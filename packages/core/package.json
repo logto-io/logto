@@ -1,0 +1,22 @@
+{
+  "name": "@logto/provider",
+  "version": "1.0.0",
+  "description": "The backend for Logto auth service.",
+  "main": "index.js",
+  "author": "Logto",
+  "license": "MIT",
+  "scripts": {
+    "build": "tsc",
+    "lint": "xo src/",
+    "dev": "tsc-watch --onSuccess \"node ./build/index.js\""
+  },
+  "dependencies": {
+    "koa": "^2.13.1"
+  },
+  "devDependencies": {
+    "@types/koa": "^2.13.3",
+    "tsc-watch": "^4.4.0",
+    "typescript": "^4.3.2",
+    "xo": "0.39.1"
+  }
+}
