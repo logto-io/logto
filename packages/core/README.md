@@ -1,4 +1,4 @@
-# Logto Provider
+# Logto
 
 The backend for Logto auth service.
 
