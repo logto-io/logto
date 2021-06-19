@@ -1,10 +1,11 @@
 {
-  "name": "@logto/provider",
+  "name": "logto",
   "version": "1.0.0",
-  "description": "The backend for Logto auth service.",
-  "main": "index.js",
+  "description": "The open source identity solution.",
+  "main": "build/index.js",
   "author": "Logto",
-  "license": "MIT",
+  "license": "UNLICENSED",
+  "private": true,
   "scripts": {
     "build": "tsc",
     "lint": "xo src/",
