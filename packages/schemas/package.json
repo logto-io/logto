@@ -6,7 +6,8 @@
   "author": "Logto",
   "license": "UNLICENSED",
   "scripts": {
-    "build": "tsc",
+    "generate": "ts-node src/gen/index.ts",
+    "build": "rm -rf lib/ && tsc --p tsconfig.build.json",
     "lint": "xo src/"
   },
   "engines": {
@@ -14,6 +15,8 @@
     "yarn": "1"
   },
   "devDependencies": {
+    "@types/node": "14",
+    "ts-node": "^10.0.0",
     "typescript": "^4.3.4",
     "xo": "0.39.1"
   }
