@@ -1,0 +1,20 @@
+{
+  "name": "@logto/schemas",
+  "version": "1.0.0",
+  "main": "lib/index.js",
+  "repository": "https://github.com/logto-io/schemas",
+  "author": "Logto",
+  "license": "UNLICENSED",
+  "scripts": {
+    "build": "tsc",
+    "lint": "xo src/"
+  },
+  "engines": {
+    "node": "14",
+    "yarn": "1"
+  },
+  "devDependencies": {
+    "typescript": "^4.3.4",
+    "xo": "0.39.1"
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "recommendations": [
+    "samverschueren.linter-xo",
+    "mikestead.dotenv"
+  ]
+}
