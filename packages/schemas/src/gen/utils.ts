@@ -1,5 +1,9 @@
 import { Optional } from '../global';
 
+export type Falsy = 0 | undefined | null | false | '';
+
+export const conditionalString = (value: string | Falsy): string => (value ? value : '');
+
 export const normalizeWhitespaces = (string: string): string => string.replace(/\s+/g, ' ').trim();
 
 const getCountDelta = (value: string): number => {
@@ -80,7 +84,9 @@ const getRawType = (value: string): string => {
 
 // Reference: https://github.com/SweetIQ/schemats/blob/7c3d3e16b5d507b4d9bd246794e7463b05d20e75/src/schemaPostgres.ts
 // eslint-disable-next-line complexity
-export const getType = (value: string): 'string' | 'number' | 'boolean' | 'Object' | 'Date' => {
+export const getType = (
+  value: string
+): 'string' | 'number' | 'boolean' | 'Record<string, unknown>' | 'Date' => {
   switch (getRawType(value)) {
     case 'bpchar':
     case 'char':
@@ -109,7 +115,7 @@ export const getType = (value: string): 'string' | 'number' | 'boolean' | 'Objec
       return 'boolean';
     case 'json':
     case 'jsonb':
-      return 'Object';
+      return 'Record<string, unknown>';
     case 'date':
     case 'timestamp':
     case 'timestamptz':

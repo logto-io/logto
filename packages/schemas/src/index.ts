@@ -1,3 +1,1 @@
-export type A = {
-  foo: string;
-};
+export * from './db-entries';
