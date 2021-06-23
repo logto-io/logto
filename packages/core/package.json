@@ -12,10 +12,14 @@
     "dev": "tsc-watch --onSuccess \"node ./build/index.js\""
   },
   "dependencies": {
+    "dayjs": "^1.10.5",
     "koa": "^2.13.1",
     "koa-mount": "^4.0.0",
     "koa-router": "^10.0.0",
-    "oidc-provider": "^7.4.1"
+    "oidc-provider": "^7.4.1",
+    "slonik": "23.6.3",
+    "slonik-interceptor-field-name-transformation": "^1.5.3",
+    "slonik-interceptor-query-normalisation": "^1.1.10"
   },
   "devDependencies": {
     "@types/koa": "^2.13.3",
