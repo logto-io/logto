@@ -11,7 +11,7 @@ export type OidcModelInstanceDBEntry = {
   grantId?: string;
 };
 
-export const OidcModelInstances = {
+export const OidcModelInstances = Object.freeze({
   table: 'oidc_model_instances',
   fields: {
     modelName: 'model_name',
@@ -23,4 +23,4 @@ export const OidcModelInstances = {
     uid: 'uid',
     grantId: 'grant_id',
   },
-};
+} as const);
