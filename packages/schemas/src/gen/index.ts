@@ -96,12 +96,12 @@ const generate = async () => {
               ),
               '};',
               '',
-              `export const ${camelcase(name, { pascalCase: true })} = {`,
+              `export const ${camelcase(name, { pascalCase: true })} = Object.freeze({`,
               `  table: '${name}',`,
               `  fields: {`,
               ...fields.map(({ name }) => `    ${camelcase(name)}: '${name}',`),
               `  },`,
-              `};`,
+              `} as const);`,
             ].join('\n')
           )
           .join('\n') +
