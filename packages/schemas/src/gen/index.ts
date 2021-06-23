@@ -95,6 +95,13 @@ const generate = async () => {
                   )}: ${type}${conditionalString(isArray && '[]')};`
               ),
               '};',
+              '',
+              `export const ${camelcase(name, { pascalCase: true })} = {`,
+              `  table: '${name}',`,
+              `  fields: {`,
+              ...fields.map(({ name }) => `    ${camelcase(name)}: '${name}',`),
+              `  },`,
+              `};`,
             ].join('\n')
           )
           .join('\n') +

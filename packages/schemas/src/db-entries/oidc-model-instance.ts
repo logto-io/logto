@@ -5,7 +5,22 @@ export type OidcModelInstanceDBEntry = {
   id: string;
   payload: Record<string, unknown>;
   expiresAt: number;
+  consumedAt?: number;
   userCode?: string;
   uid?: string;
   grantId?: string;
+};
+
+export const OidcModelInstances = {
+  table: 'oidc_model_instances',
+  fields: {
+    modelName: 'model_name',
+    id: 'id',
+    payload: 'payload',
+    expiresAt: 'expires_at',
+    consumedAt: 'consumed_at',
+    userCode: 'user_code',
+    uid: 'uid',
+    grantId: 'grant_id',
+  },
 };
