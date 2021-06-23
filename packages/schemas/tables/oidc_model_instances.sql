@@ -3,6 +3,7 @@ create table oidc_model_instances (
   id varchar(128) not null,
   payload jsonb not null,
   expires_at bigint not null,
+  consumed_at bigint,
   user_code varchar(128),
   uid varchar(128),
   grant_id varchar(128),
