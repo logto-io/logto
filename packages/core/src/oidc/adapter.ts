@@ -17,6 +17,11 @@ export default function postgresAdapter(modelName: string) {
   type QueryResult = Pick<OidcModelInstanceDBEntry, 'payload' | 'consumedAt'>;
   const convertResult = (result: QueryResult | null) =>
     conditional(result && withConsumed(result.payload, result.consumedAt));
+  const setExcluded = (...fields: IdentifierSqlTokenType[]) =>
+    sql.join(
+      fields.map((field) => sql`${field}=excluded.${field}`),
+      sql`, `
+    );
 
   const findByField = async <T extends ValueExpressionType>(
     field: IdentifierSqlTokenType,
@@ -57,12 +62,13 @@ export default function postgresAdapter(modelName: string) {
           ${payload.grantId ?? null}
         )
         on conflict (${fields.modelName}, ${fields.id}) do update
-        set
-          ${fields.payload}=excluded.${fields.payload},
-          ${fields.expiresAt}=excluded.${fields.expiresAt},
-          ${fields.userCode}=excluded.${fields.userCode},
-          ${fields.uid}=excluded.${fields.uid},
-          ${fields.grantId}=excluded.${fields.grantId}
+        set ${setExcluded(
+          fields.payload,
+          fields.expiresAt,
+          fields.userCode,
+          fields.uid,
+          fields.grantId
+        )}
       `);
     },
     find: async (id) => findByField(fields.id, id),
