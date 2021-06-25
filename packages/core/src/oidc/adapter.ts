@@ -1,12 +1,12 @@
 import dayjs from 'dayjs';
 import { AdapterFactory } from 'oidc-provider';
-import { sql } from 'slonik';
+import { IdentifierSqlTokenType, sql, ValueExpressionType } from 'slonik';
 import { OidcModelInstances, OidcModelInstanceDBEntry } from '@logto/schemas';
 import pool from '../database/pool';
 import { convertToIdentifiers } from '../database/utils';
 import { conditional } from '../utils';
 
-const postgresAdapter: AdapterFactory = (modelName) => {
+export default function postgresAdapter(modelName: string) {
   const { table, fields } = convertToIdentifiers(OidcModelInstances);
 
   type WithConsumed<T> = T & { consumed?: boolean };
@@ -14,32 +14,83 @@ const postgresAdapter: AdapterFactory = (modelName) => {
     ...data,
     ...(consumedAt ? { consumed: true } : undefined),
   });
+  type QueryResult = Pick<OidcModelInstanceDBEntry, 'payload' | 'consumedAt'>;
+  const convertResult = (result: QueryResult | null) =>
+    conditional(result && withConsumed(result.payload, result.consumedAt));
+
+  const findByField = async <T extends ValueExpressionType>(
+    field: IdentifierSqlTokenType,
+    value: T
+  ) => {
+    const result = await pool.maybeOne<QueryResult>(sql`
+        select ${fields.payload}, ${fields.consumedAt}
+        from ${table}
+        where ${fields.modelName}=${modelName}
+        and ${field}=${value}
+      `);
+
+    return convertResult(result);
+  };
 
   const adapter: ReturnType<AdapterFactory> = {
     upsert: async (id, payload, expiresIn) => {
       await pool.query(sql`
-        insert into ${table} (${fields.modelName}, ${fields.id}, ${fields.payload}, ${
-        fields.expiresAt
-      })
-        values (${modelName}, ${id}, ${JSON.stringify(payload)}, ${dayjs()
-        .add(expiresIn, 'second')
-        .unix()})
-        on conflict key do update
+        insert into ${table} (${sql.join(
+        [
+          fields.modelName,
+          fields.id,
+          fields.payload,
+          fields.expiresAt,
+          fields.userCode,
+          fields.uid,
+          fields.grantId,
+        ],
+        sql`, `
+      )})
+        values (
+          ${modelName},
+          ${id},
+          ${JSON.stringify(payload)},
+          ${dayjs().add(expiresIn, 'second').unix()},
+          ${payload.userCode ?? null},
+          ${payload.uid ?? null},
+          ${payload.grantId ?? null}
+        )
+        on conflict (${fields.modelName}, ${fields.id}) do update
+        set
+          ${fields.payload}=excluded.${fields.payload},
+          ${fields.expiresAt}=excluded.${fields.expiresAt},
+          ${fields.userCode}=excluded.${fields.userCode},
+          ${fields.uid}=excluded.${fields.uid},
+          ${fields.grantId}=excluded.${fields.grantId}
       `);
     },
-    find: async (id) => {
-      const result = await pool.maybeOne<
-        Pick<OidcModelInstanceDBEntry, 'payload' | 'consumedAt'>
-      >(sql`
-        select ${fields.payload}, ${fields.consumedAt}
-        from ${table}
+    find: async (id) => findByField(fields.id, id),
+    findByUserCode: async (userCode) => findByField(fields.userCode, userCode),
+    findByUid: async (uid) => findByField(fields.uid, uid),
+    consume: async (id) => {
+      await pool.query(sql`
+        update ${table}
+        set ${fields.consumedAt}=${dayjs().unix()}
         where ${fields.modelName}=${modelName}
-        and id=${id}
+        and ${fields.id}=${id}
       `);
-
-      return conditional(result && withConsumed(result));
+    },
+    destroy: async (id) => {
+      await pool.query(sql`
+        delete from ${table}
+        where ${fields.modelName}=${modelName}
+        and ${fields.id}=${id}
+      `);
+    },
+    revokeByGrantId: async (grantId) => {
+      await pool.query(sql`
+        delete from ${table}
+        where ${fields.modelName}=${modelName}
+        and ${fields.grantId}=${grantId}
+      `);
     },
   };
 
   return adapter;
-};
+}
