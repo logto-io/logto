@@ -1,16 +1,7 @@
 {
+  "extends": "@logto/essentials/tsconfig.base",
   "compilerOptions": {
-    "target": "es2021",
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "strict": true,
-    "forceConsistentCasingInFileNames": true,
-    "noFallthroughCasesInSwitch": true,
-    "module": "commonjs",
-    "moduleResolution": "node",
     "outDir": "build"
   },
-  "include": [
-    "src"
-  ]
+  "include": ["src"]
 }
