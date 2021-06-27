@@ -1,8 +1,4 @@
-import { Optional } from '../global';
-
-export type Falsy = 0 | undefined | null | false | '';
-
-export const conditionalString = (value: string | Falsy): string => (value ? value : '');
+import { Optional } from '@logto/essentials';
 
 export const normalizeWhitespaces = (string: string): string => string.replace(/\s+/g, ' ').trim();
 

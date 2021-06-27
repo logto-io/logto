@@ -232,6 +232,14 @@
     minimatch "^3.0.4"
     strip-json-comments "^3.1.1"
 
+"@logto/essentials@^1.0.2":
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@logto/essentials/-/essentials-1.0.2.tgz#02a8c878b4079a63709c35ce8c143370f259bb13"
+  integrity sha512-GN6m1c5ll7EhOgJbmFwRESkeWGjdoihst8O1aVIxvEOXhLe/79bph4hejsdm59piX3jgKWakEHimpqcBT1kO+Q==
+  dependencies:
+    lodash.orderby "^4.6.0"
+    lodash.pick "^4.4.0"
+
 "@mrmlnc/readdir-enhanced@^2.2.1":
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/@mrmlnc/readdir-enhanced/-/readdir-enhanced-2.2.1.tgz#524af240d1a360527b730475ecfa1344aa540dde"
@@ -2533,6 +2541,16 @@ lodash.merge@^4.6.2:
   version "4.6.2"
   resolved "https://registry.yarnpkg.com/lodash.merge/-/lodash.merge-4.6.2.tgz#558aa53b43b661e1925a0afdfa36a9a1085fe57a"
   integrity sha512-0KpjqXRVvrYyCsX1swR/XTK0va6VQkQM6MNo7PqW77ByjAhoARA8EfrP1N4+KlKj8YS0ZUCtRT/YUuhyYDujIQ==
+
+lodash.orderby@^4.6.0:
+  version "4.6.0"
+  resolved "https://registry.yarnpkg.com/lodash.orderby/-/lodash.orderby-4.6.0.tgz#e697f04ce5d78522f54d9338b32b81a3393e4eb3"
+  integrity sha1-5pfwTOXXhSL1TZM4syuBozk+TrM=
+
+lodash.pick@^4.4.0:
+  version "4.4.0"
+  resolved "https://registry.yarnpkg.com/lodash.pick/-/lodash.pick-4.4.0.tgz#52f05610fff9ded422611441ed1fc123a03001b3"
+  integrity sha1-UvBWEP/53tQiYRRB7R/BI6AwAbM=
 
 lodash.truncate@^4.4.2:
   version "4.4.2"
