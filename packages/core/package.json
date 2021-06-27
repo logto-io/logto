@@ -12,6 +12,7 @@
     "dev": "tsc-watch --onSuccess \"node ./build/index.js\""
   },
   "dependencies": {
+    "@logto/essentials": "^1.0.2",
     "@logto/schemas": "^1.0.0",
     "dayjs": "^1.10.5",
     "dotenv": "^10.0.0",
@@ -36,5 +37,6 @@
   "engines": {
     "node": "14",
     "yarn": "1"
-  }
+  },
+  "prettier": "@logto/essentials/.prettierrc.json"
 }
