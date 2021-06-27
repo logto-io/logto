@@ -3,14 +3,9 @@ import camelcase from 'camelcase';
 import fs from 'fs/promises';
 import path from 'path';
 import pluralize from 'pluralize';
+import { conditionalString } from '@logto/essentials';
 
-import {
-  conditionalString,
-  findFirstParentheses,
-  getType,
-  normalizeWhitespaces,
-  removeParentheses,
-} from './utils';
+import { findFirstParentheses, getType, normalizeWhitespaces, removeParentheses } from './utils';
 
 type Field = {
   name: string;
@@ -98,10 +93,10 @@ const generate = async () => {
               '',
               `export const ${camelcase(name, { pascalCase: true })} = Object.freeze({`,
               `  table: '${name}',`,
-              `  fields: {`,
+              '  fields: {',
               ...fields.map(({ name }) => `    ${camelcase(name)}: '${name}',`),
-              `  },`,
-              `} as const);`,
+              '  },',
+              '} as const);',
             ].join('\n')
           )
           .join('\n') +
