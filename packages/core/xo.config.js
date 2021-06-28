@@ -1,1 +1,1 @@
-module.exports = require("@logto/essentials/.xo-config.json");
+module.exports = require('@logto/essentials/.xo-config.json');
