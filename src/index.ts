@@ -6,7 +6,7 @@ import initApp from './init';
 import { getEnv } from './utils';
 
 const app = new Koa();
-const port = Number(getEnv('PORT', '3000'));
+const port = Number(getEnv('PORT', '3001'));
 
 (async () => {
   try {
