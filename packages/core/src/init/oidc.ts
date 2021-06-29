@@ -33,6 +33,11 @@ export default async function initOidc(app: Koa, port: number): Promise<void> {
         token_endpoint_auth_method: 'none',
       },
     ],
+    features: { revocation: { enabled: true } },
+    clientBasedCORS: (ctx, origin) => {
+      console.log('rogin', origin);
+      return origin.startsWith('http://localhost:3000');
+    },
     findAccount: (ctx, sub) => {
       console.log('finding account');
       return {
