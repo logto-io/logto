@@ -4,6 +4,13 @@ The backend for Logto auth service.
 
 ## Get Started
 
+Create `.env` under project root with the following vars:
+
+```env
+DB_URL=postgres://your-postgres-db-url
+OIDC_PROVIDER_PRIVATE_KEY_BASE64=private-key-for-oidc-provider-base64-encoded
+```
+
 ```bash
 yarn && yarn dev
 ```
