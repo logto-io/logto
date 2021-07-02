@@ -7,6 +7,7 @@ import postgresAdapter from '../oidc/adapter';
 import { fromKeyLike } from 'jose/jwk/from_key_like';
 import { getEnv } from '../utils';
 import { findUserById } from '../queries/user';
+import { signInRoute } from '../consts';
 
 export default async function initOidc(app: Koa, port: number): Promise<void> {
   const privateKey = crypto.createPrivateKey(
@@ -34,8 +35,15 @@ export default async function initOidc(app: Koa, port: number): Promise<void> {
         token_endpoint_auth_method: 'none',
       },
     ],
-    features: { revocation: { enabled: true }, introspection: { enabled: true } },
-    clientBasedCORS: (ctx, origin) => {
+    features: {
+      revocation: { enabled: true },
+      introspection: { enabled: true },
+      devInteractions: { enabled: false },
+    },
+    interactions: {
+      url: (_, interaction) => `${signInRoute}?uid=${interaction.uid}`,
+    },
+    clientBasedCORS: (_, origin) => {
       console.log('origin', origin);
       return origin.startsWith('http://localhost:3000');
     },
@@ -44,8 +52,11 @@ export default async function initOidc(app: Koa, port: number): Promise<void> {
 
       return {
         accountId: sub,
-        claims: async (use, scope, claims) => {
-          console.log('claims', use, scope, claims);
+        claims: async (use, scope, claims, rejected) => {
+          console.log('use:', use);
+          console.log('scope:', scope);
+          console.log('claims:', claims);
+          console.log('rejected:', rejected);
           return { sub };
         },
       };
