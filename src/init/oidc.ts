@@ -2,12 +2,12 @@ import crypto from 'crypto';
 import Koa from 'koa';
 import mount from 'koa-mount';
 import { Provider } from 'oidc-provider';
-import postgresAdapter from '../oidc/adapter';
+import postgresAdapter from '@/oidc/adapter';
 
 import { fromKeyLike } from 'jose/jwk/from_key_like';
-import { getEnv } from '../utils';
-import { findUserById } from '../queries/user';
-import { signInRoute } from '../consts';
+import { getEnv } from '@/utils';
+import { findUserById } from '@/queries/user';
+import { signInRoute } from '@/consts';
 
 export default async function initOidc(app: Koa, port: number): Promise<void> {
   const privateKey = crypto.createPrivateKey(
