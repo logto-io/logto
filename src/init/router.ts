@@ -1,10 +1,11 @@
 import Koa from 'koa';
 import Router from 'koa-router';
+import { signInRoute } from '../consts';
 
 const router = new Router();
 
-router.get('/callback', (ctx) => {
-  ctx.body = 'A callback';
+router.get(signInRoute, (ctx) => {
+  ctx.body = 'Signing in';
 });
 
 export default function initRouter(app: Koa): void {
