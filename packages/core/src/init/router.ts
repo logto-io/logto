@@ -3,8 +3,8 @@ import Koa from 'koa';
 import Router from 'koa-router';
 import { promisify } from 'util';
 import stream from 'stream';
-import { signInRoute } from '../consts';
-import { getEnv } from '../utils';
+import { signInRoute } from '@/consts';
+import { getEnv } from '@/utils';
 
 const pipeline = promisify(stream.pipeline);
 const router = new Router();

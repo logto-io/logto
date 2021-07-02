@@ -21,6 +21,7 @@
     "koa-logger": "^3.2.1",
     "koa-mount": "^4.0.0",
     "koa-router": "^10.0.0",
+    "module-alias": "^2.2.2",
     "oidc-provider": "^7.4.1",
     "slonik": "^23.8.1",
     "slonik-interceptor-preset": "^1.2.10"
@@ -41,6 +42,9 @@
   "engines": {
     "node": "14",
     "yarn": "1"
+  },
+  "_moduleAliases": {
+    "@": "./build"
   },
   "prettier": "@logto/essentials/.prettierrc.json"
 }
