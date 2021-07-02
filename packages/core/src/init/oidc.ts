@@ -6,6 +6,7 @@ import postgresAdapter from '../oidc/adapter';
 
 import { fromKeyLike } from 'jose/jwk/from_key_like';
 import { getEnv } from '../utils';
+import { findUserById } from '../queries/user';
 
 export default async function initOidc(app: Koa, port: number): Promise<void> {
   const privateKey = crypto.createPrivateKey(
@@ -35,11 +36,12 @@ export default async function initOidc(app: Koa, port: number): Promise<void> {
     ],
     features: { revocation: { enabled: true }, introspection: { enabled: true } },
     clientBasedCORS: (ctx, origin) => {
-      console.log('rogin', origin);
+      console.log('origin', origin);
       return origin.startsWith('http://localhost:3000');
     },
-    findAccount: (ctx, sub) => {
-      console.log('finding account');
+    findAccount: async (ctx, sub) => {
+      await findUserById(sub);
+
       return {
         accountId: sub,
         claims: async (use, scope, claims) => {
