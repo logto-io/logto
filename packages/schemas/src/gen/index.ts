@@ -45,7 +45,7 @@ const generate = async () => {
               .map((value) => normalizeWhitespaces(value))
               .filter((value) =>
                 ['primary', 'foreign', 'unique', 'exclude', 'check'].every(
-                  (constraint) => !value.startsWith(constraint)
+                  (constraint) => !value.startsWith(constraint + ' ')
                 )
               )
               .map<Field>((value) => {
