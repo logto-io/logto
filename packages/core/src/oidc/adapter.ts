@@ -1,10 +1,10 @@
 import dayjs from 'dayjs';
 import { AdapterFactory } from 'oidc-provider';
 import { IdentifierSqlTokenType, sql, ValueExpressionType } from 'slonik';
+import { conditional } from '@logto/essentials';
 import { OidcModelInstances, OidcModelInstanceDBEntry } from '@logto/schemas';
 import pool from '@/database/pool';
 import { convertToIdentifiers } from '@/database/utils';
-import { conditional } from '@/utils';
 
 export default function postgresAdapter(modelName: string) {
   const { table, fields } = convertToIdentifiers(OidcModelInstances);
