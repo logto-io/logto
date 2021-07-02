@@ -12,8 +12,8 @@
     "dev": "tsc-watch --onSuccess \"node ./build/index.js\""
   },
   "dependencies": {
-    "@logto/essentials": "^1.0.2",
-    "@logto/schemas": "^1.0.0",
+    "@logto/essentials": "^1.0.5",
+    "@logto/schemas": "^1.0.1",
     "dayjs": "^1.10.5",
     "dotenv": "^10.0.0",
     "koa": "^2.13.1",
