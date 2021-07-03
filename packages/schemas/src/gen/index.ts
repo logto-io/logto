@@ -3,20 +3,45 @@ import camelcase from 'camelcase';
 import fs from 'fs/promises';
 import path from 'path';
 import pluralize from 'pluralize';
-import { conditionalString } from '@logto/essentials';
+import uniq from 'lodash.uniq';
+import { conditional, conditionalString } from '@logto/essentials';
 
 import { findFirstParentheses, getType, normalizeWhitespaces, removeParentheses } from './utils';
 
 type Field = {
   name: string;
-  type: string;
+  type?: string;
+  customType?: string;
   required: boolean;
   isArray: boolean;
+};
+
+// eslint-disable-next-line @typescript-eslint/ban-types
+type FieldWithType = Omit<Field, 'type' | 'customType'> & { type: string };
+
+type Type = {
+  name: string;
+  type: 'enum';
+  values: string[];
+};
+
+type GeneratedType = Type & {
+  tsName: string;
 };
 
 type Table = {
   name: string;
   fields: Field[];
+};
+
+type TableWithType = {
+  name: string;
+  fields: FieldWithType[];
+};
+
+type FileData = {
+  types: Type[];
+  tables: Table[];
 };
 
 const dir = 'tables';
@@ -26,13 +51,12 @@ const generate = async () => {
   const generated = await Promise.all(
     files
       .filter((file) => file.endsWith('.sql'))
-      .map<Promise<[string, Table[]]>>(async (file) => [
-        file,
-        (
-          await fs.readFile(path.join(dir, file), { encoding: 'utf-8' })
-        )
+      .map<Promise<[string, FileData]>>(async (file) => {
+        const statements = (await fs.readFile(path.join(dir, file), { encoding: 'utf-8' }))
           .split(';')
-          .map((value) => normalizeWhitespaces(value).toLowerCase())
+          .map((value) => normalizeWhitespaces(value));
+        const tables = statements
+          .map((value) => value.toLowerCase())
           .filter((value) => value.startsWith('create table'))
           .map((value) => findFirstParentheses(value))
           .filter((value): value is NonNullable<typeof value> => Boolean(value))
@@ -56,17 +80,38 @@ const generate = async () => {
                 // CAUTION: Only works for single dimension arrays
                 const isArray = Boolean(/\[.*]/.test(type)) || restJoined.includes('array');
                 const required = restJoined.includes('not null');
+                const primitiveType = getType(type);
 
                 return {
                   name,
-                  type: getType(type),
+                  type: primitiveType,
+                  customType: conditional(!primitiveType && type),
                   isArray,
                   required,
                 };
               });
             return { name, fields };
-          }),
-      ])
+          });
+        const types = statements
+          .filter((value) => value.toLowerCase().startsWith('create type'))
+          .map<Type>((value) => {
+            const breakdowns = value.split(' ');
+            const name = breakdowns[2];
+            const data = findFirstParentheses(value);
+            assert(
+              name &&
+                data &&
+                breakdowns[3]?.toLowerCase() === 'as' &&
+                breakdowns[4]?.toLowerCase() === 'enum',
+              'Only support enum custom type'
+            );
+            const values = data.body.split(',').map((value) => value.trim().slice(1, -1));
+
+            return { name, type: 'enum', values };
+          });
+
+        return [file, { tables, types }];
+      })
   );
 
   const generatedDir = 'src/db-entries';
@@ -75,11 +120,61 @@ const generate = async () => {
 
   await fs.rmdir(generatedDir, { recursive: true });
   await fs.mkdir(generatedDir, { recursive: true });
+  const allTypes = generated
+    .flatMap((data) => data[1].types)
+    .map<GeneratedType>((type) => ({
+      ...type,
+      tsName: camelcase(type.name, { pascalCase: true }),
+    }));
+
+  // Generate custom types
+  await fs.writeFile(
+    path.join(generatedDir, 'custom-types.ts'),
+    header +
+      allTypes
+        .map(({ tsName, values }) =>
+          [
+            `export enum ${tsName} {`,
+            ...values.map((value) => `  ${value} = '${value}',`),
+            '}',
+          ].join('\n')
+        )
+        .join('\n') +
+      '\n'
+  );
+
+  // Generate DB entry types
   await Promise.all(
-    generated.map(async ([file, tables]) => {
+    generated.map(async ([file, { tables }]) => {
+      const customTypes: string[] = [];
+      const tableWithTypes = tables.map<TableWithType>(({ fields, ...rest }) => ({
+        ...rest,
+        fields: fields.map(({ type, customType, ...rest }) => {
+          const finalType = type ?? allTypes.find(({ name }) => name === customType)?.tsName;
+          assert(finalType, `Type ${customType ?? 'N/A'} not found`);
+          if (type === undefined) {
+            customTypes.push(finalType);
+          }
+
+          return { ...rest, type: finalType };
+        }),
+      }));
+
+      const importTypes =
+        customTypes.length > 0
+          ? [
+              'import {',
+              uniq(customTypes)
+                .map((value) => `  ${value}`)
+                .join(',\n'),
+              "} from './custom-types';",
+            ].join('\n') + '\n\n'
+          : '';
+
       const content =
         header +
-        tables
+        importTypes +
+        tableWithTypes
           .map(({ name, fields }) =>
             [
               `export type ${pluralize(camelcase(name, { pascalCase: true }), 1)}DBEntry = {`,
