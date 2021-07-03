@@ -1,3 +1,3 @@
-import { assertEnv } from './utils';
+import { assertEnv } from '@/utils/env';
 
-export const signInRoute = assertEnv('SIGN_IN_ROUTE');
+export const signInRoute = assertEnv('UI_SIGN_IN_ROUTE');
