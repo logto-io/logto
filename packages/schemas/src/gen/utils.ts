@@ -82,7 +82,7 @@ const getRawType = (value: string): string => {
 // eslint-disable-next-line complexity
 export const getType = (
   value: string
-): 'string' | 'number' | 'boolean' | 'Record<string, unknown>' | 'Date' => {
+): 'string' | 'number' | 'boolean' | 'Record<string, unknown>' | 'Date' | undefined => {
   switch (getRawType(value)) {
     case 'bpchar':
     case 'char':
@@ -117,6 +117,5 @@ export const getType = (
     case 'timestamptz':
       return 'Date';
     default:
-      throw new Error('Unable to parse type: ' + value);
   }
 };
