@@ -13,18 +13,20 @@
   },
   "dependencies": {
     "@logto/essentials": "^1.0.5",
-    "@logto/schemas": "^1.0.1",
+    "@logto/schemas": "^1.0.3",
     "dayjs": "^1.10.5",
     "dotenv": "^10.0.0",
     "got": "^11.8.2",
     "koa": "^2.13.1",
+    "koa-body": "^4.2.0",
     "koa-logger": "^3.2.1",
     "koa-mount": "^4.0.0",
     "koa-router": "^10.0.0",
     "module-alias": "^2.2.2",
     "oidc-provider": "^7.4.1",
     "slonik": "^23.8.1",
-    "slonik-interceptor-preset": "^1.2.10"
+    "slonik-interceptor-preset": "^1.2.10",
+    "zod": "^3.2.0"
   },
   "devDependencies": {
     "@commitlint/cli": "^12.1.4",
