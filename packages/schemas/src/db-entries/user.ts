@@ -7,6 +7,7 @@ export type UserDBEntry = {
   primaryPhone?: string;
   passwordEncrypted?: string;
   passwordEncryptionMethod?: string;
+  passwordEncryptionSalt?: string;
 };
 
 export const Users = Object.freeze({
@@ -18,5 +19,6 @@ export const Users = Object.freeze({
     primaryPhone: 'primary_phone',
     passwordEncrypted: 'password_encrypted',
     passwordEncryptionMethod: 'password_encryption_method',
+    passwordEncryptionSalt: 'password_encryption_salt',
   },
 } as const);
