@@ -11,7 +11,8 @@
   "scripts": {
     "generate": "ts-node src/gen/index.ts && xo src/db-entries --fix",
     "build": "yarn generate && rm -rf lib/ && tsc --p tsconfig.build.json",
-    "lint": "xo src/"
+    "lint": "xo src/",
+    "prepare": "yarn build"
   },
   "engines": {
     "node": "14",

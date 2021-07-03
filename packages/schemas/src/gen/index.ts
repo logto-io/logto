@@ -205,7 +205,7 @@ const generate = async () => {
   await fs.writeFile(
     path.join(generatedDir, 'index.ts'),
     header +
-      conditionalString(allTypes.length > 0 && `export * from './${generatedTypesFilename}';`) +
+      conditionalString(allTypes.length > 0 && `export * from './${generatedTypesFilename}';\n`) +
       generated.map(([file]) => `export * from './${getOutputFileName(file)}';`).join('\n') +
       '\n'
   );
