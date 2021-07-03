@@ -9,7 +9,7 @@
     "lib"
   ],
   "scripts": {
-    "generate": "ts-node src/gen/index.ts",
+    "generate": "ts-node src/gen/index.ts && xo src/db-entries --fix",
     "build": "yarn generate && rm -rf lib/ && tsc --p tsconfig.build.json",
     "lint": "xo src/"
   },
@@ -18,10 +18,12 @@
     "yarn": "1"
   },
   "devDependencies": {
-    "@logto/essentials": "^1.0.2",
+    "@logto/essentials": "^1.0.5",
+    "@types/lodash.uniq": "^4.5.6",
     "@types/node": "14",
     "@types/pluralize": "^0.0.29",
     "camelcase": "^6.2.0",
+    "lodash.uniq": "^4.5.0",
     "pluralize": "^8.0.0",
     "ts-node": "^10.0.0",
     "typescript": "^4.3.4",

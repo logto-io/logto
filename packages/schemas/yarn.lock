@@ -232,10 +232,10 @@
     minimatch "^3.0.4"
     strip-json-comments "^3.1.1"
 
-"@logto/essentials@^1.0.2":
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/@logto/essentials/-/essentials-1.0.2.tgz#02a8c878b4079a63709c35ce8c143370f259bb13"
-  integrity sha512-GN6m1c5ll7EhOgJbmFwRESkeWGjdoihst8O1aVIxvEOXhLe/79bph4hejsdm59piX3jgKWakEHimpqcBT1kO+Q==
+"@logto/essentials@^1.0.5":
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/@logto/essentials/-/essentials-1.0.5.tgz#edc1a376cf82e8829adcf26e8b98db1235cfbfcd"
+  integrity sha512-zft8VodNOtkhyyQTHiOlksk6UonQBY68dON4cQaUOlpN5JS9z5/zchi4I0j+XB6EeQ7l8ZtVXct2VZBp8m03kw==
   dependencies:
     lodash.orderby "^4.6.0"
     lodash.pick "^4.4.0"
@@ -336,6 +336,18 @@
   version "0.0.29"
   resolved "https://registry.yarnpkg.com/@types/json5/-/json5-0.0.29.tgz#ee28707ae94e11d2b827bcbe5270bcea7f3e71ee"
   integrity sha1-7ihweulOEdK4J7y+UnC86n8+ce4=
+
+"@types/lodash.uniq@^4.5.6":
+  version "4.5.6"
+  resolved "https://registry.yarnpkg.com/@types/lodash.uniq/-/lodash.uniq-4.5.6.tgz#adb052f6c7eeb38b920c13166e7a972dd960b4c5"
+  integrity sha512-XHNMXBtiwsWZstZMyxOYjr0e8YYWv0RgPlzIHblTuwBBiWo2MzWVaTBihtBpslb5BglgAWIeBv69qt1+RTRW1A==
+  dependencies:
+    "@types/lodash" "*"
+
+"@types/lodash@*":
+  version "4.14.170"
+  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.170.tgz#0d67711d4bf7f4ca5147e9091b847479b87925d6"
+  integrity sha512-bpcvu/MKHHeYX+qeEN8GE7DIravODWdACVA1ctevD8CN24RhPZIKMn9ntfAsrvLfSX3cR5RrBKAbYm9bGs0A+Q==
 
 "@types/minimatch@*":
   version "3.0.4"
@@ -2556,6 +2568,11 @@ lodash.truncate@^4.4.2:
   version "4.4.2"
   resolved "https://registry.yarnpkg.com/lodash.truncate/-/lodash.truncate-4.4.2.tgz#5a350da0b1113b837ecfffd5812cbe58d6eae193"
   integrity sha1-WjUNoLERO4N+z//VgSy+WNbq4ZM=
+
+lodash.uniq@^4.5.0:
+  version "4.5.0"
+  resolved "https://registry.yarnpkg.com/lodash.uniq/-/lodash.uniq-4.5.0.tgz#d0225373aeb652adc1bc82e4945339a842754773"
+  integrity sha1-0CJTc662Uq3BvILklFM5qEJ1R3M=
 
 lodash@^4.13.1, lodash@^4.17.21:
   version "4.17.21"
