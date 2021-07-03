@@ -5,11 +5,11 @@ import { Provider } from 'oidc-provider';
 import postgresAdapter from '@/oidc/adapter';
 
 import { fromKeyLike } from 'jose/jwk/from_key_like';
-import { getEnv } from '@/utils';
+import { getEnv } from '@/utils/env';
 import { findUserById } from '@/queries/user';
 import { signInRoute } from '@/consts';
 
-export default async function initOidc(app: Koa, port: number): Promise<void> {
+export default async function initOidc(app: Koa, port: number): Promise<Provider> {
   const privateKey = crypto.createPrivateKey(
     Buffer.from(getEnv('OIDC_PROVIDER_PRIVATE_KEY_BASE64'), 'base64')
   );
@@ -41,7 +41,7 @@ export default async function initOidc(app: Koa, port: number): Promise<void> {
       devInteractions: { enabled: false },
     },
     interactions: {
-      url: (_, interaction) => `${signInRoute}?uid=${interaction.uid}`,
+      url: (_) => signInRoute,
     },
     clientBasedCORS: (_, origin) => {
       console.log('origin', origin);
@@ -63,4 +63,5 @@ export default async function initOidc(app: Koa, port: number): Promise<void> {
     },
   });
   app.use(mount('/oidc', oidc.app));
+  return oidc;
 }
