@@ -23,4 +23,14 @@ export const OidcModelInstances = Object.freeze({
     uid: 'uid',
     grantId: 'grant_id',
   },
+  fieldKeys: [
+    'modelName',
+    'id',
+    'payload',
+    'expiresAt',
+    'consumedAt',
+    'userCode',
+    'uid',
+    'grantId',
+  ],
 } as const);

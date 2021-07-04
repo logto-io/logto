@@ -194,6 +194,9 @@ const generate = async () => {
               '  fields: {',
               ...fields.map(({ name }) => `    ${camelcase(name)}: '${name}',`),
               '  },',
+              '  fieldKeys: [',
+              ...fields.map(({ name }) => `    '${camelcase(name)}',`),
+              '  ],',
               '} as const);',
             ].join('\n')
           )
