@@ -4,7 +4,7 @@ import { PasswordEncryptionMethod } from './custom-types';
 
 export type UserDBEntry = {
   id: string;
-  userName?: string;
+  username?: string;
   primaryEmail?: string;
   primaryPhone?: string;
   passwordEncrypted?: string;
@@ -16,7 +16,7 @@ export const Users = Object.freeze({
   table: 'users',
   fields: {
     id: 'id',
-    userName: 'user_name',
+    username: 'username',
     primaryEmail: 'primary_email',
     primaryPhone: 'primary_phone',
     passwordEncrypted: 'password_encrypted',
@@ -25,7 +25,7 @@ export const Users = Object.freeze({
   },
   fieldKeys: [
     'id',
-    'userName',
+    'username',
     'primaryEmail',
     'primaryPhone',
     'passwordEncrypted',
