@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "@logto/essentials": "^1.0.5",
-    "@logto/schemas": "^1.0.3",
+    "@logto/schemas": "^1.0.5",
     "dayjs": "^1.10.5",
     "dotenv": "^10.0.0",
     "got": "^11.8.2",
@@ -24,6 +24,7 @@
     "koa-proxies": "^0.12.1",
     "koa-router": "^10.0.0",
     "module-alias": "^2.2.2",
+    "nanoid": "^3.1.23",
     "oidc-provider": "^7.4.1",
     "slonik": "^23.8.1",
     "slonik-interceptor-preset": "^1.2.10",
