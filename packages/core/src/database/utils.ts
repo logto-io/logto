@@ -1,9 +1,12 @@
-import { IdentifierSqlTokenType, sql, ValueExpressionType } from 'slonik';
+import { IdentifierSqlTokenType, sql } from 'slonik';
 
 type Table = { table: string; fields: Record<string, string> };
 type FieldIdentifiers<Key extends string | number | symbol> = {
   [key in Key]: IdentifierSqlTokenType;
 };
+
+const convertToPrimitive = <T>(value: T) =>
+  value !== null && typeof value === 'object' ? JSON.stringify(value) : value;
 
 export const convertToIdentifiers = <T extends Table>(
   { table, fields }: T,
@@ -20,14 +23,23 @@ export const convertToIdentifiers = <T extends Table>(
   ),
 });
 
-export const insertInto = <T extends string>(
+export const insertInto = <Type, Key extends keyof Type = keyof Type>(
   table: IdentifierSqlTokenType,
-  fields: FieldIdentifiers<T>,
-  fieldKeys: readonly T[],
-  value: { [key in T]?: ValueExpressionType }
+  fields: FieldIdentifiers<Key>,
+  fieldKeys: readonly Key[],
+  value: { [key in Key]?: Type[key] }
 ) => sql`
-  insert into ${table} (${sql.join(Object.values(fields), sql`, `)})
+  insert into ${table} (${sql.join(
+  fieldKeys.map((key) => fields[key]),
+  sql`, `
+)})
   values (${sql.join(
-    fieldKeys.map((key) => value[key] ?? null),
+    fieldKeys.map((key) => convertToPrimitive(value[key] ?? null)),
     sql`, `
   )})`;
+
+export const setExcluded = (...fields: IdentifierSqlTokenType[]) =>
+  sql.join(
+    fields.map((field) => sql`${field}=excluded.${field}`),
+    sql`, `
+  );
