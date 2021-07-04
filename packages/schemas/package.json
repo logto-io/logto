@@ -1,6 +1,6 @@
 {
   "name": "@logto/schemas",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "main": "lib/index.js",
   "repository": "https://github.com/logto-io/schemas",
   "author": "Logto",
