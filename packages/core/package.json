@@ -26,7 +26,7 @@
     "module-alias": "^2.2.2",
     "nanoid": "^3.1.23",
     "oidc-provider": "^7.4.1",
-    "slonik": "^23.8.1",
+    "slonik": "^23.8.3",
     "slonik-interceptor-preset": "^1.2.10",
     "zod": "^3.2.0"
   },
