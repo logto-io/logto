@@ -28,7 +28,7 @@ export const removeParentheses = (value: string) =>
     }
   ).result;
 
-type ParenthesesMatch = { body: string; prefix: string };
+export type ParenthesesMatch = { body: string; prefix: string };
 
 export const findFirstParentheses = (value: string): Optional<ParenthesesMatch> => {
   const { matched, count, ...rest } = Object.values(value).reduce<{
