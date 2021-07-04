@@ -23,4 +23,13 @@ export const Users = Object.freeze({
     passwordEncryptionMethod: 'password_encryption_method',
     passwordEncryptionSalt: 'password_encryption_salt',
   },
+  fieldKeys: [
+    'id',
+    'userName',
+    'primaryEmail',
+    'primaryPhone',
+    'passwordEncrypted',
+    'passwordEncryptionMethod',
+    'passwordEncryptionSalt',
+  ],
 } as const);
