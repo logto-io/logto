@@ -2480,6 +2480,14 @@ get-stack-trace@^2.0.3:
     bluebird "^3.7.1"
     source-map "^0.8.0-beta.0"
 
+get-stack-trace@^2.1.1:
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/get-stack-trace/-/get-stack-trace-2.1.1.tgz#7aeabda99d8004ad6c6462ebec38fc1a77506ca8"
+  integrity sha512-dhqSDD9lHU/6FvIZ9KbXGmVK6IKr9ZskZtNOUvhlCiONlnqatu4FmAeRbxCfJJVuQ0NWfz6dAbibKQg19B7AmQ==
+  dependencies:
+    bluebird "^3.7.1"
+    source-map "^0.8.0-beta.0"
+
 get-stdin@^8.0.0:
   version "8.0.0"
   resolved "https://registry.yarnpkg.com/get-stdin/-/get-stdin-8.0.0.tgz#cbad6a73feb75f6eeb22ba9e01f89aa28aa97a53"
@@ -5087,15 +5095,15 @@ slonik@^22.4.0:
     through2 "^4.0.2"
     ulid "^2.3.0"
 
-slonik@^23.8.1:
-  version "23.8.1"
-  resolved "https://registry.yarnpkg.com/slonik/-/slonik-23.8.1.tgz#594016f5fa8755fa95b1e295dec2eefe94c8e05d"
-  integrity sha512-TUWOddia5kNfI641EPeo4AMBwBXb+IfW2zgHKULcc2+rOtL6toM6EBGoxAbMrfgI0Djku/+Fkui+Uo1mi8KGoA==
+slonik@^23.8.3:
+  version "23.8.3"
+  resolved "https://registry.yarnpkg.com/slonik/-/slonik-23.8.3.tgz#e8be2fb61deb5541efcdc6593cacb3debc929db0"
+  integrity sha512-kXOc3xxyQAtxzjQJIXL/U5vHUg8mJeqD2Czy/+hrVFmKk0W5KGj974yT2RgRd1+oWfUNoU4Bmn4DANlCQ0KVKA==
   dependencies:
     concat-stream "^2.0.0"
     delay "^5.0.0"
     es6-error "^4.1.1"
-    get-stack-trace "^2.0.3"
+    get-stack-trace "^2.1.1"
     hyperid "^2.1.0"
     is-plain-object "^5.0.0"
     iso8601-duration "^1.3.0"
