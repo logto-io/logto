@@ -396,10 +396,10 @@
     lodash.orderby "^4.6.0"
     lodash.pick "^4.4.0"
 
-"@logto/schemas@^1.0.3":
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/@logto/schemas/-/schemas-1.0.3.tgz#6a596bb9d1b99460857eaec5d643040ae384e037"
-  integrity sha512-inCo/PQUQl9OZFkjehjcB/4PBzYBW9FVn/3nZ2CPr/+3dJKDF3B0qxu8gyQICGJuWYx1BZPygc/NvV0F1klR3g==
+"@logto/schemas@^1.0.5":
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/@logto/schemas/-/schemas-1.0.5.tgz#7784ca8f58569bfe1feafb4ad5ca6f098b1a557e"
+  integrity sha512-JxA9uXNz2tt0NqAp8Gl0hp0L/dLhZakG5sm41JrJKfhtse2Yy2K1X7gBYkH1C9P8P+NcHhv/K4pEgY66yXMOGQ==
 
 "@mrmlnc/readdir-enhanced@^2.2.1":
   version "2.2.1"
@@ -3870,7 +3870,7 @@ multimap@^1.1.0:
   resolved "https://registry.yarnpkg.com/multimap/-/multimap-1.1.0.tgz#5263febc085a1791c33b59bb3afc6a76a2a10ca8"
   integrity sha512-0ZIR9PasPxGXmRsEF8jsDzndzHDj7tIav+JUmvIFB/WHswliFnquxECT/De7GR4yg99ky/NlRKJT82G1y271bw==
 
-nanoid@^3.1.15:
+nanoid@^3.1.15, nanoid@^3.1.23:
   version "3.1.23"
   resolved "https://registry.yarnpkg.com/nanoid/-/nanoid-3.1.23.tgz#f744086ce7c2bc47ee0a8472574d5c78e4183a81"
   integrity sha512-FiB0kzdP0FFVGDKlRLEQ1BgDzU87dy5NnzjeW9YZNt+/c3+q82EQDUwniSAUxp/F0gFNI1ZhKU1FqYsMuqZVnw==
