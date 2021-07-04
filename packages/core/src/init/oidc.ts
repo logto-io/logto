@@ -40,6 +40,7 @@ export default async function initOidc(app: Koa, port: number): Promise<Provider
         redirect_uris: ['http://localhost:3000/callback'],
         grant_types: ['authorization_code', 'refresh_token'],
         token_endpoint_auth_method: 'none',
+        post_logout_redirect_uris: ['http://localhost:3000'],
       },
     ],
     features: {
