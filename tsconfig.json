@@ -1,7 +1,11 @@
 {
   "extends": "@logto/essentials/tsconfig.base",
   "compilerOptions": {
-    "outDir": "build"
+    "outDir": "build",
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    }
   },
   "include": ["src"]
 }

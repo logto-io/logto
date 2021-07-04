@@ -1,9 +1,11 @@
+import 'module-alias/register';
+
 import dotenv from 'dotenv';
 dotenv.config();
 
 import Koa from 'koa';
 import initApp from './init';
-import { getEnv } from './utils';
+import { getEnv } from './utils/env';
 
 const app = new Koa();
 const port = Number(getEnv('PORT', '3001'));
