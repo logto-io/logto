@@ -7,22 +7,29 @@ import postgresAdapter from '@/oidc/adapter';
 import { fromKeyLike } from 'jose/jwk/from_key_like';
 import { getEnv } from '@/utils/env';
 import { findUserById } from '@/queries/user';
-import { signInRoute } from '@/consts';
+import { routes } from '@/consts';
 
 export default async function initOidc(app: Koa, port: number): Promise<Provider> {
   const privateKey = crypto.createPrivateKey(
     Buffer.from(getEnv('OIDC_PROVIDER_PRIVATE_KEY_BASE64'), 'base64')
   );
   const keys = [await fromKeyLike(privateKey)];
+  const cookieConfig = Object.freeze({
+    sameSite: 'lax',
+    path: '/',
+    signed: true,
+  } as const);
   const oidc = new Provider(`http://localhost:${port}/oidc`, {
     adapter: postgresAdapter,
     renderError: (ctx, out, error) => {
-      console.log(error);
+      console.log('OIDC error', error);
     },
     cookies: {
       // V2: Rotate this when necessary
       // https://github.com/panva/node-oidc-provider/blob/main/docs/README.md#cookieskeys
       keys: ['LOGTOSEKRIT1'],
+      long: cookieConfig,
+      short: cookieConfig,
     },
     jwks: {
       keys,
@@ -41,7 +48,16 @@ export default async function initOidc(app: Koa, port: number): Promise<Provider
       devInteractions: { enabled: false },
     },
     interactions: {
-      url: (_) => signInRoute,
+      url: (_, interaction) => {
+        switch (interaction.prompt.name) {
+          case 'login':
+            return routes.signIn.credentials;
+          case 'consent':
+            return routes.signIn.consent;
+          default:
+            throw new Error(`Prompt not supported: ${interaction.prompt.name}`);
+        }
+      },
     },
     clientBasedCORS: (_, origin) => {
       console.log('origin', origin);
