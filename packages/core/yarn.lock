@@ -396,10 +396,10 @@
     lodash.orderby "^4.6.0"
     lodash.pick "^4.4.0"
 
-"@logto/schemas@^1.0.6":
-  version "1.0.6"
-  resolved "https://registry.yarnpkg.com/@logto/schemas/-/schemas-1.0.6.tgz#ef72c883b29d698a0d5b1075eee0a0de8ab80191"
-  integrity sha512-rQncFIl4cs3kZfXUTC6nrvDA1sdTlSn7ibQoZ0sjuXalqw6iGhpkQ/iQUYibkJMASc2KOtndMd47FwnQGISNUQ==
+"@logto/schemas@^1.1.0-rc.0":
+  version "1.1.0-rc.0"
+  resolved "https://registry.yarnpkg.com/@logto/schemas/-/schemas-1.1.0-rc.0.tgz#e7d07cc8b6894c74a37fe62daa5895245c1613d6"
+  integrity sha512-Oh+ok67kcFm9sAESBR6ehVYJ3a+gBMwrsJz3YoIFXV6giTPr7q0L3Q/pkoSOusX/4jyNyIoKo3x5HI9yr4ewoA==
 
 "@mrmlnc/readdir-enhanced@^2.2.1":
   version "2.2.1"
