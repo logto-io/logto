@@ -4,15 +4,20 @@ export enum GuardErrorCode {
   InvalidInput = 'guard.invalid_input',
 }
 
+export enum OidcErrorCode {
+  Aborted = 'oidc.aborted',
+}
+
 export enum RegisterErrorCode {
   UsernameExists = 'register.username_exists',
 }
 
-export type RequestErrorCode = GuardErrorCode | RegisterErrorCode;
+export type RequestErrorCode = GuardErrorCode | OidcErrorCode | RegisterErrorCode;
 
 const requestErrorMessage: Record<RequestErrorCode, string> = {
-  [RegisterErrorCode.UsernameExists]: 'The username already exists.',
   [GuardErrorCode.InvalidInput]: 'The request input is invalid.',
+  [OidcErrorCode.Aborted]: 'The end-user aborted interaction.',
+  [RegisterErrorCode.UsernameExists]: 'The username already exists.',
 };
 
 export type RequestErrorMetadata = {
