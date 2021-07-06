@@ -1,3 +1,5 @@
+import pick from 'lodash.pick';
+
 export enum GuardErrorCode {
   InvalidInput = 'guard.invalid_input',
 }
@@ -18,13 +20,13 @@ export type RequestErrorMetadata = {
   status?: number;
 };
 
-export type RequestErrorBody = { message: string; data: unknown };
+export type RequestErrorBody = { message: string; data: unknown; code: string };
 
 export default class RequestError extends Error {
   code: RequestErrorCode;
   status: number;
   expose: boolean;
-  body: RequestErrorBody;
+  data: unknown;
 
   constructor(input: RequestErrorMetadata | RequestErrorCode, data?: unknown) {
     const { code, status = 400 } = typeof input === 'string' ? { code: input } : input;
@@ -35,6 +37,10 @@ export default class RequestError extends Error {
     this.expose = true;
     this.code = code;
     this.status = status;
-    this.body = { message, data };
+    this.data = data;
+  }
+
+  get body(): RequestErrorBody {
+    return pick(this, 'message', 'code', 'data');
   }
 }
