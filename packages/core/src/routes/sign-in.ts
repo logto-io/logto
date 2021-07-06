@@ -6,6 +6,7 @@ import { findUserById } from '@/queries/user';
 import { Provider } from 'oidc-provider';
 import { conditional } from '@logto/essentials';
 import koaGuard from '@/middleware/koa-guard';
+import { OidcErrorCode } from '@/errors/RequestError';
 
 export default function createSignInRoutes(provider: Provider) {
   const router = new Router();
@@ -79,6 +80,14 @@ export default function createSignInRoutes(provider: Provider) {
       { consent: { grantId: finalGrantId } },
       { mergeWithLastSubmission: true }
     );
+    ctx.body = { redirectTo };
+  });
+
+  router.post('/sign-in/abort', async (ctx) => {
+    await provider.interactionDetails(ctx.req, ctx.res);
+    const redirectTo = await provider.interactionResult(ctx.req, ctx.res, {
+      error: OidcErrorCode.Aborted,
+    });
     ctx.body = { redirectTo };
   });
 
