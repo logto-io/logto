@@ -388,10 +388,10 @@
   dependencies:
     vary "^1.1.2"
 
-"@logto/essentials@^1.0.5":
-  version "1.0.5"
-  resolved "https://registry.yarnpkg.com/@logto/essentials/-/essentials-1.0.5.tgz#edc1a376cf82e8829adcf26e8b98db1235cfbfcd"
-  integrity sha512-zft8VodNOtkhyyQTHiOlksk6UonQBY68dON4cQaUOlpN5JS9z5/zchi4I0j+XB6EeQ7l8ZtVXct2VZBp8m03kw==
+"@logto/essentials@^1.0.7":
+  version "1.0.7"
+  resolved "https://registry.yarnpkg.com/@logto/essentials/-/essentials-1.0.7.tgz#17d06000949d6bfe02fe18fbeb1d2610f120c805"
+  integrity sha512-fwTrqCivq+7aqh3IgXfkdMbeoFmV5omVhM67/8jcZMV6/NcjTU2AiKkvWDPr/HoFH13kdjfArurE8gnRKPUanA==
   dependencies:
     lodash.orderby "^4.6.0"
     lodash.pick "^4.4.0"
@@ -590,7 +590,7 @@
   dependencies:
     "@types/node" "*"
 
-"@types/koa-compose@*":
+"@types/koa-compose@*", "@types/koa-compose@^3.2.5":
   version "3.2.5"
   resolved "https://registry.yarnpkg.com/@types/koa-compose/-/koa-compose-3.2.5.tgz#85eb2e80ac50be95f37ccf8c407c09bbe3468e9d"
   integrity sha512-B8nG/OoE1ORZqCkBVsup/AKcvjdgoHnfi4pZMn5UwAPCbhk/96xyv284eBYW8JlQbQ7zDmnpFr68I/40mFoIBQ==
@@ -2401,7 +2401,7 @@ for-in@^1.0.2:
   resolved "https://registry.yarnpkg.com/for-in/-/for-in-1.0.2.tgz#81068d295a8142ec0ac726c6e2200c30fb6d5e80"
   integrity sha1-gQaNKVqBQuwKxybG4iAMMPttXoA=
 
-formidable@^1.1.1:
+formidable@^1.1.1, formidable@^1.2.2:
   version "1.2.2"
   resolved "https://registry.yarnpkg.com/formidable/-/formidable-1.2.2.tgz#bf69aea2972982675f00865342b982986f6b8dd9"
   integrity sha512-V8gLm+41I/8kguQ4/o1D3RIHRmhYFG4pnNyonvua+40rqcEmT4+V71yaZ3B457xbbgCsCfjSPi65u/W6vK1U5Q==
