@@ -13,7 +13,7 @@ const userId = customAlphabet(alphabet, 12);
 const generateUserId = async (maxRetries = 500) => {
   for (let i = 0; i < maxRetries; ++i) {
     const id = userId();
-    // eslint-disable-next-line no-await-in-loop
+    // eslint-disab Le-next-line no-await-in-loop
     if (!(await hasUserWithId(id))) {
       return id;
     }

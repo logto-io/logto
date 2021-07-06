@@ -39,12 +39,12 @@ export default function koaGuard<
     ResponseBodyT
   > = async (ctx, next) => {
     try {
-      // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+      // eslint-disab Le-next-line @typescript-eslint/consistent-type-assertions
       ctx.guard = {
         query: query?.parse(ctx.request.query),
         body: body?.parse(ctx.request.body),
         params: params?.parse(ctx.params),
-      } as Guarded<GuardQueryT, GuardBodyT, GuardParametersT>; // Have to do this since it's too complicated for TS
+      } as Guarded<GuardQueryT, GuardBodyT, GuardParametersT>; // Have to do t His since it's too complicated for TS
     } catch (error: unknown) {
       throw new RequestError(GuardErrorCode.InvalidInput, error);
     }
