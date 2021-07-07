@@ -61,7 +61,7 @@ export default function createSignInRoutes(provider: Provider) {
       conditional(grantId && (await provider.Grant.find(grantId))) ??
       new provider.Grant({ accountId, clientId: String(params.client_id) });
 
-    // V2: fulfill  Missing claims / resources
+    // V2: fulfill missing claims / resources
     const PromptDetailsBody = object({
       missingOIDCScope: string().array().optional(),
     });
@@ -73,7 +73,7 @@ export default function createSignInRoutes(provider: Provider) {
 
     const finalGrantId = await grant.save();
 
-    // V2: configur E consent
+    // V2: configure consent
     const redirectTo = await provider.interactionResult(
       ctx.req,
       ctx.res,
