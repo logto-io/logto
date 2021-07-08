@@ -232,10 +232,10 @@
     minimatch "^3.0.4"
     strip-json-comments "^3.1.1"
 
-"@logto/essentials@^1.0.5":
-  version "1.0.5"
-  resolved "https://registry.yarnpkg.com/@logto/essentials/-/essentials-1.0.5.tgz#edc1a376cf82e8829adcf26e8b98db1235cfbfcd"
-  integrity sha512-zft8VodNOtkhyyQTHiOlksk6UonQBY68dON4cQaUOlpN5JS9z5/zchi4I0j+XB6EeQ7l8ZtVXct2VZBp8m03kw==
+"@logto/essentials@^1.1.0-rc.0":
+  version "1.1.0-rc.0"
+  resolved "https://registry.yarnpkg.com/@logto/essentials/-/essentials-1.1.0-rc.0.tgz#99932adac34815b4b5add7cb9c4990656d327442"
+  integrity sha512-OqMxjdjc9o+pjrTvTls8ZHVYoeF6BddVO3D9KQ67+pfsUbzWARlpc9JbhIyqColGbDjVZAXfTfd7o+b3Dfqxkg==
   dependencies:
     lodash.orderby "^4.6.0"
     lodash.pick "^4.4.0"
