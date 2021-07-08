@@ -15,11 +15,11 @@
     "prepare": "yarn build"
   },
   "engines": {
-    "node": "14",
-    "yarn": "1"
+    "node": ">=14.15.0",
+    "yarn": "^1.22.10"
   },
   "devDependencies": {
-    "@logto/essentials": "^1.0.5",
+    "@logto/essentials": "^1.1.0-rc.0",
     "@types/lodash.uniq": "^4.5.6",
     "@types/node": "14",
     "@types/pluralize": "^0.0.29",
