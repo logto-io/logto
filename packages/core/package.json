@@ -1,6 +1,6 @@
 {
   "name": "logto",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "The open source identity solution.",
   "main": "build/index.js",
   "author": "Logto",
@@ -13,8 +13,8 @@
     "prepare": "husky install"
   },
   "dependencies": {
-    "@logto/essentials": "^1.0.7",
-    "@logto/schemas": "^1.1.0-rc.0",
+    "@logto/essentials": "^1.1.0-rc.0",
+    "@logto/schemas": "^1.1.0-rc.1",
     "dayjs": "^1.10.5",
     "decamelize": "^5.0.0",
     "dotenv": "^10.0.0",
@@ -52,8 +52,8 @@
     "xo": "0.39.1"
   },
   "engines": {
-    "node": "14",
-    "yarn": "1"
+    "node": ">=14.15.0",
+    "yarn": "^1.22.10"
   },
   "_moduleAliases": {
     "@": "./build"

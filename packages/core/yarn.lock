@@ -388,18 +388,18 @@
   dependencies:
     vary "^1.1.2"
 
-"@logto/essentials@^1.0.7":
-  version "1.0.7"
-  resolved "https://registry.yarnpkg.com/@logto/essentials/-/essentials-1.0.7.tgz#17d06000949d6bfe02fe18fbeb1d2610f120c805"
-  integrity sha512-fwTrqCivq+7aqh3IgXfkdMbeoFmV5omVhM67/8jcZMV6/NcjTU2AiKkvWDPr/HoFH13kdjfArurE8gnRKPUanA==
+"@logto/essentials@^1.1.0-rc.0":
+  version "1.1.0-rc.0"
+  resolved "https://registry.yarnpkg.com/@logto/essentials/-/essentials-1.1.0-rc.0.tgz#99932adac34815b4b5add7cb9c4990656d327442"
+  integrity sha512-OqMxjdjc9o+pjrTvTls8ZHVYoeF6BddVO3D9KQ67+pfsUbzWARlpc9JbhIyqColGbDjVZAXfTfd7o+b3Dfqxkg==
   dependencies:
     lodash.orderby "^4.6.0"
     lodash.pick "^4.4.0"
 
-"@logto/schemas@^1.1.0-rc.0":
-  version "1.1.0-rc.0"
-  resolved "https://registry.yarnpkg.com/@logto/schemas/-/schemas-1.1.0-rc.0.tgz#e7d07cc8b6894c74a37fe62daa5895245c1613d6"
-  integrity sha512-Oh+ok67kcFm9sAESBR6ehVYJ3a+gBMwrsJz3YoIFXV6giTPr7q0L3Q/pkoSOusX/4jyNyIoKo3x5HI9yr4ewoA==
+"@logto/schemas@^1.1.0-rc.1":
+  version "1.1.0-rc.1"
+  resolved "https://registry.yarnpkg.com/@logto/schemas/-/schemas-1.1.0-rc.1.tgz#7848d35070153111bd7701727b31f330f45c7aba"
+  integrity sha512-h5HOfPvOgM9wvOPpF/LMDU1f2ZseuOXKKlbAy5NoujDSjUY3HG8mmVwcUffb7f27oqvA/cqSkHfe8k6vVswJfA==
 
 "@mrmlnc/readdir-enhanced@^2.2.1":
   version "2.2.1"
