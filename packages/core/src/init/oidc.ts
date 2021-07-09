@@ -7,9 +7,9 @@ import postgresAdapter from '@/oidc/adapter';
 import { fromKeyLike } from 'jose/jwk/from_key_like';
 import { getEnv } from '@/utils/env';
 import { findUserById } from '@/queries/user';
-import { routes } from '@/consts';
+import { oidcIssuer, routes } from '@/consts';
 
-export default async function initOidc(app: Koa, port: number): Promise<Provider> {
+export default async function initOidc(app: Koa): Promise<Provider> {
   const privateKey = crypto.createPrivateKey(
     Buffer.from(getEnv('OIDC_PROVIDER_PRIVATE_KEY_BASE64'), 'base64')
   );
@@ -19,7 +19,7 @@ export default async function initOidc(app: Koa, port: number): Promise<Provider
     path: '/',
     signed: true,
   } as const);
-  const oidc = new Provider(`http://localhost:${port}/oidc`, {
+  const oidc = new Provider(oidcIssuer, {
     adapter: postgresAdapter,
     renderError: (ctx, out, error) => {
       console.log('OIDC error', error);
