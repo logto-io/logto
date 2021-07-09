@@ -4,12 +4,7 @@ Logto is an open-source identity solution. This repo contains the core service.
 
 ## Get Started
 
-Create `.env` under project root with the following vars:
-
-```env
-DB_URL=postgres://your-postgres-db-url
-OIDC_PROVIDER_PRIVATE_KEY_BASE64=private-key-for-oidc-provider-base64-encoded
-```
+Copy proper `.env` to project root. (TBD: design the config process)
 
 ```bash
 yarn && yarn dev
