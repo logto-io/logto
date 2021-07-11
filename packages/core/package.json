@@ -8,7 +8,7 @@
   "private": true,
   "scripts": {
     "build": "tsc",
-    "lint": "eslint --format pretty \"src/**\"",
+    "lint": "eslint --format pretty --ext .ts src",
     "dev": "tsc-watch --onSuccess \"node ./build/index.js\"",
     "prepare": "husky install"
   },
