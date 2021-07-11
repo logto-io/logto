@@ -1,6 +1,8 @@
-import 'module-alias/register';
+/* eslint-disable import/first */
+import 'module-alias/register.js';
 
 import dotenv from 'dotenv';
+
 dotenv.config();
 
 import Koa from 'koa';
