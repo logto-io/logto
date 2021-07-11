@@ -21,5 +21,6 @@ yarn-error.log*
 
 # misc
 cache
+.*cache
 .DS_Store
 *.env
