@@ -22,7 +22,7 @@ export const encryptPassword = (
     'Unsupported password encryption method'
   );
 
-  const sum = [...id].reduce((acc, current) => acc + current.charCodeAt(0), 0);
+  const sum = [...id].reduce((accumulator, current) => accumulator + current.charCodeAt(0), 0);
   const pepper = peppers[sum % peppers.length];
 
   assert(pepper, 'Password pepper not found');
