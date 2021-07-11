@@ -1,3 +1,3 @@
-# React Boilerplate
+# @logto/ui
 
-TypeScript React + SCSS Modules
+The core register / sign in experience for end-users.

@@ -1,0 +1,42 @@
+.universal {
+  // Color
+  --color-gradient: linear-gradient(12.07deg, #3c4ce3 8.81%, #717ce0 93.49%);
+  --color-button-background: #3c4ce3;
+  --color-button-background-disabled: #626fe8;
+  --color-button-text: #f5f5f5;
+  --color-button-text-disabled: #eee;
+  --color-error: #ff6b66;
+
+  // Shadow
+  --shadow-button: 2px 2px 8px rgb(60 76 227 / 25%);
+}
+
+.dark {
+  // Color
+  --color-heading: #f3f6f9;
+  --color-body: #dadae0;
+  --color-secondary: #b3b7ba;
+  --color-placeholder: #888;
+  --color-control-background: #45484a;
+  --color-control-background-disabled: #65686a;
+  --color-background: #101419;
+
+  // Shadow
+  --shadow-card: 2px 2px 24px rgb(59 61 63 / 25%);
+  --shadow-control: 1px 1px 2px rgb(221 221 221 / 25%);
+}
+
+.light {
+  // Color
+  --color-heading: #333;
+  --color-body: #555;
+  --color-secondary: #888;
+  --color-placeholder: #aaa;
+  --color-control-background: #f5f8fa;
+  --color-control-background-disabled: #eaeaea;
+  --color-background: #fdfdff;
+
+  // Shadow
+  --shadow-card: 2px 2px 24px rgb(187 189 191 / 20%);
+  --shadow-control: 1px 1px 2px rgb(221 221 221 / 25%);
+}
