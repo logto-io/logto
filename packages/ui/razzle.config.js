@@ -8,6 +8,7 @@ module.exports = {
   },
   plugins: ["scss"],
   modifyWebpackConfig: ({ webpackConfig }) => {
+    /** @type {import('webpack').Configuration} **/
     const config = { ...webpackConfig };
 
     config.resolve.alias = {
