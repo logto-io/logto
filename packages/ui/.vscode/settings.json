@@ -5,5 +5,8 @@
     "editor.codeActionsOnSave": {
       "source.fixAll.stylelint": true
     }
-  }
+  },
+  "cssVariables.lookupFiles": [
+    "./src/components/AppContent/index.module.scss"
+  ]
 }

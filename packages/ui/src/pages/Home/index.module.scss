@@ -1,5 +1,11 @@
-@use '@/scss/underscore' as _;
+@use '/src/scss/underscore' as _;
 
 .wrapper {
+  text-align: center;
   padding: _.unit(5);
+}
+
+.title {
+  font: var(--font-headline);
+  color: var(--color-heading);
 }
