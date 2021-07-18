@@ -1,11 +1,18 @@
 @use '/src/scss/underscore' as _;
 
 .wrapper {
-  text-align: center;
-  padding: _.unit(5);
-}
+  padding: _.unit(8);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 
-.title {
-  font: var(--font-headline);
-  color: var(--color-heading);
+  .title {
+    font: var(--font-heading-1);
+    color: var(--color-heading);
+  }
+
+  > input {
+    align-self: stretch;
+    margin: _.unit(1.5) 0;
+  }
 }
