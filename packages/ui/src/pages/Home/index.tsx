@@ -1,14 +1,18 @@
 import Button from '@/components/Button';
 import Input from '@/components/Input';
+import MessageBox from '@/components/MessageBox';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import styles from './index.module.scss';
+
+export type PageState = 'idle' | 'loading' | 'error';
 
 const Home = () => {
   const { t } = useTranslation();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+  const [pageState, setPageState] = useState<PageState>('idle');
+  const isLoading = pageState === 'loading';
 
   return (
     <form className={styles.wrapper}>
@@ -28,11 +32,14 @@ const Home = () => {
         value={password}
         onChange={setPassword}
       />
+      {pageState === 'error' && (
+        <MessageBox className={styles.box}>{t('sign-in.error')}</MessageBox>
+      )}
       <Button
         isDisabled={isLoading}
         value={isLoading ? t('sign-in.loading') : t('sign-in')}
         onClick={() => {
-          setIsLoading(true);
+          setPageState('loading');
         }}
       />
     </form>

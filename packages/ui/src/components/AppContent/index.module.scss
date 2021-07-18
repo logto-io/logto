@@ -17,6 +17,8 @@
   --color-button-text: #f5f5f5;
   --color-button-text-disabled: #eee;
   --color-error: #ff6b66;
+  --color-error-background: #{rgba(#ff6b66, 0.15)};
+  --color-error-border: #{rgba(#ff6b66, 0.35)};
 
   /* Shadow */
   --shadow-button: 2px 2px 8px rgb(60 76 227 / 25%);
