@@ -10,8 +10,14 @@
   background: var(--color-control-background);
   color: var(--color-heading);
   font: var(--font-heading-3);
+  transition: var(--transition-default-control);
 
   &::placeholder {
     color: var(--color-placeholder);
+  }
+
+  &:disabled {
+    background: var(--color-control-background-disabled);
+    color: var(--color-secondary);
   }
 }

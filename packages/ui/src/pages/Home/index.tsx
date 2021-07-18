@@ -13,15 +13,16 @@ const Home = () => {
   return (
     <form className={styles.wrapper}>
       <div className={styles.title}>登录 Logto</div>
-
       <Input
         autoComplete="username"
+        isDisabled={isLoading}
         placeholder={t('sign-in.username')}
         value={username}
         onChange={setUsername}
       />
       <Input
         autoComplete="current-password"
+        isDisabled={isLoading}
         placeholder={t('sign-in.password')}
         type="password"
         value={password}

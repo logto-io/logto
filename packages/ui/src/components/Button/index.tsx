@@ -9,17 +9,14 @@ export type Props = {
   onClick?: React.MouseEventHandler;
 };
 
-const Button = ({ isDisabled = false, className, value, onClick }: Props) => {
+const Button = ({ isDisabled, className, value, onClick }: Props) => {
   return (
     <input
-      className={classNames(styles.button, isDisabled && styles.disabled, className)}
+      disabled={isDisabled}
+      className={classNames(styles.button, className)}
       type="button"
       value={value}
-      onClick={(event) => {
-        if (!isDisabled) {
-          onClick?.(event);
-        }
-      }}
+      onClick={onClick}
     />
   );
 };
