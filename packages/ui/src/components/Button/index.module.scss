@@ -11,15 +11,15 @@
   color: var(--color-button-text);
   font: var(--font-heading-3);
   box-shadow: var(--shadow-button);
-  transition: background 0.2s ease-in-out, color 0.2s ease-in-out;
+  transition: var(--transition-default-control);
   cursor: pointer;
 
-  &:not(.disabled):hover {
-    background: var(--color-button-background-hover);
-  }
-
-  &.disabled {
+  &:disabled {
     background: var(--color-button-background-disabled);
     color: var(--color-button-text-disabled);
+  }
+
+  &:not(:disabled):hover {
+    background: var(--color-button-background-hover);
   }
 }
