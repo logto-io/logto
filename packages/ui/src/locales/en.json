@@ -2,6 +2,7 @@
   "translation": {
     "sign-in": "Sign In",
     "sign-in.loading": "Signing in...",
+    "sign-in.error": "Username or password invalid.",
     "sign-in.username": "Username",
     "sign-in.password": "Password"
   }

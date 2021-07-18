@@ -14,12 +14,17 @@
     margin-bottom: _.unit(9);
   }
 
+  .box {
+    margin-top: _.unit(3);
+    margin-bottom: _.unit(-6);
+  }
+
   > input:not([type='button']) {
     align-self: stretch;
     margin-top: _.unit(3);
   }
 
   > input[type='button'] {
-    margin-top: _.unit(6);
+    margin-top: _.unit(12);
   }
 }
