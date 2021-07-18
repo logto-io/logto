@@ -1,3 +1,4 @@
+import Button from '@/components/Button';
 import Input from '@/components/Input';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -7,18 +8,33 @@ const Home = () => {
   const { t } = useTranslation();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   return (
-    <div className={styles.wrapper}>
+    <form className={styles.wrapper}>
       <div className={styles.title}>登录 Logto</div>
-      <Input placeholder={t('sign-in.username')} value={username} onChange={setUsername} />
+
       <Input
+        autoComplete="username"
+        placeholder={t('sign-in.username')}
+        value={username}
+        onChange={setUsername}
+      />
+      <Input
+        autoComplete="current-password"
         placeholder={t('sign-in.password')}
         type="password"
         value={password}
         onChange={setPassword}
       />
-    </div>
+      <Button
+        isDisabled={isLoading}
+        value={isLoading ? t('sign-in.loading') : t('sign-in')}
+        onClick={() => {
+          setIsLoading(true);
+        }}
+      />
+    </form>
   );
 };
 

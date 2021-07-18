@@ -5,14 +5,21 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
+  height: 100%;
 
   .title {
     font: var(--font-heading-1);
     color: var(--color-heading);
+    margin-bottom: _.unit(9);
   }
 
-  > input {
+  > input:not([type='button']) {
     align-self: stretch;
-    margin: _.unit(1.5) 0;
+    margin-top: _.unit(3);
+  }
+
+  > input[type='button'] {
+    margin-top: _.unit(6);
   }
 }

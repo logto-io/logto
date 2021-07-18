@@ -1,5 +1,7 @@
 {
   "translation": {
+    "sign-in": "Sign In",
+    "sign-in.loading": "Signing in...",
     "sign-in.username": "Username",
     "sign-in.password": "Password"
   }

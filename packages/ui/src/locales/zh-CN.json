@@ -1,5 +1,7 @@
 {
   "translation": {
+    "sign-in": "登录",
+    "sign-in.loading": "登录中...",
     "sign-in.username": "用户名",
     "sign-in.password": "密码"
   }
