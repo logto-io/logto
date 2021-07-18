@@ -1,0 +1,19 @@
+@use '/src/scss/underscore' as _;
+
+.input {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: _.unit(3) _.unit(5);
+  border-radius: _.unit(2);
+  background: var(--color-control-background);
+  color: var(--color-heading);
+  font: var(--font-heading-3);
+  border: none;
+  outline: none;
+
+  &::placeholder {
+    color: var(--color-placeholder);
+  }
+}
