@@ -4,6 +4,7 @@ import styles from './index.module.scss';
 
 export type Props = {
   autoComplete?: AutoCompleteType;
+  isDisabled?: boolean;
   className?: string;
   placeholder?: string;
   type?: InputType;
@@ -11,9 +12,18 @@ export type Props = {
   onChange: (value: string) => void;
 };
 
-const Input = ({ autoComplete, className, placeholder, type = 'text', value, onChange }: Props) => {
+const Input = ({
+  autoComplete,
+  isDisabled,
+  className,
+  placeholder,
+  type = 'text',
+  value,
+  onChange,
+}: Props) => {
   return (
     <input
+      disabled={isDisabled}
       className={classNames(styles.input, className)}
       placeholder={placeholder}
       type={type}

@@ -20,6 +20,10 @@
 
   /* Shadow */
   --shadow-button: 2px 2px 8px rgb(60 76 227 / 25%);
+
+  /* Transition */
+  --transition-default-function: 0.2s ease-in-out;
+  --transition-default-control: background var(--transition-default-function), color var(--transition-default-function);
 }
 
 .dark {
