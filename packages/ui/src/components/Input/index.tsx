@@ -3,6 +3,7 @@ import React from 'react';
 import styles from './index.module.scss';
 
 export type Props = {
+  autoComplete?: AutoCompleteType;
   className?: string;
   placeholder?: string;
   type?: InputType;
@@ -10,13 +11,14 @@ export type Props = {
   onChange: (value: string) => void;
 };
 
-const Input = ({ className, placeholder, type = 'text', value, onChange }: Props) => {
+const Input = ({ autoComplete, className, placeholder, type = 'text', value, onChange }: Props) => {
   return (
     <input
       className={classNames(styles.input, className)}
       placeholder={placeholder}
       type={type}
       value={value}
+      autoComplete={autoComplete}
       onChange={({ target: { value } }) => {
         onChange(value);
       }}

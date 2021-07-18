@@ -1,0 +1,25 @@
+@use '/src/scss/underscore' as _;
+
+.button {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: _.unit(3) _.unit(8);
+  border-radius: 12px;
+  background: var(--color-button-background);
+  color: var(--color-button-text);
+  font: var(--font-heading-3);
+  box-shadow: var(--shadow-button);
+  transition: background 0.2s ease-in-out, color 0.2s ease-in-out;
+  cursor: pointer;
+
+  &:not(.disabled):hover {
+    background: var(--color-button-background-hover);
+  }
+
+  &.disabled {
+    background: var(--color-button-background-disabled);
+    color: var(--color-button-text-disabled);
+  }
+}
