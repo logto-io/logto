@@ -9,7 +9,7 @@
   border-radius: _.unit(2);
   background: var(--color-control-background);
   color: var(--color-heading);
-  font: var(--font-heading-3);
+  font: var(--font-control);
   transition: var(--transition-default-control);
 
   &::placeholder {
