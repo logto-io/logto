@@ -605,7 +605,7 @@
   dependencies:
     "@types/node" "*"
 
-"@types/koa-compose@*", "@types/koa-compose@^3.2.5":
+"@types/koa-compose@*":
   version "3.2.5"
   resolved "https://registry.yarnpkg.com/@types/koa-compose/-/koa-compose-3.2.5.tgz#85eb2e80ac50be95f37ccf8c407c09bbe3468e9d"
   integrity sha512-B8nG/OoE1ORZqCkBVsup/AKcvjdgoHnfi4pZMn5UwAPCbhk/96xyv284eBYW8JlQbQ7zDmnpFr68I/40mFoIBQ==
