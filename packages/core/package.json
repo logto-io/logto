@@ -22,7 +22,6 @@
     "got": "^11.8.2",
     "koa": "^2.13.1",
     "koa-body": "^4.2.0",
-    "koa-compose": "^4.1.0",
     "koa-logger": "^3.2.1",
     "koa-mount": "^4.0.0",
     "koa-proxies": "^0.12.1",
@@ -41,7 +40,6 @@
     "@logto/eslint-config": "^0.1.0-rc.6",
     "@logto/ts-config": "^0.1.0-rc.6",
     "@types/koa": "^2.13.3",
-    "@types/koa-compose": "^3.2.5",
     "@types/koa-logger": "^3.1.1",
     "@types/koa-mount": "^4.0.0",
     "@types/koa-router": "^7.4.2",
@@ -63,6 +61,8 @@
   "_moduleAliases": {
     "@": "./build"
   },
-  "eslintConfig": { "extends": "@logto" },
+  "eslintConfig": {
+    "extends": "@logto"
+  },
   "prettier": "@logto/eslint-config/.prettierrc"
 }
