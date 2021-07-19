@@ -1,7 +1,6 @@
 import RequestError, { GuardErrorCode } from '@/errors/RequestError';
 import { Middleware } from 'koa';
 import koaBody from 'koa-body';
-import compose from 'koa-compose';
 import { IRouterParamContext } from 'koa-router';
 import { ZodType } from 'zod';
 
@@ -17,6 +16,24 @@ export type Guarded<QueryT, BodyT, ParametersT> = {
   params: ParametersT;
 };
 
+export type WithGuarded<
+  ContextT extends IRouterParamContext,
+  GuardQueryT,
+  GuardBodyT,
+  GuardParametersT
+> = ContextT & {
+  guard: Guarded<GuardQueryT, GuardBodyT, GuardParametersT>;
+};
+
+export type WithGuardConfig<
+  Type,
+  GuardQueryT = unknown,
+  GuardBodyT = unknown,
+  GuardParametersT = unknown
+> = Type & {
+  config: GuardConfig<GuardQueryT, GuardBodyT, GuardParametersT>;
+};
+
 export default function koaGuard<
   StateT,
   ContextT extends IRouterParamContext,
@@ -30,12 +47,12 @@ export default function koaGuard<
   params,
 }: GuardConfig<GuardQueryT, GuardBodyT, GuardParametersT>): Middleware<
   StateT,
-  ContextT & { guard: Guarded<GuardQueryT, GuardBodyT, GuardParametersT> },
+  WithGuarded<ContextT, GuardQueryT, GuardBodyT, GuardParametersT>,
   ResponseBodyT
 > {
   const guard: Middleware<
     StateT,
-    ContextT & { guard: Guarded<GuardQueryT, GuardBodyT, GuardParametersT> },
+    WithGuarded<ContextT, GuardQueryT, GuardBodyT, GuardParametersT>,
     ResponseBodyT
   > = async (ctx, next) => {
     try {
@@ -52,5 +69,24 @@ export default function koaGuard<
     await next();
   };
 
-  return body ? compose([koaBody(), guard]) : guard;
+  const guardMiddleware: WithGuardConfig<
+    Middleware<
+      StateT,
+      WithGuarded<ContextT, GuardQueryT, GuardBodyT, GuardParametersT>,
+      ResponseBodyT
+    >
+  > = async function (ctx, next) {
+    if (body) {
+      await koaBody<StateT, ContextT>()(ctx, async () => {
+        await guard(ctx, next);
+      });
+      return;
+    }
+
+    await guard(ctx, next);
+  };
+
+  guardMiddleware.config = { query, body, params };
+
+  return guardMiddleware;
 }
