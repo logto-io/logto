@@ -8,7 +8,7 @@ import { conditional } from '@logto/essentials';
 import koaGuard from '@/middleware/koa-guard';
 import { OidcErrorCode } from '@/errors/RequestError';
 
-export default function createSignInRoutes(provider: Provider) {
+export default function signInRoutes(provider: Provider) {
   const router = new Router();
 
   router.post(

@@ -22,7 +22,7 @@ const generateUserId = async (maxRetries = 500) => {
   throw new Error('Cannot generate user ID in reasonable retries');
 };
 
-export default function createRegisterRoutes() {
+export default function registerRoutes() {
   const router = new Router();
 
   router.post(
