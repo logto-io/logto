@@ -1,10 +1,15 @@
 import { GuardErrorCode } from './collection/guard-errors';
 import { OidcErrorCode } from './collection/oidc-errors';
 import { RegisterErrorCode } from './collection/register-errors';
+import { SwaggerErrorCode } from './collection/swagger-errors';
 
-export { GuardErrorCode, OidcErrorCode, RegisterErrorCode };
+export { GuardErrorCode, OidcErrorCode, SwaggerErrorCode, RegisterErrorCode };
 
-export type RequestErrorCode = GuardErrorCode | OidcErrorCode | RegisterErrorCode;
+export type RequestErrorCode =
+  | GuardErrorCode
+  | OidcErrorCode
+  | RegisterErrorCode
+  | SwaggerErrorCode;
 
 export type RequestErrorMetadata = {
   code: RequestErrorCode;

@@ -1,7 +1,8 @@
 import RequestError, { GuardErrorCode } from '@/errors/RequestError';
+import { has } from '@logto/essentials';
 import { Middleware } from 'koa';
 import koaBody from 'koa-body';
-import { IRouterParamContext } from 'koa-router';
+import { IMiddleware, IRouterParamContext } from 'koa-router';
 import { ZodType } from 'zod';
 
 export type GuardConfig<QueryT, BodyT, ParametersT> = {
@@ -33,6 +34,11 @@ export type WithGuardConfig<
 > = Type & {
   config: GuardConfig<GuardQueryT, GuardBodyT, GuardParametersT>;
 };
+
+export const isGuardMiddleware = <Type extends IMiddleware>(
+  function_: Type
+): function_ is WithGuardConfig<Type> =>
+  function_.name === 'guardMiddleware' && has(function_, 'config');
 
 export default function koaGuard<
   StateT,

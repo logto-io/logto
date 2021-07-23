@@ -7,9 +7,9 @@
   "license": "UNLICENSED",
   "private": true,
   "scripts": {
-    "build": "tsc",
+    "build": "rm -rf build/ && tsc",
     "lint": "eslint --format pretty --ext .ts src",
-    "dev": "tsc-watch --onSuccess \"node ./build/index.js\"",
+    "dev": "rm -rf build/ && tsc-watch --onSuccess \"node ./build/index.js\"",
     "prepare": "husky install"
   },
   "dependencies": {
@@ -50,6 +50,7 @@
     "eslint-formatter-pretty": "^4.1.0",
     "husky": "^6.0.0",
     "lint-staged": "^11.0.0",
+    "openapi-types": "^9.1.0",
     "prettier": "^2.3.2",
     "tsc-watch": "^4.4.0",
     "typescript": "^4.3.5"
