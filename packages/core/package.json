@@ -45,7 +45,7 @@
     "@types/koa-router": "^7.4.2",
     "@types/lodash.pick": "^4.4.6",
     "@types/node": "^16.3.1",
-    "@types/oidc-provider": "^7.4.0",
+    "@types/oidc-provider": "^7.4.1",
     "eslint": "^7.30.0",
     "eslint-formatter-pretty": "^4.1.0",
     "husky": "^6.0.0",
