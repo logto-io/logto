@@ -58,9 +58,5 @@
   "stylelint": {
     "extends": "@logto/eslint-config-react/.stylelintrc"
   },
-  "prettier": "@logto/eslint-config/.prettierrc",
-  "lint-staged": {
-    "*.{ts,tsx}": "eslint --format pretty --cache --fix",
-    "*.scss": "stylelint --fix"
-  }
+  "prettier": "@logto/eslint-config/.prettierrc"
 }
