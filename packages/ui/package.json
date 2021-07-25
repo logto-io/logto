@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "license": "UNLICENSED",
   "scripts": {
+    "precommit": "lint-staged",
     "dev:tsc": "tsc -b -w --preserveWatchOutput",
     "dev:razzle": "razzle start",
     "start": "PORT=5000 concurrently -c \"blue,cyan\" \"yarn:dev:tsc\" -k \"yarn:dev:razzle\"",
@@ -39,6 +40,7 @@
     "eslint": "^7.30.0",
     "eslint-formatter-pretty": "^4.1.0",
     "html-webpack-plugin": "^4.5.2",
+    "lint-staged": "^11.1.1",
     "mini-css-extract-plugin": "^0.9.0",
     "prettier": "^2.3.2",
     "razzle": "^4.0.5",
