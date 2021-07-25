@@ -1,0 +1,40 @@
+name: Core
+
+on:
+  push:
+    branches: [ master ]
+    paths: [ 'packages/core/**' ]
+  pull_request:
+    branches: [ master ]
+    paths: [ 'packages/core/**' ]
+
+jobs:
+  main:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      # https://github.com/actions/cache/blob/main/examples.md#node---yarn
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+
+      - uses: actions/cache@v2
+        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
+      - name: Install packages
+        run: yarn bootstrap
+
+      - name: Lint
+        working-directory: packages/core
+        run: yarn lint
+
+      - name: Build
+        working-directory: packages/core
+        run: yarn build
