@@ -1,5 +1,5 @@
 {
-  "name": "logto",
+  "name": "@logto/core",
   "version": "0.1.0",
   "description": "The open source identity solution.",
   "main": "build/index.js",
