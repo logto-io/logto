@@ -2,6 +2,7 @@
   "name": "@logto/ui",
   "version": "0.1.0",
   "license": "UNLICENSED",
+  "private": true,
   "scripts": {
     "precommit": "lint-staged",
     "dev:tsc": "tsc -b -w --preserveWatchOutput",

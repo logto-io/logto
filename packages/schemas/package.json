@@ -1,6 +1,6 @@
 {
   "name": "@logto/schemas",
-  "version": "1.1.0-rc.1",
+  "version": "0.1.0",
   "main": "lib/index.js",
   "repository": "https://github.com/logto-io/schemas",
   "author": "Logto",
@@ -8,6 +8,7 @@
   "files": [
     "lib"
   ],
+  "private": true,
   "scripts": {
     "generate": "ts-node src/gen/index.ts && eslint --format pretty \"src/db-entries/**\" --fix",
     "build": "yarn generate && rm -rf lib/ && tsc --p tsconfig.build.json",
