@@ -1,6 +1,6 @@
-# Logto Core
+# @logto/core
 
-Logto is an open-source identity solution. This repo contains the core service.
+The core backend service.
 
 ## Get Started
 
