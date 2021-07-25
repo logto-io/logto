@@ -7108,6 +7108,11 @@ known-css-properties@^0.21.0:
   resolved "https://registry.yarnpkg.com/known-css-properties/-/known-css-properties-0.21.0.tgz#15fbd0bbb83447f3ce09d8af247ed47c68ede80d"
   integrity sha512-sZLUnTqimCkvkgRS+kbPlYW5o8q5w1cu+uIisKpEWkj31I8mx8kNG162DwRav8Zirkva6N5uoFsm9kzK4mUXjw==
 
+ky@^0.28.5:
+  version "0.28.5"
+  resolved "https://registry.yarnpkg.com/ky/-/ky-0.28.5.tgz#4b7ada24fb0440c3898406f3a4986abe60ba213e"
+  integrity sha512-O5gg9kF4MeyfSw+YkgPAafOPwEUU6xcdGEJKUJmKpIPbLzk3oxUtY4OdBNekG7mawofzkyZ/ZHuR9ev5uZZdAA==
+
 leven@^3.1.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/leven/-/leven-3.1.0.tgz#77891de834064cccba82ae7842bb6b14a13ed7f2"
