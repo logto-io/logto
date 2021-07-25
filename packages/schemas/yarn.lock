@@ -246,10 +246,10 @@
   resolved "https://registry.yarnpkg.com/@humanwhocodes/object-schema/-/object-schema-1.2.0.tgz#87de7af9c231826fdd68ac7258f77c429e0e5fcf"
   integrity sha512-wdppn25U8z/2yiaT6YGquE6X8sSv7hNMWSXYSSU1jGv/yd6XqjXgTDJ8KP4NgjTXfJ3GbRjeeb8RTV7a/VpM+w==
 
-"@logto/eslint-config@^0.1.0-rc.6":
-  version "0.1.0-rc.6"
-  resolved "https://registry.yarnpkg.com/@logto/eslint-config/-/eslint-config-0.1.0-rc.6.tgz#f72193b43e2b17ef28513f9fdad948654662b187"
-  integrity sha512-/PqlhG//lYxMNAoZXPpe+yvdH0vvdKNPmvugYjK99lIgpM0EUhRWnrHLX02ZFp1nldvcfTn7AtkpvSD2bb6zVg==
+"@logto/eslint-config@^0.1.0-rc.14":
+  version "0.1.0-rc.14"
+  resolved "https://registry.yarnpkg.com/@logto/eslint-config/-/eslint-config-0.1.0-rc.14.tgz#fe358305604b21b31f334d99c0d3d6756406da17"
+  integrity sha512-M/SebidYvn3IcmpSNmreGS7ST3qc/IZpaSexoJavydb81RD+OkqV5MVtAqI7pOyuy7G2XGdPl2hkQePF0KoKzg==
   dependencies:
     "@typescript-eslint/eslint-plugin" "^4.28.2"
     "@typescript-eslint/parser" "^4.28.2"
@@ -272,10 +272,10 @@
     lodash.orderby "^4.6.0"
     lodash.pick "^4.4.0"
 
-"@logto/ts-config@^0.1.0-rc.6":
-  version "0.1.0-rc.6"
-  resolved "https://registry.yarnpkg.com/@logto/ts-config/-/ts-config-0.1.0-rc.6.tgz#d95ead3eace4644a7fbcbb13bfa1b615b9acee8b"
-  integrity sha512-T2TPpIyisYCUqMuR2J7kOhZ1IQ19z1wWFldH6yQThpFmPakytnDU+2UpbOucCR/CBd64aW3KIyqrJSGTOmg3dg==
+"@logto/ts-config@^0.1.0-rc.14":
+  version "0.1.0-rc.14"
+  resolved "https://registry.yarnpkg.com/@logto/ts-config/-/ts-config-0.1.0-rc.14.tgz#3c4cb59d20c6fa3909707704d6c0c225d655965c"
+  integrity sha512-6BUkw181YZMFcb+tMfuKYo9afVfEqj6iHJuQUnZYcLxjmR/YbRwdDIx1w5c1RXwLl57V0igStKndZwe2llUdnQ==
 
 "@nodelib/fs.scandir@2.1.5":
   version "2.1.5"
