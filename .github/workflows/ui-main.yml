@@ -1,10 +1,16 @@
-name: CI
+name: UI Main
 
 on:
   push:
     branches: [ master ]
+    paths: [ 'packages/ui' ]
   pull_request:
     branches: [ master ]
+    paths: [ 'packages/ui' ]
+
+defaults:
+  run:
+    working-directory: packages/ui
 
 jobs:
   main:
