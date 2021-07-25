@@ -7,6 +7,11 @@
     }
   },
   "cssVariables.lookupFiles": [
-    "./src/components/AppContent/index.module.scss"
+    "./packages/ui/src/components/AppContent/index.module.scss"
+  ],
+  "eslint.workingDirectories": [
+    {
+      "pattern": "./packages/*/"
+    }
   ]
 }

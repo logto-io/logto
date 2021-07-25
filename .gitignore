@@ -1,16 +1,16 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
-/node_modules
+node_modules
 /.pnp
 .pnp.js
 
 # testing
-/coverage
+/packages/*/coverage
 
 # production
-/build
-/lib
+/packages/*/build
+/packages/*/lib
 
 # logs
 logs
