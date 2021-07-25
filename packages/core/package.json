@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "@logto/essentials": "^1.1.0-rc.1",
-    "@logto/schemas": "^1.1.0-rc.1",
+    "@logto/schemas": "^0.1.0",
     "dayjs": "^1.10.5",
     "decamelize": "^5.0.0",
     "dotenv": "^10.0.0",
