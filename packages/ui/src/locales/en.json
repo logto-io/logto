@@ -1,9 +1,9 @@
 {
   "translation": {
-    "sign-in": "Sign In",
-    "sign-in.loading": "Signing in...",
-    "sign-in.error": "Username or password invalid.",
-    "sign-in.username": "Username",
-    "sign-in.password": "Password"
+    "sign_in": "Sign In",
+    "sign_in.loading": "Signing in...",
+    "sign_in.error": "Username or password invalid.",
+    "sign_in.username": "Username",
+    "sign_in.password": "Password"
   }
 }
