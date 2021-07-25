@@ -1,12 +1,12 @@
-name: UI Main
+name: UI
 
 on:
   push:
     branches: [ master ]
-    paths: [ 'packages/ui' ]
+    paths: [ 'packages/ui/**' ]
   pull_request:
     branches: [ master ]
-    paths: [ 'packages/ui' ]
+    paths: [ 'packages/ui/**' ]
 
 defaults:
   run:
