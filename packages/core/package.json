@@ -9,8 +9,7 @@
   "scripts": {
     "build": "rm -rf build/ && tsc",
     "lint": "eslint --format pretty --ext .ts src",
-    "dev": "rm -rf build/ && tsc-watch --onSuccess \"node ./build/index.js\"",
-    "prepare": "husky install"
+    "dev": "rm -rf build/ && tsc-watch --onSuccess \"node ./build/index.js\""
   },
   "dependencies": {
     "@logto/essentials": "^1.1.0-rc.1",
@@ -35,8 +34,6 @@
     "zod": "^3.2.0"
   },
   "devDependencies": {
-    "@commitlint/cli": "^12.1.4",
-    "@commitlint/config-conventional": "^12.1.4",
     "@logto/eslint-config": "^0.1.0-rc.6",
     "@logto/ts-config": "^0.1.0-rc.6",
     "@types/koa": "^2.13.3",
@@ -48,8 +45,6 @@
     "@types/oidc-provider": "^7.4.1",
     "eslint": "^7.30.0",
     "eslint-formatter-pretty": "^4.1.0",
-    "husky": "^6.0.0",
-    "lint-staged": "^11.0.0",
     "openapi-types": "^9.1.0",
     "prettier": "^2.3.2",
     "tsc-watch": "^4.4.0",

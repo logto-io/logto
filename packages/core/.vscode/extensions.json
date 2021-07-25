@@ -1,6 +1,0 @@
-{
-  "recommendations": [
-    "mikestead.dotenv",
-    "dbaeumer.vscode-eslint"
-  ]
-}

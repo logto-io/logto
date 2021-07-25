@@ -10,8 +10,7 @@
     "build": "tsc -b && razzle build",
     "lint": "eslint --format pretty --ext .ts --ext .tsx src",
     "stylelint": "stylelint \"src/**/*.scss\"",
-    "test": "razzle test --env=jsdom",
-    "prepare": "husky install"
+    "test": "razzle test --env=jsdom"
   },
   "dependencies": {
     "classnames": "^2.3.1",
@@ -25,8 +24,6 @@
   },
   "devDependencies": {
     "@babel/core": "^7.14.6",
-    "@commitlint/cli": "^12.1.4",
-    "@commitlint/config-conventional": "^12.1.4",
     "@logto/eslint-config": "^0.1.0-rc.10",
     "@logto/eslint-config-react": "^0.1.0-rc.10",
     "@logto/ts-config": "^0.1.0-rc.10",
@@ -42,8 +39,6 @@
     "eslint": "^7.30.0",
     "eslint-formatter-pretty": "^4.1.0",
     "html-webpack-plugin": "^4.5.2",
-    "husky": "^7.0.1",
-    "lint-staged": ">=10",
     "mini-css-extract-plugin": "^0.9.0",
     "prettier": "^2.3.2",
     "razzle": "^4.0.5",
@@ -61,11 +56,6 @@
     "extends": "@logto/eslint-config-react/.stylelintrc"
   },
   "prettier": "@logto/eslint-config/.prettierrc",
-  "commitlint": {
-    "extends": [
-      "@commitlint/config-conventional"
-    ]
-  },
   "lint-staged": {
     "*.{ts,tsx}": "eslint --format pretty --cache --fix",
     "*.scss": "stylelint --fix"
