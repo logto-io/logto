@@ -6,7 +6,7 @@ import { findUserById } from '@/queries/user';
 import { Provider } from 'oidc-provider';
 import { conditional } from '@logto/essentials';
 import koaGuard from '@/middleware/koa-guard';
-import { OidcErrorCode } from '@/errors/RequestError';
+import RequestError, { OidcErrorCode, SignInErrorCode } from '@/errors/RequestError';
 
 export default function signInRoutes(provider: Provider) {
   const router = new Router();
@@ -22,25 +22,38 @@ export default function signInRoutes(provider: Provider) {
       if (name === 'login') {
         const { id, password } = ctx.guard.body;
 
-        assert(id && password, 'Insufficent sign-in info.');
-        const { passwordEncrypted, passwordEncryptionMethod, passwordEncryptionSalt } =
-          await findUserById(id);
+        assert(id && password, new RequestError(SignInErrorCode.InsufficientInfo));
 
-        assert(passwordEncrypted && passwordEncryptionMethod && passwordEncryptionSalt);
-        assert(
-          encryptPassword(id, password, passwordEncryptionSalt, passwordEncryptionMethod) ===
-            passwordEncrypted
-        );
+        try {
+          const { passwordEncrypted, passwordEncryptionMethod, passwordEncryptionSalt } =
+            await findUserById(id);
 
-        const redirectTo = await provider.interactionResult(
-          ctx.req,
-          ctx.res,
-          {
-            login: { accountId: id },
-          },
-          { mergeWithLastSubmission: false }
-        );
-        ctx.body = { redirectTo };
+          assert(
+            passwordEncrypted && passwordEncryptionMethod && passwordEncryptionSalt,
+            new RequestError(SignInErrorCode.InvalidSignInMethod)
+          );
+          assert(
+            encryptPassword(id, password, passwordEncryptionSalt, passwordEncryptionMethod) ===
+              passwordEncrypted,
+            new RequestError(SignInErrorCode.InvalidCredentials)
+          );
+
+          const redirectTo = await provider.interactionResult(
+            ctx.req,
+            ctx.res,
+            {
+              login: { accountId: id },
+            },
+            { mergeWithLastSubmission: false }
+          );
+          ctx.body = { redirectTo };
+        } catch (error: unknown) {
+          if (!(error instanceof RequestError)) {
+            throw new RequestError(SignInErrorCode.InvalidCredentials);
+          }
+
+          throw error;
+        }
       } else if (name === 'consent') {
         ctx.body = { redirectTo: ctx.request.origin + '/sign-in/consent' };
       } else {
