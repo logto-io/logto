@@ -9,7 +9,7 @@
     "dev:razzle": "razzle start",
     "start": "PORT=5000 concurrently -c \"blue,cyan\" \"yarn:dev:tsc\" -k \"yarn:dev:razzle\"",
     "start:prod": "NODE_ENV=production node build/server.js",
-    "build": "tsc -b && razzle build",
+    "build": "tsc -b && razzle build --noninteractive",
     "lint": "eslint --format pretty --ext .ts --ext .tsx src",
     "stylelint": "stylelint \"src/**/*.scss\"",
     "test": "razzle test --env=jsdom"

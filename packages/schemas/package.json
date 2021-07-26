@@ -13,7 +13,7 @@
     "generate": "ts-node src/gen/index.ts && eslint --format pretty \"src/db-entries/**\" --fix",
     "build": "yarn generate && rm -rf lib/ && tsc --p tsconfig.build.json",
     "lint": "eslint --format pretty \"src/**\"",
-    "prepare": "yarn build"
+    "prepack": "yarn build"
   },
   "engines": {
     "node": ">=14.15.0",
