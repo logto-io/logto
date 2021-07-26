@@ -4,7 +4,7 @@
   "scripts": {
     "lerna": "lerna",
     "bootstrap": "lerna bootstrap",
-    "prepare": "husky install"
+    "prepare": "husky install && lerna run --stream prepack"
   },
   "devDependencies": {
     "@commitlint/cli": "^13.1.0",
@@ -12,5 +12,9 @@
     "husky": "^7.0.1",
     "lerna": "^4.0.0",
     "typescript": "^4.3.5"
+  },
+  "workspaces": {
+    "packages": ["packages/*"],
+    "nohoist": ["**/module-alias"]
   }
 }

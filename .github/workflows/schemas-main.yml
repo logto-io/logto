@@ -1,12 +1,12 @@
-name: UI
+name: Schemas
 
 on:
   push:
     branches: [ master ]
-    paths: [ 'packages/ui/**' ]
+    paths: [ 'packages/schemas/**' ]
   pull_request:
     branches: [ master ]
-    paths: [ 'packages/ui/**' ]
+    paths: [ 'packages/schemas/**' ]
 
 jobs:
   main:
@@ -32,9 +32,9 @@ jobs:
         run: yarn
 
       - name: Lint
-        working-directory: packages/ui
-        run: yarn lint && yarn stylelint
+        working-directory: packages/schemas
+        run: yarn lint
 
       - name: Build
-        working-directory: packages/ui
+        working-directory: packages/schemas
         run: yarn build
