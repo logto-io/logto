@@ -28,7 +28,7 @@ const Home = () => {
 
   return (
     <form className={styles.wrapper}>
-      <div className={styles.title}>登录 Logto</div>
+      <div className={styles.title}>Sign in to Logto</div>
       <Input
         autoComplete="username"
         isDisabled={isLoading}

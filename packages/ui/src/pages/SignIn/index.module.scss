@@ -15,11 +15,11 @@
   }
 
   .box {
-    margin-top: _.unit(3);
     margin-bottom: _.unit(-6);
   }
 
-  > input:not([type='button']) {
+  > input:not([type='button']),
+  .box {
     margin-top: _.unit(3);
     width: 100%;
     max-width: 320px;
