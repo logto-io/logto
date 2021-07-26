@@ -10,7 +10,7 @@
     "precommit": "lint-staged",
     "build": "rm -rf build/ && tsc",
     "lint": "eslint --format pretty --ext .ts src",
-    "dev": "rm -rf build/ && tsc-watch --onSuccess \"node ./build/index.js\""
+    "dev": "rm -rf build/ && tsc-watch --preserveWatchOutput --onSuccess \"node ./build/index.js\""
   },
   "dependencies": {
     "@logto/essentials": "^1.1.0-rc.1",
