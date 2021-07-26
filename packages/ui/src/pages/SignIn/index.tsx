@@ -2,6 +2,7 @@ import { signInBasic } from '@/apis/sign-in';
 import Button from '@/components/Button';
 import Input from '@/components/Input';
 import MessageBox from '@/components/MessageBox';
+import TextLink from '@/components/TextLink';
 import React, { FormEventHandler, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import styles from './index.module.scss';
@@ -52,6 +53,9 @@ const Home = () => {
         value={isLoading ? t('sign_in.loading') : t('sign_in')}
         onClick={signIn}
       />
+      <TextLink className={styles.createAccount} href="/register">
+        {t('register.create_account')}
+      </TextLink>
     </form>
   );
 };
