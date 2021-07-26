@@ -5,6 +5,13 @@ import { convertToIdentifiers, insertInto } from '@/database/utils';
 
 const { table, fields } = convertToIdentifiers(Users);
 
+export const findUserByUsername = async (username: string) =>
+  pool.one<UserDBEntry>(sql`
+  select ${sql.join(Object.values(fields), sql`,`)}
+  from ${table}
+  where ${fields.username}=${username}
+`);
+
 export const findUserById = async (id: string) =>
   pool.one<UserDBEntry>(sql`
   select ${sql.join(Object.values(fields), sql`,`)}
