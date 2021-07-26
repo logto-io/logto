@@ -4,7 +4,7 @@
   "scripts": {
     "lerna": "lerna",
     "bootstrap": "lerna bootstrap",
-    "prepare": "husky install"
+    "prepare": "husky install && lerna run --stream prepack"
   },
   "devDependencies": {
     "@commitlint/cli": "^13.1.0",
