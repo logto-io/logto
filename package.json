@@ -17,5 +17,9 @@
   "workspaces": {
     "packages": ["packages/*"],
     "nohoist": ["**/module-alias"]
+  },
+  "engines": {
+    "node": ">=14.15.0",
+    "yarn": "^1.22.10"
   }
 }
