@@ -2,7 +2,7 @@ import assert from 'assert';
 import Router from 'koa-router';
 import { object, string } from 'zod';
 import { encryptPassword } from '@/utils/password';
-import { findUserById } from '@/queries/user';
+import { findUserByUsername } from '@/queries/user';
 import { Provider } from 'oidc-provider';
 import { conditional } from '@logto/essentials';
 import koaGuard from '@/middleware/koa-guard';
@@ -13,20 +13,20 @@ export default function signInRoutes(provider: Provider) {
 
   router.post(
     '/sign-in',
-    koaGuard({ body: object({ id: string().optional(), password: string().optional() }) }),
+    koaGuard({ body: object({ username: string().optional(), password: string().optional() }) }),
     async (ctx) => {
       const {
         prompt: { name },
       } = await provider.interactionDetails(ctx.req, ctx.res);
 
       if (name === 'login') {
-        const { id, password } = ctx.guard.body;
+        const { username, password } = ctx.guard.body;
 
-        assert(id && password, new RequestError(SignInErrorCode.InsufficientInfo));
+        assert(username && password, new RequestError(SignInErrorCode.InsufficientInfo));
 
         try {
-          const { passwordEncrypted, passwordEncryptionMethod, passwordEncryptionSalt } =
-            await findUserById(id);
+          const { id, passwordEncrypted, passwordEncryptionMethod, passwordEncryptionSalt } =
+            await findUserByUsername(username);
 
           assert(
             passwordEncrypted && passwordEncryptionMethod && passwordEncryptionSalt,
