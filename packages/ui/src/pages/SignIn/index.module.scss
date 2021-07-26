@@ -1,6 +1,7 @@
 @use '/src/scss/underscore' as _;
 
 .wrapper {
+  position: relative;
   padding: _.unit(8);
   display: flex;
   flex-direction: column;
@@ -18,8 +19,8 @@
     margin-bottom: _.unit(-6);
   }
 
-  > input:not([type='button']),
-  .box {
+  .box,
+  > input:not([type='button']) {
     margin-top: _.unit(3);
     width: 100%;
     max-width: 320px;
@@ -27,5 +28,10 @@
 
   > input[type='button'] {
     margin-top: _.unit(12);
+  }
+
+  .createAccount {
+    position: absolute;
+    bottom: _.unit(10);
   }
 }
