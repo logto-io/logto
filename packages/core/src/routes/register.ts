@@ -5,7 +5,7 @@ import { hasUser, hasUserWithId, insertUser } from '@/queries/user';
 import { customAlphabet, nanoid } from 'nanoid';
 import { PasswordEncryptionMethod } from '@logto/schemas';
 import koaGuard from '@/middleware/koa-guard';
-import RequestError, { RegisterErrorCode } from '@/errors/RequestError';
+import RequestError from '@/errors/RequestError';
 
 const alphabet = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
 const userId = customAlphabet(alphabet, 12);
@@ -37,7 +37,7 @@ export default function registerRoutes() {
       const { username, password } = ctx.guard.body;
 
       if (await hasUser(username)) {
-        throw new RequestError(RegisterErrorCode.UsernameExists);
+        throw new RequestError('register.username_exists');
       }
 
       const id = await generateUserId();
