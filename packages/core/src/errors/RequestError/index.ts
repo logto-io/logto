@@ -1,19 +1,19 @@
 import pick from 'lodash.pick';
-import { requestErrorMessage } from './message';
-import { RequestErrorBody, RequestErrorCode, RequestErrorMetadata } from './types';
+import i18next from 'i18next';
+import { LogtoErrorCode } from '@logto/phrases';
+import { RequestErrorBody, RequestErrorMetadata } from './types';
 
 export * from './types';
-export * from './message';
 
 export default class RequestError extends Error {
-  code: RequestErrorCode;
+  code: LogtoErrorCode;
   status: number;
   expose: boolean;
   data: unknown;
 
-  constructor(input: RequestErrorMetadata | RequestErrorCode, data?: unknown) {
+  constructor(input: RequestErrorMetadata | LogtoErrorCode, data?: unknown) {
     const { code, status = 400 } = typeof input === 'string' ? { code: input } : input;
-    const message = requestErrorMessage[code];
+    const message = i18next.t<string, LogtoErrorCode>(code);
 
     super(message);
 

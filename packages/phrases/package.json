@@ -1,0 +1,43 @@
+{
+  "name": "@logto/phrases",
+  "version": "0.1.0",
+  "description": "Logto shared phrases (l10n).",
+  "author": "Gao Sun <gaosun.dev@gmail.com>",
+  "homepage": "https://github.com/logto-io/logto#readme",
+  "license": "UNLICENSED",
+  "main": "lib/index.js",
+  "private": true,
+  "files": [
+    "lib"
+  ],
+  "publishConfig": {
+    "registry": "https://registry.yarnpkg.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/logto-io/logto.git"
+  },
+  "scripts": {
+    "build": "rm -rf lib/ && tsc",
+    "lint": "eslint --format pretty \"src/**\"",
+    "prepack": "yarn build"
+  },
+  "bugs": {
+    "url": "https://github.com/logto-io/logto/issues"
+  },
+  "devDependencies": {
+    "@logto/eslint-config": "^0.1.0-rc.14",
+    "@logto/ts-config": "^0.1.0-rc.14",
+    "eslint": "^7.31.0",
+    "eslint-formatter-pretty": "^4.1.0",
+    "prettier": "^2.3.2",
+    "typescript": "^4.3.5"
+  },
+  "eslintConfig": {
+    "extends": "@logto"
+  },
+  "prettier": "@logto/eslint-config/.prettierrc",
+  "dependencies": {
+    "@logto/schemas": "^0.1.0"
+  }
+}

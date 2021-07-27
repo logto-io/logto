@@ -1,6 +1,6 @@
 import { OpenAPIV3 } from 'openapi-types';
 import { ZodArray, ZodBoolean, ZodNumber, ZodObject, ZodOptional, ZodString } from 'zod';
-import RequestError, { SwaggerErrorCode } from '@/errors/RequestError';
+import RequestError from '@/errors/RequestError';
 import { conditional } from '@logto/essentials';
 
 export const zodTypeToSwagger = (config: unknown): OpenAPIV3.SchemaObject => {
@@ -46,5 +46,5 @@ export const zodTypeToSwagger = (config: unknown): OpenAPIV3.SchemaObject => {
     };
   }
 
-  throw new RequestError(SwaggerErrorCode.InvalidZodType, config);
+  throw new RequestError('swagger.invalid_zod_type', config);
 };
