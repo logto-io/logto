@@ -33,7 +33,7 @@ const Home = () => {
       <Input
         autoComplete="username"
         isDisabled={isLoading}
-        placeholder={t('sign_in.username')}
+        placeholder={t('sign_in.password')}
         value={username}
         onChange={setUsername}
       />
@@ -50,7 +50,7 @@ const Home = () => {
       )}
       <Button
         isDisabled={isLoading}
-        value={isLoading ? t('sign_in.loading') : t('sign_in')}
+        value={isLoading ? t('sign_in.loading') : t('sign_in.title')}
         onClick={signIn}
       />
       <TextLink className={styles.createAccount} href="/register">

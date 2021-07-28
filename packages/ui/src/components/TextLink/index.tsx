@@ -1,10 +1,10 @@
-import React, { ReactChildren } from 'react';
+import React, { ReactChild } from 'react';
 import classNames from 'classnames';
 import styles from './index.module.scss';
 
 export type Props = {
   className?: string;
-  children: ReactChildren;
+  children: ReactChild;
   href: string;
 };
 
