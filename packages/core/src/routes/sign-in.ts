@@ -6,7 +6,8 @@ import { findUserByUsername } from '@/queries/user';
 import { Provider } from 'oidc-provider';
 import { conditional } from '@logto/essentials';
 import koaGuard from '@/middleware/koa-guard';
-import RequestError, { OidcErrorCode, SignInErrorCode } from '@/errors/RequestError';
+import RequestError from '@/errors/RequestError';
+import { LogtoErrorCode } from '@logto/phrases';
 
 export default function signInRoutes(provider: Provider) {
   const router = new Router();
@@ -22,7 +23,7 @@ export default function signInRoutes(provider: Provider) {
       if (name === 'login') {
         const { username, password } = ctx.guard.body;
 
-        assert(username && password, new RequestError(SignInErrorCode.InsufficientInfo));
+        assert(username && password, new RequestError('sign_in.insufficient_info'));
 
         try {
           const { id, passwordEncrypted, passwordEncryptionMethod, passwordEncryptionSalt } =
@@ -30,12 +31,12 @@ export default function signInRoutes(provider: Provider) {
 
           assert(
             passwordEncrypted && passwordEncryptionMethod && passwordEncryptionSalt,
-            new RequestError(SignInErrorCode.InvalidSignInMethod)
+            new RequestError('sign_in.invalid_sign_in_method')
           );
           assert(
             encryptPassword(id, password, passwordEncryptionSalt, passwordEncryptionMethod) ===
               passwordEncrypted,
-            new RequestError(SignInErrorCode.InvalidCredentials)
+            new RequestError('sign_in.invalid_credentials')
           );
 
           const redirectTo = await provider.interactionResult(
@@ -49,7 +50,7 @@ export default function signInRoutes(provider: Provider) {
           ctx.body = { redirectTo };
         } catch (error: unknown) {
           if (!(error instanceof RequestError)) {
-            throw new RequestError(SignInErrorCode.InvalidCredentials);
+            throw new RequestError('sign_in.invalid_credentials');
           }
 
           throw error;
@@ -98,8 +99,9 @@ export default function signInRoutes(provider: Provider) {
 
   router.post('/sign-in/abort', async (ctx) => {
     await provider.interactionDetails(ctx.req, ctx.res);
+    const error: LogtoErrorCode = 'oidc.aborted';
     const redirectTo = await provider.interactionResult(ctx.req, ctx.res, {
-      error: OidcErrorCode.Aborted,
+      error,
     });
     ctx.body = { redirectTo };
   });
