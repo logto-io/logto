@@ -1,4 +1,4 @@
-import RequestError, { GuardErrorCode } from '@/errors/RequestError';
+import RequestError from '@/errors/RequestError';
 import { has } from '@logto/essentials';
 import { Middleware } from 'koa';
 import koaBody from 'koa-body';
@@ -69,7 +69,7 @@ export default function koaGuard<
         params: params?.parse(ctx.params),
       } as Guarded<GuardQueryT, GuardBodyT, GuardParametersT>; // Have to do t His since it's too complicated for TS
     } catch (error: unknown) {
-      throw new RequestError(GuardErrorCode.InvalidInput, error);
+      throw new RequestError('guard.invalid_input', error);
     }
 
     await next();
