@@ -38,14 +38,6 @@ export default async function initOidc(app: Koa): Promise<Provider> {
       revocation: { enabled: true },
       introspection: { enabled: true },
       devInteractions: { enabled: false },
-      resourceIndicators: {
-        // Type def for this is broken.
-        // Update when we return client-based default resource
-        defaultResource: () => ['https://api.logto.io'],
-        getResourceServerInfo: () => {
-          return { scope: 'api', accessTokenFormat: 'jwt' };
-        },
-      },
     },
     interactions: {
       url: (_, interaction) => {
