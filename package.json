@@ -5,7 +5,7 @@
     "lerna": "lerna",
     "bootstrap": "lerna bootstrap",
     "prepare": "husky install && lerna run --stream prepack",
-    "dev": "lerna run --stream prepack && lerna run --parallel dev"
+    "dev": "lerna run --parallel dev"
   },
   "devDependencies": {
     "@commitlint/cli": "^13.1.0",
