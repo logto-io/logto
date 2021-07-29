@@ -10,7 +10,8 @@
     "precommit": "lint-staged",
     "build": "rm -rf build/ && tsc",
     "lint": "eslint --format pretty --ext .ts src",
-    "dev": "rm -rf build/ && tsc-watch --preserveWatchOutput --onSuccess \"node ./build/index.js\""
+    "dev": "rm -rf build/ && tsc-watch --preserveWatchOutput --onSuccess \"node ./build/index.js\"",
+    "start": "NODE_ENV=production node build/index.js"
   },
   "dependencies": {
     "@logto/essentials": "^1.1.0-rc.2",
@@ -29,6 +30,7 @@
     "koa-mount": "^4.0.0",
     "koa-proxies": "^0.12.1",
     "koa-router": "^10.0.0",
+    "koa-static": "^5.0.0",
     "lodash.pick": "^4.4.0",
     "module-alias": "^2.2.2",
     "nanoid": "^3.1.23",
@@ -44,6 +46,7 @@
     "@types/koa-logger": "^3.1.1",
     "@types/koa-mount": "^4.0.0",
     "@types/koa-router": "^7.4.2",
+    "@types/koa-static": "^4.0.2",
     "@types/lodash.pick": "^4.4.6",
     "@types/node": "^16.3.1",
     "@types/oidc-provider": "^7.4.1",

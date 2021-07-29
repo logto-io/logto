@@ -3,21 +3,22 @@ import Router from 'koa-router';
 import { Provider } from 'oidc-provider';
 import signInRoutes from '@/routes/sign-in';
 import registerRoutes from '@/routes/register';
-import uiProxy from '@/proxies/ui';
 import swaggerRoutes from '@/routes/swagger';
+import mount from 'koa-mount';
 
 const createRouter = (provider: Provider): Router => {
-  const router = new Router({ prefix: '/api' });
+  const router = new Router();
 
-  router.use(signInRoutes(provider));
-  router.use(registerRoutes());
-  router.use(swaggerRoutes());
+  signInRoutes(router, provider);
+  registerRoutes(router);
+  swaggerRoutes(router);
 
   return router;
 };
 
-export default function initRouter(app: Koa, provider: Provider): Router {
+export default function initRouter(app: Koa, provider: Provider) {
   const router = createRouter(provider);
-  app.use(router.routes()).use(uiProxy()).use(router.allowedMethods());
-  return router;
+  const apisApp = new Koa().use(router.routes()).use(router.allowedMethods());
+
+  app.use(mount('/api', apisApp));
 }

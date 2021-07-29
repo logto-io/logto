@@ -1,6 +1,6 @@
 import RequestError from '@/errors/RequestError';
 import { has } from '@logto/essentials';
-import { Middleware } from 'koa';
+import { MiddlewareType } from 'koa';
 import koaBody from 'koa-body';
 import { IMiddleware, IRouterParamContext } from 'koa-router';
 import { ZodType } from 'zod';
@@ -51,12 +51,12 @@ export default function koaGuard<
   query,
   body,
   params,
-}: GuardConfig<GuardQueryT, GuardBodyT, GuardParametersT>): Middleware<
+}: GuardConfig<GuardQueryT, GuardBodyT, GuardParametersT>): MiddlewareType<
   StateT,
   WithGuarded<ContextT, GuardQueryT, GuardBodyT, GuardParametersT>,
   ResponseBodyT
 > {
-  const guard: Middleware<
+  const guard: MiddlewareType<
     StateT,
     WithGuarded<ContextT, GuardQueryT, GuardBodyT, GuardParametersT>,
     ResponseBodyT
@@ -72,24 +72,21 @@ export default function koaGuard<
       throw new RequestError('guard.invalid_input', error);
     }
 
-    await next();
+    return next();
   };
 
   const guardMiddleware: WithGuardConfig<
-    Middleware<
+    MiddlewareType<
       StateT,
       WithGuarded<ContextT, GuardQueryT, GuardBodyT, GuardParametersT>,
       ResponseBodyT
     >
   > = async function (ctx, next) {
     if (body) {
-      await koaBody<StateT, ContextT>()(ctx, async () => {
-        await guard(ctx, next);
-      });
-      return;
+      return koaBody<StateT, ContextT>()(ctx, async () => guard(ctx, next));
     }
 
-    await guard(ctx, next);
+    return guard(ctx, next);
   };
 
   guardMiddleware.config = { query, body, params };
