@@ -13,7 +13,7 @@
     "dev": "rm -rf build/ && tsc-watch --preserveWatchOutput --onSuccess \"node ./build/index.js\""
   },
   "dependencies": {
-    "@logto/essentials": "^1.1.0-rc.1",
+    "@logto/essentials": "^1.1.0-rc.2",
     "@logto/phrases": "^0.1.0",
     "@logto/schemas": "^0.1.0",
     "dayjs": "^1.10.5",
@@ -22,6 +22,7 @@
     "formidable": "^1.2.2",
     "got": "^11.8.2",
     "i18next": "^20.3.5",
+    "jose": "^3.14.3",
     "koa": "^2.13.1",
     "koa-body": "^4.2.0",
     "koa-logger": "^3.2.1",
@@ -55,8 +56,7 @@
     "typescript": "^4.3.5"
   },
   "engines": {
-    "node": ">=14.15.0",
-    "yarn": "^1.22.10"
+    "node": ">=14.15.0"
   },
   "_moduleAliases": {
     "@": "./build"
