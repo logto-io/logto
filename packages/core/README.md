@@ -7,7 +7,7 @@ The core backend service.
 Copy proper `.env` to project root. (TBD: design the config process)
 
 ```bash
-yarn && yarn dev
+pnpm i && pnpm dev
 ```
 
 ## OpenAPI Doc

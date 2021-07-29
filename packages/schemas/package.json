@@ -11,17 +11,16 @@
   "private": true,
   "scripts": {
     "generate": "ts-node src/gen/index.ts && eslint --format pretty \"src/db-entries/**\" --fix",
-    "build": "yarn generate && rm -rf lib/ && tsc --p tsconfig.build.json",
+    "build": "pnpm generate && rm -rf lib/ && tsc --p tsconfig.build.json",
     "lint": "eslint --format pretty \"src/**\"",
-    "prepack": "yarn build"
+    "prepack": "pnpm build"
   },
   "engines": {
-    "node": ">=14.15.0",
-    "yarn": "^1.22.10"
+    "node": ">=14.15.0"
   },
   "devDependencies": {
     "@logto/eslint-config": "^0.1.0-rc.14",
-    "@logto/essentials": "^1.1.0-rc.1",
+    "@logto/essentials": "^1.1.0-rc.2",
     "@logto/ts-config": "^0.1.0-rc.14",
     "@types/lodash.uniq": "^4.5.6",
     "@types/node": "14",

@@ -10,9 +10,6 @@
   "files": [
     "lib"
   ],
-  "publishConfig": {
-    "registry": "https://registry.yarnpkg.com"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/logto-io/logto.git"
@@ -20,7 +17,7 @@
   "scripts": {
     "build": "rm -rf lib/ && tsc",
     "lint": "eslint --format pretty \"src/**\"",
-    "prepack": "yarn build"
+    "prepack": "pnpm build"
   },
   "bugs": {
     "url": "https://github.com/logto-io/logto/issues"
