@@ -19,16 +19,19 @@ jobs:
         with:
           node-version: '14'
 
-      # https://github.com/actions/cache/blob/main/examples.md#node---npm
-      - uses: actions/cache@v2
+      # https://github.com/pnpm/action-setup#use-cache-to-reduce-installation-time
+      - name: Cache pnpm modules
+        uses: actions/cache@v2
         with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          path: ~/.pnpm-store
+          key: ${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
-            ${{ runner.os }}-node-
+            ${{ runner.os }}-
 
-      - name: Install packages
-        run: npm ci
+      - uses: pnpm/action-setup@v2.0.1
+        with:
+          version: 6.0.2
+          run_install: true
 
       - name: Lint
         working-directory: packages/schemas
