@@ -9,13 +9,11 @@ import koaGuard from '@/middleware/koa-guard';
 import RequestError from '@/errors/RequestError';
 import { LogtoErrorCode } from '@logto/phrases';
 
-export default function signInRoutes(provider: Provider) {
-  const router = new Router();
-
+export default function signInRoutes(router: Router, provider: Provider) {
   router.post(
     '/sign-in',
     koaGuard({ body: object({ username: string().optional(), password: string().optional() }) }),
-    async (ctx) => {
+    async (ctx, next) => {
       const {
         prompt: { name },
       } = await provider.interactionDetails(ctx.req, ctx.res);
@@ -60,10 +58,12 @@ export default function signInRoutes(provider: Provider) {
       } else {
         throw new Error(`Prompt not supported: ${name}`);
       }
+
+      return next();
     }
   );
 
-  router.post('/sign-in/consent', async (ctx) => {
+  router.post('/sign-in/consent', async (ctx, next) => {
     const { session, grantId, params, prompt } = await provider.interactionDetails(
       ctx.req,
       ctx.res
@@ -95,16 +95,17 @@ export default function signInRoutes(provider: Provider) {
       { mergeWithLastSubmission: true }
     );
     ctx.body = { redirectTo };
+
+    return next();
   });
 
-  router.post('/sign-in/abort', async (ctx) => {
+  router.post('/sign-in/abort', async (ctx, next) => {
     await provider.interactionDetails(ctx.req, ctx.res);
     const error: LogtoErrorCode = 'oidc.aborted';
     const redirectTo = await provider.interactionResult(ctx.req, ctx.res, {
       error,
     });
     ctx.body = { redirectTo };
+    return next();
   });
-
-  return router.routes();
 }

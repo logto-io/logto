@@ -9,5 +9,7 @@ export const routes = Object.freeze({
   },
 });
 
+export const isProduction = getEnv('NODE_ENV') === 'production';
 export const port = Number(getEnv('PORT', '3001'));
 export const oidcIssuer = getEnv('OIDC_ISSUER', `http://localhost:${port}/oidc`);
+export const mountedApps = Object.freeze(['api', 'oidc']);
