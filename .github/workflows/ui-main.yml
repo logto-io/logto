@@ -35,8 +35,12 @@ jobs:
 
       - name: Lint
         working-directory: packages/ui
-        run: npm run lint && npm run stylelint
+        run: pnpm lint && pnpm stylelint
+
+      - name: Test
+        working-directory: packages/ui
+        run: pnpm test
 
       - name: Build
         working-directory: packages/ui
-        run: npm run build
+        run: pnpm build
