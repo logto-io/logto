@@ -2,6 +2,7 @@
   "name": "root",
   "private": true,
   "scripts": {
+    "preinstall": "npx only-allow pnpm",
     "lerna": "lerna",
     "bootstrap": "lerna bootstrap",
     "prepare": "husky install && lerna run --stream prepack",
