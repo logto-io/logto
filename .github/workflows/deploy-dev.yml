@@ -39,3 +39,21 @@ jobs:
         run: rm -rf node_modules packages/*/node_modules && pnpm i
         env:
           NODE_ENV: production
+
+      - name: Setup env
+        working-directory: packages/core
+        run: echo "$DEV_CORE_ENV" >> .env
+        env:
+          DEV_CORE_ENV: ${{ secrets.DEV_CORE_ENV }}
+
+      - name: Install SSH key
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.DEV_SSH_KEY }}
+          known_hosts: ${{ secrets.DEV_SSH_KNOWN_HOSTS }}
+          config: ${{ secrets.DEV_SSH_CONFIG }}
+
+      - name: Rsync folder
+        run: rsync --filter='exclude .git' -r -a ./ $DEV_SERVER_IP:~/logto
+        env:
+          DEV_SERVER_IP: ${{ secrets.DEV_SERVER_IP }}
