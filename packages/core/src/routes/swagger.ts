@@ -4,10 +4,8 @@ import { isGuardMiddleware, WithGuardConfig } from '@/middleware/koa-guard';
 import { toTitle } from '@/utils/string';
 import { zodTypeToSwagger } from '@/utils/zod';
 
-export default function swaggerRoutes() {
-  const router = new Router();
-
-  router.get('/swagger.json', async (ctx) => {
+export default function swaggerRoutes(router: Router) {
+  router.get('/swagger.json', async (ctx, next) => {
     const routes = ctx.router.stack.map(({ path, stack, methods }) => {
       const guard = stack.find((function_): function_ is WithGuardConfig<IMiddleware> =>
         isGuardMiddleware(function_)
@@ -17,16 +15,15 @@ export default function swaggerRoutes() {
 
     const paths = Object.fromEntries(
       routes.map<[string, OpenAPIV3.PathItemObject]>(({ path, methods, guard }) => {
-        const trimmedPath = path.slice(4);
         const body = guard?.config.body;
 
         return [
-          trimmedPath,
+          `/api${path}`,
           Object.fromEntries(
             methods.map<[string, OpenAPIV3.OperationObject]>((method) => [
               method.toLowerCase(),
               {
-                tags: [toTitle(trimmedPath.split('/')[1] ?? 'General')],
+                tags: [toTitle(path.split('/')[1] ?? 'General')],
                 requestBody: body && {
                   required: true,
                   content: {
@@ -57,7 +54,7 @@ export default function swaggerRoutes() {
     };
 
     ctx.body = document;
-  });
 
-  return router.routes();
+    return next();
+  });
 }
