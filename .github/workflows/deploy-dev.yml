@@ -33,3 +33,9 @@ jobs:
 
       - name: Build
         run: pnpm -- lerna run build --stream
+
+      # See warning in https://pnpm.io/cli/prune
+      - name: Prune
+        run: rm -rf node_modules packages/*/node_modules && pnpm i
+        env:
+          NODE_ENV: production
