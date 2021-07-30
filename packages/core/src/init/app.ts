@@ -1,3 +1,5 @@
+import https from 'https';
+import fs from 'fs/promises';
 import Koa from 'koa';
 import koaLogger from 'koa-logger';
 
@@ -15,6 +17,19 @@ export default async function initApp(app: Koa): Promise<void> {
   initRouter(app, provider);
 
   app.use(koaUIProxy());
+
+  const { HTTPS_CERT, HTTPS_KEY } = process.env;
+  if (HTTPS_CERT && HTTPS_KEY) {
+    https
+      .createServer(
+        { cert: await fs.readFile(HTTPS_CERT), key: await fs.readFile(HTTPS_KEY) },
+        app.callback()
+      )
+      .listen(port, () => {
+        console.log(`App is listening on port ${port} with HTTPS`);
+      });
+    return;
+  }
 
   app.listen(port, () => {
     console.log(`App is listening on port ${port}`);
