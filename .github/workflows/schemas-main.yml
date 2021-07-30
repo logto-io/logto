@@ -35,8 +35,8 @@ jobs:
 
       - name: Lint
         working-directory: packages/schemas
-        run: npm run lint
+        run: pnpm lint
 
       - name: Build
         working-directory: packages/schemas
-        run: npm run build
+        run: pnpm build
