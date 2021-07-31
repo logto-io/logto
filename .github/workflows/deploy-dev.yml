@@ -1,0 +1,57 @@
+name: Deploy Dev
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+
+      # https://github.com/pnpm/action-setup#use-cache-to-reduce-installation-time
+      - name: Cache pnpm modules
+        uses: actions/cache@v2
+        with:
+          path: ~/.pnpm-store
+          key: ${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-
+
+      - uses: pnpm/action-setup@v2.0.1
+        with:
+          version: 6.0.2
+          run_install: true
+
+      - name: Build
+        run: pnpm -- lerna run build --stream
+
+      # See warning in https://pnpm.io/cli/prune
+      - name: Prune
+        run: rm -rf node_modules packages/*/node_modules && pnpm i
+        env:
+          NODE_ENV: production
+
+      - name: Setup env
+        working-directory: packages/core
+        run: echo "$DEV_CORE_ENV" >> .env
+        env:
+          DEV_CORE_ENV: ${{ secrets.DEV_CORE_ENV }}
+
+      - name: Install SSH key
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.DEV_SSH_KEY }}
+          known_hosts: ${{ secrets.DEV_SSH_KNOWN_HOSTS }}
+          config: ${{ secrets.DEV_SSH_CONFIG }}
+
+      - name: Rsync folder
+        run: rsync --filter='exclude .git' -r -a ./ $DEV_SERVER_IP:~/logto
+        env:
+          DEV_SERVER_IP: ${{ secrets.DEV_SERVER_IP }}
