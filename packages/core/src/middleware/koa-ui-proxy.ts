@@ -1,5 +1,5 @@
 import fs from 'fs';
-import { Middleware } from 'koa';
+import { MiddlewareType } from 'koa';
 import proxy from 'koa-proxies';
 import serveStatic from 'koa-static';
 import { IRouterParamContext } from 'koa-router';
@@ -12,13 +12,15 @@ export default function koaUIProxy<
   StateT,
   ContextT extends IRouterParamContext,
   ResponseBodyT
->(): Middleware<StateT, ContextT, ResponseBodyT> {
-  const developmentProxy = proxy('*', {
+>(): MiddlewareType<StateT, ContextT, ResponseBodyT> {
+  type Middleware = MiddlewareType<StateT, ContextT, ResponseBodyT>;
+
+  const developmentProxy: Middleware = proxy('*', {
     target: 'http://localhost:5000',
     changeOrigin: true,
     logs: true,
   });
-  const staticProxy = serveStatic(PATH_TO_UI_DIST);
+  const staticProxy: Middleware = serveStatic(PATH_TO_UI_DIST);
 
   return async (context, next) => {
     // Route has been handled by one of mounted apps
@@ -27,15 +29,13 @@ export default function koaUIProxy<
     }
 
     if (!isProduction) {
-      await developmentProxy(context, next);
-      return next();
+      return developmentProxy(context, next);
     }
 
     if (!uiDistFiles.some((file) => context.request.path.startsWith(`/${file}`))) {
       context.request.path = '/';
     }
 
-    await staticProxy(context, next);
-    return next();
+    return staticProxy(context, next);
   };
 }
