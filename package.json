@@ -2,9 +2,10 @@
   "name": "root",
   "private": true,
   "scripts": {
+    "preinstall": "npx only-allow pnpm",
     "lerna": "lerna",
     "bootstrap": "lerna bootstrap",
-    "prepare": "husky install && lerna run --stream prepack",
+    "prepare": "if test \"$NODE_ENV\" != \"production\" ; then husky install && lerna run --stream prepack ; fi",
     "dev": "lerna run --parallel dev"
   },
   "devDependencies": {
