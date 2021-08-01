@@ -44,8 +44,14 @@
     margin-top: _.unit(12);
   }
 
-  .createAccount {
+  .haveAccount {
     position: absolute;
     bottom: _.unit(10);
+  }
+
+  .prefix {
+    font: var(--font-body-bold);
+    color: var(--color-placeholder);
+    margin-right: _.unit(0.5);
   }
 }

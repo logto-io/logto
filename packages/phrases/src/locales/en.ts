@@ -8,6 +8,9 @@ const translation = {
   },
   register: {
     create_account: 'Create an Account',
+    title: 'Sign Up',
+    loading: 'Signing Up...',
+    have_account: 'Already have an account?'
   },
 };
 

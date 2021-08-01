@@ -33,6 +33,7 @@
     "@logto/eslint-config-react": "^0.1.0-rc.14",
     "@logto/ts-config": "^0.1.0-rc.14",
     "@logto/ts-config-react": "^0.1.0-rc.14",
+    "@testing-library/react": "^12.0.0",
     "@types/jest": "^26.0.24",
     "@types/react": "^17.0.14",
     "@types/react-dom": "^17.0.9",
