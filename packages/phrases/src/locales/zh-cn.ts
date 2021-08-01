@@ -12,7 +12,7 @@ const translation = {
     create_account: '新用户注册',
     title: '注册',
     loading: '注册中...',
-    have_account: '已经有账户？'
+    have_account: '已经有账户？',
   },
 };
 
