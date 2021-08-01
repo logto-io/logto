@@ -20,7 +20,7 @@
     color: var(--color-button-text-disabled);
   }
 
-  // &:not(:disabled):hover {
-  //   background: var(--color-button-background-hover);
-  // }
+  &:not(:disabled):hover {
+    background: var(--color-button-background-hover);
+  }
 }
