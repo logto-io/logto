@@ -1,13 +1,13 @@
 import React from 'react';
 import { render, fireEvent, waitFor } from '@testing-library/react';
-import App from '@/pages/Register';
+import Register from '@/pages/Register';
 import { register } from '@/apis/register';
 
 jest.mock('@/apis/register', () => ({ register: jest.fn(async () => Promise.resolve()) }));
 
-describe('<App />', () => {
+describe('<Register />', () => {
   test('renders without exploding', async () => {
-    const { queryByText, getByText } = render(<App />);
+    const { queryByText, getByText } = render(<Register />);
     expect(queryByText('register.create_account')).not.toBeNull();
     expect(queryByText('register.have_account')).not.toBeNull();
 

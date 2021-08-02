@@ -10,7 +10,7 @@ import './scss/normalized.scss';
 initI18n();
 
 const App = () => (
-  <AppContent theme="light">
+  <AppContent theme="dark">
     <Switch>
       <Route exact path="/sign-in" component={SignIn} />
       <Route exact path="/sign-in/consent" component={Consent} />
