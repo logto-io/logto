@@ -3,8 +3,8 @@ import LanguageDetector from 'i18next-browser-languagedetector';
 import { initReactI18next } from 'react-i18next';
 import resources from '@logto/phrases';
 
-const initI18n = () => {
-  void i18n
+const initI18n = async () =>
+  i18n
     .use(initReactI18next)
     .use(LanguageDetector)
     .init({
@@ -14,6 +14,5 @@ const initI18n = () => {
         escapeValue: false,
       },
     });
-};
 
 export default initI18n;
