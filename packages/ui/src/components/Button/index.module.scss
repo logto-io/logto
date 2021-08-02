@@ -13,6 +13,7 @@
   box-shadow: var(--shadow-button);
   transition: var(--transition-default-control);
   cursor: pointer;
+  -webkit-appearance: none;
 
   &:disabled {
     background: var(--color-button-background-disabled);
