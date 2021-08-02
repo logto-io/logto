@@ -8,7 +8,7 @@ import SignIn from './pages/SignIn';
 import Register from './pages/Register';
 import './scss/normalized.scss';
 
-initI18n();
+void initI18n();
 
 const App = () => {
   const theme = useTheme();

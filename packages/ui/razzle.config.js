@@ -26,6 +26,7 @@ module.exports = {
       '^.+\\.(css|less|scss)$': 'babel-jest',
       '@/(.*)': '<rootDir>/src/$1',
     };
+    config.setupFilesAfterEnv = [...config.setupFilesAfterEnv, './src/jest.setup.ts'];
 
     return config;
   },
