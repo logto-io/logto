@@ -20,16 +20,19 @@ const Home: FC = () => {
   const [pageState, setPageState] = useState<PageState>('idle');
   const isLoading = pageState === 'loading';
 
-  const signIn: FormEventHandler = useCallback(async (event) => {
-    event.preventDefault();
-    setPageState('loading');
-    try {
-      window.location.href = (await signInBasic(username, password)).redirectTo;
-    } catch {
-      // TODO: Show specific error after merge into monorepo
-      setPageState('error');
-    }
-  }, []);
+  const signIn: FormEventHandler = useCallback(
+    async (event) => {
+      event.preventDefault();
+      setPageState('loading');
+      try {
+        window.location.href = (await signInBasic(username, password)).redirectTo;
+      } catch {
+        // TODO: Show specific error after merge into monorepo
+        setPageState('error');
+      }
+    },
+    [username, password]
+  );
 
   return (
     <div className={classNames(styles.wrapper)}>
