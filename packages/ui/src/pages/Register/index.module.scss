@@ -1,23 +1,16 @@
 @use '/src/scss/underscore' as _;
 
 
-@mixin flex-colomn {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-
 .wrapper {
   position: relative;
   padding: _.unit(8);
   height: 100%;
-  @include flex-colomn;
+  @include _.flex-colomn;
 }
 
 .form {
   width: 100%;
-  @include flex-colomn;
+  @include _.flex-colomn;
 
   > * {
     margin-bottom: _.unit(1.5);
@@ -44,8 +37,14 @@
     margin-top: _.unit(12);
   }
 
-  .createAccount {
+  .haveAccount {
     position: absolute;
     bottom: _.unit(10);
+  }
+
+  .prefix {
+    font: var(--font-body-bold);
+    color: var(--color-placeholder);
+    margin-right: _.unit(0.5);
   }
 }

@@ -3,6 +3,7 @@ import React from 'react';
 import styles from './index.module.scss';
 
 export type Props = {
+  name: string;
   autoComplete?: AutoCompleteType;
   isDisabled?: boolean;
   className?: string;
@@ -13,6 +14,7 @@ export type Props = {
 };
 
 const Input = ({
+  name,
   autoComplete,
   isDisabled,
   className,
@@ -23,6 +25,7 @@ const Input = ({
 }: Props) => {
   return (
     <input
+      name={name}
       disabled={isDisabled}
       className={classNames(styles.input, className)}
       placeholder={placeholder}
