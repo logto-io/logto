@@ -1,0 +1,35 @@
+name: Commitlint
+
+on: [pull_request]
+
+jobs:
+  lint-commits:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+
+      # https://github.com/pnpm/action-setup#use-cache-to-reduce-installation-time
+      - name: Cache pnpm modules
+        uses: actions/cache@v2
+        with:
+          path: ~/.pnpm-store
+          key: ${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-
+
+      - uses: pnpm/action-setup@v2.0.1
+        with:
+          version: 6.0.2
+          run_install: false
+
+      - name: Install commitlint
+        run: pnpm add -g @commitlint/{cli,config-conventional}
+
+      - name: Commitlint
+        run: commitlint --from HEAD~${{ github.event.pull_request.commits }} --to HEAD
