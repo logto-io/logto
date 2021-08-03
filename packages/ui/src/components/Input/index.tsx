@@ -5,6 +5,7 @@ import styles from './index.module.scss';
 export type Props = {
   name: string;
   autoComplete?: AutoCompleteType;
+  autoCapitalize?: string;
   isDisabled?: boolean;
   className?: string;
   placeholder?: string;
@@ -16,6 +17,7 @@ export type Props = {
 const Input = ({
   name,
   autoComplete,
+  autoCapitalize = 'off',
   isDisabled,
   className,
   placeholder,
@@ -32,6 +34,7 @@ const Input = ({
       type={type}
       value={value}
       autoComplete={autoComplete}
+      autoCapitalize={autoCapitalize}
       onChange={({ target: { value } }) => {
         onChange(value);
       }}

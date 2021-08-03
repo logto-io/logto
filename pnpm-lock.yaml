@@ -194,6 +194,7 @@ importers:
       typescript: ^4.3.5
       webpack: ^4.44.1
       webpack-dev-server: ^3.11.2
+      zustand: ^3.5.7
     dependencies:
       '@logto/phrases': link:../phrases
       classnames: 2.3.1
@@ -204,6 +205,7 @@ importers:
       react-dom: 17.0.2_react@17.0.2
       react-i18next: 11.11.4_i18next@20.3.5+react@17.0.2
       react-router-dom: 5.2.0_react@17.0.2
+      zustand: 3.5.7_react@17.0.2
     devDependencies:
       '@babel/core': 7.14.8
       '@jest/types': 27.0.6
@@ -15920,6 +15922,17 @@ packages:
 
   /zod/3.5.1:
     resolution: {integrity: sha512-Gg9GTai0iDHowuYM9VNhdFMmesgt44ufzqaE5CPHshpuK5fCzbibdqCnrWuYH6ZmOn/N+BlGmwZtVSijhKmhKw==}
+    dev: false
+
+  /zustand/3.5.7_react@17.0.2:
+    resolution: {integrity: sha512-DlVFXJavIHyXTOGz6dB+8QHZsPyJcGJSEBtlp2Ivmd5SwtlCnhPo3L8LB6YRfAOJC2PbqzgoD8NMjk+y+vIF0g==}
+    peerDependencies:
+      react: '>=16.8'
+    peerDependenciesMeta:
+      react:
+        optional: true
+    dependencies:
+      react: 17.0.2
     dev: false
 
   /zwitch/1.0.5:
