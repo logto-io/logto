@@ -15,6 +15,7 @@
     "url": "git+https://github.com/logto-io/logto.git"
   },
   "scripts": {
+    "preinstall": "npx only-allow pnpm",
     "build": "rm -rf lib/ && tsc",
     "lint": "eslint --format pretty \"src/**\"",
     "prepack": "pnpm build"
@@ -33,8 +34,5 @@
   "eslintConfig": {
     "extends": "@logto"
   },
-  "prettier": "@logto/eslint-config/.prettierrc",
-  "dependencies": {
-    "@logto/schemas": "^0.1.0"
-  }
+  "prettier": "@logto/eslint-config/.prettierrc"
 }
