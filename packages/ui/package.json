@@ -4,6 +4,7 @@
   "license": "UNLICENSED",
   "private": true,
   "scripts": {
+    "preinstall": "npx only-allow pnpm",
     "precommit": "lint-staged",
     "dev:tsc": "tsc -b -w --preserveWatchOutput",
     "dev:razzle": "razzle start",
