@@ -106,14 +106,11 @@ importers:
   packages/phrases:
     specifiers:
       '@logto/eslint-config': ^0.1.0-rc.14
-      '@logto/schemas': ^0.1.0
       '@logto/ts-config': ^0.1.0-rc.14
       eslint: ^7.31.0
       eslint-formatter-pretty: ^4.1.0
       prettier: ^2.3.2
       typescript: ^4.3.5
-    dependencies:
-      '@logto/schemas': link:../schemas
     devDependencies:
       '@logto/eslint-config': 0.1.0-rc.14_aa6010e91de57dec3f7388187c7addf8
       '@logto/ts-config': 0.1.0-rc.14_f847e35c67ce67b1737c27c823675243
