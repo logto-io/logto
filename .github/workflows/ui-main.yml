@@ -3,10 +3,10 @@ name: UI
 on:
   push:
     branches: [ master ]
-    paths: [ 'packages/ui/**' ]
+    paths: [ 'packages/ui/**', 'packages/phrases/**' ]
   pull_request:
     branches: [ master ]
-    paths: [ 'packages/ui/**' ]
+    paths: [ 'packages/ui/**', 'packages/phrases/**' ]
 
 jobs:
   main:

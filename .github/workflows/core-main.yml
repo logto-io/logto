@@ -3,10 +3,10 @@ name: Core
 on:
   push:
     branches: [ master ]
-    paths: [ 'packages/core/**' ]
+    paths: [ 'packages/core/**', 'packages/phrases/**', 'packages/schemas/**' ]
   pull_request:
     branches: [ master ]
-    paths: [ 'packages/core/**' ]
+    paths: [ 'packages/core/**', 'packages/phrases/**', 'packages/schemas/**' ]
 
 jobs:
   main:
