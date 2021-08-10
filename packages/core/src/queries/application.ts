@@ -5,9 +5,9 @@ import { sql } from 'slonik';
 
 const { table, fields } = convertToIdentifiers(Applications);
 
-export const findApplicationByClientId = async (clientId: string) =>
+export const findApplicationById = async (id: string) =>
   pool.one<ApplicationDBEntry>(sql`
   select ${sql.join(Object.values(fields), sql`, `)}
   from ${table}
-  where ${fields.oidcClientId}=${clientId}
+  where ${fields.id}=${id}
 `);
