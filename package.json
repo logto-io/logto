@@ -1,6 +1,7 @@
 {
   "name": "root",
   "private": true,
+  "license": "MPL-2.0",
   "scripts": {
     "preinstall": "npx only-allow pnpm",
     "lerna": "lerna",
