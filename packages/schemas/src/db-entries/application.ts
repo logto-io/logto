@@ -8,7 +8,6 @@ export type ApplicationDBEntry = {
   id: string;
   name: string;
   type: ApplicationType;
-  oidcClientId: string;
   oidcClientMetadata: OidcClientMetadata;
   createdAt: number;
 };
@@ -19,9 +18,8 @@ export const Applications = Object.freeze({
     id: 'id',
     name: 'name',
     type: 'type',
-    oidcClientId: 'oidc_client_id',
     oidcClientMetadata: 'oidc_client_metadata',
     createdAt: 'created_at',
   },
-  fieldKeys: ['id', 'name', 'type', 'oidcClientId', 'oidcClientMetadata', 'createdAt'],
+  fieldKeys: ['id', 'name', 'type', 'oidcClientMetadata', 'createdAt'],
 } as const);
