@@ -1,6 +1,6 @@
 const translation = {
   sign_in: {
-    title: 'Sign In',
+    action: 'Sign In',
     loading: 'Signing in...',
     error: 'Username or password is invalid.',
     username: 'Username',
@@ -8,8 +8,8 @@ const translation = {
   },
   register: {
     create_account: 'Create an Account',
-    title: 'Sign Up',
-    loading: 'Signing Up...',
+    action: 'Create',
+    loading: 'Creating Account...',
     have_account: 'Already have an account?',
   },
 };
@@ -21,10 +21,10 @@ const errors = {
   oidc: {
     aborted: 'The end-user aborted interaction.',
   },
-  register: {
+  user: {
     username_exists: 'The username already exists.',
   },
-  sign_in: {
+  session: {
     invalid_credentials: 'Invalid credentials. Please check your input.',
     invalid_sign_in_method: 'Current sign-in method is not available.',
     insufficient_info: 'Insufficent sign-in info.',

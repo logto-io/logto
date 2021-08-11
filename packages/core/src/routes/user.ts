@@ -22,9 +22,9 @@ const generateUserId = async (maxRetries = 500) => {
   throw new Error('Cannot generate user ID in reasonable retries');
 };
 
-export default function registerRoutes(router: Router) {
+export default function userRoutes(router: Router) {
   router.post(
-    '/register',
+    '/user',
     koaGuard({
       body: object({
         username: string().min(3),
@@ -35,7 +35,7 @@ export default function registerRoutes(router: Router) {
       const { username, password } = ctx.guard.body;
 
       if (await hasUser(username)) {
-        throw new RequestError('register.username_exists');
+        throw new RequestError('user.username_exists');
       }
 
       const id = await generateUserId();

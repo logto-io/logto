@@ -11,7 +11,7 @@ describe('<Register />', () => {
     expect(queryByText('register.create_account')).not.toBeNull();
     expect(queryByText('register.have_account')).not.toBeNull();
 
-    const submit = getByText('register.title');
+    const submit = getByText('register.action');
     fireEvent.click(submit);
 
     await waitFor(() => {
