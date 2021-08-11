@@ -6,8 +6,8 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 import Koa from 'koa';
-import initI18n from './init/i18n';
-import initApp from './init/app';
+import initI18n from './i18n/init';
+import initApp from './app/init';
 
 const app = new Koa();
 
