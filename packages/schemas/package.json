@@ -38,5 +38,8 @@
   "eslintConfig": {
     "extends": "@logto"
   },
-  "prettier": "@logto/eslint-config/.prettierrc"
+  "prettier": "@logto/eslint-config/.prettierrc",
+  "dependencies": {
+    "@logto/phrases": "^0.1.0"
+  }
 }
