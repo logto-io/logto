@@ -4,7 +4,7 @@
   "main": "lib/index.js",
   "repository": "https://github.com/logto-io/schemas",
   "author": "Logto",
-  "license": "UNLICENSED",
+  "license": "MPL-2.0",
   "files": [
     "lib"
   ],

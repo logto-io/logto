@@ -4,7 +4,7 @@
   "description": "Logto shared phrases (l10n).",
   "author": "Gao Sun <gaosun.dev@gmail.com>",
   "homepage": "https://github.com/logto-io/logto#readme",
-  "license": "UNLICENSED",
+  "license": "MPL-2.0",
   "main": "lib/index.js",
   "private": true,
   "files": [

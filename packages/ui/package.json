@@ -1,7 +1,7 @@
 {
   "name": "@logto/ui",
   "version": "0.1.0",
-  "license": "UNLICENSED",
+  "license": "MPL-2.0",
   "private": true,
   "scripts": {
     "preinstall": "npx only-allow pnpm",
