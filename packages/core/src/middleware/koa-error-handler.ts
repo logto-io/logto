@@ -1,4 +1,5 @@
-import RequestError, { RequestErrorBody } from '@/errors/RequestError';
+import RequestError from '@/errors/RequestError';
+import { RequestErrorBody } from '@logto/schemas';
 import decamelize from 'decamelize';
 import { Middleware } from 'koa';
 import { errors } from 'oidc-provider';
