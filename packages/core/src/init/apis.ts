@@ -1,16 +1,16 @@
 import Koa from 'koa';
 import Router from 'koa-router';
 import { Provider } from 'oidc-provider';
-import signInRoutes from '@/routes/sign-in';
-import registerRoutes from '@/routes/register';
+import sessionRoutes from '@/routes/session';
+import userRoutes from '@/routes/user';
 import swaggerRoutes from '@/routes/swagger';
 import mount from 'koa-mount';
 
 const createRouter = (provider: Provider): Router => {
   const router = new Router();
 
-  signInRoutes(router, provider);
-  registerRoutes(router);
+  sessionRoutes(router, provider);
+  userRoutes(router);
   swaggerRoutes(router);
 
   return router;
