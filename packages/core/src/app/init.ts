@@ -4,10 +4,10 @@ import Koa from 'koa';
 import koaLogger from 'koa-logger';
 
 import koaErrorHandler from '@/middleware/koa-error-handler';
-import { port } from '@/consts';
+import { port } from '@/env/consts';
 import koaUIProxy from '@/middleware/koa-ui-proxy';
-import initOidc from './oidc';
-import initRouter from './apis';
+import initOidc from '@/oidc/init';
+import initRouter from '@/routes/init';
 
 export default async function initApp(app: Koa): Promise<void> {
   app.use(koaErrorHandler());
