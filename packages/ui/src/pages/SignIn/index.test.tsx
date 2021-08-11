@@ -10,7 +10,7 @@ describe('<SignIn />', () => {
     const { queryByText, getByText } = render(<SignIn />);
     expect(queryByText('Sign in to Logto')).not.toBeNull();
 
-    const submit = getByText('sign_in.title');
+    const submit = getByText('sign_in.action');
     fireEvent.click(submit);
 
     await waitFor(() => {
