@@ -123,6 +123,7 @@ importers:
     specifiers:
       '@logto/eslint-config': ^0.1.0-rc.14
       '@logto/essentials': ^1.1.0-rc.2
+      '@logto/phrases': ^0.1.0
       '@logto/ts-config': ^0.1.0-rc.14
       '@types/lodash.uniq': ^4.5.6
       '@types/node': '14'
@@ -135,6 +136,8 @@ importers:
       prettier: ^2.3.2
       ts-node: ^10.0.0
       typescript: ^4.3.5
+    dependencies:
+      '@logto/phrases': link:../phrases
     devDependencies:
       '@logto/eslint-config': 0.1.0-rc.14_aa6010e91de57dec3f7388187c7addf8
       '@logto/essentials': 1.1.0-rc.2
