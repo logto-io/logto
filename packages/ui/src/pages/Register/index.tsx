@@ -57,13 +57,13 @@ const App: FC = () => {
         )}
         <Button
           isDisabled={isLoading}
-          value={isLoading ? t('register.loading') : t('register.title')}
+          value={isLoading ? t('register.loading') : t('register.action')}
           onClick={signUp}
         />
 
         <div className={styles.haveAccount}>
           <span className={styles.prefix}>{t('register.have_account')}</span>
-          <TextLink href="/sign-in">{t('sign_in.title')}</TextLink>
+          <TextLink href="/sign-in">{t('sign_in.action')}</TextLink>
         </div>
       </form>
     </div>

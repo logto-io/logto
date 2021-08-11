@@ -60,7 +60,7 @@ const Home: FC = () => {
         )}
         <Button
           isDisabled={isLoading}
-          value={isLoading ? t('sign_in.loading') : t('sign_in.title')}
+          value={isLoading ? t('sign_in.loading') : t('sign_in.action')}
           onClick={signIn}
         />
         <TextLink className={styles.createAccount} href="/register">
