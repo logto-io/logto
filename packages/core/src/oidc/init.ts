@@ -7,7 +7,8 @@ import postgresAdapter from '@/oidc/adapter';
 import { fromKeyLike } from 'jose/jwk/from_key_like';
 import { getEnv } from '@/utils/env';
 import { findUserById } from '@/queries/user';
-import { oidcIssuer, routes } from '@/consts';
+import { oidcIssuer } from '@/env/consts';
+import { routes } from '@/routes/consts';
 
 export default async function initOidc(app: Koa): Promise<Provider> {
   const privateKey = crypto.createPrivateKey(

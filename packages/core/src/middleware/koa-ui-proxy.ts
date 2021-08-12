@@ -3,7 +3,7 @@ import { MiddlewareType } from 'koa';
 import proxy from 'koa-proxies';
 import serveStatic from 'koa-static';
 import { IRouterParamContext } from 'koa-router';
-import { isProduction, mountedApps } from '@/consts';
+import { isProduction, mountedApps } from '@/env/consts';
 
 const PATH_TO_UI_DIST = '../ui/build/public';
 const uiDistFiles = fs.readdirSync(PATH_TO_UI_DIST);
