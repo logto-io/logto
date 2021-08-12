@@ -6,7 +6,7 @@
     "preinstall": "npx only-allow pnpm",
     "lerna": "lerna",
     "bootstrap": "lerna bootstrap",
-    "prepare": "if test \"$NODE_ENV\" != \"production\" ; then husky install && lerna run --concurrency 1 --stream prepack ; fi",
+    "prepare": "if test \"$NODE_ENV\" != \"production\" ; then husky install && lerna run --stream prepack ; fi",
     "dev": "lerna run --parallel dev"
   },
   "devDependencies": {
