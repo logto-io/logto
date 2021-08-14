@@ -15,6 +15,11 @@ const translation = {
 };
 
 const errors = {
+  auth: {
+    authorization_header_missing: 'Authorization header is missing.',
+    authorization_type_not_supported: 'Authorization type is not supported.',
+    unauthorized: 'Unauthorized. Please check credentils and its scope.',
+  },
   guard: {
     invalid_input: 'The request input is invalid.',
   },
