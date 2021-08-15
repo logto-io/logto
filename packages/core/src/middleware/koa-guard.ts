@@ -17,7 +17,7 @@ export type Guarded<QueryT, BodyT, ParametersT> = {
   params: ParametersT;
 };
 
-export type WithGuarded<
+export type WithGuardedContext<
   ContextT extends IRouterParamContext,
   GuardQueryT,
   GuardBodyT,
@@ -53,12 +53,12 @@ export default function koaGuard<
   params,
 }: GuardConfig<GuardQueryT, GuardBodyT, GuardParametersT>): MiddlewareType<
   StateT,
-  WithGuarded<ContextT, GuardQueryT, GuardBodyT, GuardParametersT>,
+  WithGuardedContext<ContextT, GuardQueryT, GuardBodyT, GuardParametersT>,
   ResponseBodyT
 > {
   const guard: MiddlewareType<
     StateT,
-    WithGuarded<ContextT, GuardQueryT, GuardBodyT, GuardParametersT>,
+    WithGuardedContext<ContextT, GuardQueryT, GuardBodyT, GuardParametersT>,
     ResponseBodyT
   > = async (ctx, next) => {
     try {
@@ -78,7 +78,7 @@ export default function koaGuard<
   const guardMiddleware: WithGuardConfig<
     MiddlewareType<
       StateT,
-      WithGuarded<ContextT, GuardQueryT, GuardBodyT, GuardParametersT>,
+      WithGuardedContext<ContextT, GuardQueryT, GuardBodyT, GuardParametersT>,
       ResponseBodyT
     >
   > = async function (ctx, next) {

@@ -1,26 +1,21 @@
-import crypto from 'crypto';
 import Koa from 'koa';
 import mount from 'koa-mount';
 import { Provider } from 'oidc-provider';
 import postgresAdapter from '@/oidc/adapter';
 
 import { fromKeyLike } from 'jose/jwk/from_key_like';
-import { getEnv } from '@/utils/env';
 import { findUserById } from '@/queries/user';
-import { oidcIssuer } from '@/env/consts';
 import { routes } from '@/routes/consts';
+import { issuer, privateKey } from './consts';
 
 export default async function initOidc(app: Koa): Promise<Provider> {
-  const privateKey = crypto.createPrivateKey(
-    Buffer.from(getEnv('OIDC_PROVIDER_PRIVATE_KEY_BASE64'), 'base64')
-  );
   const keys = [await fromKeyLike(privateKey)];
   const cookieConfig = Object.freeze({
     sameSite: 'lax',
     path: '/',
     signed: true,
   } as const);
-  const oidc = new Provider(oidcIssuer, {
+  const oidc = new Provider(issuer, {
     adapter: postgresAdapter,
     renderError: (ctx, out, error) => {
       console.log('OIDC error', error);
@@ -39,6 +34,10 @@ export default async function initOidc(app: Koa): Promise<Provider> {
       revocation: { enabled: true },
       introspection: { enabled: true },
       devInteractions: { enabled: false },
+      resourceIndicators: {
+        enabled: true,
+        getResourceServerInfo: () => ({ scope: '', accessTokenFormat: 'jwt' }),
+      },
     },
     interactions: {
       url: (_, interaction) => {
