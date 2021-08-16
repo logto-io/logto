@@ -5,22 +5,29 @@ import sessionRoutes from '@/routes/session';
 import userRoutes from '@/routes/user';
 import swaggerRoutes from '@/routes/swagger';
 import mount from 'koa-mount';
-import applicationRoutes from './application';
+import koaAuth, { WithAuthContext } from '@/middleware/koa-auth';
+import applicationRoutes from '@/routes/application';
 
-const createRouter = (provider: Provider): Router => {
-  const router = new Router();
+const createRouters = (provider: Provider) => {
+  const anonymousRouter = new Router();
 
-  sessionRoutes(router, provider);
-  userRoutes(router);
+  sessionRoutes(anonymousRouter, provider);
+  userRoutes(anonymousRouter);
+  swaggerRoutes(anonymousRouter);
+
+  const router = new Router<unknown, WithAuthContext>();
+  router.use(koaAuth());
   applicationRoutes(router);
-  swaggerRoutes(router);
 
-  return router;
+  return [anonymousRouter, router];
 };
 
 export default function initRouter(app: Koa, provider: Provider) {
-  const router = createRouter(provider);
-  const apisApp = new Koa().use(router.routes()).use(router.allowedMethods());
+  const apisApp = new Koa();
+
+  for (const router of createRouters(provider)) {
+    apisApp.use(router.routes()).use(router.allowedMethods());
+  }
 
   app.use(mount('/api', apisApp));
 }

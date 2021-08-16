@@ -2,10 +2,8 @@ import Router from 'koa-router';
 import { nativeEnum, object, string } from 'zod';
 import { ApplicationType } from '@logto/schemas';
 import koaGuard from '@/middleware/koa-guard';
-import koaAuth from '@/middleware/koa-auth';
 
-export default function applicationRoutes(router: Router) {
-  router.use('/application', koaAuth());
+export default function applicationRoutes<StateT, ContextT>(router: Router<StateT, ContextT>) {
   router.post(
     '/application',
     koaGuard({
