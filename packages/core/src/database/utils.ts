@@ -21,9 +21,18 @@ export const excludeAutoSetFields = <T extends string>(fields: readonly T[]) =>
     )
   );
 
-export const convertToPrimitive = (value: SchemaValue): SchemaValuePrimitive => {
+/**
+ * Note `undefined` is removed from the acceptable list,
+ * since you should NOT call this function if ignoring the field is the desired behavior.
+ * Calling this function with `null` means an explicit `null` setting in database is expected.
+ * @param value The value to convert.
+ * @returns A primitive that can be saved into database.
+ */
+export const convertToPrimitive = (
+  value: NonNullable<SchemaValue> | null
+): NonNullable<SchemaValuePrimitive> | null => {
   if (value === null) {
-    return value;
+    return null;
   }
 
   if (typeof value === 'object') {

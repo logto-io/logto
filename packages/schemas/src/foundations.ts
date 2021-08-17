@@ -1,4 +1,4 @@
-export type SchemaValuePrimitive = string | number | boolean | null;
+export type SchemaValuePrimitive = string | number | boolean | undefined;
 export type SchemaValue = SchemaValuePrimitive | Record<string, unknown>;
 export type SchemaLike<Key extends string> = {
   [key in Key]: SchemaValue;
