@@ -1,7 +1,8 @@
 import { UserDBEntry, Users } from '@logto/schemas';
 import { sql } from 'slonik';
 import pool from '@/database/pool';
-import { convertToIdentifiers, insertInto } from '@/database/utils';
+import { convertToIdentifiers } from '@/database/utils';
+import { buildInsertInto } from '@/database/insert';
 
 const { table, fields } = convertToIdentifiers(Users);
 
@@ -33,5 +34,4 @@ export const hasUserWithId = async (id: string) =>
   where ${fields.id}=${id}
 `);
 
-export const insertUser = async (user: UserDBEntry) =>
-  pool.query(insertInto(table, fields, Users.fieldKeys, user));
+export const insertUser = buildInsertInto<UserDBEntry>(pool, Users, { returning: true });

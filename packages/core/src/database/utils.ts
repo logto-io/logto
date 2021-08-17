@@ -1,12 +1,41 @@
-import { IdentifierSqlTokenType, sql } from 'slonik';
+import { Falsy, notFalsy } from '@logto/essentials';
+import { SchemaValuePrimitive, SchemaValue } from '@logto/schemas';
+import { sql, SqlSqlTokenType } from 'slonik';
+import { FieldIdentifiers, Table } from './types';
 
-type Table = { table: string; fields: Record<string, string> };
-type FieldIdentifiers<Key extends string | number | symbol> = {
-  [key in Key]: IdentifierSqlTokenType;
+export const conditionalSql = <T>(
+  value: T,
+  buildSql: (value: Exclude<T, Falsy>) => SqlSqlTokenType
+) => (notFalsy(value) ? buildSql(value) : sql``);
+
+export const autoSetFields = Object.freeze(['createdAt', 'updatedAt'] as const);
+// `Except` type will require omit fields to be the key of given type
+// eslint-disable-next-line @typescript-eslint/ban-types
+export type OmitAutoSetFields<T> = Omit<T, typeof autoSetFields[number]>;
+export type ExcludeAutoSetFields<T> = Exclude<T, typeof autoSetFields[number]>;
+export const excludeAutoSetFields = <T extends string>(fields: readonly T[]) =>
+  Object.freeze(
+    fields.filter(
+      (field): field is ExcludeAutoSetFields<T> =>
+        !(autoSetFields as readonly string[]).includes(field)
+    )
+  );
+
+export const convertToPrimitive = (value: SchemaValue): SchemaValuePrimitive => {
+  if (value === null) {
+    return value;
+  }
+
+  if (typeof value === 'object') {
+    return JSON.stringify(value);
+  }
+
+  if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') {
+    return value;
+  }
+
+  throw new Error(`Cannot convert to primitive from ${typeof value}`);
 };
-
-const convertToPrimitive = <T>(value: T) =>
-  value !== null && typeof value === 'object' ? JSON.stringify(value) : value;
 
 export const convertToIdentifiers = <T extends Table>(
   { table, fields }: T,
@@ -22,24 +51,3 @@ export const convertToIdentifiers = <T extends Table>(
     {} as FieldIdentifiers<keyof T['fields']>
   ),
 });
-
-export const insertInto = <Type, Key extends keyof Type = keyof Type>(
-  table: IdentifierSqlTokenType,
-  fields: FieldIdentifiers<Key>,
-  fieldKeys: readonly Key[],
-  value: { [key in Key]?: Type[key] }
-) => sql`
-  insert into ${table} (${sql.join(
-  fieldKeys.map((key) => fields[key]),
-  sql`, `
-)})
-  values (${sql.join(
-    fieldKeys.map((key) => convertToPrimitive(value[key] ?? null)),
-    sql`, `
-  )})`;
-
-export const setExcluded = (...fields: IdentifierSqlTokenType[]) =>
-  sql.join(
-    fields.map((field) => sql`${field}=excluded.${field}`),
-    sql`, `
-  );

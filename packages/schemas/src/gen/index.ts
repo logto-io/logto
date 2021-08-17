@@ -184,6 +184,10 @@ const generate = async () => {
         }),
       }));
 
+      if (tableWithTypes.length > 0) {
+        tsTypes.push('GeneratedSchema');
+      }
+
       const importTsTypes = conditionalString(
         tsTypes.length > 0 &&
           [
@@ -211,9 +215,13 @@ const generate = async () => {
         importTsTypes +
         importTypes +
         tableWithTypes
-          .map(({ name, fields }) =>
-            [
-              `export type ${pluralize(camelcase(name, { pascalCase: true }), 1)}DBEntry = {`,
+          .map(({ name, fields }) => {
+            const databaseEntryType = `${pluralize(
+              camelcase(name, { pascalCase: true }),
+              1
+            )}DBEntry`;
+            return [
+              `export type ${databaseEntryType} = {`,
               ...fields.map(
                 ({ name, type, isArray, required }) =>
                   `  ${camelcase(name)}${conditionalString(
@@ -222,7 +230,9 @@ const generate = async () => {
               ),
               '};',
               '',
-              `export const ${camelcase(name, { pascalCase: true })} = Object.freeze({`,
+              `export const ${camelcase(name, {
+                pascalCase: true,
+              })}: GeneratedSchema<${databaseEntryType}> = Object.freeze({`,
               `  table: '${name}',`,
               '  fields: {',
               ...fields.map(({ name }) => `    ${camelcase(name)}: '${name}',`),
@@ -230,9 +240,9 @@ const generate = async () => {
               '  fieldKeys: [',
               ...fields.map(({ name }) => `    '${camelcase(name)}',`),
               '  ],',
-              '} as const);',
-            ].join('\n')
-          )
+              '});',
+            ].join('\n');
+          })
           .join('\n') +
         '\n';
       await fs.writeFile(path.join(generatedDirectory, getOutputFileName(file) + '.ts'), content);

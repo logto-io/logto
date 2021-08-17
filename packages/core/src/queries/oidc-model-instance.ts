@@ -1,5 +1,6 @@
+import { buildInsertInto } from '@/database/insert';
 import pool from '@/database/pool';
-import { convertToIdentifiers, insertInto, setExcluded } from '@/database/utils';
+import { convertToIdentifiers } from '@/database/utils';
 import { conditional } from '@logto/essentials';
 import {
   OidcModelInstanceDBEntry,
@@ -22,30 +23,12 @@ const withConsumed = <T>(data: T, consumedAt?: number): WithConsumed<T> => ({
 const convertResult = (result: QueryResult | null) =>
   conditional(result && withConsumed(result.payload, result.consumedAt));
 
-export const upsertInstance = async (
-  modelName: string,
-  id: string,
-  payload: OidcModelInstancePayload,
-  expiresIn: number
-) => {
-  await pool.query(
-    sql`
-      ${insertInto<OidcModelInstanceDBEntry>(
-        table,
-        fields,
-        ['modelName', 'id', 'payload', 'expiresAt'],
-        {
-          modelName,
-          id,
-          payload,
-          expiresAt: dayjs().add(expiresIn, 'second').unix(),
-        }
-      )}
-      on conflict (${fields.modelName}, ${fields.id}) do update
-      set ${setExcluded(fields.payload, fields.expiresAt)}
-    `
-  );
-};
+export const upsertInstance = buildInsertInto<OidcModelInstanceDBEntry>(pool, OidcModelInstances, {
+  onConflict: {
+    fields: [fields.modelName, fields.id],
+    setExcludedFields: [fields.payload, fields.expiresAt],
+  },
+});
 
 const findByModel = (modelName: string) => sql`
   select ${fields.payload}, ${fields.consumedAt}
