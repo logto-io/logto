@@ -38,7 +38,7 @@ export default function postgresAdapter(modelName: string): ReturnType<AdapterFa
         modelName,
         id,
         payload,
-        expiresAt: dayjs().add(expiresIn, 'second').unix(),
+        expiresAt: dayjs().add(expiresIn, 'second').valueOf(),
       }),
     find: async (id) => findPayloadById(modelName, id),
     findByUserCode: async (userCode) => findPayloadByPayloadField(modelName, 'userCode', userCode),

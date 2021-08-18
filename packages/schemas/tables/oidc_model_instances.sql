@@ -2,8 +2,8 @@ create table oidc_model_instances (
   model_name varchar(64) not null,
   id varchar(128) not null,
   payload jsonb /* @use OidcModelInstancePayload */ not null,
-  expires_at bigint not null,
-  consumed_at bigint,
+  expires_at timestamptz not null,
+  consumed_at timestamptz,
   primary key (model_name, id)
 );
 

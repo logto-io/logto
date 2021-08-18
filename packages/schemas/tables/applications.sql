@@ -5,6 +5,6 @@ create table applications (
   name varchar(256) not null,
   type application_type not null,
   oidc_client_metadata jsonb /* @use OidcClientMetadata */ not null,
-  created_at bigint not null default(extract(epoch from now())),
+  created_at timestamptz not null default(now()),
   primary key (id)
 );
