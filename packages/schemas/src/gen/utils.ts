@@ -82,7 +82,7 @@ const getRawType = (value: string): string => {
 // eslint-disable-next-line complexity
 export const getType = (
   value: string
-): 'string' | 'number' | 'boolean' | 'Record<string, unknown>' | 'Date' | undefined => {
+): 'string' | 'number' | 'boolean' | 'Record<string, unknown>' | undefined => {
   switch (getRawType(value)) {
     case 'bpchar':
     case 'char':
@@ -106,16 +106,15 @@ export const getType = (
     case 'numeric':
     case 'money':
     case 'oid':
+    case 'date':
+    case 'timestamp':
+    case 'timestamptz':
       return 'number';
     case 'bool':
       return 'boolean';
     case 'json':
     case 'jsonb':
       return 'Record<string, unknown>';
-    case 'date':
-    case 'timestamp':
-    case 'timestamptz':
-      return 'Date';
     default:
   }
 };

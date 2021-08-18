@@ -64,7 +64,7 @@ export const findPayloadByPayloadField = async <
 export const consumeInstanceById = async (modelName: string, id: string) => {
   await pool.query(sql`
     update ${table}
-    set ${fields.consumedAt}=${dayjs().unix()}
+    set ${fields.consumedAt}=${dayjs().valueOf()}
     where ${fields.modelName}=${modelName}
     and ${fields.id}=${id}
   `);
