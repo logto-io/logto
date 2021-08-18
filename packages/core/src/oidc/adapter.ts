@@ -9,6 +9,7 @@ import {
 } from '@/queries/oidc-model-instance';
 import { findApplicationById } from '@/queries/application';
 import { ApplicationDBEntry } from '@logto/schemas';
+import dayjs from 'dayjs';
 
 export default function postgresAdapter(modelName: string): ReturnType<AdapterFactory> {
   if (modelName === 'Client') {
@@ -32,7 +33,13 @@ export default function postgresAdapter(modelName: string): ReturnType<AdapterFa
   }
 
   return {
-    upsert: async (id, payload, expiresIn) => upsertInstance(modelName, id, payload, expiresIn),
+    upsert: async (id, payload, expiresIn) =>
+      upsertInstance({
+        modelName,
+        id,
+        payload,
+        expiresAt: dayjs().add(expiresIn, 'second').unix(),
+      }),
     find: async (id) => findPayloadById(modelName, id),
     findByUserCode: async (userCode) => findPayloadByPayloadField(modelName, 'userCode', userCode),
     findByUid: async (uid) => findPayloadByPayloadField(modelName, 'uid', uid),

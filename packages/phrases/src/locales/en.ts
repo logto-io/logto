@@ -37,6 +37,9 @@ const errors = {
   swagger: {
     invalid_zod_type: 'Invalid Zod type, please check route guard config.',
   },
+  entity: {
+    create_failed: 'Failed to create {{name}}.',
+  },
 };
 
 const en = Object.freeze({

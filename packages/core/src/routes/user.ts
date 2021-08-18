@@ -2,13 +2,13 @@ import Router from 'koa-router';
 import { object, string } from 'zod';
 import { encryptPassword } from '@/utils/password';
 import { hasUser, hasUserWithId, insertUser } from '@/queries/user';
-import { customAlphabet, nanoid } from 'nanoid';
+import { nanoid } from 'nanoid';
 import { PasswordEncryptionMethod } from '@logto/schemas';
 import koaGuard from '@/middleware/koa-guard';
 import RequestError from '@/errors/RequestError';
+import { buildIdGenerator } from '@/utils/id';
 
-const alphabet = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
-const userId = customAlphabet(alphabet, 12);
+const userId = buildIdGenerator(12);
 
 const generateUserId = async (maxRetries = 500) => {
   for (let i = 0; i < maxRetries; ++i) {
@@ -48,15 +48,13 @@ export default function userRoutes(router: Router) {
         passwordEncryptionMethod
       );
 
-      await insertUser({
+      ctx.body = await insertUser({
         id,
         username,
         passwordEncrypted,
         passwordEncryptionMethod,
         passwordEncryptionSalt,
       });
-
-      ctx.body = { id };
       return next();
     }
   );

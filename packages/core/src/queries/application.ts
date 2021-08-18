@@ -1,3 +1,4 @@
+import { buildInsertInto } from '@/database/insert';
 import pool from '@/database/pool';
 import { convertToIdentifiers } from '@/database/utils';
 import { ApplicationDBEntry, Applications } from '@logto/schemas';
@@ -11,3 +12,7 @@ export const findApplicationById = async (id: string) =>
   from ${table}
   where ${fields.id}=${id}
 `);
+
+export const insertApplication = buildInsertInto<ApplicationDBEntry>(pool, Applications, {
+  returning: true,
+});
