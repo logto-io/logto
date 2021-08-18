@@ -37,8 +37,8 @@ const errors = {
   swagger: {
     invalid_zod_type: 'Invalid Zod type, please check route guard config.',
   },
-  application: {
-    create_failed: 'Failed to create application.',
+  entity: {
+    create_failed: 'Failed to create {{name}}.',
   },
 };
 

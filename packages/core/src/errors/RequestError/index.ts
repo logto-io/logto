@@ -10,8 +10,12 @@ export default class RequestError extends Error {
   data: unknown;
 
   constructor(input: RequestErrorMetadata | LogtoErrorCode, data?: unknown) {
-    const { code, status = 400 } = typeof input === 'string' ? { code: input } : input;
-    const message = i18next.t<string, LogtoErrorI18nKey>(`errors:${code}`);
+    const {
+      code,
+      status = 400,
+      ...interpolation
+    } = typeof input === 'string' ? { code: input } : input;
+    const message = i18next.t<string, LogtoErrorI18nKey>(`errors:${code}`, interpolation);
 
     super(message);
 

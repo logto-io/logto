@@ -14,6 +14,7 @@ export type ApplicationDBEntry = {
 
 export const Applications: GeneratedSchema<ApplicationDBEntry> = Object.freeze({
   table: 'applications',
+  tableSingular: 'application',
   fields: {
     id: 'id',
     name: 'name',

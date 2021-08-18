@@ -16,6 +16,7 @@ export type UserDBEntry = {
 
 export const Users: GeneratedSchema<UserDBEntry> = Object.freeze({
   table: 'users',
+  tableSingular: 'user',
   fields: {
     id: 'id',
     username: 'username',

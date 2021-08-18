@@ -1,6 +1,6 @@
 import { LogtoErrorCode } from '@logto/phrases';
 
-export type RequestErrorMetadata = {
+export type RequestErrorMetadata = Record<string, unknown> & {
   code: LogtoErrorCode;
   status?: number;
 };

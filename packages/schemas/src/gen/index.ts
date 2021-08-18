@@ -234,6 +234,7 @@ const generate = async () => {
                 pascalCase: true,
               })}: GeneratedSchema<${databaseEntryType}> = Object.freeze({`,
               `  table: '${name}',`,
+              `  tableSingular: '${pluralize(name, 1)}',`,
               '  fields: {',
               ...fields.map(({ name }) => `    ${camelcase(name)}: '${name}',`),
               '  },',

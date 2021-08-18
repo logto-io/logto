@@ -78,7 +78,10 @@ export const buildInsertInto: BuildInsertInto = <Schema extends SchemaLike<strin
       rows: [entry],
     } = result;
 
-    assert(!returning || entry, new RequestError('application.create_failed'));
+    assert(
+      !returning || entry,
+      new RequestError({ code: 'entity.create_failed', name: rest.tableSingular })
+    );
     return entry;
   };
 };

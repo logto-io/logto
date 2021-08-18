@@ -7,6 +7,7 @@ export type SchemaLike<Key extends string> = {
 export type GeneratedSchema<Schema extends SchemaLike<string>> = keyof Schema extends string
   ? Readonly<{
       table: string;
+      tableSingular: string;
       fields: {
         [key in keyof Schema]: string;
       };

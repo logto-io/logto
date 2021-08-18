@@ -12,6 +12,7 @@ export type OidcModelInstanceDBEntry = {
 
 export const OidcModelInstances: GeneratedSchema<OidcModelInstanceDBEntry> = Object.freeze({
   table: 'oidc_model_instances',
+  tableSingular: 'oidc_model_instance',
   fields: {
     modelName: 'model_name',
     id: 'id',
