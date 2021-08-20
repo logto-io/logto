@@ -37,6 +37,10 @@ jobs:
         working-directory: packages/core
         run: pnpm lint
 
+      - name: Test
+        working-directory: packages/core
+        run: pnpm test
+
       - name: Build
         working-directory: packages/core
         run: pnpm build
