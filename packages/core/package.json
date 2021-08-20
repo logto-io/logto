@@ -10,7 +10,7 @@
     "preinstall": "npx only-allow pnpm",
     "precommit": "lint-staged",
     "build": "rm -rf build/ && tsc",
-    "lint": "eslint --format pretty --ext .ts src",
+    "lint": "eslint --ext .ts src",
     "dev": "rm -rf build/ && tsc-watch --preserveWatchOutput --onSuccess \"node ./build/index.js\"",
     "start": "NODE_ENV=production node build/index.js",
     "test": "jest"
@@ -42,8 +42,8 @@
     "zod": "^3.2.0"
   },
   "devDependencies": {
-    "@logto/eslint-config": "^0.1.0-rc.17",
-    "@logto/ts-config": "^0.1.0-rc.17",
+    "@logto/eslint-config": "^0.1.0-rc.18",
+    "@logto/ts-config": "^0.1.0-rc.18",
     "@types/jest": "^27.0.1",
     "@types/koa": "^2.13.3",
     "@types/koa-logger": "^3.1.1",
@@ -54,7 +54,6 @@
     "@types/node": "^16.3.1",
     "@types/oidc-provider": "^7.4.1",
     "eslint": "^7.30.0",
-    "eslint-formatter-pretty": "^4.1.0",
     "jest": "^27.0.6",
     "lint-staged": "^11.1.1",
     "openapi-types": "^9.1.0",

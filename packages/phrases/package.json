@@ -17,17 +17,16 @@
   "scripts": {
     "preinstall": "npx only-allow pnpm",
     "build": "rm -rf lib/ && tsc",
-    "lint": "eslint --format pretty \"src/**\"",
+    "lint": "eslint --ext .ts src",
     "prepack": "pnpm build"
   },
   "bugs": {
     "url": "https://github.com/logto-io/logto/issues"
   },
   "devDependencies": {
-    "@logto/eslint-config": "^0.1.0-rc.14",
-    "@logto/ts-config": "^0.1.0-rc.14",
+    "@logto/eslint-config": "^0.1.0-rc.18",
+    "@logto/ts-config": "^0.1.0-rc.18",
     "eslint": "^7.31.0",
-    "eslint-formatter-pretty": "^4.1.0",
     "prettier": "^2.3.2",
     "typescript": "^4.3.5"
   },

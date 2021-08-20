@@ -11,24 +11,23 @@
   "private": true,
   "scripts": {
     "preinstall": "npx only-allow pnpm",
-    "generate": "ts-node src/gen/index.ts && eslint --format pretty \"src/db-entries/**\" --fix",
+    "generate": "ts-node src/gen/index.ts && eslint \"src/db-entries/**\" --fix",
     "build": "pnpm generate && rm -rf lib/ && tsc --p tsconfig.build.json",
-    "lint": "eslint --format pretty \"src/**\"",
+    "lint": "eslint --ext .ts src",
     "prepack": "pnpm build"
   },
   "engines": {
     "node": ">=14.15.0"
   },
   "devDependencies": {
-    "@logto/eslint-config": "^0.1.0-rc.14",
+    "@logto/eslint-config": "^0.1.0-rc.18",
     "@logto/essentials": "^1.1.0-rc.2",
-    "@logto/ts-config": "^0.1.0-rc.14",
+    "@logto/ts-config": "^0.1.0-rc.18",
     "@types/lodash.uniq": "^4.5.6",
     "@types/node": "14",
     "@types/pluralize": "^0.0.29",
     "camelcase": "^6.2.0",
     "eslint": "^7.30.0",
-    "eslint-formatter-pretty": "^4.1.0",
     "lodash.uniq": "^4.5.0",
     "pluralize": "^8.0.0",
     "prettier": "^2.3.2",
