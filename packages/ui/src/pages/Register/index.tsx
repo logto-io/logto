@@ -1,37 +1,37 @@
-import React, { FC, FormEventHandler, useState, useCallback } from 'react';
+import React, { FC, FormEventHandler, useState, useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import classNames from 'classnames';
+import { LogtoErrorI18nKey } from '@logto/phrases';
 
 import { register } from '@/apis/register';
 import Button from '@/components/Button';
 import Input from '@/components/Input';
 import MessageBox from '@/components/MessageBox';
 import TextLink from '@/components/TextLink';
+import useApi from '@/hooks/use-api';
 
 import styles from './index.module.scss';
 
-export type PageState = 'idle' | 'loading' | 'error';
-
-const App: FC = () => {
-  const { t } = useTranslation();
+const Register: FC = () => {
+  const { t, i18n } = useTranslation();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [pageState, setPageState] = useState<PageState>('idle');
-  const isLoading = pageState === 'loading';
+
+  const { loading, error, result, run: asyncRegister } = useApi(register);
 
   const signUp: FormEventHandler = useCallback(
     async (event) => {
       event.preventDefault();
-      setPageState('loading');
-      try {
-        window.location.href = (await register(username, password)).redirectTo;
-      } catch {
-        // TODO: Show specific error after merge into monorepo
-        setPageState('error');
-      }
+      await asyncRegister(username, password);
     },
-    [username, password]
+    [username, password, asyncRegister]
   );
+
+  useEffect(() => {
+    if (result?.redirectTo) {
+      window.location.href = result.redirectTo;
+    }
+  }, [result]);
 
   return (
     <div className={classNames(styles.wrapper)}>
@@ -39,25 +39,27 @@ const App: FC = () => {
         <div className={styles.title}>{t('register.create_account')}</div>
         <Input
           name="username"
-          isDisabled={isLoading}
+          isDisabled={loading}
           placeholder={t('sign_in.username')}
           value={username}
           onChange={setUsername} // TODO: account validation
         />
         <Input
           name="password"
-          isDisabled={isLoading}
+          isDisabled={loading}
           placeholder={t('sign_in.password')}
           type="password"
           value={password}
           onChange={setPassword} // TODO: password validation
         />
-        {pageState === 'error' && (
-          <MessageBox className={styles.box}>{t('sign_in.error')}</MessageBox>
+        {error && (
+          <MessageBox className={styles.box}>
+            {i18n.t<string, LogtoErrorI18nKey>(`errors:${error.code}`)}
+          </MessageBox>
         )}
         <Button
-          isDisabled={isLoading}
-          value={isLoading ? t('register.loading') : t('register.action')}
+          isDisabled={loading}
+          value={loading ? t('register.loading') : t('register.action')}
           onClick={signUp}
         />
 
@@ -70,4 +72,4 @@ const App: FC = () => {
   );
 };
 
-export default App;
+export default Register;

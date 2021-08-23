@@ -21,6 +21,11 @@ module.exports = {
     /** @type {import('@jest/types').Config.InitialOptions} **/
     const config = { ...jestConfig };
 
+    config.transformIgnorePatterns = [
+      '^.+\\.module\\.(css|sass|scss)$',
+      '[/\\\\]node_modules[/\\\\]((?!ky[/\\\\]).)+\\.(js|jsx|mjs|cjs|ts|tsx)$',
+    ];
+
     config.moduleNameMapper = {
       ...config.moduleNameMapper,
       '^.+\\.(css|less|scss)$': 'babel-jest',
