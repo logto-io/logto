@@ -40,7 +40,8 @@ const errors = {
     invalid_zod_type: '无效的 Zod 类型，请检查路由 guard 配置。',
   },
   entity: {
-    create_failed: '创建{{name}}失败。',
+    create_failed: '创建 {{name}} 失败。',
+    not_exists: 'ID 为 `{{id}}` 的 {{name}} 不存在。',
   },
 };
 
