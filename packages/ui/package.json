@@ -18,6 +18,7 @@
   },
   "dependencies": {
     "@logto/phrases": "^0.1.0",
+    "@logto/schemas": "^0.1.0",
     "classnames": "^2.3.1",
     "i18next": "^20.3.3",
     "i18next-browser-languagedetector": "^6.1.2",

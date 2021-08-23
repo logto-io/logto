@@ -69,3 +69,7 @@ type AutoCompleteType =
   | 'sex'
   | 'url'
   | 'photo';
+
+interface Body {
+  json<T>(): Promise<T>;
+}

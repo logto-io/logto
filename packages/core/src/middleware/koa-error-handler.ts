@@ -1,5 +1,6 @@
 import RequestError from '@/errors/RequestError';
 import { RequestErrorBody } from '@logto/schemas';
+import { LogtoErrorCode } from '@logto/phrases';
 import decamelize from 'decamelize';
 import { Middleware } from 'koa';
 import { errors } from 'oidc-provider';
@@ -23,7 +24,8 @@ export default function koaErrorHandler<StateT, ContextT>(): Middleware<
         ctx.status = error.status;
         ctx.body = {
           message: error.error_description ?? error.message,
-          code: `oidc.${decamelize(error.name)}`,
+          // Assert error type of OIDCProviderError, code key should all covered in @logto/phrases
+          code: `oidc.${decamelize(error.name)}` as LogtoErrorCode,
           data: error.error_detail,
         };
         return;

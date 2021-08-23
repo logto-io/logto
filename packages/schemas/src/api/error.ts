@@ -5,4 +5,4 @@ export type RequestErrorMetadata = Record<string, unknown> & {
   status?: number;
 };
 
-export type RequestErrorBody = { message: string; data: unknown; code: string };
+export type RequestErrorBody = { message: string; data: unknown; code: LogtoErrorCode };
