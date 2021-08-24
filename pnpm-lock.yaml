@@ -6,12 +6,14 @@ importers:
     specifiers:
       '@commitlint/cli': ^13.1.0
       '@commitlint/config-conventional': ^13.1.0
+      '@commitlint/types': ^13.1.0
       husky: ^7.0.1
       lerna: ^4.0.0
       typescript: ^4.3.5
     devDependencies:
       '@commitlint/cli': 13.1.0
       '@commitlint/config-conventional': 13.1.0
+      '@commitlint/types': 13.1.0
       husky: 7.0.1
       lerna: 4.0.0
       typescript: 4.3.5
@@ -1660,7 +1662,7 @@ packages:
     resolution: {integrity: sha512-zcVjuT+OfKt8h91vhBxt05RMcTGEx6DM7Q9QZeuMbXFk6xgbsSEDMMapbJPA1bCZ81fa/1OQBijSYPrKvtt06g==}
     engines: {node: '>=v12'}
     dependencies:
-      chalk: 4.1.1
+      chalk: 4.1.2
     dev: true
 
   /@eslint/eslintrc/0.4.3:
