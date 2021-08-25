@@ -15,7 +15,7 @@ export type WithAuthContext<ContextT extends IRouterParamContext = IRouterParamC
     user: UserInfo;
   };
 
-const bearerToken = 'Bearer';
+const bearerTokenIdentifier = 'Bearer';
 
 const extractBearerTokenFromHeaders = ({ authorization }: IncomingHttpHeaders) => {
   assert(
@@ -23,13 +23,13 @@ const extractBearerTokenFromHeaders = ({ authorization }: IncomingHttpHeaders) =
     new RequestError({ code: 'auth.authorization_header_missing', status: 401 })
   );
   assert(
-    authorization.startsWith(bearerToken),
+    authorization.startsWith(bearerTokenIdentifier),
     new RequestError(
       { code: 'auth.authorization_type_not_supported', status: 401 },
-      { supportedTypes: [bearerToken] }
+      { supportedTypes: [bearerTokenIdentifier] }
     )
   );
-  return authorization.slice(bearerToken.length + 1);
+  return authorization.slice(bearerTokenIdentifier.length + 1);
 };
 
 const getUserIdFromRequest = async (request: Request) => {
