@@ -1,6 +1,8 @@
 name: Commitlint
 
-on: [pull_request]
+on:
+  pull_request:
+    types: [opened, edited, synchronize, reopened]
 
 jobs:
   lint-commits:
@@ -20,3 +22,6 @@ jobs:
 
       - name: Commitlint
         run: commitlint --from HEAD~${{ github.event.pull_request.commits }} --to HEAD
+
+      - name: Commitlint on PR title
+        run: echo ${{ github.event.pull_request.title }} | commitlint
