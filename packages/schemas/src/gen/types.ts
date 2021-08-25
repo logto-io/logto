@@ -1,0 +1,36 @@
+export type Field = {
+  name: string;
+  type?: string;
+  customType?: string;
+  tsType?: string;
+  required: boolean;
+  isArray: boolean;
+};
+
+// eslint-disable-next-line @typescript-eslint/ban-types
+export type FieldWithType = Omit<Field, 'type' | 'customType'> & { type: string; isEnum: boolean };
+
+export type Type = {
+  name: string;
+  type: 'enum';
+  values: string[];
+};
+
+export type GeneratedType = Type & {
+  tsName: string;
+};
+
+export type Table = {
+  name: string;
+  fields: Field[];
+};
+
+export type TableWithType = {
+  name: string;
+  fields: FieldWithType[];
+};
+
+export type FileData = {
+  types: Type[];
+  tables: Table[];
+};

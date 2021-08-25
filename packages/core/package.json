@@ -39,7 +39,7 @@
     "oidc-provider": "^7.4.1",
     "slonik": "^23.8.3",
     "slonik-interceptor-preset": "^1.2.10",
-    "zod": "^3.2.0"
+    "zod": "^3.8.1"
   },
   "devDependencies": {
     "@logto/eslint-config": "^0.1.0-rc.18",

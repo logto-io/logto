@@ -1,6 +1,7 @@
 import { Falsy, notFalsy } from '@logto/essentials';
 import { SchemaValuePrimitive, SchemaValue } from '@logto/schemas';
-import { sql, SqlSqlTokenType } from 'slonik';
+import dayjs from 'dayjs';
+import { sql, SqlSqlTokenType, SqlTokenType } from 'slonik';
 import { FieldIdentifiers, Table } from './types';
 
 export const conditionalSql = <T>(
@@ -25,18 +26,24 @@ export const excludeAutoSetFields = <T extends string>(fields: readonly T[]) =>
  * Note `undefined` is removed from the acceptable list,
  * since you should NOT call this function if ignoring the field is the desired behavior.
  * Calling this function with `null` means an explicit `null` setting in database is expected.
+ * @param key The key of value. Will treat as `timestamp` if it ends with `_at` or 'At' AND value is a number;
  * @param value The value to convert.
  * @returns A primitive that can be saved into database.
  */
-export const convertToPrimitive = (
+export const convertToPrimitiveOrSql = (
+  key: string,
   value: NonNullable<SchemaValue> | null
-): NonNullable<SchemaValuePrimitive> | null => {
+): NonNullable<SchemaValuePrimitive> | SqlTokenType | null => {
   if (value === null) {
     return null;
   }
 
   if (typeof value === 'object') {
     return JSON.stringify(value);
+  }
+
+  if (['_at', 'At'].some((value) => key.endsWith(value)) && typeof value === 'number') {
+    return sql`to_timestamp(${value / 1000})`;
   }
 
   if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') {
@@ -60,3 +67,5 @@ export const convertToIdentifiers = <T extends Table>(
     {} as FieldIdentifiers<keyof T['fields']>
   ),
 });
+
+export const convertToTimestamp = (time = dayjs()) => sql`to_timestamp(${time.valueOf() / 1000})`;

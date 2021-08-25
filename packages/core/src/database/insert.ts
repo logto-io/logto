@@ -5,7 +5,7 @@ import { DatabasePoolType, IdentifierSqlTokenType, sql } from 'slonik';
 import {
   conditionalSql,
   convertToIdentifiers,
-  convertToPrimitive,
+  convertToPrimitiveOrSql,
   excludeAutoSetFields,
   OmitAutoSetFields,
 } from './utils';
@@ -61,7 +61,7 @@ export const buildInsertInto: BuildInsertInto = <Schema extends SchemaLike<strin
       sql`, `
     )})
     values (${sql.join(
-      keys.map((key) => convertToPrimitive(data[key] ?? null)),
+      keys.map((key) => convertToPrimitiveOrSql(key, data[key] ?? null)),
       sql`, `
     )})
     ${conditionalSql(returning, () => sql`returning *`)}
