@@ -1,13 +1,12 @@
 import { buildInsertInto } from '@/database/insert';
 import pool from '@/database/pool';
-import { convertToIdentifiers } from '@/database/utils';
+import { convertToIdentifiers, convertToTimestamp } from '@/database/utils';
 import { conditional } from '@logto/essentials';
 import {
   OidcModelInstanceDBEntry,
   OidcModelInstancePayload,
   OidcModelInstances,
 } from '@logto/schemas';
-import dayjs from 'dayjs';
 import { sql, ValueExpressionType } from 'slonik';
 
 export type WithConsumed<T> = T & { consumed?: boolean };
@@ -64,7 +63,7 @@ export const findPayloadByPayloadField = async <
 export const consumeInstanceById = async (modelName: string, id: string) => {
   await pool.query(sql`
     update ${table}
-    set ${fields.consumedAt}=${dayjs().valueOf()}
+    set ${fields.consumedAt}=${convertToTimestamp()}
     where ${fields.modelName}=${modelName}
     and ${fields.id}=${id}
   `);

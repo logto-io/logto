@@ -7,43 +7,8 @@ import uniq from 'lodash.uniq';
 import { conditional, conditionalString } from '@logto/essentials';
 
 import { findFirstParentheses, getType, normalizeWhitespaces, removeParentheses } from './utils';
-
-type Field = {
-  name: string;
-  type?: string;
-  customType?: string;
-  tsType?: string;
-  required: boolean;
-  isArray: boolean;
-};
-
-// eslint-disable-next-line @typescript-eslint/ban-types
-type FieldWithType = Omit<Field, 'type' | 'customType'> & { type: string };
-
-type Type = {
-  name: string;
-  type: 'enum';
-  values: string[];
-};
-
-type GeneratedType = Type & {
-  tsName: string;
-};
-
-type Table = {
-  name: string;
-  fields: Field[];
-};
-
-type TableWithType = {
-  name: string;
-  fields: FieldWithType[];
-};
-
-type FileData = {
-  types: Type[];
-  tables: Table[];
-};
+import { FileData, Table, Field, Type, GeneratedType, TableWithType } from './types';
+import { generateSchema } from './schema';
 
 const directory = 'tables';
 
@@ -175,18 +140,22 @@ const generate = async () => {
           assert(finalType, `Type ${customType ?? 'N/A'} not found`);
 
           if (tsType) {
-            tsTypes.push(tsType);
-          } else if (type === undefined) {
+            tsTypes.push(tsType, `${camelcase(tsType)}Guard`);
+          } else if (!type) {
             customTypes.push(finalType);
           }
 
-          return { ...rest, type: finalType };
+          return { ...rest, tsType, type: finalType, isEnum: !tsType && !type };
         }),
       }));
 
       if (tableWithTypes.length > 0) {
-        tsTypes.push('GeneratedSchema');
+        tsTypes.push('GeneratedSchema', 'Guard');
       }
+
+      const importZod = conditionalString(
+        tableWithTypes.length > 0 && "import { z } from 'zod';\n\n"
+      );
 
       const importTsTypes = conditionalString(
         tsTypes.length > 0 &&
@@ -212,39 +181,10 @@ const generate = async () => {
 
       const content =
         header +
+        importZod +
         importTsTypes +
         importTypes +
-        tableWithTypes
-          .map(({ name, fields }) => {
-            const databaseEntryType = `${pluralize(
-              camelcase(name, { pascalCase: true }),
-              1
-            )}DBEntry`;
-            return [
-              `export type ${databaseEntryType} = {`,
-              ...fields.map(
-                ({ name, type, isArray, required }) =>
-                  `  ${camelcase(name)}${conditionalString(
-                    !required && '?'
-                  )}: ${type}${conditionalString(isArray && '[]')};`
-              ),
-              '};',
-              '',
-              `export const ${camelcase(name, {
-                pascalCase: true,
-              })}: GeneratedSchema<${databaseEntryType}> = Object.freeze({`,
-              `  table: '${name}',`,
-              `  tableSingular: '${pluralize(name, 1)}',`,
-              '  fields: {',
-              ...fields.map(({ name }) => `    ${camelcase(name)}: '${name}',`),
-              '  },',
-              '  fieldKeys: [',
-              ...fields.map(({ name }) => `    '${camelcase(name)}',`),
-              '  ],',
-              '});',
-            ].join('\n');
-          })
-          .join('\n') +
+        tableWithTypes.map((table) => generateSchema(table)).join('\n') +
         '\n';
       await fs.writeFile(path.join(generatedDirectory, getOutputFileName(file) + '.ts'), content);
     })
