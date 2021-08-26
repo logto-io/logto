@@ -2,7 +2,11 @@ import Router from 'koa-router';
 import { object, string } from 'zod';
 import { Applications } from '@logto/schemas';
 import koaGuard from '@/middleware/koa-guard';
-import { deleteApplicationById, insertApplication } from '@/queries/application';
+import {
+  deleteApplicationById,
+  insertApplication,
+  updateApplicationById,
+} from '@/queries/application';
 import { buildIdGenerator } from '@/utils/id';
 import { generateOidcClientMetadata } from '@/oidc/utils';
 
@@ -27,6 +31,24 @@ export default function applicationRoutes<StateT, ContextT>(router: Router<State
         oidcClientMetadata: generateOidcClientMetadata(),
         ...rest,
       });
+      return next();
+    }
+  );
+
+  router.patch(
+    '/application/:id',
+    koaGuard({
+      params: object({ id: string().min(1) }),
+      // Consider `.deepPartial()` if OIDC client metadata bloats
+      body: Applications.guard.omit({ id: true, createdAt: true }).partial(),
+    }),
+    async (ctx, next) => {
+      const {
+        params: { id },
+        body,
+      } = ctx.guard;
+
+      ctx.body = await updateApplicationById(id, body);
       return next();
     }
   );
