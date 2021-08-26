@@ -24,4 +24,4 @@ jobs:
         run: commitlint --from HEAD~${{ github.event.pull_request.commits }} --to HEAD
 
       - name: Commitlint on PR title
-        run: echo ${{ github.event.pull_request.title }} | commitlint
+        run: echo '${{ github.event.pull_request.title }}' | commitlint

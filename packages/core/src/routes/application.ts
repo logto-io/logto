@@ -2,7 +2,7 @@ import Router from 'koa-router';
 import { nativeEnum, object, string } from 'zod';
 import { ApplicationType } from '@logto/schemas';
 import koaGuard from '@/middleware/koa-guard';
-import { insertApplication } from '@/queries/application';
+import { deleteApplicationById, insertApplication } from '@/queries/application';
 import { buildIdGenerator } from '@/utils/id';
 import { generateOidcClientMetadata } from '@/oidc/utils';
 
@@ -26,6 +26,18 @@ export default function applicationRoutes<StateT, ContextT>(router: Router<State
         name,
         oidcClientMetadata: generateOidcClientMetadata(),
       });
+      return next();
+    }
+  );
+
+  router.delete(
+    '/application/:id',
+    koaGuard({ params: object({ id: string().min(1) }) }),
+    async (ctx, next) => {
+      const { id } = ctx.guard.params;
+      // Note: will need delete cascade when application is joint with other tables
+      await deleteApplicationById(id);
+      ctx.status = 204;
       return next();
     }
   );
