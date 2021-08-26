@@ -1,6 +1,6 @@
 import Router from 'koa-router';
-import { nativeEnum, object, string } from 'zod';
-import { ApplicationType } from '@logto/schemas';
+import { object, string } from 'zod';
+import { Applications } from '@logto/schemas';
 import koaGuard from '@/middleware/koa-guard';
 import { deleteApplicationById, insertApplication } from '@/queries/application';
 import { buildIdGenerator } from '@/utils/id';
@@ -12,19 +12,20 @@ export default function applicationRoutes<StateT, ContextT>(router: Router<State
   router.post(
     '/application',
     koaGuard({
-      body: object({
-        name: string().min(1),
-        type: nativeEnum(ApplicationType),
-      }),
+      body: Applications.guard
+        .omit({ id: true, createdAt: true })
+        .partial()
+        .merge(Applications.guard.pick({ name: true, type: true })),
     }),
     async (ctx, next) => {
-      const { name, type } = ctx.guard.body;
+      const { name, type, ...rest } = ctx.guard.body;
 
       ctx.body = await insertApplication({
         id: applicationId(),
         type,
         name,
         oidcClientMetadata: generateOidcClientMetadata(),
+        ...rest,
       });
       return next();
     }
