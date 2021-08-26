@@ -8,7 +8,7 @@
     "precommit": "lint-staged",
     "dev:tsc": "tsc -b -w --preserveWatchOutput",
     "dev:razzle": "razzle start",
-    "dev": "PORT=5000 concurrently -c \"blue,cyan\" \"pnpm:dev:tsc\" -k \"pnpm:dev:razzle\"",
+    "dev": "PORT=5000 concurrently -c \"blue,cyan\" -k -n \"ui:tsc,ui:razzle\" \"pnpm:dev:tsc\" \"pnpm:dev:razzle\"",
     "start": "NODE_ENV=production node build/server.js",
     "build": "tsc -b && razzle build --noninteractive",
     "lint": "eslint --ext .ts --ext .tsx src",

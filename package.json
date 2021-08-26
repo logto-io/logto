@@ -7,7 +7,7 @@
     "lerna": "lerna",
     "bootstrap": "lerna bootstrap",
     "prepare": "if test \"$NODE_ENV\" != \"production\" ; then husky install && lerna run --stream prepack ; fi",
-    "dev": "lerna run --parallel dev"
+    "dev": "lerna --scope=@logto/{core,ui} exec -- pnpm dev"
   },
   "devDependencies": {
     "@commitlint/cli": "^13.1.0",
