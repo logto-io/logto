@@ -32,19 +32,19 @@ type InsertIntoConfig = {
 };
 
 interface BuildInsertInto {
-  <Schema extends SchemaLike<string>>(
+  <Schema extends SchemaLike>(
     pool: DatabasePoolType,
     { fieldKeys, ...rest }: GeneratedSchema<Schema>,
     config: InsertIntoConfigReturning
   ): (data: OmitAutoSetFields<Schema>) => Promise<Schema>;
-  <Schema extends SchemaLike<string>>(
+  <Schema extends SchemaLike>(
     pool: DatabasePoolType,
     { fieldKeys, ...rest }: GeneratedSchema<Schema>,
     config?: InsertIntoConfig
   ): (data: OmitAutoSetFields<Schema>) => Promise<void>;
 }
 
-export const buildInsertInto: BuildInsertInto = <Schema extends SchemaLike<string>>(
+export const buildInsertInto: BuildInsertInto = <Schema extends SchemaLike>(
   pool: DatabasePoolType,
   { fieldKeys, ...rest }: GeneratedSchema<Schema>,
   config?: InsertIntoConfig | InsertIntoConfigReturning
@@ -55,7 +55,9 @@ export const buildInsertInto: BuildInsertInto = <Schema extends SchemaLike<strin
   const onConflict = config?.onConflict;
 
   return async (data: OmitAutoSetFields<Schema>): Promise<Schema | void> => {
-    const result = await pool.query<Schema>(sql`
+    const {
+      rows: [entry],
+    } = await pool.query<Schema>(sql`
     insert into ${table} (${sql.join(
       keys.map((key) => fields[key]),
       sql`, `
@@ -73,10 +75,6 @@ export const buildInsertInto: BuildInsertInto = <Schema extends SchemaLike<strin
     `
     )}
     `);
-
-    const {
-      rows: [entry],
-    } = result;
 
     assert(
       !returning || entry,

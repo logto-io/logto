@@ -1,8 +1,12 @@
 import Router from 'koa-router';
-import { nativeEnum, object, string } from 'zod';
-import { ApplicationType } from '@logto/schemas';
+import { object, string } from 'zod';
+import { Applications } from '@logto/schemas';
 import koaGuard from '@/middleware/koa-guard';
-import { deleteApplicationById, insertApplication } from '@/queries/application';
+import {
+  deleteApplicationById,
+  insertApplication,
+  updateApplicationById,
+} from '@/queries/application';
 import { buildIdGenerator } from '@/utils/id';
 import { generateOidcClientMetadata } from '@/oidc/utils';
 
@@ -12,20 +16,39 @@ export default function applicationRoutes<StateT, ContextT>(router: Router<State
   router.post(
     '/application',
     koaGuard({
-      body: object({
-        name: string().min(1),
-        type: nativeEnum(ApplicationType),
-      }),
+      body: Applications.guard
+        .omit({ id: true, createdAt: true })
+        .partial()
+        .merge(Applications.guard.pick({ name: true, type: true })),
     }),
     async (ctx, next) => {
-      const { name, type } = ctx.guard.body;
+      const { name, type, ...rest } = ctx.guard.body;
 
       ctx.body = await insertApplication({
         id: applicationId(),
         type,
         name,
         oidcClientMetadata: generateOidcClientMetadata(),
+        ...rest,
       });
+      return next();
+    }
+  );
+
+  router.patch(
+    '/application/:id',
+    koaGuard({
+      params: object({ id: string().min(1) }),
+      // Consider `.deepPartial()` if OIDC client metadata bloats
+      body: Applications.guard.omit({ id: true, createdAt: true }).partial(),
+    }),
+    async (ctx, next) => {
+      const {
+        params: { id },
+        body,
+      } = ctx.guard;
+
+      ctx.body = await updateApplicationById(id, body);
       return next();
     }
   );

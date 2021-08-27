@@ -8,11 +8,11 @@ export type Guard<T extends Record<string, unknown>> = ZodObject<
 
 export type SchemaValuePrimitive = string | number | boolean | undefined;
 export type SchemaValue = SchemaValuePrimitive | Record<string, unknown>;
-export type SchemaLike<Key extends string> = {
+export type SchemaLike<Key extends string = string> = {
   [key in Key]: SchemaValue;
 };
 
-export type GeneratedSchema<Schema extends SchemaLike<string>> = keyof Schema extends string
+export type GeneratedSchema<Schema extends SchemaLike> = keyof Schema extends string
   ? Readonly<{
       table: string;
       tableSingular: string;
