@@ -1,4 +1,4 @@
-import { buildInsertInto } from '@/database/insert';
+import { buildInsertInto } from '@/database/insert-into';
 import pool from '@/database/pool';
 import { convertToIdentifiers } from '@/database/utils';
 import RequestError from '@/errors/RequestError';
