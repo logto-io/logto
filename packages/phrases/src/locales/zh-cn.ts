@@ -27,6 +27,8 @@ const errors = {
   },
   oidc: {
     aborted: '用户终止了交互。',
+    invalid_scope: '不支持的 scope: {{scopes}}。',
+    invalid_scope_plural: '不支持的 scope: {{scopes}}。',
   },
   user: {
     username_exists: '用户名已存在。',
