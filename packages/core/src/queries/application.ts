@@ -32,6 +32,11 @@ export const deleteApplicationById = async (id: string) => {
     where id=${id}
   `);
   if (rowCount < 1) {
-    throw new RequestError({ code: 'entity.not_exists', name: Applications.tableSingular, id });
+    throw new RequestError({
+      code: 'entity.not_exists_with_id',
+      name: Applications.tableSingular,
+      id,
+      status: 404,
+    });
   }
 };

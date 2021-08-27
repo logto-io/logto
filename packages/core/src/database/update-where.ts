@@ -51,7 +51,12 @@ export const buildUpdateWhere: BuildUpdateWhere = <Schema extends SchemaLike>(
 
     assert(
       !returning || entry,
-      new RequestError({ code: 'entity.update_failed', name: schema.tableSingular })
+      new RequestError({
+        code: where.id ? 'entity.not_exists_with_id' : 'entity.not_exists',
+        name: schema.tableSingular,
+        id: where.id,
+        status: 404,
+      })
     );
     return entry;
   };

@@ -39,8 +39,8 @@ const errors = {
   },
   entity: {
     create_failed: 'Failed to create {{name}}.',
-    update_failed: 'Failed to update {{name}}.',
-    not_exists: 'The {{name}} with ID `{{id}}` does not exist.',
+    not_exists: 'The {{name}} does not exist.',
+    not_exists_with_id: 'The {{name}} with ID `{{id}}` does not exist.',
   },
 };
 
