@@ -7,8 +7,27 @@ import {
   convertToPrimitiveOrSql,
   convertToIdentifiers,
   convertToTimestamp,
+  conditionalSql,
 } from './utils';
 import { Table } from './types';
+
+describe('conditionalSql()', () => {
+  it('returns empty sql when value is falsy', () => {
+    expect(conditionalSql(false, () => sql`select 1`)).toEqual({
+      sql: '',
+      type: SqlToken,
+      values: [],
+    });
+  });
+
+  it('builds sql when value is truthy', () => {
+    expect(conditionalSql(true, () => sql`select 1`)).toEqual({
+      sql: 'select 1',
+      type: SqlToken,
+      values: [],
+    });
+  });
+});
 
 describe('excludeAutoSetFields()', () => {
   it('excludes auto set fields when needed', () => {
