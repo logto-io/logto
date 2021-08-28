@@ -14,9 +14,10 @@ export default function sessionRoutes(router: Router, provider: Provider) {
     '/session',
     koaGuard({ body: object({ username: string().optional(), password: string().optional() }) }),
     async (ctx, next) => {
+      const interaction = await provider.interactionDetails(ctx.req, ctx.res);
       const {
         prompt: { name },
-      } = await provider.interactionDetails(ctx.req, ctx.res);
+      } = interaction;
 
       if (name === 'login') {
         const { username, password } = ctx.guard.body;
@@ -64,9 +65,23 @@ export default function sessionRoutes(router: Router, provider: Provider) {
   );
 
   router.post('/session/consent', async (ctx, next) => {
-    const { session, grantId, params, prompt } = await provider.interactionDetails(
-      ctx.req,
-      ctx.res
+    const interaction = await provider.interactionDetails(ctx.req, ctx.res);
+    const { session, grantId, params, prompt } = interaction;
+
+    const { scope } = object({
+      scope: string().optional(),
+    }).parse(params);
+
+    // LOG-49: Connect and check scope with resource indicators
+    const scopes = scope?.split(' ') ?? [];
+    const invalidScopes = scopes.filter((scope) => !['openid', 'offline_access'].includes(scope));
+    assert(
+      invalidScopes.length === 0,
+      new RequestError({
+        code: 'oidc.invalid_scope',
+        count: invalidScopes.length,
+        scopes: invalidScopes.join(', '),
+      })
     );
 
     assert(session, 'Session not found');

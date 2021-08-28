@@ -25,6 +25,8 @@ const errors = {
   },
   oidc: {
     aborted: 'The end-user aborted interaction.',
+    invalid_scope: 'Scope {{scopes}} is not supported.',
+    invalid_scope_plural: 'Scope {{scopes}} are not supported.',
   },
   user: {
     username_exists: 'The username already exists.',
