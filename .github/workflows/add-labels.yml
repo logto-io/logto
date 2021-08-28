@@ -10,33 +10,7 @@ jobs:
   add_labels:
     runs-on: ubuntu-latest
     steps:
-<<<<<<< HEAD
       - uses: logto-io/actions-add-labels-run-steps@v1.0.1
-=======
-      - uses: actions/checkout@v2
-
-      - name: Extract Label
-        id: extract-label
-        run: |
-          echo "::set-output name=labels_to_add::$(
-            node -e "
-              const title = process.env.TITLE;
-              const labelMapping = {
-                chore: 'chore',
-                feat: 'feature',
-                fix: 'bugfix',
-                refactor: 'enhancement',
-                test: 'testing',
-              };
-              const foundKey = Object.keys(labelMapping).find((label) => title && title.startsWith(label));
-              console.log(foundKey ? labelMapping[foundKey] : '');
-            "
-          )"
-        env:
-          TITLE: ${{ github.event.pull_request.title || github.event.issue.title }}
-
-      - uses: actions-ecosystem/action-add-labels@v1.1.0
->>>>>>> 5dc8d4c (test(core): add unit tests for database utils)
         with:
           title: ${{ github.event.pull_request.title || github.event.issue.title }}
           github-token: ${{ github.token }}
