@@ -1,14 +1,15 @@
 import assert from 'assert';
 import fs from 'fs/promises';
 import path from 'path';
-import camelcase from 'camelcase';
-import pluralize from 'pluralize';
-import uniq from 'lodash.uniq';
-import { conditional, conditionalString } from '@logto/essentials';
 
-import { findFirstParentheses, getType, normalizeWhitespaces, removeParentheses } from './utils';
-import { FileData, Table, Field, Type, GeneratedType, TableWithType } from './types';
+import { conditional, conditionalString } from '@logto/essentials';
+import camelcase from 'camelcase';
+import uniq from 'lodash.uniq';
+import pluralize from 'pluralize';
+
 import { generateSchema } from './schema';
+import { FileData, Table, Field, Type, GeneratedType, TableWithType } from './types';
+import { findFirstParentheses, getType, normalizeWhitespaces, removeParentheses } from './utils';
 
 const directory = 'tables';
 

@@ -1,9 +1,10 @@
-import RequestError from '@/errors/RequestError';
-import { RequestErrorBody } from '@logto/schemas';
 import { LogtoErrorCode } from '@logto/phrases';
+import { RequestErrorBody } from '@logto/schemas';
 import decamelize from 'decamelize';
 import { Middleware } from 'koa';
 import { errors } from 'oidc-provider';
+
+import RequestError from '@/errors/RequestError';
 
 export default function koaErrorHandler<StateT, ContextT>(): Middleware<
   StateT,

@@ -1,7 +1,8 @@
-import React from 'react';
 import { render, fireEvent, waitFor } from '@testing-library/react';
-import Register from '@/pages/Register';
+import React from 'react';
+
 import { register } from '@/apis/register';
+import Register from '@/pages/Register';
 
 jest.mock('@/apis/register', () => ({ register: jest.fn(async () => Promise.resolve()) }));
 

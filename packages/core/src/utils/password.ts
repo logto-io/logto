@@ -1,7 +1,9 @@
 import assert from 'assert';
 import { createHash } from 'crypto';
+
 import { PasswordEncryptionMethod } from '@logto/schemas';
 import { number, string } from 'zod';
+
 import { assertEnv } from './env';
 
 const peppers = string()

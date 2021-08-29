@@ -1,7 +1,10 @@
 import assert from 'assert';
-import RequestError from '@/errors/RequestError';
+
 import { SchemaLike, GeneratedSchema } from '@logto/schemas';
 import { DatabasePoolType, IdentifierSqlTokenType, sql } from 'slonik';
+
+import RequestError from '@/errors/RequestError';
+
 import {
   conditionalSql,
   convertToIdentifiers,

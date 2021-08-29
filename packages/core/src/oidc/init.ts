@@ -1,11 +1,12 @@
+import { fromKeyLike } from 'jose/jwk/from_key_like';
 import Koa from 'koa';
 import mount from 'koa-mount';
 import { Provider } from 'oidc-provider';
-import postgresAdapter from '@/oidc/adapter';
 
-import { fromKeyLike } from 'jose/jwk/from_key_like';
+import postgresAdapter from '@/oidc/adapter';
 import { findUserById } from '@/queries/user';
 import { routes } from '@/routes/consts';
+
 import { issuer, privateKey } from './consts';
 
 export default async function initOidc(app: Koa): Promise<Provider> {

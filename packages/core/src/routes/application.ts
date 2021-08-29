@@ -1,14 +1,15 @@
+import { Applications } from '@logto/schemas';
 import Router from 'koa-router';
 import { object, string } from 'zod';
-import { Applications } from '@logto/schemas';
+
 import koaGuard from '@/middleware/koa-guard';
+import { generateOidcClientMetadata } from '@/oidc/utils';
 import {
   deleteApplicationById,
   insertApplication,
   updateApplicationById,
 } from '@/queries/application';
 import { buildIdGenerator } from '@/utils/id';
-import { generateOidcClientMetadata } from '@/oidc/utils';
 
 const applicationId = buildIdGenerator(21);
 

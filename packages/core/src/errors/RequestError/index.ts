@@ -1,7 +1,7 @@
-import pick from 'lodash.pick';
-import i18next from 'i18next';
 import { LogtoErrorCode, LogtoErrorI18nKey } from '@logto/phrases';
 import { RequestErrorBody, RequestErrorMetadata } from '@logto/schemas';
+import i18next from 'i18next';
+import pick from 'lodash.pick';
 
 export default class RequestError extends Error {
   code: LogtoErrorCode;

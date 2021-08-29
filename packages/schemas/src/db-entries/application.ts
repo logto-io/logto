@@ -8,7 +8,6 @@ import {
   GeneratedSchema,
   Guard,
 } from '../foundations';
-
 import { ApplicationType } from './custom-types';
 
 export type ApplicationDBEntry = {

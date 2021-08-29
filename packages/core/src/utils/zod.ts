@@ -1,7 +1,8 @@
+import { conditional } from '@logto/essentials';
 import { OpenAPIV3 } from 'openapi-types';
 import { ZodArray, ZodBoolean, ZodNumber, ZodObject, ZodOptional, ZodString } from 'zod';
+
 import RequestError from '@/errors/RequestError';
-import { conditional } from '@logto/essentials';
 
 export const zodTypeToSwagger = (config: unknown): OpenAPIV3.SchemaObject => {
   if (config instanceof ZodOptional) {

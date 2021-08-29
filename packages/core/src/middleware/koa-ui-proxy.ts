@@ -1,8 +1,10 @@
 import fs from 'fs';
+
 import { MiddlewareType } from 'koa';
 import proxy from 'koa-proxies';
-import serveStatic from 'koa-static';
 import { IRouterParamContext } from 'koa-router';
+import serveStatic from 'koa-static';
+
 import { isProduction, mountedApps } from '@/env/consts';
 
 const PATH_TO_UI_DIST = '../ui/build/public';

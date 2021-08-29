@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+
 import { Theme } from '@/components/AppContent';
 
 const darkThemeWatchMedia = window.matchMedia('(prefers-color-scheme: dark)');

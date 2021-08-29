@@ -1,7 +1,7 @@
+import { LogtoErrorI18nKey } from '@logto/phrases';
+import classNames from 'classnames';
 import React, { FC, FormEventHandler, useState, useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import classNames from 'classnames';
-import { LogtoErrorI18nKey } from '@logto/phrases';
 
 import { signInBasic } from '@/apis/sign-in';
 import Button from '@/components/Button';

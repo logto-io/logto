@@ -1,6 +1,7 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { render } from 'react-dom';
 import { MemoryRouter } from 'react-router-dom';
+
 import App from './App';
 
 jest.mock('ky', () => ({}));
@@ -8,7 +9,7 @@ jest.mock('ky', () => ({}));
 describe('<App />', () => {
   test('renders without exploding', () => {
     const div = document.createElement('div');
-    ReactDOM.render(
+    render(
       <MemoryRouter>
         <App />
       </MemoryRouter>,

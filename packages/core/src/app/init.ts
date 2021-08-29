@@ -1,10 +1,11 @@
-import https from 'https';
 import fs from 'fs/promises';
+import https from 'https';
+
 import Koa from 'koa';
 import koaLogger from 'koa-logger';
 
-import koaErrorHandler from '@/middleware/koa-error-handler';
 import { port } from '@/env/consts';
+import koaErrorHandler from '@/middleware/koa-error-handler';
 import koaUIProxy from '@/middleware/koa-ui-proxy';
 import initOidc from '@/oidc/init';
 import initRouter from '@/routes/init';

@@ -2,12 +2,12 @@
 import 'module-alias/register.js';
 
 import dotenv from 'dotenv';
+import Koa from 'koa';
 
 dotenv.config();
 
-import Koa from 'koa';
-import initI18n from './i18n/init';
 import initApp from './app/init';
+import initI18n from './i18n/init';
 
 const app = new Koa();
 

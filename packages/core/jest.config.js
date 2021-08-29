@@ -7,4 +7,7 @@ module.exports = {
       tsconfig: 'tsconfig.test.json',
     },
   },
+  moduleNameMapper: {
+    '^@/(.*)$': '<rootDir>/src/$1',
+  },
 };

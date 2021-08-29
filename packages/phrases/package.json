@@ -24,8 +24,8 @@
     "url": "https://github.com/logto-io/logto/issues"
   },
   "devDependencies": {
-    "@logto/eslint-config": "^0.1.0-rc.18",
-    "@logto/ts-config": "^0.1.0-rc.18",
+    "@logto/eslint-config": "^0.1.0-rc.24",
+    "@logto/ts-config": "^0.1.0-rc.24",
     "eslint": "^7.31.0",
     "prettier": "^2.3.2",
     "typescript": "^4.3.5"

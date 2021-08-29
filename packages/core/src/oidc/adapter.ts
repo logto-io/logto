@@ -1,4 +1,8 @@
+import { ApplicationDBEntry } from '@logto/schemas';
+import dayjs from 'dayjs';
 import { AdapterFactory, AllClientMetadata } from 'oidc-provider';
+
+import { findApplicationById } from '@/queries/application';
 import {
   consumeInstanceById,
   destoryInstanceById,
@@ -7,9 +11,6 @@ import {
   revokeInstanceByGrantId,
   upsertInstance,
 } from '@/queries/oidc-model-instance';
-import { findApplicationById } from '@/queries/application';
-import { ApplicationDBEntry } from '@logto/schemas';
-import dayjs from 'dayjs';
 
 export default function postgresAdapter(modelName: string): ReturnType<AdapterFactory> {
   if (modelName === 'Client') {

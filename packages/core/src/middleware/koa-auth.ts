@@ -1,14 +1,16 @@
 import assert from 'assert';
 import { IncomingHttpHeaders } from 'http';
-import RequestError from '@/errors/RequestError';
-import { MiddlewareType, Request } from 'koa';
-import { jwtVerify } from 'jose/jwt/verify';
-import { publicKey, issuer, adminResource } from '@/oidc/consts';
-import { IRouterParamContext } from 'koa-router';
+
 import { UserInfo, userInfoSelectFields } from '@logto/schemas';
-import { findUserById } from '@/queries/user';
+import { jwtVerify } from 'jose/jwt/verify';
+import { MiddlewareType, Request } from 'koa';
+import { IRouterParamContext } from 'koa-router';
 import pick from 'lodash.pick';
+
 import { developmentUserId, isProduction } from '@/env/consts';
+import RequestError from '@/errors/RequestError';
+import { publicKey, issuer, adminResource } from '@/oidc/consts';
+import { findUserById } from '@/queries/user';
 
 export type WithAuthContext<ContextT extends IRouterParamContext = IRouterParamContext> =
   ContextT & {

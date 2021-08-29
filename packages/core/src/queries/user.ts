@@ -1,8 +1,9 @@
 import { UserDBEntry, Users } from '@logto/schemas';
 import { sql } from 'slonik';
+
+import { buildInsertInto } from '@/database/insert-into';
 import pool from '@/database/pool';
 import { convertToIdentifiers } from '@/database/utils';
-import { buildInsertInto } from '@/database/insert-into';
 
 const { table, fields } = convertToIdentifiers(Users);
 

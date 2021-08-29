@@ -1,6 +1,7 @@
-import pluralize from 'pluralize';
-import camelcase from 'camelcase';
 import { conditionalString } from '@logto/essentials';
+import camelcase from 'camelcase';
+import pluralize from 'pluralize';
+
 import { TableWithType } from './types';
 
 export const generateSchema = ({ name, fields }: TableWithType) => {
