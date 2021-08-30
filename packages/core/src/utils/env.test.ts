@@ -1,5 +1,3 @@
-import { AssertionError } from 'assert';
-
 import { assertEnv, getEnv } from './env';
 
 describe('getEnv()', () => {
@@ -26,8 +24,6 @@ describe('assertEnv()', () => {
   });
 
   it("throws an error if env doesn't exist", () => {
-    expect(() => assertEnv('BAR')).toThrow(
-      new AssertionError({ message: 'env variable BAR not found' })
-    );
+    expect(() => assertEnv('BAR')).toThrow('env variable BAR not found');
   });
 });

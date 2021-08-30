@@ -1,10 +1,9 @@
-import assert from 'assert';
-
 import { notFalsy, Truthy } from '@logto/essentials';
 import { SchemaLike, GeneratedSchema } from '@logto/schemas';
 import { DatabasePoolType, sql } from 'slonik';
 
 import RequestError from '@/errors/RequestError';
+import assert from '@/utils/assert';
 import { isKeyOf } from '@/utils/schema';
 
 import { conditionalSql, convertToIdentifiers, convertToPrimitiveOrSql } from './utils';
@@ -48,18 +47,19 @@ export const buildUpdateWhere: BuildUpdateWhere = <Schema extends SchemaLike>(
     } = await pool.query<Schema>(sql`
       update ${table}
       set ${sql.join(connectKeyValueWithEqualSign(set), sql`, `)}
-      where ${sql.join(connectKeyValueWithEqualSign(where), sql`, `)}
+      where ${sql.join(connectKeyValueWithEqualSign(where), sql` and `)}
       ${conditionalSql(returning, () => sql`returning *`)}
     `);
 
     assert(
       !returning || entry,
-      new RequestError({
-        code: where.id ? 'entity.not_exists_with_id' : 'entity.not_exists',
-        name: schema.tableSingular,
-        id: where.id,
-        status: 404,
-      })
+      () =>
+        new RequestError({
+          code: where.id ? 'entity.not_exists_with_id' : 'entity.not_exists',
+          name: schema.tableSingular,
+          id: where.id,
+          status: 404,
+        })
     );
     return entry;
   };

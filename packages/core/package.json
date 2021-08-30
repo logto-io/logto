@@ -55,6 +55,7 @@
     "@types/oidc-provider": "^7.4.1",
     "eslint": "^7.30.0",
     "jest": "^27.0.6",
+    "jest-matcher-specific-error": "^1.0.0",
     "lint-staged": "^11.1.1",
     "openapi-types": "^9.1.0",
     "prettier": "^2.3.2",

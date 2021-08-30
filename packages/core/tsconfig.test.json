@@ -1,9 +1,6 @@
 {
-  "extends": "./tsconfig.base",
+  "extends": "./tsconfig",
   "compilerOptions": {
-    "isolatedModules": false
-  },
-  "include": [
-    "src/**/*.test.ts"
-  ]
+    "isolatedModules": false,
+  }
 }
