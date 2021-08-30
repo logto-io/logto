@@ -20,9 +20,9 @@
     "node": ">=14.15.0"
   },
   "devDependencies": {
-    "@logto/eslint-config": "^0.1.0-rc.24",
+    "@logto/eslint-config": "^0.1.0-rc.26",
     "@logto/essentials": "^1.1.0-rc.2",
-    "@logto/ts-config": "^0.1.0-rc.24",
+    "@logto/ts-config": "^0.1.0-rc.26",
     "@types/lodash.uniq": "^4.5.6",
     "@types/node": "14",
     "@types/pluralize": "^0.0.29",

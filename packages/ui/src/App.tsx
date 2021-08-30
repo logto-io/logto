@@ -3,7 +3,7 @@ import { Route, Switch } from 'react-router-dom';
 
 import AppContent from './components/AppContent';
 import useTheme from './hooks/use-theme';
-import initI18n from './init/i18n';
+import initI18n from './i18n/init';
 import Consent from './pages/Consent';
 import Register from './pages/Register';
 import SignIn from './pages/SignIn';
