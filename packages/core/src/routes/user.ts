@@ -1,12 +1,13 @@
-import Router from 'koa-router';
-import { object, string } from 'zod';
-import { encryptPassword } from '@/utils/password';
-import { hasUser, hasUserWithId, insertUser } from '@/queries/user';
-import { nanoid } from 'nanoid';
 import { PasswordEncryptionMethod } from '@logto/schemas';
-import koaGuard from '@/middleware/koa-guard';
+import Router from 'koa-router';
+import { nanoid } from 'nanoid';
+import { object, string } from 'zod';
+
 import RequestError from '@/errors/RequestError';
+import koaGuard from '@/middleware/koa-guard';
+import { hasUser, hasUserWithId, insertUser } from '@/queries/user';
 import { buildIdGenerator } from '@/utils/id';
+import { encryptPassword } from '@/utils/password';
 
 const userId = buildIdGenerator(12);
 

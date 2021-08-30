@@ -1,9 +1,12 @@
 import assert from 'assert';
-import RequestError from '@/errors/RequestError';
+
+import { notFalsy, Truthy } from '@logto/essentials';
 import { SchemaLike, GeneratedSchema } from '@logto/schemas';
 import { DatabasePoolType, sql } from 'slonik';
+
+import RequestError from '@/errors/RequestError';
 import { isKeyOf } from '@/utils/schema';
-import { notFalsy, Truthy } from '@logto/essentials';
+
 import { conditionalSql, convertToIdentifiers, convertToPrimitiveOrSql } from './utils';
 
 export type UpdateWhereData<Schema extends SchemaLike> = {

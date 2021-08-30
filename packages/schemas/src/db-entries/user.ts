@@ -3,7 +3,6 @@
 import { z } from 'zod';
 
 import { GeneratedSchema, Guard } from '../foundations';
-
 import { PasswordEncryptionMethod } from './custom-types';
 
 export type UserDBEntry = {

@@ -1,9 +1,10 @@
-import RequestError from '@/errors/RequestError';
 import { has } from '@logto/essentials';
 import { MiddlewareType } from 'koa';
 import koaBody from 'koa-body';
 import { IMiddleware, IRouterParamContext } from 'koa-router';
 import { ZodType } from 'zod';
+
+import RequestError from '@/errors/RequestError';
 
 export type GuardConfig<QueryT, BodyT, ParametersT> = {
   query?: ZodType<QueryT>;

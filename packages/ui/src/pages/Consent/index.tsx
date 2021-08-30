@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
-import { consent } from '@/apis/consent';
 import { useTranslation } from 'react-i18next';
+
+import { consent } from '@/apis/consent';
 
 const Consent = () => {
   const { t } = useTranslation();

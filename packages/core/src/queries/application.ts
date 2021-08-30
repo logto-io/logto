@@ -1,10 +1,11 @@
+import { ApplicationDBEntry, Applications } from '@logto/schemas';
+import { sql } from 'slonik';
+
 import { buildInsertInto } from '@/database/insert-into';
 import pool from '@/database/pool';
 import { buildUpdateWhere } from '@/database/update-where';
 import { convertToIdentifiers, OmitAutoSetFields } from '@/database/utils';
 import RequestError from '@/errors/RequestError';
-import { ApplicationDBEntry, Applications } from '@logto/schemas';
-import { sql } from 'slonik';
 
 const { table, fields } = convertToIdentifiers(Applications);
 

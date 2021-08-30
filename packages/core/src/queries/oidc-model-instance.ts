@@ -1,6 +1,3 @@
-import { buildInsertInto } from '@/database/insert-into';
-import pool from '@/database/pool';
-import { convertToIdentifiers, convertToTimestamp } from '@/database/utils';
 import { conditional } from '@logto/essentials';
 import {
   OidcModelInstanceDBEntry,
@@ -8,6 +5,10 @@ import {
   OidcModelInstances,
 } from '@logto/schemas';
 import { sql, ValueExpressionType } from 'slonik';
+
+import { buildInsertInto } from '@/database/insert-into';
+import pool from '@/database/pool';
+import { convertToIdentifiers, convertToTimestamp } from '@/database/utils';
 
 export type WithConsumed<T> = T & { consumed?: boolean };
 export type QueryResult = Pick<OidcModelInstanceDBEntry, 'payload' | 'consumedAt'>;

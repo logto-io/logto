@@ -1,4 +1,5 @@
 import { AssertionError } from 'assert';
+
 import { assertEnv, getEnv } from './env';
 
 describe('getEnv()', () => {

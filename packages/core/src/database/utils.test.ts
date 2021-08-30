@@ -1,6 +1,8 @@
+import dayjs from 'dayjs';
 import { sql } from 'slonik';
 import { SqlToken } from 'slonik/dist/src/tokens.js';
-import dayjs from 'dayjs';
+
+import { Table } from './types';
 import {
   excludeAutoSetFields,
   autoSetFields,
@@ -9,7 +11,6 @@ import {
   convertToTimestamp,
   conditionalSql,
 } from './utils';
-import { Table } from './types';
 
 describe('conditionalSql()', () => {
   it('returns empty sql when value is falsy', () => {

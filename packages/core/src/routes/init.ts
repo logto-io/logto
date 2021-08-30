@@ -1,12 +1,13 @@
 import Koa from 'koa';
+import mount from 'koa-mount';
 import Router from 'koa-router';
 import { Provider } from 'oidc-provider';
-import sessionRoutes from '@/routes/session';
-import userRoutes from '@/routes/user';
-import swaggerRoutes from '@/routes/swagger';
-import mount from 'koa-mount';
+
 import koaAuth, { WithAuthContext } from '@/middleware/koa-auth';
 import applicationRoutes from '@/routes/application';
+import sessionRoutes from '@/routes/session';
+import swaggerRoutes from '@/routes/swagger';
+import userRoutes from '@/routes/user';
 
 const createRouters = (provider: Provider) => {
   const anonymousRouter = new Router();

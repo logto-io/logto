@@ -1,13 +1,15 @@
 import assert from 'assert';
-import Router from 'koa-router';
-import { object, string } from 'zod';
-import { encryptPassword } from '@/utils/password';
-import { findUserByUsername } from '@/queries/user';
-import { Provider } from 'oidc-provider';
+
 import { conditional } from '@logto/essentials';
-import koaGuard from '@/middleware/koa-guard';
-import RequestError from '@/errors/RequestError';
 import { LogtoErrorCode } from '@logto/phrases';
+import Router from 'koa-router';
+import { Provider } from 'oidc-provider';
+import { object, string } from 'zod';
+
+import RequestError from '@/errors/RequestError';
+import koaGuard from '@/middleware/koa-guard';
+import { findUserByUsername } from '@/queries/user';
+import { encryptPassword } from '@/utils/password';
 
 export default function sessionRoutes(router: Router, provider: Provider) {
   router.post(

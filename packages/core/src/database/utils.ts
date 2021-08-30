@@ -2,6 +2,7 @@ import { Falsy, notFalsy } from '@logto/essentials';
 import { SchemaValuePrimitive, SchemaValue } from '@logto/schemas';
 import dayjs from 'dayjs';
 import { sql, SqlSqlTokenType, SqlTokenType } from 'slonik';
+
 import { FieldIdentifiers, Table } from './types';
 
 export const conditionalSql = <T>(

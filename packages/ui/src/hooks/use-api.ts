@@ -1,6 +1,6 @@
-import { useState } from 'react';
-import { HTTPError } from 'ky';
 import { RequestErrorBody } from '@logto/schemas';
+import { HTTPError } from 'ky';
+import { useState } from 'react';
 
 type UseApi<T extends any[], U> = {
   result?: U;
