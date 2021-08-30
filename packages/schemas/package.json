@@ -11,6 +11,7 @@
   "private": true,
   "scripts": {
     "preinstall": "npx only-allow pnpm",
+    "precommit": "lint-staged",
     "generate": "ts-node src/gen/index.ts && eslint \"src/db-entries/**\" --fix",
     "build": "pnpm generate && rm -rf lib/ && tsc --p tsconfig.build.json",
     "lint": "eslint --ext .ts src",
@@ -28,6 +29,7 @@
     "@types/pluralize": "^0.0.29",
     "camelcase": "^6.2.0",
     "eslint": "^7.30.0",
+    "lint-staged": "^11.1.1",
     "lodash.uniq": "^4.5.0",
     "pluralize": "^8.0.0",
     "prettier": "^2.3.2",

@@ -114,12 +114,14 @@ importers:
       '@logto/eslint-config': ^0.1.0-rc.24
       '@logto/ts-config': ^0.1.0-rc.24
       eslint: ^7.31.0
+      lint-staged: ^11.1.1
       prettier: ^2.3.2
       typescript: ^4.3.5
     devDependencies:
       '@logto/eslint-config': 0.1.0-rc.24_2055f56ab8dafa07df5c7ad406c8a4ab
       '@logto/ts-config': 0.1.0-rc.24_43787dd55a198a22e6c455f148105a9c
       eslint: 7.31.0
+      lint-staged: 11.1.1
       prettier: 2.3.2
       typescript: 4.3.5
 
@@ -134,6 +136,7 @@ importers:
       '@types/pluralize': ^0.0.29
       camelcase: ^6.2.0
       eslint: ^7.30.0
+      lint-staged: ^11.1.1
       lodash.uniq: ^4.5.0
       pluralize: ^8.0.0
       prettier: ^2.3.2
@@ -151,6 +154,7 @@ importers:
       '@types/pluralize': 0.0.29
       camelcase: 6.2.0
       eslint: 7.31.0
+      lint-staged: 11.1.1
       lodash.uniq: 4.5.0
       pluralize: 8.0.0
       prettier: 2.3.2
@@ -10492,7 +10496,7 @@ packages:
     resolution: {integrity: sha512-eTNGe6i78PSUUH2BZi1gZmGmNfb8IeN4z2OzMYxSZ1qnP1WXKn1E7D+OHwLbRDm/wQINnzIj0bsKJ6lLVSuZiQ==}
     hasBin: true
     dependencies:
-      chalk: 4.1.1
+      chalk: 4.1.2
       cli-truncate: 2.1.0
       commander: 7.2.0
       cosmiconfig: 7.0.0
@@ -10671,7 +10675,7 @@ packages:
     resolution: {integrity: sha512-8XPvpAA8uyhfteu8pIvQxpJZ7SYYdpUivZpGy6sFsBuKRY/7rQGavedeB8aK+Zkyq6upMFVL/9AW6vOYzfRyLg==}
     engines: {node: '>=10'}
     dependencies:
-      chalk: 4.1.1
+      chalk: 4.1.2
       is-unicode-supported: 0.1.0
     dev: true
 
