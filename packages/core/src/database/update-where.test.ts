@@ -7,22 +7,28 @@ import { buildUpdateWhere } from './update-where';
 
 describe('buildUpdateWhere()', () => {
   it('resolves a promise with `undefined` when `returning` is false', async () => {
-    const pool = createTestPool('update "users"\nset "username"=$1\nwhere "id"=$2');
-    const updateWhere = buildUpdateWhere(pool, Users);
-    await expect(updateWhere({ set: { username: '123' }, where: { id: 'foo' } })).resolves.toBe(
-      undefined
+    const pool = createTestPool(
+      'update "users"\nset "username"=$1\nwhere "id"=$2 and "username"=$3'
     );
+    const updateWhere = buildUpdateWhere(pool, Users);
+    await expect(
+      updateWhere({ set: { username: '123' }, where: { id: 'foo', username: '456' } })
+    ).resolves.toBe(undefined);
   });
 
   it('resolves a promise with single entity when `returning` is true', async () => {
-    const user: UserDBEntry = { id: 'foo', username: '123' };
+    const user: UserDBEntry = { id: 'foo', username: '123', primaryEmail: 'foo@bar.com' };
     const pool = createTestPool(
-      'update "users"\nset "username"=$1\nwhere "id"=$2\nreturning *',
-      (_, [username, id]) => ({ id: String(id), username: String(username) })
+      'update "users"\nset "username"=$1, "primary_email"=$2\nwhere "id"=$3\nreturning *',
+      (_, [username, primaryEmail, id]) => ({
+        id: String(id),
+        username: String(username),
+        primaryEmail: String(primaryEmail),
+      })
     );
     const updateWhere = buildUpdateWhere(pool, Users, true);
     await expect(
-      updateWhere({ set: { username: '123' }, where: { id: 'foo' } })
+      updateWhere({ set: { username: '123', primaryEmail: 'foo@bar.com' }, where: { id: 'foo' } })
     ).resolves.toStrictEqual(user);
   });
 

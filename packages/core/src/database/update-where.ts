@@ -47,7 +47,7 @@ export const buildUpdateWhere: BuildUpdateWhere = <Schema extends SchemaLike>(
     } = await pool.query<Schema>(sql`
       update ${table}
       set ${sql.join(connectKeyValueWithEqualSign(set), sql`, `)}
-      where ${sql.join(connectKeyValueWithEqualSign(where), sql`, `)}
+      where ${sql.join(connectKeyValueWithEqualSign(where), sql` and `)}
       ${conditionalSql(returning, () => sql`returning *`)}
     `);
 
