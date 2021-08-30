@@ -42,6 +42,7 @@ importers:
       got: ^11.8.2
       i18next: ^20.3.5
       jest: ^27.0.6
+      jest-matcher-specific-error: ^1.0.0
       jose: ^3.14.3
       koa: ^2.13.1
       koa-body: ^4.2.0
@@ -102,6 +103,7 @@ importers:
       '@types/oidc-provider': 7.4.2
       eslint: 7.31.0
       jest: 27.0.6
+      jest-matcher-specific-error: 1.0.0
       lint-staged: 11.1.1
       openapi-types: 9.1.0
       prettier: 2.3.2
@@ -9567,6 +9569,10 @@ packages:
     dependencies:
       jest-get-type: 27.0.6
       pretty-format: 27.0.6
+    dev: true
+
+  /jest-matcher-specific-error/1.0.0:
+    resolution: {integrity: sha512-thJdy9ibhDo8k+0arFalNCQBJ0u7eqTfpTzS2MzL3iCLmbRCkI+yhhKSiAxEi55e5ZUyf01ySa0fMqzF+sblAw==}
     dev: true
 
   /jest-matcher-utils/26.6.2:

@@ -3,6 +3,9 @@
   "compilerOptions": {
     "outDir": "build",
     "baseUrl": ".",
+    "types": [
+      "jest-matcher-specific-error"
+    ],
     "paths": {
       "@/*": [
         "src/*"
