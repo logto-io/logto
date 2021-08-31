@@ -21,6 +21,7 @@ const errors = {
     authorization_header_missing: 'Authorization 请求 header 遗漏。',
     authorization_type_not_supported: '不支持的 authorization 类型。',
     unauthorized: '未授权。请检查相关 credentials 和 scope。',
+    jwt_sub_missing: 'JWT 中找不到 `sub`。',
   },
   guard: {
     invalid_input: '请求内容有误。',
@@ -33,7 +34,12 @@ const errors = {
   user: {
     username_exists: '用户名已存在。',
   },
+  password: {
+    unsupported_encryption_method: '不支持的加密方法 {{name}}。',
+    pepper_not_found: '密码 pepper 未找到。请检查 core 的环境变量。',
+  },
   session: {
+    not_found: 'Session not found. Please go back and sign in again.',
     invalid_credentials: '用户名或密码错误，请检查您的输入。',
     invalid_sign_in_method: '当前登录方式不可用。',
     insufficient_info: '登录信息缺失，请检查您的输入。',

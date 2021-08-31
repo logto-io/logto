@@ -1,5 +1,3 @@
-import assert from 'assert';
-
 import { conditional } from '@logto/essentials';
 import { LogtoErrorCode } from '@logto/phrases';
 import Router from 'koa-router';
@@ -9,6 +7,7 @@ import { object, string } from 'zod';
 import RequestError from '@/errors/RequestError';
 import koaGuard from '@/middleware/koa-guard';
 import { findUserByUsername } from '@/queries/user';
+import assert from '@/utils/assert';
 import { encryptPassword } from '@/utils/password';
 
 export default function sessionRoutes(router: Router, provider: Provider) {
@@ -24,7 +23,7 @@ export default function sessionRoutes(router: Router, provider: Provider) {
       if (name === 'login') {
         const { username, password } = ctx.guard.body;
 
-        assert(username && password, new RequestError('session.insufficient_info'));
+        assert(username && password, 'session.insufficient_info');
 
         try {
           const { id, passwordEncrypted, passwordEncryptionMethod, passwordEncryptionSalt } =
@@ -32,12 +31,12 @@ export default function sessionRoutes(router: Router, provider: Provider) {
 
           assert(
             passwordEncrypted && passwordEncryptionMethod && passwordEncryptionSalt,
-            new RequestError('session.invalid_sign_in_method')
+            'session.invalid_sign_in_method'
           );
           assert(
             encryptPassword(id, password, passwordEncryptionSalt, passwordEncryptionMethod) ===
               passwordEncrypted,
-            new RequestError('session.invalid_credentials')
+            'session.invalid_credentials'
           );
 
           const redirectTo = await provider.interactionResult(
@@ -69,6 +68,7 @@ export default function sessionRoutes(router: Router, provider: Provider) {
   router.post('/session/consent', async (ctx, next) => {
     const interaction = await provider.interactionDetails(ctx.req, ctx.res);
     const { session, grantId, params, prompt } = interaction;
+    assert(session, 'session.not_found');
 
     const { scope } = object({
       scope: string().optional(),
@@ -77,16 +77,11 @@ export default function sessionRoutes(router: Router, provider: Provider) {
     // LOG-49: Connect and check scope with resource indicators
     const scopes = scope?.split(' ') ?? [];
     const invalidScopes = scopes.filter((scope) => !['openid', 'offline_access'].includes(scope));
-    assert(
-      invalidScopes.length === 0,
-      new RequestError({
-        code: 'oidc.invalid_scope',
-        count: invalidScopes.length,
-        scopes: invalidScopes.join(', '),
-      })
-    );
+    assert(invalidScopes.length === 0, 'oidc.invalid_scope', {
+      count: invalidScopes.length,
+      scopes: invalidScopes.join(', '),
+    });
 
-    assert(session, 'Session not found');
     const { accountId } = session;
     const grant =
       conditional(grantId && (await provider.Grant.find(grantId))) ??

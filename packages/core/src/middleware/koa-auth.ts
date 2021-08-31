@@ -1,4 +1,3 @@
-import assert from 'assert';
 import { IncomingHttpHeaders } from 'http';
 
 import { UserInfo, userInfoSelectFields } from '@logto/schemas';
@@ -11,6 +10,7 @@ import { developmentUserId, isProduction } from '@/env/consts';
 import RequestError from '@/errors/RequestError';
 import { publicKey, issuer, adminResource } from '@/oidc/consts';
 import { findUserById } from '@/queries/user';
+import assert from '@/utils/assert';
 
 export type WithAuthContext<ContextT extends IRouterParamContext = IRouterParamContext> =
   ContextT & {
@@ -45,7 +45,7 @@ const getUserIdFromRequest = async (request: Request) => {
     issuer,
     audience: adminResource,
   });
-  assert(sub);
+  assert(sub, new RequestError({ code: 'auth.jwt_sub_missing', status: 401 }));
   return sub;
 };
 

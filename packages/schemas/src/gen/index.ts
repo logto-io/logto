@@ -1,3 +1,5 @@
+// Consider add the better assert into `essentials` package
+// eslint-disable-next-line no-restricted-imports
 import assert from 'assert';
 import fs from 'fs/promises';
 import path from 'path';
