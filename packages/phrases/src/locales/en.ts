@@ -19,6 +19,7 @@ const errors = {
     authorization_header_missing: 'Authorization header is missing.',
     authorization_type_not_supported: 'Authorization type is not supported.',
     unauthorized: 'Unauthorized. Please check credentils and its scope.',
+    jwt_sub_missing: 'Missing `sub` in JWT.',
   },
   guard: {
     invalid_input: 'The request input is invalid.',
@@ -31,7 +32,12 @@ const errors = {
   user: {
     username_exists: 'The username already exists.',
   },
+  password: {
+    unsupported_encryption_method: 'The encryption method {{name}} is not supported.',
+    pepper_not_found: 'Password pepper not found. Please check your core envs.',
+  },
   session: {
+    not_found: 'Session not found. Please go back and sign in again.',
     invalid_credentials: 'Invalid credentials. Please check your input.',
     invalid_sign_in_method: 'Current sign-in method is not available.',
     insufficient_info: 'Insufficent sign-in info.',

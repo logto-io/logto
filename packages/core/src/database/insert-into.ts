@@ -1,9 +1,7 @@
-import assert from 'assert';
-
 import { SchemaLike, GeneratedSchema } from '@logto/schemas';
 import { DatabasePoolType, IdentifierSqlTokenType, sql } from 'slonik';
 
-import RequestError from '@/errors/RequestError';
+import assert from '@/utils/assert';
 
 import {
   conditionalSql,
@@ -79,10 +77,7 @@ export const buildInsertInto: BuildInsertInto = <Schema extends SchemaLike>(
     )}
     `);
 
-    assert(
-      !returning || entry,
-      new RequestError({ code: 'entity.create_failed', name: rest.tableSingular })
-    );
+    assert(!returning || entry, 'entity.create_failed', { name: rest.tableSingular });
     return entry;
   };
 };

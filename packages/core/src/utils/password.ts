@@ -1,8 +1,9 @@
-import assert from 'assert';
 import { createHash } from 'crypto';
 
 import { PasswordEncryptionMethod } from '@logto/schemas';
 import { number, string } from 'zod';
+
+import assert from '@/utils/assert';
 
 import { assertEnv } from './env';
 
@@ -21,13 +22,14 @@ export const encryptPassword = (
 ): string => {
   assert(
     method === PasswordEncryptionMethod.SaltAndPepper,
-    'Unsupported password encryption method'
+    'password.unsupported_encryption_method',
+    { method }
   );
 
   const sum = [...id].reduce((accumulator, current) => accumulator + current.charCodeAt(0), 0);
   const pepper = peppers[sum % peppers.length];
 
-  assert(pepper, 'Password pepper not found');
+  assert(pepper, 'password.pepper_not_found');
 
   let result = password;
 
