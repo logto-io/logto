@@ -6,6 +6,7 @@ import { generateOidcClientMetadata } from '@/oidc/utils';
 import {
   deleteApplicationById,
   findApplicationById,
+  findAllApplications,
   insertApplication,
   updateApplicationById,
 } from '@/queries/application';
@@ -16,6 +17,11 @@ import { AuthedRouter } from './types';
 const applicationId = buildIdGenerator(21);
 
 export default function applicationRoutes<T extends AuthedRouter>(router: T) {
+  router.get('/applications', async (ctx, next) => {
+    ctx.body = await findAllApplications();
+    return next();
+  });
+
   router.post(
     '/application',
     koaGuard({

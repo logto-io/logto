@@ -9,6 +9,12 @@ import RequestError from '@/errors/RequestError';
 
 const { table, fields } = convertToIdentifiers(Applications);
 
+export const findAllApplications = async () =>
+  pool.many<ApplicationDBEntry>(sql`
+    select ${sql.join(Object.values(fields), sql`, `)}
+    from ${table}
+  `);
+
 export const findApplicationById = async (id: string) =>
   pool.one<ApplicationDBEntry>(sql`
     select ${sql.join(Object.values(fields), sql`, `)}
