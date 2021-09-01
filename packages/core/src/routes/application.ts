@@ -1,5 +1,4 @@
 import { Applications } from '@logto/schemas';
-import Router from 'koa-router';
 import { object, string } from 'zod';
 
 import koaGuard from '@/middleware/koa-guard';
@@ -11,9 +10,11 @@ import {
 } from '@/queries/application';
 import { buildIdGenerator } from '@/utils/id';
 
+import { AuthedRouter } from './types';
+
 const applicationId = buildIdGenerator(21);
 
-export default function applicationRoutes<StateT, ContextT>(router: Router<StateT, ContextT>) {
+export default function applicationRoutes<T extends AuthedRouter>(router: T) {
   router.post(
     '/application',
     koaGuard({

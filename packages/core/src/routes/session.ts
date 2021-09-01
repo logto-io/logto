@@ -1,6 +1,5 @@
 import { conditional } from '@logto/essentials';
 import { LogtoErrorCode } from '@logto/phrases';
-import Router from 'koa-router';
 import { Provider } from 'oidc-provider';
 import { object, string } from 'zod';
 
@@ -10,7 +9,9 @@ import { findUserByUsername } from '@/queries/user';
 import assert from '@/utils/assert';
 import { encryptPassword } from '@/utils/password';
 
-export default function sessionRoutes(router: Router, provider: Provider) {
+import { AnonymousRouter } from './types';
+
+export default function sessionRoutes<T extends AnonymousRouter>(router: T, provider: Provider) {
   router.post(
     '/session',
     koaGuard({ body: object({ username: string().optional(), password: string().optional() }) }),

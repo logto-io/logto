@@ -1,11 +1,13 @@
-import Router, { IMiddleware } from 'koa-router';
+import { IMiddleware } from 'koa-router';
 import { OpenAPIV3 } from 'openapi-types';
 
 import { isGuardMiddleware, WithGuardConfig } from '@/middleware/koa-guard';
 import { toTitle } from '@/utils/string';
 import { zodTypeToSwagger } from '@/utils/zod';
 
-export default function swaggerRoutes(router: Router) {
+import { AnonymousRouter } from './types';
+
+export default function swaggerRoutes<T extends AnonymousRouter>(router: T) {
   router.get('/swagger.json', async (ctx, next) => {
     const routes = ctx.router.stack.map(({ path, stack, methods }) => {
       const guard = stack.find((function_): function_ is WithGuardConfig<IMiddleware> =>
