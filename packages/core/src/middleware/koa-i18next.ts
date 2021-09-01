@@ -23,11 +23,11 @@ export default function koaI18next<
     const languages = detectLanguage(ctx);
     // Cannot patch type def directly, see https://github.com/microsoft/TypeScript/issues/36146
     const languageUtils = i18next.services.languageUtils as LanguageUtils;
-    const found = languages
+    const foundLanguage = languages
       .map((code) => languageUtils.formatLanguageCode(code))
       .find((code) => languageUtils.isSupportedCode(code));
 
-    await i18next.changeLanguage(found);
+    await i18next.changeLanguage(foundLanguage);
     ctx.locale = i18next.language;
     return next();
   };
