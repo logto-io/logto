@@ -5,6 +5,7 @@ import koaGuard from '@/middleware/koa-guard';
 import { generateOidcClientMetadata } from '@/oidc/utils';
 import {
   deleteApplicationById,
+  findApplicationById,
   insertApplication,
   updateApplicationById,
 } from '@/queries/application';
@@ -33,6 +34,21 @@ export default function applicationRoutes<T extends AuthedRouter>(router: T) {
         oidcClientMetadata: generateOidcClientMetadata(),
         ...rest,
       });
+      return next();
+    }
+  );
+
+  router.get(
+    '/application/:id',
+    koaGuard({
+      params: object({ id: string().min(1) }),
+    }),
+    async (ctx, next) => {
+      const {
+        params: { id },
+      } = ctx.guard;
+
+      ctx.body = await findApplicationById(id);
       return next();
     }
   );
