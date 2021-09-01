@@ -1,5 +1,4 @@
 import { PasswordEncryptionMethod } from '@logto/schemas';
-import Router from 'koa-router';
 import { nanoid } from 'nanoid';
 import { object, string } from 'zod';
 
@@ -8,6 +7,8 @@ import koaGuard from '@/middleware/koa-guard';
 import { hasUser, hasUserWithId, insertUser } from '@/queries/user';
 import { buildIdGenerator } from '@/utils/id';
 import { encryptPassword } from '@/utils/password';
+
+import { AnonymousRouter } from './types';
 
 const userId = buildIdGenerator(12);
 
@@ -23,7 +24,7 @@ const generateUserId = async (maxRetries = 500) => {
   throw new Error('Cannot generate user ID in reasonable retries');
 };
 
-export default function userRoutes(router: Router) {
+export default function userRoutes<T extends AnonymousRouter>(router: T) {
   router.post(
     '/user',
     koaGuard({
