@@ -12,7 +12,7 @@
   "scripts": {
     "preinstall": "npx only-allow pnpm",
     "precommit": "lint-staged",
-    "generate": "ts-node src/gen/index.ts && eslint \"src/db-entries/**\" --fix",
+    "generate": "rm -rf src/db-entries && ts-node src/gen/index.ts && eslint \"src/db-entries/**\" --fix",
     "build": "pnpm generate && rm -rf lib/ && tsc --p tsconfig.build.json",
     "lint": "eslint --ext .ts src",
     "prepack": "pnpm build"
