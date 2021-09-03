@@ -147,6 +147,7 @@ importers:
       zod: ^3.8.1
     dependencies:
       '@logto/phrases': link:../phrases
+      zod: 3.8.1
     devDependencies:
       '@logto/eslint-config': 0.1.3_aff669e8eb0d21fc4e2068e6112ef4d0
       '@logto/essentials': 1.1.0-rc.2
@@ -162,7 +163,6 @@ importers:
       prettier: 2.3.2
       ts-node: 10.1.0_13403c2f2d9ddab699dd2f492f123cbf
       typescript: 4.3.5
-      zod: 3.8.1
 
   packages/ui:
     specifiers:
@@ -16741,6 +16741,7 @@ packages:
 
   /zod/3.8.1:
     resolution: {integrity: sha512-u4Uodl7dLh8nXZwqXL1SM5FAl5b4lXYHOxMUVb9lqhlEAZhA2znX+0oW480m0emGFMxpoRHzUncAqRkc4h8ZJA==}
+    dev: false
 
   /zwitch/1.0.5:
     resolution: {integrity: sha512-V50KMwwzqJV0NpZIZFwfOD5/lyny3WlSzRiXgA0G7VUnRlqttta1L6UQIHzd6EuBY/cHGfwTIck7w1yH6Q5zUw==}
