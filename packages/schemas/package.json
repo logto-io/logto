@@ -12,7 +12,7 @@
   "scripts": {
     "preinstall": "npx only-allow pnpm",
     "precommit": "lint-staged",
-    "generate": "ts-node src/gen/index.ts && eslint \"src/db-entries/**\" --fix",
+    "generate": "rm -rf src/db-entries && ts-node src/gen/index.ts && eslint \"src/db-entries/**\" --fix",
     "build": "pnpm generate && rm -rf lib/ && tsc --p tsconfig.build.json",
     "lint": "eslint --ext .ts src",
     "prepack": "pnpm build"
@@ -34,17 +34,14 @@
     "pluralize": "^8.0.0",
     "prettier": "^2.3.2",
     "ts-node": "^10.0.0",
-    "typescript": "^4.3.5",
-    "zod": "^3.8.1"
+    "typescript": "^4.3.5"
   },
   "eslintConfig": {
     "extends": "@logto"
   },
   "prettier": "@logto/eslint-config/.prettierrc",
   "dependencies": {
-    "@logto/phrases": "^0.1.0"
-  },
-  "peerDependencies": {
+    "@logto/phrases": "^0.1.0",
     "zod": "^3.8.1"
   }
 }
