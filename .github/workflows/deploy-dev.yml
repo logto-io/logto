@@ -46,3 +46,11 @@ jobs:
         run: rsync --filter='exclude .git' -r -a ./ $DEV_SERVER_IP:~/logto
         env:
           DEV_SERVER_IP: ${{ secrets.DEV_SERVER_IP }}
+
+      - name: Sleep for 5 seconds
+        run: sleep 5s
+
+      - name: Health check
+        run: curl $DEV_SERVER_URL/api/status -If
+        env:
+          DEV_SERVER_URL: ${{ secrets.DEV_SERVER_URL }}
