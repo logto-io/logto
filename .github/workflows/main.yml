@@ -1,12 +1,12 @@
-name: Schemas
+name: Main
 
 on:
   push:
     branches: [ master ]
-    paths: [ 'packages/schemas/**' ]
+    paths: [ 'packages/**', 'packages/**' ]
   pull_request:
     branches: [ master ]
-    paths: [ 'packages/schemas/**' ]
+    paths: [ 'packages/**', 'packages/**' ]
 
 jobs:
   main:
@@ -19,9 +19,10 @@ jobs:
         uses: logto-io/actions-node-pnpm-run-steps@v1.0.2
 
       - name: Lint
-        working-directory: packages/schemas
-        run: pnpm lint
+        run: pnpm -- lerna run --stream lint
 
       - name: Build
-        working-directory: packages/schemas
-        run: pnpm build
+        run: pnpm -- lerna run --stream build
+
+      - name: Test
+        run: pnpm -- lerna run --stream test
