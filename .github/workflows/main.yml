@@ -3,10 +3,8 @@ name: Main
 on:
   push:
     branches: [ master ]
-    paths: [ 'packages/**', 'packages/**' ]
   pull_request:
     branches: [ master ]
-    paths: [ 'packages/**', 'packages/**' ]
 
 jobs:
   main:
