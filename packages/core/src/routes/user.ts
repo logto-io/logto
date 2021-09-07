@@ -1,32 +1,14 @@
 import { PasswordEncryptionMethod } from '@logto/schemas';
 import { nanoid } from 'nanoid';
-import pRetry from 'p-retry';
 import { object, string } from 'zod';
 
 import RequestError from '@/errors/RequestError';
+import { generateUserId } from '@/lib/user';
 import koaGuard from '@/middleware/koa-guard';
-import { hasUser, hasUserWithId, insertUser } from '@/queries/user';
-import { buildIdGenerator } from '@/utils/id';
+import { hasUser, insertUser } from '@/queries/user';
 import { encryptPassword } from '@/utils/password';
 
 import { AnonymousRouter } from './types';
-
-const userId = buildIdGenerator(12);
-
-// LOG-89: Add unit tests
-const generateUserId = async (retries = 500) =>
-  pRetry(
-    async () => {
-      const id = userId();
-
-      if (!(await hasUserWithId(id))) {
-        return id;
-      }
-
-      throw new Error('Cannot generate user ID in reasonable retries');
-    },
-    { retries }
-  );
 
 export default function userRoutes<T extends AnonymousRouter>(router: T) {
   router.post(
