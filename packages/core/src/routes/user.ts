@@ -13,6 +13,7 @@ import { AnonymousRouter } from './types';
 
 const userId = buildIdGenerator(12);
 
+// LOG-89: Add unit tests
 const generateUserId = async (retries = 500) =>
   pRetry(
     async () => {
