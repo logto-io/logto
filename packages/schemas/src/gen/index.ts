@@ -133,6 +133,8 @@ const generate = async () => {
   // Generate DB entry types
   await Promise.all(
     generated.map(async ([file, { tables }]) => {
+      // LOG-88 Need refactor, disable mutation rules for now.
+      /* eslint-disable @silverhand/fp/no-mutating-methods */
       const tsTypes: string[] = [];
       const customTypes: string[] = [];
       const tableWithTypes = tables.map<TableWithType>(({ fields, ...rest }) => ({
@@ -155,6 +157,7 @@ const generate = async () => {
       if (tableWithTypes.length > 0) {
         tsTypes.push('GeneratedSchema', 'Guard');
       }
+      /* eslint-enable @silverhand/fp/no-mutating-methods */
 
       const importZod = conditionalString(
         tableWithTypes.length > 0 && "import { z } from 'zod';\n\n"

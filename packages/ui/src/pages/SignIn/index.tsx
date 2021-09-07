@@ -30,7 +30,7 @@ const SignIn: FC = () => {
 
   useEffect(() => {
     if (result?.redirectTo) {
-      window.location.href = result.redirectTo;
+      window.location.assign(result.redirectTo);
     }
   }, [result]);
 

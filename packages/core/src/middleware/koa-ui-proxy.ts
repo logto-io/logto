@@ -24,20 +24,20 @@ export default function koaUIProxy<
   });
   const staticProxy: Middleware = serveStatic(PATH_TO_UI_DIST);
 
-  return async (context, next) => {
+  return async (ctx, next) => {
     // Route has been handled by one of mounted apps
-    if (mountedApps.some((app) => context.request.path.startsWith(`/${app}`))) {
+    if (mountedApps.some((app) => ctx.request.path.startsWith(`/${app}`))) {
       return next();
     }
 
     if (!isProduction) {
-      return developmentProxy(context, next);
+      return developmentProxy(ctx, next);
     }
 
-    if (!uiDistFiles.some((file) => context.request.path.startsWith(`/${file}`))) {
-      context.request.path = '/';
+    if (!uiDistFiles.some((file) => ctx.request.path.startsWith(`/${file}`))) {
+      ctx.request.path = '/';
     }
 
-    return staticProxy(context, next);
+    return staticProxy(ctx, next);
   };
 }

@@ -90,6 +90,8 @@ export default function koaGuard<
     return guard(ctx, next);
   };
 
+  // Intended
+  // eslint-disable-next-line @silverhand/fp/no-mutation
   guardMiddleware.config = { query, body, params };
 
   return guardMiddleware;

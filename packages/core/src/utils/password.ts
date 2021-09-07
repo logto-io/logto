@@ -6,6 +6,7 @@ import { number, string } from 'zod';
 import assert from '@/utils/assert';
 
 import { assertEnv } from './env';
+import repeat from './repeat';
 
 const peppers = string()
   .array()
@@ -31,13 +32,11 @@ export const encryptPassword = (
 
   assert(pepper, 'password.pepper_not_found');
 
-  let result = password;
-
-  for (let i = 0; i < iterationCount; ++i) {
-    result = createHash('sha256')
-      .update(salt + result + pepper)
-      .digest('hex');
-  }
+  const result = repeat(iterationCount, password, (password) =>
+    createHash('sha256')
+      .update(salt + password + pepper)
+      .digest('hex')
+  );
 
   return result;
 };
