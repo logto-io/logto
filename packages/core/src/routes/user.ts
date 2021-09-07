@@ -1,5 +1,6 @@
 import { PasswordEncryptionMethod } from '@logto/schemas';
 import { nanoid } from 'nanoid';
+import pRetry from 'p-retry';
 import { object, string } from 'zod';
 
 import RequestError from '@/errors/RequestError';
@@ -12,17 +13,19 @@ import { AnonymousRouter } from './types';
 
 const userId = buildIdGenerator(12);
 
-const generateUserId = async (maxRetries = 500) => {
-  for (let i = 0; i < maxRetries; ++i) {
-    const id = userId();
-    // eslint-disable-next-line no-await-in-loop
-    if (!(await hasUserWithId(id))) {
-      return id;
-    }
-  }
+const generateUserId = async (retries = 500) =>
+  pRetry(
+    async () => {
+      const id = userId();
 
-  throw new Error('Cannot generate user ID in reasonable retries');
-};
+      if (!(await hasUserWithId(id))) {
+        return id;
+      }
+
+      throw new Error('Cannot generate user ID in reasonable retries');
+    },
+    { retries }
+  );
 
 export default function userRoutes<T extends AnonymousRouter>(router: T) {
   router.post(

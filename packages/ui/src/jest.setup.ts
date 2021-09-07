@@ -1,5 +1,5 @@
 // https://jestjs.io/docs/manual-mocks#mocking-methods-which-are-not-implemented-in-jsdom
-
+// eslint-disable-next-line @silverhand/fp/no-mutating-methods
 Object.defineProperty(window, 'matchMedia', {
   writable: true,
   value: jest.fn().mockImplementation((query) => ({

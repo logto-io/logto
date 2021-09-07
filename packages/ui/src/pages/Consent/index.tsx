@@ -8,7 +8,7 @@ const Consent = () => {
 
   useEffect(() => {
     const autoConsent = async () => {
-      window.location.href = (await consent()).redirectTo;
+      window.location.assign((await consent()).redirectTo);
     };
 
     void autoConsent();
