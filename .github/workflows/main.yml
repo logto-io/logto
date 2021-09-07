@@ -16,11 +16,11 @@ jobs:
       - name: Setup Node and pnpm
         uses: logto-io/actions-node-pnpm-run-steps@v1.0.2
 
-      - name: Lint
-        run: pnpm -- lerna run --stream lint
-
       - name: Build
         run: pnpm -- lerna run --stream build
 
+      - name: Lint
+        run: pnpm -- lerna run --parallel lint
+
       - name: Test
-        run: pnpm -- lerna run --stream test
+        run: pnpm -- lerna run --parallel test
