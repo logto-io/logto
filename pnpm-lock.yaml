@@ -20,11 +20,11 @@ importers:
 
   packages/core:
     specifiers:
-      '@logto/eslint-config': ^0.2.0
+      '@logto/eslint-config': ^0.2.1
       '@logto/essentials': ^1.1.0-rc.2
       '@logto/phrases': ^0.1.0
       '@logto/schemas': ^0.1.0
-      '@logto/ts-config': ^0.2.0
+      '@logto/ts-config': ^0.2.1
       '@types/jest': ^27.0.1
       '@types/koa': ^2.13.3
       '@types/koa-logger': ^3.1.1
@@ -92,8 +92,8 @@ importers:
       slonik-interceptor-preset: 1.2.10
       zod: 3.8.1
     devDependencies:
-      '@logto/eslint-config': 0.2.0_aff669e8eb0d21fc4e2068e6112ef4d0
-      '@logto/ts-config': 0.2.0_typescript@4.3.5
+      '@logto/eslint-config': 0.2.1_aff669e8eb0d21fc4e2068e6112ef4d0
+      '@logto/ts-config': 0.2.1_typescript@4.3.5
       '@types/jest': 27.0.1
       '@types/koa': 2.13.4
       '@types/koa-logger': 3.1.1
@@ -115,15 +115,15 @@ importers:
 
   packages/phrases:
     specifiers:
-      '@logto/eslint-config': ^0.2.0
-      '@logto/ts-config': ^0.2.0
+      '@logto/eslint-config': ^0.2.1
+      '@logto/ts-config': ^0.2.1
       eslint: ^7.32.0
       lint-staged: ^11.1.1
       prettier: ^2.3.2
       typescript: ^4.3.5
     devDependencies:
-      '@logto/eslint-config': 0.2.0_aff669e8eb0d21fc4e2068e6112ef4d0
-      '@logto/ts-config': 0.2.0_typescript@4.3.5
+      '@logto/eslint-config': 0.2.1_aff669e8eb0d21fc4e2068e6112ef4d0
+      '@logto/ts-config': 0.2.1_typescript@4.3.5
       eslint: 7.32.0
       lint-staged: 11.1.1
       prettier: 2.3.2
@@ -131,10 +131,10 @@ importers:
 
   packages/schemas:
     specifiers:
-      '@logto/eslint-config': ^0.2.0
+      '@logto/eslint-config': ^0.2.1
       '@logto/essentials': ^1.1.0-rc.2
       '@logto/phrases': ^0.1.0
-      '@logto/ts-config': ^0.2.0
+      '@logto/ts-config': ^0.2.1
       '@types/lodash.uniq': ^4.5.6
       '@types/node': '14'
       '@types/pluralize': ^0.0.29
@@ -151,9 +151,9 @@ importers:
       '@logto/phrases': link:../phrases
       zod: 3.8.1
     devDependencies:
-      '@logto/eslint-config': 0.2.0_aff669e8eb0d21fc4e2068e6112ef4d0
+      '@logto/eslint-config': 0.2.1_aff669e8eb0d21fc4e2068e6112ef4d0
       '@logto/essentials': 1.1.0-rc.2
-      '@logto/ts-config': 0.2.0_typescript@4.3.5
+      '@logto/ts-config': 0.2.1_typescript@4.3.5
       '@types/lodash.uniq': 4.5.6
       '@types/node': 14.17.6
       '@types/pluralize': 0.0.29
@@ -170,12 +170,12 @@ importers:
     specifiers:
       '@babel/core': ^7.14.6
       '@jest/types': ^27.0.6
-      '@logto/eslint-config': ^0.2.0
-      '@logto/eslint-config-react': ^0.2.0
+      '@logto/eslint-config': ^0.2.1
+      '@logto/eslint-config-react': ^0.2.1
       '@logto/phrases': ^0.1.0
       '@logto/schemas': ^0.1.0
-      '@logto/ts-config': ^0.2.0
-      '@logto/ts-config-react': ^0.2.0
+      '@logto/ts-config': ^0.2.1
+      '@logto/ts-config-react': ^0.2.1
       '@testing-library/react': ^12.0.0
       '@types/jest': ^26.0.24
       '@types/react': ^17.0.14
@@ -220,10 +220,10 @@ importers:
     devDependencies:
       '@babel/core': 7.14.8
       '@jest/types': 27.0.6
-      '@logto/eslint-config': 0.2.0_aff669e8eb0d21fc4e2068e6112ef4d0
-      '@logto/eslint-config-react': 0.2.0_8e322dd0e62beacbfb7b944fe3d15c43
-      '@logto/ts-config': 0.2.0_typescript@4.3.5
-      '@logto/ts-config-react': 0.2.0_typescript@4.3.5
+      '@logto/eslint-config': 0.2.1_aff669e8eb0d21fc4e2068e6112ef4d0
+      '@logto/eslint-config-react': 0.2.1_8e322dd0e62beacbfb7b944fe3d15c43
+      '@logto/ts-config': 0.2.1_typescript@4.3.5
+      '@logto/ts-config-react': 0.2.1_typescript@4.3.5
       '@testing-library/react': 12.0.0_react-dom@17.0.2+react@17.0.2
       '@types/jest': 26.0.24
       '@types/react': 17.0.15
@@ -2986,12 +2986,12 @@ packages:
       write-file-atomic: 3.0.3
     dev: true
 
-  /@logto/eslint-config-react/0.2.0_8e322dd0e62beacbfb7b944fe3d15c43:
-    resolution: {integrity: sha512-GN+0Sz9CqQMcGh2mPT3OWnLrPRtG5M7/yJA34ss9z3BXPkoUJku43h3zuCc9JRok8fvLx7KEM7SRP+KpUd6Mmg==}
+  /@logto/eslint-config-react/0.2.1_8e322dd0e62beacbfb7b944fe3d15c43:
+    resolution: {integrity: sha512-NgqxHxrBFGyMIEeAUnFHiofBKFxCvRg3Tjl3548c7T67CWBQlDV+9UG9nohaEOrwbmTxhLzUzICgjthlQJ6D2w==}
     peerDependencies:
       stylelint: ^13.13.1
     dependencies:
-      '@logto/eslint-config': 0.2.0_aff669e8eb0d21fc4e2068e6112ef4d0
+      '@logto/eslint-config': 0.2.1_aff669e8eb0d21fc4e2068e6112ef4d0
       eslint-config-xo-react: 0.25.0_cf053d4ca6fd1617a5247de768e0eb43
       eslint-plugin-react: 7.25.1_eslint@7.32.0
       eslint-plugin-react-hooks: 4.2.0_eslint@7.32.0
@@ -3004,15 +3004,15 @@ packages:
       - typescript
     dev: true
 
-  /@logto/eslint-config/0.2.0_aff669e8eb0d21fc4e2068e6112ef4d0:
-    resolution: {integrity: sha512-KD5CQR4Xn0FwQCguml+JbKSdAgO9PpIjjs1rfgebTh8QRdLepLPZw+hSvI8UfB8Y1ZG7eXPh6o9hx7wuCTCung==}
+  /@logto/eslint-config/0.2.1_aff669e8eb0d21fc4e2068e6112ef4d0:
+    resolution: {integrity: sha512-ly14KXqtJ13tgofuw/swXIQhYHVFTffYcElaPctivDeSMucLtzzYLcTmcHKeUtoy77v27/1Ve+ZzM4ItzHs2jA==}
     engines: {node: '>=14.15.0'}
     peerDependencies:
       eslint: ^7.32.0
       prettier: ^2.3.2
       typescript: ^4.3.5
     dependencies:
-      '@silverhand/eslint-plugin-fp': 2.4.1_eslint@7.32.0
+      '@silverhand/eslint-plugin-fp': 2.4.2_eslint@7.32.0
       '@typescript-eslint/eslint-plugin': 4.31.0_d1dd20e6bac64435251dbfdf7965a8a7
       '@typescript-eslint/parser': 4.31.0_eslint@7.32.0+typescript@4.3.5
       eslint: 7.32.0
@@ -3041,18 +3041,18 @@ packages:
       lodash.orderby: 4.6.0
       lodash.pick: 4.4.0
 
-  /@logto/ts-config-react/0.2.0_typescript@4.3.5:
-    resolution: {integrity: sha512-cs2s9zsbn9pJ84sJJSjpyU8k71g7z8qob0d23TSDrrYQ2xMEjE1Lnja3SfZjhXGlwhgAHV5bDxuGWnbXHUGXlA==}
+  /@logto/ts-config-react/0.2.1_typescript@4.3.5:
+    resolution: {integrity: sha512-ltFFXWf5eDoEBafc4zJVysgJK6M2cL45z1gxJ68eBK9cyyHpXmvBsXG9hBjw70tAkWP+YQ4EmTRMhO0TOs9a7A==}
     engines: {node: '>=14.15.0'}
     peerDependencies:
       typescript: ^4.3.5
     dependencies:
-      '@logto/ts-config': 0.2.0_typescript@4.3.5
+      '@logto/ts-config': 0.2.1_typescript@4.3.5
       typescript: 4.3.5
     dev: true
 
-  /@logto/ts-config/0.2.0_typescript@4.3.5:
-    resolution: {integrity: sha512-2fXZG5lv2mvAB+Yy/aMcdxs6EZDXK39aULUzQfsEZSCNRihleXXAkOySgqemPeImB+CEM8RYXTp70D9VpKB1Aw==}
+  /@logto/ts-config/0.2.1_typescript@4.3.5:
+    resolution: {integrity: sha512-DSMGkQBnYnn9+1bKoG+FNtjAqg5HCB4el+RKLV5JlC+MHh77TjckrJyY3rtwbyAFY7k+UPoB6AG4Hz5GXRrmNA==}
     engines: {node: '>=14.15.0'}
     peerDependencies:
       typescript: ^4.3.5
@@ -3276,8 +3276,8 @@ packages:
       webpack-dev-server: 3.11.2_webpack@4.46.0
     dev: true
 
-  /@silverhand/eslint-plugin-fp/2.4.1_eslint@7.32.0:
-    resolution: {integrity: sha512-AI89umZbXqK4s1rjB8MAmiNbrOBUzM0jmAVlYLFrS0tLYwKptSg5SeCBU57LbmZcdJd8IGzOqGPgln294OiDbQ==}
+  /@silverhand/eslint-plugin-fp/2.4.2_eslint@7.32.0:
+    resolution: {integrity: sha512-f8BH6vyp5D4gY0DJWuVihzEqFNP/jC6kib7OBl7xCGXG2wEHiFSHyMUuaZSpq4qHMfp8x+Uywlke76R+1sAs5w==}
     engines: {node: '>=14.15.0'}
     peerDependencies:
       eslint: ^7.32.0
@@ -4976,7 +4976,7 @@ packages:
     dependencies:
       caniuse-lite: 1.0.30001255
       colorette: 1.3.0
-      electron-to-chromium: 1.3.830
+      electron-to-chromium: 1.3.831
       escalade: 3.1.1
       node-releases: 1.1.75
     dev: true
@@ -6719,8 +6719,8 @@ packages:
     resolution: {integrity: sha512-epMH/S2MkhBv+Y0+nHK8dC7bzmOaPwcmiYqt+VwxSUJLgPzkqZnGUEQ8eVhy5zGmgWm9tDDdXkHDzOEsVU979A==}
     dev: true
 
-  /electron-to-chromium/1.3.830:
-    resolution: {integrity: sha512-gBN7wNAxV5vl1430dG+XRcQhD4pIeYeak6p6rjdCtlz5wWNwDad8jwvphe5oi1chL5MV6RNRikfffBBiFuj+rQ==}
+  /electron-to-chromium/1.3.831:
+    resolution: {integrity: sha512-0tc2lPzgEipHCyRcvDTTaBk5+jSPfNaCvbQdevNMqJkHLvrBiwhygPR0hDyPZEK7Xztvv+58gSFKJ/AUVT1yYQ==}
     dev: true
 
   /elliptic/6.5.4:
