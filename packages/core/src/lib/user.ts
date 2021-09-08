@@ -5,7 +5,6 @@ import { buildIdGenerator } from '@/utils/id';
 
 const userId = buildIdGenerator(12);
 
-// LOG-89: Add unit tests
 export const generateUserId = async (retries = 500) =>
   pRetry(
     async () => {
