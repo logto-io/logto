@@ -7,14 +7,10 @@ on:
 jobs:
   deploy:
     environment: dev
+    concurrency: deploy-dev
     runs-on: ubuntu-latest
 
     steps:
-      - name: Cancel previous runs
-        uses: styfle/cancel-workflow-action@0.9.1
-        with:
-          access_token: ${{ github.token }}
-
       - uses: actions/checkout@v2
 
       - name: Setup Node and pnpm
