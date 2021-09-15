@@ -36,7 +36,7 @@
     "lodash.pick": "^4.4.0",
     "module-alias": "^2.2.2",
     "nanoid": "^3.1.23",
-    "oidc-provider": "^7.4.1",
+    "oidc-provider": "^7.7.0",
     "p-retry": "^4.6.1",
     "slonik": "^23.8.3",
     "slonik-interceptor-preset": "^1.2.10",
