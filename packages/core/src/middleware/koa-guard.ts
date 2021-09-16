@@ -1,4 +1,4 @@
-import { has } from '@logto/essentials';
+import { has } from '@silverhand/essentials';
 import { MiddlewareType } from 'koa';
 import koaBody from 'koa-body';
 import { IMiddleware, IRouterParamContext } from 'koa-router';

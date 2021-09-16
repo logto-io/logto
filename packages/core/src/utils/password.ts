@@ -1,12 +1,10 @@
 import { createHash } from 'crypto';
 
 import { PasswordEncryptionMethod } from '@logto/schemas';
+import { assertEnv, repeat } from '@silverhand/essentials';
 import { number, string } from 'zod';
 
-import assert from '@/utils/assert';
-
-import { assertEnv } from './env';
-import repeat from './repeat';
+import assertThat from '@/utils/assert-that';
 
 const peppers = string()
   .array()
@@ -21,7 +19,7 @@ export const encryptPassword = (
   salt: string,
   method: PasswordEncryptionMethod
 ): string => {
-  assert(
+  assertThat(
     method === PasswordEncryptionMethod.SaltAndPepper,
     'password.unsupported_encryption_method',
     { method }
@@ -30,7 +28,7 @@ export const encryptPassword = (
   const sum = [...id].reduce((accumulator, current) => accumulator + current.charCodeAt(0), 0);
   const pepper = peppers[sum % peppers.length];
 
-  assert(pepper, 'password.pepper_not_found');
+  assertThat(pepper, 'password.pepper_not_found');
 
   const result = repeat(iterationCount, password, (password) =>
     createHash('sha256')

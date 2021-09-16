@@ -1,9 +1,9 @@
-import { conditional } from '@logto/essentials';
 import {
   OidcModelInstanceDBEntry,
   OidcModelInstancePayload,
   OidcModelInstances,
 } from '@logto/schemas';
+import { conditional } from '@silverhand/essentials';
 import { sql, ValueExpressionType } from 'slonik';
 
 import { buildInsertInto } from '@/database/insert-into';

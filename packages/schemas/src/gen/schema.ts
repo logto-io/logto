@@ -1,4 +1,4 @@
-import { conditionalString } from '@logto/essentials';
+import { conditionalString } from '@silverhand/essentials';
 import camelcase from 'camelcase';
 import pluralize from 'pluralize';
 
