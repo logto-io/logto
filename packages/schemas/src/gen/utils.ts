@@ -1,4 +1,4 @@
-import { Optional } from '@logto/essentials';
+import { Optional } from '@silverhand/essentials';
 
 export const normalizeWhitespaces = (string: string): string => string.replace(/\s+/g, ' ').trim();
 

@@ -10,7 +10,7 @@ import { developmentUserId, isProduction } from '@/env/consts';
 import RequestError from '@/errors/RequestError';
 import { publicKey, issuer, adminResource } from '@/oidc/consts';
 import { findUserById } from '@/queries/user';
-import assert from '@/utils/assert';
+import assertThat from '@/utils/assert-that';
 
 export type WithAuthContext<ContextT extends IRouterParamContext = IRouterParamContext> =
   ContextT & {
@@ -20,11 +20,11 @@ export type WithAuthContext<ContextT extends IRouterParamContext = IRouterParamC
 const bearerTokenIdentifier = 'Bearer';
 
 const extractBearerTokenFromHeaders = ({ authorization }: IncomingHttpHeaders) => {
-  assert(
+  assertThat(
     authorization,
     new RequestError({ code: 'auth.authorization_header_missing', status: 401 })
   );
-  assert(
+  assertThat(
     authorization.startsWith(bearerTokenIdentifier),
     new RequestError(
       { code: 'auth.authorization_type_not_supported', status: 401 },
@@ -45,7 +45,7 @@ const getUserIdFromRequest = async (request: Request) => {
     issuer,
     audience: adminResource,
   });
-  assert(sub, new RequestError({ code: 'auth.jwt_sub_missing', status: 401 }));
+  assertThat(sub, new RequestError({ code: 'auth.jwt_sub_missing', status: 401 }));
   return sub;
 };
 

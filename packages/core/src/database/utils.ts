@@ -1,5 +1,5 @@
-import { Falsy, notFalsy } from '@logto/essentials';
 import { SchemaValuePrimitive, SchemaValue } from '@logto/schemas';
+import { Falsy, notFalsy } from '@silverhand/essentials';
 import dayjs from 'dayjs';
 import { sql, SqlSqlTokenType, SqlTokenType } from 'slonik';
 

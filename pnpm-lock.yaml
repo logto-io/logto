@@ -20,10 +20,10 @@ importers:
 
   packages/core:
     specifiers:
-      '@logto/essentials': ^1.1.0-rc.2
       '@logto/phrases': ^0.1.0
       '@logto/schemas': ^0.1.0
       '@silverhand/eslint-config': ^0.2.2
+      '@silverhand/essentials': ^1.1.0
       '@silverhand/ts-config': ^0.2.2
       '@types/jest': ^27.0.1
       '@types/koa': ^2.13.3
@@ -66,9 +66,9 @@ importers:
       typescript: ^4.3.5
       zod: ^3.8.1
     dependencies:
-      '@logto/essentials': 1.1.0-rc.2
       '@logto/phrases': link:../phrases
       '@logto/schemas': link:../schemas
+      '@silverhand/essentials': 1.1.0
       dayjs: 1.10.6
       decamelize: 5.0.0
       dotenv: 10.0.0
@@ -131,9 +131,9 @@ importers:
 
   packages/schemas:
     specifiers:
-      '@logto/essentials': ^1.1.0-rc.2
       '@logto/phrases': ^0.1.0
       '@silverhand/eslint-config': ^0.2.2
+      '@silverhand/essentials': ^1.1.0
       '@silverhand/ts-config': ^0.2.2
       '@types/lodash.uniq': ^4.5.6
       '@types/node': '14'
@@ -151,8 +151,8 @@ importers:
       '@logto/phrases': link:../phrases
       zod: 3.8.1
     devDependencies:
-      '@logto/essentials': 1.1.0-rc.2
       '@silverhand/eslint-config': 0.2.2_aff669e8eb0d21fc4e2068e6112ef4d0
+      '@silverhand/essentials': 1.1.0
       '@silverhand/ts-config': 0.2.2_typescript@4.3.5
       '@types/lodash.uniq': 4.5.6
       '@types/node': 14.17.6
@@ -2986,13 +2986,6 @@ packages:
       write-file-atomic: 3.0.3
     dev: true
 
-  /@logto/essentials/1.1.0-rc.2:
-    resolution: {integrity: sha512-MqmA566CFSg0HsvJwoR+mggHVoJ6WlpNLCYBLI93KImzAgk4ecnt41wTPw2/mqAkCLSJlecyXwTOzSaUj3ykZA==}
-    engines: {node: '>=14.15.0', pnpm: '>=6'}
-    dependencies:
-      lodash.orderby: 4.6.0
-      lodash.pick: 4.4.0
-
   /@nodelib/fs.scandir/2.1.5:
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
     engines: {node: '>= 8'}
@@ -3269,6 +3262,13 @@ packages:
       import-modules: 2.1.0
       lodash: 4.17.21
     dev: true
+
+  /@silverhand/essentials/1.1.0:
+    resolution: {integrity: sha512-O2ROFk1TgBLf4QwGBc5iF16TvhsIJAShbg/zHzHTF1PrSNAL/Dq2F29Fdr5BG22rJpSmypGQsk9SWVIM1tPRqA==}
+    engines: {node: '>=14.15.0', pnpm: '>=6'}
+    dependencies:
+      lodash.orderby: 4.6.0
+      lodash.pick: 4.4.0
 
   /@silverhand/ts-config-react/0.2.2_typescript@4.3.5:
     resolution: {integrity: sha512-zYddjCjxmdo/W+K+olqotrFwawjv0m3YGGVHomp+7oLqfR/6SwWxPg4lR8aWcfxs4XH1DiYTBNakrkFVN8vwug==}

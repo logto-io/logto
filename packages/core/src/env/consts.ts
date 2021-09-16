@@ -1,4 +1,4 @@
-import { assertEnv, getEnv } from '@/utils/env';
+import { assertEnv, getEnv } from '@silverhand/essentials';
 
 export const signIn = assertEnv('UI_SIGN_IN_ROUTE');
 export const isProduction = getEnv('NODE_ENV') === 'production';

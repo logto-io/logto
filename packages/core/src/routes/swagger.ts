@@ -1,8 +1,8 @@
+import { toTitle } from '@silverhand/essentials';
 import { IMiddleware } from 'koa-router';
 import { OpenAPIV3 } from 'openapi-types';
 
 import { isGuardMiddleware, WithGuardConfig } from '@/middleware/koa-guard';
-import { toTitle } from '@/utils/string';
 import { zodTypeToSwagger } from '@/utils/zod';
 
 import { AnonymousRouter } from './types';

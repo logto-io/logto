@@ -1,12 +1,12 @@
-import { conditional } from '@logto/essentials';
 import { LogtoErrorCode } from '@logto/phrases';
+import { conditional } from '@silverhand/essentials';
 import { Provider } from 'oidc-provider';
 import { object, string } from 'zod';
 
 import RequestError from '@/errors/RequestError';
 import koaGuard from '@/middleware/koa-guard';
 import { findUserByUsername } from '@/queries/user';
-import assert from '@/utils/assert';
+import assertThat from '@/utils/assert-that';
 import { encryptPassword } from '@/utils/password';
 
 import { AnonymousRouter } from './types';
@@ -24,17 +24,17 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
       if (name === 'login') {
         const { username, password } = ctx.guard.body;
 
-        assert(username && password, 'session.insufficient_info');
+        assertThat(username && password, 'session.insufficient_info');
 
         try {
           const { id, passwordEncrypted, passwordEncryptionMethod, passwordEncryptionSalt } =
             await findUserByUsername(username);
 
-          assert(
+          assertThat(
             passwordEncrypted && passwordEncryptionMethod && passwordEncryptionSalt,
             'session.invalid_sign_in_method'
           );
-          assert(
+          assertThat(
             encryptPassword(id, password, passwordEncryptionSalt, passwordEncryptionMethod) ===
               passwordEncrypted,
             'session.invalid_credentials'
@@ -69,7 +69,7 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
   router.post('/session/consent', async (ctx, next) => {
     const interaction = await provider.interactionDetails(ctx.req, ctx.res);
     const { session, grantId, params, prompt } = interaction;
-    assert(session, 'session.not_found');
+    assertThat(session, 'session.not_found');
 
     const { scope } = object({
       scope: string().optional(),
@@ -78,7 +78,7 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
     // LOG-49: Connect and check scope with resource indicators
     const scopes = scope?.split(' ') ?? [];
     const invalidScopes = scopes.filter((scope) => !['openid', 'offline_access'].includes(scope));
-    assert(invalidScopes.length === 0, 'oidc.invalid_scope', {
+    assertThat(invalidScopes.length === 0, 'oidc.invalid_scope', {
       count: invalidScopes.length,
       scopes: invalidScopes.join(', '),
     });

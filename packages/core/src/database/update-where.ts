@@ -1,9 +1,9 @@
-import { notFalsy, Truthy } from '@logto/essentials';
 import { SchemaLike, GeneratedSchema } from '@logto/schemas';
+import { notFalsy, Truthy } from '@silverhand/essentials';
 import { DatabasePoolType, sql } from 'slonik';
 
 import RequestError from '@/errors/RequestError';
-import assert from '@/utils/assert';
+import assertThat from '@/utils/assert-that';
 import { isKeyOf } from '@/utils/schema';
 
 import { conditionalSql, convertToIdentifiers, convertToPrimitiveOrSql } from './utils';
@@ -51,7 +51,7 @@ export const buildUpdateWhere: BuildUpdateWhere = <Schema extends SchemaLike>(
       ${conditionalSql(returning, () => sql`returning *`)}
     `);
 
-    assert(
+    assertThat(
       !returning || entry,
       new RequestError({
         code: where.id ? 'entity.not_exists_with_id' : 'entity.not_exists',

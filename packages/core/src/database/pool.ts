@@ -1,7 +1,6 @@
+import { getEnv } from '@silverhand/essentials';
 import { createPool } from 'slonik';
 import { createInterceptors } from 'slonik-interceptor-preset';
-
-import { getEnv } from '@/utils/env';
 
 const interceptors = [...createInterceptors()];
 

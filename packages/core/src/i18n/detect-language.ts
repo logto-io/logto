@@ -1,6 +1,6 @@
 import { IncomingHttpHeaders } from 'http';
 
-import { Optional } from '@logto/essentials';
+import { Optional, normalizeValueToStringArray } from '@silverhand/essentials';
 import { ParameterizedContext } from 'koa';
 import { IRouterParamContext } from 'koa-router';
 
@@ -25,14 +25,6 @@ const resolveLanguage = (languageString: string): Optional<[string, number]> => 
   }
 
   return [language, 1];
-};
-
-const normalizeValueToStringArray = (value?: string | string[]): string[] => {
-  if (value) {
-    return Array.isArray(value) ? value : [value];
-  }
-
-  return [];
 };
 
 const detectLanguageFromHeaders = (headers: IncomingHttpHeaders): string[] =>

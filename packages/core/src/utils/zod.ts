@@ -1,4 +1,4 @@
-import { conditional } from '@logto/essentials';
+import { conditional } from '@silverhand/essentials';
 import { OpenAPIV3 } from 'openapi-types';
 import { ZodArray, ZodBoolean, ZodNumber, ZodObject, ZodOptional, ZodString } from 'zod';
 
