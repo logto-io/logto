@@ -25,15 +25,15 @@
     "url": "https://github.com/logto-io/logto/issues"
   },
   "devDependencies": {
-    "@logto/eslint-config": "^0.2.1",
-    "@logto/ts-config": "^0.2.1",
+    "@silverhand/eslint-config": "^0.2.2",
+    "@silverhand/ts-config": "^0.2.2",
     "eslint": "^7.32.0",
     "lint-staged": "^11.1.1",
     "prettier": "^2.3.2",
     "typescript": "^4.3.5"
   },
   "eslintConfig": {
-    "extends": "@logto"
+    "extends": "@silverhand"
   },
-  "prettier": "@logto/eslint-config/.prettierrc"
+  "prettier": "@silverhand/eslint-config/.prettierrc"
 }

@@ -43,8 +43,8 @@
     "zod": "^3.8.1"
   },
   "devDependencies": {
-    "@logto/eslint-config": "^0.2.1",
-    "@logto/ts-config": "^0.2.1",
+    "@silverhand/eslint-config": "^0.2.2",
+    "@silverhand/ts-config": "^0.2.2",
     "@types/jest": "^27.0.1",
     "@types/koa": "^2.13.3",
     "@types/koa-logger": "^3.1.1",
@@ -71,7 +71,7 @@
     "@": "./build"
   },
   "eslintConfig": {
-    "extends": "@logto"
+    "extends": "@silverhand"
   },
-  "prettier": "@logto/eslint-config/.prettierrc"
+  "prettier": "@silverhand/eslint-config/.prettierrc"
 }
