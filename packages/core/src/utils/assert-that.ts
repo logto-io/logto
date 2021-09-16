@@ -1,5 +1,3 @@
-// https://github.com/facebook/jest/issues/7547
-
 import { LogtoErrorCode } from '@logto/phrases';
 import { assert } from '@silverhand/essentials';
 
