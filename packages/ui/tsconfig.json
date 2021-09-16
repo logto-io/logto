@@ -1,5 +1,5 @@
 {
-  "extends": "@logto/ts-config-react/tsconfig.base",
+  "extends": "@silverhand/ts-config-react/tsconfig.base",
   "compilerOptions": {
     "baseUrl": "src",
     "paths": {
