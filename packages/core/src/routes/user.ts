@@ -1,5 +1,6 @@
 import { PasswordEncryptionMethod } from '@logto/schemas';
 import { nanoid } from 'nanoid';
+import { Provider } from 'oidc-provider';
 import { object, string } from 'zod';
 
 import RequestError from '@/errors/RequestError';
@@ -10,7 +11,7 @@ import { encryptPassword } from '@/utils/password';
 
 import { AnonymousRouter } from './types';
 
-export default function userRoutes<T extends AnonymousRouter>(router: T) {
+export default function userRoutes<T extends AnonymousRouter>(router: T, provider: Provider) {
   router.post(
     '/user',
     koaGuard({
@@ -36,13 +37,24 @@ export default function userRoutes<T extends AnonymousRouter>(router: T) {
         passwordEncryptionMethod
       );
 
-      ctx.body = await insertUser({
+      await insertUser({
         id,
         username,
         passwordEncrypted,
         passwordEncryptionMethod,
         passwordEncryptionSalt,
       });
+
+      const redirectTo = await provider.interactionResult(
+        ctx.req,
+        ctx.res,
+        {
+          login: { accountId: id },
+        },
+        { mergeWithLastSubmission: false }
+      );
+      ctx.body = { redirectTo };
+
       return next();
     }
   );

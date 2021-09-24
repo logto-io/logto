@@ -17,7 +17,7 @@ const createRouters = (provider: Provider) => {
 
   statusRoutes(anonymousRouter);
   sessionRoutes(anonymousRouter, provider);
-  userRoutes(anonymousRouter);
+  userRoutes(anonymousRouter, provider);
   swaggerRoutes(anonymousRouter);
 
   const router: AuthedRouter = new Router();
