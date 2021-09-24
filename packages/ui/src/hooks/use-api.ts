@@ -28,6 +28,8 @@ function useApi<Args extends any[], Response>(
       if (error instanceof HTTPError) {
         const kyError = await error.response.json<RequestErrorBody>();
         setError(kyError);
+        setLoading(false);
+        return;
       }
 
       setLoading(false);
