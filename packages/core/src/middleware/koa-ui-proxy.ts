@@ -19,7 +19,7 @@ export default function koaUIProxy<
   const uiProxy: Middleware = isProduction
     ? serveStatic(PATH_TO_UI_DIST)
     : proxy('*', {
-        target: 'http://localhost:5000',
+        target: 'http://localhost:5001',
         changeOrigin: true,
         logs: true,
       });
