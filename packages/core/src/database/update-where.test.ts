@@ -12,7 +12,10 @@ describe('buildUpdateWhere()', () => {
     );
     const updateWhere = buildUpdateWhere(pool, Users);
     await expect(
-      updateWhere({ set: { username: '123' }, where: { id: 'foo', username: '456' } })
+      updateWhere({
+        set: { username: '123', id: undefined },
+        where: { id: 'foo', username: '456' },
+      })
     ).resolves.toBe(undefined);
   });
 

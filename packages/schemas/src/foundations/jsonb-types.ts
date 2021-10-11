@@ -15,6 +15,7 @@ export const oidcModelInstancePayloadGuard = z
 export type OidcModelInstancePayload = z.infer<typeof oidcModelInstancePayloadGuard>;
 
 export const oidcClientMetadataGuard = z.object({
+  applicationType: z.string().optional(),
   redirectUris: z.string().array(),
   postLogoutRedirectUris: z.string().array(),
 });
