@@ -35,7 +35,6 @@ export const buildUpdateWhere: BuildUpdateWhere = <Schema extends SchemaLike>(
   const isKeyOfSchema = isKeyOf(schema);
   const connectKeyValueWithEqualSign = (data: Partial<Schema>) =>
     Object.entries(data)
-      .filter(([_, value]) => value !== undefined)
       .map(
         ([key, value]) =>
           isKeyOfSchema(key) && sql`${fields[key]}=${convertToPrimitiveOrSql(key, value)}`
