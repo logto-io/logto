@@ -12,7 +12,10 @@ describe('buildUpdateWhere()', () => {
     );
     const updateWhere = buildUpdateWhere(pool, Users);
     await expect(
-      updateWhere({ set: { username: '123' }, where: { id: 'foo', username: '456' } })
+      updateWhere({
+        set: { username: '123' },
+        where: { id: 'foo', username: '456' },
+      })
     ).resolves.toBe(undefined);
   });
 
@@ -30,6 +33,19 @@ describe('buildUpdateWhere()', () => {
     await expect(
       updateWhere({ set: { username: '123', primaryEmail: 'foo@bar.com' }, where: { id: 'foo' } })
     ).resolves.toStrictEqual(user);
+  });
+
+  it('throws an error when `undefined` found in values', async () => {
+    const pool = createTestPool(
+      'update "users"\nset "username"=$1\nwhere "id"=$2 and "username"=$3'
+    );
+    const updateWhere = buildUpdateWhere(pool, Users);
+    await expect(
+      updateWhere({
+        set: { username: '123', id: undefined },
+        where: { id: 'foo', username: '456' },
+      })
+    ).rejects.toMatchError(new TypeError("Cannot read property 'toString' of undefined"));
   });
 
   it('throws `entity.not_exists_with_id` error with `undefined` when `returning` is true', async () => {

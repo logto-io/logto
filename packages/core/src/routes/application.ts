@@ -2,7 +2,7 @@ import { Applications } from '@logto/schemas';
 import { object, string } from 'zod';
 
 import koaGuard from '@/middleware/koa-guard';
-import { generateOidcClientMetadata } from '@/oidc/utils';
+import { buildOidcClientMetadata } from '@/oidc/utils';
 import {
   deleteApplicationById,
   findApplicationById,
@@ -31,13 +31,13 @@ export default function applicationRoutes<T extends AuthedRouter>(router: T) {
         .merge(Applications.guard.pick({ name: true, type: true })),
     }),
     async (ctx, next) => {
-      const { name, type, ...rest } = ctx.guard.body;
+      const { name, type, oidcClientMetadata, ...rest } = ctx.guard.body;
 
       ctx.body = await insertApplication({
         id: applicationId(),
         type,
         name,
-        oidcClientMetadata: generateOidcClientMetadata(),
+        oidcClientMetadata: buildOidcClientMetadata(type, oidcClientMetadata),
         ...rest,
       });
       return next();
@@ -63,7 +63,6 @@ export default function applicationRoutes<T extends AuthedRouter>(router: T) {
     '/application/:id',
     koaGuard({
       params: object({ id: string().min(1) }),
-      // Consider `.deepPartial()` if OIDC client metadata bloats
       body: Applications.guard.omit({ id: true, createdAt: true }).partial(),
     }),
     async (ctx, next) => {
@@ -71,8 +70,15 @@ export default function applicationRoutes<T extends AuthedRouter>(router: T) {
         params: { id },
         body,
       } = ctx.guard;
+      const application = await findApplicationById(id);
 
-      ctx.body = await updateApplicationById(id, body);
+      ctx.body = await updateApplicationById(id, {
+        ...body,
+        oidcClientMetadata: buildOidcClientMetadata(body.type ?? application.type, {
+          ...application.oidcClientMetadata,
+          ...body.oidcClientMetadata,
+        }),
+      });
       return next();
     }
   );
