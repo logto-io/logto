@@ -40,6 +40,7 @@
     "p-retry": "^4.6.1",
     "slonik": "^23.8.3",
     "slonik-interceptor-preset": "^1.2.10",
+    "snakecase-keys": "^5.1.0",
     "zod": "^3.8.1"
   },
   "devDependencies": {
