@@ -20,6 +20,7 @@ export default async function initOidc(app: Koa): Promise<Provider> {
     adapter: postgresAdapter,
     renderError: (ctx, out, error) => {
       console.log('OIDC error', error);
+      throw error;
     },
     cookies: {
       // V2: Rotate this when necessary
