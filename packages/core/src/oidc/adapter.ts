@@ -1,6 +1,7 @@
 import { ApplicationDBEntry } from '@logto/schemas';
 import dayjs from 'dayjs';
 import { AdapterFactory, AllClientMetadata } from 'oidc-provider';
+import snakecaseKeys from 'snakecase-keys';
 
 import { findApplicationById } from '@/queries/application';
 import {
@@ -15,16 +16,19 @@ import {
 export default function postgresAdapter(modelName: string): ReturnType<AdapterFactory> {
   if (modelName === 'Client') {
     const reject = async () => Promise.reject(new Error('Not implemented'));
-    const tranpileClient = ({ id, oidcClientMetadata }: ApplicationDBEntry): AllClientMetadata => ({
+    const transpileClient = ({
+      id,
+      oidcClientMetadata,
+    }: ApplicationDBEntry): AllClientMetadata => ({
       client_id: id,
       grant_types: ['authorization_code', 'refresh_token'],
       token_endpoint_auth_method: 'none',
-      ...oidcClientMetadata,
+      ...snakecaseKeys(oidcClientMetadata),
     });
 
     return {
       upsert: reject,
-      find: async (id) => tranpileClient(await findApplicationById(id)),
+      find: async (id) => transpileClient(await findApplicationById(id)),
       findByUserCode: reject,
       findByUid: reject,
       consume: reject,
