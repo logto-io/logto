@@ -21,4 +21,5 @@ cache
 .*cache
 .DS_Store
 *.env
+.idea/
 *.pem
