@@ -4,7 +4,7 @@ import { MemoryRouter } from 'react-router-dom';
 
 import App from './App';
 
-jest.mock('ky', () => ({}));
+jest.mock('axios', () => ({}));
 
 describe('<App />', () => {
   test('renders without exploding', () => {

@@ -19,10 +19,10 @@
   "dependencies": {
     "@logto/phrases": "^0.1.0",
     "@logto/schemas": "^0.1.0",
+    "axios": "^0.24.0",
     "classnames": "^2.3.1",
     "i18next": "^20.3.3",
     "i18next-browser-languagedetector": "^6.1.2",
-    "ky": "^0.28.5",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-i18next": "^11.11.3",

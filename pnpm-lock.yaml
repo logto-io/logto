@@ -185,6 +185,7 @@ importers:
       '@types/react-router-dom': ^5.1.8
       '@types/webpack': ^4
       '@types/webpack-env': ^1.16.2
+      axios: ^0.24.0
       babel-preset-razzle: 4.0.5
       classnames: ^2.3.1
       concurrently: ^6.2.0
@@ -192,7 +193,6 @@ importers:
       html-webpack-plugin: ^4.5.2
       i18next: ^20.3.3
       i18next-browser-languagedetector: ^6.1.2
-      ky: ^0.28.5
       lint-staged: ^11.1.1
       mini-css-extract-plugin: ^0.9.0
       postcss: ^8.3.6
@@ -211,10 +211,10 @@ importers:
     dependencies:
       '@logto/phrases': link:../phrases
       '@logto/schemas': link:../schemas
+      axios: 0.24.0
       classnames: 2.3.1
       i18next: 20.3.5
       i18next-browser-languagedetector: 6.1.2
-      ky: 0.28.5
       react: 17.0.2
       react-dom: 17.0.2_react@17.0.2
       react-i18next: 11.11.4_i18next@20.3.5+react@17.0.2
@@ -4522,6 +4522,14 @@ packages:
     resolution: {integrity: sha512-xh1Rl34h6Fi1DC2WWKfxUTVqRsNnr6LsKz2+hfwDxQJWmrx8+c7ylaqBMcHfl1U1r2dsifOvKX3LQuLNZ+XSvA==}
     dev: true
 
+  /axios/0.24.0:
+    resolution: {integrity: sha512-Q6cWsys88HoPgAaFAVUb0WpPk0O8iTeisR9IMqy9G8AbO4NlpVknrnQS03zzF9PGAWgO3cgletO3VjV/P7VztA==}
+    dependencies:
+      follow-redirects: 1.14.4
+    transitivePeerDependencies:
+      - debug
+    dev: false
+
   /babel-jest/26.6.3_@babel+core@7.14.8:
     resolution: {integrity: sha512-pl4Q+GAVOHwvjrck6jKjvmGhnO3jHX/xuB9d27f+EJZ/6k+6nMuPjorrYp7s++bKKdANwzElBWnLWaObvTnaZA==}
     engines: {node: '>= 10.14.2'}
@@ -7812,6 +7820,16 @@ packages:
       debug: 4.3.2_supports-color@6.1.0
     dev: true
 
+  /follow-redirects/1.14.4:
+    resolution: {integrity: sha512-zwGkiSXC1MUJG/qmeIFH2HBJx9u0V46QGUe3YR1fXG8bXQxq7fLj0RjLZQ5nubr9qNJUZrH+xUcwXEoXNpfS+g==}
+    engines: {node: '>=4.0'}
+    peerDependencies:
+      debug: '*'
+    peerDependenciesMeta:
+      debug:
+        optional: true
+    dev: false
+
   /for-in/1.0.2:
     resolution: {integrity: sha1-gQaNKVqBQuwKxybG4iAMMPttXoA=}
     engines: {node: '>=0.10.0'}
@@ -10747,11 +10765,6 @@ packages:
       statuses: 1.5.0
       type-is: 1.6.18
       vary: 1.1.2
-    dev: false
-
-  /ky/0.28.5:
-    resolution: {integrity: sha512-O5gg9kF4MeyfSw+YkgPAafOPwEUU6xcdGEJKUJmKpIPbLzk3oxUtY4OdBNekG7mawofzkyZ/ZHuR9ev5uZZdAA==}
-    engines: {node: '>=12'}
     dev: false
 
   /lerna/4.0.0:

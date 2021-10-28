@@ -1,15 +1,11 @@
-import ky from 'ky';
+import axios from 'axios';
 
 export const register = async (username: string, password: string) => {
   type Response = {
     redirectTo: string;
   };
-  return ky
-    .post('/api/user', {
-      json: {
-        username,
-        password,
-      },
-    })
-    .json<Response>();
+  return axios.post<Response>('/api/user', {
+    username,
+    password,
+  });
 };

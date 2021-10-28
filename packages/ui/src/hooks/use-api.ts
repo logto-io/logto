@@ -1,5 +1,5 @@
 import { RequestErrorBody } from '@logto/schemas';
-import { HTTPError } from 'ky';
+import axios, { AxiosResponse } from 'axios';
 import { useState } from 'react';
 
 type UseApi<T extends any[], U> = {
@@ -10,7 +10,7 @@ type UseApi<T extends any[], U> = {
 };
 
 function useApi<Args extends any[], Response>(
-  api: (...args: Args) => Promise<Response>
+  api: (...args: Args) => Promise<AxiosResponse<Response>>
 ): UseApi<Args, Response> {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<RequestErrorBody | null>(null);
@@ -22,16 +22,17 @@ function useApi<Args extends any[], Response>(
 
     try {
       const result = await api(...args);
-      setResult(result);
+      setResult(result.data);
       setLoading(false);
     } catch (error: unknown) {
-      if (error instanceof HTTPError) {
-        const kyError = await error.response.json<RequestErrorBody>();
-        setError(kyError);
+      if (axios.isAxiosError(error) && error.response) {
+        // TODO: need a proper way to assert the response type of axios error
+        setError(error.response.data as RequestErrorBody);
         setLoading(false);
         return;
       }
 
+      // Throw request error, unknown error
       setLoading(false);
       throw error;
     }

@@ -4,7 +4,9 @@ import React from 'react';
 import { register } from '@/apis/register';
 import Register from '@/pages/Register';
 
-jest.mock('@/apis/register', () => ({ register: jest.fn(async () => Promise.resolve()) }));
+jest.mock('@/apis/register', () => ({
+  register: jest.fn(async () => Promise.resolve({ data: { redirectUrl: '' } })),
+}));
 
 describe('<Register />', () => {
   test('renders without exploding', async () => {

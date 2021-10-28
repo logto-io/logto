@@ -4,7 +4,9 @@ import React from 'react';
 import { signInBasic } from '@/apis/sign-in';
 import SignIn from '@/pages/SignIn';
 
-jest.mock('@/apis/sign-in', () => ({ signInBasic: jest.fn(async () => Promise.resolve()) }));
+jest.mock('@/apis/sign-in', () => ({
+  signInBasic: jest.fn(async () => Promise.resolve({ data: { redirectUrl: '' } })),
+}));
 
 describe('<SignIn />', () => {
   test('renders without exploding', async () => {

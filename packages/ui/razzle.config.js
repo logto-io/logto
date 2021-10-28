@@ -23,7 +23,6 @@ module.exports = {
 
     config.transformIgnorePatterns = [
       '^.+\\.module\\.(css|sass|scss)$',
-      '[/\\\\]node_modules[/\\\\]((?!ky[/\\\\]).)+\\.(js|jsx|mjs|cjs|ts|tsx)$',
     ];
 
     config.moduleNameMapper = {
