@@ -15,6 +15,16 @@ module.exports = {
       '@': path.resolve('src/'),
     };
 
+    config.module.rules.push({
+      test: require.resolve('ky'),
+      use: {
+        loader: 'imports-loader',
+        options: {
+          imports: 'side-effects @ungap/global-this',
+        },
+      },
+    });
+
     return config;
   },
   modifyJestConfig: ({ jestConfig }) => {

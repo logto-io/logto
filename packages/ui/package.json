@@ -19,6 +19,7 @@
   "dependencies": {
     "@logto/phrases": "^0.1.0",
     "@logto/schemas": "^0.1.0",
+    "@ungap/global-this": "^0.4.4",
     "classnames": "^2.3.1",
     "i18next": "^20.3.3",
     "i18next-browser-languagedetector": "^6.1.2",
@@ -46,6 +47,7 @@
     "concurrently": "^6.2.0",
     "eslint": "^7.32.0",
     "html-webpack-plugin": "^4.5.2",
+    "imports-loader": "^3.1.0",
     "lint-staged": "^11.1.1",
     "mini-css-extract-plugin": "^0.9.0",
     "postcss": "^8.3.6",
@@ -55,7 +57,7 @@
     "razzle-plugin-scss": "^4.0.5",
     "stylelint": "^13.13.1",
     "typescript": "^4.3.5",
-    "webpack": "^4.44.1",
+    "webpack": "^5.60.0",
     "webpack-dev-server": "^3.11.2"
   },
   "eslintConfig": {
