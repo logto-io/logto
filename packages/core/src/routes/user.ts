@@ -1,11 +1,10 @@
-import { PasswordEncryptionMethod, userInfoSelectFields } from '@logto/schemas';
+import { userInfoSelectFields } from '@logto/schemas';
 import pick from 'lodash.pick';
-import { nanoid } from 'nanoid';
 import { Provider } from 'oidc-provider';
 import { object, string } from 'zod';
 
 import RequestError from '@/errors/RequestError';
-import { generateUserId } from '@/lib/user';
+import { encryptUserPassword, generateUserId } from '@/lib/user';
 import koaGuard from '@/middleware/koa-guard';
 import {
   deleteUserById,
@@ -15,7 +14,6 @@ import {
   insertUser,
   updateUserById,
 } from '@/queries/user';
-import { encryptPassword } from '@/utils/password';
 
 import { AnonymousRouter } from './types';
 
@@ -36,14 +34,9 @@ export default function userRoutes<T extends AnonymousRouter>(router: T, provide
       }
 
       const id = await generateUserId();
-      const passwordEncryptionSalt = nanoid();
-      const passwordEncryptionMethod = PasswordEncryptionMethod.SaltAndPepper;
-      const passwordEncrypted = encryptPassword(
-        id,
-        password,
-        passwordEncryptionSalt,
-        passwordEncryptionMethod
-      );
+
+      const { passwordEncryptionSalt, passwordEncrypted, passwordEncryptionMethod } =
+        encryptUserPassword(id, password);
 
       await insertUser({
         id,
@@ -102,14 +95,7 @@ export default function userRoutes<T extends AnonymousRouter>(router: T, provide
 
       await findUserById(userId);
 
-      const passwordEncryptionSalt = nanoid();
-      const passwordEncryptionMethod = PasswordEncryptionMethod.SaltAndPepper;
-      const passwordEncrypted = encryptPassword(
-        userId,
-        password,
-        passwordEncryptionSalt,
-        passwordEncryptionMethod
-      );
+      const { passwordEncrypted, passwordEncryptionSalt } = encryptUserPassword(userId, password);
 
       await updateUserById(userId, {
         passwordEncryptionSalt,

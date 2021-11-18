@@ -1,6 +1,8 @@
+import { PasswordEncryptionMethod } from '@logto/schemas';
+
 import { hasUserWithId } from '@/queries/user';
 
-import { generateUserId } from './user';
+import { encryptUserPassword, generateUserId } from './user';
 
 jest.mock('@/queries/user');
 
@@ -46,5 +48,15 @@ describe('generateUserId()', () => {
       'Cannot generate user ID in reasonable retries'
     );
     expect(mockedHasUserWithId).toBeCalledTimes(11);
+  });
+});
+
+describe('encryptUserPassword()', () => {
+  it('generates salt, encrypted and method', () => {
+    const { passwordEncryptionMethod, passwordEncrypted, passwordEncryptionSalt } =
+      encryptUserPassword('user-id', 'password');
+    expect(passwordEncryptionMethod).toEqual(PasswordEncryptionMethod.SaltAndPepper);
+    expect(passwordEncrypted).toHaveLength(64);
+    expect(passwordEncryptionSalt).toHaveLength(21);
   });
 });
