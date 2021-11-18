@@ -3,7 +3,9 @@ import { sql } from 'slonik';
 
 import { buildInsertInto } from '@/database/insert-into';
 import pool from '@/database/pool';
-import { convertToIdentifiers } from '@/database/utils';
+import { buildUpdateWhere } from '@/database/update-where';
+import { convertToIdentifiers, OmitAutoSetFields } from '@/database/utils';
+import RequestError from '@/errors/RequestError';
 
 const { table, fields } = convertToIdentifiers(Users);
 
@@ -36,3 +38,29 @@ export const hasUserWithId = async (id: string) =>
 `);
 
 export const insertUser = buildInsertInto<UserDBEntry>(pool, Users, { returning: true });
+
+export const findAllUsers = async () =>
+  pool.many<UserDBEntry>(sql`
+    select ${sql.join(Object.values(fields), sql`, `)}
+    from ${table}
+  `);
+
+const updateUser = buildUpdateWhere<UserDBEntry>(pool, Users, true);
+
+export const updateUserById = async (id: string, set: Partial<OmitAutoSetFields<UserDBEntry>>) =>
+  updateUser({ set, where: { id } });
+
+export const deleteUserById = async (id: string) => {
+  const { rowCount } = await pool.query(sql`
+      delete from ${table}
+      where id=${id}
+    `);
+  if (rowCount < 1) {
+    throw new RequestError({
+      code: 'entity.not_exists_with_id',
+      name: Users.tableSingular,
+      id,
+      status: 404,
+    });
+  }
+};
