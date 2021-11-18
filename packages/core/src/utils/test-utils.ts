@@ -1,5 +1,9 @@
-import { createMockPool, createMockQueryResult, QueryResultRowType } from 'slonik';
+import { createMockPool, createMockQueryResult, QueryResultRowType, sql } from 'slonik';
 import { PrimitiveValueExpressionType } from 'slonik/dist/src/types.d';
+
+import pool from '@/database/pool';
+import { Table } from '@/database/types';
+import { convertToIdentifiers } from '@/database/utils';
 
 export const createTestPool = <T extends QueryResultRowType>(
   expectSql?: string,
@@ -21,3 +25,11 @@ export const createTestPool = <T extends QueryResultRowType>(
       );
     },
   });
+
+export const createTestTable = async <T extends Table>(parent: T) => {
+  const { table } = convertToIdentifiers(parent);
+
+  await pool.query(sql`create temp table ${table} (like ${table})`);
+  const rows = await pool.any(sql`select * from ${table}`);
+  expect(rows.length).toBe(0);
+};
