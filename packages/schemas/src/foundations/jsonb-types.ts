@@ -21,3 +21,13 @@ export const oidcClientMetadataGuard = z.object({
 });
 
 export type OidcClientMetadata = z.infer<typeof oidcClientMetadataGuard>;
+
+export const userLogPayloadGuard = z.object({
+  ip: z.string().optional(),
+  userAgent: z.string().optional(),
+  applicationId: z.string().optional(),
+  applicationName: z.string().optional(),
+  details: z.any().optional(), // To be read only by human
+});
+
+export type UserLogPayload = z.infer<typeof userLogPayloadGuard>;
