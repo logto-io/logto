@@ -23,7 +23,7 @@ export default function applicationRoutes<T extends AuthedRouter>(router: T) {
   });
 
   router.post(
-    '/application',
+    '/applications',
     koaGuard({
       body: Applications.guard
         .omit({ id: true, createdAt: true })
@@ -45,7 +45,7 @@ export default function applicationRoutes<T extends AuthedRouter>(router: T) {
   );
 
   router.get(
-    '/application/:id',
+    '/applications/:id',
     koaGuard({
       params: object({ id: string().min(1) }),
     }),
@@ -60,7 +60,7 @@ export default function applicationRoutes<T extends AuthedRouter>(router: T) {
   );
 
   router.patch(
-    '/application/:id',
+    '/applications/:id',
     koaGuard({
       params: object({ id: string().min(1) }),
       body: Applications.guard.omit({ id: true, createdAt: true }).partial(),
@@ -84,7 +84,7 @@ export default function applicationRoutes<T extends AuthedRouter>(router: T) {
   );
 
   router.delete(
-    '/application/:id',
+    '/applications/:id',
     koaGuard({ params: object({ id: string().min(1) }) }),
     async (ctx, next) => {
       const { id } = ctx.guard.params;

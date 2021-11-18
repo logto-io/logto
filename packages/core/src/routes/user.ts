@@ -21,7 +21,7 @@ import { AnonymousRouter } from './types';
 
 export default function userRoutes<T extends AnonymousRouter>(router: T, provider: Provider) {
   router.post(
-    '/user',
+    '/users',
     koaGuard({
       body: object({
         username: string().min(3),
