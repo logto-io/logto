@@ -2,16 +2,17 @@ import { createHash } from 'crypto';
 
 import { PasswordEncryptionMethod } from '@logto/schemas';
 import { assertEnv, repeat } from '@silverhand/essentials';
+import { nanoid } from 'nanoid';
 import { number, string } from 'zod';
 
 import assertThat from '@/utils/assert-that';
 
 const peppers = string()
   .array()
-  .parse(JSON.parse(assertEnv('PASSWORD_PEPPERS')));
+  .parse(process.env.NODE_ENV === 'test' ? [nanoid()] : JSON.parse(assertEnv('PASSWORD_PEPPERS')));
 const iterationCount = number()
   .min(100)
-  .parse(Number(assertEnv('PASSWORD_INTERATION_COUNT')));
+  .parse(process.env.NODE_ENV === 'test' ? 1000 : Number(assertEnv('PASSWORD_INTERATION_COUNT')));
 
 export const encryptPassword = (
   id: string,
