@@ -68,7 +68,7 @@ export default function koaGuard<
         query: query?.parse(ctx.request.query),
         body: body?.parse(ctx.request.body),
         params: params?.parse(ctx.params),
-      } as Guarded<GuardQueryT, GuardBodyT, GuardParametersT>; // Have to do t His since it's too complicated for TS
+      } as Guarded<GuardQueryT, GuardBodyT, GuardParametersT>; // Have to do this since it's too complicated for TS
     } catch (error: unknown) {
       throw new RequestError('guard.invalid_input', error);
     }
