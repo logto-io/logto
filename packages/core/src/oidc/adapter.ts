@@ -1,5 +1,6 @@
-import { ApplicationDBEntry } from '@logto/schemas';
+import { ApplicationDBEntry, UserLogResult, UserLogType } from '@logto/schemas';
 import dayjs from 'dayjs';
+import { nanoid } from 'nanoid';
 import { AdapterFactory, AllClientMetadata } from 'oidc-provider';
 import snakecaseKeys from 'snakecase-keys';
 
@@ -12,6 +13,7 @@ import {
   revokeInstanceByGrantId,
   upsertInstance,
 } from '@/queries/oidc-model-instance';
+import { insertUserLog } from '@/queries/user-log';
 
 export default function postgresAdapter(modelName: string): ReturnType<AdapterFactory> {
   if (modelName === 'Client') {
@@ -38,13 +40,36 @@ export default function postgresAdapter(modelName: string): ReturnType<AdapterFa
   }
 
   return {
-    upsert: async (id, payload, expiresIn) =>
-      upsertInstance({
+    upsert: async (id, payload, expiresIn) => {
+      if (modelName === 'AccessToken' && payload.accountId) {
+        await insertUserLog({
+          id: nanoid(),
+          userId: payload.accountId,
+          type: UserLogType.ExchangeAccessToken,
+          result: UserLogResult.Success,
+          payload: {
+            applicationId: payload.clientId,
+            applicationName:
+              (payload.clientId && (await findApplicationById(payload.clientId)).name) ?? undefined,
+            details: {
+              scope: payload.scope,
+              grantId: payload.grantId,
+              sessionUid: payload.sessionUid,
+              exp: payload.exp,
+              iat: payload.iat,
+              gty: payload.gty,
+            },
+          },
+        });
+      }
+
+      return upsertInstance({
         modelName,
         id,
         payload,
         expiresAt: dayjs().add(expiresIn, 'second').valueOf(),
-      }),
+      });
+    },
     find: async (id) => findPayloadById(modelName, id),
     findByUserCode: async (userCode) => findPayloadByPayloadField(modelName, 'userCode', userCode),
     findByUid: async (uid) => findPayloadByPayloadField(modelName, 'uid', uid),
