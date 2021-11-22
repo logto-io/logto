@@ -1,11 +1,14 @@
 import { LogtoErrorCode } from '@logto/phrases';
+import { LogResult, LogType } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
+import { nanoid } from 'nanoid';
 import { Provider } from 'oidc-provider';
 import { object, string } from 'zod';
 
 import RequestError from '@/errors/RequestError';
 import koaGuard from '@/middleware/koa-guard';
 import { findUserByUsername } from '@/queries/user';
+import { insertUserLog } from '@/queries/user-log';
 import assertThat from '@/utils/assert-that';
 import { encryptPassword } from '@/utils/password';
 
@@ -34,11 +37,28 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
             passwordEncrypted && passwordEncryptionMethod && passwordEncryptionSalt,
             'session.invalid_sign_in_method'
           );
-          assertThat(
-            encryptPassword(id, password, passwordEncryptionSalt, passwordEncryptionMethod) ===
-              passwordEncrypted,
-            'session.invalid_credentials'
-          );
+
+          if (
+            encryptPassword(id, password, passwordEncryptionSalt, passwordEncryptionMethod) !==
+            passwordEncrypted
+          ) {
+            await insertUserLog({
+              id: nanoid(),
+              userId: id,
+              type: LogType.SignInUsernameAndPassword,
+              result: LogResult.Failed,
+              payload: {},
+            });
+            throw new RequestError('session.invalid_credentials');
+          }
+
+          await insertUserLog({
+            id: nanoid(),
+            userId: id,
+            type: LogType.SignInUsernameAndPassword,
+            result: LogResult.Failed,
+            payload: {},
+          });
 
           const redirectTo = await provider.interactionResult(
             ctx.req,
