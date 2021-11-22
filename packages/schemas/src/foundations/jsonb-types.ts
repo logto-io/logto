@@ -27,7 +27,7 @@ export const userLogPayloadGuard = z.object({
   userAgent: z.string().optional(),
   applicationId: z.string().optional(),
   applicationName: z.string().optional(),
-  details: z.any().optional(), // To be read only by human
+  details: z.object({}).optional(), // NOT intend to be parsed
 });
 
 export type UserLogPayload = z.infer<typeof userLogPayloadGuard>;
