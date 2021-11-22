@@ -6,9 +6,12 @@ export enum ApplicationType {
   Traditional = 'Traditional',
 }
 export enum LogType {
-  SignInSuccess = 'SignInSuccess',
-  SignInFailedWrongPassword = 'SignInFailedWrongPassword',
-  ExchangeAccessTokenSuccess = 'ExchangeAccessTokenSuccess',
+  SignInUsernameAndPassword = 'SignInUsernameAndPassword',
+  ExchangeAccessToken = 'ExchangeAccessToken',
+}
+export enum LogResult {
+  Success = 'Success',
+  Failed = 'Failed',
 }
 export enum PasswordEncryptionMethod {
   SaltAndPepper = 'SaltAndPepper',

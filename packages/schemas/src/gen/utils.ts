@@ -2,6 +2,10 @@ import { Optional } from '@silverhand/essentials';
 
 export const normalizeWhitespaces = (string: string): string => string.replace(/\s+/g, ' ').trim();
 
+// Remove all comments not start with @
+export const removeUnrecognizedComments = (string: string): string =>
+  string.replace(/\/\*(?!\s@)[^*]+\*\//g, '');
+
 const getCountDelta = (value: string): number => {
   if (value === '(') {
     return 1;
