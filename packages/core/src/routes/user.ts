@@ -1,7 +1,7 @@
 import { userInfoSelectFields } from '@logto/schemas';
 import pick from 'lodash.pick';
 import { Provider } from 'oidc-provider';
-import { object, string } from 'zod';
+import { boolean, object, string } from 'zod';
 
 import RequestError from '@/errors/RequestError';
 import { encryptUserPassword, generateUserId } from '@/lib/user';
@@ -11,6 +11,7 @@ import {
   findAllUsers,
   findUserById,
   hasUser,
+  hasUserWithId,
   insertUser,
   updateUserById,
 } from '@/queries/user';
@@ -101,6 +102,32 @@ export default function userRoutes<T extends AnonymousRouter>(router: T, provide
         passwordEncryptionSalt,
         passwordEncrypted,
       });
+      const user = await findUserById(userId);
+      ctx.body = pick(user, ...userInfoSelectFields);
+      return next();
+    }
+  );
+
+  router.patch(
+    '/users/:userId/block',
+    koaGuard({
+      params: object({ userId: string().min(1) }),
+      body: object({ accessBlocked: boolean() }),
+    }),
+    async (ctx, next) => {
+      const {
+        params: { userId },
+        body: { accessBlocked },
+      } = ctx.guard;
+
+      if (!(await hasUserWithId(userId))) {
+        throw new RequestError('user.not_exists');
+      }
+
+      await updateUserById(userId, {
+        accessBlocked,
+      });
+
       const user = await findUserById(userId);
       ctx.body = pick(user, ...userInfoSelectFields);
       return next();

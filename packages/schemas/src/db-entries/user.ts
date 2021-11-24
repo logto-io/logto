@@ -13,6 +13,7 @@ export type UserDBEntry = {
   passwordEncrypted?: string;
   passwordEncryptionMethod?: PasswordEncryptionMethod;
   passwordEncryptionSalt?: string;
+  accessBlocked?: boolean;
 };
 
 const guard: Guard<UserDBEntry> = z.object({
@@ -23,6 +24,7 @@ const guard: Guard<UserDBEntry> = z.object({
   passwordEncrypted: z.string().optional(),
   passwordEncryptionMethod: z.nativeEnum(PasswordEncryptionMethod).optional(),
   passwordEncryptionSalt: z.string().optional(),
+  accessBlocked: z.boolean().optional(),
 });
 
 export const Users: GeneratedSchema<UserDBEntry> = Object.freeze({
@@ -36,6 +38,7 @@ export const Users: GeneratedSchema<UserDBEntry> = Object.freeze({
     passwordEncrypted: 'password_encrypted',
     passwordEncryptionMethod: 'password_encryption_method',
     passwordEncryptionSalt: 'password_encryption_salt',
+    accessBlocked: 'access_blocked',
   },
   fieldKeys: [
     'id',
@@ -45,6 +48,7 @@ export const Users: GeneratedSchema<UserDBEntry> = Object.freeze({
     'passwordEncrypted',
     'passwordEncryptionMethod',
     'passwordEncryptionSalt',
+    'accessBlocked',
   ],
   guard,
 });

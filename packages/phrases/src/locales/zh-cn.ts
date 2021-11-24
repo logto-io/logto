@@ -28,10 +28,12 @@ const errors = {
   },
   oidc: {
     aborted: '用户终止了交互。',
+    access_denied: '授权服务器拒绝了当前请求。',
     invalid_scope: '不支持的 scope: {{scopes}}。',
     invalid_scope_plural: '不支持的 scope: {{scopes}}。',
   },
   user: {
+    not_exists: '用户不存在。',
     username_exists: '用户名已存在。',
   },
   password: {

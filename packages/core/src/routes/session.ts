@@ -27,28 +27,43 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
         assertThat(username && password, 'session.insufficient_info');
 
         try {
-          const { id, passwordEncrypted, passwordEncryptionMethod, passwordEncryptionSalt } =
-            await findUserByUsername(username);
+          const {
+            id,
+            passwordEncrypted,
+            passwordEncryptionMethod,
+            passwordEncryptionSalt,
+            accessBlocked,
+          } = await findUserByUsername(username);
 
           assertThat(
             passwordEncrypted && passwordEncryptionMethod && passwordEncryptionSalt,
             'session.invalid_sign_in_method'
           );
+
           assertThat(
             encryptPassword(id, password, passwordEncryptionSalt, passwordEncryptionMethod) ===
               passwordEncrypted,
             'session.invalid_credentials'
           );
 
-          const redirectTo = await provider.interactionResult(
-            ctx.req,
-            ctx.res,
-            {
-              login: { accountId: id },
-            },
-            { mergeWithLastSubmission: false }
-          );
-          ctx.body = { redirectTo };
+          if (accessBlocked) {
+            const accessDeniedError = new RequestError('oidc.access_denied');
+            const redirectUriWithError = await provider.interactionResult(ctx.req, ctx.res, {
+              error: 'access_denied',
+              error_description: accessDeniedError.message,
+            });
+            ctx.body = { redirectTo: redirectUriWithError };
+          } else {
+            const redirectTo = await provider.interactionResult(
+              ctx.req,
+              ctx.res,
+              {
+                login: { accountId: id },
+              },
+              { mergeWithLastSubmission: false }
+            );
+            ctx.body = { redirectTo };
+          }
         } catch (error: unknown) {
           if (!(error instanceof RequestError)) {
             throw new RequestError('session.invalid_credentials');

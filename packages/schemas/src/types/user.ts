@@ -5,6 +5,7 @@ export const userInfoSelectFields = Object.freeze([
   'username',
   'primaryEmail',
   'primaryPhone',
+  'accessBlocked',
 ] as const);
 
 export type UserInfo<Keys extends keyof UserDBEntry = typeof userInfoSelectFields[number]> = Pick<

@@ -26,10 +26,12 @@ const errors = {
   },
   oidc: {
     aborted: 'The end-user aborted interaction.',
+    access_denied: 'The authorization server denied the request.',
     invalid_scope: 'Scope {{scopes}} is not supported.',
     invalid_scope_plural: 'Scope {{scopes}} are not supported.',
   },
   user: {
+    not_exists: 'The user does not exist.',
     username_exists: 'The username already exists.',
   },
   password: {
