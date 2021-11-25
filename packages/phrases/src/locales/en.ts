@@ -23,6 +23,7 @@ const errors = {
   },
   guard: {
     invalid_input: 'The request input is invalid.',
+    invalid_pagination: 'The request pagination value is invalid.',
   },
   oidc: {
     aborted: 'The end-user aborted interaction.',

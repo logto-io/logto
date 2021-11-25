@@ -25,6 +25,7 @@ const errors = {
   },
   guard: {
     invalid_input: '请求内容有误。',
+    invalid_pagination: '分页参数有误。',
   },
   oidc: {
     aborted: '用户终止了交互。',
