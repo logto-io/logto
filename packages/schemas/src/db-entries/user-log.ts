@@ -3,13 +3,13 @@
 import { z } from 'zod';
 
 import { UserLogPayload, userLogPayloadGuard, GeneratedSchema, Guard } from '../foundations';
-import { LogType, LogResult } from './custom-types';
+import { UserLogType, UserLogResult } from './custom-types';
 
 export type UserLogDBEntry = {
   id: string;
   userId: string;
-  type: LogType;
-  result: LogResult;
+  type: UserLogType;
+  result: UserLogResult;
   payload: UserLogPayload;
   createdAt: number;
 };
@@ -17,8 +17,8 @@ export type UserLogDBEntry = {
 const guard: Guard<UserLogDBEntry> = z.object({
   id: z.string(),
   userId: z.string(),
-  type: z.nativeEnum(LogType),
-  result: z.nativeEnum(LogResult),
+  type: z.nativeEnum(UserLogType),
+  result: z.nativeEnum(UserLogResult),
   payload: userLogPayloadGuard,
   createdAt: z.number(),
 });

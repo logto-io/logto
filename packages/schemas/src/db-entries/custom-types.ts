@@ -5,11 +5,11 @@ export enum ApplicationType {
   SPA = 'SPA',
   Traditional = 'Traditional',
 }
-export enum LogType {
+export enum UserLogType {
   SignInUsernameAndPassword = 'SignInUsernameAndPassword',
   ExchangeAccessToken = 'ExchangeAccessToken',
 }
-export enum LogResult {
+export enum UserLogResult {
   Success = 'Success',
   Failed = 'Failed',
 }
