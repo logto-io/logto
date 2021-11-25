@@ -8,6 +8,6 @@ create table users (
   password_encrypted varchar(128),
   password_encryption_method password_encryption_method,
   password_encryption_salt varchar(128),
-  access_blocked bool default false,
+  block bool default false,
   primary key (id)
 );

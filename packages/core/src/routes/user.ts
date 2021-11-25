@@ -45,7 +45,7 @@ export default function userRoutes<T extends AnonymousRouter>(router: T, provide
         passwordEncrypted,
         passwordEncryptionMethod,
         passwordEncryptionSalt,
-        accessBlocked: false,
+        block: false,
       });
 
       const redirectTo = await provider.interactionResult(
@@ -113,12 +113,12 @@ export default function userRoutes<T extends AnonymousRouter>(router: T, provide
     '/users/:userId/block',
     koaGuard({
       params: object({ userId: string().min(1) }),
-      body: object({ accessBlocked: boolean() }),
+      body: object({ block: boolean() }),
     }),
     async (ctx, next) => {
       const {
         params: { userId },
-        body: { accessBlocked },
+        body: { block },
       } = ctx.guard;
 
       if (!(await hasUserWithId(userId))) {
@@ -126,7 +126,7 @@ export default function userRoutes<T extends AnonymousRouter>(router: T, provide
       }
 
       await updateUserById(userId, {
-        accessBlocked,
+        block,
       });
 
       const user = await findUserById(userId);

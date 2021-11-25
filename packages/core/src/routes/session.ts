@@ -27,13 +27,8 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
         assertThat(username && password, 'session.insufficient_info');
 
         try {
-          const {
-            id,
-            passwordEncrypted,
-            passwordEncryptionMethod,
-            passwordEncryptionSalt,
-            accessBlocked,
-          } = await findUserByUsername(username);
+          const { id, passwordEncrypted, passwordEncryptionMethod, passwordEncryptionSalt, block } =
+            await findUserByUsername(username);
 
           assertThat(
             passwordEncrypted && passwordEncryptionMethod && passwordEncryptionSalt,
@@ -46,7 +41,7 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
             'session.invalid_credentials'
           );
 
-          if (accessBlocked) {
+          if (block) {
             const accessDeniedError = new RequestError('oidc.access_denied');
             const redirectUriWithError = await provider.interactionResult(ctx.req, ctx.res, {
               error: 'access_denied',
