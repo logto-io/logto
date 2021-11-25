@@ -45,6 +45,7 @@ export default function userRoutes<T extends AnonymousRouter>(router: T, provide
         passwordEncrypted,
         passwordEncryptionMethod,
         passwordEncryptionSalt,
+        accessBlocked: false,
       });
 
       const redirectTo = await provider.interactionResult(
