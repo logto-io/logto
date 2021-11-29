@@ -3,4 +3,5 @@
 export * from './custom-types';
 export * from './application';
 export * from './oidc-model-instance';
+export * from './user-log';
 export * from './user';

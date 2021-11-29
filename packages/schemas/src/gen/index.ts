@@ -11,7 +11,13 @@ import pluralize from 'pluralize';
 
 import { generateSchema } from './schema';
 import { FileData, Table, Field, Type, GeneratedType, TableWithType } from './types';
-import { findFirstParentheses, getType, normalizeWhitespaces, removeParentheses } from './utils';
+import {
+  findFirstParentheses,
+  getType,
+  normalizeWhitespaces,
+  removeParentheses,
+  removeUnrecognizedComments,
+} from './utils';
 
 const directory = 'tables';
 
@@ -25,7 +31,8 @@ const generate = async () => {
       .map<Promise<[string, FileData]>>(async (file) => {
         const statements = (await fs.readFile(path.join(directory, file), { encoding: 'utf-8' }))
           .split(';')
-          .map((value) => normalizeWhitespaces(value));
+          .map((value) => normalizeWhitespaces(value))
+          .map((value) => removeUnrecognizedComments(value));
         const tables = statements
           .filter((value) => value.toLowerCase().startsWith('create table'))
           .map((value) => findFirstParentheses(value))
@@ -55,7 +62,6 @@ const generate = async () => {
                 const required = restLowercased.includes('not null');
                 const primitiveType = getType(type);
                 const tsType = /\/\* @use (.*) \*\//.exec(restJoined)?.[1];
-
                 assert(
                   !(!primitiveType && tsType),
                   `TS type can only be applied on primitive types, found ${

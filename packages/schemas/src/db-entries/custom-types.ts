@@ -5,6 +5,14 @@ export enum ApplicationType {
   SPA = 'SPA',
   Traditional = 'Traditional',
 }
+export enum UserLogType {
+  SignInUsernameAndPassword = 'SignInUsernameAndPassword',
+  ExchangeAccessToken = 'ExchangeAccessToken',
+}
+export enum UserLogResult {
+  Success = 'Success',
+  Failed = 'Failed',
+}
 export enum PasswordEncryptionMethod {
   SaltAndPepper = 'SaltAndPepper',
 }
