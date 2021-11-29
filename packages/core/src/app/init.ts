@@ -6,6 +6,7 @@ import koaLogger from 'koa-logger';
 
 import { port } from '@/env/consts';
 import koaErrorHandler from '@/middleware/koa-error-handler';
+import koaErrorLogHandler from '@/middleware/koa-error-log-handler';
 import koaI18next from '@/middleware/koa-i18next';
 import koaUIProxy from '@/middleware/koa-ui-proxy';
 import initOidc from '@/oidc/init';
@@ -13,6 +14,7 @@ import initRouter from '@/routes/init';
 
 export default async function initApp(app: Koa): Promise<void> {
   app.use(koaErrorHandler());
+  app.use(koaErrorLogHandler());
   app.use(koaLogger());
   app.use(koaI18next());
 

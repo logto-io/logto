@@ -1,11 +1,11 @@
 import { LogtoErrorCode } from '@logto/phrases';
-import { LogResult, LogType } from '@logto/schemas';
+import { UserLogResult, UserLogType } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { nanoid } from 'nanoid';
 import { Provider } from 'oidc-provider';
 import { object, string } from 'zod';
 
-import RequestError from '@/errors/RequestError';
+import RequestError, { RequestErrorWithUserLog } from '@/errors/RequestError';
 import koaGuard from '@/middleware/koa-guard';
 import { findUserByUsername } from '@/queries/user';
 import { insertUserLog } from '@/queries/user-log';
@@ -38,25 +38,23 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
             'session.invalid_sign_in_method'
           );
 
-          if (
-            encryptPassword(id, password, passwordEncryptionSalt, passwordEncryptionMethod) !==
-            passwordEncrypted
-          ) {
-            await insertUserLog({
+          assertThat(
+            encryptPassword(id, password, passwordEncryptionSalt, passwordEncryptionMethod) ===
+              passwordEncrypted,
+            new RequestErrorWithUserLog('session.invalid_credentials', {
               id: nanoid(),
               userId: id,
-              type: LogType.SignInUsernameAndPassword,
-              result: LogResult.Failed,
+              type: UserLogType.SignInUsernameAndPassword,
+              result: UserLogResult.Failed,
               payload: {},
-            });
-            throw new RequestError('session.invalid_credentials');
-          }
+            })
+          );
 
           await insertUserLog({
             id: nanoid(),
             userId: id,
-            type: LogType.SignInUsernameAndPassword,
-            result: LogResult.Failed,
+            type: UserLogType.SignInUsernameAndPassword,
+            result: UserLogResult.Success,
             payload: {},
           });
 
