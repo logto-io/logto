@@ -5,7 +5,12 @@ import koaPagination, { WithPaginationContext } from './koa-pagination';
 
 const next = jest.fn();
 const setHeader = jest.fn();
-const appendHeader = jest.fn();
+const links = new Set<string>();
+const appendHeader = jest.fn((key: string, value: string) => {
+  if (key === 'Link') {
+    links.add(value);
+  }
+});
 
 const createContext = (query: Record<string, string>): WithPaginationContext<Context> => {
   const baseContext = createMockContext();
@@ -13,9 +18,11 @@ const createContext = (query: Record<string, string>): WithPaginationContext<Con
     ...baseContext,
     request: {
       ...baseContext.request,
+      origin: '',
+      path: '',
       query,
     },
-    pagination: { page: 0, size: 0 },
+    pagination: { limit: 0, offset: 0 },
     set: setHeader,
     append: appendHeader,
   };
@@ -25,26 +32,27 @@ const createContext = (query: Record<string, string>): WithPaginationContext<Con
 afterEach(() => {
   setHeader.mockClear();
   appendHeader.mockClear();
+  links.clear();
 });
 
 describe('request', () => {
-  it('should get page and size from queries', async () => {
-    const context = createContext({ page: '1', per_page: '30' });
+  it('should get limit and offset from queries', async () => {
+    const context = createContext({ page: '1', page_size: '30' });
     await koaPagination()(context, next);
-    expect(context.pagination.page).toEqual(1);
-    expect(context.pagination.size).toEqual(30);
+    expect(context.pagination.limit).toEqual(30);
+    expect(context.pagination.offset).toEqual(0);
   });
 
-  it('should set default page to 1', async () => {
+  it('should set default page to 1 (offset to 0) if non is provided', async () => {
     const context = createContext({});
     await koaPagination()(context, next);
-    expect(context.pagination.page).toEqual(1);
+    expect(context.pagination.offset).toEqual(0);
   });
 
-  it('should set default size to 20', async () => {
+  it('should set default pageSize(limit) to 20', async () => {
     const context = createContext({});
     await koaPagination({ defaultPageSize: 20 })(context, next);
-    expect(context.pagination.size).toEqual(20);
+    expect(context.pagination.limit).toEqual(20);
   });
 
   it('throw when page value is not number-like', async () => {
@@ -57,18 +65,18 @@ describe('request', () => {
     await expect(koaPagination()(context, next)).rejects.toThrow();
   });
 
-  it('throw when per_page value is not number-like', async () => {
-    const context = createContext({ per_page: 'invalid_number' });
+  it('throw when page_size value is not number-like', async () => {
+    const context = createContext({ page_size: 'invalid_number' });
     await expect(koaPagination()(context, next)).rejects.toThrow();
   });
 
-  it('throw when per_page number is 0', async () => {
-    const context = createContext({ per_page: '0' });
+  it('throw when page_size number is 0', async () => {
+    const context = createContext({ page_size: '0' });
     await expect(koaPagination()(context, next)).rejects.toThrow();
   });
 
-  it('throw when per_page number exceeds max', async () => {
-    const context = createContext({ per_page: '200' });
+  it('throw when page_size number exceeds max', async () => {
+    const context = createContext({ page_size: '200' });
     await expect(koaPagination({ maxPageSize: 100 })(context, next)).rejects.toThrow();
   });
 });
@@ -78,46 +86,54 @@ describe('response', () => {
     const context = createContext({});
     await koaPagination()(context, async () => {
       // eslint-disable-next-line @silverhand/fp/no-mutation
-      context.pagination.count = 100;
+      context.pagination.totalCount = 100;
     });
     expect(setHeader).toHaveBeenCalledWith('Total-Number', '100');
   });
 
   describe('Link in response header', () => {
-    it('should append 2 times in 1 of 1 (first, last)', async () => {
+    it('should append `first` and `last` in 1 of 1', async () => {
       const context = createContext({});
       await koaPagination({ defaultPageSize: 20 })(context, async () => {
         // eslint-disable-next-line @silverhand/fp/no-mutation
-        context.pagination.count = 10;
+        context.pagination.totalCount = 10;
       });
-      expect(appendHeader).toHaveBeenCalledTimes(2);
+      expect(links.has('<?page=1>; rel="first"')).toBeTruthy();
+      expect(links.has('<?page=1>; rel="last"')).toBeTruthy();
     });
 
-    it('should append 3 times in 1 of 2 (first, next, last)', async () => {
+    it('should append `first`, `next`, `last` in 1 of 2', async () => {
       const context = createContext({});
       await koaPagination({ defaultPageSize: 20 })(context, async () => {
         // eslint-disable-next-line @silverhand/fp/no-mutation
-        context.pagination.count = 30;
+        context.pagination.totalCount = 30;
       });
-      expect(appendHeader).toHaveBeenCalledTimes(3);
+      expect(links.has('<?page=1>; rel="first"')).toBeTruthy();
+      expect(links.has('<?page=2>; rel="next"')).toBeTruthy();
+      expect(links.has('<?page=2>; rel="last"')).toBeTruthy();
     });
 
-    it('should append 3 times in 2 of 2 (first, prev, last)', async () => {
+    it('should append `first`, `prev`, `last` in 2 of 2', async () => {
       const context = createContext({ page: '2' });
       await koaPagination({ defaultPageSize: 20 })(context, async () => {
         // eslint-disable-next-line @silverhand/fp/no-mutation
-        context.pagination.count = 30;
+        context.pagination.totalCount = 30;
       });
-      expect(appendHeader).toHaveBeenCalledTimes(3);
+      expect(links.has('<?page=1>; rel="first"')).toBeTruthy();
+      expect(links.has('<?page=1>; rel="prev"')).toBeTruthy();
+      expect(links.has('<?page=2>; rel="last"')).toBeTruthy();
     });
 
-    it('should append 4 times in 2 of 3 (first, prev, next last)', async () => {
+    it('should append `first`, `prev`, `next`, `last` in 2 of 3', async () => {
       const context = createContext({ page: '2' });
       await koaPagination({ defaultPageSize: 20 })(context, async () => {
         // eslint-disable-next-line @silverhand/fp/no-mutation
-        context.pagination.count = 50;
+        context.pagination.totalCount = 50;
       });
-      expect(appendHeader).toHaveBeenCalledTimes(4);
+      expect(links.has('<?page=1>; rel="first"')).toBeTruthy();
+      expect(links.has('<?page=1>; rel="prev"')).toBeTruthy();
+      expect(links.has('<?page=3>; rel="next"')).toBeTruthy();
+      expect(links.has('<?page=3>; rel="last"')).toBeTruthy();
     });
   });
 });
