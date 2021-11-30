@@ -4,7 +4,9 @@ create table resource_scopes (
     description text not null,
     resource_id varchar(24) not null,
     primary key (id),
-    foreign key (resource_id)
+    constraint fk_resource
+        foreign key (resource_id)
+            references resource_servers(id)
 );
 
 create unique index resource_scopes__resource_id_name
