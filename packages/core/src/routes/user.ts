@@ -14,6 +14,7 @@ import {
   insertUser,
   updateUserById,
 } from '@/queries/user';
+import { findLogsByUserId } from '@/queries/user-log';
 
 import { AnonymousRouter } from './types';
 
@@ -77,6 +78,20 @@ export default function userRoutes<T extends AnonymousRouter>(router: T, provide
       } = ctx.guard;
       const user = await findUserById(userId);
       ctx.body = pick(user, ...userInfoSelectFields);
+      return next();
+    }
+  );
+
+  router.get(
+    '/users/:userId/logs',
+    koaGuard({
+      params: object({ userId: string().min(1) }),
+    }),
+    async (ctx, next) => {
+      const {
+        params: { userId },
+      } = ctx.guard;
+      ctx.body = await findLogsByUserId(userId);
       return next();
     }
   );
