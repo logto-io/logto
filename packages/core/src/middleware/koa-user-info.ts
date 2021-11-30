@@ -10,7 +10,7 @@ export type WithUserInfoContext<ContextT extends WithAuthContext = WithAuthConte
   user: UserInfo;
 };
 
-export default function koaUser<
+export default function koaUserInfo<
   StateT,
   ContextT extends WithAuthContext,
   ResponseBodyT
