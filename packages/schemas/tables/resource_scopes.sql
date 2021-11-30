@@ -12,5 +12,5 @@ create table resource_scopes (
 create unique index resource_scopes__resource_id_name
 on resource_scopes (
     name,
-    resource_id,
+    resource_id
 );
