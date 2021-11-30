@@ -5,6 +5,12 @@ export enum ApplicationType {
   SPA = 'SPA',
   Traditional = 'Traditional',
 }
+export enum SignAlgorithmType {
+  RS256 = 'RS256',
+}
+export enum AccessTokenFormatType {
+  jwt = 'jwt',
+}
 export enum UserLogType {
   SignInUsernameAndPassword = 'SignInUsernameAndPassword',
   ExchangeAccessToken = 'ExchangeAccessToken',
