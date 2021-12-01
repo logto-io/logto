@@ -5,7 +5,7 @@ import { z } from 'zod';
 import { GeneratedSchema, Guard } from '../foundations';
 import { AccessTokenFormatType, SignAlgorithmType } from './custom-types';
 
-export type ResourceServerDBEntry = {
+export type ResourceDBEntry = {
   id: string;
   name: string;
   identifier: string;
@@ -14,7 +14,7 @@ export type ResourceServerDBEntry = {
   signAlgorithm: SignAlgorithmType;
 };
 
-const guard: Guard<ResourceServerDBEntry> = z.object({
+const guard: Guard<ResourceDBEntry> = z.object({
   id: z.string(),
   name: z.string(),
   identifier: z.string(),
@@ -23,9 +23,9 @@ const guard: Guard<ResourceServerDBEntry> = z.object({
   signAlgorithm: z.nativeEnum(SignAlgorithmType),
 });
 
-export const ResourceServers: GeneratedSchema<ResourceServerDBEntry> = Object.freeze({
-  table: 'resource_servers',
-  tableSingular: 'resource_server',
+export const Resources: GeneratedSchema<ResourceDBEntry> = Object.freeze({
+  table: 'resources',
+  tableSingular: 'resource',
   fields: {
     id: 'id',
     name: 'name',

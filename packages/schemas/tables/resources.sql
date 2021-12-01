@@ -1,7 +1,7 @@
 create type sign_algorithm_type as enum ('RS256');
 create type access_token_format_type as enum ('jwt');
 
-create table resource_servers (
+create table resources (
     id varchar(24) not null,
     name text not null,
     identifier text not null unique, /* resource indicator also used as audience */

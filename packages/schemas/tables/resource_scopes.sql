@@ -6,11 +6,11 @@ create table resource_scopes (
     primary key (id),
     constraint fk_resource
         foreign key (resource_id)
-            references resource_servers(id)
+            references resources(id)
 );
 
 create unique index resource_scopes__resource_id_name
 on resource_scopes (
+    resource_id,
     name,
-    resource_id
 );

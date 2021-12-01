@@ -4,6 +4,6 @@ export * from './custom-types';
 export * from './application';
 export * from './oidc-model-instance';
 export * from './resource-scope';
-export * from './resource-server';
+export * from './resource';
 export * from './user-log';
 export * from './user';
