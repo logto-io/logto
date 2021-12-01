@@ -49,9 +49,10 @@ export default async function initOidc(app: Koa): Promise<Provider> {
 
           const { id, accessTokenFormat, accessTokenTtl: accessTokenTTl } = resourceServer;
           const scopes = await findAllScopesWithResourceId(id);
+          const scope = scopes.map(({ name }) => name).join(' ');
 
           return {
-            scope: scopes.join(','),
+            scope,
             accessTokenFormat,
             accessTokenTTl,
           };
