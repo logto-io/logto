@@ -11,7 +11,7 @@ import assertThat from '@/utils/assert-that';
 
 export type WithAuthContext<ContextT extends IRouterParamContext = IRouterParamContext> =
   ContextT & {
-    userId: string;
+    auth: string;
   };
 
 const bearerTokenIdentifier = 'Bearer';
@@ -54,7 +54,7 @@ export default function koaAuth<
   return async (ctx, next) => {
     try {
       const userId = await getUserIdFromRequest(ctx.request);
-      ctx.userId = userId;
+      ctx.auth = userId;
     } catch {
       throw new RequestError({ code: 'auth.unauthorized', status: 401 });
     }

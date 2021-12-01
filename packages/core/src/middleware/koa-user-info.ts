@@ -4,10 +4,10 @@ import pick from 'lodash.pick';
 
 import RequestError from '@/errors/RequestError';
 import { WithAuthContext } from '@/middleware/koa-auth';
-import { findUserById, hasUserWithId } from '@/queries/user';
+import { findUserById } from '@/queries/user';
 
 export type WithUserInfoContext<ContextT extends WithAuthContext = WithAuthContext> = ContextT & {
-  user: UserInfo;
+  userInfo: UserInfo;
 };
 
 export default function koaUserInfo<
@@ -17,14 +17,9 @@ export default function koaUserInfo<
 >(): MiddlewareType<StateT, WithUserInfoContext<ContextT>, ResponseBodyT> {
   return async (ctx, next) => {
     try {
-      const { userId } = ctx;
-      const userIdExists = await hasUserWithId(userId);
-      if (!userIdExists) {
-        throw new RequestError({ code: 'entity.not_exists_with_id', userId, status: 404 });
-      }
-
-      const user = await findUserById(userId);
-      ctx.user = pick(user, ...userInfoSelectFields);
+      const { auth: userId } = ctx;
+      const userInfo = await findUserById(userId);
+      ctx.userInfo = pick(userInfo, ...userInfoSelectFields);
     } catch {
       throw new RequestError({ code: 'auth.unauthorized', status: 401 });
     }
