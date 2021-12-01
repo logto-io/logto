@@ -5,7 +5,8 @@ import { nanoid } from 'nanoid';
 import { Provider } from 'oidc-provider';
 import { object, string } from 'zod';
 
-import RequestError, { RequestErrorWithUserLog } from '@/errors/RequestError';
+import RequestError from '@/errors/RequestError';
+import { RequestErrorWithUserLog } from '@/errors/RequestErrorWithUserLog';
 import koaGuard from '@/middleware/koa-guard';
 import { findUserByUsername } from '@/queries/user';
 import { insertUserLog } from '@/queries/user-log';

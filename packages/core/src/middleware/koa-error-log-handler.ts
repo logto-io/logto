@@ -1,7 +1,7 @@
 import { RequestErrorBody } from '@logto/schemas';
 import { Middleware } from 'koa';
 
-import { RequestErrorWithUserLog } from '@/errors/RequestError';
+import { RequestErrorWithUserLog } from '@/errors/RequestErrorWithUserLog';
 import { insertUserLog } from '@/queries/user-log';
 
 export default function koaErrorLogHandler<StateT, ContextT>(): Middleware<
@@ -13,11 +13,9 @@ export default function koaErrorLogHandler<StateT, ContextT>(): Middleware<
     try {
       await next();
     } catch (error: unknown) {
-      if (!(error instanceof RequestErrorWithUserLog)) {
-        throw error;
+      if (error instanceof RequestErrorWithUserLog) {
+        await insertUserLog(error.payload);
       }
-
-      await insertUserLog(error.payload);
 
       // Throw it to next middleware
       throw error;
