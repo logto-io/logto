@@ -1,9 +1,11 @@
 import { fromKeyLike } from 'jose/jwk/from_key_like';
 import Koa from 'koa';
 import mount from 'koa-mount';
-import { Provider } from 'oidc-provider';
+import { Provider, errors } from 'oidc-provider';
 
 import postgresAdapter from '@/oidc/adapter';
+import { findResourceByIdentifier } from '@/queries/resources';
+import { findAllScopesWithResourceId } from '@/queries/scopes';
 import { findUserById } from '@/queries/user';
 import { routes } from '@/routes/consts';
 
@@ -38,7 +40,22 @@ export default async function initOidc(app: Koa): Promise<Provider> {
       devInteractions: { enabled: false },
       resourceIndicators: {
         enabled: true,
-        getResourceServerInfo: () => ({ scope: '', accessTokenFormat: 'jwt' }),
+        getResourceServerInfo: async (ctx, indicator) => {
+          const resourceServer = await findResourceByIdentifier(indicator);
+
+          if (!resourceServer) {
+            throw new errors.InvalidTarget();
+          }
+
+          const { id, accessTokenFormat, accessTokenTtl: accessTokenTTl } = resourceServer;
+          const scopes = await findAllScopesWithResourceId(id);
+
+          return {
+            scope: scopes.join(','),
+            accessTokenFormat,
+            accessTokenTTl,
+          };
+        },
       },
     },
     interactions: {

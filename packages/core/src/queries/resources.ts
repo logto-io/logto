@@ -30,7 +30,7 @@ export const hasResourceWithId = async (id: string) =>
 `);
 
 export const findResourceByIdentifier = async (indentifier: string) =>
-  pool.one<ResourceDBEntry>(sql`
+  pool.maybeOne<ResourceDBEntry>(sql`
   select ${sql.join(Object.values(fields), sql`,`)}
   from ${table}
   where ${fields.identifier}=${indentifier}
