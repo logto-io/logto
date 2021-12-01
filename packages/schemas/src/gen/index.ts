@@ -45,9 +45,15 @@ const generate = async () => {
               .split(',')
               .map((value) => normalizeWhitespaces(value))
               .filter((value) =>
-                ['primary', 'foreign', 'unique', 'exclude', 'check'].every(
-                  (constraint) => !value.toLowerCase().startsWith(constraint + ' ')
-                )
+                [
+                  'primary',
+                  'foreign',
+                  'unique',
+                  'exclude',
+                  'check',
+                  'constraint',
+                  'references',
+                ].every((constraint) => !value.toLowerCase().startsWith(constraint + ' '))
               )
               .map<Field>((value) => {
                 const [nameRaw, typeRaw, ...rest] = value.split(' ');
