@@ -9,7 +9,7 @@ import RequestError from '@/errors/RequestError';
 const { table, fields } = convertToIdentifiers(ResourceScopes);
 
 export const findAllScopesWithResourceId = async (resourceId: string) =>
-  pool.many<ResourceScopeDBEntry>(sql`
+  pool.any<ResourceScopeDBEntry>(sql`
     select ${sql.join(Object.values(fields), sql`,`)}
     from ${table}
     where ${fields.resourceId}=${resourceId}
