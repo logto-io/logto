@@ -2,12 +2,7 @@
 
 import { z } from 'zod';
 
-import {
-  OidcClientMetadata,
-  oidcClientMetadataGuard,
-  GeneratedSchema,
-  Guard,
-} from '../foundations';
+import { OidcClientMetadata, oidcClientMetadataGuard, GeneratedSchema } from '../foundations';
 import { ApplicationType } from './custom-types';
 
 export type ApplicationDBEntry = {
@@ -18,7 +13,7 @@ export type ApplicationDBEntry = {
   createdAt: number;
 };
 
-const guard: Guard<ApplicationDBEntry> = z.object({
+export const ApplicationSchemaGuard = z.object({
   id: z.string(),
   name: z.string(),
   type: z.nativeEnum(ApplicationType),
@@ -37,5 +32,4 @@ export const Applications: GeneratedSchema<ApplicationDBEntry> = Object.freeze({
     createdAt: 'created_at',
   },
   fieldKeys: ['id', 'name', 'type', 'oidcClientMetadata', 'createdAt'],
-  guard,
 });

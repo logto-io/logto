@@ -2,7 +2,7 @@
 
 import { z } from 'zod';
 
-import { UserLogPayload, userLogPayloadGuard, GeneratedSchema, Guard } from '../foundations';
+import { UserLogPayload, userLogPayloadGuard, GeneratedSchema } from '../foundations';
 import { UserLogType, UserLogResult } from './custom-types';
 
 export type UserLogDBEntry = {
@@ -14,7 +14,7 @@ export type UserLogDBEntry = {
   createdAt: number;
 };
 
-const guard: Guard<UserLogDBEntry> = z.object({
+export const UserLogSchemaGuard = z.object({
   id: z.string(),
   userId: z.string(),
   type: z.nativeEnum(UserLogType),
@@ -35,5 +35,4 @@ export const UserLogs: GeneratedSchema<UserLogDBEntry> = Object.freeze({
     createdAt: 'created_at',
   },
   fieldKeys: ['id', 'userId', 'type', 'result', 'payload', 'createdAt'],
-  guard,
 });

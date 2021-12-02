@@ -1,4 +1,4 @@
-import { Applications } from '@logto/schemas';
+import { ApplicationSchemaGuard } from '@logto/schemas';
 import { object, string } from 'zod';
 
 import koaGuard from '@/middleware/koa-guard';
@@ -25,10 +25,9 @@ export default function applicationRoutes<T extends AuthedRouter>(router: T) {
   router.post(
     '/applications',
     koaGuard({
-      body: Applications.guard
-        .omit({ id: true, createdAt: true })
+      body: ApplicationSchemaGuard.omit({ id: true, createdAt: true })
         .partial()
-        .merge(Applications.guard.pick({ name: true, type: true })),
+        .merge(ApplicationSchemaGuard.pick({ name: true, type: true })),
     }),
     async (ctx, next) => {
       const { name, type, oidcClientMetadata, ...rest } = ctx.guard.body;
@@ -63,7 +62,7 @@ export default function applicationRoutes<T extends AuthedRouter>(router: T) {
     '/applications/:id',
     koaGuard({
       params: object({ id: string().min(1) }),
-      body: Applications.guard.omit({ id: true, createdAt: true }).partial(),
+      body: ApplicationSchemaGuard.omit({ id: true, createdAt: true }).partial(),
     }),
     async (ctx, next) => {
       const {

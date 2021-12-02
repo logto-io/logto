@@ -2,7 +2,7 @@
 
 import { z } from 'zod';
 
-import { GeneratedSchema, Guard } from '../foundations';
+import { GeneratedSchema } from '../foundations';
 
 export type ResourceScopeDBEntry = {
   id: string;
@@ -11,7 +11,7 @@ export type ResourceScopeDBEntry = {
   resourceId: string;
 };
 
-const guard: Guard<ResourceScopeDBEntry> = z.object({
+export const ResourceScopeSchemaGuard = z.object({
   id: z.string(),
   name: z.string(),
   description: z.string(),
@@ -28,5 +28,4 @@ export const ResourceScopes: GeneratedSchema<ResourceScopeDBEntry> = Object.free
     resourceId: 'resource_id',
   },
   fieldKeys: ['id', 'name', 'description', 'resourceId'],
-  guard,
 });

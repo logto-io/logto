@@ -6,7 +6,6 @@ import {
   OidcModelInstancePayload,
   oidcModelInstancePayloadGuard,
   GeneratedSchema,
-  Guard,
 } from '../foundations';
 
 export type OidcModelInstanceDBEntry = {
@@ -17,7 +16,7 @@ export type OidcModelInstanceDBEntry = {
   consumedAt?: number;
 };
 
-const guard: Guard<OidcModelInstanceDBEntry> = z.object({
+export const OidcModelInstanceSchemaGuard = z.object({
   modelName: z.string(),
   id: z.string(),
   payload: oidcModelInstancePayloadGuard,
@@ -36,5 +35,4 @@ export const OidcModelInstances: GeneratedSchema<OidcModelInstanceDBEntry> = Obj
     consumedAt: 'consumed_at',
   },
   fieldKeys: ['modelName', 'id', 'payload', 'expiresAt', 'consumedAt'],
-  guard,
 });

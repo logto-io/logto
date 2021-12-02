@@ -5,7 +5,9 @@ import pluralize from 'pluralize';
 import { TableWithType } from './types';
 
 export const generateSchema = ({ name, fields }: TableWithType) => {
-  const databaseEntryType = `${pluralize(camelcase(name, { pascalCase: true }), 1)}DBEntry`;
+  const entryType = pluralize(camelcase(name, { pascalCase: true }), 1);
+  const databaseEntryType = `${entryType}DBEntry`;
+  const schemaGuardName = `${entryType}SchemaGuard`;
   return [
     `export type ${databaseEntryType} = {`,
     ...fields.map(
@@ -16,7 +18,7 @@ export const generateSchema = ({ name, fields }: TableWithType) => {
     ),
     '};',
     '',
-    `const guard: Guard<${databaseEntryType}> = z.object({`,
+    `export const ${schemaGuardName} = z.object({`,
     ...fields.map(({ name, type, isArray, isEnum, required, tsType }) => {
       if (tsType) {
         return `  ${camelcase(name)}: ${camelcase(tsType)}Guard${conditionalString(
@@ -43,7 +45,6 @@ export const generateSchema = ({ name, fields }: TableWithType) => {
     '  fieldKeys: [',
     ...fields.map(({ name }) => `    '${camelcase(name)}',`),
     '  ],',
-    '  guard,',
     '});',
   ].join('\n');
 };
