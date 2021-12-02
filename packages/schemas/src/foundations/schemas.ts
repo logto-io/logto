@@ -1,8 +1,10 @@
-import { ZodObject, ZodType } from 'zod';
+import { ZodObject, ZodType, ZodOptional } from 'zod';
 
 export type Guard<T extends Record<string, unknown>> = ZodObject<
   {
-    [key in keyof T]: ZodType<T[key]>;
+    [key in keyof T]-?: undefined extends T[key]
+      ? ZodOptional<ZodType<Exclude<T[key], undefined>>>
+      : ZodType<T[key]>;
   }
 >;
 
