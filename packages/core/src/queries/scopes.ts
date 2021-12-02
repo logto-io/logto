@@ -8,25 +8,12 @@ import RequestError from '@/errors/RequestError';
 
 const { table, fields } = convertToIdentifiers(ResourceScopes);
 
-/**
- * Query all scopes registered under the target resource
- * if no scopes found should return empty array
- * as no pool.maybeMany defined we wrap up the query method using a try..catch..
- * and hide the internal slonik db error
- * @param resourceId
- * @returns ResourceScopeDBEntry[]
- */
-export const findAllScopesWithResourceId = async (resourceId: string) => {
-  try {
-    return await pool.many<ResourceScopeDBEntry>(sql`
-      select ${sql.join(Object.values(fields), sql`,`)}
-      from ${table}
-      where ${fields.resourceId}=${resourceId}
-      `);
-  } catch {
-    return [];
-  }
-};
+export const findAllScopesWithResourceId = async (resourceId: string) =>
+  pool.any<ResourceScopeDBEntry>(sql`
+    select ${sql.join(Object.values(fields), sql`,`)}
+    from ${table}
+    where ${fields.resourceId}=${resourceId}
+`);
 
 export const insertScope = buildInsertInto<ResourceScopeDBEntry>(pool, ResourceScopes, {
   returning: true,
