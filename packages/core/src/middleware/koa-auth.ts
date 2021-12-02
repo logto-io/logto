@@ -1,20 +1,17 @@
 import { IncomingHttpHeaders } from 'http';
 
-import { UserInfo, userInfoSelectFields } from '@logto/schemas';
 import { jwtVerify } from 'jose/jwt/verify';
 import { MiddlewareType, Request } from 'koa';
 import { IRouterParamContext } from 'koa-router';
-import pick from 'lodash.pick';
 
 import { developmentUserId, isProduction } from '@/env/consts';
 import RequestError from '@/errors/RequestError';
 import { publicKey, issuer, adminResource } from '@/oidc/consts';
-import { findUserById } from '@/queries/user';
 import assertThat from '@/utils/assert-that';
 
 export type WithAuthContext<ContextT extends IRouterParamContext = IRouterParamContext> =
   ContextT & {
-    user: UserInfo;
+    auth: string;
   };
 
 const bearerTokenIdentifier = 'Bearer';
@@ -57,8 +54,7 @@ export default function koaAuth<
   return async (ctx, next) => {
     try {
       const userId = await getUserIdFromRequest(ctx.request);
-      const user = await findUserById(userId);
-      ctx.user = pick(user, ...userInfoSelectFields);
+      ctx.auth = userId;
     } catch {
       throw new RequestError({ code: 'auth.unauthorized', status: 401 });
     }
