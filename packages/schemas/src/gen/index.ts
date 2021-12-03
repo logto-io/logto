@@ -65,7 +65,9 @@ const generate = async () => {
                 const restLowercased = restJoined.toLowerCase();
                 // CAUTION: Only works for single dimension arrays
                 const isArray = Boolean(/\[.*]/.test(type)) || restLowercased.includes('array');
-                const required = restLowercased.includes('not null');
+                // HINT: Filed with default value should not be required
+                const required =
+                  restLowercased.includes('not null') && !restLowercased.includes('default');
                 const primitiveType = getType(type);
                 const tsType = /\/\* @use (.*) \*\//.exec(restJoined)?.[1];
                 assert(

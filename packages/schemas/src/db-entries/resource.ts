@@ -9,18 +9,18 @@ export type ResourceDBEntry = {
   id: string;
   name: string;
   identifier: string;
-  accessTokenTtl: number;
-  accessTokenFormat: AccessTokenFormatType;
-  signAlgorithm: SignAlgorithmType;
+  accessTokenTtl?: number;
+  accessTokenFormat?: AccessTokenFormatType;
+  signAlgorithm?: SignAlgorithmType;
 };
 
 const guard: Guard<ResourceDBEntry> = z.object({
   id: z.string(),
   name: z.string(),
   identifier: z.string(),
-  accessTokenTtl: z.number(),
-  accessTokenFormat: z.nativeEnum(AccessTokenFormatType),
-  signAlgorithm: z.nativeEnum(SignAlgorithmType),
+  accessTokenTtl: z.number().optional(),
+  accessTokenFormat: z.nativeEnum(AccessTokenFormatType).optional(),
+  signAlgorithm: z.nativeEnum(SignAlgorithmType).optional(),
 });
 
 export const Resources: GeneratedSchema<ResourceDBEntry> = Object.freeze({

@@ -11,7 +11,7 @@ export type UserLogDBEntry = {
   type: UserLogType;
   result: UserLogResult;
   payload: UserLogPayload;
-  createdAt: number;
+  createdAt?: number;
 };
 
 const guard: Guard<UserLogDBEntry> = z.object({
@@ -20,7 +20,7 @@ const guard: Guard<UserLogDBEntry> = z.object({
   type: z.nativeEnum(UserLogType),
   result: z.nativeEnum(UserLogResult),
   payload: userLogPayloadGuard,
-  createdAt: z.number(),
+  createdAt: z.number().optional(),
 });
 
 export const UserLogs: GeneratedSchema<UserLogDBEntry> = Object.freeze({
