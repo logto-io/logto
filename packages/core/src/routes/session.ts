@@ -1,15 +1,12 @@
 import { LogtoErrorCode } from '@logto/phrases';
 import { UserLogResult, UserLogType } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
-import { nanoid } from 'nanoid';
 import { Provider } from 'oidc-provider';
 import { object, string } from 'zod';
 
 import RequestError from '@/errors/RequestError';
-import { RequestErrorWithUserLog } from '@/errors/RequestErrorWithUserLog';
 import koaGuard from '@/middleware/koa-guard';
 import { findUserByUsername } from '@/queries/user';
-import { insertUserLog } from '@/queries/user-log';
 import assertThat from '@/utils/assert-that';
 import { encryptPassword } from '@/utils/password';
 
@@ -39,25 +36,33 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
             'session.invalid_sign_in_method'
           );
 
-          assertThat(
-            encryptPassword(id, password, passwordEncryptionSalt, passwordEncryptionMethod) ===
-              passwordEncrypted,
-            new RequestErrorWithUserLog('session.invalid_credentials', {
-              id: nanoid(),
+          if (
+            encryptPassword(id, password, passwordEncryptionSalt, passwordEncryptionMethod) !==
+            passwordEncrypted
+          ) {
+            ctx.userLogs = [
+              ...ctx.userLogs,
+              {
+                userId: id,
+                type: UserLogType.SignInUsernameAndPassword,
+                result: UserLogResult.Failed,
+                payload: {},
+                createdAt: Date.now(),
+              },
+            ];
+            throw new RequestError('session.invalid_credentials');
+          }
+
+          ctx.userLogs = [
+            ...ctx.userLogs,
+            {
               userId: id,
               type: UserLogType.SignInUsernameAndPassword,
-              result: UserLogResult.Failed,
+              result: UserLogResult.Success,
               payload: {},
-            })
-          );
-
-          await insertUserLog({
-            id: nanoid(),
-            userId: id,
-            type: UserLogType.SignInUsernameAndPassword,
-            result: UserLogResult.Success,
-            payload: {},
-          });
+              createdAt: Date.now(),
+            },
+          ];
 
           const redirectTo = await provider.interactionResult(
             ctx.req,
