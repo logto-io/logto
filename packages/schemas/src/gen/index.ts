@@ -65,7 +65,7 @@ const generate = async () => {
                 const restLowercased = restJoined.toLowerCase();
                 // CAUTION: Only works for single dimension arrays
                 const isArray = Boolean(/\[.*]/.test(type)) || restLowercased.includes('array');
-                // HINT: Filed with default value should not be required
+                // HINT: Fields with default value should not be required
                 const required =
                   restLowercased.includes('not null') && !restLowercased.includes('default');
                 const primitiveType = getType(type);
