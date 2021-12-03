@@ -7,9 +7,12 @@ import Koa from 'koa';
 dotenv.config();
 
 import initApp from './app/init';
+import { trustingTlsOffloadingProxies } from './env/consts';
 import initI18n from './i18n/init';
 
-const app = new Koa();
+const app = new Koa({
+  proxy: trustingTlsOffloadingProxies,
+});
 
 (async () => {
   try {
