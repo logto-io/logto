@@ -81,11 +81,11 @@ describe('request', () => {
   });
 });
 
+/* eslint-disable @silverhand/fp/no-mutation */
 describe('response', () => {
   it('should add Total-Number to response header', async () => {
     const context = createContext({});
     await koaPagination()(context, async () => {
-      // eslint-disable-next-line @silverhand/fp/no-mutation
       context.pagination.totalCount = 100;
     });
     expect(setHeader).toHaveBeenCalledWith('Total-Number', '100');
@@ -95,7 +95,6 @@ describe('response', () => {
     it('should append `first` and `last` in 1 of 1', async () => {
       const context = createContext({});
       await koaPagination({ defaultPageSize: 20 })(context, async () => {
-        // eslint-disable-next-line @silverhand/fp/no-mutation
         context.pagination.totalCount = 10;
       });
       expect(links.has('<?page=1>; rel="first"')).toBeTruthy();
@@ -105,7 +104,6 @@ describe('response', () => {
     it('should append `first`, `next`, `last` in 1 of 2', async () => {
       const context = createContext({});
       await koaPagination({ defaultPageSize: 20 })(context, async () => {
-        // eslint-disable-next-line @silverhand/fp/no-mutation
         context.pagination.totalCount = 30;
       });
       expect(links.has('<?page=1>; rel="first"')).toBeTruthy();
@@ -116,7 +114,6 @@ describe('response', () => {
     it('should append `first`, `prev`, `last` in 2 of 2', async () => {
       const context = createContext({ page: '2' });
       await koaPagination({ defaultPageSize: 20 })(context, async () => {
-        // eslint-disable-next-line @silverhand/fp/no-mutation
         context.pagination.totalCount = 30;
       });
       expect(links.has('<?page=1>; rel="first"')).toBeTruthy();
@@ -127,7 +124,6 @@ describe('response', () => {
     it('should append `first`, `prev`, `next`, `last` in 2 of 3', async () => {
       const context = createContext({ page: '2' });
       await koaPagination({ defaultPageSize: 20 })(context, async () => {
-        // eslint-disable-next-line @silverhand/fp/no-mutation
         context.pagination.totalCount = 50;
       });
       expect(links.has('<?page=1>; rel="first"')).toBeTruthy();
@@ -137,3 +133,4 @@ describe('response', () => {
     });
   });
 });
+/* eslint-enable @silverhand/fp/no-mutation */
