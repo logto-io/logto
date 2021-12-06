@@ -65,7 +65,8 @@ const generate = async () => {
                 const restLowercased = restJoined.toLowerCase();
                 // CAUTION: Only works for single dimension arrays
                 const isArray = Boolean(/\[.*]/.test(type)) || restLowercased.includes('array');
-                const required = restLowercased.includes('not null');
+                const hasDefaultValue = restLowercased.includes('default');
+                const nullable = !restLowercased.includes('not null');
                 const primitiveType = getType(type);
                 const tsType = /\/\* @use (.*) \*\//.exec(restJoined)?.[1];
                 assert(
@@ -81,7 +82,8 @@ const generate = async () => {
                   customType: conditional(!primitiveType && type),
                   tsType,
                   isArray,
-                  required,
+                  hasDefaultValue,
+                  nullable,
                 };
               });
             return { name, fields };

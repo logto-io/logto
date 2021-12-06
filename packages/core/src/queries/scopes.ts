@@ -1,4 +1,4 @@
-import { ResourceScopeDBEntry, ResourceScopes } from '@logto/schemas';
+import { ResourceScope, ResourceScopeDBEntry, ResourceScopes } from '@logto/schemas';
 import { sql } from 'slonik';
 
 import { buildInsertInto } from '@/database/insert-into';
@@ -9,7 +9,7 @@ import RequestError from '@/errors/RequestError';
 const { table, fields } = convertToIdentifiers(ResourceScopes);
 
 export const findAllScopesWithResourceId = async (resourceId: string) =>
-  pool.any<ResourceScopeDBEntry>(sql`
+  pool.any<ResourceScope>(sql`
     select ${sql.join(Object.values(fields), sql`,`)}
     from ${table}
     where ${fields.resourceId}=${resourceId}

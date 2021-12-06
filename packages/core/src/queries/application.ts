@@ -1,4 +1,4 @@
-import { ApplicationDBEntry, Applications } from '@logto/schemas';
+import { Application, ApplicationDBEntry, Applications } from '@logto/schemas';
 import { sql } from 'slonik';
 
 import { buildInsertInto } from '@/database/insert-into';
@@ -10,13 +10,13 @@ import RequestError from '@/errors/RequestError';
 const { table, fields } = convertToIdentifiers(Applications);
 
 export const findAllApplications = async () =>
-  pool.many<ApplicationDBEntry>(sql`
+  pool.many<Application>(sql`
     select ${sql.join(Object.values(fields), sql`, `)}
     from ${table}
   `);
 
 export const findApplicationById = async (id: string) =>
-  pool.one<ApplicationDBEntry>(sql`
+  pool.one<Application>(sql`
     select ${sql.join(Object.values(fields), sql`, `)}
     from ${table}
     where ${fields.id}=${id}
