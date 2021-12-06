@@ -1,7 +1,5 @@
-// eslint-disable-next-line no-restricted-imports
-import { stringify } from 'querystring';
-
 import { Request } from 'koa';
+import { stringify } from 'query-string';
 
 type LinkRelationType = 'first' | 'prev' | 'next' | 'last';
 
