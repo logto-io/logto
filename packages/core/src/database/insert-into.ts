@@ -33,11 +33,11 @@ type InsertIntoConfig = {
 };
 
 interface BuildInsertInto {
-  <Schema extends SchemaLike>(
+  <Schema extends SchemaLike, ReturnType extends SchemaLike>(
     pool: DatabasePoolType,
     { fieldKeys, ...rest }: GeneratedSchema<Schema>,
     config: InsertIntoConfigReturning
-  ): (data: OmitAutoSetFields<Schema>) => Promise<Schema>;
+  ): (data: OmitAutoSetFields<Schema>) => Promise<ReturnType>;
   <Schema extends SchemaLike>(
     pool: DatabasePoolType,
     { fieldKeys, ...rest }: GeneratedSchema<Schema>,
@@ -45,7 +45,10 @@ interface BuildInsertInto {
   ): (data: OmitAutoSetFields<Schema>) => Promise<void>;
 }
 
-export const buildInsertInto: BuildInsertInto = <Schema extends SchemaLike>(
+export const buildInsertInto: BuildInsertInto = <
+  Schema extends SchemaLike,
+  ReturnType extends SchemaLike
+>(
   pool: DatabasePoolType,
   { fieldKeys, ...rest }: GeneratedSchema<Schema>,
   config?: InsertIntoConfig | InsertIntoConfigReturning
@@ -55,10 +58,10 @@ export const buildInsertInto: BuildInsertInto = <Schema extends SchemaLike>(
   const returning = Boolean(config?.returning);
   const onConflict = config?.onConflict;
 
-  return async (data: OmitAutoSetFields<Schema>): Promise<Schema | void> => {
+  return async (data: OmitAutoSetFields<Schema>): Promise<ReturnType | void> => {
     const {
       rows: [entry],
-    } = await pool.query<Schema>(sql`
+    } = await pool.query<ReturnType>(sql`
     insert into ${table} (${sql.join(
       keys.map((key) => fields[key]),
       sql`, `

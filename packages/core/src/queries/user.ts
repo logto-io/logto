@@ -37,7 +37,7 @@ export const hasUserWithId = async (id: string) =>
   where ${fields.id}=${id}
 `);
 
-export const insertUser = buildInsertInto<UserDBEntry>(pool, Users, { returning: true });
+export const insertUser = buildInsertInto<UserDBEntry, User>(pool, Users, { returning: true });
 
 export const findAllUsers = async () =>
   pool.many<User>(sql`
@@ -45,7 +45,7 @@ export const findAllUsers = async () =>
     from ${table}
   `);
 
-const updateUser = buildUpdateWhere<UserDBEntry>(pool, Users, true);
+const updateUser = buildUpdateWhere<UserDBEntry, User>(pool, Users, true);
 
 export const updateUserById = async (id: string, set: Partial<OmitAutoSetFields<UserDBEntry>>) =>
   updateUser({ set, where: { id } });

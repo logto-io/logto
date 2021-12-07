@@ -43,11 +43,11 @@ export const findResourceById = async (id: string) =>
   where ${fields.id}=${id}
 `);
 
-export const insertResource = buildInsertInto<ResourceDBEntry>(pool, Resources, {
+export const insertResource = buildInsertInto<ResourceDBEntry, Resource>(pool, Resources, {
   returning: true,
 });
 
-const updateResource = buildUpdateWhere<ResourceDBEntry>(pool, Resources, true);
+const updateResource = buildUpdateWhere<ResourceDBEntry, Resource>(pool, Resources, true);
 
 export const updateResourceById = async (
   id: string,

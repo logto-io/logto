@@ -22,11 +22,19 @@ export const findApplicationById = async (id: string) =>
     where ${fields.id}=${id}
   `);
 
-export const insertApplication = buildInsertInto<ApplicationDBEntry>(pool, Applications, {
-  returning: true,
-});
+export const insertApplication = buildInsertInto<ApplicationDBEntry, Application>(
+  pool,
+  Applications,
+  {
+    returning: true,
+  }
+);
 
-const updateApplication = buildUpdateWhere<ApplicationDBEntry>(pool, Applications, true);
+const updateApplication = buildUpdateWhere<ApplicationDBEntry, Application>(
+  pool,
+  Applications,
+  true
+);
 
 export const updateApplicationById = async (
   id: string,

@@ -15,9 +15,13 @@ export const findAllScopesWithResourceId = async (resourceId: string) =>
     where ${fields.resourceId}=${resourceId}
 `);
 
-export const insertScope = buildInsertInto<ResourceScopeDBEntry>(pool, ResourceScopes, {
-  returning: true,
-});
+export const insertScope = buildInsertInto<ResourceScopeDBEntry, ResourceScope>(
+  pool,
+  ResourceScopes,
+  {
+    returning: true,
+  }
+);
 
 export const deleteScopeById = async (id: string) => {
   const { rowCount } = await pool.query(sql`
