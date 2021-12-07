@@ -14,6 +14,7 @@ import initRouter from '@/routes/init';
 
 export default async function initApp(app: Koa): Promise<void> {
   app.use(koaErrorHandler());
+  // TODO move to specific router (LOG-454)
   app.use(koaUserLog());
   app.use(koaLogger());
   app.use(koaI18next());
