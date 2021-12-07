@@ -28,7 +28,7 @@
     "@types/node": "14",
     "@types/pluralize": "^0.0.29",
     "camelcase": "^6.2.0",
-    "eslint": "^7.32.0",
+    "eslint": "^8.1.0",
     "lint-staged": "^11.1.1",
     "lodash.uniq": "^4.5.0",
     "pluralize": "^8.0.0",

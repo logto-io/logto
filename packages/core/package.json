@@ -57,7 +57,7 @@
     "@types/lodash.pick": "^4.4.6",
     "@types/node": "^16.3.1",
     "@types/oidc-provider": "^7.8.0",
-    "eslint": "^7.32.0",
+    "eslint": "^8.1.0",
     "jest": "^27.0.6",
     "jest-matcher-specific-error": "^1.0.0",
     "lint-staged": "^11.1.1",
