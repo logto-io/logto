@@ -14,11 +14,11 @@ export type UpdateWhereData<Schema extends SchemaLike> = {
 };
 
 interface BuildUpdateWhere {
-  <Schema extends SchemaLike>(
+  <Schema extends SchemaLike, ReturnType extends SchemaLike>(
     pool: DatabasePoolType,
     schema: GeneratedSchema<Schema>,
     returning: true
-  ): (data: UpdateWhereData<Schema>) => Promise<Schema>;
+  ): (data: UpdateWhereData<Schema>) => Promise<ReturnType>;
   <Schema extends SchemaLike>(
     pool: DatabasePoolType,
     schema: GeneratedSchema<Schema>,
@@ -26,7 +26,10 @@ interface BuildUpdateWhere {
   ): (data: UpdateWhereData<Schema>) => Promise<void>;
 }
 
-export const buildUpdateWhere: BuildUpdateWhere = <Schema extends SchemaLike>(
+export const buildUpdateWhere: BuildUpdateWhere = <
+  Schema extends SchemaLike,
+  ReturnType extends SchemaLike
+>(
   pool: DatabasePoolType,
   schema: GeneratedSchema<Schema>,
   returning = false
@@ -43,8 +46,8 @@ export const buildUpdateWhere: BuildUpdateWhere = <Schema extends SchemaLike>(
 
   return async ({ set, where }: UpdateWhereData<Schema>) => {
     const {
-      rows: [entry],
-    } = await pool.query<Schema>(sql`
+      rows: [data],
+    } = await pool.query<ReturnType>(sql`
       update ${table}
       set ${sql.join(connectKeyValueWithEqualSign(set), sql`, `)}
       where ${sql.join(connectKeyValueWithEqualSign(where), sql` and `)}
@@ -52,7 +55,7 @@ export const buildUpdateWhere: BuildUpdateWhere = <Schema extends SchemaLike>(
     `);
 
     assertThat(
-      !returning || entry,
+      !returning || data,
       new RequestError({
         code: where.id ? 'entity.not_exists_with_id' : 'entity.not_exists',
         name: schema.tableSingular,
@@ -60,6 +63,6 @@ export const buildUpdateWhere: BuildUpdateWhere = <Schema extends SchemaLike>(
         status: 404,
       })
     );
-    return entry;
+    return data;
   };
 };

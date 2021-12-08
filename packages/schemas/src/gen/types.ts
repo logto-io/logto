@@ -3,7 +3,8 @@ export type Field = {
   type?: string;
   customType?: string;
   tsType?: string;
-  required: boolean;
+  hasDefaultValue: boolean;
+  nullable: boolean;
   isArray: boolean;
 };
 

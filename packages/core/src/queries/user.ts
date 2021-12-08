@@ -1,4 +1,4 @@
-import { UserDBEntry, Users } from '@logto/schemas';
+import { User, UserDBEntry, Users } from '@logto/schemas';
 import { sql } from 'slonik';
 
 import { buildInsertInto } from '@/database/insert-into';
@@ -10,14 +10,14 @@ import RequestError from '@/errors/RequestError';
 const { table, fields } = convertToIdentifiers(Users);
 
 export const findUserByUsername = async (username: string) =>
-  pool.one<UserDBEntry>(sql`
+  pool.one<User>(sql`
   select ${sql.join(Object.values(fields), sql`,`)}
   from ${table}
   where ${fields.username}=${username}
 `);
 
 export const findUserById = async (id: string) =>
-  pool.one<UserDBEntry>(sql`
+  pool.one<User>(sql`
   select ${sql.join(Object.values(fields), sql`,`)}
   from ${table}
   where ${fields.id}=${id}
@@ -37,15 +37,15 @@ export const hasUserWithId = async (id: string) =>
   where ${fields.id}=${id}
 `);
 
-export const insertUser = buildInsertInto<UserDBEntry>(pool, Users, { returning: true });
+export const insertUser = buildInsertInto<UserDBEntry, User>(pool, Users, { returning: true });
 
 export const findAllUsers = async () =>
-  pool.many<UserDBEntry>(sql`
+  pool.many<User>(sql`
     select ${sql.join(Object.values(fields), sql`, `)}
     from ${table}
   `);
 
-const updateUser = buildUpdateWhere<UserDBEntry>(pool, Users, true);
+const updateUser = buildUpdateWhere<UserDBEntry, User>(pool, Users, true);
 
 export const updateUserById = async (id: string, set: Partial<OmitAutoSetFields<UserDBEntry>>) =>
   updateUser({ set, where: { id } });

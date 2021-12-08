@@ -15,6 +15,14 @@ export type ApplicationDBEntry = {
   name: string;
   type: ApplicationType;
   oidcClientMetadata: OidcClientMetadata;
+  createdAt?: number;
+};
+
+export type Application = {
+  id: string;
+  name: string;
+  type: ApplicationType;
+  oidcClientMetadata: OidcClientMetadata;
   createdAt: number;
 };
 
@@ -23,7 +31,7 @@ const guard: Guard<ApplicationDBEntry> = z.object({
   name: z.string(),
   type: z.nativeEnum(ApplicationType),
   oidcClientMetadata: oidcClientMetadataGuard,
-  createdAt: z.number(),
+  createdAt: z.number().optional(),
 });
 
 export const Applications: GeneratedSchema<ApplicationDBEntry> = Object.freeze({

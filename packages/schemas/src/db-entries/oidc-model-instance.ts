@@ -14,7 +14,15 @@ export type OidcModelInstanceDBEntry = {
   id: string;
   payload: OidcModelInstancePayload;
   expiresAt: number;
-  consumedAt?: number;
+  consumedAt?: number | null;
+};
+
+export type OidcModelInstance = {
+  modelName: string;
+  id: string;
+  payload: OidcModelInstancePayload;
+  expiresAt: number;
+  consumedAt: number | null;
 };
 
 const guard: Guard<OidcModelInstanceDBEntry> = z.object({

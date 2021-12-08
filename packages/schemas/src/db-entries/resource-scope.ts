@@ -11,6 +11,13 @@ export type ResourceScopeDBEntry = {
   resourceId: string;
 };
 
+export type ResourceScope = {
+  id: string;
+  name: string;
+  description: string;
+  resourceId: string;
+};
+
 const guard: Guard<ResourceScopeDBEntry> = z.object({
   id: z.string(),
   name: z.string(),

@@ -7,12 +7,22 @@ import { PasswordEncryptionMethod } from './custom-types';
 
 export type UserDBEntry = {
   id: string;
-  username?: string;
-  primaryEmail?: string;
-  primaryPhone?: string;
-  passwordEncrypted?: string;
-  passwordEncryptionMethod?: PasswordEncryptionMethod;
-  passwordEncryptionSalt?: string;
+  username?: string | null;
+  primaryEmail?: string | null;
+  primaryPhone?: string | null;
+  passwordEncrypted?: string | null;
+  passwordEncryptionMethod?: PasswordEncryptionMethod | null;
+  passwordEncryptionSalt?: string | null;
+};
+
+export type User = {
+  id: string;
+  username: string | null;
+  primaryEmail: string | null;
+  primaryPhone: string | null;
+  passwordEncrypted: string | null;
+  passwordEncryptionMethod: PasswordEncryptionMethod | null;
+  passwordEncryptionSalt: string | null;
 };
 
 const guard: Guard<UserDBEntry> = z.object({
