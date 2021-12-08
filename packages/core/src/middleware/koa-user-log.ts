@@ -1,5 +1,5 @@
 import { UserLogPayload, UserLogResult, UserLogType } from '@logto/schemas';
-import { MiddlewareType } from 'koa';
+import { Context, MiddlewareType } from 'koa';
 import { nanoid } from 'nanoid';
 
 import { insertUserLog } from '@/queries/user-log';
@@ -15,42 +15,41 @@ export interface LogContext {
   createdAt: number;
 }
 
+const insertLog = async (ctx: WithUserLogContext<Context>, result: UserLogResult) => {
+  // Insert log if log context is set properly.
+  if (ctx.userLog.userId && ctx.userLog.type) {
+    try {
+      await insertUserLog({
+        id: nanoid(),
+        userId: ctx.userLog.userId,
+        type: ctx.userLog.type,
+        result,
+        payload: ctx.userLog.payload,
+      });
+    } catch (error: unknown) {
+      console.error('An error occured while inserting user log');
+      console.error(error);
+    }
+  }
+};
+
 export default function koaUserLog<StateT, ContextT, ResponseBodyT>(): MiddlewareType<
   StateT,
   WithUserLogContext<ContextT>,
   ResponseBodyT
 > {
   return async (ctx, next) => {
-    const id = nanoid();
     ctx.userLog = {
       createdAt: Date.now(),
       payload: {},
     };
 
-    const insertLog = async (result: UserLogResult) => {
-      // Insert log if log context is set properly.
-      if (ctx.userLog.userId && ctx.userLog.type) {
-        try {
-          await insertUserLog({
-            id,
-            userId: ctx.userLog.userId,
-            type: ctx.userLog.type,
-            result,
-            payload: ctx.userLog.payload,
-          });
-        } catch (error: unknown) {
-          console.error('An error occured while inserting user log');
-          console.error(error);
-        }
-      }
-    };
-
     try {
       await next();
-      await insertLog(UserLogResult.Success);
+      await insertLog(ctx, UserLogResult.Success);
       return;
     } catch (error: unknown) {
-      await insertLog(UserLogResult.Failed);
+      await insertLog(ctx, UserLogResult.Failed);
       throw error;
     }
   };
