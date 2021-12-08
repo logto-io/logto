@@ -9,7 +9,7 @@ export type Guard<T extends Record<string, unknown>> = ZodObject<
 >;
 
 export type SchemaValuePrimitive = string | number | boolean | undefined;
-export type SchemaValue = SchemaValuePrimitive | Record<string, unknown>;
+export type SchemaValue = SchemaValuePrimitive | Record<string, unknown> | null;
 export type SchemaLike<Key extends string = string> = {
   [key in Key]: SchemaValue;
 };

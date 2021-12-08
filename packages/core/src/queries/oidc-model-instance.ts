@@ -1,4 +1,5 @@
 import {
+  OidcModelInstance,
   OidcModelInstanceDBEntry,
   OidcModelInstancePayload,
   OidcModelInstances,
@@ -11,11 +12,11 @@ import pool from '@/database/pool';
 import { convertToIdentifiers, convertToTimestamp } from '@/database/utils';
 
 export type WithConsumed<T> = T & { consumed?: boolean };
-export type QueryResult = Pick<OidcModelInstanceDBEntry, 'payload' | 'consumedAt'>;
+export type QueryResult = Pick<OidcModelInstance, 'payload' | 'consumedAt'>;
 
 const { table, fields } = convertToIdentifiers(OidcModelInstances);
 
-const withConsumed = <T>(data: T, consumedAt?: number): WithConsumed<T> => ({
+const withConsumed = <T>(data: T, consumedAt?: number | null): WithConsumed<T> => ({
   ...data,
   ...(consumedAt ? { consumed: true } : undefined),
 });

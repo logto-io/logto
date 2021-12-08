@@ -1,4 +1,4 @@
-import { ResourceDBEntry, Resources } from '@logto/schemas';
+import { Resource, ResourceDBEntry, Resources } from '@logto/schemas';
 import { sql } from 'slonik';
 
 import { buildInsertInto } from '@/database/insert-into';
@@ -10,7 +10,7 @@ import RequestError from '@/errors/RequestError';
 const { table, fields } = convertToIdentifiers(Resources);
 
 export const findAllResources = async () =>
-  pool.many<ResourceDBEntry>(sql`
+  pool.many<Resource>(sql`
   select ${sql.join(Object.values(fields), sql`,`)}
   from ${table}
   `);
@@ -30,24 +30,24 @@ export const hasResourceWithId = async (id: string) =>
 `);
 
 export const findResourceByIdentifier = async (indentifier: string) =>
-  pool.maybeOne<ResourceDBEntry>(sql`
+  pool.maybeOne<Resource>(sql`
   select ${sql.join(Object.values(fields), sql`,`)}
   from ${table}
   where ${fields.identifier}=${indentifier}
 `);
 
 export const findResourceById = async (id: string) =>
-  pool.one<ResourceDBEntry>(sql`
+  pool.one<Resource>(sql`
   select ${sql.join(Object.values(fields), sql`,`)}
   from ${table}
   where ${fields.id}=${id}
 `);
 
-export const insertResource = buildInsertInto<ResourceDBEntry>(pool, Resources, {
+export const insertResource = buildInsertInto<ResourceDBEntry, Resource>(pool, Resources, {
   returning: true,
 });
 
-const updateResource = buildUpdateWhere<ResourceDBEntry>(pool, Resources, true);
+const updateResource = buildUpdateWhere<ResourceDBEntry, Resource>(pool, Resources, true);
 
 export const updateResourceById = async (
   id: string,

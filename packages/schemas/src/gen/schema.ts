@@ -5,29 +5,41 @@ import pluralize from 'pluralize';
 import { TableWithType } from './types';
 
 export const generateSchema = ({ name, fields }: TableWithType) => {
-  const databaseEntryType = `${pluralize(camelcase(name, { pascalCase: true }), 1)}DBEntry`;
+  const modelName = pluralize(camelcase(name, { pascalCase: true }), 1);
+  const databaseEntryType = `${modelName}DBEntry`;
   return [
     `export type ${databaseEntryType} = {`,
     ...fields.map(
-      ({ name, type, isArray, required }) =>
-        `  ${camelcase(name)}${conditionalString(!required && '?')}: ${type}${conditionalString(
-          isArray && '[]'
+      ({ name, type, isArray, nullable, hasDefaultValue }) =>
+        `  ${camelcase(name)}${conditionalString(
+          (nullable || hasDefaultValue) && '?'
+        )}: ${type}${conditionalString(isArray && '[]')}${conditionalString(
+          nullable && !hasDefaultValue && ' | null'
         )};`
     ),
     '};',
     '',
+    `export type ${modelName} = {`,
+    ...fields.map(
+      ({ name, type, isArray, nullable, hasDefaultValue }) =>
+        `  ${camelcase(name)}: ${type}${conditionalString(isArray && '[]')}${
+          nullable && !hasDefaultValue ? ' | null' : ''
+        };`
+    ),
+    '};',
+    '',
     `const guard: Guard<${databaseEntryType}> = z.object({`,
-    ...fields.map(({ name, type, isArray, isEnum, required, tsType }) => {
+    ...fields.map(({ name, type, isArray, isEnum, nullable, hasDefaultValue, tsType }) => {
       if (tsType) {
         return `  ${camelcase(name)}: ${camelcase(tsType)}Guard${conditionalString(
-          !required && '.optional()'
+          (nullable || hasDefaultValue) && '.optional()'
         )},`;
       }
 
       return `  ${camelcase(name)}: z.${
         isEnum ? `nativeEnum(${type})` : `${type}()`
       }${conditionalString(isArray && '.array()')}${conditionalString(
-        !required && '.optional()'
+        (nullable || hasDefaultValue) && '.optional()'
       )},`;
     }),
     '  });',
