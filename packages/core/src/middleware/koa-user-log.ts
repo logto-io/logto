@@ -48,9 +48,9 @@ export default function koaUserLog<StateT, ContextT, ResponseBodyT>(): Middlewar
     try {
       await next();
       await insertLog(UserLogResult.Success);
+      return;
     } catch (error: unknown) {
       await insertLog(UserLogResult.Failed);
-
       throw error;
     }
   };
