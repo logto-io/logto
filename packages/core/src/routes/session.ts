@@ -1,4 +1,5 @@
 import { LogtoErrorCode } from '@logto/phrases';
+import { UserLogType } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { Provider } from 'oidc-provider';
 import { object, string } from 'zod';
@@ -30,10 +31,14 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
           const { id, passwordEncrypted, passwordEncryptionMethod, passwordEncryptionSalt } =
             await findUserByUsername(username);
 
+          ctx.userLog.userId = id;
+          ctx.userLog.type = UserLogType.SignInUsernameAndPassword;
+
           assertThat(
             passwordEncrypted && passwordEncryptionMethod && passwordEncryptionSalt,
             'session.invalid_sign_in_method'
           );
+
           assertThat(
             encryptPassword(id, password, passwordEncryptionSalt, passwordEncryptionMethod) ===
               passwordEncrypted,
