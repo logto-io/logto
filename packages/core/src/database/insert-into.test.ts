@@ -1,5 +1,6 @@
 import { UserDBEntry, Users } from '@logto/schemas';
 import decamelize from 'decamelize';
+import { sql } from 'slonik';
 
 import RequestError from '@/errors/RequestError';
 import { createTestPool } from '@/utils/test-utils';
@@ -10,8 +11,8 @@ import { convertToIdentifiers, excludeAutoSetFields } from './utils';
 describe('buildInsertInto()', () => {
   const keys = excludeAutoSetFields(Users.fieldKeys);
   const expectInsertIntoSql = [
-    `insert into "users" (${keys.map((key) => `"${decamelize(key)}"`).join(', ')})`,
-    `values (${keys.map((_, index) => `$${index + 1}`).join(', ')})`,
+    sql`insert into "users" (${keys.map((key) => `"${decamelize(key)}"`).join(', ')})`,
+    sql`values (${keys.map((_, index) => `$${index + 1}`).join(', ')})`,
   ];
 
   it('resolves a promise with `undefined` when `returning` is false', async () => {

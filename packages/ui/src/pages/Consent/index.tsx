@@ -10,7 +10,7 @@ const Consent = () => {
 
   useEffect(() => {
     void asyncConsent();
-  }, []);
+  }, [asyncConsent]);
 
   useEffect(() => {
     if (result?.redirectTo) {
