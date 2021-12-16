@@ -62,22 +62,22 @@ export const buildInsertInto: BuildInsertInto = <
     const {
       rows: [entry],
     } = await pool.query<ReturnType>(sql`
-    insert into ${table} (${sql.join(
+      insert into ${table} (${sql.join(
       keys.map((key) => fields[key]),
       sql`, `
     )})
-    values (${sql.join(
-      keys.map((key) => convertToPrimitiveOrSql(key, data[key] ?? null)),
-      sql`, `
-    )})
-    ${conditionalSql(returning, () => sql`returning *`)}
-    ${conditionalSql(
-      onConflict,
-      ({ fields, setExcludedFields }) => sql`
-      on conflict (${sql.join(fields, sql`, `)}) do update
-      set ${setExcluded(...setExcludedFields)}
-    `
-    )}
+      values (${sql.join(
+        keys.map((key) => convertToPrimitiveOrSql(key, data[key] ?? null)),
+        sql`, `
+      )})
+      ${conditionalSql(returning, () => sql`returning *`)}
+      ${conditionalSql(
+        onConflict,
+        ({ fields, setExcludedFields }) => sql`
+          on conflict (${sql.join(fields, sql`, `)}) do update
+          set ${setExcluded(...setExcludedFields)}
+        `
+      )}
     `);
 
     assertThat(!returning || entry, 'entity.create_failed', { name: rest.tableSingular });

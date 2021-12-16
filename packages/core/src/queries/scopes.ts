@@ -13,7 +13,7 @@ export const findAllScopesWithResourceId = async (resourceId: string) =>
     select ${sql.join(Object.values(fields), sql`,`)}
     from ${table}
     where ${fields.resourceId}=${resourceId}
-`);
+  `);
 
 export const insertScope = buildInsertInto<ResourceScopeDBEntry, ResourceScope>(
   pool,
@@ -25,9 +25,9 @@ export const insertScope = buildInsertInto<ResourceScopeDBEntry, ResourceScope>(
 
 export const deleteScopeById = async (id: string) => {
   const { rowCount } = await pool.query(sql`
-      delete from ${table}
-      where id=${id}
-    `);
+    delete from ${table}
+    where id=${id}
+  `);
   if (rowCount < 1) {
     throw new RequestError({
       code: 'entity.not_exists_with_id',
