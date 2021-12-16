@@ -25,8 +25,8 @@
     "url": "https://github.com/logto-io/logto/issues"
   },
   "devDependencies": {
-    "@silverhand/eslint-config": "^0.3.1",
-    "@silverhand/ts-config": "^0.3.1",
+    "@silverhand/eslint-config": "^0.4.0",
+    "@silverhand/ts-config": "^0.4.0",
     "eslint": "^8.1.0",
     "lint-staged": "^11.1.1",
     "prettier": "^2.3.2",
