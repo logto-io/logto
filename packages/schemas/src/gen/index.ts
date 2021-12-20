@@ -29,7 +29,8 @@ const generate = async () => {
     files
       .filter((file) => file.endsWith('.sql'))
       .map<Promise<[string, FileData]>>(async (file) => {
-        const statements = (await fs.readFile(path.join(directory, file), { encoding: 'utf-8' }))
+        const paragraph = await fs.readFile(path.join(directory, file), { encoding: 'utf-8' });
+        const statements = paragraph
           .split(';')
           .map((value) => normalizeWhitespaces(value))
           .map((value) => removeUnrecognizedComments(value));

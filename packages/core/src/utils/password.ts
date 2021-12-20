@@ -26,7 +26,10 @@ export const encryptPassword = (
     { method }
   );
 
-  const sum = [...id].reduce((accumulator, current) => accumulator + current.charCodeAt(0), 0);
+  const sum = [...id].reduce(
+    (accumulator, current) => accumulator + (current.codePointAt(0) ?? 0),
+    0
+  );
   const pepper = peppers[sum % peppers.length];
 
   assertThat(pepper, 'password.pepper_not_found');

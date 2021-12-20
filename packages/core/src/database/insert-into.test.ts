@@ -1,3 +1,4 @@
+/* eslint-disable sql/no-unsafe-query */
 import { UserDBEntry, Users } from '@logto/schemas';
 import decamelize from 'decamelize';
 

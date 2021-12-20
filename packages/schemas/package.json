@@ -21,14 +21,14 @@
     "node": ">=14.15.0"
   },
   "devDependencies": {
-    "@silverhand/eslint-config": "^0.2.2",
+    "@silverhand/eslint-config": "^0.4.0",
     "@silverhand/essentials": "^1.1.0",
-    "@silverhand/ts-config": "^0.2.2",
+    "@silverhand/ts-config": "^0.4.0",
     "@types/lodash.uniq": "^4.5.6",
     "@types/node": "14",
     "@types/pluralize": "^0.0.29",
     "camelcase": "^6.2.0",
-    "eslint": "^7.32.0",
+    "eslint": "^8.1.0",
     "lint-staged": "^11.1.1",
     "lodash.uniq": "^4.5.0",
     "pluralize": "^8.0.0",
