@@ -1,6 +1,6 @@
 import { RequestErrorBody } from '@logto/schemas';
 import { HTTPError } from 'ky';
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 
 type UseApi<T extends any[], U> = {
   result?: U;
@@ -16,26 +16,29 @@ function useApi<Args extends any[], Response>(
   const [error, setError] = useState<RequestErrorBody | null>(null);
   const [result, setResult] = useState<Response>();
 
-  const run = async (...args: Args) => {
-    setLoading(true);
-    setError(null);
+  const run = useCallback(
+    async (...args: Args) => {
+      setLoading(true);
+      setError(null);
 
-    try {
-      const result = await api(...args);
-      setResult(result);
-      setLoading(false);
-    } catch (error: unknown) {
-      if (error instanceof HTTPError) {
-        const kyError = await error.response.json<RequestErrorBody>();
-        setError(kyError);
+      try {
+        const result = await api(...args);
+        setResult(result);
         setLoading(false);
-        return;
-      }
+      } catch (error: unknown) {
+        if (error instanceof HTTPError) {
+          const kyError = await error.response.json<RequestErrorBody>();
+          setError(kyError);
+          setLoading(false);
+          return;
+        }
 
-      setLoading(false);
-      throw error;
-    }
-  };
+        setLoading(false);
+        throw error;
+      }
+    },
+    [api]
+  );
 
   return {
     loading,
