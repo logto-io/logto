@@ -51,7 +51,7 @@ export default function postgresAdapter(modelName: string): ReturnType<AdapterFa
           result: UserLogResult.Success,
           payload: {
             applicationId: payload.clientId,
-            applicationName: application ? application.name : undefined,
+            applicationName: application?.name,
             details: {
               scope: payload.scope,
               grantId: payload.grantId,
