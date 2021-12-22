@@ -1,4 +1,3 @@
-// /* eslint-disable @typescript-eslint/consistent-indexed-object-style */
 /* Copied from i18next/index.d.ts */
 export type Resource = Record<string, ResourceLanguage>;
 
