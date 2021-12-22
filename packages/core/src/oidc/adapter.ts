@@ -42,7 +42,7 @@ export default function postgresAdapter(modelName: string): ReturnType<AdapterFa
   return {
     upsert: async (id, payload, expiresIn) => {
       if (modelName === 'AccessToken' && payload.accountId) {
-        const application = payload.clientId ? await findApplicationById(payload.clientId) : null;
+        const application = payload.clientId && await findApplicationById(payload.clientId);
 
         await insertUserLog({
           id: nanoid(),
