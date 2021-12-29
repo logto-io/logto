@@ -1,13 +1,14 @@
+/* eslint-disable import/first */
 import 'module-alias/register.js';
 
 import dotenv from 'dotenv';
 import Koa from 'koa';
 
+dotenv.config();
+
 import initApp from './app/init';
 import { trustingTlsOffloadingProxies } from './env/consts';
 import initI18n from './i18n/init';
-
-dotenv.config();
 
 const app = new Koa({
   proxy: trustingTlsOffloadingProxies,

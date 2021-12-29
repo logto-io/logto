@@ -1,9 +1,19 @@
+/* eslint-disable @typescript-eslint/consistent-indexed-object-style */
+
 /* Copied from i18next/index.d.ts */
-export type Resource = Record<string, ResourceLanguage>;
+export interface Resource {
+  [language: string]: ResourceLanguage;
+}
 
-export type ResourceLanguage = Record<string, ResourceKey>;
+export interface ResourceLanguage {
+  [namespace: string]: ResourceKey;
+}
 
-export type ResourceKey = string | Record<string, any>;
+export type ResourceKey =
+  | string
+  | {
+      [key: string]: any;
+    };
 
 /* Copied from react-i18next/ts4.1/index.d.ts */
 // Normalize single namespace
