@@ -7,6 +7,7 @@ import Koa from 'koa';
 dotenv.config();
 
 import initApp from './app/init';
+import { initConnectors } from './connectors';
 import { trustingTlsOffloadingProxies } from './env/consts';
 import initI18n from './i18n/init';
 
@@ -16,6 +17,7 @@ const app = new Koa({
 
 (async () => {
   try {
+    await initConnectors();
     await initI18n();
     await initApp(app);
   } catch (error: unknown) {
