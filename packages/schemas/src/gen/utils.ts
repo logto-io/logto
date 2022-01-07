@@ -114,7 +114,7 @@ export const getType = (
     case 'timestamp':
     case 'timestamptz':
       return 'number';
-    case 'bool':
+    case 'boolean': // https://www.postgresql.org/docs/14/datatype-boolean.html
       return 'boolean';
     case 'json':
     case 'jsonb':
