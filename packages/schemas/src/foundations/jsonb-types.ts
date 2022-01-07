@@ -31,3 +31,11 @@ export const userLogPayloadGuard = z.object({
 });
 
 export type UserLogPayload = z.infer<typeof userLogPayloadGuard>;
+
+export const connectorConfigGuard = z.object({});
+
+export type ConnectorConfig = z.infer<typeof connectorConfigGuard>;
+
+export const connectorDataGuard = z.object({});
+
+export type ConnectorData = z.infer<typeof connectorDataGuard>;
