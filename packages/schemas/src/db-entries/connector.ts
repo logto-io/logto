@@ -14,8 +14,7 @@ import { ConnectorType } from './custom-types';
 
 export type ConnectorDBEntry = {
   id: string;
-  identifier: string;
-  enable?: boolean;
+  enabled?: boolean;
   type: ConnectorType;
   config?: ConnectorConfig;
   data?: ConnectorData;
@@ -24,8 +23,7 @@ export type ConnectorDBEntry = {
 
 export type Connector = {
   id: string;
-  identifier: string;
-  enable: boolean;
+  enabled: boolean;
   type: ConnectorType;
   config: ConnectorConfig;
   data: ConnectorData;
@@ -34,8 +32,7 @@ export type Connector = {
 
 const guard: Guard<ConnectorDBEntry> = z.object({
   id: z.string(),
-  identifier: z.string(),
-  enable: z.boolean().optional(),
+  enabled: z.boolean().optional(),
   type: z.nativeEnum(ConnectorType),
   config: connectorConfigGuard.optional(),
   data: connectorDataGuard.optional(),
@@ -47,13 +44,12 @@ export const Connectors: GeneratedSchema<ConnectorDBEntry> = Object.freeze({
   tableSingular: 'connector',
   fields: {
     id: 'id',
-    identifier: 'identifier',
-    enable: 'enable',
+    enabled: 'enabled',
     type: 'type',
     config: 'config',
     data: 'data',
     createdAt: 'created_at',
   },
-  fieldKeys: ['id', 'identifier', 'enable', 'type', 'config', 'data', 'createdAt'],
+  fieldKeys: ['id', 'enabled', 'type', 'config', 'data', 'createdAt'],
   guard,
 });
