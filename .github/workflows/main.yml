@@ -23,7 +23,7 @@ jobs:
         run: pnpm -- lerna run --parallel lint
 
       - name: Test
-        run: pnpm -- lerna run --parallel test
+        run: pnpm -- lerna run --parallel test:coverage
 
       - name: Coverage Report
         run: pnpm -- lerna run --parallel test:report
