@@ -3,6 +3,7 @@ import { sql } from 'slonik';
 
 import { buildInsertInto } from '@/database/insert-into';
 import pool from '@/database/pool';
+import { buildUpdateWhere } from '@/database/update-where';
 import { convertToIdentifiers } from '@/database/utils';
 
 const { table, fields } = convertToIdentifiers(Connectors);
@@ -17,3 +18,5 @@ export const findConnectorByIdAndType = async (id: string, type: ConnectorType) 
 export const insertConnector = buildInsertInto<ConnectorDBEntry, Connector>(pool, Connectors, {
   returning: true,
 });
+
+export const updateConnector = buildUpdateWhere<ConnectorDBEntry>(pool, Connectors);
