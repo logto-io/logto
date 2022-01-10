@@ -2,9 +2,9 @@ name: Main
 
 on:
   push:
-    branches: [ master ]
+    branches: [master]
   pull_request:
-    branches: [ master ]
+    branches: [master]
 
 jobs:
   main:
@@ -23,4 +23,7 @@ jobs:
         run: pnpm -- lerna run --parallel lint
 
       - name: Test
-        run: pnpm -- lerna run --parallel test
+        run: pnpm -- lerna run --parallel test:coverage
+
+      - name: Coverage Report
+        run: pnpm -- lerna run --parallel test:report

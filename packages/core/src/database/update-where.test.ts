@@ -40,12 +40,18 @@ describe('buildUpdateWhere()', () => {
       'update "users"\nset "username"=$1\nwhere "id"=$2 and "username"=$3'
     );
     const updateWhere = buildUpdateWhere(pool, Users);
+
+    const errorMessage: Partial<Record<NodeJS.Platform, string>> = {
+      darwin: "Cannot read properties of undefined (reading 'toString')",
+      linux: "Cannot read property 'toString' of undefined",
+    };
+
     await expect(
       updateWhere({
         set: { username: '123', id: undefined },
         where: { id: 'foo', username: '456' },
       })
-    ).rejects.toMatchError(new TypeError("Cannot read property 'toString' of undefined"));
+    ).rejects.toMatchError(new TypeError(errorMessage[process.platform]));
   });
 
   it('throws `entity.not_exists_with_id` error with `undefined` when `returning` is true', async () => {

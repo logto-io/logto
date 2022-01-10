@@ -35,6 +35,7 @@ importers:
       '@types/lodash.pick': ^4.4.6
       '@types/node': ^16.3.1
       '@types/oidc-provider': ^7.8.0
+      codecov: ^3.8.3
       dayjs: ^1.10.5
       decamelize: ^5.0.0
       dotenv: ^10.0.0
@@ -109,6 +110,7 @@ importers:
       '@types/lodash.pick': 4.4.6
       '@types/node': 16.11.12
       '@types/oidc-provider': 7.8.1
+      codecov: 3.8.3
       eslint: 8.4.1
       jest: 27.4.4
       jest-matcher-specific-error: 1.0.0
@@ -192,6 +194,7 @@ importers:
       '@ungap/global-this': ^0.4.4
       babel-preset-razzle: 4.0.5
       classnames: ^2.3.1
+      codecov: ^3.8.3
       concurrently: ^6.2.0
       eslint: ^8.1.0
       html-webpack-plugin: ^4.5.2
@@ -241,6 +244,7 @@ importers:
       '@types/webpack': 4.41.32
       '@types/webpack-env': 1.16.3
       babel-preset-razzle: 4.0.5
+      codecov: 3.8.3
       concurrently: 6.4.0
       eslint: 8.4.1
       html-webpack-plugin: 4.5.2_webpack@5.65.0
@@ -4173,6 +4177,11 @@ packages:
     resolution: {integrity: sha512-8+9WqebbFzpX9OR+Wa6O29asIogeRMzcGtAINdpMHHyAg10f05aSFVBbcEqGf/PXw1EjAZ+q2/bEBg3DvurK3Q==}
     dev: true
 
+  /argv/0.0.2:
+    resolution: {integrity: sha1-7L0W+JSbFXGDcRsb2jNPN4QBhas=}
+    engines: {node: '>=0.6.10'}
+    dev: true
+
   /aria-query/5.0.0:
     resolution: {integrity: sha512-V+SM7AbUwJ+EBnB8+DXs0hPZHO0W6pqBcc0dW90OwtVG02PswOu/teuARoLQjdDOH+t9pJgGnW5/Qmouf3gPJg==}
     engines: {node: '>=6.0'}
@@ -5254,6 +5263,21 @@ packages:
   /code-point-at/1.1.0:
     resolution: {integrity: sha1-DQcLTQQ6W+ozovGkDi7bPZpMz3c=}
     engines: {node: '>=0.10.0'}
+    dev: true
+
+  /codecov/3.8.3:
+    resolution: {integrity: sha512-Y8Hw+V3HgR7V71xWH2vQ9lyS358CbGCldWlJFR0JirqoGtOoas3R3/OclRTvgUYFK29mmJICDPauVKmpqbwhOA==}
+    engines: {node: '>=4.0'}
+    deprecated: https://about.codecov.io/blog/codecov-uploader-deprecation-plan/
+    hasBin: true
+    dependencies:
+      argv: 0.0.2
+      ignore-walk: 3.0.4
+      js-yaml: 3.14.1
+      teeny-request: 7.1.1
+      urlgrey: 1.0.0
+    transitivePeerDependencies:
+      - supports-color
     dev: true
 
   /collect-v8-coverage/1.0.1:
@@ -7237,6 +7261,12 @@ packages:
     dependencies:
       boolean: 3.1.4
     dev: false
+
+  /fast-url-parser/1.1.3:
+    resolution: {integrity: sha1-9K8+qfNNiicc9YrSs3WfQx8LMY0=}
+    dependencies:
+      punycode: 1.3.2
+    dev: true
 
   /fastest-levenshtein/1.0.12:
     resolution: {integrity: sha512-On2N+BpYJ15xIC974QNVuYGMOlEVt4s0EOI3wwMqOmK1fdDY+FN/zltPV8vosq4ad4c/gJ1KHScUn/6AWIgiow==}
@@ -14775,6 +14805,12 @@ packages:
       duplexer: 0.1.2
     dev: true
 
+  /stream-events/1.0.5:
+    resolution: {integrity: sha512-E1GUzBSgvct8Jsb3v2X15pjzN1tYebtbLaMg+eBOUOAxgbLoSbT2NS91ckc5lJD1KfLjId+jXJRgo0qnV5Nerg==}
+    dependencies:
+      stubs: 3.0.0
+    dev: true
+
   /strict-uri-encode/1.1.0:
     resolution: {integrity: sha1-J5siXfHVgrH1TmWt3UNS4Y+qBxM=}
     engines: {node: '>=0.10.0'}
@@ -14953,6 +14989,10 @@ packages:
       duplexer: 0.1.2
       minimist: 1.2.5
       through: 2.3.8
+    dev: true
+
+  /stubs/3.0.0:
+    resolution: {integrity: sha1-6NK6H6nJBXAwPAMLaQD31fiavls=}
     dev: true
 
   /style-loader/2.0.0_webpack@5.65.0:
@@ -15216,6 +15256,19 @@ packages:
       minizlib: 2.1.2
       mkdirp: 1.0.4
       yallist: 4.0.0
+    dev: true
+
+  /teeny-request/7.1.1:
+    resolution: {integrity: sha512-iwY6rkW5DDGq8hE2YgNQlKbptYpY5Nn2xecjQiNjOXWbKzPGUfmeUBCSQbbr306d7Z7U2N0TPl+/SwYRfua1Dg==}
+    engines: {node: '>=10'}
+    dependencies:
+      http-proxy-agent: 4.0.1
+      https-proxy-agent: 5.0.0
+      node-fetch: 2.6.6
+      stream-events: 1.0.5
+      uuid: 8.3.2
+    transitivePeerDependencies:
+      - supports-color
     dev: true
 
   /temp-dir/1.0.0:
@@ -15927,6 +15980,12 @@ packages:
     dependencies:
       punycode: 1.3.2
       querystring: 0.2.0
+    dev: true
+
+  /urlgrey/1.0.0:
+    resolution: {integrity: sha512-hJfIzMPJmI9IlLkby8QrsCykQ+SXDeO2W5Q9QTW3QpqZVTx4a/K7p8/5q+/isD8vsbVaFgql/gvAoQCRQ2Cb5w==}
+    dependencies:
+      fast-url-parser: 1.1.3
     dev: true
 
   /use/3.1.1:
