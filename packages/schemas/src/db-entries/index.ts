@@ -6,5 +6,6 @@ export * from './connector';
 export * from './oidc-model-instance';
 export * from './resource-scope';
 export * from './resource';
+export * from './setting';
 export * from './user-log';
 export * from './user';
