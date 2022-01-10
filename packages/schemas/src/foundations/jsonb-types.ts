@@ -37,12 +37,8 @@ export const connectorConfigGuard = z.object({});
 
 export type ConnectorConfig = z.infer<typeof connectorConfigGuard>;
 
-export const applicationLevelSettingsGuard = z.object({
-  applicationId: z.object({ application_skip_get_started: z.boolean() }),
-});
-
 export const adminConsoleConfigGuard = z.object({
-  application_skip_get_started: applicationLevelSettingsGuard.array(),
+  application_skip_get_started: z.boolean(),
 });
 
 export type AdminConsoleConfig = z.infer<typeof adminConsoleConfigGuard>;
