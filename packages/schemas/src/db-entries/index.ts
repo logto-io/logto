@@ -2,6 +2,7 @@
 
 export * from './custom-types';
 export * from './application';
+export * from './connector';
 export * from './oidc-model-instance';
 export * from './resource-scope';
 export * from './resource';

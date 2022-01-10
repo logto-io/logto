@@ -5,6 +5,11 @@ export enum ApplicationType {
   SPA = 'SPA',
   Traditional = 'Traditional',
 }
+export enum ConnectorType {
+  SMS = 'SMS',
+  Email = 'Email',
+  Social = 'Social',
+}
 export enum SignAlgorithmType {
   RS256 = 'RS256',
 }

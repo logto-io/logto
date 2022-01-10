@@ -31,3 +31,8 @@ export const userLogPayloadGuard = z.object({
 });
 
 export type UserLogPayload = z.infer<typeof userLogPayloadGuard>;
+
+// TODO: support empty shape of object
+export const connectorConfigGuard = z.object({});
+
+export type ConnectorConfig = z.infer<typeof connectorConfigGuard>;
