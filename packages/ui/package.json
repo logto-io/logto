@@ -14,7 +14,9 @@
     "lint": "eslint --ext .ts --ext .tsx src",
     "stylelint": "stylelint \"src/**/*.scss\"",
     "test": "pnpm -- test:watch --no-watch",
-    "test:watch": "razzle test --env=jsdom"
+    "test:watch": "razzle test --env=jsdom",
+    "test:coverage": "razzle test --env=jsdom --coverage --silent",
+    "test:report": "codecov -F ui"
   },
   "dependencies": {
     "@logto/phrases": "^0.1.0",
@@ -44,6 +46,7 @@
     "@types/webpack": "^4",
     "@types/webpack-env": "^1.16.2",
     "babel-preset-razzle": "4.0.5",
+    "codecov": "^3.8.3",
     "concurrently": "^6.2.0",
     "eslint": "^8.1.0",
     "html-webpack-plugin": "^4.5.2",

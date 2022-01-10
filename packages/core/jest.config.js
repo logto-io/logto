@@ -11,4 +11,6 @@ module.exports = {
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
   },
+  coveragePathIgnorePatterns: ['/node_modules/', '/build/'],
+  coverageReporters: ['text-summary', 'lcov'],
 };
