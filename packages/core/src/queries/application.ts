@@ -7,12 +7,18 @@ import { buildUpdateWhere } from '@/database/update-where';
 import { convertToIdentifiers, OmitAutoSetFields } from '@/database/utils';
 import RequestError from '@/errors/RequestError';
 
+import { totalRowCount } from './utils';
+
 const { table, fields } = convertToIdentifiers(Applications);
 
-export const findAllApplications = async () =>
+export const findTotalNumberOfApplications = async () => totalRowCount(table);
+
+export const findAllApplications = async (limit: number, offset: number) =>
   pool.many<Application>(sql`
     select ${sql.join(Object.values(fields), sql`, `)}
     from ${table}
+    offset ${offset}
+    limit ${limit}
   `);
 
 export const findApplicationById = async (id: string) =>
