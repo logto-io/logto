@@ -15,12 +15,14 @@ export const initConnectors = async () => {
   await Promise.all(
     connectors.map(async ({ metadata: { id, type } }) => {
       const record = await findConnectorByIdAndType(id, type);
-      if (!record) {
-        await insertConnector({
-          id,
-          type,
-        });
+      if (record) {
+        return;
       }
+
+      await insertConnector({
+        id,
+        type,
+      });
     })
   );
 };

@@ -4,7 +4,7 @@ import { ConnectorMetadata } from '../types';
 
 export const metadata: ConnectorMetadata = {
   id: 'aliyun-dm',
-  type: ConnectorType.SMS,
+  type: ConnectorType.Email,
   name: '阿里云邮件推送',
   logo: './logo.png',
   description:
