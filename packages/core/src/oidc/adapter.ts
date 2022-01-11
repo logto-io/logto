@@ -13,14 +13,20 @@ import {
   upsertInstance,
 } from '@/queries/oidc-model-instance';
 
+import { getApplicationTypeString } from './utils';
+
 export default function postgresAdapter(modelName: string): ReturnType<AdapterFactory> {
   if (modelName === 'Client') {
     const reject = async () => Promise.reject(new Error('Not implemented'));
     const transpileClient = ({
-      id,
+      id: client_id,
+      name: client_name,
+      type,
       oidcClientMetadata,
     }: ApplicationDBEntry): AllClientMetadata => ({
-      client_id: id,
+      client_id,
+      client_name,
+      application_type: getApplicationTypeString(type),
       grant_types: ['authorization_code', 'refresh_token'],
       token_endpoint_auth_method: 'none',
       ...snakecaseKeys(oidcClientMetadata),

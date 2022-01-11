@@ -37,7 +37,7 @@ export default function applicationRoutes<T extends AuthedRouter>(router: T) {
         id: applicationId(),
         type,
         name,
-        oidcClientMetadata: buildOidcClientMetadata(type, oidcClientMetadata),
+        oidcClientMetadata: buildOidcClientMetadata(oidcClientMetadata),
         ...rest,
       });
       return next();
@@ -74,7 +74,7 @@ export default function applicationRoutes<T extends AuthedRouter>(router: T) {
 
       ctx.body = await updateApplicationById(id, {
         ...body,
-        oidcClientMetadata: buildOidcClientMetadata(body.type ?? application.type, {
+        oidcClientMetadata: buildOidcClientMetadata({
           ...application.oidcClientMetadata,
           ...body.oidcClientMetadata,
         }),
