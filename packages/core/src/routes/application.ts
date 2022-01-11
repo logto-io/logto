@@ -21,12 +21,15 @@ const applicationId = buildIdGenerator(21);
 export default function applicationRoutes<T extends AuthedRouter>(router: T) {
   router.get('/applications', koaPagination(), async (ctx, next) => {
     const { limit, offset } = ctx.pagination;
-    const { count } = await findTotalNumberOfApplications();
+
+    const [{ count }, applications] = await Promise.all([
+      findTotalNumberOfApplications(),
+      findAllApplications(limit, offset),
+    ]);
 
     // Return totalCount to pagination middleware
     ctx.pagination.totalCount = count;
-
-    ctx.body = await findAllApplications(limit, offset);
+    ctx.body = applications;
 
     return next();
   });

@@ -5,14 +5,12 @@ import { buildFindMany } from '@/database/find-many';
 import { buildInsertInto } from '@/database/insert-into';
 import pool from '@/database/pool';
 import { buildUpdateWhere } from '@/database/update-where';
-import { convertToIdentifiers, OmitAutoSetFields } from '@/database/utils';
+import { convertToIdentifiers, OmitAutoSetFields, getTotalRowCount } from '@/database/utils';
 import RequestError from '@/errors/RequestError';
-
-import { totalRowCount } from './utils';
 
 const { table, fields } = convertToIdentifiers(Applications);
 
-export const findTotalNumberOfApplications = async () => totalRowCount(table);
+export const findTotalNumberOfApplications = async () => getTotalRowCount(table);
 
 const findApplicationMany = buildFindMany<ApplicationDBEntry, Application>(pool, Applications);
 
