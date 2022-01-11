@@ -6,8 +6,8 @@ create table applications (
   description text,
   type application_type not null,
   oidc_client_metadata jsonb /* @use OidcClientMetadata */ not null,
-  id_token_ttL bigint not null default(86400),
-  refresh_token_ttL bigint not null default(2592000),
+  id_token_ttl bigint not null default(86400),
+  refresh_token_ttl bigint not null default(2592000),
   created_at timestamptz not null default(now()),
   primary key (id)
 );
