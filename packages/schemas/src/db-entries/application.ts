@@ -13,24 +13,33 @@ import { ApplicationType } from './custom-types';
 export type ApplicationDBEntry = {
   id: string;
   name: string;
+  description?: string | null;
   type: ApplicationType;
   oidcClientMetadata: OidcClientMetadata;
+  idTokenTtl?: number;
+  refreshTokenTtl?: number;
   createdAt?: number;
 };
 
 export type Application = {
   id: string;
   name: string;
+  description: string | null;
   type: ApplicationType;
   oidcClientMetadata: OidcClientMetadata;
+  idTokenTtl: number;
+  refreshTokenTtl: number;
   createdAt: number;
 };
 
 const guard: Guard<ApplicationDBEntry> = z.object({
   id: z.string(),
   name: z.string(),
+  description: z.string().optional(),
   type: z.nativeEnum(ApplicationType),
   oidcClientMetadata: oidcClientMetadataGuard,
+  idTokenTtl: z.number().optional(),
+  refreshTokenTtl: z.number().optional(),
   createdAt: z.number().optional(),
 });
 
@@ -40,10 +49,22 @@ export const Applications: GeneratedSchema<ApplicationDBEntry> = Object.freeze({
   fields: {
     id: 'id',
     name: 'name',
+    description: 'description',
     type: 'type',
     oidcClientMetadata: 'oidc_client_metadata',
+    idTokenTtl: 'id_token_ttl',
+    refreshTokenTtl: 'refresh_token_ttl',
     createdAt: 'created_at',
   },
-  fieldKeys: ['id', 'name', 'type', 'oidcClientMetadata', 'createdAt'],
+  fieldKeys: [
+    'id',
+    'name',
+    'description',
+    'type',
+    'oidcClientMetadata',
+    'idTokenTtl',
+    'refreshTokenTtl',
+    'createdAt',
+  ],
   guard,
 });
