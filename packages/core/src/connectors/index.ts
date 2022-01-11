@@ -1,3 +1,5 @@
+import { Optional } from '@silverhand/essentials';
+
 import { findConnectorByIdAndType, insertConnector } from '@/queries/connector';
 
 import * as AliyunDM from './aliyun-dm';
@@ -11,12 +13,12 @@ export const getConnectorById = (id: string): Optional<ConnectorInstance> => {
 
 export const initConnectors = async () => {
   await Promise.all(
-    connectors.map(async (connector) => {
-      const record = await findConnectorByIdAndType(connector.metadata.id, connector.metadata.type);
+    connectors.map(async ({ metadata: { id, type } }) => {
+      const record = await findConnectorByIdAndType(id, type);
       if (!record) {
         await insertConnector({
-          id: connector.metadata.id,
-          type: connector.metadata.type,
+          id,
+          type,
         });
       }
     })
