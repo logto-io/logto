@@ -1,7 +1,6 @@
 import { Applications } from '@logto/schemas';
 import { object, string } from 'zod';
 
-import RequestError from '@/errors/RequestError';
 import koaGuard from '@/middleware/koa-guard';
 import koaPagination from '@/middleware/koa-pagination';
 import { buildOidcClientMetadata } from '@/oidc/utils';
@@ -23,14 +22,6 @@ export default function applicationRoutes<T extends AuthedRouter>(router: T) {
   router.get('/applications', koaPagination(), async (ctx, next) => {
     const { limit, offset } = ctx.pagination;
     const { count } = await findTotalNumberOfApplications();
-
-    if (offset >= count) {
-      throw new RequestError({
-        code: 'entity.not_exists',
-        name: Applications.tableSingular,
-        status: 404,
-      });
-    }
 
     // Return totalCount to pagination middleware
     ctx.pagination.totalCount = count;
