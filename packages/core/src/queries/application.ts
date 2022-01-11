@@ -14,15 +14,34 @@ export const findTotalNumberOfApplications = async () => getTotalRowCount(table)
 
 const findApplicationMany = buildFindMany<ApplicationUpdate, Application>(pool, Applications);
 
-export const findAllApplications = async (limit: number, offset: number) =>
-  findApplicationMany({ limit, offset });
+export const findAllApplications = async (limit: number, offset: number) => {
+  try {
+    return await findApplicationMany({ limit, offset });
+  } catch {
+    throw new RequestError({
+      code: 'entity.not_exists',
+      name: Applications.tableSingular,
+      status: 404,
+    });
+  }
+};
 
-export const findApplicationById = async (id: string) =>
-  pool.one<Application>(sql`
-    select ${sql.join(Object.values(fields), sql`, `)}
-    from ${table}
-    where ${fields.id}=${id}
-  `);
+export const findApplicationById = async (id: string) => {
+  try {
+    return await pool.one<Application>(sql`
+      select ${sql.join(Object.values(fields), sql`, `)}
+      from ${table}
+      where ${fields.id}=${id}
+    `);
+  } catch {
+    throw new RequestError({
+      code: 'entity.not_exists_with_id',
+      name: Applications.tableSingular,
+      id,
+      status: 404,
+    });
+  }
+};
 
 export const insertApplication = buildInsertInto<ApplicationUpdate, Application>(
   pool,
