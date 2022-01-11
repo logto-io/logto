@@ -1,19 +1,21 @@
 import { Application, ApplicationDBEntry, Applications } from '@logto/schemas';
 import { sql } from 'slonik';
 
+import { buildFindMany } from '@/database/find-many';
 import { buildInsertInto } from '@/database/insert-into';
 import pool from '@/database/pool';
 import { buildUpdateWhere } from '@/database/update-where';
-import { convertToIdentifiers, OmitAutoSetFields } from '@/database/utils';
+import { convertToIdentifiers, OmitAutoSetFields, getTotalRowCount } from '@/database/utils';
 import RequestError from '@/errors/RequestError';
 
 const { table, fields } = convertToIdentifiers(Applications);
 
-export const findAllApplications = async () =>
-  pool.many<Application>(sql`
-    select ${sql.join(Object.values(fields), sql`, `)}
-    from ${table}
-  `);
+export const findTotalNumberOfApplications = async () => getTotalRowCount(table);
+
+const findApplicationMany = buildFindMany<ApplicationDBEntry, Application>(pool, Applications);
+
+export const findAllApplications = async (limit: number, offset: number) =>
+  findApplicationMany({ limit, offset });
 
 export const findApplicationById = async (id: string) =>
   pool.one<Application>(sql`
