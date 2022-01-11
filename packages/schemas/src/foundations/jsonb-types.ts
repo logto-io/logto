@@ -36,3 +36,9 @@ export type UserLogPayload = z.infer<typeof userLogPayloadGuard>;
 export const connectorConfigGuard = z.object({});
 
 export type ConnectorConfig = z.infer<typeof connectorConfigGuard>;
+
+export const adminConsoleConfigGuard = z.object({
+  applicationSkipGetStarted: z.boolean(),
+});
+
+export type AdminConsoleConfig = z.infer<typeof adminConsoleConfigGuard>;
