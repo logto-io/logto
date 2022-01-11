@@ -5,7 +5,7 @@ import { ConnectorInstance } from './types';
 
 const connectors: ConnectorInstance[] = [AliyunDM];
 
-export const getConnectorById = (id: string): ConnectorInstance | undefined => {
+export const getConnectorById = (id: string): Optional<ConnectorInstance> => {
   return connectors.find((connector) => connector.metadata.id === id);
 };
 
