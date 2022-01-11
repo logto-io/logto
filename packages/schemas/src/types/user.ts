@@ -1,4 +1,4 @@
-import { UserDBEntry } from '../db-entries';
+import { UserUpdate } from '../db-entries';
 
 export const userInfoSelectFields = Object.freeze([
   'id',
@@ -7,7 +7,7 @@ export const userInfoSelectFields = Object.freeze([
   'primaryPhone',
 ] as const);
 
-export type UserInfo<Keys extends keyof UserDBEntry = typeof userInfoSelectFields[number]> = Pick<
-  UserDBEntry,
+export type UserInfo<Keys extends keyof UserUpdate = typeof userInfoSelectFields[number]> = Pick<
+  UserUpdate,
   Keys
 >;

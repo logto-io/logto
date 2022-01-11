@@ -9,7 +9,7 @@ import {
   Guard,
 } from '../foundations';
 
-export type SettingDBEntry = {
+export type SettingUpdate = {
   id: string;
   customDomain?: string | null;
   adminConsole: AdminConsoleConfig;
@@ -21,13 +21,13 @@ export type Setting = {
   adminConsole: AdminConsoleConfig;
 };
 
-const guard: Guard<SettingDBEntry> = z.object({
+const guard: Guard<SettingUpdate> = z.object({
   id: z.string(),
   customDomain: z.string().optional(),
   adminConsole: adminConsoleConfigGuard,
 });
 
-export const Settings: GeneratedSchema<SettingDBEntry> = Object.freeze({
+export const Settings: GeneratedSchema<SettingUpdate> = Object.freeze({
   table: 'settings',
   tableSingular: 'setting',
   fields: {
