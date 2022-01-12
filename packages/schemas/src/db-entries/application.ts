@@ -10,7 +10,7 @@ import {
 } from '../foundations';
 import { ApplicationType } from './custom-types';
 
-export type ApplicationDBEntry = {
+export type ApplicationUpdate = {
   id: string;
   name: string;
   description?: string | null;
@@ -32,7 +32,7 @@ export type Application = {
   createdAt: number;
 };
 
-const guard: Guard<ApplicationDBEntry> = z.object({
+const guard: Guard<ApplicationUpdate> = z.object({
   id: z.string(),
   name: z.string(),
   description: z.string().optional(),
@@ -43,7 +43,7 @@ const guard: Guard<ApplicationDBEntry> = z.object({
   createdAt: z.number().optional(),
 });
 
-export const Applications: GeneratedSchema<ApplicationDBEntry> = Object.freeze({
+export const Applications: GeneratedSchema<ApplicationUpdate> = Object.freeze({
   table: 'applications',
   tableSingular: 'application',
   fields: {

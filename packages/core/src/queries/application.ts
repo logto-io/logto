@@ -1,19 +1,21 @@
-import { Application, ApplicationDBEntry, Applications } from '@logto/schemas';
+import { Application, ApplicationUpdate, Applications } from '@logto/schemas';
 import { sql } from 'slonik';
 
+import { buildFindMany } from '@/database/find-many';
 import { buildInsertInto } from '@/database/insert-into';
 import pool from '@/database/pool';
 import { buildUpdateWhere } from '@/database/update-where';
-import { convertToIdentifiers, OmitAutoSetFields } from '@/database/utils';
+import { convertToIdentifiers, OmitAutoSetFields, getTotalRowCount } from '@/database/utils';
 import RequestError from '@/errors/RequestError';
 
 const { table, fields } = convertToIdentifiers(Applications);
 
-export const findAllApplications = async () =>
-  pool.many<Application>(sql`
-    select ${sql.join(Object.values(fields), sql`, `)}
-    from ${table}
-  `);
+export const findTotalNumberOfApplications = async () => getTotalRowCount(table);
+
+const findApplicationMany = buildFindMany<ApplicationUpdate, Application>(pool, Applications);
+
+export const findAllApplications = async (limit: number, offset: number) =>
+  findApplicationMany({ limit, offset });
 
 export const findApplicationById = async (id: string) =>
   pool.one<Application>(sql`
@@ -22,7 +24,7 @@ export const findApplicationById = async (id: string) =>
     where ${fields.id}=${id}
   `);
 
-export const insertApplication = buildInsertInto<ApplicationDBEntry, Application>(
+export const insertApplication = buildInsertInto<ApplicationUpdate, Application>(
   pool,
   Applications,
   {
@@ -30,7 +32,7 @@ export const insertApplication = buildInsertInto<ApplicationDBEntry, Application
   }
 );
 
-const updateApplication = buildUpdateWhere<ApplicationDBEntry, Application>(
+const updateApplication = buildUpdateWhere<ApplicationUpdate, Application>(
   pool,
   Applications,
   true
@@ -38,7 +40,7 @@ const updateApplication = buildUpdateWhere<ApplicationDBEntry, Application>(
 
 export const updateApplicationById = async (
   id: string,
-  set: Partial<OmitAutoSetFields<ApplicationDBEntry>>
+  set: Partial<OmitAutoSetFields<ApplicationUpdate>>
 ) => updateApplication({ set, where: { id } });
 
 export const deleteApplicationById = async (id: string) => {

@@ -1,5 +1,5 @@
 /* eslint-disable sql/no-unsafe-query */
-import { UserDBEntry, Users } from '@logto/schemas';
+import { UserUpdate, Users } from '@logto/schemas';
 import decamelize from 'decamelize';
 
 import RequestError from '@/errors/RequestError';
@@ -42,7 +42,7 @@ describe('buildInsertInto()', () => {
   });
 
   it('resolves a promise with single entity when `returning` is true', async () => {
-    const user: UserDBEntry = { id: 'foo', username: '123', primaryEmail: 'foo@bar.com' };
+    const user: UserUpdate = { id: 'foo', username: '123', primaryEmail: 'foo@bar.com' };
     const pool = createTestPool(
       [...expectInsertIntoSql, 'returning *'].join('\n'),
       (_, [id, username, primaryEmail]) => ({

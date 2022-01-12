@@ -1,4 +1,4 @@
-import { Resource, ResourceDBEntry, Resources } from '@logto/schemas';
+import { Resource, ResourceUpdate, Resources } from '@logto/schemas';
 import { sql } from 'slonik';
 
 import { buildInsertInto } from '@/database/insert-into';
@@ -43,15 +43,15 @@ export const findResourceById = async (id: string) =>
     where ${fields.id}=${id}
   `);
 
-export const insertResource = buildInsertInto<ResourceDBEntry, Resource>(pool, Resources, {
+export const insertResource = buildInsertInto<ResourceUpdate, Resource>(pool, Resources, {
   returning: true,
 });
 
-const updateResource = buildUpdateWhere<ResourceDBEntry, Resource>(pool, Resources, true);
+const updateResource = buildUpdateWhere<ResourceUpdate, Resource>(pool, Resources, true);
 
 export const updateResourceById = async (
   id: string,
-  set: Partial<OmitAutoSetFields<ResourceDBEntry>>
+  set: Partial<OmitAutoSetFields<ResourceUpdate>>
 ) => updateResource({ set, where: { id } });
 
 export const deleteResourceById = async (id: string) => {
