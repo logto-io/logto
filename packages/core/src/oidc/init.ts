@@ -1,3 +1,4 @@
+import { customClientMetadataGuard, CustomClientMetadataType } from '@logto/schemas';
 import { fromKeyLike } from 'jose/jwk/from_key_like';
 import Koa from 'koa';
 import mount from 'koa-mount';
@@ -71,6 +72,15 @@ export default async function initOidc(app: Koa): Promise<Provider> {
         }
       },
     },
+    extraClientMetadata: {
+      properties: Object.keys(CustomClientMetadataType),
+      validator: (_ctx, key, value) => {
+        const result = customClientMetadataGuard.pick({ [key]: true }).safeParse({ key: value });
+        if (!result.success) {
+          throw new errors.InvalidClientMetadata(key);
+        }
+      },
+    },
     clientBasedCORS: (_, origin) => {
       console.log('origin', origin);
       return origin.startsWith('http://localhost:3000');
@@ -88,6 +98,19 @@ export default async function initOidc(app: Koa): Promise<Provider> {
           return { sub };
         },
       };
+    },
+    ttl: {
+      /**
+       * [OIDC Provider Default Settings](https://github.com/panva/node-oidc-provider/blob/main/docs/README.md#ttl)
+       */
+      IdToken: (ctx, token, client) => {
+        const { idTokenTtl } = client.metadata();
+        return idTokenTtl ?? 60 * 60;
+      },
+      RefreshToken: (ctx, token, client) => {
+        const { refreshTokenTtl } = client.metadata();
+        return refreshTokenTtl ?? 14 * 24 * 60 * 60;
+      },
     },
   });
   app.use(mount('/oidc', oidc.app));
