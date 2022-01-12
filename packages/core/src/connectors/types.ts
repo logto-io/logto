@@ -12,10 +12,10 @@ export interface ConnectorMetadata {
 // The name `Connector` is used for database, use `ConnectorInstance` to avoid confusing.
 export interface ConnectorInstance {
   metadata: ConnectorMetadata;
-  sendMessage: SmsSendMessageFunction;
+  sendMessage: EmailSendMessageFunction;
 }
 
-export interface SmsMessageTypes {
+export interface EmailMessageTypes {
   SIGN_IN: {
     code: string;
   };
@@ -27,8 +27,8 @@ export interface SmsMessageTypes {
   };
 }
 
-export type SmsSendMessageFunction<T = unknown> = (
+export type EmailSendMessageFunction<T = unknown> = (
   address: string,
-  type: keyof SmsMessageTypes,
-  payload: SmsMessageTypes[typeof type]
+  type: keyof EmailMessageTypes,
+  payload: EmailMessageTypes[typeof type]
 ) => Promise<T>;

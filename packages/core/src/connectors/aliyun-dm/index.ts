@@ -1,6 +1,6 @@
 import { ConnectorType } from '@logto/schemas';
 
-import { ConnectorMetadata, SmsSendMessageFunction } from '../types';
+import { ConnectorMetadata, EmailSendMessageFunction } from '../types';
 import { getConnectorConfig } from '../utils';
 import { sendSingleMail } from './send-single-mail';
 
@@ -34,7 +34,7 @@ export interface AliyunDMConfig {
   templates: Template[];
 }
 
-export const sendMessage: SmsSendMessageFunction = async (address, type, data) => {
+export const sendMessage: EmailSendMessageFunction = async (address, type, data) => {
   const config: AliyunDMConfig = await getConnectorConfig<AliyunDMConfig>(
     metadata.id,
     metadata.type
