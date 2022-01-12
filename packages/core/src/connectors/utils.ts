@@ -3,10 +3,10 @@ import { ConnectorConfig, ConnectorType } from '@logto/schemas';
 import RequestError from '@/errors/RequestError';
 import { findConnectorByIdAndType, updateConnector } from '@/queries/connector';
 
-export const getConnectorConfig = async (
+export const getConnectorConfig = async <T extends ConnectorConfig>(
   id: string,
   type: ConnectorType
-): Promise<ConnectorConfig> => {
+): Promise<T> => {
   const connector = await findConnectorByIdAndType(id, type);
   if (!connector) {
     throw new RequestError({
@@ -17,13 +17,13 @@ export const getConnectorConfig = async (
     });
   }
 
-  return connector.config;
+  return connector.config as T;
 };
 
-export const updateConnectorConfig = async (
+export const updateConnectorConfig = async <T extends ConnectorConfig>(
   id: string,
   type: ConnectorType,
-  config: ConnectorConfig
+  config: T
 ): Promise<void> => {
   await updateConnector({
     where: { id, type },
