@@ -1,18 +1,13 @@
 import { Settings } from '@logto/schemas';
 
-import RequestError from '@/errors/RequestError';
 import koaGuard from '@/middleware/koa-guard';
-import { getSetting, updateSettingById } from '@/queries/setting';
+import { getSetting, updateSetting } from '@/queries/setting';
 
 import { AuthedRouter } from './types';
 
 export default function settingRoutes<T extends AuthedRouter>(router: T) {
   router.get('/settings', async (ctx, next) => {
-    try {
-      ctx.body = await getSetting();
-    } catch {
-      throw new RequestError('entity.not_exists');
-    }
+    ctx.body = await getSetting();
 
     return next();
   });
@@ -20,11 +15,11 @@ export default function settingRoutes<T extends AuthedRouter>(router: T) {
   router.patch(
     '/settings',
     koaGuard({
-      body: Settings.guard,
+      body: Settings.guard.pick({ id: true }).merge(Settings.guard.partial()),
     }),
     async (ctx, next) => {
       const { body: setting } = ctx.guard;
-      ctx.body = await updateSettingById(setting.id, setting);
+      ctx.body = await updateSetting(setting);
 
       return next();
     }
