@@ -13,10 +13,13 @@ export const getSetting = async () =>
     from ${table}
   `);
 
-export const updateSetting = async (set: Partial<OmitAutoSetFields<SettingUpdate>>) => {
+export const updateSetting = async ({
+  id,
+  ...restSetting
+}: Partial<OmitAutoSetFields<SettingUpdate>>) => {
   return buildUpdateWhere<SettingUpdate, Setting>(
     pool,
     Settings,
     true
-  )({ set, where: { id: set.id } });
+  )({ set: restSetting, where: { id } });
 };
