@@ -1,4 +1,4 @@
-import { ApplicationDBEntry } from '@logto/schemas';
+import { ApplicationUpdate } from '@logto/schemas';
 import dayjs from 'dayjs';
 import { AdapterFactory, AllClientMetadata } from 'oidc-provider';
 import snakecaseKeys from 'snakecase-keys';
@@ -23,7 +23,7 @@ export default function postgresAdapter(modelName: string): ReturnType<AdapterFa
       name: client_name,
       type,
       oidcClientMetadata,
-    }: ApplicationDBEntry): AllClientMetadata => ({
+    }: ApplicationUpdate): AllClientMetadata => ({
       client_id,
       client_name,
       application_type: getApplicationTypeString(type),

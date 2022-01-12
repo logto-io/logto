@@ -1,4 +1,4 @@
-import { UserDBEntry, Users } from '@logto/schemas';
+import { UserUpdate, Users } from '@logto/schemas';
 
 import RequestError from '@/errors/RequestError';
 import { createTestPool } from '@/utils/test-utils';
@@ -20,7 +20,7 @@ describe('buildUpdateWhere()', () => {
   });
 
   it('resolves a promise with single entity when `returning` is true', async () => {
-    const user: UserDBEntry = { id: 'foo', username: '123', primaryEmail: 'foo@bar.com' };
+    const user: UserUpdate = { id: 'foo', username: '123', primaryEmail: 'foo@bar.com' };
     const pool = createTestPool(
       'update "users"\nset "username"=$1, "primary_email"=$2\nwhere "id"=$3\nreturning *',
       (_, [username, primaryEmail, id]) => ({
