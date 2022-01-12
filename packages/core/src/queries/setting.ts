@@ -1,4 +1,4 @@
-import { Setting, SettingDBEntry, Settings } from '@logto/schemas';
+import { Setting, SettingUpdate, Settings } from '@logto/schemas';
 import { sql } from 'slonik';
 
 import pool from '@/database/pool';
@@ -13,9 +13,9 @@ export const getSetting = async () =>
     from ${table}
   `);
 
-export const updateSetting = buildUpdateWhere<SettingDBEntry, Setting>(pool, Settings, true);
+export const updateSetting = buildUpdateWhere<SettingUpdate, Setting>(pool, Settings, true);
 
 export const updateSettingById = async (
   id: string,
-  set: Partial<OmitAutoSetFields<SettingDBEntry>>
+  set: Partial<OmitAutoSetFields<SettingUpdate>>
 ) => updateSetting({ set, where: { id } });
