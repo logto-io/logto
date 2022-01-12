@@ -4,9 +4,9 @@ import RequestError from '@/errors/RequestError';
 import koaGuard from '@/middleware/koa-guard';
 import { getSetting, updateSettingById } from '@/queries/setting';
 
-import { AnonymousRouter } from './types';
+import { AuthedRouter } from './types';
 
-export default function settingRoutes<T extends AnonymousRouter>(router: T) {
+export default function settingRoutes<T extends AuthedRouter>(router: T) {
   router.get('/settings', async (ctx, next) => {
     try {
       ctx.body = await getSetting();
