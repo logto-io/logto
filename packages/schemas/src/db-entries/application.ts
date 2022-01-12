@@ -18,7 +18,7 @@ export type ApplicationUpdate = {
   description?: string | null;
   type: ApplicationType;
   oidcClientMetadata: OidcClientMetadata;
-  customClientMetadata?: CustomClientMetadata | null;
+  customClientMetadata?: CustomClientMetadata;
   createdAt?: number;
 };
 
@@ -28,7 +28,7 @@ export type Application = {
   description: string | null;
   type: ApplicationType;
   oidcClientMetadata: OidcClientMetadata;
-  customClientMetadata: CustomClientMetadata | null;
+  customClientMetadata: CustomClientMetadata;
   createdAt: number;
 };
 

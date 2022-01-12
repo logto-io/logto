@@ -10,7 +10,7 @@ import { findAllScopesWithResourceId } from '@/queries/scopes';
 import { findUserById } from '@/queries/user';
 import { routes } from '@/routes/consts';
 
-import { issuer, privateKey } from './consts';
+import { issuer, privateKey, defaultIdTokenTtl, defaultRefreshTokenTtl } from './consts';
 
 export default async function initOidc(app: Koa): Promise<Provider> {
   const keys = [await fromKeyLike(privateKey)];
@@ -105,11 +105,11 @@ export default async function initOidc(app: Koa): Promise<Provider> {
        */
       IdToken: (ctx, token, client) => {
         const { idTokenTtl } = client.metadata();
-        return idTokenTtl ?? 60 * 60;
+        return idTokenTtl ?? defaultIdTokenTtl;
       },
       RefreshToken: (ctx, token, client) => {
         const { refreshTokenTtl } = client.metadata();
-        return refreshTokenTtl ?? 14 * 24 * 60 * 60;
+        return refreshTokenTtl ?? defaultRefreshTokenTtl;
       },
     },
   });
