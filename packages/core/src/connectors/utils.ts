@@ -1,5 +1,6 @@
 import { ConnectorConfig, ConnectorType } from '@logto/schemas';
 
+import RequestError from '@/errors/RequestError';
 import { findConnectorByIdAndType, updateConnector } from '@/queries/connector';
 
 export const getConnectorConfig = async (
@@ -8,7 +9,12 @@ export const getConnectorConfig = async (
 ): Promise<ConnectorConfig> => {
   const connector = await findConnectorByIdAndType(id, type);
   if (!connector) {
-    throw new Error('Can not find connector in database');
+    throw new RequestError({
+      code: 'entity.not_exists_with_id',
+      name: 'connector',
+      id,
+      status: 404,
+    });
   }
 
   return connector.config;
