@@ -5,7 +5,7 @@ import { buildInsertInto } from '@/database/insert-into';
 import pool from '@/database/pool';
 import { buildUpdateWhere } from '@/database/update-where';
 import { convertToIdentifiers, OmitAutoSetFields } from '@/database/utils';
-import RequestError from '@/errors/RequestError';
+import { DeletionError } from '@/errors/SlonikError';
 
 const { table, fields } = convertToIdentifiers(Resources);
 
@@ -60,11 +60,6 @@ export const deleteResourceById = async (id: string) => {
     where id=${id}
   `);
   if (rowCount < 1) {
-    throw new RequestError({
-      code: 'entity.not_exists_with_id',
-      name: Resources.tableSingular,
-      id,
-      status: 404,
-    });
+    throw new DeletionError();
   }
 };

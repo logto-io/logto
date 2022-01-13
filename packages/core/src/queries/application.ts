@@ -1,11 +1,12 @@
 import { Application, ApplicationUpdate, Applications } from '@logto/schemas';
-import { sql, SlonikError } from 'slonik';
+import { sql } from 'slonik';
 
 import { buildFindMany } from '@/database/find-many';
 import { buildInsertInto } from '@/database/insert-into';
 import pool from '@/database/pool';
 import { buildUpdateWhere } from '@/database/update-where';
 import { convertToIdentifiers, OmitAutoSetFields, getTotalRowCount } from '@/database/utils';
+import { DeletionError } from '@/errors/SlonikError';
 
 const { table, fields } = convertToIdentifiers(Applications);
 
@@ -48,6 +49,6 @@ export const deleteApplicationById = async (id: string) => {
     where id=${id}
   `);
   if (rowCount < 1) {
-    throw new SlonikError('Resource not found');
+    throw new DeletionError();
   }
 };
