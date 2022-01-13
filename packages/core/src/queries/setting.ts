@@ -5,7 +5,7 @@ import pool from '@/database/pool';
 import { buildUpdateWhere } from '@/database/update-where';
 import { convertToIdentifiers, OmitAutoSetFields } from '@/database/utils';
 
-export const defaultSettingId = '0000000000';
+export const defaultSettingId = 'default';
 
 const { table, fields } = convertToIdentifiers(Settings);
 
