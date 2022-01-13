@@ -1,5 +1,5 @@
 import { Application, ApplicationUpdate, Applications } from '@logto/schemas';
-import { sql, NotFoundError } from 'slonik';
+import { sql, SlonikError } from 'slonik';
 
 import { buildFindMany } from '@/database/find-many';
 import { buildInsertInto } from '@/database/insert-into';
@@ -48,6 +48,6 @@ export const deleteApplicationById = async (id: string) => {
     where id=${id}
   `);
   if (rowCount < 1) {
-    throw new NotFoundError();
+    throw new SlonikError('Resource not found');
   }
 };
