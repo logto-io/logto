@@ -1,6 +1,9 @@
 import { createHmac } from 'crypto';
 
+import { has } from '@silverhand/essentials';
 import axios from 'axios';
+
+import { ConnectorError } from '../types';
 
 // Aliyun has special excape rules.
 // https://help.aliyun.com/document_detail/29442.html
@@ -25,7 +28,7 @@ export const getSignature = (
     .map((key) => {
       const value = parameters[key];
       if (typeof value !== 'string') {
-        throw new TypeError('Invalid value');
+        throw new ConnectorError('Invalid value');
       }
 
       return `${escaper(key)}=${escaper(value)}`;
@@ -48,7 +51,7 @@ export interface PublicParameters {
   SignatureNonce?: string;
 }
 
-const commomParameters = {
+const commonParameters = {
   Version: '2015-11-23',
   Format: 'json',
   SignatureVersion: '1.0',
@@ -63,7 +66,7 @@ export const request = async <T>(
   const nonce = Math.random();
   const timestamp = new Date().toISOString();
   const finalParameters: Record<string, string> = {
-    ...commomParameters,
+    ...commonParameters,
     ...parameters,
     SignatureNonce: String(nonce),
     Timestamp: timestamp,
@@ -72,10 +75,10 @@ export const request = async <T>(
 
   const payload = new URLSearchParams();
   for (const key in finalParameters) {
-    if (Object.prototype.hasOwnProperty.call(finalParameters, key)) {
+    if (has(finalParameters, key)) {
       const value = finalParameters[key];
       if (typeof value !== 'string') {
-        throw new TypeError('Invalid value');
+        throw new ConnectorError('Invalid value');
       }
 
       payload.append(key, value);

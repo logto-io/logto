@@ -1,6 +1,11 @@
 import { ConnectorType } from '@logto/schemas';
 
-import { ConnectorMetadata, EmailSendMessageFunction } from '../types';
+import {
+  ConnectorError,
+  ConnectorMetadata,
+  EmailMessageTypes,
+  EmailSendMessageFunction,
+} from '../types';
 import { getConnectorConfig } from '../utils';
 import { sendSingleMail } from './send-single-mail';
 
@@ -20,35 +25,35 @@ export const metadata: ConnectorMetadata = {
 };
 
 interface Template {
-  type: 'SIGN_IN' | 'REGISTER' | 'FORGOT_PASSWORD';
+  type: keyof EmailMessageTypes;
   subject: string;
   content: string; // With variable {{code}}, support HTML
 }
 
-export interface AliyunDMConfig {
+export interface AliyunDmConfig {
   accessKeyId: string;
   accessKeySecret: string;
   accountName: string;
   fromAlias?: string;
-  replyToAddress?: boolean;
   templates: Template[];
 }
 
 export const sendMessage: EmailSendMessageFunction = async (address, type, data) => {
-  const config: AliyunDMConfig = await getConnectorConfig<AliyunDMConfig>(
+  const config: AliyunDmConfig = await getConnectorConfig<AliyunDmConfig>(
     metadata.id,
     metadata.type
   );
   const template = config.templates.find((template) => template.type === type);
+
   if (!template) {
-    throw new Error(`Can not find template for type: ${type}`);
+    throw new ConnectorError(`Can not find template for type: ${type}`);
   }
 
   return sendSingleMail(
     {
       AccessKeyId: config.accessKeyId,
       AccountName: config.accountName,
-      ReplyToAddress: config.replyToAddress ? 'true' : 'false',
+      ReplyToAddress: 'false',
       AddressType: '1',
       ToAddress: address,
       FromAlias: config.fromAlias,

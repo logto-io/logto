@@ -1,5 +1,9 @@
 import { PublicParameters, request } from './request';
 
+/**
+ * @doc https://help.aliyun.com/document_detail/29444.html
+ *
+ */
 interface SingleSendMail {
   AccountName: string;
   AddressType: '0' | '1';
@@ -13,6 +17,10 @@ interface SingleSendMail {
   TextBody?: string;
 }
 
+/**
+ * @doc https://help.aliyun.com/document_detail/29444.html
+ *
+ */
 export const sendSingleMail = async (
   parameters: PublicParameters & SingleSendMail,
   accessKeySecret: string

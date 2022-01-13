@@ -16,13 +16,13 @@ export interface ConnectorInstance {
 }
 
 export interface EmailMessageTypes {
-  SIGN_IN: {
+  SignIn: {
     code: string;
   };
-  REGISTER: {
+  Register: {
     code: string;
   };
-  FORGOT_PASSWORD: {
+  ForgotPassword: {
     code: string;
   };
 }
@@ -32,3 +32,5 @@ export type EmailSendMessageFunction<T = unknown> = (
   type: keyof EmailMessageTypes,
   payload: EmailMessageTypes[typeof type]
 ) => Promise<T>;
+
+export class ConnectorError extends Error {}
