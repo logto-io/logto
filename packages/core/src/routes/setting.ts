@@ -19,8 +19,7 @@ export default function settingRoutes<T extends AuthedRouter>(router: T) {
     }),
     async (ctx, next) => {
       const { body: setting } = ctx.guard;
-      const { id } = await getSetting();
-      ctx.body = await updateSetting({ id, ...setting });
+      ctx.body = await updateSetting(setting);
 
       return next();
     }
