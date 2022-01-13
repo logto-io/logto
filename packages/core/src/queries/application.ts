@@ -1,12 +1,11 @@
 import { Application, ApplicationUpdate, Applications } from '@logto/schemas';
-import { sql } from 'slonik';
+import { sql, SlonikError } from 'slonik';
 
 import { buildFindMany } from '@/database/find-many';
 import { buildInsertInto } from '@/database/insert-into';
 import pool from '@/database/pool';
 import { buildUpdateWhere } from '@/database/update-where';
 import { convertToIdentifiers, OmitAutoSetFields, getTotalRowCount } from '@/database/utils';
-import RequestError from '@/errors/RequestError';
 
 const { table, fields } = convertToIdentifiers(Applications);
 
@@ -49,11 +48,6 @@ export const deleteApplicationById = async (id: string) => {
     where id=${id}
   `);
   if (rowCount < 1) {
-    throw new RequestError({
-      code: 'entity.not_exists_with_id',
-      name: Applications.tableSingular,
-      id,
-      status: 404,
-    });
+    throw new SlonikError('Resource not found');
   }
 };
