@@ -7,7 +7,8 @@ import { AuthedRouter } from './types';
 
 export default function settingRoutes<T extends AuthedRouter>(router: T) {
   router.get('/settings', async (ctx, next) => {
-    ctx.body = await getSetting();
+    const { id, ...rest } = await getSetting();
+    ctx.body = rest;
 
     return next();
   });
