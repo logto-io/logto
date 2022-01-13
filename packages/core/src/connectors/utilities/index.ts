@@ -1,13 +1,10 @@
-import { ConnectorConfig, ConnectorType } from '@logto/schemas';
+import { ConnectorConfig } from '@logto/schemas';
 
 import RequestError from '@/errors/RequestError';
-import { findConnectorByIdAndType, updateConnector } from '@/queries/connector';
+import { findConnectorById, updateConnector } from '@/queries/connector';
 
-export const getConnectorConfig = async <T extends ConnectorConfig>(
-  id: string,
-  type: ConnectorType
-): Promise<T> => {
-  const connector = await findConnectorByIdAndType(id, type);
+export const getConnectorConfig = async <T extends ConnectorConfig>(id: string): Promise<T> => {
+  const connector = await findConnectorById(id);
   if (!connector) {
     throw new RequestError({
       code: 'entity.not_exists_with_id',
@@ -22,11 +19,16 @@ export const getConnectorConfig = async <T extends ConnectorConfig>(
 
 export const updateConnectorConfig = async <T extends ConnectorConfig>(
   id: string,
-  type: ConnectorType,
   config: T
 ): Promise<void> => {
   await updateConnector({
-    where: { id, type },
+    where: { id },
     set: { config },
   });
+};
+
+export const validateConfig = async <T extends ConnectorConfig>(config: T): Promise<boolean> => {
+  // TODO: implement a method to check the validity of input config
+  // https://www.notion.so/silverhand/validateConfig-75c602974f1047d19d784e60318ab73f
+  return Boolean(config);
 };

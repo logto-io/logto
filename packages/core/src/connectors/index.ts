@@ -1,4 +1,4 @@
-import { findConnectorByIdAndType, insertConnector } from '@/queries/connector';
+import { findConnectorById, insertConnector } from '@/queries/connector';
 
 import * as AliyunDM from './aliyun-dm';
 import { ConnectorInstance } from './types';
@@ -11,15 +11,15 @@ export const getConnectorById = (id: string): ConnectorInstance | null => {
 
 export const initConnectors = async () => {
   await Promise.all(
-    connectors.map(async ({ metadata: { id, type } }) => {
-      const record = await findConnectorByIdAndType(id, type);
+    connectors.map(async ({ metadata: { id, ...rest } }) => {
+      const record = await findConnectorById(id);
       if (record) {
         return;
       }
 
       await insertConnector({
         id,
-        type,
+        ...rest,
       });
     })
   );
