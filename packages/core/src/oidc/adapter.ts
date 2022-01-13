@@ -23,6 +23,7 @@ export default function postgresAdapter(modelName: string): ReturnType<AdapterFa
       name: client_name,
       type,
       oidcClientMetadata,
+      customClientMetadata,
     }: ApplicationUpdate): AllClientMetadata => ({
       client_id,
       client_name,
@@ -30,6 +31,7 @@ export default function postgresAdapter(modelName: string): ReturnType<AdapterFa
       grant_types: ['authorization_code', 'refresh_token'],
       token_endpoint_auth_method: 'none',
       ...snakecaseKeys(oidcClientMetadata),
+      ...customClientMetadata, // OIDC Provider won't camelcase custom parameter keys
     });
 
     return {

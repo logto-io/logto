@@ -22,6 +22,18 @@ export const oidcClientMetadataGuard = z.object({
 
 export type OidcClientMetadata = z.infer<typeof oidcClientMetadataGuard>;
 
+export enum CustomClientMetadataType {
+  idTokenTtl = 'idTokenTtl',
+  refreshTokenTtl = 'refreshTokenTtl',
+}
+
+export const customClientMetadataGuard = z.object({
+  [CustomClientMetadataType.idTokenTtl]: z.number().optional(),
+  [CustomClientMetadataType.refreshTokenTtl]: z.number().optional(),
+});
+
+export type CustomClientMetadata = z.infer<typeof customClientMetadataGuard>;
+
 export const userLogPayloadGuard = z.object({
   ip: z.string().optional(),
   userAgent: z.string().optional(),
