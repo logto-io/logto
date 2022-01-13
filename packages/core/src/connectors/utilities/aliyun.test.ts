@@ -1,6 +1,6 @@
 import got from 'got';
 
-import { getSignature, request } from './request';
+import { getSignature, request } from './aliyun';
 
 jest.mock('got');
 

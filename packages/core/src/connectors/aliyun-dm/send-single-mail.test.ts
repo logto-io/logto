@@ -1,7 +1,7 @@
-import { request } from './request';
+import { request } from '../utilities/aliyun';
 import { sendSingleMail } from './send-single-mail';
 
-jest.mock('./request');
+jest.mock('../utilities/aliyun');
 
 describe('sendSingleMail', () => {
   it('should call request with action SingleSendMail', async () => {

@@ -1,4 +1,4 @@
-import { PublicParameters, request } from './request';
+import { PublicParameters, request } from '../utilities/aliyun';
 
 /**
  * @doc https://help.aliyun.com/document_detail/29444.html

@@ -6,7 +6,7 @@ import {
   EmailMessageTypes,
   EmailSendMessageFunction,
 } from '../types';
-import { getConnectorConfig } from '../utils';
+import { getConnectorConfig } from '../utilities';
 import { sendSingleMail } from './send-single-mail';
 
 export const metadata: ConnectorMetadata = {
