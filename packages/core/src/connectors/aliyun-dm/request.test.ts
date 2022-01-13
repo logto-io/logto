@@ -1,8 +1,8 @@
-import axios from 'axios';
+import got from 'got';
 
 import { getSignature, request } from './request';
 
-jest.mock('axios');
+jest.mock('got');
 
 describe('getSignature', () => {
   it('should get valid signature', () => {
@@ -48,9 +48,9 @@ describe('request', () => {
       SignatureVersion: '1.0',
     };
     await request('test-endpoint', parameters, 'testsecret');
-    const calledData = (axios.post as jest.MockedFunction<typeof axios.post>).mock.calls[0];
+    const calledData = (got.post as jest.MockedFunction<typeof got.post>).mock.calls[0];
     expect(calledData).not.toBeUndefined();
-    const payload = calledData?.[1] as URLSearchParams;
+    const payload = calledData?.[0].form as URLSearchParams;
     expect(payload.get('AccessKeyId')).toEqual('testid');
     expect(payload.get('Timestamp')).not.toBeNull();
     expect(payload.get('SignatureNonce')).not.toBeNull();

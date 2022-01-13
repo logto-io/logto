@@ -1,7 +1,7 @@
 import { createHmac } from 'crypto';
 
 import { has } from '@silverhand/essentials';
-import axios from 'axios';
+import got from 'got';
 
 import { ConnectorError } from '../types';
 
@@ -86,9 +86,11 @@ export const request = async <T>(
   }
 
   payload.append('Signature', signature);
-  return axios.post<T>(url, payload, {
+  return got.post<T>({
+    url,
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
     },
+    form: payload,
   });
 };

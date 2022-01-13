@@ -21,7 +21,6 @@
     "@logto/phrases": "^0.1.0",
     "@logto/schemas": "^0.1.0",
     "@silverhand/essentials": "^1.1.0",
-    "axios": "^0.24.0",
     "dayjs": "^1.10.5",
     "decamelize": "^5.0.0",
     "dotenv": "^10.0.0",

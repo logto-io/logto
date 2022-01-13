@@ -35,7 +35,6 @@ importers:
       '@types/lodash.pick': ^4.4.6
       '@types/node': ^16.3.1
       '@types/oidc-provider': ^7.8.0
-      axios: ^0.24.0
       codecov: ^3.8.3
       dayjs: ^1.10.5
       decamelize: ^5.0.0
@@ -74,7 +73,6 @@ importers:
       '@logto/phrases': link:../phrases
       '@logto/schemas': link:../schemas
       '@silverhand/essentials': 1.1.2
-      axios: 0.24.0
       dayjs: 1.10.7
       decamelize: 5.0.1
       dotenv: 10.0.0
@@ -4389,14 +4387,6 @@ packages:
   /aws4/1.11.0:
     resolution: {integrity: sha512-xh1Rl34h6Fi1DC2WWKfxUTVqRsNnr6LsKz2+hfwDxQJWmrx8+c7ylaqBMcHfl1U1r2dsifOvKX3LQuLNZ+XSvA==}
     dev: true
-
-  /axios/0.24.0:
-    resolution: {integrity: sha512-Q6cWsys88HoPgAaFAVUb0WpPk0O8iTeisR9IMqy9G8AbO4NlpVknrnQS03zzF9PGAWgO3cgletO3VjV/P7VztA==}
-    dependencies:
-      follow-redirects: 1.14.6
-    transitivePeerDependencies:
-      - debug
-    dev: false
 
   /babel-jest/26.6.3_@babel+core@7.16.0:
     resolution: {integrity: sha512-pl4Q+GAVOHwvjrck6jKjvmGhnO3jHX/xuB9d27f+EJZ/6k+6nMuPjorrYp7s++bKKdANwzElBWnLWaObvTnaZA==}
