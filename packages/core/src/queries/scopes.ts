@@ -4,7 +4,7 @@ import { sql } from 'slonik';
 import { buildInsertInto } from '@/database/insert-into';
 import pool from '@/database/pool';
 import { convertToIdentifiers } from '@/database/utils';
-import RequestError from '@/errors/RequestError';
+import { DeletionError } from '@/errors/SlonikError';
 
 const { table, fields } = convertToIdentifiers(ResourceScopes);
 
@@ -29,11 +29,6 @@ export const deleteScopeById = async (id: string) => {
     where id=${id}
   `);
   if (rowCount < 1) {
-    throw new RequestError({
-      code: 'entity.not_exists_with_id',
-      name: ResourceScopes.tableSingular,
-      id,
-      status: 404,
-    });
+    throw new DeletionError();
   }
 };
