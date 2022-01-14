@@ -5,6 +5,7 @@ import { Provider } from 'oidc-provider';
 
 import koaAuth from '@/middleware/koa-auth';
 import applicationRoutes from '@/routes/application';
+import resourceRoutes from '@/routes/resource';
 import sessionRoutes from '@/routes/session';
 import settingRoutes from '@/routes/setting';
 import statusRoutes from '@/routes/status';
@@ -25,6 +26,7 @@ const createRouters = (provider: Provider) => {
   router.use(koaAuth());
   applicationRoutes(router);
   settingRoutes(router);
+  resourceRoutes(router);
 
   return [anonymousRouter, router];
 };
