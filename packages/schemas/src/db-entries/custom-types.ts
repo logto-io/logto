@@ -10,12 +10,6 @@ export enum ConnectorType {
   Email = 'Email',
   Social = 'Social',
 }
-export enum SignAlgorithmType {
-  RS256 = 'RS256',
-}
-export enum AccessTokenFormatType {
-  jwt = 'jwt',
-}
 export enum UserLogType {
   SignInUsernameAndPassword = 'SignInUsernameAndPassword',
   ExchangeAccessToken = 'ExchangeAccessToken',

@@ -1,33 +1,21 @@
 import { Resource, ResourceUpdate, Resources } from '@logto/schemas';
 import { sql } from 'slonik';
 
+import { buildFindMany } from '@/database/find-many';
 import { buildInsertInto } from '@/database/insert-into';
 import pool from '@/database/pool';
 import { buildUpdateWhere } from '@/database/update-where';
-import { convertToIdentifiers, OmitAutoSetFields } from '@/database/utils';
+import { convertToIdentifiers, OmitAutoSetFields, getTotalRowCount } from '@/database/utils';
 import { DeletionError } from '@/errors/SlonikError';
 
 const { table, fields } = convertToIdentifiers(Resources);
 
-export const findAllResources = async () =>
-  pool.many<Resource>(sql`
-    select ${sql.join(Object.values(fields), sql`,`)}
-    from ${table}
-  `);
+export const findTotalNumberOfResources = async () => getTotalRowCount(table);
 
-export const hasResource = async (indentifier: string) =>
-  pool.exists(sql`
-    select ${fields.id}
-    from ${table}
-    where ${fields.identifier}=${indentifier}
-  `);
+const findResourcesMany = buildFindMany<ResourceUpdate, Resource>(pool, Resources);
 
-export const hasResourceWithId = async (id: string) =>
-  pool.exists(sql`
-    select ${fields.id}
-    from ${table}
-    where ${fields.id}=${id}
-  `);
+export const findAllResources = async (limit: number, offset: number) =>
+  findResourcesMany({ limit, offset });
 
 export const findResourceByIdentifier = async (indentifier: string) =>
   pool.maybeOne<Resource>(sql`

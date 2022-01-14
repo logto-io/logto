@@ -3,15 +3,12 @@
 import { z } from 'zod';
 
 import { GeneratedSchema, Guard } from '../foundations';
-import { AccessTokenFormatType, SignAlgorithmType } from './custom-types';
 
 export type ResourceUpdate = {
   id: string;
   name: string;
   identifier: string;
   accessTokenTtl?: number;
-  accessTokenFormat?: AccessTokenFormatType;
-  signAlgorithm?: SignAlgorithmType;
 };
 
 export type Resource = {
@@ -19,8 +16,6 @@ export type Resource = {
   name: string;
   identifier: string;
   accessTokenTtl: number;
-  accessTokenFormat: AccessTokenFormatType;
-  signAlgorithm: SignAlgorithmType;
 };
 
 const guard: Guard<ResourceUpdate> = z.object({
@@ -28,8 +23,6 @@ const guard: Guard<ResourceUpdate> = z.object({
   name: z.string(),
   identifier: z.string(),
   accessTokenTtl: z.number().optional(),
-  accessTokenFormat: z.nativeEnum(AccessTokenFormatType).optional(),
-  signAlgorithm: z.nativeEnum(SignAlgorithmType).optional(),
 });
 
 export const Resources: GeneratedSchema<ResourceUpdate> = Object.freeze({
@@ -40,9 +33,7 @@ export const Resources: GeneratedSchema<ResourceUpdate> = Object.freeze({
     name: 'name',
     identifier: 'identifier',
     accessTokenTtl: 'access_token_ttl',
-    accessTokenFormat: 'access_token_format',
-    signAlgorithm: 'sign_algorithm',
   },
-  fieldKeys: ['id', 'name', 'identifier', 'accessTokenTtl', 'accessTokenFormat', 'signAlgorithm'],
+  fieldKeys: ['id', 'name', 'identifier', 'accessTokenTtl'],
   guard,
 });
