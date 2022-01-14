@@ -5,8 +5,8 @@ import mount from 'koa-mount';
 import { Provider, errors } from 'oidc-provider';
 
 import postgresAdapter from '@/oidc/adapter';
-import { findResourceByIdentifier } from '@/queries/resources';
-import { findAllScopesWithResourceId } from '@/queries/scopes';
+import { findResourceByIdentifier } from '@/queries/resource';
+import { findAllScopesWithResourceId } from '@/queries/scope';
 import { findUserById } from '@/queries/user';
 import { routes } from '@/routes/consts';
 
