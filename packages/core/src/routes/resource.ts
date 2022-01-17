@@ -41,13 +41,9 @@ export default function resourceRoutes<T extends AuthedRouter>(router: T) {
       body: Resources.guard.omit({ id: true }),
     }),
     async (ctx, next) => {
-      const { name, identifier, ...rest } = ctx.guard.body;
-
       const resource = await insertResource({
         id: resourceId(),
-        name,
-        identifier,
-        ...rest,
+        ...ctx.guard.body,
       });
 
       ctx.body = { ...resource, scopes: [] };
