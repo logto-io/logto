@@ -6,7 +6,8 @@ create table resource_scopes (
     primary key (id),
     constraint fk_resource
         foreign key (resource_id)
-            references resources(id)
+        references resources(id)
+        on delete cascade
 );
 
 create unique index resource_scopes__resource_id_name

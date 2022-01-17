@@ -5,7 +5,7 @@ import { z } from 'zod';
 import { GeneratedSchema, Guard } from '../foundations';
 import { PasswordEncryptionMethod } from './custom-types';
 
-export type UserDBEntry = {
+export type UserUpdate = {
   id: string;
   username?: string | null;
   primaryEmail?: string | null;
@@ -25,7 +25,7 @@ export type User = {
   passwordEncryptionSalt: string | null;
 };
 
-const guard: Guard<UserDBEntry> = z.object({
+const guard: Guard<UserUpdate> = z.object({
   id: z.string(),
   username: z.string().optional(),
   primaryEmail: z.string().optional(),
@@ -35,7 +35,7 @@ const guard: Guard<UserDBEntry> = z.object({
   passwordEncryptionSalt: z.string().optional(),
 });
 
-export const Users: GeneratedSchema<UserDBEntry> = Object.freeze({
+export const Users: GeneratedSchema<UserUpdate> = Object.freeze({
   table: 'users',
   tableSingular: 'user',
   fields: {

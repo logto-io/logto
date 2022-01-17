@@ -1,15 +1,16 @@
+import { customClientMetadataGuard, CustomClientMetadataType } from '@logto/schemas';
 import { fromKeyLike } from 'jose/jwk/from_key_like';
 import Koa from 'koa';
 import mount from 'koa-mount';
 import { Provider, errors } from 'oidc-provider';
 
 import postgresAdapter from '@/oidc/adapter';
-import { findResourceByIdentifier } from '@/queries/resources';
-import { findAllScopesWithResourceId } from '@/queries/scopes';
+import { findResourceByIdentifier } from '@/queries/resource';
+import { findAllScopesWithResourceId } from '@/queries/scope';
 import { findUserById } from '@/queries/user';
 import { routes } from '@/routes/consts';
 
-import { issuer, privateKey } from './consts';
+import { issuer, privateKey, defaultIdTokenTtl, defaultRefreshTokenTtl } from './consts';
 
 export default async function initOidc(app: Koa): Promise<Provider> {
   const keys = [await fromKeyLike(privateKey)];
@@ -47,14 +48,13 @@ export default async function initOidc(app: Koa): Promise<Provider> {
             throw new errors.InvalidTarget();
           }
 
-          const { id, accessTokenFormat, accessTokenTtl: accessTokenTTl } = resourceServer;
+          const { id, accessTokenTtl: accessTokenTTL } = resourceServer;
           const scopes = await findAllScopesWithResourceId(id);
           const scope = scopes.map(({ name }) => name).join(' ');
 
           return {
             scope,
-            accessTokenFormat,
-            accessTokenTTl,
+            accessTokenTTL,
           };
         },
       },
@@ -68,6 +68,15 @@ export default async function initOidc(app: Koa): Promise<Provider> {
             return routes.signIn.consent;
           default:
             throw new Error(`Prompt not supported: ${interaction.prompt.name}`);
+        }
+      },
+    },
+    extraClientMetadata: {
+      properties: Object.keys(CustomClientMetadataType),
+      validator: (_ctx, key, value) => {
+        const result = customClientMetadataGuard.pick({ [key]: true }).safeParse({ key: value });
+        if (!result.success) {
+          throw new errors.InvalidClientMetadata(key);
         }
       },
     },
@@ -88,6 +97,19 @@ export default async function initOidc(app: Koa): Promise<Provider> {
           return { sub };
         },
       };
+    },
+    ttl: {
+      /**
+       * [OIDC Provider Default Settings](https://github.com/panva/node-oidc-provider/blob/main/docs/README.md#ttl)
+       */
+      IdToken: (ctx, token, client) => {
+        const { idTokenTtl } = client.metadata();
+        return idTokenTtl ?? defaultIdTokenTtl;
+      },
+      RefreshToken: (ctx, token, client) => {
+        const { refreshTokenTtl } = client.metadata();
+        return refreshTokenTtl ?? defaultRefreshTokenTtl;
+      },
     },
   });
   app.use(mount('/oidc', oidc.app));

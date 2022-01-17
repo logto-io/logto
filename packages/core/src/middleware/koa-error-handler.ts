@@ -3,6 +3,7 @@ import { RequestErrorBody } from '@logto/schemas';
 import decamelize from 'decamelize';
 import { Middleware } from 'koa';
 import { errors } from 'oidc-provider';
+import { NotFoundError } from 'slonik';
 
 import RequestError from '@/errors/RequestError';
 
@@ -29,6 +30,13 @@ export default function koaErrorHandler<StateT, ContextT>(): Middleware<
           code: `oidc.${decamelize(error.name)}` as LogtoErrorCode,
           data: error.error_detail,
         };
+        return;
+      }
+
+      if (error instanceof NotFoundError) {
+        const error = new RequestError({ code: 'entity.not_found', status: 404 });
+        ctx.status = error.status;
+        ctx.body = error.body;
         return;
       }
 

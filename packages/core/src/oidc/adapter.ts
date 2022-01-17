@@ -1,4 +1,4 @@
-import { ApplicationDBEntry } from '@logto/schemas';
+import { ApplicationUpdate } from '@logto/schemas';
 import dayjs from 'dayjs';
 import { AdapterFactory, AllClientMetadata } from 'oidc-provider';
 import snakecaseKeys from 'snakecase-keys';
@@ -23,13 +23,15 @@ export default function postgresAdapter(modelName: string): ReturnType<AdapterFa
       name: client_name,
       type,
       oidcClientMetadata,
-    }: ApplicationDBEntry): AllClientMetadata => ({
+      customClientMetadata,
+    }: ApplicationUpdate): AllClientMetadata => ({
       client_id,
       client_name,
       application_type: getApplicationTypeString(type),
       grant_types: ['authorization_code', 'refresh_token'],
       token_endpoint_auth_method: 'none',
       ...snakecaseKeys(oidcClientMetadata),
+      ...customClientMetadata, // OIDC Provider won't camelcase custom parameter keys
     });
 
     return {

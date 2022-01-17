@@ -5,19 +5,20 @@ import { z } from 'zod';
 import {
   OidcClientMetadata,
   oidcClientMetadataGuard,
+  CustomClientMetadata,
+  customClientMetadataGuard,
   GeneratedSchema,
   Guard,
 } from '../foundations';
 import { ApplicationType } from './custom-types';
 
-export type ApplicationDBEntry = {
+export type ApplicationUpdate = {
   id: string;
   name: string;
   description?: string | null;
   type: ApplicationType;
   oidcClientMetadata: OidcClientMetadata;
-  idTokenTtl?: number;
-  refreshTokenTtl?: number;
+  customClientMetadata?: CustomClientMetadata;
   createdAt?: number;
 };
 
@@ -27,23 +28,21 @@ export type Application = {
   description: string | null;
   type: ApplicationType;
   oidcClientMetadata: OidcClientMetadata;
-  idTokenTtl: number;
-  refreshTokenTtl: number;
+  customClientMetadata: CustomClientMetadata;
   createdAt: number;
 };
 
-const guard: Guard<ApplicationDBEntry> = z.object({
+const guard: Guard<ApplicationUpdate> = z.object({
   id: z.string(),
   name: z.string(),
   description: z.string().optional(),
   type: z.nativeEnum(ApplicationType),
   oidcClientMetadata: oidcClientMetadataGuard,
-  idTokenTtl: z.number().optional(),
-  refreshTokenTtl: z.number().optional(),
+  customClientMetadata: customClientMetadataGuard.optional(),
   createdAt: z.number().optional(),
 });
 
-export const Applications: GeneratedSchema<ApplicationDBEntry> = Object.freeze({
+export const Applications: GeneratedSchema<ApplicationUpdate> = Object.freeze({
   table: 'applications',
   tableSingular: 'application',
   fields: {
@@ -52,8 +51,7 @@ export const Applications: GeneratedSchema<ApplicationDBEntry> = Object.freeze({
     description: 'description',
     type: 'type',
     oidcClientMetadata: 'oidc_client_metadata',
-    idTokenTtl: 'id_token_ttl',
-    refreshTokenTtl: 'refresh_token_ttl',
+    customClientMetadata: 'custom_client_metadata',
     createdAt: 'created_at',
   },
   fieldKeys: [
@@ -62,8 +60,7 @@ export const Applications: GeneratedSchema<ApplicationDBEntry> = Object.freeze({
     'description',
     'type',
     'oidcClientMetadata',
-    'idTokenTtl',
-    'refreshTokenTtl',
+    'customClientMetadata',
     'createdAt',
   ],
   guard,
