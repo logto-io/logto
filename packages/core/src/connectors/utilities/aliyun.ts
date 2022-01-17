@@ -60,7 +60,7 @@ const commonParameters = {
 
 export const request = async <T>(
   url: string,
-  parameters: Record<string, string> & PublicParameters,
+  parameters: PublicParameters & Record<string, string>,
   accessKeySecret: string
 ) => {
   const finalParameters: Record<string, string> = {
