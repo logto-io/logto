@@ -12,4 +12,25 @@ export interface ConnectorMetadata {
 // The name `Connector` is used for database, use `ConnectorInstance` to avoid confusing.
 export interface ConnectorInstance {
   metadata: ConnectorMetadata;
+  sendMessage: EmailSendMessageFunction;
 }
+
+export interface EmailMessageTypes {
+  SignIn: {
+    code: string;
+  };
+  Register: {
+    code: string;
+  };
+  ForgotPassword: {
+    code: string;
+  };
+}
+
+export type EmailSendMessageFunction<T = unknown> = (
+  address: string,
+  type: keyof EmailMessageTypes,
+  payload: EmailMessageTypes[typeof type]
+) => Promise<T>;
+
+export class ConnectorError extends Error {}
