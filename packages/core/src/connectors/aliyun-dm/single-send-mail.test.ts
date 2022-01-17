@@ -1,11 +1,11 @@
 import { request } from '../utilities/aliyun';
-import { sendSingleMail } from './send-single-mail';
+import { singleSendMail } from './single-send-mail';
 
 jest.mock('../utilities/aliyun');
 
-describe('sendSingleMail', () => {
+describe('singleSendMail', () => {
   it('should call request with action SingleSendMail', async () => {
-    await sendSingleMail(
+    await singleSendMail(
       {
         AccessKeyId: '<access-key-id>',
         AccountName: 'noreply@example.com',

@@ -22,7 +22,7 @@ export const getSignature = (
   secret: string,
   method: string
 ) => {
-  const canoQuery = Object.keys(parameters)
+  const canonicalizedQuery = Object.keys(parameters)
     .slice()
     .sort()
     .map((key) => {
@@ -35,7 +35,7 @@ export const getSignature = (
     })
     .join('&');
 
-  const stringToSign = `${method.toUpperCase()}&${escaper('/')}&${escaper(canoQuery)}`;
+  const stringToSign = `${method.toUpperCase()}&${escaper('/')}&${escaper(canonicalizedQuery)}`;
   return createHmac('sha1', `${secret}&`).update(stringToSign).digest('base64');
 };
 

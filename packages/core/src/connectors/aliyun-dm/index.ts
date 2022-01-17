@@ -7,7 +7,7 @@ import {
   EmailSendMessageFunction,
 } from '../types';
 import { getConnectorConfig } from '../utilities';
-import { sendSingleMail } from './send-single-mail';
+import { singleSendMail } from './single-send-mail';
 
 export const metadata: ConnectorMetadata = {
   id: 'aliyun-dm',
@@ -49,7 +49,7 @@ export const sendMessage: EmailSendMessageFunction = async (address, type, data)
     throw new ConnectorError(`Can not find template for type: ${type}`);
   }
 
-  return sendSingleMail(
+  return singleSendMail(
     {
       AccessKeyId: config.accessKeyId,
       AccountName: config.accountName,

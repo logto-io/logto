@@ -23,7 +23,7 @@ const Endpoint = 'https://dm.aliyuncs.com/';
  * @doc https://help.aliyun.com/document_detail/29444.html
  *
  */
-export const sendSingleMail = async (
+export const singleSendMail = async (
   parameters: PublicParameters & SingleSendMail,
   accessKeySecret: string
 ) => {
