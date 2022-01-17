@@ -27,8 +27,10 @@ export const updateConnectorConfig = async <T extends ConnectorConfig>(
   });
 };
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const validateConfig = async <T extends ConnectorConfig>(config: T): Promise<boolean> => {
   // TODO: implement a method to check the validity of input config
+  // (could vary by connectors, set `true` as default value to avoid blocking)
   // https://www.notion.so/silverhand/validateConfig-75c602974f1047d19d784e60318ab73f
-  return Boolean(config);
+  return true;
 };

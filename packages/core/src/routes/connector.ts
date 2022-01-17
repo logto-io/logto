@@ -1,7 +1,7 @@
 import { Connectors } from '@logto/schemas';
 import { object, string } from 'zod';
 
-import { updateConnectorConfig, validateConfig } from '@/connectors/utils';
+import { validateConfig } from '@/connectors/utilities';
 import koaGuard from '@/middleware/koa-guard';
 import { findAllConnectors, findConnectorById, updateConnector } from '@/queries/connector';
 
@@ -38,12 +38,10 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
         params: { id },
         body: { type, enabled, config },
       } = ctx.guard;
-      await updateConnector({ set: { type, enabled }, where: { id } });
       if (config && (await validateConfig(config))) {
-        await updateConnectorConfig(id, config);
+        await updateConnector({ set: { type, enabled, config }, where: { id } });
         ctx.body = { type, enabled, config };
       } else {
-        ctx.body = { type, enabled };
         throw new Error('Input invalid config: ' + JSON.stringify(config));
       }
 

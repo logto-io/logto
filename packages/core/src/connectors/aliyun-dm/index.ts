@@ -54,10 +54,7 @@ const configGuard = z.object({
 export type AliyunDmConfig = z.infer<typeof configGuard>;
 
 export const sendMessage: EmailSendMessageFunction = async (address, type, data) => {
-  const config: AliyunDmConfig = await getConnectorConfig<AliyunDmConfig>(
-    metadata.id,
-    metadata.type
-  );
+  const config: AliyunDmConfig = await getConnectorConfig<AliyunDmConfig>(metadata.id);
   const template = config.templates.find((template) => template.type === type);
 
   if (!template) {
