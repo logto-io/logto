@@ -27,8 +27,9 @@ export default function resourceRoutes<T extends AuthedRouter>(router: T) {
       findAllResources(limit, offset),
     ]);
 
-    // Return totalCount to pagination middleware
     ctx.pagination.totalCount = count;
+
+    // TODO: query scopes of all resources and insert into the response data
     ctx.body = resources;
 
     return next();
@@ -37,22 +38,20 @@ export default function resourceRoutes<T extends AuthedRouter>(router: T) {
   router.post(
     '/resources',
     koaGuard({
-      body: Resources.guard
-        .omit({ id: true })
-        .partial()
-        .merge(Resources.guard.pick({ name: true, identifier: true })),
+      body: Resources.guard.omit({ id: true }),
     }),
     async (ctx, next) => {
       const { name, identifier, ...rest } = ctx.guard.body;
 
-      ctx.body = await insertResource({
+      const resource = await insertResource({
         id: resourceId(),
         name,
         identifier,
         ...rest,
       });
 
-      // TODO: query scopes of all resources and insert into the response data
+      ctx.body = { ...resource, scopes: [] };
+
       return next();
     }
   );
@@ -87,7 +86,12 @@ export default function resourceRoutes<T extends AuthedRouter>(router: T) {
         body,
       } = ctx.guard;
 
-      ctx.body = await updateResourceById(id, body);
+      const [scopes, resource] = await Promise.all([
+        findAllScopesWithResourceId(id),
+        updateResourceById(id, body),
+      ]);
+
+      ctx.body = { ...resource, scopes };
       return next();
     }
   );
