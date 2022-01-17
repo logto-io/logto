@@ -63,13 +63,11 @@ export const request = async <T>(
   parameters: Record<string, string> & PublicParameters,
   accessKeySecret: string
 ) => {
-  const nonce = Math.random();
-  const timestamp = new Date().toISOString();
   const finalParameters: Record<string, string> = {
     ...commonParameters,
     ...parameters,
-    SignatureNonce: String(nonce),
-    Timestamp: timestamp,
+    SignatureNonce: String(Math.random()),
+    Timestamp: new Date().toISOString(),
   };
   const signature = getSignature(finalParameters, accessKeySecret, 'POST');
 

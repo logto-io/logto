@@ -17,6 +17,8 @@ interface SingleSendMail {
   TextBody?: string;
 }
 
+const Endpoint = 'https://dm.aliyuncs.com/';
+
 /**
  * @doc https://help.aliyun.com/document_detail/29444.html
  *
@@ -26,7 +28,7 @@ export const sendSingleMail = async (
   accessKeySecret: string
 ) => {
   return request<{ RequestId: string; EnvId: string }>(
-    'https://dm.aliyuncs.com/',
+    Endpoint,
     { Action: 'SingleSendMail', ...parameters },
     accessKeySecret
   );
