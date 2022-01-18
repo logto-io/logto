@@ -1,10 +1,12 @@
-import { ConnectorType } from '@logto/schemas';
+import { ConnectorConfig, ConnectorType } from '@logto/schemas';
 
 import {
+  ConnectorConfigError,
   ConnectorError,
   ConnectorMetadata,
   EmailMessageTypes,
   EmailSendMessageFunction,
+  ValidateConfig,
 } from '../types';
 import { getConnectorConfig } from '../utilities';
 import { singleSendMail } from './single-send-mail';
@@ -24,13 +26,31 @@ export const metadata: ConnectorMetadata = {
   },
 };
 
+export const validateConfig: ValidateConfig<AliyunDmConfig> = async (config: AliyunDmConfig) => {
+  if (!config.accessKeyId) {
+    throw new ConnectorConfigError('Missing accessKeyId');
+  }
+
+  if (!config.accessKeySecret) {
+    throw new ConnectorConfigError('Missing accessKeySecret');
+  }
+
+  if (!config.accountName) {
+    throw new ConnectorConfigError('Missing accountName');
+  }
+
+  if (!Array.isArray(config.templates)) {
+    throw new ConnectorConfigError('Missing templates');
+  }
+};
+
 interface Template {
   type: keyof EmailMessageTypes;
   subject: string;
   content: string; // With variable {{code}}, support HTML
 }
 
-export interface AliyunDmConfig {
+export interface AliyunDmConfig extends ConnectorConfig {
   accessKeyId: string;
   accessKeySecret: string;
   accountName: string;

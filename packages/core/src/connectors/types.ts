@@ -1,5 +1,5 @@
 import { Languages } from '@logto/phrases';
-import { ConnectorType } from '@logto/schemas';
+import { ConnectorConfig, ConnectorType } from '@logto/schemas';
 
 export interface ConnectorMetadata {
   id: string;
@@ -34,3 +34,7 @@ export type EmailSendMessageFunction<T = unknown> = (
 ) => Promise<T>;
 
 export class ConnectorError extends Error {}
+
+export class ConnectorConfigError extends ConnectorError {}
+
+export type ValidateConfig<T extends ConnectorConfig> = (config: T) => Promise<void>;
