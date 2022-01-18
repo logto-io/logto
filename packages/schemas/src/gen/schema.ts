@@ -6,7 +6,7 @@ import { TableWithType } from './types';
 
 export const generateSchema = ({ name, fields }: TableWithType) => {
   const modelName = pluralize(camelcase(name, { pascalCase: true }), 1);
-  const databaseEntryType = `${modelName}Update`;
+  const databaseEntryType = `${modelName}Create`;
   return [
     `export type ${databaseEntryType} = {`,
     ...fields.map(
@@ -28,7 +28,7 @@ export const generateSchema = ({ name, fields }: TableWithType) => {
     ),
     '};',
     '',
-    `const guard: Guard<${databaseEntryType}> = z.object({`,
+    `const createGuard: Guard<${databaseEntryType}> = z.object({`,
     ...fields.map(({ name, type, isArray, isEnum, nullable, hasDefaultValue, tsType }) => {
       if (tsType) {
         return `  ${camelcase(name)}: ${camelcase(tsType)}Guard${conditionalString(
@@ -55,7 +55,7 @@ export const generateSchema = ({ name, fields }: TableWithType) => {
     '  fieldKeys: [',
     ...fields.map(({ name }) => `    '${camelcase(name)}',`),
     '  ],',
-    '  guard,',
+    '  createGuard,',
     '});',
   ].join('\n');
 };

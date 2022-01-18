@@ -4,7 +4,7 @@ import { z } from 'zod';
 
 import { GeneratedSchema, Guard } from '../foundations';
 
-export type ResourceUpdate = {
+export type ResourceCreate = {
   id: string;
   name: string;
   identifier: string;
@@ -18,14 +18,14 @@ export type Resource = {
   accessTokenTtl: number;
 };
 
-const guard: Guard<ResourceUpdate> = z.object({
+const createGuard: Guard<ResourceCreate> = z.object({
   id: z.string(),
   name: z.string(),
   identifier: z.string(),
   accessTokenTtl: z.number().optional(),
 });
 
-export const Resources: GeneratedSchema<ResourceUpdate> = Object.freeze({
+export const Resources: GeneratedSchema<ResourceCreate> = Object.freeze({
   table: 'resources',
   tableSingular: 'resource',
   fields: {
@@ -35,5 +35,5 @@ export const Resources: GeneratedSchema<ResourceUpdate> = Object.freeze({
     accessTokenTtl: 'access_token_ttl',
   },
   fieldKeys: ['id', 'name', 'identifier', 'accessTokenTtl'],
-  guard,
+  createGuard,
 });

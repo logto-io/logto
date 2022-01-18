@@ -1,4 +1,4 @@
-import { ResourceScope, ResourceScopeUpdate, ResourceScopes } from '@logto/schemas';
+import { ResourceScope, ResourceScopeCreate, ResourceScopes } from '@logto/schemas';
 import { sql } from 'slonik';
 
 import { buildInsertInto } from '@/database/insert-into';
@@ -15,7 +15,7 @@ export const findAllScopesWithResourceId = async (resourceId: string) =>
     where ${fields.resourceId}=${resourceId}
   `);
 
-export const insertScope = buildInsertInto<ResourceScopeUpdate, ResourceScope>(
+export const insertScope = buildInsertInto<ResourceScopeCreate, ResourceScope>(
   pool,
   ResourceScopes,
   {

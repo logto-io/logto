@@ -5,7 +5,7 @@ import { z } from 'zod';
 import { ConnectorConfig, connectorConfigGuard, GeneratedSchema, Guard } from '../foundations';
 import { ConnectorType } from './custom-types';
 
-export type ConnectorUpdate = {
+export type ConnectorCreate = {
   id: string;
   enabled?: boolean;
   type: ConnectorType;
@@ -21,7 +21,7 @@ export type Connector = {
   createdAt: number;
 };
 
-const guard: Guard<ConnectorUpdate> = z.object({
+const createGuard: Guard<ConnectorCreate> = z.object({
   id: z.string(),
   enabled: z.boolean().optional(),
   type: z.nativeEnum(ConnectorType),
@@ -29,7 +29,7 @@ const guard: Guard<ConnectorUpdate> = z.object({
   createdAt: z.number().optional(),
 });
 
-export const Connectors: GeneratedSchema<ConnectorUpdate> = Object.freeze({
+export const Connectors: GeneratedSchema<ConnectorCreate> = Object.freeze({
   table: 'connectors',
   tableSingular: 'connector',
   fields: {
@@ -40,5 +40,5 @@ export const Connectors: GeneratedSchema<ConnectorUpdate> = Object.freeze({
     createdAt: 'created_at',
   },
   fieldKeys: ['id', 'enabled', 'type', 'config', 'createdAt'],
-  guard,
+  createGuard,
 });
