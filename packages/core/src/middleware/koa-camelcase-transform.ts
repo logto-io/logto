@@ -3,7 +3,6 @@ import { Middleware } from 'koa';
 
 export enum ResponseKeyCase {
   camelcase = 'camelcase',
-  snakecase = 'snakecase',
 }
 
 export default function koaCamelcaseTransform<StateT, ContextT>(): Middleware<
@@ -15,7 +14,7 @@ export default function koaCamelcaseTransform<StateT, ContextT>(): Middleware<
     await next();
     if (
       ctx.headers['response-keycase'] === ResponseKeyCase.camelcase &&
-      ctx.body &&
+      ctx.body !== null &&
       typeof ctx.body === 'object'
     ) {
       ctx.body = camelcaseKeys(ctx.body, { deep: true });

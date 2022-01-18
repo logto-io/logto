@@ -27,10 +27,10 @@ describe('koa-camelcase-transform', () => {
     expect(ctx.body).toHaveProperty('redirect_uri');
   });
 
-  it('should not transform body to camelcase with keycase header snakecase', async () => {
+  it('should not transform body to camelcase with keycase header not recognized', async () => {
     const ctx = createMockContext({
       headers: {
-        'response-keycase': ResponseKeyCase.snakecase,
+        'response-keycase': 'dummycase',
       },
     });
 
