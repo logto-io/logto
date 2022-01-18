@@ -72,7 +72,7 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
         body: { enabled, config },
         body,
       } = ctx.guard;
-      const validEnable = typeof enabled === 'boolean';
+      const validEnable = Boolean(enabled && typeof enabled === 'boolean');
       const validConfig = Boolean(config && (await validateConfig(config)));
       if (validEnable && validConfig) {
         await updateConnector({ set: body, where: { id } });
