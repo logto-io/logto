@@ -25,6 +25,7 @@ export interface EmailMessageTypes {
   ForgotPassword: {
     code: string;
   };
+  Test: Record<string, unknown>;
 }
 
 export type EmailSendMessageFunction<T = unknown> = (
