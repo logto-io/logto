@@ -6,7 +6,7 @@ import { TableWithType } from './types';
 
 export const generateSchema = ({ name, fields }: TableWithType) => {
   const modelName = pluralize(camelcase(name, { pascalCase: true }), 1);
-  const databaseEntryType = `${modelName}Create`;
+  const databaseEntryType = `Create${modelName}`;
   return [
     `export type ${databaseEntryType} = {`,
     ...fields.map(

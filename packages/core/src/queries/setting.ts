@@ -1,4 +1,4 @@
-import { Setting, SettingCreate, Settings } from '@logto/schemas';
+import { Setting, CreateSetting, Settings } from '@logto/schemas';
 import { sql } from 'slonik';
 
 import pool from '@/database/pool';
@@ -16,8 +16,8 @@ export const getSetting = async () =>
     where ${fields.id}=${defaultSettingId}
   `);
 
-export const updateSetting = async (setting: Partial<OmitAutoSetFields<SettingCreate>>) => {
-  return buildUpdateWhere<SettingCreate, Setting>(
+export const updateSetting = async (setting: Partial<OmitAutoSetFields<CreateSetting>>) => {
+  return buildUpdateWhere<CreateSetting, Setting>(
     pool,
     Settings,
     true

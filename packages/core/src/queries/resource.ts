@@ -1,4 +1,4 @@
-import { Resource, ResourceCreate, Resources } from '@logto/schemas';
+import { Resource, CreateResource, Resources } from '@logto/schemas';
 import { sql } from 'slonik';
 
 import { buildFindMany } from '@/database/find-many';
@@ -12,7 +12,7 @@ const { table, fields } = convertToIdentifiers(Resources);
 
 export const findTotalNumberOfResources = async () => getTotalRowCount(table);
 
-const findResourcesMany = buildFindMany<ResourceCreate, Resource>(pool, Resources);
+const findResourcesMany = buildFindMany<CreateResource, Resource>(pool, Resources);
 
 export const findAllResources = async (limit: number, offset: number) =>
   findResourcesMany({ limit, offset });
@@ -31,15 +31,15 @@ export const findResourceById = async (id: string) =>
     where ${fields.id}=${id}
   `);
 
-export const insertResource = buildInsertInto<ResourceCreate, Resource>(pool, Resources, {
+export const insertResource = buildInsertInto<CreateResource, Resource>(pool, Resources, {
   returning: true,
 });
 
-const updateResource = buildUpdateWhere<ResourceCreate, Resource>(pool, Resources, true);
+const updateResource = buildUpdateWhere<CreateResource, Resource>(pool, Resources, true);
 
 export const updateResourceById = async (
   id: string,
-  set: Partial<OmitAutoSetFields<ResourceCreate>>
+  set: Partial<OmitAutoSetFields<CreateResource>>
 ) => updateResource({ set, where: { id } });
 
 export const deleteResourceById = async (id: string) => {

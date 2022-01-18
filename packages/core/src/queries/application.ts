@@ -1,4 +1,4 @@
-import { Application, ApplicationCreate, Applications } from '@logto/schemas';
+import { Application, CreateApplication, Applications } from '@logto/schemas';
 import { sql } from 'slonik';
 
 import { buildFindMany } from '@/database/find-many';
@@ -12,7 +12,7 @@ const { table, fields } = convertToIdentifiers(Applications);
 
 export const findTotalNumberOfApplications = async () => getTotalRowCount(table);
 
-const findApplicationMany = buildFindMany<ApplicationCreate, Application>(pool, Applications);
+const findApplicationMany = buildFindMany<CreateApplication, Application>(pool, Applications);
 
 export const findAllApplications = async (limit: number, offset: number) =>
   findApplicationMany({ limit, offset });
@@ -24,7 +24,7 @@ export const findApplicationById = async (id: string) =>
     where ${fields.id}=${id}
   `);
 
-export const insertApplication = buildInsertInto<ApplicationCreate, Application>(
+export const insertApplication = buildInsertInto<CreateApplication, Application>(
   pool,
   Applications,
   {
@@ -32,7 +32,7 @@ export const insertApplication = buildInsertInto<ApplicationCreate, Application>
   }
 );
 
-const updateApplication = buildUpdateWhere<ApplicationCreate, Application>(
+const updateApplication = buildUpdateWhere<CreateApplication, Application>(
   pool,
   Applications,
   true
@@ -40,7 +40,7 @@ const updateApplication = buildUpdateWhere<ApplicationCreate, Application>(
 
 export const updateApplicationById = async (
   id: string,
-  set: Partial<OmitAutoSetFields<ApplicationCreate>>
+  set: Partial<OmitAutoSetFields<CreateApplication>>
 ) => updateApplication({ set, where: { id } });
 
 export const deleteApplicationById = async (id: string) => {

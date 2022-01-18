@@ -1,4 +1,4 @@
-import { Connector, ConnectorCreate, Connectors, ConnectorType } from '@logto/schemas';
+import { Connector, CreateConnector, Connectors, ConnectorType } from '@logto/schemas';
 import { sql } from 'slonik';
 
 import { buildInsertInto } from '@/database/insert-into';
@@ -15,8 +15,8 @@ export const findConnectorByIdAndType = async (id: string, type: ConnectorType) 
     where ${fields.id}=${id} and ${fields.type}=${type}
   `);
 
-export const insertConnector = buildInsertInto<ConnectorCreate, Connector>(pool, Connectors, {
+export const insertConnector = buildInsertInto<CreateConnector, Connector>(pool, Connectors, {
   returning: true,
 });
 
-export const updateConnector = buildUpdateWhere<ConnectorCreate>(pool, Connectors);
+export const updateConnector = buildUpdateWhere<CreateConnector>(pool, Connectors);

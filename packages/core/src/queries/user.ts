@@ -1,4 +1,4 @@
-import { User, UserCreate, Users } from '@logto/schemas';
+import { User, CreateUser, Users } from '@logto/schemas';
 import { sql } from 'slonik';
 
 import { buildInsertInto } from '@/database/insert-into';
@@ -37,7 +37,7 @@ export const hasUserWithId = async (id: string) =>
     where ${fields.id}=${id}
   `);
 
-export const insertUser = buildInsertInto<UserCreate, User>(pool, Users, { returning: true });
+export const insertUser = buildInsertInto<CreateUser, User>(pool, Users, { returning: true });
 
 export const findAllUsers = async () =>
   pool.many<User>(sql`
@@ -45,9 +45,9 @@ export const findAllUsers = async () =>
     from ${table}
   `);
 
-const updateUser = buildUpdateWhere<UserCreate, User>(pool, Users, true);
+const updateUser = buildUpdateWhere<CreateUser, User>(pool, Users, true);
 
-export const updateUserById = async (id: string, set: Partial<OmitAutoSetFields<UserCreate>>) =>
+export const updateUserById = async (id: string, set: Partial<OmitAutoSetFields<CreateUser>>) =>
   updateUser({ set, where: { id } });
 
 export const deleteUserById = async (id: string) => {

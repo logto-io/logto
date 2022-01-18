@@ -1,6 +1,6 @@
 import {
   OidcModelInstance,
-  OidcModelInstanceCreate,
+  CreateOidcModelInstance,
   OidcModelInstancePayload,
   OidcModelInstances,
 } from '@logto/schemas';
@@ -24,7 +24,7 @@ const withConsumed = <T>(data: T, consumedAt?: number | null): WithConsumed<T> =
 const convertResult = (result: QueryResult | null) =>
   conditional(result && withConsumed(result.payload, result.consumedAt));
 
-export const upsertInstance = buildInsertInto<OidcModelInstanceCreate>(pool, OidcModelInstances, {
+export const upsertInstance = buildInsertInto<CreateOidcModelInstance>(pool, OidcModelInstances, {
   onConflict: {
     fields: [fields.modelName, fields.id],
     setExcludedFields: [fields.payload, fields.expiresAt],

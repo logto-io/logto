@@ -4,7 +4,7 @@ import { z } from 'zod';
 
 import { GeneratedSchema, Guard } from '../foundations';
 
-export type ResourceScopeCreate = {
+export type CreateResourceScope = {
   id: string;
   name: string;
   description: string;
@@ -18,14 +18,14 @@ export type ResourceScope = {
   resourceId: string;
 };
 
-const createGuard: Guard<ResourceScopeCreate> = z.object({
+const createGuard: Guard<CreateResourceScope> = z.object({
   id: z.string(),
   name: z.string(),
   description: z.string(),
   resourceId: z.string(),
 });
 
-export const ResourceScopes: GeneratedSchema<ResourceScopeCreate> = Object.freeze({
+export const ResourceScopes: GeneratedSchema<CreateResourceScope> = Object.freeze({
   table: 'resource_scopes',
   tableSingular: 'resource_scope',
   fields: {
