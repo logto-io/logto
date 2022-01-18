@@ -9,7 +9,7 @@ import {
   Guard,
 } from '../foundations';
 
-export type OidcModelInstanceUpdate = {
+export type CreateOidcModelInstance = {
   modelName: string;
   id: string;
   payload: OidcModelInstancePayload;
@@ -25,15 +25,15 @@ export type OidcModelInstance = {
   consumedAt: number | null;
 };
 
-const guard: Guard<OidcModelInstanceUpdate> = z.object({
+const createGuard: Guard<CreateOidcModelInstance> = z.object({
   modelName: z.string(),
   id: z.string(),
   payload: oidcModelInstancePayloadGuard,
   expiresAt: z.number(),
-  consumedAt: z.number().optional(),
+  consumedAt: z.number().nullable().optional(),
 });
 
-export const OidcModelInstances: GeneratedSchema<OidcModelInstanceUpdate> = Object.freeze({
+export const OidcModelInstances: GeneratedSchema<CreateOidcModelInstance> = Object.freeze({
   table: 'oidc_model_instances',
   tableSingular: 'oidc_model_instance',
   fields: {
@@ -44,5 +44,5 @@ export const OidcModelInstances: GeneratedSchema<OidcModelInstanceUpdate> = Obje
     consumedAt: 'consumed_at',
   },
   fieldKeys: ['modelName', 'id', 'payload', 'expiresAt', 'consumedAt'],
-  guard,
+  createGuard,
 });

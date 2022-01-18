@@ -37,10 +37,10 @@ export default function applicationRoutes<T extends AuthedRouter>(router: T) {
   router.post(
     '/applications',
     koaGuard({
-      body: Applications.guard
+      body: Applications.createGuard
         .omit({ id: true, createdAt: true })
         .partial()
-        .merge(Applications.guard.pick({ name: true, type: true })),
+        .merge(Applications.createGuard.pick({ name: true, type: true })),
     }),
     async (ctx, next) => {
       const { name, type, oidcClientMetadata, ...rest } = ctx.guard.body;
@@ -75,7 +75,7 @@ export default function applicationRoutes<T extends AuthedRouter>(router: T) {
     '/applications/:id',
     koaGuard({
       params: object({ id: string().min(1) }),
-      body: Applications.guard.omit({ id: true, createdAt: true }).partial(),
+      body: Applications.createGuard.omit({ id: true, createdAt: true }).partial(),
     }),
     async (ctx, next) => {
       const {

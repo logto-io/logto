@@ -38,7 +38,7 @@ export default function resourceRoutes<T extends AuthedRouter>(router: T) {
   router.post(
     '/resources',
     koaGuard({
-      body: Resources.guard.omit({ id: true }),
+      body: Resources.createGuard.omit({ id: true }),
     }),
     async (ctx, next) => {
       const resource = await insertResource({
@@ -74,7 +74,7 @@ export default function resourceRoutes<T extends AuthedRouter>(router: T) {
     '/resources/:id',
     koaGuard({
       params: object({ id: string().min(1) }),
-      body: Resources.guard.omit({ id: true }).partial(),
+      body: Resources.createGuard.omit({ id: true }).partial(),
     }),
     async (ctx, next) => {
       const {

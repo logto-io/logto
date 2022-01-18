@@ -20,6 +20,6 @@ export type GeneratedSchema<Schema extends SchemaLike> = keyof Schema extends st
         [key in keyof Schema]: string;
       };
       fieldKeys: ReadonlyArray<keyof Schema>;
-      guard: Guard<Schema>;
+      createGuard: Guard<Schema>;
     }>
   : never;

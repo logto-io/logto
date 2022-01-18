@@ -12,7 +12,7 @@ import {
 } from '../foundations';
 import { ApplicationType } from './custom-types';
 
-export type ApplicationUpdate = {
+export type CreateApplication = {
   id: string;
   name: string;
   description?: string | null;
@@ -32,17 +32,17 @@ export type Application = {
   createdAt: number;
 };
 
-const guard: Guard<ApplicationUpdate> = z.object({
+const createGuard: Guard<CreateApplication> = z.object({
   id: z.string(),
   name: z.string(),
-  description: z.string().optional(),
+  description: z.string().nullable().optional(),
   type: z.nativeEnum(ApplicationType),
   oidcClientMetadata: oidcClientMetadataGuard,
   customClientMetadata: customClientMetadataGuard.optional(),
   createdAt: z.number().optional(),
 });
 
-export const Applications: GeneratedSchema<ApplicationUpdate> = Object.freeze({
+export const Applications: GeneratedSchema<CreateApplication> = Object.freeze({
   table: 'applications',
   tableSingular: 'application',
   fields: {
@@ -63,5 +63,5 @@ export const Applications: GeneratedSchema<ApplicationUpdate> = Object.freeze({
     'customClientMetadata',
     'createdAt',
   ],
-  guard,
+  createGuard,
 });

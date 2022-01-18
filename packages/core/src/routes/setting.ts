@@ -16,7 +16,7 @@ export default function settingRoutes<T extends AuthedRouter>(router: T) {
   router.patch(
     '/settings',
     koaGuard({
-      body: Settings.guard.omit({ id: true }).partial(),
+      body: Settings.createGuard.omit({ id: true }).partial(),
     }),
     async (ctx, next) => {
       const { body: setting } = ctx.guard;
