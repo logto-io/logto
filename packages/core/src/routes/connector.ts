@@ -1,6 +1,7 @@
 import { Connectors } from '@logto/schemas';
-import { object, string } from 'zod';
+import { boolean, object, string } from 'zod';
 
+import { getConnectorById } from '@/connectors';
 import { validateConfig } from '@/connectors/utilities';
 import RequestError from '@/errors/RequestError';
 import koaGuard from '@/middleware/koa-guard';
@@ -10,7 +11,12 @@ import { AuthedRouter } from './types';
 
 export default function connectorRoutes<T extends AuthedRouter>(router: T) {
   router.get('/connectors', async (ctx, next) => {
-    ctx.body = await findAllConnectors();
+    const connectors = await findAllConnectors();
+    ctx.body = connectors.map((connector) => {
+      const { id, ...rest } = connector;
+      const { metadata } = getConnectorById(id) ?? {};
+      return { id, ...rest, ...metadata };
+    });
 
     return next();
   });
@@ -22,7 +28,33 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
       const {
         params: { id },
       } = ctx.guard;
-      ctx.body = await findConnectorById(id);
+      const connector = await findConnectorById(id);
+      const { metadata } = getConnectorById(id) ?? {};
+      ctx.body = { ...connector, ...metadata };
+
+      return next();
+    }
+  );
+
+  router.patch(
+    '/connectors/:id/enabled',
+    koaGuard({ params: object({ id: string().min(1) }), body: object({ enabled: boolean() }) }),
+    async (ctx, next) => {
+      const {
+        params: { id },
+        body: { enabled },
+      } = ctx.guard;
+      if (typeof enabled === 'boolean') {
+        await updateConnector({ set: { enabled }, where: { id } });
+        ctx.body = { enabled };
+      } else {
+        throw new RequestError({
+          code: 'guard.invalid_input',
+          name: Connectors.tableSingular,
+          id,
+          status: 400,
+        });
+      }
 
       return next();
     }
@@ -32,7 +64,7 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
     '/connectors/:id',
     koaGuard({
       params: object({ id: string().min(1) }),
-      body: Connectors.guard.omit({ id: true, type: true, createdAt: true }).partial(),
+      body: Connectors.createGuard.omit({ id: true, type: true, createdAt: true }).partial(),
     }),
     async (ctx, next) => {
       const {
