@@ -35,7 +35,7 @@ export type Application = {
 const createGuard: Guard<CreateApplication> = z.object({
   id: z.string(),
   name: z.string(),
-  description: z.string().optional(),
+  description: z.string().nullable().optional(),
   type: z.nativeEnum(ApplicationType),
   oidcClientMetadata: oidcClientMetadataGuard,
   customClientMetadata: customClientMetadataGuard.optional(),

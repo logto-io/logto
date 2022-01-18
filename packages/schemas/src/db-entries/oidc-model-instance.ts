@@ -30,7 +30,7 @@ const createGuard: Guard<CreateOidcModelInstance> = z.object({
   id: z.string(),
   payload: oidcModelInstancePayloadGuard,
   expiresAt: z.number(),
-  consumedAt: z.number().optional(),
+  consumedAt: z.number().nullable().optional(),
 });
 
 export const OidcModelInstances: GeneratedSchema<CreateOidcModelInstance> = Object.freeze({

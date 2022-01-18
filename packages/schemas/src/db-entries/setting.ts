@@ -23,7 +23,7 @@ export type Setting = {
 
 const createGuard: Guard<CreateSetting> = z.object({
   id: z.string(),
-  customDomain: z.string().optional(),
+  customDomain: z.string().nullable().optional(),
   adminConsole: adminConsoleConfigGuard,
 });
 

@@ -32,15 +32,15 @@ export const generateSchema = ({ name, fields }: TableWithType) => {
     ...fields.map(({ name, type, isArray, isEnum, nullable, hasDefaultValue, tsType }) => {
       if (tsType) {
         return `  ${camelcase(name)}: ${camelcase(tsType)}Guard${conditionalString(
-          (nullable || hasDefaultValue) && '.optional()'
-        )},`;
+          nullable && !hasDefaultValue && '.nullable()'
+        )}${conditionalString((nullable || hasDefaultValue) && '.optional()')},`;
       }
 
       return `  ${camelcase(name)}: z.${
         isEnum ? `nativeEnum(${type})` : `${type}()`
       }${conditionalString(isArray && '.array()')}${conditionalString(
-        (nullable || hasDefaultValue) && '.optional()'
-      )},`;
+        nullable && !hasDefaultValue && '.nullable()'
+      )}${conditionalString((nullable || hasDefaultValue) && '.optional()')},`;
     }),
     '  });',
     '',
