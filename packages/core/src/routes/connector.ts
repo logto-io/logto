@@ -2,6 +2,7 @@ import { Connectors } from '@logto/schemas';
 import { object, string } from 'zod';
 
 import { validateConfig } from '@/connectors/utilities';
+import RequestError from '@/errors/RequestError';
 import koaGuard from '@/middleware/koa-guard';
 import { findAllConnectors, findConnectorById, updateConnector } from '@/queries/connector';
 
@@ -37,12 +38,28 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
       const {
         params: { id },
         body: { enabled, config },
+        body,
       } = ctx.guard;
-      if (config && (await validateConfig(config))) {
-        await updateConnector({ set: { enabled, config }, where: { id } });
-        ctx.body = { enabled, config };
-      } else {
-        throw new Error('Input invalid config: ' + JSON.stringify(config));
+      const validEnable = typeof enabled === 'boolean';
+      const validConfig = Boolean(config && (await validateConfig(config)));
+      if (validEnable && validConfig) {
+        await updateConnector({ set: body, where: { id } });
+        ctx.body = body;
+      } else if (validEnable && !validConfig) {
+        await updateConnector({ set: { enabled }, where: { id } });
+        ctx.body = { enabled };
+      } else if (!validEnable && validConfig) {
+        await updateConnector({ set: { config }, where: { id } });
+        ctx.body = { config };
+      }
+
+      if (!(validEnable && validConfig)) {
+        throw new RequestError({
+          code: 'guard.invalid_input',
+          name: Connectors.tableSingular,
+          id,
+          status: 400,
+        });
       }
 
       return next();
