@@ -31,16 +31,16 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
     '/connectors/:id',
     koaGuard({
       params: object({ id: string().min(1) }),
-      body: Connectors.guard.omit({ id: true, createdAt: true }).partial(),
+      body: Connectors.guard.omit({ id: true, type: true, createdAt: true }).partial(),
     }),
     async (ctx, next) => {
       const {
         params: { id },
-        body: { type, enabled, config },
+        body: { enabled, config },
       } = ctx.guard;
       if (config && (await validateConfig(config))) {
-        await updateConnector({ set: { type, enabled, config }, where: { id } });
-        ctx.body = { type, enabled, config };
+        await updateConnector({ set: { enabled, config }, where: { id } });
+        ctx.body = { enabled, config };
       } else {
         throw new Error('Input invalid config: ' + JSON.stringify(config));
       }
