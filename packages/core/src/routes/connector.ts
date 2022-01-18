@@ -1,13 +1,8 @@
 import { Connectors } from '@logto/schemas';
 import { object, string } from 'zod';
 
-<<<<<<< HEAD
 import { getConnectorInstances, getConnectorInstanceById } from '@/connectors';
 import { ConnectorInstance } from '@/connectors/types';
-=======
-import { validateConfig } from '@/connectors/utilities';
-import RequestError from '@/errors/RequestError';
->>>>>>> 56d3cb8 (feat(connector apis): fix according to comments)
 import koaGuard from '@/middleware/koa-guard';
 import { updateConnector } from '@/queries/connector';
 
