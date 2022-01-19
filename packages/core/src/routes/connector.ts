@@ -1,22 +1,17 @@
 import { Connectors } from '@logto/schemas';
 import { boolean, object, string } from 'zod';
 
-import { getConnectorById } from '@/connectors';
 import { validateConfig } from '@/connectors/utilities';
 import RequestError from '@/errors/RequestError';
+import { getAllConnectorInfo, getConnectorInfoById } from '@/lib/connector-info';
 import koaGuard from '@/middleware/koa-guard';
-import { findAllConnectors, findConnectorById, updateConnector } from '@/queries/connector';
+import { updateConnector } from '@/queries/connector';
 
 import { AuthedRouter } from './types';
 
 export default function connectorRoutes<T extends AuthedRouter>(router: T) {
   router.get('/connectors', async (ctx, next) => {
-    const connectors = await findAllConnectors();
-    ctx.body = connectors.map((connector) => {
-      const { id, ...rest } = connector;
-      const { metadata } = getConnectorById(id) ?? {};
-      return { id, ...rest, ...metadata };
-    });
+    ctx.body = await getAllConnectorInfo();
 
     return next();
   });
@@ -28,9 +23,7 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
       const {
         params: { id },
       } = ctx.guard;
-      const connector = await findConnectorById(id);
-      const { metadata } = getConnectorById(id) ?? {};
-      ctx.body = { ...connector, ...metadata };
+      ctx.body = await getConnectorInfoById(id);
 
       return next();
     }
