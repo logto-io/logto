@@ -64,28 +64,18 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
     '/connectors/:id',
     koaGuard({
       params: object({ id: string().min(1) }),
-      body: Connectors.createGuard.omit({ id: true, type: true, createdAt: true }).partial(),
+      body: Connectors.createGuard
+        .omit({ id: true, type: true, enabled: true, createdAt: true })
+        .partial(),
     }),
     async (ctx, next) => {
       const {
         params: { id },
-        body: { enabled, config },
-        body,
+        body: { config },
       } = ctx.guard;
-      const validEnable = Boolean(enabled && typeof enabled === 'boolean');
       const validConfig = Boolean(config && (await validateConfig(config)));
-      if (validEnable && validConfig) {
-        await updateConnector({ set: body, where: { id } });
-        ctx.body = body;
-      } else if (validEnable && !validConfig) {
-        await updateConnector({ set: { enabled }, where: { id } });
-        ctx.body = { enabled };
-      } else if (!validEnable && validConfig) {
-        await updateConnector({ set: { config }, where: { id } });
-        ctx.body = { config };
-      }
 
-      if (!(validEnable && validConfig)) {
+      if (!validConfig) {
         throw new RequestError({
           code: 'guard.invalid_input',
           name: Connectors.tableSingular,
@@ -93,6 +83,9 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
           status: 400,
         });
       }
+
+      await updateConnector({ set: { config }, where: { id } });
+      ctx.body = { config };
 
       return next();
     }
