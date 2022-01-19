@@ -1,10 +1,10 @@
-import { ConnectorConfig, ConnectorType } from '@logto/schemas';
+import { ConnectorType } from '@logto/schemas';
+import { z } from 'zod';
 
 import {
   ConnectorConfigError,
   ConnectorError,
   ConnectorMetadata,
-  EmailMessageTypes,
   EmailSendMessageFunction,
   ValidateConfig,
 } from '../types';
@@ -26,37 +26,32 @@ export const metadata: ConnectorMetadata = {
   },
 };
 
-export const validateConfig: ValidateConfig<AliyunDmConfig> = async (config: AliyunDmConfig) => {
-  if (!config.accessKeyId) {
-    throw new ConnectorConfigError('Missing accessKeyId');
+export const validateConfig: ValidateConfig = async (config: unknown) => {
+  if (!config) {
+    throw new ConnectorConfigError('Missing config');
   }
 
-  if (!config.accessKeySecret) {
-    throw new ConnectorConfigError('Missing accessKeySecret');
-  }
-
-  if (!config.accountName) {
-    throw new ConnectorConfigError('Missing accountName');
-  }
-
-  if (!Array.isArray(config.templates)) {
-    throw new ConnectorConfigError('Missing templates');
+  const result = configGuard.safeParse(config);
+  if (!result.success) {
+    throw new ConnectorConfigError(result.error.message);
   }
 };
 
-interface Template {
-  type: keyof EmailMessageTypes;
-  subject: string;
-  content: string; // With variable {{code}}, support HTML
-}
+const configGuard = z.object({
+  accessKeyId: z.string(),
+  accessKeySecret: z.string(),
+  accountName: z.string(),
+  fromAlias: z.string().optional(),
+  templates: z.array(
+    z.object({
+      type: z.string(),
+      subject: z.string(),
+      content: z.string(), // With variable {{code}}, support HTML
+    })
+  ),
+});
 
-export interface AliyunDmConfig extends ConnectorConfig {
-  accessKeyId: string;
-  accessKeySecret: string;
-  accountName: string;
-  fromAlias?: string;
-  templates: Template[];
-}
+export type AliyunDmConfig = z.infer<typeof configGuard>;
 
 export const sendMessage: EmailSendMessageFunction = async (address, type, data) => {
   const config: AliyunDmConfig = await getConnectorConfig<AliyunDmConfig>(

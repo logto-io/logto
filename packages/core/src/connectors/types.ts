@@ -37,4 +37,6 @@ export class ConnectorError extends Error {}
 
 export class ConnectorConfigError extends ConnectorError {}
 
-export type ValidateConfig<T extends ConnectorConfig> = (config: T) => Promise<void>;
+export type ValidateConfig<T extends ConnectorConfig = ConnectorConfig> = (
+  config: T
+) => Promise<void>;
