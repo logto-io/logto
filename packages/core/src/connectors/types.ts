@@ -1,6 +1,11 @@
 import { Languages } from '@logto/phrases';
-import { ConnectorConfig, ConnectorType } from '@logto/schemas';
+import { ConnectorConfig, Connector } from '@logto/schemas';
 
+export enum ConnectorType {
+  SMS = 'SMS',
+  Email = 'Email',
+  Social = 'Social',
+}
 export interface ConnectorMetadata {
   id: string;
   type: ConnectorType;
@@ -13,11 +18,13 @@ export interface ConnectorMetadata {
 export type ConnectorInstance = EmailConector | SocialConector;
 
 export interface BaseConnector {
+  connector: Connector;
   metadata: ConnectorMetadata;
   validateConfig: ValidateConfig;
 }
 
 export interface EmailConector extends BaseConnector {
+  configs: { enabled: boolean; config: unknown };
   sendMessage: EmailSendMessageFunction;
 }
 
