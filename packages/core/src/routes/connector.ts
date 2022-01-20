@@ -1,5 +1,5 @@
 import { Connectors } from '@logto/schemas';
-import { boolean, object, string } from 'zod';
+import { object, string } from 'zod';
 
 import { getConnectorInstanceById } from '@/connectors';
 import RequestError from '@/errors/RequestError';
@@ -23,7 +23,7 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
       const {
         params: { id },
       } = ctx.guard;
-      ctx.body = getConnectorInfoById(id);
+      ctx.body = await getConnectorInfoById(id);
 
       return next();
     }
@@ -31,7 +31,10 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
 
   router.patch(
     '/connectors/:id/enabled',
-    koaGuard({ params: object({ id: string().min(1) }), body: object({ enabled: boolean() }) }),
+    koaGuard({
+      params: object({ id: string().min(1) }),
+      body: Connectors.createGuard.pick({ enabled: true }),
+    }),
     async (ctx, next) => {
       const {
         params: { id },

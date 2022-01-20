@@ -3,7 +3,7 @@ import { findConnectorById, insertConnector } from '@/queries/connector';
 import * as AliyunDM from './aliyun-dm';
 import { ConnectorInstance } from './types';
 
-const connectorInstances: ConnectorInstance[] = [AliyunDM];
+export const connectorInstances: Readonly<ConnectorInstance[]> = [AliyunDM];
 
 export const getConnectorInstanceById = (id: string): ConnectorInstance | null => {
   return connectorInstances.find((connector) => connector.metadata.id === id) ?? null;
