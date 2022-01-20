@@ -73,7 +73,10 @@ export const sendMessage: EmailSendMessageFunction = async (address, type, data)
       ToAddress: address,
       FromAlias: config.fromAlias,
       Subject: template.subject,
-      HtmlBody: template.content.replaceAll('{{code}}', data.code),
+      HtmlBody:
+        typeof data.code === 'string'
+          ? template.content.replaceAll('{{code}}', data.code)
+          : template.content,
     },
     config.accessKeySecret
   );
