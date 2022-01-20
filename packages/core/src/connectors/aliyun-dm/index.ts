@@ -1,10 +1,12 @@
 import { ConnectorType } from '@logto/schemas';
+import { z } from 'zod';
 
 import {
+  ConnectorConfigError,
   ConnectorError,
   ConnectorMetadata,
-  EmailMessageTypes,
   EmailSendMessageFunction,
+  ValidateConfig,
 } from '../types';
 import { getConnectorConfig } from '../utilities';
 import { singleSendMail } from './single-send-mail';
@@ -24,19 +26,32 @@ export const metadata: ConnectorMetadata = {
   },
 };
 
-interface Template {
-  type: keyof EmailMessageTypes;
-  subject: string;
-  content: string; // With variable {{code}}, support HTML
-}
+export const validateConfig: ValidateConfig = async (config: unknown) => {
+  if (!config) {
+    throw new ConnectorConfigError('Missing config');
+  }
 
-export interface AliyunDmConfig {
-  accessKeyId: string;
-  accessKeySecret: string;
-  accountName: string;
-  fromAlias?: string;
-  templates: Template[];
-}
+  const result = configGuard.safeParse(config);
+  if (!result.success) {
+    throw new ConnectorConfigError(result.error.message);
+  }
+};
+
+const configGuard = z.object({
+  accessKeyId: z.string(),
+  accessKeySecret: z.string(),
+  accountName: z.string(),
+  fromAlias: z.string().optional(),
+  templates: z.array(
+    z.object({
+      type: z.string(),
+      subject: z.string(),
+      content: z.string(), // With variable {{code}}, support HTML
+    })
+  ),
+});
+
+export type AliyunDmConfig = z.infer<typeof configGuard>;
 
 export const sendMessage: EmailSendMessageFunction = async (address, type, data) => {
   const config: AliyunDmConfig = await getConnectorConfig<AliyunDmConfig>(
