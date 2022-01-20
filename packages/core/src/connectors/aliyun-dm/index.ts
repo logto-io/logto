@@ -38,20 +38,12 @@ export interface AliyunDmConfig {
   templates: Template[];
 }
 
-const testMessageTemplate: Template = {
-  type: 'Test',
-  subject: 'It works',
-  content: 'Congratulations!',
-};
-
 export const sendMessage: EmailSendMessageFunction = async (address, type, data) => {
   const config: AliyunDmConfig = await getConnectorConfig<AliyunDmConfig>(
     metadata.id,
     metadata.type
   );
-  const template = [...config.templates, testMessageTemplate].find(
-    (template) => template.type === type
-  );
+  const template = config.templates.find((template) => template.type === type);
 
   if (!template) {
     throw new ConnectorError(`Can not find template for type: ${type}`);
