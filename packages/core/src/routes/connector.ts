@@ -1,9 +1,9 @@
 import { Connectors } from '@logto/schemas';
 import { boolean, object, string } from 'zod';
 
-import { getAllConnectorInstances, getConnectorInstanceById } from '@/connectors';
-import { validateConfig } from '@/connectors/utilities';
+import { getConnectorInstanceById } from '@/connectors';
 import RequestError from '@/errors/RequestError';
+import { getAllConnectorInfo, getConnectorInfoById } from '@/lib/connectors';
 import koaGuard from '@/middleware/koa-guard';
 import { updateConnector } from '@/queries/connector';
 
@@ -11,7 +11,7 @@ import { AuthedRouter } from './types';
 
 export default function connectorRoutes<T extends AuthedRouter>(router: T) {
   router.get('/connectors', async (ctx, next) => {
-    ctx.body = await getAllConnectorInstances();
+    ctx.body = await getAllConnectorInfo();
 
     return next();
   });
@@ -23,7 +23,7 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
       const {
         params: { id },
       } = ctx.guard;
-      ctx.body = getConnectorInstanceById(id);
+      ctx.body = getConnectorInfoById(id);
 
       return next();
     }
@@ -64,21 +64,21 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
     async (ctx, next) => {
       const {
         params: { id },
-        body: { config },
+        body,
       } = ctx.guard;
-      const validConfig = Boolean(config && (await validateConfig(config)));
-
-      if (!validConfig) {
+      const connectorInstance = getConnectorInstanceById(id);
+      if (!connectorInstance) {
         throw new RequestError({
-          code: 'guard.invalid_input',
+          code: 'entity.not_exists_with_id',
           name: Connectors.tableSingular,
           id,
-          status: 400,
+          status: 404,
         });
       }
 
-      await updateConnector({ set: { config }, where: { id } });
-      ctx.body = { config };
+      await connectorInstance.validateConfig(body);
+      await updateConnector({ set: body, where: { id } });
+      ctx.body = body;
 
       return next();
     }

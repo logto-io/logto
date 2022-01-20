@@ -24,7 +24,6 @@ export interface BaseConnector {
 }
 
 export interface EmailConector extends BaseConnector {
-  configs: { enabled: boolean; config: unknown };
   sendMessage: EmailSendMessageFunction;
 }
 
