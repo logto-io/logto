@@ -37,17 +37,8 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
         params: { id },
         body: { enabled },
       } = ctx.guard;
-      if (typeof enabled === 'boolean') {
-        await updateConnector({ set: { enabled }, where: { id } });
-        ctx.body = { enabled };
-      } else {
-        throw new RequestError({
-          code: 'guard.invalid_input',
-          name: Connectors.tableSingular,
-          id,
-          status: 400,
-        });
-      }
+      await updateConnector({ set: { enabled }, where: { id } });
+      ctx.body = { enabled };
 
       return next();
     }
@@ -76,7 +67,10 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
         });
       }
 
-      await connectorInstance.validateConfig(body);
+      if (body.config) {
+        await connectorInstance.validateConfig(body.config);
+      }
+
       await updateConnector({ set: body, where: { id } });
       ctx.body = body;
 
