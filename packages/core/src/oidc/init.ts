@@ -36,11 +36,13 @@ export default async function initOidc(app: Koa): Promise<Provider> {
       keys,
     },
     features: {
+      userinfo: { enabled: true },
       revocation: { enabled: true },
       introspection: { enabled: true },
       devInteractions: { enabled: false },
       resourceIndicators: {
         enabled: true,
+        useGrantedResource: () => false,
         getResourceServerInfo: async (ctx, indicator) => {
           const resourceServer = await findResourceByIdentifier(indicator);
 
