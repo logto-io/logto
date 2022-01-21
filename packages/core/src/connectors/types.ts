@@ -14,6 +14,7 @@ export type ConnectorInstance = EmailConector | SocialConector;
 
 export interface BaseConnector {
   metadata: ConnectorMetadata;
+  validateConfig: ValidateConfig;
 }
 
 export interface EmailConector extends BaseConnector {

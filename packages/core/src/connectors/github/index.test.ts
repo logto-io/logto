@@ -1,6 +1,6 @@
 import nock from 'nock';
 
-import { getAccessToken, getAuthorizationUri } from '.';
+import { getAccessToken, getAuthorizationUri, validateConfig } from '.';
 import { getConnectorConfig } from '../utilities';
 import { accessTokenEndpoint, authorizationEndpoint } from './constant';
 
@@ -34,5 +34,20 @@ describe('getAccessToken', () => {
     });
     const accessToken = await getAccessToken('code');
     expect(accessToken).toEqual('access_token');
+  });
+});
+
+describe('validateConfig', () => {
+  it('should pass on valid config', async () => {
+    await expect(
+      validateConfig({ clientId: 'clientId', clientSecret: 'clientSecret' })
+    ).resolves.not.toThrow();
+  });
+  it('should throw on empty config', async () => {
+    // @ts-expect-error
+    await expect(validateConfig()).rejects.toThrowError();
+  });
+  it('should throw when missing clientSecret', async () => {
+    await expect(validateConfig({ clientId: 'clientId' })).rejects.toThrowError();
   });
 });
