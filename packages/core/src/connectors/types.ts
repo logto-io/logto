@@ -21,7 +21,8 @@ export interface EmailConector extends BaseConnector {
 }
 
 export interface SocialConector extends BaseConnector {
-  getAuthorizeUri: GetAuthorizeUri;
+  getAuthorizationUri: GetAuthorizationUri;
+  getAccessToken: GetAccessToken;
 }
 
 export interface EmailMessageTypes {
@@ -51,4 +52,6 @@ export type ValidateConfig<T extends ConnectorConfig = ConnectorConfig> = (
   config: T
 ) => Promise<void>;
 
-export type GetAuthorizeUri = (redirectUri: string, state: string) => Promise<string>;
+export type GetAuthorizationUri = (redirectUri: string, state: string) => Promise<string>;
+
+export type GetAccessToken = (code: string) => Promise<string>;
