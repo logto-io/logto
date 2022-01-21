@@ -1,4 +1,3 @@
-import { ConnectorType } from '@logto/schemas';
 import { z } from 'zod';
 
 import {
@@ -7,6 +6,7 @@ import {
   ConnectorMetadata,
   EmailSendMessageFunction,
   ValidateConfig,
+  ConnectorType,
 } from '../types';
 import { getConnectorConfig } from '../utilities';
 import { singleSendMail } from './single-send-mail';

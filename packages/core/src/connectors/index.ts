@@ -11,7 +11,7 @@ export const getConnectorInstanceById = (id: string): ConnectorInstance | null =
 
 export const initConnectors = async () => {
   await Promise.all(
-    connectorInstances.map(async ({ metadata: { id, type } }) => {
+    connectorInstances.map(async ({ metadata: { id } }) => {
       const record = await findConnectorById(id);
       if (record) {
         return;
@@ -19,7 +19,6 @@ export const initConnectors = async () => {
 
       await insertConnector({
         id,
-        type,
       });
     })
   );
