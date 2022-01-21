@@ -50,7 +50,7 @@ describe('validateConfig', () => {
   it('should throw when missing clientSecret', async () => {
     await expect(validateConfig({ clientId: 'clientId' })).rejects.toThrowError();
   });
-);
+});
 
 describe('getUserInfo', () => {
   it('shoud get valid SocialUserInfo', async () => {

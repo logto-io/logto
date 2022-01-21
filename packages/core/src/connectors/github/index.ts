@@ -57,6 +57,12 @@ export const getAuthorizationUri: GetAuthorizationUri = async (redirectUri, stat
 };
 
 export const getAccessToken: GetAccessToken = async (code) => {
+  type AccessTokenResponse = {
+    access_token: string;
+    scope: string;
+    token_type: string;
+  };
+
   const { clientId: client_id, clientSecret: client_secret } =
     await getConnectorConfig<GithubConfig>(metadata.id, metadata.type);
   const { access_token: accessToken } = await got
@@ -68,15 +74,18 @@ export const getAccessToken: GetAccessToken = async (code) => {
         code,
       },
     })
-    .json<{
-      access_token: string;
-      scope: string;
-      token_type: string;
-    }>();
+    .json<AccessTokenResponse>();
   return accessToken;
 };
 
 export const getUserInfo: GetUserInfo = async (accessToken: string) => {
+  type UserInfoResponse = {
+    id: number;
+    avatar_url: string;
+    email: string;
+    name: string;
+  };
+
   const {
     id,
     avatar_url: avatar,
@@ -88,12 +97,7 @@ export const getUserInfo: GetUserInfo = async (accessToken: string) => {
         authorization: `token ${accessToken}`,
       },
     })
-    .json<{
-      id: number;
-      avatar_url: string;
-      email: string;
-      name: string;
-    }>();
+    .json<UserInfoResponse>();
   return {
     id: String(id),
     avatar,
