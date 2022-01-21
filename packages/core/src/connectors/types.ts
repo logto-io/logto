@@ -10,9 +10,18 @@ export interface ConnectorMetadata {
 }
 
 // The name `Connector` is used for database, use `ConnectorInstance` to avoid confusing.
-export interface ConnectorInstance {
+export type ConnectorInstance = EmailConector | SocialConector;
+
+export interface BaseConnector {
   metadata: ConnectorMetadata;
+}
+
+export interface EmailConector extends BaseConnector {
   sendMessage: EmailSendMessageFunction;
+}
+
+export interface SocialConector extends BaseConnector {
+  getAuthorizeUri: GetAuthorizeUri;
 }
 
 export interface EmailMessageTypes {
@@ -41,3 +50,5 @@ export class ConnectorConfigError extends ConnectorError {}
 export type ValidateConfig<T extends ConnectorConfig = ConnectorConfig> = (
   config: T
 ) => Promise<void>;
+
+export type GetAuthorizeUri = (redirectUri: string, state: string) => Promise<string>;
