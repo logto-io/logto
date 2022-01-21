@@ -1,8 +1,8 @@
 import nock from 'nock';
 
-import { getAccessToken, getAuthorizationUri, validateConfig } from '.';
+import { getAccessToken, getAuthorizationUri, validateConfig, getUserInfo } from '.';
 import { getConnectorConfig } from '../utilities';
-import { accessTokenEndpoint, authorizationEndpoint } from './constant';
+import { accessTokenEndpoint, authorizationEndpoint, userInfoEndpoint } from './constant';
 
 jest.mock('../utilities');
 
@@ -49,5 +49,23 @@ describe('validateConfig', () => {
   });
   it('should throw when missing clientSecret', async () => {
     await expect(validateConfig({ clientId: 'clientId' })).rejects.toThrowError();
+  });
+});
+
+describe('getUserInfo', () => {
+  it('shoud get valid SocialUserInfo', async () => {
+    nock(userInfoEndpoint).get('').reply(200, {
+      id: 1,
+      avatar_url: 'https://github.com/images/error/octocat_happy.gif',
+      name: 'monalisa octocat',
+      email: 'octocat@github.com',
+    });
+    const socialUserInfo = await getUserInfo('code');
+    expect(socialUserInfo).toMatchObject({
+      id: '1',
+      avatar: 'https://github.com/images/error/octocat_happy.gif',
+      name: 'monalisa octocat',
+      email: 'octocat@github.com',
+    });
   });
 });
