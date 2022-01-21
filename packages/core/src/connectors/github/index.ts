@@ -3,7 +3,13 @@ import got from 'got';
 import { stringify } from 'query-string';
 import { z } from 'zod';
 
-import { ConnectorMetadata, GetAccessToken, GetAuthorizationUri } from '../types';
+import {
+  ConnectorConfigError,
+  ConnectorMetadata,
+  GetAccessToken,
+  GetAuthorizationUri,
+  ValidateConfig,
+} from '../types';
 import { getConnectorConfig } from '../utilities';
 import { authorizationEndpoint, accessTokenEndpoint, scope } from './constant';
 
@@ -27,6 +33,17 @@ const githubConfigGuard = z.object({
 });
 
 type GithubConfig = z.infer<typeof githubConfigGuard>;
+
+export const validateConfig: ValidateConfig = async (config: unknown) => {
+  if (!config) {
+    throw new ConnectorConfigError('Missing config');
+  }
+
+  const result = githubConfigGuard.safeParse(config);
+  if (!result.success) {
+    throw new ConnectorConfigError(result.error.message);
+  }
+};
 
 export const getAuthorizationUri: GetAuthorizationUri = async (redirectUri, state) => {
   const config = await getConnectorConfig<GithubConfig>(metadata.id, metadata.type);
