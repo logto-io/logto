@@ -1,2 +1,2 @@
-export const AUTHORIZE_ENDPOINT = 'https://github.com/login/oauth/authorize';
-export const SCOPE = 'read:user';
+export const authorizationEndpoint = 'https://github.com/login/oauth/authorize';
+export const scope = 'read:user';

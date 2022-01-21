@@ -4,7 +4,7 @@ import { z } from 'zod';
 
 import { ConnectorMetadata, GetAuthorizeUri } from '../types';
 import { getConnectorConfig } from '../utilities';
-import { AUTHORIZE_ENDPOINT, SCOPE } from './constant';
+import { authorizationEndpoint, scope } from './constant';
 
 export const metadata: ConnectorMetadata = {
   id: 'github',
@@ -29,10 +29,10 @@ type GithubConfig = z.infer<typeof githubConfigGuard>;
 
 export const getAuthorizeUri: GetAuthorizeUri = async (redirectUri, state) => {
   const config = await getConnectorConfig<GithubConfig>(metadata.id, metadata.type);
-  return `${AUTHORIZE_ENDPOINT}?${stringify({
+  return `${authorizationEndpoint}?${stringify({
     client_id: config.clientId,
     redirect_uri: redirectUri,
     state,
-    scope: SCOPE, // Only support fixed scope for v1.
+    scope, // Only support fixed scope for v1.
   })}`;
 };
