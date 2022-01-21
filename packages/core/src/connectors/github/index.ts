@@ -1,10 +1,11 @@
 import { ConnectorType } from '@logto/schemas';
+import got from 'got';
 import { stringify } from 'query-string';
 import { z } from 'zod';
 
-import { ConnectorMetadata, GetAuthorizeUri } from '../types';
+import { ConnectorMetadata, GetAccessToken, GetAuthorizationUri } from '../types';
 import { getConnectorConfig } from '../utilities';
-import { authorizationEndpoint, scope } from './constant';
+import { authorizationEndpoint, accessTokenEndpoint, scope } from './constant';
 
 export const metadata: ConnectorMetadata = {
   id: 'github',
@@ -27,7 +28,7 @@ const githubConfigGuard = z.object({
 
 type GithubConfig = z.infer<typeof githubConfigGuard>;
 
-export const getAuthorizeUri: GetAuthorizeUri = async (redirectUri, state) => {
+export const getAuthorizationUri: GetAuthorizationUri = async (redirectUri, state) => {
   const config = await getConnectorConfig<GithubConfig>(metadata.id, metadata.type);
   return `${authorizationEndpoint}?${stringify({
     client_id: config.clientId,
@@ -35,4 +36,26 @@ export const getAuthorizeUri: GetAuthorizeUri = async (redirectUri, state) => {
     state,
     scope, // Only support fixed scope for v1.
   })}`;
+};
+
+export const getAccessToken: GetAccessToken = async (code) => {
+  const { clientId, clientSecret } = await getConnectorConfig<GithubConfig>(
+    metadata.id,
+    metadata.type
+  );
+  const { access_token: accessToken } = await got
+    .post({
+      url: accessTokenEndpoint,
+      json: {
+        client_id: clientId,
+        client_secret: clientSecret,
+        code,
+      },
+    })
+    .json<{
+      access_token: string;
+      scope: string;
+      token_type: string;
+    }>();
+  return accessToken;
 };

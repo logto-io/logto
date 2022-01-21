@@ -57,6 +57,7 @@ importers:
       lodash.pick: ^4.4.0
       module-alias: ^2.2.2
       nanoid: ^3.1.23
+      nock: ^13.2.2
       oidc-provider: ^7.10.0
       openapi-types: ^9.1.0
       p-retry: ^4.6.1
@@ -115,6 +116,7 @@ importers:
       jest: 27.4.4
       jest-matcher-specific-error: 1.0.0
       lint-staged: 11.2.6
+      nock: 13.2.2
       openapi-types: 9.3.1
       prettier: 2.5.1
       ts-jest: 27.1.1_dc33159234d58f1c7ac35b6119da0e94
@@ -10626,6 +10628,10 @@ packages:
   /lodash.pick/4.4.0:
     resolution: {integrity: sha1-UvBWEP/53tQiYRRB7R/BI6AwAbM=}
 
+  /lodash.set/4.3.2:
+    resolution: {integrity: sha1-2HV7HagH3eJIFrDWqEvqGnYjCyM=}
+    dev: true
+
   /lodash.snakecase/4.1.1:
     resolution: {integrity: sha1-OdcUo1NXFHg3rv1ktdy7Fr7Nj40=}
     dev: true
@@ -11296,6 +11302,18 @@ packages:
     dependencies:
       lower-case: 2.0.2
       tslib: 2.3.1
+
+  /nock/13.2.2:
+    resolution: {integrity: sha512-PcBHuvl9i6zfaJ50A7LS55oU+nFLv8htXIhffJO+FxyfibdZ4jEvd9kTuvkrJireBFIGMZ+oUIRpMK5gU9h//g==}
+    engines: {node: '>= 10.13'}
+    dependencies:
+      debug: 4.3.3
+      json-stringify-safe: 5.0.1
+      lodash.set: 4.3.2
+      propagate: 2.0.1
+    transitivePeerDependencies:
+      - supports-color
+    dev: true
 
   /node-cleanup/2.1.2:
     resolution: {integrity: sha1-esGavSl+Caf3KnFUXZUbUX5N3iw=}
@@ -13040,6 +13058,11 @@ packages:
       loose-envify: 1.4.0
       object-assign: 4.1.1
       react-is: 16.13.1
+
+  /propagate/2.0.1:
+    resolution: {integrity: sha512-vGrhOavPSTz4QVNuBNdcNXePNdNMaO1xj9yBeH1ScQPjk/rhg9sSlCXPhMkFuaNNW/syTvYqsnbIJxMBfRbbag==}
+    engines: {node: '>= 8'}
+    dev: true
 
   /proto-list/1.2.4:
     resolution: {integrity: sha1-IS1b/hMYMGpCD2QCuOJv85ZHqEk=}

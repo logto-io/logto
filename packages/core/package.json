@@ -64,6 +64,7 @@
     "jest": "^27.0.6",
     "jest-matcher-specific-error": "^1.0.0",
     "lint-staged": "^11.1.1",
+    "nock": "^13.2.2",
     "openapi-types": "^9.1.0",
     "prettier": "^2.3.2",
     "ts-jest": "^27.0.5",
