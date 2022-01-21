@@ -39,16 +39,14 @@ export const getAuthorizationUri: GetAuthorizationUri = async (redirectUri, stat
 };
 
 export const getAccessToken: GetAccessToken = async (code) => {
-  const { clientId, clientSecret } = await getConnectorConfig<GithubConfig>(
-    metadata.id,
-    metadata.type
-  );
+  const { clientId: client_id, clientSecret: client_secret } =
+    await getConnectorConfig<GithubConfig>(metadata.id, metadata.type);
   const { access_token: accessToken } = await got
     .post({
       url: accessTokenEndpoint,
       json: {
-        client_id: clientId,
-        client_secret: clientSecret,
+        client_id,
+        client_secret,
         code,
       },
     })
