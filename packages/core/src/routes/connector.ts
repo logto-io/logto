@@ -2,10 +2,9 @@ import { Connectors } from '@logto/schemas';
 import { object, string } from 'zod';
 
 import { getConnectorInstanceById } from '@/connectors';
-import RequestError from '@/errors/RequestError';
 import { getAllConnectorInfo, getConnectorInfoById } from '@/lib/connectors';
 import koaGuard from '@/middleware/koa-guard';
-import { updateConnector } from '@/queries/connector';
+import { findConnectorById, updateConnector } from '@/queries/connector';
 
 import { AuthedRouter } from './types';
 
@@ -40,6 +39,7 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
         params: { id },
         body: { enabled },
       } = ctx.guard;
+      await findConnectorById(id);
       await updateConnector({ set: { enabled }, where: { id } });
       ctx.body = { enabled };
 
@@ -60,18 +60,11 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
         params: { id },
         body,
       } = ctx.guard;
+      await findConnectorById(id);
       const connectorInstance = getConnectorInstanceById(id);
-      if (!connectorInstance) {
-        throw new RequestError({
-          code: 'entity.not_exists_with_id',
-          name: Connectors.tableSingular,
-          id,
-          status: 404,
-        });
-      }
 
       if (body.config) {
-        await connectorInstance.validateConfig(body.config);
+        await connectorInstance?.validateConfig(body.config);
       }
 
       await updateConnector({ set: body, where: { id } });
