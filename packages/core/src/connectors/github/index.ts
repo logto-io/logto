@@ -9,9 +9,10 @@ import {
   GetAccessToken,
   GetAuthorizationUri,
   ValidateConfig,
+  GetUserInfo,
 } from '../types';
 import { getConnectorConfig } from '../utilities';
-import { authorizationEndpoint, accessTokenEndpoint, scope } from './constant';
+import { authorizationEndpoint, accessTokenEndpoint, scope, userInfoEndpoint } from './constant';
 
 export const metadata: ConnectorMetadata = {
   id: 'github',
@@ -73,4 +74,30 @@ export const getAccessToken: GetAccessToken = async (code) => {
       token_type: string;
     }>();
   return accessToken;
+};
+
+export const getUserInfo: GetUserInfo = async (accessToken: string) => {
+  const {
+    id,
+    avatar_url: avatar,
+    email,
+    name,
+  } = await got
+    .get(userInfoEndpoint, {
+      headers: {
+        authorization: `token ${accessToken}`,
+      },
+    })
+    .json<{
+      id: number;
+      avatar_url: string;
+      email: string;
+      name: string;
+    }>();
+  return {
+    id: String(id),
+    avatar,
+    email,
+    name,
+  };
 };
