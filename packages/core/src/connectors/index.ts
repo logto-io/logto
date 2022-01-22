@@ -4,8 +4,6 @@ import { findConnectorById, insertConnector } from '@/queries/connector';
 import * as AliyunDM from './aliyun-dm';
 import { ConnectorInstance, ConnectorInstanceWithConnector } from './types';
 
-// // eslint-disable-next-line @typescript-eslint/ban-types
-// type ConnectorInstanceWithoutConnector = Omit<ConnectorInstance, 'connector'>;
 const connectorInstancesWithoutConnector: ConnectorInstance[] = [AliyunDM];
 
 export const getConnectorInstances = async (): Promise<ConnectorInstanceWithConnector[]> => {
