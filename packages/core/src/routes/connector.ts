@@ -59,7 +59,6 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
         params: { id },
         body,
       } = ctx.guard;
-      await findConnectorById(id);
       const connectorInstance = await getConnectorInstanceById(id);
 
       if (body.config) {
