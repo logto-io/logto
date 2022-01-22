@@ -1,4 +1,3 @@
-import { ConnectorType } from '@logto/schemas';
 import got from 'got';
 import { stringify } from 'query-string';
 import { z } from 'zod';
@@ -10,6 +9,7 @@ import {
   GetAuthorizationUri,
   ValidateConfig,
   GetUserInfo,
+  ConnectorType,
 } from '../types';
 import { getConnectorConfig } from '../utilities';
 import { authorizationEndpoint, accessTokenEndpoint, scope, userInfoEndpoint } from './constant';
@@ -47,7 +47,7 @@ export const validateConfig: ValidateConfig = async (config: unknown) => {
 };
 
 export const getAuthorizationUri: GetAuthorizationUri = async (redirectUri, state) => {
-  const config = await getConnectorConfig<GithubConfig>(metadata.id, metadata.type);
+  const config = await getConnectorConfig<GithubConfig>(metadata.id);
   return `${authorizationEndpoint}?${stringify({
     client_id: config.clientId,
     redirect_uri: redirectUri,
@@ -64,7 +64,7 @@ export const getAccessToken: GetAccessToken = async (code) => {
   };
 
   const { clientId: client_id, clientSecret: client_secret } =
-    await getConnectorConfig<GithubConfig>(metadata.id, metadata.type);
+    await getConnectorConfig<GithubConfig>(metadata.id);
   const { access_token: accessToken } = await got
     .post({
       url: accessTokenEndpoint,

@@ -1,8 +1,8 @@
 import { getConnectorInstances } from '@/connectors';
-import { ConnectorInstance } from '@/connectors/types';
+import { ConnectorInstanceWithConnector } from '@/connectors/types';
 
 export { getConnectorInstanceById } from '@/connectors';
 
-export const getAllConnectorInstances = async (): Promise<ConnectorInstance[]> => {
+export const getAllConnectorInstances = async (): Promise<ConnectorInstanceWithConnector[]> => {
   return getConnectorInstances();
 };
