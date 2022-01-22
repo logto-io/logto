@@ -8,6 +8,12 @@ import { convertToIdentifiers } from '@/database/utils';
 
 const { table, fields } = convertToIdentifiers(Connectors);
 
+export const findAllConnectors = async () =>
+  pool.many<Connector>(sql`
+    select ${sql.join(Object.values(fields), sql`, `)}
+    from ${table}
+  `);
+
 export const findConnectorById = async (id: string) =>
   pool.one<Connector>(sql`
     select ${sql.join(Object.values(fields), sql`, `)}

@@ -1,17 +1,41 @@
+import RequestError from '@/errors/RequestError';
 import { findConnectorById, insertConnector } from '@/queries/connector';
 
 import * as AliyunDM from './aliyun-dm';
 import { ConnectorInstance } from './types';
 
-export const connectorInstances: Readonly<ConnectorInstance[]> = [AliyunDM];
+// eslint-disable-next-line @typescript-eslint/ban-types
+type ConnectorInstanceWithoutConnector = Omit<ConnectorInstance, 'connector'>;
+const connectorInstancesWithoutConnector: ConnectorInstanceWithoutConnector[] = [AliyunDM];
 
-export const getConnectorInstanceById = (id: string): ConnectorInstance | null => {
-  return connectorInstances.find((connector) => connector.metadata.id === id) ?? null;
+export const getConnectorInstances = async (): Promise<ConnectorInstance[]> => {
+  return Promise.all(
+    connectorInstancesWithoutConnector.map(async (connectorInstanceWithoutConnector) => {
+      const connector = await findConnectorById(connectorInstanceWithoutConnector.metadata.id);
+      return { connector, ...connectorInstanceWithoutConnector };
+    })
+  );
+};
+
+export const getConnectorInstanceById = async (id: string): Promise<ConnectorInstance> => {
+  const pickedConnectorInstancesWithoutConnector = connectorInstancesWithoutConnector.find(
+    (connectorInstanceWithoutConnector) => connectorInstanceWithoutConnector.metadata.id === id
+  );
+  if (!pickedConnectorInstancesWithoutConnector) {
+    throw new RequestError({
+      code: 'entity.not_found',
+      id,
+      status: 404,
+    });
+  }
+
+  const connector = await findConnectorById(id);
+  return { connector, ...pickedConnectorInstancesWithoutConnector };
 };
 
 export const initConnectors = async () => {
   await Promise.all(
-    connectorInstances.map(async ({ metadata: { id } }) => {
+    connectorInstancesWithoutConnector.map(async ({ metadata: { id } }) => {
       const record = await findConnectorById(id);
       if (record) {
         return;

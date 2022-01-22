@@ -1,19 +1,8 @@
-import { connectorInstances, getConnectorInstanceById } from '@/connectors';
-import { ConnectorInfo } from '@/connectors/types';
-import { findConnectorById } from '@/queries/connector';
+import { getConnectorInstances } from '@/connectors';
+import { ConnectorInstance } from '@/connectors/types';
 
-export const getAllConnectorInfo = async (): Promise<ConnectorInfo[]> => {
-  return Promise.all(
-    connectorInstances.map(async (connectorInstance) => {
-      const { metadata } = connectorInstance;
-      const connector = await findConnectorById(metadata.id);
-      return { ...connector, metadata };
-    })
-  );
-};
+export { getConnectorInstanceById } from '@/connectors';
 
-export const getConnectorInfoById = async (id: string): Promise<ConnectorInfo> => {
-  const connector = await findConnectorById(id);
-  const { metadata } = getConnectorInstanceById(connector.id) ?? {};
-  return { ...connector, metadata };
+export const getAllConnectorInstances = async (): Promise<ConnectorInstance[]> => {
+  return getConnectorInstances();
 };
