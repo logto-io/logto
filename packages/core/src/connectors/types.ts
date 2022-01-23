@@ -15,8 +15,8 @@ export interface ConnectorMetadata {
 }
 
 // The name `Connector` is used for database, use `ConnectorInstance` to avoid confusing.
-export type ConnectorInstanceWithConnector = ConnectorInstance & { connector: Connector };
-export type ConnectorInstance = EmailConector | SocialConector;
+export type ConnectorInstance = AllConnectors & { connector: Connector };
+export type AllConnectors = EmailConector | SocialConector;
 
 export interface BaseConnector {
   metadata: ConnectorMetadata;

@@ -2,26 +2,22 @@ import RequestError from '@/errors/RequestError';
 import { findConnectorById, insertConnector } from '@/queries/connector';
 
 import * as AliyunDM from './aliyun-dm';
-import { ConnectorInstance, ConnectorInstanceWithConnector } from './types';
+import { ConnectorInstance, AllConnectors } from './types';
 
-const connectorInstancesWithoutConnector: ConnectorInstance[] = [AliyunDM];
+const allConnectors: AllConnectors[] = [AliyunDM];
 
-export const getConnectorInstances = async (): Promise<ConnectorInstanceWithConnector[]> => {
+export const getConnectorInstances = async (): Promise<ConnectorInstance[]> => {
   return Promise.all(
-    connectorInstancesWithoutConnector.map(async (connectorInstanceWithoutConnector) => {
-      const connector = await findConnectorById(connectorInstanceWithoutConnector.metadata.id);
-      return { connector, ...connectorInstanceWithoutConnector };
+    allConnectors.map(async (element) => {
+      const connector = await findConnectorById(element.metadata.id);
+      return { connector, ...element };
     })
   );
 };
 
-export const getConnectorInstanceById = async (
-  id: string
-): Promise<ConnectorInstanceWithConnector> => {
-  const pickedConnectorInstanceWithoutConnector = connectorInstancesWithoutConnector.find(
-    (connectorInstanceWithoutConnector) => connectorInstanceWithoutConnector.metadata.id === id
-  );
-  if (!pickedConnectorInstanceWithoutConnector) {
+export const getConnectorInstanceById = async (id: string): Promise<ConnectorInstance> => {
+  const found = allConnectors.find((element) => element.metadata.id === id);
+  if (!found) {
     throw new RequestError({
       code: 'entity.not_found',
       id,
@@ -30,12 +26,12 @@ export const getConnectorInstanceById = async (
   }
 
   const connector = await findConnectorById(id);
-  return { connector, ...pickedConnectorInstanceWithoutConnector };
+  return { connector, ...found };
 };
 
 export const initConnectors = async () => {
   await Promise.all(
-    connectorInstancesWithoutConnector.map(async ({ metadata: { id } }) => {
+    allConnectors.map(async ({ metadata: { id } }) => {
       const record = await findConnectorById(id);
       if (record) {
         return;

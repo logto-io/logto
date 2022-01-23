@@ -1,7 +1,7 @@
 import { Connectors } from '@logto/schemas';
 import { object, string } from 'zod';
 
-import { getAllConnectorInstances, getConnectorInstanceById } from '@/lib/connectors';
+import { getConnectorInstances, getConnectorInstanceById } from '@/connectors';
 import koaGuard from '@/middleware/koa-guard';
 import { findConnectorById, updateConnector } from '@/queries/connector';
 
@@ -9,7 +9,7 @@ import { AuthedRouter } from './types';
 
 export default function connectorRoutes<T extends AuthedRouter>(router: T) {
   router.get('/connectors', async (ctx, next) => {
-    ctx.body = await getAllConnectorInstances();
+    ctx.body = await getConnectorInstances();
 
     return next();
   });
