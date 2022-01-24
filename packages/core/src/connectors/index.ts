@@ -2,9 +2,9 @@ import RequestError from '@/errors/RequestError';
 import { findConnectorById, insertConnector } from '@/queries/connector';
 
 import * as AliyunDM from './aliyun-dm';
-import { ConnectorInstance, AllConnectors } from './types';
+import { ConnectorInstance } from './types';
 
-const allConnectors: AllConnectors[] = [AliyunDM];
+const allConnectors: ConnectorInstance[] = [AliyunDM];
 
 export const getConnectorInstances = async (): Promise<ConnectorInstance[]> => {
   return Promise.all(

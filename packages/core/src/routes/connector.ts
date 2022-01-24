@@ -9,7 +9,10 @@ import { AuthedRouter } from './types';
 
 export default function connectorRoutes<T extends AuthedRouter>(router: T) {
   router.get('/connectors', async (ctx, next) => {
-    ctx.body = await getConnectorInstances();
+    const connectorInstances = await getConnectorInstances();
+    ctx.body = connectorInstances.map(({ connector, metadata }) => {
+      return { ...connector, metadata };
+    });
 
     return next();
   });
@@ -21,7 +24,8 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
       const {
         params: { id },
       } = ctx.guard;
-      ctx.body = await getConnectorInstanceById(id);
+      const { connector, metadata } = await getConnectorInstanceById(id);
+      ctx.body = { ...connector, metadata };
 
       return next();
     }
