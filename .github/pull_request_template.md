@@ -1,6 +1,6 @@
 <!-- MANDATORY -->
 ## Summary
-<!-- Provide detail PR description bellow -->
+<!-- Provide detail PR description below -->
 
 
 <!-- Optional -->
