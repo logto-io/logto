@@ -7,7 +7,7 @@ export * from './oidc-model-instance';
 export * from './resource-scope';
 export * from './resource';
 export * from './setting';
-export * from './sign-in-experience-setting';
+export * from './sign-in-experience';
 export * from './sign-in-method';
 export * from './user-log';
 export * from './user';

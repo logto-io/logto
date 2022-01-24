@@ -1,4 +1,4 @@
-create table sign_in_experience_settings (
+create table sign_in_experiences (
   id varchar(128) not null,
   company_info jsonb /* @use CompanyInfo */ not null,
   branding jsonb /* @use Branding */ not null,

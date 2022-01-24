@@ -17,7 +17,7 @@ import {
   Guard,
 } from '../foundations';
 
-export type CreateSignInExperienceSetting = {
+export type CreateSignInExperience = {
   id: string;
   companyInfo: CompanyInfo;
   branding: Branding;
@@ -27,7 +27,7 @@ export type CreateSignInExperienceSetting = {
   signInMethods: SignInMethodSettings;
 };
 
-export type SignInExperienceSetting = {
+export type SignInExperience = {
   id: string;
   companyInfo: CompanyInfo;
   branding: Branding;
@@ -37,7 +37,7 @@ export type SignInExperienceSetting = {
   signInMethods: SignInMethodSettings;
 };
 
-const createGuard: Guard<CreateSignInExperienceSetting> = z.object({
+const createGuard: Guard<CreateSignInExperience> = z.object({
   id: z.string(),
   companyInfo: companyInfoGuard,
   branding: brandingGuard,
@@ -47,27 +47,26 @@ const createGuard: Guard<CreateSignInExperienceSetting> = z.object({
   signInMethods: signInMethodSettingsGuard,
 });
 
-export const SignInExperienceSettings: GeneratedSchema<CreateSignInExperienceSetting> =
-  Object.freeze({
-    table: 'sign_in_experience_settings',
-    tableSingular: 'sign_in_experience_setting',
-    fields: {
-      id: 'id',
-      companyInfo: 'company_info',
-      branding: 'branding',
-      termsOfUse: 'terms_of_use',
-      forgetPasswordEnabled: 'forget_password_enabled',
-      localization: 'localization',
-      signInMethods: 'sign_in_methods',
-    },
-    fieldKeys: [
-      'id',
-      'companyInfo',
-      'branding',
-      'termsOfUse',
-      'forgetPasswordEnabled',
-      'localization',
-      'signInMethods',
-    ],
-    createGuard,
-  });
+export const SignInExperiences: GeneratedSchema<CreateSignInExperience> = Object.freeze({
+  table: 'sign_in_experiences',
+  tableSingular: 'sign_in_experience',
+  fields: {
+    id: 'id',
+    companyInfo: 'company_info',
+    branding: 'branding',
+    termsOfUse: 'terms_of_use',
+    forgetPasswordEnabled: 'forget_password_enabled',
+    localization: 'localization',
+    signInMethods: 'sign_in_methods',
+  },
+  fieldKeys: [
+    'id',
+    'companyInfo',
+    'branding',
+    'termsOfUse',
+    'forgetPasswordEnabled',
+    'localization',
+    'signInMethods',
+  ],
+  createGuard,
+});
