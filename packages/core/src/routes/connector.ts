@@ -2,16 +2,22 @@ import { Connectors } from '@logto/schemas';
 import { object, string } from 'zod';
 
 import { getConnectorInstances, getConnectorInstanceById } from '@/connectors';
+import { ConnectorInstance } from '@/connectors/types';
 import koaGuard from '@/middleware/koa-guard';
 import { findConnectorById, updateConnector } from '@/queries/connector';
 
 import { AuthedRouter } from './types';
 
+const transpileConnectorInstance = ({ connector, metadata }: ConnectorInstance) => ({
+  ...connector,
+  metadata,
+});
+
 export default function connectorRoutes<T extends AuthedRouter>(router: T) {
   router.get('/connectors', async (ctx, next) => {
     const connectorInstances = await getConnectorInstances();
-    ctx.body = connectorInstances.map(({ connector, metadata }) => {
-      return { ...connector, metadata };
+    ctx.body = connectorInstances.map((connectorInstance) => {
+      return transpileConnectorInstance(connectorInstance);
     });
 
     return next();
@@ -24,8 +30,8 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
       const {
         params: { id },
       } = ctx.guard;
-      const { connector, metadata } = await getConnectorInstanceById(id);
-      ctx.body = { ...connector, metadata };
+      const connectorInstance = await getConnectorInstanceById(id);
+      ctx.body = transpileConnectorInstance(connectorInstance);
 
       return next();
     }
@@ -70,7 +76,7 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
       }
 
       await updateConnector({ set: body, where: { id } });
-      ctx.body = body;
+      ctx.body = transpileConnectorInstance(await getConnectorInstanceById(id));
 
       return next();
     }
