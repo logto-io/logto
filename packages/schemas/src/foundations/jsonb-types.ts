@@ -93,7 +93,7 @@ export const brandingGuard = z.object({
   backgroundColor: z.string(),
   darkMode: z.boolean(),
   darkPrimaryColor: z.string(),
-  darkBackgroundColoe: z.string(),
+  darkBackgroundColor: z.string(),
   style: z.nativeEnum(BrandingStyle),
 });
 
@@ -115,7 +115,7 @@ export enum Language {
 export const localizationGuard = z.object({
   autoDetect: z.boolean(),
   primaryLanguage: z.nativeEnum(Language),
-  fallbackLandguage: z.nativeEnum(Language),
+  fallbackLanguage: z.nativeEnum(Language),
 });
 
 export type Localization = z.infer<typeof localizationGuard>;
