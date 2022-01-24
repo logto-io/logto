@@ -1,8 +1,10 @@
+import { NormalizeKeyPaths } from '@silverhand/essentials';
+
 import en from './locales/en';
 import zhCN from './locales/zh-cn';
-import { Normalize, Resource } from './types';
+import { Resource } from './types';
 
-export type LogtoErrorCode = Normalize<typeof en.errors>;
+export type LogtoErrorCode = NormalizeKeyPaths<typeof en.errors>;
 export type LogtoErrorI18nKey = `errors:${LogtoErrorCode}`;
 export type Languages = keyof Resource;
 
