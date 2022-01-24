@@ -97,11 +97,10 @@ export default function userRoutes<T extends AnonymousRouter>(router: T, provide
 
       const { passwordEncrypted, passwordEncryptionSalt } = encryptUserPassword(userId, password);
 
-      await updateUserById(userId, {
+      const user = await updateUserById(userId, {
         passwordEncryptionSalt,
         passwordEncrypted,
       });
-      const user = await findUserById(userId);
       ctx.body = pick(user, ...userInfoSelectFields);
       return next();
     }

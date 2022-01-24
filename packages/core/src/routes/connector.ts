@@ -49,8 +49,7 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
         body: { enabled },
       } = ctx.guard;
       await findConnectorById(id);
-      await updateConnector({ set: { enabled }, where: { id } });
-      ctx.body = { enabled };
+      ctx.body = await updateConnector({ set: { enabled }, where: { id } });
 
       return next();
     }
@@ -75,8 +74,7 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
         await connectorInstance.validateConfig(body.config);
       }
 
-      await updateConnector({ set: body, where: { id } });
-      ctx.body = transpileConnectorInstance(await getConnectorInstanceById(id));
+      ctx.body = await updateConnector({ set: body, where: { id } });
 
       return next();
     }

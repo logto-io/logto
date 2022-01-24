@@ -25,4 +25,4 @@ export const insertConnector = buildInsertInto<CreateConnector, Connector>(pool,
   returning: true,
 });
 
-export const updateConnector = buildUpdateWhere<CreateConnector>(pool, Connectors);
+export const updateConnector = buildUpdateWhere<CreateConnector, Connector>(pool, Connectors, true);
