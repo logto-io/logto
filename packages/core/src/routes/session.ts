@@ -76,18 +76,6 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
     const { session, grantId, params, prompt } = interaction;
     assertThat(session, 'session.not_found');
 
-    const { scope } = object({
-      scope: string().optional(),
-    }).parse(params);
-
-    // LOG-49: Connect and check scope with resource indicators
-    const scopes = scope?.split(' ') ?? [];
-    const invalidScopes = scopes.filter((scope) => !['openid', 'offline_access'].includes(scope));
-    assertThat(invalidScopes.length === 0, 'oidc.invalid_scope', {
-      count: invalidScopes.length,
-      scopes: invalidScopes.join(', '),
-    });
-
     const { accountId } = session;
     const grant =
       conditional(grantId && (await provider.Grant.find(grantId))) ??
@@ -96,11 +84,18 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
     // V2: fulfill missing claims / resources
     const PromptDetailsBody = object({
       missingOIDCScope: string().array().optional(),
+      missingResourceScopes: object({}).catchall(string().array()).optional(),
     });
-    const { missingOIDCScope } = PromptDetailsBody.parse(prompt.details);
+    const { missingOIDCScope, missingResourceScopes } = PromptDetailsBody.parse(prompt.details);
 
     if (missingOIDCScope) {
       grant.addOIDCScope(missingOIDCScope.join(' '));
+    }
+
+    if (missingResourceScopes) {
+      for (const [indicator, scope] of Object.entries(missingResourceScopes)) {
+        grant.addResourceScope(indicator, scope.join(' '));
+      }
     }
 
     const finalGrantId = await grant.save();
