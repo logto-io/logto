@@ -1,10 +1,11 @@
 import RequestError from '@/errors/RequestError';
-import { findConnectorById, insertConnector } from '@/queries/connector';
+import { findConnectorById, hasConnector, insertConnector } from '@/queries/connector';
 
 import * as AliyunDM from './aliyun-dm';
+import * as GitHub from './github';
 import { ConnectorInstance } from './types';
 
-const allConnectors: ConnectorInstance[] = [AliyunDM];
+const allConnectors: ConnectorInstance[] = [AliyunDM, GitHub];
 
 export const getConnectorInstances = async (): Promise<ConnectorInstance[]> => {
   return Promise.all(
@@ -32,8 +33,7 @@ export const getConnectorInstanceById = async (id: string): Promise<ConnectorIns
 export const initConnectors = async () => {
   await Promise.all(
     allConnectors.map(async ({ metadata: { id } }) => {
-      const record = await findConnectorById(id);
-      if (record) {
+      if (await hasConnector(id)) {
         return;
       }
 
