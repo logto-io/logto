@@ -2,32 +2,24 @@
 
 import { z } from 'zod';
 
-import {
-  SignInMethodMetadata,
-  signInMethodMetadataGuard,
-  GeneratedSchema,
-  Guard,
-} from '../foundations';
+import { GeneratedSchema, Guard } from '../foundations';
 
 export type CreateSignInMethod = {
   id: string;
   name: string;
   connectorId?: string | null;
-  metadata?: SignInMethodMetadata | null;
 };
 
 export type SignInMethod = {
   id: string;
   name: string;
   connectorId: string | null;
-  metadata: SignInMethodMetadata | null;
 };
 
 const createGuard: Guard<CreateSignInMethod> = z.object({
   id: z.string(),
   name: z.string(),
   connectorId: z.string().nullable().optional(),
-  metadata: signInMethodMetadataGuard.nullable().optional(),
 });
 
 export const SignInMethods: GeneratedSchema<CreateSignInMethod> = Object.freeze({
@@ -37,8 +29,7 @@ export const SignInMethods: GeneratedSchema<CreateSignInMethod> = Object.freeze(
     id: 'id',
     name: 'name',
     connectorId: 'connector_id',
-    metadata: 'metadata',
   },
-  fieldKeys: ['id', 'name', 'connectorId', 'metadata'],
+  fieldKeys: ['id', 'name', 'connectorId'],
   createGuard,
 });

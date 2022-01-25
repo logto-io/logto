@@ -127,8 +127,3 @@ export const signInMethodSettingsGuard = z.object({
 });
 
 export type SignInMethodSettings = z.infer<typeof signInMethodSettingsGuard>;
-
-// TODO: Leave it for now
-export const signInMethodMetadataGuard = z.object({});
-
-export type SignInMethodMetadata = z.infer<typeof signInMethodMetadataGuard>;
