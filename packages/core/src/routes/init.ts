@@ -9,6 +9,7 @@ import connectorRoutes from '@/routes/connector';
 import resourceRoutes from '@/routes/resource';
 import sessionRoutes from '@/routes/session';
 import settingRoutes from '@/routes/setting';
+import signInExperiencesRoutes from '@/routes/sign-in-experience';
 import statusRoutes from '@/routes/status';
 import swaggerRoutes from '@/routes/swagger';
 import userRoutes from '@/routes/user';
@@ -29,6 +30,7 @@ const createRouters = (provider: Provider) => {
   settingRoutes(router);
   connectorRoutes(router);
   resourceRoutes(router);
+  signInExperiencesRoutes(router);
 
   return [anonymousRouter, router];
 };
