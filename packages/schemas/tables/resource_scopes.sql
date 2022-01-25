@@ -4,7 +4,7 @@ create table resource_scopes (
     description text not null,
     resource_id varchar(24) not null,
     primary key (id),
-    constraint fk_resource
+    constraint fk__resource_scopes__resource_id
         foreign key (resource_id)
         references resources(id)
         on delete cascade
