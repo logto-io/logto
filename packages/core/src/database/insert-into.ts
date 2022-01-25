@@ -1,4 +1,5 @@
 import { SchemaLike, GeneratedSchema } from '@logto/schemas';
+import { has } from '@silverhand/essentials';
 import { DatabasePoolType, IdentifierSqlTokenType, sql } from 'slonik';
 
 import assertThat from '@/utils/assert-that';
@@ -59,15 +60,16 @@ export const buildInsertInto: BuildInsertInto = <
   const onConflict = config?.onConflict;
 
   return async (data: OmitAutoSetFields<Schema>): Promise<ReturnType | void> => {
+    const insertingKeys = keys.filter((key) => has(data, key));
     const {
       rows: [entry],
     } = await pool.query<ReturnType>(sql`
       insert into ${table} (${sql.join(
-      keys.map((key) => fields[key]),
+      insertingKeys.map((key) => fields[key]),
       sql`, `
     )})
       values (${sql.join(
-        keys.map((key) => convertToPrimitiveOrSql(key, data[key] ?? null)),
+        insertingKeys.map((key) => convertToPrimitiveOrSql(key, data[key] ?? null)),
         sql`, `
       )})
       ${conditionalSql(returning, () => sql`returning *`)}
