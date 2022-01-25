@@ -12,12 +12,8 @@ const randomCode = customAlphabet('1234567890', 6);
 export const createPasscode = async (
   sessionId: string,
   type: PasscodeType,
-  { phone, email }: { phone: string; email: string }
+  payload: { phone: string } | { email: string }
 ) => {
-  if (!phone && !email) {
-    throw new Error('Require phone or email.');
-  }
-
   // Disable existing passcodes.
   const passcode = await findUnusedPasscodeBySessionIdAndType(sessionId, type);
   if (passcode) {
@@ -32,5 +28,6 @@ export const createPasscode = async (
     sessionId,
     type,
     code: randomCode(),
+    ...payload,
   });
 };
