@@ -5,6 +5,11 @@ export enum ApplicationType {
   SPA = 'SPA',
   Traditional = 'Traditional',
 }
+export enum PasscodeType {
+  SignIn = 'SignIn',
+  Register = 'Register',
+  ForgotPassword = 'ForgotPassword',
+}
 export enum UserLogType {
   SignInUsernameAndPassword = 'SignInUsernameAndPassword',
   ExchangeAccessToken = 'ExchangeAccessToken',
