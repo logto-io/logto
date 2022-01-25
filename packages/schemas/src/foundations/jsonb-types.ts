@@ -83,9 +83,9 @@ export const companyInfoGuard = z.object({
 export type CompanyInfo = z.infer<typeof companyInfoGuard>;
 
 export enum BrandingStyle {
-  companylogo_companyname_appname = 'cl-cn-an',
-  companylogo_applogo_campanyname_appname = 'cl-al-cn-an',
-  applogo_campanyname_appname = 'al-cn-an',
+  CompanyLogo_CompanyName_AppName = 'CompanyLogo_CompanyName_AppName',
+  CompanyLogo_AppLogo_CompanyName_AppName = 'CompanyLogo_AppLogo_CompanyName_AppName',
+  AppLogo_CompanyName_AppName = 'AppLogo_CompanyName_AppName',
 }
 
 export const brandingGuard = z.object({
@@ -128,8 +128,7 @@ export const signInMethodSettingsGuard = z.object({
 
 export type SignInMethodSettings = z.infer<typeof signInMethodSettingsGuard>;
 
-export const signInMethodMetadataGuard = z.object({
-  connectorId: z.string().optional(),
-});
+// TODO: Leave it for now
+export const signInMethodMetadataGuard = z.object({});
 
 export type SignInMethodMetadata = z.infer<typeof signInMethodMetadataGuard>;

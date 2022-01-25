@@ -12,19 +12,22 @@ import {
 export type CreateSignInMethod = {
   id: string;
   name: string;
-  metadata?: SignInMethodMetadata;
+  connectorId?: string | null;
+  metadata?: SignInMethodMetadata | null;
 };
 
 export type SignInMethod = {
   id: string;
   name: string;
-  metadata: SignInMethodMetadata;
+  connectorId: string | null;
+  metadata: SignInMethodMetadata | null;
 };
 
 const createGuard: Guard<CreateSignInMethod> = z.object({
   id: z.string(),
   name: z.string(),
-  metadata: signInMethodMetadataGuard.optional(),
+  connectorId: z.string().nullable().optional(),
+  metadata: signInMethodMetadataGuard.nullable().optional(),
 });
 
 export const SignInMethods: GeneratedSchema<CreateSignInMethod> = Object.freeze({
@@ -33,8 +36,9 @@ export const SignInMethods: GeneratedSchema<CreateSignInMethod> = Object.freeze(
   fields: {
     id: 'id',
     name: 'name',
+    connectorId: 'connector_id',
     metadata: 'metadata',
   },
-  fieldKeys: ['id', 'name', 'metadata'],
+  fieldKeys: ['id', 'name', 'connectorId', 'metadata'],
   createGuard,
 });
