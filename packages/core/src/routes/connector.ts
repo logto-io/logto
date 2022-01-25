@@ -4,7 +4,7 @@ import { object, string } from 'zod';
 import { getConnectorInstances, getConnectorInstanceById } from '@/connectors';
 import { ConnectorInstance } from '@/connectors/types';
 import koaGuard from '@/middleware/koa-guard';
-import { findConnectorById, updateConnector } from '@/queries/connector';
+import { updateConnector } from '@/queries/connector';
 
 import { AuthedRouter } from './types';
 
@@ -48,9 +48,9 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
         params: { id },
         body: { enabled },
       } = ctx.guard;
-      await findConnectorById(id);
-      await updateConnector({ set: { enabled }, where: { id } });
-      ctx.body = { enabled };
+      const { metadata } = await getConnectorInstanceById(id);
+      const connector = await updateConnector({ set: { enabled }, where: { id } });
+      ctx.body = { ...connector, metadata };
 
       return next();
     }
@@ -69,14 +69,14 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
         params: { id },
         body,
       } = ctx.guard;
-      const connectorInstance = await getConnectorInstanceById(id);
+      const { metadata, validateConfig } = await getConnectorInstanceById(id);
 
       if (body.config) {
-        await connectorInstance.validateConfig(body.config);
+        await validateConfig(body.config);
       }
 
-      await updateConnector({ set: body, where: { id } });
-      ctx.body = transpileConnectorInstance(await getConnectorInstanceById(id));
+      const connector = await updateConnector({ set: body, where: { id } });
+      ctx.body = { ...connector, metadata };
 
       return next();
     }
