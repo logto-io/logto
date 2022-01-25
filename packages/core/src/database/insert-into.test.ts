@@ -6,22 +6,25 @@ import RequestError from '@/errors/RequestError';
 import { createTestPool } from '@/utils/test-utils';
 
 import { buildInsertInto } from './insert-into';
-import { convertToIdentifiers, excludeAutoSetFields } from './utils';
+import { convertToIdentifiers } from './utils';
+
+const buildExpectedInsertIntoSql = (keys: string[]) => [
+  `insert into "users" (${keys.map((key) => `"${decamelize(key)}"`).join(', ')})`,
+  `values (${keys.map((_, index) => `$${index + 1}`).join(', ')})`,
+];
 
 describe('buildInsertInto()', () => {
-  const keys = excludeAutoSetFields(Users.fieldKeys);
-  const expectInsertIntoSql = [
-    `insert into "users" (${keys.map((key) => `"${decamelize(key)}"`).join(', ')})`,
-    `values (${keys.map((_, index) => `$${index + 1}`).join(', ')})`,
-  ];
-
   it('resolves a promise with `undefined` when `returning` is false', async () => {
+    const user: CreateUser = { id: 'foo', username: '456' };
+    const expectInsertIntoSql = buildExpectedInsertIntoSql(Object.keys(user));
     const pool = createTestPool(expectInsertIntoSql.join('\n'));
     const insertInto = buildInsertInto(pool, Users);
-    await expect(insertInto({ id: 'foo', username: '456' })).resolves.toBe(undefined);
+    await expect(insertInto(user)).resolves.toBe(undefined);
   });
 
   it('resolves a promise with `undefined` when `returning` is false and `onConflict` is enabled', async () => {
+    const user: CreateUser = { id: 'foo', username: '456', primaryEmail: 'foo@bar.com' };
+    const expectInsertIntoSql = buildExpectedInsertIntoSql(Object.keys(user));
     const pool = createTestPool(
       [
         ...expectInsertIntoSql,
@@ -36,13 +39,12 @@ describe('buildInsertInto()', () => {
         setExcludedFields: [fields.primaryEmail],
       },
     });
-    await expect(
-      insertInto({ id: 'foo', username: '456', primaryEmail: 'foo@bar.com' })
-    ).resolves.toBe(undefined);
+    await expect(insertInto(user)).resolves.toBe(undefined);
   });
 
   it('resolves a promise with single entity when `returning` is true', async () => {
     const user: CreateUser = { id: 'foo', username: '123', primaryEmail: 'foo@bar.com' };
+    const expectInsertIntoSql = buildExpectedInsertIntoSql(Object.keys(user));
     const pool = createTestPool(
       [...expectInsertIntoSql, 'returning *'].join('\n'),
       (_, [id, username, primaryEmail]) => ({
@@ -58,6 +60,8 @@ describe('buildInsertInto()', () => {
   });
 
   it('throws `entity.create_failed` error with `undefined` when `returning` is true', async () => {
+    const user: CreateUser = { id: 'foo', username: '123', primaryEmail: 'foo@bar.com' };
+    const expectInsertIntoSql = buildExpectedInsertIntoSql(Object.keys(user));
     const pool = createTestPool([...expectInsertIntoSql, 'returning *'].join('\n'));
     const insertInto = buildInsertInto(pool, Users, { returning: true });
 
