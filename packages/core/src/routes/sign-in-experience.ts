@@ -9,14 +9,14 @@ import {
 
 import { AuthedRouter } from './types';
 
-export default function SignInExperiencesRoutes<T extends AuthedRouter>(router: T) {
+export default function signInExperiencesRoutes<T extends AuthedRouter>(router: T) {
   /**
    * As we only support single signInExperience settings for V1
    * always return the default settings in DB for the /sign-in-ex get method
    */
   router.get('/sign-in-ex', async (ctx, next) => {
-    const SignInExperience = await findDefaultSignInExperience();
-    ctx.body = SignInExperience;
+    const signInExperience = await findDefaultSignInExperience();
+    ctx.body = signInExperience;
 
     return next();
   });
