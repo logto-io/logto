@@ -46,6 +46,15 @@ const errors = {
   connector: {
     not_found: 'Can not find any available connector for type: {{type}}.',
   },
+  passcode: {
+    phone_email_empty: 'Both phone and email are empty.',
+    not_found: 'Passcode not found. Please send passcode first.',
+    phone_mismatch: 'Phone mismatch. Please request a new passcode.',
+    email_mismatch: 'Email mismatch. Please request a new passcode.',
+    code_mismatch: 'Invalid passcode.',
+    expired: 'Passcode has expired. Please request a new passcode.',
+    exceed_max_try: 'Passcode verification limitaton exeeded. Please request a new passcode.',
+  },
   swagger: {
     invalid_zod_type: 'Invalid Zod type, please check route guard config.',
   },
