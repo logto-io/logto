@@ -12,7 +12,7 @@ export type CreatePasscode = {
   email?: string | null;
   type: PasscodeType;
   code: string;
-  used?: boolean;
+  consumed?: boolean;
   tryCount?: number;
   createdAt?: number;
 };
@@ -24,7 +24,7 @@ export type Passcode = {
   email: string | null;
   type: PasscodeType;
   code: string;
-  used: boolean;
+  consumed: boolean;
   tryCount: number;
   createdAt: number;
 };
@@ -36,7 +36,7 @@ const createGuard: Guard<CreatePasscode> = z.object({
   email: z.string().nullable().optional(),
   type: z.nativeEnum(PasscodeType),
   code: z.string(),
-  used: z.boolean().optional(),
+  consumed: z.boolean().optional(),
   tryCount: z.number().optional(),
   createdAt: z.number().optional(),
 });
@@ -51,10 +51,20 @@ export const Passcodes: GeneratedSchema<CreatePasscode> = Object.freeze({
     email: 'email',
     type: 'type',
     code: 'code',
-    used: 'used',
+    consumed: 'consumed',
     tryCount: 'try_count',
     createdAt: 'created_at',
   },
-  fieldKeys: ['id', 'sessionId', 'phone', 'email', 'type', 'code', 'used', 'tryCount', 'createdAt'],
+  fieldKeys: [
+    'id',
+    'sessionId',
+    'phone',
+    'email',
+    'type',
+    'code',
+    'consumed',
+    'tryCount',
+    'createdAt',
+  ],
   createGuard,
 });
