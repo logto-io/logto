@@ -69,7 +69,6 @@ describe('convertToPrimitiveOrSql()', () => {
   });
 
   it('throws an error when value is not primitive', () => {
-    // @ts-expect-error
     expect(() => convertToPrimitiveOrSql(normalKey, [123, 456])).toThrow(
       'Cannot convert foo with 123,456 to primitive'
     );
