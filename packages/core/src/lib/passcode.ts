@@ -35,7 +35,6 @@ export const createPasscode = async (
 
 export const sendPasscode = async (passcode: Passcode) => {
   const emailOrPhone = passcode.email ?? passcode.phone;
-
   if (!emailOrPhone) {
     throw new Error('Both email and phone are empty.');
   }

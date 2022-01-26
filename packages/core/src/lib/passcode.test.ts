@@ -132,3 +132,50 @@ describe('sendPasscode', () => {
     });
   });
 });
+
+describe('sendPasscode', () => {
+  it('should throw error when email and phone are both empty', async () => {
+    const passcode: Passcode = {
+      id: 'id',
+      sessionId: 'sessionId',
+      phone: null,
+      email: null,
+      type: PasscodeType.SignIn,
+      code: '1234',
+      consumed: false,
+      tryCount: 0,
+      createdAt: Date.now(),
+    };
+    await expect(sendPasscode(passcode)).rejects.toThrowError('Both email and phone are empty.');
+  });
+
+  it('should call sendPasscode with params matching', async () => {
+    const sendMessage = jest.fn();
+    mockedGetSmsConnectorInstance.mockResolvedValue({
+      metadata: {
+        id: 'id',
+        type: ConnectorType.SMS,
+        name: {},
+        logo: '',
+        description: {},
+      },
+      sendMessage,
+      validateConfig: jest.fn(),
+    });
+    const passcode: Passcode = {
+      id: 'id',
+      sessionId: 'sessionId',
+      phone: 'phone',
+      email: null,
+      type: PasscodeType.SignIn,
+      code: '1234',
+      consumed: false,
+      tryCount: 0,
+      createdAt: Date.now(),
+    };
+    await sendPasscode(passcode);
+    expect(sendMessage).toHaveBeenCalledWith(passcode.phone, passcode.type, {
+      code: passcode.code,
+    });
+  });
+});
