@@ -3,7 +3,7 @@ import { findConnectorById, hasConnector, insertConnector } from '@/queries/conn
 
 import * as AliyunDM from './aliyun-dm';
 import * as GitHub from './github';
-import { ConnectorInstance } from './types';
+import { ConnectorInstance, ConnectorType } from './types';
 
 const allConnectors: ConnectorInstance[] = [AliyunDM, GitHub];
 
@@ -31,6 +31,21 @@ export const getConnectorInstanceById = async (id: string): Promise<ConnectorIns
   const connector = await findConnectorById(id);
 
   return { connector, ...found };
+};
+
+export const getConnectorInstanceByType = async <T extends ConnectorInstance>(
+  type: ConnectorType
+): Promise<T> => {
+  const connectors = await getConnectorInstances();
+  const connector = connectors
+    .filter((connector) => connector.connector?.enabled)
+    .find<T>((connector): connector is T => connector.metadata.type === type);
+
+  if (!connector) {
+    throw new RequestError('connector.not_found', { type });
+  }
+
+  return connector;
 };
 
 export const initConnectors = async () => {

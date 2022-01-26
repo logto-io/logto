@@ -15,12 +15,16 @@ export interface ConnectorMetadata {
 }
 
 // The name `Connector` is used for database, use `ConnectorInstance` to avoid confusing.
-export type ConnectorInstance = EmailConector | SocialConector;
+export type ConnectorInstance = SmsConnector | EmailConector | SocialConector;
 
 export interface BaseConnector {
   connector?: Connector;
   metadata: ConnectorMetadata;
   validateConfig: ValidateConfig;
+}
+
+export interface SmsConnector extends BaseConnector {
+  sendMessage: SmsSendMessageFunction;
 }
 
 export interface EmailConector extends BaseConnector {
@@ -46,10 +50,18 @@ export interface EmailMessageTypes {
   Test: Record<string, unknown>;
 }
 
+type SmsMessageTypes = EmailMessageTypes;
+
 export type EmailSendMessageFunction<T = unknown> = (
   address: string,
   type: keyof EmailMessageTypes,
   payload: EmailMessageTypes[typeof type]
+) => Promise<T>;
+
+export type SmsSendMessageFunction<T = unknown> = (
+  address: string,
+  type: keyof SmsMessageTypes,
+  payload: SmsMessageTypes[typeof type]
 ) => Promise<T>;
 
 export class ConnectorError extends Error {}

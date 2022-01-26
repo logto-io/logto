@@ -1,14 +1,17 @@
-import { PasscodeType } from '@logto/schemas';
+import { Passcode, PasscodeType } from '@logto/schemas';
 
+import { getConnectorInstanceByType } from '@/connectors';
+import { ConnectorType } from '@/connectors/types';
 import {
   deletePasscodesByIds,
   findUnconsumedPasscodesBySessionIdAndType,
   insertPasscode,
 } from '@/queries/passcode';
 
-import { createPasscode, passcodeLength } from './passcode';
+import { createPasscode, passcodeLength, sendPasscode } from './passcode';
 
 jest.mock('@/queries/passcode');
+jest.mock('@/connectors');
 
 const mockedFindUnconsumedPasscodesBySessionIdAndType =
   findUnconsumedPasscodesBySessionIdAndType as jest.MockedFunction<
@@ -18,6 +21,9 @@ const mockedDeletePasscodesByIds = deletePasscodesByIds as jest.MockedFunction<
   typeof deletePasscodesByIds
 >;
 const mockedInsertPasscode = insertPasscode as jest.MockedFunction<typeof insertPasscode>;
+const mockedGetConnectorInstanceByType = getConnectorInstanceByType as jest.MockedFunction<
+  typeof getConnectorInstanceByType
+>;
 
 beforeAll(() => {
   mockedFindUnconsumedPasscodesBySessionIdAndType.mockResolvedValue([]);
@@ -35,6 +41,7 @@ afterEach(() => {
   mockedFindUnconsumedPasscodesBySessionIdAndType.mockClear();
   mockedDeletePasscodesByIds.mockClear();
   mockedInsertPasscode.mockClear();
+  mockedGetConnectorInstanceByType.mockClear();
 });
 
 describe('createPasscode', () => {
@@ -76,5 +83,52 @@ describe('createPasscode', () => {
       email,
     });
     expect(mockedDeletePasscodesByIds).toHaveBeenCalledWith(['id']);
+  });
+});
+
+describe('sendPasscode', () => {
+  it('should throw error when email and phone are both empty', async () => {
+    const passcode: Passcode = {
+      id: 'id',
+      sessionId: 'sessionId',
+      phone: null,
+      email: null,
+      type: PasscodeType.SignIn,
+      code: '1234',
+      consumed: false,
+      tryCount: 0,
+      createdAt: Date.now(),
+    };
+    await expect(sendPasscode(passcode)).rejects.toThrowError('Both email and phone are empty.');
+  });
+
+  it('should call sendPasscode with params matching', async () => {
+    const sendMessage = jest.fn();
+    mockedGetConnectorInstanceByType.mockResolvedValue({
+      metadata: {
+        id: 'id',
+        type: ConnectorType.SMS,
+        name: {},
+        logo: '',
+        description: {},
+      },
+      sendMessage,
+      validateConfig: jest.fn(),
+    });
+    const passcode: Passcode = {
+      id: 'id',
+      sessionId: 'sessionId',
+      phone: 'phone',
+      email: null,
+      type: PasscodeType.SignIn,
+      code: '1234',
+      consumed: false,
+      tryCount: 0,
+      createdAt: Date.now(),
+    };
+    await sendPasscode(passcode);
+    expect(sendMessage).toHaveBeenCalledWith(passcode.phone, passcode.type, {
+      code: passcode.code,
+    });
   });
 });
