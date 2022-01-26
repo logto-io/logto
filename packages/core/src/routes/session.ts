@@ -5,8 +5,9 @@ import { Provider } from 'oidc-provider';
 import { object, string } from 'zod';
 
 import RequestError from '@/errors/RequestError';
+import { encryptUserPassword, generateUserId } from '@/lib/user';
 import koaGuard from '@/middleware/koa-guard';
-import { findUserByUsername } from '@/queries/user';
+import { findUserByUsername, hasUser, insertUser } from '@/queries/user';
 import assertThat from '@/utils/assert-that';
 import { encryptPassword } from '@/utils/password';
 
@@ -111,6 +112,48 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
 
     return next();
   });
+
+  router.post(
+    '/session/register',
+    koaGuard({
+      body: object({
+        username: string().min(3),
+        password: string().min(6),
+      }),
+    }),
+    async (ctx, next) => {
+      const { username, password } = ctx.guard.body;
+
+      if (await hasUser(username)) {
+        throw new RequestError('user.username_exists');
+      }
+
+      const id = await generateUserId();
+
+      const { passwordEncryptionSalt, passwordEncrypted, passwordEncryptionMethod } =
+        encryptUserPassword(id, password);
+
+      await insertUser({
+        id,
+        username,
+        passwordEncrypted,
+        passwordEncryptionMethod,
+        passwordEncryptionSalt,
+      });
+
+      const redirectTo = await provider.interactionResult(
+        ctx.req,
+        ctx.res,
+        {
+          login: { accountId: id },
+        },
+        { mergeWithLastSubmission: false }
+      );
+      ctx.body = { redirectTo };
+
+      return next();
+    }
+  );
 
   router.delete('/session', async (ctx, next) => {
     await provider.interactionDetails(ctx.req, ctx.res);
