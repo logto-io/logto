@@ -1,20 +1,22 @@
 import { PasscodeType } from '@logto/schemas';
 
 import {
-  findUnusedPasscodeBySessionIdAndType,
+  deletePasscodeById,
+  findUnconsumedPasscodeBySessionIdAndType,
   insertPasscode,
-  updatePasscode,
 } from '@/queries/passcode';
 
 import { createPasscode } from './passcode';
 
 jest.mock('@/queries/passcode');
 
-const mockedFindUnusedPasscodeBySessionIdAndType =
-  findUnusedPasscodeBySessionIdAndType as jest.MockedFunction<
-    typeof findUnusedPasscodeBySessionIdAndType
+const mockedFindUnconsumedPasscodeBySessionIdAndType =
+  findUnconsumedPasscodeBySessionIdAndType as jest.MockedFunction<
+    typeof findUnconsumedPasscodeBySessionIdAndType
   >;
-const mockedUpdatePasscode = updatePasscode as jest.MockedFunction<typeof updatePasscode>;
+const mockedDeletePasscodeById = deletePasscodeById as jest.MockedFunction<
+  typeof deletePasscodeById
+>;
 const mockedInsertPasscode = insertPasscode as jest.MockedFunction<typeof insertPasscode>;
 
 beforeAll(() => {
@@ -23,14 +25,14 @@ beforeAll(() => {
     createdAt: Date.now(),
     phone: data.phone ?? '',
     email: data.email ?? '',
-    used: data.used ?? false,
+    consumed: data.consumed ?? false,
     tryCount: data.tryCount ?? 0,
   }));
 });
 
 afterEach(() => {
-  mockedFindUnusedPasscodeBySessionIdAndType.mockClear();
-  mockedUpdatePasscode.mockClear();
+  mockedFindUnconsumedPasscodeBySessionIdAndType.mockClear();
+  mockedDeletePasscodeById.mockClear();
   mockedInsertPasscode.mockClear();
 });
 
@@ -56,7 +58,7 @@ describe('createPasscode', () => {
   it('should disable existing passcode', async () => {
     const email = 'jony@example.com';
     const sessionId = 'sessonId';
-    mockedFindUnusedPasscodeBySessionIdAndType.mockResolvedValue({
+    mockedFindUnconsumedPasscodeBySessionIdAndType.mockResolvedValue({
       id: 'id',
       sessionId,
       code: '1234',
@@ -64,16 +66,12 @@ describe('createPasscode', () => {
       createdAt: Date.now(),
       phone: '',
       email,
-      used: false,
+      consumed: false,
       tryCount: 0,
     });
     await createPasscode(sessionId, PasscodeType.SignIn, {
       email,
     });
-    expect(mockedUpdatePasscode).toHaveBeenCalledWith(
-      expect.objectContaining({
-        set: { used: true },
-      })
-    );
+    expect(mockedDeletePasscodeById).toHaveBeenCalledWith('id');
   });
 });
