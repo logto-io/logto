@@ -1,13 +1,15 @@
 import { ZodObject, ZodType, ZodOptional } from 'zod';
 
+type ParseOptional<K> = undefined extends K
+  ? ZodOptional<ZodType<Exclude<K, undefined>>>
+  : ZodType<K>;
+
 export type Guard<T extends Record<string, unknown>> = ZodObject<{
-  [key in keyof T]-?: undefined extends T[key]
-    ? ZodOptional<ZodType<Exclude<T[key], undefined>>>
-    : ZodType<T[key]>;
+  [key in keyof T]-?: ParseOptional<T[key]>;
 }>;
 
 export type SchemaValuePrimitive = string | number | boolean | undefined;
-export type SchemaValue = SchemaValuePrimitive | Record<string, unknown> | null;
+export type SchemaValue = SchemaValuePrimitive | Record<string, unknown> | unknown[] | null;
 export type SchemaLike<Key extends string = string> = {
   [key in Key]: SchemaValue;
 };
