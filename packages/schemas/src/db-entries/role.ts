@@ -5,27 +5,27 @@ import { z } from 'zod';
 import { GeneratedSchema, Guard } from '../foundations';
 
 export type CreateRole = {
-  id: string;
   name: string;
+  description: string;
 };
 
 export type Role = {
-  id: string;
   name: string;
+  description: string;
 };
 
 const createGuard: Guard<CreateRole> = z.object({
-  id: z.string(),
   name: z.string(),
+  description: z.string(),
 });
 
 export const Roles: GeneratedSchema<CreateRole> = Object.freeze({
   table: 'roles',
   tableSingular: 'role',
   fields: {
-    id: 'id',
     name: 'name',
+    description: 'description',
   },
-  fieldKeys: ['id', 'name'],
+  fieldKeys: ['name', 'description'],
   createGuard,
 });

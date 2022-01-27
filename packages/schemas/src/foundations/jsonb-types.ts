@@ -41,9 +41,9 @@ export type CustomClientMetadata = z.infer<typeof customClientMetadataGuard>;
 /**
  * Users
  */
-export const userRolesGuard = z.string().array();
+export const roleNamesGuard = z.string().array();
 
-export type UserRoles = z.infer<typeof userRolesGuard>;
+export type RoleNames = z.infer<typeof roleNamesGuard>;
 
 /**
  * User Logs
