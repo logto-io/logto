@@ -1,6 +1,6 @@
 import { userInfoSelectFields } from '@logto/schemas';
 import pick from 'lodash.pick';
-import { ForeignKeyIntegrityConstraintViolationError } from 'slonik';
+import { InvalidInputError } from 'slonik';
 import { object, string } from 'zod';
 
 import koaGuard from '@/middleware/koa-guard';
@@ -28,10 +28,10 @@ export default function adminUserRoutes<T extends AuthedRouter>(router: T) {
       if (roleNames?.length) {
         const roles = await findRolesByRoleName(roleNames);
         if (roles.length !== roleNames.length) {
-          throw new ForeignKeyIntegrityConstraintViolationError(
-            new Error('foreign_key_violation roleNames'),
-            'fk__users_role_names__roles_name'
+          const resourcesNotFound = roleNames.filter(
+            (rolesNames) => !roles.some(({ name }) => name === rolesNames)
           );
+          throw new InvalidInputError(`role names (${resourcesNotFound.join(',')}) are not valid`);
         }
       }
 

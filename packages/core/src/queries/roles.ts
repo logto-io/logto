@@ -13,7 +13,7 @@ export const findAllRoles = async () =>
   `);
 
 export const findRolesByRoleName = async (roleNames: string[]) =>
-  pool.many<Role>(sql`
+  pool.any<Role>(sql`
     select ${sql.join(Object.values(fields), sql`,`)}
     from ${table}
     where ${fields.name} in (${sql.join(roleNames, sql`,`)})
