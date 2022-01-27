@@ -28,6 +28,7 @@ const extractBearerTokenFromHeaders = ({ authorization }: IncomingHttpHeaders) =
       { supportedTypes: [bearerTokenIdentifier] }
     )
   );
+
   return authorization.slice(bearerTokenIdentifier.length + 1);
 };
 
@@ -43,6 +44,7 @@ const getUserIdFromRequest = async (request: Request) => {
     audience: adminResource,
   });
   assertThat(sub, new RequestError({ code: 'auth.jwt_sub_missing', status: 401 }));
+
   return sub;
 };
 

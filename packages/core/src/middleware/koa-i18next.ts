@@ -29,6 +29,7 @@ export default function koaI18next<
 
     await i18next.changeLanguage(foundLanguage);
     ctx.locale = i18next.language;
+
     return next();
   };
 }

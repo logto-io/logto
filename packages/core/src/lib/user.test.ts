@@ -32,6 +32,7 @@ describe('generateUserId()', () => {
 
       // eslint-disable-next-line @silverhand/fp/no-mutation
       tried++;
+
       return true;
     });
 

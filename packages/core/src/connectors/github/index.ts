@@ -41,6 +41,7 @@ export const validateConfig: ValidateConfig = async (config: unknown) => {
   }
 
   const result = githubConfigGuard.safeParse(config);
+
   if (!result.success) {
     throw new ConnectorConfigError(result.error.message);
   }
@@ -48,6 +49,7 @@ export const validateConfig: ValidateConfig = async (config: unknown) => {
 
 export const getAuthorizationUri: GetAuthorizationUri = async (redirectUri, state) => {
   const config = await getConnectorConfig<GithubConfig>(metadata.id);
+
   return `${authorizationEndpoint}?${stringify({
     client_id: config.clientId,
     redirect_uri: redirectUri,
@@ -75,6 +77,7 @@ export const getAccessToken: GetAccessToken = async (code) => {
       },
     })
     .json<AccessTokenResponse>();
+
   return accessToken;
 };
 
@@ -98,6 +101,7 @@ export const getUserInfo: GetUserInfo = async (accessToken: string) => {
       },
     })
     .json<UserInfoResponse>();
+
   return {
     id: String(id),
     avatar,

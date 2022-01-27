@@ -162,6 +162,7 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
       error,
     });
     ctx.body = { redirectTo };
+
     return next();
   });
 }

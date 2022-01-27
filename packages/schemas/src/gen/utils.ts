@@ -22,6 +22,7 @@ export const removeParentheses = (value: string) =>
   Object.values(value).reduce<{ result: string; count: number }>(
     (previous, current) => {
       const count = previous.count + getCountDelta(current);
+
       return count === 0 && current !== ')'
         ? { result: previous.result + current, count }
         : { result: previous.result, count };
@@ -79,6 +80,7 @@ export const findFirstParentheses = (value: string): Optional<ParenthesesMatch> 
 
 const getRawType = (value: string): string => {
   const bracketIndex = value.indexOf('[');
+
   return bracketIndex === -1 ? value : value.slice(0, bracketIndex);
 };
 

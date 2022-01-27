@@ -35,6 +35,7 @@ export default function koaUIProxy<
     }
 
     const uiDistFiles = await fs.readdir(PATH_TO_UI_DIST);
+
     if (!uiDistFiles.some((file) => ctx.request.path.startsWith(`/${file}`))) {
       ctx.request.path = '/';
     }

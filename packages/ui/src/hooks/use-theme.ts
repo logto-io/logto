@@ -14,6 +14,7 @@ export default function useTheme() {
     };
 
     darkThemeWatchMedia.addEventListener('change', changeTheme);
+
     return () => {
       darkThemeWatchMedia.removeEventListener('change', changeTheme);
     };

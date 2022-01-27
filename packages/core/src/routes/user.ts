@@ -12,6 +12,7 @@ export default function userRoutes<T extends AnonymousRouter>(router: T) {
   router.get('/users', async (ctx, next) => {
     const users = await findAllUsers();
     ctx.body = users.map((user) => pick(user, ...userInfoSelectFields));
+
     return next();
   });
 
@@ -26,6 +27,7 @@ export default function userRoutes<T extends AnonymousRouter>(router: T) {
       } = ctx.guard;
       const user = await findUserById(userId);
       ctx.body = pick(user, ...userInfoSelectFields);
+
       return next();
     }
   );
@@ -51,6 +53,7 @@ export default function userRoutes<T extends AnonymousRouter>(router: T) {
         passwordEncrypted,
       });
       ctx.body = pick(user, ...userInfoSelectFields);
+
       return next();
     }
   );
@@ -66,6 +69,7 @@ export default function userRoutes<T extends AnonymousRouter>(router: T) {
       } = ctx.guard;
       await deleteUserById(userId);
       ctx.status = 204;
+
       return next();
     }
   );

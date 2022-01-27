@@ -48,6 +48,7 @@ export const deleteApplicationById = async (id: string) => {
     delete from ${table}
     where id=${id}
   `);
+
   if (rowCount < 1) {
     throw new DeletionError();
   }

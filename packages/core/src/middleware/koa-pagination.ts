@@ -55,6 +55,7 @@ export default function koaPagination<StateT, ContextT, ResponseBodyT>({
       const page = Math.floor(offset / limit) + 1; // Start from 1
       ctx.append('Link', buildLink(ctx.request, 1, 'first'));
       ctx.append('Link', buildLink(ctx.request, totalPage, 'last'));
+
       if (page > 1) {
         ctx.append('Link', buildLink(ctx.request, page - 1, 'prev'));
       }

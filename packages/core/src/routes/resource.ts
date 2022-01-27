@@ -66,6 +66,7 @@ export default function resourceRoutes<T extends AuthedRouter>(router: T) {
       ]);
 
       ctx.body = { ...resource, scopes };
+
       return next();
     }
   );
@@ -88,6 +89,7 @@ export default function resourceRoutes<T extends AuthedRouter>(router: T) {
       ]);
 
       ctx.body = { ...resource, scopes };
+
       return next();
     }
   );
@@ -100,6 +102,7 @@ export default function resourceRoutes<T extends AuthedRouter>(router: T) {
       await findResourceById(id);
       await deleteResourceById(id);
       ctx.status = 204;
+
       return next();
     }
   );

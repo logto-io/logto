@@ -26,6 +26,7 @@ const createContext = (query: Record<string, string>): WithPaginationContext<Con
     set: setHeader,
     append: appendHeader,
   };
+
   return context;
 };
 

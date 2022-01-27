@@ -25,6 +25,7 @@ export default async function initApp(app: Koa): Promise<void> {
   app.use(koaUIProxy());
 
   const { HTTPS_CERT, HTTPS_KEY } = process.env;
+
   if (HTTPS_CERT && HTTPS_KEY) {
     https
       .createServer(
@@ -34,6 +35,7 @@ export default async function initApp(app: Koa): Promise<void> {
       .listen(port, () => {
         console.log(`App is listening on port ${port} with HTTPS`);
       });
+
     return;
   }
 

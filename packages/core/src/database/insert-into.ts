@@ -83,6 +83,7 @@ export const buildInsertInto: BuildInsertInto = <
     `);
 
     assertThat(!returning || entry, 'entity.create_failed', { name: rest.tableSingular });
+
     return entry;
   };
 };
