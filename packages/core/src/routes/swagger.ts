@@ -13,6 +13,7 @@ export default function swaggerRoutes<T extends AnonymousRouter>(router: T) {
       const guard = stack.find((function_): function_ is WithGuardConfig<IMiddleware> =>
         isGuardMiddleware(function_)
       );
+
       return { path, methods, guard };
     });
 

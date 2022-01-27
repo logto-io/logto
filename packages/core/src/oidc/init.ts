@@ -79,6 +79,7 @@ export default async function initOidc(app: Koa): Promise<Provider> {
       properties: Object.keys(CustomClientMetadataType),
       validator: (_ctx, key, value) => {
         const result = customClientMetadataGuard.pick({ [key]: true }).safeParse({ key: value });
+
         if (!result.success) {
           throw new errors.InvalidClientMetadata(key);
         }
@@ -86,6 +87,7 @@ export default async function initOidc(app: Koa): Promise<Provider> {
     },
     clientBasedCORS: (_, origin) => {
       console.log('origin', origin);
+
       return origin.startsWith('http://localhost:3000');
     },
     findAccount: async (ctx, sub) => {
@@ -98,6 +100,7 @@ export default async function initOidc(app: Koa): Promise<Provider> {
           console.log('scope:', scope);
           console.log('claims:', claims);
           console.log('rejected:', rejected);
+
           return { sub };
         },
       };
@@ -108,14 +111,17 @@ export default async function initOidc(app: Koa): Promise<Provider> {
        */
       IdToken: (ctx, token, client) => {
         const { idTokenTtl } = client.metadata();
+
         return idTokenTtl ?? defaultIdTokenTtl;
       },
       RefreshToken: (ctx, token, client) => {
         const { refreshTokenTtl } = client.metadata();
+
         return refreshTokenTtl ?? defaultRefreshTokenTtl;
       },
     },
   });
   app.use(mount('/oidc', oidc.app));
+
   return oidc;
 }

@@ -1,4 +1,3 @@
-/* eslint-disable sql/no-unsafe-query */
 import { CreateUser, Users } from '@logto/schemas';
 import decamelize from 'decamelize';
 
@@ -9,6 +8,7 @@ import { buildInsertInto } from './insert-into';
 import { convertToIdentifiers } from './utils';
 
 const buildExpectedInsertIntoSql = (keys: string[]) => [
+  // eslint-disable-next-line sql/no-unsafe-query
   `insert into "users" (${keys.map((key) => `"${decamelize(key)}"`).join(', ')})`,
   `values (${keys.map((_, index) => `$${index + 1}`).join(', ')})`,
 ];

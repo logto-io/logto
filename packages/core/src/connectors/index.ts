@@ -11,6 +11,7 @@ export const getConnectorInstances = async (): Promise<ConnectorInstance[]> => {
   return Promise.all(
     allConnectors.map(async (element) => {
       const connector = await findConnectorById(element.metadata.id);
+
       return { connector, ...element };
     })
   );
@@ -18,6 +19,7 @@ export const getConnectorInstances = async (): Promise<ConnectorInstance[]> => {
 
 export const getConnectorInstanceById = async (id: string): Promise<ConnectorInstance> => {
   const found = allConnectors.find((element) => element.metadata.id === id);
+
   if (!found) {
     throw new RequestError({
       code: 'entity.not_found',
@@ -27,6 +29,7 @@ export const getConnectorInstanceById = async (id: string): Promise<ConnectorIns
   }
 
   const connector = await findConnectorById(id);
+
   return { connector, ...found };
 };
 

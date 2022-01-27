@@ -87,6 +87,7 @@ const generate = async () => {
                   nullable,
                 };
               });
+
             return { name, fields };
           });
         const types = statements

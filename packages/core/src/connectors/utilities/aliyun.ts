@@ -27,6 +27,7 @@ export const getSignature = (
     .sort()
     .map((key) => {
       const value = parameters[key];
+
       if (typeof value !== 'string') {
         throw new ConnectorError('Invalid value');
       }
@@ -36,6 +37,7 @@ export const getSignature = (
     .join('&');
 
   const stringToSign = `${method.toUpperCase()}&${escaper('/')}&${escaper(canonicalizedQuery)}`;
+
   return createHmac('sha1', `${secret}&`).update(stringToSign).digest('base64');
 };
 
@@ -72,9 +74,11 @@ export const request = async <T>(
   const signature = getSignature(finalParameters, accessKeySecret, 'POST');
 
   const payload = new URLSearchParams();
+
   for (const key in finalParameters) {
     if (has(finalParameters, key)) {
       const value = finalParameters[key];
+
       if (typeof value !== 'string') {
         throw new ConnectorError('Invalid value');
       }
@@ -84,6 +88,7 @@ export const request = async <T>(
   }
 
   payload.append('Signature', signature);
+
   return got.post<T>({
     url,
     headers: {

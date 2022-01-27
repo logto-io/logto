@@ -19,6 +19,7 @@ const resolveLanguage = (languageString: string): Optional<[string, number]> => 
 
   for (const item of rest) {
     const [key, value] = item.split('=');
+
     if (key === 'q' && !Number.isNaN(value)) {
       return [language, Number(value)];
     }

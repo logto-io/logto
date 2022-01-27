@@ -9,5 +9,6 @@ export const buildLink = (
   type: LinkRelationType
 ): string => {
   const baseUrl = `${request.origin}${request.path}`;
+
   return `<${baseUrl}?${stringify({ ...request.query, page })}>; rel="${type}"`;
 };

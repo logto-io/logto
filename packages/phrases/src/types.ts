@@ -10,3 +10,5 @@ export interface ResourceLanguage {
 }
 
 export type ResourceKey = string | { [key: string]: any };
+
+/* eslint-enable @typescript-eslint/consistent-indexed-object-style */

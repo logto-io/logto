@@ -30,6 +30,7 @@ function useApi<Args extends any[], Response>(
           const kyError = await error.response.json<RequestErrorBody>();
           setError(kyError);
           setLoading(false);
+
           return;
         }
 

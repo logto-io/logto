@@ -52,6 +52,7 @@ export default function applicationRoutes<T extends AuthedRouter>(router: T) {
         oidcClientMetadata: buildOidcClientMetadata(oidcClientMetadata),
         ...rest,
       });
+
       return next();
     }
   );
@@ -67,6 +68,7 @@ export default function applicationRoutes<T extends AuthedRouter>(router: T) {
       } = ctx.guard;
 
       ctx.body = await findApplicationById(id);
+
       return next();
     }
   );
@@ -91,6 +93,7 @@ export default function applicationRoutes<T extends AuthedRouter>(router: T) {
           ...body.oidcClientMetadata,
         }),
       });
+
       return next();
     }
   );
@@ -104,6 +107,7 @@ export default function applicationRoutes<T extends AuthedRouter>(router: T) {
       await findApplicationById(id);
       await deleteApplicationById(id);
       ctx.status = 204;
+
       return next();
     }
   );

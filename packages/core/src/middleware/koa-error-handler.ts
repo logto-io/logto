@@ -19,6 +19,7 @@ export default function koaErrorHandler<StateT, ContextT>(): Middleware<
       if (error instanceof RequestError) {
         ctx.status = error.status;
         ctx.body = error.body;
+
         return;
       }
 
@@ -30,6 +31,7 @@ export default function koaErrorHandler<StateT, ContextT>(): Middleware<
           code: `oidc.${decamelize(error.name)}` as LogtoErrorCode,
           data: error.error_detail,
         };
+
         return;
       }
 
@@ -37,6 +39,7 @@ export default function koaErrorHandler<StateT, ContextT>(): Middleware<
         const error = new RequestError({ code: 'entity.not_found', status: 404 });
         ctx.status = error.status;
         ctx.body = error.body;
+
         return;
       }
 

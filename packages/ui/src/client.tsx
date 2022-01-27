@@ -17,3 +17,5 @@ renderFunction(
 if (module.hot) {
   module.hot.accept();
 }
+
+/* eslint-enable unicorn/prefer-module */

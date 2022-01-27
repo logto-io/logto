@@ -63,6 +63,7 @@ export const buildUpdateWhere: BuildUpdateWhere = <
         status: 404,
       })
     );
+
     return data;
   };
 };
