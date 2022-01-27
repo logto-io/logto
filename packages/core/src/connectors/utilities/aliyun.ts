@@ -43,22 +43,15 @@ export const getSignature = (
 
 export interface PublicParameters {
   AccessKeyId: string;
-  RegionId?: string;
-  Format?: string;
-  Version?: string;
-  SignatureMethod?: string;
-  Timestamp?: string;
+  Format?: string; // 'json' or 'xml', default: 'json'
+  RegionId?: string; // 'cn-hangzhou' | 'ap-southeast-1' | 'ap-southeast-2'
   Signature?: string;
-  SignatureVersion?: string;
+  SignatureMethod?: string;
   SignatureNonce?: string;
+  SignatureVersion?: string;
+  Timestamp?: string;
+  Version?: string;
 }
-
-const commonParameters = {
-  Version: '2015-11-23',
-  Format: 'json',
-  SignatureVersion: '1.0',
-  SignatureMethod: 'HMAC-SHA1',
-};
 
 export const request = async <T>(
   url: string,

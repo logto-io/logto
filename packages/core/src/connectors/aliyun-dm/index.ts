@@ -4,9 +4,9 @@ import {
   ConnectorConfigError,
   ConnectorError,
   ConnectorMetadata,
+  ConnectorType,
   EmailSendMessageFunction,
   ValidateConfig,
-  ConnectorType,
 } from '../types';
 import { getConnectorConfig } from '../utilities';
 import { singleSendMail } from './single-send-mail';

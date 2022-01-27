@@ -58,10 +58,11 @@ export type EmailSendMessageFunction<T = unknown> = (
   payload: EmailMessageTypes[typeof type]
 ) => Promise<T>;
 
-export type SmsSendMessageFunction<T = unknown> = (
-  address: string,
-  type: keyof SmsMessageTypes,
-  payload: SmsMessageTypes[typeof type]
+export type TextSendMessageFunction<T = unknown, K = Record<string, unknown> & { code: string }> = (
+  phone: string,
+  signName: string,
+  templateCode: string,
+  payload: K
 ) => Promise<T>;
 
 export class ConnectorError extends Error {}

@@ -1,3 +1,5 @@
+import { customAlphabet } from 'nanoid';
+
 import { request } from '../utilities/aliyun';
 import { singleSendText } from './single-send-text';
 
@@ -9,9 +11,9 @@ describe('singleSendMail', () => {
       {
         AccessKeyId: '<access-key-id>',
         PhoneNumbers: '13912345678',
-        SignName: 'Aliyun',
-        TemplateCode: '	SMS_15305',
-        TemplateParam: '{ "code": "231678" }',
+        SignName: '阿里云短信测试',
+        TemplateCode: '	SMS_154950909',
+        TemplateParam: JSON.stringify({ code: passcode }),
       },
       '<access-key-secret>'
     );
