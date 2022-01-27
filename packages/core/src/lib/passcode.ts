@@ -2,8 +2,8 @@ import { PasscodeType } from '@logto/schemas';
 import { customAlphabet, nanoid } from 'nanoid';
 
 import {
-  deletePasscodeById,
-  findUnconsumedPasscodeBySessionIdAndType,
+  deletePasscodesByIds,
+  findUnconsumedPasscodesBySessionIdAndType,
   insertPasscode,
 } from '@/queries/passcode';
 
@@ -15,9 +15,9 @@ export const createPasscode = async (
   payload: { phone: string } | { email: string }
 ) => {
   // Disable existing passcodes.
-  const passcode = await findUnconsumedPasscodeBySessionIdAndType(sessionId, type);
-  if (passcode) {
-    await deletePasscodeById(passcode.id);
+  const passcodes = await findUnconsumedPasscodesBySessionIdAndType(sessionId, type);
+  if (passcodes.length > 0) {
+    await deletePasscodesByIds(passcodes.map((passcode) => passcode.id));
   }
 
   return insertPasscode({

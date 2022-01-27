@@ -1,8 +1,8 @@
 import { PasscodeType } from '@logto/schemas';
 
 import {
-  deletePasscodeById,
-  findUnconsumedPasscodeBySessionIdAndType,
+  deletePasscodesByIds,
+  findUnconsumedPasscodesBySessionIdAndType,
   insertPasscode,
 } from '@/queries/passcode';
 
@@ -10,16 +10,17 @@ import { createPasscode } from './passcode';
 
 jest.mock('@/queries/passcode');
 
-const mockedFindUnconsumedPasscodeBySessionIdAndType =
-  findUnconsumedPasscodeBySessionIdAndType as jest.MockedFunction<
-    typeof findUnconsumedPasscodeBySessionIdAndType
+const mockedFindUnconsumedPasscodesBySessionIdAndType =
+  findUnconsumedPasscodesBySessionIdAndType as jest.MockedFunction<
+    typeof findUnconsumedPasscodesBySessionIdAndType
   >;
-const mockedDeletePasscodeById = deletePasscodeById as jest.MockedFunction<
-  typeof deletePasscodeById
+const mockedDeletePasscodesByIds = deletePasscodesByIds as jest.MockedFunction<
+  typeof deletePasscodesByIds
 >;
 const mockedInsertPasscode = insertPasscode as jest.MockedFunction<typeof insertPasscode>;
 
 beforeAll(() => {
+  mockedFindUnconsumedPasscodesBySessionIdAndType.mockResolvedValue([]);
   mockedInsertPasscode.mockImplementation(async (data) => ({
     ...data,
     createdAt: Date.now(),
@@ -31,8 +32,8 @@ beforeAll(() => {
 });
 
 afterEach(() => {
-  mockedFindUnconsumedPasscodeBySessionIdAndType.mockClear();
-  mockedDeletePasscodeById.mockClear();
+  mockedFindUnconsumedPasscodesBySessionIdAndType.mockClear();
+  mockedDeletePasscodesByIds.mockClear();
   mockedInsertPasscode.mockClear();
 });
 
@@ -58,20 +59,22 @@ describe('createPasscode', () => {
   it('should disable existing passcode', async () => {
     const email = 'jony@example.com';
     const sessionId = 'sessonId';
-    mockedFindUnconsumedPasscodeBySessionIdAndType.mockResolvedValue({
-      id: 'id',
-      sessionId,
-      code: '1234',
-      type: PasscodeType.SignIn,
-      createdAt: Date.now(),
-      phone: '',
-      email,
-      consumed: false,
-      tryCount: 0,
-    });
+    mockedFindUnconsumedPasscodesBySessionIdAndType.mockResolvedValue([
+      {
+        id: 'id',
+        sessionId,
+        code: '1234',
+        type: PasscodeType.SignIn,
+        createdAt: Date.now(),
+        phone: '',
+        email,
+        consumed: false,
+        tryCount: 0,
+      },
+    ]);
     await createPasscode(sessionId, PasscodeType.SignIn, {
       email,
     });
-    expect(mockedDeletePasscodeById).toHaveBeenCalledWith('id');
+    expect(mockedDeletePasscodesByIds).toHaveBeenCalledWith(['id']);
   });
 });

@@ -19,6 +19,16 @@ export const findUnconsumedPasscodeBySessionIdAndType = async (
     where ${fields.sessionId}=${sessionId} and ${fields.type}=${type} and ${fields.consumed} = false
   `);
 
+export const findUnconsumedPasscodesBySessionIdAndType = async (
+  sessionId: string,
+  type: PasscodeType
+) =>
+  pool.many<Passcode>(sql`
+    select ${sql.join(Object.values(fields), sql`, `)}
+    from ${table}
+    where ${fields.sessionId}=${sessionId} and ${fields.type}=${type} and ${fields.consumed} = false
+  `);
+
 export const insertPasscode = buildInsertInto<CreatePasscode, Passcode>(pool, Passcodes, {
   returning: true,
 });
@@ -29,6 +39,16 @@ export const deletePasscodeById = async (id: string) => {
   const { rowCount } = await pool.query(sql`
     delete from ${table}
     where id=${id}
+  `);
+  if (rowCount < 1) {
+    throw new DeletionError();
+  }
+};
+
+export const deletePasscodesByIds = async (ids: string[]) => {
+  const { rowCount } = await pool.query(sql`
+    delete from ${table}
+    where id in (${ids.join(',')})
   `);
   if (rowCount < 1) {
     throw new DeletionError();
