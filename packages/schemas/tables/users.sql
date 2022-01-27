@@ -8,5 +8,6 @@ create table users (
   password_encrypted varchar(128),
   password_encryption_method password_encryption_method,
   password_encryption_salt varchar(128),
+  role_names jsonb /* @use RoleNames */,
   primary key (id)
 );
