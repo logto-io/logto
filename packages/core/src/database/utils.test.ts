@@ -67,12 +67,6 @@ describe('convertToPrimitiveOrSql()', () => {
       expect(convertToPrimitiveOrSql(`${normalKey}${value}`, '123')).toEqual('123');
     }
   });
-
-  it('throws an error when value is not primitive', () => {
-    expect(() => convertToPrimitiveOrSql(normalKey, [123, 456])).toThrow(
-      'Cannot convert foo with 123,456 to primitive'
-    );
-  });
 });
 
 describe('convertToIdentifiers()', () => {

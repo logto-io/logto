@@ -12,7 +12,7 @@ export const findAllRoles = async () =>
     from ${table}
   `);
 
-export const findRolesByRoleName = async (roleNames: string[]) =>
+export const findRolesByRoleNames = async (roleNames: string[]) =>
   pool.any<Role>(sql`
     select ${sql.join(Object.values(fields), sql`,`)}
     from ${table}
