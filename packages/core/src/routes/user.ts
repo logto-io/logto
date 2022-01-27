@@ -64,12 +64,12 @@ export default function userRoutes<T extends AnonymousRouter>(router: T) {
     '/users/:userId/roles',
     koaGuard({
       params: object({ userId: string().min(1) }),
-      body: object({ roles: string().array().nullable() }),
+      body: object({ roleNames: string().array().nullable() }),
     }),
     async (ctx, next) => {
       const {
         params: { userId },
-        body: { roles: roleNames },
+        body: { roleNames },
       } = ctx.guard;
 
       await findUserById(userId);
@@ -79,8 +79,8 @@ export default function userRoutes<T extends AnonymousRouter>(router: T) {
         const roles = await finRolesByRoleName(roleNames);
         if (roles.length !== roleNames.length) {
           throw new ForeignKeyIntegrityConstraintViolationError(
-            new Error('foreign_key_violation'),
-            'Invalid role names'
+            new Error('foreign_key_violation roleNames'),
+            'fk__users_role_names__roles_name'
           );
         }
       }
