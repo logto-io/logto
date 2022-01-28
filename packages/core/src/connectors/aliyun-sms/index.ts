@@ -35,7 +35,7 @@ export const metadata: ConnectorMetadata = {
  * reset password, the default value of type code is set to be 0.
  *
  */
-export enum TemplateType {
+enum TemplateType {
   Notification = 0,
   Promotion = 1,
   Passcode = 2,
@@ -43,9 +43,18 @@ export enum TemplateType {
   PureNumber = 7,
 }
 
+/**
+ * UsageType here is used to specify the use case of the template, can be either
+ * 'Register', 'SignIn', 'ForgotPassword' or 'Test'.
+ *
+ * Type here in the template is used to specify the purpose of sending the sms,
+ * can be either item in TemplateType.
+ * As the SMS is applied for sending passcode, the value should always be 2 in our case.
+ *
+ */
 const templateGuard = z.object({
-  type: z.nativeEnum(TemplateType).default(0),
-  smsUsageType: z.nativeEnum(PasscodeType),
+  type: z.nativeEnum(TemplateType).default(2),
+  usageType: z.nativeEnum(PasscodeType),
   code: z.string().optional(),
   name: z.string().min(1).max(30),
   content: z.string().min(1).max(500),
@@ -78,7 +87,7 @@ export const sendMessage: SmsSendMessageFunction = async (phone, type, payload) 
   const { accessKeyId, accessKeySecret, signName, templateCode, templates } =
     await getConnectorConfig<AliyunSmsConfig>(metadata.id);
   const template = templates.find(
-    (template) => template.code === templateCode && template.smsUsageType === type
+    (template) => template.code === templateCode && template.usageType === type
   );
 
   if (!template) {

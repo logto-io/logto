@@ -27,8 +27,12 @@ export const metadata: ConnectorMetadata = {
   },
 };
 
+/**
+ * UsageType here is used to specify the use case of the template, can be either
+ * 'Register', 'SignIn', 'ForgotPassword' or 'Test'.
+ */
 const templateGuard = z.object({
-  type: z.nativeEnum(PasscodeType),
+  usageType: z.nativeEnum(PasscodeType),
   subject: z.string(),
   content: z.string(), // With variable {{code}}, support HTML
 });
@@ -58,7 +62,7 @@ export type AliyunDmConfig = z.infer<typeof configGuard>;
 export const sendMessage: EmailSendMessageFunction = async (address, type, data) => {
   const config = await getConnectorConfig<AliyunDmConfig>(metadata.id);
   await validateConfig(config);
-  const template = config.templates.find((template) => template.type === type);
+  const template = config.templates.find((template) => template.usageType === type);
 
   if (!template) {
     throw new ConnectorError(`Can not find template for type: ${type}`);
