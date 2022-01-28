@@ -40,6 +40,7 @@ export const deletePasscodeById = async (id: string) => {
     delete from ${table}
     where id=${id}
   `);
+
   if (rowCount < 1) {
     throw new DeletionError();
   }
@@ -50,6 +51,7 @@ export const deletePasscodesByIds = async (ids: string[]) => {
     delete from ${table}
     where id in (${ids.join(',')})
   `);
+
   if (rowCount < 1) {
     throw new DeletionError();
   }

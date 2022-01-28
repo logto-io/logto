@@ -17,6 +17,7 @@ export const createPasscode = async (
 ) => {
   // Disable existing passcodes.
   const passcodes = await findUnconsumedPasscodesBySessionIdAndType(sessionId, type);
+
   if (passcodes.length > 0) {
     await deletePasscodesByIds(passcodes.map(({ id }) => id));
   }
