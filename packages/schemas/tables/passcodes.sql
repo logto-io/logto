@@ -1,4 +1,4 @@
-create type passcode_type as enum ('SignIn', 'Register', 'ForgotPassword');
+create type passcode_type as enum ('SignIn', 'Register', 'ForgotPassword', 'Test');
 
 create table passcodes (
   id varchar(128) not null,
