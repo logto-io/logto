@@ -8,6 +8,6 @@ create table users (
   password_encrypted varchar(128),
   password_encryption_method password_encryption_method,
   password_encryption_salt varchar(128),
-  role_names jsonb /* @use RoleNames */,
+  role_names jsonb /* @use RoleNames */ not null default '[]'::jsonb,
   primary key (id)
 );

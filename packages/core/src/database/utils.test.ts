@@ -50,6 +50,7 @@ describe('convertToPrimitiveOrSql()', () => {
     expect(convertToPrimitiveOrSql(normalKey, 123)).toEqual(123);
     expect(convertToPrimitiveOrSql(normalKey, true)).toEqual(true);
     expect(convertToPrimitiveOrSql(normalKey, { foo: 'bar' })).toEqual('{"foo":"bar"}');
+    expect(convertToPrimitiveOrSql(normalKey, ['bar'])).toEqual('["bar"]');
   });
 
   it('converts value to sql when key ends with special set and value is number', () => {
@@ -66,12 +67,6 @@ describe('convertToPrimitiveOrSql()', () => {
     for (const value of timestampKeyEndings) {
       expect(convertToPrimitiveOrSql(`${normalKey}${value}`, '123')).toEqual('123');
     }
-  });
-
-  it('throws an error when value is not primitive', () => {
-    expect(() => convertToPrimitiveOrSql(normalKey, [123, 456])).toThrow(
-      'Cannot convert foo with 123,456 to primitive'
-    );
   });
 });
 

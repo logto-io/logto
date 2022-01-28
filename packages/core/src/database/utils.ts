@@ -40,7 +40,7 @@ export const convertToPrimitiveOrSql = (
     return null;
   }
 
-  if (typeof value === 'object' && !Array.isArray(value)) {
+  if (typeof value === 'object') {
     return JSON.stringify(value);
   }
 
@@ -52,7 +52,7 @@ export const convertToPrimitiveOrSql = (
     return value;
   }
 
-  throw new Error(`Cannot convert ${key} with ${value.toString()} to primitive`);
+  throw new Error(`Cannot convert ${key} to primitive`);
 };
 
 export const convertToIdentifiers = <T extends Table>(

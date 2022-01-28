@@ -41,17 +41,12 @@ describe('buildUpdateWhere()', () => {
     );
     const updateWhere = buildUpdateWhere(pool, Users);
 
-    const errorMessage: Partial<Record<NodeJS.Platform, string>> = {
-      darwin: "Cannot read properties of undefined (reading 'toString')",
-      linux: "Cannot read property 'toString' of undefined",
-    };
-
     await expect(
       updateWhere({
         set: { username: '123', id: undefined },
         where: { id: 'foo', username: '456' },
       })
-    ).rejects.toMatchError(new TypeError(errorMessage[process.platform]));
+    ).rejects.toMatchError(new Error(`Cannot convert id to primitive`));
   });
 
   it('throws `entity.not_exists_with_id` error with `undefined` when `returning` is true', async () => {

@@ -4,20 +4,13 @@ import { object, string } from 'zod';
 
 import { encryptUserPassword } from '@/lib/user';
 import koaGuard from '@/middleware/koa-guard';
-import { deleteUserById, findAllUsers, findUserById, updateUserById } from '@/queries/user';
+import { deleteUserById, findUserById, updateUserById } from '@/queries/user';
 
 import { AnonymousRouter } from './types';
 
 export default function userRoutes<T extends AnonymousRouter>(router: T) {
-  router.get('/users', async (ctx, next) => {
-    const users = await findAllUsers();
-    ctx.body = users.map((user) => pick(user, ...userInfoSelectFields));
-
-    return next();
-  });
-
   router.get(
-    '/users/:userId',
+    '/user/:userId',
     koaGuard({
       params: object({ userId: string().min(1) }),
     }),
@@ -33,7 +26,7 @@ export default function userRoutes<T extends AnonymousRouter>(router: T) {
   );
 
   router.patch(
-    '/users/:userId/password',
+    '/user/:userId/password',
     koaGuard({
       params: object({ userId: string().min(1) }),
       body: object({ password: string().min(6) }),
@@ -59,7 +52,7 @@ export default function userRoutes<T extends AnonymousRouter>(router: T) {
   );
 
   router.delete(
-    '/users/:userId',
+    '/user/:userId',
     koaGuard({
       params: object({ userId: string().min(1) }),
     }),
