@@ -15,7 +15,7 @@ interface SendSms {
 
 const Endpoint = 'https://dysmsapi.aliyuncs.com/';
 
-const commonParameters = {
+const staticConfigs = {
   Format: 'json',
   RegionId: 'cn-hangzhou',
   SignatureMethod: 'HMAC-SHA1',
@@ -30,7 +30,7 @@ const commonParameters = {
 export const sendSms = async (parameters: PublicParameters & SendSms, accessKeySecret: string) => {
   return request<{ BizId: string; Code: string; Message: string; RequestId: string }>(
     Endpoint,
-    { Action: 'SendSms', ...commonParameters, ...parameters },
+    { Action: 'SendSms', ...staticConfigs, ...parameters },
     accessKeySecret
   );
 };

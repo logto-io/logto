@@ -26,6 +26,28 @@ export const metadata: ConnectorMetadata = {
   },
 };
 
+export enum TemplateType {
+  Passcode = 0,
+  Notification = 1,
+  Promotion = 2,
+  InternationalMessage = 3,
+}
+
+const templateGuard = z.object({
+  type: z.nativeEnum(TemplateType).default(0),
+  code: z.string().optional(),
+  name: z.string().min(1).max(30),
+  content: z.string().min(1).max(500),
+  remark: z.string(),
+});
+
+const configGuard = z.object({
+  accessKeyId: z.string(),
+  accessKeySecret: z.string(),
+  signName: z.string(),
+  templates: z.array(templateGuard),
+});
+
 export const validateConfig: ValidateConfig = async (config: unknown) => {
   if (!config) {
     throw new ConnectorConfigError('Missing config');
@@ -38,38 +60,18 @@ export const validateConfig: ValidateConfig = async (config: unknown) => {
   }
 };
 
-export enum TemplateType {
-  Passcode = 0,
-  Notification = 1,
-  Promotion = 2,
-  InternationalMessage = 3,
-}
-
-const configGuard = z.object({
-  accessKeyId: z.string(),
-  accessKeySecret: z.string(),
-  signName: z.string(),
-  templates: z.array(
-    z.object({
-      type: z.nativeEnum(TemplateType).default(0),
-      code: z.string().optional(),
-      name: z.string().min(1).max(30),
-      content: z.string().min(1).max(500),
-      remark: z.string(),
-    })
-  ),
-});
-
 export type AliyunSmsConfig = z.infer<typeof configGuard>;
 
 export const sendMessage: TextSendMessageFunction = async (
   phone,
   signName,
   templateCode,
-  payload
+  { code }
 ) => {
-  const config = await getConnectorConfig<AliyunSmsConfig>(metadata.id);
-  const template = config.templates.find((template) => template.code === templateCode);
+  const { templates, accessKeyId, accessKeySecret } = await getConnectorConfig<AliyunSmsConfig>(
+    metadata.id
+  );
+  const template = templates.find((template) => template.code === templateCode);
 
   if (!template) {
     throw new ConnectorError(`Can not find template code: ${templateCode}`);
@@ -77,12 +79,12 @@ export const sendMessage: TextSendMessageFunction = async (
 
   return sendSms(
     {
-      AccessKeyId: config.accessKeyId,
+      AccessKeyId: accessKeyId,
       PhoneNumbers: phone,
       SignName: signName,
       TemplateCode: templateCode,
-      TemplateParam: JSON.stringify({ code: payload.code }),
+      TemplateParam: JSON.stringify({ code }),
     },
-    config.accessKeySecret
+    accessKeySecret
   );
 };

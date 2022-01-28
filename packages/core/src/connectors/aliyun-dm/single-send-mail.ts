@@ -19,7 +19,7 @@ interface SingleSendMail {
 
 const Endpoint = 'https://dm.aliyuncs.com/';
 
-const commonParameters = {
+const staticConfigs = {
   Format: 'json',
   SignatureMethod: 'HMAC-SHA1',
   SignatureVersion: '1.0',
@@ -36,7 +36,7 @@ export const singleSendMail = async (
 ) => {
   return request<{ EnvId: string; RequestId: string }>(
     Endpoint,
-    { Action: 'SingleSendMail', ...commonParameters, ...parameters },
+    { Action: 'SingleSendMail', ...staticConfigs, ...parameters },
     accessKeySecret
   );
 };

@@ -26,6 +26,20 @@ export const metadata: ConnectorMetadata = {
   },
 };
 
+const templateGuard = z.object({
+  type: z.string(),
+  subject: z.string(),
+  content: z.string(), // With variable {{code}}, support HTML
+});
+
+const configGuard = z.object({
+  accessKeyId: z.string(),
+  accessKeySecret: z.string(),
+  accountName: z.string(),
+  fromAlias: z.string().optional(),
+  templates: z.array(templateGuard),
+});
+
 export const validateConfig: ValidateConfig = async (config: unknown) => {
   if (!config) {
     throw new ConnectorConfigError('Missing config');
@@ -37,20 +51,6 @@ export const validateConfig: ValidateConfig = async (config: unknown) => {
     throw new ConnectorConfigError(result.error.message);
   }
 };
-
-const configGuard = z.object({
-  accessKeyId: z.string(),
-  accessKeySecret: z.string(),
-  accountName: z.string(),
-  fromAlias: z.string().optional(),
-  templates: z.array(
-    z.object({
-      type: z.string(),
-      subject: z.string(),
-      content: z.string(), // With variable {{code}}, support HTML
-    })
-  ),
-});
 
 export type AliyunDmConfig = z.infer<typeof configGuard>;
 
