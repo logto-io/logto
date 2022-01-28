@@ -7,7 +7,8 @@ import {
   insertPasscode,
 } from '@/queries/passcode';
 
-const randomCode = customAlphabet('1234567890', 6);
+export const passcodeLength = 6;
+const randomCode = customAlphabet('1234567890', passcodeLength);
 
 export const createPasscode = async (
   sessionId: string,
@@ -17,7 +18,7 @@ export const createPasscode = async (
   // Disable existing passcodes.
   const passcodes = await findUnconsumedPasscodesBySessionIdAndType(sessionId, type);
   if (passcodes.length > 0) {
-    await deletePasscodesByIds(passcodes.map((passcode) => passcode.id));
+    await deletePasscodesByIds(passcodes.map(({ id }) => id));
   }
 
   return insertPasscode({

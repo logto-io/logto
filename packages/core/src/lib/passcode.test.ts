@@ -6,7 +6,7 @@ import {
   insertPasscode,
 } from '@/queries/passcode';
 
-import { createPasscode } from './passcode';
+import { createPasscode, passcodeLength } from './passcode';
 
 jest.mock('@/queries/passcode');
 
@@ -24,8 +24,8 @@ beforeAll(() => {
   mockedInsertPasscode.mockImplementation(async (data) => ({
     ...data,
     createdAt: Date.now(),
-    phone: data.phone ?? '',
-    email: data.email ?? '',
+    phone: data.phone ?? null,
+    email: data.email ?? null,
     consumed: data.consumed ?? false,
     tryCount: data.tryCount ?? 0,
   }));
@@ -38,21 +38,21 @@ afterEach(() => {
 });
 
 describe('createPasscode', () => {
-  it('should generate 6 digits code for phone and insert to database', async () => {
+  it('should generate `passcodeLength` digits code for phone and insert to database', async () => {
     const phone = '13000000000';
     const passcode = await createPasscode('sessionId', PasscodeType.SignIn, {
       phone,
     });
-    expect(/^\d{6}$/.test(passcode.code)).toBeTruthy();
+    expect(new RegExp(`^\\d{${passcodeLength}}$`).test(passcode.code)).toBeTruthy();
     expect(passcode.phone).toEqual(phone);
   });
 
-  it('should generate 6 digits code for email and insert to database', async () => {
+  it('should generate `passcodeLength` digits code for email and insert to database', async () => {
     const email = 'jony@example.com';
     const passcode = await createPasscode('sessionId', PasscodeType.SignIn, {
       email,
     });
-    expect(/^\d{6}$/.test(passcode.code)).toBeTruthy();
+    expect(new RegExp(`^\\d{${passcodeLength}}$`).test(passcode.code)).toBeTruthy();
     expect(passcode.email).toEqual(email);
   });
 
