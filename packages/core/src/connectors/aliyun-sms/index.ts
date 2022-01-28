@@ -1,3 +1,4 @@
+import { PasscodeType } from '@logto/schemas';
 import { z } from 'zod';
 
 import {
@@ -26,15 +27,25 @@ export const metadata: ConnectorMetadata = {
   },
 };
 
+/**
+ * Details of TemplateType can be found at:
+ * https://next.api.aliyun.com/document/Dysmsapi/2017-05-25/QuerySmsTemplateList.
+ *
+ * For our use case is to send passcode sms for passwordless sign-in/up as well as
+ * reset password, the default value of type code is set to be 0.
+ *
+ */
 export enum TemplateType {
-  Passcode = 0,
-  Notification = 1,
-  Promotion = 2,
-  InternationalMessage = 3,
+  Notification = 0,
+  Promotion = 1,
+  Passcode = 2,
+  InternationalMessage = 6,
+  PureNumber = 7,
 }
 
 const templateGuard = z.object({
   type: z.nativeEnum(TemplateType).default(0),
+  smsUsageType: z.nativeEnum(PasscodeType),
   code: z.string().optional(),
   name: z.string().min(1).max(30),
   content: z.string().min(1).max(500),
@@ -45,6 +56,7 @@ const configGuard = z.object({
   accessKeyId: z.string(),
   accessKeySecret: z.string(),
   signName: z.string(),
+  templateCode: z.string(),
   templates: z.array(templateGuard),
 });
 
@@ -62,16 +74,12 @@ export const validateConfig: ValidateConfig = async (config: unknown) => {
 
 export type AliyunSmsConfig = z.infer<typeof configGuard>;
 
-export const sendMessage: SmsSendMessageFunction = async (
-  phone,
-  signName,
-  templateCode,
-  { code }
-) => {
-  const { templates, accessKeyId, accessKeySecret } = await getConnectorConfig<AliyunSmsConfig>(
-    metadata.id
+export const sendMessage: SmsSendMessageFunction = async (phone, type, payload) => {
+  const { accessKeyId, accessKeySecret, signName, templateCode, templates } =
+    await getConnectorConfig<AliyunSmsConfig>(metadata.id);
+  const template = templates.find(
+    (template) => template.code === templateCode && template.smsUsageType === type
   );
-  const template = templates.find((template) => template.code === templateCode);
 
   if (!template) {
     throw new ConnectorError(`Can not find template code: ${templateCode}`);
@@ -83,7 +91,7 @@ export const sendMessage: SmsSendMessageFunction = async (
       PhoneNumbers: phone,
       SignName: signName,
       TemplateCode: templateCode,
-      TemplateParam: JSON.stringify({ code }),
+      TemplateParam: JSON.stringify({ code: payload.code }),
     },
     accessKeySecret
   );

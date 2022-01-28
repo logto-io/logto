@@ -37,7 +37,7 @@ export interface SocialConector extends BaseConnector {
   getUserInfo: GetUserInfo;
 }
 
-interface MessageTypes {
+type EmailMessageTypes = {
   SignIn: {
     code: string;
   };
@@ -47,11 +47,10 @@ interface MessageTypes {
   ForgotPassword: {
     code: string;
   };
-}
+  Test: Record<string, unknown>;
+};
 
 type SmsMessageTypes = EmailMessageTypes;
-
-export interface TextMessageTypes extends MessageTypes {}
 
 export type EmailSendMessageFunction<T = unknown> = (
   address: string,
@@ -59,11 +58,10 @@ export type EmailSendMessageFunction<T = unknown> = (
   payload: EmailMessageTypes[typeof type]
 ) => Promise<T>;
 
-export type TextSendMessageFunction<T = unknown, K = Record<string, unknown> & { code: string }> = (
+export type SmsSendMessageFunction<T = unknown> = (
   phone: string,
-  signName: string,
-  templateCode: string,
-  payload: K
+  type: keyof SmsMessageTypes,
+  payload: SmsMessageTypes[typeof type]
 ) => Promise<T>;
 
 export class ConnectorError extends Error {}

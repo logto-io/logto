@@ -59,7 +59,6 @@ export const request = async <T>(
   accessKeySecret: string
 ) => {
   const finalParameters: Record<string, string> = {
-    ...commonParameters,
     ...parameters,
     SignatureNonce: String(Math.random()),
     Timestamp: new Date().toISOString(),

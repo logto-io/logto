@@ -2,6 +2,7 @@ import RequestError from '@/errors/RequestError';
 import { findConnectorById, hasConnector, insertConnector } from '@/queries/connector';
 
 import * as AliyunDM from './aliyun-dm';
+import * as AliyunSMS from './aliyun-sms';
 import * as GitHub from './github';
 import { ConnectorInstance, ConnectorType } from './types';
 

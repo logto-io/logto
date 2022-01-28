@@ -3,6 +3,8 @@ import { customAlphabet } from 'nanoid';
 import { request } from '../utilities/aliyun';
 import { sendSms } from './single-send-text';
 
+const passcodeGenerator = () => customAlphabet('0123456789', 6);
+
 jest.mock('../utilities/aliyun');
 
 describe('sendSms', () => {
