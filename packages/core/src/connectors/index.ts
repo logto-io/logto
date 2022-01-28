@@ -5,7 +5,7 @@ import * as AliyunDM from './aliyun-dm';
 import * as GitHub from './github';
 import { ConnectorInstance, ConnectorType } from './types';
 
-const allConnectors: ConnectorInstance[] = [AliyunDM, GitHub];
+export const allConnectors: ConnectorInstance[] = [AliyunDM, AliyunSMS, GitHub];
 
 export const getConnectorInstances = async (): Promise<ConnectorInstance[]> => {
   return Promise.all(
