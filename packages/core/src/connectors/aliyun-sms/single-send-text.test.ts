@@ -24,6 +24,6 @@ describe('sendSms', () => {
     const calledData = (request as jest.MockedFunction<typeof request>).mock.calls[0];
     expect(calledData).not.toBeUndefined();
     const payload = calledData?.[1];
-    expect(payload).toHaveProperty('Action', 'SingleSendMail');
+    expect(payload).toHaveProperty('Action', 'SendSms');
   });
 });
