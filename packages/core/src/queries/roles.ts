@@ -7,7 +7,7 @@ import { convertToIdentifiers } from '@/database/utils';
 const { table, fields } = convertToIdentifiers(Roles);
 
 export const findAllRoles = async () =>
-  pool.many<Role>(sql`
+  pool.any<Role>(sql`
     select ${sql.join(Object.values(fields), sql`, `)}
     from ${table}
   `);

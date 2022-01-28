@@ -21,22 +21,22 @@ export default function adminUserRoutes<T extends AuthedRouter>(router: T) {
     '/users/:userId/roleNames',
     koaGuard({
       params: object({ userId: string().min(1) }),
-      body: object({ names: string().array() }),
+      body: object({ roleNames: string().array() }),
     }),
     async (ctx, next) => {
       const {
         params: { userId },
-        body: { names },
+        body: { roleNames },
       } = ctx.guard;
 
       await findUserById(userId);
 
       // Temp solution to validate the existence of input roleNames
-      if (names?.length) {
-        const roles = await findRolesByRoleNames(names);
+      if (roleNames.length > 0) {
+        const roles = await findRolesByRoleNames(roleNames);
 
-        if (roles.length !== names.length) {
-          const resourcesNotFound = names.filter(
+        if (roles.length !== roleNames.length) {
+          const resourcesNotFound = roleNames.filter(
             (roleName) => !roles.some(({ name }) => roleName === name)
           );
           // TODO: Should be cached by the error handler and return request error
@@ -44,7 +44,7 @@ export default function adminUserRoutes<T extends AuthedRouter>(router: T) {
         }
       }
 
-      const user = await updateUserById(userId, { roleNames: names });
+      const user = await updateUserById(userId, { roleNames });
       ctx.body = pick(user, ...userInfoSelectFields);
 
       return next();
