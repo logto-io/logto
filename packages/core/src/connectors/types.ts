@@ -15,11 +15,7 @@ export interface ConnectorMetadata {
 }
 
 // The name `Connector` is used for database, use `ConnectorInstance` to avoid confusing.
-<<<<<<< HEAD
 export type ConnectorInstance = SmsConnector | EmailConector | SocialConector;
-=======
-export type ConnectorInstance = EmailConnector | SmsConnector | SocialConector;
->>>>>>> 3673062 (chore(aliyun sms connector): fix)
 
 export interface BaseConnector {
   connector?: Connector;
@@ -31,13 +27,8 @@ export interface SmsConnector extends BaseConnector {
   sendMessage: SmsSendMessageFunction;
 }
 
-<<<<<<< HEAD
 export interface EmailConector extends BaseConnector {
   sendMessage: EmailSendMessageFunction;
-=======
-export interface SmsConnector extends BaseConnector {
-  sendMessage: TextSendMessageFunction;
->>>>>>> 3673062 (chore(aliyun sms connector): fix)
 }
 
 export interface SocialConector extends BaseConnector {
@@ -58,13 +49,7 @@ interface MessageTypes {
   };
 }
 
-<<<<<<< HEAD
 type SmsMessageTypes = EmailMessageTypes;
-=======
-export interface EmailMessageTypes extends MessageTypes {
-  Test: Record<string, unknown>;
-}
->>>>>>> 3673062 (chore(aliyun sms connector): fix)
 
 export interface TextMessageTypes extends MessageTypes {}
 

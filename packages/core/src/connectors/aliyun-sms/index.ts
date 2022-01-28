@@ -5,7 +5,7 @@ import {
   ConnectorError,
   ConnectorMetadata,
   ConnectorType,
-  TextSendMessageFunction,
+  SmsSendMessageFunction,
   ValidateConfig,
 } from '../types';
 import { getConnectorConfig } from '../utilities';
@@ -62,7 +62,7 @@ export const validateConfig: ValidateConfig = async (config: unknown) => {
 
 export type AliyunSmsConfig = z.infer<typeof configGuard>;
 
-export const sendMessage: TextSendMessageFunction = async (
+export const sendMessage: SmsSendMessageFunction = async (
   phone,
   signName,
   templateCode,
