@@ -1,3 +1,4 @@
+import { PasscodeType } from '@logto/schemas';
 import { z } from 'zod';
 
 import {
@@ -27,7 +28,7 @@ export const metadata: ConnectorMetadata = {
 };
 
 const templateGuard = z.object({
-  type: z.string(),
+  type: z.nativeEnum(PasscodeType),
   subject: z.string(),
   content: z.string(), // With variable {{code}}, support HTML
 });
