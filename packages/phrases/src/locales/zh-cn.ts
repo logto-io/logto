@@ -45,6 +45,9 @@ const errors = {
     invalid_sign_in_method: '当前登录方式不可用。',
     insufficient_info: '登录信息缺失，请检查您的输入。',
   },
+  connector: {
+    not_found: '找不到可用的 {{type}} 类型的连接器.',
+  },
   swagger: {
     invalid_zod_type: '无效的 Zod 类型，请检查路由 guard 配置。',
   },

@@ -43,6 +43,9 @@ const errors = {
     invalid_sign_in_method: 'Current sign-in method is not available.',
     insufficient_info: 'Insufficent sign-in info.',
   },
+  connector: {
+    not_found: 'Can not find any available connector for type: {{type}}.',
+  },
   swagger: {
     invalid_zod_type: 'Invalid Zod type, please check route guard config.',
   },

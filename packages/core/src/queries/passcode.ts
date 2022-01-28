@@ -52,7 +52,7 @@ export const deletePasscodesByIds = async (ids: string[]) => {
     where id in (${ids.join(',')})
   `);
 
-  if (rowCount < 1) {
+  if (rowCount !== ids.length) {
     throw new DeletionError();
   }
 };

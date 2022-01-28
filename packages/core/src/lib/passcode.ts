@@ -1,6 +1,8 @@
-import { PasscodeType } from '@logto/schemas';
+import { Passcode, PasscodeType } from '@logto/schemas';
 import { customAlphabet, nanoid } from 'nanoid';
 
+import { getConnectorInstanceByType } from '@/connectors';
+import { ConnectorType, EmailConector, SmsConnector } from '@/connectors/types';
 import {
   deletePasscodesByIds,
   findUnconsumedPasscodesBySessionIdAndType,
@@ -28,5 +30,21 @@ export const createPasscode = async (
     type,
     code: randomCode(),
     ...payload,
+  });
+};
+
+export const sendPasscode = async (passcode: Passcode) => {
+  const emailOrPhone = passcode.email ?? passcode.phone;
+
+  if (!emailOrPhone) {
+    throw new Error('Both email and phone are empty.');
+  }
+
+  const connector = passcode.email
+    ? await getConnectorInstanceByType<EmailConector>(ConnectorType.Email)
+    : await getConnectorInstanceByType<SmsConnector>(ConnectorType.SMS);
+
+  return connector.sendMessage(emailOrPhone, passcode.type, {
+    code: passcode.code,
   });
 };
