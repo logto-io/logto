@@ -13,7 +13,7 @@ export type CreateUser = {
   passwordEncrypted?: string | null;
   passwordEncryptionMethod?: PasswordEncryptionMethod | null;
   passwordEncryptionSalt?: string | null;
-  roleNames?: RoleNames | null;
+  roleNames?: RoleNames;
 };
 
 export type User = {
@@ -24,7 +24,7 @@ export type User = {
   passwordEncrypted: string | null;
   passwordEncryptionMethod: PasswordEncryptionMethod | null;
   passwordEncryptionSalt: string | null;
-  roleNames: RoleNames | null;
+  roleNames: RoleNames;
 };
 
 const createGuard: Guard<CreateUser> = z.object({
@@ -35,7 +35,7 @@ const createGuard: Guard<CreateUser> = z.object({
   passwordEncrypted: z.string().nullable().optional(),
   passwordEncryptionMethod: z.nativeEnum(PasswordEncryptionMethod).nullable().optional(),
   passwordEncryptionSalt: z.string().nullable().optional(),
-  roleNames: roleNamesGuard.nullable().optional(),
+  roleNames: roleNamesGuard.optional(),
 });
 
 export const Users: GeneratedSchema<CreateUser> = Object.freeze({

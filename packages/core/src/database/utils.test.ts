@@ -50,6 +50,7 @@ describe('convertToPrimitiveOrSql()', () => {
     expect(convertToPrimitiveOrSql(normalKey, 123)).toEqual(123);
     expect(convertToPrimitiveOrSql(normalKey, true)).toEqual(true);
     expect(convertToPrimitiveOrSql(normalKey, { foo: 'bar' })).toEqual('{"foo":"bar"}');
+    expect(convertToPrimitiveOrSql(normalKey, ['bar'])).toEqual('["bar"]');
   });
 
   it('converts value to sql when key ends with special set and value is number', () => {
