@@ -1,13 +1,15 @@
 import { customAlphabet } from 'nanoid';
 
 import { request } from '../utilities/aliyun';
-import { singleSendText } from './single-send-text';
+import { sendSms } from './single-send-text';
 
 jest.mock('../utilities/aliyun');
 
-describe('singleSendMail', () => {
-  it('should call request with action SingleSendText', async () => {
-    await singleSendText(
+describe('sendSms', () => {
+  it('should call request with action sendSms', async () => {
+    const passcode = passcodeGenerator();
+
+    await sendSms(
       {
         AccessKeyId: '<access-key-id>',
         PhoneNumbers: '13912345678',

@@ -27,10 +27,7 @@ const commonParameters = {
  * @doc https://help.aliyun.com/document_detail/101414.html
  *
  */
-export const singleSendText = async (
-  parameters: PublicParameters & SendSms,
-  accessKeySecret: string
-) => {
+export const sendSms = async (parameters: PublicParameters & SendSms, accessKeySecret: string) => {
   return request<{ BizId: string; Code: string; Message: string; RequestId: string }>(
     Endpoint,
     { Action: 'SendSms', ...commonParameters, ...parameters },

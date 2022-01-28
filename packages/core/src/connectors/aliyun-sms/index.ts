@@ -9,7 +9,7 @@ import {
   ValidateConfig,
 } from '../types';
 import { getConnectorConfig } from '../utilities';
-import { singleSendText } from './single-send-text';
+import { sendSms } from './single-send-text';
 
 export const metadata: ConnectorMetadata = {
   id: 'aliyun-sms',
@@ -68,14 +68,14 @@ export const sendMessage: TextSendMessageFunction = async (
   templateCode,
   payload
 ) => {
-  const config: AliyunSmsConfig = await getConnectorConfig<AliyunSmsConfig>(metadata.id);
+  const config = await getConnectorConfig<AliyunSmsConfig>(metadata.id);
   const template = config.templates.find((template) => template.code === templateCode);
 
   if (!template) {
     throw new ConnectorError(`Can not find template code: ${templateCode}`);
   }
 
-  return singleSendText(
+  return sendSms(
     {
       AccessKeyId: config.accessKeyId,
       PhoneNumbers: phone,
