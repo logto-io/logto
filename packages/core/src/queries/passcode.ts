@@ -13,7 +13,7 @@ export const findUnconsumedPasscodeBySessionIdAndType = async (
   sessionId: string,
   type: PasscodeType
 ) =>
-  pool.one<Passcode>(sql`
+  pool.maybeOne<Passcode>(sql`
     select ${sql.join(Object.values(fields), sql`, `)}
     from ${table}
     where ${fields.sessionId}=${sessionId} and ${fields.type}=${type} and ${fields.consumed} = false
