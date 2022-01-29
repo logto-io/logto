@@ -3,8 +3,6 @@ import { createHmac } from 'crypto';
 import { has } from '@silverhand/essentials';
 import got from 'got';
 
-import { ConnectorError } from '../types';
-
 // Aliyun has special excape rules.
 // https://help.aliyun.com/document_detail/29442.html
 const escaper = (string_: string) =>
@@ -28,12 +26,13 @@ export const getSignature = (
     .map((key) => {
       const value = parameters[key];
 
-      if (typeof value !== 'string') {
-        throw new ConnectorError('Invalid value');
+      if (value === undefined || value === null) {
+        return null;
       }
 
       return `${escaper(key)}=${escaper(value)}`;
     })
+    .filter(Boolean)
     .join('&');
 
   const stringToSign = `${method.toUpperCase()}&${escaper('/')}&${escaper(canonicalizedQuery)}`;
@@ -71,8 +70,8 @@ export const request = async <T>(
     if (has(finalParameters, key)) {
       const value = finalParameters[key];
 
-      if (typeof value !== 'string') {
-        throw new ConnectorError('Invalid value');
+      if (value === undefined || value === null) {
+        continue;
       }
 
       payload.append(key, value);
