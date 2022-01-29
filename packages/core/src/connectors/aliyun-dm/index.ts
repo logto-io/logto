@@ -56,6 +56,7 @@ export type AliyunDmConfig = z.infer<typeof configGuard>;
 
 export const sendMessage: EmailSendMessageFunction = async (address, type, data) => {
   const config = await getConnectorConfig<AliyunDmConfig>(metadata.id);
+  await validateConfig(config);
   const template = config.templates.find((template) => template.type === type);
 
   if (!template) {
