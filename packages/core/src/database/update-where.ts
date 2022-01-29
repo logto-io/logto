@@ -49,7 +49,15 @@ export const buildUpdateWhere: BuildUpdateWhere = <
            * all jsonb data field must be non-nullable
            * https://www.postgresql.org/docs/current/functions-json.html
            */
-          return sql`${fields[key]}= ${fields[key]} || ${convertToPrimitiveOrSql(key, value)}`;
+          return sql`
+            ${fields[key]}=(
+              case
+                when ${fields[key]} is not NULL
+                then ${fields[key]} || ${convertToPrimitiveOrSql(key, value)}
+                else ${convertToPrimitiveOrSql(key, value)}
+              end
+            )
+          `;
         }
 
         return sql`${fields[key]}=${convertToPrimitiveOrSql(key, value)}`;
