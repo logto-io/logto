@@ -45,7 +45,7 @@ export const buildUpdateWhere: BuildUpdateWhere = <
 
         if (value && typeof value === 'object' && !Array.isArray(value)) {
           /**
-           * Jsonb || operator is used to merge to jsonb types of data
+           * Jsonb || operator is used to shallow merge two jsonb types of data
            * all jsonb data field must be non-nullable
            * https://www.postgresql.org/docs/current/functions-json.html
            */
