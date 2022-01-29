@@ -1,5 +1,5 @@
 import { Languages } from '@logto/phrases';
-import { ConnectorConfig, Connector } from '@logto/schemas';
+import { ConnectorConfig, Connector, PasscodeType } from '@logto/schemas';
 
 export enum ConnectorType {
   SMS = 'SMS',
@@ -37,7 +37,7 @@ export interface SocialConector extends BaseConnector {
   getUserInfo: GetUserInfo;
 }
 
-export interface EmailMessageTypes {
+type EmailMessageTypes = {
   SignIn: {
     code: string;
   };
@@ -48,7 +48,7 @@ export interface EmailMessageTypes {
     code: string;
   };
   Test: Record<string, unknown>;
-}
+};
 
 type SmsMessageTypes = EmailMessageTypes;
 
@@ -59,10 +59,12 @@ export type EmailSendMessageFunction<T = unknown> = (
 ) => Promise<T>;
 
 export type SmsSendMessageFunction<T = unknown> = (
-  address: string,
+  phone: string,
   type: keyof SmsMessageTypes,
   payload: SmsMessageTypes[typeof type]
 ) => Promise<T>;
+
+export type TemplateType = PasscodeType | 'Test';
 
 export class ConnectorError extends Error {}
 

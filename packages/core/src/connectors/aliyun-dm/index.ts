@@ -4,9 +4,9 @@ import {
   ConnectorConfigError,
   ConnectorError,
   ConnectorMetadata,
+  ConnectorType,
   EmailSendMessageFunction,
   ValidateConfig,
-  ConnectorType,
 } from '../types';
 import { getConnectorConfig } from '../utilities';
 import { singleSendMail } from './single-send-mail';
@@ -26,6 +26,24 @@ export const metadata: ConnectorMetadata = {
   },
 };
 
+/**
+ * UsageType here is used to specify the use case of the template, can be either
+ * 'Register', 'SignIn', 'ForgotPassword' or 'Test'.
+ */
+const templateGuard = z.object({
+  usageType: z.string(),
+  subject: z.string(),
+  content: z.string(), // With variable {{code}}, support HTML
+});
+
+const configGuard = z.object({
+  accessKeyId: z.string(),
+  accessKeySecret: z.string(),
+  accountName: z.string(),
+  fromAlias: z.string().optional(),
+  templates: z.array(templateGuard),
+});
+
 export const validateConfig: ValidateConfig = async (config: unknown) => {
   if (!config) {
     throw new ConnectorConfigError('Missing config');
@@ -38,45 +56,32 @@ export const validateConfig: ValidateConfig = async (config: unknown) => {
   }
 };
 
-const configGuard = z.object({
-  accessKeyId: z.string(),
-  accessKeySecret: z.string(),
-  accountName: z.string(),
-  fromAlias: z.string().optional(),
-  templates: z.array(
-    z.object({
-      type: z.string(),
-      subject: z.string(),
-      content: z.string(), // With variable {{code}}, support HTML
-    })
-  ),
-});
-
 export type AliyunDmConfig = z.infer<typeof configGuard>;
 
 export const sendMessage: EmailSendMessageFunction = async (address, type, data) => {
   const config = await getConnectorConfig<AliyunDmConfig>(metadata.id);
   await validateConfig(config);
-  const template = config.templates.find((template) => template.type === type);
+  const { accessKeyId, accessKeySecret, accountName, fromAlias, templates } = config;
+  const template = templates.find((template) => template.usageType === type);
 
   if (!template) {
-    throw new ConnectorError(`Can not find template for type: ${type}`);
+    throw new ConnectorError(`Cannot find template for type: ${type}`);
   }
 
   return singleSendMail(
     {
-      AccessKeyId: config.accessKeyId,
-      AccountName: config.accountName,
+      AccessKeyId: accessKeyId,
+      AccountName: accountName,
       ReplyToAddress: 'false',
       AddressType: '1',
       ToAddress: address,
-      FromAlias: config.fromAlias,
+      FromAlias: fromAlias,
       Subject: template.subject,
       HtmlBody:
         typeof data.code === 'string'
           ? template.content.replaceAll('{{code}}', data.code)
           : template.content,
     },
-    config.accessKeySecret
+    accessKeySecret
   );
 };

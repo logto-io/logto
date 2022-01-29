@@ -44,7 +44,7 @@ const errors = {
     insufficient_info: 'Insufficent sign-in info.',
   },
   connector: {
-    not_found: 'Can not find any available connector for type: {{type}}.',
+    not_found: 'Cannot find any available connector for type: {{type}}.',
   },
   passcode: {
     phone_email_empty: 'Both phone and email are empty.',

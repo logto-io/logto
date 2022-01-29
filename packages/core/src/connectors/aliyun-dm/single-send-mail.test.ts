@@ -9,12 +9,12 @@ describe('singleSendMail', () => {
       {
         AccessKeyId: '<access-key-id>',
         AccountName: 'noreply@example.com',
-        ReplyToAddress: 'false',
         AddressType: '1',
-        ToAddress: 'user@example.com',
         FromAlias: 'CompanyName',
-        Subject: 'test',
         HtmlBody: 'test from logto',
+        ReplyToAddress: 'false',
+        Subject: 'test',
+        ToAddress: 'user@example.com',
       },
       '<access-key-secret>'
     );
