@@ -9,24 +9,18 @@ import { DeletionError } from '@/errors/SlonikError';
 
 const { table, fields } = convertToIdentifiers(Passcodes);
 
-export const findUnconsumedPasscodeBySessionIdAndType = async (
-  sessionId: string,
-  type: PasscodeType
-) =>
+export const findUnconsumedPasscodeByJtiAndType = async (jti: string, type: PasscodeType) =>
   pool.maybeOne<Passcode>(sql`
     select ${sql.join(Object.values(fields), sql`, `)}
     from ${table}
-    where ${fields.sessionId}=${sessionId} and ${fields.type}=${type} and ${fields.consumed} = false
+    where ${fields.interactionJti}=${jti} and ${fields.type}=${type} and ${fields.consumed} = false
   `);
 
-export const findUnconsumedPasscodesBySessionIdAndType = async (
-  sessionId: string,
-  type: PasscodeType
-) =>
+export const findUnconsumedPasscodesByJtiAndType = async (jti: string, type: PasscodeType) =>
   pool.many<Passcode>(sql`
     select ${sql.join(Object.values(fields), sql`, `)}
     from ${table}
-    where ${fields.sessionId}=${sessionId} and ${fields.type}=${type} and ${fields.consumed} = false
+    where ${fields.interactionJti}=${jti} and ${fields.type}=${type} and ${fields.consumed} = false
   `);
 
 export const insertPasscode = buildInsertInto<CreatePasscode, Passcode>(pool, Passcodes, {

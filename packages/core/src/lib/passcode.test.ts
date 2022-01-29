@@ -5,8 +5,8 @@ import { ConnectorType } from '@/connectors/types';
 import RequestError from '@/errors/RequestError';
 import {
   deletePasscodesByIds,
-  findUnconsumedPasscodeBySessionIdAndType,
-  findUnconsumedPasscodesBySessionIdAndType,
+  findUnconsumedPasscodeByJtiAndType,
+  findUnconsumedPasscodesByJtiAndType,
   insertPasscode,
   updatePasscode,
 } from '@/queries/passcode';
@@ -23,13 +23,13 @@ import {
 jest.mock('@/queries/passcode');
 jest.mock('@/connectors');
 
-const mockedFindUnconsumedPasscodesBySessionIdAndType =
-  findUnconsumedPasscodesBySessionIdAndType as jest.MockedFunction<
-    typeof findUnconsumedPasscodesBySessionIdAndType
+const mockedFindUnconsumedPasscodesByJtiAndType =
+  findUnconsumedPasscodesByJtiAndType as jest.MockedFunction<
+    typeof findUnconsumedPasscodesByJtiAndType
   >;
-const mockedFindUnconsumedPasscodeBySessionIdAndType =
-  findUnconsumedPasscodeBySessionIdAndType as jest.MockedFunction<
-    typeof findUnconsumedPasscodeBySessionIdAndType
+const mockedFindUnconsumedPasscodeByJtiAndType =
+  findUnconsumedPasscodeByJtiAndType as jest.MockedFunction<
+    typeof findUnconsumedPasscodeByJtiAndType
   >;
 const mockedDeletePasscodesByIds = deletePasscodesByIds as jest.MockedFunction<
   typeof deletePasscodesByIds
@@ -41,7 +41,7 @@ const mockedGetConnectorInstanceByType = getConnectorInstanceByType as jest.Mock
 const mockedUpdatePasscode = updatePasscode as jest.MockedFunction<typeof updatePasscode>;
 
 beforeAll(() => {
-  mockedFindUnconsumedPasscodesBySessionIdAndType.mockResolvedValue([]);
+  mockedFindUnconsumedPasscodesByJtiAndType.mockResolvedValue([]);
   mockedInsertPasscode.mockImplementation(async (data) => ({
     ...data,
     createdAt: Date.now(),
@@ -53,7 +53,7 @@ beforeAll(() => {
 });
 
 afterEach(() => {
-  mockedFindUnconsumedPasscodesBySessionIdAndType.mockClear();
+  mockedFindUnconsumedPasscodesByJtiAndType.mockClear();
   mockedDeletePasscodesByIds.mockClear();
   mockedInsertPasscode.mockClear();
   mockedGetConnectorInstanceByType.mockClear();
@@ -62,7 +62,7 @@ afterEach(() => {
 describe('createPasscode', () => {
   it('should generate `passcodeLength` digits code for phone and insert to database', async () => {
     const phone = '13000000000';
-    const passcode = await createPasscode('sessionId', PasscodeType.SignIn, {
+    const passcode = await createPasscode('jti', PasscodeType.SignIn, {
       phone,
     });
     expect(new RegExp(`^\\d{${passcodeLength}}$`).test(passcode.code)).toBeTruthy();
@@ -71,7 +71,7 @@ describe('createPasscode', () => {
 
   it('should generate `passcodeLength` digits code for email and insert to database', async () => {
     const email = 'jony@example.com';
-    const passcode = await createPasscode('sessionId', PasscodeType.SignIn, {
+    const passcode = await createPasscode('jti', PasscodeType.SignIn, {
       email,
     });
     expect(new RegExp(`^\\d{${passcodeLength}}$`).test(passcode.code)).toBeTruthy();
@@ -80,11 +80,11 @@ describe('createPasscode', () => {
 
   it('should disable existing passcode', async () => {
     const email = 'jony@example.com';
-    const sessionId = 'sessonId';
-    mockedFindUnconsumedPasscodesBySessionIdAndType.mockResolvedValue([
+    const jti = 'jti';
+    mockedFindUnconsumedPasscodesByJtiAndType.mockResolvedValue([
       {
         id: 'id',
-        sessionId,
+        interactionJti: jti,
         code: '1234',
         type: PasscodeType.SignIn,
         createdAt: Date.now(),
@@ -94,7 +94,7 @@ describe('createPasscode', () => {
         tryCount: 0,
       },
     ]);
-    await createPasscode(sessionId, PasscodeType.SignIn, {
+    await createPasscode(jti, PasscodeType.SignIn, {
       email,
     });
     expect(mockedDeletePasscodesByIds).toHaveBeenCalledWith(['id']);
@@ -105,7 +105,7 @@ describe('sendPasscode', () => {
   it('should throw error when email and phone are both empty', async () => {
     const passcode: Passcode = {
       id: 'id',
-      sessionId: 'sessionId',
+      interactionJti: 'jti',
       phone: null,
       email: null,
       type: PasscodeType.SignIn,
@@ -134,7 +134,7 @@ describe('sendPasscode', () => {
     });
     const passcode: Passcode = {
       id: 'id',
-      sessionId: 'sessionId',
+      interactionJti: 'jti',
       phone: 'phone',
       email: null,
       type: PasscodeType.SignIn,
@@ -153,7 +153,7 @@ describe('sendPasscode', () => {
 describe('verifyPasscode', () => {
   const passcode: Passcode = {
     id: 'id',
-    sessionId: 'sessionId',
+    interactionJti: 'jti',
     phone: 'phone',
     email: null,
     type: PasscodeType.SignIn,
@@ -164,8 +164,8 @@ describe('verifyPasscode', () => {
   };
 
   it('should mark as consumed on successful verification', async () => {
-    mockedFindUnconsumedPasscodeBySessionIdAndType.mockResolvedValue(passcode);
-    await verifyPasscode(passcode.sessionId, passcode.type, passcode.code, { phone: 'phone' });
+    mockedFindUnconsumedPasscodeByJtiAndType.mockResolvedValue(passcode);
+    await verifyPasscode(passcode.interactionJti, passcode.type, passcode.code, { phone: 'phone' });
     expect(mockedUpdatePasscode).toHaveBeenCalledWith(
       expect.objectContaining({
         set: { consumed: true },
@@ -174,54 +174,58 @@ describe('verifyPasscode', () => {
   });
 
   it('should fail when passcode not found', async () => {
-    mockedFindUnconsumedPasscodeBySessionIdAndType.mockResolvedValue(null);
+    mockedFindUnconsumedPasscodeByJtiAndType.mockResolvedValue(null);
     await expect(
-      verifyPasscode(passcode.sessionId, passcode.type, passcode.code, { phone: 'phone' })
+      verifyPasscode(passcode.interactionJti, passcode.type, passcode.code, { phone: 'phone' })
     ).rejects.toThrow(new RequestError('passcode.not_found'));
   });
 
   it('should fail when phone mismatch', async () => {
-    mockedFindUnconsumedPasscodeBySessionIdAndType.mockResolvedValue(passcode);
+    mockedFindUnconsumedPasscodeByJtiAndType.mockResolvedValue(passcode);
     await expect(
-      verifyPasscode(passcode.sessionId, passcode.type, passcode.code, { phone: 'invalid_phone' })
+      verifyPasscode(passcode.interactionJti, passcode.type, passcode.code, {
+        phone: 'invalid_phone',
+      })
     ).rejects.toThrow(new RequestError('passcode.phone_mismatch'));
   });
 
   it('should fail when email mismatch', async () => {
-    mockedFindUnconsumedPasscodeBySessionIdAndType.mockResolvedValue({
+    mockedFindUnconsumedPasscodeByJtiAndType.mockResolvedValue({
       ...passcode,
       phone: null,
       email: 'email',
     });
     await expect(
-      verifyPasscode(passcode.sessionId, passcode.type, passcode.code, { email: 'invalid_email' })
+      verifyPasscode(passcode.interactionJti, passcode.type, passcode.code, {
+        email: 'invalid_email',
+      })
     ).rejects.toThrow(new RequestError('passcode.email_mismatch'));
   });
 
   it('should fail when expired', async () => {
-    mockedFindUnconsumedPasscodeBySessionIdAndType.mockResolvedValue({
+    mockedFindUnconsumedPasscodeByJtiAndType.mockResolvedValue({
       ...passcode,
       createdAt: Date.now() - passcodeExpiration - 100,
     });
     await expect(
-      verifyPasscode(passcode.sessionId, passcode.type, passcode.code, { phone: 'phone' })
+      verifyPasscode(passcode.interactionJti, passcode.type, passcode.code, { phone: 'phone' })
     ).rejects.toThrow(new RequestError('passcode.expired'));
   });
 
   it('should fail when exceed max count', async () => {
-    mockedFindUnconsumedPasscodeBySessionIdAndType.mockResolvedValue({
+    mockedFindUnconsumedPasscodeByJtiAndType.mockResolvedValue({
       ...passcode,
       tryCount: passcodeMaxTryCount,
     });
     await expect(
-      verifyPasscode(passcode.sessionId, passcode.type, passcode.code, { phone: 'phone' })
+      verifyPasscode(passcode.interactionJti, passcode.type, passcode.code, { phone: 'phone' })
     ).rejects.toThrow(new RequestError('passcode.exceed_max_try'));
   });
 
   it('should fail when invalid code, and should increase try_count', async () => {
-    mockedFindUnconsumedPasscodeBySessionIdAndType.mockResolvedValue(passcode);
+    mockedFindUnconsumedPasscodeByJtiAndType.mockResolvedValue(passcode);
     await expect(
-      verifyPasscode(passcode.sessionId, passcode.type, 'invalid', { phone: 'phone' })
+      verifyPasscode(passcode.interactionJti, passcode.type, 'invalid', { phone: 'phone' })
     ).rejects.toThrow(new RequestError('passcode.code_mismatch'));
     expect(mockedUpdatePasscode).toHaveBeenCalledWith(
       expect.objectContaining({

@@ -6,8 +6,8 @@ import { ConnectorType, EmailConector, SmsConnector } from '@/connectors/types';
 import RequestError from '@/errors/RequestError';
 import {
   deletePasscodesByIds,
-  findUnconsumedPasscodeBySessionIdAndType,
-  findUnconsumedPasscodesBySessionIdAndType,
+  findUnconsumedPasscodeByJtiAndType,
+  findUnconsumedPasscodesByJtiAndType,
   insertPasscode,
   updatePasscode,
 } from '@/queries/passcode';
@@ -16,12 +16,12 @@ export const passcodeLength = 6;
 const randomCode = customAlphabet('1234567890', passcodeLength);
 
 export const createPasscode = async (
-  sessionId: string,
+  jti: string,
   type: PasscodeType,
   payload: { phone: string } | { email: string }
 ) => {
   // Disable existing passcodes.
-  const passcodes = await findUnconsumedPasscodesBySessionIdAndType(sessionId, type);
+  const passcodes = await findUnconsumedPasscodesByJtiAndType(jti, type);
 
   if (passcodes.length > 0) {
     await deletePasscodesByIds(passcodes.map(({ id }) => id));
@@ -29,7 +29,7 @@ export const createPasscode = async (
 
   return insertPasscode({
     id: nanoid(),
-    sessionId,
+    interactionJti: jti,
     type,
     code: randomCode(),
     ...payload,
@@ -61,7 +61,7 @@ export const verifyPasscode = async (
   code: string,
   payload: { phone: string } | { email: string }
 ): Promise<void> => {
-  const passcode = await findUnconsumedPasscodeBySessionIdAndType(sessionId, type);
+  const passcode = await findUnconsumedPasscodeByJtiAndType(sessionId, type);
 
   if (!passcode) {
     throw new RequestError('passcode.not_found');
