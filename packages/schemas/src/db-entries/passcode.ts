@@ -7,7 +7,7 @@ import { PasscodeType } from './custom-types';
 
 export type CreatePasscode = {
   id: string;
-  sessionId: string;
+  interactionJti: string;
   phone?: string | null;
   email?: string | null;
   type: PasscodeType;
@@ -19,7 +19,7 @@ export type CreatePasscode = {
 
 export type Passcode = {
   id: string;
-  sessionId: string;
+  interactionJti: string;
   phone: string | null;
   email: string | null;
   type: PasscodeType;
@@ -31,7 +31,7 @@ export type Passcode = {
 
 const createGuard: Guard<CreatePasscode> = z.object({
   id: z.string(),
-  sessionId: z.string(),
+  interactionJti: z.string(),
   phone: z.string().nullable().optional(),
   email: z.string().nullable().optional(),
   type: z.nativeEnum(PasscodeType),
@@ -46,7 +46,7 @@ export const Passcodes: GeneratedSchema<CreatePasscode> = Object.freeze({
   tableSingular: 'passcode',
   fields: {
     id: 'id',
-    sessionId: 'session_id',
+    interactionJti: 'interaction_jti',
     phone: 'phone',
     email: 'email',
     type: 'type',
@@ -57,7 +57,7 @@ export const Passcodes: GeneratedSchema<CreatePasscode> = Object.freeze({
   },
   fieldKeys: [
     'id',
-    'sessionId',
+    'interactionJti',
     'phone',
     'email',
     'type',

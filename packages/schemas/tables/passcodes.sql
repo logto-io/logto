@@ -2,7 +2,7 @@ create type passcode_type as enum ('SignIn', 'Register', 'ForgotPassword');
 
 create table passcodes (
   id varchar(128) not null,
-  session_id varchar(128) not null,
+  interaction_jti varchar(128) not null,
   phone varchar(32),
   email varchar(128),
   type passcode_type not null,
