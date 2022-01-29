@@ -84,14 +84,9 @@ export default function applicationRoutes<T extends AuthedRouter>(router: T) {
         params: { id },
         body,
       } = ctx.guard;
-      const application = await findApplicationById(id);
 
       ctx.body = await updateApplicationById(id, {
         ...body,
-        oidcClientMetadata: buildOidcClientMetadata({
-          ...application.oidcClientMetadata,
-          ...body.oidcClientMetadata,
-        }),
       });
 
       return next();

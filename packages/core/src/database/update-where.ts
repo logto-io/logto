@@ -38,10 +38,22 @@ export const buildUpdateWhere: BuildUpdateWhere = <
   const isKeyOfSchema = isKeyOf(schema);
   const connectKeyValueWithEqualSign = (data: Partial<Schema>) =>
     Object.entries(data)
-      .map(
-        ([key, value]) =>
-          isKeyOfSchema(key) && sql`${fields[key]}=${convertToPrimitiveOrSql(key, value)}`
-      )
+      .map(([key, value]) => {
+        if (!isKeyOfSchema(key)) {
+          return;
+        }
+
+        if (value && typeof value === 'object' && !Array.isArray(value)) {
+          /**
+           * Jsonb || operator is used to merge to jsonb types of data
+           * all jsonb data field must be non-nullable
+           * https://www.postgresql.org/docs/current/functions-json.html
+           */
+          return sql`${fields[key]}= ${fields[key]} || ${convertToPrimitiveOrSql(key, value)}`;
+        }
+
+        return sql`${fields[key]}=${convertToPrimitiveOrSql(key, value)}`;
+      })
       .filter((value): value is Truthy<typeof value> => notFalsy(value));
 
   return async ({ set, where }: UpdateWhereData<Schema>) => {
