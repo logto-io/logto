@@ -3,13 +3,14 @@ import { customAlphabet } from 'nanoid';
 import { request } from '../utilities/aliyun';
 import { sendSms } from './single-send-text';
 
-const passcodeGenerator = () => customAlphabet('0123456789', 6);
+export const passcodeLength = 4;
+const randomCode = customAlphabet('1234567890', passcodeLength);
 
 jest.mock('../utilities/aliyun');
 
 describe('sendSms', () => {
   it('should call request with action sendSms', async () => {
-    const passcode = passcodeGenerator();
+    const code = randomCode();
 
     await sendSms(
       {
@@ -17,7 +18,7 @@ describe('sendSms', () => {
         PhoneNumbers: '13912345678',
         SignName: '阿里云短信测试',
         TemplateCode: '	SMS_154950909',
-        TemplateParam: JSON.stringify({ code: passcode }),
+        TemplateParam: JSON.stringify({ code }),
       },
       '<access-key-secret>'
     );

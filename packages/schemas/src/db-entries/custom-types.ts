@@ -9,7 +9,6 @@ export enum PasscodeType {
   SignIn = 'SignIn',
   Register = 'Register',
   ForgotPassword = 'ForgotPassword',
-  Test = 'Test',
 }
 export enum UserLogType {
   SignInUsernameAndPassword = 'SignInUsernameAndPassword',

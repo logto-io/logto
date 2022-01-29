@@ -1,4 +1,3 @@
-import { PasscodeType } from '@logto/schemas';
 import { z } from 'zod';
 
 import {
@@ -32,7 +31,7 @@ export const metadata: ConnectorMetadata = {
  * 'Register', 'SignIn', 'ForgotPassword' or 'Test'.
  */
 const templateGuard = z.object({
-  usageType: z.nativeEnum(PasscodeType),
+  usageType: z.string(),
   subject: z.string(),
   content: z.string(), // With variable {{code}}, support HTML
 });
@@ -65,7 +64,7 @@ export const sendMessage: EmailSendMessageFunction = async (address, type, data)
   const template = config.templates.find((template) => template.usageType === type);
 
   if (!template) {
-    throw new ConnectorError(`Can not find template for type: ${type}`);
+    throw new ConnectorError(`Cannot find template for type: ${type}`);
   }
 
   return singleSendMail(

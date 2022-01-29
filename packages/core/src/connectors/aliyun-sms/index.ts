@@ -1,4 +1,3 @@
-import { PasscodeType } from '@logto/schemas';
 import { z } from 'zod';
 
 import {
@@ -28,14 +27,14 @@ export const metadata: ConnectorMetadata = {
 };
 
 /**
- * Details of TemplateType can be found at:
+ * Details of SmsTemplateType can be found at:
  * https://next.api.aliyun.com/document/Dysmsapi/2017-05-25/QuerySmsTemplateList.
  *
  * For our use case is to send passcode sms for passwordless sign-in/up as well as
  * reset password, the default value of type code is set to be 2.
  *
  */
-enum TemplateType {
+enum SmsTemplateType {
   Notification = 0,
   Promotion = 1,
   Passcode = 2,
@@ -48,13 +47,13 @@ enum TemplateType {
  * 'Register', 'SignIn', 'ForgotPassword' or 'Test'.
  *
  * Type here in the template is used to specify the purpose of sending the sms,
- * can be either item in TemplateType.
+ * can be either item in SmsTemplateType.
  * As the SMS is applied for sending passcode, the value should always be 2 in our case.
  *
  */
 const templateGuard = z.object({
-  type: z.nativeEnum(TemplateType).default(2),
-  usageType: z.nativeEnum(PasscodeType),
+  type: z.nativeEnum(SmsTemplateType).default(2),
+  usageType: z.string(),
   code: z.string().optional(),
   name: z.string().min(1).max(30),
   content: z.string().min(1).max(500),
@@ -84,14 +83,15 @@ export const validateConfig: ValidateConfig = async (config: unknown) => {
 export type AliyunSmsConfig = z.infer<typeof configGuard>;
 
 export const sendMessage: SmsSendMessageFunction = async (phone, type, { code }) => {
-  const { accessKeyId, accessKeySecret, signName, templateCode, templates } =
-    await getConnectorConfig<AliyunSmsConfig>(metadata.id);
+  const config = await getConnectorConfig<AliyunSmsConfig>(metadata.id);
+  await validateConfig(config);
+  const { accessKeyId, accessKeySecret, signName, templateCode, templates } = config;
   const template = templates.find(
     ({ code, usageType }) => code === templateCode && usageType === type
   );
 
   if (!template) {
-    throw new ConnectorError(`Can not find template code: ${templateCode}`);
+    throw new ConnectorError(`Cannot find template code: ${templateCode}`);
   }
 
   return sendSms(

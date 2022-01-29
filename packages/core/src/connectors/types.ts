@@ -1,5 +1,5 @@
 import { Languages } from '@logto/phrases';
-import { ConnectorConfig, Connector } from '@logto/schemas';
+import { ConnectorConfig, Connector, PasscodeType } from '@logto/schemas';
 
 export enum ConnectorType {
   SMS = 'SMS',
@@ -63,6 +63,8 @@ export type SmsSendMessageFunction<T = unknown> = (
   type: keyof SmsMessageTypes,
   payload: SmsMessageTypes[typeof type]
 ) => Promise<T>;
+
+export type TemplateType = PasscodeType | 'Test';
 
 export class ConnectorError extends Error {}
 
