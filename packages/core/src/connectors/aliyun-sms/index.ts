@@ -83,11 +83,11 @@ export const validateConfig: ValidateConfig = async (config: unknown) => {
 
 export type AliyunSmsConfig = z.infer<typeof configGuard>;
 
-export const sendMessage: SmsSendMessageFunction = async (phone, type, payload) => {
+export const sendMessage: SmsSendMessageFunction = async (phone, type, { code }) => {
   const { accessKeyId, accessKeySecret, signName, templateCode, templates } =
     await getConnectorConfig<AliyunSmsConfig>(metadata.id);
   const template = templates.find(
-    (template) => template.code === templateCode && template.usageType === type
+    ({ code, usageType }) => code === templateCode && usageType === type
   );
 
   if (!template) {
@@ -100,7 +100,7 @@ export const sendMessage: SmsSendMessageFunction = async (phone, type, payload) 
       PhoneNumbers: phone,
       SignName: signName,
       TemplateCode: templateCode,
-      TemplateParam: JSON.stringify({ code: payload.code }),
+      TemplateParam: JSON.stringify({ code }),
     },
     accessKeySecret
   );
