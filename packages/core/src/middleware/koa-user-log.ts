@@ -11,6 +11,9 @@ export type WithUserLogContext<ContextT> = ContextT & {
 export interface LogContext {
   type?: UserLogType;
   userId?: string;
+  username?: string;
+  email?: string;
+  phone?: string;
   payload: UserLogPayload;
   createdAt: number;
 }

@@ -16,6 +16,13 @@ export const findUserByUsername = async (username: string) =>
     where ${fields.username}=${username}
   `);
 
+export const findUserByEmail = async (email: string) =>
+  pool.one<User>(sql`
+    select ${sql.join(Object.values(fields), sql`,`)}
+    from ${table}
+    where ${fields.primaryEmail}=${email}
+  `);
+
 export const findUserById = async (id: string) =>
   pool.one<User>(sql`
     select ${sql.join(Object.values(fields), sql`,`)}

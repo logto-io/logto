@@ -1,50 +1,60 @@
 import { LogtoErrorCode } from '@logto/phrases';
-import { UserLogType } from '@logto/schemas';
+import { PasscodeType, UserLogType } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { Provider } from 'oidc-provider';
 import { object, string } from 'zod';
 
 import RequestError from '@/errors/RequestError';
-import { encryptUserPassword, generateUserId } from '@/lib/user';
+import { createPasscode, sendPasscode, verifyPasscode } from '@/lib/passcode';
+import { encryptUserPassword, generateUserId, signInWithUsernameAndPassword } from '@/lib/user';
 import koaGuard from '@/middleware/koa-guard';
-import { findUserByUsername, hasUser, insertUser } from '@/queries/user';
+import { findUserByEmail, hasUser, insertUser } from '@/queries/user';
 import assertThat from '@/utils/assert-that';
-import { encryptPassword } from '@/utils/password';
+import { emailReg } from '@/utils/regex';
 
 import { AnonymousRouter } from './types';
 
 export default function sessionRoutes<T extends AnonymousRouter>(router: T, provider: Provider) {
   router.post(
     '/session',
-    koaGuard({ body: object({ username: string().optional(), password: string().optional() }) }),
+    koaGuard({
+      body: object({
+        username: string().optional(),
+        password: string().optional(),
+        email: string().optional(),
+        code: string().optional(),
+      }),
+    }),
     async (ctx, next) => {
       const interaction = await provider.interactionDetails(ctx.req, ctx.res);
       const {
+        jti,
         prompt: { name },
       } = interaction;
 
+      if (name === 'consent') {
+        ctx.body = { redirectTo: ctx.request.origin + '/session/consent' };
+
+        return next();
+      }
+
       if (name === 'login') {
-        const { username, password } = ctx.guard.body;
+        const { username, password, email, code } = ctx.guard.body;
 
-        assertThat(username && password, 'session.insufficient_info');
+        assertThat(!email || emailReg.test(email), new RequestError('user.invalid_email'));
 
-        try {
-          const { id, passwordEncrypted, passwordEncryptionMethod, passwordEncryptionSalt } =
-            await findUserByUsername(username);
+        if (email && !code) {
+          // Request passcode for email
+          const passcode = await createPasscode(jti, PasscodeType.SignIn, { email });
+          await sendPasscode(passcode);
+          ctx.state = 204;
+        } else if (email && code) {
+          // Sign In with Email
+          ctx.userLog.email = email;
+          ctx.userLog.type = UserLogType.SignInEmail;
 
-          ctx.userLog.userId = id;
-          ctx.userLog.type = UserLogType.SignInUsernameAndPassword;
-
-          assertThat(
-            passwordEncrypted && passwordEncryptionMethod && passwordEncryptionSalt,
-            'session.invalid_sign_in_method'
-          );
-
-          assertThat(
-            encryptPassword(id, password, passwordEncryptionSalt, passwordEncryptionMethod) ===
-              passwordEncrypted,
-            'session.invalid_credentials'
-          );
+          await verifyPasscode(jti, PasscodeType.SignIn, code, { email });
+          const { id } = await findUserByEmail(email);
 
           const redirectTo = await provider.interactionResult(
             ctx.req,
@@ -55,20 +65,29 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
             { mergeWithLastSubmission: false }
           );
           ctx.body = { redirectTo };
-        } catch (error: unknown) {
-          if (!(error instanceof RequestError)) {
-            throw new RequestError('session.invalid_credentials');
-          }
+        } else {
+          assertThat(username && password, 'session.insufficient_info');
 
-          throw error;
+          ctx.userLog.username = username;
+          ctx.userLog.type = UserLogType.SignInUsernameAndPassword;
+
+          const { id } = await signInWithUsernameAndPassword(username, password);
+
+          const redirectTo = await provider.interactionResult(
+            ctx.req,
+            ctx.res,
+            {
+              login: { accountId: id },
+            },
+            { mergeWithLastSubmission: false }
+          );
+          ctx.body = { redirectTo };
         }
-      } else if (name === 'consent') {
-        ctx.body = { redirectTo: ctx.request.origin + '/session/consent' };
-      } else {
-        throw new Error(`Prompt not supported: ${name}`);
+
+        return next();
       }
 
-      return next();
+      throw new Error(`Prompt not supported: ${name}`);
     }
   );
 
