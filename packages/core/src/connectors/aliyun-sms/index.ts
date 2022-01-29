@@ -32,7 +32,7 @@ export const metadata: ConnectorMetadata = {
  * https://next.api.aliyun.com/document/Dysmsapi/2017-05-25/QuerySmsTemplateList.
  *
  * For our use case is to send passcode sms for passwordless sign-in/up as well as
- * reset password, the default value of type code is set to be 0.
+ * reset password, the default value of type code is set to be 2.
  *
  */
 enum TemplateType {
