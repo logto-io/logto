@@ -1,4 +1,4 @@
-import { CreateUser, Users } from '@logto/schemas';
+import { CreateUser, Users, Applications } from '@logto/schemas';
 
 import RequestError from '@/errors/RequestError';
 import { createTestPool } from '@/utils/test-utils';
@@ -33,6 +33,24 @@ describe('buildUpdateWhere()', () => {
     await expect(
       updateWhere({ set: { username: '123', primaryEmail: 'foo@bar.com' }, where: { id: 'foo' } })
     ).resolves.toStrictEqual(user);
+  });
+
+  it('return query with jsonb partial update if input data type is jsonb', async () => {
+    const pool = createTestPool(
+      'update "applications"\nset\n"custom_client_metadata"=\ncoalesce("custom_client_metadata",\'{}\'::jsonb)|| $1\nwhere "id"=$2\nreturning *',
+      (_, [costumClientMetadata, id]) => ({
+        id: String(id),
+        costumClientMetadata: String(costumClientMetadata),
+      })
+    );
+    const updateWhere = buildUpdateWhere(pool, Applications, true);
+
+    await expect(
+      updateWhere({
+        set: { customClientMetadata: { idTokenTtl: 3600 } },
+        where: { id: 'foo' },
+      })
+    ).resolves.toStrictEqual({ id: 'foo', costumClientMetadata: '{"idTokenTtl":3600}' });
   });
 
   it('throws an error when `undefined` found in values', async () => {
