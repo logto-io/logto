@@ -28,6 +28,9 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
     async (ctx, next) => {
       const interaction = await provider.interactionDetails(ctx.req, ctx.res);
       const {
+        // Interaction's JWT identity: jti
+        // https://github.com/panva/node-oidc-provider/blob/main/docs/README.md#user-flows
+        // https://datatracker.ietf.org/doc/html/rfc7519#section-4.1.7
         jti,
         prompt: { name },
       } = interaction;
