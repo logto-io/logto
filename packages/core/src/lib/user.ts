@@ -43,7 +43,7 @@ export const encryptUserPassword = (
   return { passwordEncrypted, passwordEncryptionMethod, passwordEncryptionSalt };
 };
 
-export const signInWithUsernameAndPassword = async (
+export const findUserByUsernameAndPassword = async (
   username: string,
   password: string
 ): Promise<User> => {

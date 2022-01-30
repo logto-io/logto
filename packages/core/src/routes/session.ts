@@ -1,16 +1,18 @@
 import { LogtoErrorCode } from '@logto/phrases';
-import { PasscodeType, UserLogType } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { Provider } from 'oidc-provider';
 import { object, string } from 'zod';
 
 import RequestError from '@/errors/RequestError';
-import { createPasscode, sendPasscode, verifyPasscode } from '@/lib/passcode';
-import { encryptUserPassword, generateUserId, signInWithUsernameAndPassword } from '@/lib/user';
+import {
+  sendSignInWithEmailPasscode,
+  signInWithEmailAndPasscode,
+  signInWithUsernameAndPassword,
+} from '@/lib/sign-in';
+import { encryptUserPassword, generateUserId } from '@/lib/user';
 import koaGuard from '@/middleware/koa-guard';
-import { findUserByEmail, hasUser, insertUser } from '@/queries/user';
+import { hasUser, insertUser } from '@/queries/user';
 import assertThat from '@/utils/assert-that';
-import { emailReg } from '@/utils/regex';
 
 import { AnonymousRouter } from './types';
 
@@ -44,47 +46,14 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
       if (name === 'login') {
         const { username, password, email, code } = ctx.guard.body;
 
-        assertThat(!email || emailReg.test(email), new RequestError('user.invalid_email'));
-
         if (email && !code) {
-          // Request passcode for email
-          const passcode = await createPasscode(jti, PasscodeType.SignIn, { email });
-          await sendPasscode(passcode);
-          ctx.state = 204;
+          await sendSignInWithEmailPasscode(ctx, jti, email);
         } else if (email && code) {
-          // Sign In with Email
-          ctx.userLog.email = email;
-          ctx.userLog.type = UserLogType.SignInEmail;
-
-          await verifyPasscode(jti, PasscodeType.SignIn, code, { email });
-          const { id } = await findUserByEmail(email);
-
-          const redirectTo = await provider.interactionResult(
-            ctx.req,
-            ctx.res,
-            {
-              login: { accountId: id },
-            },
-            { mergeWithLastSubmission: false }
-          );
-          ctx.body = { redirectTo };
+          await signInWithEmailAndPasscode(ctx, provider, { jti, email, code });
+        } else if (username && password) {
+          await signInWithUsernameAndPassword(ctx, provider, username, password);
         } else {
-          assertThat(username && password, 'session.insufficient_info');
-
-          ctx.userLog.username = username;
-          ctx.userLog.type = UserLogType.SignInUsernameAndPassword;
-
-          const { id } = await signInWithUsernameAndPassword(username, password);
-
-          const redirectTo = await provider.interactionResult(
-            ctx.req,
-            ctx.res,
-            {
-              login: { accountId: id },
-            },
-            { mergeWithLastSubmission: false }
-          );
-          ctx.body = { redirectTo };
+          throw new RequestError('session.insufficient_info');
         }
 
         return next();
