@@ -50,13 +50,8 @@ export const buildUpdateWhere: BuildUpdateWhere = <
            * https://www.postgresql.org/docs/current/functions-json.html
            */
           return sql`
-            ${fields[key]}=(
-              case
-                when ${fields[key]} is not NULL
-                then ${fields[key]} || ${convertToPrimitiveOrSql(key, value)}
-                else ${convertToPrimitiveOrSql(key, value)}
-              end
-            )
+            ${fields[key]}=
+              coalesce(${fields[key]},'{}'::jsonb)|| ${convertToPrimitiveOrSql(key, value)}
           `;
         }
 
