@@ -1,4 +1,4 @@
-create type user_log_type as enum ('SignInUsernameAndPassword', 'ExchangeAccessToken');
+create type user_log_type as enum ('SignInUsernameAndPassword', 'SignInEmail', 'ExchangeAccessToken');
 
 create type user_log_result as enum ('Success', 'Failed');
 

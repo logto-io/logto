@@ -17,7 +17,7 @@ export const findUnconsumedPasscodeByJtiAndType = async (jti: string, type: Pass
   `);
 
 export const findUnconsumedPasscodesByJtiAndType = async (jti: string, type: PasscodeType) =>
-  pool.many<Passcode>(sql`
+  pool.any<Passcode>(sql`
     select ${sql.join(Object.values(fields), sql`, `)}
     from ${table}
     where ${fields.interactionJti}=${jti} and ${fields.type}=${type} and ${fields.consumed} = false

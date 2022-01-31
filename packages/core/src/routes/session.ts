@@ -1,74 +1,65 @@
 import { LogtoErrorCode } from '@logto/phrases';
-import { UserLogType } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { Provider } from 'oidc-provider';
 import { object, string } from 'zod';
 
 import RequestError from '@/errors/RequestError';
+import {
+  sendSignInWithEmailPasscode,
+  signInWithEmailAndPasscode,
+  signInWithUsernameAndPassword,
+} from '@/lib/sign-in';
 import { encryptUserPassword, generateUserId } from '@/lib/user';
 import koaGuard from '@/middleware/koa-guard';
-import { findUserByUsername, hasUser, insertUser } from '@/queries/user';
+import { hasUser, insertUser } from '@/queries/user';
 import assertThat from '@/utils/assert-that';
-import { encryptPassword } from '@/utils/password';
 
 import { AnonymousRouter } from './types';
 
 export default function sessionRoutes<T extends AnonymousRouter>(router: T, provider: Provider) {
   router.post(
     '/session',
-    koaGuard({ body: object({ username: string().optional(), password: string().optional() }) }),
+    koaGuard({
+      body: object({
+        username: string().optional(),
+        password: string().optional(),
+        email: string().optional(),
+        code: string().optional(),
+      }),
+    }),
     async (ctx, next) => {
       const interaction = await provider.interactionDetails(ctx.req, ctx.res);
       const {
+        // Interaction's JWT identity: jti
+        // https://github.com/panva/node-oidc-provider/blob/main/docs/README.md#user-flows
+        // https://datatracker.ietf.org/doc/html/rfc7519#section-4.1.7
+        jti,
         prompt: { name },
       } = interaction;
 
-      if (name === 'login') {
-        const { username, password } = ctx.guard.body;
-
-        assertThat(username && password, 'session.insufficient_info');
-
-        try {
-          const { id, passwordEncrypted, passwordEncryptionMethod, passwordEncryptionSalt } =
-            await findUserByUsername(username);
-
-          ctx.userLog.userId = id;
-          ctx.userLog.type = UserLogType.SignInUsernameAndPassword;
-
-          assertThat(
-            passwordEncrypted && passwordEncryptionMethod && passwordEncryptionSalt,
-            'session.invalid_sign_in_method'
-          );
-
-          assertThat(
-            encryptPassword(id, password, passwordEncryptionSalt, passwordEncryptionMethod) ===
-              passwordEncrypted,
-            'session.invalid_credentials'
-          );
-
-          const redirectTo = await provider.interactionResult(
-            ctx.req,
-            ctx.res,
-            {
-              login: { accountId: id },
-            },
-            { mergeWithLastSubmission: false }
-          );
-          ctx.body = { redirectTo };
-        } catch (error: unknown) {
-          if (!(error instanceof RequestError)) {
-            throw new RequestError('session.invalid_credentials');
-          }
-
-          throw error;
-        }
-      } else if (name === 'consent') {
+      if (name === 'consent') {
         ctx.body = { redirectTo: ctx.request.origin + '/session/consent' };
-      } else {
-        throw new Error(`Prompt not supported: ${name}`);
+
+        return next();
       }
 
-      return next();
+      if (name === 'login') {
+        const { username, password, email, code } = ctx.guard.body;
+
+        if (email && !code) {
+          await sendSignInWithEmailPasscode(ctx, jti, email);
+        } else if (email && code) {
+          await signInWithEmailAndPasscode(ctx, provider, { jti, email, code });
+        } else if (username && password) {
+          await signInWithUsernameAndPassword(ctx, provider, username, password);
+        } else {
+          throw new RequestError('session.insufficient_info');
+        }
+
+        return next();
+      }
+
+      throw new Error(`Prompt not supported: ${name}`);
     }
   );
 

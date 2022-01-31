@@ -32,6 +32,7 @@ const errors = {
   },
   user: {
     username_exists: 'The username already exists.',
+    invalid_email: 'Invalid email address.',
   },
   password: {
     unsupported_encryption_method: 'The encryption method {{name}} is not supported.',
