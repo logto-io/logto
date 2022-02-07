@@ -11,7 +11,9 @@ import {
 } from '@/lib/register';
 import {
   sendSignInWithEmailPasscode,
+  sendSignInWithPhonePasscode,
   signInWithEmailAndPasscode,
+  signInWithPhoneAndPasscode,
   signInWithUsernameAndPassword,
 } from '@/lib/sign-in';
 import koaGuard from '@/middleware/koa-guard';
@@ -27,6 +29,7 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
         username: string().optional(),
         password: string().optional(),
         email: string().optional(),
+        phone: string().optional(),
         code: string().optional(),
       }),
     }),
@@ -47,12 +50,16 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
       }
 
       if (name === 'login') {
-        const { username, password, email, code } = ctx.guard.body;
+        const { username, password, email, phone, code } = ctx.guard.body;
 
         if (email && !code) {
           await sendSignInWithEmailPasscode(ctx, jti, email);
         } else if (email && code) {
           await signInWithEmailAndPasscode(ctx, provider, { jti, email, code });
+        } else if (phone && !code) {
+          await sendSignInWithPhonePasscode(ctx, jti, phone);
+        } else if (phone && code) {
+          await signInWithPhoneAndPasscode(ctx, provider, { jti, phone, code });
         } else if (username && password) {
           await signInWithUsernameAndPassword(ctx, provider, username, password);
         } else {

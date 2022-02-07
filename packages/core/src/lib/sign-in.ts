@@ -4,9 +4,14 @@ import { Provider } from 'oidc-provider';
 
 import RequestError from '@/errors/RequestError';
 import { WithUserLogContext } from '@/middleware/koa-user-log';
-import { findUserByEmail, hasUserWithEmail } from '@/queries/user';
+import {
+  findUserByEmail,
+  findUserByPhone,
+  hasUserWithEmail,
+  hasUserWithPhone,
+} from '@/queries/user';
 import assertThat from '@/utils/assert-that';
-import { emailRegEx } from '@/utils/regex';
+import { emailRegEx, phoneRegEx } from '@/utils/regex';
 
 import { createPasscode, sendPasscode, verifyPasscode } from './passcode';
 import { findUserByUsernameAndPassword } from './user';
@@ -37,6 +42,20 @@ export const sendSignInWithEmailPasscode = async (ctx: Context, jti: string, ema
   ctx.state = 204;
 };
 
+export const sendSignInWithPhonePasscode = async (ctx: Context, jti: string, phone: string) => {
+  assertThat(phoneRegEx.test(phone), new RequestError('user.invalid_phone'));
+  assertThat(
+    await hasUserWithPhone(phone),
+    new RequestError({
+      code: 'user.phone_not_exists',
+      status: 422,
+    })
+  );
+  const passcode = await createPasscode(jti, PasscodeType.SignIn, { phone });
+  await sendPasscode(passcode);
+  ctx.state = 204;
+};
+
 export const signInWithUsernameAndPassword = async (
   ctx: WithUserLogContext<Context>,
   provider: Provider,
@@ -62,6 +81,20 @@ export const signInWithEmailAndPasscode = async (
 
   await verifyPasscode(jti, PasscodeType.SignIn, code, { email });
   const { id } = await findUserByEmail(email);
+
+  await assignSignInResult(ctx, provider, id);
+};
+
+export const signInWithPhoneAndPasscode = async (
+  ctx: WithUserLogContext<Context>,
+  provider: Provider,
+  { jti, phone, code }: { jti: string; phone: string; code: string }
+) => {
+  ctx.userLog.phone = phone;
+  ctx.userLog.type = UserLogType.SignInSms;
+
+  await verifyPasscode(jti, PasscodeType.SignIn, code, { phone });
+  const { id } = await findUserByPhone(phone);
 
   await assignSignInResult(ctx, provider, id);
 };

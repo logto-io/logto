@@ -48,7 +48,9 @@ const errors = {
     username_exists: '用户名已存在。',
     email_exists: '邮箱地址已存在。',
     invalid_email: '邮箱地址不正确。',
+    invalid_phone: '手机号码不正确。',
     email_not_exists: '邮箱地址尚未注册。',
+    phone_not_exists: '手机号码尚未注册。',
   },
   password: {
     unsupported_encryption_method: '不支持的加密方法 {{name}}。',
