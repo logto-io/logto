@@ -44,6 +44,13 @@ export const hasUserWithId = async (id: string) =>
     where ${fields.id}=${id}
   `);
 
+export const hasUserWithEmail = async (email: string) =>
+  pool.exists(sql`
+    select ${fields.primaryEmail}
+    from ${table}
+    where ${fields.primaryEmail}=${email}
+  `);
+
 export const insertUser = buildInsertInto<CreateUser, User>(pool, Users, { returning: true });
 
 export const findAllUsers = async () =>

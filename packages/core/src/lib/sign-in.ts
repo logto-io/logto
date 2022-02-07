@@ -4,7 +4,7 @@ import { Provider } from 'oidc-provider';
 
 import RequestError from '@/errors/RequestError';
 import { WithUserLogContext } from '@/middleware/koa-user-log';
-import { findUserByEmail } from '@/queries/user';
+import { findUserByEmail, hasUserWithEmail } from '@/queries/user';
 import assertThat from '@/utils/assert-that';
 import { emailReg } from '@/utils/regex';
 
@@ -24,8 +24,14 @@ const assignSignInResult = async (ctx: Context, provider: Provider, userId: stri
 };
 
 export const sendSignInWithEmailPasscode = async (ctx: Context, jti: string, email: string) => {
-  assertThat(!email || emailReg.test(email), new RequestError('user.invalid_email'));
-
+  assertThat(emailReg.test(email), new RequestError('user.invalid_email'));
+  assertThat(
+    await hasUserWithEmail(email),
+    new RequestError({
+      code: 'user.email_not_exists',
+      status: 422,
+    })
+  );
   const passcode = await createPasscode(jti, PasscodeType.SignIn, { email });
   await sendPasscode(passcode);
   ctx.state = 204;
