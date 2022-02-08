@@ -2,7 +2,14 @@
 
 import { z } from 'zod';
 
-import { RoleNames, roleNamesGuard, GeneratedSchema, Guard } from '../foundations';
+import {
+  RoleNames,
+  roleNamesGuard,
+  Identities,
+  identitiesGuard,
+  GeneratedSchema,
+  Guard,
+} from '../foundations';
 import { PasswordEncryptionMethod } from './custom-types';
 
 export type CreateUser = {
@@ -14,6 +21,7 @@ export type CreateUser = {
   passwordEncryptionMethod?: PasswordEncryptionMethod | null;
   passwordEncryptionSalt?: string | null;
   roleNames?: RoleNames;
+  identities?: Identities;
 };
 
 export type User = {
@@ -25,6 +33,7 @@ export type User = {
   passwordEncryptionMethod: PasswordEncryptionMethod | null;
   passwordEncryptionSalt: string | null;
   roleNames: RoleNames;
+  identities: Identities;
 };
 
 const createGuard: Guard<CreateUser> = z.object({
@@ -36,6 +45,7 @@ const createGuard: Guard<CreateUser> = z.object({
   passwordEncryptionMethod: z.nativeEnum(PasswordEncryptionMethod).nullable().optional(),
   passwordEncryptionSalt: z.string().nullable().optional(),
   roleNames: roleNamesGuard.optional(),
+  identities: identitiesGuard.optional(),
 });
 
 export const Users: GeneratedSchema<CreateUser> = Object.freeze({
@@ -50,6 +60,7 @@ export const Users: GeneratedSchema<CreateUser> = Object.freeze({
     passwordEncryptionMethod: 'password_encryption_method',
     passwordEncryptionSalt: 'password_encryption_salt',
     roleNames: 'role_names',
+    identities: 'identities',
   },
   fieldKeys: [
     'id',
@@ -60,6 +71,7 @@ export const Users: GeneratedSchema<CreateUser> = Object.freeze({
     'passwordEncryptionMethod',
     'passwordEncryptionSalt',
     'roleNames',
+    'identities',
   ],
   createGuard,
 });
