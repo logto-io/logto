@@ -57,6 +57,7 @@ export default async function initOidc(app: Koa): Promise<Provider> {
           const scope = scopes.map(({ name }) => name).join(' ');
 
           return {
+            accessTokenFormat: 'jwt',
             scope,
             accessTokenTTL,
           };
