@@ -5,13 +5,16 @@ import { object, string } from 'zod';
 
 import RequestError from '@/errors/RequestError';
 import {
+  registerWithEmailAndPasscode,
+  registerWithUsernameAndPassword,
+  sendPasscodeToEmail,
+} from '@/lib/register';
+import {
   sendSignInWithEmailPasscode,
   signInWithEmailAndPasscode,
   signInWithUsernameAndPassword,
 } from '@/lib/sign-in';
-import { encryptUserPassword, generateUserId } from '@/lib/user';
 import koaGuard from '@/middleware/koa-guard';
-import { hasUser, insertUser } from '@/queries/user';
 import assertThat from '@/utils/assert-that';
 
 import { AnonymousRouter } from './types';
@@ -108,39 +111,26 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
     '/session/register',
     koaGuard({
       body: object({
-        username: string().min(3),
-        password: string().min(6),
+        username: string().min(3).optional(),
+        password: string().min(6).optional(),
+        email: string().optional(),
+        code: string().optional(),
       }),
     }),
     async (ctx, next) => {
-      const { username, password } = ctx.guard.body;
+      const interaction = await provider.interactionDetails(ctx.req, ctx.res);
+      const { jti } = interaction;
+      const { username, password, email, code } = ctx.guard.body;
 
-      if (await hasUser(username)) {
-        throw new RequestError('user.username_exists');
+      if (email && !code) {
+        await sendPasscodeToEmail(ctx, jti, email);
+      } else if (email && code) {
+        await registerWithEmailAndPasscode(ctx, provider, { jti, email, code });
+      } else if (username && password) {
+        await registerWithUsernameAndPassword(ctx, provider, username, password);
+      } else {
+        throw new RequestError('session.insufficient_info');
       }
-
-      const id = await generateUserId();
-
-      const { passwordEncryptionSalt, passwordEncrypted, passwordEncryptionMethod } =
-        encryptUserPassword(id, password);
-
-      await insertUser({
-        id,
-        username,
-        passwordEncrypted,
-        passwordEncryptionMethod,
-        passwordEncryptionSalt,
-      });
-
-      const redirectTo = await provider.interactionResult(
-        ctx.req,
-        ctx.res,
-        {
-          login: { accountId: id },
-        },
-        { mergeWithLastSubmission: false }
-      );
-      ctx.body = { redirectTo };
 
       return next();
     }

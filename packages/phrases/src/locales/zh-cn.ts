@@ -46,6 +46,7 @@ const errors = {
   },
   user: {
     username_exists: '用户名已存在。',
+    email_exists: '邮箱地址已存在。',
     invalid_email: '邮箱地址不正确。',
     email_not_exists: '邮箱地址尚未注册。',
   },

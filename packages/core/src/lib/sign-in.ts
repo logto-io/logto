@@ -6,7 +6,7 @@ import RequestError from '@/errors/RequestError';
 import { WithUserLogContext } from '@/middleware/koa-user-log';
 import { findUserByEmail, hasUserWithEmail } from '@/queries/user';
 import assertThat from '@/utils/assert-that';
-import { emailReg } from '@/utils/regex';
+import { emailRegEx } from '@/utils/regex';
 
 import { createPasscode, sendPasscode, verifyPasscode } from './passcode';
 import { findUserByUsernameAndPassword } from './user';
@@ -24,7 +24,7 @@ const assignSignInResult = async (ctx: Context, provider: Provider, userId: stri
 };
 
 export const sendSignInWithEmailPasscode = async (ctx: Context, jti: string, email: string) => {
-  assertThat(emailReg.test(email), new RequestError('user.invalid_email'));
+  assertThat(emailRegEx.test(email), new RequestError('user.invalid_email'));
   assertThat(
     await hasUserWithEmail(email),
     new RequestError({
