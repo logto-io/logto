@@ -23,6 +23,13 @@ export const findUserByEmail = async (email: string) =>
     where ${fields.primaryEmail}=${email}
   `);
 
+export const findUserByPhone = async (phone: string) =>
+  pool.one<User>(sql`
+    select ${sql.join(Object.values(fields), sql`,`)}
+    from ${table}
+    where ${fields.primaryPhone}=${phone}
+  `);
+
 export const findUserById = async (id: string) =>
   pool.one<User>(sql`
     select ${sql.join(Object.values(fields), sql`,`)}
@@ -49,6 +56,13 @@ export const hasUserWithEmail = async (email: string) =>
     select ${fields.primaryEmail}
     from ${table}
     where ${fields.primaryEmail}=${email}
+  `);
+
+export const hasUserWithPhone = async (phone: string) =>
+  pool.exists(sql`
+    select ${fields.primaryPhone}
+    from ${table}
+    where ${fields.primaryPhone}=${phone}
   `);
 
 export const insertUser = buildInsertInto<CreateUser, User>(pool, Users, { returning: true });
