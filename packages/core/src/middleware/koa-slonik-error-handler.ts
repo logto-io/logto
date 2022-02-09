@@ -26,7 +26,7 @@ import { SlonikError, NotFoundError } from 'slonik';
 import RequestError from '@/errors/RequestError';
 import { DeletionError } from '@/errors/SlonikError';
 
-export default function koaSlonikHandler<StateT, ContextT>(): Middleware<StateT, ContextT> {
+export default function koaSlonikErrorHandler<StateT, ContextT>(): Middleware<StateT, ContextT> {
   return async (ctx, next) => {
     try {
       await next();
