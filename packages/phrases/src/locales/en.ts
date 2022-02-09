@@ -46,6 +46,7 @@ const errors = {
   user: {
     username_exists: 'The username already exists.',
     email_exists: 'The email already exists.',
+    phone_exists: 'The phone already exists.',
     invalid_email: 'Invalid email address.',
     invalid_phone: 'Invalid phone number.',
     email_not_exists: 'The email address has not been registered yet.',

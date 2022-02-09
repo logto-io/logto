@@ -94,7 +94,7 @@ export const signInWithPhoneAndPasscode = async (
   { jti, phone, code }: { jti: string; phone: string; code: string }
 ) => {
   ctx.userLog.phone = phone;
-  ctx.userLog.type = UserLogType.SignInSms;
+  ctx.userLog.type = UserLogType.SignInPhone;
 
   await verifyPasscode(jti, PasscodeType.SignIn, code, { phone });
   const { id } = await findUserByPhone(phone);
