@@ -103,6 +103,6 @@ export const deleteUserById = async (id: string) => {
   `);
 
   if (rowCount < 1) {
-    throw new DeletionError();
+    throw new DeletionError(Users.table, id);
   }
 };

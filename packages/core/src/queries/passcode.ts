@@ -36,7 +36,7 @@ export const deletePasscodeById = async (id: string) => {
   `);
 
   if (rowCount < 1) {
-    throw new DeletionError();
+    throw new DeletionError(Passcodes.table, id);
   }
 };
 
@@ -47,6 +47,7 @@ export const deletePasscodesByIds = async (ids: string[]) => {
   `);
 
   if (rowCount !== ids.length) {
-    throw new DeletionError();
+    // TODO: need to track the failed ids
+    throw new DeletionError(Passcodes.table, `${ids.join(',')}`);
   }
 };
