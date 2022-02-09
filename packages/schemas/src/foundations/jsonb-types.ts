@@ -45,6 +45,15 @@ export const roleNamesGuard = z.string().array();
 
 export type RoleNames = z.infer<typeof roleNamesGuard>;
 
+const identityGuard = z.object({
+  userId: z.string(),
+  details: z.object({}).optional(), // Connector's userinfo details, schemaless
+});
+export const identitiesGuard = z.record(identityGuard);
+
+export type Identity = z.infer<typeof identityGuard>;
+export type Identities = z.infer<typeof identitiesGuard>;
+
 /**
  * User Logs
  */
