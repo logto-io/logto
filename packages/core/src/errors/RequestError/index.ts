@@ -13,13 +13,14 @@ export default class RequestError extends Error {
     const {
       code,
       status = 400,
+      expose = true,
       ...interpolation
     } = typeof input === 'string' ? { code: input } : input;
     const message = i18next.t<string, LogtoErrorI18nKey>(`errors:${code}`, interpolation);
 
     super(message);
 
-    this.expose = true;
+    this.expose = expose;
     this.code = code;
     this.status = status;
     this.data = data;
