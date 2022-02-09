@@ -58,6 +58,7 @@ export const registerWithUsernameAndPassword = async (
   });
 
   await assignRegistrationResult(ctx, provider, id);
+  ctx.userLog.userId = id;
   ctx.userLog.username = username;
   ctx.userLog.type = UserLogType.RegisterUsernameAndPassword;
 };
@@ -113,6 +114,7 @@ export const registerWithEmailAndPasscode = async (
   });
 
   await assignRegistrationResult(ctx, provider, id);
+  ctx.userLog.userId = id;
   ctx.userLog.email = email;
   ctx.userLog.type = UserLogType.RegisterEmail;
 };
@@ -138,6 +140,7 @@ export const registerWithPhoneAndPasscode = async (
   });
 
   await assignRegistrationResult(ctx, provider, id);
+  ctx.userLog.userId = id;
   ctx.userLog.phone = phone;
   ctx.userLog.type = UserLogType.RegisterPhone;
 };
