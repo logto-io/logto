@@ -50,6 +50,7 @@ const errors = {
     invalid_phone: 'Invalid phone number.',
     email_not_exists: 'The email address has not been registered yet.',
     phone_not_exists: 'The phone number has not been registered yet.',
+    identity_not_exists: 'The social account has not been registered yet.',
   },
   password: {
     unsupported_encryption_method: 'The encryption method {{name}} is not supported.',
@@ -59,10 +60,14 @@ const errors = {
     not_found: 'Session not found. Please go back and sign in again.',
     invalid_credentials: 'Invalid credentials. Please check your input.',
     invalid_sign_in_method: 'Current sign-in method is not available.',
+    invalid_connector_id: 'Unable to find available connector with id {{connectorId}}.',
     insufficient_info: 'Insufficent sign-in info.',
   },
   connector: {
     not_found: 'Cannot find any available connector for type: {{type}}.',
+    not_enabled: 'The connector is not enabled.',
+    access_token_invalid: "Connector's access token is invalid.",
+    oauth_code_invalid: 'Unable to get access token, please check authorization code.',
   },
   passcode: {
     phone_email_empty: 'Both phone and email are empty.',

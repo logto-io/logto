@@ -14,6 +14,7 @@ export interface LogContext {
   username?: string;
   email?: string;
   phone?: string;
+  connectorId?: string;
   payload: UserLogPayload;
   createdAt: number;
 }

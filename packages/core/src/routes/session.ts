@@ -10,8 +10,10 @@ import {
   sendPasscodeToEmail,
 } from '@/lib/register';
 import {
+  assignRedirectUrlForSocial,
   sendSignInWithEmailPasscode,
   sendSignInWithPhonePasscode,
+  signInWithSocial,
   signInWithEmailAndPasscode,
   signInWithPhoneAndPasscode,
   signInWithUsernameAndPassword,
@@ -31,6 +33,8 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
         email: string().optional(),
         phone: string().optional(),
         code: string().optional(),
+        connectorId: string().optional(),
+        state: string().optional(),
       }),
     }),
     async (ctx, next) => {
@@ -50,9 +54,13 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
       }
 
       if (name === 'login') {
-        const { username, password, email, phone, code } = ctx.guard.body;
+        const { username, password, email, phone, code, connectorId, state } = ctx.guard.body;
 
-        if (email && !code) {
+        if (connectorId && state && !code) {
+          await assignRedirectUrlForSocial(ctx, connectorId, state);
+        } else if (connectorId && code) {
+          await signInWithSocial(ctx, provider, { connectorId, code });
+        } else if (email && !code) {
           await sendSignInWithEmailPasscode(ctx, jti, email);
         } else if (email && code) {
           await signInWithEmailAndPasscode(ctx, provider, { jti, email, code });

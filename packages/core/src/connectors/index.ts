@@ -4,7 +4,7 @@ import { findConnectorById, hasConnector, insertConnector } from '@/queries/conn
 import * as AliyunDM from './aliyun-dm';
 import * as AliyunSMS from './aliyun-sms';
 import * as GitHub from './github';
-import { ConnectorInstance, ConnectorType } from './types';
+import { ConnectorInstance, ConnectorType, SocialConector } from './types';
 
 const allConnectors: ConnectorInstance[] = [AliyunDM, AliyunSMS, GitHub];
 
@@ -32,6 +32,24 @@ export const getConnectorInstanceById = async (id: string): Promise<ConnectorIns
   const connector = await findConnectorById(id);
 
   return { connector, ...found };
+};
+
+const isSocialConnectorInstance = (connector: ConnectorInstance): connector is SocialConector => {
+  return connector.metadata.type === ConnectorType.Social;
+};
+
+export const getSocialConnectorInstanceById = async (id: string): Promise<SocialConector> => {
+  const connector = await getConnectorInstanceById(id);
+
+  if (!isSocialConnectorInstance(connector)) {
+    throw new RequestError({
+      code: 'entity.not_found',
+      id,
+      status: 404,
+    });
+  }
+
+  return connector;
 };
 
 export const getConnectorInstanceByType = async <T extends ConnectorInstance>(

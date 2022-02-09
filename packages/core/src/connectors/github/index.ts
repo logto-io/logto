@@ -1,6 +1,8 @@
-import got from 'got';
+import got, { RequestError as GotRequestError } from 'got';
 import { stringify } from 'query-string';
 import { z } from 'zod';
+
+import RequestError from '@/errors/RequestError';
 
 import {
   ConnectorConfigError,
@@ -67,6 +69,7 @@ export const getAccessToken: GetAccessToken = async (code) => {
 
   const { clientId: client_id, clientSecret: client_secret } =
     await getConnectorConfig<GithubConfig>(metadata.id);
+
   const { access_token: accessToken } = await got
     .post({
       url: accessTokenEndpoint,
@@ -77,6 +80,13 @@ export const getAccessToken: GetAccessToken = async (code) => {
       },
     })
     .json<AccessTokenResponse>();
+
+  if (!accessToken) {
+    throw new RequestError({
+      code: 'connector.oauth_code_invalid',
+      status: 401,
+    });
+  }
 
   return accessToken;
 };
@@ -89,23 +99,33 @@ export const getUserInfo: GetUserInfo = async (accessToken: string) => {
     name: string;
   };
 
-  const {
-    id,
-    avatar_url: avatar,
-    email,
-    name,
-  } = await got
-    .get(userInfoEndpoint, {
-      headers: {
-        authorization: `token ${accessToken}`,
-      },
-    })
-    .json<UserInfoResponse>();
+  try {
+    const {
+      id,
+      avatar_url: avatar,
+      email,
+      name,
+    } = await got
+      .get(userInfoEndpoint, {
+        headers: {
+          authorization: `token ${accessToken}`,
+        },
+      })
+      .json<UserInfoResponse>();
 
-  return {
-    id: String(id),
-    avatar,
-    email,
-    name,
-  };
+    return {
+      id: String(id),
+      avatar,
+      email,
+      name,
+    };
+  } catch (error: unknown) {
+    if (error instanceof GotRequestError && error.response?.statusCode === 401) {
+      throw new RequestError({
+        code: 'connector.access_token_invalid',
+        status: 401,
+      });
+    }
+    throw error;
+  }
 };

@@ -51,6 +51,7 @@ const errors = {
     invalid_phone: '手机号码不正确。',
     email_not_exists: '邮箱地址尚未注册。',
     phone_not_exists: '手机号码尚未注册。',
+    identity_not_exists: '该社交账号尚未注册。',
   },
   password: {
     unsupported_encryption_method: '不支持的加密方法 {{name}}。',
@@ -61,9 +62,13 @@ const errors = {
     invalid_credentials: '用户名或密码错误，请检查您的输入。',
     invalid_sign_in_method: '当前登录方式不可用。',
     insufficient_info: '登录信息缺失，请检查您的输入。',
+    invalid_connector_id: '无法找到 ID 为 {{connectorId}} 的可用连接器。',
   },
   connector: {
-    not_found: '找不到可用的 {{type}} 类型的连接器.',
+    not_found: '找不到可用的 {{type}} 类型的连接器。',
+    not_enabled: '连接器尚未启用。',
+    access_token_invalid: '当前连接器的 access_token 无效。',
+    oauth_code_invalid: '无法获取 access_token，请检查授权 code 是否有效。',
   },
   passcode: {
     phone_email_empty: '手机号与邮箱地址均为空。',
