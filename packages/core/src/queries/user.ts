@@ -37,6 +37,15 @@ export const findUserById = async (id: string) =>
     where ${fields.id}=${id}
   `);
 
+export const findUserByIdentity = async (connectorId: string, userId: string) =>
+  pool.one<User>(
+    sql`
+      select ${sql.join(Object.values(fields), sql`,`)}
+      from ${table}
+      where ${fields.identities}::json#>>'{${sql.identifier([connectorId])},userId}' = ${userId}
+    `
+  );
+
 export const hasUser = async (username: string) =>
   pool.exists(sql`
     select ${fields.id}
@@ -64,6 +73,15 @@ export const hasUserWithPhone = async (phone: string) =>
     from ${table}
     where ${fields.primaryPhone}=${phone}
   `);
+
+export const hasUserWithIdentity = async (connectorId: string, userId: string) =>
+  pool.exists(
+    sql`
+      select ${fields.id}
+      from ${table}
+      where ${fields.identities}::json#>>'{${sql.identifier([connectorId])},userId}' = ${userId}
+    `
+  );
 
 export const insertUser = buildInsertInto<CreateUser, User>(pool, Users, { returning: true });
 
