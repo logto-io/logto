@@ -2,6 +2,7 @@ import { PasscodeType, UserLogType } from '@logto/schemas';
 import { Context } from 'koa';
 import { Provider } from 'oidc-provider';
 
+import { getSocialConnectorInstanceById } from '@/connectors';
 import RequestError from '@/errors/RequestError';
 import { WithUserLogContext } from '@/middleware/koa-user-log';
 import {
@@ -158,6 +159,38 @@ export const registerWithSocial = async (
   { connectorId, code }: { connectorId: string; code: string }
 ) => {
   const userInfo = await getUserInfoByConnectorCode(connectorId, code);
+
+  assertThat(
+    !(await hasUserWithIdentity(connectorId, userInfo.id)),
+    new RequestError({
+      code: 'user.identity_exists',
+      status: 422,
+    })
+  );
+
+  const id = await generateUserId();
+  await insertUser({
+    id,
+    identities: {
+      [connectorId]: {
+        userId: userInfo.id,
+        details: userInfo,
+      },
+    },
+  });
+
+  await assignRegistrationResult(ctx, provider, id);
+};
+
+export const registerWithSocial = async (
+  ctx: WithUserLogContext<Context>,
+  provider: Provider,
+  { connectorId, code }: { connectorId: string; code: string }
+) => {
+  const connector = await getSocialConnectorInstanceById(connectorId);
+  const accessToken = await connector.getAccessToken(code);
+
+  const userInfo = await connector.getUserInfo(accessToken);
 
   assertThat(
     !(await hasUserWithIdentity(connectorId, userInfo.id)),
