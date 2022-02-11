@@ -65,6 +65,7 @@ const errors = {
     invalid_sign_in_method: '当前登录方式不可用。',
     insufficient_info: '登录信息缺失，请检查您的输入。',
     invalid_connector_id: '无法找到 ID 为 {{connectorId}} 的可用连接器。',
+    connector_id_mismatch: '传入的 connectorId 与 session 中保存的记录不一致。',
   },
   connector: {
     not_found: '找不到可用的 {{type}} 类型的连接器。',

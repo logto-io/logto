@@ -1,6 +1,15 @@
+import { InteractionResults } from 'oidc-provider';
+import { z } from 'zod';
+
 import { getSocialConnectorInstanceById } from '@/connectors';
-import { SocialUserInfo } from '@/connectors/types';
+import { SocialUserInfo, socialUserInfoGuard } from '@/connectors/types';
 import RequestError from '@/errors/RequestError';
+import assertThat from '@/utils/assert-that';
+
+export interface SocialUserInfoSession {
+  connectorId: string;
+  userInfo: SocialUserInfo;
+}
 
 const getConnector = async (connectorId: string) => {
   try {
@@ -26,4 +35,22 @@ export const getUserInfoByConnectorCode = async (
   const accessToken = await connector.getAccessToken(code);
 
   return connector.getUserInfo(accessToken);
+};
+
+export const getUserInfoFromInteractionResult = async (
+  connectorId: string,
+  interactionResult?: InteractionResults
+): Promise<SocialUserInfo> => {
+  const result = z
+    .object({
+      socialUserInfo: z.object({
+        connectorId: z.string(),
+        userInfo: socialUserInfoGuard,
+      }),
+    })
+    .parse(interactionResult);
+
+  assertThat(result.socialUserInfo.connectorId === connectorId, 'session.insufficient_info');
+
+  return result.socialUserInfo.userInfo;
 };

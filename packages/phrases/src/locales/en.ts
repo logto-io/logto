@@ -64,6 +64,7 @@ const errors = {
     invalid_sign_in_method: 'Current sign-in method is not available.',
     invalid_connector_id: 'Unable to find available connector with id {{connectorId}}.',
     insufficient_info: 'Insufficent sign-in info.',
+    connector_id_mismatch: 'The connectorId is mismatched with session record.',
   },
   connector: {
     not_found: 'Cannot find any available connector for type: {{type}}.',
