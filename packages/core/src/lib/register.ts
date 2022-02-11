@@ -4,11 +4,18 @@ import { Provider } from 'oidc-provider';
 
 import RequestError from '@/errors/RequestError';
 import { WithUserLogContext } from '@/middleware/koa-user-log';
-import { hasUser, hasUserWithEmail, hasUserWithPhone, insertUser } from '@/queries/user';
+import {
+  hasUser,
+  hasUserWithEmail,
+  hasUserWithPhone,
+  hasUserWithIdentity,
+  insertUser,
+} from '@/queries/user';
 import assertThat from '@/utils/assert-that';
 import { emailRegEx, phoneRegEx } from '@/utils/regex';
 
 import { createPasscode, sendPasscode, verifyPasscode } from './passcode';
+import { getUserInfoByConnectorCode } from './social';
 import { encryptUserPassword, generateUserId } from './user';
 
 const assignRegistrationResult = async (ctx: Context, provider: Provider, userId: string) => {
@@ -143,4 +150,33 @@ export const registerWithPhoneAndPasscode = async (
   ctx.userLog.userId = id;
   ctx.userLog.phone = phone;
   ctx.userLog.type = UserLogType.RegisterPhone;
+};
+
+export const registerWithSocial = async (
+  ctx: WithUserLogContext<Context>,
+  provider: Provider,
+  { connectorId, code }: { connectorId: string; code: string }
+) => {
+  const userInfo = await getUserInfoByConnectorCode(connectorId, code);
+
+  assertThat(
+    !(await hasUserWithIdentity(connectorId, userInfo.id)),
+    new RequestError({
+      code: 'user.identity_exists',
+      status: 422,
+    })
+  );
+
+  const id = await generateUserId();
+  await insertUser({
+    id,
+    identities: {
+      [connectorId]: {
+        userId: userInfo.id,
+        details: userInfo,
+      },
+    },
+  });
+
+  await assignRegistrationResult(ctx, provider, id);
 };

@@ -53,6 +53,7 @@ const errors = {
     email_not_exists: '邮箱地址尚未注册。',
     phone_not_exists: '手机号码尚未注册。',
     identity_not_exists: '该社交账号尚未注册。',
+    identity_exists: '该社交账号已被注册。',
   },
   password: {
     unsupported_encryption_method: '不支持的加密方法 {{name}}。',

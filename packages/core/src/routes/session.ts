@@ -5,6 +5,7 @@ import { object, string } from 'zod';
 
 import RequestError from '@/errors/RequestError';
 import {
+  registerWithSocial,
   registerWithEmailAndPasscode,
   registerWithPhoneAndPasscode,
   registerWithUsernameAndPassword,
@@ -133,14 +134,20 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
         email: string().optional(),
         phone: string().optional(),
         code: string().optional(),
+        connectorId: string().optional(),
+        state: string().optional(),
       }),
     }),
     async (ctx, next) => {
       const interaction = await provider.interactionDetails(ctx.req, ctx.res);
       const { jti } = interaction;
-      const { username, password, email, phone, code } = ctx.guard.body;
+      const { username, password, email, phone, code, connectorId, state } = ctx.guard.body;
 
-      if (email && !code) {
+      if (connectorId && state && !code) {
+        await assignRedirectUrlForSocial(ctx, connectorId, state);
+      } else if (connectorId && state && code) {
+        await registerWithSocial(ctx, provider, { connectorId, code });
+      } else if (email && !code) {
         await sendPasscodeToEmail(ctx, jti, email);
       } else if (email && code) {
         await registerWithEmailAndPasscode(ctx, provider, { jti, email, code });
