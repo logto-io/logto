@@ -47,6 +47,11 @@ const errors = {
     username_exists: 'The username already exists.',
     email_exists: 'The email already exists.',
     phone_exists: 'The phone already exists.',
+    username_exists_register: 'The username can not be regitsered because it is occupied.',
+    email_exists_register:
+      'The email address can not be regitsered because it is bound to another accournt.',
+    phone_exists_register:
+      'The phone number can not be regitsered because it is bound to another accournt.',
     invalid_email: 'Invalid email address.',
     invalid_phone: 'Invalid phone number.',
     email_not_exists: 'The email address has not been registered yet.',

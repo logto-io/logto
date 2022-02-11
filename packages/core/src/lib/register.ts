@@ -39,7 +39,7 @@ export const registerWithUsernameAndPassword = async (
   assertThat(
     !(await hasUser(username)),
     new RequestError({
-      code: 'user.username_exists',
+      code: 'user.username_exists_register',
       status: 422,
     })
   );
@@ -68,7 +68,7 @@ export const sendPasscodeToEmail = async (ctx: Context, jti: string, email: stri
   assertThat(
     !(await hasUserWithEmail(email)),
     new RequestError({
-      code: 'user.email_exists',
+      code: 'user.email_exists_register',
       status: 422,
     })
   );
@@ -83,7 +83,7 @@ export const sendPasscodeToPhone = async (ctx: Context, jti: string, phone: stri
   assertThat(
     !(await hasUserWithPhone(phone)),
     new RequestError({
-      code: 'user.phone_exists',
+      code: 'user.phone_exists_register',
       status: 422,
     })
   );
@@ -101,7 +101,7 @@ export const registerWithEmailAndPasscode = async (
   assertThat(
     !(await hasUserWithEmail(email)),
     new RequestError({
-      code: 'user.email_exists',
+      code: 'user.email_exists_register',
       status: 422,
     })
   );
@@ -127,7 +127,7 @@ export const registerWithPhoneAndPasscode = async (
   assertThat(
     !(await hasUserWithPhone(phone)),
     new RequestError({
-      code: 'user.phone_exists',
+      code: 'user.phone_exists_register',
       status: 422,
     })
   );
