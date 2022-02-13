@@ -17,7 +17,7 @@ const translation = {
 const errors = {
   auth: {
     authorization_header_missing: 'Authorization header is missing.',
-    authorization_type_not_supported: 'Authorization type is not supported.',
+    authorization_token_type_not_supported: 'Authorization type is not supported.',
     unauthorized: 'Unauthorized. Please check credentils and its scope.',
     jwt_sub_missing: 'Missing `sub` in JWT.',
   },

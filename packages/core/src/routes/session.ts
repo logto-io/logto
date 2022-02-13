@@ -1,6 +1,6 @@
 import { LogtoErrorCode } from '@logto/phrases';
 import { conditional } from '@silverhand/essentials';
-import { Provider } from 'oidc-provider';
+import { Provider, errors } from 'oidc-provider';
 import { object, string } from 'zod';
 
 import RequestError from '@/errors/RequestError';
@@ -77,7 +77,7 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
         return next();
       }
 
-      throw new Error(`Prompt not supported: ${name}`);
+      throw new errors.InvalidRequest(`Prompt not supported: ${name}`);
     }
   );
 
