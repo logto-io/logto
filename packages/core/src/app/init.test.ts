@@ -1,8 +1,13 @@
+import dotenv from 'dotenv';
 import Koa from 'koa';
 import request from 'supertest';
 
+dotenv.config();
+
+/* eslint-disable import/first */
 import initI18n from '../i18n/init';
 import initApp from './init';
+/* eslint-enable import/first */
 
 describe('App Init', () => {
   jest.mock('jose/jwk/from_key_like', () => ({
