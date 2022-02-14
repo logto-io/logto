@@ -12,6 +12,7 @@ import {
   hasUserWithPhone,
   hasUserWithIdentity,
   findUserByIdentity,
+  updateUserById,
 } from '@/queries/user';
 import assertThat from '@/utils/assert-that';
 import { emailRegEx, phoneRegEx } from '@/utils/regex';
@@ -136,7 +137,11 @@ export const signInWithSocial = async (
     })
   );
 
-  const { id } = await findUserByIdentity(connectorId, userInfo.id);
+  const { id, identities } = await findUserByIdentity(connectorId, userInfo.id);
+  // Update social connector's user info
+  await updateUserById(id, {
+    identities: { ...identities, [connectorId]: { userId: userInfo.id, details: userInfo } },
+  });
   ctx.userLog.userId = id;
   await assignSignInResult(ctx, provider, id);
 };
