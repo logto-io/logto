@@ -170,6 +170,8 @@ export const registerWithSocial = async (
   const id = await generateUserId();
   await insertUser({
     id,
+    name: userInfo.name ?? null,
+    avatar: userInfo.avatar ?? null,
     identities: {
       [connectorId]: {
         userId: userInfo.id,
