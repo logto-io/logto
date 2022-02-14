@@ -67,11 +67,11 @@ export const signInWithUsernameAndPassword = async (
 ) => {
   assertThat(username && password, 'session.insufficient_info');
 
-  ctx.userLog.username = username;
-  ctx.userLog.type = UserLogType.SignInUsernameAndPassword;
-
   const { id } = await findUserByUsernameAndPassword(username, password);
   await assignSignInResult(ctx, provider, id);
+  ctx.userLog.userId = id;
+  ctx.userLog.username = username;
+  ctx.userLog.type = UserLogType.SignInUsernameAndPassword;
 };
 
 export const signInWithEmailAndPasscode = async (
@@ -79,13 +79,13 @@ export const signInWithEmailAndPasscode = async (
   provider: Provider,
   { jti, email, code }: { jti: string; email: string; code: string }
 ) => {
-  ctx.userLog.email = email;
-  ctx.userLog.type = UserLogType.SignInEmail;
-
   await verifyPasscode(jti, PasscodeType.SignIn, code, { email });
   const { id } = await findUserByEmail(email);
 
   await assignSignInResult(ctx, provider, id);
+  ctx.userLog.userId = id;
+  ctx.userLog.email = email;
+  ctx.userLog.type = UserLogType.SignInEmail;
 };
 
 export const signInWithPhoneAndPasscode = async (
@@ -93,13 +93,13 @@ export const signInWithPhoneAndPasscode = async (
   provider: Provider,
   { jti, phone, code }: { jti: string; phone: string; code: string }
 ) => {
-  ctx.userLog.phone = phone;
-  ctx.userLog.type = UserLogType.SignInSms;
-
   await verifyPasscode(jti, PasscodeType.SignIn, code, { phone });
   const { id } = await findUserByPhone(phone);
 
   await assignSignInResult(ctx, provider, id);
+  ctx.userLog.userId = id;
+  ctx.userLog.phone = phone;
+  ctx.userLog.type = UserLogType.SignInPhone;
 };
 
 // TODO: change this after frontend is ready.

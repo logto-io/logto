@@ -1,12 +1,12 @@
-import { PasscodeType } from '@logto/schemas';
+import { PasscodeType, UserLogType } from '@logto/schemas';
 import { Context } from 'koa';
 import { Provider } from 'oidc-provider';
 
 import RequestError from '@/errors/RequestError';
 import { WithUserLogContext } from '@/middleware/koa-user-log';
-import { hasUser, hasUserWithEmail, insertUser } from '@/queries/user';
+import { hasUser, hasUserWithEmail, hasUserWithPhone, insertUser } from '@/queries/user';
 import assertThat from '@/utils/assert-that';
-import { emailRegEx } from '@/utils/regex';
+import { emailRegEx, phoneRegEx } from '@/utils/regex';
 
 import { createPasscode, sendPasscode, verifyPasscode } from './passcode';
 import { encryptUserPassword, generateUserId } from './user';
@@ -39,7 +39,7 @@ export const registerWithUsernameAndPassword = async (
   assertThat(
     !(await hasUser(username)),
     new RequestError({
-      code: 'user.username_exists',
+      code: 'user.username_exists_register',
       status: 422,
     })
   );
@@ -58,6 +58,9 @@ export const registerWithUsernameAndPassword = async (
   });
 
   await assignRegistrationResult(ctx, provider, id);
+  ctx.userLog.userId = id;
+  ctx.userLog.username = username;
+  ctx.userLog.type = UserLogType.RegisterUsernameAndPassword;
 };
 
 export const sendPasscodeToEmail = async (ctx: Context, jti: string, email: string) => {
@@ -65,12 +68,27 @@ export const sendPasscodeToEmail = async (ctx: Context, jti: string, email: stri
   assertThat(
     !(await hasUserWithEmail(email)),
     new RequestError({
-      code: 'user.email_exists',
+      code: 'user.email_exists_register',
       status: 422,
     })
   );
 
   const passcode = await createPasscode(jti, PasscodeType.Register, { email });
+  await sendPasscode(passcode);
+  ctx.state = 204;
+};
+
+export const sendPasscodeToPhone = async (ctx: Context, jti: string, phone: string) => {
+  assertThat(phoneRegEx.test(phone), new RequestError('user.invalid_phone'));
+  assertThat(
+    !(await hasUserWithPhone(phone)),
+    new RequestError({
+      code: 'user.phone_exists_register',
+      status: 422,
+    })
+  );
+
+  const passcode = await createPasscode(jti, PasscodeType.Register, { phone });
   await sendPasscode(passcode);
   ctx.state = 204;
 };
@@ -83,7 +101,7 @@ export const registerWithEmailAndPasscode = async (
   assertThat(
     !(await hasUserWithEmail(email)),
     new RequestError({
-      code: 'user.email_exists',
+      code: 'user.email_exists_register',
       status: 422,
     })
   );
@@ -96,4 +114,33 @@ export const registerWithEmailAndPasscode = async (
   });
 
   await assignRegistrationResult(ctx, provider, id);
+  ctx.userLog.userId = id;
+  ctx.userLog.email = email;
+  ctx.userLog.type = UserLogType.RegisterEmail;
+};
+
+export const registerWithPhoneAndPasscode = async (
+  ctx: WithUserLogContext<Context>,
+  provider: Provider,
+  { jti, phone, code }: { jti: string; phone: string; code: string }
+) => {
+  assertThat(
+    !(await hasUserWithPhone(phone)),
+    new RequestError({
+      code: 'user.phone_exists_register',
+      status: 422,
+    })
+  );
+  await verifyPasscode(jti, PasscodeType.Register, code, { phone });
+
+  const id = await generateUserId();
+  await insertUser({
+    id,
+    primaryPhone: phone,
+  });
+
+  await assignRegistrationResult(ctx, provider, id);
+  ctx.userLog.userId = id;
+  ctx.userLog.phone = phone;
+  ctx.userLog.type = UserLogType.RegisterPhone;
 };

@@ -44,8 +44,9 @@ const errors = {
     provider_error: 'OIDC Internal Error: {{message}}.',
   },
   user: {
-    username_exists: 'The username already exists.',
-    email_exists: 'The email already exists.',
+    username_exists_register: 'The username has been registered.',
+    email_exists_register: 'The email address has been registered.',
+    phone_exists_register: 'The phone number has been registered.',
     invalid_email: 'Invalid email address.',
     invalid_phone: 'Invalid phone number.',
     email_not_exists: 'The email address has not been registered yet.',

@@ -13,8 +13,12 @@ export enum PasscodeType {
 export enum UserLogType {
   SignInUsernameAndPassword = 'SignInUsernameAndPassword',
   SignInEmail = 'SignInEmail',
-  SignInSms = 'SignInSms',
+  SignInPhone = 'SignInPhone',
   SignInSocial = 'SignInSocial',
+  RegisterUsernameAndPassword = 'RegisterUsernameAndPassword',
+  RegisterEmail = 'RegisterEmail',
+  RegisterPhone = 'RegisterPhone',
+  RegisterSocial = 'RegisterSocial',
   ExchangeAccessToken = 'ExchangeAccessToken',
 }
 export enum UserLogResult {
