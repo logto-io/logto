@@ -49,6 +49,6 @@ export const deleteResourceById = async (id: string) => {
   `);
 
   if (rowCount < 1) {
-    throw new DeletionError();
+    throw new DeletionError(Resources.table, id);
   }
 };

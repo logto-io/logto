@@ -19,7 +19,7 @@ const translation = {
 const errors = {
   auth: {
     authorization_header_missing: 'Authorization 请求 header 遗漏。',
-    authorization_type_not_supported: '不支持的 authorization 类型。',
+    authorization_token_type_not_supported: '不支持的 authorization 类型。',
     unauthorized: '未授权。请检查相关 credentials 和 scope。',
     jwt_sub_missing: 'JWT 中找不到 `sub`。',
   },

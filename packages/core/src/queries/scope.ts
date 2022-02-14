@@ -30,6 +30,6 @@ export const deleteScopeById = async (id: string) => {
   `);
 
   if (rowCount < 1) {
-    throw new DeletionError();
+    throw new DeletionError(ResourceScopes.table, id);
   }
 };

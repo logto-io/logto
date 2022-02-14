@@ -50,6 +50,6 @@ export const deleteApplicationById = async (id: string) => {
   `);
 
   if (rowCount < 1) {
-    throw new DeletionError();
+    throw new DeletionError(Applications.table, id);
   }
 };

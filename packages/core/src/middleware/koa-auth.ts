@@ -24,7 +24,7 @@ const extractBearerTokenFromHeaders = ({ authorization }: IncomingHttpHeaders) =
   assertThat(
     authorization.startsWith(bearerTokenIdentifier),
     new RequestError(
-      { code: 'auth.authorization_type_not_supported', status: 401 },
+      { code: 'auth.authorization_token_type_not_supported', status: 401 },
       { supportedTypes: [bearerTokenIdentifier] }
     )
   );
