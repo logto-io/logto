@@ -26,7 +26,7 @@ import initApp from './init';
 describe('App Init', () => {
   const listenMock = jest.spyOn(Koa.prototype, 'listen').mockImplementation(jest.fn());
 
-  const middleWares = [
+  const middlewareList = [
     koaErrorHandler,
     koaI18next,
     koaOIDCErrorHandler,
@@ -36,7 +36,7 @@ describe('App Init', () => {
   ];
   const initMethods = [initRouter, initOidc];
 
-  const middleWareSpys = middleWares.map((module) => jest.spyOn(module, 'default'));
+  const middlewareSpys = middlewareList.map((module) => jest.spyOn(module, 'default'));
   const initMethodSpys = initMethods.map((module) => jest.spyOn(module, 'default'));
 
   it('app init properly with 404 not found route', async () => {
@@ -44,7 +44,7 @@ describe('App Init', () => {
     await initI18n();
     await initApp(app);
 
-    for (const middleware of middleWareSpys) {
+    for (const middleware of middlewareSpys) {
       expect(middleware).toBeCalled();
     }
 
