@@ -54,6 +54,11 @@ export const identitiesGuard = z.record(identityGuard);
 export type Identity = z.infer<typeof identityGuard>;
 export type Identities = z.infer<typeof identitiesGuard>;
 
+// TODO: LOG-1553 support empty shape of object
+export const customDataGuard = z.object({}).catchall(z.unknown());
+
+export type CustomData = z.infer<typeof customDataGuard>;
+
 /**
  * User Logs
  */

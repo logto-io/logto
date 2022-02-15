@@ -7,6 +7,8 @@ import {
   roleNamesGuard,
   Identities,
   identitiesGuard,
+  CustomData,
+  customDataGuard,
   GeneratedSchema,
   Guard,
 } from '../foundations';
@@ -24,6 +26,7 @@ export type CreateUser = {
   avatar?: string | null;
   roleNames?: RoleNames;
   identities?: Identities;
+  customData?: CustomData;
 };
 
 export type User = {
@@ -38,6 +41,7 @@ export type User = {
   avatar: string | null;
   roleNames: RoleNames;
   identities: Identities;
+  customData: CustomData;
 };
 
 const createGuard: Guard<CreateUser> = z.object({
@@ -52,6 +56,7 @@ const createGuard: Guard<CreateUser> = z.object({
   avatar: z.string().nullable().optional(),
   roleNames: roleNamesGuard.optional(),
   identities: identitiesGuard.optional(),
+  customData: customDataGuard.optional(),
 });
 
 export const Users: GeneratedSchema<CreateUser> = Object.freeze({
@@ -69,6 +74,7 @@ export const Users: GeneratedSchema<CreateUser> = Object.freeze({
     avatar: 'avatar',
     roleNames: 'role_names',
     identities: 'identities',
+    customData: 'custom_data',
   },
   fieldKeys: [
     'id',
@@ -82,6 +88,7 @@ export const Users: GeneratedSchema<CreateUser> = Object.freeze({
     'avatar',
     'roleNames',
     'identities',
+    'customData',
   ],
   createGuard,
 });
