@@ -39,20 +39,26 @@ afterEach(() => {
 describe('request', () => {
   it('should get limit and offset from queries', async () => {
     const ctx = createContext({ page: '1', page_size: '30' });
-    await koaPagination()(ctx, next);
+    await koaPagination()(ctx, async () => {
+      ctx.pagination.totalCount = 100;
+    });
     expect(ctx.pagination.limit).toEqual(30);
     expect(ctx.pagination.offset).toEqual(0);
   });
 
   it('should set default page to 1 (offset to 0) if non is provided', async () => {
     const ctx = createContext({});
-    await koaPagination()(ctx, next);
+    await koaPagination()(ctx, async () => {
+      ctx.pagination.totalCount = 100;
+    });
     expect(ctx.pagination.offset).toEqual(0);
   });
 
   it('should set default pageSize(limit) to 20', async () => {
     const ctx = createContext({});
-    await koaPagination({ defaultPageSize: 20 })(ctx, next);
+    await koaPagination({ defaultPageSize: 20 })(ctx, async () => {
+      ctx.pagination.totalCount = 100;
+    });
     expect(ctx.pagination.limit).toEqual(20);
   });
 
@@ -83,6 +89,11 @@ describe('request', () => {
 });
 
 describe('response', () => {
+  it('should throw without total count', async () => {
+    const ctx = createContext({});
+    await expect(koaPagination()(ctx, next)).rejects.toThrow();
+  });
+
   it('should add Total-Number to response header', async () => {
     const ctx = createContext({});
     await koaPagination()(ctx, async () => {
