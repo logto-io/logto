@@ -1,4 +1,4 @@
-import { userInfoSelectFields } from '@logto/schemas';
+import { customDataGuard, userInfoSelectFields } from '@logto/schemas';
 import pick from 'lodash.pick';
 import { InvalidInputError } from 'slonik';
 import { object, string } from 'zod';
@@ -121,6 +121,30 @@ export default function adminUserRoutes<T extends AuthedRouter>(router: T) {
       }
 
       const user = await updateUserById(userId, { roleNames });
+      ctx.body = pick(user, ...userInfoSelectFields);
+
+      return next();
+    }
+  );
+
+  router.patch(
+    '/users/:userId/custom-data',
+    koaGuard({
+      params: object({ userId: string().min(1) }),
+      body: object({ customData: customDataGuard }),
+    }),
+    async (ctx, next) => {
+      const {
+        params: { userId },
+        body: { customData },
+      } = ctx.guard;
+
+      await findUserById(userId);
+
+      const user = await updateUserById(userId, {
+        customData,
+      });
+
       ctx.body = pick(user, ...userInfoSelectFields);
 
       return next();
