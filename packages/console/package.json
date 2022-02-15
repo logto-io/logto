@@ -1,0 +1,67 @@
+{
+  "name": "@logto/console",
+  "version": "0.1.0",
+  "description": "Logto admin console",
+  "author": "Gao Sun <gao@silverhand.io>",
+  "homepage": "https://github.com/logto-io/logto#readme",
+  "license": "MPL-2.0",
+  "main": "build/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/logto-io/logto.git"
+  },
+  "bugs": {
+    "url": "https://github.com/logto-io/logto/issues"
+  },
+  "scripts": {
+    "preinstall": "npx only-allow pnpm",
+    "precommit": "lint-staged",
+    "dev:tsc": "tsc -b -w --preserveWatchOutput",
+    "dev:razzle": "razzle start",
+    "start": "concurrently -c \"blue,cyan\" \"pnpm:dev:tsc\" -k \"pnpm:dev:razzle\"",
+    "start:prod": "NODE_ENV=production node build/server.js",
+    "build": "tsc -b && razzle build",
+    "lint": "eslint --ext .ts --ext .tsx src",
+    "stylelint": "stylelint \"src/**/*.scss\"",
+    "test": "razzle test --env=jsdom"
+  },
+  "dependencies": {
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-router-dom": "^5.3.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.15.5",
+    "@silverhand/eslint-config": "^0.8.0",
+    "@silverhand/eslint-config-react": "^0.8.0",
+    "@silverhand/ts-config": "^0.8.0",
+    "@silverhand/ts-config-react": "^0.8.0",
+    "@types/jest": "^26.0.24",
+    "@types/react": "^17.0.21",
+    "@types/react-dom": "^17.0.9",
+    "@types/react-router-dom": "^5.1.9",
+    "@types/webpack-env": "^1.16.2",
+    "babel-preset-razzle": "4.2.14",
+    "concurrently": "^6.2.1",
+    "eslint": "^8.9.0",
+    "html-webpack-plugin": "^4.5.2",
+    "lint-staged": "^11.1.2",
+    "mini-css-extract-plugin": "^0.12.0",
+    "postcss": "^8.3.6",
+    "prettier": "^2.4.0",
+    "razzle": "^4.2.14",
+    "razzle-dev-utils": "^4.2.14",
+    "razzle-plugin-scss": "^4.2.14",
+    "stylelint": "^13.13.1",
+    "typescript": "^4.5.5",
+    "webpack": "^5.68.0",
+    "webpack-dev-server": "^3.11.3"
+  },
+  "eslintConfig": {
+    "extends": "@silverhand/react"
+  },
+  "stylelint": {
+    "extends": "@silverhand/eslint-config-react/.stylelintrc"
+  },
+  "prettier": "@silverhand/eslint-config/.prettierrc"
+}

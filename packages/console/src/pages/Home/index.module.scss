@@ -1,0 +1,5 @@
+@use '@/scss/underscore' as _;
+
+.wrapper {
+  padding: _.unit(5);
+}
