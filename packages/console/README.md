@@ -1,11 +1,3 @@
-# `@logto/console`
+# @logto/console
 
-> TODO: description
-
-## Usage
-
-```
-const console = require('@logto/console');
-
-// TODO: DEMONSTRATE API
-```
+The web admin console for Logto.
