@@ -7,21 +7,21 @@ import { GeneratedSchema, Guard } from '../foundations';
 export type CreateResource = {
   id: string;
   name: string;
-  identifier: string;
+  indicator: string;
   accessTokenTtl?: number;
 };
 
 export type Resource = {
   id: string;
   name: string;
-  identifier: string;
+  indicator: string;
   accessTokenTtl: number;
 };
 
 const createGuard: Guard<CreateResource> = z.object({
   id: z.string(),
   name: z.string(),
-  identifier: z.string(),
+  indicator: z.string(),
   accessTokenTtl: z.number().optional(),
 });
 
@@ -31,9 +31,9 @@ export const Resources: GeneratedSchema<CreateResource> = Object.freeze({
   fields: {
     id: 'id',
     name: 'name',
-    identifier: 'identifier',
+    indicator: 'indicator',
     accessTokenTtl: 'access_token_ttl',
   },
-  fieldKeys: ['id', 'name', 'identifier', 'accessTokenTtl'],
+  fieldKeys: ['id', 'name', 'indicator', 'accessTokenTtl'],
   createGuard,
 });

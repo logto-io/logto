@@ -5,7 +5,7 @@ import mount from 'koa-mount';
 import { Provider, errors } from 'oidc-provider';
 
 import postgresAdapter from '@/oidc/adapter';
-import { findResourceByIdentifier } from '@/queries/resource';
+import { findResourceByIndicator } from '@/queries/resource';
 import { findAllScopesWithResourceId } from '@/queries/scope';
 import { findUserById } from '@/queries/user';
 import { routes } from '@/routes/consts';
@@ -46,7 +46,7 @@ export default async function initOidc(app: Koa): Promise<Provider> {
         // https://github.com/panva/node-oidc-provider/blob/main/docs/README.md#usegrantedresource
         useGrantedResource: () => false,
         getResourceServerInfo: async (ctx, indicator) => {
-          const resourceServer = await findResourceByIdentifier(indicator);
+          const resourceServer = await findResourceByIndicator(indicator);
 
           if (!resourceServer) {
             throw new errors.InvalidTarget();

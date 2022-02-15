@@ -17,11 +17,11 @@ const findResourcesMany = buildFindMany<CreateResource, Resource>(pool, Resource
 export const findAllResources = async (limit: number, offset: number) =>
   findResourcesMany({ limit, offset });
 
-export const findResourceByIdentifier = async (indentifier: string) =>
+export const findResourceByIndicator = async (indicator: string) =>
   pool.maybeOne<Resource>(sql`
     select ${sql.join(Object.values(fields), sql`,`)}
     from ${table}
-    where ${fields.identifier}=${indentifier}
+    where ${fields.indicator}=${indicator}
   `);
 
 export const findResourceById = async (id: string) =>
