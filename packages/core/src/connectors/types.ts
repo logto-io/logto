@@ -1,5 +1,6 @@
 import { Languages } from '@logto/phrases';
 import { ConnectorConfig, Connector, PasscodeType } from '@logto/schemas';
+import { z } from 'zod';
 
 export enum ConnectorType {
   SMS = 'SMS',
@@ -80,10 +81,12 @@ export type GetAccessToken = (code: string) => Promise<string>;
 
 export type GetUserInfo = (accessToken: string) => Promise<SocialUserInfo>;
 
-export interface SocialUserInfo {
-  id: string;
-  email?: string;
-  phone?: string;
-  name?: string;
-  avatar?: string;
-}
+export const socialUserInfoGuard = z.object({
+  id: z.string(),
+  email: z.string().optional(),
+  phone: z.string().optional(),
+  name: z.string().optional(),
+  avatar: z.string().optional(),
+});
+
+export type SocialUserInfo = z.infer<typeof socialUserInfoGuard>;

@@ -48,6 +48,7 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
         // https://datatracker.ietf.org/doc/html/rfc7519#section-4.1.7
         jti,
         prompt: { name },
+        result,
       } = interaction;
 
       if (name === 'consent') {
@@ -62,7 +63,7 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
         if (connectorId && state && !code) {
           await assignRedirectUrlForSocial(ctx, connectorId, state);
         } else if (connectorId && code) {
-          await signInWithSocial(ctx, provider, { connectorId, code });
+          await signInWithSocial(ctx, provider, { connectorId, code, result });
         } else if (email && !code) {
           await sendSignInWithEmailPasscode(ctx, jti, email);
         } else if (email && code) {

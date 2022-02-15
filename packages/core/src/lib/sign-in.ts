@@ -1,6 +1,6 @@
 import { PasscodeType, UserLogType } from '@logto/schemas';
 import { Context } from 'koa';
-import { Provider } from 'oidc-provider';
+import { InteractionResults, Provider } from 'oidc-provider';
 
 import { getSocialConnectorInstanceById } from '@/connectors';
 import RequestError from '@/errors/RequestError';
@@ -18,7 +18,7 @@ import assertThat from '@/utils/assert-that';
 import { emailRegEx, phoneRegEx } from '@/utils/regex';
 
 import { createPasscode, sendPasscode, verifyPasscode } from './passcode';
-import { getUserInfoByConnectorCode } from './social';
+import { getUserInfoByConnectorCode, getUserInfoFromInteractionResult } from './social';
 import { findUserByUsernameAndPassword } from './user';
 
 const assignSignInResult = async (ctx: Context, provider: Provider, userId: string) => {
@@ -122,12 +122,15 @@ export const assignRedirectUrlForSocial = async (
 export const signInWithSocial = async (
   ctx: WithUserLogContext<Context>,
   provider: Provider,
-  { connectorId, code }: { connectorId: string; code: string }
+  { connectorId, code, result }: { connectorId: string; code: string; result?: InteractionResults }
 ) => {
   ctx.userLog.connectorId = connectorId;
   ctx.userLog.type = UserLogType.SignInSocial;
 
-  const userInfo = await getUserInfoByConnectorCode(connectorId, code);
+  const userInfo =
+    code === 'session'
+      ? await getUserInfoFromInteractionResult(connectorId, result)
+      : await getUserInfoByConnectorCode(connectorId, code);
 
   assertThat(
     await hasUserWithIdentity(connectorId, userInfo.id),

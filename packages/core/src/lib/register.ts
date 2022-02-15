@@ -15,15 +15,29 @@ import assertThat from '@/utils/assert-that';
 import { emailRegEx, phoneRegEx } from '@/utils/regex';
 
 import { createPasscode, sendPasscode, verifyPasscode } from './passcode';
-import { getUserInfoByConnectorCode } from './social';
+import { getUserInfoByConnectorCode, SocialUserInfoSession } from './social';
 import { encryptUserPassword, generateUserId } from './user';
 
 const assignRegistrationResult = async (ctx: Context, provider: Provider, userId: string) => {
   const redirectTo = await provider.interactionResult(
     ctx.req,
     ctx.res,
+    { login: { accountId: userId } },
+    { mergeWithLastSubmission: false }
+  );
+  ctx.body = { redirectTo };
+};
+
+const saveUserInfoToSession = async (
+  ctx: Context,
+  provider: Provider,
+  socialUserInfo: SocialUserInfoSession
+) => {
+  const redirectTo = await provider.interactionResult(
+    ctx.req,
+    ctx.res,
     {
-      login: { accountId: userId },
+      socialUserInfo,
     },
     { mergeWithLastSubmission: false }
   );
@@ -159,13 +173,13 @@ export const registerWithSocial = async (
 ) => {
   const userInfo = await getUserInfoByConnectorCode(connectorId, code);
 
-  assertThat(
-    !(await hasUserWithIdentity(connectorId, userInfo.id)),
-    new RequestError({
+  if (await hasUserWithIdentity(connectorId, userInfo.id)) {
+    await saveUserInfoToSession(ctx, provider, { connectorId, userInfo });
+    throw new RequestError({
       code: 'user.identity_exists',
       status: 422,
-    })
-  );
+    });
+  }
 
   const id = await generateUserId();
   await insertUser({
