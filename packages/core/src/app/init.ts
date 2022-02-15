@@ -14,7 +14,7 @@ import koaUserLog from '@/middleware/koa-user-log';
 import initOidc from '@/oidc/init';
 import initRouter from '@/routes/init';
 
-export default async function initApp(app: Koa) {
+export default async function initApp(app: Koa): Promise<void> {
   app.use(koaErrorHandler());
   app.use(koaOIDCErrorHandler());
   app.use(koaSlonikErrorHandler());
@@ -32,7 +32,7 @@ export default async function initApp(app: Koa) {
   const { HTTPS_CERT, HTTPS_KEY } = process.env;
 
   if (HTTPS_CERT && HTTPS_KEY) {
-    return https
+    https
       .createServer(
         { cert: await fs.readFile(HTTPS_CERT), key: await fs.readFile(HTTPS_KEY) },
         app.callback()
@@ -40,9 +40,11 @@ export default async function initApp(app: Koa) {
       .listen(port, () => {
         console.log(`App is listening on port ${port} with HTTPS`);
       });
+
+    return;
   }
 
-  return app.listen(port, () => {
+  app.listen(port, () => {
     console.log(`App is listening on port ${port}`);
   });
 }
