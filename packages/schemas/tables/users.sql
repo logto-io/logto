@@ -12,5 +12,6 @@ create table users (
   avatar varchar(256),
   role_names jsonb /* @use RoleNames */ not null default '[]'::jsonb,
   identities jsonb /* @use Identities */ not null default '{}'::jsonb,
+  custom_data jsonb /* @use CustomData */ not null default '{}'::jsonb,
   primary key (id)
 );
