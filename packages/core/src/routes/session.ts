@@ -28,64 +28,6 @@ import { AnonymousRouter } from './types';
 
 export default function sessionRoutes<T extends AnonymousRouter>(router: T, provider: Provider) {
   router.post(
-    '/session',
-    koaGuard({
-      body: object({
-        username: string().optional(),
-        password: string().optional(),
-        email: string().optional(),
-        phone: string().optional(),
-        code: string().optional(),
-        connectorId: string().optional(),
-        state: string().optional(),
-      }),
-    }),
-    async (ctx, next) => {
-      const interaction = await provider.interactionDetails(ctx.req, ctx.res);
-      const {
-        // Interaction's JWT identity: jti
-        // https://github.com/panva/node-oidc-provider/blob/main/docs/README.md#user-flows
-        // https://datatracker.ietf.org/doc/html/rfc7519#section-4.1.7
-        jti,
-        prompt: { name },
-        result,
-      } = interaction;
-
-      if (name === 'consent') {
-        ctx.body = { redirectTo: ctx.request.origin + '/session/consent' };
-
-        return next();
-      }
-
-      if (name === 'login') {
-        const { username, password, email, phone, code, connectorId, state } = ctx.guard.body;
-
-        if (connectorId && state && !code) {
-          await assignRedirectUrlForSocial(ctx, connectorId, state);
-        } else if (connectorId && code) {
-          await signInWithSocial(ctx, provider, { connectorId, code, result });
-        } else if (email && !code) {
-          await sendSignInWithEmailPasscode(ctx, jti, email);
-        } else if (email && code) {
-          await signInWithEmailAndPasscode(ctx, provider, { jti, email, code });
-        } else if (phone && !code) {
-          await sendSignInWithPhonePasscode(ctx, jti, phone);
-        } else if (phone && code) {
-          await signInWithPhoneAndPasscode(ctx, provider, { jti, phone, code });
-        } else if (username && password) {
-          await signInWithUsernameAndPassword(ctx, provider, username, password);
-        } else {
-          throw new RequestError('session.insufficient_info');
-        }
-
-        return next();
-      }
-
-      throw new errors.InvalidRequest(`Prompt not supported: ${name}`);
-    }
-  );
-
-  router.post(
     '/session/sign-in/username-and-password',
     koaGuard({ body: object({ username: string(), password: string() }) }),
     async (ctx, next) => {
@@ -120,6 +62,9 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
     koaGuard({ body: object({ phone: string(), code: string().optional() }) }),
     async (ctx, next) => {
       const {
+        // Interaction's JWT identity: jti
+        // https://github.com/panva/node-oidc-provider/blob/main/docs/README.md#user-flows
+        // https://datatracker.ietf.org/doc/html/rfc7519#section-4.1.7
         jti,
         prompt: { name },
       } = await provider.interactionDetails(ctx.req, ctx.res);
@@ -193,6 +138,7 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
     async (ctx, next) => {
       const {
         prompt: { name },
+        result,
       } = await provider.interactionDetails(ctx.req, ctx.res);
 
       if (name === 'consent') {
@@ -207,7 +153,7 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
         if (connectorId && state && !code) {
           await assignRedirectUrlForSocial(ctx, connectorId, state);
         } else if (connectorId && code) {
-          await signInWithSocial(ctx, provider, { connectorId, code });
+          await signInWithSocial(ctx, provider, { connectorId, code, result });
         } else {
           throw new RequestError('session.insufficient_info');
         }
@@ -261,48 +207,8 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
   });
 
   router.post(
-    '/session/register',
-    koaGuard({
-      body: object({
-        username: string().min(3).optional(),
-        password: string().min(6).optional(),
-        email: string().optional(),
-        phone: string().optional(),
-        code: string().optional(),
-        connectorId: string().optional(),
-        state: string().optional(),
-      }),
-    }),
-    async (ctx, next) => {
-      const interaction = await provider.interactionDetails(ctx.req, ctx.res);
-      const { jti } = interaction;
-      const { username, password, email, phone, code, connectorId, state } = ctx.guard.body;
-
-      if (connectorId && state && !code) {
-        await assignRedirectUrlForSocial(ctx, connectorId, state);
-      } else if (connectorId && state && code) {
-        await registerWithSocial(ctx, provider, { connectorId, code });
-      } else if (email && !code) {
-        await sendPasscodeToEmail(ctx, jti, email);
-      } else if (email && code) {
-        await registerWithEmailAndPasscode(ctx, provider, { jti, email, code });
-      } else if (phone && !code) {
-        await sendPasscodeToPhone(ctx, jti, phone);
-      } else if (phone && code) {
-        await registerWithPhoneAndPasscode(ctx, provider, { jti, phone, code });
-      } else if (username && password) {
-        await registerWithUsernameAndPassword(ctx, provider, username, password);
-      } else {
-        throw new RequestError('session.insufficient_info');
-      }
-
-      return next();
-    }
-  );
-
-  router.post(
     '/session/register/username-and-password',
-    koaGuard({ body: object({ username: string().min(1), password: string().min(1) }) }),
+    koaGuard({ body: object({ username: string(), password: string() }) }),
     async (ctx, next) => {
       const { username, password } = ctx.guard.body;
 
@@ -357,7 +263,11 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
   router.post(
     '/session/register/social',
     koaGuard({
-      body: object({ connectorId: string(), state: string(), code: string().optional() }),
+      body: object({
+        connectorId: string(),
+        state: string().optional(),
+        code: string().optional(),
+      }),
     }),
     async (ctx, next) => {
       const { connectorId, state, code } = ctx.guard.body;
