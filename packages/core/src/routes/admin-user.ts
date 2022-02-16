@@ -3,10 +3,20 @@ import pick from 'lodash.pick';
 import { InvalidInputError } from 'slonik';
 import { object, string } from 'zod';
 
+import RequestError from '@/errors/RequestError';
+import { encryptUserPassword, generateUserId } from '@/lib/user';
 import koaGuard from '@/middleware/koa-guard';
 import koaPagination from '@/middleware/koa-pagination';
 import { findRolesByRoleNames } from '@/queries/roles';
-import { findAllUsers, findTotalNumberOfUsers, findUserById, updateUserById } from '@/queries/user';
+import {
+  findAllUsers,
+  findTotalNumberOfUsers,
+  findUserById,
+  hasUser,
+  insertUser,
+  updateUserById,
+} from '@/queries/user';
+import assertThat from '@/utils/assert-that';
 
 import { AuthedRouter } from './types';
 
@@ -36,6 +46,46 @@ export default function adminUserRoutes<T extends AuthedRouter>(router: T) {
       } = ctx.guard;
 
       const user = await findUserById(userId);
+
+      ctx.body = pick(user, ...userInfoSelectFields);
+
+      return next();
+    }
+  );
+
+  router.post(
+    '/users',
+    koaGuard({
+      body: object({
+        username: string().min(3),
+        password: string().min(6),
+        name: string().min(3),
+      }),
+    }),
+    async (ctx, next) => {
+      const { username, password, name } = ctx.guard.body;
+
+      assertThat(
+        !(await hasUser(username)),
+        new RequestError({
+          code: 'user.username_exists_register',
+          status: 422,
+        })
+      );
+
+      const id = await generateUserId();
+
+      const { passwordEncryptionSalt, passwordEncrypted, passwordEncryptionMethod } =
+        encryptUserPassword(id, password);
+
+      const user = await insertUser({
+        id,
+        username,
+        passwordEncrypted,
+        passwordEncryptionMethod,
+        passwordEncryptionSalt,
+        name,
+      });
 
       ctx.body = pick(user, ...userInfoSelectFields);
 
