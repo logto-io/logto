@@ -128,9 +128,8 @@ export const signInWithSocial = async (
   ctx.userLog.type = UserLogType.SignInSocial;
 
   const userInfo =
-    code === 'session'
-      ? await getUserInfoFromInteractionResult(connectorId, result)
-      : await getUserInfoByConnectorCode(connectorId, code);
+    (await getUserInfoFromInteractionResult(connectorId, result)) ??
+    (await getUserInfoByConnectorCode(connectorId, code));
 
   assertThat(
     await hasUserWithIdentity(connectorId, userInfo.id),

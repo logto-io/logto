@@ -4,7 +4,6 @@ import { z } from 'zod';
 import { getSocialConnectorInstanceById } from '@/connectors';
 import { SocialUserInfo, socialUserInfoGuard } from '@/connectors/types';
 import RequestError from '@/errors/RequestError';
-import assertThat from '@/utils/assert-that';
 
 export interface SocialUserInfoSession {
   connectorId: string;
@@ -40,7 +39,7 @@ export const getUserInfoByConnectorCode = async (
 export const getUserInfoFromInteractionResult = async (
   connectorId: string,
   interactionResult?: InteractionResults
-): Promise<SocialUserInfo> => {
+): Promise<SocialUserInfo | null> => {
   const result = z
     .object({
       socialUserInfo: z.object({
@@ -48,9 +47,9 @@ export const getUserInfoFromInteractionResult = async (
         userInfo: socialUserInfoGuard,
       }),
     })
-    .parse(interactionResult);
+    .safeParse(interactionResult);
 
-  assertThat(result.socialUserInfo.connectorId === connectorId, 'session.connector_id_mismatch');
-
-  return result.socialUserInfo.userInfo;
+  return result.success && result.data.socialUserInfo.connectorId === connectorId
+    ? result.data.socialUserInfo.userInfo
+    : null;
 };
