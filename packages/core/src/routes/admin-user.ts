@@ -4,14 +4,22 @@ import { InvalidInputError } from 'slonik';
 import { object, string } from 'zod';
 
 import koaGuard from '@/middleware/koa-guard';
+import koaPagination from '@/middleware/koa-pagination';
 import { findRolesByRoleNames } from '@/queries/roles';
-import { findAllUsers, findUserById, updateUserById } from '@/queries/user';
+import { findAllUsers, findTotalNumberOfUsers, findUserById, updateUserById } from '@/queries/user';
 
 import { AuthedRouter } from './types';
 
 export default function adminUserRoutes<T extends AuthedRouter>(router: T) {
-  router.get('/users', async (ctx, next) => {
-    const users = await findAllUsers();
+  router.get('/users', koaPagination(), async (ctx, next) => {
+    const { limit, offset } = ctx.pagination;
+
+    const [{ count }, users] = await Promise.all([
+      findTotalNumberOfUsers(),
+      findAllUsers(limit, offset),
+    ]);
+
+    ctx.pagination.totalCount = count;
     ctx.body = users.map((user) => pick(user, ...userInfoSelectFields));
 
     return next();
