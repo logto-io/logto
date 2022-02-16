@@ -21,6 +21,13 @@ import { createPasscode, sendPasscode, verifyPasscode } from './passcode';
 import { getUserInfoByConnectorCode, getUserInfoFromInteractionResult } from './social';
 import { findUserByUsernameAndPassword } from './user';
 
+export enum SignInFlowType {
+  UsernameAndPassword = 'UsernameAndPassword',
+  Email = 'Email',
+  Phone = 'Phone',
+  Social = 'Social',
+}
+
 const assignSignInResult = async (ctx: Context, provider: Provider, userId: string) => {
   const redirectTo = await provider.interactionResult(
     ctx.req,

@@ -196,3 +196,5 @@ export const registerWithSocial = async (
 
   await assignRegistrationResult(ctx, provider, id);
 };
+
+export { SignInFlowType as RegisterFlowType } from './sign-in';
