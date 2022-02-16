@@ -39,7 +39,7 @@ const saveUserInfoToSession = async (
     {
       socialUserInfo,
     },
-    { mergeWithLastSubmission: false }
+    { mergeWithLastSubmission: true }
   );
   ctx.body = { redirectTo };
 };

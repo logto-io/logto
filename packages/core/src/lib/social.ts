@@ -50,7 +50,7 @@ export const getUserInfoFromInteractionResult = async (
     })
     .parse(interactionResult);
 
-  assertThat(result.socialUserInfo.connectorId === connectorId, 'session.insufficient_info');
+  assertThat(result.socialUserInfo.connectorId === connectorId, 'session.connector_id_mismatch');
 
   return result.socialUserInfo.userInfo;
 };
