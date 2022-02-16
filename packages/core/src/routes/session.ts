@@ -70,13 +70,8 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
           const { phone, code } = ctx.guard.body.Phone;
           await signInWithPhoneAndPasscode(ctx, provider, { jti, phone, code });
         } else if (signInFlowType === SignInFlowType.Social && ctx.guard.body.Social) {
-          const { connectorId, code, state } = ctx.guard.body.Social;
-
-          if (connectorId && state && !code) {
-            await assignRedirectUrlForSocial(ctx, connectorId, state);
-          } else if (connectorId && code) {
-            await signInWithSocial(ctx, provider, { connectorId, code, result });
-          }
+          const { connectorId, code } = ctx.guard.body.Social;
+          await signInWithSocial(ctx, provider, { connectorId, code, result });
         } else {
           throw new RequestError('session.insufficient_info');
         }
@@ -120,6 +115,17 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
       } else {
         throw new RequestError('session.insufficient_info');
       }
+
+      return next();
+    }
+  );
+
+  router.post(
+    '/session/social-authorization-uri',
+    koaGuard({ body: object({ connectorId: string(), state: string() }) }),
+    async (ctx, next) => {
+      const { connectorId, state } = ctx.guard.body;
+      await assignRedirectUrlForSocial(ctx, connectorId, state);
 
       return next();
     }
@@ -189,13 +195,8 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
         const { phone, code } = ctx.guard.body.Phone;
         await registerWithPhoneAndPasscode(ctx, provider, { jti, phone, code });
       } else if (registerFlowType === RegisterFlowType.Social && ctx.guard.body.Social) {
-        const { connectorId, code, state } = ctx.guard.body.Social;
-
-        if (connectorId && state && !code) {
-          await assignRedirectUrlForSocial(ctx, connectorId, state);
-        } else if (connectorId && code) {
-          await registerWithSocial(ctx, provider, { connectorId, code });
-        }
+        const { connectorId, code } = ctx.guard.body.Social;
+        await registerWithSocial(ctx, provider, { connectorId, code });
       } else {
         throw new RequestError('session.insufficient_info');
       }

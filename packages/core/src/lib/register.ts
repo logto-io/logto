@@ -204,7 +204,5 @@ export const registerParametersGuard = z.object({
   UsernameAndPassword: z.object({ username: z.string(), password: z.string() }).optional(),
   Email: z.object({ email: z.string(), code: z.string() }).optional(),
   Phone: z.object({ phone: z.string(), code: z.string() }).optional(),
-  Social: z
-    .object({ connectorId: z.string(), state: z.string(), code: z.string().optional() })
-    .optional(),
+  Social: z.object({ connectorId: z.string(), code: z.string() }).optional(),
 });
