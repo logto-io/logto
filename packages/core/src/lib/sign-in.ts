@@ -1,7 +1,6 @@
 import { PasscodeType, UserLogType } from '@logto/schemas';
 import { Context } from 'koa';
 import { InteractionResults, Provider } from 'oidc-provider';
-import { z } from 'zod';
 
 import { getSocialConnectorInstanceById } from '@/connectors';
 import RequestError from '@/errors/RequestError';
@@ -21,20 +20,6 @@ import { emailRegEx, phoneRegEx } from '@/utils/regex';
 import { createPasscode, sendPasscode, verifyPasscode } from './passcode';
 import { getUserInfoByConnectorCode, getUserInfoFromInteractionResult } from './social';
 import { findUserByUsernameAndPassword } from './user';
-
-export enum SignInFlowType {
-  UsernameAndPassword = 'UsernameAndPassword',
-  Email = 'Email',
-  Phone = 'Phone',
-  Social = 'Social',
-}
-
-export const signInParametersGuard = z.object({
-  UsernameAndPassword: z.object({ username: z.string(), password: z.string() }).optional(),
-  Email: z.object({ email: z.string(), code: z.string() }).optional(),
-  Phone: z.object({ phone: z.string(), code: z.string() }).optional(),
-  Social: z.object({ connectorId: z.string(), code: z.string() }).optional(),
-});
 
 const assignSignInResult = async (ctx: Context, provider: Provider, userId: string) => {
   const redirectTo = await provider.interactionResult(
