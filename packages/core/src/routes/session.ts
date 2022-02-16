@@ -1,7 +1,8 @@
 import { LogtoErrorCode } from '@logto/phrases';
+import { PasscodeType } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { Provider, errors } from 'oidc-provider';
-import { object, string } from 'zod';
+import { nativeEnum, object, string } from 'zod';
 
 import RequestError from '@/errors/RequestError';
 import {
@@ -123,6 +124,43 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
       }
 
       throw new errors.InvalidRequest(`Prompt not supported: ${name}`);
+    }
+  );
+
+  router.post(
+    '/session/passcodes',
+    koaGuard({
+      body: object({
+        type: nativeEnum(PasscodeType),
+        phone: string().optional(),
+        email: string().optional(),
+      }),
+    }),
+    async (ctx, next) => {
+      const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
+      const { type, phone, email } = ctx.guard.body;
+
+      if (!phone && !email) {
+        throw new RequestError('session.insufficient_info');
+      }
+
+      if (type === PasscodeType.SignIn) {
+        if (phone) {
+          await sendSignInWithPhonePasscode(ctx, jti, phone);
+        } else if (email) {
+          await sendSignInWithEmailPasscode(ctx, jti, email);
+        }
+      } else if (type === PasscodeType.Register) {
+        if (phone) {
+          await sendPasscodeToPhone(ctx, jti, phone);
+        } else if (email) {
+          await sendPasscodeToEmail(ctx, jti, email);
+        }
+      } else {
+        throw new RequestError('session.insufficient_info');
+      }
+
+      return next();
     }
   );
 
