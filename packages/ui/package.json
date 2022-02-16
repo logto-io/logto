@@ -59,7 +59,7 @@
     "razzle-dev-utils": "^4.0.5",
     "razzle-plugin-scss": "^4.0.5",
     "stylelint": "^13.13.1",
-    "typescript": "^4.3.5",
+    "typescript": "^4.5.5",
     "webpack": "^5.60.0",
     "webpack-dev-server": "^3.11.2"
   },
