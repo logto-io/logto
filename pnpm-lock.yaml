@@ -22,10 +22,10 @@ importers:
     specifiers:
       '@parcel/core': ^2.3.1
       '@parcel/transformer-sass': ^2.3.1
-      '@silverhand/eslint-config': ^0.8.0
-      '@silverhand/eslint-config-react': ^0.8.0
-      '@silverhand/ts-config': ^0.8.0
-      '@silverhand/ts-config-react': ^0.8.0
+      '@silverhand/eslint-config': ^0.8.1
+      '@silverhand/eslint-config-react': ^0.8.1
+      '@silverhand/ts-config': ^0.8.1
+      '@silverhand/ts-config-react': ^0.8.1
       '@types/react': ^17.0.14
       '@types/react-dom': ^17.0.9
       eslint: ^8.1.0
@@ -44,10 +44,10 @@ importers:
     devDependencies:
       '@parcel/core': 2.3.1
       '@parcel/transformer-sass': 2.3.1_@parcel+core@2.3.1
-      '@silverhand/eslint-config': 0.8.0_b07be603d0ceb19daeedad1772e0f2c4
-      '@silverhand/eslint-config-react': 0.8.0_bde439a4d13c321a6cb4f974de44a545
-      '@silverhand/ts-config': 0.8.0_typescript@4.5.5
-      '@silverhand/ts-config-react': 0.8.0_typescript@4.5.5
+      '@silverhand/eslint-config': 0.8.1_b07be603d0ceb19daeedad1772e0f2c4
+      '@silverhand/eslint-config-react': 0.8.1_bde439a4d13c321a6cb4f974de44a545
+      '@silverhand/ts-config': 0.8.1_typescript@4.5.5
+      '@silverhand/ts-config-react': 0.8.1_typescript@4.5.5
       '@types/react': 17.0.37
       '@types/react-dom': 17.0.11
       eslint: 8.4.1
@@ -64,9 +64,9 @@ importers:
       '@logto/phrases': ^0.1.0
       '@logto/schemas': ^0.1.0
       '@shopify/jest-koa-mocks': ^3.0.8
-      '@silverhand/eslint-config': ^0.6.1
+      '@silverhand/eslint-config': ^0.8.1
       '@silverhand/essentials': ^1.1.0
-      '@silverhand/ts-config': ^0.6.1
+      '@silverhand/ts-config': ^0.8.1
       '@types/jest': ^27.0.1
       '@types/koa': ^2.13.3
       '@types/koa-logger': ^3.1.1
@@ -141,8 +141,8 @@ importers:
       zod: 3.11.6
     devDependencies:
       '@shopify/jest-koa-mocks': 3.0.8
-      '@silverhand/eslint-config': 0.6.1_b07be603d0ceb19daeedad1772e0f2c4
-      '@silverhand/ts-config': 0.6.1_typescript@4.5.5
+      '@silverhand/eslint-config': 0.8.1_b07be603d0ceb19daeedad1772e0f2c4
+      '@silverhand/ts-config': 0.8.1_typescript@4.5.5
       '@types/jest': 27.0.3
       '@types/koa': 2.13.4
       '@types/koa-logger': 3.1.2
@@ -166,9 +166,9 @@ importers:
 
   packages/phrases:
     specifiers:
-      '@silverhand/eslint-config': ^0.6.1
+      '@silverhand/eslint-config': ^0.8.1
       '@silverhand/essentials': ^1.1.4
-      '@silverhand/ts-config': ^0.6.1
+      '@silverhand/ts-config': ^0.8.1
       eslint: ^8.1.0
       lint-staged: ^11.1.1
       prettier: ^2.3.2
@@ -176,8 +176,8 @@ importers:
     dependencies:
       '@silverhand/essentials': 1.1.4
     devDependencies:
-      '@silverhand/eslint-config': 0.6.1_b07be603d0ceb19daeedad1772e0f2c4
-      '@silverhand/ts-config': 0.6.1_typescript@4.5.5
+      '@silverhand/eslint-config': 0.8.1_b07be603d0ceb19daeedad1772e0f2c4
+      '@silverhand/ts-config': 0.8.1_typescript@4.5.5
       eslint: 8.4.1
       lint-staged: 11.2.6
       prettier: 2.5.1
@@ -186,9 +186,9 @@ importers:
   packages/schemas:
     specifiers:
       '@logto/phrases': ^0.1.0
-      '@silverhand/eslint-config': ^0.6.1
+      '@silverhand/eslint-config': ^0.8.1
       '@silverhand/essentials': ^1.1.0
-      '@silverhand/ts-config': ^0.4.0
+      '@silverhand/ts-config': ^0.8.1
       '@types/lodash.uniq': ^4.5.6
       '@types/node': '14'
       '@types/pluralize': ^0.0.29
@@ -205,9 +205,9 @@ importers:
       '@logto/phrases': link:../phrases
       zod: 3.11.6
     devDependencies:
-      '@silverhand/eslint-config': 0.6.1_b07be603d0ceb19daeedad1772e0f2c4
+      '@silverhand/eslint-config': 0.8.1_b07be603d0ceb19daeedad1772e0f2c4
       '@silverhand/essentials': 1.1.2
-      '@silverhand/ts-config': 0.4.0_typescript@4.5.5
+      '@silverhand/ts-config': 0.8.1_typescript@4.5.5
       '@types/lodash.uniq': 4.5.6
       '@types/node': 14.18.0
       '@types/pluralize': 0.0.29
@@ -226,10 +226,10 @@ importers:
       '@jest/types': ^27.0.6
       '@logto/phrases': ^0.1.0
       '@logto/schemas': ^0.1.0
-      '@silverhand/eslint-config': ^0.6.1
-      '@silverhand/eslint-config-react': ^0.6.1
-      '@silverhand/ts-config': ^0.6.1
-      '@silverhand/ts-config-react': ^0.6.1
+      '@silverhand/eslint-config': ^0.8.1
+      '@silverhand/eslint-config-react': ^0.8.1
+      '@silverhand/ts-config': ^0.8.1
+      '@silverhand/ts-config-react': ^0.8.1
       '@testing-library/react': ^12.0.0
       '@types/jest': ^26.0.24
       '@types/react': ^17.0.14
@@ -278,10 +278,10 @@ importers:
     devDependencies:
       '@babel/core': 7.16.0
       '@jest/types': 27.4.2
-      '@silverhand/eslint-config': 0.6.1_b07be603d0ceb19daeedad1772e0f2c4
-      '@silverhand/eslint-config-react': 0.6.1_bde439a4d13c321a6cb4f974de44a545
-      '@silverhand/ts-config': 0.6.1_typescript@4.5.5
-      '@silverhand/ts-config-react': 0.6.1_typescript@4.5.5
+      '@silverhand/eslint-config': 0.8.1_b07be603d0ceb19daeedad1772e0f2c4
+      '@silverhand/eslint-config-react': 0.8.1_bde439a4d13c321a6cb4f974de44a545
+      '@silverhand/ts-config': 0.8.1_typescript@4.5.5
+      '@silverhand/ts-config-react': 0.8.1_typescript@4.5.5
       '@testing-library/react': 12.1.2_react-dom@17.0.2+react@17.0.2
       '@types/jest': 26.0.24
       '@types/react': 17.0.37
@@ -3777,12 +3777,12 @@ packages:
       - supports-color
     dev: true
 
-  /@silverhand/eslint-config-react/0.6.1_bde439a4d13c321a6cb4f974de44a545:
-    resolution: {integrity: sha512-QrYy4E6jPPYDHTBiwD6cTQUZ2iC/6GjUrP6bnDDa7ujn93ll0oDlTVsJjcIj9tHaxjF7rJofG+JKCJKLED0Bhw==}
+  /@silverhand/eslint-config-react/0.8.1_bde439a4d13c321a6cb4f974de44a545:
+    resolution: {integrity: sha512-jZnrG6OdezjdOc/zZHon73iymdUTISwuFqT+t+rNzfDSU4jcWt03OkjqSkU+aKC30641pb+dAIwLUxnWkbS5Gw==}
     peerDependencies:
       stylelint: ^13.13.1
     dependencies:
-      '@silverhand/eslint-config': 0.6.1_b07be603d0ceb19daeedad1772e0f2c4
+      '@silverhand/eslint-config': 0.8.1_b07be603d0ceb19daeedad1772e0f2c4
       eslint-config-xo-react: 0.25.0_0d0b684468c8c3b6dac037452254bcd4
       eslint-plugin-react: 7.27.1_eslint@8.4.1
       eslint-plugin-react-hooks: 4.3.0_eslint@8.4.1
@@ -3795,57 +3795,8 @@ packages:
       - typescript
     dev: true
 
-  /@silverhand/eslint-config-react/0.8.0_bde439a4d13c321a6cb4f974de44a545:
-    resolution: {integrity: sha512-GA/NviEZ2LrwRteoE/oyWnOtptGlwU3UOVJ9FVSXoPJF2vs8rD+qrDXUe7HfBkpnxW80bw90rs2ECfHPgnDCdQ==}
-    peerDependencies:
-      stylelint: ^13.13.1
-    dependencies:
-      '@silverhand/eslint-config': 0.8.0_b07be603d0ceb19daeedad1772e0f2c4
-      eslint-config-xo-react: 0.25.0_0d0b684468c8c3b6dac037452254bcd4
-      eslint-plugin-react: 7.27.1_eslint@8.4.1
-      eslint-plugin-react-hooks: 4.3.0_eslint@8.4.1
-      stylelint: 13.13.1
-      stylelint-config-xo-scss: 0.14.0_stylelint@13.13.1
-    transitivePeerDependencies:
-      - eslint
-      - prettier
-      - supports-color
-      - typescript
-    dev: true
-
-  /@silverhand/eslint-config/0.6.1_b07be603d0ceb19daeedad1772e0f2c4:
-    resolution: {integrity: sha512-XgLn291LvMjhdfPgRfjtL8L2rmZ2Dci40N3jvNoC65jb4i1wmHoaG2ZYL4eVSTXOLiAfIuRJnuuLisunY/aUKQ==}
-    engines: {node: '>=14.15.0'}
-    peerDependencies:
-      eslint: ^8.1.0
-      prettier: ^2.3.2
-      typescript: ^4.3.5
-    dependencies:
-      '@silverhand/eslint-plugin-fp': 2.5.0_eslint@8.4.1
-      '@typescript-eslint/eslint-plugin': 5.6.0_1265a56439cdc21b9457e89eb025b8bf
-      '@typescript-eslint/parser': 5.6.0_eslint@8.4.1+typescript@4.5.5
-      eslint: 8.4.1
-      eslint-config-prettier: 8.3.0_eslint@8.4.1
-      eslint-config-xo: 0.39.0_eslint@8.4.1
-      eslint-config-xo-typescript: 0.43.0_31ad65a5a34b638b5d345ca6f0359d48
-      eslint-import-resolver-typescript: 2.5.0_581d2b6245defd0595f2dd29dbf58da2
-      eslint-plugin-consistent-default-export-name: 0.0.7
-      eslint-plugin-eslint-comments: 3.2.0_eslint@8.4.1
-      eslint-plugin-import: 2.25.3_eslint@8.4.1
-      eslint-plugin-no-use-extend-native: 0.5.0
-      eslint-plugin-node: 11.1.0_eslint@8.4.1
-      eslint-plugin-prettier: 3.4.1_90bd2ba582f6d1348d73031482d782e2
-      eslint-plugin-promise: 5.2.0_eslint@8.4.1
-      eslint-plugin-sql: 2.0.0_eslint@8.4.1
-      eslint-plugin-unicorn: 39.0.0_eslint@8.4.1
-      prettier: 2.5.1
-      typescript: 4.5.5
-    transitivePeerDependencies:
-      - supports-color
-    dev: true
-
-  /@silverhand/eslint-config/0.8.0_b07be603d0ceb19daeedad1772e0f2c4:
-    resolution: {integrity: sha512-p5cpiyCYe798cTQcDruUGGAGSv9zFafQzqmIWQAugDOUnvozc/RUPjKifmlW6W5i67agEaRvuUEXcvRoq+buGQ==}
+  /@silverhand/eslint-config/0.8.1_b07be603d0ceb19daeedad1772e0f2c4:
+    resolution: {integrity: sha512-6pSjy3TeZ5DYv4RSwoQmaRc7IIRE+yFL0yunB5HVZdoFaXeR8Ov9hyPmxMOndw2Xtb3WQoK9VLJvN+LO4r+KCA==}
     engines: {node: '>=14.15.0'}
     peerDependencies:
       eslint: ^8.1.0
@@ -3903,46 +3854,18 @@ packages:
       lodash.pick: 4.4.0
     dev: false
 
-  /@silverhand/ts-config-react/0.6.1_typescript@4.5.5:
-    resolution: {integrity: sha512-tFuXXeOzWY4p9acWdxL4TyEl+XMHSNj6lpcqQBrYErGklr0Qq9ztYNEQ1MMpNmQMWoUCkUvH/nbl3HEC0DZz5w==}
+  /@silverhand/ts-config-react/0.8.1_typescript@4.5.5:
+    resolution: {integrity: sha512-ybE3dIR+KsiGF38bjoNsjXOxyYVGTZuXUjB8TxcMMBOztrHyKSjeIFG87u1fWucdHjKvleKHuorHZPePo1KAWw==}
     engines: {node: '>=14.15.0'}
     peerDependencies:
       typescript: ^4.3.5
     dependencies:
-      '@silverhand/ts-config': 0.6.1_typescript@4.5.5
+      '@silverhand/ts-config': 0.8.1_typescript@4.5.5
       typescript: 4.5.5
     dev: true
 
-  /@silverhand/ts-config-react/0.8.0_typescript@4.5.5:
-    resolution: {integrity: sha512-auqb2yfdPI4bC8WLIedfML+rtox7kCUnTcD31uVWY/Twn8e/qUsTxNfymb73WXxg423ywunb129lCOUgyc4N8A==}
-    engines: {node: '>=14.15.0'}
-    peerDependencies:
-      typescript: ^4.3.5
-    dependencies:
-      '@silverhand/ts-config': 0.8.0_typescript@4.5.5
-      typescript: 4.5.5
-    dev: true
-
-  /@silverhand/ts-config/0.4.0_typescript@4.5.5:
-    resolution: {integrity: sha512-OqzXXl21RLSfVbBeCqqyX850N6/aFZgJdQL3jwGioDMOiviXk9OfgN0l0ooLBjqUc6t65QR5g2IMJ95ddhOyEw==}
-    engines: {node: '>=14.15.0'}
-    peerDependencies:
-      typescript: ^4.3.5
-    dependencies:
-      typescript: 4.5.5
-    dev: true
-
-  /@silverhand/ts-config/0.6.1_typescript@4.5.5:
-    resolution: {integrity: sha512-Bj6xK0ZUuv57bqryD9LbOJu3j13ud4aM+mrF6ztlQr8WnauvqSn17zCUfwLNxL7EMRH+qIb2BdVqJVIYFE2Dhg==}
-    engines: {node: '>=14.15.0'}
-    peerDependencies:
-      typescript: ^4.3.5
-    dependencies:
-      typescript: 4.5.5
-    dev: true
-
-  /@silverhand/ts-config/0.8.0_typescript@4.5.5:
-    resolution: {integrity: sha512-ZxSf6hKP+vR4GFC6JH3cQPJ2+RpqSHnG7adNgiTX2l3zNkdP+ZW0BNpAl4rjkEw0nQLS3ALeIY4Gywgh0kKlqw==}
+  /@silverhand/ts-config/0.8.1_typescript@4.5.5:
+    resolution: {integrity: sha512-8I9cxcppVU7iq2KM/9h3nHDBIZ6EPgYtmi5eO9Z9u4vPoHo0YM9yrYtG2ra2FffNuTGyd8qiZK6YGrx463zs7Q==}
     engines: {node: '>=14.15.0'}
     peerDependencies:
       typescript: ^4.3.5
@@ -7673,15 +7596,6 @@ packages:
       eslint-config-prettier: 8.3.0_eslint@8.4.1
       prettier: 2.5.1
       prettier-linter-helpers: 1.0.0
-    dev: true
-
-  /eslint-plugin-promise/5.2.0_eslint@8.4.1:
-    resolution: {integrity: sha512-SftLb1pUG01QYq2A/hGAWfDRXqYD82zE7j7TopDOyNdU+7SvvoXREls/+PRTY17vUXzXnZA/zfnyKgRH6x4JJw==}
-    engines: {node: ^10.12.0 || >=12.0.0}
-    peerDependencies:
-      eslint: ^7.0.0
-    dependencies:
-      eslint: 8.4.1
     dev: true
 
   /eslint-plugin-promise/6.0.0_eslint@8.4.1:

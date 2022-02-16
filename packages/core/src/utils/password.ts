@@ -21,6 +21,8 @@ export const encryptPassword = (
   method: PasswordEncryptionMethod
 ): string => {
   assertThat(
+    // FIXME:
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     method === PasswordEncryptionMethod.SaltAndPepper,
     'password.unsupported_encryption_method',
     { method }
