@@ -95,10 +95,6 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
       const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
       const { type, email } = ctx.guard.body;
 
-      if (!email) {
-        throw new RequestError('session.insufficient_info');
-      }
-
       if (type === PasscodeType.SignIn) {
         await sendSignInWithEmailPasscode(ctx, jti, email);
       } else if (type === PasscodeType.Register) {
@@ -122,10 +118,6 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
     async (ctx, next) => {
       const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
       const { type, phone } = ctx.guard.body;
-
-      if (!phone) {
-        throw new RequestError('session.insufficient_info');
-      }
 
       if (type === PasscodeType.SignIn) {
         await sendSignInWithPhonePasscode(ctx, jti, phone);
