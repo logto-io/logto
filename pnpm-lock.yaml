@@ -3821,7 +3821,7 @@ packages:
       prettier: ^2.3.2
       typescript: ^4.3.5
     dependencies:
-      '@silverhand/eslint-plugin-fp': 2.4.2_eslint@8.4.1
+      '@silverhand/eslint-plugin-fp': 2.5.0_eslint@8.4.1
       '@typescript-eslint/eslint-plugin': 5.6.0_0d0cecf582ba45923647a091322795b0
       '@typescript-eslint/parser': 5.6.0_eslint@8.4.1+typescript@4.5.3
       eslint: 8.4.1
@@ -3873,19 +3873,6 @@ packages:
       typescript: 4.5.3
     transitivePeerDependencies:
       - supports-color
-    dev: true
-
-  /@silverhand/eslint-plugin-fp/2.4.2_eslint@8.4.1:
-    resolution: {integrity: sha512-f8BH6vyp5D4gY0DJWuVihzEqFNP/jC6kib7OBl7xCGXG2wEHiFSHyMUuaZSpq4qHMfp8x+Uywlke76R+1sAs5w==}
-    engines: {node: '>=14.15.0'}
-    peerDependencies:
-      eslint: ^7.32.0
-    dependencies:
-      create-eslint-index: 1.0.0
-      eslint: 8.4.1
-      eslint-ast-utils: 1.1.0
-      import-modules: 2.1.0
-      lodash: 4.17.21
     dev: true
 
   /@silverhand/eslint-plugin-fp/2.5.0_eslint@8.4.1:
