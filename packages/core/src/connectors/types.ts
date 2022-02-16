@@ -67,9 +67,21 @@ export type SmsSendMessageFunction<T = unknown> = (
 
 export type TemplateType = PasscodeType | 'Test';
 
-export class ConnectorError extends Error {}
+export enum ConnectorErrorCodes {
+  General,
+  InvalidConfig,
+  TemplateNotFound,
+  SocialAuthCodeInvalid,
+  SocialAccessTokenInvalid,
+}
+export class ConnectorError extends Error {
+  public code: ConnectorErrorCodes;
 
-export class ConnectorConfigError extends ConnectorError {}
+  constructor(code: ConnectorErrorCodes, message?: string) {
+    super(message);
+    this.code = code;
+  }
+}
 
 export type ValidateConfig<T extends ConnectorConfig = ConnectorConfig> = (
   config: T

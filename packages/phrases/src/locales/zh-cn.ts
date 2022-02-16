@@ -68,8 +68,11 @@ const errors = {
     connector_id_mismatch: '传入的 connectorId 与 session 中保存的记录不一致。',
   },
   connector: {
+    general: 'Connector 发生未知错误。',
     not_found: '找不到可用的 {{type}} 类型的连接器。',
     not_enabled: '连接器尚未启用。',
+    invalid_config: 'Connector 配置错误。',
+    template_not_found: '无法从 connector 配置中找到对应的模板。',
     access_token_invalid: '当前连接器的 access_token 无效。',
     oauth_code_invalid: '无法获取 access_token，请检查授权 code 是否有效。',
   },

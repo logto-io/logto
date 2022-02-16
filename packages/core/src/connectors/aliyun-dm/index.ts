@@ -1,8 +1,8 @@
 import { z } from 'zod';
 
 import {
-  ConnectorConfigError,
   ConnectorError,
+  ConnectorErrorCodes,
   ConnectorMetadata,
   ConnectorType,
   EmailSendMessageFunction,
@@ -46,13 +46,13 @@ const configGuard = z.object({
 
 export const validateConfig: ValidateConfig = async (config: unknown) => {
   if (!config) {
-    throw new ConnectorConfigError('Missing config');
+    throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, 'Missing config');
   }
 
   const result = configGuard.safeParse(config);
 
   if (!result.success) {
-    throw new ConnectorConfigError(result.error.message);
+    throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, result.error.message);
   }
 };
 
@@ -65,7 +65,10 @@ export const sendMessage: EmailSendMessageFunction = async (address, type, data)
   const template = templates.find((template) => template.usageType === type);
 
   if (!template) {
-    throw new ConnectorError(`Cannot find template for type: ${type}`);
+    throw new ConnectorError(
+      ConnectorErrorCodes.TemplateNotFound,
+      `Cannot find template for type: ${type}`
+    );
   }
 
   return singleSendMail(

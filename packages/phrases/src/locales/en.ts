@@ -67,8 +67,11 @@ const errors = {
     connector_id_mismatch: 'The connectorId is mismatched with session record.',
   },
   connector: {
+    general: 'An unexpected error occured in connector.',
     not_found: 'Cannot find any available connector for type: {{type}}.',
     not_enabled: 'The connector is not enabled.',
+    invalid_config: "The connector's config is invalid.",
+    template_not_found: 'Unable to find correct template in connector config.',
     access_token_invalid: "Connector's access token is invalid.",
     oauth_code_invalid: 'Unable to get access token, please check authorization code.',
   },
