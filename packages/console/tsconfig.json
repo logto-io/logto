@@ -1,0 +1,6 @@
+{
+  "extends": "@silverhand/ts-config-react/tsconfig.base",
+  "include": [
+    "src"
+  ]
+}
