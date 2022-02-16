@@ -108,3 +108,15 @@ export const deleteUserById = async (id: string) => {
     throw new DeletionError(Users.table, id);
   }
 };
+
+export const deleteUserCustomDataById = async (id: string) => {
+  const { rowCount } = await pool.query<User>(sql`
+    update ${table}
+    set ${fields.customData}='{}'::jsonb
+    where id=${id}
+  `);
+
+  if (rowCount < 1) {
+    throw new DeletionError(Users.table, id);
+  }
+};
