@@ -84,34 +84,53 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
   );
 
   router.post(
-    '/session/passcodes',
+    '/session/passcodes/email',
     koaGuard({
       body: object({
         type: nativeEnum(PasscodeType),
-        phone: string().optional(),
-        email: string().optional(),
+        email: string(),
       }),
     }),
     async (ctx, next) => {
       const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
-      const { type, phone, email } = ctx.guard.body;
+      const { type, email } = ctx.guard.body;
 
-      if (!phone && !email) {
+      if (!email) {
         throw new RequestError('session.insufficient_info');
       }
 
       if (type === PasscodeType.SignIn) {
-        if (phone) {
-          await sendSignInWithPhonePasscode(ctx, jti, phone);
-        } else if (email) {
-          await sendSignInWithEmailPasscode(ctx, jti, email);
-        }
+        await sendSignInWithEmailPasscode(ctx, jti, email);
       } else if (type === PasscodeType.Register) {
-        if (phone) {
-          await sendPasscodeToPhone(ctx, jti, phone);
-        } else if (email) {
-          await sendPasscodeToEmail(ctx, jti, email);
-        }
+        await sendPasscodeToEmail(ctx, jti, email);
+      } else {
+        throw new RequestError('session.insufficient_info');
+      }
+
+      return next();
+    }
+  );
+
+  router.post(
+    '/session/passcodes/phone',
+    koaGuard({
+      body: object({
+        type: nativeEnum(PasscodeType),
+        phone: string(),
+      }),
+    }),
+    async (ctx, next) => {
+      const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
+      const { type, phone } = ctx.guard.body;
+
+      if (!phone) {
+        throw new RequestError('session.insufficient_info');
+      }
+
+      if (type === PasscodeType.SignIn) {
+        await sendSignInWithPhonePasscode(ctx, jti, phone);
+      } else if (type === PasscodeType.Register) {
+        await sendPasscodeToPhone(ctx, jti, phone);
       } else {
         throw new RequestError('session.insufficient_info');
       }
