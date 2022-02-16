@@ -34,7 +34,7 @@ const detectLanguageFromHeaders = (headers: IncomingHttpHeaders): string[] =>
     .map((string) => resolveLanguage(string))
     .filter((value): value is NonNullable<typeof value> => Boolean(value))
     .slice()
-    .sort((a, b) => b[1] - a[1])
+    .sort((lng1, lng2) => lng2[1] - lng1[1])
     .map(([locale]) => locale) ?? [];
 
 const detectLanguage = <StateT, ContextT extends IRouterParamContext, ResponseBodyT>(
