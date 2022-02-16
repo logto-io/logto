@@ -1,9 +1,5 @@
 {
   "extends": "@silverhand/ts-config-react/tsconfig.base",
-  "compilerOptions": {
-    "outDir": "build",
-    "esModuleInterop": true
-  },
   "include": [
     "src"
   ]
