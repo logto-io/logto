@@ -12,6 +12,8 @@ import {
   registerWithUsernameAndPassword,
   sendPasscodeToEmail,
   sendPasscodeToPhone,
+  RegisterFlowType,
+  registerParametersGuard,
 } from '@/lib/register';
 import {
   assignRedirectUrlForSocial,
@@ -21,6 +23,8 @@ import {
   signInWithEmailAndPasscode,
   signInWithPhoneAndPasscode,
   signInWithUsernameAndPassword,
+  SignInFlowType,
+  signInParametersGuard,
 } from '@/lib/sign-in';
 import koaGuard from '@/middleware/koa-guard';
 import assertThat from '@/utils/assert-that';
@@ -29,38 +33,11 @@ import { AnonymousRouter } from './types';
 
 export default function sessionRoutes<T extends AnonymousRouter>(router: T, provider: Provider) {
   router.post(
-    '/session/sign-in/username-and-password',
-    koaGuard({ body: object({ username: string(), password: string() }) }),
-    async (ctx, next) => {
-      const {
-        prompt: { name },
-      } = await provider.interactionDetails(ctx.req, ctx.res);
-
-      if (name === 'consent') {
-        ctx.body = { redirectTo: ctx.request.origin + '/session/consent' };
-
-        return next();
-      }
-
-      if (name === 'login') {
-        const { username, password } = ctx.guard.body;
-
-        if (username && password) {
-          await signInWithUsernameAndPassword(ctx, provider, username, password);
-        } else {
-          throw new RequestError('session.insufficient_info');
-        }
-
-        return next();
-      }
-
-      throw new errors.InvalidRequest(`Prompt not supported: ${name}`);
-    }
-  );
-
-  router.post(
-    '/session/sign-in/phone-and-code',
-    koaGuard({ body: object({ phone: string(), code: string().optional() }) }),
+    '/session/sign-in/:signInFlowType',
+    koaGuard({
+      params: object({ signInFlowType: nativeEnum(SignInFlowType) }),
+      body: signInParametersGuard,
+    }),
     async (ctx, next) => {
       const {
         // Interaction's JWT identity: jti
@@ -68,6 +45,7 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
         // https://datatracker.ietf.org/doc/html/rfc7519#section-4.1.7
         jti,
         prompt: { name },
+        result,
       } = await provider.interactionDetails(ctx.req, ctx.res);
 
       if (name === 'consent') {
@@ -77,45 +55,28 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
       }
 
       if (name === 'login') {
-        const { phone, code } = ctx.guard.body;
+        const { signInFlowType } = ctx.guard.params;
 
-        if (phone && !code) {
-          await sendSignInWithPhonePasscode(ctx, jti, phone);
-        } else if (phone && code) {
-          await signInWithPhoneAndPasscode(ctx, provider, { jti, phone, code });
-        } else {
-          throw new RequestError('session.insufficient_info');
-        }
-
-        return next();
-      }
-
-      throw new errors.InvalidRequest(`Prompt not supported: ${name}`);
-    }
-  );
-
-  router.post(
-    '/session/sign-in/email-and-code',
-    koaGuard({ body: object({ email: string(), code: string().optional() }) }),
-    async (ctx, next) => {
-      const {
-        jti,
-        prompt: { name },
-      } = await provider.interactionDetails(ctx.req, ctx.res);
-
-      if (name === 'consent') {
-        ctx.body = { redirectTo: ctx.request.origin + '/session/consent' };
-
-        return next();
-      }
-
-      if (name === 'login') {
-        const { email, code } = ctx.guard.body;
-
-        if (email && !code) {
-          await sendSignInWithEmailPasscode(ctx, jti, email);
-        } else if (email && code) {
+        if (
+          signInFlowType === SignInFlowType.UsernameAndPassword &&
+          ctx.guard.body.UsernameAndPassword
+        ) {
+          const { username, password } = ctx.guard.body.UsernameAndPassword;
+          await signInWithUsernameAndPassword(ctx, provider, username, password);
+        } else if (signInFlowType === SignInFlowType.Email && ctx.guard.body.Email) {
+          const { email, code } = ctx.guard.body.Email;
           await signInWithEmailAndPasscode(ctx, provider, { jti, email, code });
+        } else if (signInFlowType === SignInFlowType.Phone && ctx.guard.body.Phone) {
+          const { phone, code } = ctx.guard.body.Phone;
+          await signInWithPhoneAndPasscode(ctx, provider, { jti, phone, code });
+        } else if (signInFlowType === SignInFlowType.Social && ctx.guard.body.Social) {
+          const { connectorId, code, state } = ctx.guard.body.Social;
+
+          if (connectorId && state && !code) {
+            await assignRedirectUrlForSocial(ctx, connectorId, state);
+          } else if (connectorId && code) {
+            await signInWithSocial(ctx, provider, { connectorId, code, result });
+          }
         } else {
           throw new RequestError('session.insufficient_info');
         }
@@ -164,45 +125,6 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
     }
   );
 
-  router.post(
-    '/session/sign-in/social',
-    koaGuard({
-      body: object({
-        connectorId: string(),
-        state: string().optional(),
-        code: string().optional(),
-      }),
-    }),
-    async (ctx, next) => {
-      const {
-        prompt: { name },
-        result,
-      } = await provider.interactionDetails(ctx.req, ctx.res);
-
-      if (name === 'consent') {
-        ctx.body = { redirectTo: ctx.request.origin + '/session/consent' };
-
-        return next();
-      }
-
-      if (name === 'login') {
-        const { connectorId, code, state } = ctx.guard.body;
-
-        if (connectorId && state && !code) {
-          await assignRedirectUrlForSocial(ctx, connectorId, state);
-        } else if (connectorId && code) {
-          await signInWithSocial(ctx, provider, { connectorId, code, result });
-        } else {
-          throw new RequestError('session.insufficient_info');
-        }
-
-        return next();
-      }
-
-      throw new errors.InvalidRequest(`Prompt not supported: ${name}`);
-    }
-  );
-
   router.post('/session/consent', async (ctx, next) => {
     const interaction = await provider.interactionDetails(ctx.req, ctx.res);
     const { session, grantId, params, prompt } = interaction;
@@ -245,75 +167,35 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
   });
 
   router.post(
-    '/session/register/username-and-password',
-    koaGuard({ body: object({ username: string(), password: string() }) }),
-    async (ctx, next) => {
-      const { username, password } = ctx.guard.body;
-
-      if (username && password) {
-        await registerWithUsernameAndPassword(ctx, provider, username, password);
-      } else {
-        throw new RequestError('session.insufficient_info');
-      }
-
-      return next();
-    }
-  );
-
-  router.post(
-    '/session/register/phone-and-code',
-    koaGuard({ body: object({ phone: string(), code: string().optional() }) }),
-    async (ctx, next) => {
-      const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
-      const { phone, code } = ctx.guard.body;
-
-      if (phone && !code) {
-        await sendPasscodeToPhone(ctx, jti, phone);
-      } else if (phone && code) {
-        await registerWithPhoneAndPasscode(ctx, provider, { jti, phone, code });
-      } else {
-        throw new RequestError('session.insufficient_info');
-      }
-
-      return next();
-    }
-  );
-
-  router.post(
-    '/session/register/email-and-code',
-    koaGuard({ body: object({ email: string(), code: string().optional() }) }),
-    async (ctx, next) => {
-      const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
-      const { email, code } = ctx.guard.body;
-
-      if (email && !code) {
-        await sendPasscodeToEmail(ctx, jti, email);
-      } else if (email && code) {
-        await registerWithEmailAndPasscode(ctx, provider, { jti, email, code });
-      } else {
-        throw new RequestError('session.insufficient_info');
-      }
-
-      return next();
-    }
-  );
-
-  router.post(
-    '/session/register/social',
+    '/session/register/:registerFlowType',
     koaGuard({
-      body: object({
-        connectorId: string(),
-        state: string().optional(),
-        code: string().optional(),
-      }),
+      params: object({ registerFlowType: nativeEnum(RegisterFlowType) }),
+      body: registerParametersGuard,
     }),
     async (ctx, next) => {
-      const { connectorId, state, code } = ctx.guard.body;
+      const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
+      const { registerFlowType } = ctx.guard.params;
 
-      if (connectorId && state && !code) {
-        await assignRedirectUrlForSocial(ctx, connectorId, state);
-      } else if (connectorId && code) {
-        await registerWithSocial(ctx, provider, { connectorId, code });
+      if (
+        registerFlowType === RegisterFlowType.UsernameAndPassword &&
+        ctx.guard.body.UsernameAndPassword
+      ) {
+        const { username, password } = ctx.guard.body.UsernameAndPassword;
+        await registerWithUsernameAndPassword(ctx, provider, username, password);
+      } else if (registerFlowType === RegisterFlowType.Email && ctx.guard.body.Email) {
+        const { email, code } = ctx.guard.body.Email;
+        await registerWithEmailAndPasscode(ctx, provider, { jti, email, code });
+      } else if (registerFlowType === RegisterFlowType.Phone && ctx.guard.body.Phone) {
+        const { phone, code } = ctx.guard.body.Phone;
+        await registerWithPhoneAndPasscode(ctx, provider, { jti, phone, code });
+      } else if (registerFlowType === RegisterFlowType.Social && ctx.guard.body.Social) {
+        const { connectorId, code, state } = ctx.guard.body.Social;
+
+        if (connectorId && state && !code) {
+          await assignRedirectUrlForSocial(ctx, connectorId, state);
+        } else if (connectorId && code) {
+          await registerWithSocial(ctx, provider, { connectorId, code });
+        }
       } else {
         throw new RequestError('session.insufficient_info');
       }

@@ -1,6 +1,7 @@
 import { PasscodeType, UserLogType } from '@logto/schemas';
 import { Context } from 'koa';
 import { Provider } from 'oidc-provider';
+import { z } from 'zod';
 
 import RequestError from '@/errors/RequestError';
 import { WithUserLogContext } from '@/middleware/koa-user-log';
@@ -198,3 +199,12 @@ export const registerWithSocial = async (
 };
 
 export { SignInFlowType as RegisterFlowType } from './sign-in';
+
+export const registerParametersGuard = z.object({
+  UsernameAndPassword: z.object({ username: z.string(), password: z.string() }).optional(),
+  Email: z.object({ email: z.string(), code: z.string() }).optional(),
+  Phone: z.object({ phone: z.string(), code: z.string() }).optional(),
+  Social: z
+    .object({ connectorId: z.string(), state: z.string(), code: z.string().optional() })
+    .optional(),
+});
