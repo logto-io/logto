@@ -1,10 +1,11 @@
 import { User, CreateUser, Users } from '@logto/schemas';
 import { sql } from 'slonik';
 
+import { buildFindMany } from '@/database/find-many';
 import { buildInsertInto } from '@/database/insert-into';
 import pool from '@/database/pool';
 import { buildUpdateWhere } from '@/database/update-where';
-import { convertToIdentifiers, OmitAutoSetFields } from '@/database/utils';
+import { convertToIdentifiers, getTotalRowCount, OmitAutoSetFields } from '@/database/utils';
 import { DeletionError } from '@/errors/SlonikError';
 
 const { table, fields } = convertToIdentifiers(Users);
@@ -85,11 +86,12 @@ export const hasUserWithIdentity = async (connectorId: string, userId: string) =
 
 export const insertUser = buildInsertInto<CreateUser, User>(pool, Users, { returning: true });
 
-export const findAllUsers = async () =>
-  pool.many<User>(sql`
-    select ${sql.join(Object.values(fields), sql`, `)}
-    from ${table}
-  `);
+export const findTotalNumberOfUsers = async () => getTotalRowCount(table);
+
+const findUserMany = buildFindMany<CreateUser, User>(pool, Users);
+
+export const findAllUsers = async (limit: number, offset: number) =>
+  findUserMany({ limit, offset });
 
 const updateUser = buildUpdateWhere<CreateUser, User>(pool, Users, true);
 
