@@ -27,6 +27,7 @@ export default function koaI18next<
       .map((code) => languageUtils.formatLanguageCode(code))
       .find((code) => languageUtils.isSupportedCode(code));
 
+    console.log(foundLanguage);
     await i18next.changeLanguage(foundLanguage);
     ctx.locale = i18next.language;
 
