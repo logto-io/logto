@@ -28,6 +28,18 @@ import assertThat from '@/utils/assert-that';
 import { AnonymousRouter } from './types';
 
 export default function sessionRoutes<T extends AnonymousRouter>(router: T, provider: Provider) {
+  router.post('/session', async (ctx, next) => {
+    const {
+      prompt: { name },
+    } = await provider.interactionDetails(ctx.req, ctx.res);
+
+    if (name === 'consent') {
+      ctx.body = { redirectTo: ctx.request.origin + '/session/consent' };
+
+      return next();
+    }
+  });
+
   router.post(
     '/session/sign-in/username-password',
     koaGuard({ body: object({ username: string(), password: string() }) }),
