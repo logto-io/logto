@@ -25,6 +25,7 @@ const mockUser: User = {
 
 describe('koaUserInfo middleware', () => {
   const next = jest.fn();
+
   it('should set userInfo to the context', async () => {
     findUserByIdSpy.mockImplementationOnce(async () => Promise.resolve(mockUser));
 
@@ -42,6 +43,7 @@ describe('koaUserInfo middleware', () => {
       primaryEmail: mockUser.primaryEmail,
       primaryPhone: mockUser.primaryPhone,
       roleNames: mockUser.roleNames,
+      customData: {},
     });
   });
 
