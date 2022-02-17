@@ -1,3 +1,6 @@
+import { createMockContext, Options } from '@shopify/jest-koa-mocks';
+import { MiddlewareType, Context } from 'koa';
+import Router, { IRouterParamContext } from 'koa-router';
 import { createMockPool, createMockQueryResult, QueryResultRowType } from 'slonik';
 import { PrimitiveValueExpressionType } from 'slonik/dist/src/types.d';
 
@@ -31,5 +34,27 @@ export const envVariablesSetUp = () => {
     ...process.env,
     OIDC_PROVIDER_PRIVATE_KEY_BASE64,
     UI_SIGN_IN_ROUTE,
+  };
+};
+
+export const emptyMiddleware =
+  <StateT, ContextT>(): MiddlewareType<StateT, ContextT> =>
+  // Intend to mock the async middleware
+  // eslint-disable-next-line unicorn/consistent-function-scoping
+  async (ctx, next) => {
+    return next();
+  };
+
+export const createContextWithRouteParamters = (
+  mockContestOptions?: Options<Record<string, unknown>>
+): Context & IRouterParamContext => {
+  const ctx = createMockContext(mockContestOptions);
+
+  return {
+    ...ctx,
+    params: {},
+    router: new Router(),
+    _matchedRoute: undefined,
+    _matchedRouteName: undefined,
   };
 };

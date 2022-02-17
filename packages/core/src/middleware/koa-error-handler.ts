@@ -3,10 +3,10 @@ import { Middleware } from 'koa';
 
 import RequestError from '@/errors/RequestError';
 
-export default function koaErrorHandler<StateT, ContextT>(): Middleware<
+export default function koaErrorHandler<StateT, ContextT, BodyT>(): Middleware<
   StateT,
   ContextT,
-  RequestErrorBody
+  BodyT | RequestErrorBody
 > {
   return async (ctx, next) => {
     try {

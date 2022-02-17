@@ -1,15 +1,5 @@
 import Koa from 'koa';
 
-/**
- * Need to mock env variables ahead
- */
-
-// eslint-disable-next-line import/order
-import { envVariablesSetUp } from '@/utils/test-utils';
-
-envVariablesSetUp();
-
-/* eslint-disable import/first */
 import * as koaErrorHandler from '@/middleware/koa-error-handler';
 import * as koaI18next from '@/middleware/koa-i18next';
 import * as koaOIDCErrorHandler from '@/middleware/koa-oidc-error-handler';
@@ -21,7 +11,6 @@ import * as initRouter from '@/routes/init';
 
 import initI18n from '../i18n/init';
 import initApp from './init';
-/* eslint-enable import/first */
 
 describe('App Init', () => {
   const listenMock = jest.spyOn(Koa.prototype, 'listen').mockImplementation(jest.fn());
