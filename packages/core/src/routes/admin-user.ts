@@ -123,6 +123,32 @@ export default function adminUserRoutes<T extends AuthedRouter>(router: T) {
     }
   );
 
+  router.patch(
+    '/users/:userId/password',
+    koaGuard({
+      params: object({ userId: string().min(1) }),
+      body: object({ password: string().min(6) }),
+    }),
+    async (ctx, next) => {
+      const {
+        params: { userId },
+        body: { password },
+      } = ctx.guard;
+
+      await findUserById(userId);
+
+      const { passwordEncrypted, passwordEncryptionSalt } = encryptUserPassword(userId, password);
+
+      const user = await updateUserById(userId, {
+        passwordEncryptionSalt,
+        passwordEncrypted,
+      });
+      ctx.body = pick(user, ...userInfoSelectFields);
+
+      return next();
+    }
+  );
+
   router.delete(
     '/users/:userId',
     koaGuard({
