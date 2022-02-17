@@ -5,6 +5,8 @@ export const userInfoSelectFields = Object.freeze([
   'username',
   'primaryEmail',
   'primaryPhone',
+  'name',
+  'avatar',
   'roleNames',
   'customData',
 ] as const);

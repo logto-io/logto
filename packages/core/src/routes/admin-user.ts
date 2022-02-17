@@ -95,6 +95,34 @@ export default function adminUserRoutes<T extends AuthedRouter>(router: T) {
   );
 
   router.patch(
+    '/users/:userId',
+    koaGuard({
+      params: object({ userId: string().min(1) }),
+      body: object({
+        name: string().min(3).optional(),
+        avatar: string().url().optional(),
+      }),
+    }),
+    async (ctx, next) => {
+      const {
+        params: { userId },
+        body: { name, avatar },
+      } = ctx.guard;
+
+      await findUserById(userId);
+
+      const user = await updateUserById(userId, {
+        name,
+        avatar,
+      });
+
+      ctx.body = pick(user, ...userInfoSelectFields);
+
+      return next();
+    }
+  );
+
+  router.patch(
     '/users/:userId/roleNames',
     koaGuard({
       params: object({ userId: string().min(1) }),
