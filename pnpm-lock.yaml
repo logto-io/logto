@@ -307,6 +307,45 @@ importers:
       webpack: 5.65.0
       webpack-dev-server: 3.11.3_webpack@5.65.0
 
+  packages/ui-new:
+    specifiers:
+      '@parcel/core': ^2.3.1
+      '@parcel/transformer-sass': ^2.3.1
+      '@silverhand/eslint-config': ^0.8.1
+      '@silverhand/eslint-config-react': ^0.8.1
+      '@silverhand/ts-config': ^0.8.1
+      '@silverhand/ts-config-react': ^0.8.1
+      '@types/react': ^17.0.14
+      '@types/react-dom': ^17.0.9
+      eslint: ^8.1.0
+      lint-staged: ^11.1.1
+      parcel: ^2.3.1
+      postcss: ^8.4.6
+      postcss-modules: ^4.3.0
+      prettier: ^2.3.2
+      react: ^17.0.2
+      react-dom: ^17.0.2
+      stylelint: ^13.13.1
+    dependencies:
+      react: 17.0.2
+      react-dom: 17.0.2_react@17.0.2
+    devDependencies:
+      '@parcel/core': 2.3.1
+      '@parcel/transformer-sass': 2.3.1_@parcel+core@2.3.1
+      '@silverhand/eslint-config': 0.8.1_b07be603d0ceb19daeedad1772e0f2c4
+      '@silverhand/eslint-config-react': 0.8.1_bde439a4d13c321a6cb4f974de44a545
+      '@silverhand/ts-config': 0.8.1_typescript@4.5.5
+      '@silverhand/ts-config-react': 0.8.1_typescript@4.5.5
+      '@types/react': 17.0.37
+      '@types/react-dom': 17.0.11
+      eslint: 8.4.1
+      lint-staged: 11.2.6
+      parcel: 2.3.1_postcss@8.4.6
+      postcss: 8.4.6
+      postcss-modules: 4.3.0_postcss@8.4.6
+      prettier: 2.5.1
+      stylelint: 13.13.1
+
 packages:
 
   /@babel/code-frame/7.10.4:
