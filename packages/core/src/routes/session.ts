@@ -1,10 +1,8 @@
 import { LogtoErrorCode } from '@logto/phrases';
-import { PasscodeType } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { Provider } from 'oidc-provider';
-import { nativeEnum, object, string } from 'zod';
+import { object, string } from 'zod';
 
-import RequestError from '@/errors/RequestError';
 import {
   registerWithSocial,
   registerWithEmailAndPasscode,
@@ -52,11 +50,17 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
   );
 
   router.post(
-    '/session/sign-in/phone-code',
-    koaGuard({ body: object({ phone: string(), code: string() }) }),
+    '/session/sign-in/passwordless/phone',
+    koaGuard({ body: object({ phone: string(), code: string().optional() }) }),
     async (ctx, next) => {
       const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
       const { phone, code } = ctx.guard.body;
+
+      if (!code) {
+        await sendSignInWithPhonePasscode(ctx, jti, phone);
+
+        return next();
+      }
       await signInWithPhoneAndPasscode(ctx, provider, { jti, phone, code });
 
       return next();
@@ -64,11 +68,17 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
   );
 
   router.post(
-    '/session/sign-in/email-code',
-    koaGuard({ body: object({ email: string(), code: string() }) }),
+    '/session/sign-in/passwordless/email',
+    koaGuard({ body: object({ email: string(), code: string().optional() }) }),
     async (ctx, next) => {
       const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
       const { email, code } = ctx.guard.body;
+
+      if (!code) {
+        await sendSignInWithEmailPasscode(ctx, jti, email);
+
+        return next();
+      }
       await signInWithEmailAndPasscode(ctx, provider, { jti, email, code });
 
       return next();
@@ -76,71 +86,21 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
   );
 
   router.post(
-    '/session/sign-in/social-code',
-    koaGuard({ body: object({ connectorId: string(), code: string() }) }),
+    '/session/sign-in/social',
+    koaGuard({
+      body: object({ connectorId: string(), code: string().optional(), state: string() }),
+    }),
     async (ctx, next) => {
       const { result } = await provider.interactionDetails(ctx.req, ctx.res);
-      const { connectorId, code } = ctx.guard.body;
+      const { connectorId, code, state } = ctx.guard.body;
+
+      if (!code) {
+        assertThat(state, 'session.insufficient_info');
+        await assignRedirectUrlForSocial(ctx, connectorId, state);
+
+        return next();
+      }
       await signInWithSocial(ctx, provider, { connectorId, code, result });
-
-      return next();
-    }
-  );
-
-  router.post(
-    '/session/passcodes/email',
-    koaGuard({
-      body: object({
-        type: nativeEnum(PasscodeType),
-        email: string(),
-      }),
-    }),
-    async (ctx, next) => {
-      const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
-      const { type, email } = ctx.guard.body;
-
-      if (type === PasscodeType.SignIn) {
-        await sendSignInWithEmailPasscode(ctx, jti, email);
-      } else if (type === PasscodeType.Register) {
-        await sendPasscodeToEmail(ctx, jti, email);
-      } else {
-        throw new RequestError('session.insufficient_info');
-      }
-
-      return next();
-    }
-  );
-
-  router.post(
-    '/session/passcodes/phone',
-    koaGuard({
-      body: object({
-        type: nativeEnum(PasscodeType),
-        phone: string(),
-      }),
-    }),
-    async (ctx, next) => {
-      const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
-      const { type, phone } = ctx.guard.body;
-
-      if (type === PasscodeType.SignIn) {
-        await sendSignInWithPhonePasscode(ctx, jti, phone);
-      } else if (type === PasscodeType.Register) {
-        await sendPasscodeToPhone(ctx, jti, phone);
-      } else {
-        throw new RequestError('session.insufficient_info');
-      }
-
-      return next();
-    }
-  );
-
-  router.post(
-    '/session/social-authorization-uri',
-    koaGuard({ body: object({ connectorId: string(), state: string() }) }),
-    async (ctx, next) => {
-      const { connectorId, state } = ctx.guard.body;
-      await assignRedirectUrlForSocial(ctx, connectorId, state);
 
       return next();
     }
@@ -199,11 +159,17 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
   );
 
   router.post(
-    '/session/register/phone-code',
-    koaGuard({ body: object({ phone: string(), code: string() }) }),
+    '/session/register/passwordless/phone',
+    koaGuard({ body: object({ phone: string(), code: string().optional() }) }),
     async (ctx, next) => {
       const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
       const { phone, code } = ctx.guard.body;
+
+      if (!code) {
+        await sendPasscodeToPhone(ctx, jti, phone);
+
+        return next();
+      }
       await registerWithPhoneAndPasscode(ctx, provider, { jti, phone, code });
 
       return next();
@@ -211,11 +177,17 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
   );
 
   router.post(
-    '/session/register/email-code',
-    koaGuard({ body: object({ email: string(), code: string() }) }),
+    '/session/register/passwordless/email',
+    koaGuard({ body: object({ email: string(), code: string().optional() }) }),
     async (ctx, next) => {
       const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
       const { email, code } = ctx.guard.body;
+
+      if (!code) {
+        await sendPasscodeToEmail(ctx, jti, email);
+
+        return next();
+      }
       await registerWithEmailAndPasscode(ctx, provider, { jti, email, code });
 
       return next();
@@ -223,10 +195,23 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
   );
 
   router.post(
-    '/session/register/social-code',
-    koaGuard({ body: object({ connectorId: string(), code: string() }) }),
+    '/session/register/social',
+    koaGuard({
+      body: object({
+        connectorId: string(),
+        code: string().optional(),
+        state: string().optional(),
+      }),
+    }),
     async (ctx, next) => {
-      const { connectorId, code } = ctx.guard.body;
+      const { connectorId, code, state } = ctx.guard.body;
+
+      if (!code) {
+        assertThat(state, 'session.insufficient_info');
+        await assignRedirectUrlForSocial(ctx, connectorId, state);
+
+        return next();
+      }
       await registerWithSocial(ctx, provider, { connectorId, code });
 
       return next();
