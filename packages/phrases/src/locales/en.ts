@@ -44,6 +44,7 @@ const errors = {
     provider_error: 'OIDC Internal Error: {{message}}.',
   },
   user: {
+    not_found: 'User not found',
     username_exists_register: 'The username has been registered.',
     email_exists_register: 'The email address has been registered.',
     phone_exists_register: 'The phone number has been registered.',

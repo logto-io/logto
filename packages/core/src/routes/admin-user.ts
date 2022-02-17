@@ -14,6 +14,7 @@ import {
   findTotalNumberOfUsers,
   findUserById,
   hasUser,
+  hasUserWithId,
   insertUser,
   updateUserById,
 } from '@/queries/user';
@@ -161,6 +162,15 @@ export default function adminUserRoutes<T extends AuthedRouter>(router: T) {
       const {
         params: { userId },
       } = ctx.guard;
+
+      assertThat(
+        !(await hasUserWithId(userId)),
+        new RequestError({
+          code: 'user.not_found',
+          status: 404,
+        })
+      );
+
       await clearUserCustomDataById(userId);
       ctx.status = 200;
 
