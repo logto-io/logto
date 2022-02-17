@@ -9,7 +9,7 @@ import koaGuard from '@/middleware/koa-guard';
 import koaPagination from '@/middleware/koa-pagination';
 import { findRolesByRoleNames } from '@/queries/roles';
 import {
-  deleteUserCustomDataById,
+  clearUserCustomDataById,
   findAllUsers,
   findTotalNumberOfUsers,
   findUserById,
@@ -161,7 +161,7 @@ export default function adminUserRoutes<T extends AuthedRouter>(router: T) {
       const {
         params: { userId },
       } = ctx.guard;
-      await deleteUserCustomDataById(userId);
+      await clearUserCustomDataById(userId);
       ctx.status = 200;
 
       return next();

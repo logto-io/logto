@@ -109,7 +109,7 @@ export const deleteUserById = async (id: string) => {
   }
 };
 
-export const deleteUserCustomDataById = async (id: string) => {
+export const clearUserCustomDataById = async (id: string) => {
   const { rowCount } = await pool.query<User>(sql`
     update ${table}
     set ${fields.customData}='{}'::jsonb
