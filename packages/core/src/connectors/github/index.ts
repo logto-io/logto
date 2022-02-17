@@ -2,16 +2,15 @@ import got, { RequestError as GotRequestError } from 'got';
 import { stringify } from 'query-string';
 import { z } from 'zod';
 
-import RequestError from '@/errors/RequestError';
-
 import {
-  ConnectorConfigError,
   ConnectorMetadata,
   GetAccessToken,
   GetAuthorizationUri,
   ValidateConfig,
   GetUserInfo,
   ConnectorType,
+  ConnectorError,
+  ConnectorErrorCodes,
 } from '../types';
 import { getConnectorConfig } from '../utilities';
 import { authorizationEndpoint, accessTokenEndpoint, scope, userInfoEndpoint } from './constant';
@@ -39,13 +38,13 @@ type GithubConfig = z.infer<typeof githubConfigGuard>;
 
 export const validateConfig: ValidateConfig = async (config: unknown) => {
   if (!config) {
-    throw new ConnectorConfigError('Missing config');
+    throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, 'Missing config');
   }
 
   const result = githubConfigGuard.safeParse(config);
 
   if (!result.success) {
-    throw new ConnectorConfigError(result.error.message);
+    throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, result.error.message);
   }
 };
 
@@ -82,10 +81,7 @@ export const getAccessToken: GetAccessToken = async (code) => {
     .json<AccessTokenResponse>();
 
   if (!accessToken) {
-    throw new RequestError({
-      code: 'connector.oauth_code_invalid',
-      status: 401,
-    });
+    throw new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid);
   }
 
   return accessToken;
@@ -121,10 +117,7 @@ export const getUserInfo: GetUserInfo = async (accessToken: string) => {
     };
   } catch (error: unknown) {
     if (error instanceof GotRequestError && error.response?.statusCode === 401) {
-      throw new RequestError({
-        code: 'connector.access_token_invalid',
-        status: 401,
-      });
+      throw new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid);
     }
     throw error;
   }

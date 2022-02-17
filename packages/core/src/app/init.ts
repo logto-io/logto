@@ -5,6 +5,7 @@ import Koa from 'koa';
 import koaLogger from 'koa-logger';
 
 import { port } from '@/env/consts';
+import koaConnectorErrorHandler from '@/middleware/koa-connector-error-handle';
 import koaErrorHandler from '@/middleware/koa-error-handler';
 import koaI18next from '@/middleware/koa-i18next';
 import koaOIDCErrorHandler from '@/middleware/koa-oidc-error-handler';
@@ -18,6 +19,7 @@ export default async function initApp(app: Koa): Promise<void> {
   app.use(koaErrorHandler());
   app.use(koaOIDCErrorHandler());
   app.use(koaSlonikErrorHandler());
+  app.use(koaConnectorErrorHandler());
 
   // TODO move to specific router (LOG-454)
   app.use(koaUserLog());
