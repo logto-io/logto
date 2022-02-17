@@ -9,6 +9,7 @@ import koaGuard from '@/middleware/koa-guard';
 import koaPagination from '@/middleware/koa-pagination';
 import { findRolesByRoleNames } from '@/queries/roles';
 import {
+  clearUserCustomDataById,
   findAllUsers,
   findTotalNumberOfUsers,
   findUserById,
@@ -146,6 +147,26 @@ export default function adminUserRoutes<T extends AuthedRouter>(router: T) {
       });
 
       ctx.body = pick(user, ...userInfoSelectFields);
+
+      return next();
+    }
+  );
+
+  router.delete(
+    '/users/:userId/custom-data',
+    koaGuard({
+      params: object({ userId: string().min(1) }),
+    }),
+    async (ctx, next) => {
+      const {
+        params: { userId },
+      } = ctx.guard;
+
+      await findUserById(userId);
+
+      await clearUserCustomDataById(userId);
+
+      ctx.status = 200;
 
       return next();
     }
