@@ -1,4 +1,4 @@
-import { customDataGuard, userInfoSelectFields } from '@logto/schemas';
+import { customDataGuard, userInfoSelectFields, Users } from '@logto/schemas';
 import pick from 'lodash.pick';
 import { InvalidInputError } from 'slonik';
 import { object, string } from 'zod';
@@ -164,14 +164,16 @@ export default function adminUserRoutes<T extends AuthedRouter>(router: T) {
       } = ctx.guard;
 
       assertThat(
-        !(await hasUserWithId(userId)),
+        await hasUserWithId(userId),
         new RequestError({
-          code: 'user.not_found',
+          code: 'entity.not_exists',
+          name: Users.tableSingular,
           status: 404,
         })
       );
 
       await clearUserCustomDataById(userId);
+
       ctx.status = 200;
 
       return next();
