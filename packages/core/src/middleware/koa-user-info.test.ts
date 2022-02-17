@@ -35,12 +35,13 @@ describe('koaUserInfo middleware', () => {
     };
 
     await koaUserInfo()(ctx, next);
+
     expect(ctx.userInfo).toEqual({
-      id: 'foo',
-      username: 'foo',
-      primaryEmail: 'foo@logto.io',
-      primaryPhone: '111111',
-      roleNames: ['admin'],
+      id: mockUser.id,
+      username: mockUser.username,
+      primaryEmail: mockUser.primaryEmail,
+      primaryPhone: mockUser.primaryPhone,
+      roleNames: mockUser.roleNames,
     });
   });
 
