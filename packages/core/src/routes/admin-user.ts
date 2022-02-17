@@ -16,6 +16,7 @@ import {
   findUserById,
   hasUser,
   hasUserWithEmail,
+  hasUserWithPhone,
   insertUser,
   updateUserById,
 } from '@/queries/user';
@@ -202,6 +203,36 @@ export default function adminUserRoutes<T extends AuthedRouter>(router: T) {
 
       const user = await updateUserById(userId, {
         primaryEmail,
+      });
+
+      ctx.body = pick(user, ...userInfoSelectFields);
+
+      return next();
+    }
+  );
+
+  router.patch(
+    '/users/:userId/primary-phone',
+    koaGuard({
+      params: object({ userId: string().min(1) }),
+      body: object({ primaryPhone: string() }),
+    }),
+    async (ctx, next) => {
+      const {
+        params: { userId },
+        body: { primaryPhone },
+      } = ctx.guard;
+
+      assertThat(
+        !(await hasUserWithPhone(primaryPhone)),
+        new RequestError({
+          code: 'user.phone_exists_register',
+          status: 422,
+        })
+      );
+
+      const user = await updateUserById(userId, {
+        primaryPhone,
       });
 
       ctx.body = pick(user, ...userInfoSelectFields);
