@@ -17,9 +17,9 @@ const App = () => {
   return (
     <AppContent theme={theme}>
       <Switch>
-        <Route exact path="/sign-in" component={SignIn} />
-        <Route exact path="/sign-in/consent" component={Consent} />
-        <Route exact path="/register" component={Register} />
+        <Route exact path="/sign-in/username-password" component={SignIn} />
+        <Route exact path="/consent" component={Consent} />
+        <Route exact path="/register/username-password" component={Register} />
       </Switch>
     </AppContent>
   );
