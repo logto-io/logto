@@ -45,7 +45,6 @@ const errors = {
     provider_error: 'OIDC 错误: {{message}}。',
   },
   user: {
-    not_found: '用户不存在。',
     username_exists_register: '用户名已被注册。',
     email_exists_register: '邮箱地址已被注册。',
     phone_exists_register: '手机号码已被注册。',
