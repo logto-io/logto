@@ -15,6 +15,7 @@ import {
   findTotalNumberOfUsers,
   findUserById,
   hasUser,
+  hasUserWithEmail,
   insertUser,
   updateUserById,
 } from '@/queries/user';
@@ -171,6 +172,36 @@ export default function adminUserRoutes<T extends AuthedRouter>(router: T) {
 
       const user = await updateUserById(userId, {
         username,
+      });
+
+      ctx.body = pick(user, ...userInfoSelectFields);
+
+      return next();
+    }
+  );
+
+  router.patch(
+    '/users/:userId/primary-email',
+    koaGuard({
+      params: object({ userId: string().min(1) }),
+      body: object({ primaryEmail: string().email() }),
+    }),
+    async (ctx, next) => {
+      const {
+        params: { userId },
+        body: { primaryEmail },
+      } = ctx.guard;
+
+      assertThat(
+        !(await hasUserWithEmail(primaryEmail)),
+        new RequestError({
+          code: 'user.email_exists_register',
+          status: 422,
+        })
+      );
+
+      const user = await updateUserById(userId, {
+        primaryEmail,
       });
 
       ctx.body = pick(user, ...userInfoSelectFields);
