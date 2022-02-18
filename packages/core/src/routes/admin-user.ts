@@ -21,6 +21,7 @@ import {
   updateUserById,
 } from '@/queries/user';
 import assertThat from '@/utils/assert-that';
+import { emailRegEx, phoneRegEx } from '@/utils/regex';
 
 import { AuthedRouter } from './types';
 
@@ -158,13 +159,15 @@ export default function adminUserRoutes<T extends AuthedRouter>(router: T) {
     '/users/:userId/primary-email',
     koaGuard({
       params: object({ userId: string() }),
-      body: object({ primaryEmail: string().email() }),
+      body: object({ primaryEmail: string() }),
     }),
     async (ctx, next) => {
       const {
         params: { userId },
         body: { primaryEmail },
       } = ctx.guard;
+
+      assertThat(emailRegEx.test(primaryEmail), new RequestError('user.invalid_email'));
 
       assertThat(
         !(await hasUserWithEmail(primaryEmail)),
@@ -195,6 +198,8 @@ export default function adminUserRoutes<T extends AuthedRouter>(router: T) {
         params: { userId },
         body: { primaryPhone },
       } = ctx.guard;
+
+      assertThat(phoneRegEx.test(primaryPhone), new RequestError('user.invalid_phone'));
 
       assertThat(
         !(await hasUserWithPhone(primaryPhone)),
