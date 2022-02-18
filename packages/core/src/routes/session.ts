@@ -1,3 +1,5 @@
+import path from 'path';
+
 import { LogtoErrorCode } from '@logto/phrases';
 import { conditional } from '@silverhand/essentials';
 import { Provider } from 'oidc-provider';
@@ -32,7 +34,7 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
     } = await provider.interactionDetails(ctx.req, ctx.res);
 
     if (name === 'consent') {
-      ctx.body = { redirectTo: ctx.request.origin + '/session/consent' };
+      ctx.body = { redirectTo: path.join(ctx.request.origin, '/session/consent') };
 
       return next();
     }
@@ -61,6 +63,7 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
 
         return next();
       }
+
       await signInWithPhoneAndPasscode(ctx, provider, { jti, phone, code });
 
       return next();
@@ -79,6 +82,7 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
 
         return next();
       }
+
       await signInWithEmailAndPasscode(ctx, provider, { jti, email, code });
 
       return next();
@@ -100,6 +104,7 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
 
         return next();
       }
+
       await signInWithSocial(ctx, provider, { connectorId, code, result });
 
       return next();
@@ -170,6 +175,7 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
 
         return next();
       }
+
       await registerWithPhoneAndPasscode(ctx, provider, { jti, phone, code });
 
       return next();
@@ -188,6 +194,7 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
 
         return next();
       }
+
       await registerWithEmailAndPasscode(ctx, provider, { jti, email, code });
 
       return next();
@@ -212,6 +219,7 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
 
         return next();
       }
+
       await registerWithSocial(ctx, provider, { connectorId, code });
 
       return next();
