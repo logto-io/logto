@@ -28,5 +28,8 @@
   "engines": {
     "node": ">=14.15.0",
     "pnpm": ">=6"
+  },
+  "alias": {
+    "html-parse-stringify": "html-parse-stringify/dist/html-parse-stringify.module.js"
   }
 }

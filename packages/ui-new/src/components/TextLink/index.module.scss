@@ -1,0 +1,12 @@
+@use '@/scss/underscore' as _;
+
+.link {
+  color: var(--color-button-background);
+  font: var(--font-body-bold);
+  transition: var(--transition-default-control);
+  cursor: pointer;
+
+  &:hover {
+    color: var(--color-button-background-hover);
+  }
+}

@@ -1,0 +1,50 @@
+@use '@/scss/underscore' as _;
+
+
+.wrapper {
+  position: relative;
+  padding: _.unit(8);
+  height: 100%;
+  @include _.flex-colomn;
+}
+
+.form {
+  width: 100%;
+  @include _.flex-colomn;
+
+  > * {
+    margin-bottom: _.unit(1.5);
+  }
+
+  .title {
+    font: var(--font-heading-1);
+    color: var(--color-heading);
+    margin-bottom: _.unit(9);
+  }
+
+  .box {
+    margin-bottom: _.unit(-6);
+  }
+
+  .box,
+  > input:not([type='button']) {
+    margin-top: _.unit(3);
+    width: 100%;
+    max-width: 320px;
+  }
+
+  > input[type='button'] {
+    margin-top: _.unit(12);
+  }
+
+  .haveAccount {
+    position: absolute;
+    bottom: _.unit(10);
+  }
+
+  .prefix {
+    font: var(--font-body-bold);
+    color: var(--color-placeholder);
+    margin-right: _.unit(0.5);
+  }
+}
