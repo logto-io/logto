@@ -59,6 +59,7 @@
     "@types/lodash.pick": "^4.4.6",
     "@types/node": "^16.3.1",
     "@types/oidc-provider": "^7.8.0",
+    "@types/supertest": "^2.0.11",
     "codecov": "^3.8.3",
     "eslint": "^8.1.0",
     "jest": "^27.0.6",
@@ -67,6 +68,7 @@
     "nock": "^13.2.2",
     "openapi-types": "^9.1.0",
     "prettier": "^2.3.2",
+    "supertest": "^6.2.2",
     "ts-jest": "^27.0.5",
     "tsc-watch": "^4.4.0",
     "typescript": "^4.5.5"
