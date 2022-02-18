@@ -42,7 +42,7 @@ export default function adminUserRoutes<T extends AuthedRouter>(router: T) {
   router.get(
     '/users/:userId',
     koaGuard({
-      params: object({ userId: string().min(1) }),
+      params: object({ userId: string() }),
     }),
     async (ctx, next) => {
       const {
@@ -100,7 +100,7 @@ export default function adminUserRoutes<T extends AuthedRouter>(router: T) {
   router.patch(
     '/users/:userId',
     koaGuard({
-      params: object({ userId: string().min(1) }),
+      params: object({ userId: string() }),
       body: object({
         name: string().min(3).optional(),
         avatar: string().url().optional(),
@@ -128,7 +128,7 @@ export default function adminUserRoutes<T extends AuthedRouter>(router: T) {
   router.patch(
     '/users/:userId/password',
     koaGuard({
-      params: object({ userId: string().min(1) }),
+      params: object({ userId: string() }),
       body: object({ password: string().min(6) }),
     }),
     async (ctx, next) => {
@@ -154,7 +154,7 @@ export default function adminUserRoutes<T extends AuthedRouter>(router: T) {
   router.patch(
     '/users/:userId/username',
     koaGuard({
-      params: object({ userId: string().min(1) }),
+      params: object({ userId: string() }),
       body: object({ username: string().min(3) }),
     }),
     async (ctx, next) => {
@@ -184,7 +184,7 @@ export default function adminUserRoutes<T extends AuthedRouter>(router: T) {
   router.patch(
     '/users/:userId/primary-email',
     koaGuard({
-      params: object({ userId: string().min(1) }),
+      params: object({ userId: string() }),
       body: object({ primaryEmail: string().email() }),
     }),
     async (ctx, next) => {
@@ -214,7 +214,7 @@ export default function adminUserRoutes<T extends AuthedRouter>(router: T) {
   router.patch(
     '/users/:userId/primary-phone',
     koaGuard({
-      params: object({ userId: string().min(1) }),
+      params: object({ userId: string() }),
       body: object({ primaryPhone: string() }),
     }),
     async (ctx, next) => {
@@ -244,7 +244,7 @@ export default function adminUserRoutes<T extends AuthedRouter>(router: T) {
   router.delete(
     '/users/:userId',
     koaGuard({
-      params: object({ userId: string().min(1) }),
+      params: object({ userId: string() }),
     }),
     async (ctx, next) => {
       const {
@@ -264,7 +264,7 @@ export default function adminUserRoutes<T extends AuthedRouter>(router: T) {
   router.patch(
     '/users/:userId/roleNames',
     koaGuard({
-      params: object({ userId: string().min(1) }),
+      params: object({ userId: string() }),
       body: object({ roleNames: string().array() }),
     }),
     async (ctx, next) => {
@@ -298,7 +298,7 @@ export default function adminUserRoutes<T extends AuthedRouter>(router: T) {
   router.patch(
     '/users/:userId/custom-data',
     koaGuard({
-      params: object({ userId: string().min(1) }),
+      params: object({ userId: string() }),
       body: object({ customData: customDataGuard }),
     }),
     async (ctx, next) => {
@@ -322,7 +322,7 @@ export default function adminUserRoutes<T extends AuthedRouter>(router: T) {
   router.delete(
     '/users/:userId/custom-data',
     koaGuard({
-      params: object({ userId: string().min(1) }),
+      params: object({ userId: string() }),
     }),
     async (ctx, next) => {
       const {
