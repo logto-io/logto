@@ -15,13 +15,10 @@ import {
   findTotalNumberOfUsers,
   findUserById,
   hasUser,
-  hasUserWithEmail,
-  hasUserWithPhone,
   insertUser,
   updateUserById,
 } from '@/queries/user';
 import assertThat from '@/utils/assert-that';
-import { emailRegEx, phoneRegEx } from '@/utils/regex';
 
 import { AuthedRouter } from './types';
 
@@ -147,70 +144,6 @@ export default function adminUserRoutes<T extends AuthedRouter>(router: T) {
         passwordEncrypted,
         passwordEncryptionMethod,
         passwordEncryptionSalt,
-      });
-
-      ctx.body = pick(user, ...userInfoSelectFields);
-
-      return next();
-    }
-  );
-
-  router.patch(
-    '/users/:userId/primary-email',
-    koaGuard({
-      params: object({ userId: string() }),
-      body: object({ primaryEmail: string() }),
-    }),
-    async (ctx, next) => {
-      const {
-        params: { userId },
-        body: { primaryEmail },
-      } = ctx.guard;
-
-      assertThat(emailRegEx.test(primaryEmail), new RequestError('user.invalid_email'));
-
-      assertThat(
-        !(await hasUserWithEmail(primaryEmail)),
-        new RequestError({
-          code: 'user.email_exists_register',
-          status: 422,
-        })
-      );
-
-      const user = await updateUserById(userId, {
-        primaryEmail,
-      });
-
-      ctx.body = pick(user, ...userInfoSelectFields);
-
-      return next();
-    }
-  );
-
-  router.patch(
-    '/users/:userId/primary-phone',
-    koaGuard({
-      params: object({ userId: string() }),
-      body: object({ primaryPhone: string() }),
-    }),
-    async (ctx, next) => {
-      const {
-        params: { userId },
-        body: { primaryPhone },
-      } = ctx.guard;
-
-      assertThat(phoneRegEx.test(primaryPhone), new RequestError('user.invalid_phone'));
-
-      assertThat(
-        !(await hasUserWithPhone(primaryPhone)),
-        new RequestError({
-          code: 'user.phone_exists_register',
-          status: 422,
-        })
-      );
-
-      const user = await updateUserById(userId, {
-        primaryPhone,
       });
 
       ctx.body = pick(user, ...userInfoSelectFields);
