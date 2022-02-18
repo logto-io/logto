@@ -1,4 +1,5 @@
-import { User } from '@logto/schemas';
+import { User, userInfoSelectFields } from '@logto/schemas';
+import pick from 'lodash.pick';
 
 import RequestError from '@/errors/RequestError';
 import * as userQueries from '@/queries/user';
@@ -37,14 +38,7 @@ describe('koaUserInfo middleware', () => {
 
     await koaUserInfo()(ctx, next);
 
-    expect(ctx.userInfo).toEqual({
-      id: mockUser.id,
-      username: mockUser.username,
-      primaryEmail: mockUser.primaryEmail,
-      primaryPhone: mockUser.primaryPhone,
-      roleNames: mockUser.roleNames,
-      customData: {},
-    });
+    expect(ctx.userInfo).toEqual(pick(mockUser, ...userInfoSelectFields));
   });
 
   it('should throw if is not authenticated', async () => {
