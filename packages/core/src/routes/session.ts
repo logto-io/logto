@@ -1,9 +1,10 @@
+import path from 'path';
+
 import { LogtoErrorCode } from '@logto/phrases';
 import { conditional } from '@silverhand/essentials';
-import { Provider, errors } from 'oidc-provider';
+import { Provider } from 'oidc-provider';
 import { object, string } from 'zod';
 
-import RequestError from '@/errors/RequestError';
 import {
   registerWithSocial,
   registerWithEmailAndPasscode,
@@ -27,61 +28,86 @@ import assertThat from '@/utils/assert-that';
 import { AnonymousRouter } from './types';
 
 export default function sessionRoutes<T extends AnonymousRouter>(router: T, provider: Provider) {
+  router.post('/session', async (ctx, next) => {
+    const {
+      prompt: { name },
+    } = await provider.interactionDetails(ctx.req, ctx.res);
+
+    if (name === 'consent') {
+      ctx.body = { redirectTo: path.join(ctx.request.origin, '/session/consent') };
+
+      return next();
+    }
+  });
+
   router.post(
-    '/session',
+    '/session/sign-in/username-password',
+    koaGuard({ body: object({ username: string(), password: string() }) }),
+    async (ctx, next) => {
+      const { username, password } = ctx.guard.body;
+      await signInWithUsernameAndPassword(ctx, provider, username, password);
+
+      return next();
+    }
+  );
+
+  router.post(
+    '/session/sign-in/passwordless/phone',
+    koaGuard({ body: object({ phone: string(), code: string().optional() }) }),
+    async (ctx, next) => {
+      const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
+      const { phone, code } = ctx.guard.body;
+
+      if (!code) {
+        await sendSignInWithPhonePasscode(ctx, jti, phone);
+
+        return next();
+      }
+
+      await signInWithPhoneAndPasscode(ctx, provider, { jti, phone, code });
+
+      return next();
+    }
+  );
+
+  router.post(
+    '/session/sign-in/passwordless/email',
+    koaGuard({ body: object({ email: string(), code: string().optional() }) }),
+    async (ctx, next) => {
+      const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
+      const { email, code } = ctx.guard.body;
+
+      if (!code) {
+        await sendSignInWithEmailPasscode(ctx, jti, email);
+
+        return next();
+      }
+
+      await signInWithEmailAndPasscode(ctx, provider, { jti, email, code });
+
+      return next();
+    }
+  );
+
+  router.post(
+    '/session/sign-in/social',
     koaGuard({
-      body: object({
-        username: string().optional(),
-        password: string().optional(),
-        email: string().optional(),
-        phone: string().optional(),
-        code: string().optional(),
-        connectorId: string().optional(),
-        state: string().optional(),
-      }),
+      body: object({ connectorId: string(), code: string().optional(), state: string() }),
     }),
     async (ctx, next) => {
-      const interaction = await provider.interactionDetails(ctx.req, ctx.res);
-      const {
-        // Interaction's JWT identity: jti
-        // https://github.com/panva/node-oidc-provider/blob/main/docs/README.md#user-flows
-        // https://datatracker.ietf.org/doc/html/rfc7519#section-4.1.7
-        jti,
-        prompt: { name },
-        result,
-      } = interaction;
+      const { result } = await provider.interactionDetails(ctx.req, ctx.res);
+      const { connectorId, code, state } = ctx.guard.body;
 
-      if (name === 'consent') {
-        ctx.body = { redirectTo: ctx.request.origin + '/session/consent' };
+      if (!code) {
+        assertThat(state, 'session.insufficient_info');
+        await assignRedirectUrlForSocial(ctx, connectorId, state);
 
         return next();
       }
 
-      if (name === 'login') {
-        const { username, password, email, phone, code, connectorId, state } = ctx.guard.body;
+      await signInWithSocial(ctx, provider, { connectorId, code, result });
 
-        if (connectorId && state && !code) {
-          await assignRedirectUrlForSocial(ctx, connectorId, state);
-        } else if (connectorId && code) {
-          await signInWithSocial(ctx, provider, { connectorId, code, result });
-        } else if (email && !code) {
-          await sendSignInWithEmailPasscode(ctx, jti, email);
-        } else if (email && code) {
-          await signInWithEmailAndPasscode(ctx, provider, { jti, email, code });
-        } else if (phone && !code) {
-          await sendSignInWithPhonePasscode(ctx, jti, phone);
-        } else if (phone && code) {
-          await signInWithPhoneAndPasscode(ctx, provider, { jti, phone, code });
-        } else if (username && password) {
-          await signInWithUsernameAndPassword(ctx, provider, username, password);
-        } else {
-          throw new RequestError('session.insufficient_info');
-        }
-
-        return next();
-      }
-
-      throw new errors.InvalidRequest(`Prompt not supported: ${name}`);
+      return next();
     }
   );
 
@@ -127,40 +153,74 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
   });
 
   router.post(
-    '/session/register',
+    '/session/register/username-password',
+    koaGuard({ body: object({ username: string(), password: string() }) }),
+    async (ctx, next) => {
+      const { username, password } = ctx.guard.body;
+      await registerWithUsernameAndPassword(ctx, provider, username, password);
+
+      return next();
+    }
+  );
+
+  router.post(
+    '/session/register/passwordless/phone',
+    koaGuard({ body: object({ phone: string(), code: string().optional() }) }),
+    async (ctx, next) => {
+      const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
+      const { phone, code } = ctx.guard.body;
+
+      if (!code) {
+        await sendPasscodeToPhone(ctx, jti, phone);
+
+        return next();
+      }
+
+      await registerWithPhoneAndPasscode(ctx, provider, { jti, phone, code });
+
+      return next();
+    }
+  );
+
+  router.post(
+    '/session/register/passwordless/email',
+    koaGuard({ body: object({ email: string(), code: string().optional() }) }),
+    async (ctx, next) => {
+      const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
+      const { email, code } = ctx.guard.body;
+
+      if (!code) {
+        await sendPasscodeToEmail(ctx, jti, email);
+
+        return next();
+      }
+
+      await registerWithEmailAndPasscode(ctx, provider, { jti, email, code });
+
+      return next();
+    }
+  );
+
+  router.post(
+    '/session/register/social',
     koaGuard({
       body: object({
-        username: string().min(3).optional(),
-        password: string().min(6).optional(),
-        email: string().optional(),
-        phone: string().optional(),
+        connectorId: string(),
         code: string().optional(),
-        connectorId: string().optional(),
         state: string().optional(),
       }),
     }),
     async (ctx, next) => {
-      const interaction = await provider.interactionDetails(ctx.req, ctx.res);
-      const { jti } = interaction;
-      const { username, password, email, phone, code, connectorId, state } = ctx.guard.body;
+      const { connectorId, code, state } = ctx.guard.body;
 
-      if (connectorId && state && !code) {
+      if (!code) {
+        assertThat(state, 'session.insufficient_info');
         await assignRedirectUrlForSocial(ctx, connectorId, state);
-      } else if (connectorId && state && code) {
-        await registerWithSocial(ctx, provider, { connectorId, code });
-      } else if (email && !code) {
-        await sendPasscodeToEmail(ctx, jti, email);
-      } else if (email && code) {
-        await registerWithEmailAndPasscode(ctx, provider, { jti, email, code });
-      } else if (phone && !code) {
-        await sendPasscodeToPhone(ctx, jti, phone);
-      } else if (phone && code) {
-        await registerWithPhoneAndPasscode(ctx, provider, { jti, phone, code });
-      } else if (username && password) {
-        await registerWithUsernameAndPassword(ctx, provider, username, password);
-      } else {
-        throw new RequestError('session.insufficient_info');
+
+        return next();
       }
+
+      await registerWithSocial(ctx, provider, { connectorId, code });
 
       return next();
     }
