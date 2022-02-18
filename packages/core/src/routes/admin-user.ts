@@ -155,36 +155,6 @@ export default function adminUserRoutes<T extends AuthedRouter>(router: T) {
   );
 
   router.patch(
-    '/users/:userId/username',
-    koaGuard({
-      params: object({ userId: string() }),
-      body: object({ username: string().min(3) }),
-    }),
-    async (ctx, next) => {
-      const {
-        params: { userId },
-        body: { username },
-      } = ctx.guard;
-
-      assertThat(
-        !(await hasUser(username)),
-        new RequestError({
-          code: 'user.username_exists_register',
-          status: 422,
-        })
-      );
-
-      const user = await updateUserById(userId, {
-        username,
-      });
-
-      ctx.body = pick(user, ...userInfoSelectFields);
-
-      return next();
-    }
-  );
-
-  router.patch(
     '/users/:userId/primary-email',
     koaGuard({
       params: object({ userId: string() }),
