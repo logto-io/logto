@@ -20,6 +20,8 @@ importers:
 
   packages/console:
     specifiers:
+      '@logto/phrases': ^0.1.0
+      '@logto/schemas': ^0.1.0
       '@parcel/core': ^2.3.1
       '@parcel/transformer-sass': ^2.3.1
       '@silverhand/eslint-config': ^0.8.1
@@ -39,6 +41,8 @@ importers:
       stylelint: ^13.13.1
       typescript: ^4.5.5
     dependencies:
+      '@logto/phrases': link:../phrases
+      '@logto/schemas': link:../schemas
       react: 17.0.2
       react-dom: 17.0.2_react@17.0.2
     devDependencies:
@@ -166,6 +170,7 @@ importers:
 
   packages/phrases:
     specifiers:
+      '@logto/schemas': ^0.1.0
       '@silverhand/eslint-config': ^0.8.1
       '@silverhand/essentials': ^1.1.4
       '@silverhand/ts-config': ^0.8.1
@@ -174,6 +179,7 @@ importers:
       prettier: ^2.3.2
       typescript: ^4.5.5
     dependencies:
+      '@logto/schemas': link:../schemas
       '@silverhand/essentials': 1.1.4
     devDependencies:
       '@silverhand/eslint-config': 0.8.1_b07be603d0ceb19daeedad1772e0f2c4
@@ -309,6 +315,8 @@ importers:
 
   packages/ui-new:
     specifiers:
+      '@logto/phrases': ^0.1.0
+      '@logto/schemas': ^0.1.0
       '@parcel/core': ^2.3.1
       '@parcel/transformer-sass': ^2.3.1
       '@silverhand/eslint-config': ^0.8.1
@@ -317,7 +325,12 @@ importers:
       '@silverhand/ts-config-react': ^0.8.1
       '@types/react': ^17.0.14
       '@types/react-dom': ^17.0.9
+      '@types/react-router-dom': ^5.3.2
+      classnames: ^2.3.1
       eslint: ^8.1.0
+      i18next: ^21.6.11
+      i18next-browser-languagedetector: ^6.1.3
+      ky: ^0.29.0
       lint-staged: ^11.1.1
       parcel: ^2.3.1
       postcss: ^8.4.6
@@ -325,10 +338,20 @@ importers:
       prettier: ^2.3.2
       react: ^17.0.2
       react-dom: ^17.0.2
+      react-i18next: ^11.15.4
+      react-router-dom: ^5.2.0
       stylelint: ^13.13.1
     dependencies:
+      '@logto/phrases': link:../phrases
+      '@logto/schemas': link:../schemas
+      classnames: 2.3.1
+      i18next: 21.6.11
+      i18next-browser-languagedetector: 6.1.3
+      ky: 0.29.0
       react: 17.0.2
       react-dom: 17.0.2_react@17.0.2
+      react-i18next: 11.15.4_3fb644aa30122a07f960d67fa51d6dc1
+      react-router-dom: 5.3.0_react@17.0.2
     devDependencies:
       '@parcel/core': 2.3.1
       '@parcel/transformer-sass': 2.3.1_@parcel+core@2.3.1
@@ -338,6 +361,7 @@ importers:
       '@silverhand/ts-config-react': 0.8.1_typescript@4.5.5
       '@types/react': 17.0.37
       '@types/react-dom': 17.0.11
+      '@types/react-router-dom': 5.3.2
       eslint: 8.4.1
       lint-staged: 11.2.6
       parcel: 2.3.1_postcss@8.4.6
@@ -9248,8 +9272,20 @@ packages:
       '@babel/runtime': 7.16.3
     dev: false
 
+  /i18next-browser-languagedetector/6.1.3:
+    resolution: {integrity: sha512-T+oGXHXtrur14CGnZZ7qQ07X38XJQEI00b/4ILrtO6xPbwTlQ1wtMZC2H+tBULixHuVUXv8LKbxfjyITJkezUg==}
+    dependencies:
+      '@babel/runtime': 7.16.3
+    dev: false
+
   /i18next/20.6.1:
     resolution: {integrity: sha512-yCMYTMEJ9ihCwEQQ3phLo7I/Pwycf8uAx+sRHwwk5U9Aui/IZYgQRyMqXafQOw5QQ7DM1Z+WyEXWIqSuJHhG2A==}
+    dependencies:
+      '@babel/runtime': 7.16.3
+    dev: false
+
+  /i18next/21.6.11:
+    resolution: {integrity: sha512-tJ2+o0lVO+fhi8bPkCpBAeY1SgkqmQm5NzgPWCQssBrywJw98/o+Kombhty5nxQOpHtvMmsxcOopczUiH6bJxQ==}
     dependencies:
       '@babel/runtime': 7.16.3
     dev: false
@@ -11321,6 +11357,11 @@ packages:
 
   /ky/0.28.7:
     resolution: {integrity: sha512-a23i6qSr/ep15vdtw/zyEQIDLoUaKDg9Jf04CYl/0ns/wXNYna26zJpI+MeIFaPeDvkrjLPrKtKOiiI3IE53RQ==}
+    engines: {node: '>=12'}
+    dev: false
+
+  /ky/0.29.0:
+    resolution: {integrity: sha512-01TBSOqlHmLfcQhHseugGHLxPtU03OyZWaLDWt5MfzCkijG6xWFvAQPhKVn0cR2MMjYvBP9keQ8A3+rQEhLO5g==}
     engines: {node: '>=12'}
     dev: false
 
@@ -14815,6 +14856,27 @@ packages:
       html-parse-stringify: 3.0.1
       i18next: 20.6.1
       react: 17.0.2
+    dev: false
+
+  /react-i18next/11.15.4_3fb644aa30122a07f960d67fa51d6dc1:
+    resolution: {integrity: sha512-jKJNAcVcbPGK+yrTcXhLblgPY16n6NbpZZL3Mk8nswj1v3ayIiUBVDU09SgqnT+DluyQBS97hwSvPU5yVFG0yg==}
+    peerDependencies:
+      i18next: '>= 19.0.0'
+      react: '>= 16.8.0'
+      react-dom: '*'
+      react-native: '*'
+    peerDependenciesMeta:
+      react-dom:
+        optional: true
+      react-native:
+        optional: true
+    dependencies:
+      '@babel/runtime': 7.16.3
+      html-escaper: 2.0.2
+      html-parse-stringify: 3.0.1
+      i18next: 21.6.11
+      react: 17.0.2
+      react-dom: 17.0.2_react@17.0.2
     dev: false
 
   /react-is/16.13.1:
