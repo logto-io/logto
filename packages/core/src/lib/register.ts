@@ -1,6 +1,6 @@
 import { PasscodeType, UserLogType } from '@logto/schemas';
 import { Context } from 'koa';
-import { Provider } from 'oidc-provider';
+import { InteractionResults, Provider } from 'oidc-provider';
 
 import { SocialUserInfo } from '@/connectors/types';
 import RequestError from '@/errors/RequestError';
