@@ -323,6 +323,8 @@ importers:
       '@silverhand/eslint-config-react': ^0.8.1
       '@silverhand/ts-config': ^0.8.1
       '@silverhand/ts-config-react': ^0.8.1
+      '@testing-library/react': ^12.0.0
+      '@types/jest': ^27.4.0
       '@types/react': ^17.0.14
       '@types/react-dom': ^17.0.9
       '@types/react-router-dom': ^5.3.2
@@ -359,6 +361,8 @@ importers:
       '@silverhand/eslint-config-react': 0.8.1_bde439a4d13c321a6cb4f974de44a545
       '@silverhand/ts-config': 0.8.1_typescript@4.5.5
       '@silverhand/ts-config-react': 0.8.1_typescript@4.5.5
+      '@testing-library/react': 12.1.2_react-dom@17.0.2+react@17.0.2
+      '@types/jest': 27.4.0
       '@types/react': 17.0.37
       '@types/react-dom': 17.0.11
       '@types/react-router-dom': 5.3.2
@@ -4224,6 +4228,13 @@ packages:
 
   /@types/jest/27.0.3:
     resolution: {integrity: sha512-cmmwv9t7gBYt7hNKH5Spu7Kuu/DotGa+Ff+JGRKZ4db5eh8PnKS4LuebJ3YLUoyOyIHraTGyULn23YtEAm0VSg==}
+    dependencies:
+      jest-diff: 27.4.2
+      pretty-format: 27.4.2
+    dev: true
+
+  /@types/jest/27.4.0:
+    resolution: {integrity: sha512-gHl8XuC1RZ8H2j5sHv/JqsaxXkDDM9iDOgu0Wp8sjs4u/snb2PVehyWXJPr+ORA0RPpgw231mnutWI1+0hgjIQ==}
     dependencies:
       jest-diff: 27.4.2
       pretty-format: 27.4.2
