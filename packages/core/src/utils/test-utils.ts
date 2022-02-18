@@ -6,8 +6,6 @@ import pick from 'lodash.pick';
 import { createMockPool, createMockQueryResult, QueryResultRowType } from 'slonik';
 import { PrimitiveValueExpressionType } from 'slonik/dist/src/types.d';
 
-import { WithAuthContext } from '@/middleware/koa-auth';
-
 export const mockUser: User = {
   id: 'foo',
   username: 'foo',
@@ -65,15 +63,5 @@ export const createContextWithRouteParameters = (
     router: new Router(),
     _matchedRoute: undefined,
     _matchedRouteName: undefined,
-  };
-};
-
-export const mockKoaAuthMiddleware = <StateT, ContextT extends IRouterParamContext, ResponseBodyT>(
-  userId = 'foo'
-): MiddlewareType<StateT, WithAuthContext<ContextT>, ResponseBodyT> => {
-  return async (ctx, next) => {
-    ctx.auth = userId;
-
-    return next();
   };
 };
