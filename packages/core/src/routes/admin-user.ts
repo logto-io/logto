@@ -139,12 +139,15 @@ export default function adminUserRoutes<T extends AuthedRouter>(router: T) {
 
       await findUserById(userId);
 
-      const { passwordEncrypted, passwordEncryptionSalt } = encryptUserPassword(userId, password);
+      const { passwordEncryptionSalt, passwordEncrypted, passwordEncryptionMethod } =
+        encryptUserPassword(userId, password);
 
       const user = await updateUserById(userId, {
-        passwordEncryptionSalt,
         passwordEncrypted,
+        passwordEncryptionMethod,
+        passwordEncryptionSalt,
       });
+
       ctx.body = pick(user, ...userInfoSelectFields);
 
       return next();
