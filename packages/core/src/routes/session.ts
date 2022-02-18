@@ -22,7 +22,9 @@ import {
   signInWithPhoneAndPasscode,
   signInWithUsernameAndPassword,
 } from '@/lib/sign-in';
+import { getUserInfoByAuthCode, getUserInfoFromInteractionResult } from '@/lib/social';
 import koaGuard from '@/middleware/koa-guard';
+import { hasUserWithIdentity } from '@/queries/user';
 import assertThat from '@/utils/assert-that';
 
 import { AnonymousRouter } from './types';
@@ -95,7 +97,6 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
       body: object({ connectorId: string(), code: string().optional(), state: string() }),
     }),
     async (ctx, next) => {
-      const { result } = await provider.interactionDetails(ctx.req, ctx.res);
       const { connectorId, code, state } = ctx.guard.body;
 
       if (!code) {
@@ -105,7 +106,8 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
         return next();
       }
 
-      await signInWithSocial(ctx, provider, { connectorId, code, result });
+      const userInfo = await getUserInfoByAuthCode(connectorId, code);
+      await signInWithSocial(ctx, provider, connectorId, userInfo);
 
       return next();
     }
@@ -206,21 +208,21 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
     koaGuard({
       body: object({
         connectorId: string(),
-        code: string().optional(),
-        state: string().optional(),
       }),
     }),
     async (ctx, next) => {
-      const { connectorId, code, state } = ctx.guard.body;
+      const { connectorId } = ctx.guard.body;
+      const { result } = await provider.interactionDetails(ctx.req, ctx.res);
 
-      if (!code) {
-        assertThat(state, 'session.insufficient_info');
-        await assignRedirectUrlForSocial(ctx, connectorId, state);
+      // User can not regsiter with social directly,
+      // need to try to sign in with social first, then confirm to register and continue,
+      // so the result is expected to be exists.
+      assertThat(result, 'session.connector_session_not_found');
 
-        return next();
-      }
+      const userInfo = await getUserInfoFromInteractionResult(connectorId, result);
+      assertThat(!(await hasUserWithIdentity(connectorId, userInfo.id)), 'user.identity_exists');
 
-      await registerWithSocial(ctx, provider, { connectorId, code });
+      await registerWithSocial(ctx, provider, connectorId, userInfo);
 
       return next();
     }
