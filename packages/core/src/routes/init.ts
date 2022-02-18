@@ -12,7 +12,6 @@ import settingRoutes from '@/routes/setting';
 import signInExperiencesRoutes from '@/routes/sign-in-experience';
 import statusRoutes from '@/routes/status';
 import swaggerRoutes from '@/routes/swagger';
-import userRoutes from '@/routes/user';
 
 import adminUserRoutes from './admin-user';
 import roleRoutes from './role';
@@ -23,7 +22,6 @@ const createRouters = (provider: Provider) => {
 
   statusRoutes(anonymousRouter);
   sessionRoutes(anonymousRouter, provider);
-  userRoutes(anonymousRouter);
   swaggerRoutes(anonymousRouter);
 
   const router: AuthedRouter = new Router();
