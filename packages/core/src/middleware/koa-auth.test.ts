@@ -3,7 +3,7 @@ import { Context } from 'koa';
 import { IRouterParamContext } from 'koa-router';
 
 import RequestError from '@/errors/RequestError';
-import { createContextWithRouteParamters } from '@/utils/test-utils';
+import { createContextWithRouteParameters } from '@/utils/test-utils';
 
 import koaAuth, { WithAuthContext } from './koa-auth';
 
@@ -12,7 +12,7 @@ jest.mock('jose/jwt/verify', () => ({
 }));
 
 describe('koaAuth middleware', () => {
-  const baseCtx = createContextWithRouteParamters();
+  const baseCtx = createContextWithRouteParameters();
 
   const ctx: WithAuthContext<Context & IRouterParamContext> = {
     ...baseCtx,

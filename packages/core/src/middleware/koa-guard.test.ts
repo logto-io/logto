@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { emptyMiddleware, createContextWithRouteParamters } from '@/utils/test-utils';
+import { emptyMiddleware, createContextWithRouteParameters } from '@/utils/test-utils';
 
 import koaGuard, { isGuardMiddleware } from './koa-guard';
 
@@ -32,7 +32,7 @@ describe('koaGuardMiddleware', () => {
   });
 
   describe('guardMiddleware', () => {
-    const baseCtx = createContextWithRouteParamters();
+    const baseCtx = createContextWithRouteParameters();
 
     const next = jest.fn();
 

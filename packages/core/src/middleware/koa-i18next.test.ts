@@ -1,7 +1,7 @@
 import i18next from 'i18next';
 
 import initI18n from '@/i18n/init';
-import { createContextWithRouteParamters } from '@/utils/test-utils';
+import { createContextWithRouteParameters } from '@/utils/test-utils';
 
 import koaI18next from './koa-i18next';
 
@@ -15,7 +15,7 @@ describe('koaI18next', () => {
 
   it('deteact language', async () => {
     const ctx = {
-      ...createContextWithRouteParamters(),
+      ...createContextWithRouteParameters(),
       query: {},
       locale: 'en',
     };

@@ -68,7 +68,7 @@ export default function koaOIDCErrorHandler<StateT, ContextT>(): Middleware<Stat
               code: 'oidc.insufficient_scope',
               status,
               expose,
-              scopes: error_detail,
+              ...interpolation,
             },
             data
           );
