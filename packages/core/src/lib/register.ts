@@ -12,6 +12,7 @@ import {
   insertUser,
 } from '@/queries/user';
 import assertThat from '@/utils/assert-that';
+import { assignInteractionResults } from '@/utils/interaction';
 import { emailRegEx, phoneRegEx } from '@/utils/regex';
 
 import { createPasscode, sendPasscode, verifyPasscode } from './passcode';
@@ -19,13 +20,7 @@ import { getUserInfoByConnectorCode, SocialUserInfoSession } from './social';
 import { encryptUserPassword, generateUserId } from './user';
 
 const assignRegistrationResult = async (ctx: Context, provider: Provider, userId: string) => {
-  const redirectTo = await provider.interactionResult(
-    ctx.req,
-    ctx.res,
-    { login: { accountId: userId } },
-    { mergeWithLastSubmission: false }
-  );
-  ctx.body = { redirectTo };
+  await assignInteractionResults(ctx, provider, { login: { accountId: userId } });
 };
 
 const saveUserInfoToSession = async (
@@ -33,15 +28,7 @@ const saveUserInfoToSession = async (
   provider: Provider,
   socialUserInfo: SocialUserInfoSession
 ) => {
-  const redirectTo = await provider.interactionResult(
-    ctx.req,
-    ctx.res,
-    {
-      socialUserInfo,
-    },
-    { mergeWithLastSubmission: true }
-  );
-  ctx.body = { redirectTo };
+  await assignInteractionResults(ctx, provider, { socialUserInfo }, true);
 };
 
 export const registerWithUsernameAndPassword = async (
@@ -84,86 +71,84 @@ export const registerWithUsernameAndPassword = async (
   ctx.userLog.type = UserLogType.RegisterUsernameAndPassword;
 };
 
-export const sendPasscodeToEmail = async (ctx: Context, jti: string, email: string) => {
-  assertThat(emailRegEx.test(email), new RequestError('user.invalid_email'));
+export const sendPasscodeForRegistration = async (
+  ctx: Context,
+  jti: string,
+  emailOrPhone: string
+) => {
   assertThat(
-    !(await hasUserWithEmail(email)),
-    new RequestError({
-      code: 'user.email_exists_register',
-      status: 422,
-    })
+    emailRegEx.test(emailOrPhone) || phoneRegEx.test(emailOrPhone),
+    new RequestError({ code: 'guard.invalid_input', status: 422 })
   );
 
-  const passcode = await createPasscode(jti, PasscodeType.Register, { email });
+  const sendWithEmail = emailRegEx.test(emailOrPhone);
+
+  const formatErrorCode = sendWithEmail ? 'user.invalid_email' : 'user.invalid_phone';
+  const existenceErrorCode = sendWithEmail
+    ? 'user.email_exists_register'
+    : 'user.phone_exists_register';
+
+  const formatChecker = sendWithEmail ? emailRegEx : phoneRegEx;
+
+  const availabilityChecker = async (toAddress: string): Promise<boolean> => {
+    return sendWithEmail
+      ? !(await hasUserWithEmail(toAddress))
+      : !(await hasUserWithPhone(toAddress));
+  };
+
+  assertThat(formatChecker.test(emailOrPhone), formatErrorCode);
+  assertThat(
+    availabilityChecker(emailOrPhone),
+    new RequestError({ code: existenceErrorCode, status: 422 })
+  );
+
+  const payload = sendWithEmail ? { email: emailOrPhone } : { phone: emailOrPhone };
+  const passcode = await createPasscode(jti, PasscodeType.Register, payload);
   await sendPasscode(passcode);
   ctx.state = 204;
 };
 
-export const sendPasscodeToPhone = async (ctx: Context, jti: string, phone: string) => {
-  assertThat(phoneRegEx.test(phone), new RequestError('user.invalid_phone'));
-  assertThat(
-    !(await hasUserWithPhone(phone)),
-    new RequestError({
-      code: 'user.phone_exists_register',
-      status: 422,
-    })
-  );
-
-  const passcode = await createPasscode(jti, PasscodeType.Register, { phone });
-  await sendPasscode(passcode);
-  ctx.state = 204;
-};
-
-export const registerWithEmailAndPasscode = async (
+export const registerWithPasswordlessFlow = async (
   ctx: WithUserLogContext<Context>,
   provider: Provider,
-  { jti, email, code }: { jti: string; email: string; code: string }
+  { jti, emailOrPhone, code }: { jti: string; emailOrPhone: string; code: string }
 ) => {
   assertThat(
-    !(await hasUserWithEmail(email)),
-    new RequestError({
-      code: 'user.email_exists_register',
-      status: 422,
-    })
+    emailRegEx.test(emailOrPhone) || phoneRegEx.test(emailOrPhone),
+    new RequestError({ code: 'guard.invalid_input', status: 422 })
   );
-  await verifyPasscode(jti, PasscodeType.Register, code, { email });
 
-  const id = await generateUserId();
-  await insertUser({
-    id,
-    primaryEmail: email,
-  });
+  const registerWithEmail = emailRegEx.test(emailOrPhone);
 
-  await assignRegistrationResult(ctx, provider, id);
-  ctx.userLog.userId = id;
-  ctx.userLog.email = email;
-  ctx.userLog.type = UserLogType.RegisterEmail;
-};
+  const availabilityChecker = async (toAddress: string): Promise<boolean> => {
+    return registerWithEmail
+      ? !(await hasUserWithEmail(toAddress))
+      : !(await hasUserWithPhone(toAddress));
+  };
+  const errorCodeDesciption = registerWithEmail
+    ? 'user.email_exists_register'
+    : 'user.phone_exists_register';
 
-export const registerWithPhoneAndPasscode = async (
-  ctx: WithUserLogContext<Context>,
-  provider: Provider,
-  { jti, phone, code }: { jti: string; phone: string; code: string }
-) => {
   assertThat(
-    !(await hasUserWithPhone(phone)),
-    new RequestError({
-      code: 'user.phone_exists_register',
-      status: 422,
-    })
+    availabilityChecker(emailOrPhone),
+    new RequestError({ code: errorCodeDesciption, status: 422 })
   );
-  await verifyPasscode(jti, PasscodeType.Register, code, { phone });
-
+  await verifyPasscode(
+    jti,
+    PasscodeType.Register,
+    code,
+    registerWithEmail ? { email: emailOrPhone } : { phone: emailOrPhone }
+  );
   const id = await generateUserId();
-  await insertUser({
-    id,
-    primaryPhone: phone,
-  });
-
+  const userInfo = registerWithEmail
+    ? { id, primaryEmail: emailOrPhone }
+    : { id, primaryPhone: emailOrPhone };
+  await insertUser(userInfo);
   await assignRegistrationResult(ctx, provider, id);
-  ctx.userLog.userId = id;
-  ctx.userLog.phone = phone;
-  ctx.userLog.type = UserLogType.RegisterPhone;
+  const userLogUpdate = registerWithEmail
+    ? { primaryEmail: emailOrPhone, type: UserLogType.RegisterEmail }
+    : { primaryPhone: emailOrPhone, type: UserLogType.RegisterPhone };
+  ctx.userLog = { ...ctx.userLog, ...userLogUpdate, userId: id };
 };
 
 export const registerWithSocial = async (

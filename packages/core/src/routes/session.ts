@@ -6,12 +6,10 @@ import { Provider } from 'oidc-provider';
 import { object, string } from 'zod';
 
 import {
+  registerWithPasswordlessFlow,
   registerWithSocial,
-  registerWithEmailAndPasscode,
-  registerWithPhoneAndPasscode,
   registerWithUsernameAndPassword,
-  sendPasscodeToEmail,
-  sendPasscodeToPhone,
+  sendPasscodeForRegistration,
 } from '@/lib/register';
 import {
   assignRedirectUrlForSocial,
@@ -171,12 +169,12 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
       const { phone, code } = ctx.guard.body;
 
       if (!code) {
-        await sendPasscodeToPhone(ctx, jti, phone);
+        await sendPasscodeForRegistration(ctx, jti, phone);
 
         return next();
       }
 
-      await registerWithPhoneAndPasscode(ctx, provider, { jti, phone, code });
+      await registerWithPasswordlessFlow(ctx, provider, { jti, emailOrPhone: phone, code });
 
       return next();
     }
@@ -190,12 +188,12 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
       const { email, code } = ctx.guard.body;
 
       if (!code) {
-        await sendPasscodeToEmail(ctx, jti, email);
+        await sendPasscodeForRegistration(ctx, jti, email);
 
         return next();
       }
 
-      await registerWithEmailAndPasscode(ctx, provider, { jti, email, code });
+      await registerWithPasswordlessFlow(ctx, provider, { jti, emailOrPhone: email, code });
 
       return next();
     }
