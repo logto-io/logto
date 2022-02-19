@@ -4,13 +4,16 @@ const config: Config.InitialOptions = {
   preset: 'ts-jest',
   testEnvironment: 'jsdom',
   transform: {
+    // Enable JS/JSX transformation
     '\\.(ts|js)x?$': 'ts-jest',
   },
   transformIgnorePatterns: [
     '[/\\\\]node_modules[/\\\\]((?!ky[/\\\\]).)+\\.(js|jsx|mjs|cjs|ts|tsx)$',
   ],
   moduleNameMapper: {
+    // Map path alias in `tsconfig.json`
     '@/(.*)': '<rootDir>/src/$1',
+    // Mock CSS Modules
     '\\.module\\.(css|sass|scss)$': 'identity-obj-proxy',
   },
   setupFilesAfterEnv: ['<rootDir>/src/jest.setup.ts'],
