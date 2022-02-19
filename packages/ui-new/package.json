@@ -8,9 +8,10 @@
     "precommit": "lint-staged",
     "start": "parcel src/index.html",
     "check": "tsc --noEmit",
-    "build": "rm -rf dist && parcel build src/index.html --no-autoinstall",
+    "build": "pnpm check && rm -rf dist && parcel build src/index.html --no-autoinstall",
     "lint": "eslint --ext .ts --ext .tsx src",
-    "stylelint": "stylelint \"src/**/*.scss\""
+    "stylelint": "stylelint \"src/**/*.scss\"",
+    "test": "jest"
   },
   "dependencies": {
     "@logto/phrases": "^0.1.0",
@@ -25,6 +26,7 @@
     "react-router-dom": "^5.2.0"
   },
   "devDependencies": {
+    "@jest/types": "^27.5.1",
     "@parcel/core": "^2.3.1",
     "@parcel/transformer-sass": "^2.3.1",
     "@silverhand/eslint-config": "^0.8.1",
@@ -37,12 +39,15 @@
     "@types/react-dom": "^17.0.9",
     "@types/react-router-dom": "^5.3.2",
     "eslint": "^8.1.0",
+    "identity-obj-proxy": "^3.0.0",
+    "jest": "^27.5.1",
     "lint-staged": "^11.1.1",
     "parcel": "^2.3.1",
     "postcss": "^8.4.6",
     "postcss-modules": "^4.3.0",
     "prettier": "^2.3.2",
-    "stylelint": "^13.13.1"
+    "stylelint": "^13.13.1",
+    "ts-jest": "^27.0.5"
   },
   "alias": {
     "@/*": "./src/$1"
