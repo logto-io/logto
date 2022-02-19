@@ -23,7 +23,7 @@ const App = () => {
           <Route exact path="/register" component={Register} />
         </Switch>
       </BrowserRouter>
-    </AppContent >
+    </AppContent>
   );
 };
 
