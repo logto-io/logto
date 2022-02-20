@@ -6,7 +6,7 @@ export const register = async (username: string, password: string) => {
   };
 
   return ky
-    .post('/api/session/register/username-password', {
+    .post('/api/session/register', {
       json: {
         username,
         password,

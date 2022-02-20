@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import React, { ReactChild } from 'react';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 export type Props = {
   className?: string;

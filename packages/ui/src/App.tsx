@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, Switch } from 'react-router-dom';
+import { Route, Switch, BrowserRouter } from 'react-router-dom';
 
 import AppContent from './components/AppContent';
 import useTheme from './hooks/use-theme';
@@ -16,11 +16,13 @@ const App = () => {
 
   return (
     <AppContent theme={theme}>
-      <Switch>
-        <Route exact path="/sign-in" component={SignIn} />
-        <Route exact path="/sign-in/consent" component={Consent} />
-        <Route exact path="/register" component={Register} />
-      </Switch>
+      <BrowserRouter>
+        <Switch>
+          <Route exact path="/sign-in" component={SignIn} />
+          <Route exact path="/sign-in/consent" component={Consent} />
+          <Route exact path="/register" component={Register} />
+        </Switch>
+      </BrowserRouter>
     </AppContent>
   );
 };

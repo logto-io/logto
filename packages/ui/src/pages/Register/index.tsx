@@ -10,7 +10,7 @@ import MessageBox from '@/components/MessageBox';
 import TextLink from '@/components/TextLink';
 import useApi from '@/hooks/use-api';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 const Register: FC = () => {
   const { t, i18n } = useTranslation();
