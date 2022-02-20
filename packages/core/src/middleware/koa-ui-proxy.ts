@@ -7,7 +7,7 @@ import serveStatic from 'koa-static';
 
 import { isProduction, mountedApps } from '@/env/consts';
 
-const PATH_TO_UI_DIST = '../ui/build/public';
+const PATH_TO_UI_DIST = '../ui/dist';
 
 export default function koaUIProxy<
   StateT,

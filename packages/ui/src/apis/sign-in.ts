@@ -6,7 +6,7 @@ export const signInBasic = async (username: string, password: string) => {
   };
 
   return ky
-    .post('/api/session/sign-in/username-password', {
+    .post('/api/session', {
       json: {
         username,
         password,

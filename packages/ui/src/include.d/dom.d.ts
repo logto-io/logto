@@ -70,6 +70,7 @@ type AutoCompleteType =
   | 'url'
   | 'photo';
 
+// TO-DO: remove me
 interface Body {
   json<T>(): Promise<T>;
 }
