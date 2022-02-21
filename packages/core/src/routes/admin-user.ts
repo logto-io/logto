@@ -39,6 +39,7 @@ export default function adminUserRoutes<T extends AuthedRouter>(router: T) {
 
   router.get(
     '/users/:userId',
+    // TODO: No need to guard
     koaGuard({
       params: object({ userId: string() }),
     }),
@@ -66,7 +67,6 @@ export default function adminUserRoutes<T extends AuthedRouter>(router: T) {
     }),
     async (ctx, next) => {
       const { username, password, name } = ctx.guard.body;
-
       assertThat(
         !(await hasUser(username)),
         new RequestError({
