@@ -1,16 +1,13 @@
 import path from 'path';
 
 import { LogtoErrorCode } from '@logto/phrases';
+import { UserLogType } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { Provider } from 'oidc-provider';
 import { object, string } from 'zod';
 
-import {
-  registerWithPasswordlessFlow,
-  registerWithSocial,
-  registerWithUsernameAndPassword,
-  sendPasscodeForRegistration,
-} from '@/lib/register';
+import RequestError from '@/errors/RequestError';
+import { registerWithPasswordlessFlow, sendPasscodeForRegistration } from '@/lib/register';
 import {
   assignRedirectUrlForSocial,
   sendSignInWithEmailPasscode,
@@ -20,7 +17,10 @@ import {
   signInWithPhoneAndPasscode,
   signInWithUsernameAndPassword,
 } from '@/lib/sign-in';
+import { getUserInfoByConnectorCode } from '@/lib/social';
+import { encryptUserPassword, generateUserId } from '@/lib/user';
 import koaGuard from '@/middleware/koa-guard';
+import { hasUser, hasUserWithIdentity, insertUser } from '@/queries/user';
 import assertThat from '@/utils/assert-that';
 
 import { AnonymousRouter } from './types';
@@ -155,7 +155,47 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
     koaGuard({ body: object({ username: string(), password: string() }) }),
     async (ctx, next) => {
       const { username, password } = ctx.guard.body;
-      await registerWithUsernameAndPassword(ctx, provider, username, password);
+      assertThat(
+        username && password,
+        new RequestError({
+          code: 'session.insufficient_info',
+          status: 400,
+        })
+      );
+      assertThat(
+        !(await hasUser(username)),
+        new RequestError({
+          code: 'user.username_exists_register',
+          status: 422,
+        })
+      );
+
+      const id = await generateUserId();
+
+      const { passwordEncryptionSalt, passwordEncrypted, passwordEncryptionMethod } =
+        encryptUserPassword(id, password);
+
+      await insertUser({
+        id,
+        username,
+        passwordEncrypted,
+        passwordEncryptionMethod,
+        passwordEncryptionSalt,
+      });
+
+      ctx.userLog.userId = id;
+      ctx.userLog.username = username;
+      ctx.userLog.type = UserLogType.RegisterUsernameAndPassword;
+
+      const redirectTo = await provider.interactionResult(
+        ctx.req,
+        ctx.res,
+        { login: { accountId: id } },
+        {
+          mergeWithLastSubmission: false,
+        }
+      );
+      ctx.body = { redirectTo };
 
       return next();
     }
@@ -218,7 +258,46 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
         return next();
       }
 
-      await registerWithSocial(ctx, provider, { connectorId, code });
+      const userInfo = await getUserInfoByConnectorCode(connectorId, code);
+
+      if (await hasUserWithIdentity(connectorId, userInfo.id)) {
+        const redirectTo = await provider.interactionResult(
+          ctx.req,
+          ctx.res,
+          { connectorId, userInfo },
+          {
+            mergeWithLastSubmission: true,
+          }
+        );
+        ctx.body = { redirectTo };
+        throw new RequestError({
+          code: 'user.identity_exists',
+          status: 422,
+        });
+      }
+
+      const id = await generateUserId();
+      await insertUser({
+        id,
+        name: userInfo.name ?? null,
+        avatar: userInfo.avatar ?? null,
+        identities: {
+          [connectorId]: {
+            userId: userInfo.id,
+            details: userInfo,
+          },
+        },
+      });
+
+      const redirectTo = await provider.interactionResult(
+        ctx.req,
+        ctx.res,
+        { login: { accountId: id } },
+        {
+          mergeWithLastSubmission: false,
+        }
+      );
+      ctx.body = { redirectTo };
 
       return next();
     }

@@ -4,72 +4,12 @@ import { Provider } from 'oidc-provider';
 
 import RequestError from '@/errors/RequestError';
 import { WithUserLogContext } from '@/middleware/koa-user-log';
-import {
-  hasUser,
-  hasUserWithEmail,
-  hasUserWithPhone,
-  hasUserWithIdentity,
-  insertUser,
-} from '@/queries/user';
+import { hasUserWithEmail, hasUserWithPhone, insertUser } from '@/queries/user';
 import assertThat from '@/utils/assert-that';
-import { assignInteractionResults } from '@/utils/interaction';
 import { emailRegEx, phoneRegEx } from '@/utils/regex';
 
 import { createPasscode, sendPasscode, verifyPasscode } from './passcode';
-import { getUserInfoByConnectorCode, SocialUserInfoSession } from './social';
-import { encryptUserPassword, generateUserId } from './user';
-
-const assignRegistrationResult = async (ctx: Context, provider: Provider, userId: string) => {
-  await assignInteractionResults(ctx, provider, { login: { accountId: userId } });
-};
-
-const saveUserInfoToSession = async (
-  ctx: Context,
-  provider: Provider,
-  socialUserInfo: SocialUserInfoSession
-) => {
-  await assignInteractionResults(ctx, provider, { socialUserInfo }, true);
-};
-
-export const registerWithUsernameAndPassword = async (
-  ctx: WithUserLogContext<Context>,
-  provider: Provider,
-  username: string,
-  password: string
-) => {
-  assertThat(
-    username && password,
-    new RequestError({
-      code: 'session.insufficient_info',
-      status: 400,
-    })
-  );
-  assertThat(
-    !(await hasUser(username)),
-    new RequestError({
-      code: 'user.username_exists_register',
-      status: 422,
-    })
-  );
-
-  const id = await generateUserId();
-
-  const { passwordEncryptionSalt, passwordEncrypted, passwordEncryptionMethod } =
-    encryptUserPassword(id, password);
-
-  await insertUser({
-    id,
-    username,
-    passwordEncrypted,
-    passwordEncryptionMethod,
-    passwordEncryptionSalt,
-  });
-
-  await assignRegistrationResult(ctx, provider, id);
-  ctx.userLog.userId = id;
-  ctx.userLog.username = username;
-  ctx.userLog.type = UserLogType.RegisterUsernameAndPassword;
-};
+import { generateUserId } from './user';
 
 export const sendPasscodeForRegistration = async (
   ctx: Context,
@@ -144,40 +84,17 @@ export const registerWithPasswordlessFlow = async (
     ? { id, primaryEmail: emailOrPhone }
     : { id, primaryPhone: emailOrPhone };
   await insertUser(userInfo);
-  await assignRegistrationResult(ctx, provider, id);
+  const redirectTo = await provider.interactionResult(
+    ctx.req,
+    ctx.res,
+    { login: { accountId: id } },
+    {
+      mergeWithLastSubmission: false,
+    }
+  );
+  ctx.body = { redirectTo };
   const userLogUpdate = registerWithEmail
     ? { primaryEmail: emailOrPhone, type: UserLogType.RegisterEmail }
     : { primaryPhone: emailOrPhone, type: UserLogType.RegisterPhone };
   ctx.userLog = { ...ctx.userLog, ...userLogUpdate, userId: id };
-};
-
-export const registerWithSocial = async (
-  ctx: WithUserLogContext<Context>,
-  provider: Provider,
-  { connectorId, code }: { connectorId: string; code: string }
-) => {
-  const userInfo = await getUserInfoByConnectorCode(connectorId, code);
-
-  if (await hasUserWithIdentity(connectorId, userInfo.id)) {
-    await saveUserInfoToSession(ctx, provider, { connectorId, userInfo });
-    throw new RequestError({
-      code: 'user.identity_exists',
-      status: 422,
-    });
-  }
-
-  const id = await generateUserId();
-  await insertUser({
-    id,
-    name: userInfo.name ?? null,
-    avatar: userInfo.avatar ?? null,
-    identities: {
-      [connectorId]: {
-        userId: userInfo.id,
-        details: userInfo,
-      },
-    },
-  });
-
-  await assignRegistrationResult(ctx, provider, id);
 };
