@@ -1,27 +1,11 @@
-import { User, userInfoSelectFields } from '@logto/schemas';
 import { createMockContext, Options } from '@shopify/jest-koa-mocks';
-import { MiddlewareType, Context } from 'koa';
+import Koa, { MiddlewareType, Context } from 'koa';
 import Router, { IRouterParamContext } from 'koa-router';
-import pick from 'lodash.pick';
 import { createMockPool, createMockQueryResult, QueryResultRowType } from 'slonik';
 import { PrimitiveValueExpressionType } from 'slonik/dist/src/types.d';
+import request from 'supertest';
 
-export const mockUser: User = {
-  id: 'foo',
-  username: 'foo',
-  primaryEmail: 'foo@logto.io',
-  primaryPhone: '111111',
-  roleNames: ['admin'],
-  passwordEncrypted: null,
-  passwordEncryptionMethod: null,
-  passwordEncryptionSalt: null,
-  name: null,
-  avatar: null,
-  identities: {},
-  customData: {},
-};
-
-export const mockUserResponse = pick(mockUser, ...userInfoSelectFields);
+import { AuthedRouter, AnonymousRouter } from '@/routes/types';
 
 export const createTestPool = <T extends QueryResultRowType>(
   expectSql?: string,
@@ -64,4 +48,21 @@ export const createContextWithRouteParameters = (
     _matchedRoute: undefined,
     _matchedRouteName: undefined,
   };
+};
+
+type RouteLauncher<T extends AuthedRouter | AnonymousRouter> = (router: T) => void;
+
+export const createRequester = <T extends AuthedRouter | AnonymousRouter = AuthedRouter>(
+  ...logtoRoute: Array<RouteLauncher<T>>
+): request.SuperTest<request.Test> => {
+  const app = new Koa();
+  const router = new Router() as T;
+
+  for (const route of logtoRoute) {
+    route(router);
+  }
+
+  app.use(router.routes()).use(router.allowedMethods());
+
+  return request(app.callback());
 };

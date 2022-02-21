@@ -1,13 +1,10 @@
 import { CreateUser, User } from '@logto/schemas';
-import Koa from 'koa';
-import Router from 'koa-router';
-import request from 'supertest';
 
 import { hasUser, findUserById } from '@/queries/user';
-import { mockUser, mockUserResponse } from '@/utils/test-utils';
+import { mockUser, mockUserResponse } from '@/utils/mock';
+import { createRequester } from '@/utils/test-utils';
 
 import adminUserRoutes from './admin-user';
-import { AuthedRouter } from './types';
 
 jest.mock('@/queries/user', () => ({
   findTotalNumberOfUsers: jest.fn(async () => ({ count: 10 })),
@@ -38,18 +35,13 @@ jest.mock('@/lib/user', () => ({
 }));
 
 describe('adminUserRoutes', () => {
-  const app = new Koa();
-  const router: AuthedRouter = new Router();
-
-  adminUserRoutes(router);
-  app.use(router.routes()).use(router.allowedMethods());
-
-  const userRequest = request(app.callback());
+  const userRequest = createRequester(adminUserRoutes);
 
   it('GET /users', async () => {
     const response = await userRequest.get('/users');
     expect(response.status).toEqual(200);
     expect(response.body).toEqual([mockUserResponse]);
+    expect(response.header).toHaveProperty('total-number', '10');
   });
 
   it('GET /users/:userId', async () => {
