@@ -1,6 +1,7 @@
 import RequestError from '@/errors/RequestError';
 import * as userQueries from '@/queries/user';
-import { mockUser, mockUserResponse, createContextWithRouteParameters } from '@/utils/test-utils';
+import { mockUser, mockUserResponse } from '@/utils/mock';
+import { createContextWithRouteParameters } from '@/utils/test-utils';
 
 import koaUserInfo from './koa-user-info';
 
