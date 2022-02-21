@@ -98,7 +98,7 @@ export const sendPasscodeForRegistration = async (
 
   assertThat(formatChecker.test(emailOrPhone), formatErrorCode);
   assertThat(
-    availabilityChecker(emailOrPhone),
+    await availabilityChecker(emailOrPhone),
     new RequestError({ code: existenceErrorCode, status: 422 })
   );
 
@@ -130,7 +130,7 @@ export const registerWithPasswordlessFlow = async (
     : 'user.phone_exists_register';
 
   assertThat(
-    availabilityChecker(emailOrPhone),
+    await availabilityChecker(emailOrPhone),
     new RequestError({ code: errorCodeDesciption, status: 422 })
   );
   await verifyPasscode(
