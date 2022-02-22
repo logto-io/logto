@@ -16,10 +16,13 @@ export interface ConnectorMetadata {
 }
 
 // The name `Connector` is used for database, use `ConnectorInstance` to avoid confusing.
-export type ConnectorInstance = SmsConnector | EmailConector | SocialConector;
+export type IConnector = SmsConnector | EmailConector | SocialConector;
+export type ConnectorInstance =
+  | SmsConnectorInstance
+  | EmailConectorInstance
+  | SocialConectorInstance;
 
 export interface BaseConnector {
-  connector?: Connector;
   metadata: ConnectorMetadata;
   validateConfig: ValidateConfig;
 }
@@ -28,15 +31,21 @@ export interface SmsConnector extends BaseConnector {
   sendMessage: SmsSendMessageFunction;
 }
 
+export type SmsConnectorInstance = SmsConnector & { connector: Connector };
+
 export interface EmailConector extends BaseConnector {
   sendMessage: EmailSendMessageFunction;
 }
+
+export type EmailConectorInstance = EmailConector & { connector: Connector };
 
 export interface SocialConector extends BaseConnector {
   getAuthorizationUri: GetAuthorizationUri;
   getAccessToken: GetAccessToken;
   getUserInfo: GetUserInfo;
 }
+
+export type SocialConectorInstance = SocialConector & { connector: Connector };
 
 type EmailMessageTypes = {
   SignIn: {
