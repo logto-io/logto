@@ -4,9 +4,9 @@ import { findConnectorById, hasConnector, insertConnector } from '@/queries/conn
 import * as AliyunDM from './aliyun-dm';
 import * as AliyunSMS from './aliyun-sms';
 import * as GitHub from './github';
-import { ConnectorInstance, ConnectorType, SocialConector } from './types';
+import { ConnectorInstance, ConnectorType, IConnector, SocialConectorInstance } from './types';
 
-const allConnectors: ConnectorInstance[] = [AliyunDM, AliyunSMS, GitHub];
+const allConnectors: IConnector[] = [AliyunDM, AliyunSMS, GitHub];
 
 export const getConnectorInstances = async (): Promise<ConnectorInstance[]> => {
   return Promise.all(
@@ -34,11 +34,15 @@ export const getConnectorInstanceById = async (id: string): Promise<ConnectorIns
   return { connector, ...found };
 };
 
-const isSocialConnectorInstance = (connector: ConnectorInstance): connector is SocialConector => {
+const isSocialConnectorInstance = (
+  connector: ConnectorInstance
+): connector is SocialConectorInstance => {
   return connector.metadata.type === ConnectorType.Social;
 };
 
-export const getSocialConnectorInstanceById = async (id: string): Promise<SocialConector> => {
+export const getSocialConnectorInstanceById = async (
+  id: string
+): Promise<SocialConectorInstance> => {
   const connector = await getConnectorInstanceById(id);
 
   if (!isSocialConnectorInstance(connector)) {
@@ -57,7 +61,7 @@ export const getConnectorInstanceByType = async <T extends ConnectorInstance>(
 ): Promise<T> => {
   const connectors = await getConnectorInstances();
   const connector = connectors
-    .filter((connector) => connector.connector?.enabled)
+    .filter((connector) => connector.connector.enabled)
     .find<T>((connector): connector is T => connector.metadata.type === type);
 
   if (!connector) {

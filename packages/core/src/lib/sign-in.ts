@@ -114,7 +114,7 @@ export const assignRedirectUrlForSocial = async (
   state: string
 ) => {
   const connector = await getSocialConnectorInstanceById(connectorId);
-  assertThat(connector.connector?.enabled, 'connector.not_enabled');
+  assertThat(connector.connector.enabled, 'connector.not_enabled');
   const redirectTo = await connector.getAuthorizationUri(connectorRedirectUrl, state);
   ctx.body = { redirectTo };
 };

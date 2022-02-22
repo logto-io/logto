@@ -2,7 +2,7 @@ import { Passcode, PasscodeType } from '@logto/schemas';
 import { customAlphabet, nanoid } from 'nanoid';
 
 import { getConnectorInstanceByType } from '@/connectors';
-import { ConnectorType, EmailConector, SmsConnector } from '@/connectors/types';
+import { ConnectorType, EmailConectorInstance, SmsConnectorInstance } from '@/connectors/types';
 import RequestError from '@/errors/RequestError';
 import {
   deletePasscodesByIds,
@@ -44,8 +44,8 @@ export const sendPasscode = async (passcode: Passcode) => {
   }
 
   const connector = passcode.email
-    ? await getConnectorInstanceByType<EmailConector>(ConnectorType.Email)
-    : await getConnectorInstanceByType<SmsConnector>(ConnectorType.SMS);
+    ? await getConnectorInstanceByType<EmailConectorInstance>(ConnectorType.Email)
+    : await getConnectorInstanceByType<SmsConnectorInstance>(ConnectorType.SMS);
 
   return connector.sendMessage(emailOrPhone, passcode.type, {
     code: passcode.code,
