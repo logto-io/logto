@@ -162,13 +162,7 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
       ctx.userLog.type = UserLogType.SignInSocial;
 
       if (!(await hasUserWithIdentity(connectorId, userInfo.id))) {
-        const redirectTo = await provider.interactionResult(
-          ctx.req,
-          ctx.res,
-          { connectorId, userInfo },
-          { mergeWithLastSubmission: true }
-        );
-        ctx.body = { redirectTo };
+        await assignInteractionResults(ctx, provider, { connectorId, userInfo }, true);
         const relatedInfo = await findSocialRelatedUser(userInfo);
         throw new RequestError(
           {
@@ -298,15 +292,7 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
       ctx.userLog.username = username;
       ctx.userLog.type = UserLogType.RegisterUsernameAndPassword;
 
-      const redirectTo = await provider.interactionResult(
-        ctx.req,
-        ctx.res,
-        { login: { accountId: id } },
-        {
-          mergeWithLastSubmission: false,
-        }
-      );
-      ctx.body = { redirectTo };
+      await assignInteractionResults(ctx, provider, { login: { accountId: id } });
 
       return next();
     }
