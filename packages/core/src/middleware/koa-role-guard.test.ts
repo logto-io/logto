@@ -1,23 +1,13 @@
+import { UserRole } from '@logto/schemas';
 import { Context } from 'koa';
 
 import RequestError from '@/errors/RequestError';
+import { mockUser } from '@/utils/mock';
 import { createContextWithRouteParameters } from '@/utils/test-utils';
 
 import { WithAuthContext } from './koa-auth';
 import koaRoleGuard from './koa-role-guard';
 import { WithUserInfoContext } from './koa-user-info';
-
-// TODO: remove after log-1530 PR is merged and rebased
-const mockUser = {
-  id: 'foo',
-  username: 'foo',
-  primaryEmail: 'foo@logto.io',
-  primaryPhone: '111111',
-  roleNames: ['admin'],
-  name: null,
-  avatar: null,
-  customData: {},
-};
 
 describe('koaRoleGuard middleware', () => {
   const baseCtx = createContextWithRouteParameters();
@@ -34,11 +24,11 @@ describe('koaRoleGuard middleware', () => {
 
   it('should throw if user dose not have admin role', async () => {
     ctx.userInfo.roleNames = ['guest'];
-    await expect(koaRoleGuard()(ctx, next)).rejects.toMatchError(unauthorizedError);
+    await expect(koaRoleGuard(UserRole.admin)(ctx, next)).rejects.toMatchError(unauthorizedError);
   });
 
   it('should not throw for admin user', async () => {
     ctx.userInfo.roleNames = ['admin'];
-    await expect(koaRoleGuard()(ctx, next)).resolves.not.toThrow();
+    await expect(koaRoleGuard(UserRole.admin)(ctx, next)).resolves.not.toThrow();
   });
 });
