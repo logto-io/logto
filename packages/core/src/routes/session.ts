@@ -1,13 +1,13 @@
 import path from 'path';
 
 import { LogtoErrorCode } from '@logto/phrases';
-import { UserLogType } from '@logto/schemas';
+import { PasscodeType, UserLogType } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { Provider } from 'oidc-provider';
 import { object, string } from 'zod';
 
 import RequestError from '@/errors/RequestError';
-import { registerWithPasswordlessFlow, sendPasscodeForRegistration } from '@/lib/register';
+import { createPasscode, sendPasscode, verifyPasscode } from '@/lib/passcode';
 import {
   assignRedirectUrlForSocial,
   sendSignInWithEmailPasscode,
@@ -20,8 +20,15 @@ import {
 import { getUserInfoByConnectorCode } from '@/lib/social';
 import { encryptUserPassword, generateUserId } from '@/lib/user';
 import koaGuard from '@/middleware/koa-guard';
-import { hasUser, hasUserWithIdentity, insertUser } from '@/queries/user';
+import {
+  hasUser,
+  hasUserWithEmail,
+  hasUserWithIdentity,
+  hasUserWithPhone,
+  insertUser,
+} from '@/queries/user';
 import assertThat from '@/utils/assert-that';
+import { emailRegEx, phoneRegEx } from '@/utils/regex';
 
 import { AnonymousRouter } from './types';
 
@@ -208,13 +215,36 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
       const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
       const { phone, code } = ctx.guard.body;
 
+      assertThat(phoneRegEx.test(phone), 'user.invalid_phone');
+      assertThat(
+        !(await hasUserWithPhone(phone)),
+        new RequestError({ code: 'user.phone_exists_register', status: 422 })
+      );
+
       if (!code) {
-        await sendPasscodeForRegistration(ctx, jti, phone);
+        const passcode = await createPasscode(jti, PasscodeType.Register, { phone });
+        await sendPasscode(passcode);
+        ctx.state = 204;
 
         return next();
       }
 
-      await registerWithPasswordlessFlow(ctx, provider, { jti, emailOrPhone: phone, code });
+      await verifyPasscode(jti, PasscodeType.Register, code, { phone });
+      const id = await generateUserId();
+      await insertUser({ id, primaryPhone: phone });
+      const redirectTo = await provider.interactionResult(
+        ctx.req,
+        ctx.res,
+        { login: { accountId: id } },
+        { mergeWithLastSubmission: false }
+      );
+      ctx.body = { redirectTo };
+      ctx.userLog = {
+        ...ctx.userLog,
+        type: UserLogType.RegisterPhone,
+        userId: id,
+        phone,
+      };
 
       return next();
     }
@@ -227,13 +257,36 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
       const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
       const { email, code } = ctx.guard.body;
 
+      assertThat(emailRegEx.test(email), 'user.invalid_email');
+      assertThat(
+        !(await hasUserWithEmail(email)),
+        new RequestError({ code: 'user.email_exists_register', status: 422 })
+      );
+
       if (!code) {
-        await sendPasscodeForRegistration(ctx, jti, email);
+        const passcode = await createPasscode(jti, PasscodeType.Register, { email });
+        await sendPasscode(passcode);
+        ctx.state = 204;
 
         return next();
       }
 
-      await registerWithPasswordlessFlow(ctx, provider, { jti, emailOrPhone: email, code });
+      await verifyPasscode(jti, PasscodeType.Register, code, { email });
+      const id = await generateUserId();
+      await insertUser({ id, primaryEmail: email });
+      const redirectTo = await provider.interactionResult(
+        ctx.req,
+        ctx.res,
+        { login: { accountId: id } },
+        { mergeWithLastSubmission: false }
+      );
+      ctx.body = { redirectTo };
+      ctx.userLog = {
+        ...ctx.userLog,
+        type: UserLogType.RegisterPhone,
+        userId: id,
+        email,
+      };
 
       return next();
     }
