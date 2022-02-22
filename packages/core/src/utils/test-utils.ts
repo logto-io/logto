@@ -1,11 +1,14 @@
 import { createMockContext, Options } from '@shopify/jest-koa-mocks';
 import Koa, { MiddlewareType, Context } from 'koa';
 import Router, { IRouterParamContext } from 'koa-router';
+import { Provider } from 'oidc-provider';
 import { createMockPool, createMockQueryResult, QueryResultRowType } from 'slonik';
 import { PrimitiveValueExpressionType } from 'slonik/dist/src/types.d';
 import request from 'supertest';
 
 import { AuthedRouter, AnonymousRouter } from '@/routes/types';
+
+jest.mock('oidc-provider');
 
 export const createTestPool = <T extends QueryResultRowType>(
   expectSql?: string,
@@ -50,16 +53,19 @@ export const createContextWithRouteParameters = (
   };
 };
 
-type RouteLauncher<T extends AuthedRouter | AnonymousRouter> = (router: T) => void;
+type RouteLauncher<T extends AuthedRouter | AnonymousRouter> =
+  | ((router: T) => void)
+  | ((router: T, provider: Provider) => void);
 
 export const createRequester = <T extends AuthedRouter | AnonymousRouter = AuthedRouter>(
   ...logtoRoute: Array<RouteLauncher<T>>
 ): request.SuperTest<request.Test> => {
   const app = new Koa();
   const router = new Router() as T;
+  const provider = new Provider('');
 
   for (const route of logtoRoute) {
-    route(router);
+    route(router, provider);
   }
 
   app.use(router.routes()).use(router.allowedMethods());
