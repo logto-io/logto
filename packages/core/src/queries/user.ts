@@ -1,11 +1,10 @@
 import { User, CreateUser, Users } from '@logto/schemas';
 import { sql } from 'slonik';
 
-import { buildFindMany } from '@/database/find-many';
 import { buildInsertInto } from '@/database/insert-into';
 import pool from '@/database/pool';
 import { buildUpdateWhere } from '@/database/update-where';
-import { convertToIdentifiers, getTotalRowCount, OmitAutoSetFields } from '@/database/utils';
+import { conditionalSql, convertToIdentifiers, OmitAutoSetFields } from '@/database/utils';
 import { DeletionError } from '@/errors/SlonikError';
 
 const { table, fields } = convertToIdentifiers(Users);
@@ -86,20 +85,6 @@ export const hasUserWithIdentity = async (connectorId: string, userId: string) =
 
 export const insertUser = buildInsertInto<CreateUser, User>(pool, Users, { returning: true });
 
-export const findTotalNumberOfUsers = async (search: string | undefined) => {
-  if (search) {
-    return pool.one<{ count: number }>(sql`
-      select count (*)
-      from ${table}
-      where ${buildUserSearchConditionSql(search)}
-    `);
-  }
-
-  return getTotalRowCount(table);
-};
-
-const findUserMany = buildFindMany<CreateUser, User>(pool, Users);
-
 const buildUserSearchConditionSql = (search: string) => {
   const searchFields = [fields.primaryEmail, fields.primaryPhone, fields.username, fields.name];
   const conditions = searchFields.map((filedName) => sql`${filedName} like ${'%' + search + '%'}`);
@@ -107,39 +92,23 @@ const buildUserSearchConditionSql = (search: string) => {
   return sql`${sql.join(conditions, sql` or `)}`;
 };
 
-export const searchUsers = async (limit: number, offset: number, search: string) =>
+export const findTotalNumberOfUsers = async (search: string | undefined) =>
+  pool.one<{ count: number }>(sql`
+    select count(*)
+    from ${table}
+    ${conditionalSql(search, (search) => sql`where ${buildUserSearchConditionSql(search)}`)}
+  `);
+
+export const findAllUsers = async (limit: number, offset: number, search: string | undefined) =>
   pool.many<User>(
     sql`
       select ${sql.join(Object.values(fields), sql`,`)}
       from ${table}
-      where ${buildUserSearchConditionSql(search)}
+      ${conditionalSql(search, (search) => sql`where ${buildUserSearchConditionSql(search)}`)}
       limit ${limit}
       offset ${offset}
     `
   );
-
-export const findTotalNumberOfUsersWithSearch = async (search: string) =>
-  pool.one<{ count: number }>(sql`
-    select count (*)
-    from ${table}
-    where ${buildUserSearchConditionSql(search)}
-  `);
-
-export const findAllUsers = async (limit: number, offset: number, search: string | undefined) => {
-  if (search) {
-    return pool.many<User>(
-      sql`
-        select ${sql.join(Object.values(fields), sql`,`)}
-        from ${table}
-        where ${buildUserSearchConditionSql(search)}
-        limit ${limit}
-        offset ${offset}
-      `
-    );
-  }
-
-  return findUserMany({ limit, offset });
-};
 
 const updateUser = buildUpdateWhere<CreateUser, User>(pool, Users, true);
 
