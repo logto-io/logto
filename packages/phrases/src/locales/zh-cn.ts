@@ -66,6 +66,8 @@ const errors = {
     insufficient_info: '登录信息缺失，请检查您的输入。',
     invalid_connector_id: '无法找到 ID 为 {{connectorId}} 的可用连接器。',
     connector_id_mismatch: '传入的 connectorId 与 session 中保存的记录不一致。',
+    connector_session_not_found: '无法找到 connector 登录信息，请尝试重新登录。',
+    unauthorized: '请先登录。',
   },
   connector: {
     general: 'Connector 发生未知错误。',

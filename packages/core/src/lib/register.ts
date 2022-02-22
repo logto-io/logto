@@ -2,20 +2,14 @@ import { PasscodeType, UserLogType } from '@logto/schemas';
 import { Context } from 'koa';
 import { Provider } from 'oidc-provider';
 
+import { SocialUserInfo } from '@/connectors/types';
 import RequestError from '@/errors/RequestError';
 import { WithUserLogContext } from '@/middleware/koa-user-log';
-import {
-  hasUser,
-  hasUserWithEmail,
-  hasUserWithPhone,
-  hasUserWithIdentity,
-  insertUser,
-} from '@/queries/user';
+import { hasUser, hasUserWithEmail, hasUserWithPhone, insertUser } from '@/queries/user';
 import assertThat from '@/utils/assert-that';
 import { emailRegEx, phoneRegEx } from '@/utils/regex';
 
 import { createPasscode, sendPasscode, verifyPasscode } from './passcode';
-import { getUserInfoByConnectorCode, SocialUserInfoSession } from './social';
 import { encryptUserPassword, generateUserId } from './user';
 
 const assignRegistrationResult = async (ctx: Context, provider: Provider, userId: string) => {
@@ -24,22 +18,6 @@ const assignRegistrationResult = async (ctx: Context, provider: Provider, userId
     ctx.res,
     { login: { accountId: userId } },
     { mergeWithLastSubmission: false }
-  );
-  ctx.body = { redirectTo };
-};
-
-const saveUserInfoToSession = async (
-  ctx: Context,
-  provider: Provider,
-  socialUserInfo: SocialUserInfoSession
-) => {
-  const redirectTo = await provider.interactionResult(
-    ctx.req,
-    ctx.res,
-    {
-      socialUserInfo,
-    },
-    { mergeWithLastSubmission: true }
   );
   ctx.body = { redirectTo };
 };
@@ -169,18 +147,9 @@ export const registerWithPhoneAndPasscode = async (
 export const registerWithSocial = async (
   ctx: WithUserLogContext<Context>,
   provider: Provider,
-  { connectorId, code }: { connectorId: string; code: string }
+  connectorId: string,
+  userInfo: SocialUserInfo
 ) => {
-  const userInfo = await getUserInfoByConnectorCode(connectorId, code);
-
-  if (await hasUserWithIdentity(connectorId, userInfo.id)) {
-    await saveUserInfoToSession(ctx, provider, { connectorId, userInfo });
-    throw new RequestError({
-      code: 'user.identity_exists',
-      status: 422,
-    });
-  }
-
   const id = await generateUserId();
   await insertUser({
     id,

@@ -1,9 +1,16 @@
+import { User } from '@logto/schemas';
 import { InteractionResults } from 'oidc-provider';
 import { z } from 'zod';
 
 import { getSocialConnectorInstanceById } from '@/connectors';
 import { SocialUserInfo, socialUserInfoGuard } from '@/connectors/types';
 import RequestError from '@/errors/RequestError';
+import {
+  findUserByEmail,
+  findUserByPhone,
+  hasUserWithEmail,
+  hasUserWithPhone,
+} from '@/queries/user';
 import assertThat from '@/utils/assert-that';
 
 export interface SocialUserInfoSession {
@@ -27,12 +34,12 @@ const getConnector = async (connectorId: string) => {
   }
 };
 
-export const getUserInfoByConnectorCode = async (
+export const getUserInfoByAuthCode = async (
   connectorId: string,
-  code: string
+  authCode: string
 ): Promise<SocialUserInfo> => {
   const connector = await getConnector(connectorId);
-  const accessToken = await connector.getAccessToken(code);
+  const accessToken = await connector.getAccessToken(authCode);
 
   return connector.getUserInfo(accessToken);
 };
@@ -41,16 +48,46 @@ export const getUserInfoFromInteractionResult = async (
   connectorId: string,
   interactionResult?: InteractionResults
 ): Promise<SocialUserInfo> => {
-  const result = z
+  const parse = z
     .object({
       socialUserInfo: z.object({
         connectorId: z.string(),
         userInfo: socialUserInfoGuard,
       }),
     })
-    .parse(interactionResult);
+    .safeParse(interactionResult);
 
+  if (!parse.success) {
+    throw new RequestError('session.connector_session_not_found');
+  }
+
+  const result = parse.data;
   assertThat(result.socialUserInfo.connectorId === connectorId, 'session.connector_id_mismatch');
 
   return result.socialUserInfo.userInfo;
+};
+
+/**
+ * Find user by phone/email from social user info.
+ * if both phone and email exist, take phone for priority.
+ *
+ * @param info SocialUserInfo
+ * @returns null | [string, User] the first string idicating phone or email
+ */
+export const findSocialRelatedUser = async (
+  info: SocialUserInfo
+): Promise<null | [string, User]> => {
+  if (info.phone && (await hasUserWithPhone(info.phone))) {
+    const user = await findUserByPhone(info.phone);
+
+    return [info.phone, user];
+  }
+
+  if (info.email && (await hasUserWithEmail(info.email))) {
+    const user = await findUserByEmail(info.email);
+
+    return [info.email, user];
+  }
+
+  return null;
 };
