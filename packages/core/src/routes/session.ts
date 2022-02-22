@@ -332,23 +332,6 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
       const userInfo = await getUserInfoFromInteractionResult(connectorId, result);
       assertThat(!(await hasUserWithIdentity(connectorId, userInfo.id)), 'user.identity_exists');
 
-      if (await hasUserWithIdentity(connectorId, userInfo.id)) {
-        const redirectTo = await provider.interactionResult(
-          ctx.req,
-          ctx.res,
-          {
-            connectorId,
-            userInfo,
-          },
-          { mergeWithLastSubmission: true }
-        );
-        ctx.body = { redirectTo };
-        throw new RequestError({
-          code: 'user.identity_exists',
-          status: 422,
-        });
-      }
-
       const id = await generateUserId();
       await insertUser({
         id,
