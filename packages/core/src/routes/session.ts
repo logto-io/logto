@@ -1,20 +1,14 @@
 import path from 'path';
 
 import { LogtoErrorCode } from '@logto/phrases';
-import { userInfoSelectFields } from '@logto/schemas';
+import { PasscodeType, UserLogType, userInfoSelectFields } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import pick from 'lodash.pick';
 import { Provider } from 'oidc-provider';
 import { object, string } from 'zod';
 
-import {
-  registerWithSocial,
-  registerWithEmailAndPasscode,
-  registerWithPhoneAndPasscode,
-  registerWithUsernameAndPassword,
-  sendPasscodeToEmail,
-  sendPasscodeToPhone,
-} from '@/lib/register';
+import RequestError from '@/errors/RequestError';
+import { createPasscode, sendPasscode, verifyPasscode } from '@/lib/passcode';
 import {
   assignRedirectUrlForSocial,
   sendSignInWithEmailPasscode,
@@ -26,9 +20,19 @@ import {
   signInWithSocialRelatedUser,
 } from '@/lib/sign-in';
 import { getUserInfoByAuthCode, getUserInfoFromInteractionResult } from '@/lib/social';
+import { encryptUserPassword, generateUserId } from '@/lib/user';
 import koaGuard from '@/middleware/koa-guard';
-import { findUserById, hasUserWithIdentity, updateUserById } from '@/queries/user';
+import {
+  hasUser,
+  hasUserWithEmail,
+  hasUserWithIdentity,
+  hasUserWithPhone,
+  insertUser,
+  findUserById,
+  updateUserById,
+} from '@/queries/user';
 import assertThat from '@/utils/assert-that';
+import { emailRegEx, phoneRegEx } from '@/utils/regex';
 
 import { AnonymousRouter } from './types';
 
@@ -179,7 +183,47 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
     koaGuard({ body: object({ username: string(), password: string() }) }),
     async (ctx, next) => {
       const { username, password } = ctx.guard.body;
-      await registerWithUsernameAndPassword(ctx, provider, username, password);
+      assertThat(
+        username && password,
+        new RequestError({
+          code: 'session.insufficient_info',
+          status: 400,
+        })
+      );
+      assertThat(
+        !(await hasUser(username)),
+        new RequestError({
+          code: 'user.username_exists_register',
+          status: 422,
+        })
+      );
+
+      const id = await generateUserId();
+
+      const { passwordEncryptionSalt, passwordEncrypted, passwordEncryptionMethod } =
+        encryptUserPassword(id, password);
+
+      await insertUser({
+        id,
+        username,
+        passwordEncrypted,
+        passwordEncryptionMethod,
+        passwordEncryptionSalt,
+      });
+
+      ctx.userLog.userId = id;
+      ctx.userLog.username = username;
+      ctx.userLog.type = UserLogType.RegisterUsernameAndPassword;
+
+      const redirectTo = await provider.interactionResult(
+        ctx.req,
+        ctx.res,
+        { login: { accountId: id } },
+        {
+          mergeWithLastSubmission: false,
+        }
+      );
+      ctx.body = { redirectTo };
 
       return next();
     }
@@ -192,13 +236,36 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
       const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
       const { phone, code } = ctx.guard.body;
 
+      assertThat(phoneRegEx.test(phone), 'user.invalid_phone');
+      assertThat(
+        !(await hasUserWithPhone(phone)),
+        new RequestError({ code: 'user.phone_exists_register', status: 422 })
+      );
+
       if (!code) {
-        await sendPasscodeToPhone(ctx, jti, phone);
+        const passcode = await createPasscode(jti, PasscodeType.Register, { phone });
+        await sendPasscode(passcode);
+        ctx.state = 204;
 
         return next();
       }
 
-      await registerWithPhoneAndPasscode(ctx, provider, { jti, phone, code });
+      await verifyPasscode(jti, PasscodeType.Register, code, { phone });
+      const id = await generateUserId();
+      await insertUser({ id, primaryPhone: phone });
+      const redirectTo = await provider.interactionResult(
+        ctx.req,
+        ctx.res,
+        { login: { accountId: id } },
+        { mergeWithLastSubmission: false }
+      );
+      ctx.body = { redirectTo };
+      ctx.userLog = {
+        ...ctx.userLog,
+        type: UserLogType.RegisterPhone,
+        userId: id,
+        phone,
+      };
 
       return next();
     }
@@ -211,13 +278,36 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
       const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
       const { email, code } = ctx.guard.body;
 
+      assertThat(emailRegEx.test(email), 'user.invalid_email');
+      assertThat(
+        !(await hasUserWithEmail(email)),
+        new RequestError({ code: 'user.email_exists_register', status: 422 })
+      );
+
       if (!code) {
-        await sendPasscodeToEmail(ctx, jti, email);
+        const passcode = await createPasscode(jti, PasscodeType.Register, { email });
+        await sendPasscode(passcode);
+        ctx.state = 204;
 
         return next();
       }
 
-      await registerWithEmailAndPasscode(ctx, provider, { jti, email, code });
+      await verifyPasscode(jti, PasscodeType.Register, code, { email });
+      const id = await generateUserId();
+      await insertUser({ id, primaryEmail: email });
+      const redirectTo = await provider.interactionResult(
+        ctx.req,
+        ctx.res,
+        { login: { accountId: id } },
+        { mergeWithLastSubmission: false }
+      );
+      ctx.body = { redirectTo };
+      ctx.userLog = {
+        ...ctx.userLog,
+        type: UserLogType.RegisterPhone,
+        userId: id,
+        email,
+      };
 
       return next();
     }
@@ -242,7 +332,43 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
       const userInfo = await getUserInfoFromInteractionResult(connectorId, result);
       assertThat(!(await hasUserWithIdentity(connectorId, userInfo.id)), 'user.identity_exists');
 
-      await registerWithSocial(ctx, provider, connectorId, userInfo);
+      if (await hasUserWithIdentity(connectorId, userInfo.id)) {
+        const redirectTo = await provider.interactionResult(
+          ctx.req,
+          ctx.res,
+          {
+            connectorId,
+            userInfo,
+          },
+          { mergeWithLastSubmission: true }
+        );
+        ctx.body = { redirectTo };
+        throw new RequestError({
+          code: 'user.identity_exists',
+          status: 422,
+        });
+      }
+
+      const id = await generateUserId();
+      await insertUser({
+        id,
+        name: userInfo.name ?? null,
+        avatar: userInfo.avatar ?? null,
+        identities: {
+          [connectorId]: {
+            userId: userInfo.id,
+            details: userInfo,
+          },
+        },
+      });
+
+      const redirectTo = await provider.interactionResult(
+        ctx.req,
+        ctx.res,
+        { login: { accountId: id } },
+        { mergeWithLastSubmission: false }
+      );
+      ctx.body = { redirectTo };
 
       return next();
     }
