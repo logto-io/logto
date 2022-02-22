@@ -122,6 +122,12 @@ describe('sendPasscode', () => {
   it('should call sendPasscode with params matching', async () => {
     const sendMessage = jest.fn();
     mockedGetConnectorInstanceByType.mockResolvedValue({
+      connector: {
+        id: 'id',
+        enabled: true,
+        config: {},
+        createdAt: Date.now(),
+      },
       metadata: {
         id: 'id',
         type: ConnectorType.SMS,
