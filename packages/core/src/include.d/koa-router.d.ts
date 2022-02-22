@@ -227,7 +227,7 @@ declare module 'koa-router' {
       routeHandler: Router.IMiddleware<StateT & T, CustomT & U>
     ): Router<StateT & T, CustomT & U>;
 
-    // Addtional signatures
+    // Additional signatures
     get<T1, U1, T2, U2>(
       path: string | RegExp | Array<string | RegExp>,
       middleware1: Koa.Middleware<T1, U1>,
@@ -266,7 +266,7 @@ declare module 'koa-router' {
       routeHandler: Router.IMiddleware<StateT & T, CustomT & U>
     ): Router<StateT & T, CustomT & U>;
 
-    // Addtional signatures
+    // Additional signatures
     post<T1, U1, T2, U2>(
       path: string | RegExp | Array<string | RegExp>,
       middleware1: Koa.Middleware<T1, U1>,
@@ -305,7 +305,7 @@ declare module 'koa-router' {
       routeHandler: Router.IMiddleware<StateT & T, CustomT & U>
     ): Router<StateT & T, CustomT & U>;
 
-    // Addtional signatures
+    // Additional signatures
     put<T1, U1, T2, U2>(
       path: string | RegExp | Array<string | RegExp>,
       middleware1: Koa.Middleware<T1, U1>,
@@ -344,7 +344,7 @@ declare module 'koa-router' {
       routeHandler: Router.IMiddleware<StateT & T, CustomT & U>
     ): Router<StateT & T, CustomT & U>;
 
-    // Addtional signatures
+    // Additional signatures
     link<T1, U1, T2, U2>(
       path: string | RegExp | Array<string | RegExp>,
       middleware1: Koa.Middleware<T1, U1>,
@@ -383,7 +383,7 @@ declare module 'koa-router' {
       routeHandler: Router.IMiddleware<StateT & T, CustomT & U>
     ): Router<StateT & T, CustomT & U>;
 
-    // Addtional signatures
+    // Additional signatures
     unlink<T1, U1, T2, U2>(
       path: string | RegExp | Array<string | RegExp>,
       middleware1: Koa.Middleware<T1, U1>,
@@ -422,7 +422,7 @@ declare module 'koa-router' {
       routeHandler: Router.IMiddleware<StateT & T, CustomT & U>
     ): Router<StateT & T, CustomT & U>;
 
-    // Addtional signatures
+    // Additional signatures
     delete<T1, U1, T2, U2>(
       path: string | RegExp | Array<string | RegExp>,
       middleware1: Koa.Middleware<T1, U1>,
@@ -461,7 +461,7 @@ declare module 'koa-router' {
       routeHandler: Router.IMiddleware<StateT & T, CustomT & U>
     ): Router<StateT & T, CustomT & U>;
 
-    // Addtional signatures
+    // Additional signatures
     del<T1, U1, T2, U2>(
       path: string | RegExp | Array<string | RegExp>,
       middleware1: Koa.Middleware<T1, U1>,
@@ -500,7 +500,7 @@ declare module 'koa-router' {
       routeHandler: Router.IMiddleware<StateT & T, CustomT & U>
     ): Router<StateT & T, CustomT & U>;
 
-    // Addtional signatures
+    // Additional signatures
     head<T1, U1, T2, U2>(
       path: string | RegExp | Array<string | RegExp>,
       middleware1: Koa.Middleware<T1, U1>,
@@ -539,7 +539,7 @@ declare module 'koa-router' {
       routeHandler: Router.IMiddleware<StateT & T, CustomT & U>
     ): Router<StateT & T, CustomT & U>;
 
-    // Addtional signatures
+    // Additional signatures
     options<T1, U1, T2, U2>(
       path: string | RegExp | Array<string | RegExp>,
       middleware1: Koa.Middleware<T1, U1>,
@@ -578,7 +578,7 @@ declare module 'koa-router' {
       routeHandler: Router.IMiddleware<StateT & T, CustomT & U>
     ): Router<StateT & T, CustomT & U>;
 
-    // Addtional signatures
+    // Additional signatures
     patch<T1, U1, T2, U2>(
       path: string | RegExp | Array<string | RegExp>,
       middleware1: Koa.Middleware<T1, U1>,
@@ -617,7 +617,7 @@ declare module 'koa-router' {
       routeHandler: Router.IMiddleware<StateT & T, CustomT & U>
     ): Router<StateT & T, CustomT & U>;
 
-    // Addtional signatures
+    // Additional signatures
     all<T1, U1, T2, U2>(
       path: string | RegExp | Array<string | RegExp>,
       middleware1: Koa.Middleware<T1, U1>,
