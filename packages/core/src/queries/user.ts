@@ -90,15 +90,19 @@ export const findTotalNumberOfUsers = async () => getTotalRowCount(table);
 
 const findUserMany = buildFindMany<CreateUser, User>(pool, Users);
 
+const buildUserSearchConditionSql = (search: string) => {
+  const searchFields = [fields.primaryEmail, fields.primaryPhone, fields.username, fields.name];
+  const conditions = searchFields.map((filedName) => sql`${filedName} like ${'%' + search + '%'}`);
+
+  return sql`${sql.join(conditions, sql`or`)}`;
+};
+
 export const searchUsers = async (limit: number, offset: number, search: string) =>
   pool.many<User>(
     sql`
       select ${sql.join(Object.values(fields), sql`,`)}
       from ${table}
-      where ${fields.primaryEmail} like ${'%' + search + '%'}
-      or ${fields.primaryPhone} like ${'%' + search + '%'}
-      or ${fields.username} like ${'%' + search + '%'}
-      or ${fields.name} like ${'%' + search + '%'}
+      where ${buildUserSearchConditionSql(search)}
       limit ${limit}
       offset ${offset}
     `
@@ -108,10 +112,7 @@ export const findTotalNumberOfUsersWithSearch = async (search: string) =>
   pool.one<{ count: number }>(sql`
     select count (*)
     from ${table}
-    where ${fields.primaryEmail} like ${'%' + search + '%'}
-    or ${fields.primaryPhone} like ${'%' + search + '%'}
-    or ${fields.username} like ${'%' + search + '%'}
-    or ${fields.name} like ${'%' + search + '%'}
+    where ${buildUserSearchConditionSql(search)}
   `);
 
 export const findAllUsers = async (limit: number, offset: number) =>
