@@ -1,9 +1,16 @@
+import { User } from '@logto/schemas';
 import { InteractionResults } from 'oidc-provider';
 import { z } from 'zod';
 
 import { getSocialConnectorInstanceById } from '@/connectors';
 import { SocialUserInfo, socialUserInfoGuard } from '@/connectors/types';
 import RequestError from '@/errors/RequestError';
+import {
+  findUserByEmail,
+  findUserByPhone,
+  hasUserWithEmail,
+  hasUserWithPhone,
+} from '@/queries/user';
 import assertThat from '@/utils/assert-that';
 
 export interface SocialUserInfoSession {
@@ -58,4 +65,29 @@ export const getUserInfoFromInteractionResult = async (
   assertThat(result.socialUserInfo.connectorId === connectorId, 'session.connector_id_mismatch');
 
   return result.socialUserInfo.userInfo;
+};
+
+/**
+ * Find user by phone/email from social user info.
+ * if both phone and email exist, take phone for priority.
+ *
+ * @param info SocialUserInfo
+ * @returns null | [string, User] the first string idicating phone or email
+ */
+export const findSocialRelatedUser = async (
+  info: SocialUserInfo
+): Promise<null | [string, User]> => {
+  if (info.phone && (await hasUserWithPhone(info.phone))) {
+    const user = await findUserByPhone(info.phone);
+
+    return [info.phone, user];
+  }
+
+  if (info.email && (await hasUserWithEmail(info.email))) {
+    const user = await findUserByEmail(info.email);
+
+    return [info.email, user];
+  }
+
+  return null;
 };

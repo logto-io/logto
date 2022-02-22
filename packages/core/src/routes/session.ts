@@ -23,6 +23,7 @@ import {
   signInWithEmailAndPasscode,
   signInWithPhoneAndPasscode,
   signInWithUsernameAndPassword,
+  signInWithSocialRelatedUser,
 } from '@/lib/sign-in';
 import { getUserInfoByAuthCode, getUserInfoFromInteractionResult } from '@/lib/social';
 import koaGuard from '@/middleware/koa-guard';
@@ -110,6 +111,23 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
 
       const userInfo = await getUserInfoByAuthCode(connectorId, code);
       await signInWithSocial(ctx, provider, connectorId, userInfo);
+
+      return next();
+    }
+  );
+
+  router.post(
+    '/session/sign-in/social-related-user',
+    koaGuard({
+      body: object({ connectorId: string() }),
+    }),
+    async (ctx, next) => {
+      const { connectorId } = ctx.guard.body;
+
+      const { result } = await provider.interactionDetails(ctx.req, ctx.res);
+      assertThat(result, 'session.connector_session_not_found');
+
+      await signInWithSocialRelatedUser(ctx, provider, { connectorId, result });
 
       return next();
     }
