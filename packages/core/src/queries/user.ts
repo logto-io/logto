@@ -90,6 +90,30 @@ export const findTotalNumberOfUsers = async () => getTotalRowCount(table);
 
 const findUserMany = buildFindMany<CreateUser, User>(pool, Users);
 
+export const searchUsers = async (limit: number, offset: number, search: string) =>
+  pool.many<User>(
+    sql`
+      select ${sql.join(Object.values(fields), sql`,`)}
+      from ${table}
+      where ${fields.primaryEmail} like ${'%' + search + '%'}
+      or ${fields.primaryPhone} like ${'%' + search + '%'}
+      or ${fields.username} like ${'%' + search + '%'}
+      or ${fields.name} like ${'%' + search + '%'}
+      limit ${limit}
+      offset ${offset}
+    `
+  );
+
+export const findTotalNumberOfUsersWithSearch = async (search: string) =>
+  pool.one<{ count: number }>(sql`
+    select count (*)
+    from ${table}
+    where ${fields.primaryEmail} like ${'%' + search + '%'}
+    or ${fields.primaryPhone} like ${'%' + search + '%'}
+    or ${fields.username} like ${'%' + search + '%'}
+    or ${fields.name} like ${'%' + search + '%'}
+  `);
+
 export const findAllUsers = async (limit: number, offset: number) =>
   findUserMany({ limit, offset });
 

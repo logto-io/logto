@@ -13,9 +13,11 @@ import {
   deleteUserById,
   findAllUsers,
   findTotalNumberOfUsers,
+  findTotalNumberOfUsersWithSearch,
   findUserById,
   hasUser,
   insertUser,
+  searchUsers,
   updateUserById,
 } from '@/queries/user';
 import assertThat from '@/utils/assert-that';
@@ -23,19 +25,32 @@ import assertThat from '@/utils/assert-that';
 import { AuthedRouter } from './types';
 
 export default function adminUserRoutes<T extends AuthedRouter>(router: T) {
-  router.get('/users', koaPagination(), async (ctx, next) => {
-    const { limit, offset } = ctx.pagination;
+  router.get(
+    '/users',
+    koaPagination(),
+    koaGuard({ query: object({ search: string().optional() }) }),
+    async (ctx, next) => {
+      const { limit, offset } = ctx.pagination;
+      const {
+        query: { search },
+      } = ctx.guard;
 
-    const [{ count }, users] = await Promise.all([
-      findTotalNumberOfUsers(),
-      findAllUsers(limit, offset),
-    ]);
+      const userCounter = search
+        ? async () => findTotalNumberOfUsersWithSearch(search)
+        : async () => findTotalNumberOfUsers();
 
-    ctx.pagination.totalCount = count;
-    ctx.body = users.map((user) => pick(user, ...userInfoSelectFields));
+      const userFinder = search
+        ? async () => searchUsers(limit, offset, search)
+        : async () => findAllUsers(limit, offset);
 
-    return next();
-  });
+      const [{ count }, users] = await Promise.all([userCounter(), userFinder()]);
+
+      ctx.pagination.totalCount = count;
+      ctx.body = users.map((user) => pick(user, ...userInfoSelectFields));
+
+      return next();
+    }
+  );
 
   router.get(
     '/users/:userId',
