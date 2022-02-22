@@ -13,11 +13,9 @@ import {
   deleteUserById,
   findAllUsers,
   findTotalNumberOfUsers,
-  findTotalNumberOfUsersWithSearch,
   findUserById,
   hasUser,
   insertUser,
-  searchUsers,
   updateUserById,
 } from '@/queries/user';
 import assertThat from '@/utils/assert-that';
@@ -35,15 +33,10 @@ export default function adminUserRoutes<T extends AuthedRouter>(router: T) {
         query: { search },
       } = ctx.guard;
 
-      const userCounter = search
-        ? async () => findTotalNumberOfUsersWithSearch(search)
-        : async () => findTotalNumberOfUsers();
-
-      const userFinder = search
-        ? async () => searchUsers(limit, offset, search)
-        : async () => findAllUsers(limit, offset);
-
-      const [{ count }, users] = await Promise.all([userCounter(), userFinder()]);
+      const [{ count }, users] = await Promise.all([
+        findTotalNumberOfUsers(search),
+        findAllUsers(limit, offset, search),
+      ]);
 
       ctx.pagination.totalCount = count;
       ctx.body = users.map((user) => pick(user, ...userInfoSelectFields));
