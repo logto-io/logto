@@ -1,8 +1,9 @@
 import path from 'path';
 
 import { LogtoErrorCode } from '@logto/phrases';
-import { PasscodeType, UserLogType } from '@logto/schemas';
+import { PasscodeType, UserLogType, userInfoSelectFields } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
+import pick from 'lodash.pick';
 import { Provider } from 'oidc-provider';
 import { object, string } from 'zod';
 
@@ -16,8 +17,9 @@ import {
   signInWithEmailAndPasscode,
   signInWithPhoneAndPasscode,
   signInWithUsernameAndPassword,
+  signInWithSocialRelatedUser,
 } from '@/lib/sign-in';
-import { getUserInfoByConnectorCode } from '@/lib/social';
+import { getUserInfoByAuthCode, getUserInfoFromInteractionResult } from '@/lib/social';
 import { encryptUserPassword, generateUserId } from '@/lib/user';
 import koaGuard from '@/middleware/koa-guard';
 import {
@@ -26,6 +28,8 @@ import {
   hasUserWithIdentity,
   hasUserWithPhone,
   insertUser,
+  findUserById,
+  updateUserById,
 } from '@/queries/user';
 import assertThat from '@/utils/assert-that';
 import { emailRegEx, phoneRegEx } from '@/utils/regex';
@@ -100,7 +104,6 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
       body: object({ connectorId: string(), code: string().optional(), state: string() }),
     }),
     async (ctx, next) => {
-      const { result } = await provider.interactionDetails(ctx.req, ctx.res);
       const { connectorId, code, state } = ctx.guard.body;
 
       if (!code) {
@@ -110,7 +113,25 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
         return next();
       }
 
-      await signInWithSocial(ctx, provider, { connectorId, code, result });
+      const userInfo = await getUserInfoByAuthCode(connectorId, code);
+      await signInWithSocial(ctx, provider, connectorId, userInfo);
+
+      return next();
+    }
+  );
+
+  router.post(
+    '/session/sign-in/social-related-user',
+    koaGuard({
+      body: object({ connectorId: string() }),
+    }),
+    async (ctx, next) => {
+      const { connectorId } = ctx.guard.body;
+
+      const { result } = await provider.interactionDetails(ctx.req, ctx.res);
+      assertThat(result, 'session.connector_session_not_found');
+
+      await signInWithSocialRelatedUser(ctx, provider, { connectorId, result });
 
       return next();
     }
@@ -297,60 +318,50 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
     koaGuard({
       body: object({
         connectorId: string(),
-        code: string().optional(),
-        state: string().optional(),
       }),
     }),
     async (ctx, next) => {
-      const { connectorId, code, state } = ctx.guard.body;
+      const { connectorId } = ctx.guard.body;
+      const { result } = await provider.interactionDetails(ctx.req, ctx.res);
 
-      if (!code) {
-        assertThat(state, 'session.insufficient_info');
-        await assignRedirectUrlForSocial(ctx, connectorId, state);
+      // User can not regsiter with social directly,
+      // need to try to sign in with social first, then confirm to register and continue,
+      // so the result is expected to be exists.
+      assertThat(result, 'session.connector_session_not_found');
 
-        return next();
-      }
+      const userInfo = await getUserInfoFromInteractionResult(connectorId, result);
+      assertThat(!(await hasUserWithIdentity(connectorId, userInfo.id)), 'user.identity_exists');
 
-      const userInfo = await getUserInfoByConnectorCode(connectorId, code);
+      await registerWithSocial(ctx, provider, connectorId, userInfo);
 
-      if (await hasUserWithIdentity(connectorId, userInfo.id)) {
-        const redirectTo = await provider.interactionResult(
-          ctx.req,
-          ctx.res,
-          { connectorId, userInfo },
-          {
-            mergeWithLastSubmission: true,
-          }
-        );
-        ctx.body = { redirectTo };
-        throw new RequestError({
-          code: 'user.identity_exists',
-          status: 422,
-        });
-      }
+      return next();
+    }
+  );
 
-      const id = await generateUserId();
-      await insertUser({
-        id,
-        name: userInfo.name ?? null,
-        avatar: userInfo.avatar ?? null,
+  router.post(
+    '/session/bind-social',
+    koaGuard({
+      body: object({
+        connectorId: string(),
+      }),
+    }),
+    async (ctx, next) => {
+      const { connectorId } = ctx.guard.body;
+      const { result } = await provider.interactionDetails(ctx.req, ctx.res);
+      assertThat(result, 'session.connector_session_not_found');
+      assertThat(result.login?.accountId, 'session.unauthorized');
+
+      const userInfo = await getUserInfoFromInteractionResult(connectorId, result);
+      const user = await findUserById(result.login.accountId);
+
+      const updatedUser = await updateUserById(user.id, {
         identities: {
-          [connectorId]: {
-            userId: userInfo.id,
-            details: userInfo,
-          },
+          ...user.identities,
+          [connectorId]: { userId: userInfo.id, details: userInfo },
         },
       });
 
-      const redirectTo = await provider.interactionResult(
-        ctx.req,
-        ctx.res,
-        { login: { accountId: id } },
-        {
-          mergeWithLastSubmission: false,
-        }
-      );
-      ctx.body = { redirectTo };
+      ctx.body = pick(updatedUser, ...userInfoSelectFields);
 
       return next();
     }

@@ -3,6 +3,7 @@ import { Context } from 'koa';
 import { InteractionResults, Provider } from 'oidc-provider';
 
 import { getSocialConnectorInstanceById } from '@/connectors';
+import { SocialUserInfo } from '@/connectors/types';
 import RequestError from '@/errors/RequestError';
 import { WithUserLogContext } from '@/middleware/koa-user-log';
 import {
@@ -18,7 +19,11 @@ import assertThat from '@/utils/assert-that';
 import { emailRegEx, phoneRegEx } from '@/utils/regex';
 
 import { createPasscode, sendPasscode, verifyPasscode } from './passcode';
-import { getUserInfoByConnectorCode, getUserInfoFromInteractionResult } from './social';
+import {
+  findSocialRelatedUser,
+  getUserInfoFromInteractionResult,
+  SocialUserInfoSession,
+} from './social';
 import { findUserByUsernameAndPassword } from './user';
 
 const assignSignInResult = async (ctx: Context, provider: Provider, userId: string) => {
@@ -119,29 +124,67 @@ export const assignRedirectUrlForSocial = async (
   ctx.body = { redirectTo };
 };
 
+const saveUserInfoToSession = async (
+  ctx: Context,
+  provider: Provider,
+  socialUserInfo: SocialUserInfoSession
+) => {
+  const redirectTo = await provider.interactionResult(
+    ctx.req,
+    ctx.res,
+    {
+      socialUserInfo,
+    },
+    { mergeWithLastSubmission: true }
+  );
+  ctx.body = { redirectTo };
+};
+
 export const signInWithSocial = async (
   ctx: WithUserLogContext<Context>,
   provider: Provider,
-  { connectorId, code, result }: { connectorId: string; code: string; result?: InteractionResults }
+  connectorId: string,
+  userInfo: SocialUserInfo
 ) => {
   ctx.userLog.connectorId = connectorId;
   ctx.userLog.type = UserLogType.SignInSocial;
 
-  const userInfo =
-    code === 'session'
-      ? await getUserInfoFromInteractionResult(connectorId, result)
-      : await getUserInfoByConnectorCode(connectorId, code);
-
-  assertThat(
-    await hasUserWithIdentity(connectorId, userInfo.id),
-    new RequestError({
-      code: 'user.identity_not_exists',
-      status: 422,
-    })
-  );
+  if (!(await hasUserWithIdentity(connectorId, userInfo.id))) {
+    await saveUserInfoToSession(ctx, provider, { connectorId, userInfo });
+    const relatedInfo = await findSocialRelatedUser(userInfo);
+    throw new RequestError(
+      {
+        code: 'user.identity_not_exists',
+        status: 422,
+      },
+      relatedInfo && { relatedUser: relatedInfo[0] }
+    );
+  }
 
   const { id, identities } = await findUserByIdentity(connectorId, userInfo.id);
   // Update social connector's user info
+  await updateUserById(id, {
+    identities: { ...identities, [connectorId]: { userId: userInfo.id, details: userInfo } },
+  });
+  ctx.userLog.userId = id;
+  await assignSignInResult(ctx, provider, id);
+};
+
+export const signInWithSocialRelatedUser = async (
+  ctx: WithUserLogContext<Context>,
+  provider: Provider,
+  { connectorId, result }: { connectorId: string; result: InteractionResults }
+) => {
+  ctx.userLog.connectorId = connectorId;
+  ctx.userLog.type = UserLogType.SignInSocial;
+
+  const userInfo = await getUserInfoFromInteractionResult(connectorId, result);
+  const relatedInfo = await findSocialRelatedUser(userInfo);
+
+  assertThat(relatedInfo, 'session.connector_session_not_found');
+
+  const { id, identities } = relatedInfo[1];
+
   await updateUserById(id, {
     identities: { ...identities, [connectorId]: { userId: userInfo.id, details: userInfo } },
   });
