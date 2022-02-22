@@ -68,6 +68,7 @@ const errors = {
     connector_id_mismatch: '传入的 connectorId 与 session 中保存的记录不一致。',
     connector_session_not_found: '无法找到 connector 登录信息，请尝试重新登录。',
     unauthorized: '请先登录。',
+    unsupported_prompt_name: '不支持的 prompt name。',
   },
   connector: {
     general: 'Connector 发生未知错误。',

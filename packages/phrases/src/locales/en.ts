@@ -67,6 +67,7 @@ const errors = {
     connector_id_mismatch: 'The connectorId is mismatched with session record.',
     connector_session_not_found: 'Connector session not found. Please go back and sign in again.',
     unauthorized: 'Please sign in first.',
+    unsupported_prompt_name: 'Unsupported prompt name',
   },
   connector: {
     general: 'An unexpected error occured in connector.',
