@@ -1,14 +1,27 @@
-import { CreateUser, User } from '@logto/schemas';
+import { CreateUser, User, userInfoSelectFields } from '@logto/schemas';
+import pick from 'lodash.pick';
 
 import { hasUser, findUserById } from '@/queries/user';
-import { mockUser, mockUserResponse } from '@/utils/mock';
+import { mockUser, mockUserList, mockUserListResponse, mockUserResponse } from '@/utils/mock';
 import { createRequester } from '@/utils/test-utils';
 
 import adminUserRoutes from './admin-user';
 
+const filterUsersWithSearch = (users: User[], search: string) =>
+  users.filter((user) =>
+    [user.username, user.primaryEmail, user.primaryPhone, user.name].some((value) =>
+      value ? !value.includes(search) : false
+    )
+  );
+
 jest.mock('@/queries/user', () => ({
-  findTotalNumberOfUsers: jest.fn(async () => ({ count: 10 })),
-  findAllUsers: jest.fn(async (): Promise<User[]> => [mockUser]),
+  findTotalNumberOfUsers: jest.fn(async (search) => ({
+    count: search ? filterUsersWithSearch(mockUserList, search).length : mockUserList.length,
+  })),
+  findAllUsers: jest.fn(
+    async (limit, offset, search): Promise<User[]> =>
+      search ? filterUsersWithSearch(mockUserList, search) : mockUserList
+  ),
   findUserById: jest.fn(async (): Promise<User> => mockUser),
   hasUser: jest.fn(async () => false),
   updateUserById: jest.fn(
@@ -37,11 +50,28 @@ jest.mock('@/lib/user', () => ({
 describe('adminUserRoutes', () => {
   const userRequest = createRequester(adminUserRoutes);
 
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
   it('GET /users', async () => {
     const response = await userRequest.get('/users');
     expect(response.status).toEqual(200);
-    expect(response.body).toEqual([mockUserResponse]);
-    expect(response.header).toHaveProperty('total-number', '10');
+    expect(response.body).toEqual(mockUserListResponse);
+    expect(response.header).toHaveProperty('total-number', `${mockUserList.length}`);
+  });
+
+  it('GET /users should return matched data', async () => {
+    const search = 'foo';
+    const response = await userRequest.get('/users').send({ search });
+    expect(response.status).toEqual(200);
+    expect(response.body).toEqual(
+      filterUsersWithSearch(mockUserList, search).map((user) => pick(user, ...userInfoSelectFields))
+    );
+    expect(response.header).toHaveProperty(
+      'total-number',
+      `${filterUsersWithSearch(mockUserList, search).length}`
+    );
   });
 
   it('GET /users/:userId', async () => {
