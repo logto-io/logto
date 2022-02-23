@@ -55,13 +55,15 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
     koaGuard({ body: object({ username: string(), password: string() }) }),
     async (ctx, next) => {
       const { username, password } = ctx.guard.body;
+
       assertThat(username && password, 'session.insufficient_info');
+      ctx.userLog.username = username;
 
       const { id } = await findUserByUsernameAndPassword(username, password);
-      await assignInteractionResults(ctx, provider, { login: { accountId: id } });
       ctx.userLog.userId = id;
-      ctx.userLog.username = username;
       ctx.userLog.type = UserLogType.SignInUsernameAndPassword;
+
+      await assignInteractionResults(ctx, provider, { login: { accountId: id } });
 
       return next();
     }
@@ -82,6 +84,7 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
           status: 422,
         })
       );
+      ctx.userLog.phone = phone;
 
       if (!code) {
         const passcode = await createPasscode(jti, PasscodeType.SignIn, { phone });
@@ -93,11 +96,10 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
 
       await verifyPasscode(jti, PasscodeType.SignIn, code, { phone });
       const { id } = await findUserByPhone(phone);
+      ctx.userLog.userId = id;
+      ctx.userLog.type = UserLogType.SignInPhone;
 
       await assignInteractionResults(ctx, provider, { login: { accountId: id } });
-      ctx.userLog.userId = id;
-      ctx.userLog.phone = phone;
-      ctx.userLog.type = UserLogType.SignInPhone;
 
       return next();
     }
@@ -118,6 +120,7 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
           status: 422,
         })
       );
+      ctx.userLog.email = email;
 
       if (!code) {
         const passcode = await createPasscode(jti, PasscodeType.SignIn, { email });
@@ -129,11 +132,10 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
 
       await verifyPasscode(jti, PasscodeType.SignIn, code, { email });
       const { id } = await findUserByEmail(email);
+      ctx.userLog.userId = id;
+      ctx.userLog.type = UserLogType.SignInEmail;
 
       await assignInteractionResults(ctx, provider, { login: { accountId: id } });
-      ctx.userLog.userId = id;
-      ctx.userLog.email = email;
-      ctx.userLog.type = UserLogType.SignInEmail;
 
       return next();
     }
@@ -147,6 +149,8 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
     async (ctx, next) => {
       const { connectorId, code, state } = ctx.guard.body;
 
+      ctx.userLog.connectorId = connectorId;
+
       if (!code) {
         assertThat(state, 'session.insufficient_info');
         const connector = await getSocialConnectorInstanceById(connectorId);
@@ -158,8 +162,6 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
       }
 
       const userInfo = await getUserInfoByAuthCode(connectorId, code);
-      ctx.userLog.connectorId = connectorId;
-      ctx.userLog.type = UserLogType.SignInSocial;
 
       if (!(await hasUserWithIdentity(connectorId, userInfo.id))) {
         await assignInteractionResults(ctx, provider, { connectorId, userInfo }, true);
@@ -174,13 +176,13 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
       }
 
       const { id, identities } = await findUserByIdentity(connectorId, userInfo.id);
+      ctx.userLog.userId = id;
+      ctx.userLog.type = UserLogType.SignInSocial;
 
       // Update social connector's user info
       await updateUserById(id, {
         identities: { ...identities, [connectorId]: { userId: userInfo.id, details: userInfo } },
       });
-      ctx.userLog.userId = id;
-
       await assignInteractionResults(ctx, provider, { login: { accountId: id } });
 
       return next();
@@ -194,12 +196,11 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
     }),
     async (ctx, next) => {
       const { connectorId } = ctx.guard.body;
-
       const { result } = await provider.interactionDetails(ctx.req, ctx.res);
+
       assertThat(result, 'session.connector_session_not_found');
 
       ctx.userLog.connectorId = connectorId;
-      ctx.userLog.type = UserLogType.SignInSocial;
 
       const userInfo = await getUserInfoFromInteractionResult(connectorId, result);
       const relatedInfo = await findSocialRelatedUser(userInfo);
@@ -207,13 +208,12 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
       assertThat(relatedInfo, 'session.connector_session_not_found');
 
       const { id, identities } = relatedInfo[1];
+      ctx.userLog.userId = id;
+      ctx.userLog.type = UserLogType.SignInSocial;
 
       await updateUserById(id, {
         identities: { ...identities, [connectorId]: { userId: userInfo.id, details: userInfo } },
       });
-
-      ctx.userLog.userId = id;
-
       await assignInteractionResults(ctx, provider, { login: { accountId: id } });
 
       return next();
@@ -260,6 +260,7 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
     koaGuard({ body: object({ username: string(), password: string() }) }),
     async (ctx, next) => {
       const { username, password } = ctx.guard.body;
+
       assertThat(
         username && password,
         new RequestError({
@@ -274,8 +275,11 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
           status: 422,
         })
       );
+      ctx.userLog.username = username;
 
       const id = await generateUserId();
+      ctx.userLog.userId = id;
+      ctx.userLog.type = UserLogType.RegisterUsernameAndPassword;
 
       const { passwordEncryptionSalt, passwordEncrypted, passwordEncryptionMethod } =
         encryptUserPassword(id, password);
@@ -287,11 +291,6 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
         passwordEncryptionMethod,
         passwordEncryptionSalt,
       });
-
-      ctx.userLog.userId = id;
-      ctx.userLog.username = username;
-      ctx.userLog.type = UserLogType.RegisterUsernameAndPassword;
-
       await assignInteractionResults(ctx, provider, { login: { accountId: id } });
 
       return next();
@@ -310,6 +309,7 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
         !(await hasUserWithPhone(phone)),
         new RequestError({ code: 'user.phone_exists_register', status: 422 })
       );
+      ctx.userLog.phone = phone;
 
       if (!code) {
         const passcode = await createPasscode(jti, PasscodeType.Register, { phone });
@@ -321,14 +321,11 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
 
       await verifyPasscode(jti, PasscodeType.Register, code, { phone });
       const id = await generateUserId();
+      ctx.userLog.userId = id;
+      ctx.userLog.type = UserLogType.RegisterPhone;
+
       await insertUser({ id, primaryPhone: phone });
       await assignInteractionResults(ctx, provider, { login: { accountId: id } });
-      ctx.userLog = {
-        ...ctx.userLog,
-        type: UserLogType.RegisterPhone,
-        userId: id,
-        phone,
-      };
 
       return next();
     }
@@ -346,6 +343,7 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
         !(await hasUserWithEmail(email)),
         new RequestError({ code: 'user.email_exists_register', status: 422 })
       );
+      ctx.userLog.email = email;
 
       if (!code) {
         const passcode = await createPasscode(jti, PasscodeType.Register, { email });
@@ -357,14 +355,11 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
 
       await verifyPasscode(jti, PasscodeType.Register, code, { email });
       const id = await generateUserId();
+      ctx.userLog.userId = id;
+      ctx.userLog.type = UserLogType.RegisterPhone;
+
       await insertUser({ id, primaryEmail: email });
       await assignInteractionResults(ctx, provider, { login: { accountId: id } });
-      ctx.userLog = {
-        ...ctx.userLog,
-        type: UserLogType.RegisterPhone,
-        userId: id,
-        email,
-      };
 
       return next();
     }
