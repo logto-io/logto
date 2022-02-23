@@ -51,27 +51,52 @@ export const createContextWithRouteParameters = (
   };
 };
 
-type RouteLauncher<T extends AuthedRouter | AnonymousRouter> = (
+type RouteLauncher<T extends AuthedRouter | AnonymousRouter> = (router: T) => void;
+
+type ProviderRouteLauncher<T extends AuthedRouter | AnonymousRouter> = (
   router: T,
-  provider?: Provider
+  provider: Provider
 ) => void;
 
-export const createRequester = ({
+export function createRequester(
+  payload:
+    | {
+        anonymousRoutes?: RouteLauncher<AnonymousRouter> | Array<RouteLauncher<AnonymousRouter>>;
+        authedRoutes?: RouteLauncher<AuthedRouter> | Array<RouteLauncher<AuthedRouter>>;
+      }
+    | {
+        anonymousRoutes?:
+          | ProviderRouteLauncher<AnonymousRouter>
+          | Array<ProviderRouteLauncher<AnonymousRouter>>;
+        authedRoutes?: RouteLauncher<AuthedRouter> | Array<RouteLauncher<AuthedRouter>>;
+        provider: Provider;
+      }
+): request.SuperTest<request.Test>;
+
+export function createRequester({
   anonymousRoutes,
   authedRoutes,
   provider,
 }: {
-  anonymousRoutes?: RouteLauncher<AnonymousRouter> | Array<RouteLauncher<AnonymousRouter>>;
+  anonymousRoutes?:
+    | RouteLauncher<AnonymousRouter>
+    | Array<RouteLauncher<AnonymousRouter>>
+    | ProviderRouteLauncher<AnonymousRouter>
+    | Array<ProviderRouteLauncher<AnonymousRouter>>;
   authedRoutes?: RouteLauncher<AuthedRouter> | Array<RouteLauncher<AuthedRouter>>;
   provider?: Provider;
-}): request.SuperTest<request.Test> => {
+}): request.SuperTest<request.Test> {
   const app = new Koa();
 
   if (anonymousRoutes) {
     const anonymousRouter: AnonymousRouter = new Router();
 
     for (const route of Array.isArray(anonymousRoutes) ? anonymousRoutes : [anonymousRoutes]) {
-      route(anonymousRouter, provider);
+      if (provider) {
+        route(anonymousRouter, provider);
+      } else {
+        (route as RouteLauncher<AnonymousRouter>)(anonymousRouter);
+      }
     }
 
     app.use(anonymousRouter.routes()).use(anonymousRouter.allowedMethods());
@@ -81,11 +106,11 @@ export const createRequester = ({
     const authRouter: AuthedRouter = new Router();
 
     for (const route of Array.isArray(authedRoutes) ? authedRoutes : [authedRoutes]) {
-      route(authRouter, provider);
+      route(authRouter);
     }
 
     app.use(authRouter.routes()).use(authRouter.allowedMethods());
   }
 
   return request(app.callback());
-};
+}

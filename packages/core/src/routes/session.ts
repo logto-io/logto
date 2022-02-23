@@ -47,6 +47,8 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
 
       return next();
     }
+
+    throw new RequestError('session.unsupported_prompt_name');
   });
 
   router.post(
