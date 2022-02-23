@@ -50,7 +50,7 @@ jest.mock('@/lib/user', () => ({
 describe('adminUserRoutes', () => {
   const userRequest = createRequester(adminUserRoutes);
 
-  beforeEach(() => {
+  afterEach(() => {
     jest.clearAllMocks();
   });
 
