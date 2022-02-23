@@ -268,13 +268,13 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
 
   router.post(
     '/session/register/username-password',
-    koaGuard({ body: object({ username: string(), password: string() }) }),
+    koaGuard({ body: object({ username: string(), password: string().optional() }) }),
     async (ctx, next) => {
       ctx.userLog.type = UserLogType.RegisterUsernameAndPassword;
       const { username, password } = ctx.guard.body;
 
       assertThat(
-        username && password,
+        username,
         new RequestError({
           code: 'session.insufficient_info',
           status: 400,
@@ -288,6 +288,12 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
         })
       );
       ctx.userLog.username = username;
+
+      if (!password) {
+        ctx.status = 204;
+
+        return next();
+      }
 
       const id = await generateUserId();
       ctx.userLog.userId = id;
