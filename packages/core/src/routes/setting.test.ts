@@ -38,7 +38,6 @@ describe('settings routes', () => {
 
     expect(response.status).toEqual(200);
     expect(response.body).toEqual({
-      ...mockSetting,
       customDomain,
       adminConsole,
     });
