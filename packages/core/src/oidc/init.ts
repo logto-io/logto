@@ -1,3 +1,5 @@
+/* istanbul ignore file */
+
 import { customClientMetadataGuard, CustomClientMetadataType } from '@logto/schemas';
 import { fromKeyLike } from 'jose/jwk/from_key_like';
 import Koa from 'koa';
