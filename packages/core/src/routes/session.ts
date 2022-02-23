@@ -54,6 +54,7 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
     '/session/sign-in/username-password',
     koaGuard({ body: object({ username: string(), password: string() }) }),
     async (ctx, next) => {
+      ctx.userLog.type = UserLogType.SignInUsernameAndPassword;
       const { username, password } = ctx.guard.body;
 
       assertThat(username && password, 'session.insufficient_info');
@@ -61,7 +62,6 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
 
       const { id } = await findUserByUsernameAndPassword(username, password);
       ctx.userLog.userId = id;
-      ctx.userLog.type = UserLogType.SignInUsernameAndPassword;
 
       await assignInteractionResults(ctx, provider, { login: { accountId: id } });
 
@@ -73,6 +73,7 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
     '/session/sign-in/passwordless/phone',
     koaGuard({ body: object({ phone: string(), code: string().optional() }) }),
     async (ctx, next) => {
+      ctx.userLog.type = UserLogType.SignInPhone;
       const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
       const { phone, code } = ctx.guard.body;
 
@@ -97,7 +98,6 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
       await verifyPasscode(jti, PasscodeType.SignIn, code, { phone });
       const { id } = await findUserByPhone(phone);
       ctx.userLog.userId = id;
-      ctx.userLog.type = UserLogType.SignInPhone;
 
       await assignInteractionResults(ctx, provider, { login: { accountId: id } });
 
@@ -109,6 +109,7 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
     '/session/sign-in/passwordless/email',
     koaGuard({ body: object({ email: string(), code: string().optional() }) }),
     async (ctx, next) => {
+      ctx.userLog.type = UserLogType.SignInEmail;
       const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
       const { email, code } = ctx.guard.body;
 
@@ -133,7 +134,6 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
       await verifyPasscode(jti, PasscodeType.SignIn, code, { email });
       const { id } = await findUserByEmail(email);
       ctx.userLog.userId = id;
-      ctx.userLog.type = UserLogType.SignInEmail;
 
       await assignInteractionResults(ctx, provider, { login: { accountId: id } });
 
@@ -147,6 +147,7 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
       body: object({ connectorId: string(), code: string().optional(), state: string() }),
     }),
     async (ctx, next) => {
+      ctx.userLog.type = UserLogType.SignInSocial;
       const { connectorId, code, state } = ctx.guard.body;
 
       ctx.userLog.connectorId = connectorId;
@@ -177,7 +178,6 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
 
       const { id, identities } = await findUserByIdentity(connectorId, userInfo.id);
       ctx.userLog.userId = id;
-      ctx.userLog.type = UserLogType.SignInSocial;
 
       // Update social connector's user info
       await updateUserById(id, {
@@ -195,6 +195,7 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
       body: object({ connectorId: string() }),
     }),
     async (ctx, next) => {
+      ctx.userLog.type = UserLogType.SignInSocial;
       const { connectorId } = ctx.guard.body;
       const { result } = await provider.interactionDetails(ctx.req, ctx.res);
 
@@ -209,7 +210,6 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
 
       const { id, identities } = relatedInfo[1];
       ctx.userLog.userId = id;
-      ctx.userLog.type = UserLogType.SignInSocial;
 
       await updateUserById(id, {
         identities: { ...identities, [connectorId]: { userId: userInfo.id, details: userInfo } },
@@ -259,6 +259,7 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
     '/session/register/username-password',
     koaGuard({ body: object({ username: string(), password: string() }) }),
     async (ctx, next) => {
+      ctx.userLog.type = UserLogType.RegisterUsernameAndPassword;
       const { username, password } = ctx.guard.body;
 
       assertThat(
@@ -279,7 +280,6 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
 
       const id = await generateUserId();
       ctx.userLog.userId = id;
-      ctx.userLog.type = UserLogType.RegisterUsernameAndPassword;
 
       const { passwordEncryptionSalt, passwordEncrypted, passwordEncryptionMethod } =
         encryptUserPassword(id, password);
@@ -301,6 +301,7 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
     '/session/register/passwordless/phone',
     koaGuard({ body: object({ phone: string(), code: string().optional() }) }),
     async (ctx, next) => {
+      ctx.userLog.type = UserLogType.RegisterPhone;
       const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
       const { phone, code } = ctx.guard.body;
 
@@ -322,7 +323,6 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
       await verifyPasscode(jti, PasscodeType.Register, code, { phone });
       const id = await generateUserId();
       ctx.userLog.userId = id;
-      ctx.userLog.type = UserLogType.RegisterPhone;
 
       await insertUser({ id, primaryPhone: phone });
       await assignInteractionResults(ctx, provider, { login: { accountId: id } });
@@ -335,6 +335,7 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
     '/session/register/passwordless/email',
     koaGuard({ body: object({ email: string(), code: string().optional() }) }),
     async (ctx, next) => {
+      ctx.userLog.type = UserLogType.RegisterPhone;
       const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
       const { email, code } = ctx.guard.body;
 
@@ -356,7 +357,6 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
       await verifyPasscode(jti, PasscodeType.Register, code, { email });
       const id = await generateUserId();
       ctx.userLog.userId = id;
-      ctx.userLog.type = UserLogType.RegisterPhone;
 
       await insertUser({ id, primaryEmail: email });
       await assignInteractionResults(ctx, provider, { login: { accountId: id } });
