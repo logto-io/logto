@@ -16,7 +16,7 @@ jest.mock('@/queries/setting', () => ({
 }));
 
 describe('settings routes', () => {
-  const roleRequester = createRequester(settingRoutes);
+  const roleRequester = createRequester({ authedRoutes: settingRoutes });
 
   it('GET /settings', async () => {
     const response = await roleRequester.get('/settings');

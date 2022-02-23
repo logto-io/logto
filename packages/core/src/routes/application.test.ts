@@ -35,7 +35,7 @@ jest.mock('@/utils/id', () => ({
 }));
 
 describe('application route', () => {
-  const applicationRequest = createRequester(applicationRoutes);
+  const applicationRequest = createRequester({ authedRoutes: applicationRoutes });
 
   it('GET /applications', async () => {
     const response = await applicationRequest.get('/applications');
