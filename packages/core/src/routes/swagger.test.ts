@@ -2,10 +2,9 @@ import { createRequester } from '@/utils/test-utils';
 
 import statusRoutes from './status';
 import swaggerRoutes from './swagger';
-import { AnonymousRouter } from './types';
 
 describe('swagger api', () => {
-  const swaggerRequest = createRequester<AnonymousRouter>(swaggerRoutes, statusRoutes);
+  const swaggerRequest = createRequester({ anonymousRoutes: [swaggerRoutes, statusRoutes] });
 
   it('GET /swagger', async () => {
     const response = await swaggerRequest.get('/swagger.json');

@@ -1,6 +1,7 @@
 import { createMockContext, Options } from '@shopify/jest-koa-mocks';
 import Koa, { MiddlewareType, Context } from 'koa';
 import Router, { IRouterParamContext } from 'koa-router';
+import { Provider } from 'oidc-provider';
 import { createMockPool, createMockQueryResult, QueryResultRowType } from 'slonik';
 import { PrimitiveValueExpressionType } from 'slonik/dist/src/types.d';
 import request from 'supertest';
@@ -50,19 +51,41 @@ export const createContextWithRouteParameters = (
   };
 };
 
-type RouteLauncher<T extends AuthedRouter | AnonymousRouter> = (router: T) => void;
+type RouteLauncher<T extends AuthedRouter | AnonymousRouter> = (
+  router: T,
+  provider?: Provider
+) => void;
 
-export const createRequester = <T extends AuthedRouter | AnonymousRouter = AuthedRouter>(
-  ...logtoRoute: Array<RouteLauncher<T>>
-): request.SuperTest<request.Test> => {
+export const createRequester = ({
+  anonymousRoutes,
+  authedRoutes,
+  provider,
+}: {
+  anonymousRoutes?: RouteLauncher<AnonymousRouter> | Array<RouteLauncher<AnonymousRouter>>;
+  authedRoutes?: RouteLauncher<AuthedRouter> | Array<RouteLauncher<AuthedRouter>>;
+  provider?: Provider;
+}): request.SuperTest<request.Test> => {
   const app = new Koa();
-  const router = new Router() as T;
 
-  for (const route of logtoRoute) {
-    route(router);
+  if (anonymousRoutes) {
+    const anonymousRouter: AnonymousRouter = new Router();
+
+    for (const route of Array.isArray(anonymousRoutes) ? anonymousRoutes : [anonymousRoutes]) {
+      route(anonymousRouter, provider);
+    }
+
+    app.use(anonymousRouter.routes()).use(anonymousRouter.allowedMethods());
   }
 
-  app.use(router.routes()).use(router.allowedMethods());
+  if (authedRoutes) {
+    const authRouter: AuthedRouter = new Router();
+
+    for (const route of Array.isArray(authedRoutes) ? authedRoutes : [authedRoutes]) {
+      route(authRouter, provider);
+    }
+
+    app.use(authRouter.routes()).use(authRouter.allowedMethods());
+  }
 
   return request(app.callback());
 };

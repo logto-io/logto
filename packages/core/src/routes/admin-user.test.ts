@@ -35,7 +35,7 @@ jest.mock('@/lib/user', () => ({
 }));
 
 describe('adminUserRoutes', () => {
-  const userRequest = createRequester(adminUserRoutes);
+  const userRequest = createRequester({ authedRoutes: adminUserRoutes });
 
   it('GET /users', async () => {
     const response = await userRequest.get('/users');

@@ -16,7 +16,7 @@ jest.mock('@/queries/sign-in-experience', () => ({
 }));
 
 describe('signInExperiences routes', () => {
-  const signInExperienceRequester = createRequester(signInExperiencesRoutes);
+  const signInExperienceRequester = createRequester({ authedRoutes: signInExperiencesRoutes });
 
   it('GET /sign-in-ex', async () => {
     const response = await signInExperienceRequester.get('/sign-in-ex');

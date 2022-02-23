@@ -10,7 +10,7 @@ jest.mock('@/queries/roles', () => ({
 }));
 
 describe('role routes', () => {
-  const roleRequester = createRequester(roleRoutes);
+  const roleRequester = createRequester({ authedRoutes: roleRoutes });
 
   it('GET /roles', async () => {
     const response = await roleRequester.get('/roles');

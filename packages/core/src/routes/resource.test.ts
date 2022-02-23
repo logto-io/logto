@@ -34,7 +34,7 @@ jest.mock('@/utils/id', () => ({
 }));
 
 describe('resource routes', () => {
-  const resourceRequest = createRequester(resourceRoutes);
+  const resourceRequest = createRequester({ authedRoutes: resourceRoutes });
 
   it('GET /resources', async () => {
     const response = await resourceRequest.get('/resources');
