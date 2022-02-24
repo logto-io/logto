@@ -1,5 +1,5 @@
 import { createMockContext, Options } from '@shopify/jest-koa-mocks';
-import Koa, { MiddlewareType, Context } from 'koa';
+import Koa, { MiddlewareType, Context, Middleware } from 'koa';
 import Router, { IRouterParamContext } from 'koa-router';
 import { Provider } from 'oidc-provider';
 import { createMockPool, createMockQueryResult, QueryResultRowType } from 'slonik';
@@ -63,12 +63,14 @@ export function createRequester(
     | {
         anonymousRoutes?: RouteLauncher<AnonymousRouter> | Array<RouteLauncher<AnonymousRouter>>;
         authedRoutes?: RouteLauncher<AuthedRouter> | Array<RouteLauncher<AuthedRouter>>;
+        middlewares?: Middleware[];
       }
     | {
         anonymousRoutes?:
           | ProviderRouteLauncher<AnonymousRouter>
           | Array<ProviderRouteLauncher<AnonymousRouter>>;
         authedRoutes?: RouteLauncher<AuthedRouter> | Array<RouteLauncher<AuthedRouter>>;
+        middlewares?: Middleware[];
         provider: Provider;
       }
 ): request.SuperTest<request.Test>;
@@ -77,6 +79,7 @@ export function createRequester({
   anonymousRoutes,
   authedRoutes,
   provider,
+  middlewares,
 }: {
   anonymousRoutes?:
     | RouteLauncher<AnonymousRouter>
@@ -85,8 +88,15 @@ export function createRequester({
     | Array<ProviderRouteLauncher<AnonymousRouter>>;
   authedRoutes?: RouteLauncher<AuthedRouter> | Array<RouteLauncher<AuthedRouter>>;
   provider?: Provider;
+  middlewares?: Middleware[];
 }): request.SuperTest<request.Test> {
   const app = new Koa();
+
+  if (middlewares) {
+    for (const middleware of middlewares) {
+      app.use(middleware);
+    }
+  }
 
   if (anonymousRoutes) {
     const anonymousRouter: AnonymousRouter = new Router();
