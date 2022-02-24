@@ -11,8 +11,8 @@ import { findRolesByRoleNames } from '@/queries/roles';
 import {
   clearUserCustomDataById,
   deleteUserById,
-  findAllUsers,
-  findTotalNumberOfUsers,
+  findUsers,
+  countUsers,
   findUserById,
   hasUser,
   insertUser,
@@ -23,19 +23,27 @@ import assertThat from '@/utils/assert-that';
 import { AuthedRouter } from './types';
 
 export default function adminUserRoutes<T extends AuthedRouter>(router: T) {
-  router.get('/users', koaPagination(), async (ctx, next) => {
-    const { limit, offset } = ctx.pagination;
+  router.get(
+    '/users',
+    koaPagination(),
+    koaGuard({ query: object({ search: string().optional() }) }),
+    async (ctx, next) => {
+      const { limit, offset } = ctx.pagination;
+      const {
+        query: { search },
+      } = ctx.guard;
 
-    const [{ count }, users] = await Promise.all([
-      findTotalNumberOfUsers(),
-      findAllUsers(limit, offset),
-    ]);
+      const [{ count }, users] = await Promise.all([
+        countUsers(search),
+        findUsers(limit, offset, search),
+      ]);
 
-    ctx.pagination.totalCount = count;
-    ctx.body = users.map((user) => pick(user, ...userInfoSelectFields));
+      ctx.pagination.totalCount = count;
+      ctx.body = users.map((user) => pick(user, ...userInfoSelectFields));
 
-    return next();
-  });
+      return next();
+    }
+  );
 
   router.get(
     '/users/:userId',

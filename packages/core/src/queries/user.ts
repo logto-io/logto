@@ -1,11 +1,10 @@
 import { User, CreateUser, Users } from '@logto/schemas';
 import { sql } from 'slonik';
 
-import { buildFindMany } from '@/database/find-many';
 import { buildInsertInto } from '@/database/insert-into';
 import pool from '@/database/pool';
 import { buildUpdateWhere } from '@/database/update-where';
-import { convertToIdentifiers, getTotalRowCount, OmitAutoSetFields } from '@/database/utils';
+import { conditionalSql, convertToIdentifiers, OmitAutoSetFields } from '@/database/utils';
 import { DeletionError } from '@/errors/SlonikError';
 
 const { table, fields } = convertToIdentifiers(Users);
@@ -86,12 +85,30 @@ export const hasUserWithIdentity = async (connectorId: string, userId: string) =
 
 export const insertUser = buildInsertInto<CreateUser, User>(pool, Users, { returning: true });
 
-export const findTotalNumberOfUsers = async () => getTotalRowCount(table);
+const buildUserSearchConditionSql = (search: string) => {
+  const searchFields = [fields.primaryEmail, fields.primaryPhone, fields.username, fields.name];
+  const conditions = searchFields.map((filedName) => sql`${filedName} like ${'%' + search + '%'}`);
 
-const findUserMany = buildFindMany<CreateUser, User>(pool, Users);
+  return sql`${sql.join(conditions, sql` or `)}`;
+};
 
-export const findAllUsers = async (limit: number, offset: number) =>
-  findUserMany({ limit, offset });
+export const countUsers = async (search?: string) =>
+  pool.one<{ count: number }>(sql`
+    select count(*)
+    from ${table}
+    ${conditionalSql(search, (search) => sql`where ${buildUserSearchConditionSql(search)}`)}
+  `);
+
+export const findUsers = async (limit: number, offset: number, search?: string) =>
+  pool.many<User>(
+    sql`
+      select ${sql.join(Object.values(fields), sql`,`)}
+      from ${table}
+      ${conditionalSql(search, (search) => sql`where ${buildUserSearchConditionSql(search)}`)}
+      limit ${limit}
+      offset ${offset}
+    `
+  );
 
 const updateUser = buildUpdateWhere<CreateUser, User>(pool, Users, true);
 
