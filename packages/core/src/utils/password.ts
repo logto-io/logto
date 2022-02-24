@@ -1,6 +1,6 @@
 import { createHash } from 'crypto';
 
-import { PasswordEncryptionMethod } from '@logto/schemas';
+import { UsersPasswordEncryptionMethod } from '@logto/schemas';
 import { assertEnv, repeat } from '@silverhand/essentials';
 import { nanoid } from 'nanoid';
 import { number, string } from 'zod';
@@ -18,12 +18,12 @@ export const encryptPassword = (
   id: string,
   password: string,
   salt: string,
-  method: PasswordEncryptionMethod
+  method: UsersPasswordEncryptionMethod
 ): string => {
   assertThat(
     // FIXME:
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    method === PasswordEncryptionMethod.SaltAndPepper,
+    method === UsersPasswordEncryptionMethod.SaltAndPepper,
     'password.unsupported_encryption_method',
     { method }
   );

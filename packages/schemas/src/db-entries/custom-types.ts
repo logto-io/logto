@@ -25,6 +25,6 @@ export enum UserLogResult {
   Success = 'Success',
   Failed = 'Failed',
 }
-export enum PasswordEncryptionMethod {
+export enum UsersPasswordEncryptionMethod {
   SaltAndPepper = 'SaltAndPepper',
 }

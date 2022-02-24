@@ -1,4 +1,4 @@
-import { PasswordEncryptionMethod } from '@logto/schemas';
+import { UsersPasswordEncryptionMethod } from '@logto/schemas';
 
 import { hasUserWithId } from '@/queries/user';
 
@@ -56,7 +56,7 @@ describe('encryptUserPassword()', () => {
   it('generates salt, encrypted and method', () => {
     const { passwordEncryptionMethod, passwordEncrypted, passwordEncryptionSalt } =
       encryptUserPassword('user-id', 'password');
-    expect(passwordEncryptionMethod).toEqual(PasswordEncryptionMethod.SaltAndPepper);
+    expect(passwordEncryptionMethod).toEqual(UsersPasswordEncryptionMethod.SaltAndPepper);
     expect(passwordEncrypted).toHaveLength(64);
     expect(passwordEncryptionSalt).toHaveLength(21);
   });
