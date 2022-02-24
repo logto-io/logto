@@ -11,8 +11,8 @@ import { findRolesByRoleNames } from '@/queries/roles';
 import {
   clearUserCustomDataById,
   deleteUserById,
-  findAllUsers,
-  findTotalNumberOfUsers,
+  findUsers,
+  countUsers,
   findUserById,
   hasUser,
   insertUser,
@@ -34,8 +34,8 @@ export default function adminUserRoutes<T extends AuthedRouter>(router: T) {
       } = ctx.guard;
 
       const [{ count }, users] = await Promise.all([
-        findTotalNumberOfUsers(search),
-        findAllUsers(limit, offset, search),
+        countUsers(search),
+        findUsers(limit, offset, search),
       ]);
 
       ctx.pagination.totalCount = count;

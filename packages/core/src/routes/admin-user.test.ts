@@ -15,10 +15,10 @@ const filterUsersWithSearch = (users: User[], search: string) =>
   );
 
 jest.mock('@/queries/user', () => ({
-  findTotalNumberOfUsers: jest.fn(async (search) => ({
+  countUsers: jest.fn(async (search) => ({
     count: search ? filterUsersWithSearch(mockUserList, search).length : mockUserList.length,
   })),
-  findAllUsers: jest.fn(
+  findUsers: jest.fn(
     async (limit, offset, search): Promise<User[]> =>
       search ? filterUsersWithSearch(mockUserList, search) : mockUserList
   ),
