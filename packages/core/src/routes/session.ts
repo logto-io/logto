@@ -77,10 +77,10 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
     '/session/sign-in/passwordless/phone/send-passcode',
     koaGuard({ body: object({ phone: string() }) }),
     async (ctx, next) => {
-      ctx.userLog.type = UserLogType.SignInPhone;
       const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
       const { phone } = ctx.guard.body;
       ctx.userLog.phone = phone;
+      ctx.userLog.type = UserLogType.SignInPhone;
 
       await checkPhoneNumberValidityAndExistence(phone);
 
@@ -96,10 +96,10 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
     '/session/sign-in/passwordless/phone/verify-passcode',
     koaGuard({ body: object({ phone: string(), code: string() }) }),
     async (ctx, next) => {
-      ctx.userLog.type = UserLogType.SignInPhone;
       const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
       const { phone, code } = ctx.guard.body;
       ctx.userLog.phone = phone;
+      ctx.userLog.type = UserLogType.SignInPhone;
 
       await checkPhoneNumberValidityAndExistence(phone);
 
@@ -117,10 +117,10 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
     '/session/sign-in/passwordless/email/send-passcode',
     koaGuard({ body: object({ email: string() }) }),
     async (ctx, next) => {
-      ctx.userLog.type = UserLogType.SignInEmail;
       const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
       const { email } = ctx.guard.body;
       ctx.userLog.email = email;
+      ctx.userLog.type = UserLogType.SignInEmail;
 
       await checkEmailValidityAndExistence(email);
 
@@ -136,10 +136,10 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
     '/session/sign-in/passwordless/email/verify-passcode',
     koaGuard({ body: object({ email: string(), code: string() }) }),
     async (ctx, next) => {
-      ctx.userLog.type = UserLogType.SignInEmail;
       const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
       const { email, code } = ctx.guard.body;
       ctx.userLog.email = email;
+      ctx.userLog.type = UserLogType.SignInEmail;
 
       await checkEmailValidityAndExistence(email);
 
@@ -159,10 +159,9 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
       body: object({ connectorId: string(), code: string().optional(), state: string() }),
     }),
     async (ctx, next) => {
-      ctx.userLog.type = UserLogType.SignInSocial;
       const { connectorId, code, state } = ctx.guard.body;
-
       ctx.userLog.connectorId = connectorId;
+      ctx.userLog.type = UserLogType.SignInSocial;
 
       if (!code) {
         assertThat(state, 'session.insufficient_info');
@@ -332,10 +331,10 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
     '/session/register/passwordless/phone/verify-passcode',
     koaGuard({ body: object({ phone: string(), code: string() }) }),
     async (ctx, next) => {
-      ctx.userLog.type = UserLogType.RegisterPhone;
       const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
       const { phone, code } = ctx.guard.body;
       ctx.userLog.phone = phone;
+      ctx.userLog.type = UserLogType.RegisterPhone;
 
       await checkPhoneNumberValidityAndAvailability(phone);
 
@@ -354,10 +353,10 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
     '/session/register/passwordless/email/send-passcode',
     koaGuard({ body: object({ email: string() }) }),
     async (ctx, next) => {
-      ctx.userLog.type = UserLogType.RegisterEmail;
       const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
       const { email } = ctx.guard.body;
       ctx.userLog.email = email;
+      ctx.userLog.type = UserLogType.RegisterEmail;
 
       await checkEmailValidityAndAvailability(email);
 
@@ -373,10 +372,10 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
     '/session/register/passwordless/email/verify-passcode',
     koaGuard({ body: object({ email: string(), code: string() }) }),
     async (ctx, next) => {
-      ctx.userLog.type = UserLogType.RegisterEmail;
       const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
       const { email, code } = ctx.guard.body;
       ctx.userLog.email = email;
+      ctx.userLog.type = UserLogType.RegisterEmail;
 
       await checkEmailValidityAndAvailability(email);
 
