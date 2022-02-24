@@ -8,6 +8,20 @@ import request from 'supertest';
 
 import { AuthedRouter, AnonymousRouter } from '@/routes/types';
 
+export const expectSqlAssert = (sql: string, expectSql: string) => {
+  expect(
+    sql
+      .split('\n')
+      .map((row) => row.trim())
+      .filter((row) => row)
+  ).toEqual(
+    expectSql
+      .split('\n')
+      .map((row) => row.trim())
+      .filter((row) => row)
+  );
+};
+
 export const createTestPool = <T extends QueryResultRowType>(
   expectSql?: string,
   returning?: T | ((sql: string, values: readonly PrimitiveValueExpressionType[]) => T)
@@ -15,12 +29,7 @@ export const createTestPool = <T extends QueryResultRowType>(
   createMockPool({
     query: async (sql, values) => {
       if (expectSql) {
-        expect(
-          sql
-            .split('\n')
-            .map((row) => row.trim())
-            .filter((row) => row)
-        ).toEqual(expectSql.split('\n'));
+        expectSqlAssert(sql, expectSql);
       }
 
       return createMockQueryResult(

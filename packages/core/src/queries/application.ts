@@ -46,7 +46,7 @@ export const updateApplicationById = async (
 export const deleteApplicationById = async (id: string) => {
   const { rowCount } = await pool.query(sql`
     delete from ${table}
-    where id=${id}
+    where ${fields.id}=${id}
   `);
 
   if (rowCount < 1) {
