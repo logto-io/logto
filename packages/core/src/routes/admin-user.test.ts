@@ -208,7 +208,7 @@ describe('adminUserRoutes', () => {
     const password = '123456';
     const response = await userRequest.patch(`/users/${mockedUserId}/password`).send({ password });
     expect(encryptUserPassword).toHaveBeenCalledWith(mockedUserId, password);
-    expect(updateUserById).toHaveBeenCalled();
+    expect(updateUserById).toHaveBeenCalledTimes(1);
     expect(response.status).toEqual(200);
     expect(response.body).toEqual({
       ...mockUserResponse,
@@ -255,8 +255,8 @@ describe('adminUserRoutes', () => {
 
   it('PATCH /users/:userId/roleNames', async () => {
     const response = await userRequest.patch('/users/foo/roleNames').send({ roleNames: ['admin'] });
-    expect(findUserById).toHaveBeenCalled();
-    expect(updateUserById).toHaveBeenCalled();
+    expect(findUserById).toHaveBeenCalledTimes(1);
+    expect(updateUserById).toHaveBeenCalledTimes(1);
     expect(response.status).toEqual(200);
   });
 
@@ -286,15 +286,15 @@ describe('adminUserRoutes', () => {
     await expect(
       userRequest.patch('/users/foo/roleNames').send({ roleNames: ['admin'] })
     ).resolves.toHaveProperty('status', 500);
-    expect(findUserById).toHaveBeenCalled();
+    expect(findUserById).toHaveBeenCalledTimes(1);
     expect(updateUserById).not.toHaveBeenCalled();
   });
 
   it('PATCH /users/:userId/custom-data', async () => {
     const customData = { level: 1 };
     const response = await userRequest.patch('/users/foo/custom-data').send({ customData });
-    expect(findUserById).toHaveBeenCalled();
-    expect(updateUserById).toHaveBeenCalled();
+    expect(findUserById).toHaveBeenCalledTimes(1);
+    expect(updateUserById).toHaveBeenCalledTimes(1);
     expect(response.status).toEqual(200);
     expect(response.body).toHaveProperty('customData', customData);
   });
@@ -315,8 +315,8 @@ describe('adminUserRoutes', () => {
 
   it('DELETE /users/:userId/custom-data', async () => {
     const response = await userRequest.delete('/users/foo/custom-data');
-    expect(findUserById).toHaveBeenCalled();
-    expect(clearUserCustomDataById).toHaveBeenCalled();
+    expect(findUserById).toHaveBeenCalledTimes(1);
+    expect(clearUserCustomDataById).toHaveBeenCalledTimes(1);
     expect(response.status).toEqual(200);
   });
 
@@ -331,7 +331,7 @@ describe('adminUserRoutes', () => {
     await expect(
       userRequest.delete(`/users/${notExistedUserId}/custom-data`)
     ).resolves.toHaveProperty('status', 500);
-    expect(findUserById).toHaveBeenCalled();
+    expect(findUserById).toHaveBeenCalledTimes(1);
     expect(clearUserCustomDataById).not.toHaveBeenCalled();
   });
 });
