@@ -1,7 +1,15 @@
-import { CreateUser, User, userInfoSelectFields } from '@logto/schemas';
+import { CreateUser, Role, User, userInfoSelectFields } from '@logto/schemas';
 import pick from 'lodash.pick';
 
-import { hasUser, findUserById } from '@/queries/user';
+import { encryptUserPassword } from '@/lib/user';
+import { findRolesByRoleNames } from '@/queries/roles';
+import {
+  hasUser,
+  findUserById,
+  updateUserById,
+  deleteUserById,
+  clearUserCustomDataById,
+} from '@/queries/user';
 import { mockUser, mockUserList, mockUserListResponse, mockUserResponse } from '@/utils/mock';
 import { createRequester } from '@/utils/test-utils';
 
@@ -30,12 +38,18 @@ jest.mock('@/queries/user', () => ({
       ...data,
     })
   ),
+  deleteUserById: jest.fn(async (_): Promise<void> => {
+    /* Note: Do nothing */
+  }),
   insertUser: jest.fn(
     async (user: CreateUser): Promise<User> => ({
       ...mockUser,
       ...user,
     })
   ),
+  clearUserCustomDataById: jest.fn(async (_): Promise<void> => {
+    /* Note: Do nothing */
+  }),
 }));
 
 jest.mock('@/lib/user', () => ({
@@ -45,6 +59,12 @@ jest.mock('@/lib/user', () => ({
     passwordEncrypted: 'password',
     passwordEncryptionMethod: 'saltAndPepper',
   })),
+}));
+
+jest.mock('@/queries/roles', () => ({
+  findRolesByRoleNames: jest.fn(
+    async (): Promise<Role[]> => [{ name: 'admin', description: 'none' }]
+  ),
 }));
 
 describe('adminUserRoutes', () => {
@@ -180,5 +200,138 @@ describe('adminUserRoutes', () => {
       'status',
       500
     );
+    expect(updateUserById).not.toBeCalled();
+  });
+
+  it('PATCH /users/:userId/password', async () => {
+    const mockedUserId = 'foo';
+    const password = '123456';
+    const response = await userRequest.patch(`/users/${mockedUserId}/password`).send({ password });
+    expect(encryptUserPassword).toHaveBeenCalledWith(mockedUserId, password);
+    expect(updateUserById).toHaveBeenCalledTimes(1);
+    expect(response.status).toEqual(200);
+    expect(response.body).toEqual({
+      ...mockUserResponse,
+    });
+  });
+
+  it('PATCH /users/:userId/password throw if user not found', async () => {
+    const notExistedUserId = 'notExistedUserId';
+    const dummyPassword = '123456';
+    const mockedFindUserById = findUserById as jest.Mock;
+    mockedFindUserById.mockImplementationOnce((userId) => {
+      if (userId === notExistedUserId) {
+        throw new Error(' ');
+      }
+    });
+
+    await expect(
+      userRequest.patch(`/users/${notExistedUserId}/password`).send({ password: dummyPassword })
+    ).resolves.toHaveProperty('status', 500);
+    expect(encryptUserPassword).not.toHaveBeenCalled();
+    expect(updateUserById).not.toHaveBeenCalled();
+  });
+
+  it('DELETE /users/:userId', async () => {
+    const userId = 'foo';
+    const response = await userRequest.delete(`/users/${userId}`);
+    expect(response.status).toEqual(204);
+  });
+
+  it('DELETE /users/:userId should throw if user not found', async () => {
+    const notExistedUserId = 'notExisitedUserId';
+    const mockedFindUserById = findUserById as jest.Mock;
+    mockedFindUserById.mockImplementationOnce((userId) => {
+      if (userId === notExistedUserId) {
+        throw new Error(' ');
+      }
+    });
+    await expect(userRequest.delete(`/users/${notExistedUserId}`)).resolves.toHaveProperty(
+      'status',
+      500
+    );
+    expect(deleteUserById).not.toHaveBeenCalled();
+  });
+
+  it('PATCH /users/:userId/roleNames', async () => {
+    const response = await userRequest.patch('/users/foo/roleNames').send({ roleNames: ['admin'] });
+    expect(findUserById).toHaveBeenCalledTimes(1);
+    expect(updateUserById).toHaveBeenCalledTimes(1);
+    expect(response.status).toEqual(200);
+  });
+
+  it('PATCH /users/:userId/roleNames should throw if user not found', async () => {
+    const notExistedUserId = 'notExisitedUserId';
+    const mockedFindUserById = findUserById as jest.Mock;
+    mockedFindUserById.mockImplementationOnce((userId) => {
+      if (userId === notExistedUserId) {
+        throw new Error(' ');
+      }
+    });
+    await expect(
+      userRequest.patch(`/users/${notExistedUserId}/roleNames`).send({ roleNames: ['admin'] })
+    ).resolves.toHaveProperty('status', 500);
+    expect(findRolesByRoleNames).not.toHaveBeenCalled();
+    expect(updateUserById).not.toHaveBeenCalled();
+  });
+
+  it('PATCH /users/:userId/roleNames should throw if role names are invalid', async () => {
+    const mockedFindRolesByRoleNames = findRolesByRoleNames as jest.Mock;
+    mockedFindRolesByRoleNames.mockImplementationOnce(
+      async (): Promise<Role[]> => [
+        { name: 'worker', description: 'none' },
+        { name: 'cleaner', description: 'none' },
+      ]
+    );
+    await expect(
+      userRequest.patch('/users/foo/roleNames').send({ roleNames: ['admin'] })
+    ).resolves.toHaveProperty('status', 500);
+    expect(findUserById).toHaveBeenCalledTimes(1);
+    expect(updateUserById).not.toHaveBeenCalled();
+  });
+
+  it('PATCH /users/:userId/custom-data', async () => {
+    const customData = { level: 1 };
+    const response = await userRequest.patch('/users/foo/custom-data').send({ customData });
+    expect(findUserById).toHaveBeenCalledTimes(1);
+    expect(updateUserById).toHaveBeenCalledTimes(1);
+    expect(response.status).toEqual(200);
+    expect(response.body).toHaveProperty('customData', customData);
+  });
+
+  it('PATCH /users/:userId/custom-data should throw if user not found', async () => {
+    const notExistedUserId = 'notExisitedUserId';
+    const mockedFindUserById = findUserById as jest.Mock;
+    mockedFindUserById.mockImplementationOnce((userId) => {
+      if (userId === notExistedUserId) {
+        throw new Error(' ');
+      }
+    });
+    await expect(
+      userRequest.patch(`/users/${notExistedUserId}/roleNames`).send({ roleNames: ['admin'] })
+    ).resolves.toHaveProperty('status', 500);
+    expect(updateUserById).not.toHaveBeenCalled();
+  });
+
+  it('DELETE /users/:userId/custom-data', async () => {
+    const response = await userRequest.delete('/users/foo/custom-data');
+    expect(findUserById).toHaveBeenCalledTimes(1);
+    expect(clearUserCustomDataById).toHaveBeenCalledTimes(1);
+    expect(response.status).toEqual(200);
+  });
+
+  it('DELETE /users/:userId/custom-data should throw if user not found', async () => {
+    const notExistedUserId = 'notExisitedUserId';
+    const mockedFindUserById = findUserById as jest.Mock;
+    mockedFindUserById.mockImplementationOnce((userId) => {
+      if (userId === notExistedUserId) {
+        throw new Error(' ');
+      }
+    });
+    await expect(
+      userRequest.delete(`/users/${notExistedUserId}/custom-data`)
+    ).resolves.toHaveProperty('status', 500);
+    expect(findUserById).toHaveBeenCalledTimes(1);
+    expect(clearUserCustomDataById).not.toHaveBeenCalled();
   });
 });
