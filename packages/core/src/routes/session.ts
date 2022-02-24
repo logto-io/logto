@@ -10,7 +10,14 @@ import { object, string } from 'zod';
 import { getSocialConnectorInstanceById } from '@/connectors';
 import RequestError from '@/errors/RequestError';
 import { createPasscode, sendPasscode, verifyPasscode } from '@/lib/passcode';
-import { assignInteractionResults, connectorRedirectUrl } from '@/lib/session';
+import {
+  assignInteractionResults,
+  connectorRedirectUrl,
+  checkEmailValidityAndAvailability,
+  checkEmailValidityAndExistence,
+  checkPhoneNumberValidityAndAvailability,
+  checkPhoneNumberValidityAndExistence,
+} from '@/lib/session';
 import {
   findSocialRelatedUser,
   getUserInfoByAuthCode,
@@ -20,9 +27,7 @@ import { encryptUserPassword, generateUserId, findUserByUsernameAndPassword } fr
 import koaGuard from '@/middleware/koa-guard';
 import {
   hasUser,
-  hasUserWithEmail,
   hasUserWithIdentity,
-  hasUserWithPhone,
   insertUser,
   findUserById,
   updateUserById,
@@ -31,7 +36,6 @@ import {
   findUserByIdentity,
 } from '@/queries/user';
 import assertThat from '@/utils/assert-that';
-import { emailRegEx, phoneRegEx } from '@/utils/regex';
 
 import { AnonymousRouter } from './types';
 
@@ -70,30 +74,34 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
   );
 
   router.post(
-    '/session/sign-in/passwordless/phone',
-    koaGuard({ body: object({ phone: string(), code: string().optional() }) }),
+    '/session/sign-in/passwordless/phone/send-passcode',
+    koaGuard({ body: object({ phone: string() }) }),
     async (ctx, next) => {
+      const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
+      const { phone } = ctx.guard.body;
+      ctx.userLog.phone = phone;
       ctx.userLog.type = UserLogType.SignInPhone;
+
+      await checkPhoneNumberValidityAndExistence(phone);
+
+      const passcode = await createPasscode(jti, PasscodeType.SignIn, { phone });
+      await sendPasscode(passcode);
+      ctx.state = 204;
+
+      return next();
+    }
+  );
+
+  router.post(
+    '/session/sign-in/passwordless/phone/verify-passcode',
+    koaGuard({ body: object({ phone: string(), code: string() }) }),
+    async (ctx, next) => {
       const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
       const { phone, code } = ctx.guard.body;
-
-      assertThat(phoneRegEx.test(phone), new RequestError('user.invalid_phone'));
-      assertThat(
-        await hasUserWithPhone(phone),
-        new RequestError({
-          code: 'user.phone_not_exists',
-          status: 422,
-        })
-      );
       ctx.userLog.phone = phone;
+      ctx.userLog.type = UserLogType.SignInPhone;
 
-      if (!code) {
-        const passcode = await createPasscode(jti, PasscodeType.SignIn, { phone });
-        await sendPasscode(passcode);
-        ctx.state = 204;
-
-        return next();
-      }
+      await checkPhoneNumberValidityAndExistence(phone);
 
       await verifyPasscode(jti, PasscodeType.SignIn, code, { phone });
       const { id } = await findUserByPhone(phone);
@@ -106,30 +114,34 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
   );
 
   router.post(
-    '/session/sign-in/passwordless/email',
-    koaGuard({ body: object({ email: string(), code: string().optional() }) }),
+    '/session/sign-in/passwordless/email/send-passcode',
+    koaGuard({ body: object({ email: string() }) }),
     async (ctx, next) => {
+      const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
+      const { email } = ctx.guard.body;
+      ctx.userLog.email = email;
       ctx.userLog.type = UserLogType.SignInEmail;
+
+      await checkEmailValidityAndExistence(email);
+
+      const passcode = await createPasscode(jti, PasscodeType.SignIn, { email });
+      await sendPasscode(passcode);
+      ctx.state = 204;
+
+      return next();
+    }
+  );
+
+  router.post(
+    '/session/sign-in/passwordless/email/verify-passcode',
+    koaGuard({ body: object({ email: string(), code: string() }) }),
+    async (ctx, next) => {
       const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
       const { email, code } = ctx.guard.body;
-
-      assertThat(emailRegEx.test(email), new RequestError('user.invalid_email'));
-      assertThat(
-        await hasUserWithEmail(email),
-        new RequestError({
-          code: 'user.email_not_exists',
-          status: 422,
-        })
-      );
       ctx.userLog.email = email;
+      ctx.userLog.type = UserLogType.SignInEmail;
 
-      if (!code) {
-        const passcode = await createPasscode(jti, PasscodeType.SignIn, { email });
-        await sendPasscode(passcode);
-        ctx.state = 204;
-
-        return next();
-      }
+      await checkEmailValidityAndExistence(email);
 
       await verifyPasscode(jti, PasscodeType.SignIn, code, { email });
       const { id } = await findUserByEmail(email);
@@ -147,10 +159,9 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
       body: object({ connectorId: string(), code: string().optional(), state: string() }),
     }),
     async (ctx, next) => {
-      ctx.userLog.type = UserLogType.SignInSocial;
       const { connectorId, code, state } = ctx.guard.body;
-
       ctx.userLog.connectorId = connectorId;
+      ctx.userLog.type = UserLogType.SignInSocial;
 
       if (!code) {
         assertThat(state, 'session.insufficient_info');
@@ -298,27 +309,34 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
   );
 
   router.post(
-    '/session/register/passwordless/phone',
-    koaGuard({ body: object({ phone: string(), code: string().optional() }) }),
+    '/session/register/passwordless/phone/send-passcode',
+    koaGuard({ body: object({ phone: string() }) }),
     async (ctx, next) => {
       ctx.userLog.type = UserLogType.RegisterPhone;
       const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
-      const { phone, code } = ctx.guard.body;
-
-      assertThat(phoneRegEx.test(phone), 'user.invalid_phone');
-      assertThat(
-        !(await hasUserWithPhone(phone)),
-        new RequestError({ code: 'user.phone_exists_register', status: 422 })
-      );
+      const { phone } = ctx.guard.body;
       ctx.userLog.phone = phone;
 
-      if (!code) {
-        const passcode = await createPasscode(jti, PasscodeType.Register, { phone });
-        await sendPasscode(passcode);
-        ctx.state = 204;
+      await checkPhoneNumberValidityAndAvailability(phone);
 
-        return next();
-      }
+      const passcode = await createPasscode(jti, PasscodeType.Register, { phone });
+      await sendPasscode(passcode);
+      ctx.state = 204;
+
+      return next();
+    }
+  );
+
+  router.post(
+    '/session/register/passwordless/phone/verify-passcode',
+    koaGuard({ body: object({ phone: string(), code: string() }) }),
+    async (ctx, next) => {
+      const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
+      const { phone, code } = ctx.guard.body;
+      ctx.userLog.phone = phone;
+      ctx.userLog.type = UserLogType.RegisterPhone;
+
+      await checkPhoneNumberValidityAndAvailability(phone);
 
       await verifyPasscode(jti, PasscodeType.Register, code, { phone });
       const id = await generateUserId();
@@ -332,27 +350,34 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
   );
 
   router.post(
-    '/session/register/passwordless/email',
-    koaGuard({ body: object({ email: string(), code: string().optional() }) }),
+    '/session/register/passwordless/email/send-passcode',
+    koaGuard({ body: object({ email: string() }) }),
     async (ctx, next) => {
-      ctx.userLog.type = UserLogType.RegisterPhone;
+      const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
+      const { email } = ctx.guard.body;
+      ctx.userLog.email = email;
+      ctx.userLog.type = UserLogType.RegisterEmail;
+
+      await checkEmailValidityAndAvailability(email);
+
+      const passcode = await createPasscode(jti, PasscodeType.Register, { email });
+      await sendPasscode(passcode);
+      ctx.state = 204;
+
+      return next();
+    }
+  );
+
+  router.post(
+    '/session/register/passwordless/email/verify-passcode',
+    koaGuard({ body: object({ email: string(), code: string() }) }),
+    async (ctx, next) => {
       const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
       const { email, code } = ctx.guard.body;
-
-      assertThat(emailRegEx.test(email), 'user.invalid_email');
-      assertThat(
-        !(await hasUserWithEmail(email)),
-        new RequestError({ code: 'user.email_exists_register', status: 422 })
-      );
       ctx.userLog.email = email;
+      ctx.userLog.type = UserLogType.RegisterEmail;
 
-      if (!code) {
-        const passcode = await createPasscode(jti, PasscodeType.Register, { email });
-        await sendPasscode(passcode);
-        ctx.state = 204;
-
-        return next();
-      }
+      await checkEmailValidityAndAvailability(email);
 
       await verifyPasscode(jti, PasscodeType.Register, code, { email });
       const id = await generateUserId();
