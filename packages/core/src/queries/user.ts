@@ -92,14 +92,14 @@ const buildUserSearchConditionSql = (search: string) => {
   return sql`${sql.join(conditions, sql` or `)}`;
 };
 
-export const findTotalNumberOfUsers = async (search: string | undefined) =>
+export const findTotalNumberOfUsers = async (search?: string) =>
   pool.one<{ count: number }>(sql`
     select count(*)
     from ${table}
     ${conditionalSql(search, (search) => sql`where ${buildUserSearchConditionSql(search)}`)}
   `);
 
-export const findAllUsers = async (limit: number, offset: number, search: string | undefined) =>
+export const findAllUsers = async (limit: number, offset: number, search?: string) =>
   pool.many<User>(
     sql`
       select ${sql.join(Object.values(fields), sql`,`)}
