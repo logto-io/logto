@@ -1,4 +1,4 @@
-import { PasswordEncryptionMethod, User } from '@logto/schemas';
+import { UsersPasswordEncryptionMethod, User } from '@logto/schemas';
 import { nanoid } from 'nanoid';
 import pRetry from 'p-retry';
 
@@ -29,10 +29,10 @@ export const encryptUserPassword = (
 ): {
   passwordEncryptionSalt: string;
   passwordEncrypted: string;
-  passwordEncryptionMethod: PasswordEncryptionMethod;
+  passwordEncryptionMethod: UsersPasswordEncryptionMethod;
 } => {
   const passwordEncryptionSalt = nanoid();
-  const passwordEncryptionMethod = PasswordEncryptionMethod.SaltAndPepper;
+  const passwordEncryptionMethod = UsersPasswordEncryptionMethod.SaltAndPepper;
   const passwordEncrypted = encryptPassword(
     userId,
     password,

@@ -12,7 +12,7 @@ import {
   GeneratedSchema,
   Guard,
 } from '../foundations';
-import { PasswordEncryptionMethod } from './custom-types';
+import { UsersPasswordEncryptionMethod } from './custom-types';
 
 export type CreateUser = {
   id: string;
@@ -20,7 +20,7 @@ export type CreateUser = {
   primaryEmail?: string | null;
   primaryPhone?: string | null;
   passwordEncrypted?: string | null;
-  passwordEncryptionMethod?: PasswordEncryptionMethod | null;
+  passwordEncryptionMethod?: UsersPasswordEncryptionMethod | null;
   passwordEncryptionSalt?: string | null;
   name?: string | null;
   avatar?: string | null;
@@ -35,7 +35,7 @@ export type User = {
   primaryEmail: string | null;
   primaryPhone: string | null;
   passwordEncrypted: string | null;
-  passwordEncryptionMethod: PasswordEncryptionMethod | null;
+  passwordEncryptionMethod: UsersPasswordEncryptionMethod | null;
   passwordEncryptionSalt: string | null;
   name: string | null;
   avatar: string | null;
@@ -50,7 +50,7 @@ const createGuard: Guard<CreateUser> = z.object({
   primaryEmail: z.string().nullable().optional(),
   primaryPhone: z.string().nullable().optional(),
   passwordEncrypted: z.string().nullable().optional(),
-  passwordEncryptionMethod: z.nativeEnum(PasswordEncryptionMethod).nullable().optional(),
+  passwordEncryptionMethod: z.nativeEnum(UsersPasswordEncryptionMethod).nullable().optional(),
   passwordEncryptionSalt: z.string().nullable().optional(),
   name: z.string().nullable().optional(),
   avatar: z.string().nullable().optional(),
