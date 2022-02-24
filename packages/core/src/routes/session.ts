@@ -36,6 +36,7 @@ import {
   findUserByIdentity,
 } from '@/queries/user';
 import assertThat from '@/utils/assert-that';
+import { usernameRegEx } from '@/utils/regex';
 
 import { AnonymousRouter } from './types';
 
@@ -303,6 +304,18 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
         passwordEncryptionSalt,
       });
       await assignInteractionResults(ctx, provider, { login: { accountId: id } });
+
+      return next();
+    }
+  );
+
+  router.get(
+    '/session/register/:username/existence',
+    koaGuard({ params: object({ username: string().regex(usernameRegEx) }) }),
+    async (ctx, next) => {
+      const { username } = ctx.guard.params;
+
+      ctx.body = { existence: await hasUser(username) };
 
       return next();
     }
