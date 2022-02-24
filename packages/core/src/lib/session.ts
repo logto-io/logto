@@ -22,7 +22,6 @@ export const assignInteractionResults = async (
 };
 
 export const checkEmailValidityAndAvailability = async (email: string) => {
-  // AssertThat(emailRegEx.test(email), new RequestError('user.invalid_email'));
   assertThat(
     !(await hasUserWithEmail(email)),
     new RequestError({ code: 'user.email_exists_register', status: 422 })
@@ -30,7 +29,6 @@ export const checkEmailValidityAndAvailability = async (email: string) => {
 };
 
 export const checkEmailValidityAndExistence = async (email: string) => {
-  // AssertThat(emailRegEx.test(email), new RequestError('user.invalid_email'));
   assertThat(
     await hasUserWithEmail(email),
     new RequestError({ code: 'user.email_not_exists', status: 422 })
@@ -38,7 +36,6 @@ export const checkEmailValidityAndExistence = async (email: string) => {
 };
 
 export const checkPhoneNumberValidityAndAvailability = async (phone: string) => {
-  // AssertThat(phoneRegEx.test(phone), new RequestError('user.invalid_phone'));
   assertThat(
     !(await hasUserWithPhone(phone)),
     new RequestError({ code: 'user.phone_exists_register', status: 422 })
@@ -46,7 +43,6 @@ export const checkPhoneNumberValidityAndAvailability = async (phone: string) => 
 };
 
 export const checkPhoneNumberValidityAndExistence = async (phone: string) => {
-  // AssertThat(phoneRegEx.test(phone), new RequestError('user.invalid_phone'));
   assertThat(
     await hasUserWithPhone(phone),
     new RequestError({ code: 'user.phone_not_exists', status: 422 })
