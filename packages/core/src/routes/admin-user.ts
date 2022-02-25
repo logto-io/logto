@@ -19,6 +19,7 @@ import {
   updateUserById,
 } from '@/queries/user';
 import assertThat from '@/utils/assert-that';
+import { nameRegEx, passwordRegEx, usernameRegEx } from '@/utils/regex';
 
 import { AuthedRouter } from './types';
 
@@ -68,9 +69,9 @@ export default function adminUserRoutes<T extends AuthedRouter>(router: T) {
     '/users',
     koaGuard({
       body: object({
-        username: string().min(3),
-        password: string().min(6),
-        name: string().min(3),
+        username: string().regex(usernameRegEx),
+        password: string().regex(passwordRegEx),
+        name: string().regex(nameRegEx),
       }),
     }),
     async (ctx, next) => {
@@ -108,7 +109,7 @@ export default function adminUserRoutes<T extends AuthedRouter>(router: T) {
     koaGuard({
       params: object({ userId: string() }),
       body: object({
-        name: string().min(3).optional(),
+        name: string().regex(nameRegEx).optional(),
         avatar: string().url().optional(),
       }),
     }),
@@ -135,7 +136,7 @@ export default function adminUserRoutes<T extends AuthedRouter>(router: T) {
     '/users/:userId/password',
     koaGuard({
       params: object({ userId: string() }),
-      body: object({ password: string().min(6) }),
+      body: object({ password: string().regex(passwordRegEx) }),
     }),
     async (ctx, next) => {
       const {
