@@ -1,4 +1,4 @@
-import { customDataGuard, userInfoSelectFields } from '@logto/schemas';
+import { arbitraryObjectGuard, userInfoSelectFields } from '@logto/schemas';
 import pick from 'lodash.pick';
 import { InvalidInputError } from 'slonik';
 import { object, string } from 'zod';
@@ -218,7 +218,7 @@ export default function adminUserRoutes<T extends AuthedRouter>(router: T) {
     '/users/:userId/custom-data',
     koaGuard({
       params: object({ userId: string() }),
-      body: object({ customData: customDataGuard }),
+      body: object({ customData: arbitraryObjectGuard }),
     }),
     async (ctx, next) => {
       const {

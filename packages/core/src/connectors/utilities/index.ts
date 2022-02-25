@@ -1,9 +1,9 @@
-import { ConnectorConfig } from '@logto/schemas';
+import { ArbitraryObject } from '@logto/schemas';
 
 import RequestError from '@/errors/RequestError';
 import { findConnectorById, updateConnector } from '@/queries/connector';
 
-export const getConnectorConfig = async <T extends ConnectorConfig>(id: string): Promise<T> => {
+export const getConnectorConfig = async <T extends ArbitraryObject>(id: string): Promise<T> => {
   const connector = await findConnectorById(id);
 
   // FIXME:
@@ -20,7 +20,7 @@ export const getConnectorConfig = async <T extends ConnectorConfig>(id: string):
   return connector.config as T;
 };
 
-export const updateConnectorConfig = async <T extends ConnectorConfig>(
+export const updateConnectorConfig = async <T extends ArbitraryObject>(
   id: string,
   config: T
 ): Promise<void> => {

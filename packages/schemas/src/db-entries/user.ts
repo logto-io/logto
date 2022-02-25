@@ -7,8 +7,8 @@ import {
   roleNamesGuard,
   Identities,
   identitiesGuard,
-  CustomData,
-  customDataGuard,
+  ArbitraryObject,
+  arbitraryObjectGuard,
   GeneratedSchema,
   Guard,
 } from '../foundations';
@@ -26,7 +26,7 @@ export type CreateUser = {
   avatar?: string | null;
   roleNames?: RoleNames;
   identities?: Identities;
-  customData?: CustomData;
+  customData?: ArbitraryObject;
 };
 
 export type User = {
@@ -41,7 +41,7 @@ export type User = {
   avatar: string | null;
   roleNames: RoleNames;
   identities: Identities;
-  customData: CustomData;
+  customData: ArbitraryObject;
 };
 
 const createGuard: Guard<CreateUser> = z.object({
@@ -56,7 +56,7 @@ const createGuard: Guard<CreateUser> = z.object({
   avatar: z.string().nullable().optional(),
   roleNames: roleNamesGuard.optional(),
   identities: identitiesGuard.optional(),
-  customData: customDataGuard.optional(),
+  customData: arbitraryObjectGuard.optional(),
 });
 
 export const Users: GeneratedSchema<CreateUser> = Object.freeze({

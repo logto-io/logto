@@ -2,26 +2,26 @@
 
 import { z } from 'zod';
 
-import { ConnectorConfig, connectorConfigGuard, GeneratedSchema, Guard } from '../foundations';
+import { ArbitraryObject, arbitraryObjectGuard, GeneratedSchema, Guard } from '../foundations';
 
 export type CreateConnector = {
   id: string;
   enabled?: boolean;
-  config?: ConnectorConfig;
+  config?: ArbitraryObject;
   createdAt?: number;
 };
 
 export type Connector = {
   id: string;
   enabled: boolean;
-  config: ConnectorConfig;
+  config: ArbitraryObject;
   createdAt: number;
 };
 
 const createGuard: Guard<CreateConnector> = z.object({
   id: z.string(),
   enabled: z.boolean().optional(),
-  config: connectorConfigGuard.optional(),
+  config: arbitraryObjectGuard.optional(),
   createdAt: z.number().optional(),
 });
 
