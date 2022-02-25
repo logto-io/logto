@@ -10,14 +10,7 @@ import { object, string } from 'zod';
 import { getSocialConnectorInstanceById } from '@/connectors';
 import RequestError from '@/errors/RequestError';
 import { createPasscode, sendPasscode, verifyPasscode } from '@/lib/passcode';
-import {
-  assignInteractionResults,
-  connectorRedirectUrl,
-  checkEmailValidityAndAvailability,
-  checkEmailValidityAndExistence,
-  checkPhoneNumberValidityAndAvailability,
-  checkPhoneNumberValidityAndExistence,
-} from '@/lib/session';
+import { assignInteractionResults, connectorRedirectUrl } from '@/lib/session';
 import {
   findSocialRelatedUser,
   getUserInfoByAuthCode,
@@ -26,6 +19,8 @@ import {
 import { encryptUserPassword, generateUserId, findUserByUsernameAndPassword } from '@/lib/user';
 import koaGuard from '@/middleware/koa-guard';
 import {
+  hasUserWithEmail,
+  hasUserWithPhone,
   hasUser,
   hasUserWithIdentity,
   insertUser,
@@ -36,7 +31,7 @@ import {
   findUserByIdentity,
 } from '@/queries/user';
 import assertThat from '@/utils/assert-that';
-import { usernameRegEx } from '@/utils/regex';
+import { emailRegEx, phoneRegEx, usernameRegEx } from '@/utils/regex';
 
 import { AnonymousRouter } from './types';
 
@@ -57,13 +52,13 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
 
   router.post(
     '/session/sign-in/username-password',
-    koaGuard({ body: object({ username: string(), password: string() }) }),
+    koaGuard({ body: object({ username: string().regex(usernameRegEx), password: string() }) }),
     async (ctx, next) => {
-      ctx.userLog.type = UserLogType.SignInUsernameAndPassword;
       const { username, password } = ctx.guard.body;
-
-      assertThat(username && password, 'session.insufficient_info');
       ctx.userLog.username = username;
+      ctx.userLog.type = UserLogType.SignInUsernameAndPassword;
+
+      assertThat(password, 'session.insufficient_info');
 
       const { id } = await findUserByUsernameAndPassword(username, password);
       ctx.userLog.userId = id;
@@ -76,14 +71,17 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
 
   router.post(
     '/session/sign-in/passwordless/phone/send-passcode',
-    koaGuard({ body: object({ phone: string() }) }),
+    koaGuard({ body: object({ phone: string().regex(phoneRegEx) }) }),
     async (ctx, next) => {
       const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
       const { phone } = ctx.guard.body;
       ctx.userLog.phone = phone;
       ctx.userLog.type = UserLogType.SignInPhone;
 
-      await checkPhoneNumberValidityAndExistence(phone);
+      assertThat(
+        await hasUserWithPhone(phone),
+        new RequestError({ code: 'user.phone_not_exists', status: 422 })
+      );
 
       const passcode = await createPasscode(jti, PasscodeType.SignIn, { phone });
       await sendPasscode(passcode);
@@ -95,14 +93,17 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
 
   router.post(
     '/session/sign-in/passwordless/phone/verify-passcode',
-    koaGuard({ body: object({ phone: string(), code: string() }) }),
+    koaGuard({ body: object({ phone: string().regex(phoneRegEx), code: string() }) }),
     async (ctx, next) => {
       const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
       const { phone, code } = ctx.guard.body;
       ctx.userLog.phone = phone;
       ctx.userLog.type = UserLogType.SignInPhone;
 
-      await checkPhoneNumberValidityAndExistence(phone);
+      assertThat(
+        await hasUserWithPhone(phone),
+        new RequestError({ code: 'user.phone_not_exists', status: 422 })
+      );
 
       await verifyPasscode(jti, PasscodeType.SignIn, code, { phone });
       const { id } = await findUserByPhone(phone);
@@ -116,14 +117,17 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
 
   router.post(
     '/session/sign-in/passwordless/email/send-passcode',
-    koaGuard({ body: object({ email: string() }) }),
+    koaGuard({ body: object({ email: string().regex(emailRegEx) }) }),
     async (ctx, next) => {
       const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
       const { email } = ctx.guard.body;
       ctx.userLog.email = email;
       ctx.userLog.type = UserLogType.SignInEmail;
 
-      await checkEmailValidityAndExistence(email);
+      assertThat(
+        await hasUserWithEmail(email),
+        new RequestError({ code: 'user.email_not_exists', status: 422 })
+      );
 
       const passcode = await createPasscode(jti, PasscodeType.SignIn, { email });
       await sendPasscode(passcode);
@@ -135,14 +139,17 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
 
   router.post(
     '/session/sign-in/passwordless/email/verify-passcode',
-    koaGuard({ body: object({ email: string(), code: string() }) }),
+    koaGuard({ body: object({ email: string().regex(emailRegEx), code: string() }) }),
     async (ctx, next) => {
       const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
       const { email, code } = ctx.guard.body;
       ctx.userLog.email = email;
       ctx.userLog.type = UserLogType.SignInEmail;
 
-      await checkEmailValidityAndExistence(email);
+      assertThat(
+        await hasUserWithEmail(email),
+        new RequestError({ code: 'user.email_not_exists', status: 422 })
+      );
 
       await verifyPasscode(jti, PasscodeType.SignIn, code, { email });
       const { id } = await findUserByEmail(email);
@@ -269,13 +276,14 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
 
   router.post(
     '/session/register/username-password',
-    koaGuard({ body: object({ username: string(), password: string() }) }),
+    koaGuard({ body: object({ username: string().regex(usernameRegEx), password: string() }) }),
     async (ctx, next) => {
-      ctx.userLog.type = UserLogType.RegisterUsernameAndPassword;
       const { username, password } = ctx.guard.body;
+      ctx.userLog.username = username;
+      ctx.userLog.type = UserLogType.RegisterUsernameAndPassword;
 
       assertThat(
-        username && password,
+        password,
         new RequestError({
           code: 'session.insufficient_info',
           status: 400,
@@ -288,7 +296,6 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
           status: 422,
         })
       );
-      ctx.userLog.username = username;
 
       const id = await generateUserId();
       ctx.userLog.userId = id;
@@ -323,14 +330,17 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
 
   router.post(
     '/session/register/passwordless/phone/send-passcode',
-    koaGuard({ body: object({ phone: string() }) }),
+    koaGuard({ body: object({ phone: string().regex(phoneRegEx) }) }),
     async (ctx, next) => {
       ctx.userLog.type = UserLogType.RegisterPhone;
       const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
       const { phone } = ctx.guard.body;
       ctx.userLog.phone = phone;
 
-      await checkPhoneNumberValidityAndAvailability(phone);
+      assertThat(
+        !(await hasUserWithPhone(phone)),
+        new RequestError({ code: 'user.phone_exists_register', status: 422 })
+      );
 
       const passcode = await createPasscode(jti, PasscodeType.Register, { phone });
       await sendPasscode(passcode);
@@ -342,14 +352,17 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
 
   router.post(
     '/session/register/passwordless/phone/verify-passcode',
-    koaGuard({ body: object({ phone: string(), code: string() }) }),
+    koaGuard({ body: object({ phone: string().regex(phoneRegEx), code: string() }) }),
     async (ctx, next) => {
       const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
       const { phone, code } = ctx.guard.body;
       ctx.userLog.phone = phone;
       ctx.userLog.type = UserLogType.RegisterPhone;
 
-      await checkPhoneNumberValidityAndAvailability(phone);
+      assertThat(
+        !(await hasUserWithPhone(phone)),
+        new RequestError({ code: 'user.phone_exists_register', status: 422 })
+      );
 
       await verifyPasscode(jti, PasscodeType.Register, code, { phone });
       const id = await generateUserId();
@@ -364,14 +377,17 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
 
   router.post(
     '/session/register/passwordless/email/send-passcode',
-    koaGuard({ body: object({ email: string() }) }),
+    koaGuard({ body: object({ email: string().regex(emailRegEx) }) }),
     async (ctx, next) => {
       const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
       const { email } = ctx.guard.body;
       ctx.userLog.email = email;
       ctx.userLog.type = UserLogType.RegisterEmail;
 
-      await checkEmailValidityAndAvailability(email);
+      assertThat(
+        !(await hasUserWithEmail(email)),
+        new RequestError({ code: 'user.email_exists_register', status: 422 })
+      );
 
       const passcode = await createPasscode(jti, PasscodeType.Register, { email });
       await sendPasscode(passcode);
@@ -383,14 +399,17 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
 
   router.post(
     '/session/register/passwordless/email/verify-passcode',
-    koaGuard({ body: object({ email: string(), code: string() }) }),
+    koaGuard({ body: object({ email: string().regex(emailRegEx), code: string() }) }),
     async (ctx, next) => {
       const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
       const { email, code } = ctx.guard.body;
       ctx.userLog.email = email;
       ctx.userLog.type = UserLogType.RegisterEmail;
 
-      await checkEmailValidityAndAvailability(email);
+      assertThat(
+        !(await hasUserWithEmail(email)),
+        new RequestError({ code: 'user.email_exists_register', status: 422 })
+      );
 
       await verifyPasscode(jti, PasscodeType.Register, code, { email });
       const id = await generateUserId();
