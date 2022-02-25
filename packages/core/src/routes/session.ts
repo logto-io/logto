@@ -85,7 +85,7 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
 
       const passcode = await createPasscode(jti, PasscodeType.SignIn, { phone });
       await sendPasscode(passcode);
-      ctx.state = 204;
+      ctx.status = 204;
 
       return next();
     }
@@ -131,7 +131,7 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
 
       const passcode = await createPasscode(jti, PasscodeType.SignIn, { email });
       await sendPasscode(passcode);
-      ctx.state = 204;
+      ctx.status = 204;
 
       return next();
     }
@@ -214,7 +214,7 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
   );
 
   router.post(
-    '/session/sign-in/bind-social-related-user-and-sign-in',
+    '/session/sign-in/bind-social-related-user',
     koaGuard({
       body: object({ connectorId: string() }),
     }),

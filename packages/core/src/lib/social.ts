@@ -46,7 +46,7 @@ export const getUserInfoByAuthCode = async (
 
 export const getUserInfoFromInteractionResult = async (
   connectorId: string,
-  interactionResult?: InteractionResults
+  interactionResult: InteractionResults
 ): Promise<SocialUserInfo> => {
   const parse = z
     .object({
