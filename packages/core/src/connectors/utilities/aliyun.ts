@@ -26,13 +26,7 @@ export const getSignature = (
     .map((key) => {
       const value = parameters[key];
 
-      // FIXME:
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-      if (value === undefined || value === null) {
-        return null;
-      }
-
-      return `${escaper(key)}=${escaper(value)}`;
+      return value === undefined ? '' : `${escaper(key)}=${escaper(value)}`;
     })
     .filter(Boolean)
     .join('&');
@@ -72,13 +66,9 @@ export const request = async <T>(
     if (has(finalParameters, key)) {
       const value = finalParameters[key];
 
-      // FIXME:
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-      if (value === undefined || value === null) {
-        continue;
+      if (value !== undefined) {
+        payload.append(key, value);
       }
-
-      payload.append(key, value);
     }
   }
 

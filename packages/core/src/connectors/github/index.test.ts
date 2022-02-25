@@ -1,6 +1,7 @@
 import nock from 'nock';
 
 import { getAccessToken, getAuthorizationUri, validateConfig, getUserInfo } from '.';
+import { ConnectorError, ConnectorErrorCodes } from '../types';
 import { getConnectorConfig } from '../utilities';
 import { accessTokenEndpoint, authorizationEndpoint, userInfoEndpoint } from './constant';
 
@@ -26,7 +27,7 @@ describe('getAuthorizationUri', () => {
 });
 
 describe('getAccessToken', () => {
-  it('shoud get an accessToken by exchanging with code', async () => {
+  it('should get an accessToken by exchanging with code', async () => {
     nock(accessTokenEndpoint).post('').reply(200, {
       access_token: 'access_token',
       scope: 'scope',
@@ -34,6 +35,12 @@ describe('getAccessToken', () => {
     });
     const accessToken = await getAccessToken('code');
     expect(accessToken).toEqual('access_token');
+  });
+  it('throws SocialAuthCodeInvalid error if accessToken not found in response', async () => {
+    nock(accessTokenEndpoint).post('').reply(200, {});
+    await expect(getAccessToken('code')).rejects.toMatchError(
+      new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid)
+    );
   });
 });
 
@@ -67,5 +74,15 @@ describe('getUserInfo', () => {
       name: 'monalisa octocat',
       email: 'octocat@github.com',
     });
+  });
+  it('throws SocialAccessTokenInvalid error if remote response code is 401', async () => {
+    nock(userInfoEndpoint).get('').reply(401);
+    await expect(getUserInfo('code')).rejects.toMatchError(
+      new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid)
+    );
+  });
+  it('throws unrecognized error', async () => {
+    nock(userInfoEndpoint).get('').reply(500);
+    await expect(getUserInfo('code')).rejects.toThrow();
   });
 });
