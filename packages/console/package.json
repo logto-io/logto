@@ -38,11 +38,17 @@
     "stylelint": "^13.13.1",
     "typescript": "^4.5.5"
   },
+  "alias": {
+    "@/*": "./src/$1"
+  },
   "eslintConfig": {
     "extends": "@silverhand/react"
   },
   "stylelint": {
-    "extends": "@silverhand/eslint-config-react/.stylelintrc"
+    "extends": "@silverhand/eslint-config-react/.stylelintrc",
+    "rules": {
+      "color-function-notation": "legacy"
+    }
   },
   "prettier": "@silverhand/eslint-config/.prettierrc"
 }
