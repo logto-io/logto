@@ -32,7 +32,7 @@ export const updatePasscode = buildUpdateWhere<CreatePasscode, Passcode>(pool, P
 export const deletePasscodeById = async (id: string) => {
   const { rowCount } = await pool.query(sql`
     delete from ${table}
-    where id=${id}
+    where ${fields.id}=${id}
   `);
 
   if (rowCount < 1) {
@@ -43,7 +43,7 @@ export const deletePasscodeById = async (id: string) => {
 export const deletePasscodesByIds = async (ids: string[]) => {
   const { rowCount } = await pool.query(sql`
     delete from ${table}
-    where id in (${ids.join(',')})
+    where ${fields.id} in (${ids.join(',')})
   `);
 
   if (rowCount !== ids.length) {

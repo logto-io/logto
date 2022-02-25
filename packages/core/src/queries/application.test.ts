@@ -1,12 +1,5 @@
 import { Applications } from '@logto/schemas';
-import {
-  createMockPool,
-  createMockQueryResult,
-  sql,
-  QueryResultType,
-  QueryResultRowType,
-} from 'slonik';
-import { PrimitiveValueExpressionType } from 'slonik/dist/src/types.d';
+import { createMockPool, createMockQueryResult, sql } from 'slonik';
 import { snakeCase } from 'snake-case';
 
 import {
@@ -16,7 +9,7 @@ import {
 } from '@/database/utils';
 import { DeletionError } from '@/errors/SlonikError';
 import { mockApplication } from '@/utils/mock';
-import { expectSqlAssert } from '@/utils/test-utils';
+import { expectSqlAssert, QueryType } from '@/utils/test-utils';
 
 import {
   findTotalNumberOfApplications,
@@ -27,12 +20,7 @@ import {
   deleteApplicationById,
 } from './application';
 
-type MockQuery = (
-  sql: string,
-  values: PrimitiveValueExpressionType
-) => Promise<QueryResultType<QueryResultRowType>>;
-
-const mockQuery: jest.MockedFunction<MockQuery> = jest.fn();
+const mockQuery: jest.MockedFunction<QueryType> = jest.fn();
 
 jest.mock('@/database/pool', () =>
   createMockPool({
@@ -42,7 +30,7 @@ jest.mock('@/database/pool', () =>
   })
 );
 
-describe('appliaction query', () => {
+describe('application query', () => {
   const { table, fields } = convertToIdentifiers(Applications);
 
   it('findTotalNumberOfApplications', async () => {
