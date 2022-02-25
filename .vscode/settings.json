@@ -1,6 +1,5 @@
 {
   "typescript.tsdk": "node_modules/typescript/lib",
-  "editor.formatOnSave": true,
   "[scss]": {
     "editor.codeActionsOnSave": {
       "source.fixAll.stylelint": true
@@ -13,5 +12,14 @@
     {
       "pattern": "./packages/*"
     }
-  ]
+  ],
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact",
+  ],
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true,
+  }
 }
