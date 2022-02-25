@@ -203,6 +203,12 @@ describe('sessionRoutes', () => {
         expect.anything()
       );
     });
+    it('throw error if email not exists', async () => {
+      const response = await sessionRequest
+        .post('/session/sign-in/passwordless/email/send-passcode')
+        .send({ email: 'b@a.com' });
+      expect(response.statusCode).toEqual(422);
+    });
     it('throw error if verifyPasscode failed', async () => {
       const response = await sessionRequest
         .post('/session/sign-in/passwordless/email/verify-passcode')
