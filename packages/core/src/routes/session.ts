@@ -10,7 +10,7 @@ import { object, string } from 'zod';
 import { getSocialConnectorInstanceById } from '@/connectors';
 import RequestError from '@/errors/RequestError';
 import { createPasscode, sendPasscode, verifyPasscode } from '@/lib/passcode';
-import { assignInteractionResults, connectorRedirectUrl } from '@/lib/session';
+import { assignInteractionResults } from '@/lib/session';
 import {
   findSocialRelatedUser,
   getUserInfoByAuthCode,
@@ -164,18 +164,23 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
   router.post(
     '/session/sign-in/social',
     koaGuard({
-      body: object({ connectorId: string(), code: string().optional(), state: string() }),
+      body: object({
+        connectorId: string(),
+        code: string().optional(),
+        state: string(),
+        redirectUri: string(),
+      }),
     }),
     async (ctx, next) => {
-      const { connectorId, code, state } = ctx.guard.body;
+      const { connectorId, code, state, redirectUri } = ctx.guard.body;
       ctx.userLog.connectorId = connectorId;
       ctx.userLog.type = UserLogType.SignInSocial;
 
       if (!code) {
-        assertThat(state, 'session.insufficient_info');
+        assertThat(state && redirectUri, 'session.insufficient_info');
         const connector = await getSocialConnectorInstanceById(connectorId);
         assertThat(connector.connector.enabled, 'connector.not_enabled');
-        const redirectTo = await connector.getAuthorizationUri(connectorRedirectUrl, state);
+        const redirectTo = await connector.getAuthorizationUri(redirectUri, state);
         ctx.body = { redirectTo };
 
         return next();
