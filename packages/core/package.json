@@ -67,6 +67,7 @@
     "nock": "^13.2.2",
     "openapi-types": "^9.1.0",
     "prettier": "^2.3.2",
+    "snake-case": "^3.0.4",
     "supertest": "^6.2.2",
     "ts-jest": "^27.0.5",
     "tsc-watch": "^4.4.0",

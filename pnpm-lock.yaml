@@ -110,6 +110,7 @@ importers:
       query-string: ^7.0.1
       slonik: ^23.8.3
       slonik-interceptor-preset: ^1.2.10
+      snake-case: ^3.0.4
       snakecase-keys: ^5.1.0
       supertest: ^6.2.2
       ts-jest: ^27.0.5
@@ -165,6 +166,7 @@ importers:
       nock: 13.2.2
       openapi-types: 9.3.1
       prettier: 2.5.1
+      snake-case: 3.0.4
       supertest: 6.2.2
       ts-jest: 27.1.1_0ef321b3552d50570980838f9f6677eb
       tsc-watch: 4.5.0_typescript@4.5.5
@@ -5066,7 +5068,6 @@ packages:
     dependencies:
       no-case: 3.0.4
       tslib: 2.3.1
-    dev: false
 
   /dot-prop/5.3.0:
     resolution: {integrity: sha512-QM8q3zDe58hqUqjraQOmzZ1LIH9SWQJTlEKCH4kJ2oQvLZk7RbQXvtDM2XEq3fwkV9CCvvH4LA0AV+ogFsBM2Q==}
@@ -6285,6 +6286,7 @@ packages:
 
   /graceful-fs/4.2.9:
     resolution: {integrity: sha512-NtNxqUcXgpW2iMrfqSfR73Glt39K+BLwWsPs94yR63v45T0Wbej7eRmL5cWfwEgqXnmjQp3zaJTshdRW/qC2ZQ==}
+    requiresBuild: true
     dev: true
 
   /handlebars/4.7.7:
@@ -8704,7 +8706,6 @@ packages:
     resolution: {integrity: sha512-7fm3l3NAF9WfN6W3JOmf5drwpVqX78JtoGJ3A6W0a6ZnldM41w2fV5D490psKFTpMds8TJse/eHLFFsNHHjHgg==}
     dependencies:
       tslib: 2.3.1
-    dev: false
 
   /lowercase-keys/1.0.1:
     resolution: {integrity: sha512-G2Lj61tXDnVFFOi8VZds+SoQjtQC3dgokKdDG2mTm1tx4m50NUHBOZSBwQQHyy0V12A0JTG4icfZQH+xPyh8VA==}
@@ -9179,7 +9180,6 @@ packages:
     dependencies:
       lower-case: 2.0.2
       tslib: 2.3.1
-    dev: false
 
   /nock/13.2.2:
     resolution: {integrity: sha512-PcBHuvl9i6zfaJ50A7LS55oU+nFLv8htXIhffJO+FxyfibdZ4jEvd9kTuvkrJireBFIGMZ+oUIRpMK5gU9h//g==}
@@ -11588,7 +11588,6 @@ packages:
     dependencies:
       dot-case: 3.0.4
       tslib: 2.3.1
-    dev: false
 
   /snakecase-keys/5.1.2:
     resolution: {integrity: sha512-fvtDQZqPBqYb0dEY97TGuOMbN2NJ05Tj4MaoKwjTKkmjcG6mrd58JYGr23UWZRi6Aqv49Fk4HtjTIStOQenaug==}
