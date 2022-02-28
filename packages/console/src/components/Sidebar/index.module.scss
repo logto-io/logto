@@ -1,9 +1,11 @@
 @use '@/scss/underscore' as _;
 
 .sidebar {
-  padding: _.unit(3);
   flex-grow: 0;
   flex-shrink: 0;
-  // TO-DO: remove after fulfilled with components
-  width: 250px;
+  width: 275px;
+
+  > div + div {
+    margin-top: _.unit(6);
+  }
 }

@@ -42,13 +42,16 @@
     "@/*": "./src/$1"
   },
   "eslintConfig": {
-    "extends": "@silverhand/react"
+    "extends": "@silverhand/react",
+    "rules": {
+      "react/jsx-curly-brace-presence": [
+        "error",
+        { "props": "never", "children": "never", "propElementValues": "always" }
+      ]
+    }
   },
   "stylelint": {
-    "extends": "@silverhand/eslint-config-react/.stylelintrc",
-    "rules": {
-      "color-function-notation": "legacy"
-    }
+    "extends": "@silverhand/eslint-config-react/.stylelintrc"
   },
   "prettier": "@silverhand/eslint-config/.prettierrc"
 }

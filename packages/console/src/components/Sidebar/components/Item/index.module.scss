@@ -1,0 +1,26 @@
+@use '@/scss/underscore' as _;
+
+.row {
+  display: flex;
+  align-items: center;
+  padding: _.unit(3) _.unit(6);
+  color: var(--color-on-surface-variant);
+
+  > div + div {
+    margin-left: _.unit(5);
+  }
+
+  .icon {
+    width: _.unit(6);
+    height: _.unit(6);
+    flex: 0 0 _.unit(6);
+
+    svg {
+      fill: var(--color-on-surface-variant);
+    }
+  }
+
+  .title {
+    @include _.subhead-1;
+  }
+}
