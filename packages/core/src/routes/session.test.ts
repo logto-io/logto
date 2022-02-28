@@ -467,17 +467,10 @@ describe('sessionRoutes', () => {
       );
     });
 
-    it('throw error if username not valid (starts with underscore)', async () => {
+    it('throw error if username not valid', async () => {
       const response = await sessionRequest
         .post('/session/register/username-password')
-        .send({ username: '_username', password: 'password' });
-      expect(response.statusCode).toEqual(400);
-    });
-
-    it('throw error if username not valid (starts with digits)', async () => {
-      const response = await sessionRequest
-        .post('/session/register/username-password')
-        .send({ username: '0username', password: 'password' });
+        .send({ username: '_', password: 'password' });
       expect(response.statusCode).toEqual(400);
     });
 
@@ -495,13 +488,8 @@ describe('sessionRoutes', () => {
       expect(response.body).toHaveProperty('existence', false);
     });
 
-    it('throw error if username not valid (starts with underscore)', async () => {
-      const response = await sessionRequest.get('/session/register/_username/existence');
-      expect(response.statusCode).toEqual(400);
-    });
-
-    it('throw error if username not valid (starts with digits)', async () => {
-      const response = await sessionRequest.get('/session/register/0username/existence');
+    it('throw error if username not valid', async () => {
+      const response = await sessionRequest.get('/session/register/_u/existence');
       expect(response.statusCode).toEqual(400);
     });
 
