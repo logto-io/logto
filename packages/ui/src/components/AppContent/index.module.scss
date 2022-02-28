@@ -21,7 +21,7 @@
   --color-error-border: #{rgba(#ff6b66, 0.35)};
 
   /* Shadow */
-  --shadow-button: 2px 2px 8px rgb(60 76 227 / 25%);
+  --shadow-button: 2px 2px 8px rgb(60, 76, 227, 25%);
 
   /* Transition */
   --transition-default-function: 0.2s ease-in-out;
@@ -39,8 +39,8 @@
   --color-background: #101419;
 
   /* Shadow */
-  --shadow-card: 2px 2px 24px rgb(59 61 63 / 25%);
-  --shadow-control: 1px 1px 2px rgb(221 221 221 / 25%);
+  --shadow-card: 2px 2px 24px rgb(59, 61, 63, 25%);
+  --shadow-control: 1px 1px 2px rgb(221, 221, 221, 25%);
 }
 
 .light {
@@ -54,8 +54,8 @@
   --color-background: #fdfdff;
 
   /* Shadow */
-  --shadow-card: 2px 2px 24px rgb(187 189 191 / 20%);
-  --shadow-control: 1px 1px 2px rgb(221 221 221 / 25%);
+  --shadow-card: 2px 2px 24px rgb(187, 189, 191, 20%);
+  --shadow-control: 1px 1px 2px rgb(221, 221, 221, 25%);
 }
 
 $font-family: 'PingFang SC', 'SF Pro Text', sans-serif;
