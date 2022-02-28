@@ -173,6 +173,25 @@ describe('adminUserRoutes', () => {
     });
   });
 
+  it('PATCH /users/:userId should updated with one field if the other is undefined', async () => {
+    const name = 'Micheal';
+
+    const updateNameResponse = await userRequest.patch('/users/foo').send({ name });
+    expect(updateNameResponse.status).toEqual(200);
+    expect(updateNameResponse.body).toEqual({
+      ...mockUserResponse,
+      name,
+    });
+
+    const avatar = 'https://www.miceal.png';
+    const updateAvatarResponse = await userRequest.patch('/users/foo').send({ avatar });
+    expect(updateAvatarResponse.status).toEqual(200);
+    expect(updateAvatarResponse.body).toEqual({
+      ...mockUserResponse,
+      avatar,
+    });
+  });
+
   it('PATCH /users/:userId throw with invalid input params', async () => {
     const name = 'Micheal';
     const avatar = 'http://www.micheal.png';

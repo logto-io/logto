@@ -115,14 +115,13 @@ export default function adminUserRoutes<T extends AuthedRouter>(router: T) {
     async (ctx, next) => {
       const {
         params: { userId },
-        body: { name, avatar },
+        body,
       } = ctx.guard;
 
       await findUserById(userId);
 
       const user = await updateUserById(userId, {
-        name,
-        avatar,
+        ...body,
       });
 
       ctx.body = pick(user, ...userInfoSelectFields);
