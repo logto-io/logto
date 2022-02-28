@@ -33,12 +33,12 @@ describe('getAccessToken', () => {
       scope: 'scope',
       token_type: 'token_type',
     });
-    const accessToken = await getAccessToken('code');
+    const accessToken = await getAccessToken('code', 'dummyRedirectUri');
     expect(accessToken).toEqual('access_token');
   });
   it('throws SocialAuthCodeInvalid error if accessToken not found in response', async () => {
     nock(accessTokenEndpoint).post('').reply(200, {});
-    await expect(getAccessToken('code')).rejects.toMatchError(
+    await expect(getAccessToken('code', 'dummyRedirectUri')).rejects.toMatchError(
       new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid)
     );
   });

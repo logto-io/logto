@@ -191,7 +191,7 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
         return next();
       }
 
-      const userInfo = await getUserInfoByAuthCode(connectorId, code);
+      const userInfo = await getUserInfoByAuthCode(connectorId, code, redirectUri);
 
       if (!(await hasUserWithIdentity(connectorId, userInfo.id))) {
         await assignInteractionResults(ctx, provider, { connectorId, userInfo }, true);

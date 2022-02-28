@@ -36,10 +36,11 @@ const getConnector = async (connectorId: string) => {
 
 export const getUserInfoByAuthCode = async (
   connectorId: string,
-  authCode: string
+  authCode: string,
+  redirectUri: string
 ): Promise<SocialUserInfo> => {
   const connector = await getConnector(connectorId);
-  const accessToken = await connector.getAccessToken(authCode);
+  const accessToken = await connector.getAccessToken(authCode, redirectUri);
 
   return connector.getUserInfo(accessToken);
 };

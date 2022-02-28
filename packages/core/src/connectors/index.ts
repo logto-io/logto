@@ -4,9 +4,10 @@ import { findConnectorById, hasConnector, insertConnector } from '@/queries/conn
 import * as AliyunDM from './aliyun-dm';
 import * as AliyunSMS from './aliyun-sms';
 import * as GitHub from './github';
-import { ConnectorInstance, ConnectorType, IConnector, SocialConnectorInstance } from './types';
+import * as Google from './google';
+import { ConnectorInstance, ConnectorType, IConnector, SocialConectorInstance } from './types';
 
-const allConnectors: IConnector[] = [AliyunDM, AliyunSMS, GitHub];
+const allConnectors: IConnector[] = [AliyunDM, AliyunSMS, GitHub, Google];
 
 export const getConnectorInstances = async (): Promise<ConnectorInstance[]> => {
   return Promise.all(
@@ -36,13 +37,13 @@ export const getConnectorInstanceById = async (id: string): Promise<ConnectorIns
 
 const isSocialConnectorInstance = (
   connector: ConnectorInstance
-): connector is SocialConnectorInstance => {
+): connector is SocialConectorInstance => {
   return connector.metadata.type === ConnectorType.Social;
 };
 
 export const getSocialConnectorInstanceById = async (
   id: string
-): Promise<SocialConnectorInstance> => {
+): Promise<SocialConectorInstance> => {
   const connector = await getConnectorInstanceById(id);
 
   if (!isSocialConnectorInstance(connector)) {
