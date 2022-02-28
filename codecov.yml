@@ -1,0 +1,15 @@
+coverage:
+  status:
+    project:
+      default: off
+      core:
+        target: auto
+        threshold: 1%
+        flags:
+          - core
+
+flags:
+  core:
+    paths:
+      - packages/core/
+    carryforward: true

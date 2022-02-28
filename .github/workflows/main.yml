@@ -28,5 +28,5 @@ jobs:
       - name: Test
         run: pnpm -- lerna run --parallel test:coverage
 
-      - name: Coverage Report
-        run: pnpm -- lerna run --parallel test:report
+      - name: Codecov
+        uses: codecov/codecov-action@v2
