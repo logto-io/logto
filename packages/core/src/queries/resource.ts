@@ -19,14 +19,14 @@ export const findAllResources = async (limit: number, offset: number) =>
 
 export const findResourceByIndicator = async (indicator: string) =>
   pool.maybeOne<Resource>(sql`
-    select ${sql.join(Object.values(fields), sql`,`)}
+    select ${sql.join(Object.values(fields), sql`, `)}
     from ${table}
     where ${fields.indicator}=${indicator}
   `);
 
 export const findResourceById = async (id: string) =>
   pool.one<Resource>(sql`
-    select ${sql.join(Object.values(fields), sql`,`)}
+    select ${sql.join(Object.values(fields), sql`, `)}
     from ${table}
     where ${fields.id}=${id}
   `);
@@ -45,7 +45,7 @@ export const updateResourceById = async (
 export const deleteResourceById = async (id: string) => {
   const { rowCount } = await pool.query(sql`
     delete from ${table}
-    where id=${id}
+    where ${fields.id}=${id}
   `);
 
   if (rowCount < 1) {

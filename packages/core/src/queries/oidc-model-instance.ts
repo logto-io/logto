@@ -71,7 +71,7 @@ export const consumeInstanceById = async (modelName: string, id: string) => {
   `);
 };
 
-export const destoryInstanceById = async (modelName: string, id: string) => {
+export const destroyInstanceById = async (modelName: string, id: string) => {
   await pool.query(sql`
     delete from ${table}
     where ${fields.modelName}=${modelName}

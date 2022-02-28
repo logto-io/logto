@@ -10,7 +10,7 @@ const { table, fields } = convertToIdentifiers(ResourceScopes);
 
 export const findAllScopesWithResourceId = async (resourceId: string) =>
   pool.any<ResourceScope>(sql`
-    select ${sql.join(Object.values(fields), sql`,`)}
+    select ${sql.join(Object.values(fields), sql`, `)}
     from ${table}
     where ${fields.resourceId}=${resourceId}
   `);
@@ -26,7 +26,7 @@ export const insertScope = buildInsertInto<CreateResourceScope, ResourceScope>(
 export const deleteScopeById = async (id: string) => {
   const { rowCount } = await pool.query(sql`
     delete from ${table}
-    where id=${id}
+    where ${fields.id}=${id}
   `);
 
   if (rowCount < 1) {

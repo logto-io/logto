@@ -10,6 +10,12 @@ import {
   SignInExperience,
   BrandingStyle,
   Language,
+  Connector,
+  Passcode,
+  PasscodeType,
+  UserLog,
+  UserLogType,
+  UserLogResult,
 } from '@logto/schemas';
 import pick from 'lodash.pick';
 
@@ -173,4 +179,32 @@ export const mockSignInExperience: SignInExperience = {
     secondary: [],
     disabled: [],
   },
+};
+
+export const mockConnector: Connector = {
+  id: 'foo',
+  enabled: true,
+  config: {},
+  createdAt: 1_645_334_775_356,
+};
+
+export const mockPasscode: Passcode = {
+  id: 'foo',
+  interactionJti: 'jti',
+  phone: '888 888 8888',
+  email: 'foo@logto.io',
+  type: PasscodeType.SignIn,
+  code: 'asdfghjkl',
+  consumed: false,
+  tryCount: 2,
+  createdAt: 10,
+};
+
+export const mockUserLog: UserLog = {
+  id: 'foo',
+  userId: 'foo',
+  type: UserLogType.RegisterEmail,
+  result: UserLogResult.Success,
+  payload: {},
+  createdAt: 10,
 };

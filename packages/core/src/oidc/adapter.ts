@@ -6,7 +6,7 @@ import snakecaseKeys from 'snakecase-keys';
 import { findApplicationById } from '@/queries/application';
 import {
   consumeInstanceById,
-  destoryInstanceById,
+  destroyInstanceById,
   findPayloadById,
   findPayloadByPayloadField,
   revokeInstanceByGrantId,
@@ -57,7 +57,7 @@ export default function postgresAdapter(modelName: string): ReturnType<AdapterFa
     findByUserCode: async (userCode) => findPayloadByPayloadField(modelName, 'userCode', userCode),
     findByUid: async (uid) => findPayloadByPayloadField(modelName, 'uid', uid),
     consume: async (id) => consumeInstanceById(modelName, id),
-    destroy: async (id) => destoryInstanceById(modelName, id),
+    destroy: async (id) => destroyInstanceById(modelName, id),
     revokeByGrantId: async (grantId) => revokeInstanceByGrantId(modelName, grantId),
   };
 }

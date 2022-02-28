@@ -3,7 +3,7 @@ import snakecaseKeys from 'snakecase-keys';
 
 import {
   consumeInstanceById,
-  destoryInstanceById,
+  destroyInstanceById,
   findPayloadById,
   findPayloadByPayloadField,
   revokeInstanceByGrantId,
@@ -23,7 +23,7 @@ jest.mock('@/queries/oidc-model-instance', () => ({
   findPayloadById: jest.fn(),
   findPayloadByPayloadField: jest.fn(),
   consumeInstanceById: jest.fn(),
-  destoryInstanceById: jest.fn(),
+  destroyInstanceById: jest.fn(),
   revokeInstanceByGrantId: jest.fn(),
 }));
 
@@ -102,7 +102,7 @@ describe('postgres Adapter', () => {
     expect(consumeInstanceById).toBeCalledWith(modelName, id);
 
     await adapter.destroy(id);
-    expect(destoryInstanceById).toBeCalledWith(modelName, id);
+    expect(destroyInstanceById).toBeCalledWith(modelName, id);
 
     await adapter.revokeByGrantId(grantId);
     expect(revokeInstanceByGrantId).toBeCalledWith(modelName, grantId);

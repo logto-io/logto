@@ -2,12 +2,15 @@ import { createMockContext, Options } from '@shopify/jest-koa-mocks';
 import Koa, { MiddlewareType, Context, Middleware } from 'koa';
 import Router, { IRouterParamContext } from 'koa-router';
 import { Provider } from 'oidc-provider';
-import { createMockPool, createMockQueryResult, QueryResultRowType } from 'slonik';
+import { createMockPool, createMockQueryResult, QueryResultType, QueryResultRowType } from 'slonik';
 import { PrimitiveValueExpressionType } from 'slonik/dist/src/types.d';
 import request from 'supertest';
 
 import { AuthedRouter, AnonymousRouter } from '@/routes/types';
 
+/**
+ *  Slonik Query Mock Utils
+ **/
 export const expectSqlAssert = (sql: string, expectSql: string) => {
   expect(
     sql
@@ -21,6 +24,11 @@ export const expectSqlAssert = (sql: string, expectSql: string) => {
       .filter((row) => row)
   );
 };
+
+export type QueryType = (
+  sql: string,
+  values: readonly PrimitiveValueExpressionType[]
+) => Promise<QueryResultType<QueryResultRowType>>;
 
 export const createTestPool = <T extends QueryResultRowType>(
   expectSql?: string,
@@ -38,6 +46,9 @@ export const createTestPool = <T extends QueryResultRowType>(
     },
   });
 
+/**
+ * Middleware & Context Mock Utils
+ **/
 export const emptyMiddleware =
   <StateT, ContextT>(): MiddlewareType<StateT, ContextT> =>
   // Intend to mock the async middleware
@@ -60,6 +71,9 @@ export const createContextWithRouteParameters = (
   };
 };
 
+/**
+ * Supertest Request Mock Utils
+ **/
 type RouteLauncher<T extends AuthedRouter | AnonymousRouter> = (router: T) => void;
 
 type ProviderRouteLauncher<T extends AuthedRouter | AnonymousRouter> = (

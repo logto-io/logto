@@ -118,7 +118,7 @@ export const updateUserById = async (id: string, set: Partial<OmitAutoSetFields<
 export const deleteUserById = async (id: string) => {
   const { rowCount } = await pool.query(sql`
     delete from ${table}
-    where id=${id}
+    where ${fields.id}=${id}
   `);
 
   if (rowCount < 1) {
@@ -130,7 +130,7 @@ export const clearUserCustomDataById = async (id: string) => {
   const { rowCount } = await pool.query<User>(sql`
     update ${table}
     set ${fields.customData}='{}'::jsonb
-    where id=${id}
+    where ${fields.id}=${id}
   `);
 
   if (rowCount < 1) {

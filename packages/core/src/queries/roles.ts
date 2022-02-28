@@ -14,7 +14,7 @@ export const findAllRoles = async () =>
 
 export const findRolesByRoleNames = async (roleNames: string[]) =>
   pool.any<Role>(sql`
-    select ${sql.join(Object.values(fields), sql`,`)}
+    select ${sql.join(Object.values(fields), sql`, `)}
     from ${table}
-    where ${fields.name} in (${sql.join(roleNames, sql`,`)})
+    where ${fields.name} in (${sql.join(roleNames, sql`, `)})
   `);
