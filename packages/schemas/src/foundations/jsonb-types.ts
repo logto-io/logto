@@ -54,11 +54,6 @@ export const identitiesGuard = z.record(identityGuard);
 export type Identity = z.infer<typeof identityGuard>;
 export type Identities = z.infer<typeof identitiesGuard>;
 
-// TODO: LOG-1553 support empty shape of object
-export const customDataGuard = z.object({}).catchall(z.unknown());
-
-export type CustomData = z.infer<typeof customDataGuard>;
-
 /**
  * User Logs
  */
@@ -72,15 +67,6 @@ export const userLogPayloadGuard = z.object({
 });
 
 export type UserLogPayload = z.infer<typeof userLogPayloadGuard>;
-
-/**
- * Connectors
- */
-
-// TODO: support empty shape of object
-export const connectorConfigGuard = z.object({}).catchall(z.unknown());
-
-export type ConnectorConfig = z.infer<typeof connectorConfigGuard>;
 
 /**
  * Settings
@@ -148,3 +134,11 @@ export const signInMethodSettingsGuard = z.object({
 });
 
 export type SignInMethodSettings = z.infer<typeof signInMethodSettingsGuard>;
+
+/**
+ * Commonly Used
+ */
+
+export const arbitraryObjectGuard = z.object({}).catchall(z.unknown());
+
+export type ArbitraryObject = z.infer<typeof arbitraryObjectGuard>;

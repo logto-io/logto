@@ -308,8 +308,24 @@ describe('adminUserRoutes', () => {
       }
     });
     await expect(
-      userRequest.patch(`/users/${notExistedUserId}/roleNames`).send({ roleNames: ['admin'] })
+      userRequest.patch(`/users/${notExistedUserId}/custom-data`).send({ customData: { level: 1 } })
     ).resolves.toHaveProperty('status', 500);
+    expect(updateUserById).not.toHaveBeenCalled();
+  });
+
+  it('PATCH /users/:userId/custom-data should throw if customData is not an object', async () => {
+    await expect(
+      userRequest.patch(`/users/foo/custom-data`).send({ customData: 123_456 })
+    ).resolves.toHaveProperty('status', 400);
+
+    await expect(
+      userRequest.patch(`/users/foo/custom-data`).send({ customData: ['customDataContent'] })
+    ).resolves.toHaveProperty('status', 400);
+
+    await expect(
+      userRequest.patch(`/users/foo/custom-data`).send({ customData: 'customDataContent' })
+    ).resolves.toHaveProperty('status', 400);
+
     expect(updateUserById).not.toHaveBeenCalled();
   });
 

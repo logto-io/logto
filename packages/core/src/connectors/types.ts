@@ -1,5 +1,5 @@
 import { Languages } from '@logto/phrases';
-import { ConnectorConfig, Connector, PasscodeType } from '@logto/schemas';
+import { ArbitraryObject, Connector, PasscodeType } from '@logto/schemas';
 import { z } from 'zod';
 
 export enum ConnectorType {
@@ -92,7 +92,7 @@ export class ConnectorError extends Error {
   }
 }
 
-export type ValidateConfig<T extends ConnectorConfig = ConnectorConfig> = (
+export type ValidateConfig<T extends ArbitraryObject = ArbitraryObject> = (
   config: T
 ) => Promise<void>;
 
