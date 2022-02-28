@@ -12,6 +12,18 @@ const translation = {
     loading: 'Creating Account...',
     have_account: 'Already have an account?',
   },
+  admin_console: {
+    tab_sections: {
+      overview: 'Overview',
+      resource_management: 'Resource Management',
+    },
+    tabs: {
+      get_started: 'Get Started',
+      dashboard: 'Dashboard',
+      applications: 'Applications',
+      api_resources: 'API Resources',
+    },
+  },
 };
 
 const errors = {

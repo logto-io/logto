@@ -14,6 +14,18 @@ const translation = {
     loading: '创建中...',
     have_account: '已经有账户？',
   },
+  admin_console: {
+    tab_sections: {
+      overview: '概览',
+      resource_management: '资源管理',
+    },
+    tabs: {
+      get_started: '开始使用',
+      dashboard: '仪表盘',
+      applications: '应用',
+      api_resources: 'API 资源',
+    },
+  },
 };
 
 const errors = {

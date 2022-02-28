@@ -3,7 +3,8 @@
 .row {
   display: flex;
   align-items: center;
-  padding: _.unit(3) _.unit(6);
+  margin: 0 _.unit(5) 0 _.unit(2);
+  padding: _.unit(3) _.unit(4);
   color: var(--color-on-surface-variant);
 
   > div + div {
