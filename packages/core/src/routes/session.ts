@@ -31,7 +31,7 @@ import {
   findUserByIdentity,
 } from '@/queries/user';
 import assertThat from '@/utils/assert-that';
-import { emailRegEx, phoneRegEx, usernameRegEx } from '@/utils/regex';
+import { emailRegEx, passwordRegEx, phoneRegEx, usernameRegEx } from '@/utils/regex';
 
 import { AnonymousRouter } from './types';
 
@@ -52,7 +52,12 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
 
   router.post(
     '/session/sign-in/username-password',
-    koaGuard({ body: object({ username: string().regex(usernameRegEx), password: string() }) }),
+    koaGuard({
+      body: object({
+        username: string().regex(usernameRegEx),
+        password: string().regex(passwordRegEx),
+      }),
+    }),
     async (ctx, next) => {
       const { username, password } = ctx.guard.body;
       ctx.userLog.username = username;
@@ -281,7 +286,12 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
 
   router.post(
     '/session/register/username-password',
-    koaGuard({ body: object({ username: string().regex(usernameRegEx), password: string() }) }),
+    koaGuard({
+      body: object({
+        username: string().regex(usernameRegEx),
+        password: string().regex(passwordRegEx),
+      }),
+    }),
     async (ctx, next) => {
       const { username, password } = ctx.guard.body;
       ctx.userLog.username = username;

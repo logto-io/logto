@@ -101,7 +101,7 @@ describe('adminUserRoutes', () => {
   });
 
   it('POST /users', async () => {
-    const username = 'MJ@logto.io';
+    const username = 'MJAtLogto';
     const password = 'PASSWORD';
     const name = 'Micheal';
 
@@ -116,7 +116,7 @@ describe('adminUserRoutes', () => {
   });
 
   it('POST /users should throw with invalid input params', async () => {
-    const username = 'MJ@logto.io';
+    const username = 'MJAtLogto';
     const password = 'PASSWORD';
     const name = 'Micheal';
 
@@ -137,13 +137,7 @@ describe('adminUserRoutes', () => {
 
     // Invalid input format
     await expect(
-      userRequest.post('/users').send({ username: 'xy', password, name })
-    ).resolves.toHaveProperty('status', 400);
-    await expect(
       userRequest.post('/users').send({ username, password: 'abc', name })
-    ).resolves.toHaveProperty('status', 400);
-    await expect(
-      userRequest.post('/users').send({ username, password, name: 'xy' })
     ).resolves.toHaveProperty('status', 400);
   });
 
@@ -151,7 +145,7 @@ describe('adminUserRoutes', () => {
     const mockHasUser = hasUser as jest.Mock;
     mockHasUser.mockImplementationOnce(async () => Promise.resolve(true));
 
-    const username = 'MJ@logto.io';
+    const username = 'MJAtLogto';
     const password = 'PASSWORD';
     const name = 'Micheal';
 
