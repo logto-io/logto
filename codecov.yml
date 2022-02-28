@@ -11,5 +11,4 @@ coverage:
 flags:
   core:
     paths:
-      - packages/core/
-    carryforward: true
+      - packages/core
