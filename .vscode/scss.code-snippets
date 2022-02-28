@@ -9,7 +9,7 @@
 		"scope": "scss",
 		"prefix": "use",
 		"body": [
-			"@use '/src/scss${1:/}'${2: as $3};",
+			"@use '@/scss${1:/}'${2: as $3};",
 			"$0"
 		],
 		"description": "Add @use in header."
@@ -18,7 +18,7 @@
 		"scope": "scss",
 		"prefix": "useu",
 		"body": [
-			"@use '/src/scss/underscore' as _;",
+			"@use '@/scss/underscore' as _;",
 			"$0"
 		],
 		"description": "Add @use underscore in header."
