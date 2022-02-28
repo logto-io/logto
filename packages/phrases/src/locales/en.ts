@@ -16,12 +16,21 @@ const translation = {
     tab_sections: {
       overview: 'Overview',
       resource_management: 'Resource Management',
+      user_management: 'User Management',
+      help_and_support: 'Help and Support',
     },
     tabs: {
       get_started: 'Get Started',
       dashboard: 'Dashboard',
       applications: 'Applications',
       api_resources: 'API Resources',
+      sign_in_experience: 'Sign-in Experience',
+      connectors: 'Connectors',
+      user_management: 'User Management',
+      audit_logs: 'Audit Logs',
+      documentation: 'Documentation',
+      community_support: 'Community Support',
+      settings: 'Settings',
     },
   },
 };

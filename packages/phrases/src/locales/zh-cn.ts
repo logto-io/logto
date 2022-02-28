@@ -18,12 +18,21 @@ const translation = {
     tab_sections: {
       overview: '概览',
       resource_management: '资源管理',
+      user_management: '用户管理',
+      help_and_support: '帮助与支持',
     },
     tabs: {
       get_started: '开始使用',
       dashboard: '仪表盘',
       applications: '应用',
       api_resources: 'API 资源',
+      sign_in_experience: '登录体验',
+      connectors: '连接器',
+      user_management: '用户管理',
+      audit_logs: '审计日志',
+      documentation: '文档',
+      community_support: '社区支持',
+      settings: '设置',
     },
   },
 };
