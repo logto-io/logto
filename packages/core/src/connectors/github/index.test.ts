@@ -44,6 +44,8 @@ describe('validateConfig', () => {
     ).resolves.not.toThrow();
   });
   it('should throw on empty config', async () => {
+    // FIXME: @sijie
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-expect-error
     await expect(validateConfig()).rejects.toThrowError();
   });

@@ -8,7 +8,6 @@ export type Field = {
   isArray: boolean;
 };
 
-// eslint-disable-next-line @typescript-eslint/ban-types
 export type FieldWithType = Omit<Field, 'type' | 'customType'> & { type: string; isEnum: boolean };
 
 export type Type = {
