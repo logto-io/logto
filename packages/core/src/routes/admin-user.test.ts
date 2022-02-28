@@ -137,13 +137,7 @@ describe('adminUserRoutes', () => {
 
     // Invalid input format
     await expect(
-      userRequest.post('/users').send({ username: '_xy', password, name })
-    ).resolves.toHaveProperty('status', 400);
-    await expect(
       userRequest.post('/users').send({ username, password: 'abc', name })
-    ).resolves.toHaveProperty('status', 400);
-    await expect(
-      userRequest.post('/users').send({ username, password, name: '_xy' })
     ).resolves.toHaveProperty('status', 400);
   });
 
