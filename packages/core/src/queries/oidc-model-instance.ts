@@ -59,8 +59,6 @@ export const findPayloadByPayloadField = async <
     and ${fields.payload}->>${field}=${value}
   `);
 
-  console.log(result);
-
   return convertResult(result);
 };
 
