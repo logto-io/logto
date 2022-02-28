@@ -12,8 +12,6 @@ export const conditionalSql = <T>(
 ) => (notFalsy(value) ? buildSql(value) : sql``);
 
 export const autoSetFields = Object.freeze(['createdAt', 'updatedAt'] as const);
-// `Except` type will require omit fields to be the key of given type
-// eslint-disable-next-line @typescript-eslint/ban-types
 export type OmitAutoSetFields<T> = Omit<T, typeof autoSetFields[number]>;
 export type ExcludeAutoSetFields<T> = Exclude<T, typeof autoSetFields[number]>;
 export const excludeAutoSetFields = <T extends string>(fields: readonly T[]) =>
@@ -34,7 +32,9 @@ export const excludeAutoSetFields = <T extends string>(fields: readonly T[]) =>
  */
 export const convertToPrimitiveOrSql = (
   key: string,
+  // eslint-disable-next-line @typescript-eslint/ban-types
   value: NonNullable<SchemaValue> | null
+  // eslint-disable-next-line @typescript-eslint/ban-types
 ): NonNullable<SchemaValuePrimitive> | SqlTokenType | null => {
   if (value === null) {
     return null;

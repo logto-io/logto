@@ -5,6 +5,8 @@ import { useState, useCallback } from 'react';
 type UseApi<T extends any[], U> = {
   result?: U;
   loading: boolean;
+  // FIXME:
+  // eslint-disable-next-line @typescript-eslint/ban-types
   error: RequestErrorBody | null;
   run: (...args: T) => Promise<void>;
 };
@@ -13,6 +15,8 @@ function useApi<Args extends any[], Response>(
   api: (...args: Args) => Promise<Response>
 ): UseApi<Args, Response> {
   const [loading, setLoading] = useState(false);
+  // FIXME:
+  // eslint-disable-next-line @typescript-eslint/ban-types
   const [error, setError] = useState<RequestErrorBody | null>(null);
   const [result, setResult] = useState<Response>();
 

@@ -76,6 +76,8 @@ export const getUserInfoFromInteractionResult = async (
  */
 export const findSocialRelatedUser = async (
   info: SocialUserInfo
+  // FIXME:
+  // eslint-disable-next-line @typescript-eslint/ban-types
 ): Promise<null | [string, User]> => {
   if (info.phone && (await hasUserWithPhone(info.phone))) {
     const user = await findUserByPhone(info.phone);

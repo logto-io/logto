@@ -16,11 +16,13 @@ export type QueryResult = Pick<OidcModelInstance, 'payload' | 'consumedAt'>;
 
 const { table, fields } = convertToIdentifiers(OidcModelInstances);
 
+// eslint-disable-next-line @typescript-eslint/ban-types
 const withConsumed = <T>(data: T, consumedAt?: number | null): WithConsumed<T> => ({
   ...data,
   ...(consumedAt ? { consumed: true } : undefined),
 });
 
+// eslint-disable-next-line @typescript-eslint/ban-types
 const convertResult = (result: QueryResult | null) =>
   conditional(result && withConsumed(result.payload, result.consumedAt));
 
