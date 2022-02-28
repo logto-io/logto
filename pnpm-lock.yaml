@@ -174,7 +174,6 @@ importers:
 
   packages/phrases:
     specifiers:
-      '@logto/schemas': ^0.1.0
       '@silverhand/eslint-config': ^0.9.1
       '@silverhand/essentials': ^1.1.4
       '@silverhand/ts-config': ^0.9.1
@@ -183,7 +182,6 @@ importers:
       prettier: ^2.3.2
       typescript: ^4.5.5
     dependencies:
-      '@logto/schemas': link:../schemas
       '@silverhand/essentials': 1.1.4
     devDependencies:
       '@silverhand/eslint-config': 0.9.1_dd26a5c7f44cc79875cab41b61b7f609
