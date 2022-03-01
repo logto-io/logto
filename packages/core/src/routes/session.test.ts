@@ -7,9 +7,13 @@ import { createRequester } from '@/utils/test-utils';
 import sessionRoutes from './session';
 
 jest.mock('@/lib/user', () => ({
-  async findUserByUsernameAndPassword(username: string) {
-    if (username === 'notexistuser') {
-      throw new Error(' ');
+  async findUserByUsernameAndPassword(username: string, password: string) {
+    if (username !== 'username') {
+      throw new RequestError({ code: 'entity.not_found', status: 404 });
+    }
+
+    if (password !== 'password') {
+      throw new RequestError('session.invalid_credentials');
     }
 
     return { id: 'user1' };
@@ -176,7 +180,15 @@ describe('sessionRoutes', () => {
         username: 'notexistuser',
         password: 'password',
       });
-      expect(response.statusCode).toEqual(500);
+      expect(response.statusCode).toEqual(404);
+    });
+
+    it('throw if user found but wrong password', async () => {
+      const response = await sessionRequest.post('/session/sign-in/username-password').send({
+        username: 'username',
+        password: '_password',
+      });
+      expect(response.statusCode).toEqual(400);
     });
   });
 
