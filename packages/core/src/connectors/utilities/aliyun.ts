@@ -3,7 +3,7 @@ import { createHmac } from 'crypto';
 import { has } from '@silverhand/essentials';
 import got from 'got';
 
-// Aliyun has special excape rules.
+// Aliyun has special escape rules.
 // https://help.aliyun.com/document_detail/29442.html
 const escaper = (string_: string) =>
   encodeURIComponent(string_)
