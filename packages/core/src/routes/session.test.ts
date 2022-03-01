@@ -182,7 +182,7 @@ describe('sessionRoutes', () => {
         jti: 'jti',
       });
     });
-    it('call sendPasscode', async () => {
+    it('it should call sendPasscode', async () => {
       const response = await sessionRequest
         .post('/session/sign-in/passwordless/phone/send-passcode')
         .send({ phone: '13000000000' });
@@ -231,7 +231,7 @@ describe('sessionRoutes', () => {
         jti: 'jti',
       });
     });
-    it('call sendPasscode', async () => {
+    it('it should call sendPasscode', async () => {
       const response = await sessionRequest
         .post('/session/sign-in/passwordless/email/send-passcode')
         .send({ email: 'a@a.com' });
@@ -482,7 +482,7 @@ describe('sessionRoutes', () => {
       });
     });
 
-    it('call sendPasscode', async () => {
+    it('it should call sendPasscode', async () => {
       const response = await sessionRequest
         .post('/session/register/passwordless/phone/send-passcode')
         .send({ phone: '13000000001' });
@@ -566,7 +566,7 @@ describe('sessionRoutes', () => {
       });
     });
 
-    it('call sendPasscode', async () => {
+    it('it should call sendPasscode', async () => {
       const response = await sessionRequest
         .post('/session/register/passwordless/email/send-passcode')
         .send({ email: 'b@a.com' });
