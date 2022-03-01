@@ -26,7 +26,14 @@ jest.mock('@/lib/social', () => ({
   async findSocialRelatedUser() {
     return ['phone', { id: 'user1', identities: {} }];
   },
-  async getUserInfoByAuthCode(_connectorId: string, authCode: string) {
+  async getUserInfoByAuthCode(connectorId: string, authCode: string) {
+    if (connectorId === '_connectorId') {
+      throw new RequestError({
+        code: 'session.invalid_connector_id',
+        status: 422,
+      });
+    }
+
     if (authCode === '123456') {
       return { id: 'id' };
     }
@@ -325,6 +332,16 @@ describe('sessionRoutes', () => {
       expect(response.statusCode).toEqual(500);
     });
 
+    it('throw error when code is provided but connector can not be found', async () => {
+      const response = await sessionRequest.post('/session/sign-in/social').send({
+        connectorId: '_connectorId',
+        state: 'state',
+        redirectUri: 'logto.dev',
+        code: '123456',
+      });
+      expect(response.statusCode).toEqual(422);
+    });
+
     it('get and add user info with auth code, as well as assign result and redirect', async () => {
       const response = await sessionRequest.post('/session/sign-in/social').send({
         connectorId: 'connectorId',
@@ -349,7 +366,7 @@ describe('sessionRoutes', () => {
 
     it('throw error when identity exists', async () => {
       const response = await sessionRequest.post('/session/sign-in/social').send({
-        connectorId: '_connectorId',
+        connectorId: '_connectorId_',
         state: 'state',
         redirectUri: 'logto.dev',
         code: '123456',
@@ -357,7 +374,7 @@ describe('sessionRoutes', () => {
       expect(interactionResult).toHaveBeenCalledWith(
         expect.anything(),
         expect.anything(),
-        expect.objectContaining({ connectorId: '_connectorId', userInfo: { id: 'id' } }),
+        expect.objectContaining({ connectorId: '_connectorId_', userInfo: { id: 'id' } }),
         expect.anything()
       );
       expect(response.statusCode).toEqual(422);
