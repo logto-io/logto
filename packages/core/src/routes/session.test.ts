@@ -70,7 +70,7 @@ jest.mock('@/lib/passcode', () => ({
   },
   verifyPasscode: async (_a: unknown, _b: unknown, code: string) => {
     if (code !== '1234') {
-      throw new Error(' ');
+      throw new RequestError('passcode.code_mismatch');
     }
   },
 }));
@@ -239,7 +239,7 @@ describe('sessionRoutes', () => {
       const response = await sessionRequest
         .post('/session/sign-in/passwordless/phone/verify-passcode')
         .send({ phone: '13000000000', code: '1231' });
-      expect(response.statusCode).toEqual(500);
+      expect(response.statusCode).toEqual(400);
     });
   });
 
@@ -288,7 +288,7 @@ describe('sessionRoutes', () => {
       const response = await sessionRequest
         .post('/session/sign-in/passwordless/email/verify-passcode')
         .send({ email: 'a@a.com', code: '1231' });
-      expect(response.statusCode).toEqual(500);
+      expect(response.statusCode).toEqual(400);
     });
   });
 
@@ -583,7 +583,7 @@ describe('sessionRoutes', () => {
       const response = await sessionRequest
         .post('/session/register/passwordless/phone/verify-passcode')
         .send({ phone: '13000000001', code: '1231' });
-      expect(response.statusCode).toEqual(500);
+      expect(response.statusCode).toEqual(400);
     });
   });
 
@@ -653,7 +653,7 @@ describe('sessionRoutes', () => {
       const response = await sessionRequest
         .post('/session/sign-in/passwordless/email/verify-passcode')
         .send({ email: 'a@a.com', code: '1231' });
-      expect(response.statusCode).toEqual(500);
+      expect(response.statusCode).toEqual(400);
     });
   });
 
