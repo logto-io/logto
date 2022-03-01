@@ -38,6 +38,7 @@ const insertUser = jest.fn(async (..._args: unknown[]) => ({ id: 'id' }));
 const updateUserById = jest.fn(async (..._args: unknown[]) => ({ id: 'id' }));
 jest.mock('@/queries/user', () => ({
   findUserById: async () => ({ id: 'id' }),
+  findUserByIdentity: async () => ({ id: 'id', identities: {} }),
   findUserByPhone: async () => ({ id: 'id' }),
   findUserByEmail: async () => ({ id: 'id' }),
   insertUser: async (...args: unknown[]) => insertUser(...args),
@@ -332,7 +333,7 @@ describe('sessionRoutes', () => {
         code: '123456',
       });
       expect(updateUserById).toHaveBeenCalledWith(
-        'id ',
+        'id',
         expect.objectContaining({
           identities: { connectorId: { userId: 'id', details: { id: 'id' } } },
         })
@@ -341,7 +342,7 @@ describe('sessionRoutes', () => {
       expect(interactionResult).toHaveBeenCalledWith(
         expect.anything(),
         expect.anything(),
-        expect.objectContaining({ login: { accountId: 'id ' } }),
+        expect.objectContaining({ login: { accountId: 'id' } }),
         expect.anything()
       );
     });
