@@ -18,7 +18,7 @@ const errors = {
   auth: {
     authorization_header_missing: 'Authorization header is missing.',
     authorization_token_type_not_supported: 'Authorization type is not supported.',
-    unauthorized: 'Unauthorized. Please check credentils and its scope.',
+    unauthorized: 'Unauthorized. Please check credentials and its scope.',
     jwt_sub_missing: 'Missing `sub` in JWT.',
   },
   guard: {
@@ -63,14 +63,14 @@ const errors = {
     invalid_credentials: 'Invalid credentials. Please check your input.',
     invalid_sign_in_method: 'Current sign-in method is not available.',
     invalid_connector_id: 'Unable to find available connector with id {{connectorId}}.',
-    insufficient_info: 'Insufficent sign-in info.',
+    insufficient_info: 'Insufficient sign-in info.',
     connector_id_mismatch: 'The connectorId is mismatched with session record.',
     connector_session_not_found: 'Connector session not found. Please go back and sign in again.',
     unauthorized: 'Please sign in first.',
     unsupported_prompt_name: 'Unsupported prompt name',
   },
   connector: {
-    general: 'An unexpected error occured in connector.',
+    general: 'An unexpected error occurred in connector.',
     not_found: 'Cannot find any available connector for type: {{type}}.',
     not_enabled: 'The connector is not enabled.',
     invalid_config: "The connector's config is invalid.",
@@ -85,7 +85,7 @@ const errors = {
     email_mismatch: 'Email mismatch. Please request a new passcode.',
     code_mismatch: 'Invalid passcode.',
     expired: 'Passcode has expired. Please request a new passcode.',
-    exceed_max_try: 'Passcode verification limitaton exeeded. Please request a new passcode.',
+    exceed_max_try: 'Passcode verification limitation exceeded. Please request a new passcode.',
   },
   swagger: {
     invalid_zod_type: 'Invalid Zod type, please check route guard config.',
