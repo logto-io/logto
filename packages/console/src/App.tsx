@@ -11,7 +11,7 @@ void initI18n();
 
 export const App = () => {
   return (
-    <div className={styles.skeleton}>
+    <div className={styles.app}>
       <Topbar />
       <div className={styles.content}>
         <Sidebar />
