@@ -54,7 +54,7 @@ enum SmsTemplateType {
 const templateGuard = z.object({
   type: z.nativeEnum(SmsTemplateType).default(2),
   usageType: z.string(),
-  code: z.string().optional(),
+  code: z.string(),
   name: z.string().min(1).max(30),
   content: z.string().min(1).max(500),
   remark: z.string(),
@@ -64,7 +64,6 @@ const configGuard = z.object({
   accessKeyId: z.string(),
   accessKeySecret: z.string(),
   signName: z.string(),
-  templateCode: z.string(),
   templates: z.array(templateGuard),
 });
 
@@ -74,6 +73,7 @@ export const validateConfig: ValidateConfig = async (config: unknown) => {
   }
 
   const result = configGuard.safeParse(config);
+  console.log(result);
 
   if (!result.success) {
     throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, result.error.message);
@@ -85,16 +85,11 @@ export type AliyunSmsConfig = z.infer<typeof configGuard>;
 export const sendMessage: SmsSendMessageFunction = async (phone, type, { code }) => {
   const config = await getConnectorConfig<AliyunSmsConfig>(metadata.id);
   await validateConfig(config);
-  const { accessKeyId, accessKeySecret, signName, templateCode, templates } = config;
-  const template = templates.find(
-    ({ code, usageType }) => code === templateCode && usageType === type
-  );
+  const { accessKeyId, accessKeySecret, signName, templates } = config;
+  const template = templates.find(({ usageType }) => usageType === type);
 
   if (!template) {
-    throw new ConnectorError(
-      ConnectorErrorCodes.TemplateNotFound,
-      `Cannot find template code: ${templateCode}`
-    );
+    throw new ConnectorError(ConnectorErrorCodes.TemplateNotFound, `Cannot find template!`);
   }
 
   return sendSms(
@@ -102,7 +97,7 @@ export const sendMessage: SmsSendMessageFunction = async (phone, type, { code })
       AccessKeyId: accessKeyId,
       PhoneNumbers: phone,
       SignName: signName,
-      TemplateCode: templateCode,
+      TemplateCode: template.code,
       TemplateParam: JSON.stringify({ code }),
     },
     accessKeySecret

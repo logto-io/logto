@@ -6,12 +6,14 @@ jest.mock('../utilities', () => ({
   getConnectorConfig: async () => ({
     accessKeyId: 'accessKeyId',
     accessKeySecret: 'accessKeySecret',
-    accountName: 'accountName',
+    signName: 'signName',
     templates: [
       {
         usageType: 'SignIn',
-        content: 'Your code is {{code}}, {{code}} is your code',
-        subject: 'subject',
+        code: 'code',
+        name: 'name',
+        content: 'content',
+        remark: 'remark',
       },
     ],
   }),
@@ -23,7 +25,7 @@ describe('validateConfig()', () => {
       validateConfig({
         accessKeyId: 'accessKeyId',
         accessKeySecret: 'accessKeySecret',
-        accountName: 'accountName',
+        signName: 'signName',
         templates: [],
       })
     ).resolves.not.toThrow();
@@ -35,15 +37,19 @@ describe('validateConfig()', () => {
 
 describe('sendMessage()', () => {
   it('should call singleSendMail() and replace code in content', async () => {
-    await sendMessage('to@email.com', 'SignIn', { code: '1234' });
+    await sendMessage('13012345678', 'SignIn', { code: '1234' });
     expect(sendSms).toHaveBeenCalledWith(
       expect.objectContaining({
-        HtmlBody: 'Your code is 1234, 1234 is your code',
+        AccessKeyId: 'accessKeyId',
+        PhoneNumbers: '13012345678',
+        SignName: 'signName',
+        TemplateCode: 'code',
+        TemplateParam: '{"code":"1234"}',
       }),
-      expect.anything()
+      'accessKeySecret'
     );
   });
   it('throws if template is missing', async () => {
-    await expect(sendMessage('to@email.com', 'Register', { code: '1234' })).rejects.toThrow();
+    await expect(sendMessage('13012345678', 'Register', { code: '1234' })).rejects.toThrow();
   });
 });
