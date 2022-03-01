@@ -4,7 +4,6 @@ import { createRequester } from '@/utils/test-utils';
 
 import sessionRoutes from './session';
 
-jest.mock('oidc-provider');
 jest.mock('@/lib/user', () => ({
   async findUserByUsernameAndPassword(username: string) {
     if (username === 'notexistuser') {
@@ -22,9 +21,9 @@ jest.mock('@/lib/social', () => ({
 }));
 const updateUserById = jest.fn(async (..._args: unknown[]) => ({ id: 'id' }));
 jest.mock('@/queries/user', () => ({
-  findUserById: async () => ({ id: 'id ' }),
-  findUserByPhone: async () => ({ id: 'id ' }),
-  findUserByEmail: async () => ({ id: 'id ' }),
+  findUserById: async () => ({ id: 'id' }),
+  findUserByPhone: async () => ({ id: 'id' }),
+  findUserByEmail: async () => ({ id: 'id' }),
   updateUserById: async (...args: unknown[]) => updateUserById(...args),
   hasUserWithPhone: async (phone: string) => phone === '13000000000',
   hasUserWithEmail: async (email: string) => email === 'a@a.com',
@@ -42,21 +41,23 @@ jest.mock('@/lib/passcode', () => ({
   },
 }));
 
-const MockedProvider = Provider as jest.MockedClass<typeof Provider>;
+const grantSave = jest.fn(async () => 'finalGrantId');
+const interactionResult = jest.fn(async () => 'redirectTo');
+const interactionDetails: jest.MockedFunction<() => Promise<unknown>> = jest.fn(async () => ({}));
+jest.mock('oidc-provider', () => ({
+  Provider: jest.fn(() => ({
+    Grant: jest.fn(() => ({
+      save: grantSave,
+    })),
+    interactionDetails,
+    interactionResult,
+  })),
+}));
 
-const getProvider = (): Provider => {
-  const provider = MockedProvider.mock.instances[0];
-
-  if (!provider) {
-    throw new Error('Provider is not initialized');
-  }
-
-  return provider;
-};
-
-const getInteractionDetails = () => {
-  return getProvider().interactionDetails as unknown as jest.MockedFunction<() => Promise<any>>;
-};
+afterEach(() => {
+  grantSave.mockClear();
+  interactionResult.mockClear();
+});
 
 describe('sessionRoutes', () => {
   const sessionRequest = createRequester({
@@ -71,20 +72,9 @@ describe('sessionRoutes', () => {
     ],
   });
 
-  afterAll(() => jest.clearAllMocks());
-
-  beforeAll(() => {
-    const provider = getProvider();
-    const { interactionResult } = provider;
-
-    (interactionResult as jest.MockedFunction<typeof interactionResult>).mockResolvedValue(
-      'redirectTo'
-    );
-  });
-
   describe('POST /session', () => {
     it('should redirect to /session/consent with consent prompt name', async () => {
-      getInteractionDetails().mockResolvedValue({
+      interactionDetails.mockResolvedValueOnce({
         prompt: { name: 'consent' },
       });
       const response = await sessionRequest.post('/session');
@@ -97,7 +87,7 @@ describe('sessionRoutes', () => {
     });
 
     it('throw error with other prompt name', async () => {
-      getInteractionDetails().mockResolvedValue({
+      interactionDetails.mockResolvedValueOnce({
         prompt: { name: 'invalid' },
       });
       await expect(sessionRequest.post('/session').send({})).resolves.toHaveProperty('status', 400);
@@ -112,7 +102,7 @@ describe('sessionRoutes', () => {
       });
       expect(response.statusCode).toEqual(200);
       expect(response.body).toHaveProperty('redirectTo');
-      expect(getProvider().interactionResult).toHaveBeenCalledWith(
+      expect(interactionResult).toHaveBeenCalledWith(
         expect.anything(),
         expect.anything(),
         expect.objectContaining({ login: { accountId: 'user1' } }),
@@ -131,7 +121,7 @@ describe('sessionRoutes', () => {
 
   describe('POST /session/sign-in/passwordless/phone/send-passcode', () => {
     beforeAll(() => {
-      getInteractionDetails().mockResolvedValue({
+      interactionDetails.mockResolvedValueOnce({
         jti: 'jti',
       });
     });
@@ -157,10 +147,10 @@ describe('sessionRoutes', () => {
         .send({ phone: '13000000000', code: '1234' });
       expect(response.statusCode).toEqual(200);
       expect(response.body).toHaveProperty('redirectTo');
-      expect(getProvider().interactionResult).toHaveBeenCalledWith(
+      expect(interactionResult).toHaveBeenCalledWith(
         expect.anything(),
         expect.anything(),
-        expect.objectContaining({ login: { accountId: 'user1' } }),
+        expect.objectContaining({ login: { accountId: 'id' } }),
         expect.anything()
       );
     });
@@ -180,7 +170,7 @@ describe('sessionRoutes', () => {
 
   describe('POST /session/sign-in/passwordless/email/send-passcode', () => {
     beforeAll(() => {
-      getInteractionDetails().mockResolvedValue({
+      interactionDetails.mockResolvedValue({
         jti: 'jti',
       });
     });
@@ -206,10 +196,10 @@ describe('sessionRoutes', () => {
         .send({ email: 'a@a.com', code: '1234' });
       expect(response.statusCode).toEqual(200);
       expect(response.body).toHaveProperty('redirectTo');
-      expect(getProvider().interactionResult).toHaveBeenCalledWith(
+      expect(interactionResult).toHaveBeenCalledWith(
         expect.anything(),
         expect.anything(),
-        expect.objectContaining({ login: { accountId: 'user1' } }),
+        expect.objectContaining({ login: { accountId: 'id' } }),
         expect.anything()
       );
     });
@@ -230,7 +220,7 @@ describe('sessionRoutes', () => {
       ).resolves.toHaveProperty('statusCode', 400);
     });
     it('throw if no social info in session', async () => {
-      getInteractionDetails().mockResolvedValue({
+      interactionDetails.mockResolvedValueOnce({
         result: { login: { accountId: 'user1' } },
       });
       await expect(
@@ -240,7 +230,7 @@ describe('sessionRoutes', () => {
       ).resolves.toHaveProperty('statusCode', 400);
     });
     it('updates user identities and sign in', async () => {
-      getInteractionDetails().mockResolvedValue({
+      interactionDetails.mockResolvedValueOnce({
         result: {
           login: { accountId: 'user1' },
           socialUserInfo: {
@@ -265,7 +255,7 @@ describe('sessionRoutes', () => {
         })
       );
       expect(response.body).toHaveProperty('redirectTo');
-      expect(getProvider().interactionResult).toHaveBeenCalledWith(
+      expect(interactionResult).toHaveBeenCalledWith(
         expect.anything(),
         expect.anything(),
         expect.objectContaining({ login: { accountId: 'user1' } }),
@@ -276,13 +266,13 @@ describe('sessionRoutes', () => {
 
   describe('POST /session/bind-social', () => {
     it('throw if session is not authorized', async () => {
-      getInteractionDetails().mockResolvedValue({});
+      interactionDetails.mockResolvedValueOnce({});
       await expect(
         sessionRequest.post('/session/bind-social').send({ connectorId: 'connectorId' })
       ).resolves.toHaveProperty('statusCode', 400);
     });
     it('throw if no social info in session', async () => {
-      getInteractionDetails().mockResolvedValue({
+      interactionDetails.mockResolvedValueOnce({
         result: { login: { accountId: 'user1' } },
       });
       await expect(
@@ -290,7 +280,7 @@ describe('sessionRoutes', () => {
       ).resolves.toHaveProperty('statusCode', 400);
     });
     it('updates user identities', async () => {
-      getInteractionDetails().mockResolvedValue({
+      interactionDetails.mockResolvedValueOnce({
         result: {
           login: { accountId: 'user1' },
           socialUserInfo: {
@@ -320,7 +310,7 @@ describe('sessionRoutes', () => {
   it('DELETE /session', async () => {
     const response = await sessionRequest.delete('/session');
     expect(response.body).toHaveProperty('redirectTo');
-    expect(getProvider().interactionResult).toHaveBeenCalledWith(
+    expect(interactionResult).toHaveBeenCalledWith(
       expect.anything(),
       expect.anything(),
       expect.objectContaining({ error: 'oidc.aborted' }),
