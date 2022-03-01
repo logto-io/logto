@@ -12,7 +12,7 @@ const peppers = string()
   .parse(process.env.NODE_ENV === 'test' ? [nanoid()] : JSON.parse(assertEnv('PASSWORD_PEPPERS')));
 const iterationCount = number()
   .min(100)
-  .parse(process.env.NODE_ENV === 'test' ? 1000 : Number(assertEnv('PASSWORD_INTERATION_COUNT')));
+  .parse(process.env.NODE_ENV === 'test' ? 1000 : Number(assertEnv('PASSWORD_ITERATION_COUNT')));
 
 export const encryptPassword = (
   id: string,
