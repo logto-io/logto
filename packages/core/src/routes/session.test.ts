@@ -116,10 +116,6 @@ afterEach(() => {
   interactionResult.mockClear();
 });
 
-// Const getGrant = () => {
-//   return getProvider().Grant as unknown;
-// };
-
 describe('sessionRoutes', () => {
   const sessionRequest = createRequester({
     anonymousRoutes: sessionRoutes,
@@ -423,26 +419,6 @@ describe('sessionRoutes', () => {
       );
     });
   });
-
-  // Describe('POST /session/consent', () => {
-  //   it('assign result and redirect', async () => {
-  //     interactionDetails.mockResolvedValueOnce({
-  //       session: { accountId: 'accountId' },
-  //       grantId: 'grantId',
-  //       params: { client_id: 'client_id' },
-  //     });
-  //     const response = await sessionRequest.post('/session/consent');
-  //     expect(response.statusCode).toEqual(500);
-  //     expect(interactionResult).toHaveBeenCalledWith(
-  //       expect.anything(),
-  //       expect.anything(),
-  //       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  //       expect.objectContaining({ consent: { grantId: expect.any(String) } }),
-  //       true
-  //     );
-  //     expect(response.body).toHaveProperty('redirectTo');
-  //   });
-  // });
 
   describe('POST /session/register/username-password', () => {
     it('assign result and redirect', async () => {
