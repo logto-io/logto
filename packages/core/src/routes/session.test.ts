@@ -14,16 +14,12 @@ jest.mock('@/lib/user', () => ({
 
     return { id: 'user1' };
   },
-  async generateUserId() {
-    return 'user1';
-  },
-  encryptUserPassword(userId: string, password: string) {
-    return {
-      passwordEncrypted: userId + '_' + password + '_user1',
-      passwordEncryptionMethod: 'SaltAndPepper',
-      passwordEncryptionSalt: 'user1',
-    };
-  },
+  generateUserId: () => 'user1',
+  encryptUserPassword: (userId: string, password: string) => ({
+    passwordEncrypted: userId + '_' + password + '_user1',
+    passwordEncryptionMethod: 'SaltAndPepper',
+    passwordEncryptionSalt: 'user1',
+  }),
 }));
 jest.mock('@/lib/social', () => ({
   ...jest.requireActual('@/lib/social'),
@@ -281,7 +277,7 @@ describe('sessionRoutes', () => {
         state: 'state',
         redirectUri: 'logto.dev',
       });
-      expect(response.body).toHaveProperty('redirectTo');
+      expect(response.body).toHaveProperty('redirectTo', '');
     });
 
     it('throw error when sign-in with social but miss state', async () => {
