@@ -35,8 +35,8 @@ export const metadata: ConnectorMetadata = {
 };
 
 const googleConfigGuard = z.object({
-  clientId: z.string().length(72),
-  clientSecret: z.string().length(35),
+  clientId: z.string(),
+  clientSecret: z.string(),
 });
 
 type GoogleConfig = z.infer<typeof googleConfigGuard>;
