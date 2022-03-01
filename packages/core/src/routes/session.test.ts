@@ -42,6 +42,8 @@ jest.mock('@/lib/social', () => ({
       return { id: 'id' };
     }
 
+    // This mocks the case that can not get userInfo with access token and auth code
+    // (most likely third-party social connectors' problem).
     throw new Error(' ');
   },
 }));
