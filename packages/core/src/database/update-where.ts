@@ -55,8 +55,7 @@ export const buildUpdateWhere: BuildUpdateWhere = <
       })
       .filter((value): value is Truthy<typeof value> => notFalsy(value));
 
-  return async (updateWhereData: UpdateWhereData<Schema>) => {
-    const { set, where } = updateWhereData;
+  return async ({ set, where }: UpdateWhereData<Schema>) => {
     const {
       rows: [data],
     } = await pool.query<ReturnType>(sql`
@@ -66,7 +65,7 @@ export const buildUpdateWhere: BuildUpdateWhere = <
       ${conditionalSql(returning, () => sql`returning *`)}
     `);
 
-    assertThat(!returning || data, new UpdateError(schema, updateWhereData));
+    assertThat(!returning || data, new UpdateError(schema, { set, where }));
 
     return data;
   };
