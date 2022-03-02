@@ -73,7 +73,6 @@ export const validateConfig: ValidateConfig = async (config: unknown) => {
   }
 
   const result = configGuard.safeParse(config);
-  console.log(result);
 
   if (!result.success) {
     throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, result.error.message);
