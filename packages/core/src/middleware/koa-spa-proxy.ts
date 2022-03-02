@@ -1,5 +1,5 @@
 import fs from 'fs/promises';
-import path from 'path/posix';
+import path from 'path';
 
 import { MiddlewareType } from 'koa';
 import proxy from 'koa-proxies';
@@ -39,7 +39,7 @@ export default function koaSpaProxy<StateT, ContextT extends IRouterParamContext
 
     // Route has been handled by one of mounted apps
     if (
-      Object.keys(MountedApps).some((app) => app !== prefix && requestPath.startsWith(`/${app}`))
+      Object.values(MountedApps).some((app) => app !== prefix && requestPath.startsWith(`/${app}`))
     ) {
       return next();
     }

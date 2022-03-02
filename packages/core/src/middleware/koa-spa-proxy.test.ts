@@ -24,7 +24,7 @@ describe('koaSpaProxy middleware', () => {
 
   for (const app of Object.values(MountedApps)) {
     // eslint-disable-next-line @typescript-eslint/no-loop-func
-    it(`${app} path should not call uiProxy`, async () => {
+    it(`${app} path should not call dev proxy`, async () => {
       const ctx = createContextWithRouteParameters({
         url: `/${app}/foo`,
       });
@@ -35,7 +35,7 @@ describe('koaSpaProxy middleware', () => {
     });
   }
 
-  it('dev env should call proxy middleware for ui paths', async () => {
+  it('dev env should call dev proxy for SPA paths', async () => {
     const ctx = createContextWithRouteParameters();
     await koaSpaProxy()(ctx, next);
     expect(mockProxyMiddleware).toBeCalled();
