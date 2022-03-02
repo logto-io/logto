@@ -2,6 +2,7 @@ import { SchemaLike, GeneratedSchema } from '@logto/schemas';
 import { has } from '@silverhand/essentials';
 import { DatabasePoolType, IdentifierSqlTokenType, sql } from 'slonik';
 
+import { InsertionError } from '@/errors/SlonikError';
 import assertThat from '@/utils/assert-that';
 
 import {
@@ -51,9 +52,10 @@ export const buildInsertInto: BuildInsertInto = <
   ReturnType extends SchemaLike
 >(
   pool: DatabasePoolType,
-  { fieldKeys, ...rest }: GeneratedSchema<Schema>,
+  schema: GeneratedSchema<Schema>,
   config?: InsertIntoConfig | InsertIntoConfigReturning
 ) => {
+  const { fieldKeys, ...rest } = schema;
   const { table, fields } = convertToIdentifiers(rest);
   const keys = excludeAutoSetFields(fieldKeys);
   const returning = Boolean(config?.returning);
@@ -82,7 +84,7 @@ export const buildInsertInto: BuildInsertInto = <
       )}
     `);
 
-    assertThat(!returning || entry, 'entity.create_failed', { name: rest.tableSingular });
+    assertThat(!returning || entry, new InsertionError(schema, data));
 
     return entry;
   };

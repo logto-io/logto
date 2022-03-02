@@ -4,13 +4,8 @@ import { DatabasePoolType, sql } from 'slonik';
 
 import { isKeyOf } from '@/utils/schema';
 
+import { FindManyData } from './types';
 import { conditionalSql, convertToIdentifiers, convertToPrimitiveOrSql } from './utils';
-
-export type FindManyData<Schema extends SchemaLike> = {
-  where?: Partial<Schema>;
-  limit?: number;
-  offset?: number;
-};
 
 export const buildFindMany = <Schema extends SchemaLike, ReturnType extends SchemaLike>(
   pool: DatabasePoolType,
