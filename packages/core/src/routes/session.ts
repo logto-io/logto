@@ -359,7 +359,7 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
 
       const passcode = await createPasscode(jti, PasscodeType.Register, { phone });
       await sendPasscode(passcode);
-      ctx.state = 204;
+      ctx.status = 204;
 
       return next();
     }
@@ -406,7 +406,7 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
 
       const passcode = await createPasscode(jti, PasscodeType.Register, { email });
       await sendPasscode(passcode);
-      ctx.state = 204;
+      ctx.status = 204;
 
       return next();
     }
