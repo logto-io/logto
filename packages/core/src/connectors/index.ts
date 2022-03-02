@@ -5,7 +5,7 @@ import * as AliyunDM from './aliyun-dm';
 import * as AliyunSMS from './aliyun-sms';
 import * as GitHub from './github';
 import * as Google from './google';
-import { ConnectorInstance, ConnectorType, IConnector, SocialConectorInstance } from './types';
+import { ConnectorInstance, ConnectorType, IConnector, SocialConnectorInstance } from './types';
 
 const allConnectors: IConnector[] = [AliyunDM, AliyunSMS, GitHub, Google];
 
@@ -37,13 +37,13 @@ export const getConnectorInstanceById = async (id: string): Promise<ConnectorIns
 
 const isSocialConnectorInstance = (
   connector: ConnectorInstance
-): connector is SocialConectorInstance => {
+): connector is SocialConnectorInstance => {
   return connector.metadata.type === ConnectorType.Social;
 };
 
 export const getSocialConnectorInstanceById = async (
   id: string
-): Promise<SocialConectorInstance> => {
+): Promise<SocialConnectorInstance> => {
   const connector = await getConnectorInstanceById(id);
 
   if (!isSocialConnectorInstance(connector)) {
