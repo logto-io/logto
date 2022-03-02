@@ -42,13 +42,30 @@ jest.mock('@/lib/passcode', () => ({
 }));
 
 const grantSave = jest.fn(async () => 'finalGrantId');
+const grantAddOIDCScope = jest.fn();
+const grantAddResourceScope = jest.fn();
 const interactionResult = jest.fn(async () => 'redirectTo');
 const interactionDetails: jest.MockedFunction<() => Promise<unknown>> = jest.fn(async () => ({}));
+
+class Grant {
+  static async find(id: string) {
+    return id === 'exists' ? new Grant() : undefined;
+  }
+
+  save: typeof grantSave;
+  addOIDCScope: typeof grantAddOIDCScope;
+  addResourceScope: typeof grantAddResourceScope;
+
+  constructor() {
+    this.save = grantSave;
+    this.addOIDCScope = grantAddOIDCScope;
+    this.addResourceScope = grantAddResourceScope;
+  }
+}
+
 jest.mock('oidc-provider', () => ({
   Provider: jest.fn(() => ({
-    Grant: jest.fn(() => ({
-      save: grantSave,
-    })),
+    Grant,
     interactionDetails,
     interactionResult,
   })),
@@ -303,6 +320,83 @@ describe('sessionRoutes', () => {
             },
           },
         })
+      );
+    });
+  });
+
+  describe('POST /session/consent', () => {
+    describe('should call grant.save() and assign interaction results', () => {
+      it('with empty details and reusing old grant', async () => {
+        interactionDetails.mockResolvedValueOnce({
+          session: { accountId: 'accountId' },
+          params: { client_id: 'clientId' },
+          prompt: { details: {} },
+        });
+        const response = await sessionRequest.post('/session/consent');
+        expect(response.statusCode).toEqual(200);
+        expect(grantSave).toHaveBeenCalled();
+        expect(interactionResult).toHaveBeenCalledWith(
+          expect.anything(),
+          expect.anything(),
+          expect.objectContaining({
+            consent: { grantId: 'finalGrantId' },
+          }),
+          expect.anything()
+        );
+      });
+      it('with empty details and creating new grant', async () => {
+        interactionDetails.mockResolvedValueOnce({
+          session: { accountId: 'accountId' },
+          params: { client_id: 'clientId' },
+          prompt: { details: {} },
+          grantId: 'exists',
+        });
+        const response = await sessionRequest.post('/session/consent');
+        expect(response.statusCode).toEqual(200);
+        expect(grantSave).toHaveBeenCalled();
+        expect(interactionResult).toHaveBeenCalledWith(
+          expect.anything(),
+          expect.anything(),
+          expect.objectContaining({
+            consent: { grantId: 'finalGrantId' },
+          }),
+          expect.anything()
+        );
+      });
+      it('missingOIDCScope and missingResourceScopes', async () => {
+        interactionDetails.mockResolvedValueOnce({
+          session: { accountId: 'accountId' },
+          params: { client_id: 'clientId' },
+          prompt: {
+            details: {
+              missingOIDCScope: ['scope1', 'scope2'],
+              missingResourceScopes: {
+                resource1: ['scope1', 'scope2'],
+                resource2: ['scope3'],
+              },
+            },
+          },
+        });
+        const response = await sessionRequest.post('/session/consent');
+        expect(response.statusCode).toEqual(200);
+        expect(grantAddOIDCScope).toHaveBeenCalledWith('scope1 scope2');
+        expect(grantAddResourceScope).toHaveBeenCalledWith('resource1', 'scope1 scope2');
+        expect(grantAddResourceScope).toHaveBeenCalledWith('resource2', 'scope3');
+        expect(interactionResult).toHaveBeenCalledWith(
+          expect.anything(),
+          expect.anything(),
+          expect.objectContaining({
+            consent: { grantId: 'finalGrantId' },
+          }),
+          expect.anything()
+        );
+      });
+    });
+    it('throws if session is missing', async () => {
+      interactionDetails.mockResolvedValueOnce({});
+      await expect(sessionRequest.post('/session/consent')).resolves.toHaveProperty(
+        'statusCode',
+        400
       );
     });
   });
