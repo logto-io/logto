@@ -7,6 +7,8 @@
   padding: _.unit(3) _.unit(4);
   color: var(--color-on-surface-variant);
   border-radius: _.unit(2);
+  text-decoration: none;
+  user-select: none;
 
   .icon {
     width: _.unit(6);

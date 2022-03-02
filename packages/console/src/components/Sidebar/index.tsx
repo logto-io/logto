@@ -1,11 +1,13 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { useLocation } from 'react-router-dom';
 
 import Item from './components/Item';
 import Section from './components/Section';
 import { sections } from './consts';
 import Gear from './icons/Gear';
 import * as styles from './index.module.scss';
+import { getPath } from './utils';
 
 const Sidebar = () => {
   const { t: tSection } = useTranslation(undefined, {
@@ -14,6 +16,7 @@ const Sidebar = () => {
   const { t: tItem } = useTranslation(undefined, {
     keyPrefix: 'admin_console.tabs',
   });
+  const location = useLocation();
 
   return (
     <div className={styles.sidebar}>
@@ -24,7 +27,7 @@ const Sidebar = () => {
               key={title}
               title={tItem(title)}
               icon={<Icon />}
-              isActive={title === 'api_resources'}
+              isActive={location.pathname === getPath(title)}
             />
           ))}
         </Section>

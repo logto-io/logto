@@ -1,15 +1,27 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { BrowserRouter, useLocation, useNavigate } from 'react-router-dom';
 
 import './scss/normalized.scss';
 import * as styles from './App.module.scss';
 import Content from './components/Content';
 import Sidebar from './components/Sidebar';
+import { sections } from './components/Sidebar/consts';
+import { getPath } from './components/Sidebar/utils';
 import Topbar from './components/Topbar';
 import initI18n from './i18n/init';
 
 void initI18n();
 
-export const App = () => {
+const Main = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (location.pathname === '/') {
+      navigate(getPath(sections[0]?.items[0]?.title ?? ''));
+    }
+  }, [location.pathname, navigate]);
+
   return (
     <div className={styles.app}>
       <Topbar />
@@ -20,3 +32,11 @@ export const App = () => {
     </div>
   );
 };
+
+const App = () => (
+  <BrowserRouter>
+    <Main />
+  </BrowserRouter>
+);
+
+export default App;
