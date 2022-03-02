@@ -1,7 +1,8 @@
+import { Users } from '@logto/schemas';
 import { NotFoundError, SlonikError } from 'slonik';
 
 import RequestError from '@/errors/RequestError';
-import { DeletionError } from '@/errors/SlonikError';
+import { DeletionError, InsertionError, UpdateError } from '@/errors/SlonikError';
 import { createContextWithRouteParameters } from '@/utils/test-utils';
 
 import koaSlonikErrorHandler from './koa-slonik-error-handler';
@@ -32,6 +33,34 @@ describe('koaSlonikErrorHandler middleware', () => {
     });
 
     await expect(koaSlonikErrorHandler()(ctx, next)).rejects.toMatchError(error);
+  });
+
+  it('Insertion Error', async () => {
+    const error = new InsertionError(Users, { id: '123' });
+    next.mockImplementationOnce(() => {
+      throw error;
+    });
+
+    await expect(koaSlonikErrorHandler()(ctx, next)).rejects.toMatchError(
+      new RequestError({
+        code: 'entity.create_failed',
+        name: Users.tableSingular,
+      })
+    );
+  });
+
+  it('Update Error', async () => {
+    const error = new UpdateError(Users, { set: { name: 'punk' }, where: { id: '123' } });
+    next.mockImplementationOnce(() => {
+      throw error;
+    });
+
+    await expect(koaSlonikErrorHandler()(ctx, next)).rejects.toMatchError(
+      new RequestError({
+        code: 'entity.not_exists',
+        name: Users.tableSingular,
+      })
+    );
   });
 
   it('Deletion Error', async () => {
