@@ -42,10 +42,6 @@ const googleConfigGuard = z.object({
 type GoogleConfig = z.infer<typeof googleConfigGuard>;
 
 export const validateConfig: ValidateConfig = async (config: unknown) => {
-  if (!config) {
-    throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, 'Missing config');
-  }
-
   const result = googleConfigGuard.safeParse(config);
 
   if (!result.success) {
