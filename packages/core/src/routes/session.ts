@@ -448,7 +448,7 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
       const { connectorId } = ctx.guard.body;
       const { result } = await provider.interactionDetails(ctx.req, ctx.res);
 
-      // User can not regsiter with social directly,
+      // User can not register with social directly,
       // need to try to sign in with social first, then confirm to register and continue,
       // so the result is expected to be exists.
       assertThat(result, 'session.connector_session_not_found');

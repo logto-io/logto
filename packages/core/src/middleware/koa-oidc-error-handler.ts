@@ -6,7 +6,7 @@ import { errors } from 'oidc-provider';
 import RequestError from '@/errors/RequestError';
 
 /**
- * OIDC Provider Error Definiation: https://github.com/panva/node-oidc-provider/blob/main/lib/helpers/errors.js
+ * OIDC Provider Error Definition: https://github.com/panva/node-oidc-provider/blob/main/lib/helpers/errors.js
  */
 
 export default function koaOIDCErrorHandler<StateT, ContextT>(): Middleware<StateT, ContextT> {

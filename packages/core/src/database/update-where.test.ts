@@ -38,9 +38,9 @@ describe('buildUpdateWhere()', () => {
   it('return query with jsonb partial update if input data type is jsonb', async () => {
     const pool = createTestPool(
       'update "applications"\nset\n"custom_client_metadata"=\ncoalesce("custom_client_metadata",\'{}\'::jsonb)|| $1\nwhere "id"=$2\nreturning *',
-      (_, [costumClientMetadata, id]) => ({
+      (_, [customClientMetadata, id]) => ({
         id: String(id),
-        costumClientMetadata: String(costumClientMetadata),
+        customClientMetadata: String(customClientMetadata),
       })
     );
     const updateWhere = buildUpdateWhere(pool, Applications, true);
@@ -50,7 +50,7 @@ describe('buildUpdateWhere()', () => {
         set: { customClientMetadata: { idTokenTtl: 3600 } },
         where: { id: 'foo' },
       })
-    ).resolves.toStrictEqual({ id: 'foo', costumClientMetadata: '{"idTokenTtl":3600}' });
+    ).resolves.toStrictEqual({ id: 'foo', customClientMetadata: '{"idTokenTtl":3600}' });
   });
 
   it('throws an error when `undefined` found in values', async () => {
