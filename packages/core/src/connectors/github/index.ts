@@ -59,7 +59,7 @@ export const getAuthorizationUri: GetAuthorizationUri = async (redirectUri, stat
   })}`;
 };
 
-export const getAccessToken: GetAccessToken = async (code, _) => {
+export const getAccessToken: GetAccessToken = async (code) => {
   type AccessTokenResponse = {
     access_token: string;
     scope: string;
