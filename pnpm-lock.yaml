@@ -25,12 +25,15 @@ importers:
       '@parcel/core': ^2.3.1
       '@parcel/transformer-sass': ^2.3.1
       '@silverhand/eslint-config': ^0.9.1
-      '@silverhand/eslint-config-react': ^0.9.2
+      '@silverhand/eslint-config-react': ^0.9.3
       '@silverhand/ts-config': ^0.9.1
-      '@silverhand/ts-config-react': ^0.9.2
+      '@silverhand/ts-config-react': ^0.9.3
       '@types/react': ^17.0.14
       '@types/react-dom': ^17.0.9
+      classnames: ^2.3.1
       eslint: ^8.10.0
+      i18next: ^21.6.12
+      i18next-browser-languagedetector: ^6.1.3
       lint-staged: ^11.1.1
       parcel: ^2.3.1
       postcss: ^8.4.6
@@ -38,20 +41,25 @@ importers:
       prettier: ^2.3.2
       react: ^17.0.2
       react-dom: ^17.0.2
+      react-i18next: ^11.15.4
       stylelint: ^13.13.1
       typescript: ^4.5.5
     dependencies:
       '@logto/phrases': link:../phrases
       '@logto/schemas': link:../schemas
+      classnames: 2.3.1
+      i18next: 21.6.12
+      i18next-browser-languagedetector: 6.1.3
       react: 17.0.2
       react-dom: 17.0.2_react@17.0.2
+      react-i18next: 11.15.4_2c37a602a29bb6bd53f3de707a8cfcc5
     devDependencies:
       '@parcel/core': 2.3.1
       '@parcel/transformer-sass': 2.3.1_@parcel+core@2.3.1
       '@silverhand/eslint-config': 0.9.1_dd26a5c7f44cc79875cab41b61b7f609
-      '@silverhand/eslint-config-react': 0.9.2_40768c17363f6507b3c2d36cc72e1a6b
+      '@silverhand/eslint-config-react': 0.9.3_40768c17363f6507b3c2d36cc72e1a6b
       '@silverhand/ts-config': 0.9.1_typescript@4.5.5
-      '@silverhand/ts-config-react': 0.9.2_typescript@4.5.5
+      '@silverhand/ts-config-react': 0.9.3_typescript@4.5.5
       '@types/react': 17.0.37
       '@types/react-dom': 17.0.11
       eslint: 8.10.0
@@ -232,9 +240,9 @@ importers:
       '@parcel/core': ^2.3.1
       '@parcel/transformer-sass': ^2.3.1
       '@silverhand/eslint-config': ^0.9.1
-      '@silverhand/eslint-config-react': ^0.9.2
+      '@silverhand/eslint-config-react': ^0.9.3
       '@silverhand/ts-config': ^0.9.1
-      '@silverhand/ts-config-react': ^0.9.2
+      '@silverhand/ts-config-react': ^0.9.3
       '@testing-library/react': ^12.0.0
       '@types/jest': ^27.4.0
       '@types/react': ^17.0.14
@@ -274,9 +282,9 @@ importers:
       '@parcel/core': 2.3.1
       '@parcel/transformer-sass': 2.3.1_@parcel+core@2.3.1
       '@silverhand/eslint-config': 0.9.1_dd26a5c7f44cc79875cab41b61b7f609
-      '@silverhand/eslint-config-react': 0.9.2_40768c17363f6507b3c2d36cc72e1a6b
+      '@silverhand/eslint-config-react': 0.9.3_40768c17363f6507b3c2d36cc72e1a6b
       '@silverhand/ts-config': 0.9.1_typescript@4.5.5
-      '@silverhand/ts-config-react': 0.9.2_typescript@4.5.5
+      '@silverhand/ts-config-react': 0.9.3_typescript@4.5.5
       '@testing-library/react': 12.1.2_react-dom@17.0.2+react@17.0.2
       '@types/jest': 27.4.0
       '@types/react': 17.0.37
@@ -3034,8 +3042,8 @@ packages:
       - supports-color
     dev: true
 
-  /@silverhand/eslint-config-react/0.9.2_40768c17363f6507b3c2d36cc72e1a6b:
-    resolution: {integrity: sha512-+r0RyjJ3l2Dx8kpeEtdpRxJNcYRprTWAS4DC6gpuRDue0IH+swFONrj68JD1IJqHYk2K/VvvSvCN8ewOr8N9bQ==}
+  /@silverhand/eslint-config-react/0.9.3_40768c17363f6507b3c2d36cc72e1a6b:
+    resolution: {integrity: sha512-o1n0llNeTtOZm9GgckPRnJ8xJOBOW/Z7tsf0OM0OxRpkVxE61nwIFIPik3loz+6jGT+q4hN1fuE4P1+r/jUiRw==}
     peerDependencies:
       stylelint: ^13.13.1
     dependencies:
@@ -3111,8 +3119,8 @@ packages:
       lodash.pick: 4.4.0
     dev: false
 
-  /@silverhand/ts-config-react/0.9.2_typescript@4.5.5:
-    resolution: {integrity: sha512-YvkGLzgh4ysA+vaoAQ95RecM8MIG4QxoxgayOdmEh3onm76OLc9EN7Vf6nJd9kVJKwX78Y5k6i7iApncTA0SwA==}
+  /@silverhand/ts-config-react/0.9.3_typescript@4.5.5:
+    resolution: {integrity: sha512-oKI9/xxrqcLzCjoNxhDRKhk1HRfLKw1nvoWm4RQUHJWCSGBLHovuUB/qwwQXEPrJnwweRGfatFnbM5dTSKPwGA==}
     engines: {node: '>=14.15.0'}
     peerDependencies:
       typescript: ^4.3.5
@@ -6870,6 +6878,12 @@ packages:
 
   /i18next/21.6.11:
     resolution: {integrity: sha512-tJ2+o0lVO+fhi8bPkCpBAeY1SgkqmQm5NzgPWCQssBrywJw98/o+Kombhty5nxQOpHtvMmsxcOopczUiH6bJxQ==}
+    dependencies:
+      '@babel/runtime': 7.16.3
+    dev: false
+
+  /i18next/21.6.12:
+    resolution: {integrity: sha512-xlGTPdu2g5PZEUIE6TA1mQ9EIAAv9nMFONzgwAIrKL/KTmYYWufQNGgOmp5Og1PvgUji+6i1whz0rMdsz1qaKw==}
     dependencies:
       '@babel/runtime': 7.16.3
     dev: false
@@ -11166,6 +11180,27 @@ packages:
       object-assign: 4.1.1
       react: 17.0.2
       scheduler: 0.20.2
+    dev: false
+
+  /react-i18next/11.15.4_2c37a602a29bb6bd53f3de707a8cfcc5:
+    resolution: {integrity: sha512-jKJNAcVcbPGK+yrTcXhLblgPY16n6NbpZZL3Mk8nswj1v3ayIiUBVDU09SgqnT+DluyQBS97hwSvPU5yVFG0yg==}
+    peerDependencies:
+      i18next: '>= 19.0.0'
+      react: '>= 16.8.0'
+      react-dom: '*'
+      react-native: '*'
+    peerDependenciesMeta:
+      react-dom:
+        optional: true
+      react-native:
+        optional: true
+    dependencies:
+      '@babel/runtime': 7.16.3
+      html-escaper: 2.0.2
+      html-parse-stringify: 3.0.1
+      i18next: 21.6.12
+      react: 17.0.2
+      react-dom: 17.0.2_react@17.0.2
     dev: false
 
   /react-i18next/11.15.4_3fb644aa30122a07f960d67fa51d6dc1:

@@ -1,0 +1,10 @@
+@use '@/scss/underscore' as _;
+
+.title {
+  font-weight: bold;
+  color: #adaab4;
+  padding: _.unit(3) _.unit(6);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 12px;
+}

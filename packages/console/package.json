@@ -17,16 +17,20 @@
   "dependencies": {
     "@logto/phrases": "^0.1.0",
     "@logto/schemas": "^0.1.0",
+    "classnames": "^2.3.1",
+    "i18next": "^21.6.12",
+    "i18next-browser-languagedetector": "^6.1.3",
     "react": "^17.0.2",
-    "react-dom": "^17.0.2"
+    "react-dom": "^17.0.2",
+    "react-i18next": "^11.15.4"
   },
   "devDependencies": {
     "@parcel/core": "^2.3.1",
     "@parcel/transformer-sass": "^2.3.1",
     "@silverhand/eslint-config": "^0.9.1",
-    "@silverhand/eslint-config-react": "^0.9.2",
+    "@silverhand/eslint-config-react": "^0.9.3",
     "@silverhand/ts-config": "^0.9.1",
-    "@silverhand/ts-config-react": "^0.9.2",
+    "@silverhand/ts-config-react": "^0.9.3",
     "@types/react": "^17.0.14",
     "@types/react-dom": "^17.0.9",
     "eslint": "^8.10.0",
@@ -45,10 +49,7 @@
     "extends": "@silverhand/react"
   },
   "stylelint": {
-    "extends": "@silverhand/eslint-config-react/.stylelintrc",
-    "rules": {
-      "color-function-notation": "legacy"
-    }
+    "extends": "@silverhand/eslint-config-react/.stylelintrc"
   },
   "prettier": "@silverhand/eslint-config/.prettierrc"
 }

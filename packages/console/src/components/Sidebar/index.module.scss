@@ -1,9 +1,19 @@
 @use '@/scss/underscore' as _;
 
 .sidebar {
-  padding: _.unit(3);
+  display: flex;
+  flex-direction: column;
   flex-grow: 0;
   flex-shrink: 0;
-  // TO-DO: remove after fulfilled with components
-  width: 250px;
+  width: 275px;
+  padding-bottom: _.unit(6);
+
+  > div + div {
+    margin-top: _.unit(6);
+  }
+
+  .spacer {
+    margin: 0;
+    flex: 1 1 0;
+  }
 }
