@@ -4,9 +4,10 @@ import { findConnectorById, hasConnector, insertConnector } from '@/queries/conn
 import * as AliyunDM from './aliyun-dm';
 import * as AliyunSMS from './aliyun-sms';
 import * as GitHub from './github';
+import * as Google from './google';
 import { ConnectorInstance, ConnectorType, IConnector, SocialConnectorInstance } from './types';
 
-const allConnectors: IConnector[] = [AliyunDM, AliyunSMS, GitHub];
+const allConnectors: IConnector[] = [AliyunDM, AliyunSMS, GitHub, Google];
 
 export const getConnectorInstances = async (): Promise<ConnectorInstance[]> => {
   return Promise.all(

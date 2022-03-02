@@ -98,7 +98,7 @@ export type ValidateConfig<T extends ArbitraryObject = ArbitraryObject> = (
 
 export type GetAuthorizationUri = (redirectUri: string, state: string) => Promise<string>;
 
-export type GetAccessToken = (code: string) => Promise<string>;
+export type GetAccessToken = (code: string, redirectUri: string) => Promise<string>;
 
 export type GetUserInfo = (accessToken: string) => Promise<SocialUserInfo>;
 

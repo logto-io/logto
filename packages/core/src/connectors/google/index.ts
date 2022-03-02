@@ -1,47 +1,49 @@
+/**
+ * The Implementation of OpenID Connect of Google Identity Platform.
+ * https://developers.google.com/identity/protocols/oauth2/openid-connect
+ */
+
+import { conditional } from '@silverhand/essentials';
 import got, { RequestError as GotRequestError } from 'got';
 import { stringify } from 'query-string';
 import { z } from 'zod';
 
 import {
-  ConnectorMetadata,
-  GetAccessToken,
-  GetAuthorizationUri,
-  ValidateConfig,
-  GetUserInfo,
-  ConnectorType,
   ConnectorError,
   ConnectorErrorCodes,
+  ConnectorMetadata,
+  ConnectorType,
+  GetAccessToken,
+  GetAuthorizationUri,
+  GetUserInfo,
+  ValidateConfig,
 } from '../types';
 import { getConnectorConfig, getConnectorRequestTimeout } from '../utilities';
-import { authorizationEndpoint, accessTokenEndpoint, scope, userInfoEndpoint } from './constant';
+import { accessTokenEndpoint, authorizationEndpoint, scope, userInfoEndpoint } from './constant';
 
 export const metadata: ConnectorMetadata = {
-  id: 'github',
+  id: 'google',
   type: ConnectorType.Social,
   name: {
-    en: 'Sign In with GitHub',
-    zh_CN: 'GitHub登录',
+    en: 'Sign In with Google',
+    zh_CN: 'Google登录',
   },
   logo: './logo.png',
   description: {
-    en: 'Sign In with GitHub',
-    zh_CN: 'GitHub登录',
+    en: 'Sign In with Google',
+    zh_CN: 'Google登录',
   },
 };
 
-const githubConfigGuard = z.object({
+const googleConfigGuard = z.object({
   clientId: z.string(),
   clientSecret: z.string(),
 });
 
-type GithubConfig = z.infer<typeof githubConfigGuard>;
+type GoogleConfig = z.infer<typeof googleConfigGuard>;
 
 export const validateConfig: ValidateConfig = async (config: unknown) => {
-  if (!config) {
-    throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, 'Missing config');
-  }
-
-  const result = githubConfigGuard.safeParse(config);
+  const result = googleConfigGuard.safeParse(config);
 
   if (!result.success) {
     throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, result.error.message);
@@ -49,35 +51,39 @@ export const validateConfig: ValidateConfig = async (config: unknown) => {
 };
 
 export const getAuthorizationUri: GetAuthorizationUri = async (redirectUri, state) => {
-  const config = await getConnectorConfig<GithubConfig>(metadata.id);
+  const config = await getConnectorConfig<GoogleConfig>(metadata.id);
 
   return `${authorizationEndpoint}?${stringify({
     client_id: config.clientId,
     redirect_uri: redirectUri,
+    response_type: 'code',
     state,
-    scope, // Only support fixed scope for v1.
+    scope,
   })}`;
 };
 
-export const getAccessToken: GetAccessToken = async (code) => {
+export const getAccessToken: GetAccessToken = async (code, redirectUri) => {
   type AccessTokenResponse = {
     access_token: string;
     scope: string;
     token_type: string;
   };
 
-  const { clientId: client_id, clientSecret: client_secret } =
-    await getConnectorConfig<GithubConfig>(metadata.id);
+  const { clientId, clientSecret } = await getConnectorConfig<GoogleConfig>(metadata.id);
 
+  // Note：Need to decodeURIComponent on code
+  // https://stackoverflow.com/questions/51058256/google-api-node-js-invalid-grant-malformed-auth-code
   const { access_token: accessToken } = await got
-    .post({
-      url: accessTokenEndpoint,
-      json: {
-        client_id,
-        client_secret,
-        code,
+    .post(accessTokenEndpoint, {
+      form: {
+        code: decodeURIComponent(code),
+        client_id: clientId,
+        client_secret: clientSecret,
+        redirect_uri: redirectUri,
+        grant_type: 'authorization_code',
       },
       timeout: await getConnectorRequestTimeout(),
+      followRedirect: true,
     })
     .json<AccessTokenResponse>();
 
@@ -90,31 +96,36 @@ export const getAccessToken: GetAccessToken = async (code) => {
 
 export const getUserInfo: GetUserInfo = async (accessToken: string) => {
   type UserInfoResponse = {
-    id: number;
-    avatar_url?: string;
-    email?: string;
+    sub: string;
     name?: string;
+    given_name?: string;
+    family_name?: string;
+    picture?: string;
+    email?: string;
+    email_verified?: boolean;
+    locale?: string;
   };
 
   try {
     const {
-      id,
-      avatar_url: avatar,
+      sub: id,
+      picture: avatar,
       email,
+      email_verified,
       name,
     } = await got
-      .get(userInfoEndpoint, {
+      .post(userInfoEndpoint, {
         headers: {
-          authorization: `token ${accessToken}`,
+          authorization: `Bearer ${accessToken}`,
         },
         timeout: await getConnectorRequestTimeout(),
       })
       .json<UserInfoResponse>();
 
     return {
-      id: String(id),
+      id,
       avatar,
-      email,
+      email: conditional(email_verified && email),
       name,
     };
   } catch (error: unknown) {
