@@ -2,16 +2,12 @@ import { SchemaLike, GeneratedSchema } from '@logto/schemas';
 import { notFalsy, Truthy } from '@silverhand/essentials';
 import { DatabasePoolType, sql } from 'slonik';
 
-import RequestError from '@/errors/RequestError';
+import { UpdateError } from '@/errors/SlonikError';
 import assertThat from '@/utils/assert-that';
 import { isKeyOf } from '@/utils/schema';
 
+import { UpdateWhereData } from './types';
 import { conditionalSql, convertToIdentifiers, convertToPrimitiveOrSql } from './utils';
-
-export type UpdateWhereData<Schema extends SchemaLike> = {
-  set: Partial<Schema>;
-  where: Partial<Schema>;
-};
 
 interface BuildUpdateWhere {
   <Schema extends SchemaLike, ReturnType extends SchemaLike>(
@@ -69,15 +65,7 @@ export const buildUpdateWhere: BuildUpdateWhere = <
       ${conditionalSql(returning, () => sql`returning *`)}
     `);
 
-    assertThat(
-      !returning || data,
-      new RequestError({
-        code: where.id ? 'entity.not_exists_with_id' : 'entity.not_exists',
-        name: schema.tableSingular,
-        id: where.id,
-        status: 404,
-      })
-    );
+    assertThat(!returning || data, new UpdateError(schema, { set, where }));
 
     return data;
   };

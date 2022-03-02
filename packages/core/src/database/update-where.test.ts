@@ -1,6 +1,6 @@
 import { CreateUser, Users, Applications } from '@logto/schemas';
 
-import RequestError from '@/errors/RequestError';
+import { UpdateError } from '@/errors/SlonikError';
 import { createTestPool } from '@/utils/test-utils';
 
 import { buildUpdateWhere } from './update-where';
@@ -70,34 +70,20 @@ describe('buildUpdateWhere()', () => {
   it('throws `entity.not_exists_with_id` error with `undefined` when `returning` is true', async () => {
     const pool = createTestPool('update "users"\nset "username"=$1\nwhere "id"=$2\nreturning *');
     const updateWhere = buildUpdateWhere(pool, Users, true);
+    const updateWhereData = { set: { username: '123' }, where: { id: 'foo' } };
 
-    await expect(
-      updateWhere({ set: { username: '123' }, where: { id: 'foo' } })
-    ).rejects.toMatchError(
-      new RequestError({
-        code: 'entity.not_exists_with_id',
-        name: Users.tableSingular,
-        id: 'foo',
-        status: 404,
-      })
+    await expect(updateWhere(updateWhereData)).rejects.toMatchError(
+      new UpdateError(Users, updateWhereData)
     );
   });
 
-  it('throws `entity.not_exists` error with `undefined` when `returning` is true and no id in where clause', async () => {
+  it('throws `UpdateError` error when `returning` is true and no id in where clause', async () => {
     const pool = createTestPool(
       'update "users"\nset "username"=$1\nwhere "username"=$2\nreturning *'
     );
     const updateWhere = buildUpdateWhere(pool, Users, true);
+    const updateData = { set: { username: '123' }, where: { username: 'foo' } };
 
-    await expect(
-      updateWhere({ set: { username: '123' }, where: { username: 'foo' } })
-    ).rejects.toMatchError(
-      new RequestError({
-        code: 'entity.not_exists',
-        name: Users.tableSingular,
-        id: undefined,
-        status: 404,
-      })
-    );
+    await expect(updateWhere(updateData)).rejects.toMatchError(new UpdateError(Users, updateData));
   });
 });

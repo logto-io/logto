@@ -1,7 +1,7 @@
 import { CreateUser, Users } from '@logto/schemas';
 import decamelize from 'decamelize';
 
-import RequestError from '@/errors/RequestError';
+import { InsertionError } from '@/errors/SlonikError';
 import { createTestPool } from '@/utils/test-utils';
 
 import { buildInsertInto } from './insert-into';
@@ -59,19 +59,15 @@ describe('buildInsertInto()', () => {
     ).resolves.toStrictEqual(user);
   });
 
-  it('throws `entity.create_failed` error with `undefined` when `returning` is true', async () => {
+  it('throws `InsertionError` error when `returning` is true', async () => {
     const user: CreateUser = { id: 'foo', username: '123', primaryEmail: 'foo@bar.com' };
     const expectInsertIntoSql = buildExpectedInsertIntoSql(Object.keys(user));
     const pool = createTestPool([...expectInsertIntoSql, 'returning *'].join('\n'));
     const insertInto = buildInsertInto(pool, Users, { returning: true });
+    const dataToInsert = { id: 'foo', username: '123', primaryEmail: 'foo@bar.com' };
 
-    await expect(
-      insertInto({ id: 'foo', username: '123', primaryEmail: 'foo@bar.com' })
-    ).rejects.toMatchError(
-      new RequestError({
-        code: 'entity.create_failed',
-        name: Users.tableSingular,
-      })
+    await expect(insertInto(dataToInsert)).rejects.toMatchError(
+      new InsertionError(Users, dataToInsert)
     );
   });
 });
