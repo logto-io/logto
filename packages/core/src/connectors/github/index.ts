@@ -91,9 +91,9 @@ export const getAccessToken: GetAccessToken = async (code) => {
 export const getUserInfo: GetUserInfo = async (accessToken: string) => {
   type UserInfoResponse = {
     id: number;
-    avatar_url: string;
-    email: string;
-    name: string;
+    avatar_url?: string;
+    email?: string;
+    name?: string;
   };
 
   try {

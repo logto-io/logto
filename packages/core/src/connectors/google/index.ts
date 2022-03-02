@@ -3,6 +3,7 @@
  * https://developers.google.com/identity/protocols/oauth2/openid-connect
  */
 
+import { conditional } from '@silverhand/essentials';
 import got, { RequestError as GotRequestError } from 'got';
 import { stringify } from 'query-string';
 import { z } from 'zod';
@@ -96,13 +97,13 @@ export const getAccessToken: GetAccessToken = async (code, redirectUri) => {
 export const getUserInfo: GetUserInfo = async (accessToken: string) => {
   type UserInfoResponse = {
     sub: string;
-    name: string;
-    given_name: string;
-    family_name: string;
-    picture: string;
-    email: string;
-    email_verified: boolean;
-    locale: string;
+    name?: string;
+    given_name?: string;
+    family_name?: string;
+    picture?: string;
+    email?: string;
+    email_verified?: boolean;
+    locale?: string;
   };
 
   try {
@@ -110,6 +111,7 @@ export const getUserInfo: GetUserInfo = async (accessToken: string) => {
       sub: id,
       picture: avatar,
       email,
+      email_verified,
       name,
     } = await got
       .post(userInfoEndpoint, {
@@ -123,7 +125,7 @@ export const getUserInfo: GetUserInfo = async (accessToken: string) => {
     return {
       id,
       avatar,
-      email,
+      email: conditional(email_verified && email),
       name,
     };
   } catch (error: unknown) {
