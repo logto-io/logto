@@ -17,7 +17,7 @@ export default function koaSpaProxy<StateT, ContextT extends IRouterParamContext
 
   const distPath = path.join('..', packagePath, 'dist');
 
-  const uiProxy: Middleware = isProduction
+  const spaProxy: Middleware = isProduction
     ? serveStatic(distPath)
     : proxy('*', {
         target: `http://localhost:${port}`,
@@ -45,15 +45,15 @@ export default function koaSpaProxy<StateT, ContextT extends IRouterParamContext
     }
 
     if (!isProduction) {
-      return uiProxy(ctx, next);
+      return spaProxy(ctx, next);
     }
 
-    const uiDistFiles = await fs.readdir(distPath);
+    const spaDistFiles = await fs.readdir(distPath);
 
-    if (!uiDistFiles.some((file) => requestPath.startsWith('/' + path.join(prefix, file)))) {
+    if (!spaDistFiles.some((file) => requestPath.startsWith('/' + file))) {
       ctx.request.path = '/';
     }
 
-    return uiProxy(ctx, next);
+    return spaProxy(ctx, next);
   };
 }
