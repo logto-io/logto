@@ -17,3 +17,7 @@ export const updateConnectorConfig = async <T extends ArbitraryObject>(
     set: { config },
   });
 };
+
+const connectorRequestTimeout = 5000;
+
+export const getConnectorRequestTimeout = async (): Promise<number> => connectorRequestTimeout;
