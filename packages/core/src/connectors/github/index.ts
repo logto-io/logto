@@ -2,6 +2,7 @@ import got, { RequestError as GotRequestError } from 'got';
 import { stringify } from 'query-string';
 import { z } from 'zod';
 
+import { connectorRequestTimeout } from '../constant';
 import {
   ConnectorMetadata,
   GetAccessToken,
@@ -77,6 +78,7 @@ export const getAccessToken: GetAccessToken = async (code) => {
         client_secret,
         code,
       },
+      timeout: connectorRequestTimeout,
     })
     .json<AccessTokenResponse>();
 
@@ -106,6 +108,7 @@ export const getUserInfo: GetUserInfo = async (accessToken: string) => {
         headers: {
           authorization: `token ${accessToken}`,
         },
+        timeout: connectorRequestTimeout,
       })
       .json<UserInfoResponse>();
 
