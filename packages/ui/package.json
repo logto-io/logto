@@ -7,7 +7,7 @@
     "preinstall": "npx only-allow pnpm",
     "precommit": "lint-staged",
     "start": "parcel src/index.html",
-    "dev": "PORT=5001 pnpm start",
+    "dev": "PORT=5001 parcel src/index.html --no-hmr",
     "check": "tsc --noEmit",
     "build": "pnpm check && rm -rf dist && parcel build src/index.html --no-autoinstall",
     "lint": "eslint --ext .ts --ext .tsx src",

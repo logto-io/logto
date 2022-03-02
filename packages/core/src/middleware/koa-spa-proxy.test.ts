@@ -1,7 +1,7 @@
-import { mountedApps } from '@/env/consts';
+import { MountedApps } from '@/env/consts';
 import { createContextWithRouteParameters } from '@/utils/test-utils';
 
-import koaUIProxy from './koa-ui-proxy';
+import koaSpaProxy from './koa-spa-proxy';
 
 const mockProxyMiddleware = jest.fn();
 const mockStaticMiddleware = jest.fn();
@@ -14,7 +14,7 @@ jest.mock('fs/promises', () => ({
 jest.mock('koa-proxies', () => jest.fn(() => mockProxyMiddleware));
 jest.mock('koa-static', () => jest.fn(() => mockStaticMiddleware));
 
-describe('koaUIProxy middleware', () => {
+describe('koaSpaProxy middleware', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     jest.resetModules();
@@ -22,14 +22,14 @@ describe('koaUIProxy middleware', () => {
 
   const next = jest.fn();
 
-  for (const app of mountedApps) {
+  for (const app of Object.values(MountedApps)) {
     // eslint-disable-next-line @typescript-eslint/no-loop-func
     it(`${app} path should not call uiProxy`, async () => {
       const ctx = createContextWithRouteParameters({
         url: `/${app}/foo`,
       });
 
-      await koaUIProxy()(ctx, next);
+      await koaSpaProxy()(ctx, next);
 
       expect(mockProxyMiddleware).not.toBeCalled();
     });
@@ -37,7 +37,7 @@ describe('koaUIProxy middleware', () => {
 
   it('dev env should call proxy middleware for ui paths', async () => {
     const ctx = createContextWithRouteParameters();
-    await koaUIProxy()(ctx, next);
+    await koaSpaProxy()(ctx, next);
     expect(mockProxyMiddleware).toBeCalled();
   });
 
@@ -51,7 +51,7 @@ describe('koaUIProxy middleware', () => {
     /* eslint-disable @typescript-eslint/no-require-imports */
     /* eslint-disable @typescript-eslint/no-var-requires */
     /* eslint-disable unicorn/prefer-module */
-    const koaUIProxyModule = require('./koa-ui-proxy') as { default: typeof koaUIProxy };
+    const koaSpaProxyModule = require('./koa-spa-proxy') as { default: typeof koaSpaProxy };
     /* eslint-enable @typescript-eslint/no-require-imports */
     /* eslint-enable @typescript-eslint/no-var-requires */
     /* eslint-enable unicorn/prefer-module */
@@ -59,7 +59,7 @@ describe('koaUIProxy middleware', () => {
       url: '/foo',
     });
 
-    await koaUIProxyModule.default()(ctx, next);
+    await koaSpaProxyModule.default()(ctx, next);
     expect(mockStaticMiddleware).toBeCalled();
     expect(ctx.request.path).toEqual('/');
   });
@@ -74,7 +74,7 @@ describe('koaUIProxy middleware', () => {
     /* eslint-disable @typescript-eslint/no-require-imports */
     /* eslint-disable @typescript-eslint/no-var-requires */
     /* eslint-disable unicorn/prefer-module */
-    const koaUIProxyModule = require('./koa-ui-proxy') as { default: typeof koaUIProxy };
+    const koaSpaProxyModule = require('./koa-spa-proxy') as { default: typeof koaSpaProxy };
     /* eslint-enable @typescript-eslint/no-require-imports */
     /* eslint-enable @typescript-eslint/no-var-requires */
     /* eslint-enable unicorn/prefer-module */
@@ -82,7 +82,7 @@ describe('koaUIProxy middleware', () => {
       url: '/sign-in',
     });
 
-    await koaUIProxyModule.default()(ctx, next);
+    await koaSpaProxyModule.default()(ctx, next);
     expect(mockStaticMiddleware).toBeCalled();
   });
 });
