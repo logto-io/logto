@@ -5,7 +5,7 @@ import { buildInsertInto } from '@/database/insert-into';
 import pool from '@/database/pool';
 import { buildUpdateWhere } from '@/database/update-where';
 import { conditionalSql, convertToIdentifiers, OmitAutoSetFields } from '@/database/utils';
-import { DeletionError } from '@/errors/SlonikError';
+import { DeletionError, UpdateError } from '@/errors/SlonikError';
 
 const { table, fields } = convertToIdentifiers(Users);
 
@@ -134,6 +134,6 @@ export const clearUserCustomDataById = async (id: string) => {
   `);
 
   if (rowCount < 1) {
-    throw new DeletionError(Users.table, id);
+    throw new UpdateError(Users, { set: { customData: {} }, where: { id } });
   }
 };
