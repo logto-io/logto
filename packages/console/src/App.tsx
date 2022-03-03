@@ -9,6 +9,8 @@ import Sidebar, { getPath, sections } from './components/Sidebar';
 import Topbar from './components/Topbar';
 import initI18n from './i18n/init';
 
+const isProduction = process.env.NODE_ENV !== 'development' || process.env.PORT === '5002';
+
 void initI18n();
 
 const Main = () => {
@@ -33,7 +35,7 @@ const Main = () => {
 };
 
 const App = () => (
-  <BrowserRouter>
+  <BrowserRouter basename={isProduction ? '/console' : ''}>
     <Main />
   </BrowserRouter>
 );

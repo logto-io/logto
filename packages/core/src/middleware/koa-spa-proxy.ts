@@ -39,6 +39,7 @@ export default function koaSpaProxy<StateT, ContextT extends IRouterParamContext
 
     // Route has been handled by one of mounted apps
     if (
+      !prefix &&
       Object.values(MountedApps).some((app) => app !== prefix && requestPath.startsWith(`/${app}`))
     ) {
       return next();
