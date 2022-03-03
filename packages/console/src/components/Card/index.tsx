@@ -6,8 +6,8 @@ type Props = {
   children: ReactNode;
 };
 
-const Content = ({ children }: Props) => {
-  return <div className={styles.content}>{children}</div>;
+const Card = ({ children }: Props) => {
+  return <div className={styles.card}>{children}</div>;
 };
 
-export default Content;
+export default Card;

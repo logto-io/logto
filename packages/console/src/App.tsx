@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { BrowserRouter, useLocation, useNavigate } from 'react-router-dom';
+import { BrowserRouter, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 
 import './scss/normalized.scss';
 import * as styles from './App.module.scss';
@@ -8,6 +8,7 @@ import Content from './components/Content';
 import Sidebar, { getPath, sections } from './components/Sidebar';
 import Topbar from './components/Topbar';
 import initI18n from './i18n/init';
+import ApiResources from './pages/ApiResources';
 
 const isBasenameNeeded = process.env.NODE_ENV !== 'development' || process.env.PORT === '5002';
 
@@ -28,7 +29,11 @@ const Main = () => {
       <Topbar />
       <div className={styles.content}>
         <Sidebar />
-        <Content />
+        <Content>
+          <Routes>
+            <Route path="api-resources" element={<ApiResources />} />
+          </Routes>
+        </Content>
       </div>
     </AppContent>
   );

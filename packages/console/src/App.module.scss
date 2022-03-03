@@ -1,4 +1,7 @@
+@use '@/scss/underscore' as _;
+
 .content {
   flex-grow: 1;
   display: flex;
+  padding-right: _.unit(5);
 }
