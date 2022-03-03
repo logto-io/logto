@@ -9,8 +9,9 @@
     "preinstall": "npx only-allow pnpm",
     "precommit": "lint-staged",
     "start": "parcel src/index.html",
+    "dev": "PORT=5002 parcel src/index.html --public-url /console --no-hmr",
     "check": "tsc --noEmit",
-    "build": "pnpm check && rm -rf dist && parcel build src/index.html --no-autoinstall",
+    "build": "pnpm check && rm -rf dist && parcel build src/index.html --no-autoinstall --public-url /console",
     "lint": "eslint --ext .ts --ext .tsx src",
     "stylelint": "stylelint \"src/**/*.scss\""
   },

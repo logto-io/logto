@@ -3,14 +3,15 @@ import https from 'https';
 
 import Koa from 'koa';
 import koaLogger from 'koa-logger';
+import mount from 'koa-mount';
 
-import { port } from '@/env/consts';
+import { MountedApps, port } from '@/env/consts';
 import koaConnectorErrorHandler from '@/middleware/koa-connector-error-handle';
 import koaErrorHandler from '@/middleware/koa-error-handler';
 import koaI18next from '@/middleware/koa-i18next';
 import koaOIDCErrorHandler from '@/middleware/koa-oidc-error-handler';
 import koaSlonikErrorHandler from '@/middleware/koa-slonik-error-handler';
-import koaUIProxy from '@/middleware/koa-ui-proxy';
+import koaSpaProxy from '@/middleware/koa-spa-proxy';
 import koaUserLog from '@/middleware/koa-user-log';
 import initOidc from '@/oidc/init';
 import initRouter from '@/routes/init';
@@ -29,7 +30,10 @@ export default async function initApp(app: Koa): Promise<void> {
   const provider = await initOidc(app);
   initRouter(app, provider);
 
-  app.use(koaUIProxy());
+  app.use(
+    mount('/' + MountedApps.Console, koaSpaProxy(MountedApps.Console, 5002, MountedApps.Console))
+  );
+  app.use(koaSpaProxy());
 
   const { HTTPS_CERT, HTTPS_KEY } = process.env;
 

@@ -4,7 +4,7 @@ import * as koaErrorHandler from '@/middleware/koa-error-handler';
 import * as koaI18next from '@/middleware/koa-i18next';
 import * as koaOIDCErrorHandler from '@/middleware/koa-oidc-error-handler';
 import * as koaSlonikErrorHandler from '@/middleware/koa-slonik-error-handler';
-import * as koaUIProxy from '@/middleware/koa-ui-proxy';
+import * as koaSpaProxy from '@/middleware/koa-spa-proxy';
 import * as koaUserLog from '@/middleware/koa-user-log';
 import * as initOidc from '@/oidc/init';
 import * as initRouter from '@/routes/init';
@@ -20,7 +20,7 @@ describe('App Init', () => {
     koaI18next,
     koaOIDCErrorHandler,
     koaSlonikErrorHandler,
-    koaUIProxy,
+    koaSpaProxy,
     koaUserLog,
   ];
   const initMethods = [initRouter, initOidc];
