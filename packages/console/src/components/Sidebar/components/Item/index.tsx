@@ -1,5 +1,6 @@
 import classNames from 'classnames';
 import React, { ReactChild } from 'react';
+import { Link } from 'react-router-dom';
 
 import { getPath } from '../../utils';
 import * as styles from './index.module.scss';
@@ -12,10 +13,10 @@ type Props = {
 
 const Item = ({ icon, title, isActive = false }: Props) => {
   return (
-    <a href={getPath(title)} className={classNames(styles.row, isActive && styles.active)}>
+    <Link to={getPath(title)} className={classNames(styles.row, isActive && styles.active)}>
       {icon && <div className={styles.icon}>{icon}</div>}
       <div className={styles.title}>{title}</div>
-    </a>
+    </Link>
   );
 };
 
