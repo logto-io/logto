@@ -9,6 +9,7 @@ import Sidebar, { getPath, sections } from './components/Sidebar';
 import Topbar from './components/Topbar';
 import initI18n from './i18n/init';
 import ApiResources from './pages/ApiResources';
+import Applications from './pages/Applications';
 
 const isBasenameNeeded = process.env.NODE_ENV !== 'development' || process.env.PORT === '5002';
 
@@ -32,6 +33,7 @@ const Main = () => {
         <Content>
           <Routes>
             <Route path="api-resources" element={<ApiResources />} />
+            <Route path="applications" element={<Applications />} />
           </Routes>
         </Content>
       </div>
