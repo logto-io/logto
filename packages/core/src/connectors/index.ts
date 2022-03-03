@@ -5,9 +5,10 @@ import * as AliyunDM from './aliyun-dm';
 import * as AliyunSMS from './aliyun-sms';
 import * as GitHub from './github';
 import * as Google from './google';
+import * as Twitter from './twitter';
 import { ConnectorInstance, ConnectorType, IConnector, SocialConnectorInstance } from './types';
 
-const allConnectors: IConnector[] = [AliyunDM, AliyunSMS, GitHub, Google];
+const allConnectors: IConnector[] = [AliyunDM, AliyunSMS, GitHub, Google, Twitter];
 
 export const getConnectorInstances = async (): Promise<ConnectorInstance[]> => {
   return Promise.all(
