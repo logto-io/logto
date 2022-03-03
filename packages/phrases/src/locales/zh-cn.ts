@@ -15,6 +15,7 @@ const translation = {
     have_account: '已经有账户？',
   },
   admin_console: {
+    title: '管理面板',
     tab_sections: {
       overview: '概览',
       resource_management: '资源管理',
