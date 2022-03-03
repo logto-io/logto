@@ -6,4 +6,21 @@
   padding: _.unit(3) _.unit(8);
   display: flex;
   align-items: center;
+
+  img {
+    height: 30px;
+  }
+
+  .line {
+    border: 1px solid #c4c7c7;
+    height: 24px;
+    width: 0;
+    flex: 0 0 0;
+    margin: 0 _.unit(3);
+  }
+
+  .text {
+    @include _.title-medium;
+    color: var(--color-component-text);
+  }
 }
