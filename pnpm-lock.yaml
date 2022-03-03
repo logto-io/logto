@@ -28,6 +28,7 @@ importers:
       '@silverhand/eslint-config-react': ^0.9.3
       '@silverhand/ts-config': ^0.9.1
       '@silverhand/ts-config-react': ^0.9.3
+      '@types/lodash.kebabcase': ^4.1.6
       '@types/react': ^17.0.14
       '@types/react-dom': ^17.0.9
       classnames: ^2.3.1
@@ -35,6 +36,7 @@ importers:
       i18next: ^21.6.12
       i18next-browser-languagedetector: ^6.1.3
       lint-staged: ^11.1.1
+      lodash.kebabcase: ^4.1.1
       parcel: ^2.3.1
       postcss: ^8.4.6
       postcss-modules: ^4.3.0
@@ -42,6 +44,7 @@ importers:
       react: ^17.0.2
       react-dom: ^17.0.2
       react-i18next: ^11.15.4
+      react-router-dom: ^6.2.2
       stylelint: ^13.13.1
       typescript: ^4.5.5
     dependencies:
@@ -50,9 +53,11 @@ importers:
       classnames: 2.3.1
       i18next: 21.6.12
       i18next-browser-languagedetector: 6.1.3
+      lodash.kebabcase: 4.1.1
       react: 17.0.2
       react-dom: 17.0.2_react@17.0.2
       react-i18next: 11.15.4_2c37a602a29bb6bd53f3de707a8cfcc5
+      react-router-dom: 6.2.2_react-dom@17.0.2+react@17.0.2
     devDependencies:
       '@parcel/core': 2.3.1
       '@parcel/transformer-sass': 2.3.1_@parcel+core@2.3.1
@@ -60,6 +65,7 @@ importers:
       '@silverhand/eslint-config-react': 0.9.3_40768c17363f6507b3c2d36cc72e1a6b
       '@silverhand/ts-config': 0.9.1_typescript@4.5.5
       '@silverhand/ts-config-react': 0.9.3_typescript@4.5.5
+      '@types/lodash.kebabcase': 4.1.6
       '@types/react': 17.0.37
       '@types/react-dom': 17.0.11
       eslint: 8.10.0
@@ -3462,6 +3468,12 @@ packages:
       '@types/node': 16.11.12
     dev: true
 
+  /@types/lodash.kebabcase/4.1.6:
+    resolution: {integrity: sha512-+RAD9pCAa8kuVyCYTeDNiwBXwD/0u0p+hos3NSqD+tXTjJextbfF3farfYB+ssAKgEssoewXEtBsfwBpsI7gsA==}
+    dependencies:
+      '@types/lodash': 4.14.178
+    dev: true
+
   /@types/lodash.pick/4.4.6:
     resolution: {integrity: sha512-u8bzA16qQ+8dY280z3aK7PoWb3fzX5ATJ0rJB6F+uqchOX2VYF02Aqa+8aYiHiHgPzQiITqCgeimlyKFy4OA6g==}
     dependencies:
@@ -6655,6 +6667,12 @@ packages:
       value-equal: 1.0.1
     dev: false
 
+  /history/5.3.0:
+    resolution: {integrity: sha512-ZqaKwjjrAYUYfLG+htGaIIZ4nioX2L70ZUMIFysS3xvBsSG4x/n1V6TXV3N8ZYNuFGlDirFg32T7B6WOUPDYcQ==}
+    dependencies:
+      '@babel/runtime': 7.16.3
+    dev: false
+
   /hoist-non-react-statics/3.3.2:
     resolution: {integrity: sha512-/gGivxi8JPKWNm/W0jSmzcMPpfpPLc3dY/6GxhX2hQ9iGj3aDfklV4ET7NjKpSinLpJ5vafa9iiGIEZg10SfBw==}
     dependencies:
@@ -8922,7 +8940,6 @@ packages:
 
   /lodash.kebabcase/4.1.1:
     resolution: {integrity: sha1-hImxyw0p/4gZXM7KRI/21swpXDY=}
-    dev: true
 
   /lodash.memoize/4.1.2:
     resolution: {integrity: sha1-vMbEmkKihA7Zl/Mj6tpezRguC/4=}
@@ -9272,14 +9289,14 @@ packages:
     engines: {node: '>=4'}
     dev: true
 
-  /mini-create-react-context/0.4.1_prop-types@15.7.2+react@17.0.2:
+  /mini-create-react-context/0.4.1_prop-types@15.8.1+react@17.0.2:
     resolution: {integrity: sha512-YWCYEmd5CQeHGSAKrYvXgmzzkrvssZcuuQDDeqkT+PziKGMgE+0MCCtcKbROzocGBG1meBLl2FotlRwf4gAzbQ==}
     peerDependencies:
       prop-types: ^15.0.0
       react: ^0.14.0 || ^15.0.0 || ^16.0.0 || ^17.0.0
     dependencies:
       '@babel/runtime': 7.16.3
-      prop-types: 15.7.2
+      prop-types: 15.8.1
       react: 17.0.2
       tiny-warning: 1.0.3
     dev: false
@@ -11037,21 +11054,12 @@ packages:
       read: 1.0.7
     dev: true
 
-  /prop-types/15.7.2:
-    resolution: {integrity: sha512-8QQikdH7//R2vurIJSutZ1smHYTcLpRWEOlHnzcWHmBYrOGUysKwSsrC89BCiFj3CbrfJ/nXFdJepOVrY1GCHQ==}
-    dependencies:
-      loose-envify: 1.4.0
-      object-assign: 4.1.1
-      react-is: 16.13.1
-    dev: false
-
   /prop-types/15.8.1:
     resolution: {integrity: sha512-oj87CgZICdulUohogVAR7AjlC0327U4el4L6eAvOqCeudMDVU0NThNaV+b9Df4dXgSP1gXMTnPdhfe/2qDH5cg==}
     dependencies:
       loose-envify: 1.4.0
       object-assign: 4.1.1
       react-is: 16.13.1
-    dev: true
 
   /propagate/2.0.1:
     resolution: {integrity: sha512-vGrhOavPSTz4QVNuBNdcNXePNdNMaO1xj9yBeH1ScQPjk/rhg9sSlCXPhMkFuaNNW/syTvYqsnbIJxMBfRbbag==}
@@ -11244,11 +11252,23 @@ packages:
       '@babel/runtime': 7.16.3
       history: 4.10.1
       loose-envify: 1.4.0
-      prop-types: 15.7.2
+      prop-types: 15.8.1
       react: 17.0.2
       react-router: 5.2.1_react@17.0.2
       tiny-invariant: 1.2.0
       tiny-warning: 1.0.3
+    dev: false
+
+  /react-router-dom/6.2.2_react-dom@17.0.2+react@17.0.2:
+    resolution: {integrity: sha512-AtYEsAST7bDD4dLSQHDnk/qxWLJdad5t1HFa1qJyUrCeGgEuCSw0VB/27ARbF9Fi/W5598ujvJOm3ujUCVzuYQ==}
+    peerDependencies:
+      react: '>=16.8'
+      react-dom: '>=16.8'
+    dependencies:
+      history: 5.3.0
+      react: 17.0.2
+      react-dom: 17.0.2_react@17.0.2
+      react-router: 6.2.2_react@17.0.2
     dev: false
 
   /react-router/5.2.1_react@17.0.2:
@@ -11260,13 +11280,22 @@ packages:
       history: 4.10.1
       hoist-non-react-statics: 3.3.2
       loose-envify: 1.4.0
-      mini-create-react-context: 0.4.1_prop-types@15.7.2+react@17.0.2
+      mini-create-react-context: 0.4.1_prop-types@15.8.1+react@17.0.2
       path-to-regexp: 1.8.0
-      prop-types: 15.7.2
+      prop-types: 15.8.1
       react: 17.0.2
       react-is: 16.13.1
       tiny-invariant: 1.2.0
       tiny-warning: 1.0.3
+    dev: false
+
+  /react-router/6.2.2_react@17.0.2:
+    resolution: {integrity: sha512-/MbxyLzd7Q7amp4gDOGaYvXwhEojkJD5BtExkuKmj39VEE0m3l/zipf6h2WIB2jyAO0lI6NGETh4RDcktRm4AQ==}
+    peerDependencies:
+      react: '>=16.8'
+    dependencies:
+      history: 5.3.0
+      react: 17.0.2
     dev: false
 
   /react/17.0.2:

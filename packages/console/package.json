@@ -21,9 +21,11 @@
     "classnames": "^2.3.1",
     "i18next": "^21.6.12",
     "i18next-browser-languagedetector": "^6.1.3",
+    "lodash.kebabcase": "^4.1.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
-    "react-i18next": "^11.15.4"
+    "react-i18next": "^11.15.4",
+    "react-router-dom": "^6.2.2"
   },
   "devDependencies": {
     "@parcel/core": "^2.3.1",
@@ -32,6 +34,7 @@
     "@silverhand/eslint-config-react": "^0.9.3",
     "@silverhand/ts-config": "^0.9.1",
     "@silverhand/ts-config-react": "^0.9.3",
+    "@types/lodash.kebabcase": "^4.1.6",
     "@types/react": "^17.0.14",
     "@types/react-dom": "^17.0.9",
     "eslint": "^8.10.0",
