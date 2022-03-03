@@ -3,6 +3,7 @@ import { BrowserRouter, useLocation, useNavigate } from 'react-router-dom';
 
 import './scss/normalized.scss';
 import * as styles from './App.module.scss';
+import AppContent from './components/AppContent';
 import Content from './components/Content';
 import Sidebar, { getPath, sections } from './components/Sidebar';
 import Topbar from './components/Topbar';
@@ -21,13 +22,13 @@ const Main = () => {
   }, [location.pathname, navigate]);
 
   return (
-    <div className={styles.app}>
+    <AppContent theme="light">
       <Topbar />
       <div className={styles.content}>
         <Sidebar />
         <Content />
       </div>
-    </div>
+    </AppContent>
   );
 };
 
