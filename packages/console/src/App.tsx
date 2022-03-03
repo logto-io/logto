@@ -4,9 +4,7 @@ import { BrowserRouter, useLocation, useNavigate } from 'react-router-dom';
 import './scss/normalized.scss';
 import * as styles from './App.module.scss';
 import Content from './components/Content';
-import Sidebar from './components/Sidebar';
-import { sections } from './components/Sidebar/consts';
-import { getPath } from './components/Sidebar/utils';
+import Sidebar, { getPath, sections } from './components/Sidebar';
 import Topbar from './components/Topbar';
 import initI18n from './i18n/init';
 
