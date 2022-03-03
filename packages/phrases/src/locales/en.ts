@@ -13,6 +13,7 @@ const translation = {
     have_account: 'Already have an account?',
   },
   admin_console: {
+    title: 'Admin Console',
     tab_sections: {
       overview: 'Overview',
       resource_management: 'Resource Management',
