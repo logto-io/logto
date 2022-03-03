@@ -11,7 +11,7 @@ type Props = {
 };
 
 const AppContent = ({ children, theme }: Props) => {
-  return <div className={classNames(styles.app, styles[theme])}>{children}</div>;
+  return <div className={classNames(styles.app, styles.web, styles[theme])}>{children}</div>;
 };
 
 export default AppContent;
