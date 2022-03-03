@@ -15,7 +15,10 @@ jest.mock('koa-proxies', () => jest.fn(() => mockProxyMiddleware));
 jest.mock('koa-static', () => jest.fn(() => mockStaticMiddleware));
 
 describe('koaSpaProxy middleware', () => {
+  const envBackup = process.env;
+
   beforeEach(() => {
+    process.env = { ...envBackup };
     jest.clearAllMocks();
     jest.resetModules();
   });
@@ -42,47 +45,28 @@ describe('koaSpaProxy middleware', () => {
   });
 
   it('production env should overwrite the request path to root if no target ui file are detected', async () => {
-    // Mock the @/env/consts
-    jest.mock('@/env/consts', () => ({
-      ...jest.requireActual('@/env/consts'),
-      isProduction: true,
-    }));
+    process.env.NODE_ENV = 'production';
 
-    /* eslint-disable @typescript-eslint/no-require-imports */
-    /* eslint-disable @typescript-eslint/no-var-requires */
-    /* eslint-disable unicorn/prefer-module */
-    const koaSpaProxyModule = require('./koa-spa-proxy') as { default: typeof koaSpaProxy };
-    /* eslint-enable @typescript-eslint/no-require-imports */
-    /* eslint-enable @typescript-eslint/no-var-requires */
-    /* eslint-enable unicorn/prefer-module */
     const ctx = createContextWithRouteParameters({
       url: '/foo',
     });
 
-    await koaSpaProxyModule.default()(ctx, next);
+    const { default: proxy } = await import('./koa-spa-proxy');
+    await proxy()(ctx, next);
+
     expect(mockStaticMiddleware).toBeCalled();
     expect(ctx.request.path).toEqual('/');
   });
 
   it('production env should call the static middleware if path hit the ui file directory', async () => {
-    // Mock the @/env/consts
-    jest.mock('@/env/consts', () => ({
-      ...jest.requireActual('@/env/consts'),
-      isProduction: true,
-    }));
+    process.env.NODE_ENV = 'production';
 
-    /* eslint-disable @typescript-eslint/no-require-imports */
-    /* eslint-disable @typescript-eslint/no-var-requires */
-    /* eslint-disable unicorn/prefer-module */
-    const koaSpaProxyModule = require('./koa-spa-proxy') as { default: typeof koaSpaProxy };
-    /* eslint-enable @typescript-eslint/no-require-imports */
-    /* eslint-enable @typescript-eslint/no-var-requires */
-    /* eslint-enable unicorn/prefer-module */
+    const { default: proxy } = await import('./koa-spa-proxy');
     const ctx = createContextWithRouteParameters({
       url: '/sign-in',
     });
 
-    await koaSpaProxyModule.default()(ctx, next);
+    await proxy()(ctx, next);
     expect(mockStaticMiddleware).toBeCalled();
   });
 });
