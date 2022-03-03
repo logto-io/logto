@@ -10,22 +10,19 @@ import * as styles from './index.module.scss';
 import { getPath } from './utils';
 
 const Sidebar = () => {
-  const { t: tSection } = useTranslation(undefined, {
+  const { t } = useTranslation(undefined, {
     keyPrefix: 'admin_console.tab_sections',
-  });
-  const { t: tItem } = useTranslation(undefined, {
-    keyPrefix: 'admin_console.tabs',
   });
   const location = useLocation();
 
   return (
     <div className={styles.sidebar}>
       {sections.map(({ title, items }) => (
-        <Section key={title} title={tSection(title)}>
+        <Section key={title} title={t(title)}>
           {items.map(({ title, Icon }) => (
             <Item
               key={title}
-              title={tItem(title)}
+              titleKey={title}
               icon={<Icon />}
               isActive={location.pathname === getPath(title)}
             />
@@ -33,7 +30,7 @@ const Sidebar = () => {
         </Section>
       ))}
       <div className={styles.spacer} />
-      <Item title={tItem('settings')} icon={<Gear />} />
+      <Item titleKey="settings" icon={<Gear />} />
     </div>
   );
 };
