@@ -6,7 +6,10 @@
   border-radius: _.unit(2);
   font: var(--font-button);
   transition: background 0.2s ease-in-out;
-  cursor: pointer;
+
+  &:not(:disabled) {
+    cursor: pointer;
+  }
 
   &.small {
     height: 20px;
@@ -27,13 +30,18 @@
     background: var(--color-primary);
     color: var(--color-on-primary);
 
-    &:hover {
-      background: var(--color-primary-30);
+    &:disabled {
+      background: var(--color-inverse-on-surface);
+      color: var(--color-neutral-70);
     }
 
     &:focus {
       background: var(--color-primary-40);
       outline: 3px solid var(--color-primary-80);
+    }
+
+    &:not(:disabled):hover {
+      background: var(--color-primary-30);
     }
   }
 
@@ -41,13 +49,18 @@
     background: var(--color-error);
     color: var(--color-on-primary);
 
-    &:hover {
-      background: var(--color-error-30);
+    &:disabled {
+      background: var(--color-inverse-on-surface);
+      color: var(--color-neutral-70);
     }
 
     &:focus {
       background: var(--color-error-40);
       outline: 3px solid var(--color-error-90);
+    }
+
+    &:not(:disabled):hover {
+      background: var(--color-error-30);
     }
   }
 }

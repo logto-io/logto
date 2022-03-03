@@ -11,7 +11,7 @@ const Applications = () => {
     <Card>
       <div className={styles.headline}>
         <CardTitle title="applications.title" subtitle="applications.subtitle" />
-        <Button title="admin_console.applications.create" />
+        <Button disabled title="admin_console.applications.create" />
       </div>
     </Card>
   );
