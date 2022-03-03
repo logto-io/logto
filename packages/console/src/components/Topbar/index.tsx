@@ -1,7 +1,8 @@
 import React from 'react';
 
+import logo from '@/assets/images/logo.svg';
+
 import * as styles from './index.module.scss';
-import logo from './logo.svg';
 
 const Topbar = () => {
   return (
