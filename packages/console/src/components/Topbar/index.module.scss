@@ -20,7 +20,7 @@
   }
 
   .text {
-    @include _.title-medium;
+    font: var(--font-title-medium);
     color: var(--color-component-text);
   }
 }

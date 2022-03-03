@@ -1,0 +1,21 @@
+.app {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.light {
+  --color-on-surface-variant: #47464e;
+  --color-primary: #4f37f9;
+  --color-primary-90: #e5dfff;
+}
+
+$font-family: 'SF UI Text', 'SF Pro Display', sans-serif;
+
+.web {
+  --font-title-medium: 500 16px/24px #{$font-family};
+}
