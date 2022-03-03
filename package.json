@@ -4,10 +4,10 @@
   "license": "MPL-2.0",
   "scripts": {
     "preinstall": "npx only-allow pnpm",
-    "postinstall": "lerna run --stream prepack",
     "lerna": "lerna",
     "bootstrap": "lerna bootstrap",
     "prepare": "if test \"$NODE_ENV\" != \"production\" && test \"$CI\" != \"true\" ; then husky install ; fi",
+    "prepare:pack": "lerna run --stream prepack",
     "dev": "lerna run --stream prepack && lerna --scope=@logto/{core,ui,console} exec -- pnpm dev"
   },
   "devDependencies": {
