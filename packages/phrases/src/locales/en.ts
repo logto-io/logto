@@ -33,6 +33,12 @@ const translation = {
       community_support: 'Community Support',
       settings: 'Settings',
     },
+    applications: {
+      title: 'Applications',
+      subtitle:
+        'Setup a mobile, single page or traditional application to use Logto for authentication.',
+      create: 'Create Application',
+    },
   },
 };
 

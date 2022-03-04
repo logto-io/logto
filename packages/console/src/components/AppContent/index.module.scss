@@ -12,11 +12,33 @@
   --color-card-background: #fff;
   --color-on-surface-variant: #47464e;
   --color-primary: #4f37f9;
+  --color-primary-30: #3500e3;
+  --color-primary-40: #4f37f9;
+  --color-primary-50: #6e5dff;
+  --color-primary-60: #8b80ff;
+  --color-primary-70: #a8a0ff;
+  --color-primary-80: #c6c0ff;
   --color-primary-90: #e5dfff;
+  --color-on-primary: #fff;
+  --color-error: #ba1b1b;
+  --color-error-30: #930006;
+  --color-error-40: #ba1b1b;
+  --color-error-50: #dd3730;
+  --color-error-60: #ff5449;
+  --color-error-70: #ff897a;
+  --color-error-80: #ffb4a9;
+  --color-error-90: #ffdad4;
+  --color-inverse-on-surface: #eff1f1;
+  --color-neutral-70: #a9acac;
+  --color-on-secondary-container: #201c00;
+  --color-component-caption: #747778;
 }
 
 $font-family: 'SF UI Text', 'SF Pro Display', sans-serif;
 
 .web {
   --font-title-medium: 500 16px/24px #{$font-family};
+  --font-heading-small: 600 24px/32px #{$font-family};
+  --font-body: normal 16px/22px #{$font-family};
+  --font-button: 500 14px/20px #{$font-family};
 }

@@ -8,6 +8,7 @@ export type LogtoErrorCode = NormalizeKeyPaths<typeof en.errors>;
 export type LogtoErrorI18nKey = `errors:${LogtoErrorCode}`;
 export type Languages = keyof Resource;
 export type I18nKey = NormalizeKeyPaths<typeof en.translation>;
+export type AdminConsoleKey = NormalizeKeyPaths<typeof en.translation.admin_console>;
 
 const resource: Resource = {
   en,

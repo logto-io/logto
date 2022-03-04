@@ -35,6 +35,12 @@ const translation = {
       community_support: '社区支持',
       settings: '设置',
     },
+    applications: {
+      title: 'Applications',
+      subtitle:
+        'Setup a mobile, single page or traditional application to use Logto for authentication.',
+      create: 'Create Application',
+    },
   },
 };
 
