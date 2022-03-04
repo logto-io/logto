@@ -46,6 +46,7 @@ importers:
       react-i18next: ^11.15.4
       react-router-dom: ^6.2.2
       stylelint: ^13.13.1
+      swr: ^1.2.2
       typescript: ^4.5.5
     dependencies:
       '@logto/phrases': link:../phrases
@@ -58,6 +59,7 @@ importers:
       react-dom: 17.0.2_react@17.0.2
       react-i18next: 11.15.4_2c37a602a29bb6bd53f3de707a8cfcc5
       react-router-dom: 6.2.2_react-dom@17.0.2+react@17.0.2
+      swr: 1.2.2_react@17.0.2
     devDependencies:
       '@parcel/core': 2.3.1
       '@parcel/transformer-sass': 2.3.1_@parcel+core@2.3.1
@@ -12546,6 +12548,14 @@ packages:
       picocolors: 1.0.0
       stable: 0.1.8
     dev: true
+
+  /swr/1.2.2_react@17.0.2:
+    resolution: {integrity: sha512-ky0BskS/V47GpW8d6RU7CPsr6J8cr7mQD6+do5eky3bM0IyJaoi3vO8UhvrzJaObuTlGhPl2szodeB2dUd76Xw==}
+    peerDependencies:
+      react: ^16.11.0 || ^17.0.0 || ^18.0.0
+    dependencies:
+      react: 17.0.2
+    dev: false
 
   /symbol-tree/3.2.4:
     resolution: {integrity: sha512-9QNk5KwDF+Bvz+PyObkmSYjI5ksVUYtjW7AU22r2NKcfLJcXp96hkDWU3+XndOsUb+AQ9QhfzfCT2O+CNWT5Tw==}

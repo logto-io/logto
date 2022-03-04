@@ -1,4 +1,4 @@
-import { DefaultState, DefaultContext, ParameterizedContext, Next } from 'koa';
+import { DefaultState, DefaultContext, ParameterizedContext, Next, BaseRequest } from 'koa';
 
 declare module 'koa' {
   // Have to do this patch since `compose.Middleware` returns `any`.
@@ -10,4 +10,9 @@ declare module 'koa' {
     ResponseBodyT = any,
     NextT = void
   > = KoaMiddleware<ParameterizedContext<StateT, ContextT, ResponseBodyT>, NextT>;
+
+  interface Request extends BaseRequest {
+    body?: any;
+    files?: Files;
+  }
 }

@@ -4,7 +4,7 @@ import * as styles from './index.module.scss';
 
 type Props = {
   title: string;
-  subtitle?: string;
+  subtitle?: string | unknown;
   icon?: ReactNode;
 };
 
@@ -14,7 +14,7 @@ const ItemPreview = ({ title, subtitle, icon }: Props) => {
       {icon}
       <div>
         <div className={styles.title}>{title}</div>
-        {subtitle && <div className={styles.subtitle}>{subtitle}</div>}
+        {subtitle && <div className={styles.subtitle}>{String(subtitle)}</div>}
       </div>
     </div>
   );
