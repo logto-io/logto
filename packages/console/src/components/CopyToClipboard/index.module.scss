@@ -1,0 +1,22 @@
+@use '@/scss/underscore' as _;
+
+.container {
+  display: inline-block;
+  padding: _.unit(3);
+  border-radius: _.unit(2);
+  background: var(--color-on-surface);
+  color: var(--color-on-secondary-container);
+  font: var(--font-caption);
+  cursor: default;
+
+  .row {
+    display: flex;
+    align-items: center;
+    cursor: text;
+
+    > svg {
+      margin-left: _.unit(3);
+      cursor: pointer;
+    }
+  }
+}

@@ -1,3 +1,5 @@
+@use '@/scss/underscore' as _;
+
 body {
   margin: 0;
   padding: 0;
@@ -14,4 +16,36 @@ body {
 input {
   border: none;
   outline: none;
+}
+
+table {
+  border: 1px solid var(--color-neutral-90);
+  border-radius: _.unit(2);
+  border-spacing: 0;
+  overflow: hidden;
+
+  thead {
+    td {
+      font: var(--font-subhead-2);
+      color: var(--color-component-caption);
+      padding: _.unit(3) _.unit(4);
+
+      &:first-child,
+      &:last-child {
+        padding: _.unit(3) _.unit(8);
+      }
+    }
+  }
+
+  tbody {
+    td {
+      border-top: 1px solid var(--color-neutral-90);
+      padding: _.unit(5) _.unit(4);
+
+      &:first-child,
+      &:last-child {
+        padding: _.unit(5) _.unit(8);
+      }
+    }
+  }
 }
