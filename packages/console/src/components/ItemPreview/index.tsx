@@ -4,7 +4,7 @@ import * as styles from './index.module.scss';
 
 type Props = {
   title: string;
-  subtitle?: string | unknown;
+  subtitle?: string;
   icon?: ReactNode;
 };
 
