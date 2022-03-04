@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react';
 import { BrowserRouter, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
-
+import { SWRConfig } from 'swr';
 import './scss/normalized.scss';
+
 import * as styles from './App.module.scss';
 import AppContent from './components/AppContent';
 import Content from './components/Content';
@@ -10,6 +11,7 @@ import Topbar from './components/Topbar';
 import initI18n from './i18n/init';
 import ApiResources from './pages/ApiResources';
 import Applications from './pages/Applications';
+import { fetcher } from './swr';
 
 const isBasenameNeeded = process.env.NODE_ENV !== 'development' || process.env.PORT === '5002';
 
@@ -26,18 +28,20 @@ const Main = () => {
   }, [location.pathname, navigate]);
 
   return (
-    <AppContent theme="light">
-      <Topbar />
-      <div className={styles.content}>
-        <Sidebar />
-        <Content>
-          <Routes>
-            <Route path="api-resources" element={<ApiResources />} />
-            <Route path="applications" element={<Applications />} />
-          </Routes>
-        </Content>
-      </div>
-    </AppContent>
+    <SWRConfig value={{ fetcher }}>
+      <AppContent theme="light">
+        <Topbar />
+        <div className={styles.content}>
+          <Sidebar />
+          <Content>
+            <Routes>
+              <Route path="api-resources" element={<ApiResources />} />
+              <Route path="applications" element={<Applications />} />
+            </Routes>
+          </Content>
+        </div>
+      </AppContent>
+    </SWRConfig>
   );
 };
 

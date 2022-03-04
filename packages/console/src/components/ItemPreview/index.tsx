@@ -14,7 +14,7 @@ const ItemPreview = ({ title, subtitle, icon }: Props) => {
       {icon}
       <div>
         <div className={styles.title}>{title}</div>
-        {subtitle && <div className={styles.subtitle}>{subtitle}</div>}
+        {subtitle && <div className={styles.subtitle}>{String(subtitle)}</div>}
       </div>
     </div>
   );
