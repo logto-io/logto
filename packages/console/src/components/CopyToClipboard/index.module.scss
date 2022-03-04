@@ -17,6 +17,11 @@
     > svg {
       margin-left: _.unit(3);
       cursor: pointer;
+      fill: var(--color-component-caption);
+
+      &:hover {
+        fill: var(--color-primary);
+      }
     }
   }
 }
