@@ -29,7 +29,7 @@ const Applications = () => {
         <thead>
           <tr>
             <td className={styles.applicationName}>{t('applications.application_name')}</td>
-            <td>{t('applications.application_name')}</td>
+            <td>{t('applications.client_id')}</td>
           </tr>
         </thead>
         <tbody>
