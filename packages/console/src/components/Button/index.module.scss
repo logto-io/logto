@@ -6,6 +6,7 @@
   border-radius: _.unit(2);
   font: var(--font-button);
   transition: background 0.2s ease-in-out;
+  @include _.text-ellipsis;
 
   &:not(:disabled) {
     cursor: pointer;

@@ -1,0 +1,21 @@
+@use '@/scss/underscore' as _;
+
+.item {
+  display: flex;
+  align-items: center;
+
+  > div:not(:first-child) {
+    margin-left: _.unit(4);
+  }
+
+  .title {
+    font: var(--font-body);
+    color: var(--color-primary);
+  }
+
+  .subtitle {
+    margin-top: _.unit(0.5);
+    font: var(--font-small-text);
+    color: var(--color-outline);
+  }
+}

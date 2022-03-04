@@ -1,4 +1,11 @@
+@use '@/scss/underscore' as _;
+
 .headline {
   display: flex;
   justify-content: space-between;
+}
+
+.table {
+  margin-top: _.unit(6);
+  width: 100%;
 }

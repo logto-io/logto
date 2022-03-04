@@ -8,3 +8,9 @@
   align-items: center;
   justify-content: center;
 }
+
+@mixin text-ellipsis {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
