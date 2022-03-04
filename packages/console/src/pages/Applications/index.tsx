@@ -3,6 +3,7 @@ import React from 'react';
 import Button from '@/components/Button';
 import Card from '@/components/Card';
 import CardTitle from '@/components/CardTitle';
+import CopyToClipboard from '@/components/CopyToClipboard';
 import ImagePlaceholder from '@/components/ImagePlaceholder';
 import ItemPreview from '@/components/ItemPreview';
 
@@ -18,7 +19,7 @@ const Applications = () => {
       <table className={styles.table}>
         <thead>
           <tr>
-            <td>Application Name</td>
+            <td className={styles.applicationName}>Application Name</td>
             <td>Client ID</td>
           </tr>
         </thead>
@@ -31,7 +32,9 @@ const Applications = () => {
                 icon={<ImagePlaceholder />}
               />
             </td>
-            <td>RUMatENw0rFWO5aGbMI8tY2Qol50eOg3</td>
+            <td>
+              <CopyToClipboard value="RUMatENw0rFWO5aGbMI8tY2Qol50eOg3" />
+            </td>
           </tr>
         </tbody>
       </table>

@@ -10,6 +10,7 @@
 
 .light {
   --color-card-background: #fff;
+  --color-on-surface: #eff1f1;
   --color-on-surface-variant: #47464e;
   --color-primary: #4f37f9;
   --color-primary-30: #3500e3;
@@ -43,6 +44,7 @@ $font-family: 'SF UI Text', 'SF Pro Display', sans-serif;
   --font-heading-small: 600 24px/32px #{$font-family};
   --font-body: normal 16px/22px #{$font-family};
   --font-small-text: normal 12px/17px #{$font-family};
+  --font-caption: normal 14px/17px #{$font-family};
   --font-button: 500 14px/20px #{$font-family};
   --font-subhead-2: 500 14px/20px #{$font-family};
 }

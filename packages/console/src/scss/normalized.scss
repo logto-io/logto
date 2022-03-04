@@ -23,9 +23,10 @@ table {
   border-radius: _.unit(2);
   border-spacing: 0;
 
-  thead,
-  tbody {
+  thead {
     td {
+      font: var(--font-subhead-2);
+      color: var(--color-component-caption);
       padding: _.unit(3) _.unit(4);
 
       &:first-child,
@@ -35,14 +36,15 @@ table {
     }
   }
 
-  thead {
-    font: var(--font-subhead-2);
-    color: var(--color-component-caption);
-  }
-
   tbody {
     td {
       border-top: 1px solid var(--color-neutral-90);
+      padding: _.unit(5) _.unit(4);
+
+      &:first-child,
+      &:last-child {
+        padding: _.unit(5) _.unit(8);
+      }
     }
   }
 }
