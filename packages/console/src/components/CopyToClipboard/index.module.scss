@@ -7,10 +7,12 @@
   background: var(--color-on-surface);
   color: var(--color-on-secondary-container);
   font: var(--font-caption);
+  cursor: default;
 
   .row {
     display: flex;
     align-items: center;
+    cursor: text;
 
     > svg {
       margin-left: _.unit(3);

@@ -8,6 +8,14 @@
 .table {
   margin-top: _.unit(6);
   width: 100%;
+
+  tbody tr {
+    cursor: pointer;
+
+    &:hover {
+      background: var(--color-table-row-selected);
+    }
+  }
 }
 
 .applicationName {

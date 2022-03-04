@@ -1,4 +1,4 @@
-import React, { SVGProps } from 'react';
+import React, { MouseEventHandler, SVGProps } from 'react';
 
 import * as styles from './index.module.scss';
 
@@ -23,13 +23,18 @@ const CopyIcon = (props: SVGProps<SVGSVGElement>) => (
 );
 
 const CopyToClipboard = ({ value }: Props) => {
-  const copy = () => {
+  const copy: MouseEventHandler<SVGSVGElement> = () => {
     // TO-DO: toast after finished
     void navigator.clipboard.writeText(value);
   };
 
   return (
-    <div className={styles.container}>
+    <div
+      className={styles.container}
+      onClick={(event) => {
+        event.stopPropagation();
+      }}
+    >
       <div className={styles.row}>
         {value}
         <CopyIcon onClick={copy} />
