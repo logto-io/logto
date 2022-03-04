@@ -61,7 +61,7 @@ describe('google connector', () => {
   });
 
   describe('getUserInfo', () => {
-    it('shoud get valid SocialUserInfo', async () => {
+    it('should get valid SocialUserInfo', async () => {
       nock(userInfoEndpoint).post('').reply(200, {
         sub: '1234567890',
         name: 'monalisa octocat',
