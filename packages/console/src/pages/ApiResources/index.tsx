@@ -43,7 +43,7 @@ const ApiResources = () => {
             </tr>
           )}
           {data?.map(({ id, name, indicator }) => (
-            <tr key={id}>
+            <tr key={id} className={styles.clickable}>
               <td>
                 <ItemPreview title={name} icon={<ImagePlaceholder />} />
               </td>
