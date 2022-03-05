@@ -16,6 +16,11 @@ const translation = {
   },
   admin_console: {
     title: '管理面板',
+    copy: {
+      pending: '拷贝',
+      copying: '拷贝中',
+      copied: '已拷贝',
+    },
     tab_sections: {
       overview: '概览',
       resource_management: '资源管理',
