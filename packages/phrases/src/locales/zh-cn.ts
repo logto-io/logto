@@ -49,10 +49,10 @@ const translation = {
       },
     },
     api_resources: {
-      title: 'API 资源管理',
+      title: 'API Resources',
       subtitle: 'Define APIs that you can consume from your authorized applications.',
-      create: '创建新的API',
-      api_name: 'API 名称',
+      create: 'Create API Resource',
+      api_name: 'API Name',
       api_identifier: 'API Identifier',
     },
   },
