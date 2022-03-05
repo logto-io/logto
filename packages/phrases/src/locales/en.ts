@@ -46,6 +46,13 @@ const translation = {
         tranditional: 'Tranditional Web App',
       },
     },
+    api_resources: {
+      title: 'API Resources',
+      subtitle: 'Define APIs that you can consume from your authorized applications.',
+      create: 'Create API',
+      api_name: 'API Name',
+      api_identifier: 'API Identifier',
+    },
   },
 };
 

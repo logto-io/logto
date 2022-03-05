@@ -48,6 +48,13 @@ const translation = {
         tranditional: 'Tranditional Web App',
       },
     },
+    api_resources: {
+      title: 'API 资源管理',
+      subtitle: 'Define APIs that you can consume from your authorized applications.',
+      create: '创建新的API',
+      api_name: 'API 名称',
+      api_identifier: 'API Identifier',
+    },
   },
 };
 
