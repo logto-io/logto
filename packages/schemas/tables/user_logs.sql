@@ -1,4 +1,4 @@
-create type user_log_type as enum ('SignInUsernameAndPassword', 'SignInEmail', 'SignInPhone', 'SignInSocial', 'RegisterUsernameAndPassword', 'RegisterEmail', 'RegisterPhone', 'RegisterSocial', 'ExchangeAccessToken');
+create type user_log_type as enum ('SignInUsernameAndPassword', 'SignInEmail', 'SignInPhone', 'SignInSocial', 'RegisterUsernameAndPassword', 'RegisterEmail', 'RegisterPhone', 'RegisterSocial', 'ForgotPasswordEmail', 'ForgotPasswordPhone', 'ExchangeAccessToken');
 
 create type user_log_result as enum ('Success', 'Failed');
 

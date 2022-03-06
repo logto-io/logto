@@ -96,6 +96,7 @@ const errors = {
     phone_not_exists: '手机号码尚未注册。',
     identity_not_exists: '该社交账号尚未注册。',
     identity_exists: '该社交账号已被注册。',
+    username_password_signin_not_exists: '该账号暂未开通账号密码登录方式。',
   },
   password: {
     unsupported_encryption_method: '不支持的加密方法 {{name}}。',
