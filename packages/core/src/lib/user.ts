@@ -67,7 +67,7 @@ export const findUserSignInMethodsById = async (
   );
   const emailPasswordless = Boolean(primaryEmail);
   const phonePasswordless = Boolean(primaryPhone);
-  const social = Boolean(identities);
+  const social = Boolean(identities) && Object.keys(identities).length > 0;
 
   return { usernameAndPassword, emailPasswordless, phonePasswordless, social };
 };

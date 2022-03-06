@@ -80,6 +80,7 @@ describe('findUserSignInMethodsById()', () => {
   it('generate and test user with email passwordless sign-in method', async () => {
     findUserById.mockResolvedValue({
       primaryEmail: 'b@a.com',
+      identities: {},
     });
     const { usernameAndPassword, emailPasswordless, phonePasswordless, social } =
       await findUserSignInMethodsById('');
