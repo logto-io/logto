@@ -62,6 +62,10 @@ describe('encryptUserPassword()', () => {
 });
 
 describe('findUserSignInMethodsById()', () => {
+  afterEach(() => {
+    findUserById.mockClear();
+  });
+
   it('generate and test user with username and password sign-in method', async () => {
     findUserById.mockResolvedValue({
       username: 'abcd',
