@@ -19,6 +19,9 @@ const translation = {
       copying: 'Copying',
       copied: 'Copied',
     },
+    form: {
+      required: 'Required',
+    },
     tab_sections: {
       overview: 'Overview',
       resource_management: 'Resource Management',
@@ -44,6 +47,7 @@ const translation = {
         'Setup a mobile, single page or traditional application to use Logto for authentication.',
       create: 'Create Application',
       application_name: 'Application Name',
+      select_application_type: 'Select an application type',
       client_id: 'Client ID',
       type: {
         native: 'Native App',

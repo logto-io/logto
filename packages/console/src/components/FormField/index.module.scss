@@ -1,0 +1,21 @@
+@use '@/scss/underscore' as _;
+
+.headline {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: _.unit(1);
+
+  &:not(:first-child) {
+    margin-top: _.unit(6);
+  }
+
+  .title {
+    font: var(--font-caption-bold);
+    color: var(--color-component-text);
+  }
+
+  .required {
+    font: var(--font-body);
+    color: var(--color-component-caption);
+  }
+}

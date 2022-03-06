@@ -14,7 +14,7 @@ import * as modalStyles from '@/scss/modal.module.scss';
 import { RequestError } from '@/swr';
 import { applicationTypeI18nKey } from '@/types/applications';
 
-import Create from './components/Create';
+import CreateForm from './components/CreateForm';
 import * as styles from './index.module.scss';
 
 const Applications = () => {
@@ -38,7 +38,7 @@ const Applications = () => {
           className={modalStyles.content}
           overlayClassName={modalStyles.overlay}
         >
-          <Create
+          <CreateForm
             onClose={() => {
               setIsCreateFormOpen(false);
             }}

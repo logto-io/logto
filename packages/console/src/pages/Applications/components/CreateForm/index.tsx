@@ -1,7 +1,11 @@
+import { ApplicationType } from '@logto/schemas';
 import React, { SVGProps } from 'react';
+import { useController, useForm } from 'react-hook-form';
 
 import Card from '@/components/Card';
 import CardTitle from '@/components/CardTitle';
+import FormField from '@/components/FormField';
+import RadioGroup, { Radio } from '@/components/RadioGroup';
 
 import * as styles from './index.module.scss';
 
@@ -14,19 +18,44 @@ const Close = (props: SVGProps<SVGSVGElement>) => (
   </svg>
 );
 
+type FormData = {
+  type: ApplicationType;
+  name: string;
+  description?: string;
+};
+
 type Props = {
   onClose?: () => void;
 };
 
-const Create = ({ onClose }: Props) => {
+const CreateForm = ({ onClose }: Props) => {
+  const { handleSubmit, control } = useForm<FormData>();
+  const {
+    field: { onChange, value },
+  } = useController({ name: 'type', control });
+
+  const onSubmit = handleSubmit((data) => {
+    console.log(data);
+  });
+
   return (
     <Card className={styles.card}>
       <div className={styles.headline}>
         <CardTitle title="applications.create" subtitle="applications.subtitle" />
         <Close onClick={onClose} />
       </div>
+      <form className={styles.form} onSubmit={onSubmit}>
+        <FormField title="admin_console.applications.select_application_type">
+          <RadioGroup name="application_type" value={value} onChange={onChange}>
+            <Radio title="Native" value={ApplicationType.Native} />
+            <Radio title="Single Page Application" value={ApplicationType.SPA} />
+            <Radio title="Tranditional Web" value={ApplicationType.Traditional} />
+          </RadioGroup>
+        </FormField>
+        <button type="submit">Submit</button>
+      </form>
     </Card>
   );
 };
 
-export default Create;
+export default CreateForm;
