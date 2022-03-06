@@ -10,6 +10,7 @@ import Sidebar, { getPath, sections } from './components/Sidebar';
 import Topbar from './components/Topbar';
 import initI18n from './i18n/init';
 import ApiResources from './pages/ApiResources';
+import ApplicationDetails from './pages/ApplicationDetails';
 import Applications from './pages/Applications';
 import Connectors from './pages/Connectors';
 import Connector from './pages/Connectors/Connector';
@@ -38,9 +39,12 @@ const Main = () => {
           <Content>
             <Routes>
               <Route path="api-resources" element={<ApiResources />} />
-              <Route path="applications" element={<Applications />} />
               <Route path="connectors" element={<Connectors />} />
               <Route path="connectors/:connectorId" element={<Connector />} />
+              <Route path="applications">
+                <Route index element={<Applications />} />
+                <Route path=":id" element={<ApplicationDetails />} />
+              </Route>
             </Routes>
           </Content>
         </div>

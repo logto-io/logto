@@ -1,0 +1,14 @@
+@use '@/scss/underscore' as _;
+
+.button {
+  padding-left: 0;
+
+  .container {
+    display: flex;
+    align-items: center;
+
+    > *:not(:first-child) {
+      margin-left: _.unit(1);
+    }
+  }
+}
