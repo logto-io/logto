@@ -8,11 +8,8 @@ import Card from '@/components/Card';
 import CardTitle from '@/components/CardTitle';
 import FormField from '@/components/FormField';
 import RadioGroup, { Radio } from '@/components/RadioGroup';
-<<<<<<< HEAD
-import Close from '@/icons/Close';
-=======
 import TextInput from '@/components/TextInput';
->>>>>>> 39a72f4 (feat(console): complete app create form inputs)
+import Close from '@/icons/Close';
 import { applicationTypeI18nKey } from '@/types/applications';
 
 import TypeDescription from '../TypeDescription';
@@ -25,7 +22,7 @@ type FormData = {
 };
 
 type Props = {
-  onClose?: () => void;
+  onClose?: (createdApp?: Application) => void;
 };
 
 const CreateForm = ({ onClose }: Props) => {
@@ -35,15 +32,21 @@ const CreateForm = ({ onClose }: Props) => {
   } = useController({ name: 'type', control, rules: { required: true } });
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
-  const onSubmit = handleSubmit((data) => {
-    console.log(data);
+  const onSubmit = handleSubmit(async (data) => {
+    try {
+      const createdApp = await ky.post('/api/applications', { json: data }).json<Application>();
+
+      onClose?.(createdApp);
+    } catch (error: unknown) {
+      console.error(error);
+    }
   });
 
   return (
     <Card className={styles.card}>
       <div className={styles.headline}>
         <CardTitle title="applications.create" subtitle="applications.subtitle" />
-        <Close onClick={onClose} />
+        <Close onClick={() => onClose?.()} />
       </div>
       <form className={styles.form} onSubmit={onSubmit}>
         <FormField title="admin_console.applications.select_application_type">
