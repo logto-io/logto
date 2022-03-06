@@ -5,19 +5,19 @@ import { hasUserWithId } from '@/queries/user';
 import { encryptUserPassword, generateUserId, findUserSignInMethodsById } from './user';
 
 const findUserById: jest.MockedFunction<() => Promise<unknown>> = jest.fn(async () => ({}));
-const hasUserWithIdHelper = jest.fn() as jest.MockedFunction<typeof hasUserWithId>;
+const hasUserWithIdPlaceHolder = jest.fn() as jest.MockedFunction<typeof hasUserWithId>;
 jest.mock('@/queries/user', () => ({
   findUserById: async () => findUserById(),
-  hasUserWithId: async (_id: string) => hasUserWithIdHelper(_id),
+  hasUserWithId: async (_id: string) => hasUserWithIdPlaceHolder(_id),
 }));
 
 describe('generateUserId()', () => {
   afterEach(() => {
-    hasUserWithIdHelper.mockClear();
+    hasUserWithIdPlaceHolder.mockClear();
   });
 
   it('generates user ID with correct length when no conflict found', async () => {
-    const mockedHasUserWithId = hasUserWithIdHelper.mockImplementationOnce(async () => false);
+    const mockedHasUserWithId = hasUserWithIdPlaceHolder.mockImplementationOnce(async () => false);
 
     await expect(generateUserId()).resolves.toHaveLength(12);
     expect(mockedHasUserWithId).toBeCalledTimes(1);
@@ -26,7 +26,7 @@ describe('generateUserId()', () => {
   it('generates user ID with correct length when retry limit is not reached', async () => {
     // eslint-disable-next-line @silverhand/fp/no-let
     let tried = 0;
-    const mockedHasUserWithId = hasUserWithIdHelper.mockImplementation(async () => {
+    const mockedHasUserWithId = hasUserWithIdPlaceHolder.mockImplementation(async () => {
       if (tried) {
         return false;
       }
@@ -42,7 +42,7 @@ describe('generateUserId()', () => {
   });
 
   it('rejects with correct error message when retry limit is reached', async () => {
-    const mockedHasUserWithId = hasUserWithIdHelper.mockImplementation(async () => true);
+    const mockedHasUserWithId = hasUserWithIdPlaceHolder.mockImplementation(async () => true);
 
     await expect(generateUserId(10)).rejects.toThrow(
       'Cannot generate user ID in reasonable retries'
