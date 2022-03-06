@@ -1,6 +1,7 @@
 import { Application } from '@logto/schemas';
-import React from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import Modal from 'react-modal';
 import useSWR from 'swr';
 
 import Button from '@/components/Button';
@@ -9,12 +10,15 @@ import CardTitle from '@/components/CardTitle';
 import CopyToClipboard from '@/components/CopyToClipboard';
 import ImagePlaceholder from '@/components/ImagePlaceholder';
 import ItemPreview from '@/components/ItemPreview';
+import * as modalStyles from '@/scss/modal.module.scss';
 import { RequestError } from '@/swr';
 import { applicationTypeI18nKey } from '@/types/applications';
 
+import Create from './components/Create';
 import * as styles from './index.module.scss';
 
 const Applications = () => {
+  const [isCreateFormOpen, setIsCreateFormOpen] = useState(false);
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { data, error } = useSWR<Application[], RequestError>('/api/applications');
   const isLoading = !data && !error;
@@ -23,7 +27,23 @@ const Applications = () => {
     <Card>
       <div className={styles.headline}>
         <CardTitle title="applications.title" subtitle="applications.subtitle" />
-        <Button disabled title="admin_console.applications.create" />
+        <Button
+          title="admin_console.applications.create"
+          onClick={() => {
+            setIsCreateFormOpen(true);
+          }}
+        />
+        <Modal
+          isOpen={isCreateFormOpen}
+          className={modalStyles.content}
+          overlayClassName={modalStyles.overlay}
+        >
+          <Create
+            onClose={() => {
+              setIsCreateFormOpen(false);
+            }}
+          />
+        </Modal>
       </div>
       <table className={styles.table}>
         <thead>

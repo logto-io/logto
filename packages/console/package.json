@@ -26,6 +26,7 @@
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-i18next": "^11.15.4",
+    "react-modal": "^3.14.4",
     "react-router-dom": "^6.2.2",
     "swr": "^1.2.2"
   },
@@ -39,6 +40,7 @@
     "@types/lodash.kebabcase": "^4.1.6",
     "@types/react": "^17.0.14",
     "@types/react-dom": "^17.0.9",
+    "@types/react-modal": "^3.13.1",
     "eslint": "^8.10.0",
     "lint-staged": "^11.1.1",
     "parcel": "^2.3.1",
