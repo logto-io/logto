@@ -18,7 +18,7 @@ import CreateForm from './components/CreateForm';
 import * as styles from './index.module.scss';
 
 const Applications = () => {
-  const [isCreateFormOpen, setIsCreateFormOpen] = useState(false);
+  const [isCreateFormOpen, setIsCreateFormOpen] = useState(true);
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { data, error } = useSWR<Application[], RequestError>('/api/applications');
   const isLoading = !data && !error;

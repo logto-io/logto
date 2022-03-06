@@ -1,13 +1,17 @@
 @use '@/scss/underscore' as _;
 
+.field {
+  &:not(:first-child) {
+    margin-top: _.unit(6);
+  }
+}
+
 .headline {
   display: flex;
   justify-content: space-between;
   margin-bottom: _.unit(1);
 
-  &:not(:first-child) {
-    margin-top: _.unit(6);
-  }
+
 
   .title {
     font: var(--font-caption-bold);
@@ -15,7 +19,7 @@
   }
 
   .required {
-    font: var(--font-body);
+    font: var(--font-body-2);
     color: var(--color-component-caption);
   }
 }

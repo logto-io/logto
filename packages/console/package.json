@@ -70,7 +70,10 @@
           ]
         }
       }
-    ]
+    ],
+    "rules": {
+      "react/button-has-type": "off"
+    }
   },
   "stylelint": {
     "extends": "@silverhand/eslint-config-react/.stylelintrc"
