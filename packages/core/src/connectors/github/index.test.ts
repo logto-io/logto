@@ -51,10 +51,7 @@ describe('validateConfig', () => {
     ).resolves.not.toThrow();
   });
   it('should throw on empty config', async () => {
-    // FIXME: @sijie
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-expect-error
-    await expect(validateConfig()).rejects.toThrowError();
+    await expect(validateConfig({})).rejects.toThrowError();
   });
   it('should throw when missing clientSecret', async () => {
     await expect(validateConfig({ clientId: 'clientId' })).rejects.toThrowError();

@@ -37,10 +37,6 @@ const githubConfigGuard = z.object({
 type GithubConfig = z.infer<typeof githubConfigGuard>;
 
 export const validateConfig: ValidateConfig = async (config: unknown) => {
-  if (!config) {
-    throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, 'Missing config');
-  }
-
   const result = githubConfigGuard.safeParse(config);
 
   if (!result.success) {

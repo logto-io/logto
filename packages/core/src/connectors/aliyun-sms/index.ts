@@ -68,10 +68,6 @@ const configGuard = z.object({
 });
 
 export const validateConfig: ValidateConfig = async (config: unknown) => {
-  if (!config) {
-    throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, 'Missing config');
-  }
-
   const result = configGuard.safeParse(config);
 
   if (!result.success) {
