@@ -1,5 +1,7 @@
 import { z } from 'zod';
 
+import assertThat from '@/utils/assert-that';
+
 import {
   ConnectorError,
   ConnectorErrorCodes,
@@ -84,9 +86,10 @@ export const sendMessage: SmsSendMessageFunction = async (phone, type, { code })
   const { accessKeyId, accessKeySecret, signName, templates } = config;
   const template = templates.find(({ usageType }) => usageType === type);
 
-  if (!template) {
-    throw new ConnectorError(ConnectorErrorCodes.TemplateNotFound, `Cannot find template!`);
-  }
+  assertThat(
+    template,
+    new ConnectorError(ConnectorErrorCodes.TemplateNotFound, `Cannot find template!`)
+  );
 
   return sendSms(
     {

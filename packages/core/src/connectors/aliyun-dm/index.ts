@@ -1,5 +1,7 @@
 import { z } from 'zod';
 
+import assertThat from '@/utils/assert-that';
+
 import {
   ConnectorError,
   ConnectorErrorCodes,
@@ -61,12 +63,13 @@ export const sendMessage: EmailSendMessageFunction = async (address, type, data)
   const { accessKeyId, accessKeySecret, accountName, fromAlias, templates } = config;
   const template = templates.find((template) => template.usageType === type);
 
-  if (!template) {
-    throw new ConnectorError(
+  assertThat(
+    template,
+    new ConnectorError(
       ConnectorErrorCodes.TemplateNotFound,
       `Cannot find template for type: ${type}`
-    );
-  }
+    )
+  );
 
   return singleSendMail(
     {

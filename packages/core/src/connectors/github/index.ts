@@ -2,6 +2,8 @@ import got, { RequestError as GotRequestError } from 'got';
 import { stringify } from 'query-string';
 import { z } from 'zod';
 
+import assertThat from '@/utils/assert-that';
+
 import {
   ConnectorMetadata,
   GetAccessToken,
@@ -78,9 +80,7 @@ export const getAccessToken: GetAccessToken = async (code) => {
     })
     .json<AccessTokenResponse>();
 
-  if (!accessToken) {
-    throw new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid);
-  }
+  assertThat(accessToken, new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid));
 
   return accessToken;
 };
