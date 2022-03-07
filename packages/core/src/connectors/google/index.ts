@@ -28,6 +28,7 @@ export const metadata: ConnectorMetadata = {
     en: 'Sign In with Google',
     zh_CN: 'Google登录',
   },
+  // TODO: add the real logo URL (LOG-1823)
   logo: './logo.png',
   description: {
     en: 'Sign In with Google',

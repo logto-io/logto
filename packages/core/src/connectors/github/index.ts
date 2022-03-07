@@ -22,6 +22,7 @@ export const metadata: ConnectorMetadata = {
     en: 'Sign In with GitHub',
     zh_CN: 'GitHub登录',
   },
+  // TODO: add the real logo URL (LOG-1823)
   logo: './logo.png',
   description: {
     en: 'Sign In with GitHub',
