@@ -780,31 +780,77 @@ describe('sessionRoutes', () => {
     });
   });
 
-  describe('POST /session/forgot-password/phone/verify-passcode-and-reset-password', () => {
+  describe('POST /session/forgot-password/email/send-passcode', () => {
+    afterEach(() => {
+      findUserSignInMethodsByIdPlaceHolder.mockClear();
+    });
+
     beforeAll(() => {
       interactionDetails.mockResolvedValueOnce({
         jti: 'jti',
       });
     });
 
-    it('throw if no user can be found with phone', async () => {
+    it('throw if no user can be found with email', async () => {
       const response = await sessionRequest
-        .post('/session/forgot-password/phone/verify-passcode-and-reset-password')
-        .send({ phone: '13000000001', code: '1234', password: '123456' });
+        .post('/session/forgot-password/email/send-passcode')
+        .send({ email: 'b@a.com' });
+      expect(response).toHaveProperty('statusCode', 422);
+    });
+
+    it('throw if found user can not sign-in with username and password', async () => {
+      findUserSignInMethodsByIdPlaceHolder.mockResolvedValue({
+        usernameAndPassword: false,
+        emailPasswordless: false,
+        phonePasswordless: false,
+        social: false,
+      });
+      const response = await sessionRequest
+        .post('/session/forgot-password/email/send-passcode')
+        .send({ email: 'a@a.com' });
+      expect(response).toHaveProperty('statusCode', 400);
+    });
+
+    it('create and send passcode', async () => {
+      findUserSignInMethodsByIdPlaceHolder.mockResolvedValue({
+        usernameAndPassword: true,
+        emailPasswordless: false,
+        phonePasswordless: false,
+        social: false,
+      });
+      const response = await sessionRequest
+        .post('/session/forgot-password/email/send-passcode')
+        .send({ email: 'a@a.com' });
+      expect(response.statusCode).toEqual(204);
+      expect(sendPasscode).toHaveBeenCalled();
+    });
+  });
+
+  describe('POST /session/forgot-password/email/verify-passcode', () => {
+    beforeAll(() => {
+      interactionDetails.mockResolvedValueOnce({
+        jti: 'jti',
+      });
+    });
+
+    it('throw if no user can be found with email', async () => {
+      const response = await sessionRequest
+        .post('/session/forgot-password/email/verify-passcode')
+        .send({ email: 'b@a.com', code: '1234' });
       expect(response).toHaveProperty('statusCode', 422);
     });
 
     it('fail to verify passcode', async () => {
       const response = await sessionRequest
-        .post('/session/forgot-password/phone/verify-passcode-and-reset-password')
-        .send({ phone: '13000000000', code: '1231', password: '123456' });
+        .post('/session/forgot-password/email/verify-passcode')
+        .send({ email: 'a@a.com', code: '1231' });
       expect(response).toHaveProperty('statusCode', 400);
     });
 
     it('verify passcode, reset password and assign result', async () => {
       const response = await sessionRequest
-        .post('/session/forgot-password/phone/verify-passcode-and-reset-password')
-        .send({ phone: '13000000000', code: '1234', password: '123456' });
+        .post('/session/forgot-password/email/verify-passcode')
+        .send({ email: 'a@a.com', code: '1234' });
       expect(response).toHaveProperty('statusCode', 200);
       expect(updateUserById).toHaveBeenCalledWith('id', {
         passwordEncryptionSalt: 'user1',
