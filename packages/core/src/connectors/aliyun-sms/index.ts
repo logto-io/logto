@@ -18,6 +18,7 @@ export const metadata: ConnectorMetadata = {
     en: 'Aliyun Short Message Service',
     zh_CN: '阿里云短信服务',
   },
+  // TODO: add the real logo URL (LOG-1823)
   logo: './logo.png',
   description: {
     en: 'Short Message Service (SMS) has a batch sending feature and various API operations to send one-time password (OTP) messages, notification messages, and promotional messages to customers.',

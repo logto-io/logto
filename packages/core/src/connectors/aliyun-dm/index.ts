@@ -18,6 +18,7 @@ export const metadata: ConnectorMetadata = {
     en: 'Aliyun Direct Mail',
     zh_CN: '阿里云邮件推送',
   },
+  // TODO: add the real logo URL (LOG-1823)
   logo: './logo.png',
   description: {
     en: 'A simple and efficient email service to help you send transactional notifications and batch email.',
