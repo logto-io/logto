@@ -14,6 +14,11 @@ const translation = {
   },
   admin_console: {
     title: 'Admin Console',
+    copy: {
+      pending: 'Copy',
+      copying: 'Copying',
+      copied: 'Copied',
+    },
     tab_sections: {
       overview: 'Overview',
       resource_management: 'Resource Management',

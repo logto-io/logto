@@ -1,0 +1,25 @@
+@use '@/scss/underscore' as _;
+
+.container {
+  position: absolute;
+  transform: translate(-50%, -100%);
+  border-radius: 8px;
+  background: #191c1d;
+  color: #e0e3e3;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 8%);
+  padding: _.unit(2) _.unit(3);
+  font: var(--font-body);
+
+  &::after {
+    content: '';
+    display: block;
+    position: absolute;
+    border-width: 4px;
+    border-style: solid;
+    border-color: #191c1d transparent transparent;
+    left: 50%;
+    top: 100%;
+    transform: translateX(-50%);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 8%);
+  }
+}
