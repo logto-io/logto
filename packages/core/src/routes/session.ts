@@ -504,6 +504,30 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
   );
 
   router.post(
+    '/session/forgot-password/phone/verify-passcode',
+    koaGuard({ body: object({ phone: string().regex(phoneRegEx), code: string() }) }),
+    async (ctx, next) => {
+      const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
+      const { phone, code } = ctx.guard.body;
+      ctx.userLog.phone = phone;
+      ctx.userLog.type = UserLogType.ForgotPasswordPhone;
+
+      assertThat(
+        await hasUserWithPhone(phone),
+        new RequestError({ code: 'user.phone_not_exists', status: 422 })
+      );
+
+      await verifyPasscode(jti, PasscodeType.ForgotPassword, code, { phone });
+      const { id } = await findUserByPhone(phone);
+      ctx.userLog.userId = id;
+
+      await assignInteractionResults(ctx, provider, { login: { accountId: id } });
+
+      return next();
+    }
+  );
+
+  router.post(
     '/session/bind-social',
     koaGuard({
       body: object({

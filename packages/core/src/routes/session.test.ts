@@ -780,6 +780,41 @@ describe('sessionRoutes', () => {
     });
   });
 
+  describe('POST /session/forgot-password/phone/verify-passcode', () => {
+    beforeAll(() => {
+      interactionDetails.mockResolvedValueOnce({
+        jti: 'jti',
+      });
+    });
+
+    it('throw if no user can be found with phone', async () => {
+      const response = await sessionRequest
+        .post('/session/forgot-password/phone/verify-passcode')
+        .send({ phone: '13000000001', code: '1234' });
+      expect(response).toHaveProperty('statusCode', 422);
+    });
+
+    it('fail to verify passcode', async () => {
+      const response = await sessionRequest
+        .post('/session/forgot-password/phone/verify-passcode')
+        .send({ phone: '13000000000', code: '1231' });
+      expect(response).toHaveProperty('statusCode', 400);
+    });
+
+    it('verify passcode and assign result', async () => {
+      const response = await sessionRequest
+        .post('/session/forgot-password/phone/verify-passcode')
+        .send({ phone: '13000000000', code: '1234' });
+      expect(response).toHaveProperty('statusCode', 200);
+      expect(interactionResult).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.anything(),
+        expect.objectContaining({ login: { accountId: 'id' } }),
+        expect.anything()
+      );
+    });
+  });
+
   describe('POST /session/bind-social', () => {
     it('throw if session is not authorized', async () => {
       interactionDetails.mockResolvedValueOnce({});
