@@ -1,0 +1,23 @@
+@use '@/scss/underscore' as _;
+
+$logo-height: 60px;
+
+.container {
+  width: 100%;
+  @include _.flex-column;
+}
+
+.logo {
+  height: $logo-height;
+  width: auto;
+  @include _.image-align-center;
+
+  &:not(:last-child) {
+    margin-bottom: _.unit(2);
+  }
+}
+
+.context {
+  font: var(--font-subtitle-18-medium);
+  color: var(--color-font-secondary);
+}
