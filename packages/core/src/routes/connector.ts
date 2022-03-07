@@ -1,4 +1,4 @@
-import { Connectors } from '@logto/schemas';
+import { ConnectorDTO, Connectors } from '@logto/schemas';
 import { object, string } from 'zod';
 
 import { getConnectorInstances, getConnectorInstanceById } from '@/connectors';
@@ -8,7 +8,7 @@ import { updateConnector } from '@/queries/connector';
 
 import { AuthedRouter } from './types';
 
-const transpileConnectorInstance = ({ connector, metadata }: ConnectorInstance) => ({
+const transpileConnectorInstance = ({ connector, metadata }: ConnectorInstance): ConnectorDTO => ({
   ...connector,
   metadata,
 });
