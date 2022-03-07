@@ -1,19 +1,8 @@
-import { Languages } from '@logto/phrases';
-import { ArbitraryObject, Connector, PasscodeType } from '@logto/schemas';
+import { ArbitraryObject, Connector, PasscodeType, ConnectorMetadata } from '@logto/schemas';
 import { z } from 'zod';
 
-export enum ConnectorType {
-  SMS = 'SMS',
-  Email = 'Email',
-  Social = 'Social',
-}
-export interface ConnectorMetadata {
-  id: string;
-  type: ConnectorType;
-  name: Record<Languages, string>;
-  logo: string;
-  description: Record<Languages, string>;
-}
+export { ConnectorType } from '@logto/schemas';
+export type { ConnectorMetadata } from '@logto/schemas';
 
 // The name `Connector` is used for database, use `ConnectorInstance` to avoid confusing.
 export type IConnector = SmsConnector | EmailConnector | SocialConnector;
