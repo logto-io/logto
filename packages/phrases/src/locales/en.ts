@@ -95,6 +95,8 @@ const errors = {
     phone_not_exists: 'The phone number has not been registered yet.',
     identity_not_exists: 'The social account has not been registered yet.',
     identity_exists: 'The social account has been registered.',
+    username_password_signin_not_exists:
+      'Signing in with username and password has not been enabled for this user.',
   },
   password: {
     unsupported_encryption_method: 'The encryption method {{name}} is not supported.',
