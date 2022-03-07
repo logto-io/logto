@@ -53,6 +53,20 @@ const translation = {
       api_name: 'API Name',
       api_identifier: 'API Identifier',
     },
+    connectors: {
+      title: 'Connectors',
+      subtitle: 'Setup connectors to enable passwordless and social sign in experience.',
+      create: 'Add Connector',
+      connector_name: 'Connector Name',
+      connector_status: 'Status',
+      connector_status_enabled: 'Enabled',
+      connector_status_disabled: 'Disabled',
+      type: {
+        email: 'Email Sender',
+        sms: 'SMS Sender',
+        social: 'Social',
+      },
+    },
   },
 };
 

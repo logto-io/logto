@@ -1,0 +1,34 @@
+@use '@/scss/underscore' as _;
+
+.headline {
+  display: flex;
+  justify-content: space-between;
+}
+
+.table {
+  margin-top: _.unit(6);
+  width: 100%;
+
+  tbody tr.clickable {
+    cursor: pointer;
+
+    &:hover {
+      background: var(--color-table-row-selected);
+    }
+  }
+}
+
+.connectorName {
+  width: 360px;
+}
+
+a.link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.logo {
+  width: 50px;
+  height: 50px;
+  border-radius: 5px;
+}
