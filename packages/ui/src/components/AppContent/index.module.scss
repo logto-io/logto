@@ -30,6 +30,22 @@
     color var(--transition-default-function);
 }
 
+.dark {
+  /* ===== Legacy Styling ===== */
+  /* Color */
+  --color-heading: #f3f6f9;
+  --color-body: #dadae0;
+  --color-secondary: #b3b7ba;
+  --color-placeholder: #888;
+  --color-control-background: #45484a;
+  --color-control-background-disabled: #65686a;
+  --color-background: #101419;
+
+  /* Shadow */
+  --shadow-card: 2px 2px 24px rgb(59, 61, 63, 25%);
+  --shadow-control: 1px 1px 2px rgb(221, 221, 221, 25%);
+}
+
 .light {
   /* Color */
   --color-primary: #6139f6;
