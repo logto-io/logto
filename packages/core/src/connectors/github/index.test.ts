@@ -62,7 +62,7 @@ describe('validateConfig', () => {
 });
 
 describe('getUserInfo', () => {
-  it('shoud get valid SocialUserInfo', async () => {
+  it('should get valid SocialUserInfo', async () => {
     nock(userInfoEndpoint).get('').reply(200, {
       id: 1,
       avatar_url: 'https://github.com/images/error/octocat_happy.gif',
