@@ -1,24 +1,17 @@
-import React, { useState, useCallback } from 'react';
+import React from 'react';
 
 import * as styles from './index.module.scss';
 
 export type Props = {
   logo: string;
-  context?: string;
+  headline?: string;
 };
 
-const BrandingHeader = ({ logo, context }: Props) => {
-  const [imgError, setImgError] = useState(false);
-
-  // TODO: fallback to logto
-  const hideLogo = useCallback(() => {
-    setImgError(true);
-  }, [setImgError]);
-
+const BrandingHeader = ({ logo, headline }: Props) => {
   return (
     <div className={styles.container}>
-      {!imgError && <img className={styles.logo} alt="app logo" src={logo} onError={hideLogo} />}
-      {context && <div className={styles.context}>{context}</div>}
+      <img className={styles.logo} alt="app logo" src={logo} />
+      {headline && <div className={styles.headline}>{headline}</div>}
     </div>
   );
 };
