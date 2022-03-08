@@ -68,7 +68,7 @@ const Applications = () => {
               <td>
                 <ItemPreview
                   title={name}
-                  subtitle={String(t(applicationTypeI18nKey[type]))}
+                  subtitle={t(`${applicationTypeI18nKey[type]}.title`)}
                   icon={<ImagePlaceholder />}
                 />
               </td>

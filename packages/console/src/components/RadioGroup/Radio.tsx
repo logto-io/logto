@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import React, { forwardRef, ReactNode } from 'react';
+import React, { ReactNode } from 'react';
 
 import * as styles from './index.module.scss';
 
@@ -15,8 +15,6 @@ const Check = () => (
   </svg>
 );
 
-// https://github.com/yannickcr/eslint-plugin-react/issues/2856
-/* eslint-disable react/require-default-props */
 export type Props = {
   value: string;
   title: string;
@@ -25,28 +23,18 @@ export type Props = {
   isChecked?: boolean;
   onClick?: () => void;
 };
-/* eslint-enable react/require-default-props */
 
-const Radio = forwardRef<HTMLInputElement, Props>(
-  ({ value, title, name, children, isChecked, onClick }, reference) => {
-    return (
-      <div className={classNames(styles.radio, isChecked && styles.checked)} onClick={onClick}>
-        <input
-          ref={reference}
-          readOnly
-          type="radio"
-          name={name}
-          value={value}
-          checked={isChecked}
-        />
-        <div className={classNames(styles.headline, !children && styles.center)}>
-          <div className={styles.title}>{title}</div>
-          <Check />
-        </div>
-        {children}
+const Radio = ({ value, title, name, children, isChecked, onClick }: Props) => {
+  return (
+    <div className={classNames(styles.radio, isChecked && styles.checked)} onClick={onClick}>
+      <input readOnly type="radio" name={name} value={value} checked={isChecked} />
+      <div className={classNames(styles.headline, !children && styles.center)}>
+        <div className={styles.title}>{title}</div>
+        <Check />
       </div>
-    );
-  }
-);
+      {children}
+    </div>
+  );
+};
 
 export default Radio;
