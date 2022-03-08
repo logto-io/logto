@@ -44,6 +44,7 @@ const SignIn: FC = () => {
           isDisabled={loading}
           placeholder={t('sign_in.username')}
           value={username}
+          className={styles.inputField}
           onChange={setUsername}
         />
         <Input
@@ -53,6 +54,7 @@ const SignIn: FC = () => {
           placeholder={t('sign_in.password')}
           type="password"
           value={password}
+          className={styles.inputField}
           onChange={setPassword}
         />
         {error && (

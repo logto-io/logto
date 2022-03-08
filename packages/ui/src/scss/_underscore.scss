@@ -13,3 +13,7 @@
   object-fit: contain;
   object-position: center;
 }
+
+@function border($color: transparent, $width: 1) {
+  @return #{$width}px solid #{$color};
+}

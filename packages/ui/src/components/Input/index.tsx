@@ -1,6 +1,7 @@
 import classNames from 'classnames';
 import React from 'react';
 
+import CloseIcon from '../Icons/CloseIcon';
 import * as styles from './index.module.scss';
 
 export type Props = {
@@ -25,18 +26,28 @@ const Input = ({
   onChange,
 }: Props) => {
   return (
-    <input
-      name={name}
-      disabled={isDisabled}
-      className={classNames(styles.input, className)}
-      placeholder={placeholder}
-      type={type}
-      value={value}
-      autoComplete={autoComplete}
-      onChange={({ target: { value } }) => {
-        onChange(value);
-      }}
-    />
+    <div className={classNames(styles.wrapper, className)}>
+      <input
+        name={name}
+        disabled={isDisabled}
+        className={styles.input}
+        placeholder={placeholder}
+        type={type}
+        value={value}
+        autoComplete={autoComplete}
+        onChange={({ target: { value } }) => {
+          onChange(value);
+        }}
+      />
+      {value && (
+        <CloseIcon
+          className={classNames(styles.clearBtn)}
+          onClick={() => {
+            onChange('');
+          }}
+        />
+      )}
+    </div>
   );
 };
 
