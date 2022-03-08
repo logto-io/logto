@@ -518,8 +518,6 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
       );
       const { id } = await findUserByEmail(email);
       ctx.userLog.userId = id;
-      const { usernameAndPassword } = await findUserSignInMethodsById(id);
-      assertThat(usernameAndPassword, 'user.username_password_signin_not_exists');
 
       const passcode = await createPasscode(jti, PasscodeType.ForgotPassword, { email });
       await sendPasscode(passcode);

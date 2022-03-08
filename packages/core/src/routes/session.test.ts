@@ -781,10 +781,6 @@ describe('sessionRoutes', () => {
   });
 
   describe('POST /session/forgot-password/email/send-passcode', () => {
-    afterEach(() => {
-      findUserSignInMethodsByIdPlaceHolder.mockClear();
-    });
-
     beforeAll(() => {
       interactionDetails.mockResolvedValueOnce({
         jti: 'jti',
@@ -798,26 +794,7 @@ describe('sessionRoutes', () => {
       expect(response).toHaveProperty('statusCode', 422);
     });
 
-    it('throw if found user can not sign-in with username and password', async () => {
-      findUserSignInMethodsByIdPlaceHolder.mockResolvedValue({
-        usernameAndPassword: false,
-        emailPasswordless: false,
-        phonePasswordless: false,
-        social: false,
-      });
-      const response = await sessionRequest
-        .post('/session/forgot-password/email/send-passcode')
-        .send({ email: 'a@a.com' });
-      expect(response).toHaveProperty('statusCode', 400);
-    });
-
     it('create and send passcode', async () => {
-      findUserSignInMethodsByIdPlaceHolder.mockResolvedValue({
-        usernameAndPassword: true,
-        emailPasswordless: false,
-        phonePasswordless: false,
-        social: false,
-      });
       const response = await sessionRequest
         .post('/session/forgot-password/email/send-passcode')
         .send({ email: 'a@a.com' });
