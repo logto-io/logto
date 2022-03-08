@@ -35,10 +35,10 @@
   "devDependencies": {
     "@parcel/core": "^2.3.1",
     "@parcel/transformer-sass": "^2.3.1",
-    "@silverhand/eslint-config": "^0.9.1",
-    "@silverhand/eslint-config-react": "^0.9.3",
-    "@silverhand/ts-config": "^0.9.1",
-    "@silverhand/ts-config-react": "^0.9.3",
+    "@silverhand/eslint-config": "^0.9.4",
+    "@silverhand/eslint-config-react": "^0.9.5",
+    "@silverhand/ts-config": "^0.9.4",
+    "@silverhand/ts-config-react": "^0.9.5",
     "@types/lodash.kebabcase": "^4.1.6",
     "@types/react": "^17.0.14",
     "@types/react-dom": "^17.0.9",
@@ -56,25 +56,7 @@
     "@/*": "./src/$1"
   },
   "eslintConfig": {
-    "extends": "@silverhand/react",
-    "overrides": [
-      {
-        "files": [
-          "*.tsx"
-        ],
-        "rules": {
-          "unicorn/no-useless-undefined": [
-            "error",
-            {
-              "checkArguments": false
-            }
-          ]
-        }
-      }
-    ],
-    "rules": {
-      "react/button-has-type": "off"
-    }
+    "extends": "@silverhand/react"
   },
   "stylelint": {
     "extends": "@silverhand/eslint-config-react/.stylelintrc"
