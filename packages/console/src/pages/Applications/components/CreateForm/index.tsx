@@ -67,7 +67,7 @@ const CreateForm = ({ onClose }: Props) => {
             ))}
           </RadioGroup>
           {errors.type?.type === 'required' && (
-            <div className={styles.error}>You have to select an application to proceed.</div>
+            <div className={styles.error}>{t('applications.no_application_type_selected')}</div>
           )}
         </FormField>
         <FormField
