@@ -1,4 +1,7 @@
 const translation = {
+  general: {
+    placeholder: 'Placeholder',
+  },
   sign_in: {
     action: 'Sign In',
     loading: 'Signing in...',

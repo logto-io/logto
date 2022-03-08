@@ -1,6 +1,9 @@
 import en from './en';
 
 const translation = {
+  general: {
+    placeholder: '占位符',
+  },
   sign_in: {
     action: '登录',
     loading: '登录中...',
