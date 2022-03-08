@@ -3,6 +3,7 @@ import { conditional } from '@silverhand/essentials/lib/utilities/conditional.js
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Modal from 'react-modal';
+import { useNavigate } from 'react-router-dom';
 import useSWR from 'swr';
 
 import Button from '@/components/Button';
@@ -23,6 +24,7 @@ const Applications = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { data, error, mutate } = useSWR<Application[], RequestError>('/api/applications');
   const isLoading = !data && !error;
+  const navigate = useNavigate();
 
   return (
     <Card>
@@ -69,7 +71,13 @@ const Applications = () => {
             </tr>
           )}
           {data?.map(({ id, name, type }) => (
-            <tr key={id}>
+            <tr
+              key={id}
+              className={styles.clickable}
+              onClick={() => {
+                navigate(`/applications/${id}`);
+              }}
+            >
               <td>
                 <ItemPreview
                   title={name}
