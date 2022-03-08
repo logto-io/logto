@@ -1,0 +1,30 @@
+@use '@/scss/underscore' as _;
+
+.button {
+  display: inline-block;
+  font: var(--font-caption);
+  color: var(--color-primary);
+  padding: _.unit(0.5) _.unit(1);
+  border-radius: _.unit(1);
+  text-decoration: none;
+
+  svg {
+    fill: var(--color-primary);
+  }
+
+  &:active {
+    background: var(--color-primary-95);
+  }
+
+  &:hover {
+    color: var(--color-primary-30);
+
+    svg {
+      fill: var(--color-primary-30);
+    }
+  }
+
+  &:focus {
+    outline: 2px solid var(--color-primary-80);
+  }
+}

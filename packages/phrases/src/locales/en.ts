@@ -1,4 +1,7 @@
 const translation = {
+  general: {
+    placeholder: 'Placeholder',
+  },
   sign_in: {
     action: 'Sign In',
     loading: 'Signing in...',
@@ -87,6 +90,9 @@ const translation = {
         sms: 'SMS Sender',
         social: 'Social',
       },
+    },
+    application_details: {
+      back_to_applications: 'Back to Applications',
     },
   },
 };

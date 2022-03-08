@@ -1,11 +1,23 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 import defaultPlaceholder from '@/assets/images/default-placeholder.svg';
 
 import * as styles from './index.module.scss';
 
-const ImagePlaceholder = () => {
-  return <img src={defaultPlaceholder} className={styles.placeholder} />;
+type Props = {
+  size?: number;
+  borderRadius?: number;
+};
+
+const ImagePlaceholder = ({ size = 50, borderRadius = 8 }: Props) => {
+  const { t } = useTranslation();
+
+  return (
+    <div className={styles.container} style={{ width: size, height: size, borderRadius }}>
+      <img alt={t('general.placeholder')} src={defaultPlaceholder} />
+    </div>
+  );
 };
 
 export default ImagePlaceholder;
