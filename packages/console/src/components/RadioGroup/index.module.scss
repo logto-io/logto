@@ -15,6 +15,7 @@
   > .radio {
     position: relative;
     flex: 1;
+    min-width: 180px;
     max-width: 220px;
     padding: _.unit(5);
     display: flex;
@@ -24,6 +25,12 @@
     outline: none;
     user-select: none;
     cursor: pointer;
+    transition: border 0.2s ease-in-out;
+
+    &:focus,
+    &:hover {
+      border-color: var(--color-primary);
+    }
 
     &:not(:first-child) {
       margin-left: _.unit(8);

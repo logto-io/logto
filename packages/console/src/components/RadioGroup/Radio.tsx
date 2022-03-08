@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import React, { ReactNode } from 'react';
+import React, { KeyboardEventHandler, ReactNode, useCallback } from 'react';
 
 import * as styles from './index.module.scss';
 
@@ -22,12 +22,27 @@ export type Props = {
   children?: ReactNode;
   isChecked?: boolean;
   onClick?: () => void;
+  tabIndex?: number;
 };
 
-const Radio = ({ value, title, name, children, isChecked, onClick }: Props) => {
+const Radio = ({ value, title, name, children, isChecked, onClick, tabIndex }: Props) => {
+  const handleKeyPress: KeyboardEventHandler<HTMLDivElement> = useCallback(
+    ({ key }) => {
+      if ([' ', '\n'].includes(key)) {
+        onClick?.();
+      }
+    },
+    [onClick]
+  );
+
   return (
-    <div className={classNames(styles.radio, isChecked && styles.checked)} onClick={onClick}>
-      <input readOnly type="radio" name={name} value={value} checked={isChecked} />
+    <div
+      className={classNames(styles.radio, isChecked && styles.checked)}
+      tabIndex={tabIndex}
+      onClick={onClick}
+      onKeyPress={handleKeyPress}
+    >
+      <input readOnly disabled type="radio" name={name} value={value} checked={isChecked} />
       <div className={classNames(styles.headline, !children && styles.center)}>
         <div className={styles.title}>{title}</div>
         <Check />
