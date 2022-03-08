@@ -1,8 +1,7 @@
-import { AdminConsoleKey } from '@logto/phrases';
 import { ApplicationType } from '@logto/schemas';
 
-export const applicationTypeI18nKey: Record<ApplicationType, AdminConsoleKey> = {
+export const applicationTypeI18nKey = Object.freeze({
   [ApplicationType.Native]: 'applications.type.native',
   [ApplicationType.SPA]: 'applications.type.spa',
-  [ApplicationType.Traditional]: 'applications.type.tranditional',
-};
+  [ApplicationType.Traditional]: 'applications.type.traditional',
+} as const);

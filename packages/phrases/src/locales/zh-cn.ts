@@ -21,6 +21,9 @@ const translation = {
       copying: '拷贝中',
       copied: '已拷贝',
     },
+    form: {
+      required: '必填',
+    },
     tab_sections: {
       overview: '概览',
       resource_management: '资源管理',
@@ -46,11 +49,24 @@ const translation = {
         'Setup a mobile, single page or traditional application to use Logto for authentication.',
       create: 'Create Application',
       application_name: 'Application Name',
+      select_application_type: 'Select an application type',
       client_id: 'Client ID',
       type: {
-        native: 'Native App',
-        spa: 'Single Page App',
-        tranditional: 'Tranditional Web App',
+        native: {
+          title: 'Native',
+          subtitle: 'Mobile, desktop, CLI and smart device apps running natively.',
+          description: 'E.g.: iOS, Electron, Apple TV apps',
+        },
+        spa: {
+          title: 'Single Page App',
+          subtitle: 'A JavaScript front-end app that uses an API.',
+          description: 'E.g.: Angular, React, Vue',
+        },
+        traditional: {
+          title: 'Tranditional Web',
+          subtitle: 'Traditional web app using redirects.',
+          description: 'E.g.: Node.js, Express, ASP.NET, Java, PHP',
+        },
       },
     },
     api_resources: {

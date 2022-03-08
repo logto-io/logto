@@ -1,0 +1,13 @@
+.content {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translateX(-50%, -50%);
+  outline: none;
+}
+
+.overlay {
+  position: fixed;
+  background: rgba(0, 0, 0, 40%);
+  inset: 0;
+}

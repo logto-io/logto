@@ -1,5 +1,4 @@
-import classNames from 'classnames';
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useEffect } from 'react';
 
 import * as styles from './index.module.scss';
 
@@ -11,7 +10,16 @@ type Props = {
 };
 
 const AppContent = ({ children, theme }: Props) => {
-  return <div className={classNames(styles.app, styles.web, styles[theme])}>{children}</div>;
+  useEffect(() => {
+    const classes = [styles.web, styles[theme]].filter((value): value is string => Boolean(value));
+    document.body.classList.add(...classes);
+
+    return () => {
+      document.body.classList.remove(...classes);
+    };
+  }, [theme]);
+
+  return <div className={styles.app}>{children}</div>;
 };
 
 export default AppContent;
