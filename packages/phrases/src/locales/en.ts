@@ -163,6 +163,8 @@ const errors = {
     template_not_found: 'Unable to find correct template in connector config.',
     access_token_invalid: "Connector's access token is invalid.",
     oauth_code_invalid: 'Unable to get access token, please check authorization code.',
+    more_than_one_sms: 'The number of SMS connectors is larger then 1.',
+    more_than_one_email: 'The number of Email connectors is larger then 1.',
   },
   passcode: {
     phone_email_empty: 'Both phone and email are empty.',
