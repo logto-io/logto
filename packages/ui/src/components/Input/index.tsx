@@ -12,6 +12,7 @@ export type Props = {
   placeholder?: string;
   type?: InputType;
   value: string;
+  hasError?: boolean;
   onChange: (value: string) => void;
 };
 
@@ -23,6 +24,7 @@ const Input = ({
   placeholder,
   type = 'text',
   value,
+  hasError = false,
   onChange,
 }: Props) => {
   return (
@@ -30,7 +32,7 @@ const Input = ({
       <input
         name={name}
         disabled={isDisabled}
-        className={styles.input}
+        className={classNames(styles.input, hasError && styles.error)}
         placeholder={placeholder}
         type={type}
         value={value}

@@ -24,6 +24,11 @@
   }
 }
 
+.error,
+.error:focus {
+  border: _.border(var(--color-error));
+}
+
 .clearBtn {
   position: absolute;
   right: 0;
