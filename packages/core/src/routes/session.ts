@@ -504,11 +504,17 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
   );
 
   router.post(
-    '/session/forgot-password/phone/verify-passcode',
-    koaGuard({ body: object({ phone: string().regex(phoneRegEx), code: string() }) }),
+    '/session/forgot-password/phone/verify-passcode-and-reset-password',
+    koaGuard({
+      body: object({
+        phone: string().regex(phoneRegEx),
+        code: string(),
+        password: string().regex(passwordRegEx),
+      }),
+    }),
     async (ctx, next) => {
       const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
-      const { phone, code } = ctx.guard.body;
+      const { phone, code, password } = ctx.guard.body;
       ctx.userLog.phone = phone;
       ctx.userLog.type = UserLogType.ForgotPasswordPhone;
 
@@ -521,6 +527,13 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
       const { id } = await findUserByPhone(phone);
       ctx.userLog.userId = id;
 
+      const { passwordEncryptionSalt, passwordEncrypted, passwordEncryptionMethod } =
+        encryptUserPassword(id, password);
+      await updateUserById(id, {
+        passwordEncryptionSalt,
+        passwordEncrypted,
+        passwordEncryptionMethod,
+      });
       await assignInteractionResults(ctx, provider, { login: { accountId: id } });
 
       return next();
