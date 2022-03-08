@@ -88,6 +88,9 @@ const translation = {
         social: 'Social',
       },
     },
+    application_details: {
+      back_to_applications: 'Back to Applications',
+    },
   },
 };
 

@@ -26,7 +26,7 @@ const ApplicationDetails = () => {
       <Link to="/applications" className={classNames(buttonStyles.button, styles.button)}>
         <div className={styles.body}>
           <Back />
-          <div>Back to Applications</div>
+          <div>{t('application_details.back_to_applications')}</div>
         </div>
       </Link>
       {isLoading && <div>loading</div>}

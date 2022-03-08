@@ -33,7 +33,7 @@ const translation = {
     tabs: {
       get_started: '开始使用',
       dashboard: '仪表盘',
-      applications: '应用',
+      applications: '应用集',
       api_resources: 'API 资源',
       sign_in_experience: '登录体验',
       connectors: '连接器',
@@ -44,7 +44,7 @@ const translation = {
       settings: '设置',
     },
     applications: {
-      title: 'Applications',
+      title: '应用集',
       subtitle:
         'Setup a mobile, single page or traditional application to use Logto for authentication.',
       create: 'Create Application',
@@ -89,6 +89,9 @@ const translation = {
         sms: '短信服务商',
         social: '社会化登录',
       },
+    },
+    application_details: {
+      back_to_applications: '返回应用集',
     },
   },
 };
