@@ -1,10 +1,11 @@
-import { ConnectorDTO, Connectors } from '@logto/schemas';
+import { ConnectorDTO, Connectors, ConnectorType } from '@logto/schemas';
 import { object, string } from 'zod';
 
 import { getConnectorInstances, getConnectorInstanceById } from '@/connectors';
 import { ConnectorInstance } from '@/connectors/types';
 import koaGuard from '@/middleware/koa-guard';
 import { updateConnector } from '@/queries/connector';
+import assertThat from '@/utils/assert-that';
 
 import { AuthedRouter } from './types';
 
@@ -16,6 +17,21 @@ const transpileConnectorInstance = ({ connector, metadata }: ConnectorInstance):
 export default function connectorRoutes<T extends AuthedRouter>(router: T) {
   router.get('/connectors', async (ctx, next) => {
     const connectorInstances = await getConnectorInstances();
+
+    assertThat(
+      connectorInstances.filter(
+        (connector) =>
+          connector.connector.enabled && connector.metadata.type === ConnectorType.Email
+      ).length <= 1,
+      'connector.more_than_one_email'
+    );
+    assertThat(
+      connectorInstances.filter(
+        (connector) => connector.connector.enabled && connector.metadata.type === ConnectorType.SMS
+      ).length <= 1,
+      'connector.more_than_one_sms'
+    );
+
     ctx.body = connectorInstances.map((connectorInstance) => {
       return transpileConnectorInstance(connectorInstance);
     });
@@ -49,6 +65,26 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
         body: { enabled },
       } = ctx.guard;
       const { metadata } = await getConnectorInstanceById(id);
+
+      // Only allow one enabled connector for SMS and Email.
+      // disable other connectors before enable this one.
+      if (
+        enabled &&
+        (metadata.type === ConnectorType.SMS || metadata.type === ConnectorType.Email)
+      ) {
+        const connectors = await getConnectorInstances();
+        await Promise.all(
+          connectors
+            .filter(
+              (connector) =>
+                connector.metadata.type === metadata.type && connector.connector.enabled
+            )
+            .map(async ({ connector: { id } }) =>
+              updateConnector({ set: { enabled: false }, where: { id } })
+            )
+        );
+      }
+
       const connector = await updateConnector({ set: { enabled }, where: { id } });
       ctx.body = { ...connector, metadata };
 

@@ -163,6 +163,8 @@ const errors = {
     template_not_found: '无法从连接器配置中找到对应的模板。',
     access_token_invalid: '当前连接器的 access_token 无效。',
     oauth_code_invalid: '无法获取 access_token，请检查授权 code 是否有效。',
+    more_than_one_sms: '同时存在超过 1 个短信连接器。',
+    more_than_one_email: '同时存在超过 1 个邮件连接器。',
   },
   passcode: {
     phone_email_empty: '手机号与邮箱地址均为空。',
