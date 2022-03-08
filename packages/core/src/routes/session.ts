@@ -530,11 +530,17 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
   );
 
   router.post(
-    '/session/forgot-password/email/verify-passcode',
-    koaGuard({ body: object({ email: string().regex(emailRegEx), code: string() }) }),
+    '/session/forgot-password/email/verify-passcode-and-reset-password',
+    koaGuard({
+      body: object({
+        email: string().regex(emailRegEx),
+        code: string(),
+        password: string().regex(passwordRegEx),
+      }),
+    }),
     async (ctx, next) => {
       const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
-      const { email, code } = ctx.guard.body;
+      const { email, code, password } = ctx.guard.body;
       ctx.userLog.email = email;
       ctx.userLog.type = UserLogType.ForgotPasswordEmail;
 

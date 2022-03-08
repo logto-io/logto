@@ -826,7 +826,7 @@ describe('sessionRoutes', () => {
     });
   });
 
-  describe('POST /session/forgot-password/email/verify-passcode', () => {
+  describe('POST /session/forgot-password/email/verify-passcode-and-reset-password', () => {
     beforeAll(() => {
       interactionDetails.mockResolvedValueOnce({
         jti: 'jti',
@@ -835,22 +835,22 @@ describe('sessionRoutes', () => {
 
     it('throw if no user can be found with email', async () => {
       const response = await sessionRequest
-        .post('/session/forgot-password/email/verify-passcode')
-        .send({ email: 'b@a.com', code: '1234' });
+        .post('/session/forgot-password/email/verify-passcode-and-reset-password')
+        .send({ email: 'b@a.com', code: '1234', password: '123456' });
       expect(response).toHaveProperty('statusCode', 422);
     });
 
     it('fail to verify passcode', async () => {
       const response = await sessionRequest
-        .post('/session/forgot-password/email/verify-passcode')
-        .send({ email: 'a@a.com', code: '1231' });
+        .post('/session/forgot-password/email/verify-passcode-and-reset-password')
+        .send({ email: 'a@a.com', code: '1231', password: '123456' });
       expect(response).toHaveProperty('statusCode', 400);
     });
 
     it('verify passcode, reset password and assign result', async () => {
       const response = await sessionRequest
-        .post('/session/forgot-password/email/verify-passcode')
-        .send({ email: 'a@a.com', code: '1234' });
+        .post('/session/forgot-password/email/verify-passcode-and-reset-password')
+        .send({ email: 'a@a.com', code: '1234', password: '123456' });
       expect(response).toHaveProperty('statusCode', 200);
       expect(updateUserById).toHaveBeenCalledWith('id', {
         passwordEncryptionSalt: 'user1',
