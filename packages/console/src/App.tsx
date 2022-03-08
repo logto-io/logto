@@ -11,6 +11,7 @@ import Topbar from './components/Topbar';
 import initI18n from './i18n/init';
 import ApiResources from './pages/ApiResources';
 import Applications from './pages/Applications';
+import Connectors from './pages/Connectors';
 import Connector from './pages/Connectors/Connector';
 import { fetcher } from './swr';
 
@@ -38,6 +39,7 @@ const Main = () => {
             <Routes>
               <Route path="api-resources" element={<ApiResources />} />
               <Route path="applications" element={<Applications />} />
+              <Route path="connectors" element={<Connectors />} />
               <Route path="connectors/:connectorId" element={<Connector />} />
             </Routes>
           </Content>

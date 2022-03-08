@@ -22,13 +22,12 @@ export const metadata: ConnectorMetadata = {
   type: ConnectorType.Social,
   name: {
     en: 'Sign In with GitHub',
-    zh_CN: 'GitHub登录',
+    'zh-CN': 'GitHub登录',
   },
-  // TODO: add the real logo URL (LOG-1823)
-  logo: './logo.png',
+  logo: 'https://user-images.githubusercontent.com/5717882/156983224-7ea0296b-38fa-419d-9515-67e8a9612e09.png',
   description: {
     en: 'Sign In with GitHub',
-    zh_CN: 'GitHub登录',
+    'zh-CN': 'GitHub登录',
   },
 };
 
