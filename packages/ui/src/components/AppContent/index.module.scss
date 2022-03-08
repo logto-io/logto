@@ -2,12 +2,12 @@
   position: absolute;
   inset: 0;
   background: var(--color-background);
-  color: var(--color-body);
+  color: var(--color-font-primary);
 }
 
 .universal {
+  /* ===== Legacy Styling ===== */
   /* Color */
-  --color-gradient: linear-gradient(12.07deg, #3c4ce3 8.81%, #717ce0 93.49%);
   --color-button-background: #3c4ce3;
   --color-button-background-disabled: #626fe8;
   --color-button-background-hover: #2234df;
@@ -22,10 +22,13 @@
 
   /* Transition */
   --transition-default-function: 0.2s ease-in-out;
-  --transition-default-control: background var(--transition-default-function), color var(--transition-default-function);
+  --transition-default-control:
+    background var(--transition-default-function),
+    color var(--transition-default-function);
 }
 
 .dark {
+  /* ===== Legacy Styling ===== */
   /* Color */
   --color-heading: #f3f6f9;
   --color-body: #dadae0;
@@ -42,22 +45,35 @@
 
 .light {
   /* Color */
+  --color-primary: #6139f6;
+  --color-gradient: linear-gradient(69.73deg, #492ef3 5.52%, #cf69ff 94.22%);
+  --color-background: #fdfdff;
+
+  /* Font Color */
+  --color-font-primary: #111;
+  --color-font-secondary: #444;
+  --color-font-tertiary: #777;
+
+  /* ===== Legacy Styling ===== */
+
   --color-heading: #333;
   --color-body: #555;
   --color-secondary: #888;
   --color-placeholder: #aaa;
   --color-control-background: #f5f8fa;
   --color-control-background-disabled: #eaeaea;
-  --color-background: #fdfdff;
 
   /* Shadow */
   --shadow-card: 2px 2px 24px rgb(187, 189, 191, 20%);
   --shadow-control: 1px 1px 2px rgb(221, 221, 221, 25%);
 }
 
-$font-family: 'PingFang SC', 'SF Pro Text', sans-serif;
+$font-family: 'PingFang SC', 'SF Pro Display', sans-serif;
 
 .mobile {
+  --font-subtitle-18-medium: 500 18px/21px #{$font-family};
+
+  /* ===== Legacy Styling ===== */
   --font-headline: 600 40px/56px #{$font-family};
   --font-heading-1: 600 28px/39px #{$font-family};
   --font-heading-2: 600 20px/28px #{$font-family};

@@ -1,16 +1,15 @@
 @use '@/scss/underscore' as _;
 
-
 .wrapper {
   position: relative;
   padding: _.unit(8);
   height: 100%;
-  @include _.flex-colomn;
+  @include _.flex-column;
 }
 
 .form {
   width: 100%;
-  @include _.flex-colomn;
+  @include _.flex-column;
 
   > * {
     margin-bottom: _.unit(1.5);

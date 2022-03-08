@@ -2,7 +2,7 @@
   @return #{$factor * 4}#{$unit};
 }
 
-@mixin flex-colomn {
+@mixin flex-column {
   display: flex;
   flex-direction: column;
   align-items: center;
