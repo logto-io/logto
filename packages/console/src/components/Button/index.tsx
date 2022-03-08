@@ -6,14 +6,14 @@ import { useTranslation } from 'react-i18next';
 import * as styles from './index.module.scss';
 
 type Props = Omit<HTMLProps<HTMLButtonElement>, 'type' | 'size' | 'title'> & {
-  buttonType?: 'button' | 'submit' | 'reset';
+  htmlType?: 'button' | 'submit' | 'reset';
   title: I18nKey;
   type?: 'primary' | 'danger';
   size?: 'small' | 'medium' | 'large';
 };
 
 const Button = ({
-  buttonType = 'button',
+  htmlType = 'button',
   type = 'primary',
   size = 'medium',
   title,
@@ -24,7 +24,7 @@ const Button = ({
   return (
     <button
       className={classNames(styles.button, styles[type], styles[size])}
-      type={buttonType}
+      type={htmlType}
       {...rest}
     >
       {t(title)}

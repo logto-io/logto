@@ -12,7 +12,7 @@ type Props = {
 
 const RadioGroup = ({ name, children, value, onChange }: Props) => {
   return (
-    <div className={styles.radioGroup}>
+    <div className={styles.radioGroup} tabIndex={0}>
       {Children.map(children, (child) => {
         if (!isValidElement(child) || child.type !== Radio) {
           return child;

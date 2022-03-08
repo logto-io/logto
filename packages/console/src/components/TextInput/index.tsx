@@ -6,16 +6,18 @@ import * as styles from './index.module.scss';
 // https://github.com/yannickcr/eslint-plugin-react/issues/2856
 /* eslint-disable react/require-default-props */
 type Props = HTMLProps<HTMLInputElement> & {
-  error?: boolean;
+  hasError?: boolean;
 };
 /* eslint-enable react/require-default-props */
 
-const TextInput = forwardRef<HTMLInputElement, Props>(({ error = false, ...rest }, reference) => {
-  return (
-    <div className={classNames(styles.container, error && styles.error)}>
-      <input type="text" {...rest} ref={reference} />
-    </div>
-  );
-});
+const TextInput = forwardRef<HTMLInputElement, Props>(
+  ({ hasError = false, ...rest }, reference) => {
+    return (
+      <div className={classNames(styles.container, hasError && styles.error)}>
+        <input type="text" {...rest} ref={reference} />
+      </div>
+    );
+  }
+);
 
 export default TextInput;

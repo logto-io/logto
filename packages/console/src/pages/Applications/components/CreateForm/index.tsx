@@ -1,4 +1,5 @@
-import { ApplicationType } from '@logto/schemas';
+import { Application, ApplicationType } from '@logto/schemas';
+import ky from 'ky';
 import React from 'react';
 import { useController, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -75,7 +76,7 @@ const CreateForm = ({ onClose }: Props) => {
           <TextInput />
         </FormField>
         <div className={styles.submit} {...register('description')}>
-          <Button buttonType="submit" title="admin_console.applications.create" size="large" />
+          <Button htmlType="submit" title="admin_console.applications.create" size="large" />
         </div>
       </form>
     </Card>
