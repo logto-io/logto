@@ -1,4 +1,5 @@
 import { Application } from '@logto/schemas';
+import { conditional } from '@silverhand/essentials/lib/utilities/conditional.js';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Modal from 'react-modal';
@@ -20,7 +21,7 @@ import * as styles from './index.module.scss';
 const Applications = () => {
   const [isCreateFormOpen, setIsCreateFormOpen] = useState(false);
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { data, error } = useSWR<Application[], RequestError>('/api/applications');
+  const { data, error, mutate } = useSWR<Application[], RequestError>('/api/applications');
   const isLoading = !data && !error;
 
   return (
@@ -39,8 +40,12 @@ const Applications = () => {
           overlayClassName={modalStyles.overlay}
         >
           <CreateForm
-            onClose={() => {
+            onClose={(createdApp) => {
               setIsCreateFormOpen(false);
+
+              if (createdApp) {
+                void mutate(conditional(data && [...data, createdApp]));
+              }
             }}
           />
         </Modal>

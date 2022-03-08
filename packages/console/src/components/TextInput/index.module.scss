@@ -1,0 +1,36 @@
+@use '@/scss/underscore' as _;
+
+.container {
+  input {
+    width: 100%;
+    appearance: none;
+    padding: _.unit(2) _.unit(3);
+    color: var(--color-component-text);
+    border-radius: 6px;
+    border: 1px solid var(--color-component-border);
+    outline: 2px solid transparent;
+    font: var(--font-body-2);
+    transition-property: outline, border;
+    transition-timing-function: ease-in-out;
+    transition-duration: 0.2s;
+
+    &::placeholder {
+      color: var(--color-component-caption);
+    }
+
+    &:focus {
+      border-color: var(--color-primary);
+      outline-color: var(--color-primary-80);
+    }
+
+    &:disabled {
+      background: var(--color-surface);
+      color: var(--color-disabled);
+      border-color: var(--color-disabled);
+    }
+  }
+
+  &.error input {
+    border-color: var(--color-error);
+  }
+}

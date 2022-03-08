@@ -50,7 +50,8 @@ const translation = {
         'Setup a mobile, single page or traditional application to use Logto for authentication.',
       create: 'Create Application',
       application_name: 'Application Name',
-      select_application_type: 'Select an application type',
+      application_description: 'Application Description',
+      select_application_type: 'Select an Application Type',
       client_id: 'Client ID',
       type: {
         native: {

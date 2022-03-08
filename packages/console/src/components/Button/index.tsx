@@ -6,18 +6,25 @@ import { useTranslation } from 'react-i18next';
 import * as styles from './index.module.scss';
 
 type Props = Omit<HTMLProps<HTMLButtonElement>, 'type' | 'size' | 'title'> & {
+  htmlType?: 'button' | 'submit' | 'reset';
   title: I18nKey;
   type?: 'primary' | 'danger';
   size?: 'small' | 'medium' | 'large';
 };
 
-const Button = ({ type = 'primary', size = 'medium', title, ...rest }: Props) => {
+const Button = ({
+  htmlType = 'button',
+  type = 'primary',
+  size = 'medium',
+  title,
+  ...rest
+}: Props) => {
   const { t } = useTranslation();
 
   return (
     <button
       className={classNames(styles.button, styles[type], styles[size])}
-      type="button"
+      type={htmlType}
       {...rest}
     >
       {t(title)}
