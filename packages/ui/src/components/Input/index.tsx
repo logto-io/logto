@@ -43,7 +43,7 @@ const Input = ({
       />
       {value && (
         <CloseIcon
-          className={classNames(styles.clearBtn)}
+          className={classNames(styles.clearButton)}
           onClick={() => {
             onChange('');
           }}

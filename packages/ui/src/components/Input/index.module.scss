@@ -29,10 +29,10 @@
   border: _.border(var(--color-error));
 }
 
-.clearBtn {
+.clearButton {
   position: absolute;
   right: 0;
   top: 0;
-  transform: translate3d(-50%, 50%, 0);
+  transform: translate(-50%, 50%);
   fill: var(--color-neutral-70);
 }
