@@ -1,0 +1,18 @@
+@use '@/scss/underscore' as _;
+
+.link {
+  font-size: var(--font-body-2);
+  margin-right: _.unit(6);
+  padding-bottom: _.unit(1);
+
+  a {
+    color: unset;
+    text-decoration: none;
+  }
+}
+
+.selected {
+  color: var(--color-primary);
+  border-bottom: 1px solid var(--color-primary);
+  margin-bottom: -1px;
+}
