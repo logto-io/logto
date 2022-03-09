@@ -6,7 +6,7 @@
 
 .input {
   width: 100%;
-  padding: _.unit(3) _.unit(10) _.unit(3) _.unit(5);
+  padding: _.unit(3) _.unit(12) _.unit(3) _.unit(5);
   border-radius: _.unit(2);
   border: _.border();
   background: var(--color-control-background);
@@ -31,8 +31,8 @@
 
 .clearButton {
   position: absolute;
-  right: 0;
-  top: 0;
-  transform: translate(-50%, 50%);
+  right: _.unit(5);
+  bottom: 50%;
+  transform: translateY(50%);
   fill: var(--color-neutral-70);
 }
