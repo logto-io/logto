@@ -57,6 +57,7 @@ describe('application query', () => {
     const expectSql = sql`
       select ${sql.join(Object.values(fields), sql`, `)}
       from ${table}
+      order by "created_at" desc
       limit $1
       offset $2
     `;
