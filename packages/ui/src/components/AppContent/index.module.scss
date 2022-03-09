@@ -15,7 +15,7 @@
   --color-button-background-hover: #2234df;
   --color-button-text: #f5f5f5;
   --color-button-text-disabled: #eee;
-  --color-error: #ff6b66;
+  --color-error: #ea0000;
   --color-error-background: #{rgba(#ff6b66, 0.15)};
   --color-error-border: #{rgba(#ff6b66, 0.35)};
 
@@ -48,6 +48,7 @@
 .light {
   /* Color */
   --color-primary: #6139f6;
+  --color-primary-tint-70: #b09bfa;
   --color-gradient: linear-gradient(69.73deg, #492ef3 5.52%, #cf69ff 94.22%);
   --color-background: #fdfdff;
   --color-control-background: #f4f4f4;

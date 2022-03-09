@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { register } from '@/apis/register';
 import Button from '@/components/Button';
 import Input from '@/components/Input';
+import PasswordInput from '@/components/Input/PasswordInput';
 import MessageBox from '@/components/MessageBox';
 import TextLink from '@/components/TextLink';
 import useApi from '@/hooks/use-api';
@@ -44,11 +45,10 @@ const Register: FC = () => {
           value={username}
           onChange={setUsername} // TODO: account validation
         />
-        <Input
+        <PasswordInput
           name="password"
           isDisabled={loading}
           placeholder={t('sign_in.password')}
-          type="password"
           value={password}
           onChange={setPassword} // TODO: password validation
         />

@@ -1,8 +1,10 @@
 import classNames from 'classnames';
 import React from 'react';
 
-import CloseIcon from '../Icons/CloseIcon';
+import { ClearIcon } from '../Icons';
 import * as styles from './index.module.scss';
+
+type SupportedInputType = 'text' | 'email';
 
 export type Props = {
   name: string;
@@ -10,7 +12,7 @@ export type Props = {
   isDisabled?: boolean;
   className?: string;
   placeholder?: string;
-  type?: InputType;
+  type?: SupportedInputType;
   value: string;
   hasError?: boolean;
   onChange: (value: string) => void;
@@ -26,31 +28,29 @@ const Input = ({
   value,
   hasError = false,
   onChange,
-}: Props) => {
-  return (
-    <div className={classNames(styles.wrapper, className)}>
-      <input
-        name={name}
-        disabled={isDisabled}
-        className={classNames(styles.input, hasError && styles.error)}
-        placeholder={placeholder}
-        type={type}
-        value={value}
-        autoComplete={autoComplete}
-        onChange={({ target: { value } }) => {
-          onChange(value);
+}: Props) => (
+  <div className={classNames(styles.wrapper, className)}>
+    <input
+      name={name}
+      disabled={isDisabled}
+      className={classNames(styles.input, hasError && styles.error)}
+      placeholder={placeholder}
+      type={type}
+      value={value}
+      autoComplete={autoComplete}
+      onChange={({ target: { value } }) => {
+        onChange(value);
+      }}
+    />
+    {value && (
+      <ClearIcon
+        className={styles.actionButton}
+        onClick={() => {
+          onChange('');
         }}
       />
-      {value && (
-        <CloseIcon
-          className={classNames(styles.clearButton)}
-          onClick={() => {
-            onChange('');
-          }}
-        />
-      )}
-    </div>
-  );
-};
+    )}
+  </div>
+);
 
 export default Input;
