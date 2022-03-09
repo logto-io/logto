@@ -1,5 +1,6 @@
 import { Resource } from '@logto/schemas';
-import React from 'react';
+import ky from 'ky';
+import React, { useCallback, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useParams } from 'react-router-dom';
@@ -25,14 +26,37 @@ type FormData = {
 const ApiResourceDetails = () => {
   const location = useLocation();
   const { id } = useParams();
-  const { data, error } = useSWR<Resource, RequestError>(id && `/api/resources/${id}`);
+  const { data, error, mutate } = useSWR<Resource, RequestError>(id && `/api/resources/${id}`);
   const isLoading = !data && !error;
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { handleSubmit, register } = useForm<FormData>();
-
-  const onSubmit = handleSubmit((data) => {
-    console.log(data);
+  const { handleSubmit, register, reset } = useForm<FormData>({
+    defaultValues: data,
   });
+
+  useEffect(() => {
+    if (!data) {
+      return;
+    }
+    reset(data);
+  }, [data, reset]);
+
+  const submit = useCallback(
+    async (formData) => {
+      if (!data) {
+        return;
+      }
+
+      try {
+        const updatedApiResource = await ky
+          .patch(`/api/resources/${data.id}`, { json: formData })
+          .json<Resource>();
+        void mutate(updatedApiResource);
+      } catch (error: unknown) {
+        console.error(error);
+      }
+    },
+    [data, mutate]
+  );
 
   return (
     <div className={styles.container}>
@@ -52,31 +76,27 @@ const ApiResourceDetails = () => {
             </div>
             <div className={styles.operation}>
               <Button title="admin_console.api_resource_details.check_help_guide" />
-              <Button title="admin_console.api_resource_details.check_help_guide" />
             </div>
           </Card>
           <Card className={styles.body}>
             <TabNav>
               <TabNavLink href={location.pathname}>{t('api_resource_details.settings')}</TabNavLink>
             </TabNav>
-            <form className={styles.form} onSubmit={onSubmit}>
+            <form className={styles.form} onSubmit={handleSubmit(submit)}>
               <div className={styles.fields}>
                 <FormField
                   isRequired
                   title="admin_console.api_resources.api_name"
                   className={styles.textField}
                 >
-                  <TextInput value={data.name} {...register('name', { required: true })} />
+                  <TextInput {...register('name', { required: true })} />
                 </FormField>
                 <FormField
                   isRequired
                   title="admin_console.api_resource_details.token_expiration_time_in_seconds"
                   className={styles.textField}
                 >
-                  <TextInput
-                    value={data.accessTokenTtl}
-                    {...register('accessTokenTtl', { required: true })}
-                  />
+                  <TextInput {...register('accessTokenTtl', { required: true })} />
                 </FormField>
               </div>
               <div className={styles.submit}>
