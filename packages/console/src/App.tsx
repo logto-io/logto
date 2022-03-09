@@ -12,8 +12,8 @@ import initI18n from './i18n/init';
 import ApiResources from './pages/ApiResources';
 import ApplicationDetails from './pages/ApplicationDetails';
 import Applications from './pages/Applications';
+import ConnectorDetails from './pages/ConnectorDetails';
 import Connectors from './pages/Connectors';
-import Connector from './pages/Connectors/Connector';
 import { fetcher } from './swr';
 
 const isBasenameNeeded = process.env.NODE_ENV !== 'development' || process.env.PORT === '5002';
@@ -46,7 +46,7 @@ const Main = () => {
               <Route path="connectors">
                 <Route index element={<Connectors />} />
                 <Route path="social" element={<Connectors />} />
-                <Route path=":connectorId" element={<Connector />} />
+                <Route path=":connectorId" element={<ConnectorDetails />} />
               </Route>
             </Routes>
           </Content>

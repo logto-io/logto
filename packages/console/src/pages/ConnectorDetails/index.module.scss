@@ -16,6 +16,12 @@
     margin-left: _.unit(6);
   }
 
+  .logo {
+    width: _.unit(19);
+    height: _.unit(19);
+    border-radius: _.unit(4);
+  }
+
   .metadata {
     flex: 1;
 
@@ -37,7 +43,7 @@
       color: var(--color-component-text);
     }
 
-    .type {
+    .id {
       font: var(--font-subhead-2);
       color: var(--color-component-caption);
     }

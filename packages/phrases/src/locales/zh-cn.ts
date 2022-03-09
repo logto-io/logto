@@ -103,6 +103,9 @@ const translation = {
     application_details: {
       back_to_applications: '返回应用集',
     },
+    connector_details: {
+      back_to_connectors: '返回连接器',
+    },
   },
 };
 

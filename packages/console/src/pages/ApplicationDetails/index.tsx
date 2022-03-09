@@ -1,18 +1,16 @@
 import { Application } from '@logto/schemas';
-import classNames from 'classnames';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import useSWR from 'swr';
 
+import BackLink from '@/components/BackLink';
 import Card from '@/components/Card';
 import CopyToClipboard from '@/components/CopyToClipboard';
 import ImagePlaceholder from '@/components/ImagePlaceholder';
-import * as buttonStyles from '@/components/TextButton/index.module.scss';
 import { RequestError } from '@/swr';
 import { applicationTypeI18nKey } from '@/types/applications';
 
-import Back from './icons/Back';
 import * as styles from './index.module.scss';
 
 const ApplicationDetails = () => {
@@ -23,12 +21,7 @@ const ApplicationDetails = () => {
 
   return (
     <div className={styles.container}>
-      <Link to="/applications" className={classNames(buttonStyles.button, styles.button)}>
-        <div className={styles.body}>
-          <Back />
-          <div>{t('application_details.back_to_applications')}</div>
-        </div>
-      </Link>
+      <BackLink to="/applications">{t('application_details.back_to_applications')}</BackLink>
       {isLoading && <div>loading</div>}
       {error && <div>{`error occurred: ${error.metadata.code}`}</div>}
       {data && (
