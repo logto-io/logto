@@ -1,6 +1,6 @@
 import { Resource } from '@logto/schemas';
 import ky from 'ky';
-import React, { useCallback, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useParams } from 'react-router-dom';
@@ -40,23 +40,20 @@ const ApiResourceDetails = () => {
     reset(data);
   }, [data, reset]);
 
-  const submit = useCallback(
-    async (formData) => {
-      if (!data) {
-        return;
-      }
+  const onSubmit = handleSubmit(async (formData) => {
+    if (!data) {
+      return;
+    }
 
-      try {
-        const updatedApiResource = await ky
-          .patch(`/api/resources/${data.id}`, { json: formData })
-          .json<Resource>();
-        void mutate(updatedApiResource);
-      } catch (error: unknown) {
-        console.error(error);
-      }
-    },
-    [data, mutate]
-  );
+    try {
+      const updatedApiResource = await ky
+        .patch(`/api/resources/${data.id}`, { json: formData })
+        .json<Resource>();
+      void mutate(updatedApiResource);
+    } catch (error: unknown) {
+      console.error(error);
+    }
+  });
 
   return (
     <div className={styles.container}>
@@ -82,7 +79,7 @@ const ApiResourceDetails = () => {
             <TabNav>
               <TabNavLink href={location.pathname}>{t('api_resource_details.settings')}</TabNavLink>
             </TabNav>
-            <form className={styles.form} onSubmit={handleSubmit(submit)}>
+            <form className={styles.form} onSubmit={onSubmit}>
               <div className={styles.fields}>
                 <FormField
                   isRequired
