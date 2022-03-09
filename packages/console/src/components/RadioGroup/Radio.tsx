@@ -27,9 +27,10 @@ export type Props = {
 
 const Radio = ({ value, title, name, children, isChecked, onClick, tabIndex }: Props) => {
   const handleKeyPress: KeyboardEventHandler<HTMLDivElement> = useCallback(
-    ({ key }) => {
-      if ([' ', '\n'].includes(key)) {
+    (event) => {
+      if ([' ', 'Enter'].includes(event.key)) {
         onClick?.();
+        event.preventDefault();
       }
     },
     [onClick]
