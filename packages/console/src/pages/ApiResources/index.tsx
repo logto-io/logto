@@ -3,6 +3,7 @@ import { conditional } from '@silverhand/essentials/lib/utilities/conditional.js
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Modal from 'react-modal';
+import { useNavigate } from 'react-router-dom';
 import useSWR from 'swr';
 
 import Button from '@/components/Button';
@@ -22,6 +23,7 @@ const ApiResources = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { data, error, mutate } = useSWR<Resource[], RequestError>('/api/resources');
   const isLoading = !data && !error;
+  const navigate = useNavigate();
 
   return (
     <Card>
@@ -45,6 +47,7 @@ const ApiResources = () => {
 
               if (createdApiResource) {
                 void mutate(conditional(data && [...data, createdApiResource]));
+                navigate(createdApiResource.id);
               }
             }}
           />
@@ -71,7 +74,7 @@ const ApiResources = () => {
           {data?.map(({ id, name, indicator }) => (
             <tr key={id} className={styles.clickable}>
               <td>
-                <ItemPreview title={name} icon={<ImagePlaceholder />} />
+                <ItemPreview title={name} icon={<ImagePlaceholder />} to={`/api-resources/${id}`} />
               </td>
               <td>
                 <CopyToClipboard value={indicator} />
