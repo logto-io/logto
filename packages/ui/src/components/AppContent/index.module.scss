@@ -1,3 +1,5 @@
+@use '@/scss/underscore' as _;
+
 .content {
   position: absolute;
   inset: 0;
@@ -48,19 +50,29 @@
   --color-primary: #6139f6;
   --color-gradient: linear-gradient(69.73deg, #492ef3 5.52%, #cf69ff 94.22%);
   --color-background: #fdfdff;
+  --color-control-background: #f4f4f4;
+  --color-control-focus: #a48dfa;
+
+  --color-neutral-100: #111;
+  --color-neutral-90: #666;
+  --color-neutral-70: #999;
+  --color-neutral-50: #aeaeae;
+  --color-neutral-30: #d8d8d8;
+  --color-neutral-10: #f4f4f4;
+  --color-neutral-0: #fff;
 
   /* Font Color */
   --color-font-primary: #111;
   --color-font-secondary: #444;
-  --color-font-tertiary: #777;
+  --color-font-tertiary-1: #777;
+  --color-font-tertiary-2: #999;
+  --color-font-tertiary-3: #aaa;
 
   /* ===== Legacy Styling ===== */
-
   --color-heading: #333;
   --color-body: #555;
   --color-secondary: #888;
   --color-placeholder: #aaa;
-  --color-control-background: #f5f8fa;
   --color-control-background-disabled: #eaeaea;
 
   /* Shadow */
@@ -68,17 +80,18 @@
   --shadow-control: 1px 1px 2px rgb(221, 221, 221, 25%);
 }
 
-$font-family: 'PingFang SC', 'SF Pro Display', sans-serif;
+$font-family: 'PingFang SC', 'SF Pro Text', sans-serif;
 
 .mobile {
-  --font-subtitle-18-medium: 500 18px/21px #{$font-family};
+  --font-title: 600 32px/40px #{$font-family};
+  --font-heading-2: 400 18px/21px #{$font-family};
+  --font-heading-2-bold: 600 18px/21px #{$font-family};
+  --font-control: 400 18px/21px #{$font-family};
 
   /* ===== Legacy Styling ===== */
   --font-headline: 600 40px/56px #{$font-family};
   --font-heading-1: 600 28px/39px #{$font-family};
-  --font-heading-2: 600 20px/28px #{$font-family};
   --font-heading-3: 600 16px/22.4px #{$font-family};
-  --font-control: 500 16px/22.4px #{$font-family};
   --font-body: 400 12px/16px #{$font-family};
   --font-body-bold: 500 12px/16px #{$font-family};
 }

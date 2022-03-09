@@ -25,10 +25,9 @@
     margin-bottom: _.unit(-6);
   }
 
-  .box,
-  > input:not([type='button']) {
-    margin-top: _.unit(3);
+  .inputField {
     width: 100%;
+    margin-top: _.unit(3);
     max-width: 320px;
   }
 

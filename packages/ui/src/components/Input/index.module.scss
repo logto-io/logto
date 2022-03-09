@@ -1,23 +1,38 @@
 @use '@/scss/underscore' as _;
 
+.wrapper {
+  position: relative;
+}
+
 .input {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  padding: _.unit(3) _.unit(5);
+  width: 100%;
+  padding: _.unit(3) _.unit(12) _.unit(3) _.unit(5);
   border-radius: _.unit(2);
+  border: _.border();
   background: var(--color-control-background);
-  color: var(--color-heading);
+  color: var(--color-font-primary);
+  caret-color: var(--color-primary);
   font: var(--font-control);
   transition: var(--transition-default-control);
 
   &::placeholder {
-    color: var(--color-placeholder);
+    color: var(--color-font-tertiary-3);
   }
 
-  &:disabled {
-    background: var(--color-control-background-disabled);
-    color: var(--color-secondary);
+  &:focus {
+    border: _.border(var(--color-control-focus));
   }
+}
+
+.error,
+.error:focus {
+  border: _.border(var(--color-error));
+}
+
+.clearButton {
+  position: absolute;
+  right: _.unit(5);
+  bottom: 50%;
+  transform: translateY(50%);
+  fill: var(--color-neutral-70);
 }
