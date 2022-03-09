@@ -56,14 +56,14 @@ const ApiResources = () => {
       <table className={styles.table}>
         <thead>
           <tr>
-            <td className={styles.apiResourceName}>{t('api_resources.api_name')}</td>
-            <td>{t('api_resources.api_identifier')}</td>
+            <th className={styles.apiResourceName}>{t('api_resources.api_name')}</th>
+            <th>{t('api_resources.api_identifier')}</th>
           </tr>
         </thead>
         <tbody>
           {error && (
             <tr>
-              <td colSpan={2}>error occured: {error.metadata.code}</td>
+              <td colSpan={2}>error occurred: {error.metadata.code}</td>
             </tr>
           )}
           {isLoading && (
@@ -73,7 +73,7 @@ const ApiResources = () => {
           )}
           {data?.map(({ id, name, indicator }) => (
             <tr key={id} className={styles.clickable}>
-              <td>
+              <td className={styles.apiResourceName}>
                 <ItemPreview title={name} icon={<ImagePlaceholder />} to={`/api-resources/${id}`} />
               </td>
               <td>

@@ -65,8 +65,8 @@ const Applications = () => {
       <table className={styles.table}>
         <thead>
           <tr>
-            <td className={styles.applicationName}>{t('applications.application_name')}</td>
-            <td>{t('applications.client_id')}</td>
+            <th className={styles.applicationName}>{t('applications.application_name')}</th>
+            <th>{t('applications.client_id')}</th>
           </tr>
         </thead>
         <tbody>
@@ -88,7 +88,7 @@ const Applications = () => {
                 navigate(`/applications/${id}`);
               }}
             >
-              <td>
+              <td className={styles.applicationName}>
                 <ItemPreview
                   title={name}
                   subtitle={t(`${applicationTypeI18nKey[type]}.title`)}
