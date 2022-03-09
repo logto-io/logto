@@ -27,9 +27,14 @@ type Props = {
 };
 
 const CreateForm = ({ onClose }: Props) => {
-  const { handleSubmit, control, register } = useForm<FormData>();
   const {
-    field: { onChange, value, name },
+    handleSubmit,
+    control,
+    register,
+    formState: { errors },
+  } = useForm<FormData>();
+  const {
+    field: { onChange, value, name, ref },
   } = useController({ name: 'type', control, rules: { required: true } });
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
@@ -51,7 +56,7 @@ const CreateForm = ({ onClose }: Props) => {
       </div>
       <form className={styles.form} onSubmit={onSubmit}>
         <FormField title="admin_console.applications.select_application_type">
-          <RadioGroup name={name} value={value} onChange={onChange}>
+          <RadioGroup ref={ref} name={name} value={value} onChange={onChange}>
             {Object.values(ApplicationType).map((value) => (
               <Radio key={value} title={t(`${applicationTypeI18nKey[value]}.title`)} value={value}>
                 <TypeDescription
@@ -61,6 +66,9 @@ const CreateForm = ({ onClose }: Props) => {
               </Radio>
             ))}
           </RadioGroup>
+          {errors.type?.type === 'required' && (
+            <div className={styles.error}>{t('applications.no_application_type_selected')}</div>
+          )}
         </FormField>
         <FormField
           isRequired
