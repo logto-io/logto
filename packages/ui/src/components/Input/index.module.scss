@@ -21,10 +21,6 @@
 
   &:focus {
     border: _.border(var(--color-control-focus));
-
-    + .highlight {
-      fill: var(--color-primary-tint-70);
-    }
   }
 }
 
@@ -39,4 +35,8 @@
   bottom: 50%;
   transform: translateY(50%);
   fill: var(--color-neutral-70);
+
+  &.highlight {
+    fill: var(--color-primary-tint-70);
+  }
 }

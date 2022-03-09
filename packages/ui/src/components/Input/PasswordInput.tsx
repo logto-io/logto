@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 
 import { PrivacyIcon } from '../Icons';
 import * as styles from './index.module.scss';
@@ -29,16 +29,8 @@ const PasswordInput = ({
 
   // Used to toggle the password visibility
   const [type, setType] = useState('password');
-
-  // Should refocus after the input type toggling
-  useEffect(() => {
-    if (!inputReference.current) {
-      return;
-    }
-
-    inputReference.current.focus();
-    inputReference.current.setSelectionRange(value.length, value.length);
-  }, [type, value]);
+  const [onFocus, setOnFocus] = useState(false);
+  const iconType = type === 'password' ? 'hide' : 'show';
 
   return (
     <div className={classNames(styles.wrapper, className)}>
@@ -51,15 +43,23 @@ const PasswordInput = ({
         type={type}
         value={value}
         autoComplete={autoComplete}
+        onFocus={() => {
+          setOnFocus(true);
+        }}
+        onBlur={() => {
+          setOnFocus(false);
+        }}
         onChange={({ target: { value } }) => {
           onChange(value);
         }}
       />
-      {value && (
+      {value && onFocus && (
         <PrivacyIcon
-          className={classNames(styles.actionButton, type === 'password' && styles.highlight)}
-          type={type === 'password' ? 'show' : 'hide'}
-          onClick={() => {
+          className={classNames(styles.actionButton, iconType === 'hide' && styles.highlight)}
+          type={iconType}
+          onMouseDown={(event) => {
+            // Should execute before onFocus
+            event.preventDefault();
             setType(type === 'password' ? 'text' : 'password');
           }}
         />

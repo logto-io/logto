@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import React from 'react';
+import React, { useState, useRef } from 'react';
 
 import { ClearIcon } from '../Icons';
 import * as styles from './index.module.scss';
@@ -28,29 +28,44 @@ const Input = ({
   value,
   hasError = false,
   onChange,
-}: Props) => (
-  <div className={classNames(styles.wrapper, className)}>
-    <input
-      name={name}
-      disabled={isDisabled}
-      className={classNames(styles.input, hasError && styles.error)}
-      placeholder={placeholder}
-      type={type}
-      value={value}
-      autoComplete={autoComplete}
-      onChange={({ target: { value } }) => {
-        onChange(value);
-      }}
-    />
-    {value && (
-      <ClearIcon
-        className={styles.actionButton}
-        onClick={() => {
-          onChange('');
+}: Props) => {
+  const [onFocus, setOnFocus] = useState(false);
+  const inputReference = useRef<HTMLInputElement>(null);
+
+  return (
+    <div className={classNames(styles.wrapper, className)}>
+      <input
+        ref={inputReference}
+        name={name}
+        disabled={isDisabled}
+        className={classNames(styles.input, hasError && styles.error)}
+        placeholder={placeholder}
+        type={type}
+        value={value}
+        autoComplete={autoComplete}
+        onFocus={() => {
+          setOnFocus(true);
+        }}
+        onBlur={() => {
+          console.log('blur');
+          setOnFocus(false);
+        }}
+        onChange={({ target: { value } }) => {
+          onChange(value);
         }}
       />
-    )}
-  </div>
-);
+      {value && onFocus && (
+        <ClearIcon
+          className={styles.actionButton}
+          onMouseDown={(event) => {
+            // Should execute before onFocus
+            event.preventDefault();
+            onChange('');
+          }}
+        />
+      )}
+    </div>
+  );
+};
 
 export default Input;
