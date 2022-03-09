@@ -101,6 +101,9 @@ const translation = {
     application_details: {
       back_to_applications: 'Back to Applications',
     },
+    connector_details: {
+      back_to_connectors: 'Back to Connectors',
+    },
   },
 };
 
