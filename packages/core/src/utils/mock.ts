@@ -11,11 +11,13 @@ import {
   BrandingStyle,
   Language,
   Connector,
+  ConnectorMetadata,
   Passcode,
   PasscodeType,
   UserLog,
   UserLogType,
   UserLogResult,
+  ConnectorType,
 } from '@logto/schemas';
 import pick from 'lodash.pick';
 
@@ -187,6 +189,162 @@ export const mockConnector: Connector = {
   config: {},
   createdAt: 1_645_334_775_356,
 };
+
+export const mockConnectorList: Connector[] = [
+  {
+    id: 'connector_0',
+    enabled: true,
+    config: {},
+    createdAt: 1_234_567_890_123,
+  },
+  {
+    id: 'connector_1',
+    enabled: true,
+    config: {},
+    createdAt: 1_234_567_890_234,
+  },
+  {
+    id: 'connector_2',
+    enabled: true,
+    config: {},
+    createdAt: 1_234_567_890_345,
+  },
+  {
+    id: 'connector_3',
+    enabled: true,
+    config: {},
+    createdAt: 1_234_567_890_456,
+  },
+  {
+    id: 'connector_4',
+    enabled: true,
+    config: {},
+    createdAt: 1_234_567_890_567,
+  },
+  {
+    id: 'connector_5',
+    enabled: true,
+    config: {},
+    createdAt: 1_234_567_890_567,
+  },
+  {
+    id: 'connector_6',
+    enabled: true,
+    config: {},
+    createdAt: 1_234_567_890_567,
+  },
+];
+
+export const mockConnectorInstanceList: Array<{
+  connector: Connector;
+  metadata: ConnectorMetadata;
+}> = [
+  {
+    connector: {
+      id: 'connector_0',
+      enabled: true,
+      config: {},
+      createdAt: 1_234_567_890_123,
+    },
+    metadata: {
+      id: 'connector_0',
+      type: ConnectorType.Social,
+      name: {},
+      logo: './logo.png',
+      description: {},
+    },
+  },
+  {
+    connector: {
+      id: 'connector_1',
+      enabled: true,
+      config: {},
+      createdAt: 1_234_567_890_234,
+    },
+    metadata: {
+      id: 'connector_1',
+      type: ConnectorType.SMS,
+      name: {},
+      logo: './logo.png',
+      description: {},
+    },
+  },
+  {
+    connector: {
+      id: 'connector_2',
+      enabled: true,
+      config: {},
+      createdAt: 1_234_567_890_345,
+    },
+    metadata: {
+      id: 'connector_2',
+      type: ConnectorType.Social,
+      name: {},
+      logo: './logo.png',
+      description: {},
+    },
+  },
+  {
+    connector: {
+      id: 'connector_3',
+      enabled: true,
+      config: {},
+      createdAt: 1_234_567_890_456,
+    },
+    metadata: {
+      id: 'connector_3',
+      type: ConnectorType.Social,
+      name: {},
+      logo: './logo.png',
+      description: {},
+    },
+  },
+  {
+    connector: {
+      id: 'connector_4',
+      enabled: true,
+      config: {},
+      createdAt: 1_234_567_890_567,
+    },
+    metadata: {
+      id: 'connector_4',
+      type: ConnectorType.Email,
+      name: {},
+      logo: './logo.png',
+      description: {},
+    },
+  },
+  {
+    connector: {
+      id: 'connector_5',
+      enabled: true,
+      config: {},
+      createdAt: 1_234_567_890_567,
+    },
+    metadata: {
+      id: 'connector_5',
+      type: ConnectorType.SMS,
+      name: {},
+      logo: './logo.png',
+      description: {},
+    },
+  },
+  {
+    connector: {
+      id: 'connector_6',
+      enabled: true,
+      config: {},
+      createdAt: 1_234_567_890_567,
+    },
+    metadata: {
+      id: 'connector_6',
+      type: ConnectorType.Email,
+      name: {},
+      logo: './logo.png',
+      description: {},
+    },
+  },
+];
 
 export const mockPasscode: Passcode = {
   id: 'foo',
