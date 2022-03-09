@@ -47,7 +47,6 @@ const Input = ({
           setOnFocus(true);
         }}
         onBlur={() => {
-          console.log('blur');
           setOnFocus(false);
         }}
         onChange={({ target: { value } }) => {
