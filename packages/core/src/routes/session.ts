@@ -16,12 +16,7 @@ import {
   getUserInfoByAuthCode,
   getUserInfoFromInteractionResult,
 } from '@/lib/social';
-import {
-  generateUserId,
-  encryptUserPassword,
-  findUserSignInMethodsById,
-  findUserByUsernameAndPassword,
-} from '@/lib/user';
+import { generateUserId, encryptUserPassword, findUserByUsernameAndPassword } from '@/lib/user';
 import koaGuard from '@/middleware/koa-guard';
 import {
   hasUserWithEmail,
@@ -492,8 +487,6 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
       assertThat(await hasUserWithPhone(phone), 'user.phone_not_exists');
       const { id } = await findUserByPhone(phone);
       ctx.userLog.userId = id;
-      const { usernameAndPassword } = await findUserSignInMethodsById(id);
-      assertThat(usernameAndPassword, 'user.username_password_signin_not_exists');
 
       const passcode = await createPasscode(jti, PasscodeType.ForgotPassword, { phone });
       await sendPasscode(passcode);
