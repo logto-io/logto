@@ -1,6 +1,6 @@
 import { Resource } from '@logto/schemas';
 import ky from 'ky';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useParams } from 'react-router-dom';
@@ -26,12 +26,15 @@ type FormData = {
 const ApiResourceDetails = () => {
   const location = useLocation();
   const { id } = useParams();
+  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+
   const { data, error, mutate } = useSWR<Resource, RequestError>(id && `/api/resources/${id}`);
   const isLoading = !data && !error;
-  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+
   const { handleSubmit, register, reset } = useForm<FormData>({
     defaultValues: data,
   });
+  const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
     if (!data) {
@@ -41,9 +44,10 @@ const ApiResourceDetails = () => {
   }, [data, reset]);
 
   const onSubmit = handleSubmit(async (formData) => {
-    if (!data) {
+    if (!data || submitting) {
       return;
     }
+    setSubmitting(true);
 
     try {
       const updatedApiResource = await ky
@@ -52,6 +56,8 @@ const ApiResourceDetails = () => {
       void mutate(updatedApiResource);
     } catch (error: unknown) {
       console.error(error);
+    } finally {
+      setSubmitting(false);
     }
   });
 
@@ -100,6 +106,7 @@ const ApiResourceDetails = () => {
               </div>
               <div className={styles.submit}>
                 <Button
+                  disabled={submitting}
                   htmlType="submit"
                   type="primary"
                   title="admin_console.api_resource_details.save_changes"
