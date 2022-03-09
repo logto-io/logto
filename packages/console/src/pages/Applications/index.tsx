@@ -1,5 +1,8 @@
-import { Application } from '@logto/schemas';
-import { conditional } from '@silverhand/essentials/lib/utilities/conditional.js';
+import { Application, Setting } from '@logto/schemas';
+import {
+  conditional,
+  conditionalString,
+} from '@silverhand/essentials/lib/utilities/conditional.js';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Modal from 'react-modal';
@@ -23,6 +26,7 @@ const Applications = () => {
   const [isCreateFormOpen, setIsCreateFormOpen] = useState(false);
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { data, error, mutate } = useSWR<Application[], RequestError>('/api/applications');
+  const { data: setting } = useSWR<Setting, RequestError>('/api/settings');
   const isLoading = !data && !error;
   const navigate = useNavigate();
 
@@ -47,6 +51,11 @@ const Applications = () => {
 
               if (createdApp) {
                 void mutate(conditional(data && [...data, createdApp]));
+                navigate(
+                  `/applications/${createdApp.id}${conditionalString(
+                    !setting?.adminConsole.applicationSkipGetStarted && '/get-started'
+                  )}`
+                );
               }
             }}
           />
