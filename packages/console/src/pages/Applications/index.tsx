@@ -83,6 +83,7 @@ const Applications = () => {
                   title={name}
                   subtitle={t(`${applicationTypeI18nKey[type]}.title`)}
                   icon={<ImagePlaceholder />}
+                  to={`/applications/${id}`}
                 />
               </td>
               <td>
