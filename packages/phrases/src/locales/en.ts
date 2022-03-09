@@ -79,6 +79,13 @@ const translation = {
       api_name: 'API Name',
       api_identifier: 'API Identifier',
     },
+    api_resource_details: {
+      back_to_api_resources: 'Back to my API resources',
+      check_help_guide: 'Check Help Guide',
+      settings: 'Settings',
+      save_changes: 'Save Changes',
+      token_expiration_time_in_seconds: 'Token Expiration Time (in seconds)',
+    },
     connectors: {
       title: 'Connectors',
       subtitle: 'Setup connectors to enable passwordless and social sign in experience.',

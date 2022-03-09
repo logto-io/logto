@@ -9,6 +9,7 @@ import Content from './components/Content';
 import Sidebar, { getPath, sections } from './components/Sidebar';
 import Topbar from './components/Topbar';
 import initI18n from './i18n/init';
+import ApiResourceDetails from './pages/ApiResourceDetails';
 import ApiResources from './pages/ApiResources';
 import ApplicationDetails from './pages/ApplicationDetails';
 import Applications from './pages/Applications';
@@ -38,10 +39,13 @@ const Main = () => {
           <Sidebar />
           <Content>
             <Routes>
-              <Route path="api-resources" element={<ApiResources />} />
               <Route path="applications">
                 <Route index element={<Applications />} />
                 <Route path=":id" element={<ApplicationDetails />} />
+              </Route>
+              <Route path="api-resources">
+                <Route index element={<ApiResources />} />
+                <Route path=":id" element={<ApiResourceDetails />} />
               </Route>
               <Route path="connectors">
                 <Route index element={<Connectors />} />
