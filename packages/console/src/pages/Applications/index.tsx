@@ -1,9 +1,7 @@
 import { Application, Setting } from '@logto/schemas';
-import {
-  conditional,
-  conditionalString,
-} from '@silverhand/essentials/lib/utilities/conditional.js';
+import { conditional } from '@silverhand/essentials/lib/utilities/conditional.js';
 import React, { useState } from 'react';
+import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import Modal from 'react-modal';
 import { useNavigate } from 'react-router-dom';
@@ -52,11 +50,13 @@ const Applications = () => {
 
               if (createdApp) {
                 void mutate(conditional(data && [...data, createdApp]));
-                navigate(
-                  `/applications/${createdApp.id}${conditionalString(
-                    !setting?.adminConsole.applicationSkipGetStarted && '/get-started'
-                  )}`
-                );
+
+                if (setting?.adminConsole.applicationSkipGetStarted) {
+                  toast.success(t('applications.application_created', { name: createdApp.name }));
+                  navigate(`/applications/${createdApp.id}`);
+                } else {
+                  navigate(`/applications/${createdApp.id}/get-started`);
+                }
               }
             }}
           />

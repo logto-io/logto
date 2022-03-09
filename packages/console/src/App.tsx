@@ -7,6 +7,7 @@ import * as styles from './App.module.scss';
 import AppContent from './components/AppContent';
 import Content from './components/Content';
 import Sidebar, { getPath, sections } from './components/Sidebar';
+import Toast from './components/Toast';
 import Topbar from './components/Topbar';
 import initI18n from './i18n/init';
 import ApiResources from './pages/ApiResources';
@@ -32,6 +33,7 @@ const Main = () => {
 
   return (
     <SWRConfig value={{ fetcher }}>
+      <Toast />
       <AppContent theme="light">
         <Topbar />
         <div className={styles.content}>

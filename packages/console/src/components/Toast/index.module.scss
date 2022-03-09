@@ -1,0 +1,19 @@
+@use '@/scss/underscore' as _;
+
+div.toast {
+  padding: _.unit(3) _.unit(4);
+  font: var(--font-body-2);
+  color: var(--color-component-text);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 8%);
+  border-radius: _.unit(2);
+  max-width: none;
+
+  > div[role='status'] {
+    margin: 0 0 0 _.unit(3);
+  }
+
+  &.success {
+    border: 1px solid #66bb6a;
+    background: linear-gradient(0deg, rgba(102, 187, 106, 15%), rgba(102, 187, 106, 15%)), #fff;
+  }
+}

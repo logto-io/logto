@@ -53,6 +53,8 @@ const translation = {
       application_description: 'Application Description',
       select_application_type: 'Select an Application Type',
       no_application_type_selected: 'You have to select an application type to proceed.',
+      application_created:
+        'The application {{name}} has been successfully created! \nNow finish your application settings.',
       client_id: 'Client ID',
       type: {
         native: {
