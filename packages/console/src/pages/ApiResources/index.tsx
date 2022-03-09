@@ -18,6 +18,8 @@ import { RequestError } from '@/swr';
 import CreateForm from './components/CreateForm';
 import * as styles from './index.module.scss';
 
+const buildDetailsLink = (id: string) => `/api-resources/${id}`;
+
 const ApiResources = () => {
   const [isCreateFormOpen, setIsCreateFormOpen] = useState(false);
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
@@ -47,7 +49,7 @@ const ApiResources = () => {
 
               if (createdApiResource) {
                 void mutate(conditional(data && [...data, createdApiResource]));
-                navigate(createdApiResource.id);
+                navigate(buildDetailsLink(createdApiResource.id));
               }
             }}
           />
@@ -72,9 +74,15 @@ const ApiResources = () => {
             </tr>
           )}
           {data?.map(({ id, name, indicator }) => (
-            <tr key={id} className={styles.clickable}>
+            <tr
+              key={id}
+              className={styles.clickable}
+              onClick={() => {
+                navigate(buildDetailsLink(id));
+              }}
+            >
               <td>
-                <ItemPreview title={name} icon={<ImagePlaceholder />} to={`/api-resources/${id}`} />
+                <ItemPreview title={name} icon={<ImagePlaceholder />} to={buildDetailsLink(id)} />
               </td>
               <td>
                 <CopyToClipboard value={indicator} />
