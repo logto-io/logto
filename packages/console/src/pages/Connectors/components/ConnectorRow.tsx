@@ -47,7 +47,7 @@ const ConnectorRow = ({ type, connector }: Props) => {
           <Status status="operational">{t('connectors.connector_status_enabled')}</Status>
         )}
         {type !== ConnectorType.Social && !connector && (
-          <Button title="admin_console.connectors.set_up" />
+          <Button title="admin_console.connectors.set_up" type="primary" />
         )}
       </td>
     </tr>

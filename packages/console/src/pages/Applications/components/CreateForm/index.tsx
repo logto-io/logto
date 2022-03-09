@@ -84,7 +84,12 @@ const CreateForm = ({ onClose }: Props) => {
           <TextInput />
         </FormField>
         <div className={styles.submit} {...register('description')}>
-          <Button htmlType="submit" title="admin_console.applications.create" size="large" />
+          <Button
+            htmlType="submit"
+            title="admin_console.applications.create"
+            size="large"
+            type="primary"
+          />
         </div>
       </form>
     </Card>

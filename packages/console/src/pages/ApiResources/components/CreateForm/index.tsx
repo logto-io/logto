@@ -55,7 +55,12 @@ const CreateForm = ({ onClose }: Props) => {
           <TextInput {...register('indicator', { required: true })} />
         </FormField>
         <div className={styles.submit}>
-          <Button htmlType="submit" title="admin_console.api_resources.create" size="large" />
+          <Button
+            htmlType="submit"
+            title="admin_console.api_resources.create"
+            size="large"
+            type="primary"
+          />
         </div>
       </form>
     </Card>

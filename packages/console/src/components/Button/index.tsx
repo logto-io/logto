@@ -8,13 +8,13 @@ import * as styles from './index.module.scss';
 type Props = Omit<HTMLProps<HTMLButtonElement>, 'type' | 'size' | 'title'> & {
   htmlType?: 'button' | 'submit' | 'reset';
   title: I18nKey;
-  type?: 'primary' | 'danger';
+  type?: 'primary' | 'danger' | 'default';
   size?: 'small' | 'medium' | 'large';
 };
 
 const Button = ({
   htmlType = 'button',
-  type = 'primary',
+  type = 'default',
   size = 'medium',
   title,
   ...rest

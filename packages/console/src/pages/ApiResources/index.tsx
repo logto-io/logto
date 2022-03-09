@@ -29,6 +29,7 @@ const ApiResources = () => {
         <CardTitle title="api_resources.title" subtitle="api_resources.subtitle" />
         <Button
           title="admin_console.api_resources.create"
+          type="primary"
           onClick={() => {
             setIsCreateFormOpen(true);
           }}

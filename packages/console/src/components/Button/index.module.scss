@@ -27,6 +27,27 @@
     padding: 0 _.unit(6);
   }
 
+  &.default {
+    background: var(--color-card-background);
+    color: var(--color-text-default);
+    border-color: var(--color-outline);
+    border-width: 1px;
+    border-style: solid;
+
+    &:disabled {
+      background: var(--color-neutral-95);
+      border-color: var(--color-neutral-95);
+    }
+
+    &:focus {
+      outline: 3px solid var(--color-neutral-90);
+    }
+
+    &:not(:disabled):hover {
+      background: var(--color-neutral-95);
+    }
+  }
+
   &.primary {
     background: var(--color-primary);
     color: var(--color-on-primary);
