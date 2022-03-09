@@ -8,11 +8,10 @@ import placeholder from '@/assets/images/social-connectors-placeholder.svg';
 import Button from '@/components/Button';
 import Card from '@/components/Card';
 import CardTitle from '@/components/CardTitle';
-import Status from '@/components/Status';
 import TabNav, { TabNavLink } from '@/components/TabNav';
 import { RequestError } from '@/swr';
 
-import ConnectorName from './components/ConnectorName';
+import ConnectorRow from './components/ConnectorRow';
 import * as styles from './index.module.scss';
 
 const Connectors = () => {
@@ -22,23 +21,15 @@ const Connectors = () => {
   const { data, error } = useSWR<ConnectorDTO[], RequestError>('/api/connectors');
   const isLoading = !data && !error;
 
-  const emailAndSmsConnectors: Array<[ConnectorDTO | undefined, string]> | undefined =
-    useMemo(() => {
-      if (isSocial || !data) {
-        return;
-      }
+  const emailConnector = useMemo(
+    () => data?.find((connector) => connector.metadata.type === ConnectorType.Email),
+    [data]
+  );
 
-      return [
-        [
-          data.find((connector) => connector.metadata.type === ConnectorType.Email),
-          t('connectors.type.email'),
-        ],
-        [
-          data.find((connector) => connector.metadata.type === ConnectorType.SMS),
-          t('connectors.type.sms'),
-        ],
-      ];
-    }, [data, isSocial, t]);
+  const smsConnector = useMemo(
+    () => data?.find((connector) => connector.metadata.type === ConnectorType.SMS),
+    [data]
+  );
 
   const socialConnectors = useMemo(() => {
     if (!isSocial) {
@@ -91,37 +82,14 @@ const Connectors = () => {
               </td>
             </tr>
           )}
-          {emailAndSmsConnectors?.map(([connector, type]) => (
-            <tr key={type}>
-              <td>
-                <ConnectorName connector={connector} titlePlaceholder={type} />
-              </td>
-              <td>{type}</td>
-              <td>
-                {connector ? (
-                  <Status status="operational">{t('connectors.connector_status_enabled')}</Status>
-                ) : (
-                  <Button title="admin_console.connectors.set_up" />
-                )}
-              </td>
-            </tr>
-          ))}
+          {!isLoading && !isSocial && (
+            <ConnectorRow connector={emailConnector} type={ConnectorType.Email} />
+          )}
+          {!isLoading && !isSocial && (
+            <ConnectorRow connector={smsConnector} type={ConnectorType.SMS} />
+          )}
           {socialConnectors?.map((connector) => (
-            <tr key={connector.id}>
-              <td>
-                <ConnectorName connector={connector} />
-              </td>
-              <td>{t('connectors.type.social')}</td>
-              <td>
-                <Status status={connector.enabled ? 'operational' : 'offline'}>
-                  {t(
-                    connector.enabled
-                      ? 'connectors.connector_status_enabled'
-                      : 'connectors.connector_status_disabled'
-                  )}
-                </Status>
-              </td>
-            </tr>
+            <ConnectorRow key={connector.id} connector={connector} type={ConnectorType.Social} />
           ))}
         </tbody>
       </table>
