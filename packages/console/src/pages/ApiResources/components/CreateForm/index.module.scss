@@ -2,7 +2,7 @@
 
 .card {
   padding: _.unit(8);
-  width: 800px;
+  max-width: 800px;
 }
 
 .headline {
@@ -23,7 +23,7 @@
 }
 
 .textField {
-  max-width: 554px;
+  @include _.form-text-field;
 }
 
 .submit {

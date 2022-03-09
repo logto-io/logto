@@ -14,3 +14,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+@mixin form-text-field {
+  width: 556px;
+}
