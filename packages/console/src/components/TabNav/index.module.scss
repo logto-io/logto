@@ -1,0 +1,7 @@
+@use '@/scss/underscore' as _;
+
+.nav {
+  border-bottom: 1px solid var(--color-border);
+  display: flex;
+  margin: _.unit(6) 0 _.unit(1);
+}

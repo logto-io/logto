@@ -8,6 +8,7 @@
 .table {
   margin-top: _.unit(6);
   width: 100%;
+  font-size: var(--font-small-text);
 
   tbody tr.clickable {
     cursor: pointer;
@@ -22,13 +23,11 @@
   width: 360px;
 }
 
-a.link {
-  color: inherit;
-  text-decoration: none;
+.empty {
+  text-align: center;
+  font-size: var(--font-body-2);
 }
 
-.logo {
-  width: 50px;
-  height: 50px;
-  border-radius: 5px;
+.emptyLine {
+  padding: _.unit(2) 0;
 }

@@ -24,7 +24,7 @@ const Sidebar = () => {
               key={title}
               titleKey={title}
               icon={<Icon />}
-              isActive={location.pathname === getPath(title)}
+              isActive={location.pathname.startsWith(getPath(title))}
             />
           ))}
         </Section>

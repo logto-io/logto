@@ -1,0 +1,18 @@
+@use '@/scss/underscore' as _;
+
+.status {
+  display: flex;
+  align-items: center;
+}
+
+.icon {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-right: _.unit(2);
+  background: var(--color-green);
+}
+
+.status.offline .icon {
+  background: var(--color-neutral-70);
+}

@@ -39,11 +39,14 @@ const Main = () => {
           <Content>
             <Routes>
               <Route path="api-resources" element={<ApiResources />} />
-              <Route path="connectors" element={<Connectors />} />
-              <Route path="connectors/:connectorId" element={<Connector />} />
               <Route path="applications">
                 <Route index element={<Applications />} />
                 <Route path=":id" element={<ApplicationDetails />} />
+              </Route>
+              <Route path="connectors">
+                <Route index element={<Connectors />} />
+                <Route path="social" element={<Connectors />} />
+                <Route path=":connectorId" element={<Connector />} />
               </Route>
             </Routes>
           </Content>
