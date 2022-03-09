@@ -103,6 +103,7 @@ const translation = {
     },
     connector_details: {
       back_to_connectors: 'Back to Connectors',
+      check_readme: 'Check README',
     },
   },
 };

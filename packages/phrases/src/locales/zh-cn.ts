@@ -105,6 +105,7 @@ const translation = {
     },
     connector_details: {
       back_to_connectors: '返回连接器',
+      check_readme: '查看文档',
     },
   },
 };
