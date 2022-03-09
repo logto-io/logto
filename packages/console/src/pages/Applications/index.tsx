@@ -32,6 +32,7 @@ const Applications = () => {
         <CardTitle title="applications.title" subtitle="applications.subtitle" />
         <Button
           title="admin_console.applications.create"
+          type="primary"
           onClick={() => {
             setIsCreateFormOpen(true);
           }}

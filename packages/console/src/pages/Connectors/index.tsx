@@ -43,7 +43,7 @@ const Connectors = () => {
     <Card>
       <div className={styles.headline}>
         <CardTitle title="connectors.title" subtitle="connectors.subtitle" />
-        {isSocial && <Button disabled title="admin_console.connectors.create" />}
+        {isSocial && <Button disabled title="admin_console.connectors.create" type="primary" />}
       </div>
       <TabNav>
         <TabNavLink href="/connectors">{t('connectors.tab_email_sms')}</TabNavLink>
@@ -77,7 +77,7 @@ const Connectors = () => {
                   </div>
                   <div className={styles.emptyLine}>{t('connectors.type.social')}</div>
                   <div className={styles.emptyLine}>{t('connectors.social_connector_eg')}</div>
-                  <Button disabled title="admin_console.connectors.create" />
+                  <Button disabled title="admin_console.connectors.create" type="primary" />
                 </div>
               </td>
             </tr>
