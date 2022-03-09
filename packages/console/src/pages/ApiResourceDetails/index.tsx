@@ -93,7 +93,9 @@ const ApiResourceDetails = () => {
                   title="admin_console.api_resource_details.token_expiration_time_in_seconds"
                   className={styles.textField}
                 >
-                  <TextInput {...register('accessTokenTtl', { required: true })} />
+                  <TextInput
+                    {...register('accessTokenTtl', { required: true, valueAsNumber: true })}
+                  />
                 </FormField>
               </div>
               <div className={styles.submit}>
