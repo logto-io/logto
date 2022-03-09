@@ -1,5 +1,4 @@
 import { SchemaLike, GeneratedSchema } from '@logto/schemas';
-import { notFalsy, Truthy } from '@silverhand/essentials';
 import { DatabasePoolType, sql } from 'slonik';
 
 import { isKeyOf } from '@/utils/schema';
@@ -15,11 +14,8 @@ export const buildFindMany = <Schema extends SchemaLike, ReturnType extends Sche
   const isKeyOfSchema = isKeyOf(schema);
   const connectKeyValueWithEqualSign = (data: Partial<Schema>) =>
     Object.entries(data)
-      .map(
-        ([key, value]) =>
-          isKeyOfSchema(key) && sql`${fields[key]}=${convertToPrimitiveOrSql(key, value)}`
-      )
-      .filter((value): value is Truthy<typeof value> => notFalsy(value));
+      .filter((entry): entry is [keyof Schema & string, any] => isKeyOfSchema(entry[0]))
+      .map(([key, value]) => sql`${fields[key]}=${convertToPrimitiveOrSql(key, value)}`);
 
   return async ({ where, limit, offset }: FindManyData<Schema> = {}) => {
     return pool.any<ReturnType>(sql`
