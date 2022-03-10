@@ -15,7 +15,7 @@ export const findTotalNumberOfApplications = async () => getTotalRowCount(table)
 const findApplicationMany = buildFindMany<CreateApplication, Application>(pool, Applications);
 
 export const findAllApplications = async (limit: number, offset: number) =>
-  findApplicationMany({ limit, offset });
+  findApplicationMany({ orderBy: { createdAt: 'desc' }, limit, offset });
 
 export const findApplicationById = async (id: string) =>
   pool.one<Application>(sql`
