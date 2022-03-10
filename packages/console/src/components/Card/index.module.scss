@@ -3,5 +3,6 @@
 .card {
   background: var(--color-card-background);
   border-radius: _.unit(4);
+  padding: _.unit(6);
   height: 100%;
 }

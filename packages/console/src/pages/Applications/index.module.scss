@@ -3,11 +3,10 @@
 .headline {
   display: flex;
   justify-content: space-between;
-  padding: _.unit(6) _.unit(6) 0;
 }
 
 .table {
-  margin: _.unit(4) _.unit(6) _.unit(6);
+  margin-top: _.unit(4);
 
   tbody {
     max-height: calc(100vh - _.unit(64));
