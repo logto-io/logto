@@ -24,11 +24,21 @@ table {
   border-spacing: 0;
   overflow: hidden;
 
+  thead,
+  tbody,
+  tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+  }
+
   thead {
-    td {
+    th {
       font: var(--font-subhead-2);
       color: var(--color-component-caption);
       padding: _.unit(3) _.unit(4);
+      border-bottom: 1px solid var(--color-neutral-90);
+      text-align: left;
 
       &:first-child,
       &:last-child {
@@ -38,8 +48,13 @@ table {
   }
 
   tbody {
+    display: block;
+    overflow: auto;
+    table-layout: fixed;
+    max-height: calc(100% - _.unit(40));
+
     td {
-      border-top: 1px solid var(--color-neutral-90);
+      border-bottom: 1px solid var(--color-neutral-90);
       padding: _.unit(5) _.unit(4);
 
       &:first-child,
@@ -47,5 +62,9 @@ table {
         padding: _.unit(5) _.unit(8);
       }
     }
+  }
+
+  tr:last-child td {
+    border-bottom: none;
   }
 }

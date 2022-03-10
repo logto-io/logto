@@ -3,17 +3,21 @@
 .headline {
   display: flex;
   justify-content: space-between;
+  padding: _.unit(6) _.unit(6) 0;
 }
 
 .table {
-  margin-top: _.unit(6);
-  width: 100%;
+  margin: _.unit(4) _.unit(6) _.unit(6);
 
-  tbody tr.clickable {
-    cursor: pointer;
+  tbody {
+    max-height: calc(100vh - _.unit(64));
 
-    &:hover {
-      background: var(--color-table-row-selected);
+    tr.clickable {
+      cursor: pointer;
+
+      &:hover {
+        background: var(--color-table-row-selected);
+      }
     }
   }
 }
