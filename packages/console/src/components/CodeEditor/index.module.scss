@@ -1,0 +1,9 @@
+@use '@/scss/underscore' as _;
+
+.editor {
+  margin: _.unit(1) 0;
+
+  textarea {
+    width: 100%;
+  }
+}

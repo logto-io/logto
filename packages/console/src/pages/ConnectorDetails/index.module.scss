@@ -64,3 +64,15 @@
     }
   }
 }
+
+.space {
+  margin-bottom: _.unit(4);
+}
+
+.actions {
+  border-top: 1px solid var(--color-border);
+  display: flex;
+  justify-content: right;
+  padding: _.unit(4) 0;
+  margin-top: _.unit(6);
+}

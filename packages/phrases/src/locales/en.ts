@@ -113,6 +113,10 @@ const translation = {
     connector_details: {
       back_to_connectors: 'Back to Connectors',
       check_readme: 'Check README',
+      tab_settings: 'Settings',
+      save_changes: 'Save Changes',
+      save_error_empty_config: 'Please enter config.',
+      save_error_json_parse_error: 'Please enter valid JSON.',
     },
   },
 };
