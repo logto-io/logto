@@ -6,7 +6,7 @@
   border-radius: 8px;
   background: #191c1d;
   color: #e0e3e3;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 8%);
+  box-shadow: var(--light-shadow-s1);
   padding: _.unit(2) _.unit(3);
   font: var(--font-body);
 
@@ -20,6 +20,6 @@
     left: 50%;
     top: 100%;
     transform: translateX(-50%);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 8%);
+    box-shadow: var(--light-shadow-s1);
   }
 }
