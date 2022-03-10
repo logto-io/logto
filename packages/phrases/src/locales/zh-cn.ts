@@ -119,6 +119,7 @@ const translation = {
       save_changes: '保存',
       save_error_empty_config: '请输入配置内容。',
       save_error_json_parse_error: '请输入符合 JSON 格式的配置。',
+      save_success: '保存成功',
     },
   },
 };

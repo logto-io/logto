@@ -117,6 +117,7 @@ const translation = {
       save_changes: 'Save Changes',
       save_error_empty_config: 'Please enter config.',
       save_error_json_parse_error: 'Please enter valid JSON.',
+      save_success: 'Saved!',
     },
   },
 };

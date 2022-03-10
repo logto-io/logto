@@ -1,6 +1,7 @@
 import { ConnectorDTO, RequestErrorBody } from '@logto/schemas';
 import ky, { HTTPError } from 'ky';
 import React, { useEffect, useState } from 'react';
+import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import ReactModal from 'react-modal';
 import { useParams } from 'react-router-dom';
@@ -57,7 +58,7 @@ const ConnectorDetails = () => {
       await ky
         .patch(`/api/connectors/${connectorId}`, { json: { config: configJson } })
         .json<ConnectorDTO>();
-      // TODO: show a toast, awaiting PR #354.
+      toast.success(t('connector_details.save_success'));
     } catch (error: unknown) {
       if (error instanceof SyntaxError) {
         setSaveError(t('connector_details.save_error_json_parse_error'));
