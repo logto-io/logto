@@ -3,48 +3,48 @@
 import { z } from 'zod';
 
 import {
-  CompanyInfo,
-  companyInfoGuard,
   Branding,
   brandingGuard,
+  LanguageInfo,
+  languageInfoGuard,
   TermsOfUse,
   termsOfUseGuard,
-  Localization,
-  localizationGuard,
-  SignInMethodSettings,
-  signInMethodSettingsGuard,
+  SignInMethods,
+  signInMethodsGuard,
+  ConnectorIds,
+  connectorIdsGuard,
   GeneratedSchema,
   Guard,
 } from '../foundations';
 
 export type CreateSignInExperience = {
   id: string;
-  companyInfo: CompanyInfo;
-  branding: Branding;
-  termsOfUse: TermsOfUse;
+  branding?: Branding;
+  languageInfo?: LanguageInfo;
+  termsOfUse?: TermsOfUse;
   forgetPasswordEnabled?: boolean;
-  localization: Localization;
-  signInMethods: SignInMethodSettings;
+  signInMethods?: SignInMethods;
+  socialSignInConnectorIds?: ConnectorIds;
 };
 
 export type SignInExperience = {
   id: string;
-  companyInfo: CompanyInfo;
   branding: Branding;
+  languageInfo: LanguageInfo;
   termsOfUse: TermsOfUse;
   forgetPasswordEnabled: boolean;
-  localization: Localization;
-  signInMethods: SignInMethodSettings;
+  signInMethods: SignInMethods;
+  socialSignInConnectorIds: ConnectorIds;
 };
 
 const createGuard: Guard<CreateSignInExperience> = z.object({
   id: z.string(),
-  companyInfo: companyInfoGuard,
-  branding: brandingGuard,
-  termsOfUse: termsOfUseGuard,
+  branding: brandingGuard.optional(),
+  languageInfo: languageInfoGuard.optional(),
+  termsOfUse: termsOfUseGuard.optional(),
   forgetPasswordEnabled: z.boolean().optional(),
-  localization: localizationGuard,
-  signInMethods: signInMethodSettingsGuard,
+  signInMethods: signInMethodsGuard.optional(),
+  socialSignInConnectorIds: connectorIdsGuard.optional(),
 });
 
 export const SignInExperiences: GeneratedSchema<CreateSignInExperience> = Object.freeze({
@@ -52,21 +52,21 @@ export const SignInExperiences: GeneratedSchema<CreateSignInExperience> = Object
   tableSingular: 'sign_in_experience',
   fields: {
     id: 'id',
-    companyInfo: 'company_info',
     branding: 'branding',
+    languageInfo: 'language_info',
     termsOfUse: 'terms_of_use',
     forgetPasswordEnabled: 'forget_password_enabled',
-    localization: 'localization',
     signInMethods: 'sign_in_methods',
+    socialSignInConnectorIds: 'social_sign_in_connector_ids',
   },
   fieldKeys: [
     'id',
-    'companyInfo',
     'branding',
+    'languageInfo',
     'termsOfUse',
     'forgetPasswordEnabled',
-    'localization',
     'signInMethods',
+    'socialSignInConnectorIds',
   ],
   createGuard,
 });

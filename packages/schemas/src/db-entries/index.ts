@@ -10,6 +10,5 @@ export * from './resource';
 export * from './role';
 export * from './setting';
 export * from './sign-in-experience';
-export * from './sign-in-method';
 export * from './user-log';
 export * from './user';
