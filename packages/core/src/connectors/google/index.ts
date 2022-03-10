@@ -2,7 +2,7 @@
  * The Implementation of OpenID Connect of Google Identity Platform.
  * https://developers.google.com/identity/protocols/oauth2/openid-connect
  */
-import * as fs from 'fs';
+import { readFileSync } from 'fs';
 
 import { conditional } from '@silverhand/essentials';
 import got, { RequestError as GotRequestError } from 'got';
@@ -37,7 +37,7 @@ export const metadata: ConnectorMetadata = {
     en: 'Sign In with Google',
     'zh-CN': 'Google登录',
   },
-  readme: fs.readFileSync('./README.md', 'utf8'),
+  readme: readFileSync('./README.md', 'utf8'),
 };
 
 const googleConfigGuard = z.object({

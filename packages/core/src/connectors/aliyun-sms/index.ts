@@ -1,4 +1,4 @@
-import * as fs from 'fs';
+import { readFileSync } from 'fs';
 
 import { z } from 'zod';
 
@@ -29,7 +29,7 @@ export const metadata: ConnectorMetadata = {
     'zh-CN':
       '短信服务（Short Message Service）是指通过调用短信发送API，将指定短信内容发送给指定手机用户。',
   },
-  readme: fs.readFileSync('./README.md', 'utf8'),
+  readme: readFileSync('./README.md', 'utf8'),
 };
 
 /**

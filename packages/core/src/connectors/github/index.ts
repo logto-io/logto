@@ -1,4 +1,4 @@
-import * as fs from 'fs';
+import { readFileSync } from 'fs';
 
 import got, { RequestError as GotRequestError } from 'got';
 import { stringify } from 'query-string';
@@ -31,7 +31,7 @@ export const metadata: ConnectorMetadata = {
     en: 'Sign In with GitHub',
     'zh-CN': 'GitHub登录',
   },
-  readme: fs.readFileSync('./README.md', 'utf8'),
+  readme: readFileSync('./README.md', 'utf8'),
 };
 
 const githubConfigGuard = z.object({
