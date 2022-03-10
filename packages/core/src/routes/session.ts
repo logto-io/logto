@@ -484,7 +484,10 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
       ctx.userLog.phone = phone;
       ctx.userLog.type = UserLogType.ForgotPasswordPhone;
 
-      assertThat(await hasUserWithPhone(phone), 'user.phone_not_exists');
+      assertThat(
+        await hasUserWithPhone(phone),
+        new RequestError({ code: 'user.phone_not_exists', status: 422 })
+      );
       const { id } = await findUserByPhone(phone);
       ctx.userLog.userId = id;
 

@@ -740,7 +740,7 @@ describe('sessionRoutes', () => {
       const response = await sessionRequest
         .post('/session/forgot-password/phone/send-passcode')
         .send({ phone: '13000000001' });
-      expect(response).toHaveProperty('statusCode', 400);
+      expect(response).toHaveProperty('statusCode', 422);
     });
 
     it('create and send passcode', async () => {
