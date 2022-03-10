@@ -2,6 +2,8 @@
  * Reference: Manually Build a Login Flow
  * https://developers.facebook.com/docs/facebook-login/manually-build-a-login-flow
  */
+import * as fs from 'fs';
+
 import got, { RequestError as GotRequestError } from 'got';
 import { stringify } from 'query-string';
 import { z } from 'zod';
@@ -38,6 +40,7 @@ export const metadata: ConnectorMetadata = {
     en: 'Sign In with Facebook',
     'zh-CN': 'Facebook 登录',
   },
+  readme: fs.readFileSync('./README.md', 'utf8'),
 };
 
 const facebookConfigGuard = z.object({

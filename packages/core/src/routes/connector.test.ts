@@ -189,6 +189,7 @@ describe('connector route', () => {
             name: {},
             logo: './logo.png',
             description: {},
+            readme: 'README.md',
           },
         };
       });
@@ -228,6 +229,7 @@ describe('connector route', () => {
             name: {},
             logo: './logo.png',
             description: {},
+            readme: 'README.md',
           },
         };
       });
@@ -247,6 +249,7 @@ describe('connector route', () => {
           name: {},
           logo: './logo.png',
           description: {},
+          readme: 'README.md',
         },
       });
       expect(response).toHaveProperty('statusCode', 200);
@@ -268,6 +271,7 @@ describe('connector route', () => {
             name: {},
             logo: './logo.png',
             description: {},
+            readme: 'README.md',
           },
         };
       });
@@ -302,6 +306,7 @@ describe('connector route', () => {
           name: {},
           logo: './logo.png',
           description: {},
+          readme: 'README.md',
         },
       });
       expect(response).toHaveProperty('statusCode', 200);
@@ -322,6 +327,7 @@ describe('connector route', () => {
             name: {},
             logo: './logo.png',
             description: {},
+            readme: 'README.md',
           },
         };
       });
@@ -341,6 +347,7 @@ describe('connector route', () => {
           name: {},
           logo: './logo.png',
           description: {},
+          readme: 'README.md',
         },
       });
       expect(response).toHaveProperty('statusCode', 200);
@@ -399,6 +406,7 @@ describe('connector route', () => {
             name: {},
             logo: './logo.png',
             description: {},
+            readme: 'README.md',
           },
           validateConfig: async (_config) => {
             throw new ConnectorError(ConnectorErrorCodes.InvalidConfig);
@@ -426,6 +434,7 @@ describe('connector route', () => {
             name: {},
             logo: './logo.png',
             description: {},
+            readme: 'README.md',
           },
           // eslint-disable-next-line @typescript-eslint/no-empty-function
           validateConfig: async (_config) => {},
@@ -447,6 +456,7 @@ describe('connector route', () => {
           name: {},
           logo: './logo.png',
           description: {},
+          readme: 'README.md',
         },
       });
       expect(response).toHaveProperty('statusCode', 200);

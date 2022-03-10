@@ -1,3 +1,5 @@
+import * as fs from 'fs';
+
 import { z } from 'zod';
 
 import assertThat from '@/utils/assert-that';
@@ -27,6 +29,7 @@ export const metadata: ConnectorMetadata = {
     'zh-CN':
       '短信服务（Short Message Service）是指通过调用短信发送API，将指定短信内容发送给指定手机用户。',
   },
+  readme: fs.readFileSync('./README.md', 'utf8'),
 };
 
 /**

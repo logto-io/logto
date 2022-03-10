@@ -1,3 +1,5 @@
+import * as fs from 'fs';
+
 import { z } from 'zod';
 
 import assertThat from '@/utils/assert-that';
@@ -27,6 +29,7 @@ export const metadata: ConnectorMetadata = {
     'zh-CN':
       '邮件推送（DirectMail）是款简单高效的电子邮件群发服务，构建在阿里云基础之上，帮您快速、精准地实现事务邮件、通知邮件和批量邮件的发送。',
   },
+  readme: fs.readFileSync('./README.md', 'utf8'),
 };
 
 /**
