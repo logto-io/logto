@@ -81,9 +81,9 @@ const CreateForm = ({ onClose }: Props) => {
           title="admin_console.applications.application_description"
           className={styles.textField}
         >
-          <TextInput />
+          <TextInput {...register('description')} />
         </FormField>
-        <div className={styles.submit} {...register('description')}>
+        <div className={styles.submit}>
           <Button
             htmlType="submit"
             title="admin_console.applications.create"
