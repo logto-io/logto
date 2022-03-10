@@ -1,19 +1,24 @@
 import { ConnectorDTO } from '@logto/schemas';
-import React from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import ReactModal from 'react-modal';
 import { useParams } from 'react-router-dom';
 import useSWR from 'swr';
 
 import BackLink from '@/components/BackLink';
+import Button from '@/components/Button';
 import Card from '@/components/Card';
 import ImagePlaceholder from '@/components/ImagePlaceholder';
 import Status from '@/components/Status';
+import Close from '@/icons/Close';
+import * as drawerStyles from '@/scss/drawer.module.scss';
 import { RequestError } from '@/swr';
 
 import * as styles from './index.module.scss';
 
 const ConnectorDetails = () => {
   const { connectorId } = useParams();
+  const [isReadMeOpen, setIsReadMeOpen] = useState(false);
   const {
     t,
     i18n: { language },
@@ -48,7 +53,30 @@ const ConnectorDetails = () => {
               </Status>
             </div>
           </div>
-          <div>action</div>
+          <div>
+            <Button
+              title="admin_console.connector_details.check_readme"
+              onClick={() => {
+                setIsReadMeOpen(true);
+              }}
+            />
+            <ReactModal
+              isOpen={isReadMeOpen}
+              className={drawerStyles.content}
+              overlayClassName={drawerStyles.overlay}
+            >
+              <div className={styles.readme}>
+                <div className={styles.headline}>
+                  <Close
+                    onClick={() => {
+                      setIsReadMeOpen(false);
+                    }}
+                  />
+                </div>
+                <div>README</div>
+              </div>
+            </ReactModal>
+          </div>
         </Card>
       )}
     </div>

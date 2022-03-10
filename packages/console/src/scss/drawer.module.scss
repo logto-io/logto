@@ -1,0 +1,14 @@
+.content {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  outline: none;
+}
+
+.overlay {
+  position: fixed;
+  background: rgba(0, 0, 0, 40%);
+  inset: 0;
+}
