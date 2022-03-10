@@ -1,13 +1,14 @@
 import { I18nKey } from '@logto/phrases';
 import classNames from 'classnames';
-import React, { HTMLProps } from 'react';
+import React, { HTMLProps, ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import * as styles from './index.module.scss';
 
-type Props = Omit<HTMLProps<HTMLButtonElement>, 'type' | 'size' | 'title'> & {
+type Props = Omit<HTMLProps<HTMLButtonElement>, 'type' | 'size' | 'icon' | 'title'> & {
   htmlType?: 'button' | 'submit' | 'reset';
-  title: I18nKey;
+  icon?: ReactNode;
+  title?: I18nKey;
   type?: 'primary' | 'danger' | 'default';
   size?: 'small' | 'medium' | 'large';
 };
@@ -16,6 +17,7 @@ const Button = ({
   htmlType = 'button',
   type = 'default',
   size = 'medium',
+  icon,
   title,
   ...rest
 }: Props) => {
@@ -27,7 +29,8 @@ const Button = ({
       type={htmlType}
       {...rest}
     >
-      {t(title)}
+      {icon && icon}
+      {title && t(title)}
     </button>
   );
 };

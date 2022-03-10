@@ -4,9 +4,14 @@
   border: none;
   outline: none;
   border-radius: _.unit(2);
+  vertical-align: middle;
   font: var(--font-button);
   transition: background 0.2s ease-in-out;
   @include _.text-ellipsis;
+
+  > svg {
+    vertical-align: middle;
+  }
 
   &:not(:disabled) {
     cursor: pointer;

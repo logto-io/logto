@@ -14,6 +14,7 @@ import FormField from '@/components/FormField';
 import ImagePlaceholder from '@/components/ImagePlaceholder';
 import TabNav, { TabNavLink } from '@/components/TabNav';
 import TextInput from '@/components/TextInput';
+import More from '@/icons/More';
 import { RequestError } from '@/swr';
 
 import * as styles from './index.module.scss';
@@ -79,6 +80,7 @@ const ApiResourceDetails = () => {
             </div>
             <div className={styles.operation}>
               <Button title="admin_console.api_resource_details.check_help_guide" />
+              <Button icon={<More />} />
             </div>
           </Card>
           <Card className={styles.body}>
