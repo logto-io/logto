@@ -1,0 +1,35 @@
+import { render, fireEvent } from '@testing-library/react';
+import React from 'react';
+
+import PasswordInput from './PasswordInput';
+
+describe('Input Field UI Component', () => {
+  const text = 'foo';
+  const onChange = jest.fn();
+
+  test('render password input', () => {
+    const { container } = render(<PasswordInput name="foo" value={text} onChange={onChange} />);
+
+    const inputEle = container.querySelector('input');
+    expect(inputEle?.value).toEqual(text);
+    expect(inputEle?.type).toEqual('password');
+
+    if (inputEle) {
+      fireEvent.change(inputEle, { target: { value: 'update' } });
+      expect(onChange).toBeCalledWith('update');
+    }
+  });
+
+  test('click on toggle visibility button', () => {
+    const { container } = render(<PasswordInput name="foo" value={text} onChange={onChange} />);
+
+    const inputEle = container.querySelector('input');
+    const visibilityButton = container.querySelector('svg');
+    expect(visibilityButton).not.toBeNull();
+
+    if (visibilityButton) {
+      fireEvent.click(visibilityButton);
+      expect(inputEle?.type).toEqual('text');
+    }
+  });
+});

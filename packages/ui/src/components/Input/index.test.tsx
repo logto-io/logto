@@ -7,7 +7,7 @@ describe('Input Field UI Component', () => {
   const text = 'foo';
   const onChange = jest.fn();
 
-  test('render with input value', () => {
+  test('render plain text input with value', () => {
     const { container } = render(<Input name="foo" value={text} onChange={onChange} />);
     const inputEle = container.querySelector('input');
     expect(inputEle).not.toBeNull();
@@ -22,11 +22,11 @@ describe('Input Field UI Component', () => {
 
   test('click on clear button', () => {
     const { container } = render(<Input name="foo" value={text} onChange={onChange} />);
-    const closeIcon = container.querySelector('svg');
-    expect(closeIcon).not.toBeNull();
+    const clearIcon = container.querySelector('svg');
+    expect(clearIcon).not.toBeNull();
 
-    if (closeIcon) {
-      fireEvent.click(closeIcon);
+    if (clearIcon) {
+      fireEvent.click(clearIcon);
       expect(onChange).toBeCalledWith('');
     }
   });
