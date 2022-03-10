@@ -21,11 +21,11 @@ describe('sign-in-experience query', () => {
   const { table, fields } = convertToIdentifiers(SignInExperiences);
   const dbvalue = {
     ...mockSignInExperience,
-    companyInfo: JSON.stringify(mockSignInExperience.companyInfo),
     branding: JSON.stringify(mockSignInExperience.branding),
     termsOfUse: JSON.stringify(mockSignInExperience.termsOfUse),
-    localization: JSON.stringify(mockSignInExperience.localization),
-    signInMethods: JSON.stringify(mockSignInExperience.signInMethods),
+    languageInfo: JSON.stringify(mockSignInExperience.languageInfo),
+    signInMethods: JSON.stringify(mockSignInExperience.socialSignInConnectorIds),
+    socialSignInConnectorIds: JSON.stringify(mockSignInExperience.socialSignInConnectorIds),
   };
 
   it('findDefaultSignInExperience', async () => {
