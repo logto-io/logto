@@ -1,0 +1,35 @@
+@use '@/scss/underscore' as _;
+
+.fields {
+  display: flex;
+  align-items: flex-end;
+  margin-bottom: _.unit(1);
+
+  .textField {
+    @include _.form-text-field;
+  }
+
+  .send {
+    margin-left: _.unit(1);
+    margin-bottom: 1px;
+  }
+}
+
+.error {
+  font: var(--font-body-2);
+  color: var(--color-error);
+}
+
+.description {
+  font: var(--font-body-2);
+  color: var(--color-component-caption);
+}
+
+div.successTooltip {
+  background: #008a71;
+  color: #fff;
+
+  &::after {
+    border-top-color: #008a71;
+  }
+}

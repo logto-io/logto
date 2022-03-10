@@ -9,6 +9,7 @@ type Props<T> = {
   content: ReactNode;
   domRef: RefObject<Nullable<T>>;
   className?: string;
+  isAuto?: boolean;
 };
 
 type Position = {
@@ -16,7 +17,7 @@ type Position = {
   left: number;
 };
 
-const Tooltip = <T extends Element>({ content, domRef, className }: Props<T>) => {
+const Tooltip = <T extends Element>({ content, domRef, className, isAuto = true }: Props<T>) => {
   const [tooltipDom, setTooltipDom] = useState<HTMLDivElement>();
   const [position, setPosition] = useState<Position>();
   const isVisible = position !== undefined;
@@ -27,6 +28,14 @@ const Tooltip = <T extends Element>({ content, domRef, className }: Props<T>) =>
     }
 
     const dom = domRef.current;
+
+    if (!isAuto) {
+      const { top, left, width } = domRef.current.getBoundingClientRect();
+      const { scrollTop, scrollLeft } = document.documentElement;
+      setPosition({ top: top + scrollTop - 12, left: left + scrollLeft + width / 2 });
+
+      return;
+    }
 
     const enterHandler = () => {
       if (domRef.current) {
@@ -47,7 +56,7 @@ const Tooltip = <T extends Element>({ content, domRef, className }: Props<T>) =>
       dom.removeEventListener('mouseenter', enterHandler);
       dom.removeEventListener('mouseleave', leaveHandler);
     };
-  }, [domRef]);
+  }, [domRef, isAuto]);
 
   useEffect(() => {
     if (!isVisible) {

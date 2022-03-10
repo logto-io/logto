@@ -74,6 +74,9 @@ const translation = {
         },
       },
     },
+    application_details: {
+      back_to_applications: 'Back to Applications',
+    },
     api_resources: {
       title: 'API Resources',
       subtitle: 'Define APIs that you can consume from your authorized applications.',
@@ -107,9 +110,6 @@ const translation = {
         social: 'Social',
       },
     },
-    application_details: {
-      back_to_applications: 'Back to Applications',
-    },
     connector_details: {
       back_to_connectors: 'Back to Connectors',
       check_readme: 'Check README',
@@ -118,6 +118,12 @@ const translation = {
       save_error_empty_config: 'Please enter config.',
       save_error_json_parse_error: 'Please enter valid JSON.',
       save_success: 'Saved!',
+      send: 'Send',
+      send_error_invalid_format: 'Invalid input',
+      test_email_sender: 'Test your email sender',
+      test_sms_sender: 'Test your SMS sender',
+      test_message_sent: 'Test Message Sent!',
+      test_sender_description: 'Test sender description',
     },
   },
 };

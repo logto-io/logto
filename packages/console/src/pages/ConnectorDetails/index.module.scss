@@ -50,6 +50,12 @@
   }
 }
 
+.container .body {
+  > :not(:first-child) {
+    margin-top: _.unit(4);
+  }
+}
+
 .readme {
   background: var(--color-card-background);
   padding: _.unit(6);
@@ -63,10 +69,6 @@
       cursor: pointer;
     }
   }
-}
-
-.space {
-  margin-bottom: _.unit(4);
 }
 
 .actions {

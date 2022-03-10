@@ -36,7 +36,7 @@ export interface SocialConnector extends BaseConnector {
 
 export type SocialConnectorInstance = SocialConnector & { connector: Connector };
 
-type EmailMessageTypes = {
+export type EmailMessageTypes = {
   SignIn: {
     code: string;
   };

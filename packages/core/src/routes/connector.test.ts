@@ -4,6 +4,8 @@ import {
   ConnectorError,
   ConnectorErrorCodes,
   ConnectorMetadata,
+  EmailConnectorInstance,
+  EmailMessageTypes,
   ValidateConfig,
 } from '@/connectors/types';
 import RequestError from '@/errors/RequestError';
@@ -26,6 +28,9 @@ const findConnectorByIdPlaceHolder = jest.fn() as jest.MockedFunction<
 const getConnectorInstanceByIdPlaceHolder = jest.fn() as jest.MockedFunction<
   (connectorId: string) => Promise<ConnectorInstance>
 >;
+const getConnectorInstanceByTypePlaceHolder = jest.fn() as jest.MockedFunction<
+  (type: ConnectorType) => Promise<ConnectorInstance>
+>;
 const getConnectorInstancesPlaceHolder = jest.fn() as jest.MockedFunction<
   () => Promise<ConnectorInstance[]>
 >;
@@ -38,6 +43,8 @@ jest.mock('@/queries/connector', () => ({
 jest.mock('@/connectors', () => ({
   getConnectorInstanceById: async (connectorId: string) =>
     getConnectorInstanceByIdPlaceHolder(connectorId),
+  getConnectorInstanceByType: async (type: ConnectorType) =>
+    getConnectorInstanceByTypePlaceHolder(type),
   getConnectorInstances: async () => getConnectorInstancesPlaceHolder(),
 }));
 
@@ -450,6 +457,94 @@ describe('connector route', () => {
         },
       });
       expect(response).toHaveProperty('statusCode', 200);
+    });
+  });
+
+  describe('POST /connectors/test/email', () => {
+    afterEach(() => {
+      jest.clearAllMocks();
+    });
+
+    it('should get email connector and send message', async () => {
+      const mockedEmailConnector: EmailConnectorInstance = {
+        connector: {
+          id: 'connector_0',
+          enabled: true,
+          config: {},
+          createdAt: 1_234_567_890_123,
+        },
+        metadata: {
+          id: 'connector_0',
+          type: ConnectorType.Email,
+          name: {},
+          logo: './logo.png',
+          description: {},
+        },
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        validateConfig: async (_config: any) => {},
+        sendMessage: async (
+          address: string,
+          type: keyof EmailMessageTypes,
+          _payload: EmailMessageTypes[typeof type]
+          // eslint-disable-next-line @typescript-eslint/no-empty-function
+        ): Promise<any> => {},
+      };
+
+      getConnectorInstanceByTypePlaceHolder.mockImplementationOnce(async (_: ConnectorType) => {
+        return mockedEmailConnector;
+      });
+
+      const sendMessageSpy = jest.spyOn(mockedEmailConnector, 'sendMessage');
+      const response = await connectorRequest
+        .post('/connectors/test/email')
+        .send({ email: 'test@email.com' });
+      expect(getConnectorInstanceByTypePlaceHolder).toHaveBeenCalledWith(ConnectorType.Email);
+      expect(sendMessageSpy).toHaveBeenCalledTimes(1);
+      expect(response).toHaveProperty('statusCode', 204);
+    });
+  });
+
+  describe('POST /connectors/test/sms', () => {
+    afterEach(() => {
+      jest.clearAllMocks();
+    });
+
+    it('should get SMS connector and send message', async () => {
+      const mockedEmailConnector: EmailConnectorInstance = {
+        connector: {
+          id: 'connector_0',
+          enabled: true,
+          config: {},
+          createdAt: 1_234_567_890_123,
+        },
+        metadata: {
+          id: 'connector_0',
+          type: ConnectorType.SMS,
+          name: {},
+          logo: './logo.png',
+          description: {},
+        },
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        validateConfig: async (_config: any) => {},
+        sendMessage: async (
+          address: string,
+          type: keyof EmailMessageTypes,
+          _payload: EmailMessageTypes[typeof type]
+          // eslint-disable-next-line @typescript-eslint/no-empty-function
+        ): Promise<any> => {},
+      };
+
+      getConnectorInstanceByTypePlaceHolder.mockImplementationOnce(async (_: ConnectorType) => {
+        return mockedEmailConnector;
+      });
+
+      const sendMessageSpy = jest.spyOn(mockedEmailConnector, 'sendMessage');
+      const response = await connectorRequest
+        .post('/connectors/test/sms')
+        .send({ phone: '12345678901' });
+      expect(getConnectorInstanceByTypePlaceHolder).toHaveBeenCalledWith(ConnectorType.SMS);
+      expect(sendMessageSpy).toHaveBeenCalledTimes(1);
+      expect(response).toHaveProperty('statusCode', 204);
     });
   });
 });
