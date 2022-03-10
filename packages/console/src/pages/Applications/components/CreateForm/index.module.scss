@@ -22,7 +22,7 @@
 }
 
 .textField {
-  max-width: 556px;
+  @include _.form-text-field;
 }
 
 .submit {
