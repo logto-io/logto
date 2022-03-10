@@ -4,7 +4,7 @@ div.toast {
   padding: _.unit(3) _.unit(4);
   font: var(--font-body-2);
   color: var(--color-component-text);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 8%);
+  box-shadow: var(--light-shadow-s1);
   border-radius: _.unit(2);
   max-width: none;
 
