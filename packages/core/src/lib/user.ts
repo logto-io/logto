@@ -2,7 +2,7 @@ import { UsersPasswordEncryptionMethod, User } from '@logto/schemas';
 import { nanoid } from 'nanoid';
 import pRetry from 'p-retry';
 
-import { findUserById, findUserByUsername, hasUserWithId } from '@/queries/user';
+import { findUserByUsername, hasUserWithId } from '@/queries/user';
 import assertThat from '@/utils/assert-that';
 import { buildIdGenerator } from '@/utils/id';
 import { encryptPassword } from '@/utils/password';
@@ -41,36 +41,6 @@ export const encryptUserPassword = (
   );
 
   return { passwordEncrypted, passwordEncryptionMethod, passwordEncryptionSalt };
-};
-
-export const findUserSignInMethodsById = async (
-  id: string
-): Promise<{
-  usernameAndPassword: boolean;
-  emailPasswordless: boolean;
-  phonePasswordless: boolean;
-  social: boolean;
-}> => {
-  const user = await findUserById(id);
-  const {
-    username,
-    passwordEncrypted,
-    passwordEncryptionMethod,
-    passwordEncryptionSalt,
-    primaryEmail,
-    primaryPhone,
-    identities,
-  } = user;
-
-  const usernameAndPassword = Boolean(
-    username && passwordEncrypted && passwordEncryptionMethod && passwordEncryptionSalt
-  );
-  const emailPasswordless = Boolean(primaryEmail);
-  const phonePasswordless = Boolean(primaryPhone);
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-  const social = identities && Object.keys(identities).length > 0;
-
-  return { usernameAndPassword, emailPasswordless, phonePasswordless, social };
 };
 
 export const findUserByUsernameAndPassword = async (

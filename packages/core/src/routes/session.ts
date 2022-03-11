@@ -16,12 +16,7 @@ import {
   getUserInfoByAuthCode,
   getUserInfoFromInteractionResult,
 } from '@/lib/social';
-import {
-  generateUserId,
-  encryptUserPassword,
-  findUserSignInMethodsById,
-  findUserByUsernameAndPassword,
-} from '@/lib/user';
+import { encryptUserPassword, generateUserId, findUserByUsernameAndPassword } from '@/lib/user';
 import koaGuard from '@/middleware/koa-guard';
 import {
   hasUserWithEmail,
@@ -475,29 +470,6 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
       });
 
       await assignInteractionResults(ctx, provider, { login: { accountId: id } });
-
-      return next();
-    }
-  );
-
-  router.post(
-    '/session/forgot-password/phone/send-passcode',
-    koaGuard({ body: object({ phone: string().regex(phoneRegEx) }) }),
-    async (ctx, next) => {
-      const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
-      const { phone } = ctx.guard.body;
-      ctx.userLog.phone = phone;
-      ctx.userLog.type = UserLogType.ForgotPasswordPhone;
-
-      assertThat(await hasUserWithPhone(phone), 'user.phone_not_exists');
-      const { id } = await findUserByPhone(phone);
-      ctx.userLog.userId = id;
-      const { usernameAndPassword } = await findUserSignInMethodsById(id);
-      assertThat(usernameAndPassword, 'user.username_password_signin_not_exists');
-
-      const passcode = await createPasscode(jti, PasscodeType.ForgotPassword, { phone });
-      await sendPasscode(passcode);
-      ctx.status = 204;
 
       return next();
     }

@@ -19,8 +19,6 @@ export enum UserLogType {
   RegisterEmail = 'RegisterEmail',
   RegisterPhone = 'RegisterPhone',
   RegisterSocial = 'RegisterSocial',
-  ForgotPasswordEmail = 'ForgotPasswordEmail',
-  ForgotPasswordPhone = 'ForgotPasswordPhone',
   ExchangeAccessToken = 'ExchangeAccessToken',
 }
 export enum UserLogResult {
