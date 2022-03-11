@@ -1,4 +1,4 @@
-import { readFileSync } from 'fs';
+import { existsSync, readFileSync } from 'fs';
 
 import got, { RequestError as GotRequestError } from 'got';
 import { stringify } from 'query-string';
@@ -31,7 +31,9 @@ export const metadata: ConnectorMetadata = {
     en: 'Sign In with GitHub',
     'zh-CN': 'GitHub登录',
   },
-  readme: readFileSync('./README.md', 'utf8'),
+  readme: existsSync('./README.md')
+    ? readFileSync('./README.md', 'utf8')
+    : 'Please check README.md file directory.',
 };
 
 const githubConfigGuard = z.object({
