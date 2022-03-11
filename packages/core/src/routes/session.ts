@@ -16,7 +16,7 @@ import {
   getUserInfoByAuthCode,
   getUserInfoFromInteractionResult,
 } from '@/lib/social';
-import { generateUserId, encryptUserPassword, findUserByUsernameAndPassword } from '@/lib/user';
+import { encryptUserPassword, generateUserId, findUserByUsernameAndPassword } from '@/lib/user';
 import koaGuard from '@/middleware/koa-guard';
 import {
   hasUserWithEmail,
@@ -469,128 +469,6 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
         },
       });
 
-      await assignInteractionResults(ctx, provider, { login: { accountId: id } });
-
-      return next();
-    }
-  );
-
-  router.post(
-    '/session/forgot-password/phone/send-passcode',
-    koaGuard({ body: object({ phone: string().regex(phoneRegEx) }) }),
-    async (ctx, next) => {
-      const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
-      const { phone } = ctx.guard.body;
-      ctx.userLog.phone = phone;
-      ctx.userLog.type = UserLogType.ForgotPasswordPhone;
-
-      assertThat(
-        await hasUserWithPhone(phone),
-        new RequestError({ code: 'user.phone_not_exists', status: 422 })
-      );
-      const { id } = await findUserByPhone(phone);
-      ctx.userLog.userId = id;
-
-      const passcode = await createPasscode(jti, PasscodeType.ForgotPassword, { phone });
-      await sendPasscode(passcode);
-      ctx.status = 204;
-
-      return next();
-    }
-  );
-
-  router.post(
-    '/session/forgot-password/phone/verify-passcode-and-reset-password',
-    koaGuard({
-      body: object({
-        phone: string().regex(phoneRegEx),
-        code: string(),
-        password: string().regex(passwordRegEx),
-      }),
-    }),
-    async (ctx, next) => {
-      const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
-      const { phone, code, password } = ctx.guard.body;
-      ctx.userLog.phone = phone;
-      ctx.userLog.type = UserLogType.ForgotPasswordPhone;
-
-      assertThat(
-        await hasUserWithPhone(phone),
-        new RequestError({ code: 'user.phone_not_exists', status: 422 })
-      );
-
-      await verifyPasscode(jti, PasscodeType.ForgotPassword, code, { phone });
-      const { id } = await findUserByPhone(phone);
-      ctx.userLog.userId = id;
-
-      const { passwordEncryptionSalt, passwordEncrypted, passwordEncryptionMethod } =
-        encryptUserPassword(id, password);
-      await updateUserById(id, {
-        passwordEncryptionSalt,
-        passwordEncrypted,
-        passwordEncryptionMethod,
-      });
-      await assignInteractionResults(ctx, provider, { login: { accountId: id } });
-
-      return next();
-    }
-  );
-
-  router.post(
-    '/session/forgot-password/email/send-passcode',
-    koaGuard({ body: object({ email: string().regex(emailRegEx) }) }),
-    async (ctx, next) => {
-      const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
-      const { email } = ctx.guard.body;
-      ctx.userLog.email = email;
-      ctx.userLog.type = UserLogType.ForgotPasswordEmail;
-
-      assertThat(
-        await hasUserWithEmail(email),
-        new RequestError({ code: 'user.email_not_exists', status: 422 })
-      );
-      const { id } = await findUserByEmail(email);
-      ctx.userLog.userId = id;
-
-      const passcode = await createPasscode(jti, PasscodeType.ForgotPassword, { email });
-      await sendPasscode(passcode);
-      ctx.status = 204;
-
-      return next();
-    }
-  );
-
-  router.post(
-    '/session/forgot-password/email/verify-passcode-and-reset-password',
-    koaGuard({
-      body: object({
-        email: string().regex(emailRegEx),
-        code: string(),
-        password: string().regex(passwordRegEx),
-      }),
-    }),
-    async (ctx, next) => {
-      const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
-      const { email, code, password } = ctx.guard.body;
-      ctx.userLog.email = email;
-      ctx.userLog.type = UserLogType.ForgotPasswordEmail;
-
-      assertThat(
-        await hasUserWithEmail(email),
-        new RequestError({ code: 'user.email_not_exists', status: 422 })
-      );
-
-      await verifyPasscode(jti, PasscodeType.ForgotPassword, code, { email });
-      const { id } = await findUserByEmail(email);
-      ctx.userLog.userId = id;
-
-      const { passwordEncryptionSalt, passwordEncrypted, passwordEncryptionMethod } =
-        encryptUserPassword(id, password);
-      await updateUserById(id, {
-        passwordEncryptionSalt,
-        passwordEncrypted,
-        passwordEncryptionMethod,
-      });
       await assignInteractionResults(ctx, provider, { login: { accountId: id } });
 
       return next();
