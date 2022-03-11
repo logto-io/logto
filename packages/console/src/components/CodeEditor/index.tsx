@@ -1,21 +1,50 @@
-import React, { ChangeEventHandler } from 'react';
+import MonacoEditor from '@monaco-editor/react';
+import React from 'react';
 
 import * as styles from './index.module.scss';
 
-// Will be implemented in LOG-1708, defined 2 basic props for now.
 type Props = {
+  language: string;
+  isDarkMode?: boolean;
+  height?: string;
+  isReadonly?: boolean;
   value?: string;
   onChange?: (value: string) => void;
 };
 
-const CodeEditor = ({ value, onChange }: Props) => {
-  const handleChange: ChangeEventHandler<HTMLTextAreaElement> = (event) => {
-    onChange?.(event.target.value);
+const CodeEditor = ({
+  value,
+  onChange,
+  language,
+  height = '300px',
+  isReadonly = false,
+  isDarkMode,
+}: Props) => {
+  const handleChange = (changedValue: string | undefined) => {
+    onChange?.(changedValue ?? '');
+  };
+
+  // See https://microsoft.github.io/monaco-editor/api/enums/monaco.editor.EditorOption.html
+  const options = {
+    readOnly: isReadonly,
+    scrollBeyondLastLine: false,
+    codeLens: false,
+    minimap: {
+      enabled: false,
+    },
+    folding: false,
   };
 
   return (
     <div className={styles.editor}>
-      <textarea rows={10} value={value} onChange={handleChange} />
+      <MonacoEditor
+        language={language}
+        height={height}
+        theme={isDarkMode ? 'vs-dark' : 'vs-light'}
+        value={value}
+        options={options}
+        onChange={handleChange}
+      />
     </div>
   );
 };

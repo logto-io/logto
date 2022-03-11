@@ -24,6 +24,7 @@ importers:
       '@logto/schemas': ^0.1.0
       '@parcel/core': ^2.3.2
       '@parcel/transformer-sass': ^2.3.2
+      '@monaco-editor/react': ^4.3.1
       '@silverhand/eslint-config': ^0.9.4
       '@silverhand/eslint-config-react': ^0.9.5
       '@silverhand/essentials': ^1.1.6
@@ -58,6 +59,7 @@ importers:
     dependencies:
       '@logto/phrases': link:../phrases
       '@logto/schemas': link:../schemas
+      '@monaco-editor/react': 4.3.1_react-dom@17.0.2+react@17.0.2
       '@silverhand/essentials': 1.1.6
       classnames: 2.3.1
       csstype: 3.0.11
@@ -2203,6 +2205,27 @@ packages:
       npmlog: 4.1.2
       write-file-atomic: 3.0.3
     dev: true
+
+  /@monaco-editor/loader/1.2.0:
+    resolution: {integrity: sha512-cJVCG/T/KxXgzYnjKqyAgsKDbH9mGLjcXxN6AmwumBwa2rVFkwvGcUj1RJtD0ko4XqLqJxwqsN/Z/KURB5f1OQ==}
+    peerDependencies:
+      monaco-editor: '>= 0.21.0 < 1'
+    dependencies:
+      state-local: 1.0.7
+    dev: false
+
+  /@monaco-editor/react/4.3.1_react-dom@17.0.2+react@17.0.2:
+    resolution: {integrity: sha512-f+0BK1PP/W5I50hHHmwf11+Ea92E5H1VZXs+wvKplWUWOfyMa1VVwqkJrXjRvbcqHL+XdIGYWhWNdi4McEvnZg==}
+    peerDependencies:
+      monaco-editor: '>= 0.25.0 < 1'
+      react: ^16.8.0 || ^17.0.0
+      react-dom: ^16.8.0 || ^17.0.0
+    dependencies:
+      '@monaco-editor/loader': 1.2.0
+      prop-types: 15.8.1
+      react: 17.0.2
+      react-dom: 17.0.2_react@17.0.2
+    dev: false
 
   /@nodelib/fs.scandir/2.1.5:
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
@@ -12269,6 +12292,10 @@ packages:
     dependencies:
       escape-string-regexp: 2.0.0
     dev: true
+
+  /state-local/1.0.7:
+    resolution: {integrity: sha512-HTEHMNieakEnoe33shBYcZ7NX83ACUjCu8c40iOGEZsngj9zRnkqS9j1pqQPXwobB0ZcVTk27REb7COQ0UR59w==}
+    dev: false
 
   /statuses/1.5.0:
     resolution: {integrity: sha1-Fhx9rBd2Wf2YEfQ3cfqZOBR4Yow=}
