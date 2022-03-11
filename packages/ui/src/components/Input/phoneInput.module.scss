@@ -1,0 +1,26 @@
+@use '@/scss/underscore' as _;
+
+.countryCodeSelector {
+  color: var(--color-font-primary);
+  font: var(--font-control);
+  border: none;
+  background: none;
+  width: auto;
+  @include _.flex-row;
+  position: relative;
+
+  > select {
+    appearance: none;
+    border: none;
+    outline: none;
+    background: none;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    font-size: 0;
+  }
+
+  > svg {
+    fill: var(--color-primary);
+  }
+}

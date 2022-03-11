@@ -6,6 +6,7 @@ const config: Config.InitialOptions = {
   transform: {
     // Enable JS/JSX transformation
     '\\.(ts|js)x?$': 'ts-jest',
+    '\\.(svg)$': 'jest-transform-stub',
   },
   transformIgnorePatterns: [
     '[/\\\\]node_modules[/\\\\]((?!ky[/\\\\]).)+\\.(js|jsx|mjs|cjs|ts|tsx)$',

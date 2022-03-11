@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 
 import { PrivacyIcon } from '../Icons';
 import * as styles from './index.module.scss';
@@ -25,9 +25,7 @@ const PasswordInput = ({
   hasError = false,
   onChange,
 }: Props) => {
-  const inputReference = useRef<HTMLInputElement>(null);
-
-  // Used to toggle the password visibility
+  // Toggle the password visibility
   const [type, setType] = useState('password');
   const [onFocus, setOnFocus] = useState(false);
   const iconType = type === 'password' ? 'hide' : 'show';
@@ -35,7 +33,6 @@ const PasswordInput = ({
   return (
     <div className={classNames(styles.wrapper, className)}>
       <input
-        ref={inputReference}
         name={name}
         disabled={isDisabled}
         className={classNames(styles.input, hasError && styles.error)}
@@ -58,7 +55,6 @@ const PasswordInput = ({
           className={classNames(styles.actionButton, iconType === 'hide' && styles.highlight)}
           type={iconType}
           onMouseDown={(event) => {
-            // Should execute before onFocus
             event.preventDefault();
             setType(type === 'password' ? 'text' : 'password');
           }}

@@ -68,7 +68,8 @@ type AutoCompleteType =
   | 'bday-year'
   | 'sex'
   | 'url'
-  | 'photo';
+  | 'photo'
+  | 'mobile';
 
 // TO-DO: remove me
 interface Body {

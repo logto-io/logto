@@ -12,7 +12,6 @@ describe('Input Field UI Component', () => {
     const inputEle = container.querySelector('input');
     expect(inputEle).not.toBeNull();
     expect(inputEle?.value).toEqual(text);
-    expect(container.querySelector('svg')).not.toBeNull();
 
     if (inputEle) {
       fireEvent.change(inputEle, { target: { value: 'update' } });
@@ -22,11 +21,19 @@ describe('Input Field UI Component', () => {
 
   test('click on clear button', () => {
     const { container } = render(<Input name="foo" value={text} onChange={onChange} />);
+    const inputField = container.querySelector('input');
+
+    expect(container.querySelector('svg')).toBeNull();
+
+    if (inputField) {
+      fireEvent.focus(inputField);
+    }
+
     const clearIcon = container.querySelector('svg');
     expect(clearIcon).not.toBeNull();
 
     if (clearIcon) {
-      fireEvent.click(clearIcon);
+      fireEvent.mouseDown(clearIcon);
       expect(onChange).toBeCalledWith('');
     }
   });

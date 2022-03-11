@@ -2,38 +2,48 @@
 
 .wrapper {
   position: relative;
-}
-
-.input {
-  width: 100%;
-  padding: _.unit(3) _.unit(12) _.unit(3) _.unit(5);
+  @include _.flex-row;
+  padding: 0 _.unit(4);
   border-radius: _.unit(2);
   border: _.border();
   background: var(--color-control-background);
   color: var(--color-font-primary);
-  caret-color: var(--color-primary);
-  font: var(--font-control);
-  transition: var(--transition-default-control);
 
-  &::placeholder {
-    color: var(--color-font-tertiary-3);
+  > *:not(:first-child) {
+    margin-left: _.unit(1);
   }
 
-  &:focus {
+  &.focus {
     border: _.border(var(--color-control-focus));
   }
-}
 
-.error,
-.error:focus {
-  border: _.border(var(--color-error));
+  &.error {
+    border: _.border(var(--color-error));
+  }
+
+  input {
+    flex: 1;
+    border: none;
+    background: none;
+    padding: _.unit(3) 0;
+    caret-color: var(--color-primary);
+    font: var(--font-control);
+    transition: var(--transition-default-control);
+
+    &::placeholder {
+      color: var(--color-font-tertiary-3);
+    }
+
+    &:-webkit-autofill {
+      box-shadow: 0 0 0 30px var(--color-control-background) inset;
+      transition: background-color 5000s ease-in-out 0s;
+    }
+  }
 }
 
 .actionButton {
-  position: absolute;
-  right: _.unit(5);
-  bottom: 50%;
-  transform: translateY(50%);
+  margin-left: _.unit();
+  width: _.unit(6);
   fill: var(--color-neutral-70);
 
   &.highlight {
