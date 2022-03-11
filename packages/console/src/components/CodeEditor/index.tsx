@@ -1,4 +1,5 @@
 import MonacoEditor from '@monaco-editor/react';
+import * as monaco from 'monaco-editor';
 import React from 'react';
 
 import * as styles from './index.module.scss';
@@ -20,12 +21,12 @@ const CodeEditor = ({
   isReadonly = false,
   isDarkMode,
 }: Props) => {
-  const handleChange = (changedValue: string | undefined) => {
-    onChange?.(changedValue ?? '');
+  const handleChange = (changedValue = '') => {
+    onChange?.(changedValue);
   };
 
   // See https://microsoft.github.io/monaco-editor/api/enums/monaco.editor.EditorOption.html
-  const options = {
+  const options: monaco.editor.IStandaloneEditorConstructionOptions = {
     readOnly: isReadonly,
     scrollBeyondLastLine: false,
     codeLens: false,
