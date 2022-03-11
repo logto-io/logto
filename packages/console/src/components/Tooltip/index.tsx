@@ -9,7 +9,7 @@ type Props<T> = {
   content: ReactNode;
   domRef: RefObject<Nullable<T>>;
   className?: string;
-  isAuto?: boolean;
+  behavior?: 'visibleOnHover' | 'visibleByDefault';
 };
 
 type Position = {
@@ -17,10 +17,15 @@ type Position = {
   left: number;
 };
 
-const Tooltip = <T extends Element>({ content, domRef, className, isAuto = true }: Props<T>) => {
+const Tooltip = <T extends Element>({
+  content,
+  domRef,
+  className,
+  behavior = 'visibleOnHover',
+}: Props<T>) => {
   const [tooltipDom, setTooltipDom] = useState<HTMLDivElement>();
   const [position, setPosition] = useState<Position>();
-  const isVisible = position !== undefined;
+  const positionCaculated = position !== undefined;
 
   useEffect(() => {
     if (!domRef.current) {
@@ -29,7 +34,7 @@ const Tooltip = <T extends Element>({ content, domRef, className, isAuto = true 
 
     const dom = domRef.current;
 
-    if (!isAuto) {
+    if (behavior === 'visibleByDefault') {
       const { top, left, width } = domRef.current.getBoundingClientRect();
       const { scrollTop, scrollLeft } = document.documentElement;
       setPosition({ top: top + scrollTop - 12, left: left + scrollLeft + width / 2 });
@@ -56,10 +61,10 @@ const Tooltip = <T extends Element>({ content, domRef, className, isAuto = true 
       dom.removeEventListener('mouseenter', enterHandler);
       dom.removeEventListener('mouseleave', leaveHandler);
     };
-  }, [domRef, isAuto]);
+  }, [domRef, behavior]);
 
   useEffect(() => {
-    if (!isVisible) {
+    if (!positionCaculated) {
       if (tooltipDom) {
         tooltipDom.remove();
         setTooltipDom(undefined);
@@ -75,7 +80,7 @@ const Tooltip = <T extends Element>({ content, domRef, className, isAuto = true 
     }
 
     return () => tooltipDom?.remove();
-  }, [isVisible, tooltipDom]);
+  }, [positionCaculated, tooltipDom]);
 
   if (!tooltipDom || !position) {
     return null;

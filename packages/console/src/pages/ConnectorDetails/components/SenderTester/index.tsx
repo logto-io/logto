@@ -101,7 +101,7 @@ const SenderTester = ({ connectorType }: Props) => {
         </div>
         {showTooltip && (
           <Tooltip
-            isAuto={false}
+            behavior="visibleByDefault"
             domRef={buttonPosReference}
             className={styles.successTooltip}
             content={t('connector_details.test_message_sent')}
