@@ -1,4 +1,5 @@
 import { existsSync, readFileSync } from 'fs';
+import path from 'path';
 
 import { z } from 'zod';
 
@@ -15,6 +16,9 @@ import {
 import { getConnectorConfig } from '../utilities';
 import { singleSendMail } from './single-send-mail';
 
+// eslint-disable-next-line unicorn/prefer-module
+const pathToReadmeFile = path.join(__dirname, 'README.md');
+const readmeContentFallback = 'Please check README.md file directory.';
 export const metadata: ConnectorMetadata = {
   id: 'aliyun-dm',
   type: ConnectorType.Email,
@@ -29,9 +33,9 @@ export const metadata: ConnectorMetadata = {
     'zh-CN':
       '邮件推送（DirectMail）是款简单高效的电子邮件群发服务，构建在阿里云基础之上，帮您快速、精准地实现事务邮件、通知邮件和批量邮件的发送。',
   },
-  readme: existsSync('./README.md')
-    ? readFileSync('./README.md', 'utf8')
-    : 'Please check README.md file directory.',
+  readme: existsSync(pathToReadmeFile)
+    ? readFileSync(pathToReadmeFile, 'utf8')
+    : readmeContentFallback,
 };
 
 /**

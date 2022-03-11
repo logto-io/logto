@@ -3,6 +3,7 @@
  * https://developers.google.com/identity/protocols/oauth2/openid-connect
  */
 import { existsSync, readFileSync } from 'fs';
+import path from 'path';
 
 import { conditional } from '@silverhand/essentials';
 import got, { RequestError as GotRequestError } from 'got';
@@ -24,6 +25,9 @@ import {
 import { getConnectorConfig, getConnectorRequestTimeout } from '../utilities';
 import { accessTokenEndpoint, authorizationEndpoint, scope, userInfoEndpoint } from './constant';
 
+// eslint-disable-next-line unicorn/prefer-module
+const pathToReadmeFile = path.join(__dirname, 'README.md');
+const readmeContentFallback = 'Please check README.md file directory.';
 export const metadata: ConnectorMetadata = {
   id: 'google',
   type: ConnectorType.Social,
@@ -37,9 +41,9 @@ export const metadata: ConnectorMetadata = {
     en: 'Sign In with Google',
     'zh-CN': 'Google登录',
   },
-  readme: existsSync('./README.md')
-    ? readFileSync('./README.md', 'utf8')
-    : 'Please check README.md file directory.',
+  readme: existsSync(pathToReadmeFile)
+    ? readFileSync(pathToReadmeFile, 'utf8')
+    : readmeContentFallback,
 };
 
 const googleConfigGuard = z.object({
