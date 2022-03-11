@@ -1,5 +1,4 @@
-import { ConnectorDTO, ConnectorType, RequestErrorBody } from '@logto/schemas';
-import ky, { HTTPError } from 'ky';
+import { ConnectorDTO, ConnectorType } from '@logto/schemas';
 import React, { useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
@@ -17,6 +16,7 @@ import TabNav, { TabNavLink } from '@/components/TabNav';
 import Close from '@/icons/Close';
 import * as drawerStyles from '@/scss/drawer.module.scss';
 import { RequestError } from '@/swr';
+import api from '@/utilities/api';
 
 import SenderTester from './components/SenderTester';
 import * as styles from './index.module.scss';
@@ -56,18 +56,15 @@ const ConnectorDetails = () => {
     try {
       const configJson = JSON.parse(config) as JSON;
       setIsSubmitLoading(true);
-      await ky
-        .patch(`/api/connectors/${connectorId}`, { json: { config: configJson } })
+      await api
+        .patch(`/api/connectors/${connectorId}`, {
+          json: { config: configJson },
+        })
         .json<ConnectorDTO>();
       toast.success(t('connector_details.save_success'));
     } catch (error: unknown) {
       if (error instanceof SyntaxError) {
         setSaveError(t('connector_details.save_error_json_parse_error'));
-      } else if (error instanceof HTTPError) {
-        const { message } = (await error.response.json()) as RequestErrorBody;
-        setSaveError(message);
-      } else {
-        console.error(error);
       }
     }
 

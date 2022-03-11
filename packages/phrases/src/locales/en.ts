@@ -25,6 +25,9 @@ const translation = {
     form: {
       required: 'Required',
     },
+    errors: {
+      unknown_server_error: 'Unknown server error occurred.',
+    },
     tab_sections: {
       overview: 'Overview',
       resource_management: 'Resource Management',

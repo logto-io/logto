@@ -1,5 +1,4 @@
 import { Application, ApplicationType } from '@logto/schemas';
-import ky from 'ky';
 import React from 'react';
 import { useController, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -12,6 +11,7 @@ import RadioGroup, { Radio } from '@/components/RadioGroup';
 import TextInput from '@/components/TextInput';
 import Close from '@/icons/Close';
 import { applicationTypeI18nKey } from '@/types/applications';
+import api from '@/utilities/api';
 
 import TypeDescription from '../TypeDescription';
 import * as styles from './index.module.scss';
@@ -40,7 +40,7 @@ const CreateForm = ({ onClose }: Props) => {
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-      const createdApp = await ky.post('/api/applications', { json: data }).json<Application>();
+      const createdApp = await api.post('/api/applications', { json: data }).json<Application>();
 
       onClose?.(createdApp);
     } catch (error: unknown) {
