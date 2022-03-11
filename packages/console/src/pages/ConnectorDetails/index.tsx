@@ -132,7 +132,6 @@ const ConnectorDetails = () => {
               {t('connector_details.tab_settings')}
             </TabNavLink>
           </TabNav>
-          <div className={styles.space} />
           <CodeEditor
             value={config}
             onChange={(value) => {
