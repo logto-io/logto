@@ -52,8 +52,8 @@ type PhoneNumberData = {
   nationalNumber: string;
 };
 
-// Add mutate status to prevent the initial onUpdate useEffect call
-type PhoneNumberState = PhoneNumberData & { initialized: boolean };
+// Add interact status to prevent the initial onUpdate useEffect call
+type PhoneNumberState = PhoneNumberData & { interacted: boolean };
 
 const parseE164Number = (value: string): E164Number | '' => {
   if (!value || value.startsWith('+')) {
@@ -83,13 +83,13 @@ const usePhoneNumber = (value: string, onChangeCallback: (value: string) => void
   const [phoneNumber, setPhoneNumber] = useState<PhoneNumberState>({
     countryCallingCode: defaultCountryCallingCode,
     nationalNumber: '',
-    initialized: false,
+    interacted: false,
   });
   const [error, setError] = useState<ParseError>();
 
   useEffect(() => {
     // Only run on data initialization
-    if (phoneNumber.initialized) {
+    if (phoneNumber.interacted) {
       return;
     }
 
@@ -104,11 +104,11 @@ const usePhoneNumber = (value: string, onChangeCallback: (value: string) => void
         nationalNumber,
       }));
     }
-  }, [phoneNumber.initialized, value]);
+  }, [phoneNumber.interacted, value]);
 
   useEffect(() => {
     // Only run after data initialization
-    if (!phoneNumber.initialized) {
+    if (!phoneNumber.interacted) {
       return;
     }
 

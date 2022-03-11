@@ -17,7 +17,7 @@ const PhoneInputProvider = ({ value, onChange, ...inputProps }: Props) => {
   // TODO: error message
   const {
     error,
-    phoneNumber: { countryCallingCode, nationalNumber },
+    phoneNumber: { countryCallingCode, nationalNumber, interacted },
     setPhoneNumber,
   } = usePhoneNumber(value, onChange);
 
@@ -27,9 +27,9 @@ const PhoneInputProvider = ({ value, onChange, ...inputProps }: Props) => {
       countryCallingCode={countryCallingCode}
       nationalNumber={nationalNumber}
       countryList={countryList}
-      hasError={Boolean(error)}
+      hasError={Boolean(error && interacted)}
       onChange={(data) => {
-        setPhoneNumber((phoneNumber) => ({ ...phoneNumber, ...data, initialized: true }));
+        setPhoneNumber((phoneNumber) => ({ ...phoneNumber, ...data, interacted: true }));
       }}
     />
   );
