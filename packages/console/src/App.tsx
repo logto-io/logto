@@ -15,6 +15,7 @@ import ApplicationDetails from './pages/ApplicationDetails';
 import Applications from './pages/Applications';
 import ConnectorDetails from './pages/ConnectorDetails';
 import Connectors from './pages/Connectors';
+import GetStarted from './pages/GetStarted';
 import Users from './pages/Users';
 import { fetcher } from './swr';
 
@@ -33,12 +34,13 @@ const Main = () => {
   }, [location.pathname, navigate]);
 
   return (
-    <LogtoProvider logtoConfig={{ endpoint: 'https://logto.dev', clientId: 'foo' }}>
+    <LogtoProvider logtoConfig={{ endpoint: window.location.origin, clientId: 'foo' }}>
       <SWRConfig value={{ fetcher }}>
         <Toast />
         <Routes>
           <Route path="callback" element={<Callback />} />
           <Route element={<AppContent theme="light" />}>
+            <Route path="get-started" element={<GetStarted />} />
             <Route path="applications">
               <Route index element={<Applications />} />
               <Route path=":id">

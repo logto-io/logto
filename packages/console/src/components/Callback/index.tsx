@@ -6,6 +6,7 @@ const Callback = () => {
   const { isAuthenticated, isLoading } = useLogto();
   const navigate = useNavigate();
 
+  // TO-DO: Error handling
   useEffect(() => {
     if (isAuthenticated && !isLoading) {
       navigate('/', { replace: true });
