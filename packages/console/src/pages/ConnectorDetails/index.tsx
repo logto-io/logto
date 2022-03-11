@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import useSWR from 'swr';
 
+import ActionMenu, { ActionMenuItem } from '@/components/ActionMenu';
 import BackLink from '@/components/BackLink';
 import Button from '@/components/Button';
 import Card from '@/components/Card';
@@ -110,6 +111,18 @@ const ConnectorDetails = () => {
             >
               <Markdown>{data.metadata.readme}</Markdown>
             </Drawer>
+            <ActionMenu
+              buttonProps={{ title: 'admin_console.connector_details.options' }}
+              title={t('connector_details.more_options')}
+            >
+              {data.metadata.type === ConnectorType.SMS && (
+                <ActionMenuItem>{t('connector_details.options_change_sms')}</ActionMenuItem>
+              )}
+              {data.metadata.type === ConnectorType.Email && (
+                <ActionMenuItem>{t('connector_details.options_change_email')}</ActionMenuItem>
+              )}
+              <ActionMenuItem>{t('connector_details.options_delete')}</ActionMenuItem>
+            </ActionMenu>
           </div>
         </Card>
       )}

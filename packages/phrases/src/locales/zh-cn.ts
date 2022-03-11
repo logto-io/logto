@@ -130,6 +130,11 @@ const translation = {
       test_sms_sender: 'Test your SMS sender',
       test_message_sent: 'Test Message Sent!',
       test_sender_description: 'Test sender description',
+      options: '操作',
+      options_delete: '删除',
+      options_change_email: '更换邮件服务商',
+      options_change_sms: '更换短信服务商',
+      more_options: '更多选项',
     },
     users: {
       title: '用户管理',
