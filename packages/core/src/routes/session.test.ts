@@ -780,46 +780,6 @@ describe('sessionRoutes', () => {
     });
   });
 
-  describe('POST /session/forgot-password/phone/verify-passcode-and-reset-password', () => {
-    beforeAll(() => {
-      interactionDetails.mockResolvedValueOnce({
-        jti: 'jti',
-      });
-    });
-
-    it('throw if no user can be found with phone', async () => {
-      const response = await sessionRequest
-        .post('/session/forgot-password/phone/verify-passcode-and-reset-password')
-        .send({ phone: '13000000001', code: '1234', password: '123456' });
-      expect(response).toHaveProperty('statusCode', 422);
-    });
-
-    it('fail to verify passcode', async () => {
-      const response = await sessionRequest
-        .post('/session/forgot-password/phone/verify-passcode-and-reset-password')
-        .send({ phone: '13000000000', code: '1231', password: '123456' });
-      expect(response).toHaveProperty('statusCode', 400);
-    });
-
-    it('verify passcode, reset password and assign result', async () => {
-      const response = await sessionRequest
-        .post('/session/forgot-password/phone/verify-passcode-and-reset-password')
-        .send({ phone: '13000000000', code: '1234', password: '123456' });
-      expect(response).toHaveProperty('statusCode', 200);
-      expect(updateUserById).toHaveBeenCalledWith('id', {
-        passwordEncryptionSalt: 'user1',
-        passwordEncrypted: 'id_123456_user1',
-        passwordEncryptionMethod: 'SaltAndPepper',
-      });
-      expect(interactionResult).toHaveBeenCalledWith(
-        expect.anything(),
-        expect.anything(),
-        expect.objectContaining({ login: { accountId: 'id' } }),
-        expect.anything()
-      );
-    });
-  });
-
   describe('POST /session/bind-social', () => {
     it('throw if session is not authorized', async () => {
       interactionDetails.mockResolvedValueOnce({});
