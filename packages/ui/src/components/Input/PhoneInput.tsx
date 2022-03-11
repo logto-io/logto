@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useRef } from 'react';
 
 import { CountryCallingCode, CountryMetaData } from '@/hooks/use-phone-number';
 
@@ -33,6 +33,7 @@ const PhoneInput = ({
   onChange,
 }: Props) => {
   const [onFocus, setOnFocus] = useState(false);
+  const inputReference = useRef<HTMLInputElement>(null);
 
   const countrySelector = useMemo(() => {
     if (!countryCallingCode || !countryList) {
@@ -46,6 +47,13 @@ const PhoneInput = ({
         <select
           onChange={({ target: { value } }) => {
             onChange({ countryCallingCode: value });
+
+            // Auto Focus to the input
+            if (inputReference.current) {
+              inputReference.current.focus();
+              const { length } = inputReference.current.value;
+              inputReference.current.setSelectionRange(length, length);
+            }
           }}
         >
           {countryList.map(({ countryCode, countryCallingCode, countryName }) => (
@@ -69,6 +77,7 @@ const PhoneInput = ({
     >
       {countrySelector}
       <input
+        ref={inputReference}
         name={name}
         disabled={isDisabled}
         placeholder={placeholder}

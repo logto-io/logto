@@ -42,8 +42,6 @@
 }
 
 .actionButton {
-  margin-left: _.unit();
-  width: _.unit(6);
   fill: var(--color-neutral-70);
 
   &.highlight {
