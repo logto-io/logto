@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "@logto/phrases": "^0.1.0",
+    "@logto/react": "^0.1.2",
     "@logto/schemas": "^0.1.0",
     "@monaco-editor/react": "^4.3.1",
     "@silverhand/essentials": "^1.1.6",
@@ -55,6 +56,7 @@
     "postcss": "^8.4.6",
     "postcss-modules": "^4.3.0",
     "prettier": "^2.3.2",
+    "process": "^0.11.10",
     "stylelint": "^13.13.1",
     "typescript": "^4.6.2"
   },
