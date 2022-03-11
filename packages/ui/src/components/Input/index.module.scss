@@ -29,10 +29,14 @@
   border: _.border(var(--color-error));
 }
 
-.clearButton {
+.actionButton {
   position: absolute;
   right: _.unit(5);
   bottom: 50%;
   transform: translateY(50%);
   fill: var(--color-neutral-70);
+
+  &.highlight {
+    fill: var(--color-primary-tint-70);
+  }
 }

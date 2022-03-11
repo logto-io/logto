@@ -53,6 +53,8 @@ const translation = {
       application_description: 'Application Description',
       select_application_type: 'Select an Application Type',
       no_application_type_selected: 'You have to select an application type to proceed.',
+      application_created:
+        'The application {{name}} has been successfully created! \nNow finish your application settings.',
       client_id: 'Client ID',
       type: {
         native: {
@@ -110,6 +112,12 @@ const translation = {
     },
     connector_details: {
       back_to_connectors: 'Back to Connectors',
+      check_readme: 'Check README',
+      tab_settings: 'Settings',
+      save_changes: 'Save Changes',
+      save_error_empty_config: 'Please enter config.',
+      save_error_json_parse_error: 'Please enter valid JSON.',
+      save_success: 'Saved!',
     },
   },
 };

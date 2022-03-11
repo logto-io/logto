@@ -5,16 +5,22 @@
   justify-content: space-between;
 }
 
+.tabs {
+  margin-top: _.unit(4);
+}
+
 .table {
-  margin-top: _.unit(6);
-  width: 100%;
-  font-size: var(--font-small-text);
+  margin-top: _.unit(4);
 
-  tbody tr.clickable {
-    cursor: pointer;
+  tbody {
+    max-height: calc(100vh - _.unit(74));
 
-    &:hover {
-      background: var(--color-table-row-selected);
+    tr.clickable {
+      cursor: pointer;
+
+      &:hover {
+        background: var(--color-table-row-selected);
+      }
     }
   }
 }

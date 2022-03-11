@@ -6,8 +6,13 @@ export type FieldIdentifiers<Key extends string | number | symbol> = {
   [key in Key]: IdentifierSqlTokenType;
 };
 
+export type OrderDirection = 'asc' | 'desc';
+
+export type OrderBy<Schema extends SchemaLike> = Partial<Record<keyof Schema, OrderDirection>>;
+
 export type FindManyData<Schema extends SchemaLike> = {
   where?: Partial<Schema>;
+  orderBy?: OrderBy<Schema>;
   limit?: number;
   offset?: number;
 };

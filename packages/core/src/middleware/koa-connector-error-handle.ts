@@ -22,7 +22,7 @@ export default function koaConnectorErrorHandler<StateT, ContextT>(): Middleware
           throw new RequestError(
             {
               code: 'connector.invalid_config',
-              status: 500,
+              status: 400,
             },
             data
           );

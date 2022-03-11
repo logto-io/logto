@@ -1,9 +1,9 @@
 @use '@/scss/underscore' as _;
 
 .topbar {
-  height: 80px;
+  flex: 0 0 66px;
   width: 100%;
-  padding: _.unit(3) _.unit(8);
+  padding: _.unit(4) _.unit(6);
   display: flex;
   align-items: center;
 

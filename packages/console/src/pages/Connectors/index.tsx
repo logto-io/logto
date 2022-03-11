@@ -45,16 +45,16 @@ const Connectors = () => {
         <CardTitle title="connectors.title" subtitle="connectors.subtitle" />
         {isSocial && <Button disabled title="admin_console.connectors.create" type="primary" />}
       </div>
-      <TabNav>
+      <TabNav className={styles.tabs}>
         <TabNavLink href="/connectors">{t('connectors.tab_email_sms')}</TabNavLink>
         <TabNavLink href="/connectors/social">{t('connectors.tab_social')}</TabNavLink>
       </TabNav>
       <table className={styles.table}>
         <thead>
           <tr>
-            <td className={styles.connectorName}>{t('connectors.connector_name')}</td>
-            <td>{t('connectors.connector_type')}</td>
-            <td>{t('connectors.connector_status')}</td>
+            <th className={styles.connectorName}>{t('connectors.connector_name')}</th>
+            <th>{t('connectors.connector_type')}</th>
+            <th>{t('connectors.connector_status')}</th>
           </tr>
         </thead>
         <tbody>

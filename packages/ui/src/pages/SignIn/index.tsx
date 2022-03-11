@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { signInBasic } from '@/apis/sign-in';
 import Button from '@/components/Button';
 import Input from '@/components/Input';
+import PasswordInput from '@/components/Input/PasswordInput';
 import MessageBox from '@/components/MessageBox';
 import TextLink from '@/components/TextLink';
 import useApi from '@/hooks/use-api';
@@ -47,12 +48,11 @@ const SignIn: FC = () => {
           className={styles.inputField}
           onChange={setUsername}
         />
-        <Input
+        <PasswordInput
           name="password"
           autoComplete="current-password"
           isDisabled={loading}
           placeholder={t('sign_in.password')}
-          type="password"
           value={password}
           className={styles.inputField}
           onChange={setPassword}

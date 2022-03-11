@@ -6,14 +6,17 @@
 }
 
 .table {
-  margin-top: _.unit(6);
-  width: 100%;
+  margin-top: _.unit(4);
 
-  tbody tr.clickable {
-    cursor: pointer;
+  tbody {
+    max-height: calc(100vh - _.unit(64));
 
-    &:hover {
-      background: var(--color-table-row-selected);
+    tr.clickable {
+      cursor: pointer;
+
+      &:hover {
+        background: var(--color-table-row-selected);
+      }
     }
   }
 }

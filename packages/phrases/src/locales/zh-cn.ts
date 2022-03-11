@@ -55,6 +55,8 @@ const translation = {
       application_description: 'Application Description',
       select_application_type: 'Select an application type',
       no_application_type_selected: 'You have to select an application type to proceed.',
+      application_created:
+        'The application {{name}} has been successfully created! \nNow finish your application settings.',
       client_id: 'Client ID',
       type: {
         native: {
@@ -112,6 +114,12 @@ const translation = {
     },
     connector_details: {
       back_to_connectors: '返回连接器',
+      check_readme: '查看文档',
+      tab_settings: '设置',
+      save_changes: '保存',
+      save_error_empty_config: '请输入配置内容。',
+      save_error_json_parse_error: '请输入符合 JSON 格式的配置。',
+      save_success: '保存成功',
     },
   },
 };

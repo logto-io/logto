@@ -1,19 +1,31 @@
-import { ConnectorDTO } from '@logto/schemas';
-import React from 'react';
+import { ConnectorDTO, RequestErrorBody } from '@logto/schemas';
+import ky, { HTTPError } from 'ky';
+import React, { useEffect, useState } from 'react';
+import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
+import ReactModal from 'react-modal';
 import { useParams } from 'react-router-dom';
 import useSWR from 'swr';
 
 import BackLink from '@/components/BackLink';
+import Button from '@/components/Button';
 import Card from '@/components/Card';
+import CodeEditor from '@/components/CodeEditor';
 import ImagePlaceholder from '@/components/ImagePlaceholder';
 import Status from '@/components/Status';
+import TabNav, { TabNavLink } from '@/components/TabNav';
+import Close from '@/icons/Close';
+import * as drawerStyles from '@/scss/drawer.module.scss';
 import { RequestError } from '@/swr';
 
 import * as styles from './index.module.scss';
 
 const ConnectorDetails = () => {
   const { connectorId } = useParams();
+  const [isReadMeOpen, setIsReadMeOpen] = useState(false);
+  const [config, setConfig] = useState<string>();
+  const [saveError, setSaveError] = useState<string>();
+  const [isSubmitLoading, setIsSubmitLoading] = useState(false);
   const {
     t,
     i18n: { language },
@@ -22,6 +34,44 @@ const ConnectorDetails = () => {
     connectorId && `/api/connectors/${connectorId}`
   );
   const isLoading = !data && !error;
+
+  useEffect(() => {
+    if (data) {
+      setConfig(JSON.stringify(data.config, null, 2));
+    }
+  }, [data]);
+
+  const handleSave = async () => {
+    if (!connectorId) {
+      return;
+    }
+
+    if (!config) {
+      setSaveError(t('connector_details.save_error_empty_config'));
+
+      return;
+    }
+
+    try {
+      const configJson = JSON.parse(config) as JSON;
+      setIsSubmitLoading(true);
+      await ky
+        .patch(`/api/connectors/${connectorId}`, { json: { config: configJson } })
+        .json<ConnectorDTO>();
+      toast.success(t('connector_details.save_success'));
+    } catch (error: unknown) {
+      if (error instanceof SyntaxError) {
+        setSaveError(t('connector_details.save_error_json_parse_error'));
+      } else if (error instanceof HTTPError) {
+        const { message } = (await error.response.json()) as RequestErrorBody;
+        setSaveError(message);
+      } else {
+        console.error(error);
+      }
+    }
+
+    setIsSubmitLoading(false);
+  };
 
   return (
     <div className={styles.container}>
@@ -48,7 +98,55 @@ const ConnectorDetails = () => {
               </Status>
             </div>
           </div>
-          <div>action</div>
+          <div>
+            <Button
+              title="admin_console.connector_details.check_readme"
+              onClick={() => {
+                setIsReadMeOpen(true);
+              }}
+            />
+            <ReactModal
+              isOpen={isReadMeOpen}
+              className={drawerStyles.content}
+              overlayClassName={drawerStyles.overlay}
+            >
+              <div className={styles.readme}>
+                <div className={styles.headline}>
+                  <Close
+                    onClick={() => {
+                      setIsReadMeOpen(false);
+                    }}
+                  />
+                </div>
+                <div>README</div>
+              </div>
+            </ReactModal>
+          </div>
+        </Card>
+      )}
+      {data && (
+        <Card>
+          <TabNav>
+            <TabNavLink href={`/connectors/${connectorId ?? ''}`}>
+              {t('connector_details.tab_settings')}
+            </TabNavLink>
+          </TabNav>
+          <div className={styles.space} />
+          <CodeEditor
+            value={config}
+            onChange={(value) => {
+              setConfig(value);
+            }}
+          />
+          {saveError && <div>{saveError}</div>}
+          <div className={styles.actions}>
+            <Button
+              type="primary"
+              title="admin_console.connector_details.save_changes"
+              disabled={isSubmitLoading}
+              onClick={handleSave}
+            />
+          </div>
         </Card>
       )}
     </div>
