@@ -82,6 +82,7 @@ const SenderTester = ({ connectorType }: Props) => {
           className={styles.textField}
         >
           <TextInput
+            hasError={Boolean(inputError?.message)}
             {...register('sendTo', {
               required: true,
               pattern: {
