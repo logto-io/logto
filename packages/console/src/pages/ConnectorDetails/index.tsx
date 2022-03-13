@@ -133,6 +133,7 @@ const ConnectorDetails = () => {
           </TabNav>
           <div className={styles.space} />
           <CodeEditor
+            language="json"
             value={config}
             onChange={(value) => {
               setConfig(value);

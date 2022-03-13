@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import React, { ReactNode } from 'react';
 
-import styles from './index.module.scss';
+import * as styles from './index.module.scss';
 
 type Props = {
   status: 'operational' | 'offline';
