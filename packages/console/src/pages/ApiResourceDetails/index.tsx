@@ -1,5 +1,4 @@
 import { Resource } from '@logto/schemas';
-import ky from 'ky';
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -15,6 +14,7 @@ import ImagePlaceholder from '@/components/ImagePlaceholder';
 import TabNav, { TabNavLink } from '@/components/TabNav';
 import TextInput from '@/components/TextInput';
 import { RequestError } from '@/swr';
+import api from '@/utilities/api';
 
 import * as styles from './index.module.scss';
 
@@ -50,7 +50,7 @@ const ApiResourceDetails = () => {
     setSubmitting(true);
 
     try {
-      const updatedApiResource = await ky
+      const updatedApiResource = await api
         .patch(`/api/resources/${data.id}`, { json: formData })
         .json<Resource>();
       void mutate(updatedApiResource);

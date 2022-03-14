@@ -1,5 +1,4 @@
 import { Resource } from '@logto/schemas';
-import ky from 'ky';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 
@@ -9,6 +8,7 @@ import CardTitle from '@/components/CardTitle';
 import FormField from '@/components/FormField';
 import TextInput from '@/components/TextInput';
 import Close from '@/icons/Close';
+import api from '@/utilities/api';
 
 import * as styles from './index.module.scss';
 
@@ -26,7 +26,7 @@ const CreateForm = ({ onClose }: Props) => {
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-      const createdApiResource = await ky.post('/api/resources', { json: data }).json<Resource>();
+      const createdApiResource = await api.post('/api/resources', { json: data }).json<Resource>();
       onClose?.(createdApiResource);
     } catch (error: unknown) {
       console.error(error);

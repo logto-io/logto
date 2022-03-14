@@ -27,6 +27,9 @@ const translation = {
     form: {
       required: '必填',
     },
+    errors: {
+      unknown_server_error: '服务器发生未知错误。',
+    },
     tab_sections: {
       overview: '概览',
       resource_management: '资源管理',
