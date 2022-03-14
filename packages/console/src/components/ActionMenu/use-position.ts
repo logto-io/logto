@@ -1,4 +1,4 @@
-import { RefObject, useCallback, useEffect, useLayoutEffect, useState } from 'react';
+import { RefObject, useCallback, useLayoutEffect, useState } from 'react';
 
 type Position = {
   left: number;
@@ -29,9 +29,8 @@ export default function usePosition(
     }
   }, [anchorReference, overlayReference]);
 
-  useLayoutEffect(updatePosition, [updatePosition]);
-
-  useEffect(() => {
+  useLayoutEffect(() => {
+    updatePosition();
     window.addEventListener('resize', updatePosition);
 
     return () => {
