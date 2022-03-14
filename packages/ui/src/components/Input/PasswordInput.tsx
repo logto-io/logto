@@ -31,11 +31,17 @@ const PasswordInput = ({
   const iconType = type === 'password' ? 'hide' : 'show';
 
   return (
-    <div className={classNames(styles.wrapper, className)}>
+    <div
+      className={classNames(
+        styles.wrapper,
+        onFocus && styles.focus,
+        hasError && styles.error,
+        className
+      )}
+    >
       <input
         name={name}
         disabled={isDisabled}
-        className={classNames(styles.input, hasError && styles.error)}
         placeholder={placeholder}
         type={type}
         value={value}
