@@ -59,3 +59,34 @@
     }
   }
 }
+
+.container .body {
+  > :not(:first-child) {
+    margin-top: _.unit(6);
+  }
+
+  .tabContent {
+    form {
+      >:not(:first-child) {
+        margin-top: _.unit(6);
+      }
+
+      .fields {
+        border-bottom: 1px solid var(--color-border);
+        padding-bottom: _.unit(6);
+
+        > div {
+          @include _.form-text-field;
+        }
+
+        .copy {
+          @include _.form-text-field;
+        }
+      }
+
+      .submit {
+        text-align: right;
+      }
+    }
+  }
+}
