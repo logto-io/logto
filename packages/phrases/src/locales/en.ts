@@ -41,7 +41,7 @@ const translation = {
       api_resources: 'API Resources',
       sign_in_experience: 'Sign-in Experience',
       connectors: 'Connectors',
-      user_management: 'User Management',
+      users: 'User Management',
       audit_logs: 'Audit Logs',
       documentation: 'Documentation',
       community_support: 'Community Support',
@@ -127,6 +127,18 @@ const translation = {
       test_sms_sender: 'Test your SMS sender',
       test_message_sent: 'Test Message Sent!',
       test_sender_description: 'Test sender description',
+    },
+    users: {
+      title: 'User Management',
+      subtitle:
+        'The tab for managing users, creating a new user, and editing user profiles. Every registered user can be found here.',
+      create: 'Add user',
+      user_name: 'User',
+      application_name: 'Apps',
+      latest_sign_in: 'Latest sign in',
+      create_form_username: 'Username',
+      create_form_password: 'Password',
+      create_form_name: 'Full name',
     },
   },
 };

@@ -62,7 +62,7 @@ export const sections: SidebarSection[] = [
     items: [
       {
         Icon: UserProfile,
-        title: 'user_management',
+        title: 'users',
       },
       {
         Icon: List,

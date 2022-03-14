@@ -1,0 +1,26 @@
+@use '@/scss/underscore' as _;
+
+.headline {
+  display: flex;
+  justify-content: space-between;
+}
+
+.table {
+  margin-top: _.unit(4);
+
+  tbody {
+    max-height: calc(100vh - _.unit(64));
+
+    tr.clickable {
+      cursor: pointer;
+
+      &:hover {
+        background: var(--color-table-row-selected);
+      }
+    }
+  }
+}
+
+.userName {
+  width: 360px;
+}
