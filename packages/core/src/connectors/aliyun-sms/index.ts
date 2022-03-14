@@ -1,3 +1,6 @@
+import { existsSync, readFileSync } from 'fs';
+import path from 'path';
+
 import { z } from 'zod';
 
 import assertThat from '@/utils/assert-that';
@@ -13,6 +16,9 @@ import {
 import { getConnectorConfig } from '../utilities';
 import { sendSms } from './single-send-text';
 
+// eslint-disable-next-line unicorn/prefer-module
+const pathToReadmeFile = path.join(__dirname, 'README.md');
+const readmeContentFallback = 'Please check README.md file directory.';
 export const metadata: ConnectorMetadata = {
   id: 'aliyun-sms',
   type: ConnectorType.SMS,
@@ -27,6 +33,9 @@ export const metadata: ConnectorMetadata = {
     'zh-CN':
       '短信服务（Short Message Service）是指通过调用短信发送API，将指定短信内容发送给指定手机用户。',
   },
+  readme: existsSync(pathToReadmeFile)
+    ? readFileSync(pathToReadmeFile, 'utf8')
+    : readmeContentFallback,
 };
 
 /**

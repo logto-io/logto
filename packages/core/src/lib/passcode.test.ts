@@ -134,6 +134,7 @@ describe('sendPasscode', () => {
         name: {},
         logo: '',
         description: {},
+        readme: '',
       },
       sendMessage,
       validateConfig: jest.fn(),

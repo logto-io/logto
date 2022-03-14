@@ -1,3 +1,6 @@
+import { existsSync, readFileSync } from 'fs';
+import path from 'path';
+
 import got, { RequestError as GotRequestError } from 'got';
 import { stringify } from 'query-string';
 import { z } from 'zod';
@@ -17,6 +20,9 @@ import {
 import { getConnectorConfig, getConnectorRequestTimeout } from '../utilities';
 import { authorizationEndpoint, accessTokenEndpoint, scope, userInfoEndpoint } from './constant';
 
+// eslint-disable-next-line unicorn/prefer-module
+const pathToReadmeFile = path.join(__dirname, 'README.md');
+const readmeContentFallback = 'Please check README.md file directory.';
 export const metadata: ConnectorMetadata = {
   id: 'github',
   type: ConnectorType.Social,
@@ -29,6 +35,9 @@ export const metadata: ConnectorMetadata = {
     en: 'Sign In with GitHub',
     'zh-CN': 'GitHub登录',
   },
+  readme: existsSync(pathToReadmeFile)
+    ? readFileSync(pathToReadmeFile, 'utf8')
+    : readmeContentFallback,
 };
 
 const githubConfigGuard = z.object({

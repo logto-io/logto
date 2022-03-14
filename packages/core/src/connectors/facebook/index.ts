@@ -2,6 +2,9 @@
  * Reference: Manually Build a Login Flow
  * https://developers.facebook.com/docs/facebook-login/manually-build-a-login-flow
  */
+import { existsSync, readFileSync } from 'fs';
+import path from 'path';
+
 import got, { RequestError as GotRequestError } from 'got';
 import { stringify } from 'query-string';
 import { z } from 'zod';
@@ -25,6 +28,9 @@ import {
 import { getConnectorConfig, getConnectorRequestTimeout } from '@/connectors/utilities';
 import assertThat from '@/utils/assert-that';
 
+// eslint-disable-next-line unicorn/prefer-module
+const pathToReadmeFile = path.join(__dirname, 'README.md');
+const readmeContentFallback = 'Please check README.md file directory.';
 export const metadata: ConnectorMetadata = {
   id: 'facebook',
   type: ConnectorType.Social,
@@ -38,6 +44,9 @@ export const metadata: ConnectorMetadata = {
     en: 'Sign In with Facebook',
     'zh-CN': 'Facebook 登录',
   },
+  readme: existsSync(pathToReadmeFile)
+    ? readFileSync(pathToReadmeFile, 'utf8')
+    : readmeContentFallback,
 };
 
 const facebookConfigGuard = z.object({
