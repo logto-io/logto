@@ -56,22 +56,6 @@
   }
 }
 
-.readme {
-  background: var(--color-card-background);
-  padding: _.unit(6);
-  height: 100%;
-  overflow-y: auto;
-
-  .headline {
-    display: flex;
-    justify-content: right;
-
-    > svg {
-      cursor: pointer;
-    }
-  }
-}
-
 .actions {
   border-top: 1px solid var(--color-border);
   display: flex;
