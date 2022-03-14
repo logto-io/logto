@@ -61,7 +61,7 @@ const translation = {
       client_id: 'Client ID',
       type: {
         native: {
-          title: 'Native',
+          title: 'Native App',
           subtitle: 'Mobile, desktop, CLI and smart device apps running natively.',
           description: 'E.g.: iOS, Electron, Apple TV apps',
         },
