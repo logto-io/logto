@@ -5,6 +5,7 @@ import { useParams } from 'react-router-dom';
 import useSWR from 'swr';
 
 import BackLink from '@/components/BackLink';
+import Button from '@/components/Button';
 import Card from '@/components/Card';
 import CopyToClipboard from '@/components/CopyToClipboard';
 import ImagePlaceholder from '@/components/ImagePlaceholder';
@@ -28,16 +29,17 @@ const ApplicationDetails = () => {
         <Card className={styles.header}>
           <ImagePlaceholder size={76} borderRadius={16} />
           <div className={styles.metadata}>
+            <div className={styles.name}>{data.name}</div>
             <div>
-              <div className={styles.name}>{data.name}</div>
               <div className={styles.type}>{t(`${applicationTypeI18nKey[data.type]}.title`)}</div>
-            </div>
-            <div>
-              <div className={styles.type}>ID</div>
-              <CopyToClipboard value={data.id} />
+              <div className={styles.verticalBar} />
+              <div className={styles.text}>App ID</div>
+              <CopyToClipboard value={data.id} className={styles.copy} />
             </div>
           </div>
-          <div>action</div>
+          <div>
+            <Button title="admin_console.application_details.check_help_guide" />
+          </div>
         </Card>
       )}
     </div>

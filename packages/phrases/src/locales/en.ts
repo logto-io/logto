@@ -79,6 +79,7 @@ const translation = {
     },
     application_details: {
       back_to_applications: 'Back to Applications',
+      check_help_guide: 'Check Help Guide',
     },
     api_resources: {
       title: 'API Resources',

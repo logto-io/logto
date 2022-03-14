@@ -81,6 +81,7 @@ const translation = {
     },
     application_details: {
       back_to_applications: '返回应用集',
+      check_help_guide: 'Check Help Guide',
     },
     api_resources: {
       title: 'API Resources',

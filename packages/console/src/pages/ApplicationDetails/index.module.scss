@@ -38,8 +38,24 @@
     }
 
     .type {
+      background-color: var(--color-neutral-90);
+      padding: _.unit(0.5) _.unit(2);
+      border-radius: 10px;
+      font: var(--font-label-medium);
+    }
+
+    .text {
       font: var(--font-subhead-2);
       color: var(--color-component-caption);
+    }
+
+    .verticalBar {
+      @include _.vertical-bar;
+      height: 12px;
+    }
+
+    .copy {
+      padding: _.unit(1) _.unit(4) _.unit(1) _.unit(2);
     }
   }
 }
