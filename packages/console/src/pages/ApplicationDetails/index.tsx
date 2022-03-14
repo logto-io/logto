@@ -41,17 +41,7 @@ const ApplicationDetails = () => {
 
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
-  const isNormalSettings = !location.pathname.includes('advanced-settings');
-
-  const buildTabLink = (tabLinkName: string) => {
-    const index = location.pathname.lastIndexOf('/');
-
-    if (index < 0) {
-      return location.pathname;
-    }
-
-    return `${location.pathname.slice(0, Math.max(0, index))}/${tabLinkName}`;
-  };
+  const isAdvancedSettings = location.pathname.includes('advanced-settings');
 
   useEffect(() => {
     if (!data) {
@@ -88,17 +78,17 @@ const ApplicationDetails = () => {
           </Card>
           <Card className={styles.body}>
             <TabNav>
-              <TabNavLink href={buildTabLink('settings')}>
+              <TabNavLink href={`/applications/${data.id}/settings`}>
                 {t('application_details.settings')}
               </TabNavLink>
-              <TabNavLink href={buildTabLink('advanced-settings')}>
+              <TabNavLink href={`/applications/${data.id}/advanced-settings`}>
                 {t('application_details.advanced_settings')}
               </TabNavLink>
             </TabNav>
             <div className={styles.tabContent}>
               <form onSubmit={onSubmit}>
                 <div className={styles.fields}>
-                  {isNormalSettings ? (
+                  {!isAdvancedSettings && (
                     <>
                       <FormField
                         isRequired
@@ -116,7 +106,8 @@ const ApplicationDetails = () => {
                         />
                       </FormField>
                     </>
-                  ) : (
+                  )}
+                  {isAdvancedSettings && (
                     <>
                       <FormField title="admin_console.application_details.token_endpoint">
                         <CopyToClipboard
