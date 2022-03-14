@@ -8,7 +8,7 @@ import * as styles from './index.module.scss';
 export type Props = Omit<HTMLProps<HTMLButtonElement>, 'type' | 'size' | 'title'> & {
   htmlType?: 'button' | 'submit' | 'reset';
   title: I18nKey;
-  type?: 'primary' | 'danger' | 'default';
+  type?: 'primary' | 'danger' | 'outline' | 'plain' | 'default';
   size?: 'small' | 'medium' | 'large';
 };
 
