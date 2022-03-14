@@ -16,6 +16,7 @@ import ApplicationDetails from './pages/ApplicationDetails';
 import Applications from './pages/Applications';
 import ConnectorDetails from './pages/ConnectorDetails';
 import Connectors from './pages/Connectors';
+import Users from './pages/Users';
 import { fetcher } from './swr';
 
 const isBasenameNeeded = process.env.NODE_ENV !== 'development' || process.env.PORT === '5002';
@@ -53,6 +54,9 @@ const Main = () => {
                 <Route index element={<Connectors />} />
                 <Route path="social" element={<Connectors />} />
                 <Route path=":connectorId" element={<ConnectorDetails />} />
+              </Route>
+              <Route path="users">
+                <Route index element={<Users />} />
               </Route>
             </Routes>
           </Content>
