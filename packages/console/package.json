@@ -32,8 +32,10 @@
     "react-hook-form": "^7.27.1",
     "react-hot-toast": "^2.2.0",
     "react-i18next": "^11.15.4",
+    "react-markdown": "^8.0.0",
     "react-modal": "^3.14.4",
     "react-router-dom": "^6.2.2",
+    "remark-gfm": "^3.0.1",
     "swr": "^1.2.2"
   },
   "devDependencies": {
