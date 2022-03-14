@@ -1,7 +1,7 @@
 import React, { MouseEventHandler, ReactNode, useRef, useState } from 'react';
 import ReactModal from 'react-modal';
 
-import { ButtonProps } from '../Button';
+import { Props as ButtonProps } from '../Button';
 import ActionMenuButton from './ActionMenuButton';
 import * as styles from './index.module.scss';
 import usePosition from './use-position';

@@ -1,6 +1,6 @@
 import React, { forwardRef } from 'react';
 
-import Button, { ButtonProps } from '../Button';
+import Button, { Props as ButtonProps } from '../Button';
 
 const ActionMenuButton = forwardRef<HTMLDivElement, ButtonProps>((props, anchorReference) => (
   <div ref={anchorReference} style={{ display: 'inline-block' }}>
