@@ -18,9 +18,7 @@ const api = ky.create({
       (error) => {
         const { response } = error;
 
-        if (response.body) {
-          void toastError(response);
-        }
+        void toastError(response);
 
         return error;
       },
