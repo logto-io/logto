@@ -18,3 +18,8 @@
 @mixin form-text-field {
   width: 556px;
 }
+
+@mixin vertical-bar {
+  border: 1px solid #c4c7c7;
+  width: 0;
+}

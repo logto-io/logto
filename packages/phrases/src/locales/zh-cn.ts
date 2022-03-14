@@ -63,7 +63,7 @@ const translation = {
       client_id: 'Client ID',
       type: {
         native: {
-          title: 'Native',
+          title: 'Native App',
           subtitle: 'Mobile, desktop, CLI and smart device apps running natively.',
           description: 'E.g.: iOS, Electron, Apple TV apps',
         },
@@ -81,6 +81,7 @@ const translation = {
     },
     application_details: {
       back_to_applications: '返回应用集',
+      check_help_guide: 'Check Help Guide',
     },
     api_resources: {
       title: 'API Resources',

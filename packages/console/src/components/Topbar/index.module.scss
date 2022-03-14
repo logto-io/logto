@@ -12,10 +12,8 @@
   }
 
   .line {
-    border: 1px solid #c4c7c7;
+    @include _.vertical-bar;
     height: 24px;
-    width: 0;
-    flex: 0 0 0;
     margin: 0 _.unit(3);
   }
 
