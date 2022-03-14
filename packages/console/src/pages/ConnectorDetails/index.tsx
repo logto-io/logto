@@ -1,4 +1,4 @@
-import { ConnectorDTO, RequestErrorBody } from '@logto/schemas';
+import { ConnectorDTO, ConnectorType, RequestErrorBody } from '@logto/schemas';
 import ky, { HTTPError } from 'ky';
 import React, { useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
@@ -18,6 +18,7 @@ import Close from '@/icons/Close';
 import * as drawerStyles from '@/scss/drawer.module.scss';
 import { RequestError } from '@/swr';
 
+import SenderTester from './components/SenderTester';
 import * as styles from './index.module.scss';
 
 const ConnectorDetails = () => {
@@ -125,13 +126,12 @@ const ConnectorDetails = () => {
         </Card>
       )}
       {data && (
-        <Card>
+        <Card className={styles.body}>
           <TabNav>
             <TabNavLink href={`/connectors/${connectorId ?? ''}`}>
               {t('connector_details.tab_settings')}
             </TabNavLink>
           </TabNav>
-          <div className={styles.space} />
           <CodeEditor
             language="json"
             value={config}
@@ -139,6 +139,9 @@ const ConnectorDetails = () => {
               setConfig(value);
             }}
           />
+          {data.metadata.type !== ConnectorType.Social && (
+            <SenderTester connectorType={data.metadata.type} />
+          )}
           {saveError && <div>{saveError}</div>}
           <div className={styles.actions}>
             <Button

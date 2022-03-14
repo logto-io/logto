@@ -1,11 +1,20 @@
 import { ConnectorDTO, Connectors, ConnectorType } from '@logto/schemas';
 import { object, string } from 'zod';
 
-import { getConnectorInstances, getConnectorInstanceById } from '@/connectors';
-import { ConnectorInstance } from '@/connectors/types';
+import {
+  getConnectorInstances,
+  getConnectorInstanceById,
+  getConnectorInstanceByType,
+} from '@/connectors';
+import {
+  ConnectorInstance,
+  EmailConnectorInstance,
+  SmsConnectorInstance,
+} from '@/connectors/types';
 import koaGuard from '@/middleware/koa-guard';
 import { updateConnector } from '@/queries/connector';
 import assertThat from '@/utils/assert-that';
+import { emailRegEx, phoneRegEx } from '@/utils/regex';
 
 import { AuthedRouter } from './types';
 
@@ -113,6 +122,54 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
 
       const connector = await updateConnector({ set: body, where: { id } });
       ctx.body = { ...connector, metadata };
+
+      return next();
+    }
+  );
+
+  router.post(
+    '/connectors/test/email',
+    koaGuard({
+      body: object({
+        email: string().regex(emailRegEx),
+      }),
+    }),
+    async (ctx, next) => {
+      const { email } = ctx.guard.body;
+
+      const connector = await getConnectorInstanceByType<EmailConnectorInstance>(
+        ConnectorType.Email
+      );
+
+      // TODO - LOG-1875: SMS & Email Template for Test
+      await connector.sendMessage(email, 'Test', {
+        code: 'email-test',
+      });
+
+      ctx.status = 204;
+
+      return next();
+    }
+  );
+
+  router.post(
+    '/connectors/test/sms',
+    koaGuard({
+      body: object({
+        phone: string().regex(phoneRegEx),
+      }),
+    }),
+    async (ctx, next) => {
+      const { phone } = ctx.guard.body;
+
+      const connector = await getConnectorInstanceByType<SmsConnectorInstance>(ConnectorType.SMS);
+
+      // TODO - LOG-1875: SMS & Email Template for Test
+      await connector.sendMessage(phone, 'Test', {
+        code: '123456',
+      });
+
+      ctx.status = 204;
 
       return next();
     }

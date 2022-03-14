@@ -76,6 +76,9 @@ const translation = {
         },
       },
     },
+    application_details: {
+      back_to_applications: '返回应用集',
+    },
     api_resources: {
       title: 'API Resources',
       subtitle: 'Define APIs that you can consume from your authorized applications.',
@@ -109,9 +112,6 @@ const translation = {
         social: '社会化登录',
       },
     },
-    application_details: {
-      back_to_applications: '返回应用集',
-    },
     connector_details: {
       back_to_connectors: '返回连接器',
       check_readme: '查看文档',
@@ -120,6 +120,12 @@ const translation = {
       save_error_empty_config: '请输入配置内容。',
       save_error_json_parse_error: '请输入符合 JSON 格式的配置。',
       save_success: '保存成功',
+      send: 'Send',
+      send_error_invalid_format: 'Invalid input',
+      test_email_sender: 'Test your email sender',
+      test_sms_sender: 'Test your SMS sender',
+      test_message_sent: 'Test Message Sent!',
+      test_sender_description: 'Test sender description',
     },
   },
 };
