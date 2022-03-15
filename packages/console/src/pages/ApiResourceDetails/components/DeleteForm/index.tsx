@@ -66,7 +66,7 @@ const DeleteForm = ({ id, name, onClose }: Props) => {
         />
         <Button
           disabled={inputMismatched || isDeleting}
-          type="outline"
+          type="danger"
           title="admin_console.api_resource_details.delete"
           onClick={() => {
             void handleDelete();
