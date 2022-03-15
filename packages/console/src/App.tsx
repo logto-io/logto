@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { BrowserRouter, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
+import { BrowserRouter, Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { SWRConfig } from 'swr';
 import './scss/normalized.scss';
 
@@ -44,7 +44,11 @@ const Main = () => {
             <Routes>
               <Route path="applications">
                 <Route index element={<Applications />} />
-                <Route path=":id" element={<ApplicationDetails />} />
+                <Route path=":id">
+                  <Route index element={<Navigate to="settings" />} />
+                  <Route path="settings" element={<ApplicationDetails />} />
+                  <Route path="advanced-settings" element={<ApplicationDetails />} />
+                </Route>
               </Route>
               <Route path="api-resources">
                 <Route index element={<ApiResources />} />
