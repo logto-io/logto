@@ -51,7 +51,7 @@ const Passcode = ({
   isDisabled,
   className,
   value,
-  length = 6,
+  length = defaultLength,
   hasError,
   onChange,
 }: Props) => {
