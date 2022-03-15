@@ -1,3 +1,5 @@
+@use '@/scss/colors' as colors;
+
 .app {
   position: absolute;
   inset: 0;
@@ -6,45 +8,12 @@
 }
 
 .light {
-  --color-card-background: #fff;
-  --color-surface: #fbfdfd;
-  --color-on-surface: #eff1f1;
-  --color-on-surface-variant: #47464e;
-  --color-primary: #4f37f9;
-  --color-primary-30: #3500e3;
-  --color-primary-40: #4f37f9;
-  --color-primary-50: #6e5dff;
-  --color-primary-60: #8b80ff;
-  --color-primary-70: #a8a0ff;
-  --color-primary-80: #c6c0ff;
-  --color-primary-90: #e5dfff;
-  --color-primary-95: #f3eeff;
-  --color-on-primary: #fff;
-  --color-error: #ba1b1b;
-  --color-error-30: #930006;
-  --color-error-40: #ba1b1b;
-  --color-error-50: #dd3730;
-  --color-error-60: #ff5449;
-  --color-error-70: #ff897a;
-  --color-error-80: #ffb4a9;
-  --color-error-90: #ffdad4;
-  --color-inverse-on-surface: #eff1f1;
-  --color-neutral-70: #a9acac;
-  --color-neutral-90: #e0e3e3;
-  --color-neutral-95: #eff1f1;
-  --color-on-secondary-container: #201c00;
-  --color-component-border: #c4c7c7;
-  --color-component-caption: #747778;
-  --color-component-text: #191c1d;
-  --color-outline: #78767f;
-  --color-table-row-selected: rgba(0, 0, 0, 2%);
-  --color-text-default: #202223;
-  --color-foggy: #888;
-  --color-disabled: #c4c7c7;
-  --color-border: #c4c7c7;
-  --color-green: #66bb6a;
-  --shadow-light-s1: 0 2px 8px rgba(0, 0, 0, 8%);
-  --shadow-light-s2: 0 4px 12px rgba(0, 0, 0, 12%);
+  @include colors.light-theme;
+}
+
+// Currently not in use
+.dark {
+  @include colors.dark-theme;
 }
 
 $font-family: 'SF UI Text', 'SF Pro Display', sans-serif;

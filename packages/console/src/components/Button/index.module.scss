@@ -28,8 +28,8 @@
   }
 
   &.default {
-    background: var(--color-card-background);
-    color: var(--color-text-default);
+    background: var(--color-on-primary);
+    color: var(--color-component-text);
     border-color: var(--color-outline);
     border-width: 1px;
     border-style: solid;

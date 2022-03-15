@@ -1,0 +1,93 @@
+// tonal palettes
+:root {
+  --color-all-0: #000;
+  --color-all-100: #fff;
+  --color-primary-10: #190064;
+  --color-primary-20: #2d009d;
+  --color-primary-30: #4300da;
+  --color-primary-40: #5d34f2;
+  --color-primary-50: #7958ff;
+  --color-primary-60: #947dff;
+  --color-primary-70: #af9eff;
+  --color-primary-80: #cabeff;
+  --color-primary-90: #e6deff;
+  --color-primary-95: #f5eeff;
+  --color-primary-99: #fffbff;
+  --color-secondary-10: #201c00;
+  --color-secondary-20: #373100;
+  --color-secondary-30: #4f4700;
+  --color-secondary-40: #695f00;
+  --color-secondary-50: #847900;
+  --color-secondary-60: #9f930d;
+  --color-secondary-70: #baad2d;
+  --color-secondary-80: #d7c947;
+  --color-secondary-90: #f4e560;
+  --color-secondary-95: #fff480;
+  --color-secondary-99: #fffbf7;
+  --color-error-10: #410001;
+  --color-error-20: #680003;
+  --color-error-30: #930006;
+  --color-error-40: #ba1b1b;
+  --color-error-50: #dd3730;
+  --color-error-60: #ff5449;
+  --color-error-70: #ff897a;
+  --color-error-80: #ffb4a9;
+  --color-error-90: #ffdad4;
+  --color-error-95: #ffede9;
+  --color-error-99: #fcfcfc;
+  --color-neutral-10: #191c1d;
+  --color-neutral-20: #2d3132;
+  --color-neutral-30: #444748;
+  --color-neutral-40: #5c5f60;
+  --color-neutral-50: #747778;
+  --color-neutral-60: #8e9192;
+  --color-neutral-70: #a9acac;
+  --color-neutral-80: #c4c7c7;
+  --color-neutral-90: #e0e3e3;
+  --color-neutral-95: #eff1f1;
+  --color-neutral-99: #f7f8f8;
+  --color-neutral-variant-10: #1b1b22;
+  --color-neutral-variant-20: #302f38;
+  --color-neutral-variant-30: #47464e;
+  --color-neutral-variant-40: #5f5d67;
+  --color-neutral-variant-50: #78767f;
+  --color-neutral-variant-60: #928f9a;
+  --color-neutral-variant-70: #adaab4;
+  --color-neutral-variant-80: #c9c5d0;
+  --color-neutral-variant-90: #e5e1ec;
+  --color-neutral-variant-95: #f3effa;
+  --color-neutral-variant-99: #fffbff;
+}
+
+@mixin light-theme {
+  --color-main-background: #f2f0f6;
+  --color-surface: var(--color-neutral-99);
+  --color-on-surface: var(--color-neutral-10);
+  --color-on-surface-variant: var(--color-neutral-variant-30);
+  --color-primary: var(--color-primary-40);
+  --color-on-primary: var(--color-all-100);
+  --color-error: var(--color-error-40);
+  --color-inverse-on-surface: var(--color-neutral-95);
+  --color-on-secondary-container: var(--color-secondary-10);
+  --color-component-border: var(--color-neutral-80);
+  --color-component-caption: var(--color-neutral-50);
+  --color-component-text: var(--color-neutral-10);
+  --color-outline: var(--color-neutral-variant-50);
+  --color-disabled: var(--color-neutral-80);
+  --color-border: var(--color-neutral-80);
+  --color-table-row-selected: rgba(25, 28, 29, 4%);
+  --color-code-comment: #66bb6a;
+  --color-surface-3: #e3dff5;
+  --shadow-light-s2: 0 4px 12px rgba(0, 0, 0, 12%);
+}
+
+@mixin dark-theme {
+  --color-surface: var(--color-neutral-10);
+  --color-on-surface: var(--color-neutral-80);
+  --color-on-surface-variant: var(--color-neutral-variant-80);
+  --color-primary: var(--color-primary-80);
+  --color-on-primary: var(--color-primary-20);
+  --color-error: var(--color-error-80);
+  --color-on-secondary-container: var(--color-secondary-90);
+  // to-do: add more dark theme colors
+}
