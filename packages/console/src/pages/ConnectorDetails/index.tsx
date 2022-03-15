@@ -11,6 +11,7 @@ import Button from '@/components/Button';
 import Card from '@/components/Card';
 import CodeEditor from '@/components/CodeEditor';
 import ImagePlaceholder from '@/components/ImagePlaceholder';
+import Markdown from '@/components/Markdown';
 import Status from '@/components/Status';
 import TabNav, { TabNavLink } from '@/components/TabNav';
 import Close from '@/icons/Close';
@@ -116,7 +117,9 @@ const ConnectorDetails = () => {
                     }}
                   />
                 </div>
-                <div>README</div>
+                <div>
+                  <Markdown>{data.metadata.readme}</Markdown>
+                </div>
               </div>
             </ReactModal>
           </div>

@@ -1,0 +1,21 @@
+.markdown {
+  font: var(--font-body-2);
+
+  h1 {
+    font: var(--font-title-large);
+  }
+
+  h2 {
+    font: var(--font-title-medium);
+  }
+
+  h3,
+  h4,
+  h5 {
+    font: var(--font-title-small);
+  }
+
+  p {
+    font: var(--font-body-2);
+  }
+}
