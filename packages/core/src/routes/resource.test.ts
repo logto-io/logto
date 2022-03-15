@@ -1,5 +1,7 @@
 import { Resource, CreateResource } from '@logto/schemas';
 
+import { deleteResourceById } from '@/queries/resource';
+import { deleteScopesByResourceId } from '@/queries/scope';
 import { mockResource, mockScope } from '@/utils/mock';
 import { createRequester } from '@/utils/test-utils';
 
@@ -26,6 +28,7 @@ jest.mock('@/queries/resource', () => ({
 
 jest.mock('@/queries/scope', () => ({
   findAllScopesWithResourceId: jest.fn(async () => [mockScope]),
+  deleteScopesByResourceId: jest.fn(),
 }));
 
 jest.mock('@/utils/id', () => ({
@@ -112,6 +115,12 @@ describe('resource routes', () => {
   });
 
   it('DELETE /resources/:id', async () => {
-    await expect(resourceRequest.delete('/resources/foo')).resolves.toHaveProperty('status', 204);
+    const resourceId = 'foo';
+    await expect(resourceRequest.delete(`/resources/${resourceId}`)).resolves.toHaveProperty(
+      'status',
+      204
+    );
+    expect(deleteScopesByResourceId).toHaveBeenCalledWith(resourceId);
+    expect(deleteResourceById).toHaveBeenCalledWith(resourceId);
   });
 });

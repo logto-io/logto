@@ -11,7 +11,7 @@ import {
   updateResourceById,
   deleteResourceById,
 } from '@/queries/resource';
-import { findAllScopesWithResourceId } from '@/queries/scope';
+import { deleteScopesByResourceId, findAllScopesWithResourceId } from '@/queries/scope';
 import { buildIdGenerator } from '@/utils/id';
 
 import { AuthedRouter } from './types';
@@ -100,6 +100,7 @@ export default function resourceRoutes<T extends AuthedRouter>(router: T) {
     async (ctx, next) => {
       const { id } = ctx.guard.params;
       await findResourceById(id);
+      await deleteScopesByResourceId(id);
       await deleteResourceById(id);
       ctx.status = 204;
 

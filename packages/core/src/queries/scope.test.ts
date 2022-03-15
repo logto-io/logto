@@ -6,7 +6,12 @@ import { DeletionError } from '@/errors/SlonikError';
 import { mockScope } from '@/utils/mock';
 import { expectSqlAssert, QueryType } from '@/utils/test-utils';
 
-import { findAllScopesWithResourceId, insertScope, deleteScopeById } from './scope';
+import {
+  findAllScopesWithResourceId,
+  insertScope,
+  deleteScopeById,
+  deleteScopesByResourceId,
+} from './scope';
 
 const mockQuery: jest.MockedFunction<QueryType> = jest.fn();
 
@@ -95,5 +100,22 @@ describe('scope query', () => {
     await expect(deleteScopeById(id)).rejects.toMatchError(
       new DeletionError(ResourceScopes.table, id)
     );
+  });
+
+  it('deleteScopesByResourceId', async () => {
+    const resourceId = 'logto_api';
+    const expectSql = sql`
+      delete from ${table}
+      where ${fields.resourceId}=$1
+    `;
+
+    mockQuery.mockImplementationOnce(async (sql, values) => {
+      expectSqlAssert(sql, expectSql.sql);
+      expect(values).toEqual([resourceId]);
+
+      return createMockQueryResult([mockScope]);
+    });
+
+    await deleteScopesByResourceId(resourceId);
   });
 });

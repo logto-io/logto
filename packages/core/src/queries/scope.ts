@@ -33,3 +33,9 @@ export const deleteScopeById = async (id: string) => {
     throw new DeletionError(ResourceScopes.table, id);
   }
 };
+
+export const deleteScopesByResourceId = async (resourceId: string) =>
+  pool.query(sql`
+    delete from ${table}
+    where ${fields.resourceId}=${resourceId}
+  `);
