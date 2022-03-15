@@ -51,7 +51,7 @@ describe('signInExperiences routes', () => {
     });
   });
 
-  it('PATH /sign-in-ex/:id should throw with invalid inputs', async () => {
+  it('PATCH /sign-in-ex/:id should throw with invalid inputs', async () => {
     const socialSignInConnectorIds = [123, 456];
 
     const response = await signInExperienceRequester.patch('/sign-in-ex/default').send({
