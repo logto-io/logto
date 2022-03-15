@@ -32,6 +32,7 @@
   },
   "alias": {
     "html-parse-stringify": "html-parse-stringify/dist/html-parse-stringify.module.js",
-    "react-hook-form": "react-hook-form/dist/index.esm.mjs"
+    "react-hook-form": "react-hook-form/dist/index.esm.mjs",
+    "superstruct": "superstruct/lib/index.es.js"
   }
 }

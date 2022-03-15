@@ -1,21 +1,21 @@
+import { LogtoProvider } from '@logto/react';
 import React, { useEffect } from 'react';
 import { BrowserRouter, Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { SWRConfig } from 'swr';
 import './scss/normalized.scss';
 
-import * as styles from './App.module.scss';
 import AppContent from './components/AppContent';
-import Content from './components/Content';
-import Sidebar, { getPath, sections } from './components/Sidebar';
+import { getPath, sections } from './components/AppContent/components/Sidebar';
 import Toast from './components/Toast';
-import Topbar from './components/Topbar';
 import initI18n from './i18n/init';
 import ApiResourceDetails from './pages/ApiResourceDetails';
 import ApiResources from './pages/ApiResources';
 import ApplicationDetails from './pages/ApplicationDetails';
 import Applications from './pages/Applications';
+import Callback from './pages/Callback';
 import ConnectorDetails from './pages/ConnectorDetails';
 import Connectors from './pages/Connectors';
+import GetStarted from './pages/GetStarted';
 import Users from './pages/Users';
 import { fetcher } from './swr';
 
@@ -34,39 +34,37 @@ const Main = () => {
   }, [location.pathname, navigate]);
 
   return (
-    <SWRConfig value={{ fetcher }}>
-      <Toast />
-      <AppContent theme="light">
-        <Topbar />
-        <div className={styles.content}>
-          <Sidebar />
-          <Content>
-            <Routes>
-              <Route path="applications">
-                <Route index element={<Applications />} />
-                <Route path=":id">
-                  <Route index element={<Navigate to="settings" />} />
-                  <Route path="settings" element={<ApplicationDetails />} />
-                  <Route path="advanced-settings" element={<ApplicationDetails />} />
-                </Route>
+    <LogtoProvider logtoConfig={{ endpoint: window.location.origin, clientId: 'foo' }}>
+      <SWRConfig value={{ fetcher }}>
+        <Toast />
+        <Routes>
+          <Route path="callback" element={<Callback />} />
+          <Route element={<AppContent theme="light" />}>
+            <Route path="get-started" element={<GetStarted />} />
+            <Route path="applications">
+              <Route index element={<Applications />} />
+              <Route path=":id">
+                <Route index element={<Navigate to="settings" />} />
+                <Route path="settings" element={<ApplicationDetails />} />
+                <Route path="advanced-settings" element={<ApplicationDetails />} />
               </Route>
-              <Route path="api-resources">
-                <Route index element={<ApiResources />} />
-                <Route path=":id" element={<ApiResourceDetails />} />
-              </Route>
-              <Route path="connectors">
-                <Route index element={<Connectors />} />
-                <Route path="social" element={<Connectors />} />
-                <Route path=":connectorId" element={<ConnectorDetails />} />
-              </Route>
-              <Route path="users">
-                <Route index element={<Users />} />
-              </Route>
-            </Routes>
-          </Content>
-        </div>
-      </AppContent>
-    </SWRConfig>
+            </Route>
+            <Route path="api-resources">
+              <Route index element={<ApiResources />} />
+              <Route path=":id" element={<ApiResourceDetails />} />
+            </Route>
+            <Route path="connectors">
+              <Route index element={<Connectors />} />
+              <Route path="social" element={<Connectors />} />
+              <Route path=":connectorId" element={<ConnectorDetails />} />
+            </Route>
+            <Route path="users">
+              <Route index element={<Users />} />
+            </Route>
+          </Route>
+        </Routes>
+      </SWRConfig>
+    </LogtoProvider>
   );
 };
 
