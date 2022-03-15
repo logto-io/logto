@@ -44,9 +44,11 @@ const Main = () => {
             <Routes>
               <Route path="applications">
                 <Route index element={<Applications />} />
-                <Route path=":id" element={<Navigate to="settings" />} />
-                <Route path=":id/settings" element={<ApplicationDetails />} />
-                <Route path=":id/advanced-settings" element={<ApplicationDetails />} />
+                <Route path=":id">
+                  <Route index element={<Navigate to="settings" />} />
+                  <Route path="settings" element={<ApplicationDetails />} />
+                  <Route path="advanced-settings" element={<ApplicationDetails />} />
+                </Route>
               </Route>
               <Route path="api-resources">
                 <Route index element={<ApiResources />} />
