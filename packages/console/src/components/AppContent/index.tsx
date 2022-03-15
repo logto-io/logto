@@ -2,7 +2,6 @@ import { useLogto } from '@logto/react';
 import React, { useEffect } from 'react';
 import { Outlet, useHref } from 'react-router-dom';
 
-import Content from './components/Content';
 import Sidebar from './components/Sidebar';
 import Topbar from './components/Topbar';
 import * as styles from './index.module.scss';
@@ -41,9 +40,9 @@ const AppContent = ({ theme }: Props) => {
       <Topbar />
       <div className={styles.content}>
         <Sidebar />
-        <Content>
+        <div className={styles.main}>
           <Outlet />
-        </Content>
+        </div>
       </div>
     </div>
   );

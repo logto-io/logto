@@ -6,13 +6,13 @@ import './scss/normalized.scss';
 
 import AppContent from './components/AppContent';
 import { getPath, sections } from './components/AppContent/components/Sidebar';
-import Callback from './components/Callback';
 import Toast from './components/Toast';
 import initI18n from './i18n/init';
 import ApiResourceDetails from './pages/ApiResourceDetails';
 import ApiResources from './pages/ApiResources';
 import ApplicationDetails from './pages/ApplicationDetails';
 import Applications from './pages/Applications';
+import Callback from './pages/Callback';
 import ConnectorDetails from './pages/ConnectorDetails';
 import Connectors from './pages/Connectors';
 import GetStarted from './pages/GetStarted';

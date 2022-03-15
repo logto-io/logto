@@ -14,6 +14,10 @@
   padding-right: _.unit(5);
   margin-bottom: _.unit(6);
   overflow: hidden;
+
+  .main {
+    flex-grow: 1;
+  }
 }
 
 .light {
