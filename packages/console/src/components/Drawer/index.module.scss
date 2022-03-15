@@ -1,0 +1,28 @@
+@use '@/scss/underscore' as _;
+
+.content {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  outline: none;
+  background: var(--color-card-background);
+  padding: _.unit(6);
+  overflow-y: auto;
+
+  .headline {
+    display: flex;
+    justify-content: right;
+
+    > svg {
+      cursor: pointer;
+    }
+  }
+}
+
+.overlay {
+  position: fixed;
+  background: rgba(0, 0, 0, 40%);
+  inset: 0;
+}

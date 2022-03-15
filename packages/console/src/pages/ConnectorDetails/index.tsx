@@ -2,7 +2,6 @@ import { ConnectorDTO, ConnectorType } from '@logto/schemas';
 import React, { useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
-import ReactModal from 'react-modal';
 import { useParams } from 'react-router-dom';
 import useSWR from 'swr';
 
@@ -10,12 +9,11 @@ import BackLink from '@/components/BackLink';
 import Button from '@/components/Button';
 import Card from '@/components/Card';
 import CodeEditor from '@/components/CodeEditor';
+import Drawer from '@/components/Drawer';
 import ImagePlaceholder from '@/components/ImagePlaceholder';
 import Markdown from '@/components/Markdown';
 import Status from '@/components/Status';
 import TabNav, { TabNavLink } from '@/components/TabNav';
-import Close from '@/icons/Close';
-import * as drawerStyles from '@/scss/drawer.module.scss';
 import { RequestError } from '@/swr';
 import api from '@/utilities/api';
 
@@ -104,24 +102,14 @@ const ConnectorDetails = () => {
                 setIsReadMeOpen(true);
               }}
             />
-            <ReactModal
+            <Drawer
               isOpen={isReadMeOpen}
-              className={drawerStyles.content}
-              overlayClassName={drawerStyles.overlay}
+              onClose={() => {
+                setIsReadMeOpen(false);
+              }}
             >
-              <div className={styles.readme}>
-                <div className={styles.headline}>
-                  <Close
-                    onClick={() => {
-                      setIsReadMeOpen(false);
-                    }}
-                  />
-                </div>
-                <div>
-                  <Markdown>{data.metadata.readme}</Markdown>
-                </div>
-              </div>
-            </ReactModal>
+              <Markdown>{data.metadata.readme}</Markdown>
+            </Drawer>
           </div>
         </Card>
       )}
