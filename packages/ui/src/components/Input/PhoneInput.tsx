@@ -83,6 +83,7 @@ const PhoneInput = ({
         placeholder={placeholder}
         value={nationalNumber}
         type="tel"
+        inputMode="numeric"
         autoComplete={autoComplete}
         onFocus={() => {
           setOnFocus(true);
