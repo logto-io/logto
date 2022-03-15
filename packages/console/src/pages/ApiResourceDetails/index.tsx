@@ -39,7 +39,7 @@ const ApiResourceDetails = () => {
   });
   const [submitting, setSubmitting] = useState(false);
 
-  const [isDeleteOpen, setIsDeleteOpen] = useState(true);
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
 
   useEffect(() => {
     if (!data) {
@@ -83,12 +83,7 @@ const ApiResourceDetails = () => {
               </div>
             </div>
             <div className={styles.operation}>
-              <Button
-                title="admin_console.api_resource_details.check_help_guide"
-                onClick={() => {
-                  setIsDeleteOpen(true);
-                }}
-              />
+              <Button title="admin_console.api_resource_details.check_help_guide" />
               <Modal
                 isOpen={isDeleteOpen}
                 className={modalStyles.content}
