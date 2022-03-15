@@ -9,7 +9,7 @@ import Button from '@/components/Button';
 import FormField from '@/components/FormField';
 import TextInput from '@/components/TextInput';
 import Tooltip from '@/components/Tooltip';
-import { phoneRegEx, emailRegEx } from '@/utils/regex';
+import { phoneRegEx, emailRegEx } from '@/utilities/regex';
 
 import * as styles from './index.module.scss';
 
