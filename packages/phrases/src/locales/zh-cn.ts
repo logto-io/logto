@@ -109,6 +109,13 @@ const translation = {
       settings: 'Settings',
       save_changes: 'Save Changes',
       token_expiration_time_in_seconds: 'Token Expiration Time (in seconds)',
+      reminder: 'Reminder',
+      delete_description:
+        'This action cannot be undone. This will permanently delete the this application. Please enter the api resource name {{name}} to proceed.',
+      enter_your_api_resource_name: 'Enter your API resource name',
+      cancel: 'Cancel',
+      delete: 'Delete',
+      api_resource_deleted: 'The API Resource {{name}} deleted.',
     },
     connectors: {
       title: '连接器',

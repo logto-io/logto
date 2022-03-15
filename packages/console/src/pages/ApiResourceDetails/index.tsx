@@ -2,6 +2,7 @@ import { Resource } from '@logto/schemas';
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+import Modal from 'react-modal';
 import { useLocation, useParams } from 'react-router-dom';
 import useSWR from 'swr';
 
@@ -13,9 +14,11 @@ import FormField from '@/components/FormField';
 import ImagePlaceholder from '@/components/ImagePlaceholder';
 import TabNav, { TabNavLink } from '@/components/TabNav';
 import TextInput from '@/components/TextInput';
+import * as modalStyles from '@/scss/modal.module.scss';
 import { RequestError } from '@/swr';
 import api from '@/utilities/api';
 
+import DeleteForm from './components/DeleteForm';
 import * as styles from './index.module.scss';
 
 type FormData = {
@@ -35,6 +38,8 @@ const ApiResourceDetails = () => {
     defaultValues: data,
   });
   const [submitting, setSubmitting] = useState(false);
+
+  const [isDeleteOpen, setIsDeleteOpen] = useState(true);
 
   useEffect(() => {
     if (!data) {
@@ -78,7 +83,25 @@ const ApiResourceDetails = () => {
               </div>
             </div>
             <div className={styles.operation}>
-              <Button title="admin_console.api_resource_details.check_help_guide" />
+              <Button
+                title="admin_console.api_resource_details.check_help_guide"
+                onClick={() => {
+                  setIsDeleteOpen(true);
+                }}
+              />
+              <Modal
+                isOpen={isDeleteOpen}
+                className={modalStyles.content}
+                overlayClassName={modalStyles.overlay}
+              >
+                <DeleteForm
+                  id={data.id}
+                  name={data.name}
+                  onClose={() => {
+                    setIsDeleteOpen(false);
+                  }}
+                />
+              </Modal>
             </div>
           </Card>
           <Card className={styles.body}>

@@ -1,0 +1,36 @@
+@use '@/scss/underscore' as _;
+
+.card {
+  padding: _.unit(8);
+  max-width: 800px;
+
+  > :not(:first-child) {
+    margin-top: _.unit(6);
+  }
+
+  .headline {
+    display: flex;
+    justify-content: space-between;
+
+    .close {
+      cursor: pointer;
+    }
+  }
+
+  .line {
+    border-top: 1px solid var(--color-neutral-90);
+  }
+
+  .description {
+    font: var(--font-body-2);
+  }
+
+  .actions {
+    text-align: right;
+
+    > :not(:first-child) {
+      margin-left: _.unit(4);
+    }
+  }
+}
+
