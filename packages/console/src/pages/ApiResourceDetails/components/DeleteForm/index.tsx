@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 
 import Button from '@/components/Button';
 import Card from '@/components/Card';
@@ -20,6 +21,8 @@ type Props = {
 const DeleteForm = ({ id, name, onClose }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
+  const navigate = useNavigate();
+
   const [inputName, setInputName] = useState<string>('');
   const [isDeleting, setIsDeleting] = useState(false);
 
@@ -30,6 +33,7 @@ const DeleteForm = ({ id, name, onClose }: Props) => {
       setIsDeleting(true);
       await api.delete(`/api/resources/${id}`);
       onClose();
+      navigate(`/api-resources`);
       toast.success(t('api_resource_details.api_resource_deleted', { name }));
     } catch (error: unknown) {
       console.error(error);
