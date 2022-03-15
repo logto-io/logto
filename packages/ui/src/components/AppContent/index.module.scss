@@ -85,9 +85,9 @@ $font-family: 'PingFang SC', 'SF Pro Text', sans-serif;
 
 .mobile {
   --font-title: 600 32px/40px #{$font-family};
-  --font-heading-2: 400 18px/21px #{$font-family};
-  --font-heading-2-bold: 600 18px/21px #{$font-family};
-  --font-control: 400 18px/21px #{$font-family};
+  --font-heading-2: 400 18px/22px #{$font-family};
+  --font-heading-2-bold: 600 18px/22px #{$font-family};
+  --font-control: 500 18px/22px #{$font-family};
 
   /* ===== Legacy Styling ===== */
   --font-headline: 600 40px/56px #{$font-family};
