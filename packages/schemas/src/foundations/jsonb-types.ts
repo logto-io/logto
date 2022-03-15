@@ -79,20 +79,12 @@ export const adminConsoleConfigGuard = z.object({
 export type AdminConsoleConfig = z.infer<typeof adminConsoleConfigGuard>;
 
 /**
- * SignIn Experience
+ * SignIn Experiences
  */
 
-export const companyInfoGuard = z.object({
-  name: z.string(),
-  logo: z.string(),
-});
-
-export type CompanyInfo = z.infer<typeof companyInfoGuard>;
-
 export enum BrandingStyle {
-  CompanyLogo_CompanyName_AppName = 'CompanyLogo_CompanyName_AppName',
-  CompanyLogo_AppLogo_CompanyName_AppName = 'CompanyLogo_AppLogo_CompanyName_AppName',
-  AppLogo_CompanyName_AppName = 'AppLogo_CompanyName_AppName',
+  Logo = 'Logo',
+  Logo_Slogan = 'Logo_Slogan',
 }
 
 export const brandingGuard = z.object({
@@ -102,13 +94,14 @@ export const brandingGuard = z.object({
   darkPrimaryColor: z.string(),
   darkBackgroundColor: z.string(),
   style: z.nativeEnum(BrandingStyle),
+  logoUrl: z.string().optional(),
+  slogan: z.string().optional(),
 });
 
 export type Branding = z.infer<typeof brandingGuard>;
 
 export const termsOfUseGuard = z.object({
   enabled: z.boolean(),
-  content: z.string().optional(),
   contentUrl: z.string().optional(),
 });
 
@@ -119,21 +112,32 @@ export enum Language {
   chinese = 'zh-cn',
 }
 
-export const localizationGuard = z.object({
+export const languageInfoGuard = z.object({
   autoDetect: z.boolean(),
-  primaryLanguage: z.nativeEnum(Language),
   fallbackLanguage: z.nativeEnum(Language),
+  fixedLanguage: z.nativeEnum(Language),
 });
 
-export type Localization = z.infer<typeof localizationGuard>;
+export type LanguageInfo = z.infer<typeof languageInfoGuard>;
 
-export const signInMethodSettingsGuard = z.object({
-  primary: z.string().array().nonempty().max(3),
-  secondary: z.string().array(),
-  disabled: z.string().array(),
+export enum SignInMethodState {
+  primary = 'primary',
+  secondary = 'secondary',
+  disabled = 'disabled',
+}
+
+export const signInMethodsGuard = z.object({
+  username: z.nativeEnum(SignInMethodState),
+  email: z.nativeEnum(SignInMethodState),
+  sms: z.nativeEnum(SignInMethodState),
+  social: z.nativeEnum(SignInMethodState),
 });
 
-export type SignInMethodSettings = z.infer<typeof signInMethodSettingsGuard>;
+export type SignInMethods = z.infer<typeof signInMethodsGuard>;
+
+export const connectorIdsGuard = z.string().array();
+
+export type ConnectorIds = z.infer<typeof connectorIdsGuard>;
 
 /**
  * Commonly Used

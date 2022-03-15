@@ -18,6 +18,7 @@ import {
   UserLogType,
   UserLogResult,
   ConnectorType,
+  SignInMethodState,
 } from '@logto/schemas';
 import pick from 'lodash.pick';
 
@@ -155,39 +156,32 @@ export const mockSetting: Setting = {
 
 export const mockSignInExperience: SignInExperience = {
   id: 'foo',
-  companyInfo: {
-    name: 'logto',
-    logo: 'http://logto.png',
-  },
   branding: {
     primaryColor: '#000',
     backgroundColor: '#fff',
     darkMode: true,
     darkBackgroundColor: '#000',
     darkPrimaryColor: '#fff',
-    style: BrandingStyle.CompanyLogo_AppLogo_CompanyName_AppName,
+    style: BrandingStyle.Logo,
+    logoUrl: 'http://logto.png',
+    slogan: 'logto',
   },
   termsOfUse: {
     enabled: false,
   },
   forgetPasswordEnabled: true,
-  localization: {
+  languageInfo: {
     autoDetect: true,
-    primaryLanguage: Language.chinese,
     fallbackLanguage: Language.english,
+    fixedLanguage: Language.chinese,
   },
   signInMethods: {
-    primary: ['email'],
-    secondary: [],
-    disabled: [],
+    username: SignInMethodState.primary,
+    email: SignInMethodState.disabled,
+    sms: SignInMethodState.disabled,
+    social: SignInMethodState.secondary,
   },
-};
-
-export const mockConnector: Connector = {
-  id: 'foo',
-  enabled: true,
-  config: {},
-  createdAt: 1_645_334_775_356,
+  socialSignInConnectorIds: ['foo', 'bar'],
 };
 
 export const mockConnectorList: Connector[] = [

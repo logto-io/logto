@@ -1,4 +1,4 @@
-import { SignInExperience, CreateSignInExperience } from '@logto/schemas';
+import { SignInExperience, CreateSignInExperience, BrandingStyle, Branding } from '@logto/schemas';
 
 import { mockSignInExperience } from '@/utils/mock';
 import { createRequester } from '@/utils/test-utils';
@@ -25,38 +25,37 @@ describe('signInExperiences routes', () => {
   });
 
   it('PATCH /sign-in-ex/:id', async () => {
-    const companyInfo = {
-      name: 'silverhand',
-      logo: 'http://silverhand.png',
-    };
-    const signInMethods = {
-      primary: ['phone'],
-      secondary: ['email'],
-      disabled: [],
+    const branding: Branding = {
+      primaryColor: '#000',
+      backgroundColor: '#fff',
+      darkMode: true,
+      darkBackgroundColor: '#000',
+      darkPrimaryColor: '#fff',
+      style: BrandingStyle.Logo,
+      logoUrl: 'http://silverhand.png',
+      slogan: 'silverhand',
     };
 
+    const socialSignInConnectorIds = ['abc', 'def'];
+
     const response = await signInExperienceRequester.patch('/sign-in-ex/default').send({
-      companyInfo,
-      signInMethods,
+      branding,
+      socialSignInConnectorIds,
     });
 
     expect(response.status).toEqual(200);
     expect(response.body).toEqual({
       ...mockSignInExperience,
-      companyInfo,
-      signInMethods,
+      branding,
+      socialSignInConnectorIds,
     });
   });
 
-  it('PATH /sign-in-ex/:id should throw with invalid inputs', async () => {
-    const signInMethods = {
-      primary: [],
-      secondary: ['email'],
-      disabled: [],
-    };
+  it('PATCH /sign-in-ex/:id should throw with invalid inputs', async () => {
+    const socialSignInConnectorIds = [123, 456];
 
     const response = await signInExperienceRequester.patch('/sign-in-ex/default').send({
-      signInMethods,
+      socialSignInConnectorIds,
     });
     expect(response.status).toEqual(400);
   });
