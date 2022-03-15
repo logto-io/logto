@@ -161,6 +161,12 @@ const translation = {
     },
     user_details: {
       back_to_users: 'Back to user management',
+      created_title: 'Congratulations! This user has been created.',
+      created_guide: 'Now send this following information.',
+      created_username: 'User username:',
+      created_password: 'Initial password:',
+      created_button_close: 'Close',
+      created_button_copy: 'Copy',
     },
   },
 };

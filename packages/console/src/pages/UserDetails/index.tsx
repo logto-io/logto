@@ -10,6 +10,7 @@ import CopyToClipboard from '@/components/CopyToClipboard';
 import ImagePlaceholder from '@/components/ImagePlaceholder';
 import { RequestError } from '@/swr';
 
+import CreateSuccess from './components/CreateSuccess';
 import * as styles from './index.module.scss';
 
 const UserDetails = () => {
@@ -42,6 +43,7 @@ const UserDetails = () => {
           <Card>TBD</Card>
         </>
       )}
+      {data && <CreateSuccess username={data.username ?? '-'} />}
     </div>
   );
 };
