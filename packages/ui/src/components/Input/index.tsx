@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 
 import { ClearIcon } from '../Icons';
 import * as styles from './index.module.scss';
@@ -30,15 +30,19 @@ const Input = ({
   onChange,
 }: Props) => {
   const [onFocus, setOnFocus] = useState(false);
-  const inputReference = useRef<HTMLInputElement>(null);
 
   return (
-    <div className={classNames(styles.wrapper, className)}>
+    <div
+      className={classNames(
+        styles.wrapper,
+        onFocus && styles.focus,
+        hasError && styles.error,
+        className
+      )}
+    >
       <input
-        ref={inputReference}
         name={name}
         disabled={isDisabled}
-        className={classNames(styles.input, hasError && styles.error)}
         placeholder={placeholder}
         type={type}
         value={value}
@@ -57,7 +61,6 @@ const Input = ({
         <ClearIcon
           className={styles.actionButton}
           onMouseDown={(event) => {
-            // Should execute before onFocus
             event.preventDefault();
             onChange('');
           }}

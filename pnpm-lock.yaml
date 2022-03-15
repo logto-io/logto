@@ -288,7 +288,9 @@ importers:
       i18next-browser-languagedetector: ^6.1.3
       identity-obj-proxy: ^3.0.0
       jest: ^27.5.1
+      jest-transform-stub: ^2.0.0
       ky: ^0.29.0
+      libphonenumber-js: ^1.9.49
       lint-staged: ^11.1.1
       parcel: ^2.3.2
       postcss: ^8.4.6
@@ -297,6 +299,7 @@ importers:
       react: ^17.0.2
       react-dom: ^17.0.2
       react-i18next: ^11.15.4
+      react-phone-number-input: ^3.1.46
       react-router-dom: ^5.2.0
       stylelint: ^13.13.1
       ts-jest: ^27.0.5
@@ -308,9 +311,11 @@ importers:
       i18next: 21.6.11
       i18next-browser-languagedetector: 6.1.3
       ky: 0.29.0
+      libphonenumber-js: 1.9.49
       react: 17.0.2
       react-dom: 17.0.2_react@17.0.2
       react-i18next: 11.15.4_3fb644aa30122a07f960d67fa51d6dc1
+      react-phone-number-input: 3.1.46_react-dom@17.0.2+react@17.0.2
       react-router-dom: 5.3.0_react@17.0.2
     devDependencies:
       '@jest/types': 27.5.1
@@ -328,6 +333,7 @@ importers:
       eslint: 8.10.0
       identity-obj-proxy: 3.0.0
       jest: 27.5.1
+      jest-transform-stub: 2.0.0
       lint-staged: 11.2.6
       parcel: 2.3.2_postcss@8.4.6
       postcss: 8.4.6
@@ -2216,27 +2222,6 @@ packages:
       write-file-atomic: 3.0.3
     dev: true
 
-  /@monaco-editor/loader/1.2.0_monaco-editor@0.32.1:
-    resolution: {integrity: sha512-cJVCG/T/KxXgzYnjKqyAgsKDbH9mGLjcXxN6AmwumBwa2rVFkwvGcUj1RJtD0ko4XqLqJxwqsN/Z/KURB5f1OQ==}
-    peerDependencies:
-      monaco-editor: '>= 0.21.0 < 1'
-    dependencies:
-      monaco-editor: 0.32.1
-      state-local: 1.0.7
-    dev: false
-
-  /@monaco-editor/react/4.3.1_e62f1489d5efe674a41c3f8d6971effe:
-    resolution: {integrity: sha512-f+0BK1PP/W5I50hHHmwf11+Ea92E5H1VZXs+wvKplWUWOfyMa1VVwqkJrXjRvbcqHL+XdIGYWhWNdi4McEvnZg==}
-    peerDependencies:
-      monaco-editor: '>= 0.25.0 < 1'
-      react: ^16.8.0 || ^17.0.0
-      react-dom: ^16.8.0 || ^17.0.0
-    dependencies:
-      '@monaco-editor/loader': 1.2.0_monaco-editor@0.32.1
-      monaco-editor: 0.32.1
-      prop-types: 15.8.1
-      react: 17.0.2
-      react-dom: 17.0.2_react@17.0.2
   /@logto/browser/0.1.2:
     resolution: {integrity: sha512-sTJjnx00BXYEChCbbO/LPs0x0wE1bDSHniFi+u93cynyEHgoT5yjMnH4N39NhrpmRdkXxOxaIkXmyAT1nSmYzQ==}
     requiresBuild: true
@@ -2269,6 +2254,29 @@ packages:
       '@logto/browser': 0.1.2
       '@silverhand/essentials': 1.1.6
       react: 17.0.2
+    dev: false
+
+  /@monaco-editor/loader/1.2.0_monaco-editor@0.32.1:
+    resolution: {integrity: sha512-cJVCG/T/KxXgzYnjKqyAgsKDbH9mGLjcXxN6AmwumBwa2rVFkwvGcUj1RJtD0ko4XqLqJxwqsN/Z/KURB5f1OQ==}
+    peerDependencies:
+      monaco-editor: '>= 0.21.0 < 1'
+    dependencies:
+      monaco-editor: 0.32.1
+      state-local: 1.0.7
+    dev: false
+
+  /@monaco-editor/react/4.3.1_e62f1489d5efe674a41c3f8d6971effe:
+    resolution: {integrity: sha512-f+0BK1PP/W5I50hHHmwf11+Ea92E5H1VZXs+wvKplWUWOfyMa1VVwqkJrXjRvbcqHL+XdIGYWhWNdi4McEvnZg==}
+    peerDependencies:
+      monaco-editor: '>= 0.25.0 < 1'
+      react: ^16.8.0 || ^17.0.0
+      react-dom: ^16.8.0 || ^17.0.0
+    dependencies:
+      '@monaco-editor/loader': 1.2.0_monaco-editor@0.32.1
+      monaco-editor: 0.32.1
+      prop-types: 15.8.1
+      react: 17.0.2
+      react-dom: 17.0.2_react@17.0.2
     dev: false
 
   /@nodelib/fs.scandir/2.1.5:
@@ -5033,6 +5041,10 @@ packages:
       yaml: 1.10.2
     dev: true
 
+  /country-flag-icons/1.4.21:
+    resolution: {integrity: sha512-bA9jDr+T5li7EsKdDx0xVnO0bdMdoT8IA3BNbeT2XSWUygR1okhiZ2+eYiC1EKLrFZhI4aEHni2w03lUlOjogg==}
+    dev: false
+
   /crack-json/1.3.0:
     resolution: {integrity: sha512-JfZ9NPLsU9ejTYgZ7fM+5TIMfTwROTxpi2Twh597GxmiVDwIGZSjaor+zsQBKZ0mmCKOFb9EZZLVeKNf/5UaGg==}
     engines: {node: '>=8.0'}
@@ -7243,6 +7255,12 @@ packages:
     resolution: {integrity: sha512-7NXolsK4CAS5+xvdj5OMMbI962hU/wvwoxk+LWR9Ek9bVtyuuYScDN6eS0rUm6TxApFpw7CX1o4uJzcd4AyD3Q==}
     dev: false
 
+  /input-format/0.3.7:
+    resolution: {integrity: sha512-hgwiCjV7MnhFvX4Hwrvk7hB2a2rcB2CQb7Ex7GlK1ISbEXuLtflwBUnadFSA1rVNDPFh9yWBaJJ4/o1XkzhPIg==}
+    dependencies:
+      prop-types: 15.8.1
+    dev: false
+
   /inquirer/7.3.3:
     resolution: {integrity: sha512-JG3eIAj5V9CwcGvuOmoo6LB9kbAYT8HXffUl6memuszlwDC/qvFAJw49XJ5NROSFNPxp3iQg1GqkFhaY/CR0IA==}
     engines: {node: '>=8.0.0'}
@@ -8477,6 +8495,10 @@ packages:
       - supports-color
     dev: true
 
+  /jest-transform-stub/2.0.0:
+    resolution: {integrity: sha512-lspHaCRx/mBbnm3h4uMMS3R5aZzMwyNpNIJLXj4cEsV0mIUtS4IjYJLSoyjRCtnxb6RIGJ4NL2quZzfIeNhbkg==}
+    dev: true
+
   /jest-util/27.4.2:
     resolution: {integrity: sha512-YuxxpXU6nlMan9qyLuxHaMMOzXAl5aGZWCSzben5DhLHemYQxCc4YK+4L3ZrCutT8GPQ+ui9k5D8rUJoDioMnA==}
     engines: {node: ^10.13.0 || ^12.13.0 || ^14.15.0 || >=15.0.0}
@@ -9015,6 +9037,10 @@ packages:
     transitivePeerDependencies:
       - supports-color
     dev: true
+
+  /libphonenumber-js/1.9.49:
+    resolution: {integrity: sha512-/wEOIONcVboFky+lWlCaF7glm1FhBz11M5PHeCApA+xDdVfmhKjHktHS8KjyGxouV5CSXIr4f3GvLSpJa4qMSg==}
+    dev: false
 
   /lilconfig/2.0.4:
     resolution: {integrity: sha512-bfTIN7lEsiooCocSISTWXkiWJkRqtL9wYtYy+8EK3Y41qh3mpwPU0ycTOgjdY9ErwXCc8QyrQp82bdL0Xkm9yA==}
@@ -11921,6 +11947,21 @@ packages:
       react-dom: 17.0.2_react@17.0.2
       react-lifecycles-compat: 3.0.4
       warning: 4.0.3
+    dev: false
+
+  /react-phone-number-input/3.1.46_react-dom@17.0.2+react@17.0.2:
+    resolution: {integrity: sha512-afYl7BMy/0vMqWtzsZBmOgiPdqQAGyPO/Z3auorFs4K/zgFSBq3YoaASleodBkeRO/PygJ4ML8Wnb4Ce+3dlVQ==}
+    peerDependencies:
+      react: '>=0.16.8'
+      react-dom: '>=0.16.8'
+    dependencies:
+      classnames: 2.3.1
+      country-flag-icons: 1.4.21
+      input-format: 0.3.7
+      libphonenumber-js: 1.9.49
+      prop-types: 15.8.1
+      react: 17.0.2
+      react-dom: 17.0.2_react@17.0.2
     dev: false
 
   /react-refresh/0.9.0:

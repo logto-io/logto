@@ -52,7 +52,7 @@
   --color-gradient: linear-gradient(69.73deg, #492ef3 5.52%, #cf69ff 94.22%);
   --color-background: #fdfdff;
   --color-control-background: #f4f4f4;
-  --color-control-focus: #a48dfa;
+  --color-control-focus: #{rgba(#a48dfa, 0.8)};
 
   --color-neutral-100: #111;
   --color-neutral-90: #666;

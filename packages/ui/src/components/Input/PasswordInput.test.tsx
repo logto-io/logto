@@ -24,12 +24,19 @@ describe('Input Field UI Component', () => {
     const { container } = render(<PasswordInput name="foo" value={text} onChange={onChange} />);
 
     const inputEle = container.querySelector('input');
+
+    if (!inputEle) {
+      return;
+    }
+
+    fireEvent.focus(inputEle);
+
     const visibilityButton = container.querySelector('svg');
     expect(visibilityButton).not.toBeNull();
 
     if (visibilityButton) {
-      fireEvent.click(visibilityButton);
-      expect(inputEle?.type).toEqual('text');
+      fireEvent.mouseDown(visibilityButton);
+      expect(inputEle.type).toEqual('text');
     }
   });
 });
