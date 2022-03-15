@@ -9,7 +9,7 @@ import Button from '@/components/Button';
 import Card from '@/components/Card';
 import CardTitle from '@/components/CardTitle';
 import TabNav, { TabNavLink } from '@/components/TabNav';
-import { RequestError } from '@/swr';
+import { RequestError } from '@/hooks/use-api';
 
 import ConnectorRow from './components/ConnectorRow';
 import * as styles from './index.module.scss';

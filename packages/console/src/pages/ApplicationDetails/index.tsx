@@ -13,7 +13,7 @@ import FormField from '@/components/FormField';
 import ImagePlaceholder from '@/components/ImagePlaceholder';
 import TabNav, { TabNavLink } from '@/components/TabNav';
 import TextInput from '@/components/TextInput';
-import { RequestError } from '@/swr';
+import { RequestError } from '@/hooks/use-api';
 import { applicationTypeI18nKey } from '@/types/applications';
 
 import * as styles from './index.module.scss';

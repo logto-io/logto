@@ -9,9 +9,9 @@ import CardTitle from '@/components/CardTitle';
 import FormField from '@/components/FormField';
 import RadioGroup, { Radio } from '@/components/RadioGroup';
 import TextInput from '@/components/TextInput';
+import useApi from '@/hooks/use-api';
 import Close from '@/icons/Close';
 import { applicationTypeI18nKey } from '@/types/applications';
-import api from '@/utilities/api';
 
 import TypeDescription from '../TypeDescription';
 import * as styles from './index.module.scss';
@@ -37,6 +37,7 @@ const CreateForm = ({ onClose }: Props) => {
     field: { onChange, value, name, ref },
   } = useController({ name: 'type', control, rules: { required: true } });
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const api = useApi();
 
   const onSubmit = handleSubmit(async (data) => {
     try {

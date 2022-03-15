@@ -12,8 +12,8 @@ import CardTitle from '@/components/CardTitle';
 import CopyToClipboard from '@/components/CopyToClipboard';
 import ImagePlaceholder from '@/components/ImagePlaceholder';
 import ItemPreview from '@/components/ItemPreview';
+import { RequestError } from '@/hooks/use-api';
 import * as modalStyles from '@/scss/modal.module.scss';
-import { RequestError } from '@/swr';
 
 import CreateForm from './components/CreateForm';
 import * as styles from './index.module.scss';
