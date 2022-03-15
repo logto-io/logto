@@ -1,0 +1,30 @@
+@use '@/scss/underscore' as _;
+
+.actionMenu {
+  display: inline-block;
+  min-width: _.unit(20);
+}
+
+.content {
+  background: var(--color-card-background);
+  box-shadow: var(--shadow-light-s2);
+  border-radius: _.unit(2);
+  position: absolute;
+
+  .title {
+    padding: _.unit(5) _.unit(4) _.unit(2) _.unit(4);
+    font: var(--font-body-2);
+    border-bottom: 1px solid var(--color-border);
+  }
+}
+
+.overlay {
+  background: transparent;
+  position: fixed;
+  inset: 0;
+}
+
+ul.actionList {
+  margin: 0;
+  padding: _.unit(2) 0;
+}

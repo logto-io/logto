@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 
 import * as styles from './index.module.scss';
 
-type Props = Omit<HTMLProps<HTMLButtonElement>, 'type' | 'size' | 'title'> & {
+export type Props = Omit<HTMLProps<HTMLButtonElement>, 'type' | 'size' | 'title'> & {
   htmlType?: 'button' | 'submit' | 'reset';
   title: I18nKey;
   type?: 'primary' | 'danger' | 'default';

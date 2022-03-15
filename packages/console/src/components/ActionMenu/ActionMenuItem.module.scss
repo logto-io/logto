@@ -1,0 +1,12 @@
+@use '@/scss/underscore' as _;
+
+.item {
+  padding: _.unit(2) _.unit(4);
+  list-style: none;
+  font: var(--font-body-2);
+  cursor: pointer;
+
+  &:hover {
+    background: var(--color-neutral-95);
+  }
+}

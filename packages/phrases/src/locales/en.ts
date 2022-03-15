@@ -128,6 +128,11 @@ const translation = {
       test_sms_sender: 'Test your SMS sender',
       test_message_sent: 'Test Message Sent!',
       test_sender_description: 'Test sender description',
+      options: 'Options',
+      options_delete: 'Delete',
+      options_change_email: 'Change email connector',
+      options_change_sms: 'Change SMS connector',
+      more_options: 'MORE OPTIONS',
     },
     users: {
       title: 'User Management',
