@@ -159,6 +159,9 @@ const translation = {
       create_form_password: 'Password',
       create_form_name: 'Full name',
     },
+    user_details: {
+      back_to_users: 'Back to user management',
+    },
   },
 };
 
