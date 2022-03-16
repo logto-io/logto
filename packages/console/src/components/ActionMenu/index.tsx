@@ -47,7 +47,14 @@ const ActionMenu = ({ children, buttonProps, title }: Props) => {
       >
         <div ref={overlayReference}>
           {title && <div className={styles.title}>{title}</div>}
-          <ul className={styles.actionList}>{children}</ul>
+          <ul
+            className={styles.actionList}
+            onClick={() => {
+              setIsOpen(false);
+            }}
+          >
+            {children}
+          </ul>
         </div>
       </ReactModal>
     </div>

@@ -6,6 +6,7 @@ import Modal from 'react-modal';
 import { useLocation, useParams } from 'react-router-dom';
 import useSWR from 'swr';
 
+import ActionMenu, { ActionMenuItem } from '@/components/ActionMenu';
 import BackLink from '@/components/BackLink';
 import Button from '@/components/Button';
 import Card from '@/components/Card';
@@ -84,6 +85,18 @@ const ApiResourceDetails = () => {
             </div>
             <div className={styles.operation}>
               <Button title="admin_console.api_resource_details.check_help_guide" />
+              <ActionMenu
+                buttonProps={{ title: 'admin_console.api_resource_details.options' }}
+                title={t('api_resource_details.more_options')}
+              >
+                <ActionMenuItem
+                  onClick={() => {
+                    setIsDeleteOpen(true);
+                  }}
+                >
+                  {t('api_resource_details.options_delete')}
+                </ActionMenuItem>
+              </ActionMenu>
               <Modal
                 isOpen={isDeleteOpen}
                 className={modalStyles.content}

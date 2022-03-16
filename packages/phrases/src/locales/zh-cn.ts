@@ -106,6 +106,9 @@ const translation = {
     api_resource_details: {
       back_to_api_resources: 'Back to my API resources',
       check_help_guide: 'Check Help Guide',
+      options: 'Options',
+      more_options: 'More Options',
+      options_delete: 'Delete',
       settings: 'Settings',
       save_changes: 'Save Changes',
       token_expiration_time_in_seconds: 'Token Expiration Time (in seconds)',
