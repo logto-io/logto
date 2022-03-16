@@ -91,7 +91,9 @@ export default async function initOidc(app: Koa): Promise<Provider> {
     clientBasedCORS: (_, origin) => {
       console.log('origin', origin);
 
-      return origin.startsWith('http://localhost:3001');
+      return ['http://localhost:3001', 'https://logto.dev'].some((value) =>
+        origin.startsWith(value)
+      );
     },
     findAccount: async (ctx, sub) => {
       await findUserById(sub);
