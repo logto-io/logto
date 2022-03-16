@@ -7,8 +7,8 @@ import Card from '@/components/Card';
 import CardTitle from '@/components/CardTitle';
 import FormField from '@/components/FormField';
 import TextInput from '@/components/TextInput';
+import useApi from '@/hooks/use-api';
 import Close from '@/icons/Close';
-import api from '@/utilities/api';
 
 import * as styles from './index.module.scss';
 
@@ -23,6 +23,7 @@ type Props = {
 
 const CreateForm = ({ onClose }: Props) => {
   const { handleSubmit, register } = useForm<FormData>();
+  const api = useApi();
 
   const onSubmit = handleSubmit(async (data) => {
     try {

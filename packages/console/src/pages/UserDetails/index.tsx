@@ -8,7 +8,7 @@ import BackLink from '@/components/BackLink';
 import Card from '@/components/Card';
 import CopyToClipboard from '@/components/CopyToClipboard';
 import ImagePlaceholder from '@/components/ImagePlaceholder';
-import { RequestError } from '@/swr';
+import { RequestError } from '@/hooks/use-api';
 
 import CreateSuccess from './components/CreateSuccess';
 import * as styles from './index.module.scss';

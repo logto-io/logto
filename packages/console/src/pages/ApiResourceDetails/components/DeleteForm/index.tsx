@@ -7,8 +7,8 @@ import Button from '@/components/Button';
 import Card from '@/components/Card';
 import CardTitle from '@/components/CardTitle';
 import TextInput from '@/components/TextInput';
+import useApi from '@/hooks/use-api';
 import Close from '@/icons/Close';
-import api from '@/utilities/api';
 
 import * as styles from './index.module.scss';
 
@@ -19,6 +19,7 @@ type Props = {
 };
 
 const DeleteForm = ({ id, name, onClose }: Props) => {
+  const api = useApi();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   const navigate = useNavigate();

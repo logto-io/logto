@@ -15,9 +15,8 @@ import FormField from '@/components/FormField';
 import ImagePlaceholder from '@/components/ImagePlaceholder';
 import TabNav, { TabNavLink } from '@/components/TabNav';
 import TextInput from '@/components/TextInput';
+import useApi, { RequestError } from '@/hooks/use-api';
 import * as modalStyles from '@/scss/modal.module.scss';
-import { RequestError } from '@/swr';
-import api from '@/utilities/api';
 
 import DeleteForm from './components/DeleteForm';
 import * as styles from './index.module.scss';
@@ -39,6 +38,7 @@ const ApiResourceDetails = () => {
     defaultValues: data,
   });
   const [submitting, setSubmitting] = useState(false);
+  const api = useApi();
 
   const [isDeleteFormOpen, setIsDeleteFormOpen] = useState(false);
 

@@ -15,8 +15,7 @@ import ImagePlaceholder from '@/components/ImagePlaceholder';
 import Markdown from '@/components/Markdown';
 import Status from '@/components/Status';
 import TabNav, { TabNavLink } from '@/components/TabNav';
-import { RequestError } from '@/swr';
-import api from '@/utilities/api';
+import useApi, { RequestError } from '@/hooks/use-api';
 
 import SenderTester from './components/SenderTester';
 import * as styles from './index.module.scss';
@@ -35,6 +34,7 @@ const ConnectorDetails = () => {
     connectorId && `/api/connectors/${connectorId}`
   );
   const isLoading = !data && !error;
+  const api = useApi();
 
   useEffect(() => {
     if (data) {
