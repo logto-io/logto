@@ -16,6 +16,7 @@ import Callback from './pages/Callback';
 import ConnectorDetails from './pages/ConnectorDetails';
 import Connectors from './pages/Connectors';
 import GetStarted from './pages/GetStarted';
+import UserDetails from './pages/UserDetails';
 import Users from './pages/Users';
 import { fetcher } from './swr';
 
@@ -60,6 +61,7 @@ const Main = () => {
             </Route>
             <Route path="users">
               <Route index element={<Users />} />
+              <Route path=":id" element={<UserDetails />} />
             </Route>
           </Route>
         </Routes>

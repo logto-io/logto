@@ -170,6 +170,15 @@ const translation = {
       create_form_password: '密码',
       create_form_name: '姓名',
     },
+    user_details: {
+      back_to_users: '返回用户管理',
+      created_title: '恭喜！用户创建成功',
+      created_guide: '用户信息如下',
+      created_username: '用户名：',
+      created_password: '初始密码：',
+      created_button_close: '关闭',
+      created_button_copy: '拷贝',
+    },
   },
 };
 
