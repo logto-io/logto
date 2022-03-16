@@ -62,7 +62,6 @@ const CreateSuccess = ({ username }: Props) => {
               </div>
               <div className={styles.operation}>
                 <IconButton
-                  size="large"
                   onClick={() => {
                     setPasswordVisible((previous) => !previous);
                   }}
