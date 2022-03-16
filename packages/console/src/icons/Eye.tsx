@@ -1,7 +1,14 @@
 import React, { SVGProps } from 'react';
 
 const Eye = (props: SVGProps<SVGSVGElement>) => (
-  <svg width="20" height="14" viewBox="0 0 20 14" xmlns="http://www.w3.org/2000/svg" {...props}>
+  <svg
+    width="20"
+    height="14"
+    viewBox="0 0 20 14"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
     <path
       d="M13 7C13 8.65685 11.6569 10 10 10C8.34315 10 7 8.65685 7 7C7 5.34315 8.34315 4 10 4C11.6569 4 13 5.34315 13 7Z"
       fill="#747778"

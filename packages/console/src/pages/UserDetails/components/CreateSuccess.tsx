@@ -6,6 +6,7 @@ import { useSearchParams } from 'react-router-dom';
 
 import Button from '@/components/Button';
 import Card from '@/components/Card';
+import IconButton from '@/components/IconButton';
 import Eye from '@/icons/Eye';
 import * as modalStyles from '@/scss/modal.module.scss';
 
@@ -60,12 +61,14 @@ const CreateSuccess = ({ username }: Props) => {
                 {passwordVisible ? password : password.replace(/./g, '*')}
               </div>
               <div className={styles.operation}>
-                {/* TODO: Replaced into IconButton(LOG-1890) */}
-                <Eye
+                <IconButton
+                  size="large"
                   onClick={() => {
                     setPasswordVisible((previous) => !previous);
                   }}
-                />
+                >
+                  <Eye />
+                </IconButton>
               </div>
             </div>
           </div>

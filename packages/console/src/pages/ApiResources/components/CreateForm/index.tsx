@@ -6,6 +6,7 @@ import Button from '@/components/Button';
 import Card from '@/components/Card';
 import CardTitle from '@/components/CardTitle';
 import FormField from '@/components/FormField';
+import IconButton from '@/components/IconButton';
 import TextInput from '@/components/TextInput';
 import Close from '@/icons/Close';
 import api from '@/utilities/api';
@@ -37,7 +38,9 @@ const CreateForm = ({ onClose }: Props) => {
     <Card className={styles.card}>
       <div className={styles.headline}>
         <CardTitle title="api_resources.create" subtitle="api_resources.subtitle" />
-        <Close onClick={() => onClose?.()} />
+        <IconButton size="large" onClick={() => onClose?.()}>
+          <Close />
+        </IconButton>
       </div>
       <form className={styles.form} onSubmit={onSubmit}>
         <FormField

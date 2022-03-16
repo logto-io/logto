@@ -3,6 +3,7 @@ import ReactModal from 'react-modal';
 
 import Close from '@/icons/Close';
 
+import IconButton from '../IconButton';
 import * as styles from './index.module.scss';
 
 type Props = {
@@ -21,11 +22,14 @@ const Drawer = ({ isOpen, onClose, children }: Props) => {
       onRequestClose={onClose}
     >
       <div className={styles.headline}>
-        <Close
+        <IconButton
+          size="large"
           onClick={() => {
             onClose?.();
           }}
-        />
+        >
+          <Close />
+        </IconButton>
       </div>
       <div>{children}</div>
     </ReactModal>

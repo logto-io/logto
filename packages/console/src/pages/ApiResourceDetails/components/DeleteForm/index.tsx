@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import Button from '@/components/Button';
 import Card from '@/components/Card';
 import CardTitle from '@/components/CardTitle';
+import IconButton from '@/components/IconButton';
 import TextInput from '@/components/TextInput';
 import Close from '@/icons/Close';
 import api from '@/utilities/api';
@@ -43,11 +44,12 @@ const DeleteForm = ({ id, name, onClose }: Props) => {
 
   return (
     // TODO LOG-1907: Modal
-    // TODO LOG-1890: Icon Button
     <Card className={styles.card}>
       <div className={styles.headline}>
         <CardTitle title="api_resource_details.reminder" />
-        <Close className={styles.close} onClick={onClose} />
+        <IconButton size="large" className={styles.close} onClick={onClose}>
+          <Close />
+        </IconButton>
       </div>
       <div className={styles.description}>
         <Trans
