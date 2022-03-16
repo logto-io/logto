@@ -42,6 +42,8 @@ const DeleteForm = ({ id, name, onClose }: Props) => {
   };
 
   return (
+    // TODO LOG-1907: Modal
+    // TODO LOG-1890: Icon Button
     <Card className={styles.card}>
       <div className={styles.headline}>
         <CardTitle title="api_resource_details.reminder" />
