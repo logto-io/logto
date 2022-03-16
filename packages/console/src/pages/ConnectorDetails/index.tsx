@@ -89,7 +89,7 @@ const ConnectorDetails = () => {
               <div className={styles.id}>{data.id}</div>
             </div>
             <div>
-              <Status status={data.enabled ? 'operational' : 'offline'}>
+              <Status status={data.enabled ? 'enabled' : 'disabled'}>
                 {t('connectors.connector_status', {
                   context: data.enabled ? 'enabled' : 'disabled',
                 })}

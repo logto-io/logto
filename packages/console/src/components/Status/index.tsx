@@ -4,7 +4,7 @@ import React, { ReactNode } from 'react';
 import * as styles from './index.module.scss';
 
 type Props = {
-  status: 'operational' | 'offline';
+  status: 'enabled' | 'disabled';
   children: ReactNode;
 };
 
