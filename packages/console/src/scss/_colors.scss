@@ -57,6 +57,8 @@
   --color-neutral-variant-90: #e5e1ec;
   --color-neutral-variant-95: #f3effa;
   --color-neutral-variant-99: #fffbff;
+  --color-overlay-8: rgba(25, 28, 29, 8%);
+  --color-overlay-12: rgba(25, 28, 29, 12%);
 }
 
 @mixin light-theme {
