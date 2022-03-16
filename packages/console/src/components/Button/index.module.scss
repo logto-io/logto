@@ -7,9 +7,21 @@
   font: var(--font-button);
   transition: background 0.2s ease-in-out;
   @include _.text-ellipsis;
+  display: flex;
+  align-items: center;
 
   &:not(:disabled) {
     cursor: pointer;
+  }
+
+  .icon {
+    display: block;
+    width: 16px;
+    height: 16px;
+
+    &:not(:last-child) {
+      margin-right: _.unit(2);
+    }
   }
 
   &.small {
