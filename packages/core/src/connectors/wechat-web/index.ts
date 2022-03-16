@@ -1,3 +1,10 @@
+/**
+ * The Implementation of OpenID Connect of WeChat Web Open Platform.
+ * https://developers.weixin.qq.com/doc/oplatform/Website_App/WeChat_Login/Wechat_Login.html
+ *
+ * As creating a WeChat Web/Mobile application needs a real App or Website record, the real test is temporarily not finished.
+ * TODO: test with real on-record wechat mobile/web application (LOG-1910)
+ */
 import { existsSync, readFileSync } from 'fs';
 import path from 'path';
 
@@ -18,37 +25,35 @@ import {
   ConnectorErrorCodes,
 } from '../types';
 import { getConnectorConfig, getConnectorRequestTimeout } from '../utilities';
-import { authorizationEndpoint, accessTokenEndpoint, scope, userInfoEndpoint } from './constant';
+import { authorizationEndpoint, accessTokenEndpoint, userInfoEndpoint, scope } from './constant';
 
 // eslint-disable-next-line unicorn/prefer-module
 const pathToReadmeFile = path.join(__dirname, 'README.md');
 const readmeContentFallback = 'Please check README.md file directory.';
 export const metadata: ConnectorMetadata = {
-  id: 'github',
+  id: 'wechat-web',
   type: ConnectorType.Social,
   name: {
-    en: 'Sign In with GitHub',
-    'zh-CN': 'GitHub登录',
+    en: 'Sign In with WeChat',
+    'zh-CN': 'WeChat 登录',
   },
-  logo: 'https://user-images.githubusercontent.com/5717882/156983224-7ea0296b-38fa-419d-9515-67e8a9612e09.png',
+  // TODO: add the real logo URL (LOG-1823)
+  logo: './logo.png',
   description: {
-    en: 'Sign In with GitHub',
-    'zh-CN': 'GitHub登录',
+    en: 'Sign In with WeChat Web Application',
+    'zh-CN': 'WeChat 网页登录',
   },
   readme: existsSync(pathToReadmeFile)
     ? readFileSync(pathToReadmeFile, 'utf8')
     : readmeContentFallback,
 };
 
-const githubConfigGuard = z.object({
-  clientId: z.string(),
-  clientSecret: z.string(),
-});
+const weChatWebConfigGuard = z.object({ appId: z.string(), appSecret: z.string() });
 
-type GithubConfig = z.infer<typeof githubConfigGuard>;
+type WeChatWebConfig = z.infer<typeof weChatWebConfigGuard>;
 
 export const validateConfig: ValidateConfig = async (config: unknown) => {
-  const result = githubConfigGuard.safeParse(config);
+  const result = weChatWebConfigGuard.safeParse(config);
 
   if (!result.success) {
     throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, result.error.message);
@@ -56,72 +61,58 @@ export const validateConfig: ValidateConfig = async (config: unknown) => {
 };
 
 export const getAuthorizationUri: GetAuthorizationUri = async (redirectUri, state) => {
-  const config = await getConnectorConfig<GithubConfig>(metadata.id);
+  const config = await getConnectorConfig<WeChatWebConfig>(metadata.id);
 
   return `${authorizationEndpoint}?${stringify({
-    client_id: config.clientId,
+    appid: config.appId,
     redirect_uri: redirectUri,
+    response_type: 'code',
+    scope,
     state,
-    scope, // Only support fixed scope for v1.
   })}`;
 };
 
 export const getAccessToken: GetAccessToken = async (code) => {
   type AccessTokenResponse = {
     access_token: string;
+    openid: string;
+    expires_in: number; // In seconds
+    refresh_token: string;
     scope: string;
-    token_type: string;
   };
 
-  const { clientId: client_id, clientSecret: client_secret } =
-    await getConnectorConfig<GithubConfig>(metadata.id);
+  const config = await getConnectorConfig<WeChatWebConfig>(metadata.id);
+  const { appId: appid, appSecret: secret } = config;
 
-  const { access_token: accessToken } = await got
+  const { access_token: accessToken, openid } = await got
     .post({
       url: accessTokenEndpoint,
-      json: {
-        client_id,
-        client_secret,
-        code,
-      },
+      json: { appid, secret, code, grant_type: 'authorization_code' },
       timeout: await getConnectorRequestTimeout(),
     })
     .json<AccessTokenResponse>();
 
   assertThat(accessToken, new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid));
 
-  return { accessToken };
+  return { accessToken, openid };
 };
 
-export const getUserInfo: GetUserInfo = async (accessToken: string) => {
+export const getUserInfo: GetUserInfo = async (accessToken, openid) => {
   type UserInfoResponse = {
-    id: number;
-    avatar_url?: string;
-    email?: string;
-    name?: string;
+    unionid: string;
+    headimgurl?: string;
+    nickname?: string;
   };
 
   try {
-    const {
-      id,
-      avatar_url: avatar,
-      email,
-      name,
-    } = await got
+    const { unionid, headimgurl, nickname } = await got
       .get(userInfoEndpoint, {
-        headers: {
-          authorization: `token ${accessToken}`,
-        },
+        headers: { access_token: accessToken, openid },
         timeout: await getConnectorRequestTimeout(),
       })
       .json<UserInfoResponse>();
 
-    return {
-      id: String(id),
-      avatar,
-      email,
-      name,
-    };
+    return { id: unionid, avatar: headimgurl, name: nickname };
   } catch (error: unknown) {
     if (error instanceof GotRequestError && error.response?.statusCode === 401) {
       throw new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid);

@@ -48,7 +48,7 @@ describe('google connector', () => {
         scope: 'scope',
         token_type: 'token_type',
       });
-      const accessToken = await getAccessToken('code', 'dummyRedirectUri');
+      const { accessToken } = await getAccessToken('code', 'dummyRedirectUri');
       expect(accessToken).toEqual('access_token');
     });
 

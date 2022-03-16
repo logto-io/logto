@@ -40,9 +40,9 @@ export const getUserInfoByAuthCode = async (
   redirectUri: string
 ): Promise<SocialUserInfo> => {
   const connector = await getConnector(connectorId);
-  const accessToken = await connector.getAccessToken(authCode, redirectUri);
+  const { accessToken, openid } = await connector.getAccessToken(authCode, redirectUri);
 
-  return connector.getUserInfo(accessToken);
+  return connector.getUserInfo(accessToken, openid);
 };
 
 export const getUserInfoFromInteractionResult = async (

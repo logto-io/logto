@@ -87,9 +87,12 @@ export type ValidateConfig<T extends ArbitraryObject = ArbitraryObject> = (
 
 export type GetAuthorizationUri = (redirectUri: string, state: string) => Promise<string>;
 
-export type GetAccessToken = (code: string, redirectUri: string) => Promise<string>;
+export type GetAccessToken = (
+  code: string,
+  redirectUri?: string
+) => Promise<{ accessToken: string; openid?: string }>;
 
-export type GetUserInfo = (accessToken: string) => Promise<SocialUserInfo>;
+export type GetUserInfo = (accessToken: string, openid?: string) => Promise<SocialUserInfo>;
 
 export const socialUserInfoGuard = z.object({
   id: z.string(),
