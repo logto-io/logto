@@ -1,22 +1,34 @@
 import { I18nKey } from '@logto/phrases';
 import classNames from 'classnames';
-import React, { HTMLProps } from 'react';
+import React, { HTMLProps, ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import * as styles from './index.module.scss';
 
-export type Props = Omit<HTMLProps<HTMLButtonElement>, 'type' | 'size' | 'title'> & {
+type BaseProps = Omit<HTMLProps<HTMLButtonElement>, 'type' | 'size' | 'title'> & {
   htmlType?: 'button' | 'submit' | 'reset';
-  title: I18nKey;
   type?: 'primary' | 'danger' | 'outline' | 'plain' | 'default';
   size?: 'small' | 'medium' | 'large';
 };
+
+type TitleButtonProps = BaseProps & {
+  title: I18nKey;
+  icon?: ReactNode;
+};
+
+type IconButtonProps = BaseProps & {
+  title?: I18nKey;
+  icon: ReactNode;
+};
+
+export type Props = TitleButtonProps | IconButtonProps;
 
 const Button = ({
   htmlType = 'button',
   type = 'default',
   size = 'medium',
   title,
+  icon,
   ...rest
 }: Props) => {
   const { t } = useTranslation();
@@ -27,7 +39,8 @@ const Button = ({
       type={htmlType}
       {...rest}
     >
-      {t(title)}
+      {icon && <span className={styles.icon}>{icon}</span>}
+      {title && <span>{t(title)}</span>}
     </button>
   );
 };
