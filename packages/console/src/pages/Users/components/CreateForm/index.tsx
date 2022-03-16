@@ -26,13 +26,8 @@ const CreateForm = ({ onClose }: Props) => {
   const { handleSubmit, register } = useForm<FormData>();
 
   const onSubmit = handleSubmit(async (data) => {
-    try {
-      const createdUser = await api.post('/api/users', { json: data }).json<User>();
-
-      onClose?.(createdUser, btoa(data.password));
-    } catch (error: unknown) {
-      console.error(error);
-    }
+    const createdUser = await api.post('/api/users', { json: data }).json<User>();
+    onClose?.(createdUser, btoa(data.password));
   });
 
   return (
