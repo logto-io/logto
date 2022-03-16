@@ -23,22 +23,21 @@ const DeleteForm = ({ id, name, onClose }: Props) => {
 
   const navigate = useNavigate();
 
-  const [inputName, setInputName] = useState<string>('');
-  const [isDeleting, setIsDeleting] = useState(false);
+  const [inputName, setInputName] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const inputMismatched = inputName !== name;
 
   const handleDelete = async () => {
+    setLoading(true);
+
     try {
-      setIsDeleting(true);
       await api.delete(`/api/resources/${id}`);
       onClose();
       navigate(`/api-resources`);
       toast.success(t('api_resource_details.api_resource_deleted', { name }));
-    } catch (error: unknown) {
-      console.error(error);
     } finally {
-      setIsDeleting(false);
+      setLoading(false);
     }
   };
 
@@ -64,17 +63,13 @@ const DeleteForm = ({ id, name, onClose }: Props) => {
         <Button
           type="outline"
           title="admin_console.api_resource_details.cancel"
-          onClick={() => {
-            onClose();
-          }}
+          onClick={onClose}
         />
         <Button
-          disabled={inputMismatched || isDeleting}
+          disabled={inputMismatched || loading}
           type="danger"
           title="admin_console.api_resource_details.delete"
-          onClick={() => {
-            void handleDelete();
-          }}
+          onClick={handleDelete}
         />
       </div>
     </Card>

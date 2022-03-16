@@ -40,7 +40,7 @@ const ApiResourceDetails = () => {
   });
   const [submitting, setSubmitting] = useState(false);
 
-  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+  const [isDeleteFormOpen, setIsDeleteFormOpen] = useState(false);
 
   useEffect(() => {
     if (!data) {
@@ -91,14 +91,14 @@ const ApiResourceDetails = () => {
               >
                 <ActionMenuItem
                   onClick={() => {
-                    setIsDeleteOpen(true);
+                    setIsDeleteFormOpen(true);
                   }}
                 >
                   {t('api_resource_details.options_delete')}
                 </ActionMenuItem>
               </ActionMenu>
               <Modal
-                isOpen={isDeleteOpen}
+                isOpen={isDeleteFormOpen}
                 className={modalStyles.content}
                 overlayClassName={modalStyles.overlay}
               >
@@ -106,7 +106,7 @@ const ApiResourceDetails = () => {
                   id={data.id}
                   name={data.name}
                   onClose={() => {
-                    setIsDeleteOpen(false);
+                    setIsDeleteFormOpen(false);
                   }}
                 />
               </Modal>
