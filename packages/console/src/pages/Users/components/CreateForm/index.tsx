@@ -19,20 +19,15 @@ type FormData = {
 };
 
 type Props = {
-  onClose?: (createdUser?: User) => void;
+  onClose?: (createdUser?: User, password?: string) => void;
 };
 
 const CreateForm = ({ onClose }: Props) => {
   const { handleSubmit, register } = useForm<FormData>();
 
   const onSubmit = handleSubmit(async (data) => {
-    try {
-      const createdUser = await api.post('/api/users', { json: data }).json<User>();
-
-      onClose?.(createdUser);
-    } catch (error: unknown) {
-      console.error(error);
-    }
+    const createdUser = await api.post('/api/users', { json: data }).json<User>();
+    onClose?.(createdUser, btoa(data.password));
   });
 
   return (
@@ -61,7 +56,7 @@ const CreateForm = ({ onClose }: Props) => {
           title="admin_console.users.create_form_password"
           className={styles.textField}
         >
-          <TextInput {...register('name', { required: true })} />
+          <TextInput {...register('password', { required: true })} />
         </FormField>
         <div className={styles.submit}>
           <Button

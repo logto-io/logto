@@ -1,5 +1,4 @@
 import { User } from '@logto/schemas';
-import { conditional } from '@silverhand/essentials/lib/utilities/conditional.js';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Modal from 'react-modal';
@@ -20,7 +19,7 @@ import * as styles from './index.module.scss';
 const Users = () => {
   const [isCreateFormOpen, setIsCreateFormOpen] = useState(false);
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { data, error, mutate } = useSWR<User[], RequestError>('/api/users');
+  const { data, error } = useSWR<User[], RequestError>('/api/users');
   const isLoading = !data && !error;
   const navigate = useNavigate();
 
@@ -41,13 +40,11 @@ const Users = () => {
           overlayClassName={modalStyles.overlay}
         >
           <CreateForm
-            onClose={(createdUser) => {
+            onClose={(createdUser, password) => {
               setIsCreateFormOpen(false);
 
-              if (createdUser) {
-                void mutate(conditional(data && [...data, createdUser]));
-
-                navigate(`/applications/${createdUser.id}/get-started`);
+              if (createdUser && password) {
+                navigate(`/users/${createdUser.id}?password=${password}`);
               }
             }}
           />
