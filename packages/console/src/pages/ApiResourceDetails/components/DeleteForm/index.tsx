@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { toast } from 'react-hot-toast';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
 import Button from '@/components/Button';
@@ -48,7 +48,12 @@ const DeleteForm = ({ id, name, onClose }: Props) => {
         <Close className={styles.close} onClick={onClose} />
       </div>
       <div className={styles.description}>
-        {t('api_resource_details.delete_description', { name })}
+        <Trans
+          t={t}
+          i18nKey="api_resource_details.delete_description"
+          values={{ name }}
+          components={{ span: <span className={styles.hightlight} /> }}
+        />
       </div>
       <TextInput
         value={inputName}
