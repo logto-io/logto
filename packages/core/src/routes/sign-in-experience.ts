@@ -12,9 +12,9 @@ import { AuthedRouter } from './types';
 export default function signInExperiencesRoutes<T extends AuthedRouter>(router: T) {
   /**
    * As we only support single signInExperience settings for V1
-   * always return the default settings in DB for the /sign-in-ex get method
+   * always return the default settings in DB for the /sign-in-exp get method
    */
-  router.get('/sign-in-ex', async (ctx, next) => {
+  router.get('/sign-in-exp', async (ctx, next) => {
     const signInExperience = await findDefaultSignInExperience();
     ctx.body = signInExperience;
 
@@ -23,7 +23,7 @@ export default function signInExperiencesRoutes<T extends AuthedRouter>(router: 
 
   // TODO: LOG-1403 need to find a way to validate SignInMethod input
   router.patch(
-    '/sign-in-ex/:id',
+    '/sign-in-exp/:id',
     koaGuard({
       params: object({ id: string().min(1) }),
       body: SignInExperiences.createGuard.omit({ id: true }).partial(),
