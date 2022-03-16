@@ -21,7 +21,7 @@ importers:
   packages/console:
     specifiers:
       '@logto/phrases': ^0.1.0
-      '@logto/react': ^0.1.2
+      '@logto/react': ^0.1.3
       '@logto/schemas': ^0.1.0
       '@monaco-editor/react': ^4.3.1
       '@parcel/core': ^2.3.2
@@ -63,7 +63,7 @@ importers:
       typescript: ^4.6.2
     dependencies:
       '@logto/phrases': link:../phrases
-      '@logto/react': 0.1.2_react@17.0.2
+      '@logto/react': 0.1.3_react@17.0.2
       '@logto/schemas': link:../schemas
       '@monaco-editor/react': 4.3.1_e62f1489d5efe674a41c3f8d6971effe
       '@silverhand/essentials': 1.1.6
@@ -2222,19 +2222,19 @@ packages:
       write-file-atomic: 3.0.3
     dev: true
 
-  /@logto/browser/0.1.2:
-    resolution: {integrity: sha512-sTJjnx00BXYEChCbbO/LPs0x0wE1bDSHniFi+u93cynyEHgoT5yjMnH4N39NhrpmRdkXxOxaIkXmyAT1nSmYzQ==}
+  /@logto/browser/0.1.3:
+    resolution: {integrity: sha512-SsXp7uWnDKSyYGbcCCUkTelcWs8OlUNO0gVnW1hvuAAgm62LAX6EfgsE4EIKCLN/JrcRfjbiJIr98QNfa0riWw==}
     requiresBuild: true
     dependencies:
-      '@logto/js': 0.1.2
+      '@logto/js': 0.1.3
       '@silverhand/essentials': 1.1.6
       jose: 4.6.0
       lodash.get: 4.4.2
       superstruct: 0.15.4
     dev: false
 
-  /@logto/js/0.1.2:
-    resolution: {integrity: sha512-kz7l++gfpXa1OaUaB5WvnHNXQKEJDFnBzVYAofPADnPftHEF0zYRuQDCa8PJMd6/ECKfL1XPLMlJMNP/5U2fqQ==}
+  /@logto/js/0.1.3:
+    resolution: {integrity: sha512-lxdZNX67w2rntiSHC5ovY2D7IHq8ldcT9AQDaP7ayjKTyIuWIJxW7u9f21BpuPpfBHAIhOsKjgqAvLPBXczjzw==}
     requiresBuild: true
     dependencies:
       '@silverhand/essentials': 1.1.6
@@ -2245,13 +2245,13 @@ packages:
       superstruct: 0.15.4
     dev: false
 
-  /@logto/react/0.1.2_react@17.0.2:
-    resolution: {integrity: sha512-kxLOvxOv3IB8BjpbcoRFsBFX249wAfbOL0tfJlSWmOXrkPouai1bRItEFBHFKDI1zLJATVQRoJNQfaczJy/c0A==}
+  /@logto/react/0.1.3_react@17.0.2:
+    resolution: {integrity: sha512-cxa+LM+sb0azQY5tGe5smY4B5N6U/yE66GT6RL0CguHC6DXZ3j00wfzaRhwAtOXAl3QL2xULcZTwkI3sY69COw==}
     requiresBuild: true
     peerDependencies:
       react: '>=16.8.0'
     dependencies:
-      '@logto/browser': 0.1.2
+      '@logto/browser': 0.1.3
       '@silverhand/essentials': 1.1.6
       react: 17.0.2
     dev: false
@@ -2366,8 +2366,8 @@ packages:
       '@octokit/types': 6.34.0
     dev: true
 
-  /@octokit/core/3.5.1:
-    resolution: {integrity: sha512-omncwpLVxMP+GLpLPgeGJBF6IWJFjXDS5flY5VbppePYX9XehevbDykRH9PdCdvqt9TS5AOTiDide7h0qrkHjw==}
+  /@octokit/core/3.6.0:
+    resolution: {integrity: sha512-7RKRKuA4xTjMhY+eG3jthb3hlZCsOwg3rztWh75Xc+ShDWOfDDATWbeZpAHBNRpm4Tv9WgBMOy1zEJYXG6NJ7Q==}
     dependencies:
       '@octokit/auth-token': 2.5.0
       '@octokit/graphql': 4.8.0
@@ -2406,29 +2406,29 @@ packages:
     resolution: {integrity: sha512-93uGjlhUD+iNg1iWhUENAtJata6w5nE+V4urXOAlIXdco6xNZtUSfYY8dzp3Udy74aqO/B5UZL80x/YMa5PKRw==}
     dev: true
 
-  /@octokit/plugin-paginate-rest/2.17.0_@octokit+core@3.5.1:
+  /@octokit/plugin-paginate-rest/2.17.0_@octokit+core@3.6.0:
     resolution: {integrity: sha512-tzMbrbnam2Mt4AhuyCHvpRkS0oZ5MvwwcQPYGtMv4tUa5kkzG58SVB0fcsLulOZQeRnOgdkZWkRUiyBlh0Bkyw==}
     peerDependencies:
       '@octokit/core': '>=2'
     dependencies:
-      '@octokit/core': 3.5.1
+      '@octokit/core': 3.6.0
       '@octokit/types': 6.34.0
     dev: true
 
-  /@octokit/plugin-request-log/1.0.4_@octokit+core@3.5.1:
+  /@octokit/plugin-request-log/1.0.4_@octokit+core@3.6.0:
     resolution: {integrity: sha512-mLUsMkgP7K/cnFEw07kWqXGF5LKrOkD+lhCrKvPHXWDywAwuDUeDwWBpc69XK3pNX0uKiVt8g5z96PJ6z9xCFA==}
     peerDependencies:
       '@octokit/core': '>=3'
     dependencies:
-      '@octokit/core': 3.5.1
+      '@octokit/core': 3.6.0
     dev: true
 
-  /@octokit/plugin-rest-endpoint-methods/5.13.0_@octokit+core@3.5.1:
+  /@octokit/plugin-rest-endpoint-methods/5.13.0_@octokit+core@3.6.0:
     resolution: {integrity: sha512-uJjMTkN1KaOIgNtUPMtIXDOjx6dGYysdIFhgA52x4xSadQCz3b/zJexvITDVpANnfKPW/+E0xkOvLntqMYpviA==}
     peerDependencies:
       '@octokit/core': '>=3'
     dependencies:
-      '@octokit/core': 3.5.1
+      '@octokit/core': 3.6.0
       '@octokit/types': 6.34.0
       deprecation: 2.3.1
     dev: true
@@ -2457,10 +2457,10 @@ packages:
   /@octokit/rest/18.12.0:
     resolution: {integrity: sha512-gDPiOHlyGavxr72y0guQEhLsemgVjwRePayJ+FcKc2SJqKUbxbkvf5kAZEWA/MKvsfYlQAMVzNJE3ezQcxMJ2Q==}
     dependencies:
-      '@octokit/core': 3.5.1
-      '@octokit/plugin-paginate-rest': 2.17.0_@octokit+core@3.5.1
-      '@octokit/plugin-request-log': 1.0.4_@octokit+core@3.5.1
-      '@octokit/plugin-rest-endpoint-methods': 5.13.0_@octokit+core@3.5.1
+      '@octokit/core': 3.6.0
+      '@octokit/plugin-paginate-rest': 2.17.0_@octokit+core@3.6.0
+      '@octokit/plugin-request-log': 1.0.4_@octokit+core@3.6.0
+      '@octokit/plugin-rest-endpoint-methods': 5.13.0_@octokit+core@3.6.0
     transitivePeerDependencies:
       - encoding
     dev: true
@@ -6377,7 +6377,7 @@ packages:
     dependencies:
       asynckit: 0.4.0
       combined-stream: 1.0.8
-      mime-types: 2.1.34
+      mime-types: 2.1.35
     dev: true
 
   /form-data/3.0.1:
@@ -9850,11 +9850,23 @@ packages:
     resolution: {integrity: sha512-5y8A56jg7XVQx2mbv1lu49NR4dokRnhZYTtL+KGfaa27uq4pSTXkwQkFJl4pkRMyNFz/EtYDSkiiEHx3F7UN6g==}
     engines: {node: '>= 0.6'}
 
+  /mime-db/1.52.0:
+    resolution: {integrity: sha512-sPU4uV7dYlvtWJxwwxHD0PuihVNiE7TyAbQ5SWxDCB9mUYvOgroQOwYQQOKPJ8CIbE+1ETVlOoK1UC2nU3gYvg==}
+    engines: {node: '>= 0.6'}
+    dev: true
+
   /mime-types/2.1.34:
     resolution: {integrity: sha512-6cP692WwGIs9XXdOO4++N+7qjqv0rqxxVvJ3VHPh/Sc9mVZcQP+ZGhkKiTvWMQRr2tbHkJP/Yn7Y0npb3ZBs4A==}
     engines: {node: '>= 0.6'}
     dependencies:
       mime-db: 1.51.0
+
+  /mime-types/2.1.35:
+    resolution: {integrity: sha512-ZDY+bPm5zTTF+YpCrAU9nK0UgICYPT0QtT1NZWFv4s++TNkcgVaT0g6+4R2uI4MjQjzysHB1zxuWL50hzaeXiw==}
+    engines: {node: '>= 0.6'}
+    dependencies:
+      mime-db: 1.52.0
+    dev: true
 
   /mime/1.6.0:
     resolution: {integrity: sha512-x0Vn8spI+wuJ1O6S7gnbaQg8Pxh4NNHb7KSINmEWKiPE4RKOplvijn+NkmYmmRgP68mc70j2EbeTFRsrswaQeg==}
@@ -12263,7 +12275,7 @@ packages:
       is-typedarray: 1.0.0
       isstream: 0.1.2
       json-stringify-safe: 5.0.1
-      mime-types: 2.1.34
+      mime-types: 2.1.35
       oauth-sign: 0.9.0
       performance-now: 2.1.0
       qs: 6.5.3

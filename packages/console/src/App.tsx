@@ -7,6 +7,7 @@ import './scss/normalized.scss';
 import AppContent from './components/AppContent';
 import { getPath, sections } from './components/AppContent/components/Sidebar';
 import Toast from './components/Toast';
+import { logtoApiResource } from './consts/api';
 import useSwrFetcher from './hooks/use-swr-fetcher';
 import initI18n from './i18n/init';
 import ApiResourceDetails from './pages/ApiResourceDetails';
@@ -71,7 +72,9 @@ const Main = () => {
 
 const App = () => (
   <BrowserRouter basename={isBasenameNeeded ? '/console' : ''}>
-    <LogtoProvider logtoConfig={{ endpoint: window.location.origin, clientId: 'foo' }}>
+    <LogtoProvider
+      config={{ endpoint: window.location.origin, clientId: 'foo', resources: [logtoApiResource] }}
+    >
       <Main />
     </LogtoProvider>
   </BrowserRouter>
