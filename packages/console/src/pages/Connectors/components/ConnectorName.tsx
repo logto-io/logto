@@ -1,10 +1,10 @@
 import { ConnectorDTO } from '@logto/schemas';
 import React from 'react';
-import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 
 import ImagePlaceholder from '@/components/ImagePlaceholder';
 import ItemPreview from '@/components/ItemPreview';
+import UnnamedTrans from '@/components/UnnamedTrans';
 
 import * as styles from './ConnectorName.module.scss';
 
@@ -14,10 +14,6 @@ type Props = {
 };
 
 const ConnectorName = ({ connector, titlePlaceholder = '' }: Props) => {
-  const {
-    i18n: { language },
-  } = useTranslation();
-
   if (!connector) {
     return <ItemPreview title={titlePlaceholder} icon={<ImagePlaceholder />} />;
   }
@@ -25,7 +21,7 @@ const ConnectorName = ({ connector, titlePlaceholder = '' }: Props) => {
   return (
     <Link to={`/connectors/${connector.id}`} className={styles.link}>
       <ItemPreview
-        title={connector.metadata.name[language] ?? connector.metadata.name.en ?? '-'}
+        title={<UnnamedTrans resource={connector.metadata.name} />}
         subtitle={connector.id}
         icon={
           connector.metadata.logo.startsWith('http') ? (
