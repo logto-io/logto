@@ -31,7 +31,7 @@
     transition: var(--transition-default-control);
 
     &::placeholder {
-      color: var(--color-font-tertiary-3);
+      color: var(--color-placeholder);
     }
 
     &:-webkit-autofill {
@@ -42,9 +42,5 @@
 }
 
 .actionButton {
-  fill: var(--color-neutral-70);
-
-  &.highlight {
-    fill: var(--color-primary-tint-70);
-  }
+  fill: var(--color-control-action);
 }

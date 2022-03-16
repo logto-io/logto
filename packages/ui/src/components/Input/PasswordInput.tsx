@@ -58,7 +58,7 @@ const PasswordInput = ({
       />
       {value && onFocus && (
         <PrivacyIcon
-          className={classNames(styles.actionButton, iconType === 'hide' && styles.highlight)}
+          className={styles.actionButton}
           type={iconType}
           onMouseDown={(event) => {
             event.preventDefault();
