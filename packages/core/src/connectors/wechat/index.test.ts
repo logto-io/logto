@@ -28,7 +28,7 @@ describe('getAuthorizationUri', () => {
 
 describe('getAccessToken', () => {
   it('should get an accessToken by exchanging with code', async () => {
-    nock(accessTokenEndpoint).post('').reply(200, {
+    nock(accessTokenEndpoint).get('').reply(200, {
       access_token: 'access_token',
       openid: 'openid',
     });
@@ -37,7 +37,7 @@ describe('getAccessToken', () => {
     expect(openid).toEqual('openid');
   });
   it('throws SocialAuthCodeInvalid error if accessToken not found in response', async () => {
-    nock(accessTokenEndpoint).post('').reply(200, {});
+    nock(accessTokenEndpoint).get('').reply(200, {});
     await expect(getAccessToken('code')).rejects.toMatchError(
       new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid)
     );

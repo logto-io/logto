@@ -85,9 +85,8 @@ export const getAccessToken: GetAccessToken = async (code) => {
   const { appId: appid, appSecret: secret } = config;
 
   const { access_token: accessToken, openid } = await got
-    .post({
-      url: accessTokenEndpoint,
-      json: { appid, secret, code, grant_type: 'authorization_code' },
+    .get(accessTokenEndpoint, {
+      headers: { appid, secret, code, grant_type: 'authorization_code' },
       timeout: await getConnectorRequestTimeout(),
     })
     .json<AccessTokenResponse>();
