@@ -186,9 +186,9 @@ const Passcode = ({
     [codes, onChange]
   );
 
-  const inputs = useMemo(
-    () =>
-      Array.from({ length }).map((_, index) => (
+  return (
+    <div className={classNames(styles.passcode, className)}>
+      {Array.from({ length }).map((_, index) => (
         <input
           ref={(element) => {
             // eslint-disable-next-line @silverhand/fp/no-mutation
@@ -209,21 +209,9 @@ const Passcode = ({
           onKeyDown={onKeyDownHandler}
           onFocus={onFocusHandler}
         />
-      )),
-    [
-      codes,
-      hasError,
-      isDisabled,
-      length,
-      name,
-      onFocusHandler,
-      onInputHandler,
-      onKeyDownHandler,
-      onPasteHandler,
-    ]
+      ))}
+    </div>
   );
-
-  return <div className={classNames(styles.passcode, className)}>{inputs}</div>;
 };
 
 export default Passcode;

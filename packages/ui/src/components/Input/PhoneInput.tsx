@@ -7,6 +7,8 @@ import { ClearIcon, DownArrowIcon } from '../Icons';
 import * as styles from './index.module.scss';
 import * as phoneInputStyles from './phoneInput.module.scss';
 
+type Value = { countryCallingCode?: CountryCallingCode; nationalNumber?: string };
+
 export type Props = {
   name: string;
   autoComplete?: AutoCompleteType;
@@ -17,7 +19,7 @@ export type Props = {
   nationalNumber: string;
   countryList?: CountryMetaData[];
   hasError?: boolean;
-  onChange: (value: { countryCallingCode?: CountryCallingCode; nationalNumber?: string }) => void;
+  onChange: (value: Value) => void;
 };
 
 const PhoneInput = ({

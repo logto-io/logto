@@ -1,5 +1,20 @@
 @use '@/scss/underscore' as _;
 
+/* Foundation */
+$color-neutral-100: #111;
+$color-neutral-90: #666;
+$color-neutral-70: #999;
+$color-neutral-50: #aeaeae;
+$color-neutral-30: #d8d8d8;
+$color-neutral-10: #f4f4f4;
+$color-neutral-0: #fff;
+
+$color-primary: #6139f6;
+$color-primary-tint-60: #a48dfa;
+$color-primary-tint-70: #b09bfa;
+
+$font-family: 'PingFang SC', 'SF Pro Text', sans-serif;
+
 .content {
   position: absolute;
   inset: 0;
@@ -8,6 +23,8 @@
 }
 
 .universal {
+  --color-error: #ea0000;
+
   /* ===== Legacy Styling ===== */
   /* Color */
   --color-button-background: #3c4ce3;
@@ -15,7 +32,6 @@
   --color-button-background-hover: #2234df;
   --color-button-text: #f5f5f5;
   --color-button-text-disabled: #eee;
-  --color-error: #ea0000;
   --color-error-background: #{rgba(#ff6b66, 0.15)};
   --color-error-border: #{rgba(#ff6b66, 0.35)};
 
@@ -47,27 +63,23 @@
 
 .light {
   /* Color */
-  --color-primary: #6139f6;
-  --color-primary-tint-70: #b09bfa;
-  --color-gradient: linear-gradient(69.73deg, #492ef3 5.52%, #cf69ff 94.22%);
-  --color-background: #fdfdff;
-  --color-control-background: #f4f4f4;
-  --color-control-focus: #{rgba(#a48dfa, 0.8)};
+  --color-primary: #{$color-primary};
+  --color-background: #{$color-neutral-0};
+  --color-border: #{$color-neutral-100};
+  --color-border-active: #{$color-neutral-70};
+  --color-control-background: #{$color-neutral-10};
+  --color-control-focus: #{$color-primary-tint-60};
+  --color-control-action: #{$color-neutral-70};
+  --color-control-action-focus: #{$color-primary-tint-70};
 
-  --color-neutral-100: #111;
-  --color-neutral-90: #666;
-  --color-neutral-70: #999;
-  --color-neutral-50: #aeaeae;
-  --color-neutral-30: #d8d8d8;
-  --color-neutral-10: #f4f4f4;
-  --color-neutral-0: #fff;
 
   /* Font Color */
-  --color-font-primary: #111;
+  --color-font-primary: #{$color-neutral-100};
   --color-font-secondary: #444;
-  --color-font-tertiary-1: #777;
-  --color-font-tertiary-2: #999;
-  --color-font-tertiary-3: #aaa;
+  --color-font-placeholder: #aaa;
+  --color-font-button-text: #{$color-neutral-0};
+  --color-font-button-text-active: #{rgba($color-neutral-0, 0.4)};
+  --color-font-secondary-active: #{$color-neutral-70};
 
   /* ===== Legacy Styling ===== */
   --color-heading: #333;
@@ -81,13 +93,12 @@
   --shadow-control: 1px 1px 2px rgb(221, 221, 221, 25%);
 }
 
-$font-family: 'PingFang SC', 'SF Pro Text', sans-serif;
-
 .mobile {
   --font-title: 600 32px/40px #{$font-family};
   --font-heading-2: 400 18px/22px #{$font-family};
   --font-heading-2-bold: 600 18px/22px #{$font-family};
   --font-control: 500 18px/22px #{$font-family};
+  --font-button-text: 600 20px/24px #{$font-family};
 
   /* ===== Legacy Styling ===== */
   --font-headline: 600 40px/56px #{$font-family};
