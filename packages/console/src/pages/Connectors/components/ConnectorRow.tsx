@@ -36,7 +36,7 @@ const ConnectorRow = ({ type, connector }: Props) => {
       <td>{typeLabel}</td>
       <td>
         {type === ConnectorType.Social && (
-          <Status status={connector?.enabled ? 'operational' : 'offline'}>
+          <Status status={connector?.enabled ? 'enabled' : 'disabled'}>
             {t(
               connector?.enabled
                 ? 'connectors.connector_status_enabled'
@@ -45,7 +45,7 @@ const ConnectorRow = ({ type, connector }: Props) => {
           </Status>
         )}
         {type !== ConnectorType.Social && connector && (
-          <Status status="operational">{t('connectors.connector_status_enabled')}</Status>
+          <Status status="enabled">{t('connectors.connector_status_enabled')}</Status>
         )}
         {type !== ConnectorType.Social && !connector && (
           <Button title="admin_console.connectors.set_up" type="primary" />
