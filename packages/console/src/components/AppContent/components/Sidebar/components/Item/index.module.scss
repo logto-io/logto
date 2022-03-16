@@ -3,7 +3,7 @@
 .row {
   display: flex;
   align-items: center;
-  margin: 0 _.unit(6) 0 _.unit(4);
+  margin: _.unit(1) _.unit(6) _.unit(1) _.unit(4);
   padding: _.unit(2);
   color: var(--color-on-surface-variant);
   border-radius: _.unit(2);
@@ -19,6 +19,10 @@
       width: _.unit(5);
       height: _.unit(5);
     }
+  }
+
+  &:not(.active):hover {
+    background: var(--color-neutral-variant-90);
   }
 
   &.active {
