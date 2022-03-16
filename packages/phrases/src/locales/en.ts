@@ -104,9 +104,19 @@ const translation = {
     api_resource_details: {
       back_to_api_resources: 'Back to my API resources',
       check_help_guide: 'Check Help Guide',
+      options: 'Options',
+      more_options: 'More Options',
+      options_delete: 'Delete',
       settings: 'Settings',
       save_changes: 'Save Changes',
       token_expiration_time_in_seconds: 'Token Expiration Time (in seconds)',
+      reminder: 'Reminder',
+      delete_description:
+        'This action cannot be undone. This will permanently delete the this application. Please enter the api resource name <span>{{name}}</span> to proceed.',
+      enter_your_api_resource_name: 'Enter your API resource name',
+      cancel: 'Cancel',
+      delete: 'Delete',
+      api_resource_deleted: 'The API Resource {{name}} deleted.',
     },
     connectors: {
       title: 'Connectors',

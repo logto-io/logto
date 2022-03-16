@@ -2,9 +2,11 @@ import { Resource } from '@logto/schemas';
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+import Modal from 'react-modal';
 import { useLocation, useParams } from 'react-router-dom';
 import useSWR from 'swr';
 
+import ActionMenu, { ActionMenuItem } from '@/components/ActionMenu';
 import BackLink from '@/components/BackLink';
 import Button from '@/components/Button';
 import Card from '@/components/Card';
@@ -13,9 +15,11 @@ import FormField from '@/components/FormField';
 import ImagePlaceholder from '@/components/ImagePlaceholder';
 import TabNav, { TabNavLink } from '@/components/TabNav';
 import TextInput from '@/components/TextInput';
+import * as modalStyles from '@/scss/modal.module.scss';
 import { RequestError } from '@/swr';
 import api from '@/utilities/api';
 
+import DeleteForm from './components/DeleteForm';
 import * as styles from './index.module.scss';
 
 type FormData = {
@@ -35,6 +39,8 @@ const ApiResourceDetails = () => {
     defaultValues: data,
   });
   const [submitting, setSubmitting] = useState(false);
+
+  const [isDeleteFormOpen, setIsDeleteFormOpen] = useState(false);
 
   useEffect(() => {
     if (!data) {
@@ -79,6 +85,31 @@ const ApiResourceDetails = () => {
             </div>
             <div className={styles.operation}>
               <Button title="admin_console.api_resource_details.check_help_guide" />
+              <ActionMenu
+                buttonProps={{ title: 'admin_console.api_resource_details.options' }}
+                title={t('api_resource_details.more_options')}
+              >
+                <ActionMenuItem
+                  onClick={() => {
+                    setIsDeleteFormOpen(true);
+                  }}
+                >
+                  {t('api_resource_details.options_delete')}
+                </ActionMenuItem>
+              </ActionMenu>
+              <Modal
+                isOpen={isDeleteFormOpen}
+                className={modalStyles.content}
+                overlayClassName={modalStyles.overlay}
+              >
+                <DeleteForm
+                  id={data.id}
+                  name={data.name}
+                  onClose={() => {
+                    setIsDeleteFormOpen(false);
+                  }}
+                />
+              </Modal>
             </div>
           </Card>
           <Card className={styles.body}>
