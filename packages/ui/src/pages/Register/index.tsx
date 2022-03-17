@@ -1,4 +1,3 @@
-import { LogtoErrorI18nKey } from '@logto/phrases';
 import classNames from 'classnames';
 import React, { FC, FormEventHandler, useState, useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -14,7 +13,7 @@ import useApi from '@/hooks/use-api';
 import * as styles from './index.module.scss';
 
 const Register: FC = () => {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
@@ -52,11 +51,7 @@ const Register: FC = () => {
           value={password}
           onChange={setPassword} // TODO: password validation
         />
-        {error && (
-          <ErrorMessage className={styles.box}>
-            {i18n.t<string, LogtoErrorI18nKey>(`errors:${error.code}`)}
-          </ErrorMessage>
-        )}
+        {error && <ErrorMessage className={styles.box} errorCode={error.code} />}
         <Button isDisabled={loading} onClick={signUp}>
           {loading ? t('register.loading') : t('register.action')}
         </Button>

@@ -1,4 +1,3 @@
-import { LogtoErrorI18nKey } from '@logto/phrases';
 import classNames from 'classnames';
 import React, { FC, FormEventHandler, useState, useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -15,7 +14,7 @@ import * as styles from './index.module.scss';
 
 const SignIn: FC = () => {
   // TODO: Consider creating cross page data modal
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
@@ -57,11 +56,7 @@ const SignIn: FC = () => {
           className={styles.inputField}
           onChange={setPassword}
         />
-        {error && (
-          <ErrorMessage className={styles.box}>
-            {i18n.t<string, LogtoErrorI18nKey>(`errors:${error.code}`)}
-          </ErrorMessage>
-        )}
+        {error && <ErrorMessage className={styles.box} errorCode={error.code} />}
         <Button isDisabled={loading} type="primary" onClick={signInHandler}>
           {loading ? t('sign_in.loading') : t('sign_in.action')}
         </Button>
