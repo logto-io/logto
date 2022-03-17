@@ -1,5 +1,5 @@
 import { Application } from '@logto/schemas';
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { useController, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useParams } from 'react-router-dom';
@@ -29,6 +29,7 @@ type OidcConfig = {
 const ApplicationDetails = () => {
   const { id } = useParams();
   const location = useLocation();
+  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   const { data, error } = useSWR<Application, RequestError>(id && `/api/applications/${id}`);
   // TODO LOG-1908: OidcConfig in Application Details
@@ -38,6 +39,14 @@ const ApplicationDetails = () => {
   const isLoading = !data && !error && !oidcConfig && !fetchOidcConfigError;
 
   const { control, handleSubmit, register, reset } = useForm<Application>();
+
+  useEffect(() => {
+    if (!data) {
+      return;
+    }
+
+    reset(data);
+  }, [data, reset]);
 
   const {
     field: { value: redirectUris, onChange: onRedirectUriChange },
@@ -55,21 +64,70 @@ const ApplicationDetails = () => {
     defaultValue: [],
   });
 
-  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-
-  const isAdvancedSettings = location.pathname.includes('advanced-settings');
-
-  useEffect(() => {
-    if (!data) {
-      return;
-    }
-
-    reset(data);
-  }, [data, reset]);
-
   const onSubmit = handleSubmit((formData) => {
     console.log(formData);
   });
+
+  const isAdvancedSettings = location.pathname.includes('advanced-settings');
+
+  const SettingsPage = useMemo(() => {
+    return (
+      oidcConfig && (
+        <>
+          <FormField isRequired title="admin_console.application_details.application_name">
+            <TextInput {...register('name', { required: true })} />
+          </FormField>
+          <FormField title="admin_console.application_details.description">
+            <TextInput {...register('description')} />
+          </FormField>
+          <FormField title="admin_console.application_details.authorization_endpoint">
+            <CopyToClipboard
+              className={styles.textField}
+              value={oidcConfig.authorization_endpoint}
+            />
+          </FormField>
+          <FormField title="admin_console.application_details.redirect_uri">
+            <MultilineInput
+              values={redirectUris}
+              onChange={(values) => {
+                onRedirectUriChange(values);
+              }}
+            />
+          </FormField>
+          <FormField title="admin_console.application_details.post_sign_out_redirect_uri">
+            <MultilineInput
+              values={postSignOutRedirectUris}
+              onChange={(values) => {
+                onPostSignOutRedirectUriChange(values);
+              }}
+            />
+          </FormField>
+        </>
+      )
+    );
+  }, [
+    oidcConfig,
+    onPostSignOutRedirectUriChange,
+    onRedirectUriChange,
+    postSignOutRedirectUris,
+    redirectUris,
+    register,
+  ]);
+
+  const AdvancedSettingsPage = useMemo(() => {
+    return (
+      oidcConfig && (
+        <>
+          <FormField title="admin_console.application_details.token_endpoint">
+            <CopyToClipboard className={styles.textField} value={oidcConfig.token_endpoint} />
+          </FormField>
+          <FormField title="admin_console.application_details.user_info_endpoint">
+            <CopyToClipboard className={styles.textField} value={oidcConfig.userinfo_endpoint} />
+          </FormField>
+        </>
+      )
+    );
+  }, [oidcConfig]);
 
   return (
     <div className={styles.container}>
@@ -104,57 +162,7 @@ const ApplicationDetails = () => {
             </TabNav>
             <form className={styles.form} onSubmit={onSubmit}>
               <div className={styles.fields}>
-                {!isAdvancedSettings && (
-                  <>
-                    <FormField
-                      isRequired
-                      title="admin_console.application_details.application_name"
-                    >
-                      <TextInput {...register('name', { required: true })} />
-                    </FormField>
-                    <FormField title="admin_console.application_details.description">
-                      <TextInput {...register('description')} />
-                    </FormField>
-                    <FormField title="admin_console.application_details.authorization_endpoint">
-                      <CopyToClipboard
-                        className={styles.textField}
-                        value={oidcConfig.authorization_endpoint}
-                      />
-                    </FormField>
-                    <FormField title="admin_console.application_details.redirect_uri">
-                      <MultilineInput
-                        values={redirectUris}
-                        onChange={(values) => {
-                          onRedirectUriChange(values);
-                        }}
-                      />
-                    </FormField>
-                    <FormField title="admin_console.application_details.post_sign_out_redirect_uri">
-                      <MultilineInput
-                        values={postSignOutRedirectUris}
-                        onChange={(values) => {
-                          onPostSignOutRedirectUriChange(values);
-                        }}
-                      />
-                    </FormField>
-                  </>
-                )}
-                {isAdvancedSettings && (
-                  <>
-                    <FormField title="admin_console.application_details.token_endpoint">
-                      <CopyToClipboard
-                        className={styles.textField}
-                        value={oidcConfig.token_endpoint}
-                      />
-                    </FormField>
-                    <FormField title="admin_console.application_details.user_info_endpoint">
-                      <CopyToClipboard
-                        className={styles.textField}
-                        value={oidcConfig.userinfo_endpoint}
-                      />
-                    </FormField>
-                  </>
-                )}
+                {isAdvancedSettings ? AdvancedSettingsPage : SettingsPage}
               </div>
               <div className={styles.submit}>
                 <Button
