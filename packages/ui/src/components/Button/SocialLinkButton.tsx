@@ -13,10 +13,7 @@ export type Props = {
   onClick?: (id: string) => void;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-empty-function
-const noop = () => {};
-
-const SocialLinkButton = ({ isDisabled, className, connector, onClick = noop }: Props) => {
+const SocialLinkButton = ({ isDisabled, className, connector, onClick }: Props) => {
   const { id, name, logo } = connector;
 
   const {
@@ -30,7 +27,7 @@ const SocialLinkButton = ({ isDisabled, className, connector, onClick = noop }: 
       className={classNames(styles.button, SocialLinkButtonStyles.socialButton, className)}
       type="button"
       onClick={() => {
-        onClick(id);
+        onClick?.(id);
       }}
     >
       {logo && <img src={logo} alt={localName} className={SocialLinkButtonStyles.icon} />}
