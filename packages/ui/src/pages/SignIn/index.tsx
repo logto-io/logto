@@ -5,9 +5,9 @@ import { useTranslation } from 'react-i18next';
 
 import { signInBasic } from '@/apis/sign-in';
 import Button from '@/components/Button';
+import ErrorMessage from '@/components/ErrorMessage';
 import Input from '@/components/Input';
 import PasswordInput from '@/components/Input/PasswordInput';
-import MessageBox from '@/components/MessageBox';
 import TextLink from '@/components/TextLink';
 import useApi from '@/hooks/use-api';
 
@@ -58,16 +58,18 @@ const SignIn: FC = () => {
           onChange={setPassword}
         />
         {error && (
-          <MessageBox className={styles.box}>
+          <ErrorMessage className={styles.box}>
             {i18n.t<string, LogtoErrorI18nKey>(`errors:${error.code}`)}
-          </MessageBox>
+          </ErrorMessage>
         )}
         <Button isDisabled={loading} type="primary" onClick={signInHandler}>
           {loading ? t('sign_in.loading') : t('sign_in.action')}
         </Button>
-        <TextLink className={styles.createAccount} href="/register">
-          {t('register.create_account')}
-        </TextLink>
+        <TextLink
+          className={styles.createAccount}
+          href="/register"
+          text="register.create_account"
+        />
       </form>
     </div>
   );

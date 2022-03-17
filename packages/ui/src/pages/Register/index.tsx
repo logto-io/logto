@@ -5,9 +5,9 @@ import { useTranslation } from 'react-i18next';
 
 import { register } from '@/apis/register';
 import Button from '@/components/Button';
+import ErrorMessage from '@/components/ErrorMessage';
 import Input from '@/components/Input';
 import PasswordInput from '@/components/Input/PasswordInput';
-import MessageBox from '@/components/MessageBox';
 import TextLink from '@/components/TextLink';
 import useApi from '@/hooks/use-api';
 
@@ -53,9 +53,9 @@ const Register: FC = () => {
           onChange={setPassword} // TODO: password validation
         />
         {error && (
-          <MessageBox className={styles.box}>
+          <ErrorMessage className={styles.box}>
             {i18n.t<string, LogtoErrorI18nKey>(`errors:${error.code}`)}
-          </MessageBox>
+          </ErrorMessage>
         )}
         <Button isDisabled={loading} onClick={signUp}>
           {loading ? t('register.loading') : t('register.action')}
