@@ -68,3 +68,27 @@
     }
   }
 }
+
+.container .body {
+  > :first-child {
+    margin-top: 0;
+  }
+
+  .form {
+    margin-top: _.unit(8);
+  }
+
+  .fields {
+    padding-bottom: _.unit(16);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .textField {
+    @include _.form-text-field;
+  }
+
+  .submit {
+    margin-top: _.unit(6);
+    text-align: right;
+  }
+}
