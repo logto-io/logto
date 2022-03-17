@@ -48,7 +48,7 @@ const DeleteForm = ({ id, name, onClose }: Props) => {
     <Card className={styles.card}>
       <div className={styles.headline}>
         <CardTitle title="api_resource_details.reminder" />
-        <IconButton size="large" className={styles.close} onClick={onClose}>
+        <IconButton size="large" onClick={onClose}>
           <Close />
         </IconButton>
       </div>
