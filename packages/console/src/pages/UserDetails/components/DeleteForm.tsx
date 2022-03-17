@@ -46,7 +46,7 @@ const DeleteForm = ({ id, onClose }: Props) => {
           <Close />
         </IconButton>
       </div>
-      <div className={styles.description}>{t('user_details.delete_description')}</div>
+      <div>{t('user_details.delete_description')}</div>
       <div className={styles.footer}>
         <Button type="outline" title="admin_console.user_details.delete_cancel" onClick={onClose} />
         <Button
