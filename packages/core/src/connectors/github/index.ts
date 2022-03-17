@@ -93,13 +93,15 @@ export const getAccessToken: GetAccessToken = async (code) => {
   return { accessToken };
 };
 
-export const getUserInfo: GetUserInfo = async (accessToken: string) => {
+export const getUserInfo: GetUserInfo = async (accessTokenObject) => {
   type UserInfoResponse = {
     id: number;
     avatar_url?: string;
     email?: string;
     name?: string;
   };
+
+  const { accessToken } = accessTokenObject;
 
   try {
     const {

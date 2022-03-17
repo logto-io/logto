@@ -64,7 +64,7 @@ describe('getUserInfo', () => {
         'https://thirdwx.qlogo.cn/mmopen/g3MonUZtNHkdmzicIlibx6iaFqAc56vxLSUfpb6n5WKSYVY0ChQKkiaJSgQ1dZuTOgvLLrhJbERQQ4eMsv84eavHiaiceqxibJxCfHe/0',
       nickname: 'wechat bot',
     });
-    const socialUserInfo = await getUserInfo('accessToken', 'openid');
+    const socialUserInfo = await getUserInfo({ accessToken: 'accessToken', openid: 'openid' });
     expect(socialUserInfo).toMatchObject({
       id: 'this_is_an_arbitrary_wechat_union_id',
       avatar:
@@ -74,12 +74,22 @@ describe('getUserInfo', () => {
   });
   it('throws SocialAccessTokenInvalid error if remote response code is 401', async () => {
     nock(userInfoEndpoint).get('').reply(401);
-    await expect(getUserInfo('accessToken', 'openid')).rejects.toMatchError(
-      new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid)
+    await expect(
+      getUserInfo({ accessToken: 'accessToken', openid: 'openid' })
+    ).rejects.toMatchError(new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid));
+  });
+  it('throws General ConnectorError if both openid and unionid are missing', async () => {
+    nock(userInfoEndpoint).get('').reply(200, {
+      headimgurl:
+        'https://thirdwx.qlogo.cn/mmopen/g3MonUZtNHkdmzicIlibx6iaFqAc56vxLSUfpb6n5WKSYVY0ChQKkiaJSgQ1dZuTOgvLLrhJbERQQ4eMsv84eavHiaiceqxibJxCfHe/0',
+      nickname: 'wechat bot',
+    });
+    await expect(getUserInfo({ accessToken: 'accessToken' })).rejects.toMatchError(
+      new ConnectorError(ConnectorErrorCodes.General)
     );
   });
   it('throws unrecognized error', async () => {
     nock(userInfoEndpoint).get('').reply(500);
-    await expect(getUserInfo('accessToken', 'openid')).rejects.toThrow();
+    await expect(getUserInfo({ accessToken: 'accessToken', openid: 'openid' })).rejects.toThrow();
   });
 });

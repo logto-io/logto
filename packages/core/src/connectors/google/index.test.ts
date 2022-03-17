@@ -72,7 +72,7 @@ describe('google connector', () => {
         email_verified: true,
         locale: 'en',
       });
-      const socialUserInfo = await getUserInfo('code');
+      const socialUserInfo = await getUserInfo({ accessToken: 'code' });
       expect(socialUserInfo).toMatchObject({
         id: '1234567890',
         avatar: 'https://github.com/images/error/octocat_happy.gif',
@@ -83,14 +83,14 @@ describe('google connector', () => {
 
     it('throws SocialAccessTokenInvalid error if remote response code is 401', async () => {
       nock(userInfoEndpoint).post('').reply(401);
-      await expect(getUserInfo('code')).rejects.toMatchError(
+      await expect(getUserInfo({ accessToken: 'code' })).rejects.toMatchError(
         new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid)
       );
     });
 
     it('throws unrecognized error', async () => {
       nock(userInfoEndpoint).post('').reply(500);
-      await expect(getUserInfo('code')).rejects.toThrow();
+      await expect(getUserInfo({ accessToken: 'code' })).rejects.toThrow();
     });
   });
 });

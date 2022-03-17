@@ -1,2 +1,2 @@
-### WeChat Web Social Connector README
+### WeChat Social Connector README
 placeholder

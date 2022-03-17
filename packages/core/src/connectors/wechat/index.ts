@@ -31,7 +31,7 @@ import { authorizationEndpoint, accessTokenEndpoint, userInfoEndpoint, scope } f
 const pathToReadmeFile = path.join(__dirname, 'README.md');
 const readmeContentFallback = 'Please check README.md file directory.';
 export const metadata: ConnectorMetadata = {
-  id: 'wechat-web',
+  id: 'wechat',
   type: ConnectorType.Social,
   name: {
     en: 'Sign In with WeChat',
@@ -40,20 +40,20 @@ export const metadata: ConnectorMetadata = {
   // TODO: add the real logo URL (LOG-1823)
   logo: './logo.png',
   description: {
-    en: 'Sign In with WeChat Web Application',
-    'zh-CN': 'WeChat 网页登录',
+    en: 'Sign In with WeChat',
+    'zh-CN': 'WeChat 登录',
   },
   readme: existsSync(pathToReadmeFile)
     ? readFileSync(pathToReadmeFile, 'utf8')
     : readmeContentFallback,
 };
 
-const weChatWebConfigGuard = z.object({ appId: z.string(), appSecret: z.string() });
+const weChatConfigGuard = z.object({ appId: z.string(), appSecret: z.string() });
 
-type WeChatWebConfig = z.infer<typeof weChatWebConfigGuard>;
+type WeChatConfig = z.infer<typeof weChatConfigGuard>;
 
 export const validateConfig: ValidateConfig = async (config: unknown) => {
-  const result = weChatWebConfigGuard.safeParse(config);
+  const result = weChatConfigGuard.safeParse(config);
 
   if (!result.success) {
     throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, result.error.message);
@@ -61,11 +61,11 @@ export const validateConfig: ValidateConfig = async (config: unknown) => {
 };
 
 export const getAuthorizationUri: GetAuthorizationUri = async (redirectUri, state) => {
-  const config = await getConnectorConfig<WeChatWebConfig>(metadata.id);
+  const { appId } = await getConnectorConfig<WeChatConfig>(metadata.id);
 
   return `${authorizationEndpoint}?${stringify({
-    appid: config.appId,
-    redirect_uri: redirectUri,
+    appid: appId,
+    redirect_uri: encodeURI(redirectUri), // The variable `redirectUri` should match {appId, appSecret}
     response_type: 'code',
     scope,
     state,
@@ -81,12 +81,13 @@ export const getAccessToken: GetAccessToken = async (code) => {
     scope: string;
   };
 
-  const config = await getConnectorConfig<WeChatWebConfig>(metadata.id);
+  const config = await getConnectorConfig<WeChatConfig>(metadata.id);
   const { appId: appid, appSecret: secret } = config;
 
   const { access_token: accessToken, openid } = await got
-    .get(accessTokenEndpoint, {
-      headers: { appid, secret, code, grant_type: 'authorization_code' },
+    .get({
+      url: accessTokenEndpoint,
+      searchParams: { appid, secret, code, grant_type: 'authorization_code' },
       timeout: await getConnectorRequestTimeout(),
     })
     .json<AccessTokenResponse>();
@@ -96,22 +97,31 @@ export const getAccessToken: GetAccessToken = async (code) => {
   return { accessToken, openid };
 };
 
-export const getUserInfo: GetUserInfo = async (accessToken, openid) => {
+export const getUserInfo: GetUserInfo = async (accessTokenObject) => {
   type UserInfoResponse = {
-    unionid: string;
+    unionid?: string;
     headimgurl?: string;
     nickname?: string;
   };
 
+  const { accessToken, openid } = accessTokenObject;
+
   try {
     const { unionid, headimgurl, nickname } = await got
-      .get(userInfoEndpoint, {
-        headers: { access_token: accessToken, openid },
+      .get({
+        url: userInfoEndpoint,
+        searchParams: { access_token: accessToken, openid },
         timeout: await getConnectorRequestTimeout(),
       })
       .json<UserInfoResponse>();
 
-    return { id: unionid, avatar: headimgurl, name: nickname };
+    const userId = unionid ?? openid;
+
+    if (!userId) {
+      throw new ConnectorError(ConnectorErrorCodes.General);
+    }
+
+    return { id: userId, avatar: headimgurl, name: nickname };
   } catch (error: unknown) {
     if (error instanceof GotRequestError && error.response?.statusCode === 401) {
       throw new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid);
