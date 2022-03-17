@@ -28,7 +28,7 @@ const findConnectorByIdPlaceHolder = jest.fn() as jest.MockedFunction<
 const getConnectorInstanceByIdPlaceHolder = jest.fn() as jest.MockedFunction<
   (connectorId: string) => Promise<ConnectorInstance>
 >;
-const getConnectorInstanceByTypePlaceHolder = jest.fn() as jest.MockedFunction<
+const getEnabledConnectorInstanceByTypePlaceHolder = jest.fn() as jest.MockedFunction<
   (type: ConnectorType) => Promise<ConnectorInstance>
 >;
 const getConnectorInstancesPlaceHolder = jest.fn() as jest.MockedFunction<
@@ -41,11 +41,11 @@ jest.mock('@/queries/connector', () => ({
   updateConnector: jest.fn(),
 }));
 jest.mock('@/connectors', () => ({
+  getConnectorInstances: async () => getConnectorInstancesPlaceHolder(),
   getConnectorInstanceById: async (connectorId: string) =>
     getConnectorInstanceByIdPlaceHolder(connectorId),
-  getConnectorInstanceByType: async (type: ConnectorType) =>
-    getConnectorInstanceByTypePlaceHolder(type),
-  getConnectorInstances: async () => getConnectorInstancesPlaceHolder(),
+  getEnabledConnectorInstanceByType: async (type: ConnectorType) =>
+    getEnabledConnectorInstanceByTypePlaceHolder(type),
 }));
 
 describe('connector route', () => {
@@ -502,15 +502,19 @@ describe('connector route', () => {
         ): Promise<any> => {},
       };
 
-      getConnectorInstanceByTypePlaceHolder.mockImplementationOnce(async (_: ConnectorType) => {
-        return mockedEmailConnector;
-      });
+      getEnabledConnectorInstanceByTypePlaceHolder.mockImplementationOnce(
+        async (_: ConnectorType) => {
+          return mockedEmailConnector;
+        }
+      );
 
       const sendMessageSpy = jest.spyOn(mockedEmailConnector, 'sendMessage');
       const response = await connectorRequest
         .post('/connectors/test/email')
         .send({ email: 'test@email.com' });
-      expect(getConnectorInstanceByTypePlaceHolder).toHaveBeenCalledWith(ConnectorType.Email);
+      expect(getEnabledConnectorInstanceByTypePlaceHolder).toHaveBeenCalledWith(
+        ConnectorType.Email
+      );
       expect(sendMessageSpy).toHaveBeenCalledTimes(1);
       expect(response).toHaveProperty('statusCode', 204);
     });
@@ -547,15 +551,17 @@ describe('connector route', () => {
         ): Promise<any> => {},
       };
 
-      getConnectorInstanceByTypePlaceHolder.mockImplementationOnce(async (_: ConnectorType) => {
-        return mockedEmailConnector;
-      });
+      getEnabledConnectorInstanceByTypePlaceHolder.mockImplementationOnce(
+        async (_: ConnectorType) => {
+          return mockedEmailConnector;
+        }
+      );
 
       const sendMessageSpy = jest.spyOn(mockedEmailConnector, 'sendMessage');
       const response = await connectorRequest
         .post('/connectors/test/sms')
         .send({ phone: '12345678901' });
-      expect(getConnectorInstanceByTypePlaceHolder).toHaveBeenCalledWith(ConnectorType.SMS);
+      expect(getEnabledConnectorInstanceByTypePlaceHolder).toHaveBeenCalledWith(ConnectorType.SMS);
       expect(sendMessageSpy).toHaveBeenCalledTimes(1);
       expect(response).toHaveProperty('statusCode', 204);
     });

@@ -1,7 +1,7 @@
 import { Passcode, PasscodeType } from '@logto/schemas';
 import { customAlphabet, nanoid } from 'nanoid';
 
-import { getConnectorInstanceByType } from '@/connectors';
+import { getEnabledConnectorInstanceByType } from '@/connectors';
 import { ConnectorType, EmailConnectorInstance, SmsConnectorInstance } from '@/connectors/types';
 import RequestError from '@/errors/RequestError';
 import {
@@ -44,8 +44,8 @@ export const sendPasscode = async (passcode: Passcode) => {
   }
 
   const connector = passcode.email
-    ? await getConnectorInstanceByType<EmailConnectorInstance>(ConnectorType.Email)
-    : await getConnectorInstanceByType<SmsConnectorInstance>(ConnectorType.SMS);
+    ? await getEnabledConnectorInstanceByType<EmailConnectorInstance>(ConnectorType.Email)
+    : await getEnabledConnectorInstanceByType<SmsConnectorInstance>(ConnectorType.SMS);
 
   return connector.sendMessage(emailOrPhone, passcode.type, {
     code: passcode.code,

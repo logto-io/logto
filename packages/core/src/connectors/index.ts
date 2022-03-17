@@ -74,7 +74,7 @@ export const getSocialConnectorInstanceById = async (
   return connector;
 };
 
-export const getConnectorInstanceByType = async <T extends ConnectorInstance>(
+export const getEnabledConnectorInstanceByType = async <T extends ConnectorInstance>(
   type: ConnectorType
 ): Promise<T> => {
   const connectors = await getConnectorInstances();

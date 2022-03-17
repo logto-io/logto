@@ -1,6 +1,6 @@
 import { Passcode, PasscodeType } from '@logto/schemas';
 
-import { getConnectorInstanceByType } from '@/connectors';
+import { getEnabledConnectorInstanceByType } from '@/connectors';
 import { ConnectorType } from '@/connectors/types';
 import RequestError from '@/errors/RequestError';
 import {
@@ -35,8 +35,8 @@ const mockedDeletePasscodesByIds = deletePasscodesByIds as jest.MockedFunction<
   typeof deletePasscodesByIds
 >;
 const mockedInsertPasscode = insertPasscode as jest.MockedFunction<typeof insertPasscode>;
-const mockedGetConnectorInstanceByType = getConnectorInstanceByType as jest.MockedFunction<
-  typeof getConnectorInstanceByType
+const mockedGetConnectorInstanceByType = getEnabledConnectorInstanceByType as jest.MockedFunction<
+  typeof getEnabledConnectorInstanceByType
 >;
 const mockedUpdatePasscode = updatePasscode as jest.MockedFunction<typeof updatePasscode>;
 
