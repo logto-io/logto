@@ -1,5 +1,12 @@
+import { notFalsy } from '@silverhand/essentials';
+
 import RequestError from '@/errors/RequestError';
-import { findConnectorById, hasConnector, insertConnector } from '@/queries/connector';
+import {
+  findConnectorById,
+  findConnectorsByIds,
+  hasConnector,
+  insertConnector,
+} from '@/queries/connector';
 
 import * as AliyunDM from './aliyun-dm';
 import * as AliyunSMS from './aliyun-sms';
@@ -11,13 +18,22 @@ import { ConnectorInstance, ConnectorType, IConnector, SocialConnectorInstance }
 const allConnectors: IConnector[] = [AliyunDM, AliyunSMS, Facebook, GitHub, Google];
 
 export const getConnectorInstances = async (): Promise<ConnectorInstance[]> => {
-  return Promise.all(
-    allConnectors.map(async (element) => {
-      const connector = await findConnectorById(element.metadata.id);
+  const allConnectorIds = allConnectors.map((connector) => connector.metadata.id);
+  const connectors = await findConnectorsByIds(allConnectorIds);
+  const connectorMap = new Map(connectors.map((connector) => [connector.id, connector]));
+  const connectorInstances = allConnectors
+    .map((element) => {
+      const connector = connectorMap.get(element.metadata.id);
+
+      if (!connector) {
+        return;
+      }
 
       return { connector, ...element };
     })
-  );
+    .filter((entry): entry is ConnectorInstance => notFalsy(entry));
+
+  return Promise.all(connectorInstances);
 };
 
 export const getConnectorInstanceById = async (id: string): Promise<ConnectorInstance> => {
