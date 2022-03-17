@@ -4,6 +4,8 @@ const translation = {
   general: {
     placeholder: '占位符',
     add_another: '+ Add Another',
+    skip: '跳过',
+    next: '下一步',
   },
   sign_in: {
     action: '登录',
@@ -77,10 +79,28 @@ const translation = {
           description: 'E.g.: Angular, React, Vue',
         },
         traditional: {
-          title: 'Tranditional Web',
+          title: 'Traditional Web',
           subtitle: 'Traditional web app using redirects.',
           description: 'E.g.: Node.js, Express, ASP.NET, Java, PHP',
         },
+      },
+      get_started: {
+        header_description:
+          '参考如下教程，将 Logto 集成到您的应用中。您也可以点击右侧链接，获取我们为您准备好的示范工程。',
+        get_sample_file: '获取示范工程',
+        title: '恭喜！您的应用已成功创建。',
+        subtitle: '请参考以下步骤完成您的应用设置。首先，请选择您要使用的 Javascript 框架：',
+        description_by_library: '本教程向您演示如何在 {{library}} 应用中集成 Logto 登录功能',
+        title_step_1: '安装 Logto SDK',
+        subtitle_step_1: '3 options | lorem ipsum dolor sit amet',
+        title_step_2: '初始化得到 LogtoClient 实例',
+        subtitle_step_2: '1 step | lorem ipsum dolor sit amet',
+        title_step_3: 'Sign in',
+        subtitle_step_3: '1 step | lorem ipsum dolor sit amet',
+        title_step_4: 'Sign out',
+        subtitle_step_4: '1 step | lorem ipsum dolor sit amet',
+        title_step_5: '延伸阅读',
+        subtitle_step_5: 'Tutorial and readings',
       },
     },
     application_details: {

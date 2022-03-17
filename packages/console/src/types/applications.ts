@@ -5,3 +5,9 @@ export const applicationTypeI18nKey = Object.freeze({
   [ApplicationType.SPA]: 'applications.type.spa',
   [ApplicationType.Traditional]: 'applications.type.traditional',
 } as const);
+
+export enum SupportedJavascriptLibraries {
+  Angular = 'Angular',
+  React = 'React',
+  Vue = 'Vue',
+}

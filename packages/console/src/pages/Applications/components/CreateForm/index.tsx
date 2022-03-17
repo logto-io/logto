@@ -1,7 +1,9 @@
-import { Application, ApplicationType } from '@logto/schemas';
-import React from 'react';
+import { Application, ApplicationType, Setting } from '@logto/schemas';
+import React, { useState } from 'react';
 import { useController, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+import Modal from 'react-modal';
+import useSWR from 'swr';
 
 import Button from '@/components/Button';
 import Card from '@/components/Card';
@@ -10,10 +12,12 @@ import FormField from '@/components/FormField';
 import IconButton from '@/components/IconButton';
 import RadioGroup, { Radio } from '@/components/RadioGroup';
 import TextInput from '@/components/TextInput';
-import useApi from '@/hooks/use-api';
+import useApi, { RequestError } from '@/hooks/use-api';
 import Close from '@/icons/Close';
+import * as modalStyles from '@/scss/modal.module.scss';
 import { applicationTypeI18nKey } from '@/types/applications';
 
+import GetStarted from '../GetStarted';
 import TypeDescription from '../TypeDescription';
 import * as styles from './index.module.scss';
 
@@ -28,6 +32,8 @@ type Props = {
 };
 
 const CreateForm = ({ onClose }: Props) => {
+  const [createdApp, setCreatedApp] = useState<Application>();
+  const [isQuickStartGuideOpen, setIsQuickStartGuideOpen] = useState(false);
   const {
     handleSubmit,
     control,
@@ -38,13 +44,26 @@ const CreateForm = ({ onClose }: Props) => {
     field: { onChange, value, name, ref },
   } = useController({ name: 'type', control, rules: { required: true } });
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const { data: setting } = useSWR<Setting, RequestError>('/api/settings');
   const api = useApi();
+
+  const isGetStartedSkipped = setting?.adminConsole.applicationSkipGetStarted;
+
+  const closeModal = () => {
+    setIsQuickStartGuideOpen(false);
+    onClose?.(createdApp);
+  };
 
   const onSubmit = handleSubmit(async (data) => {
     try {
       const createdApp = await api.post('/api/applications', { json: data }).json<Application>();
+      setCreatedApp(createdApp);
 
-      onClose?.(createdApp);
+      if (isGetStartedSkipped) {
+        closeModal();
+      } else {
+        setIsQuickStartGuideOpen(true);
+      }
     } catch (error: unknown) {
       console.error(error);
     }
@@ -96,6 +115,11 @@ const CreateForm = ({ onClose }: Props) => {
           />
         </div>
       </form>
+      {!isGetStartedSkipped && createdApp && (
+        <Modal isOpen={isQuickStartGuideOpen} className={modalStyles.fullScreen}>
+          <GetStarted appName={createdApp.name} onClose={closeModal} />
+        </Modal>
+      )}
     </Card>
   );
 };

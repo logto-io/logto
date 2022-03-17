@@ -9,21 +9,23 @@
   border-radius: 6px;
   font: var(--font-button);
   transition: background 0.2s ease-in-out;
-  padding: 0;
+  padding: _.unit(1);
   display: flex;
   justify-content: center;
   align-items: center;
 
-  &:disabled {
-    color: var(--color-neutral-80);
+  > svg {
+    fill: var(--color-component-caption);
   }
 
-  &:focus {
-    outline: 2px solid var(--color-overlay-12);
+  &:disabled {
+    > svg {
+      fill: var(--color-neutral-80);
+    }
   }
 
   &:active {
-    background: var(--color-neutral-90);
+    background: var(--color-overlay-12);
   }
 
   &:not(:disabled) {
@@ -31,21 +33,27 @@
   }
 
   &:not(:disabled):hover {
-    color: var(--color-primary-30);
+    background: var(--color-overlay-8);
   }
 
   &.small {
-    height: 16px;
-    width: 16px;
+    > svg {
+      height: 16px;
+      width: 16px;
+    }
   }
 
   &.medium {
-    height: 20px;
-    width: 20px;
+    > svg {
+      height: 20px;
+      width: 20px;
+    }
   }
 
   &.large {
-    height: 32px;
-    width: 32px;
+    > svg {
+      height: 24px;
+      width: 24px;
+    }
   }
 }
