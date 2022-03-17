@@ -1,4 +1,5 @@
 import { I18nKey } from '@logto/phrases';
+import { conditionalString } from '@silverhand/essentials';
 import classNames from 'classnames';
 import React, { HTMLProps, ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -35,7 +36,12 @@ const Button = ({
 
   return (
     <button
-      className={classNames(styles.button, styles[type], styles[size])}
+      className={classNames(
+        styles.button,
+        styles[type],
+        styles[size],
+        conditionalString(icon && styles.withIcon)
+      )}
       type={htmlType}
       {...rest}
     >
