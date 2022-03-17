@@ -14,6 +14,13 @@ export const findAllConnectors = async () =>
     from ${table}
   `);
 
+export const findConnectorsByIds = async (ids: string[]) =>
+  pool.many<Connector>(sql`
+    select ${sql.join(Object.values(fields), sql`, `)}
+    from ${table}
+    where ${fields.id} in (${sql.join(ids, sql`, `)})
+  `);
+
 export const findConnectorById = async (id: string) =>
   pool.one<Connector>(sql`
     select ${sql.join(Object.values(fields), sql`, `)}
