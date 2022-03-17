@@ -7,6 +7,7 @@ import { expectSqlAssert, QueryType } from '@/utils/test-utils';
 import {
   findAllConnectors,
   findConnectorById,
+  findConnectorsByIds,
   hasConnector,
   insertConnector,
   updateConnector,
@@ -40,6 +41,26 @@ describe('connector queries', () => {
     });
 
     await expect(findAllConnectors()).resolves.toEqual([rowData]);
+  });
+
+  it('findConnectorsByIds', async () => {
+    const ids = ['foo', 'bar'];
+    const rows = [{ id: 'foo' }, { id: 'bar' }];
+
+    const expectSql = sql`
+      select ${sql.join(Object.values(fields), sql`, `)}
+      from ${table}
+      where ${fields.id} in ($1, $2)
+    `;
+
+    mockQuery.mockImplementationOnce(async (sql, values) => {
+      expectSqlAssert(sql, expectSql.sql);
+      expect(values).toEqual(ids);
+
+      return createMockQueryResult(rows);
+    });
+
+    await expect(findConnectorsByIds(ids)).resolves.toEqual(rows);
   });
 
   it('findConnectorById', async () => {
