@@ -65,7 +65,7 @@ describe('connector route', () => {
     it('throws if more than one SMS connector is enabled', async () => {
       getConnectorInstancesPlaceHolder.mockResolvedValue(
         mockConnectorInstanceList.filter(
-          (connecotrInstance) => connecotrInstance.metadata.type !== ConnectorType.Email
+          (connectorInstance) => connectorInstance.metadata.type !== ConnectorType.Email
         )
       );
       const response = await connectorRequest.get('/connectors').send({});
@@ -75,7 +75,7 @@ describe('connector route', () => {
     it('shows all connectors', async () => {
       getConnectorInstancesPlaceHolder.mockResolvedValue(
         mockConnectorInstanceList.filter(
-          (connecotrInstance) => connecotrInstance.metadata.type === ConnectorType.Social
+          (connectorInstance) => connectorInstance.metadata.type === ConnectorType.Social
         )
       );
       const response = await connectorRequest.get('/connectors').send({});
