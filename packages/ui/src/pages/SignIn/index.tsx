@@ -62,11 +62,9 @@ const SignIn: FC = () => {
             {i18n.t<string, LogtoErrorI18nKey>(`errors:${error.code}`)}
           </MessageBox>
         )}
-        <Button
-          isDisabled={loading}
-          value={loading ? t('sign_in.loading') : t('sign_in.action')}
-          onClick={signInHandler}
-        />
+        <Button isDisabled={loading} type="primary" onClick={signInHandler}>
+          {loading ? t('sign_in.loading') : t('sign_in.action')}
+        </Button>
         <TextLink className={styles.createAccount} href="/register">
           {t('register.create_account')}
         </TextLink>

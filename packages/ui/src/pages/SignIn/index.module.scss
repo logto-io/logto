@@ -25,14 +25,15 @@
     margin-bottom: _.unit(-6);
   }
 
-  .inputField {
+  > .inputField {
     width: 100%;
     margin-top: _.unit(3);
     max-width: 320px;
   }
 
-  > input[type='button'] {
+  > button {
     margin-top: _.unit(12);
+    max-width: 320px;
   }
 
   .createAccount {

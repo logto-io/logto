@@ -1,0 +1,32 @@
+@use '@/scss/underscore' as _;
+
+.socialButton {
+  font: var(--font-control);
+  border: _.border(var(--color-border));
+  background: var(--color-background);
+  color: var(--color-font-primary);
+  justify-content: flex-start;
+
+  .icon {
+    width: _.unit(5);
+    height: _.unit(5);
+    @include _.image-align-center;
+    margin-right: _.unit(4);
+  }
+
+  &:active {
+    background: var(--color-secondary-background-active);
+    border: _.border(var(--color-border-active));
+    color: var(--color-font-primary);
+  }
+
+  &:disabled {
+    background: var(--color-secondary-background-disabled);
+    border: _.border(var(--color-border-disabled));
+    color: var(--color-font-secondary-disabled);
+
+    .icon {
+      filter: grayscale(100%);
+    }
+  }
+}

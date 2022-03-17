@@ -57,11 +57,9 @@ const Register: FC = () => {
             {i18n.t<string, LogtoErrorI18nKey>(`errors:${error.code}`)}
           </MessageBox>
         )}
-        <Button
-          isDisabled={loading}
-          value={loading ? t('register.loading') : t('register.action')}
-          onClick={signUp}
-        />
+        <Button isDisabled={loading} onClick={signUp}>
+          {loading ? t('register.loading') : t('register.action')}
+        </Button>
 
         <div className={styles.haveAccount}>
           <span className={styles.prefix}>{t('register.have_account')}</span>
