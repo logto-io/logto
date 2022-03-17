@@ -7,7 +7,7 @@
   font: var(--font-button);
   transition: background 0.2s ease-in-out;
   @include _.text-ellipsis;
-  display: flex;
+  display: inline-flex;
   align-items: center;
 
   &:not(:disabled) {
