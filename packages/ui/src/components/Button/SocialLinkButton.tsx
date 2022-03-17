@@ -1,6 +1,7 @@
 import { ConnectorMetadata } from '@logto/schemas';
 import classNames from 'classnames';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 import * as SocialLinkButtonStyles from './SocialLinkButton.module.scss';
 import * as styles from './index.module.scss';
@@ -17,7 +18,11 @@ const noop = () => {};
 
 const SocialLinkButton = ({ isDisabled, className, connector, onClick = noop }: Props) => {
   const { id, name, logo } = connector;
-  const localName = name.en; // TODO: i18n
+
+  const {
+    i18n: { language },
+  } = useTranslation();
+  const localName = name[language] ?? name.en;
 
   return (
     <button
