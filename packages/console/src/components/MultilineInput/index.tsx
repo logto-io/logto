@@ -1,5 +1,5 @@
 import { nanoid } from 'nanoid';
-import React, { FormEvent, useEffect, useState } from 'react';
+import React, { useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import * as textButtonStyles from '@/components/TextButton/index.module.scss';
@@ -10,82 +10,48 @@ import TextInput from '../TextInput';
 import * as styles from './index.module.scss';
 
 type Props = {
-  values: string[];
-  onChange: (values: string[]) => void;
+  value: string[];
+  onChange: (value: string[]) => void;
 };
 
-type FieldItem = {
-  id: string;
-  value: string;
-};
-
-const MultilineInput = ({ values, onChange }: Props) => {
-  const [fields, setFileds] = useState<FieldItem[]>([]);
-
+const MultilineInput = ({ value, onChange }: Props) => {
   const { t } = useTranslation(undefined, {
     keyPrefix: 'general',
   });
 
-  useEffect(() => {
-    if (values.length === 0) {
-      setFileds([{ id: nanoid(), value: '' }]);
-
-      return;
+  const ids = useRef([nanoid()]);
+  const items = useMemo(() => {
+    if (value.length > 0 && value.length !== ids.current.length) {
+      // eslint-disable-next-line @silverhand/fp/no-mutation
+      ids.current = value.map(() => nanoid());
     }
 
-    setFileds(
-      values.map((value) => ({
-        id: nanoid(),
-        value,
-      }))
-    );
-  }, [values]);
-
-  const handleInputChange = (event: FormEvent<HTMLInputElement>, index: number) => {
-    setFileds(
-      fields.map((field, fieldIndex) =>
-        fieldIndex === index ? { id: field.id, value: event.currentTarget.value } : field
-      )
-    );
-  };
-
-  const handleAdd = () => {
-    setFileds([...fields, { id: nanoid(), value: '' }]);
-  };
-
-  const handleRemove = (index: number) => {
-    setFileds(fields.filter((_, fieldIndex) => fieldIndex !== index));
-  };
-
-  const handleBlur: React.FocusEventHandler<HTMLDivElement> = (event) => {
-    const { relatedTarget, currentTarget } = event;
-
-    // Should not trigger update outer values when switch between input fields inside
-    if (relatedTarget && currentTarget.contains(relatedTarget)) {
-      return;
+    if (value.length === 0) {
+      return [''];
     }
 
-    // TODO LOG-1916: MultilineInput Value Validation.
-    onChange(fields.map((field) => field.value));
-  };
+    return value;
+  }, [value]);
 
   return (
-    <div className={styles.multilineInput} onBlur={handleBlur}>
-      {fields.map((field, index) => (
-        <div key={field.id} className={styles.deletableInput}>
+    <div className={styles.multilineInput}>
+      {items.map((itemValue, itemIndex) => (
+        <div key={ids.current[itemIndex]} className={styles.deletableInput}>
           <div>
             <TextInput
               className={styles.textField}
-              defaultValue={field.value}
+              defaultValue={itemValue}
               onChange={(event) => {
-                handleInputChange(event, index);
+                onChange(
+                  items.map((value, i) => (i === itemIndex ? event.currentTarget.value : value))
+                );
               }}
             />
           </div>
-          {fields.length > 1 && (
+          {items.length > 1 && (
             <IconButton
               onClick={() => {
-                handleRemove(index);
+                onChange(items.filter((_, i) => i !== itemIndex));
               }}
             >
               <Minus />
@@ -93,7 +59,12 @@ const MultilineInput = ({ values, onChange }: Props) => {
           )}
         </div>
       ))}
-      <div className={textButtonStyles.button} onClick={handleAdd}>
+      <div
+        className={textButtonStyles.button}
+        onClick={() => {
+          onChange([...value, '']);
+        }}
+      >
         {t('add_another')}
       </div>
     </div>

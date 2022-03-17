@@ -88,17 +88,17 @@ const ApplicationDetails = () => {
           </FormField>
           <FormField title="admin_console.application_details.redirect_uri">
             <MultilineInput
-              values={redirectUris}
-              onChange={(values) => {
-                onRedirectUriChange(values);
+              value={redirectUris}
+              onChange={(value) => {
+                onRedirectUriChange(value);
               }}
             />
           </FormField>
           <FormField title="admin_console.application_details.post_sign_out_redirect_uri">
             <MultilineInput
-              values={postSignOutRedirectUris}
-              onChange={(values) => {
-                onPostSignOutRedirectUriChange(values);
+              value={postSignOutRedirectUris}
+              onChange={(value) => {
+                onPostSignOutRedirectUriChange(value);
               }}
             />
           </FormField>
