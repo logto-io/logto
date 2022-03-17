@@ -1,0 +1,22 @@
+@use '@/scss/underscore' as _;
+
+.terms {
+  @include _.flex-row;
+
+  input[type='checkbox'] {
+    appearance: none;
+    position: absolute;
+    margin: 0;
+    width: 0;
+    height: 0;
+  }
+}
+
+.radioButton {
+  margin-right: _.unit(2);
+  transform: scale(0.8);
+}
+
+.content {
+  @include _.text-hint;
+}

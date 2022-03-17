@@ -20,6 +20,16 @@
   object-position: center;
 }
 
+@mixin text-hint {
+  font: var(--font-body-small);
+  color: var(--color-font-link-secondary);
+}
+
+@mixin title {
+  font: var(--font-title);
+  color: var(--color-font-primary);
+}
+
 @function border($color: transparent, $width: 1) {
   @return #{$width}px solid #{$color};
 }

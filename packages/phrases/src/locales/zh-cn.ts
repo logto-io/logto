@@ -10,6 +10,9 @@ const translation = {
     error: '用户名或密码错误。',
     username: '用户名',
     password: '密码',
+    terms_of_use: '用户协议',
+    terms_agreement_prefix: '登录即表明您已经同意',
+    continue_with: '更多',
   },
   register: {
     create_account: '创建新账户',

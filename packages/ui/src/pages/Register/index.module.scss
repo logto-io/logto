@@ -16,8 +16,7 @@
   }
 
   .title {
-    font: var(--font-heading-1);
-    color: var(--color-heading);
+    @include _.title;
     margin-bottom: _.unit(9);
   }
 

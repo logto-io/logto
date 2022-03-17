@@ -74,11 +74,14 @@ $font-family: 'PingFang SC', 'SF Pro Text', sans-serif;
   --color-control-focus: #{$color-primary-tint-60};
   --color-control-action: #{$color-neutral-70};
   --color-control-action-focus: #{$color-primary-tint-70};
+  --color-checkbox-border: #{$color-neutral-30};
+  --color-divider: #dbdbdb;
 
   /* Font Color */
   --color-font-primary: #{$color-neutral-100};
   --color-font-secondary: #444;
   --color-font-placeholder: #aaa;
+  --color-font-divider: #bbb;
   --color-font-button-text: #{$color-neutral-0};
   --color-font-button-text-active: #{rgba($color-neutral-0, 0.4)};
   --color-font-secondary-active: #{$color-neutral-70};

@@ -8,6 +8,9 @@ const translation = {
     error: 'Username or password is invalid.',
     username: 'Username',
     password: 'Password',
+    terms_of_use: 'Terms of Use',
+    terms_agreement_prefix: 'I agree with ',
+    continue_with: 'Continue With',
   },
   register: {
     create_account: 'Create an Account',

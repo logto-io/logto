@@ -11,13 +11,14 @@ export type Props = {
   text?: I18nKey;
   href: string;
   type?: 'primary' | 'secondary';
+  onClick?: React.MouseEventHandler<HTMLAnchorElement>;
 };
 
-const TextLink = ({ className, children, text, href, type = 'primary' }: Props) => {
+const TextLink = ({ className, children, text, href, type = 'primary', onClick }: Props) => {
   const { t } = useTranslation();
 
   return (
-    <a className={classNames(styles.link, styles[type], className)} href={href}>
+    <a className={classNames(styles.link, styles[type], className)} href={href} onClick={onClick}>
       {children ?? (text ? t(text) : '')}
     </a>
   );
