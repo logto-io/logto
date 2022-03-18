@@ -91,7 +91,7 @@ export const getAccessToken: GetAccessToken = async (code) => {
     })
     .json<AccessTokenResponse>();
 
-  assertThat(accessToken, new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid));
+  assertThat(accessToken && openid, new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid));
 
   return { accessToken, openid };
 };
@@ -108,15 +108,22 @@ export const getUserInfo: GetUserInfo = async (accessTokenObject) => {
   const { accessToken, openid } = accessTokenObject;
 
   try {
-    const { unionid, headimgurl, nickname, errmsg } = await got
+    const { unionid, headimgurl, nickname, errcode, errmsg } = await got
       .get(userInfoEndpoint, {
         searchParams: { access_token: accessToken, openid },
         timeout: await getConnectorRequestTimeout(),
       })
       .json<UserInfoResponse>();
 
-    if (!openid) {
-      // If no openid is provided, there will be error per Tencent's API design
+    if (!openid || errcode || errmsg) {
+      // 'openid' is defined as a required input argument in WeChat API doc, but it does not necessarily to
+      // be the return value from getAccessToken per testing.
+      // In another word, 'openid' is required but the response of getUserInfo is consistent as long as
+      // access_token is valid.
+      if (errcode === 40_001) {
+        throw new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid);
+      }
+
       throw new Error(errmsg);
     }
 
