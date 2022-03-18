@@ -85,7 +85,7 @@ const ApiResourceDetails = () => {
                 <CopyToClipboard value={data.indicator} />
               </div>
             </div>
-            <div className={styles.operation}>
+            <div className={styles.operations}>
               <Button title="admin_console.api_resource_details.check_help_guide" />
               <ActionMenu
                 buttonProps={{ icon: <More /> }}
