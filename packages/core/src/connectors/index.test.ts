@@ -40,6 +40,12 @@ const googleConnector = {
   config: {},
   createdAt: 1_646_382_233_000,
 };
+const wechatConnector = {
+  id: 'wechat',
+  enabled: false,
+  config: {},
+  createdAt: 1_646_382_233_000,
+};
 
 const connectors = [
   aliyunDmConnector,
@@ -47,6 +53,7 @@ const connectors = [
   facebookConnector,
   githubConnector,
   googleConnector,
+  wechatConnector,
 ];
 const connectorMap = new Map(connectors.map((connector) => [connector.id, connector]));
 
@@ -79,6 +86,7 @@ describe('getConnectorInstances', () => {
     expect(connectorInstances[2]).toHaveProperty('connector', facebookConnector);
     expect(connectorInstances[3]).toHaveProperty('connector', githubConnector);
     expect(connectorInstances[4]).toHaveProperty('connector', googleConnector);
+    expect(connectorInstances[5]).toHaveProperty('connector', wechatConnector);
   });
 });
 
