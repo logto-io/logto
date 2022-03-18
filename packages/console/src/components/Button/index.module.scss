@@ -7,8 +7,11 @@
   font: var(--font-button);
   transition: background 0.2s ease-in-out;
   @include _.text-ellipsis;
-  display: flex;
   align-items: center;
+
+  &.withIcon {
+    display: inline-flex;
+  }
 
   &:not(:disabled) {
     cursor: pointer;
