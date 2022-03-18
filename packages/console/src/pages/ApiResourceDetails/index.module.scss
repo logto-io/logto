@@ -37,6 +37,9 @@
   }
 
   .operation {
+    display: flex;
+    align-items: center;
+
     > *:not(:first-child) {
       margin-left: _.unit(3);
     }
