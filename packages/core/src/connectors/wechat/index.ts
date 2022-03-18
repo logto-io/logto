@@ -32,13 +32,13 @@ export const metadata: ConnectorMetadata = {
   type: ConnectorType.Social,
   name: {
     en: 'Sign In with WeChat',
-    'zh-CN': 'WeChat 登录',
+    'zh-CN': '微信登录',
   },
   // TODO: add the real logo URL (LOG-1823)
   logo: './logo.png',
   description: {
     en: 'Sign In with WeChat',
-    'zh-CN': 'WeChat 登录',
+    'zh-CN': '微信登录',
   },
   readme: existsSync(pathToReadmeFile)
     ? readFileSync(pathToReadmeFile, 'utf8')
