@@ -81,7 +81,7 @@ const ApiResources = () => {
                 navigate(buildDetailsLink(id));
               }}
             >
-              <td>
+              <td className={styles.apiResourceName}>
                 <ItemPreview title={name} icon={<ImagePlaceholder />} to={buildDetailsLink(id)} />
               </td>
               <td>
