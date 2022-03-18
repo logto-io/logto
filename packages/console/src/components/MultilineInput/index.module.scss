@@ -1,0 +1,17 @@
+@use '@/scss/underscore' as _;
+
+.multilineInput {
+  > :not(:first-child) {
+    margin-top: _.unit(2);
+  }
+
+  .deletableInput {
+    display: flex;
+    align-items: center;
+
+    .textField {
+      @include _.form-text-field;
+      margin-right: _.unit(3);
+    }
+  }
+}

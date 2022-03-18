@@ -3,6 +3,7 @@ import en from './en';
 const translation = {
   general: {
     placeholder: '占位符',
+    add_another: '+ Add Another',
   },
   sign_in: {
     action: '登录',
