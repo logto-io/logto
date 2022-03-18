@@ -6,9 +6,6 @@
     }
   },
   "stylelint.validate": ["css", "scss"],
-  "cssVariables.lookupFiles": [
-    "./packages/ui/src/components/AppContent/index.module.scss"
-  ],
   "eslint.workingDirectories": [
     {
       "pattern": "./packages/*"
