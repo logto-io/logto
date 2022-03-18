@@ -4,7 +4,7 @@ import { Link, To } from 'react-router-dom';
 import * as styles from './index.module.scss';
 
 type Props = {
-  title: string;
+  title: ReactNode;
   subtitle?: string;
   icon?: ReactNode;
   to?: To;

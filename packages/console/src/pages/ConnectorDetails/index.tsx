@@ -15,6 +15,7 @@ import ImagePlaceholder from '@/components/ImagePlaceholder';
 import Markdown from '@/components/Markdown';
 import Status from '@/components/Status';
 import TabNav, { TabNavLink } from '@/components/TabNav';
+import UnnamedTrans from '@/components/UnnamedTrans';
 import useApi, { RequestError } from '@/hooks/use-api';
 
 import SenderTester from './components/SenderTester';
@@ -26,10 +27,7 @@ const ConnectorDetails = () => {
   const [config, setConfig] = useState<string>();
   const [saveError, setSaveError] = useState<string>();
   const [isSubmitLoading, setIsSubmitLoading] = useState(false);
-  const {
-    t,
-    i18n: { language },
-  } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { data, error } = useSWR<ConnectorDTO, RequestError>(
     connectorId && `/api/connectors/${connectorId}`
   );
@@ -85,7 +83,9 @@ const ConnectorDetails = () => {
           )}
           <div className={styles.metadata}>
             <div>
-              <div className={styles.name}>{data.metadata.name[language]}</div>
+              <div className={styles.name}>
+                <UnnamedTrans resource={data.metadata.name} />
+              </div>
               <div className={styles.id}>{data.id}</div>
             </div>
             <div>
