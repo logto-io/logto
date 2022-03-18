@@ -132,6 +132,7 @@ export const getUserInfo: GetUserInfo = async (accessTokenObject) => {
     if (error instanceof GotRequestError && error.response?.statusCode === 40_001) {
       throw new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid);
     }
+
     throw error;
   }
 };

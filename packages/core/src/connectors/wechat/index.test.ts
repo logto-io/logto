@@ -115,7 +115,19 @@ describe('getUserInfo', () => {
     await expect(getUserInfo({ accessToken: 'accessToken', openid: 'openid' })).rejects.toThrow();
   });
 
-  it('throws Error if openid is missing', async () => {
-    await expect(getUserInfo({ accessToken: 'accessToken' })).rejects.toBeInstanceOf(Error);
+  it('throws Error if request failed and errcode is not 40001', async () => {
+    nock(userInfoEndpointUrl.origin)
+      .get(userInfoEndpointUrl.pathname)
+      .query(parameters)
+      .reply(200, { errcode: 40_003, errmsg: 'invalid openid' });
+    await expect(
+      getUserInfo({ accessToken: 'accessToken', openid: 'openid' })
+    ).rejects.toMatchError(new Error('invalid openid'));
+  });
+
+  it('throws SocialAccessTokenInvalid error if openid is missing', async () => {
+    await expect(getUserInfo({ accessToken: 'accessToken' })).rejects.toMatchError(
+      new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid)
+    );
   });
 });
