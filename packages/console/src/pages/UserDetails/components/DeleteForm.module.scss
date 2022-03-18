@@ -2,6 +2,7 @@
 
 .card {
   padding: _.unit(8);
+  min-width: 400px;
 
   > :not(:first-child) {
     margin-top: _.unit(6);
