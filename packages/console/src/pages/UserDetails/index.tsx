@@ -13,8 +13,10 @@ import ImagePlaceholder from '@/components/ImagePlaceholder';
 import { RequestError } from '@/hooks/use-api';
 import Delete from '@/icons/Delete';
 import More from '@/icons/More';
+import Reset from '@/icons/Reset';
 import * as modalStyles from '@/scss/modal.module.scss';
 
+import ChangePasswordForm from './components/ChangePasswordForm';
 import CreateSuccess from './components/CreateSuccess';
 import DeleteForm from './components/DeleteForm';
 import * as styles from './index.module.scss';
@@ -23,6 +25,7 @@ const UserDetails = () => {
   const { id } = useParams();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const [isDeleteFormOpen, setIsDeleteFormOpen] = useState(false);
+  const [isChangePasswordFormOpen, setIsChangePasswordFormOpen] = useState(false);
 
   const { data, error } = useSWR<User, RequestError>(id && `/api/users/${id}`);
   const isLoading = !data && !error;
@@ -49,6 +52,14 @@ const UserDetails = () => {
             <div>
               <ActionMenu buttonProps={{ icon: <More /> }} title={t('user_details.more_options')}>
                 <ActionMenuItem
+                  icon={<Reset />}
+                  onClick={() => {
+                    setIsChangePasswordFormOpen(true);
+                  }}
+                >
+                  {t('user_details.change_password.change_password')}
+                </ActionMenuItem>
+                <ActionMenuItem
                   icon={<Delete />}
                   type="danger"
                   onClick={() => {
@@ -58,6 +69,18 @@ const UserDetails = () => {
                   {t('user_details.menu_delete')}
                 </ActionMenuItem>
               </ActionMenu>
+              <ReactModal
+                isOpen={isChangePasswordFormOpen}
+                className={modalStyles.content}
+                overlayClassName={modalStyles.overlay}
+              >
+                <ChangePasswordForm
+                  userId={data.id}
+                  onClose={() => {
+                    setIsChangePasswordFormOpen(false);
+                  }}
+                />
+              </ReactModal>
               <ReactModal
                 isOpen={isDeleteFormOpen}
                 className={modalStyles.content}
