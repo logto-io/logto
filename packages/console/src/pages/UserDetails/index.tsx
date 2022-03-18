@@ -16,16 +16,16 @@ import More from '@/icons/More';
 import Reset from '@/icons/Reset';
 import * as modalStyles from '@/scss/modal.module.scss';
 
-import ChangePasswordForm from './components/ChangePasswordForm';
 import CreateSuccess from './components/CreateSuccess';
 import DeleteForm from './components/DeleteForm';
+import ResetPasswordForm from './components/ResetPasswordForm';
 import * as styles from './index.module.scss';
 
 const UserDetails = () => {
   const { id } = useParams();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const [isDeleteFormOpen, setIsDeleteFormOpen] = useState(false);
-  const [isChangePasswordFormOpen, setIsChangePasswordFormOpen] = useState(false);
+  const [isResetPasswordFormOpen, setIsResetPasswordFormOpen] = useState(false);
 
   const { data, error } = useSWR<User, RequestError>(id && `/api/users/${id}`);
   const isLoading = !data && !error;
@@ -54,10 +54,10 @@ const UserDetails = () => {
                 <ActionMenuItem
                   icon={<Reset />}
                   onClick={() => {
-                    setIsChangePasswordFormOpen(true);
+                    setIsResetPasswordFormOpen(true);
                   }}
                 >
-                  {t('user_details.change_password.change_password')}
+                  {t('user_details.reset_password.reset_password')}
                 </ActionMenuItem>
                 <ActionMenuItem
                   icon={<Delete />}
@@ -70,14 +70,14 @@ const UserDetails = () => {
                 </ActionMenuItem>
               </ActionMenu>
               <ReactModal
-                isOpen={isChangePasswordFormOpen}
+                isOpen={isResetPasswordFormOpen}
                 className={modalStyles.content}
                 overlayClassName={modalStyles.overlay}
               >
-                <ChangePasswordForm
+                <ResetPasswordForm
                   userId={data.id}
                   onClose={() => {
-                    setIsChangePasswordFormOpen(false);
+                    setIsResetPasswordFormOpen(false);
                   }}
                 />
               </ReactModal>

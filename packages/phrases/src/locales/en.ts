@@ -183,10 +183,10 @@ const translation = {
       delete_cancel: 'Cancel',
       delete_confirm: 'Delete',
       deleted: 'User deleted.',
-      change_password: {
-        title: 'Change Password',
+      reset_password: {
+        title: 'Reset Password',
         label: 'New password:',
-        change_password: 'Change password',
+        reset_password: 'Reset password',
       },
     },
   },

@@ -11,7 +11,7 @@ import TextInput from '@/components/TextInput';
 import useApi from '@/hooks/use-api';
 import Close from '@/icons/Close';
 
-import * as styles from './ChangePasswordForm.module.scss';
+import * as styles from './ResetPasswordForm.module.scss';
 
 type FormData = {
   password: string;
@@ -22,7 +22,7 @@ type Props = {
   onClose?: () => void;
 };
 
-const ChangePasswordForm = ({ onClose, userId }: Props) => {
+const ResetPasswordForm = ({ onClose, userId }: Props) => {
   const { handleSubmit, register } = useForm<FormData>();
   const api = useApi();
 
@@ -34,7 +34,7 @@ const ChangePasswordForm = ({ onClose, userId }: Props) => {
   return (
     <Card className={styles.card}>
       <div className={styles.headline}>
-        <CardTitle title="user_details.change_password.title" />
+        <CardTitle title="user_details.reset_password.title" />
         <IconButton size="large" onClick={() => onClose?.()}>
           <Close />
         </IconButton>
@@ -42,7 +42,7 @@ const ChangePasswordForm = ({ onClose, userId }: Props) => {
       <form className={styles.form} onSubmit={onSubmit}>
         <FormField
           isRequired
-          title="admin_console.user_details.change_password.label"
+          title="admin_console.user_details.reset_password.label"
           className={styles.textField}
         >
           <TextInput {...register('password', { required: true })} />
@@ -50,7 +50,7 @@ const ChangePasswordForm = ({ onClose, userId }: Props) => {
         <div className={styles.submit}>
           <Button
             htmlType="submit"
-            title="admin_console.user_details.change_password.change_password"
+            title="admin_console.user_details.reset_password.reset_password"
             size="large"
             type="primary"
           />
@@ -60,4 +60,4 @@ const ChangePasswordForm = ({ onClose, userId }: Props) => {
   );
 };
 
-export default ChangePasswordForm;
+export default ResetPasswordForm;
