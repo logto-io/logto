@@ -1,0 +1,44 @@
+@use '@/scss/underscore' as _;
+
+.card {
+  padding: _.unit(8);
+  max-width: 800px;
+
+  > :not(:first-child) {
+    margin-top: _.unit(6);
+  }
+
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .close {
+      cursor: pointer;
+    }
+  }
+
+  .body {
+    > :not(:first-child) {
+      margin-top: _.unit(6);
+    }
+
+    .description {
+      font: var(--font-body-2);
+    }
+
+    .hightlight {
+      color: var(--color-primary-50);
+    }
+  }
+
+  .footer {
+    padding-top: _.unit(6);
+    border-top: 1px solid var(--color-neutral-90);
+    text-align: right;
+
+    > :not(:first-child) {
+      margin-left: _.unit(4);
+    }
+  }
+}
