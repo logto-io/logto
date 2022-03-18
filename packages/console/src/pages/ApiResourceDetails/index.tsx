@@ -16,6 +16,8 @@ import ImagePlaceholder from '@/components/ImagePlaceholder';
 import TabNav, { TabNavLink } from '@/components/TabNav';
 import TextInput from '@/components/TextInput';
 import useApi, { RequestError } from '@/hooks/use-api';
+import Delete from '@/icons/Delete';
+import More from '@/icons/More';
 import * as modalStyles from '@/scss/modal.module.scss';
 
 import DeleteForm from './components/DeleteForm';
@@ -86,10 +88,12 @@ const ApiResourceDetails = () => {
             <div className={styles.operation}>
               <Button title="admin_console.api_resource_details.check_help_guide" />
               <ActionMenu
-                buttonProps={{ title: 'admin_console.api_resource_details.options' }}
+                buttonProps={{ icon: <More /> }}
                 title={t('api_resource_details.more_options')}
               >
                 <ActionMenuItem
+                  icon={<Delete />}
+                  type="danger"
                   onClick={() => {
                     setIsDeleteFormOpen(true);
                   }}

@@ -2,14 +2,14 @@
 
 .actionMenu {
   display: inline-block;
-  min-width: _.unit(20);
 }
 
 .content {
-  background: var(--color-card-background);
+  background: var(--color-on-primary);
   box-shadow: var(--shadow-light-s2);
   border-radius: _.unit(2);
   position: absolute;
+  min-width: 180px;
 
   .title {
     padding: _.unit(5) _.unit(4) _.unit(2) _.unit(4);

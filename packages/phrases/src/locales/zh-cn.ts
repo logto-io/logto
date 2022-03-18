@@ -106,7 +106,6 @@ const translation = {
     api_resource_details: {
       back_to_api_resources: 'Back to my API resources',
       check_help_guide: 'Check Help Guide',
-      options: 'Options',
       more_options: 'More Options',
       options_delete: 'Delete',
       settings: 'Settings',
@@ -178,6 +177,13 @@ const translation = {
       created_password: '初始密码：',
       created_button_close: '关闭',
       created_button_copy: '拷贝',
+      more_options: '更多操作',
+      menu_delete: '删除用户',
+      delete_title: '注意',
+      delete_description: '本操作无法撤回，将删除此用户。',
+      delete_cancel: '取消',
+      delete_confirm: '删除',
+      deleted: '用户已成功删除。',
     },
   },
 };

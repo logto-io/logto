@@ -104,7 +104,6 @@ const translation = {
     api_resource_details: {
       back_to_api_resources: 'Back to my API resources',
       check_help_guide: 'Check Help Guide',
-      options: 'Options',
       more_options: 'More Options',
       options_delete: 'Delete',
       settings: 'Settings',
@@ -177,6 +176,13 @@ const translation = {
       created_password: 'Initial password:',
       created_button_close: 'Close',
       created_button_copy: 'Copy',
+      more_options: 'MORE OPTIONS',
+      menu_delete: 'Delete',
+      delete_title: 'Reminder',
+      delete_description: 'This action cannot be undone. This will delete the user.',
+      delete_cancel: 'Cancel',
+      delete_confirm: 'Delete',
+      deleted: 'User deleted.',
     },
   },
 };

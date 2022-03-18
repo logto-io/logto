@@ -5,8 +5,20 @@
   list-style: none;
   font: var(--font-body-2);
   cursor: pointer;
+  display: flex;
+  align-items: center;
 
   &:hover {
     background: var(--color-neutral-95);
+  }
+
+  &.danger {
+    color: var(--color-error-40);
+  }
+
+  .icon {
+    display: flex;
+    align-items: center;
+    margin-right: _.unit(5);
   }
 }
