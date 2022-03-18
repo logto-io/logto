@@ -1,13 +1,12 @@
-import { LogtoErrorI18nKey } from '@logto/phrases';
 import classNames from 'classnames';
 import React, { FC, FormEventHandler, useState, useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { signInBasic } from '@/apis/sign-in';
 import Button from '@/components/Button';
+import ErrorMessage from '@/components/ErrorMessage';
 import Input from '@/components/Input';
 import PasswordInput from '@/components/Input/PasswordInput';
-import MessageBox from '@/components/MessageBox';
 import TextLink from '@/components/TextLink';
 import useApi from '@/hooks/use-api';
 
@@ -15,7 +14,7 @@ import * as styles from './index.module.scss';
 
 const SignIn: FC = () => {
   // TODO: Consider creating cross page data modal
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
@@ -57,17 +56,15 @@ const SignIn: FC = () => {
           className={styles.inputField}
           onChange={setPassword}
         />
-        {error && (
-          <MessageBox className={styles.box}>
-            {i18n.t<string, LogtoErrorI18nKey>(`errors:${error.code}`)}
-          </MessageBox>
-        )}
+        {error && <ErrorMessage className={styles.box} errorCode={error.code} />}
         <Button isDisabled={loading} type="primary" onClick={signInHandler}>
           {loading ? t('sign_in.loading') : t('sign_in.action')}
         </Button>
-        <TextLink className={styles.createAccount} href="/register">
-          {t('register.create_account')}
-        </TextLink>
+        <TextLink
+          className={styles.createAccount}
+          href="/register"
+          text="register.create_account"
+        />
       </form>
     </div>
   );
