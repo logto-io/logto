@@ -2,4 +2,20 @@
 
 .editor {
   margin: _.unit(1) 0;
+  border-radius: _.unit(4);
+  padding: _.unit(4) 0;
+  // Use fixed color for both light and dark mode, the same as vs-dark.
+  background: #1e1e1e;
+
+  .actions {
+    display: flex;
+    align-items: center;
+    justify-content: right;
+    padding: 0 _.unit(4);
+
+    button:hover {
+      // Clear icons background style since the background color is fixed.
+      background: unset;
+    }
+  }
 }
