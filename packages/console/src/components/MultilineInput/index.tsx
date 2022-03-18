@@ -43,15 +43,13 @@ const MultilineInput = ({ value, onChange }: Props) => {
       {fields.map((fieldValue, fieldIndex) => (
         // eslint-disable-next-line react/no-array-index-key
         <div key={fieldIndex} className={styles.deletableInput}>
-          <div>
-            <TextInput
-              className={styles.textField}
-              defaultValue={fieldValue}
-              onChange={(event) => {
-                handleInputChange(event, fieldIndex);
-              }}
-            />
-          </div>
+          <TextInput
+            className={styles.textField}
+            defaultValue={fieldValue}
+            onChange={(event) => {
+              handleInputChange(event, fieldIndex);
+            }}
+          />
           {fields.length > 1 && (
             <IconButton
               onClick={() => {
