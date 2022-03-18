@@ -2,6 +2,8 @@ const translation = {
   general: {
     placeholder: 'Placeholder',
     add_another: '+ Add Another',
+    skip: 'Skip',
+    next: 'Next',
   },
   sign_in: {
     action: 'Sign In',
@@ -75,10 +77,30 @@ const translation = {
           description: 'E.g.: Angular, React, Vue',
         },
         traditional: {
-          title: 'Tranditional Web',
+          title: 'Traditional Web',
           subtitle: 'Traditional web app using redirects.',
           description: 'E.g.: Node.js, Express, ASP.NET, Java, PHP',
         },
+      },
+      get_started: {
+        header_description:
+          'Follow a step by step guide to integrate your application or get a sample configured with your account settings',
+        get_sample_file: 'Get a sample file',
+        title: 'Congratulations! The application has been created successfully.',
+        subtitle:
+          'Now follow the steps below to finish your app settings. Please select the JS library to continue.',
+        description_by_library:
+          'This quickstart demonstrates how to add Logto to {{library}} application.',
+        title_step_1: 'Install Logto SDK',
+        subtitle_step_1: '3 options | lorem ipsum dolor sit amet',
+        title_step_2: 'Initiate LogtoClient',
+        subtitle_step_2: '1 step | lorem ipsum dolor sit amet',
+        title_step_3: 'Sign in',
+        subtitle_step_3: '1 step | lorem ipsum dolor sit amet',
+        title_step_4: 'Sign out',
+        subtitle_step_4: '1 step | lorem ipsum dolor sit amet',
+        title_step_5: 'Further readings',
+        subtitle_step_5: 'Tutorial and readings',
       },
     },
     application_details: {

@@ -16,6 +16,7 @@ const Check = () => (
 );
 
 export type Props = {
+  className?: string;
   value: string;
   title: string;
   name?: string;
@@ -25,7 +26,16 @@ export type Props = {
   tabIndex?: number;
 };
 
-const Radio = ({ value, title, name, children, isChecked, onClick, tabIndex }: Props) => {
+const Radio = ({
+  className,
+  value,
+  title,
+  name,
+  children,
+  isChecked,
+  onClick,
+  tabIndex,
+}: Props) => {
   const handleKeyPress: KeyboardEventHandler<HTMLDivElement> = useCallback(
     (event) => {
       if ([' ', 'Enter'].includes(event.key)) {
@@ -38,7 +48,7 @@ const Radio = ({ value, title, name, children, isChecked, onClick, tabIndex }: P
 
   return (
     <div
-      className={classNames(styles.radio, isChecked && styles.checked)}
+      className={classNames(styles.radio, className, isChecked && styles.checked)}
       tabIndex={tabIndex}
       onClick={onClick}
       onKeyPress={handleKeyPress}
