@@ -85,8 +85,7 @@ export const getAccessToken: GetAccessToken = async (code) => {
   const { appId: appid, appSecret: secret } = config;
 
   const { access_token: accessToken, openid } = await got
-    .get({
-      url: accessTokenEndpoint,
+    .get(accessTokenEndpoint, {
       searchParams: { appid, secret, code, grant_type: 'authorization_code' },
       timeout: await getConnectorRequestTimeout(),
     })
@@ -102,28 +101,28 @@ export const getUserInfo: GetUserInfo = async (accessTokenObject) => {
     unionid?: string;
     headimgurl?: string;
     nickname?: string;
+    errcode?: number;
+    errmsg?: string;
   };
 
   const { accessToken, openid } = accessTokenObject;
 
   try {
-    const { unionid, headimgurl, nickname } = await got
-      .get({
-        url: userInfoEndpoint,
+    const { unionid, headimgurl, nickname, errmsg } = await got
+      .get(userInfoEndpoint, {
         searchParams: { access_token: accessToken, openid },
         timeout: await getConnectorRequestTimeout(),
       })
       .json<UserInfoResponse>();
 
-    const userId = unionid ?? openid;
-
-    if (!userId) {
-      throw new ConnectorError(ConnectorErrorCodes.General);
+    if (!openid) {
+      // If no openid is provided, there will be error per Tencent's API design
+      throw new Error(errmsg);
     }
 
-    return { id: userId, avatar: headimgurl, name: nickname };
+    return { id: unionid ?? openid, avatar: headimgurl, name: nickname };
   } catch (error: unknown) {
-    if (error instanceof GotRequestError && error.response?.statusCode === 401) {
+    if (error instanceof GotRequestError && error.response?.statusCode === 40_001) {
       throw new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid);
     }
     throw error;

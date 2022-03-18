@@ -27,17 +27,36 @@ describe('getAuthorizationUri', () => {
 });
 
 describe('getAccessToken', () => {
+  afterEach(() => {
+    nock.cleanAll();
+  });
+
+  const accessTokenEndpointUrl = new URL(accessTokenEndpoint);
+  const parameters = new URLSearchParams({
+    appid: '<app-id>',
+    secret: '<app-secret>',
+    code: 'code',
+    grant_type: 'authorization_code',
+  });
+
   it('should get an accessToken by exchanging with code', async () => {
-    nock(accessTokenEndpoint).get('').reply(200, {
-      access_token: 'access_token',
-      openid: 'openid',
-    });
+    nock(accessTokenEndpointUrl.origin)
+      .get(accessTokenEndpointUrl.pathname)
+      .query(parameters)
+      .reply(200, {
+        access_token: 'access_token',
+        openid: 'openid',
+      });
     const { accessToken, openid } = await getAccessToken('code');
     expect(accessToken).toEqual('access_token');
     expect(openid).toEqual('openid');
   });
+
   it('throws SocialAuthCodeInvalid error if accessToken not found in response', async () => {
-    nock(accessTokenEndpoint).get('').reply(200, {});
+    nock(accessTokenEndpointUrl.origin)
+      .get(accessTokenEndpointUrl.pathname)
+      .query(parameters)
+      .reply(200, {});
     await expect(getAccessToken('code')).rejects.toMatchError(
       new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid)
     );
@@ -57,39 +76,46 @@ describe('validateConfig', () => {
 });
 
 describe('getUserInfo', () => {
+  afterEach(() => {
+    nock.cleanAll();
+  });
+
+  const userInfoEndpointUrl = new URL(userInfoEndpoint);
+  const parameters = new URLSearchParams({ access_token: 'accessToken', openid: 'openid' });
+
   it('should get valid SocialUserInfo', async () => {
-    nock(userInfoEndpoint).get('').reply(200, {
-      unionid: 'this_is_an_arbitrary_wechat_union_id',
-      headimgurl:
-        'https://thirdwx.qlogo.cn/mmopen/g3MonUZtNHkdmzicIlibx6iaFqAc56vxLSUfpb6n5WKSYVY0ChQKkiaJSgQ1dZuTOgvLLrhJbERQQ4eMsv84eavHiaiceqxibJxCfHe/0',
-      nickname: 'wechat bot',
-    });
+    nock(userInfoEndpointUrl.origin)
+      .get(userInfoEndpointUrl.pathname)
+      .query(parameters)
+      .reply(200, {
+        unionid: 'this_is_an_arbitrary_wechat_union_id',
+        headimgurl: 'https://github.com/images/error/octocat_happy.gif',
+        nickname: 'wechat bot',
+      });
     const socialUserInfo = await getUserInfo({ accessToken: 'accessToken', openid: 'openid' });
     expect(socialUserInfo).toMatchObject({
       id: 'this_is_an_arbitrary_wechat_union_id',
-      avatar:
-        'https://thirdwx.qlogo.cn/mmopen/g3MonUZtNHkdmzicIlibx6iaFqAc56vxLSUfpb6n5WKSYVY0ChQKkiaJSgQ1dZuTOgvLLrhJbERQQ4eMsv84eavHiaiceqxibJxCfHe/0',
+      avatar: 'https://github.com/images/error/octocat_happy.gif',
       name: 'wechat bot',
     });
   });
-  it('throws SocialAccessTokenInvalid error if remote response code is 401', async () => {
-    nock(userInfoEndpoint).get('').reply(401);
+
+  it('throws SocialAccessTokenInvalid error if remote response code is 40001', async () => {
+    nock(userInfoEndpointUrl.origin)
+      .get(userInfoEndpointUrl.pathname)
+      .query(parameters)
+      .reply(40_001);
     await expect(
       getUserInfo({ accessToken: 'accessToken', openid: 'openid' })
     ).rejects.toMatchError(new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid));
   });
-  it('throws General ConnectorError if both openid and unionid are missing', async () => {
-    nock(userInfoEndpoint).get('').reply(200, {
-      headimgurl:
-        'https://thirdwx.qlogo.cn/mmopen/g3MonUZtNHkdmzicIlibx6iaFqAc56vxLSUfpb6n5WKSYVY0ChQKkiaJSgQ1dZuTOgvLLrhJbERQQ4eMsv84eavHiaiceqxibJxCfHe/0',
-      nickname: 'wechat bot',
-    });
-    await expect(getUserInfo({ accessToken: 'accessToken' })).rejects.toMatchError(
-      new ConnectorError(ConnectorErrorCodes.General)
-    );
-  });
+
   it('throws unrecognized error', async () => {
-    nock(userInfoEndpoint).get('').reply(500);
+    nock(userInfoEndpointUrl.origin).get(userInfoEndpointUrl.pathname).query(parameters).reply(500);
     await expect(getUserInfo({ accessToken: 'accessToken', openid: 'openid' })).rejects.toThrow();
+  });
+
+  it('throws Error if openid is missing', async () => {
+    await expect(getUserInfo({ accessToken: 'accessToken' })).rejects.toBeInstanceOf(Error);
   });
 });
