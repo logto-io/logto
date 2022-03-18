@@ -27,7 +27,7 @@ const MultilineInput = ({ value, onChange }: Props) => {
   }, [value]);
 
   const handleAdd = () => {
-    onChange([...value, '']);
+    onChange([...fields, '']);
   };
 
   const handleRemove = (index: number) => {
@@ -45,7 +45,7 @@ const MultilineInput = ({ value, onChange }: Props) => {
         <div key={fieldIndex} className={styles.deletableInput}>
           <TextInput
             className={styles.textField}
-            defaultValue={fieldValue}
+            value={fieldValue}
             onChange={(event) => {
               handleInputChange(event, fieldIndex);
             }}
