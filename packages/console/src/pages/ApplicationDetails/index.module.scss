@@ -82,9 +82,8 @@
     .fields {
       flex: 1;
       border-bottom: 1px solid var(--color-border);
-      padding-bottom: _.unit(6);
+      padding: _.unit(6) 0;
       overflow: auto;
-      padding-top: _.unit(6);
 
       > div {
         @include _.form-text-field;
