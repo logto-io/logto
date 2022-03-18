@@ -187,6 +187,11 @@ const translation = {
       delete_cancel: '取消',
       delete_confirm: '删除',
       deleted: '用户已成功删除。',
+      reset_password: {
+        title: '重置密码',
+        label: '新密码：',
+        reset_password: '重置密码',
+      },
     },
   },
 };

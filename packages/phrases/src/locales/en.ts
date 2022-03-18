@@ -186,6 +186,11 @@ const translation = {
       delete_cancel: 'Cancel',
       delete_confirm: 'Delete',
       deleted: 'User deleted.',
+      reset_password: {
+        title: 'Reset Password',
+        label: 'New password:',
+        reset_password: 'Reset password',
+      },
     },
   },
 };
