@@ -1,5 +1,4 @@
-import { nanoid } from 'nanoid';
-import React, { useMemo, useRef } from 'react';
+import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import * as textButtonStyles from '@/components/TextButton/index.module.scss';
@@ -19,13 +18,7 @@ const MultilineInput = ({ value, onChange }: Props) => {
     keyPrefix: 'general',
   });
 
-  const ids = useRef([nanoid()]);
-  const items = useMemo(() => {
-    if (value.length > 0 && value.length !== ids.current.length) {
-      // eslint-disable-next-line @silverhand/fp/no-mutation
-      ids.current = value.map(() => nanoid());
-    }
-
+  const fields = useMemo(() => {
     if (value.length === 0) {
       return [''];
     }
@@ -33,25 +26,36 @@ const MultilineInput = ({ value, onChange }: Props) => {
     return value;
   }, [value]);
 
+  const handleAdd = () => {
+    onChange([...value, '']);
+  };
+
+  const handleRemove = (index: number) => {
+    onChange(fields.filter((_, i) => i !== index));
+  };
+
+  const handleInputChange = (event: React.FormEvent<HTMLInputElement>, index: number) => {
+    onChange(fields.map((value, i) => (i === index ? event.currentTarget.value : value)));
+  };
+
   return (
     <div className={styles.multilineInput}>
-      {items.map((itemValue, itemIndex) => (
-        <div key={ids.current[itemIndex]} className={styles.deletableInput}>
+      {fields.map((fieldValue, fieldIndex) => (
+        // eslint-disable-next-line react/no-array-index-key
+        <div key={fieldIndex} className={styles.deletableInput}>
           <div>
             <TextInput
               className={styles.textField}
-              defaultValue={itemValue}
+              defaultValue={fieldValue}
               onChange={(event) => {
-                onChange(
-                  items.map((value, i) => (i === itemIndex ? event.currentTarget.value : value))
-                );
+                handleInputChange(event, fieldIndex);
               }}
             />
           </div>
-          {items.length > 1 && (
+          {fields.length > 1 && (
             <IconButton
               onClick={() => {
-                onChange(items.filter((_, i) => i !== itemIndex));
+                handleRemove(fieldIndex);
               }}
             >
               <Minus />
@@ -59,12 +63,7 @@ const MultilineInput = ({ value, onChange }: Props) => {
           )}
         </div>
       ))}
-      <div
-        className={textButtonStyles.button}
-        onClick={() => {
-          onChange([...value, '']);
-        }}
-      >
+      <div className={textButtonStyles.button} onClick={handleAdd}>
         {t('add_another')}
       </div>
     </div>
