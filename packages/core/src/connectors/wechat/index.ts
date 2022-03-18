@@ -1,9 +1,6 @@
 /**
  * The Implementation of OpenID Connect of WeChat Web Open Platform.
  * https://developers.weixin.qq.com/doc/oplatform/Website_App/WeChat_Login/Wechat_Login.html
- *
- * As creating a WeChat Web/Mobile application needs a real App or Website record, the real test is temporarily not finished.
- * TODO: test with real on-record wechat mobile/web application (LOG-1910)
  */
 import { existsSync, readFileSync } from 'fs';
 import path from 'path';
@@ -47,6 +44,9 @@ export const metadata: ConnectorMetadata = {
     ? readFileSync(pathToReadmeFile, 'utf8')
     : readmeContentFallback,
 };
+
+// As creating a WeChat Web/Mobile application needs a real App or Website record, the real test is temporarily not finished.
+// TODO: test with our own wechat mobile/web application (LOG-1910), already tested with other verified wechat web application
 
 const weChatConfigGuard = z.object({ appId: z.string(), appSecret: z.string() });
 
