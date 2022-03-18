@@ -7,8 +7,9 @@ import * as Facebook from './facebook';
 import * as GitHub from './github';
 import * as Google from './google';
 import { ConnectorInstance, ConnectorType, IConnector, SocialConnectorInstance } from './types';
+import * as WeChat from './wechat';
 
-const allConnectors: IConnector[] = [AliyunDM, AliyunSMS, Facebook, GitHub, Google];
+const allConnectors: IConnector[] = [AliyunDM, AliyunSMS, Facebook, GitHub, Google, WeChat];
 
 export const getConnectorInstances = async (): Promise<ConnectorInstance[]> => {
   return Promise.all(

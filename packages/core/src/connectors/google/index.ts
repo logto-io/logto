@@ -100,10 +100,10 @@ export const getAccessToken: GetAccessToken = async (code, redirectUri) => {
 
   assertThat(accessToken, new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid));
 
-  return accessToken;
+  return { accessToken };
 };
 
-export const getUserInfo: GetUserInfo = async (accessToken: string) => {
+export const getUserInfo: GetUserInfo = async (accessTokenObject) => {
   type UserInfoResponse = {
     sub: string;
     name?: string;
@@ -114,6 +114,8 @@ export const getUserInfo: GetUserInfo = async (accessToken: string) => {
     email_verified?: boolean;
     locale?: string;
   };
+
+  const { accessToken } = accessTokenObject;
 
   try {
     const {

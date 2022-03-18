@@ -33,7 +33,7 @@ describe('getAccessToken', () => {
       scope: 'scope',
       token_type: 'token_type',
     });
-    const accessToken = await getAccessToken('code', 'dummyRedirectUri');
+    const { accessToken } = await getAccessToken('code', 'dummyRedirectUri');
     expect(accessToken).toEqual('access_token');
   });
   it('throws SocialAuthCodeInvalid error if accessToken not found in response', async () => {
@@ -66,7 +66,7 @@ describe('getUserInfo', () => {
       name: 'monalisa octocat',
       email: 'octocat@github.com',
     });
-    const socialUserInfo = await getUserInfo('code');
+    const socialUserInfo = await getUserInfo({ accessToken: 'code' });
     expect(socialUserInfo).toMatchObject({
       id: '1',
       avatar: 'https://github.com/images/error/octocat_happy.gif',
@@ -76,12 +76,12 @@ describe('getUserInfo', () => {
   });
   it('throws SocialAccessTokenInvalid error if remote response code is 401', async () => {
     nock(userInfoEndpoint).get('').reply(401);
-    await expect(getUserInfo('code')).rejects.toMatchError(
+    await expect(getUserInfo({ accessToken: 'code' })).rejects.toMatchError(
       new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid)
     );
   });
   it('throws unrecognized error', async () => {
     nock(userInfoEndpoint).get('').reply(500);
-    await expect(getUserInfo('code')).rejects.toThrow();
+    await expect(getUserInfo({ accessToken: 'code' })).rejects.toThrow();
   });
 });

@@ -62,7 +62,7 @@ describe('facebook connector', () => {
           token_type: 'token_type',
         });
 
-      const accessToken = await getAccessToken(code, dummyRedirectUri);
+      const { accessToken } = await getAccessToken(code, dummyRedirectUri);
       expect(accessToken).toEqual('access_token');
     });
 
@@ -96,7 +96,7 @@ describe('facebook connector', () => {
           picture: { data: { url: avatar } },
         });
 
-      const socialUserInfo = await getUserInfo(code);
+      const socialUserInfo = await getUserInfo({ accessToken: code });
       expect(socialUserInfo).toMatchObject({
         id: '1234567890',
         avatar,
@@ -107,14 +107,14 @@ describe('facebook connector', () => {
 
     it('throws SocialAccessTokenInvalid error if remote response code is 401', async () => {
       nock(userInfoEndpoint).get('').query({ fields }).reply(400);
-      await expect(getUserInfo(code)).rejects.toMatchError(
+      await expect(getUserInfo({ accessToken: code })).rejects.toMatchError(
         new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid)
       );
     });
 
     it('throws unrecognized error', async () => {
       nock(userInfoEndpoint).get('').reply(500);
-      await expect(getUserInfo(code)).rejects.toThrow();
+      await expect(getUserInfo({ accessToken: code })).rejects.toThrow();
     });
   });
 });
