@@ -1,0 +1,29 @@
+@use '@/scss/underscore' as _;
+
+.toastContainer {
+  position: fixed;
+  top: 50%;
+  left: 0;
+  right: 0;
+  transform: translateY(-50%);
+  @include _.flex-column;
+  padding: 0 _.unit(8);
+  pointer-events: none;
+
+  .toast {
+    padding: _.unit(2) _.unit(4);
+    font: var(--font-body);
+    color: var(--color-font-toast-text);
+    border-radius: _.unit(2);
+    max-width: none;
+    background: var(--color-dark-background);
+    min-width: _.unit(25);
+    text-align: center;
+    opacity: 0%;
+    transition: opacity 0.3s ease-in-out;
+
+    &[data-visible='true'] {
+      opacity: 100%;
+    }
+  }
+}

@@ -72,10 +72,10 @@ $font-family: 'PingFang SC', 'SF Pro Text', sans-serif;
   --color-border-disabled: #{$color-neutral-30};
   --color-control-background: #{$color-neutral-10};
   --color-control-focus: #{$color-primary-tint-60};
-  --color-control-action: #{$color-neutral-70};
-  --color-control-action-focus: #{$color-primary-tint-70};
+  --color-control-action: #{$color-neutral-50};
   --color-checkbox-border: #{$color-neutral-30};
   --color-divider: #dbdbdb;
+  --color-dark-background: #{rgba($color-neutral-100, 0.8)};
 
   /* Font Color */
   --color-font-primary: #{$color-neutral-100};
@@ -88,6 +88,7 @@ $font-family: 'PingFang SC', 'SF Pro Text', sans-serif;
   --color-font-secondary-disabled: #{rgba($color-neutral-100, 0.4)};
   --color-font-link: #{$color-primary};
   --color-font-link-secondary: #{$color-neutral-70};
+  --color-font-toast-text: #{$color-neutral-0};
 
   /* ===== Legacy Styling ===== */
   --color-heading: #333;

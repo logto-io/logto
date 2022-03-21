@@ -13,7 +13,6 @@ import useApi from '@/hooks/use-api';
 import * as styles from './index.module.scss';
 
 const SignIn: FC = () => {
-  // TODO: Consider creating cross page data modal
   const { t } = useTranslation();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
