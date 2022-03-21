@@ -58,6 +58,7 @@ const connectors = [
 ];
 const connectorMap = new Map(connectors.map((connector) => [connector.id, connector]));
 
+const findAllConnectors = jest.fn(async () => connectors);
 const findConnectorById = jest.fn(async (id: string) => {
   const connector = connectorMap.get(id);
 
@@ -72,7 +73,7 @@ const insertConnector = jest.fn(async (connector: Connector) => connector);
 
 jest.mock('@/queries/connector', () => ({
   ...jest.requireActual('@/queries/connector'),
-  findConnectorsByIds: async () => connectors,
+  findAllConnectors: async () => findAllConnectors(),
   findConnectorById: async (id: string) => findConnectorById(id),
   hasConnector: async () => hasConnector(),
   insertConnector: async (connector: Connector) => insertConnector(connector),
@@ -88,6 +89,23 @@ describe('getConnectorInstances', () => {
     expect(connectorInstances[3]).toHaveProperty('connector', githubConnector);
     expect(connectorInstances[4]).toHaveProperty('connector', googleConnector);
     expect(connectorInstances[5]).toHaveProperty('connector', wechatConnector);
+  });
+
+  test('should throw if any required connector does not exist in DB', async () => {
+    const id = 'aliyun-dm';
+    findAllConnectors.mockImplementationOnce(async () => []);
+    await expect(getConnectorInstances()).rejects.toMatchError(
+      new RequestError({ code: 'entity.not_found', id, status: 404 })
+    );
+  });
+
+  test('should access DB only once and should not throw', async () => {
+    await expect(getConnectorInstances()).resolves.not.toThrow();
+    expect(findAllConnectors).toHaveBeenCalledTimes(1);
+  });
+
+  afterEach(() => {
+    findAllConnectors.mockClear();
   });
 });
 
