@@ -1,25 +1,10 @@
 @use '@/scss/underscore' as _;
 
-.card {
-  padding: _.unit(8);
-  max-width: 800px;
+.content {
+  padding: _.unit(6) 0;
 
   > :not(:first-child) {
     margin-top: _.unit(6);
-  }
-
-  .headline {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-
-    .close {
-      cursor: pointer;
-    }
-  }
-
-  .line {
-    border-top: 1px solid var(--color-neutral-90);
   }
 
   .description {
@@ -29,13 +14,13 @@
   .hightlight {
     color: var(--color-primary-50);
   }
-
-  .actions {
-    text-align: right;
-
-    > :not(:first-child) {
-      margin-left: _.unit(4);
-    }
-  }
 }
 
+.actions {
+  display: flex;
+  justify-content: flex-end;
+
+  > :not(:first-child) {
+    margin-left: _.unit(4);
+  }
+}
