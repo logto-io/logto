@@ -5,6 +5,11 @@ import { createRequester } from '@/utils/test-utils';
 
 import signInExperiencesRoutes from './sign-in-experience';
 
+jest.mock('@/connectors', () => ({
+  ...jest.requireActual('@/connectors'),
+  getEnabledSocialConnectorIds: jest.fn(async () => ['facebook', 'github']),
+}));
+
 jest.mock('@/queries/sign-in-experience', () => ({
   findDefaultSignInExperience: jest.fn(async (): Promise<SignInExperience> => mockSignInExperience),
   updateSignInExperienceById: jest.fn(
