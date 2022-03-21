@@ -111,6 +111,7 @@ export default function adminUserRoutes<T extends AuthedRouter>(router: T) {
       body: object({
         name: string().regex(nameRegEx).optional(),
         avatar: string().url().optional(),
+        customData: arbitraryObjectGuard.optional(),
       }),
     }),
     async (ctx, next) => {
@@ -120,6 +121,12 @@ export default function adminUserRoutes<T extends AuthedRouter>(router: T) {
       } = ctx.guard;
 
       await findUserById(userId);
+
+      // Clear customData to achieve full replacement,
+      // to partial update, call patch /users/:userId/customData
+      if (body.customData) {
+        await clearUserCustomDataById(userId);
+      }
 
       const user = await updateUserById(userId, {
         ...body,

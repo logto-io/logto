@@ -167,6 +167,15 @@ describe('adminUserRoutes', () => {
     });
   });
 
+  it('PATCH /users/:userId should call clearUserCustomDataById if customData is present', async () => {
+    const updateNameResponse = await userRequest.patch('/users/foo').send({ customData: {} });
+    expect(updateNameResponse.status).toEqual(200);
+    expect(updateNameResponse.body).toEqual({
+      ...mockUserResponse,
+    });
+    expect(clearUserCustomDataById).toHaveBeenCalledTimes(1);
+  });
+
   it('PATCH /users/:userId should updated with one field if the other is undefined', async () => {
     const name = 'Micheal';
 
