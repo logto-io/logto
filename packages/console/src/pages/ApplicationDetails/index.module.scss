@@ -21,6 +21,15 @@
     margin-left: _.unit(6);
   }
 
+  .operations {
+    display: flex;
+    align-items: center;
+
+    > :not(:first-child) {
+      margin-left: _.unit(3);
+    }
+  }
+
   .metadata {
     flex: 1;
 

@@ -119,6 +119,15 @@ const translation = {
       token_endpoint: 'Token Endpoint',
       user_info_endpoint: 'User Info Endpoint',
       save_changes: 'Save Changes',
+      more_options: 'More Options',
+      options_delete: 'Delete',
+      reminder: 'Reminder',
+      delete_description:
+        'This action cannot be undone. This will permanently delete the this application. Please enter the application name <span>{{name}}</span> to proceed.',
+      enter_your_application_name: 'Enter your application name',
+      cancel: 'Cancel',
+      delete: 'Delete',
+      application_deleted: 'The application {{name}} deleted.',
     },
     api_resources: {
       title: 'API Resources',
@@ -137,7 +146,7 @@ const translation = {
       token_expiration_time_in_seconds: 'Token Expiration Time (in seconds)',
       reminder: 'Reminder',
       delete_description:
-        'This action cannot be undone. This will permanently delete the this application. Please enter the api resource name <span>{{name}}</span> to proceed.',
+        'This action cannot be undone. This will permanently delete the this API resource. Please enter the api resource name <span>{{name}}</span> to proceed.',
       enter_your_api_resource_name: 'Enter your API resource name',
       cancel: 'Cancel',
       delete: 'Delete',

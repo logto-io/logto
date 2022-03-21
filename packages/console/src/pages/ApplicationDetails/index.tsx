@@ -1,10 +1,12 @@
 import { Application } from '@logto/schemas';
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useController, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+import Modal from 'react-modal';
 import { useLocation, useParams } from 'react-router-dom';
 import useSWR from 'swr';
 
+import ActionMenu, { ActionMenuItem } from '@/components/ActionMenu';
 import BackLink from '@/components/BackLink';
 import Button from '@/components/Button';
 import Card from '@/components/Card';
@@ -15,8 +17,12 @@ import MultilineInput from '@/components/MultilineInput';
 import TabNav, { TabNavLink } from '@/components/TabNav';
 import TextInput from '@/components/TextInput';
 import { RequestError } from '@/hooks/use-api';
+import Delete from '@/icons/Delete';
+import More from '@/icons/More';
+import * as modalStyles from '@/scss/modal.module.scss';
 import { applicationTypeI18nKey } from '@/types/applications';
 
+import DeleteForm from './components/DeleteForm';
 import * as styles from './index.module.scss';
 
 // TODO LOG-1908: OidcConfig in Application Details
@@ -37,6 +43,8 @@ const ApplicationDetails = () => {
     '/oidc/.well-known/openid-configuration'
   );
   const isLoading = !data && !error && !oidcConfig && !fetchOidcConfigError;
+
+  const [isDeleteFormOpen, setIsDeleteFormOpen] = useState(false);
 
   const { control, handleSubmit, register, reset } = useForm<Application>();
 
@@ -147,8 +155,35 @@ const ApplicationDetails = () => {
                 <CopyToClipboard value={data.id} className={styles.copy} />
               </div>
             </div>
-            <div>
+            <div className={styles.operations}>
               <Button title="admin_console.application_details.check_help_guide" />
+              <ActionMenu
+                buttonProps={{ icon: <More /> }}
+                title={t('application_details.more_options')}
+              >
+                <ActionMenuItem
+                  icon={<Delete />}
+                  type="danger"
+                  onClick={() => {
+                    setIsDeleteFormOpen(true);
+                  }}
+                >
+                  {t('application_details.options_delete')}
+                </ActionMenuItem>
+              </ActionMenu>
+              <Modal
+                isOpen={isDeleteFormOpen}
+                className={modalStyles.content}
+                overlayClassName={modalStyles.overlay}
+              >
+                <DeleteForm
+                  id={data.id}
+                  name={data.name}
+                  onClose={() => {
+                    setIsDeleteFormOpen(false);
+                  }}
+                />
+              </Modal>
             </div>
           </Card>
           <Card className={styles.body}>
