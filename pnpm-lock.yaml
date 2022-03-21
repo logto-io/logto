@@ -122,6 +122,7 @@ importers:
       '@types/node': ^16.3.1
       '@types/oidc-provider': ^7.8.0
       '@types/supertest': ^2.0.11
+      copyfiles: ^2.4.1
       dayjs: ^1.10.5
       decamelize: ^5.0.0
       dotenv: ^10.0.0
@@ -197,6 +198,7 @@ importers:
       '@types/node': 16.11.12
       '@types/oidc-provider': 7.8.1
       '@types/supertest': 2.0.11
+      copyfiles: 2.4.1
       eslint: 8.10.0
       jest: 27.4.4
       jest-matcher-specific-error: 1.0.0
@@ -5006,6 +5008,19 @@ packages:
       depd: 2.0.0
       keygrip: 1.1.0
 
+  /copyfiles/2.4.1:
+    resolution: {integrity: sha512-fereAvAvxDrQDOXybk3Qu3dPbOoKoysFMWtkY3mv5BsL8//OSZVL5DCLYqgRfY5cWirgRzlC+WSrxp6Bo3eNZg==}
+    hasBin: true
+    dependencies:
+      glob: 7.2.0
+      minimatch: 3.1.2
+      mkdirp: 1.0.4
+      noms: 0.0.0
+      through2: 2.0.5
+      untildify: 4.0.0
+      yargs: 16.2.0
+    dev: true
+
   /core-js/3.19.3:
     resolution: {integrity: sha512-LeLBMgEGSsG7giquSzvgBrTS7V5UL6ks3eQlUSbN8dJStlLFiRzUm5iqsRyzUB8carhfKjkJ2vzKqE6z1Vga9g==}
     requiresBuild: true
@@ -7588,7 +7603,6 @@ packages:
 
   /isarray/0.0.1:
     resolution: {integrity: sha1-ihis/Kmo9Bd+Cav8YDiTmwXR7t8=}
-    dev: false
 
   /isarray/1.0.0:
     resolution: {integrity: sha1-u5NdSFgsuhaMBoNJV6VKPgcSTxE=}
@@ -10237,6 +10251,13 @@ packages:
     resolution: {integrity: sha512-XxYDdcQ6eKqp/YjI+tb2C5WM2LgjnZrfYg4vgQt49EK268b6gYCHsBLrK2qvJo4FmCtqmKezb0WZFK4fkrZNsg==}
     dev: true
 
+  /noms/0.0.0:
+    resolution: {integrity: sha1-2o69nzr51nYJGbJ9nNyAkqczKFk=}
+    dependencies:
+      inherits: 2.0.4
+      readable-stream: 1.0.34
+    dev: true
+
   /nopt/4.0.3:
     resolution: {integrity: sha512-CvaGwVMztSMJLOeXPrez7fyfObdZqNUK1cPAEzLHrTybIua9pMdmmPR5YwtfNftIOMv3DPUhFaxsZMNTQO20Kg==}
     hasBin: true
@@ -12130,6 +12151,15 @@ packages:
       mute-stream: 0.0.8
     dev: true
 
+  /readable-stream/1.0.34:
+    resolution: {integrity: sha1-Elgg40vIQtLyqq+v5MKRbuMsFXw=}
+    dependencies:
+      core-util-is: 1.0.3
+      inherits: 2.0.4
+      isarray: 0.0.1
+      string_decoder: 0.10.31
+    dev: true
+
   /readable-stream/2.3.7:
     resolution: {integrity: sha512-Ebho8K4jIbHAxnuxi7o42OrZgF/ZTNcsZj6nRKyUmkhLFq8CHItp/fy6hQZuZmP/n3yZ9VBUbp4zz/mX8hmYPw==}
     dependencies:
@@ -13028,6 +13058,10 @@ packages:
     dependencies:
       call-bind: 1.0.2
       define-properties: 1.1.3
+    dev: true
+
+  /string_decoder/0.10.31:
+    resolution: {integrity: sha1-YuIDvEF2bGwoyfyEMB2rHFMQ+pQ=}
     dev: true
 
   /string_decoder/1.1.1:
@@ -13965,6 +13999,11 @@ packages:
     resolution: {integrity: sha1-sr9O6FFKrmFltIF4KdIbLvSZBOw=}
     engines: {node: '>= 0.8'}
     dev: false
+
+  /untildify/4.0.0:
+    resolution: {integrity: sha512-KK8xQ1mkzZeg9inewmFVDNkg3l5LUhoq9kN6iWYB/CC9YMG8HA+c1Q8HwDe6dEX7kErrEVNVBO3fWsVq5iDgtw==}
+    engines: {node: '>=8'}
+    dev: true
 
   /upath/2.0.1:
     resolution: {integrity: sha512-1uEe95xksV1O0CYKXo8vQvN1JEbtJp7lb7C5U9HMsIp6IVwntkH/oNUzyVNQSd4S1sYk2FpSSW44FqMc8qee5w==}
