@@ -4,7 +4,7 @@ import { object, string } from 'zod';
 import {
   getConnectorInstances,
   getConnectorInstanceById,
-  getConnectorInstanceByType,
+  getEnabledPasswordlessConnectorInstanceByType,
 } from '@/connectors';
 import {
   ConnectorInstance,
@@ -137,7 +137,7 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
     async (ctx, next) => {
       const { email } = ctx.guard.body;
 
-      const connector = await getConnectorInstanceByType<EmailConnectorInstance>(
+      const connector = await getEnabledPasswordlessConnectorInstanceByType<EmailConnectorInstance>(
         ConnectorType.Email
       );
 
@@ -162,7 +162,9 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
     async (ctx, next) => {
       const { phone } = ctx.guard.body;
 
-      const connector = await getConnectorInstanceByType<SmsConnectorInstance>(ConnectorType.SMS);
+      const connector = await getEnabledPasswordlessConnectorInstanceByType<SmsConnectorInstance>(
+        ConnectorType.SMS
+      );
 
       // TODO - LOG-1875: SMS & Email Template for Test
       await connector.sendMessage(phone, 'Test', {

@@ -59,8 +59,8 @@ export const getSocialConnectorInstanceById = async (
   return connector;
 };
 
-export const getConnectorInstanceByType = async <T extends ConnectorInstance>(
-  type: ConnectorType
+export const getEnabledPasswordlessConnectorInstanceByType = async <T extends ConnectorInstance>(
+  type: ConnectorType.Email | ConnectorType.SMS
 ): Promise<T> => {
   const connectors = await getConnectorInstances();
   const connector = connectors

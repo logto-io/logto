@@ -3,7 +3,7 @@ import { NotFoundError } from 'slonik';
 
 import {
   getConnectorInstanceById,
-  getConnectorInstanceByType,
+  getEnabledPasswordlessConnectorInstanceByType,
   getConnectorInstances,
   getSocialConnectorInstanceById,
   initConnectors,
@@ -120,13 +120,15 @@ describe('getSocialConnectorInstanceById', () => {
 
 describe('getConnectorInstanceByType', () => {
   test('should return the enabled connector existing in DB', async () => {
-    const dmEnabledConnectorInstance = await getConnectorInstanceByType(ConnectorType.Email);
+    const dmEnabledConnectorInstance = await getEnabledPasswordlessConnectorInstanceByType(
+      ConnectorType.Email
+    );
     expect(dmEnabledConnectorInstance).toHaveProperty('connector', aliyunDmConnector);
   });
 
   test('should throw when there is no enabled connector existing in DB', async () => {
     const type = ConnectorType.SMS;
-    await expect(getConnectorInstanceByType(type)).rejects.toMatchError(
+    await expect(getEnabledPasswordlessConnectorInstanceByType(type)).rejects.toMatchError(
       new RequestError('connector.not_found', { type })
     );
   });

@@ -28,7 +28,7 @@ const findConnectorByIdPlaceHolder = jest.fn() as jest.MockedFunction<
 const getConnectorInstanceByIdPlaceHolder = jest.fn() as jest.MockedFunction<
   (connectorId: string) => Promise<ConnectorInstance>
 >;
-const getConnectorInstanceByTypePlaceHolder = jest.fn() as jest.MockedFunction<
+const getEnabledPasswordlessConnectorInstanceByTypePlaceHolder = jest.fn() as jest.MockedFunction<
   (type: ConnectorType) => Promise<ConnectorInstance>
 >;
 const getConnectorInstancesPlaceHolder = jest.fn() as jest.MockedFunction<
@@ -43,8 +43,8 @@ jest.mock('@/queries/connector', () => ({
 jest.mock('@/connectors', () => ({
   getConnectorInstanceById: async (connectorId: string) =>
     getConnectorInstanceByIdPlaceHolder(connectorId),
-  getConnectorInstanceByType: async (type: ConnectorType) =>
-    getConnectorInstanceByTypePlaceHolder(type),
+  getEnabledPasswordlessConnectorInstanceByType: async (type: ConnectorType) =>
+    getEnabledPasswordlessConnectorInstanceByTypePlaceHolder(type),
   getConnectorInstances: async () => getConnectorInstancesPlaceHolder(),
 }));
 
@@ -502,15 +502,19 @@ describe('connector route', () => {
         ): Promise<any> => {},
       };
 
-      getConnectorInstanceByTypePlaceHolder.mockImplementationOnce(async (_: ConnectorType) => {
-        return mockedEmailConnector;
-      });
+      getEnabledPasswordlessConnectorInstanceByTypePlaceHolder.mockImplementationOnce(
+        async (_: ConnectorType) => {
+          return mockedEmailConnector;
+        }
+      );
 
       const sendMessageSpy = jest.spyOn(mockedEmailConnector, 'sendMessage');
       const response = await connectorRequest
         .post('/connectors/test/email')
         .send({ email: 'test@email.com' });
-      expect(getConnectorInstanceByTypePlaceHolder).toHaveBeenCalledWith(ConnectorType.Email);
+      expect(getEnabledPasswordlessConnectorInstanceByTypePlaceHolder).toHaveBeenCalledWith(
+        ConnectorType.Email
+      );
       expect(sendMessageSpy).toHaveBeenCalledTimes(1);
       expect(response).toHaveProperty('statusCode', 204);
     });
@@ -547,15 +551,19 @@ describe('connector route', () => {
         ): Promise<any> => {},
       };
 
-      getConnectorInstanceByTypePlaceHolder.mockImplementationOnce(async (_: ConnectorType) => {
-        return mockedEmailConnector;
-      });
+      getEnabledPasswordlessConnectorInstanceByTypePlaceHolder.mockImplementationOnce(
+        async (_: ConnectorType) => {
+          return mockedEmailConnector;
+        }
+      );
 
       const sendMessageSpy = jest.spyOn(mockedEmailConnector, 'sendMessage');
       const response = await connectorRequest
         .post('/connectors/test/sms')
         .send({ phone: '12345678901' });
-      expect(getConnectorInstanceByTypePlaceHolder).toHaveBeenCalledWith(ConnectorType.SMS);
+      expect(getEnabledPasswordlessConnectorInstanceByTypePlaceHolder).toHaveBeenCalledWith(
+        ConnectorType.SMS
+      );
       expect(sendMessageSpy).toHaveBeenCalledTimes(1);
       expect(response).toHaveProperty('statusCode', 204);
     });
