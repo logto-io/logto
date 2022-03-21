@@ -1,6 +1,7 @@
 import { SignInExperiences } from '@logto/schemas';
 import { object, string } from 'zod';
 
+import { getEnabledSocialConnectorIds } from '@/connectors';
 import koaGuard from '@/middleware/koa-guard';
 import {
   findDefaultSignInExperience,
@@ -16,7 +17,16 @@ export default function signInExperiencesRoutes<T extends AuthedRouter>(router: 
    */
   router.get('/sign-in-exp', async (ctx, next) => {
     const signInExperience = await findDefaultSignInExperience();
-    ctx.body = signInExperience;
+    const { socialSignInConnectorIds: selectedSocialSignInConnectorIds } = signInExperience;
+    const enabledSocialConnectorIds = new Set(await getEnabledSocialConnectorIds());
+    const socialSignInConnectorIds = selectedSocialSignInConnectorIds.filter((id) =>
+      enabledSocialConnectorIds.has(id)
+    );
+
+    ctx.body = {
+      ...signInExperience,
+      socialSignInConnectorIds,
+    };
 
     return next();
   });
