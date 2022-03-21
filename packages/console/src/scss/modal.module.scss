@@ -1,16 +1,27 @@
-.content {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  outline: none;
-}
+@use '@/scss/underscore' as _;
 
 .overlay {
   position: fixed;
   background: rgba(0, 0, 0, 40%);
   inset: 0;
   overflow-y: auto;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 0 0;
+  min-height: 100%;
+}
+
+// paddings in scroll view
+.content::after,
+.content::before {
+  flex: 1 0 _.unit(12);
+  content: '';
+  display: block;
+  width: 100%;
 }
 
 .fullScreen {
