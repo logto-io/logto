@@ -1,5 +1,10 @@
 import RequestError from '@/errors/RequestError';
-import { findConnectorById, hasConnector, insertConnector } from '@/queries/connector';
+import {
+  findAllConnectors,
+  findConnectorById,
+  hasConnector,
+  insertConnector,
+} from '@/queries/connector';
 
 import * as AliyunDM from './aliyun-dm';
 import * as AliyunSMS from './aliyun-sms';
@@ -12,13 +17,19 @@ import * as WeChat from './wechat';
 const allConnectors: IConnector[] = [AliyunDM, AliyunSMS, Facebook, GitHub, Google, WeChat];
 
 export const getConnectorInstances = async (): Promise<ConnectorInstance[]> => {
-  return Promise.all(
-    allConnectors.map(async (element) => {
-      const connector = await findConnectorById(element.metadata.id);
+  const connectors = await findAllConnectors();
+  const connectorMap = new Map(connectors.map((connector) => [connector.id, connector]));
 
-      return { connector, ...element };
-    })
-  );
+  return allConnectors.map((element) => {
+    const { id } = element.metadata;
+    const connector = connectorMap.get(id);
+
+    if (!connector) {
+      throw new RequestError({ code: 'entity.not_found', id, status: 404 });
+    }
+
+    return { connector, ...element };
+  });
 };
 
 export const getConnectorInstanceById = async (id: string): Promise<ConnectorInstance> => {
