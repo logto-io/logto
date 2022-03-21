@@ -61,14 +61,18 @@ const DeleteForm = ({ id, name, onClose }: Props) => {
       onClose={onClose}
     >
       <div className={styles.content}>
-        <div className={styles.description}>
-          <Trans
-            t={t}
-            i18nKey="api_resource_details.delete_description"
-            values={{ name }}
-            components={{ span: <span className={styles.hightlight} /> }}
-          />
-        </div>
+        {[...Array.from({ length: 10 }).keys()].map((index) => {
+          return (
+            <div key={index} className={styles.description}>
+              <Trans
+                t={t}
+                i18nKey="api_resource_details.delete_description"
+                values={{ name }}
+                components={{ span: <span className={styles.hightlight} /> }}
+              />
+            </div>
+          );
+        })}
         <TextInput
           value={inputName}
           placeholder={t('api_resource_details.enter_your_api_resource_name')}

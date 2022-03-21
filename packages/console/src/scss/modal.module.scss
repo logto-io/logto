@@ -5,7 +5,7 @@
   background: rgba(0, 0, 0, 40%);
   inset: 0;
   overflow-y: auto;
-  padding: 64px 0;
+  padding: _.unit(12) 0;
 }
 
 .content {
