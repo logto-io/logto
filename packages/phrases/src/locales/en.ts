@@ -156,7 +156,7 @@ const translation = {
     connectors: {
       title: 'Connectors',
       subtitle: 'Setup connectors to enable passwordless and social sign in experience.',
-      create: 'Add Connector',
+      create: 'Add social connector',
       set_up: 'Set Up',
       tab_email_sms: 'Email and SMS connectors',
       tab_social: 'Social connectors',
@@ -166,10 +166,16 @@ const translation = {
       connector_status_enabled: 'Enabled',
       connector_status_disabled: 'Disabled',
       social_connector_eg: 'e.g.: Google, Facebook, Twitter',
+      next: 'Next',
       type: {
         email: 'Email Sender',
         sms: 'SMS Sender',
         social: 'Social',
+      },
+      setup_title: {
+        email: 'Setup email sender',
+        sms: 'Setup SMS sender',
+        social: 'Add social connector',
       },
     },
     connector_details: {

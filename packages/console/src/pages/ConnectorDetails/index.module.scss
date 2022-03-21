@@ -22,6 +22,15 @@
     border-radius: _.unit(4);
   }
 
+  .operations {
+    display: flex;
+    align-items: center;
+
+    > *:not(:first-child) {
+      margin-left: _.unit(2);
+    }
+  }
+
   .metadata {
     flex: 1;
 

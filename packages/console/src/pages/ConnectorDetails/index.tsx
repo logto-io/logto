@@ -17,7 +17,11 @@ import Status from '@/components/Status';
 import TabNav, { TabNavLink } from '@/components/TabNav';
 import UnnamedTrans from '@/components/UnnamedTrans';
 import useApi, { RequestError } from '@/hooks/use-api';
+import Delete from '@/icons/Delete';
+import More from '@/icons/More';
+import Reset from '@/icons/Reset';
 
+import SetupModal from '../Connectors/components/SetupModal';
 import SenderTester from './components/SenderTester';
 import * as styles from './index.module.scss';
 
@@ -27,6 +31,7 @@ const ConnectorDetails = () => {
   const [config, setConfig] = useState<string>();
   const [saveError, setSaveError] = useState<string>();
   const [isSubmitLoading, setIsSubmitLoading] = useState(false);
+  const [isSetupOpen, setIsSetupOpen] = useState(false);
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { data, error } = useSWR<ConnectorDTO, RequestError>(
     connectorId && `/api/connectors/${connectorId}`
@@ -96,7 +101,7 @@ const ConnectorDetails = () => {
               </Status>
             </div>
           </div>
-          <div>
+          <div className={styles.operations}>
             <Button
               title="admin_console.connector_details.check_readme"
               onClick={() => {
@@ -112,17 +117,34 @@ const ConnectorDetails = () => {
               <Markdown>{data.metadata.readme}</Markdown>
             </Drawer>
             <ActionMenu
-              buttonProps={{ title: 'admin_console.connector_details.options' }}
+              buttonProps={{ icon: <More /> }}
               title={t('connector_details.more_options')}
             >
-              {data.metadata.type === ConnectorType.SMS && (
-                <ActionMenuItem>{t('connector_details.options_change_sms')}</ActionMenuItem>
+              {data.metadata.type !== ConnectorType.Social && (
+                <ActionMenuItem
+                  icon={<Reset />}
+                  onClick={() => {
+                    setIsSetupOpen(true);
+                  }}
+                >
+                  {t(
+                    data.metadata.type === ConnectorType.SMS
+                      ? 'connector_details.options_change_sms'
+                      : 'connector_details.options_change_email'
+                  )}
+                </ActionMenuItem>
               )}
-              {data.metadata.type === ConnectorType.Email && (
-                <ActionMenuItem>{t('connector_details.options_change_email')}</ActionMenuItem>
-              )}
-              <ActionMenuItem>{t('connector_details.options_delete')}</ActionMenuItem>
+              <ActionMenuItem icon={<Delete />}>
+                {t('connector_details.options_delete')}
+              </ActionMenuItem>
             </ActionMenu>
+            <SetupModal
+              isOpen={isSetupOpen}
+              type={data.metadata.type}
+              onClose={() => {
+                setIsSetupOpen(false);
+              }}
+            />
           </div>
         </Card>
       )}
