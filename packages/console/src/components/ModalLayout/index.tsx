@@ -13,7 +13,7 @@ type Props = {
   subtitle?: AdminConsoleKey;
   children: ReactNode;
   footer?: ReactNode;
-  onClose: () => void;
+  onClose?: () => void;
 };
 
 const ModalLayout = ({ title, subtitle, children, footer, onClose }: Props) => {
@@ -21,9 +21,15 @@ const ModalLayout = ({ title, subtitle, children, footer, onClose }: Props) => {
     <Card className={styles.container}>
       <div className={styles.header}>
         <CardTitle title={title} subtitle={subtitle} />
-        <IconButton onClick={onClose}>
-          <Close />
-        </IconButton>
+        {onClose && (
+          <IconButton
+            onClick={() => {
+              onClose();
+            }}
+          >
+            <Close />
+          </IconButton>
+        )}
       </div>
       <div>{children}</div>
       {footer && <div className={styles.footer}>{footer}</div>}
