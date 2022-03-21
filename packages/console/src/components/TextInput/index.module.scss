@@ -28,6 +28,12 @@
       color: var(--color-disabled);
       border-color: var(--color-disabled);
     }
+
+    &:read-only {
+      background: var(--color-surface);
+      color: var(--color-readonly);
+      border-color: var(--color-disabled);
+    }
   }
 
   &.error input {
