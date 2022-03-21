@@ -12,8 +12,8 @@ jest.mock('@/connectors', () => ({
 
 jest.mock('@/queries/sign-in-experience', () => ({
   findDefaultSignInExperience: jest.fn(async (): Promise<SignInExperience> => mockSignInExperience),
-  updateSignInExperienceById: jest.fn(
-    async (_, data: Partial<CreateSignInExperience>): Promise<SignInExperience> => ({
+  updateDefaultSignInExperience: jest.fn(
+    async (data: Partial<CreateSignInExperience>): Promise<SignInExperience> => ({
       ...mockSignInExperience,
       ...data,
     })
@@ -29,7 +29,7 @@ describe('signInExperiences routes', () => {
     expect(response.body).toEqual(mockSignInExperience);
   });
 
-  it('PATCH /sign-in-exp/:id', async () => {
+  it('PATCH /sign-in-exp', async () => {
     const branding: Branding = {
       primaryColor: '#000',
       backgroundColor: '#fff',
@@ -43,7 +43,7 @@ describe('signInExperiences routes', () => {
 
     const socialSignInConnectorIds = ['abc', 'def'];
 
-    const response = await signInExperienceRequester.patch('/sign-in-exp/default').send({
+    const response = await signInExperienceRequester.patch('/sign-in-exp').send({
       branding,
       socialSignInConnectorIds,
     });
@@ -56,10 +56,10 @@ describe('signInExperiences routes', () => {
     });
   });
 
-  it('PATCH /sign-in-exp/:id should throw with invalid inputs', async () => {
+  it('PATCH /sign-in-exp should throw with invalid inputs', async () => {
     const socialSignInConnectorIds = [123, 456];
 
-    const response = await signInExperienceRequester.patch('/sign-in-exp/default').send({
+    const response = await signInExperienceRequester.patch('/sign-in-exp').send({
       socialSignInConnectorIds,
     });
     expect(response.status).toEqual(400);
