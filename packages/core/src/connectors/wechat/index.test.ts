@@ -43,7 +43,7 @@ describe('getAccessToken', () => {
     nock(accessTokenEndpointUrl.origin)
       .get(accessTokenEndpointUrl.pathname)
       .query(parameters)
-      .reply(200, {
+      .reply(0, {
         access_token: 'access_token',
         openid: 'openid',
       });
@@ -56,7 +56,7 @@ describe('getAccessToken', () => {
     nock(accessTokenEndpointUrl.origin)
       .get(accessTokenEndpointUrl.pathname)
       .query(parameters)
-      .reply(200, {});
+      .reply(0, {});
     await expect(getAccessToken('code')).rejects.toMatchError(
       new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid)
     );
@@ -84,14 +84,11 @@ describe('getUserInfo', () => {
   const parameters = new URLSearchParams({ access_token: 'accessToken', openid: 'openid' });
 
   it('should get valid SocialUserInfo', async () => {
-    nock(userInfoEndpointUrl.origin)
-      .get(userInfoEndpointUrl.pathname)
-      .query(parameters)
-      .reply(200, {
-        unionid: 'this_is_an_arbitrary_wechat_union_id',
-        headimgurl: 'https://github.com/images/error/octocat_happy.gif',
-        nickname: 'wechat bot',
-      });
+    nock(userInfoEndpointUrl.origin).get(userInfoEndpointUrl.pathname).query(parameters).reply(0, {
+      unionid: 'this_is_an_arbitrary_wechat_union_id',
+      headimgurl: 'https://github.com/images/error/octocat_happy.gif',
+      nickname: 'wechat bot',
+    });
     const socialUserInfo = await getUserInfo({ accessToken: 'accessToken', openid: 'openid' });
     expect(socialUserInfo).toMatchObject({
       id: 'this_is_an_arbitrary_wechat_union_id',
@@ -119,7 +116,7 @@ describe('getUserInfo', () => {
     nock(userInfoEndpointUrl.origin)
       .get(userInfoEndpointUrl.pathname)
       .query(parameters)
-      .reply(200, { errcode: 40_003, errmsg: 'invalid openid' });
+      .reply(0, { errcode: 40_003, errmsg: 'invalid openid' });
     await expect(
       getUserInfo({ accessToken: 'accessToken', openid: 'openid' })
     ).rejects.toMatchError(new Error('invalid openid'));
