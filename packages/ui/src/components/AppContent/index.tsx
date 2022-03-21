@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import React, { ReactNode, useState, useMemo } from 'react';
+import React, { ReactNode, useState, useMemo, useCallback } from 'react';
 
 import PageContext from '@/hooks/page-context';
 
@@ -19,9 +19,10 @@ const AppContent = ({ children, theme }: Props) => {
 
   const context = useMemo(() => ({ toast, loading, setLoading, setToast }), [loading, toast]);
 
-  const hideToast = () => {
+  // Prevent internal eventListener rebind
+  const hideToast = useCallback(() => {
     setToast('');
-  };
+  }, []);
 
   return (
     <PageContext.Provider value={context}>

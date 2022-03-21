@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 
 import * as styles from './index.module.scss';
 
@@ -13,14 +13,14 @@ const Toast = ({ message, isVisible = false, duration = 3000, callback }: Props)
   const toastElement = useRef<HTMLDivElement>(null);
   const [show, setShow] = useState(false);
 
-  const callbackHandler = () => {
+  const callbackHandler = useCallback(() => {
     // Only execute on hide transitionend event
     if (toastElement.current?.dataset.visible === 'true') {
       return;
     }
 
     callback?.();
-  };
+  }, [callback]);
 
   useEffect(() => {
     if (!isVisible) {
