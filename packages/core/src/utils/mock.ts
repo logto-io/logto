@@ -181,7 +181,7 @@ export const mockSignInExperience: SignInExperience = {
     sms: SignInMethodState.disabled,
     social: SignInMethodState.secondary,
   },
-  socialSignInConnectorIds: ['foo', 'bar'],
+  socialSignInConnectorIds: ['github', 'facebook'],
 };
 
 export const mockConnectorList: Connector[] = [
