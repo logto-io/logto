@@ -1,5 +1,4 @@
 import { AdminConsoleKey } from '@logto/phrases';
-import classNames from 'classnames';
 import React, { ReactNode } from 'react';
 
 import Close from '@/icons/Close';
@@ -12,20 +11,12 @@ import * as styles from './index.module.scss';
 type Props = {
   title: AdminConsoleKey;
   subtitle?: AdminConsoleKey;
-  hasFootDecoration?: boolean;
+  children: ReactNode;
+  footer?: ReactNode;
   onClose: () => void;
-  content: () => ReactNode;
-  footer: () => ReactNode;
 };
 
-const ModalLayout = ({
-  title,
-  subtitle,
-  hasFootDecoration = true,
-  onClose,
-  content,
-  footer,
-}: Props) => {
+const ModalLayout = ({ title, subtitle, children, footer, onClose }: Props) => {
   return (
     <Card className={styles.container}>
       <div className={styles.header}>
@@ -34,10 +25,8 @@ const ModalLayout = ({
           <Close />
         </IconButton>
       </div>
-      <div>{content()}</div>
-      <div className={classNames(styles.footer, hasFootDecoration && styles.footDecoration)}>
-        {footer()}
-      </div>
+      <div>{children}</div>
+      {footer && <div className={styles.footer}>{footer}</div>}
     </Card>
   );
 };

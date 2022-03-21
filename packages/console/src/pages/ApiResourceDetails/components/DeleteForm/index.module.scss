@@ -1,6 +1,8 @@
 @use '@/scss/underscore' as _;
 
 .content {
+  padding: _.unit(6) 0;
+
   > :not(:first-child) {
     margin-top: _.unit(6);
   }

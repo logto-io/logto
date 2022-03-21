@@ -4,10 +4,6 @@
   padding: _.unit(8);
   max-width: 800px;
 
-  > :not(:first-child) {
-    margin-top: _.unit(6);
-  }
-
   .header {
     display: flex;
     align-items: flex-start;
@@ -16,9 +12,6 @@
 
   .footer {
     padding-top: _.unit(6);
-  }
-
-  .footDecoration {
     border-top: 1px solid var(--color-neutral-90);
   }
 }

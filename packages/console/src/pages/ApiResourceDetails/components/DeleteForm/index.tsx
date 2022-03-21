@@ -43,27 +43,7 @@ const DeleteForm = ({ id, name, onClose }: Props) => {
   return (
     <ModalLayout
       title="api_resource_details.reminder"
-      content={() => (
-        <div className={styles.content}>
-          <div className={styles.description}>
-            <Trans
-              t={t}
-              i18nKey="api_resource_details.delete_description"
-              values={{ name }}
-              components={{ span: <span className={styles.hightlight} /> }}
-            />
-          </div>
-          <TextInput
-            value={inputName}
-            placeholder={t('api_resource_details.enter_your_api_resource_name')}
-            hasError={inputMismatched}
-            onChange={(event) => {
-              setInputName(event.currentTarget.value);
-            }}
-          />
-        </div>
-      )}
-      footer={() => (
+      footer={
         <div className={styles.actions}>
           <Button
             type="outline"
@@ -77,9 +57,28 @@ const DeleteForm = ({ id, name, onClose }: Props) => {
             onClick={handleDelete}
           />
         </div>
-      )}
+      }
       onClose={onClose}
-    />
+    >
+      <div className={styles.content}>
+        <div className={styles.description}>
+          <Trans
+            t={t}
+            i18nKey="api_resource_details.delete_description"
+            values={{ name }}
+            components={{ span: <span className={styles.hightlight} /> }}
+          />
+        </div>
+        <TextInput
+          value={inputName}
+          placeholder={t('api_resource_details.enter_your_api_resource_name')}
+          hasError={inputMismatched}
+          onChange={(event) => {
+            setInputName(event.currentTarget.value);
+          }}
+        />
+      </div>
+    </ModalLayout>
   );
 };
 
