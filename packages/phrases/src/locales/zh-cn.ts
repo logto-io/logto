@@ -197,6 +197,7 @@ const translation = {
       options_change_email: '更换邮件服务商',
       options_change_sms: '更换短信服务商',
       more_options: '更多选项',
+      connector_deleted: '成功删除连接器。',
     },
     users: {
       title: '用户管理',
