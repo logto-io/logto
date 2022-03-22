@@ -87,9 +87,9 @@ export const getConnectorInstanceByType = async <T extends ConnectorInstance>(
   type: ConnectorType
 ): Promise<T> => {
   const connectors = await getConnectorInstances();
-  const connector = connectors
-    .filter((connector) => connector.connector.enabled)
-    .find<T>((connector): connector is T => connector.metadata.type === type);
+  const connector = connectors.find<T>(
+    (connector): connector is T => connector.connector.enabled && connector.metadata.type === type
+  );
 
   if (!connector) {
     throw new RequestError('connector.not_found', { type });
