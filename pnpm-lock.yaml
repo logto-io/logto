@@ -36,6 +36,7 @@ importers:
       '@types/react-dom': ^17.0.9
       '@types/react-modal': ^3.13.1
       classnames: ^2.3.1
+      copyfiles: ^2.4.1
       csstype: ^3.0.11
       eslint: ^8.10.0
       i18next: ^21.6.12
@@ -95,6 +96,7 @@ importers:
       '@types/react': 17.0.37
       '@types/react-dom': 17.0.11
       '@types/react-modal': 3.13.1
+      copyfiles: 2.4.1
       eslint: 8.10.0
       lint-staged: 11.2.6
       parcel: 2.3.2_postcss@8.4.6

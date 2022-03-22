@@ -8,10 +8,11 @@
   "scripts": {
     "preinstall": "npx only-allow pnpm",
     "precommit": "lint-staged",
-    "start": "parcel src/index.html",
-    "dev": "PORT=5002 parcel src/index.html --public-url /console --no-hmr --no-cache",
+    "copyfiles": "copyfiles -u 1 public/**/*.* dist",
+    "start": "pnpm copyfiles && parcel src/index.html",
+    "dev": "pnpm copyfiles && PORT=5002 parcel src/index.html --public-url /console --no-hmr --no-cache",
     "check": "tsc --noEmit",
-    "build": "pnpm check && rm -rf dist && parcel build src/index.html --no-autoinstall --public-url /console",
+    "build": "pnpm check && rm -rf dist && pnpm copyfiles && parcel build src/index.html --no-autoinstall --public-url /console",
     "lint": "eslint --ext .ts --ext .tsx src",
     "stylelint": "stylelint \"src/**/*.scss\""
   },
@@ -50,6 +51,7 @@
     "@types/react": "^17.0.14",
     "@types/react-dom": "^17.0.9",
     "@types/react-modal": "^3.13.1",
+    "copyfiles": "^2.4.1",
     "eslint": "^8.10.0",
     "lint-staged": "^11.1.1",
     "parcel": "^2.3.2",
