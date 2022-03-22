@@ -1,4 +1,12 @@
-import React, { useMemo } from 'react';
+import React, { useEffect } from 'react';
+import {
+  UseFormRegister,
+  FieldValues,
+  Control,
+  ArrayPath,
+  useFieldArray,
+  RegisterOptions,
+} from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
 import * as textButtonStyles from '@/components/TextButton/index.module.scss';
@@ -8,52 +16,45 @@ import IconButton from '../IconButton';
 import TextInput from '../TextInput';
 import * as styles from './index.module.scss';
 
-type Props = {
-  value: string[];
-  onChange: (value: string[]) => void;
+type Props<T extends FieldValues = FieldValues> = {
+  name: ArrayPath<T>;
+  register: UseFormRegister<T>;
+  options?: RegisterOptions;
+  control: Control<T>;
 };
 
-const MultilineInput = ({ value, onChange }: Props) => {
+const MultilineInput = <T extends FieldValues = FieldValues>({
+  name,
+  register,
+  options,
+  control,
+}: Props<T>) => {
   const { t } = useTranslation(undefined, {
     keyPrefix: 'general',
   });
 
-  const fields = useMemo(() => {
-    if (value.length === 0) {
-      return [''];
+  const { fields, append, remove } = useFieldArray({ control, name });
+
+  useEffect(() => {
+    if (fields.length === 0) {
+      // @ts-expect-error: FIXME
+      append('');
     }
-
-    return value;
-  }, [value]);
-
-  const handleAdd = () => {
-    onChange([...fields, '']);
-  };
-
-  const handleRemove = (index: number) => {
-    onChange(fields.filter((_, i) => i !== index));
-  };
-
-  const handleInputChange = (event: React.FormEvent<HTMLInputElement>, index: number) => {
-    onChange(fields.map((value, i) => (i === index ? event.currentTarget.value : value)));
-  };
+  }, [fields, append]);
 
   return (
     <div className={styles.multilineInput}>
-      {fields.map((fieldValue, fieldIndex) => (
-        // eslint-disable-next-line react/no-array-index-key
-        <div key={fieldIndex} className={styles.deletableInput}>
+      {fields.map((field, index) => (
+        <div key={field.id} className={styles.deletableInput}>
           <TextInput
+            // @ts-expect-error: https://stackoverflow.com/questions/66967241/argument-of-type-string-is-not-assignable-to-parameter-of-type-string
+            {...register(`${name}.${index}`, options)}
             className={styles.textField}
-            value={fieldValue}
-            onChange={(event) => {
-              handleInputChange(event, fieldIndex);
-            }}
           />
-          {fields.length > 1 && (
+          {index > 0 && (
             <IconButton
               onClick={() => {
-                handleRemove(fieldIndex);
+                remove(index);
               }}
             >
               <Minus />
@@ -61,7 +62,13 @@ const MultilineInput = ({ value, onChange }: Props) => {
           )}
         </div>
       ))}
-      <div className={textButtonStyles.button} onClick={handleAdd}>
+      <div
+        className={textButtonStyles.button}
+        onClick={() => {
+          // @ts-expect-error: FIXME
+          append('');
+        }}
+      >
         {t('add_another')}
       </div>
     </div>

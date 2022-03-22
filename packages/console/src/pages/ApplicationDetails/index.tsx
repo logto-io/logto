@@ -1,6 +1,6 @@
 import { Application } from '@logto/schemas';
 import React, { useEffect, useMemo, useState } from 'react';
-import { useController, useForm } from 'react-hook-form';
+import { useForm, ArrayPath } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import Modal from 'react-modal';
 import { useLocation, useParams } from 'react-router-dom';
@@ -21,6 +21,7 @@ import Delete from '@/icons/Delete';
 import More from '@/icons/More';
 import * as modalStyles from '@/scss/modal.module.scss';
 import { applicationTypeI18nKey } from '@/types/applications';
+import { noSpaceRegex } from '@/utilities/regex';
 
 import DeleteForm from './components/DeleteForm';
 import * as styles from './index.module.scss';
@@ -46,7 +47,7 @@ const ApplicationDetails = () => {
 
   const [isDeleteFormOpen, setIsDeleteFormOpen] = useState(false);
 
-  const { control, handleSubmit, register, reset } = useForm<Application>();
+  const { handleSubmit, register, reset, control } = useForm<Application>();
 
   useEffect(() => {
     if (!data) {
@@ -55,22 +56,6 @@ const ApplicationDetails = () => {
 
     reset(data);
   }, [data, reset]);
-
-  const {
-    field: { value: redirectUris, onChange: onRedirectUriChange },
-  } = useController({
-    control,
-    name: 'oidcClientMetadata.redirectUris',
-    defaultValue: [],
-  });
-
-  const {
-    field: { value: postSignOutRedirectUris, onChange: onPostSignOutRedirectUriChange },
-  } = useController({
-    control,
-    name: 'oidcClientMetadata.postLogoutRedirectUris',
-    defaultValue: [],
-  });
 
   const onSubmit = handleSubmit((formData) => {
     console.log(formData);
@@ -95,32 +80,24 @@ const ApplicationDetails = () => {
             />
           </FormField>
           <FormField title="admin_console.application_details.redirect_uri">
-            <MultilineInput
-              value={redirectUris}
-              onChange={(value) => {
-                onRedirectUriChange(value);
-              }}
+            <MultilineInput<Application>
+              name={'oidcClientMetadata.redirectUris' as ArrayPath<Application>}
+              register={register}
+              options={{ pattern: noSpaceRegex }}
+              control={control}
             />
           </FormField>
           <FormField title="admin_console.application_details.post_sign_out_redirect_uri">
-            <MultilineInput
-              value={postSignOutRedirectUris}
-              onChange={(value) => {
-                onPostSignOutRedirectUriChange(value);
-              }}
+            <MultilineInput<Application>
+              name={'oidcClientMetadata.postLogoutRedirectUris' as ArrayPath<Application>}
+              register={register}
+              control={control}
             />
           </FormField>
         </>
       )
     );
-  }, [
-    oidcConfig,
-    onPostSignOutRedirectUriChange,
-    onRedirectUriChange,
-    postSignOutRedirectUris,
-    redirectUris,
-    register,
-  ]);
+  }, [oidcConfig, register, control]);
 
   const AdvancedSettingsPage = useMemo(() => {
     return (
