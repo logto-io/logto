@@ -1,0 +1,45 @@
+@use '@/scss/underscore' as _;
+
+.table {
+  thead {
+    th {
+      padding: _.unit(2);
+    }
+
+    th:first-child {
+      padding-left: _.unit(4);
+    }
+  }
+
+  tbody {
+    tr {
+      td {
+        padding: _.unit(2);
+        font: var(--font-body-2);
+
+        &:first-child {
+          padding-left: _.unit(4);
+        }
+
+        &:last-child {
+          padding-left: _.unit(4);
+        }
+      }
+    }
+  }
+
+  .connectorName {
+    display: flex;
+    align-items: center;
+
+    img {
+      width: 32px;
+      height: 32px;
+      border-radius: _.unit(2);
+    }
+
+    .name {
+      margin-left: _.unit(3);
+    }
+  }
+}

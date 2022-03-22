@@ -27,6 +27,7 @@ import { safeParseJson } from '@/utilities/json';
 import CreateSuccess from './components/CreateSuccess';
 import DeleteForm from './components/DeleteForm';
 import ResetPasswordForm from './components/ResetPasswordForm';
+import UserConnectors from './components/UserConnectors';
 import * as styles from './index.module.scss';
 
 type FormData = {
@@ -206,6 +207,18 @@ const UserDetails = () => {
                   className={styles.textField}
                 >
                   <TextInput readOnly {...register('roles')} />
+                </FormField>
+                <FormField
+                  title="admin_console.user_details.field_connectors"
+                  className={styles.textField}
+                >
+                  <UserConnectors
+                    userId={data.id}
+                    connectors={data.identities}
+                    onDelete={() => {
+                      void mutate();
+                    }}
+                  />
                 </FormField>
                 <FormField
                   isRequired

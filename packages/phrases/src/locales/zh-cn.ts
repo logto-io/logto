@@ -237,6 +237,12 @@ const translation = {
       custom_data_invalid: '自定义数据必须是有效的 JSON',
       save_changes: '保存设置',
       saved: '保存成功!',
+      connectors: {
+        connectors: '连接器',
+        user_id: '用户ID',
+        remove: '删除',
+        not_connected: '该用户还没有绑定社交账号。',
+      },
     },
   },
 };
