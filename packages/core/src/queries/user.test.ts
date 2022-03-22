@@ -23,6 +23,7 @@ import {
   updateUserById,
   deleteUserById,
   clearUserCustomDataById,
+  clearUserIdentitiesById,
 } from './user';
 
 const mockQuery: jest.MockedFunction<QueryType> = jest.fn();
@@ -374,5 +375,23 @@ describe('user query', () => {
     });
 
     await clearUserCustomDataById(id);
+  });
+
+  it('clearUserIdentitiesById', async () => {
+    const id = 'foo';
+    const expectSql = sql`
+      update ${table}
+      set ${fields.identities}='{}'::jsonb
+      where ${fields.id}=$1
+    `;
+
+    mockQuery.mockImplementationOnce(async (sql, values) => {
+      expectSqlAssert(sql, expectSql.sql);
+      expect(values).toEqual([id]);
+
+      return createMockQueryResult([dbvalue]);
+    });
+
+    await clearUserIdentitiesById(id);
   });
 });

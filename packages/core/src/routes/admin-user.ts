@@ -10,6 +10,7 @@ import koaPagination from '@/middleware/koa-pagination';
 import { findRolesByRoleNames } from '@/queries/roles';
 import {
   clearUserCustomDataById,
+  clearUserIdentitiesById,
   deleteUserById,
   findUsers,
   countUsers,
@@ -260,6 +261,37 @@ export default function adminUserRoutes<T extends AuthedRouter>(router: T) {
       await clearUserCustomDataById(userId);
 
       ctx.status = 200;
+
+      return next();
+    }
+  );
+
+  router.delete(
+    '/users/:userId/identities/:connectorId',
+    koaGuard({ params: object({ userId: string(), connectorId: string() }) }),
+    async (ctx, next) => {
+      const {
+        params: { userId, connectorId },
+      } = ctx.guard;
+
+      const { identities } = await findUserById(userId);
+
+      if (Object.entries(identities).length === 0) {
+        throw new RequestError({ code: 'user.identity_empty', status: 404 });
+      }
+
+      if (!Object.prototype.hasOwnProperty.call(identities, connectorId)) {
+        throw new RequestError({ code: 'user.identity_not_exists', status: 404 });
+      }
+
+      const restIdentities = Object.fromEntries(
+        Object.entries(identities).filter(([key]) => key !== connectorId)
+      );
+      await clearUserIdentitiesById(userId);
+      const updatedUser = await updateUserById(userId, {
+        identities: restIdentities,
+      });
+      ctx.body = pick(updatedUser, ...userInfoSelectFields);
 
       return next();
     }

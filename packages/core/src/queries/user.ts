@@ -137,3 +137,15 @@ export const clearUserCustomDataById = async (id: string) => {
     throw new UpdateError(Users, { set: { customData: {} }, where: { id } });
   }
 };
+
+export const clearUserIdentitiesById = async (id: string) => {
+  const { rowCount } = await pool.query<User>(sql`
+    update ${table}
+    set ${fields.identities}='{}'::jsonb
+    where ${fields.id}=${id}
+  `);
+
+  if (rowCount < 1) {
+    throw new UpdateError(Users, { set: { identities: {} }, where: { id } });
+  }
+};
