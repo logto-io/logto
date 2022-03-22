@@ -120,6 +120,8 @@ export const getUserInfo: GetUserInfo = async (accessTokenObject) => {
       // be the return value from getAccessToken per testing.
       // In another word, 'openid' is required but the response of getUserInfo is consistent as long as
       // access_token is valid.
+      // We are expecting to get 41009 'missing openid' response according to the developers doc, but the
+      // fact is that we still got 40001 'invalid credentials' response.
       if (errcode === 40_001) {
         throw new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid);
       }
