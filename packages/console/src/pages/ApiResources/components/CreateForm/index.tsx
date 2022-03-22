@@ -1,15 +1,12 @@
 import { Resource } from '@logto/schemas';
-import React from 'react';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 import Button from '@/components/Button';
-import Card from '@/components/Card';
-import CardTitle from '@/components/CardTitle';
 import FormField from '@/components/FormField';
-import IconButton from '@/components/IconButton';
+import ModalLayout from '@/components/ModalLayout';
 import TextInput from '@/components/TextInput';
 import useApi from '@/hooks/use-api';
-import Close from '@/icons/Close';
 
 import * as styles from './index.module.scss';
 
@@ -24,50 +21,61 @@ type Props = {
 
 const CreateForm = ({ onClose }: Props) => {
   const { handleSubmit, register } = useForm<FormData>();
+  const [loading, setLoading] = useState(false);
   const api = useApi();
 
   const onSubmit = handleSubmit(async (data) => {
+    if (loading) {
+      return;
+    }
+
+    setLoading(true);
+
     try {
       const createdApiResource = await api.post('/api/resources', { json: data }).json<Resource>();
       onClose?.(createdApiResource);
-    } catch (error: unknown) {
-      console.error(error);
+    } finally {
+      setLoading(false);
     }
   });
 
   return (
-    <Card className={styles.card}>
-      <div className={styles.headline}>
-        <CardTitle title="api_resources.create" subtitle="api_resources.subtitle" />
-        <IconButton size="large" onClick={() => onClose?.()}>
-          <Close />
-        </IconButton>
-      </div>
-      <form className={styles.form} onSubmit={onSubmit}>
-        <FormField
-          isRequired
-          title="admin_console.api_resources.api_name"
-          className={styles.textField}
-        >
-          <TextInput {...register('name', { required: true })} />
-        </FormField>
-        <FormField
-          isRequired
-          title="admin_console.api_resources.api_identifier"
-          className={styles.textField}
-        >
-          <TextInput {...register('indicator', { required: true })} />
-        </FormField>
+    <ModalLayout
+      title="api_resources.create"
+      subtitle="api_resources.subtitle"
+      footer={
         <div className={styles.submit}>
           <Button
+            disabled={loading}
             htmlType="submit"
             title="admin_console.api_resources.create"
             size="large"
             type="primary"
+            onClick={onSubmit}
           />
         </div>
+      }
+      onClose={onClose}
+    >
+      <form className={styles.form}>
+        <div className={styles.fields}>
+          <FormField
+            isRequired
+            title="admin_console.api_resources.api_name"
+            className={styles.textField}
+          >
+            <TextInput {...register('name', { required: true })} />
+          </FormField>
+          <FormField
+            isRequired
+            title="admin_console.api_resources.api_identifier"
+            className={styles.textField}
+          >
+            <TextInput {...register('indicator', { required: true })} />
+          </FormField>
+        </div>
       </form>
-    </Card>
+    </ModalLayout>
   );
 };
 

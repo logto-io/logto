@@ -135,6 +135,7 @@ const translation = {
       create: 'Create API Resource',
       api_name: 'API Name',
       api_identifier: 'API Identifier',
+      api_resource_created: 'The API resource {{name}} has been successfully created!',
     },
     api_resource_details: {
       back_to_api_resources: 'Back to my API resources',

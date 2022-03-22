@@ -30,5 +30,14 @@
 			"_.unit(${1:2})"
 		],
 		"description": "Use underscore unit function."
+	},
+	"Use dimensions": {
+		"scope": "scss",
+		"prefix": "used",
+		"body": [
+			"@use '@/scss/dimensions' as dim;",
+			"$0"
+		],
+		"description": "Add @use dimensions in header."
 	}
 }

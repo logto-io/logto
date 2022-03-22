@@ -1,9 +1,10 @@
+@use '@/scss/dimensions' as dim;
 @use '@/scss/underscore' as _;
 
 .container {
   display: flex;
   flex-direction: column;
-  max-width: 800px;
+  max-width: dim.$modal-layout-max-width;
   padding: _.unit(8);
 
   .header {

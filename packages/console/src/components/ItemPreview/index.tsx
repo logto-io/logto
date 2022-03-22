@@ -13,7 +13,7 @@ type Props = {
 const ItemPreview = ({ title, subtitle, icon, to }: Props) => {
   return (
     <div className={styles.item}>
-      {icon}
+      {icon && <div className={styles.icon}>{icon}</div>}
       <div>
         {to && (
           <Link

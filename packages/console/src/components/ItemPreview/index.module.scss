@@ -9,6 +9,10 @@
     margin-left: _.unit(4);
   }
 
+  .icon {
+    flex-shrink: 0;
+  }
+
   .title {
     font: var(--font-body);
     color: var(--color-primary);
