@@ -4,11 +4,8 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
 import Button from '@/components/Button';
-import Card from '@/components/Card';
-import CardTitle from '@/components/CardTitle';
-import IconButton from '@/components/IconButton';
+import ModalLayout from '@/components/ModalLayout';
 import useApi from '@/hooks/use-api';
-import Close from '@/icons/Close';
 
 import * as styles from './DeleteForm.module.scss';
 
@@ -39,24 +36,29 @@ const DeleteForm = ({ id, onClose }: Props) => {
   };
 
   return (
-    <Card className={styles.card}>
-      <div className={styles.header}>
-        <CardTitle title="user_details.delete_title" />
-        <IconButton size="large" onClick={onClose}>
-          <Close />
-        </IconButton>
+    <ModalLayout
+      title="user_details.delete_title"
+      footer={
+        <div className={styles.footer}>
+          <Button
+            type="outline"
+            title="admin_console.user_details.delete_cancel"
+            onClick={onClose}
+          />
+          <Button
+            disabled={loading}
+            type="danger"
+            title="admin_console.user_details.delete_confirm"
+            onClick={handleDelete}
+          />
+        </div>
+      }
+      onClose={onClose}
+    >
+      <div className={styles.content}>
+        <div>{t('user_details.delete_description')}</div>
       </div>
-      <div>{t('user_details.delete_description')}</div>
-      <div className={styles.footer}>
-        <Button type="outline" title="admin_console.user_details.delete_cancel" onClick={onClose} />
-        <Button
-          disabled={loading}
-          type="danger"
-          title="admin_console.user_details.delete_confirm"
-          onClick={handleDelete}
-        />
-      </div>
-    </Card>
+    </ModalLayout>
   );
 };
 

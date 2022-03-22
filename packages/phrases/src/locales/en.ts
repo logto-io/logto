@@ -223,6 +223,7 @@ const translation = {
         title: 'Reset Password',
         label: 'New password:',
         reset_password: 'Reset password',
+        reset_password_success: 'Reset password successfully.',
       },
       tab_settings: 'Settings',
       tab_logs: 'User Logs',

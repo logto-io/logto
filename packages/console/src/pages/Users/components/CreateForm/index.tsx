@@ -1,15 +1,12 @@
 import { User } from '@logto/schemas';
-import React from 'react';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 import Button from '@/components/Button';
-import Card from '@/components/Card';
-import CardTitle from '@/components/CardTitle';
 import FormField from '@/components/FormField';
-import IconButton from '@/components/IconButton';
+import ModalLayout from '@/components/ModalLayout';
 import TextInput from '@/components/TextInput';
 import useApi from '@/hooks/use-api';
-import Close from '@/icons/Close';
 
 import * as styles from './index.module.scss';
 
@@ -27,20 +24,42 @@ const CreateForm = ({ onClose }: Props) => {
   const { handleSubmit, register } = useForm<FormData>();
   const api = useApi();
 
+  const [loading, setLoading] = useState(false);
+
   const onSubmit = handleSubmit(async (data) => {
-    const createdUser = await api.post('/api/users', { json: data }).json<User>();
-    onClose?.(createdUser, btoa(data.password));
+    if (loading) {
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const createdUser = await api.post('/api/users', { json: data }).json<User>();
+      onClose?.(createdUser, btoa(data.password));
+    } finally {
+      setLoading(false);
+    }
   });
 
   return (
-    <Card className={styles.card}>
-      <div className={styles.headline}>
-        <CardTitle title="users.create" subtitle="users.subtitle" />
-        <IconButton size="large" onClick={() => onClose?.()}>
-          <Close />
-        </IconButton>
-      </div>
-      <form className={styles.form} onSubmit={onSubmit}>
+    <ModalLayout
+      title="users.create"
+      subtitle="users.subtitle"
+      footer={
+        <div className={styles.submit}>
+          <Button
+            disabled={loading}
+            htmlType="submit"
+            title="admin_console.users.create"
+            size="large"
+            type="primary"
+            onClick={onSubmit}
+          />
+        </div>
+      }
+      onClose={onClose}
+    >
+      <form className={styles.form}>
         <FormField
           isRequired
           title="admin_console.users.create_form_username"
@@ -62,16 +81,8 @@ const CreateForm = ({ onClose }: Props) => {
         >
           <TextInput {...register('password', { required: true })} />
         </FormField>
-        <div className={styles.submit}>
-          <Button
-            htmlType="submit"
-            title="admin_console.users.create"
-            size="large"
-            type="primary"
-          />
-        </div>
       </form>
-    </Card>
+    </ModalLayout>
   );
 };
 

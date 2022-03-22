@@ -222,6 +222,7 @@ const translation = {
         title: '重置密码',
         label: '新密码：',
         reset_password: '重置密码',
+        reset_password_success: '密码已成功重置。',
       },
       tab_settings: '设置',
       tab_logs: '用户日志',

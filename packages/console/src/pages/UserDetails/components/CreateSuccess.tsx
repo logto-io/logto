@@ -5,8 +5,8 @@ import ReactModal from 'react-modal';
 import { useSearchParams } from 'react-router-dom';
 
 import Button from '@/components/Button';
-import Card from '@/components/Card';
 import IconButton from '@/components/IconButton';
+import ModalLayout from '@/components/ModalLayout';
 import Eye from '@/icons/Eye';
 import * as modalStyles from '@/scss/modal.module.scss';
 
@@ -44,11 +44,20 @@ const CreateSuccess = ({ username }: Props) => {
 
   return (
     <ReactModal isOpen className={modalStyles.content} overlayClassName={modalStyles.overlay}>
-      <Card className={styles.card}>
-        <div className={styles.header}>
-          <h1>{t('user_details.created_title')}</h1>
-        </div>
-        <div className={styles.body}>
+      <ModalLayout
+        title="user_details.created_title"
+        footer={
+          <div className={styles.footer}>
+            <Button title="admin_console.user_details.created_button_close" onClick={handleClose} />
+            <Button
+              type="primary"
+              title="admin_console.user_details.created_button_copy"
+              onClick={handleCopy}
+            />
+          </div>
+        }
+      >
+        <div className={styles.content}>
           <div>{t('user_details.created_guide')}</div>
           <div className={styles.info}>
             <div className={styles.infoLine}>
@@ -72,15 +81,7 @@ const CreateSuccess = ({ username }: Props) => {
             </div>
           </div>
         </div>
-        <div className={styles.footer}>
-          <Button title="admin_console.user_details.created_button_close" onClick={handleClose} />
-          <Button
-            type="primary"
-            title="admin_console.user_details.created_button_copy"
-            onClick={handleCopy}
-          />
-        </div>
-      </Card>
+      </ModalLayout>
     </ReactModal>
   );
 };
