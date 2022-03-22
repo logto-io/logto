@@ -58,22 +58,20 @@ const CreateForm = ({ onClose }: Props) => {
       onClose={onClose}
     >
       <form className={styles.form}>
-        <div className={styles.fields}>
-          <FormField
-            isRequired
-            title="admin_console.api_resources.api_name"
-            className={styles.textField}
-          >
-            <TextInput {...register('name', { required: true })} />
-          </FormField>
-          <FormField
-            isRequired
-            title="admin_console.api_resources.api_identifier"
-            className={styles.textField}
-          >
-            <TextInput {...register('indicator', { required: true })} />
-          </FormField>
-        </div>
+        <FormField
+          isRequired
+          title="admin_console.api_resources.api_name"
+          className={styles.textField}
+        >
+          <TextInput {...register('name', { required: true })} />
+        </FormField>
+        <FormField
+          isRequired
+          title="admin_console.api_resources.api_identifier"
+          className={styles.textField}
+        >
+          <TextInput {...register('indicator', { required: true })} />
+        </FormField>
       </form>
     </ModalLayout>
   );
