@@ -63,41 +63,34 @@ const ApplicationDetails = () => {
 
   const isAdvancedSettings = location.pathname.includes('advanced-settings');
 
-  const SettingsPage = useMemo(() => {
-    return (
-      oidcConfig && (
-        <>
-          <FormField isRequired title="admin_console.application_details.application_name">
-            <TextInput {...register('name', { required: true })} />
-          </FormField>
-          <FormField title="admin_console.application_details.description">
-            <TextInput {...register('description')} />
-          </FormField>
-          <FormField title="admin_console.application_details.authorization_endpoint">
-            <CopyToClipboard
-              className={styles.textField}
-              value={oidcConfig.authorization_endpoint}
-            />
-          </FormField>
-          <FormField title="admin_console.application_details.redirect_uri">
-            <MultilineInput<Application>
-              name={'oidcClientMetadata.redirectUris' as ArrayPath<Application>}
-              register={register}
-              options={{ pattern: noSpaceRegex }}
-              control={control}
-            />
-          </FormField>
-          <FormField title="admin_console.application_details.post_sign_out_redirect_uri">
-            <MultilineInput<Application>
-              name={'oidcClientMetadata.postLogoutRedirectUris' as ArrayPath<Application>}
-              register={register}
-              control={control}
-            />
-          </FormField>
-        </>
-      )
-    );
-  }, [oidcConfig, register, control]);
+  const SettingsPage = oidcConfig && (
+    <>
+      <FormField isRequired title="admin_console.application_details.application_name">
+        <TextInput {...register('name', { required: true })} />
+      </FormField>
+      <FormField title="admin_console.application_details.description">
+        <TextInput {...register('description')} />
+      </FormField>
+      <FormField title="admin_console.application_details.authorization_endpoint">
+        <CopyToClipboard className={styles.textField} value={oidcConfig.authorization_endpoint} />
+      </FormField>
+      <FormField title="admin_console.application_details.redirect_uri">
+        <MultilineInput<Application>
+          name={'oidcClientMetadata.redirectUris' as ArrayPath<Application>}
+          register={register}
+          options={{ pattern: noSpaceRegex }}
+          control={control}
+        />
+      </FormField>
+      <FormField title="admin_console.application_details.post_sign_out_redirect_uri">
+        <MultilineInput<Application>
+          name={'oidcClientMetadata.postLogoutRedirectUris' as ArrayPath<Application>}
+          register={register}
+          control={control}
+        />
+      </FormField>
+    </>
+  );
 
   const AdvancedSettingsPage = useMemo(() => {
     return (
