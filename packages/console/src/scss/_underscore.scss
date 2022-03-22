@@ -1,3 +1,5 @@
+@use '@/scss/dimensions' as dim;
+
 @function unit($factor: 1, $unit: 'px') {
   @return #{$factor * 4}#{$unit};
 }
@@ -16,7 +18,7 @@
 }
 
 @mixin form-text-field {
-  width: 556px;
+  width: dim.$form-text-field-width;
 }
 
 @mixin vertical-bar {

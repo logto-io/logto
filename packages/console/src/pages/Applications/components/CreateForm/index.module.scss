@@ -1,24 +1,9 @@
 @use '@/scss/underscore' as _;
+@use '@/scss/dimensions' as dim;
 
-.card {
-  padding: _.unit(8);
-}
-
-.headline {
-  display: flex;
-  justify-content: space-between;
-
-  > *:not(:first-child) {
-    margin-left: _.unit(3);
-  }
-
-  > svg {
-    cursor: pointer;
-  }
-}
 
 .form {
-  margin-top: _.unit(8);
+  padding: _.unit(8) 0;
 }
 
 .textField {
@@ -26,8 +11,7 @@
 }
 
 .submit {
-  margin-top: _.unit(8);
-  text-align: right;
+  padding-left: dim.$form-text-field-width;
 }
 
 .error {

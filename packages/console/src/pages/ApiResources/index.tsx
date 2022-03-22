@@ -1,6 +1,7 @@
 import { Resource } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials/lib/utilities/conditional.js';
 import React, { useState } from 'react';
+import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import Modal from 'react-modal';
 import { useNavigate } from 'react-router-dom';
@@ -49,6 +50,9 @@ const ApiResources = () => {
 
               if (createdApiResource) {
                 void mutate(conditional(data && [...data, createdApiResource]));
+                toast.success(
+                  t('api_resources.api_resource_created', { name: createdApiResource.name })
+                );
                 navigate(buildDetailsLink(createdApiResource.id));
               }
             }}

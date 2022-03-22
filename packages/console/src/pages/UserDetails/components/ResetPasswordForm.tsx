@@ -1,15 +1,14 @@
 import { User } from '@logto/schemas';
-import React from 'react';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { toast } from 'react-hot-toast';
+import { useTranslation } from 'react-i18next';
 
 import Button from '@/components/Button';
-import Card from '@/components/Card';
-import CardTitle from '@/components/CardTitle';
 import FormField from '@/components/FormField';
-import IconButton from '@/components/IconButton';
+import ModalLayout from '@/components/ModalLayout';
 import TextInput from '@/components/TextInput';
 import useApi from '@/hooks/use-api';
-import Close from '@/icons/Close';
 
 import * as styles from './ResetPasswordForm.module.scss';
 
@@ -23,22 +22,28 @@ type Props = {
 };
 
 const ResetPasswordForm = ({ onClose, userId }: Props) => {
+  const { t } = useTranslation(undefined, {
+    keyPrefix: 'admin_console',
+  });
   const { handleSubmit, register } = useForm<FormData>();
   const api = useApi();
 
+  const [loading, setLoading] = useState(false);
+
   const onSubmit = handleSubmit(async (data) => {
-    await api.patch(`/api/users/${userId}/password`, { json: data }).json<User>();
-    onClose?.();
+    setLoading(true);
+
+    try {
+      await api.patch(`/api/users/${userId}/password`, { json: data }).json<User>();
+      onClose?.();
+      toast.success(t('user_details.reset_password.reset_password_success'));
+    } finally {
+      setLoading(false);
+    }
   });
 
   return (
-    <Card className={styles.card}>
-      <div className={styles.headline}>
-        <CardTitle title="user_details.reset_password.title" />
-        <IconButton size="large" onClick={() => onClose?.()}>
-          <Close />
-        </IconButton>
-      </div>
+    <ModalLayout title="user_details.reset_password.title" onClose={onClose}>
       <form className={styles.form} onSubmit={onSubmit}>
         <FormField
           isRequired
@@ -49,6 +54,7 @@ const ResetPasswordForm = ({ onClose, userId }: Props) => {
         </FormField>
         <div className={styles.submit}>
           <Button
+            disabled={loading}
             htmlType="submit"
             title="admin_console.user_details.reset_password.reset_password"
             size="large"
@@ -56,7 +62,7 @@ const ResetPasswordForm = ({ onClose, userId }: Props) => {
           />
         </div>
       </form>
-    </Card>
+    </ModalLayout>
   );
 };
 

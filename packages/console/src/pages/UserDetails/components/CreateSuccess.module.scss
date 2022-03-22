@@ -1,15 +1,10 @@
 @use '@/scss/underscore' as _;
+@use '@/scss/dimensions' as dim;
 
-.card {
-  min-width: _.unit(100);
-}
 
-.header h1 {
-  font: var(--font-title-large);
-  margin-top: 0;
-}
-
-.body {
+.content {
+  padding: _.unit(8) 0;
+  min-width: dim.$modal-layout-min-width;
   font: var(--font-body-2);
 
   .info {
@@ -39,9 +34,6 @@
 }
 
 .footer {
-  border-top: 1px solid var(--color-neutral-80);
-  margin-top: _.unit(6);
-  padding-top: _.unit(6);
   display: flex;
   justify-content: right;
 

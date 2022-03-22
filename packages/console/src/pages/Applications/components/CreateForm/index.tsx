@@ -6,14 +6,11 @@ import Modal from 'react-modal';
 import useSWR from 'swr';
 
 import Button from '@/components/Button';
-import Card from '@/components/Card';
-import CardTitle from '@/components/CardTitle';
 import FormField from '@/components/FormField';
-import IconButton from '@/components/IconButton';
+import ModalLayout from '@/components/ModalLayout';
 import RadioGroup, { Radio } from '@/components/RadioGroup';
 import TextInput from '@/components/TextInput';
 import useApi, { RequestError } from '@/hooks/use-api';
-import Close from '@/icons/Close';
 import * as modalStyles from '@/scss/modal.module.scss';
 import { applicationTypeI18nKey } from '@/types/applications';
 
@@ -46,6 +43,7 @@ const CreateForm = ({ onClose }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { data: setting } = useSWR<Setting, RequestError>('/api/settings');
   const api = useApi();
+  const [loading, setLoading] = useState(false);
 
   const isGetStartedSkipped = setting?.adminConsole.applicationSkipGetStarted;
 
@@ -55,6 +53,12 @@ const CreateForm = ({ onClose }: Props) => {
   };
 
   const onSubmit = handleSubmit(async (data) => {
+    if (loading) {
+      return;
+    }
+
+    setLoading(true);
+
     try {
       const createdApp = await api.post('/api/applications', { json: data }).json<Application>();
       setCreatedApp(createdApp);
@@ -64,20 +68,30 @@ const CreateForm = ({ onClose }: Props) => {
       } else {
         setIsQuickStartGuideOpen(true);
       }
-    } catch (error: unknown) {
-      console.error(error);
+    } finally {
+      setLoading(false);
     }
   });
 
   return (
-    <Card className={styles.card}>
-      <div className={styles.headline}>
-        <CardTitle title="applications.create" subtitle="applications.subtitle" />
-        <IconButton size="large" onClick={() => onClose?.()}>
-          <Close />
-        </IconButton>
-      </div>
-      <form className={styles.form} onSubmit={onSubmit}>
+    <ModalLayout
+      title="applications.create"
+      subtitle="applications.subtitle"
+      footer={
+        <div className={styles.submit}>
+          <Button
+            disabled={loading}
+            htmlType="submit"
+            title="admin_console.applications.create"
+            size="large"
+            type="primary"
+            onClick={onSubmit}
+          />
+        </div>
+      }
+      onClose={onClose}
+    >
+      <form className={styles.form}>
         <FormField title="admin_console.applications.select_application_type">
           <RadioGroup ref={ref} name={name} value={value} onChange={onChange}>
             {Object.values(ApplicationType).map((value) => (
@@ -106,21 +120,13 @@ const CreateForm = ({ onClose }: Props) => {
         >
           <TextInput {...register('description')} />
         </FormField>
-        <div className={styles.submit}>
-          <Button
-            htmlType="submit"
-            title="admin_console.applications.create"
-            size="large"
-            type="primary"
-          />
-        </div>
       </form>
       {!isGetStartedSkipped && createdApp && (
         <Modal isOpen={isQuickStartGuideOpen} className={modalStyles.fullScreen}>
           <GetStarted appName={createdApp.name} onClose={closeModal} />
         </Modal>
       )}
-    </Card>
+    </ModalLayout>
   );
 };
 
