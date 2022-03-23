@@ -59,6 +59,19 @@ export const getSocialConnectorInstanceById = async (
   return connector;
 };
 
+export const getEnabledSocialConnectorIds = async <T extends ConnectorInstance>(): Promise<
+  string[]
+> => {
+  const connectorInstances = await getConnectorInstances();
+
+  return connectorInstances
+    .filter<T>(
+      (instance): instance is T =>
+        instance.connector.enabled && instance.metadata.type === ConnectorType.Social
+    )
+    .map((instance) => instance.metadata.id);
+};
+
 export const getConnectorInstanceByType = async <T extends ConnectorInstance>(
   type: ConnectorType
 ): Promise<T> => {

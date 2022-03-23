@@ -5,6 +5,7 @@ import {
   getConnectorInstanceById,
   getConnectorInstanceByType,
   getConnectorInstances,
+  getEnabledSocialConnectorIds,
   getSocialConnectorInstanceById,
   initConnectors,
 } from '@/connectors/index';
@@ -115,6 +116,13 @@ describe('getSocialConnectorInstanceById', () => {
     await expect(getSocialConnectorInstanceById(id)).rejects.toMatchError(
       new RequestError({ code: 'entity.not_found', id, status: 404 })
     );
+  });
+});
+
+describe('getEnabledSocialConnectorIds', () => {
+  test('should return the enabled social connectors existing in DB', async () => {
+    const enabledSocialConnectorIds = await getEnabledSocialConnectorIds();
+    expect(enabledSocialConnectorIds).toEqual(['facebook', 'github']);
   });
 });
 
