@@ -109,7 +109,6 @@ const ConnectorDetails = () => {
                 setIsReadMeOpen(false);
               }}
             >
-              {/* TODO - Implement the content when the documentation website is ready. */}
               <Markdown>{data.metadata.readme}</Markdown>
             </Drawer>
             <ActionMenu
