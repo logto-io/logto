@@ -10,6 +10,7 @@ import Card from '@/components/Card';
 import CardTitle from '@/components/CardTitle';
 import ImagePlaceholder from '@/components/ImagePlaceholder';
 import ItemPreview from '@/components/ItemPreview';
+import TableLoading, { ItemPreviewLoading } from '@/components/Table/TableLoading';
 import { RequestError } from '@/hooks/use-api';
 import * as modalStyles from '@/scss/modal.module.scss';
 
@@ -65,9 +66,17 @@ const Users = () => {
             </tr>
           )}
           {isLoading && (
-            <tr>
-              <td colSpan={2}>loading</td>
-            </tr>
+            <TableLoading>
+              <td className={styles.userName}>
+                <ItemPreviewLoading />
+              </td>
+              <td>
+                <div />
+              </td>
+              <td>
+                <div />
+              </td>
+            </TableLoading>
           )}
           {data?.map(({ id, name, username }) => (
             <tr
