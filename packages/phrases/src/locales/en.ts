@@ -238,6 +238,12 @@ const translation = {
       custom_data_invalid: 'Custom data must be a valid JSON',
       save_changes: 'Save changes',
       saved: 'Saved!',
+      connectors: {
+        connectors: 'Connectors',
+        user_id: 'User ID',
+        remove: 'remove',
+        not_connected: 'The user is not connected to any social connector.',
+      },
     },
   },
 };

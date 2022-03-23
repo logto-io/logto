@@ -9,6 +9,7 @@ export const userInfoSelectFields = Object.freeze([
   'avatar',
   'roleNames',
   'customData',
+  'identities',
 ] as const);
 
 export type UserInfo<Keys extends keyof CreateUser = typeof userInfoSelectFields[number]> = Pick<
