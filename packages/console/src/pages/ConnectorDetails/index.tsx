@@ -2,7 +2,7 @@ import { ConnectorDTO, ConnectorType } from '@logto/schemas';
 import React, { useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import useSWR from 'swr';
 
 import ActionMenu, { ActionMenuItem } from '@/components/ActionMenu';
@@ -38,6 +38,7 @@ const ConnectorDetails = () => {
   );
   const isLoading = !data && !error;
   const api = useApi();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (data) {
@@ -72,6 +73,25 @@ const ConnectorDetails = () => {
     }
 
     setIsSubmitLoading(false);
+  };
+
+  const handleDelete = async () => {
+    if (!connectorId) {
+      return;
+    }
+
+    await api
+      .patch(`/api/connectors/${connectorId}/enabled`, {
+        json: { enabled: false },
+      })
+      .json<ConnectorDTO>();
+    toast.success(t('connector_details.connector_deleted'));
+
+    if (data?.metadata.type === ConnectorType.Social) {
+      navigate(`/connectors/social`);
+    } else {
+      navigate(`/connectors`);
+    }
   };
 
   return (
@@ -134,7 +154,7 @@ const ConnectorDetails = () => {
                   )}
                 </ActionMenuItem>
               )}
-              <ActionMenuItem icon={<Delete />}>
+              <ActionMenuItem icon={<Delete />} type="danger">
                 {t('connector_details.options_delete')}
               </ActionMenuItem>
             </ActionMenu>

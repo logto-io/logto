@@ -197,6 +197,7 @@ const translation = {
       options_change_email: 'Change email connector',
       options_change_sms: 'Change SMS connector',
       more_options: 'MORE OPTIONS',
+      connector_deleted: 'The connector has been deleted.',
     },
     users: {
       title: 'User Management',
