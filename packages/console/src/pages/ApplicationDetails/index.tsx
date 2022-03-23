@@ -78,8 +78,6 @@ const ApplicationDetails = () => {
   });
 
   const onSubmit = handleSubmit(async (formData) => {
-    console.log(formData);
-
     if (!data || submitting) {
       return;
     }
