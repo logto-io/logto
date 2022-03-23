@@ -26,13 +26,10 @@ const AppContent = ({ children, theme }: Props) => {
 
   return (
     <PageContext.Provider value={context}>
-      <div
-        id="main"
-        className={classNames(styles.content, styles.universal, styles.mobile, styles[theme])}
-      >
+      <main className={classNames(styles.content, styles.universal, styles.mobile, styles[theme])}>
         {children}
         <Toast message={toast} isVisible={Boolean(toast)} callback={hideToast} />
-      </div>
+      </main>
     </PageContext.Provider>
   );
 };
