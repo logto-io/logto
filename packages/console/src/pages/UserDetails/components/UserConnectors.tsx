@@ -1,7 +1,7 @@
 import { Languages } from '@logto/phrases';
 import { ConnectorDTO, Identities } from '@logto/schemas';
 import { Optional } from '@silverhand/essentials';
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import useSWR from 'swr';
 
@@ -30,10 +30,21 @@ const UserConnectors = ({ userId, connectors, onDelete }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { data, error } = useSWR<ConnectorDTO[], RequestError>('/api/connectors');
   const isLoading = !data && !error;
+  const [isSubmiting, setIsSubmiting] = useState(false);
 
   const handleDelete = async (connectorId: string) => {
-    await api.delete(`/api/users/${userId}/identities/${connectorId}`);
-    onDelete?.(connectorId);
+    if (isSubmiting) {
+      return;
+    }
+
+    setIsSubmiting(true);
+
+    try {
+      await api.delete(`/api/users/${userId}/identities/${connectorId}`);
+      onDelete?.(connectorId);
+    } finally {
+      setIsSubmiting(false);
+    }
   };
 
   const displayConnectors: Optional<DisplayConnector[]> = useMemo(() => {
