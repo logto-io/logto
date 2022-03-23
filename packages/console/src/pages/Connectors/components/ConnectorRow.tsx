@@ -11,9 +11,10 @@ import ConnectorName from './ConnectorName';
 type Props = {
   type: ConnectorType;
   connector?: ConnectorDTO;
+  onClickSetup?: () => void;
 };
 
-const ConnectorRow = ({ type, connector }: Props) => {
+const ConnectorRow = ({ type, connector, onClickSetup }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   const typeLabel = useMemo(() => {
@@ -48,7 +49,13 @@ const ConnectorRow = ({ type, connector }: Props) => {
           <Status status="enabled">{t('connectors.connector_status_enabled')}</Status>
         )}
         {type !== ConnectorType.Social && !connector && (
-          <Button title="admin_console.connectors.set_up" type="primary" />
+          <Button
+            title="admin_console.connectors.set_up"
+            type="outline"
+            onClick={() => {
+              onClickSetup?.();
+            }}
+          />
         )}
       </td>
     </tr>

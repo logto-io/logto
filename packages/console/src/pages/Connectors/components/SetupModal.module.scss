@@ -1,0 +1,38 @@
+@use '@/scss/underscore' as _;
+
+.body {
+  padding-top: _.unit(5);
+
+  .connector {
+    font: var(--font-body);
+    width: 230px;
+
+    .logo {
+      margin: _.unit(2);
+      width: 32px;
+      height: 32px;
+
+      img {
+        width: 32px;
+        height: 32px;
+      }
+    }
+
+    .name {
+      margin-top: _.unit(2);
+    }
+
+    .connectorId {
+      margin-top: _.unit(2);
+      font: var(--font-body-2);
+      color: var(--color-neutral-50);
+    }
+
+    .description {
+      font: var(--font-body-2);
+      margin-top: _.unit(2);
+      height: 60px;
+      overflow: hidden;
+    }
+  }
+}

@@ -2,15 +2,11 @@
 
 .radioGroup {
   display: flex;
+  flex-wrap: wrap;
 
   &:not(:first-child) {
     margin-top: _.unit(3);
   }
-
-  svg {
-    opacity: 0%;
-  }
-
 
   > .radio {
     position: relative;
@@ -26,14 +22,18 @@
     user-select: none;
     cursor: pointer;
     transition: border 0.2s ease-in-out;
+    margin: 0 _.unit(8) _.unit(8) 0;
 
     &:focus,
     &:hover {
       border-color: var(--color-primary);
     }
 
-    &:not(:first-child) {
-      margin-left: _.unit(8);
+    svg {
+      opacity: 0%;
+      position: absolute;
+      right: _.unit(5);
+      top: _.unit(5);
     }
 
     &.checked {

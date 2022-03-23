@@ -156,7 +156,7 @@ const translation = {
     connectors: {
       title: '连接器',
       subtitle: 'Setup connectors to enable passwordless and social sign in experience.',
-      create: '添加连接器',
+      create: '添加社会化登录',
       set_up: '设置',
       tab_email_sms: '邮件/短信服务商',
       tab_social: '社会化登录',
@@ -166,10 +166,16 @@ const translation = {
       connector_status_enabled: '已启用',
       connector_status_disabled: '已禁用',
       social_connector_eg: '如: 微信登录，支付宝登录，微博登录',
+      next: '下一步',
       type: {
         email: '邮件服务商',
         sms: '短信服务商',
         social: '社会化登录',
+      },
+      setup_title: {
+        email: '设置邮件服务商',
+        sms: '设置短信服务商',
+        social: '添加社会化登录',
       },
     },
     connector_details: {
@@ -191,6 +197,7 @@ const translation = {
       options_change_email: '更换邮件服务商',
       options_change_sms: '更换短信服务商',
       more_options: '更多选项',
+      connector_deleted: '成功删除连接器。',
     },
     users: {
       title: '用户管理',

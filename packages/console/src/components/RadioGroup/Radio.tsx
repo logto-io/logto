@@ -18,7 +18,7 @@ const Check = () => (
 export type Props = {
   className?: string;
   value: string;
-  title: string;
+  title?: string;
   name?: string;
   children?: ReactNode;
   isChecked?: boolean;
@@ -54,10 +54,12 @@ const Radio = ({
       onKeyPress={handleKeyPress}
     >
       <input readOnly disabled type="radio" name={name} value={value} checked={isChecked} />
-      <div className={classNames(styles.headline, !children && styles.center)}>
-        <div className={styles.title}>{title}</div>
-        <Check />
-      </div>
+      {title && (
+        <div className={classNames(styles.headline, !children && styles.center)}>
+          <div className={styles.title}>{title}</div>
+        </div>
+      )}
+      <Check />
       {children}
     </div>
   );

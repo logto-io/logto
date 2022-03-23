@@ -14,9 +14,10 @@ type Props = {
   children: ReactNode;
   footer?: ReactNode;
   onClose?: () => void;
+  className?: string;
 };
 
-const ModalLayout = ({ title, subtitle, children, footer, onClose }: Props) => {
+const ModalLayout = ({ title, subtitle, children, footer, onClose, className }: Props) => {
   return (
     <Card className={styles.container}>
       <div className={styles.header}>
@@ -31,7 +32,7 @@ const ModalLayout = ({ title, subtitle, children, footer, onClose }: Props) => {
           </IconButton>
         )}
       </div>
-      <div>{children}</div>
+      <div className={className}>{children}</div>
       {footer && <div className={styles.footer}>{footer}</div>}
     </Card>
   );
