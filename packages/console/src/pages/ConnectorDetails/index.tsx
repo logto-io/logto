@@ -154,7 +154,7 @@ const ConnectorDetails = () => {
                   )}
                 </ActionMenuItem>
               )}
-              <ActionMenuItem icon={<Delete />} type="danger">
+              <ActionMenuItem icon={<Delete />} type="danger" onClick={handleDelete}>
                 {t('connector_details.options_delete')}
               </ActionMenuItem>
             </ActionMenu>
