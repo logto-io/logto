@@ -162,7 +162,7 @@ const ApplicationDetails = () => {
     <div className={styles.container}>
       <BackLink to="/applications">{t('application_details.back_to_applications')}</BackLink>
       {isLoading && <div>loading</div>}
-      {error && <div>{`error occurred: ${error.metadata.code}`}</div>}
+      {error && <div>{`error occurred: ${error.body.message}`}</div>}
       {data && oidcConfig && (
         <>
           <Card className={styles.header}>

@@ -7,6 +7,7 @@ import useSWR from 'swr';
 
 import Button from '@/components/Button';
 import ImagePlaceholder from '@/components/ImagePlaceholder';
+import TableError from '@/components/Table/TableError';
 import UnnamedTrans from '@/components/UnnamedTrans';
 import useApi, { RequestError } from '@/hooks/use-api';
 
@@ -28,7 +29,7 @@ type DisplayConnector = {
 const UserConnectors = ({ userId, connectors, onDelete }: Props) => {
   const api = useApi();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { data, error } = useSWR<ConnectorDTO[], RequestError>('/api/connectors');
+  const { data, error, mutate } = useSWR<ConnectorDTO[], RequestError>('/api/connectors');
   const isLoading = !data && !error;
   const [isSubmiting, setIsSubmiting] = useState(false);
 
@@ -81,7 +82,6 @@ const UserConnectors = ({ userId, connectors, onDelete }: Props) => {
   return (
     <div>
       {isLoading && <div>Loading</div>}
-      {error && error}
       {displayConnectors && (
         <table className={styles.table}>
           <thead>
@@ -92,6 +92,14 @@ const UserConnectors = ({ userId, connectors, onDelete }: Props) => {
             </tr>
           </thead>
           <tbody>
+            {error && (
+              <TableError
+                content={error.body.message}
+                onTryAgain={() => {
+                  void mutate(undefined, true);
+                }}
+              />
+            )}
             {displayConnectors.length === 0 && (
               <tr>
                 <td rowSpan={3}>{t('user_details.connectors.not_connected')}</td>

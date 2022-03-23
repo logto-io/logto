@@ -76,7 +76,7 @@ const ApiResourceDetails = () => {
       <BackLink to="/api-resources">{t('api_resource_details.back_to_api_resources')}</BackLink>
 
       {isLoading && <div>loading</div>}
-      {error && <div>{`error occurred: ${error.metadata.code}`}</div>}
+      {error && <div>{`error occurred: ${error.body.message}`}</div>}
       {data && (
         <>
           <Card className={styles.header}>
