@@ -1,11 +1,9 @@
-import { SignInExperiences } from '@logto/schemas';
-import { createMockPool, createMockQueryResult, sql } from 'slonik';
+import { createMockPool, createMockQueryResult } from 'slonik';
 
-import { convertToIdentifiers } from '@/database/utils';
 import { mockSignInExperience } from '@/utils/mock';
 import { expectSqlAssert, QueryType } from '@/utils/test-utils';
 
-import { findDefaultSignInExperience, updateSignInExperienceById } from './sign-in-experience';
+import { findDefaultSignInExperience, updateDefaultSignInExperience } from './sign-in-experience';
 
 const mockQuery: jest.MockedFunction<QueryType> = jest.fn();
 
@@ -18,7 +16,8 @@ jest.mock('@/database/pool', () =>
 );
 
 describe('sign-in-experience query', () => {
-  const { table, fields } = convertToIdentifiers(SignInExperiences);
+  const id = 'default';
+
   const dbvalue = {
     ...mockSignInExperience,
     branding: JSON.stringify(mockSignInExperience.branding),
@@ -29,14 +28,17 @@ describe('sign-in-experience query', () => {
   };
 
   it('findDefaultSignInExperience', async () => {
-    const expectSql = sql`
-      select ${sql.join(Object.values(fields), sql`, `)}
-      from ${table}
+    /* eslint-disable sql/no-unsafe-query */
+    const expectSql = `
+      select "id", "branding", "language_info", "terms_of_use", "forget_password_enabled", "sign_in_methods", "social_sign_in_connector_ids"
+      from "sign_in_experiences"
+      where "id" = $1
     `;
+    /* eslint-enable sql/no-unsafe-query */
 
     mockQuery.mockImplementationOnce(async (sql, values) => {
-      expectSqlAssert(sql, expectSql.sql);
-      expect(values).toEqual([]);
+      expectSqlAssert(sql, expectSql);
+      expect(values).toEqual([id]);
 
       return createMockQueryResult([dbvalue]);
     });
@@ -44,28 +46,29 @@ describe('sign-in-experience query', () => {
     await expect(findDefaultSignInExperience()).resolves.toEqual(dbvalue);
   });
 
-  it('updateSignInExperienceById', async () => {
-    const id = 'foo';
+  it('updateDefaultSignInExperience', async () => {
     const termsOfUse = {
       enabled: false,
     };
 
-    const expectSql = sql`
-      update ${table}
+    /* eslint-disable sql/no-unsafe-query */
+    const expectSql = `
+      update "sign_in_experiences"
       set
-      ${fields.termsOfUse}=
-      coalesce(${fields.termsOfUse},'{}'::jsonb)|| $1
-      where ${fields.id}=$2
+      "terms_of_use"=
+      coalesce("terms_of_use",'{}'::jsonb)|| $1
+      where "id"=$2
       returning *
     `;
+    /* eslint-enable sql/no-unsafe-query */
 
     mockQuery.mockImplementationOnce(async (sql, values) => {
-      expectSqlAssert(sql, expectSql.sql);
+      expectSqlAssert(sql, expectSql);
       expect(values).toEqual([JSON.stringify(termsOfUse), id]);
 
       return createMockQueryResult([dbvalue]);
     });
 
-    await expect(updateSignInExperienceById(id, { termsOfUse })).resolves.toEqual(dbvalue);
+    await expect(updateDefaultSignInExperience({ termsOfUse })).resolves.toEqual(dbvalue);
   });
 });
