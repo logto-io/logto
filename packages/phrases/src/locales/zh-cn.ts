@@ -128,6 +128,7 @@ const translation = {
       cancel: 'Cancel',
       delete: 'Delete',
       application_deleted: 'The application {{name}} deleted.',
+      save_success: 'Saved!',
     },
     api_resources: {
       title: 'API Resources',

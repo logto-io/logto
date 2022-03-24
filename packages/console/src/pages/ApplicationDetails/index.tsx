@@ -1,6 +1,7 @@
 import { Application } from '@logto/schemas';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useController, useForm } from 'react-hook-form';
+import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import Modal from 'react-modal';
 import { useLocation, useParams } from 'react-router-dom';
@@ -17,7 +18,7 @@ import ImagePlaceholder from '@/components/ImagePlaceholder';
 import MultilineInput from '@/components/MultilineInput';
 import TabNav, { TabNavLink } from '@/components/TabNav';
 import TextInput from '@/components/TextInput';
-import { RequestError } from '@/hooks/use-api';
+import useApi, { RequestError } from '@/hooks/use-api';
 import Delete from '@/icons/Delete';
 import More from '@/icons/More';
 import * as modalStyles from '@/scss/modal.module.scss';
@@ -38,7 +39,9 @@ const ApplicationDetails = () => {
   const location = useLocation();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
-  const { data, error } = useSWR<Application, RequestError>(id && `/api/applications/${id}`);
+  const { data, error, mutate } = useSWR<Application, RequestError>(
+    id && `/api/applications/${id}`
+  );
   // TODO LOG-1908: OidcConfig in Application Details
   const { data: oidcConfig, error: fetchOidcConfigError } = useSWR<OidcConfig, RequestError>(
     '/oidc/.well-known/openid-configuration'
@@ -48,6 +51,8 @@ const ApplicationDetails = () => {
   const [isReadmeOpen, setIsReadmeOpen] = useState(false);
 
   const [isDeleteFormOpen, setIsDeleteFormOpen] = useState(false);
+  const api = useApi();
+  const [submitting, setSubmitting] = useState(false);
 
   const { control, handleSubmit, register, reset } = useForm<Application>();
 
@@ -75,8 +80,21 @@ const ApplicationDetails = () => {
     defaultValue: [],
   });
 
-  const onSubmit = handleSubmit((formData) => {
-    console.log(formData);
+  const onSubmit = handleSubmit(async (formData) => {
+    if (!data || submitting) {
+      return;
+    }
+    setSubmitting(true);
+
+    try {
+      const updatedApplication = await api
+        .patch(`/api/applications/${data.id}`, { json: formData })
+        .json<Application>();
+      void mutate(updatedApplication);
+      toast.success(t('application_details.save_success'));
+    } finally {
+      setSubmitting(false);
+    }
   });
 
   const isAdvancedSettings = location.pathname.includes('advanced-settings');
@@ -218,6 +236,7 @@ const ApplicationDetails = () => {
               </div>
               <div className={styles.submit}>
                 <Button
+                  disabled={submitting}
                   htmlType="submit"
                   type="primary"
                   title="admin_console.application_details.save_changes"
