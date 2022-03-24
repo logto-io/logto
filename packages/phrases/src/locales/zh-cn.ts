@@ -40,6 +40,7 @@ const translation = {
     errors: {
       something_went_wrong: '哎哟喂，遇到了一个错误',
       unknown_server_error: '服务器发生未知错误。',
+      empty: '没有数据',
     },
     tab_sections: {
       overview: '概览',

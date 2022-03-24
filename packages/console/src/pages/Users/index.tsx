@@ -10,6 +10,7 @@ import Card from '@/components/Card';
 import CardTitle from '@/components/CardTitle';
 import ImagePlaceholder from '@/components/ImagePlaceholder';
 import ItemPreview from '@/components/ItemPreview';
+import TableEmpty from '@/components/Table/TableEmpty';
 import TableError from '@/components/Table/TableError';
 import TableLoading from '@/components/Table/TableLoading';
 import { RequestError } from '@/hooks/use-api';
@@ -73,6 +74,17 @@ const Users = () => {
             />
           )}
           {isLoading && <TableLoading columns={3} />}
+          {data?.length === 0 && (
+            <TableEmpty>
+              <Button
+                title="admin_console.users.create"
+                type="outline"
+                onClick={() => {
+                  setIsCreateFormOpen(true);
+                }}
+              />
+            </TableEmpty>
+          )}
           {data?.map(({ id, name, username }) => (
             <tr
               key={id}

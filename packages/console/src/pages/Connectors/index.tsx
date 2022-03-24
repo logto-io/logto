@@ -4,11 +4,11 @@ import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
 import useSWR from 'swr';
 
-import placeholder from '@/assets/images/social-connectors-placeholder.svg';
 import Button from '@/components/Button';
 import Card from '@/components/Card';
 import CardTitle from '@/components/CardTitle';
 import TabNav, { TabNavLink } from '@/components/TabNav';
+import TableEmpty from '@/components/Table/TableEmpty';
 import TableError from '@/components/Table/TableError';
 import TableLoading from '@/components/Table/TableLoading';
 import { RequestError } from '@/hooks/use-api';
@@ -88,18 +88,12 @@ const Connectors = () => {
             )}
             {isLoading && <TableLoading columns={3} />}
             {socialConnectors?.length === 0 && (
-              <tr>
-                <td colSpan={3}>
-                  <div className={styles.empty}>
-                    <div>
-                      <img src={placeholder} />
-                    </div>
-                    <div className={styles.emptyLine}>{t('connectors.type.social')}</div>
-                    <div className={styles.emptyLine}>{t('connectors.social_connector_eg')}</div>
-                    <Button disabled title="admin_console.connectors.create" type="primary" />
-                  </div>
-                </td>
-              </tr>
+              <TableEmpty
+                title={t('connectors.type.social')}
+                content={t('connectors.social_connector_eg')}
+              >
+                <Button title="admin_console.connectors.create" type="outline" />
+              </TableEmpty>
             )}
             {!isLoading && !isSocial && (
               <ConnectorRow
