@@ -10,6 +10,7 @@ import Card from '@/components/Card';
 import CardTitle from '@/components/CardTitle';
 import ImagePlaceholder from '@/components/ImagePlaceholder';
 import ItemPreview from '@/components/ItemPreview';
+import TableError from '@/components/Table/TableError';
 import TableLoading, { ItemPreviewLoading } from '@/components/Table/TableLoading';
 import { RequestError } from '@/hooks/use-api';
 import * as modalStyles from '@/scss/modal.module.scss';
@@ -20,7 +21,7 @@ import * as styles from './index.module.scss';
 const Users = () => {
   const [isCreateFormOpen, setIsCreateFormOpen] = useState(false);
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { data, error } = useSWR<User[], RequestError>('/api/users');
+  const { data, error, mutate } = useSWR<User[], RequestError>('/api/users');
   const isLoading = !data && !error;
   const navigate = useNavigate();
 
@@ -61,9 +62,10 @@ const Users = () => {
         </thead>
         <tbody>
           {error && (
-            <tr>
-              <td colSpan={2}>error occurred: {error.metadata.code}</td>
-            </tr>
+            <TableError
+              content={error.body.message}
+              onRetry={async () => mutate(undefined, true)}
+            />
           )}
           {isLoading && (
             <TableLoading>

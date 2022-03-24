@@ -13,6 +13,7 @@ import CardTitle from '@/components/CardTitle';
 import CopyToClipboard from '@/components/CopyToClipboard';
 import ImagePlaceholder from '@/components/ImagePlaceholder';
 import ItemPreview from '@/components/ItemPreview';
+import TableError from '@/components/Table/TableError';
 import TableLoading, { ItemPreviewLoading } from '@/components/Table/TableLoading';
 import { RequestError } from '@/hooks/use-api';
 import * as modalStyles from '@/scss/modal.module.scss';
@@ -69,9 +70,10 @@ const ApiResources = () => {
         </thead>
         <tbody>
           {error && (
-            <tr>
-              <td colSpan={2}>error occurred: {error.metadata.code}</td>
-            </tr>
+            <TableError
+              content={error.body.message}
+              onRetry={async () => mutate(undefined, true)}
+            />
           )}
           {isLoading && (
             <TableLoading>

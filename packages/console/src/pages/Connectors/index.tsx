@@ -9,6 +9,7 @@ import Button from '@/components/Button';
 import Card from '@/components/Card';
 import CardTitle from '@/components/CardTitle';
 import TabNav, { TabNavLink } from '@/components/TabNav';
+import TableError from '@/components/Table/TableError';
 import TableLoading, { ItemPreviewLoading } from '@/components/Table/TableLoading';
 import { RequestError } from '@/hooks/use-api';
 
@@ -21,7 +22,7 @@ const Connectors = () => {
   const isSocial = location.pathname === '/connectors/social';
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const [createType, setCreateType] = useState<ConnectorType>();
-  const { data, error } = useSWR<ConnectorDTO[], RequestError>('/api/connectors');
+  const { data, error, mutate } = useSWR<ConnectorDTO[], RequestError>('/api/connectors');
   const isLoading = !data && !error;
 
   const emailConnector = useMemo(
@@ -75,9 +76,10 @@ const Connectors = () => {
           </thead>
           <tbody>
             {error && (
-              <tr>
-                <td colSpan={3}>error occurred: {error.metadata.code}</td>
-              </tr>
+              <TableError
+                content={error.body.message}
+                onRetry={async () => mutate(undefined, true)}
+              />
             )}
             {isLoading && (
               <TableLoading>

@@ -105,7 +105,7 @@ const UserDetails = () => {
       <BackLink to="/users">{t('user_details.back_to_users')}</BackLink>
 
       {isLoading && <div>loading</div>}
-      {error && <div>{`error occurred: ${error.metadata.code}`}</div>}
+      {error && <div>{`error occurred: ${error.body.message}`}</div>}
       {id && data && (
         <>
           <Card className={styles.header}>

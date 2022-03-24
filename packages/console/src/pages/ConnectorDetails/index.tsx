@@ -98,7 +98,7 @@ const ConnectorDetails = () => {
     <div className={styles.container}>
       <BackLink to="/connectors">{t('connector_details.back_to_connectors')}</BackLink>
       {isLoading && <div>loading</div>}
-      {error && <div>{`error occurred: ${error.metadata.code}`}</div>}
+      {error && <div>{`error occurred: ${error.body.message}`}</div>}
       {data && (
         <Card className={styles.header}>
           {data.metadata.logo.startsWith('http') ? (

@@ -6,6 +6,7 @@ const translation = {
     add_another: '+ Add Another',
     skip: '跳过',
     next: '下一步',
+    retry: '重试',
   },
   sign_in: {
     action: '登录',
@@ -34,6 +35,7 @@ const translation = {
       required: '必填',
     },
     errors: {
+      something_went_wrong: '哎哟喂，遇到了一个错误',
       unknown_server_error: '服务器发生未知错误。',
     },
     tab_sections: {
