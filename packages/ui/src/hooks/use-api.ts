@@ -5,9 +5,7 @@ import { useState, useCallback } from 'react';
 type UseApi<T extends any[], U> = {
   result?: U;
   loading: boolean;
-  // FIXME:
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  error: RequestErrorBody | null;
+  error: RequestErrorBody | undefined;
   run: (...args: T) => Promise<void>;
 };
 
@@ -15,31 +13,30 @@ function useApi<Args extends any[], Response>(
   api: (...args: Args) => Promise<Response>
 ): UseApi<Args, Response> {
   const [loading, setLoading] = useState(false);
-  // FIXME:
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  const [error, setError] = useState<RequestErrorBody | null>(null);
+  const [error, setError] = useState<RequestErrorBody>();
   const [result, setResult] = useState<Response>();
 
   const run = useCallback(
     async (...args: Args) => {
       setLoading(true);
-      setError(null);
+      // eslint-disable-next-line unicorn/no-useless-undefined
+      setError(undefined);
 
       try {
         const result = await api(...args);
         setResult(result);
-        setLoading(false);
       } catch (error: unknown) {
-        if (error instanceof HTTPError) {
+        if (error instanceof HTTPError && error.response.body) {
           const kyError = await error.response.json<RequestErrorBody>();
           setError(kyError);
-          setLoading(false);
 
           return;
         }
 
-        setLoading(false);
+        // TODO: handle unknown server error
         throw error;
+      } finally {
+        setLoading(false);
       }
     },
     [api]

@@ -20,3 +20,7 @@
 .content {
   @include _.text-hint;
 }
+
+.errorMessage {
+  margin-top: _.unit(2);
+}

@@ -39,19 +39,29 @@ const Register: FC = () => {
         <div className={styles.title}>{t('register.create_account')}</div>
         <Input
           name="username"
-          isDisabled={loading}
+          disabled={loading}
           placeholder={t('sign_in.username')}
           value={username}
-          onChange={setUsername} // TODO: account validation
+          onChange={({ target }) => {
+            if (target instanceof HTMLInputElement) {
+              const { value } = target;
+              setUsername(value);
+            }
+          }}
         />
         <PasswordInput
           name="password"
-          isDisabled={loading}
+          disabled={loading}
           placeholder={t('sign_in.password')}
           value={password}
-          onChange={setPassword} // TODO: password validation
+          onChange={({ target }) => {
+            if (target instanceof HTMLInputElement) {
+              const { value } = target;
+              setPassword(value);
+            }
+          }}
         />
-        {error && <ErrorMessage className={styles.box} errorCode={error.code} />}
+        {error && <ErrorMessage className={styles.box} error={error.code} />}
         <Button isDisabled={loading} onClick={signUp}>
           {loading ? t('register.loading') : t('register.action')}
         </Button>

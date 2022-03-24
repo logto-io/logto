@@ -9,6 +9,7 @@
   background: var(--color-control-background);
   color: var(--color-font-primary);
 
+
   > *:not(:first-child) {
     margin-left: _.unit(1);
   }
@@ -39,6 +40,10 @@
       transition: background-color 5000s ease-in-out 0s;
     }
   }
+}
+
+.errorMessage {
+  margin-top: _.unit(2);
 }
 
 .actionButton {

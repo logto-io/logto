@@ -1,8 +1,8 @@
 import { TermsOfUse as TermsOfUseType } from '@logto/schemas';
-import classNames from 'classnames';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 
+import ErrorMessage, { ErrorType } from '@/components/ErrorMessage';
 import RadioButtonIcon from '@/components/Icons/RadioButtonIcon';
 import TextLink from '@/components/TextLink';
 
@@ -13,10 +13,11 @@ type Props = {
   className?: string;
   termsOfUse: TermsOfUseType;
   isChecked?: boolean;
+  error?: ErrorType;
   onChange: (checked: boolean) => void;
 };
 
-const TermsOfUse = ({ name, className, termsOfUse, isChecked, onChange }: Props) => {
+const TermsOfUse = ({ name, className, termsOfUse, isChecked, error, onChange }: Props) => {
   const { t } = useTranslation();
 
   if (!termsOfUse.enabled || !termsOfUse.contentUrl) {
@@ -26,25 +27,28 @@ const TermsOfUse = ({ name, className, termsOfUse, isChecked, onChange }: Props)
   const prefix = t('sign_in.terms_agreement_prefix');
 
   return (
-    <div
-      className={classNames(styles.terms, className)}
-      onClick={() => {
-        onChange(!isChecked);
-      }}
-    >
-      <input disabled readOnly name={name} type="checkbox" checked={isChecked} />
-      <RadioButtonIcon checked={isChecked} className={styles.radioButton} />
-      <div className={styles.content}>
-        {prefix}
-        <TextLink
-          text="sign_in.terms_of_use"
-          href={termsOfUse.contentUrl}
-          type="secondary"
-          onClick={(event) => {
-            event.stopPropagation();
-          }}
-        />
+    <div className={className}>
+      <div
+        className={styles.terms}
+        onClick={() => {
+          onChange(!isChecked);
+        }}
+      >
+        <input disabled readOnly name={name} type="checkbox" checked={isChecked} />
+        <RadioButtonIcon checked={isChecked} className={styles.radioButton} />
+        <div className={styles.content}>
+          {prefix}
+          <TextLink
+            text="sign_in.terms_of_use"
+            href={termsOfUse.contentUrl}
+            type="secondary"
+            onClick={(event) => {
+              event.stopPropagation();
+            }}
+          />
+        </div>
       </div>
+      {error && <ErrorMessage error={error} className={styles.errorMessage} />}
     </div>
   );
 };

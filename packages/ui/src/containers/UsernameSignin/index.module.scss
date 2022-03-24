@@ -1,0 +1,36 @@
+@use '@/scss/underscore' as _;
+
+.form {
+  width: 100%;
+  max-width: 320px;
+  @include _.flex-column;
+
+  > * {
+    width: 100%;
+  }
+
+  .inputField:first-child {
+    margin-bottom: _.unit(4);
+
+    &.withError {
+      margin-bottom: _.unit(2);
+    }
+  }
+
+  .textLink {
+    margin-top: _.unit(3);
+    text-align: right;
+  }
+
+  .inputField.withError + .textLink {
+    margin-top: _.unit(1);
+  }
+
+  .terms {
+    margin: _.unit(5) 0;
+
+    &.withError {
+      margin: _.unit(5) 0  _.unit(2) 0;
+    }
+  }
+}

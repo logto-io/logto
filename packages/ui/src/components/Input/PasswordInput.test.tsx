@@ -8,7 +8,17 @@ describe('Input Field UI Component', () => {
   const onChange = jest.fn();
 
   test('render password input', () => {
-    const { container } = render(<PasswordInput name="foo" value={text} onChange={onChange} />);
+    const { container } = render(
+      <PasswordInput
+        name="foo"
+        value={text}
+        onChange={({ target }) => {
+          if (target instanceof HTMLInputElement) {
+            onChange(target.value);
+          }
+        }}
+      />
+    );
 
     const inputEle = container.querySelector('input');
     expect(inputEle?.value).toEqual(text);
@@ -18,6 +28,12 @@ describe('Input Field UI Component', () => {
       fireEvent.change(inputEle, { target: { value: 'update' } });
       expect(onChange).toBeCalledWith('update');
     }
+  });
+
+  test('render error message', () => {
+    const errorCode = 'user.email_not_exists';
+    const { queryByText } = render(<PasswordInput error={errorCode} />);
+    expect(queryByText(`errors:${errorCode}`)).not.toBeNull();
   });
 
   test('click on toggle visibility button', () => {

@@ -45,7 +45,7 @@ $font-family: 'PingFang SC', 'SF Pro Text', sans-serif;
     color var(--transition-default-function);
 }
 
-.dark {
+.darkLegacy {
   /* ===== Legacy Styling ===== */
   /* Color */
   --color-heading: #f3f6f9;
@@ -61,7 +61,8 @@ $font-family: 'PingFang SC', 'SF Pro Text', sans-serif;
   --shadow-control: 1px 1px 2px rgb(221, 221, 221, 25%);
 }
 
-.light {
+.light,
+.dark {
   /* Color */
   --color-primary: #{$color-primary};
   --color-background: #{$color-neutral-0};

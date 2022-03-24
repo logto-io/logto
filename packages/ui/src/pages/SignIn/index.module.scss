@@ -5,35 +5,11 @@
   padding: _.unit(8);
   height: 100%;
   @include _.flex-column;
-}
 
-.form {
-  width: 100%;
-  @include _.flex-column;
-
-  > * {
-    margin-bottom: _.unit(1.5);
+  .header {
+    margin-bottom: _.unit(10);
   }
 
-  .title {
-    @include _.title;
-    margin-bottom: _.unit(9);
-  }
-
-  .box {
-    margin-bottom: _.unit(-6);
-  }
-
-  > .inputField {
-    width: 100%;
-    margin-top: _.unit(3);
-    max-width: 320px;
-  }
-
-  > button {
-    margin-top: _.unit(12);
-    max-width: 320px;
-  }
 
   .createAccount {
     position: absolute;
