@@ -13,6 +13,7 @@ import CardTitle from '@/components/CardTitle';
 import CopyToClipboard from '@/components/CopyToClipboard';
 import ImagePlaceholder from '@/components/ImagePlaceholder';
 import ItemPreview from '@/components/ItemPreview';
+import TableLoading, { ItemPreviewLoading } from '@/components/Table/TableLoading';
 import { RequestError } from '@/hooks/use-api';
 import * as modalStyles from '@/scss/modal.module.scss';
 
@@ -73,9 +74,14 @@ const ApiResources = () => {
             </tr>
           )}
           {isLoading && (
-            <tr>
-              <td colSpan={2}>loading</td>
-            </tr>
+            <TableLoading>
+              <td className={styles.apiResourceName}>
+                <ItemPreviewLoading />
+              </td>
+              <td>
+                <div />
+              </td>
+            </TableLoading>
           )}
           {data?.map(({ id, name, indicator }) => (
             <tr

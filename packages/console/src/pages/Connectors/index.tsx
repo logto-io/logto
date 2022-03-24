@@ -9,6 +9,7 @@ import Button from '@/components/Button';
 import Card from '@/components/Card';
 import CardTitle from '@/components/CardTitle';
 import TabNav, { TabNavLink } from '@/components/TabNav';
+import TableLoading, { ItemPreviewLoading } from '@/components/Table/TableLoading';
 import { RequestError } from '@/hooks/use-api';
 
 import ConnectorRow from './components/ConnectorRow';
@@ -79,9 +80,17 @@ const Connectors = () => {
               </tr>
             )}
             {isLoading && (
-              <tr>
-                <td colSpan={3}>loading</td>
-              </tr>
+              <TableLoading>
+                <td className={styles.connectorName}>
+                  <ItemPreviewLoading />
+                </td>
+                <td>
+                  <div />
+                </td>
+                <td>
+                  <div />
+                </td>
+              </TableLoading>
             )}
             {socialConnectors?.length === 0 && (
               <tr>
