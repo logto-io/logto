@@ -14,7 +14,7 @@ import CopyToClipboard from '@/components/CopyToClipboard';
 import ImagePlaceholder from '@/components/ImagePlaceholder';
 import ItemPreview from '@/components/ItemPreview';
 import TableError from '@/components/Table/TableError';
-import TableLoading, { ItemPreviewLoading } from '@/components/Table/TableLoading';
+import TableLoading from '@/components/Table/TableLoading';
 import { RequestError } from '@/hooks/use-api';
 import * as modalStyles from '@/scss/modal.module.scss';
 import { applicationTypeI18nKey } from '@/types/applications';
@@ -60,9 +60,13 @@ const Applications = () => {
         </Modal>
       </div>
       <table className={styles.table}>
+        <colgroup>
+          <col className={styles.applicationName} />
+          <col />
+        </colgroup>
         <thead>
           <tr>
-            <th className={styles.applicationName}>{t('applications.application_name')}</th>
+            <th>{t('applications.application_name')}</th>
             <th>{t('applications.client_id')}</th>
           </tr>
         </thead>
@@ -73,16 +77,7 @@ const Applications = () => {
               onRetry={async () => mutate(undefined, true)}
             />
           )}
-          {isLoading && (
-            <TableLoading>
-              <td className={styles.applicationName}>
-                <ItemPreviewLoading />
-              </td>
-              <td>
-                <div />
-              </td>
-            </TableLoading>
-          )}
+          {isLoading && <TableLoading columns={2} />}
           {data?.map(({ id, name, type }) => (
             <tr
               key={id}
@@ -91,7 +86,7 @@ const Applications = () => {
                 navigate(`/applications/${id}`);
               }}
             >
-              <td className={styles.applicationName}>
+              <td>
                 <ItemPreview
                   title={name}
                   subtitle={t(`${applicationTypeI18nKey[type]}.title`)}

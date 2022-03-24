@@ -22,15 +22,9 @@ table {
   border: 1px solid var(--color-neutral-90);
   border-radius: _.unit(2);
   border-spacing: 0;
+  width: 100%;
+  table-layout: fixed;
   overflow: hidden;
-
-  thead,
-  tbody,
-  tr {
-    display: table;
-    width: 100%;
-    table-layout: fixed;
-  }
 
   thead {
     th {
@@ -48,11 +42,6 @@ table {
   }
 
   tbody {
-    display: block;
-    overflow: auto;
-    table-layout: fixed;
-    max-height: calc(100% - _.unit(40));
-
     td {
       border-bottom: 1px solid var(--color-neutral-90);
       padding: _.unit(5) _.unit(4);
