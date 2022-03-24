@@ -156,11 +156,11 @@
 
     &:active {
       color: var(--color-primary-30);
-      background: var(--color-primary-95);
     }
 
     &:not(:disabled):hover {
       color: var(--color-primary-30);
+      background: var(--color-primary-95);
     }
   }
 }
