@@ -1,13 +1,14 @@
 import classNames from 'classnames';
-import React from 'react';
+import React, { ReactNode } from 'react';
 
 import * as styles from './index.module.scss';
 
 export type Props = {
   htmlType?: 'button' | 'submit' | 'reset';
+  size?: 'large' | 'small';
   isDisabled?: boolean;
   className?: string;
-  children: string; // TODO: make it i18nKey with optional params
+  children: ReactNode; // TODO: make it i18nKey with optional params
   type?: 'primary' | 'secondary';
   onClick?: React.MouseEventHandler;
 };
@@ -15,6 +16,7 @@ export type Props = {
 const Button = ({
   htmlType = 'button',
   type = 'primary',
+  size = 'large',
   isDisabled,
   className,
   children,
@@ -22,7 +24,7 @@ const Button = ({
 }: Props) => (
   <button
     disabled={isDisabled}
-    className={classNames(styles.button, styles[type], className)}
+    className={classNames(styles.button, styles[type], styles[size], className)}
     type={htmlType}
     onClick={onClick}
   >

@@ -5,7 +5,7 @@
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  padding: _.unit(3) _.unit(10);
+  padding: _.unit(3);
   border-radius: _.unit(2);
   font: var(--font-button-text);
   transition: var(--transition-default-control);
@@ -19,20 +19,19 @@
   border: none;
   background: var(--color-primary);
   color: var(--color-font-button-text);
-
-  &:active {
-    background: linear-gradient(0deg, rgba(0, 0, 0, 16%), rgba(0, 0, 0, 16%)), var(--color-primary);
-    color: var(--color-font-button-text-active);
-  }
 }
 
 .secondary {
   border: _.border(var(--color-border));
   background: var(--color-background);
   color: var(--color-font-primary);
+}
 
-  &:active {
-    border: _.border(var(--color-border-active));
-    color: var(--color-font-secondary-active);
+.small {
+  font: var(--font-button-text-small);
+
+  &.secondary {
+    border: _.border(var(--color-border-secondary));
+    color: var(--color-font-secondary-dialog);
   }
 }

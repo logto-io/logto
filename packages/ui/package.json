@@ -25,6 +25,7 @@
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-i18next": "^11.15.4",
+    "react-modal": "^3.14.4",
     "react-phone-number-input": "^3.1.46",
     "react-router-dom": "^5.2.0"
   },
@@ -40,6 +41,7 @@
     "@types/jest": "^27.4.0",
     "@types/react": "^17.0.14",
     "@types/react-dom": "^17.0.9",
+    "@types/react-modal": "^3.13.1",
     "@types/react-router-dom": "^5.3.2",
     "eslint": "^8.10.0",
     "identity-obj-proxy": "^3.0.0",

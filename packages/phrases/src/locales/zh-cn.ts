@@ -7,6 +7,8 @@ const translation = {
     skip: '跳过',
     next: '下一步',
     retry: '重试',
+    confirm: '确认',
+    cancel: '取消',
   },
   sign_in: {
     action: '登录',

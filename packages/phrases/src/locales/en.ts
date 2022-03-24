@@ -5,6 +5,8 @@ const translation = {
     skip: 'Skip',
     next: 'Next',
     retry: 'Try again',
+    confirm: 'Confirm',
+    cancel: 'Cancel',
   },
   sign_in: {
     action: 'Sign In',

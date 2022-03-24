@@ -1,0 +1,14 @@
+.modal {
+  position: absolute;
+  left: 40px;
+  right: 40px;
+  top: 50%;
+  transform: translate(0, -50%);
+  outline: none;
+}
+
+.overlay {
+  position: fixed;
+  background: rgba(0, 0, 0, 16%);
+  inset: 0;
+}
