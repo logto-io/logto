@@ -6,7 +6,7 @@ const translation = {
     add_another: '+ Add Another',
     skip: '跳过',
     next: '下一步',
-    try_again: '重试',
+    retry: '重试',
   },
   sign_in: {
     action: '登录',

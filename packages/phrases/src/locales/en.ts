@@ -4,7 +4,7 @@ const translation = {
     add_another: '+ Add Another',
     skip: 'Skip',
     next: 'Next',
-    try_again: 'Try again',
+    retry: 'Try again',
   },
   sign_in: {
     action: 'Sign In',
@@ -33,7 +33,7 @@ const translation = {
       required: 'Required',
     },
     errors: {
-      something_went_wrong: 'Opps! Something went wrong',
+      something_went_wrong: 'Oops! Something went wrong',
       unknown_server_error: 'Unknown server error occurred.',
     },
     tab_sections: {

@@ -9,10 +9,10 @@ import * as styles from './TableError.module.scss';
 type Props = {
   title?: string;
   content?: string;
-  onTryAgain?: () => void;
+  onRetry?: () => void;
 };
 
-const TableError = ({ title, content, onTryAgain }: Props) => {
+const TableError = ({ title, content, onRetry }: Props) => {
   const { t } = useTranslation();
 
   return (
@@ -28,7 +28,7 @@ const TableError = ({ title, content, onTryAgain }: Props) => {
           <div className={styles.content}>
             {content ?? t('admin_console.errors.unknown_server_error')}
           </div>
-          {onTryAgain && <Button title="general.try_again" onClick={onTryAgain} />}
+          {onRetry && <Button title="general.retry" onClick={onRetry} />}
         </div>
       </td>
     </tr>

@@ -72,9 +72,7 @@ const ApiResources = () => {
           {error && (
             <TableError
               content={error.body.message}
-              onTryAgain={() => {
-                void mutate(undefined, true);
-              }}
+              onRetry={async () => mutate(undefined, true)}
             />
           )}
           {isLoading && (
