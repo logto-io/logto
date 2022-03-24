@@ -294,7 +294,6 @@ const errors = {
     email_not_exists: '邮箱地址尚未注册。',
     phone_not_exists: '手机号码尚未注册。',
     identity_not_exists: '该社交账号尚未注册。',
-    identity_empty: '找不到关于该用户的任何社交账号。',
     identity_exists: '该社交账号已被注册。',
   },
   password: {

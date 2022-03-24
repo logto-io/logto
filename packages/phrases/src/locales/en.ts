@@ -296,7 +296,6 @@ const errors = {
     email_not_exists: 'The email address has not been registered yet.',
     phone_not_exists: 'The phone number has not been registered yet.',
     identity_not_exists: 'The social account has not been registered yet.',
-    identity_empty: 'Can not find any social account for this user.',
     identity_exists: 'The social account has been registered.',
   },
   password: {

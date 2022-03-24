@@ -33,7 +33,9 @@ export const mockUser: User = {
   passwordEncryptionSalt: null,
   name: null,
   avatar: null,
-  identities: {},
+  identities: {
+    connector1: { userId: 'connector1', details: {} },
+  },
   customData: {},
 };
 

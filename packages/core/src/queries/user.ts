@@ -138,14 +138,16 @@ export const clearUserCustomDataById = async (id: string) => {
   }
 };
 
-export const clearUserIdentitiesById = async (id: string) => {
-  const { rowCount } = await pool.query<User>(sql`
-    update ${table}
-    set ${fields.identities}='{}'::jsonb
-    where ${fields.id}=${id}
-  `);
+export const deleteConnectorInfoFromUserIdentities = async (
+  userId: string,
+  connectorId: string
+) => {
+  const { identities } = await findUserById(userId);
 
-  if (rowCount < 1) {
-    throw new UpdateError(Users, { set: { identities: {} }, where: { id } });
-  }
+  return pool.one<User>(sql`
+    update ${table}
+    set ${fields.identities}=${JSON.stringify(identities)}::jsonb-${connectorId}
+    where ${fields.id}=${userId}
+    returning *
+  `);
 };

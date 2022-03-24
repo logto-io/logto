@@ -1,4 +1,5 @@
 import { arbitraryObjectGuard, userInfoSelectFields } from '@logto/schemas';
+import { has } from '@silverhand/essentials';
 import pick from 'lodash.pick';
 import { InvalidInputError } from 'slonik';
 import { object, string } from 'zod';
@@ -10,8 +11,8 @@ import koaPagination from '@/middleware/koa-pagination';
 import { findRolesByRoleNames } from '@/queries/roles';
 import {
   clearUserCustomDataById,
-  clearUserIdentitiesById,
   deleteUserById,
+  deleteConnectorInfoFromUserIdentities,
   findUsers,
   countUsers,
   findUserById,
@@ -276,21 +277,11 @@ export default function adminUserRoutes<T extends AuthedRouter>(router: T) {
 
       const { identities } = await findUserById(userId);
 
-      if (Object.entries(identities).length === 0) {
-        throw new RequestError({ code: 'user.identity_empty', status: 404 });
-      }
-
-      if (!Object.prototype.hasOwnProperty.call(identities, connectorId)) {
+      if (!has(identities, connectorId)) {
         throw new RequestError({ code: 'user.identity_not_exists', status: 404 });
       }
 
-      const restIdentities = Object.fromEntries(
-        Object.entries(identities).filter(([key]) => key !== connectorId)
-      );
-      await clearUserIdentitiesById(userId);
-      const updatedUser = await updateUserById(userId, {
-        identities: restIdentities,
-      });
+      const updatedUser = await deleteConnectorInfoFromUserIdentities(userId, connectorId);
       ctx.body = pick(updatedUser, ...userInfoSelectFields);
 
       return next();
