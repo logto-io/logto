@@ -1,4 +1,5 @@
 import { User } from '@logto/schemas';
+import { Nullable } from '@silverhand/essentials';
 import React, { useEffect, useState } from 'react';
 import { useController, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
@@ -31,12 +32,12 @@ import UserConnectors from './components/UserConnectors';
 import * as styles from './index.module.scss';
 
 type FormData = {
-  primaryEmail: string;
-  primaryPhone: string;
-  username: string;
-  name: string;
-  avatar: string;
-  roles: string;
+  primaryEmail: Nullable<string>;
+  primaryPhone: Nullable<string>;
+  username: Nullable<string>;
+  name: Nullable<string>;
+  avatar: Nullable<string>;
+  roles: Nullable<string>;
   customData: string;
 };
 
@@ -61,11 +62,7 @@ const UserDetails = () => {
       return;
     }
     reset({
-      primaryEmail: data.primaryEmail ?? '',
-      primaryPhone: data.primaryPhone ?? '',
-      username: data.username ?? '',
-      name: data.name ?? '',
-      avatar: data.avatar ?? '',
+      ...data,
       roles: data.roleNames.join(','),
       customData: JSON.stringify(data.customData, null, 2),
     });
