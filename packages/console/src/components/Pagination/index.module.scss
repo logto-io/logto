@@ -1,0 +1,37 @@
+@use '@/scss/underscore' as _;
+
+.pagination {
+  display: flex;
+  justify-content: right;
+
+  li {
+    list-style: none;
+
+    &:not(:first-child) {
+      margin-left: _.unit(2);
+    }
+
+    .button {
+      border-radius: 6px;
+      padding: 0;
+      width: 32px;
+      height: 32px;
+      text-overflow: unset;
+
+      > span {
+        margin: 0 auto;
+      }
+    }
+
+    &.disabled {
+      .button {
+        cursor: not-allowed;
+        background: var(--color-neutral-95);
+
+        &:hover {
+          background: var(--color-neutral-95);
+        }
+      }
+    }
+  }
+}

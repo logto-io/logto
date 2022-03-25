@@ -56,6 +56,7 @@ importers:
       react-i18next: ^11.15.4
       react-markdown: ^8.0.0
       react-modal: ^3.14.4
+      react-paginate: ^8.1.2
       react-router-dom: ^6.2.2
       remark-gfm: ^3.0.1
       stylelint: ^13.13.1
@@ -81,6 +82,7 @@ importers:
       react-i18next: 11.15.4_2c37a602a29bb6bd53f3de707a8cfcc5
       react-markdown: 8.0.0_cfedea9b3ed0faf0dded75c187406c5e
       react-modal: 3.14.4_react-dom@17.0.2+react@17.0.2
+      react-paginate: 8.1.2_react@17.0.2
       react-router-dom: 6.2.2_react-dom@17.0.2+react@17.0.2
       remark-gfm: 3.0.1
       swr: 1.2.2_react@17.0.2
@@ -11978,6 +11980,15 @@ packages:
       react-dom: 17.0.2_react@17.0.2
       react-lifecycles-compat: 3.0.4
       warning: 4.0.3
+    dev: false
+
+  /react-paginate/8.1.2_react@17.0.2:
+    resolution: {integrity: sha512-buBkBiN9J8gvZYwYNixlTGRmWOC5C6+tH2XHTN8B5qGkRPOSYFkAqxhWUnxSVAeLKxpVZGPya/gOL2eJQNZGvg==}
+    peerDependencies:
+      react: ^16 || ^17
+    dependencies:
+      prop-types: 15.8.1
+      react: 17.0.2
     dev: false
 
   /react-phone-number-input/3.1.46_react-dom@17.0.2+react@17.0.2:
