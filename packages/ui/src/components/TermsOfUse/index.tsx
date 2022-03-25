@@ -43,6 +43,7 @@ const TermsOfUse = ({ name, className, termsOfUse, isChecked, error, onChange }:
             href={termsOfUse.contentUrl}
             type="secondary"
             onClick={(event) => {
+              // Prevent above parent onClick event being triggered
               event.stopPropagation();
             }}
           />

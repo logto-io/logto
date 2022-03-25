@@ -42,7 +42,7 @@ const defaultState: FieldState = {
 const UsernameSignin: FC = () => {
   const { t, i18n } = useTranslation();
   const [fieldState, setFieldState] = useState<FieldState>(defaultState);
-  const [errors, setErrors] = useState<ErrorState>({});
+  const [fieldErrors, setFieldErrors] = useState<ErrorState>({});
 
   const { setToast } = useContext(PageContext);
 
@@ -55,14 +55,14 @@ const UsernameSignin: FC = () => {
     }
 
     if (!fieldState.username) {
-      setErrors((previous) => ({
+      setFieldErrors((previous) => ({
         ...previous,
         username: { code: 'form.required', data: { fieldName: t('sign_in.username') } },
       }));
     }
 
     if (!fieldState.password) {
-      setErrors((previous) => ({
+      setFieldErrors((previous) => ({
         ...previous,
         password: { code: 'form.required', data: { fieldName: t('sign_in.password') } },
       }));
@@ -73,7 +73,7 @@ const UsernameSignin: FC = () => {
     }
 
     if (!fieldState.termsAgreement) {
-      setErrors((previous) => ({
+      setFieldErrors((previous) => ({
         ...previous,
         termsAgreement: 'form.terms_required',
       }));
@@ -93,11 +93,11 @@ const UsernameSignin: FC = () => {
   useEffect(() => {
     // Clear errors
     for (const key of Object.keys(fieldState) as [keyof FieldState]) {
-      if (fieldState[key] && errors[key]) {
-        setErrors((previous) => ({ ...previous, [key]: undefined }));
+      if (fieldState[key] && fieldErrors[key]) {
+        setFieldErrors((previous) => ({ ...previous, [key]: undefined }));
       }
     }
-  }, [errors, fieldState]);
+  }, [fieldErrors, fieldState]);
 
   useEffect(() => {
     if (error) {
@@ -108,12 +108,12 @@ const UsernameSignin: FC = () => {
   return (
     <form className={styles.form}>
       <Input
-        className={classNames(styles.inputField, errors.username && styles.withError)}
+        className={classNames(styles.inputField, fieldErrors.username && styles.withError)}
         name="username"
         autoComplete="username"
         placeholder={t('sign_in.username')}
         value={fieldState.username}
-        error={errors.username}
+        error={fieldErrors.username}
         onChange={({ target }) => {
           if (target instanceof HTMLInputElement) {
             const { value } = target;
@@ -125,12 +125,12 @@ const UsernameSignin: FC = () => {
         }}
       />
       <PasswordInput
-        className={classNames(styles.inputField, errors.password && styles.withError)}
+        className={classNames(styles.inputField, fieldErrors.password && styles.withError)}
         name="password"
         autoComplete="current-password"
         placeholder={t('sign_in.password')}
         value={fieldState.password}
-        error={errors.password}
+        error={fieldErrors.password}
         onChange={({ target }) => {
           if (target instanceof HTMLInputElement) {
             const { value } = target;
@@ -147,10 +147,10 @@ const UsernameSignin: FC = () => {
 
       <TermsOfUse
         name="termsAgreement"
-        className={classNames(styles.terms, errors.termsAgreement && styles.withError)}
+        className={classNames(styles.terms, fieldErrors.termsAgreement && styles.withError)}
         termsOfUse={{ enabled: true, contentUrl: '/' }}
         isChecked={fieldState.termsAgreement}
-        error={errors.termsAgreement}
+        error={fieldErrors.termsAgreement}
         onChange={(checked) => {
           setFieldState((state) => ({ ...state, termsAgreement: checked }));
         }}
