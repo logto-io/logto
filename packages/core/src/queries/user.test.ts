@@ -407,33 +407,19 @@ describe('user query', () => {
       customData: JSON.stringify(mockUser.customData),
     };
 
-    const expectSqlFindById = sql`
-      select ${sql.join(Object.values(fields), sql`,`)}
-      from ${table}
-      where ${fields.id}=$1
-    `;
-
-    const expectSqlDeleteConnectorInfo = sql`
+    const expectSql = sql`
       update ${table}
-      set ${fields.identities}=$1::jsonb-$2
-      where ${fields.id}=$3
+      set ${fields.identities}=${fields.identities}::jsonb-$1
+      where ${fields.id}=$2
       returning *
     `;
 
-    mockQuery
-      .mockImplementationOnce(async (sql, values) => {
-        expectSqlAssert(sql, expectSqlFindById.sql);
-        expect(values).toEqual([mockUser.id]);
+    mockQuery.mockImplementationOnce(async (sql, values) => {
+      expectSqlAssert(sql, expectSql.sql);
+      expect(values).toEqual([connectorId, mockUser.id]);
 
-        return createMockQueryResult([dbvalue]);
-      })
-      .mockImplementationOnce(async (sql, values) => {
-        expectSqlAssert(sql, expectSqlDeleteConnectorInfo.sql);
-        expect(values[1]).toEqual(connectorId);
-        expect(values[2]).toEqual(mockUser.id);
-
-        return createMockQueryResult([finalDbvalue]);
-      });
+      return createMockQueryResult([finalDbvalue]);
+    });
 
     await expect(deleteUserIdentity(userId, connectorId)).resolves.toEqual(finalDbvalue);
   });
