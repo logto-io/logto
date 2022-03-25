@@ -23,7 +23,7 @@ import {
   updateUserById,
   deleteUserById,
   clearUserCustomDataById,
-  deleteConnectorInfoFromUserIdentities,
+  deleteUserIdentity,
 } from './user';
 
 const mockQuery: jest.MockedFunction<QueryType> = jest.fn();
@@ -395,7 +395,7 @@ describe('user query', () => {
     await expect(clearUserCustomDataById(id)).rejects.toThrowError();
   });
 
-  it('deleteConnectorInfoFromUserIdentities', async () => {
+  it('deleteUserIdentity', async () => {
     const userId = 'foo';
     const connectorId = 'connector1';
 
@@ -435,8 +435,6 @@ describe('user query', () => {
         return createMockQueryResult([finalDbvalue]);
       });
 
-    await expect(deleteConnectorInfoFromUserIdentities(userId, connectorId)).resolves.toEqual(
-      finalDbvalue
-    );
+    await expect(deleteUserIdentity(userId, connectorId)).resolves.toEqual(finalDbvalue);
   });
 });

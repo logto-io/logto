@@ -7,7 +7,7 @@ import {
   hasUser,
   findUserById,
   updateUserById,
-  deleteConnectorInfoFromUserIdentities,
+  deleteUserIdentity,
   deleteUserById,
   clearUserCustomDataById,
 } from '@/queries/user';
@@ -39,21 +39,15 @@ jest.mock('@/queries/user', () => ({
       ...data,
     })
   ),
-  deleteUserById: jest.fn(async (_): Promise<void> => {
-    /* Note: Do nothing */
-  }),
+  deleteUserById: jest.fn(),
   insertUser: jest.fn(
     async (user: CreateUser): Promise<User> => ({
       ...mockUser,
       ...user,
     })
   ),
-  clearUserCustomDataById: jest.fn(async (_): Promise<void> => {
-    /* Note: Do nothing */
-  }),
-  deleteConnectorInfoFromUserIdentities: jest.fn(async (_): Promise<void> => {
-    /* Note: Do nothing */
-  }),
+  clearUserCustomDataById: jest.fn(),
+  deleteUserIdentity: jest.fn(),
 }));
 
 jest.mock('@/lib/user', () => ({
@@ -389,7 +383,7 @@ describe('adminUserRoutes', () => {
     await expect(
       userRequest.delete(`/users/${notExistedUserId}/identities/${arbitraryConnectorId}`)
     ).resolves.toHaveProperty('status', 500);
-    expect(deleteConnectorInfoFromUserIdentities).not.toHaveBeenCalled();
+    expect(deleteUserIdentity).not.toHaveBeenCalled();
   });
 
   it('DELETE /users/:userId/identities/:connectorId should throw if user found and connector is not found', async () => {
@@ -404,7 +398,7 @@ describe('adminUserRoutes', () => {
     await expect(
       userRequest.delete(`/users/${arbitraryUserId}/identities/${notExistedConnectorId}`)
     ).resolves.toHaveProperty('status', 404);
-    expect(deleteConnectorInfoFromUserIdentities).not.toHaveBeenCalled();
+    expect(deleteUserIdentity).not.toHaveBeenCalled();
   });
 
   it('DELETE /users/:userId/identities/:connectorId', async () => {
@@ -417,9 +411,6 @@ describe('adminUserRoutes', () => {
       }
     });
     await userRequest.delete(`/users/${arbitraryUserId}/identities/${arbitraryConnectorId}`);
-    expect(deleteConnectorInfoFromUserIdentities).toHaveBeenCalledWith(
-      arbitraryUserId,
-      arbitraryConnectorId
-    );
+    expect(deleteUserIdentity).toHaveBeenCalledWith(arbitraryUserId, arbitraryConnectorId);
   });
 });

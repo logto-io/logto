@@ -138,10 +138,7 @@ export const clearUserCustomDataById = async (id: string) => {
   }
 };
 
-export const deleteConnectorInfoFromUserIdentities = async (
-  userId: string,
-  connectorId: string
-) => {
+export const deleteUserIdentity = async (userId: string, connectorId: string) => {
   const { identities } = await findUserById(userId);
 
   return pool.one<User>(sql`

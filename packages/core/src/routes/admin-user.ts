@@ -12,7 +12,7 @@ import { findRolesByRoleNames } from '@/queries/roles';
 import {
   clearUserCustomDataById,
   deleteUserById,
-  deleteConnectorInfoFromUserIdentities,
+  deleteUserIdentity,
   findUsers,
   countUsers,
   findUserById,
@@ -281,7 +281,7 @@ export default function adminUserRoutes<T extends AuthedRouter>(router: T) {
         throw new RequestError({ code: 'user.identity_not_exists', status: 404 });
       }
 
-      const updatedUser = await deleteConnectorInfoFromUserIdentities(userId, connectorId);
+      const updatedUser = await deleteUserIdentity(userId, connectorId);
       ctx.body = pick(updatedUser, ...userInfoSelectFields);
 
       return next();
