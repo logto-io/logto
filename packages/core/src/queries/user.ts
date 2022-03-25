@@ -137,3 +137,11 @@ export const clearUserCustomDataById = async (id: string) => {
     throw new UpdateError(Users, { set: { customData: {} }, where: { id } });
   }
 };
+
+export const deleteUserIdentity = async (userId: string, connectorId: string) =>
+  pool.one<User>(sql`
+    update ${table}
+    set ${fields.identities}=${fields.identities}::jsonb-${connectorId}
+    where ${fields.id}=${userId}
+    returning *
+  `);

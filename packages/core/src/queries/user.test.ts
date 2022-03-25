@@ -23,6 +23,7 @@ import {
   updateUserById,
   deleteUserById,
   clearUserCustomDataById,
+  deleteUserIdentity,
 } from './user';
 
 const mockQuery: jest.MockedFunction<QueryType> = jest.fn();
@@ -374,5 +375,52 @@ describe('user query', () => {
     });
 
     await clearUserCustomDataById(id);
+  });
+
+  it('clearUserCustomDataById should throw when user can not be found by id', async () => {
+    const id = 'foo';
+    const expectSql = sql`
+      update ${table}
+      set ${fields.customData}='{}'::jsonb
+      where ${fields.id}=$1
+    `;
+
+    mockQuery.mockImplementationOnce(async (sql, values) => {
+      expectSqlAssert(sql, expectSql.sql);
+      expect(values).toEqual([id]);
+
+      return createMockQueryResult([]);
+    });
+
+    await expect(clearUserCustomDataById(id)).rejects.toThrowError();
+  });
+
+  it('deleteUserIdentity', async () => {
+    const userId = 'foo';
+    const connectorId = 'connector1';
+
+    const { connector1, ...restIdentities } = mockUser.identities;
+    const finalDbvalue = {
+      ...mockUser,
+      roleNames: JSON.stringify(mockUser.roleNames),
+      identities: JSON.stringify(restIdentities),
+      customData: JSON.stringify(mockUser.customData),
+    };
+
+    const expectSql = sql`
+      update ${table}
+      set ${fields.identities}=${fields.identities}::jsonb-$1
+      where ${fields.id}=$2
+      returning *
+    `;
+
+    mockQuery.mockImplementationOnce(async (sql, values) => {
+      expectSqlAssert(sql, expectSql.sql);
+      expect(values).toEqual([connectorId, mockUser.id]);
+
+      return createMockQueryResult([finalDbvalue]);
+    });
+
+    await expect(deleteUserIdentity(userId, connectorId)).resolves.toEqual(finalDbvalue);
   });
 });

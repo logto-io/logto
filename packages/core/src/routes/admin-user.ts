@@ -1,4 +1,5 @@
 import { arbitraryObjectGuard, userInfoSelectFields } from '@logto/schemas';
+import { has } from '@silverhand/essentials';
 import pick from 'lodash.pick';
 import { InvalidInputError } from 'slonik';
 import { object, string } from 'zod';
@@ -11,6 +12,7 @@ import { findRolesByRoleNames } from '@/queries/roles';
 import {
   clearUserCustomDataById,
   deleteUserById,
+  deleteUserIdentity,
   findUsers,
   countUsers,
   findUserById,
@@ -260,6 +262,27 @@ export default function adminUserRoutes<T extends AuthedRouter>(router: T) {
       await clearUserCustomDataById(userId);
 
       ctx.status = 200;
+
+      return next();
+    }
+  );
+
+  router.delete(
+    '/users/:userId/identities/:connectorId',
+    koaGuard({ params: object({ userId: string(), connectorId: string() }) }),
+    async (ctx, next) => {
+      const {
+        params: { userId, connectorId },
+      } = ctx.guard;
+
+      const { identities } = await findUserById(userId);
+
+      if (!has(identities, connectorId)) {
+        throw new RequestError({ code: 'user.identity_not_exists', status: 404 });
+      }
+
+      const updatedUser = await deleteUserIdentity(userId, connectorId);
+      ctx.body = pick(updatedUser, ...userInfoSelectFields);
 
       return next();
     }
