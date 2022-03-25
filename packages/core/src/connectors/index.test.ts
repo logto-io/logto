@@ -68,14 +68,12 @@ const findConnectorById = jest.fn(async (id: string) => {
 
   return connector;
 });
-const hasConnector = jest.fn(async () => true);
 const insertConnector = jest.fn(async (connector: Connector) => connector);
 
 jest.mock('@/queries/connector', () => ({
   ...jest.requireActual('@/queries/connector'),
   findAllConnectors: async () => findAllConnectors(),
   findConnectorById: async (id: string) => findConnectorById(id),
-  hasConnector: async () => hasConnector(),
   insertConnector: async (connector: Connector) => insertConnector(connector),
 }));
 
@@ -159,31 +157,23 @@ describe('getConnectorInstanceByType', () => {
 });
 
 describe('initConnectors', () => {
-  beforeEach(() => {
-    insertConnector.mockClear();
-    hasConnector.mockClear();
-  });
-
-  afterEach(() => {
-    insertConnector.mockClear();
-    hasConnector.mockClear();
-  });
-
   test('should insert the necessary connector if it does not exist in DB', async () => {
+    findAllConnectors.mockImplementationOnce(async () => []);
     await expect(initConnectors()).resolves.not.toThrow();
-    expect(hasConnector).toHaveBeenCalledTimes(connectors.length);
-    expect(insertConnector).not.toHaveBeenCalled();
-  });
-
-  test('should not insert the connector if it exists in DB', async () => {
-    hasConnector.mockImplementation(async () => false);
-
-    await expect(initConnectors()).resolves.not.toThrow();
-    expect(hasConnector).toHaveBeenCalledTimes(connectors.length);
+    expect(insertConnector).toHaveBeenCalledTimes(connectors.length);
 
     for (const [i, connector] of connectors.entries()) {
       const { id } = connector;
       expect(insertConnector).toHaveBeenNthCalledWith(i + 1, { id });
     }
+  });
+
+  test('should not insert the connector if it exists in DB', async () => {
+    await expect(initConnectors()).resolves.not.toThrow();
+    expect(insertConnector).not.toHaveBeenCalled();
+  });
+
+  afterEach(() => {
+    insertConnector.mockClear();
   });
 });

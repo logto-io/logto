@@ -22,13 +22,6 @@ export const findConnectorById = async (id: string) =>
     where ${fields.id}=${id}
   `);
 
-export const hasConnector = async (id: string) =>
-  pool.exists(sql`
-    select ${sql.join(Object.values(fields), sql`, `)}
-    from ${table}
-    where ${fields.id}=${id}
-  `);
-
 export const insertConnector = buildInsertInto<CreateConnector, Connector>(pool, Connectors, {
   returning: true,
 });
