@@ -23,8 +23,8 @@ const ConfirmModal = ({
   classname,
   isOpen = false,
   children,
-  cancelText,
-  confirmText,
+  cancelText = 'general.cancel',
+  confirmText = 'general.confirm',
   onConfirm,
   onClose,
 }: Props) => {
@@ -42,10 +42,10 @@ const ConfirmModal = ({
         <div className={styles.content}>{children}</div>
         <div className={styles.footer}>
           <Button type="secondary" size="small" onClick={onClose}>
-            {t(cancelText ?? 'general.cancel')}
+            {t(cancelText)}
           </Button>
           <Button size="small" onClick={onConfirm ?? onClose}>
-            {t(confirmText ?? 'general.confirm')}
+            {t(confirmText)}
           </Button>
         </div>
       </div>
