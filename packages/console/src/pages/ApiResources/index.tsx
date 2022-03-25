@@ -14,7 +14,7 @@ import CopyToClipboard from '@/components/CopyToClipboard';
 import ImagePlaceholder from '@/components/ImagePlaceholder';
 import ItemPreview from '@/components/ItemPreview';
 import TableError from '@/components/Table/TableError';
-import TableLoading, { ItemPreviewLoading } from '@/components/Table/TableLoading';
+import TableLoading from '@/components/Table/TableLoading';
 import { RequestError } from '@/hooks/use-api';
 import * as modalStyles from '@/scss/modal.module.scss';
 
@@ -62,9 +62,13 @@ const ApiResources = () => {
         </Modal>
       </div>
       <table className={styles.table}>
+        <colgroup>
+          <col className={styles.apiResourceName} />
+          <col />
+        </colgroup>
         <thead>
           <tr>
-            <th className={styles.apiResourceName}>{t('api_resources.api_name')}</th>
+            <th>{t('api_resources.api_name')}</th>
             <th>{t('api_resources.api_identifier')}</th>
           </tr>
         </thead>
@@ -75,16 +79,7 @@ const ApiResources = () => {
               onRetry={async () => mutate(undefined, true)}
             />
           )}
-          {isLoading && (
-            <TableLoading>
-              <td className={styles.apiResourceName}>
-                <ItemPreviewLoading />
-              </td>
-              <td>
-                <div />
-              </td>
-            </TableLoading>
-          )}
+          {isLoading && <TableLoading columns={2} />}
           {data?.map(({ id, name, indicator }) => (
             <tr
               key={id}
@@ -93,7 +88,7 @@ const ApiResources = () => {
                 navigate(buildDetailsLink(id));
               }}
             >
-              <td className={styles.apiResourceName}>
+              <td>
                 <ItemPreview title={name} icon={<ImagePlaceholder />} to={buildDetailsLink(id)} />
               </td>
               <td>

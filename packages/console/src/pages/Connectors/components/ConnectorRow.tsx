@@ -5,7 +5,6 @@ import { useTranslation } from 'react-i18next';
 import Button from '@/components/Button';
 import Status from '@/components/Status';
 
-import * as styles from '../index.module.scss';
 import ConnectorName from './ConnectorName';
 
 type Props = {
@@ -31,7 +30,7 @@ const ConnectorRow = ({ type, connector, onClickSetup }: Props) => {
 
   return (
     <tr>
-      <td className={styles.connectorName}>
+      <td>
         <ConnectorName connector={connector} titlePlaceholder={typeLabel} />
       </td>
       <td>{typeLabel}</td>

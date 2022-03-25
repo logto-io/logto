@@ -10,7 +10,7 @@ import Card from '@/components/Card';
 import CardTitle from '@/components/CardTitle';
 import TabNav, { TabNavLink } from '@/components/TabNav';
 import TableError from '@/components/Table/TableError';
-import TableLoading, { ItemPreviewLoading } from '@/components/Table/TableLoading';
+import TableLoading from '@/components/Table/TableLoading';
 import { RequestError } from '@/hooks/use-api';
 
 import ConnectorRow from './components/ConnectorRow';
@@ -67,9 +67,14 @@ const Connectors = () => {
           <TabNavLink href="/connectors/social">{t('connectors.tab_social')}</TabNavLink>
         </TabNav>
         <table className={styles.table}>
+          <colgroup>
+            <col className={styles.connectorName} />
+            <col />
+            <col />
+          </colgroup>
           <thead>
             <tr>
-              <th className={styles.connectorName}>{t('connectors.connector_name')}</th>
+              <th>{t('connectors.connector_name')}</th>
               <th>{t('connectors.connector_type')}</th>
               <th>{t('connectors.connector_status')}</th>
             </tr>
@@ -81,19 +86,7 @@ const Connectors = () => {
                 onRetry={async () => mutate(undefined, true)}
               />
             )}
-            {isLoading && (
-              <TableLoading>
-                <td className={styles.connectorName}>
-                  <ItemPreviewLoading />
-                </td>
-                <td>
-                  <div />
-                </td>
-                <td>
-                  <div />
-                </td>
-              </TableLoading>
-            )}
+            {isLoading && <TableLoading columns={3} />}
             {socialConnectors?.length === 0 && (
               <tr>
                 <td colSpan={3}>

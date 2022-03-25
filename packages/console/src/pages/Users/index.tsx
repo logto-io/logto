@@ -11,7 +11,7 @@ import CardTitle from '@/components/CardTitle';
 import ImagePlaceholder from '@/components/ImagePlaceholder';
 import ItemPreview from '@/components/ItemPreview';
 import TableError from '@/components/Table/TableError';
-import TableLoading, { ItemPreviewLoading } from '@/components/Table/TableLoading';
+import TableLoading from '@/components/Table/TableLoading';
 import { RequestError } from '@/hooks/use-api';
 import * as modalStyles from '@/scss/modal.module.scss';
 
@@ -53,6 +53,11 @@ const Users = () => {
         </Modal>
       </div>
       <table className={styles.table}>
+        <colgroup>
+          <col className={styles.userName} />
+          <col />
+          <col />
+        </colgroup>
         <thead>
           <tr>
             <th>{t('users.user_name')}</th>
@@ -67,19 +72,7 @@ const Users = () => {
               onRetry={async () => mutate(undefined, true)}
             />
           )}
-          {isLoading && (
-            <TableLoading>
-              <td className={styles.userName}>
-                <ItemPreviewLoading />
-              </td>
-              <td>
-                <div />
-              </td>
-              <td>
-                <div />
-              </td>
-            </TableLoading>
-          )}
+          {isLoading && <TableLoading columns={3} />}
           {data?.map(({ id, name, username }) => (
             <tr
               key={id}
@@ -88,7 +81,7 @@ const Users = () => {
                 navigate(`/users/${id}`);
               }}
             >
-              <td className={styles.userName}>
+              <td>
                 <ItemPreview
                   title={name ?? '-'}
                   subtitle={username ?? '-'}
