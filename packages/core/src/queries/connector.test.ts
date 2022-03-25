@@ -30,6 +30,7 @@ describe('connector queries', () => {
     const expectSql = sql`
       select ${sql.join(Object.values(fields), sql`, `)}
       from ${table}
+      order by ${fields.enabled} desc, ${fields.id} asc
     `;
 
     mockQuery.mockImplementationOnce(async (sql, values) => {
