@@ -1,10 +1,5 @@
 import RequestError from '@/errors/RequestError';
-import {
-  findAllConnectors,
-  findConnectorById,
-  hasConnector,
-  insertConnector,
-} from '@/queries/connector';
+import { findAllConnectors, findConnectorById, insertConnector } from '@/queries/connector';
 
 import * as AliyunDM from './aliyun-dm';
 import * as AliyunSMS from './aliyun-sms';
@@ -99,15 +94,16 @@ export const getConnectorInstanceByType = async <T extends ConnectorInstance>(
 };
 
 export const initConnectors = async () => {
+  const connectors = await findAllConnectors();
+  const existingConnectorIds = new Set(connectors.map((connector) => connector.id));
+
   await Promise.all(
     allConnectors.map(async ({ metadata: { id } }) => {
-      if (await hasConnector(id)) {
+      if (existingConnectorIds.has(id)) {
         return;
       }
 
-      await insertConnector({
-        id,
-      });
+      await insertConnector({ id });
     })
   );
 };
