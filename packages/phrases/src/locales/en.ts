@@ -39,6 +39,7 @@ const translation = {
     errors: {
       something_went_wrong: 'Oops! Something went wrong',
       unknown_server_error: 'Unknown server error occurred.',
+      empty: 'No Data',
     },
     tab_sections: {
       overview: 'Overview',

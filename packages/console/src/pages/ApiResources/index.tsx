@@ -13,6 +13,7 @@ import CardTitle from '@/components/CardTitle';
 import CopyToClipboard from '@/components/CopyToClipboard';
 import ImagePlaceholder from '@/components/ImagePlaceholder';
 import ItemPreview from '@/components/ItemPreview';
+import TableEmpty from '@/components/Table/TableEmpty';
 import TableError from '@/components/Table/TableError';
 import TableLoading from '@/components/Table/TableLoading';
 import { RequestError } from '@/hooks/use-api';
@@ -80,6 +81,17 @@ const ApiResources = () => {
             />
           )}
           {isLoading && <TableLoading columns={2} />}
+          {data?.length === 0 && (
+            <TableEmpty>
+              <Button
+                title="admin_console.api_resources.create"
+                type="outline"
+                onClick={() => {
+                  setIsCreateFormOpen(true);
+                }}
+              />
+            </TableEmpty>
+          )}
           {data?.map(({ id, name, indicator }) => (
             <tr
               key={id}
