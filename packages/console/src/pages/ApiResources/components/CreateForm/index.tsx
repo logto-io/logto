@@ -1,5 +1,5 @@
 import { Resource } from '@logto/schemas';
-import React, { useState } from 'react';
+import React from 'react';
 import { useForm } from 'react-hook-form';
 
 import Button from '@/components/Button';
@@ -18,23 +18,21 @@ type Props = {
 };
 
 const CreateForm = ({ onClose }: Props) => {
-  const { handleSubmit, register } = useForm<FormData>();
-  const [loading, setLoading] = useState(false);
+  const {
+    handleSubmit,
+    register,
+    formState: { isSubmitting },
+  } = useForm<FormData>();
+
   const api = useApi();
 
   const onSubmit = handleSubmit(async (data) => {
-    if (loading) {
+    if (isSubmitting) {
       return;
     }
 
-    setLoading(true);
-
-    try {
-      const createdApiResource = await api.post('/api/resources', { json: data }).json<Resource>();
-      onClose?.(createdApiResource);
-    } finally {
-      setLoading(false);
-    }
+    const createdApiResource = await api.post('/api/resources', { json: data }).json<Resource>();
+    onClose?.(createdApiResource);
   });
 
   return (
@@ -43,7 +41,7 @@ const CreateForm = ({ onClose }: Props) => {
       subtitle="api_resources.subtitle"
       footer={
         <Button
-          disabled={loading}
+          disabled={isSubmitting}
           htmlType="submit"
           title="admin_console.api_resources.create"
           size="large"

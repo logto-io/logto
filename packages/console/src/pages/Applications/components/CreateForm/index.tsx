@@ -35,7 +35,7 @@ const CreateForm = ({ onClose }: Props) => {
     handleSubmit,
     control,
     register,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<FormData>();
   const {
     field: { onChange, value, name, ref },
@@ -43,7 +43,6 @@ const CreateForm = ({ onClose }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { data: setting } = useSWR<Setting, RequestError>('/api/settings');
   const api = useApi();
-  const [loading, setLoading] = useState(false);
 
   const isGetStartedSkipped = setting?.adminConsole.applicationSkipGetStarted;
 
@@ -53,23 +52,17 @@ const CreateForm = ({ onClose }: Props) => {
   };
 
   const onSubmit = handleSubmit(async (data) => {
-    if (loading) {
+    if (isSubmitting) {
       return;
     }
 
-    setLoading(true);
+    const createdApp = await api.post('/api/applications', { json: data }).json<Application>();
+    setCreatedApp(createdApp);
 
-    try {
-      const createdApp = await api.post('/api/applications', { json: data }).json<Application>();
-      setCreatedApp(createdApp);
-
-      if (isGetStartedSkipped) {
-        closeModal();
-      } else {
-        setIsQuickStartGuideOpen(true);
-      }
-    } finally {
-      setLoading(false);
+    if (isGetStartedSkipped) {
+      closeModal();
+    } else {
+      setIsQuickStartGuideOpen(true);
     }
   });
 
@@ -80,7 +73,7 @@ const CreateForm = ({ onClose }: Props) => {
       size="large"
       footer={
         <Button
-          disabled={loading}
+          disabled={isSubmitting}
           htmlType="submit"
           title="admin_console.applications.create"
           size="large"

@@ -1,6 +1,7 @@
 import { Resource } from '@logto/schemas';
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import Modal from 'react-modal';
 import { useLocation, useParams } from 'react-router-dom';
@@ -37,10 +38,15 @@ const ApiResourceDetails = () => {
   const { data, error, mutate } = useSWR<Resource, RequestError>(id && `/api/resources/${id}`);
   const isLoading = !data && !error;
 
-  const { handleSubmit, register, reset } = useForm<FormData>({
+  const {
+    handleSubmit,
+    register,
+    reset,
+    formState: { isSubmitting },
+  } = useForm<FormData>({
     defaultValues: data,
   });
-  const [submitting, setSubmitting] = useState(false);
+
   const api = useApi();
 
   const [isDeleteFormOpen, setIsDeleteFormOpen] = useState(false);
@@ -54,21 +60,15 @@ const ApiResourceDetails = () => {
   }, [data, reset]);
 
   const onSubmit = handleSubmit(async (formData) => {
-    if (!data || submitting) {
+    if (!data || isSubmitting) {
       return;
     }
-    setSubmitting(true);
 
-    try {
-      const updatedApiResource = await api
-        .patch(`/api/resources/${data.id}`, { json: formData })
-        .json<Resource>();
-      void mutate(updatedApiResource);
-    } catch (error: unknown) {
-      console.error(error);
-    } finally {
-      setSubmitting(false);
-    }
+    const updatedApiResource = await api
+      .patch(`/api/resources/${data.id}`, { json: formData })
+      .json<Resource>();
+    void mutate(updatedApiResource);
+    toast.success(t('api_resource_details.save_success'));
   });
 
   return (
@@ -157,7 +157,7 @@ const ApiResourceDetails = () => {
               </div>
               <div className={styles.submit}>
                 <Button
-                  disabled={submitting}
+                  disabled={isSubmitting}
                   htmlType="submit"
                   type="primary"
                   title="admin_console.api_resource_details.save_changes"

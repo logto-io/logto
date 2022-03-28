@@ -158,6 +158,7 @@ const translation = {
       cancel: 'Cancel',
       delete: 'Delete',
       api_resource_deleted: 'The API Resource {{name}} deleted.',
+      save_success: 'Saved!',
     },
     connectors: {
       title: '连接器',

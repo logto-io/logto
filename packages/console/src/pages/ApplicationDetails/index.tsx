@@ -52,9 +52,14 @@ const ApplicationDetails = () => {
 
   const [isDeleteFormOpen, setIsDeleteFormOpen] = useState(false);
   const api = useApi();
-  const [submitting, setSubmitting] = useState(false);
 
-  const { control, handleSubmit, register, reset } = useForm<Application>();
+  const {
+    control,
+    handleSubmit,
+    register,
+    reset,
+    formState: { isSubmitting },
+  } = useForm<Application>();
 
   useEffect(() => {
     if (!data) {
@@ -81,20 +86,15 @@ const ApplicationDetails = () => {
   });
 
   const onSubmit = handleSubmit(async (formData) => {
-    if (!data || submitting) {
+    if (!data || isSubmitting) {
       return;
     }
-    setSubmitting(true);
 
-    try {
-      const updatedApplication = await api
-        .patch(`/api/applications/${data.id}`, { json: formData })
-        .json<Application>();
-      void mutate(updatedApplication);
-      toast.success(t('application_details.save_success'));
-    } finally {
-      setSubmitting(false);
-    }
+    const updatedApplication = await api
+      .patch(`/api/applications/${data.id}`, { json: formData })
+      .json<Application>();
+    void mutate(updatedApplication);
+    toast.success(t('application_details.save_success'));
   });
 
   const isAdvancedSettings = location.pathname.includes('advanced-settings');
@@ -236,7 +236,7 @@ const ApplicationDetails = () => {
               </div>
               <div className={styles.submit}>
                 <Button
-                  disabled={submitting}
+                  disabled={isSubmitting}
                   htmlType="submit"
                   type="primary"
                   title="admin_console.application_details.save_changes"

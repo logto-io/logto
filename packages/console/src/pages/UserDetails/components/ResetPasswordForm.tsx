@@ -1,5 +1,5 @@
 import { User } from '@logto/schemas';
-import React, { useState } from 'react';
+import React from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
@@ -23,21 +23,17 @@ const ResetPasswordForm = ({ onClose, userId }: Props) => {
   const { t } = useTranslation(undefined, {
     keyPrefix: 'admin_console',
   });
-  const { handleSubmit, register } = useForm<FormData>();
+  const {
+    handleSubmit,
+    register,
+    formState: { isSubmitting },
+  } = useForm<FormData>();
   const api = useApi();
 
-  const [loading, setLoading] = useState(false);
-
   const onSubmit = handleSubmit(async (data) => {
-    setLoading(true);
-
-    try {
-      await api.patch(`/api/users/${userId}/password`, { json: data }).json<User>();
-      onClose?.();
-      toast.success(t('user_details.reset_password.reset_password_success'));
-    } finally {
-      setLoading(false);
-    }
+    await api.patch(`/api/users/${userId}/password`, { json: data }).json<User>();
+    onClose?.();
+    toast.success(t('user_details.reset_password.reset_password_success'));
   });
 
   return (
@@ -45,7 +41,7 @@ const ResetPasswordForm = ({ onClose, userId }: Props) => {
       title="user_details.reset_password.title"
       footer={
         <Button
-          disabled={loading}
+          disabled={isSubmitting}
           htmlType="submit"
           title="admin_console.user_details.reset_password.reset_password"
           size="large"
