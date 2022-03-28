@@ -47,37 +47,36 @@ const CreateSuccess = ({ username }: Props) => {
       <ModalLayout
         title="user_details.created_title"
         footer={
-          <div className={styles.footer}>
+          <>
             <Button title="admin_console.user_details.created_button_close" onClick={handleClose} />
             <Button
               type="primary"
               title="admin_console.user_details.created_button_copy"
               onClick={handleCopy}
             />
-          </div>
+          </>
         }
+        className={styles.content}
       >
-        <div className={styles.content}>
-          <div>{t('user_details.created_guide')}</div>
-          <div className={styles.info}>
-            <div className={styles.infoLine}>
-              <div>{t('user_details.created_username')}</div>
-              <div className={styles.infoContent}>{username}</div>
+        <div>{t('user_details.created_guide')}</div>
+        <div className={styles.info}>
+          <div className={styles.infoLine}>
+            <div>{t('user_details.created_username')}</div>
+            <div className={styles.infoContent}>{username}</div>
+          </div>
+          <div className={styles.infoLine}>
+            <div>{t('user_details.created_password')}</div>
+            <div className={styles.infoContent}>
+              {passwordVisible ? password : password.replace(/./g, '*')}
             </div>
-            <div className={styles.infoLine}>
-              <div>{t('user_details.created_password')}</div>
-              <div className={styles.infoContent}>
-                {passwordVisible ? password : password.replace(/./g, '*')}
-              </div>
-              <div className={styles.operation}>
-                <IconButton
-                  onClick={() => {
-                    setPasswordVisible((previous) => !previous);
-                  }}
-                >
-                  <Eye />
-                </IconButton>
-              </div>
+            <div className={styles.operation}>
+              <IconButton
+                onClick={() => {
+                  setPasswordVisible((previous) => !previous);
+                }}
+              >
+                <Eye />
+              </IconButton>
             </div>
           </div>
         </div>

@@ -77,21 +77,20 @@ const CreateForm = ({ onClose }: Props) => {
     <ModalLayout
       title="applications.create"
       subtitle="applications.subtitle"
+      size="large"
       footer={
-        <div className={styles.submit}>
-          <Button
-            disabled={loading}
-            htmlType="submit"
-            title="admin_console.applications.create"
-            size="large"
-            type="primary"
-            onClick={onSubmit}
-          />
-        </div>
+        <Button
+          disabled={loading}
+          htmlType="submit"
+          title="admin_console.applications.create"
+          size="large"
+          type="primary"
+          onClick={onSubmit}
+        />
       }
       onClose={onClose}
     >
-      <form className={styles.form}>
+      <form>
         <FormField title="admin_console.applications.select_application_type">
           <RadioGroup ref={ref} name={name} value={value} onChange={onChange}>
             {Object.values(ApplicationType).map((value) => (
@@ -107,17 +106,10 @@ const CreateForm = ({ onClose }: Props) => {
             <div className={styles.error}>{t('applications.no_application_type_selected')}</div>
           )}
         </FormField>
-        <FormField
-          isRequired
-          title="admin_console.applications.application_name"
-          className={styles.textField}
-        >
+        <FormField isRequired title="admin_console.applications.application_name">
           <TextInput {...register('name', { required: true })} />
         </FormField>
-        <FormField
-          title="admin_console.applications.application_description"
-          className={styles.textField}
-        >
+        <FormField title="admin_console.applications.application_description">
           <TextInput {...register('description')} />
         </FormField>
       </form>

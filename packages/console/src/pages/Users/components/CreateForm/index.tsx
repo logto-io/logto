@@ -8,8 +8,6 @@ import ModalLayout from '@/components/ModalLayout';
 import TextInput from '@/components/TextInput';
 import useApi from '@/hooks/use-api';
 
-import * as styles from './index.module.scss';
-
 type FormData = {
   username: string;
   password: string;
@@ -46,39 +44,25 @@ const CreateForm = ({ onClose }: Props) => {
       title="users.create"
       subtitle="users.subtitle"
       footer={
-        <div className={styles.submit}>
-          <Button
-            disabled={loading}
-            htmlType="submit"
-            title="admin_console.users.create"
-            size="large"
-            type="primary"
-            onClick={onSubmit}
-          />
-        </div>
+        <Button
+          disabled={loading}
+          htmlType="submit"
+          title="admin_console.users.create"
+          size="large"
+          type="primary"
+          onClick={onSubmit}
+        />
       }
       onClose={onClose}
     >
-      <form className={styles.form}>
-        <FormField
-          isRequired
-          title="admin_console.users.create_form_username"
-          className={styles.textField}
-        >
+      <form>
+        <FormField isRequired title="admin_console.users.create_form_username">
           <TextInput {...register('username', { required: true })} />
         </FormField>
-        <FormField
-          isRequired
-          title="admin_console.users.create_form_name"
-          className={styles.textField}
-        >
+        <FormField isRequired title="admin_console.users.create_form_name">
           <TextInput {...register('name', { required: true })} />
         </FormField>
-        <FormField
-          isRequired
-          title="admin_console.users.create_form_password"
-          className={styles.textField}
-        >
+        <FormField isRequired title="admin_console.users.create_form_password">
           <TextInput {...register('password', { required: true })} />
         </FormField>
       </form>

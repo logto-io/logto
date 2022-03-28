@@ -13,12 +13,3 @@
     color: var(--color-primary-50);
   }
 }
-
-.actions {
-  display: flex;
-  justify-content: flex-end;
-
-  > :not(:first-child) {
-    margin-left: _.unit(4);
-  }
-}

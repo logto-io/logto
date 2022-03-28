@@ -7,8 +7,6 @@ import Button from '@/components/Button';
 import ModalLayout from '@/components/ModalLayout';
 import useApi from '@/hooks/use-api';
 
-import * as styles from './DeleteForm.module.scss';
-
 type Props = {
   id: string;
   onClose: () => void;
@@ -39,7 +37,7 @@ const DeleteForm = ({ id, onClose }: Props) => {
     <ModalLayout
       title="user_details.delete_title"
       footer={
-        <div className={styles.footer}>
+        <>
           <Button
             type="outline"
             title="admin_console.user_details.delete_cancel"
@@ -51,13 +49,11 @@ const DeleteForm = ({ id, onClose }: Props) => {
             title="admin_console.user_details.delete_confirm"
             onClick={handleDelete}
           />
-        </div>
+        </>
       }
       onClose={onClose}
     >
-      <div className={styles.content}>
-        <div>{t('user_details.delete_description')}</div>
-      </div>
+      <div>{t('user_details.delete_description')}</div>
     </ModalLayout>
   );
 };

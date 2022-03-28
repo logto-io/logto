@@ -1,18 +1,4 @@
 @use '@/scss/underscore' as _;
-@use '@/scss/dimensions' as dim;
-
-
-.form {
-  padding: _.unit(8) 0;
-}
-
-.textField {
-  @include _.form-text-field;
-}
-
-.submit {
-  padding-left: dim.$form-text-field-width;
-}
 
 .error {
   font: var(--font-body-2);
