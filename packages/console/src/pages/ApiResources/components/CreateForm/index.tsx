@@ -8,8 +8,6 @@ import ModalLayout from '@/components/ModalLayout';
 import TextInput from '@/components/TextInput';
 import useApi from '@/hooks/use-api';
 
-import * as styles from './index.module.scss';
-
 type FormData = {
   name: string;
   indicator: string;
@@ -44,32 +42,22 @@ const CreateForm = ({ onClose }: Props) => {
       title="api_resources.create"
       subtitle="api_resources.subtitle"
       footer={
-        <div className={styles.submit}>
-          <Button
-            disabled={loading}
-            htmlType="submit"
-            title="admin_console.api_resources.create"
-            size="large"
-            type="primary"
-            onClick={onSubmit}
-          />
-        </div>
+        <Button
+          disabled={loading}
+          htmlType="submit"
+          title="admin_console.api_resources.create"
+          size="large"
+          type="primary"
+          onClick={onSubmit}
+        />
       }
       onClose={onClose}
     >
-      <form className={styles.form}>
-        <FormField
-          isRequired
-          title="admin_console.api_resources.api_name"
-          className={styles.textField}
-        >
+      <form>
+        <FormField isRequired title="admin_console.api_resources.api_name">
           <TextInput {...register('name', { required: true })} />
         </FormField>
-        <FormField
-          isRequired
-          title="admin_console.api_resources.api_identifier"
-          className={styles.textField}
-        >
+        <FormField isRequired title="admin_console.api_resources.api_identifier">
           <TextInput {...register('indicator', { required: true })} />
         </FormField>
       </form>

@@ -10,8 +10,6 @@ import ModalLayout from '@/components/ModalLayout';
 import TextInput from '@/components/TextInput';
 import useApi from '@/hooks/use-api';
 
-import * as styles from './ResetPasswordForm.module.scss';
-
 type FormData = {
   password: string;
 };
@@ -43,24 +41,24 @@ const ResetPasswordForm = ({ onClose, userId }: Props) => {
   });
 
   return (
-    <ModalLayout title="user_details.reset_password.title" onClose={onClose}>
-      <form className={styles.form} onSubmit={onSubmit}>
-        <FormField
-          isRequired
-          title="admin_console.user_details.reset_password.label"
-          className={styles.textField}
-        >
+    <ModalLayout
+      title="user_details.reset_password.title"
+      footer={
+        <Button
+          disabled={loading}
+          htmlType="submit"
+          title="admin_console.user_details.reset_password.reset_password"
+          size="large"
+          type="primary"
+          onClick={onSubmit}
+        />
+      }
+      onClose={onClose}
+    >
+      <form>
+        <FormField isRequired title="admin_console.user_details.reset_password.label">
           <TextInput {...register('password', { required: true })} />
         </FormField>
-        <div className={styles.submit}>
-          <Button
-            disabled={loading}
-            htmlType="submit"
-            title="admin_console.user_details.reset_password.reset_password"
-            size="large"
-            type="primary"
-          />
-        </div>
       </form>
     </ModalLayout>
   );

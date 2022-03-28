@@ -1,10 +1,6 @@
 @use '@/scss/underscore' as _;
-@use '@/scss/dimensions' as dim;
-
 
 .content {
-  padding: _.unit(8) 0;
-  min-width: dim.$modal-layout-min-width;
   font: var(--font-body-2);
 
   .info {
@@ -30,14 +26,5 @@
         padding-left: _.unit(1);
       }
     }
-  }
-}
-
-.footer {
-  display: flex;
-  justify-content: right;
-
-  button:not(:last-child) {
-    margin-right: _.unit(2);
   }
 }
