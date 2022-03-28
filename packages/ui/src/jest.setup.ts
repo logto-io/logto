@@ -15,4 +15,13 @@ Object.defineProperty(window, 'matchMedia', {
   })),
 });
 
+jest.mock('react-i18next', () => ({
+  useTranslation: () => ({
+    t: (key: string) => key,
+    i18n: {
+      t: (key: string) => key,
+    },
+  }),
+}));
+
 export {};

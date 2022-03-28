@@ -1,71 +1,58 @@
 import classNames from 'classnames';
-import React, { useState } from 'react';
+import React, { useState, HTMLProps } from 'react';
 
+import ErrorMessage, { ErrorType } from '../ErrorMessage';
 import { ClearIcon } from '../Icons';
 import * as styles from './index.module.scss';
 
-type SupportedInputType = 'text' | 'email';
-
-export type Props = {
-  name: string;
-  autoComplete?: AutoCompleteType;
-  isDisabled?: boolean;
+export type Props = HTMLProps<HTMLInputElement> & {
   className?: string;
-  placeholder?: string;
-  type?: SupportedInputType;
-  value: string;
-  hasError?: boolean;
-  onChange: (value: string) => void;
+  error?: ErrorType;
+  onClear?: () => void;
+  validation?: (value: string | number | readonly string[] | undefined) => ErrorType | undefined;
 };
 
 const Input = ({
-  name,
-  autoComplete,
-  isDisabled,
   className,
-  placeholder,
   type = 'text',
   value,
-  hasError = false,
-  onChange,
+  error,
+  onFocus,
+  onBlur,
+  onClear,
+  ...rest
 }: Props) => {
-  const [onFocus, setOnFocus] = useState(false);
+  const [onInputFocus, setOnInputFocus] = useState(false);
 
   return (
-    <div
-      className={classNames(
-        styles.wrapper,
-        onFocus && styles.focus,
-        hasError && styles.error,
-        className
-      )}
-    >
-      <input
-        name={name}
-        disabled={isDisabled}
-        placeholder={placeholder}
-        type={type}
-        value={value}
-        autoComplete={autoComplete}
-        onFocus={() => {
-          setOnFocus(true);
-        }}
-        onBlur={() => {
-          setOnFocus(false);
-        }}
-        onChange={({ target: { value } }) => {
-          onChange(value);
-        }}
-      />
-      {value && onFocus && (
-        <ClearIcon
-          className={styles.actionButton}
-          onMouseDown={(event) => {
-            event.preventDefault();
-            onChange('');
+    <div className={className}>
+      <div
+        className={classNames(styles.wrapper, onInputFocus && styles.focus, error && styles.error)}
+      >
+        <input
+          type={type}
+          value={value}
+          onFocus={(event) => {
+            setOnInputFocus(true);
+            onFocus?.(event);
           }}
+          onBlur={(event) => {
+            setOnInputFocus(false);
+            onBlur?.(event);
+          }}
+          {...rest}
         />
-      )}
+        {value && onInputFocus && onClear && (
+          <ClearIcon
+            className={styles.actionButton}
+            onMouseDown={(event) => {
+              event.preventDefault();
+              onClear();
+            }}
+          />
+        )}
+      </div>
+      {error && <ErrorMessage error={error} className={styles.errorMessage} />}
     </div>
   );
 };

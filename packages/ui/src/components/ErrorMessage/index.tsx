@@ -5,20 +5,30 @@ import { useTranslation } from 'react-i18next';
 
 import * as styles from './index.module.scss';
 
+export type ErrorType = LogtoErrorCode | { code: LogtoErrorCode; data?: Record<string, unknown> };
+
 export type Props = {
-  errorCode?: LogtoErrorCode;
+  error?: ErrorType;
   className?: string;
   children?: ReactNode;
 };
 
-const ErrorMessage = ({ errorCode, className, children }: Props) => {
+const ErrorMessage = ({ error, className, children }: Props) => {
   const { i18n } = useTranslation();
 
-  return (
-    <div className={classNames(styles.error, className)}>
-      {children ?? (errorCode ? i18n.t<string, LogtoErrorI18nKey>(`errors:${errorCode}`) : ``)}
-    </div>
-  );
+  const getMessage = () => {
+    if (!error) {
+      return children;
+    }
+
+    if (typeof error === 'string') {
+      return i18n.t<string, LogtoErrorI18nKey>(`errors:${error}`);
+    }
+
+    return i18n.t<string, LogtoErrorI18nKey>(`errors:${error.code}`, { ...error.data });
+  };
+
+  return <div className={classNames(styles.error, className)}>{getMessage()}</div>;
 };
 
 export default ErrorMessage;

@@ -19,6 +19,7 @@ const translation = {
     terms_of_use: '用户协议',
     terms_agreement_prefix: '登录即表明您已经同意',
     continue_with: '更多',
+    forgot_password: '忘记密码？',
   },
   register: {
     create_account: '创建新账户',
@@ -341,6 +342,10 @@ const errors = {
     not_exists: '该 {{name}} 不存在。',
     not_exists_with_id: 'ID 为 `{{id}}` 的 {{name}} 不存在。',
     not_found: '该资源不存在',
+  },
+  form: {
+    required: '请输入 {{ fieldName }}',
+    terms_required: '请先同意并勾选《用户协议》',
   },
 };
 

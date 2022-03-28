@@ -17,6 +17,7 @@ const translation = {
     terms_of_use: 'Terms of Use',
     terms_agreement_prefix: 'I agree with ',
     continue_with: 'Continue With',
+    forgot_password: 'Forgot Password?',
   },
   register: {
     create_account: 'Create an Account',
@@ -343,6 +344,10 @@ const errors = {
     not_exists: 'The {{name}} does not exist.',
     not_exists_with_id: 'The {{name}} with ID `{{id}}` does not exist.',
     not_found: 'The resource does not exist',
+  },
+  form: {
+    required: 'Please enter the {{ fieldName }}',
+    terms_required: 'Please check & agree the Terms',
   },
 };
 
