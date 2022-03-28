@@ -88,14 +88,14 @@ export enum BrandingStyle {
 }
 
 export const brandingGuard = z.object({
-  primaryColor: z.string(),
-  backgroundColor: z.string(),
+  primaryColor: z.string().nonempty(),
+  backgroundColor: z.string().nonempty(),
   darkMode: z.boolean(),
-  darkPrimaryColor: z.string(),
-  darkBackgroundColor: z.string(),
+  darkPrimaryColor: z.string().nonempty(),
+  darkBackgroundColor: z.string().nonempty(),
   style: z.nativeEnum(BrandingStyle),
   logoUrl: z.string().url(),
-  slogan: z.string().optional(),
+  slogan: z.string().nonempty().optional(),
 });
 
 export type Branding = z.infer<typeof brandingGuard>;
