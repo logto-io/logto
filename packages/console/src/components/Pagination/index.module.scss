@@ -13,8 +13,8 @@
 
     .button {
       border-radius: 6px;
-      padding: 0;
-      width: 32px;
+      min-width: 32px;
+      padding: 0 6px;
       height: 32px;
       text-overflow: unset;
 
