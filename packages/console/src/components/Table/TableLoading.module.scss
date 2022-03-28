@@ -1,7 +1,7 @@
 @use '@/scss/underscore' as _;
 
 .loading {
-  td > div {
+  .rect {
     border-radius: _.unit(2);
     background: var(--color-neutral-95);
     height: 32px;
