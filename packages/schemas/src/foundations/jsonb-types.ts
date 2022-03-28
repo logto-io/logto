@@ -94,7 +94,7 @@ export const brandingGuard = z.object({
   darkPrimaryColor: z.string(),
   darkBackgroundColor: z.string(),
   style: z.nativeEnum(BrandingStyle),
-  logoUrl: z.string().url().optional(),
+  logoUrl: z.string().url(),
   slogan: z.string().optional(),
 });
 
