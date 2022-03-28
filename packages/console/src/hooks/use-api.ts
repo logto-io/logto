@@ -19,7 +19,7 @@ export class RequestError extends Error {
 
 const toastError = async (response: Response) => {
   try {
-    const data = (await response.json()) as RequestErrorBody;
+    const data = await response.json<RequestErrorBody>();
     toast.error(data.message || t('admin_console.errors.unknown_server_error'));
   } catch {
     toast.error(t('admin_console.errors.unknown_server_error'));

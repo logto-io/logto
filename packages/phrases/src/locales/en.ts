@@ -7,6 +7,7 @@ const translation = {
     retry: 'Try again',
     confirm: 'Confirm',
     cancel: 'Cancel',
+    done: 'Done',
   },
   sign_in: {
     action: 'Sign In',
@@ -96,16 +97,6 @@ const translation = {
           'Now follow the steps below to finish your app settings. Please select the JS library to continue.',
         description_by_library:
           'This quickstart demonstrates how to add Logto to {{library}} application.',
-        title_step_1: 'Install Logto SDK',
-        subtitle_step_1: '3 options | lorem ipsum dolor sit amet',
-        title_step_2: 'Initiate LogtoClient',
-        subtitle_step_2: '1 step | lorem ipsum dolor sit amet',
-        title_step_3: 'Sign in',
-        subtitle_step_3: '1 step | lorem ipsum dolor sit amet',
-        title_step_4: 'Sign out',
-        subtitle_step_4: '1 step | lorem ipsum dolor sit amet',
-        title_step_5: 'Further readings',
-        subtitle_step_5: 'Tutorial and readings',
       },
     },
     application_details: {

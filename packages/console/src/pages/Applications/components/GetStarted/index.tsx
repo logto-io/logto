@@ -1,17 +1,23 @@
 import classNames from 'classnames';
-import React, { useMemo, useState } from 'react';
+import i18next from 'i18next';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import ReactMarkdown from 'react-markdown';
+// eslint-disable-next-line node/file-extension-in-import
+import useSWRImmutable from 'swr/immutable';
 
 import highFive from '@/assets/images/high-five.svg';
 import tada from '@/assets/images/tada.svg';
 import Button from '@/components/Button';
 import Card from '@/components/Card';
-import CardTitle from '@/components/CardTitle';
 import IconButton from '@/components/IconButton';
 import RadioGroup, { Radio } from '@/components/RadioGroup';
 import Spacer from '@/components/Spacer';
+import { ArrowDown, ArrowUp } from '@/icons/Arrow';
 import Close from '@/icons/Close';
+import Tick from '@/icons/Tick';
 import { SupportedJavascriptLibraries } from '@/types/applications';
+import { parseMarkdownWithYamlFrontmatter } from '@/utilities/markdown';
 
 import * as styles from './index.module.scss';
 
@@ -20,10 +26,49 @@ type Props = {
   onClose: () => void;
 };
 
+type DocumentFileNames = {
+  files: string[];
+};
+
+type Step = {
+  title?: string;
+  subtitle?: string;
+  metadata: string;
+};
+
 const GetStarted = ({ appName, onClose }: Props) => {
   const [isLibrarySelectorFolded, setIsLibrarySelectorFolded] = useState(false);
-  const [libraryName, setLibraryName] = useState<string>(SupportedJavascriptLibraries.Angular);
+  const [libraryName, setLibraryName] = useState<string>(SupportedJavascriptLibraries.React);
+  const [activeStepIndex, setActiveStepIndex] = useState<number>(-1);
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const publicPath = useMemo(
+    () => `/console/get-started/${libraryName}/${i18next.language}`,
+    [libraryName]
+  );
+
+  const { data: jsonData } = useSWRImmutable<DocumentFileNames>(`${publicPath}/index.json`);
+  const { data: steps } = useSWRImmutable<Step[]>(jsonData, async ({ files }: DocumentFileNames) =>
+    Promise.all(
+      files.map(async (fileName) => {
+        const response = await fetch(`${publicPath}/${fileName}`);
+        const markdownFile = await response.text();
+
+        return parseMarkdownWithYamlFrontmatter<Step>(markdownFile);
+      })
+    )
+  );
+
+  const stepReferences = useMemo(
+    () => Array.from({ length: steps?.length ?? 0 }).map(() => React.createRef<HTMLDivElement>()),
+    [steps?.length]
+  );
+
+  useEffect(() => {
+    if (activeStepIndex > -1) {
+      const activeStepReference = stepReferences[activeStepIndex];
+      activeStepReference?.current?.scrollIntoView({ block: 'start', behavior: 'smooth' });
+    }
+  }, [activeStepIndex, stepReferences]);
 
   const onClickFetchSampleProject = () => {
     window.open(
@@ -36,34 +81,28 @@ const GetStarted = ({ appName, onClose }: Props) => {
     () => (
       <Card className={classNames(styles.card, styles.selector)}>
         <img src={highFive} alt="success" />
-        <CardTitle
-          title="applications.get_started.title"
-          subtitle="applications.get_started.subtitle"
-        />
-        <RadioGroup
-          name="libraryName"
-          value={libraryName}
-          onChange={(value) => {
-            setLibraryName(value);
-          }}
-        >
+        <div>
+          <div className={styles.title}>{t('applications.get_started.title')}</div>
+          <div className={styles.subtitle}>{t('applications.get_started.subtitle')}</div>
+        </div>
+        <RadioGroup name="libraryName" value={libraryName} onChange={setLibraryName}>
           {Object.values(SupportedJavascriptLibraries).map((library) => (
             <Radio key={library} className={styles.radio} title={library} value={library} />
           ))}
         </RadioGroup>
         <div className={styles.buttonWrapper}>
-          <Spacer />
           <Button
             type="primary"
             title="general.next"
             onClick={() => {
               setIsLibrarySelectorFolded(true);
+              setActiveStepIndex(0);
             }}
           />
         </div>
       </Card>
     ),
-    [libraryName]
+    [libraryName, t]
   );
 
   const librarySelectorFolded = useMemo(
@@ -98,42 +137,70 @@ const GetStarted = ({ appName, onClose }: Props) => {
       </div>
       <div className={styles.content}>
         {isLibrarySelectorFolded ? librarySelectorFolded : librarySelector}
-        {/* TO-DO: Dynamically render steps from markdown files */}
-        <Card className={styles.card}>
-          <div className={styles.index}>1</div>
-          <CardTitle
-            title="applications.get_started.title_step_1"
-            subtitle="applications.get_started.subtitle_step_1"
-          />
-        </Card>
-        <Card className={styles.card}>
-          <div className={styles.index}>2</div>
-          <CardTitle
-            title="applications.get_started.title_step_2"
-            subtitle="applications.get_started.subtitle_step_2"
-          />
-        </Card>
-        <Card className={styles.card}>
-          <div className={styles.index}>3</div>
-          <CardTitle
-            title="applications.get_started.title_step_3"
-            subtitle="applications.get_started.subtitle_step_3"
-          />
-        </Card>
-        <Card className={styles.card}>
-          <div className={styles.index}>4</div>
-          <CardTitle
-            title="applications.get_started.title_step_4"
-            subtitle="applications.get_started.subtitle_step_4"
-          />
-        </Card>
-        <Card className={styles.card}>
-          <div className={styles.index}>5</div>
-          <CardTitle
-            title="applications.get_started.title_step_5"
-            subtitle="applications.get_started.subtitle_step_5"
-          />
-        </Card>
+        {steps?.map((step, index) => {
+          const { title, subtitle, metadata } = step;
+          const isExpanded = activeStepIndex === index;
+          const isCompleted = activeStepIndex > index;
+          const isLastStep = index === steps.length - 1;
+
+          // Steps in get-started must have "title" declared in the Yaml header of the markdown source file
+          if (!title) {
+            return null;
+          }
+
+          // TODO: add more styles to markdown renderer
+          // TODO: render form and input fields in steps
+          return (
+            <Card
+              key={title}
+              ref={stepReferences[index]}
+              className={classNames(styles.card, isExpanded && styles.expanded)}
+            >
+              <div
+                className={styles.cardHeader}
+                onClick={() => {
+                  setIsLibrarySelectorFolded(true);
+                  setActiveStepIndex(index);
+                }}
+              >
+                <div
+                  className={classNames(
+                    styles.index,
+                    isExpanded && styles.active,
+                    isCompleted && styles.completed
+                  )}
+                >
+                  {isCompleted ? <Tick /> : index + 1}
+                </div>
+                <div>
+                  <div className={styles.title}>{title}</div>
+                  <div className={styles.subtitle}>{subtitle}</div>
+                </div>
+                <Spacer />
+                {isExpanded ? <ArrowUp /> : <ArrowDown />}
+              </div>
+              {isExpanded && (
+                <>
+                  <ReactMarkdown className={styles.markdownContent}>{metadata}</ReactMarkdown>
+                  <div className={styles.buttonWrapper}>
+                    <Button
+                      type="primary"
+                      title={`general.${isLastStep ? 'done' : 'next'}`}
+                      onClick={() => {
+                        if (isLastStep) {
+                          // TO-DO: submit form
+                          onClose();
+                        } else {
+                          setActiveStepIndex(index + 1);
+                        }
+                      }}
+                    />
+                  </div>
+                </>
+              )}
+            </Card>
+          );
+        })}
       </div>
     </div>
   );

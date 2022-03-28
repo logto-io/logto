@@ -16,7 +16,7 @@ const useSwrFetcher = () => {
       } catch (error: unknown) {
         if (error instanceof HTTPError) {
           const { response } = error;
-          const metadata = (await response.json()) as RequestErrorBody;
+          const metadata = await response.json<RequestErrorBody>();
           throw new RequestError(metadata);
         }
         throw error;

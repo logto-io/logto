@@ -6,6 +6,16 @@
   background-color: var(--color-main-background);
   height: 100vh;
 
+  .title {
+    font: var(--font-title-large);
+    color: var(--color-component-text);
+  }
+
+  .subtitle {
+    font: var(--font-body-1);
+    color: var(--color-component-caption);
+  }
+
   .header {
     display: flex;
     align-items: center;
@@ -15,16 +25,6 @@
 
     .titleWrapper {
       margin-left: _.unit(4);
-    }
-
-    .title {
-      font: var(--font-title-large);
-      color: var(--color-component-text);
-    }
-
-    .subtitle {
-      font: var(--font-body-2);
-      color: var(--color-component-caption);
     }
 
     button + button {
@@ -45,12 +45,18 @@
     width: 858px;
     padding: _.unit(6) _.unit(8);
     display: flex;
-    align-items: center;
+    flex-direction: column;
+    scroll-margin: _.unit(6);
 
     &.selector {
       display: block;
       padding: _.unit(8);
       margin-top: _.unit(4);
+
+      .subtitle {
+        color: var(--color-component-text);
+        margin-top: _.unit(3);
+      }
 
       .radio {
         border-radius: _.unit(2);
@@ -58,13 +64,9 @@
         max-width: unset;
       }
 
-      .buttonWrapper {
-        display: flex;
-        margin-top: _.unit(8);
-      }
-
       &.folded {
         display: flex;
+        flex-direction: row;
         align-items: center;
         flex: 0 0 56px;
         background: var(--color-neutral-variant-90);
@@ -79,20 +81,58 @@
         }
       }
     }
+
+    &.expanded {
+      padding: _.unit(8);
+    }
+
+    .cardHeader {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      cursor: pointer;
+
+      > svg {
+        fill: var(--color-icon);
+      }
+
+      .index {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        color: var(--color-primary);
+        background: var(--color-surface-5);
+        font: var(--font-label-large);
+        text-align: center;
+        margin-right: _.unit(4);
+
+        &.active {
+          color: var(--color-on-primary);
+          background: var(--color-primary);
+        }
+
+        &.completed {
+          background: var(--color-primary);
+
+          > svg {
+            fill: var(--color-on-primary);
+          }
+        }
+      }
+    }
+
+    .buttonWrapper {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: _.unit(6);
+    }
   }
 
   .card + .card {
     margin-top: _.unit(6);
   }
 
-  .index {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    color: var(--color-primary);
-    background: var(--color-surface-5);
-    font: var(--font-label-large);
-    text-align: center;
-    margin-right: _.unit(4);
+  .markdownContent {
+    margin-top: _.unit(6);
   }
 }
