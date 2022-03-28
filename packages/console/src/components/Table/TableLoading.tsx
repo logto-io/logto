@@ -17,7 +17,7 @@ const TableLoading = ({ columns }: Props) => {
         {Array.from({ length: columns - 1 }).map((_, index) => (
           // eslint-disable-next-line react/no-array-index-key
           <td key={index}>
-            <div />
+            <div className={styles.rect} />
           </td>
         ))}
       </tr>
