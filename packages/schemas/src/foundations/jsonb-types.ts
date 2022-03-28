@@ -87,12 +87,14 @@ export enum BrandingStyle {
   Logo_Slogan = 'Logo_Slogan',
 }
 
+export const hexColorRegEx = /^#[\da-f]{3}([\da-f]{3})?$/i;
+
 export const brandingGuard = z.object({
-  primaryColor: z.string().nonempty(),
-  backgroundColor: z.string().nonempty(),
+  primaryColor: z.string().regex(hexColorRegEx),
+  backgroundColor: z.string().regex(hexColorRegEx),
   darkMode: z.boolean(),
-  darkPrimaryColor: z.string().nonempty(),
-  darkBackgroundColor: z.string().nonempty(),
+  darkPrimaryColor: z.string().regex(hexColorRegEx),
+  darkBackgroundColor: z.string().regex(hexColorRegEx),
   style: z.nativeEnum(BrandingStyle),
   logoUrl: z.string().url(),
   slogan: z.string().nonempty().optional(),
