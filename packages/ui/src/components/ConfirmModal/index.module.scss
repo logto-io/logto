@@ -1,0 +1,27 @@
+@use '@/scss/underscore' as _;
+
+.container {
+  background: var(--color-background);
+  padding: _.unit(6);
+  border-radius: _.unit(2);
+}
+
+.content {
+  text-align: center;
+  font: var(--font-body);
+  color: var(--color-font-primary);
+}
+
+.footer {
+  @include _.flex_row;
+  margin-top: _.unit(6);
+  justify-content: space-between;
+
+  > * {
+    flex: 1;
+  }
+
+  > button:first-child {
+    margin-right: _.unit(2);
+  }
+}
