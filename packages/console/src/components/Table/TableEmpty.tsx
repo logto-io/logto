@@ -18,7 +18,7 @@ const TableEmpty = ({ title, content, children }: Props) => {
     <tr>
       <td colSpan={0}>
         <div className={styles.tableEmpty}>
-          <div className={styles.image}>
+          <div>
             <img src={EmptyImage} />
           </div>
           <div className={styles.title}>{title ?? t('admin_console.errors.empty')}</div>
