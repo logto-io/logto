@@ -10,6 +10,7 @@ import Card from '@/components/Card';
 import CardTitle from '@/components/CardTitle';
 import ImagePlaceholder from '@/components/ImagePlaceholder';
 import ItemPreview from '@/components/ItemPreview';
+import Pagination from '@/components/Pagination';
 import TableEmpty from '@/components/Table/TableEmpty';
 import TableError from '@/components/Table/TableError';
 import TableLoading from '@/components/Table/TableLoading';
@@ -19,12 +20,18 @@ import * as modalStyles from '@/scss/modal.module.scss';
 import CreateForm from './components/CreateForm';
 import * as styles from './index.module.scss';
 
+const pageSize = 20;
+
 const Users = () => {
   const [isCreateFormOpen, setIsCreateFormOpen] = useState(false);
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { data, error, mutate } = useSWR<User[], RequestError>('/api/users');
+  const [pageIndex, setPageIndex] = useState(1);
+  const { data, error, mutate } = useSWR<[User[], number], RequestError>(
+    `/api/users?page=${pageIndex}&page_size=${pageSize}`
+  );
   const isLoading = !data && !error;
   const navigate = useNavigate();
+  const [users, totalCount] = data ?? [];
 
   return (
     <Card>
@@ -74,7 +81,7 @@ const Users = () => {
             />
           )}
           {isLoading && <TableLoading columns={3} />}
-          {data?.length === 0 && (
+          {users?.length === 0 && (
             <TableEmpty>
               <Button
                 title="admin_console.users.create"
@@ -85,7 +92,7 @@ const Users = () => {
               />
             </TableEmpty>
           )}
-          {data?.map(({ id, name, username }) => (
+          {users?.map(({ id, name, username }) => (
             <tr
               key={id}
               className={styles.clickable}
@@ -107,6 +114,13 @@ const Users = () => {
           ))}
         </tbody>
       </table>
+      {totalCount && (
+        <Pagination
+          pageCount={Math.ceil(totalCount / pageSize)}
+          pageIndex={pageIndex}
+          onChange={setPageIndex}
+        />
+      )}
     </Card>
   );
 };

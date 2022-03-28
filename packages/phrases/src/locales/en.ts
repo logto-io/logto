@@ -40,6 +40,7 @@ const translation = {
       something_went_wrong: 'Oops! Something went wrong',
       unknown_server_error: 'Unknown server error occurred.',
       empty: 'No Data',
+      missing_total_number: 'Unable to find Total-Number in response headers.',
     },
     tab_sections: {
       overview: 'Overview',
