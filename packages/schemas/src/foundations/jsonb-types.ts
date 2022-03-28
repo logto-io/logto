@@ -94,7 +94,7 @@ export const brandingGuard = z.object({
   darkPrimaryColor: z.string(),
   darkBackgroundColor: z.string(),
   style: z.nativeEnum(BrandingStyle),
-  logoUrl: z.string().optional(),
+  logoUrl: z.string().url().optional(),
   slogan: z.string().optional(),
 });
 
@@ -102,7 +102,7 @@ export type Branding = z.infer<typeof brandingGuard>;
 
 export const termsOfUseGuard = z.object({
   enabled: z.boolean(),
-  contentUrl: z.string().optional(),
+  contentUrl: z.string().url().optional(),
 });
 
 export type TermsOfUse = z.infer<typeof termsOfUseGuard>;
