@@ -14,13 +14,13 @@
   }
 
   .title {
-    font: var(--font-body);
+    font: var(--font-body-medium);
     color: var(--color-primary);
     text-decoration: none;
   }
 
   .subtitle {
-    font: var(--font-small-text);
+    font: var(--font-body-small);
     color: var(--color-outline);
   }
 }

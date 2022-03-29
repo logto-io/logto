@@ -3,7 +3,7 @@
 
 .divider {
   @include _.flex-row;
-  font: var(--font-body);
+  font: var(--font-body-medium);
   color: var(--color-font-divider);
   margin: _.unit(4) 0;
   width: 100%;

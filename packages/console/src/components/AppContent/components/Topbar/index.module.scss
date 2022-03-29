@@ -1,20 +1,20 @@
 @use '@/scss/underscore' as _;
 
 .topbar {
-  flex: 0 0 66px;
+  flex: 0 0 64px;
   width: 100%;
   padding: _.unit(4) _.unit(6);
   display: flex;
   align-items: center;
 
   img {
-    height: 30px;
+    height: 32px;
   }
 
   .line {
     @include _.vertical-bar;
-    height: 24px;
-    margin: 0 _.unit(3);
+    height: 20px;
+    margin: 0 _.unit(5);
   }
 
   .text {

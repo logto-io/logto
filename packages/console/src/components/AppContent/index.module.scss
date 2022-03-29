@@ -29,22 +29,3 @@
 .dark {
   @include colors.dark-theme;
 }
-
-$font-family: 'SF UI Text', 'SF Pro Display', sans-serif;
-
-.web {
-  --font-title-large: 600 20px/28px #{$font-family};
-  --font-title-medium: 500 16px/24px #{$font-family};
-  --font-heading-small: 600 24px/32px #{$font-family};
-  --font-heading: 600 16px/24px #{$font-family};
-  --font-body: normal 16px/22px #{$font-family};
-  --font-body-1: normal 16px/24px #{$font-family};
-  --font-body-2: normal 14px/20px #{$font-family};
-  --font-small-text: normal 12px/16px #{$font-family};
-  --font-caption: normal 14px/20px #{$font-family};
-  --font-caption-bold: 600 14px/20px #{$font-family};
-  --font-button: 500 14px/20px #{$font-family};
-  --font-subhead-2: 500 14px/20px #{$font-family};
-  --font-label-large: 500 20px/32px #{$font-family};
-  --font-label-medium: 500 12px/16px #{$font-family};
-}

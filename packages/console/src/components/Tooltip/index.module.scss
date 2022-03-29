@@ -8,7 +8,7 @@
   color: #e0e3e3;
   box-shadow: var(--light-shadow-s1);
   padding: _.unit(2) _.unit(3);
-  font: var(--font-body);
+  font: var(--font-body-medium);
 
   &::after {
     content: '';

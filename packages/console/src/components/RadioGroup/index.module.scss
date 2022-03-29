@@ -3,10 +3,7 @@
 .radioGroup {
   display: flex;
   flex-wrap: wrap;
-
-  &:not(:first-child) {
-    margin-top: _.unit(3);
-  }
+  margin: 0 _.unit(-8) _.unit(-8) 0;
 
   > .radio {
     position: relative;
@@ -60,7 +57,7 @@
     }
 
     .title {
-      font: var(--font-heading);
+      font: var(--font-subhead-2);
       color: var(--color-component-text);
     }
 

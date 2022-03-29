@@ -12,7 +12,7 @@
 
   .toast {
     padding: _.unit(2) _.unit(4);
-    font: var(--font-body);
+    font: var(--font-body-medium);
     color: var(--color-font-toast-text);
     border-radius: _.unit(2);
     max-width: none;
