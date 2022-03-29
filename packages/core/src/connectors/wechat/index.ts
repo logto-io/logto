@@ -74,24 +74,32 @@ export const getAuthorizationUri: GetAuthorizationUri = async (redirectUri, stat
 
 export const getAccessToken: GetAccessToken = async (code) => {
   type AccessTokenResponse = {
-    access_token: string;
-    openid: string;
-    expires_in: number; // In seconds
-    refresh_token: string;
-    scope: string;
+    access_token?: string;
+    openid?: string;
+    expires_in?: number; // In seconds
+    refresh_token?: string;
+    scope?: string;
+    errcode?: number;
   };
 
   const config = await getConnectorConfig<WeChatConfig>(metadata.id);
   const { appId: appid, appSecret: secret } = config;
 
-  const { access_token: accessToken, openid } = await got
+  const {
+    access_token: accessToken,
+    openid,
+    errcode,
+  } = await got
     .get(accessTokenEndpoint, {
       searchParams: { appid, secret, code, grant_type: 'authorization_code' },
       timeout: await getConnectorRequestTimeout(),
     })
     .json<AccessTokenResponse>();
 
-  assertThat(accessToken && openid, new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid));
+  assertThat(
+    errcode !== 40_029 && accessToken && openid,
+    new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid)
+  );
 
   return { accessToken, openid };
 };
@@ -131,7 +139,7 @@ export const getUserInfo: GetUserInfo = async (accessTokenObject) => {
 
     return { id: unionid ?? openid, avatar: headimgurl, name: nickname };
   } catch (error: unknown) {
-    if (error instanceof GotRequestError && error.response?.statusCode === 40_001) {
+    if (error instanceof GotRequestError && error.response?.statusCode === 401) {
       throw new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid);
     }
 
