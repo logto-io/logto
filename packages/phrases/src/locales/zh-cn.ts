@@ -127,6 +127,8 @@ const translation = {
       delete: 'Delete',
       application_deleted: 'The application {{name}} deleted.',
       save_success: 'Saved!',
+      redirect_uri_required: 'You have to enter at least one redirect URI.',
+      no_space_in_uri: 'Sapce is not allowed in URI',
     },
     api_resources: {
       title: 'API Resources',

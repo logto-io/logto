@@ -7,15 +7,9 @@ import Minus from '@/icons/Minus';
 import IconButton from '../IconButton';
 import TextInput from '../TextInput';
 import * as styles from './MultiTextInput.module.scss';
-import { MutiTextInputErrors } from './type';
+import { UseMultiTextInputRhfReturn } from './type';
 
-type Props = {
-  fields: string[];
-  errors: MutiTextInputErrors;
-  handleAdd: () => void;
-  handleRemove: (index: number) => void;
-  handleInputChange: (event: React.FormEvent<HTMLInputElement>, index: number) => void;
-};
+type Props = UseMultiTextInputRhfReturn;
 
 const MultiTextInput = ({ fields, errors, handleAdd, handleRemove, handleInputChange }: Props) => {
   const { t } = useTranslation(undefined, {
@@ -29,7 +23,7 @@ const MultiTextInput = ({ fields, errors, handleAdd, handleRemove, handleInputCh
         <div key={fieldIndex}>
           <div className={styles.deletableInput}>
             <TextInput
-              hasError={Boolean(errors[`${fieldIndex}`])}
+              hasError={Boolean(errors.inputs[fieldIndex])}
               className={styles.textField}
               value={fieldValue}
               onChange={(event) => {
@@ -46,7 +40,12 @@ const MultiTextInput = ({ fields, errors, handleAdd, handleRemove, handleInputCh
               </IconButton>
             )}
           </div>
-          {errors[`${fieldIndex}`] && <div className={styles.error}>{errors[`${fieldIndex}`]}</div>}
+          {fieldIndex === 0 && errors.required && (
+            <div className={styles.error}>{errors.required}</div>
+          )}
+          {errors.inputs[fieldIndex] && (
+            <div className={styles.error}>{errors.inputs[fieldIndex]}</div>
+          )}
         </div>
       ))}
       <div className={textButtonStyles.button} onClick={handleAdd}>

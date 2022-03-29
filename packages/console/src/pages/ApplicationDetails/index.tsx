@@ -23,6 +23,7 @@ import Delete from '@/icons/Delete';
 import More from '@/icons/More';
 import * as modalStyles from '@/scss/modal.module.scss';
 import { applicationTypeI18nKey } from '@/types/applications';
+import { noSpaceRegex } from '@/utilities/regex';
 
 import DeleteForm from './components/DeleteForm';
 import * as styles from './index.module.scss';
@@ -72,11 +73,27 @@ const ApplicationDetails = () => {
   const redirectUriMultiTextInput = useMultiTextInputRhf({
     control,
     name: 'oidcClientMetadata.redirectUris',
+    rule: {
+      required: {
+        isRequred: true,
+        message: t('application_details.redirect_uri_required'),
+      },
+      inputs: {
+        pattern: noSpaceRegex,
+        message: t('application_details.no_space_in_uri'),
+      },
+    },
   });
 
   const postSignOutRedirectUriMultiTextInput = useMultiTextInputRhf({
     control,
     name: 'oidcClientMetadata.postLogoutRedirectUris',
+    rule: {
+      inputs: {
+        pattern: noSpaceRegex,
+        message: t('application_details.no_space_in_uri'),
+      },
+    },
   });
 
   const onSubmit = handleSubmit(async (formData) => {
@@ -85,7 +102,17 @@ const ApplicationDetails = () => {
     }
 
     const updatedApplication = await api
-      .patch(`/api/applications/${data.id}`, { json: formData })
+      .patch(`/api/applications/${data.id}`, {
+        json: {
+          ...formData,
+          oidcClientMetadata: {
+            ...formData.oidcClientMetadata,
+            redirectUris: formData.oidcClientMetadata.redirectUris.filter(Boolean),
+            postSignOutRedirectUriMultiTextInput:
+              formData.oidcClientMetadata.postLogoutRedirectUris.filter(Boolean),
+          },
+        },
+      })
       .json<Application>();
     void mutate(updatedApplication);
     toast.success(t('application_details.save_success'));
@@ -104,7 +131,7 @@ const ApplicationDetails = () => {
       <FormField title="admin_console.application_details.authorization_endpoint">
         <CopyToClipboard className={styles.textField} value={oidcConfig.authorization_endpoint} />
       </FormField>
-      <FormField title="admin_console.application_details.redirect_uri">
+      <FormField isRequired title="admin_console.application_details.redirect_uri">
         <MultiTextInput {...redirectUriMultiTextInput} />
       </FormField>
       <FormField title="admin_console.application_details.post_sign_out_redirect_uri">

@@ -1,6 +1,5 @@
 import { useMemo, useState } from 'react';
 import {
-  Control,
   FieldPath,
   FieldValues,
   PathValue,
@@ -9,28 +8,39 @@ import {
   Path,
 } from 'react-hook-form';
 
-import { noSpaceRegex } from '@/utilities/regex';
-
-import { MutiTextInputErrors, StringFiledArrayPath } from './type';
-
-type Props<
-  TFieldValues extends FieldValues = FieldValues,
-  TName extends StringFiledArrayPath<TFieldValues> = StringFiledArrayPath<TFieldValues>
-> = {
-  control: Control<TFieldValues>;
-  name: TName;
-};
+import {
+  MutiTextInputErrors,
+  StringFiledArrayPath,
+  UseMultiTextInputRhfProps,
+  UseMultiTextInputRhfReturn,
+} from './type';
 
 function useMultiTextInputRhf<
   TFieldValues extends FieldValues = FieldValues,
   TName extends StringFiledArrayPath<TFieldValues> = StringFiledArrayPath<TFieldValues>
->({ control, name }: Props<TFieldValues, TName>) {
-  const [errors, setErrors] = useState<MutiTextInputErrors>({});
+>({
+  control,
+  name,
+  rule: {
+    required: requiredRule = {
+      isRequred: false,
+      message: '',
+    },
+    inputs: inputsRule,
+  },
+}: UseMultiTextInputRhfProps<TFieldValues, TName>): UseMultiTextInputRhfReturn {
+  const [errors, setErrors] = useState<MutiTextInputErrors>({ inputs: {}, required: undefined });
 
   const validate = () => {
-    console.log('validate multi text input');
+    if (requiredRule.isRequred && !validateRequired(fields)) {
+      return false;
+    }
 
-    return !Object.values(errors).some(Boolean);
+    if (!inputsRule) {
+      return true;
+    }
+
+    return !Object.values(errors.inputs).some(Boolean);
   };
 
   const {
@@ -52,11 +62,31 @@ function useMultiTextInputRhf<
     return value as string[];
   }, [value]);
 
+  const validateRequired = (candidateValues: string[]) => {
+    if (!requiredRule.isRequred) {
+      return true;
+    }
+
+    const containValue = candidateValues.some(Boolean);
+    setErrors((preErros) => ({
+      ...preErros,
+      required: containValue ? undefined : requiredRule.message,
+    }));
+
+    return containValue;
+  };
+
   const validateInput = (index: number, input: string) => {
-    setErrors({
-      ...errors,
-      [index]: noSpaceRegex.test(input) ? undefined : 'space_not_allowed',
-    });
+    if (!inputsRule) {
+      return;
+    }
+
+    setErrors((preErrors) => ({
+      ...preErrors,
+      inputs: {
+        [index]: inputsRule.pattern.test(input) ? undefined : inputsRule.message,
+      },
+    }));
   };
 
   const handleAdd = () => {
@@ -64,12 +94,25 @@ function useMultiTextInputRhf<
   };
 
   const handleRemove = (index: number) => {
+    setErrors((preErrors) => ({
+      ...preErrors,
+      inputs: Object.fromEntries(
+        Object.values(errors.inputs)
+          .filter((_, i) => i !== index)
+          .map((error, i) => [i, error])
+      ),
+    }));
     onChange(fields.filter((_, i) => i !== index));
   };
 
   const handleInputChange = (event: React.FormEvent<HTMLInputElement>, index: number) => {
     validateInput(index, event.currentTarget.value);
-    onChange(fields.map((value, i) => (i === index ? event.currentTarget.value : value)));
+    const candidateValues = fields.map((fieldValue, i) =>
+      i === index ? event.currentTarget.value : fieldValue
+    );
+    onChange(candidateValues);
+    validateRequired(candidateValues);
+    console.log(errors);
   };
 
   return {
