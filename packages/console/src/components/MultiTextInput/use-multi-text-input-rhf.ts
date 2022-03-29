@@ -84,6 +84,7 @@ function useMultiTextInputRhf<
     setErrors((preErrors) => ({
       ...preErrors,
       inputs: {
+        ...preErrors.inputs,
         [index]: inputsRule.pattern.test(input) ? undefined : inputsRule.message,
       },
     }));
@@ -94,15 +95,33 @@ function useMultiTextInputRhf<
   };
 
   const handleRemove = (index: number) => {
-    setErrors((preErrors) => ({
-      ...preErrors,
-      inputs: Object.fromEntries(
-        Object.values(errors.inputs)
-          .filter((_, i) => i !== index)
-          .map((error, i) => [i, error])
-      ),
-    }));
+    if (errors.inputs[index]) {
+      resetInputErrorAbove(index);
+    }
     onChange(fields.filter((_, i) => i !== index));
+  };
+
+  const resetInputErrorAbove = (index: number) => {
+    if (Object.prototype.hasOwnProperty.call(errors.inputs, index + 1)) {
+      setErrors((preErrors) => ({
+        required: preErrors.required,
+        inputs: {
+          ...preErrors.inputs,
+          [index]: preErrors.inputs[index + 1],
+          [index + 1]: undefined,
+        },
+      }));
+      resetInputErrorAbove(index + 1);
+
+      return;
+    }
+    setErrors((preErrors) => ({
+      required: preErrors.required,
+      inputs: {
+        ...preErrors.inputs,
+        [index]: undefined,
+      },
+    }));
   };
 
   const handleInputChange = (event: React.FormEvent<HTMLInputElement>, index: number) => {
@@ -112,7 +131,6 @@ function useMultiTextInputRhf<
     );
     onChange(candidateValues);
     validateRequired(candidateValues);
-    console.log(errors);
   };
 
   return {
