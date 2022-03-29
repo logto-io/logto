@@ -87,7 +87,7 @@ export const getConnectorInstanceByType = async <T extends ConnectorInstance>(
   );
 
   if (!connector) {
-    throw new RequestError('connector.not_found', { type });
+    throw new RequestError({ code: 'connector.not_found', type });
   }
 
   return connector;
