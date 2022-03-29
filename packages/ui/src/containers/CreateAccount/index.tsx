@@ -44,7 +44,7 @@ const defaultState = {
   termsAgreement: false,
 };
 
-const usernameRegx = /^[_a-z-][\w-]*$/;
+const usernameRegx = /^[A-Z_a-z-][\w-]*$/;
 
 const CreateAccount = () => {
   const { t, i18n } = useTranslation();
