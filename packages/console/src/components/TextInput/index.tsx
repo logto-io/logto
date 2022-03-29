@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import React, { forwardRef, HTMLProps } from 'react';
+import React, { forwardRef, HTMLProps, ReactNode } from 'react';
 
 import * as styles from './index.module.scss';
 
@@ -7,14 +7,26 @@ import * as styles from './index.module.scss';
 /* eslint-disable react/require-default-props */
 type Props = HTMLProps<HTMLInputElement> & {
   hasError?: boolean;
+  icon?: ReactNode;
+  disabled?: boolean;
+  readOnly?: boolean;
 };
 /* eslint-enable react/require-default-props */
 
 const TextInput = forwardRef<HTMLInputElement, Props>(
-  ({ hasError = false, ...rest }, reference) => {
+  ({ hasError = false, icon, disabled, readOnly, ...rest }, reference) => {
     return (
-      <div className={classNames(styles.container, hasError && styles.error)}>
-        <input type="text" {...rest} ref={reference} />
+      <div
+        className={classNames(
+          styles.container,
+          hasError && styles.error,
+          icon && styles.withIcon,
+          disabled && styles.disabled,
+          readOnly && styles.readOnly
+        )}
+      >
+        {icon && <span className={styles.icon}>{icon}</span>}
+        <input type="text" {...rest} ref={reference} disabled={disabled} readOnly={readOnly} />
       </div>
     );
   }
