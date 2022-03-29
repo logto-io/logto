@@ -1,0 +1,11 @@
+@use '@/scss/underscore' as _;
+
+.search {
+  display: flex;
+  align-items: center;
+
+  .searchInput {
+    width: 286px;
+    margin-right: _.unit(2);
+  }
+}
