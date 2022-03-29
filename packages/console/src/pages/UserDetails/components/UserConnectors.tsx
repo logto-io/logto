@@ -94,6 +94,7 @@ const UserConnectors = ({ userId, connectors, onDelete }: Props) => {
           <tbody>
             {error && (
               <TableError
+                columns={3}
                 content={error.body.message}
                 onRetry={async () => mutate(undefined, true)}
               />

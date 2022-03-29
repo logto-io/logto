@@ -82,6 +82,7 @@ const Connectors = () => {
           <tbody>
             {error && (
               <TableError
+                columns={3}
                 content={error.body.message}
                 onRetry={async () => mutate(undefined, true)}
               />
@@ -89,6 +90,7 @@ const Connectors = () => {
             {isLoading && <TableLoading columns={3} />}
             {socialConnectors?.length === 0 && (
               <TableEmpty
+                columns={3}
                 title={t('connectors.type.social')}
                 content={t('connectors.social_connector_eg')}
               >

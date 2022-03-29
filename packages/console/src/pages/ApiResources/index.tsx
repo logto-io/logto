@@ -76,13 +76,14 @@ const ApiResources = () => {
         <tbody>
           {error && (
             <TableError
+              columns={2}
               content={error.body.message}
               onRetry={async () => mutate(undefined, true)}
             />
           )}
           {isLoading && <TableLoading columns={2} />}
           {data?.length === 0 && (
-            <TableEmpty>
+            <TableEmpty columns={2}>
               <Button
                 title="admin_console.api_resources.create"
                 type="outline"

@@ -10,14 +10,15 @@ type Props = {
   title?: string;
   content?: string;
   onRetry?: () => void;
+  columns: number;
 };
 
-const TableError = ({ title, content, onRetry }: Props) => {
+const TableError = ({ title, content, onRetry, columns }: Props) => {
   const { t } = useTranslation();
 
   return (
     <tr>
-      <td colSpan={0}>
+      <td colSpan={columns}>
         <div className={styles.tableError}>
           <div className={styles.image}>
             <img src={ErrorImage} />

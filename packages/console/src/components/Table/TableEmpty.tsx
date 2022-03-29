@@ -9,14 +9,15 @@ type Props = {
   title?: string;
   content?: string;
   children?: ReactNode;
+  columns: number;
 };
 
-const TableEmpty = ({ title, content, children }: Props) => {
+const TableEmpty = ({ title, content, children, columns }: Props) => {
   const { t } = useTranslation();
 
   return (
     <tr>
-      <td colSpan={0}>
+      <td colSpan={columns}>
         <div className={styles.tableEmpty}>
           <div>
             <img src={EmptyImage} />
