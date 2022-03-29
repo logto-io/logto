@@ -76,13 +76,14 @@ const Users = () => {
         <tbody>
           {error && (
             <TableError
+              columns={3}
               content={error.body.message}
               onRetry={async () => mutate(undefined, true)}
             />
           )}
           {isLoading && <TableLoading columns={3} />}
           {users?.length === 0 && (
-            <TableEmpty>
+            <TableEmpty columns={3}>
               <Button
                 title="admin_console.users.create"
                 type="outline"
