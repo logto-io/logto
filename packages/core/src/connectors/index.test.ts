@@ -151,7 +151,7 @@ describe('getConnectorInstanceByType', () => {
   test('should throw when there is no enabled connector existing in DB', async () => {
     const type = ConnectorType.SMS;
     await expect(getConnectorInstanceByType(type)).rejects.toMatchError(
-      new RequestError('connector.not_found', { type })
+      new RequestError({ code: 'connector.not_found', type })
     );
   });
 });

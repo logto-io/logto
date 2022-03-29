@@ -35,6 +35,7 @@ jest.mock('@/lib/social', () => ({
       throw new RequestError({
         code: 'session.invalid_connector_id',
         status: 422,
+        connectorId,
       });
     }
 

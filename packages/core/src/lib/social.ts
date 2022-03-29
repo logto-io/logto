@@ -27,7 +27,7 @@ const getConnector = async (connectorId: string) => {
       throw new RequestError({
         code: 'session.invalid_connector_id',
         status: 422,
-        data: { connectorId },
+        connectorId,
       });
     }
     throw error;
