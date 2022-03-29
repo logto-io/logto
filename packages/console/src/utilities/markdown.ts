@@ -16,7 +16,7 @@ export const parseMarkdownWithYamlFrontmatter = <T extends Record<string, string
   const metaRegExp = new RegExp(/^---[\n\r](((?!---).|[\n\r])*)[\n\r]---$/m);
 
   // "rawYamlHeader" is the full matching string, including the --- and ---
-  // "metadata" is the first capturing group, which is the string between the --- and ---
+  // "yamlVariables" is the first capturing group, which is the string between the --- and ---
   const [rawYamlHeader, yamlVariables] = metaRegExp.exec(markdown) ?? [];
 
   if (!rawYamlHeader || !yamlVariables) {
