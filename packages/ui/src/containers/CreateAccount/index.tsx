@@ -8,16 +8,15 @@
 
 import { LogtoErrorI18nKey } from '@logto/phrases';
 import classNames from 'classnames';
-import React, { FC, useState, useCallback, useEffect, useContext, useMemo } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { signInBasic } from '@/apis/sign-in';
+import { register } from '@/apis/register';
 import Button from '@/components/Button';
 import { ErrorType } from '@/components/ErrorMessage';
 import Input from '@/components/Input';
 import PasswordInput from '@/components/Input/PasswordInput';
 import TermsOfUse from '@/components/TermsOfUse';
-import TextLink from '@/components/TextLink';
 import PageContext from '@/hooks/page-context';
 import useApi from '@/hooks/use-api';
 
@@ -26,6 +25,7 @@ import * as styles from './index.module.scss';
 type FieldState = {
   username: string;
   password: string;
+  confirmPassword: string;
   termsAgreement: boolean;
 };
 
@@ -37,20 +37,23 @@ type FieldValidations = {
   [key in keyof FieldState]?: (state: FieldState) => ErrorType | undefined;
 };
 
-const defaultState: FieldState = {
+const defaultState = {
   username: '',
   password: '',
+  confirmPassword: '',
   termsAgreement: false,
 };
 
-const UsernameSignin: FC = () => {
+const usernameRegx = /^[_a-z-][\w-]*$/;
+
+const CreateAccount = () => {
   const { t, i18n } = useTranslation();
   const [fieldState, setFieldState] = useState<FieldState>(defaultState);
   const [fieldErrors, setFieldErrors] = useState<ErrorState>({});
 
   const { setToast } = useContext(PageContext);
 
-  const { error, loading, result, run: asyncSignInBasic } = useApi(signInBasic);
+  const { loading, error, result, run: asyncRegister } = useApi(register);
 
   const validations = useMemo<FieldValidations>(
     () => ({
@@ -58,10 +61,27 @@ const UsernameSignin: FC = () => {
         if (!username) {
           return { code: 'form.required', data: { fieldName: t('sign_in.username') } };
         }
+
+        if (/\d/.test(username.slice(0, 1))) {
+          return 'user.username_forbidden_initial_number';
+        }
+
+        if (!usernameRegx.test(username)) {
+          return 'user.username_invalid_character';
+        }
       },
       password: ({ password }) => {
         if (!password) {
           return { code: 'form.required', data: { fieldName: t('sign_in.password') } };
+        }
+
+        if (password.length < 6) {
+          return { code: 'password.too_short', data: { min: 6 } };
+        }
+      },
+      confirmPassword: ({ password, confirmPassword }) => {
+        if (password !== confirmPassword) {
+          return { code: 'password.inconsistent_password' };
         }
       },
       termsAgreement: ({ termsAgreement }) => {
@@ -73,7 +93,7 @@ const UsernameSignin: FC = () => {
     [t]
   );
 
-  const onSubmitHandler = useCallback(async () => {
+  const onSubmitHandler = useCallback(() => {
     // Should be removed after api redesign
     if (loading) {
       return;
@@ -93,6 +113,14 @@ const UsernameSignin: FC = () => {
       return;
     }
 
+    const confirmPasswordError = validations.confirmPassword?.(fieldState);
+
+    if (confirmPasswordError) {
+      setFieldErrors((previous) => ({ ...previous, confirmPassword: confirmPasswordError }));
+
+      return;
+    }
+
     const termsAgreementError = validations.termsAgreement?.(fieldState);
 
     if (termsAgreementError) {
@@ -104,8 +132,8 @@ const UsernameSignin: FC = () => {
       return;
     }
 
-    void asyncSignInBasic(fieldState.username, fieldState.password);
-  }, [loading, validations, fieldState, asyncSignInBasic]);
+    void asyncRegister(fieldState.username, fieldState.password);
+  }, [fieldState, loading, validations, asyncRegister]);
 
   useEffect(() => {
     if (result?.redirectTo) {
@@ -116,20 +144,19 @@ const UsernameSignin: FC = () => {
   useEffect(() => {
     // Clear errors
     for (const key of Object.keys(fieldState) as [keyof FieldState]) {
-      if (fieldState[key]) {
-        setFieldErrors((previous) => {
-          if (!previous[key]) {
-            return previous;
-          }
+      setFieldErrors((previous) => {
+        if (!previous[key]) {
+          return previous;
+        }
+        const error = validations[key]?.(fieldState);
 
-          return { ...previous, [key]: undefined };
-        });
-      }
+        return { ...previous, [key]: error };
+      });
     }
-  }, [fieldState]);
+  }, [fieldState, validations]);
 
   useEffect(() => {
-    // TODO: username password not correct error message
+    // TODO: username exist error message
     if (error) {
       setToast(i18n.t<string, LogtoErrorI18nKey>(`errors:${error.code}`));
     }
@@ -155,6 +182,7 @@ const UsernameSignin: FC = () => {
         }}
       />
       <PasswordInput
+        forceHidden
         className={classNames(styles.inputField, fieldErrors.password && styles.withError)}
         name="password"
         autoComplete="current-password"
@@ -168,13 +196,21 @@ const UsernameSignin: FC = () => {
           }
         }}
       />
-      <TextLink
-        className={styles.textLink}
-        type="secondary"
-        text="sign_in.forgot_password"
-        href="/passcode"
+      <PasswordInput
+        forceHidden
+        className={classNames(styles.inputField, fieldErrors.confirmPassword && styles.withError)}
+        name="confirm_password"
+        autoComplete="current-password"
+        placeholder={t('register.confirm_password')}
+        value={fieldState.confirmPassword}
+        error={fieldErrors.confirmPassword}
+        onChange={({ target }) => {
+          if (target instanceof HTMLInputElement) {
+            const { value } = target;
+            setFieldState((state) => ({ ...state, confirmPassword: value }));
+          }
+        }}
       />
-
       <TermsOfUse
         name="termsAgreement"
         className={classNames(styles.terms, fieldErrors.termsAgreement && styles.withError)}
@@ -186,9 +222,9 @@ const UsernameSignin: FC = () => {
         }}
       />
 
-      <Button onClick={onSubmitHandler}>{t('sign_in.action')}</Button>
+      <Button onClick={onSubmitHandler}>{t('register.action')}</Button>
     </form>
   );
 };
 
-export default UsernameSignin;
+export default CreateAccount;

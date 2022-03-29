@@ -1,4 +1,4 @@
-import { fireEvent, render } from '@testing-library/react';
+import { fireEvent, render, waitFor } from '@testing-library/react';
 import React from 'react';
 
 import { signInBasic } from '@/apis/sign-in';
@@ -47,7 +47,7 @@ describe('<UsernameSignin>', () => {
     expect(signInBasic).not.toBeCalled();
   });
 
-  test('submit form', () => {
+  test('submit form', async () => {
     const { getByText, container } = render(<UsernameSignin />);
     const submitButton = getByText('sign_in.action');
 
@@ -65,7 +65,9 @@ describe('<UsernameSignin>', () => {
     const termsButton = getByText('sign_in.terms_agreement_prefix');
     fireEvent.click(termsButton);
 
-    fireEvent.click(submitButton);
+    await waitFor(() => {
+      fireEvent.click(submitButton);
+    });
 
     expect(signInBasic).toBeCalledWith('username', 'password');
   });

@@ -1,5 +1,7 @@
+import { LogtoErrorI18nKey } from '@logto/phrases';
 import { render, fireEvent } from '@testing-library/react';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 import Input from '.';
 
@@ -7,6 +9,7 @@ describe('Input Field UI Component', () => {
   const text = 'foo';
   const onChange = jest.fn();
   const onClear = jest.fn();
+  const { i18n } = useTranslation();
 
   test('render plain text input with value', () => {
     const { container } = render(
@@ -33,7 +36,7 @@ describe('Input Field UI Component', () => {
   test('render error message', () => {
     const errorCode = 'user.email_not_exists';
     const { queryByText } = render(<Input error={errorCode} />);
-    expect(queryByText(`errors:${errorCode}`)).not.toBeNull();
+    expect(queryByText(i18n.t<string, LogtoErrorI18nKey>(`errors:${errorCode}`))).not.toBeNull();
   });
 
   test('click on clear button', () => {

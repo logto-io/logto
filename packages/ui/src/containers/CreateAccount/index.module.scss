@@ -9,7 +9,7 @@
     width: 100%;
   }
 
-  .inputField:first-child {
+  .inputField {
     margin-bottom: _.unit(4);
 
     &.withError {
@@ -17,20 +17,15 @@
     }
   }
 
-  .textLink {
-    margin-top: _.unit(3);
-    text-align: right;
-  }
-
-  .inputField.withError + .textLink {
-    margin-top: _.unit(1);
-  }
-
   .terms {
-    margin: _.unit(6) 0;
+    margin: _.unit(7) 0 _.unit(6);
 
     &.withError {
-      margin: _.unit(5) 0  _.unit(2) 0;
+      margin: _.unit(7) 0  _.unit(2) 0;
     }
+  }
+
+  .inputField.withError + .terms {
+    margin-top: _.unit(9);
   }
 }

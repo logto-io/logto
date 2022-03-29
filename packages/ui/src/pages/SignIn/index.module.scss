@@ -3,7 +3,6 @@
 .wrapper {
   position: relative;
   padding: _.unit(8);
-  height: 100%;
   @include _.flex-column;
 
   .header {
@@ -12,7 +11,7 @@
 
 
   .createAccount {
-    position: absolute;
-    bottom: _.unit(10);
+    position: fixed;
+    bottom: _.unit(12);
   }
 }

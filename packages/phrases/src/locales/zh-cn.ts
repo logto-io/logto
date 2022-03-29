@@ -26,8 +26,8 @@ const translation = {
   register: {
     create_account: '创建新账户',
     action: '创建',
-    loading: '创建中...',
     have_account: '已经有账户？',
+    confirm_password: '确认密码',
   },
   admin_console: {
     title: '管理面板',
@@ -285,6 +285,8 @@ const errors = {
   },
   user: {
     username_exists_register: '用户名已被注册。',
+    username_forbidden_initial_number: '用户名不能以数字开头。',
+    username_invalid_character: '用户名应只包含 A-Za-z0-9_ 字符。',
     email_exists_register: '邮箱地址已被注册。',
     phone_exists_register: '手机号码已被注册。',
     invalid_email: '邮箱地址不正确。',
@@ -295,8 +297,10 @@ const errors = {
     identity_exists: '该社交账号已被注册。',
   },
   password: {
+    too_short: '密码长度不得小于 {{min}}。',
     unsupported_encryption_method: '不支持的加密方法 {{name}}。',
     pepper_not_found: '密码 pepper 未找到。请检查 core 的环境变量。',
+    inconsistent_password: '密码不一致。',
   },
   session: {
     not_found: 'Session not found. Please go back and sign in again.',

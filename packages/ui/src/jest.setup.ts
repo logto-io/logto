@@ -15,11 +15,13 @@ Object.defineProperty(window, 'matchMedia', {
   })),
 });
 
+const translation = (key: string) => key;
+
 jest.mock('react-i18next', () => ({
   useTranslation: () => ({
-    t: (key: string) => key,
+    t: translation,
     i18n: {
-      t: (key: string) => key,
+      t: translation,
     },
   }),
 }));
