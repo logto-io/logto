@@ -1,4 +1,5 @@
 import { User } from '@logto/schemas';
+import { conditional, conditionalString } from '@silverhand/essentials';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Modal from 'react-modal';
@@ -11,6 +12,7 @@ import CardTitle from '@/components/CardTitle';
 import ImagePlaceholder from '@/components/ImagePlaceholder';
 import ItemPreview from '@/components/ItemPreview';
 import Pagination from '@/components/Pagination';
+import Search from '@/components/Search';
 import TableEmpty from '@/components/Table/TableEmpty';
 import TableError from '@/components/Table/TableError';
 import TableLoading from '@/components/Table/TableLoading';
@@ -26,8 +28,11 @@ const Users = () => {
   const [isCreateFormOpen, setIsCreateFormOpen] = useState(false);
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const [pageIndex, setPageIndex] = useState(1);
+  const [keyword, setKeyword] = useState<string>();
   const { data, error, mutate } = useSWR<[User[], number], RequestError>(
-    `/api/users?page=${pageIndex}&page_size=${pageSize}`
+    `/api/users?page=${pageIndex}&page_size=${pageSize}${conditionalString(
+      keyword && `&search=${keyword}`
+    )}`
   );
   const isLoading = !data && !error;
   const navigate = useNavigate();
@@ -59,6 +64,9 @@ const Users = () => {
             }}
           />
         </Modal>
+      </div>
+      <div className={styles.filter}>
+        <Search defaultValue={keyword} onSearch={setKeyword} />
       </div>
       <table className={styles.table}>
         <colgroup>
@@ -115,12 +123,14 @@ const Users = () => {
           ))}
         </tbody>
       </table>
-      {totalCount && (
-        <Pagination
-          pageCount={Math.ceil(totalCount / pageSize)}
-          pageIndex={pageIndex}
-          onChange={setPageIndex}
-        />
+      {conditional(
+        totalCount && (
+          <Pagination
+            pageCount={Math.ceil(totalCount / pageSize)}
+            pageIndex={pageIndex}
+            onChange={setPageIndex}
+          />
+        )
       )}
     </Card>
   );

@@ -100,7 +100,7 @@ export const countUsers = async (search?: string) =>
   `);
 
 export const findUsers = async (limit: number, offset: number, search?: string) =>
-  pool.many<User>(
+  pool.any<User>(
     sql`
       select ${sql.join(Object.values(fields), sql`,`)}
       from ${table}
