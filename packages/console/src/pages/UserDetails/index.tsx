@@ -50,8 +50,14 @@ const UserDetails = () => {
   const { data, error, mutate } = useSWR<User, RequestError>(id && `/api/users/${id}`);
   const isLoading = !data && !error;
 
-  const { handleSubmit, register, control, reset } = useForm<FormData>();
-  const [submitting, setSubmitting] = useState(false);
+  const {
+    handleSubmit,
+    register,
+    control,
+    reset,
+    formState: { isSubmitting },
+  } = useForm<FormData>();
+
   const {
     field: { onChange, value },
   } = useController({ name: 'customData', control, rules: { required: true } });
@@ -69,7 +75,7 @@ const UserDetails = () => {
   }, [data, reset]);
 
   const onSubmit = handleSubmit(async (formData) => {
-    if (!data || submitting) {
+    if (!data || isSubmitting) {
       return;
     }
 
@@ -86,15 +92,10 @@ const UserDetails = () => {
       avatar: formData.avatar,
       customData,
     };
-    setSubmitting(true);
 
-    try {
-      const updatedUser = await api.patch(`/api/users/${data.id}`, { json: payload }).json<User>();
-      void mutate(updatedUser);
-      toast.success(t('user_details.saved'));
-    } finally {
-      setSubmitting(false);
-    }
+    const updatedUser = await api.patch(`/api/users/${data.id}`, { json: payload }).json<User>();
+    void mutate(updatedUser);
+    toast.success(t('user_details.saved'));
   });
 
   return (
@@ -227,7 +228,7 @@ const UserDetails = () => {
               </div>
               <div className={styles.submit}>
                 <Button
-                  disabled={submitting}
+                  disabled={isSubmitting}
                   htmlType="submit"
                   type="primary"
                   title="admin_console.user_details.save_changes"
