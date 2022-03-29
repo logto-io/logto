@@ -1,6 +1,6 @@
 import { Application } from '@logto/schemas';
-import React, { useEffect, useMemo, useState } from 'react';
-import { useController, useForm } from 'react-hook-form';
+import React, { useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import Modal from 'react-modal';
@@ -15,7 +15,7 @@ import CopyToClipboard from '@/components/CopyToClipboard';
 import Drawer from '@/components/Drawer';
 import FormField from '@/components/FormField';
 import ImagePlaceholder from '@/components/ImagePlaceholder';
-import MultilineInput from '@/components/MultilineInput';
+import MultiTextInput from '@/components/MultiTextInput';
 import TabNav, { TabNavLink } from '@/components/TabNav';
 import TextInput from '@/components/TextInput';
 import useApi, { RequestError } from '@/hooks/use-api';
@@ -23,6 +23,7 @@ import Delete from '@/icons/Delete';
 import More from '@/icons/More';
 import * as modalStyles from '@/scss/modal.module.scss';
 import { applicationTypeI18nKey } from '@/types/applications';
+import { noSpaceRegex } from '@/utilities/regex';
 
 import DeleteForm from './components/DeleteForm';
 import * as styles from './index.module.scss';
@@ -69,29 +70,23 @@ const ApplicationDetails = () => {
     reset(data);
   }, [data, reset]);
 
-  const {
-    field: { value: redirectUris, onChange: onRedirectUriChange },
-  } = useController({
-    control,
-    name: 'oidcClientMetadata.redirectUris',
-    defaultValue: [],
-  });
-
-  const {
-    field: { value: postSignOutRedirectUris, onChange: onPostSignOutRedirectUriChange },
-  } = useController({
-    control,
-    name: 'oidcClientMetadata.postLogoutRedirectUris',
-    defaultValue: [],
-  });
-
   const onSubmit = handleSubmit(async (formData) => {
     if (!data || isSubmitting) {
       return;
     }
 
     const updatedApplication = await api
-      .patch(`/api/applications/${data.id}`, { json: formData })
+      .patch(`/api/applications/${data.id}`, {
+        json: {
+          ...formData,
+          oidcClientMetadata: {
+            ...formData.oidcClientMetadata,
+            redirectUris: formData.oidcClientMetadata.redirectUris.filter(Boolean),
+            postLogoutRedirectUris:
+              formData.oidcClientMetadata.postLogoutRedirectUris.filter(Boolean),
+          },
+        },
+      })
       .json<Application>();
     void mutate(updatedApplication);
     toast.success(t('application_details.save_success'));
@@ -99,64 +94,52 @@ const ApplicationDetails = () => {
 
   const isAdvancedSettings = location.pathname.includes('advanced-settings');
 
-  const SettingsPage = useMemo(() => {
-    return (
-      oidcConfig && (
-        <>
-          <FormField isRequired title="admin_console.application_details.application_name">
-            <TextInput {...register('name', { required: true })} />
-          </FormField>
-          <FormField title="admin_console.application_details.description">
-            <TextInput {...register('description')} />
-          </FormField>
-          <FormField title="admin_console.application_details.authorization_endpoint">
-            <CopyToClipboard
-              className={styles.textField}
-              value={oidcConfig.authorization_endpoint}
-            />
-          </FormField>
-          <FormField title="admin_console.application_details.redirect_uri">
-            <MultilineInput
-              value={redirectUris}
-              onChange={(value) => {
-                onRedirectUriChange(value);
-              }}
-            />
-          </FormField>
-          <FormField title="admin_console.application_details.post_sign_out_redirect_uri">
-            <MultilineInput
-              value={postSignOutRedirectUris}
-              onChange={(value) => {
-                onPostSignOutRedirectUriChange(value);
-              }}
-            />
-          </FormField>
-        </>
-      )
-    );
-  }, [
-    oidcConfig,
-    onPostSignOutRedirectUriChange,
-    onRedirectUriChange,
-    postSignOutRedirectUris,
-    redirectUris,
-    register,
-  ]);
+  const SettingsPage = oidcConfig && (
+    <>
+      <FormField isRequired title="admin_console.application_details.application_name">
+        <TextInput {...register('name', { required: true })} />
+      </FormField>
+      <FormField title="admin_console.application_details.description">
+        <TextInput {...register('description')} />
+      </FormField>
+      <FormField title="admin_console.application_details.authorization_endpoint">
+        <CopyToClipboard className={styles.textField} value={oidcConfig.authorization_endpoint} />
+      </FormField>
+      <FormField isRequired title="admin_console.application_details.redirect_uri">
+        <MultiTextInput
+          isRequired
+          control={control}
+          name="oidcClientMetadata.redirectUris"
+          requiredMessage={t('application_details.redirect_uri_required')}
+          rule={{
+            pattern: noSpaceRegex,
+            message: t('application_details.no_space_in_uri'),
+          }}
+        />
+      </FormField>
+      <FormField title="admin_console.application_details.post_sign_out_redirect_uri">
+        <MultiTextInput
+          control={control}
+          name="oidcClientMetadata.postLogoutRedirectUris"
+          rule={{
+            pattern: noSpaceRegex,
+            message: t('application_details.no_space_in_uri'),
+          }}
+        />
+      </FormField>
+    </>
+  );
 
-  const AdvancedSettingsPage = useMemo(() => {
-    return (
-      oidcConfig && (
-        <>
-          <FormField title="admin_console.application_details.token_endpoint">
-            <CopyToClipboard className={styles.textField} value={oidcConfig.token_endpoint} />
-          </FormField>
-          <FormField title="admin_console.application_details.user_info_endpoint">
-            <CopyToClipboard className={styles.textField} value={oidcConfig.userinfo_endpoint} />
-          </FormField>
-        </>
-      )
-    );
-  }, [oidcConfig]);
+  const AdvancedSettingsPage = oidcConfig && (
+    <>
+      <FormField title="admin_console.application_details.token_endpoint">
+        <CopyToClipboard className={styles.textField} value={oidcConfig.token_endpoint} />
+      </FormField>
+      <FormField title="admin_console.application_details.user_info_endpoint">
+        <CopyToClipboard className={styles.textField} value={oidcConfig.userinfo_endpoint} />
+      </FormField>
+    </>
+  );
 
   return (
     <div className={styles.container}>
