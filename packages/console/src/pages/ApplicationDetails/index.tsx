@@ -1,6 +1,6 @@
 import { Application } from '@logto/schemas';
-import React, { useEffect, useMemo, useState } from 'react';
-import { useController, useForm } from 'react-hook-form';
+import React, { useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import Modal from 'react-modal';
@@ -15,7 +15,7 @@ import CopyToClipboard from '@/components/CopyToClipboard';
 import Drawer from '@/components/Drawer';
 import FormField from '@/components/FormField';
 import ImagePlaceholder from '@/components/ImagePlaceholder';
-import MultilineInput from '@/components/MultilineInput';
+import { useMultiTextInputRhf, MultiTextInput } from '@/components/MultiTextInput';
 import TabNav, { TabNavLink } from '@/components/TabNav';
 import TextInput from '@/components/TextInput';
 import useApi, { RequestError } from '@/hooks/use-api';
@@ -69,20 +69,14 @@ const ApplicationDetails = () => {
     reset(data);
   }, [data, reset]);
 
-  const {
-    field: { value: redirectUris, onChange: onRedirectUriChange },
-  } = useController({
+  const redirectUriMultiTextInput = useMultiTextInputRhf({
     control,
     name: 'oidcClientMetadata.redirectUris',
-    defaultValue: [],
   });
 
-  const {
-    field: { value: postSignOutRedirectUris, onChange: onPostSignOutRedirectUriChange },
-  } = useController({
+  const postSignOutRedirectUriMultiTextInput = useMultiTextInputRhf({
     control,
     name: 'oidcClientMetadata.postLogoutRedirectUris',
-    defaultValue: [],
   });
 
   const onSubmit = handleSubmit(async (formData) => {
@@ -99,64 +93,36 @@ const ApplicationDetails = () => {
 
   const isAdvancedSettings = location.pathname.includes('advanced-settings');
 
-  const SettingsPage = useMemo(() => {
-    return (
-      oidcConfig && (
-        <>
-          <FormField isRequired title="admin_console.application_details.application_name">
-            <TextInput {...register('name', { required: true })} />
-          </FormField>
-          <FormField title="admin_console.application_details.description">
-            <TextInput {...register('description')} />
-          </FormField>
-          <FormField title="admin_console.application_details.authorization_endpoint">
-            <CopyToClipboard
-              className={styles.textField}
-              value={oidcConfig.authorization_endpoint}
-            />
-          </FormField>
-          <FormField title="admin_console.application_details.redirect_uri">
-            <MultilineInput
-              value={redirectUris}
-              onChange={(value) => {
-                onRedirectUriChange(value);
-              }}
-            />
-          </FormField>
-          <FormField title="admin_console.application_details.post_sign_out_redirect_uri">
-            <MultilineInput
-              value={postSignOutRedirectUris}
-              onChange={(value) => {
-                onPostSignOutRedirectUriChange(value);
-              }}
-            />
-          </FormField>
-        </>
-      )
-    );
-  }, [
-    oidcConfig,
-    onPostSignOutRedirectUriChange,
-    onRedirectUriChange,
-    postSignOutRedirectUris,
-    redirectUris,
-    register,
-  ]);
+  const SettingsPage = oidcConfig && (
+    <>
+      <FormField isRequired title="admin_console.application_details.application_name">
+        <TextInput {...register('name', { required: true })} />
+      </FormField>
+      <FormField title="admin_console.application_details.description">
+        <TextInput {...register('description')} />
+      </FormField>
+      <FormField title="admin_console.application_details.authorization_endpoint">
+        <CopyToClipboard className={styles.textField} value={oidcConfig.authorization_endpoint} />
+      </FormField>
+      <FormField title="admin_console.application_details.redirect_uri">
+        <MultiTextInput {...redirectUriMultiTextInput} />
+      </FormField>
+      <FormField title="admin_console.application_details.post_sign_out_redirect_uri">
+        <MultiTextInput {...postSignOutRedirectUriMultiTextInput} />
+      </FormField>
+    </>
+  );
 
-  const AdvancedSettingsPage = useMemo(() => {
-    return (
-      oidcConfig && (
-        <>
-          <FormField title="admin_console.application_details.token_endpoint">
-            <CopyToClipboard className={styles.textField} value={oidcConfig.token_endpoint} />
-          </FormField>
-          <FormField title="admin_console.application_details.user_info_endpoint">
-            <CopyToClipboard className={styles.textField} value={oidcConfig.userinfo_endpoint} />
-          </FormField>
-        </>
-      )
-    );
-  }, [oidcConfig]);
+  const AdvancedSettingsPage = oidcConfig && (
+    <>
+      <FormField title="admin_console.application_details.token_endpoint">
+        <CopyToClipboard className={styles.textField} value={oidcConfig.token_endpoint} />
+      </FormField>
+      <FormField title="admin_console.application_details.user_info_endpoint">
+        <CopyToClipboard className={styles.textField} value={oidcConfig.userinfo_endpoint} />
+      </FormField>
+    </>
+  );
 
   return (
     <div className={styles.container}>
