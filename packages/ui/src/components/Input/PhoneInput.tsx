@@ -3,6 +3,7 @@ import React, { useState, useMemo, useRef } from 'react';
 
 import { CountryCallingCode, CountryMetaData } from '@/hooks/use-phone-number';
 
+import ErrorMessage, { ErrorType } from '../ErrorMessage';
 import { ClearIcon, DownArrowIcon } from '../Icons';
 import * as styles from './index.module.scss';
 import * as phoneInputStyles from './phoneInput.module.scss';
@@ -12,26 +13,24 @@ type Value = { countryCallingCode?: CountryCallingCode; nationalNumber?: string 
 export type Props = {
   name: string;
   autoComplete?: AutoCompleteType;
-  isDisabled?: boolean;
   className?: string;
   placeholder?: string;
   countryCallingCode?: CountryCallingCode;
   nationalNumber: string;
   countryList?: CountryMetaData[];
-  hasError?: boolean;
+  error?: ErrorType;
   onChange: (value: Value) => void;
 };
 
 const PhoneInput = ({
   name,
   autoComplete,
-  isDisabled,
   className,
   placeholder,
   countryCallingCode,
   nationalNumber,
   countryList,
-  hasError = false,
+  error,
   onChange,
 }: Props) => {
   const [onFocus, setOnFocus] = useState(false);
@@ -69,43 +68,38 @@ const PhoneInput = ({
   }, [countryCallingCode, countryList, onChange]);
 
   return (
-    <div
-      className={classNames(
-        styles.wrapper,
-        onFocus && styles.focus,
-        hasError && styles.error,
-        className
-      )}
-    >
-      {countrySelector}
-      <input
-        ref={inputReference}
-        name={name}
-        disabled={isDisabled}
-        placeholder={placeholder}
-        value={nationalNumber}
-        type="tel"
-        inputMode="numeric"
-        autoComplete={autoComplete}
-        onFocus={() => {
-          setOnFocus(true);
-        }}
-        onBlur={() => {
-          setOnFocus(false);
-        }}
-        onChange={({ target: { value } }) => {
-          onChange({ nationalNumber: value });
-        }}
-      />
-      {nationalNumber && onFocus && (
-        <ClearIcon
-          className={styles.actionButton}
-          onMouseDown={(event) => {
-            event.preventDefault();
-            onChange({ nationalNumber: '' });
+    <div className={className}>
+      <div className={classNames(styles.wrapper, onFocus && styles.focus, error && styles.error)}>
+        {countrySelector}
+        <input
+          ref={inputReference}
+          name={name}
+          placeholder={placeholder}
+          value={nationalNumber}
+          type="tel"
+          inputMode="numeric"
+          autoComplete={autoComplete}
+          onFocus={() => {
+            setOnFocus(true);
+          }}
+          onBlur={() => {
+            setOnFocus(false);
+          }}
+          onChange={({ target: { value } }) => {
+            onChange({ nationalNumber: value.replaceAll(/\D/g, '') });
           }}
         />
-      )}
+        {nationalNumber && onFocus && (
+          <ClearIcon
+            className={styles.actionButton}
+            onMouseDown={(event) => {
+              event.preventDefault();
+              onChange({ nationalNumber: '' });
+            }}
+          />
+        )}
+      </div>
+      {error && <ErrorMessage error={error} className={styles.errorMessage} />}
     </div>
   );
 };
