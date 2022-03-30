@@ -1,7 +1,7 @@
 @use '@/scss/underscore' as _;
 
 .link {
-  font: var(--font-body-2);
+  font: var(--font-body-medium);
   margin-right: _.unit(6);
   padding-bottom: _.unit(1);
 

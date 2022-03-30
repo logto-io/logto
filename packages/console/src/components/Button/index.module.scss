@@ -6,8 +6,8 @@
   border-radius: _.unit(2);
   font: var(--font-button);
   transition: background 0.2s ease-in-out;
-  @include _.text-ellipsis;
   align-items: center;
+  white-space: nowrap;
 
   &.withIcon {
     display: inline-flex;
@@ -144,6 +144,7 @@
   &.plain {
     background: none;
     border-color: none;
+    font: var(--font-body-medium);
     color: var(--color-primary);
 
     &:disabled {

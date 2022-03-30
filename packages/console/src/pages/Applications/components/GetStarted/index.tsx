@@ -10,6 +10,8 @@ import highFive from '@/assets/images/high-five.svg';
 import tada from '@/assets/images/tada.svg';
 import Button from '@/components/Button';
 import Card from '@/components/Card';
+import CardTitle from '@/components/CardTitle';
+import DangerousRaw from '@/components/DangerousRaw';
 import IconButton from '@/components/IconButton';
 import RadioGroup, { Radio } from '@/components/RadioGroup';
 import Spacer from '@/components/Spacer';
@@ -85,7 +87,12 @@ const GetStarted = ({ appName, onClose }: Props) => {
           <div className={styles.title}>{t('applications.get_started.title')}</div>
           <div className={styles.subtitle}>{t('applications.get_started.subtitle')}</div>
         </div>
-        <RadioGroup name="libraryName" value={libraryName} onChange={setLibraryName}>
+        <RadioGroup
+          className={styles.radioGroup}
+          name="libraryName"
+          value={libraryName}
+          onChange={setLibraryName}
+        >
           {Object.values(SupportedJavascriptLibraries).map((library) => (
             <Radio key={library} className={styles.radio} title={library} value={library} />
           ))}
@@ -123,10 +130,12 @@ const GetStarted = ({ appName, onClose }: Props) => {
         <IconButton size="large" onClick={onClose}>
           <Close />
         </IconButton>
-        <div className={styles.titleWrapper}>
-          <div className={styles.title}>{appName}</div>
-          <div className={styles.subtitle}>{t('applications.get_started.header_description')}</div>
-        </div>
+        <div className={styles.separator} />
+        <CardTitle
+          size="small"
+          title={<DangerousRaw>{appName}</DangerousRaw>}
+          subtitle="applications.get_started.header_description"
+        />
         <Spacer />
         <Button type="plain" size="small" title="general.skip" onClick={onClose} />
         <Button
@@ -151,11 +160,7 @@ const GetStarted = ({ appName, onClose }: Props) => {
           // TODO: add more styles to markdown renderer
           // TODO: render form and input fields in steps
           return (
-            <Card
-              key={title}
-              ref={stepReferences[index]}
-              className={classNames(styles.card, isExpanded && styles.expanded)}
-            >
+            <Card key={title} ref={stepReferences[index]} className={styles.card}>
               <div
                 className={styles.cardHeader}
                 onClick={() => {
@@ -172,12 +177,13 @@ const GetStarted = ({ appName, onClose }: Props) => {
                 >
                   {isCompleted ? <Tick /> : index + 1}
                 </div>
-                <div>
-                  <div className={styles.title}>{title}</div>
-                  <div className={styles.subtitle}>{subtitle}</div>
-                </div>
+                <CardTitle
+                  size="medium"
+                  title={<DangerousRaw>{title}</DangerousRaw>}
+                  subtitle={<DangerousRaw>{subtitle}</DangerousRaw>}
+                />
                 <Spacer />
-                {isExpanded ? <ArrowUp /> : <ArrowDown />}
+                <IconButton>{isExpanded ? <ArrowUp /> : <ArrowDown />}</IconButton>
               </div>
               {isExpanded && (
                 <>

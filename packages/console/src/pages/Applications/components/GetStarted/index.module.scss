@@ -6,29 +6,21 @@
   background-color: var(--color-main-background);
   height: 100vh;
 
-  .title {
-    font: var(--font-title-large);
-    color: var(--color-component-text);
-  }
-
-  .subtitle {
-    font: var(--font-body-1);
-    color: var(--color-component-caption);
-  }
-
   .header {
     display: flex;
     align-items: center;
     background-color: var(--color-on-primary);
-    height: 80px;
-    padding: 0 _.unit(17) 0 _.unit(5);
+    height: 64px;
+    padding: 0 _.unit(21) 0 _.unit(2);
 
-    .titleWrapper {
+    button {
       margin-left: _.unit(4);
     }
 
-    button + button {
-      margin-left: _.unit(4);
+    .separator {
+      @include _.vertical-bar;
+      height: 20px;
+      margin: 0 _.unit(5) 0 _.unit(4);
     }
   }
 
@@ -43,19 +35,26 @@
 
   .card {
     width: 858px;
-    padding: _.unit(6) _.unit(8);
+    padding: _.unit(5) _.unit(6);
     display: flex;
     flex-direction: column;
-    scroll-margin: _.unit(6);
+    scroll-margin: _.unit(5);
 
     &.selector {
       display: block;
-      padding: _.unit(8);
-      margin-top: _.unit(4);
+
+      .title {
+        font: var(--font-title-large);
+      }
 
       .subtitle {
+        font: var(--font-body-medium);
         color: var(--color-component-text);
         margin-top: _.unit(3);
+      }
+
+      .radioGroup {
+        margin-top: _.unit(6);
       }
 
       .radio {
@@ -72,18 +71,13 @@
         background: var(--color-neutral-variant-90);
         border-radius: _.unit(2);
         padding: 0 _.unit(4);
-        margin-top: 0;
-        font: var(--font-body-2);
+        font: var(--font-body-medium);
         color: var(--color-component-text);
 
         img {
           margin-right: _.unit(3);
         }
       }
-    }
-
-    &.expanded {
-      padding: _.unit(8);
     }
 
     .cardHeader {
@@ -97,13 +91,15 @@
       }
 
       .index {
-        width: 32px;
-        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 28px;
+        height: 28px;
         border-radius: 50%;
         color: var(--color-primary);
         background: var(--color-surface-5);
-        font: var(--font-label-large);
-        text-align: center;
+        font: var(--font-title-medium);
         margin-right: _.unit(4);
 
         &.active {

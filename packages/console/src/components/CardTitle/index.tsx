@@ -1,24 +1,31 @@
 import { AdminConsoleKey } from '@logto/phrases';
-import React from 'react';
+import classNames from 'classnames';
+import React, { ReactElement } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import DangerousRaw from '../DangerousRaw';
 import * as styles from './index.module.scss';
 
 type Props = {
-  title: AdminConsoleKey;
-  subtitle?: AdminConsoleKey;
+  title: AdminConsoleKey | ReactElement<typeof DangerousRaw>;
+  subtitle?: AdminConsoleKey | ReactElement<typeof DangerousRaw>;
+  size?: 'small' | 'medium' | 'large';
 };
 
 /**
  * Always use this component to render CardTitle, with built-in i18n support.
  */
-const CardTitle = ({ title, subtitle }: Props) => {
+const CardTitle = ({ title, subtitle, size = 'large' }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   return (
-    <div>
-      <div className={styles.title}>{t(title)}</div>
-      {subtitle && <div className={styles.subtitle}>{t(subtitle)}</div>}
+    <div className={classNames(styles.container, styles[size])}>
+      <div className={styles.title}>{typeof title === 'string' ? t(title) : title}</div>
+      {subtitle && (
+        <div className={styles.subtitle}>
+          {typeof subtitle === 'string' ? t(subtitle) : subtitle}
+        </div>
+      )}
     </div>
   );
 };

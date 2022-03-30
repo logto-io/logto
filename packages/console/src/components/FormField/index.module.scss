@@ -12,12 +12,12 @@
   margin-bottom: _.unit(1);
 
   .title {
-    font: var(--font-caption-bold);
+    font: var(--font-subhead-2);
     color: var(--color-component-text);
   }
 
   .required {
-    font: var(--font-body-2);
+    font: var(--font-body-medium);
     color: var(--color-component-caption);
   }
 }

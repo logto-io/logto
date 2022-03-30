@@ -1,4 +1,12 @@
-import React, { Children, cloneElement, forwardRef, isValidElement, ReactNode } from 'react';
+import classNames from 'classnames';
+import React, {
+  Children,
+  cloneElement,
+  forwardRef,
+  isValidElement,
+  LegacyRef,
+  ReactNode,
+} from 'react';
 
 import Radio, { Props as RadioProps } from './Radio';
 import * as styles from './index.module.scss';
@@ -7,33 +15,33 @@ type Props = {
   name: string;
   children: ReactNode;
   value: string;
-  // https://github.com/yannickcr/eslint-plugin-react/issues/2856
-  // eslint-disable-next-line react/require-default-props
+  className?: string;
   onChange?: (value: string) => void;
 };
 
-const RadioGroup = forwardRef<HTMLDivElement, Props>(
-  ({ name, children, value, onChange }: Props, reference) => {
-    return (
-      <div ref={reference} className={styles.radioGroup}>
-        {Children.map(children, (child) => {
-          if (!isValidElement(child) || child.type !== Radio) {
-            return child;
-          }
+const RadioGroup = (
+  { name, children, value, className, onChange }: Props,
+  reference?: LegacyRef<HTMLDivElement>
+) => {
+  return (
+    <div ref={reference} className={classNames(styles.radioGroup, className)}>
+      {Children.map(children, (child) => {
+        if (!isValidElement(child) || child.type !== Radio) {
+          return child;
+        }
 
-          return cloneElement<RadioProps>(child, {
-            name,
-            isChecked: value === child.props.value,
-            onClick: () => {
-              onChange?.(child.props.value);
-            },
-            tabIndex: 0,
-          });
-        })}
-      </div>
-    );
-  }
-);
+        return cloneElement<RadioProps>(child, {
+          name,
+          isChecked: value === child.props.value,
+          onClick: () => {
+            onChange?.(child.props.value);
+          },
+          tabIndex: 0,
+        });
+      })}
+    </div>
+  );
+};
 
-export default RadioGroup;
+export default forwardRef<HTMLDivElement, Props>(RadioGroup);
 export { default as Radio } from './Radio';

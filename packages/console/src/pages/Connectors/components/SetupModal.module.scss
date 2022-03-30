@@ -4,7 +4,7 @@
   padding-top: _.unit(5);
 
   .connector {
-    font: var(--font-body);
+    font: var(--font-body-medium);
     width: 230px;
 
     .logo {
@@ -24,12 +24,12 @@
 
     .connectorId {
       margin-top: _.unit(2);
-      font: var(--font-body-2);
+      font: var(--font-body-medium);
       color: var(--color-neutral-50);
     }
 
     .description {
-      font: var(--font-body-2);
+      font: var(--font-body-medium);
       margin-top: _.unit(2);
       height: 60px;
       overflow: hidden;
