@@ -83,27 +83,21 @@ const MultiTextInput = <
   });
 
   const [errors, setErrors] = useState<MutiTextInputErrors>({ inputs: {}, required: undefined });
+  const shouldValidate = useRef(false);
 
   const validate = () => {
-    const isValid = validateResult();
+    const isRequiredValid = validateRequired(fields);
+    const isInputsValid = validateInputs(fields);
 
-    if (!isValid) {
-      setReferenceToInvalidInput();
+    const allValid = isRequiredValid && isInputsValid;
+
+    if (!allValid) {
+      setReferenceToInvalidInput(fields);
+      // eslint-disable-next-line @silverhand/fp/no-mutation
+      shouldValidate.current = true;
     }
 
-    return isValid;
-  };
-
-  const validateResult = () => {
-    if (rule?.required && !validateRequired(fields)) {
-      return false;
-    }
-
-    if (!rule) {
-      return true;
-    }
-
-    return !Object.values(errors.inputs).some(Boolean);
+    return allValid;
   };
 
   const {
@@ -139,20 +133,27 @@ const MultiTextInput = <
     return containValue;
   };
 
-  const validateInput = (index: number, input: string) => {
+  const validateInputs = (candidateValues: string[]) => {
     if (!rule?.pattern) {
-      return;
+      return true;
     }
 
-    const { pattern } = rule;
+    const { regex, message } = rule.pattern;
 
-    setErrors((preErrors) => ({
-      ...preErrors,
-      inputs: {
-        ...preErrors.inputs,
-        [index]: pattern.regex.test(input) ? undefined : pattern.message,
-      },
-    }));
+    for (const [index, value] of candidateValues.entries()) {
+      const isValid = regex.test(value);
+      setErrors((preErros) => ({
+        ...preErros,
+        inputs: {
+          ...preErros.inputs,
+          [index]: isValid ? undefined : message,
+        },
+      }));
+    }
+
+    const hasInvalidInput = candidateValues.some((element) => !regex.test(element));
+
+    return !hasInvalidInput;
   };
 
   const handleAdd = () => {
@@ -190,32 +191,41 @@ const MultiTextInput = <
   };
 
   const handleInputChange = (event: React.FormEvent<HTMLInputElement>, index: number) => {
-    validateInput(index, event.currentTarget.value);
     const candidateValues = fields.map((fieldValue, i) =>
       i === index ? event.currentTarget.value : fieldValue
     );
     onChange(candidateValues);
-    validateRequired(candidateValues);
+
+    if (shouldValidate.current) {
+      validateInputs(candidateValues);
+      validateRequired(candidateValues);
+    }
   };
 
   const inputReferences = useRef<Record<number, HTMLInputElement | undefined>>({});
 
-  const setReferenceToInvalidInput = () => {
-    if (rule?.required && !validateRequired(fields)) {
+  const setReferenceToInvalidInput = (candidateValues: string[]) => {
+    ref(null);
+
+    if (!validateRequired(candidateValues)) {
       ref(inputReferences.current[0]);
 
       return;
     }
 
-    Object.entries(errors.inputs).find(([index, error]) => {
-      if (error) {
-        ref(inputReferences.current[Number(index)]);
+    if (!rule?.pattern) {
+      return;
+    }
 
-        return true;
+    if (!validateInputs(candidateValues)) {
+      const errorIndex = candidateValues.findIndex(
+        (candidateValue) => !rule.pattern?.regex.test(candidateValue)
+      );
+
+      if (errorIndex >= 0) {
+        ref(inputReferences.current[errorIndex]);
       }
-
-      return false;
-    });
+    }
   };
 
   return (
