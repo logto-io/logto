@@ -1,5 +1,5 @@
 import { User } from '@logto/schemas';
-import { conditional, conditionalString } from '@silverhand/essentials';
+import { conditionalString } from '@silverhand/essentials';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Modal from 'react-modal';
@@ -123,14 +123,12 @@ const Users = () => {
           ))}
         </tbody>
       </table>
-      {conditional(
-        totalCount && (
-          <Pagination
-            pageCount={Math.ceil(totalCount / pageSize)}
-            pageIndex={pageIndex}
-            onChange={setPageIndex}
-          />
-        )
+      {totalCount !== undefined && totalCount > 0 && (
+        <Pagination
+          pageCount={Math.ceil(totalCount / pageSize)}
+          pageIndex={pageIndex}
+          onChange={setPageIndex}
+        />
       )}
     </Card>
   );
