@@ -220,7 +220,6 @@ const MultiTextInput = <
                 inputReferences.current[fieldIndex] = element ?? undefined;
               }}
               hasError={Boolean(errors.inputs[fieldIndex] || (fieldIndex === 0 && errors.required))}
-              className={styles.textField}
               value={fieldValue}
               onChange={(event) => {
                 handleInputChange(event, fieldIndex);
