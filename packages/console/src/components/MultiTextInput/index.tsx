@@ -46,7 +46,7 @@ type StringArrayPath<T> = T extends ReadonlyArray<infer V>
  * StringFiledArrayPath<{foo: {bar: string[], baz: number[]}}> = 'foo.bar' | 'foo.baz'
  * ```
  */
-type StringFiledArrayPath<TFieldValues extends FieldValues> = StringArrayPath<TFieldValues>;
+type StringFieldArrayPath<TFieldValues extends FieldValues> = StringArrayPath<TFieldValues>;
 
 type MultiTextInputRule = {
   required?: string;
@@ -63,7 +63,7 @@ type MutiTextInputErrors = {
 
 type Props<
   TFieldValues extends FieldValues = FieldValues,
-  TName extends StringFiledArrayPath<TFieldValues> = StringFiledArrayPath<TFieldValues>
+  TName extends StringFieldArrayPath<TFieldValues> = StringFieldArrayPath<TFieldValues>
 > = {
   control: Control<TFieldValues>;
   name: TName;
@@ -72,7 +72,7 @@ type Props<
 
 const MultiTextInput = <
   TFieldValues extends FieldValues = FieldValues,
-  TName extends StringFiledArrayPath<TFieldValues> = StringFiledArrayPath<TFieldValues>
+  TName extends StringFieldArrayPath<TFieldValues> = StringFieldArrayPath<TFieldValues>
 >({
   control,
   name,
