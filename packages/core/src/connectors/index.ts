@@ -1,5 +1,12 @@
+import { notFalsy } from '@silverhand/essentials';
+
 import RequestError from '@/errors/RequestError';
-import { findAllConnectors, findConnectorById, insertConnector } from '@/queries/connector';
+import {
+  findAllConnectors,
+  findAllEnabledConnectors,
+  findConnectorById,
+  insertConnector,
+} from '@/queries/connector';
 
 import * as AliyunDM from './aliyun-dm';
 import * as AliyunSMS from './aliyun-sms';
@@ -9,28 +16,30 @@ import * as Google from './google';
 import { ConnectorInstance, ConnectorType, IConnector, SocialConnectorInstance } from './types';
 import * as WeChat from './wechat';
 
-const allConnectors: IConnector[] = [AliyunDM, AliyunSMS, Facebook, GitHub, Google, WeChat];
+const allBaseConnectors: IConnector[] = [AliyunDM, AliyunSMS, Facebook, GitHub, Google, WeChat];
 
 export const getConnectorInstances = async (): Promise<ConnectorInstance[]> => {
   const connectors = await findAllConnectors();
   const connectorMap = new Map(connectors.map((connector) => [connector.id, connector]));
 
-  return allConnectors.map((element) => {
-    const { id } = element.metadata;
+  return allBaseConnectors.map((baseConnector) => {
+    const { id } = baseConnector.metadata;
     const connector = connectorMap.get(id);
 
     if (!connector) {
       throw new RequestError({ code: 'entity.not_found', id, status: 404 });
     }
 
-    return { connector, ...element };
+    return { connector, ...baseConnector };
   });
 };
 
 export const getConnectorInstanceById = async (id: string): Promise<ConnectorInstance> => {
-  const found = allConnectors.find((element) => element.metadata.id === id);
+  const foundBaseConnector = allBaseConnectors.find(
+    (baseConnector) => baseConnector.metadata.id === id
+  );
 
-  if (!found) {
+  if (!foundBaseConnector) {
     throw new RequestError({
       code: 'entity.not_found',
       id,
@@ -40,7 +49,23 @@ export const getConnectorInstanceById = async (id: string): Promise<ConnectorIns
 
   const connector = await findConnectorById(id);
 
-  return { connector, ...found };
+  return { connector, ...foundBaseConnector };
+};
+
+export const getEnabledConnectorInstances = async <T extends ConnectorInstance>(): Promise<T[]> => {
+  const enabledConnectors = await findAllEnabledConnectors();
+  const enabledConnectorMap = new Map(
+    enabledConnectors.map((connector) => [connector.id, connector])
+  );
+
+  return allBaseConnectors
+    .map((baseConnector) => {
+      const { id } = baseConnector.metadata;
+      const connector = enabledConnectorMap.get(id);
+
+      return connector ? { connector, ...baseConnector } : undefined;
+    })
+    .filter((connectorInstance): connectorInstance is T => notFalsy(connectorInstance));
 };
 
 const isSocialConnectorInstance = (
@@ -52,9 +77,9 @@ const isSocialConnectorInstance = (
 export const getSocialConnectorInstanceById = async (
   id: string
 ): Promise<SocialConnectorInstance> => {
-  const connector = await getConnectorInstanceById(id);
+  const connectorInstance = await getConnectorInstanceById(id);
 
-  if (!isSocialConnectorInstance(connector)) {
+  if (!isSocialConnectorInstance(connectorInstance)) {
     throw new RequestError({
       code: 'entity.not_found',
       id,
@@ -62,19 +87,16 @@ export const getSocialConnectorInstanceById = async (
     });
   }
 
-  return connector;
+  return connectorInstance;
 };
 
 export const getEnabledSocialConnectorIds = async <T extends ConnectorInstance>(): Promise<
   string[]
 > => {
-  const connectorInstances = await getConnectorInstances();
+  const enabledConnectorInstances = await getEnabledConnectorInstances();
 
-  return connectorInstances
-    .filter<T>(
-      (instance): instance is T =>
-        instance.connector.enabled && instance.metadata.type === ConnectorType.Social
-    )
+  return enabledConnectorInstances
+    .filter<T>((instance): instance is T => isSocialConnectorInstance(instance))
     .map((instance) => instance.metadata.id);
 };
 
@@ -98,7 +120,7 @@ export const initConnectors = async () => {
   const existingConnectorIds = new Set(connectors.map((connector) => connector.id));
 
   await Promise.all(
-    allConnectors.map(async ({ metadata: { id } }) => {
+    allBaseConnectors.map(async ({ metadata: { id } }) => {
       if (existingConnectorIds.has(id)) {
         return;
       }
