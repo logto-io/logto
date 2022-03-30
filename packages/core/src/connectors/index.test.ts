@@ -5,6 +5,7 @@ import {
   getConnectorInstanceById,
   getConnectorInstanceByType,
   getConnectorInstances,
+  getEnabledConnectorInstances,
   getEnabledSocialConnectorIds,
   getSocialConnectorInstanceById,
   initConnectors,
@@ -72,6 +73,7 @@ const insertConnector = jest.fn(async (connector: Connector) => connector);
 
 jest.mock('@/queries/connector', () => ({
   ...jest.requireActual('@/queries/connector'),
+  findAllEnabledConnectors: async () => [aliyunDmConnector, facebookConnector, githubConnector],
   findAllConnectors: async () => findAllConnectors(),
   findConnectorById: async (id: string) => findConnectorById(id),
   insertConnector: async (connector: Connector) => insertConnector(connector),
@@ -80,7 +82,7 @@ jest.mock('@/queries/connector', () => ({
 describe('getConnectorInstances', () => {
   test('should return the connectors existing in DB', async () => {
     const connectorInstances = await getConnectorInstances();
-    expect(connectorInstances).toHaveLength(connectorInstances.length);
+    expect(connectorInstances).toHaveLength(connectors.length);
     expect(connectorInstances[0]).toHaveProperty('connector', aliyunDmConnector);
     expect(connectorInstances[1]).toHaveProperty('connector', aliyunSmsConnector);
     expect(connectorInstances[2]).toHaveProperty('connector', facebookConnector);
@@ -118,6 +120,16 @@ describe('getConnectorInstanceById', () => {
     await expect(getConnectorInstanceById(id)).rejects.toMatchError(
       new RequestError({ code: 'entity.not_found', id, status: 404 })
     );
+  });
+});
+
+describe('getEnabledConnectorInstances', () => {
+  test('should return the enabled connectors', async () => {
+    const enabledConnectorInstances = await getEnabledConnectorInstances();
+    expect(enabledConnectorInstances).toHaveLength(3);
+    expect(enabledConnectorInstances[0]).toHaveProperty('connector', aliyunDmConnector);
+    expect(enabledConnectorInstances[1]).toHaveProperty('connector', facebookConnector);
+    expect(enabledConnectorInstances[2]).toHaveProperty('connector', githubConnector);
   });
 });
 
