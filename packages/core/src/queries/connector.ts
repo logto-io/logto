@@ -15,6 +15,14 @@ export const findAllConnectors = async () =>
     order by ${fields.enabled} desc, ${fields.id} asc
   `);
 
+export const findAllEnabledConnectors = async () =>
+  pool.many<Connector>(sql`
+    select ${sql.join(Object.values(fields), sql`, `)}
+    from ${table}
+    where ${fields.enabled} = true
+    order by ${fields.id} asc
+  `);
+
 export const findConnectorById = async (id: string) =>
   pool.one<Connector>(sql`
     select ${sql.join(Object.values(fields), sql`, `)}
