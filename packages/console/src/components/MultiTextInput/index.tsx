@@ -37,6 +37,15 @@ type StringArrayPath<T> = T extends ReadonlyArray<infer V>
       [K in keyof T]-?: StringArrayPathImpl<K & string, T[K]>;
     }[keyof T];
 
+/**
+ * Type which eagerly collects all paths through a type which point to a string array
+ * type.
+ * @typeParam TFieldValues - type which should be introspected
+ * @example
+ * ```
+ * StringFiledArrayPath<{foo: {bar: string[], baz: number[]}}> = 'foo.bar' | 'foo.baz'
+ * ```
+ */
 type StringFiledArrayPath<TFieldValues extends FieldValues> = StringArrayPath<TFieldValues>;
 
 type InputsRule = {
