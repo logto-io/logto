@@ -107,13 +107,14 @@ const ApplicationDetails = () => {
       </FormField>
       <FormField isRequired title="admin_console.application_details.redirect_uri">
         <MultiTextInput
-          isRequired
           control={control}
           name="oidcClientMetadata.redirectUris"
-          requiredMessage={t('application_details.redirect_uri_required')}
           rule={{
-            pattern: noSpaceRegex,
-            message: t('application_details.no_space_in_uri'),
+            required: t('application_details.redirect_uri_required'),
+            pattern: {
+              regex: noSpaceRegex,
+              message: t('application_details.no_space_in_uri'),
+            },
           }}
         />
       </FormField>
@@ -122,8 +123,10 @@ const ApplicationDetails = () => {
           control={control}
           name="oidcClientMetadata.postLogoutRedirectUris"
           rule={{
-            pattern: noSpaceRegex,
-            message: t('application_details.no_space_in_uri'),
+            pattern: {
+              regex: noSpaceRegex,
+              message: t('application_details.no_space_in_uri'),
+            },
           }}
         />
       </FormField>

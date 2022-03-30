@@ -48,9 +48,12 @@ type StringArrayPath<T> = T extends ReadonlyArray<infer V>
  */
 type StringFiledArrayPath<TFieldValues extends FieldValues> = StringArrayPath<TFieldValues>;
 
-type InputsRule = {
-  pattern: RegExp;
-  message: string;
+type MultiTextInputRule = {
+  required?: string;
+  pattern?: {
+    regex: RegExp;
+    message: string;
+  };
 };
 
 type MutiTextInputErrors = {
@@ -64,9 +67,7 @@ type Props<
 > = {
   control: Control<TFieldValues>;
   name: TName;
-  isRequired?: boolean;
-  requiredMessage?: string;
-  rule?: InputsRule;
+  rule?: MultiTextInputRule;
 };
 
 const MultiTextInput = <
@@ -75,8 +76,6 @@ const MultiTextInput = <
 >({
   control,
   name,
-  isRequired = false,
-  requiredMessage,
   rule,
 }: Props<TFieldValues, TName>) => {
   const { t } = useTranslation(undefined, {
@@ -96,7 +95,7 @@ const MultiTextInput = <
   };
 
   const validateResult = () => {
-    if (isRequired && !validateRequired(fields)) {
+    if (rule?.required && !validateRequired(fields)) {
       return false;
     }
 
@@ -127,29 +126,31 @@ const MultiTextInput = <
   }, [value]);
 
   const validateRequired = (candidateValues: string[]) => {
-    if (!isRequired) {
+    if (!rule?.required) {
       return true;
     }
 
     const containValue = candidateValues.some(Boolean);
     setErrors((preErros) => ({
       ...preErros,
-      required: containValue ? undefined : requiredMessage ?? t('form.multi_text_input_required'),
+      required: containValue ? undefined : rule.required ?? t('form.multi_text_input_required'),
     }));
 
     return containValue;
   };
 
   const validateInput = (index: number, input: string) => {
-    if (!rule) {
+    if (!rule?.pattern) {
       return;
     }
+
+    const { pattern } = rule;
 
     setErrors((preErrors) => ({
       ...preErrors,
       inputs: {
         ...preErrors.inputs,
-        [index]: rule.pattern.test(input) ? undefined : rule.message,
+        [index]: pattern.regex.test(input) ? undefined : pattern.message,
       },
     }));
   };
@@ -200,7 +201,7 @@ const MultiTextInput = <
   const inputReferences = useRef<Record<number, HTMLInputElement | undefined>>({});
 
   const setReferenceToInvalidInput = () => {
-    if (isRequired && !validateRequired(fields)) {
+    if (rule?.required && !validateRequired(fields)) {
       ref(inputReferences.current[0]);
 
       return;
