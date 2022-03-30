@@ -97,8 +97,11 @@ describe('getUserInfo', () => {
     });
   });
 
-  it('throws SocialAccessTokenInvalid error if remote response code is 40001', async () => {
-    nock(userInfoEndpointUrl.origin).get(userInfoEndpointUrl.pathname).query(parameters).reply(401);
+  it('throws SocialAccessTokenInvalid error if errcode is 40001', async () => {
+    nock(userInfoEndpointUrl.origin)
+      .get(userInfoEndpointUrl.pathname)
+      .query(parameters)
+      .reply(200, { errcode: 40_001 });
     await expect(
       getUserInfo({ accessToken: 'accessToken', openid: 'openid' })
     ).rejects.toMatchError(new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid));
@@ -119,7 +122,11 @@ describe('getUserInfo', () => {
     ).rejects.toMatchError(new Error('invalid openid'));
   });
 
-  it('throws SocialAccessTokenInvalid error if openid is missing', async () => {
+  it('throws SocialAccessTokenInvalid error if response code is 401', async () => {
+    nock(userInfoEndpointUrl.origin)
+      .get(userInfoEndpointUrl.pathname)
+      .query(new URLSearchParams({ access_token: 'accessToken' }))
+      .reply(401);
     await expect(getUserInfo({ accessToken: 'accessToken' })).rejects.toMatchError(
       new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid)
     );
