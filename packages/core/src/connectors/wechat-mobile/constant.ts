@@ -1,2 +1,2 @@
-export const authorizationEndpoint = 'https://help.wechat.com/app';
+export const authorizationEndpoint = 'https://wechat.mobile/';
 export const scope = 'snsapi_userinfo';
