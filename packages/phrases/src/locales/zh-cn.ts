@@ -10,6 +10,7 @@ const translation = {
     confirm: '确认',
     cancel: '取消',
     done: '完成',
+    search: '搜索',
   },
   sign_in: {
     action: '登录',

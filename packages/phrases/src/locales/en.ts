@@ -8,6 +8,7 @@ const translation = {
     confirm: 'Confirm',
     cancel: 'Cancel',
     done: 'Done',
+    search: 'Search',
   },
   sign_in: {
     action: 'Sign In',

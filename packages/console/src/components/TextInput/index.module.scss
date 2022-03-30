@@ -1,42 +1,63 @@
 @use '@/scss/underscore' as _;
 
 .container {
+  border-radius: 6px;
+  border: 1px solid var(--color-component-border);
+  outline: 2px solid transparent;
+  transition-property: outline, border;
+  transition-timing-function: ease-in-out;
+  transition-duration: 0.2s;
+  padding: _.unit(2) _.unit(3);
+
+  &.withIcon {
+    display: flex;
+    align-items: center;
+
+    .icon {
+      width: 20px;
+      height: 20px;
+      margin-right: _.unit(2);
+    }
+  }
+
+  &:focus-within {
+    border-color: var(--color-primary);
+    outline-color: var(--color-primary-80);
+  }
+
   input {
     width: 100%;
     appearance: none;
-    padding: _.unit(2) _.unit(3);
     color: var(--color-component-text);
-    border-radius: 6px;
-    border: 1px solid var(--color-component-border);
-    outline: 2px solid transparent;
     font: var(--font-body-medium);
-    transition-property: outline, border;
-    transition-timing-function: ease-in-out;
-    transition-duration: 0.2s;
+    padding: 0;
 
     &::placeholder {
       color: var(--color-component-caption);
     }
+  }
 
-    &:focus {
-      border-color: var(--color-primary);
-      outline-color: var(--color-primary-80);
-    }
+  &.disabled {
+    background: var(--color-surface);
+    color: var(--color-disabled);
+    border-color: var(--color-disabled);
 
-    &:disabled {
-      background: var(--color-surface);
-      color: var(--color-disabled);
-      border-color: var(--color-disabled);
-    }
-
-    &:read-only {
-      background: var(--color-surface);
-      color: var(--color-readonly);
-      border-color: var(--color-disabled);
+    input {
+      background: none;
     }
   }
 
-  &.error input {
+  &.readOnly {
+    background: var(--color-surface);
+    color: var(--color-readonly);
+    border-color: var(--color-disabled);
+
+    input {
+      background: none;
+    }
+  }
+
+  &.error {
     border-color: var(--color-error);
   }
 }
