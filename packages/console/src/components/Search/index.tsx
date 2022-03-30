@@ -15,7 +15,7 @@ const Search = ({ defaultValue = '', onSearch }: Props) => {
   const [inputValue, setInputValue] = useState<string>(defaultValue);
 
   const handleSearchKeyPress: KeyboardEventHandler<HTMLInputElement> = (event) => {
-    if (event.key === 'Enter') {
+    if (event.key === 'Enter' && inputValue) {
       onSearch?.(inputValue);
     }
   };
@@ -25,7 +25,9 @@ const Search = ({ defaultValue = '', onSearch }: Props) => {
   };
 
   const handleClick = () => {
-    onSearch?.(inputValue);
+    if (inputValue) {
+      onSearch?.(inputValue);
+    }
   };
 
   return (
