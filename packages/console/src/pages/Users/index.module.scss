@@ -1,9 +1,7 @@
 @use '@/scss/underscore' as _;
 
 .card {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
+  @include _.flex-column;
 }
 
 .headline {
@@ -17,14 +15,6 @@
 
 .table {
   flex: 1;
-
-  tr.clickable {
-    cursor: pointer;
-
-    &:hover {
-      background: var(--color-table-row-selected);
-    }
-  }
 }
 
 .pagination {

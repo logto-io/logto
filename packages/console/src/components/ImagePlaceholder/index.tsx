@@ -10,12 +10,16 @@ type Props = {
   borderRadius?: number;
 };
 
-const ImagePlaceholder = ({ size = 50, borderRadius = 8 }: Props) => {
+const ImagePlaceholder = ({ size = 40, borderRadius = 8 }: Props) => {
   const { t } = useTranslation();
 
   return (
     <div className={styles.container} style={{ width: size, height: size, borderRadius }}>
-      <img alt={t('general.placeholder')} src={defaultPlaceholder} />
+      <img
+        alt={t('general.placeholder')}
+        src={defaultPlaceholder}
+        style={{ width: size, height: size }}
+      />
     </div>
   );
 };

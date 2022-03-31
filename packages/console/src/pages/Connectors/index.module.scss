@@ -1,5 +1,9 @@
 @use '@/scss/underscore' as _;
 
+.card {
+  @include _.flex-column;
+}
+
 .headline {
   display: flex;
   justify-content: space-between;
@@ -11,18 +15,7 @@
 
 .table {
   margin-top: _.unit(4);
-
-  tbody {
-    max-height: calc(100vh - _.unit(74));
-
-    tr.clickable {
-      cursor: pointer;
-
-      &:hover {
-        background: var(--color-table-row-selected);
-      }
-    }
-  }
+  flex: 1;
 }
 
 .connectorName {

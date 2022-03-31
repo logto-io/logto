@@ -1,5 +1,6 @@
 import { Resource } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials/lib/utilities/conditional.js';
+import classNames from 'classnames';
 import React, { useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
@@ -18,6 +19,7 @@ import TableError from '@/components/Table/TableError';
 import TableLoading from '@/components/Table/TableLoading';
 import { RequestError } from '@/hooks/use-api';
 import * as modalStyles from '@/scss/modal.module.scss';
+import * as tableStyles from '@/scss/table.module.scss';
 
 import CreateForm from './components/CreateForm';
 import * as styles from './index.module.scss';
@@ -32,7 +34,7 @@ const ApiResources = () => {
   const navigate = useNavigate();
 
   return (
-    <Card>
+    <Card className={styles.card}>
       <div className={styles.headline}>
         <CardTitle title="api_resources.title" subtitle="api_resources.subtitle" />
         <Button
@@ -62,55 +64,57 @@ const ApiResources = () => {
           />
         </Modal>
       </div>
-      <table className={styles.table}>
-        <colgroup>
-          <col className={styles.apiResourceName} />
-          <col />
-        </colgroup>
-        <thead>
-          <tr>
-            <th>{t('api_resources.api_name')}</th>
-            <th>{t('api_resources.api_identifier')}</th>
-          </tr>
-        </thead>
-        <tbody>
-          {error && (
-            <TableError
-              columns={2}
-              content={error.body.message}
-              onRetry={async () => mutate(undefined, true)}
-            />
-          )}
-          {isLoading && <TableLoading columns={2} />}
-          {data?.length === 0 && (
-            <TableEmpty columns={2}>
-              <Button
-                title="admin_console.api_resources.create"
-                type="outline"
-                onClick={() => {
-                  setIsCreateFormOpen(true);
-                }}
-              />
-            </TableEmpty>
-          )}
-          {data?.map(({ id, name, indicator }) => (
-            <tr
-              key={id}
-              className={styles.clickable}
-              onClick={() => {
-                navigate(buildDetailsLink(id));
-              }}
-            >
-              <td>
-                <ItemPreview title={name} icon={<ImagePlaceholder />} to={buildDetailsLink(id)} />
-              </td>
-              <td>
-                <CopyToClipboard value={indicator} />
-              </td>
+      <div className={classNames(styles.table, tableStyles.scrollable)}>
+        <table>
+          <colgroup>
+            <col className={styles.apiResourceName} />
+            <col />
+          </colgroup>
+          <thead>
+            <tr>
+              <th>{t('api_resources.api_name')}</th>
+              <th>{t('api_resources.api_identifier')}</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {error && (
+              <TableError
+                columns={2}
+                content={error.body.message}
+                onRetry={async () => mutate(undefined, true)}
+              />
+            )}
+            {isLoading && <TableLoading columns={2} />}
+            {data?.length === 0 && (
+              <TableEmpty columns={2}>
+                <Button
+                  title="admin_console.api_resources.create"
+                  type="outline"
+                  onClick={() => {
+                    setIsCreateFormOpen(true);
+                  }}
+                />
+              </TableEmpty>
+            )}
+            {data?.map(({ id, name, indicator }) => (
+              <tr
+                key={id}
+                className={tableStyles.clickable}
+                onClick={() => {
+                  navigate(buildDetailsLink(id));
+                }}
+              >
+                <td>
+                  <ItemPreview title={name} icon={<ImagePlaceholder />} to={buildDetailsLink(id)} />
+                </td>
+                <td>
+                  <CopyToClipboard value={indicator} />
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </Card>
   );
 };
