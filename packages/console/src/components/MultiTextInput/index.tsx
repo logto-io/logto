@@ -37,10 +37,7 @@ const MultiTextInput = ({ value, onChange, error }: Props) => {
   };
 
   const handleInputChange = (event: React.FormEvent<HTMLInputElement>, index: number) => {
-    const candidateValues = fields.map((fieldValue, i) =>
-      i === index ? event.currentTarget.value : fieldValue
-    );
-    onChange(candidateValues);
+    onChange(fields.map((fieldValue, i) => (i === index ? event.currentTarget.value : fieldValue)));
   };
 
   return (
