@@ -73,7 +73,15 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
         params: { id },
         body: { enabled },
       } = ctx.guard;
-      const { metadata } = await getConnectorInstanceById(id);
+      const {
+        connector: { config },
+        metadata,
+        validateConfig,
+      } = await getConnectorInstanceById(id);
+
+      if (enabled) {
+        await validateConfig(config);
+      }
 
       // Only allow one enabled connector for SMS and Email.
       // disable other connectors before enable this one.
