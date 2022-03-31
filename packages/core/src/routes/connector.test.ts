@@ -182,7 +182,7 @@ describe('connector route', () => {
       expect(response).toHaveProperty('statusCode', 400);
     });
 
-    it('enables one of the social connectors', async () => {
+    it('enables one of the social connectors (with valid config)', async () => {
       getConnectorInstanceByIdPlaceHolder.mockImplementationOnce(async (_id: string) => {
         return {
           connector: {
@@ -199,12 +199,15 @@ describe('connector route', () => {
             description: {},
             readme: 'README.md',
           },
+          // eslint-disable-next-line @typescript-eslint/no-empty-function
+          validateConfig: async (_config) => {},
         };
       });
       const response = await connectorRequest
         .patch('/connectors/connector_0/enabled')
         .send({ enabled: true });
-      expect(updateConnector).toHaveBeenCalledWith(
+      expect(updateConnector).toHaveBeenNthCalledWith(
+        1,
         expect.objectContaining({
           where: { id: 'connector_0' },
           set: { enabled: true },
@@ -221,6 +224,34 @@ describe('connector route', () => {
         },
       });
       expect(response).toHaveProperty('statusCode', 200);
+    });
+
+    it('enables one of the social connectors (with invalid config)', async () => {
+      getConnectorInstanceByIdPlaceHolder.mockImplementationOnce(async (_id: string) => {
+        return {
+          connector: {
+            id: 'connector_0',
+            enabled: true,
+            config: {},
+            createdAt: 1_234_567_890_123,
+          },
+          metadata: {
+            id: 'connector_0',
+            type: ConnectorType.Social,
+            name: {},
+            logo: './logo.png',
+            description: {},
+            readme: 'README.md',
+          },
+          validateConfig: async (_config) => {
+            throw new ConnectorError(ConnectorErrorCodes.InvalidConfig);
+          },
+        };
+      });
+      const response = await connectorRequest
+        .patch('/connectors/connector_0/enabled')
+        .send({ enabled: true });
+      expect(response).toHaveProperty('statusCode', 500);
     });
 
     it('disables one of the social connectors', async () => {
@@ -264,7 +295,7 @@ describe('connector route', () => {
       expect(response).toHaveProperty('statusCode', 200);
     });
 
-    it('enables one of the email/sms connectors', async () => {
+    it('enables one of the email/sms connectors (with valid config)', async () => {
       getConnectorInstancesPlaceHolder.mockResolvedValueOnce(mockConnectorInstanceList);
       getConnectorInstanceByIdPlaceHolder.mockImplementationOnce(async (_id: string) => {
         return {
@@ -282,6 +313,8 @@ describe('connector route', () => {
             description: {},
             readme: 'README.md',
           },
+          // eslint-disable-next-line @typescript-eslint/no-empty-function
+          validateConfig: async (_config) => {},
         };
       });
       const response = await connectorRequest
@@ -319,6 +352,35 @@ describe('connector route', () => {
         },
       });
       expect(response).toHaveProperty('statusCode', 200);
+    });
+
+    it('enables one of the email/sms connectors (with invalid config)', async () => {
+      getConnectorInstancesPlaceHolder.mockResolvedValueOnce(mockConnectorInstanceList);
+      getConnectorInstanceByIdPlaceHolder.mockImplementationOnce(async (_id: string) => {
+        return {
+          connector: {
+            id: 'connector_1',
+            enabled: true,
+            config: {},
+            createdAt: 1_234_567_890_234,
+          },
+          metadata: {
+            id: 'connector_1',
+            type: ConnectorType.SMS,
+            name: {},
+            logo: './logo.png',
+            description: {},
+            readme: 'README.md',
+          },
+          validateConfig: async (_config) => {
+            throw new ConnectorError(ConnectorErrorCodes.InvalidConfig);
+          },
+        };
+      });
+      const response = await connectorRequest
+        .patch('/connectors/connector_1/enabled')
+        .send({ enabled: true });
+      expect(response).toHaveProperty('statusCode', 500);
     });
 
     it('disables one of the email/sms connectors', async () => {
