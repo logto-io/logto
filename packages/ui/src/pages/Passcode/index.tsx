@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router-dom';
 
 import NavArrowIcon from '@/components/Icons/NavArrowIcon';
-import PasscodeValidation from '@/containers/PasscodeValidation';
+import PasscodeController from '@/containers/PasscodeController';
 
 import * as styles from './index.module.scss';
 
@@ -40,7 +40,7 @@ const Passcode = () => {
         />
       </div>
       <div className={styles.title}>{t('sign_in.enter_passcode')}</div>
-      <PasscodeValidation type={type} channel={channel} />
+      <PasscodeController type={type} channel={channel} />
     </div>
   );
 };

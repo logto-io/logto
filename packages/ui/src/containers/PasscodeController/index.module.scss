@@ -1,0 +1,11 @@
+@use '@/scss/underscore' as _;
+
+.form {
+  width: 100%;
+  max-width: 360px;
+  @include _.flex-column;
+
+  > * {
+    width: 100%;
+  }
+}
