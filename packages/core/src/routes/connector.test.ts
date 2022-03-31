@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { Connector, ConnectorType } from '@logto/schemas';
 
 import {
@@ -617,3 +618,4 @@ describe('connector route', () => {
     });
   });
 });
+/* eslint-enable max-lines */
