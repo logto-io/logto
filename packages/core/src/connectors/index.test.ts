@@ -47,6 +47,12 @@ const wechatConnector = {
   config: {},
   createdAt: 1_646_382_233_000,
 };
+const wechatNativeConnector = {
+  id: 'wechat-native',
+  enabled: false,
+  config: {},
+  createdAt: 1_646_382_233_000,
+};
 
 const connectors = [
   aliyunDmConnector,
@@ -55,6 +61,7 @@ const connectors = [
   githubConnector,
   googleConnector,
   wechatConnector,
+  wechatNativeConnector,
 ];
 const connectorMap = new Map(connectors.map((connector) => [connector.id, connector]));
 

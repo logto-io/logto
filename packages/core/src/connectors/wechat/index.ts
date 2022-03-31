@@ -50,7 +50,7 @@ export const metadata: ConnectorMetadata = {
 
 const weChatConfigGuard = z.object({ appId: z.string(), appSecret: z.string() });
 
-type WeChatConfig = z.infer<typeof weChatConfigGuard>;
+export type WeChatConfig = z.infer<typeof weChatConfigGuard>;
 
 export const validateConfig: ValidateConfig = async (config: unknown) => {
   const result = weChatConfigGuard.safeParse(config);
