@@ -2,7 +2,10 @@ import { conditional } from '@silverhand/essentials';
 
 import { MultiTextInputError, MultiTextInputRule } from './types';
 
-const validate = (value: string[], rule?: MultiTextInputRule): MultiTextInputError | undefined => {
+export const validate = (
+  value: string[],
+  rule?: MultiTextInputRule
+): MultiTextInputError | undefined => {
   if (!rule) {
     return;
   }
