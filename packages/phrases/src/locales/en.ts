@@ -23,9 +23,9 @@ const translation = {
   },
   register: {
     create_account: 'Create an Account',
-    action: 'Create',
-    loading: 'Creating Account...',
+    action: 'Create Account',
     have_account: 'Already have an account?',
+    confirm_password: 'Confirm Password',
   },
   admin_console: {
     title: 'Admin Console',
@@ -287,6 +287,8 @@ const errors = {
   },
   user: {
     username_exists_register: 'The username has been registered.',
+    username_forbidden_initial_number: 'Username start with number is prohibited.',
+    username_invalid_character: 'The username should contain A-Za-z0-9_ only.',
     email_exists_register: 'The email address has been registered.',
     phone_exists_register: 'The phone number has been registered.',
     invalid_email: 'Invalid email address.',
@@ -297,8 +299,10 @@ const errors = {
     identity_exists: 'The social account has been registered.',
   },
   password: {
+    too_short: 'The password length should no less than {{min}}.',
     unsupported_encryption_method: 'The encryption method {{name}} is not supported.',
     pepper_not_found: 'Password pepper not found. Please check your core envs.',
+    inconsistent_password: 'Inconsistent password.',
   },
   session: {
     not_found: 'Session not found. Please go back and sign in again.',

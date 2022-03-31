@@ -1,76 +1,27 @@
-import classNames from 'classnames';
-import React, { FC, FormEventHandler, useState, useCallback, useEffect } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { useHistory } from 'react-router-dom';
 
-import { register } from '@/apis/register';
-import Button from '@/components/Button';
-import ErrorMessage from '@/components/ErrorMessage';
-import Input from '@/components/Input';
-import PasswordInput from '@/components/Input/PasswordInput';
-import TextLink from '@/components/TextLink';
-import useApi from '@/hooks/use-api';
+import NavArrowIcon from '@/components/Icons/NavArrowIcon';
+import CreateAccount from '@/containers/CreateAccount';
 
 import * as styles from './index.module.scss';
 
-const Register: FC = () => {
+const Register = () => {
   const { t } = useTranslation();
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-
-  const { loading, error, result, run: asyncRegister } = useApi(register);
-
-  const signUp: FormEventHandler = useCallback(
-    async (event) => {
-      event.preventDefault();
-      await asyncRegister(username, password);
-    },
-    [username, password, asyncRegister]
-  );
-
-  useEffect(() => {
-    if (result?.redirectTo) {
-      window.location.assign(result.redirectTo);
-    }
-  }, [result]);
+  const history = useHistory();
 
   return (
-    <div className={classNames(styles.wrapper)}>
-      <form className={classNames(styles.form)}>
-        <div className={styles.title}>{t('register.create_account')}</div>
-        <Input
-          name="username"
-          disabled={loading}
-          placeholder={t('sign_in.username')}
-          value={username}
-          onChange={({ target }) => {
-            if (target instanceof HTMLInputElement) {
-              const { value } = target;
-              setUsername(value);
-            }
+    <div className={styles.wrapper}>
+      <div className={styles.navBar}>
+        <NavArrowIcon
+          onClick={() => {
+            history.goBack();
           }}
         />
-        <PasswordInput
-          name="password"
-          disabled={loading}
-          placeholder={t('sign_in.password')}
-          value={password}
-          onChange={({ target }) => {
-            if (target instanceof HTMLInputElement) {
-              const { value } = target;
-              setPassword(value);
-            }
-          }}
-        />
-        {error && <ErrorMessage className={styles.box} error={error.code} />}
-        <Button isDisabled={loading} onClick={signUp}>
-          {loading ? t('register.loading') : t('register.action')}
-        </Button>
-
-        <div className={styles.haveAccount}>
-          <span className={styles.prefix}>{t('register.have_account')}</span>
-          <TextLink href="/sign-in">{t('sign_in.action')}</TextLink>
-        </div>
-      </form>
+      </div>
+      <div className={styles.title}>{t('register.create_account')}</div>
+      <CreateAccount />
     </div>
   );
 };
