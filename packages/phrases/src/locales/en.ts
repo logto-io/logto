@@ -340,6 +340,12 @@ const errors = {
     expired: 'Passcode has expired. Please request a new passcode.',
     exceed_max_try: 'Passcode verification limitation exceeded. Please request a new passcode.',
   },
+  sign_in_experiences: {
+    empty_content_url_of_terms_of_use:
+      'Empty "Terms of use" content URL. Please add the content URL if "Terms of use" is enabled.',
+    empty_slogan:
+      'Empty branding slogan. Please add a branding slogan if a UI style containing the slogan is selected.',
+  },
   swagger: {
     invalid_zod_type: 'Invalid Zod type, please check route guard config.',
   },
