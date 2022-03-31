@@ -15,7 +15,7 @@ export { validateConfig, getAccessToken, getUserInfo } from '@/connectors/wechat
 
 export const metadata: ConnectorMetadata = {
   ...weChatWebMetadata,
-  id: 'wechat-mobile',
+  id: 'wechat-native',
 };
 
 export const getAuthorizationUri: GetAuthorizationUri = async (redirectUri, state) => {
