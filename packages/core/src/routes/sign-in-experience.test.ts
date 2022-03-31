@@ -1,6 +1,6 @@
-import { SignInExperience, CreateSignInExperience, BrandingStyle, Branding } from '@logto/schemas';
+import { SignInExperience, CreateSignInExperience, Branding, TermsOfUse } from '@logto/schemas';
 
-import { mockSignInExperience } from '@/utils/mock';
+import { mockBranding, mockSignInExperience } from '@/utils/mock';
 import { createRequester } from '@/utils/test-utils';
 
 import signInExperiencesRoutes from './sign-in-experience';
@@ -20,6 +20,19 @@ jest.mock('@/queries/sign-in-experience', () => ({
   ),
 }));
 
+const validateBranding = jest.fn();
+const validateTermsOfUse = jest.fn();
+
+jest.mock('@/utils/validate-sign-in-experience', () => ({
+  ...jest.requireActual('@/utils/validate-sign-in-experience'),
+  validateBranding: (branding: Branding | undefined) => {
+    validateBranding(branding);
+  },
+  validateTermsOfUse: (termsOfUse: TermsOfUse | undefined) => {
+    validateTermsOfUse(termsOfUse);
+  },
+}));
+
 describe('signInExperiences routes', () => {
   const signInExperienceRequester = createRequester({ authedRoutes: signInExperiencesRoutes });
 
@@ -30,28 +43,23 @@ describe('signInExperiences routes', () => {
   });
 
   it('PATCH /sign-in-exp', async () => {
-    const branding: Branding = {
-      primaryColor: '#000',
-      backgroundColor: '#fff',
-      darkMode: true,
-      darkBackgroundColor: '#000',
-      darkPrimaryColor: '#fff',
-      style: BrandingStyle.Logo,
-      logoUrl: 'http://silverhand.png',
-      slogan: 'silverhand',
-    };
-
+    const termsOfUse: TermsOfUse = { enabled: false };
     const socialSignInConnectorIds = ['abc', 'def'];
 
     const response = await signInExperienceRequester.patch('/sign-in-exp').send({
-      branding,
+      branding: mockBranding,
+      termsOfUse,
       socialSignInConnectorIds,
     });
+
+    expect(validateBranding).toHaveBeenCalledWith(mockBranding);
+    expect(validateTermsOfUse).toHaveBeenCalledWith(termsOfUse);
 
     expect(response.status).toEqual(200);
     expect(response.body).toEqual({
       ...mockSignInExperience,
-      branding,
+      termsOfUse,
+      branding: mockBranding,
       socialSignInConnectorIds,
     });
   });

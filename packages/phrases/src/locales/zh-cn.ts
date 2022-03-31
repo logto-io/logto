@@ -338,6 +338,11 @@ const errors = {
     expired: '验证码已过期. 请尝试请求新的验证码。',
     exceed_max_try: '超过最大验证次数. 请尝试请求新的验证码。',
   },
+  sign_in_experiences: {
+    empty_content_url_of_terms_of_use:
+      '空的《用户协议》内容链接。当启用《用户协议》时，请添加其内容链接。',
+    empty_slogan: '空的标语。当使用包含标语的 UI 风格时，请添加标语。',
+  },
   swagger: {
     invalid_zod_type: '无效的 Zod 类型，请检查路由 guard 配置。',
   },
