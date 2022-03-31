@@ -1,4 +1,3 @@
-import classNames from 'classnames';
 import React, {
   useMemo,
   useRef,
@@ -9,17 +8,17 @@ import React, {
   ClipboardEventHandler,
 } from 'react';
 
+import ErrorMessage, { ErrorType } from '../ErrorMessage';
 import * as styles from './index.module.scss';
 
 export const defaultLength = 6;
 
 export type Props = {
   name: string;
-  isDisabled?: boolean;
   className?: string;
   length?: number;
   value: string[];
-  hasError?: boolean;
+  error?: ErrorType;
   onChange: (value: string[]) => void;
 };
 
@@ -46,15 +45,7 @@ const trim = (oldValue: string | undefined, newValue: string) => {
   return newValue;
 };
 
-const Passcode = ({
-  name,
-  isDisabled,
-  className,
-  value,
-  length = defaultLength,
-  hasError,
-  onChange,
-}: Props) => {
+const Passcode = ({ name, className, value, length = defaultLength, error, onChange }: Props) => {
   /* eslint-disable @typescript-eslint/ban-types */
   const inputReferences = useRef<Array<HTMLInputElement | null>>(
     Array.from<null>({ length }).fill(null)
@@ -187,29 +178,32 @@ const Passcode = ({
   );
 
   return (
-    <div className={classNames(styles.passcode, className)}>
-      {Array.from({ length }).map((_, index) => (
-        <input
-          ref={(element) => {
-            // eslint-disable-next-line @silverhand/fp/no-mutation
-            inputReferences.current[index] = element;
-          }}
-          // eslint-disable-next-line react/no-array-index-key
-          key={`${name}_${index}`}
-          name={`${name}_${index}`}
-          data-id={index}
-          disabled={isDisabled}
-          value={codes[index]}
-          className={hasError ? styles.error : undefined}
-          type="text"
-          inputMode="numeric"
-          maxLength={2} // Allow overwrite input
-          onPaste={onPasteHandler}
-          onInput={onInputHandler}
-          onKeyDown={onKeyDownHandler}
-          onFocus={onFocusHandler}
-        />
-      ))}
+    <div className={className}>
+      <div className={styles.passcode}>
+        {Array.from({ length }).map((_, index) => (
+          <input
+            ref={(element) => {
+              // eslint-disable-next-line @silverhand/fp/no-mutation
+              inputReferences.current[index] = element;
+            }}
+            // eslint-disable-next-line react/no-array-index-key
+            key={`${name}_${index}`}
+            autoFocus={index === 0}
+            name={`${name}_${index}`}
+            data-id={index}
+            value={codes[index]}
+            className={error ? styles.error : undefined}
+            type="text"
+            inputMode="numeric"
+            maxLength={2} // Allow overwrite input
+            onPaste={onPasteHandler}
+            onInput={onInputHandler}
+            onKeyDown={onKeyDownHandler}
+            onFocus={onFocusHandler}
+          />
+        ))}
+      </div>
+      {error && <ErrorMessage error={error} className={styles.errorMessage} />}
     </div>
   );
 };
