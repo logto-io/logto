@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import en from './en';
 
 const translation = {
@@ -113,7 +114,7 @@ const translation = {
       advanced_settings: 'Advanced Settings',
       application_name: 'Application Name',
       description: 'Description',
-      authorization_endpoint: 'Authorization Endpiont',
+      authorization_endpoint: 'Authorization Endpoint',
       redirect_uri: 'Redirect URI',
       post_sign_out_redirect_uri: 'Post Sign Out Redirect URI',
       add_another: 'Add another',
@@ -358,3 +359,4 @@ const zhCN: typeof en = Object.freeze({
 });
 
 export default zhCN;
+/* eslint-enable max-lines */

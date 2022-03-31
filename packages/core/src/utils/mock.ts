@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import {
   User,
   userInfoSelectFields,
@@ -369,3 +370,4 @@ export const mockUserLog: UserLog = {
   payload: {},
   createdAt: 10,
 };
+/* eslint-enable max-lines */
