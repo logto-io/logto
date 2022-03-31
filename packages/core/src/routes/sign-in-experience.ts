@@ -6,7 +6,11 @@ import {
   findDefaultSignInExperience,
   updateDefaultSignInExperience,
 } from '@/queries/sign-in-experience';
-import { validateBranding, validateTermsOfUse } from '@/utils/validate-sign-in-experience';
+import {
+  validateBranding,
+  validateSignInMethods,
+  validateTermsOfUse,
+} from '@/utils/validate-sign-in-experience';
 
 import { AuthedRouter } from './types';
 
@@ -43,11 +47,12 @@ export default function signInExperiencesRoutes<T extends AuthedRouter>(router: 
     }),
     async (ctx, next) => {
       const { body } = ctx.guard;
-      const { branding, termsOfUse } = body;
+      const { branding, termsOfUse, signInMethods } = body;
 
       validateBranding(branding);
       validateTermsOfUse(termsOfUse);
-      // TODO: validate SignInMethods
+      validateSignInMethods(signInMethods);
+      // TODO: validate socialConnectorIds
 
       ctx.body = await updateDefaultSignInExperience({
         ...body,

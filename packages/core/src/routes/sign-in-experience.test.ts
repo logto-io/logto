@@ -1,6 +1,12 @@
-import { SignInExperience, CreateSignInExperience, Branding, TermsOfUse } from '@logto/schemas';
+import {
+  SignInExperience,
+  CreateSignInExperience,
+  Branding,
+  TermsOfUse,
+  SignInMethods,
+} from '@logto/schemas';
 
-import { mockBranding, mockSignInExperience } from '@/utils/mock';
+import { mockBranding, mockSignInExperience, mockSignInMethods } from '@/utils/mock';
 import { createRequester } from '@/utils/test-utils';
 
 import signInExperiencesRoutes from './sign-in-experience';
@@ -22,6 +28,7 @@ jest.mock('@/queries/sign-in-experience', () => ({
 
 const validateBranding = jest.fn();
 const validateTermsOfUse = jest.fn();
+const validateSignInMethods = jest.fn();
 
 jest.mock('@/utils/validate-sign-in-experience', () => ({
   ...jest.requireActual('@/utils/validate-sign-in-experience'),
@@ -30,6 +37,9 @@ jest.mock('@/utils/validate-sign-in-experience', () => ({
   },
   validateTermsOfUse: (termsOfUse: TermsOfUse | undefined) => {
     validateTermsOfUse(termsOfUse);
+  },
+  validateSignInMethods: (signInMethods: SignInMethods | undefined) => {
+    validateSignInMethods(signInMethods);
   },
 }));
 
@@ -49,17 +59,20 @@ describe('signInExperiences routes', () => {
     const response = await signInExperienceRequester.patch('/sign-in-exp').send({
       branding: mockBranding,
       termsOfUse,
+      signInMethods: mockSignInMethods,
       socialSignInConnectorIds,
     });
 
     expect(validateBranding).toHaveBeenCalledWith(mockBranding);
     expect(validateTermsOfUse).toHaveBeenCalledWith(termsOfUse);
+    expect(validateSignInMethods).toHaveBeenCalledWith(mockSignInMethods);
 
     expect(response.status).toEqual(200);
     expect(response.body).toEqual({
       ...mockSignInExperience,
-      termsOfUse,
       branding: mockBranding,
+      termsOfUse,
+      signInMethods: mockSignInMethods,
       socialSignInConnectorIds,
     });
   });

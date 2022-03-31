@@ -1,8 +1,12 @@
-import { BrandingStyle } from '@logto/schemas';
+import { BrandingStyle, SignInMethodState } from '@logto/schemas';
 
 import RequestError from '@/errors/RequestError';
-import { mockBranding } from '@/utils/mock';
-import { validateBranding, validateTermsOfUse } from '@/utils/validate-sign-in-experience';
+import { mockBranding, mockSignInMethods } from '@/utils/mock';
+import {
+  validateBranding,
+  validateSignInMethods,
+  validateTermsOfUse,
+} from '@/utils/validate-sign-in-experience';
 
 describe('validate branding', () => {
   test('should not throw if without branding', () => {
@@ -37,5 +41,38 @@ describe('validate terms of use', () => {
         enabled: true,
       });
     }).toMatchError(new RequestError('sign_in_experiences.empty_content_url_of_terms_of_use'));
+  });
+});
+
+describe('validate sign-in methods and social connector IDs', () => {
+  test('should not throw if without sign-in methods', () => {
+    expect(() => {
+      // eslint-disable-next-line unicorn/no-useless-undefined
+      validateSignInMethods(undefined);
+    }).not.toThrow();
+  });
+
+  describe('There must be one and only one primary sign-in method.', () => {
+    test('should throw when there is no primary sign-in method', async () => {
+      expect(() => {
+        validateSignInMethods({
+          ...mockSignInMethods,
+          username: SignInMethodState.disabled,
+        });
+      }).toMatchError(
+        new RequestError('sign_in_experiences.not_one_and_only_one_primary_sign_in_method')
+      );
+    });
+
+    test('should throw when there are more than one primary sign-in methods', async () => {
+      expect(() => {
+        validateSignInMethods({
+          ...mockSignInMethods,
+          social: SignInMethodState.primary,
+        });
+      }).toMatchError(
+        new RequestError('sign_in_experiences.not_one_and_only_one_primary_sign_in_method')
+      );
+    });
   });
 });
