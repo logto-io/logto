@@ -6,6 +6,7 @@ import useTheme from './hooks/use-theme';
 import initI18n from './i18n/init';
 import Consent from './pages/Consent';
 import Register from './pages/Register';
+import SecondarySignIn from './pages/SecondarySignIn';
 import SignIn from './pages/SignIn';
 import './scss/normalized.scss';
 
@@ -21,6 +22,7 @@ const App = () => {
           <Route exact path="/sign-in" component={SignIn} />
           <Route exact path="/sign-in/consent" component={Consent} />
           <Route exact path="/register" component={Register} />
+          <Route exact path="/sign-in-secondary" component={SecondarySignIn} />
         </Switch>
       </BrowserRouter>
     </AppContent>

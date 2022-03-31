@@ -4,7 +4,7 @@
  */
 
 import {
-  parsePhoneNumber as _parsePhoneNumber,
+  parsePhoneNumberWithError,
   getCountries,
   getCountryCallingCode,
   CountryCallingCode,
@@ -12,19 +12,11 @@ import {
   E164Number,
   ParseError,
 } from 'libphonenumber-js';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 // Should not need the react-phone-number-input package, but we use its locale country name for now
 import en from 'react-phone-number-input/locale/en.json';
 
 export type { CountryCallingCode } from 'libphonenumber-js';
-
-/**
- * TODO: Get Default Country Code
- */
-const defaultCountryCode: CountryCode = 'CN';
-
-export const defaultCountryCallingCode: CountryCallingCode =
-  getCountryCallingCode(defaultCountryCode);
 
 /**
  * Provide Country Code Options
@@ -52,9 +44,6 @@ type PhoneNumberData = {
   nationalNumber: string;
 };
 
-// Add interact status to prevent the initial onUpdate useEffect call
-type PhoneNumberState = PhoneNumberData & { interacted: boolean };
-
 const parseE164Number = (value: string): E164Number | '' => {
   if (!value || value.startsWith('+')) {
     return value;
@@ -63,65 +52,33 @@ const parseE164Number = (value: string): E164Number | '' => {
   return `+${value}`;
 };
 
-export const parsePhoneNumber = (value: string): [ParseError?, PhoneNumberData?] => {
+const isValidPhoneNumber = (value: string): boolean => {
   try {
-    const phoneNumber = _parsePhoneNumber(parseE164Number(value));
-    const { countryCallingCode, nationalNumber } = phoneNumber;
+    const phoneNumber = parsePhoneNumberWithError(parseE164Number(value));
 
-    return [undefined, { countryCallingCode, nationalNumber }];
+    return phoneNumber.isValid();
   } catch (error: unknown) {
     if (error instanceof ParseError) {
-      return [error];
+      return false;
     }
     throw error;
   }
 };
 
-const usePhoneNumber = (value: string, onChangeCallback: (value: string) => void) => {
-  // TODO: phoneNumber format based on country
+export const defaultCountryCode: CountryCode = 'CN';
+export const defaultCountryCallingCode = getCountryCallingCode(defaultCountryCode);
 
-  const [phoneNumber, setPhoneNumber] = useState<PhoneNumberState>({
+const usePhoneNumber = () => {
+  // TODO:  Get Default Country Code
+  const [phoneNumber, setPhoneNumber] = useState<PhoneNumberData>({
     countryCallingCode: defaultCountryCallingCode,
     nationalNumber: '',
-    interacted: false,
   });
-  const [error, setError] = useState<ParseError>();
-
-  useEffect(() => {
-    // Only run on data initialization
-    if (phoneNumber.interacted) {
-      return;
-    }
-
-    const [parseError, result] = parsePhoneNumber(value);
-    setError(parseError);
-
-    if (result) {
-      const { countryCallingCode, nationalNumber } = result;
-      setPhoneNumber((previous) => ({
-        ...previous,
-        countryCallingCode,
-        nationalNumber,
-      }));
-    }
-  }, [phoneNumber.interacted, value]);
-
-  useEffect(() => {
-    // Only run after data initialization
-    if (!phoneNumber.interacted) {
-      return;
-    }
-
-    const { countryCallingCode, nationalNumber } = phoneNumber;
-    const [parseError] = parsePhoneNumber(`${countryCallingCode}${nationalNumber}`);
-    setError(parseError);
-    onChangeCallback(`+${countryCallingCode}${nationalNumber}`);
-  }, [onChangeCallback, phoneNumber]);
 
   return {
-    error,
     phoneNumber,
     setPhoneNumber,
+    isValidPhoneNumber,
   };
 };
 
