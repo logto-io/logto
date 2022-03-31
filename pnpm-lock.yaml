@@ -161,7 +161,7 @@ importers:
       ts-jest: ^27.0.5
       tsc-watch: ^4.4.0
       typescript: ^4.6.2
-      zod: ^3.8.1
+      zod: ^3.14.3
     dependencies:
       '@logto/phrases': link:../phrases
       '@logto/schemas': link:../schemas
@@ -188,7 +188,7 @@ importers:
       slonik: 23.9.0
       slonik-interceptor-preset: 1.2.10
       snakecase-keys: 5.1.2
-      zod: 3.11.6
+      zod: 3.14.3
     devDependencies:
       '@shopify/jest-koa-mocks': 3.0.8
       '@silverhand/eslint-config': 0.9.4_3a533fa6cc3da0cf8525ef55d41c4384
@@ -252,10 +252,10 @@ importers:
       prettier: ^2.3.2
       ts-node: ^10.0.0
       typescript: ^4.6.2
-      zod: ^3.8.1
+      zod: ^3.14.3
     dependencies:
       '@logto/phrases': link:../phrases
-      zod: 3.11.6
+      zod: 3.14.3
     devDependencies:
       '@silverhand/eslint-config': 0.9.4_3a533fa6cc3da0cf8525ef55d41c4384
       '@silverhand/essentials': 1.1.2
@@ -14446,8 +14446,8 @@ packages:
     engines: {node: '>=10'}
     dev: true
 
-  /zod/3.11.6:
-    resolution: {integrity: sha512-daZ80A81I3/9lIydI44motWe6n59kRBfNzTuS2bfzVh1nAXi667TOTWWtatxyG+fwgNUiagSj/CWZwRRbevJIg==}
+  /zod/3.14.3:
+    resolution: {integrity: sha512-OzwRCSXB1+/8F6w6HkYHdbuWysYWnAF4fkRgKDcSFc54CE+Sv0rHXKfeNUReGCrHukm1LNpi6AYeXotznhYJbQ==}
     dev: false
 
   /zwitch/1.0.5:
