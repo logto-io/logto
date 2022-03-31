@@ -1,4 +1,3 @@
-/* eslint-disable max-lines */
 import { Connector, ConnectorType } from '@logto/schemas';
 
 import {
@@ -199,15 +198,13 @@ describe('connector route', () => {
             description: {},
             readme: 'README.md',
           },
-          // eslint-disable-next-line @typescript-eslint/no-empty-function
-          validateConfig: async (_config) => {},
+          validateConfig: jest.fn(),
         };
       });
       const response = await connectorRequest
         .patch('/connectors/connector_0/enabled')
         .send({ enabled: true });
-      expect(updateConnector).toHaveBeenNthCalledWith(
-        1,
+      expect(updateConnector).toHaveBeenCalledWith(
         expect.objectContaining({
           where: { id: 'connector_0' },
           set: { enabled: true },
@@ -243,7 +240,7 @@ describe('connector route', () => {
             description: {},
             readme: 'README.md',
           },
-          validateConfig: async (_config) => {
+          validateConfig: async () => {
             throw new ConnectorError(ConnectorErrorCodes.InvalidConfig);
           },
         };
@@ -313,8 +310,7 @@ describe('connector route', () => {
             description: {},
             readme: 'README.md',
           },
-          // eslint-disable-next-line @typescript-eslint/no-empty-function
-          validateConfig: async (_config) => {},
+          validateConfig: jest.fn(),
         };
       });
       const response = await connectorRequest
@@ -372,7 +368,7 @@ describe('connector route', () => {
             description: {},
             readme: 'README.md',
           },
-          validateConfig: async (_config) => {
+          validateConfig: async () => {
             throw new ConnectorError(ConnectorErrorCodes.InvalidConfig);
           },
         };
@@ -479,7 +475,7 @@ describe('connector route', () => {
             description: {},
             readme: 'README.md',
           },
-          validateConfig: async (_config) => {
+          validateConfig: async () => {
             throw new ConnectorError(ConnectorErrorCodes.InvalidConfig);
           },
         };
@@ -507,8 +503,7 @@ describe('connector route', () => {
             description: {},
             readme: 'README.md',
           },
-          // eslint-disable-next-line @typescript-eslint/no-empty-function
-          validateConfig: async (_config) => {},
+          validateConfig: jest.fn(),
         };
       });
       const response = await connectorRequest
@@ -555,8 +550,7 @@ describe('connector route', () => {
           description: {},
           readme: 'README.md',
         },
-        // eslint-disable-next-line @typescript-eslint/no-empty-function
-        validateConfig: async (_config: any) => {},
+        validateConfig: jest.fn(),
         sendMessage: async (
           address: string,
           type: keyof EmailMessageTypes,
@@ -600,8 +594,7 @@ describe('connector route', () => {
           description: {},
           readme: 'README.md',
         },
-        // eslint-disable-next-line @typescript-eslint/no-empty-function
-        validateConfig: async (_config: any) => {},
+        validateConfig: jest.fn(),
         sendMessage: async (
           address: string,
           type: keyof EmailMessageTypes,
@@ -624,4 +617,3 @@ describe('connector route', () => {
     });
   });
 });
-/* eslint-enable max-lines */
