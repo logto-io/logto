@@ -1,7 +1,11 @@
 import { SignInExperiences } from '@logto/schemas';
 
 import { getEnabledSocialConnectorIds } from '@/connectors';
-import { validateBranding, validateTermsOfUse } from '@/lib/sign-in-experience';
+import {
+  validateBranding,
+  validateTermsOfUse,
+  validateSignInMethods,
+} from '@/lib/sign-in-experience';
 import koaGuard from '@/middleware/koa-guard';
 import {
   findDefaultSignInExperience,
@@ -42,7 +46,7 @@ export default function signInExperiencesRoutes<T extends AuthedRouter>(router: 
       body: SignInExperiences.createGuard.omit({ id: true }).partial(),
     }),
     async (ctx, next) => {
-      const { branding, termsOfUse } = ctx.guard.body;
+      const { branding, termsOfUse, signInMethods } = ctx.guard.body;
 
       if (branding) {
         validateBranding(branding);
@@ -52,7 +56,10 @@ export default function signInExperiencesRoutes<T extends AuthedRouter>(router: 
         validateTermsOfUse(termsOfUse);
       }
 
-      // TODO: validate SignInMethods
+      if (signInMethods) {
+        validateSignInMethods(signInMethods);
+      }
+
       // TODO: validate socialConnectorIds
 
       // TODO: Only update socialSignInConnectorIds when social sign-in is enabled.
