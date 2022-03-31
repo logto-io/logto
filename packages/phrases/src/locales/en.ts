@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 const translation = {
   general: {
     placeholder: 'Placeholder',
@@ -113,7 +114,7 @@ const translation = {
       advanced_settings: 'Advanced Settings',
       application_name: 'Application Name',
       description: 'Description',
-      authorization_endpoint: 'Authorization Endpiont',
+      authorization_endpoint: 'Authorization Endpoint',
       redirect_uri: 'Redirect URI',
       post_sign_out_redirect_uri: 'Post Sign Out Redirect URI',
       add_another: 'Add another',
@@ -360,3 +361,4 @@ const en = Object.freeze({
 });
 
 export default en;
+/* eslint-enable max-lines */

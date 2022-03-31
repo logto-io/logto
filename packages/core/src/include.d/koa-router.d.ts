@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 /* eslint-disable unicorn/prevent-abbreviations */
 // Modified from `@types/koa-router`
 // Added more precise middleware chain typings
@@ -724,3 +725,4 @@ declare module 'koa-router' {
   export = Router;
 }
 /* eslint-enable unicorn/prevent-abbreviations */
+/* eslint-enable max-lines */

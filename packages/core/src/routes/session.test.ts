@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { Provider } from 'oidc-provider';
 
 import { ConnectorType } from '@/connectors/types';
@@ -861,3 +862,4 @@ describe('sessionRoutes', () => {
     );
   });
 });
+/* eslint-enable max-lines */

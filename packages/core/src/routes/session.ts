@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import path from 'path';
 
 import { LogtoErrorCode } from '@logto/phrases';
@@ -512,3 +513,4 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
     return next();
   });
 }
+/* eslint-enable max-lines */
