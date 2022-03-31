@@ -1,15 +1,33 @@
 import { SignInExperience, CreateSignInExperience, TermsOfUse } from '@logto/schemas';
 
 import * as signInExpLib from '@/lib/sign-in-experience';
-import { mockBranding, mockSignInExperience, mockSignInMethods } from '@/utils/mock';
+import {
+  mockBranding,
+  mockFacebookConnectorInstance,
+  mockGithubConnectorInstance,
+  mockGoogleConnectorInstance,
+  mockSignInExperience,
+  mockSignInMethods,
+} from '@/utils/mock';
 import { createRequester } from '@/utils/test-utils';
 
 import signInExperiencesRoutes from './sign-in-experience';
 
-jest.mock('@/connectors', () => ({
-  ...jest.requireActual('@/connectors'),
-  getEnabledSocialConnectorIds: jest.fn(async () => ['facebook', 'github']),
-}));
+const connectorInstances = [
+  mockFacebookConnectorInstance,
+  mockGithubConnectorInstance,
+  mockGoogleConnectorInstance,
+];
+
+const getConnectorInstances = jest.fn(async () => connectorInstances);
+
+jest.mock('@/connectors', () => {
+  return {
+    ...jest.requireActual('@/connectors'),
+    getEnabledSocialConnectorIds: jest.fn(async () => ['facebook', 'github']),
+    getConnectorInstances: jest.fn(async () => getConnectorInstances()),
+  };
+});
 
 jest.mock('@/queries/sign-in-experience', () => ({
   findDefaultSignInExperience: jest.fn(async (): Promise<SignInExperience> => mockSignInExperience),
@@ -34,7 +52,7 @@ describe('signInExperiences routes', () => {
 
   it('PATCH /sign-in-exp', async () => {
     const termsOfUse: TermsOfUse = { enabled: false };
-    const socialSignInConnectorIds = ['abc', 'def'];
+    const socialSignInConnectorIds = ['github', 'facebook'];
 
     const validateBranding = jest.spyOn(signInExpLib, 'validateBranding');
     const validateTermsOfUse = jest.spyOn(signInExpLib, 'validateTermsOfUse');
@@ -49,7 +67,10 @@ describe('signInExperiences routes', () => {
 
     expect(validateBranding).toHaveBeenCalledWith(mockBranding);
     expect(validateTermsOfUse).toHaveBeenCalledWith(termsOfUse);
-    expect(validateSignInMethods).toHaveBeenCalledWith(mockSignInMethods);
+    expect(validateSignInMethods).toHaveBeenCalledWith(mockSignInMethods, [
+      mockFacebookConnectorInstance,
+      mockGithubConnectorInstance,
+    ]);
     // TODO: only update socialSignInConnectorIds when social sign-in is enabled.
 
     expect(response).toMatchObject({

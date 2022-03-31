@@ -347,6 +347,7 @@ const errors = {
       'Empty "Terms of use" content URL. Please add the content URL if "Terms of use" is enabled.',
     empty_slogan:
       'Empty branding slogan. Please add a branding slogan if a UI style containing the slogan is selected.',
+    enabled_connector_not_found: 'Enabled {{type}} connector not found.',
     not_one_and_only_one_primary_sign_in_method:
       'There must be one and only one primary sign-in method. Please check your input.',
   },

@@ -390,4 +390,52 @@ export const mockSignInMethods: SignInMethods = {
   sms: SignInMethodState.disabled,
   social: SignInMethodState.disabled,
 };
+
+export const mockAliyunDmConnectorInstance = {
+  connector: {
+    id: 'aliyun-dm',
+    enabled: true,
+    config: {},
+    createdAt: 1_646_382_233_333,
+  },
+  metadata: {
+    type: ConnectorType.Email,
+  },
+};
+
+export const mockFacebookConnectorInstance = {
+  connector: {
+    id: 'facebook',
+    enabled: true,
+    config: {},
+    createdAt: 1_646_382_233_333,
+  },
+  metadata: {
+    type: ConnectorType.Social,
+  },
+};
+
+export const mockGithubConnectorInstance = {
+  connector: {
+    id: 'github',
+    enabled: true,
+    config: {},
+    createdAt: 1_646_382_233_000,
+  },
+  metadata: {
+    type: ConnectorType.Social,
+  },
+};
+
+export const mockGoogleConnectorInstance = {
+  connector: {
+    id: 'google',
+    enabled: false,
+    config: {},
+    createdAt: 1_646_382_233_000,
+  },
+  metadata: {
+    type: ConnectorType.Social,
+  },
+};
 /* eslint-enable max-lines */
