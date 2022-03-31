@@ -10,9 +10,7 @@ export const validate = (
     return;
   }
 
-  const requiredError = conditional(
-    rule.required && value.filter(Boolean).length === 0 && rule.required
-  );
+  const requiredError = conditional(value.filter(Boolean).length === 0 && rule.required);
 
   if (requiredError) {
     return {

@@ -10,8 +10,8 @@ import * as styles from './index.module.scss';
 import { MultiTextInputError } from './types';
 
 type Props = {
-  value?: string[];
-  onChange?: (value: string[]) => void;
+  value: string[];
+  onChange: (value: string[]) => void;
   error?: MultiTextInputError;
 };
 
@@ -21,7 +21,7 @@ const MultiTextInput = ({ value, onChange, error }: Props) => {
   });
 
   const fields = useMemo(() => {
-    if (!value?.length) {
+    if (value.length === 0) {
       return [''];
     }
 
@@ -29,17 +29,15 @@ const MultiTextInput = ({ value, onChange, error }: Props) => {
   }, [value]);
 
   const handleAdd = () => {
-    onChange?.([...fields, '']);
+    onChange([...fields, '']);
   };
 
   const handleRemove = (index: number) => {
-    onChange?.(fields.filter((_, i) => i !== index));
+    onChange(fields.filter((_, i) => i !== index));
   };
 
-  const handleInputChange = (event: React.FormEvent<HTMLInputElement>, index: number) => {
-    onChange?.(
-      fields.map((fieldValue, i) => (i === index ? event.currentTarget.value : fieldValue))
-    );
+  const handleInputChange = (inputValue: string, index: number) => {
+    onChange(fields.map((fieldValue, i) => (i === index ? inputValue : fieldValue)));
   };
 
   return (
@@ -53,8 +51,8 @@ const MultiTextInput = ({ value, onChange, error }: Props) => {
                 error?.inputs?.[fieldIndex] || (fieldIndex === 0 && error?.required)
               )}
               value={fieldValue}
-              onChange={(event) => {
-                handleInputChange(event, fieldIndex);
+              onChange={({ currentTarget: { value } }) => {
+                handleInputChange(value, fieldIndex);
               }}
             />
             {fields.length > 1 && (

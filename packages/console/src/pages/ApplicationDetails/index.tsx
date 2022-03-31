@@ -110,6 +110,7 @@ const ApplicationDetails = () => {
         <Controller
           name="oidcClientMetadata.redirectUris"
           control={control}
+          defaultValue={[]}
           rules={{
             validate: createValidatorForRhf({
               required: t('application_details.redirect_uri_required'),
@@ -132,6 +133,7 @@ const ApplicationDetails = () => {
         <Controller
           name="oidcClientMetadata.postLogoutRedirectUris"
           control={control}
+          defaultValue={[]}
           rules={{
             validate: createValidatorForRhf({
               pattern: {
