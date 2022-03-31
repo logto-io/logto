@@ -6,6 +6,7 @@ import {
   findDefaultSignInExperience,
   updateDefaultSignInExperience,
 } from '@/queries/sign-in-experience';
+import { isEnabled } from '@/utils/assert-sign-in-experience';
 import {
   validateBranding,
   validateSignInMethods,
@@ -46,17 +47,20 @@ export default function signInExperiencesRoutes<T extends AuthedRouter>(router: 
       body: SignInExperiences.createGuard.omit({ id: true }).partial(),
     }),
     async (ctx, next) => {
-      const { body } = ctx.guard;
-      const { branding, termsOfUse, signInMethods } = body;
+      const { socialSignInConnectorIds, ...rest } = ctx.guard.body;
+      const { branding, termsOfUse, signInMethods } = rest;
 
       validateBranding(branding);
       validateTermsOfUse(termsOfUse);
-      validateSignInMethods(signInMethods);
-      // TODO: validate socialConnectorIds
+      await validateSignInMethods(signInMethods, socialSignInConnectorIds);
 
-      ctx.body = await updateDefaultSignInExperience({
-        ...body,
-      });
+      // Only update socialSignInConnectorIds when social sign-in is enabled.
+      const signInExperience =
+        signInMethods && isEnabled(signInMethods.social)
+          ? { ...rest, socialSignInConnectorIds }
+          : { ...rest };
+
+      ctx.body = await updateDefaultSignInExperience(signInExperience);
 
       return next();
     }

@@ -33,8 +33,6 @@ export const assertTermsOfUse = (termsOfUse?: TermsOfUse) => {
   }
 };
 
-export const isEnabled = (state: SignInMethodState) => state !== SignInMethodState.disabled;
-
 const assertOneAndOnlyOnePrimarySignInMethod = (signInMethods: SignInMethods) => {
   const signInMethodStates = Object.values(signInMethods);
   const primarySignInMethodCount = signInMethodStates.reduce(
@@ -47,6 +45,8 @@ const assertOneAndOnlyOnePrimarySignInMethod = (signInMethods: SignInMethods) =>
     'sign_in_experiences.not_one_and_only_one_primary_sign_in_method'
   );
 };
+
+export const isEnabled = (state: SignInMethodState) => state !== SignInMethodState.disabled;
 
 const assertEnabledConnectorByType = (
   type: ConnectorType,

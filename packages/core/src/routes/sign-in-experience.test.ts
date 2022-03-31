@@ -4,15 +4,30 @@ import {
   Branding,
   TermsOfUse,
   SignInMethods,
+  SignInMethodState,
 } from '@logto/schemas';
 
-import { mockBranding, mockSignInExperience, mockSignInMethods } from '@/utils/mock';
+import {
+  mockBranding,
+  mockFacebookConnectorInstance,
+  mockGithubConnectorInstance,
+  mockGoogleConnectorInstance,
+  mockSignInExperience,
+  mockSignInMethods,
+} from '@/utils/mock';
 import { createRequester } from '@/utils/test-utils';
 
 import signInExperiencesRoutes from './sign-in-experience';
 
+const getConnectorInstances = jest.fn(async () => [
+  mockFacebookConnectorInstance,
+  mockGithubConnectorInstance,
+  mockGoogleConnectorInstance,
+]);
+
 jest.mock('@/connectors', () => ({
   ...jest.requireActual('@/connectors'),
+  getConnectorInstances: jest.fn(async () => getConnectorInstances()),
   getEnabledSocialConnectorIds: jest.fn(async () => ['facebook', 'github']),
 }));
 
@@ -43,16 +58,61 @@ jest.mock('@/utils/validate-sign-in-experience', () => ({
   },
 }));
 
-describe('signInExperiences routes', () => {
-  const signInExperienceRequester = createRequester({ authedRoutes: signInExperiencesRoutes });
+const signInExperienceRequester = createRequester({ authedRoutes: signInExperiencesRoutes });
 
-  it('GET /sign-in-exp', async () => {
-    const response = await signInExperienceRequester.get('/sign-in-exp');
+it('GET /sign-in-exp', async () => {
+  const response = await signInExperienceRequester.get('/sign-in-exp');
+  expect(response.status).toEqual(200);
+  expect(response.body).toEqual(mockSignInExperience);
+});
+
+describe('PATCH /sign-in-exp', () => {
+  it('should not update social connector ids when disabled social sign-in', async () => {
+    const signInMethods = { ...mockSignInMethods, social: SignInMethodState.disabled };
+    const response = await signInExperienceRequester.patch('/sign-in-exp').send({
+      signInMethods,
+      socialSignInConnectorIds: ['facebook'],
+    });
     expect(response.status).toEqual(200);
-    expect(response.body).toEqual(mockSignInExperience);
+    expect(response.body).toEqual({
+      ...mockSignInExperience,
+      signInMethods,
+    });
   });
 
-  it('PATCH /sign-in-exp', async () => {
+  it('should update enabled social connector ids when enabled social sign-in', async () => {
+    const signInMethods = { ...mockSignInMethods, social: SignInMethodState.secondary };
+    const socialSignInConnectorIds = ['facebook'];
+    const signInExperience = {
+      signInMethods,
+      socialSignInConnectorIds,
+    };
+    const response = await signInExperienceRequester.patch('/sign-in-exp').send(signInExperience);
+    expect(response.status).toEqual(200);
+    expect(response.body).toEqual({
+      ...mockSignInExperience,
+      signInMethods,
+      socialSignInConnectorIds,
+    });
+  });
+
+  it('should update social connector ids in correct sorting order', async () => {
+    const signInMethods = { ...mockSignInMethods, social: SignInMethodState.secondary };
+    const socialSignInConnectorIds = ['github', 'facebook'];
+    const signInExperience = {
+      signInMethods,
+      socialSignInConnectorIds,
+    };
+    const response = await signInExperienceRequester.patch('/sign-in-exp').send(signInExperience);
+    expect(response.status).toEqual(200);
+    expect(response.body).toEqual({
+      ...mockSignInExperience,
+      signInMethods,
+      socialSignInConnectorIds,
+    });
+  });
+
+  it('should succeed to update when the input is valid', async () => {
     const termsOfUse: TermsOfUse = { enabled: false };
     const socialSignInConnectorIds = ['abc', 'def'];
 
@@ -75,14 +135,5 @@ describe('signInExperiences routes', () => {
       signInMethods: mockSignInMethods,
       socialSignInConnectorIds,
     });
-  });
-
-  it('PATCH /sign-in-exp should throw with invalid inputs', async () => {
-    const socialSignInConnectorIds = [123, 456];
-
-    const response = await signInExperienceRequester.patch('/sign-in-exp').send({
-      socialSignInConnectorIds,
-    });
-    expect(response.status).toEqual(400);
   });
 });
