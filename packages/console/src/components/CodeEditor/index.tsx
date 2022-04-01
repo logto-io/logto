@@ -8,7 +8,7 @@ import IconButton from '../IconButton';
 import * as styles from './index.module.scss';
 
 type Props = {
-  language: string;
+  language?: string;
   height?: string;
   isReadonly?: boolean;
   value?: string;
