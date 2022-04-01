@@ -59,5 +59,9 @@
 
   &.error {
     border-color: var(--color-error);
+
+    &:focus-within {
+      outline-color: var(--color-error-80);
+    }
   }
 }
