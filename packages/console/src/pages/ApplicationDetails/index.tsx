@@ -22,6 +22,7 @@ import TextInput from '@/components/TextInput';
 import useApi, { RequestError } from '@/hooks/use-api';
 import Delete from '@/icons/Delete';
 import More from '@/icons/More';
+import * as detailsStyles from '@/scss/details.module.scss';
 import * as modalStyles from '@/scss/modal.module.scss';
 import { applicationTypeI18nKey } from '@/types/applications';
 import { noSpaceRegex } from '@/utilities/regex';
@@ -166,7 +167,7 @@ const ApplicationDetails = () => {
   );
 
   return (
-    <div className={styles.container}>
+    <div className={detailsStyles.container}>
       <BackLink to="/applications">{t('application_details.back_to_applications')}</BackLink>
       {isLoading && <div>loading</div>}
       {error && <div>{`error occurred: ${error.body.message}`}</div>}
@@ -241,7 +242,7 @@ const ApplicationDetails = () => {
               <div className={styles.fields}>
                 {isAdvancedSettings ? AdvancedSettingsPage : SettingsPage}
               </div>
-              <div className={styles.submit}>
+              <div className={detailsStyles.footer}>
                 <Button
                   disabled={isSubmitting}
                   htmlType="submit"

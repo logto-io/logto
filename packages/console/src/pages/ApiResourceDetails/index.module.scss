@@ -1,12 +1,6 @@
 @use '@/scss/underscore' as _;
 
-.container {
-  > *:not(:first-child) {
-    margin-top: _.unit(4);
-  }
-}
-
-.container .backButton {
+.backButton {
   display: flex;
   align-items: center;
 
@@ -15,7 +9,7 @@
   }
 }
 
-.container .header {
+.header {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -46,7 +40,9 @@
   }
 }
 
-.container .body {
+.body {
+  padding-bottom: 0;
+
   > :first-child {
     margin-top: 0;
   }
@@ -56,16 +52,10 @@
   }
 
   .fields {
-    padding-bottom: _.unit(16);
-    border-bottom: 1px solid var(--color-border);
+    padding-bottom: _.unit(10);
   }
 
   .textField {
     @include _.form-text-field;
-  }
-
-  .submit {
-    margin-top: _.unit(6);
-    text-align: right;
   }
 }

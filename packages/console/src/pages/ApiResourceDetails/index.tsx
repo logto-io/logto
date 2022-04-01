@@ -20,6 +20,7 @@ import TextInput from '@/components/TextInput';
 import useApi, { RequestError } from '@/hooks/use-api';
 import Delete from '@/icons/Delete';
 import More from '@/icons/More';
+import * as detailsStyles from '@/scss/details.module.scss';
 import * as modalStyles from '@/scss/modal.module.scss';
 
 import DeleteForm from './components/DeleteForm';
@@ -72,7 +73,7 @@ const ApiResourceDetails = () => {
   });
 
   return (
-    <div className={styles.container}>
+    <div className={detailsStyles.container}>
       <BackLink to="/api-resources">{t('api_resource_details.back_to_api_resources')}</BackLink>
 
       {isLoading && <div>loading</div>}
@@ -155,7 +156,7 @@ const ApiResourceDetails = () => {
                   />
                 </FormField>
               </div>
-              <div className={styles.submit}>
+              <div className={detailsStyles.footer}>
                 <Button
                   disabled={isSubmitting}
                   htmlType="submit"

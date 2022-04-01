@@ -20,6 +20,7 @@ import useApi, { RequestError } from '@/hooks/use-api';
 import Delete from '@/icons/Delete';
 import More from '@/icons/More';
 import Reset from '@/icons/Reset';
+import * as detailsStyles from '@/scss/details.module.scss';
 
 import SetupModal from '../Connectors/components/SetupModal';
 import SenderTester from './components/SenderTester';
@@ -95,7 +96,7 @@ const ConnectorDetails = () => {
   };
 
   return (
-    <div className={styles.container}>
+    <div className={detailsStyles.container}>
       <BackLink to="/connectors">{t('connector_details.back_to_connectors')}</BackLink>
       {isLoading && <div>loading</div>}
       {error && <div>{`error occurred: ${error.body.message}`}</div>}
@@ -186,7 +187,7 @@ const ConnectorDetails = () => {
             <SenderTester connectorType={data.metadata.type} />
           )}
           {saveError && <div>{saveError}</div>}
-          <div className={styles.actions}>
+          <div className={detailsStyles.footer}>
             <Button
               type="primary"
               title="admin_console.connector_details.save_changes"

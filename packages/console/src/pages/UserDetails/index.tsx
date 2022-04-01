@@ -22,6 +22,7 @@ import useApi, { RequestError } from '@/hooks/use-api';
 import Delete from '@/icons/Delete';
 import More from '@/icons/More';
 import Reset from '@/icons/Reset';
+import * as detailsStyles from '@/scss/details.module.scss';
 import * as modalStyles from '@/scss/modal.module.scss';
 import { safeParseJson } from '@/utilities/json';
 
@@ -99,7 +100,7 @@ const UserDetails = () => {
   });
 
   return (
-    <div className={styles.container}>
+    <div className={detailsStyles.container}>
       <BackLink to="/users">{t('user_details.back_to_users')}</BackLink>
 
       {isLoading && <div>loading</div>}
@@ -226,7 +227,7 @@ const UserDetails = () => {
                   <CodeEditor height="200px" language="json" value={value} onChange={onChange} />
                 </FormField>
               </div>
-              <div className={styles.submit}>
+              <div className={detailsStyles.footer}>
                 <Button
                   disabled={isSubmitting}
                   htmlType="submit"
