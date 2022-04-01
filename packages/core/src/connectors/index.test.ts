@@ -13,42 +13,49 @@ import RequestError from '@/errors/RequestError';
 
 const aliyunDmConnector = {
   id: 'aliyun-dm',
+  type: ConnectorType.Email,
   enabled: true,
   config: {},
   createdAt: 1_646_382_233_911,
 };
 const aliyunSmsConnector = {
   id: 'aliyun-sms',
+  type: ConnectorType.SMS,
   enabled: false,
   config: {},
   createdAt: 1_646_382_233_666,
 };
 const facebookConnector = {
   id: 'facebook',
+  type: ConnectorType.Social,
   enabled: true,
   config: {},
   createdAt: 1_646_382_233_333,
 };
 const githubConnector = {
   id: 'github',
+  type: ConnectorType.Social,
   enabled: true,
   config: {},
   createdAt: 1_646_382_233_555,
 };
 const googleConnector = {
   id: 'google',
+  type: ConnectorType.Social,
   enabled: false,
   config: {},
   createdAt: 1_646_382_233_000,
 };
 const wechatConnector = {
   id: 'wechat',
+  type: ConnectorType.Social,
   enabled: false,
   config: {},
   createdAt: 1_646_382_233_000,
 };
 const wechatNativeConnector = {
   id: 'wechat-native',
+  type: ConnectorType.Social,
   enabled: false,
   config: {},
   createdAt: 1_646_382_233_000,
@@ -170,8 +177,8 @@ describe('initConnectors', () => {
     expect(insertConnector).toHaveBeenCalledTimes(connectors.length);
 
     for (const [i, connector] of connectors.entries()) {
-      const { id } = connector;
-      expect(insertConnector).toHaveBeenNthCalledWith(i + 1, { id });
+      const { id, type } = connector;
+      expect(insertConnector).toHaveBeenNthCalledWith(i + 1, { id, type });
     }
   });
 

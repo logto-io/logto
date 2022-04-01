@@ -124,6 +124,7 @@ describe('sendPasscode', () => {
     mockedGetConnectorInstanceByType.mockResolvedValue({
       connector: {
         id: 'id',
+        type: ConnectorType.SMS,
         enabled: true,
         config: {},
         createdAt: Date.now(),

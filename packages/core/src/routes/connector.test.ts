@@ -7,6 +7,7 @@ import {
   ConnectorMetadata,
   EmailConnectorInstance,
   EmailMessageTypes,
+  SmsConnectorInstance,
   ValidateConfig,
 } from '@/connectors/types';
 import RequestError from '@/errors/RequestError';
@@ -187,6 +188,7 @@ describe('connector route', () => {
         return {
           connector: {
             id: 'connector_0',
+            type: ConnectorType.Social,
             enabled: true,
             config: {},
             createdAt: 1_234_567_890_123,
@@ -229,6 +231,7 @@ describe('connector route', () => {
         return {
           connector: {
             id: 'connector_0',
+            type: ConnectorType.Social,
             enabled: true,
             config: {},
             createdAt: 1_234_567_890_123,
@@ -257,6 +260,7 @@ describe('connector route', () => {
         return {
           connector: {
             id: 'connector_0',
+            type: ConnectorType.Social,
             enabled: true,
             config: {},
             createdAt: 1_234_567_890_123,
@@ -299,6 +303,7 @@ describe('connector route', () => {
         return {
           connector: {
             id: 'connector_1',
+            type: ConnectorType.SMS,
             enabled: true,
             config: {},
             createdAt: 1_234_567_890_234,
@@ -357,6 +362,7 @@ describe('connector route', () => {
         return {
           connector: {
             id: 'connector_1',
+            type: ConnectorType.SMS,
             enabled: true,
             config: {},
             createdAt: 1_234_567_890_234,
@@ -385,6 +391,7 @@ describe('connector route', () => {
         return {
           connector: {
             id: 'connector_4',
+            type: ConnectorType.Email,
             enabled: true,
             config: {},
             createdAt: 1_234_567_890_567,
@@ -464,6 +471,7 @@ describe('connector route', () => {
         return {
           connector: {
             id: 'connector_0',
+            type: ConnectorType.Social,
             enabled: true,
             config: {},
             createdAt: 1_234_567_890_123,
@@ -492,6 +500,7 @@ describe('connector route', () => {
         return {
           connector: {
             id: 'connector_0',
+            type: ConnectorType.Social,
             enabled: true,
             config: {},
             createdAt: 1_234_567_890_123,
@@ -539,6 +548,7 @@ describe('connector route', () => {
       const mockedEmailConnector: EmailConnectorInstance = {
         connector: {
           id: 'connector_0',
+          type: ConnectorType.Email,
           enabled: true,
           config: {},
           createdAt: 1_234_567_890_123,
@@ -580,9 +590,10 @@ describe('connector route', () => {
     });
 
     it('should get SMS connector and send message', async () => {
-      const mockedEmailConnector: EmailConnectorInstance = {
+      const mockedSmsConnector: SmsConnectorInstance = {
         connector: {
           id: 'connector_0',
+          type: ConnectorType.SMS,
           enabled: true,
           config: {},
           createdAt: 1_234_567_890_123,
@@ -605,10 +616,10 @@ describe('connector route', () => {
       };
 
       getConnectorInstanceByTypePlaceHolder.mockImplementationOnce(async (_: ConnectorType) => {
-        return mockedEmailConnector;
+        return mockedSmsConnector;
       });
 
-      const sendMessageSpy = jest.spyOn(mockedEmailConnector, 'sendMessage');
+      const sendMessageSpy = jest.spyOn(mockedSmsConnector, 'sendMessage');
       const response = await connectorRequest
         .post('/connectors/test/sms')
         .send({ phone: '12345678901' });

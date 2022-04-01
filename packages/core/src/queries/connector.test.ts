@@ -1,4 +1,4 @@
-import { Connectors, CreateConnector } from '@logto/schemas';
+import { Connectors, ConnectorType, CreateConnector } from '@logto/schemas';
 import { createMockPool, createMockQueryResult, sql, QueryResultRowType } from 'slonik';
 
 import { convertToIdentifiers } from '@/database/utils';
@@ -65,19 +65,20 @@ describe('connector queries', () => {
   it('insertConnector', async () => {
     const connector: CreateConnector & QueryResultRowType = {
       id: 'foo',
+      type: ConnectorType.Social,
       enabled: true,
     };
 
     const expectSql = `
-      insert into "connectors" ("id", "enabled")
-      values ($1, $2)
+      insert into "connectors" ("id", "type", "enabled")
+      values ($1, $2, $3)
       returning *
     `;
 
     mockQuery.mockImplementationOnce(async (sql, values) => {
       expectSqlAssert(sql, expectSql);
 
-      expect(values).toEqual([connector.id, connector.enabled]);
+      expect(values).toEqual([connector.id, connector.type, connector.enabled]);
 
       return createMockQueryResult([connector]);
     });
