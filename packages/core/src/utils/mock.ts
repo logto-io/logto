@@ -20,6 +20,7 @@ import {
   UserLogResult,
   ConnectorType,
   SignInMethodState,
+  Branding,
 } from '@logto/schemas';
 import pick from 'lodash.pick';
 
@@ -369,5 +370,16 @@ export const mockUserLog: UserLog = {
   result: UserLogResult.Success,
   payload: {},
   createdAt: 10,
+};
+
+export const mockBranding: Branding = {
+  primaryColor: '#000',
+  backgroundColor: '#fff',
+  darkMode: true,
+  darkBackgroundColor: '#000',
+  darkPrimaryColor: '#fff',
+  style: BrandingStyle.Logo_Slogan,
+  logoUrl: 'http://silverhand.png',
+  slogan: 'Silverhand.',
 };
 /* eslint-enable max-lines */

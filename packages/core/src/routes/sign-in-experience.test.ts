@@ -1,6 +1,7 @@
-import { SignInExperience, CreateSignInExperience, BrandingStyle, Branding } from '@logto/schemas';
+import { SignInExperience, CreateSignInExperience, TermsOfUse } from '@logto/schemas';
 
-import { mockSignInExperience } from '@/utils/mock';
+import * as signInExpLib from '@/lib/sign-in-experience';
+import { mockBranding, mockSignInExperience } from '@/utils/mock';
 import { createRequester } from '@/utils/test-utils';
 
 import signInExperiencesRoutes from './sign-in-experience';
@@ -25,34 +26,36 @@ describe('signInExperiences routes', () => {
 
   it('GET /sign-in-exp', async () => {
     const response = await signInExperienceRequester.get('/sign-in-exp');
-    expect(response.status).toEqual(200);
-    expect(response.body).toEqual(mockSignInExperience);
+    expect(response).toMatchObject({
+      status: 200,
+      body: mockSignInExperience,
+    });
   });
 
   it('PATCH /sign-in-exp', async () => {
-    const branding: Branding = {
-      primaryColor: '#000',
-      backgroundColor: '#fff',
-      darkMode: true,
-      darkBackgroundColor: '#000',
-      darkPrimaryColor: '#fff',
-      style: BrandingStyle.Logo,
-      logoUrl: 'http://silverhand.png',
-      slogan: 'silverhand',
-    };
-
+    const termsOfUse: TermsOfUse = { enabled: false };
     const socialSignInConnectorIds = ['abc', 'def'];
 
+    const validateBranding = jest.spyOn(signInExpLib, 'validateBranding');
+    const validateTermsOfUse = jest.spyOn(signInExpLib, 'validateTermsOfUse');
+
     const response = await signInExperienceRequester.patch('/sign-in-exp').send({
-      branding,
+      branding: mockBranding,
+      termsOfUse,
       socialSignInConnectorIds,
     });
 
-    expect(response.status).toEqual(200);
-    expect(response.body).toEqual({
-      ...mockSignInExperience,
-      branding,
-      socialSignInConnectorIds,
+    expect(validateBranding).toHaveBeenCalledWith(mockBranding);
+    expect(validateTermsOfUse).toHaveBeenCalledWith(termsOfUse);
+
+    expect(response).toMatchObject({
+      status: 200,
+      body: {
+        ...mockSignInExperience,
+        branding: mockBranding,
+        termsOfUse,
+        socialSignInConnectorIds,
+      },
     });
   });
 
