@@ -2,6 +2,7 @@ import React, {
   useMemo,
   useRef,
   useCallback,
+  useEffect,
   FormEventHandler,
   KeyboardEventHandler,
   FocusEventHandler,
@@ -30,14 +31,15 @@ const normalize = (value: string[], length: number): string[] => {
   }
 
   if (value.length < length) {
-    return value.concat(Array.from({ length: length - value.length }));
+    // Undefined will not overwrite the original input displays, need to pass in empty string instead
+    return value.concat(Array.from<string>({ length: length - value.length }).fill(''));
   }
 
   return value;
 };
 
 const trim = (oldValue: string | undefined, newValue: string) => {
-  // Trim oldValue from the latest input to get the updated char
+  // Pop oldValue from the latest input to get the updated Digit
   if (newValue.length > 1 && oldValue) {
     return newValue.replace(oldValue, '');
   }
@@ -78,7 +80,7 @@ const Passcode = ({ name, className, value, length = defaultLength, error, onCha
 
       const targetId = Number(dataset.id);
 
-      // Update the total input value
+      // Update the root input value
       onChange(Object.assign([], codes, { [targetId]: trim(codes[targetId], value) }));
 
       // Move to the next target
@@ -176,6 +178,14 @@ const Passcode = ({ name, className, value, length = defaultLength, error, onCha
     },
     [codes, onChange]
   );
+
+  useEffect(() => {
+    if (error) {
+      // Clear field and focus
+      onChange([]);
+      inputReferences.current[0]?.focus();
+    }
+  }, [error, onChange]);
 
   return (
     <div className={className}>

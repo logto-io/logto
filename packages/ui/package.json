@@ -27,7 +27,8 @@
     "react-i18next": "^11.15.4",
     "react-modal": "^3.14.4",
     "react-phone-number-input": "^3.1.46",
-    "react-router-dom": "^5.2.0"
+    "react-router-dom": "^5.2.0",
+    "react-timer-hook": "^3.0.5"
   },
   "devDependencies": {
     "@jest/types": "^27.5.1",

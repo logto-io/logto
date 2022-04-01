@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { useHistory, useParams } from 'react-router-dom';
+import { useHistory, useParams, useLocation } from 'react-router-dom';
 
 import NavArrowIcon from '@/components/Icons/NavArrowIcon';
 import PasscodeValidation from '@/containers/PasscodeValidation';
@@ -12,21 +12,36 @@ type Props = {
   channel: string;
 };
 
+type StateType = {
+  email?: string;
+  phone?: string;
+};
+
 const Passcode = () => {
   const { t } = useTranslation();
   const history = useHistory();
   const { type, channel } = useParams<Props>();
+  const location = useLocation<StateType>();
 
   // TODO: 404 page
   if (type !== 'sign-in' && type !== 'register') {
-    window.location.assign('/404');
+    // eslint-disable-next-line @silverhand/fp/no-mutating-methods
+    history.push('/404');
 
     return null;
   }
 
   if (channel !== 'email' && channel !== 'phone') {
-    window.location.assign('/404');
+    // eslint-disable-next-line @silverhand/fp/no-mutating-methods
+    history.push('/404');
 
+    return null;
+  }
+
+  const target = location.state[channel];
+
+  if (!target) {
+    // TODO: no email or phone found
     return null;
   }
 
@@ -40,7 +55,8 @@ const Passcode = () => {
         />
       </div>
       <div className={styles.title}>{t('sign_in.enter_passcode')}</div>
-      <PasscodeValidation type={type} channel={channel} />
+      <div className={styles.detail}>{t('sign_in.passcode_sent', { target })}</div>
+      <PasscodeController type={type} channel={channel} target={target} />
     </div>
   );
 };
