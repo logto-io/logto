@@ -336,6 +336,7 @@ const errors = {
     oauth_code_invalid: 'Unable to get access token, please check authorization code.',
     more_than_one_sms: 'The number of SMS connectors is larger then 1.',
     more_than_one_email: 'The number of Email connectors is larger then 1.',
+    db_connector_type_mismatch: 'There is a connector in the DB that does not match the type.',
   },
   passcode: {
     phone_email_empty: 'Both phone and email are empty.',
