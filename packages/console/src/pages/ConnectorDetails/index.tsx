@@ -6,7 +6,6 @@ import { useNavigate, useParams } from 'react-router-dom';
 import useSWR from 'swr';
 
 import ActionMenu, { ActionMenuItem } from '@/components/ActionMenu';
-import BackLink from '@/components/BackLink';
 import Button from '@/components/Button';
 import Card from '@/components/Card';
 import CodeEditor from '@/components/CodeEditor';
@@ -17,6 +16,7 @@ import Status from '@/components/Status';
 import TabNav, { TabNavLink } from '@/components/TabNav';
 import UnnamedTrans from '@/components/UnnamedTrans';
 import useApi, { RequestError } from '@/hooks/use-api';
+import Back from '@/icons/Back';
 import Delete from '@/icons/Delete';
 import More from '@/icons/More';
 import Reset from '@/icons/Reset';
@@ -96,7 +96,14 @@ const ConnectorDetails = () => {
 
   return (
     <div className={styles.container}>
-      <BackLink to="/connectors">{t('connector_details.back_to_connectors')}</BackLink>
+      <Button
+        type="plain"
+        icon={<Back />}
+        title="admin_console.connector_details.back_to_connectors"
+        onClick={() => {
+          navigate('/connectors');
+        }}
+      />
       {isLoading && <div>loading</div>}
       {error && <div>{`error occurred: ${error.body.message}`}</div>}
       {data && (

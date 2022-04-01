@@ -25,6 +25,10 @@
     &:not(:last-child) {
       margin-right: _.unit(2);
     }
+
+    > svg {
+      vertical-align: middle;
+    }
   }
 
   &.small {

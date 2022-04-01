@@ -4,11 +4,10 @@ import { useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import Modal from 'react-modal';
-import { useLocation, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import useSWR from 'swr';
 
 import ActionMenu, { ActionMenuItem } from '@/components/ActionMenu';
-import BackLink from '@/components/BackLink';
 import Button from '@/components/Button';
 import Card from '@/components/Card';
 import CopyToClipboard from '@/components/CopyToClipboard';
@@ -18,6 +17,7 @@ import ImagePlaceholder from '@/components/ImagePlaceholder';
 import TabNav, { TabNavLink } from '@/components/TabNav';
 import TextInput from '@/components/TextInput';
 import useApi, { RequestError } from '@/hooks/use-api';
+import Back from '@/icons/Back';
 import Delete from '@/icons/Delete';
 import More from '@/icons/More';
 import * as modalStyles from '@/scss/modal.module.scss';
@@ -34,6 +34,7 @@ const ApiResourceDetails = () => {
   const location = useLocation();
   const { id } = useParams();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const navigate = useNavigate();
 
   const { data, error, mutate } = useSWR<Resource, RequestError>(id && `/api/resources/${id}`);
   const isLoading = !data && !error;
@@ -73,8 +74,14 @@ const ApiResourceDetails = () => {
 
   return (
     <div className={styles.container}>
-      <BackLink to="/api-resources">{t('api_resource_details.back_to_api_resources')}</BackLink>
-
+      <Button
+        type="plain"
+        icon={<Back />}
+        title="admin_console.api_resource_details.back_to_api_resources"
+        onClick={() => {
+          navigate('/api-resources');
+        }}
+      />
       {isLoading && <div>loading</div>}
       {error && <div>{`error occurred: ${error.body.message}`}</div>}
       {data && (
