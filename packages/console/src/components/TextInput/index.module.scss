@@ -59,5 +59,6 @@
 
   &.error {
     border-color: var(--color-error);
+    outline-color: var(--color-error-80);
   }
 }
