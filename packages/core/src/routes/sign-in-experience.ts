@@ -1,6 +1,6 @@
 import { SignInExperiences } from '@logto/schemas';
 
-import { getEnabledSocialConnectorIds } from '@/connectors';
+import { getConnectorInstances, getEnabledSocialConnectorIds } from '@/connectors';
 import {
   validateBranding,
   validateTermsOfUse,
@@ -57,7 +57,13 @@ export default function signInExperiencesRoutes<T extends AuthedRouter>(router: 
       }
 
       if (signInMethods) {
-        validateSignInMethods(signInMethods);
+        // TODO: LOG-2055 refactor connectors
+        const connectorInstances = await getConnectorInstances();
+        const enabledConnectorInstances = connectorInstances.filter(
+          (instance) => instance.connector.enabled
+        );
+
+        validateSignInMethods(signInMethods, enabledConnectorInstances);
       }
 
       // TODO: validate socialConnectorIds
