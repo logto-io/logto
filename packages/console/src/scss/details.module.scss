@@ -1,0 +1,19 @@
+@use '@/scss/underscore' as _;
+
+.container {
+  position: relative;
+
+  > *:not(:first-child) {
+    margin-top: _.unit(4);
+  }
+
+  .footer {
+    border-top: 1px solid var(--color-border);
+    margin-top: _.unit(6);
+    padding: _.unit(6) 0;
+    text-align: right;
+    position: sticky;
+    bottom: 0;
+    background: var(--color-on-primary);
+  }
+}

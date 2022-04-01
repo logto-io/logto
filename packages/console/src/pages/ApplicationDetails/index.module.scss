@@ -1,16 +1,26 @@
 @use '@/scss/underscore' as _;
 
-.container {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
+.body {
+  padding-bottom: 0;
 
-  > :not(:first-child) {
-    margin-top: _.unit(4);
+  > :first-child {
+    margin-top: 0;
+  }
+
+  .form {
+    margin-top: _.unit(8);
+  }
+
+  .fields {
+    padding-bottom: _.unit(10);
+  }
+
+  .textField {
+    @include _.form-text-field;
   }
 }
 
-.container .header {
+.header {
   flex: 0;
   display: flex;
   align-items: center;
@@ -67,51 +77,6 @@
 
     .copy {
       padding: _.unit(1) _.unit(4) _.unit(1) _.unit(2);
-    }
-  }
-}
-
-.container .body {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-
-  .form {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    overflow: auto;
-
-    > *:not(:first-child) {
-      margin-top: _.unit(6);
-    }
-
-    .fields {
-      flex: 1;
-      border-bottom: 1px solid var(--color-border);
-      padding: _.unit(6) 0;
-      overflow: auto;
-
-      > div {
-        @include _.form-text-field;
-      }
-
-      .textField {
-        @include _.form-text-field;
-      }
-
-      .listFields {
-        > *:not(:first-child) {
-          margin-top: _.unit(1);
-        }
-      }
-    }
-
-    .submit {
-      flex: 0;
-      text-align: right;
     }
   }
 }
