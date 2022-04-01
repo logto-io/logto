@@ -3,12 +3,12 @@
 td > div.loading {
   display: flex;
   background: none;
-  height: 50px;
+  height: 40px;
   border-radius: unset;
 
   .avatar {
-    width: 50px;
-    height: 50px;
+    width: 40px;
+    height: 40px;
     border-radius: _.unit(2);
     margin-right: _.unit(4);
     background: var(--color-neutral-95);
@@ -20,14 +20,15 @@ td > div.loading {
     .title {
       background: var(--color-neutral-95);
       border-radius: _.unit(2);
-      height: 16px;
-      margin: _.unit(2) 0;
+      height: 14px;
+      margin: _.unit(1) 0;
     }
 
     .subTitle {
       background: var(--color-neutral-95);
       border-radius: _.unit(2);
       height: 12px;
+      margin-top: _.unit(2);
     }
   }
 }

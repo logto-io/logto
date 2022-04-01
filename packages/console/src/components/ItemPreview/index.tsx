@@ -1,3 +1,4 @@
+import classNames from 'classnames';
 import React, { ReactNode } from 'react';
 import { Link, To } from 'react-router-dom';
 
@@ -8,13 +9,14 @@ type Props = {
   subtitle?: string;
   icon?: ReactNode;
   to?: To;
+  size?: 'default' | 'compact';
 };
 
-const ItemPreview = ({ title, subtitle, icon, to }: Props) => {
+const ItemPreview = ({ title, subtitle, icon, to, size = 'default' }: Props) => {
   return (
-    <div className={styles.item}>
+    <div className={classNames(styles.item, styles[size])}>
       {icon && <div className={styles.icon}>{icon}</div>}
-      <div>
+      <div className={styles.content}>
         {to && (
           <Link
             className={styles.title}

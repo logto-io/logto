@@ -23,4 +23,15 @@
     font: var(--font-body-small);
     color: var(--color-outline);
   }
+
+  &.compact {
+    .content {
+      display: flex;
+      align-items: baseline;
+
+      .title {
+        margin-right: _.unit(1);
+      }
+    }
+  }
 }

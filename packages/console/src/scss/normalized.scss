@@ -30,30 +30,27 @@ table {
     th {
       font: var(--font-subhead-2);
       color: var(--color-component-caption);
-      padding: _.unit(3) _.unit(4);
+      padding: _.unit(2);
       border-bottom: 1px solid var(--color-neutral-90);
       text-align: left;
 
       &:first-child,
       &:last-child {
-        padding: _.unit(3) _.unit(8);
+        padding: _.unit(2) _.unit(8);
       }
     }
   }
 
   tbody {
     td {
+      font: var(--font-body-medium);
       border-bottom: 1px solid var(--color-neutral-90);
-      padding: _.unit(5) _.unit(4);
+      padding: _.unit(3) _.unit(2);
 
       &:first-child,
       &:last-child {
-        padding: _.unit(5) _.unit(8);
+        padding: _.unit(3) _.unit(8);
       }
     }
-  }
-
-  tr:last-child td {
-    border-bottom: none;
   }
 }

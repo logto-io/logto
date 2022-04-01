@@ -107,7 +107,7 @@ const Users = () => {
             {users?.map(({ id, name, username }) => (
               <tr
                 key={id}
-                className={styles.clickable}
+                className={tableStyles.clickable}
                 onClick={() => {
                   navigate(`/users/${id}`);
                 }}
@@ -116,8 +116,9 @@ const Users = () => {
                   <ItemPreview
                     title={name ?? '-'}
                     subtitle={username ?? '-'}
-                    icon={<ImagePlaceholder />}
+                    icon={<ImagePlaceholder size={24} />}
                     to={`/users/${id}`}
+                    size="compact"
                   />
                 </td>
                 <td>Application</td>
