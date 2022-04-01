@@ -1,0 +1,50 @@
+@use '@/scss/underscore' as _;
+
+.card {
+  padding: _.unit(5) _.unit(6);
+  display: block;
+  flex-direction: column;
+  scroll-margin: _.unit(5);
+
+  .title {
+    font: var(--font-title-large);
+  }
+
+  .subtitle {
+    font: var(--font-body-medium);
+    color: var(--color-component-text);
+    margin-top: _.unit(3);
+  }
+
+  .radioGroup {
+    margin-top: _.unit(6);
+  }
+
+  .radio {
+    border-radius: _.unit(2);
+    width: 240px;
+    max-width: unset;
+  }
+
+  &.folded {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    flex: 0 0 56px;
+    background: var(--color-neutral-variant-90);
+    border-radius: _.unit(2);
+    padding: 0 _.unit(4);
+    font: var(--font-body-medium);
+    color: var(--color-component-text);
+
+    img {
+      margin-right: _.unit(3);
+    }
+  }
+
+  .buttonWrapper {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: _.unit(6);
+  }
+}
