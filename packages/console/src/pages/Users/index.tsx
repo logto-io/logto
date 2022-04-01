@@ -1,5 +1,6 @@
 import { User } from '@logto/schemas';
 import { conditionalString } from '@silverhand/essentials';
+import classNames from 'classnames';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Modal from 'react-modal';
@@ -18,6 +19,7 @@ import TableError from '@/components/Table/TableError';
 import TableLoading from '@/components/Table/TableLoading';
 import { RequestError } from '@/hooks/use-api';
 import * as modalStyles from '@/scss/modal.module.scss';
+import * as tableStyles from '@/scss/table.module.scss';
 
 import CreateForm from './components/CreateForm';
 import * as styles from './index.module.scss';
@@ -39,7 +41,7 @@ const Users = () => {
   const [users, totalCount] = data ?? [];
 
   return (
-    <Card>
+    <Card className={styles.card}>
       <div className={styles.headline}>
         <CardTitle title="users.title" subtitle="users.subtitle" />
         <Button
@@ -68,68 +70,72 @@ const Users = () => {
       <div className={styles.filter}>
         <Search defaultValue={keyword} onSearch={setKeyword} />
       </div>
-      <table className={styles.table}>
-        <colgroup>
-          <col className={styles.userName} />
-          <col />
-          <col />
-        </colgroup>
-        <thead>
-          <tr>
-            <th>{t('users.user_name')}</th>
-            <th>{t('users.application_name')}</th>
-            <th>{t('users.latest_sign_in')}</th>
-          </tr>
-        </thead>
-        <tbody>
-          {error && (
-            <TableError
-              columns={3}
-              content={error.body.message}
-              onRetry={async () => mutate(undefined, true)}
-            />
-          )}
-          {isLoading && <TableLoading columns={3} />}
-          {users?.length === 0 && (
-            <TableEmpty columns={3}>
-              <Button
-                title="admin_console.users.create"
-                type="outline"
-                onClick={() => {
-                  setIsCreateFormOpen(true);
-                }}
-              />
-            </TableEmpty>
-          )}
-          {users?.map(({ id, name, username }) => (
-            <tr
-              key={id}
-              className={styles.clickable}
-              onClick={() => {
-                navigate(`/users/${id}`);
-              }}
-            >
-              <td>
-                <ItemPreview
-                  title={name ?? '-'}
-                  subtitle={username ?? '-'}
-                  icon={<ImagePlaceholder />}
-                  to={`/users/${id}`}
-                />
-              </td>
-              <td>Application</td>
-              <td>Last sign in</td>
+      <div className={classNames(styles.table, tableStyles.scrollable)}>
+        <table>
+          <colgroup>
+            <col className={styles.userName} />
+            <col />
+            <col />
+          </colgroup>
+          <thead>
+            <tr>
+              <th>{t('users.user_name')}</th>
+              <th>{t('users.application_name')}</th>
+              <th>{t('users.latest_sign_in')}</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
-      {totalCount !== undefined && totalCount > 0 && (
-        <Pagination
-          pageCount={Math.ceil(totalCount / pageSize)}
-          pageIndex={pageIndex}
-          onChange={setPageIndex}
-        />
-      )}
+          </thead>
+          <tbody>
+            {error && (
+              <TableError
+                columns={3}
+                content={error.body.message}
+                onRetry={async () => mutate(undefined, true)}
+              />
+            )}
+            {isLoading && <TableLoading columns={3} />}
+            {users?.length === 0 && (
+              <TableEmpty columns={3}>
+                <Button
+                  title="admin_console.users.create"
+                  type="outline"
+                  onClick={() => {
+                    setIsCreateFormOpen(true);
+                  }}
+                />
+              </TableEmpty>
+            )}
+            {users?.map(({ id, name, username }) => (
+              <tr
+                key={id}
+                className={styles.clickable}
+                onClick={() => {
+                  navigate(`/users/${id}`);
+                }}
+              >
+                <td>
+                  <ItemPreview
+                    title={name ?? '-'}
+                    subtitle={username ?? '-'}
+                    icon={<ImagePlaceholder />}
+                    to={`/users/${id}`}
+                  />
+                </td>
+                <td>Application</td>
+                <td>Last sign in</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <div className={styles.pagination}>
+        {totalCount !== undefined && totalCount > 0 && (
+          <Pagination
+            pageCount={Math.ceil(totalCount / pageSize)}
+            pageIndex={pageIndex}
+            onChange={setPageIndex}
+          />
+        )}
+      </div>
     </Card>
   );
 };

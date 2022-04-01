@@ -1,5 +1,11 @@
 @use '@/scss/underscore' as _;
 
+.card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
 .headline {
   display: flex;
   justify-content: space-between;
@@ -10,19 +16,19 @@
 }
 
 .table {
-  margin-top: _.unit(4);
+  flex: 1;
 
-  tbody {
-    max-height: calc(100vh - _.unit(64));
+  tr.clickable {
+    cursor: pointer;
 
-    tr.clickable {
-      cursor: pointer;
-
-      &:hover {
-        background: var(--color-table-row-selected);
-      }
+    &:hover {
+      background: var(--color-table-row-selected);
     }
   }
+}
+
+.pagination {
+  min-height: 64px;
 }
 
 .userName {
