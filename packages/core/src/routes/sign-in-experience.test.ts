@@ -67,10 +67,11 @@ describe('signInExperiences routes', () => {
 
     expect(validateBranding).toHaveBeenCalledWith(mockBranding);
     expect(validateTermsOfUse).toHaveBeenCalledWith(termsOfUse);
-    expect(validateSignInMethods).toHaveBeenCalledWith(mockSignInMethods, [
-      mockFacebookConnectorInstance,
-      mockGithubConnectorInstance,
-    ]);
+    expect(validateSignInMethods).toHaveBeenCalledWith(
+      mockSignInMethods,
+      socialSignInConnectorIds,
+      [mockFacebookConnectorInstance, mockGithubConnectorInstance]
+    );
     // TODO: only update socialSignInConnectorIds when social sign-in is enabled.
 
     expect(response).toMatchObject({

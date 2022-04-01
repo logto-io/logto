@@ -5,6 +5,7 @@ import {
   SignInMethodState,
   TermsOfUse,
 } from '@logto/schemas';
+import { Optional } from '@silverhand/essentials';
 
 import { ConnectorInstance, ConnectorType } from '@/connectors/types';
 import assertThat from '@/utils/assert-that';
@@ -26,6 +27,7 @@ const isEnabled = (state: SignInMethodState) => state !== SignInMethodState.disa
 
 export const validateSignInMethods = (
   signInMethods: SignInMethods,
+  socialSignInConnectorIds: Optional<string[]>,
   enabledConnectorInstances: ConnectorInstance[]
 ) => {
   const signInMethodStates = Object.values(signInMethods);
@@ -56,7 +58,20 @@ export const validateSignInMethods = (
       'sign_in_experiences.enabled_connector_not_found',
       { type: ConnectorType.Social }
     );
-    // TODO: assertNonemptySocialConnectorIds
-    // TODO: assertEnabledSocialConnectorIds
+
+    assertThat(
+      socialSignInConnectorIds && socialSignInConnectorIds.length > 0,
+      'sign_in_experiences.empty_social_connectors'
+    );
+
+    const enabledSocialConnectorIds = new Set(
+      enabledConnectorInstances
+        .filter((instance) => instance.metadata.type === ConnectorType.Social)
+        .map((instance) => instance.connector.id)
+    );
+    assertThat(
+      socialSignInConnectorIds.every((id) => enabledSocialConnectorIds.has(id)),
+      'sign_in_experiences.invalid_social_connectors'
+    );
   }
 };

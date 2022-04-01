@@ -1,6 +1,6 @@
-import { BrandingStyle, SignInMethodState } from '@logto/schemas';
+import { BrandingStyle, SignInMethodState, ConnectorType } from '@logto/schemas';
 
-import { ConnectorType } from '@/connectors/types';
+import { ConnectorInstance } from '@/connectors/types';
 import RequestError from '@/errors/RequestError';
 import {
   validateBranding,
@@ -62,7 +62,11 @@ describe('validate sign-in methods', () => {
   describe('There must be one and only one primary sign-in method.', () => {
     test('should throw when there is no primary sign-in method', () => {
       expect(() => {
-        validateSignInMethods({ ...mockSignInMethods, username: SignInMethodState.disabled }, []);
+        validateSignInMethods(
+          { ...mockSignInMethods, username: SignInMethodState.disabled },
+          [],
+          []
+        );
       }).toMatchError(
         new RequestError('sign_in_experiences.not_one_and_only_one_primary_sign_in_method')
       );
@@ -70,7 +74,7 @@ describe('validate sign-in methods', () => {
 
     test('should throw when there are more than one primary sign-in methods', () => {
       expect(() => {
-        validateSignInMethods({ ...mockSignInMethods, social: SignInMethodState.primary }, []);
+        validateSignInMethods({ ...mockSignInMethods, social: SignInMethodState.primary }, [], []);
       }).toMatchError(
         new RequestError('sign_in_experiences.not_one_and_only_one_primary_sign_in_method')
       );
@@ -82,8 +86,8 @@ describe('validate sign-in methods', () => {
       expect(() => {
         validateSignInMethods(
           { ...mockSignInMethods, email: SignInMethodState.secondary },
-          // @ts-expect-error-this-line
-          enabledConnectorInstances
+          [],
+          enabledConnectorInstances as ConnectorInstance[]
         );
       }).toMatchError(
         new RequestError({
@@ -97,8 +101,8 @@ describe('validate sign-in methods', () => {
       expect(() => {
         validateSignInMethods(
           { ...mockSignInMethods, sms: SignInMethodState.secondary },
-          // @ts-expect-error-this-line
-          enabledConnectorInstances
+          [],
+          enabledConnectorInstances as ConnectorInstance[]
         );
       }).toMatchError(
         new RequestError({
@@ -110,16 +114,57 @@ describe('validate sign-in methods', () => {
 
     test('should throw when there is no enabled social connector and social sign-in method is enabled', () => {
       expect(() => {
-        validateSignInMethods({ ...mockSignInMethods, social: SignInMethodState.secondary }, [
-          // @ts-expect-error-this-line
+        validateSignInMethods({ ...mockSignInMethods, social: SignInMethodState.secondary }, [], [
           mockAliyunDmConnectorInstance,
-        ]);
+        ] as ConnectorInstance[]);
       }).toMatchError(
         new RequestError({
           code: 'sign_in_experiences.enabled_connector_not_found',
           type: ConnectorType.Social,
         })
       );
+    });
+  });
+
+  test('should throw when the social connector IDs are empty and social sign-in method is enabled', () => {
+    expect(() => {
+      validateSignInMethods(
+        { ...mockSignInMethods, social: SignInMethodState.secondary },
+        [],
+        enabledConnectorInstances as ConnectorInstance[]
+      );
+    }).toMatchError(new RequestError('sign_in_experiences.empty_social_connectors'));
+  });
+
+  describe('Selected social connectors must be enabled only when social sign-in method is enabled.', () => {
+    test('should not validate selected social connectors when social sign-in method is disabled', () => {
+      expect(() => {
+        validateSignInMethods(
+          { ...mockSignInMethods, social: SignInMethodState.disabled },
+          ['google', 'facebook'],
+          enabledConnectorInstances as ConnectorInstance[]
+        );
+      }).not.toThrow();
+    });
+
+    test('should throw when some selected social connector are disabled and social sign-in method is enabled', () => {
+      expect(() => {
+        validateSignInMethods(
+          { ...mockSignInMethods, social: SignInMethodState.secondary },
+          ['google', 'facebook'],
+          enabledConnectorInstances as ConnectorInstance[]
+        );
+      }).toMatchError(new RequestError('sign_in_experiences.invalid_social_connectors'));
+    });
+
+    test('should not throw when all selected social connectors are enabled and social sign-in method is enabled', () => {
+      expect(() => {
+        validateSignInMethods(
+          { ...mockSignInMethods, social: SignInMethodState.secondary },
+          ['facebook', 'github'],
+          enabledConnectorInstances as ConnectorInstance[]
+        );
+      }).not.toThrow();
     });
   });
 });
