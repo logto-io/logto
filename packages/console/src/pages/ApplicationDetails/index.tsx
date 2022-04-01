@@ -98,16 +98,27 @@ const ApplicationDetails = () => {
 
   const SettingsPage = oidcConfig && (
     <>
-      <FormField isRequired title="admin_console.application_details.application_name">
+      <FormField
+        isRequired
+        title="admin_console.application_details.application_name"
+        className={styles.textField}
+      >
         <TextInput {...register('name', { required: true })} />
       </FormField>
-      <FormField title="admin_console.application_details.description">
+      <FormField title="admin_console.application_details.description" className={styles.textField}>
         <TextInput {...register('description')} />
       </FormField>
-      <FormField title="admin_console.application_details.authorization_endpoint">
+      <FormField
+        title="admin_console.application_details.authorization_endpoint"
+        className={styles.textField}
+      >
         <CopyToClipboard className={styles.textField} value={oidcConfig.authorization_endpoint} />
       </FormField>
-      <FormField isRequired title="admin_console.application_details.redirect_uri">
+      <FormField
+        isRequired
+        title="admin_console.application_details.redirect_uri"
+        className={styles.textField}
+      >
         <Controller
           name="oidcClientMetadata.redirectUris"
           control={control}
@@ -130,7 +141,10 @@ const ApplicationDetails = () => {
           )}
         />
       </FormField>
-      <FormField title="admin_console.application_details.post_sign_out_redirect_uri">
+      <FormField
+        title="admin_console.application_details.post_sign_out_redirect_uri"
+        className={styles.textField}
+      >
         <Controller
           name="oidcClientMetadata.postLogoutRedirectUris"
           control={control}
