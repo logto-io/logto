@@ -46,7 +46,7 @@ export default function signInExperiencesRoutes<T extends AuthedRouter>(router: 
       body: SignInExperiences.createGuard.omit({ id: true }).partial(),
     }),
     async (ctx, next) => {
-      const { branding, termsOfUse, signInMethods } = ctx.guard.body;
+      const { branding, termsOfUse, signInMethods, socialSignInConnectorIds } = ctx.guard.body;
 
       if (branding) {
         validateBranding(branding);
@@ -63,10 +63,8 @@ export default function signInExperiencesRoutes<T extends AuthedRouter>(router: 
           (instance) => instance.connector.enabled
         );
 
-        validateSignInMethods(signInMethods, enabledConnectorInstances);
+        validateSignInMethods(signInMethods, socialSignInConnectorIds, enabledConnectorInstances);
       }
-
-      // TODO: validate socialConnectorIds
 
       // TODO: Only update socialSignInConnectorIds when social sign-in is enabled.
       ctx.body = await updateDefaultSignInExperience({
