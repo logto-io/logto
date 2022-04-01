@@ -21,6 +21,7 @@ import {
   ConnectorType,
   SignInMethodState,
   Branding,
+  SignInMethods,
 } from '@logto/schemas';
 import pick from 'lodash.pick';
 
@@ -381,5 +382,12 @@ export const mockBranding: Branding = {
   style: BrandingStyle.Logo_Slogan,
   logoUrl: 'http://silverhand.png',
   slogan: 'Silverhand.',
+};
+
+export const mockSignInMethods: SignInMethods = {
+  username: SignInMethodState.primary,
+  email: SignInMethodState.disabled,
+  sms: SignInMethodState.disabled,
+  social: SignInMethodState.disabled,
 };
 /* eslint-enable max-lines */

@@ -1,7 +1,7 @@
 import { SignInExperience, CreateSignInExperience, TermsOfUse } from '@logto/schemas';
 
 import * as signInExpLib from '@/lib/sign-in-experience';
-import { mockBranding, mockSignInExperience } from '@/utils/mock';
+import { mockBranding, mockSignInExperience, mockSignInMethods } from '@/utils/mock';
 import { createRequester } from '@/utils/test-utils';
 
 import signInExperiencesRoutes from './sign-in-experience';
@@ -38,15 +38,19 @@ describe('signInExperiences routes', () => {
 
     const validateBranding = jest.spyOn(signInExpLib, 'validateBranding');
     const validateTermsOfUse = jest.spyOn(signInExpLib, 'validateTermsOfUse');
+    const validateSignInMethods = jest.spyOn(signInExpLib, 'validateSignInMethods');
 
     const response = await signInExperienceRequester.patch('/sign-in-exp').send({
       branding: mockBranding,
       termsOfUse,
+      signInMethods: mockSignInMethods,
       socialSignInConnectorIds,
     });
 
     expect(validateBranding).toHaveBeenCalledWith(mockBranding);
     expect(validateTermsOfUse).toHaveBeenCalledWith(termsOfUse);
+    expect(validateSignInMethods).toHaveBeenCalledWith(mockSignInMethods);
+    // TODO: only update socialSignInConnectorIds when social sign-in is enabled.
 
     expect(response).toMatchObject({
       status: 200,
@@ -54,6 +58,7 @@ describe('signInExperiences routes', () => {
         ...mockSignInExperience,
         branding: mockBranding,
         termsOfUse,
+        signInMethods: mockSignInMethods,
         socialSignInConnectorIds,
       },
     });
