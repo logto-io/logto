@@ -8,6 +8,10 @@ node_modules
 # testing
 /packages/*/coverage
 
+# report
+/report.json
+/packages/*/report.json
+
 # production
 /packages/*/build
 /packages/*/lib

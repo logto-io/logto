@@ -14,6 +14,7 @@
     "check": "tsc --noEmit",
     "build": "pnpm check && rm -rf dist && pnpm copyfiles && parcel build src/index.html --no-autoinstall --public-url /console",
     "lint": "eslint --ext .ts --ext .tsx src",
+    "lint:report": "pnpm lint -- --format json --output-file report.json",
     "stylelint": "stylelint \"src/**/*.scss\""
   },
   "dependencies": {
