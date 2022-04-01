@@ -4,7 +4,6 @@ import en from './en';
 const translation = {
   general: {
     placeholder: '占位符',
-    add_another: '+ Add Another',
     skip: '跳过',
     next: '下一步',
     retry: '重试',
@@ -43,6 +42,7 @@ const translation = {
     },
     form: {
       required: '必填',
+      add_another: '+ Add Another',
     },
     errors: {
       something_went_wrong: '哎哟喂，遇到了一个错误',
@@ -133,6 +133,8 @@ const translation = {
       delete: 'Delete',
       application_deleted: 'The application {{name}} deleted.',
       save_success: 'Saved!',
+      redirect_uri_required: 'You have to enter at least one redirect URI.',
+      no_space_in_uri: 'Space is not allowed in URI',
     },
     api_resources: {
       title: 'API Resources',

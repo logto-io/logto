@@ -2,7 +2,6 @@
 const translation = {
   general: {
     placeholder: 'Placeholder',
-    add_another: '+ Add Another',
     skip: 'Skip',
     next: 'Next',
     retry: 'Try again',
@@ -41,6 +40,7 @@ const translation = {
     },
     form: {
       required: 'Required',
+      add_another: '+ Add Another',
     },
     errors: {
       something_went_wrong: 'Oops! Something went wrong',
@@ -133,6 +133,8 @@ const translation = {
       delete: 'Delete',
       application_deleted: 'The application {{name}} deleted.',
       save_success: 'Saved!',
+      redirect_uri_required: 'You have to enter at least one redirect URI.',
+      no_space_in_uri: 'Space is not allowed in URI',
     },
     api_resources: {
       title: 'API Resources',
