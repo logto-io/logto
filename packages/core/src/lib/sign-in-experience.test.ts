@@ -3,6 +3,7 @@ import { BrandingStyle, SignInMethodState, ConnectorType } from '@logto/schemas'
 import { ConnectorInstance } from '@/connectors/types';
 import RequestError from '@/errors/RequestError';
 import {
+  isEnabled,
   validateBranding,
   validateSignInMethods,
   validateTermsOfUse,
@@ -55,6 +56,20 @@ describe('validate terms of use', () => {
         enabled: true,
       });
     }).toMatchError(new RequestError('sign_in_experiences.empty_content_url_of_terms_of_use'));
+  });
+});
+
+describe('check whether the social sign in method state is enabled', () => {
+  it('should be truthy when sign-in method state is primary', () => {
+    expect(isEnabled(SignInMethodState.primary)).toBeTruthy();
+  });
+
+  it('should be truthy when sign-in method state is secondary', () => {
+    expect(isEnabled(SignInMethodState.secondary)).toBeTruthy();
+  });
+
+  it('should be falsy when sign-in method state is disabled', () => {
+    expect(isEnabled(SignInMethodState.disabled)).toBeFalsy();
   });
 });
 

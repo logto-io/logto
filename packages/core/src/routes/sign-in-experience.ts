@@ -5,6 +5,7 @@ import {
   validateBranding,
   validateTermsOfUse,
   validateSignInMethods,
+  isEnabled,
 } from '@/lib/sign-in-experience';
 import koaGuard from '@/middleware/koa-guard';
 import {
@@ -46,7 +47,8 @@ export default function signInExperiencesRoutes<T extends AuthedRouter>(router: 
       body: SignInExperiences.createGuard.omit({ id: true }).partial(),
     }),
     async (ctx, next) => {
-      const { branding, termsOfUse, signInMethods, socialSignInConnectorIds } = ctx.guard.body;
+      const { socialSignInConnectorIds, ...rest } = ctx.guard.body;
+      const { branding, termsOfUse, signInMethods } = rest;
 
       if (branding) {
         validateBranding(branding);
@@ -66,10 +68,11 @@ export default function signInExperiencesRoutes<T extends AuthedRouter>(router: 
         validateSignInMethods(signInMethods, socialSignInConnectorIds, enabledConnectorInstances);
       }
 
-      // TODO: Only update socialSignInConnectorIds when social sign-in is enabled.
-      ctx.body = await updateDefaultSignInExperience({
-        ...ctx.guard.body,
-      });
+      // Update socialSignInConnectorIds only when social sign-in is enabled.
+      const signInExperience =
+        signInMethods && isEnabled(signInMethods.social) ? ctx.guard.body : rest;
+
+      ctx.body = await updateDefaultSignInExperience(signInExperience);
 
       return next();
     }

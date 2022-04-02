@@ -23,7 +23,7 @@ export const validateTermsOfUse = (termsOfUse: TermsOfUse) => {
   );
 };
 
-const isEnabled = (state: SignInMethodState) => state !== SignInMethodState.disabled;
+export const isEnabled = (state: SignInMethodState) => state !== SignInMethodState.disabled;
 
 export const validateSignInMethods = (
   signInMethods: SignInMethods,
