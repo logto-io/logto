@@ -4,7 +4,7 @@ import classNames from 'classnames';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Modal from 'react-modal';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import useSWR from 'swr';
 
 import Button from '@/components/Button';
@@ -29,8 +29,9 @@ const pageSize = 20;
 const Users = () => {
   const [isCreateFormOpen, setIsCreateFormOpen] = useState(false);
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const [pageIndex, setPageIndex] = useState(1);
-  const [keyword, setKeyword] = useState<string>();
+  const [query, setQuery] = useSearchParams();
+  const pageIndex = Number(query.get('page') ?? '1');
+  const keyword = query.get('search') ?? '';
   const { data, error, mutate } = useSWR<[User[], number], RequestError>(
     `/api/users?page=${pageIndex}&page_size=${pageSize}${conditionalString(
       keyword && `&search=${keyword}`
@@ -68,7 +69,12 @@ const Users = () => {
         </Modal>
       </div>
       <div className={styles.filter}>
-        <Search defaultValue={keyword} onSearch={setKeyword} />
+        <Search
+          defaultValue={keyword}
+          onSearch={(value) => {
+            setQuery({ search: value });
+          }}
+        />
       </div>
       <div className={classNames(styles.table, tableStyles.scrollable)}>
         <table>
@@ -133,7 +139,9 @@ const Users = () => {
           <Pagination
             pageCount={Math.ceil(totalCount / pageSize)}
             pageIndex={pageIndex}
-            onChange={setPageIndex}
+            onChange={(page) => {
+              setQuery({ page: String(page) });
+            }}
           />
         )}
       </div>
