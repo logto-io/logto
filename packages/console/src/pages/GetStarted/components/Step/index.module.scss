@@ -1,0 +1,59 @@
+@use '@/scss/underscore' as _;
+
+.card {
+  padding: _.unit(5) _.unit(6);
+  display: flex;
+  flex-direction: column;
+  scroll-margin: _.unit(5);
+
+  .cardHeader {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    cursor: pointer;
+
+    > svg {
+      fill: var(--color-icon);
+    }
+
+    .index {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      color: var(--color-primary);
+      background: var(--color-surface-5);
+      font: var(--font-title-medium);
+      margin-right: _.unit(4);
+
+      &.active {
+        color: var(--color-on-primary);
+        background: var(--color-primary);
+      }
+
+      &.completed {
+        background: var(--color-primary);
+
+        > svg {
+          fill: var(--color-on-primary);
+        }
+      }
+    }
+  }
+
+  .buttonWrapper {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: _.unit(6);
+  }
+}
+
+.card + .card {
+  margin-top: _.unit(6);
+}
+
+.markdownContent {
+  margin-top: _.unit(6);
+}

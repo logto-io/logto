@@ -17,7 +17,6 @@ import Applications from './pages/Applications';
 import Callback from './pages/Callback';
 import ConnectorDetails from './pages/ConnectorDetails';
 import Connectors from './pages/Connectors';
-import GetStarted from './pages/GetStarted';
 import NotFound from './pages/NotFound';
 import UserDetails from './pages/UserDetails';
 import Users from './pages/Users';
@@ -44,7 +43,6 @@ const Main = () => {
         <Route path="callback" element={<Callback />} />
         <Route element={<AppContent theme="light" />}>
           <Route path="*" element={<NotFound />} />
-          <Route path="get-started" element={<GetStarted />} />
           <Route path="applications">
             <Route index element={<Applications />} />
             <Route path=":id">

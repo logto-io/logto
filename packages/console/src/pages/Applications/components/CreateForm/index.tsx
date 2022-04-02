@@ -11,10 +11,11 @@ import ModalLayout from '@/components/ModalLayout';
 import RadioGroup, { Radio } from '@/components/RadioGroup';
 import TextInput from '@/components/TextInput';
 import useApi, { RequestError } from '@/hooks/use-api';
+import GetStarted from '@/pages/GetStarted';
 import * as modalStyles from '@/scss/modal.module.scss';
-import { applicationTypeI18nKey } from '@/types/applications';
+import { applicationTypeI18nKey, SupportedJavascriptLibraries } from '@/types/applications';
 
-import GetStarted from '../GetStarted';
+import LibrarySelector from '../LibrarySelector';
 import TypeDescription from '../TypeDescription';
 import * as styles from './index.module.scss';
 
@@ -108,7 +109,15 @@ const CreateForm = ({ onClose }: Props) => {
       </form>
       {!isGetStartedSkipped && createdApp && (
         <Modal isOpen={isQuickStartGuideOpen} className={modalStyles.fullScreen}>
-          <GetStarted appName={createdApp.name} onClose={closeModal} />
+          <GetStarted
+            bannerComponent={<LibrarySelector />}
+            title={createdApp.name}
+            subtitle="applications.get_started.header_description"
+            type="application"
+            defaultSubtype={SupportedJavascriptLibraries.React}
+            onClose={closeModal}
+            onComplete={closeModal}
+          />
         </Modal>
       )}
     </ModalLayout>
