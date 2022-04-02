@@ -5,6 +5,7 @@ import ReactMarkdown from 'react-markdown';
 import Button from '@/components/Button';
 import Card from '@/components/Card';
 import CardTitle from '@/components/CardTitle';
+import CodeEditor from '@/components/CodeEditor';
 import DangerousRaw from '@/components/DangerousRaw';
 import IconButton from '@/components/IconButton';
 import Spacer from '@/components/Spacer';
@@ -65,7 +66,19 @@ const Step = (
       </div>
       {isExpanded && (
         <>
-          <ReactMarkdown className={styles.markdownContent}>{metadata}</ReactMarkdown>
+          <ReactMarkdown
+            className={styles.markdownContent}
+            components={{
+              code: ({ className, children }) => {
+                const [, language] = /language-(\w+)/.exec(className ?? '') ?? [];
+                const content = String(children);
+
+                return <CodeEditor isReadonly language={language} value={content} />;
+              },
+            }}
+          >
+            {metadata}
+          </ReactMarkdown>
           <div className={styles.buttonWrapper}>
             <Button
               type="primary"
