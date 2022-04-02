@@ -2,7 +2,7 @@
 
 .wrapper {
   position: relative;
-  padding: _.unit(8);
+  padding: _.unit(8) _.unit(5);
   @include _.flex-column;
 
   .header {

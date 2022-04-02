@@ -9,8 +9,7 @@ import classNames from 'classnames';
 import React, { useState, useCallback, useMemo, useEffect, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { sendEmailPasscode as sendRegisterEmailPasscode } from '@/apis/register';
-import { sendEmailPasscode as sendSignInEmailPasscode } from '@/apis/sign-in';
+import { getSendPasscodeApi } from '@/apis/utils';
 import Button from '@/components/Button';
 import { ErrorType } from '@/components/ErrorMessage';
 import Input from '@/components/Input';
@@ -47,7 +46,7 @@ const EmailPasswordless = ({ type }: Props) => {
   const [fieldErrors, setFieldErrors] = useState<ErrorState>({});
   const { setToast } = useContext(PageContext);
 
-  const sendPasscode = type === 'sign-in' ? sendSignInEmailPasscode : sendRegisterEmailPasscode;
+  const sendPasscode = getSendPasscodeApi(type, 'email');
 
   const { loading, error, result, run: asyncSendPasscode } = useApi(sendPasscode);
 

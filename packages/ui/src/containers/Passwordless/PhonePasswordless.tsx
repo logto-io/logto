@@ -9,8 +9,7 @@ import classNames from 'classnames';
 import React, { useState, useCallback, useMemo, useEffect, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { sendPhonePasscode as sendRegisterPhonePasscode } from '@/apis/register';
-import { sendPhonePasscode as sendSignInPhonePasscode } from '@/apis/sign-in';
+import { getSendPasscodeApi } from '@/apis/utils';
 import Button from '@/components/Button';
 import { ErrorType } from '@/components/ErrorMessage';
 import PhoneInput from '@/components/Input/PhoneInput';
@@ -48,7 +47,7 @@ const PhonePasswordless = ({ type }: Props) => {
 
   const { phoneNumber, setPhoneNumber, isValidPhoneNumber } = usePhoneNumber();
 
-  const sendPasscode = type === 'sign-in' ? sendSignInPhonePasscode : sendRegisterPhonePasscode;
+  const sendPasscode = getSendPasscodeApi(type, 'phone');
   const { loading, error, result, run: asyncSendPasscode } = useApi(sendPasscode);
 
   const validations = useMemo<FieldValidations>(
