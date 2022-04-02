@@ -148,7 +148,6 @@ describe('PATCH /sign-in-exp', () => {
       socialSignInConnectorIds,
       [mockFacebookConnectorInstance, mockGithubConnectorInstance]
     );
-    // TODO: only update socialSignInConnectorIds when social sign-in is enabled.
 
     expect(response).toMatchObject({
       status: 200,
@@ -161,15 +160,4 @@ describe('PATCH /sign-in-exp', () => {
       },
     });
   });
-
-  it('should throw when the type of social connector IDs is wrong', async () => {
-    const socialSignInConnectorIds = [123, 456];
-
-    const response = await signInExperienceRequester.patch('/sign-in-exp').send({
-      socialSignInConnectorIds,
-    });
-    expect(response.status).toEqual(400);
-  });
-
-  // TODO: test other Zod guards of sign-in experiences
 });
