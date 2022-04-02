@@ -28,7 +28,7 @@ const getTimeout = () => {
   return now;
 };
 
-const PasscodeController = ({ type, channel, className, target }: Props) => {
+const PasscodeValidation = ({ type, channel, className, target }: Props) => {
   const [code, setCode] = useState<string[]>([]);
   const [error, setError] = useState<ErrorType>();
   const { setToast } = useContext(PageContext);

@@ -56,7 +56,7 @@ const Passcode = () => {
       </div>
       <div className={styles.title}>{t('sign_in.enter_passcode')}</div>
       <div className={styles.detail}>{t('sign_in.passcode_sent', { target })}</div>
-      <PasscodeController type={type} channel={channel} target={target} />
+      <PasscodeValidation type={type} channel={channel} target={target} />
     </div>
   );
 };

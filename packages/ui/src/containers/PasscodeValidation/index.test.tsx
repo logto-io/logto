@@ -1,7 +1,7 @@
 import { render, act, fireEvent, waitFor } from '@testing-library/react';
 import React from 'react';
 
-import PasscodeController, { timeRange } from '.';
+import PasscodeValidation, { timeRange } from '.';
 
 jest.useFakeTimers();
 
@@ -13,7 +13,7 @@ jest.mock('@/apis/utils', () => ({
   getVerifyPasscodeApi: () => verifyPasscodeApi,
 }));
 
-describe('<PasscodeController />', () => {
+describe('<PasscodeValidation />', () => {
   const email = 'foo@logto.io';
 
   afterAll(() => {
@@ -22,7 +22,7 @@ describe('<PasscodeController />', () => {
 
   it('render counter', () => {
     const { queryByText } = render(
-      <PasscodeController type="sign-in" channel="email" target={email} />
+      <PasscodeValidation type="sign-in" channel="email" target={email} />
     );
 
     expect(queryByText(timeRange)).not.toBeNull();
@@ -36,7 +36,7 @@ describe('<PasscodeController />', () => {
 
   it('fire resend event', async () => {
     const { getByText } = render(
-      <PasscodeController type="sign-in" channel="email" target={email} />
+      <PasscodeValidation type="sign-in" channel="email" target={email} />
     );
     act(() => {
       jest.runAllTimers();
@@ -52,7 +52,7 @@ describe('<PasscodeController />', () => {
 
   it('fire validate passcode event', async () => {
     const { container } = render(
-      <PasscodeController type="sign-in" channel="email" target={email} />
+      <PasscodeValidation type="sign-in" channel="email" target={email} />
     );
     const inputs = container.querySelectorAll('input');
 
