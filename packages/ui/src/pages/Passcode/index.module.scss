@@ -18,5 +18,12 @@
 .title {
   width: 100%;
   @include _.title;
+  margin-bottom: _.unit(1);
+}
+
+.detail {
+  width: 100%;
   margin-bottom: _.unit(9);
+  font: var(--font-body);
+  color: var(--color-font-tertiary);
 }

@@ -8,6 +8,7 @@ import { LogtoErrorI18nKey } from '@logto/phrases';
 import classNames from 'classnames';
 import React, { useState, useCallback, useMemo, useEffect, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useHistory } from 'react-router-dom';
 
 import { getSendPasscodeApi } from '@/apis/utils';
 import Button from '@/components/Button';
@@ -44,6 +45,7 @@ const PhonePasswordless = ({ type }: Props) => {
   const [fieldState, setFieldState] = useState<FieldState>(defaultState);
   const [fieldErrors, setFieldErrors] = useState<ErrorState>({});
   const { setToast } = useContext(PageContext);
+  const history = useHistory();
 
   const { phoneNumber, setPhoneNumber, isValidPhoneNumber } = usePhoneNumber();
 
@@ -99,9 +101,13 @@ const PhonePasswordless = ({ type }: Props) => {
   }, [phoneNumber]);
 
   useEffect(() => {
-    // TODO: navigate to the passcode page
     console.log(result);
-  }, [result]);
+
+    if (result) {
+      // eslint-disable-next-line @silverhand/fp/no-mutating-methods
+      history.push(`/${type}/phone/passcode-validation`, { phone: fieldState.phone });
+    }
+  }, [fieldState.phone, history, result, type]);
 
   useEffect(() => {
     // Clear errors

@@ -9,7 +9,7 @@ export type Props = {
   className?: string;
   children?: ReactNode;
   text?: I18nKey;
-  href: string;
+  href?: string;
   type?: 'primary' | 'secondary';
   onClick?: React.MouseEventHandler<HTMLAnchorElement>;
 };

@@ -8,4 +8,18 @@
   > * {
     width: 100%;
   }
+
+  .field {
+    margin-bottom: _.unit(8);
+
+    &.withError {
+      margin-bottom: _.unit(2);
+    }
+  }
+
+  .message {
+    > span {
+      color: var(--color-primary);
+    }
+  }
 }
