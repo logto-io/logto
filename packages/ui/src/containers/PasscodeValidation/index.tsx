@@ -9,11 +9,12 @@ import Passcode, { defaultLength } from '@/components/Passcode';
 import TextLink from '@/components/TextLink';
 import PageContext from '@/hooks/page-context';
 import useApi from '@/hooks/use-api';
+import { UserFlow } from '@/types';
 
 import * as styles from './index.module.scss';
 
 type Props = {
-  type: 'sign-in' | 'register';
+  type: UserFlow;
   channel: 'email' | 'phone';
   target: string;
   className?: string;

@@ -1,6 +1,6 @@
 import { render } from '@testing-library/react';
 import React from 'react';
-import { Route, MemoryRouter } from 'react-router-dom';
+import { Routes, Route, MemoryRouter } from 'react-router-dom';
 
 import SecondarySignIn from '@/pages/SecondarySignIn';
 
@@ -20,9 +20,9 @@ describe('<SecondarySignIn />', () => {
   test('renders phone', async () => {
     const { queryByText, container } = render(
       <MemoryRouter initialEntries={['/sign-in/phone']}>
-        <Route path="/sign-in/:channel">
-          <SecondarySignIn />
-        </Route>
+        <Routes>
+          <Route path="/sign-in/:channel" element={<SecondarySignIn />} />
+        </Routes>
       </MemoryRouter>
     );
     expect(queryByText('sign_in.sign_in')).not.toBeNull();
@@ -32,9 +32,9 @@ describe('<SecondarySignIn />', () => {
   test('renders email', async () => {
     const { queryByText, container } = render(
       <MemoryRouter initialEntries={['/sign-in/email']}>
-        <Route path="/sign-in/:channel">
-          <SecondarySignIn />
-        </Route>
+        <Routes>
+          <Route path="/sign-in/:channel" element={<SecondarySignIn />} />
+        </Routes>
       </MemoryRouter>
     );
     expect(queryByText('sign_in.sign_in')).not.toBeNull();
