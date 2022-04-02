@@ -7,10 +7,10 @@ type Props = {
   channel: 'email' | 'phone';
 };
 
-const PasscodeController = ({ type, channel }: Props) => {
+const PasscodeValidation = ({ type, channel }: Props) => {
   console.log(type, channel);
 
   return <form className={styles.form}>{/* TODO */}</form>;
 };
 
-export default PasscodeController;
+export default PasscodeValidation;
