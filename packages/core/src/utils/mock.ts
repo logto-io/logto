@@ -192,42 +192,49 @@ export const mockSignInExperience: SignInExperience = {
 export const mockConnectorList: Connector[] = [
   {
     id: 'connector_0',
+    type: ConnectorType.Email,
     enabled: true,
     config: {},
     createdAt: 1_234_567_890_123,
   },
   {
     id: 'connector_1',
+    type: ConnectorType.SMS,
     enabled: true,
     config: {},
     createdAt: 1_234_567_890_234,
   },
   {
     id: 'connector_2',
+    type: ConnectorType.Social,
     enabled: true,
     config: {},
     createdAt: 1_234_567_890_345,
   },
   {
     id: 'connector_3',
+    type: ConnectorType.Social,
     enabled: true,
     config: {},
     createdAt: 1_234_567_890_456,
   },
   {
     id: 'connector_4',
+    type: ConnectorType.Social,
     enabled: true,
     config: {},
     createdAt: 1_234_567_890_567,
   },
   {
     id: 'connector_5',
+    type: ConnectorType.Social,
     enabled: true,
     config: {},
     createdAt: 1_234_567_890_567,
   },
   {
     id: 'connector_6',
+    type: ConnectorType.Social,
     enabled: true,
     config: {},
     createdAt: 1_234_567_890_567,
@@ -241,6 +248,7 @@ export const mockConnectorInstanceList: Array<{
   {
     connector: {
       id: 'connector_0',
+      type: ConnectorType.Social,
       enabled: true,
       config: {},
       createdAt: 1_234_567_890_123,
@@ -257,6 +265,7 @@ export const mockConnectorInstanceList: Array<{
   {
     connector: {
       id: 'connector_1',
+      type: ConnectorType.SMS,
       enabled: true,
       config: {},
       createdAt: 1_234_567_890_234,
@@ -273,6 +282,7 @@ export const mockConnectorInstanceList: Array<{
   {
     connector: {
       id: 'connector_2',
+      type: ConnectorType.Social,
       enabled: true,
       config: {},
       createdAt: 1_234_567_890_345,
@@ -289,6 +299,7 @@ export const mockConnectorInstanceList: Array<{
   {
     connector: {
       id: 'connector_3',
+      type: ConnectorType.Social,
       enabled: true,
       config: {},
       createdAt: 1_234_567_890_456,
@@ -305,6 +316,7 @@ export const mockConnectorInstanceList: Array<{
   {
     connector: {
       id: 'connector_4',
+      type: ConnectorType.Email,
       enabled: true,
       config: {},
       createdAt: 1_234_567_890_567,
@@ -321,6 +333,7 @@ export const mockConnectorInstanceList: Array<{
   {
     connector: {
       id: 'connector_5',
+      type: ConnectorType.SMS,
       enabled: true,
       config: {},
       createdAt: 1_234_567_890_567,
@@ -337,6 +350,7 @@ export const mockConnectorInstanceList: Array<{
   {
     connector: {
       id: 'connector_6',
+      type: ConnectorType.Email,
       enabled: true,
       config: {},
       createdAt: 1_234_567_890_567,

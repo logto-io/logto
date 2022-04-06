@@ -104,15 +104,11 @@ export const getConnectorInstanceByType = async <T extends ConnectorInstance>(
 
 export const initConnectors = async () => {
   const connectors = await findAllConnectors();
-  const existingConnectorIds = new Set(connectors.map((connector) => connector.id));
-
+  const existingConnectors = new Map(connectors.map((connector) => [connector.id, connector]));
+  const newConnectors = allConnectors.filter(
+    ({ metadata: { id, type } }) => existingConnectors.get(id)?.type !== type
+  );
   await Promise.all(
-    allConnectors.map(async ({ metadata: { id } }) => {
-      if (existingConnectorIds.has(id)) {
-        return;
-      }
-
-      await insertConnector({ id });
-    })
+    newConnectors.map(async ({ metadata: { id, type } }) => insertConnector({ id, type }))
   );
 };

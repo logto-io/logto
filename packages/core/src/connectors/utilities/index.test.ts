@@ -1,3 +1,5 @@
+import { ConnectorType } from '@logto/schemas';
+
 import { findConnectorById, updateConnector } from '@/queries/connector';
 
 import { getConnectorConfig, updateConnectorConfig } from '.';
@@ -7,6 +9,7 @@ jest.mock('@/queries/connector');
 it('getConnectorConfig()', async () => {
   (findConnectorById as jest.MockedFunction<typeof findConnectorById>).mockResolvedValueOnce({
     id: 'id',
+    type: ConnectorType.Social,
     enabled: true,
     config: { foo: 'bar' },
     createdAt: 0,

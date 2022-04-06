@@ -1,12 +1,7 @@
 import { Languages } from '@logto/phrases';
 
-import { Connector } from '../db-entries';
+import { Connector, ConnectorType } from '../db-entries';
 
-export enum ConnectorType {
-  SMS = 'SMS',
-  Email = 'Email',
-  Social = 'Social',
-}
 export interface ConnectorMetadata {
   id: string;
   type: ConnectorType;
