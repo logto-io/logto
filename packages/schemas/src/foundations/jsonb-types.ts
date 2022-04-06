@@ -27,13 +27,15 @@ export const oidcClientMetadataGuard = z.object({
 export type OidcClientMetadata = z.infer<typeof oidcClientMetadataGuard>;
 
 export enum CustomClientMetadataType {
-  idTokenTtl = 'idTokenTtl',
-  refreshTokenTtl = 'refreshTokenTtl',
+  CorsAllowedOrigins = 'corsAllowedOrigins',
+  IdTokenTtl = 'idTokenTtl',
+  RefreshTokenTtl = 'refreshTokenTtl',
 }
 
 export const customClientMetadataGuard = z.object({
-  [CustomClientMetadataType.idTokenTtl]: z.number().optional(),
-  [CustomClientMetadataType.refreshTokenTtl]: z.number().optional(),
+  [CustomClientMetadataType.CorsAllowedOrigins]: z.string().array().optional(),
+  [CustomClientMetadataType.IdTokenTtl]: z.number().optional(),
+  [CustomClientMetadataType.RefreshTokenTtl]: z.number().optional(),
 });
 
 export type CustomClientMetadata = z.infer<typeof customClientMetadataGuard>;
