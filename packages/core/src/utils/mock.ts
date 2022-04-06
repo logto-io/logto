@@ -23,6 +23,7 @@ import {
   Branding,
   SignInMethods,
   TermsOfUse,
+  LanguageInfo,
 } from '@logto/schemas';
 import pick from 'lodash.pick';
 
@@ -402,6 +403,12 @@ export const mockBranding: Branding = {
 export const mockTermsOfUse: TermsOfUse = {
   enabled: true,
   contentUrl: 'http://silverhand.com/terms',
+};
+
+export const mockLanguageInfo: LanguageInfo = {
+  autoDetect: true,
+  fallbackLanguage: Language.english,
+  fixedLanguage: Language.chinese,
 };
 
 export const mockSignInMethods: SignInMethods = {

@@ -1,6 +1,6 @@
-import { BrandingStyle, CreateSignInExperience, SignInExperience } from '@logto/schemas';
+import { BrandingStyle, CreateSignInExperience, Language, SignInExperience } from '@logto/schemas';
 
-import { mockBranding, mockSignInExperience, mockTermsOfUse } from '@/utils/mock';
+import { mockBranding, mockLanguageInfo, mockSignInExperience, mockTermsOfUse } from '@/utils/mock';
 import { createRequester } from '@/utils/test-utils';
 
 import signInExperiencesRoutes from './sign-in-experience';
@@ -20,6 +20,9 @@ const expectPatchResponseStatus = async (signInExperience: any, status: number) 
   const response = await signInExperienceRequester.patch('/sign-in-exp').send(signInExperience);
   expect(response.status).toEqual(status);
 };
+
+const validBooleans = [true, false];
+const invalidBooleans = [undefined, null, 0, 1, '0', '1', 'true', 'false'];
 
 describe('branding', () => {
   const colorKeys = ['primaryColor', 'backgroundColor', 'darkPrimaryColor', 'darkBackgroundColor'];
@@ -126,18 +129,15 @@ describe('branding', () => {
 
 describe('terms of use', () => {
   describe('enabled', () => {
-    test.each([true, false])('%p should success', async (enabled) => {
+    test.each(validBooleans)('%p should success', async (enabled) => {
       const signInExperience = { termsOfUse: { ...mockTermsOfUse, enabled } };
       await expectPatchResponseStatus(signInExperience, 200);
     });
 
-    test.each([undefined, null, 0, 1, '0', '1', 'true', 'false'])(
-      '%p should fail',
-      async (enabled) => {
-        const signInExperience = { termsOfUse: { ...mockTermsOfUse, enabled } };
-        await expectPatchResponseStatus(signInExperience, 400);
-      }
-    );
+    test.each(invalidBooleans)('%p should fail', async (enabled) => {
+      const signInExperience = { termsOfUse: { ...mockTermsOfUse, enabled } };
+      await expectPatchResponseStatus(signInExperience, 400);
+    });
   });
 
   describe('contentUrl', () => {
@@ -149,8 +149,49 @@ describe('terms of use', () => {
       }
     );
 
-    test.each([null, '', ' \b \t\n\r', 'non-url'])('%p should fail', async (contentUrl) => {
+    test.each([null, '', ' \t\n\r', 'non-url'])('%p should fail', async (contentUrl) => {
       const signInExperience = { termsOfUse: { ...mockTermsOfUse, enabled: false, contentUrl } };
+      await expectPatchResponseStatus(signInExperience, 400);
+    });
+  });
+});
+
+describe('languageInfo', () => {
+  describe('autoDetect', () => {
+    test.each(validBooleans)('%p should success', async (autoDetect) => {
+      const signInExperience = { languageInfo: { ...mockLanguageInfo, autoDetect } };
+      await expectPatchResponseStatus(signInExperience, 200);
+    });
+
+    test.each(invalidBooleans)('%p should fail', async (autoDetect) => {
+      const signInExperience = { languageInfo: { ...mockLanguageInfo, autoDetect } };
+      await expectPatchResponseStatus(signInExperience, 400);
+    });
+  });
+
+  const validLanguages = Object.values(Language);
+  const invalidLanguages = [undefined, null, '', ' \t\n\r', 'abc'];
+
+  describe('fallbackLanguage', () => {
+    test.each(validLanguages)('%p should success', async (fallbackLanguage) => {
+      const signInExperience = { languageInfo: { ...mockLanguageInfo, fallbackLanguage } };
+      await expectPatchResponseStatus(signInExperience, 200);
+    });
+
+    test.each(invalidLanguages)('%p should fail', async (fallbackLanguage) => {
+      const signInExperience = { languageInfo: { ...mockLanguageInfo, fallbackLanguage } };
+      await expectPatchResponseStatus(signInExperience, 400);
+    });
+  });
+
+  describe('fixedLanguage', () => {
+    test.each(validLanguages)('%p should success', async (fixedLanguage) => {
+      const signInExperience = { languageInfo: { ...mockLanguageInfo, fixedLanguage } };
+      await expectPatchResponseStatus(signInExperience, 200);
+    });
+
+    test.each(invalidLanguages)('%p should fail', async (fixedLanguage) => {
+      const signInExperience = { languageInfo: { ...mockLanguageInfo, fixedLanguage } };
       await expectPatchResponseStatus(signInExperience, 400);
     });
   });
