@@ -26,6 +26,7 @@ describe('branding', () => {
 
   const invalidColors = [
     undefined,
+    null,
     '',
     '#',
     '#1',
@@ -82,7 +83,7 @@ describe('branding', () => {
       }
     );
 
-    test.each([undefined, '', 'invalid'])('%p should fail', async (logoUrl) => {
+    test.each([undefined, null, '', 'invalid'])('%p should fail', async (logoUrl) => {
       const signInExperience = { branding: { ...mockBranding, logoUrl } };
       await expectPatchResponseStatus(signInExperience, 400);
     });
@@ -103,12 +104,12 @@ describe('branding', () => {
       }
     );
 
-    it('should fail when it is empty string', async () => {
+    test.each([null, ''])('%p should fail', async (slogan) => {
       const signInExperience = {
         branding: {
           ...mockBranding,
           style: BrandingStyle.Logo,
-          slogan: '',
+          slogan,
         },
       };
       await expectPatchResponseStatus(signInExperience, 400);
