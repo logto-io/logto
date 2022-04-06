@@ -36,6 +36,9 @@ const CodeEditor = ({ value, onChange, language, height = '300px', isReadonly = 
       enabled: false,
     },
     folding: false,
+    scrollbar: {
+      alwaysConsumeMouseWheel: false,
+    },
   };
 
   return (
