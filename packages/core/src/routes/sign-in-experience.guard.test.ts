@@ -1,6 +1,6 @@
 import { BrandingStyle, CreateSignInExperience, SignInExperience } from '@logto/schemas';
 
-import { mockBranding, mockSignInExperience } from '@/utils/mock';
+import { mockBranding, mockSignInExperience, mockTermsOfUse } from '@/utils/mock';
 import { createRequester } from '@/utils/test-utils';
 
 import signInExperiencesRoutes from './sign-in-experience';
@@ -120,6 +120,38 @@ describe('branding', () => {
       .patch('/sign-in-exp')
       .send({ branding: mockBranding });
     await expect(response).resolves.toMatchObject({ status: 200 });
+  });
+});
+
+describe('terms of use', () => {
+  describe('enabled', () => {
+    test.each([true, false])('%p should success', async (enabled) => {
+      const signInExperience = { termsOfUse: { ...mockTermsOfUse, enabled } };
+      await expectPatchResponseStatus(signInExperience, 200);
+    });
+
+    test.each([undefined, null, 0, 1, '0', '1', 'true', 'false'])(
+      '%p should fail',
+      async (enabled) => {
+        const signInExperience = { termsOfUse: { ...mockTermsOfUse, enabled } };
+        await expectPatchResponseStatus(signInExperience, 400);
+      }
+    );
+  });
+
+  describe('contentUrl', () => {
+    test.each([undefined, 'http://silverhand.com/terms', 'https://logto.dev/terms'])(
+      '%p should success',
+      async (contentUrl) => {
+        const signInExperience = { termsOfUse: { ...mockTermsOfUse, enabled: false, contentUrl } };
+        await expectPatchResponseStatus(signInExperience, 200);
+      }
+    );
+
+    test.each([null, '', ' \b \t\n\r', 'non-url'])('%p should fail', async (contentUrl) => {
+      const signInExperience = { termsOfUse: { ...mockTermsOfUse, enabled: false, contentUrl } };
+      await expectPatchResponseStatus(signInExperience, 400);
+    });
   });
 });
 

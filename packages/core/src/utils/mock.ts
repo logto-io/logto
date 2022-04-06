@@ -22,6 +22,7 @@ import {
   SignInMethodState,
   Branding,
   SignInMethods,
+  TermsOfUse,
 } from '@logto/schemas';
 import pick from 'lodash.pick';
 
@@ -396,6 +397,11 @@ export const mockBranding: Branding = {
   style: BrandingStyle.Logo_Slogan,
   logoUrl: 'http://silverhand.png',
   slogan: 'Silverhand.',
+};
+
+export const mockTermsOfUse: TermsOfUse = {
+  enabled: true,
+  contentUrl: 'http://silverhand.com/terms',
 };
 
 export const mockSignInMethods: SignInMethods = {
