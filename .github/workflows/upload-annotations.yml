@@ -1,0 +1,34 @@
+name: Upload Annotations
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+jobs:
+  upload-annotations:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup Node and pnpm
+        uses: logto-io/actions-node-pnpm-run-steps@v1.0.2
+
+      - name: Prepack
+        run: pnpm prepack
+
+      - name: Lint with Report
+        run: pnpm -- lerna run --parallel lint:report && node merge-eslint-reports.js
+
+      - name: Annotate Code Linting Results
+        uses: ataylorme/eslint-annotate-action@1.2.0
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload ESLint report
+        uses: actions/upload-artifact@v2
+        with:
+          name: eslint_report.json
+          path: eslint_report.json
