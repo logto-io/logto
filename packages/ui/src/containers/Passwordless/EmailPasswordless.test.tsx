@@ -1,5 +1,6 @@
 import { fireEvent, render, waitFor } from '@testing-library/react';
 import React from 'react';
+import { MemoryRouter } from 'react-router-dom';
 
 import { sendEmailPasscode as sendRegisterEmailPasscode } from '@/apis/register';
 import { sendEmailPasscode as sendSignInEmailPasscode } from '@/apis/sign-in';
@@ -11,14 +12,22 @@ jest.mock('@/apis/register', () => ({ sendEmailPasscode: jest.fn(async () => Pro
 
 describe('<EmailPasswordless/>', () => {
   test('render', () => {
-    const { queryByText, container } = render(<EmailPasswordless type="sign-in" />);
+    const { queryByText, container } = render(
+      <MemoryRouter>
+        <EmailPasswordless type="sign-in" />
+      </MemoryRouter>
+    );
     expect(container.querySelector('input[name="email"]')).not.toBeNull();
     expect(queryByText('general.continue')).not.toBeNull();
     expect(queryByText('sign_in.terms_of_use')).not.toBeNull();
   });
 
   test('required email with error message', () => {
-    const { queryByText, container, getByText } = render(<EmailPasswordless type="sign-in" />);
+    const { queryByText, container, getByText } = render(
+      <MemoryRouter>
+        <EmailPasswordless type="sign-in" />
+      </MemoryRouter>
+    );
     const submitButton = getByText('general.continue');
 
     fireEvent.click(submitButton);
@@ -37,7 +46,11 @@ describe('<EmailPasswordless/>', () => {
   });
 
   test('required terms of agreement with error message', () => {
-    const { queryByText, container, getByText } = render(<EmailPasswordless type="sign-in" />);
+    const { queryByText, container, getByText } = render(
+      <MemoryRouter>
+        <EmailPasswordless type="sign-in" />
+      </MemoryRouter>
+    );
     const submitButton = getByText('general.continue');
     const emailInput = container.querySelector('input[name="email"]');
 
@@ -50,7 +63,11 @@ describe('<EmailPasswordless/>', () => {
   });
 
   test('signin method properly', async () => {
-    const { container, getByText } = render(<EmailPasswordless type="sign-in" />);
+    const { container, getByText } = render(
+      <MemoryRouter>
+        <EmailPasswordless type="sign-in" />
+      </MemoryRouter>
+    );
     const emailInput = container.querySelector('input[name="email"]');
 
     if (emailInput) {
@@ -69,7 +86,11 @@ describe('<EmailPasswordless/>', () => {
   });
 
   test('register method properly', async () => {
-    const { container, getByText } = render(<EmailPasswordless type="register" />);
+    const { container, getByText } = render(
+      <MemoryRouter>
+        <EmailPasswordless type="register" />
+      </MemoryRouter>
+    );
     const emailInput = container.querySelector('input[name="email"]');
 
     if (emailInput) {

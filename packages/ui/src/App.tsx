@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, Switch, BrowserRouter } from 'react-router-dom';
+import { Route, Routes, BrowserRouter } from 'react-router-dom';
 
 import AppContent from './components/AppContent';
 import useTheme from './hooks/use-theme';
@@ -19,14 +19,15 @@ const App = () => {
   return (
     <AppContent theme={theme}>
       <BrowserRouter>
-        <Switch>
-          <Route exact path="/sign-in" component={SignIn} />
-          <Route exact path="/sign-in/consent" component={Consent} />
-          <Route exact path="/sign-in/:channel" component={SecondarySignIn} />
-          <Route exact path="/register" component={Register} />
-          <Route exact path="/register/:channel" component={Register} />
-          <Route exact path="/:type/:channel/passcode-validation" component={Passcode} />
-        </Switch>
+        <Routes>
+          {/* always keep route path with param as the last one */}
+          <Route path="/sign-in" element={<SignIn />} />
+          <Route path="/sign-in/consent" element={<Consent />} />
+          <Route path="/sign-in/:channel" element={<SecondarySignIn />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/register/:channel" element={<Register />} />
+          <Route path="/:type/:channel/passcode-validation" element={<Passcode />} />
+        </Routes>
       </BrowserRouter>
     </AppContent>
   );

@@ -8,7 +8,7 @@ import { LogtoErrorI18nKey } from '@logto/phrases';
 import classNames from 'classnames';
 import React, { useState, useCallback, useMemo, useEffect, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import { getSendPasscodeApi } from '@/apis/utils';
 import Button from '@/components/Button';
@@ -17,11 +17,12 @@ import Input from '@/components/Input';
 import TermsOfUse from '@/components/TermsOfUse';
 import PageContext from '@/hooks/page-context';
 import useApi from '@/hooks/use-api';
+import { UserFlow } from '@/types';
 
 import * as styles from './index.module.scss';
 
 type Props = {
-  type: 'sign-in' | 'register';
+  type: UserFlow;
 };
 
 type FieldState = {
@@ -46,7 +47,7 @@ const EmailPasswordless = ({ type }: Props) => {
   const [fieldState, setFieldState] = useState<FieldState>(defaultState);
   const [fieldErrors, setFieldErrors] = useState<ErrorState>({});
   const { setToast } = useContext(PageContext);
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const sendPasscode = getSendPasscodeApi(type, 'email');
 
@@ -97,10 +98,9 @@ const EmailPasswordless = ({ type }: Props) => {
     console.log(result);
 
     if (result) {
-      // eslint-disable-next-line @silverhand/fp/no-mutating-methods
-      history.push(`/${type}/email/passcode-validation`, { email: fieldState.email });
+      navigate(`/${type}/email/passcode-validation`, { state: { email: fieldState.email } });
     }
-  }, [fieldState.email, history, result, type]);
+  }, [fieldState.email, navigate, result, type]);
 
   useEffect(() => {
     // Clear errors

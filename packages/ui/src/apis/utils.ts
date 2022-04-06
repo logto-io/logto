@@ -1,3 +1,5 @@
+import { UserFlow } from '@/types';
+
 import {
   verifyEmailPasscode as verifyRegisterEmailPasscode,
   verifyPhonePasscode as verifyRegisterPhonePasscode,
@@ -11,10 +13,9 @@ import {
   sendPhonePasscode as sendSignInPhonePasscode,
 } from './sign-in';
 
-export type PasscodeType = 'sign-in' | 'register';
 export type PasscodeChannel = 'phone' | 'email';
 
-export const getSendPasscodeApi = (type: PasscodeType, channel: PasscodeChannel) => {
+export const getSendPasscodeApi = (type: UserFlow, channel: PasscodeChannel) => {
   if (type === 'sign-in' && channel === 'email') {
     return sendSignInEmailPasscode;
   }
@@ -30,7 +31,7 @@ export const getSendPasscodeApi = (type: PasscodeType, channel: PasscodeChannel)
   return sendRegisterPhonePasscode;
 };
 
-export const getVerifyPasscodeApi = (type: PasscodeType, channel: PasscodeChannel) => {
+export const getVerifyPasscodeApi = (type: UserFlow, channel: PasscodeChannel) => {
   if (type === 'sign-in' && channel === 'email') {
     return verifySignInEmailPasscode;
   }

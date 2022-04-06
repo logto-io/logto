@@ -1,6 +1,6 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useHistory, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import NavArrowIcon from '@/components/Icons/NavArrowIcon';
 import { PhonePasswordless, EmailPasswordless } from '@/containers/Passwordless';
@@ -9,13 +9,19 @@ import UsernameSignin from '@/containers/UsernameSignin';
 import * as styles from './index.module.scss';
 
 type Props = {
-  channel?: 'phone' | 'email' | 'username';
+  channel?: string;
 };
 
 const SecondarySignIn = () => {
   const { t } = useTranslation();
-  const history = useHistory();
-  const { channel } = useParams<Props>();
+  const navigate = useNavigate();
+  const { channel = 'username' } = useParams<Props>();
+
+  useEffect(() => {
+    if (channel !== 'email' && channel !== 'phone' && channel !== 'username') {
+      navigate('/404', { replace: true });
+    }
+  }, [channel, navigate]);
 
   const signInForm = useMemo(() => {
     if (channel === 'phone') {
@@ -34,7 +40,7 @@ const SecondarySignIn = () => {
       <div className={styles.navBar}>
         <NavArrowIcon
           onClick={() => {
-            history.goBack();
+            navigate(-1);
           }}
         />
       </div>

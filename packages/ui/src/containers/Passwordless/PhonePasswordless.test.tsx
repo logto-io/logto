@@ -1,5 +1,6 @@
 import { fireEvent, render, waitFor } from '@testing-library/react';
 import React from 'react';
+import { MemoryRouter } from 'react-router-dom';
 
 import { sendPhonePasscode as sendRegisterPhonePasscode } from '@/apis/register';
 import { sendPhonePasscode as sendSignInPhonePasscode } from '@/apis/sign-in';
@@ -14,14 +15,22 @@ describe('<PhonePasswordless/>', () => {
   const phoneNumber = '18888888888';
 
   test('render', () => {
-    const { queryByText, container } = render(<PhonePasswordless type="sign-in" />);
+    const { queryByText, container } = render(
+      <MemoryRouter>
+        <PhonePasswordless type="sign-in" />
+      </MemoryRouter>
+    );
     expect(container.querySelector('input[name="phone"]')).not.toBeNull();
     expect(queryByText('general.continue')).not.toBeNull();
     expect(queryByText('sign_in.terms_of_use')).not.toBeNull();
   });
 
   test('required phone with error message', () => {
-    const { queryByText, container, getByText } = render(<PhonePasswordless type="sign-in" />);
+    const { queryByText, container, getByText } = render(
+      <MemoryRouter>
+        <PhonePasswordless type="sign-in" />
+      </MemoryRouter>
+    );
     const submitButton = getByText('general.continue');
 
     fireEvent.click(submitButton);
@@ -40,7 +49,11 @@ describe('<PhonePasswordless/>', () => {
   });
 
   test('required terms of agreement with error message', () => {
-    const { queryByText, container, getByText } = render(<PhonePasswordless type="sign-in" />);
+    const { queryByText, container, getByText } = render(
+      <MemoryRouter>
+        <PhonePasswordless type="sign-in" />
+      </MemoryRouter>
+    );
     const submitButton = getByText('general.continue');
     const phoneInput = container.querySelector('input[name="phone"]');
 
@@ -53,7 +66,11 @@ describe('<PhonePasswordless/>', () => {
   });
 
   test('signin method properly', async () => {
-    const { container, getByText } = render(<PhonePasswordless type="sign-in" />);
+    const { container, getByText } = render(
+      <MemoryRouter>
+        <PhonePasswordless type="sign-in" />
+      </MemoryRouter>
+    );
     const phoneInput = container.querySelector('input[name="phone"]');
 
     if (phoneInput) {
@@ -72,7 +89,11 @@ describe('<PhonePasswordless/>', () => {
   });
 
   test('register method properly', async () => {
-    const { container, getByText } = render(<PhonePasswordless type="register" />);
+    const { container, getByText } = render(
+      <MemoryRouter>
+        <PhonePasswordless type="register" />
+      </MemoryRouter>
+    );
     const phoneInput = container.querySelector('input[name="phone"]');
 
     if (phoneInput) {

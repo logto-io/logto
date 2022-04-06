@@ -1,6 +1,6 @@
 import { render } from '@testing-library/react';
 import React from 'react';
-import { Route, MemoryRouter } from 'react-router-dom';
+import { Routes, Route, MemoryRouter } from 'react-router-dom';
 
 import Register from '@/pages/Register';
 
@@ -20,9 +20,9 @@ describe('<Register />', () => {
   test('renders phone', async () => {
     const { queryByText, container } = render(
       <MemoryRouter initialEntries={['/register/phone']}>
-        <Route path="/register/:channel">
-          <Register />
-        </Route>
+        <Routes>
+          <Route path="/register/:channel" element={<Register />} />
+        </Routes>
       </MemoryRouter>
     );
     expect(queryByText('register.create_account')).not.toBeNull();
@@ -32,9 +32,9 @@ describe('<Register />', () => {
   test('renders email', async () => {
     const { queryByText, container } = render(
       <MemoryRouter initialEntries={['/register/email']}>
-        <Route path="/register/:channel">
-          <Register />
-        </Route>
+        <Routes>
+          <Route path="/register/:channel" element={<Register />} />
+        </Routes>
       </MemoryRouter>
     );
     expect(queryByText('register.create_account')).not.toBeNull();
