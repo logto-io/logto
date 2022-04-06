@@ -52,7 +52,7 @@ describe('<CreateAccount/>', () => {
   });
 
   test('username with special character should throw', () => {
-    const { queryByText, getByText, container, debug } = render(<CreateAccount />);
+    const { queryByText, getByText, container } = render(<CreateAccount />);
     const submitButton = getByText('action.create');
     const usernameInput = container.querySelector('input[name="username"]');
 
@@ -61,8 +61,6 @@ describe('<CreateAccount/>', () => {
     }
 
     fireEvent.click(submitButton);
-
-    debug();
 
     expect(queryByText('username_valid_charset')).not.toBeNull();
 
