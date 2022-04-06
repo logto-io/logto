@@ -21,8 +21,8 @@ describe('<PhonePasswordless/>', () => {
       </MemoryRouter>
     );
     expect(container.querySelector('input[name="phone"]')).not.toBeNull();
-    expect(queryByText('general.continue')).not.toBeNull();
-    expect(queryByText('sign_in.terms_of_use')).not.toBeNull();
+    expect(queryByText('action.continue')).not.toBeNull();
+    expect(queryByText('description.terms_of_use')).not.toBeNull();
   });
 
   test('required phone with error message', () => {
@@ -31,20 +31,20 @@ describe('<PhonePasswordless/>', () => {
         <PhonePasswordless type="sign-in" />
       </MemoryRouter>
     );
-    const submitButton = getByText('general.continue');
+    const submitButton = getByText('action.continue');
 
     fireEvent.click(submitButton);
-    expect(queryByText('errors:user.invalid_phone')).not.toBeNull();
+    expect(queryByText('invalid_phone')).not.toBeNull();
     expect(sendSignInPhonePasscode).not.toBeCalled();
 
     const phoneInput = container.querySelector('input[name="phone"]');
 
     if (phoneInput) {
       fireEvent.change(phoneInput, { target: { value: '1113' } });
-      expect(queryByText('errors:user.invalid_phone')).not.toBeNull();
+      expect(queryByText('invalid_phone')).not.toBeNull();
 
       fireEvent.change(phoneInput, { target: { value: phoneNumber } });
-      expect(queryByText('errors:user.invalid_phone')).toBeNull();
+      expect(queryByText('invalid_phone')).toBeNull();
     }
   });
 
@@ -54,7 +54,7 @@ describe('<PhonePasswordless/>', () => {
         <PhonePasswordless type="sign-in" />
       </MemoryRouter>
     );
-    const submitButton = getByText('general.continue');
+    const submitButton = getByText('action.continue');
     const phoneInput = container.querySelector('input[name="phone"]');
 
     if (phoneInput) {
@@ -62,7 +62,7 @@ describe('<PhonePasswordless/>', () => {
     }
 
     fireEvent.click(submitButton);
-    expect(queryByText('errors:form.terms_required')).not.toBeNull();
+    expect(queryByText('agree_terms_required')).not.toBeNull();
   });
 
   test('signin method properly', async () => {
@@ -76,10 +76,10 @@ describe('<PhonePasswordless/>', () => {
     if (phoneInput) {
       fireEvent.change(phoneInput, { target: { value: phoneNumber } });
     }
-    const termsButton = getByText('sign_in.terms_agreement_prefix');
+    const termsButton = getByText('description.agree_with_terms');
     fireEvent.click(termsButton);
 
-    const submitButton = getByText('general.continue');
+    const submitButton = getByText('action.continue');
 
     await waitFor(() => {
       fireEvent.click(submitButton);
@@ -99,10 +99,10 @@ describe('<PhonePasswordless/>', () => {
     if (phoneInput) {
       fireEvent.change(phoneInput, { target: { value: phoneNumber } });
     }
-    const termsButton = getByText('sign_in.terms_agreement_prefix');
+    const termsButton = getByText('description.agree_with_terms');
     fireEvent.click(termsButton);
 
-    const submitButton = getByText('general.continue');
+    const submitButton = getByText('action.continue');
 
     await waitFor(() => {
       fireEvent.click(submitButton);

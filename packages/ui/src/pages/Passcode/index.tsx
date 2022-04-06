@@ -20,7 +20,7 @@ type StateType = Nullable<{
 }>;
 
 const Passcode = () => {
-  const { t } = useTranslation();
+  const { t } = useTranslation(undefined, { keyPrefix: 'main_flow' });
   const navigate = useNavigate();
   const { channel, type } = useParams<Parameters>();
   const state = useLocation().state as StateType;
@@ -53,8 +53,8 @@ const Passcode = () => {
           }}
         />
       </div>
-      <div className={styles.title}>{t('sign_in.enter_passcode')}</div>
-      <div className={styles.detail}>{t('sign_in.passcode_sent', { target })}</div>
+      <div className={styles.title}>{t('action.enter_passcode')}</div>
+      <div className={styles.detail}>{t('description.enter_passcode', { address: target })}</div>
       <PasscodeValidation type={type} channel={channel} target={target} />
     </div>
   );

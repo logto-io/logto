@@ -9,7 +9,6 @@ export type Props = HTMLProps<HTMLInputElement> & {
   className?: string;
   error?: ErrorType;
   onClear?: () => void;
-  validation?: (value: string | number | readonly string[] | undefined) => ErrorType | undefined;
 };
 
 const Input = ({

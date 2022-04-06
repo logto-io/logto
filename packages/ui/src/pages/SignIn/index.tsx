@@ -17,7 +17,7 @@ const SignIn = () => {
         logo="https://avatars.githubusercontent.com/u/84981374?s=400&u=6c44c3642f2fe15a59a56cdcb0358c0bd8b92f57&v=4"
       />
       <UsernameSignin />
-      <TextLink className={styles.createAccount} href="/register" text="register.create_account" />
+      <TextLink className={styles.createAccount} href="/register" text="action.create_account" />
     </div>
   );
 };

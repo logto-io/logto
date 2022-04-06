@@ -18,13 +18,13 @@ type Props = {
 };
 
 const TermsOfUse = ({ name, className, termsOfUse, isChecked, error, onChange }: Props) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation(undefined, { keyPrefix: 'main_flow' });
 
   if (!termsOfUse.enabled || !termsOfUse.contentUrl) {
     return null;
   }
 
-  const prefix = t('sign_in.terms_agreement_prefix');
+  const prefix = t('description.agree_with_terms');
 
   return (
     <div className={className}>
@@ -39,7 +39,7 @@ const TermsOfUse = ({ name, className, termsOfUse, isChecked, error, onChange }:
         <div className={styles.content}>
           {prefix}
           <TextLink
-            text="sign_in.terms_of_use"
+            text="description.terms_of_use"
             href={termsOfUse.contentUrl}
             type="secondary"
             onClick={(event) => {

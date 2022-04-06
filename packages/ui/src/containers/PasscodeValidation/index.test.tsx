@@ -31,7 +31,7 @@ describe('<PasscodeValidation />', () => {
       jest.runAllTimers();
     });
 
-    expect(queryByText('sign_in.resend_passcode')).not.toBeNull();
+    expect(queryByText('description.resend_passcode')).not.toBeNull();
   });
 
   it('fire resend event', async () => {
@@ -41,7 +41,7 @@ describe('<PasscodeValidation />', () => {
     act(() => {
       jest.runAllTimers();
     });
-    const resendButton = getByText('sign_in.resend_passcode');
+    const resendButton = getByText('description.resend_passcode');
 
     await waitFor(() => {
       fireEvent.click(resendButton);

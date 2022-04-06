@@ -6,7 +6,6 @@
  * 4. Read terms of use settings from SignInExperience Settings
  */
 
-import { LogtoErrorI18nKey } from '@logto/phrases';
 import classNames from 'classnames';
 import React, { FC, useState, useCallback, useEffect, useContext, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -44,7 +43,7 @@ const defaultState: FieldState = {
 };
 
 const UsernameSignin: FC = () => {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation(undefined, { keyPrefix: 'main_flow' });
   const [fieldState, setFieldState] = useState<FieldState>(defaultState);
   const [fieldErrors, setFieldErrors] = useState<ErrorState>({});
 
@@ -56,17 +55,17 @@ const UsernameSignin: FC = () => {
     () => ({
       username: ({ username }) => {
         if (!username) {
-          return { code: 'form.required', data: { fieldName: t('sign_in.username') } };
+          return { code: 'required', data: { fieldName: t('input.username') } };
         }
       },
       password: ({ password }) => {
         if (!password) {
-          return { code: 'form.required', data: { fieldName: t('sign_in.password') } };
+          return { code: 'required', data: { fieldName: t('input.password') } };
         }
       },
       termsAgreement: ({ termsAgreement }) => {
         if (!termsAgreement) {
-          return 'form.terms_required';
+          return 'agree_terms_required';
         }
       },
     }),
@@ -131,9 +130,9 @@ const UsernameSignin: FC = () => {
   useEffect(() => {
     // TODO: username password not correct error message
     if (error) {
-      setToast(i18n.t<string, LogtoErrorI18nKey>(`errors:${error.code}`));
+      setToast(t('error.username_password_mismatch'));
     }
-  }, [error, i18n, setToast]);
+  }, [error, t, setToast]);
 
   return (
     <form className={styles.form}>
@@ -141,7 +140,7 @@ const UsernameSignin: FC = () => {
         className={classNames(styles.inputField, fieldErrors.username && styles.withError)}
         name="username"
         autoComplete="username"
-        placeholder={t('sign_in.username')}
+        placeholder={t('input.username')}
         value={fieldState.username}
         error={fieldErrors.username}
         onChange={({ target }) => {
@@ -158,7 +157,7 @@ const UsernameSignin: FC = () => {
         className={classNames(styles.inputField, fieldErrors.password && styles.withError)}
         name="password"
         autoComplete="current-password"
-        placeholder={t('sign_in.password')}
+        placeholder={t('input.password')}
         value={fieldState.password}
         error={fieldErrors.password}
         onChange={({ target }) => {
@@ -171,7 +170,7 @@ const UsernameSignin: FC = () => {
       <TextLink
         className={styles.textLink}
         type="secondary"
-        text="sign_in.forgot_password"
+        text="description.forgot_password"
         href="/passcode"
       />
 
@@ -186,7 +185,7 @@ const UsernameSignin: FC = () => {
         }}
       />
 
-      <Button onClick={onSubmitHandler}>{t('sign_in.action')}</Button>
+      <Button onClick={onSubmitHandler}>{t('action.sign_in')}</Button>
     </form>
   );
 };

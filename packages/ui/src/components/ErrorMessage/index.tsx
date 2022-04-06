@@ -1,11 +1,12 @@
-import { LogtoErrorCode, LogtoErrorI18nKey } from '@logto/phrases';
 import classNames from 'classnames';
 import React, { ReactNode } from 'react';
-import { useTranslation } from 'react-i18next';
+import { TFuncKey, useTranslation } from 'react-i18next';
 
 import * as styles from './index.module.scss';
 
-export type ErrorType = LogtoErrorCode | { code: LogtoErrorCode; data?: Record<string, unknown> };
+type ErrorCode = TFuncKey<'translation', 'main_flow.error'>;
+
+export type ErrorType = ErrorCode | { code: ErrorCode; data?: Record<string, unknown> };
 
 export type Props = {
   error?: ErrorType;
@@ -14,7 +15,7 @@ export type Props = {
 };
 
 const ErrorMessage = ({ error, className, children }: Props) => {
-  const { i18n } = useTranslation();
+  const { t } = useTranslation(undefined, { keyPrefix: 'main_flow.error' });
 
   const getMessage = () => {
     if (!error) {
@@ -22,10 +23,10 @@ const ErrorMessage = ({ error, className, children }: Props) => {
     }
 
     if (typeof error === 'string') {
-      return i18n.t<string, LogtoErrorI18nKey>(`errors:${error}`);
+      return t(error);
     }
 
-    return i18n.t<string, LogtoErrorI18nKey>(`errors:${error.code}`, { ...error.data });
+    return t(error.code, { ...error.data });
   };
 
   return <div className={classNames(styles.error, className)}>{getMessage()}</div>;

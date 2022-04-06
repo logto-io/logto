@@ -13,7 +13,7 @@ type Parameters = {
 };
 
 const Register = () => {
-  const { t } = useTranslation();
+  const { t } = useTranslation(undefined, { keyPrefix: 'main_flow' });
   const navigate = useNavigate();
   const { channel = 'username' } = useParams<Parameters>();
 
@@ -44,7 +44,7 @@ const Register = () => {
           }}
         />
       </div>
-      <div className={styles.title}>{t('register.create_account')}</div>
+      <div className={styles.title}>{t('action.create_account')}</div>
       {registerForm}
     </div>
   );

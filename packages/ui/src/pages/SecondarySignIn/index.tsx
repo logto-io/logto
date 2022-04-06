@@ -13,7 +13,7 @@ type Props = {
 };
 
 const SecondarySignIn = () => {
-  const { t } = useTranslation();
+  const { t } = useTranslation(undefined, { keyPrefix: 'main_flow' });
   const navigate = useNavigate();
   const { channel = 'username' } = useParams<Props>();
 
@@ -44,7 +44,7 @@ const SecondarySignIn = () => {
           }}
         />
       </div>
-      <div className={styles.title}>{t('sign_in.sign_in')}</div>
+      <div className={styles.title}>{t('action.sign_in')}</div>
       {signInForm}
     </div>
   );

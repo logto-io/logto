@@ -7,6 +7,6 @@ describe('<SignIn />', () => {
   test('renders without exploding', async () => {
     const { queryByText } = render(<SignIn />);
     expect(queryByText('Welcome to Logto')).not.toBeNull();
-    expect(queryByText('sign_in.action')).not.toBeNull();
+    expect(queryByText('action.sign_in')).not.toBeNull();
   });
 });

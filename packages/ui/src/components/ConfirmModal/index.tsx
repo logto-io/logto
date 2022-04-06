@@ -1,7 +1,6 @@
-import { I18nKey } from '@logto/phrases';
 import classNames from 'classnames';
 import React, { ReactNode } from 'react';
-import { useTranslation } from 'react-i18next';
+import { TFuncKey, useTranslation } from 'react-i18next';
 import ReactModal from 'react-modal';
 
 import Button from '@/components/Button';
@@ -13,8 +12,8 @@ type Props = {
   classname?: string;
   isOpen?: boolean;
   children: ReactNode;
-  cancelText?: I18nKey;
-  confirmText?: I18nKey;
+  cancelText?: TFuncKey<'translation', 'main_flow'>;
+  confirmText?: TFuncKey<'translation', 'main_flow'>;
   onConfirm?: () => void;
   onClose: () => void;
 };
@@ -23,12 +22,12 @@ const ConfirmModal = ({
   classname,
   isOpen = false,
   children,
-  cancelText = 'general.cancel',
-  confirmText = 'general.confirm',
+  cancelText = 'action.cancel',
+  confirmText = 'action.confirm',
   onConfirm,
   onClose,
 }: Props) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation(undefined, { keyPrefix: 'main_flow' });
 
   return (
     <ReactModal
