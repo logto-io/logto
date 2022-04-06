@@ -26,7 +26,6 @@ jobs:
         uses: ataylorme/eslint-annotate-action@1.2.0
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
-          only-pr-files: false
 
       - name: Upload ESLint report
         uses: actions/upload-artifact@v2
