@@ -6,8 +6,8 @@ import Bolt from './icons/Bolt';
 import Box from './icons/Box';
 import Cloud from './icons/Cloud';
 import Connection from './icons/Connection';
+import Contact from './icons/Contact';
 import Document from './icons/Document';
-import Help from './icons/Help';
 import List from './icons/List';
 import UserProfile from './icons/UserProfile';
 import Web from './icons/Web';
@@ -74,8 +74,8 @@ export const sections: SidebarSection[] = [
     title: 'help_and_support',
     items: [
       {
-        Icon: Help,
-        title: 'community_support',
+        Icon: Contact,
+        title: 'contact_us',
       },
       {
         Icon: Document,

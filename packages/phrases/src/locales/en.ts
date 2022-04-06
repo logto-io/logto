@@ -93,7 +93,7 @@ const translation = {
       users: 'User Management',
       audit_logs: 'Audit Logs',
       documentation: 'Documentation',
-      community_support: 'Community Support',
+      contact_us: 'Contact Us',
       settings: 'Settings',
     },
     applications: {

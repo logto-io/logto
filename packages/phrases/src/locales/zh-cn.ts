@@ -93,7 +93,7 @@ const translation = {
       users: '用户管理',
       audit_logs: '审计日志',
       documentation: '文档',
-      community_support: '社区支持',
+      contact_us: '联系我们',
       settings: '设置',
     },
     applications: {
