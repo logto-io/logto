@@ -31,6 +31,9 @@
     color: var(--color-component-text);
     font: var(--font-body-medium);
     padding: 0;
+    // Our font size and line height pair (14px/20px) will cause a "blank top space" in inline display.
+    // need to set display to block to keep the whole input box height to 36px.
+    display: block;
 
     &::placeholder {
       color: var(--color-component-caption);
