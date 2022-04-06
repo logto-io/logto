@@ -1,14 +1,6 @@
 import { AdminConsoleKey } from '@logto/phrases';
-import { Nullable } from '@silverhand/essentials';
-import React, {
-  cloneElement,
-  isValidElement,
-  PropsWithChildren,
-  ReactNode,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
+import React, { cloneElement, isValidElement, PropsWithChildren, ReactNode, useState } from 'react';
+import { FormProvider, useForm } from 'react-hook-form';
 
 import Button from '@/components/Button';
 import CardTitle from '@/components/CardTitle';
@@ -16,6 +8,7 @@ import DangerousRaw from '@/components/DangerousRaw';
 import IconButton from '@/components/IconButton';
 import Spacer from '@/components/Spacer';
 import Close from '@/icons/Close';
+import { GetStartedForm } from '@/types/get-started';
 
 import Step from './components/Step';
 import { GetStartedType, useGetStartedSteps } from './hooks';
@@ -31,8 +24,7 @@ type Props = PropsWithChildren<{
   defaultSubtype?: string;
   bannerComponent?: ReactNode;
   onClose?: () => void;
-  onComplete?: () => void;
-  onToggleSteps?: () => void;
+  onComplete?: (data: GetStartedForm) => Promise<void>;
 }>;
 
 const onClickFetchSampleProject = (projectName: string) => {
@@ -48,23 +40,22 @@ const GetStarted = ({
   bannerComponent,
   onClose,
   onComplete,
-  onToggleSteps,
 }: Props) => {
   const [subtype, setSubtype] = useState(defaultSubtype);
   const [activeStepIndex, setActiveStepIndex] = useState<number>(-1);
   const steps = useGetStartedSteps(type, subtype) ?? [];
+  const methods = useForm<GetStartedForm>({ reValidateMode: 'onBlur' });
+  const {
+    formState: { isSubmitting },
+    handleSubmit,
+  } = methods;
 
-  const stepReferences = useRef<Array<Nullable<HTMLDivElement>>>(
-    // eslint-disable-next-line @typescript-eslint/ban-types
-    Array.from<null>({ length: steps.length }).fill(null)
-  );
-
-  useEffect(() => {
-    if (activeStepIndex > -1) {
-      const activeStepRef = stepReferences.current[activeStepIndex];
-      activeStepRef?.scrollIntoView({ block: 'start', behavior: 'smooth' });
+  const onSubmit = handleSubmit((data) => {
+    if (isSubmitting) {
+      return;
     }
-  }, [activeStepIndex, stepReferences]);
+    void onComplete?.(data);
+  });
 
   return (
     <div className={styles.container}>
@@ -79,7 +70,7 @@ const GetStarted = ({
         {subtype && (
           <Button
             type="outline"
-            title="admin_console.applications.get_started.get_sample_file"
+            title="admin_console.get_started.get_sample_file"
             onClick={() => {
               onClickFetchSampleProject(subtype);
             }}
@@ -87,40 +78,35 @@ const GetStarted = ({
         )}
       </div>
       <div className={styles.content}>
-        {isValidElement(bannerComponent) &&
-          cloneElement(bannerComponent, {
-            className: styles.banner,
-            onChange: setSubtype,
-            onToggle: () => {
-              setActiveStepIndex(0);
-            },
-          })}
-        {steps.map((step, index) => {
-          const isFinalStep = index === steps.length - 1;
+        <FormProvider {...methods}>
+          <form onSubmit={onSubmit}>
+            {isValidElement(bannerComponent) &&
+              cloneElement(bannerComponent, {
+                className: styles.banner,
+                onChange: setSubtype,
+                onToggle: () => {
+                  setActiveStepIndex(0);
+                },
+              })}
+            {steps.map((step, index) => {
+              const isFinalStep = index === steps.length - 1;
 
-          return (
-            <Step
-              key={step.title}
-              ref={(element) => {
-                // eslint-disable-next-line @silverhand/fp/no-mutation
-                stepReferences.current[index] = element;
-              }}
-              data={step}
-              index={index}
-              isCompleted={activeStepIndex > index}
-              isExpanded={activeStepIndex === index}
-              isFinalStep={isFinalStep}
-              onComplete={onComplete}
-              onNext={() => {
-                setActiveStepIndex(index + 1);
-              }}
-              onToggle={() => {
-                setActiveStepIndex(index);
-                onToggleSteps?.();
-              }}
-            />
-          );
-        })}
+              return (
+                <Step
+                  key={step.title}
+                  data={step}
+                  index={index}
+                  isActive={activeStepIndex === index}
+                  isComplete={activeStepIndex > index}
+                  isFinalStep={isFinalStep}
+                  onNext={() => {
+                    setActiveStepIndex(index + 1);
+                  }}
+                />
+              );
+            })}
+          </form>
+        </FormProvider>
       </div>
     </div>
   );

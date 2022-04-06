@@ -6,7 +6,7 @@
   flex-direction: column;
   scroll-margin: _.unit(5);
 
-  .cardHeader {
+  .header {
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -47,6 +47,16 @@
     display: flex;
     justify-content: flex-end;
     margin-top: _.unit(6);
+  }
+
+  .content {
+    max-height: 0;
+    overflow: hidden;
+
+    &.expanded {
+      max-height: 9999px;
+      overflow: unset;
+    }
   }
 }
 

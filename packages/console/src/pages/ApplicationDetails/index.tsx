@@ -128,7 +128,7 @@ const ApplicationDetails = () => {
               required: t('application_details.redirect_uri_required'),
               pattern: {
                 regex: noSpaceRegex,
-                message: t('application_details.no_space_in_uri'),
+                message: t('errors.no_space_in_uri'),
               },
             }),
           }}
@@ -153,7 +153,7 @@ const ApplicationDetails = () => {
             validate: createValidatorForRhf({
               pattern: {
                 regex: noSpaceRegex,
-                message: t('application_details.no_space_in_uri'),
+                message: t('errors.no_space_in_uri'),
               },
             }),
           }}

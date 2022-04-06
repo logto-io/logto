@@ -4,7 +4,7 @@ subtitle: 1 steps
 ---
 Execute signOut() methods will redirect users to the Logto sign out page. After a success sign out, all use session data and auth status will be cleared. 
 
-```multitextinput
+```postLogoutRedirectUris
 Post sign out redirect URI
 ```
 

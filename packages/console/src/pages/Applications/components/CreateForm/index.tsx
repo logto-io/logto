@@ -2,7 +2,6 @@ import { Application, ApplicationType, Setting } from '@logto/schemas';
 import React, { useState } from 'react';
 import { useController, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import Modal from 'react-modal';
 import useSWR from 'swr';
 
 import Button from '@/components/Button';
@@ -11,11 +10,10 @@ import ModalLayout from '@/components/ModalLayout';
 import RadioGroup, { Radio } from '@/components/RadioGroup';
 import TextInput from '@/components/TextInput';
 import useApi, { RequestError } from '@/hooks/use-api';
-import GetStarted from '@/pages/GetStarted';
-import * as modalStyles from '@/scss/modal.module.scss';
-import { applicationTypeI18nKey, SupportedJavascriptLibraries } from '@/types/applications';
+import { applicationTypeI18nKey } from '@/types/applications';
+import { GetStartedForm } from '@/types/get-started';
 
-import LibrarySelector from '../LibrarySelector';
+import GetStartedModal from '../GetStartedModal';
 import TypeDescription from '../TypeDescription';
 import * as styles from './index.module.scss';
 
@@ -31,7 +29,7 @@ type Props = {
 
 const CreateForm = ({ onClose }: Props) => {
   const [createdApp, setCreatedApp] = useState<Application>();
-  const [isQuickStartGuideOpen, setIsQuickStartGuideOpen] = useState(false);
+  const [isGetStartedModalOpen, setIsGetStartedModalOpen] = useState(false);
   const {
     handleSubmit,
     control,
@@ -48,7 +46,7 @@ const CreateForm = ({ onClose }: Props) => {
   const isGetStartedSkipped = setting?.adminConsole.applicationSkipGetStarted;
 
   const closeModal = () => {
-    setIsQuickStartGuideOpen(false);
+    setIsGetStartedModalOpen(false);
     onClose?.(createdApp);
   };
 
@@ -63,9 +61,28 @@ const CreateForm = ({ onClose }: Props) => {
     if (isGetStartedSkipped) {
       closeModal();
     } else {
-      setIsQuickStartGuideOpen(true);
+      setIsGetStartedModalOpen(true);
     }
   });
+
+  const onComplete = async (data: GetStartedForm) => {
+    if (!createdApp) {
+      return;
+    }
+
+    const application = await api
+      .patch(`/api/applications/${createdApp.id}`, {
+        json: {
+          oidcClientMetadata: {
+            redirectUris: data.redirectUris.filter(Boolean),
+            postLogoutRedirectUris: data.postLogoutRedirectUris.filter(Boolean),
+          },
+        },
+      })
+      .json<Application>();
+    setCreatedApp(application);
+    closeModal();
+  };
 
   return (
     <ModalLayout
@@ -108,17 +125,12 @@ const CreateForm = ({ onClose }: Props) => {
         </FormField>
       </form>
       {!isGetStartedSkipped && createdApp && (
-        <Modal isOpen={isQuickStartGuideOpen} className={modalStyles.fullScreen}>
-          <GetStarted
-            bannerComponent={<LibrarySelector />}
-            title={createdApp.name}
-            subtitle="applications.get_started.header_description"
-            type="application"
-            defaultSubtype={SupportedJavascriptLibraries.React}
-            onClose={closeModal}
-            onComplete={closeModal}
-          />
-        </Modal>
+        <GetStartedModal
+          appName={createdApp.name}
+          isOpen={isGetStartedModalOpen}
+          onClose={closeModal}
+          onComplete={onComplete}
+        />
       )}
     </ModalLayout>
   );
