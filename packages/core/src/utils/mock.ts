@@ -430,6 +430,18 @@ export const mockAliyunDmConnectorInstance = {
   },
 };
 
+export const mockAliyunSmsConnectorInstance = {
+  connector: {
+    id: 'aliyun-sms',
+    enabled: true,
+    config: {},
+    createdAt: 1_646_382_233_333,
+  },
+  metadata: {
+    type: ConnectorType.SMS,
+  },
+};
+
 export const mockFacebookConnectorInstance = {
   connector: {
     id: 'facebook',

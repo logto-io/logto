@@ -1,9 +1,33 @@
-import { BrandingStyle, CreateSignInExperience, Language, SignInExperience } from '@logto/schemas';
+import {
+  CreateSignInExperience,
+  Language,
+  SignInExperience,
+  SignInMethodState,
+} from '@logto/schemas';
 
-import { mockBranding, mockLanguageInfo, mockSignInExperience, mockTermsOfUse } from '@/utils/mock';
+import {
+  mockAliyunDmConnectorInstance,
+  mockAliyunSmsConnectorInstance,
+  mockFacebookConnectorInstance,
+  mockGithubConnectorInstance,
+  mockGoogleConnectorInstance,
+  mockLanguageInfo,
+  mockSignInExperience,
+  mockTermsOfUse,
+} from '@/utils/mock';
 import { createRequester } from '@/utils/test-utils';
 
 import signInExperiencesRoutes from './sign-in-experience';
+
+jest.mock('@/connectors', () => ({
+  getConnectorInstances: jest.fn(async () => [
+    mockAliyunDmConnectorInstance,
+    mockAliyunSmsConnectorInstance,
+    mockFacebookConnectorInstance,
+    mockGithubConnectorInstance,
+    mockGoogleConnectorInstance,
+  ]),
+}));
 
 jest.mock('@/queries/sign-in-experience', () => ({
   updateDefaultSignInExperience: jest.fn(
@@ -23,109 +47,6 @@ const expectPatchResponseStatus = async (signInExperience: any, status: number) 
 
 const validBooleans = [true, false];
 const invalidBooleans = [undefined, null, 0, 1, '0', '1', 'true', 'false'];
-
-describe('branding', () => {
-  const colorKeys = ['primaryColor', 'backgroundColor', 'darkPrimaryColor', 'darkBackgroundColor'];
-
-  const invalidColors = [
-    undefined,
-    null,
-    '',
-    '#',
-    '#1',
-    '#2B',
-    '#3cZ',
-    '#4D9e',
-    '#5f80E',
-    '#6GHiXY',
-    '#78Cb5dA',
-    'rgb(0,13,255)',
-  ];
-
-  const validColors = ['#aB3', '#169deF'];
-
-  describe('colors', () => {
-    test.each(validColors)('%p should succeed', async (validColor) => {
-      for (const colorKey of colorKeys) {
-        // eslint-disable-next-line no-await-in-loop
-        await expectPatchResponseStatus(
-          { branding: { ...mockBranding, [colorKey]: validColor } },
-          200
-        );
-      }
-    });
-    test.each(invalidColors)('%p should fail', async (invalidColor) => {
-      for (const colorKey of colorKeys) {
-        // eslint-disable-next-line no-await-in-loop
-        await expectPatchResponseStatus(
-          { branding: { ...mockBranding, [colorKey]: invalidColor } },
-          400
-        );
-      }
-    });
-  });
-
-  describe('style', () => {
-    test.each(Object.values(BrandingStyle))('%p should succeed', async (style) => {
-      const signInExperience = { branding: { ...mockBranding, style } };
-      await expectPatchResponseStatus(signInExperience, 200);
-    });
-
-    test.each([undefined, '', 'invalid'])('%p should fail', async (style) => {
-      const signInExperience = { branding: { ...mockBranding, style } };
-      await expectPatchResponseStatus(signInExperience, 400);
-    });
-  });
-
-  describe('logoUrl', () => {
-    test.each(['http://silverhand.com/silverhand.png', 'https://logto.dev/logto.jpg'])(
-      '%p should success',
-      async (logoUrl) => {
-        const signInExperience = { branding: { ...mockBranding, logoUrl } };
-        await expectPatchResponseStatus(signInExperience, 200);
-      }
-    );
-
-    test.each([undefined, null, '', 'invalid'])('%p should fail', async (logoUrl) => {
-      const signInExperience = { branding: { ...mockBranding, logoUrl } };
-      await expectPatchResponseStatus(signInExperience, 400);
-    });
-  });
-
-  describe('slogan', () => {
-    test.each([undefined, 'Silverhand.', 'Supercharge innovations.'])(
-      '%p should success',
-      async (slogan) => {
-        const signInExperience = {
-          branding: {
-            ...mockBranding,
-            style: BrandingStyle.Logo,
-            slogan,
-          },
-        };
-        await expectPatchResponseStatus(signInExperience, 200);
-      }
-    );
-
-    test.each([null, ''])('%p should fail', async (slogan) => {
-      const signInExperience = {
-        branding: {
-          ...mockBranding,
-          style: BrandingStyle.Logo,
-          slogan,
-        },
-      };
-      await expectPatchResponseStatus(signInExperience, 400);
-    });
-  });
-
-  it('should succeed when branding is valid', async () => {
-    const response = signInExperienceRequester
-      .patch('/sign-in-exp')
-      .send({ branding: mockBranding });
-    await expect(response).resolves.toMatchObject({ status: 200 });
-  });
-});
 
 describe('terms of use', () => {
   describe('enabled', () => {
@@ -192,6 +113,143 @@ describe('languageInfo', () => {
 
     test.each(invalidLanguages)('%p should fail', async (fixedLanguage) => {
       const signInExperience = { languageInfo: { ...mockLanguageInfo, fixedLanguage } };
+      await expectPatchResponseStatus(signInExperience, 400);
+    });
+  });
+});
+
+describe('signInMethods', () => {
+  const validSignInMethodStates = Object.values(SignInMethodState);
+  const invalidSignInMethodStates = [undefined, null, '', ' \t\n\r', 'invalid'];
+
+  describe('username', () => {
+    test.each(validSignInMethodStates)('%p should success', async (state) => {
+      if (state === SignInMethodState.primary) {
+        return;
+      }
+      const signInExperience = {
+        signInMethods: {
+          username: state,
+          email: SignInMethodState.primary,
+          sms: SignInMethodState.disabled,
+          social: SignInMethodState.disabled,
+        },
+      };
+      await expectPatchResponseStatus(signInExperience, 200);
+    });
+
+    test.each(invalidSignInMethodStates)('%p should fail', async (state) => {
+      if (state === SignInMethodState.primary) {
+        return;
+      }
+      const signInExperience = {
+        signInMethods: {
+          username: state,
+          email: SignInMethodState.primary,
+          sms: SignInMethodState.disabled,
+          social: SignInMethodState.disabled,
+        },
+      };
+      await expectPatchResponseStatus(signInExperience, 400);
+    });
+  });
+
+  describe('email', () => {
+    test.each(validSignInMethodStates)('%p should success', async (state) => {
+      if (state === SignInMethodState.primary) {
+        return;
+      }
+      const signInExperience = {
+        signInMethods: {
+          username: SignInMethodState.disabled,
+          email: state,
+          sms: SignInMethodState.primary,
+          social: SignInMethodState.disabled,
+        },
+      };
+      await expectPatchResponseStatus(signInExperience, 200);
+    });
+
+    test.each(invalidSignInMethodStates)('%p should fail', async (state) => {
+      if (state === SignInMethodState.primary) {
+        return;
+      }
+      const signInExperience = {
+        signInMethods: {
+          username: SignInMethodState.disabled,
+          email: state,
+          sms: SignInMethodState.primary,
+          social: SignInMethodState.disabled,
+        },
+      };
+      await expectPatchResponseStatus(signInExperience, 400);
+    });
+  });
+
+  describe('sms', () => {
+    test.each(validSignInMethodStates)('%p should success', async (state) => {
+      if (state === SignInMethodState.primary) {
+        return;
+      }
+      const signInExperience = {
+        signInMethods: {
+          username: SignInMethodState.disabled,
+          email: SignInMethodState.disabled,
+          sms: state,
+          social: SignInMethodState.primary,
+        },
+        socialSignInConnectorIds: ['github'],
+      };
+      await expectPatchResponseStatus(signInExperience, 200);
+    });
+
+    test.each(invalidSignInMethodStates)('%p should fail', async (state) => {
+      if (state === SignInMethodState.primary) {
+        return;
+      }
+      const signInExperience = {
+        signInMethods: {
+          username: SignInMethodState.disabled,
+          email: SignInMethodState.disabled,
+          sms: state,
+          social: SignInMethodState.primary,
+        },
+        socialSignInConnectorIds: ['github'],
+      };
+      await expectPatchResponseStatus(signInExperience, 400);
+    });
+  });
+
+  describe('social', () => {
+    test.each(validSignInMethodStates)('%p should success', async (state) => {
+      if (state === SignInMethodState.primary) {
+        return;
+      }
+      const signInExperience = {
+        signInMethods: {
+          username: SignInMethodState.primary,
+          email: SignInMethodState.disabled,
+          sms: SignInMethodState.disabled,
+          social: state,
+        },
+        socialSignInConnectorIds: ['github'],
+      };
+      await expectPatchResponseStatus(signInExperience, 200);
+    });
+
+    test.each(invalidSignInMethodStates)('%p should fail', async (state) => {
+      if (state === SignInMethodState.primary) {
+        return;
+      }
+      const signInExperience = {
+        signInMethods: {
+          username: SignInMethodState.primary,
+          email: SignInMethodState.disabled,
+          sms: SignInMethodState.disabled,
+          social: state,
+        },
+        socialSignInConnectorIds: ['github'],
+      };
       await expectPatchResponseStatus(signInExperience, 400);
     });
   });
