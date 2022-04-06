@@ -13,6 +13,7 @@ import {
   mockGoogleConnectorInstance,
   mockLanguageInfo,
   mockSignInExperience,
+  mockSignInMethods,
   mockTermsOfUse,
 } from '@/utils/mock';
 import { createRequester } from '@/utils/test-utils';
@@ -256,11 +257,29 @@ describe('signInMethods', () => {
 });
 
 describe('socialSignInConnectorIds', () => {
-  it('should throw when the type of social connector IDs is wrong', async () => {
-    const socialSignInConnectorIds = [123, 456];
-    const response = await signInExperienceRequester.patch('/sign-in-exp').send({
-      socialSignInConnectorIds,
-    });
-    expect(response.status).toEqual(400);
-  });
+  test.each([[['facebook']], [['facebook', 'github']]])(
+    '%p should success',
+    async (socialSignInConnectorIds) => {
+      await expectPatchResponseStatus(
+        {
+          signInMethods: { ...mockSignInMethods, social: SignInMethodState.secondary },
+          socialSignInConnectorIds,
+        },
+        200
+      );
+    }
+  );
+
+  test.each([[[]], [[null, undefined]], [['', ' \t\n\r']], [[123, 456]]])(
+    '%p should fail',
+    async (socialSignInConnectorIds: any[]) => {
+      await expectPatchResponseStatus(
+        {
+          signInMethods: { ...mockSignInMethods, social: SignInMethodState.secondary },
+          socialSignInConnectorIds,
+        },
+        400
+      );
+    }
+  );
 });
