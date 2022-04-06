@@ -11,8 +11,8 @@ describe('Terms of Use', () => {
     enabled: true,
     contentUrl: 'http://logto.dev/',
   };
-  const { t } = useTranslation();
-  const prefix = t('sign_in.terms_agreement_prefix');
+  const { t } = useTranslation(undefined, { keyPrefix: 'main_flow' });
+  const prefix = t('description.agree_with_terms');
 
   beforeEach(() => {
     onChange.mockClear();

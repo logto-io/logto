@@ -18,8 +18,8 @@ describe('<EmailPasswordless/>', () => {
       </MemoryRouter>
     );
     expect(container.querySelector('input[name="email"]')).not.toBeNull();
-    expect(queryByText('general.continue')).not.toBeNull();
-    expect(queryByText('sign_in.terms_of_use')).not.toBeNull();
+    expect(queryByText('action.continue')).not.toBeNull();
+    expect(queryByText('description.terms_of_use')).not.toBeNull();
   });
 
   test('required email with error message', () => {
@@ -28,20 +28,20 @@ describe('<EmailPasswordless/>', () => {
         <EmailPasswordless type="sign-in" />
       </MemoryRouter>
     );
-    const submitButton = getByText('general.continue');
+    const submitButton = getByText('action.continue');
 
     fireEvent.click(submitButton);
-    expect(queryByText('errors:user.invalid_email')).not.toBeNull();
+    expect(queryByText('invalid_email')).not.toBeNull();
     expect(sendSignInEmailPasscode).not.toBeCalled();
 
     const emailInput = container.querySelector('input[name="email"]');
 
     if (emailInput) {
       fireEvent.change(emailInput, { target: { value: 'foo' } });
-      expect(queryByText('errors:user.invalid_email')).not.toBeNull();
+      expect(queryByText('invalid_email')).not.toBeNull();
 
       fireEvent.change(emailInput, { target: { value: 'foo@logto.io' } });
-      expect(queryByText('errors:user.invalid_email')).toBeNull();
+      expect(queryByText('invalid_email')).toBeNull();
     }
   });
 
@@ -51,7 +51,7 @@ describe('<EmailPasswordless/>', () => {
         <EmailPasswordless type="sign-in" />
       </MemoryRouter>
     );
-    const submitButton = getByText('general.continue');
+    const submitButton = getByText('action.continue');
     const emailInput = container.querySelector('input[name="email"]');
 
     if (emailInput) {
@@ -59,7 +59,7 @@ describe('<EmailPasswordless/>', () => {
     }
 
     fireEvent.click(submitButton);
-    expect(queryByText('errors:form.terms_required')).not.toBeNull();
+    expect(queryByText('agree_terms_required')).not.toBeNull();
   });
 
   test('signin method properly', async () => {
@@ -73,10 +73,10 @@ describe('<EmailPasswordless/>', () => {
     if (emailInput) {
       fireEvent.change(emailInput, { target: { value: 'foo@logto.io' } });
     }
-    const termsButton = getByText('sign_in.terms_agreement_prefix');
+    const termsButton = getByText('description.agree_with_terms');
     fireEvent.click(termsButton);
 
-    const submitButton = getByText('general.continue');
+    const submitButton = getByText('action.continue');
 
     await waitFor(() => {
       fireEvent.click(submitButton);
@@ -96,10 +96,10 @@ describe('<EmailPasswordless/>', () => {
     if (emailInput) {
       fireEvent.change(emailInput, { target: { value: 'foo@logto.io' } });
     }
-    const termsButton = getByText('sign_in.terms_agreement_prefix');
+    const termsButton = getByText('description.agree_with_terms');
     fireEvent.click(termsButton);
 
-    const submitButton = getByText('general.continue');
+    const submitButton = getByText('action.continue');
 
     await waitFor(() => {
       fireEvent.click(submitButton);

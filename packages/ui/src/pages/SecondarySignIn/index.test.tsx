@@ -8,13 +8,12 @@ jest.mock('@/apis/register', () => ({ register: jest.fn(async () => Promise.reso
 
 describe('<SecondarySignIn />', () => {
   test('renders without exploding', async () => {
-    const { queryByText } = render(
+    const { queryAllByText } = render(
       <MemoryRouter initialEntries={['/sign-in/username']}>
         <SecondarySignIn />
       </MemoryRouter>
     );
-    expect(queryByText('sign_in.sign_in')).not.toBeNull();
-    expect(queryByText('sign_in.action')).not.toBeNull();
+    expect(queryAllByText('action.sign_in')).toHaveLength(2);
   });
 
   test('renders phone', async () => {
@@ -25,7 +24,7 @@ describe('<SecondarySignIn />', () => {
         </Routes>
       </MemoryRouter>
     );
-    expect(queryByText('sign_in.sign_in')).not.toBeNull();
+    expect(queryByText('action.sign_in')).not.toBeNull();
     expect(container.querySelector('input[name="phone"]')).not.toBeNull();
   });
 
@@ -37,7 +36,7 @@ describe('<SecondarySignIn />', () => {
         </Routes>
       </MemoryRouter>
     );
-    expect(queryByText('sign_in.sign_in')).not.toBeNull();
+    expect(queryByText('action.sign_in')).not.toBeNull();
     expect(container.querySelector('input[name="email"]')).not.toBeNull();
   });
 });

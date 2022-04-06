@@ -6,7 +6,6 @@
  * 4. Read terms of use settings from SignInExperience Settings
  */
 
-import { LogtoErrorI18nKey } from '@logto/phrases';
 import classNames from 'classnames';
 import React, { useState, useEffect, useCallback, useMemo, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -47,7 +46,7 @@ const defaultState = {
 const usernameRegx = /^[A-Z_a-z-][\w-]*$/;
 
 const CreateAccount = () => {
-  const { t, i18n } = useTranslation();
+  const { t, i18n } = useTranslation(undefined, { keyPrefix: 'main_flow' });
   const [fieldState, setFieldState] = useState<FieldState>(defaultState);
   const [fieldErrors, setFieldErrors] = useState<ErrorState>({});
 
@@ -59,34 +58,34 @@ const CreateAccount = () => {
     () => ({
       username: ({ username }) => {
         if (!username) {
-          return { code: 'form.required', data: { fieldName: t('sign_in.username') } };
+          return { code: 'required', data: { field: t('input.username') } };
         }
 
         if (/\d/.test(username.slice(0, 1))) {
-          return 'user.username_forbidden_initial_number';
+          return 'username_should_not_start_with_number';
         }
 
         if (!usernameRegx.test(username)) {
-          return 'user.username_invalid_character';
+          return 'username_valid_charset';
         }
       },
       password: ({ password }) => {
         if (!password) {
-          return { code: 'form.required', data: { fieldName: t('sign_in.password') } };
+          return { code: 'required', data: { field: t('input.password') } };
         }
 
         if (password.length < 6) {
-          return { code: 'password.too_short', data: { min: 6 } };
+          return { code: 'password_min_length', data: { min: 6 } };
         }
       },
       confirmPassword: ({ password, confirmPassword }) => {
         if (password !== confirmPassword) {
-          return { code: 'password.inconsistent_password' };
+          return { code: 'passwords_do_not_match' };
         }
       },
       termsAgreement: ({ termsAgreement }) => {
         if (!termsAgreement) {
-          return 'form.terms_required';
+          return 'agree_terms_required';
         }
       },
     }),
@@ -158,9 +157,9 @@ const CreateAccount = () => {
   useEffect(() => {
     // TODO: username exist error message
     if (error) {
-      setToast(i18n.t<string, LogtoErrorI18nKey>(`errors:${error.code}`));
+      setToast(t('error.username_exists'));
     }
-  }, [error, i18n, setToast]);
+  }, [error, i18n, setToast, t]);
 
   return (
     <form className={styles.form}>
@@ -168,7 +167,7 @@ const CreateAccount = () => {
         className={classNames(styles.inputField, fieldErrors.username && styles.withError)}
         name="username"
         autoComplete="username"
-        placeholder={t('sign_in.username')}
+        placeholder={t('input.username')}
         value={fieldState.username}
         error={fieldErrors.username}
         onChange={({ target }) => {
@@ -186,7 +185,7 @@ const CreateAccount = () => {
         className={classNames(styles.inputField, fieldErrors.password && styles.withError)}
         name="password"
         autoComplete="current-password"
-        placeholder={t('sign_in.password')}
+        placeholder={t('input.password')}
         value={fieldState.password}
         error={fieldErrors.password}
         onChange={({ target }) => {
@@ -201,7 +200,7 @@ const CreateAccount = () => {
         className={classNames(styles.inputField, fieldErrors.confirmPassword && styles.withError)}
         name="confirm_password"
         autoComplete="current-password"
-        placeholder={t('register.confirm_password')}
+        placeholder={t('input.confirm_password')}
         value={fieldState.confirmPassword}
         error={fieldErrors.confirmPassword}
         onChange={({ target }) => {
@@ -222,7 +221,7 @@ const CreateAccount = () => {
         }}
       />
 
-      <Button onClick={onSubmitHandler}>{t('register.action')}</Button>
+      <Button onClick={onSubmitHandler}>{t('action.create')}</Button>
     </form>
   );
 };

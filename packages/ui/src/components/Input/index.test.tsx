@@ -31,9 +31,9 @@ describe('Input Field UI Component', () => {
   });
 
   test('render error message', () => {
-    const errorCode = 'user.email_not_exists';
+    const errorCode = 'invalid_email';
     const { queryByText } = render(<Input error={errorCode} />);
-    expect(queryByText(`errors:${errorCode}`)).not.toBeNull();
+    expect(queryByText(errorCode)).not.toBeNull();
   });
 
   test('click on clear button', () => {

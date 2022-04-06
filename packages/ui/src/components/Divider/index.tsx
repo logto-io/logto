@@ -1,17 +1,16 @@
-import { I18nKey } from '@logto/phrases';
 import classNames from 'classnames';
 import React from 'react';
-import { useTranslation } from 'react-i18next';
+import { TFuncKey, useTranslation } from 'react-i18next';
 
 import * as styles from './index.module.scss';
 
 type Props = {
   className?: string;
-  label?: I18nKey;
+  label?: TFuncKey<'translation', 'main_flow'>;
 };
 
 const Divider = ({ className, label }: Props) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation(undefined, { keyPrefix: 'main_flow' });
 
   return (
     <div className={classNames(styles.divider, className)}>

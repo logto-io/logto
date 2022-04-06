@@ -13,8 +13,8 @@ describe('<Register />', () => {
         <Register />
       </MemoryRouter>
     );
-    expect(queryByText('register.create_account')).not.toBeNull();
-    expect(queryByText('register.action')).not.toBeNull();
+    expect(queryByText('action.create_account')).not.toBeNull();
+    expect(queryByText('action.create')).not.toBeNull();
   });
 
   test('renders phone', async () => {
@@ -25,7 +25,7 @@ describe('<Register />', () => {
         </Routes>
       </MemoryRouter>
     );
-    expect(queryByText('register.create_account')).not.toBeNull();
+    expect(queryByText('action.create_account')).not.toBeNull();
     expect(container.querySelector('input[name="phone"]')).not.toBeNull();
   });
 
@@ -37,7 +37,7 @@ describe('<Register />', () => {
         </Routes>
       </MemoryRouter>
     );
-    expect(queryByText('register.create_account')).not.toBeNull();
+    expect(queryByText('action.create_account')).not.toBeNull();
     expect(container.querySelector('input[name="email"]')).not.toBeNull();
   });
 });

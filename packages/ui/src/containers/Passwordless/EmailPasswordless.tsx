@@ -4,7 +4,6 @@
  * 2. Input field validation, should move the validation rule to the input field scope
  * 4. Read terms of use settings from SignInExperience Settings
  */
-import { LogtoErrorI18nKey } from '@logto/phrases';
 import classNames from 'classnames';
 import React, { useState, useCallback, useMemo, useEffect, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -43,7 +42,7 @@ const defaultState: FieldState = { email: '', termsAgreement: false };
 const emailRegEx = /^\S+@\S+\.\S+$/;
 
 const EmailPasswordless = ({ type }: Props) => {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation(undefined, { keyPrefix: 'main_flow' });
   const [fieldState, setFieldState] = useState<FieldState>(defaultState);
   const [fieldErrors, setFieldErrors] = useState<ErrorState>({});
   const { setToast } = useContext(PageContext);
@@ -57,12 +56,12 @@ const EmailPasswordless = ({ type }: Props) => {
     () => ({
       email: ({ email }) => {
         if (!emailRegEx.test(email)) {
-          return 'user.invalid_email';
+          return 'invalid_email';
         }
       },
       termsAgreement: ({ termsAgreement }) => {
         if (!termsAgreement) {
-          return 'form.terms_required';
+          return 'agree_terms_required';
         }
       },
     }),
@@ -118,10 +117,11 @@ const EmailPasswordless = ({ type }: Props) => {
   }, [fieldState, validations]);
 
   useEffect(() => {
+    // TODO: request error
     if (error) {
-      setToast(i18n.t<string, LogtoErrorI18nKey>(`errors:${error.code}`));
+      setToast(t('error.request', { ...error }));
     }
-  }, [error, i18n, setToast]);
+  }, [error, t, setToast]);
 
   return (
     <form className={styles.form}>
@@ -129,7 +129,7 @@ const EmailPasswordless = ({ type }: Props) => {
         className={classNames(styles.inputField, fieldErrors.email && styles.withError)}
         name="email"
         autoComplete="email"
-        placeholder={t('sign_in.email')}
+        placeholder={t('input.email')}
         value={fieldState.email}
         error={fieldErrors.email}
         onChange={({ target }) => {
@@ -154,7 +154,7 @@ const EmailPasswordless = ({ type }: Props) => {
         }}
       />
 
-      <Button onClick={onSubmitHandler}>{t('general.continue')}</Button>
+      <Button onClick={onSubmitHandler}>{t('action.continue')}</Button>
     </form>
   );
 };

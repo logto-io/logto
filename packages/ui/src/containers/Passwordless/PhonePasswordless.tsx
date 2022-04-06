@@ -4,7 +4,6 @@
  * 2. Input field validation, should move the validation rule to the input field scope
  * 4. Read terms of use settings from SignInExperience Settings
  */
-import { LogtoErrorI18nKey } from '@logto/phrases';
 import classNames from 'classnames';
 import React, { useState, useCallback, useMemo, useEffect, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -42,7 +41,7 @@ type FieldValidations = {
 const defaultState: FieldState = { phone: '', termsAgreement: false };
 
 const PhonePasswordless = ({ type }: Props) => {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation(undefined, { keyPrefix: 'main_flow' });
   const [fieldState, setFieldState] = useState<FieldState>(defaultState);
   const [fieldErrors, setFieldErrors] = useState<ErrorState>({});
   const { setToast } = useContext(PageContext);
@@ -57,12 +56,12 @@ const PhonePasswordless = ({ type }: Props) => {
     () => ({
       phone: ({ phone }) => {
         if (!isValidPhoneNumber(phone)) {
-          return 'user.invalid_phone';
+          return 'invalid_phone';
         }
       },
       termsAgreement: ({ termsAgreement }) => {
         if (!termsAgreement) {
-          return 'form.terms_required';
+          return 'agree_terms_required';
         }
       },
     }),
@@ -126,9 +125,9 @@ const PhonePasswordless = ({ type }: Props) => {
 
   useEffect(() => {
     if (error) {
-      setToast(i18n.t<string, LogtoErrorI18nKey>(`errors:${error.code}`));
+      setToast(t('error.request', { ...error }));
     }
-  }, [error, i18n, setToast]);
+  }, [error, t, setToast]);
 
   return (
     <form className={styles.form}>
@@ -136,7 +135,7 @@ const PhonePasswordless = ({ type }: Props) => {
         name="phone"
         className={classNames(styles.inputField, fieldErrors.phone && styles.withError)}
         autoComplete="mobile"
-        placeholder={t('sign_in.phone_number')}
+        placeholder={t('input.phone_number')}
         countryCallingCode={phoneNumber.countryCallingCode}
         nationalNumber={phoneNumber.nationalNumber}
         countryList={countryList}
@@ -156,7 +155,7 @@ const PhonePasswordless = ({ type }: Props) => {
         }}
       />
 
-      <Button onClick={onSubmitHandler}>{t('general.continue')}</Button>
+      <Button onClick={onSubmitHandler}>{t('action.continue')}</Button>
     </form>
   );
 };

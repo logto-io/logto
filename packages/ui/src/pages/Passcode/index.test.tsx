@@ -21,7 +21,7 @@ describe('Passcode Page', () => {
       </MemoryRouter>
     );
 
-    expect(queryByText('sign_in.enter_passcode')).toBeNull();
+    expect(queryByText('action.enter_passcode')).toBeNull();
   });
 
   it('render properly', () => {
@@ -33,7 +33,7 @@ describe('Passcode Page', () => {
       </MemoryRouter>
     );
 
-    expect(queryByText('sign_in.enter_passcode')).not.toBeNull();
-    expect(queryByText('sign_in.passcode_sent')).not.toBeNull();
+    expect(queryByText('action.enter_passcode')).not.toBeNull();
+    expect(queryByText('description.enter_passcode')).not.toBeNull();
   });
 });

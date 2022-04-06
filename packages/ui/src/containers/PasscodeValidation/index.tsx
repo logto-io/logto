@@ -33,7 +33,7 @@ const PasscodeValidation = ({ type, channel, className, target }: Props) => {
   const [code, setCode] = useState<string[]>([]);
   const [error, setError] = useState<ErrorType>();
   const { setToast } = useContext(PageContext);
-  const { t } = useTranslation();
+  const { t } = useTranslation(undefined, { keyPrefix: 'main_flow' });
 
   const { seconds, isRunning, restart } = useTimer({
     autoStart: true,
@@ -74,18 +74,19 @@ const PasscodeValidation = ({ type, channel, className, target }: Props) => {
   useEffect(() => {
     // TODO: move to global handling
     if (sendPasscodeError) {
-      setToast(sendPasscodeError.message);
+      setToast(t('error.request', { ...sendPasscodeError }));
     }
-  }, [sendPasscodeError, setToast]);
+  }, [sendPasscodeError, setToast, t]);
 
   useEffect(() => {
+    // TODO: load error from api response
     if (verifyPasscodeError) {
-      setError(verifyPasscodeError.code);
+      setError('invalid_passcode');
     }
   }, [verifyPasscodeError]);
 
   const renderCountDownMessage = useMemo(() => {
-    const contents: ReactNode[] = t('sign_in.resend_after_seconds', { seconds }).split(
+    const contents: ReactNode[] = t('description.resend_after_senconds', { seconds }).split(
       `${seconds}`
     );
     const counter = <span key="counter">{seconds}</span>;
@@ -109,7 +110,7 @@ const PasscodeValidation = ({ type, channel, className, target }: Props) => {
         renderCountDownMessage
       ) : (
         <TextLink
-          text="sign_in.resend_passcode"
+          text="description.resend_passcode"
           onClick={() => {
             void sendPassCode(target);
           }}

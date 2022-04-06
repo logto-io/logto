@@ -13,23 +13,23 @@ describe('<CreateAccount/>', () => {
     expect(container.querySelector('input[name="username"]')).not.toBeNull();
     expect(container.querySelector('input[name="password"]')).not.toBeNull();
     expect(container.querySelector('input[name="confirm_password"]')).not.toBeNull();
-    expect(queryByText('register.action')).not.toBeNull();
-    expect(queryByText('sign_in.terms_of_use')).not.toBeNull();
+    expect(queryByText('action.create')).not.toBeNull();
+    expect(queryByText('description.terms_of_use')).not.toBeNull();
   });
 
   test('username and password are required', () => {
     const { queryAllByText, getByText } = render(<CreateAccount />);
-    const submitButton = getByText('register.action');
+    const submitButton = getByText('action.create');
     fireEvent.click(submitButton);
 
-    expect(queryAllByText('errors:form.required')).toHaveLength(2);
+    expect(queryAllByText('required')).toHaveLength(2);
 
     expect(register).not.toBeCalled();
   });
 
   test('username with initial numeric char should throw', () => {
     const { queryByText, getByText, container } = render(<CreateAccount />);
-    const submitButton = getByText('register.action');
+    const submitButton = getByText('action.create');
 
     const usernameInput = container.querySelector('input[name="username"]');
 
@@ -39,7 +39,7 @@ describe('<CreateAccount/>', () => {
 
     fireEvent.click(submitButton);
 
-    expect(queryByText('errors:user.username_forbidden_initial_number')).not.toBeNull();
+    expect(queryByText('username_should_not_start_with_number')).not.toBeNull();
 
     expect(register).not.toBeCalled();
 
@@ -48,12 +48,12 @@ describe('<CreateAccount/>', () => {
       fireEvent.change(usernameInput, { target: { value: 'username' } });
     }
 
-    expect(queryByText('errors:user.username_forbidden_initial_number')).toBeNull();
+    expect(queryByText('username_should_not_start_with_number')).toBeNull();
   });
 
   test('username with special character should throw', () => {
-    const { queryByText, getByText, container } = render(<CreateAccount />);
-    const submitButton = getByText('register.action');
+    const { queryByText, getByText, container, debug } = render(<CreateAccount />);
+    const submitButton = getByText('action.create');
     const usernameInput = container.querySelector('input[name="username"]');
 
     if (usernameInput) {
@@ -62,7 +62,9 @@ describe('<CreateAccount/>', () => {
 
     fireEvent.click(submitButton);
 
-    expect(queryByText('errors:user.username_invalid_character')).not.toBeNull();
+    debug();
+
+    expect(queryByText('username_valid_charset')).not.toBeNull();
 
     expect(register).not.toBeCalled();
 
@@ -71,12 +73,12 @@ describe('<CreateAccount/>', () => {
       fireEvent.change(usernameInput, { target: { value: 'username' } });
     }
 
-    expect(queryByText('errors:user.username_invalid_character')).toBeNull();
+    expect(queryByText('username_valid_charset')).toBeNull();
   });
 
   test('password less than 6 chars should throw', () => {
     const { queryByText, getByText, container } = render(<CreateAccount />);
-    const submitButton = getByText('register.action');
+    const submitButton = getByText('action.create');
     const passwordInput = container.querySelector('input[name="password"]');
 
     if (passwordInput) {
@@ -85,7 +87,7 @@ describe('<CreateAccount/>', () => {
 
     fireEvent.click(submitButton);
 
-    expect(queryByText('errors:password.too_short')).not.toBeNull();
+    expect(queryByText('password_min_length')).not.toBeNull();
 
     expect(register).not.toBeCalled();
 
@@ -94,12 +96,12 @@ describe('<CreateAccount/>', () => {
       fireEvent.change(passwordInput, { target: { value: '123456' } });
     }
 
-    expect(queryByText('errors:password.too_short')).toBeNull();
+    expect(queryByText('password_min_length')).toBeNull();
   });
 
   test('password mismatch with confirmPassword should throw', () => {
     const { queryByText, getByText, container } = render(<CreateAccount />);
-    const submitButton = getByText('register.action');
+    const submitButton = getByText('action.create');
     const passwordInput = container.querySelector('input[name="password"]');
     const confirmPasswordInput = container.querySelector('input[name="confirm_password"]');
     const usernameInput = container.querySelector('input[name="username"]');
@@ -118,7 +120,7 @@ describe('<CreateAccount/>', () => {
 
     fireEvent.click(submitButton);
 
-    expect(queryByText('errors:password.inconsistent_password')).not.toBeNull();
+    expect(queryByText('passwords_do_not_match')).not.toBeNull();
 
     expect(register).not.toBeCalled();
 
@@ -127,12 +129,12 @@ describe('<CreateAccount/>', () => {
       fireEvent.change(confirmPasswordInput, { target: { value: '123456' } });
     }
 
-    expect(queryByText('errors:password.inconsistent_password')).toBeNull();
+    expect(queryByText('passwords_do_not_match')).toBeNull();
   });
 
   test('terms of use not checked should throw', () => {
     const { queryByText, getByText, container } = render(<CreateAccount />);
-    const submitButton = getByText('register.action');
+    const submitButton = getByText('action.create');
     const passwordInput = container.querySelector('input[name="password"]');
     const confirmPasswordInput = container.querySelector('input[name="confirm_password"]');
     const usernameInput = container.querySelector('input[name="username"]');
@@ -151,20 +153,20 @@ describe('<CreateAccount/>', () => {
 
     fireEvent.click(submitButton);
 
-    expect(queryByText('errors:form.terms_required')).not.toBeNull();
+    expect(queryByText('agree_terms_required')).not.toBeNull();
 
     expect(register).not.toBeCalled();
 
     // Clear Error
-    const termsButton = getByText('sign_in.terms_agreement_prefix');
+    const termsButton = getByText('description.agree_with_terms');
     fireEvent.click(termsButton);
 
-    expect(queryByText('errors:form.terms_required')).toBeNull();
+    expect(queryByText('agree_terms_required')).toBeNull();
   });
 
   test('submit form properly', async () => {
     const { getByText, container } = render(<CreateAccount />);
-    const submitButton = getByText('register.action');
+    const submitButton = getByText('action.create');
     const passwordInput = container.querySelector('input[name="password"]');
     const confirmPasswordInput = container.querySelector('input[name="confirm_password"]');
     const usernameInput = container.querySelector('input[name="username"]');
@@ -181,7 +183,7 @@ describe('<CreateAccount/>', () => {
       fireEvent.change(confirmPasswordInput, { target: { value: '123456' } });
     }
 
-    const termsButton = getByText('sign_in.terms_agreement_prefix');
+    const termsButton = getByText('description.agree_with_terms');
     fireEvent.click(termsButton);
 
     await waitFor(() => {

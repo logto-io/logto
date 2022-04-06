@@ -58,6 +58,18 @@ describe('Phone Input Field UI Component', () => {
     }
   });
 
+  it('render input error', () => {
+    const { queryByText } = render(
+      <PhoneInput
+        name="PhoneInput"
+        nationalNumber="110"
+        error="invalid_phone"
+        onChange={onChange}
+      />
+    );
+    expect(queryByText('invalid_phone')).not.toBeNull();
+  });
+
   it('render input clear', () => {
     const { container } = render(
       <PhoneInput name="PhoneInput" nationalNumber="911" onChange={onChange} />
