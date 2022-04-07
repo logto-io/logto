@@ -6,5 +6,9 @@
   padding: _.unit(2) _.unit(6);
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  font-size: 12px;
+  font-size: 10px;
+
+  &.zh {
+    font-size: 12px;
+  }
 }
