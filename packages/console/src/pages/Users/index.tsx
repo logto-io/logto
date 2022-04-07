@@ -18,6 +18,7 @@ import TableEmpty from '@/components/Table/TableEmpty';
 import TableError from '@/components/Table/TableError';
 import TableLoading from '@/components/Table/TableLoading';
 import { RequestError } from '@/hooks/use-api';
+import Plus from '@/icons/Plus';
 import * as modalStyles from '@/scss/modal.module.scss';
 import * as tableStyles from '@/scss/table.module.scss';
 
@@ -48,6 +49,7 @@ const Users = () => {
         <Button
           title="admin_console.users.create"
           type="primary"
+          icon={<Plus />}
           onClick={() => {
             setIsCreateFormOpen(true);
           }}

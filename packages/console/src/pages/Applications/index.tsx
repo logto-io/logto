@@ -18,6 +18,7 @@ import TableEmpty from '@/components/Table/TableEmpty';
 import TableError from '@/components/Table/TableError';
 import TableLoading from '@/components/Table/TableLoading';
 import { RequestError } from '@/hooks/use-api';
+import Plus from '@/icons/Plus';
 import * as modalStyles from '@/scss/modal.module.scss';
 import * as tableStyles from '@/scss/table.module.scss';
 import { applicationTypeI18nKey } from '@/types/applications';
@@ -37,6 +38,7 @@ const Applications = () => {
       <div className={styles.headline}>
         <CardTitle title="applications.title" subtitle="applications.subtitle" />
         <Button
+          icon={<Plus />}
           title="admin_console.applications.create"
           type="primary"
           onClick={() => {
