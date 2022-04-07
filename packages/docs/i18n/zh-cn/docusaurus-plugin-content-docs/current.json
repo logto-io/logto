@@ -1,0 +1,10 @@
+{
+  "version.label": {
+    "message": "下一个",
+    "description": "The label for version current"
+  },
+  "sidebar.tutorialSidebar.category.Integrate SDK": {
+    "message": "集成 SDK",
+    "description": "The label for category Integrate SDK in sidebar tutorialSidebar"
+  }
+}
