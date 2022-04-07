@@ -6,7 +6,7 @@ import ImagePlaceholder from '@/components/ImagePlaceholder';
 import ItemPreview from '@/components/ItemPreview';
 import UnnamedTrans from '@/components/UnnamedTrans';
 
-import * as styles from './ConnectorName.module.scss';
+import * as styles from './index.module.scss';
 
 type Props = {
   connector?: ConnectorDTO;

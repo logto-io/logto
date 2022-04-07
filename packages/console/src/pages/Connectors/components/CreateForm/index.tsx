@@ -11,7 +11,7 @@ import UnnamedTrans from '@/components/UnnamedTrans';
 import { RequestError } from '@/hooks/use-api';
 import * as modalStyles from '@/scss/modal.module.scss';
 
-import * as styles from './SetupModal.module.scss';
+import * as styles from './index.module.scss';
 
 type Props = {
   isOpen: boolean;
@@ -19,7 +19,7 @@ type Props = {
   type?: ConnectorType;
 };
 
-const SetupModal = ({ isOpen, onClose, type }: Props) => {
+const CreateForm = ({ isOpen, onClose, type }: Props) => {
   const [connectorId, setConnectorId] = useState<string>('');
   const { data, error } = useSWR<ConnectorDTO[], RequestError>('/api/connectors');
   const isLoading = !data && !error;
@@ -66,6 +66,7 @@ const SetupModal = ({ isOpen, onClose, type }: Props) => {
           />
         }
         className={styles.body}
+        size="large"
         onClose={onClose}
       >
         {isLoading && 'Loading...'}
@@ -103,4 +104,4 @@ const SetupModal = ({ isOpen, onClose, type }: Props) => {
   );
 };
 
-export default SetupModal;
+export default CreateForm;

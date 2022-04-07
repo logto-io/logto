@@ -16,7 +16,7 @@ import { RequestError } from '@/hooks/use-api';
 import * as tableStyles from '@/scss/table.module.scss';
 
 import ConnectorRow from './components/ConnectorRow';
-import SetupModal from './components/SetupModal';
+import CreateForm from './components/CreateForm';
 import * as styles from './index.module.scss';
 
 const Connectors = () => {
@@ -124,7 +124,7 @@ const Connectors = () => {
         </div>
       </Card>
       {data && (
-        <SetupModal
+        <CreateForm
           isOpen={Boolean(createType)}
           type={createType}
           onClose={() => {
