@@ -8,6 +8,7 @@
   transition-timing-function: ease-in-out;
   transition-duration: 0.2s;
   padding: _.unit(2) _.unit(3);
+  font: var(--font-body-medium);
 
   &.withIcon {
     display: flex;
@@ -31,9 +32,6 @@
     color: var(--color-component-text);
     font: var(--font-body-medium);
     padding: 0;
-    // Our font size and line height pair (14px/20px) will cause a "blank top space" in inline display.
-    // need to set display to block to keep the whole input box height to 36px.
-    display: block;
 
     &::placeholder {
       color: var(--color-component-caption);
