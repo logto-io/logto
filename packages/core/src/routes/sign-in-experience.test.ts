@@ -34,8 +34,10 @@ jest.mock('@/connectors', () => {
   };
 });
 
+const findDefaultSignInExperience = jest.fn(async () => mockSignInExperience);
+
 jest.mock('@/queries/sign-in-experience', () => ({
-  findDefaultSignInExperience: jest.fn(async (): Promise<SignInExperience> => mockSignInExperience),
+  findDefaultSignInExperience: jest.fn(async () => findDefaultSignInExperience()),
   updateDefaultSignInExperience: jest.fn(
     async (data: Partial<CreateSignInExperience>): Promise<SignInExperience> => ({
       ...mockSignInExperience,
@@ -46,10 +48,30 @@ jest.mock('@/queries/sign-in-experience', () => ({
 
 const signInExperienceRequester = createRequester({ authedRoutes: signInExperiencesRoutes });
 
-it('GET /sign-in-exp', async () => {
-  const response = await signInExperienceRequester.get('/sign-in-exp');
-  expect(response.status).toEqual(200);
-  expect(response.body).toEqual(mockSignInExperience);
+describe('GET /sign-in-exp', () => {
+  it('should call findDefaultSignInExperience', async () => {
+    const response = await signInExperienceRequester.get('/sign-in-exp');
+    expect(findDefaultSignInExperience).toHaveBeenCalledTimes(1);
+    expect(response.status).toEqual(200);
+    expect(response.body).toEqual(mockSignInExperience);
+  });
+
+  it('should filter enabled social connectors', async () => {
+    const signInExperience = {
+      ...mockSignInExperience,
+      signInMethods: { ...mockSignInMethods, social: SignInMethodState.secondary },
+      socialSignInConnectorIds: ['facebook', 'github', 'google'],
+    };
+
+    findDefaultSignInExperience.mockImplementationOnce(async () => signInExperience);
+
+    const response = await signInExperienceRequester.get('/sign-in-exp');
+    expect(response.status).toEqual(200);
+    expect(response.body).toEqual({
+      ...signInExperience,
+      socialSignInConnectorIds: ['facebook', 'github'],
+    });
+  });
 });
 
 describe('PATCH /sign-in-exp', () => {
