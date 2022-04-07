@@ -1,11 +1,10 @@
 import { Application } from '@logto/schemas';
-import { conditional } from '@silverhand/essentials/lib/utilities/conditional.js';
 import classNames from 'classnames';
 import React, { useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import Modal from 'react-modal';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import useSWR from 'swr';
 
 import Button from '@/components/Button';
@@ -14,6 +13,7 @@ import CardTitle from '@/components/CardTitle';
 import CopyToClipboard from '@/components/CopyToClipboard';
 import ImagePlaceholder from '@/components/ImagePlaceholder';
 import ItemPreview from '@/components/ItemPreview';
+import Pagination from '@/components/Pagination';
 import TableEmpty from '@/components/Table/TableEmpty';
 import TableError from '@/components/Table/TableError';
 import TableLoading from '@/components/Table/TableLoading';
@@ -25,12 +25,19 @@ import { applicationTypeI18nKey } from '@/types/applications';
 import CreateForm from './components/CreateForm';
 import * as styles from './index.module.scss';
 
+const pageSize = 20;
+
 const Applications = () => {
   const [isCreateFormOpen, setIsCreateFormOpen] = useState(false);
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { data, error, mutate } = useSWR<Application[], RequestError>('/api/applications');
+  const [query, setQuery] = useSearchParams();
+  const pageIndex = Number(query.get('page') ?? '1');
+  const { data, error, mutate } = useSWR<[Application[], number], RequestError>(
+    `/api/applications?page=${pageIndex}&page_size=${pageSize}`
+  );
   const isLoading = !data && !error;
   const navigate = useNavigate();
+  const [applications, totalCount] = data ?? [];
 
   return (
     <Card className={styles.card}>
@@ -53,8 +60,6 @@ const Applications = () => {
               setIsCreateFormOpen(false);
 
               if (createdApp) {
-                void mutate(conditional(data && [...data, createdApp]));
-
                 toast.success(t('applications.application_created', { name: createdApp.name }));
                 navigate(`/applications/${createdApp.id}`);
               }
@@ -83,7 +88,7 @@ const Applications = () => {
               />
             )}
             {isLoading && <TableLoading columns={2} />}
-            {data?.length === 0 && (
+            {applications?.length === 0 && (
               <TableEmpty columns={2}>
                 <Button
                   title="admin_console.applications.create"
@@ -94,7 +99,7 @@ const Applications = () => {
                 />
               </TableEmpty>
             )}
-            {data?.map(({ id, name, type }) => (
+            {applications?.map(({ id, name, type }) => (
               <tr
                 key={id}
                 className={tableStyles.clickable}
@@ -117,6 +122,17 @@ const Applications = () => {
             ))}
           </tbody>
         </table>
+      </div>
+      <div className={styles.pagination}>
+        {!!totalCount && (
+          <Pagination
+            pageCount={Math.ceil(totalCount / pageSize)}
+            pageIndex={pageIndex}
+            onChange={(page) => {
+              setQuery({ page: String(page) });
+            }}
+          />
+        )}
       </div>
     </Card>
   );

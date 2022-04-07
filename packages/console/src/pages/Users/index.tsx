@@ -135,7 +135,7 @@ const Users = () => {
         </table>
       </div>
       <div className={styles.pagination}>
-        {totalCount !== undefined && totalCount > 0 && (
+        {!!totalCount && (
           <Pagination
             pageCount={Math.ceil(totalCount / pageSize)}
             pageIndex={pageIndex}
