@@ -18,7 +18,7 @@ const config: Config.InitialOptions = {
     '\\.module\\.(css|sass|scss)$': 'identity-obj-proxy',
   },
   setupFilesAfterEnv: ['<rootDir>/src/jest.setup.ts'],
-  coveragePathIgnorePatterns: ['/node_modules/', '/dist/'],
+  coveragePathIgnorePatterns: ['/node_modules/', '/dist/', '/src/__mocks__/'],
   coverageReporters: ['text-summary', 'lcov'],
   globals: {
     'ts-jest': {
