@@ -21,7 +21,7 @@ export type GetStartedType = 'application' | 'connector';
 export const useGetStartedSteps = (type: GetStartedType, subtype?: string) => {
   const subPath = subtype ? `/${subtype}` : '';
   const publicPath = useMemo(
-    () => `/console/get-started/${type}${subPath}/${i18next.language}`,
+    () => `/console/get-started/${type}${subPath}/${i18next.language}`.toLowerCase(),
     [type, subPath]
   );
 
