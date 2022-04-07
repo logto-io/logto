@@ -3,9 +3,8 @@ import { useMemo } from 'react';
 // eslint-disable-next-line node/file-extension-in-import
 import useSWRImmutable from 'swr/immutable';
 
+import { StepMetadata } from '@/types/get-started';
 import { parseMarkdownWithYamlFrontmatter } from '@/utilities/markdown';
-
-import { StepMetadata } from '../components/Step';
 
 type DocumentFileNames = {
   files: string[];

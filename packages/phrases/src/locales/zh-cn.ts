@@ -76,6 +76,9 @@ const translation = {
       unknown_server_error: '服务器发生未知错误。',
       empty: '没有数据',
       missing_total_number: '无法从返回的头部信息中找到 Total-Number。',
+      no_space_in_uri: 'URI 中不能包含空格',
+      required_field_missing: '请输入{{field}}',
+      required_field_missing_plural: '{{field}}不能全部为空',
     },
     tab_sections: {
       overview: '概览',
@@ -128,7 +131,6 @@ const translation = {
       get_started: {
         header_description:
           '参考如下教程，将 Logto 集成到您的应用中。您也可以点击右侧链接，获取我们为您准备好的示范工程。',
-        get_sample_file: '获取示范工程',
         title: '恭喜！您的应用已成功创建。',
         subtitle: '请参考以下步骤完成您的应用设置。首先，请选择您要使用的 Javascript 框架：',
         description_by_library: '本教程向您演示如何在 {{library}} 应用中集成 Logto 登录功能',
@@ -161,7 +163,6 @@ const translation = {
       application_deleted: 'The application {{name}} deleted.',
       save_success: 'Saved!',
       redirect_uri_required: 'You have to enter at least one redirect URI.',
-      no_space_in_uri: 'Space is not allowed in URI',
     },
     api_resources: {
       title: 'API Resources',
@@ -233,6 +234,9 @@ const translation = {
       options_change_sms: '更换短信服务商',
       more_options: '更多选项',
       connector_deleted: '成功删除连接器。',
+    },
+    get_started: {
+      get_sample_file: '获取示例工程',
     },
     users: {
       title: '用户管理',

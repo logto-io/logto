@@ -6,7 +6,7 @@ subtitle: 2 steps
 
 The Logto React SDK provides you tools and hooks to quickly implement your own authorization flow.  First, let’s enter your redirect URI
 
-```multitextinput
+```redirectUris
 Redirect URI
 ```
 

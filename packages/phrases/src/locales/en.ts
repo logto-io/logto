@@ -76,6 +76,9 @@ const translation = {
       unknown_server_error: 'Unknown server error occurred.',
       empty: 'No Data',
       missing_total_number: 'Unable to find Total-Number in response headers.',
+      no_space_in_uri: 'Space is not allowed in URI',
+      required_field_missing: 'Please enter {{field}}',
+      required_field_missing_plural: 'You have to enter at least one {{field}}',
     },
     tab_sections: {
       overview: 'Overview',
@@ -128,7 +131,6 @@ const translation = {
       get_started: {
         header_description:
           'Follow a step by step guide to integrate your application or get a sample configured with your account settings',
-        get_sample_file: 'Get a sample file',
         title: 'Congratulations! The application has been created successfully.',
         subtitle:
           'Now follow the steps below to finish your app settings. Please select the JS library to continue.',
@@ -163,7 +165,6 @@ const translation = {
       application_deleted: 'The application {{name}} deleted.',
       save_success: 'Saved!',
       redirect_uri_required: 'You have to enter at least one redirect URI.',
-      no_space_in_uri: 'Space is not allowed in URI',
     },
     api_resources: {
       title: 'API Resources',
@@ -235,6 +236,9 @@ const translation = {
       options_change_sms: 'Change SMS connector',
       more_options: 'MORE OPTIONS',
       connector_deleted: 'The connector has been deleted.',
+    },
+    get_started: {
+      get_sample_file: 'Get a sample file',
     },
     users: {
       title: 'User Management',

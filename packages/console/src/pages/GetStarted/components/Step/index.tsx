@@ -1,41 +1,65 @@
+import { conditional } from '@silverhand/essentials';
 import classNames from 'classnames';
-import React, { forwardRef, Ref } from 'react';
+import React, { PropsWithChildren, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
+import { CodeProps } from 'react-markdown/lib/ast-to-react.js';
 
 import Button from '@/components/Button';
 import Card from '@/components/Card';
 import CardTitle from '@/components/CardTitle';
-import CodeEditor from '@/components/CodeEditor';
 import DangerousRaw from '@/components/DangerousRaw';
 import IconButton from '@/components/IconButton';
 import Spacer from '@/components/Spacer';
 import { ArrowDown, ArrowUp } from '@/icons/Arrow';
 import Tick from '@/icons/Tick';
+import { StepMetadata } from '@/types/get-started';
 
+import CodeComponentRenderer from '../CodeComponentRenderer';
 import * as styles from './index.module.scss';
-
-export type StepMetadata = {
-  title?: string;
-  subtitle?: string;
-  metadata: string; // Markdown formatted string
-};
 
 type Props = {
   data: StepMetadata;
   index: number;
-  isCompleted: boolean;
-  isExpanded: boolean;
+  isActive: boolean;
+  isComplete: boolean;
   isFinalStep: boolean;
-  onComplete?: () => void;
   onNext?: () => void;
-  onToggle?: () => void;
 };
 
-const Step = (
-  { data, index, isCompleted, isExpanded, isFinalStep, onComplete, onNext, onToggle }: Props,
-  ref?: Ref<HTMLDivElement>
-) => {
+const Step = ({ data, index, isActive, isComplete, isFinalStep, onNext }: Props) => {
+  const [isExpanded, setIsExpanded] = useState(false);
   const { title, subtitle, metadata } = data;
+  const ref = useRef<HTMLDivElement>(null);
+
+  const scrollToStep = useCallback(() => {
+    ref.current?.scrollIntoView({ block: 'start', behavior: 'smooth' });
+  }, []);
+
+  const onError = useCallback(() => {
+    setIsExpanded(true);
+    scrollToStep();
+  }, [scrollToStep]);
+
+  useEffect(() => {
+    if (isActive) {
+      setIsExpanded(true);
+    }
+  }, [isActive]);
+
+  useEffect(() => {
+    if (isExpanded) {
+      scrollToStep();
+    }
+  }, [isExpanded, scrollToStep]);
+
+  const memoizedComponents = useMemo(
+    () => ({
+      code: ({ ...props }: PropsWithChildren<CodeProps>) => (
+        <CodeComponentRenderer {...props} onError={onError} />
+      ),
+    }),
+    [onError]
+  );
 
   // Steps in get-started must have "title" declared in the Yaml header of the markdown source file
   if (!title) {
@@ -43,18 +67,22 @@ const Step = (
   }
 
   // TODO: add more styles to markdown renderer
-  // TODO: render form and input fields in steps
   return (
     <Card key={title} ref={ref} className={styles.card}>
-      <div className={styles.cardHeader} onClick={onToggle}>
+      <div
+        className={styles.header}
+        onClick={() => {
+          setIsExpanded(!isExpanded);
+        }}
+      >
         <div
           className={classNames(
             styles.index,
-            isExpanded && styles.active,
-            isCompleted && styles.completed
+            isActive && styles.active,
+            isComplete && styles.completed
           )}
         >
-          {isCompleted ? <Tick /> : index + 1}
+          {isComplete ? <Tick /> : index + 1}
         </div>
         <CardTitle
           size="medium"
@@ -64,38 +92,21 @@ const Step = (
         <Spacer />
         <IconButton>{isExpanded ? <ArrowUp /> : <ArrowDown />}</IconButton>
       </div>
-      {isExpanded && (
-        <>
-          <ReactMarkdown
-            className={styles.markdownContent}
-            components={{
-              code: ({ className, children }) => {
-                const [, language] = /language-(\w+)/.exec(className ?? '') ?? [];
-                const content = String(children);
-
-                return <CodeEditor isReadonly language={language} value={content} />;
-              },
-            }}
-          >
-            {metadata}
-          </ReactMarkdown>
-          <div className={styles.buttonWrapper}>
-            <Button
-              type="primary"
-              title={`general.${isFinalStep ? 'done' : 'next'}`}
-              onClick={() => {
-                if (isFinalStep) {
-                  onComplete?.();
-                } else {
-                  onNext?.();
-                }
-              }}
-            />
-          </div>
-        </>
-      )}
+      <div className={classNames(styles.content, isExpanded && styles.expanded)}>
+        <ReactMarkdown className={styles.markdownContent} components={memoizedComponents}>
+          {metadata}
+        </ReactMarkdown>
+        <div className={styles.buttonWrapper}>
+          <Button
+            htmlType={isFinalStep ? 'submit' : 'button'}
+            type="primary"
+            title={`general.${isFinalStep ? 'done' : 'next'}`}
+            onClick={conditional(!isFinalStep && onNext)}
+          />
+        </div>
+      </div>
     </Card>
   );
 };
 
-export default forwardRef(Step);
+export default Step;
