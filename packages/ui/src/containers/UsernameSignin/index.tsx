@@ -130,7 +130,7 @@ const UsernameSignin: FC = () => {
   useEffect(() => {
     // TODO: username password not correct error message
     if (error) {
-      setToast(t('error.username_password_mismatch'));
+      setToast(t('error.request', { ...error }));
     }
   }, [error, t, setToast]);
 
