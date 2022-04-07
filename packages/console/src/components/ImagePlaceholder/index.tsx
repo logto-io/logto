@@ -14,11 +14,11 @@ const ImagePlaceholder = ({ size = 40, borderRadius = 8 }: Props) => {
   const { t } = useTranslation();
 
   return (
-    <div className={styles.container} style={{ width: size, height: size, borderRadius }}>
+    <div className={styles.container} style={{ borderRadius }}>
       <img
         alt={t('general.placeholder')}
         src={defaultPlaceholder}
-        style={{ width: size, height: size }}
+        style={{ width: size - 16, height: size - 16 }}
       />
     </div>
   );
