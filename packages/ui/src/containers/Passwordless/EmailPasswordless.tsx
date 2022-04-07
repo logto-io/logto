@@ -50,7 +50,7 @@ const EmailPasswordless = ({ type }: Props) => {
 
   const sendPasscode = getSendPasscodeApi(type, 'email');
 
-  const { loading, error, result, run: asyncSendPasscode } = useApi(sendPasscode);
+  const { error, result, run: asyncSendPasscode } = useApi(sendPasscode);
 
   const validations = useMemo<FieldValidations>(
     () => ({
@@ -69,11 +69,6 @@ const EmailPasswordless = ({ type }: Props) => {
   );
 
   const onSubmitHandler = useCallback(() => {
-    // Should be removed after api redesign
-    if (loading) {
-      return;
-    }
-
     const emailError = validations.email(fieldState);
 
     if (emailError) {
@@ -91,7 +86,7 @@ const EmailPasswordless = ({ type }: Props) => {
     }
 
     void asyncSendPasscode(fieldState.email);
-  }, [loading, validations, fieldState, asyncSendPasscode]);
+  }, [validations, fieldState, asyncSendPasscode]);
 
   useEffect(() => {
     console.log(result);

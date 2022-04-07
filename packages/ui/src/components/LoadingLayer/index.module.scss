@@ -1,0 +1,33 @@
+@use '@/scss/underscore' as _;
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--color-loading-layer);
+  @include _.flex-column;
+}
+
+.container {
+  width: 60px;
+  height: 60px;
+  border-radius: 8px;
+  background-color: var(--color-dark-background);
+  @include _.flex-column;
+}
+
+.loadingIcon {
+  animation: rotating 1.5s ease-in-out infinite;
+}
+
+@keyframes rotating {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}

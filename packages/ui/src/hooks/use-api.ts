@@ -1,6 +1,8 @@
 import { RequestErrorBody } from '@logto/schemas';
 import { HTTPError } from 'ky';
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useContext, useEffect } from 'react';
+
+import PageContext from '@/hooks/page-context';
 
 type UseApi<T extends any[], U> = {
   result?: U;
@@ -15,6 +17,12 @@ function useApi<Args extends any[], Response>(
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<RequestErrorBody>();
   const [result, setResult] = useState<Response>();
+
+  const { setLoading: setPageLoading } = useContext(PageContext);
+
+  useEffect(() => {
+    setPageLoading(loading);
+  }, [loading, setPageLoading]);
 
   const run = useCallback(
     async (...args: Args) => {
