@@ -1,21 +1,29 @@
 import { Application, CreateApplication, Applications } from '@logto/schemas';
 import { sql } from 'slonik';
 
-import { buildFindMany } from '@/database/find-many';
 import { buildInsertInto } from '@/database/insert-into';
 import pool from '@/database/pool';
 import { buildUpdateWhere } from '@/database/update-where';
-import { convertToIdentifiers, OmitAutoSetFields, getTotalRowCount } from '@/database/utils';
+import {
+  convertToIdentifiers,
+  OmitAutoSetFields,
+  getTotalRowCount,
+  conditionalSql,
+} from '@/database/utils';
 import { DeletionError } from '@/errors/SlonikError';
 
 const { table, fields } = convertToIdentifiers(Applications);
 
 export const findTotalNumberOfApplications = async () => getTotalRowCount(table);
 
-const findApplicationMany = buildFindMany<CreateApplication, Application>(pool, Applications);
-
 export const findAllApplications = async (limit: number, offset: number) =>
-  findApplicationMany({ orderBy: { createdAt: 'desc' }, limit, offset });
+  pool.many<Application>(sql`
+    select ${sql.join(Object.values(fields), sql`, `)}
+    from ${table}
+    order by ${fields.createdAt} desc
+    ${conditionalSql(limit, (limit) => sql`limit ${limit}`)}
+    ${conditionalSql(offset, (offset) => sql`offset ${offset}`)}
+  `);
 
 export const findApplicationById = async (id: string) =>
   pool.one<Application>(sql`
