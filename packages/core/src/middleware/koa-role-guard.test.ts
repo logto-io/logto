@@ -1,8 +1,8 @@
 import { UserRole } from '@logto/schemas';
 import { Context } from 'koa';
 
+import { mockUser } from '@/__mocks__';
 import RequestError from '@/errors/RequestError';
-import { mockUser } from '@/utils/mock';
 import { createContextWithRouteParameters } from '@/utils/test-utils';
 
 import { WithAuthContext } from './koa-auth';

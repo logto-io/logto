@@ -1,6 +1,7 @@
 /* eslint-disable max-lines */
 import { Connector, ConnectorType } from '@logto/schemas';
 
+import { mockConnectorInstanceList, mockConnectorList } from '@/__mocks__';
 import {
   ConnectorError,
   ConnectorErrorCodes,
@@ -13,7 +14,6 @@ import {
 import RequestError from '@/errors/RequestError';
 import { updateConnector } from '@/queries/connector';
 import assertThat from '@/utils/assert-that';
-import { mockConnectorList, mockConnectorInstanceList } from '@/utils/mock';
 import { createRequester } from '@/utils/test-utils';
 
 import connectorRoutes from './connector';

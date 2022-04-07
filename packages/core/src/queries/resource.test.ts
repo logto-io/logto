@@ -1,9 +1,9 @@
 import { Resources } from '@logto/schemas';
 import { createMockPool, createMockQueryResult, sql } from 'slonik';
 
+import { mockResource } from '@/__mocks__';
 import { convertToIdentifiers, convertToPrimitiveOrSql } from '@/database/utils';
 import { DeletionError } from '@/errors/SlonikError';
-import { mockResource } from '@/utils/mock';
 import { expectSqlAssert, QueryType } from '@/utils/test-utils';
 
 import {

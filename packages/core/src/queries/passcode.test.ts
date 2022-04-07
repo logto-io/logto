@@ -2,13 +2,13 @@ import { Passcodes, PasscodeType } from '@logto/schemas';
 import { createMockPool, createMockQueryResult, sql } from 'slonik';
 import { snakeCase } from 'snake-case';
 
+import { mockPasscode } from '@/__mocks__';
 import {
   convertToIdentifiers,
   convertToPrimitiveOrSql,
   excludeAutoSetFields,
 } from '@/database/utils';
 import { DeletionError } from '@/errors/SlonikError';
-import { mockPasscode } from '@/utils/mock';
 import { expectSqlAssert, QueryType } from '@/utils/test-utils';
 
 import {

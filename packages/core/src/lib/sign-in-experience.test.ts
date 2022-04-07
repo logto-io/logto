@@ -1,5 +1,12 @@
 import { BrandingStyle, SignInMethodState, ConnectorType } from '@logto/schemas';
 
+import {
+  mockAliyunDmConnectorInstance,
+  mockFacebookConnectorInstance,
+  mockGithubConnectorInstance,
+  mockBranding,
+  mockSignInMethods,
+} from '@/__mocks__';
 import { ConnectorInstance } from '@/connectors/types';
 import RequestError from '@/errors/RequestError';
 import {
@@ -8,13 +15,6 @@ import {
   validateSignInMethods,
   validateTermsOfUse,
 } from '@/lib/sign-in-experience';
-import {
-  mockAliyunDmConnectorInstance,
-  mockBranding,
-  mockFacebookConnectorInstance,
-  mockGithubConnectorInstance,
-  mockSignInMethods,
-} from '@/utils/mock';
 
 const enabledConnectorInstances = [mockFacebookConnectorInstance, mockGithubConnectorInstance];
 

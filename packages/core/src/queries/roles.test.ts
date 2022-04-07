@@ -1,8 +1,8 @@
 import { Roles } from '@logto/schemas';
 import { createMockPool, createMockQueryResult, sql } from 'slonik';
 
+import { mockRole } from '@/__mocks__';
 import { convertToIdentifiers } from '@/database/utils';
-import { mockRole } from '@/utils/mock';
 import { expectSqlAssert, QueryType } from '@/utils/test-utils';
 
 import { findAllRoles, findRolesByRoleNames } from './roles';

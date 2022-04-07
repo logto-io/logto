@@ -1,6 +1,6 @@
 import { Setting, CreateSetting } from '@logto/schemas';
 
-import { mockSetting } from '@/utils/mock';
+import { mockSetting } from '@/__mocks__';
 import { createRequester } from '@/utils/test-utils';
 
 import settingRoutes from './setting';

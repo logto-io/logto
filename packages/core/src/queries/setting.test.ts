@@ -1,8 +1,8 @@
 import { Settings } from '@logto/schemas';
 import { createMockPool, createMockQueryResult, sql } from 'slonik';
 
+import { mockSetting } from '@/__mocks__';
 import { convertToIdentifiers } from '@/database/utils';
-import { mockSetting } from '@/utils/mock';
 import { expectSqlAssert, QueryType } from '@/utils/test-utils';
 
 import { defaultSettingId, getSetting, updateSetting } from './setting';

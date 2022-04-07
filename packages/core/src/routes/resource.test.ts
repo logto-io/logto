@@ -1,6 +1,6 @@
 import { Resource, CreateResource } from '@logto/schemas';
 
-import { mockResource } from '@/utils/mock';
+import { mockResource } from '@/__mocks__';
 import { createRequester } from '@/utils/test-utils';
 
 import resourceRoutes from './resource';

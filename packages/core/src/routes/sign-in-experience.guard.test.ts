@@ -15,7 +15,7 @@ import {
   mockSignInExperience,
   mockSignInMethods,
   mockTermsOfUse,
-} from '@/utils/mock';
+} from '@/__mocks__';
 import { createRequester } from '@/utils/test-utils';
 
 import signInExperiencesRoutes from './sign-in-experience';

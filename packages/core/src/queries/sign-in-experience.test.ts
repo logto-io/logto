@@ -1,6 +1,6 @@
 import { createMockPool, createMockQueryResult } from 'slonik';
 
-import { mockSignInExperience } from '@/utils/mock';
+import { mockSignInExperience } from '@/__mocks__';
 import { expectSqlAssert, QueryType } from '@/utils/test-utils';
 
 import { findDefaultSignInExperience, updateDefaultSignInExperience } from './sign-in-experience';

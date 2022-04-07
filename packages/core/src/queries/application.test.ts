@@ -2,13 +2,13 @@ import { Applications } from '@logto/schemas';
 import { createMockPool, createMockQueryResult, sql } from 'slonik';
 import { snakeCase } from 'snake-case';
 
+import { mockApplication } from '@/__mocks__';
 import {
   convertToIdentifiers,
   convertToPrimitiveOrSql,
   excludeAutoSetFields,
 } from '@/database/utils';
 import { DeletionError } from '@/errors/SlonikError';
-import { mockApplication } from '@/utils/mock';
 import { expectSqlAssert, QueryType } from '@/utils/test-utils';
 
 import {

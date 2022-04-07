@@ -1,6 +1,7 @@
 import { Application } from '@logto/schemas';
 import snakecaseKeys from 'snakecase-keys';
 
+import { mockApplication } from '@/__mocks__';
 import {
   consumeInstanceById,
   destroyInstanceById,
@@ -9,7 +10,6 @@ import {
   revokeInstanceByGrantId,
   upsertInstance,
 } from '@/queries/oidc-model-instance';
-import { mockApplication } from '@/utils/mock';
 
 import postgresAdapter from './adapter';
 import { getApplicationTypeString } from './utils';
