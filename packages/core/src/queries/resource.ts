@@ -1,21 +1,28 @@
 import { Resource, CreateResource, Resources } from '@logto/schemas';
 import { sql } from 'slonik';
 
-import { buildFindMany } from '@/database/find-many';
 import { buildInsertInto } from '@/database/insert-into';
 import pool from '@/database/pool';
 import { buildUpdateWhere } from '@/database/update-where';
-import { convertToIdentifiers, OmitAutoSetFields, getTotalRowCount } from '@/database/utils';
+import {
+  convertToIdentifiers,
+  OmitAutoSetFields,
+  getTotalRowCount,
+  conditionalSql,
+} from '@/database/utils';
 import { DeletionError } from '@/errors/SlonikError';
 
 const { table, fields } = convertToIdentifiers(Resources);
 
 export const findTotalNumberOfResources = async () => getTotalRowCount(table);
 
-const findResourcesMany = buildFindMany<CreateResource, Resource>(pool, Resources);
-
 export const findAllResources = async (limit: number, offset: number) =>
-  findResourcesMany({ limit, offset });
+  pool.many<Resource>(sql`
+    select ${sql.join(Object.values(fields), sql`, `)}
+    from ${table}
+    ${conditionalSql(limit, (limit) => sql`limit ${limit}`)}
+    ${conditionalSql(offset, (offset) => sql`offset ${offset}`)}
+  `);
 
 export const findResourceByIndicator = async (indicator: string) =>
   pool.maybeOne<Resource>(sql`
