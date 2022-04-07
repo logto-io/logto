@@ -1,6 +1,7 @@
 import classNames from 'classnames';
-import React, { useState, useEffect, useContext, useMemo, ReactNode } from 'react';
+import React, { useState, useEffect, useContext, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import reactStringReplace from 'react-string-replace';
 import { useTimer } from 'react-timer-hook';
 
 import { getSendPasscodeApi, getVerifyPasscodeApi } from '@/apis/utils';
@@ -86,15 +87,15 @@ const PasscodeValidation = ({ type, channel, className, target }: Props) => {
   }, [verifyPasscodeError]);
 
   const renderCountDownMessage = useMemo(() => {
-    const contents: ReactNode[] = t('description.resend_after_senconds', { seconds }).split(
-      `${seconds}`
+    const contents = t('description.resend_after_senconds', { seconds });
+
+    return (
+      <div className={styles.message}>
+        {reactStringReplace(contents, `${seconds}`, (match) => (
+          <span key="counter">{match}</span>
+        ))}
+      </div>
     );
-    const counter = <span key="counter">{seconds}</span>;
-
-    // eslint-disable-next-line @silverhand/fp/no-mutating-methods
-    contents.splice(1, 0, counter);
-
-    return <div className={styles.message}>{contents}</div>;
   }, [seconds, t]);
 
   return (

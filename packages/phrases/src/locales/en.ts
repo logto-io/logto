@@ -17,8 +17,8 @@ const translation = {
       confirm_password: 'Confirm password',
     },
     secondary: {
-      sign_in_with: 'Sign in with {{ method }}',
-      sign_in_with_2: 'Sign in with {{ methods[0] }} or {{ methods[1] }}',
+      sign_in_with: 'Sign in with {{method}}',
+      sign_in_with_2: 'Sign in with {{methods.0}} or {{methods.1}}',
     },
     action: {
       sign_in: 'Sign In',
@@ -35,8 +35,8 @@ const translation = {
       creat_account: 'Create Account',
       forgot_password: 'Forgot Password?',
       or: 'Or',
-      enter_passcode: 'The passcode has been sent to {{ address }}',
-      resend_after_senconds: 'Resend after {{ seconds }} seconds',
+      enter_passcode: 'The passcode has been sent to {{address}}',
+      resend_after_senconds: 'Resend after {{seconds}} seconds',
       resend_passcode: 'Resend Passcode',
       continue_with: 'Continue with',
       create_account_id_exsits:
@@ -46,7 +46,7 @@ const translation = {
     },
     error: {
       username_password_mismatch: 'Username and password do not match.',
-      required: '{{ field }} is required.',
+      required: '{{field}} is required.',
       username_exists: 'Username already exists.',
       username_should_not_start_with_number: 'Username should not start with a number.',
       username_valid_charset: 'Username should only contain letters, numbers, or underscore.',

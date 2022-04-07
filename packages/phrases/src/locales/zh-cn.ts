@@ -19,7 +19,7 @@ const translation = {
       confirm_password: '确认密码',
     },
     secondary: {
-      sign_in_with: '通过 {{ method }} 登录',
+      sign_in_with: '通过 {{method}} 登录',
       sign_in_with_2: '通过 {{ methods[0] }} 或 {{ methods[1] }} 登录',
     },
     action: {
