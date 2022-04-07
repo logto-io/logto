@@ -8,12 +8,19 @@
   }
 
   .footer {
-    border-top: 1px solid var(--color-border);
-    margin-top: _.unit(6);
-    padding: _.unit(6) 0;
+    padding: 0 _.unit(6) _.unit(6);
     text-align: right;
     position: sticky;
     bottom: 0;
     background: var(--color-on-primary);
+
+    &::before {
+      content: '';
+      background: var(--color-border);
+      opacity: 50%;
+      height: 1px;
+      display: block;
+      margin: _.unit(6) _.unit(-6);
+    }
   }
 }

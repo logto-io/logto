@@ -59,7 +59,6 @@
   --color-neutral-variant-99: #fffbff;
   --color-overlay-8: rgba(25, 28, 29, 8%);
   --color-overlay-12: rgba(25, 28, 29, 12%);
-  --color-border: #c4c7c780;
 }
 
 @mixin light-theme {
@@ -79,6 +78,7 @@
   --color-disabled: var(--color-neutral-80);
   --color-readonly: var(--color-neutral-50);
   --color-icon: var(--color-neutral-50);
+  --color-border: var(--color-neutral-80);
   --color-table-row-selected: rgba(25, 28, 29, 4%);
   --color-code-comment: #66bb6a;
   --color-surface-3: #e3dff5;
