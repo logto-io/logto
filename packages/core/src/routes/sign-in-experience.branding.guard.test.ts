@@ -22,6 +22,8 @@ const expectPatchResponseStatus = async (signInExperience: any, status: number) 
 };
 
 describe('branding', () => {
+  const colorKeys = ['primaryColor', 'backgroundColor', 'darkPrimaryColor', 'darkBackgroundColor'];
+
   const invalidColors = [
     undefined,
     null,
@@ -39,47 +41,24 @@ describe('branding', () => {
 
   const validColors = ['#aB3', '#169deF'];
 
-  describe('primaryColor', () => {
-    test.each(validColors)('%p should succeed', async (primaryColor) => {
-      const signInExperience = { branding: { ...mockBranding, primaryColor } };
-      await expectPatchResponseStatus(signInExperience, 200);
+  describe('colors', () => {
+    test.each(validColors)('%p should succeed', async (validColor) => {
+      for (const colorKey of colorKeys) {
+        // eslint-disable-next-line no-await-in-loop
+        await expectPatchResponseStatus(
+          { branding: { ...mockBranding, [colorKey]: validColor } },
+          200
+        );
+      }
     });
-    test.each(invalidColors)('%p should fail', async (primaryColor) => {
-      const signInExperience = { branding: { ...mockBranding, primaryColor } };
-      await expectPatchResponseStatus(signInExperience, 400);
-    });
-  });
-
-  describe('backgroundColor', () => {
-    test.each(validColors)('%p should succeed', async (backgroundColor) => {
-      const signInExperience = { branding: { ...mockBranding, backgroundColor } };
-      await expectPatchResponseStatus(signInExperience, 200);
-    });
-    test.each(invalidColors)('%p should fail', async (backgroundColor) => {
-      const signInExperience = { branding: { ...mockBranding, backgroundColor } };
-      await expectPatchResponseStatus(signInExperience, 400);
-    });
-  });
-
-  describe('darkPrimaryColor', () => {
-    test.each(validColors)('%p should succeed', async (darkPrimaryColor) => {
-      const signInExperience = { branding: { ...mockBranding, darkPrimaryColor } };
-      await expectPatchResponseStatus(signInExperience, 200);
-    });
-    test.each(invalidColors)('%p should fail', async (darkPrimaryColor) => {
-      const signInExperience = { branding: { ...mockBranding, darkPrimaryColor } };
-      await expectPatchResponseStatus(signInExperience, 400);
-    });
-  });
-
-  describe('darkBackgroundColor', () => {
-    test.each(validColors)('%p should succeed', async (darkBackgroundColor) => {
-      const signInExperience = { branding: { ...mockBranding, darkBackgroundColor } };
-      await expectPatchResponseStatus(signInExperience, 200);
-    });
-    test.each(invalidColors)('%p should fail', async (darkBackgroundColor) => {
-      const signInExperience = { branding: { ...mockBranding, darkBackgroundColor } };
-      await expectPatchResponseStatus(signInExperience, 400);
+    test.each(invalidColors)('%p should fail', async (invalidColor) => {
+      for (const colorKey of colorKeys) {
+        // eslint-disable-next-line no-await-in-loop
+        await expectPatchResponseStatus(
+          { branding: { ...mockBranding, [colorKey]: invalidColor } },
+          400
+        );
+      }
     });
   });
 
@@ -138,9 +117,6 @@ describe('branding', () => {
   });
 
   it('should succeed when branding is valid', async () => {
-    const response = signInExperienceRequester
-      .patch('/sign-in-exp')
-      .send({ branding: mockBranding });
-    await expect(response).resolves.toMatchObject({ status: 200 });
+    await expectPatchResponseStatus({ branding: mockBranding }, 200);
   });
 });
