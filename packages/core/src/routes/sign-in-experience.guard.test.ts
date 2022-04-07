@@ -1,6 +1,6 @@
-import { BrandingStyle, CreateSignInExperience, SignInExperience } from '@logto/schemas';
+import { BrandingStyle, CreateSignInExperience, Language, SignInExperience } from '@logto/schemas';
 
-import { mockBranding, mockSignInExperience } from '@/utils/mock';
+import { mockBranding, mockLanguageInfo, mockSignInExperience, mockTermsOfUse } from '@/utils/mock';
 import { createRequester } from '@/utils/test-utils';
 
 import signInExperiencesRoutes from './sign-in-experience';
@@ -21,11 +21,15 @@ const expectPatchResponseStatus = async (signInExperience: any, status: number) 
   expect(response.status).toEqual(status);
 };
 
+const validBooleans = [true, false];
+const invalidBooleans = [undefined, null, 0, 1, '0', '1', 'true', 'false'];
+
 describe('branding', () => {
   const colorKeys = ['primaryColor', 'backgroundColor', 'darkPrimaryColor', 'darkBackgroundColor'];
 
   const invalidColors = [
     undefined,
+    null,
     '',
     '#',
     '#1',
@@ -82,7 +86,7 @@ describe('branding', () => {
       }
     );
 
-    test.each([undefined, '', 'invalid'])('%p should fail', async (logoUrl) => {
+    test.each([undefined, null, '', 'invalid'])('%p should fail', async (logoUrl) => {
       const signInExperience = { branding: { ...mockBranding, logoUrl } };
       await expectPatchResponseStatus(signInExperience, 400);
     });
@@ -103,12 +107,12 @@ describe('branding', () => {
       }
     );
 
-    it('should fail when it is empty string', async () => {
+    test.each([null, ''])('%p should fail', async (slogan) => {
       const signInExperience = {
         branding: {
           ...mockBranding,
           style: BrandingStyle.Logo,
-          slogan: '',
+          slogan,
         },
       };
       await expectPatchResponseStatus(signInExperience, 400);
@@ -120,6 +124,76 @@ describe('branding', () => {
       .patch('/sign-in-exp')
       .send({ branding: mockBranding });
     await expect(response).resolves.toMatchObject({ status: 200 });
+  });
+});
+
+describe('terms of use', () => {
+  describe('enabled', () => {
+    test.each(validBooleans)('%p should success', async (enabled) => {
+      const signInExperience = { termsOfUse: { ...mockTermsOfUse, enabled } };
+      await expectPatchResponseStatus(signInExperience, 200);
+    });
+
+    test.each(invalidBooleans)('%p should fail', async (enabled) => {
+      const signInExperience = { termsOfUse: { ...mockTermsOfUse, enabled } };
+      await expectPatchResponseStatus(signInExperience, 400);
+    });
+  });
+
+  describe('contentUrl', () => {
+    test.each([undefined, 'http://silverhand.com/terms', 'https://logto.dev/terms'])(
+      '%p should success',
+      async (contentUrl) => {
+        const signInExperience = { termsOfUse: { ...mockTermsOfUse, enabled: false, contentUrl } };
+        await expectPatchResponseStatus(signInExperience, 200);
+      }
+    );
+
+    test.each([null, '', ' \t\n\r', 'non-url'])('%p should fail', async (contentUrl) => {
+      const signInExperience = { termsOfUse: { ...mockTermsOfUse, enabled: false, contentUrl } };
+      await expectPatchResponseStatus(signInExperience, 400);
+    });
+  });
+});
+
+describe('languageInfo', () => {
+  describe('autoDetect', () => {
+    test.each(validBooleans)('%p should success', async (autoDetect) => {
+      const signInExperience = { languageInfo: { ...mockLanguageInfo, autoDetect } };
+      await expectPatchResponseStatus(signInExperience, 200);
+    });
+
+    test.each(invalidBooleans)('%p should fail', async (autoDetect) => {
+      const signInExperience = { languageInfo: { ...mockLanguageInfo, autoDetect } };
+      await expectPatchResponseStatus(signInExperience, 400);
+    });
+  });
+
+  const validLanguages = Object.values(Language);
+  const invalidLanguages = [undefined, null, '', ' \t\n\r', 'abc'];
+
+  describe('fallbackLanguage', () => {
+    test.each(validLanguages)('%p should success', async (fallbackLanguage) => {
+      const signInExperience = { languageInfo: { ...mockLanguageInfo, fallbackLanguage } };
+      await expectPatchResponseStatus(signInExperience, 200);
+    });
+
+    test.each(invalidLanguages)('%p should fail', async (fallbackLanguage) => {
+      const signInExperience = { languageInfo: { ...mockLanguageInfo, fallbackLanguage } };
+      await expectPatchResponseStatus(signInExperience, 400);
+    });
+  });
+
+  describe('fixedLanguage', () => {
+    test.each(validLanguages)('%p should success', async (fixedLanguage) => {
+      const signInExperience = { languageInfo: { ...mockLanguageInfo, fixedLanguage } };
+      await expectPatchResponseStatus(signInExperience, 200);
+    });
+
+    test.each(invalidLanguages)('%p should fail', async (fixedLanguage) => {
+      const signInExperience = { languageInfo: { ...mockLanguageInfo, fixedLanguage } };
+      await expectPatchResponseStatus(signInExperience, 400);
+    });
   });
 });
 
