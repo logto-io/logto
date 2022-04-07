@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import Button from '@/components/Button';
 import Status from '@/components/Status';
 
-import ConnectorName from './ConnectorName';
+import ConnectorName from '../ConnectorName';
 
 type Props = {
   type: ConnectorType;

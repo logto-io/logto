@@ -22,7 +22,7 @@ import More from '@/icons/More';
 import Reset from '@/icons/Reset';
 import * as detailsStyles from '@/scss/details.module.scss';
 
-import SetupModal from '../Connectors/components/SetupModal';
+import CreateForm from '../Connectors/components/CreateForm';
 import SenderTester from './components/SenderTester';
 import * as styles from './index.module.scss';
 
@@ -159,7 +159,7 @@ const ConnectorDetails = () => {
                 {t('connector_details.options_delete')}
               </ActionMenuItem>
             </ActionMenu>
-            <SetupModal
+            <CreateForm
               isOpen={isSetupOpen}
               type={data.metadata.type}
               onClose={() => {
