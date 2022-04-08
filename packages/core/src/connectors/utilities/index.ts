@@ -21,3 +21,33 @@ export const updateConnectorConfig = async <T extends ArbitraryObject>(
 const connectorRequestTimeout = 5000;
 
 export const getConnectorRequestTimeout = async (): Promise<number> => connectorRequestTimeout;
+
+export const getFormattedDate = () => {
+  const date = new Date();
+
+  const yearString = date.getFullYear().toString();
+  const month = date.getMonth() + 1;
+  const monthString = month < 10 ? `0${month}` : `${month}`;
+  const day = date.getDate();
+  const dayString = day < 10 ? `0${day}` : `${day}`;
+  const hours = date.getHours();
+  const hoursString = hours < 10 ? `0${hours}` : `${hours}`;
+  const minutes = date.getMinutes();
+  const minutesString = minutes < 10 ? `0${minutes}` : `${minutes}`;
+  const seconds = date.getSeconds();
+  const secondsString = seconds < 10 ? `0${seconds}` : `${seconds}`;
+  const formattedDateString =
+    yearString +
+    '-' +
+    monthString +
+    '-' +
+    dayString +
+    ' ' +
+    hoursString +
+    ':' +
+    minutesString +
+    ':' +
+    secondsString; // "yyyy-MM-dd HH:mm:ss" 2014-07-24 03:07:50
+
+  return formattedDateString;
+};

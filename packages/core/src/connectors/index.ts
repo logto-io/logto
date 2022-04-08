@@ -1,6 +1,7 @@
 import RequestError from '@/errors/RequestError';
 import { findAllConnectors, findConnectorById, insertConnector } from '@/queries/connector';
 
+import * as Alipay from './alipay';
 import * as AliyunDM from './aliyun-dm';
 import * as AliyunSMS from './aliyun-sms';
 import * as Facebook from './facebook';
@@ -11,6 +12,7 @@ import * as WeChat from './wechat';
 import * as WeChatNative from './wechat-native';
 
 const allConnectors: IConnector[] = [
+  Alipay,
   AliyunDM,
   AliyunSMS,
   Facebook,
