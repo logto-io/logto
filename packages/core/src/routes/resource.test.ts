@@ -1,6 +1,6 @@
 import { Resource, CreateResource } from '@logto/schemas';
 
-import { mockResource, mockScope } from '@/utils/mock';
+import { mockResource } from '@/utils/mock';
 import { createRequester } from '@/utils/test-utils';
 
 import resourceRoutes from './resource';
@@ -22,10 +22,6 @@ jest.mock('@/queries/resource', () => ({
     })
   ),
   deleteResourceById: jest.fn(),
-}));
-
-jest.mock('@/queries/scope', () => ({
-  findAllScopesWithResourceId: jest.fn(async () => [mockScope]),
 }));
 
 jest.mock('@/utils/id', () => ({
@@ -83,7 +79,6 @@ describe('resource routes', () => {
     expect(response.status).toEqual(200);
     expect(response.body).toEqual({
       ...mockResource,
-      scopes: [mockScope],
     });
   });
 
@@ -102,7 +97,6 @@ describe('resource routes', () => {
       name,
       indicator,
       accessTokenTtl,
-      scopes: [mockScope],
     });
   });
 

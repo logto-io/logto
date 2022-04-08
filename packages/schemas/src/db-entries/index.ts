@@ -5,7 +5,6 @@ export * from './application';
 export * from './connector';
 export * from './oidc-model-instance';
 export * from './passcode';
-export * from './resource-scope';
 export * from './resource';
 export * from './role';
 export * from './setting';

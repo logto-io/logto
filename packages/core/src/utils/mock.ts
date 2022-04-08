@@ -5,7 +5,6 @@ import {
   Application,
   ApplicationType,
   Resource,
-  ResourceScope,
   Role,
   Setting,
   SignInExperience,
@@ -139,13 +138,6 @@ export const mockResource: Resource = {
   name: 'management api',
   indicator: 'logto.dev/api',
   accessTokenTtl: 3600,
-};
-
-export const mockScope: ResourceScope = {
-  id: 'foo',
-  name: 'read:user',
-  description: 'read:user',
-  resourceId: 'logto_api',
 };
 
 export const mockRole: Role = {
