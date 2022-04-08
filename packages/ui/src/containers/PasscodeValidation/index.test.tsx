@@ -13,6 +13,13 @@ jest.mock('@/apis/utils', () => ({
   getVerifyPasscodeApi: () => verifyPasscodeApi,
 }));
 
+jest.mock('@/hooks/page-context', () =>
+  React.createContext({
+    loading: false,
+    setLoading: jest.fn(),
+  })
+);
+
 describe('<PasscodeValidation />', () => {
   const email = 'foo@logto.io';
 

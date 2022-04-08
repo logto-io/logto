@@ -6,6 +6,12 @@ import { register } from '@/apis/register';
 import CreateAccount from '.';
 
 jest.mock('@/apis/register', () => ({ register: jest.fn(async () => Promise.resolve()) }));
+jest.mock('@/hooks/page-context', () =>
+  React.createContext({
+    loading: false,
+    setLoading: jest.fn(),
+  })
+);
 
 describe('<CreateAccount/>', () => {
   test('default render', () => {

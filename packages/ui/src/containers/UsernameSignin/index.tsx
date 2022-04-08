@@ -49,7 +49,7 @@ const UsernameSignin: FC = () => {
 
   const { setToast } = useContext(PageContext);
 
-  const { error, loading, result, run: asyncSignInBasic } = useApi(signInBasic);
+  const { error, result, run: asyncSignInBasic } = useApi(signInBasic);
 
   const validations = useMemo<FieldValidations>(
     () => ({
@@ -73,11 +73,6 @@ const UsernameSignin: FC = () => {
   );
 
   const onSubmitHandler = useCallback(async () => {
-    // Should be removed after api redesign
-    if (loading) {
-      return;
-    }
-
     // Validates
     const usernameError = validations.username?.(fieldState);
     const passwordError = validations.password?.(fieldState);
@@ -104,7 +99,7 @@ const UsernameSignin: FC = () => {
     }
 
     void asyncSignInBasic(fieldState.username, fieldState.password);
-  }, [loading, validations, fieldState, asyncSignInBasic]);
+  }, [validations, fieldState, asyncSignInBasic]);
 
   useEffect(() => {
     if (result?.redirectTo) {
