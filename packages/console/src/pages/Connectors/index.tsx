@@ -13,6 +13,7 @@ import TableEmpty from '@/components/Table/TableEmpty';
 import TableError from '@/components/Table/TableError';
 import TableLoading from '@/components/Table/TableLoading';
 import { RequestError } from '@/hooks/use-api';
+import Plus from '@/icons/Plus';
 import * as tableStyles from '@/scss/table.module.scss';
 
 import ConnectorRow from './components/ConnectorRow';
@@ -58,6 +59,7 @@ const Connectors = () => {
             <Button
               title="admin_console.connectors.create"
               type="primary"
+              icon={<Plus />}
               onClick={() => {
                 setCreateType(ConnectorType.Social);
               }}

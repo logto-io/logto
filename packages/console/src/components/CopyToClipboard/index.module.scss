@@ -3,7 +3,7 @@
 .container {
   display: inline-block;
   padding: _.unit(2) _.unit(3);
-  border-radius: _.unit(2);
+  border-radius: 6px;
   background: var(--color-inverse-on-surface);
   color: var(--color-on-secondary-container);
   font: var(--font-body-medium);

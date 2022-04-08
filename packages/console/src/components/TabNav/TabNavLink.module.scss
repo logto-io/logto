@@ -1,12 +1,12 @@
 @use '@/scss/underscore' as _;
 
 .link {
-  font: var(--font-body-medium);
+  font: var(--font-subhead-2);
   margin-right: _.unit(6);
   padding-bottom: _.unit(1);
 
   a {
-    color: unset;
+    color: var(--color-component-caption);
     text-decoration: none;
   }
 }
@@ -15,4 +15,8 @@
   color: var(--color-primary);
   border-bottom: 1px solid var(--color-primary);
   margin-bottom: -1px;
+
+  a {
+    color: var(--color-primary);
+  }
 }

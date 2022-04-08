@@ -8,6 +8,7 @@
   transition-timing-function: ease-in-out;
   transition-duration: 0.2s;
   padding: _.unit(2) _.unit(3);
+  font: var(--font-body-medium);
 
   &.withIcon {
     display: flex;

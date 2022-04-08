@@ -97,7 +97,7 @@ const SenderTester = ({ connectorType }: Props) => {
             htmlType="submit"
             disabled={submitting}
             title="admin_console.connector_details.send"
-            type="primary"
+            type="outline"
           />
         </div>
         {showTooltip && (
