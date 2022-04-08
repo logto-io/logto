@@ -52,7 +52,7 @@ const CreateAccount = () => {
 
   const { setToast } = useContext(PageContext);
 
-  const { loading, error, result, run: asyncRegister } = useApi(register);
+  const { error, result, run: asyncRegister } = useApi(register);
 
   const validations = useMemo<FieldValidations>(
     () => ({
@@ -93,11 +93,6 @@ const CreateAccount = () => {
   );
 
   const onSubmitHandler = useCallback(() => {
-    // Should be removed after api redesign
-    if (loading) {
-      return;
-    }
-
     // Validates
     const usernameError = validations.username?.(fieldState);
     const passwordError = validations.password?.(fieldState);
@@ -132,7 +127,7 @@ const CreateAccount = () => {
     }
 
     void asyncRegister(fieldState.username, fieldState.password);
-  }, [fieldState, loading, validations, asyncRegister]);
+  }, [fieldState, validations, asyncRegister]);
 
   useEffect(() => {
     if (result?.redirectTo) {

@@ -50,7 +50,7 @@ const PhonePasswordless = ({ type }: Props) => {
   const { phoneNumber, setPhoneNumber, isValidPhoneNumber } = usePhoneNumber();
 
   const sendPasscode = getSendPasscodeApi(type, 'phone');
-  const { loading, error, result, run: asyncSendPasscode } = useApi(sendPasscode);
+  const { error, result, run: asyncSendPasscode } = useApi(sendPasscode);
 
   const validations = useMemo<FieldValidations>(
     () => ({
@@ -69,11 +69,6 @@ const PhonePasswordless = ({ type }: Props) => {
   );
 
   const onSubmitHandler = useCallback(() => {
-    // Should be removed after api redesign
-    if (loading) {
-      return;
-    }
-
     const phoneError = validations.phone(fieldState);
 
     if (phoneError) {
@@ -91,7 +86,7 @@ const PhonePasswordless = ({ type }: Props) => {
     }
 
     void asyncSendPasscode(fieldState.phone);
-  }, [loading, validations, fieldState, asyncSendPasscode]);
+  }, [validations, fieldState, asyncSendPasscode]);
 
   useEffect(() => {
     setFieldState((previous) => ({

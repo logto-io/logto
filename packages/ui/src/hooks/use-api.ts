@@ -1,10 +1,11 @@
 import { RequestErrorBody } from '@logto/schemas';
 import { HTTPError } from 'ky';
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useContext } from 'react';
+
+import PageContext from '@/hooks/page-context';
 
 type UseApi<T extends any[], U> = {
   result?: U;
-  loading: boolean;
   error: RequestErrorBody | undefined;
   run: (...args: T) => Promise<void>;
 };
@@ -12,9 +13,10 @@ type UseApi<T extends any[], U> = {
 function useApi<Args extends any[], Response>(
   api: (...args: Args) => Promise<Response>
 ): UseApi<Args, Response> {
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<RequestErrorBody>();
   const [result, setResult] = useState<Response>();
+
+  const { setLoading } = useContext(PageContext);
 
   const run = useCallback(
     async (...args: Args) => {
@@ -39,11 +41,10 @@ function useApi<Args extends any[], Response>(
         setLoading(false);
       }
     },
-    [api]
+    [api, setLoading]
   );
 
   return {
-    loading,
     error,
     result,
     run,

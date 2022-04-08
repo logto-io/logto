@@ -10,6 +10,12 @@ import PhonePasswordless from './PhonePasswordless';
 
 jest.mock('@/apis/sign-in', () => ({ sendPhonePasscode: jest.fn(async () => Promise.resolve()) }));
 jest.mock('@/apis/register', () => ({ sendPhonePasscode: jest.fn(async () => Promise.resolve()) }));
+jest.mock('@/hooks/page-context', () =>
+  React.createContext({
+    loading: false,
+    setLoading: jest.fn(),
+  })
+);
 
 describe('<PhonePasswordless/>', () => {
   const phoneNumber = '18888888888';

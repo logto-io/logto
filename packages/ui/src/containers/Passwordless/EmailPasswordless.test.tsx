@@ -9,6 +9,12 @@ import EmailPasswordless from './EmailPasswordless';
 
 jest.mock('@/apis/sign-in', () => ({ sendEmailPasscode: jest.fn(async () => Promise.resolve()) }));
 jest.mock('@/apis/register', () => ({ sendEmailPasscode: jest.fn(async () => Promise.resolve()) }));
+jest.mock('@/hooks/page-context', () =>
+  React.createContext({
+    loading: false,
+    setLoading: jest.fn(),
+  })
+);
 
 describe('<EmailPasswordless/>', () => {
   test('render', () => {

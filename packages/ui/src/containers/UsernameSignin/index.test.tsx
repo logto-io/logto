@@ -6,6 +6,12 @@ import { signInBasic } from '@/apis/sign-in';
 import UsernameSignin from '.';
 
 jest.mock('@/apis/sign-in', () => ({ signInBasic: jest.fn(async () => Promise.resolve()) }));
+jest.mock('@/hooks/page-context', () =>
+  React.createContext({
+    loading: false,
+    setLoading: jest.fn(),
+  })
+);
 
 describe('<UsernameSignin>', () => {
   test('render', () => {
