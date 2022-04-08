@@ -1,6 +1,6 @@
 import { Role } from '@logto/schemas';
 
-import { mockRole } from '@/utils/mock';
+import { mockRole } from '@/__mocks__';
 import { createRequester } from '@/utils/test-utils';
 
 import roleRoutes from './role';

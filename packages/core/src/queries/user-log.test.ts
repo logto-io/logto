@@ -2,12 +2,12 @@ import { UserLogs } from '@logto/schemas';
 import { createMockPool, createMockQueryResult, sql } from 'slonik';
 import { snakeCase } from 'snake-case';
 
+import { mockUserLog } from '@/__mocks__';
 import {
   convertToIdentifiers,
   excludeAutoSetFields,
   convertToPrimitiveOrSql,
 } from '@/database/utils';
-import { mockUserLog } from '@/utils/mock';
 import { expectSqlAssert, QueryType } from '@/utils/test-utils';
 
 import { insertUserLog, findLogsByUserId } from './user-log';

@@ -1,6 +1,6 @@
 import { BrandingStyle, CreateSignInExperience, SignInExperience } from '@logto/schemas';
 
-import { mockBranding, mockSignInExperience } from '@/utils/mock';
+import { mockBranding, mockSignInExperience } from '@/__mocks__';
 import { createRequester } from '@/utils/test-utils';
 
 import signInExperiencesRoutes from './sign-in-experience';

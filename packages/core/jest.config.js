@@ -12,6 +12,6 @@ module.exports = {
     '^@/(.*)$': '<rootDir>/src/$1',
     '^jose/(.*)$': '<rootDir>/node_modules/jose/dist/node/cjs/$1',
   },
-  coveragePathIgnorePatterns: ['/node_modules/', '/build/'],
+  coveragePathIgnorePatterns: ['/node_modules/', '/build/', '/src/__mocks__/'],
   coverageReporters: ['text-summary', 'lcov'],
 };

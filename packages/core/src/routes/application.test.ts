@@ -1,7 +1,7 @@
 import { Application, CreateApplication, ApplicationType } from '@logto/schemas';
 
+import { mockApplication } from '@/__mocks__';
 import { findApplicationById } from '@/queries/application';
-import { mockApplication } from '@/utils/mock';
 import { createRequester } from '@/utils/test-utils';
 
 import applicationRoutes from './application';

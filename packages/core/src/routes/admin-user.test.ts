@@ -1,6 +1,7 @@
 import { CreateUser, Role, User, userInfoSelectFields } from '@logto/schemas';
 import pick from 'lodash.pick';
 
+import { mockUser, mockUserList, mockUserListResponse, mockUserResponse } from '@/__mocks__';
 import { encryptUserPassword } from '@/lib/user';
 import { findRolesByRoleNames } from '@/queries/roles';
 import {
@@ -11,7 +12,6 @@ import {
   deleteUserById,
   clearUserCustomDataById,
 } from '@/queries/user';
-import { mockUser, mockUserList, mockUserListResponse, mockUserResponse } from '@/utils/mock';
 import { createRequester } from '@/utils/test-utils';
 
 import adminUserRoutes from './admin-user';

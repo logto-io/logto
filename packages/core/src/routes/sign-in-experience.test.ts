@@ -5,15 +5,15 @@ import {
   SignInMethodState,
 } from '@logto/schemas';
 
-import * as signInExpLib from '@/lib/sign-in-experience';
 import {
-  mockBranding,
   mockFacebookConnectorInstance,
   mockGithubConnectorInstance,
   mockGoogleConnectorInstance,
+  mockBranding,
   mockSignInExperience,
   mockSignInMethods,
-} from '@/utils/mock';
+} from '@/__mocks__';
+import * as signInExpLib from '@/lib/sign-in-experience';
 import { createRequester } from '@/utils/test-utils';
 
 import signInExperiencesRoutes from './sign-in-experience';
