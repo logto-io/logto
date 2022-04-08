@@ -17,7 +17,7 @@ export const register = async (username: string, password: string) => {
 
 export const sendPhonePasscode = async (phone: string) => {
   return ky
-    .post('/session/register/passwordless/phone/send-passcode', {
+    .post('/api/session/register/passwordless/phone/send-passcode', {
       json: {
         phone,
       },
@@ -31,7 +31,7 @@ export const verifyPhonePasscode = async (phone: string, passcode: string) => {
   };
 
   return ky
-    .post('/session/register/passwordless/phone/verify-passcode', {
+    .post('/api/session/register/passwordless/phone/verify-passcode', {
       json: {
         phone,
         passcode,
@@ -42,7 +42,7 @@ export const verifyPhonePasscode = async (phone: string, passcode: string) => {
 
 export const sendEmailPasscode = async (email: string) => {
   return ky
-    .post('/session/register/passwordless/email/send-passcode', {
+    .post('/api/session/register/passwordless/email/send-passcode', {
       json: {
         email,
       },
@@ -56,7 +56,7 @@ export const verifyEmailPasscode = async (email: string, passcode: string) => {
   };
 
   return ky
-    .post('/session/register/passwordless/email/verify-passcode', {
+    .post('/api/session/register/passwordless/email/verify-passcode', {
       json: {
         email,
         passcode,

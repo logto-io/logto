@@ -15,6 +15,7 @@ import {
   verifyEmailPasscode,
   verifyPhonePasscode,
 } from './sign-in';
+import { signInWithSocial, signInToSoical, bindSocialAccount, registerWithSocial } from './social';
 
 jest.mock('ky', () => ({
   post: jest.fn(() => ({
@@ -47,7 +48,7 @@ describe('api', () => {
 
   it('sendPhonePasscode', async () => {
     await sendPhonePasscode(phone);
-    expect(ky.post).toBeCalledWith('/session/sign-in/passwordless/phone/send-passcode', {
+    expect(ky.post).toBeCalledWith('/api/session/sign-in/passwordless/phone/send-passcode', {
       json: {
         phone,
       },
@@ -56,7 +57,7 @@ describe('api', () => {
 
   it('verifyPhonePasscode', async () => {
     await verifyPhonePasscode(phone, passcode);
-    expect(ky.post).toBeCalledWith('/session/sign-in/passwordless/phone/verify-passcode', {
+    expect(ky.post).toBeCalledWith('/api/session/sign-in/passwordless/phone/verify-passcode', {
       json: {
         phone,
         passcode,
@@ -66,7 +67,7 @@ describe('api', () => {
 
   it('sendEmailPasscode', async () => {
     await sendEmailPasscode(email);
-    expect(ky.post).toBeCalledWith('/session/sign-in/passwordless/email/send-passcode', {
+    expect(ky.post).toBeCalledWith('/api/session/sign-in/passwordless/email/send-passcode', {
       json: {
         email,
       },
@@ -75,7 +76,7 @@ describe('api', () => {
 
   it('verifyEmailPasscode', async () => {
     await verifyEmailPasscode(email, passcode);
-    expect(ky.post).toBeCalledWith('/session/sign-in/passwordless/email/verify-passcode', {
+    expect(ky.post).toBeCalledWith('/api/session/sign-in/passwordless/email/verify-passcode', {
       json: {
         email,
         passcode,
@@ -100,7 +101,7 @@ describe('api', () => {
 
   it('registerSendPhonePasscode', async () => {
     await registerSendPhonePasscode(phone);
-    expect(ky.post).toBeCalledWith('/session/register/passwordless/phone/send-passcode', {
+    expect(ky.post).toBeCalledWith('/api/session/register/passwordless/phone/send-passcode', {
       json: {
         phone,
       },
@@ -109,7 +110,7 @@ describe('api', () => {
 
   it('registerVerifyPhonePasscode', async () => {
     await registerVerifyPhonePasscode(phone, passcode);
-    expect(ky.post).toBeCalledWith('/session/register/passwordless/phone/verify-passcode', {
+    expect(ky.post).toBeCalledWith('/api/session/register/passwordless/phone/verify-passcode', {
       json: {
         phone,
         passcode,
@@ -119,7 +120,7 @@ describe('api', () => {
 
   it('registerSendEmailPasscode', async () => {
     await registerSendEmailPasscode(email);
-    expect(ky.post).toBeCalledWith('/session/register/passwordless/email/send-passcode', {
+    expect(ky.post).toBeCalledWith('/api/session/register/passwordless/email/send-passcode', {
       json: {
         email,
       },
@@ -128,10 +129,52 @@ describe('api', () => {
 
   it('registerVerifyEmailPasscode', async () => {
     await registerVerifyEmailPasscode(email, passcode);
-    expect(ky.post).toBeCalledWith('/session/register/passwordless/email/verify-passcode', {
+    expect(ky.post).toBeCalledWith('/api/session/register/passwordless/email/verify-passcode', {
       json: {
         email,
         passcode,
+      },
+    });
+  });
+
+  it('signInWithSocial', async () => {
+    await signInWithSocial('connectorId', 'state', 'redirectUri');
+    expect(ky.post).toBeCalledWith('/api/session/sign-in/social', {
+      json: {
+        connectorId: 'connectorId',
+        state: 'state',
+        redirectUri: 'redirectUri',
+      },
+    });
+  });
+
+  it('signInToSoical', async () => {
+    const parameters = {
+      connectorId: 'connectorId',
+      state: 'state',
+      redirectUri: 'redirectUri',
+      code: 'code',
+    };
+    await signInToSoical(parameters);
+    expect(ky.post).toBeCalledWith('/api/session/sign-in/social', {
+      json: parameters,
+    });
+  });
+
+  it('bindSocialAccount', async () => {
+    await bindSocialAccount('connectorId');
+    expect(ky.post).toBeCalledWith('/api/session/sign-in/bind-social-related-user', {
+      json: {
+        connectorId: 'connectorId',
+      },
+    });
+  });
+
+  it('registerWithSocial', async () => {
+    await registerWithSocial('connectorId');
+    expect(ky.post).toBeCalledWith('/api/session/register/social', {
+      json: {
+        connectorId: 'connectorId',
       },
     });
   });
