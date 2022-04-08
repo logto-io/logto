@@ -8,7 +8,6 @@ import { Provider, errors } from 'oidc-provider';
 
 import postgresAdapter from '@/oidc/adapter';
 import { findResourceByIndicator } from '@/queries/resource';
-import { findAllScopesWithResourceId } from '@/queries/scope';
 import { findUserById } from '@/queries/user';
 import { routes } from '@/routes/consts';
 
@@ -47,20 +46,18 @@ export default async function initOidc(app: Koa): Promise<Provider> {
         // Disable the auto use of authorization_code granted resource feature
         // https://github.com/panva/node-oidc-provider/blob/main/docs/README.md#usegrantedresource
         useGrantedResource: () => false,
-        getResourceServerInfo: async (ctx, indicator) => {
+        getResourceServerInfo: async (_, indicator) => {
           const resourceServer = await findResourceByIndicator(indicator);
 
           if (!resourceServer) {
             throw new errors.InvalidTarget();
           }
 
-          const { id, accessTokenTtl: accessTokenTTL } = resourceServer;
-          const scopes = await findAllScopesWithResourceId(id);
-          const scope = scopes.map(({ name }) => name).join(' ');
+          const { accessTokenTtl: accessTokenTTL } = resourceServer;
 
           return {
             accessTokenFormat: 'jwt',
-            scope,
+            scope: '',
             accessTokenTTL,
           };
         },

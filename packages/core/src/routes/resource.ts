@@ -11,7 +11,6 @@ import {
   updateResourceById,
   deleteResourceById,
 } from '@/queries/resource';
-import { findAllScopesWithResourceId } from '@/queries/scope';
 import { buildIdGenerator } from '@/utils/id';
 
 import { AuthedRouter } from './types';
@@ -60,12 +59,8 @@ export default function resourceRoutes<T extends AuthedRouter>(router: T) {
         params: { id },
       } = ctx.guard;
 
-      const [resource, scopes] = await Promise.all([
-        findResourceById(id),
-        findAllScopesWithResourceId(id),
-      ]);
-
-      ctx.body = { ...resource, scopes };
+      const resource = await findResourceById(id);
+      ctx.body = resource;
 
       return next();
     }
@@ -83,12 +78,8 @@ export default function resourceRoutes<T extends AuthedRouter>(router: T) {
         body,
       } = ctx.guard;
 
-      const [scopes, resource] = await Promise.all([
-        findAllScopesWithResourceId(id),
-        updateResourceById(id, body),
-      ]);
-
-      ctx.body = { ...resource, scopes };
+      const resource = await updateResourceById(id, body);
+      ctx.body = resource;
 
       return next();
     }
