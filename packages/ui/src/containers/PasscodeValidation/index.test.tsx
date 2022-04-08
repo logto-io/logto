@@ -1,7 +1,7 @@
 import { render, act, fireEvent, waitFor } from '@testing-library/react';
 import React from 'react';
 
-import PasscodeValidation, { timeRange } from '.';
+import PasscodeValidation from '.';
 
 jest.useFakeTimers();
 
@@ -32,7 +32,7 @@ describe('<PasscodeValidation />', () => {
       <PasscodeValidation type="sign-in" channel="email" target={email} />
     );
 
-    expect(queryByText(timeRange)).not.toBeNull();
+    expect(queryByText('description.resend_after_senconds')).not.toBeNull();
 
     act(() => {
       jest.runAllTimers();

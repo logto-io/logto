@@ -55,12 +55,12 @@ const UsernameSignin: FC = () => {
     () => ({
       username: ({ username }) => {
         if (!username) {
-          return { code: 'required', data: { fieldName: t('input.username') } };
+          return { code: 'required', data: { field: t('input.username') } };
         }
       },
       password: ({ password }) => {
         if (!password) {
-          return { code: 'required', data: { fieldName: t('input.password') } };
+          return { code: 'required', data: { field: t('input.password') } };
         }
       },
       termsAgreement: ({ termsAgreement }) => {

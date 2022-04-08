@@ -1,0 +1,34 @@
+@use '@/scss/underscore' as _;
+
+.methodsPrimary {
+  @include _.flex-row;
+  justify-content: center;
+
+  .signInMethodLink {
+    padding: 0 _.unit(4);
+    position: relative;
+
+    &::after {
+      content: '';
+      width: 1px;
+      height: 12px;
+      position: absolute;
+      top: 50%;
+      right: 0;
+      transform: translateY(-50%);
+      background-color: var(--color-primary);
+    }
+
+    &:first-child {
+      padding-left: 0;
+    }
+
+    &:last-child {
+      padding-right: 0;
+
+      &::after {
+        content: none;
+      }
+    }
+  }
+}
