@@ -1,12 +1,13 @@
 /* istanbul ignore file */
 
-import { customClientMetadataGuard, CustomClientMetadataType } from '@logto/schemas';
+import { CustomClientMetadataKey } from '@logto/schemas';
 import { fromKeyLike } from 'jose/jwk/from_key_like';
 import Koa from 'koa';
 import mount from 'koa-mount';
 import { Provider, errors } from 'oidc-provider';
 
 import postgresAdapter from '@/oidc/adapter';
+import { isOriginAllowed, validateCustomClientMetadata } from '@/oidc/utils';
 import { findResourceByIndicator } from '@/queries/resource';
 import { findUserById } from '@/queries/user';
 import { routes } from '@/routes/consts';
@@ -76,22 +77,13 @@ export default async function initOidc(app: Koa): Promise<Provider> {
       },
     },
     extraClientMetadata: {
-      properties: Object.keys(CustomClientMetadataType),
-      validator: (_ctx, key, value) => {
-        const result = customClientMetadataGuard.pick({ [key]: true }).safeParse({ key: value });
-
-        if (!result.success) {
-          throw new errors.InvalidClientMetadata(key);
-        }
+      properties: Object.keys(CustomClientMetadataKey),
+      validator: (_, key, value) => {
+        validateCustomClientMetadata(key, value);
       },
     },
-    clientBasedCORS: (_, origin) => {
-      console.log('origin', origin);
-
-      return ['http://localhost:3001', 'https://logto.dev'].some((value) =>
-        origin.startsWith(value)
-      );
-    },
+    // https://github.com/panva/node-oidc-provider/blob/main/recipes/client_based_origins.md
+    clientBasedCORS: (_, origin, client) => isOriginAllowed(origin, client.metadata()),
     findAccount: async (ctx, sub) => {
       await findUserById(sub);
 
