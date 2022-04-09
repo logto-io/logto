@@ -30,7 +30,7 @@ describe('sign-in-experience query', () => {
   it('findDefaultSignInExperience', async () => {
     /* eslint-disable sql/no-unsafe-query */
     const expectSql = `
-      select "id", "branding", "language_info", "terms_of_use", "forget_password_enabled", "sign_in_methods", "social_sign_in_connector_ids"
+      select "id", "branding", "language_info", "terms_of_use", "sign_in_methods", "social_sign_in_connector_ids"
       from "sign_in_experiences"
       where "id" = $1
     `;

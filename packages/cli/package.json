@@ -37,8 +37,10 @@
   "prettier": "@silverhand/eslint-config/.prettierrc",
   "dependencies": {
     "@logto/schemas": "^0.1.0",
+    "decamelize": "^5.0.0",
     "roarr": "^7.11.0",
     "slonik": "^28.1.0",
+    "slonik-interceptor-preset": "^1.2.10",
     "slonik-sql-tag-raw": "^1.1.4"
   }
 }

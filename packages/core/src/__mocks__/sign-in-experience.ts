@@ -13,9 +13,7 @@ export const mockSignInExperience: SignInExperience = {
   id: 'foo',
   branding: {
     primaryColor: '#000',
-    backgroundColor: '#fff',
-    darkMode: true,
-    darkBackgroundColor: '#000',
+    isDarkModeEnabled: true,
     darkPrimaryColor: '#fff',
     style: BrandingStyle.Logo,
     logoUrl: 'http://logto.png',
@@ -24,7 +22,6 @@ export const mockSignInExperience: SignInExperience = {
   termsOfUse: {
     enabled: false,
   },
-  forgetPasswordEnabled: true,
   languageInfo: {
     autoDetect: true,
     fallbackLanguage: Language.english,
@@ -41,9 +38,7 @@ export const mockSignInExperience: SignInExperience = {
 
 export const mockBranding: Branding = {
   primaryColor: '#000',
-  backgroundColor: '#fff',
-  darkMode: true,
-  darkBackgroundColor: '#000',
+  isDarkModeEnabled: true,
   darkPrimaryColor: '#fff',
   style: BrandingStyle.Logo_Slogan,
   logoUrl: 'http://silverhand.png',

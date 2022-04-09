@@ -76,9 +76,7 @@ export type UserLogPayload = z.infer<typeof userLogPayloadGuard>;
  * Settings
  */
 
-export const adminConsoleConfigGuard = z.object({
-  applicationSkipGetStarted: z.boolean(),
-});
+export const adminConsoleConfigGuard = z.object({});
 
 export type AdminConsoleConfig = z.infer<typeof adminConsoleConfigGuard>;
 
@@ -95,10 +93,8 @@ export const hexColorRegEx = /^#[\da-f]{3}([\da-f]{3})?$/i;
 
 export const brandingGuard = z.object({
   primaryColor: z.string().regex(hexColorRegEx),
-  backgroundColor: z.string().regex(hexColorRegEx),
-  darkMode: z.boolean(),
+  isDarkModeEnabled: z.boolean(),
   darkPrimaryColor: z.string().regex(hexColorRegEx),
-  darkBackgroundColor: z.string().regex(hexColorRegEx),
   style: z.nativeEnum(BrandingStyle),
   logoUrl: z.string().url(),
   slogan: z.string().nonempty().optional(),

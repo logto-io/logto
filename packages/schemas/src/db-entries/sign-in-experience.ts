@@ -22,7 +22,6 @@ export type CreateSignInExperience = {
   branding?: Branding;
   languageInfo?: LanguageInfo;
   termsOfUse?: TermsOfUse;
-  forgetPasswordEnabled?: boolean;
   signInMethods?: SignInMethods;
   socialSignInConnectorIds?: ConnectorIds;
 };
@@ -32,7 +31,6 @@ export type SignInExperience = {
   branding: Branding;
   languageInfo: LanguageInfo;
   termsOfUse: TermsOfUse;
-  forgetPasswordEnabled: boolean;
   signInMethods: SignInMethods;
   socialSignInConnectorIds: ConnectorIds;
 };
@@ -42,7 +40,6 @@ const createGuard: Guard<CreateSignInExperience> = z.object({
   branding: brandingGuard.optional(),
   languageInfo: languageInfoGuard.optional(),
   termsOfUse: termsOfUseGuard.optional(),
-  forgetPasswordEnabled: z.boolean().optional(),
   signInMethods: signInMethodsGuard.optional(),
   socialSignInConnectorIds: connectorIdsGuard.optional(),
 });
@@ -55,7 +52,6 @@ export const SignInExperiences: GeneratedSchema<CreateSignInExperience> = Object
     branding: 'branding',
     languageInfo: 'language_info',
     termsOfUse: 'terms_of_use',
-    forgetPasswordEnabled: 'forget_password_enabled',
     signInMethods: 'sign_in_methods',
     socialSignInConnectorIds: 'social_sign_in_connector_ids',
   },
@@ -64,7 +60,6 @@ export const SignInExperiences: GeneratedSchema<CreateSignInExperience> = Object
     'branding',
     'languageInfo',
     'termsOfUse',
-    'forgetPasswordEnabled',
     'signInMethods',
     'socialSignInConnectorIds',
   ],

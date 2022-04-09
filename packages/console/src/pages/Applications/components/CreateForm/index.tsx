@@ -1,15 +1,14 @@
-import { Application, ApplicationType, Setting } from '@logto/schemas';
+import { Application, ApplicationType } from '@logto/schemas';
 import React, { useState } from 'react';
 import { useController, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import useSWR from 'swr';
 
 import Button from '@/components/Button';
 import FormField from '@/components/FormField';
 import ModalLayout from '@/components/ModalLayout';
 import RadioGroup, { Radio } from '@/components/RadioGroup';
 import TextInput from '@/components/TextInput';
-import useApi, { RequestError } from '@/hooks/use-api';
+import useApi from '@/hooks/use-api';
 import { applicationTypeI18nKey } from '@/types/applications';
 import { GetStartedForm } from '@/types/get-started';
 
@@ -40,10 +39,7 @@ const CreateForm = ({ onClose }: Props) => {
     field: { onChange, value, name, ref },
   } = useController({ name: 'type', control, rules: { required: true } });
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { data: setting } = useSWR<Setting, RequestError>('/api/settings');
   const api = useApi();
-
-  const isGetStartedSkipped = setting?.adminConsole.applicationSkipGetStarted;
 
   const closeModal = () => {
     setIsGetStartedModalOpen(false);
@@ -58,11 +54,7 @@ const CreateForm = ({ onClose }: Props) => {
     const createdApp = await api.post('/api/applications', { json: data }).json<Application>();
     setCreatedApp(createdApp);
 
-    if (isGetStartedSkipped) {
-      closeModal();
-    } else {
-      setIsGetStartedModalOpen(true);
-    }
+    setIsGetStartedModalOpen(true);
   });
 
   const onComplete = async (data: GetStartedForm) => {
@@ -124,7 +116,7 @@ const CreateForm = ({ onClose }: Props) => {
           <TextInput {...register('description')} />
         </FormField>
       </form>
-      {!isGetStartedSkipped && createdApp && (
+      {createdApp && (
         <GetStartedModal
           appName={createdApp.name}
           isOpen={isGetStartedModalOpen}
