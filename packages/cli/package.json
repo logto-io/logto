@@ -16,7 +16,7 @@
     "lint": "eslint --ext .ts src",
     "lint:report": "pnpm lint -- --format json --output-file report.json",
     "prepack": "pnpm build",
-    "dev": "ts-node src/index.ts"
+    "dev": "ts-node --files src/index.ts"
   },
   "engines": {
     "node": ">=16.0.0"
@@ -38,6 +38,7 @@
   "dependencies": {
     "@logto/schemas": "^0.1.0",
     "decamelize": "^5.0.0",
+    "dotenv": "^10.0.0",
     "roarr": "^7.11.0",
     "slonik": "^28.1.0",
     "slonik-interceptor-preset": "^1.2.10",
