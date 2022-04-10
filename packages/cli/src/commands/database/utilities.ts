@@ -2,7 +2,7 @@
 
 import { SchemaLike, SchemaValue, SchemaValuePrimitive } from '@logto/schemas';
 import decamelize from 'decamelize';
-import { sql, SqlToken } from 'slonik';
+import { parseDsn, sql, SqlToken, stringifyDsn } from 'slonik';
 
 /**
  * Note `undefined` is removed from the acceptable list,
@@ -52,3 +52,6 @@ export const insertInto = <T extends SchemaLike>(object: T, table: string) => {
     )})
   `;
 };
+
+export const replaceDsnDatabase = (dsn: string, databaseName: string): string =>
+  stringifyDsn({ ...parseDsn(dsn), databaseName });
