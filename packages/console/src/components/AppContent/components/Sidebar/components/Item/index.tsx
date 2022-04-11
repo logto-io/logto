@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import React, { MouseEventHandler, ReactChild, ReactNode, useState } from 'react';
+import React, { ReactChild, ReactNode, useState } from 'react';
 import { TFuncKey, useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 
@@ -19,26 +19,32 @@ const Item = ({ icon, titleKey, modal, isActive = false }: Props) => {
   });
   const [isOpen, setIsOpen] = useState(false);
 
-  const handleClick: MouseEventHandler<HTMLAnchorElement> = (event) => {
-    if (!modal) {
-      return;
-    }
+  const content = (
+    <>
+      {icon && <div className={styles.icon}>{icon}</div>}
+      <div className={styles.title}>{t(titleKey)}</div>
+    </>
+  );
 
-    event.preventDefault();
-    setIsOpen(true);
-  };
+  if (!modal) {
+    return (
+      <Link to={getPath(titleKey)} className={classNames(styles.row, isActive && styles.active)}>
+        {content}
+      </Link>
+    );
+  }
 
   return (
     <>
-      <Link
-        to={getPath(titleKey)}
-        className={classNames(styles.row, isActive && styles.active)}
-        onClick={handleClick}
+      <button
+        className={styles.row}
+        onClick={() => {
+          setIsOpen(true);
+        }}
       >
-        {icon && <div className={styles.icon}>{icon}</div>}
-        <div className={styles.title}>{t(titleKey)}</div>
-      </Link>
-      {modal?.(isOpen, () => {
+        {content}
+      </button>
+      {modal(isOpen, () => {
         setIsOpen(false);
       })}
     </>
