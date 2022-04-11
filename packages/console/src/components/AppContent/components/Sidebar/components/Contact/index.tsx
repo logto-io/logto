@@ -25,17 +25,17 @@ const Contact = ({ isOpen, onCancel }: Props) => {
     >
       <ModalLayout title="contact.title" subtitle="contact.description" onClose={onCancel}>
         <div className={styles.main}>
-          {contacts.map((contact) => (
-            <div key={contact.title} className={styles.row}>
+          {contacts.map(({ title, icon, description, label }) => (
+            <div key={title} className={styles.row}>
               <div className={styles.icon}>
-                <img src={contact.icon} alt={contact.title} />
+                <img src={icon} alt={title} />
               </div>
               <div className={styles.text}>
-                <div className={styles.title}>{t(contact.title)}</div>
-                <div className={styles.description}>{t(contact.description)}</div>
+                <div className={styles.title}>{t(title)}</div>
+                <div className={styles.description}>{t(description)}</div>
               </div>
               <div>
-                <Button type="outline" title={contact.label} />
+                <Button type="outline" title={label} />
               </div>
             </div>
           ))}

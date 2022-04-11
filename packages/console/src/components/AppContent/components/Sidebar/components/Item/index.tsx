@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import React, { ReactChild, ReactNode, useState } from 'react';
+import React, { ReactChild, ReactNode, useMemo, useState } from 'react';
 import { TFuncKey, useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 
@@ -19,11 +19,14 @@ const Item = ({ icon, titleKey, modal, isActive = false }: Props) => {
   });
   const [isOpen, setIsOpen] = useState(false);
 
-  const content = (
-    <>
-      {icon && <div className={styles.icon}>{icon}</div>}
-      <div className={styles.title}>{t(titleKey)}</div>
-    </>
+  const content = useMemo(
+    () => (
+      <>
+        {icon && <div className={styles.icon}>{icon}</div>}
+        <div className={styles.title}>{t(titleKey)}</div>
+      </>
+    ),
+    [icon, t, titleKey]
   );
 
   if (!modal) {
