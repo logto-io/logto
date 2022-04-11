@@ -1,12 +1,13 @@
-import { FC } from 'react';
+import React, { FC, ReactNode } from 'react';
 import { TFuncKey } from 'react-i18next';
 
+import Contact from './components/Contact';
 import BarGraph from './icons/BarGraph';
 import Bolt from './icons/Bolt';
 import Box from './icons/Box';
 import Cloud from './icons/Cloud';
 import Connection from './icons/Connection';
-import Contact from './icons/Contact';
+import ContactIcon from './icons/Contact';
 import Document from './icons/Document';
 import List from './icons/List';
 import UserProfile from './icons/UserProfile';
@@ -15,6 +16,7 @@ import Web from './icons/Web';
 type SidebarItem = {
   Icon: FC;
   title: TFuncKey<'translation', 'admin_console.tabs'>;
+  modal?: (isOpen: boolean, onCancel: () => void) => ReactNode;
 };
 
 type SidebarSection = {
@@ -74,8 +76,9 @@ export const sections: SidebarSection[] = [
     title: 'help_and_support',
     items: [
       {
-        Icon: Contact,
+        Icon: ContactIcon,
         title: 'contact_us',
+        modal: (isOpen, onCancel) => <Contact isOpen={isOpen} onCancel={onCancel} />,
       },
       {
         Icon: Document,
