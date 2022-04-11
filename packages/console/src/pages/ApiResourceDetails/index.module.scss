@@ -1,12 +1,7 @@
 @use '@/scss/underscore' as _;
 
-.backButton {
-  display: flex;
-  align-items: center;
-
-  > *:not(:first-child) {
-    margin-left: _.unit(1);
-  }
+.backLink {
+  margin: _.unit(1) 0 0 _.unit(1);
 }
 
 .header {
