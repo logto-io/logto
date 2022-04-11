@@ -1,0 +1,27 @@
+@use '@/scss/underscore' as _;
+
+.linkButton {
+  background: none;
+  border-color: none;
+  font: var(--font-body-medium);
+  color: var(--color-primary);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+
+  > *:not(:first-child) {
+    margin-left: _.unit(1);
+  }
+
+  &:hover {
+    text-decoration: underline;
+  }
+
+  &:active {
+    color: var(--color-primary-30);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-primary-80);
+  }
+}

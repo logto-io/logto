@@ -6,17 +6,18 @@ import { useNavigate, useParams } from 'react-router-dom';
 import useSWR from 'swr';
 
 import ActionMenu, { ActionMenuItem } from '@/components/ActionMenu';
-import BackLink from '@/components/BackLink';
 import Button from '@/components/Button';
 import Card from '@/components/Card';
 import CodeEditor from '@/components/CodeEditor';
 import Drawer from '@/components/Drawer';
 import ImagePlaceholder from '@/components/ImagePlaceholder';
+import LinkButton from '@/components/LinkButton';
 import Markdown from '@/components/Markdown';
 import Status from '@/components/Status';
 import TabNav, { TabNavLink } from '@/components/TabNav';
 import UnnamedTrans from '@/components/UnnamedTrans';
 import useApi, { RequestError } from '@/hooks/use-api';
+import Back from '@/icons/Back';
 import Delete from '@/icons/Delete';
 import More from '@/icons/More';
 import Reset from '@/icons/Reset';
@@ -97,7 +98,12 @@ const ConnectorDetails = () => {
 
   return (
     <div className={detailsStyles.container}>
-      <BackLink to="/connectors">{t('connector_details.back_to_connectors')}</BackLink>
+      <LinkButton
+        to="/connectors"
+        icon={<Back />}
+        title="admin_console.connector_details.back_to_connectors"
+        className={styles.backLink}
+      />
       {isLoading && <div>loading</div>}
       {error && <div>{`error occurred: ${error.body.message}`}</div>}
       {data && (

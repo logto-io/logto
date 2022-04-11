@@ -8,16 +8,17 @@ import { useLocation, useParams } from 'react-router-dom';
 import useSWR from 'swr';
 
 import ActionMenu, { ActionMenuItem } from '@/components/ActionMenu';
-import BackLink from '@/components/BackLink';
 import Button from '@/components/Button';
 import Card from '@/components/Card';
 import CopyToClipboard from '@/components/CopyToClipboard';
 import Drawer from '@/components/Drawer';
 import FormField from '@/components/FormField';
 import ImagePlaceholder from '@/components/ImagePlaceholder';
+import LinkButton from '@/components/LinkButton';
 import TabNav, { TabNavLink } from '@/components/TabNav';
 import TextInput from '@/components/TextInput';
 import useApi, { RequestError } from '@/hooks/use-api';
+import Back from '@/icons/Back';
 import Delete from '@/icons/Delete';
 import More from '@/icons/More';
 import * as detailsStyles from '@/scss/details.module.scss';
@@ -74,8 +75,12 @@ const ApiResourceDetails = () => {
 
   return (
     <div className={detailsStyles.container}>
-      <BackLink to="/api-resources">{t('api_resource_details.back_to_api_resources')}</BackLink>
-
+      <LinkButton
+        to="/api-resources"
+        icon={<Back />}
+        title="admin_console.api_resource_details.back_to_api_resources"
+        className={styles.backLink}
+      />
       {isLoading && <div>loading</div>}
       {error && <div>{`error occurred: ${error.body.message}`}</div>}
       {data && (

@@ -1,5 +1,9 @@
 @use '@/scss/underscore' as _;
 
+.backLink {
+  margin: _.unit(1) 0 0 _.unit(1);
+}
+
 .header {
   padding: _.unit(8);
   display: flex;

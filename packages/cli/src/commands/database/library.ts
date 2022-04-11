@@ -2,18 +2,40 @@ import { readdir, readFile } from 'fs/promises';
 import path from 'path';
 
 import { seeds } from '@logto/schemas';
+import chalk from 'chalk';
 import { createPool, sql } from 'slonik';
 import { createInterceptors } from 'slonik-interceptor-preset';
 import { raw } from 'slonik-sql-tag-raw';
 
-import { insertInto } from './utilities';
+import { insertInto, replaceDsnDatabase } from './utilities';
 
 const { managementResource, defaultSignInExperience, createDefaultSetting } = seeds;
 const tableDirectory = 'node_modules/@logto/schemas/tables';
-const domain = 'http://localhost:3001';
 
-export const createDatabaseCli = (uri: string) => {
-  const pool = createPool(uri, { interceptors: createInterceptors() });
+/**
+ * Create a database.
+ * @returns DSN with the created database name.
+ */
+export const createDatabase = async (dsn: string, databaseName: string): Promise<string> => {
+  const pool = createPool(replaceDsnDatabase(dsn, 'postgres'));
+
+  await pool.query(sql`
+    create database ${sql.identifier([databaseName])}
+      with
+      encoding = 'UTF8'
+      lc_collate = 'C'
+      lc_ctype = 'en_US.utf8'
+      connection_limit = -1;
+  `);
+  await pool.end();
+
+  console.log(`${chalk.blue('[create]')} Database ${databaseName} successfully created.`);
+
+  return replaceDsnDatabase(dsn, databaseName);
+};
+
+export const createDatabaseCli = (dsn: string) => {
+  const pool = createPool(dsn, { interceptors: createInterceptors() });
 
   const createTables = async () => {
     const directory = await readdir(tableDirectory);
@@ -29,22 +51,18 @@ export const createDatabaseCli = (uri: string) => {
     for (const [file, query] of queries) {
       // eslint-disable-next-line no-await-in-loop
       await pool.query(sql`${raw(query)}`);
-      console.log(`Create Tables: Run ${file} succeeded.`);
+      console.log(`${chalk.blue('[create-tables]')} Run ${file} succeeded.`);
     }
   };
 
-  const seedTables = async () => {
+  const seedTables = async (domain: string) => {
     await Promise.all([
       pool.query(insertInto(managementResource, 'resources')),
       pool.query(insertInto(createDefaultSetting(domain), 'settings')),
       pool.query(insertInto(defaultSignInExperience, 'sign_in_experiences')),
     ]);
-    console.log('Seed Tables: Seed tables succeeded.');
+    console.log(`${chalk.blue('[seed-tables]')} Seed tables succeeded.`);
   };
 
-  return { createTables, seedTables };
+  return { createTables, seedTables, end: pool.end };
 };
-
-// For testing purpose, will remove later
-const cli = createDatabaseCli(process.env.DSN ?? '');
-void cli.seedTables();
