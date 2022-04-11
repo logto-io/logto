@@ -9,6 +9,10 @@
   border-radius: _.unit(2);
   text-decoration: none;
   user-select: none;
+  cursor: pointer;
+  background: none;
+  border: none;
+  width: calc(100% - _.unit(10));
 
   .icon {
     height: _.unit(5);

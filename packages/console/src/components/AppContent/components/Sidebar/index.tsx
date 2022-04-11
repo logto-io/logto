@@ -19,12 +19,13 @@ const Sidebar = () => {
     <div className={styles.sidebar}>
       {sections.map(({ title, items }) => (
         <Section key={title} title={t(title)}>
-          {items.map(({ title, Icon }) => (
+          {items.map(({ title, Icon, modal }) => (
             <Item
               key={title}
               titleKey={title}
               icon={<Icon />}
               isActive={location.pathname.startsWith(getPath(title))}
+              modal={modal}
             />
           ))}
         </Section>

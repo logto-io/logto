@@ -293,6 +293,25 @@ const translation = {
         not_connected: 'The user is not connected to any social connector.',
       },
     },
+    contact: {
+      title: 'Contact us',
+      description: 'You can contact us for help and support.',
+      slack: {
+        title: 'Slack channel',
+        description: 'Join our public channel to chat with developers.',
+        button: 'Join',
+      },
+      github: {
+        title: 'GitHub',
+        description: 'Create an issue.',
+        button: 'Contact',
+      },
+      email: {
+        title: 'Send us an email',
+        description: 'If you have any question.',
+        button: 'Send',
+      },
+    },
   },
 };
 

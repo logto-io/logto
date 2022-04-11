@@ -290,6 +290,25 @@ const translation = {
         not_connected: '该用户还没有绑定社交账号。',
       },
     },
+    contact: {
+      title: 'Contact us',
+      description: 'You can contact us for help and support.',
+      slack: {
+        title: 'Slack channel',
+        description: 'Join our public channel to chat with developers.',
+        button: 'Join',
+      },
+      github: {
+        title: 'GitHub',
+        description: 'Create an issue.',
+        button: 'Contact',
+      },
+      email: {
+        title: 'Send us an email',
+        description: 'If you have any question.',
+        button: 'Send',
+      },
+    },
   },
 };
 
