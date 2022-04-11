@@ -1,5 +1,13 @@
+import { Command } from 'commander';
 import dotenv from 'dotenv';
+
+import database from './commands/database';
 
 dotenv.config();
 
-export * from './database';
+const program = new Command();
+
+program.addCommand(database);
+program.parse(process.argv);
+
+// Export * from './database';
