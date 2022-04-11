@@ -4,11 +4,10 @@ import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import Modal from 'react-modal';
-import { useLocation, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import useSWR from 'swr';
 
 import ActionMenu, { ActionMenuItem } from '@/components/ActionMenu';
-import BackLink from '@/components/BackLink';
 import Button from '@/components/Button';
 import Card from '@/components/Card';
 import CopyToClipboard from '@/components/CopyToClipboard';
@@ -20,6 +19,7 @@ import { convertRhfErrorMessage, createValidatorForRhf } from '@/components/Mult
 import TabNav, { TabNavLink } from '@/components/TabNav';
 import TextInput from '@/components/TextInput';
 import useApi, { RequestError } from '@/hooks/use-api';
+import Back from '@/icons/Back';
 import Delete from '@/icons/Delete';
 import More from '@/icons/More';
 import * as detailsStyles from '@/scss/details.module.scss';
@@ -41,7 +41,7 @@ const ApplicationDetails = () => {
   const { id } = useParams();
   const location = useLocation();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-
+  const navigate = useNavigate();
   const { data, error, mutate } = useSWR<Application, RequestError>(
     id && `/api/applications/${id}`
   );
@@ -182,7 +182,14 @@ const ApplicationDetails = () => {
 
   return (
     <div className={detailsStyles.container}>
-      <BackLink to="/applications">{t('application_details.back_to_applications')}</BackLink>
+      <Button
+        type="link"
+        icon={<Back />}
+        title="admin_console.application_details.back_to_applications"
+        onClick={() => {
+          navigate('/applications');
+        }}
+      />
       {isLoading && <div>loading</div>}
       {error && <div>{`error occurred: ${error.body.message}`}</div>}
       {data && oidcConfig && (

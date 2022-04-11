@@ -25,6 +25,10 @@
     &:not(:last-child) {
       margin-right: _.unit(2);
     }
+
+    > svg {
+      vertical-align: middle;
+    }
   }
 
   &.small {
@@ -162,6 +166,25 @@
     &:not(:disabled):hover {
       color: var(--color-primary-30);
       background: var(--color-primary-95);
+    }
+  }
+
+  &.link {
+    background: none;
+    border-color: none;
+    font: var(--font-body-medium);
+    color: var(--color-primary);
+
+    &:disabled {
+      color: var(--color-neutral-80);
+    }
+
+    &:not(:disabled):active {
+      color: var(--color-primary-30);
+    }
+
+    &:not(:disabled):hover {
+      text-decoration: underline;
     }
   }
 }

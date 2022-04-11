@@ -5,11 +5,10 @@ import { useController, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import ReactModal from 'react-modal';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import useSWR from 'swr';
 
 import ActionMenu, { ActionMenuItem } from '@/components/ActionMenu';
-import BackLink from '@/components/BackLink';
 import Button from '@/components/Button';
 import Card from '@/components/Card';
 import CodeEditor from '@/components/CodeEditor';
@@ -19,6 +18,7 @@ import ImagePlaceholder from '@/components/ImagePlaceholder';
 import TabNav, { TabNavLink } from '@/components/TabNav';
 import TextInput from '@/components/TextInput';
 import useApi, { RequestError } from '@/hooks/use-api';
+import Back from '@/icons/Back';
 import Delete from '@/icons/Delete';
 import More from '@/icons/More';
 import Reset from '@/icons/Reset';
@@ -45,6 +45,7 @@ type FormData = {
 const UserDetails = () => {
   const { id } = useParams();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const navigate = useNavigate();
   const [isDeleteFormOpen, setIsDeleteFormOpen] = useState(false);
   const [isResetPasswordFormOpen, setIsResetPasswordFormOpen] = useState(false);
 
@@ -101,7 +102,14 @@ const UserDetails = () => {
 
   return (
     <div className={detailsStyles.container}>
-      <BackLink to="/users">{t('user_details.back_to_users')}</BackLink>
+      <Button
+        type="link"
+        icon={<Back />}
+        title="admin_console.connector_details.back_to_connectors"
+        onClick={() => {
+          navigate('/connectors');
+        }}
+      />
 
       {isLoading && <div>loading</div>}
       {error && <div>{`error occurred: ${error.body.message}`}</div>}

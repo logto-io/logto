@@ -9,7 +9,7 @@ import * as styles from './index.module.scss';
 
 type BaseProps = Omit<HTMLProps<HTMLButtonElement>, 'type' | 'size' | 'title'> & {
   htmlType?: 'button' | 'submit' | 'reset';
-  type?: 'primary' | 'danger' | 'outline' | 'plain' | 'default';
+  type?: 'primary' | 'danger' | 'outline' | 'plain' | 'link' | 'default';
   size?: 'small' | 'medium' | 'large';
 };
 
