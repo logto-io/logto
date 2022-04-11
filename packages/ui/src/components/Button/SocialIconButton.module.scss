@@ -1,0 +1,21 @@
+@use '@/scss/underscore' as _;
+
+
+.socialButton {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  @include _.flex-column;
+  background: var(--color-secondary-background-active);
+  border: none;
+
+  &.more {
+    background: url('../../assets/icons/more-social-icon.svg') no-repeat center;
+  }
+}
+
+.icon {
+  width: 28px;
+  height: 28px;
+  @include _.image-align-center;
+}

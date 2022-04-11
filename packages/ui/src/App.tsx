@@ -4,6 +4,7 @@ import { Route, Routes, BrowserRouter } from 'react-router-dom';
 import AppContent from './components/AppContent';
 import useTheme from './hooks/use-theme';
 import initI18n from './i18n/init';
+import Callback from './pages/Callback';
 import Consent from './pages/Consent';
 import Passcode from './pages/Passcode';
 import Register from './pages/Register';
@@ -27,6 +28,7 @@ const App = () => {
           <Route path="/register" element={<Register />} />
           <Route path="/register/:channel" element={<Register />} />
           <Route path="/:type/:channel/passcode-validation" element={<Passcode />} />
+          <Route path="/callback/:connector" element={<Callback />} />
         </Routes>
       </BrowserRouter>
     </AppContent>
