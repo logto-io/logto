@@ -186,6 +186,7 @@ importers:
       lint-staged: ^11.1.1
       lodash.pick: ^4.4.0
       module-alias: ^2.2.2
+      moment: ^2.29.0
       nanoid: ^3.1.23
       nock: ^13.2.2
       oidc-provider: ^7.10.0
@@ -222,6 +223,7 @@ importers:
       koa-static: 5.0.0
       lodash.pick: 4.4.0
       module-alias: 2.2.2
+      moment: 2.29.2
       nanoid: 3.1.30
       oidc-provider: 7.10.4
       p-retry: 4.6.1
@@ -13505,6 +13507,10 @@ packages:
 
   /module-alias/2.2.2:
     resolution: {integrity: sha512-A/78XjoX2EmNvppVWEhM2oGk3x4lLxnkEA4jTbaK97QKSDjkIoOsKQlfylt/d3kKKi596Qy3NP5XrXJ6fZIC9Q==}
+    dev: false
+
+  /moment/2.29.2:
+    resolution: {integrity: sha512-UgzG4rvxYpN15jgCmVJwac49h9ly9NurikMWGPdVxm8GZD6XjkKPxDTjQQ43gtGgnV3X0cAyWDdP2Wexoquifg==}
     dev: false
 
   /monaco-editor/0.32.1:

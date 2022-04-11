@@ -377,7 +377,6 @@ const errors = {
     more_than_one_sms: '同时存在超过 1 个短信连接器。',
     more_than_one_email: '同时存在超过 1 个邮件连接器。',
     db_connector_type_mismatch: '数据库中存在一个类型不匹配的连接器。',
-    invalid_redirect_uri: '重定向链接需要以 http:// 或者 https:// 作为开头。',
   },
   passcode: {
     phone_email_empty: '手机号与邮箱地址均为空。',

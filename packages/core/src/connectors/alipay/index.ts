@@ -15,7 +15,6 @@ import snakeCaseKeys from 'snakecase-keys';
 import { z } from 'zod';
 
 import assertThat from '@/utils/assert-that';
-import { redirectUriRegEx } from '@/utils/regex';
 
 import {
   ConnectorError,
@@ -36,14 +35,16 @@ import {
   scope,
 } from './constant';
 
-const ALIPAY_ALGORITHM_MAPPING = {
+export const alipaySigningAlgorithmMapping = {
   RSA: 'RSA-SHA1',
   RSA2: 'RSA-SHA256',
-};
+} as const;
+const alipaySigningAlgorithms = ['RSA', 'RSA2'] as const;
 
-export enum CHAR_SET {
-  UTF8 = 'UTF8',
-}
+export const charSetMapping = {
+  UTF8: 'UTF8',
+} as const;
+const charSets = ['UTF8'] as const;
 
 // eslint-disable-next-line unicorn/prefer-module
 const pathToReadmeFile = path.join(__dirname, 'README.md');
@@ -68,9 +69,9 @@ export const metadata: ConnectorMetadata = {
 
 const alipayConfigGuard = z.object({
   appId: z.string(),
-  charset: z.nativeEnum(CHAR_SET).default(CHAR_SET.UTF8),
+  charset: z.enum(charSets),
   privateKey: z.string(),
-  signType: z.enum(['RSA', 'RSA2']),
+  signType: z.enum(alipaySigningAlgorithms),
 });
 
 export type AlipayConfig = z.infer<typeof alipayConfigGuard>;
@@ -100,13 +101,7 @@ export const signingPamameters = (
   const sortedParametersAsString = Object.keys(decamelizeParameters)
     .sort()
     .map((key) => {
-      // eslint-disable-next-line @silverhand/fp/no-let
-      let data = decamelizeParameters[key];
-
-      if (Array.prototype.toString.call(data) !== '[object String]') {
-        // eslint-disable-next-line @silverhand/fp/no-mutation
-        data = JSON.stringify(data);
-      }
+      const data = decamelizeParameters[key];
 
       // Supported Encodings can be found at https://github.com/ashtuchkin/iconv-lite/wiki/Supported-Encodings
       // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
@@ -116,7 +111,7 @@ export const signingPamameters = (
     .join('&');
 
   const sign = crypto
-    .createSign(ALIPAY_ALGORITHM_MAPPING[signParameters.signType])
+    .createSign(alipaySigningAlgorithmMapping[signParameters.signType])
     .update(sortedParametersAsString, 'utf8')
     .sign(privateKey, 'base64');
 
@@ -125,7 +120,6 @@ export const signingPamameters = (
 };
 
 export const getAuthorizationUri: GetAuthorizationUri = async (redirectUri, state) => {
-  assertThat(redirectUriRegEx.test(redirectUri), 'connector.invalid_redirect_uri');
   const { appId: app_id } = await getConnectorConfig<AlipayConfig>(metadata.id);
 
   return `${authorizationEndpoint}?${stringify({
@@ -154,7 +148,7 @@ export const getAccessToken: GetAccessToken = async (authCode) => {
     };
   };
 
-  const config = await getConnectorConfig<AlipayConfig>(metadata.id);
+  const { charset, ...restConfig } = await getConnectorConfig<AlipayConfig>(metadata.id);
   const initSearchParameters = {
     method: methodForAccessToken,
     format: 'JSON',
@@ -162,7 +156,8 @@ export const getAccessToken: GetAccessToken = async (authCode) => {
     version: '1.0',
     grant_type: 'authorization_code',
     code: authCode,
-    ...config,
+    charset: charSetMapping[charset],
+    ...restConfig,
   };
   const signedSearchParameters = signingPamameters(initSearchParameters);
 
@@ -205,7 +200,7 @@ export const getUserInfo: GetUserInfo = async (accessTokenObject) => {
 
   const { accessToken } = accessTokenObject;
 
-  const config = await getConnectorConfig<AlipayConfig>(metadata.id);
+  const { charset, ...restConfig } = await getConnectorConfig<AlipayConfig>(metadata.id);
   const initSearchParameters = {
     method: methodForUserInfo,
     format: 'JSON',
@@ -214,7 +209,8 @@ export const getUserInfo: GetUserInfo = async (accessTokenObject) => {
     grant_type: 'authorization_code',
     auth_token: accessToken,
     biz_content: JSON.stringify({}),
-    ...config,
+    charset: charSetMapping[charset],
+    ...restConfig,
   };
   const signedSearchParameters = signingPamameters(initSearchParameters);
 
