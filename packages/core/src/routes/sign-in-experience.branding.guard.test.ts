@@ -22,7 +22,7 @@ const expectPatchResponseStatus = async (signInExperience: any, status: number) 
 };
 
 describe('branding', () => {
-  const colorKeys = ['primaryColor', 'backgroundColor', 'darkPrimaryColor', 'darkBackgroundColor'];
+  const colorKeys = ['primaryColor', 'darkPrimaryColor'];
 
   const invalidColors = [
     undefined,

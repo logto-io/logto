@@ -1,13 +1,19 @@
 import { readdir, readFile } from 'fs/promises';
 import path from 'path';
 
+import { seeds } from '@logto/schemas';
 import { createPool, sql } from 'slonik';
+import { createInterceptors } from 'slonik-interceptor-preset';
 import { raw } from 'slonik-sql-tag-raw';
 
+import { insertInto } from './utilities';
+
+const { managementResource, defaultSignInExperience, createDefaultSetting } = seeds;
 const tableDirectory = 'node_modules/@logto/schemas/tables';
+const domain = 'http://localhost:3001';
 
 export const createDatabaseCli = (uri: string) => {
-  const pool = createPool(uri);
+  const pool = createPool(uri, { interceptors: createInterceptors() });
 
   const createTables = async () => {
     const directory = await readdir(tableDirectory);
@@ -23,13 +29,22 @@ export const createDatabaseCli = (uri: string) => {
     for (const [file, query] of queries) {
       // eslint-disable-next-line no-await-in-loop
       await pool.query(sql`${raw(query)}`);
-      console.log(`Run ${file} succeeded.`);
+      console.log(`Create Tables: Run ${file} succeeded.`);
     }
   };
 
-  return { createTables };
+  const seedTables = async () => {
+    await Promise.all([
+      pool.query(insertInto(managementResource, 'resources')),
+      pool.query(insertInto(createDefaultSetting(domain), 'settings')),
+      pool.query(insertInto(defaultSignInExperience, 'sign_in_experiences')),
+    ]);
+    console.log('Seed Tables: Seed tables succeeded.');
+  };
+
+  return { createTables, seedTables };
 };
 
 // For testing purpose, will remove later
 const cli = createDatabaseCli(process.env.DSN ?? '');
-void cli.createTables();
+void cli.seedTables();
