@@ -2,7 +2,7 @@ import { readdir, readFile } from 'fs/promises';
 import path from 'path';
 
 import { seeds } from '@logto/schemas';
-import { createPool, sql } from 'slonik';
+import { createPool, parseDsn, sql, stringifyDsn } from 'slonik';
 import { createInterceptors } from 'slonik-interceptor-preset';
 import { raw } from 'slonik-sql-tag-raw';
 
@@ -11,9 +11,33 @@ import { insertInto } from './utilities';
 const { managementResource, defaultSignInExperience, createDefaultSetting } = seeds;
 const tableDirectory = 'node_modules/@logto/schemas/tables';
 const domain = 'http://localhost:3001';
+const defaultDatabase = 'logto_test';
 
-export const createDatabaseCli = (uri: string) => {
-  const pool = createPool(uri, { interceptors: createInterceptors() });
+/**
+ * Create a database.
+ * @returns DSN with the created database name.
+ */
+export const createDatabase = async (
+  dsn: string,
+  databaseName = defaultDatabase
+): Promise<string> => {
+  const { databaseName: _, ...restDsn } = parseDsn(dsn);
+  const pool = createPool(dsn);
+
+  await pool.query(sql`
+    create database ${sql.identifier([databaseName])}
+      with
+      encoding = 'UTF8'
+      lc_collate = 'C'
+      lc_ctype = 'en_US.utf8'
+      connection_limit = -1;
+  `);
+
+  return stringifyDsn({ ...restDsn, databaseName });
+};
+
+export const createDatabaseCli = (dsn: string) => {
+  const pool = createPool(dsn, { interceptors: createInterceptors() });
 
   const createTables = async () => {
     const directory = await readdir(tableDirectory);
@@ -46,5 +70,4 @@ export const createDatabaseCli = (uri: string) => {
 };
 
 // For testing purpose, will remove later
-const cli = createDatabaseCli(process.env.DSN ?? '');
-void cli.seedTables();
+void createDatabase(process.env.DSN ?? '');

@@ -25,6 +25,7 @@ importers:
       '@silverhand/ts-config': ^0.10.2
       '@types/node': '14'
       decamelize: ^5.0.0
+      dotenv: ^10.0.0
       eslint: ^8.10.0
       lint-staged: ^11.1.1
       prettier: ^2.3.2
@@ -37,6 +38,7 @@ importers:
     dependencies:
       '@logto/schemas': link:../schemas
       decamelize: 5.0.1
+      dotenv: 10.0.0
       roarr: 7.11.0
       slonik: 28.1.0
       slonik-interceptor-preset: 1.2.10
