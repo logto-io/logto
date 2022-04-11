@@ -24,7 +24,11 @@ export const mockApplication: Application = {
     redirectUris: [],
     postLogoutRedirectUris: [],
   },
-  customClientMetadata: {},
+  customClientMetadata: {
+    corsAllowedOrigins: ['http://localhost:3000', 'http://localhost:3001', 'https://logto.dev'],
+    idTokenTtl: 5000,
+    refreshTokenTtl: 6_000_000,
+  },
   createdAt: 1_645_334_775_356,
 };
 

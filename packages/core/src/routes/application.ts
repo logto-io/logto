@@ -43,14 +43,14 @@ export default function applicationRoutes<T extends AuthedRouter>(router: T) {
         .merge(Applications.createGuard.pick({ name: true, type: true })),
     }),
     async (ctx, next) => {
-      const { name, type, oidcClientMetadata, ...rest } = ctx.guard.body;
+      const { name, type, oidcClientMetadata, customClientMetadata } = ctx.guard.body;
 
       ctx.body = await insertApplication({
         id: applicationId(),
         type,
         name,
         oidcClientMetadata: buildOidcClientMetadata(oidcClientMetadata),
-        ...rest,
+        customClientMetadata,
       });
 
       return next();
