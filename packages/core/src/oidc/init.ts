@@ -77,7 +77,7 @@ export default async function initOidc(app: Koa): Promise<Provider> {
       },
     },
     extraClientMetadata: {
-      properties: Object.keys(CustomClientMetadataKey),
+      properties: Object.values(CustomClientMetadataKey),
       validator: (_, key, value) => {
         validateCustomClientMetadata(key, value);
       },
