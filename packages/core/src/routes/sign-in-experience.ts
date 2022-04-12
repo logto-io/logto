@@ -41,6 +41,14 @@ export default function signInExperiencesRoutes<T extends AuthedRouter>(router: 
     return next();
   });
 
+  router.get('/sign-in-settings', async (ctx, next) => {
+    // TODO: Social Connector Details
+    const signInExperience = await findDefaultSignInExperience();
+    ctx.body = signInExperience;
+
+    return next();
+  });
+
   router.patch(
     '/sign-in-exp',
     koaGuard({

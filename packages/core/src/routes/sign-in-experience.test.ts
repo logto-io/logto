@@ -49,6 +49,10 @@ jest.mock('@/queries/sign-in-experience', () => ({
 const signInExperienceRequester = createRequester({ authedRoutes: signInExperiencesRoutes });
 
 describe('GET /sign-in-exp', () => {
+  afterAll(() => {
+    jest.clearAllMocks();
+  });
+
   it('should call findDefaultSignInExperience', async () => {
     const response = await signInExperienceRequester.get('/sign-in-exp');
     expect(findDefaultSignInExperience).toHaveBeenCalledTimes(1);
@@ -71,6 +75,19 @@ describe('GET /sign-in-exp', () => {
       ...signInExperience,
       socialSignInConnectorIds: ['facebook', 'github'],
     });
+  });
+});
+
+describe('GET /sign-in-settings', () => {
+  afterAll(() => {
+    jest.clearAllMocks();
+  });
+
+  it('should call findDefaultSignInExperience', async () => {
+    const response = await signInExperienceRequester.get('/sign-in-settings');
+    expect(findDefaultSignInExperience).toHaveBeenCalledTimes(1);
+    expect(response.status).toEqual(200);
+    expect(response.body).toEqual(mockSignInExperience);
   });
 });
 
