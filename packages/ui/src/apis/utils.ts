@@ -13,14 +13,14 @@ import {
   sendPhonePasscode as sendSignInPhonePasscode,
 } from './sign-in';
 
-export type PasscodeChannel = 'phone' | 'email';
+export type PasscodeChannel = 'sms' | 'email';
 
 export const getSendPasscodeApi = (type: UserFlow, channel: PasscodeChannel) => {
   if (type === 'sign-in' && channel === 'email') {
     return sendSignInEmailPasscode;
   }
 
-  if (type === 'sign-in' && channel === 'phone') {
+  if (type === 'sign-in' && channel === 'sms') {
     return sendSignInPhonePasscode;
   }
 
@@ -36,7 +36,7 @@ export const getVerifyPasscodeApi = (type: UserFlow, channel: PasscodeChannel) =
     return verifySignInEmailPasscode;
   }
 
-  if (type === 'sign-in' && channel === 'phone') {
+  if (type === 'sign-in' && channel === 'sms') {
     return verifySignInPhonePasscode;
   }
 

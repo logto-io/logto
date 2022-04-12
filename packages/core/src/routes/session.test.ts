@@ -213,7 +213,7 @@ describe('sessionRoutes', () => {
     });
   });
 
-  describe('POST /session/sign-in/passwordless/phone/send-passcode', () => {
+  describe('POST /session/sign-in/passwordless/sms/send-passcode', () => {
     beforeAll(() => {
       interactionDetails.mockResolvedValueOnce({
         jti: 'jti',
@@ -221,23 +221,23 @@ describe('sessionRoutes', () => {
     });
     it('it should call sendPasscode', async () => {
       const response = await sessionRequest
-        .post('/session/sign-in/passwordless/phone/send-passcode')
+        .post('/session/sign-in/passwordless/sms/send-passcode')
         .send({ phone: '13000000000' });
       expect(response.statusCode).toEqual(204);
       expect(sendPasscode).toHaveBeenCalled();
     });
     it('throw error if phone does not exist', async () => {
       const response = await sessionRequest
-        .post('/session/sign-in/passwordless/phone/send-passcode')
+        .post('/session/sign-in/passwordless/sms/send-passcode')
         .send({ phone: '13000000001' });
       expect(response.statusCode).toEqual(422);
     });
   });
 
-  describe('POST /session/sign-in/passwordless/phone/verify-passcode', () => {
+  describe('POST /session/sign-in/passwordless/sms/verify-passcode', () => {
     it('assign result and redirect', async () => {
       const response = await sessionRequest
-        .post('/session/sign-in/passwordless/phone/verify-passcode')
+        .post('/session/sign-in/passwordless/sms/verify-passcode')
         .send({ phone: '13000000000', code: '1234' });
       expect(response.statusCode).toEqual(200);
       expect(response.body).toHaveProperty('redirectTo');
@@ -250,13 +250,13 @@ describe('sessionRoutes', () => {
     });
     it('throw error if phone does not exist', async () => {
       const response = await sessionRequest
-        .post('/session/sign-in/passwordless/phone/verify-passcode')
+        .post('/session/sign-in/passwordless/sms/verify-passcode')
         .send({ phone: '13000000001', code: '1234' });
       expect(response.statusCode).toEqual(422);
     });
     it('throw error if verifyPasscode failed', async () => {
       const response = await sessionRequest
-        .post('/session/sign-in/passwordless/phone/verify-passcode')
+        .post('/session/sign-in/passwordless/sms/verify-passcode')
         .send({ phone: '13000000000', code: '1231' });
       expect(response.statusCode).toEqual(400);
     });
@@ -522,7 +522,7 @@ describe('sessionRoutes', () => {
     });
   });
 
-  describe('POST /session/register/passwordless/phone/send-passcode', () => {
+  describe('POST /session/register/passwordless/sms/send-passcode', () => {
     beforeAll(() => {
       interactionDetails.mockResolvedValueOnce({
         jti: 'jti',
@@ -531,7 +531,7 @@ describe('sessionRoutes', () => {
 
     it('it should call sendPasscode', async () => {
       const response = await sessionRequest
-        .post('/session/register/passwordless/phone/send-passcode')
+        .post('/session/register/passwordless/sms/send-passcode')
         .send({ phone: '13000000001' });
       expect(response.statusCode).toEqual(204);
       expect(sendPasscode).toHaveBeenCalled();
@@ -539,30 +539,30 @@ describe('sessionRoutes', () => {
 
     it('throw error if phone not valid (charactors other than digits)', async () => {
       const response = await sessionRequest
-        .post('/session/register/passwordless/phone/send-passcode')
+        .post('/session/register/passwordless/sms/send-passcode')
         .send({ phone: '1300000000a' });
       expect(response.statusCode).toEqual(400);
     });
 
     it('throw error if phone not valid (not exactly 11-digits)', async () => {
       const response = await sessionRequest
-        .post('/session/register/passwordless/phone/send-passcode')
+        .post('/session/register/passwordless/sms/send-passcode')
         .send({ phone: '1300000000' });
       expect(response.statusCode).toEqual(400);
     });
 
     it('throw error if phone exists', async () => {
       const response = await sessionRequest
-        .post('/session/register/passwordless/phone/send-passcode')
+        .post('/session/register/passwordless/sms/send-passcode')
         .send({ phone: '13000000000' });
       expect(response.statusCode).toEqual(422);
     });
   });
 
-  describe('POST /session/register/passwordless/phone/verify-passcode', () => {
+  describe('POST /session/register/passwordless/sms/verify-passcode', () => {
     it('assign result and redirect', async () => {
       const response = await sessionRequest
-        .post('/session/register/passwordless/phone/verify-passcode')
+        .post('/session/register/passwordless/sms/verify-passcode')
         .send({ phone: '13000000001', code: '1234' });
       expect(response.statusCode).toEqual(200);
       expect(response.body).toHaveProperty('redirectTo');
@@ -579,28 +579,28 @@ describe('sessionRoutes', () => {
 
     it('throw error if phone not valid (characters other than digits)', async () => {
       const response = await sessionRequest
-        .post('/session/register/passwordless/phone/verify-passcode')
+        .post('/session/register/passwordless/sms/verify-passcode')
         .send({ phone: '1300000000a', code: '1234' });
       expect(response.statusCode).toEqual(400);
     });
 
     it('throw error if phone not valid (not exactly 11-digits)', async () => {
       const response = await sessionRequest
-        .post('/session/register/passwordless/phone/verify-passcode')
+        .post('/session/register/passwordless/sms/verify-passcode')
         .send({ phone: '1300000000', code: '1234' });
       expect(response.statusCode).toEqual(400);
     });
 
     it('throw error if phone exists', async () => {
       const response = await sessionRequest
-        .post('/session/register/passwordless/phone/verify-passcode')
+        .post('/session/register/passwordless/sms/verify-passcode')
         .send({ phone: '13000000000', code: '1234' });
       expect(response.statusCode).toEqual(422);
     });
 
     it('throw error if verifyPasscode failed', async () => {
       const response = await sessionRequest
-        .post('/session/register/passwordless/phone/verify-passcode')
+        .post('/session/register/passwordless/sms/verify-passcode')
         .send({ phone: '13000000001', code: '1231' });
       expect(response.statusCode).toEqual(400);
     });

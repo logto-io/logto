@@ -20,7 +20,7 @@ const SignInMethodsKeyMap: {
 } = {
   username: 'username',
   email: 'email',
-  phone: 'phone_number',
+  sms: 'phone_number',
 };
 
 const SignInMethodsLink = ({ signInMethods, type = 'secondary', classname }: Props) => {

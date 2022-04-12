@@ -18,13 +18,13 @@ const SecondarySignIn = () => {
   const { channel = 'username' } = useParams<Props>();
 
   useEffect(() => {
-    if (channel !== 'email' && channel !== 'phone' && channel !== 'username') {
+    if (channel !== 'email' && channel !== 'sms' && channel !== 'username') {
       navigate('/404', { replace: true });
     }
   }, [channel, navigate]);
 
   const signInForm = useMemo(() => {
-    if (channel === 'phone') {
+    if (channel === 'sms') {
       return <PhonePasswordless type="sign-in" />;
     }
 

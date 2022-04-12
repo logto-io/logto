@@ -53,7 +53,7 @@ describe('api', () => {
 
   it('sendPhonePasscode', async () => {
     await sendPhonePasscode(phone);
-    expect(ky.post).toBeCalledWith('/api/session/sign-in/passwordless/phone/send-passcode', {
+    expect(ky.post).toBeCalledWith('/api/session/sign-in/passwordless/sms/send-passcode', {
       json: {
         phone,
       },
@@ -62,7 +62,7 @@ describe('api', () => {
 
   it('verifyPhonePasscode', async () => {
     await verifyPhonePasscode(phone, passcode);
-    expect(ky.post).toBeCalledWith('/api/session/sign-in/passwordless/phone/verify-passcode', {
+    expect(ky.post).toBeCalledWith('/api/session/sign-in/passwordless/sms/verify-passcode', {
       json: {
         phone,
         passcode,
@@ -106,7 +106,7 @@ describe('api', () => {
 
   it('registerSendPhonePasscode', async () => {
     await registerSendPhonePasscode(phone);
-    expect(ky.post).toBeCalledWith('/api/session/register/passwordless/phone/send-passcode', {
+    expect(ky.post).toBeCalledWith('/api/session/register/passwordless/sms/send-passcode', {
       json: {
         phone,
       },
@@ -115,7 +115,7 @@ describe('api', () => {
 
   it('registerVerifyPhonePasscode', async () => {
     await registerVerifyPhonePasscode(phone, passcode);
-    expect(ky.post).toBeCalledWith('/api/session/register/passwordless/phone/verify-passcode', {
+    expect(ky.post).toBeCalledWith('/api/session/register/passwordless/sms/verify-passcode', {
       json: {
         phone,
         passcode,
