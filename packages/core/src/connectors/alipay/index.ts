@@ -33,18 +33,9 @@ import {
   methodForAccessToken,
   methodForUserInfo,
   scope,
+  alipaySigningAlgorithmMapping,
+  alipaySigningAlgorithms,
 } from './constant';
-
-export const alipaySigningAlgorithmMapping = {
-  RSA: 'RSA-SHA1',
-  RSA2: 'RSA-SHA256',
-} as const;
-const alipaySigningAlgorithms = ['RSA', 'RSA2'] as const;
-
-export const charSetMapping = {
-  UTF8: 'UTF8',
-} as const;
-const charSets = ['UTF8'] as const;
 
 // eslint-disable-next-line unicorn/prefer-module
 const pathToReadmeFile = path.join(__dirname, 'README.md');
@@ -69,7 +60,6 @@ export const metadata: ConnectorMetadata = {
 
 const alipayConfigGuard = z.object({
   appId: z.string(),
-  charset: z.enum(charSets),
   privateKey: z.string(),
   signType: z.enum(alipaySigningAlgorithms),
 });
@@ -105,7 +95,7 @@ export const signingPamameters = (
 
       // Supported Encodings can be found at https://github.com/ashtuchkin/iconv-lite/wiki/Supported-Encodings
       // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-      return data ? `${key}=${iconv.encode(data, signParameters.charset)}` : '';
+      return data ? `${key}=${iconv.encode(data, signParameters.charset ?? 'UTF8')}` : '';
     })
     .filter((keyValueString) => keyValueString)
     .join('&');
@@ -147,7 +137,7 @@ export const getAccessToken: GetAccessToken = async (authCode) => {
     };
   };
 
-  const { charset, ...restConfig } = await getConnectorConfig<AlipayConfig>(metadata.id);
+  const config = await getConnectorConfig<AlipayConfig>(metadata.id);
   const initSearchParameters = {
     method: methodForAccessToken,
     format: 'JSON',
@@ -155,8 +145,8 @@ export const getAccessToken: GetAccessToken = async (authCode) => {
     version: '1.0',
     grant_type: 'authorization_code',
     code: authCode,
-    charset: charSetMapping[charset],
-    ...restConfig,
+    charset: 'UTF8',
+    ...config,
   };
   const signedSearchParameters = signingPamameters(initSearchParameters);
 
@@ -199,7 +189,7 @@ export const getUserInfo: GetUserInfo = async (accessTokenObject) => {
 
   const { accessToken } = accessTokenObject;
 
-  const { charset, ...restConfig } = await getConnectorConfig<AlipayConfig>(metadata.id);
+  const config = await getConnectorConfig<AlipayConfig>(metadata.id);
   const initSearchParameters = {
     method: methodForUserInfo,
     format: 'JSON',
@@ -208,8 +198,8 @@ export const getUserInfo: GetUserInfo = async (accessTokenObject) => {
     grant_type: 'authorization_code',
     auth_token: accessToken,
     biz_content: JSON.stringify({}),
-    charset: charSetMapping[charset],
-    ...restConfig,
+    charset: 'UTF8',
+    ...config,
   };
   const signedSearchParameters = signingPamameters(initSearchParameters);
 
