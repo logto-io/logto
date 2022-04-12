@@ -229,8 +229,11 @@ export const getUserInfo: GetUserInfo = async (accessTokenObject) => {
     code,
   } = response.alipay_user_info_share_response;
 
-  if ((sub_msg || sub_code) && code === '20001') {
-    throw new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid, msg);
+  if (sub_msg || sub_code) {
+    if (code === '20001') {
+      throw new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid, msg);
+    }
+    throw new ConnectorError(ConnectorErrorCodes.General);
   }
   // TODO: elaborate on the error messages for all social connectors (see LOG-2157)
 

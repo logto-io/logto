@@ -230,6 +230,8 @@ describe('getUserInfo', () => {
       .query(searchParameters)
       .reply(200, {
         alipay_user_info_share_response: {
+          code: '10000',
+          msg: 'Success',
           user_id: '2088000000000000',
           nick_name: 'PlayboyEric',
           avatar: 'https://www.alipay.com/xxx.jpg',
@@ -243,7 +245,7 @@ describe('getUserInfo', () => {
     expect(avatar).toEqual('https://www.alipay.com/xxx.jpg');
   });
 
-  it('should throw with wrong accessToken (throw with error msg)', async () => {
+  it('should throw with wrong accessToken', async () => {
     jest.spyOn(AlipayMethods, 'signingPamameters').mockImplementationOnce((parameters) => {
       return snakeCaseKeys({ ...parameters, sign: 'sign' });
     });
@@ -266,7 +268,7 @@ describe('getUserInfo', () => {
     );
   });
 
-  it('should throw with wrong accessToken (throw without error msg)', async () => {
+  it('should throw General error with other response error codes', async () => {
     jest.spyOn(AlipayMethods, 'signingPamameters').mockImplementationOnce((parameters) => {
       return snakeCaseKeys({ ...parameters, sign: 'sign' });
     });
@@ -276,12 +278,16 @@ describe('getUserInfo', () => {
         new URLSearchParams(snakeCaseKeys({ ...parameters, auth_token: 'wrong_access_token' }))
       )
       .reply(200, {
-        alipay_user_info_share_response: {},
+        alipay_user_info_share_response: {
+          code: '40002',
+          msg: 'Invalid parameter',
+          sub_code: 'isv.invalid-parameter',
+        },
         sign: '<signature>',
       });
 
     await expect(getUserInfo({ accessToken: 'wrong_access_token' })).rejects.toMatchError(
-      new ConnectorError(ConnectorErrorCodes.InvalidResponse)
+      new ConnectorError(ConnectorErrorCodes.General)
     );
   });
 
@@ -294,6 +300,8 @@ describe('getUserInfo', () => {
       .query(searchParameters)
       .reply(200, {
         alipay_user_info_share_response: {
+          code: '10000',
+          msg: 'Success',
           user_id: undefined,
           nick_name: 'PlayboyEric',
           avatar: 'https://www.alipay.com/xxx.jpg',
