@@ -220,11 +220,13 @@ export const getUserInfo: GetUserInfo = async (accessTokenObject) => {
     avatar,
     nick_name: name,
     sub_msg,
+    sub_code,
     msg,
+    code,
   } = response.alipay_user_info_share_response;
 
   assertThat(
-    !msg && !sub_msg,
+    !msg && !sub_msg && !code && !sub_code,
     new ConnectorError(
       ConnectorErrorCodes.SocialAccessTokenInvalid,
       msg ? msg : sub_msg ? sub_msg : undefined

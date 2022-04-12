@@ -193,7 +193,7 @@ describe('getAccessToken', () => {
       });
 
     await expect(getAccessToken('code')).rejects.toMatchError(
-      new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid)
+      new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid, 'Invalid code')
     );
   });
 });
@@ -205,22 +205,21 @@ describe('getUserInfo', () => {
   });
 
   const alipayEndpointUrl = new URL(alipayEndpoint);
-  const parameters = new URLSearchParams(
-    snakeCaseKeys({
-      appId: '2021000000000000',
-      charset: 'UTF8',
-      signType: 'RSA2',
-      privateKey: '<private-key>',
-      method: methodForUserInfo,
-      format: 'JSON',
-      timestamp: '2022-02-22 22:22:22',
-      version: '1.0',
-      grantType: 'authorization_code',
-      auth_token: 'access_token',
-      biz_content: '{}',
-      sign: 'sign',
-    })
-  );
+  const parameters = {
+    appId: '2021000000000000',
+    charset: 'UTF8',
+    signType: 'RSA2',
+    privateKey: '<private-key>',
+    method: methodForUserInfo,
+    format: 'JSON',
+    timestamp: '2022-02-22 22:22:22',
+    version: '1.0',
+    grantType: 'authorization_code',
+    auth_token: 'access_token',
+    biz_content: '{}',
+    sign: 'sign',
+  };
+  const searchParameters = new URLSearchParams(snakeCaseKeys(parameters));
 
   it('should get userInfo with accessToken', async () => {
     jest.spyOn(AlipayMethods, 'signingPamameters').mockImplementationOnce((parameters) => {
@@ -228,7 +227,7 @@ describe('getUserInfo', () => {
     });
     nock(alipayEndpointUrl.origin)
       .post(alipayEndpointUrl.pathname)
-      .query(parameters)
+      .query(searchParameters)
       .reply(200, {
         alipay_user_info_share_response: {
           user_id: '2088000000000000',
@@ -244,15 +243,17 @@ describe('getUserInfo', () => {
     expect(avatar).toEqual('https://www.alipay.com/xxx.jpg');
   });
 
-  it('should throw with wrong accessToken', async () => {
+  it('should throw with wrong accessToken (throw with error msg)', async () => {
     jest.spyOn(AlipayMethods, 'signingPamameters').mockImplementationOnce((parameters) => {
       return snakeCaseKeys({ ...parameters, sign: 'sign' });
     });
     nock(alipayEndpointUrl.origin)
       .post(alipayEndpointUrl.pathname)
-      .query(parameters)
+      .query(
+        new URLSearchParams(snakeCaseKeys({ ...parameters, auth_token: 'wrong_access_token' }))
+      )
       .reply(200, {
-        error_response: {
+        alipay_user_info_share_response: {
           code: '20001',
           msg: 'Invalid auth token',
           sub_code: 'aop.invalid-auth-token',
@@ -260,7 +261,26 @@ describe('getUserInfo', () => {
         sign: '<signature>',
       });
 
-    await expect(getUserInfo({ accessToken: 'access_token' })).rejects.toMatchError(
+    await expect(getUserInfo({ accessToken: 'wrong_access_token' })).rejects.toMatchError(
+      new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid, 'Invalid auth token')
+    );
+  });
+
+  it('should throw with wrong accessToken (throw without error msg)', async () => {
+    jest.spyOn(AlipayMethods, 'signingPamameters').mockImplementationOnce((parameters) => {
+      return snakeCaseKeys({ ...parameters, sign: 'sign' });
+    });
+    nock(alipayEndpointUrl.origin)
+      .post(alipayEndpointUrl.pathname)
+      .query(
+        new URLSearchParams(snakeCaseKeys({ ...parameters, auth_token: 'wrong_access_token' }))
+      )
+      .reply(200, {
+        alipay_user_info_share_response: {},
+        sign: '<signature>',
+      });
+
+    await expect(getUserInfo({ accessToken: 'wrong_access_token' })).rejects.toMatchError(
       new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid)
     );
   });
@@ -271,7 +291,7 @@ describe('getUserInfo', () => {
     });
     nock(alipayEndpointUrl.origin)
       .post(alipayEndpointUrl.pathname)
-      .query(parameters)
+      .query(searchParameters)
       .reply(200, {
         alipay_user_info_share_response: {
           user_id: undefined,
@@ -286,22 +306,14 @@ describe('getUserInfo', () => {
     );
   });
 
-  it('should throw with request 401 error', async () => {
-    jest.spyOn(AlipayMethods, 'signingPamameters').mockImplementationOnce((parameters) => {
-      return snakeCaseKeys({ ...parameters, sign: 'sign' });
-    });
-    nock(alipayEndpointUrl.origin).post(alipayEndpointUrl.pathname).query(parameters).reply(401);
-
-    await expect(getUserInfo({ accessToken: 'access_token' })).rejects.toMatchError(
-      new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid)
-    );
-  });
-
   it('should throw with other request errors', async () => {
     jest.spyOn(AlipayMethods, 'signingPamameters').mockImplementationOnce((parameters) => {
       return snakeCaseKeys({ ...parameters, sign: 'sign' });
     });
-    nock(alipayEndpointUrl.origin).post(alipayEndpointUrl.pathname).query(parameters).reply(400);
+    nock(alipayEndpointUrl.origin)
+      .post(alipayEndpointUrl.pathname)
+      .query(searchParameters)
+      .reply(500);
 
     await expect(getUserInfo({ accessToken: 'access_token' })).rejects.toThrow();
   });
