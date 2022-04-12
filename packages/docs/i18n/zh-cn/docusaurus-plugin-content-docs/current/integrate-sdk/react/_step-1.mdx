@@ -3,8 +3,6 @@ import TabItem from '@theme/TabItem';
 
 ## 安装 Logto SDK
 
-_方案 1: 安装 SDK 依赖包_
-
 <Tabs>
 <TabItem value="npm" label="npm">
 
@@ -27,17 +25,21 @@ pnpm add @logto/react
 ```
 
 </TabItem>
-</Tabs>
 
-_方案 2: Add script tag to your HTML_
+<TabItem value="script" label="script">
 
 ```html
 <script src="https://logto.io/js/logto-sdk-react/0.1.0/logto-sdk-react.production.js" />
 ```
 
-_方案 3: Fork your own from GitHub_
+</TabItem>
+
+<TabItem value="git" label="Git">
 
 ```bash
 git clone https://github.com/logto-io/js.git
 pnpm build
 ```
+
+</TabItem>
+</Tabs>
