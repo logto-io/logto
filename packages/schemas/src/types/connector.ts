@@ -9,6 +9,7 @@ export interface ConnectorMetadata {
   logo: string;
   description: Record<Languages, string>;
   readme: string;
+  configTemplate: string;
 }
 export interface ConnectorDTO extends Connector {
   metadata: ConnectorMetadata;
