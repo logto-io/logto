@@ -36,6 +36,10 @@ const App = () => {
     })();
   }, []);
 
+  if (!experienceSettings) {
+    return null;
+  }
+
   return (
     <PageContext.Provider value={context}>
       <AppContent>
