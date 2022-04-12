@@ -1,7 +1,15 @@
 import { conditional } from '@silverhand/essentials';
 import classNames from 'classnames';
-import React, { PropsWithChildren, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import ReactMarkdown from 'react-markdown';
+import React, {
+  cloneElement,
+  isValidElement,
+  PropsWithChildren,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { CodeProps } from 'react-markdown/lib/ast-to-react.js';
 
 import Button from '@/components/Button';
@@ -12,23 +20,33 @@ import IconButton from '@/components/IconButton';
 import Spacer from '@/components/Spacer';
 import { ArrowDown, ArrowUp } from '@/icons/Arrow';
 import Tick from '@/icons/Tick';
-import { StepMetadata } from '@/types/get-started';
 
 import CodeComponentRenderer from '../CodeComponentRenderer';
 import * as styles from './index.module.scss';
 
-type Props = {
-  data: StepMetadata;
+type Props = PropsWithChildren<{
+  title: string;
+  subtitle?: string;
   index: number;
   isActive: boolean;
   isComplete: boolean;
   isFinalStep: boolean;
+  buttonHtmlType: 'submit' | 'button';
   onNext?: () => void;
-};
+}>;
 
-const Step = ({ data, index, isActive, isComplete, isFinalStep, onNext }: Props) => {
+const Step = ({
+  children,
+  title,
+  subtitle,
+  index,
+  isActive,
+  isComplete,
+  isFinalStep,
+  buttonHtmlType,
+  onNext,
+}: Props) => {
   const [isExpanded, setIsExpanded] = useState(false);
-  const { title, subtitle, metadata } = data;
   const ref = useRef<HTMLDivElement>(null);
 
   const scrollToStep = useCallback(() => {
@@ -61,11 +79,6 @@ const Step = ({ data, index, isActive, isComplete, isFinalStep, onNext }: Props)
     [onError]
   );
 
-  // Steps in get-started must have "title" declared in the Yaml header of the markdown source file
-  if (!title) {
-    return null;
-  }
-
   // TODO: add more styles to markdown renderer
   return (
     <Card key={title} ref={ref} className={styles.card}>
@@ -93,12 +106,10 @@ const Step = ({ data, index, isActive, isComplete, isFinalStep, onNext }: Props)
         <IconButton>{isExpanded ? <ArrowUp /> : <ArrowDown />}</IconButton>
       </div>
       <div className={classNames(styles.content, isExpanded && styles.expanded)}>
-        <ReactMarkdown className={styles.markdownContent} components={memoizedComponents}>
-          {metadata}
-        </ReactMarkdown>
+        {isValidElement(children) && cloneElement(children, { components: memoizedComponents })}
         <div className={styles.buttonWrapper}>
           <Button
-            htmlType={isFinalStep ? 'submit' : 'button'}
+            htmlType={buttonHtmlType}
             type="primary"
             title={`general.${isFinalStep ? 'done' : 'next'}`}
             onClick={conditional(!isFinalStep && onNext)}

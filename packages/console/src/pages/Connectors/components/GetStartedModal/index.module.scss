@@ -27,21 +27,25 @@
   .content {
     flex: 1;
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    overflow-y: auto;
-    padding: _.unit(6) 0 _.unit(20);
+    overflow: hidden;
+    padding: _.unit(6) _.unit(15);
 
     > * {
-      width: 858px;
+      flex: 1;
+      margin: 0 12px;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
     }
 
-    .banner {
-      margin-bottom: _.unit(6);
+    .readme {
+      background-color: var(--color-surface-variant);
+      border-radius: 16px;
+      padding: _.unit(6);
+    }
+
+    form + div {
+      margin-top: _.unit(6);
     }
   }
-}
-
-.markdownContent {
-  margin-top: _.unit(6);
 }

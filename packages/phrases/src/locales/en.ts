@@ -215,6 +215,10 @@ const translation = {
         sms: 'Setup SMS sender',
         social: 'Add social connector',
       },
+      get_started: {
+        subtitle:
+          'A step by step guide to integrate your connector or get a sample configured with your account settings',
+      },
     },
     connector_details: {
       back_to_connectors: 'Back to Connectors',

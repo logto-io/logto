@@ -4,9 +4,9 @@ The GitHub connector provides the ability to easily integrate GitHub’s OAuth A
 
 Official guide on OAuth App: [https://docs.github.com/en/developers/apps/building-oauth-apps/creating-an-oauth-app](https://docs.github.com/en/developers/apps/building-oauth-apps/creating-an-oauth-app)
 
-## Prerequests
+## Prerequisites
 
-A GitHub account, both personal and organazation are OK.
+A GitHub account, both personal and organization are OK.
 
 ## Configuration On GitHub
 

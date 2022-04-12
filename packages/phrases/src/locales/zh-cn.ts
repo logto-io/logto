@@ -213,6 +213,9 @@ const translation = {
         sms: '设置短信服务商',
         social: '添加社会化登录',
       },
+      get_started: {
+        subtitle: '请参考下列分步指南，配置您的 connector，或点击按钮获取示例配置文件',
+      },
     },
     connector_details: {
       back_to_connectors: '返回连接器',

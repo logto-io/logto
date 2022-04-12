@@ -1,6 +1,6 @@
 import { ConnectorDTO, ConnectorType } from '@logto/schemas';
-import React, { useEffect, useMemo, useState } from 'react';
-import ReactModal from 'react-modal';
+import React, { useMemo, useState } from 'react';
+import Modal from 'react-modal';
 import useSWR from 'swr';
 
 import Button from '@/components/Button';
@@ -11,24 +11,30 @@ import UnnamedTrans from '@/components/UnnamedTrans';
 import { RequestError } from '@/hooks/use-api';
 import * as modalStyles from '@/scss/modal.module.scss';
 
+import GetStartedModal from '../GetStartedModal';
 import * as styles from './index.module.scss';
 
 type Props = {
   isOpen: boolean;
-  onClose?: () => void;
   type?: ConnectorType;
+  onClose?: () => void;
 };
 
-const CreateForm = ({ isOpen, onClose, type }: Props) => {
-  const [connectorId, setConnectorId] = useState<string>('');
+const CreateForm = ({ onClose, isOpen: isFormOpen, type }: Props) => {
   const { data, error } = useSWR<ConnectorDTO[], RequestError>('/api/connectors');
   const isLoading = !data && !error;
+  const [activeConnectorId, setActiveConnectorId] = useState<string>();
+  const [isGetStartedModalOpen, setIsGetStartedModalOpen] = useState(false);
 
-  useEffect(() => {
-    if (isOpen) {
-      setConnectorId('');
-    }
-  }, [isOpen]);
+  const connectors = useMemo(
+    () => data?.filter((connector) => connector.metadata.type === type),
+    [data, type]
+  );
+
+  const activeConnector = useMemo(
+    () => connectors?.find(({ id }) => id === activeConnectorId),
+    [activeConnectorId, connectors]
+  );
 
   const cardTitle = useMemo(() => {
     if (type === ConnectorType.Email) {
@@ -42,14 +48,14 @@ const CreateForm = ({ isOpen, onClose, type }: Props) => {
     return 'connectors.setup_title.social';
   }, [type]);
 
-  const connectors = useMemo(
-    () => data?.filter((connector) => connector.metadata.type === type),
-    [data, type]
-  );
+  const closeModal = () => {
+    setIsGetStartedModalOpen(false);
+    onClose?.();
+  };
 
   return (
-    <ReactModal
-      isOpen={isOpen}
+    <Modal
+      isOpen={isFormOpen}
       className={modalStyles.content}
       overlayClassName={modalStyles.overlay}
     >
@@ -59,9 +65,9 @@ const CreateForm = ({ isOpen, onClose, type }: Props) => {
           <Button
             title="admin_console.connectors.next"
             type="primary"
-            disabled={!connectorId}
+            disabled={!activeConnectorId}
             onClick={() => {
-              console.log("Charles's job.");
+              setIsGetStartedModalOpen(true);
             }}
           />
         }
@@ -72,35 +78,32 @@ const CreateForm = ({ isOpen, onClose, type }: Props) => {
         {isLoading && 'Loading...'}
         {error && error}
         {connectors && (
-          <RadioGroup
-            name="connector"
-            value={connectorId}
-            onChange={(value) => {
-              setConnectorId(value);
-            }}
-          >
-            {connectors.map((connector) => (
-              <Radio key={connector.id} value={connector.id} className={styles.connector}>
+          <RadioGroup name="connector" value={activeConnectorId} onChange={setActiveConnectorId}>
+            {connectors.map(({ id, metadata: { name, logo, description } }) => (
+              <Radio key={id} value={id} className={styles.connector}>
                 <div className={styles.logo}>
-                  {connector.metadata.logo.startsWith('http') ? (
-                    <img src={connector.metadata.logo} />
-                  ) : (
-                    <ImagePlaceholder size={32} />
-                  )}
+                  {logo.startsWith('http') ? <img src={logo} /> : <ImagePlaceholder size={32} />}
                 </div>
                 <div className={styles.name}>
-                  <UnnamedTrans resource={connector.metadata.name} />{' '}
+                  <UnnamedTrans resource={name} />
                 </div>
-                <div className={styles.connectorId}>{connector.id}</div>
+                <div className={styles.connectorId}>{id}</div>
                 <div className={styles.description}>
-                  <UnnamedTrans resource={connector.metadata.description} />
+                  <UnnamedTrans resource={description} />
                 </div>
               </Radio>
             ))}
           </RadioGroup>
         )}
+        {activeConnector && (
+          <GetStartedModal
+            connector={activeConnector}
+            isOpen={isGetStartedModalOpen}
+            onClose={closeModal}
+          />
+        )}
       </ModalLayout>
-    </ReactModal>
+    </Modal>
   );
 };
 
