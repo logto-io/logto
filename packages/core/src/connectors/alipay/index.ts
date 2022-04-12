@@ -8,7 +8,7 @@ import * as crypto from 'crypto';
 import { existsSync, readFileSync } from 'fs';
 import path from 'path';
 
-import got, { RequestError as GotRequestError } from 'got';
+import got from 'got';
 import * as iconv from 'iconv-lite';
 import { stringify } from 'query-string';
 import snakeCaseKeys from 'snakecase-keys';
@@ -120,6 +120,7 @@ export const getAuthorizationUri: GetAuthorizationUri = async (redirectUri, stat
 };
 
 export const getAccessToken: GetAccessToken = async (authCode) => {
+  // `error_response` and `alipay_system_oauth_token_response` are mutually exclusive.
   type AccessTokenResponse = {
     error_response?: {
       code: string;
@@ -156,10 +157,15 @@ export const getAccessToken: GetAccessToken = async (authCode) => {
       timeout: await getConnectorRequestTimeout(),
     })
     .json<AccessTokenResponse>();
+  console.log('getAccessToken response:', response);
 
+  const { msg, sub_msg } = response.error_response ?? {};
   assertThat(
     response.alipay_system_oauth_token_response,
-    new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid)
+    new ConnectorError(
+      ConnectorErrorCodes.SocialAuthCodeInvalid,
+      msg ? msg : sub_msg ? sub_msg : undefined
+    )
   );
   const { access_token: accessToken } = response.alipay_system_oauth_token_response;
 
@@ -170,20 +176,18 @@ export const getAccessToken: GetAccessToken = async (authCode) => {
 
 export const getUserInfo: GetUserInfo = async (accessTokenObject) => {
   type UserInfoResponse = {
-    error_response?: {
-      code: string;
-      msg: string; // To know `code` and `msg` details, see: https://opendocs.alipay.com/common/02km9f
-      sub_code?: string;
-      sub_msg?: string;
-    };
     sign: string; // To know `sign` details, see: https://opendocs.alipay.com/common/02kf5q
-    alipay_user_info_share_response?: {
-      user_id: string; // String of digits with max length of 16
+    alipay_user_info_share_response: {
+      user_id?: string; // String of digits with max length of 16
       avatar?: string; // URL of avatar
       province?: string;
       city?: string;
       nick_name?: string;
       gender?: string; // Enum type: 'F' for female, 'M' for male
+      code?: string;
+      msg?: string; // To know `code` and `msg` details, see: https://opendocs.alipay.com/common/02km9f
+      sub_code?: string;
+      sub_msg?: string;
     };
   };
 
@@ -203,28 +207,31 @@ export const getUserInfo: GetUserInfo = async (accessTokenObject) => {
   };
   const signedSearchParameters = signingPamameters(initSearchParameters);
 
-  try {
-    const response = await got
-      .post(alipayEndpoint, {
-        searchParams: signedSearchParameters,
-        timeout: await getConnectorRequestTimeout(),
-      })
-      .json<UserInfoResponse>();
+  const response = await got
+    .post(alipayEndpoint, {
+      searchParams: signedSearchParameters,
+      timeout: await getConnectorRequestTimeout(),
+    })
+    .json<UserInfoResponse>();
+  console.log('getUserInfo response:', response);
 
-    assertThat(
-      response.alipay_user_info_share_response,
-      new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid)
-    );
-    const { user_id: id, avatar, nick_name: name } = response.alipay_user_info_share_response;
+  const {
+    user_id: id,
+    avatar,
+    nick_name: name,
+    sub_msg,
+    msg,
+  } = response.alipay_user_info_share_response;
 
-    assertThat(id, new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid));
+  assertThat(
+    !msg && !sub_msg,
+    new ConnectorError(
+      ConnectorErrorCodes.SocialAccessTokenInvalid,
+      msg ? msg : sub_msg ? sub_msg : undefined
+    )
+  );
 
-    return { id, avatar, name };
-  } catch (error: unknown) {
-    if (error instanceof GotRequestError && error.response?.statusCode === 401) {
-      throw new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid);
-    }
+  assertThat(id, new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid));
 
-    throw error;
-  }
+  return { id, avatar, name };
 };
