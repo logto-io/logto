@@ -4,16 +4,16 @@ import { consent } from './consent';
 import {
   register,
   sendEmailPasscode as registerSendEmailPasscode,
-  sendPhonePasscode as registerSendPhonePasscode,
+  sendSMSPasscode as registerSendSMSPasscode,
   verifyEmailPasscode as registerVerifyEmailPasscode,
-  verifyPhonePasscode as registerVerifyPhonePasscode,
+  verifySMSPasscode as registerVerifySMSPasscode,
 } from './register';
 import {
   signInBasic,
-  sendPhonePasscode,
+  sendSMSPasscode,
   sendEmailPasscode,
   verifyEmailPasscode,
-  verifyPhonePasscode,
+  verifySMSPasscode,
 } from './sign-in';
 import {
   invokeSocialSignIn,
@@ -51,8 +51,8 @@ describe('api', () => {
     });
   });
 
-  it('sendPhonePasscode', async () => {
-    await sendPhonePasscode(phone);
+  it('sendSMSPasscode', async () => {
+    await sendSMSPasscode(phone);
     expect(ky.post).toBeCalledWith('/api/session/sign-in/passwordless/sms/send-passcode', {
       json: {
         phone,
@@ -60,8 +60,8 @@ describe('api', () => {
     });
   });
 
-  it('verifyPhonePasscode', async () => {
-    await verifyPhonePasscode(phone, passcode);
+  it('verifySMSPasscode', async () => {
+    await verifySMSPasscode(phone, passcode);
     expect(ky.post).toBeCalledWith('/api/session/sign-in/passwordless/sms/verify-passcode', {
       json: {
         phone,
@@ -104,8 +104,8 @@ describe('api', () => {
     });
   });
 
-  it('registerSendPhonePasscode', async () => {
-    await registerSendPhonePasscode(phone);
+  it('registerSendSMSPasscode', async () => {
+    await registerSendSMSPasscode(phone);
     expect(ky.post).toBeCalledWith('/api/session/register/passwordless/sms/send-passcode', {
       json: {
         phone,
@@ -113,8 +113,8 @@ describe('api', () => {
     });
   });
 
-  it('registerVerifyPhonePasscode', async () => {
-    await registerVerifyPhonePasscode(phone, passcode);
+  it('registerVerifySMSPasscode', async () => {
+    await registerVerifySMSPasscode(phone, passcode);
     expect(ky.post).toBeCalledWith('/api/session/register/passwordless/sms/verify-passcode', {
       json: {
         phone,
