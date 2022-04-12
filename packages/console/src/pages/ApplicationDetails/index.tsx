@@ -1,4 +1,4 @@
-import { Application } from '@logto/schemas';
+import { Application, ApplicationDTO } from '@logto/schemas';
 import React, { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
@@ -31,26 +31,16 @@ import { noSpaceRegex } from '@/utilities/regex';
 import DeleteForm from './components/DeleteForm';
 import * as styles from './index.module.scss';
 
-// TODO LOG-1908: OidcConfig in Application Details
-type OidcConfig = {
-  authorization_endpoint: string;
-  userinfo_endpoint: string;
-  token_endpoint: string;
-};
-
 const ApplicationDetails = () => {
   const { id } = useParams();
   const location = useLocation();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
-  const { data, error, mutate } = useSWR<Application, RequestError>(
+  const { data, error, mutate } = useSWR<ApplicationDTO, RequestError>(
     id && `/api/applications/${id}`
   );
-  // TODO LOG-1908: OidcConfig in Application Details
-  const { data: oidcConfig, error: fetchOidcConfigError } = useSWR<OidcConfig, RequestError>(
-    '/oidc/.well-known/openid-configuration'
-  );
-  const isLoading = !data && !error && !oidcConfig && !fetchOidcConfigError;
+
+  const isLoading = !data && !error;
 
   const [isReadmeOpen, setIsReadmeOpen] = useState(false);
 
@@ -90,14 +80,14 @@ const ApplicationDetails = () => {
           },
         },
       })
-      .json<Application>();
+      .json<ApplicationDTO>();
     void mutate(updatedApplication);
     toast.success(t('application_details.save_success'));
   });
 
   const isAdvancedSettings = location.pathname.includes('advanced-settings');
 
-  const SettingsPage = oidcConfig && (
+  const SettingsPage = data && (
     <>
       <FormField
         isRequired
@@ -113,7 +103,10 @@ const ApplicationDetails = () => {
         title="admin_console.application_details.authorization_endpoint"
         className={styles.textField}
       >
-        <CopyToClipboard className={styles.textField} value={oidcConfig.authorization_endpoint} />
+        <CopyToClipboard
+          className={styles.textField}
+          value={data.oidcConfig.authorizationEndpoint}
+        />
       </FormField>
       <FormField
         isRequired
@@ -170,13 +163,13 @@ const ApplicationDetails = () => {
     </>
   );
 
-  const AdvancedSettingsPage = oidcConfig && (
+  const AdvancedSettingsPage = data && (
     <>
       <FormField title="admin_console.application_details.token_endpoint">
-        <CopyToClipboard className={styles.textField} value={oidcConfig.token_endpoint} />
+        <CopyToClipboard className={styles.textField} value={data.oidcConfig.tokenEndpoint} />
       </FormField>
       <FormField title="admin_console.application_details.user_info_endpoint">
-        <CopyToClipboard className={styles.textField} value={oidcConfig.userinfo_endpoint} />
+        <CopyToClipboard className={styles.textField} value={data.oidcConfig.userinfoEndpoint} />
       </FormField>
     </>
   );
@@ -191,7 +184,7 @@ const ApplicationDetails = () => {
       />
       {isLoading && <div>loading</div>}
       {error && <div>{`error occurred: ${error.body.message}`}</div>}
-      {data && oidcConfig && (
+      {data && (
         <>
           <Card className={styles.header}>
             <ImagePlaceholder size={76} borderRadius={16} />
