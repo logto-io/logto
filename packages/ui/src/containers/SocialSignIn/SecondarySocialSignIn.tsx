@@ -2,8 +2,8 @@ import { ConnectorMetadata } from '@logto/schemas';
 import classNames from 'classnames';
 import React, { useMemo } from 'react';
 
+import MoreButton from '@/components/Button/MoreButton';
 import SocialIconButton from '@/components/Button/SocialIconButton';
-import SocialMoreButton from '@/components/Button/SocialMoreButton';
 import useSocial from '@/hooks/use-social-connector';
 
 import * as styles from './index.module.scss';
@@ -13,7 +13,7 @@ type Props = {
   connectors: Array<Pick<ConnectorMetadata, 'id' | 'logo'>>;
 };
 
-const SecondarySocialList = ({ className, connectors }: Props) => {
+const SecondarySocialSignIn = ({ className, connectors }: Props) => {
   const { signInWithSocial } = useSocial();
   const sampled = connectors.length > 4;
 
@@ -34,14 +34,14 @@ const SecondarySocialList = ({ className, connectors }: Props) => {
           key={connector.id}
           className={styles.socialButton}
           connector={connector}
-          onClick={(id) => {
-            void signInWithSocial(id);
+          onClick={() => {
+            void signInWithSocial(connector.id);
           }}
         />
       ))}
-      {sampled && <SocialMoreButton className={styles.socialButton} />}
+      {sampled && <MoreButton className={styles.socialButton} />}
     </div>
   );
 };
 
-export default SecondarySocialList;
+export default SecondarySocialSignIn;

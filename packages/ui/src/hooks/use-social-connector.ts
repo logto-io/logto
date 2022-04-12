@@ -6,12 +6,12 @@ import { generateRandomString } from '@/utils';
 
 import useApi from './use-api';
 
-const StorageKeyPrefix = 'social_auth_state';
-const WebPlatformPrefix = 'web';
-const MobilePlatformPrefix = 'mobile';
+const storageKeyPrefix = 'social_auth_state';
+const webPlatformPrefix = 'web';
+const mobilePlatformPrefix = 'mobile';
 
 const isMobileWebview = () => {
-  // TODO: read from native sdk imbeded params
+  // TODO: read from native sdk embedded params
   return true;
 };
 
@@ -21,12 +21,12 @@ const useSocial = () => {
 
   const { search } = useLocation();
 
-  const stateValidation = useCallback((state: string, connectorId: string) => {
-    if (state.startsWith(MobilePlatformPrefix)) {
+  const validateState = useCallback((state: string, connectorId: string) => {
+    if (state.startsWith(mobilePlatformPrefix)) {
       return true; // Not able to validate the state source from the native call stack
     }
 
-    const stateStorage = sessionStorage.getItem(`${StorageKeyPrefix}:${connectorId}`);
+    const stateStorage = sessionStorage.getItem(`${storageKeyPrefix}:${connectorId}`);
 
     return stateStorage === state;
   }, []);
@@ -42,23 +42,23 @@ const useSocial = () => {
         return;
       }
 
-      if (!stateValidation(state, connector)) {
+      if (!validateState(state, connector)) {
         // TODO: error message
         return;
       }
 
       void asyncSignInToSoical({ connectorId: connector, state, code, redirectUri: 'TODO' });
     },
-    [asyncSignInToSoical, search, stateValidation]
+    [asyncSignInToSoical, search, validateState]
   );
 
   const signInWithSocialHandler = useCallback(
     async (connectorId: string) => {
       const state = `${
-        isMobileWebview() ? MobilePlatformPrefix : WebPlatformPrefix
+        isMobileWebview() ? mobilePlatformPrefix : webPlatformPrefix
       }_${generateRandomString()}`;
       const { origin } = window.location;
-      sessionStorage.setItem(`${StorageKeyPrefix}:${connectorId}`, state);
+      sessionStorage.setItem(`${storageKeyPrefix}:${connectorId}`, state);
 
       return asyncSignInWithSocial(connectorId, state, `${origin}/callback/${connectorId}`);
     },

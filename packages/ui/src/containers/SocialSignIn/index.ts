@@ -1,1 +1,1 @@
-export { default as SecondarySocialList } from './SecondarySocialList';
+export { default as SecondarySocialSignIn } from './SecondarySocialSignIn';

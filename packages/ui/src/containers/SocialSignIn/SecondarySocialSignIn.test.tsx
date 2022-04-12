@@ -4,22 +4,22 @@ import { MemoryRouter } from 'react-router-dom';
 
 import { socialConnectors } from '@/__mocks__/logto';
 
-import SecondarySocialList from './SecondarySocialList';
+import SecondarySocialSignIn from './SecondarySocialSignIn';
 
-describe('SecondarySocialList', () => {
-  it('less than four connector', () => {
+describe('SecondarySocialSignIn', () => {
+  it('less than four connectors', () => {
     const { container } = render(
       <MemoryRouter>
-        <SecondarySocialList connectors={socialConnectors.slice(0, 3)} />
+        <SecondarySocialSignIn connectors={socialConnectors.slice(0, 3)} />
       </MemoryRouter>
     );
     expect(container.querySelectorAll('button')).toHaveLength(3);
   });
 
-  it('more than four connector', () => {
+  it('more than four connectors', () => {
     const { container } = render(
       <MemoryRouter>
-        <SecondarySocialList connectors={socialConnectors} />
+        <SecondarySocialSignIn connectors={socialConnectors} />
       </MemoryRouter>
     );
     expect(container.querySelectorAll('button')).toHaveLength(4);
