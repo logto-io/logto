@@ -21,7 +21,7 @@ describe('<Register />', () => {
     const { queryByText, container } = render(
       <MemoryRouter initialEntries={['/register/sms']}>
         <Routes>
-          <Route path="/register/:channel" element={<Register />} />
+          <Route path="/register/:method" element={<Register />} />
         </Routes>
       </MemoryRouter>
     );
@@ -33,7 +33,7 @@ describe('<Register />', () => {
     const { queryByText, container } = render(
       <MemoryRouter initialEntries={['/register/email']}>
         <Routes>
-          <Route path="/register/:channel" element={<Register />} />
+          <Route path="/register/:method" element={<Register />} />
         </Routes>
       </MemoryRouter>
     );

@@ -11,7 +11,7 @@ import * as styles from './index.module.scss';
 
 type Parameters = {
   type: UserFlow;
-  channel: string;
+  method: string;
 };
 
 type StateType = Nullable<{
@@ -22,10 +22,10 @@ type StateType = Nullable<{
 const Passcode = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'main_flow' });
   const navigate = useNavigate();
-  const { channel, type } = useParams<Parameters>();
+  const { method, type } = useParams<Parameters>();
   const state = useLocation().state as StateType;
   const invalidSignInMethod = type !== 'sign-in' && type !== 'register';
-  const invalidChannel = channel !== 'email' && channel !== 'sms';
+  const invalidChannel = method !== 'email' && method !== 'sms';
 
   useEffect(() => {
     if (invalidSignInMethod || invalidChannel) {
@@ -37,7 +37,7 @@ const Passcode = () => {
     return null;
   }
 
-  const target = state ? state[channel] : undefined;
+  const target = state ? state[method] : undefined;
 
   if (!target) {
     // TODO: no email or phone found
@@ -55,7 +55,7 @@ const Passcode = () => {
       </div>
       <div className={styles.title}>{t('action.enter_passcode')}</div>
       <div className={styles.detail}>{t('description.enter_passcode', { address: target })}</div>
-      <PasscodeValidation type={type} channel={channel} target={target} />
+      <PasscodeValidation type={type} method={method} target={target} />
     </div>
   );
 };

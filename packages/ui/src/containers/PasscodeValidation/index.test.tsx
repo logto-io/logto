@@ -29,7 +29,7 @@ describe('<PasscodeValidation />', () => {
 
   it('render counter', () => {
     const { queryByText } = render(
-      <PasscodeValidation type="sign-in" channel="email" target={email} />
+      <PasscodeValidation type="sign-in" method="email" target={email} />
     );
 
     expect(queryByText('description.resend_after_senconds')).not.toBeNull();
@@ -43,7 +43,7 @@ describe('<PasscodeValidation />', () => {
 
   it('fire resend event', async () => {
     const { getByText } = render(
-      <PasscodeValidation type="sign-in" channel="email" target={email} />
+      <PasscodeValidation type="sign-in" method="email" target={email} />
     );
     act(() => {
       jest.runAllTimers();
@@ -59,7 +59,7 @@ describe('<PasscodeValidation />', () => {
 
   it('fire validate passcode event', async () => {
     const { container } = render(
-      <PasscodeValidation type="sign-in" channel="email" target={email} />
+      <PasscodeValidation type="sign-in" method="email" target={email} />
     );
     const inputs = container.querySelectorAll('input');
 

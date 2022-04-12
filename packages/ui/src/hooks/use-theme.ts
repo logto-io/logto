@@ -1,24 +1,35 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 
-import { Theme } from '@/components/AppContent';
+import PageContext from './page-context';
+
+export type Theme = 'dark' | 'light';
 
 const darkThemeWatchMedia = window.matchMedia('(prefers-color-scheme: dark)');
 const getThemeBySystemConfiguration = (): Theme => (darkThemeWatchMedia.matches ? 'dark' : 'light');
 
 export default function useTheme() {
-  const [theme, setTheme] = useState(getThemeBySystemConfiguration());
+  const { experienceSettings } = useContext(PageContext);
+  const [theme, setTheme] = useState<Theme>('light');
 
   useEffect(() => {
+    console.log(experienceSettings);
+
+    if (!experienceSettings?.branding.isDarkModeEnabled) {
+      return;
+    }
+
     const changeTheme = () => {
       setTheme(getThemeBySystemConfiguration());
     };
+
+    changeTheme();
 
     darkThemeWatchMedia.addEventListener('change', changeTheme);
 
     return () => {
       darkThemeWatchMedia.removeEventListener('change', changeTheme);
     };
-  }, []);
+  }, [experienceSettings]);
 
   return theme;
 }

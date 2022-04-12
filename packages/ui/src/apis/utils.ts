@@ -15,32 +15,32 @@ import {
 
 export type PasscodeChannel = 'sms' | 'email';
 
-export const getSendPasscodeApi = (type: UserFlow, channel: PasscodeChannel) => {
-  if (type === 'sign-in' && channel === 'email') {
+export const getSendPasscodeApi = (type: UserFlow, method: PasscodeChannel) => {
+  if (type === 'sign-in' && method === 'email') {
     return sendSignInEmailPasscode;
   }
 
-  if (type === 'sign-in' && channel === 'sms') {
+  if (type === 'sign-in' && method === 'sms') {
     return sendSignInSmsPasscode;
   }
 
-  if (type === 'register' && channel === 'email') {
+  if (type === 'register' && method === 'email') {
     return sendRegisterEmailPasscode;
   }
 
   return sendRegisterSmsPasscode;
 };
 
-export const getVerifyPasscodeApi = (type: UserFlow, channel: PasscodeChannel) => {
-  if (type === 'sign-in' && channel === 'email') {
+export const getVerifyPasscodeApi = (type: UserFlow, method: PasscodeChannel) => {
+  if (type === 'sign-in' && method === 'email') {
     return verifySignInEmailPasscode;
   }
 
-  if (type === 'sign-in' && channel === 'sms') {
+  if (type === 'sign-in' && method === 'sms') {
     return verifySignInSmsPasscode;
   }
 
-  if (type === 'register' && channel === 'email') {
+  if (type === 'register' && method === 'email') {
     return verifyRegisterEmailPasscode;
   }
 

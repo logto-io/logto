@@ -20,7 +20,7 @@ describe('<SecondarySignIn />', () => {
     const { queryByText, container } = render(
       <MemoryRouter initialEntries={['/sign-in/sms']}>
         <Routes>
-          <Route path="/sign-in/:channel" element={<SecondarySignIn />} />
+          <Route path="/sign-in/:method" element={<SecondarySignIn />} />
         </Routes>
       </MemoryRouter>
     );
@@ -32,7 +32,7 @@ describe('<SecondarySignIn />', () => {
     const { queryByText, container } = render(
       <MemoryRouter initialEntries={['/sign-in/email']}>
         <Routes>
-          <Route path="/sign-in/:channel" element={<SecondarySignIn />} />
+          <Route path="/sign-in/:method" element={<SecondarySignIn />} />
         </Routes>
       </MemoryRouter>
     );

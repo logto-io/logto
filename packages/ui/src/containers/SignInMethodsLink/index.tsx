@@ -5,18 +5,18 @@ import { useNavigate } from 'react-router-dom';
 import reactStringReplace from 'react-string-replace';
 
 import TextLink from '@/components/TextLink';
-import { SignInMethod } from '@/types';
+import { LocalSignInMethod } from '@/types';
 
 import * as styles from './index.module.scss';
 
 type Props = {
-  signInMethods: SignInMethod[];
+  signInMethods: LocalSignInMethod[];
   type?: 'primary' | 'secondary';
   classname?: string;
 };
 
 const SignInMethodsKeyMap: {
-  [key in SignInMethod]: TFuncKey<'translation', 'main_flow.input'>;
+  [key in LocalSignInMethod]: TFuncKey<'translation', 'main_flow.input'>;
 } = {
   username: 'username',
   email: 'email',

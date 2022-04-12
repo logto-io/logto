@@ -9,31 +9,31 @@ import UsernameSignin from '@/containers/UsernameSignin';
 import * as styles from './index.module.scss';
 
 type Props = {
-  channel?: string;
+  method?: string;
 };
 
 const SecondarySignIn = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'main_flow' });
   const navigate = useNavigate();
-  const { channel = 'username' } = useParams<Props>();
+  const { method = 'username' } = useParams<Props>();
 
   useEffect(() => {
-    if (channel !== 'email' && channel !== 'sms' && channel !== 'username') {
+    if (method !== 'email' && method !== 'sms' && method !== 'username') {
       navigate('/404', { replace: true });
     }
-  }, [channel, navigate]);
+  }, [method, navigate]);
 
   const signInForm = useMemo(() => {
-    if (channel === 'sms') {
+    if (method === 'sms') {
       return <PhonePasswordless type="sign-in" />;
     }
 
-    if (channel === 'email') {
+    if (method === 'email') {
       return <EmailPasswordless type="sign-in" />;
     }
 
     return <UsernameSignin />;
-  }, [channel]);
+  }, [method]);
 
   return (
     <div className={styles.wrapper}>
