@@ -1,7 +1,7 @@
 import { useEffect, useCallback } from 'react';
 import { useLocation } from 'react-router-dom';
 
-import { signInWithSocial, signInToSoical } from '@/apis/social';
+import { invokeSocialSignIn, signInWithSoical } from '@/apis/social';
 import { generateRandomString } from '@/utils';
 
 import useApi from './use-api';
@@ -16,8 +16,9 @@ const isMobileWebview = () => {
 };
 
 const useSocial = () => {
-  const { result: signInWithSocialResult, run: asyncSignInWithSocial } = useApi(signInWithSocial);
-  const { result: signInToSocialResult, run: asyncSignInToSoical } = useApi(signInToSoical);
+  const { result: invokeSocialSignInResult, run: asyncSignInWithSocial } =
+    useApi(invokeSocialSignIn);
+  const { result: signInToSocialResult, run: asyncSignInWithSoical } = useApi(signInWithSoical);
 
   const { search } = useLocation();
 
@@ -31,7 +32,7 @@ const useSocial = () => {
     return stateStorage === state;
   }, []);
 
-  const socialCallbackHandler = useCallback(
+  const signInWithSocialHandler = useCallback(
     (connector?: string) => {
       const uriParameters = new URLSearchParams(search);
       const state = uriParameters.get('state');
@@ -47,12 +48,12 @@ const useSocial = () => {
         return;
       }
 
-      void asyncSignInToSoical({ connectorId: connector, state, code, redirectUri: 'TODO' });
+      void asyncSignInWithSoical({ connectorId: connector, state, code, redirectUri: 'TODO' });
     },
-    [asyncSignInToSoical, search, validateState]
+    [asyncSignInWithSoical, search, validateState]
   );
 
-  const signInWithSocialHandler = useCallback(
+  const invokeSocialSignInHandler = useCallback(
     async (connectorId: string) => {
       const state = `${
         isMobileWebview() ? mobilePlatformPrefix : webPlatformPrefix
@@ -66,10 +67,10 @@ const useSocial = () => {
   );
 
   useEffect(() => {
-    if (signInWithSocialResult?.redirectTo) {
-      window.location.assign(signInWithSocialResult.redirectTo);
+    if (invokeSocialSignInResult?.redirectTo) {
+      window.location.assign(invokeSocialSignInResult.redirectTo);
     }
-  }, [signInWithSocialResult]);
+  }, [invokeSocialSignInResult]);
 
   useEffect(() => {
     if (signInToSocialResult?.redirectTo) {
@@ -78,8 +79,8 @@ const useSocial = () => {
   }, [signInToSocialResult]);
 
   return {
+    invokeSocialSignIn: invokeSocialSignInHandler,
     signInWithSocial: signInWithSocialHandler,
-    socialCallbackHandler,
   };
 };
 

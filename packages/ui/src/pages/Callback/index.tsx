@@ -9,11 +9,11 @@ type Props = {
 
 const Callback = () => {
   const { connector } = useParams<Props>();
-  const { socialCallbackHandler } = useSocial();
+  const { signInWithSocial } = useSocial();
 
   useEffect(() => {
-    socialCallbackHandler(connector);
-  }, [socialCallbackHandler, connector]);
+    signInWithSocial(connector);
+  }, [signInWithSocial, connector]);
 
   return <div>{connector} loading...</div>;
 };

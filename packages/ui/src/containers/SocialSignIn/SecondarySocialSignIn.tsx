@@ -14,7 +14,7 @@ type Props = {
 };
 
 const SecondarySocialSignIn = ({ className, connectors }: Props) => {
-  const { signInWithSocial } = useSocial();
+  const { invokeSocialSignIn } = useSocial();
   const sampled = connectors.length > 4;
 
   const sampledConnectors = useMemo(() => {
@@ -35,7 +35,7 @@ const SecondarySocialSignIn = ({ className, connectors }: Props) => {
           className={styles.socialButton}
           connector={connector}
           onClick={() => {
-            void signInWithSocial(connector.id);
+            void invokeSocialSignIn(connector.id);
           }}
         />
       ))}
