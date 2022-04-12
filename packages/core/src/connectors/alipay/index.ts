@@ -164,6 +164,7 @@ export const getAccessToken: GetAccessToken = async (authCode) => {
       timeout: await getConnectorRequestTimeout(),
     })
     .json<AccessTokenResponse>();
+  console.log('getAccessToken response:', response);
 
   const { msg, sub_msg } = response.error_response ?? {};
   assertThat(
@@ -187,8 +188,8 @@ export const getUserInfo: GetUserInfo = async (accessTokenObject) => {
       city?: string;
       nick_name?: string;
       gender?: string; // Enum type: 'F' for female, 'M' for male
-      code?: string;
-      msg?: string; // To know `code` and `msg` details, see: https://opendocs.alipay.com/common/02km9f
+      code: string;
+      msg: string; // To know `code` and `msg` details, see: https://opendocs.alipay.com/common/02km9f
       sub_code?: string;
       sub_msg?: string;
     };
@@ -216,6 +217,7 @@ export const getUserInfo: GetUserInfo = async (accessTokenObject) => {
       timeout: await getConnectorRequestTimeout(),
     })
     .json<UserInfoResponse>();
+  console.log('getUserInfo response:', response);
 
   const {
     user_id: id,
@@ -227,10 +229,10 @@ export const getUserInfo: GetUserInfo = async (accessTokenObject) => {
     code,
   } = response.alipay_user_info_share_response;
 
-  assertThat(
-    !msg && !sub_msg && !code && !sub_code,
-    new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid, msg ?? sub_msg)
-  );
+  if ((sub_msg || sub_code) && code === '20001') {
+    throw new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid, msg);
+  }
+  // TODO: elaborate on the error messages for all social connectors (see LOG-2157)
 
   assertThat(id, new ConnectorError(ConnectorErrorCodes.InvalidResponse));
 
