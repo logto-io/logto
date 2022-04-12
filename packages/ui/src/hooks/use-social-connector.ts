@@ -17,7 +17,7 @@ const isMobileWebview = () => {
 
 const useSocial = () => {
   const { result: signInWithSocialResult, run: asyncSignInWithSocial } = useApi(signInWithSocial);
-  const { result: signInToSoicalResult, run: asyncSignInToSoical } = useApi(signInToSoical);
+  const { result: signInToSocialResult, run: asyncSignInToSoical } = useApi(signInToSoical);
 
   const { search } = useLocation();
 
@@ -72,10 +72,10 @@ const useSocial = () => {
   }, [signInWithSocialResult]);
 
   useEffect(() => {
-    if (signInToSoicalResult?.redirectTo) {
-      window.location.assign(signInToSoicalResult.redirectTo);
+    if (signInToSocialResult?.redirectTo) {
+      window.location.assign(signInToSocialResult.redirectTo);
     }
-  }, [signInToSoicalResult]);
+  }, [signInToSocialResult]);
 
   return {
     signInWithSocial: signInWithSocialHandler,
