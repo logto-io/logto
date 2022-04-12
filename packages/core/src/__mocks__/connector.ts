@@ -71,6 +71,7 @@ export const mockConnectorInstanceList: Array<{
       logo: './logo.png',
       description: {},
       readme: 'README.md',
+      configTemplate: 'config-template.md',
     },
   },
   {
@@ -88,6 +89,7 @@ export const mockConnectorInstanceList: Array<{
       logo: './logo.png',
       description: {},
       readme: 'README.md',
+      configTemplate: 'config-template.md',
     },
   },
   {
@@ -105,6 +107,7 @@ export const mockConnectorInstanceList: Array<{
       logo: './logo.png',
       description: {},
       readme: 'README.md',
+      configTemplate: 'config-template.md',
     },
   },
   {
@@ -122,6 +125,7 @@ export const mockConnectorInstanceList: Array<{
       logo: './logo.png',
       description: {},
       readme: 'README.md',
+      configTemplate: 'config-template.md',
     },
   },
   {
@@ -139,6 +143,7 @@ export const mockConnectorInstanceList: Array<{
       logo: './logo.png',
       description: {},
       readme: 'README.md',
+      configTemplate: 'config-template.md',
     },
   },
   {
@@ -156,6 +161,7 @@ export const mockConnectorInstanceList: Array<{
       logo: './logo.png',
       description: {},
       readme: 'README.md',
+      configTemplate: 'config-template.md',
     },
   },
   {
@@ -173,6 +179,7 @@ export const mockConnectorInstanceList: Array<{
       logo: './logo.png',
       description: {},
       readme: 'README.md',
+      configTemplate: 'config-template.md',
     },
   },
 ];

@@ -17,8 +17,12 @@ import { getConnectorConfig } from '../utilities';
 import { sendSms } from './single-send-text';
 
 // eslint-disable-next-line unicorn/prefer-module
-const pathToReadmeFile = path.join(__dirname, 'README.md');
+const currentPath = __dirname;
+const pathToReadmeFile = path.join(currentPath, 'README.md');
+const pathToConfigTemplate = path.join(currentPath, 'config-template.md');
 const readmeContentFallback = 'Please check README.md file directory.';
+const configTemplateFallback = 'Please check config-template.md file directory.';
+
 export const metadata: ConnectorMetadata = {
   id: 'aliyun-sms',
   type: ConnectorType.SMS,
@@ -36,6 +40,9 @@ export const metadata: ConnectorMetadata = {
   readme: existsSync(pathToReadmeFile)
     ? readFileSync(pathToReadmeFile, 'utf8')
     : readmeContentFallback,
+  configTemplate: existsSync(pathToConfigTemplate)
+    ? readFileSync(pathToConfigTemplate, 'utf-8')
+    : configTemplateFallback,
 };
 
 /**

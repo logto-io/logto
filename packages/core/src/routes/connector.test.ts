@@ -200,6 +200,7 @@ describe('connector route', () => {
             logo: './logo.png',
             description: {},
             readme: 'README.md',
+            configTemplate: 'config-template.md',
           },
           validateConfig: jest.fn(),
         };
@@ -221,6 +222,7 @@ describe('connector route', () => {
           logo: './logo.png',
           description: {},
           readme: 'README.md',
+          configTemplate: 'config-template.md',
         },
       });
       expect(response).toHaveProperty('statusCode', 200);
@@ -243,6 +245,7 @@ describe('connector route', () => {
             logo: './logo.png',
             description: {},
             readme: 'README.md',
+            configTemplate: 'config-template.md',
           },
           validateConfig: async () => {
             throw new ConnectorError(ConnectorErrorCodes.InvalidConfig);
@@ -272,6 +275,7 @@ describe('connector route', () => {
             logo: './logo.png',
             description: {},
             readme: 'README.md',
+            configTemplate: 'config-template.md',
           },
         };
       });
@@ -315,6 +319,7 @@ describe('connector route', () => {
             logo: './logo.png',
             description: {},
             readme: 'README.md',
+            configTemplate: 'config-template.md',
           },
           validateConfig: jest.fn(),
         };
@@ -374,6 +379,7 @@ describe('connector route', () => {
             logo: './logo.png',
             description: {},
             readme: 'README.md',
+            configTemplate: 'config-template.md',
           },
           validateConfig: async () => {
             throw new ConnectorError(ConnectorErrorCodes.InvalidConfig);
@@ -403,6 +409,7 @@ describe('connector route', () => {
             logo: './logo.png',
             description: {},
             readme: 'README.md',
+            configTemplate: 'config-template.md',
           },
         };
       });
@@ -483,6 +490,7 @@ describe('connector route', () => {
             logo: './logo.png',
             description: {},
             readme: 'README.md',
+            configTemplate: 'config-template.md',
           },
           validateConfig: async () => {
             throw new ConnectorError(ConnectorErrorCodes.InvalidConfig);
@@ -512,6 +520,7 @@ describe('connector route', () => {
             logo: './logo.png',
             description: {},
             readme: 'README.md',
+            configTemplate: 'config-template.md',
           },
           validateConfig: jest.fn(),
         };
@@ -560,6 +569,7 @@ describe('connector route', () => {
           logo: './logo.png',
           description: {},
           readme: 'README.md',
+          configTemplate: 'config-template.md',
         },
         validateConfig: jest.fn(),
         sendMessage: async (
@@ -605,6 +615,7 @@ describe('connector route', () => {
           logo: './logo.png',
           description: {},
           readme: 'README.md',
+          configTemplate: 'config-template.md',
         },
         validateConfig: jest.fn(),
         sendMessage: async (
