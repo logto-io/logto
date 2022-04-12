@@ -15,7 +15,12 @@ import {
   verifyEmailPasscode,
   verifyPhonePasscode,
 } from './sign-in';
-import { signInWithSocial, signInToSoical, bindSocialAccount, registerWithSocial } from './social';
+import {
+  invokeSocialSignIn,
+  signInWithSoical,
+  bindSocialAccount,
+  registerWithSocial,
+} from './social';
 
 jest.mock('ky', () => ({
   post: jest.fn(() => ({
@@ -137,8 +142,8 @@ describe('api', () => {
     });
   });
 
-  it('signInWithSocial', async () => {
-    await signInWithSocial('connectorId', 'state', 'redirectUri');
+  it('invokeSocialSignIn', async () => {
+    await invokeSocialSignIn('connectorId', 'state', 'redirectUri');
     expect(ky.post).toBeCalledWith('/api/session/sign-in/social', {
       json: {
         connectorId: 'connectorId',
@@ -148,14 +153,14 @@ describe('api', () => {
     });
   });
 
-  it('signInToSoical', async () => {
+  it('signInWithSoical', async () => {
     const parameters = {
       connectorId: 'connectorId',
       state: 'state',
       redirectUri: 'redirectUri',
       code: 'code',
     };
-    await signInToSoical(parameters);
+    await signInWithSoical(parameters);
     expect(ky.post).toBeCalledWith('/api/session/sign-in/social', {
       json: parameters,
     });

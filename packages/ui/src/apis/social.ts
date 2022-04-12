@@ -1,6 +1,10 @@
 import ky from 'ky';
 
-export const signInWithSocial = async (connectorId: string, state: string, redirectUri: string) => {
+export const invokeSocialSignIn = async (
+  connectorId: string,
+  state: string,
+  redirectUri: string
+) => {
   type Response = {
     redirectTo: string;
   };
@@ -16,7 +20,7 @@ export const signInWithSocial = async (connectorId: string, state: string, redir
     .json<Response>();
 };
 
-export const signInToSoical = async (parameters: {
+export const signInWithSoical = async (parameters: {
   connectorId: string;
   state: string;
   redirectUri: string;

@@ -353,6 +353,7 @@ importers:
       '@logto/schemas': ^0.1.0
       '@parcel/core': ^2.3.2
       '@parcel/transformer-sass': ^2.3.2
+      '@peculiar/webcrypto': ^1.3.3
       '@silverhand/eslint-config': ^0.10.2
       '@silverhand/eslint-config-react': ^0.10.3
       '@silverhand/essentials': ^1.1.7
@@ -371,6 +372,7 @@ importers:
       identity-obj-proxy: ^3.0.0
       jest: ^27.5.1
       jest-transform-stub: ^2.0.0
+      js-base64: ^3.7.2
       ky: ^0.29.0
       libphonenumber-js: ^1.9.49
       lint-staged: ^11.1.1
@@ -396,6 +398,7 @@ importers:
       classnames: 2.3.1
       i18next: 21.6.11
       i18next-browser-languagedetector: 6.1.3
+      js-base64: 3.7.2
       ky: 0.29.0
       libphonenumber-js: 1.9.49
       react: 17.0.2
@@ -410,6 +413,7 @@ importers:
       '@jest/types': 27.5.1
       '@parcel/core': 2.3.2
       '@parcel/transformer-sass': 2.3.2_@parcel+core@2.3.2
+      '@peculiar/webcrypto': 1.3.3
       '@silverhand/eslint-config': 0.10.2_3a533fa6cc3da0cf8525ef55d41c4384
       '@silverhand/eslint-config-react': 0.10.3_75f27ebc3d08f23e7ca8c3f63c7fa502
       '@silverhand/ts-config': 0.10.2_typescript@4.6.2
@@ -5103,6 +5107,33 @@ packages:
       nullthrows: 1.1.1
     dev: true
 
+  /@peculiar/asn1-schema/2.1.0:
+    resolution: {integrity: sha512-D6g4C5YRKC/iPujMAOXuZ7YGdaoMx8GsvWzfVSyx2LYeL38ECOKNywlYAuwbqQvON64lgsYdAujWQPX8hhoBLw==}
+    dependencies:
+      '@types/asn1js': 2.0.2
+      asn1js: 2.3.2
+      pvtsutils: 1.2.2
+      tslib: 2.3.1
+    dev: true
+
+  /@peculiar/json-schema/1.1.12:
+    resolution: {integrity: sha512-coUfuoMeIB7B8/NMekxaDzLhaYmp0HZNPEjYRm9goRou8UZIC3z21s0sL9AWoCw4EG876QyO3kYrc61WNF9B/w==}
+    engines: {node: '>=8.0.0'}
+    dependencies:
+      tslib: 2.3.1
+    dev: true
+
+  /@peculiar/webcrypto/1.3.3:
+    resolution: {integrity: sha512-+jkp16Hp18HkphJlMtqsQKjyDWJBh0AhDuoB+vVakuIRbkBdaFb7v26Ldm25altjiYhCyQnR5NChHxwSTvbXJw==}
+    engines: {node: '>=10.12.0'}
+    dependencies:
+      '@peculiar/asn1-schema': 2.1.0
+      '@peculiar/json-schema': 1.1.12
+      pvtsutils: 1.2.2
+      tslib: 2.3.1
+      webcrypto-core: 1.7.3
+    dev: true
+
   /@polka/url/1.0.0-next.21:
     resolution: {integrity: sha512-a5Sab1C4/icpTZVzZc5Ghpz88yQtGOyNqYXcZgOssB2uuAr+wF/MvN6bgtW32q7HHrvBki+BsZ0OuNv6EV3K9g==}
     dev: false
@@ -5572,6 +5603,10 @@ packages:
 
   /@types/aria-query/4.2.2:
     resolution: {integrity: sha512-HnYpAE1Y6kRyKM/XkEuiRQhTHvkzMBurTHnpFLYLBGPIylZNPs9jJcuOOYWxPLJCSEtmZT0Y8rHDokKN7rRTig==}
+    dev: true
+
+  /@types/asn1js/2.0.2:
+    resolution: {integrity: sha512-t4YHCgtD+ERvH0FyxvNlYwJ2ezhqw7t+Ygh4urQ7dJER8i185JPv6oIM3ey5YQmGN6Zp9EMbpohkjZi9t3UxwA==}
     dev: true
 
   /@types/babel__core/7.1.17:
@@ -6724,6 +6759,13 @@ packages:
     resolution: {integrity: sha512-ix/FxPn0MDjeyJ7i/yoHGFt/EX6LyNbxSEhPPXODPL+KB0VPk86UYfL0lMdy+KCnv+fmvIzySwaK5COwqVbWTQ==}
     dependencies:
       safer-buffer: 2.1.2
+    dev: true
+
+  /asn1js/2.3.2:
+    resolution: {integrity: sha512-IYzujqcOk7fHaePpTyvD3KPAA0AjT3qZlaQAw76zmPPAV/XTjhO+tbHjbFbIQZIhw+fk9wCSfb0Z6K+JHe8Q2g==}
+    engines: {node: '>=6.0.0'}
+    dependencies:
+      pvutils: 1.1.3
     dev: true
 
   /assert-plus/1.0.0:
@@ -15792,6 +15834,17 @@ packages:
     resolution: {integrity: sha1-H+Bk+wrIUfDeYTIKi/eWg2Qi8z4=}
     dev: false
 
+  /pvtsutils/1.2.2:
+    resolution: {integrity: sha512-OALo5ZEdqiI127i64+CXwkCOyFHUA+tCQgaUO/MvRDFXWPr53f2sx28ECNztUEzuyu5xvuuD1EB/szg9mwJoGA==}
+    dependencies:
+      tslib: 2.3.1
+    dev: true
+
+  /pvutils/1.1.3:
+    resolution: {integrity: sha512-pMpnA0qRdFp32b1sJl1wOJNxZLQ2cbQx+k6tjNtZ8CpvVhNqEPRgivZ2WOUev2YMajecdH7ctUPDvEe87nariQ==}
+    engines: {node: '>=6.0.0'}
+    dev: true
+
   /q/1.5.1:
     resolution: {integrity: sha1-fjL3W0E4EpHQRhHxvxQQmsAGUdc=}
     engines: {node: '>=0.6.0', teleport: '>=0.2.0'}
@@ -19157,6 +19210,16 @@ packages:
   /web-namespaces/1.1.4:
     resolution: {integrity: sha512-wYxSGajtmoP4WxfejAPIr4l0fVh+jeMXZb08wNc0tMg6xsfZXj3cECqIK0G7ZAqUq0PP8WlMDtaOGVBTAWztNw==}
     dev: false
+
+  /webcrypto-core/1.7.3:
+    resolution: {integrity: sha512-8TnMtwwC/hQOyvElAOJ26lJKGgcErUG02KnKS1+QhjV4mDvQetVWU1EUEeLF8ICOrdc42+GypocyBJKRqo2kQg==}
+    dependencies:
+      '@peculiar/asn1-schema': 2.1.0
+      '@peculiar/json-schema': 1.1.12
+      asn1js: 2.3.2
+      pvtsutils: 1.2.2
+      tslib: 2.3.1
+    dev: true
 
   /webidl-conversions/3.0.1:
     resolution: {integrity: sha1-JFNCdeKnvGvnvIZhHMFq4KVlSHE=}
