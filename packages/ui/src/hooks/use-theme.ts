@@ -12,8 +12,6 @@ export default function useTheme() {
   const [theme, setTheme] = useState<Theme>('light');
 
   useEffect(() => {
-    console.log(experienceSettings);
-
     if (!experienceSettings?.branding.isDarkModeEnabled) {
       return;
     }
