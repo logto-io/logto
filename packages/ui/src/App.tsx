@@ -30,6 +30,7 @@ const App = () => {
   useEffect(() => {
     (async () => {
       setLoading(true);
+      // TODO: error handling
       const { settings } = await getSignInExperienceSettings();
       setExperienceSettings(settings);
       setLoading(false);
