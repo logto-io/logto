@@ -161,10 +161,7 @@ export const getAccessToken: GetAccessToken = async (authCode) => {
   const { msg, sub_msg } = response.error_response ?? {};
   assertThat(
     response.alipay_system_oauth_token_response,
-    new ConnectorError(
-      ConnectorErrorCodes.SocialAuthCodeInvalid,
-      msg ? msg : sub_msg ? sub_msg : undefined
-    )
+    new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid, msg ?? sub_msg)
   );
   const { access_token: accessToken } = response.alipay_system_oauth_token_response;
 
@@ -225,13 +222,10 @@ export const getUserInfo: GetUserInfo = async (accessTokenObject) => {
 
   assertThat(
     !msg && !sub_msg && !code && !sub_code,
-    new ConnectorError(
-      ConnectorErrorCodes.SocialAccessTokenInvalid,
-      msg ? msg : sub_msg ? sub_msg : undefined
-    )
+    new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid, msg ?? sub_msg)
   );
 
-  assertThat(id, new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid));
+  assertThat(id, new ConnectorError(ConnectorErrorCodes.InvalidResponse));
 
   return { id, avatar, name };
 };

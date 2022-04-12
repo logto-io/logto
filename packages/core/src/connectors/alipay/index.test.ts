@@ -281,7 +281,7 @@ describe('getUserInfo', () => {
       });
 
     await expect(getUserInfo({ accessToken: 'wrong_access_token' })).rejects.toMatchError(
-      new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid)
+      new ConnectorError(ConnectorErrorCodes.InvalidResponse)
     );
   });
 
@@ -302,7 +302,7 @@ describe('getUserInfo', () => {
       });
 
     await expect(getUserInfo({ accessToken: 'access_token' })).rejects.toMatchError(
-      new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid)
+      new ConnectorError(ConnectorErrorCodes.InvalidResponse)
     );
   });
 
