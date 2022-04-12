@@ -1,5 +1,5 @@
 import { ArbitraryObject } from '@logto/schemas';
-import moment from 'moment';
+import dayjs from 'dayjs';
 
 import { findConnectorById, updateConnector } from '@/queries/connector';
 
@@ -24,5 +24,5 @@ const connectorRequestTimeout = 5000;
 export const getConnectorRequestTimeout = async (): Promise<number> => connectorRequestTimeout;
 
 export const getFormattedDate = (): string => {
-  return moment().format('YYYY-MM-DD HH:mm:ss');
+  return dayjs().format('YYYY-MM-DD HH:mm:ss');
 };
