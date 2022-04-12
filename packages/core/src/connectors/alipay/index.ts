@@ -157,7 +157,6 @@ export const getAccessToken: GetAccessToken = async (authCode) => {
       timeout: await getConnectorRequestTimeout(),
     })
     .json<AccessTokenResponse>();
-  console.log('getAccessToken response:', response);
 
   const { msg, sub_msg } = response.error_response ?? {};
   assertThat(
@@ -213,7 +212,6 @@ export const getUserInfo: GetUserInfo = async (accessTokenObject) => {
       timeout: await getConnectorRequestTimeout(),
     })
     .json<UserInfoResponse>();
-  console.log('getUserInfo response:', response);
 
   const {
     user_id: id,
