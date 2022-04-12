@@ -115,8 +115,7 @@ export const signingPamameters = (
     .update(sortedParametersAsString, 'utf8')
     .sign(privateKey, 'base64');
 
-  // eslint-disable-next-line @silverhand/fp/no-mutating-assign
-  return Object.assign(decamelizeParameters, { sign });
+  return { ...decamelizeParameters, sign };
 };
 
 export const getAuthorizationUri: GetAuthorizationUri = async (redirectUri, state) => {
