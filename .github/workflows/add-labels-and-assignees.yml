@@ -20,5 +20,5 @@ jobs:
         if: ${{ github.event_name == 'pull_request' }}
         uses: actions-ecosystem/action-add-assignees@v1
         with:
-          github_token: ${{ secrets.github_token }}
+          github_token: ${{ github.token }}
           assignees: ${{ github.actor }}
