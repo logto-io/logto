@@ -18,7 +18,7 @@ const Register = () => {
   const { method = 'username' } = useParams<Parameters>();
 
   useEffect(() => {
-    if (method !== 'email' && method !== 'sms' && method !== 'username') {
+    if (!['email', 'sms', 'username'].includes(method)) {
       navigate('/404', { replace: true });
     }
   }, [method, navigate]);
