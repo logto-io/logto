@@ -34,6 +34,12 @@ jest.mock('@/utils/id', () => ({
   buildIdGenerator: jest.fn(() => () => 'randomId'),
 }));
 
+const customClientMetadata = {
+  corsAllowedOrigins: ['http://localhost:5000', 'http://localhost:5001', 'https://silverhand.com'],
+  idTokenTtl: 999_999,
+  refreshTokenTtl: 100_000_000,
+};
+
 describe('application route', () => {
   const applicationRequest = createRequester({ authedRoutes: applicationRoutes });
 
@@ -47,13 +53,10 @@ describe('application route', () => {
   it('POST /applications', async () => {
     const name = 'FooApplication';
     const type = ApplicationType.Traditional;
-    const description = 'New created application';
 
-    const response = await applicationRequest.post('/applications').send({
-      name,
-      type,
-      description,
-    });
+    const response = await applicationRequest
+      .post('/applications')
+      .send({ name, type, customClientMetadata });
 
     expect(response.status).toEqual(200);
     expect(response.body).toEqual({
@@ -61,24 +64,33 @@ describe('application route', () => {
       id: 'randomId',
       name,
       type,
-      description,
+      customClientMetadata,
     });
   });
 
   it('POST /applications should throw with invalid input body', async () => {
     const name = 'FooApplication';
     const type = ApplicationType.Traditional;
-    const description = 'New created application';
 
     await expect(applicationRequest.post('/applications')).resolves.toHaveProperty('status', 400);
     await expect(
-      applicationRequest.post('/applications').send({ description })
+      applicationRequest.post('/applications').send({ customClientMetadata })
     ).resolves.toHaveProperty('status', 400);
     await expect(
-      applicationRequest.post('/applications').send({ name, description })
+      applicationRequest.post('/applications').send({ name, customClientMetadata })
     ).resolves.toHaveProperty('status', 400);
     await expect(
-      applicationRequest.post('/applications').send({ type, description })
+      applicationRequest.post('/applications').send({ type, customClientMetadata })
+    ).resolves.toHaveProperty('status', 400);
+    await expect(
+      applicationRequest.post('/applications').send({
+        name,
+        type,
+        customClientMetadata: {
+          ...customClientMetadata,
+          corsAllowedOrigins: [''],
+        },
+      })
     ).resolves.toHaveProperty('status', 400);
   });
 
@@ -91,24 +103,26 @@ describe('application route', () => {
 
   it('PATCH /applications/:applicationId', async () => {
     const name = 'FooApplication';
-    const description = 'New created application';
 
-    const response = await applicationRequest.patch('/applications/foo').send({
-      name,
-      description,
-    });
+    const response = await applicationRequest
+      .patch('/applications/foo')
+      .send({ name, customClientMetadata });
 
     expect(response.status).toEqual(200);
-    expect(response.body).toEqual({
-      ...mockApplication,
-      name,
-      description,
-    });
+    expect(response.body).toEqual({ ...mockApplication, name, customClientMetadata });
   });
 
   it('PATCH /applications/:applicationId expect to throw with invalid properties', async () => {
     await expect(
       applicationRequest.patch('/applications/doo').send({ type: 'node' })
+    ).resolves.toHaveProperty('status', 400);
+    await expect(
+      applicationRequest.patch('/applications/doo').send({
+        customClientMetadata: {
+          ...customClientMetadata,
+          corsAllowedOrigins: [''],
+        },
+      })
     ).resolves.toHaveProperty('status', 400);
   });
 

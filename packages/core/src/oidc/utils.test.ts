@@ -62,7 +62,7 @@ describe('validateMetadata', () => {
   });
 });
 
-describe('corsAllowOrigin', () => {
+describe('isOriginAllowed', () => {
   it('should return false if there is no corsAllowOrigins', () => {
     expect(isOriginAllowed('https://logto.dev', {})).toBeFalsy();
   });
