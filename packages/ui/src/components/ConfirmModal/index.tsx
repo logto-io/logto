@@ -1,4 +1,4 @@
-import classNames from 'classNames';
+import classNames from 'classnames';
 import React, { ReactNode } from 'react';
 import { TFuncKey, useTranslation } from 'react-i18next';
 import ReactModal from 'react-modal';
