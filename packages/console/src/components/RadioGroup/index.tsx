@@ -14,7 +14,7 @@ import * as styles from './index.module.scss';
 type Props = {
   name: string;
   children: ReactNode;
-  value: string;
+  value?: string;
   className?: string;
   onChange?: (value: string) => void;
 };

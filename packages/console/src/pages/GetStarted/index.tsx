@@ -1,6 +1,7 @@
 import { AdminConsoleKey } from '@logto/phrases';
 import React, { cloneElement, isValidElement, PropsWithChildren, ReactNode, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
+import ReactMarkdown from 'react-markdown';
 
 import Button from '@/components/Button';
 import CardTitle from '@/components/CardTitle';
@@ -88,21 +89,30 @@ const GetStarted = ({
                   setActiveStepIndex(0);
                 },
               })}
-            {steps.map((step, index) => {
+            {steps.map(({ title, subtitle, metadata }, index) => {
+              if (!title) {
+                return null;
+              }
               const isFinalStep = index === steps.length - 1;
 
               return (
                 <Step
-                  key={step.title}
-                  data={step}
+                  key={title}
+                  title={title}
+                  subtitle={subtitle}
                   index={index}
                   isActive={activeStepIndex === index}
                   isComplete={activeStepIndex > index}
                   isFinalStep={isFinalStep}
+                  buttonHtmlType={isFinalStep ? 'submit' : 'button'}
                   onNext={() => {
                     setActiveStepIndex(index + 1);
                   }}
-                />
+                >
+                  {metadata && (
+                    <ReactMarkdown className={styles.markdownContent}>{metadata}</ReactMarkdown>
+                  )}
+                </Step>
               );
             })}
           </form>

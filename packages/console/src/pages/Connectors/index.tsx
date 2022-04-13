@@ -125,15 +125,13 @@ const Connectors = () => {
           </table>
         </div>
       </Card>
-      {data && (
-        <CreateForm
-          isOpen={Boolean(createType)}
-          type={createType}
-          onClose={() => {
-            setCreateType(undefined);
-          }}
-        />
-      )}
+      <CreateForm
+        isOpen={Boolean(createType)}
+        type={createType}
+        onClose={() => {
+          setCreateType(undefined);
+        }}
+      />
     </>
   );
 };
