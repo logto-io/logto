@@ -18,6 +18,7 @@ import Callback from './pages/Callback';
 import ConnectorDetails from './pages/ConnectorDetails';
 import Connectors from './pages/Connectors';
 import NotFound from './pages/NotFound';
+import SignInExperience from './pages/SignInExperience';
 import UserDetails from './pages/UserDetails';
 import Users from './pages/Users';
 
@@ -63,6 +64,10 @@ const Main = () => {
           <Route path="users">
             <Route index element={<Users />} />
             <Route path=":id" element={<UserDetails />} />
+          </Route>
+          <Route path="sign-in-experience">
+            <Route index element={<Navigate to="experience" />} />
+            <Route path=":tab" element={<SignInExperience />} />
           </Route>
         </Route>
       </Routes>

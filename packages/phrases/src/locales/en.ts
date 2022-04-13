@@ -7,6 +7,7 @@ const translation = {
     retry: 'Try again',
     done: 'Done',
     search: 'Search',
+    save_changes: 'Save changes',
   },
   main_flow: {
     input: {
@@ -310,6 +311,68 @@ const translation = {
         title: 'Send us an email',
         description: 'If you have any question.',
         button: 'Send',
+      },
+    },
+    sign_in_exp: {
+      title: 'Sign-in Experience',
+      description: 'Customize the sign in experience.',
+      tabs: {
+        experience: 'Experience',
+        methods: 'Sign in methods',
+        others: 'Others',
+      },
+      branding: {
+        title: 'BRANDING',
+        primary_color: 'Primary color',
+        dark_mode: 'Enable dark mode',
+        dark_mode_description:
+          'Enabling this setting will auto generate the dark mode color. You app won’t have dark mode if it’s turned off.',
+        ui_style: 'Define your UI style',
+        app_logo: 'App Logo',
+        text: 'Text',
+        logo_image_url: 'Logo image URL',
+        slogan: 'Slogan',
+        slogan_placeholder: 'Unleash your creativity',
+      },
+      terms_of_use: {
+        title: 'TERMS OF USE',
+        enable: 'Enable Terms of use',
+        description:
+          'Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. ',
+        terms_of_use: 'Terms of use',
+        terms_of_use_placeholder: 'Terms of use url',
+      },
+      sign_in_methods: {
+        title: 'SIGN IN METHODS',
+        primary: 'Primary sign in method',
+        enable_secondary: 'Enable secondary sign in',
+        enable_secondary_description:
+          "Once it's turned on, you app will support more sign in method(s) besides the primary one. ",
+        methods: {
+          sms: 'Phone number sign in',
+          email: 'Email sign in',
+          social: 'Social sign in',
+          username_password: 'Username-with-password sign in',
+        },
+      },
+      others: {
+        forgot_password: {
+          title: 'FORGOT PASSWORD',
+          enable: 'Enable forgot password',
+          enable_description:
+            'Once it’s turned on, you app will support more sign in method(s) besides the primary one. ',
+        },
+        languages: {
+          title: 'LANGUAGES',
+          mode: 'Language mode',
+          auto: 'Auto',
+          fixed: 'Fixed',
+          fallback: 'Fallback laguanges',
+          languages: {
+            english: 'English',
+            chinese: 'Chinese',
+          },
+        },
       },
     },
   },

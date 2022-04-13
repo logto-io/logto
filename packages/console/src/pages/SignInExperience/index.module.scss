@@ -1,0 +1,19 @@
+@use '@/scss/underscore' as _;
+
+.wrapper {
+  display: flex;
+  height: 100%;
+
+  .setup {
+    flex: 1;
+    margin-right: _.unit(3);
+
+    .tabs {
+      padding-top: _.unit(2);
+    }
+  }
+
+  .preview {
+    width: 500px;
+  }
+}
