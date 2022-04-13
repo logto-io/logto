@@ -2,14 +2,14 @@ import { fireEvent, render, waitFor } from '@testing-library/react';
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
 
-import { sendSMSPasscode as sendRegisterSMSPasscode } from '@/apis/register';
-import { sendSMSPasscode as sendSignInSMSPasscode } from '@/apis/sign-in';
+import { sendSmsPasscode as sendRegisterSMSPasscode } from '@/apis/register';
+import { sendSmsPasscode as sendSignInSMSPasscode } from '@/apis/sign-in';
 import { defaultCountryCallingCode } from '@/hooks/use-phone-number';
 
 import PhonePasswordless from './PhonePasswordless';
 
-jest.mock('@/apis/sign-in', () => ({ sendSMSPasscode: jest.fn(async () => Promise.resolve()) }));
-jest.mock('@/apis/register', () => ({ sendSMSPasscode: jest.fn(async () => Promise.resolve()) }));
+jest.mock('@/apis/sign-in', () => ({ sendSmsPasscode: jest.fn(async () => Promise.resolve()) }));
+jest.mock('@/apis/register', () => ({ sendSmsPasscode: jest.fn(async () => Promise.resolve()) }));
 jest.mock('@/hooks/page-context', () =>
   React.createContext({
     loading: false,

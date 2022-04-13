@@ -4,13 +4,13 @@ import { consent } from './consent';
 import {
   register,
   sendEmailPasscode as registerSendEmailPasscode,
-  sendSMSPasscode as registerSendSMSPasscode,
+  sendSmsPasscode as registerSendSMSPasscode,
   verifyEmailPasscode as registerVerifyEmailPasscode,
   verifySMSPasscode as registerVerifySMSPasscode,
 } from './register';
 import {
   signInBasic,
-  sendSMSPasscode,
+  sendSmsPasscode,
   sendEmailPasscode,
   verifyEmailPasscode,
   verifySMSPasscode,
@@ -51,8 +51,8 @@ describe('api', () => {
     });
   });
 
-  it('sendSMSPasscode', async () => {
-    await sendSMSPasscode(phone);
+  it('sendSmsPasscode', async () => {
+    await sendSmsPasscode(phone);
     expect(ky.post).toBeCalledWith('/api/session/sign-in/passwordless/sms/send-passcode', {
       json: {
         phone,

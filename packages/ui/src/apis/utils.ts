@@ -4,13 +4,13 @@ import {
   verifyEmailPasscode as verifyRegisterEmailPasscode,
   verifySMSPasscode as verifyRegisterSMSPasscode,
   sendEmailPasscode as sendRegisterEmailPasscode,
-  sendSMSPasscode as sendRegisterSMSPasscode,
+  sendSmsPasscode as sendRegisterSMSPasscode,
 } from './register';
 import {
   verifyEmailPasscode as verifySignInEmailPasscode,
   verifySMSPasscode as verifySignInSMSPasscode,
   sendEmailPasscode as sendSignInEmailPasscode,
-  sendSMSPasscode as sendSignInSMSPasscode,
+  sendSmsPasscode as sendSignInSMSPasscode,
 } from './sign-in';
 
 export type PasscodeChannel = 'sms' | 'email';
