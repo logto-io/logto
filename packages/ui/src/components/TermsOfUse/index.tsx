@@ -3,7 +3,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 
 import ErrorMessage, { ErrorType } from '@/components/ErrorMessage';
-import RadioButtonIcon from '@/components/Icons/RadioButtonIcon';
+import { RadioButtonIcon } from '@/components/Icons';
 import TextLink from '@/components/TextLink';
 
 import * as styles from './index.module.scss';

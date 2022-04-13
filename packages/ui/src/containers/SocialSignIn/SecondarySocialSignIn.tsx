@@ -11,25 +11,24 @@ import * as styles from './index.module.scss';
 type Props = {
   className?: string;
   connectors: Array<Pick<ConnectorMetadata, 'id' | 'logo'>>;
+  showMoreConnectors?: () => void;
 };
 
-const SecondarySocialSignIn = ({ className, connectors }: Props) => {
+const SecondarySocialSignIn = ({ className, connectors, showMoreConnectors }: Props) => {
   const { invokeSocialSignIn } = useSocial();
-  const sampled = connectors.length > 4;
+  const isOverSize = connectors.length > 4;
 
-  const sampledConnectors = useMemo(() => {
-    // TODO: filter with native returned
-
-    if (sampled) {
+  const displayConnectors = useMemo(() => {
+    if (isOverSize) {
       return connectors.slice(0, 3);
     }
 
     return connectors;
-  }, [connectors, sampled]);
+  }, [connectors, isOverSize]);
 
   return (
     <div className={classNames(styles.socialIconList, className)}>
-      {sampledConnectors.map((connector) => (
+      {displayConnectors.map((connector) => (
         <SocialIconButton
           key={connector.id}
           className={styles.socialButton}
@@ -39,7 +38,7 @@ const SecondarySocialSignIn = ({ className, connectors }: Props) => {
           }}
         />
       ))}
-      {sampled && <MoreButton className={styles.socialButton} />}
+      {isOverSize && <MoreButton className={styles.socialButton} onClick={showMoreConnectors} />}
     </div>
   );
 };

@@ -5,12 +5,22 @@
   max-width: 360px;
   @include _.flex-row;
   justify-content: center;
+
+  .socialButton {
+    margin-right: _.unit(10);
+
+    &:last-child {
+      margin-right: 0;
+    }
+  }
 }
 
-.socialButton {
-  margin-right: _.unit(10);
+.socialLinkList {
+  width: 100%;
+  max-width: 360px;
+  @include _.flex-column;
 
-  &:last-child {
-    margin-right: 0;
+  .socialLinkButton {
+    margin-bottom: _.unit(4);
   }
 }
