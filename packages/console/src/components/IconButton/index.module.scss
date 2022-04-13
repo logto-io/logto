@@ -15,7 +15,7 @@
   align-items: center;
 
   > svg {
-    fill: var(--color-component-caption);
+    fill: var(--color-caption);
   }
 
   &:disabled {
@@ -25,7 +25,7 @@
   }
 
   &:active {
-    background: var(--color-overlay-12);
+    background: var(--color-pressed);
   }
 
   &:not(:disabled) {
@@ -33,7 +33,7 @@
   }
 
   &:not(:disabled):hover {
-    background: var(--color-overlay-8);
+    background: var(--color-hover);
   }
 
   &.small {

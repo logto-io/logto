@@ -49,7 +49,7 @@
 
     .name {
       font: var(--font-title-large);
-      color: var(--color-component-text);
+      color: var(--color-text);
     }
 
     .details {
@@ -63,7 +63,8 @@
     }
 
     .type {
-      background-color: var(--color-neutral-90);
+      background-color: var(--color-surface-variant);
+      color: var(--color-text);
       padding: _.unit(0.5) _.unit(2);
       border-radius: 10px;
       font: var(--font-label-medium);
@@ -71,7 +72,7 @@
 
     .text {
       font: var(--font-subhead-2);
-      color: var(--color-component-caption);
+      color: var(--color-caption);
     }
 
     .verticalBar {

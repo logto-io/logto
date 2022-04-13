@@ -5,7 +5,7 @@
   align-items: center;
   margin: _.unit(1) _.unit(6) _.unit(1) _.unit(4);
   padding: _.unit(2);
-  color: var(--color-on-surface-variant);
+  color: var(--color-neutral-variant-30);
   border-radius: _.unit(2);
   text-decoration: none;
   user-select: none;
@@ -26,11 +26,11 @@
   }
 
   &:not(.active):hover {
-    background: var(--color-neutral-variant-90);
+    background: var(--color-hover-variant);
   }
 
   &.active {
-    background: var(--color-primary-90);
+    background: var(--color-surface-5);
     color: var(--color-primary);
 
     .icon svg {

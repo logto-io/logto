@@ -4,13 +4,13 @@
   overflow: hidden;
 
   .title {
-    color: var(--color-component-text);
+    color: var(--color-text);
     @include _.text-ellipsis;
   }
 
   .subtitle {
     margin-top: _.unit(1);
-    color: var(--color-component-caption);
+    color: var(--color-caption);
     @include _.text-ellipsis;
   }
 
