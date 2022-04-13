@@ -17,11 +17,14 @@ type Props = {
 const Drawer = ({ className, isOpen = false, children, onClose }: Props) => {
   return (
     <ReactModal
-      role="dialog"
+      shouldCloseOnOverlayClick
+      role="popup"
       isOpen={isOpen}
       className={classNames(modalStyles.drawer, className)}
       overlayClassName={modalStyles.overlay}
       parentSelector={() => document.querySelector('main') ?? document.body}
+      appElement={document.querySelector('main') ?? document.body}
+      closeTimeoutMS={300}
       onRequestClose={onClose}
     >
       <div className={styles.container}>

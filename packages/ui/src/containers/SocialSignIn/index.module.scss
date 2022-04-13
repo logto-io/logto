@@ -19,6 +19,7 @@
   width: 100%;
   max-width: 360px;
   @include _.flex-column;
+  margin: 0 auto;
 
   .socialLinkButton {
     margin-bottom: _.unit(4);

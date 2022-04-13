@@ -22,3 +22,23 @@
   background: rgba(0, 0, 0, 16%);
   inset: 0;
 }
+
+
+// React modal animation
+/* stylelint-disable-next-line selector-pseudo-class-no-unknown */
+:global {
+  .ReactModal__Content[role='popup'] {
+    transform: translateY(100%);
+    transition: transform 300ms ease-in-out;
+  }
+
+  /* stylelint-disable selector-class-pattern */
+  .ReactModal__Content--after-open[role='popup'] {
+    transform: translateY(0);
+  }
+
+  .ReactModal__Content--before-close[role='popup'] {
+    transform: translateY(100%);
+  }
+  /* stylelint-enable selector-class-pattern */
+}
