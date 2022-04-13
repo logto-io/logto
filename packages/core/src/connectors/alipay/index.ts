@@ -12,7 +12,6 @@ import got from 'got';
 import * as iconv from 'iconv-lite';
 import { stringify } from 'query-string';
 import snakeCaseKeys from 'snakecase-keys';
-import { z } from 'zod';
 
 import assertThat from '@/utils/assert-that';
 
@@ -34,8 +33,8 @@ import {
   methodForUserInfo,
   scope,
   alipaySigningAlgorithmMapping,
-  alipaySigningAlgorithms,
 } from './constant';
+import { alipayConfigGuard, AlipayConfig, AccessTokenResponse, UserInfoResponse } from './types';
 
 // eslint-disable-next-line unicorn/prefer-module
 const currentPath = __dirname;
@@ -65,14 +64,6 @@ export const metadata: ConnectorMetadata = {
     : configTemplateFallback,
 };
 
-const alipayConfigGuard = z.object({
-  appId: z.string(),
-  privateKey: z.string(),
-  signType: z.enum(alipaySigningAlgorithms),
-});
-
-export type AlipayConfig = z.infer<typeof alipayConfigGuard>;
-
 export const validateConfig: ValidateConfig = async (config: unknown) => {
   const result = alipayConfigGuard.safeParse(config);
 
@@ -85,30 +76,36 @@ export const validateConfig: ValidateConfig = async (config: unknown) => {
 export const signingPamameters = (
   parameters: AlipayConfig & Record<string, string>
 ): Record<string, string> => {
-  const { biz_content: bizContent, privateKey, ...signParameters } = parameters;
-
-  if (bizContent) {
-    // eslint-disable-next-line @silverhand/fp/no-mutation
-    signParameters.biz_content = JSON.stringify(snakeCaseKeys(JSON.parse(bizContent)));
-  }
+  const { biz_content, privateKey, ...rest } = parameters;
+  const signParameters = snakeCaseKeys(
+    biz_content
+      ? {
+          ...rest,
+          bizContent: JSON.stringify(snakeCaseKeys(JSON.parse(biz_content))),
+        }
+      : rest
+  );
 
   const decamelizeParameters = snakeCaseKeys(signParameters);
 
   // eslint-disable-next-line @silverhand/fp/no-mutating-methods
-  const sortedParametersAsString = Object.keys(decamelizeParameters)
-    .sort()
-    .map((key) => {
-      const data = decamelizeParameters[key];
-
+  const sortedParametersAsString = Object.entries(decamelizeParameters)
+    .map(([key, value]) => {
       // Supported Encodings can be found at https://github.com/ashtuchkin/iconv-lite/wiki/Supported-Encodings
-      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-      return data ? `${key}=${iconv.encode(data, signParameters.charset ?? 'UTF8')}` : '';
+
+      if (value) {
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+        return `${key}=${iconv.encode(value, rest.charset ?? 'UTF8')}`;
+      }
+
+      return '';
     })
     .filter((keyValueString) => keyValueString)
+    .sort()
     .join('&');
 
   const sign = crypto
-    .createSign(alipaySigningAlgorithmMapping[signParameters.signType])
+    .createSign(alipaySigningAlgorithmMapping[rest.signType])
     .update(sortedParametersAsString, 'utf8')
     .sign(privateKey, 'base64');
 
@@ -127,24 +124,6 @@ export const getAuthorizationUri: GetAuthorizationUri = async (redirectUri, stat
 };
 
 export const getAccessToken: GetAccessToken = async (authCode) => {
-  // `error_response` and `alipay_system_oauth_token_response` are mutually exclusive.
-  type AccessTokenResponse = {
-    error_response?: {
-      code: string;
-      msg: string; // To know `code` and `msg` details, see: https://opendocs.alipay.com/common/02km9f
-      sub_code?: string;
-      sub_msg?: string;
-    };
-    sign: string; // To know `sign` details, see: https://opendocs.alipay.com/common/02kf5q
-    alipay_system_oauth_token_response?: {
-      user_id: string; // Unique Alipay ID, 16 digits starts with '2088'
-      access_token: string;
-      expires_in: string; // In seconds
-      refresh_token: string;
-      re_expires_in: string; // Expiring time of refresh token, in seconds
-    };
-  };
-
   const config = await getConnectorConfig<AlipayConfig>(metadata.id);
   const initSearchParameters = {
     method: methodForAccessToken,
@@ -164,7 +143,6 @@ export const getAccessToken: GetAccessToken = async (authCode) => {
       timeout: await getConnectorRequestTimeout(),
     })
     .json<AccessTokenResponse>();
-  console.log('getAccessToken response:', response);
 
   const { msg, sub_msg } = response.error_response ?? {};
   assertThat(
@@ -179,22 +157,6 @@ export const getAccessToken: GetAccessToken = async (authCode) => {
 };
 
 export const getUserInfo: GetUserInfo = async (accessTokenObject) => {
-  type UserInfoResponse = {
-    sign: string; // To know `sign` details, see: https://opendocs.alipay.com/common/02kf5q
-    alipay_user_info_share_response: {
-      user_id?: string; // String of digits with max length of 16
-      avatar?: string; // URL of avatar
-      province?: string;
-      city?: string;
-      nick_name?: string;
-      gender?: string; // Enum type: 'F' for female, 'M' for male
-      code: string;
-      msg: string; // To know `code` and `msg` details, see: https://opendocs.alipay.com/common/02km9f
-      sub_code?: string;
-      sub_msg?: string;
-    };
-  };
-
   const { accessToken } = accessTokenObject;
 
   const config = await getConnectorConfig<AlipayConfig>(metadata.id);
@@ -217,7 +179,6 @@ export const getUserInfo: GetUserInfo = async (accessTokenObject) => {
       timeout: await getConnectorRequestTimeout(),
     })
     .json<UserInfoResponse>();
-  console.log('getUserInfo response:', response);
 
   const {
     user_id: id,
