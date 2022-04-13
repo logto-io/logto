@@ -8,14 +8,14 @@ import PrimarySocialSignIn from './PrimarySocialSignIn';
 type Props = {
   isOpen?: boolean;
   onClose: () => void;
-  className: string;
+  className?: string;
   connectors: Array<Pick<ConnectorMetadata, 'id' | 'logo' | 'name'>>;
 };
 
-const SocialSignInPopUp = ({ isOpen = false, onClose, className, connectors }: Props) => {
+const SocialSignInPopUp = ({ isOpen = false, onClose, className, connectors }: Props) => (
   <Drawer className={className} isOpen={isOpen} onClose={onClose}>
     <PrimarySocialSignIn isPopup connectors={connectors} />
-  </Drawer>;
-};
+  </Drawer>
+);
 
 export default SocialSignInPopUp;
