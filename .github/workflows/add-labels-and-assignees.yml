@@ -7,19 +7,18 @@ on:
     types: [opened, edited, synchronize, reopened]
 
 jobs:
-  add_labels:
+  add_labels_and_assignees:
     runs-on: ubuntu-latest
     steps:
-      - uses: logto-io/actions-add-labels-run-steps@v1.0.1
+      - name: Add Labels
+        uses: logto-io/actions-add-labels-run-steps@v1.0.1
         with:
           title: ${{ github.event.pull_request.title || github.event.issue.title }}
           github-token: ${{ github.token }}
 
-  add_assignees:
-    if: ${{ github.event_name == 'pull_request' }}
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions-ecosystem/action-add-assignees@v1
+      - name: Add Assignees
+        if: ${{ github.event_name == 'pull_request' }}
+        uses: actions-ecosystem/action-add-assignees@v1
         with:
           github_token: ${{ secrets.github_token }}
           assignees: ${{ github.actor }}
