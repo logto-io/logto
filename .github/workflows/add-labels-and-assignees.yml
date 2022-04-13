@@ -1,0 +1,24 @@
+name: Add Labels And Assignees
+
+on:
+  issues:
+    types: [opened, edited, reopened]
+  pull_request:
+    types: [opened, edited, synchronize, reopened]
+
+jobs:
+  add_labels_and_assignees:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Add Labels
+        uses: logto-io/actions-add-labels-run-steps@v1.0.1
+        with:
+          title: ${{ github.event.pull_request.title || github.event.issue.title }}
+          github-token: ${{ github.token }}
+
+      - name: Add Assignees
+        if: ${{ github.event_name == 'pull_request' }}
+        uses: actions-ecosystem/action-add-assignees@v1
+        with:
+          github_token: ${{ github.token }}
+          assignees: ${{ github.actor }}
