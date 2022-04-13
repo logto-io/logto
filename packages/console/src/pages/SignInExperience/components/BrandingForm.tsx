@@ -1,22 +1,18 @@
 import { BrandingStyle, SignInExperience } from '@logto/schemas';
 import React from 'react';
-import { Control, Controller, UseFormRegister, UseFormWatch } from 'react-hook-form';
+import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
 import FormField from '@/components/FormField';
 import RadioGroup, { Radio } from '@/components/RadioGroup';
+import Switch from '@/components/Switch';
 import TextInput from '@/components/TextInput';
 
 import * as styles from './index.module.scss';
 
-type Props = {
-  register: UseFormRegister<SignInExperience>;
-  control: Control<SignInExperience>;
-  watch: UseFormWatch<SignInExperience>;
-};
-
-const BrandingForm = ({ register, control, watch }: Props) => {
+const BrandingForm = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const { watch, register, control } = useFormContext<SignInExperience>();
 
   const isDarkModeEnabled = watch('branding.isDarkModeEnabled');
   const style = watch('branding.style');
@@ -30,9 +26,10 @@ const BrandingForm = ({ register, control, watch }: Props) => {
         <TextInput {...register('branding.primaryColor', { required: true })} />
       </FormField>
       <FormField isRequired title="admin_console.sign_in_exp.branding.dark_mode">
-        {/* TODO: LOG-2152 switch */}
-        <TextInput {...register('branding.isDarkModeEnabled', { required: true })} />
-        <div>{t('sign_in_exp.branding.dark_mode_description')}</div>
+        <Switch
+          label={t('sign_in_exp.branding.dark_mode_description')}
+          {...register('branding.isDarkModeEnabled', { required: true })}
+        />
       </FormField>
       <FormField
         isRequired={isDarkModeEnabled}
