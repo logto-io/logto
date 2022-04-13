@@ -24,6 +24,7 @@ export type Props = {
   isChecked?: boolean;
   onClick?: () => void;
   tabIndex?: number;
+  type?: 'card' | 'plain';
 };
 
 const Radio = ({
@@ -35,6 +36,7 @@ const Radio = ({
   isChecked,
   onClick,
   tabIndex,
+  type,
 }: Props) => {
   const handleKeyPress: KeyboardEventHandler<HTMLDivElement> = useCallback(
     (event) => {
@@ -59,7 +61,8 @@ const Radio = ({
           <div className={styles.title}>{title}</div>
         </div>
       )}
-      <Check />
+      {type === 'card' && <Check />}
+      {type === 'plain' && <div className={styles.indicator} />}
       {children}
     </div>
   );
