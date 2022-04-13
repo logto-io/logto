@@ -115,9 +115,11 @@ export const signingPamameters = (
 export const getAuthorizationUri: GetAuthorizationUri = async (redirectUri, state) => {
   const { appId: app_id } = await getConnectorConfig<AlipayConfig>(metadata.id);
 
+  const redirect_uri = encodeURI(redirectUri);
+
   return `${authorizationEndpoint}?${stringify({
     app_id,
-    redirect_uri: encodeURI(redirectUri), // The variable `redirectUri` should match {appId, appSecret}
+    redirect_uri, // The variable `redirectUri` should match {appId, appSecret}
     scope,
     state,
   })}`;
