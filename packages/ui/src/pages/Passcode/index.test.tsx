@@ -12,11 +12,11 @@ jest.mock('react-router-dom', () => ({
 }));
 
 describe('Passcode Page', () => {
-  it('render with invalid channel should lead to 404 page', () => {
+  it('render with invalid method should lead to 404 page', () => {
     const { queryByText } = render(
       <MemoryRouter initialEntries={['/sign-in/username/passcode-validation']}>
         <Routes>
-          <Route path="/:type/:channel/passcode-validation" element={<Passcode />} />
+          <Route path="/:type/:method/passcode-validation" element={<Passcode />} />
         </Routes>
       </MemoryRouter>
     );
@@ -28,7 +28,7 @@ describe('Passcode Page', () => {
     const { queryByText } = render(
       <MemoryRouter initialEntries={['/sign-in/email/passcode-validation']}>
         <Routes>
-          <Route path="/:type/:channel/passcode-validation" element={<Passcode />} />
+          <Route path="/:type/:method/passcode-validation" element={<Passcode />} />
         </Routes>
       </MemoryRouter>
     );

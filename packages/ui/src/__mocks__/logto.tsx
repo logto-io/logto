@@ -27,3 +27,30 @@ export const socialConnectors = [
     name: 'Meta',
   },
 ];
+
+export const mockSignInExperience = {
+  id: 'foo',
+  branding: {
+    primaryColor: '#000',
+    isDarkModeEnabled: true,
+    darkPrimaryColor: '#fff',
+    style: 'Logo_Slogan',
+    logoUrl: 'http://logto.png',
+    slogan: 'logto',
+  },
+  termsOfUse: {
+    enabled: false,
+  },
+  languageInfo: {
+    autoDetect: true,
+    fallbackLanguage: 'en',
+    fixedLanguage: 'zh-cn',
+  },
+  signInMethods: {
+    username: 'primary',
+    email: 'secondary',
+    sms: 'secondary',
+    social: 'secondary',
+  },
+  socialSignInConnectorIds: ['github', 'facebook'],
+};

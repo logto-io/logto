@@ -9,31 +9,31 @@ import { PhonePasswordless, EmailPasswordless } from '@/containers/Passwordless'
 import * as styles from './index.module.scss';
 
 type Parameters = {
-  channel?: string;
+  method?: string;
 };
 
 const Register = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'main_flow' });
   const navigate = useNavigate();
-  const { channel = 'username' } = useParams<Parameters>();
+  const { method = 'username' } = useParams<Parameters>();
 
   useEffect(() => {
-    if (channel !== 'email' && channel !== 'sms' && channel !== 'username') {
+    if (!['email', 'sms', 'username'].includes(method)) {
       navigate('/404', { replace: true });
     }
-  }, [channel, navigate]);
+  }, [method, navigate]);
 
   const registerForm = useMemo(() => {
-    if (channel === 'sms') {
+    if (method === 'sms') {
       return <PhonePasswordless type="register" />;
     }
 
-    if (channel === 'email') {
+    if (method === 'email') {
       return <EmailPasswordless type="register" />;
     }
 
     return <CreateAccount />;
-  }, [channel]);
+  }, [method]);
 
   return (
     <div className={styles.wrapper}>

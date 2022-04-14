@@ -16,7 +16,7 @@ import * as styles from './index.module.scss';
 
 type Props = {
   type: UserFlow;
-  channel: 'email' | 'sms';
+  method: 'email' | 'sms';
   target: string;
   className?: string;
 };
@@ -30,7 +30,7 @@ const getTimeout = () => {
   return now;
 };
 
-const PasscodeValidation = ({ type, channel, className, target }: Props) => {
+const PasscodeValidation = ({ type, method, className, target }: Props) => {
   const [code, setCode] = useState<string[]>([]);
   const [error, setError] = useState<ErrorType>();
   const { setToast } = useContext(PageContext);
@@ -45,13 +45,13 @@ const PasscodeValidation = ({ type, channel, className, target }: Props) => {
     error: verifyPasscodeError,
     result: verifyPasscodeResult,
     run: verifyPassCode,
-  } = useApi(getVerifyPasscodeApi(type, channel));
+  } = useApi(getVerifyPasscodeApi(type, method));
 
   const {
     error: sendPasscodeError,
     result: sendPasscodeResult,
     run: sendPassCode,
-  } = useApi(getSendPasscodeApi(type, channel));
+  } = useApi(getSendPasscodeApi(type, method));
 
   useEffect(() => {
     if (code.length === defaultLength && code.every(Boolean)) {
