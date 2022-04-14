@@ -2,15 +2,15 @@ import { UserFlow } from '@/types';
 
 import {
   verifyEmailPasscode as verifyRegisterEmailPasscode,
-  verifySMSPasscode as verifyRegisterSMSPasscode,
+  verifySmsPasscode as verifyRegisterSmsPasscode,
   sendEmailPasscode as sendRegisterEmailPasscode,
-  sendSmsPasscode as sendRegisterSMSPasscode,
+  sendSmsPasscode as sendRegisterSmsPasscode,
 } from './register';
 import {
   verifyEmailPasscode as verifySignInEmailPasscode,
-  verifySMSPasscode as verifySignInSMSPasscode,
+  verifySmsPasscode as verifySignInSmsPasscode,
   sendEmailPasscode as sendSignInEmailPasscode,
-  sendSmsPasscode as sendSignInSMSPasscode,
+  sendSmsPasscode as sendSignInSmsPasscode,
 } from './sign-in';
 
 export type PasscodeChannel = 'sms' | 'email';
@@ -21,14 +21,14 @@ export const getSendPasscodeApi = (type: UserFlow, channel: PasscodeChannel) => 
   }
 
   if (type === 'sign-in' && channel === 'sms') {
-    return sendSignInSMSPasscode;
+    return sendSignInSmsPasscode;
   }
 
   if (type === 'register' && channel === 'email') {
     return sendRegisterEmailPasscode;
   }
 
-  return sendRegisterSMSPasscode;
+  return sendRegisterSmsPasscode;
 };
 
 export const getVerifyPasscodeApi = (type: UserFlow, channel: PasscodeChannel) => {
@@ -37,12 +37,12 @@ export const getVerifyPasscodeApi = (type: UserFlow, channel: PasscodeChannel) =
   }
 
   if (type === 'sign-in' && channel === 'sms') {
-    return verifySignInSMSPasscode;
+    return verifySignInSmsPasscode;
   }
 
   if (type === 'register' && channel === 'email') {
     return verifyRegisterEmailPasscode;
   }
 
-  return verifyRegisterSMSPasscode;
+  return verifyRegisterSmsPasscode;
 };

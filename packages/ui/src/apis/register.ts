@@ -25,7 +25,7 @@ export const sendSmsPasscode = async (phone: string) => {
     .json();
 };
 
-export const verifySMSPasscode = async (phone: string, passcode: string) => {
+export const verifySmsPasscode = async (phone: string, passcode: string) => {
   type Response = {
     redirectTo: string;
   };

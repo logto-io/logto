@@ -4,16 +4,16 @@ import { consent } from './consent';
 import {
   register,
   sendEmailPasscode as registerSendEmailPasscode,
-  sendSmsPasscode as registerSendSMSPasscode,
+  sendSmsPasscode as registerSendSmsPasscode,
   verifyEmailPasscode as registerVerifyEmailPasscode,
-  verifySMSPasscode as registerVerifySMSPasscode,
+  verifySmsPasscode as registerVerifySmsPasscode,
 } from './register';
 import {
   signInBasic,
   sendSmsPasscode,
   sendEmailPasscode,
   verifyEmailPasscode,
-  verifySMSPasscode,
+  verifySmsPasscode,
 } from './sign-in';
 import {
   invokeSocialSignIn,
@@ -60,8 +60,8 @@ describe('api', () => {
     });
   });
 
-  it('verifySMSPasscode', async () => {
-    await verifySMSPasscode(phone, passcode);
+  it('verifySmsPasscode', async () => {
+    await verifySmsPasscode(phone, passcode);
     expect(ky.post).toBeCalledWith('/api/session/sign-in/passwordless/sms/verify-passcode', {
       json: {
         phone,
@@ -104,8 +104,8 @@ describe('api', () => {
     });
   });
 
-  it('registerSendSMSPasscode', async () => {
-    await registerSendSMSPasscode(phone);
+  it('registerSendSmsPasscode', async () => {
+    await registerSendSmsPasscode(phone);
     expect(ky.post).toBeCalledWith('/api/session/register/passwordless/sms/send-passcode', {
       json: {
         phone,
@@ -113,8 +113,8 @@ describe('api', () => {
     });
   });
 
-  it('registerVerifySMSPasscode', async () => {
-    await registerVerifySMSPasscode(phone, passcode);
+  it('registerVerifySmsPasscode', async () => {
+    await registerVerifySmsPasscode(phone, passcode);
     expect(ky.post).toBeCalledWith('/api/session/register/passwordless/sms/verify-passcode', {
       json: {
         phone,

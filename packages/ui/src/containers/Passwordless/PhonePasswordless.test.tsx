@@ -2,8 +2,8 @@ import { fireEvent, render, waitFor } from '@testing-library/react';
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
 
-import { sendSmsPasscode as sendRegisterSMSPasscode } from '@/apis/register';
-import { sendSmsPasscode as sendSignInSMSPasscode } from '@/apis/sign-in';
+import { sendSmsPasscode as sendRegisterSmsPasscode } from '@/apis/register';
+import { sendSmsPasscode as sendSignInSmsPasscode } from '@/apis/sign-in';
 import { defaultCountryCallingCode } from '@/hooks/use-phone-number';
 
 import PhonePasswordless from './PhonePasswordless';
@@ -41,7 +41,7 @@ describe('<PhonePasswordless/>', () => {
 
     fireEvent.click(submitButton);
     expect(queryByText('invalid_phone')).not.toBeNull();
-    expect(sendSignInSMSPasscode).not.toBeCalled();
+    expect(sendSignInSmsPasscode).not.toBeCalled();
 
     const phoneInput = container.querySelector('input[name="phone"]');
 
@@ -91,7 +91,7 @@ describe('<PhonePasswordless/>', () => {
       fireEvent.click(submitButton);
     });
 
-    expect(sendSignInSMSPasscode).toBeCalledWith(`${defaultCountryCallingCode}${phoneNumber}`);
+    expect(sendSignInSmsPasscode).toBeCalledWith(`${defaultCountryCallingCode}${phoneNumber}`);
   });
 
   test('register method properly', async () => {
@@ -114,6 +114,6 @@ describe('<PhonePasswordless/>', () => {
       fireEvent.click(submitButton);
     });
 
-    expect(sendRegisterSMSPasscode).toBeCalledWith(`${defaultCountryCallingCode}${phoneNumber}`);
+    expect(sendRegisterSmsPasscode).toBeCalledWith(`${defaultCountryCallingCode}${phoneNumber}`);
   });
 });
