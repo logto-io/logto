@@ -4,8 +4,8 @@ import { TFuncKey, useTranslation } from 'react-i18next';
 import ReactModal from 'react-modal';
 
 import Button from '@/components/Button';
-import * as modalStyles from '@/scss/modal.module.scss';
 
+import * as modalStyles from '../../scss/modal.module.scss';
 import * as styles from './index.module.scss';
 
 type Props = {
