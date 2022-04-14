@@ -8,7 +8,7 @@ tr.clickable {
   cursor: pointer;
 
   &:hover {
-    background: var(--color-table-row-selected);
+    background: var(--color-hover);
   }
 }
 

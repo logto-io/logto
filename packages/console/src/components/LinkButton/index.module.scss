@@ -13,15 +13,20 @@
     margin-left: _.unit(1);
   }
 
-  &:hover {
+  &:focus-visible {
+    outline: 2px solid var(--color-focused-variant);
+  }
+
+  &:disabled {
+    color: var(--color-disabled);
+    cursor: not-allowed;
+  }
+
+  &:not(:disabled):hover {
     text-decoration: underline;
   }
 
-  &:active {
-    color: var(--color-primary-30);
-  }
-
-  &:focus-visible {
-    outline: 2px solid var(--color-primary-80);
+  > svg {
+    fill: var(--color-primary);
   }
 }

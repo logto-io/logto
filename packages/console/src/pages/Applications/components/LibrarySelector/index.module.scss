@@ -12,7 +12,7 @@
 
   .subtitle {
     font: var(--font-body-medium);
-    color: var(--color-component-text);
+    color: var(--color-text);
     margin-top: _.unit(3);
   }
 
@@ -36,7 +36,7 @@
     border-radius: _.unit(2);
     padding: 0 _.unit(4);
     font: var(--font-body-medium);
-    color: var(--color-component-text);
+    color: var(--color-text);
 
     img {
       margin-right: _.unit(3);

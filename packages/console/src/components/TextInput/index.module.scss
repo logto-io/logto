@@ -2,8 +2,8 @@
 
 .container {
   border-radius: 6px;
-  border: 1px solid var(--color-component-border);
-  outline: 2px solid transparent;
+  border: 1px solid var(--color-border);
+  outline: 3px solid transparent;
   transition-property: outline, border;
   transition-timing-function: ease-in-out;
   transition-duration: 0.2s;
@@ -23,25 +23,26 @@
 
   &:focus-within {
     border-color: var(--color-primary);
-    outline-color: var(--color-primary-80);
+    outline-color: var(--color-focused-variant);
   }
 
   input {
     width: 100%;
     appearance: none;
-    color: var(--color-component-text);
+    background: var(--color-layer-1);
+    color: var(--color-text);
     font: var(--font-body-medium);
     padding: 0;
 
     &::placeholder {
-      color: var(--color-component-caption);
+      color: var(--color-caption);
     }
   }
 
   &.disabled {
-    background: var(--color-surface);
-    color: var(--color-disabled);
-    border-color: var(--color-disabled);
+    background: var(--color-inverse-on-surface);
+    color: var(--color-caption);
+    border-color: var(--color-border);
 
     input {
       background: none;
@@ -49,9 +50,9 @@
   }
 
   &.readOnly {
-    background: var(--color-surface);
-    color: var(--color-readonly);
-    border-color: var(--color-disabled);
+    background: var(--color-inverse-on-surface);
+    color: var(--color-text);
+    border-color: var(--color-border);
 
     input {
       background: none;
