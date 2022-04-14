@@ -1,31 +1,31 @@
 {
-  "accessKeyId": "<your-access-key-id>",
-  "accessKeySecret": "<your-access-key-secret>",
-  "signName": "aliyun-sms",
+  "accessKeyId": "<access-key-id>",
+  "accessKeySecret": "<access-key-secret>",
+  "signName": "<sign-name>",
   "templates": [
     {
       "type": 0,
       "usageType": "SIGN_IN",
-      "code": "SMS_0001",
-      "name": "Sign-In",
+      "code": "<temporary-passcode>",
+      "name": "<sign-in-template-name>",
       "content": "<sign-in-template-content>",
-      "remark": "Sign-In"
+      "remark": "<sign-in-template-remark>"
     },
     {
       "type": 0,
       "usageType": "REGISTER",
-      "code": "SMS_0002",
-      "name": "Register",
+      "code": "<temporary-passcode>",
+      "name": "<register-template-name>",
       "content": "<register-template-content>",
-      "remark": "Register"
+      "remark": "<register-template-remark>"
     },
     {
       "type": 0,
       "usageType": "TEST",
-      "code": "SMS_0001",
-      "name": "Sign-In",
+      "code": "<temporary-passcode>",
+      "name": "<test-template-name>",
       "content": "<test-template-content>",
-      "remark": "Sign-In"
+      "remark": "<test-template-remark>"
     },
   ]
 }
