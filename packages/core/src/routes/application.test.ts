@@ -59,12 +59,29 @@ describe('application route', () => {
 
   it('POST /applications', async () => {
     const name = 'FooApplication';
+    const description = 'FooDescription';
+    const type = ApplicationType.Traditional;
+
+    const response = await applicationRequest
+      .post('/applications')
+      .send({ name, type, description });
+    expect(response.status).toEqual(200);
+    expect(response.body).toEqual({
+      ...mockApplicationDTO,
+      id: 'randomId',
+      name,
+      description,
+      type,
+    });
+  });
+
+  it('POST /applications with custom client metadata', async () => {
+    const name = 'FooApplication';
     const type = ApplicationType.Traditional;
 
     const response = await applicationRequest
       .post('/applications')
       .send({ name, type, customClientMetadata });
-
     expect(response.status).toEqual(200);
     expect(response.body).toEqual({
       ...mockApplicationDTO,
@@ -77,6 +94,7 @@ describe('application route', () => {
 
   it('POST /applications should throw with invalid input body', async () => {
     const name = 'FooApplication';
+    const description = 'FooDescription';
     const type = ApplicationType.Traditional;
 
     await expect(applicationRequest.post('/applications')).resolves.toHaveProperty('status', 400);
@@ -84,10 +102,10 @@ describe('application route', () => {
       applicationRequest.post('/applications').send({ customClientMetadata })
     ).resolves.toHaveProperty('status', 400);
     await expect(
-      applicationRequest.post('/applications').send({ name, customClientMetadata })
+      applicationRequest.post('/applications').send({ name, description, customClientMetadata })
     ).resolves.toHaveProperty('status', 400);
     await expect(
-      applicationRequest.post('/applications').send({ type, customClientMetadata })
+      applicationRequest.post('/applications').send({ type, description, customClientMetadata })
     ).resolves.toHaveProperty('status', 400);
     await expect(
       applicationRequest.post('/applications').send({
@@ -110,13 +128,18 @@ describe('application route', () => {
 
   it('PATCH /applications/:applicationId', async () => {
     const name = 'FooApplication';
+    const description = 'FooDescription';
 
     const response = await applicationRequest
       .patch('/applications/foo')
-      .send({ name, customClientMetadata });
-
+      .send({ name, description, customClientMetadata });
     expect(response.status).toEqual(200);
-    expect(response.body).toEqual({ ...mockApplicationDTO, name, customClientMetadata });
+    expect(response.body).toEqual({
+      ...mockApplicationDTO,
+      name,
+      description,
+      customClientMetadata,
+    });
   });
 
   it('PATCH /applications/:applicationId expect to throw with invalid properties', async () => {
