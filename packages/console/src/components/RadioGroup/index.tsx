@@ -14,14 +14,14 @@ import * as styles from './index.module.scss';
 type Props = {
   name: string;
   children: ReactNode;
-  value: string;
+  value?: string;
   type?: 'card' | 'plain';
   className?: string;
   onChange?: (value: string) => void;
 };
 
 const RadioGroup = (
-  { name, children, value, className, onChange, type = 'card' }: Props,
+  { name, children, value, className, onChange, type = 'plain' }: Props,
   reference?: LegacyRef<HTMLDivElement>
 ) => {
   return (

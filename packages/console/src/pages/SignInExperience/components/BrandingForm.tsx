@@ -48,11 +48,12 @@ const BrandingForm = ({ register, control, watch }: Props) => {
           control={control}
           defaultValue={BrandingStyle.Logo_Slogan}
           render={({ field: { onChange, value, name } }) => (
-            <RadioGroup value={value} name={name} type="plain" onChange={onChange}>
-              <Radio value={BrandingStyle.Logo_Slogan}>
-                {t('sign_in_exp.branding.styles.logo_slogan')}
-              </Radio>
-              <Radio value={BrandingStyle.Logo}>{t('sign_in_exp.branding.styles.logo')}</Radio>
+            <RadioGroup value={value} name={name} onChange={onChange}>
+              <Radio
+                value={BrandingStyle.Logo_Slogan}
+                title="sign_in_exp.branding.styles.logo_slogan"
+              />
+              <Radio value={BrandingStyle.Logo} title="sign_in_exp.branding.styles.logo" />
             </RadioGroup>
           )}
         />
