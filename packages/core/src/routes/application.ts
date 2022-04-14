@@ -52,15 +52,13 @@ export default function applicationRoutes<T extends AuthedRouter>(router: T) {
         .merge(Applications.createGuard.pick({ name: true, type: true })),
     }),
     async (ctx, next) => {
-      const { name, type, oidcClientMetadata, customClientMetadata } = ctx.guard.body;
+      const { oidcClientMetadata, ...rest } = ctx.guard.body;
 
       const [application, oidcConfig] = await Promise.all([
         insertApplication({
           id: applicationId(),
-          type,
-          name,
           oidcClientMetadata: buildOidcClientMetadata(oidcClientMetadata),
-          customClientMetadata,
+          ...rest,
         }),
         got(discoveryUrl).json<SnakeCaseOidcConfig>(),
       ]);
