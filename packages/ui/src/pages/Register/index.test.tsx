@@ -19,7 +19,7 @@ describe('<Register />', () => {
 
   test('renders phone', async () => {
     const { queryByText, container } = render(
-      <MemoryRouter initialEntries={['/register/phone']}>
+      <MemoryRouter initialEntries={['/register/sms']}>
         <Routes>
           <Route path="/register/:channel" element={<Register />} />
         </Routes>

@@ -15,9 +15,9 @@ export const register = async (username: string, password: string) => {
     .json<Response>();
 };
 
-export const sendPhonePasscode = async (phone: string) => {
+export const sendSmsPasscode = async (phone: string) => {
   return ky
-    .post('/api/session/register/passwordless/phone/send-passcode', {
+    .post('/api/session/register/passwordless/sms/send-passcode', {
       json: {
         phone,
       },
@@ -25,13 +25,13 @@ export const sendPhonePasscode = async (phone: string) => {
     .json();
 };
 
-export const verifyPhonePasscode = async (phone: string, passcode: string) => {
+export const verifySmsPasscode = async (phone: string, passcode: string) => {
   type Response = {
     redirectTo: string;
   };
 
   return ky
-    .post('/api/session/register/passwordless/phone/verify-passcode', {
+    .post('/api/session/register/passwordless/sms/verify-passcode', {
       json: {
         phone,
         passcode,

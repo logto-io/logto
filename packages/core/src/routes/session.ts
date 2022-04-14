@@ -76,7 +76,7 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
   );
 
   router.post(
-    '/session/sign-in/passwordless/phone/send-passcode',
+    '/session/sign-in/passwordless/sms/send-passcode',
     koaGuard({ body: object({ phone: string().regex(phoneRegEx) }) }),
     async (ctx, next) => {
       const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
@@ -98,7 +98,7 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
   );
 
   router.post(
-    '/session/sign-in/passwordless/phone/verify-passcode',
+    '/session/sign-in/passwordless/sms/verify-passcode',
     koaGuard({ body: object({ phone: string().regex(phoneRegEx), code: string() }) }),
     async (ctx, next) => {
       const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
@@ -345,7 +345,7 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
   );
 
   router.post(
-    '/session/register/passwordless/phone/send-passcode',
+    '/session/register/passwordless/sms/send-passcode',
     koaGuard({ body: object({ phone: string().regex(phoneRegEx) }) }),
     async (ctx, next) => {
       ctx.userLog.type = UserLogType.RegisterPhone;
@@ -367,7 +367,7 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
   );
 
   router.post(
-    '/session/register/passwordless/phone/verify-passcode',
+    '/session/register/passwordless/sms/verify-passcode',
     koaGuard({ body: object({ phone: string().regex(phoneRegEx), code: string() }) }),
     async (ctx, next) => {
       const { jti } = await provider.interactionDetails(ctx.req, ctx.res);

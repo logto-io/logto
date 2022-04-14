@@ -2,33 +2,33 @@ import { UserFlow } from '@/types';
 
 import {
   verifyEmailPasscode as verifyRegisterEmailPasscode,
-  verifyPhonePasscode as verifyRegisterPhonePasscode,
+  verifySmsPasscode as verifyRegisterSmsPasscode,
   sendEmailPasscode as sendRegisterEmailPasscode,
-  sendPhonePasscode as sendRegisterPhonePasscode,
+  sendSmsPasscode as sendRegisterSmsPasscode,
 } from './register';
 import {
   verifyEmailPasscode as verifySignInEmailPasscode,
-  verifyPhonePasscode as verifySignInPhonePasscode,
+  verifySmsPasscode as verifySignInSmsPasscode,
   sendEmailPasscode as sendSignInEmailPasscode,
-  sendPhonePasscode as sendSignInPhonePasscode,
+  sendSmsPasscode as sendSignInSmsPasscode,
 } from './sign-in';
 
-export type PasscodeChannel = 'phone' | 'email';
+export type PasscodeChannel = 'sms' | 'email';
 
 export const getSendPasscodeApi = (type: UserFlow, channel: PasscodeChannel) => {
   if (type === 'sign-in' && channel === 'email') {
     return sendSignInEmailPasscode;
   }
 
-  if (type === 'sign-in' && channel === 'phone') {
-    return sendSignInPhonePasscode;
+  if (type === 'sign-in' && channel === 'sms') {
+    return sendSignInSmsPasscode;
   }
 
   if (type === 'register' && channel === 'email') {
     return sendRegisterEmailPasscode;
   }
 
-  return sendRegisterPhonePasscode;
+  return sendRegisterSmsPasscode;
 };
 
 export const getVerifyPasscodeApi = (type: UserFlow, channel: PasscodeChannel) => {
@@ -36,13 +36,13 @@ export const getVerifyPasscodeApi = (type: UserFlow, channel: PasscodeChannel) =
     return verifySignInEmailPasscode;
   }
 
-  if (type === 'sign-in' && channel === 'phone') {
-    return verifySignInPhonePasscode;
+  if (type === 'sign-in' && channel === 'sms') {
+    return verifySignInSmsPasscode;
   }
 
   if (type === 'register' && channel === 'email') {
     return verifyRegisterEmailPasscode;
   }
 
-  return verifyRegisterPhonePasscode;
+  return verifyRegisterSmsPasscode;
 };

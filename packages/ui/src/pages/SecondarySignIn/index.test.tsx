@@ -18,7 +18,7 @@ describe('<SecondarySignIn />', () => {
 
   test('renders phone', async () => {
     const { queryByText, container } = render(
-      <MemoryRouter initialEntries={['/sign-in/phone']}>
+      <MemoryRouter initialEntries={['/sign-in/sms']}>
         <Routes>
           <Route path="/sign-in/:channel" element={<SecondarySignIn />} />
         </Routes>

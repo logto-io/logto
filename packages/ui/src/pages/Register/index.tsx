@@ -18,13 +18,13 @@ const Register = () => {
   const { channel = 'username' } = useParams<Parameters>();
 
   useEffect(() => {
-    if (channel !== 'email' && channel !== 'phone' && channel !== 'username') {
+    if (channel !== 'email' && channel !== 'sms' && channel !== 'username') {
       navigate('/404', { replace: true });
     }
   }, [channel, navigate]);
 
   const registerForm = useMemo(() => {
-    if (channel === 'phone') {
+    if (channel === 'sms') {
       return <PhonePasswordless type="register" />;
     }
 

@@ -16,7 +16,7 @@ import * as styles from './index.module.scss';
 
 type Props = {
   type: UserFlow;
-  channel: 'email' | 'phone';
+  channel: 'email' | 'sms';
   target: string;
   className?: string;
 };

@@ -2,14 +2,14 @@ import { fireEvent, render, waitFor } from '@testing-library/react';
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
 
-import { sendPhonePasscode as sendRegisterPhonePasscode } from '@/apis/register';
-import { sendPhonePasscode as sendSignInPhonePasscode } from '@/apis/sign-in';
+import { sendSmsPasscode as sendRegisterSmsPasscode } from '@/apis/register';
+import { sendSmsPasscode as sendSignInSmsPasscode } from '@/apis/sign-in';
 import { defaultCountryCallingCode } from '@/hooks/use-phone-number';
 
 import PhonePasswordless from './PhonePasswordless';
 
-jest.mock('@/apis/sign-in', () => ({ sendPhonePasscode: jest.fn(async () => Promise.resolve()) }));
-jest.mock('@/apis/register', () => ({ sendPhonePasscode: jest.fn(async () => Promise.resolve()) }));
+jest.mock('@/apis/sign-in', () => ({ sendSmsPasscode: jest.fn(async () => Promise.resolve()) }));
+jest.mock('@/apis/register', () => ({ sendSmsPasscode: jest.fn(async () => Promise.resolve()) }));
 jest.mock('@/hooks/page-context', () =>
   React.createContext({
     loading: false,
@@ -41,7 +41,7 @@ describe('<PhonePasswordless/>', () => {
 
     fireEvent.click(submitButton);
     expect(queryByText('invalid_phone')).not.toBeNull();
-    expect(sendSignInPhonePasscode).not.toBeCalled();
+    expect(sendSignInSmsPasscode).not.toBeCalled();
 
     const phoneInput = container.querySelector('input[name="phone"]');
 
@@ -91,7 +91,7 @@ describe('<PhonePasswordless/>', () => {
       fireEvent.click(submitButton);
     });
 
-    expect(sendSignInPhonePasscode).toBeCalledWith(`${defaultCountryCallingCode}${phoneNumber}`);
+    expect(sendSignInSmsPasscode).toBeCalledWith(`${defaultCountryCallingCode}${phoneNumber}`);
   });
 
   test('register method properly', async () => {
@@ -114,6 +114,6 @@ describe('<PhonePasswordless/>', () => {
       fireEvent.click(submitButton);
     });
 
-    expect(sendRegisterPhonePasscode).toBeCalledWith(`${defaultCountryCallingCode}${phoneNumber}`);
+    expect(sendRegisterSmsPasscode).toBeCalledWith(`${defaultCountryCallingCode}${phoneNumber}`);
   });
 });

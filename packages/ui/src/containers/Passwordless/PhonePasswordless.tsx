@@ -49,7 +49,7 @@ const PhonePasswordless = ({ type }: Props) => {
 
   const { phoneNumber, setPhoneNumber, isValidPhoneNumber } = usePhoneNumber();
 
-  const sendPasscode = getSendPasscodeApi(type, 'phone');
+  const sendPasscode = getSendPasscodeApi(type, 'sms');
   const { error, result, run: asyncSendPasscode } = useApi(sendPasscode);
 
   const validations = useMemo<FieldValidations>(
@@ -99,7 +99,7 @@ const PhonePasswordless = ({ type }: Props) => {
     console.log(result);
 
     if (result) {
-      navigate(`/${type}/phone/passcode-validation`, { state: { phone: fieldState.phone } });
+      navigate(`/${type}/sms/passcode-validation`, { state: { phone: fieldState.phone } });
     }
   }, [fieldState.phone, navigate, result, type]);
 

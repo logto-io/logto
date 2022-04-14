@@ -16,7 +16,7 @@ type Parameters = {
 
 type StateType = Nullable<{
   email?: string;
-  phone?: string;
+  sms?: string;
 }>;
 
 const Passcode = () => {
@@ -25,7 +25,7 @@ const Passcode = () => {
   const { channel, type } = useParams<Parameters>();
   const state = useLocation().state as StateType;
   const invalidSignInMethod = type !== 'sign-in' && type !== 'register';
-  const invalidChannel = channel !== 'email' && channel !== 'phone';
+  const invalidChannel = channel !== 'email' && channel !== 'sms';
 
   useEffect(() => {
     if (invalidSignInMethod || invalidChannel) {
