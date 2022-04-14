@@ -1,6 +1,6 @@
 import { SignInExperience as SignInExperienceType } from '@logto/schemas';
 import React, { useEffect } from 'react';
-import { useForm } from 'react-hook-form';
+import { FormProvider, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
@@ -21,14 +21,12 @@ const SignInExperience = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { tab } = useParams();
   const { data, error, mutate } = useSWR<SignInExperienceType, RequestError>('/api/sign-in-exp');
+  const methods = useForm<SignInExperienceType>();
   const {
     reset,
-    control,
     handleSubmit,
-    register,
-    watch,
     formState: { isSubmitting },
-  } = useForm<SignInExperienceType>();
+  } = methods;
   const api = useApi();
 
   useEffect(() => {
@@ -72,20 +70,24 @@ const SignInExperience = () => {
           {!data && !error && <div>loading</div>}
           {error && <div>{`error occurred: ${error.body.message}`}</div>}
           {data && (
-            <form onSubmit={onSubmit}>
-              {tab === 'experience' && (
-                <BrandingForm register={register} control={control} watch={watch} />
-              )}
-              {tab === 'experience' && <TermsForm register={register} watch={watch} />}
-              <div className={detailsStyles.footer}>
-                <Button
-                  disabled={isSubmitting}
-                  type="primary"
-                  htmlType="submit"
-                  title="general.save_changes"
-                />
-              </div>
-            </form>
+            <FormProvider {...methods}>
+              <form onSubmit={onSubmit}>
+                {tab === 'experience' && (
+                  <>
+                    <BrandingForm />
+                    <TermsForm />
+                  </>
+                )}
+                <div className={detailsStyles.footer}>
+                  <Button
+                    disabled={isSubmitting}
+                    type="primary"
+                    htmlType="submit"
+                    title="general.save_changes"
+                  />
+                </div>
+              </form>
+            </FormProvider>
           )}
         </Card>
       </div>
