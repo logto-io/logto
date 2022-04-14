@@ -165,6 +165,7 @@ importers:
       '@types/node': ^16.3.1
       '@types/oidc-provider': ^7.8.0
       '@types/supertest': ^2.0.11
+      camelcase-keys: ^7.0.2
       copyfiles: ^2.4.1
       dayjs: ^1.10.5
       decamelize: ^5.0.0
@@ -206,6 +207,7 @@ importers:
       '@logto/phrases': link:../phrases
       '@logto/schemas': link:../schemas
       '@silverhand/essentials': 1.1.2
+      camelcase-keys: 7.0.2
       dayjs: 1.10.7
       decamelize: 5.0.1
       dotenv: 10.0.0
@@ -315,7 +317,7 @@ importers:
     specifiers:
       '@logto/phrases': ^0.1.0
       '@silverhand/eslint-config': ^0.10.2
-      '@silverhand/essentials': ^1.1.0
+      '@silverhand/essentials': ^1.1.6
       '@silverhand/ts-config': ^0.10.2
       '@types/lodash.uniq': ^4.5.6
       '@types/node': '14'
@@ -334,7 +336,7 @@ importers:
       zod: 3.14.3
     devDependencies:
       '@silverhand/eslint-config': 0.10.2_3a533fa6cc3da0cf8525ef55d41c4384
-      '@silverhand/essentials': 1.1.2
+      '@silverhand/essentials': 1.1.7
       '@silverhand/ts-config': 0.10.2_typescript@4.6.2
       '@types/lodash.uniq': 4.5.6
       '@types/node': 14.18.0
@@ -5260,6 +5262,7 @@ packages:
     dependencies:
       lodash.orderby: 4.6.0
       lodash.pick: 4.4.0
+    dev: false
 
   /@silverhand/essentials/1.1.4:
     resolution: {integrity: sha512-5pHjIz42CjILcqGWhmfP7/RCbmlWIWmj0H3RMJDGW3QKZyNkWawG6gKwtEQ75N0MoZOzXjNE4HD4DK3moPa5sg==}
@@ -5283,7 +5286,6 @@ packages:
     dependencies:
       lodash.orderby: 4.6.0
       lodash.pick: 4.4.0
-    dev: false
 
   /@silverhand/ts-config-react/0.10.3_typescript@4.6.2:
     resolution: {integrity: sha512-xGOwcw1HTixfP3PSSdJT3leGnlUV0dLna9xp58bDDLul7UCnIn+PNp1VNJxUZ/HvtKbV4ZSYdGsGE6Xqmwn7Ag==}
@@ -7374,7 +7376,6 @@ packages:
   /camelcase/6.3.0:
     resolution: {integrity: sha512-Gmy6FhYlCY7uOElZUSbxo2UCDH8owEk996gkbrpsgGtrJLM3J7jGxl9Ic7Qwwj4ivOE5AWZWRMecDdF7hqGjFA==}
     engines: {node: '>=10'}
-    dev: false
 
   /caniuse-api/3.0.0:
     resolution: {integrity: sha512-bsTwuIg/BZZK/vreVTYYbSWoe2F+71P7K5QGEX+pT250DZbfU1MQ5prOKpPR+LL6uWKK3KMwMCAS74QB3Um1uw==}
@@ -11898,7 +11899,7 @@ packages:
     engines: {node: ^10.13.0 || ^12.13.0 || ^14.15.0 || >=15.0.0}
     dependencies:
       '@jest/types': 27.5.1
-      camelcase: 6.2.1
+      camelcase: 6.3.0
       chalk: 4.1.2
       jest-get-type: 27.5.1
       leven: 3.1.0

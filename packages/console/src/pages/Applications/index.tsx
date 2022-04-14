@@ -1,4 +1,4 @@
-import { Application } from '@logto/schemas';
+import { ApplicationDTO } from '@logto/schemas';
 import classNames from 'classnames';
 import React, { useState } from 'react';
 import { toast } from 'react-hot-toast';
@@ -33,7 +33,7 @@ const Applications = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const [query, setQuery] = useSearchParams();
   const pageIndex = Number(query.get('page') ?? '1');
-  const { data, error, mutate } = useSWR<[Application[], number], RequestError>(
+  const { data, error, mutate } = useSWR<[ApplicationDTO[], number], RequestError>(
     `/api/applications?page=${pageIndex}&page_size=${pageSize}`
   );
   const isLoading = !data && !error;

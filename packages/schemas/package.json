@@ -23,7 +23,7 @@
   },
   "devDependencies": {
     "@silverhand/eslint-config": "^0.10.2",
-    "@silverhand/essentials": "^1.1.0",
+    "@silverhand/essentials": "^1.1.6",
     "@silverhand/ts-config": "^0.10.2",
     "@types/lodash.uniq": "^4.5.6",
     "@types/node": "14",
