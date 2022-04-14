@@ -3,7 +3,7 @@ import React, { ReactNode } from 'react';
 import ReactModal from 'react-modal';
 
 import { ClearIcon } from '@/components/Icons';
-import modalStyles from '@/scss/modal.module.scss';
+import * as modalStyles from '@/scss/modal.module.scss';
 
 import * as styles from './index.module.scss';
 
