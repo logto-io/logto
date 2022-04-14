@@ -7,6 +7,8 @@
   .setup {
     flex: 1;
     margin-right: _.unit(3);
+    height: 100%;
+    overflow-y: auto;
 
     .tabs {
       padding-top: _.unit(2);

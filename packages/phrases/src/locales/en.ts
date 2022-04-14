@@ -328,12 +328,15 @@ const translation = {
       branding: {
         title: 'BRANDING',
         primary_color: 'Primary color',
-        dark_mode: 'Enable dark mode',
+        dark_primary_color: 'Primary color (Dark)',
+        dark_mode: 'Enable Dark Mode',
         dark_mode_description:
           'Enabling this setting will auto generate the dark mode color. You app won’t have dark mode if it’s turned off.',
         ui_style: 'Define your UI style',
-        app_logo: 'App Logo',
-        text: 'Text',
+        styles: {
+          logo_slogan: 'Logo + slogan',
+          logo: 'Logo',
+        },
         logo_image_url: 'Logo image URL',
         slogan: 'Slogan',
         slogan_placeholder: 'Unleash your creativity',
