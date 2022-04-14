@@ -312,11 +312,20 @@ describe('sessionRoutes', () => {
   });
 
   describe('POST /session/sign-in/social', () => {
-    it('sign-in with social and redirect', async () => {
+    it('should throw when redirectURI is invalid', async () => {
       const response = await sessionRequest.post('/session/sign-in/social').send({
         connectorId: 'social_enabled',
         state: 'state',
         redirectUri: 'logto.dev',
+      });
+      expect(response.statusCode).toEqual(400);
+    });
+
+    it('sign-in with social and redirect', async () => {
+      const response = await sessionRequest.post('/session/sign-in/social').send({
+        connectorId: 'social_enabled',
+        state: 'state',
+        redirectUri: 'https://logto.dev',
       });
       expect(response.body).toHaveProperty('redirectTo', '');
     });
@@ -324,7 +333,7 @@ describe('sessionRoutes', () => {
     it('throw error when sign-in with social but miss state', async () => {
       const response = await sessionRequest.post('/session/sign-in/social').send({
         connectorId: 'social_enabled',
-        redirectUri: 'logto.dev',
+        redirectUri: 'https://logto.dev',
       });
       expect(response.statusCode).toEqual(400);
     });
@@ -341,7 +350,7 @@ describe('sessionRoutes', () => {
       const response = await sessionRequest.post('/session/sign-in/social').send({
         connectorId: 'social_disabled',
         state: 'state',
-        redirectUri: 'logto.dev',
+        redirectUri: 'https://logto.dev',
       });
       expect(response.statusCode).toEqual(400);
     });
@@ -350,7 +359,7 @@ describe('sessionRoutes', () => {
       const response = await sessionRequest.post('/session/sign-in/social').send({
         connectorId: 'others',
         state: 'state',
-        redirectUri: 'logto.dev',
+        redirectUri: 'https://logto.dev',
       });
       expect(response.statusCode).toEqual(404);
     });
@@ -359,7 +368,7 @@ describe('sessionRoutes', () => {
       const response = await sessionRequest.post('/session/sign-in/social').send({
         connectorId: 'connectorId',
         state: 'state',
-        redirectUri: 'logto.dev',
+        redirectUri: 'https://logto.dev',
         code: '123455',
       });
       expect(response.statusCode).toEqual(500);
@@ -369,7 +378,7 @@ describe('sessionRoutes', () => {
       const response = await sessionRequest.post('/session/sign-in/social').send({
         connectorId: '_connectorId',
         state: 'state',
-        redirectUri: 'logto.dev',
+        redirectUri: 'https://logto.dev',
         code: '123456',
       });
       expect(response.statusCode).toEqual(422);
@@ -379,7 +388,7 @@ describe('sessionRoutes', () => {
       const response = await sessionRequest.post('/session/sign-in/social').send({
         connectorId: 'connectorId',
         state: 'state',
-        redirectUri: 'logto.dev',
+        redirectUri: 'https://logto.dev',
         code: '123456',
       });
       expect(updateUserById).toHaveBeenCalledWith(
@@ -401,7 +410,7 @@ describe('sessionRoutes', () => {
       const response = await sessionRequest.post('/session/sign-in/social').send({
         connectorId: '_connectorId_',
         state: 'state',
-        redirectUri: 'logto.dev',
+        redirectUri: 'https://logto.dev',
         code: '123456',
       });
       expect(interactionResult).toHaveBeenCalledWith(

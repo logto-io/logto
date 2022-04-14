@@ -68,6 +68,7 @@ export type TemplateType = PasscodeType | 'Test';
 export enum ConnectorErrorCodes {
   General,
   InvalidConfig,
+  InvalidResponse,
   TemplateNotFound,
   SocialAuthCodeInvalid,
   SocialAccessTokenInvalid,

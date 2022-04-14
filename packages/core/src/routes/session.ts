@@ -32,7 +32,13 @@ import {
   findUserByIdentity,
 } from '@/queries/user';
 import assertThat from '@/utils/assert-that';
-import { emailRegEx, passwordRegEx, phoneRegEx, usernameRegEx } from '@/utils/regex';
+import {
+  redirectUriRegEx,
+  emailRegEx,
+  passwordRegEx,
+  phoneRegEx,
+  usernameRegEx,
+} from '@/utils/regex';
 
 import { AnonymousRouter } from './types';
 
@@ -174,7 +180,7 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
         connectorId: string(),
         code: string().optional(),
         state: string(),
-        redirectUri: string(),
+        redirectUri: string().regex(redirectUriRegEx),
       }),
     }),
     async (ctx, next) => {

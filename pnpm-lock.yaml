@@ -172,6 +172,7 @@ importers:
       eslint: ^8.10.0
       got: ^11.8.2
       i18next: ^20.3.5
+      iconv-lite: 0.6.3
       jest: ^27.5.1
       jest-matcher-specific-error: ^1.0.0
       jose: ^3.14.3
@@ -210,6 +211,7 @@ importers:
       dotenv: 10.0.0
       got: 11.8.3
       i18next: 20.6.1
+      iconv-lite: 0.6.3
       jose: 3.20.3
       koa: 2.13.4
       koa-body: 4.2.0
@@ -10816,8 +10818,6 @@ packages:
     engines: {node: '>=0.10.0'}
     dependencies:
       safer-buffer: 2.1.2
-    dev: true
-    optional: true
 
   /icss-replace-symbols/1.1.0:
     resolution: {integrity: sha1-Bupvg2ead0njhs/h/oEq5dsiPe0=}

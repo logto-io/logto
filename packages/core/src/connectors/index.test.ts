@@ -11,6 +11,13 @@ import {
 } from '@/connectors/index';
 import RequestError from '@/errors/RequestError';
 
+const alipayConnector = {
+  id: 'alipay',
+  type: ConnectorType.Social,
+  enabled: true,
+  config: {},
+  createdAt: 1_646_382_233_911,
+};
 const aliyunDmConnector = {
   id: 'aliyun-dm',
   type: ConnectorType.Email,
@@ -62,6 +69,7 @@ const wechatNativeConnector = {
 };
 
 const connectors = [
+  alipayConnector,
   aliyunDmConnector,
   aliyunSmsConnector,
   facebookConnector,
@@ -95,12 +103,13 @@ describe('getConnectorInstances', () => {
   test('should return the connectors existing in DB', async () => {
     const connectorInstances = await getConnectorInstances();
     expect(connectorInstances).toHaveLength(connectorInstances.length);
-    expect(connectorInstances[0]).toHaveProperty('connector', aliyunDmConnector);
-    expect(connectorInstances[1]).toHaveProperty('connector', aliyunSmsConnector);
-    expect(connectorInstances[2]).toHaveProperty('connector', facebookConnector);
-    expect(connectorInstances[3]).toHaveProperty('connector', githubConnector);
-    expect(connectorInstances[4]).toHaveProperty('connector', googleConnector);
-    expect(connectorInstances[5]).toHaveProperty('connector', wechatConnector);
+    expect(connectorInstances[0]).toHaveProperty('connector', alipayConnector);
+    expect(connectorInstances[1]).toHaveProperty('connector', aliyunDmConnector);
+    expect(connectorInstances[2]).toHaveProperty('connector', aliyunSmsConnector);
+    expect(connectorInstances[3]).toHaveProperty('connector', facebookConnector);
+    expect(connectorInstances[4]).toHaveProperty('connector', githubConnector);
+    expect(connectorInstances[5]).toHaveProperty('connector', googleConnector);
+    expect(connectorInstances[6]).toHaveProperty('connector', wechatConnector);
   });
 
   test('should throw if any required connector does not exist in DB', async () => {
@@ -152,7 +161,7 @@ describe('getSocialConnectorInstanceById', () => {
 describe('getEnabledSocialConnectorIds', () => {
   test('should return the enabled social connectors existing in DB', async () => {
     const enabledSocialConnectorIds = await getEnabledSocialConnectorIds();
-    expect(enabledSocialConnectorIds).toEqual(['facebook', 'github']);
+    expect(enabledSocialConnectorIds).toEqual(['alipay', 'facebook', 'github']);
   });
 });
 
