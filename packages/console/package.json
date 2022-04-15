@@ -12,7 +12,7 @@
     "start": "pnpm copyfiles && parcel src/index.html",
     "dev": "pnpm copyfiles && PORT=5002 parcel src/index.html --public-url /console --no-cache --hmr-port 6002",
     "check": "tsc --noEmit",
-    "build": "pnpm check && rm -rf dist && pnpm copyfiles && parcel build src/index.html --no-autoinstall --public-url /console",
+    "build": "pnpm check && rm -rf dist && pnpm copyfiles && parcel build src/index.html --no-autoinstall --no-cache --public-url /console",
     "lint": "eslint --ext .ts --ext .tsx src",
     "lint:report": "pnpm lint -- --format json --output-file report.json",
     "stylelint": "stylelint \"src/**/*.scss\""
