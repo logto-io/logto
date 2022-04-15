@@ -3,6 +3,7 @@
 export * from './custom-types';
 export * from './application';
 export * from './connector';
+export * from './log';
 export * from './oidc-model-instance';
 export * from './passcode';
 export * from './resource';
