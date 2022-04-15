@@ -110,8 +110,8 @@ export const termsOfUseGuard = z.object({
 export type TermsOfUse = z.infer<typeof termsOfUseGuard>;
 
 export enum Language {
-  english = 'en',
-  chinese = 'zh-cn',
+  English = 'en',
+  Chinese = 'zh-cn',
 }
 
 export const languageInfoGuard = z.object({
@@ -130,9 +130,9 @@ export enum SignInMethodKey {
 }
 
 export enum SignInMethodState {
-  primary = 'primary',
-  secondary = 'secondary',
-  disabled = 'disabled',
+  Primary = 'primary',
+  Secondary = 'secondary',
+  Disabled = 'disabled',
 }
 
 export const signInMethodsGuard = z.object({
