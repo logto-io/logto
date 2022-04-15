@@ -1,5 +1,5 @@
 create table sign_in_experiences (
-  id varchar(128) not null,
+  id varchar(21) not null,
   branding jsonb /* @use Branding */ not null default '{}'::jsonb,
   language_info jsonb /* @use LanguageInfo */ not null default '{}'::jsonb,
   terms_of_use jsonb /* @use TermsOfUse */ not null default '{}'::jsonb,
