@@ -1,0 +1,48 @@
+@use '@/scss/underscore' as _;
+
+.select {
+  background: var(--color-layer-1);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  outline: 3px solid transparent;
+  transition-property: outline, border;
+  transition-timing-function: ease-in-out;
+  transition-duration: 0.2s;
+  padding: _.unit(2) _.unit(5) _.unit(2) _.unit(3);
+  font: var(--font-body-medium);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  &.open {
+    border-color: var(--color-primary);
+    outline-color: var(--color-focused-variant);
+  }
+
+  &.readOnly {
+    background: var(--color-inverse-on-surface);
+    color: var(--color-text);
+    border-color: var(--color-border);
+    cursor: default;
+  }
+
+  &.error {
+    border-color: var(--color-error);
+
+    &.open {
+      outline-color: var(--color-error-80);
+    }
+  }
+
+  .arrow {
+    position: absolute;
+    right: _.unit(2);
+    top: 6px;
+
+    svg {
+      fill: var(--color-icon);
+    }
+  }
+}

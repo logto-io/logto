@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import React from 'react';
 
-import * as styles from './ActionMenuItem.module.scss';
+import * as styles from './DropdownItem.module.scss';
 
 type Props = {
   onClick?: () => void;
@@ -10,7 +10,7 @@ type Props = {
   type?: 'default' | 'danger';
 };
 
-const ActionMenuItem = ({ onClick, children, icon, type = 'default' }: Props) => (
+const DropdownItem = ({ onClick, children, icon, type = 'default' }: Props) => (
   <li
     className={classNames(styles.item, styles[type])}
     onClick={() => {
@@ -22,4 +22,4 @@ const ActionMenuItem = ({ onClick, children, icon, type = 'default' }: Props) =>
   </li>
 );
 
-export default ActionMenuItem;
+export default DropdownItem;

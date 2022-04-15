@@ -1,0 +1,29 @@
+@use '@/scss/underscore' as _;
+
+.content {
+  background: var(--color-layer-1);
+  box-shadow: var(--shadow-light-s2);
+  border-radius: _.unit(2);
+  position: absolute;
+
+  &:focus {
+    outline: none;
+  }
+
+  .title {
+    padding: _.unit(4) _.unit(4) 0 _.unit(4);
+    font: var(--font-body-medium);
+    color: var(--color-caption);
+  }
+}
+
+.overlay {
+  background: transparent;
+  position: fixed;
+  inset: 0;
+}
+
+ul.list {
+  margin: 0;
+  padding: _.unit(2);
+}
