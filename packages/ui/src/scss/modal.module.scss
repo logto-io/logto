@@ -29,7 +29,7 @@
 :global {
   .ReactModal__Content[role='popup'] {
     transform: translateY(100%);
-    transition: transform 300ms ease-in-out;
+    transition: transform 0.3 ease-in-out;
   }
 
   /* stylelint-disable selector-class-pattern */
