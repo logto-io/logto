@@ -16,9 +16,12 @@ describe('koaErrorHandler middleware', () => {
   const next = jest.fn().mockReturnValue(Promise.resolve());
 
   beforeEach(() => {
-    jest.clearAllMocks();
     ctx.body = mockBody;
     ctx.status = 200;
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
   });
 
   it('expect to return error response if error type is RequestError', async () => {
