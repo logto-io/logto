@@ -1,0 +1,34 @@
+@use '@/scss/underscore' as _;
+
+.container {
+  overflow-y: auto;
+  height: 100vh;
+
+  .wrapper {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--color-layer-1);
+    color: var(--color-text);
+    padding: _.unit(6);
+    width: 858px;
+    min-height: 100%;
+    margin: 0 auto;
+
+    > *:not(:first-child) {
+      margin-top: _.unit(6);
+    }
+
+    img {
+      height: 300px;
+    }
+
+    img,
+    h2 {
+      margin: 0 auto;
+    }
+
+    details {
+      white-space: pre-wrap;
+    }
+  }
+}
