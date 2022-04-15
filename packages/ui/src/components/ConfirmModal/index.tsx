@@ -4,12 +4,12 @@ import { TFuncKey, useTranslation } from 'react-i18next';
 import ReactModal from 'react-modal';
 
 import Button from '@/components/Button';
-import * as modalStyles from '@/scss/modal.module.scss';
 
+import * as modalStyles from '../../scss/modal.module.scss';
 import * as styles from './index.module.scss';
 
 type Props = {
-  classname?: string;
+  className?: string;
   isOpen?: boolean;
   children: ReactNode;
   cancelText?: TFuncKey<'translation', 'main_flow'>;
@@ -19,7 +19,7 @@ type Props = {
 };
 
 const ConfirmModal = ({
-  classname,
+  className,
   isOpen = false,
   children,
   cancelText = 'action.cancel',
@@ -33,7 +33,7 @@ const ConfirmModal = ({
     <ReactModal
       role="dialog"
       isOpen={isOpen}
-      className={classNames(modalStyles.modal, classname)}
+      className={classNames(modalStyles.modal, className)}
       overlayClassName={modalStyles.overlay}
       parentSelector={() => document.querySelector('main') ?? document.body}
     >

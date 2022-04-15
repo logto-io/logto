@@ -3,7 +3,7 @@ import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 
-import NavArrowIcon from '@/components/Icons/NavArrowIcon';
+import { NavArrowIcon } from '@/components/Icons';
 import PasscodeValidation from '@/containers/PasscodeValidation';
 import { UserFlow } from '@/types';
 

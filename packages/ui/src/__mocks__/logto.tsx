@@ -4,27 +4,37 @@ export const socialConnectors = [
   {
     id: 'github',
     logo: 'https://user-images.githubusercontent.com/5717882/156983224-7ea0296b-38fa-419d-9515-67e8a9612e09.png',
-    name: 'GitHub',
+    name: {
+      en: 'Sign in with GitHub',
+    },
   },
   {
     id: 'alipay',
     logo: 'https://user-images.githubusercontent.com/5717882/156983224-7ea0296b-38fa-419d-9515-67e8a9612e09.png',
-    name: 'alipay',
+    name: {
+      en: 'Sign in with Alipay',
+    },
   },
   {
     id: 'wechat',
     logo: 'https://user-images.githubusercontent.com/5717882/156983224-7ea0296b-38fa-419d-9515-67e8a9612e09.png',
-    name: 'wechat',
+    name: {
+      en: 'Sign in with WeChat',
+    },
   },
   {
     id: 'google',
     logo: 'https://user-images.githubusercontent.com/5717882/156983224-7ea0296b-38fa-419d-9515-67e8a9612e09.png',
-    name: 'google',
+    name: {
+      en: 'Sign in with Google',
+    },
   },
   {
     id: 'facebook',
     logo: 'https://user-images.githubusercontent.com/5717882/156983224-7ea0296b-38fa-419d-9515-67e8a9612e09.png',
-    name: 'Meta',
+    name: {
+      en: 'Sign in with Meta',
+    },
   },
 ];
 

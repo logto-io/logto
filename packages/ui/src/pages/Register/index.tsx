@@ -2,7 +2,7 @@ import React, { useMemo, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import NavArrowIcon from '@/components/Icons/NavArrowIcon';
+import { NavArrowIcon } from '@/components/Icons';
 import CreateAccount from '@/containers/CreateAccount';
 import { PhonePasswordless, EmailPasswordless } from '@/containers/Passwordless';
 
