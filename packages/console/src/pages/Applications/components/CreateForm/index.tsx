@@ -95,10 +95,11 @@ const CreateForm = ({ onClose }: Props) => {
     >
       <form>
         <FormField title="admin_console.applications.select_application_type">
-          <RadioGroup ref={ref} name={name} value={value} onChange={onChange}>
+          <RadioGroup ref={ref} name={name} value={value} type="card" onChange={onChange}>
             {Object.values(ApplicationType).map((value) => (
-              <Radio key={value} title={t(`${applicationTypeI18nKey[value]}.title`)} value={value}>
+              <Radio key={value} value={value}>
                 <TypeDescription
+                  title={t(`${applicationTypeI18nKey[value]}.title`)}
                   subtitle={t(`${applicationTypeI18nKey[value]}.subtitle`)}
                   description={t(`${applicationTypeI18nKey[value]}.description`)}
                 />

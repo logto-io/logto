@@ -15,16 +15,17 @@ type Props = {
   name: string;
   children: ReactNode;
   value?: string;
+  type?: 'card' | 'plain';
   className?: string;
   onChange?: (value: string) => void;
 };
 
 const RadioGroup = (
-  { name, children, value, className, onChange }: Props,
+  { name, children, value, className, onChange, type = 'plain' }: Props,
   reference?: LegacyRef<HTMLDivElement>
 ) => {
   return (
-    <div ref={reference} className={classNames(styles.radioGroup, className)}>
+    <div ref={reference} className={classNames(styles.radioGroup, styles[type], className)}>
       {Children.map(children, (child) => {
         if (!isValidElement(child) || child.type !== Radio) {
           return child;
@@ -37,6 +38,7 @@ const RadioGroup = (
             onChange?.(child.props.value);
           },
           tabIndex: 0,
+          type,
         });
       })}
     </div>

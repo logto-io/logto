@@ -1,5 +1,7 @@
+import { AdminConsoleKey } from '@logto/phrases';
 import classNames from 'classnames';
 import React, { KeyboardEventHandler, ReactNode, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import * as styles from './index.module.scss';
 
@@ -18,12 +20,13 @@ const Check = () => (
 export type Props = {
   className?: string;
   value: string;
-  title?: string;
+  title?: AdminConsoleKey;
   name?: string;
   children?: ReactNode;
   isChecked?: boolean;
   onClick?: () => void;
   tabIndex?: number;
+  type?: 'card' | 'plain';
 };
 
 const Radio = ({
@@ -35,7 +38,10 @@ const Radio = ({
   isChecked,
   onClick,
   tabIndex,
+  type,
 }: Props) => {
+  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+
   const handleKeyPress: KeyboardEventHandler<HTMLDivElement> = useCallback(
     (event) => {
       if ([' ', 'Enter'].includes(event.key)) {
@@ -54,13 +60,10 @@ const Radio = ({
       onKeyPress={handleKeyPress}
     >
       <input readOnly disabled type="radio" name={name} value={value} checked={isChecked} />
-      {title && (
-        <div className={classNames(styles.headline, !children && styles.center)}>
-          <div className={styles.title}>{title}</div>
-        </div>
-      )}
-      <Check />
+      {type === 'card' && <Check />}
       {children}
+      {type === 'plain' && <div className={styles.indicator} />}
+      {title && t(title)}
     </div>
   );
 };

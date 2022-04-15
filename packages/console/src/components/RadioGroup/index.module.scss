@@ -1,72 +1,96 @@
 @use '@/scss/underscore' as _;
 
 .radioGroup {
-  display: flex;
-  flex-wrap: wrap;
-  margin: 0 _.unit(-8) _.unit(-8) 0;
+  input[type='radio'] {
+    appearance: none;
+    position: absolute;
+    margin: 0;
+    width: 0;
+    height: 0;
+  }
 
-  > .radio {
-    position: relative;
-    flex: 1;
-    min-width: 180px;
-    max-width: 220px;
-    padding: _.unit(5);
+  &.card {
     display: flex;
-    flex-direction: column;
-    border-radius: _.unit(4);
-    border: 1px solid var(--color-neutral-90);
-    outline: none;
-    user-select: none;
-    cursor: pointer;
-    transition: border 0.2s ease-in-out;
-    margin: 0 _.unit(8) _.unit(8) 0;
+    flex-wrap: wrap;
+    margin: 0 _.unit(-8) _.unit(-8) 0;
 
-    &:focus,
-    &:hover {
-      border-color: var(--color-primary);
-    }
+    > .radio {
+      position: relative;
+      flex: 1;
+      min-width: 180px;
+      max-width: 220px;
+      padding: _.unit(5);
+      display: flex;
+      flex-direction: column;
+      border-radius: _.unit(4);
+      border: 1px solid transparent;
+      outline: 1px solid var(--color-neutral-90);
+      user-select: none;
+      cursor: pointer;
+      margin: 0 _.unit(8) _.unit(8) 0;
 
-    svg {
-      opacity: 0%;
-      position: absolute;
-      right: _.unit(5);
-      top: _.unit(5);
-    }
-
-    &.checked {
-      border-color: var(--color-primary);
-      outline: 1px solid var(--color-primary);
+      &:focus,
+      &:hover {
+        outline: 1px solid var(--color-primary);
+        box-shadow: var(--shadow-light-s2);
+      }
 
       svg {
-        opacity: 100%;
+        opacity: 0%;
+        position: absolute;
+        right: _.unit(5);
+        top: _.unit(5);
+      }
+
+      &.checked {
+        border-color: var(--color-primary);
+        outline: 1px solid var(--color-primary);
+
+        svg {
+          opacity: 100%;
+        }
       }
     }
+  }
 
-    .headline {
-      flex: 1;
+  &.plain {
+    font: var(--font-body-medium);
+
+    > .radio {
       display: flex;
-      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
 
-      &.center {
-        align-items: center;
+      &:not(:last-child) {
+        margin-bottom: _.unit(2);
       }
 
-      > *:not(:first-child) {
-        margin-left: _.unit(3);
+      .indicator {
+        border-radius: 50%;
+        border: 2px solid var(--color-neutral-60);
+        display: inline-block;
+        margin-right: _.unit(2);
+
+        &::before {
+          content: '';
+          background: var(--color-layer-1);
+          width: 10px;
+          height: 10px;
+          display: block;
+          border-radius: 50%;
+          border: 2px solid var(--color-layer-1);
+        }
       }
-    }
 
-    .title {
-      font: var(--font-subhead-2);
-      color: var(--color-text);
-    }
+      &.checked {
+        .indicator {
+          border-color: var(--color-primary);
 
-    input[type='radio'] {
-      appearance: none;
-      position: absolute;
-      margin: 0;
-      width: 0;
-      height: 0;
+          &::before {
+            background: var(--color-primary);
+          }
+        }
+      }
     }
   }
 }

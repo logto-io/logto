@@ -39,10 +39,13 @@ const LibrarySelector = ({
           className={styles.radioGroup}
           name="libraryName"
           value={libraryName}
+          type="card"
           onChange={onChange}
         >
           {Object.values(SupportedJavascriptLibraries).map((library) => (
-            <Radio key={library} className={styles.radio} title={library} value={library} />
+            <Radio key={library} className={styles.radio} value={library}>
+              {library}
+            </Radio>
           ))}
         </RadioGroup>
         <div className={styles.buttonWrapper}>
