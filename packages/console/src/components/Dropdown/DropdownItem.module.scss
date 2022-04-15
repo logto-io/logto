@@ -1,12 +1,14 @@
 @use '@/scss/underscore' as _;
 
 .item {
-  padding: _.unit(2) _.unit(4);
+  padding: 6px _.unit(2);
+  border-radius: _.unit(2);
   list-style: none;
   font: var(--font-body-medium);
   cursor: pointer;
   display: flex;
   align-items: center;
+  overflow: hidden;
 
   &:hover {
     background: var(--color-neutral-95);
