@@ -61,15 +61,15 @@ describe('validate terms of use', () => {
 
 describe('check whether the social sign in method state is enabled', () => {
   it('should be truthy when sign-in method state is primary', () => {
-    expect(isEnabled(SignInMethodState.primary)).toBeTruthy();
+    expect(isEnabled(SignInMethodState.Primary)).toBeTruthy();
   });
 
   it('should be truthy when sign-in method state is secondary', () => {
-    expect(isEnabled(SignInMethodState.secondary)).toBeTruthy();
+    expect(isEnabled(SignInMethodState.Secondary)).toBeTruthy();
   });
 
   it('should be falsy when sign-in method state is disabled', () => {
-    expect(isEnabled(SignInMethodState.disabled)).toBeFalsy();
+    expect(isEnabled(SignInMethodState.Disabled)).toBeFalsy();
   });
 });
 
@@ -78,7 +78,7 @@ describe('validate sign-in methods', () => {
     test('should throw when there is no primary sign-in method', () => {
       expect(() => {
         validateSignInMethods(
-          { ...mockSignInMethods, username: SignInMethodState.disabled },
+          { ...mockSignInMethods, username: SignInMethodState.Disabled },
           [],
           []
         );
@@ -89,7 +89,7 @@ describe('validate sign-in methods', () => {
 
     test('should throw when there are more than one primary sign-in methods', () => {
       expect(() => {
-        validateSignInMethods({ ...mockSignInMethods, social: SignInMethodState.primary }, [], []);
+        validateSignInMethods({ ...mockSignInMethods, social: SignInMethodState.Primary }, [], []);
       }).toMatchError(
         new RequestError('sign_in_experiences.not_one_and_only_one_primary_sign_in_method')
       );
@@ -100,7 +100,7 @@ describe('validate sign-in methods', () => {
     test('should throw when there is no enabled email connector and email sign-in method is enabled', async () => {
       expect(() => {
         validateSignInMethods(
-          { ...mockSignInMethods, email: SignInMethodState.secondary },
+          { ...mockSignInMethods, email: SignInMethodState.Secondary },
           [],
           enabledConnectorInstances as ConnectorInstance[]
         );
@@ -115,7 +115,7 @@ describe('validate sign-in methods', () => {
     test('should throw when there is no enabled SMS connector and SMS sign-in method is enabled', () => {
       expect(() => {
         validateSignInMethods(
-          { ...mockSignInMethods, sms: SignInMethodState.secondary },
+          { ...mockSignInMethods, sms: SignInMethodState.Secondary },
           [],
           enabledConnectorInstances as ConnectorInstance[]
         );
@@ -129,7 +129,7 @@ describe('validate sign-in methods', () => {
 
     test('should throw when there is no enabled social connector and social sign-in method is enabled', () => {
       expect(() => {
-        validateSignInMethods({ ...mockSignInMethods, social: SignInMethodState.secondary }, [], [
+        validateSignInMethods({ ...mockSignInMethods, social: SignInMethodState.Secondary }, [], [
           mockAliyunDmConnectorInstance,
         ] as ConnectorInstance[]);
       }).toMatchError(
@@ -144,7 +144,7 @@ describe('validate sign-in methods', () => {
   test('should throw when the social connector IDs are empty and social sign-in method is enabled', () => {
     expect(() => {
       validateSignInMethods(
-        { ...mockSignInMethods, social: SignInMethodState.secondary },
+        { ...mockSignInMethods, social: SignInMethodState.Secondary },
         [],
         enabledConnectorInstances as ConnectorInstance[]
       );
@@ -155,7 +155,7 @@ describe('validate sign-in methods', () => {
     test('should not validate selected social connectors when social sign-in method is disabled', () => {
       expect(() => {
         validateSignInMethods(
-          { ...mockSignInMethods, social: SignInMethodState.disabled },
+          { ...mockSignInMethods, social: SignInMethodState.Disabled },
           ['google', 'facebook'],
           enabledConnectorInstances as ConnectorInstance[]
         );
@@ -165,7 +165,7 @@ describe('validate sign-in methods', () => {
     test('should throw when some selected social connector are disabled and social sign-in method is enabled', () => {
       expect(() => {
         validateSignInMethods(
-          { ...mockSignInMethods, social: SignInMethodState.secondary },
+          { ...mockSignInMethods, social: SignInMethodState.Secondary },
           ['google', 'facebook'],
           enabledConnectorInstances as ConnectorInstance[]
         );
@@ -175,7 +175,7 @@ describe('validate sign-in methods', () => {
     test('should not throw when all selected social connectors are enabled and social sign-in method is enabled', () => {
       expect(() => {
         validateSignInMethods(
-          { ...mockSignInMethods, social: SignInMethodState.secondary },
+          { ...mockSignInMethods, social: SignInMethodState.Secondary },
           ['facebook', 'github'],
           enabledConnectorInstances as ConnectorInstance[]
         );

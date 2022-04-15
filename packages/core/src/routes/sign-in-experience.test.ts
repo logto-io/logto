@@ -63,7 +63,7 @@ describe('GET /sign-in-exp', () => {
   it('should filter enabled social connectors', async () => {
     const signInExperience = {
       ...mockSignInExperience,
-      signInMethods: { ...mockSignInMethods, social: SignInMethodState.secondary },
+      signInMethods: { ...mockSignInMethods, social: SignInMethodState.Secondary },
       socialSignInConnectorIds: ['facebook', 'github', 'google'],
     };
 
@@ -93,7 +93,7 @@ describe('GET /sign-in-settings', () => {
 
 describe('PATCH /sign-in-exp', () => {
   it('should not update social connector ids when social sign-in is disabled', async () => {
-    const signInMethods = { ...mockSignInMethods, social: SignInMethodState.disabled };
+    const signInMethods = { ...mockSignInMethods, social: SignInMethodState.Disabled };
     const response = await signInExperienceRequester.patch('/sign-in-exp').send({
       signInMethods,
       socialSignInConnectorIds: ['facebook'],
@@ -108,7 +108,7 @@ describe('PATCH /sign-in-exp', () => {
   });
 
   it('should update enabled social connector IDs only when social sign-in is enabled', async () => {
-    const signInMethods = { ...mockSignInMethods, social: SignInMethodState.secondary };
+    const signInMethods = { ...mockSignInMethods, social: SignInMethodState.Secondary };
     const socialSignInConnectorIds = ['facebook'];
     const signInExperience = {
       signInMethods,
@@ -126,7 +126,7 @@ describe('PATCH /sign-in-exp', () => {
   });
 
   it('should update social connector IDs in correct sorting order', async () => {
-    const signInMethods = { ...mockSignInMethods, social: SignInMethodState.secondary };
+    const signInMethods = { ...mockSignInMethods, social: SignInMethodState.Secondary };
     const socialSignInConnectorIds = ['github', 'facebook'];
     const signInExperience = {
       signInMethods,

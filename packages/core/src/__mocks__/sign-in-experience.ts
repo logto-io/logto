@@ -24,14 +24,14 @@ export const mockSignInExperience: SignInExperience = {
   },
   languageInfo: {
     autoDetect: true,
-    fallbackLanguage: Language.english,
-    fixedLanguage: Language.chinese,
+    fallbackLanguage: Language.English,
+    fixedLanguage: Language.Chinese,
   },
   signInMethods: {
-    username: SignInMethodState.primary,
-    email: SignInMethodState.disabled,
-    sms: SignInMethodState.disabled,
-    social: SignInMethodState.secondary,
+    username: SignInMethodState.Primary,
+    email: SignInMethodState.Disabled,
+    sms: SignInMethodState.Disabled,
+    social: SignInMethodState.Secondary,
   },
   socialSignInConnectorIds: ['github', 'facebook'],
 };
@@ -52,13 +52,13 @@ export const mockTermsOfUse: TermsOfUse = {
 
 export const mockLanguageInfo: LanguageInfo = {
   autoDetect: true,
-  fallbackLanguage: Language.english,
-  fixedLanguage: Language.chinese,
+  fallbackLanguage: Language.English,
+  fixedLanguage: Language.Chinese,
 };
 
 export const mockSignInMethods: SignInMethods = {
-  username: SignInMethodState.primary,
-  email: SignInMethodState.disabled,
-  sms: SignInMethodState.disabled,
-  social: SignInMethodState.disabled,
+  username: SignInMethodState.Primary,
+  email: SignInMethodState.Disabled,
+  sms: SignInMethodState.Disabled,
+  social: SignInMethodState.Disabled,
 };
