@@ -1,4 +1,4 @@
-import { BrandingStyle, SignInExperience } from '@logto/schemas';
+import { BrandingStyle } from '@logto/schemas';
 import React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -8,11 +8,12 @@ import RadioGroup, { Radio } from '@/components/RadioGroup';
 import Switch from '@/components/Switch';
 import TextInput from '@/components/TextInput';
 
+import { SignInExperienceForm } from '../types';
 import * as styles from './index.module.scss';
 
 const BrandingForm = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { watch, register, control } = useFormContext<SignInExperience>();
+  const { watch, register, control } = useFormContext<SignInExperienceForm>();
 
   const isDarkModeEnabled = watch('branding.isDarkModeEnabled');
   const style = watch('branding.style');
@@ -39,7 +40,6 @@ const BrandingForm = () => {
         <TextInput {...register('branding.darkPrimaryColor', { required: isDarkModeEnabled })} />
       </FormField>
       <FormField isRequired title="admin_console.sign_in_exp.branding.ui_style">
-        {/* TODO: LOG-2153 plain radio */}
         <Controller
           name="branding.style"
           control={control}
