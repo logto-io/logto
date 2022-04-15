@@ -1,0 +1,28 @@
+import { nanoid } from 'nanoid';
+import React, { ChangeEventHandler, useState } from 'react';
+
+import * as styles from './index.module.scss';
+
+type Props = {
+  value?: string;
+  onChange?: (value: string) => void;
+};
+
+const ColorPicker = ({ onChange, value = '#000000' }: Props) => {
+  const [id] = useState(nanoid());
+
+  const handleChange: ChangeEventHandler<HTMLInputElement> = (event) => {
+    onChange?.(event.target.value);
+  };
+
+  return (
+    <div className={styles.container}>
+      <input type="color" id={id} value={value} onChange={handleChange} />
+      <label htmlFor={id}>
+        <div className={styles.preview} style={{ backgroundColor: value }} />
+        {value.toUpperCase()}
+      </label>
+    </div>
+  );
+};
+export default ColorPicker;
