@@ -1,16 +1,16 @@
 import { UserFlow } from '@/types';
 
 import {
-  verifyEmailPasscode as verifyRegisterEmailPasscode,
-  verifySmsPasscode as verifyRegisterSmsPasscode,
-  sendEmailPasscode as sendRegisterEmailPasscode,
-  sendSmsPasscode as sendRegisterSmsPasscode,
+  verifyRegisterEmailPasscode,
+  verifyRegisterSmsPasscode,
+  sendRegisterEmailPasscode,
+  sendRegisterSmsPasscode,
 } from './register';
 import {
-  verifyEmailPasscode as verifySignInEmailPasscode,
-  verifySmsPasscode as verifySignInSmsPasscode,
-  sendEmailPasscode as sendSignInEmailPasscode,
-  sendSmsPasscode as sendSignInSmsPasscode,
+  verifySignInEmailPasscode,
+  verifySignInSmsPasscode,
+  sendSignInEmailPasscode,
+  sendSignInSmsPasscode,
 } from './sign-in';
 
 export type PasscodeChannel = 'sms' | 'email';
