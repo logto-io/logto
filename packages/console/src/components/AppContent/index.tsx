@@ -2,6 +2,7 @@ import { useLogto } from '@logto/react';
 import React, { useEffect } from 'react';
 import { Outlet, useHref } from 'react-router-dom';
 
+import ErrorBoundary from '../ErrorBoundary';
 import Sidebar from './components/Sidebar';
 import Topbar from './components/Topbar';
 import * as styles from './index.module.scss';
@@ -36,15 +37,17 @@ const AppContent = ({ theme }: Props) => {
   }
 
   return (
-    <div className={styles.app}>
-      <Topbar />
-      <div className={styles.content}>
-        <Sidebar />
-        <div className={styles.main}>
-          <Outlet />
+    <ErrorBoundary>
+      <div className={styles.app}>
+        <Topbar />
+        <div className={styles.content}>
+          <Sidebar />
+          <div className={styles.main}>
+            <Outlet />
+          </div>
         </div>
       </div>
-    </div>
+    </ErrorBoundary>
   );
 };
 
