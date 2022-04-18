@@ -20,7 +20,7 @@ export const invokeSocialSignIn = async (
     .json<Response>();
 };
 
-export const signInWithSoical = async (parameters: {
+export const signInWithSocial = async (parameters: {
   connectorId: string;
   state: string;
   redirectUri: string;

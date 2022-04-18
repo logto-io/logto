@@ -1,8 +1,10 @@
 import classNames from 'classnames';
 import React from 'react';
 
+import { socialConnectors } from '@/__mocks__/logto';
 import BrandingHeader from '@/components/BrandingHeader';
 import TextLink from '@/components/TextLink';
+import { SecondarySocialSignIn } from '@/containers/SocialSignIn';
 import UsernameSignin from '@/containers/UsernameSignin';
 
 import * as styles from './index.module.scss';
@@ -17,6 +19,7 @@ const SignIn = () => {
         logo="https://avatars.githubusercontent.com/u/84981374?s=400&u=6c44c3642f2fe15a59a56cdcb0358c0bd8b92f57&v=4"
       />
       <UsernameSignin />
+      <SecondarySocialSignIn connectors={socialConnectors} />
       <TextLink className={styles.createAccount} href="/register" text="action.create_account" />
     </div>
   );
