@@ -39,11 +39,11 @@ const translation = {
       forgot_password: '忘记密码？',
       or: '或',
       enter_passcode: '验证码已经发送至 {{ address }}',
-      resend_after_senconds: '在 {{ seconds }} 秒后重发',
+      resend_after_seconds: '在 {{ seconds }} 秒后重发',
       resend_passcode: '重发验证码',
       continue_with: '通过以下方式继续',
-      create_account_id_exsits: '{{ type }}为 {{ value }} 的账号已存在，您要登录吗？',
-      sign_in_id_does_not_exsits: '{{ type }}为 {{ value }} 的账号不存在，您要创建一个新账号吗？',
+      create_account_id_exists: '{{ type }}为 {{ value }} 的账号已存在，您要登录吗？',
+      sign_in_id_does_not_exists: '{{ type }}为 {{ value }} 的账号不存在，您要创建一个新账号吗？',
     },
     error: {
       username_password_mismatch: '用户名和密码不匹配。',
@@ -376,7 +376,7 @@ const translation = {
           mode: 'Language mode',
           auto: 'Auto',
           fixed: 'Fixed',
-          fallback: 'Fallback laguanges',
+          fallback: 'Fallback languages',
           languages: {
             english: 'English',
             chinese: 'Chinese',

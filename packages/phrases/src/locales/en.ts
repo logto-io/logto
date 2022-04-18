@@ -37,12 +37,12 @@ const translation = {
       forgot_password: 'Forgot Password?',
       or: 'Or',
       enter_passcode: 'The passcode has been sent to {{address}}',
-      resend_after_senconds: 'Resend after {{seconds}} seconds',
+      resend_after_seconds: 'Resend after {{seconds}} seconds',
       resend_passcode: 'Resend Passcode',
       continue_with: 'Continue with',
-      create_account_id_exsits:
+      create_account_id_exists:
         'The account with {{type}} {{value}} already exists, would you like to sign in?',
-      sign_in_id_does_not_exsits:
+      sign_in_id_does_not_exists:
         'The account with {{type}} {{value}} does not exist, would you like to create a new account?',
     },
     error: {
@@ -380,7 +380,7 @@ const translation = {
           mode: 'Language mode',
           auto: 'Auto',
           fixed: 'Fixed',
-          fallback: 'Fallback laguanges',
+          fallback: 'Fallback languages',
           languages: {
             english: 'English',
             chinese: 'Chinese',
