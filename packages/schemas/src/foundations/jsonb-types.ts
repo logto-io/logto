@@ -1,6 +1,14 @@
 import { z } from 'zod';
 
 /**
+ * Commonly Used
+ */
+
+export const arbitraryObjectGuard = z.object({}).catchall(z.unknown());
+
+export type ArbitraryObject = z.infer<typeof arbitraryObjectGuard>;
+
+/**
  * OIDC Model Instances
  */
 
@@ -62,6 +70,7 @@ export type Identities = z.infer<typeof identitiesGuard>;
  * User Logs
  */
 
+/** @deprecated */
 export const userLogPayloadGuard = z.object({
   ip: z.string().optional(),
   userAgent: z.string().optional(),
@@ -70,6 +79,7 @@ export const userLogPayloadGuard = z.object({
   details: z.object({}).optional(), // NOT intend to be parsed
 });
 
+/** @deprecated */
 export type UserLogPayload = z.infer<typeof userLogPayloadGuard>;
 
 /**
@@ -147,11 +157,3 @@ export type SignInMethods = z.infer<typeof signInMethodsGuard>;
 export const connectorIdsGuard = z.string().array();
 
 export type ConnectorIds = z.infer<typeof connectorIdsGuard>;
-
-/**
- * Commonly Used
- */
-
-export const arbitraryObjectGuard = z.object({}).catchall(z.unknown());
-
-export type ArbitraryObject = z.infer<typeof arbitraryObjectGuard>;
