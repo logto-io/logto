@@ -19,10 +19,10 @@ import {
 
 export type CreateSignInExperience = {
   id: string;
-  branding?: Branding;
-  languageInfo?: LanguageInfo;
-  termsOfUse?: TermsOfUse;
-  signInMethods?: SignInMethods;
+  branding: Branding;
+  languageInfo: LanguageInfo;
+  termsOfUse: TermsOfUse;
+  signInMethods: SignInMethods;
   socialSignInConnectorIds?: ConnectorIds;
 };
 
@@ -37,10 +37,10 @@ export type SignInExperience = {
 
 const createGuard: Guard<CreateSignInExperience> = z.object({
   id: z.string(),
-  branding: brandingGuard.optional(),
-  languageInfo: languageInfoGuard.optional(),
-  termsOfUse: termsOfUseGuard.optional(),
-  signInMethods: signInMethodsGuard.optional(),
+  branding: brandingGuard,
+  languageInfo: languageInfoGuard,
+  termsOfUse: termsOfUseGuard,
+  signInMethods: signInMethodsGuard,
   socialSignInConnectorIds: connectorIdsGuard.optional(),
 });
 
