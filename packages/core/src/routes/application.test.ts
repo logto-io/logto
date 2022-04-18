@@ -1,8 +1,6 @@
 import { Application, CreateApplication, ApplicationType } from '@logto/schemas';
-import nock from 'nock';
 
-import { mockApplicationDTO, mockOidcConfig } from '@/__mocks__';
-import { port } from '@/env/consts';
+import { mockApplication } from '@/__mocks__';
 import { findApplicationById } from '@/queries/application';
 import { createRequester } from '@/utils/test-utils';
 
@@ -10,22 +8,22 @@ import applicationRoutes from './application';
 
 jest.mock('@/queries/application', () => ({
   findTotalNumberOfApplications: jest.fn(async () => ({ count: 10 })),
-  findAllApplications: jest.fn(async () => [mockApplicationDTO]),
-  findApplicationById: jest.fn(async () => mockApplicationDTO),
+  findAllApplications: jest.fn(async () => [mockApplication]),
+  findApplicationById: jest.fn(async () => mockApplication),
   deleteApplicationById: jest.fn(),
   insertApplication: jest.fn(
     async (body: CreateApplication): Promise<Application> => ({
-      ...mockApplicationDTO,
+      ...mockApplication,
       ...body,
       oidcClientMetadata: {
-        ...mockApplicationDTO.oidcClientMetadata,
+        ...mockApplication.oidcClientMetadata,
         ...body.oidcClientMetadata,
       },
     })
   ),
   updateApplicationById: jest.fn(
     async (_, data: Partial<CreateApplication>): Promise<Application> => ({
-      ...mockApplicationDTO,
+      ...mockApplication,
       ...data,
     })
   ),
@@ -45,15 +43,10 @@ const customClientMetadata = {
 describe('application route', () => {
   const applicationRequest = createRequester({ authedRoutes: applicationRoutes });
 
-  beforeEach(() => {
-    const discoveryUrl = `http://localhost:${port}/oidc/.well-known/openid-configuration`;
-    nock(discoveryUrl).get('').reply(200, mockOidcConfig);
-  });
-
   it('GET /applications', async () => {
     const response = await applicationRequest.get('/applications');
     expect(response.status).toEqual(200);
-    expect(response.body).toEqual([mockApplicationDTO]);
+    expect(response.body).toEqual([mockApplication]);
     expect(response.header).toHaveProperty('total-number', '10');
   });
 
@@ -67,7 +60,7 @@ describe('application route', () => {
       .send({ name, type, description });
     expect(response.status).toEqual(200);
     expect(response.body).toEqual({
-      ...mockApplicationDTO,
+      ...mockApplication,
       id: 'randomId',
       name,
       description,
@@ -84,7 +77,7 @@ describe('application route', () => {
       .send({ name, type, customClientMetadata });
     expect(response.status).toEqual(200);
     expect(response.body).toEqual({
-      ...mockApplicationDTO,
+      ...mockApplication,
       id: 'randomId',
       name,
       type,
@@ -123,7 +116,7 @@ describe('application route', () => {
     const response = await applicationRequest.get('/applications/foo');
 
     expect(response.status).toEqual(200);
-    expect(response.body).toEqual(mockApplicationDTO);
+    expect(response.body).toEqual(mockApplication);
   });
 
   it('PATCH /applications/:applicationId', async () => {
@@ -134,12 +127,7 @@ describe('application route', () => {
       .patch('/applications/foo')
       .send({ name, description, customClientMetadata });
     expect(response.status).toEqual(200);
-    expect(response.body).toEqual({
-      ...mockApplicationDTO,
-      name,
-      description,
-      customClientMetadata,
-    });
+    expect(response.body).toEqual({ ...mockApplication, name, description, customClientMetadata });
   });
 
   it('PATCH /applications/:applicationId expect to throw with invalid properties', async () => {

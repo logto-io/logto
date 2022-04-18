@@ -1,9 +1,6 @@
-import { Applications, SnakeCaseOidcConfig } from '@logto/schemas';
-import camelcaseKeys from 'camelcase-keys';
-import got from 'got';
+import { Applications } from '@logto/schemas';
 import { object, string } from 'zod';
 
-import { port } from '@/env/consts';
 import koaGuard from '@/middleware/koa-guard';
 import koaPagination from '@/middleware/koa-pagination';
 import { buildOidcClientMetadata } from '@/oidc/utils';
@@ -21,24 +18,18 @@ import { AuthedRouter } from './types';
 
 const applicationId = buildIdGenerator(21);
 
-const discoveryUrl = `http://localhost:${port}/oidc/.well-known/openid-configuration`;
-
 export default function applicationRoutes<T extends AuthedRouter>(router: T) {
   router.get('/applications', koaPagination(), async (ctx, next) => {
     const { limit, offset } = ctx.pagination;
 
-    const [{ count }, applications, oidcConfig] = await Promise.all([
+    const [{ count }, applications] = await Promise.all([
       findTotalNumberOfApplications(),
       findAllApplications(limit, offset),
-      got(discoveryUrl).json<SnakeCaseOidcConfig>(),
     ]);
 
     // Return totalCount to pagination middleware
     ctx.pagination.totalCount = count;
-    ctx.body = applications.map((application) => ({
-      ...application,
-      oidcConfig: camelcaseKeys(oidcConfig),
-    }));
+    ctx.body = applications;
 
     return next();
   });
@@ -54,19 +45,11 @@ export default function applicationRoutes<T extends AuthedRouter>(router: T) {
     async (ctx, next) => {
       const { oidcClientMetadata, ...rest } = ctx.guard.body;
 
-      const [application, oidcConfig] = await Promise.all([
-        insertApplication({
-          id: applicationId(),
-          oidcClientMetadata: buildOidcClientMetadata(oidcClientMetadata),
-          ...rest,
-        }),
-        got(discoveryUrl).json<SnakeCaseOidcConfig>(),
-      ]);
-
-      ctx.body = {
-        ...application,
-        oidcConfig: camelcaseKeys(oidcConfig),
-      };
+      ctx.body = await insertApplication({
+        id: applicationId(),
+        oidcClientMetadata: buildOidcClientMetadata(oidcClientMetadata),
+        ...rest,
+      });
 
       return next();
     }
@@ -82,15 +65,7 @@ export default function applicationRoutes<T extends AuthedRouter>(router: T) {
         params: { id },
       } = ctx.guard;
 
-      const [application, oidcConfig] = await Promise.all([
-        findApplicationById(id),
-        got(discoveryUrl).json<SnakeCaseOidcConfig>(),
-      ]);
-
-      ctx.body = {
-        ...application,
-        oidcConfig: camelcaseKeys(oidcConfig),
-      };
+      ctx.body = await findApplicationById(id);
 
       return next();
     }
@@ -108,17 +83,9 @@ export default function applicationRoutes<T extends AuthedRouter>(router: T) {
         body,
       } = ctx.guard;
 
-      const [application, oidcConfig] = await Promise.all([
-        updateApplicationById(id, {
-          ...body,
-        }),
-        got(discoveryUrl).json<SnakeCaseOidcConfig>(),
-      ]);
-
-      ctx.body = {
-        ...application,
-        oidcConfig: camelcaseKeys(oidcConfig),
-      };
+      ctx.body = await updateApplicationById(id, {
+        ...body,
+      });
 
       return next();
     }
