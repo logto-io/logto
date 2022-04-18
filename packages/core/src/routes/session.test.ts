@@ -4,6 +4,7 @@ import { Provider } from 'oidc-provider';
 import { mockSignInExperience } from '@/__mocks__';
 import { ConnectorType } from '@/connectors/types';
 import RequestError from '@/errors/RequestError';
+import * as signInExperienceQueries from '@/queries/sign-in-experience';
 import { createRequester } from '@/utils/test-utils';
 
 import sessionRoutes from './session';
@@ -862,12 +863,13 @@ describe('sessionRoutes', () => {
   });
 
   describe('GET /sign-in-settings', () => {
-    const findDefaultSignInExperience = jest.fn(async () => mockSignInExperience);
-    jest.mock('@/queries/sign-in-experience', async () => findDefaultSignInExperience());
+    const signInExperienceQuerySpon = jest
+      .spyOn(signInExperienceQueries, 'findDefaultSignInExperience')
+      .mockResolvedValue(mockSignInExperience);
 
     it('should call findDefaultSignInExperience', async () => {
       const response = await sessionRequest.get('/sign-in-settings');
-      expect(findDefaultSignInExperience).toHaveBeenCalledTimes(1);
+      expect(signInExperienceQuerySpon).toHaveBeenCalledTimes(1);
       expect(response.status).toEqual(200);
       expect(response.body).toEqual(mockSignInExperience);
     });
