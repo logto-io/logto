@@ -1,7 +1,7 @@
 create type users_password_encryption_method as enum ('SaltAndPepper');
 
 create table users (
-  id varchar(24) not null,
+  id varchar(12) not null,
   username varchar(128) unique,
   primary_email varchar(128) unique,
   primary_phone varchar(128) unique,

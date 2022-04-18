@@ -1,7 +1,7 @@
 create type application_type as enum ('Native', 'SPA', 'Traditional');
 
 create table applications (
-  id varchar(128) not null,
+  id varchar(21) not null,
   name varchar(256) not null,
   description text,
   type application_type not null,
