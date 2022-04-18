@@ -23,7 +23,7 @@ export const validateTermsOfUse = (termsOfUse: TermsOfUse) => {
   );
 };
 
-export const isEnabled = (state: SignInMethodState) => state !== SignInMethodState.disabled;
+export const isEnabled = (state: SignInMethodState) => state !== SignInMethodState.Disabled;
 
 export const validateSignInMethods = (
   signInMethods: SignInMethods,
@@ -32,7 +32,7 @@ export const validateSignInMethods = (
 ) => {
   const signInMethodStates = Object.values(signInMethods);
   assertThat(
-    signInMethodStates.filter((state) => state === SignInMethodState.primary).length === 1,
+    signInMethodStates.filter((state) => state === SignInMethodState.Primary).length === 1,
     'sign_in_experiences.not_one_and_only_one_primary_sign_in_method'
   );
 

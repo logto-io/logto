@@ -24,11 +24,11 @@ describe('koaRoleGuard middleware', () => {
 
   it('should throw if user dose not have admin role', async () => {
     ctx.userInfo.roleNames = ['guest'];
-    await expect(koaRoleGuard(UserRole.admin)(ctx, next)).rejects.toMatchError(unauthorizedError);
+    await expect(koaRoleGuard(UserRole.Admin)(ctx, next)).rejects.toMatchError(unauthorizedError);
   });
 
   it('should not throw for admin user', async () => {
     ctx.userInfo.roleNames = ['admin'];
-    await expect(koaRoleGuard(UserRole.admin)(ctx, next)).resolves.not.toThrow();
+    await expect(koaRoleGuard(UserRole.Admin)(ctx, next)).resolves.not.toThrow();
   });
 });

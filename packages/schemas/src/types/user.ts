@@ -18,5 +18,5 @@ export type UserInfo<Keys extends keyof CreateUser = typeof userInfoSelectFields
 >;
 
 export enum UserRole {
-  admin = 'admin',
+  Admin = 'admin',
 }

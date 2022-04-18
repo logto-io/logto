@@ -125,30 +125,30 @@ describe('signInMethods', () => {
 
   describe('username', () => {
     test.each(validSignInMethodStates)('%p should success', async (state) => {
-      if (state === SignInMethodState.primary) {
+      if (state === SignInMethodState.Primary) {
         return;
       }
       const signInExperience = {
         signInMethods: {
           username: state,
-          email: SignInMethodState.primary,
-          sms: SignInMethodState.disabled,
-          social: SignInMethodState.disabled,
+          email: SignInMethodState.Primary,
+          sms: SignInMethodState.Disabled,
+          social: SignInMethodState.Disabled,
         },
       };
       await expectPatchResponseStatus(signInExperience, 200);
     });
 
     test.each(invalidSignInMethodStates)('%p should fail', async (state) => {
-      if (state === SignInMethodState.primary) {
+      if (state === SignInMethodState.Primary) {
         return;
       }
       const signInExperience = {
         signInMethods: {
           username: state,
-          email: SignInMethodState.primary,
-          sms: SignInMethodState.disabled,
-          social: SignInMethodState.disabled,
+          email: SignInMethodState.Primary,
+          sms: SignInMethodState.Disabled,
+          social: SignInMethodState.Disabled,
         },
       };
       await expectPatchResponseStatus(signInExperience, 400);
@@ -157,30 +157,30 @@ describe('signInMethods', () => {
 
   describe('email', () => {
     test.each(validSignInMethodStates)('%p should success', async (state) => {
-      if (state === SignInMethodState.primary) {
+      if (state === SignInMethodState.Primary) {
         return;
       }
       const signInExperience = {
         signInMethods: {
-          username: SignInMethodState.disabled,
+          username: SignInMethodState.Disabled,
           email: state,
-          sms: SignInMethodState.primary,
-          social: SignInMethodState.disabled,
+          sms: SignInMethodState.Primary,
+          social: SignInMethodState.Disabled,
         },
       };
       await expectPatchResponseStatus(signInExperience, 200);
     });
 
     test.each(invalidSignInMethodStates)('%p should fail', async (state) => {
-      if (state === SignInMethodState.primary) {
+      if (state === SignInMethodState.Primary) {
         return;
       }
       const signInExperience = {
         signInMethods: {
-          username: SignInMethodState.disabled,
+          username: SignInMethodState.Disabled,
           email: state,
-          sms: SignInMethodState.primary,
-          social: SignInMethodState.disabled,
+          sms: SignInMethodState.Primary,
+          social: SignInMethodState.Disabled,
         },
       };
       await expectPatchResponseStatus(signInExperience, 400);
@@ -189,15 +189,15 @@ describe('signInMethods', () => {
 
   describe('sms', () => {
     test.each(validSignInMethodStates)('%p should success', async (state) => {
-      if (state === SignInMethodState.primary) {
+      if (state === SignInMethodState.Primary) {
         return;
       }
       const signInExperience = {
         signInMethods: {
-          username: SignInMethodState.disabled,
-          email: SignInMethodState.disabled,
+          username: SignInMethodState.Disabled,
+          email: SignInMethodState.Disabled,
           sms: state,
-          social: SignInMethodState.primary,
+          social: SignInMethodState.Primary,
         },
         socialSignInConnectorIds: ['github'],
       };
@@ -205,15 +205,15 @@ describe('signInMethods', () => {
     });
 
     test.each(invalidSignInMethodStates)('%p should fail', async (state) => {
-      if (state === SignInMethodState.primary) {
+      if (state === SignInMethodState.Primary) {
         return;
       }
       const signInExperience = {
         signInMethods: {
-          username: SignInMethodState.disabled,
-          email: SignInMethodState.disabled,
+          username: SignInMethodState.Disabled,
+          email: SignInMethodState.Disabled,
           sms: state,
-          social: SignInMethodState.primary,
+          social: SignInMethodState.Primary,
         },
         socialSignInConnectorIds: ['github'],
       };
@@ -223,14 +223,14 @@ describe('signInMethods', () => {
 
   describe('social', () => {
     test.each(validSignInMethodStates)('%p should success', async (state) => {
-      if (state === SignInMethodState.primary) {
+      if (state === SignInMethodState.Primary) {
         return;
       }
       const signInExperience = {
         signInMethods: {
-          username: SignInMethodState.primary,
-          email: SignInMethodState.disabled,
-          sms: SignInMethodState.disabled,
+          username: SignInMethodState.Primary,
+          email: SignInMethodState.Disabled,
+          sms: SignInMethodState.Disabled,
           social: state,
         },
         socialSignInConnectorIds: ['github'],
@@ -239,14 +239,14 @@ describe('signInMethods', () => {
     });
 
     test.each(invalidSignInMethodStates)('%p should fail', async (state) => {
-      if (state === SignInMethodState.primary) {
+      if (state === SignInMethodState.Primary) {
         return;
       }
       const signInExperience = {
         signInMethods: {
-          username: SignInMethodState.primary,
-          email: SignInMethodState.disabled,
-          sms: SignInMethodState.disabled,
+          username: SignInMethodState.Primary,
+          email: SignInMethodState.Disabled,
+          sms: SignInMethodState.Disabled,
           social: state,
         },
         socialSignInConnectorIds: ['github'],
@@ -262,7 +262,7 @@ describe('socialSignInConnectorIds', () => {
     async (socialSignInConnectorIds) => {
       await expectPatchResponseStatus(
         {
-          signInMethods: { ...mockSignInMethods, social: SignInMethodState.secondary },
+          signInMethods: { ...mockSignInMethods, social: SignInMethodState.Secondary },
           socialSignInConnectorIds,
         },
         200
@@ -275,7 +275,7 @@ describe('socialSignInConnectorIds', () => {
     async (socialSignInConnectorIds: any[]) => {
       await expectPatchResponseStatus(
         {
-          signInMethods: { ...mockSignInMethods, social: SignInMethodState.secondary },
+          signInMethods: { ...mockSignInMethods, social: SignInMethodState.Secondary },
           socialSignInConnectorIds,
         },
         400

@@ -12,17 +12,17 @@ export const defaultSignInExperience: Readonly<CreateSignInExperience> = {
   },
   languageInfo: {
     autoDetect: true,
-    fallbackLanguage: Language.english,
-    fixedLanguage: Language.english,
+    fallbackLanguage: Language.English,
+    fixedLanguage: Language.English,
   },
   termsOfUse: {
     enabled: false,
   },
   signInMethods: {
-    username: SignInMethodState.primary,
-    email: SignInMethodState.disabled,
-    sms: SignInMethodState.disabled,
-    social: SignInMethodState.disabled,
+    username: SignInMethodState.Primary,
+    email: SignInMethodState.Disabled,
+    sms: SignInMethodState.Disabled,
+    social: SignInMethodState.Disabled,
   },
   socialSignInConnectorIds: [],
 };
