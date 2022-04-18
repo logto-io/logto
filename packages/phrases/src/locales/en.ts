@@ -8,6 +8,8 @@ const translation = {
     done: 'Done',
     search: 'Search',
     save_changes: 'Save changes',
+    loading: 'Loading...',
+    redirecting: 'Redirecting...',
   },
   main_flow: {
     input: {

@@ -2,6 +2,8 @@ import { useHandleSignInCallback, useLogto } from '@logto/react';
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import LogtoLoading from '@/components/LogtoLoading';
+
 const Callback = () => {
   const { isAuthenticated, isLoading } = useLogto();
   const navigate = useNavigate();
@@ -15,7 +17,7 @@ const Callback = () => {
     }
   }, [isAuthenticated, isLoading, navigate]);
 
-  return <p>Redirecting...</p>;
+  return <LogtoLoading message="general.redirecting" />;
 };
 
 export default Callback;
