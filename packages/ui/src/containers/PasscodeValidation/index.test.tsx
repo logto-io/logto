@@ -32,7 +32,7 @@ describe('<PasscodeValidation />', () => {
       <PasscodeValidation type="sign-in" method="email" target={email} />
     );
 
-    expect(queryByText('description.resend_after_senconds')).not.toBeNull();
+    expect(queryByText('description.resend_after_seconds')).not.toBeNull();
 
     act(() => {
       jest.runAllTimers();

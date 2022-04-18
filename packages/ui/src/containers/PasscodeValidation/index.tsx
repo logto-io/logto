@@ -87,7 +87,7 @@ const PasscodeValidation = ({ type, method, className, target }: Props) => {
   }, [verifyPasscodeError]);
 
   const renderCountDownMessage = useMemo(() => {
-    const contents = t('description.resend_after_senconds', { seconds });
+    const contents = t('description.resend_after_seconds', { seconds });
 
     return (
       <div className={styles.message}>
