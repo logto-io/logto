@@ -2,13 +2,17 @@ import { fireEvent, render, waitFor } from '@testing-library/react';
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
 
-import { sendEmailPasscode as sendRegisterEmailPasscode } from '@/apis/register';
-import { sendEmailPasscode as sendSignInEmailPasscode } from '@/apis/sign-in';
+import { sendRegisterEmailPasscode } from '@/apis/register';
+import { sendSignInEmailPasscode } from '@/apis/sign-in';
 
 import EmailPasswordless from './EmailPasswordless';
 
-jest.mock('@/apis/sign-in', () => ({ sendEmailPasscode: jest.fn(async () => Promise.resolve()) }));
-jest.mock('@/apis/register', () => ({ sendEmailPasscode: jest.fn(async () => Promise.resolve()) }));
+jest.mock('@/apis/sign-in', () => ({
+  sendSignInEmailPasscode: jest.fn(async () => Promise.resolve()),
+}));
+jest.mock('@/apis/register', () => ({
+  sendRegisterEmailPasscode: jest.fn(async () => Promise.resolve()),
+}));
 jest.mock('@/hooks/page-context', () =>
   React.createContext({
     loading: false,
