@@ -19,6 +19,9 @@ describe('koaSpaProxy middleware', () => {
 
   beforeEach(() => {
     process.env = { ...envBackup };
+  });
+
+  afterEach(() => {
     jest.clearAllMocks();
     jest.resetModules();
   });

@@ -26,7 +26,7 @@ describe('koaUserLog middleware', () => {
     payload: { applicationId: 'foo' },
   };
 
-  beforeEach(() => {
+  afterEach(() => {
     jest.clearAllMocks();
   });
 
