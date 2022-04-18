@@ -3,6 +3,7 @@ import React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
+import ColorPicker from '@/components/ColorPicker';
 import FormField from '@/components/FormField';
 import RadioGroup, { Radio } from '@/components/RadioGroup';
 import Switch from '@/components/Switch';
@@ -23,8 +24,13 @@ const BrandingForm = () => {
     <>
       <div className={styles.title}>{t('sign_in_exp.branding.title')}</div>
       <FormField isRequired title="admin_console.sign_in_exp.branding.primary_color">
-        {/* TODO: LOG-1733 color-picker */}
-        <TextInput {...register('branding.primaryColor', { required: true })} />
+        <Controller
+          name="branding.primaryColor"
+          control={control}
+          render={({ field: { onChange, value } }) => (
+            <ColorPicker value={value} onChange={onChange} />
+          )}
+        />
       </FormField>
       <FormField isRequired title="admin_console.sign_in_exp.branding.dark_mode">
         <Switch
@@ -36,8 +42,13 @@ const BrandingForm = () => {
         isRequired={isDarkModeEnabled}
         title="admin_console.sign_in_exp.branding.dark_primary_color"
       >
-        {/* TODO: LOG-1733 color-picker */}
-        <TextInput {...register('branding.darkPrimaryColor', { required: isDarkModeEnabled })} />
+        <Controller
+          name="branding.darkPrimaryColor"
+          control={control}
+          render={({ field: { onChange, value } }) => (
+            <ColorPicker value={value} onChange={onChange} />
+          )}
+        />
       </FormField>
       <FormField isRequired title="admin_console.sign_in_exp.branding.ui_style">
         <Controller

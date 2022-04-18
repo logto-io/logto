@@ -1,0 +1,40 @@
+@use '@/scss/underscore' as _;
+
+.container {
+  border-radius: 6px;
+  border: 1px solid var(--color-border);
+  outline: 3px solid transparent;
+  transition-property: outline, border;
+  transition-timing-function: ease-in-out;
+  transition-duration: 0.2s;
+  padding: _.unit(2) _.unit(3);
+  font: var(--font-body-medium);
+  position: relative;
+
+  &:focus-within {
+    border-color: var(--color-primary);
+    outline-color: var(--color-focused-variant);
+  }
+
+  input {
+    position: absolute;
+    left: _.unit(3);
+    top: _.unit(2);
+    width: 24px;
+    height: 24px;
+    border-radius: _.unit(1);
+  }
+
+  label {
+    display: flex;
+    align-items: center;
+    position: relative;
+
+    .preview {
+      width: 24px;
+      height: 24px;
+      margin-right: _.unit(2);
+      border-radius: _.unit(1);
+    }
+  }
+}
