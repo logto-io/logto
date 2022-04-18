@@ -1,8 +1,10 @@
 /* eslint-disable max-lines */
 import { Provider } from 'oidc-provider';
 
+import { mockSignInExperience } from '@/__mocks__';
 import { ConnectorType } from '@/connectors/types';
 import RequestError from '@/errors/RequestError';
+import * as signInExperienceQueries from '@/queries/sign-in-experience';
 import { createRequester } from '@/utils/test-utils';
 
 import sessionRoutes from './session';
@@ -857,6 +859,19 @@ describe('sessionRoutes', () => {
         'statusCode',
         400
       );
+    });
+  });
+
+  describe('GET /sign-in-settings', () => {
+    const signInExperienceQuerySpon = jest
+      .spyOn(signInExperienceQueries, 'findDefaultSignInExperience')
+      .mockResolvedValue(mockSignInExperience);
+
+    it('should call findDefaultSignInExperience', async () => {
+      const response = await sessionRequest.get('/sign-in-settings');
+      expect(signInExperienceQuerySpon).toHaveBeenCalledTimes(1);
+      expect(response.status).toEqual(200);
+      expect(response.body).toEqual(mockSignInExperience);
     });
   });
 
