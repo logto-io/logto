@@ -351,11 +351,17 @@ const translation = {
         enable_secondary: 'Enable secondary sign in',
         enable_secondary_description:
           "Once it's turned on, you app will support more sign in method(s) besides the primary one. ",
-        methods: {
-          sms: 'Phone number sign in',
-          email: 'Email sign in',
-          social: 'Social sign in',
-          username_password: 'Username-with-password sign in',
+        methods: 'Sign in method',
+        methods_sms: 'Phone number sign in',
+        methods_email: 'Email sign in',
+        methods_social: 'Social sign in',
+        methods_username: 'Username-with-password sign in',
+        methods_primary_tag: '(Primary)',
+        define_social_methods: 'Define social sign in methods',
+        transfer: {
+          title: 'Social connectors',
+          added: 'added',
+          footer: 'Not in the list?  Set up more social connectors or go to “Connectors” section.',
         },
       },
       others: {

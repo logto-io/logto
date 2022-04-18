@@ -14,14 +14,17 @@ import useApi, { RequestError } from '@/hooks/use-api';
 import * as detailsStyles from '@/scss/details.module.scss';
 
 import BrandingForm from './components/BrandingForm';
+import SignInMethodsForm from './components/SignInMethodsForm';
 import TermsForm from './components/TermsForm';
 import * as styles from './index.module.scss';
+import { SignInExperienceForm } from './types';
+import { signInExperienceParser } from './utilities';
 
 const SignInExperience = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { tab } = useParams();
   const { data, error, mutate } = useSWR<SignInExperienceType, RequestError>('/api/sign-in-exp');
-  const methods = useForm<SignInExperienceType>();
+  const methods = useForm<SignInExperienceForm>();
   const {
     reset,
     handleSubmit,
@@ -31,7 +34,7 @@ const SignInExperience = () => {
 
   useEffect(() => {
     if (data) {
-      reset(data);
+      reset(signInExperienceParser.toLocalForm(data));
     }
   }, [data, reset]);
 
@@ -78,6 +81,7 @@ const SignInExperience = () => {
                     <TermsForm />
                   </>
                 )}
+                {tab === 'methods' && <SignInMethodsForm />}
                 <div className={detailsStyles.footer}>
                   <Button
                     disabled={isSubmitting}
