@@ -12,6 +12,7 @@ const translation = {
     save_changes: '保存更改',
     loading: '读取中...',
     redirecting: '页面跳转中...',
+    added: '已添加',
   },
   main_flow: {
     input: {
@@ -362,8 +363,11 @@ const translation = {
         define_social_methods: 'Define social sign in methods',
         transfer: {
           title: 'Social connectors',
-          added: 'added',
-          footer: 'Not in the list?  Set up more social connectors or go to “Connectors” section.',
+          footer: {
+            not_in_list: 'Not in the list?',
+            set_up_more: 'Set up more',
+            go_to: 'social connectors or go to “Connectors” section.',
+          },
         },
       },
       others: {

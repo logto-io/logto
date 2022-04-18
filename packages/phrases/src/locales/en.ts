@@ -10,6 +10,7 @@ const translation = {
     save_changes: 'Save changes',
     loading: 'Loading...',
     redirecting: 'Redirecting...',
+    added: 'Added',
   },
   main_flow: {
     input: {
@@ -366,8 +367,11 @@ const translation = {
         define_social_methods: 'Define social sign in methods',
         transfer: {
           title: 'Social connectors',
-          added: 'added',
-          footer: 'Not in the list?  Set up more social connectors or go to “Connectors” section.',
+          footer: {
+            not_in_list: 'Not in the list?',
+            set_up_more: 'Set up more',
+            go_to: 'social connectors or go to “Connectors” section.',
+          },
         },
       },
       others: {
