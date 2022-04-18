@@ -11,16 +11,17 @@
   pointer-events: none;
 
   .toast {
+    max-width: 360px;
     padding: _.unit(2) _.unit(4);
     font: var(--font-body-medium);
     color: var(--color-font-toast-text);
     border-radius: _.unit(2);
-    max-width: none;
     background: var(--color-dark-background);
     min-width: _.unit(25);
     text-align: center;
     opacity: 0%;
     transition: opacity 0.3s ease-in-out;
+    word-break: break-all;
 
     &[data-visible='true'] {
       opacity: 100%;
