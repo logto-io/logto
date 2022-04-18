@@ -122,6 +122,13 @@ export const languageInfoGuard = z.object({
 
 export type LanguageInfo = z.infer<typeof languageInfoGuard>;
 
+export enum SignInMethodKey {
+  Username = 'username',
+  Email = 'email',
+  SMS = 'sms',
+  Social = 'social',
+}
+
 export enum SignInMethodState {
   primary = 'primary',
   secondary = 'secondary',
@@ -129,10 +136,10 @@ export enum SignInMethodState {
 }
 
 export const signInMethodsGuard = z.object({
-  username: z.nativeEnum(SignInMethodState),
-  email: z.nativeEnum(SignInMethodState),
-  sms: z.nativeEnum(SignInMethodState),
-  social: z.nativeEnum(SignInMethodState),
+  [SignInMethodKey.Username]: z.nativeEnum(SignInMethodState),
+  [SignInMethodKey.Email]: z.nativeEnum(SignInMethodState),
+  [SignInMethodKey.SMS]: z.nativeEnum(SignInMethodState),
+  [SignInMethodKey.Social]: z.nativeEnum(SignInMethodState),
 });
 
 export type SignInMethods = z.infer<typeof signInMethodsGuard>;
