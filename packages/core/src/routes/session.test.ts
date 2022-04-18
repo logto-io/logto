@@ -1,6 +1,7 @@
 /* eslint-disable max-lines */
 import { Provider } from 'oidc-provider';
 
+import { mockSignInExperience } from '@/__mocks__';
 import { ConnectorType } from '@/connectors/types';
 import RequestError from '@/errors/RequestError';
 import { createRequester } from '@/utils/test-utils';
@@ -857,6 +858,18 @@ describe('sessionRoutes', () => {
         'statusCode',
         400
       );
+    });
+  });
+
+  describe('GET /sign-in-settings', () => {
+    const findDefaultSignInExperience = jest.fn(async () => mockSignInExperience);
+    jest.mock('@/queries/sign-in-experience', async () => findDefaultSignInExperience());
+
+    it('should call findDefaultSignInExperience', async () => {
+      const response = await sessionRequest.get('/sign-in-settings');
+      expect(findDefaultSignInExperience).toHaveBeenCalledTimes(1);
+      expect(response.status).toEqual(200);
+      expect(response.body).toEqual(mockSignInExperience);
     });
   });
 
