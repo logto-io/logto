@@ -1,4 +1,4 @@
-import { Application } from '@logto/schemas';
+import { Application, SnakeCaseOidcConfig } from '@logto/schemas';
 import React, { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
@@ -31,13 +31,6 @@ import { noSpaceRegex } from '@/utilities/regex';
 import DeleteForm from './components/DeleteForm';
 import * as styles from './index.module.scss';
 
-// TODO LOG-1908: OidcConfig in Application Details
-type OidcConfig = {
-  authorization_endpoint: string;
-  userinfo_endpoint: string;
-  token_endpoint: string;
-};
-
 const ApplicationDetails = () => {
   const { id } = useParams();
   const location = useLocation();
@@ -46,10 +39,11 @@ const ApplicationDetails = () => {
   const { data, error, mutate } = useSWR<Application, RequestError>(
     id && `/api/applications/${id}`
   );
-  // TODO LOG-1908: OidcConfig in Application Details
-  const { data: oidcConfig, error: fetchOidcConfigError } = useSWR<OidcConfig, RequestError>(
-    '/oidc/.well-known/openid-configuration'
-  );
+
+  const { data: oidcConfig, error: fetchOidcConfigError } = useSWR<
+    SnakeCaseOidcConfig,
+    RequestError
+  >('/oidc/.well-known/openid-configuration');
   const isLoading = !data && !error && !oidcConfig && !fetchOidcConfigError;
 
   const [isReadmeOpen, setIsReadmeOpen] = useState(false);
