@@ -19,6 +19,7 @@ import {
 } from '@/lib/social';
 import { encryptUserPassword, generateUserId, findUserByUsernameAndPassword } from '@/lib/user';
 import koaGuard from '@/middleware/koa-guard';
+import { findDefaultSignInExperience } from '@/queries/sign-in-experience';
 import {
   hasUserWithEmail,
   hasUserWithPhone,
@@ -515,6 +516,14 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
     await provider.interactionDetails(ctx.req, ctx.res);
     const error: LogtoErrorCode = 'oidc.aborted';
     await assignInteractionResults(ctx, provider, { error });
+
+    return next();
+  });
+
+  router.get('/sign-in-settings', async (ctx, next) => {
+    // TODO: Social Connector Details
+    const signInExperience = await findDefaultSignInExperience();
+    ctx.body = signInExperience;
 
     return next();
   });

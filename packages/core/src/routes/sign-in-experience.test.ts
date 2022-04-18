@@ -78,19 +78,6 @@ describe('GET /sign-in-exp', () => {
   });
 });
 
-describe('GET /sign-in-settings', () => {
-  afterAll(() => {
-    jest.clearAllMocks();
-  });
-
-  it('should call findDefaultSignInExperience', async () => {
-    const response = await signInExperienceRequester.get('/sign-in-settings');
-    expect(findDefaultSignInExperience).toHaveBeenCalledTimes(1);
-    expect(response.status).toEqual(200);
-    expect(response.body).toEqual(mockSignInExperience);
-  });
-});
-
 describe('PATCH /sign-in-exp', () => {
   it('should not update social connector ids when social sign-in is disabled', async () => {
     const signInMethods = { ...mockSignInMethods, social: SignInMethodState.Disabled };
