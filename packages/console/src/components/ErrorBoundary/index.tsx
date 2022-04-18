@@ -1,6 +1,6 @@
 import { conditional } from '@silverhand/essentials';
 import React, { Component, ReactNode } from 'react';
-import { Namespace, TFunction, withTranslation } from 'react-i18next';
+import { TFunction, withTranslation } from 'react-i18next';
 
 import ErrorImage from '@/assets/images/table-error.svg';
 
@@ -8,7 +8,7 @@ import * as styles from './index.module.scss';
 
 type Props = {
   children: ReactNode;
-  t: TFunction<Namespace, 'admin_console'>;
+  t: TFunction;
 };
 
 type State = {
@@ -48,7 +48,7 @@ class ErrorBoundary extends Component<Props, State> {
         <div className={styles.container}>
           <div className={styles.wrapper}>
             <img src={ErrorImage} alt="oops" />
-            <h2>{t('errors.something_went_wrong')}</h2>
+            <h2>{t('admin_console.errors.something_went_wrong')}</h2>
             <details open>
               <summary>{errorMessage}</summary>
               {callStack}
