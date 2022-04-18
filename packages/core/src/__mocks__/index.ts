@@ -1,28 +1,19 @@
 import {
   Application,
-  ApplicationDTO,
   ApplicationType,
   Passcode,
   PasscodeType,
   Resource,
   Role,
   Setting,
-  SnakeCaseOidcConfig,
   UserLog,
   UserLogResult,
   UserLogType,
 } from '@logto/schemas';
-import camelcaseKeys from 'camelcase-keys';
 
 export * from './connector';
 export * from './sign-in-experience';
 export * from './user';
-
-export const mockOidcConfig: SnakeCaseOidcConfig = {
-  authorization_endpoint: 'https://logto.dev/oidc/auth',
-  userinfo_endpoint: 'https://logto.dev/oidc/userinfo',
-  token_endpoint: 'https://logto.dev/oidc/token',
-};
 
 export const mockApplication: Application = {
   id: 'foo',
@@ -39,11 +30,6 @@ export const mockApplication: Application = {
     refreshTokenTtl: 6_000_000,
   },
   createdAt: 1_645_334_775_356,
-};
-
-export const mockApplicationDTO: ApplicationDTO = {
-  ...mockApplication,
-  oidcConfig: camelcaseKeys(mockOidcConfig),
 };
 
 export const mockResource: Resource = {
