@@ -4,7 +4,7 @@ import React, { useMemo } from 'react';
 
 import MoreButton from '@/components/Button/MoreButton';
 import SocialIconButton from '@/components/Button/SocialIconButton';
-import useSocial from '@/hooks/use-social-connector';
+import useSocial from '@/hooks/use-social';
 
 import * as styles from './index.module.scss';
 

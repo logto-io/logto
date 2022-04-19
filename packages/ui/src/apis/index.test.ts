@@ -17,7 +17,7 @@ import {
 } from './sign-in';
 import {
   invokeSocialSignIn,
-  signInWithSoical,
+  signInWithSocial,
   bindSocialAccount,
   registerWithSocial,
 } from './social';
@@ -153,14 +153,14 @@ describe('api', () => {
     });
   });
 
-  it('signInWithSoical', async () => {
+  it('signInWithSocial', async () => {
     const parameters = {
       connectorId: 'connectorId',
       state: 'state',
       redirectUri: 'redirectUri',
       code: 'code',
     };
-    await signInWithSoical(parameters);
+    await signInWithSocial(parameters);
     expect(ky.post).toBeCalledWith('/api/session/sign-in/social', {
       json: parameters,
     });

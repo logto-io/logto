@@ -1,7 +1,9 @@
 import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 
-import useSocial from '@/hooks/use-social-connector';
+import useSocial from '@/hooks/use-social';
+
+import * as styles from './index.module.scss';
 
 type Props = {
   connector?: string;
@@ -9,13 +11,16 @@ type Props = {
 
 const Callback = () => {
   const { connector } = useParams<Props>();
-  const { signInWithSocial } = useSocial();
+  const { socialCallbackHandler } = useSocial();
 
+  // SocialSignIn Callback Handler
   useEffect(() => {
-    signInWithSocial(connector);
-  }, [signInWithSocial, connector]);
+    if (connector) {
+      socialCallbackHandler(connector);
+    }
+  }, [connector, socialCallbackHandler]);
 
-  return <div>{connector} loading...</div>;
+  return <div className={styles.container}>{connector} loading...</div>;
 };
 
 export default Callback;

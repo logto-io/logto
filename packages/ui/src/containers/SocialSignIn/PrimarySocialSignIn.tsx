@@ -4,7 +4,7 @@ import React, { useState, useMemo } from 'react';
 
 import SocialLinkButton from '@/components/Button/SocialLinkButton';
 import { ExpandMoreIcon } from '@/components/Icons';
-import useSocial from '@/hooks/use-social-connector';
+import useSocial from '@/hooks/use-social';
 
 import * as styles from './index.module.scss';
 
@@ -42,7 +42,6 @@ const PrimarySocialSignIn = ({ className, connectors, isPopup = false }: Props) 
       ))}
       {!displayAll && (
         <ExpandMoreIcon
-          className={styles.expandButton}
           onClick={() => {
             setShowAll(true);
           }}
