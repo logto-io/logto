@@ -1,1 +1,1 @@
-# Swift SDK Reference
+# @logto-io/swift

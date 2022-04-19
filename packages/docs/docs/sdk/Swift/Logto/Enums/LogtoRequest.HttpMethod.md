@@ -1,3 +1,7 @@
+---
+sidebar_position: 4.1
+---
+
 **ENUM**
 
 # `LogtoRequest.HttpMethod`

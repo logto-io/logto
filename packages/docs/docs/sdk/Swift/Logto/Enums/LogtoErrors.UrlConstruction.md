@@ -1,3 +1,7 @@
+---
+sidebar_position: 3.1
+---
+
 **ENUM**
 
 # `LogtoErrors.UrlConstruction`
