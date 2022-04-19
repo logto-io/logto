@@ -5,7 +5,7 @@ import Koa from 'koa';
 import koaLogger from 'koa-logger';
 import mount from 'koa-mount';
 
-import { MountedApps, port } from '@/env/consts';
+import envSet, { MountedApps } from '@/env-set';
 import koaConnectorErrorHandler from '@/middleware/koa-connector-error-handle';
 import koaErrorHandler from '@/middleware/koa-error-handler';
 import koaI18next from '@/middleware/koa-i18next';
@@ -35,12 +35,12 @@ export default async function initApp(app: Koa): Promise<void> {
   );
   app.use(koaSpaProxy());
 
-  const { HTTPS_CERT, HTTPS_KEY } = process.env;
+  const { httpsCert, httpsKey, port } = envSet.values;
 
-  if (HTTPS_CERT && HTTPS_KEY) {
+  if (httpsCert && httpsKey) {
     https
       .createServer(
-        { cert: await fs.readFile(HTTPS_CERT), key: await fs.readFile(HTTPS_KEY) },
+        { cert: await fs.readFile(httpsCert), key: await fs.readFile(httpsKey) },
         app.callback()
       )
       .listen(port, () => {

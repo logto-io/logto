@@ -1,4 +1,4 @@
-import { MountedApps } from '@/env/consts';
+import { MountedApps } from '@/env-set';
 import { createContextWithRouteParameters } from '@/utils/test-utils';
 
 import koaSpaProxy from './koa-spa-proxy';
@@ -49,6 +49,8 @@ describe('koaSpaProxy middleware', () => {
 
   it('production env should overwrite the request path to root if no target ui file are detected', async () => {
     process.env.NODE_ENV = 'production';
+    process.env.PASSWORD_PEPPERS = JSON.stringify(['foo']);
+    process.env.DB_URL = 'some_db_url';
 
     const ctx = createContextWithRouteParameters({
       url: '/foo',
@@ -63,6 +65,8 @@ describe('koaSpaProxy middleware', () => {
 
   it('production env should call the static middleware if path hit the ui file directory', async () => {
     process.env.NODE_ENV = 'production';
+    process.env.PASSWORD_PEPPERS = JSON.stringify(['foo']);
+    process.env.DB_URL = 'some_db_url';
 
     const { default: proxy } = await import('./koa-spa-proxy');
     const ctx = createContextWithRouteParameters({

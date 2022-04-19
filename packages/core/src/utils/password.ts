@@ -1,18 +1,10 @@
 import { createHash } from 'crypto';
 
 import { UsersPasswordEncryptionMethod } from '@logto/schemas';
-import { assertEnv, repeat } from '@silverhand/essentials';
-import { nanoid } from 'nanoid';
-import { number, string } from 'zod';
+import { repeat } from '@silverhand/essentials';
 
+import envSet from '@/env-set';
 import assertThat from '@/utils/assert-that';
-
-const peppers = string()
-  .array()
-  .parse(process.env.NODE_ENV === 'test' ? [nanoid()] : JSON.parse(assertEnv('PASSWORD_PEPPERS')));
-const iterationCount = number()
-  .min(100)
-  .parse(process.env.NODE_ENV === 'test' ? 1000 : Number(assertEnv('PASSWORD_ITERATION_COUNT')));
 
 export const encryptPassword = (
   id: string,
@@ -32,7 +24,9 @@ export const encryptPassword = (
     (accumulator, current) => accumulator + (current.codePointAt(0) ?? 0),
     0
   );
+  const peppers = envSet.values.passwordPeppers;
   const pepper = peppers[sum % peppers.length];
+  const iterationCount = envSet.values.passwordIterationCount;
 
   assertThat(pepper, 'password.pepper_not_found');
 
