@@ -223,6 +223,21 @@ describe('adminUserRoutes', () => {
     expect(updateUserById).not.toBeCalled();
   });
 
+  it('PATCH /users/:userId should throw if role names are invalid', async () => {
+    const mockedFindRolesByRoleNames = findRolesByRoleNames as jest.Mock;
+    mockedFindRolesByRoleNames.mockImplementationOnce(
+      async (): Promise<Role[]> => [
+        { name: 'worker', description: 'none' },
+        { name: 'cleaner', description: 'none' },
+      ]
+    );
+    await expect(
+      userRequest.patch('/users/foo').send({ roleNames: ['admin'] })
+    ).resolves.toHaveProperty('status', 500);
+    expect(findUserById).toHaveBeenCalledTimes(1);
+    expect(updateUserById).not.toHaveBeenCalled();
+  });
+
   it('PATCH /users/:userId/password', async () => {
     const mockedUserId = 'foo';
     const password = '123456';
@@ -271,43 +286,6 @@ describe('adminUserRoutes', () => {
       500
     );
     expect(deleteUserById).not.toHaveBeenCalled();
-  });
-
-  it('PATCH /users/:userId/roleNames', async () => {
-    const response = await userRequest.patch('/users/foo/roleNames').send({ roleNames: ['admin'] });
-    expect(findUserById).toHaveBeenCalledTimes(1);
-    expect(updateUserById).toHaveBeenCalledTimes(1);
-    expect(response.status).toEqual(200);
-  });
-
-  it('PATCH /users/:userId/roleNames should throw if user not found', async () => {
-    const notExistedUserId = 'notExisitedUserId';
-    const mockedFindUserById = findUserById as jest.Mock;
-    mockedFindUserById.mockImplementationOnce((userId) => {
-      if (userId === notExistedUserId) {
-        throw new Error(' ');
-      }
-    });
-    await expect(
-      userRequest.patch(`/users/${notExistedUserId}/roleNames`).send({ roleNames: ['admin'] })
-    ).resolves.toHaveProperty('status', 500);
-    expect(findRolesByRoleNames).not.toHaveBeenCalled();
-    expect(updateUserById).not.toHaveBeenCalled();
-  });
-
-  it('PATCH /users/:userId/roleNames should throw if role names are invalid', async () => {
-    const mockedFindRolesByRoleNames = findRolesByRoleNames as jest.Mock;
-    mockedFindRolesByRoleNames.mockImplementationOnce(
-      async (): Promise<Role[]> => [
-        { name: 'worker', description: 'none' },
-        { name: 'cleaner', description: 'none' },
-      ]
-    );
-    await expect(
-      userRequest.patch('/users/foo/roleNames').send({ roleNames: ['admin'] })
-    ).resolves.toHaveProperty('status', 500);
-    expect(findUserById).toHaveBeenCalledTimes(1);
-    expect(updateUserById).not.toHaveBeenCalled();
   });
 
   it('PATCH /users/:userId/custom-data', async () => {

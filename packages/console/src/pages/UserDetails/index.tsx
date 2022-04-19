@@ -1,7 +1,7 @@
 import { User } from '@logto/schemas';
 import { Nullable } from '@silverhand/essentials';
 import React, { useEffect, useState } from 'react';
-import { useController, useForm } from 'react-hook-form';
+import { Controller, useController, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import ReactModal from 'react-modal';
@@ -30,6 +30,7 @@ import { safeParseJson } from '@/utilities/json';
 import CreateSuccess from './components/CreateSuccess';
 import DeleteForm from './components/DeleteForm';
 import ResetPasswordForm from './components/ResetPasswordForm';
+import RoleSelect from './components/RoleSelect';
 import UserConnectors from './components/UserConnectors';
 import * as styles from './index.module.scss';
 
@@ -39,7 +40,7 @@ type FormData = {
   username: Nullable<string>;
   name: Nullable<string>;
   avatar: Nullable<string>;
-  roles: Nullable<string>;
+  roleNames: string[];
   customData: string;
 };
 
@@ -71,7 +72,6 @@ const UserDetails = () => {
     }
     reset({
       ...data,
-      roles: data.roleNames.join(','),
       customData: JSON.stringify(data.customData, null, 2),
     });
   }, [data, reset]);
@@ -92,6 +92,7 @@ const UserDetails = () => {
     const payload: Partial<User> = {
       name: formData.name,
       avatar: formData.avatar,
+      roleNames: formData.roleNames,
       customData,
     };
 
@@ -210,7 +211,13 @@ const UserDetails = () => {
                   title="admin_console.user_details.field_roles"
                   className={styles.textField}
                 >
-                  <TextInput readOnly {...register('roles')} />
+                  <Controller
+                    name="roleNames"
+                    control={control}
+                    render={({ field: { value, onChange } }) => (
+                      <RoleSelect value={value} onChange={onChange} />
+                    )}
+                  />
                 </FormField>
                 <FormField
                   title="admin_console.user_details.field_connectors"

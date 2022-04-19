@@ -295,6 +295,10 @@ const translation = {
         remove: '删除',
         not_connected: '该用户还没有绑定社交账号。',
       },
+      roles: {
+        default: '默认',
+        admin: '管理员',
+      },
     },
     contact: {
       title: 'Contact us',
