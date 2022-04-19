@@ -14,7 +14,7 @@ const config = {
   onBrokenMarkdownLinks: 'warn',
   favicon: 'img/favicon.ico',
   organizationName: 'logto-io', // Usually your GitHub org/user name.
-  projectName: 'logto', // Usually your repo name.
+  projectName: 'website-docs', // Usually your repo name.
 
   i18n: {
     defaultLocale: 'en',
