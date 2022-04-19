@@ -3,6 +3,7 @@ import React, { useEffect } from 'react';
 import { Outlet, useHref } from 'react-router-dom';
 
 import ErrorBoundary from '../ErrorBoundary';
+import LogtoLoading from '../LogtoLoading';
 import Sidebar from './components/Sidebar';
 import Topbar from './components/Topbar';
 import * as styles from './index.module.scss';
@@ -33,7 +34,7 @@ const AppContent = ({ theme }: Props) => {
   }, [href, isAuthenticated, signIn]);
 
   if (!isAuthenticated) {
-    return <>loading</>;
+    return <LogtoLoading message="general.loading" />;
   }
 
   return (

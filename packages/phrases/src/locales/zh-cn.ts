@@ -10,6 +10,8 @@ const translation = {
     done: '完成',
     search: '搜索',
     save_changes: '保存更改',
+    loading: '读取中...',
+    redirecting: '页面跳转中...',
   },
   main_flow: {
     input: {
