@@ -1,18 +1,6 @@
 @use '@/scss/underscore' as _;
 
 /* Foundation */
-$color-neutral-100: #111;
-$color-neutral-90: #666;
-$color-neutral-70: #999;
-$color-neutral-50: #aeaeae;
-$color-neutral-30: #d8d8d8;
-$color-neutral-10: #f4f4f4;
-$color-neutral-0: #fff;
-
-$color-primary: #6139f6;
-$color-primary-tint-60: #a48dfa;
-$color-primary-tint-70: #b09bfa;
-
 $font-family: 'PingFang SC', 'SF Pro Display', 'Siyuan Heiti', 'Roboto';
 $font-family-small: 'PingFang SC', 'SF Pro Text', 'Siyuan Heiti', 'Roboto';
 
@@ -41,47 +29,6 @@ $font-family-small: 'PingFang SC', 'SF Pro Text', 'Siyuan Heiti', 'Roboto';
   --color-toast: rgba(25, 28, 29, 80%);
   --color-overlay: rgba(25, 28, 29, 16%);
   --color-base: #fff;
-
-
-  /* ===== Legacy Styling ===== */
-
-  /* Color */
-  --color-background: #{$color-neutral-0};
-  --color-secondary-background-active: #{$color-neutral-10};
-  --color-secondary-background-disabled: #{$color-neutral-10};
-  --color-border-secondary: #{$color-neutral-70};
-  --color-border-disabled: #{$color-neutral-30};
-  --color-control-background: #{$color-neutral-10};
-  --color-control-focus: #{$color-primary-tint-60};
-  --color-control-action: #{$color-neutral-50};
-  --color-checkbox-border: #{$color-neutral-30};
-  --color-divider: #dbdbdb;
-  --color-dark-background: #{rgba($color-neutral-100, 0.8)};
-  --color-loading-layer: rgba(0, 0, 0, 8%);
-
-  /* Font Color */
-  --color-font-primary: #{$color-neutral-100};
-  --color-font-secondary: #444;
-  --color-font-tertiary: #777;
-  --color-font-placeholder: #aaa;
-  --color-font-divider: #bbb;
-  --color-font-button-text: #{$color-neutral-0};
-  --color-font-button-text-active: #{rgba($color-neutral-0, 0.4)};
-  --color-font-secondary-dialog: #{$color-neutral-70};
-  --color-font-secondary-disabled: #{rgba($color-neutral-100, 0.4)};
-  --color-font-link: #{$color-primary};
-  --color-font-link-secondary: #{$color-neutral-70};
-  --color-font-toast-text: #{$color-neutral-0};
-
-  --color-heading: #333;
-  --color-body: #555;
-  --color-secondary: #888;
-  --color-placeholder: #aaa;
-  --color-control-background-disabled: #eaeaea;
-
-  /* Shadow */
-  --shadow-card: 2px 2px 24px rgb(187, 189, 191, 20%);
-  --shadow-control: 1px 1px 2px rgb(221, 221, 221, 25%);
 }
 
 .dark {
@@ -105,12 +52,4 @@ $font-family-small: 'PingFang SC', 'SF Pro Text', 'Siyuan Heiti', 'Roboto';
   --font-body: 400 16px/20px #{$font-family};
   --font-body-small: 500 14px/18px #{$font-family-small};
   --font-caption: 400 14px/18px #{$font-family-small};
-
-
-  /* legacy  */
-  --font-heading-2: 500 18px/22px #{$font-family};
-  --font-heading-2-bold: 600 18px/22px #{$font-family};
-  --font-control: 500 18px/20px #{$font-family};
-  --font-button-text: 600 20px/24px #{$font-family};
-  --font-button-text-small: 500 18px/22px #{$font-family};
 }
