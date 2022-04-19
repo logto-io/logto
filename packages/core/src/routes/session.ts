@@ -84,8 +84,12 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
     '/session/sign-in/passwordless/sms/send-passcode',
     koaGuard({ body: object({ phone: string().regex(phoneRegEx) }) }),
     async (ctx, next) => {
-      const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
       const { phone } = ctx.guard.body;
+      ctx.log.type = LogType.SignInSmsSendPasscode;
+      ctx.log.phone = phone;
+
+      const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
+      ctx.log.sessionId = jti;
 
       assertThat(
         await hasUserWithPhone(phone),
@@ -93,7 +97,10 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
       );
 
       const passcode = await createPasscode(jti, PasscodeType.SignIn, { phone });
+      ctx.log.passcode = passcode;
+
       await sendPasscode(passcode);
+      // TODO: ctx.log.connectorId = connectorId; // LOG-2230
       ctx.status = 204;
 
       return next();
@@ -104,8 +111,13 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
     '/session/sign-in/passwordless/sms/verify-passcode',
     koaGuard({ body: object({ phone: string().regex(phoneRegEx), code: string() }) }),
     async (ctx, next) => {
-      const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
       const { phone, code } = ctx.guard.body;
+      ctx.log.type = LogType.SignInSms;
+      ctx.log.phone = phone;
+      ctx.log.passcode = code;
+
+      const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
+      ctx.log.sessionId = jti;
 
       assertThat(
         await hasUserWithPhone(phone),
@@ -114,6 +126,7 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
 
       await verifyPasscode(jti, PasscodeType.SignIn, code, { phone });
       const { id } = await findUserByPhone(phone);
+      ctx.log.userId = id;
 
       await assignInteractionResults(ctx, provider, { login: { accountId: id } });
 
@@ -125,8 +138,12 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
     '/session/sign-in/passwordless/email/send-passcode',
     koaGuard({ body: object({ email: string().regex(emailRegEx) }) }),
     async (ctx, next) => {
-      const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
       const { email } = ctx.guard.body;
+      ctx.log.type = LogType.SignInEmailSendPasscode;
+      ctx.log.email = email;
+
+      const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
+      ctx.log.sessionId = jti;
 
       assertThat(
         await hasUserWithEmail(email),
@@ -134,7 +151,10 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
       );
 
       const passcode = await createPasscode(jti, PasscodeType.SignIn, { email });
+      ctx.log.passcode = passcode;
+
       await sendPasscode(passcode);
+      // TODO: ctx.log.connectorId = connectorId; // LOG-2230
       ctx.status = 204;
 
       return next();
@@ -145,8 +165,13 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
     '/session/sign-in/passwordless/email/verify-passcode',
     koaGuard({ body: object({ email: string().regex(emailRegEx), code: string() }) }),
     async (ctx, next) => {
-      const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
       const { email, code } = ctx.guard.body;
+      ctx.log.type = LogType.SignInEmail;
+      ctx.log.email = email;
+      ctx.log.passcode = code;
+
+      const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
+      ctx.log.sessionId = jti;
 
       assertThat(
         await hasUserWithEmail(email),
@@ -155,6 +180,7 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
 
       await verifyPasscode(jti, PasscodeType.SignIn, code, { email });
       const { id } = await findUserByEmail(email);
+      ctx.log.userId = id;
 
       await assignInteractionResults(ctx, provider, { login: { accountId: id } });
 
