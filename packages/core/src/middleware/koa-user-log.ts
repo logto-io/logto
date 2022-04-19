@@ -1,14 +1,26 @@
-import { UserLogPayload, UserLogResult, UserLogType } from '@logto/schemas';
+/**
+ * TODO: remove useless code, and rename to koa-log.ts
+ */
+import { LogResult, LogType, UserLogPayload, UserLogResult, UserLogType } from '@logto/schemas';
 import { Context, MiddlewareType } from 'koa';
 import { nanoid } from 'nanoid';
 
+import { insertLog } from '@/queries/log';
 import { insertUserLog } from '@/queries/user-log';
 
-export type WithUserLogContext<ContextT> = ContextT & {
-  userLog: LogContext;
+export type WithLogContext<ContextT> = ContextT & {
+  log: LogContext;
+  /** @deprecated */
+  userLog: UserLogContext;
 };
 
 export interface LogContext {
+  [key: string]: unknown;
+  type?: LogType;
+}
+
+/** @deprecated */
+export interface UserLogContext {
   type?: UserLogType;
   userId?: string;
   username?: string;
@@ -19,7 +31,30 @@ export interface LogContext {
   createdAt: number;
 }
 
-const insertLog = async (ctx: WithUserLogContext<Context>, result: UserLogResult) => {
+const log = async (ctx: WithLogContext<Context>, result: LogResult) => {
+  const { type, ...rest } = ctx.log;
+
+  if (!type) {
+    return;
+  }
+
+  try {
+    await insertLog({
+      id: nanoid(),
+      type,
+      payload: {
+        ...rest,
+        result,
+      },
+    });
+  } catch (error: unknown) {
+    console.error('An error occurred while inserting log');
+    console.error(error);
+  }
+};
+
+/** @deprecated */
+const logUser = async (ctx: WithLogContext<Context>, result: UserLogResult) => {
   // Insert log if log context is set properly.
   if (ctx.userLog.userId && ctx.userLog.type) {
     try {
@@ -39,10 +74,12 @@ const insertLog = async (ctx: WithUserLogContext<Context>, result: UserLogResult
 
 export default function koaUserLog<StateT, ContextT, ResponseBodyT>(): MiddlewareType<
   StateT,
-  WithUserLogContext<ContextT>,
+  WithLogContext<ContextT>,
   ResponseBodyT
 > {
   return async (ctx, next) => {
+    ctx.log = {};
+
     ctx.userLog = {
       createdAt: Date.now(),
       payload: {},
@@ -50,11 +87,14 @@ export default function koaUserLog<StateT, ContextT, ResponseBodyT>(): Middlewar
 
     try {
       await next();
-      await insertLog(ctx, UserLogResult.Success);
+      await log(ctx, LogResult.Success);
+      await logUser(ctx, UserLogResult.Success);
 
       return;
     } catch (error: unknown) {
-      await insertLog(ctx, UserLogResult.Failed);
+      ctx.log.error = String(error);
+      await log(ctx, LogResult.Error);
+      await logUser(ctx, UserLogResult.Failed);
       throw error;
     }
   };
