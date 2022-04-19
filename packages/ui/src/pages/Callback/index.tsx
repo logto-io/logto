@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 
 import useSocial from '@/hooks/use-social';
@@ -11,9 +11,14 @@ type Props = {
 
 const Callback = () => {
   const { connector } = useParams<Props>();
-  useSocial();
+  const { socialCallbackHandler } = useSocial();
 
-  // TODO: load connector configs from context experience settings
+  // SocialSignIn Callback Handler
+  useEffect(() => {
+    if (connector) {
+      socialCallbackHandler(connector);
+    }
+  }, [connector, socialCallbackHandler]);
 
   return <div className={styles.container}>{connector} loading...</div>;
 };

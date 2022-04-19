@@ -23,10 +23,16 @@ type State = {
 
 const storageKeyPrefix = 'social_auth_state';
 
+const getLogtoNativeSdk = () => {
+  if (typeof logtoNativeSdk !== 'undefined') {
+    return logtoNativeSdk;
+  }
+};
+
 export const generateState = () => {
   const uuid = generateRandomString();
-  const platform = logtoNativeSdk?.platform ?? 'web';
-  const callbackUriScheme = logtoNativeSdk?.callbackUriScheme;
+  const platform = getLogtoNativeSdk()?.platform ?? 'web';
+  const callbackUriScheme = getLogtoNativeSdk()?.callbackUriScheme;
 
   const state: State = { uuid, platform, callbackUriScheme };
 
@@ -52,7 +58,9 @@ export const storeState = (state: string, connectorId: string) => {
 /* ============================================================================ */
 
 const isNativeWebview = () => {
-  return ['ios', 'android'].includes(logtoNativeSdk?.platform ?? '');
+  const platform = getLogtoNativeSdk()?.platform ?? '';
+
+  return ['ios', 'android'].includes(platform);
 };
 
 const useSocial = () => {
@@ -112,7 +120,9 @@ const useSocial = () => {
       const { platform, callbackUriScheme } = decodedState;
 
       if (platform === 'web') {
-        signInWithSocialHandler(connectorId, state, code);
+        window.location.assign(
+          new URL(`${location.origin}/sign-in/callback/${connectorId}/${window.location.search}`)
+        );
 
         return;
       }
@@ -122,9 +132,9 @@ const useSocial = () => {
         return;
       }
 
-      window.location.assign(`${callbackUriScheme}${window.location.search}`);
+      window.location.assign(new URL(`${callbackUriScheme}${window.location.search}`));
     },
-    [setToast, signInWithSocialHandler]
+    [setToast]
   );
 
   // InvokeSocialSignIn Callback
@@ -136,9 +146,8 @@ const useSocial = () => {
     }
 
     // Invoke Native Social Sign In flow
-    if (logtoNativeSdk && isNativeWebview()) {
-      const postMessage = logtoNativeSdk.getPostMessage();
-      postMessage({
+    if (isNativeWebview()) {
+      getLogtoNativeSdk()?.getPostMessage()({
         callbackUri: redirectTo.replace('/callback', '/sign-in/callback'),
         redirectTo,
       });
@@ -157,12 +166,20 @@ const useSocial = () => {
     }
   }, [signInWithSocialResult]);
 
-  // SocialSignIn Callback Handler
+  // SignIn Callback Page Handler
   useEffect(() => {
-    if (parameters.connector && location.pathname.includes('/callback')) {
-      socialCallbackHandler(parameters.connector);
+    if (!location.pathname.includes('/sign-in/callback') || !parameters.connector) {
+      return;
     }
-  }, [parameters.connector, socialCallbackHandler]);
+
+    const { state, code } = parseQueryParameters(window.location.search);
+
+    if (!state || !code) {
+      return;
+    }
+
+    signInWithSocialHandler(parameters.connector, state, code);
+  }, [parameters.connector, signInWithSocialHandler]);
 
   // Monitor Native Error Message
   useEffect(() => {
