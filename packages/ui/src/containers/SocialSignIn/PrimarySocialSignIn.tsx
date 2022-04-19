@@ -42,7 +42,6 @@ const PrimarySocialSignIn = ({ className, connectors, isPopup = false }: Props) 
       ))}
       {!displayAll && (
         <ExpandMoreIcon
-          className={styles.expandButton}
           onClick={() => {
             setShowAll(true);
           }}
