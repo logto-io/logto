@@ -21,7 +21,7 @@
     text-align: center;
     opacity: 0%;
     transition: opacity 0.3s ease-in-out;
-    word-break: break-all;
+    word-break: break-word;
 
     &[data-visible='true'] {
       opacity: 100%;

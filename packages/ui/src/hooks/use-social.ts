@@ -10,13 +10,13 @@ import useApi from './use-api';
 /**
  * Social Connector State Utility Methods
  * @param state
- * @param state.uunid - unique id
+ * @param state.uuid - unique id
  * @param state.platform - platform
  * @param state.callbackUriScheme - callback uri scheme
  */
 
 type State = {
-  uunid: string;
+  uuid: string;
   platform: 'web' | 'ios' | 'android';
   callbackUriScheme?: string;
 };
@@ -24,27 +24,25 @@ type State = {
 const storageKeyPrefix = 'social_auth_state';
 
 export const generateState = () => {
-  const uunid = generateRandomString();
+  const uuid = generateRandomString();
   const platform = logtoNativeSdk?.platform ?? 'web';
   const callbackUriScheme = logtoNativeSdk?.callbackUriScheme;
 
-  const state: State = { uunid, platform, callbackUriScheme };
+  const state: State = { uuid, platform, callbackUriScheme };
 
-  return Buffer.from(JSON.stringify(state)).toString('base64');
+  return btoa(JSON.stringify(state));
 };
 
 export const decodeState = (state: string) => {
   try {
-    const value = JSON.parse(Buffer.from(state, 'base64').toString()) as State;
-
-    return value;
+    return JSON.parse(atob(state)) as State;
   } catch {}
 };
 
 export const stateValidation = (state: string, connectorId: string) => {
   const stateStorage = sessionStorage.getItem(`${storageKeyPrefix}:${connectorId}`);
 
-  return Boolean(stateStorage) && stateStorage === state;
+  return stateStorage === state;
 };
 
 export const storeState = (state: string, connectorId: string) => {
@@ -124,7 +122,7 @@ const useSocial = () => {
         return;
       }
 
-      window.location.assign(`${callbackUriScheme}${connectorId}${window.location.search}`);
+      window.location.assign(`${callbackUriScheme}${window.location.search}`);
     },
     [setToast, signInWithSocialHandler]
   );
@@ -168,11 +166,17 @@ const useSocial = () => {
 
   // Monitor Native Error Message
   useEffect(() => {
-    window.addEventListener('message', function (event) {
+    const nativeMessageHandler = (event: MessageEvent) => {
       if (event.origin === window.location.origin) {
         setToast(JSON.stringify(event.data));
       }
-    });
+    };
+
+    window.addEventListener('message', nativeMessageHandler);
+
+    return () => {
+      window.removeEventListener('message', nativeMessageHandler);
+    };
   }, [setToast]);
 
   return {
