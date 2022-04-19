@@ -2,8 +2,8 @@ import { ConnectorMetadata } from '@logto/schemas';
 import classNames from 'classnames';
 import React, { useMemo } from 'react';
 
-import MoreButton from '@/components/Button/MoreButton';
 import SocialIconButton from '@/components/Button/SocialIconButton';
+import MoreSocialIcon from '@/components/Icons/MoreSocialIcon';
 import useSocial from '@/hooks/use-social';
 
 import * as styles from './index.module.scss';
@@ -38,7 +38,9 @@ const SecondarySocialSignIn = ({ className, connectors, showMoreConnectors }: Pr
           }}
         />
       ))}
-      {isOverSize && <MoreButton className={styles.socialButton} onClick={showMoreConnectors} />}
+      {isOverSize && (
+        <MoreSocialIcon className={styles.socialButton} onClick={showMoreConnectors} />
+      )}
     </div>
   );
 };

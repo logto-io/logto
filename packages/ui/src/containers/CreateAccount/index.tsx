@@ -2,11 +2,9 @@
  * TODO:
  * 1. API redesign handle api error and loading status globally in PageContext
  * 2. Input field validation, should move the validation rule to the input field scope
- * 3. Forgot password URL
  * 4. Read terms of use settings from SignInExperience Settings
  */
 
-import classNames from 'classnames';
 import React, { useState, useEffect, useCallback, useMemo, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -159,7 +157,7 @@ const CreateAccount = () => {
   return (
     <form className={styles.form}>
       <Input
-        className={classNames(styles.inputField, fieldErrors.username && styles.withError)}
+        className={styles.inputField}
         name="username"
         autoComplete="username"
         placeholder={t('input.username')}
@@ -177,7 +175,7 @@ const CreateAccount = () => {
       />
       <PasswordInput
         forceHidden
-        className={classNames(styles.inputField, fieldErrors.password && styles.withError)}
+        className={styles.inputField}
         name="password"
         autoComplete="current-password"
         placeholder={t('input.password')}
@@ -192,7 +190,7 @@ const CreateAccount = () => {
       />
       <PasswordInput
         forceHidden
-        className={classNames(styles.inputField, fieldErrors.confirmPassword && styles.withError)}
+        className={styles.inputField}
         name="confirm_password"
         autoComplete="current-password"
         placeholder={t('input.confirm_password')}
@@ -207,7 +205,7 @@ const CreateAccount = () => {
       />
       <TermsOfUse
         name="termsAgreement"
-        className={classNames(styles.terms, fieldErrors.termsAgreement && styles.withError)}
+        className={styles.terms}
         termsOfUse={{ enabled: true, contentUrl: '/' }}
         isChecked={fieldState.termsAgreement}
         error={fieldErrors.termsAgreement}

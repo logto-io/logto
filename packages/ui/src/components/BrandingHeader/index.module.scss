@@ -4,6 +4,9 @@ $logo-height: 60px;
 
 .container {
   width: 100%;
+  height: 15vh;
+  min-height: 92px;
+  max-height: 148px;
   @include _.flex-column;
 }
 
@@ -18,6 +21,6 @@ $logo-height: 60px;
 }
 
 .headline {
-  font: var(--font-heading-2-bold);
-  color: var(--color-font-secondary);
+  font: var(--font-body);
+  color: var(--color-text);
 }

@@ -7,17 +7,16 @@
   right: 0;
   transform: translateY(-50%);
   @include _.flex-column;
-  padding: 0 _.unit(8);
   pointer-events: none;
 
   .toast {
-    max-width: 360px;
+    max-width: 295px;
+    margin: 0 auto;
     padding: _.unit(2) _.unit(4);
-    font: var(--font-body-medium);
-    color: var(--color-font-toast-text);
-    border-radius: _.unit(2);
-    background: var(--color-dark-background);
-    min-width: _.unit(25);
+    font: var(--font-body);
+    color: var(--color-base);
+    border-radius: var(--radius);
+    background: var(--color-toast);
     text-align: center;
     opacity: 0%;
     transition: opacity 0.3s ease-in-out;

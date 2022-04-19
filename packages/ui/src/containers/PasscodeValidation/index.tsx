@@ -111,6 +111,7 @@ const PasscodeValidation = ({ type, method, className, target }: Props) => {
         renderCountDownMessage
       ) : (
         <TextLink
+          className={styles.link}
           text="description.resend_passcode"
           onClick={() => {
             void sendPassCode(target);

@@ -1,8 +1,8 @@
 @use '@/scss/underscore' as _;
 
 .countryCodeSelector {
-  color: var(--color-font-primary);
-  font: var(--font-control);
+  color: var(--color-text);
+  font: var(--font-body);
   border: none;
   background: none;
   width: auto;

@@ -3,7 +3,7 @@ import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 
-import { NavArrowIcon } from '@/components/Icons';
+import NavBar from '@/components/NavBar';
 import PasscodeValidation from '@/containers/PasscodeValidation';
 import { UserFlow } from '@/types';
 
@@ -46,13 +46,7 @@ const Passcode = () => {
 
   return (
     <div className={styles.wrapper}>
-      <div className={styles.navBar}>
-        <NavArrowIcon
-          onClick={() => {
-            navigate(-1);
-          }}
-        />
-      </div>
+      <NavBar />
       <div className={styles.title}>{t('action.enter_passcode')}</div>
       <div className={styles.detail}>{t('description.enter_passcode', { address: target })}</div>
       <PasscodeValidation type={type} method={method} target={target} />

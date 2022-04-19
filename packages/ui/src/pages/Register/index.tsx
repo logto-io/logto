@@ -2,7 +2,7 @@ import React, { useMemo, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { NavArrowIcon } from '@/components/Icons';
+import NavBar from '@/components/NavBar';
 import CreateAccount from '@/containers/CreateAccount';
 import { PhonePasswordless, EmailPasswordless } from '@/containers/Passwordless';
 
@@ -37,13 +37,7 @@ const Register = () => {
 
   return (
     <div className={styles.wrapper}>
-      <div className={styles.navBar}>
-        <NavArrowIcon
-          onClick={() => {
-            navigate(-1);
-          }}
-        />
-      </div>
+      <NavBar />
       <div className={styles.title}>{t('action.create_account')}</div>
       {registerForm}
     </div>

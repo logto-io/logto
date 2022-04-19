@@ -6,12 +6,8 @@
   height: 48px;
   border-radius: 50%;
   @include _.flex-column;
-  background: var(--color-secondary-background-active);
+  background: var(--color-layer);
   border: none;
-
-  &.more {
-    background: url('../../assets/icons/more-social-icon.svg') no-repeat center;
-  }
 }
 
 .icon {

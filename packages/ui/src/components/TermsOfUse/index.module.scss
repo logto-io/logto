@@ -2,6 +2,7 @@
 
 .terms {
   @include _.flex-row;
+  width: 100%;
 
   input[type='checkbox'] {
     appearance: none;
@@ -14,11 +15,15 @@
 
 .radioButton {
   margin-right: _.unit(2);
-  transform: scale(0.8);
+  fill: var(--color-icon);
 }
 
 .content {
   @include _.text-hint;
+
+  .link {
+    @include _.text-hint;
+  }
 }
 
 .errorMessage {

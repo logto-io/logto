@@ -3,23 +3,28 @@
 .socialIconList {
   width: 100%;
   max-width: 360px;
+  margin: 0 auto;
   @include _.flex-row;
   justify-content: center;
 
   .socialButton {
-    margin-right: _.unit(10);
+    margin-right: _.unit(8);
 
     &:last-child {
       margin-right: 0;
     }
+  }
+
+  .moreButton {
+    border-radius: 50%;
   }
 }
 
 .socialLinkList {
   width: 100%;
   max-width: 360px;
-  @include _.flex-column;
   margin: 0 auto;
+  @include _.flex-column;
 
   .socialLinkButton {
     margin-bottom: _.unit(4);

@@ -4,10 +4,10 @@
   position: relative;
   @include _.flex-row;
   padding: 0 _.unit(4);
-  border-radius: _.unit(2);
+  border-radius: var(--radius);
   border: _.border();
-  background: var(--color-control-background);
-  color: var(--color-font-primary);
+  background: var(--color-layer);
+  color: var(--color-text);
 
 
   > *:not(:first-child) {
@@ -15,7 +15,7 @@
   }
 
   &.focus {
-    border: _.border(var(--color-control-focus));
+    border: _.border(var(--color-primary));
   }
 
   &.error {
@@ -28,13 +28,13 @@
     background: none;
     padding: _.unit(3) 0;
     caret-color: var(--color-primary);
-    font: var(--font-control);
-    transition: var(--transition-default-control);
+    font: var(--font-body-bold);
 
     &::placeholder {
-      color: var(--color-placeholder);
+      color: var(--color-caption);
     }
 
+    // Overwrite webkit auto-fill style
     &:-webkit-autofill {
       box-shadow: 0 0 0 30px var(--color-control-background) inset;
       transition: background-color 5000s ease-in-out 0s;
@@ -47,5 +47,5 @@
 }
 
 .actionButton {
-  fill: var(--color-control-action);
+  fill: var(--color-icon);
 }

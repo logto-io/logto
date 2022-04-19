@@ -29,7 +29,7 @@ const Drawer = ({ className, isOpen = false, children, onClose }: Props) => {
     >
       <div className={styles.container}>
         <div className={styles.header}>
-          <ClearIcon onClick={onClose} />
+          <ClearIcon className={styles.closeIcon} onClick={onClose} />
         </div>
         {children}
       </div>

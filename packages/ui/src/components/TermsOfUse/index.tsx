@@ -39,6 +39,7 @@ const TermsOfUse = ({ name, className, termsOfUse, isChecked, error, onChange }:
         <div className={styles.content}>
           {prefix}
           <TextLink
+            className={styles.link}
             text="description.terms_of_use"
             href={termsOfUse.contentUrl}
             type="secondary"

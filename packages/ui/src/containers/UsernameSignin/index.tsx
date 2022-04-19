@@ -2,7 +2,6 @@
  * TODO:
  * 1. API redesign handle api error and loading status globally in PageContext
  * 2. Input field validation, should move the validation rule to the input field scope
- * 3. Forgot password URL
  * 4. Read terms of use settings from SignInExperience Settings
  */
 
@@ -16,7 +15,6 @@ import { ErrorType } from '@/components/ErrorMessage';
 import Input from '@/components/Input';
 import PasswordInput from '@/components/Input/PasswordInput';
 import TermsOfUse from '@/components/TermsOfUse';
-import TextLink from '@/components/TextLink';
 import PageContext from '@/hooks/page-context';
 import useApi from '@/hooks/use-api';
 
@@ -162,16 +160,10 @@ const UsernameSignin: FC = () => {
           }
         }}
       />
-      <TextLink
-        className={styles.textLink}
-        type="secondary"
-        text="description.forgot_password"
-        href="/passcode"
-      />
 
       <TermsOfUse
         name="termsAgreement"
-        className={classNames(styles.terms, fieldErrors.termsAgreement && styles.withError)}
+        className={styles.terms}
         termsOfUse={{ enabled: true, contentUrl: '/' }}
         isChecked={fieldState.termsAgreement}
         error={fieldErrors.termsAgreement}

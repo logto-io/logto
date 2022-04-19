@@ -3,6 +3,7 @@
 .form {
   width: 100%;
   max-width: 360px;
+  margin: 0 auto;
   @include _.flex-column;
 
   > * {
@@ -19,9 +20,5 @@
 
   .terms {
     margin-bottom: _.unit(6);
-
-    &.withError {
-      margin-bottom: _.unit(5);
-    }
   }
 }

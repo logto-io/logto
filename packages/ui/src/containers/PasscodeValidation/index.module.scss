@@ -3,6 +3,7 @@
 .form {
   width: 100%;
   max-width: 360px;
+  margin: 0 auto;
   @include _.flex-column;
 
   > * {
@@ -17,7 +18,14 @@
     }
   }
 
+  .link {
+    font: var(--font-caption);
+  }
+
   .message {
+    font: var(--font-caption);
+    color: var(--color-text);
+
     > span {
       color: var(--color-primary);
     }
