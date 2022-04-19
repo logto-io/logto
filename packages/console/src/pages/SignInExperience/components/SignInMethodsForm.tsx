@@ -1,19 +1,20 @@
 import { SignInMethodKey } from '@logto/schemas';
 import React from 'react';
-import { useFormContext } from 'react-hook-form';
+import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
 import FormField from '@/components/FormField';
 import Switch from '@/components/Switch';
 
 import { SignInExperienceForm } from '../types';
+import ConnectorsTransfer from './ConnectorsTransfer';
 import * as styles from './index.module.scss';
 
 const signInMethods = Object.values(SignInMethodKey);
 
 const SignInMethodsForm = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { register, watch } = useFormContext<SignInExperienceForm>();
+  const { register, watch, control } = useFormContext<SignInExperienceForm>();
   const primaryMethod = watch('signInMethods.primary');
 
   return (
@@ -56,8 +57,13 @@ const SignInMethodsForm = () => {
         ))}
       </FormField>
       <FormField title="admin_console.sign_in_exp.sign_in_methods.define_social_methods">
-        {/* TODO: LOG-1735 transfer component */}
-        <input {...register('socialSignInConnectorIds')} />
+        <Controller
+          name="socialSignInConnectorIds"
+          control={control}
+          render={({ field: { value, onChange } }) => (
+            <ConnectorsTransfer value={value} onChange={onChange} />
+          )}
+        />
       </FormField>
     </>
   );

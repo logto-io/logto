@@ -4,9 +4,10 @@ import { useTranslation } from 'react-i18next';
 
 type Props = {
   resource: Record<Languages, string>;
+  className?: string;
 };
 
-const UnnamedTrans = ({ resource }: Props) => {
+const UnnamedTrans = ({ resource, className }: Props) => {
   const {
     i18n: { languages },
   } = useTranslation();
@@ -16,7 +17,7 @@ const UnnamedTrans = ({ resource }: Props) => {
     return null;
   }
 
-  return <span>{resource[matchedLanguage]}</span>;
+  return <span className={className}>{resource[matchedLanguage]}</span>;
 };
 
 export default UnnamedTrans;

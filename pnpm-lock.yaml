@@ -77,6 +77,7 @@ importers:
       classnames: ^2.3.1
       copyfiles: ^2.4.1
       csstype: ^3.0.11
+      dnd-core: ^16.0.0
       eslint: ^8.10.0
       i18next: ^21.6.12
       i18next-browser-languagedetector: ^6.1.3
@@ -91,6 +92,8 @@ importers:
       prettier: ^2.3.2
       process: ^0.11.10
       react: ^17.0.2
+      react-dnd: ^16.0.0
+      react-dnd-html5-backend: ^16.0.0
       react-dom: ^17.0.2
       react-hook-form: ^7.27.1
       react-hot-toast: ^2.2.0
@@ -111,6 +114,7 @@ importers:
       '@silverhand/essentials': 1.1.6
       classnames: 2.3.1
       csstype: 3.0.11
+      dnd-core: 16.0.0
       i18next: 21.6.12
       i18next-browser-languagedetector: 6.1.3
       ky: 0.30.0
@@ -118,6 +122,8 @@ importers:
       monaco-editor: 0.32.1
       nanoid: 3.3.1
       react: 17.0.2
+      react-dnd: 16.0.0_cfedea9b3ed0faf0dded75c187406c5e
+      react-dnd-html5-backend: 16.0.0
       react-dom: 17.0.2_react@17.0.2
       react-hook-form: 7.27.1_react@17.0.2
       react-hot-toast: 2.2.0_383bc679f6b8b3c30a924b2c4a84e8d7
@@ -5142,6 +5148,18 @@ packages:
     resolution: {integrity: sha512-a5Sab1C4/icpTZVzZc5Ghpz88yQtGOyNqYXcZgOssB2uuAr+wF/MvN6bgtW32q7HHrvBki+BsZ0OuNv6EV3K9g==}
     dev: false
 
+  /@react-dnd/asap/5.0.0:
+    resolution: {integrity: sha512-czNGSkNPZgxapKz1a8zj/C5me5MpVpN4wlXDQIMF4wDUuFJ37x7beakc4S7C1xKilHA4tgT9zZb4U64BdT/E5g==}
+    dev: false
+
+  /@react-dnd/invariant/4.0.0:
+    resolution: {integrity: sha512-tjPrh294NbH6Gj1YP1of6JYEe3+sm0Wy7YA1ImG6YghlZe3n8F+fBx1yIrA5dVJCuUh6pBp4XO7/lcSq7oLL0A==}
+    dev: false
+
+  /@react-dnd/shallowequal/4.0.0:
+    resolution: {integrity: sha512-Yykovind6xzqAqd0t5umrdAGPlGLTE80cy80UkEnbt8Zv5zEYTFzJSNPQ81TY8BSpRreubu1oE54iHBv2UVnTQ==}
+    dev: false
+
   /@shopify/jest-koa-mocks/3.0.8:
     resolution: {integrity: sha512-VYb4txR56asRlrKs4QUxYp/7mjD4u4KePfHnuAGKE/ICCYe0PJduIxsX0Fj0MZnL1Vy+IpUbp3Eh7JP6SaeSxQ==}
     engines: {node: '>=12.14.0'}
@@ -8653,6 +8671,14 @@ packages:
     engines: {node: '>=8'}
     dependencies:
       path-type: 4.0.0
+
+  /dnd-core/16.0.0:
+    resolution: {integrity: sha512-8cGtybb5LBjG2euYgVv3amk49F+9dH3l5TuuGQf0mhFr+KWIPE1qPxB8VpPDov74ZevUAxVDxadL2zN7I0oQ1Q==}
+    dependencies:
+      '@react-dnd/asap': 5.0.0
+      '@react-dnd/invariant': 4.0.0
+      redux: 4.1.2
+    dev: false
 
   /dns-equal/1.0.0:
     resolution: {integrity: sha1-s55/HabrCnW6nBcySzR1PEfgZU0=}
@@ -16007,6 +16033,36 @@ packages:
       - webpack
     dev: false
 
+  /react-dnd-html5-backend/16.0.0:
+    resolution: {integrity: sha512-be3lKEbbT8FQcoTjFlQ4ZXG/NVrFNJu9W0INc5rm/5EFQpHCkz+xpbB2U8j9uh5Bvk7AsJyQrZznEut0hrNPIA==}
+    dependencies:
+      dnd-core: 16.0.0
+    dev: false
+
+  /react-dnd/16.0.0_cfedea9b3ed0faf0dded75c187406c5e:
+    resolution: {integrity: sha512-RCoeWRWhuwSoqdLaJV8N/weARLyXqsf43OC3QiBWPORIIGGovF/EqI8ckf14ca3bl6oZNI/igtxX49+IDmNDeQ==}
+    peerDependencies:
+      '@types/hoist-non-react-statics': '>= 3.3.1'
+      '@types/node': '>= 12'
+      '@types/react': '>= 16'
+      react: '>= 16.14'
+    peerDependenciesMeta:
+      '@types/hoist-non-react-statics':
+        optional: true
+      '@types/node':
+        optional: true
+      '@types/react':
+        optional: true
+    dependencies:
+      '@react-dnd/invariant': 4.0.0
+      '@react-dnd/shallowequal': 4.0.0
+      '@types/react': 17.0.37
+      dnd-core: 16.0.0
+      fast-deep-equal: 3.1.3
+      hoist-non-react-statics: 3.3.2
+      react: 17.0.2
+    dev: false
+
   /react-dom/17.0.2_react@17.0.2:
     resolution: {integrity: sha512-s4h96KtLDUQlsENhMn1ar8t2bEa+q/YAtj8pPPdIjPDGBDIVNsrD9aXNWqspUe6AzKCIG0C1HZZLqLV7qpOBGA==}
     peerDependencies:
@@ -16476,6 +16532,12 @@ packages:
       indent-string: 4.0.0
       strip-indent: 3.0.0
     dev: true
+
+  /redux/4.1.2:
+    resolution: {integrity: sha512-SH8PglcebESbd/shgf6mii6EIoRM0zrQyjcuQ+ojmfxjTtE0z9Y8pa62iA/OJ58qjP6j27uyW4kUF4jl/jd6sw==}
+    dependencies:
+      '@babel/runtime': 7.17.9
+    dev: false
 
   /regenerate-unicode-properties/10.0.1:
     resolution: {integrity: sha512-vn5DU6yg6h8hP/2OkQo3K7uVILvY4iu0oI4t3HFa81UPkhGJwkRwM10JEc3upjdhHjs/k8GJY1sRBhk5sr69Bw==}
