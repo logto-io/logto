@@ -41,7 +41,7 @@ const CreateForm = ({ onClose }: Props) => {
       subtitle="api_resources.subtitle"
       footer={
         <Button
-          disabled={isSubmitting}
+          isLoading={isSubmitting}
           htmlType="submit"
           title="admin_console.api_resources.create"
           size="large"

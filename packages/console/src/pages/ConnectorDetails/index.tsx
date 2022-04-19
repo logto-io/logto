@@ -32,7 +32,7 @@ const ConnectorDetails = () => {
   const [isReadMeOpen, setIsReadMeOpen] = useState(false);
   const [config, setConfig] = useState<string>();
   const [saveError, setSaveError] = useState<string>();
-  const [isSubmitLoading, setIsSubmitLoading] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSetupOpen, setIsSetupOpen] = useState(false);
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { data, error } = useSWR<ConnectorDTO, RequestError>(
@@ -61,7 +61,7 @@ const ConnectorDetails = () => {
 
     try {
       const configJson = JSON.parse(config) as JSON;
-      setIsSubmitLoading(true);
+      setIsSubmitting(true);
       await api
         .patch(`/api/connectors/${connectorId}`, {
           json: { config: configJson },
@@ -74,7 +74,7 @@ const ConnectorDetails = () => {
       }
     }
 
-    setIsSubmitLoading(false);
+    setIsSubmitting(false);
   };
 
   const handleDelete = async () => {
@@ -197,7 +197,7 @@ const ConnectorDetails = () => {
             <Button
               type="primary"
               title="admin_console.connector_details.save_changes"
-              disabled={isSubmitLoading}
+              isLoading={isSubmitting}
               onClick={handleSave}
             />
           </div>

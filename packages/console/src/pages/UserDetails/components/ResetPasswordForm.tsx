@@ -41,7 +41,7 @@ const ResetPasswordForm = ({ onClose, userId }: Props) => {
       title="user_details.reset_password.title"
       footer={
         <Button
-          disabled={isSubmitting}
+          isLoading={isSubmitting}
           htmlType="submit"
           title="admin_console.user_details.reset_password.reset_password"
           size="large"

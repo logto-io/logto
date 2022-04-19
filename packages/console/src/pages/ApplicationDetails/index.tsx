@@ -258,9 +258,10 @@ const ApplicationDetails = () => {
               </div>
               <div className={detailsStyles.footer}>
                 <Button
-                  disabled={isSubmitting}
+                  isLoading={isSubmitting}
                   htmlType="submit"
                   type="primary"
+                  size="large"
                   title="admin_console.application_details.save_changes"
                 />
               </div>

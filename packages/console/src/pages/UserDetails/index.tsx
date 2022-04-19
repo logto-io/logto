@@ -234,7 +234,7 @@ const UserDetails = () => {
               </div>
               <div className={detailsStyles.footer}>
                 <Button
-                  disabled={isSubmitting}
+                  isLoading={isSubmitting}
                   htmlType="submit"
                   type="primary"
                   title="admin_console.user_details.save_changes"

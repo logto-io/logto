@@ -84,7 +84,7 @@ const SignInExperience = () => {
                 {tab === 'methods' && <SignInMethodsForm />}
                 <div className={detailsStyles.footer}>
                   <Button
-                    disabled={isSubmitting}
+                    isLoading={isSubmitting}
                     type="primary"
                     htmlType="submit"
                     title="general.save_changes"
