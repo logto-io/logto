@@ -1,19 +1,15 @@
-import { UserLogType, UserLogResult, LogType, LogResult } from '@logto/schemas';
+/** TODO: remove deprecated code after removing all usages (LOG-2220), and rename to koa-log */
+import { LogType, LogResult } from '@logto/schemas';
 
 import { insertLog } from '@/queries/log';
-import { insertUserLog } from '@/queries/user-log';
 import { createContextWithRouteParameters } from '@/utils/test-utils';
 
-import koaUserLog, { WithLogContext, LogContext, UserLogContext } from './koa-user-log';
+import koaUserLog, { WithLogContext, LogContext } from './koa-user-log';
 
 const nanoIdMock = 'mockId';
 
 jest.mock('@/queries/log', () => ({
   insertLog: jest.fn(async () => Promise.resolve()),
-}));
-
-jest.mock('@/queries/user-log', () => ({
-  insertUserLog: jest.fn(async () => Promise.resolve()),
 }));
 
 jest.mock('nanoid', () => ({
@@ -22,8 +18,6 @@ jest.mock('nanoid', () => ({
 
 describe('koaUserLog middleware', () => {
   const insertLogMock = insertLog as jest.Mock;
-  /** @deprecated */
-  const insertUserLogMock = insertUserLog as jest.Mock;
   const next = jest.fn();
 
   const logMock: Partial<LogContext> = {
@@ -31,13 +25,6 @@ describe('koaUserLog middleware', () => {
     applicationId: 'foo',
     userId: 'foo',
     username: 'Foo Bar',
-  };
-  /** @deprecated */
-  const userLogMock: Partial<UserLogContext> = {
-    userId: 'foo',
-    type: UserLogType.SignInEmail,
-    email: 'foo@logto.io',
-    payload: { applicationId: 'foo' },
   };
 
   afterEach(() => {
@@ -48,6 +35,7 @@ describe('koaUserLog middleware', () => {
     const ctx: WithLogContext<ReturnType<typeof createContextWithRouteParameters>> = {
       ...createContextWithRouteParameters(),
       log: {}, // Bypass middleware context type assert
+      /** @deprecated */
       userLog: {
         payload: {},
         createdAt: 0,
@@ -56,10 +44,6 @@ describe('koaUserLog middleware', () => {
 
     next.mockImplementationOnce(async () => {
       ctx.log = logMock;
-      ctx.userLog = {
-        ...ctx.userLog,
-        ...userLogMock,
-      };
     });
 
     await koaUserLog()(ctx, next);
@@ -73,25 +57,13 @@ describe('koaUserLog middleware', () => {
         result: LogResult.Success,
       },
     });
-
-    expect(ctx.userLog).toHaveProperty('userId', userLogMock.userId);
-    expect(ctx.userLog).toHaveProperty('type', userLogMock.type);
-    expect(ctx.userLog).toHaveProperty('email', userLogMock.email);
-    expect(ctx.userLog).toHaveProperty('payload', userLogMock.payload);
-    expect(ctx.userLog.createdAt).not.toBeFalsy();
-    expect(insertUserLogMock).toBeCalledWith({
-      id: nanoIdMock,
-      userId: ctx.userLog.userId,
-      type: ctx.userLog.type,
-      result: UserLogResult.Success,
-      payload: ctx.userLog.payload,
-    });
   });
 
   it('should not block request if insertLog throws error', async () => {
     const ctx: WithLogContext<ReturnType<typeof createContextWithRouteParameters>> = {
       ...createContextWithRouteParameters(),
       log: {}, // Bypass middleware context type assert
+      /** @deprecated */
       userLog: {
         payload: {},
         createdAt: 0,
@@ -102,16 +74,9 @@ describe('koaUserLog middleware', () => {
     insertLogMock.mockImplementationOnce(async () => {
       throw error;
     });
-    insertUserLogMock.mockImplementationOnce(async () => {
-      throw error;
-    });
 
     next.mockImplementationOnce(async () => {
       ctx.log = logMock;
-      ctx.userLog = {
-        ...ctx.userLog,
-        ...userLogMock,
-      };
     });
 
     await koaUserLog()(ctx, next);
@@ -125,25 +90,13 @@ describe('koaUserLog middleware', () => {
         result: LogResult.Success,
       },
     });
-
-    expect(ctx.userLog).toHaveProperty('userId', userLogMock.userId);
-    expect(ctx.userLog).toHaveProperty('type', userLogMock.type);
-    expect(ctx.userLog).toHaveProperty('email', userLogMock.email);
-    expect(ctx.userLog).toHaveProperty('payload', userLogMock.payload);
-    expect(ctx.userLog.createdAt).not.toBeFalsy();
-    expect(insertUserLogMock).toBeCalledWith({
-      id: nanoIdMock,
-      userId: ctx.userLog.userId,
-      type: ctx.userLog.type,
-      result: UserLogResult.Success,
-      payload: ctx.userLog.payload,
-    });
   });
 
   it('should insert userLog with failed result if next throws error', async () => {
     const ctx: WithLogContext<ReturnType<typeof createContextWithRouteParameters>> = {
       ...createContextWithRouteParameters(),
       log: {}, // Bypass middleware context type assert
+      /** @deprecated */
       userLog: {
         payload: {},
         createdAt: 0,
@@ -154,10 +107,6 @@ describe('koaUserLog middleware', () => {
 
     next.mockImplementationOnce(async () => {
       ctx.log = logMock;
-      ctx.userLog = {
-        ...ctx.userLog,
-        ...userLogMock,
-      };
       throw error;
     });
 
@@ -172,15 +121,6 @@ describe('koaUserLog middleware', () => {
         result: LogResult.Error,
         error: String(error),
       },
-    });
-
-    expect(ctx.userLog.createdAt).not.toBeFalsy();
-    expect(insertUserLogMock).toBeCalledWith({
-      id: nanoIdMock,
-      userId: ctx.userLog.userId,
-      type: ctx.userLog.type,
-      result: UserLogResult.Failed,
-      payload: ctx.userLog.payload,
     });
   });
 });

@@ -154,6 +154,7 @@ describe('sessionRoutes', () => {
     middlewares: [
       async (ctx, next) => {
         ctx.log = {};
+        /** @deprecated */
         ctx.userLog = {};
 
         return next();
