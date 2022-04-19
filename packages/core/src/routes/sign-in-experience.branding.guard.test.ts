@@ -23,40 +23,24 @@ const expectPatchResponseStatus = async (signInExperience: any, status: number) 
 
 describe('branding', () => {
   const colorKeys = ['primaryColor', 'darkPrimaryColor'];
-
-  const invalidColors = [
-    undefined,
-    null,
-    '',
-    '#',
-    '#1',
-    '#2B',
-    '#3cZ',
-    '#4D9e',
-    '#5f80E',
-    '#6GHiXY',
-    '#78Cb5dA',
-    'rgb(0,13,255)',
-  ];
-
-  const validColors = ['#aB3', '#169deF'];
+  const invalidColors = [undefined, null, '#0'];
 
   describe('colors', () => {
-    test.each(validColors)('%p should succeed', async (validColor) => {
-      for (const colorKey of colorKeys) {
-        // eslint-disable-next-line no-await-in-loop
-        await expectPatchResponseStatus(
-          { branding: { ...mockBranding, [colorKey]: validColor } },
-          200
-        );
-      }
-    });
-    test.each(invalidColors)('%p should fail', async (invalidColor) => {
+    test.each(invalidColors)('should fail when color is %p', async (invalidColor) => {
       for (const colorKey of colorKeys) {
         // eslint-disable-next-line no-await-in-loop
         await expectPatchResponseStatus(
           { branding: { ...mockBranding, [colorKey]: invalidColor } },
           400
+        );
+      }
+    });
+    it('should succeed when color is valid', async () => {
+      for (const colorKey of colorKeys) {
+        // eslint-disable-next-line no-await-in-loop
+        await expectPatchResponseStatus(
+          { branding: { ...mockBranding, [colorKey]: '#169deF' } },
+          200
         );
       }
     });
