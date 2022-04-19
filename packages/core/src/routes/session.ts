@@ -2,7 +2,7 @@
 import path from 'path';
 
 import { LogtoErrorCode } from '@logto/phrases';
-import { PasscodeType, userInfoSelectFields } from '@logto/schemas';
+import { LogType, PasscodeType, userInfoSelectFields } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import pick from 'lodash.pick';
 import { Provider } from 'oidc-provider';
@@ -68,9 +68,12 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
     }),
     async (ctx, next) => {
       const { username, password } = ctx.guard.body;
+      ctx.log.type = LogType.SignInUsernamePassword;
+      ctx.log.username = username;
       assertThat(password, 'session.insufficient_info');
 
       const { id } = await findUserByUsernameAndPassword(username, password);
+      ctx.log.userId = id;
       await assignInteractionResults(ctx, provider, { login: { accountId: id } });
 
       return next();

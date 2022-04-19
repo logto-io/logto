@@ -153,7 +153,7 @@ describe('sessionRoutes', () => {
     provider: new Provider(''),
     middlewares: [
       async (ctx, next) => {
-        ctx.userLog = {};
+        ctx.log = {};
 
         return next();
       },
