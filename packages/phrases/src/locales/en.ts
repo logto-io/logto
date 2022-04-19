@@ -258,6 +258,7 @@ const translation = {
       create_form_username: 'Username',
       create_form_password: 'Password',
       create_form_name: 'Full name',
+      unnamed: 'Unnamed',
     },
     user_details: {
       back_to_users: 'Back to user management',

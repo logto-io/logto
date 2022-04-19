@@ -254,6 +254,7 @@ const translation = {
       create_form_username: '用户名',
       create_form_password: '密码',
       create_form_name: '姓名',
+      unnamed: '未命名',
     },
     user_details: {
       back_to_users: '返回用户管理',

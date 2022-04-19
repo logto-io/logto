@@ -57,6 +57,12 @@
     input {
       background: none;
     }
+
+
+    &:focus-within {
+      border-color: var(--color-border);
+      outline-color: transparent;
+    }
   }
 
   &.error {

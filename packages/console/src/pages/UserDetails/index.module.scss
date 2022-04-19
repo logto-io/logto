@@ -36,10 +36,8 @@
     }
 
     .username {
-      background-color: var(--color-neutral-90);
-      padding: _.unit(0.5) _.unit(2);
-      border-radius: 10px;
-      font: var(--font-label-medium);
+      color: var(--color-caption);
+      font: var(--font-subhead-2);
     }
 
     .text {
