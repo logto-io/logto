@@ -3,6 +3,8 @@ import { readFileSync } from 'fs';
 
 import { assertEnv, getEnv, Optional } from '@silverhand/essentials';
 import { nanoid } from 'nanoid';
+import { createPool, DatabasePoolType } from 'slonik';
+import { createInterceptors } from 'slonik-interceptor-preset';
 import { string, number } from 'zod';
 
 export enum MountedApps {
@@ -33,15 +35,16 @@ const loadOidcValues = (port: number) => {
   };
 };
 
-const loadEnvValues = () => {
+const loadEnvValues = async () => {
   const isProduction = getEnv('NODE_ENV') === 'production';
   const isTest = getEnv('NODE_ENV') === 'test';
   const port = Number(getEnv('PORT', '3001'));
+  const databaseUrl = isTest ? getEnv('DB_URL') : assertEnv('DB_URL');
 
   return Object.freeze({
     isTest,
     isProduction,
-    dbUrl: isTest ? getEnv('DB_URL') : assertEnv('DB_URL'),
+    databaseUrl,
     httpsCert: process.env.HTTPS_CERT,
     httpsKey: process.env.HTTPS_KEY,
     port,
@@ -57,18 +60,44 @@ const loadEnvValues = () => {
   });
 };
 
+const throwNotLoadedError = () => {
+  throw new Error(
+    'Env set is not loaded. Make sure to call `await envSet.load()` before using it.'
+  );
+};
+
+/* eslint-disable @silverhand/fp/no-let, @silverhand/fp/no-mutation */
 function createEnvSet() {
-  // eslint-disable-next-line @silverhand/fp/no-let
-  let values = loadEnvValues();
+  let values: Optional<Awaited<ReturnType<typeof loadEnvValues>>>;
+  let pool: Optional<DatabasePoolType>;
 
   return {
-    values,
-    reload: () => {
-      // eslint-disable-next-line @silverhand/fp/no-mutation
-      values = loadEnvValues();
+    get values() {
+      if (!values) {
+        return throwNotLoadedError();
+      }
+
+      return values;
+    },
+    get pool() {
+      if (!pool) {
+        return throwNotLoadedError();
+      }
+
+      return pool;
+    },
+
+    load: async () => {
+      values = await loadEnvValues();
+
+      if (!values.isTest) {
+        const interceptors = [...createInterceptors()];
+        pool = createPool(values.databaseUrl, { interceptors });
+      }
     },
   };
 }
+/* eslint-enable @silverhand/fp/no-let, @silverhand/fp/no-mutation */
 
 const envSet = createEnvSet();
 

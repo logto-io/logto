@@ -2,7 +2,6 @@ import { Application, CreateApplication, Applications } from '@logto/schemas';
 import { sql } from 'slonik';
 
 import { buildInsertInto } from '@/database/insert-into';
-import pool from '@/database/pool';
 import { buildUpdateWhere } from '@/database/update-where';
 import {
   convertToIdentifiers,
@@ -10,6 +9,7 @@ import {
   getTotalRowCount,
   conditionalSql,
 } from '@/database/utils';
+import envSet from '@/env-set';
 import { DeletionError } from '@/errors/SlonikError';
 
 const { table, fields } = convertToIdentifiers(Applications);
@@ -17,7 +17,7 @@ const { table, fields } = convertToIdentifiers(Applications);
 export const findTotalNumberOfApplications = async () => getTotalRowCount(table);
 
 export const findAllApplications = async (limit: number, offset: number) =>
-  pool.many<Application>(sql`
+  envSet.pool.many<Application>(sql`
     select ${sql.join(Object.values(fields), sql`, `)}
     from ${table}
     order by ${fields.createdAt} desc
@@ -26,25 +26,17 @@ export const findAllApplications = async (limit: number, offset: number) =>
   `);
 
 export const findApplicationById = async (id: string) =>
-  pool.one<Application>(sql`
+  envSet.pool.one<Application>(sql`
     select ${sql.join(Object.values(fields), sql`, `)}
     from ${table}
     where ${fields.id}=${id}
   `);
 
-export const insertApplication = buildInsertInto<CreateApplication, Application>(
-  pool,
-  Applications,
-  {
-    returning: true,
-  }
-);
+export const insertApplication = buildInsertInto<CreateApplication, Application>(Applications, {
+  returning: true,
+});
 
-const updateApplication = buildUpdateWhere<CreateApplication, Application>(
-  pool,
-  Applications,
-  true
-);
+const updateApplication = buildUpdateWhere<CreateApplication, Application>(Applications, true);
 
 export const updateApplicationById = async (
   id: string,
@@ -52,7 +44,7 @@ export const updateApplicationById = async (
 ) => updateApplication({ set, where: { id } });
 
 export const deleteApplicationById = async (id: string) => {
-  const { rowCount } = await pool.query(sql`
+  const { rowCount } = await envSet.pool.query(sql`
     delete from ${table}
     where ${fields.id}=${id}
   `);

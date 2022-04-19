@@ -1,7 +1,8 @@
 import { SchemaLike, GeneratedSchema } from '@logto/schemas';
 import { has } from '@silverhand/essentials';
-import { DatabasePoolType, IdentifierSqlTokenType, sql } from 'slonik';
+import { IdentifierSqlTokenType, sql } from 'slonik';
 
+import envSet from '@/env-set';
 import { InsertionError } from '@/errors/SlonikError';
 import assertThat from '@/utils/assert-that';
 
@@ -36,12 +37,10 @@ type InsertIntoConfig = {
 
 interface BuildInsertInto {
   <Schema extends SchemaLike, ReturnType extends SchemaLike>(
-    pool: DatabasePoolType,
     { fieldKeys, ...rest }: GeneratedSchema<Schema>,
     config: InsertIntoConfigReturning
   ): (data: OmitAutoSetFields<Schema>) => Promise<ReturnType>;
   <Schema extends SchemaLike>(
-    pool: DatabasePoolType,
     { fieldKeys, ...rest }: GeneratedSchema<Schema>,
     config?: InsertIntoConfig
   ): (data: OmitAutoSetFields<Schema>) => Promise<void>;
@@ -51,7 +50,6 @@ export const buildInsertInto: BuildInsertInto = <
   Schema extends SchemaLike,
   ReturnType extends SchemaLike
 >(
-  pool: DatabasePoolType,
   schema: GeneratedSchema<Schema>,
   config?: InsertIntoConfig | InsertIntoConfigReturning
 ) => {
@@ -65,7 +63,7 @@ export const buildInsertInto: BuildInsertInto = <
     const insertingKeys = keys.filter((key) => has(data, key));
     const {
       rows: [entry],
-    } = await pool.query<ReturnType>(sql`
+    } = await envSet.pool.query<ReturnType>(sql`
       insert into ${table} (${sql.join(
       insertingKeys.map((key) => fields[key]),
       sql`, `

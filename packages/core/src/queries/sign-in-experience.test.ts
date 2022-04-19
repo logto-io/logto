@@ -1,13 +1,14 @@
 import { createMockPool, createMockQueryResult } from 'slonik';
 
 import { mockSignInExperience } from '@/__mocks__';
+import envSet from '@/env-set';
 import { expectSqlAssert, QueryType } from '@/utils/test-utils';
 
 import { findDefaultSignInExperience, updateDefaultSignInExperience } from './sign-in-experience';
 
 const mockQuery: jest.MockedFunction<QueryType> = jest.fn();
 
-jest.mock('@/database/pool', () =>
+jest.spyOn(envSet, 'pool', 'get').mockReturnValue(
   createMockPool({
     query: async (sql, values) => {
       return mockQuery(sql, values);

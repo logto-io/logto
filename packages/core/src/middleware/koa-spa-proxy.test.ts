@@ -1,4 +1,4 @@
-import { MountedApps } from '@/env-set';
+import envSet, { MountedApps } from '@/env-set';
 import { createContextWithRouteParameters } from '@/utils/test-utils';
 
 import koaSpaProxy from './koa-spa-proxy';
@@ -48,32 +48,38 @@ describe('koaSpaProxy middleware', () => {
   });
 
   it('production env should overwrite the request path to root if no target ui file are detected', async () => {
-    process.env.NODE_ENV = 'production';
-    process.env.PASSWORD_PEPPERS = JSON.stringify(['foo']);
-    process.env.DB_URL = 'some_db_url';
+    const spy = jest.spyOn(envSet, 'values', 'get').mockReturnValue({
+      ...envSet.values,
+      isProduction: true,
+      passwordPeppers: ['foo'],
+      databaseUrl: 'some_db_url',
+    });
 
     const ctx = createContextWithRouteParameters({
       url: '/foo',
     });
 
-    const { default: proxy } = await import('./koa-spa-proxy');
-    await proxy()(ctx, next);
+    await koaSpaProxy()(ctx, next);
 
     expect(mockStaticMiddleware).toBeCalled();
     expect(ctx.request.path).toEqual('/');
+    spy.mockRestore();
   });
 
   it('production env should call the static middleware if path hit the ui file directory', async () => {
-    process.env.NODE_ENV = 'production';
-    process.env.PASSWORD_PEPPERS = JSON.stringify(['foo']);
-    process.env.DB_URL = 'some_db_url';
+    const spy = jest.spyOn(envSet, 'values', 'get').mockReturnValue({
+      ...envSet.values,
+      isProduction: true,
+      passwordPeppers: ['foo'],
+      databaseUrl: 'some_db_url',
+    });
 
-    const { default: proxy } = await import('./koa-spa-proxy');
     const ctx = createContextWithRouteParameters({
       url: '/sign-in',
     });
 
-    await proxy()(ctx, next);
+    await koaSpaProxy()(ctx, next);
     expect(mockStaticMiddleware).toBeCalled();
+    spy.mockRestore();
   });
 });

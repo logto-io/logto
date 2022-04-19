@@ -2,43 +2,43 @@ import { User, CreateUser, Users } from '@logto/schemas';
 import { sql } from 'slonik';
 
 import { buildInsertInto } from '@/database/insert-into';
-import pool from '@/database/pool';
 import { buildUpdateWhere } from '@/database/update-where';
 import { conditionalSql, convertToIdentifiers, OmitAutoSetFields } from '@/database/utils';
+import envSet from '@/env-set';
 import { DeletionError, UpdateError } from '@/errors/SlonikError';
 
 const { table, fields } = convertToIdentifiers(Users);
 
 export const findUserByUsername = async (username: string) =>
-  pool.one<User>(sql`
+  envSet.pool.one<User>(sql`
     select ${sql.join(Object.values(fields), sql`,`)}
     from ${table}
     where ${fields.username}=${username}
   `);
 
 export const findUserByEmail = async (email: string) =>
-  pool.one<User>(sql`
+  envSet.pool.one<User>(sql`
     select ${sql.join(Object.values(fields), sql`,`)}
     from ${table}
     where ${fields.primaryEmail}=${email}
   `);
 
 export const findUserByPhone = async (phone: string) =>
-  pool.one<User>(sql`
+  envSet.pool.one<User>(sql`
     select ${sql.join(Object.values(fields), sql`,`)}
     from ${table}
     where ${fields.primaryPhone}=${phone}
   `);
 
 export const findUserById = async (id: string) =>
-  pool.one<User>(sql`
+  envSet.pool.one<User>(sql`
     select ${sql.join(Object.values(fields), sql`,`)}
     from ${table}
     where ${fields.id}=${id}
   `);
 
 export const findUserByIdentity = async (connectorId: string, userId: string) =>
-  pool.one<User>(
+  envSet.pool.one<User>(
     sql`
       select ${sql.join(Object.values(fields), sql`,`)}
       from ${table}
@@ -47,35 +47,35 @@ export const findUserByIdentity = async (connectorId: string, userId: string) =>
   );
 
 export const hasUser = async (username: string) =>
-  pool.exists(sql`
+  envSet.pool.exists(sql`
     select ${fields.id}
     from ${table}
     where ${fields.username}=${username}
   `);
 
 export const hasUserWithId = async (id: string) =>
-  pool.exists(sql`
+  envSet.pool.exists(sql`
     select ${fields.id}
     from ${table}
     where ${fields.id}=${id}
   `);
 
 export const hasUserWithEmail = async (email: string) =>
-  pool.exists(sql`
+  envSet.pool.exists(sql`
     select ${fields.primaryEmail}
     from ${table}
     where ${fields.primaryEmail}=${email}
   `);
 
 export const hasUserWithPhone = async (phone: string) =>
-  pool.exists(sql`
+  envSet.pool.exists(sql`
     select ${fields.primaryPhone}
     from ${table}
     where ${fields.primaryPhone}=${phone}
   `);
 
 export const hasUserWithIdentity = async (connectorId: string, userId: string) =>
-  pool.exists(
+  envSet.pool.exists(
     sql`
       select ${fields.id}
       from ${table}
@@ -83,7 +83,9 @@ export const hasUserWithIdentity = async (connectorId: string, userId: string) =
     `
   );
 
-export const insertUser = buildInsertInto<CreateUser, User>(pool, Users, { returning: true });
+export const insertUser = buildInsertInto<CreateUser, User>(Users, {
+  returning: true,
+});
 
 const buildUserSearchConditionSql = (search: string) => {
   const searchFields = [fields.primaryEmail, fields.primaryPhone, fields.username, fields.name];
@@ -93,14 +95,14 @@ const buildUserSearchConditionSql = (search: string) => {
 };
 
 export const countUsers = async (search?: string) =>
-  pool.one<{ count: number }>(sql`
+  envSet.pool.one<{ count: number }>(sql`
     select count(*)
     from ${table}
     ${conditionalSql(search, (search) => sql`where ${buildUserSearchConditionSql(search)}`)}
   `);
 
 export const findUsers = async (limit: number, offset: number, search?: string) =>
-  pool.any<User>(
+  envSet.pool.any<User>(
     sql`
       select ${sql.join(Object.values(fields), sql`,`)}
       from ${table}
@@ -110,13 +112,13 @@ export const findUsers = async (limit: number, offset: number, search?: string) 
     `
   );
 
-const updateUser = buildUpdateWhere<CreateUser, User>(pool, Users, true);
+const updateUser = buildUpdateWhere<CreateUser, User>(Users, true);
 
 export const updateUserById = async (id: string, set: Partial<OmitAutoSetFields<CreateUser>>) =>
   updateUser({ set, where: { id } });
 
 export const deleteUserById = async (id: string) => {
-  const { rowCount } = await pool.query(sql`
+  const { rowCount } = await envSet.pool.query(sql`
     delete from ${table}
     where ${fields.id}=${id}
   `);
@@ -127,7 +129,7 @@ export const deleteUserById = async (id: string) => {
 };
 
 export const clearUserCustomDataById = async (id: string) => {
-  const { rowCount } = await pool.query<User>(sql`
+  const { rowCount } = await envSet.pool.query<User>(sql`
     update ${table}
     set ${fields.customData}='{}'::jsonb
     where ${fields.id}=${id}
@@ -139,7 +141,7 @@ export const clearUserCustomDataById = async (id: string) => {
 };
 
 export const deleteUserIdentity = async (userId: string, connectorId: string) =>
-  pool.one<User>(sql`
+  envSet.pool.one<User>(sql`
     update ${table}
     set ${fields.identities}=${fields.identities}::jsonb-${connectorId}
     where ${fields.id}=${userId}

@@ -2,8 +2,8 @@
 module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'node',
-  setupFilesAfterEnv: ['./jest.setup.js', 'jest-matcher-specific-error'],
-  globalSetup: './jest.global-setup.js',
+  setupFilesAfterEnv: ['./jest.setup.ts', 'jest-matcher-specific-error'],
+  globalSetup: './jest.global-setup.ts',
   globals: {
     'ts-jest': {
       tsconfig: 'tsconfig.test.json',

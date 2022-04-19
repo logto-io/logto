@@ -1,7 +1,8 @@
 import { SchemaLike, GeneratedSchema } from '@logto/schemas';
 import { notFalsy, Truthy } from '@silverhand/essentials';
-import { DatabasePoolType, sql } from 'slonik';
+import { sql } from 'slonik';
 
+import envSet from '@/env-set';
 import { UpdateError } from '@/errors/SlonikError';
 import assertThat from '@/utils/assert-that';
 import { isKeyOf } from '@/utils/schema';
@@ -11,22 +12,18 @@ import { conditionalSql, convertToIdentifiers, convertToPrimitiveOrSql } from '.
 
 interface BuildUpdateWhere {
   <Schema extends SchemaLike, ReturnType extends SchemaLike>(
-    pool: DatabasePoolType,
     schema: GeneratedSchema<Schema>,
     returning: true
   ): (data: UpdateWhereData<Schema>) => Promise<ReturnType>;
-  <Schema extends SchemaLike>(
-    pool: DatabasePoolType,
-    schema: GeneratedSchema<Schema>,
-    returning?: false
-  ): (data: UpdateWhereData<Schema>) => Promise<void>;
+  <Schema extends SchemaLike>(schema: GeneratedSchema<Schema>, returning?: false): (
+    data: UpdateWhereData<Schema>
+  ) => Promise<void>;
 }
 
 export const buildUpdateWhere: BuildUpdateWhere = <
   Schema extends SchemaLike,
   ReturnType extends SchemaLike
 >(
-  pool: DatabasePoolType,
   schema: GeneratedSchema<Schema>,
   returning = false
 ) => {
@@ -58,7 +55,7 @@ export const buildUpdateWhere: BuildUpdateWhere = <
   return async ({ set, where }: UpdateWhereData<Schema>) => {
     const {
       rows: [data],
-    } = await pool.query<ReturnType>(sql`
+    } = await envSet.pool.query<ReturnType>(sql`
       update ${table}
       set ${sql.join(connectKeyValueWithEqualSign(set), sql`, `)}
       where ${sql.join(connectKeyValueWithEqualSign(where), sql` and `)}

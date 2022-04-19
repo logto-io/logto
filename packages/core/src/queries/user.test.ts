@@ -3,6 +3,7 @@ import { createMockPool, createMockQueryResult, sql } from 'slonik';
 
 import { mockUser } from '@/__mocks__';
 import { convertToIdentifiers, convertToPrimitiveOrSql } from '@/database/utils';
+import envSet from '@/env-set';
 import { DeletionError } from '@/errors/SlonikError';
 import { expectSqlAssert, QueryType } from '@/utils/test-utils';
 
@@ -28,7 +29,7 @@ import {
 
 const mockQuery: jest.MockedFunction<QueryType> = jest.fn();
 
-jest.mock('@/database/pool', () =>
+jest.spyOn(envSet, 'pool', 'get').mockReturnValue(
   createMockPool({
     query: async (sql, values) => {
       return mockQuery(sql, values);
