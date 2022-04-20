@@ -67,22 +67,6 @@ export type Identity = z.infer<typeof identityGuard>;
 export type Identities = z.infer<typeof identitiesGuard>;
 
 /**
- * User Logs
- */
-
-/** @deprecated */
-export const userLogPayloadGuard = z.object({
-  ip: z.string().optional(),
-  userAgent: z.string().optional(),
-  applicationId: z.string().optional(),
-  applicationName: z.string().optional(),
-  details: z.object({}).optional(), // NOT intend to be parsed
-});
-
-/** @deprecated */
-export type UserLogPayload = z.infer<typeof userLogPayloadGuard>;
-
-/**
  * Settings
  */
 
