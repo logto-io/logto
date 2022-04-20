@@ -3,7 +3,7 @@ import { UserLogType, UserLogResult } from '@logto/schemas';
 import { insertUserLog } from '@/queries/user-log';
 import { createContextWithRouteParameters } from '@/utils/test-utils';
 
-import koaUserLog, { WithUserLogContext, LogContext } from './koa-user-log';
+import koaUserLog, { WithUserLogContext, UserLogContext } from './koa-user-log';
 
 const nanoIdMock = 'mockId';
 
@@ -19,7 +19,7 @@ describe('koaUserLog middleware', () => {
   const insertUserLogMock = insertUserLog as jest.Mock;
   const next = jest.fn();
 
-  const userLogMock: Partial<LogContext> = {
+  const userLogMock: Partial<UserLogContext> = {
     userId: 'foo',
     type: UserLogType.SignInEmail,
     email: 'foo@logto.io',

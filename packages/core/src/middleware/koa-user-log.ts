@@ -5,10 +5,10 @@ import { nanoid } from 'nanoid';
 import { insertUserLog } from '@/queries/user-log';
 
 export type WithUserLogContext<ContextT> = ContextT & {
-  userLog: LogContext;
+  userLog: UserLogContext;
 };
 
-export interface LogContext {
+export interface UserLogContext {
   type?: UserLogType;
   userId?: string;
   username?: string;
