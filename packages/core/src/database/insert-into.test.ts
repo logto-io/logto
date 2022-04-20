@@ -8,6 +8,8 @@ import { createTestPool } from '@/utils/test-utils';
 import { buildInsertInto } from './insert-into';
 import { convertToIdentifiers } from './utils';
 
+const poolSpy = jest.spyOn(envSet, 'pool', 'get');
+
 const buildExpectedInsertIntoSql = (keys: string[]) => [
   // eslint-disable-next-line sql/no-unsafe-query
   `insert into "users" (${keys.map((key) => `"${decamelize(key)}"`).join(', ')})`,
@@ -19,7 +21,7 @@ describe('buildInsertInto()', () => {
     const user: CreateUser = { id: 'foo', username: '456' };
     const expectInsertIntoSql = buildExpectedInsertIntoSql(Object.keys(user));
     const pool = createTestPool(expectInsertIntoSql.join('\n'));
-    jest.spyOn(envSet, 'pool', 'get').mockReturnValue(pool);
+    poolSpy.mockReturnValue(pool);
 
     const insertInto = buildInsertInto(Users);
     await expect(insertInto(user)).resolves.toBe(undefined);
@@ -35,7 +37,7 @@ describe('buildInsertInto()', () => {
         'set "primary_email"=excluded."primary_email"',
       ].join('\n')
     );
-    jest.spyOn(envSet, 'pool', 'get').mockReturnValue(pool);
+    poolSpy.mockReturnValue(pool);
 
     const { fields } = convertToIdentifiers(Users);
     const insertInto = buildInsertInto(Users, {
@@ -58,7 +60,7 @@ describe('buildInsertInto()', () => {
         primaryEmail: String(primaryEmail),
       })
     );
-    jest.spyOn(envSet, 'pool', 'get').mockReturnValue(pool);
+    poolSpy.mockReturnValue(pool);
 
     const insertInto = buildInsertInto(Users, { returning: true });
     await expect(
@@ -70,7 +72,7 @@ describe('buildInsertInto()', () => {
     const user: CreateUser = { id: 'foo', username: '123', primaryEmail: 'foo@bar.com' };
     const expectInsertIntoSql = buildExpectedInsertIntoSql(Object.keys(user));
     const pool = createTestPool([...expectInsertIntoSql, 'returning *'].join('\n'));
-    jest.spyOn(envSet, 'pool', 'get').mockReturnValue(pool);
+    poolSpy.mockReturnValue(pool);
 
     const insertInto = buildInsertInto(Users, { returning: true });
     const dataToInsert = { id: 'foo', username: '123', primaryEmail: 'foo@bar.com' };

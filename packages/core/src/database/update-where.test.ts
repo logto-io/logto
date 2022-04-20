@@ -6,12 +6,14 @@ import { createTestPool } from '@/utils/test-utils';
 
 import { buildUpdateWhere } from './update-where';
 
+const poolSpy = jest.spyOn(envSet, 'pool', 'get');
+
 describe('buildUpdateWhere()', () => {
   it('resolves a promise with `undefined` when `returning` is false', async () => {
     const pool = createTestPool(
       'update "users"\nset "username"=$1\nwhere "id"=$2 and "username"=$3'
     );
-    jest.spyOn(envSet, 'pool', 'get').mockReturnValue(pool);
+    poolSpy.mockReturnValue(pool);
 
     const updateWhere = buildUpdateWhere(Users);
     await expect(
@@ -32,7 +34,7 @@ describe('buildUpdateWhere()', () => {
         primaryEmail: String(primaryEmail),
       })
     );
-    jest.spyOn(envSet, 'pool', 'get').mockReturnValue(pool);
+    poolSpy.mockReturnValue(pool);
 
     const updateWhere = buildUpdateWhere(Users, true);
     await expect(
@@ -48,7 +50,7 @@ describe('buildUpdateWhere()', () => {
         customClientMetadata: String(customClientMetadata),
       })
     );
-    jest.spyOn(envSet, 'pool', 'get').mockReturnValue(pool);
+    poolSpy.mockReturnValue(pool);
 
     const updateWhere = buildUpdateWhere(Applications, true);
     await expect(
@@ -63,7 +65,7 @@ describe('buildUpdateWhere()', () => {
     const pool = createTestPool(
       'update "users"\nset "username"=$1\nwhere "id"=$2 and "username"=$3'
     );
-    jest.spyOn(envSet, 'pool', 'get').mockReturnValue(pool);
+    poolSpy.mockReturnValue(pool);
 
     const updateWhere = buildUpdateWhere(Users);
 
@@ -77,7 +79,7 @@ describe('buildUpdateWhere()', () => {
 
   it('throws `entity.not_exists_with_id` error with `undefined` when `returning` is true', async () => {
     const pool = createTestPool('update "users"\nset "username"=$1\nwhere "id"=$2\nreturning *');
-    jest.spyOn(envSet, 'pool', 'get').mockReturnValue(pool);
+    poolSpy.mockReturnValue(pool);
 
     const updateWhere = buildUpdateWhere(Users, true);
     const updateWhereData = { set: { username: '123' }, where: { id: 'foo' } };
@@ -91,7 +93,7 @@ describe('buildUpdateWhere()', () => {
     const pool = createTestPool(
       'update "users"\nset "username"=$1\nwhere "username"=$2\nreturning *'
     );
-    jest.spyOn(envSet, 'pool', 'get').mockReturnValue(pool);
+    poolSpy.mockReturnValue(pool);
 
     const updateWhere = buildUpdateWhere(Users, true);
     const updateData = { set: { username: '123' }, where: { username: 'foo' } };
