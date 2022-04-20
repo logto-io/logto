@@ -100,7 +100,6 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
       ctx.log.passcode = passcode;
 
       await sendPasscode(passcode);
-      // TODO: ctx.log.connectorId = connectorId; // LOG-2230
       ctx.status = 204;
 
       return next();
@@ -154,7 +153,6 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
       ctx.log.passcode = passcode;
 
       await sendPasscode(passcode);
-      // TODO: ctx.log.connectorId = connectorId; // LOG-2230
       ctx.status = 204;
 
       return next();
@@ -200,6 +198,11 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
     }),
     async (ctx, next) => {
       const { connectorId, code, state, redirectUri } = ctx.guard.body;
+      ctx.log.type = LogType.SignInSocial;
+      ctx.log.connectorId = connectorId;
+      ctx.log.code = code;
+      ctx.log.state = state;
+      ctx.log.redirectUri = redirectUri;
 
       if (!code) {
         assertThat(state && redirectUri, 'session.insufficient_info');
@@ -207,11 +210,13 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
         assertThat(connector.connector.enabled, 'connector.not_enabled');
         const redirectTo = await connector.getAuthorizationUri(redirectUri, state);
         ctx.body = { redirectTo };
+        ctx.log.redirectTo = redirectTo;
 
         return next();
       }
 
       const userInfo = await getUserInfoByAuthCode(connectorId, code, redirectUri);
+      ctx.log.userInfo = userInfo;
 
       if (!(await hasUserWithIdentity(connectorId, userInfo.id))) {
         await assignInteractionResults(ctx, provider, { connectorId, userInfo }, true);
@@ -226,6 +231,7 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
       }
 
       const { id, identities } = await findUserByIdentity(connectorId, userInfo.id);
+      ctx.log.userId = id;
 
       // Update social connector's user info
       await updateUserById(id, {
@@ -244,14 +250,21 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
     }),
     async (ctx, next) => {
       const { connectorId } = ctx.guard.body;
+      ctx.log.type = LogType.SignInSocialBind;
+      ctx.log.connectorId = connectorId;
+
       const { result } = await provider.interactionDetails(ctx.req, ctx.res);
       assertThat(result, 'session.connector_session_not_found');
 
       const userInfo = await getUserInfoFromInteractionResult(connectorId, result);
+      ctx.log.userInfo = userInfo;
+
       const relatedInfo = await findSocialRelatedUser(userInfo);
       assertThat(relatedInfo, 'session.connector_session_not_found');
 
       const { id, identities } = relatedInfo[1];
+      ctx.log.userId = id;
+
       await updateUserById(id, {
         identities: { ...identities, [connectorId]: { userId: userInfo.id, details: userInfo } },
       });
