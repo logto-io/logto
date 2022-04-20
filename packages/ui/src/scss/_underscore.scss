@@ -20,13 +20,13 @@
 }
 
 @mixin text-hint {
-  font: var(--font-body-small);
-  color: var(--color-font-link-secondary);
+  font: var(--font-caption);
+  color: var(--color-caption);
 }
 
 @mixin title {
   font: var(--font-title);
-  color: var(--color-font-primary);
+  color: var(--color-text);
 }
 
 @function border($color: transparent, $width: 1) {

@@ -22,6 +22,7 @@ import * as styles from './index.module.scss';
 
 type Props = {
   type: UserFlow;
+  className?: string;
 };
 
 type FieldState = {
@@ -41,7 +42,7 @@ const defaultState: FieldState = { email: '', termsAgreement: false };
 
 const emailRegEx = /^\S+@\S+\.\S+$/;
 
-const EmailPasswordless = ({ type }: Props) => {
+const EmailPasswordless = ({ type, className }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'main_flow' });
   const [fieldState, setFieldState] = useState<FieldState>(defaultState);
   const [fieldErrors, setFieldErrors] = useState<ErrorState>({});
@@ -89,8 +90,6 @@ const EmailPasswordless = ({ type }: Props) => {
   }, [validations, fieldState, asyncSendPasscode]);
 
   useEffect(() => {
-    console.log(result);
-
     if (result) {
       navigate(`/${type}/email/passcode-validation`, { state: { email: fieldState.email } });
     }
@@ -119,9 +118,9 @@ const EmailPasswordless = ({ type }: Props) => {
   }, [error, t, setToast]);
 
   return (
-    <form className={styles.form}>
+    <form className={classNames(styles.form, className)}>
       <Input
-        className={classNames(styles.inputField, fieldErrors.email && styles.withError)}
+        className={styles.inputField}
         name="email"
         autoComplete="email"
         placeholder={t('input.email')}
@@ -140,7 +139,7 @@ const EmailPasswordless = ({ type }: Props) => {
 
       <TermsOfUse
         name="termsAgreement"
-        className={classNames(styles.terms, fieldErrors.termsAgreement && styles.withError)}
+        className={styles.terms}
         termsOfUse={{ enabled: true, contentUrl: '/' }}
         isChecked={fieldState.termsAgreement}
         error={fieldErrors.termsAgreement}

@@ -1,37 +1,38 @@
 @use '@/scss/underscore' as _;
 
 .button {
-  display: flex;
-  flex-direction: row;
+  @include _.flex-row;
   justify-content: center;
-  align-items: center;
   padding: _.unit(3);
-  border-radius: _.unit(2);
-  font: var(--font-button-text);
-  transition: var(--transition-default-control);
+  border-radius: var(--radius);
+  font: var(--font-body-bold);
   cursor: pointer;
-  -webkit-appearance: none;
   width: 100%;
+  -webkit-appearance: none;
   -webkit-tap-highlight-color: transparent;
 }
 
 .primary {
   border: none;
   background: var(--color-primary);
-  color: var(--color-font-button-text);
+  color: var(--color-base);
+
+  &.disabled {
+    background: var(--color-layer);
+    color: var(--color-disabled);
+  }
 }
 
 .secondary {
-  border: _.border(var(--color-border));
-  background: var(--color-background);
-  color: var(--color-font-primary);
+  border: _.border(var(--color-outline));
+  background: var(--color-base);
+  color: var(--color-text);
+
+  &.disabled {
+    color: var(--color-disabled);
+  }
 }
 
 .small {
   font: var(--font-button-text-small);
-
-  &.secondary {
-    border: _.border(var(--color-border-secondary));
-    color: var(--color-font-secondary-dialog);
-  }
 }

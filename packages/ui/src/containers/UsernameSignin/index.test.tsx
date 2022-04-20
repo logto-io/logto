@@ -19,7 +19,6 @@ describe('<UsernameSignin>', () => {
     expect(container.querySelector('input[name="username"]')).not.toBeNull();
     expect(container.querySelector('input[name="password"]')).not.toBeNull();
     expect(queryByText('action.sign_in')).not.toBeNull();
-    expect(queryByText('description.forgot_password')).not.toBeNull();
     expect(queryByText('description.agree_with_terms')).not.toBeNull();
   });
 

@@ -1,0 +1,11 @@
+@use '@/scss/underscore' as _;
+
+.navBar {
+  width: 100%;
+  margin-bottom: _.unit(6);
+
+  svg {
+    margin-left: _.unit(-2);
+    fill: var(--color-icon);
+  }
+}

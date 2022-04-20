@@ -4,18 +4,19 @@
   @include _.flex-row;
   justify-content: space-between;
   width: 100%;
-  max-width: 375px;
+  max-width: 360px;
+  margin: 0 auto;
 
   input {
     border-radius: _.unit(2);
     border: _.border();
-    background: var(--color-control-background);
+    background: var(--color-layer);
     caret-color: var(--color-primary);
-    width: _.unit(12);
-    height: _.unit(12);
+    width: 44px;
+    height: 44px;
     text-align: center;
-    font: var(--font-control);
-    color: var(--color-font-primary);
+    font: var(--font-body);
+    color: var(--color-text);
 
     &::-webkit-outer-spin-button,
     &::-webkit-inner-spin-button {
@@ -24,7 +25,7 @@
     }
 
     &:focus {
-      border: _.border(var(--color-control-focus));
+      border: _.border(var(--color-primary));
     }
 
     &.error {
@@ -32,7 +33,7 @@
     }
 
     &::placeholder {
-      color: var(--color-font-placeholder);
+      color: var(--color-caption);
     }
   }
 }

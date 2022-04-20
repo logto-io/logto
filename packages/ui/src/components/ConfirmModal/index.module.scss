@@ -1,21 +1,20 @@
 @use '@/scss/underscore' as _;
 
 .container {
-  background: var(--color-background);
-  padding: _.unit(6);
-  border-radius: _.unit(2);
+  background: var(--color-base);
+  padding: _.unit(6) _.unit(5);
+  border-radius: var(--radius);
 }
 
 .content {
   text-align: center;
-  font: var(--font-body-medium);
-  color: var(--color-font-primary);
+  font: var(--font-body);
+  color: var(--color-text);
 }
 
 .footer {
   @include _.flex_row;
   margin-top: _.unit(6);
-  justify-content: space-between;
 
   > * {
     flex: 1;

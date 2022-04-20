@@ -2,7 +2,7 @@
 
 .container {
   padding: _.unit(5);
-  background: var(--color-background);
+  background: var(--color-base);
 }
 
 .header {
@@ -10,4 +10,8 @@
   justify-content: flex-end;
   align-items: center;
   margin-bottom: _.unit(4);
+}
+
+.closeIcon {
+  fill: var(--color-icon);
 }

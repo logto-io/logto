@@ -6,15 +6,15 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: var(--color-loading-layer);
+  background-color: var(--color-overlay);
   @include _.flex-column;
 }
 
 .container {
   width: 60px;
   height: 60px;
-  border-radius: 8px;
-  background-color: var(--color-dark-background);
+  border-radius: var(--radius);
+  background-color: var(--color-toast);
   @include _.flex-column;
 }
 

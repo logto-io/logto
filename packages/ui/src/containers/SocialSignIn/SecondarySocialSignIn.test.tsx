@@ -50,7 +50,8 @@ describe('SecondarySocialSignIn', () => {
         <SecondarySocialSignIn connectors={socialConnectors} />
       </MemoryRouter>
     );
-    expect(container.querySelectorAll('button')).toHaveLength(4);
+    expect(container.querySelectorAll('button')).toHaveLength(3);
+    expect(container.querySelector('svg')).not.toBeNull();
   });
 
   it('invoke web social signIn', async () => {

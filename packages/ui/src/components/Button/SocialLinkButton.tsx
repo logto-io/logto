@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 
-import * as SocialLinkButtonStyles from './SocialLinkButton.module.scss';
+import * as socialLinkButtonStyles from './SocialLinkButton.module.scss';
 import * as styles from './index.module.scss';
 
 export type Props = {
@@ -24,13 +24,18 @@ const SocialLinkButton = ({ isDisabled, className, connector, onClick }: Props) 
   return (
     <button
       disabled={isDisabled}
-      className={classNames(styles.button, SocialLinkButtonStyles.socialButton, className)}
+      className={classNames(
+        styles.button,
+        isDisabled && styles.disabled,
+        socialLinkButtonStyles.socialButton,
+        className
+      )}
       type="button"
       onClick={() => {
         onClick?.(id);
       }}
     >
-      {logo && <img src={logo} alt={localName} className={SocialLinkButtonStyles.icon} />}
+      {logo && <img src={logo} alt={localName} className={socialLinkButtonStyles.icon} />}
       {localName}
     </button>
   );

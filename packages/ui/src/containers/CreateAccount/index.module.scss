@@ -3,6 +3,7 @@
 .form {
   width: 100%;
   max-width: 360px;
+  margin: 0 auto;
   @include _.flex-column;
 
   > * {
@@ -11,21 +12,9 @@
 
   .inputField {
     margin-bottom: _.unit(4);
-
-    &.withError {
-      margin-bottom: _.unit(2);
-    }
   }
 
   .terms {
-    margin: _.unit(7) 0 _.unit(6);
-
-    &.withError {
-      margin: _.unit(7) 0  _.unit(2) 0;
-    }
-  }
-
-  .inputField.withError + .terms {
-    margin-top: _.unit(9);
+    margin: _.unit(8) 0 _.unit(4);
   }
 }

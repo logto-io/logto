@@ -5,7 +5,7 @@ import * as styles from './index.module.scss';
 
 export type Props = {
   htmlType?: 'button' | 'submit' | 'reset';
-  size?: 'large' | 'small';
+  size?: 'regular' | 'small';
   isDisabled?: boolean;
   className?: string;
   children: ReactNode; // TODO: make it i18nKey with optional params
@@ -16,7 +16,7 @@ export type Props = {
 const Button = ({
   htmlType = 'button',
   type = 'primary',
-  size = 'large',
+  size = 'regular',
   isDisabled,
   className,
   children,
@@ -24,7 +24,13 @@ const Button = ({
 }: Props) => (
   <button
     disabled={isDisabled}
-    className={classNames(styles.button, styles[type], styles[size], className)}
+    className={classNames(
+      styles.button,
+      styles[type],
+      styles[size],
+      isDisabled && styles.disabled,
+      className
+    )}
     type={htmlType}
     onClick={onClick}
   >

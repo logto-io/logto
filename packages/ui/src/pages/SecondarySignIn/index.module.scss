@@ -6,17 +6,9 @@
   @include _.flex-column;
 }
 
-.navBar {
-  width: 100%;
-  margin-bottom: _.unit(6);
-
-  svg {
-    margin-left: _.unit(-2);
-  }
-}
 
 .title {
   width: 100%;
   @include _.title;
-  margin-bottom: _.unit(9);
+  margin-bottom: _.unit(6);
 }
