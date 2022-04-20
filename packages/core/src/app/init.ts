@@ -13,7 +13,6 @@ import koaLog from '@/middleware/koa-log';
 import koaOIDCErrorHandler from '@/middleware/koa-oidc-error-handler';
 import koaSlonikErrorHandler from '@/middleware/koa-slonik-error-handler';
 import koaSpaProxy from '@/middleware/koa-spa-proxy';
-import koaUserLog from '@/middleware/koa-user-log';
 import initOidc from '@/oidc/init';
 import initRouter from '@/routes/init';
 
@@ -23,7 +22,6 @@ export default async function initApp(app: Koa): Promise<void> {
   app.use(koaSlonikErrorHandler());
   app.use(koaConnectorErrorHandler());
 
-  app.use(koaUserLog());
   app.use(koaLog());
   app.use(koaLogger());
   app.use(koaI18next());

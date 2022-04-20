@@ -2,7 +2,7 @@
 import path from 'path';
 
 import { LogtoErrorCode } from '@logto/phrases';
-import { PasscodeType, UserLogType, userInfoSelectFields } from '@logto/schemas';
+import { PasscodeType, userInfoSelectFields } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import pick from 'lodash.pick';
 import { Provider } from 'oidc-provider';
@@ -68,14 +68,9 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
     }),
     async (ctx, next) => {
       const { username, password } = ctx.guard.body;
-      ctx.userLog.username = username;
-      ctx.userLog.type = UserLogType.SignInUsernameAndPassword;
-
       assertThat(password, 'session.insufficient_info');
 
       const { id } = await findUserByUsernameAndPassword(username, password);
-      ctx.userLog.userId = id;
-
       await assignInteractionResults(ctx, provider, { login: { accountId: id } });
 
       return next();
@@ -88,8 +83,6 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
     async (ctx, next) => {
       const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
       const { phone } = ctx.guard.body;
-      ctx.userLog.phone = phone;
-      ctx.userLog.type = UserLogType.SignInPhone;
 
       assertThat(
         await hasUserWithPhone(phone),
@@ -110,8 +103,6 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
     async (ctx, next) => {
       const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
       const { phone, code } = ctx.guard.body;
-      ctx.userLog.phone = phone;
-      ctx.userLog.type = UserLogType.SignInPhone;
 
       assertThat(
         await hasUserWithPhone(phone),
@@ -120,7 +111,6 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
 
       await verifyPasscode(jti, PasscodeType.SignIn, code, { phone });
       const { id } = await findUserByPhone(phone);
-      ctx.userLog.userId = id;
 
       await assignInteractionResults(ctx, provider, { login: { accountId: id } });
 
@@ -134,8 +124,6 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
     async (ctx, next) => {
       const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
       const { email } = ctx.guard.body;
-      ctx.userLog.email = email;
-      ctx.userLog.type = UserLogType.SignInEmail;
 
       assertThat(
         await hasUserWithEmail(email),
@@ -156,8 +144,6 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
     async (ctx, next) => {
       const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
       const { email, code } = ctx.guard.body;
-      ctx.userLog.email = email;
-      ctx.userLog.type = UserLogType.SignInEmail;
 
       assertThat(
         await hasUserWithEmail(email),
@@ -166,7 +152,6 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
 
       await verifyPasscode(jti, PasscodeType.SignIn, code, { email });
       const { id } = await findUserByEmail(email);
-      ctx.userLog.userId = id;
 
       await assignInteractionResults(ctx, provider, { login: { accountId: id } });
 
@@ -186,8 +171,6 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
     }),
     async (ctx, next) => {
       const { connectorId, code, state, redirectUri } = ctx.guard.body;
-      ctx.userLog.connectorId = connectorId;
-      ctx.userLog.type = UserLogType.SignInSocial;
 
       if (!code) {
         assertThat(state && redirectUri, 'session.insufficient_info');
@@ -214,7 +197,6 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
       }
 
       const { id, identities } = await findUserByIdentity(connectorId, userInfo.id);
-      ctx.userLog.userId = id;
 
       // Update social connector's user info
       await updateUserById(id, {
@@ -232,22 +214,15 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
       body: object({ connectorId: string() }),
     }),
     async (ctx, next) => {
-      ctx.userLog.type = UserLogType.SignInSocial;
       const { connectorId } = ctx.guard.body;
       const { result } = await provider.interactionDetails(ctx.req, ctx.res);
-
       assertThat(result, 'session.connector_session_not_found');
-
-      ctx.userLog.connectorId = connectorId;
 
       const userInfo = await getUserInfoFromInteractionResult(connectorId, result);
       const relatedInfo = await findSocialRelatedUser(userInfo);
-
       assertThat(relatedInfo, 'session.connector_session_not_found');
 
       const { id, identities } = relatedInfo[1];
-      ctx.userLog.userId = id;
-
       await updateUserById(id, {
         identities: { ...identities, [connectorId]: { userId: userInfo.id, details: userInfo } },
       });
@@ -302,8 +277,6 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
     }),
     async (ctx, next) => {
       const { username, password } = ctx.guard.body;
-      ctx.userLog.username = username;
-      ctx.userLog.type = UserLogType.RegisterUsernameAndPassword;
 
       assertThat(
         password,
@@ -321,8 +294,6 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
       );
 
       const id = await generateUserId();
-      ctx.userLog.userId = id;
-
       const { passwordEncryptionSalt, passwordEncrypted, passwordEncryptionMethod } =
         encryptUserPassword(id, password);
 
@@ -355,10 +326,8 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
     '/session/register/passwordless/sms/send-passcode',
     koaGuard({ body: object({ phone: string().regex(phoneRegEx) }) }),
     async (ctx, next) => {
-      ctx.userLog.type = UserLogType.RegisterPhone;
       const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
       const { phone } = ctx.guard.body;
-      ctx.userLog.phone = phone;
 
       assertThat(
         !(await hasUserWithPhone(phone)),
@@ -379,8 +348,6 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
     async (ctx, next) => {
       const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
       const { phone, code } = ctx.guard.body;
-      ctx.userLog.phone = phone;
-      ctx.userLog.type = UserLogType.RegisterPhone;
 
       assertThat(
         !(await hasUserWithPhone(phone)),
@@ -389,7 +356,6 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
 
       await verifyPasscode(jti, PasscodeType.Register, code, { phone });
       const id = await generateUserId();
-      ctx.userLog.userId = id;
 
       await insertUser({ id, primaryPhone: phone });
       await assignInteractionResults(ctx, provider, { login: { accountId: id } });
@@ -404,8 +370,6 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
     async (ctx, next) => {
       const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
       const { email } = ctx.guard.body;
-      ctx.userLog.email = email;
-      ctx.userLog.type = UserLogType.RegisterEmail;
 
       assertThat(
         !(await hasUserWithEmail(email)),
@@ -426,8 +390,6 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
     async (ctx, next) => {
       const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
       const { email, code } = ctx.guard.body;
-      ctx.userLog.email = email;
-      ctx.userLog.type = UserLogType.RegisterEmail;
 
       assertThat(
         !(await hasUserWithEmail(email)),
@@ -436,7 +398,6 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
 
       await verifyPasscode(jti, PasscodeType.Register, code, { email });
       const id = await generateUserId();
-      ctx.userLog.userId = id;
 
       await insertUser({ id, primaryEmail: email });
       await assignInteractionResults(ctx, provider, { login: { accountId: id } });
