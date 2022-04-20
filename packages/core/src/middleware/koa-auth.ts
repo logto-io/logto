@@ -4,9 +4,8 @@ import { jwtVerify } from 'jose/jwt/verify';
 import { MiddlewareType, Request } from 'koa';
 import { IRouterParamContext } from 'koa-router';
 
-import { developmentUserId, isProduction } from '@/env/consts';
+import envSet from '@/env-set';
 import RequestError from '@/errors/RequestError';
-import { publicKey, issuer, adminResource } from '@/oidc/consts';
 import assertThat from '@/utils/assert-that';
 
 export type WithAuthContext<ContextT extends IRouterParamContext = IRouterParamContext> =
@@ -33,10 +32,13 @@ const extractBearerTokenFromHeaders = ({ authorization }: IncomingHttpHeaders) =
 };
 
 const getUserIdFromRequest = async (request: Request) => {
+  const { isProduction, developmentUserId, oidc } = envSet.values;
+
   if (!isProduction && developmentUserId) {
     return developmentUserId;
   }
 
+  const { publicKey, issuer, adminResource } = oidc;
   const {
     payload: { sub },
   } = await jwtVerify(extractBearerTokenFromHeaders(request.headers), publicKey, {

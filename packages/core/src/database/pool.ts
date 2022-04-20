@@ -1,9 +1,10 @@
-import { getEnv } from '@silverhand/essentials';
 import { createPool } from 'slonik';
 import { createInterceptors } from 'slonik-interceptor-preset';
 
+import envSet from '@/env-set';
+
 const interceptors = [...createInterceptors()];
 
-const pool = createPool(getEnv('DB_URL'), { interceptors });
+const pool = createPool(envSet.values.dbUrl, { interceptors });
 
 export default pool;

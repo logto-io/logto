@@ -31,10 +31,7 @@ describe('koaAuth middleware', () => {
 
   it('should read DEVELOPMENT_USER_ID from env variable first if not production', async () => {
     // Mock the @/env/consts
-    jest.mock('@/env/consts', () => ({
-      ...jest.requireActual('@/env/consts'),
-      developmentUserId: 'foo',
-    }));
+    process.env.DEVELOPMENT_USER_ID = 'foo';
 
     /* eslint-disable @typescript-eslint/no-require-imports */
     /* eslint-disable @typescript-eslint/no-var-requires */

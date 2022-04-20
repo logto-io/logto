@@ -6,15 +6,16 @@ import Koa from 'koa';
 import mount from 'koa-mount';
 import { Provider, errors } from 'oidc-provider';
 
+import envSet from '@/env-set';
 import postgresAdapter from '@/oidc/adapter';
 import { isOriginAllowed, validateCustomClientMetadata } from '@/oidc/utils';
 import { findResourceByIndicator } from '@/queries/resource';
 import { findUserById } from '@/queries/user';
 import { routes } from '@/routes/consts';
 
-import { issuer, privateKey, defaultIdTokenTtl, defaultRefreshTokenTtl } from './consts';
-
 export default async function initOidc(app: Koa): Promise<Provider> {
+  const { issuer, privateKey, defaultIdTokenTtl, defaultRefreshTokenTtl } = envSet.values.oidc;
+
   const keys = [await fromKeyLike(privateKey)];
   const cookieConfig = Object.freeze({
     sameSite: 'lax',

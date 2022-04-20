@@ -1,4 +1,4 @@
-import { signIn } from '@/env/consts';
+const signIn = '/sign-in';
 
 export const routes = Object.freeze({
   signIn: {
