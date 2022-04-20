@@ -9,5 +9,3 @@ const program = new Command();
 
 program.addCommand(database);
 program.parse(process.argv);
-
-// Export * from './database';

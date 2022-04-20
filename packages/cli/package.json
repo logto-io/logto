@@ -6,8 +6,12 @@
   "author": "Logto",
   "license": "MPL-2.0",
   "files": [
-    "lib"
+    "lib",
+    "bin"
   ],
+  "bin": {
+    "logto": "bin/run.js"
+  },
   "private": true,
   "scripts": {
     "preinstall": "npx only-allow pnpm",
