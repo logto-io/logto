@@ -6,7 +6,6 @@ import * as koaLog from '@/middleware/koa-log';
 import * as koaOIDCErrorHandler from '@/middleware/koa-oidc-error-handler';
 import * as koaSlonikErrorHandler from '@/middleware/koa-slonik-error-handler';
 import * as koaSpaProxy from '@/middleware/koa-spa-proxy';
-import * as koaUserLog from '@/middleware/koa-user-log';
 import * as initOidc from '@/oidc/init';
 import * as initRouter from '@/routes/init';
 
@@ -23,7 +22,6 @@ describe('App Init', () => {
     koaOIDCErrorHandler,
     koaSlonikErrorHandler,
     koaSpaProxy,
-    koaUserLog,
   ];
   const initMethods = [initRouter, initOidc];
 
