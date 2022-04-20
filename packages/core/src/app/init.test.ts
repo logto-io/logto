@@ -2,6 +2,7 @@ import Koa from 'koa';
 
 import * as koaErrorHandler from '@/middleware/koa-error-handler';
 import * as koaI18next from '@/middleware/koa-i18next';
+import * as koaLog from '@/middleware/koa-log';
 import * as koaOIDCErrorHandler from '@/middleware/koa-oidc-error-handler';
 import * as koaSlonikErrorHandler from '@/middleware/koa-slonik-error-handler';
 import * as koaSpaProxy from '@/middleware/koa-spa-proxy';
@@ -18,6 +19,7 @@ describe('App Init', () => {
   const middlewareList = [
     koaErrorHandler,
     koaI18next,
+    koaLog,
     koaOIDCErrorHandler,
     koaSlonikErrorHandler,
     koaSpaProxy,
