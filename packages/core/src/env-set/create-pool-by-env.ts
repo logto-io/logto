@@ -6,6 +6,7 @@ import { createInterceptors } from 'slonik-interceptor-preset';
 import appendDotEnv from './append-dot-env';
 
 const createPoolByEnv = async (isTest: boolean) => {
+  // Database connection is disabled in unit test environment
   if (isTest) {
     return;
   }
