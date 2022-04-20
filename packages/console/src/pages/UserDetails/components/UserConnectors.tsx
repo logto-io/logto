@@ -79,6 +79,10 @@ const UserConnectors = ({ userId, connectors, onDelete }: Props) => {
     });
   }, [data, connectors]);
 
+  if (Object.keys(connectors).length === 0) {
+    return <div className={styles.empty}>{t('user_details.connectors.not_connected')}</div>;
+  }
+
   return (
     <div>
       {isLoading && <div>Loading</div>}
@@ -98,11 +102,6 @@ const UserConnectors = ({ userId, connectors, onDelete }: Props) => {
                 content={error.body.message}
                 onRetry={async () => mutate(undefined, true)}
               />
-            )}
-            {displayConnectors.length === 0 && (
-              <tr>
-                <td rowSpan={3}>{t('user_details.connectors.not_connected')}</td>
-              </tr>
             )}
             {displayConnectors.map((connector) => (
               <tr key={connector.id}>

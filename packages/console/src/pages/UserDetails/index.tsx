@@ -58,6 +58,7 @@ const UserDetails = () => {
     control,
     reset,
     formState: { isSubmitting },
+    getValues,
   } = useForm<FormData>();
 
   const {
@@ -176,24 +177,30 @@ const UserDetails = () => {
             </TabNav>
             <form className={styles.form} onSubmit={onSubmit}>
               <div className={styles.fields}>
-                <FormField
-                  title="admin_console.user_details.field_email"
-                  className={styles.textField}
-                >
-                  <TextInput readOnly {...register('primaryEmail')} />
-                </FormField>
-                <FormField
-                  title="admin_console.user_details.field_phone"
-                  className={styles.textField}
-                >
-                  <TextInput readOnly {...register('primaryPhone')} />
-                </FormField>
-                <FormField
-                  title="admin_console.user_details.field_username"
-                  className={styles.textField}
-                >
-                  <TextInput readOnly {...register('username')} />
-                </FormField>
+                {getValues('primaryEmail') && (
+                  <FormField
+                    title="admin_console.user_details.field_email"
+                    className={styles.textField}
+                  >
+                    <TextInput readOnly {...register('primaryEmail')} />
+                  </FormField>
+                )}
+                {getValues('primaryPhone') && (
+                  <FormField
+                    title="admin_console.user_details.field_phone"
+                    className={styles.textField}
+                  >
+                    <TextInput readOnly {...register('primaryPhone')} />
+                  </FormField>
+                )}
+                {getValues('username') && (
+                  <FormField
+                    title="admin_console.user_details.field_username"
+                    className={styles.textField}
+                  >
+                    <TextInput readOnly {...register('username')} />
+                  </FormField>
+                )}
                 <FormField
                   title="admin_console.user_details.field_name"
                   className={styles.textField}

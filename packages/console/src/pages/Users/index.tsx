@@ -122,8 +122,8 @@ const Users = () => {
               >
                 <td>
                   <ItemPreview
-                    title={name ?? '-'}
-                    subtitle={username ?? '-'}
+                    title={name ?? t('users.unnamed')}
+                    subtitle={conditionalString(username)}
                     icon={<ImagePlaceholder size={24} />}
                     to={`/users/${id}`}
                     size="compact"
