@@ -10,9 +10,14 @@ export type Languages = keyof Resource;
 export type I18nKey = NormalizeKeyPaths<typeof en.translation>;
 export type AdminConsoleKey = NormalizeKeyPaths<typeof en.translation.admin_console>;
 
+export enum Language {
+  English = 'en',
+  Chinese = 'zh-CN',
+}
+
 const resource: Resource = {
-  en,
-  'zh-CN': zhCN,
+  [Language.English]: en,
+  [Language.Chinese]: zhCN,
 };
 
 export default resource;

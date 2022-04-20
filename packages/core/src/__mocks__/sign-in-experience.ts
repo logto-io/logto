@@ -1,7 +1,7 @@
+import { Language } from '@logto/phrases';
 import {
   Branding,
   BrandingStyle,
-  Language,
   LanguageInfo,
   SignInExperience,
   SignInMethods,

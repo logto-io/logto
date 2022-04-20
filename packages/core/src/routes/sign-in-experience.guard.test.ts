@@ -1,9 +1,5 @@
-import {
-  CreateSignInExperience,
-  Language,
-  SignInExperience,
-  SignInMethodState,
-} from '@logto/schemas';
+import { Language } from '@logto/phrases';
+import { CreateSignInExperience, SignInExperience, SignInMethodState } from '@logto/schemas';
 
 import {
   mockAliyunDmConnectorInstance,

@@ -1,5 +1,7 @@
+import { Language } from '@logto/phrases';
+
 import { CreateSignInExperience } from '../db-entries';
-import { BrandingStyle, Language, SignInMethodState } from '../foundations';
+import { BrandingStyle, SignInMethodState } from '../foundations';
 
 export const defaultSignInExperience: Readonly<CreateSignInExperience> = {
   id: 'default',
