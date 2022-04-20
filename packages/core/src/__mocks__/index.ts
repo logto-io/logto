@@ -6,9 +6,6 @@ import {
   Resource,
   Role,
   Setting,
-  UserLog,
-  UserLogResult,
-  UserLogType,
 } from '@logto/schemas';
 
 export * from './connector';
@@ -59,14 +56,5 @@ export const mockPasscode: Passcode = {
   code: 'asdfghjkl',
   consumed: false,
   tryCount: 2,
-  createdAt: 10,
-};
-
-export const mockUserLog: UserLog = {
-  id: 'foo',
-  userId: 'foo',
-  type: UserLogType.RegisterEmail,
-  result: UserLogResult.Success,
-  payload: {},
   createdAt: 10,
 };
