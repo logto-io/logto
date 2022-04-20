@@ -25,3 +25,17 @@
   border-left: 1px solid var(--color-border);
   width: 0;
 }
+
+@mixin rotating-animation {
+  animation: rotating 1s ease-in-out infinite;
+}
+
+@keyframes rotating {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}

@@ -24,7 +24,7 @@ type FormData = {
 const SenderTester = ({ connectorType }: Props) => {
   const buttonPosReference = useRef(null);
   const [showTooltip, setShowTooltip] = useState(false);
-  const [submitting, setSubmitting] = useState(false);
+  const [isSubmitting, seIsSubmitting] = useState(false);
   const {
     handleSubmit,
     register,
@@ -42,7 +42,7 @@ const SenderTester = ({ connectorType }: Props) => {
 
     const tooltipTimeout = setTimeout(() => {
       setShowTooltip(false);
-      setSubmitting(false);
+      seIsSubmitting(false);
     }, 2000);
 
     return () => {
@@ -52,7 +52,7 @@ const SenderTester = ({ connectorType }: Props) => {
 
   const onSubmit = handleSubmit(async (formData) => {
     const { sendTo } = formData;
-    setSubmitting(true);
+    seIsSubmitting(true);
 
     const data = isSms ? { phone: sendTo } : { email: sendTo };
 
@@ -65,7 +65,7 @@ const SenderTester = ({ connectorType }: Props) => {
       setShowTooltip(true);
     } catch (error: unknown) {
       console.error(error);
-      setSubmitting(false);
+      seIsSubmitting(false);
     }
   });
 
@@ -95,7 +95,7 @@ const SenderTester = ({ connectorType }: Props) => {
         <div ref={buttonPosReference} className={styles.send}>
           <Button
             htmlType="submit"
-            disabled={submitting}
+            isLoading={isSubmitting}
             title="admin_console.connector_details.send"
             type="outline"
           />

@@ -163,7 +163,7 @@ const ApiResourceDetails = () => {
               </div>
               <div className={detailsStyles.footer}>
                 <Button
-                  disabled={isSubmitting}
+                  isLoading={isSubmitting}
                   htmlType="submit"
                   type="primary"
                   title="admin_console.api_resource_details.save_changes"

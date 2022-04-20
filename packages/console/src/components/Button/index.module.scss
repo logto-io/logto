@@ -8,9 +8,33 @@
   transition: background 0.2s ease-in-out;
   align-items: center;
   white-space: nowrap;
+  user-select: none;
+  position: relative;
 
   &.withIcon {
     display: inline-flex;
+  }
+
+  &.loading {
+    pointer-events: none;
+    opacity: 60%;
+
+    .spinner {
+      width: 16px;
+      height: 16px;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+
+      svg {
+        @include _.rotating-animation;
+      }
+    }
+
+    .spinner ~ span {
+      visibility: hidden;
+    }
   }
 
   &:not(:disabled) {
@@ -19,6 +43,7 @@
 
   &:disabled {
     cursor: not-allowed;
+    pointer-events: none;
   }
 
   .icon {
@@ -70,7 +95,7 @@
       border-color: var(--color-neutral-70);
     }
 
-    &:focus {
+    &:focus-visible {
       outline: 3px solid var(--color-focused);
     }
 
@@ -92,7 +117,7 @@
       color: var(--color-neutral-70);
     }
 
-    &:focus {
+    &:focus-visible {
       outline: 3px solid var(--color-focused-variant);
     }
 
@@ -114,7 +139,7 @@
       color: var(--color-neutral-70);
     }
 
-    &:focus {
+    &:focus-visible {
       outline: 3px solid var(--color-danger-focused);
     }
 
@@ -139,7 +164,7 @@
       color: var(--color-neutral-70);
     }
 
-    &:focus {
+    &:focus-visible {
       outline: 3px solid var(--color-focused-variant);
     }
 
@@ -162,7 +187,7 @@
       color: var(--color-disabled);
     }
 
-    &:focus {
+    &:focus-visible {
       outline: 2px solid var(--color-focused-variant);
     }
 

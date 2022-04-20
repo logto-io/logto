@@ -83,7 +83,7 @@ const CreateForm = ({ onClose }: Props) => {
       size="large"
       footer={
         <Button
-          disabled={isSubmitting}
+          isLoading={isSubmitting}
           htmlType="submit"
           title="admin_console.applications.create"
           size="large"
