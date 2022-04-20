@@ -3,7 +3,8 @@ import { Falsy, notFalsy } from '@silverhand/essentials';
 import dayjs from 'dayjs';
 import { sql, SqlSqlTokenType, SqlTokenType, IdentifierSqlTokenType } from 'slonik';
 
-import pool from './pool';
+import envSet from '@/env-set';
+
 import { FieldIdentifiers, Table } from './types';
 
 export const conditionalSql = <T>(
@@ -73,7 +74,7 @@ export const convertToIdentifiers = <T extends Table>(
 export const convertToTimestamp = (time = dayjs()) => sql`to_timestamp(${time.valueOf() / 1000})`;
 
 export const getTotalRowCount = async (table: IdentifierSqlTokenType) =>
-  pool.one<{ count: number }>(sql`
+  envSet.pool.one<{ count: number }>(sql`
     select count(*)
     from ${table}
   `);

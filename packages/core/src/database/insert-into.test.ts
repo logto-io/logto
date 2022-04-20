@@ -1,11 +1,14 @@
 import { CreateUser, Users } from '@logto/schemas';
 import decamelize from 'decamelize';
 
+import envSet from '@/env-set';
 import { InsertionError } from '@/errors/SlonikError';
 import { createTestPool } from '@/utils/test-utils';
 
 import { buildInsertInto } from './insert-into';
 import { convertToIdentifiers } from './utils';
+
+const poolSpy = jest.spyOn(envSet, 'pool', 'get');
 
 const buildExpectedInsertIntoSql = (keys: string[]) => [
   // eslint-disable-next-line sql/no-unsafe-query
@@ -18,7 +21,9 @@ describe('buildInsertInto()', () => {
     const user: CreateUser = { id: 'foo', username: '456' };
     const expectInsertIntoSql = buildExpectedInsertIntoSql(Object.keys(user));
     const pool = createTestPool(expectInsertIntoSql.join('\n'));
-    const insertInto = buildInsertInto(pool, Users);
+    poolSpy.mockReturnValue(pool);
+
+    const insertInto = buildInsertInto(Users);
     await expect(insertInto(user)).resolves.toBe(undefined);
   });
 
@@ -32,8 +37,10 @@ describe('buildInsertInto()', () => {
         'set "primary_email"=excluded."primary_email"',
       ].join('\n')
     );
+    poolSpy.mockReturnValue(pool);
+
     const { fields } = convertToIdentifiers(Users);
-    const insertInto = buildInsertInto(pool, Users, {
+    const insertInto = buildInsertInto(Users, {
       onConflict: {
         fields: [fields.id, fields.username],
         setExcludedFields: [fields.primaryEmail],
@@ -53,7 +60,9 @@ describe('buildInsertInto()', () => {
         primaryEmail: String(primaryEmail),
       })
     );
-    const insertInto = buildInsertInto(pool, Users, { returning: true });
+    poolSpy.mockReturnValue(pool);
+
+    const insertInto = buildInsertInto(Users, { returning: true });
     await expect(
       insertInto({ id: 'foo', username: '123', primaryEmail: 'foo@bar.com' })
     ).resolves.toStrictEqual(user);
@@ -63,7 +72,9 @@ describe('buildInsertInto()', () => {
     const user: CreateUser = { id: 'foo', username: '123', primaryEmail: 'foo@bar.com' };
     const expectInsertIntoSql = buildExpectedInsertIntoSql(Object.keys(user));
     const pool = createTestPool([...expectInsertIntoSql, 'returning *'].join('\n'));
-    const insertInto = buildInsertInto(pool, Users, { returning: true });
+    poolSpy.mockReturnValue(pool);
+
+    const insertInto = buildInsertInto(Users, { returning: true });
     const dataToInsert = { id: 'foo', username: '123', primaryEmail: 'foo@bar.com' };
 
     await expect(insertInto(dataToInsert)).rejects.toMatchError(

@@ -2,6 +2,7 @@ import { jwtVerify } from 'jose/jwt/verify';
 import { Context } from 'koa';
 import { IRouterParamContext } from 'koa-router';
 
+import envSet from '@/env-set';
 import RequestError from '@/errors/RequestError';
 import { createContextWithRouteParameters } from '@/utils/test-utils';
 
@@ -30,19 +31,14 @@ describe('koaAuth middleware', () => {
   });
 
   it('should read DEVELOPMENT_USER_ID from env variable first if not production', async () => {
-    // Mock the @/env/consts
-    process.env.DEVELOPMENT_USER_ID = 'foo';
+    const spy = jest
+      .spyOn(envSet, 'values', 'get')
+      .mockReturnValue({ ...envSet.values, developmentUserId: 'foo' });
 
-    /* eslint-disable @typescript-eslint/no-require-imports */
-    /* eslint-disable @typescript-eslint/no-var-requires */
-    /* eslint-disable unicorn/prefer-module */
-    const koaAuthModule = require('./koa-auth') as { default: typeof koaAuth };
-    /* eslint-enable @typescript-eslint/no-require-imports */
-    /* eslint-enable @typescript-eslint/no-var-requires */
-    /* eslint-enable unicorn/prefer-module */
-
-    await koaAuthModule.default()(ctx, next);
+    await koaAuth()(ctx, next);
     expect(ctx.auth).toEqual('foo');
+
+    spy.mockRestore();
   });
 
   it('should set user auth with given sub returned from accessToken', async () => {

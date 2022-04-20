@@ -8,8 +8,8 @@ import { conditional } from '@silverhand/essentials';
 import { sql, ValueExpressionType } from 'slonik';
 
 import { buildInsertInto } from '@/database/insert-into';
-import pool from '@/database/pool';
 import { convertToIdentifiers, convertToTimestamp } from '@/database/utils';
+import envSet from '@/env-set';
 
 export type WithConsumed<T> = T & { consumed?: boolean };
 export type QueryResult = Pick<OidcModelInstance, 'payload' | 'consumedAt'>;
@@ -26,7 +26,7 @@ const withConsumed = <T>(data: T, consumedAt?: number | null): WithConsumed<T> =
 const convertResult = (result: QueryResult | null) =>
   conditional(result && withConsumed(result.payload, result.consumedAt));
 
-export const upsertInstance = buildInsertInto<CreateOidcModelInstance>(pool, OidcModelInstances, {
+export const upsertInstance = buildInsertInto<CreateOidcModelInstance>(OidcModelInstances, {
   onConflict: {
     fields: [fields.modelName, fields.id],
     setExcludedFields: [fields.payload, fields.expiresAt],
@@ -40,7 +40,7 @@ const findByModel = (modelName: string) => sql`
 `;
 
 export const findPayloadById = async (modelName: string, id: string) => {
-  const result = await pool.maybeOne<QueryResult>(sql`
+  const result = await envSet.pool.maybeOne<QueryResult>(sql`
     ${findByModel(modelName)}
     and ${fields.id}=${id}
   `);
@@ -56,7 +56,7 @@ export const findPayloadByPayloadField = async <
   field: Field,
   value: T
 ) => {
-  const result = await pool.maybeOne<QueryResult>(sql`
+  const result = await envSet.pool.maybeOne<QueryResult>(sql`
     ${findByModel(modelName)}
     and ${fields.payload}->>${field}=${value}
   `);
@@ -65,7 +65,7 @@ export const findPayloadByPayloadField = async <
 };
 
 export const consumeInstanceById = async (modelName: string, id: string) => {
-  await pool.query(sql`
+  await envSet.pool.query(sql`
     update ${table}
     set ${fields.consumedAt}=${convertToTimestamp()}
     where ${fields.modelName}=${modelName}
@@ -74,7 +74,7 @@ export const consumeInstanceById = async (modelName: string, id: string) => {
 };
 
 export const destroyInstanceById = async (modelName: string, id: string) => {
-  await pool.query(sql`
+  await envSet.pool.query(sql`
     delete from ${table}
     where ${fields.modelName}=${modelName}
     and ${fields.id}=${id}
@@ -82,7 +82,7 @@ export const destroyInstanceById = async (modelName: string, id: string) => {
 };
 
 export const revokeInstanceByGrantId = async (modelName: string, grantId: string) => {
-  await pool.query(sql`
+  await envSet.pool.query(sql`
     delete from ${table}
     where ${fields.modelName}=${modelName}
     and ${fields.payload}->>'grantId'=${grantId}

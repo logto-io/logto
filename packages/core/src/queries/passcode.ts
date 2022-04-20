@@ -2,35 +2,35 @@ import { PasscodeType, Passcode, Passcodes, CreatePasscode } from '@logto/schema
 import { sql } from 'slonik';
 
 import { buildInsertInto } from '@/database/insert-into';
-import pool from '@/database/pool';
 import { buildUpdateWhere } from '@/database/update-where';
 import { convertToIdentifiers } from '@/database/utils';
+import envSet from '@/env-set';
 import { DeletionError } from '@/errors/SlonikError';
 
 const { table, fields } = convertToIdentifiers(Passcodes);
 
 export const findUnconsumedPasscodeByJtiAndType = async (jti: string, type: PasscodeType) =>
-  pool.maybeOne<Passcode>(sql`
+  envSet.pool.maybeOne<Passcode>(sql`
     select ${sql.join(Object.values(fields), sql`, `)}
     from ${table}
     where ${fields.interactionJti}=${jti} and ${fields.type}=${type} and ${fields.consumed} = false
   `);
 
 export const findUnconsumedPasscodesByJtiAndType = async (jti: string, type: PasscodeType) =>
-  pool.any<Passcode>(sql`
+  envSet.pool.any<Passcode>(sql`
     select ${sql.join(Object.values(fields), sql`, `)}
     from ${table}
     where ${fields.interactionJti}=${jti} and ${fields.type}=${type} and ${fields.consumed} = false
   `);
 
-export const insertPasscode = buildInsertInto<CreatePasscode, Passcode>(pool, Passcodes, {
+export const insertPasscode = buildInsertInto<CreatePasscode, Passcode>(Passcodes, {
   returning: true,
 });
 
-export const updatePasscode = buildUpdateWhere<CreatePasscode, Passcode>(pool, Passcodes, true);
+export const updatePasscode = buildUpdateWhere<CreatePasscode, Passcode>(Passcodes, true);
 
 export const deletePasscodeById = async (id: string) => {
-  const { rowCount } = await pool.query(sql`
+  const { rowCount } = await envSet.pool.query(sql`
     delete from ${table}
     where ${fields.id}=${id}
   `);
@@ -41,7 +41,7 @@ export const deletePasscodeById = async (id: string) => {
 };
 
 export const deletePasscodesByIds = async (ids: string[]) => {
-  const { rowCount } = await pool.query(sql`
+  const { rowCount } = await envSet.pool.query(sql`
     delete from ${table}
     where ${fields.id} in (${ids.join(',')})
   `);
