@@ -9,6 +9,7 @@ import envSet, { MountedApps } from '@/env-set';
 import koaConnectorErrorHandler from '@/middleware/koa-connector-error-handle';
 import koaErrorHandler from '@/middleware/koa-error-handler';
 import koaI18next from '@/middleware/koa-i18next';
+import koaLog from '@/middleware/koa-log';
 import koaOIDCErrorHandler from '@/middleware/koa-oidc-error-handler';
 import koaSlonikErrorHandler from '@/middleware/koa-slonik-error-handler';
 import koaSpaProxy from '@/middleware/koa-spa-proxy';
@@ -22,8 +23,8 @@ export default async function initApp(app: Koa): Promise<void> {
   app.use(koaSlonikErrorHandler());
   app.use(koaConnectorErrorHandler());
 
-  // TODO move to specific router (LOG-454)
   app.use(koaUserLog());
+  app.use(koaLog());
   app.use(koaLogger());
   app.use(koaI18next());
 
