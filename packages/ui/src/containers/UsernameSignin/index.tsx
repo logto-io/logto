@@ -6,7 +6,7 @@
  */
 
 import classNames from 'classnames';
-import React, { FC, useState, useCallback, useEffect, useContext, useMemo } from 'react';
+import React, { useState, useCallback, useEffect, useContext, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { signInBasic } from '@/apis/sign-in';
@@ -34,13 +34,17 @@ type FieldValidations = {
   [key in keyof FieldState]?: (state: FieldState) => ErrorType | undefined;
 };
 
+type Props = {
+  className?: string;
+};
+
 const defaultState: FieldState = {
   username: '',
   password: '',
   termsAgreement: false,
 };
 
-const UsernameSignin: FC = () => {
+const UsernameSignin = ({ className }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'main_flow' });
   const [fieldState, setFieldState] = useState<FieldState>(defaultState);
   const [fieldErrors, setFieldErrors] = useState<ErrorState>({});
@@ -128,9 +132,9 @@ const UsernameSignin: FC = () => {
   }, [error, t, setToast]);
 
   return (
-    <form className={styles.form}>
+    <form className={classNames(styles.form, className)}>
       <Input
-        className={classNames(styles.inputField, fieldErrors.username && styles.withError)}
+        className={styles.inputField}
         name="username"
         autoComplete="username"
         placeholder={t('input.username')}
@@ -147,7 +151,7 @@ const UsernameSignin: FC = () => {
         }}
       />
       <PasswordInput
-        className={classNames(styles.inputField, fieldErrors.password && styles.withError)}
+        className={styles.inputField}
         name="password"
         autoComplete="current-password"
         placeholder={t('input.password')}

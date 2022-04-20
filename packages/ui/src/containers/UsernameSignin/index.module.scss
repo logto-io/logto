@@ -17,8 +17,4 @@
   .terms {
     margin: _.unit(6) 0;
   }
-
-  .inputField.withError + .terms {
-    margin-top: _.unit(2);
-  }
 }

@@ -23,6 +23,7 @@ import * as styles from './index.module.scss';
 
 type Props = {
   type: UserFlow;
+  className?: string;
 };
 
 type FieldState = {
@@ -40,7 +41,7 @@ type FieldValidations = {
 
 const defaultState: FieldState = { phone: '', termsAgreement: false };
 
-const PhonePasswordless = ({ type }: Props) => {
+const PhonePasswordless = ({ type, className }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'main_flow' });
   const [fieldState, setFieldState] = useState<FieldState>(defaultState);
   const [fieldErrors, setFieldErrors] = useState<ErrorState>({});
@@ -125,10 +126,10 @@ const PhonePasswordless = ({ type }: Props) => {
   }, [error, t, setToast]);
 
   return (
-    <form className={styles.form}>
+    <form className={classNames(styles.form, className)}>
       <PhoneInput
         name="phone"
-        className={classNames(styles.inputField, fieldErrors.phone && styles.withError)}
+        className={styles.inputField}
         autoComplete="mobile"
         placeholder={t('input.phone_number')}
         countryCallingCode={phoneNumber.countryCallingCode}

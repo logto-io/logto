@@ -5,6 +5,7 @@
  * 4. Read terms of use settings from SignInExperience Settings
  */
 
+import classNames from 'classnames';
 import React, { useState, useEffect, useCallback, useMemo, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -34,6 +35,10 @@ type FieldValidations = {
   [key in keyof FieldState]?: (state: FieldState) => ErrorType | undefined;
 };
 
+type Props = {
+  className?: string;
+};
+
 const defaultState = {
   username: '',
   password: '',
@@ -43,7 +48,7 @@ const defaultState = {
 
 const usernameRegx = /^[A-Z_a-z-][\w-]*$/;
 
-const CreateAccount = () => {
+const CreateAccount = ({ className }: Props) => {
   const { t, i18n } = useTranslation(undefined, { keyPrefix: 'main_flow' });
   const [fieldState, setFieldState] = useState<FieldState>(defaultState);
   const [fieldErrors, setFieldErrors] = useState<ErrorState>({});
@@ -155,7 +160,7 @@ const CreateAccount = () => {
   }, [error, i18n, setToast, t]);
 
   return (
-    <form className={styles.form}>
+    <form className={classNames(styles.form, className)}>
       <Input
         className={styles.inputField}
         name="username"
