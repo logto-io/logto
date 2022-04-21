@@ -67,6 +67,9 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
       }),
     }),
     async (ctx, next) => {
+      const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
+      ctx.log.sessionId = jti;
+
       const { username, password } = ctx.guard.body;
       ctx.log.type = LogType.SignInUsernamePassword;
       ctx.log.username = username;
@@ -84,12 +87,12 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
     '/session/sign-in/passwordless/sms/send-passcode',
     koaGuard({ body: object({ phone: string().regex(phoneRegEx) }) }),
     async (ctx, next) => {
+      const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
+      ctx.log.sessionId = jti;
+
       const { phone } = ctx.guard.body;
       ctx.log.type = LogType.SignInSmsSendPasscode;
       ctx.log.phone = phone;
-
-      const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
-      ctx.log.sessionId = jti;
 
       assertThat(
         await hasUserWithPhone(phone),
@@ -110,13 +113,13 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
     '/session/sign-in/passwordless/sms/verify-passcode',
     koaGuard({ body: object({ phone: string().regex(phoneRegEx), code: string() }) }),
     async (ctx, next) => {
+      const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
+      ctx.log.sessionId = jti;
+
       const { phone, code } = ctx.guard.body;
       ctx.log.type = LogType.SignInSms;
       ctx.log.phone = phone;
       ctx.log.passcode = code;
-
-      const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
-      ctx.log.sessionId = jti;
 
       assertThat(
         await hasUserWithPhone(phone),
@@ -137,12 +140,12 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
     '/session/sign-in/passwordless/email/send-passcode',
     koaGuard({ body: object({ email: string().regex(emailRegEx) }) }),
     async (ctx, next) => {
+      const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
+      ctx.log.sessionId = jti;
+
       const { email } = ctx.guard.body;
       ctx.log.type = LogType.SignInEmailSendPasscode;
       ctx.log.email = email;
-
-      const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
-      ctx.log.sessionId = jti;
 
       assertThat(
         await hasUserWithEmail(email),
@@ -163,13 +166,13 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
     '/session/sign-in/passwordless/email/verify-passcode',
     koaGuard({ body: object({ email: string().regex(emailRegEx), code: string() }) }),
     async (ctx, next) => {
+      const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
+      ctx.log.sessionId = jti;
+
       const { email, code } = ctx.guard.body;
       ctx.log.type = LogType.SignInEmail;
       ctx.log.email = email;
       ctx.log.passcode = code;
-
-      const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
-      ctx.log.sessionId = jti;
 
       assertThat(
         await hasUserWithEmail(email),
@@ -197,6 +200,9 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
       }),
     }),
     async (ctx, next) => {
+      const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
+      ctx.log.sessionId = jti;
+
       const { connectorId, code, state, redirectUri } = ctx.guard.body;
       ctx.log.type = LogType.SignInSocial;
       ctx.log.connectorId = connectorId;
@@ -249,12 +255,13 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
       body: object({ connectorId: string() }),
     }),
     async (ctx, next) => {
+      const { jti, result } = await provider.interactionDetails(ctx.req, ctx.res);
+      assertThat(result, 'session.connector_session_not_found');
+      ctx.log.sessionId = jti;
+
       const { connectorId } = ctx.guard.body;
       ctx.log.type = LogType.SignInSocialBind;
       ctx.log.connectorId = connectorId;
-
-      const { result } = await provider.interactionDetails(ctx.req, ctx.res);
-      assertThat(result, 'session.connector_session_not_found');
 
       const userInfo = await getUserInfoFromInteractionResult(connectorId, result);
       ctx.log.userInfo = userInfo;
