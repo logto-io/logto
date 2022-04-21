@@ -15,21 +15,6 @@ export enum PasscodeType {
   Register = 'Register',
   ForgotPassword = 'ForgotPassword',
 }
-export enum UserLogType {
-  SignInUsernameAndPassword = 'SignInUsernameAndPassword',
-  SignInEmail = 'SignInEmail',
-  SignInPhone = 'SignInPhone',
-  SignInSocial = 'SignInSocial',
-  RegisterUsernameAndPassword = 'RegisterUsernameAndPassword',
-  RegisterEmail = 'RegisterEmail',
-  RegisterPhone = 'RegisterPhone',
-  RegisterSocial = 'RegisterSocial',
-  ExchangeAccessToken = 'ExchangeAccessToken',
-}
-export enum UserLogResult {
-  Success = 'Success',
-  Failed = 'Failed',
-}
 export enum UsersPasswordEncryptionMethod {
   SaltAndPepper = 'SaltAndPepper',
 }
