@@ -168,9 +168,8 @@ const UsernameSignin = ({ className }: Props) => {
       <TermsOfUse
         name="termsAgreement"
         className={styles.terms}
-        termsOfUse={{ enabled: true, contentUrl: '/' }}
+        termsUrl="/"
         isChecked={fieldState.termsAgreement}
-        error={fieldErrors.termsAgreement}
         onChange={(checked) => {
           setFieldState((state) => ({ ...state, termsAgreement: checked }));
         }}

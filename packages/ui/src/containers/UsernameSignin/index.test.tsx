@@ -44,7 +44,6 @@ describe('<UsernameSignin>', () => {
     fireEvent.click(submitButton);
 
     expect(queryByText('required')).toBeNull();
-    expect(queryByText('agree_terms_required')).not.toBeNull();
 
     expect(signInBasic).not.toBeCalled();
   });

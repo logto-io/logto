@@ -36,6 +36,7 @@ const ConfirmModal = ({
       className={classNames(modalStyles.modal, className)}
       overlayClassName={modalStyles.overlay}
       parentSelector={() => document.querySelector('main') ?? document.body}
+      ariaHideApp={false}
     >
       <div className={styles.container}>
         <div className={styles.content}>{children}</div>

@@ -50,24 +50,7 @@ describe('<EmailPasswordless/>', () => {
     }
   });
 
-  test('required terms of agreement with error message', () => {
-    const { queryByText, container, getByText } = renderWithPageContext(
-      <MemoryRouter>
-        <EmailPasswordless type="sign-in" />
-      </MemoryRouter>
-    );
-    const submitButton = getByText('action.continue');
-    const emailInput = container.querySelector('input[name="email"]');
-
-    if (emailInput) {
-      fireEvent.change(emailInput, { target: { value: 'foo@logto.io' } });
-    }
-
-    fireEvent.click(submitButton);
-    expect(queryByText('agree_terms_required')).not.toBeNull();
-  });
-
-  test('signin method properly', async () => {
+  test('should call sign-in method properly', async () => {
     const { container, getByText } = renderWithPageContext(
       <MemoryRouter>
         <EmailPasswordless type="sign-in" />
@@ -90,7 +73,7 @@ describe('<EmailPasswordless/>', () => {
     expect(sendSignInEmailPasscode).toBeCalledWith('foo@logto.io');
   });
 
-  test('register method properly', async () => {
+  test('should call register method properly', async () => {
     const { container, getByText } = renderWithPageContext(
       <MemoryRouter>
         <EmailPasswordless type="register" />
