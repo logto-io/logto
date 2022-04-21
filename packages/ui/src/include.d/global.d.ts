@@ -2,7 +2,7 @@
 
 type LogtoNativeSdkInfo = {
   platform: 'ios' | 'android';
-  callbackUriScheme: string;
+  callbackLink: string;
   getPostMessage: () => (data: { callbackUri?: string; redirectTo?: string }) => void;
   supportedSocialConnectors: string[];
 };

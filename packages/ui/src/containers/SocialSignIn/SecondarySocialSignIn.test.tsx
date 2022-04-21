@@ -26,7 +26,7 @@ describe('SecondarySocialSignIn', () => {
     globalThis.logtoNativeSdk = {
       platform: 'web',
       getPostMessage: jest.fn(() => jest.fn()),
-      callbackUriScheme: '/logto:',
+      callbackLink: '/logto:',
     };
     /* eslint-enable @silverhand/fp/no-mutation */
   });
