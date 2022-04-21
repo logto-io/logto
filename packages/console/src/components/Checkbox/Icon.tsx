@@ -14,7 +14,7 @@ const Icon = ({ className }: Props) => (
       xmlns="http://www.w3.org/2000/svg"
       className={className}
     >
-      <rect x="1" y="1" width="18" height="18" rx="4" fill="#5D34F2" />
+      <rect x="1" y="1" width="18" height="18" rx="4" fill="currentColor" />
       <path
         fillRule="evenodd"
         clipRule="evenodd"
@@ -30,7 +30,7 @@ const Icon = ({ className }: Props) => (
       xmlns="http://www.w3.org/2000/svg"
       className={className}
     >
-      <rect x="2" y="2" width="16" height="16" rx="3" stroke="#8E9192" strokeWidth="2" />
+      <rect x="2" y="2" width="16" height="16" rx="3" stroke="currentColor" strokeWidth="2" />
     </svg>
     <svg
       width="20"
@@ -40,7 +40,7 @@ const Icon = ({ className }: Props) => (
       xmlns="http://www.w3.org/2000/svg"
       className={className}
     >
-      <rect x="1" y="1" width="18" height="18" rx="4" fill="#C4C7C7" />
+      <rect x="1" y="1" width="18" height="18" rx="4" fill="currentColor" />
       <path
         fillRule="evenodd"
         clipRule="evenodd"
@@ -63,7 +63,7 @@ const Icon = ({ className }: Props) => (
         height="16"
         rx="3"
         fill="#EFF1F1"
-        stroke="#C4C7C7"
+        stroke="currentColor"
         strokeWidth="2"
       />
     </svg>
