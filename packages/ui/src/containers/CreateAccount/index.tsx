@@ -155,7 +155,7 @@ const CreateAccount = ({ className }: Props) => {
   useEffect(() => {
     // TODO: username exist error message
     if (error) {
-      setToast(t('error.username_exists'));
+      setToast(error.message);
     }
   }, [error, i18n, setToast, t]);
 
