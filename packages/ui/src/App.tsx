@@ -35,7 +35,7 @@ const App = () => {
       }
 
       // Note: i18n must be initialized ahead of global experience settings
-      void initI18n(settings?.languageInfo);
+      await initI18n(settings?.languageInfo);
 
       setExperienceSettings(settings);
 
