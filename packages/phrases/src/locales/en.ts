@@ -301,6 +301,10 @@ const translation = {
         remove: 'remove',
         not_connected: 'The user is not connected to any social connector.',
       },
+      roles: {
+        default: 'Default',
+        admin: 'Admin',
+      },
     },
     contact: {
       title: 'Contact us',
