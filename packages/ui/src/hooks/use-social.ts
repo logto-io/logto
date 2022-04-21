@@ -12,13 +12,13 @@ import { PageContext } from './use-page-context';
  * @param state
  * @param state.uuid - unique id
  * @param state.platform - platform
- * @param state.callbackUriScheme - callback uri scheme
+ * @param state.callbackLink - callback uri scheme
  */
 
 type State = {
   uuid: string;
   platform: 'web' | 'ios' | 'android';
-  callbackUriScheme?: string;
+  callbackLink?: string;
 };
 
 const storageKeyPrefix = 'social_auth_state';
@@ -32,9 +32,9 @@ const getLogtoNativeSdk = () => {
 export const generateState = () => {
   const uuid = generateRandomString();
   const platform = getLogtoNativeSdk()?.platform ?? 'web';
-  const callbackUriScheme = getLogtoNativeSdk()?.callbackUriScheme;
+  const callbackLink = getLogtoNativeSdk()?.callbackLink;
 
-  const state: State = { uuid, platform, callbackUriScheme };
+  const state: State = { uuid, platform, callbackLink };
 
   return btoa(JSON.stringify(state));
 };
@@ -117,7 +117,7 @@ const useSocial = () => {
         return;
       }
 
-      const { platform, callbackUriScheme } = decodedState;
+      const { platform, callbackLink } = decodedState;
 
       if (platform === 'web') {
         window.location.assign(
@@ -127,12 +127,12 @@ const useSocial = () => {
         return;
       }
 
-      if (!callbackUriScheme) {
-        // TODO: native callbackUriScheme not found error message
+      if (!callbackLink) {
+        // TODO: native callbackLink not found error message
         return;
       }
 
-      window.location.assign(new URL(`${callbackUriScheme}${window.location.search}`));
+      window.location.assign(new URL(`${callbackLink}${window.location.search}`));
     },
     [setToast]
   );
