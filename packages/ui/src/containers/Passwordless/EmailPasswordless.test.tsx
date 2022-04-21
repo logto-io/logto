@@ -2,7 +2,7 @@ import { fireEvent, waitFor } from '@testing-library/react';
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
 
-import renderWithContext from '@/__mocks__/RenderWithContext';
+import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import { sendRegisterEmailPasscode } from '@/apis/register';
 import { sendSignInEmailPasscode } from '@/apis/sign-in';
 
@@ -17,7 +17,7 @@ jest.mock('@/apis/register', () => ({
 
 describe('<EmailPasswordless/>', () => {
   test('render', () => {
-    const { queryByText, container } = renderWithContext(
+    const { queryByText, container } = renderWithPageContext(
       <MemoryRouter>
         <EmailPasswordless type="sign-in" />
       </MemoryRouter>
@@ -28,7 +28,7 @@ describe('<EmailPasswordless/>', () => {
   });
 
   test('required email with error message', () => {
-    const { queryByText, container, getByText } = renderWithContext(
+    const { queryByText, container, getByText } = renderWithPageContext(
       <MemoryRouter>
         <EmailPasswordless type="sign-in" />
       </MemoryRouter>
@@ -51,7 +51,7 @@ describe('<EmailPasswordless/>', () => {
   });
 
   test('required terms of agreement with error message', () => {
-    const { queryByText, container, getByText } = renderWithContext(
+    const { queryByText, container, getByText } = renderWithPageContext(
       <MemoryRouter>
         <EmailPasswordless type="sign-in" />
       </MemoryRouter>
@@ -68,7 +68,7 @@ describe('<EmailPasswordless/>', () => {
   });
 
   test('signin method properly', async () => {
-    const { container, getByText } = renderWithContext(
+    const { container, getByText } = renderWithPageContext(
       <MemoryRouter>
         <EmailPasswordless type="sign-in" />
       </MemoryRouter>
@@ -91,7 +91,7 @@ describe('<EmailPasswordless/>', () => {
   });
 
   test('register method properly', async () => {
-    const { container, getByText } = renderWithContext(
+    const { container, getByText } = renderWithPageContext(
       <MemoryRouter>
         <EmailPasswordless type="register" />
       </MemoryRouter>

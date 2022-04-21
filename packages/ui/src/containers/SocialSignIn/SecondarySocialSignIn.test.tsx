@@ -2,7 +2,7 @@ import { render, fireEvent, waitFor } from '@testing-library/react';
 import React from 'react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 
-import renderWithContext from '@/__mocks__/RenderWithContext';
+import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import { socialConnectors } from '@/__mocks__/logto';
 import * as socialSignInApi from '@/apis/social';
 import { generateState, storeState } from '@/hooks/use-social';
@@ -57,7 +57,7 @@ describe('SecondarySocialSignIn', () => {
   it('invoke web social signIn', async () => {
     const connectors = socialConnectors.slice(0, 1);
 
-    const { container } = renderWithContext(
+    const { container } = renderWithPageContext(
       <MemoryRouter>
         <SecondarySocialSignIn connectors={connectors} />
       </MemoryRouter>
@@ -80,7 +80,7 @@ describe('SecondarySocialSignIn', () => {
     /* eslint-enable @silverhand/fp/no-mutation */
 
     const connectors = socialConnectors.slice(0, 1);
-    const { container } = renderWithContext(
+    const { container } = renderWithPageContext(
       <MemoryRouter>
         <SecondarySocialSignIn connectors={connectors} />
       </MemoryRouter>
@@ -114,7 +114,7 @@ describe('SecondarySocialSignIn', () => {
     });
     /* eslint-enable @silverhand/fp/no-mutating-methods */
 
-    renderWithContext(
+    renderWithPageContext(
       <MemoryRouter initialEntries={['/sign-in/callback/github']}>
         <Routes>
           <Route

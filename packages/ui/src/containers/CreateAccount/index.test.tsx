@@ -1,7 +1,7 @@
 import { fireEvent, waitFor } from '@testing-library/react';
 import React from 'react';
 
-import renderWithContext from '@/__mocks__/RenderWithContext';
+import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import { register } from '@/apis/register';
 
 import CreateAccount from '.';
@@ -10,7 +10,7 @@ jest.mock('@/apis/register', () => ({ register: jest.fn(async () => Promise.reso
 
 describe('<CreateAccount/>', () => {
   test('default render', () => {
-    const { queryByText, container } = renderWithContext(<CreateAccount />);
+    const { queryByText, container } = renderWithPageContext(<CreateAccount />);
     expect(container.querySelector('input[name="username"]')).not.toBeNull();
     expect(container.querySelector('input[name="password"]')).not.toBeNull();
     expect(container.querySelector('input[name="confirm_password"]')).not.toBeNull();
@@ -19,7 +19,7 @@ describe('<CreateAccount/>', () => {
   });
 
   test('username and password are required', () => {
-    const { queryAllByText, getByText } = renderWithContext(<CreateAccount />);
+    const { queryAllByText, getByText } = renderWithPageContext(<CreateAccount />);
     const submitButton = getByText('action.create');
     fireEvent.click(submitButton);
 
@@ -29,7 +29,7 @@ describe('<CreateAccount/>', () => {
   });
 
   test('username with initial numeric char should throw', () => {
-    const { queryByText, getByText, container } = renderWithContext(<CreateAccount />);
+    const { queryByText, getByText, container } = renderWithPageContext(<CreateAccount />);
     const submitButton = getByText('action.create');
 
     const usernameInput = container.querySelector('input[name="username"]');
@@ -53,7 +53,7 @@ describe('<CreateAccount/>', () => {
   });
 
   test('username with special character should throw', () => {
-    const { queryByText, getByText, container } = renderWithContext(<CreateAccount />);
+    const { queryByText, getByText, container } = renderWithPageContext(<CreateAccount />);
     const submitButton = getByText('action.create');
     const usernameInput = container.querySelector('input[name="username"]');
 
@@ -76,7 +76,7 @@ describe('<CreateAccount/>', () => {
   });
 
   test('password less than 6 chars should throw', () => {
-    const { queryByText, getByText, container } = renderWithContext(<CreateAccount />);
+    const { queryByText, getByText, container } = renderWithPageContext(<CreateAccount />);
     const submitButton = getByText('action.create');
     const passwordInput = container.querySelector('input[name="password"]');
 
@@ -99,7 +99,7 @@ describe('<CreateAccount/>', () => {
   });
 
   test('password mismatch with confirmPassword should throw', () => {
-    const { queryByText, getByText, container } = renderWithContext(<CreateAccount />);
+    const { queryByText, getByText, container } = renderWithPageContext(<CreateAccount />);
     const submitButton = getByText('action.create');
     const passwordInput = container.querySelector('input[name="password"]');
     const confirmPasswordInput = container.querySelector('input[name="confirm_password"]');
@@ -132,7 +132,7 @@ describe('<CreateAccount/>', () => {
   });
 
   test('terms of use not checked should throw', () => {
-    const { queryByText, getByText, container } = renderWithContext(<CreateAccount />);
+    const { queryByText, getByText, container } = renderWithPageContext(<CreateAccount />);
     const submitButton = getByText('action.create');
     const passwordInput = container.querySelector('input[name="password"]');
     const confirmPasswordInput = container.querySelector('input[name="confirm_password"]');
@@ -164,7 +164,7 @@ describe('<CreateAccount/>', () => {
   });
 
   test('submit form properly', async () => {
-    const { getByText, container } = renderWithContext(<CreateAccount />);
+    const { getByText, container } = renderWithPageContext(<CreateAccount />);
     const submitButton = getByText('action.create');
     const passwordInput = container.querySelector('input[name="password"]');
     const confirmPasswordInput = container.querySelector('input[name="confirm_password"]');

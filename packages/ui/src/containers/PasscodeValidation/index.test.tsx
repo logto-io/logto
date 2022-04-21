@@ -1,7 +1,7 @@
 import { act, fireEvent, waitFor } from '@testing-library/react';
 import React from 'react';
 
-import renderWithContext from '@/__mocks__/RenderWithContext';
+import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 
 import PasscodeValidation from '.';
 
@@ -23,7 +23,7 @@ describe('<PasscodeValidation />', () => {
   });
 
   it('render counter', () => {
-    const { queryByText } = renderWithContext(
+    const { queryByText } = renderWithPageContext(
       <PasscodeValidation type="sign-in" method="email" target={email} />
     );
 
@@ -37,7 +37,7 @@ describe('<PasscodeValidation />', () => {
   });
 
   it('fire resend event', async () => {
-    const { getByText } = renderWithContext(
+    const { getByText } = renderWithPageContext(
       <PasscodeValidation type="sign-in" method="email" target={email} />
     );
     act(() => {
@@ -53,7 +53,7 @@ describe('<PasscodeValidation />', () => {
   });
 
   it('fire validate passcode event', async () => {
-    const { container } = renderWithContext(
+    const { container } = renderWithPageContext(
       <PasscodeValidation type="sign-in" method="email" target={email} />
     );
     const inputs = container.querySelectorAll('input');

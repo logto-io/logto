@@ -1,7 +1,7 @@
 import { fireEvent, waitFor } from '@testing-library/react';
 import React from 'react';
 
-import renderWithContext from '@/__mocks__/RenderWithContext';
+import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import { signInBasic } from '@/apis/sign-in';
 
 import UsernameSignin from '.';
@@ -10,7 +10,7 @@ jest.mock('@/apis/sign-in', () => ({ signInBasic: jest.fn(async () => Promise.re
 
 describe('<UsernameSignin>', () => {
   test('render', () => {
-    const { queryByText, container } = renderWithContext(<UsernameSignin />);
+    const { queryByText, container } = renderWithPageContext(<UsernameSignin />);
     expect(container.querySelector('input[name="username"]')).not.toBeNull();
     expect(container.querySelector('input[name="password"]')).not.toBeNull();
     expect(queryByText('action.sign_in')).not.toBeNull();
@@ -18,7 +18,7 @@ describe('<UsernameSignin>', () => {
   });
 
   test('required inputs with error message', () => {
-    const { queryByText, queryAllByText, getByText, container } = renderWithContext(
+    const { queryByText, queryAllByText, getByText, container } = renderWithPageContext(
       <UsernameSignin />
     );
     const submitButton = getByText('action.sign_in');
@@ -50,7 +50,7 @@ describe('<UsernameSignin>', () => {
   });
 
   test('submit form', async () => {
-    const { getByText, container } = renderWithContext(<UsernameSignin />);
+    const { getByText, container } = renderWithPageContext(<UsernameSignin />);
     const submitButton = getByText('action.sign_in');
 
     const usernameInput = container.querySelector('input[name="username"]');

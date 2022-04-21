@@ -3,7 +3,7 @@ import React, { ReactElement } from 'react';
 
 import ContextProvider from './ContextProvider';
 
-const renderWithContext = <
+const renderWithPageContext = <
   Q extends Queries = typeof queries,
   Container extends Element | DocumentFragment = HTMLElement
 >(
@@ -11,4 +11,4 @@ const renderWithContext = <
   options: RenderOptions<Q, Container> = {}
 ) => render<Q, Container>(<ContextProvider>{ui}</ContextProvider>, options);
 
-export default renderWithContext;
+export default renderWithPageContext;

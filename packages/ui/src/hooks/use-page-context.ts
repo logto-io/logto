@@ -15,7 +15,7 @@ type Context = {
   setExperienceSettings: (settings: SignInExperienceSettings) => void;
 };
 
-const NOOP = () => {
+const noop = () => {
   throw new Error('Context provider not found');
 };
 
@@ -25,11 +25,11 @@ export const PageContext = createContext<Context>({
   termsAgreement: false,
   showTermsModal: false,
   experienceSettings: undefined,
-  setToast: NOOP,
-  setLoading: NOOP,
-  setTermsAgreement: NOOP,
-  setShowTermsModal: NOOP,
-  setExperienceSettings: NOOP,
+  setToast: noop,
+  setLoading: noop,
+  setTermsAgreement: noop,
+  setShowTermsModal: noop,
+  setExperienceSettings: noop,
 });
 
 const usePageContext = () => {
