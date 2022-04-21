@@ -306,7 +306,10 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
       }),
     }),
     async (ctx, next) => {
+      const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
       const { username, password } = ctx.guard.body;
+      const type = 'RegisterUsernamePassword';
+      ctx.log(type, { sessionId: jti, username });
 
       assertThat(
         password,
@@ -324,6 +327,8 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
       );
 
       const id = await generateUserId();
+      ctx.log(type, { userId: id });
+
       const { passwordEncryptionSalt, passwordEncrypted, passwordEncryptionMethod } =
         encryptUserPassword(id, password);
 
@@ -358,6 +363,8 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
     async (ctx, next) => {
       const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
       const { phone } = ctx.guard.body;
+      const type = 'RegisterSmsSendPasscode';
+      ctx.log(type, { sessionId: jti, phone });
 
       assertThat(
         !(await hasUserWithPhone(phone)),
@@ -365,6 +372,8 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
       );
 
       const passcode = await createPasscode(jti, PasscodeType.Register, { phone });
+      ctx.log(type, { sessionId: jti, phone, passcode });
+
       await sendPasscode(passcode);
       ctx.status = 204;
 
@@ -378,6 +387,8 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
     async (ctx, next) => {
       const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
       const { phone, code } = ctx.guard.body;
+      const type = 'RegisterSms';
+      ctx.log(type, { sessionId: jti, phone, code });
 
       assertThat(
         !(await hasUserWithPhone(phone)),
@@ -386,6 +397,7 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
 
       await verifyPasscode(jti, PasscodeType.Register, code, { phone });
       const id = await generateUserId();
+      ctx.log(type, { userId: id });
 
       await insertUser({ id, primaryPhone: phone });
       await assignInteractionResults(ctx, provider, { login: { accountId: id } });
@@ -400,6 +412,8 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
     async (ctx, next) => {
       const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
       const { email } = ctx.guard.body;
+      const type = 'RegisterEmailSendPasscode';
+      ctx.log(type, { sessionId: jti, email });
 
       assertThat(
         !(await hasUserWithEmail(email)),
@@ -407,6 +421,8 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
       );
 
       const passcode = await createPasscode(jti, PasscodeType.Register, { email });
+      ctx.log(type, { passcode });
+
       await sendPasscode(passcode);
       ctx.status = 204;
 
@@ -420,6 +436,8 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
     async (ctx, next) => {
       const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
       const { email, code } = ctx.guard.body;
+      const type = 'RegisterEmail';
+      ctx.log(type, { sessionId: jti, email, code });
 
       assertThat(
         !(await hasUserWithEmail(email)),
@@ -428,6 +446,7 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
 
       await verifyPasscode(jti, PasscodeType.Register, code, { email });
       const id = await generateUserId();
+      ctx.log(type, { userId: id });
 
       await insertUser({ id, primaryEmail: email });
       await assignInteractionResults(ctx, provider, { login: { accountId: id } });
@@ -444,15 +463,18 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
       }),
     }),
     async (ctx, next) => {
-      const { connectorId } = ctx.guard.body;
-      const { result } = await provider.interactionDetails(ctx.req, ctx.res);
-
+      const { jti, result } = await provider.interactionDetails(ctx.req, ctx.res);
       // User can not register with social directly,
       // need to try to sign in with social first, then confirm to register and continue,
       // so the result is expected to be exists.
       assertThat(result, 'session.connector_session_not_found');
 
+      const { connectorId } = ctx.guard.body;
+      const type = 'RegisterSocial';
+      ctx.log(type, { sessionId: jti, connectorId });
+
       const userInfo = await getUserInfoFromInteractionResult(connectorId, result);
+      ctx.log(type, { userInfo });
       assertThat(!(await hasUserWithIdentity(connectorId, userInfo.id)), 'user.identity_exists');
 
       const id = await generateUserId();
@@ -467,6 +489,7 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
           },
         },
       });
+      ctx.log(type, { userId: id });
 
       await assignInteractionResults(ctx, provider, { login: { accountId: id } });
 
@@ -482,15 +505,20 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
       }),
     }),
     async (ctx, next) => {
-      const { connectorId } = ctx.guard.body;
-      const { result } = await provider.interactionDetails(ctx.req, ctx.res);
+      const { jti, result } = await provider.interactionDetails(ctx.req, ctx.res);
       assertThat(result, 'session.connector_session_not_found');
-      assertThat(result.login?.accountId, 'session.unauthorized');
+      const userId = result.login?.accountId;
+      assertThat(userId, 'session.unauthorized');
+
+      const { connectorId } = ctx.guard.body;
+      const type = 'RegisterSocialBind';
+      ctx.log(type, { sessionId: jti, connectorId, userId });
 
       const userInfo = await getUserInfoFromInteractionResult(connectorId, result);
-      const user = await findUserById(result.login.accountId);
+      ctx.log(type, { userInfo });
 
-      const updatedUser = await updateUserById(user.id, {
+      const user = await findUserById(userId);
+      const updatedUser = await updateUserById(userId, {
         identities: {
           ...user.identities,
           [connectorId]: { userId: userInfo.id, details: userInfo },

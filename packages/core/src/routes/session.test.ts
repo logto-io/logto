@@ -690,6 +690,7 @@ describe('sessionRoutes', () => {
   describe('POST /session/register/social', () => {
     it('register with social, assign result and redirect', async () => {
       interactionDetails.mockResolvedValueOnce({
+        jti: 'jti',
         result: {
           socialUserInfo: { connectorId: 'connectorId', userInfo: { id: 'user1' } },
         },
@@ -759,6 +760,7 @@ describe('sessionRoutes', () => {
     });
     it('updates user identities', async () => {
       interactionDetails.mockResolvedValueOnce({
+        jti: 'jti',
         result: {
           login: { accountId: 'user1' },
           socialUserInfo: {
