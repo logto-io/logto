@@ -9,7 +9,10 @@
     width: 20px;
     height: 20px;
     margin-right: _.unit(2);
-    display: none;
+
+    > svg {
+      display: none;
+    }
   }
 
   input {
@@ -22,19 +25,10 @@
     opacity: 0%;
   }
 
-  input:not(:checked):not(:disabled) ~ .uncheck {
-    display: block;
-  }
-
-  input:not(:checked):disabled ~ .uncheckDisabled {
-    display: block;
-  }
-
-  input:checked:not(:disabled) ~ .check {
-    display: block;
-  }
-
-  input:checked:disabled ~ .checkDisabled {
+  input:not(:checked):not(:disabled) ~ .icon > svg:nth-child(2),
+  input:not(:checked):disabled ~ .icon > svg:nth-child(4),
+  input:checked:not(:disabled) ~ .icon > svg:nth-child(1),
+  input:checked:disabled ~ .icon > svg:nth-child(3) {
     display: block;
   }
 
