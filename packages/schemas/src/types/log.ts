@@ -1,4 +1,11 @@
 export enum LogType {
+  RegisterUsernamePassword = 'RegisterUsernamePassword',
+  RegisterEmail = 'RegisterEmail',
+  RegisterEmailSendPasscode = 'RegisterEmailSendPasscode',
+  RegisterSms = 'RegisterSms',
+  RegisterSmsSendPasscode = 'RegisterSmsSendPasscode',
+  RegisterSocial = 'RegisterSocial',
+  RegisterSocialBind = 'RegisterSocialBind',
   SignInUsernamePassword = 'SignInUsernamePassword',
   SignInEmail = 'SignInEmail',
   SignInEmailSendPasscode = 'SignInEmailSendPasscode',
