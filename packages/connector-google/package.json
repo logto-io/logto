@@ -1,0 +1,56 @@
+{
+  "name": "@logto/connector-google",
+  "version": "0.1.0",
+  "description": "Google implementation.",
+  "main": "build/index.js",
+  "author": "Logto Team",
+  "license": "MPL-2.0",
+  "private": true,
+  "scripts": {
+    "preinstall": "npx only-allow pnpm",
+    "precommit": "lint-staged",
+    "copyfiles": "copyfiles -u 1 src/**/*.md build",
+    "build": "rm -rf build/ && tsc -p tsconfig.build.json && pnpm run copyfiles",
+    "lint": "eslint --ext .ts src",
+    "lint:report": "pnpm lint -- --format json --output-file report.json",
+    "dev": "rm -rf build/ && pnpm run copyfiles && tsc-watch -p tsconfig.build.json --preserveWatchOutput --onSuccess \"node ./build/index.js\"",
+    "test": "jest",
+    "test:coverage": "jest --coverage --silent"
+  },
+  "dependencies": {
+    "@logto/connector-types": "^0.1.0",
+    "@logto/schemas": "^0.1.0",
+    "@silverhand/essentials": "^1.1.0",
+    "got": "^11.8.2",
+    "jose": "^3.14.3",
+    "query-string": "^7.0.1",
+    "zod": "^3.14.3"
+  },
+  "devDependencies": {
+    "@shopify/jest-koa-mocks": "^3.0.8",
+    "@silverhand/eslint-config": "^0.10.2",
+    "@silverhand/ts-config": "^0.10.2",
+    "@types/jest": "^27.4.1",
+    "@types/lodash.pick": "^4.4.6",
+    "@types/node": "^16.3.1",
+    "@types/supertest": "^2.0.11",
+    "copyfiles": "^2.4.1",
+    "eslint": "^8.10.0",
+    "jest": "^27.5.1",
+    "jest-matcher-specific-error": "^1.0.0",
+    "lint-staged": "^11.1.1",
+    "nock": "^13.2.2",
+    "prettier": "^2.3.2",
+    "supertest": "^6.2.2",
+    "ts-jest": "^27.1.1",
+    "tsc-watch": "^4.4.0",
+    "typescript": "^4.6.2"
+  },
+  "engines": {
+    "node": ">=14.15.0"
+  },
+  "eslintConfig": {
+    "extends": "@silverhand"
+  },
+  "prettier": "@silverhand/eslint-config/.prettierrc"
+}

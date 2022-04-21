@@ -1,4 +1,5 @@
-import { ConnectorDTO, Connectors, ConnectorType } from '@logto/schemas';
+import { ConnectorDTO } from '@logto/connector-types';
+import { Connectors, ConnectorType } from '@logto/schemas';
 import { object, string } from 'zod';
 
 import {

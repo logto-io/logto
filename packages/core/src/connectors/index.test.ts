@@ -100,6 +100,10 @@ jest.mock('@/queries/connector', () => ({
 }));
 
 describe('getConnectorInstances', () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
   test('should return the connectors existing in DB', async () => {
     const connectorInstances = await getConnectorInstances();
     expect(connectorInstances).toHaveLength(connectorInstances.length);
@@ -124,13 +128,13 @@ describe('getConnectorInstances', () => {
     await expect(getConnectorInstances()).resolves.not.toThrow();
     expect(findAllConnectors).toHaveBeenCalledTimes(1);
   });
-
-  afterEach(() => {
-    findAllConnectors.mockClear();
-  });
 });
 
 describe('getConnectorInstanceById', () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
   test('should return the connector existing in DB', async () => {
     const connectorInstance = await getConnectorInstanceById('aliyun-dm');
     expect(connectorInstance).toHaveProperty('connector', aliyunDmConnector);
@@ -145,6 +149,10 @@ describe('getConnectorInstanceById', () => {
 });
 
 describe('getSocialConnectorInstanceById', () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
   test('should return the connector existing in DB', async () => {
     const socialConnectorInstance = await getSocialConnectorInstanceById('google');
     expect(socialConnectorInstance).toHaveProperty('connector', googleConnector);
@@ -166,6 +174,10 @@ describe('getEnabledSocialConnectorIds', () => {
 });
 
 describe('getConnectorInstanceByType', () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
   test('should return the enabled connector existing in DB', async () => {
     const dmEnabledConnectorInstance = await getConnectorInstanceByType(ConnectorType.Email);
     expect(dmEnabledConnectorInstance).toHaveProperty('connector', aliyunDmConnector);
@@ -180,6 +192,10 @@ describe('getConnectorInstanceByType', () => {
 });
 
 describe('initConnectors', () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
   test('should insert the necessary connector if it does not exist in DB', async () => {
     findAllConnectors.mockImplementationOnce(async () => []);
     await expect(initConnectors()).resolves.not.toThrow();
@@ -194,9 +210,5 @@ describe('initConnectors', () => {
   test('should not insert the connector if it exists in DB', async () => {
     await expect(initConnectors()).resolves.not.toThrow();
     expect(insertConnector).not.toHaveBeenCalled();
-  });
-
-  afterEach(() => {
-    insertConnector.mockClear();
   });
 });

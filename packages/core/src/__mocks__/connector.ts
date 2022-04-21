@@ -1,4 +1,5 @@
-import { Connector, ConnectorMetadata, ConnectorType } from '@logto/schemas';
+import { ConnectorMetadata } from '@logto/connector-types';
+import { Connector, ConnectorType } from '@logto/schemas';
 
 export const mockConnectorList: Connector[] = [
   {

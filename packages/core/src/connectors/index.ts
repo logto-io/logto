@@ -1,25 +1,70 @@
+import { AlipayConnector, AlipayConfig } from '@logto/connector-alipay';
+import { AliyunDmConnector, AliyunDmConfig } from '@logto/connector-aliyun-dm';
+import { AliyunSmsConnector, AliyunSmsConfig } from '@logto/connector-aliyun-sms';
+import { FacebookConnector, FacebookConfig } from '@logto/connector-facebook';
+import { GithubConnector, GithubConfig } from '@logto/connector-github';
+import { GoogleConnector, GoogleConfig } from '@logto/connector-google';
+import { SmsConnector, EmailConnector, SocialConnector } from '@logto/connector-types';
+import { WeChatConnector, WeChatConfig } from '@logto/connector-wechat';
+import { WeChatNativeConnector } from '@logto/connector-wechat-native';
+
 import RequestError from '@/errors/RequestError';
 import { findAllConnectors, findConnectorById, insertConnector } from '@/queries/connector';
 
-import * as Alipay from './alipay';
-import * as AliyunDM from './aliyun-dm';
-import * as AliyunSMS from './aliyun-sms';
-import * as Facebook from './facebook';
-import * as GitHub from './github';
-import * as Google from './google';
 import { ConnectorInstance, ConnectorType, IConnector, SocialConnectorInstance } from './types';
-import * as WeChat from './wechat';
-import * as WeChatNative from './wechat-native';
+import { getConnectorConfig, getConnectorRequestTimeout, getFormattedDate } from './utilities';
+
+const getAlipayConfig = async (id: string) => getConnectorConfig<AlipayConfig>(id);
+const AlipayIConnector = new AlipayConnector(
+  getAlipayConfig,
+  getConnectorRequestTimeout,
+  getFormattedDate
+) as SocialConnector;
+
+const getAliyunDmConfig = async (id: string) => getConnectorConfig<AliyunDmConfig>(id);
+const AliyunDmIConnector = new AliyunDmConnector(getAliyunDmConfig) as EmailConnector;
+
+const getAliyunSmsConfig = async (id: string) => getConnectorConfig<AliyunSmsConfig>(id);
+const AliyunSmsIConnector = new AliyunSmsConnector(getAliyunSmsConfig) as SmsConnector;
+
+const getFacebookConfig = async (id: string) => getConnectorConfig<FacebookConfig>(id);
+const FacebookIConnector = new FacebookConnector(
+  getFacebookConfig,
+  getConnectorRequestTimeout
+) as SocialConnector;
+
+const getGithubConfig = async (id: string) => getConnectorConfig<GithubConfig>(id);
+const GithubIConnector = new GithubConnector(
+  getGithubConfig,
+  getConnectorRequestTimeout
+) as SocialConnector;
+
+const getGoogleConfig = async (id: string) => getConnectorConfig<GoogleConfig>(id);
+const GoogleIConnector = new GoogleConnector(
+  getGoogleConfig,
+  getConnectorRequestTimeout
+) as SocialConnector;
+
+const getWeChatConfig = async (id: string) => getConnectorConfig<WeChatConfig>(id);
+const WeChatIConnector = new WeChatConnector(
+  getWeChatConfig,
+  getConnectorRequestTimeout
+) as SocialConnector;
+
+const WeChatNativeIConnector = new WeChatNativeConnector(
+  getWeChatConfig,
+  getConnectorRequestTimeout
+) as SocialConnector;
 
 const allConnectors: IConnector[] = [
-  Alipay,
-  AliyunDM,
-  AliyunSMS,
-  Facebook,
-  GitHub,
-  Google,
-  WeChat,
-  WeChatNative,
+  AlipayIConnector,
+  AliyunDmIConnector,
+  AliyunSmsIConnector,
+  FacebookIConnector,
+  GithubIConnector,
+  GoogleIConnector,
+  WeChatIConnector,
+  WeChatNativeIConnector,
 ];
 
 export const getConnectorInstances = async (): Promise<ConnectorInstance[]> => {

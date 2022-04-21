@@ -20,6 +20,7 @@ importers:
 
   packages/cli:
     specifiers:
+      '@logto/connector-types': ^0.1.0
       '@logto/schemas': ^0.1.0
       '@silverhand/eslint-config': ^0.10.2
       '@silverhand/ts-config': ^0.10.2
@@ -38,6 +39,7 @@ importers:
       ts-node: ^10.0.0
       typescript: ^4.6.3
     dependencies:
+      '@logto/connector-types': link:../connector-types
       '@logto/schemas': link:../schemas
       chalk: 4.1.2
       commander: 9.1.0
@@ -57,8 +59,496 @@ importers:
       ts-node: 10.4.0_e6a8a9b497f380f485f6d23f5cd591ca
       typescript: 4.6.3
 
+  packages/connector-alipay:
+    specifiers:
+      '@logto/connector-types': ^0.1.0
+      '@logto/schemas': ^0.1.0
+      '@shopify/jest-koa-mocks': ^3.0.8
+      '@silverhand/eslint-config': ^0.10.2
+      '@silverhand/essentials': ^1.1.0
+      '@silverhand/ts-config': ^0.10.2
+      '@types/jest': ^27.4.1
+      '@types/lodash.pick': ^4.4.6
+      '@types/node': ^16.3.1
+      '@types/supertest': ^2.0.11
+      copyfiles: ^2.4.1
+      eslint: ^8.10.0
+      got: ^11.8.2
+      iconv-lite: 0.6.3
+      jest: ^27.5.1
+      jest-matcher-specific-error: ^1.0.0
+      jose: ^3.14.3
+      lint-staged: ^11.1.1
+      nock: ^13.2.2
+      prettier: ^2.3.2
+      query-string: ^7.0.1
+      snakecase-keys: ^5.1.0
+      supertest: ^6.2.2
+      ts-jest: ^27.1.1
+      tsc-watch: ^4.4.0
+      typescript: ^4.6.2
+      zod: ^3.14.3
+    dependencies:
+      '@logto/connector-types': link:../connector-types
+      '@logto/schemas': link:../schemas
+      '@silverhand/essentials': 1.1.7
+      got: 11.8.3
+      iconv-lite: 0.6.3
+      jose: 3.20.3
+      query-string: 7.0.1
+      snakecase-keys: 5.1.2
+      zod: 3.14.3
+    devDependencies:
+      '@shopify/jest-koa-mocks': 3.0.8
+      '@silverhand/eslint-config': 0.10.2_bbe1a6794670f389df81805f22999709
+      '@silverhand/ts-config': 0.10.2_typescript@4.6.3
+      '@types/jest': 27.4.1
+      '@types/lodash.pick': 4.4.6
+      '@types/node': 16.11.12
+      '@types/supertest': 2.0.11
+      copyfiles: 2.4.1
+      eslint: 8.10.0
+      jest: 27.5.1
+      jest-matcher-specific-error: 1.0.0
+      lint-staged: 11.2.6
+      nock: 13.2.2
+      prettier: 2.5.1
+      supertest: 6.2.2
+      ts-jest: 27.1.1_9985e1834e803358b7be1e6ce5ca0eea
+      tsc-watch: 4.5.0_typescript@4.6.3
+      typescript: 4.6.3
+
+  packages/connector-aliyun-dm:
+    specifiers:
+      '@logto/connector-types': ^0.1.0
+      '@logto/schemas': ^0.1.0
+      '@shopify/jest-koa-mocks': ^3.0.8
+      '@silverhand/eslint-config': ^0.10.2
+      '@silverhand/essentials': ^1.1.0
+      '@silverhand/ts-config': ^0.10.2
+      '@types/jest': ^27.4.1
+      '@types/lodash.pick': ^4.4.6
+      '@types/node': ^16.3.1
+      '@types/supertest': ^2.0.11
+      copyfiles: ^2.4.1
+      eslint: ^8.10.0
+      got: ^11.8.2
+      jest: ^27.5.1
+      jest-matcher-specific-error: ^1.0.0
+      jose: ^3.14.3
+      lint-staged: ^11.1.1
+      nock: ^13.2.2
+      prettier: ^2.3.2
+      supertest: ^6.2.2
+      ts-jest: ^27.1.1
+      tsc-watch: ^4.4.0
+      typescript: ^4.6.2
+      zod: ^3.14.3
+    dependencies:
+      '@logto/connector-types': link:../connector-types
+      '@logto/schemas': link:../schemas
+      '@silverhand/essentials': 1.1.7
+      got: 11.8.3
+      jose: 3.20.3
+      zod: 3.14.3
+    devDependencies:
+      '@shopify/jest-koa-mocks': 3.0.8
+      '@silverhand/eslint-config': 0.10.2_bbe1a6794670f389df81805f22999709
+      '@silverhand/ts-config': 0.10.2_typescript@4.6.3
+      '@types/jest': 27.4.1
+      '@types/lodash.pick': 4.4.6
+      '@types/node': 16.11.12
+      '@types/supertest': 2.0.11
+      copyfiles: 2.4.1
+      eslint: 8.10.0
+      jest: 27.5.1
+      jest-matcher-specific-error: 1.0.0
+      lint-staged: 11.2.6
+      nock: 13.2.2
+      prettier: 2.5.1
+      supertest: 6.2.2
+      ts-jest: 27.1.1_9985e1834e803358b7be1e6ce5ca0eea
+      tsc-watch: 4.5.0_typescript@4.6.3
+      typescript: 4.6.3
+
+  packages/connector-aliyun-sms:
+    specifiers:
+      '@logto/connector-types': ^0.1.0
+      '@logto/schemas': ^0.1.0
+      '@shopify/jest-koa-mocks': ^3.0.8
+      '@silverhand/eslint-config': ^0.10.2
+      '@silverhand/essentials': ^1.1.0
+      '@silverhand/ts-config': ^0.10.2
+      '@types/jest': ^27.4.1
+      '@types/lodash.pick': ^4.4.6
+      '@types/node': ^16.3.1
+      '@types/supertest': ^2.0.11
+      copyfiles: ^2.4.1
+      eslint: ^8.10.0
+      got: ^11.8.2
+      jest: ^27.5.1
+      jest-matcher-specific-error: ^1.0.0
+      jose: ^3.14.3
+      lint-staged: ^11.1.1
+      nanoid: ^3.1.23
+      nock: ^13.2.2
+      prettier: ^2.3.2
+      supertest: ^6.2.2
+      ts-jest: ^27.1.1
+      tsc-watch: ^4.4.0
+      typescript: ^4.6.2
+      zod: ^3.14.3
+    dependencies:
+      '@logto/connector-types': link:../connector-types
+      '@logto/schemas': link:../schemas
+      '@silverhand/essentials': 1.1.7
+      got: 11.8.3
+      jose: 3.20.3
+      nanoid: 3.3.1
+      zod: 3.14.3
+    devDependencies:
+      '@shopify/jest-koa-mocks': 3.0.8
+      '@silverhand/eslint-config': 0.10.2_bbe1a6794670f389df81805f22999709
+      '@silverhand/ts-config': 0.10.2_typescript@4.6.3
+      '@types/jest': 27.4.1
+      '@types/lodash.pick': 4.4.6
+      '@types/node': 16.11.12
+      '@types/supertest': 2.0.11
+      copyfiles: 2.4.1
+      eslint: 8.10.0
+      jest: 27.5.1
+      jest-matcher-specific-error: 1.0.0
+      lint-staged: 11.2.6
+      nock: 13.2.2
+      prettier: 2.5.1
+      supertest: 6.2.2
+      ts-jest: 27.1.1_9985e1834e803358b7be1e6ce5ca0eea
+      tsc-watch: 4.5.0_typescript@4.6.3
+      typescript: 4.6.3
+
+  packages/connector-facebook:
+    specifiers:
+      '@logto/connector-types': ^0.1.0
+      '@logto/schemas': ^0.1.0
+      '@shopify/jest-koa-mocks': ^3.0.8
+      '@silverhand/eslint-config': ^0.10.2
+      '@silverhand/essentials': ^1.1.0
+      '@silverhand/ts-config': ^0.10.2
+      '@types/jest': ^27.4.1
+      '@types/lodash.pick': ^4.4.6
+      '@types/node': ^16.3.1
+      '@types/supertest': ^2.0.11
+      copyfiles: ^2.4.1
+      eslint: ^8.10.0
+      got: ^11.8.2
+      jest: ^27.5.1
+      jest-matcher-specific-error: ^1.0.0
+      jose: ^3.14.3
+      lint-staged: ^11.1.1
+      nock: ^13.2.2
+      prettier: ^2.3.2
+      query-string: ^7.0.1
+      supertest: ^6.2.2
+      ts-jest: ^27.1.1
+      tsc-watch: ^4.4.0
+      typescript: ^4.6.2
+      zod: ^3.14.3
+    dependencies:
+      '@logto/connector-types': link:../connector-types
+      '@logto/schemas': link:../schemas
+      '@silverhand/essentials': 1.1.7
+      got: 11.8.3
+      jose: 3.20.3
+      query-string: 7.0.1
+      zod: 3.14.3
+    devDependencies:
+      '@shopify/jest-koa-mocks': 3.0.8
+      '@silverhand/eslint-config': 0.10.2_bbe1a6794670f389df81805f22999709
+      '@silverhand/ts-config': 0.10.2_typescript@4.6.3
+      '@types/jest': 27.4.1
+      '@types/lodash.pick': 4.4.6
+      '@types/node': 16.11.12
+      '@types/supertest': 2.0.11
+      copyfiles: 2.4.1
+      eslint: 8.10.0
+      jest: 27.5.1
+      jest-matcher-specific-error: 1.0.0
+      lint-staged: 11.2.6
+      nock: 13.2.2
+      prettier: 2.5.1
+      supertest: 6.2.2
+      ts-jest: 27.1.1_9985e1834e803358b7be1e6ce5ca0eea
+      tsc-watch: 4.5.0_typescript@4.6.3
+      typescript: 4.6.3
+
+  packages/connector-github:
+    specifiers:
+      '@logto/connector-types': ^0.1.0
+      '@logto/schemas': ^0.1.0
+      '@shopify/jest-koa-mocks': ^3.0.8
+      '@silverhand/eslint-config': ^0.10.2
+      '@silverhand/essentials': ^1.1.0
+      '@silverhand/ts-config': ^0.10.2
+      '@types/jest': ^27.4.1
+      '@types/lodash.pick': ^4.4.6
+      '@types/node': ^16.3.1
+      '@types/supertest': ^2.0.11
+      copyfiles: ^2.4.1
+      eslint: ^8.10.0
+      got: ^11.8.2
+      jest: ^27.5.1
+      jest-matcher-specific-error: ^1.0.0
+      jose: ^3.14.3
+      lint-staged: ^11.1.1
+      nock: ^13.2.2
+      prettier: ^2.3.2
+      query-string: ^7.0.1
+      supertest: ^6.2.2
+      ts-jest: ^27.1.1
+      tsc-watch: ^4.4.0
+      typescript: ^4.6.2
+      zod: ^3.14.3
+    dependencies:
+      '@logto/connector-types': link:../connector-types
+      '@logto/schemas': link:../schemas
+      '@silverhand/essentials': 1.1.7
+      got: 11.8.3
+      jose: 3.20.3
+      query-string: 7.0.1
+      zod: 3.14.3
+    devDependencies:
+      '@shopify/jest-koa-mocks': 3.0.8
+      '@silverhand/eslint-config': 0.10.2_bbe1a6794670f389df81805f22999709
+      '@silverhand/ts-config': 0.10.2_typescript@4.6.3
+      '@types/jest': 27.4.1
+      '@types/lodash.pick': 4.4.6
+      '@types/node': 16.11.12
+      '@types/supertest': 2.0.11
+      copyfiles: 2.4.1
+      eslint: 8.10.0
+      jest: 27.5.1
+      jest-matcher-specific-error: 1.0.0
+      lint-staged: 11.2.6
+      nock: 13.2.2
+      prettier: 2.5.1
+      supertest: 6.2.2
+      ts-jest: 27.1.1_9985e1834e803358b7be1e6ce5ca0eea
+      tsc-watch: 4.5.0_typescript@4.6.3
+      typescript: 4.6.3
+
+  packages/connector-google:
+    specifiers:
+      '@logto/connector-types': ^0.1.0
+      '@logto/schemas': ^0.1.0
+      '@shopify/jest-koa-mocks': ^3.0.8
+      '@silverhand/eslint-config': ^0.10.2
+      '@silverhand/essentials': ^1.1.0
+      '@silverhand/ts-config': ^0.10.2
+      '@types/jest': ^27.4.1
+      '@types/lodash.pick': ^4.4.6
+      '@types/node': ^16.3.1
+      '@types/supertest': ^2.0.11
+      copyfiles: ^2.4.1
+      eslint: ^8.10.0
+      got: ^11.8.2
+      jest: ^27.5.1
+      jest-matcher-specific-error: ^1.0.0
+      jose: ^3.14.3
+      lint-staged: ^11.1.1
+      nock: ^13.2.2
+      prettier: ^2.3.2
+      query-string: ^7.0.1
+      supertest: ^6.2.2
+      ts-jest: ^27.1.1
+      tsc-watch: ^4.4.0
+      typescript: ^4.6.2
+      zod: ^3.14.3
+    dependencies:
+      '@logto/connector-types': link:../connector-types
+      '@logto/schemas': link:../schemas
+      '@silverhand/essentials': 1.1.7
+      got: 11.8.3
+      jose: 3.20.3
+      query-string: 7.0.1
+      zod: 3.14.3
+    devDependencies:
+      '@shopify/jest-koa-mocks': 3.0.8
+      '@silverhand/eslint-config': 0.10.2_bbe1a6794670f389df81805f22999709
+      '@silverhand/ts-config': 0.10.2_typescript@4.6.3
+      '@types/jest': 27.4.1
+      '@types/lodash.pick': 4.4.6
+      '@types/node': 16.11.12
+      '@types/supertest': 2.0.11
+      copyfiles: 2.4.1
+      eslint: 8.10.0
+      jest: 27.5.1
+      jest-matcher-specific-error: 1.0.0
+      lint-staged: 11.2.6
+      nock: 13.2.2
+      prettier: 2.5.1
+      supertest: 6.2.2
+      ts-jest: 27.1.1_9985e1834e803358b7be1e6ce5ca0eea
+      tsc-watch: 4.5.0_typescript@4.6.3
+      typescript: 4.6.3
+
+  packages/connector-types:
+    specifiers:
+      '@logto/phrases': ^0.1.0
+      '@logto/schemas': ^0.1.0
+      '@shopify/jest-koa-mocks': ^3.0.8
+      '@silverhand/eslint-config': ^0.10.2
+      '@silverhand/essentials': ^1.1.6
+      '@silverhand/ts-config': ^0.10.2
+      '@types/jest': ^27.4.1
+      '@types/node': '14'
+      '@types/pluralize': ^0.0.29
+      eslint: ^8.10.0
+      got: ^11.8.2
+      jest: ^27.5.1
+      jest-matcher-specific-error: ^1.0.0
+      jose: ^3.14.3
+      lint-staged: ^11.1.1
+      prettier: ^2.3.2
+      ts-jest: ^27.1.1
+      ts-node: ^10.0.0
+      typescript: ^4.6.2
+    dependencies:
+      '@logto/phrases': link:../phrases
+      '@logto/schemas': link:../schemas
+      got: 11.8.3
+      jose: 3.20.3
+    devDependencies:
+      '@shopify/jest-koa-mocks': 3.0.8
+      '@silverhand/eslint-config': 0.10.2_bbe1a6794670f389df81805f22999709
+      '@silverhand/essentials': 1.1.7
+      '@silverhand/ts-config': 0.10.2_typescript@4.6.3
+      '@types/jest': 27.4.1
+      '@types/node': 14.18.0
+      '@types/pluralize': 0.0.29
+      eslint: 8.10.0
+      jest: 27.5.1_ts-node@10.4.0
+      jest-matcher-specific-error: 1.0.0
+      lint-staged: 11.2.6
+      prettier: 2.5.1
+      ts-jest: 27.1.1_9985e1834e803358b7be1e6ce5ca0eea
+      ts-node: 10.4.0_de13640ee400640abd8d11bf95f8f857
+      typescript: 4.6.3
+
+  packages/connector-wechat:
+    specifiers:
+      '@logto/connector-types': ^0.1.0
+      '@logto/schemas': ^0.1.0
+      '@shopify/jest-koa-mocks': ^3.0.8
+      '@silverhand/eslint-config': ^0.10.2
+      '@silverhand/essentials': ^1.1.0
+      '@silverhand/ts-config': ^0.10.2
+      '@types/jest': ^27.4.1
+      '@types/lodash.pick': ^4.4.6
+      '@types/node': ^16.3.1
+      '@types/supertest': ^2.0.11
+      copyfiles: ^2.4.1
+      eslint: ^8.10.0
+      got: ^11.8.2
+      jest: ^27.5.1
+      jest-matcher-specific-error: ^1.0.0
+      jose: ^3.14.3
+      lint-staged: ^11.1.1
+      nock: ^13.2.2
+      prettier: ^2.3.2
+      query-string: ^7.0.1
+      supertest: ^6.2.2
+      ts-jest: ^27.1.1
+      tsc-watch: ^4.4.0
+      typescript: ^4.6.2
+      zod: ^3.14.3
+    dependencies:
+      '@logto/connector-types': link:../connector-types
+      '@logto/schemas': link:../schemas
+      '@silverhand/essentials': 1.1.7
+      got: 11.8.3
+      jose: 3.20.3
+      query-string: 7.0.1
+      zod: 3.14.3
+    devDependencies:
+      '@shopify/jest-koa-mocks': 3.0.8
+      '@silverhand/eslint-config': 0.10.2_bbe1a6794670f389df81805f22999709
+      '@silverhand/ts-config': 0.10.2_typescript@4.6.3
+      '@types/jest': 27.4.1
+      '@types/lodash.pick': 4.4.6
+      '@types/node': 16.11.12
+      '@types/supertest': 2.0.11
+      copyfiles: 2.4.1
+      eslint: 8.10.0
+      jest: 27.5.1
+      jest-matcher-specific-error: 1.0.0
+      lint-staged: 11.2.6
+      nock: 13.2.2
+      prettier: 2.5.1
+      supertest: 6.2.2
+      ts-jest: 27.1.1_9985e1834e803358b7be1e6ce5ca0eea
+      tsc-watch: 4.5.0_typescript@4.6.3
+      typescript: 4.6.3
+
+  packages/connector-wechat-native:
+    specifiers:
+      '@logto/connector-types': ^0.1.0
+      '@logto/connector-wechat': ^0.1.0
+      '@logto/schemas': ^0.1.0
+      '@shopify/jest-koa-mocks': ^3.0.8
+      '@silverhand/eslint-config': ^0.10.2
+      '@silverhand/essentials': ^1.1.0
+      '@silverhand/ts-config': ^0.10.2
+      '@types/jest': ^27.4.1
+      '@types/lodash.pick': ^4.4.6
+      '@types/node': ^16.3.1
+      '@types/supertest': ^2.0.11
+      copyfiles: ^2.4.1
+      eslint: ^8.10.0
+      got: ^11.8.2
+      jest: ^27.5.1
+      jest-matcher-specific-error: ^1.0.0
+      jose: ^3.14.3
+      lint-staged: ^11.1.1
+      nock: ^13.2.2
+      prettier: ^2.3.2
+      query-string: ^7.0.1
+      supertest: ^6.2.2
+      ts-jest: ^27.1.1
+      tsc-watch: ^4.4.0
+      typescript: ^4.6.2
+      zod: ^3.14.3
+    dependencies:
+      '@logto/connector-types': link:../connector-types
+      '@logto/connector-wechat': link:../connector-wechat
+      '@logto/schemas': link:../schemas
+      '@silverhand/essentials': 1.1.7
+      got: 11.8.3
+      jose: 3.20.3
+      query-string: 7.0.1
+      zod: 3.14.3
+    devDependencies:
+      '@shopify/jest-koa-mocks': 3.0.8
+      '@silverhand/eslint-config': 0.10.2_bbe1a6794670f389df81805f22999709
+      '@silverhand/ts-config': 0.10.2_typescript@4.6.3
+      '@types/jest': 27.4.1
+      '@types/lodash.pick': 4.4.6
+      '@types/node': 16.11.12
+      '@types/supertest': 2.0.11
+      copyfiles: 2.4.1
+      eslint: 8.10.0
+      jest: 27.5.1
+      jest-matcher-specific-error: 1.0.0
+      lint-staged: 11.2.6
+      nock: 13.2.2
+      prettier: 2.5.1
+      supertest: 6.2.2
+      ts-jest: 27.1.1_9985e1834e803358b7be1e6ce5ca0eea
+      tsc-watch: 4.5.0_typescript@4.6.3
+      typescript: 4.6.3
+
   packages/console:
     specifiers:
+      '@logto/connector-types': ^0.1.0
       '@logto/phrases': ^0.1.0
       '@logto/react': ^0.1.3
       '@logto/schemas': ^0.1.0
@@ -106,7 +596,12 @@ importers:
       stylelint: ^13.13.1
       swr: ^1.2.2
       typescript: ^4.6.2
+<<<<<<< HEAD
     devDependencies:
+=======
+    dependencies:
+      '@logto/connector-types': link:../connector-types
+>>>>>>> 70bdedc (feat(core): move all core/src/connectors/xxx to connector-xxx)
       '@logto/phrases': link:../phrases
       '@logto/react': 0.1.3_react@17.0.2
       '@logto/schemas': link:../schemas
@@ -157,6 +652,15 @@ importers:
 
   packages/core:
     specifiers:
+      '@logto/connector-alipay': ^0.1.0
+      '@logto/connector-aliyun-dm': ^0.1.0
+      '@logto/connector-aliyun-sms': ^0.1.0
+      '@logto/connector-facebook': ^0.1.0
+      '@logto/connector-github': ^0.1.0
+      '@logto/connector-google': ^0.1.0
+      '@logto/connector-types': ^0.1.0
+      '@logto/connector-wechat': ^0.1.0
+      '@logto/connector-wechat-native': ^0.1.0
       '@logto/phrases': ^0.1.0
       '@logto/schemas': ^0.1.0
       '@shopify/jest-koa-mocks': ^3.0.8
@@ -212,6 +716,15 @@ importers:
       typescript: ^4.6.2
       zod: ^3.14.3
     dependencies:
+      '@logto/connector-alipay': link:../connector-alipay
+      '@logto/connector-aliyun-dm': link:../connector-aliyun-dm
+      '@logto/connector-aliyun-sms': link:../connector-aliyun-sms
+      '@logto/connector-facebook': link:../connector-facebook
+      '@logto/connector-github': link:../connector-github
+      '@logto/connector-google': link:../connector-google
+      '@logto/connector-types': link:../connector-types
+      '@logto/connector-wechat': link:../connector-wechat
+      '@logto/connector-wechat-native': link:../connector-wechat-native
       '@logto/phrases': link:../phrases
       '@logto/schemas': link:../schemas
       '@silverhand/essentials': 1.1.2
@@ -3330,6 +3843,51 @@ packages:
       graceful-fs: 4.2.9
       jest-changed-files: 27.5.1
       jest-config: 27.5.1
+      jest-haste-map: 27.5.1
+      jest-message-util: 27.5.1
+      jest-regex-util: 27.5.1
+      jest-resolve: 27.5.1
+      jest-resolve-dependencies: 27.5.1
+      jest-runner: 27.5.1
+      jest-runtime: 27.5.1
+      jest-snapshot: 27.5.1
+      jest-util: 27.5.1
+      jest-validate: 27.5.1
+      jest-watcher: 27.5.1
+      micromatch: 4.0.4
+      rimraf: 3.0.2
+      slash: 3.0.0
+      strip-ansi: 6.0.1
+    transitivePeerDependencies:
+      - bufferutil
+      - canvas
+      - supports-color
+      - ts-node
+      - utf-8-validate
+    dev: true
+
+  /@jest/core/27.5.1_ts-node@10.4.0:
+    resolution: {integrity: sha512-AK6/UTrvQD0Cd24NSqmIA6rKsu0tKIxfiCducZvqxYdmMisOYAsdItspT+fQDQYARPf8XgjAFZi0ogW2agH5nQ==}
+    engines: {node: ^10.13.0 || ^12.13.0 || ^14.15.0 || >=15.0.0}
+    peerDependencies:
+      node-notifier: ^8.0.1 || ^9.0.0 || ^10.0.0
+    peerDependenciesMeta:
+      node-notifier:
+        optional: true
+    dependencies:
+      '@jest/console': 27.5.1
+      '@jest/reporters': 27.5.1
+      '@jest/test-result': 27.5.1
+      '@jest/transform': 27.5.1
+      '@jest/types': 27.5.1
+      '@types/node': 16.11.12
+      ansi-escapes: 4.3.2
+      chalk: 4.1.2
+      emittery: 0.8.1
+      exit: 0.1.2
+      graceful-fs: 4.2.9
+      jest-changed-files: 27.5.1
+      jest-config: 27.5.1_ts-node@10.4.0
       jest-haste-map: 27.5.1
       jest-message-util: 27.5.1
       jest-regex-util: 27.5.1
@@ -11802,6 +12360,36 @@ packages:
       - utf-8-validate
     dev: true
 
+  /jest-cli/27.5.1_ts-node@10.4.0:
+    resolution: {integrity: sha512-Hc6HOOwYq4/74/c62dEE3r5elx8wjYqxY0r0G/nFrLDPMFRu6RA/u8qINOIkvhxG7mMQ5EJsOGfRpI8L6eFUVw==}
+    engines: {node: ^10.13.0 || ^12.13.0 || ^14.15.0 || >=15.0.0}
+    hasBin: true
+    peerDependencies:
+      node-notifier: ^8.0.1 || ^9.0.0 || ^10.0.0
+    peerDependenciesMeta:
+      node-notifier:
+        optional: true
+    dependencies:
+      '@jest/core': 27.5.1_ts-node@10.4.0
+      '@jest/test-result': 27.5.1
+      '@jest/types': 27.5.1
+      chalk: 4.1.2
+      exit: 0.1.2
+      graceful-fs: 4.2.9
+      import-local: 3.0.3
+      jest-config: 27.5.1_ts-node@10.4.0
+      jest-util: 27.5.1
+      jest-validate: 27.5.1
+      prompts: 2.4.2
+      yargs: 16.2.0
+    transitivePeerDependencies:
+      - bufferutil
+      - canvas
+      - supports-color
+      - ts-node
+      - utf-8-validate
+    dev: true
+
   /jest-config/27.5.1:
     resolution: {integrity: sha512-5sAsjm6tGdsVbW9ahcChPAFCk4IlkQUknH5AvKjuLTSlcO/wCZKyFdn7Rg0EkC+OGgWODEy2hDpWB1PgzH0JNA==}
     engines: {node: ^10.13.0 || ^12.13.0 || ^14.15.0 || >=15.0.0}
@@ -11835,6 +12423,47 @@ packages:
       pretty-format: 27.5.1
       slash: 3.0.0
       strip-json-comments: 3.1.1
+    transitivePeerDependencies:
+      - bufferutil
+      - canvas
+      - supports-color
+      - utf-8-validate
+    dev: true
+
+  /jest-config/27.5.1_ts-node@10.4.0:
+    resolution: {integrity: sha512-5sAsjm6tGdsVbW9ahcChPAFCk4IlkQUknH5AvKjuLTSlcO/wCZKyFdn7Rg0EkC+OGgWODEy2hDpWB1PgzH0JNA==}
+    engines: {node: ^10.13.0 || ^12.13.0 || ^14.15.0 || >=15.0.0}
+    peerDependencies:
+      ts-node: '>=9.0.0'
+    peerDependenciesMeta:
+      ts-node:
+        optional: true
+    dependencies:
+      '@babel/core': 7.16.0
+      '@jest/test-sequencer': 27.5.1
+      '@jest/types': 27.5.1
+      babel-jest: 27.5.1_@babel+core@7.16.0
+      chalk: 4.1.2
+      ci-info: 3.3.0
+      deepmerge: 4.2.2
+      glob: 7.2.0
+      graceful-fs: 4.2.9
+      jest-circus: 27.5.1
+      jest-environment-jsdom: 27.5.1
+      jest-environment-node: 27.5.1
+      jest-get-type: 27.5.1
+      jest-jasmine2: 27.5.1
+      jest-regex-util: 27.5.1
+      jest-resolve: 27.5.1
+      jest-runner: 27.5.1
+      jest-util: 27.5.1
+      jest-validate: 27.5.1
+      micromatch: 4.0.4
+      parse-json: 5.2.0
+      pretty-format: 27.5.1
+      slash: 3.0.0
+      strip-json-comments: 3.1.1
+      ts-node: 10.4.0_de13640ee400640abd8d11bf95f8f857
     transitivePeerDependencies:
       - bufferutil
       - canvas
@@ -12202,6 +12831,27 @@ packages:
       '@jest/core': 27.5.1
       import-local: 3.0.3
       jest-cli: 27.5.1
+    transitivePeerDependencies:
+      - bufferutil
+      - canvas
+      - supports-color
+      - ts-node
+      - utf-8-validate
+    dev: true
+
+  /jest/27.5.1_ts-node@10.4.0:
+    resolution: {integrity: sha512-Yn0mADZB89zTtjkPJEXwrac3LHudkQMR+Paqa8uxJHCBr9agxztUifWCyiYrjhMPBoUVBjyny0I7XH6ozDr7QQ==}
+    engines: {node: ^10.13.0 || ^12.13.0 || ^14.15.0 || >=15.0.0}
+    hasBin: true
+    peerDependencies:
+      node-notifier: ^8.0.1 || ^9.0.0 || ^10.0.0
+    peerDependenciesMeta:
+      node-notifier:
+        optional: true
+    dependencies:
+      '@jest/core': 27.5.1_ts-node@10.4.0
+      import-local: 3.0.3
+      jest-cli: 27.5.1_ts-node@10.4.0
     transitivePeerDependencies:
       - bufferutil
       - canvas
@@ -18801,6 +19451,40 @@ packages:
       yargs-parser: 20.2.9
     dev: true
 
+  /ts-jest/27.1.1_9985e1834e803358b7be1e6ce5ca0eea:
+    resolution: {integrity: sha512-Ds0VkB+cB+8g2JUmP/GKWndeZcCKrbe6jzolGrVWdqVUFByY/2KDHqxJ7yBSon7hDB1TA4PXxjfZ+JjzJisvgA==}
+    engines: {node: ^10.13.0 || ^12.13.0 || ^14.15.0 || >=15.0.0}
+    hasBin: true
+    peerDependencies:
+      '@babel/core': '>=7.0.0-beta.0 <8'
+      '@types/jest': ^27.0.0
+      babel-jest: '>=27.0.0 <28'
+      esbuild: ~0.14.0
+      jest: ^27.0.0
+      typescript: '>=3.8 <5.0'
+    peerDependenciesMeta:
+      '@babel/core':
+        optional: true
+      '@types/jest':
+        optional: true
+      babel-jest:
+        optional: true
+      esbuild:
+        optional: true
+    dependencies:
+      '@types/jest': 27.4.1
+      bs-logger: 0.2.6
+      fast-json-stable-stringify: 2.1.0
+      jest: 27.5.1_ts-node@10.4.0
+      jest-util: 27.5.1
+      json5: 2.2.1
+      lodash.memoize: 4.1.2
+      make-error: 1.3.6
+      semver: 7.3.5
+      typescript: 4.6.3
+      yargs-parser: 20.2.9
+    dev: true
+
   /ts-jest/27.1.1_ac171f3d9f636bd8b4c3e7aa384f840e:
     resolution: {integrity: sha512-Ds0VkB+cB+8g2JUmP/GKWndeZcCKrbe6jzolGrVWdqVUFByY/2KDHqxJ7yBSon7hDB1TA4PXxjfZ+JjzJisvgA==}
     engines: {node: ^10.13.0 || ^12.13.0 || ^14.15.0 || >=15.0.0}
@@ -18939,6 +19623,21 @@ packages:
       string-argv: 0.1.2
       strip-ansi: 6.0.1
       typescript: 4.6.2
+    dev: true
+
+  /tsc-watch/4.5.0_typescript@4.6.3:
+    resolution: {integrity: sha512-aXhN4jY+1YEcn/NwCQ/+fHqU43EqOpW+pS+933EPsVEsrKhvyrodPDIjQsk1a1niFrabAK3RIBrRbAslVefEbQ==}
+    engines: {node: '>=8.17.0'}
+    hasBin: true
+    peerDependencies:
+      typescript: '*'
+    dependencies:
+      cross-spawn: 7.0.3
+      node-cleanup: 2.1.2
+      ps-tree: 1.2.0
+      string-argv: 0.1.2
+      strip-ansi: 6.0.1
+      typescript: 4.6.3
     dev: true
 
   /tsconfig-paths/3.13.0:

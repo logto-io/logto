@@ -1,15 +1,17 @@
 /* eslint-disable max-lines */
+import {
+  ConnectorError,
+  ConnectorErrorCodes,
+  EmailMessageTypes,
+  ValidateConfig,
+} from '@logto/connector-types';
 import { Connector, ConnectorType } from '@logto/schemas';
 
 import { mockConnectorInstanceList, mockConnectorList } from '@/__mocks__';
 import {
-  ConnectorError,
-  ConnectorErrorCodes,
   ConnectorMetadata,
   EmailConnectorInstance,
-  EmailMessageTypes,
   SmsConnectorInstance,
-  ValidateConfig,
 } from '@/connectors/types';
 import RequestError from '@/errors/RequestError';
 import { updateConnector } from '@/queries/connector';
@@ -578,6 +580,7 @@ describe('connector route', () => {
           _payload: EmailMessageTypes[typeof type]
           // eslint-disable-next-line @typescript-eslint/no-empty-function
         ): Promise<any> => {},
+        getConfig: jest.fn(),
       };
 
       getConnectorInstanceByTypePlaceHolder.mockImplementationOnce(async (_: ConnectorType) => {
@@ -624,6 +627,7 @@ describe('connector route', () => {
           _payload: EmailMessageTypes[typeof type]
           // eslint-disable-next-line @typescript-eslint/no-empty-function
         ): Promise<any> => {},
+        getConfig: jest.fn(),
       };
 
       getConnectorInstanceByTypePlaceHolder.mockImplementationOnce(async (_: ConnectorType) => {

@@ -1,6 +1,6 @@
+import { ConnectorError, ConnectorErrorCodes } from '@logto/connector-types';
 import { Middleware } from 'koa';
 
-import { ConnectorError, ConnectorErrorCodes } from '@/connectors/types';
 import RequestError from '@/errors/RequestError';
 
 export default function koaConnectorErrorHandler<StateT, ContextT>(): Middleware<StateT, ContextT> {

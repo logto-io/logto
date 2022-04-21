@@ -40,6 +40,7 @@
   },
   "prettier": "@silverhand/eslint-config/.prettierrc",
   "dependencies": {
+    "@logto/connector-types": "^0.1.0",
     "@logto/schemas": "^0.1.0",
     "chalk": "^4",
     "commander": "^9.1.0",

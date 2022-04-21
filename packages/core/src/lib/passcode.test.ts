@@ -140,6 +140,7 @@ describe('sendPasscode', () => {
       },
       sendMessage,
       validateConfig: jest.fn(),
+      getConfig: jest.fn(),
     });
     const passcode: Passcode = {
       id: 'id',

@@ -20,6 +20,15 @@
     "test:report": "codecov -F core"
   },
   "dependencies": {
+    "@logto/connector-types": "^0.1.0",
+    "@logto/connector-wechat": "^0.1.0",
+    "@logto/connector-wechat-native": "^0.1.0",
+    "@logto/connector-alipay": "^0.1.0",
+    "@logto/connector-aliyun-dm": "^0.1.0",
+    "@logto/connector-aliyun-sms": "^0.1.0",
+    "@logto/connector-google": "^0.1.0",
+    "@logto/connector-github": "^0.1.0",
+    "@logto/connector-facebook": "^0.1.0",
     "@logto/phrases": "^0.1.0",
     "@logto/schemas": "^0.1.0",
     "@silverhand/essentials": "^1.1.0",
