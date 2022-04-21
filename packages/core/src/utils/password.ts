@@ -24,9 +24,8 @@ export const encryptPassword = (
     (accumulator, current) => accumulator + (current.codePointAt(0) ?? 0),
     0
   );
-  const peppers = envSet.values.passwordPeppers;
+  const { peppers, iterationCount } = envSet.values.password;
   const pepper = peppers[sum % peppers.length];
-  const iterationCount = envSet.values.passwordIterationCount;
 
   assertThat(pepper, 'password.pepper_not_found');
 

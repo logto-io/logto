@@ -51,8 +51,7 @@ describe('koaSpaProxy middleware', () => {
     const spy = jest.spyOn(envSet, 'values', 'get').mockReturnValue({
       ...envSet.values,
       isProduction: true,
-      passwordPeppers: ['foo'],
-      databaseUrl: 'some_db_url',
+      password: { peppers: ['foo'], iterationCount: 1000 },
     });
 
     const ctx = createContextWithRouteParameters({
@@ -70,8 +69,7 @@ describe('koaSpaProxy middleware', () => {
     const spy = jest.spyOn(envSet, 'values', 'get').mockReturnValue({
       ...envSet.values,
       isProduction: true,
-      passwordPeppers: ['foo'],
-      databaseUrl: 'some_db_url',
+      password: { peppers: ['foo'], iterationCount: 1000 },
     });
 
     const ctx = createContextWithRouteParameters({
