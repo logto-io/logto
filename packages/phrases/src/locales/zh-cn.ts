@@ -36,6 +36,8 @@ const translation = {
       confirm: '确认',
     },
     description: {
+      loading: '读取中...',
+      redirecting: '页面跳转中...',
       agree_with_terms: '我已阅读并同意 ',
       terms_of_use: '使用条款',
       creat_account: '创建账号',

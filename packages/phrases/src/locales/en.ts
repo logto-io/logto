@@ -34,6 +34,8 @@ const translation = {
       cancel: 'Cancel',
     },
     description: {
+      loading: 'Loading...',
+      redirecting: 'Redirecting...',
       agree_with_terms: 'I have read and agree to the ',
       terms_of_use: 'Terms of Use',
       creat_account: 'Create Account',
