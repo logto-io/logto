@@ -1,5 +1,6 @@
+import { ConnectorDTO } from '@logto/connector-types';
 import { Languages } from '@logto/phrases';
-import { ConnectorDTO, Identities } from '@logto/schemas';
+import { Identities } from '@logto/schemas';
 import { Optional } from '@silverhand/essentials';
 import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';

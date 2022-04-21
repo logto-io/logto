@@ -1,4 +1,5 @@
-import { ConnectorDTO, ConnectorType } from '@logto/schemas';
+import { ConnectorDTO } from '@logto/connector-types';
+import { ConnectorType } from '@logto/schemas';
 import i18next from 'i18next';
 import React, { useState } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';

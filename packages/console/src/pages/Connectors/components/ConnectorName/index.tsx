@@ -1,4 +1,4 @@
-import { ConnectorDTO } from '@logto/schemas';
+import { ConnectorDTO } from '@logto/connector-types';
 import React from 'react';
 import { Link } from 'react-router-dom';
 

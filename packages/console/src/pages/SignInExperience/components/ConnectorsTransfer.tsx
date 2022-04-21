@@ -1,4 +1,4 @@
-import { ConnectorDTO } from '@logto/schemas';
+import { ConnectorDTO } from '@logto/connector-types';
 import { conditionalString } from '@silverhand/essentials';
 import React from 'react';
 import { useTranslation } from 'react-i18next';

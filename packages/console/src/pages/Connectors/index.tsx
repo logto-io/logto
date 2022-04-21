@@ -1,4 +1,5 @@
-import { ConnectorDTO, ConnectorType } from '@logto/schemas';
+import { ConnectorDTO } from '@logto/connector-types';
+import { ConnectorType } from '@logto/schemas';
 import classNames from 'classnames';
 import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';

@@ -1,4 +1,5 @@
-import { ConnectorDTO, ConnectorType } from '@logto/schemas';
+import { ConnectorDTO } from '@logto/connector-types';
+import { ConnectorType } from '@logto/schemas';
 import React, { useMemo, useState } from 'react';
 import Modal from 'react-modal';
 import useSWR from 'swr';
