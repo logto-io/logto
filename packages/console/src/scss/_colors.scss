@@ -141,6 +141,7 @@
   --color-focused-variant: rgba(93, 52, 242, 16%); // 16% P40
   --shadow-light-s1: 0 4px 8px rgba(66, 41, 159, 8%);
   --shadow-light-s2: 0 4px 12px rgba(66, 41, 159, 12%);
+  --shadow-light-s2-reversed: 0 -4px 12px rgba(66, 41, 159, 12%);
   --shadow-light-s3: 0 4px 16px rgba(66, 41, 159, 16%);
 
   // Client specific variables
@@ -290,6 +291,7 @@
   --color-focused-variant: rgba(202, 190, 255, 16%); // 16% P40
   --shadow-light-s1: 0 4px 8px rgba(66, 41, 159, 8%);
   --shadow-light-s2: 0 4px 12px rgba(66, 41, 159, 12%);
+  --shadow-light-s2-reversed: 0 -4px -12px rgba(66, 41, 159, 12%);
   --shadow-light-s3: 0 4px 16px rgba(66, 41, 159, 16%);
 
   // Client specific variables
