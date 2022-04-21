@@ -28,14 +28,10 @@ const App = () => {
   useEffect(() => {
     (async () => {
       setLoading(true);
-      const { error, settings } = await getSignInExperienceSettings();
-
-      if (error) {
-        setToast('invalid settings'); // TODO: error message
-      }
+      const settings = await getSignInExperienceSettings();
 
       // Note: i18n must be initialized ahead of global experience settings
-      await initI18n(settings?.languageInfo);
+      await initI18n(settings.languageInfo);
 
       setExperienceSettings(settings);
 
