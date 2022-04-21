@@ -29,6 +29,7 @@
     padding: _.unit(3) 0;
     caret-color: var(--color-primary);
     font: var(--font-body-bold);
+    color: var(--color-text);
 
     &::placeholder {
       color: var(--color-caption);

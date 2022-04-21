@@ -15,8 +15,6 @@ import getSignInExperienceSettings from './utils/sign-in-experience';
 
 import './scss/normalized.scss';
 
-void initI18n();
-
 const App = () => {
   const [loading, setLoading] = useState(false);
   const [toast, setToast] = useState('');
@@ -30,9 +28,13 @@ const App = () => {
   useEffect(() => {
     (async () => {
       setLoading(true);
-      // TODO: error handling
-      const { settings } = await getSignInExperienceSettings();
+      const settings = await getSignInExperienceSettings();
+
+      // Note: i18n must be initialized ahead of global experience settings
+      await initI18n(settings.languageInfo);
+
       setExperienceSettings(settings);
+
       setLoading(false);
     })();
   }, []);

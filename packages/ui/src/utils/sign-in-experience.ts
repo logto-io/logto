@@ -6,7 +6,7 @@
 import { SignInMethods } from '@logto/schemas';
 
 import { getSignInExperience } from '@/apis/settings';
-import { SignInMethod } from '@/types';
+import { SignInMethod, SignInExperienceSettings } from '@/types';
 
 const getPrimarySignInMethod = (signInMethods: SignInMethods) => {
   for (const [key, value] of Object.entries(signInMethods)) {
@@ -18,7 +18,7 @@ const getPrimarySignInMethod = (signInMethods: SignInMethods) => {
   return 'username';
 };
 
-const getSecondarySignInMethod = (signInMethods: SignInMethods) =>
+const getSecondarySignInMethods = (signInMethods: SignInMethods) =>
   Object.entries(signInMethods).reduce<SignInMethod[]>((methods, [key, value]) => {
     if (value === 'secondary') {
       return [...methods, key as SignInMethod];
@@ -27,21 +27,16 @@ const getSecondarySignInMethod = (signInMethods: SignInMethods) =>
     return methods;
   }, []);
 
-const getSignInExperienceSettings = async () => {
-  try {
-    const result = await getSignInExperience();
-    const settings = {
-      branding: result.branding,
-      languageInfo: result.languageInfo,
-      termsOfUse: result.termsOfUse,
-      primarySignInMethod: getPrimarySignInMethod(result.signInMethods),
-      secondarySignInMethods: getSecondarySignInMethod(result.signInMethods),
-    };
+const getSignInExperienceSettings = async (): Promise<SignInExperienceSettings> => {
+  const { branding, languageInfo, termsOfUse, signInMethods } = await getSignInExperience();
 
-    return { settings };
-  } catch (error: unknown) {
-    return { error };
-  }
+  return {
+    branding,
+    languageInfo,
+    termsOfUse,
+    primarySignInMethod: getPrimarySignInMethod(signInMethods),
+    secondarySignInMethods: getSecondarySignInMethods(signInMethods),
+  };
 };
 
 export default getSignInExperienceSettings;
