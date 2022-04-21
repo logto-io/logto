@@ -874,6 +874,7 @@ importers:
   packages/ui:
     specifiers:
       '@jest/types': ^27.5.1
+      '@logto/connector-types': ^0.1.0
       '@logto/phrases': ^0.1.0
       '@logto/schemas': ^0.1.0
       '@parcel/core': ^2.3.2
@@ -916,6 +917,28 @@ importers:
       stylelint: ^13.13.1
       ts-jest: ^27.1.1
       typescript: ^4.6.2
+<<<<<<< HEAD
+=======
+    dependencies:
+      '@logto/connector-types': link:../connector-types
+      '@logto/phrases': link:../phrases
+      '@logto/schemas': link:../schemas
+      '@silverhand/essentials': 1.1.7
+      classnames: 2.3.1
+      i18next: 21.6.11
+      i18next-browser-languagedetector: 6.1.3
+      js-base64: 3.7.2
+      ky: 0.30.0
+      libphonenumber-js: 1.9.49
+      react: 17.0.2
+      react-dom: 17.0.2_react@17.0.2
+      react-i18next: 11.15.4_3fb644aa30122a07f960d67fa51d6dc1
+      react-modal: 3.14.4_react-dom@17.0.2+react@17.0.2
+      react-phone-number-input: 3.1.46_react-dom@17.0.2+react@17.0.2
+      react-router-dom: 6.2.2_react-dom@17.0.2+react@17.0.2
+      react-string-replace: 1.0.0
+      react-timer-hook: 3.0.5_react-dom@17.0.2+react@17.0.2
+>>>>>>> 1dfce12 (feat(core): fix ui imports)
     devDependencies:
       '@jest/types': 27.5.1
       '@logto/phrases': link:../phrases

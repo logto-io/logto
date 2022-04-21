@@ -1,4 +1,4 @@
-import { ConnectorMetadata } from '@logto/schemas';
+import { ConnectorMetadata } from '@logto/connector-types';
 import classNames from 'classnames';
 import React, { useState, useMemo } from 'react';
 
