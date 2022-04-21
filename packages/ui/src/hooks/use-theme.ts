@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext } from 'react';
 
-import PageContext from './page-context';
+import { PageContext } from './use-page-context';
 
 export type Theme = 'dark' | 'light';
 

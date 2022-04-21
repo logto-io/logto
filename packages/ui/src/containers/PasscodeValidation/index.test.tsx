@@ -1,5 +1,7 @@
-import { render, act, fireEvent, waitFor } from '@testing-library/react';
+import { act, fireEvent, waitFor } from '@testing-library/react';
 import React from 'react';
+
+import renderWithContext from '@/__mocks__/RenderWithContext';
 
 import PasscodeValidation from '.';
 
@@ -13,13 +15,6 @@ jest.mock('@/apis/utils', () => ({
   getVerifyPasscodeApi: () => verifyPasscodeApi,
 }));
 
-jest.mock('@/hooks/page-context', () =>
-  React.createContext({
-    loading: false,
-    setLoading: jest.fn(),
-  })
-);
-
 describe('<PasscodeValidation />', () => {
   const email = 'foo@logto.io';
 
@@ -28,7 +23,7 @@ describe('<PasscodeValidation />', () => {
   });
 
   it('render counter', () => {
-    const { queryByText } = render(
+    const { queryByText } = renderWithContext(
       <PasscodeValidation type="sign-in" method="email" target={email} />
     );
 
@@ -42,7 +37,7 @@ describe('<PasscodeValidation />', () => {
   });
 
   it('fire resend event', async () => {
-    const { getByText } = render(
+    const { getByText } = renderWithContext(
       <PasscodeValidation type="sign-in" method="email" target={email} />
     );
     act(() => {
@@ -58,7 +53,7 @@ describe('<PasscodeValidation />', () => {
   });
 
   it('fire validate passcode event', async () => {
-    const { container } = render(
+    const { container } = renderWithContext(
       <PasscodeValidation type="sign-in" method="email" target={email} />
     );
     const inputs = container.querySelectorAll('input');
