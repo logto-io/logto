@@ -63,10 +63,6 @@ Post a notification that tells Logto clients to handle the given URL.
 
 Usually this function need to be called in `onOpenURL(perform:)` in SwiftUI or `application(_:open:options:)` in AppDelegate. See integration guide for detailed information.
 
-- Parameters:
-   - forClientId: If the notification is for specific client ID only. When `nil`, all Logto clients will try to handle the notification.
-   - url:The URL that needs to be handled.
-
 #### Parameters
 
 | Name | Description |
@@ -94,8 +90,6 @@ public func signInWithBrowser(
 
 Start a sign in session with WKWebView. If the function returns with no error threw, it means the user has signed in successfully.
 
-- Parameters:
-   - redirectUri: One of Redirect URIs of this application.
 - Throws: An error if the session failed to complete.
 
 #### Parameters
@@ -120,14 +114,12 @@ Clear all tokens in memory and Keychain. Also try to revoke the Refresh Token fr
 @MainActor public func getAccessToken(for resource: String?) async throws -> String
 ```
 
-Get access token for the given resrouce. If resource is `nil`, return the access token for user endpoint.
+Get an Access Token for the given resrouce. If resource is `nil`, return the Access Token for user endpoint.
 
-If the cached access token has expired, this function will try to use `refreshToken` to fetch a new access token from the OIDC provider.
+If the cached Access Token has expired, this function will try to use `refreshToken` to fetch a new Access Token from the OIDC provider.
 
-- Parameters:
-   - resource: The resource indicator.
-- Throws: An error if failed to get a valid access token.
-- Returns: Access token in string.
+- Throws: An error if failed to get a valid Access Token.
+- Returns: Access Token in string.
 
 #### Parameters
 

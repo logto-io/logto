@@ -2,7 +2,7 @@
 sidebar_position: 1.1
 ---
 
-**ENUM**
+**枚举**
 
 # `LogtoClientErrorTypes.SignIn`
 
@@ -10,7 +10,7 @@ sidebar_position: 1.1
 public enum SignIn: String
 ```
 
-## Cases
+## 枚举情况
 ### `unknownError`
 
 ```swift
@@ -23,8 +23,7 @@ case unknownError
 case authFailed
 ```
 
-Failed to complete the authentication.
-This could be an internal error or the user canceled the authentication.
+无法完成验证（登录）。可能是一个内部错误或者用户取消了验证。
 
 ### `unableToConstructRedirectUri`
 
@@ -32,7 +31,7 @@ This could be an internal error or the user canceled the authentication.
 case unableToConstructRedirectUri
 ```
 
-Unable to construct Redirect URI for the given string.
+无法通过给定的字符串构建 Redirect URI。
 
 ### `unableToConstructAuthUri`
 
@@ -40,8 +39,7 @@ Unable to construct Redirect URI for the given string.
 case unableToConstructAuthUri
 ```
 
-Unable to construct Redirect URI for the config.
-Please double check OIDC and Logto config.
+无法通过配置构建 Redirect URI。请检查 OIDC 和 Logto 配置。
 
 ### `unableToFetchToken`
 
@@ -49,7 +47,7 @@ Please double check OIDC and Logto config.
 case unableToFetchToken
 ```
 
-Unable to finish the initial token request after authentication.
+在验证结束后无法完成首次 token 请求。
 
 ### `unexpectedSignInCallback`
 
@@ -57,4 +55,4 @@ Unable to finish the initial token request after authentication.
 case unexpectedSignInCallback
 ```
 
-The Sign in Callback URI is not valid.
+登录回调 URI 无效。
