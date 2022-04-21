@@ -1,3 +1,4 @@
+import { Language } from '@logto/phrases';
 import { z } from 'zod';
 
 /**
@@ -118,11 +119,6 @@ export const termsOfUseGuard = z.object({
 });
 
 export type TermsOfUse = z.infer<typeof termsOfUseGuard>;
-
-export enum Language {
-  English = 'en',
-  Chinese = 'zh-cn',
-}
 
 export const languageInfoGuard = z.object({
   autoDetect: z.boolean(),
