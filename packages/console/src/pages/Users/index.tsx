@@ -10,6 +10,7 @@ import useSWR from 'swr';
 import Button from '@/components/Button';
 import Card from '@/components/Card';
 import CardTitle from '@/components/CardTitle';
+import DateTime from '@/components/DateTime';
 import ImagePlaceholder from '@/components/ImagePlaceholder';
 import ItemPreview from '@/components/ItemPreview';
 import Pagination from '@/components/Pagination';
@@ -112,7 +113,7 @@ const Users = () => {
                 />
               </TableEmpty>
             )}
-            {users?.map(({ id, name, username }) => (
+            {users?.map(({ id, name, username, lastSignIn }) => (
               <tr
                 key={id}
                 className={tableStyles.clickable}
@@ -130,7 +131,9 @@ const Users = () => {
                   />
                 </td>
                 <td>Application</td>
-                <td>Last sign in</td>
+                <td>
+                  <DateTime>{lastSignIn}</DateTime>
+                </td>
               </tr>
             ))}
           </tbody>

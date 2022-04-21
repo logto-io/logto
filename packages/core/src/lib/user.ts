@@ -1,8 +1,9 @@
 import { UsersPasswordEncryptionMethod, User } from '@logto/schemas';
+import dayjs from 'dayjs';
 import { nanoid } from 'nanoid';
 import pRetry from 'p-retry';
 
-import { findUserByUsername, hasUserWithId } from '@/queries/user';
+import { findUserByUsername, hasUserWithId, updateUserById } from '@/queries/user';
 import assertThat from '@/utils/assert-that';
 import { buildIdGenerator } from '@/utils/id';
 import { encryptPassword } from '@/utils/password';
@@ -63,3 +64,6 @@ export const findUserByUsernameAndPassword = async (
 
   return user;
 };
+
+export const updateLastSignIn = async (userId: string) =>
+  updateUserById(userId, { lastSignIn: dayjs().valueOf() });

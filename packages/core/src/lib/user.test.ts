@@ -1,8 +1,8 @@
 import { UsersPasswordEncryptionMethod } from '@logto/schemas';
 
-import { hasUserWithId } from '@/queries/user';
+import { hasUserWithId, updateUserById } from '@/queries/user';
 
-import { encryptUserPassword, generateUserId } from './user';
+import { encryptUserPassword, generateUserId, updateLastSignIn } from './user';
 
 jest.mock('@/queries/user');
 
@@ -59,5 +59,19 @@ describe('encryptUserPassword()', () => {
     expect(passwordEncryptionMethod).toEqual(UsersPasswordEncryptionMethod.SaltAndPepper);
     expect(passwordEncrypted).toHaveLength(64);
     expect(passwordEncryptionSalt).toHaveLength(21);
+  });
+});
+
+describe('updateLastSignIn()', () => {
+  beforeAll(() => {
+    jest.useFakeTimers().setSystemTime(new Date('2020-01-01'));
+  });
+
+  it('calls updateUserById with current timestamp', async () => {
+    await updateLastSignIn('user-id');
+    expect(updateUserById).toHaveBeenCalledWith(
+      'user-id',
+      expect.objectContaining({ lastSignIn: new Date('2020-01-01').getTime() })
+    );
   });
 });

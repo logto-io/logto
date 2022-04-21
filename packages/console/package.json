@@ -41,6 +41,7 @@
     "classnames": "^2.3.1",
     "copyfiles": "^2.4.1",
     "csstype": "^3.0.11",
+    "dayjs": "^1.10.5",
     "dnd-core": "^16.0.0",
     "eslint": "^8.10.0",
     "i18next": "^21.6.12",
