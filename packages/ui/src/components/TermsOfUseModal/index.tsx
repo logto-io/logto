@@ -4,7 +4,6 @@ import reactStringReplace from 'react-string-replace';
 
 import ConfirmModal from '../ConfirmModal';
 import TextLink from '../TextLink';
-import * as styles from './index.module.scss';
 
 type Props = {
   isOpen?: boolean;
@@ -20,22 +19,11 @@ const TermsOfUseModal = ({ isOpen = false, termsUrl, onConfirm, onClose }: Props
   const content = t('description.agree_with_terms_modal', { terms });
 
   const modalContent: ReactNode = reactStringReplace(content, terms, () => (
-    <TextLink
-      className={styles.link}
-      text="description.terms_of_use"
-      href={termsUrl}
-      target="_blank"
-      type="secondary"
-    />
+    <TextLink key={terms} text="description.terms_of_use" href={termsUrl} target="_blank" />
   ));
 
   return (
-    <ConfirmModal
-      className={styles.content}
-      isOpen={isOpen}
-      onConfirm={onConfirm}
-      onClose={onClose}
-    >
+    <ConfirmModal isOpen={isOpen} onConfirm={onConfirm} onClose={onClose}>
       {modalContent}
     </ConfirmModal>
   );
