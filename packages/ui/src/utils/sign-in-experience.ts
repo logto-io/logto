@@ -18,7 +18,7 @@ const getPrimarySignInMethod = (signInMethods: SignInMethods) => {
   return 'username';
 };
 
-const getSecondarySignInMethod = (signInMethods: SignInMethods) =>
+const getSecondarySignInMethods = (signInMethods: SignInMethods) =>
   Object.entries(signInMethods).reduce<SignInMethod[]>((methods, [key, value]) => {
     if (value === 'secondary') {
       return [...methods, key as SignInMethod];
@@ -35,7 +35,7 @@ const getSignInExperienceSettings = async (): Promise<SignInExperienceSettings> 
     languageInfo,
     termsOfUse,
     primarySignInMethod: getPrimarySignInMethod(signInMethods),
-    secondarySignInMethods: getSecondarySignInMethod(signInMethods),
+    secondarySignInMethods: getSecondarySignInMethods(signInMethods),
   };
 };
 
