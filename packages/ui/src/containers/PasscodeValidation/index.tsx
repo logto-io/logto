@@ -8,8 +8,8 @@ import { getSendPasscodeApi, getVerifyPasscodeApi } from '@/apis/utils';
 import { ErrorType } from '@/components/ErrorMessage';
 import Passcode, { defaultLength } from '@/components/Passcode';
 import TextLink from '@/components/TextLink';
-import PageContext from '@/hooks/page-context';
 import useApi from '@/hooks/use-api';
+import { PageContext } from '@/hooks/use-page-context';
 import { UserFlow } from '@/types';
 
 import * as styles from './index.module.scss';
@@ -102,7 +102,7 @@ const PasscodeValidation = ({ type, method, className, target }: Props) => {
     <form className={classNames(styles.form, className)}>
       <Passcode
         name="passcode"
-        className={classNames(styles.field, error && styles.withError)}
+        className={classNames(styles.inputField, error && styles.withError)}
         value={code}
         error={error}
         onChange={setCode}

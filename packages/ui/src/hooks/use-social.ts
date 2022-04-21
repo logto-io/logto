@@ -4,8 +4,8 @@ import { useParams } from 'react-router-dom';
 import { invokeSocialSignIn, signInWithSocial } from '@/apis/social';
 import { generateRandomString, parseQueryParameters } from '@/utils';
 
-import PageContext from './page-context';
 import useApi from './use-api';
+import { PageContext } from './use-page-context';
 
 /**
  * Social Connector State Utility Methods

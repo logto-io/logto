@@ -3,7 +3,7 @@ import React, { ReactNode, useCallback, useContext } from 'react';
 
 import LoadingLayer from '@/components/LoadingLayer';
 import Toast from '@/components/Toast';
-import PageContext from '@/hooks/page-context';
+import { PageContext } from '@/hooks/use-page-context';
 import useTheme from '@/hooks/use-theme';
 
 import * as styles from './index.module.scss';

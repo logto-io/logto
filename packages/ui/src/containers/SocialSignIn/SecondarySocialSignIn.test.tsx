@@ -2,7 +2,7 @@ import { render, fireEvent, waitFor } from '@testing-library/react';
 import React from 'react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 
-import ContextProvider from '@/__mocks__/ContextProvider';
+import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import { socialConnectors } from '@/__mocks__/logto';
 import * as socialSignInApi from '@/apis/social';
 import { generateState, storeState } from '@/hooks/use-social';
@@ -57,12 +57,10 @@ describe('SecondarySocialSignIn', () => {
   it('invoke web social signIn', async () => {
     const connectors = socialConnectors.slice(0, 1);
 
-    const { container } = render(
-      <ContextProvider>
-        <MemoryRouter>
-          <SecondarySocialSignIn connectors={connectors} />
-        </MemoryRouter>
-      </ContextProvider>
+    const { container } = renderWithPageContext(
+      <MemoryRouter>
+        <SecondarySocialSignIn connectors={connectors} />
+      </MemoryRouter>
     );
     const socialButton = container.querySelector('button');
 
@@ -82,12 +80,10 @@ describe('SecondarySocialSignIn', () => {
     /* eslint-enable @silverhand/fp/no-mutation */
 
     const connectors = socialConnectors.slice(0, 1);
-    const { container } = render(
-      <ContextProvider>
-        <MemoryRouter>
-          <SecondarySocialSignIn connectors={connectors} />
-        </MemoryRouter>
-      </ContextProvider>
+    const { container } = renderWithPageContext(
+      <MemoryRouter>
+        <SecondarySocialSignIn connectors={connectors} />
+      </MemoryRouter>
     );
     const socialButton = container.querySelector('button');
 
@@ -118,17 +114,15 @@ describe('SecondarySocialSignIn', () => {
     });
     /* eslint-enable @silverhand/fp/no-mutating-methods */
 
-    render(
-      <ContextProvider>
-        <MemoryRouter initialEntries={['/sign-in/callback/github']}>
-          <Routes>
-            <Route
-              path="/sign-in/callback/:connector"
-              element={<SecondarySocialSignIn connectors={connectors} />}
-            />
-          </Routes>
-        </MemoryRouter>
-      </ContextProvider>
+    renderWithPageContext(
+      <MemoryRouter initialEntries={['/sign-in/callback/github']}>
+        <Routes>
+          <Route
+            path="/sign-in/callback/:connector"
+            element={<SecondarySocialSignIn connectors={connectors} />}
+          />
+        </Routes>
+      </MemoryRouter>
     );
 
     await waitFor(() => {

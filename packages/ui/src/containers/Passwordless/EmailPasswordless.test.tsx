@@ -1,7 +1,8 @@
-import { fireEvent, render, waitFor } from '@testing-library/react';
+import { fireEvent, waitFor } from '@testing-library/react';
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
 
+import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import { sendRegisterEmailPasscode } from '@/apis/register';
 import { sendSignInEmailPasscode } from '@/apis/sign-in';
 
@@ -13,16 +14,10 @@ jest.mock('@/apis/sign-in', () => ({
 jest.mock('@/apis/register', () => ({
   sendRegisterEmailPasscode: jest.fn(async () => Promise.resolve()),
 }));
-jest.mock('@/hooks/page-context', () =>
-  React.createContext({
-    loading: false,
-    setLoading: jest.fn(),
-  })
-);
 
 describe('<EmailPasswordless/>', () => {
   test('render', () => {
-    const { queryByText, container } = render(
+    const { queryByText, container } = renderWithPageContext(
       <MemoryRouter>
         <EmailPasswordless type="sign-in" />
       </MemoryRouter>
@@ -33,7 +28,7 @@ describe('<EmailPasswordless/>', () => {
   });
 
   test('required email with error message', () => {
-    const { queryByText, container, getByText } = render(
+    const { queryByText, container, getByText } = renderWithPageContext(
       <MemoryRouter>
         <EmailPasswordless type="sign-in" />
       </MemoryRouter>
@@ -56,7 +51,7 @@ describe('<EmailPasswordless/>', () => {
   });
 
   test('required terms of agreement with error message', () => {
-    const { queryByText, container, getByText } = render(
+    const { queryByText, container, getByText } = renderWithPageContext(
       <MemoryRouter>
         <EmailPasswordless type="sign-in" />
       </MemoryRouter>
@@ -73,7 +68,7 @@ describe('<EmailPasswordless/>', () => {
   });
 
   test('signin method properly', async () => {
-    const { container, getByText } = render(
+    const { container, getByText } = renderWithPageContext(
       <MemoryRouter>
         <EmailPasswordless type="sign-in" />
       </MemoryRouter>
@@ -96,7 +91,7 @@ describe('<EmailPasswordless/>', () => {
   });
 
   test('register method properly', async () => {
-    const { container, getByText } = render(
+    const { container, getByText } = renderWithPageContext(
       <MemoryRouter>
         <EmailPasswordless type="register" />
       </MemoryRouter>

@@ -2,7 +2,7 @@ import { RequestErrorBody } from '@logto/schemas';
 import { HTTPError } from 'ky';
 import { useState, useCallback, useContext } from 'react';
 
-import PageContext from '@/hooks/page-context';
+import { PageContext } from '@/hooks/use-page-context';
 
 type UseApi<T extends any[], U> = {
   result?: U;

@@ -1,7 +1,8 @@
-import { fireEvent, render, waitFor } from '@testing-library/react';
+import { fireEvent, waitFor } from '@testing-library/react';
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
 
+import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import { sendRegisterSmsPasscode } from '@/apis/register';
 import { sendSignInSmsPasscode } from '@/apis/sign-in';
 import { defaultCountryCallingCode } from '@/hooks/use-phone-number';
@@ -14,18 +15,12 @@ jest.mock('@/apis/sign-in', () => ({
 jest.mock('@/apis/register', () => ({
   sendRegisterSmsPasscode: jest.fn(async () => Promise.resolve()),
 }));
-jest.mock('@/hooks/page-context', () =>
-  React.createContext({
-    loading: false,
-    setLoading: jest.fn(),
-  })
-);
 
 describe('<PhonePasswordless/>', () => {
   const phoneNumber = '18888888888';
 
   test('render', () => {
-    const { queryByText, container } = render(
+    const { queryByText, container } = renderWithPageContext(
       <MemoryRouter>
         <PhonePasswordless type="sign-in" />
       </MemoryRouter>
@@ -36,7 +31,7 @@ describe('<PhonePasswordless/>', () => {
   });
 
   test('required phone with error message', () => {
-    const { queryByText, container, getByText } = render(
+    const { queryByText, container, getByText } = renderWithPageContext(
       <MemoryRouter>
         <PhonePasswordless type="sign-in" />
       </MemoryRouter>
@@ -59,7 +54,7 @@ describe('<PhonePasswordless/>', () => {
   });
 
   test('required terms of agreement with error message', () => {
-    const { queryByText, container, getByText } = render(
+    const { queryByText, container, getByText } = renderWithPageContext(
       <MemoryRouter>
         <PhonePasswordless type="sign-in" />
       </MemoryRouter>
@@ -76,7 +71,7 @@ describe('<PhonePasswordless/>', () => {
   });
 
   test('signin method properly', async () => {
-    const { container, getByText } = render(
+    const { container, getByText } = renderWithPageContext(
       <MemoryRouter>
         <PhonePasswordless type="sign-in" />
       </MemoryRouter>
@@ -99,7 +94,7 @@ describe('<PhonePasswordless/>', () => {
   });
 
   test('register method properly', async () => {
-    const { container, getByText } = render(
+    const { container, getByText } = renderWithPageContext(
       <MemoryRouter>
         <PhonePasswordless type="register" />
       </MemoryRouter>

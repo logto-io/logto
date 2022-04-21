@@ -14,8 +14,8 @@ import Button from '@/components/Button';
 import { ErrorType } from '@/components/ErrorMessage';
 import PhoneInput from '@/components/Input/PhoneInput';
 import TermsOfUse from '@/components/TermsOfUse';
-import PageContext from '@/hooks/page-context';
 import useApi from '@/hooks/use-api';
+import { PageContext } from '@/hooks/use-page-context';
 import usePhoneNumber, { countryList } from '@/hooks/use-phone-number';
 import { UserFlow } from '@/types';
 

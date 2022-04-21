@@ -14,8 +14,8 @@ import Button from '@/components/Button';
 import { ErrorType } from '@/components/ErrorMessage';
 import Input from '@/components/Input';
 import TermsOfUse from '@/components/TermsOfUse';
-import PageContext from '@/hooks/page-context';
 import useApi from '@/hooks/use-api';
+import { PageContext } from '@/hooks/use-page-context';
 import { UserFlow } from '@/types';
 
 import * as styles from './index.module.scss';

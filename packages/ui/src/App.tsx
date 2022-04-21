@@ -1,8 +1,8 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { Route, Routes, BrowserRouter, Navigate } from 'react-router-dom';
 
 import AppContent from './components/AppContent';
-import PageContext from './hooks/page-context';
+import usePageContext from './hooks/use-page-context';
 import initI18n from './i18n/init';
 import Callback from './pages/Callback';
 import Consent from './pages/Consent';
@@ -10,20 +10,13 @@ import Passcode from './pages/Passcode';
 import Register from './pages/Register';
 import SecondarySignIn from './pages/SecondarySignIn';
 import SignIn from './pages/SignIn';
-import { SignInExperienceSettings } from './types';
 import getSignInExperienceSettings from './utils/sign-in-experience';
 
 import './scss/normalized.scss';
 
 const App = () => {
-  const [loading, setLoading] = useState(false);
-  const [toast, setToast] = useState('');
-  const [experienceSettings, setExperienceSettings] = useState<SignInExperienceSettings>();
-
-  const context = useMemo(
-    () => ({ toast, loading, experienceSettings, setLoading, setToast, setExperienceSettings }),
-    [experienceSettings, loading, toast]
-  );
+  const { context, Provider } = usePageContext();
+  const { experienceSettings, setLoading, setExperienceSettings } = context;
 
   useEffect(() => {
     (async () => {
@@ -37,14 +30,14 @@ const App = () => {
 
       setLoading(false);
     })();
-  }, []);
+  }, [setExperienceSettings, setLoading]);
 
   if (!experienceSettings) {
     return null;
   }
 
   return (
-    <PageContext.Provider value={context}>
+    <Provider value={context}>
       <AppContent>
         <BrowserRouter>
           <Routes>
@@ -61,7 +54,7 @@ const App = () => {
           </Routes>
         </BrowserRouter>
       </AppContent>
-    </PageContext.Provider>
+    </Provider>
   );
 };
 
