@@ -87,10 +87,12 @@ const ApiResourceDetails = () => {
         <>
           <Card className={styles.header}>
             <div className={styles.info}>
-              <ImagePlaceholder size={76} borderRadius={16} />
+              <div className={styles.imagePlaceholder}>
+                <ImagePlaceholder size={60} borderRadius={16} />
+              </div>
               <div className={styles.meta}>
                 <div className={styles.name}>{data.name}</div>
-                <CopyToClipboard value={data.indicator} />
+                <CopyToClipboard value={data.indicator} className={styles.copy} />
               </div>
             </div>
             <div className={styles.operations}>

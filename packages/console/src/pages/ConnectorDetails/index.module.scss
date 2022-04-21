@@ -5,7 +5,7 @@
 }
 
 .header {
-  padding: _.unit(8);
+  padding: _.unit(6);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -14,10 +14,15 @@
     margin-left: _.unit(6);
   }
 
+  .imagePlaceholder {
+    margin-left: _.unit(2);
+  }
+
   .logo {
-    width: _.unit(19);
-    height: _.unit(19);
-    border-radius: _.unit(4);
+    display: block;
+    width: 60px;
+    height: 60px;
+    border-radius: 16px;
   }
 
   .operations {

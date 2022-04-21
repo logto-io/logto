@@ -114,7 +114,9 @@ const UserDetails = () => {
       {id && data && (
         <>
           <Card className={styles.header}>
-            <ImagePlaceholder size={76} borderRadius={16} />
+            <div className={styles.imagePlaceholder}>
+              <ImagePlaceholder size={60} borderRadius={16} />
+            </div>
             <div className={styles.metadata}>
               <div className={styles.name}>{data.name ?? '-'}</div>
               <div>
