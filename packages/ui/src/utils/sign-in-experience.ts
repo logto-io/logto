@@ -28,14 +28,14 @@ const getSecondarySignInMethod = (signInMethods: SignInMethods) =>
   }, []);
 
 const getSignInExperienceSettings = async (): Promise<SignInExperienceSettings> => {
-  const result = await getSignInExperience();
+  const { branding, languageInfo, termsOfUse, signInMethods } = await getSignInExperience();
 
   return {
-    branding: result.branding,
-    languageInfo: result.languageInfo,
-    termsOfUse: result.termsOfUse,
-    primarySignInMethod: getPrimarySignInMethod(result.signInMethods),
-    secondarySignInMethods: getSecondarySignInMethod(result.signInMethods),
+    branding,
+    languageInfo,
+    termsOfUse,
+    primarySignInMethod: getPrimarySignInMethod(signInMethods),
+    secondarySignInMethods: getSecondarySignInMethod(signInMethods),
   };
 };
 
