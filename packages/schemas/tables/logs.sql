@@ -1,9 +1,9 @@
 create table logs
 (
-  id          varchar(21)                      not null,
-  type        varchar(64)                      not null,
-  payload     jsonb /* @use ArbitraryObject */ not null default '{}'::jsonb,
-  created_at  timestamptz                      not null default (now()),
+  id varchar(21) not null,
+  type varchar(64) not null,
+  payload jsonb /* @use ArbitraryObject */ not null default '{}'::jsonb,
+  created_at timestamptz not null default (now()),
   primary key (id)
 );
 
