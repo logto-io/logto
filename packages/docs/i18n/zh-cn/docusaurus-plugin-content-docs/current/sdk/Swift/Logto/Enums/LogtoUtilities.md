@@ -1,4 +1,4 @@
-**ENUM**
+**枚举**
 
 # `LogtoUtilities`
 
@@ -6,7 +6,7 @@
 public enum LogtoUtilities
 ```
 
-## Methods
+## 方法
 ### `withReservedScopes(_:)`
 
 ```swift
@@ -40,9 +40,9 @@ static func decodeIdToken(_ idToken: String) throws -> IdTokenClaims
 Decode ID Token claims WITHOUT validation.
 - Returns: A set of ID Token claims.
 
-#### Parameters
+#### 参数
 
-| Name | Description |
+| 名称 | 描述 |
 | ---- | ----------- |
 | token | The JWT to decode. |
 

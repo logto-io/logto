@@ -1,10 +1,26 @@
 {
   "version.label": {
-    "message": "下一个",
-    "description": "The label for version current"
+    "message": "下一个"
   },
   "sidebar.tutorialSidebar.category.Integrate SDK": {
-    "message": "集成 SDK",
-    "description": "The label for category Integrate SDK in sidebar tutorialSidebar"
+    "message": "集成 SDK"
+  },
+  "sidebar.sdkSidebar.category.Classes": {
+    "message": "类（Classes）"
+  },
+  "sidebar.sdkSidebar.category.Enums": {
+    "message": "枚举（Enums）"
+  },
+  "sidebar.sdkSidebar.category.Protocols": {
+    "message": "接口（Protocols）"
+  },
+  "sidebar.sdkSidebar.category.Typealiases": {
+    "message": "类型别名（Typealiases）"
+  },
+  "sidebar.sdkSidebar.category.Extensions": {
+    "message": "扩展（Extensions）"
+  },
+  "sidebar.sdkSidebar.category.Structs": {
+    "message": "结构体（Structs）"
   }
 }

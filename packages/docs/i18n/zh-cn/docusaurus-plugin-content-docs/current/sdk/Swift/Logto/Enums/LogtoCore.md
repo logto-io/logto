@@ -2,7 +2,7 @@
 sidebar_position: 2
 ---
 
-**ENUM**
+**枚举**
 
 # `LogtoCore`
 
@@ -10,13 +10,13 @@ sidebar_position: 2
 public enum LogtoCore
 ```
 
-## Structs
+## 结构体
 ###   [CodeTokenResponse](../Structs/LogtoCore.CodeTokenResponse.md)
 ###   [OidcConfigResponse](../Structs/LogtoCore.OidcConfigResponse.md)
 ###   [RefreshTokenTokenResponse](../Structs/LogtoCore.RefreshTokenTokenResponse.md)
 ###   [UserInfoResponse](../Structs/LogtoCore.UserInfoResponse.md)
 
-## Properties
+## 属性
 ### `postHeaders`
 
 ```swift
@@ -25,7 +25,7 @@ static let postHeaders: [String: String] = [
 ]
 ```
 
-## Methods
+## 方法
 ### `fetchOidcConfig(useSession:uri:)`
 
 ```swift
