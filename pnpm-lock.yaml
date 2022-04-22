@@ -371,7 +371,7 @@ importers:
       '@silverhand/essentials': ^1.1.7
       '@silverhand/ts-config': ^0.10.2
       '@silverhand/ts-config-react': ^0.10.3
-      '@testing-library/react': ^12.0.0
+      '@testing-library/react': ^13.0.0
       '@types/jest': ^27.4.0
       '@types/react': ^17.0.14
       '@types/react-dom': ^17.0.9
@@ -415,7 +415,7 @@ importers:
       '@silverhand/essentials': 1.1.7
       '@silverhand/ts-config': 0.10.2_typescript@4.6.2
       '@silverhand/ts-config-react': 0.10.3_typescript@4.6.2
-      '@testing-library/react': 12.1.2_react-dom@17.0.2+react@17.0.2
+      '@testing-library/react': 13.1.1_react-dom@17.0.2+react@17.0.2
       '@types/jest': 27.4.0
       '@types/react': 17.0.37
       '@types/react-dom': 17.0.11
@@ -5599,25 +5599,26 @@ packages:
     resolution: {integrity: sha512-3KQDyx9r0RKYailW2MiYrSSKEfH0GTkI51UGEvJenvcoDoeRYs0PZpi2SXqtnMClQvCqdtTTpOfFETDTVADpAg==}
     engines: {node: '>=12'}
     dependencies:
-      '@babel/code-frame': 7.16.0
-      '@babel/runtime': 7.16.3
+      '@babel/code-frame': 7.16.7
+      '@babel/runtime': 7.17.9
       '@types/aria-query': 4.2.2
       aria-query: 5.0.0
       chalk: 4.1.2
       dom-accessibility-api: 0.5.10
       lz-string: 1.4.4
-      pretty-format: 27.4.2
+      pretty-format: 27.5.1
     dev: true
 
-  /@testing-library/react/12.1.2_react-dom@17.0.2+react@17.0.2:
-    resolution: {integrity: sha512-ihQiEOklNyHIpo2Y8FREkyD1QAea054U0MVbwH1m8N9TxeFz+KoJ9LkqoKqJlzx2JDm56DVwaJ1r36JYxZM05g==}
+  /@testing-library/react/13.1.1_react-dom@17.0.2+react@17.0.2:
+    resolution: {integrity: sha512-8mirlAa0OKaUvnqnZF6MdAh2tReYA2KtWVw1PKvaF5EcCZqgK5pl8iF+3uW90JdG5Ua2c2c2E2wtLdaug3dsVg==}
     engines: {node: '>=12'}
     peerDependencies:
-      react: '*'
-      react-dom: '*'
+      react: ^18.0.0
+      react-dom: ^18.0.0
     dependencies:
-      '@babel/runtime': 7.16.3
+      '@babel/runtime': 7.17.9
       '@testing-library/dom': 8.11.1
+      '@types/react-dom': 18.0.2
       react: 17.0.2
       react-dom: 17.0.2_react@17.0.2
     dev: true
@@ -6029,6 +6030,12 @@ packages:
 
   /@types/react-dom/17.0.11:
     resolution: {integrity: sha512-f96K3k+24RaLGVu/Y2Ng3e1EbZ8/cVJvypZWd7cy0ofCBaf2lcM46xNhycMZ2xGwbBjRql7hOlZ+e2WlJ5MH3Q==}
+    dependencies:
+      '@types/react': 17.0.37
+    dev: true
+
+  /@types/react-dom/18.0.2:
+    resolution: {integrity: sha512-UxeS+Wtj5bvLRREz9tIgsK4ntCuLDo0EcAcACgw3E+9wE8ePDr9uQpq53MfcyxyIS55xJ+0B6mDS8c4qkkHLBg==}
     dependencies:
       '@types/react': 17.0.37
     dev: true
@@ -15980,16 +15987,6 @@ packages:
     dependencies:
       lodash: 4.17.21
       renderkid: 3.0.0
-    dev: true
-
-  /pretty-format/27.4.2:
-    resolution: {integrity: sha512-p0wNtJ9oLuvgOQDEIZ9zQjZffK7KtyR6Si0jnXULIDwrlNF8Cuir3AZP0hHv0jmKuNN/edOnbMjnzd4uTcmWiw==}
-    engines: {node: ^10.13.0 || ^12.13.0 || ^14.15.0 || >=15.0.0}
-    dependencies:
-      '@jest/types': 27.5.1
-      ansi-regex: 5.0.1
-      ansi-styles: 5.2.0
-      react-is: 17.0.2
     dev: true
 
   /pretty-format/27.5.1:
