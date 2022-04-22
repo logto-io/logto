@@ -27,7 +27,7 @@ describe('settings routes', () => {
 
   it('PATCH /settings', async () => {
     const customDomain = 'silverhand-logto.io';
-    const adminConsole = {};
+    const { adminConsole } = mockSetting;
 
     const response = await roleRequester.patch('/settings').send({
       customDomain,

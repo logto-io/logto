@@ -31,7 +31,11 @@ const Sidebar = () => {
         </Section>
       ))}
       <div className={styles.spacer} />
-      <Item titleKey="settings" icon={<Gear />} />
+      <Item
+        titleKey="settings"
+        icon={<Gear />}
+        isActive={location.pathname.startsWith(getPath('settings'))}
+      />
     </div>
   );
 };

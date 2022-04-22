@@ -68,14 +68,6 @@ export type Identity = z.infer<typeof identityGuard>;
 export type Identities = z.infer<typeof identitiesGuard>;
 
 /**
- * Settings
- */
-
-export const adminConsoleConfigGuard = z.object({});
-
-export type AdminConsoleConfig = z.infer<typeof adminConsoleConfigGuard>;
-
-/**
  * SignIn Experiences
  */
 
@@ -137,3 +129,20 @@ export type SignInMethods = z.infer<typeof signInMethodsGuard>;
 export const connectorIdsGuard = z.string().array();
 
 export type ConnectorIds = z.infer<typeof connectorIdsGuard>;
+
+/**
+ * Settings
+ */
+
+export enum AppearanceMode {
+  SyncWithSystem = 'SyncWithSystem',
+  LightMode = 'LightMode',
+  DarkMode = 'DarkMode',
+}
+
+export const adminConsoleConfigGuard = z.object({
+  language: z.nativeEnum(Language),
+  appearanceMode: z.nativeEnum(AppearanceMode),
+});
+
+export type AdminConsoleConfig = z.infer<typeof adminConsoleConfigGuard>;
