@@ -13,7 +13,7 @@ jobs:
           fetch-depth: 0
 
       - name: Setup Node and pnpm
-        uses: logto-io/actions-node-pnpm-run-steps@v1.0.2
+        uses: logto-io/actions-node-pnpm-run-steps@v1.1.0
         with:
           run-install: false
 
