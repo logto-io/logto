@@ -7,10 +7,10 @@ public struct NotificationObject
 ```
 
 ## 属性
-### `clientId`
+### `appId`
 
 ```swift
-public let clientId: String?
+public let appId: String?
 ```
 
 ### `url`

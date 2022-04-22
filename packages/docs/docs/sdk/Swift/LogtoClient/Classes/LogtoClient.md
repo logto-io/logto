@@ -53,10 +53,10 @@ public var isAuthenticated: Bool
 Whether the user has been authenticated.
 
 ## Methods
-### `handle(forClientId:url:)`
+### `handle(forAppId:url:)`
 
 ```swift
-public static func handle(forClientId clientId: String? = nil, url: URL)
+public static func handle(forAppId appId: String? = nil, url: URL)
 ```
 
 Post a notification that tells Logto clients to handle the given URL.
@@ -67,7 +67,7 @@ Usually this function need to be called in `onOpenURL(perform:)` in SwiftUI or `
 
 | Name | Description |
 | ---- | ----------- |
-| forClientId | If the notification is for specific client ID only. When `nil`, all Logto clients will try to handle the notification. |
+| forAppId | If the notification is for specific client ID only. When `nil`, all Logto clients will try to handle the notification. |
 | url | The URL that needs to be handled. |
 
 ### `init(useConfig:socialPlugins:session:)`

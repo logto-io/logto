@@ -7,10 +7,10 @@ public struct NotificationObject
 ```
 
 ## Properties
-### `clientId`
+### `appId`
 
 ```swift
-public let clientId: String?
+public let appId: String?
 ```
 
 ### `url`
