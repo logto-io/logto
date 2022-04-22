@@ -11,18 +11,18 @@ const mockedConfig = {
 const getConnectorConfig = jest.fn() as GetConnectorConfig<WeChatConfig>;
 const getConnectorRequestTimeout = jest.fn() as GetTimeout;
 
-const WeChatNativeMethods = new WeChatNativeConnector(
+const weChatNativeMethods = new WeChatNativeConnector(
   getConnectorConfig,
   getConnectorRequestTimeout
 );
 
 beforeAll(() => {
-  jest.spyOn(WeChatNativeMethods, 'getConfig').mockResolvedValue(mockedConfig);
+  jest.spyOn(weChatNativeMethods, 'getConfig').mockResolvedValue(mockedConfig);
 });
 
 describe('getAuthorizationUri', () => {
   it('should get a valid uri by redirectUri and state', async () => {
-    const authorizationUri = await WeChatNativeMethods.getAuthorizationUri(
+    const authorizationUri = await weChatNativeMethods.getAuthorizationUri(
       'http://localhost:3001/callback',
       'some_state'
     );

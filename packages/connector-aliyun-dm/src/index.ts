@@ -1,4 +1,3 @@
-import { existsSync, readFileSync } from 'fs';
 import path from 'path';
 
 import {
@@ -11,6 +10,7 @@ import {
   EmailConnector,
   GetConnectorConfig,
 } from '@logto/connector-types';
+import { getMarkdownContents } from '@logto/connector-utils';
 import { ConnectorType } from '@logto/schemas';
 import { assert } from '@silverhand/essentials';
 import { z } from 'zod';
@@ -59,12 +59,8 @@ export class AliyunDmConnector implements EmailConnector {
       'zh-CN':
         '邮件推送（DirectMail）是款简单高效的电子邮件群发服务，构建在阿里云基础之上，帮您快速、精准地实现事务邮件、通知邮件和批量邮件的发送。',
     },
-    readme: existsSync(pathToReadmeFile)
-      ? readFileSync(pathToReadmeFile, 'utf8')
-      : readmeContentFallback,
-    configTemplate: existsSync(pathToConfigTemplate)
-      ? readFileSync(pathToConfigTemplate, 'utf-8')
-      : configTemplateFallback,
+    readme: getMarkdownContents(pathToReadmeFile, readmeContentFallback),
+    configTemplate: getMarkdownContents(pathToConfigTemplate, configTemplateFallback),
   };
 
   public readonly getConfig: GetConnectorConfig<AliyunDmConfig>;

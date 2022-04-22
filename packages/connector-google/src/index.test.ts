@@ -18,11 +18,11 @@ const mockedTimeout = 5000;
 const getConnectorConfig = jest.fn() as GetConnectorConfig<GoogleConfig>;
 const getConnectorRequestTimeout = jest.fn() as GetTimeout;
 
-const GoogleMethods = new GoogleConnector(getConnectorConfig, getConnectorRequestTimeout);
+const googleMethods = new GoogleConnector(getConnectorConfig, getConnectorRequestTimeout);
 
 beforeAll(() => {
-  jest.spyOn(GoogleMethods, 'getConfig').mockResolvedValue(mockedConfig);
-  jest.spyOn(GoogleMethods, 'getRequestTimeout').mockResolvedValue(mockedTimeout);
+  jest.spyOn(googleMethods, 'getConfig').mockResolvedValue(mockedConfig);
+  jest.spyOn(googleMethods, 'getRequestTimeout').mockResolvedValue(mockedTimeout);
 });
 
 describe('google connector', () => {
@@ -33,15 +33,15 @@ describe('google connector', () => {
 
     it('should pass on valid config', async () => {
       await expect(
-        GoogleMethods.validateConfig({ clientId: 'clientId', clientSecret: 'clientSecret' })
+        googleMethods.validateConfig({ clientId: 'clientId', clientSecret: 'clientSecret' })
       ).resolves.not.toThrow();
     });
 
     it('should throw on invalid config', async () => {
-      await expect(GoogleMethods.validateConfig({})).rejects.toThrow();
-      await expect(GoogleMethods.validateConfig({ clientId: 'clientId' })).rejects.toThrow();
+      await expect(googleMethods.validateConfig({})).rejects.toThrow();
+      await expect(googleMethods.validateConfig({ clientId: 'clientId' })).rejects.toThrow();
       await expect(
-        GoogleMethods.validateConfig({ clientSecret: 'clientSecret' })
+        googleMethods.validateConfig({ clientSecret: 'clientSecret' })
       ).rejects.toThrow();
     });
   });
@@ -52,7 +52,7 @@ describe('google connector', () => {
     });
 
     it('should get a valid authorizationUri with redirectUri and state', async () => {
-      const authorizationUri = await GoogleMethods.getAuthorizationUri(
+      const authorizationUri = await googleMethods.getAuthorizationUri(
         'http://localhost:3000/callback',
         'some_state'
       );
@@ -74,13 +74,13 @@ describe('google connector', () => {
         scope: 'scope',
         token_type: 'token_type',
       });
-      const { accessToken } = await GoogleMethods.getAccessToken('code', 'dummyRedirectUri');
+      const { accessToken } = await googleMethods.getAccessToken('code', 'dummyRedirectUri');
       expect(accessToken).toEqual('access_token');
     });
 
     it('throws SocialAuthCodeInvalid error if accessToken not found in response', async () => {
       nock(accessTokenEndpoint).post('').reply(200, {});
-      await expect(GoogleMethods.getAccessToken('code', 'dummyRedirectUri')).rejects.toMatchError(
+      await expect(googleMethods.getAccessToken('code', 'dummyRedirectUri')).rejects.toMatchError(
         new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid)
       );
     });
@@ -103,7 +103,7 @@ describe('google connector', () => {
         email_verified: true,
         locale: 'en',
       });
-      const socialUserInfo = await GoogleMethods.getUserInfo({ accessToken: 'code' });
+      const socialUserInfo = await googleMethods.getUserInfo({ accessToken: 'code' });
       expect(socialUserInfo).toMatchObject({
         id: '1234567890',
         avatar: 'https://github.com/images/error/octocat_happy.gif',
@@ -114,14 +114,14 @@ describe('google connector', () => {
 
     it('throws SocialAccessTokenInvalid error if remote response code is 401', async () => {
       nock(userInfoEndpoint).post('').reply(401);
-      await expect(GoogleMethods.getUserInfo({ accessToken: 'code' })).rejects.toMatchError(
+      await expect(googleMethods.getUserInfo({ accessToken: 'code' })).rejects.toMatchError(
         new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid)
       );
     });
 
     it('throws unrecognized error', async () => {
       nock(userInfoEndpoint).post('').reply(500);
-      await expect(GoogleMethods.getUserInfo({ accessToken: 'code' })).rejects.toThrow();
+      await expect(googleMethods.getUserInfo({ accessToken: 'code' })).rejects.toThrow();
     });
   });
 });

@@ -2,7 +2,7 @@
  * The Implementation of OpenID Connect of WeChat Web Open Platform.
  * https://developers.weixin.qq.com/doc/oplatform/Website_App/WeChat_Login/Wechat_Login.html
  */
-import { existsSync, readFileSync } from 'fs';
+
 import path from 'path';
 
 import {
@@ -17,6 +17,7 @@ import {
   GetConnectorConfig,
   GetTimeout,
 } from '@logto/connector-types';
+import { getMarkdownContents } from '@logto/connector-utils';
 import { ConnectorType } from '@logto/schemas';
 import { assert } from '@silverhand/essentials';
 import got, { RequestError as GotRequestError } from 'got';
@@ -53,12 +54,8 @@ export class WeChatConnector implements SocialConnector {
       en: 'Sign In with WeChat',
       'zh-CN': '微信登录',
     },
-    readme: existsSync(pathToReadmeFile)
-      ? readFileSync(pathToReadmeFile, 'utf8')
-      : readmeContentFallback,
-    configTemplate: existsSync(pathToConfigTemplate)
-      ? readFileSync(pathToConfigTemplate, 'utf-8')
-      : configTemplateFallback,
+    readme: getMarkdownContents(pathToReadmeFile, readmeContentFallback),
+    configTemplate: getMarkdownContents(pathToConfigTemplate, configTemplateFallback),
   };
 
   public getConfig: GetConnectorConfig<WeChatConfig>;

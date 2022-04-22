@@ -1,4 +1,3 @@
-import { existsSync, readFileSync } from 'fs';
 import path from 'path';
 
 import {
@@ -13,6 +12,7 @@ import {
   GetConnectorConfig,
   GetTimeout,
 } from '@logto/connector-types';
+import { getMarkdownContents } from '@logto/connector-utils';
 import { ConnectorType } from '@logto/schemas';
 import { assert } from '@silverhand/essentials';
 import got, { RequestError as GotRequestError } from 'got';
@@ -48,12 +48,8 @@ export class GithubConnector implements SocialConnector {
       en: 'Sign In with GitHub',
       'zh-CN': 'GitHub登录',
     },
-    readme: existsSync(pathToReadmeFile)
-      ? readFileSync(pathToReadmeFile, 'utf8')
-      : readmeContentFallback,
-    configTemplate: existsSync(pathToConfigTemplate)
-      ? readFileSync(pathToConfigTemplate, 'utf-8')
-      : configTemplateFallback,
+    readme: getMarkdownContents(pathToReadmeFile, readmeContentFallback),
+    configTemplate: getMarkdownContents(pathToConfigTemplate, configTemplateFallback),
   };
 
   public readonly getConfig: GetConnectorConfig<GithubConfig>;

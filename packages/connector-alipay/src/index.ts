@@ -5,7 +5,6 @@
  * https://opendocs.alipay.com/open/01emu5
  */
 import * as crypto from 'crypto';
-import { existsSync, readFileSync } from 'fs';
 import path from 'path';
 
 import {
@@ -22,6 +21,7 @@ import {
   GetTimeout,
   GetTimestamp,
 } from '@logto/connector-types';
+import { getMarkdownContents } from '@logto/connector-utils';
 import { ConnectorType } from '@logto/schemas';
 import { assert } from '@silverhand/essentials';
 import got from 'got';
@@ -62,12 +62,8 @@ export class AlipayConnector implements SocialConnector {
       en: 'Sign In with Alipay',
       'zh-CN': '支付宝登录',
     },
-    readme: existsSync(pathToReadmeFile)
-      ? readFileSync(pathToReadmeFile, 'utf8')
-      : readmeContentFallback,
-    configTemplate: existsSync(pathToConfigTemplate)
-      ? readFileSync(pathToConfigTemplate, 'utf-8')
-      : configTemplateFallback,
+    readme: getMarkdownContents(pathToReadmeFile, readmeContentFallback),
+    configTemplate: getMarkdownContents(pathToConfigTemplate, configTemplateFallback),
   };
 
   public readonly getConfig: GetConnectorConfig<AlipayConfig>;

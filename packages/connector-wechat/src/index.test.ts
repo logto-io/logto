@@ -18,11 +18,11 @@ const mockedTimeout = 5000;
 const getConnectorConfig = jest.fn() as GetConnectorConfig<WeChatConfig>;
 const getConnectorRequestTimeout = jest.fn() as GetTimeout;
 
-const WeChatMethods = new WeChatConnector(getConnectorConfig, getConnectorRequestTimeout);
+const weChatMethods = new WeChatConnector(getConnectorConfig, getConnectorRequestTimeout);
 
 beforeAll(() => {
-  jest.spyOn(WeChatMethods, 'getConfig').mockResolvedValue(mockedConfig);
-  jest.spyOn(WeChatMethods, 'getRequestTimeout').mockResolvedValue(mockedTimeout);
+  jest.spyOn(weChatMethods, 'getConfig').mockResolvedValue(mockedConfig);
+  jest.spyOn(weChatMethods, 'getRequestTimeout').mockResolvedValue(mockedTimeout);
 });
 
 describe('getAuthorizationUri', () => {
@@ -31,7 +31,7 @@ describe('getAuthorizationUri', () => {
   });
 
   it('should get a valid uri by redirectUri and state', async () => {
-    const authorizationUri = await WeChatMethods.getAuthorizationUri(
+    const authorizationUri = await weChatMethods.getAuthorizationUri(
       'http://localhost:3001/callback',
       'some_state'
     );
@@ -63,7 +63,7 @@ describe('getAccessToken', () => {
         access_token: 'access_token',
         openid: 'openid',
       });
-    const { accessToken, openid } = await WeChatMethods.getAccessToken('code');
+    const { accessToken, openid } = await weChatMethods.getAccessToken('code');
     expect(accessToken).toEqual('access_token');
     expect(openid).toEqual('openid');
   });
@@ -73,7 +73,7 @@ describe('getAccessToken', () => {
       .get(accessTokenEndpointUrl.pathname)
       .query(parameters)
       .reply(200, {});
-    await expect(WeChatMethods.getAccessToken('code')).rejects.toMatchError(
+    await expect(weChatMethods.getAccessToken('code')).rejects.toMatchError(
       new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid)
     );
   });
@@ -82,14 +82,14 @@ describe('getAccessToken', () => {
 describe('validateConfig', () => {
   it('should pass on valid config', async () => {
     await expect(
-      WeChatMethods.validateConfig({ appId: 'appId', appSecret: 'appSecret' })
+      weChatMethods.validateConfig({ appId: 'appId', appSecret: 'appSecret' })
     ).resolves.not.toThrow();
   });
   it('should throw on empty config', async () => {
-    await expect(WeChatMethods.validateConfig({})).rejects.toThrowError();
+    await expect(weChatMethods.validateConfig({})).rejects.toThrowError();
   });
   it('should throw when missing appSecret', async () => {
-    await expect(WeChatMethods.validateConfig({ appId: 'appId' })).rejects.toThrowError();
+    await expect(weChatMethods.validateConfig({ appId: 'appId' })).rejects.toThrowError();
   });
 });
 
@@ -108,7 +108,7 @@ describe('getUserInfo', () => {
       headimgurl: 'https://github.com/images/error/octocat_happy.gif',
       nickname: 'wechat bot',
     });
-    const socialUserInfo = await WeChatMethods.getUserInfo({
+    const socialUserInfo = await weChatMethods.getUserInfo({
       accessToken: 'accessToken',
       openid: 'openid',
     });
@@ -125,14 +125,14 @@ describe('getUserInfo', () => {
       .query(parameters)
       .reply(200, { errcode: 40_001 });
     await expect(
-      WeChatMethods.getUserInfo({ accessToken: 'accessToken', openid: 'openid' })
+      weChatMethods.getUserInfo({ accessToken: 'accessToken', openid: 'openid' })
     ).rejects.toMatchError(new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid));
   });
 
   it('throws unrecognized error', async () => {
     nock(userInfoEndpointUrl.origin).get(userInfoEndpointUrl.pathname).query(parameters).reply(500);
     await expect(
-      WeChatMethods.getUserInfo({ accessToken: 'accessToken', openid: 'openid' })
+      weChatMethods.getUserInfo({ accessToken: 'accessToken', openid: 'openid' })
     ).rejects.toThrow();
   });
 
@@ -142,7 +142,7 @@ describe('getUserInfo', () => {
       .query(parameters)
       .reply(200, { errcode: 40_003, errmsg: 'invalid openid' });
     await expect(
-      WeChatMethods.getUserInfo({ accessToken: 'accessToken', openid: 'openid' })
+      weChatMethods.getUserInfo({ accessToken: 'accessToken', openid: 'openid' })
     ).rejects.toMatchError(new Error('invalid openid'));
   });
 
@@ -151,7 +151,7 @@ describe('getUserInfo', () => {
       .get(userInfoEndpointUrl.pathname)
       .query(new URLSearchParams({ access_token: 'accessToken' }))
       .reply(401);
-    await expect(WeChatMethods.getUserInfo({ accessToken: 'accessToken' })).rejects.toMatchError(
+    await expect(weChatMethods.getUserInfo({ accessToken: 'accessToken' })).rejects.toMatchError(
       new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid)
     );
   });

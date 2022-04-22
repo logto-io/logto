@@ -20,6 +20,7 @@
   },
   "dependencies": {
     "@logto/connector-types": "^0.1.0",
+    "@logto/connector-utils": "^0.1.0",
     "@logto/schemas": "^0.1.0",
     "@silverhand/essentials": "^1.1.0",
     "got": "^11.8.2",

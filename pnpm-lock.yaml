@@ -60,6 +60,7 @@ importers:
   packages/connector-alipay:
     specifiers:
       '@logto/connector-types': ^0.1.0
+      '@logto/connector-utils': ^0.1.0
       '@logto/schemas': ^0.1.0
       '@shopify/jest-koa-mocks': ^3.0.8
       '@silverhand/eslint-config': ^0.10.2
@@ -88,6 +89,7 @@ importers:
       zod: ^3.14.3
     dependencies:
       '@logto/connector-types': link:../connector-types
+      '@logto/connector-utils': link:../connector-utils
       '@logto/schemas': link:../schemas
       '@silverhand/essentials': 1.1.7
       got: 11.8.3
@@ -119,6 +121,7 @@ importers:
   packages/connector-aliyun-dm:
     specifiers:
       '@logto/connector-types': ^0.1.0
+      '@logto/connector-utils': ^0.1.0
       '@logto/schemas': ^0.1.0
       '@shopify/jest-koa-mocks': ^3.0.8
       '@silverhand/eslint-config': ^0.10.2
@@ -144,6 +147,7 @@ importers:
       zod: ^3.14.3
     dependencies:
       '@logto/connector-types': link:../connector-types
+      '@logto/connector-utils': link:../connector-utils
       '@logto/schemas': link:../schemas
       '@silverhand/essentials': 1.1.7
       got: 11.8.3
@@ -172,6 +176,7 @@ importers:
   packages/connector-aliyun-sms:
     specifiers:
       '@logto/connector-types': ^0.1.0
+      '@logto/connector-utils': ^0.1.0
       '@logto/schemas': ^0.1.0
       '@shopify/jest-koa-mocks': ^3.0.8
       '@silverhand/eslint-config': ^0.10.2
@@ -198,6 +203,7 @@ importers:
       zod: ^3.14.3
     dependencies:
       '@logto/connector-types': link:../connector-types
+      '@logto/connector-utils': link:../connector-utils
       '@logto/schemas': link:../schemas
       '@silverhand/essentials': 1.1.7
       got: 11.8.3
@@ -227,6 +233,7 @@ importers:
   packages/connector-facebook:
     specifiers:
       '@logto/connector-types': ^0.1.0
+      '@logto/connector-utils': ^0.1.0
       '@logto/schemas': ^0.1.0
       '@shopify/jest-koa-mocks': ^3.0.8
       '@silverhand/eslint-config': ^0.10.2
@@ -253,6 +260,7 @@ importers:
       zod: ^3.14.3
     dependencies:
       '@logto/connector-types': link:../connector-types
+      '@logto/connector-utils': link:../connector-utils
       '@logto/schemas': link:../schemas
       '@silverhand/essentials': 1.1.7
       got: 11.8.3
@@ -282,6 +290,7 @@ importers:
   packages/connector-github:
     specifiers:
       '@logto/connector-types': ^0.1.0
+      '@logto/connector-utils': ^0.1.0
       '@logto/schemas': ^0.1.0
       '@shopify/jest-koa-mocks': ^3.0.8
       '@silverhand/eslint-config': ^0.10.2
@@ -308,6 +317,7 @@ importers:
       zod: ^3.14.3
     dependencies:
       '@logto/connector-types': link:../connector-types
+      '@logto/connector-utils': link:../connector-utils
       '@logto/schemas': link:../schemas
       '@silverhand/essentials': 1.1.7
       got: 11.8.3
@@ -337,6 +347,7 @@ importers:
   packages/connector-google:
     specifiers:
       '@logto/connector-types': ^0.1.0
+      '@logto/connector-utils': ^0.1.0
       '@logto/schemas': ^0.1.0
       '@shopify/jest-koa-mocks': ^3.0.8
       '@silverhand/eslint-config': ^0.10.2
@@ -363,6 +374,7 @@ importers:
       zod: ^3.14.3
     dependencies:
       '@logto/connector-types': link:../connector-types
+      '@logto/connector-utils': link:../connector-utils
       '@logto/schemas': link:../schemas
       '@silverhand/essentials': 1.1.7
       got: 11.8.3
@@ -398,7 +410,6 @@ importers:
       '@silverhand/essentials': ^1.1.6
       '@silverhand/ts-config': ^0.10.2
       '@types/jest': ^27.4.1
-      '@types/pluralize': ^0.0.29
       eslint: ^8.10.0
       got: ^11.8.2
       jest: ^27.5.1
@@ -419,7 +430,6 @@ importers:
       '@silverhand/essentials': 1.1.7
       '@silverhand/ts-config': 0.10.2_typescript@4.6.3
       '@types/jest': 27.4.1
-      '@types/pluralize': 0.0.29
       eslint: 8.10.0
       jest: 27.5.1
       jest-matcher-specific-error: 1.0.0
@@ -428,9 +438,30 @@ importers:
       ts-jest: 27.1.1_9985e1834e803358b7be1e6ce5ca0eea
       typescript: 4.6.3
 
+  packages/connector-utils:
+    specifiers:
+      '@silverhand/eslint-config': ^0.10.2
+      '@silverhand/essentials': ^1.1.6
+      '@silverhand/ts-config': ^0.10.2
+      '@types/node': ^16.3.1
+      eslint: ^8.10.0
+      lint-staged: ^11.1.1
+      prettier: ^2.3.2
+      typescript: ^4.6.2
+    devDependencies:
+      '@silverhand/eslint-config': 0.10.2_bbe1a6794670f389df81805f22999709
+      '@silverhand/essentials': 1.1.7
+      '@silverhand/ts-config': 0.10.2_typescript@4.6.3
+      '@types/node': 16.11.12
+      eslint: 8.10.0
+      lint-staged: 11.2.6
+      prettier: 2.5.1
+      typescript: 4.6.3
+
   packages/connector-wechat:
     specifiers:
       '@logto/connector-types': ^0.1.0
+      '@logto/connector-utils': ^0.1.0
       '@logto/schemas': ^0.1.0
       '@shopify/jest-koa-mocks': ^3.0.8
       '@silverhand/eslint-config': ^0.10.2
@@ -457,6 +488,7 @@ importers:
       zod: ^3.14.3
     dependencies:
       '@logto/connector-types': link:../connector-types
+      '@logto/connector-utils': link:../connector-utils
       '@logto/schemas': link:../schemas
       '@silverhand/essentials': 1.1.7
       got: 11.8.3

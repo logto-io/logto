@@ -18,11 +18,11 @@ const mockedTimeout = 5000;
 const getConnectorConfig = jest.fn() as GetConnectorConfig<GithubConfig>;
 const getConnectorRequestTimeout = jest.fn() as GetTimeout;
 
-const GithubMethods = new GithubConnector(getConnectorConfig, getConnectorRequestTimeout);
+const githubMethods = new GithubConnector(getConnectorConfig, getConnectorRequestTimeout);
 
 beforeAll(() => {
-  jest.spyOn(GithubMethods, 'getConfig').mockResolvedValue(mockedConfig);
-  jest.spyOn(GithubMethods, 'getRequestTimeout').mockResolvedValue(mockedTimeout);
+  jest.spyOn(githubMethods, 'getConfig').mockResolvedValue(mockedConfig);
+  jest.spyOn(githubMethods, 'getRequestTimeout').mockResolvedValue(mockedTimeout);
 });
 
 describe('getAuthorizationUri', () => {
@@ -31,7 +31,7 @@ describe('getAuthorizationUri', () => {
   });
 
   it('should get a valid uri by redirectUri and state', async () => {
-    const authorizationUri = await GithubMethods.getAuthorizationUri(
+    const authorizationUri = await githubMethods.getAuthorizationUri(
       'http://localhost:3000/callback',
       'some_state'
     );
@@ -53,13 +53,13 @@ describe('getAccessToken', () => {
       scope: 'scope',
       token_type: 'token_type',
     });
-    const { accessToken } = await GithubMethods.getAccessToken('code');
+    const { accessToken } = await githubMethods.getAccessToken('code');
     expect(accessToken).toEqual('access_token');
   });
 
   it('throws SocialAuthCodeInvalid error if accessToken not found in response', async () => {
     nock(accessTokenEndpoint).post('').reply(200, {});
-    await expect(GithubMethods.getAccessToken('code')).rejects.toMatchError(
+    await expect(githubMethods.getAccessToken('code')).rejects.toMatchError(
       new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid)
     );
   });
@@ -72,16 +72,16 @@ describe('validateConfig', () => {
 
   it('should pass on valid config', async () => {
     await expect(
-      GithubMethods.validateConfig({ clientId: 'clientId', clientSecret: 'clientSecret' })
+      githubMethods.validateConfig({ clientId: 'clientId', clientSecret: 'clientSecret' })
     ).resolves.not.toThrow();
   });
 
   it('should throw on empty config', async () => {
-    await expect(GithubMethods.validateConfig({})).rejects.toThrowError();
+    await expect(githubMethods.validateConfig({})).rejects.toThrowError();
   });
 
   it('should throw when missing clientSecret', async () => {
-    await expect(GithubMethods.validateConfig({ clientId: 'clientId' })).rejects.toThrowError();
+    await expect(githubMethods.validateConfig({ clientId: 'clientId' })).rejects.toThrowError();
   });
 });
 
@@ -98,7 +98,7 @@ describe('getUserInfo', () => {
       name: 'monalisa octocat',
       email: 'octocat@github.com',
     });
-    const socialUserInfo = await GithubMethods.getUserInfo({ accessToken: 'code' });
+    const socialUserInfo = await githubMethods.getUserInfo({ accessToken: 'code' });
     expect(socialUserInfo).toMatchObject({
       id: '1',
       avatar: 'https://github.com/images/error/octocat_happy.gif',
@@ -109,13 +109,13 @@ describe('getUserInfo', () => {
 
   it('throws SocialAccessTokenInvalid error if remote response code is 401', async () => {
     nock(userInfoEndpoint).get('').reply(401);
-    await expect(GithubMethods.getUserInfo({ accessToken: 'code' })).rejects.toMatchError(
+    await expect(githubMethods.getUserInfo({ accessToken: 'code' })).rejects.toMatchError(
       new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid)
     );
   });
 
   it('throws unrecognized error', async () => {
     nock(userInfoEndpoint).get('').reply(500);
-    await expect(GithubMethods.getUserInfo({ accessToken: 'code' })).rejects.toThrow();
+    await expect(githubMethods.getUserInfo({ accessToken: 'code' })).rejects.toThrow();
   });
 });

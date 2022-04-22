@@ -5,7 +5,7 @@ import { singleSendMail } from './single-send-mail';
 
 const getConnectorConfig = jest.fn() as GetConnectorConfig<AliyunDmConfig>;
 
-const AliyunDmMethods = new AliyunDmConnector(getConnectorConfig);
+const aliyunDmMethods = new AliyunDmConnector(getConnectorConfig);
 
 const mockedConfig = {
   accessKeyId: 'accessKeyId',
@@ -23,7 +23,7 @@ const mockedConfig = {
 jest.mock('./single-send-mail');
 
 beforeAll(() => {
-  jest.spyOn(AliyunDmMethods, 'getConfig').mockResolvedValue(mockedConfig);
+  jest.spyOn(aliyunDmMethods, 'getConfig').mockResolvedValue(mockedConfig);
 });
 
 describe('validateConfig()', () => {
@@ -33,7 +33,7 @@ describe('validateConfig()', () => {
 
   it('should pass on valid config', async () => {
     await expect(
-      AliyunDmMethods.validateConfig({
+      aliyunDmMethods.validateConfig({
         accessKeyId: 'accessKeyId',
         accessKeySecret: 'accessKeySecret',
         accountName: 'accountName',
@@ -43,7 +43,7 @@ describe('validateConfig()', () => {
   });
 
   it('throws if config is invalid', async () => {
-    await expect(AliyunDmMethods.validateConfig({})).rejects.toThrow();
+    await expect(aliyunDmMethods.validateConfig({})).rejects.toThrow();
   });
 });
 
@@ -53,7 +53,7 @@ describe('sendMessage()', () => {
   });
 
   it('should call singleSendMail() and replace code in content', async () => {
-    await AliyunDmMethods.sendMessage('to@email.com', 'SignIn', { code: '1234' });
+    await aliyunDmMethods.sendMessage('to@email.com', 'SignIn', { code: '1234' });
     expect(singleSendMail).toHaveBeenCalledWith(
       expect.objectContaining({
         HtmlBody: 'Your code is 1234, 1234 is your code',
@@ -64,7 +64,7 @@ describe('sendMessage()', () => {
 
   it('throws if template is missing', async () => {
     await expect(
-      AliyunDmMethods.sendMessage('to@email.com', 'Register', { code: '1234' })
+      aliyunDmMethods.sendMessage('to@email.com', 'Register', { code: '1234' })
     ).rejects.toThrow();
   });
 });

@@ -28,22 +28,22 @@ const getConnectorConfig = jest.fn() as GetConnectorConfig<AlipayConfig>;
 const getConnectorRequestTimeout = jest.fn() as GetTimeout;
 const getConnectorTimestamp = jest.fn() as GetTimestamp;
 
-const AlipayMethods = new AlipayConnector(
+const alipayMethods = new AlipayConnector(
   getConnectorConfig,
   getConnectorRequestTimeout,
   getConnectorTimestamp
 );
 
 beforeAll(() => {
-  jest.spyOn(AlipayMethods, 'getConfig').mockResolvedValue(mockedAlipayConfig);
-  jest.spyOn(AlipayMethods, 'getRequestTimeout').mockResolvedValue(mockedTimeout);
-  jest.spyOn(AlipayMethods, 'getTimestamp').mockReturnValue(mockedTimestamp);
+  jest.spyOn(alipayMethods, 'getConfig').mockResolvedValue(mockedAlipayConfig);
+  jest.spyOn(alipayMethods, 'getRequestTimeout').mockResolvedValue(mockedTimeout);
+  jest.spyOn(alipayMethods, 'getTimestamp').mockReturnValue(mockedTimestamp);
 });
 
 const listenJSONParse = jest.spyOn(JSON, 'parse');
 const listenJSONStringify = jest.spyOn(JSON, 'stringify');
 
-const mockedSigningParameters = jest.spyOn(AlipayMethods, 'signingPamameters');
+const mockedSigningParameters = jest.spyOn(alipayMethods, 'signingPamameters');
 
 describe('validateConfig', () => {
   afterEach(() => {
@@ -52,16 +52,16 @@ describe('validateConfig', () => {
 
   it('should pass on valid config', async () => {
     await expect(
-      AlipayMethods.validateConfig({ appId: 'appId', privateKey: 'privateKey', signType: 'RSA' })
+      alipayMethods.validateConfig({ appId: 'appId', privateKey: 'privateKey', signType: 'RSA' })
     ).resolves.not.toThrow();
   });
 
   it('should throw on empty config', async () => {
-    await expect(AlipayMethods.validateConfig({})).rejects.toThrowError();
+    await expect(alipayMethods.validateConfig({})).rejects.toThrowError();
   });
 
   it('should throw when missing required properties', async () => {
-    await expect(AlipayMethods.validateConfig({ appId: 'appId' })).rejects.toThrowError();
+    await expect(alipayMethods.validateConfig({ appId: 'appId' })).rejects.toThrowError();
   });
 });
 
@@ -79,14 +79,14 @@ describe('signingParameters', () => {
   };
 
   it('should return exact signature with the given parameters (functionality check)', () => {
-    const decamelizedParameters = AlipayMethods.signingPamameters(testingParameters);
+    const decamelizedParameters = alipayMethods.signingPamameters(testingParameters);
     expect(decamelizedParameters.sign).toBe(
       'td9+u0puul3HgbwLGL1X6z/vKKB/K25K5pjtLT/snQOp292RX3Y5j+FQUVuazTI2l65GpoSgA83LWNT9htQgtmdBmkCQ3bO6RWs38+2ZmBmH7MvpHx4ebUDhtebLUmHNuRFaNcpAZW92b0ZSuuJuahpLK8VNBgXljq+x0aD7WCRudPxc9fikR65NGxr5bwepl/9IqgMxwtajh1+PEJyhGGJhJxS1dCktGN0EiWXWNiogYT8NlFVCmw7epByKzCBWu4sPflU52gJMFHTdbav/0Tk/ZBs8RyP8Z8kcJA0jom2iT+dHqDpgkdzEmsR360UVNKCu5X7ltIiiObsAWmfluQ=='
     );
   });
 
   it('should return exact signature with the given parameters (with empty property in testingParameters)', () => {
-    const decamelizedParameters = AlipayMethods.signingPamameters({
+    const decamelizedParameters = alipayMethods.signingPamameters({
       ...testingParameters,
       emptyProperty: '',
     });
@@ -96,12 +96,12 @@ describe('signingParameters', () => {
   });
 
   it('should not call JSON.parse() when biz_content is empty', () => {
-    AlipayMethods.signingPamameters(testingParameters);
+    alipayMethods.signingPamameters(testingParameters);
     expect(listenJSONParse).not.toHaveBeenCalled();
   });
 
   it('should call JSON.parse() when biz_content is not empty', () => {
-    AlipayMethods.signingPamameters({
+    alipayMethods.signingPamameters({
       ...testingParameters,
       biz_content: JSON.stringify({ AB: 'AB' }),
     });
@@ -109,7 +109,7 @@ describe('signingParameters', () => {
   });
 
   it('should call JSON.stringify() when some value is object string', () => {
-    AlipayMethods.signingPamameters({
+    alipayMethods.signingPamameters({
       ...testingParameters,
       testObject: JSON.stringify({ AB: 'AB' }),
     });
@@ -123,8 +123,8 @@ describe('getAuthorizationUri', () => {
   });
 
   it('should get a valid uri by redirectUri and state', async () => {
-    jest.spyOn(AlipayMethods, 'getConfig').mockResolvedValueOnce(mockedAlipayConfig);
-    const authorizationUri = await AlipayMethods.getAuthorizationUri(
+    jest.spyOn(alipayMethods, 'getConfig').mockResolvedValueOnce(mockedAlipayConfig);
+    const authorizationUri = await alipayMethods.getAuthorizationUri(
       'http://localhost:3001/callback',
       'some_state'
     );
@@ -168,7 +168,7 @@ describe('getAccessToken', () => {
         sign: '<signature>',
       });
 
-    const { accessToken } = await AlipayMethods.getAccessToken('code');
+    const { accessToken } = await alipayMethods.getAccessToken('code');
     expect(accessToken).toEqual('access_token');
   });
 
@@ -190,7 +190,7 @@ describe('getAccessToken', () => {
         sign: '<signature>',
       });
 
-    await expect(AlipayMethods.getAccessToken('code')).rejects.toMatchError(
+    await expect(alipayMethods.getAccessToken('code')).rejects.toMatchError(
       new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid)
     );
   });
@@ -211,7 +211,7 @@ describe('getAccessToken', () => {
         sign: '<signature>',
       });
 
-    await expect(AlipayMethods.getAccessToken('wrong_code')).rejects.toMatchError(
+    await expect(alipayMethods.getAccessToken('wrong_code')).rejects.toMatchError(
       new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid, 'Invalid code')
     );
   });
@@ -252,7 +252,7 @@ describe('getUserInfo', () => {
         sign: '<signature>',
       });
 
-    const { id, name, avatar } = await AlipayMethods.getUserInfo({ accessToken: 'access_token' });
+    const { id, name, avatar } = await alipayMethods.getUserInfo({ accessToken: 'access_token' });
     expect(id).toEqual('2088000000000000');
     expect(name).toEqual('PlayboyEric');
     expect(avatar).toEqual('https://www.alipay.com/xxx.jpg');
@@ -277,7 +277,7 @@ describe('getUserInfo', () => {
       });
 
     await expect(
-      AlipayMethods.getUserInfo({ accessToken: 'wrong_access_token' })
+      alipayMethods.getUserInfo({ accessToken: 'wrong_access_token' })
     ).rejects.toMatchError(
       new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid, 'Invalid auth token')
     );
@@ -302,7 +302,7 @@ describe('getUserInfo', () => {
       });
 
     await expect(
-      AlipayMethods.getUserInfo({ accessToken: 'wrong_access_token' })
+      alipayMethods.getUserInfo({ accessToken: 'wrong_access_token' })
     ).rejects.toMatchError(new ConnectorError(ConnectorErrorCodes.General));
   });
 
@@ -324,7 +324,7 @@ describe('getUserInfo', () => {
         sign: '<signature>',
       });
 
-    await expect(AlipayMethods.getUserInfo({ accessToken: 'access_token' })).rejects.toMatchError(
+    await expect(alipayMethods.getUserInfo({ accessToken: 'access_token' })).rejects.toMatchError(
       new ConnectorError(ConnectorErrorCodes.InvalidResponse)
     );
   });
@@ -338,6 +338,6 @@ describe('getUserInfo', () => {
       .query(searchParameters)
       .reply(500);
 
-    await expect(AlipayMethods.getUserInfo({ accessToken: 'access_token' })).rejects.toThrow();
+    await expect(alipayMethods.getUserInfo({ accessToken: 'access_token' })).rejects.toThrow();
   });
 });

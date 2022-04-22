@@ -5,7 +5,7 @@ import { sendSms } from './single-send-text';
 
 const getConnectorConfig = jest.fn() as GetConnectorConfig<AliyunSmsConfig>;
 
-const AliyunSmsMethods = new AliyunSmsConnector(getConnectorConfig);
+const aliyunSmsMethods = new AliyunSmsConnector(getConnectorConfig);
 
 const defaultConnectorConfig = {
   accessKeyId: 'accessKeyId',
@@ -41,11 +41,11 @@ describe('validateConfig()', () => {
   });
 
   it('should pass on valid config', async () => {
-    await expect(AliyunSmsMethods.validateConfig(validConnectorConfig)).resolves.not.toThrow();
+    await expect(aliyunSmsMethods.validateConfig(validConnectorConfig)).resolves.not.toThrow();
   });
 
   it('throws if config is invalid', async () => {
-    await expect(AliyunSmsMethods.validateConfig({})).rejects.toThrow();
+    await expect(aliyunSmsMethods.validateConfig({})).rejects.toThrow();
   });
 });
 
@@ -55,8 +55,8 @@ describe('sendMessage()', () => {
   });
 
   it('should call singleSendMail() and replace code in content', async () => {
-    jest.spyOn(AliyunSmsMethods, 'getConfig').mockResolvedValueOnce(defaultConnectorConfig);
-    await AliyunSmsMethods.sendMessage(phoneTest, 'SignIn', { code: codeTest });
+    jest.spyOn(aliyunSmsMethods, 'getConfig').mockResolvedValueOnce(defaultConnectorConfig);
+    await aliyunSmsMethods.sendMessage(phoneTest, 'SignIn', { code: codeTest });
     const { templates, ...credentials } = defaultConnectorConfig;
     expect(sendSms).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -71,9 +71,9 @@ describe('sendMessage()', () => {
   });
 
   it('throws if template is missing', async () => {
-    jest.spyOn(AliyunSmsMethods, 'getConfig').mockResolvedValueOnce(defaultConnectorConfig);
+    jest.spyOn(aliyunSmsMethods, 'getConfig').mockResolvedValueOnce(defaultConnectorConfig);
     await expect(
-      AliyunSmsMethods.sendMessage(phoneTest, 'Register', { code: codeTest })
+      aliyunSmsMethods.sendMessage(phoneTest, 'Register', { code: codeTest })
     ).rejects.toThrow();
   });
 });

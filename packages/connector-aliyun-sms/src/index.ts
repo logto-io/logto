@@ -1,4 +1,3 @@
-import { existsSync, readFileSync } from 'fs';
 import path from 'path';
 
 import {
@@ -11,6 +10,7 @@ import {
   SmsConnector,
   GetConnectorConfig,
 } from '@logto/connector-types';
+import { getMarkdownContents } from '@logto/connector-utils';
 import { ConnectorType } from '@logto/schemas';
 import { assert } from '@silverhand/essentials';
 import { z } from 'zod';
@@ -82,12 +82,8 @@ export class AliyunSmsConnector implements SmsConnector {
       'zh-CN':
         '短信服务（Short Message Service）是指通过调用短信发送API，将指定短信内容发送给指定手机用户。',
     },
-    readme: existsSync(pathToReadmeFile)
-      ? readFileSync(pathToReadmeFile, 'utf8')
-      : readmeContentFallback,
-    configTemplate: existsSync(pathToConfigTemplate)
-      ? readFileSync(pathToConfigTemplate, 'utf-8')
-      : configTemplateFallback,
+    readme: getMarkdownContents(pathToReadmeFile, readmeContentFallback),
+    configTemplate: getMarkdownContents(pathToConfigTemplate, configTemplateFallback),
   };
 
   public readonly getConfig: GetConnectorConfig<AliyunSmsConfig>;

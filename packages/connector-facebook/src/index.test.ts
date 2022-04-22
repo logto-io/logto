@@ -21,11 +21,11 @@ const mockedTimeout = 5000;
 const getConnectorConfig = jest.fn() as GetConnectorConfig<FacebookConfig>;
 const getConnectorRequestTimeout = jest.fn() as GetTimeout;
 
-const FacebookMethods = new FacebookConnector(getConnectorConfig, getConnectorRequestTimeout);
+const facebookMethods = new FacebookConnector(getConnectorConfig, getConnectorRequestTimeout);
 
 beforeAll(() => {
-  jest.spyOn(FacebookMethods, 'getConfig').mockResolvedValue(mockedConfig);
-  jest.spyOn(FacebookMethods, 'getRequestTimeout').mockResolvedValue(mockedTimeout);
+  jest.spyOn(facebookMethods, 'getConfig').mockResolvedValue(mockedConfig);
+  jest.spyOn(facebookMethods, 'getRequestTimeout').mockResolvedValue(mockedTimeout);
 });
 
 describe('facebook connector', () => {
@@ -36,14 +36,14 @@ describe('facebook connector', () => {
 
     it('should pass on valid config', async () => {
       await expect(
-        FacebookMethods.validateConfig({ clientId, clientSecret })
+        facebookMethods.validateConfig({ clientId, clientSecret })
       ).resolves.not.toThrow();
     });
 
     it('should throw on invalid config', async () => {
-      await expect(FacebookMethods.validateConfig({})).rejects.toThrow();
-      await expect(FacebookMethods.validateConfig({ clientId })).rejects.toThrow();
-      await expect(FacebookMethods.validateConfig({ clientSecret })).rejects.toThrow();
+      await expect(facebookMethods.validateConfig({})).rejects.toThrow();
+      await expect(facebookMethods.validateConfig({ clientId })).rejects.toThrow();
+      await expect(facebookMethods.validateConfig({ clientSecret })).rejects.toThrow();
     });
   });
 
@@ -55,7 +55,7 @@ describe('facebook connector', () => {
     it('should get a valid authorizationUri with redirectUri and state', async () => {
       const redirectUri = 'http://localhost:3000/callback';
       const state = 'some_state';
-      const authorizationUri = await FacebookMethods.getAuthorizationUri(redirectUri, state);
+      const authorizationUri = await facebookMethods.getAuthorizationUri(redirectUri, state);
 
       const encodedRedirectUri = encodeURIComponent(redirectUri);
       expect(authorizationUri).toEqual(
@@ -85,7 +85,7 @@ describe('facebook connector', () => {
           token_type: 'token_type',
         });
 
-      const { accessToken } = await FacebookMethods.getAccessToken(code, dummyRedirectUri);
+      const { accessToken } = await facebookMethods.getAccessToken(code, dummyRedirectUri);
       expect(accessToken).toEqual('access_token');
     });
 
@@ -100,7 +100,7 @@ describe('facebook connector', () => {
         })
         .reply(200, {});
 
-      await expect(FacebookMethods.getAccessToken(code, dummyRedirectUri)).rejects.toMatchError(
+      await expect(facebookMethods.getAccessToken(code, dummyRedirectUri)).rejects.toMatchError(
         new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid)
       );
     });
@@ -124,7 +124,7 @@ describe('facebook connector', () => {
           picture: { data: { url: avatar } },
         });
 
-      const socialUserInfo = await FacebookMethods.getUserInfo({ accessToken: code });
+      const socialUserInfo = await facebookMethods.getUserInfo({ accessToken: code });
       expect(socialUserInfo).toMatchObject({
         id: '1234567890',
         avatar,
@@ -135,14 +135,14 @@ describe('facebook connector', () => {
 
     it('throws SocialAccessTokenInvalid error if remote response code is 401', async () => {
       nock(userInfoEndpoint).get('').query({ fields }).reply(400);
-      await expect(FacebookMethods.getUserInfo({ accessToken: code })).rejects.toMatchError(
+      await expect(facebookMethods.getUserInfo({ accessToken: code })).rejects.toMatchError(
         new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid)
       );
     });
 
     it('throws unrecognized error', async () => {
       nock(userInfoEndpoint).get('').reply(500);
-      await expect(FacebookMethods.getUserInfo({ accessToken: code })).rejects.toThrow();
+      await expect(facebookMethods.getUserInfo({ accessToken: code })).rejects.toThrow();
     });
   });
 });
