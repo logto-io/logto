@@ -26,7 +26,7 @@
     "@silverhand/essentials": "^1.1.6",
     "@silverhand/ts-config": "^0.10.2",
     "@types/lodash.uniq": "^4.5.6",
-    "@types/node": "14",
+    "@types/node": "16",
     "@types/pluralize": "^0.0.29",
     "camelcase": "^6.2.0",
     "eslint": "^8.10.0",
