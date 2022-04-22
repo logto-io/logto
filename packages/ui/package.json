@@ -15,7 +15,7 @@
     "stylelint": "stylelint \"src/**/*.scss\"",
     "test": "jest"
   },
-  "dependencies": {
+  "devDependencies": {
     "@logto/phrases": "^0.1.0",
     "@logto/schemas": "^0.1.0",
     "@silverhand/essentials": "^1.1.7",
@@ -32,9 +32,7 @@
     "react-phone-number-input": "^3.1.46",
     "react-router-dom": "^6.2.2",
     "react-string-replace": "^1.0.0",
-    "react-timer-hook": "^3.0.5"
-  },
-  "devDependencies": {
+    "react-timer-hook": "^3.0.5",
     "@jest/types": "^27.5.1",
     "@parcel/core": "^2.3.2",
     "@parcel/transformer-sass": "^2.3.2",
