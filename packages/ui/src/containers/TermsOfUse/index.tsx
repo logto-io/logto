@@ -16,8 +16,6 @@ const TermsOfUse = ({ className }: Props) => {
     return null;
   }
 
-  console.log(termsSettings);
-
   return (
     <>
       <PureTermsOfUse
