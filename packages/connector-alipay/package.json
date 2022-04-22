@@ -15,7 +15,8 @@
     "lint:report": "pnpm lint -- --format json --output-file report.json",
     "dev": "rm -rf build/ && pnpm run copyfiles && tsc-watch -p tsconfig.build.json --preserveWatchOutput --onSuccess \"node ./build/index.js\"",
     "test": "jest",
-    "test:coverage": "jest --coverage --silent"
+    "test:coverage": "jest --coverage --silent",
+    "prepack": "pnpm build"
   },
   "dependencies": {
     "@logto/connector-types": "^0.1.0",

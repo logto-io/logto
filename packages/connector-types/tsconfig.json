@@ -1,8 +1,11 @@
 {
-  "extends": "@silverhand/ts-config/tsconfig.base",
+  "extends": "./tsconfig.base",
   "compilerOptions": {
-    "outDir": "lib",
-    "declaration": true
+    "types": [
+      "node",
+      "jest",
+      "jest-matcher-specific-error"
+    ]
   },
   "include": [
     "src"

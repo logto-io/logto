@@ -1,7 +1,7 @@
 {
   "name": "@logto/connector-types",
   "version": "0.1.0",
-  "main": "lib/index.js",
+  "main": "build/index.js",
   "author": "Logto Team",
   "license": "MPL-2.0",
   "files": [
@@ -11,7 +11,7 @@
   "scripts": {
     "preinstall": "npx only-allow pnpm",
     "precommit": "lint-staged",
-    "build": "rm -rf lib/ && tsc --p tsconfig.build.json",
+    "build": "rm -rf build/ && tsc --p tsconfig.build.json",
     "lint": "eslint --ext .ts src",
     "lint:report": "pnpm lint -- --format json --output-file report.json",
     "prepack": "pnpm build",
