@@ -3,7 +3,7 @@ import inquirer from 'inquirer';
 import { createPool } from 'slonik';
 import { createInterceptors } from 'slonik-interceptor-preset';
 
-import appendDotEnv from './append-dot-env';
+import { appendDotEnv } from './dot-env';
 import { noInquiry } from './parameters';
 
 const createPoolByEnv = async (isTest: boolean) => {

@@ -1,9 +1,11 @@
 import 'module-alias/register.js';
 
-import dotenv from 'dotenv';
 import Koa from 'koa';
 
-dotenv.config();
+// eslint-disable-next-line import/order
+import { configDotEnv } from './env-set/dot-env';
+
+configDotEnv();
 
 /* eslint-disable import/first */
 import initApp from './app/init';

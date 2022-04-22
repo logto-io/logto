@@ -3,7 +3,7 @@ import inquirer from 'inquirer';
 import { nanoid } from 'nanoid';
 import { number, string } from 'zod';
 
-import appendDotEnv from './append-dot-env';
+import { appendDotEnv } from './dot-env';
 import { noInquiry } from './parameters';
 
 const loadPeppers = async (isTest: boolean): Promise<string[]> => {
