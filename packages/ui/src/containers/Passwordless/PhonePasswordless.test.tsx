@@ -3,6 +3,7 @@ import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
 
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
+import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider';
 import { sendRegisterSmsPasscode } from '@/apis/register';
 import { sendSignInSmsPasscode } from '@/apis/sign-in';
 import { defaultCountryCallingCode } from '@/hooks/use-phone-number';
@@ -27,6 +28,16 @@ describe('<PhonePasswordless/>', () => {
     );
     expect(container.querySelector('input[name="phone"]')).not.toBeNull();
     expect(queryByText('action.continue')).not.toBeNull();
+  });
+
+  test('render with terms settings enabled', () => {
+    const { queryByText } = renderWithPageContext(
+      <MemoryRouter>
+        <SettingsProvider>
+          <PhonePasswordless type="sign-in" />
+        </SettingsProvider>
+      </MemoryRouter>
+    );
     expect(queryByText('description.terms_of_use')).not.toBeNull();
   });
 
@@ -56,7 +67,9 @@ describe('<PhonePasswordless/>', () => {
   test('should call sign-in method properly', async () => {
     const { container, getByText } = renderWithPageContext(
       <MemoryRouter>
-        <PhonePasswordless type="sign-in" />
+        <SettingsProvider>
+          <PhonePasswordless type="sign-in" />
+        </SettingsProvider>
       </MemoryRouter>
     );
     const phoneInput = container.querySelector('input[name="phone"]');
@@ -79,7 +92,9 @@ describe('<PhonePasswordless/>', () => {
   test('should call register method properly', async () => {
     const { container, getByText } = renderWithPageContext(
       <MemoryRouter>
-        <PhonePasswordless type="register" />
+        <SettingsProvider>
+          <PhonePasswordless type="register" />
+        </SettingsProvider>
       </MemoryRouter>
     );
     const phoneInput = container.querySelector('input[name="phone"]');

@@ -2,7 +2,6 @@ import React from 'react';
 
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider';
-import { mockSignInExperienceSettings } from '@/__mocks__/logto';
 
 import TermsOfUse from '.';
 
@@ -14,7 +13,7 @@ describe('TermsOfUse Container', () => {
 
   it('render with settings', async () => {
     const { queryByText } = renderWithPageContext(
-      <SettingsProvider settings={mockSignInExperienceSettings}>
+      <SettingsProvider>
         <TermsOfUse />
       </SettingsProvider>
     );

@@ -2,6 +2,7 @@ import { fireEvent, waitFor } from '@testing-library/react';
 import React from 'react';
 
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
+import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider';
 import { register } from '@/apis/register';
 
 import CreateAccount from '.';
@@ -15,6 +16,14 @@ describe('<CreateAccount/>', () => {
     expect(container.querySelector('input[name="password"]')).not.toBeNull();
     expect(container.querySelector('input[name="confirm_password"]')).not.toBeNull();
     expect(queryByText('action.create')).not.toBeNull();
+  });
+
+  test('render with terms settings enabled', () => {
+    const { queryByText } = renderWithPageContext(
+      <SettingsProvider>
+        <CreateAccount />
+      </SettingsProvider>
+    );
     expect(queryByText('description.terms_of_use')).not.toBeNull();
   });
 
@@ -131,8 +140,12 @@ describe('<CreateAccount/>', () => {
     expect(queryByText('passwords_do_not_match')).toBeNull();
   });
 
-  test('submit form properly', async () => {
-    const { getByText, container } = renderWithPageContext(<CreateAccount />);
+  test('submit form properly with terms settings enabled', async () => {
+    const { getByText, container } = renderWithPageContext(
+      <SettingsProvider>
+        <CreateAccount />
+      </SettingsProvider>
+    );
     const submitButton = getByText('action.create');
     const passwordInput = container.querySelector('input[name="password"]');
     const confirmPasswordInput = container.querySelector('input[name="confirm_password"]');

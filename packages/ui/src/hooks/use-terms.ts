@@ -12,12 +12,14 @@ const useTerms = () => {
   } = useContext(PageContext);
 
   const termsValidation = useCallback(() => {
-    if (termsAgreement) {
-      return;
+    if (termsAgreement || !experienceSettings?.termsOfUse.enabled) {
+      return true;
     }
 
     setShowTermsModal(true);
-  }, [setShowTermsModal, termsAgreement]);
+
+    return false;
+  }, [experienceSettings, termsAgreement, setShowTermsModal]);
 
   return {
     termsSettings: experienceSettings?.termsOfUse,
