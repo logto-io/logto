@@ -8,7 +8,8 @@
     "bootstrap": "lerna bootstrap",
     "prepare": "if test \"$NODE_ENV\" != \"production\" && test \"$CI\" != \"true\" ; then husky install ; fi",
     "prepack": "lerna run --stream prepack",
-    "dev": "lerna run --stream prepack && lerna --scope=@logto/{core,ui,console} exec -- pnpm dev"
+    "dev": "lerna run --stream prepack && lerna --scope=@logto/{core,ui,console} exec -- pnpm dev",
+    "start": "cd packages/core && node ."
   },
   "devDependencies": {
     "@commitlint/cli": "^13.2.1",

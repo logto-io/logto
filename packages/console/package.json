@@ -17,7 +17,7 @@
     "lint:report": "pnpm lint -- --format json --output-file report.json",
     "stylelint": "stylelint \"src/**/*.scss\""
   },
-  "dependencies": {
+  "devDependencies": {
     "@logto/phrases": "^0.1.0",
     "@logto/react": "^0.1.3",
     "@logto/schemas": "^0.1.0",
@@ -44,9 +44,7 @@
     "react-paginate": "^8.1.2",
     "react-router-dom": "^6.2.2",
     "remark-gfm": "^3.0.1",
-    "swr": "^1.2.2"
-  },
-  "devDependencies": {
+    "swr": "^1.2.2",
     "@parcel/core": "^2.3.2",
     "@parcel/transformer-sass": "^2.3.2",
     "@silverhand/eslint-config": "^0.10.2",
