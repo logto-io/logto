@@ -6,6 +6,7 @@ import { generateRandomString, parseQueryParameters } from '@/utils';
 
 import useApi from './use-api';
 import { PageContext } from './use-page-context';
+import useTerms from './use-terms';
 
 /**
  * Social Connector State Utility Methods
@@ -65,6 +66,7 @@ const isNativeWebview = () => {
 
 const useSocial = () => {
   const { setToast } = useContext(PageContext);
+  const { termsValidation } = useTerms();
   const parameters = useParams();
 
   const { result: invokeSocialSignInResult, run: asyncInvokeSocialSignIn } =
@@ -74,6 +76,10 @@ const useSocial = () => {
 
   const invokeSocialSignInHandler = useCallback(
     async (connectorId: string) => {
+      if (!termsValidation()) {
+        return;
+      }
+
       const state = generateState();
       storeState(state, connectorId);
 
@@ -81,7 +87,7 @@ const useSocial = () => {
 
       return asyncInvokeSocialSignIn(connectorId, state, `${origin}/callback/${connectorId}`);
     },
-    [asyncInvokeSocialSignIn]
+    [asyncInvokeSocialSignIn, termsValidation]
   );
 
   const signInWithSocialHandler = useCallback(
@@ -166,7 +172,7 @@ const useSocial = () => {
     }
   }, [signInWithSocialResult]);
 
-  // SignIn Callback Page Handler
+  // Social Sign-In Callback Handler
   useEffect(() => {
     if (!location.pathname.includes('/sign-in/callback') || !parameters.connector) {
       return;

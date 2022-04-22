@@ -2,7 +2,6 @@
  * TODO:
  * 1. API redesign handle api error and loading status globally in PageContext
  * 2. Input field validation, should move the validation rule to the input field scope
- * 4. Read terms of use settings from SignInExperience Settings
  */
 import classNames from 'classnames';
 import React, { useState, useCallback, useMemo, useEffect, useContext } from 'react';
@@ -13,9 +12,10 @@ import { getSendPasscodeApi } from '@/apis/utils';
 import Button from '@/components/Button';
 import { ErrorType } from '@/components/ErrorMessage';
 import Input from '@/components/Input';
-import TermsOfUse from '@/components/TermsOfUse';
+import TermsOfUse from '@/containers/TermsOfUse';
 import useApi from '@/hooks/use-api';
 import { PageContext } from '@/hooks/use-page-context';
+import useTerms from '@/hooks/use-terms';
 import { UserFlow } from '@/types';
 
 import * as styles from './index.module.scss';
@@ -27,7 +27,6 @@ type Props = {
 
 type FieldState = {
   email: string;
-  termsAgreement: boolean;
 };
 
 type ErrorState = {
@@ -38,7 +37,7 @@ type FieldValidations = {
   [key in keyof FieldState]: (state: FieldState) => ErrorType | undefined;
 };
 
-const defaultState: FieldState = { email: '', termsAgreement: false };
+const defaultState: FieldState = { email: '' };
 
 const emailRegEx = /^\S+@\S+\.\S+$/;
 
@@ -48,6 +47,7 @@ const EmailPasswordless = ({ type, className }: Props) => {
   const [fieldErrors, setFieldErrors] = useState<ErrorState>({});
   const { setToast } = useContext(PageContext);
   const navigate = useNavigate();
+  const { termsValidation } = useTerms();
 
   const sendPasscode = getSendPasscodeApi(type, 'email');
 
@@ -58,11 +58,6 @@ const EmailPasswordless = ({ type, className }: Props) => {
       email: ({ email }) => {
         if (!emailRegEx.test(email)) {
           return 'invalid_email';
-        }
-      },
-      termsAgreement: ({ termsAgreement }) => {
-        if (!termsAgreement) {
-          return 'agree_terms_required';
         }
       },
     }),
@@ -78,16 +73,12 @@ const EmailPasswordless = ({ type, className }: Props) => {
       return;
     }
 
-    const termsAgreementError = validations.termsAgreement(fieldState);
-
-    if (termsAgreementError) {
-      setFieldErrors((previous) => ({ ...previous, termsAgreement: termsAgreementError }));
-
+    if (!termsValidation()) {
       return;
     }
 
     void asyncSendPasscode(fieldState.email);
-  }, [validations, fieldState, asyncSendPasscode]);
+  }, [validations, fieldState, termsValidation, asyncSendPasscode]);
 
   useEffect(() => {
     if (result) {
@@ -137,15 +128,7 @@ const EmailPasswordless = ({ type, className }: Props) => {
         }}
       />
 
-      <TermsOfUse
-        name="termsAgreement"
-        className={styles.terms}
-        termsUrl="/"
-        isChecked={fieldState.termsAgreement}
-        onChange={(checked) => {
-          setFieldState((state) => ({ ...state, termsAgreement: checked }));
-        }}
-      />
+      <TermsOfUse className={styles.terms} />
 
       <Button onClick={onSubmitHandler}>{t('action.continue')}</Button>
     </form>

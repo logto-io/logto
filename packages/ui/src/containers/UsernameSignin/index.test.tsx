@@ -2,6 +2,7 @@ import { fireEvent, waitFor } from '@testing-library/react';
 import React from 'react';
 
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
+import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider';
 import { signInBasic } from '@/apis/sign-in';
 
 import UsernameSignin from '.';
@@ -14,6 +15,14 @@ describe('<UsernameSignin>', () => {
     expect(container.querySelector('input[name="username"]')).not.toBeNull();
     expect(container.querySelector('input[name="password"]')).not.toBeNull();
     expect(queryByText('action.sign_in')).not.toBeNull();
+  });
+
+  test('render with terms settings enabled', () => {
+    const { queryByText } = renderWithPageContext(
+      <SettingsProvider>
+        <UsernameSignin />
+      </SettingsProvider>
+    );
     expect(queryByText('description.agree_with_terms')).not.toBeNull();
   });
 
@@ -41,15 +50,15 @@ describe('<UsernameSignin>', () => {
       fireEvent.change(passwordInput, { target: { value: 'password' } });
     }
 
-    fireEvent.click(submitButton);
-
     expect(queryByText('required')).toBeNull();
-
-    expect(signInBasic).not.toBeCalled();
   });
 
   test('submit form', async () => {
-    const { getByText, container } = renderWithPageContext(<UsernameSignin />);
+    const { getByText, container } = renderWithPageContext(
+      <SettingsProvider>
+        <UsernameSignin />
+      </SettingsProvider>
+    );
     const submitButton = getByText('action.sign_in');
 
     const usernameInput = container.querySelector('input[name="username"]');

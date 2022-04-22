@@ -2,7 +2,6 @@
  * TODO:
  * 1. API redesign handle api error and loading status globally in PageContext
  * 2. Input field validation, should move the validation rule to the input field scope
- * 4. Read terms of use settings from SignInExperience Settings
  */
 
 import classNames from 'classnames';
@@ -14,16 +13,16 @@ import Button from '@/components/Button';
 import { ErrorType } from '@/components/ErrorMessage';
 import Input from '@/components/Input';
 import PasswordInput from '@/components/Input/PasswordInput';
-import TermsOfUse from '@/components/TermsOfUse';
+import TermsOfUse from '@/containers/TermsOfUse';
 import useApi from '@/hooks/use-api';
 import { PageContext } from '@/hooks/use-page-context';
+import useTerms from '@/hooks/use-terms';
 
 import * as styles from './index.module.scss';
 
 type FieldState = {
   username: string;
   password: string;
-  termsAgreement: boolean;
 };
 
 type ErrorState = {
@@ -41,17 +40,15 @@ type Props = {
 const defaultState: FieldState = {
   username: '',
   password: '',
-  termsAgreement: false,
 };
 
 const UsernameSignin = ({ className }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'main_flow' });
   const [fieldState, setFieldState] = useState<FieldState>(defaultState);
   const [fieldErrors, setFieldErrors] = useState<ErrorState>({});
-
   const { setToast } = useContext(PageContext);
-
   const { error, result, run: asyncSignInBasic } = useApi(signInBasic);
+  const { termsValidation } = useTerms();
 
   const validations = useMemo<FieldValidations>(
     () => ({
@@ -63,11 +60,6 @@ const UsernameSignin = ({ className }: Props) => {
       password: ({ password }) => {
         if (!password) {
           return { code: 'required', data: { field: t('input.password') } };
-        }
-      },
-      termsAgreement: ({ termsAgreement }) => {
-        if (!termsAgreement) {
-          return 'agree_terms_required';
         }
       },
     }),
@@ -89,19 +81,12 @@ const UsernameSignin = ({ className }: Props) => {
       return;
     }
 
-    const termsAgreementError = validations.termsAgreement?.(fieldState);
-
-    if (termsAgreementError) {
-      setFieldErrors((previous) => ({
-        ...previous,
-        termsAgreement: termsAgreementError,
-      }));
-
+    if (!termsValidation()) {
       return;
     }
 
     void asyncSignInBasic(fieldState.username, fieldState.password);
-  }, [validations, fieldState, asyncSignInBasic]);
+  }, [validations, fieldState, asyncSignInBasic, termsValidation]);
 
   useEffect(() => {
     if (result?.redirectTo) {
@@ -165,15 +150,7 @@ const UsernameSignin = ({ className }: Props) => {
         }}
       />
 
-      <TermsOfUse
-        name="termsAgreement"
-        className={styles.terms}
-        termsUrl="/"
-        isChecked={fieldState.termsAgreement}
-        onChange={(checked) => {
-          setFieldState((state) => ({ ...state, termsAgreement: checked }));
-        }}
-      />
+      <TermsOfUse className={styles.terms} />
 
       <Button onClick={onSubmitHandler}>{t('action.sign_in')}</Button>
     </form>

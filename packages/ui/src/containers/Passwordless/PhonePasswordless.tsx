@@ -2,7 +2,6 @@
  * TODO:
  * 1. API redesign handle api error and loading status globally in PageContext
  * 2. Input field validation, should move the validation rule to the input field scope
- * 4. Read terms of use settings from SignInExperience Settings
  */
 import classNames from 'classnames';
 import React, { useState, useCallback, useMemo, useEffect, useContext } from 'react';
@@ -13,10 +12,11 @@ import { getSendPasscodeApi } from '@/apis/utils';
 import Button from '@/components/Button';
 import { ErrorType } from '@/components/ErrorMessage';
 import PhoneInput from '@/components/Input/PhoneInput';
-import TermsOfUse from '@/components/TermsOfUse';
+import TermsOfUse from '@/containers/TermsOfUse';
 import useApi from '@/hooks/use-api';
 import { PageContext } from '@/hooks/use-page-context';
 import usePhoneNumber, { countryList } from '@/hooks/use-phone-number';
+import useTerms from '@/hooks/use-terms';
 import { UserFlow } from '@/types';
 
 import * as styles from './index.module.scss';
@@ -28,7 +28,6 @@ type Props = {
 
 type FieldState = {
   phone: string;
-  termsAgreement: boolean;
 };
 
 type ErrorState = {
@@ -39,7 +38,7 @@ type FieldValidations = {
   [key in keyof FieldState]: (state: FieldState) => ErrorType | undefined;
 };
 
-const defaultState: FieldState = { phone: '', termsAgreement: false };
+const defaultState: FieldState = { phone: '' };
 
 const PhonePasswordless = ({ type, className }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'main_flow' });
@@ -47,6 +46,7 @@ const PhonePasswordless = ({ type, className }: Props) => {
   const [fieldErrors, setFieldErrors] = useState<ErrorState>({});
   const { setToast } = useContext(PageContext);
   const navigate = useNavigate();
+  const { termsValidation } = useTerms();
 
   const { phoneNumber, setPhoneNumber, isValidPhoneNumber } = usePhoneNumber();
 
@@ -58,11 +58,6 @@ const PhonePasswordless = ({ type, className }: Props) => {
       phone: ({ phone }) => {
         if (!isValidPhoneNumber(phone)) {
           return 'invalid_phone';
-        }
-      },
-      termsAgreement: ({ termsAgreement }) => {
-        if (!termsAgreement) {
-          return 'agree_terms_required';
         }
       },
     }),
@@ -78,16 +73,12 @@ const PhonePasswordless = ({ type, className }: Props) => {
       return;
     }
 
-    const termsAgreementError = validations.termsAgreement(fieldState);
-
-    if (termsAgreementError) {
-      setFieldErrors((previous) => ({ ...previous, termsAgreement: termsAgreementError }));
-
+    if (!termsValidation()) {
       return;
     }
 
     void asyncSendPasscode(fieldState.phone);
-  }, [validations, fieldState, asyncSendPasscode]);
+  }, [validations, fieldState, termsValidation, asyncSendPasscode]);
 
   useEffect(() => {
     setFieldState((previous) => ({
@@ -97,8 +88,6 @@ const PhonePasswordless = ({ type, className }: Props) => {
   }, [phoneNumber]);
 
   useEffect(() => {
-    console.log(result);
-
     if (result) {
       navigate(`/${type}/sms/passcode-validation`, { state: { phone: fieldState.phone } });
     }
@@ -140,15 +129,7 @@ const PhonePasswordless = ({ type, className }: Props) => {
           setPhoneNumber((previous) => ({ ...previous, ...data }));
         }}
       />
-      <TermsOfUse
-        name="termsAgreement"
-        className={styles.terms}
-        termsUrl="/"
-        isChecked={fieldState.termsAgreement}
-        onChange={(checked) => {
-          setFieldState((state) => ({ ...state, termsAgreement: checked }));
-        }}
-      />
+      <TermsOfUse className={styles.terms} />
 
       <Button onClick={onSubmitHandler}>{t('action.continue')}</Button>
     </form>

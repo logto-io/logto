@@ -3,6 +3,7 @@ import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
 
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
+import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider';
 import { sendRegisterEmailPasscode } from '@/apis/register';
 import { sendSignInEmailPasscode } from '@/apis/sign-in';
 
@@ -24,6 +25,16 @@ describe('<EmailPasswordless/>', () => {
     );
     expect(container.querySelector('input[name="email"]')).not.toBeNull();
     expect(queryByText('action.continue')).not.toBeNull();
+  });
+
+  test('render with terms settings enabled', () => {
+    const { queryByText } = renderWithPageContext(
+      <MemoryRouter>
+        <SettingsProvider>
+          <EmailPasswordless type="sign-in" />
+        </SettingsProvider>
+      </MemoryRouter>
+    );
     expect(queryByText('description.terms_of_use')).not.toBeNull();
   });
 
@@ -53,7 +64,9 @@ describe('<EmailPasswordless/>', () => {
   test('should call sign-in method properly', async () => {
     const { container, getByText } = renderWithPageContext(
       <MemoryRouter>
-        <EmailPasswordless type="sign-in" />
+        <SettingsProvider>
+          <EmailPasswordless type="sign-in" />
+        </SettingsProvider>
       </MemoryRouter>
     );
     const emailInput = container.querySelector('input[name="email"]');
@@ -76,7 +89,9 @@ describe('<EmailPasswordless/>', () => {
   test('should call register method properly', async () => {
     const { container, getByText } = renderWithPageContext(
       <MemoryRouter>
-        <EmailPasswordless type="register" />
+        <SettingsProvider>
+          <EmailPasswordless type="register" />
+        </SettingsProvider>
       </MemoryRouter>
     );
     const emailInput = container.querySelector('input[name="email"]');
