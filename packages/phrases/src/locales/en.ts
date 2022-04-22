@@ -34,9 +34,11 @@ const translation = {
       cancel: 'Cancel',
     },
     description: {
+      loading: 'Loading...',
+      redirecting: 'Redirecting...',
       agree_with_terms: 'I have read and agree to the ',
       terms_of_use: 'Terms of Use',
-      creat_account: 'Create Account',
+      create_account: 'Create Account',
       forgot_password: 'Forgot Password?',
       or: 'Or',
       enter_passcode: 'The passcode has been sent to {{address}}',
