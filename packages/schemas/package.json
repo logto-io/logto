@@ -22,20 +22,20 @@
     "node": ">=14.15.0"
   },
   "devDependencies": {
-    "@silverhand/eslint-config": "^0.10.2",
-    "@silverhand/essentials": "^1.1.6",
-    "@silverhand/ts-config": "^0.10.2",
-    "@types/lodash.uniq": "^4.5.6",
-    "@types/node": "14",
-    "@types/pluralize": "^0.0.29",
-    "camelcase": "^6.2.0",
-    "eslint": "^8.10.0",
-    "lint-staged": "^11.1.1",
-    "lodash.uniq": "^4.5.0",
-    "pluralize": "^8.0.0",
-    "prettier": "^2.3.2",
-    "ts-node": "^10.0.0",
-    "typescript": "^4.6.2"
+    "@silverhand/eslint-config": "0.10.2",
+    "@silverhand/essentials": "1.1.7",
+    "@silverhand/ts-config": "0.10.2",
+    "@types/lodash.uniq": "4.5.7",
+    "@types/node": "14.18.13",
+    "@types/pluralize": "0.0.29",
+    "camelcase": "6.3.0",
+    "eslint": "8.13.0",
+    "lint-staged": "11.2.6",
+    "lodash.uniq": "4.5.0",
+    "pluralize": "8.0.0",
+    "prettier": "2.6.2",
+    "ts-node": "10.7.0",
+    "typescript": "4.6.3"
   },
   "eslintConfig": {
     "extends": "@silverhand",
@@ -46,6 +46,6 @@
   "prettier": "@silverhand/eslint-config/.prettierrc",
   "dependencies": {
     "@logto/phrases": "^0.1.0",
-    "zod": "^3.14.3"
+    "zod": "3.14.4"
   }
 }

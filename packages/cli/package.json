@@ -26,14 +26,14 @@
     "node": ">=16.0.0"
   },
   "devDependencies": {
-    "@silverhand/eslint-config": "^0.10.2",
-    "@silverhand/ts-config": "^0.10.2",
-    "@types/node": "14",
-    "eslint": "^8.10.0",
-    "lint-staged": "^11.1.1",
-    "prettier": "^2.3.2",
-    "ts-node": "^10.0.0",
-    "typescript": "^4.6.3"
+    "@silverhand/eslint-config": "0.10.2",
+    "@silverhand/ts-config": "0.10.2",
+    "@types/node": "14.18.13",
+    "eslint": "8.13.0",
+    "lint-staged": "11.2.6",
+    "prettier": "2.6.2",
+    "ts-node": "10.7.0",
+    "typescript": "4.6.3"
   },
   "eslintConfig": {
     "extends": "@silverhand"
@@ -41,13 +41,13 @@
   "prettier": "@silverhand/eslint-config/.prettierrc",
   "dependencies": {
     "@logto/schemas": "^0.1.0",
-    "chalk": "^4",
-    "commander": "^9.1.0",
-    "decamelize": "^5.0.0",
-    "dotenv": "^10.0.0",
-    "roarr": "^7.11.0",
-    "slonik": "^28.1.0",
-    "slonik-interceptor-preset": "^1.2.10",
-    "slonik-sql-tag-raw": "^1.1.4"
+    "chalk": "4.1.2",
+    "commander": "9.2.0",
+    "decamelize": "5.0.1",
+    "dotenv": "10.0.0",
+    "roarr": "7.11.0",
+    "slonik": "28.1.0",
+    "slonik-interceptor-preset": "1.2.10",
+    "slonik-sql-tag-raw": "1.1.4"
   }
 }
