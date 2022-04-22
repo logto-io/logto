@@ -28,7 +28,7 @@ jobs:
         run: pnpm -- lerna run --parallel test:coverage
 
       - name: Codecov
-        uses: codecov/codecov-action@v2
+        uses: codecov/codecov-action@v3
         with:
           flags: core
           directory: ./packages/core
