@@ -27,7 +27,7 @@ importers:
       chalk: ^4
       commander: ^9.1.0
       decamelize: ^5.0.0
-      dotenv: ^10.0.0
+      dotenv: ^16.0.0
       eslint: ^8.10.0
       lint-staged: ^11.1.1
       prettier: ^2.3.2
@@ -42,7 +42,7 @@ importers:
       chalk: 4.1.2
       commander: 9.1.0
       decamelize: 5.0.1
-      dotenv: 10.0.0
+      dotenv: 16.0.0
       roarr: 7.11.0
       slonik: 28.1.0
       slonik-interceptor-preset: 1.2.10
@@ -176,7 +176,7 @@ importers:
       copyfiles: ^2.4.1
       dayjs: ^1.10.5
       decamelize: ^5.0.0
-      dotenv: ^10.0.0
+      dotenv: ^16.0.0
       eslint: ^8.10.0
       got: ^11.8.2
       i18next: ^20.3.5
@@ -217,7 +217,7 @@ importers:
       '@silverhand/essentials': 1.1.2
       dayjs: 1.10.7
       decamelize: 5.0.1
-      dotenv: 10.0.0
+      dotenv: 16.0.0
       got: 11.8.3
       i18next: 20.6.1
       iconv-lite: 0.6.3
@@ -8934,9 +8934,9 @@ packages:
     resolution: {integrity: sha512-YXQl1DSa4/PQyRfgrv6aoNjhasp/p4qs9FjJ4q4cQk+8m4r6k4ZSiEyytKG8f8W9gi8WsQtIObNmKd+tMzNTmA==}
     dev: true
 
-  /dotenv/10.0.0:
-    resolution: {integrity: sha512-rlBi9d8jpv9Sf1klPjNfFAuWDjKLwTIJJ/VxtoTwIR6hnZxcEOQCZg2oIL3MWBYw5GpUDKOEnND7LXTbIpQ03Q==}
-    engines: {node: '>=10'}
+  /dotenv/16.0.0:
+    resolution: {integrity: sha512-qD9WU0MPM4SWLPJy/r2Be+2WgQj8plChsyrCNQzW/0WjvcJQiKQJ9mH3ZgB3fxbUUxgc/11ZJ0Fi5KiimWGz2Q==}
+    engines: {node: '>=12'}
     dev: false
 
   /dotenv/7.0.0:

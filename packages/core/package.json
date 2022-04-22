@@ -25,7 +25,7 @@
     "@silverhand/essentials": "^1.1.0",
     "dayjs": "^1.10.5",
     "decamelize": "^5.0.0",
-    "dotenv": "^10.0.0",
+    "dotenv": "^16.0.0",
     "got": "^11.8.2",
     "i18next": "^20.3.5",
     "iconv-lite": "0.6.3",
