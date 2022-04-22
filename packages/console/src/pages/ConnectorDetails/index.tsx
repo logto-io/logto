@@ -108,11 +108,13 @@ const ConnectorDetails = () => {
       {error && <div>{`error occurred: ${error.body.message}`}</div>}
       {data && (
         <Card className={styles.header}>
-          {data.metadata.logo.startsWith('http') ? (
-            <img src={data.metadata.logo} className={styles.logo} />
-          ) : (
-            <ImagePlaceholder size={76} borderRadius={16} />
-          )}
+          <div className={styles.imagePlaceholder}>
+            {data.metadata.logo.startsWith('http') ? (
+              <img src={data.metadata.logo} className={styles.logo} />
+            ) : (
+              <ImagePlaceholder size={60} borderRadius={16} />
+            )}
+          </div>
           <div className={styles.metadata}>
             <div>
               <div className={styles.name}>

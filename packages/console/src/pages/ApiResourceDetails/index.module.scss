@@ -12,6 +12,10 @@
   .info {
     display: flex;
 
+    .imagePlaceholder {
+      margin-left: _.unit(2);
+    }
+
     .meta {
       margin-left: _.unit(6);
       display: flex;
@@ -21,6 +25,10 @@
       .name {
         font: var(--font-title-large);
         color: var(--color-text);
+      }
+
+      .copy {
+        padding: _.unit(1) _.unit(2);
       }
     }
   }

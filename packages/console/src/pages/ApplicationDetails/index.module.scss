@@ -29,7 +29,11 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: _.unit(8);
+  padding: _.unit(6);
+
+  .imagePlaceholder {
+    margin-left: _.unit(2);
+  }
 
   > *:not(:first-child) {
     margin-left: _.unit(6);
@@ -55,7 +59,6 @@
     .details {
       display: flex;
       align-items: center;
-      margin-top: _.unit(2);
 
       > :not(:first-child) {
         margin-left: _.unit(2);
@@ -81,7 +84,7 @@
     }
 
     .copy {
-      padding: _.unit(1) _.unit(4) _.unit(1) _.unit(2);
+      padding: _.unit(1) _.unit(2);
     }
   }
 }
