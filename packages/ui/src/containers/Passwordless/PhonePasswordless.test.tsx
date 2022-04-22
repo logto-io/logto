@@ -53,24 +53,7 @@ describe('<PhonePasswordless/>', () => {
     }
   });
 
-  test('required terms of agreement with error message', () => {
-    const { queryByText, container, getByText } = renderWithPageContext(
-      <MemoryRouter>
-        <PhonePasswordless type="sign-in" />
-      </MemoryRouter>
-    );
-    const submitButton = getByText('action.continue');
-    const phoneInput = container.querySelector('input[name="phone"]');
-
-    if (phoneInput) {
-      fireEvent.change(phoneInput, { target: { value: phoneNumber } });
-    }
-
-    fireEvent.click(submitButton);
-    expect(queryByText('agree_terms_required')).not.toBeNull();
-  });
-
-  test('signin method properly', async () => {
+  test('should call sign-in method properly', async () => {
     const { container, getByText } = renderWithPageContext(
       <MemoryRouter>
         <PhonePasswordless type="sign-in" />
@@ -93,7 +76,7 @@ describe('<PhonePasswordless/>', () => {
     expect(sendSignInSmsPasscode).toBeCalledWith(`${defaultCountryCallingCode}${phoneNumber}`);
   });
 
-  test('register method properly', async () => {
+  test('should call register method properly', async () => {
     const { container, getByText } = renderWithPageContext(
       <MemoryRouter>
         <PhonePasswordless type="register" />

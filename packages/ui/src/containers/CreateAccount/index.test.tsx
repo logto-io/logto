@@ -131,38 +131,6 @@ describe('<CreateAccount/>', () => {
     expect(queryByText('passwords_do_not_match')).toBeNull();
   });
 
-  test('terms of use not checked should throw', () => {
-    const { queryByText, getByText, container } = renderWithPageContext(<CreateAccount />);
-    const submitButton = getByText('action.create');
-    const passwordInput = container.querySelector('input[name="password"]');
-    const confirmPasswordInput = container.querySelector('input[name="confirm_password"]');
-    const usernameInput = container.querySelector('input[name="username"]');
-
-    if (usernameInput) {
-      fireEvent.change(usernameInput, { target: { value: 'username' } });
-    }
-
-    if (passwordInput) {
-      fireEvent.change(passwordInput, { target: { value: '123456' } });
-    }
-
-    if (confirmPasswordInput) {
-      fireEvent.change(confirmPasswordInput, { target: { value: '123456' } });
-    }
-
-    fireEvent.click(submitButton);
-
-    expect(queryByText('agree_terms_required')).not.toBeNull();
-
-    expect(register).not.toBeCalled();
-
-    // Clear Error
-    const termsButton = getByText('description.agree_with_terms');
-    fireEvent.click(termsButton);
-
-    expect(queryByText('agree_terms_required')).toBeNull();
-  });
-
   test('submit form properly', async () => {
     const { getByText, container } = renderWithPageContext(<CreateAccount />);
     const submitButton = getByText('action.create');

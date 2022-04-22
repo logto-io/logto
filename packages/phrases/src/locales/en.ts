@@ -37,6 +37,7 @@ const translation = {
       loading: 'Loading...',
       redirecting: 'Redirecting...',
       agree_with_terms: 'I have read and agree to the ',
+      agree_with_terms_modal: 'Please read the {{terms}} and then agree the box first.',
       terms_of_use: 'Terms of Use',
       create_account: 'Create Account',
       forgot_password: 'Forgot Password?',

@@ -39,6 +39,7 @@ const translation = {
       loading: '读取中...',
       redirecting: '页面跳转中...',
       agree_with_terms: '我已阅读并同意 ',
+      agree_with_terms_modal: 'Please read the {{terms}} and then agree the box first.',
       terms_of_use: '使用条款',
       create_account: '创建账号',
       forgot_password: '忘记密码？',
