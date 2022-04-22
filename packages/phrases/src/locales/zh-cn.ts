@@ -40,7 +40,7 @@ const translation = {
       redirecting: '页面跳转中...',
       agree_with_terms: '我已阅读并同意 ',
       terms_of_use: '使用条款',
-      creat_account: '创建账号',
+      create_account: '创建账号',
       forgot_password: '忘记密码？',
       or: '或',
       enter_passcode: '验证码已经发送至 {{ address }}',
