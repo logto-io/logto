@@ -7,6 +7,12 @@ import inquirer from 'inquirer';
 import { noInquiry } from './parameters';
 
 const readPrivateKey = async (): Promise<string> => {
+  const privateKey = getEnv('OIDC_PRIVATE_KEY');
+
+  if (privateKey) {
+    return privateKey;
+  }
+
   const privateKeyPath = getEnv('OIDC_PRIVATE_KEY_PATH', 'oidc-private-key.pem');
 
   try {
@@ -19,7 +25,7 @@ const readPrivateKey = async (): Promise<string> => {
     const answer = await inquirer.prompt({
       type: 'confirm',
       name: 'confirm',
-      message: `No private key found in \`${privateKeyPath}\`, would you like to generate a new one?`,
+      message: `No private key found in env \`OIDC_PRIVATE_KEY\` nor \`${privateKeyPath}\`, would you like to generate a new one?`,
     });
 
     if (!answer.confirm) {
