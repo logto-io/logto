@@ -48,7 +48,7 @@ const Button = ({
     // Delay showing the spinner after 'loadingDelay' milliseconds
     if (isLoading) {
       // eslint-disable-next-line @silverhand/fp/no-mutation
-      timerRef.current = setTimeout(() => {
+      timerRef.current = window.setTimeout(() => {
         setShowSpinner(true);
       }, loadingDelay);
     }

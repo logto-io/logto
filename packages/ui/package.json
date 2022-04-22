@@ -13,7 +13,8 @@
     "lint": "eslint --ext .ts --ext .tsx src",
     "lint:report": "pnpm lint -- --format json --output-file report.json",
     "stylelint": "stylelint \"src/**/*.scss\"",
-    "test": "jest"
+    "test": "jest",
+    "prepack": "pnpm build"
   },
   "devDependencies": {
     "@logto/phrases": "^0.1.0",
