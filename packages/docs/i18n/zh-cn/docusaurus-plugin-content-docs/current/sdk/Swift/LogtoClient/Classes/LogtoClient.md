@@ -52,10 +52,10 @@ public var isAuthenticated: Bool
 用户是否已经登录。
 
 ## 方法
-### `handle(forClientId:url:)`
+### `handle(forAppId:url:)`
 
 ```swift
-public static func handle(forClientId clientId: String? = nil, url: URL)
+public static func handle(forAppId appId: String? = nil, url: URL)
 ```
 
 发送一个通知让 Logto 客户端处理该 URL。通常该函数需要在 `onOpenURL(perform:)` (SwiftUI) 或者 `application(_:open:options:)` (AppDelegate) 被调用。详情见集成指南。
@@ -64,7 +64,7 @@ public static func handle(forClientId clientId: String? = nil, url: URL)
 
 | 名称 | 描述 |
 | ---- | ----------- |
-| forClientId | 该通知是否仅供特定的客户端 ID。当值为 `nil` 时，所有的 Logto 客户端会尝试处理该通知。 |
+| forAppId | 该通知是否仅供特定的客户端 ID。当值为 `nil` 时，所有的 Logto 客户端会尝试处理该通知。 |
 | url | 需要被处理的 URL。 |
 
 ### `init(useConfig:socialPlugins:session:)`

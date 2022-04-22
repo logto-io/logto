@@ -13,10 +13,10 @@ public struct LogtoConfig
 public let endpoint: URL
 ```
 
-### `clientId`
+### `appId`
 
 ```swift
-public let clientId: String
+public let appId: String
 ```
 
 ### `resources`
@@ -38,12 +38,12 @@ public var scopes: [String]
 ```
 
 ## Methods
-### `init(endpoint:clientId:scopes:resources:usingPersistStorage:)`
+### `init(endpoint:appId:scopes:resources:usingPersistStorage:)`
 
 ```swift
 public init(
     endpoint: String,
-    clientId: String,
+    appId: String,
     scopes: [String] = [],
     resources: [String] = [],
     usingPersistStorage: Bool = true
