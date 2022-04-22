@@ -44,7 +44,7 @@
     "chalk": "^4",
     "commander": "^9.1.0",
     "decamelize": "^5.0.0",
-    "dotenv": "^10.0.0",
+    "dotenv": "^16.0.0",
     "roarr": "^7.11.0",
     "slonik": "^28.1.0",
     "slonik-interceptor-preset": "^1.2.10",
