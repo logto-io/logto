@@ -57,4 +57,4 @@ Unable to finish the initial token request after authentication.
 case unexpectedSignInCallback
 ```
 
-The Sign in Callback URI is not valid.
+The sign in callback URI is not valid.

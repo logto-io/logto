@@ -114,7 +114,7 @@ Clear all tokens in memory and Keychain. Also try to revoke the Refresh Token fr
 @MainActor public func getAccessToken(for resource: String?) async throws -> String
 ```
 
-Get an Access Token for the given resrouce. If resource is `nil`, return the Access Token for user endpoint.
+Get an Access Token for the given resource. If resource is `nil`, return the Access Token for user endpoint.
 
 If the cached Access Token has expired, this function will try to use `refreshToken` to fetch a new Access Token from the OIDC provider.
 

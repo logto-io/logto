@@ -49,7 +49,7 @@ static func fetchToken(
 ```
 
 Fetch token by `authorization_code`.
-The returned `access_token` is only for user info enpoint.
+The returned `access_token` is only for [UserInfo Endpoint](https://openid.net/specs/openid-connect-core-1_0.html#UserInfo).
 Note the function will NOT validate any token in the response.
 
 ### `fetchToken(useSession:byRefreshToken:tokenEndpoint:clientId:resource:scopes:)`
