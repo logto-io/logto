@@ -415,6 +415,7 @@ importers:
 
   packages/connector-types:
     specifiers:
+      '@jest/types': ^27.5.1
       '@logto/phrases': ^0.1.0
       '@logto/schemas': ^0.1.0
       '@shopify/jest-koa-mocks': ^3.0.8
@@ -437,6 +438,7 @@ importers:
       got: 11.8.3
       jose: 3.20.3
     devDependencies:
+      '@jest/types': 27.5.1
       '@shopify/jest-koa-mocks': 3.0.8
       '@silverhand/eslint-config': 0.10.2_bbe1a6794670f389df81805f22999709
       '@silverhand/essentials': 1.1.7
