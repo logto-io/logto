@@ -165,7 +165,7 @@ importers:
       '@silverhand/essentials': ^1.1.0
       '@silverhand/ts-config': ^0.10.2
       '@types/inquirer': ^8.2.1
-      '@types/jest': ^27.4.0
+      '@types/jest': ^27.4.1
       '@types/koa': ^2.13.3
       '@types/koa-logger': ^3.1.1
       '@types/koa-mount': ^4.0.0
@@ -246,7 +246,7 @@ importers:
       '@silverhand/eslint-config': 0.10.2_3a533fa6cc3da0cf8525ef55d41c4384
       '@silverhand/ts-config': 0.10.2_typescript@4.6.2
       '@types/inquirer': 8.2.1
-      '@types/jest': 27.4.0
+      '@types/jest': 27.4.1
       '@types/koa': 2.13.4
       '@types/koa-logger': 3.1.2
       '@types/koa-mount': 4.0.1
@@ -407,7 +407,7 @@ importers:
       '@silverhand/ts-config': ^0.10.2
       '@silverhand/ts-config-react': ^0.10.3
       '@testing-library/react': ^12.0.0
-      '@types/jest': ^27.4.0
+      '@types/jest': ^27.4.1
       '@types/react': ^17.0.14
       '@types/react-dom': ^17.0.9
       '@types/react-modal': ^3.13.1
@@ -448,7 +448,7 @@ importers:
       '@silverhand/ts-config': 0.10.2_typescript@4.6.2
       '@silverhand/ts-config-react': 0.10.3_typescript@4.6.2
       '@testing-library/react': 12.1.5_react-dom@17.0.2+react@17.0.2
-      '@types/jest': 27.4.0
+      '@types/jest': 27.4.1
       '@types/react': 17.0.37
       '@types/react-dom': 17.0.11
       '@types/react-modal': 3.13.1
@@ -5825,10 +5825,10 @@ packages:
     dependencies:
       '@types/istanbul-lib-report': 3.0.0
 
-  /@types/jest/27.4.0:
-    resolution: {integrity: sha512-gHl8XuC1RZ8H2j5sHv/JqsaxXkDDM9iDOgu0Wp8sjs4u/snb2PVehyWXJPr+ORA0RPpgw231mnutWI1+0hgjIQ==}
+  /@types/jest/27.4.1:
+    resolution: {integrity: sha512-23iPJADSmicDVrWk+HT58LMJtzLAnB2AgIzplQuq/bSrGaxCrlvRFjGbXmamnnk/mAmCdLStiGqggu28ocUyiw==}
     dependencies:
-      jest-diff: 27.5.1
+      jest-matcher-utils: 27.5.1
       pretty-format: 27.5.1
     dev: true
 
