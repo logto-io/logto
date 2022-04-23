@@ -43,7 +43,7 @@
     "@logto/schemas": "^0.1.0",
     "chalk": "^4",
     "commander": "^9.1.0",
-    "decamelize": "^5.0.0",
+    "decamelize": "^6.0.0",
     "dotenv": "^16.0.0",
     "roarr": "^7.11.0",
     "slonik": "^28.1.0",

@@ -26,7 +26,7 @@ importers:
       '@types/node': '16'
       chalk: ^4
       commander: ^9.1.0
-      decamelize: ^5.0.0
+      decamelize: ^6.0.0
       dotenv: ^16.0.0
       eslint: ^8.10.0
       lint-staged: ^12.0.0
@@ -41,7 +41,7 @@ importers:
       '@logto/schemas': link:../schemas
       chalk: 4.1.2
       commander: 9.1.0
-      decamelize: 5.0.1
+      decamelize: 6.0.0
       dotenv: 16.0.0
       roarr: 7.11.0
       slonik: 28.1.0
@@ -175,7 +175,7 @@ importers:
       '@types/supertest': ^2.0.11
       copyfiles: ^2.4.1
       dayjs: ^1.10.5
-      decamelize: ^5.0.0
+      decamelize: ^6.0.0
       dotenv: ^16.0.0
       eslint: ^8.10.0
       got: ^11.8.2
@@ -216,7 +216,7 @@ importers:
       '@logto/schemas': link:../schemas
       '@silverhand/essentials': 1.1.2
       dayjs: 1.10.7
-      decamelize: 5.0.1
+      decamelize: 6.0.0
       dotenv: 16.0.0
       got: 11.8.3
       i18next: 20.6.1
@@ -8593,9 +8593,9 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: true
 
-  /decamelize/5.0.1:
-    resolution: {integrity: sha512-VfxadyCECXgQlkoEAjeghAr5gY3Hf+IKjKb+X8tGVDtveCjN+USwprd2q3QXBR9T1+x2DG0XZF5/w+7HAtSaXA==}
-    engines: {node: '>=10'}
+  /decamelize/6.0.0:
+    resolution: {integrity: sha512-Fv96DCsdOgB6mdGl67MT5JaTNKRzrzill5OH5s8bjYJXVlcXyPYGyPsUkWyGV5p1TXI5esYIYMMeDJL0hEIwaA==}
+    engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
     dev: false
 
   /decimal.js/10.3.1:
