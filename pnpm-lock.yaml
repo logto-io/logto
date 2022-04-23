@@ -199,7 +199,7 @@ importers:
       nock: ^13.2.2
       oidc-provider: ^7.10.0
       openapi-types: ^11.0.0
-      p-retry: ^4.6.1
+      p-retry: ^5.0.0
       prettier: ^2.3.2
       query-string: ^7.0.1
       slonik: ^23.8.3
@@ -234,7 +234,7 @@ importers:
       module-alias: 2.2.2
       nanoid: 3.1.30
       oidc-provider: 7.10.4
-      p-retry: 4.6.1
+      p-retry: 5.1.0
       query-string: 7.0.1
       slonik: 23.9.0
       slonik-interceptor-preset: 1.2.10
@@ -14536,6 +14536,15 @@ packages:
     dependencies:
       '@types/retry': 0.12.1
       retry: 0.13.1
+    dev: true
+
+  /p-retry/5.1.0:
+    resolution: {integrity: sha512-zh8em2ciphCu4eZYzatLp4bTYkAhyi8PwMIOyQyh1b5bxunYNe6nwumHPkUBtvmEfIfnTYzhOq1+vWf46Qii+w==}
+    engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
+    dependencies:
+      '@types/retry': 0.12.1
+      retry: 0.13.1
+    dev: false
 
   /p-timeout/3.2.0:
     resolution: {integrity: sha512-rhIwUycgwwKcP9yTOOFK/AKsAopjjCakVqLHePO3CC6Mir1Z99xT+R63jZxAT5lFZLa2inS5h+ZS2GvR99/FBg==}

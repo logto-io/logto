@@ -42,7 +42,7 @@
     "module-alias": "^2.2.2",
     "nanoid": "^3.1.23",
     "oidc-provider": "^7.10.0",
-    "p-retry": "^4.6.1",
+    "p-retry": "^5.0.0",
     "query-string": "^7.0.1",
     "slonik": "^23.8.3",
     "slonik-interceptor-preset": "^1.2.10",
