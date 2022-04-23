@@ -1,0 +1,7 @@
+{
+  "extends": "./tsconfig.base",
+  "compilerOptions": {
+    "types": ["jest", "jest-matcher-specific-error"]
+  },
+  "include": ["src", "jest.config.ts"]
+}
