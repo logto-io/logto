@@ -41,7 +41,7 @@
   "prettier": "@silverhand/eslint-config/.prettierrc",
   "dependencies": {
     "@logto/schemas": "^0.1.0",
-    "chalk": "^4",
+    "chalk": "^5.0.0",
     "commander": "^9.1.0",
     "decamelize": "^5.0.0",
     "dotenv": "^16.0.0",

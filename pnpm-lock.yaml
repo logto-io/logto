@@ -24,7 +24,7 @@ importers:
       '@silverhand/eslint-config': ^0.10.2
       '@silverhand/ts-config': ^0.10.2
       '@types/node': '16'
-      chalk: ^4
+      chalk: ^5.0.0
       commander: ^9.1.0
       decamelize: ^5.0.0
       dotenv: ^16.0.0
@@ -39,7 +39,7 @@ importers:
       typescript: ^4.6.3
     dependencies:
       '@logto/schemas': link:../schemas
-      chalk: 4.1.2
+      chalk: 5.0.1
       commander: 9.1.0
       decamelize: 5.0.1
       dotenv: 16.0.0
@@ -7534,6 +7534,11 @@ packages:
     dependencies:
       ansi-styles: 4.3.0
       supports-color: 7.2.0
+
+  /chalk/5.0.1:
+    resolution: {integrity: sha512-Fo07WOYGqMfCWHOzSXOt2CxDbC6skS/jO9ynEcmpANMoPrD+W1r1K6Vx7iNm+AQmETU1Xr2t+n8nzkV9t6xh3w==}
+    engines: {node: ^12.17.0 || ^14.13 || >=16.0.0}
+    dev: false
 
   /char-regex/1.0.2:
     resolution: {integrity: sha512-kWWXztvZ5SBQV+eRgKFeh8q5sLuZY2+8WUIzlxWVTg+oGwY14qylx1KbKzHd8P6ZYkAg0xyIDU9JMHhyJMZ1jw==}
