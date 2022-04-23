@@ -1,7 +1,7 @@
 {
   "name": "@logto/shared",
   "version": "0.1.0",
-  "main": "build/index.js",
+  "main": "lib/index.js",
   "author": "Logto Team",
   "license": "MPL-2.0",
   "files": [
@@ -11,13 +11,13 @@
   "scripts": {
     "preinstall": "npx only-allow pnpm",
     "precommit": "lint-staged",
-    "build": "rm -rf build/ && tsc --p tsconfig.build.json",
+    "build": "rm -rf lib/ && tsc --p tsconfig.build.json",
     "lint": "eslint --ext .ts src",
     "lint:report": "pnpm lint -- --format json --output-file report.json",
     "prepack": "pnpm build"
   },
   "engines": {
-    "node": ">=14.15.0"
+    "node": "^16.0.0"
   },
   "devDependencies": {
     "@silverhand/eslint-config": "^0.10.2",
@@ -30,10 +30,7 @@
     "typescript": "^4.6.2"
   },
   "eslintConfig": {
-    "extends": "@silverhand",
-    "rules": {
-      "@typescript-eslint/ban-types": "off"
-    }
+    "extends": "@silverhand"
   },
   "prettier": "@silverhand/eslint-config/.prettierrc"
 }

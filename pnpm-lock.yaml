@@ -96,26 +96,6 @@ importers:
       ts-jest: 27.1.1_9985e1834e803358b7be1e6ce5ca0eea
       typescript: 4.6.3
 
-  packages/connector-utils:
-    specifiers:
-      '@silverhand/eslint-config': ^0.10.2
-      '@silverhand/essentials': ^1.1.6
-      '@silverhand/ts-config': ^0.10.2
-      '@types/node': ^16.3.1
-      eslint: ^8.10.0
-      lint-staged: ^11.1.1
-      prettier: ^2.3.2
-      typescript: ^4.6.2
-    devDependencies:
-      '@silverhand/eslint-config': 0.10.2_bbe1a6794670f389df81805f22999709
-      '@silverhand/essentials': 1.1.7
-      '@silverhand/ts-config': 0.10.2_typescript@4.6.3
-      '@types/node': 16.11.12
-      eslint: 8.10.0
-      lint-staged: 11.2.6
-      prettier: 2.5.1
-      typescript: 4.6.3
-
   packages/console:
     specifiers:
       '@logto/phrases': ^0.1.0
@@ -453,6 +433,26 @@ importers:
       prettier: 2.5.1
       ts-node: 10.4.0_64c593b7451d264b48ef412e6cb0ba64
       typescript: 4.6.2
+
+  packages/shared:
+    specifiers:
+      '@silverhand/eslint-config': ^0.10.2
+      '@silverhand/essentials': ^1.1.6
+      '@silverhand/ts-config': ^0.10.2
+      '@types/node': ^16.3.1
+      eslint: ^8.10.0
+      lint-staged: ^11.1.1
+      prettier: ^2.3.2
+      typescript: ^4.6.2
+    devDependencies:
+      '@silverhand/eslint-config': 0.10.2_bbe1a6794670f389df81805f22999709
+      '@silverhand/essentials': 1.1.7
+      '@silverhand/ts-config': 0.10.2_typescript@4.6.3
+      '@types/node': 16.11.12
+      eslint: 8.10.0
+      lint-staged: 11.2.6
+      prettier: 2.5.1
+      typescript: 4.6.3
 
   packages/ui:
     specifiers:

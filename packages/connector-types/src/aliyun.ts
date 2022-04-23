@@ -36,6 +36,7 @@ export const getSignature = (
 
   return createHmac('sha1', `${secret}&`).update(stringToSign).digest('base64');
 };
+
 export interface PublicParameters {
   AccessKeyId: string;
   Format?: string; // 'json' or 'xml', default: 'json'
