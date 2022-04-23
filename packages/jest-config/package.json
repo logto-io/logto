@@ -1,0 +1,47 @@
+{
+  "name": "@logto/jest-config",
+  "version": "0.1.0",
+  "main": "lib/jest.config.js",
+  "repository": "https://github.com/logto-io/logto",
+  "author": "Silverhand Inc.",
+  "license": "MPL-2.0",
+  "files": [
+    "lib",
+    "jest.config.ts"
+  ],
+  "private": true,
+  "scripts": {
+    "preinstall": "npx only-allow pnpm",
+    "precommit": "lint-staged",
+    "build": "rm -rf lib/ && tsc",
+    "lint": "eslint --ext .ts jest.config.ts",
+    "lint:report": "pnpm lint -- --format json --output-file report.json",
+    "prepack": "pnpm build"
+  },
+  "engines": {
+    "node": "^16.0.0"
+  },
+  "devDependencies": {
+    "@silverhand/eslint-config": "^0.10.2",
+    "@silverhand/ts-config": "^0.10.2",
+    "@types/node": "16",
+    "eslint": "^8.10.0",
+    "jest": "^27.5.1",
+    "lint-staged": "^12.0.0",
+    "prettier": "^2.3.2",
+    "ts-node": "^10.0.0",
+    "typescript": "^4.6.3"
+  },
+  "eslintConfig": {
+    "extends": "@silverhand"
+  },
+  "prettier": "@silverhand/eslint-config/.prettierrc",
+  "dependencies": {
+    "@jest/types": "^27.5.1",
+    "deepmerge": "^4.2.2",
+    "identity-obj-proxy": "^3.0.0",
+    "jest-matcher-specific-error": "^1.0.0",
+    "jest-transform-stub": "^2.0.0",
+    "ts-jest": "^27.1.1"
+  }
+}

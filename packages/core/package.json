@@ -50,11 +50,12 @@
     "zod": "^3.14.3"
   },
   "devDependencies": {
+    "@logto/jest-config": "^0.1.0",
     "@shopify/jest-koa-mocks": "^3.0.8",
     "@silverhand/eslint-config": "^0.10.2",
     "@silverhand/ts-config": "^0.10.2",
     "@types/inquirer": "^8.2.1",
-    "@types/jest": "^27.4.1",
+    "@types/jest": "^27.4.0",
     "@types/koa": "^2.13.3",
     "@types/koa-logger": "^3.1.1",
     "@types/koa-mount": "^4.0.0",
@@ -66,7 +67,6 @@
     "copyfiles": "^2.4.1",
     "eslint": "^8.10.0",
     "jest": "^27.5.1",
-    "jest-matcher-specific-error": "^1.0.0",
     "lint-staged": "^12.0.0",
     "nock": "^13.2.2",
     "openapi-types": "^11.0.0",
