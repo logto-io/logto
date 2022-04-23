@@ -208,7 +208,7 @@ importers:
       snakecase-keys: ^5.1.0
       supertest: ^6.2.2
       ts-jest: ^27.1.1
-      tsc-watch: ^4.4.0
+      tsc-watch: ^5.0.0
       typescript: ^4.6.2
       zod: ^3.14.3
     dependencies:
@@ -265,7 +265,7 @@ importers:
       snake-case: 3.0.4
       supertest: 6.2.2
       ts-jest: 27.1.1_60149d457e34ffba7d4e845dde6a1263
-      tsc-watch: 4.5.0_typescript@4.6.2
+      tsc-watch: 5.0.3_typescript@4.6.2
       typescript: 4.6.2
 
   packages/docs:
@@ -18926,8 +18926,8 @@ packages:
       yn: 3.1.1
     dev: true
 
-  /tsc-watch/4.5.0_typescript@4.6.2:
-    resolution: {integrity: sha512-aXhN4jY+1YEcn/NwCQ/+fHqU43EqOpW+pS+933EPsVEsrKhvyrodPDIjQsk1a1niFrabAK3RIBrRbAslVefEbQ==}
+  /tsc-watch/5.0.3_typescript@4.6.2:
+    resolution: {integrity: sha512-Hz2UawwELMSLOf0xHvAFc7anLeMw62cMVXr1flYmhRuOhOyOljwmb1l/O60ZwRyy1k7N1iC1mrn1QYM2zITfuw==}
     engines: {node: '>=8.17.0'}
     hasBin: true
     peerDependencies:
