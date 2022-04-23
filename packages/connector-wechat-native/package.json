@@ -19,6 +19,7 @@
     "prepack": "pnpm build"
   },
   "dependencies": {
+    "@jest/types": "^27.5.1",
     "@logto/connector-types": "^0.1.0",
     "@logto/connector-wechat": "^0.1.0",
     "@logto/schemas": "^0.1.0",
