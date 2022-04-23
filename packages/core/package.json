@@ -69,7 +69,7 @@
     "jest-matcher-specific-error": "^1.0.0",
     "lint-staged": "^12.0.0",
     "nock": "^13.2.2",
-    "openapi-types": "^9.1.0",
+    "openapi-types": "^11.0.0",
     "prettier": "^2.3.2",
     "snake-case": "^3.0.4",
     "supertest": "^6.2.2",
