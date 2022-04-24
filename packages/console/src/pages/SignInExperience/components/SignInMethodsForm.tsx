@@ -3,6 +3,7 @@ import React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
+import Checkbox from '@/components/Checkbox';
 import FormField from '@/components/FormField';
 import Select from '@/components/Select';
 import Switch from '@/components/Switch';
@@ -43,23 +44,21 @@ const SignInMethodsForm = () => {
           label={t('sign_in_exp.sign_in_methods.enable_secondary_description')}
         />
         {signInMethods.map((method) => (
-          <div key={method}>
-            {/* TODO: LOG-2187 checkbox component */}
-            <input
-              type="checkbox"
-              id={method}
-              value={method}
+          <div key={method} className={styles.method}>
+            <Checkbox
+              label={
+                <>
+                  {t('sign_in_exp.sign_in_methods.methods', { context: method })}
+                  {primaryMethod === method && (
+                    <span className={styles.primaryTag}>
+                      {t('sign_in_exp.sign_in_methods.methods_primary_tag')}
+                    </span>
+                  )}
+                </>
+              }
               disabled={primaryMethod === method}
               {...register(`signInMethods.${method}`)}
             />
-            <label htmlFor={method}>
-              {t('sign_in_exp.sign_in_methods.methods', { context: method })}
-              {primaryMethod === method && (
-                <span className={styles.primaryTag}>
-                  {t('sign_in_exp.sign_in_methods.methods_primary_tag')}
-                </span>
-              )}
-            </label>
           </div>
         ))}
       </FormField>
