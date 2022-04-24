@@ -50,6 +50,7 @@
     "zod": "^3.14.3"
   },
   "devDependencies": {
+    "@logto/jest-config": "^0.1.0",
     "@shopify/jest-koa-mocks": "^3.0.8",
     "@silverhand/eslint-config": "^0.10.2",
     "@silverhand/ts-config": "^0.10.2",
