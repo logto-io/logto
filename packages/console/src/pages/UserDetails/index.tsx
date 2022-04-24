@@ -128,7 +128,10 @@ const UserDetails = () => {
               </div>
             </div>
             <div>
-              <ActionMenu buttonProps={{ icon: <More /> }} title={t('user_details.more_options')}>
+              <ActionMenu
+                buttonProps={{ icon: <More />, size: 'large' }}
+                title={t('user_details.more_options')}
+              >
                 <ActionMenuItem
                   icon={<Reset />}
                   onClick={() => {

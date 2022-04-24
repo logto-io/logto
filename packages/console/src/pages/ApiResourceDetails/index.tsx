@@ -98,6 +98,7 @@ const ApiResourceDetails = () => {
             <div className={styles.operations}>
               <Button
                 title="admin_console.api_resource_details.check_help_guide"
+                size="large"
                 onClick={() => {
                   setIsReadmeOpen(true);
                 }}
@@ -112,7 +113,7 @@ const ApiResourceDetails = () => {
                 <div>TBD</div>
               </Drawer>
               <ActionMenu
-                buttonProps={{ icon: <More /> }}
+                buttonProps={{ icon: <More />, size: 'large' }}
                 title={t('api_resource_details.more_options')}
               >
                 <ActionMenuItem
