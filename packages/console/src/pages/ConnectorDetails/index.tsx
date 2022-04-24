@@ -133,6 +133,7 @@ const ConnectorDetails = () => {
           <div className={styles.operations}>
             <Button
               title="admin_console.connector_details.check_readme"
+              size="large"
               onClick={() => {
                 setIsReadMeOpen(true);
               }}
@@ -146,7 +147,7 @@ const ConnectorDetails = () => {
               <Markdown>{data.metadata.readme}</Markdown>
             </Drawer>
             <ActionMenu
-              buttonProps={{ icon: <More /> }}
+              buttonProps={{ icon: <More />, size: 'large' }}
               title={t('connector_details.more_options')}
             >
               {data.metadata.type !== ConnectorType.Social && (

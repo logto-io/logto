@@ -203,6 +203,7 @@ const ApplicationDetails = () => {
             <div className={styles.operations}>
               <Button
                 title="admin_console.application_details.check_help_guide"
+                size="large"
                 onClick={() => {
                   setIsReadmeOpen(true);
                 }}
@@ -217,7 +218,7 @@ const ApplicationDetails = () => {
                 <div>TBD</div>
               </Drawer>
               <ActionMenu
-                buttonProps={{ icon: <More /> }}
+                buttonProps={{ icon: <More />, size: 'large' }}
                 title={t('application_details.more_options')}
               >
                 <ActionMenuItem

@@ -118,7 +118,7 @@ const Applications = () => {
                   />
                 </td>
                 <td>
-                  <CopyToClipboard value={id} />
+                  <CopyToClipboard value={id} variant="text" />
                 </td>
               </tr>
             ))}

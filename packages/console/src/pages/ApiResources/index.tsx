@@ -116,7 +116,7 @@ const ApiResources = () => {
                   <ItemPreview title={name} icon={<ImagePlaceholder />} to={buildDetailsLink(id)} />
                 </td>
                 <td>
-                  <CopyToClipboard value={indicator} />
+                  <CopyToClipboard value={indicator} variant="text" />
                 </td>
               </tr>
             ))}
