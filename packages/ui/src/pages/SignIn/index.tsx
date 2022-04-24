@@ -4,10 +4,10 @@ import React, { useContext } from 'react';
 
 import BrandingHeader from '@/components/BrandingHeader';
 import TextLink from '@/components/TextLink';
-import UsernameSignin from '@/containers/UsernameSignin';
 import { PageContext } from '@/hooks/use-page-context';
 
 import * as styles from './index.module.scss';
+import { PrimarySection, SecondarySection } from './registry';
 
 const SignIn = () => {
   const { experienceSettings } = useContext(PageContext);
@@ -21,7 +21,11 @@ const SignIn = () => {
         headline={style === BrandingStyle.Logo_Slogan ? slogan : undefined}
         logo={logoUrl}
       />
-      <UsernameSignin />
+      <PrimarySection signInMethod={experienceSettings?.primarySignInMethod} />
+      <SecondarySection
+        primarySignInMethod={experienceSettings?.primarySignInMethod}
+        secondarySignInMethods={experienceSettings?.secondarySignInMethods}
+      />
       <TextLink
         className={styles.createAccount}
         type="secondary"

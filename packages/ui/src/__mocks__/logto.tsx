@@ -77,4 +77,5 @@ export const mockSignInExperienceSettings: SignInExperienceSettings = {
   languageInfo: mockSignInExperience.languageInfo,
   primarySignInMethod: 'username',
   secondarySignInMethods: ['email', 'sms', 'social'],
+  socialConnectors,
 };

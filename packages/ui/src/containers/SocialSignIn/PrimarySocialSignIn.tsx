@@ -1,4 +1,3 @@
-import { ConnectorMetadata } from '@logto/schemas';
 import classNames from 'classnames';
 import React, { useState, useMemo } from 'react';
 
@@ -10,23 +9,23 @@ import * as styles from './index.module.scss';
 
 type Props = {
   className?: string;
-  connectors: Array<Pick<ConnectorMetadata, 'id' | 'logo' | 'name'>>;
   isPopup?: boolean;
+  onSocialSignInCallback?: () => void;
 };
 
-const PrimarySocialSignIn = ({ className, connectors, isPopup = false }: Props) => {
+const PrimarySocialSignIn = ({ className, isPopup = false, onSocialSignInCallback }: Props) => {
   const [showAll, setShowAll] = useState(false);
-  const { invokeSocialSignIn } = useSocial();
-  const isOverSize = connectors.length > 3;
+  const { invokeSocialSignIn, socialConnectors } = useSocial({ onSocialSignInCallback });
+  const isOverSize = socialConnectors.length > 3;
   const displayAll = showAll || isPopup || !isOverSize;
 
   const displayConnectors = useMemo(() => {
     if (displayAll) {
-      return connectors;
+      return socialConnectors;
     }
 
-    return connectors.slice(0, 3);
-  }, [connectors, displayAll]);
+    return socialConnectors.slice(0, 3);
+  }, [socialConnectors, displayAll]);
 
   return (
     <div className={classNames(styles.socialLinkList, className)}>

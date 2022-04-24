@@ -5,6 +5,7 @@
 
 import { SignInMethods } from '@logto/schemas';
 
+import { socialConnectors } from '@/__mocks__/logto';
 import { getSignInExperience } from '@/apis/settings';
 import { SignInMethod, SignInExperienceSettings } from '@/types';
 
@@ -36,6 +37,7 @@ const getSignInExperienceSettings = async (): Promise<SignInExperienceSettings> 
     termsOfUse,
     primarySignInMethod: getPrimarySignInMethod(signInMethods),
     secondarySignInMethods: getSecondarySignInMethods(signInMethods),
+    socialConnectors, // TODO: get values from api
   };
 };
 

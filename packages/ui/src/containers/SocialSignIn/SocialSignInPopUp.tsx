@@ -1,4 +1,3 @@
-import { ConnectorMetadata } from '@logto/schemas';
 import React from 'react';
 
 import Drawer from '@/components/Drawer';
@@ -9,12 +8,11 @@ type Props = {
   isOpen?: boolean;
   onClose: () => void;
   className?: string;
-  connectors: Array<Pick<ConnectorMetadata, 'id' | 'logo' | 'name'>>;
 };
 
-const SocialSignInPopUp = ({ isOpen = false, onClose, className, connectors }: Props) => (
+const SocialSignInPopUp = ({ isOpen = false, onClose, className }: Props) => (
   <Drawer className={className} isOpen={isOpen} onClose={onClose}>
-    <PrimarySocialSignIn isPopup connectors={connectors} />
+    <PrimarySocialSignIn isPopup onSocialSignInCallback={onClose} />
   </Drawer>
 );
 

@@ -8,6 +8,7 @@
   width: auto;
   @include _.flex-row;
   position: relative;
+  margin-right: _.unit(1);
 
   > select {
     appearance: none;

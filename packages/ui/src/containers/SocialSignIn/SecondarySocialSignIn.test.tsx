@@ -1,9 +1,10 @@
-import { render, fireEvent, waitFor } from '@testing-library/react';
+import { fireEvent, waitFor } from '@testing-library/react';
 import React from 'react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
-import { socialConnectors } from '@/__mocks__/logto';
+import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider';
+import { socialConnectors, mockSignInExperienceSettings } from '@/__mocks__/logto';
 import * as socialSignInApi from '@/apis/social';
 import { generateState, storeState } from '@/hooks/use-social';
 
@@ -27,6 +28,7 @@ describe('SecondarySocialSignIn', () => {
       platform: 'web',
       getPostMessage: jest.fn(() => jest.fn()),
       callbackLink: '/logto:',
+      supportedSocialConnectors: socialConnectors.map(({ id }) => id),
     };
     /* eslint-enable @silverhand/fp/no-mutation */
   });
@@ -36,19 +38,28 @@ describe('SecondarySocialSignIn', () => {
   });
 
   it('less than four connectors', () => {
-    const { container } = render(
-      <MemoryRouter>
-        <SecondarySocialSignIn connectors={socialConnectors.slice(0, 3)} />
-      </MemoryRouter>
+    const { container } = renderWithPageContext(
+      <SettingsProvider
+        settings={{
+          ...mockSignInExperienceSettings,
+          socialConnectors: socialConnectors.slice(0, 3),
+        }}
+      >
+        <MemoryRouter>
+          <SecondarySocialSignIn />
+        </MemoryRouter>
+      </SettingsProvider>
     );
     expect(container.querySelectorAll('button')).toHaveLength(3);
   });
 
   it('more than four connectors', () => {
-    const { container } = render(
-      <MemoryRouter>
-        <SecondarySocialSignIn connectors={socialConnectors} />
-      </MemoryRouter>
+    const { container } = renderWithPageContext(
+      <SettingsProvider>
+        <MemoryRouter>
+          <SecondarySocialSignIn />
+        </MemoryRouter>
+      </SettingsProvider>
     );
     expect(container.querySelectorAll('button')).toHaveLength(3);
     expect(container.querySelector('svg')).not.toBeNull();
@@ -58,9 +69,17 @@ describe('SecondarySocialSignIn', () => {
     const connectors = socialConnectors.slice(0, 1);
 
     const { container } = renderWithPageContext(
-      <MemoryRouter>
-        <SecondarySocialSignIn connectors={connectors} />
-      </MemoryRouter>
+      <SettingsProvider
+        settings={{
+          ...mockSignInExperienceSettings,
+          termsOfUse: { enabled: false },
+          socialConnectors: connectors,
+        }}
+      >
+        <MemoryRouter>
+          <SecondarySocialSignIn />
+        </MemoryRouter>
+      </SettingsProvider>
     );
     const socialButton = container.querySelector('button');
 
@@ -81,9 +100,17 @@ describe('SecondarySocialSignIn', () => {
 
     const connectors = socialConnectors.slice(0, 1);
     const { container } = renderWithPageContext(
-      <MemoryRouter>
-        <SecondarySocialSignIn connectors={connectors} />
-      </MemoryRouter>
+      <SettingsProvider
+        settings={{
+          ...mockSignInExperienceSettings,
+          termsOfUse: { enabled: false },
+          socialConnectors: connectors,
+        }}
+      >
+        <MemoryRouter>
+          <SecondarySocialSignIn />
+        </MemoryRouter>
+      </SettingsProvider>
     );
     const socialButton = container.querySelector('button');
 
@@ -98,8 +125,6 @@ describe('SecondarySocialSignIn', () => {
   });
 
   it('callback validation and signIn with social', async () => {
-    const connectors = socialConnectors.slice(0, 1);
-
     const state = generateState();
     storeState(state, 'github');
 
@@ -115,14 +140,13 @@ describe('SecondarySocialSignIn', () => {
     /* eslint-enable @silverhand/fp/no-mutating-methods */
 
     renderWithPageContext(
-      <MemoryRouter initialEntries={['/sign-in/callback/github']}>
-        <Routes>
-          <Route
-            path="/sign-in/callback/:connector"
-            element={<SecondarySocialSignIn connectors={connectors} />}
-          />
-        </Routes>
-      </MemoryRouter>
+      <SettingsProvider>
+        <MemoryRouter initialEntries={['/sign-in/callback/github']}>
+          <Routes>
+            <Route path="/sign-in/callback/:connector" element={<SecondarySocialSignIn />} />
+          </Routes>
+        </MemoryRouter>
+      </SettingsProvider>
     );
 
     await waitFor(() => {

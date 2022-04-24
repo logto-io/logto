@@ -42,6 +42,10 @@ const SignInMethodsLink = ({ signInMethods, type = 'secondary', className }: Pro
     [navigate, signInMethods]
   );
 
+  if (signInMethodsLink.length === 0) {
+    return null;
+  }
+
   if (type === 'primary') {
     return <div className={classNames(styles.methodsPrimary, className)}>{signInMethodsLink}</div>;
   }
