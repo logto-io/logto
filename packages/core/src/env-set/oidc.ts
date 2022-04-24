@@ -6,6 +6,17 @@ import inquirer from 'inquirer';
 
 import { noInquiry } from './parameters';
 
+/**
+ * Try to read private key with the following order:
+ *
+ * 1. From `process.env.OIDC_PRIVATE_KEY`.
+ * 2. Fetch path from `process.env.OIDC_PRIVATE_KEY_PATH` then read from that path.
+ *
+ * If none of above succeed, then inquire user to generate a new key if no `--no-inquiry` presents in argv.
+ *
+ * @returns The private key for OIDC provider.
+ * @throws An error when failed to read a private key.
+ */
 const readPrivateKey = async (): Promise<string> => {
   const privateKey = getEnv('OIDC_PRIVATE_KEY');
 
