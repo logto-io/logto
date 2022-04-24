@@ -2,8 +2,8 @@ import { createMockContext, Options } from '@shopify/jest-koa-mocks';
 import Koa, { MiddlewareType, Context, Middleware } from 'koa';
 import Router, { IRouterParamContext } from 'koa-router';
 import { Provider } from 'oidc-provider';
-import { createMockPool, createMockQueryResult, QueryResultType, QueryResultRowType } from 'slonik';
-import { PrimitiveValueExpressionType } from 'slonik/dist/src/types.d';
+import { createMockPool, createMockQueryResult, QueryResult, QueryResultRow } from 'slonik';
+import { PrimitiveValueExpression } from 'slonik/dist/src/types.d';
 import request from 'supertest';
 
 import { AuthedRouter, AnonymousRouter } from '@/routes/types';
@@ -27,12 +27,12 @@ export const expectSqlAssert = (sql: string, expectSql: string) => {
 
 export type QueryType = (
   sql: string,
-  values: readonly PrimitiveValueExpressionType[]
-) => Promise<QueryResultType<QueryResultRowType>>;
+  values: readonly PrimitiveValueExpression[]
+) => Promise<QueryResult<QueryResultRow>>;
 
-export const createTestPool = <T extends QueryResultRowType>(
+export const createTestPool = <T extends QueryResultRow>(
   expectSql?: string,
-  returning?: T | ((sql: string, values: readonly PrimitiveValueExpressionType[]) => T)
+  returning?: T | ((sql: string, values: readonly PrimitiveValueExpression[]) => T)
 ) =>
   createMockPool({
     query: async (sql, values) => {

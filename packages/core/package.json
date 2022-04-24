@@ -44,7 +44,7 @@
     "oidc-provider": "^7.10.0",
     "p-retry": "^4.6.1",
     "query-string": "^7.0.1",
-    "slonik": "^23.8.3",
+    "slonik": "^28.0.0",
     "slonik-interceptor-preset": "^1.2.10",
     "snakecase-keys": "^5.1.0",
     "zod": "^3.14.3"

@@ -5,7 +5,7 @@ import {
   OidcModelInstances,
 } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
-import { sql, ValueExpressionType } from 'slonik';
+import { sql, ValueExpression } from 'slonik';
 
 import { buildInsertInto } from '@/database/insert-into';
 import { convertToIdentifiers, convertToTimestamp } from '@/database/utils';
@@ -49,7 +49,7 @@ export const findPayloadById = async (modelName: string, id: string) => {
 };
 
 export const findPayloadByPayloadField = async <
-  T extends ValueExpressionType,
+  T extends ValueExpression,
   Field extends keyof OidcModelInstancePayload
 >(
   modelName: string,
