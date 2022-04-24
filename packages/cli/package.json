@@ -23,7 +23,7 @@
     "dev": "ts-node --files src/index.ts"
   },
   "engines": {
-    "node": ">=16.0.0"
+    "node": "^16.0.0"
   },
   "devDependencies": {
     "@silverhand/eslint-config": "^0.10.2",

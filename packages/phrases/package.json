@@ -22,6 +22,9 @@
     "lint:report": "pnpm lint -- --format json --output-file report.json",
     "prepack": "pnpm build"
   },
+  "engines": {
+    "node": "^16.0.0"
+  },
   "bugs": {
     "url": "https://github.com/logto-io/logto/issues"
   },
