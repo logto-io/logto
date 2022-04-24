@@ -8,6 +8,7 @@ import * as styles from './index.module.scss';
 type Props = {
   value: string;
   className?: string;
+  variant?: 'text' | 'contained';
 };
 
 const CopyIcon = forwardRef<SVGSVGElement, SVGProps<SVGSVGElement>>(
@@ -27,7 +28,7 @@ const CopyIcon = forwardRef<SVGSVGElement, SVGProps<SVGSVGElement>>(
 
 type CopyState = TFuncKey<'translation', 'admin_console.copy'>;
 
-const CopyToClipboard = ({ value, className }: Props) => {
+const CopyToClipboard = ({ value, className, variant = 'contained' }: Props) => {
   const copyIconReference = useRef<SVGSVGElement>(null);
   const [copyState, setCopyState] = useState<CopyState>('pending');
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.copy' });
@@ -46,7 +47,7 @@ const CopyToClipboard = ({ value, className }: Props) => {
 
   return (
     <div
-      className={classNames(styles.container, className)}
+      className={classNames(styles.container, styles[variant], className)}
       onClick={(event) => {
         event.stopPropagation();
       }}
