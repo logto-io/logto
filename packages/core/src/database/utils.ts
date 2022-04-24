@@ -1,16 +1,14 @@
 import { SchemaValuePrimitive, SchemaValue } from '@logto/schemas';
 import { Falsy, notFalsy } from '@silverhand/essentials';
 import dayjs from 'dayjs';
-import { sql, SqlSqlTokenType, SqlTokenType, IdentifierSqlTokenType } from 'slonik';
+import { sql, SqlSqlToken, SqlToken, IdentifierSqlToken } from 'slonik';
 
 import envSet from '@/env-set';
 
 import { FieldIdentifiers, Table } from './types';
 
-export const conditionalSql = <T>(
-  value: T,
-  buildSql: (value: Exclude<T, Falsy>) => SqlSqlTokenType
-) => (notFalsy(value) ? buildSql(value) : sql``);
+export const conditionalSql = <T>(value: T, buildSql: (value: Exclude<T, Falsy>) => SqlSqlToken) =>
+  notFalsy(value) ? buildSql(value) : sql``;
 
 export const autoSetFields = Object.freeze(['createdAt', 'updatedAt'] as const);
 export type OmitAutoSetFields<T> = Omit<T, typeof autoSetFields[number]>;
@@ -36,7 +34,7 @@ export const convertToPrimitiveOrSql = (
   // eslint-disable-next-line @typescript-eslint/ban-types
   value: NonNullable<SchemaValue> | null
   // eslint-disable-next-line @typescript-eslint/ban-types
-): NonNullable<SchemaValuePrimitive> | SqlTokenType | null => {
+): NonNullable<SchemaValuePrimitive> | SqlToken | null => {
   if (value === null) {
     return null;
   }
@@ -73,7 +71,7 @@ export const convertToIdentifiers = <T extends Table>(
 
 export const convertToTimestamp = (time = dayjs()) => sql`to_timestamp(${time.valueOf() / 1000})`;
 
-export const getTotalRowCount = async (table: IdentifierSqlTokenType) =>
+export const getTotalRowCount = async (table: IdentifierSqlToken) =>
   envSet.pool.one<{ count: number }>(sql`
     select count(*)
     from ${table}

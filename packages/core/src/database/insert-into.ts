@@ -1,6 +1,6 @@
 import { SchemaLike, GeneratedSchema } from '@logto/schemas';
 import { has } from '@silverhand/essentials';
-import { IdentifierSqlTokenType, sql } from 'slonik';
+import { IdentifierSqlToken, sql } from 'slonik';
 
 import envSet from '@/env-set';
 import { InsertionError } from '@/errors/SlonikError';
@@ -14,15 +14,15 @@ import {
   OmitAutoSetFields,
 } from './utils';
 
-const setExcluded = (...fields: IdentifierSqlTokenType[]) =>
+const setExcluded = (...fields: IdentifierSqlToken[]) =>
   sql.join(
     fields.map((field) => sql`${field}=excluded.${field}`),
     sql`, `
   );
 
 type OnConflict = {
-  fields: IdentifierSqlTokenType[];
-  setExcludedFields: IdentifierSqlTokenType[];
+  fields: IdentifierSqlToken[];
+  setExcludedFields: IdentifierSqlToken[];
 };
 
 type InsertIntoConfigReturning = {

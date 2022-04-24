@@ -1,5 +1,5 @@
 import { Connectors, ConnectorType, CreateConnector } from '@logto/schemas';
-import { createMockPool, createMockQueryResult, sql, QueryResultRowType } from 'slonik';
+import { createMockPool, createMockQueryResult, sql, QueryResultRow } from 'slonik';
 
 import { convertToIdentifiers } from '@/database/utils';
 import envSet from '@/env-set';
@@ -64,7 +64,7 @@ describe('connector queries', () => {
   });
 
   it('insertConnector', async () => {
-    const connector: CreateConnector & QueryResultRowType = {
+    const connector: CreateConnector & QueryResultRow = {
       id: 'foo',
       type: ConnectorType.Social,
       enabled: true,

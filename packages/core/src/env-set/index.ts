@@ -1,5 +1,5 @@
 import { getEnv, Optional } from '@silverhand/essentials';
-import { DatabasePoolType } from 'slonik';
+import { DatabasePool } from 'slonik';
 
 import createPoolByEnv from './create-pool-by-env';
 import loadOidcValues from './oidc';
@@ -38,7 +38,7 @@ const throwNotLoadedError = () => {
 /* eslint-disable @silverhand/fp/no-let, @silverhand/fp/no-mutation */
 function createEnvSet() {
   let values: Optional<Awaited<ReturnType<typeof loadEnvValues>>>;
-  let pool: Optional<DatabasePoolType>;
+  let pool: Optional<DatabasePool>;
 
   return {
     get values() {
