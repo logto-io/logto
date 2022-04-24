@@ -371,7 +371,7 @@ importers:
       '@silverhand/essentials': ^1.1.7
       '@silverhand/ts-config': ^0.10.2
       '@silverhand/ts-config-react': ^0.10.3
-      '@testing-library/react': ^13.0.0
+      '@testing-library/react': ^12.1.2
       '@types/jest': ^27.4.0
       '@types/react': ^17.0.14
       '@types/react-dom': ^17.0.9
@@ -415,7 +415,7 @@ importers:
       '@silverhand/essentials': 1.1.7
       '@silverhand/ts-config': 0.10.2_typescript@4.6.2
       '@silverhand/ts-config-react': 0.10.3_typescript@4.6.2
-      '@testing-library/react': 13.1.1_react-dom@17.0.2+react@17.0.2
+      '@testing-library/react': 12.1.5_react-dom@17.0.2+react@17.0.2
       '@types/jest': 27.4.0
       '@types/react': 17.0.37
       '@types/react-dom': 17.0.11
@@ -5610,16 +5610,16 @@ packages:
       pretty-format: 27.5.1
     dev: true
 
-  /@testing-library/react/13.1.1_react-dom@17.0.2+react@17.0.2:
-    resolution: {integrity: sha512-8mirlAa0OKaUvnqnZF6MdAh2tReYA2KtWVw1PKvaF5EcCZqgK5pl8iF+3uW90JdG5Ua2c2c2E2wtLdaug3dsVg==}
+  /@testing-library/react/12.1.5_react-dom@17.0.2+react@17.0.2:
+    resolution: {integrity: sha512-OfTXCJUFgjd/digLUuPxa0+/3ZxsQmE7ub9kcbW/wi96Bh3o/p5vrETcBGfP17NWPGqeYYl5LTRpwyGoMC4ysg==}
     engines: {node: '>=12'}
     peerDependencies:
-      react: ^18.0.0
-      react-dom: ^18.0.0
+      react: <18.0.0
+      react-dom: <18.0.0
     dependencies:
       '@babel/runtime': 7.17.9
       '@testing-library/dom': 8.11.1
-      '@types/react-dom': 18.0.2
+      '@types/react-dom': 17.0.11
       react: 17.0.2
       react-dom: 17.0.2_react@17.0.2
     dev: true
@@ -6031,12 +6031,6 @@ packages:
 
   /@types/react-dom/17.0.11:
     resolution: {integrity: sha512-f96K3k+24RaLGVu/Y2Ng3e1EbZ8/cVJvypZWd7cy0ofCBaf2lcM46xNhycMZ2xGwbBjRql7hOlZ+e2WlJ5MH3Q==}
-    dependencies:
-      '@types/react': 17.0.37
-    dev: true
-
-  /@types/react-dom/18.0.2:
-    resolution: {integrity: sha512-UxeS+Wtj5bvLRREz9tIgsK4ntCuLDo0EcAcACgw3E+9wE8ePDr9uQpq53MfcyxyIS55xJ+0B6mDS8c4qkkHLBg==}
     dependencies:
       '@types/react': 17.0.37
     dev: true
