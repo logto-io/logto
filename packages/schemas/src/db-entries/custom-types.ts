@@ -5,11 +5,6 @@ export enum ApplicationType {
   SPA = 'SPA',
   Traditional = 'Traditional',
 }
-export enum ConnectorType {
-  Email = 'Email',
-  SMS = 'SMS',
-  Social = 'Social',
-}
 export enum PasscodeType {
   SignIn = 'SignIn',
   Register = 'Register',

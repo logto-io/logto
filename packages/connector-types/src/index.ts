@@ -1,6 +1,10 @@
 import { Languages } from '@logto/phrases';
-import { ArbitraryObject, ConnectorType } from '@logto/schemas';
-import { Response } from 'got';
+
+export enum ConnectorType {
+  Email = 'Email',
+  SMS = 'SMS',
+  Social = 'Social',
+}
 
 export interface ConnectorMetadata {
   id: string;
@@ -50,23 +54,17 @@ export type SendEmailResponse = { EnvId: string; RequestId: string };
 
 export type SendSmsResponse = { BizId: string; Code: string; Message: string; RequestId: string };
 
-export type EmailSendMessageFunction<
-  ResponseBody extends ArbitraryObject = ArbitraryObject,
-  ResponseType = Response<ResponseBody>
-> = (
+export type EmailSendMessageFunction<T = Record<string, unknown>> = (
   address: string,
   type: keyof EmailMessageTypes,
   payload: EmailMessageTypes[typeof type]
-) => Promise<ResponseType>;
+) => Promise<T>;
 
-export type SmsSendMessageFunction<
-  ResponseBody extends ArbitraryObject = ArbitraryObject,
-  ResponseType = Response<ResponseBody>
-> = (
+export type SmsSendMessageFunction<T = Record<string, unknown>> = (
   phone: string,
   type: keyof SmsMessageTypes,
   payload: SmsMessageTypes[typeof type]
-) => Promise<ResponseType>;
+) => Promise<T>;
 
 export interface BaseConnector {
   metadata: ConnectorMetadata;
@@ -90,9 +88,7 @@ export interface SocialConnector extends BaseConnector {
   getTimestamp?: GetTimestamp;
 }
 
-export type ValidateConfig<T extends ArbitraryObject = ArbitraryObject> = (
-  config: T
-) => Promise<void>;
+export type ValidateConfig<T = Record<string, unknown>> = (config: T) => Promise<void>;
 
 export type GetAuthorizationUri = (redirectUri: string, state: string) => Promise<string>;
 
@@ -104,9 +100,7 @@ export type GetUserInfo = (
   accessTokenObject: AccessTokenObject
 ) => Promise<{ id: string } & Record<string, string | undefined>>;
 
-export type GetConnectorConfig<T extends ArbitraryObject = ArbitraryObject> = (
-  id: string
-) => Promise<T>;
+export type GetConnectorConfig<T = Record<string, unknown>> = (id: string) => Promise<T>;
 
 export type GetTimeout = () => Promise<number>;
 

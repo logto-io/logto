@@ -45,6 +45,7 @@
   },
   "prettier": "@silverhand/eslint-config/.prettierrc",
   "dependencies": {
+    "@logto/connector-types": "^0.1.0",
     "@logto/phrases": "^0.1.0",
     "zod": "^3.14.3"
   }
