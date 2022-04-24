@@ -1,4 +1,4 @@
-import { Languages } from '@logto/phrases';
+import type { Languages } from '@logto/phrases';
 
 export enum ConnectorType {
   Email = 'Email',
