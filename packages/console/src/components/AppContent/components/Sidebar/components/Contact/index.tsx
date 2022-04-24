@@ -35,7 +35,7 @@ const Contact = ({ isOpen, onCancel }: Props) => {
                 <div className={styles.description}>{t(description)}</div>
               </div>
               <div>
-                <Button type="outline" title={label} />
+                <Button type="outline" title={label} className={styles.button} />
               </div>
             </div>
           ))}
