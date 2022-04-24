@@ -9,3 +9,11 @@ export const parseQueryParameters = (parameters: string | URLSearchParams) => {
 
   return Object.fromEntries(searchParameters.entries());
 };
+
+type Entries<T> = Array<
+  {
+    [K in keyof T]: [K, T[K]];
+  }[keyof T]
+>;
+
+export const entries = <T>(object: T): Entries<T> => Object.entries(object) as Entries<T>;
