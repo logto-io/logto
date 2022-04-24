@@ -7,6 +7,4 @@ describe('oidc provider init', () => {
     const app = new Koa();
     await expect(initOidc(app)).resolves.not.toThrow();
   });
-
-  // TODO:
 });
