@@ -177,6 +177,7 @@ importers:
       copyfiles: ^2.4.1
       dayjs: ^1.10.5
       decamelize: ^5.0.0
+      deepmerge: ^4.2.2
       dotenv: ^16.0.0
       eslint: ^8.10.0
       got: ^11.8.2
@@ -218,6 +219,7 @@ importers:
       '@silverhand/essentials': 1.1.2
       dayjs: 1.10.7
       decamelize: 5.0.1
+      deepmerge: 4.2.2
       dotenv: 16.0.0
       got: 11.8.3
       i18next: 21.6.12
@@ -6822,7 +6824,6 @@ packages:
 
   /asap/2.0.6:
     resolution: {integrity: sha1-5QNHYR1+aQlDIIu9r+vLwvuGbUY=}
-    dev: true
 
   /asn1/0.2.6:
     resolution: {integrity: sha512-ix/FxPn0MDjeyJ7i/yoHGFt/EX6LyNbxSEhPPXODPL+KB0VPk86UYfL0lMdy+KCnv+fmvIzySwaK5COwqVbWTQ==}
@@ -11272,12 +11273,6 @@ packages:
     hasBin: true
     dependencies:
       ci-info: 2.0.0
-    dev: true
-
-  /is-core-module/2.8.0:
-    resolution: {integrity: sha512-vd15qHsaqrRL7dtH6QNuy0ndJmRDrS9HAM1CAiSifNUFv4x1a0CCVsj18hJ1mShxIG6T2i1sO78MkP56r0nYRw==}
-    dependencies:
-      has: 1.0.3
     dev: true
 
   /is-core-module/2.8.1:

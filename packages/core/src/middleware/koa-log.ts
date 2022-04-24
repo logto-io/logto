@@ -1,33 +1,21 @@
-import { LogResult, LogType } from '@logto/schemas';
-import { Context, MiddlewareType } from 'koa';
+import { LogPayload, LogPayloads, LogResult, LogType } from '@logto/schemas';
+import { Optional } from '@silverhand/essentials';
+import deepmerge from 'deepmerge';
+import { MiddlewareType } from 'koa';
 import { nanoid } from 'nanoid';
 
 import { insertLog } from '@/queries/log';
 
 export type WithLogContext<ContextT> = ContextT & {
-  log: LogContext;
+  log: <T extends LogType>(type: T, payload: LogPayloads[T]) => void;
 };
 
-export interface LogContext {
-  [key: string]: unknown;
-  type?: LogType;
-}
-
-const log = async (ctx: WithLogContext<Context>, result: LogResult) => {
-  const { type, ...rest } = ctx.log;
-
-  if (!type) {
-    return;
-  }
-
+const saveLog = async (type: LogType, payload: LogPayload) => {
   try {
     await insertLog({
       id: nanoid(),
       type,
-      payload: {
-        ...rest,
-        result,
-      },
+      payload,
     });
   } catch (error: unknown) {
     console.error('An error occurred while inserting log');
@@ -41,14 +29,33 @@ export default function koaLog<StateT, ContextT, ResponseBodyT>(): MiddlewareTyp
   ResponseBodyT
 > {
   return async (ctx, next) => {
-    ctx.log = {};
+    // eslint-disable-next-line @silverhand/fp/no-let
+    let logType: Optional<LogType>;
+    // eslint-disable-next-line @silverhand/fp/no-let
+    let logPayload: LogPayload = {};
+
+    ctx.log = (type, payload) => {
+      if (logType !== type) {
+        // eslint-disable-next-line @silverhand/fp/no-mutation
+        logPayload = {}; // Reset payload when type changes
+      }
+
+      // eslint-disable-next-line @silverhand/fp/no-mutation
+      logType = type; // Use first initialized log type
+      // eslint-disable-next-line @silverhand/fp/no-mutation
+      logPayload = deepmerge(logPayload, payload);
+    };
 
     try {
       await next();
-      await log(ctx, LogResult.Success);
+
+      if (logType) {
+        await saveLog(logType, { ...logPayload, result: LogResult.Success });
+      }
     } catch (error: unknown) {
-      ctx.log.error = String(error);
-      await log(ctx, LogResult.Error);
+      if (logType) {
+        await saveLog(logType, { ...logPayload, result: LogResult.Error, error: String(error) });
+      }
       throw error;
     }
   };

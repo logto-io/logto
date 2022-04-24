@@ -5,7 +5,9 @@ import { z } from 'zod';
  * Commonly Used
  */
 
-export const arbitraryObjectGuard = z.object({}).catchall(z.unknown());
+// Cannot declare `z.object({}).catchall(z.unknown().optional())` to guard `{ [key: string]?: unknown }` (invalid type),
+// so do it another way to guard `{ [x: string]: unknown; } | {}`.
+export const arbitraryObjectGuard = z.union([z.object({}).catchall(z.unknown()), z.object({})]);
 
 export type ArbitraryObject = z.infer<typeof arbitraryObjectGuard>;
 

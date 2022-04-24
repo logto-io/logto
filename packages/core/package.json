@@ -25,6 +25,7 @@
     "@silverhand/essentials": "^1.1.0",
     "dayjs": "^1.10.5",
     "decamelize": "^5.0.0",
+    "deepmerge": "^4.2.2",
     "dotenv": "^16.0.0",
     "got": "^11.8.2",
     "i18next": "^21.0.0",
