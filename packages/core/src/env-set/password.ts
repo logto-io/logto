@@ -4,6 +4,7 @@ import { nanoid } from 'nanoid';
 import { number, string } from 'zod';
 
 import appendDotEnv from './append-dot-env';
+import { noInquiry } from './parameters';
 
 const loadPeppers = async (isTest: boolean): Promise<string[]> => {
   if (isTest) {
@@ -17,6 +18,10 @@ const loadPeppers = async (isTest: boolean): Promise<string[]> => {
       .array()
       .parse(JSON.parse(assertEnv(key)));
   } catch (error: unknown) {
+    if (noInquiry) {
+      throw error;
+    }
+
     if (!(error instanceof Error && error.message === `env variable ${key} not found`)) {
       throw error;
     }

@@ -4,12 +4,18 @@ import { readFileSync, writeFileSync } from 'fs';
 import { getEnv } from '@silverhand/essentials';
 import inquirer from 'inquirer';
 
+import { noInquiry } from './parameters';
+
 const readPrivateKey = async (path: string): Promise<string> => {
   const privateKeyPath = getEnv('OIDC_PRIVATE_KEY_PATH', 'oidc-private-key.pem');
 
   try {
     return readFileSync(path, 'utf-8');
   } catch (error: unknown) {
+    if (noInquiry) {
+      throw error;
+    }
+
     const answer = await inquirer.prompt({
       type: 'confirm',
       name: 'confirm',
