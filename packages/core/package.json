@@ -67,6 +67,7 @@
     "copyfiles": "^2.4.1",
     "eslint": "^8.10.0",
     "jest": "^27.5.1",
+    "jest-matcher-specific-error": "^1.0.0",
     "lint-staged": "^12.0.0",
     "nock": "^13.2.2",
     "openapi-types": "^11.0.0",

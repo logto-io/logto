@@ -184,6 +184,7 @@ importers:
       iconv-lite: 0.6.3
       inquirer: ^8.2.2
       jest: ^27.5.1
+      jest-matcher-specific-error: ^1.0.0
       jose: ^4.0.0
       koa: ^2.13.1
       koa-body: ^5.0.0
@@ -258,13 +259,14 @@ importers:
       copyfiles: 2.4.1
       eslint: 8.10.0
       jest: 27.5.1
+      jest-matcher-specific-error: 1.0.0
       lint-staged: 12.4.0
       nock: 13.2.2
       openapi-types: 11.0.0
       prettier: 2.5.1
       snake-case: 3.0.4
       supertest: 6.2.2
-      ts-jest: 27.1.1_ac171f3d9f636bd8b4c3e7aa384f840e
+      ts-jest: 27.1.1_60149d457e34ffba7d4e845dde6a1263
       tsc-watch: 5.0.3_typescript@4.6.2
       typescript: 4.6.2
 
@@ -11947,7 +11949,6 @@ packages:
 
   /jest-matcher-specific-error/1.0.0:
     resolution: {integrity: sha512-thJdy9ibhDo8k+0arFalNCQBJ0u7eqTfpTzS2MzL3iCLmbRCkI+yhhKSiAxEi55e5ZUyf01ySa0fMqzF+sblAw==}
-    dev: false
 
   /jest-matcher-utils/27.5.1:
     resolution: {integrity: sha512-z2uTx/T6LBaCoNWNFWwChLBKYxTMcGBRjAt+2SbP929/Fflb9aa5LGma654Rz8z9HLxsrUaYzxE9T/EFIL/PAw==}
@@ -18750,7 +18751,7 @@ packages:
     resolution: {integrity: sha512-AqTiAOLcj85xS7vQ8QkAV41hPDIJ71XJB4RCUrzo/1GM2CQwhkJGaf9Hgr7BOugMRpgGUrqRg/DrBDl4H40+8g==}
     dev: true
 
-  /ts-jest/27.1.1_ac171f3d9f636bd8b4c3e7aa384f840e:
+  /ts-jest/27.1.1_60149d457e34ffba7d4e845dde6a1263:
     resolution: {integrity: sha512-Ds0VkB+cB+8g2JUmP/GKWndeZcCKrbe6jzolGrVWdqVUFByY/2KDHqxJ7yBSon7hDB1TA4PXxjfZ+JjzJisvgA==}
     engines: {node: ^10.13.0 || ^12.13.0 || ^14.15.0 || >=15.0.0}
     hasBin: true
@@ -18771,7 +18772,7 @@ packages:
       esbuild:
         optional: true
     dependencies:
-      '@types/jest': 27.4.0
+      '@types/jest': 27.4.1
       bs-logger: 0.2.6
       fast-json-stable-stringify: 2.1.0
       jest: 27.5.1
