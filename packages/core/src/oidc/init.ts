@@ -1,7 +1,7 @@
 /* istanbul ignore file */
 
 import { CustomClientMetadataKey } from '@logto/schemas';
-import { fromKeyLike } from 'jose/jwk/from_key_like';
+import { exportJWK } from 'jose';
 import Koa from 'koa';
 import mount from 'koa-mount';
 import { Provider, errors } from 'oidc-provider';
@@ -16,7 +16,7 @@ import { routes } from '@/routes/consts';
 export default async function initOidc(app: Koa): Promise<Provider> {
   const { issuer, privateKey, defaultIdTokenTtl, defaultRefreshTokenTtl } = envSet.values.oidc;
 
-  const keys = [await fromKeyLike(privateKey)];
+  const keys = [await exportJWK(privateKey)];
   const cookieConfig = Object.freeze({
     sameSite: 'lax',
     path: '/',

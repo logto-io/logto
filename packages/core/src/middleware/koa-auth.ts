@@ -1,6 +1,6 @@
 import { IncomingHttpHeaders } from 'http';
 
-import { jwtVerify } from 'jose/jwt/verify';
+import { jwtVerify } from 'jose';
 import { MiddlewareType, Request } from 'koa';
 import { IRouterParamContext } from 'koa-router';
 

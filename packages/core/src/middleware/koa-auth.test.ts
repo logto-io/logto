@@ -1,4 +1,4 @@
-import { jwtVerify } from 'jose/jwt/verify';
+import { jwtVerify } from 'jose';
 import { Context } from 'koa';
 import { IRouterParamContext } from 'koa-router';
 
@@ -8,7 +8,7 @@ import { createContextWithRouteParameters } from '@/utils/test-utils';
 
 import koaAuth, { WithAuthContext } from './koa-auth';
 
-jest.mock('jose/jwt/verify', () => ({
+jest.mock('jose', () => ({
   jwtVerify: jest.fn(() => ({ payload: { sub: 'fooUser' } })),
 }));
 
