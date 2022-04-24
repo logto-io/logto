@@ -3,11 +3,10 @@
 import { z } from 'zod';
 
 import { ArbitraryObject, arbitraryObjectGuard, GeneratedSchema, Guard } from '../foundations';
-import { ConnectorType } from './custom-types';
 
 export type CreateConnector = {
   id: string;
-  type: ConnectorType;
+  type: string;
   enabled?: boolean;
   config?: ArbitraryObject;
   createdAt?: number;
@@ -15,7 +14,7 @@ export type CreateConnector = {
 
 export type Connector = {
   id: string;
-  type: ConnectorType;
+  type: string;
   enabled: boolean;
   config: ArbitraryObject;
   createdAt: number;
@@ -23,7 +22,7 @@ export type Connector = {
 
 const createGuard: Guard<CreateConnector> = z.object({
   id: z.string(),
-  type: z.nativeEnum(ConnectorType),
+  type: z.string(),
   enabled: z.boolean().optional(),
   config: arbitraryObjectGuard.optional(),
   createdAt: z.number().optional(),
