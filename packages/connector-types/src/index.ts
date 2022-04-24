@@ -1,9 +1,6 @@
 import { Languages } from '@logto/phrases';
-import { ArbitraryObject, Connector, ConnectorType } from '@logto/schemas';
-
-import { Response } from './aliyun';
-
-export * from './aliyun';
+import { ArbitraryObject, ConnectorType } from '@logto/schemas';
+import { Response } from 'got';
 
 export interface ConnectorMetadata {
   id: string;
@@ -13,10 +10,6 @@ export interface ConnectorMetadata {
   description: Record<Languages, string>;
   readme: string;
   configTemplate: string;
-}
-
-export interface ConnectorDTO extends Connector {
-  metadata: ConnectorMetadata;
 }
 
 export enum ConnectorErrorCodes {
@@ -58,22 +51,22 @@ export type SendEmailResponse = { EnvId: string; RequestId: string };
 export type SendSmsResponse = { BizId: string; Code: string; Message: string; RequestId: string };
 
 export type EmailSendMessageFunction<
-  T1 extends ArbitraryObject = ArbitraryObject,
-  T2 = Response<T1>
+  ResponseBody extends ArbitraryObject = ArbitraryObject,
+  ResponseType = Response<ResponseBody>
 > = (
   address: string,
   type: keyof EmailMessageTypes,
   payload: EmailMessageTypes[typeof type]
-) => Promise<T2>;
+) => Promise<ResponseType>;
 
 export type SmsSendMessageFunction<
-  T1 extends ArbitraryObject = ArbitraryObject,
-  T2 = Response<T1>
+  ResponseBody extends ArbitraryObject = ArbitraryObject,
+  ResponseType = Response<ResponseBody>
 > = (
   phone: string,
   type: keyof SmsMessageTypes,
   payload: SmsMessageTypes[typeof type]
-) => Promise<T2>;
+) => Promise<ResponseType>;
 
 export interface BaseConnector {
   metadata: ConnectorMetadata;

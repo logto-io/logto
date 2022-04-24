@@ -14,9 +14,7 @@
     "build": "rm -rf lib/ && tsc --p tsconfig.build.json",
     "lint": "eslint --ext .ts src",
     "lint:report": "pnpm lint -- --format json --output-file report.json",
-    "prepack": "pnpm build",
-    "test": "jest",
-    "test:coverage": "jest --coverage --silent"
+    "prepack": "pnpm build"
   },
   "engines": {
     "node": "^16.0.0"
@@ -24,8 +22,7 @@
   "dependencies": {
     "@logto/phrases": "^0.1.0",
     "@logto/schemas": "^0.1.0",
-    "got": "^11.8.2",
-    "jose": "^3.14.3"
+    "got": "^11.8.2"
   },
   "devDependencies": {
     "@jest/types": "^27.5.1",
