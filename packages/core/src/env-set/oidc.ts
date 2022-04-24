@@ -6,11 +6,11 @@ import inquirer from 'inquirer';
 
 import { noInquiry } from './parameters';
 
-const readPrivateKey = async (path: string): Promise<string> => {
+const readPrivateKey = async (): Promise<string> => {
   const privateKeyPath = getEnv('OIDC_PRIVATE_KEY_PATH', 'oidc-private-key.pem');
 
   try {
-    return readFileSync(path, 'utf-8');
+    return readFileSync(privateKeyPath, 'utf-8');
   } catch (error: unknown) {
     if (noInquiry) {
       throw error;
@@ -44,12 +44,10 @@ const readPrivateKey = async (path: string): Promise<string> => {
 };
 
 const loadOidcValues = async (port: number) => {
-  const privateKeyPath = getEnv('OIDC_PRIVATE_KEY_PATH', 'oidc-private-key.pem');
-  const privateKey = crypto.createPrivateKey(await readPrivateKey(privateKeyPath));
+  const privateKey = crypto.createPrivateKey(await readPrivateKey());
   const publicKey = crypto.createPublicKey(privateKey);
 
   return Object.freeze({
-    privateKeyPath,
     privateKey,
     publicKey,
     issuer: getEnv('OIDC_ISSUER', `http://localhost:${port}/oidc`),

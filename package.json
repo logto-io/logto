@@ -9,7 +9,7 @@
     "prepare": "if test \"$NODE_ENV\" != \"production\" && test \"$CI\" != \"true\" ; then husky install ; fi",
     "prepack": "lerna run --stream prepack",
     "dev": "lerna run --stream prepack && lerna --scope=@logto/{core,ui,console} exec -- pnpm dev",
-    "start": "cd packages/core && node ."
+    "start": "cd packages/core && node . --from-root"
   },
   "devDependencies": {
     "@commitlint/cli": "^16.0.0",
