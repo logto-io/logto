@@ -18,6 +18,7 @@ import Callback from './pages/Callback';
 import ConnectorDetails from './pages/ConnectorDetails';
 import Connectors from './pages/Connectors';
 import NotFound from './pages/NotFound';
+import Settings from './pages/Settings';
 import SignInExperience from './pages/SignInExperience';
 import UserDetails from './pages/UserDetails';
 import Users from './pages/Users';
@@ -69,6 +70,7 @@ const Main = () => {
             <Route index element={<Navigate to="experience" />} />
             <Route path=":tab" element={<SignInExperience />} />
           </Route>
+          <Route path="settings" element={<Settings />} />
         </Route>
       </Routes>
     </SWRConfig>

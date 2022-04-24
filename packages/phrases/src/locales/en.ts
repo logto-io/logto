@@ -402,6 +402,22 @@ const translation = {
         },
       },
     },
+    settings: {
+      title: 'settings',
+      description: 'Global settings and others',
+      tabs: {
+        general: 'General',
+      },
+      custom_domain: 'Custom domain',
+      language: 'Language',
+      language_english: 'English',
+      language_chinese: 'Chinese',
+      appearance: 'Appearance',
+      appearance_system: 'Sync with system',
+      appearance_light: 'Light mode',
+      appearance_dark: 'Dark mode',
+      saved: 'Saved!',
+    },
   },
 };
 

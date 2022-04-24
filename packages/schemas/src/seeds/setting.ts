@@ -1,4 +1,7 @@
+import { Language } from '@logto/phrases';
+
 import { CreateSetting } from '../db-entries';
+import { AppearanceMode } from '../foundations';
 
 export const defaultSettingId = 'default';
 
@@ -6,5 +9,8 @@ export const createDefaultSetting = (customDomain: string): Readonly<CreateSetti
   Object.freeze({
     id: defaultSettingId,
     customDomain,
-    adminConsole: {},
+    adminConsole: {
+      language: Language.English,
+      appearanceMode: AppearanceMode.SyncWithSystem,
+    },
   });
