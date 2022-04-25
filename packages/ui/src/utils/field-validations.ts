@@ -10,7 +10,7 @@ export const usernameValidation = (username: string): ErrorType | undefined => {
     return { code: 'required', data: { field: i18next.t('input.username') } };
   }
 
-  if (/\d/.test(username.slice(0, 1))) {
+  if (/^\d/.test(username)) {
     return 'username_should_not_start_with_number';
   }
 
