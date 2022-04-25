@@ -1,7 +1,5 @@
 import { AlipayConfig } from './types';
 
-export const mockedTimeout = 5000;
-
 export const mockedTimestamp = '2022-02-22 22:22:22';
 
 export const mockedAlipayConfig: AlipayConfig = {

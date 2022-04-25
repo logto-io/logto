@@ -1,10 +1,4 @@
-import {
-  ConnectorError,
-  ConnectorErrorCodes,
-  GetConnectorConfig,
-  GetTimeout,
-  GetTimestamp,
-} from '@logto/connector-types';
+import { ConnectorError, ConnectorErrorCodes, GetConnectorConfig } from '@logto/connector-types';
 import nock from 'nock';
 import snakeCaseKeys from 'snakecase-keys';
 
@@ -19,24 +13,16 @@ import {
   mockedAlipayConfig,
   mockedAlipayConfigWithValidPrivateKey,
   mockedAlipayPublicParameters,
-  mockedTimeout,
   mockedTimestamp,
 } from './mock';
 import { AlipayConfig } from './types';
 
 const getConnectorConfig = jest.fn() as GetConnectorConfig<AlipayConfig>;
-const getConnectorRequestTimeout = jest.fn() as GetTimeout;
-const getConnectorTimestamp = jest.fn() as GetTimestamp;
 
-const alipayMethods = new AlipayConnector(
-  getConnectorConfig,
-  getConnectorRequestTimeout,
-  getConnectorTimestamp
-);
+const alipayMethods = new AlipayConnector(getConnectorConfig);
 
 beforeAll(() => {
   jest.spyOn(alipayMethods, 'getConfig').mockResolvedValue(mockedAlipayConfig);
-  jest.spyOn(alipayMethods, 'getRequestTimeout').mockResolvedValue(mockedTimeout);
   jest.spyOn(alipayMethods, 'getTimestamp').mockReturnValue(mockedTimestamp);
 });
 
@@ -152,7 +138,7 @@ describe('getAccessToken', () => {
 
   it('should get an accessToken by exchanging with code', async () => {
     mockedSigningParameters.mockImplementationOnce((parameters) => {
-      return snakeCaseKeys({ ...parameters, sign: 'sign' });
+      return snakeCaseKeys({ ...parameters, sign: 'sign' }) as Record<string, string>;
     });
     nock(alipayEndpointUrl.origin)
       .post(alipayEndpointUrl.pathname)
@@ -174,7 +160,7 @@ describe('getAccessToken', () => {
 
   it('should throw when accessToken is empty', async () => {
     mockedSigningParameters.mockImplementationOnce((parameters) => {
-      return snakeCaseKeys({ ...parameters, sign: 'sign' });
+      return snakeCaseKeys({ ...parameters, sign: 'sign' }) as Record<string, string>;
     });
     nock(alipayEndpointUrl.origin)
       .post(alipayEndpointUrl.pathname)
@@ -197,7 +183,7 @@ describe('getAccessToken', () => {
 
   it('should fail with wrong code', async () => {
     mockedSigningParameters.mockImplementationOnce((parameters) => {
-      return snakeCaseKeys({ ...parameters, sign: 'sign' });
+      return snakeCaseKeys({ ...parameters, sign: 'sign' }) as Record<string, string>;
     });
     nock(alipayEndpointUrl.origin)
       .post(alipayEndpointUrl.pathname)
@@ -236,7 +222,7 @@ describe('getUserInfo', () => {
 
   it('should get userInfo with accessToken', async () => {
     mockedSigningParameters.mockImplementationOnce((parameters) => {
-      return snakeCaseKeys({ ...parameters, sign: 'sign' });
+      return snakeCaseKeys({ ...parameters, sign: 'sign' }) as Record<string, string>;
     });
     nock(alipayEndpointUrl.origin)
       .post(alipayEndpointUrl.pathname)
@@ -260,7 +246,7 @@ describe('getUserInfo', () => {
 
   it('should throw with wrong accessToken', async () => {
     mockedSigningParameters.mockImplementationOnce((parameters) => {
-      return snakeCaseKeys({ ...parameters, sign: 'sign' });
+      return snakeCaseKeys({ ...parameters, sign: 'sign' }) as Record<string, string>;
     });
     nock(alipayEndpointUrl.origin)
       .post(alipayEndpointUrl.pathname)
@@ -285,7 +271,7 @@ describe('getUserInfo', () => {
 
   it('should throw General error with other response error codes', async () => {
     mockedSigningParameters.mockImplementationOnce((parameters) => {
-      return snakeCaseKeys({ ...parameters, sign: 'sign' });
+      return snakeCaseKeys({ ...parameters, sign: 'sign' }) as Record<string, string>;
     });
     nock(alipayEndpointUrl.origin)
       .post(alipayEndpointUrl.pathname)
@@ -308,7 +294,7 @@ describe('getUserInfo', () => {
 
   it('should throw with right accessToken but empty userInfo', async () => {
     mockedSigningParameters.mockImplementationOnce((parameters) => {
-      return snakeCaseKeys({ ...parameters, sign: 'sign' });
+      return snakeCaseKeys({ ...parameters, sign: 'sign' }) as Record<string, string>;
     });
     nock(alipayEndpointUrl.origin)
       .post(alipayEndpointUrl.pathname)
@@ -331,7 +317,7 @@ describe('getUserInfo', () => {
 
   it('should throw with other request errors', async () => {
     mockedSigningParameters.mockImplementationOnce((parameters) => {
-      return snakeCaseKeys({ ...parameters, sign: 'sign' });
+      return snakeCaseKeys({ ...parameters, sign: 'sign' }) as Record<string, string>;
     });
     nock(alipayEndpointUrl.origin)
       .post(alipayEndpointUrl.pathname)

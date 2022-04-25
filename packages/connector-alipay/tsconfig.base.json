@@ -1,7 +1,7 @@
 {
   "extends": "@silverhand/ts-config/tsconfig.base",
   "compilerOptions": {
-    "outDir": "build",
+    "outDir": "lib",
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"]

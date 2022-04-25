@@ -5,7 +5,6 @@
  * https://opendocs.alipay.com/open/01emu5
  */
 import * as crypto from 'crypto';
-import path from 'path';
 
 import {
   AccessTokenObject,
@@ -18,12 +17,9 @@ import {
   ValidateConfig,
   SocialConnector,
   GetConnectorConfig,
-  GetTimeout,
-  GetTimestamp,
 } from '@logto/connector-types';
-import { ConnectorType } from '@logto/schemas';
-import { getMarkdownContents } from '@logto/shared';
 import { assert } from '@silverhand/essentials';
+import dayjs from 'dayjs';
 import got from 'got';
 import * as iconv from 'iconv-lite';
 import { stringify } from 'query-string';
@@ -36,48 +32,20 @@ import {
   methodForUserInfo,
   scope,
   alipaySigningAlgorithmMapping,
+  defaultMetadata,
+  defaultTimeout,
 } from './constant';
 import { alipayConfigGuard, AlipayConfig, AccessTokenResponse, UserInfoResponse } from './types';
 
 export type { AlipayConfig } from './types';
 
-// eslint-disable-next-line unicorn/prefer-module
-const currentPath = __dirname;
-const pathToReadmeFile = path.join(currentPath, 'README.md');
-const pathToConfigTemplate = path.join(currentPath, 'config-template.md');
-const readmeContentFallback = 'Please check README.md file directory.';
-const configTemplateFallback = 'Please check config-template.md file directory.';
-
 export class AlipayConnector implements SocialConnector {
-  public metadata: ConnectorMetadata = {
-    id: 'alipay',
-    type: ConnectorType.Social,
-    name: {
-      en: 'Sign In with Alipay',
-      'zh-CN': '支付宝登录',
-    },
-    // TODO: add the real logo URL (LOG-1823)
-    logo: './logo.png',
-    description: {
-      en: 'Sign In with Alipay',
-      'zh-CN': '支付宝登录',
-    },
-    readme: getMarkdownContents(pathToReadmeFile, readmeContentFallback),
-    configTemplate: getMarkdownContents(pathToConfigTemplate, configTemplateFallback),
-  };
+  public metadata: ConnectorMetadata = defaultMetadata;
 
-  public readonly getConfig: GetConnectorConfig<AlipayConfig>;
-  public readonly getRequestTimeout: GetTimeout;
-  public readonly getTimestamp: GetTimestamp;
+  public getConfig: GetConnectorConfig<AlipayConfig>;
 
-  constructor(
-    getConnectorConfig: GetConnectorConfig<AlipayConfig>,
-    getConnectorRequestTimeout: GetTimeout,
-    getConnectorTimestamp: GetTimestamp
-  ) {
+  constructor(getConnectorConfig: GetConnectorConfig<AlipayConfig>) {
     this.getConfig = getConnectorConfig;
-    this.getRequestTimeout = getConnectorRequestTimeout;
-    this.getTimestamp = getConnectorTimestamp;
   }
 
   public validateConfig: ValidateConfig = async (config: unknown) => {
@@ -118,7 +86,7 @@ export class AlipayConnector implements SocialConnector {
     const response = await got
       .post(alipayEndpoint, {
         searchParams: signedSearchParameters,
-        timeout: await this.getRequestTimeout(),
+        timeout: defaultTimeout,
       })
       .json<AccessTokenResponse>();
 
@@ -158,7 +126,7 @@ export class AlipayConnector implements SocialConnector {
     const response = await got
       .post(alipayEndpoint, {
         searchParams: signedSearchParameters,
-        timeout: await this.getRequestTimeout(),
+        timeout: defaultTimeout,
       })
       .json<UserInfoResponse>();
 
@@ -185,8 +153,10 @@ export class AlipayConnector implements SocialConnector {
     return { id, avatar, name };
   };
 
+  public getTimestamp = (): string => dayjs().format('YYYY-MM-DD HH:mm:ss');
+
   // Reference: https://github.com/alipay/alipay-sdk-nodejs-all/blob/10d78e0adc7f310d5b07567ce7e4c13a3f6c768f/lib/util.ts
-  public readonly signingPamameters = (
+  public signingPamameters = (
     parameters: AlipayConfig & Record<string, string | undefined>
   ): Record<string, string> => {
     const { biz_content, privateKey, ...rest } = parameters;
