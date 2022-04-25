@@ -4,7 +4,6 @@
  * https://opendocs.alipay.com/open/263/105808
  * https://opendocs.alipay.com/open/01emu5
  */
-import * as crypto from 'crypto';
 
 import {
   AccessTokenObject,
@@ -21,9 +20,7 @@ import {
 import { assert } from '@silverhand/essentials';
 import dayjs from 'dayjs';
 import got from 'got';
-import * as iconv from 'iconv-lite';
 import { stringify } from 'query-string';
-import snakeCaseKeys from 'snakecase-keys';
 
 import {
   alipayEndpoint,
@@ -31,11 +28,12 @@ import {
   methodForAccessToken,
   methodForUserInfo,
   scope,
-  alipaySigningAlgorithmMapping,
   defaultMetadata,
   defaultTimeout,
 } from './constant';
 import { alipayConfigGuard, AlipayConfig, AccessTokenResponse, UserInfoResponse } from './types';
+import { signingPamameters } from './utils';
+import type { SigningPamameters } from './utils';
 
 export type { AlipayConfig } from './types';
 
@@ -43,6 +41,8 @@ export class AlipayConnector implements SocialConnector {
   public metadata: ConnectorMetadata = defaultMetadata;
 
   public getConfig: GetConnectorConfig<AlipayConfig>;
+
+  protected readonly signingPamameters: SigningPamameters = signingPamameters;
 
   constructor(getConnectorConfig: GetConnectorConfig<AlipayConfig>) {
     this.getConfig = getConnectorConfig;
@@ -153,45 +153,5 @@ export class AlipayConnector implements SocialConnector {
     return { id, avatar, name };
   };
 
-  public readonly getTimestamp = (): string => dayjs().format('YYYY-MM-DD HH:mm:ss');
-
-  // Reference: https://github.com/alipay/alipay-sdk-nodejs-all/blob/10d78e0adc7f310d5b07567ce7e4c13a3f6c768f/lib/util.ts
-  public readonly signingPamameters = (
-    parameters: AlipayConfig & Record<string, string | undefined>
-  ): Record<string, string> => {
-    const { biz_content, privateKey, ...rest } = parameters;
-    const signParameters = snakeCaseKeys(
-      biz_content
-        ? {
-            ...rest,
-            bizContent: JSON.stringify(snakeCaseKeys(JSON.parse(biz_content))),
-          }
-        : rest
-    );
-
-    const decamelizeParameters = snakeCaseKeys(signParameters);
-
-    // eslint-disable-next-line @silverhand/fp/no-mutating-methods
-    const sortedParametersAsString = Object.entries(decamelizeParameters)
-      .map(([key, value]) => {
-        // Supported Encodings can be found at https://github.com/ashtuchkin/iconv-lite/wiki/Supported-Encodings
-
-        if (value) {
-          // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-          return `${key}=${iconv.encode(value, rest.charset ?? 'UTF8')}`;
-        }
-
-        return '';
-      })
-      .filter((keyValueString) => keyValueString)
-      .sort()
-      .join('&');
-
-    const sign = crypto
-      .createSign(alipaySigningAlgorithmMapping[rest.signType])
-      .update(sortedParametersAsString, 'utf8')
-      .sign(privateKey, 'base64');
-
-    return { ...decamelizeParameters, sign };
-  };
+  protected readonly getTimestamp = (): string => dayjs().format('YYYY-MM-DD HH:mm:ss');
 }
