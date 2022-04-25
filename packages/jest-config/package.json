@@ -26,7 +26,7 @@
     "@silverhand/ts-config": "^0.10.2",
     "@types/node": "16",
     "eslint": "^8.10.0",
-    "jest": "^27.5.1",
+    "jest": "^28.0.0",
     "lint-staged": "^12.0.0",
     "prettier": "^2.3.2",
     "ts-node": "^10.0.0",
@@ -37,7 +37,7 @@
   },
   "prettier": "@silverhand/eslint-config/.prettierrc",
   "dependencies": {
-    "@jest/types": "^27.5.1",
+    "@jest/types": "^28.0.0",
     "deepmerge": "^4.2.2",
     "identity-obj-proxy": "^3.0.0",
     "jest-matcher-specific-error": "^1.0.0",
