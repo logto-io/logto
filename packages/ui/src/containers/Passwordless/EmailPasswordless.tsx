@@ -36,13 +36,13 @@ const EmailPasswordless = ({ type, className }: Props) => {
   const { setToast } = useContext(PageContext);
   const navigate = useNavigate();
   const { termsValidation } = useTerms();
-  const { fieldValue, setFieldValue, register, formValidation } = useForm(defaultState);
+  const { fieldValue, setFieldValue, register, validateForm } = useForm(defaultState);
 
   const sendPasscode = getSendPasscodeApi(type, 'email');
   const { error, result, run: asyncSendPasscode } = useApi(sendPasscode);
 
   const onSubmitHandler = useCallback(() => {
-    if (!formValidation()) {
+    if (!validateForm()) {
       return;
     }
 
@@ -51,7 +51,7 @@ const EmailPasswordless = ({ type, className }: Props) => {
     }
 
     void asyncSendPasscode(fieldValue.email);
-  }, [formValidation, termsValidation, asyncSendPasscode, fieldValue.email]);
+  }, [validateForm, termsValidation, asyncSendPasscode, fieldValue.email]);
 
   useEffect(() => {
     if (result) {

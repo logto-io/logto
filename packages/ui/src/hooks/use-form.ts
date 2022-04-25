@@ -17,7 +17,7 @@ const useForm = <T>(initialState: T) => {
 
   const fieldValidationsRef = useRef<FieldValidations>({});
 
-  const formValidation = useCallback(() => {
+  const validateForm = useCallback(() => {
     const errors = entries(fieldValue).map<[keyof T, ErrorType | undefined]>(([key, value]) => [
       key,
       fieldValidationsRef.current[key]?.(value),
@@ -61,7 +61,7 @@ const useForm = <T>(initialState: T) => {
   return {
     fieldValue,
     fieldErrors,
-    formValidation,
+    validateForm,
     setFieldValue,
     setFieldErrors,
     register,

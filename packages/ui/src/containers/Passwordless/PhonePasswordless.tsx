@@ -34,7 +34,7 @@ const defaultState: FieldState = { phone: '' };
 const PhonePasswordless = ({ type, className }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'main_flow' });
   const { phoneNumber, setPhoneNumber, isValidPhoneNumber } = usePhoneNumber();
-  const { fieldValue, setFieldValue, formValidation, register } = useForm(defaultState);
+  const { fieldValue, setFieldValue, validateForm, register } = useForm(defaultState);
   const { setToast } = useContext(PageContext);
   const navigate = useNavigate();
   const { termsValidation } = useTerms();
@@ -52,7 +52,7 @@ const PhonePasswordless = ({ type, className }: Props) => {
   );
 
   const onSubmitHandler = useCallback(() => {
-    if (!formValidation()) {
+    if (!validateForm()) {
       return;
     }
 
@@ -61,7 +61,7 @@ const PhonePasswordless = ({ type, className }: Props) => {
     }
 
     void asyncSendPasscode(fieldValue.phone);
-  }, [formValidation, termsValidation, asyncSendPasscode, fieldValue.phone]);
+  }, [validateForm, termsValidation, asyncSendPasscode, fieldValue.phone]);
 
   useEffect(() => {
     // Sync phoneNumber

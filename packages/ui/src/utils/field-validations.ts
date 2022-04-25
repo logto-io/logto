@@ -2,8 +2,8 @@ import i18next from 'i18next';
 
 import { ErrorType } from '@/components/ErrorMessage';
 
-const usernameRegx = /^[A-Z_a-z-][\w-]*$/;
-const emailRegEx = /^\S+@\S+\.\S+$/;
+const usernameRegex = /^[A-Z_a-z-][\w-]*$/;
+const emailRegex = /^\S+@\S+\.\S+$/;
 
 export const usernameValidation = (username: string): ErrorType | undefined => {
   if (!username) {
@@ -14,7 +14,7 @@ export const usernameValidation = (username: string): ErrorType | undefined => {
     return 'username_should_not_start_with_number';
   }
 
-  if (!usernameRegx.test(username)) {
+  if (!usernameRegex.test(username)) {
     return 'username_valid_charset';
   }
 };
@@ -39,7 +39,7 @@ export const confirmPasswordValidation = (
 };
 
 export const emailValidation = (email: string): ErrorType | undefined => {
-  if (!emailRegEx.test(email)) {
+  if (!emailRegex.test(email)) {
     return 'invalid_email';
   }
 };

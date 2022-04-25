@@ -49,11 +49,11 @@ const CreateAccount = ({ className }: Props) => {
     fieldValue,
     setFieldValue,
     register: fieldRegister,
-    formValidation,
+    validateForm,
   } = useForm(defaultState);
 
   const onSubmitHandler = useCallback(() => {
-    if (!formValidation()) {
+    if (!validateForm()) {
       return;
     }
 
@@ -62,7 +62,7 @@ const CreateAccount = ({ className }: Props) => {
     }
 
     void asyncRegister(fieldValue.username, fieldValue.password);
-  }, [formValidation, termsValidation, asyncRegister, fieldValue]);
+  }, [validateForm, termsValidation, asyncRegister, fieldValue]);
 
   useEffect(() => {
     if (result?.redirectTo) {

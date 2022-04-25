@@ -39,10 +39,10 @@ const UsernameSignin = ({ className }: Props) => {
   const { setToast } = useContext(PageContext);
   const { error, result, run: asyncSignInBasic } = useApi(signInBasic);
   const { termsValidation } = useTerms();
-  const { fieldValue, setFieldValue, register, formValidation } = useForm(defaultState);
+  const { fieldValue, setFieldValue, register, validateForm } = useForm(defaultState);
 
   const onSubmitHandler = useCallback(async () => {
-    if (!formValidation()) {
+    if (!validateForm()) {
       return;
     }
 
@@ -51,7 +51,7 @@ const UsernameSignin = ({ className }: Props) => {
     }
 
     void asyncSignInBasic(fieldValue.username, fieldValue.password);
-  }, [formValidation, termsValidation, asyncSignInBasic, fieldValue]);
+  }, [validateForm, termsValidation, asyncSignInBasic, fieldValue]);
 
   useEffect(() => {
     if (result?.redirectTo) {
