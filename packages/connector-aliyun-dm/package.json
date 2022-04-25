@@ -1,7 +1,7 @@
 {
     "name": "@logto/connector-aliyun-dm",
     "version": "0.1.0",
-    "description": "Alipay implementation.",
+    "description": "Aliyun DM connector implementation.",
     "main": "lib/index.js",
     "author": "Logto Team",
     "license": "MPL-2.0",
