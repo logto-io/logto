@@ -1,40 +1,14 @@
 import { ConnectorError, ConnectorErrorCodes, GetConnectorConfig } from '@logto/connector-types';
 import nock from 'nock';
-import snakeCaseKeys from 'snakecase-keys';
 
 import { AlipayConnector } from '.';
-import {
-  alipayEndpoint,
-  authorizationEndpoint,
-  methodForAccessToken,
-  methodForUserInfo,
-} from './constant';
-import { mockedAlipayConfig, mockedAlipayPublicParameters, mockedTimestamp } from './mock';
+import { alipayEndpoint, authorizationEndpoint } from './constant';
+import { mockedAlipayConfig, mockedAlipayConfigWithValidPrivateKey } from './mock';
 import { AlipayConfig } from './types';
-
-class AlipayConnectorTester extends AlipayConnector {
-  signingPamameters: jest.Mock = jest.fn();
-  getTimestamp: jest.Mock = jest.fn();
-
-  public getConfig: GetConnectorConfig<AlipayConfig>;
-
-  constructor(getConnectorConfig: GetConnectorConfig<AlipayConfig>) {
-    super(getConnectorConfig);
-
-    this.getConfig = getConnectorConfig;
-  }
-}
 
 const getConnectorConfig = jest.fn() as GetConnectorConfig<AlipayConfig>;
 
-const alipayMethods = new AlipayConnectorTester(getConnectorConfig);
-
-beforeAll(() => {
-  jest.spyOn(alipayMethods, 'getConfig').mockResolvedValue(mockedAlipayConfig);
-  jest.spyOn(alipayMethods, 'getTimestamp').mockReturnValue(mockedTimestamp);
-});
-
-const mockedSigningParameters = jest.spyOn(alipayMethods, 'signingPamameters');
+const alipayMethods = new AlipayConnector(getConnectorConfig);
 
 describe('validateConfig', () => {
   afterEach(() => {
@@ -80,22 +54,14 @@ describe('getAccessToken', () => {
   });
 
   const alipayEndpointUrl = new URL(alipayEndpoint);
-  const parameters = {
-    ...mockedAlipayPublicParameters,
-    method: methodForAccessToken,
-    ...mockedAlipayConfig,
-    code: 'code',
-    sign: 'sign',
-  };
-  const searchParameters = new URLSearchParams(snakeCaseKeys(parameters));
 
   it('should get an accessToken by exchanging with code', async () => {
-    mockedSigningParameters.mockImplementationOnce((parameters) => {
-      return snakeCaseKeys({ ...parameters, sign: 'sign' }) as Record<string, string>;
-    });
+    jest
+      .spyOn(alipayMethods, 'getConfig')
+      .mockResolvedValueOnce(mockedAlipayConfigWithValidPrivateKey);
     nock(alipayEndpointUrl.origin)
       .post(alipayEndpointUrl.pathname)
-      .query(searchParameters)
+      .query(true)
       .reply(200, {
         alipay_system_oauth_token_response: {
           user_id: '2088000000000000',
@@ -107,17 +73,19 @@ describe('getAccessToken', () => {
         sign: '<signature>',
       });
 
-    const { accessToken } = await alipayMethods.getAccessToken('code');
+    const response = await alipayMethods.getAccessToken('code');
+    console.log(response);
+    const { accessToken } = response;
     expect(accessToken).toEqual('access_token');
   });
 
   it('should throw when accessToken is empty', async () => {
-    mockedSigningParameters.mockImplementationOnce((parameters) => {
-      return snakeCaseKeys({ ...parameters, sign: 'sign' }) as Record<string, string>;
-    });
+    jest
+      .spyOn(alipayMethods, 'getConfig')
+      .mockResolvedValueOnce(mockedAlipayConfigWithValidPrivateKey);
     nock(alipayEndpointUrl.origin)
       .post(alipayEndpointUrl.pathname)
-      .query(searchParameters)
+      .query(true)
       .reply(200, {
         alipay_system_oauth_token_response: {
           user_id: '2088000000000000',
@@ -135,12 +103,12 @@ describe('getAccessToken', () => {
   });
 
   it('should fail with wrong code', async () => {
-    mockedSigningParameters.mockImplementationOnce((parameters) => {
-      return snakeCaseKeys({ ...parameters, sign: 'sign' }) as Record<string, string>;
-    });
+    jest
+      .spyOn(alipayMethods, 'getConfig')
+      .mockResolvedValueOnce(mockedAlipayConfigWithValidPrivateKey);
     nock(alipayEndpointUrl.origin)
       .post(alipayEndpointUrl.pathname)
-      .query(new URLSearchParams(snakeCaseKeys({ ...parameters, code: 'wrong_code' })))
+      .query(true)
       .reply(200, {
         error_response: {
           code: '20001',
@@ -163,23 +131,14 @@ describe('getUserInfo', () => {
   });
 
   const alipayEndpointUrl = new URL(alipayEndpoint);
-  const parameters = {
-    ...mockedAlipayPublicParameters,
-    method: methodForUserInfo,
-    ...mockedAlipayConfig,
-    auth_token: 'access_token',
-    biz_content: '{}',
-    sign: 'sign',
-  };
-  const searchParameters = new URLSearchParams(snakeCaseKeys(parameters));
 
   it('should get userInfo with accessToken', async () => {
-    mockedSigningParameters.mockImplementationOnce((parameters) => {
-      return snakeCaseKeys({ ...parameters, sign: 'sign' }) as Record<string, string>;
-    });
+    jest
+      .spyOn(alipayMethods, 'getConfig')
+      .mockResolvedValueOnce(mockedAlipayConfigWithValidPrivateKey);
     nock(alipayEndpointUrl.origin)
       .post(alipayEndpointUrl.pathname)
-      .query(searchParameters)
+      .query(true)
       .reply(200, {
         alipay_user_info_share_response: {
           code: '10000',
@@ -198,14 +157,12 @@ describe('getUserInfo', () => {
   });
 
   it('should throw with wrong accessToken', async () => {
-    mockedSigningParameters.mockImplementationOnce((parameters) => {
-      return snakeCaseKeys({ ...parameters, sign: 'sign' }) as Record<string, string>;
-    });
+    jest
+      .spyOn(alipayMethods, 'getConfig')
+      .mockResolvedValueOnce(mockedAlipayConfigWithValidPrivateKey);
     nock(alipayEndpointUrl.origin)
       .post(alipayEndpointUrl.pathname)
-      .query(
-        new URLSearchParams(snakeCaseKeys({ ...parameters, auth_token: 'wrong_access_token' }))
-      )
+      .query(true)
       .reply(200, {
         alipay_user_info_share_response: {
           code: '20001',
@@ -223,14 +180,12 @@ describe('getUserInfo', () => {
   });
 
   it('should throw General error with other response error codes', async () => {
-    mockedSigningParameters.mockImplementationOnce((parameters) => {
-      return snakeCaseKeys({ ...parameters, sign: 'sign' }) as Record<string, string>;
-    });
+    jest
+      .spyOn(alipayMethods, 'getConfig')
+      .mockResolvedValueOnce(mockedAlipayConfigWithValidPrivateKey);
     nock(alipayEndpointUrl.origin)
       .post(alipayEndpointUrl.pathname)
-      .query(
-        new URLSearchParams(snakeCaseKeys({ ...parameters, auth_token: 'wrong_access_token' }))
-      )
+      .query(true)
       .reply(200, {
         alipay_user_info_share_response: {
           code: '40002',
@@ -246,12 +201,12 @@ describe('getUserInfo', () => {
   });
 
   it('should throw with right accessToken but empty userInfo', async () => {
-    mockedSigningParameters.mockImplementationOnce((parameters) => {
-      return snakeCaseKeys({ ...parameters, sign: 'sign' }) as Record<string, string>;
-    });
+    jest
+      .spyOn(alipayMethods, 'getConfig')
+      .mockResolvedValueOnce(mockedAlipayConfigWithValidPrivateKey);
     nock(alipayEndpointUrl.origin)
       .post(alipayEndpointUrl.pathname)
-      .query(searchParameters)
+      .query(true)
       .reply(200, {
         alipay_user_info_share_response: {
           code: '10000',
@@ -269,13 +224,10 @@ describe('getUserInfo', () => {
   });
 
   it('should throw with other request errors', async () => {
-    mockedSigningParameters.mockImplementationOnce((parameters) => {
-      return snakeCaseKeys({ ...parameters, sign: 'sign' }) as Record<string, string>;
-    });
-    nock(alipayEndpointUrl.origin)
-      .post(alipayEndpointUrl.pathname)
-      .query(searchParameters)
-      .reply(500);
+    jest
+      .spyOn(alipayMethods, 'getConfig')
+      .mockResolvedValueOnce(mockedAlipayConfigWithValidPrivateKey);
+    nock(alipayEndpointUrl.origin).post(alipayEndpointUrl.pathname).query(true).reply(500);
 
     await expect(alipayMethods.getUserInfo({ accessToken: 'access_token' })).rejects.toThrow();
   });

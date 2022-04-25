@@ -42,7 +42,7 @@ export class AlipayConnector implements SocialConnector {
 
   public getConfig: GetConnectorConfig<AlipayConfig>;
 
-  protected readonly signingPamameters: SigningPamameters = signingPamameters;
+  private readonly signingPamameters: SigningPamameters = signingPamameters;
 
   constructor(getConnectorConfig: GetConnectorConfig<AlipayConfig>) {
     this.getConfig = getConnectorConfig;
@@ -153,5 +153,5 @@ export class AlipayConnector implements SocialConnector {
     return { id, avatar, name };
   };
 
-  protected readonly getTimestamp = (): string => dayjs().format('YYYY-MM-DD HH:mm:ss');
+  private readonly getTimestamp = (): string => dayjs().format('YYYY-MM-DD HH:mm:ss');
 }
