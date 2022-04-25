@@ -153,10 +153,10 @@ export class AlipayConnector implements SocialConnector {
     return { id, avatar, name };
   };
 
-  public getTimestamp = (): string => dayjs().format('YYYY-MM-DD HH:mm:ss');
+  public readonly getTimestamp = (): string => dayjs().format('YYYY-MM-DD HH:mm:ss');
 
   // Reference: https://github.com/alipay/alipay-sdk-nodejs-all/blob/10d78e0adc7f310d5b07567ce7e4c13a3f6c768f/lib/util.ts
-  public signingPamameters = (
+  public readonly signingPamameters = (
     parameters: AlipayConfig & Record<string, string | undefined>
   ): Record<string, string> => {
     const { biz_content, privateKey, ...rest } = parameters;
