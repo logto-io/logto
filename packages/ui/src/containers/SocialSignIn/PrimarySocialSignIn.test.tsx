@@ -6,7 +6,7 @@ import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider';
 import { socialConnectors, mockSignInExperienceSettings } from '@/__mocks__/logto';
 
-import PrimarySocialSignIn from './PrimarySocialSignIn';
+import PrimarySocialSignIn, { defaultSize } from './PrimarySocialSignIn';
 
 describe('SecondarySocialSignIn', () => {
   it('less than three connectors', () => {
@@ -14,7 +14,7 @@ describe('SecondarySocialSignIn', () => {
       <SettingsProvider
         settings={{
           ...mockSignInExperienceSettings,
-          socialConnectors: socialConnectors.slice(0, 3),
+          socialConnectors: socialConnectors.slice(0, defaultSize),
         }}
       >
         <MemoryRouter>
@@ -22,7 +22,7 @@ describe('SecondarySocialSignIn', () => {
         </MemoryRouter>
       </SettingsProvider>
     );
-    expect(container.querySelectorAll('button')).toHaveLength(3);
+    expect(container.querySelectorAll('button')).toHaveLength(defaultSize);
   });
 
   it('more than three connectors', () => {
@@ -34,7 +34,7 @@ describe('SecondarySocialSignIn', () => {
       </SettingsProvider>
     );
 
-    expect(container.querySelectorAll('button')).toHaveLength(3);
+    expect(container.querySelectorAll('button')).toHaveLength(defaultSize);
 
     const expandButton = container.querySelector('svg');
 

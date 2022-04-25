@@ -77,11 +77,7 @@ const useSocial = (options?: Options) => {
   const socialConnectors = useMemo(
     () =>
       (experienceSettings?.socialConnectors ?? []).filter(({ id }) => {
-        if (!isNativeWebview()) {
-          return true;
-        }
-
-        return getLogtoNativeSdk()?.supportedSocialConnectors.includes(id);
+        return !isNativeWebview() || getLogtoNativeSdk()?.supportedSocialConnectors.includes(id);
       }),
     [experienceSettings?.socialConnectors]
   );

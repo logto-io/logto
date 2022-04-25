@@ -8,7 +8,7 @@ import { socialConnectors, mockSignInExperienceSettings } from '@/__mocks__/logt
 import * as socialSignInApi from '@/apis/social';
 import { generateState, storeState } from '@/hooks/use-social';
 
-import SecondarySocialSignIn from './SecondarySocialSignIn';
+import SecondarySocialSignIn, { defaultSize } from './SecondarySocialSignIn';
 
 describe('SecondarySocialSignIn', () => {
   const mockOrigin = 'https://logto.dev';
@@ -42,7 +42,7 @@ describe('SecondarySocialSignIn', () => {
       <SettingsProvider
         settings={{
           ...mockSignInExperienceSettings,
-          socialConnectors: socialConnectors.slice(0, 3),
+          socialConnectors: socialConnectors.slice(0, defaultSize - 1),
         }}
       >
         <MemoryRouter>
@@ -50,7 +50,7 @@ describe('SecondarySocialSignIn', () => {
         </MemoryRouter>
       </SettingsProvider>
     );
-    expect(container.querySelectorAll('button')).toHaveLength(3);
+    expect(container.querySelectorAll('button')).toHaveLength(defaultSize - 1);
   });
 
   it('more than four connectors', () => {
@@ -61,7 +61,7 @@ describe('SecondarySocialSignIn', () => {
         </MemoryRouter>
       </SettingsProvider>
     );
-    expect(container.querySelectorAll('button')).toHaveLength(3);
+    expect(container.querySelectorAll('button')).toHaveLength(defaultSize - 1);
     expect(container.querySelector('svg')).not.toBeNull();
   });
 

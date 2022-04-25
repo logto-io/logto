@@ -7,6 +7,8 @@ import useSocial from '@/hooks/use-social';
 
 import * as styles from './index.module.scss';
 
+export const defaultSize = 3;
+
 type Props = {
   className?: string;
   isPopup?: boolean;
@@ -16,7 +18,7 @@ type Props = {
 const PrimarySocialSignIn = ({ className, isPopup = false, onSocialSignInCallback }: Props) => {
   const [showAll, setShowAll] = useState(false);
   const { invokeSocialSignIn, socialConnectors } = useSocial({ onSocialSignInCallback });
-  const isOverSize = socialConnectors.length > 3;
+  const isOverSize = socialConnectors.length > defaultSize;
   const displayAll = showAll || isPopup || !isOverSize;
 
   const displayConnectors = useMemo(() => {
@@ -24,7 +26,7 @@ const PrimarySocialSignIn = ({ className, isPopup = false, onSocialSignInCallbac
       return socialConnectors;
     }
 
-    return socialConnectors.slice(0, 3);
+    return socialConnectors.slice(0, defaultSize);
   }, [socialConnectors, displayAll]);
 
   return (
