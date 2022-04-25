@@ -57,11 +57,19 @@ importers:
       ts-node: 10.4.0_e6a8a9b497f380f485f6d23f5cd591ca
       typescript: 4.6.3
 
+<<<<<<< HEAD
   packages/connector-alipay:
+=======
+  packages/connector-aliyun-dm:
+>>>>>>> 446190b (feat(core): wrap aliyun direct mail connector)
     specifiers:
       '@jest/types': ^27.5.1
       '@logto/connector-types': ^0.1.0
       '@logto/jest-config': ^0.1.0
+<<<<<<< HEAD
+=======
+      '@logto/schemas': ^0.1.0
+>>>>>>> 446190b (feat(core): wrap aliyun direct mail connector)
       '@logto/shared': ^0.1.0
       '@shopify/jest-koa-mocks': ^3.0.8
       '@silverhand/eslint-config': ^0.10.2
@@ -72,17 +80,25 @@ importers:
       '@types/node': ^16.3.1
       '@types/supertest': ^2.0.11
       copyfiles: ^2.4.1
+<<<<<<< HEAD
       dayjs: ^1.10.5
       eslint: ^8.10.0
       got: ^11.8.2
       iconv-lite: 0.6.3
+=======
+      eslint: ^8.10.0
+      got: ^11.8.2
+>>>>>>> 446190b (feat(core): wrap aliyun direct mail connector)
       jest: ^27.5.1
       jest-matcher-specific-error: ^1.0.0
       lint-staged: ^11.1.1
       nock: ^13.2.2
       prettier: ^2.3.2
       query-string: ^7.0.1
+<<<<<<< HEAD
       snakecase-keys: ^5.1.0
+=======
+>>>>>>> 446190b (feat(core): wrap aliyun direct mail connector)
       supertest: ^6.2.2
       ts-jest: ^27.1.1
       tsc-watch: ^4.4.0
@@ -91,6 +107,7 @@ importers:
     dependencies:
       '@logto/connector-types': link:../connector-types
       '@logto/jest-config': link:../jest-config
+<<<<<<< HEAD
       '@logto/shared': link:../shared
       '@silverhand/essentials': 1.1.7
       dayjs: 1.10.7
@@ -98,6 +115,13 @@ importers:
       iconv-lite: 0.6.3
       query-string: 7.0.1
       snakecase-keys: 5.1.2
+=======
+      '@logto/schemas': link:../schemas
+      '@logto/shared': link:../shared
+      '@silverhand/essentials': 1.1.7
+      got: 11.8.3
+      query-string: 7.0.1
+>>>>>>> 446190b (feat(core): wrap aliyun direct mail connector)
       zod: 3.14.3
     devDependencies:
       '@jest/types': 27.5.1
@@ -117,7 +141,11 @@ importers:
       prettier: 2.5.1
       supertest: 6.2.2
       ts-jest: 27.1.1_9985e1834e803358b7be1e6ce5ca0eea
+<<<<<<< HEAD
       tsc-watch: 4.5.0_typescript@4.6.3
+=======
+      tsc-watch: 4.6.2_typescript@4.6.3
+>>>>>>> 446190b (feat(core): wrap aliyun direct mail connector)
       typescript: 4.6.3
 
   packages/connector-types:
@@ -19072,8 +19100,13 @@ packages:
       yn: 3.1.1
     dev: true
 
+<<<<<<< HEAD
   /tsc-watch/4.5.0_typescript@4.6.3:
     resolution: {integrity: sha512-aXhN4jY+1YEcn/NwCQ/+fHqU43EqOpW+pS+933EPsVEsrKhvyrodPDIjQsk1a1niFrabAK3RIBrRbAslVefEbQ==}
+=======
+  /tsc-watch/4.6.2_typescript@4.6.3:
+    resolution: {integrity: sha512-eHWzZGkPmzXVGQKbqQgf3BFpGiZZw1jQ29ZOJeaSe8JfyUvphbd221NfXmmsJUGGPGA/nnaSS01tXipUcyxAxg==}
+>>>>>>> 446190b (feat(core): wrap aliyun direct mail connector)
     engines: {node: '>=8.17.0'}
     hasBin: true
     peerDependencies:
