@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "main": "lib/jest.config.js",
   "repository": "https://github.com/logto-io/logto",
-  "author": "Silverhand Inc.",
+  "author": "Silverhand Inc. <contact@silverhand.io>",
   "license": "MPL-2.0",
   "files": [
     "lib",

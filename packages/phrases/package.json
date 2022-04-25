@@ -2,7 +2,7 @@
   "name": "@logto/phrases",
   "version": "0.1.0",
   "description": "Logto shared phrases (l10n).",
-  "author": "Gao Sun <gaosun.dev@gmail.com>",
+  "author": "Silverhand Inc. <contact@silverhand.io>",
   "homepage": "https://github.com/logto-io/logto#readme",
   "license": "MPL-2.0",
   "main": "lib/index.js",
