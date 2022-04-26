@@ -79,11 +79,19 @@ importers:
       tsc-watch: 4.5.0_typescript@4.6.3
       typescript: 4.6.3
 
+<<<<<<< HEAD
   packages/connector-aliyun-dm:
+=======
+  packages/connector-aliyun-sms:
+>>>>>>> 81e3cc3 (feat(core): wrap aliyun short message service connector)
     specifiers:
       '@jest/types': ^27.5.1
       '@logto/connector-types': ^0.1.0
       '@logto/jest-config': ^0.1.0
+<<<<<<< HEAD
+=======
+      '@logto/schemas': ^0.1.0
+>>>>>>> 81e3cc3 (feat(core): wrap aliyun short message service connector)
       '@logto/shared': ^0.1.0
       '@silverhand/eslint-config': ^0.10.2
       '@silverhand/essentials': ^1.1.0
@@ -95,6 +103,10 @@ importers:
       jest: ^27.5.1
       jest-matcher-specific-error: ^1.0.0
       lint-staged: ^11.1.1
+<<<<<<< HEAD
+=======
+      nanoid: ^3.1.23
+>>>>>>> 81e3cc3 (feat(core): wrap aliyun short message service connector)
       prettier: ^2.3.2
       ts-jest: ^27.1.1
       tsc-watch: ^4.4.0
@@ -103,9 +115,17 @@ importers:
     dependencies:
       '@logto/connector-types': link:../connector-types
       '@logto/jest-config': link:../jest-config
+<<<<<<< HEAD
       '@logto/shared': link:../shared
       '@silverhand/essentials': 1.1.7
       got: 11.8.3
+=======
+      '@logto/schemas': link:../schemas
+      '@logto/shared': link:../shared
+      '@silverhand/essentials': 1.1.7
+      got: 11.8.3
+      nanoid: 3.3.1
+>>>>>>> 81e3cc3 (feat(core): wrap aliyun short message service connector)
       zod: 3.14.3
     devDependencies:
       '@jest/types': 27.5.1
@@ -119,7 +139,11 @@ importers:
       lint-staged: 11.2.6
       prettier: 2.5.1
       ts-jest: 27.1.1_9985e1834e803358b7be1e6ce5ca0eea
+<<<<<<< HEAD
       tsc-watch: 4.6.2_typescript@4.6.3
+=======
+      tsc-watch: 4.5.0_typescript@4.6.3
+>>>>>>> 81e3cc3 (feat(core): wrap aliyun short message service connector)
       typescript: 4.6.3
 
   packages/connector-facebook:
@@ -14110,7 +14134,6 @@ packages:
     resolution: {integrity: sha512-n6Vs/3KGyxPQd6uO0eH4Bv0ojGSUvuLlIHtC3Y0kEO23YRge8H9x1GCzLn28YX0H66pMkxuaeESFq4tKISKwdw==}
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
     hasBin: true
-    dev: true
 
   /natural-compare/1.4.0:
     resolution: {integrity: sha1-Sr6/7tdUHywnrPspvbvRXI1bpPc=}
