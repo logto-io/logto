@@ -23,8 +23,9 @@ const translation = {
       confirm_password: '确认密码',
     },
     secondary: {
-      sign_in_with: '通过 {{method}} 登录',
-      sign_in_with_2: '通过 {{ methods.0 }} 或 {{ methods.1 }} 登录',
+      sign_in_with: '通过 {{methods, list(type: disjunction;)}} 登录',
+      social_bind_with:
+        'Already have an account? Sign in to bind {{methods, list(type: disjunction;)}} with your social identity.',
     },
     action: {
       sign_in: '登录',
