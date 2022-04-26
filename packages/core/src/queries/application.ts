@@ -2,13 +2,9 @@ import { Application, CreateApplication, Applications } from '@logto/schemas';
 import { sql } from 'slonik';
 
 import { buildInsertInto } from '@/database/insert-into';
+import { getTotalRowCount } from '@/database/row-count';
 import { buildUpdateWhere } from '@/database/update-where';
-import {
-  convertToIdentifiers,
-  OmitAutoSetFields,
-  getTotalRowCount,
-  conditionalSql,
-} from '@/database/utils';
+import { convertToIdentifiers, OmitAutoSetFields, conditionalSql } from '@/database/utils';
 import envSet from '@/env-set';
 import { DeletionError } from '@/errors/SlonikError';
 
