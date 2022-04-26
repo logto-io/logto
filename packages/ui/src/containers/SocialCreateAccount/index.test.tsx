@@ -21,13 +21,13 @@ jest.mock('@/apis/social', () => ({
 
 describe('SocialCreateAccount', () => {
   it('should match snapshot', () => {
-    const { queryByText } = render(<SocialCreateAccount connector="github" />);
+    const { queryByText } = render(<SocialCreateAccount connectorId="github" />);
     expect(queryByText('description.social_create_account')).not.toBeNull();
     expect(queryByText('description.social_bind_account')).not.toBeNull();
   });
 
   it('should redirect to sign in page when click sign-in button', () => {
-    const { getByText } = render(<SocialCreateAccount connector="github" />);
+    const { getByText } = render(<SocialCreateAccount connectorId="github" />);
 
     const signInButton = getByText('action.sign_in');
     fireEvent.click(signInButton);
@@ -35,7 +35,7 @@ describe('SocialCreateAccount', () => {
   });
 
   it('should call registerWithSocial when click create button', async () => {
-    const { getByText } = renderWithPageContext(<SocialCreateAccount connector="github" />);
+    const { getByText } = renderWithPageContext(<SocialCreateAccount connectorId="github" />);
     const createButton = getByText('action.create');
 
     await waitFor(() => {
@@ -46,7 +46,7 @@ describe('SocialCreateAccount', () => {
   });
 
   it('should render bindUser Button when relatedUserInfo found', async () => {
-    const { getByText } = renderWithPageContext(<SocialCreateAccount connector="github" />);
+    const { getByText } = renderWithPageContext(<SocialCreateAccount connectorId="github" />);
     const bindButton = getByText('action.bind');
     await waitFor(() => {
       fireEvent.click(bindButton);
