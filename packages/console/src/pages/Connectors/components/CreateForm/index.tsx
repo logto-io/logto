@@ -78,7 +78,12 @@ const CreateForm = ({ onClose, isOpen: isFormOpen, type }: Props) => {
         {isLoading && 'Loading...'}
         {error && error}
         {connectors && (
-          <RadioGroup name="connector" value={activeConnectorId} onChange={setActiveConnectorId}>
+          <RadioGroup
+            name="connector"
+            value={activeConnectorId}
+            type="card"
+            onChange={setActiveConnectorId}
+          >
             {connectors.map(({ id, metadata: { name, logo, description } }) => (
               <Radio key={id} value={id} className={styles.connector}>
                 <div className={styles.logo}>

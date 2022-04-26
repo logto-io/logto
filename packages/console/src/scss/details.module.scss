@@ -1,18 +1,37 @@
 @use '@/scss/underscore' as _;
 
 .container {
-  position: relative;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 
   > *:not(:first-child) {
     margin-top: _.unit(4);
   }
 
+  .body {
+    position: relative;
+    padding-bottom: 0;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
   .footer {
-    padding: 0 _.unit(6) _.unit(6);
     text-align: right;
     position: sticky;
     bottom: 0;
-    background: var(--color-layer-1);
+    margin: 0 _.unit(-6);
+    // Use the same color with app's background to cover card body
+    // simulate the always-on border-radius
+    background: var(--color-base);
+
+    .footerMain {
+      border-bottom-left-radius: 16px;
+      border-bottom-right-radius: 16px;
+      background: var(--color-layer-1);
+      padding: _.unit(6);
+    }
 
     &::before {
       content: '';
@@ -20,7 +39,7 @@
       opacity: 50%;
       height: 1px;
       display: block;
-      margin: _.unit(6) _.unit(-6);
+      margin: 0;
     }
   }
 }

@@ -1,5 +1,6 @@
 import { User } from '@logto/schemas';
 import { Nullable } from '@silverhand/essentials';
+import classNames from 'classnames';
 import React, { useEffect, useState } from 'react';
 import { Controller, useController, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
@@ -176,7 +177,7 @@ const UserDetails = () => {
               </ReactModal>
             </div>
           </Card>
-          <Card className={styles.body}>
+          <Card className={classNames(styles.body, detailsStyles.body)}>
             <TabNav>
               <TabNavLink href={`/users/${id}`}>{t('user_details.tab_settings')}</TabNavLink>
               <TabNavLink href={`/users/${id}/logs`}>{t('user_details.tab_logs')}</TabNavLink>
@@ -252,13 +253,15 @@ const UserDetails = () => {
                 </FormField>
               </div>
               <div className={detailsStyles.footer}>
-                <Button
-                  isLoading={isSubmitting}
-                  htmlType="submit"
-                  type="primary"
-                  title="admin_console.user_details.save_changes"
-                  size="large"
-                />
+                <div className={detailsStyles.footerMain}>
+                  <Button
+                    isLoading={isSubmitting}
+                    htmlType="submit"
+                    type="primary"
+                    title="admin_console.user_details.save_changes"
+                    size="large"
+                  />
+                </div>
               </div>
             </form>
           </Card>

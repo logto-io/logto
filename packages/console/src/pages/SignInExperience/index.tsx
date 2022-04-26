@@ -1,4 +1,5 @@
 import { SignInExperience as SignInExperienceType } from '@logto/schemas';
+import classNames from 'classnames';
 import React, { useEffect } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
@@ -55,8 +56,8 @@ const SignInExperience = () => {
 
   return (
     <div className={styles.wrapper}>
-      <div className={styles.setup}>
-        <Card className={detailsStyles.container}>
+      <div className={classNames(styles.setup, detailsStyles.container)}>
+        <Card className={styles.card}>
           <CardTitle title="sign_in_exp.title" subtitle="sign_in_exp.description" />
           <TabNav className={styles.tabs}>
             <TabNavLink href="/sign-in-experience/experience">
@@ -73,7 +74,7 @@ const SignInExperience = () => {
           {error && <div>{`error occurred: ${error.body.message}`}</div>}
           {data && (
             <FormProvider {...methods}>
-              <form onSubmit={onSubmit}>
+              <form className={classNames(detailsStyles.body, styles.form)} onSubmit={onSubmit}>
                 {tab === 'experience' && (
                   <>
                     <BrandingForm />
@@ -82,7 +83,9 @@ const SignInExperience = () => {
                 )}
                 {tab === 'methods' && <SignInMethodsForm />}
                 {tab === 'others' && <LanguagesForm />}
-                <div className={detailsStyles.footer}>
+              </form>
+              <div className={detailsStyles.footer}>
+                <div className={detailsStyles.footerMain}>
                   <Button
                     isLoading={isSubmitting}
                     type="primary"
@@ -90,7 +93,7 @@ const SignInExperience = () => {
                     title="general.save_changes"
                   />
                 </div>
-              </form>
+              </div>
             </FormProvider>
           )}
         </Card>

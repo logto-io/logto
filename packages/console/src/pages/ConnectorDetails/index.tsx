@@ -1,4 +1,5 @@
 import { ConnectorDTO, ConnectorType } from '@logto/schemas';
+import classNames from 'classnames';
 import React, { useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
@@ -179,7 +180,7 @@ const ConnectorDetails = () => {
         </Card>
       )}
       {data && (
-        <Card className={styles.body}>
+        <Card className={classNames(styles.body, detailsStyles.body)}>
           <TabNav>
             <TabNavLink href={`/connectors/${connectorId ?? ''}`}>
               {t('connector_details.tab_settings')}
@@ -197,12 +198,14 @@ const ConnectorDetails = () => {
           )}
           {saveError && <div>{saveError}</div>}
           <div className={detailsStyles.footer}>
-            <Button
-              type="primary"
-              title="admin_console.connector_details.save_changes"
-              isLoading={isSubmitting}
-              onClick={handleSave}
-            />
+            <div className={detailsStyles.footerMain}>
+              <Button
+                type="primary"
+                title="admin_console.connector_details.save_changes"
+                isLoading={isSubmitting}
+                onClick={handleSave}
+              />
+            </div>
           </div>
         </Card>
       )}
