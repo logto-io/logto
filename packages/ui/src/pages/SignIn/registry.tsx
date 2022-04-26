@@ -49,18 +49,14 @@ export const SecondarySection = ({
     return (
       <>
         <Divider label="description.continue_with" className={styles.divider} />
-        <SignInMethodsLink
-          signInMethods={localMethods}
-          type="primary"
-          className={styles.otherMethodsLink}
-        />
+        <SignInMethodsLink signInMethods={localMethods} className={styles.otherMethodsLink} />
       </>
     );
   }
 
   return (
     <>
-      <SignInMethodsLink signInMethods={localMethods} />
+      <SignInMethodsLink signInMethods={localMethods} template="sign_in_with" />
       {secondarySignInMethods.includes('social') && (
         <>
           <Divider label="description.continue_with" className={styles.divider} />

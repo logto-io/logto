@@ -11,8 +11,9 @@ import * as styles from './index.module.scss';
 
 type Props = {
   signInMethods: LocalSignInMethod[];
-  type?: 'primary' | 'secondary';
+  search?: string;
   className?: string;
+  template?: TFuncKey<'translation', 'main_flow.secondary'>;
 };
 
 const SignInMethodsKeyMap: {
@@ -23,7 +24,7 @@ const SignInMethodsKeyMap: {
   sms: 'phone_number',
 };
 
-const SignInMethodsLink = ({ signInMethods, type = 'secondary', className }: Props) => {
+const SignInMethodsLink = ({ signInMethods, template, search, className }: Props) => {
   const navigate = useNavigate();
   const { t } = useTranslation(undefined, { keyPrefix: 'main_flow' });
 
@@ -35,40 +36,35 @@ const SignInMethodsLink = ({ signInMethods, type = 'secondary', className }: Pro
           className={styles.signInMethodLink}
           text={`input.${SignInMethodsKeyMap[method]}`}
           onClick={() => {
-            navigate(`/sign-in/${method}`);
+            navigate({
+              pathname: `/sign-in/${method}`,
+              search,
+            });
           }}
         />
       )),
-    [navigate, signInMethods]
+    [navigate, search, signInMethods]
   );
 
   if (signInMethodsLink.length === 0) {
     return null;
   }
 
-  if (type === 'primary') {
-    return <div className={classNames(styles.methodsPrimary, className)}>{signInMethodsLink}</div>;
+  // Without text template
+  if (!template) {
+    return <div className={classNames(styles.methodsLinkList, className)}>{signInMethodsLink}</div>;
   }
 
-  if (signInMethods.length > 1) {
-    const rawText = t('secondary.sign_in_with_2', {
-      methods: signInMethods,
-    });
+  // With text template
+  const rawText = t(`secondary.${template}`, { methods: signInMethods });
+  const textWithLink: ReactNode = signInMethods.reduce<ReactNode>(
+    (content, method, index) =>
+      // @ts-expect-error: reactStringReplace type bug, using deprecated ReactNodeArray as its input type
+      reactStringReplace(content, method, () => signInMethodsLink[index]),
+    rawText
+  );
 
-    const textLink: ReactNode = signInMethods.reduce<ReactNode>(
-      (content, method, index) =>
-        // @ts-expect-error: reactStringReplace type bug, using deprecated ReactNodeArray as its input type
-        reactStringReplace(content, method, () => signInMethodsLink[index]),
-      rawText
-    );
-
-    return <div className={className}>{textLink}</div>;
-  }
-
-  const rawText = t('secondary.sign_in_with', { method: signInMethods[0] });
-  const textLink = reactStringReplace(rawText, signInMethods[0], () => signInMethodsLink[0]);
-
-  return <div className={className}>{textLink}</div>;
+  return <div className={classNames(styles.textLink, className)}>{textWithLink}</div>;
 };
 
 export default SignInMethodsLink;

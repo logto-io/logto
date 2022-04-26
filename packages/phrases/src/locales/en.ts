@@ -21,8 +21,9 @@ const translation = {
       confirm_password: 'Confirm password',
     },
     secondary: {
-      sign_in_with: 'Sign in with {{method}}',
-      sign_in_with_2: 'Sign in with {{methods.0}} or {{methods.1}}',
+      sign_in_with: 'Sign in with {{methods, list(type: disjunction;)}}',
+      social_bind_with:
+        'Already have an account? Sign in to bind {{methods, list(type: disjunction;)}} with your social identity.',
     },
     action: {
       sign_in: 'Sign In',
