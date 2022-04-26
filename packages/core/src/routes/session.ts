@@ -21,7 +21,7 @@ import {
   encryptUserPassword,
   generateUserId,
   findUserByUsernameAndPassword,
-  updateLastSignIn,
+  updateLastSignInAt,
 } from '@/lib/user';
 import koaGuard from '@/middleware/koa-guard';
 import { findDefaultSignInExperience } from '@/queries/sign-in-experience';
@@ -80,7 +80,7 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
 
       const { id } = await findUserByUsernameAndPassword(username, password);
       ctx.log(type, { userId: id });
-      await updateLastSignIn(id);
+      await updateLastSignInAt(id);
       await assignInteractionResults(ctx, provider, { login: { accountId: id } });
 
       return next();
@@ -129,7 +129,7 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
       const { id } = await findUserByPhone(phone);
       ctx.log(type, { userId: id });
 
-      await updateLastSignIn(id);
+      await updateLastSignInAt(id);
       await assignInteractionResults(ctx, provider, { login: { accountId: id } });
 
       return next();
@@ -178,7 +178,7 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
       const { id } = await findUserByEmail(email);
       ctx.log(type, { userId: id });
 
-      await updateLastSignIn(id);
+      await updateLastSignInAt(id);
       await assignInteractionResults(ctx, provider, { login: { accountId: id } });
 
       return next();
@@ -233,7 +233,7 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
       await updateUserById(id, {
         identities: { ...identities, [connectorId]: { userId: userInfo.id, details: userInfo } },
       });
-      await updateLastSignIn(id);
+      await updateLastSignInAt(id);
       await assignInteractionResults(ctx, provider, { login: { accountId: id } });
 
       return next();
@@ -265,7 +265,7 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
       await updateUserById(id, {
         identities: { ...identities, [connectorId]: { userId: userInfo.id, details: userInfo } },
       });
-      await updateLastSignIn(id);
+      await updateLastSignInAt(id);
       await assignInteractionResults(ctx, provider, { login: { accountId: id } });
 
       return next();
@@ -356,7 +356,7 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
         passwordEncryptionMethod,
         passwordEncryptionSalt,
       });
-      await updateLastSignIn(id);
+      await updateLastSignInAt(id);
       await assignInteractionResults(ctx, provider, { login: { accountId: id } });
 
       return next();
@@ -418,7 +418,7 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
       ctx.log(type, { userId: id });
 
       await insertUser({ id, primaryPhone: phone });
-      await updateLastSignIn(id);
+      await updateLastSignInAt(id);
       await assignInteractionResults(ctx, provider, { login: { accountId: id } });
 
       return next();
@@ -468,7 +468,7 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
       ctx.log(type, { userId: id });
 
       await insertUser({ id, primaryEmail: email });
-      await updateLastSignIn(id);
+      await updateLastSignInAt(id);
       await assignInteractionResults(ctx, provider, { login: { accountId: id } });
 
       return next();
@@ -511,7 +511,7 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
       });
       ctx.log(type, { userId: id });
 
-      await updateLastSignIn(id);
+      await updateLastSignInAt(id);
       await assignInteractionResults(ctx, provider, { login: { accountId: id } });
 
       return next();

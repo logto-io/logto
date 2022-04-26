@@ -240,16 +240,22 @@ describe('user query', () => {
     const expectSql = sql`
       insert into ${table} (${sql.join(Object.values(fields), sql`, `)})
       values (${sql.join(
-        Object.values(fields).map((_, index) => `$${index + 1}`),
+        Object.values(fields)
+          .slice(0, -1)
+          .map((_, index) => `$${index + 1}`),
         sql`, `
-      )})
+      )}, to_timestamp($${Object.values(fields).length}::double precision / 1000))
       returning *
     `;
 
     mockQuery.mockImplementationOnce(async (sql, values) => {
       expectSqlAssert(sql, expectSql.sql);
 
-      expect(values).toEqual(Users.fieldKeys.map((k) => convertToPrimitiveOrSql(k, mockUser[k])));
+      expect(values).toEqual(
+        Users.fieldKeys.map((k) =>
+          k === 'lastSignInAt' ? mockUser[k] : convertToPrimitiveOrSql(k, mockUser[k])
+        )
+      );
 
       return createMockQueryResult([dbvalue]);
     });

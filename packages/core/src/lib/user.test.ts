@@ -2,7 +2,7 @@ import { UsersPasswordEncryptionMethod } from '@logto/schemas';
 
 import { hasUserWithId, updateUserById } from '@/queries/user';
 
-import { encryptUserPassword, generateUserId, updateLastSignIn } from './user';
+import { encryptUserPassword, generateUserId, updateLastSignInAt } from './user';
 
 jest.mock('@/queries/user');
 
@@ -68,10 +68,10 @@ describe('updateLastSignIn()', () => {
   });
 
   it('calls updateUserById with current timestamp', async () => {
-    await updateLastSignIn('user-id');
+    await updateLastSignInAt('user-id');
     expect(updateUserById).toHaveBeenCalledWith(
       'user-id',
-      expect.objectContaining({ lastSignIn: new Date('2020-01-01').getTime() })
+      expect.objectContaining({ lastSignInAt: new Date('2020-01-01').getTime() })
     );
   });
 });

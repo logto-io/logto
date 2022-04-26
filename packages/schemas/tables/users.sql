@@ -14,6 +14,6 @@ create table users (
   role_names jsonb /* @use RoleNames */ not null default '[]'::jsonb,
   identities jsonb /* @use Identities */ not null default '{}'::jsonb,
   custom_data jsonb /* @use ArbitraryObject */ not null default '{}'::jsonb,
-  last_sign_in timestamptz,
+  last_sign_in_at timestamptz,
   primary key (id)
 );
