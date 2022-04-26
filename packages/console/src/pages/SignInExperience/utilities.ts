@@ -5,7 +5,7 @@ import {
   SignInMethodState,
 } from '@logto/schemas';
 
-import { SignInExperienceForm } from './types';
+import { LanguageMode, SignInExperienceForm } from './types';
 
 const findMethodState = (
   setup: SignInExperienceForm,
@@ -34,6 +34,10 @@ export const signInExperienceParser = {
       (key) => signInExperience.signInMethods[key] === SignInMethodState.Secondary
     );
 
+    const {
+      languageInfo: { autoDetect, fallbackLanguage, fixedLanguage },
+    } = signInExperience;
+
     return {
       ...signInExperience,
       signInMethods: {
@@ -44,9 +48,18 @@ export const signInExperienceParser = {
         email: secondaryMethods.includes(SignInMethodKey.Email),
         social: secondaryMethods.includes(SignInMethodKey.Social),
       },
+      languageInfo: {
+        mode: autoDetect ? LanguageMode.Auto : LanguageMode.Fixed,
+        fallbackLanguage,
+        fixedLanguage,
+      },
     };
   },
   toRemoteModel: (setup: SignInExperienceForm): SignInExperience => {
+    const {
+      languageInfo: { mode, fallbackLanguage, fixedLanguage },
+    } = setup;
+
     return {
       ...setup,
       signInMethods: {
@@ -54,6 +67,11 @@ export const signInExperienceParser = {
         sms: findMethodState(setup, 'sms'),
         email: findMethodState(setup, 'email'),
         social: findMethodState(setup, 'social'),
+      },
+      languageInfo: {
+        autoDetect: mode === LanguageMode.Auto,
+        fallbackLanguage,
+        fixedLanguage,
       },
     };
   },

@@ -14,6 +14,7 @@ import useApi, { RequestError } from '@/hooks/use-api';
 import * as detailsStyles from '@/scss/details.module.scss';
 
 import BrandingForm from './components/BrandingForm';
+import LanguagesForm from './components/LanguagesForm';
 import SignInMethodsForm from './components/SignInMethodsForm';
 import TermsForm from './components/TermsForm';
 import * as styles from './index.module.scss';
@@ -44,10 +45,8 @@ const SignInExperience = () => {
     }
 
     const updatedData = await api
-      .patch(`/api/applications/${data.id}`, {
-        json: {
-          ...formData,
-        },
+      .patch('/api/sign-in-exp', {
+        json: signInExperienceParser.toRemoteModel(formData),
       })
       .json<SignInExperienceType>();
     void mutate(updatedData);
@@ -82,6 +81,7 @@ const SignInExperience = () => {
                   </>
                 )}
                 {tab === 'methods' && <SignInMethodsForm />}
+                {tab === 'others' && <LanguagesForm />}
                 <div className={detailsStyles.footer}>
                   <Button
                     isLoading={isSubmitting}
