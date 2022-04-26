@@ -23,14 +23,14 @@ export const getSignature = (
   method: string
 ) => {
   const canonicalizedQuery = Object.keys(parameters)
-    .slice()
-    .sort()
     .map((key) => {
       const value = parameters[key];
 
       return value === undefined ? '' : `${escaper(key)}=${escaper(value)}`;
     })
     .filter(Boolean)
+    .slice()
+    .sort()
     .join('&');
 
   const stringToSign = `${method.toUpperCase()}&${escaper('/')}&${escaper(canonicalizedQuery)}`;
