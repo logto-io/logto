@@ -8,7 +8,7 @@
     "license": "MPL-2.0",
     "files": [
         "lib",
-        "src/docs"
+        "docs"
     ],
     "private": true,
     "scripts": {
