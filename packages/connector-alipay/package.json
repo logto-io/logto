@@ -22,7 +22,6 @@
         "@logto/connector-types": "^0.1.0",
         "@logto/jest-config": "^0.1.0",
         "@logto/shared": "^0.1.0",
-        "@logto/schemas": "^0.1.0",
         "@silverhand/essentials": "^1.1.0",
         "dayjs": "^1.10.5",
         "got": "^11.8.2",

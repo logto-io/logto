@@ -62,7 +62,6 @@ importers:
       '@jest/types': ^27.5.1
       '@logto/connector-types': ^0.1.0
       '@logto/jest-config': ^0.1.0
-      '@logto/schemas': ^0.1.0
       '@logto/shared': ^0.1.0
       '@shopify/jest-koa-mocks': ^3.0.8
       '@silverhand/eslint-config': ^0.10.2
@@ -92,7 +91,6 @@ importers:
     dependencies:
       '@logto/connector-types': link:../connector-types
       '@logto/jest-config': link:../jest-config
-      '@logto/schemas': link:../schemas
       '@logto/shared': link:../shared
       '@silverhand/essentials': 1.1.7
       dayjs: 1.10.7
