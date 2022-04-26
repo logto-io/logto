@@ -29,7 +29,7 @@ const SocialRegister = () => {
   return (
     <div className={styles.wrapper}>
       <NavBar title={t('description.bind_account_title')} />
-      <SocialCreateAccount connector={connector} />
+      <SocialCreateAccount connectorId={connector} />
     </div>
   );
 };
