@@ -18,8 +18,8 @@ export type GithubConfig = z.infer<typeof githubConfigGuard>;
 
 // eslint-disable-next-line unicorn/prefer-module
 const currentPath = __dirname;
-const pathToReadmeFile = path.join(currentPath, 'README.md');
-const pathToConfigTemplate = path.join(currentPath, 'config-template.md');
+const pathToReadmeFile = path.join(currentPath, '..', 'README.md');
+const pathToConfigTemplate = path.join(currentPath, '..', 'docs', 'config-template.md');
 const readmeContentFallback = 'Please check README.md file directory.';
 const configTemplateFallback = 'Please check config-template.md file directory.';
 
