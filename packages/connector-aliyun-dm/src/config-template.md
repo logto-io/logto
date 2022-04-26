@@ -1,3 +1,4 @@
+```
 {
   "accessKeyId": "<access-key-id>",
   "accessKeySecret": "<access-key-secret>",
@@ -21,3 +22,4 @@
     }
   ]
 }
+```

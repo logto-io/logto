@@ -29,7 +29,6 @@ export const defaultMetadata: ConnectorMetadata = {
     en: 'Sign In with Alipay',
     'zh-CN': '支付宝登录',
   },
-  // TODO: add the real logo URL (LOG-1823)
   logo: './logo.png',
   description: {
     en: 'Sign In with Alipay',

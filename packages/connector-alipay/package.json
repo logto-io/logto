@@ -3,7 +3,7 @@
     "version": "0.1.0",
     "description": "Alipay implementation.",
     "main": "lib/index.js",
-    "author": "Logto Team",
+    "author": "Silverhand Inc. <contact@silverhand.io>",
     "license": "MPL-2.0",
     "private": true,
     "scripts": {
