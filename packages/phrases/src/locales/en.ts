@@ -383,18 +383,13 @@ const translation = {
         },
       },
       others: {
-        forgot_password: {
-          title: 'FORGOT PASSWORD',
-          enable: 'Enable forgot password',
-          enable_description:
-            'Once it’s turned on, you app will support more sign in method(s) besides the primary one. ',
-        },
         languages: {
           title: 'LANGUAGES',
           mode: 'Language mode',
           auto: 'Auto',
           fixed: 'Fixed',
-          fallback: 'Fallback languages',
+          fallback_language: 'Fallback language',
+          fixed_language: 'Fixed language',
           languages: {
             english: 'English',
             chinese: 'Chinese',

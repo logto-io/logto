@@ -1,6 +1,12 @@
+import { Language } from '@logto/phrases';
 import { SignInExperience, SignInMethods } from '@logto/schemas';
 
-export type SignInExperienceForm = Omit<SignInExperience, 'signInMethods'> & {
+export enum LanguageMode {
+  Auto = 'Auto',
+  Fixed = 'Fixed',
+}
+
+export type SignInExperienceForm = Omit<SignInExperience, 'signInMethods' | 'languageInfo'> & {
   signInMethods: {
     primary?: keyof SignInMethods;
     enableSecondary: boolean;
@@ -8,5 +14,10 @@ export type SignInExperienceForm = Omit<SignInExperience, 'signInMethods'> & {
     sms: boolean;
     email: boolean;
     social: boolean;
+  };
+  languageInfo: {
+    mode: LanguageMode;
+    fixedLanguage: Language;
+    fallbackLanguage: Language;
   };
 };
