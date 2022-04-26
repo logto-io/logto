@@ -17,8 +17,8 @@ export const alipaySigningAlgorithms = ['RSA', 'RSA2'] as const;
 
 // eslint-disable-next-line unicorn/prefer-module
 const currentPath = __dirname;
-const pathToReadmeFile = path.join(currentPath, 'README.md');
-const pathToConfigTemplate = path.join(currentPath, 'config-template.md');
+const pathToReadmeFile = path.join(currentPath, '..', 'README.md');
+const pathToConfigTemplate = path.join(currentPath, '..', 'docs', 'config-template.md');
 const readmeContentFallback = 'Please check README.md file directory.';
 const configTemplateFallback = 'Please check config-template.md file directory.';
 
@@ -29,7 +29,6 @@ export const defaultMetadata: ConnectorMetadata = {
     en: 'Sign In with Alipay',
     'zh-CN': '支付宝登录',
   },
-  // TODO: add the real logo URL (LOG-1823)
   logo: './logo.png',
   description: {
     en: 'Sign In with Alipay',

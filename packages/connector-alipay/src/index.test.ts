@@ -74,7 +74,6 @@ describe('getAccessToken', () => {
       });
 
     const response = await alipayMethods.getAccessToken('code');
-    console.log(response);
     const { accessToken } = response;
     expect(accessToken).toEqual('access_token');
   });

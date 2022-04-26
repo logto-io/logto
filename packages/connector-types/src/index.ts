@@ -50,17 +50,15 @@ export type EmailMessageTypes = {
 
 type SmsMessageTypes = EmailMessageTypes;
 
-export type SendEmailResponse = { EnvId: string; RequestId: string };
-
 export type SendSmsResponse = { BizId: string; Code: string; Message: string; RequestId: string };
 
-export type EmailSendMessageFunction<T = Record<string, unknown>> = (
+export type EmailSendMessageFunction<T = unknown> = (
   address: string,
   type: keyof EmailMessageTypes,
   payload: EmailMessageTypes[typeof type]
 ) => Promise<T>;
 
-export type SmsSendMessageFunction<T = Record<string, unknown>> = (
+export type SmsSendMessageFunction<T = unknown> = (
   phone: string,
   type: keyof SmsMessageTypes,
   payload: SmsMessageTypes[typeof type]
