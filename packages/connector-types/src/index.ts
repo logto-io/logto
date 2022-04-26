@@ -84,8 +84,6 @@ export interface SocialConnector extends BaseConnector {
   getAuthorizationUri: GetAuthorizationUri;
   getAccessToken: GetAccessToken;
   getUserInfo: GetUserInfo;
-  getRequestTimeout?: GetTimeout;
-  getTimestamp?: GetTimestamp;
 }
 
 export type ValidateConfig<T = Record<string, unknown>> = (config: T) => Promise<void>;
@@ -101,7 +99,3 @@ export type GetUserInfo = (
 ) => Promise<{ id: string } & Record<string, string | undefined>>;
 
 export type GetConnectorConfig<T = Record<string, unknown>> = (id: string) => Promise<T>;
-
-export type GetTimeout = () => Promise<number>;
-
-export type GetTimestamp = () => string;

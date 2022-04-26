@@ -57,6 +57,69 @@ importers:
       ts-node: 10.4.0_e6a8a9b497f380f485f6d23f5cd591ca
       typescript: 4.6.3
 
+  packages/connector-alipay:
+    specifiers:
+      '@jest/types': ^27.5.1
+      '@logto/connector-types': ^0.1.0
+      '@logto/jest-config': ^0.1.0
+      '@logto/shared': ^0.1.0
+      '@shopify/jest-koa-mocks': ^3.0.8
+      '@silverhand/eslint-config': ^0.10.2
+      '@silverhand/essentials': ^1.1.0
+      '@silverhand/ts-config': ^0.10.2
+      '@types/jest': ^27.4.1
+      '@types/lodash.pick': ^4.4.6
+      '@types/node': ^16.3.1
+      '@types/supertest': ^2.0.11
+      copyfiles: ^2.4.1
+      dayjs: ^1.10.5
+      eslint: ^8.10.0
+      got: ^11.8.2
+      iconv-lite: 0.6.3
+      jest: ^27.5.1
+      jest-matcher-specific-error: ^1.0.0
+      lint-staged: ^11.1.1
+      nock: ^13.2.2
+      prettier: ^2.3.2
+      query-string: ^7.0.1
+      snakecase-keys: ^5.1.0
+      supertest: ^6.2.2
+      ts-jest: ^27.1.1
+      tsc-watch: ^4.4.0
+      typescript: ^4.6.2
+      zod: ^3.14.3
+    dependencies:
+      '@logto/connector-types': link:../connector-types
+      '@logto/jest-config': link:../jest-config
+      '@logto/shared': link:../shared
+      '@silverhand/essentials': 1.1.7
+      dayjs: 1.10.7
+      got: 11.8.3
+      iconv-lite: 0.6.3
+      query-string: 7.0.1
+      snakecase-keys: 5.1.2
+      zod: 3.14.3
+    devDependencies:
+      '@jest/types': 27.5.1
+      '@shopify/jest-koa-mocks': 3.0.8
+      '@silverhand/eslint-config': 0.10.2_bbe1a6794670f389df81805f22999709
+      '@silverhand/ts-config': 0.10.2_typescript@4.6.3
+      '@types/jest': 27.4.1
+      '@types/lodash.pick': 4.4.6
+      '@types/node': 16.11.12
+      '@types/supertest': 2.0.11
+      copyfiles: 2.4.1
+      eslint: 8.10.0
+      jest: 27.5.1
+      jest-matcher-specific-error: 1.0.0
+      lint-staged: 11.2.6
+      nock: 13.2.2
+      prettier: 2.5.1
+      supertest: 6.2.2
+      ts-jest: 27.1.1_9985e1834e803358b7be1e6ce5ca0eea
+      tsc-watch: 4.5.0_typescript@4.6.3
+      typescript: 4.6.3
+
   packages/connector-types:
     specifiers:
       '@jest/types': ^27.5.1
@@ -5362,7 +5425,6 @@ packages:
     dependencies:
       lodash.orderby: 4.6.0
       lodash.pick: 4.4.0
-    dev: true
 
   /@silverhand/ts-config-react/0.10.3_typescript@4.6.2:
     resolution: {integrity: sha512-xGOwcw1HTixfP3PSSdJT3leGnlUV0dLna9xp58bDDLul7UCnIn+PNp1VNJxUZ/HvtKbV4ZSYdGsGE6Xqmwn7Ag==}
@@ -19008,6 +19070,21 @@ packages:
       typescript: 4.6.3
       v8-compile-cache-lib: 3.0.1
       yn: 3.1.1
+    dev: true
+
+  /tsc-watch/4.5.0_typescript@4.6.3:
+    resolution: {integrity: sha512-aXhN4jY+1YEcn/NwCQ/+fHqU43EqOpW+pS+933EPsVEsrKhvyrodPDIjQsk1a1niFrabAK3RIBrRbAslVefEbQ==}
+    engines: {node: '>=8.17.0'}
+    hasBin: true
+    peerDependencies:
+      typescript: '*'
+    dependencies:
+      cross-spawn: 7.0.3
+      node-cleanup: 2.1.2
+      ps-tree: 1.2.0
+      string-argv: 0.1.2
+      strip-ansi: 6.0.1
+      typescript: 4.6.3
     dev: true
 
   /tsc-watch/5.0.3_typescript@4.6.2:
