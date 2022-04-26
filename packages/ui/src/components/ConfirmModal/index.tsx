@@ -34,7 +34,7 @@ const ConfirmModal = ({
       role="dialog"
       isOpen={isOpen}
       className={classNames(modalStyles.modal, className)}
-      overlayClassName={modalStyles.overlay}
+      overlayClassName={classNames(modalStyles.overlay, styles.overlay)}
       parentSelector={() => document.querySelector('main') ?? document.body}
       ariaHideApp={false}
     >

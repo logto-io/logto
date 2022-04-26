@@ -1,4 +1,4 @@
-import { useEffect, useCallback, useContext } from 'react';
+import { useEffect, useCallback, useContext, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 
 import { invokeSocialSignIn, signInWithSocial } from '@/apis/social';
@@ -20,6 +20,10 @@ type State = {
   uuid: string;
   platform: 'web' | 'ios' | 'android';
   callbackLink?: string;
+};
+
+type Options = {
+  onSocialSignInCallback?: () => void;
 };
 
 const storageKeyPrefix = 'social_auth_state';
@@ -64,10 +68,19 @@ const isNativeWebview = () => {
   return ['ios', 'android'].includes(platform);
 };
 
-const useSocial = () => {
-  const { setToast } = useContext(PageContext);
+const useSocial = (options?: Options) => {
+  const { setToast, experienceSettings } = useContext(PageContext);
   const { termsValidation } = useTerms();
   const parameters = useParams();
+
+  // Filter native supported social connectors
+  const socialConnectors = useMemo(
+    () =>
+      (experienceSettings?.socialConnectors ?? []).filter(({ id }) => {
+        return !isNativeWebview() || getLogtoNativeSdk()?.supportedSocialConnectors.includes(id);
+      }),
+    [experienceSettings?.socialConnectors]
+  );
 
   const { result: invokeSocialSignInResult, run: asyncInvokeSocialSignIn } =
     useApi(invokeSocialSignIn);
@@ -151,6 +164,8 @@ const useSocial = () => {
       return;
     }
 
+    options?.onSocialSignInCallback?.();
+
     // Invoke Native Social Sign In flow
     if (isNativeWebview()) {
       getLogtoNativeSdk()?.getPostMessage()({
@@ -163,7 +178,7 @@ const useSocial = () => {
 
     // Invoke Web Social Sign In flow
     window.location.assign(redirectTo);
-  }, [invokeSocialSignInResult]);
+  }, [invokeSocialSignInResult, options]);
 
   // SignInWithSocial Callback
   useEffect(() => {
@@ -189,6 +204,10 @@ const useSocial = () => {
 
   // Monitor Native Error Message
   useEffect(() => {
+    if (!isNativeWebview()) {
+      return;
+    }
+
     const nativeMessageHandler = (event: MessageEvent) => {
       if (event.origin === window.location.origin) {
         setToast(JSON.stringify(event.data));
@@ -203,6 +222,7 @@ const useSocial = () => {
   }, [setToast]);
 
   return {
+    socialConnectors,
     invokeSocialSignIn: invokeSocialSignInHandler,
     socialCallbackHandler,
   };

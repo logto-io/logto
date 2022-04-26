@@ -1,5 +1,9 @@
 @use '@/scss/underscore' as _;
 
+.overlay {
+  z-index: 100;
+}
+
 .container {
   background: var(--color-base);
   padding: _.unit(6) _.unit(5);

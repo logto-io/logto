@@ -42,6 +42,10 @@ const SignInMethodsLink = ({ signInMethods, type = 'secondary', className }: Pro
     [navigate, signInMethods]
   );
 
+  if (signInMethodsLink.length === 0) {
+    return null;
+  }
+
   if (type === 'primary') {
     return <div className={classNames(styles.methodsPrimary, className)}>{signInMethodsLink}</div>;
   }
@@ -58,13 +62,13 @@ const SignInMethodsLink = ({ signInMethods, type = 'secondary', className }: Pro
       rawText
     );
 
-    return <div className={classNames(styles.methodsSecondary, className)}>{textLink}</div>;
+    return <div className={className}>{textLink}</div>;
   }
 
   const rawText = t('secondary.sign_in_with', { method: signInMethods[0] });
   const textLink = reactStringReplace(rawText, signInMethods[0], () => signInMethodsLink[0]);
 
-  return <div className={classNames(styles.methodsSecondary, className)}>{textLink}</div>;
+  return <div className={className}>{textLink}</div>;
 };
 
 export default SignInMethodsLink;
