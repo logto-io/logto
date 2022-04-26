@@ -55,7 +55,13 @@ const EmailPasswordless = ({ type, className }: Props) => {
 
   useEffect(() => {
     if (result) {
-      navigate(`/${type}/email/passcode-validation`, { state: { email: fieldValue.email } });
+      navigate(
+        {
+          pathname: `/${type}/email/passcode-validation`,
+          search: location.search,
+        },
+        { state: { email: fieldValue.email } }
+      );
     }
   }, [fieldValue.email, navigate, result, type]);
 
