@@ -32,6 +32,7 @@ const translation = {
       enter_passcode: 'Enter Passcode',
       confirm: 'Confirm',
       cancel: 'Cancel',
+      bind: 'Binding with {{address}}',
     },
     description: {
       loading: 'Loading...',
@@ -50,6 +51,10 @@ const translation = {
         'The account with {{type}} {{value}} already exists, would you like to sign in?',
       sign_in_id_does_not_exists:
         'The account with {{type}} {{value}} does not exist, would you like to create a new account?',
+      bind_account_title: 'Binding Logto account',
+      social_create_account: 'No account? You can create a new account and bind.',
+      social_bind_account: 'Already have an account? Sign in to bind it with your social identity.',
+      social_bind_with_existing: 'We find a related account, you can bind it directly.',
     },
     error: {
       username_password_mismatch: 'Username and password do not match.',

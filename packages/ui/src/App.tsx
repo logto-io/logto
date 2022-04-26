@@ -10,6 +10,7 @@ import Passcode from './pages/Passcode';
 import Register from './pages/Register';
 import SecondarySignIn from './pages/SecondarySignIn';
 import SignIn from './pages/SignIn';
+import SocialRegister from './pages/SocialRegister';
 import getSignInExperienceSettings from './utils/sign-in-experience';
 
 import './scss/normalized.scss';
@@ -45,12 +46,14 @@ const App = () => {
             <Route path="/" element={<Navigate replace to="/sign-in" />} />
             <Route path="/sign-in" element={<SignIn />} />
             <Route path="/sign-in/consent" element={<Consent />} />
+            <Route path="/sign-in/bind/:connector" element={<SignIn />} />
             <Route path="/sign-in/callback/:connector" element={<SignIn />} />
             <Route path="/sign-in/:method" element={<SecondarySignIn />} />
             <Route path="/register" element={<Register />} />
             <Route path="/register/:method" element={<Register />} />
-            <Route path="/:type/:method/passcode-validation" element={<Passcode />} />
             <Route path="/callback/:connector" element={<Callback />} />
+            <Route path="/social-register/:connector" element={<SocialRegister />} />
+            <Route path="/:type/:method/passcode-validation" element={<Passcode />} />
           </Routes>
         </BrowserRouter>
       </AppContent>
