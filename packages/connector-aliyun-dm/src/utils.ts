@@ -1,6 +1,5 @@
 import { createHmac } from 'crypto';
 
-import { has } from '@silverhand/essentials';
 import got from 'got';
 
 export type { Response } from 'got';
@@ -65,16 +64,9 @@ export const request = async <T>(
 
   const payload = new URLSearchParams();
 
-  for (const key in finalParameters) {
-    if (has(finalParameters, key)) {
-      const value = finalParameters[key];
-
-      if (value !== undefined) {
-        payload.append(key, value);
-      }
-    }
+  for (const [key, value] of Object.entries(finalParameters)) {
+    payload.append(key, value);
   }
-
   payload.append('Signature', signature);
 
   return got.post<T>({

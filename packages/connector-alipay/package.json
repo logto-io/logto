@@ -6,15 +6,18 @@
     "exports": "./lib/index.js",
     "author": "Silverhand Inc. <contact@silverhand.io>",
     "license": "MPL-2.0",
+    "files": [
+        "lib",
+        "src/docs"
+    ],
     "private": true,
     "scripts": {
         "preinstall": "npx only-allow pnpm",
         "precommit": "lint-staged",
-        "copyfiles": "copyfiles -u 1 src/**/*.md lib",
-        "build": "rm -rf lib/ && tsc -p tsconfig.build.json && pnpm run copyfiles",
+        "build": "rm -rf lib/ && tsc -p tsconfig.build.json",
         "lint": "eslint --ext .ts src",
         "lint:report": "pnpm lint -- --format json --output-file report.json",
-        "dev": "rm -rf lib/ && pnpm run copyfiles && tsc-watch -p tsconfig.build.json --preserveWatchOutput --onSuccess \"node ./lib/index.js\"",
+        "dev": "rm -rf lib/ && tsc-watch -p tsconfig.build.json --preserveWatchOutput --onSuccess \"node ./lib/index.js\"",
         "test": "jest",
         "test:coverage": "jest --coverage --silent",
         "prepack": "pnpm build"
@@ -40,7 +43,6 @@
         "@types/lodash.pick": "^4.4.6",
         "@types/node": "^16.3.1",
         "@types/supertest": "^2.0.11",
-        "copyfiles": "^2.4.1",
         "eslint": "^8.10.0",
         "jest": "^27.5.1",
         "jest-matcher-specific-error": "^1.0.0",

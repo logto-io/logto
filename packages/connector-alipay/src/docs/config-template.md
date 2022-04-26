@@ -1,4 +1,4 @@
-```
+```json
 {
   "appId": "<app-id>",
   "signType": "<signing-algorithm>",

@@ -71,7 +71,6 @@ importers:
       '@types/lodash.pick': ^4.4.6
       '@types/node': ^16.3.1
       '@types/supertest': ^2.0.11
-      copyfiles: ^2.4.1
       dayjs: ^1.10.5
       eslint: ^8.10.0
       got: ^11.8.2
@@ -108,7 +107,6 @@ importers:
       '@types/lodash.pick': 4.4.6
       '@types/node': 16.11.12
       '@types/supertest': 2.0.11
-      copyfiles: 2.4.1
       eslint: 8.10.0
       jest: 27.5.1
       jest-matcher-specific-error: 1.0.0
@@ -131,7 +129,6 @@ importers:
       '@silverhand/ts-config': ^0.10.2
       '@types/jest': ^27.4.1
       '@types/node': ^16.3.1
-      copyfiles: ^2.4.1
       eslint: ^8.10.0
       got: ^11.8.2
       jest: ^27.5.1
@@ -155,7 +152,6 @@ importers:
       '@silverhand/ts-config': 0.10.2_typescript@4.6.3
       '@types/jest': 27.4.1
       '@types/node': 16.11.12
-      copyfiles: 2.4.1
       eslint: 8.10.0
       jest: 27.5.1
       jest-matcher-specific-error: 1.0.0
