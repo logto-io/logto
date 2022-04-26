@@ -31,7 +31,7 @@ describe('SocialCreateAccount', () => {
 
     const signInButton = getByText('action.sign_in');
     fireEvent.click(signInButton);
-    expect(mockNavigate).toBeCalledWith('/sign-in/bind/github');
+    expect(mockNavigate).toBeCalledWith('/sign-in/username/github');
   });
 
   it('should call registerWithSocial when click create button', async () => {

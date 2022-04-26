@@ -36,7 +36,8 @@ const SocialCreateAccount = ({ connector, className }: Props) => {
   }, [asyncBindSocialRelatedUser, connector]);
 
   const signInHandler = useCallback(() => {
-    navigate('/sign-in/bind/' + connector);
+    // TODO: redirect to desired sign-in page
+    navigate('/sign-in/username/' + connector);
   }, [connector, navigate]);
 
   useEffect(() => {

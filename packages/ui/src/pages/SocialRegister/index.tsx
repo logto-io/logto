@@ -22,8 +22,6 @@ const SocialRegister = () => {
     }
   }, [connector, navigate]);
 
-  console.log(connector);
-
   if (!connector) {
     return null;
   }
