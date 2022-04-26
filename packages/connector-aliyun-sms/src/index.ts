@@ -3,7 +3,6 @@ import {
   ConnectorErrorCodes,
   ConnectorMetadata,
   SmsSendMessageFunction,
-  SendSmsResponse,
   ValidateConfig,
   SmsConnector,
   GetConnectorConfig,
@@ -14,6 +13,7 @@ import { z } from 'zod';
 
 import { defaultMetadata } from './constant';
 import { sendSms } from './single-send-text';
+import { SendSmsResponse } from './utils';
 /**
  * Details of SmsTemplateType can be found at:
  * https://next.api.aliyun.com/document/Dysmsapi/2017-05-25/QuerySmsTemplateList.
