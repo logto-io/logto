@@ -19,6 +19,7 @@ import {
   invokeSocialSignIn,
   signInWithSocial,
   bindSocialAccount,
+  bindSocialRelatedUser,
   registerWithSocial,
 } from './social';
 
@@ -168,6 +169,15 @@ describe('api', () => {
 
   it('bindSocialAccount', async () => {
     await bindSocialAccount('connectorId');
+    expect(ky.post).toBeCalledWith('/api/session/sign-in/bind-social', {
+      json: {
+        connectorId: 'connectorId',
+      },
+    });
+  });
+
+  it('bindSocialRelatedUser', async () => {
+    await bindSocialRelatedUser('connectorId');
     expect(ky.post).toBeCalledWith('/api/session/sign-in/bind-social-related-user', {
       json: {
         connectorId: 'connectorId',

@@ -1,0 +1,23 @@
+@use '@/scss/underscore' as _;
+
+
+.container {
+  width: 100%;
+  max-width: 360px;
+  margin: 0 auto;
+  @include _.flex-column;
+
+  > * {
+    width: 100%;
+  }
+}
+
+.desc {
+  @include _.text-hint;
+  margin-bottom: _.unit(2);
+
+  &:not(:first-child) {
+    margin-top: _.unit(8);
+  }
+}
+

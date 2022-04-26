@@ -1,0 +1,7 @@
+@use '@/scss/underscore' as _;
+
+.wrapper {
+  position: relative;
+  padding: _.unit(8) _.unit(5);
+  @include _.flex-column;
+}

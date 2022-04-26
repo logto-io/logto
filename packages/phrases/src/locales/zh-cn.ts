@@ -34,6 +34,7 @@ const translation = {
       enter_passcode: '输入验证码',
       cancel: '取消',
       confirm: '确认',
+      bind: '绑定到 {{address}}',
     },
     description: {
       loading: '读取中...',
@@ -50,6 +51,10 @@ const translation = {
       continue_with: '通过以下方式继续',
       create_account_id_exists: '{{ type }}为 {{ value }} 的账号已存在，您要登录吗？',
       sign_in_id_does_not_exists: '{{ type }}为 {{ value }} 的账号不存在，您要创建一个新账号吗？',
+      bind_account_title: '绑定 Logto 账号',
+      social_create_account: 'No account? You can create a new account and bind.',
+      social_bind_account: 'Already have an account? Sign in to bind it with your social identity.',
+      social_bind_with_existing: 'We find a related account, you can bind it directly.',
     },
     error: {
       username_password_mismatch: '用户名和密码不匹配。',

@@ -43,6 +43,20 @@ export const bindSocialAccount = async (connectorId: string) => {
   };
 
   return ky
+    .post('/api/session/sign-in/bind-social', {
+      json: {
+        connectorId,
+      },
+    })
+    .json<Response>();
+};
+
+export const bindSocialRelatedUser = async (connectorId: string) => {
+  type Response = {
+    redirectTo: string;
+  };
+
+  return ky
     .post('/api/session/sign-in/bind-social-related-user', {
       json: {
         connectorId,

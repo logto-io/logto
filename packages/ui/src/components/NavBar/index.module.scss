@@ -3,9 +3,20 @@
 .navBar {
   width: 100%;
   margin-bottom: _.unit(6);
+  @include _.flex-row;
+  justify-content: center;
+  position: relative;
+  padding: _.unit(3) 0;
 
   svg {
-    margin-left: _.unit(-2);
+    position: absolute;
+    left: _.unit(-2);
+    top: 50%;
+    transform: translateY(-50%);
     fill: var(--color-icon);
+  }
+
+  .title {
+    font: var(--font-body-bold);
   }
 }

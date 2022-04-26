@@ -4,7 +4,11 @@ import { useNavigate } from 'react-router-dom';
 import { NavArrowIcon } from '../Icons';
 import * as styles from './index.module.scss';
 
-const NavBar = () => {
+type Props = {
+  title?: string;
+};
+
+const NavBar = ({ title }: Props) => {
   const navigate = useNavigate();
 
   return (
@@ -14,6 +18,7 @@ const NavBar = () => {
           navigate(-1);
         }}
       />
+      {title && <div className={styles.title}>{title}</div>}
     </div>
   );
 };
