@@ -43,11 +43,36 @@ describe('api', () => {
   });
 
   it('signInBasic', async () => {
+    mockKyPost.mockReturnValueOnce({
+      json: () => ({
+        redirectTo: '/',
+      }),
+    });
     await signInBasic(username, password);
     expect(ky.post).toBeCalledWith('/api/session/sign-in/username-password', {
       json: {
         username,
         password,
+      },
+    });
+  });
+
+  it('signInBasic with bind social account', async () => {
+    mockKyPost.mockReturnValueOnce({
+      json: () => ({
+        redirectTo: '/',
+      }),
+    });
+    await signInBasic(username, password, 'github');
+    expect(ky.post).toHaveBeenNthCalledWith(1, '/api/session/sign-in/username-password', {
+      json: {
+        username,
+        password,
+      },
+    });
+    expect(ky.post).toHaveBeenNthCalledWith(2, '/api/session/sign-in/bind-social', {
+      json: {
+        connectorId: 'github',
       },
     });
   });
@@ -62,6 +87,11 @@ describe('api', () => {
   });
 
   it('verifySignInSmsPasscode', async () => {
+    mockKyPost.mockReturnValueOnce({
+      json: () => ({
+        redirectTo: '/',
+      }),
+    });
     await verifySignInSmsPasscode(phone, passcode);
     expect(ky.post).toBeCalledWith('/api/session/sign-in/passwordless/sms/verify-passcode', {
       json: {
@@ -81,6 +111,11 @@ describe('api', () => {
   });
 
   it('verifySignInEmailPasscode', async () => {
+    mockKyPost.mockReturnValueOnce({
+      json: () => ({
+        redirectTo: '/',
+      }),
+    });
     await verifySignInEmailPasscode(email, passcode);
     expect(ky.post).toBeCalledWith('/api/session/sign-in/passwordless/email/verify-passcode', {
       json: {

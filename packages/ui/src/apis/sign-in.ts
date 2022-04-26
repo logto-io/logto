@@ -1,11 +1,13 @@
 import ky from 'ky';
 
-export const signInBasic = async (username: string, password: string) => {
+import { bindSocialAccount } from './social';
+
+export const signInBasic = async (username: string, password: string, socialToBind?: string) => {
   type Response = {
     redirectTo: string;
   };
 
-  return ky
+  const result = await ky
     .post('/api/session/sign-in/username-password', {
       json: {
         username,
@@ -13,6 +15,12 @@ export const signInBasic = async (username: string, password: string) => {
       },
     })
     .json<Response>();
+
+  if (result.redirectTo && socialToBind) {
+    await bindSocialAccount(socialToBind);
+  }
+
+  return result;
 };
 
 export const sendSignInSmsPasscode = async (phone: string) => {
@@ -25,12 +33,16 @@ export const sendSignInSmsPasscode = async (phone: string) => {
     .json();
 };
 
-export const verifySignInSmsPasscode = async (phone: string, passcode: string) => {
+export const verifySignInSmsPasscode = async (
+  phone: string,
+  passcode: string,
+  socialToBind?: string
+) => {
   type Response = {
     redirectTo: string;
   };
 
-  return ky
+  const result = await ky
     .post('/api/session/sign-in/passwordless/sms/verify-passcode', {
       json: {
         phone,
@@ -38,6 +50,12 @@ export const verifySignInSmsPasscode = async (phone: string, passcode: string) =
       },
     })
     .json<Response>();
+
+  if (result.redirectTo && socialToBind) {
+    await bindSocialAccount(socialToBind);
+  }
+
+  return result;
 };
 
 export const sendSignInEmailPasscode = async (email: string) => {
@@ -50,12 +68,16 @@ export const sendSignInEmailPasscode = async (email: string) => {
     .json();
 };
 
-export const verifySignInEmailPasscode = async (email: string, passcode: string) => {
+export const verifySignInEmailPasscode = async (
+  email: string,
+  passcode: string,
+  socialToBind?: string
+) => {
   type Response = {
     redirectTo: string;
   };
 
-  return ky
+  const result = await ky
     .post('/api/session/sign-in/passwordless/email/verify-passcode', {
       json: {
         email,
@@ -63,4 +85,10 @@ export const verifySignInEmailPasscode = async (email: string, passcode: string)
       },
     })
     .json<Response>();
+
+  if (result.redirectTo && socialToBind) {
+    await bindSocialAccount(socialToBind);
+  }
+
+  return result;
 };

@@ -79,6 +79,6 @@ describe('<UsernameSignin>', () => {
       fireEvent.click(submitButton);
     });
 
-    expect(signInBasic).toBeCalledWith('username', 'password');
+    expect(signInBasic).toBeCalledWith('username', 'password', undefined);
   });
 });

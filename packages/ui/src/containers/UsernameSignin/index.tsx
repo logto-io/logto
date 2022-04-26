@@ -16,6 +16,8 @@ import useApi from '@/hooks/use-api';
 import useForm from '@/hooks/use-form';
 import { PageContext } from '@/hooks/use-page-context';
 import useTerms from '@/hooks/use-terms';
+import { SearchParameters } from '@/types';
+import { getSearchParameters } from '@/utils';
 import { usernameValidation, passwordValidation } from '@/utils/field-validations';
 
 import * as styles from './index.module.scss';
@@ -50,7 +52,9 @@ const UsernameSignin = ({ className }: Props) => {
       return;
     }
 
-    void asyncSignInBasic(fieldValue.username, fieldValue.password);
+    const socialToBind = getSearchParameters(location.search, SearchParameters.bindWithSocial);
+
+    void asyncSignInBasic(fieldValue.username, fieldValue.password, socialToBind);
   }, [validateForm, termsValidation, asyncSignInBasic, fieldValue]);
 
   useEffect(() => {

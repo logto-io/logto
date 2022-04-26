@@ -23,7 +23,7 @@ export const getSearchParameters = (parameters: string | URLSearchParams, key: s
   const searchParameters =
     parameters instanceof URLSearchParams ? parameters : new URLSearchParams(parameters);
 
-  return searchParameters.get(key);
+  return searchParameters.get(key) ?? undefined;
 };
 
 type Entries<T> = Array<
