@@ -1,9 +1,7 @@
 import { SchemaValuePrimitive, SchemaValue } from '@logto/schemas';
 import { Falsy, notFalsy } from '@silverhand/essentials';
 import dayjs from 'dayjs';
-import { sql, SqlSqlToken, SqlToken, IdentifierSqlToken } from 'slonik';
-
-import envSet from '@/env-set';
+import { sql, SqlSqlToken, SqlToken, QueryResult } from 'slonik';
 
 import { FieldIdentifiers, Table } from './types';
 
@@ -71,8 +69,8 @@ export const convertToIdentifiers = <T extends Table>(
 
 export const convertToTimestamp = (time = dayjs()) => sql`to_timestamp(${time.valueOf() / 1000})`;
 
-export const getTotalRowCount = async (table: IdentifierSqlToken) =>
-  envSet.pool.one<{ count: number }>(sql`
-    select count(*)
-    from ${table}
-  `);
+export const manyRows = async <T>(query: Promise<QueryResult<T>>): Promise<readonly T[]> => {
+  const { rows } = await query;
+
+  return rows;
+};

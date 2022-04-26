@@ -1,4 +1,4 @@
-import { getEnv, Optional } from '@silverhand/essentials';
+import { conditionalString, getEnv, Optional } from '@silverhand/essentials';
 import { DatabasePool } from 'slonik';
 
 import createPoolByEnv from './create-pool-by-env';
@@ -19,6 +19,7 @@ const loadEnvValues = async () => {
   return Object.freeze({
     isTest,
     isProduction,
+    isHttpsEnabled: Boolean(process.env.HTTPS_CERT && process.env.HTTPS_KEY),
     httpsCert: process.env.HTTPS_CERT,
     httpsKey: process.env.HTTPS_KEY,
     port,
@@ -58,7 +59,10 @@ function createEnvSet() {
 
     load: async () => {
       values = await loadEnvValues();
-      pool = await createPoolByEnv(values.isTest);
+      pool = await createPoolByEnv(
+        values.isTest,
+        `http${conditionalString(values.isHttpsEnabled && 's')}://localhost:${values.port}`
+      );
     },
   };
 }

@@ -1,16 +1,20 @@
 import { readdir, readFile } from 'fs/promises';
 import path from 'path';
 
-import { seeds } from '@logto/schemas';
+import { SchemaLike, seeds } from '@logto/schemas';
 import chalk from 'chalk';
-import { createPool, sql } from 'slonik';
+import decamelize from 'decamelize';
+import { createPool, parseDsn, sql, stringifyDsn } from 'slonik';
 import { createInterceptors } from 'slonik-interceptor-preset';
 import { raw } from 'slonik-sql-tag-raw';
 
-import { insertInto, replaceDsnDatabase } from './utilities';
+import { convertToPrimitiveOrSql } from './utils';
 
 const { managementResource, defaultSignInExperience, createDefaultSetting } = seeds;
 const tableDirectory = 'node_modules/@logto/schemas/tables';
+
+export const replaceDsnDatabase = (dsn: string, databaseName: string): string =>
+  stringifyDsn({ ...parseDsn(dsn), databaseName });
 
 /**
  * Create a database.
@@ -23,8 +27,6 @@ export const createDatabase = async (dsn: string, databaseName: string): Promise
     create database ${sql.identifier([databaseName])}
       with
       encoding = 'UTF8'
-      lc_collate = 'C'
-      lc_ctype = 'en_US.utf8'
       connection_limit = -1;
   `);
   await pool.end();
@@ -32,6 +34,22 @@ export const createDatabase = async (dsn: string, databaseName: string): Promise
   console.log(`${chalk.blue('[create]')} Database ${databaseName} successfully created.`);
 
   return replaceDsnDatabase(dsn, databaseName);
+};
+
+export const insertInto = <T extends SchemaLike>(object: T, table: string) => {
+  const keys = Object.keys(object);
+
+  return sql`
+    insert into ${sql.identifier([table])}
+    (${sql.join(
+      keys.map((key) => sql.identifier([decamelize(key)])),
+      sql`, `
+    )})
+    values (${sql.join(
+      keys.map((key) => convertToPrimitiveOrSql(key, object[key] ?? null)),
+      sql`, `
+    )})
+  `;
 };
 
 export const createDatabaseCli = (dsn: string) => {
@@ -64,5 +82,5 @@ export const createDatabaseCli = (dsn: string) => {
     console.log(`${chalk.blue('[seed-tables]')} Seed tables succeeded.`);
   };
 
-  return { createTables, seedTables, end: pool.end };
+  return { createTables, seedTables, pool };
 };

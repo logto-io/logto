@@ -2,12 +2,13 @@ import { Application, CreateApplication, Applications } from '@logto/schemas';
 import { sql } from 'slonik';
 
 import { buildInsertInto } from '@/database/insert-into';
+import { getTotalRowCount } from '@/database/row-count';
 import { buildUpdateWhere } from '@/database/update-where';
 import {
   convertToIdentifiers,
   OmitAutoSetFields,
-  getTotalRowCount,
   conditionalSql,
+  manyRows,
 } from '@/database/utils';
 import envSet from '@/env-set';
 import { DeletionError } from '@/errors/SlonikError';
@@ -17,13 +18,15 @@ const { table, fields } = convertToIdentifiers(Applications);
 export const findTotalNumberOfApplications = async () => getTotalRowCount(table);
 
 export const findAllApplications = async (limit: number, offset: number) =>
-  envSet.pool.many<Application>(sql`
-    select ${sql.join(Object.values(fields), sql`, `)}
-    from ${table}
-    order by ${fields.createdAt} desc
-    ${conditionalSql(limit, (limit) => sql`limit ${limit}`)}
-    ${conditionalSql(offset, (offset) => sql`offset ${offset}`)}
-  `);
+  manyRows(
+    envSet.pool.query<Application>(sql`
+      select ${sql.join(Object.values(fields), sql`, `)}
+      from ${table}
+      order by ${fields.createdAt} desc
+      ${conditionalSql(limit, (limit) => sql`limit ${limit}`)}
+      ${conditionalSql(offset, (offset) => sql`offset ${offset}`)}
+    `)
+  );
 
 export const findApplicationById = async (id: string) =>
   envSet.pool.one<Application>(sql`
