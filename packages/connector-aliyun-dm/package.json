@@ -3,6 +3,7 @@
     "version": "0.1.0",
     "description": "Aliyun DM connector implementation.",
     "main": "lib/index.js",
+    "exports": "lib/index.js",
     "author": "Silverhand Inc. <contact@silverhand.io>",
     "license": "MPL-2.0",
     "private": true,
@@ -22,7 +23,6 @@
         "@logto/connector-types": "^0.1.0",
         "@logto/jest-config": "^0.1.0",
         "@logto/shared": "^0.1.0",
-        "@logto/schemas": "^0.1.0",
         "@silverhand/essentials": "^1.1.0",
         "got": "^11.8.2",
         "zod": "^3.14.3"
