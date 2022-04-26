@@ -12,8 +12,8 @@ export interface ConnectorMetadata {
   name: Record<Languages, string>;
   logo: string;
   description: Record<Languages, string>;
-  readme?: string; // TODO: old connector implementations contain this field, temporarily make it optional; will delete after new setup takes effect
-  configTemplate?: string;
+  readme: string;
+  configTemplate: string;
 }
 
 export enum ConnectorErrorCodes {
