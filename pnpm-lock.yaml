@@ -273,6 +273,7 @@ importers:
       copyfiles: ^2.4.1
       dayjs: ^1.10.5
       decamelize: ^5.0.0
+      deepmerge: ^4.2.2
       dotenv: ^16.0.0
       eslint: ^8.10.0
       got: ^11.8.2
@@ -314,6 +315,7 @@ importers:
       '@silverhand/essentials': 1.1.2
       dayjs: 1.10.7
       decamelize: 5.0.1
+      deepmerge: 4.2.2
       dotenv: 16.0.0
       got: 11.8.3
       i18next: 21.6.12

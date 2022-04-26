@@ -153,7 +153,7 @@ describe('sessionRoutes', () => {
     provider: new Provider(''),
     middlewares: [
       async (ctx, next) => {
-        ctx.log = {};
+        ctx.log = jest.fn();
 
         return next();
       },
