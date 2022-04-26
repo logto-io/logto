@@ -44,7 +44,7 @@ const directory = 'logto';
     const startCommand = `cd ${directory} && npm start`;
 
     if (answer === '' || ['y', 'yeah', 'yes'].includes(answer.toLowerCase())) {
-      spawn('sh', ['-c', startCommand], { detached: true, stdio: 'inherit' });
+      spawn('sh', ['-c', startCommand], { stdio: 'inherit' });
     } else {
       console.log(`You can use \`${startCommand}\` to start Logto. Happy hacking!`);
     }
