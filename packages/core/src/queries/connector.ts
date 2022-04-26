@@ -3,17 +3,19 @@ import { sql } from 'slonik';
 
 import { buildInsertInto } from '@/database/insert-into';
 import { buildUpdateWhere } from '@/database/update-where';
-import { convertToIdentifiers } from '@/database/utils';
+import { convertToIdentifiers, manyRows } from '@/database/utils';
 import envSet from '@/env-set';
 
 const { table, fields } = convertToIdentifiers(Connectors);
 
 export const findAllConnectors = async () =>
-  envSet.pool.many<Connector>(sql`
-    select ${sql.join(Object.values(fields), sql`, `)}
-    from ${table}
-    order by ${fields.enabled} desc, ${fields.id} asc
-  `);
+  manyRows(
+    envSet.pool.query<Connector>(sql`
+      select ${sql.join(Object.values(fields), sql`, `)}
+      from ${table}
+      order by ${fields.enabled} desc, ${fields.id} asc
+    `)
+  );
 
 export const findConnectorById = async (id: string) =>
   envSet.pool.one<Connector>(sql`

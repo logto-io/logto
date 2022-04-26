@@ -4,7 +4,12 @@ import { sql } from 'slonik';
 import { buildInsertInto } from '@/database/insert-into';
 import { getTotalRowCount } from '@/database/row-count';
 import { buildUpdateWhere } from '@/database/update-where';
-import { convertToIdentifiers, OmitAutoSetFields, conditionalSql } from '@/database/utils';
+import {
+  convertToIdentifiers,
+  OmitAutoSetFields,
+  conditionalSql,
+  manyRows,
+} from '@/database/utils';
 import envSet from '@/env-set';
 import { DeletionError } from '@/errors/SlonikError';
 
@@ -13,12 +18,14 @@ const { table, fields } = convertToIdentifiers(Resources);
 export const findTotalNumberOfResources = async () => getTotalRowCount(table);
 
 export const findAllResources = async (limit: number, offset: number) =>
-  envSet.pool.many<Resource>(sql`
-    select ${sql.join(Object.values(fields), sql`, `)}
-    from ${table}
-    ${conditionalSql(limit, (limit) => sql`limit ${limit}`)}
-    ${conditionalSql(offset, (offset) => sql`offset ${offset}`)}
-  `);
+  manyRows(
+    envSet.pool.query<Resource>(sql`
+      select ${sql.join(Object.values(fields), sql`, `)}
+      from ${table}
+      ${conditionalSql(limit, (limit) => sql`limit ${limit}`)}
+      ${conditionalSql(offset, (offset) => sql`offset ${offset}`)}
+    `)
+  );
 
 export const findResourceByIndicator = async (indicator: string) =>
   envSet.pool.maybeOne<Resource>(sql`
