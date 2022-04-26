@@ -50,8 +50,6 @@ export type EmailMessageTypes = {
 
 type SmsMessageTypes = EmailMessageTypes;
 
-export type SendEmailResponse = { EnvId: string; RequestId: string };
-
 export type EmailSendMessageFunction<T = unknown> = (
   address: string,
   type: keyof EmailMessageTypes,
