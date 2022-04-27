@@ -6,31 +6,46 @@ const isVersionGreaterThan = (version, targetMajor) => Number(version.split('.')
 
 const trimV = (version) => version.startsWith('v') ? version.slice(1) : version;
 
-const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout,
+const question = async (query) => new Promise((resolve) => {
+  const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout,
+  });
+  rl.question(query, (answer) => {
+    rl.close();
+    resolve(answer);
+  });
 });
+
+const confirm = async (query) => {
+  const answer = await question(`${query} (Y/n) `);
+  return answer === '' || ['y', 'yes', 'yep', 'yeah'].includes(answer);
+};
 
 const directory = 'logto';
 
 (async () => {
   if (existsSync(directory)) {
-    throw new Error(`\`${directory}\` already exists in current directory.`);
+    throw new Error(`\`${directory}\` already exists in the current directory.`);
   }
 
   const nodeVersion = execSync('node -v', { encoding: 'utf-8' });
-  const pgOutput = execSync('postgres --version', { encoding: 'utf-8' });
 
   if (!isVersionGreaterThan(trimV(nodeVersion), 16)) {
-    throw new Error('Logto requires NodeJS>=16.0.0');
+    throw new Error('Logto requires NodeJS >= 16.0.0.');
   }
 
+  const pgOutput = execSync('postgres --version', { encoding: 'utf-8' });
   const pgArray = pgOutput.split(' ');
   const pgVersion = pgArray[pgArray.length - 1];
 
-  if (!isVersionGreaterThan(trimV(pgVersion), 14)) {
-    throw new Error('Logto requires PostgreSQL>=14.0.0');
+  if (!isVersionGreaterThan(trimV(pgVersion), 18)) {
+    const answer = await confirm('Logto requires PostgreSQL >= 14.0.0 but cannot find in the current environment.\nDo you have a remote PostgreSQL instance ready?');
+    if (!answer) {
+      process.exit(1);
+    }
   }
+
 
   spawnSync(
     'sh',
@@ -38,15 +53,12 @@ const directory = 'logto';
     { stdio: 'inherit' },
   );
 
-  rl.question('Would you like to start Logto now? (Y/n) ', (answer) => {
-    rl.close();
+  const startCommand = `cd ${directory} && npm start`;
+  const answer = await confirm('Would you like to start Logto now?');
 
-    const startCommand = `cd ${directory} && npm start`;
-
-    if (answer === '' || ['y', 'yeah', 'yes'].includes(answer.toLowerCase())) {
-      spawn('sh', ['-c', startCommand], { stdio: 'inherit' });
-    } else {
-      console.log(`You can use \`${startCommand}\` to start Logto. Happy hacking!`);
-    }
-  })
+  if (answer) {
+    spawn('sh', ['-c', startCommand], { stdio: 'inherit' });
+  } else {
+    console.log(`You can use \`${startCommand}\` to start Logto. Happy hacking!`);
+  }
 })();
