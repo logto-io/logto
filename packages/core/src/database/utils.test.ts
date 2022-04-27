@@ -56,9 +56,9 @@ describe('convertToPrimitiveOrSql()', () => {
   it('converts value to sql when key ends with special set and value is number', () => {
     for (const value of timestampKeyEndings) {
       expect(convertToPrimitiveOrSql(`${normalKey}${value}`, 12_341_234)).toEqual({
-        sql: 'to_timestamp($1)',
+        sql: 'to_timestamp($1::double precision / 1000)',
         type: SqlToken,
-        values: [12_341.234],
+        values: [12_341_234],
       });
     }
   });

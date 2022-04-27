@@ -46,7 +46,7 @@ describe('oidc-model-instance query', () => {
   it('upsertInstance', async () => {
     const expectSql = sql`
       insert into ${table} ("model_name", "id", "payload", "expires_at")
-      values ($1, $2, $3, to_timestamp($4))
+      values ($1, $2, $3, to_timestamp($4::double precision / 1000))
       on conflict ("model_name", "id") do update
       set "payload"=excluded."payload", "expires_at"=excluded."expires_at"
     `;
@@ -57,7 +57,7 @@ describe('oidc-model-instance query', () => {
         instance.modelName,
         instance.id,
         JSON.stringify(instance.payload),
-        instance.expiresAt / 1000,
+        instance.expiresAt,
       ]);
 
       return createMockQueryResult([databaseValue]);

@@ -42,7 +42,7 @@ export const convertToPrimitiveOrSql = (
   }
 
   if (['_at', 'At'].some((value) => key.endsWith(value)) && typeof value === 'number') {
-    return sql`to_timestamp(${value / 1000})`;
+    return sql`to_timestamp(${value}::double precision / 1000)`;
   }
 
   if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') {
