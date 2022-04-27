@@ -1,11 +1,13 @@
 import classNames from 'classnames';
-import React, { useCallback } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
 
 import Button from '@/components/Button';
 import useBindSocial from '@/hooks/use-bind-social';
+import { SearchParameters } from '@/types';
+import { queryStringify } from '@/utils';
 
+import SignInMethodsLink from '../SignInMethodsLink';
 import * as styles from './index.module.scss';
 
 type Props = {
@@ -14,14 +16,9 @@ type Props = {
 };
 
 const SocialCreateAccount = ({ connectorId, className }: Props) => {
-  const navigate = useNavigate();
   const { t } = useTranslation(undefined, { keyPrefix: 'main_flow' });
-  const { relatedUser, registerWithSocial, bindSocialRelatedUser } = useBindSocial();
-
-  const signInHandler = useCallback(() => {
-    // TODO: redirect to desired sign-in page
-    navigate('/sign-in/username/' + connectorId);
-  }, [connectorId, navigate]);
+  const { relatedUser, localSignInMethods, registerWithSocial, bindSocialRelatedUser } =
+    useBindSocial();
 
   return (
     <div className={classNames(styles.container, className)}>
@@ -46,10 +43,12 @@ const SocialCreateAccount = ({ connectorId, className }: Props) => {
       >
         {t('action.create')}
       </Button>
-      <div className={styles.desc}>{t('description.social_bind_account')}</div>
-      <Button type="secondary" onClick={signInHandler}>
-        {t('action.sign_in')}
-      </Button>
+      <SignInMethodsLink
+        signInMethods={localSignInMethods}
+        template="social_bind_with"
+        className={styles.desc}
+        search={queryStringify({ [SearchParameters.bindWithSocial]: connectorId })}
+      />
     </div>
   );
 };

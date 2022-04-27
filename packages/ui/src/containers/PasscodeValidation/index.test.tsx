@@ -65,7 +65,7 @@ describe('<PasscodeValidation />', () => {
         });
       }
 
-      expect(verifyPasscodeApi).toBeCalledWith(email, '111111');
+      expect(verifyPasscodeApi).toBeCalledWith(email, '111111', undefined);
     });
   });
 });

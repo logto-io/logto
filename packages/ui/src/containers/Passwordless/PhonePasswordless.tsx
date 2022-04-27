@@ -73,7 +73,10 @@ const PhonePasswordless = ({ type, className }: Props) => {
 
   useEffect(() => {
     if (result) {
-      navigate(`/${type}/sms/passcode-validation`, { state: { phone: fieldValue.phone } });
+      navigate(
+        { pathname: `/${type}/sms/passcode-validation`, search: location.search },
+        { state: { phone: fieldValue.phone } }
+      );
     }
   }, [fieldValue.phone, navigate, result, type]);
 

@@ -10,6 +10,22 @@ export const parseQueryParameters = (parameters: string | URLSearchParams) => {
   return Object.fromEntries(searchParameters.entries());
 };
 
+export const queryStringify = (
+  parameters: string | URLSearchParams | Record<string, string | string>
+) => {
+  const searchParameters =
+    parameters instanceof URLSearchParams ? parameters : new URLSearchParams(parameters);
+
+  return searchParameters.toString();
+};
+
+export const getSearchParameters = (parameters: string | URLSearchParams, key: string) => {
+  const searchParameters =
+    parameters instanceof URLSearchParams ? parameters : new URLSearchParams(parameters);
+
+  return searchParameters.get(key) ?? undefined;
+};
+
 type Entries<T> = Array<
   {
     [K in keyof T]: [K, T[K]];

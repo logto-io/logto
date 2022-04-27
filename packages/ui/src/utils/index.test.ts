@@ -1,4 +1,4 @@
-import { generateRandomString, parseQueryParameters } from '.';
+import { generateRandomString, parseQueryParameters, queryStringify, getSearchParameters } from '.';
 
 describe('util methods', () => {
   it('generateRandomString', () => {
@@ -9,5 +9,17 @@ describe('util methods', () => {
   it('parseQueryParameters', () => {
     const parameters = parseQueryParameters('?foo=test&bar=test2');
     expect(parameters).toEqual({ foo: 'test', bar: 'test2' });
+  });
+
+  it('queryStringify', () => {
+    expect(queryStringify('foo=test')).toEqual('foo=test');
+    expect(queryStringify(new URLSearchParams({ foo: 'test' }))).toEqual('foo=test');
+  });
+
+  it('getSearchParameters', () => {
+    expect(getSearchParameters('?foo=test&bar=test2', 'foo')).toEqual('test');
+    expect(getSearchParameters(new URLSearchParams({ foo: 'test', bar: 'test2' }), 'foo')).toEqual(
+      'test'
+    );
   });
 });

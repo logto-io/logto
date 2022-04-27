@@ -15,6 +15,7 @@
 .desc {
   @include _.text-hint;
   margin-bottom: _.unit(2);
+  text-align: left;
 
   &:not(:first-child) {
     margin-top: _.unit(8);

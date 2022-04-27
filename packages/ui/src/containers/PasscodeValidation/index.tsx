@@ -10,7 +10,8 @@ import Passcode, { defaultLength } from '@/components/Passcode';
 import TextLink from '@/components/TextLink';
 import useApi from '@/hooks/use-api';
 import { PageContext } from '@/hooks/use-page-context';
-import { UserFlow } from '@/types';
+import { UserFlow, SearchParameters } from '@/types';
+import { getSearchParameters } from '@/utils';
 
 import * as styles from './index.module.scss';
 
@@ -55,7 +56,8 @@ const PasscodeValidation = ({ type, method, className, target }: Props) => {
 
   useEffect(() => {
     if (code.length === defaultLength && code.every(Boolean)) {
-      void verifyPassCode(target, code.join(''));
+      const socialToBind = getSearchParameters(location.search, SearchParameters.bindWithSocial);
+      void verifyPassCode(target, code.join(''), socialToBind);
     }
   }, [code, target, verifyPassCode]);
 

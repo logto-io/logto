@@ -1,7 +1,8 @@
-import { render, fireEvent, waitFor } from '@testing-library/react';
+import { fireEvent, waitFor } from '@testing-library/react';
 import React from 'react';
 
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
+import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider';
 import { registerWithSocial, bindSocialRelatedUser } from '@/apis/social';
 
 import SocialCreateAccount from '.';
@@ -20,18 +21,15 @@ jest.mock('@/apis/social', () => ({
 }));
 
 describe('SocialCreateAccount', () => {
-  it('should match snapshot', () => {
-    const { queryByText } = render(<SocialCreateAccount connectorId="github" />);
+  it('should render secondary sigin-in methods', () => {
+    const { queryByText } = renderWithPageContext(
+      <SettingsProvider>
+        <SocialCreateAccount connectorId="github" />
+      </SettingsProvider>
+    );
     expect(queryByText('description.social_create_account')).not.toBeNull();
-    expect(queryByText('description.social_bind_account')).not.toBeNull();
-  });
-
-  it('should redirect to sign in page when click sign-in button', () => {
-    const { getByText } = render(<SocialCreateAccount connectorId="github" />);
-
-    const signInButton = getByText('action.sign_in');
-    fireEvent.click(signInButton);
-    expect(mockNavigate).toBeCalledWith('/sign-in/username/github');
+    expect(queryByText('description.social_bind_with_existing')).not.toBeNull();
+    expect(queryByText('secondary.social_bind_with')).not.toBeNull();
   });
 
   it('should call registerWithSocial when click create button', async () => {
