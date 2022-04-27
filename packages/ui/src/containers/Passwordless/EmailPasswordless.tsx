@@ -1,7 +1,3 @@
-/**
- * TODO:
- * 1. API redesign handle api error and loading status globally in PageContext
- */
 import classNames from 'classnames';
 import React, { useCallback, useEffect, useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -10,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { getSendPasscodeApi } from '@/apis/utils';
 import Button from '@/components/Button';
 import Input from '@/components/Input';
-import CreateAccountConfirmModal from '@/containers/CreateAccountConfirmModal';
+import PasswordlessConfirmModal from '@/containers/PasswordlessConfirmModal';
 import TermsOfUse from '@/containers/TermsOfUse';
 import useApi, { ErrorHandlers } from '@/hooks/use-api';
 import useForm from '@/hooks/use-form';
@@ -32,18 +28,26 @@ type FieldState = {
 const defaultState: FieldState = { email: '' };
 
 const EmailPasswordless = ({ type, className }: Props) => {
-  const [showCreateAccountModal, setShowCreateAccountModal] = useState(false);
+  const [showPasswordlessConfirmModal, setShowPasswordlessConfirmModal] = useState(false);
   const { t } = useTranslation(undefined, { keyPrefix: 'main_flow' });
   const navigate = useNavigate();
   const { termsValidation } = useTerms();
-  const { fieldValue, setFieldValue, register, validateForm } = useForm(defaultState);
+  const { fieldValue, setFieldValue, setFieldErrors, register, validateForm } =
+    useForm(defaultState);
+
   const errorHandlers: ErrorHandlers = useMemo(
     () => ({
       'user.email_not_exists': () => {
-        setShowCreateAccountModal(true);
+        setShowPasswordlessConfirmModal(true);
+      },
+      'user.email_exists_register': () => {
+        setShowPasswordlessConfirmModal(true);
+      },
+      'guard.invalid_input': () => {
+        setFieldErrors({ email: 'invalid_email' });
       },
     }),
-    []
+    [setFieldErrors]
   );
 
   const sendPasscode = getSendPasscodeApi(type, 'email');
@@ -62,7 +66,7 @@ const EmailPasswordless = ({ type, className }: Props) => {
   }, [validateForm, termsValidation, asyncSendPasscode, fieldValue.email]);
 
   const onModalCloseHandler = useCallback(() => {
-    setShowCreateAccountModal(false);
+    setShowPasswordlessConfirmModal(false);
   }, []);
 
   useEffect(() => {
@@ -95,9 +99,10 @@ const EmailPasswordless = ({ type, className }: Props) => {
 
         <Button onClick={onSubmitHandler}>{t('action.continue')}</Button>
       </form>
-      <CreateAccountConfirmModal
-        isOpen={showCreateAccountModal}
-        type="email"
+      <PasswordlessConfirmModal
+        isOpen={showPasswordlessConfirmModal}
+        type={type === 'sign-in' ? 'register' : 'sign-in'}
+        method="email"
         value={fieldValue.email}
         onClose={onModalCloseHandler}
       />

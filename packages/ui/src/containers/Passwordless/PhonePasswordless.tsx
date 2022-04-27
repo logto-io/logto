@@ -1,7 +1,3 @@
-/**
- * TODO:
- * 1. API redesign handle api error and loading status globally in PageContext
- */
 import classNames from 'classnames';
 import React, { useCallback, useEffect, useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -10,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { getSendPasscodeApi } from '@/apis/utils';
 import Button from '@/components/Button';
 import PhoneInput from '@/components/Input/PhoneInput';
-import CreateAccountConfirmModal from '@/containers/CreateAccountConfirmModal';
+import PasswordlessConfirmModal from '@/containers/PasswordlessConfirmModal';
 import TermsOfUse from '@/containers/TermsOfUse';
 import useApi, { ErrorHandlers } from '@/hooks/use-api';
 import useForm from '@/hooks/use-form';
@@ -32,19 +28,27 @@ type FieldState = {
 const defaultState: FieldState = { phone: '' };
 
 const PhonePasswordless = ({ type, className }: Props) => {
-  const [showCreateAccountModal, setShowCreateAccountModal] = useState(false);
+  const [showPasswordlessConfirmModal, setShowPasswordlessConfirmModal] = useState(false);
   const { t } = useTranslation(undefined, { keyPrefix: 'main_flow' });
   const { phoneNumber, setPhoneNumber, isValidPhoneNumber } = usePhoneNumber();
   const navigate = useNavigate();
   const { termsValidation } = useTerms();
-  const { fieldValue, setFieldValue, validateForm, register } = useForm(defaultState);
+  const { fieldValue, setFieldValue, setFieldErrors, validateForm, register } =
+    useForm(defaultState);
+
   const errorHandlers: ErrorHandlers = useMemo(
     () => ({
       'user.phone_not_exists': () => {
-        setShowCreateAccountModal(true);
+        setShowPasswordlessConfirmModal(true);
+      },
+      'user.phone_exists_register': () => {
+        setShowPasswordlessConfirmModal(true);
+      },
+      'guard.invalid_input': () => {
+        setFieldErrors({ phone: 'invalid_phone' });
       },
     }),
-    []
+    [setFieldErrors]
   );
 
   const sendPasscode = getSendPasscodeApi(type, 'sms');
@@ -72,7 +76,7 @@ const PhonePasswordless = ({ type, className }: Props) => {
   }, [validateForm, termsValidation, asyncSendPasscode, fieldValue.phone]);
 
   const onModalCloseHandler = useCallback(() => {
-    setShowCreateAccountModal(false);
+    setShowPasswordlessConfirmModal(false);
   }, []);
 
   useEffect(() => {
@@ -87,7 +91,7 @@ const PhonePasswordless = ({ type, className }: Props) => {
     if (result) {
       navigate(
         { pathname: `/${type}/sms/passcode-validation`, search: location.search },
-        { state: { phone: fieldValue.phone } }
+        { state: { sms: fieldValue.phone } }
       );
     }
   }, [fieldValue.phone, navigate, result, type]);
@@ -112,9 +116,10 @@ const PhonePasswordless = ({ type, className }: Props) => {
 
         <Button onClick={onSubmitHandler}>{t('action.continue')}</Button>
       </form>
-      <CreateAccountConfirmModal
-        isOpen={showCreateAccountModal}
-        type="sms"
+      <PasswordlessConfirmModal
+        isOpen={showPasswordlessConfirmModal}
+        type={type === 'sign-in' ? 'register' : 'sign-in'}
+        method="sms"
         value={fieldValue.phone}
         onClose={onModalCloseHandler}
       />

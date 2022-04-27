@@ -25,15 +25,15 @@ const Passcode = () => {
   const { method, type } = useParams<Parameters>();
   const state = useLocation().state as StateType;
   const invalidSignInMethod = type !== 'sign-in' && type !== 'register';
-  const invalidChannel = method !== 'email' && method !== 'sms';
+  const invalidMethod = method !== 'email' && method !== 'sms';
 
   useEffect(() => {
-    if (invalidSignInMethod || invalidChannel) {
+    if (invalidSignInMethod || invalidMethod) {
       navigate('/404', { replace: true });
     }
-  }, [invalidChannel, invalidSignInMethod, navigate]);
+  }, [invalidMethod, invalidSignInMethod, navigate]);
 
-  if (invalidSignInMethod || invalidChannel) {
+  if (invalidSignInMethod || invalidMethod) {
     return null;
   }
 
