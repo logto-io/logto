@@ -24,6 +24,7 @@ export type CreateUser = {
   passwordEncryptionSalt?: string | null;
   name?: string | null;
   avatar?: string | null;
+  applicationId?: string | null;
   roleNames?: RoleNames;
   identities?: Identities;
   customData?: ArbitraryObject;
@@ -39,6 +40,7 @@ export type User = {
   passwordEncryptionSalt: string | null;
   name: string | null;
   avatar: string | null;
+  applicationId: string | null;
   roleNames: RoleNames;
   identities: Identities;
   customData: ArbitraryObject;
@@ -54,6 +56,7 @@ const createGuard: Guard<CreateUser> = z.object({
   passwordEncryptionSalt: z.string().nullable().optional(),
   name: z.string().nullable().optional(),
   avatar: z.string().nullable().optional(),
+  applicationId: z.string().nullable().optional(),
   roleNames: roleNamesGuard.optional(),
   identities: identitiesGuard.optional(),
   customData: arbitraryObjectGuard.optional(),
@@ -72,6 +75,7 @@ export const Users: GeneratedSchema<CreateUser> = Object.freeze({
     passwordEncryptionSalt: 'password_encryption_salt',
     name: 'name',
     avatar: 'avatar',
+    applicationId: 'application_id',
     roleNames: 'role_names',
     identities: 'identities',
     customData: 'custom_data',
@@ -86,6 +90,7 @@ export const Users: GeneratedSchema<CreateUser> = Object.freeze({
     'passwordEncryptionSalt',
     'name',
     'avatar',
+    'applicationId',
     'roleNames',
     'identities',
     'customData',

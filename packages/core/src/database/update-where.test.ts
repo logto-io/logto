@@ -25,20 +25,29 @@ describe('buildUpdateWhere()', () => {
   });
 
   it('resolves a promise with single entity when `returning` is true', async () => {
-    const user: CreateUser = { id: 'foo', username: '123', primaryEmail: 'foo@bar.com' };
+    const user: CreateUser = {
+      id: 'foo',
+      username: '123',
+      primaryEmail: 'foo@bar.com',
+      applicationId: 'bar',
+    };
     const pool = createTestPool(
-      'update "users"\nset "username"=$1, "primary_email"=$2\nwhere "id"=$3\nreturning *',
-      (_, [username, primaryEmail, id]) => ({
+      'update "users"\nset "username"=$1, "primary_email"=$2, "application_id"=$3\nwhere "id"=$4\nreturning *',
+      (_, [username, primaryEmail, applicationId, id]) => ({
         id: String(id),
         username: String(username),
         primaryEmail: String(primaryEmail),
+        applicationId: String(applicationId),
       })
     );
     poolSpy.mockReturnValue(pool);
 
     const updateWhere = buildUpdateWhere(Users, true);
     await expect(
-      updateWhere({ set: { username: '123', primaryEmail: 'foo@bar.com' }, where: { id: 'foo' } })
+      updateWhere({
+        set: { username: '123', primaryEmail: 'foo@bar.com', applicationId: 'bar' },
+        where: { id: 'foo' },
+      })
     ).resolves.toStrictEqual(user);
   });
 

@@ -18,7 +18,7 @@ const buildExpectedInsertIntoSql = (keys: string[]) => [
 
 describe('buildInsertInto()', () => {
   it('resolves a promise with `undefined` when `returning` is false', async () => {
-    const user: CreateUser = { id: 'foo', username: '456' };
+    const user: CreateUser = { id: 'foo', username: '456', applicationId: 'bar' };
     const expectInsertIntoSql = buildExpectedInsertIntoSql(Object.keys(user));
     const pool = createTestPool(expectInsertIntoSql.join('\n'));
     poolSpy.mockReturnValue(pool);
@@ -28,7 +28,12 @@ describe('buildInsertInto()', () => {
   });
 
   it('resolves a promise with `undefined` when `returning` is false and `onConflict` is enabled', async () => {
-    const user: CreateUser = { id: 'foo', username: '456', primaryEmail: 'foo@bar.com' };
+    const user: CreateUser = {
+      id: 'foo',
+      username: '456',
+      primaryEmail: 'foo@bar.com',
+      applicationId: 'bar',
+    };
     const expectInsertIntoSql = buildExpectedInsertIntoSql(Object.keys(user));
     const pool = createTestPool(
       [
@@ -50,32 +55,48 @@ describe('buildInsertInto()', () => {
   });
 
   it('resolves a promise with single entity when `returning` is true', async () => {
-    const user: CreateUser = { id: 'foo', username: '123', primaryEmail: 'foo@bar.com' };
+    const user: CreateUser = {
+      id: 'foo',
+      username: '123',
+      primaryEmail: 'foo@bar.com',
+      applicationId: 'bar',
+    };
     const expectInsertIntoSql = buildExpectedInsertIntoSql(Object.keys(user));
     const pool = createTestPool(
       [...expectInsertIntoSql, 'returning *'].join('\n'),
-      (_, [id, username, primaryEmail]) => ({
+      (_, [id, username, primaryEmail, applicationId]) => ({
         id: String(id),
         username: String(username),
         primaryEmail: String(primaryEmail),
+        applicationId: String(applicationId),
       })
     );
     poolSpy.mockReturnValue(pool);
 
     const insertInto = buildInsertInto(Users, { returning: true });
     await expect(
-      insertInto({ id: 'foo', username: '123', primaryEmail: 'foo@bar.com' })
+      insertInto({ id: 'foo', username: '123', primaryEmail: 'foo@bar.com', applicationId: 'bar' })
     ).resolves.toStrictEqual(user);
   });
 
   it('throws `InsertionError` error when `returning` is true', async () => {
-    const user: CreateUser = { id: 'foo', username: '123', primaryEmail: 'foo@bar.com' };
+    const user: CreateUser = {
+      id: 'foo',
+      username: '123',
+      primaryEmail: 'foo@bar.com',
+      applicationId: 'bar',
+    };
     const expectInsertIntoSql = buildExpectedInsertIntoSql(Object.keys(user));
     const pool = createTestPool([...expectInsertIntoSql, 'returning *'].join('\n'));
     poolSpy.mockReturnValue(pool);
 
     const insertInto = buildInsertInto(Users, { returning: true });
-    const dataToInsert = { id: 'foo', username: '123', primaryEmail: 'foo@bar.com' };
+    const dataToInsert = {
+      id: 'foo',
+      username: '123',
+      primaryEmail: 'foo@bar.com',
+      applicationId: 'bar',
+    };
 
     await expect(insertInto(dataToInsert)).rejects.toMatchError(
       new InsertionError(Users, dataToInsert)

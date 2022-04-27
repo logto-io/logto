@@ -11,7 +11,7 @@ import { object, string } from 'zod';
 import { getSocialConnectorInstanceById } from '@/connectors';
 import RequestError from '@/errors/RequestError';
 import { createPasscode, sendPasscode, verifyPasscode } from '@/lib/passcode';
-import { assignInteractionResults } from '@/lib/session';
+import { assignInteractionResults, saveUserFirstConsentedAppId } from '@/lib/session';
 import {
   findSocialRelatedUser,
   getUserInfoByAuthCode,
@@ -264,13 +264,20 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
 
   router.post('/session/consent', async (ctx, next) => {
     const interaction = await provider.interactionDetails(ctx.req, ctx.res);
-    const { session, grantId, params, prompt } = interaction;
+    const {
+      session,
+      grantId,
+      params: { client_id },
+      prompt,
+    } = interaction;
     assertThat(session, 'session.not_found');
 
     const { accountId } = session;
     const grant =
       conditional(grantId && (await provider.Grant.find(grantId))) ??
-      new provider.Grant({ accountId, clientId: String(params.client_id) });
+      new provider.Grant({ accountId, clientId: String(client_id) });
+
+    await saveUserFirstConsentedAppId(accountId, String(client_id));
 
     // V2: fulfill missing claims / resources
     const PromptDetailsBody = object({

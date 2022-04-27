@@ -10,6 +10,7 @@ create table users (
   password_encryption_salt varchar(128),
   name varchar(128),
   avatar varchar(256),
+  application_id varchar(21) references applications(id),
   role_names jsonb /* @use RoleNames */ not null default '[]'::jsonb,
   identities jsonb /* @use Identities */ not null default '{}'::jsonb,
   custom_data jsonb /* @use ArbitraryObject */ not null default '{}'::jsonb,

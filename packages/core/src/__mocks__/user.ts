@@ -16,6 +16,7 @@ export const mockUser: User = {
     connector1: { userId: 'connector1', details: {} },
   },
   customData: {},
+  applicationId: 'bar',
 };
 
 export const mockUserResponse = pick(mockUser, ...userInfoSelectFields);
@@ -34,6 +35,7 @@ export const mockUserList: User[] = [
     avatar: null,
     identities: {},
     customData: {},
+    applicationId: 'bar',
   },
   {
     id: '2',
@@ -48,6 +50,7 @@ export const mockUserList: User[] = [
     avatar: null,
     identities: {},
     customData: {},
+    applicationId: 'bar',
   },
   {
     id: '3',
@@ -62,6 +65,7 @@ export const mockUserList: User[] = [
     avatar: null,
     identities: {},
     customData: {},
+    applicationId: 'bar',
   },
   {
     id: '4',
@@ -76,6 +80,7 @@ export const mockUserList: User[] = [
     avatar: null,
     identities: {},
     customData: {},
+    applicationId: 'bar',
   },
   {
     id: '5',
@@ -90,6 +95,7 @@ export const mockUserList: User[] = [
     avatar: null,
     identities: {},
     customData: {},
+    applicationId: 'bar',
   },
 ];
 
