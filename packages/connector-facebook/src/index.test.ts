@@ -49,7 +49,7 @@ describe('facebook connector', () => {
 
       const encodedRedirectUri = encodeURIComponent(redirectUri);
       expect(authorizationUri).toEqual(
-        `${authorizationEndpoint}?client_id=${clientId}&redirect_uri=${encodedRedirectUri}&response_type=code&scope=email%2Cpublic_profile&state=${state}`
+        `${authorizationEndpoint}?client_id=${clientId}&redirect_uri=${encodedRedirectUri}&response_type=code&state=${state}&scope=email%2Cpublic_profile`
       );
     });
   });
