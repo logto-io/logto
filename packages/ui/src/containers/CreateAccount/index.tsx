@@ -1,10 +1,5 @@
-/**
- * TODO:
- * 1. API redesign handle api error and loading status globally in PageContext
- */
-
 import classNames from 'classnames';
-import React, { useEffect, useCallback } from 'react';
+import React, { useEffect, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { register } from '@/apis/register';
@@ -12,7 +7,7 @@ import Button from '@/components/Button';
 import Input from '@/components/Input';
 import PasswordInput from '@/components/Input/PasswordInput';
 import TermsOfUse from '@/containers/TermsOfUse';
-import useApi from '@/hooks/use-api';
+import useApi, { ErrorHandlers } from '@/hooks/use-api';
 import useForm from '@/hooks/use-form';
 import useTerms from '@/hooks/use-terms';
 import {
@@ -42,13 +37,27 @@ const defaultState: FieldState = {
 const CreateAccount = ({ className }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'main_flow' });
   const { termsValidation } = useTerms();
-  const { result, run: asyncRegister } = useApi(register);
   const {
     fieldValue,
     setFieldValue,
+    setFieldErrors,
     register: fieldRegister,
     validateForm,
   } = useForm(defaultState);
+
+  const registerErrorHandlers: ErrorHandlers = useMemo(
+    () => ({
+      'user.username_exists_register': () => {
+        setFieldErrors((state) => ({
+          ...state,
+          username: 'username_exists',
+        }));
+      },
+    }),
+    [setFieldErrors]
+  );
+
+  const { result, run: asyncRegister } = useApi(register, registerErrorHandlers);
 
   const onSubmitHandler = useCallback(() => {
     if (!validateForm()) {
