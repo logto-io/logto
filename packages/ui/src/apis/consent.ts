@@ -1,9 +1,9 @@
-import ky from 'ky';
+import api from './api';
 
 export const consent = async () => {
   type Response = {
     redirectTo: string;
   };
 
-  return ky.post('/api/session/consent').json<Response>();
+  return api.post('/api/session/consent').json<Response>();
 };

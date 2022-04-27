@@ -1,4 +1,4 @@
-import ky from 'ky';
+import api from './api';
 
 export const invokeSocialSignIn = async (
   connectorId: string,
@@ -9,7 +9,7 @@ export const invokeSocialSignIn = async (
     redirectTo: string;
   };
 
-  return ky
+  return api
     .post('/api/session/sign-in/social', {
       json: {
         connectorId,
@@ -30,7 +30,7 @@ export const signInWithSocial = async (parameters: {
     redirectTo: string;
   };
 
-  return ky
+  return api
     .post('/api/session/sign-in/social', {
       json: parameters,
     })
@@ -42,7 +42,7 @@ export const bindSocialAccount = async (connectorId: string) => {
     redirectTo: string;
   };
 
-  return ky
+  return api
     .post('/api/session/sign-in/bind-social', {
       json: {
         connectorId,
@@ -56,7 +56,7 @@ export const bindSocialRelatedUser = async (connectorId: string) => {
     redirectTo: string;
   };
 
-  return ky
+  return api
     .post('/api/session/sign-in/bind-social-related-user', {
       json: {
         connectorId,
@@ -70,7 +70,7 @@ export const registerWithSocial = async (connectorId: string) => {
     redirectTo: string;
   };
 
-  return ky
+  return api
     .post('/api/session/register/social', {
       json: {
         connectorId,

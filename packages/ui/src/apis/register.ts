@@ -1,11 +1,11 @@
-import ky from 'ky';
+import api from './api';
 
 export const register = async (username: string, password: string) => {
   type Response = {
     redirectTo: string;
   };
 
-  return ky
+  return api
     .post('/api/session/register/username-password', {
       json: {
         username,
@@ -16,7 +16,7 @@ export const register = async (username: string, password: string) => {
 };
 
 export const sendRegisterSmsPasscode = async (phone: string) => {
-  return ky
+  return api
     .post('/api/session/register/passwordless/sms/send-passcode', {
       json: {
         phone,
@@ -30,7 +30,7 @@ export const verifyRegisterSmsPasscode = async (phone: string, passcode: string)
     redirectTo: string;
   };
 
-  return ky
+  return api
     .post('/api/session/register/passwordless/sms/verify-passcode', {
       json: {
         phone,
@@ -41,7 +41,7 @@ export const verifyRegisterSmsPasscode = async (phone: string, passcode: string)
 };
 
 export const sendRegisterEmailPasscode = async (email: string) => {
-  return ky
+  return api
     .post('/api/session/register/passwordless/email/send-passcode', {
       json: {
         email,
@@ -55,7 +55,7 @@ export const verifyRegisterEmailPasscode = async (email: string, passcode: strin
     redirectTo: string;
   };
 
-  return ky
+  return api
     .post('/api/session/register/passwordless/email/verify-passcode', {
       json: {
         email,
