@@ -244,7 +244,7 @@ describe('user query', () => {
           .slice(0, -1)
           .map((_, index) => `$${index + 1}`),
         sql`, `
-      )}, to_timestamp($${Object.values(fields).length}::double precision / 1000))
+      )}, to_timestamp(${Object.values(fields).length}::double precision / 1000))
       returning *
     `;
 
