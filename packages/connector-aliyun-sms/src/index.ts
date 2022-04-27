@@ -20,7 +20,6 @@ import { SendSmsResponse } from './utils';
  *
  * For our use case is to send passcode sms for passwordless sign-in/up as well as
  * reset password, the default value of type code is set to be 2.
- *
  */
 enum SmsTemplateType {
   Notification = 0,
@@ -37,7 +36,6 @@ enum SmsTemplateType {
  * Type here in the template is used to specify the purpose of sending the sms,
  * can be either item in SmsTemplateType.
  * As the SMS is applied for sending passcode, the value should always be 2 in our case.
- *
  */
 const templateGuard = z.object({
   type: z.nativeEnum(SmsTemplateType).default(2),
