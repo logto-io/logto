@@ -1,5 +1,6 @@
 import { Language } from '@logto/phrases';
 import { AppearanceMode, Setting } from '@logto/schemas';
+import classNames from 'classnames';
 import React, { useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
@@ -15,6 +16,8 @@ import TabNav, { TabNavLink } from '@/components/TabNav';
 import TextInput from '@/components/TextInput';
 import useApi, { RequestError } from '@/hooks/use-api';
 import * as detailsStyles from '@/scss/details.module.scss';
+
+import * as styles from './index.module.scss';
 
 const Settings = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
@@ -51,7 +54,7 @@ const Settings = () => {
   });
 
   return (
-    <Card className={detailsStyles.container}>
+    <Card className={classNames(detailsStyles.container, styles.container)}>
       <CardTitle title="settings.title" subtitle="settings.description" />
       <TabNav>
         <TabNavLink href="/settings">{t('settings.tabs.general')}</TabNavLink>
@@ -59,67 +62,71 @@ const Settings = () => {
       {!data && !error && <div>loading</div>}
       {error && <div>{`error occurred: ${error.body.message}`}</div>}
       {data && (
-        <form onSubmit={onSubmit}>
-          <FormField title="admin_console.settings.custom_domain">
-            <TextInput {...register('customDomain')} />
-          </FormField>
-          <FormField isRequired title="admin_console.settings.language">
-            <Controller
-              name="adminConsole.language"
-              control={control}
-              render={({ field: { value, onChange } }) => (
-                <Select
-                  value={value}
-                  options={[
-                    {
-                      value: Language.English,
-                      title: t('settings.language_english'),
-                    },
-                    {
-                      value: Language.Chinese,
-                      title: t('settings.language_chinese'),
-                    },
-                  ]}
-                  onChange={onChange}
-                />
-              )}
-            />
-          </FormField>
-          <FormField isRequired title="admin_console.settings.appearance">
-            <Controller
-              name="adminConsole.appearanceMode"
-              control={control}
-              render={({ field: { value, onChange } }) => (
-                <Select
-                  value={value}
-                  options={[
-                    {
-                      value: AppearanceMode.SyncWithSystem,
-                      title: t('settings.appearance_system'),
-                    },
-                    {
-                      value: AppearanceMode.LightMode,
-                      title: t('settings.appearance_light'),
-                    },
-                    {
-                      value: AppearanceMode.DarkMode,
-                      title: t('settings.appearance_dark'),
-                    },
-                  ]}
-                  onChange={onChange}
-                />
-              )}
-            />
-          </FormField>
+        <>
+          <form className={detailsStyles.body} onSubmit={onSubmit}>
+            <FormField title="admin_console.settings.custom_domain">
+              <TextInput {...register('customDomain')} />
+            </FormField>
+            <FormField isRequired title="admin_console.settings.language">
+              <Controller
+                name="adminConsole.language"
+                control={control}
+                render={({ field: { value, onChange } }) => (
+                  <Select
+                    value={value}
+                    options={[
+                      {
+                        value: Language.English,
+                        title: t('settings.language_english'),
+                      },
+                      {
+                        value: Language.Chinese,
+                        title: t('settings.language_chinese'),
+                      },
+                    ]}
+                    onChange={onChange}
+                  />
+                )}
+              />
+            </FormField>
+            <FormField isRequired title="admin_console.settings.appearance">
+              <Controller
+                name="adminConsole.appearanceMode"
+                control={control}
+                render={({ field: { value, onChange } }) => (
+                  <Select
+                    value={value}
+                    options={[
+                      {
+                        value: AppearanceMode.SyncWithSystem,
+                        title: t('settings.appearance_system'),
+                      },
+                      {
+                        value: AppearanceMode.LightMode,
+                        title: t('settings.appearance_light'),
+                      },
+                      {
+                        value: AppearanceMode.DarkMode,
+                        title: t('settings.appearance_dark'),
+                      },
+                    ]}
+                    onChange={onChange}
+                  />
+                )}
+              />
+            </FormField>
+          </form>
           <div className={detailsStyles.footer}>
-            <Button
-              isLoading={isSubmitting}
-              type="primary"
-              htmlType="submit"
-              title="general.save_changes"
-            />
+            <div className={detailsStyles.footerMain}>
+              <Button
+                isLoading={isSubmitting}
+                type="primary"
+                htmlType="submit"
+                title="general.save_changes"
+              />
+            </div>
           </div>
-        </form>
+        </>
       )}
     </Card>
   );

@@ -1,4 +1,5 @@
 import { Resource } from '@logto/schemas';
+import classNames from 'classnames';
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
@@ -141,11 +142,11 @@ const ApiResourceDetails = () => {
               </Modal>
             </div>
           </Card>
-          <Card className={styles.body}>
+          <Card className={classNames(styles.body, detailsStyles.body)}>
             <TabNav>
               <TabNavLink href={location.pathname}>{t('api_resource_details.settings')}</TabNavLink>
             </TabNav>
-            <form className={styles.form} onSubmit={onSubmit}>
+            <form className={classNames(styles.form, detailsStyles.body)} onSubmit={onSubmit}>
               <div className={styles.fields}>
                 <FormField
                   isRequired
@@ -164,7 +165,9 @@ const ApiResourceDetails = () => {
                   />
                 </FormField>
               </div>
-              <div className={detailsStyles.footer}>
+            </form>
+            <div className={detailsStyles.footer}>
+              <div className={detailsStyles.footerMain}>
                 <Button
                   isLoading={isSubmitting}
                   htmlType="submit"
@@ -173,7 +176,7 @@ const ApiResourceDetails = () => {
                   size="large"
                 />
               </div>
-            </form>
+            </div>
           </Card>
         </>
       )}

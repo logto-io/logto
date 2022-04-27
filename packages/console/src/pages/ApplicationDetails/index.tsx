@@ -1,4 +1,5 @@
 import { Application, SnakeCaseOidcConfig } from '@logto/schemas';
+import classNames from 'classnames';
 import React, { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
@@ -246,7 +247,7 @@ const ApplicationDetails = () => {
               </Modal>
             </div>
           </Card>
-          <Card className={styles.body}>
+          <Card className={classNames(styles.body, detailsStyles.body)}>
             <TabNav>
               <TabNavLink href={`/applications/${data.id}/settings`}>
                 {t('application_details.settings')}
@@ -260,13 +261,15 @@ const ApplicationDetails = () => {
                 {isAdvancedSettings ? AdvancedSettingsPage : SettingsPage}
               </div>
               <div className={detailsStyles.footer}>
-                <Button
-                  isLoading={isSubmitting}
-                  htmlType="submit"
-                  type="primary"
-                  size="large"
-                  title="admin_console.application_details.save_changes"
-                />
+                <div className={detailsStyles.footerMain}>
+                  <Button
+                    isLoading={isSubmitting}
+                    htmlType="submit"
+                    type="primary"
+                    size="large"
+                    title="admin_console.application_details.save_changes"
+                  />
+                </div>
               </div>
             </form>
           </Card>
