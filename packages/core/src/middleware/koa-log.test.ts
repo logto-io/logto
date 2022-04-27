@@ -27,17 +27,22 @@ describe('koaLog middleware', () => {
     username: 'Bar',
   };
 
+  const ip = '192.168.0.1';
+  const userAgent =
+    'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.51 Safari/537.36';
+
   afterEach(() => {
     jest.clearAllMocks();
   });
 
   it('insert log with success response', async () => {
     const ctx: WithLogContext<ReturnType<typeof createContextWithRouteParameters>> = {
-      ...createContextWithRouteParameters(),
+      ...createContextWithRouteParameters({ headers: { 'user-agent': userAgent } }),
       log, // Bypass middleware context type assert
     };
 
     next.mockImplementationOnce(async () => {
+      ctx.request.ip = ip;
       ctx.log(type, payload);
     });
 
@@ -49,13 +54,15 @@ describe('koaLog middleware', () => {
       payload: {
         ...payload,
         result: LogResult.Success,
+        ip,
+        userAgent,
       },
     });
   });
 
   it('should not block request if insertLog throws error', async () => {
     const ctx: WithLogContext<ReturnType<typeof createContextWithRouteParameters>> = {
-      ...createContextWithRouteParameters(),
+      ...createContextWithRouteParameters({ headers: { 'user-agent': userAgent } }),
       log, // Bypass middleware context type assert
     };
 
@@ -65,6 +72,7 @@ describe('koaLog middleware', () => {
     });
 
     next.mockImplementationOnce(async () => {
+      ctx.request.ip = ip;
       ctx.log(type, payload);
     });
 
@@ -76,19 +84,22 @@ describe('koaLog middleware', () => {
       payload: {
         ...payload,
         result: LogResult.Success,
+        ip,
+        userAgent,
       },
     });
   });
 
   it('should insert log with failed result if next throws error', async () => {
     const ctx: WithLogContext<ReturnType<typeof createContextWithRouteParameters>> = {
-      ...createContextWithRouteParameters(),
+      ...createContextWithRouteParameters({ headers: { 'user-agent': userAgent } }),
       log, // Bypass middleware context type assert
     };
 
     const error = new Error('next error');
 
     next.mockImplementationOnce(async () => {
+      ctx.request.ip = ip;
       ctx.log(type, payload);
       throw error;
     });
@@ -102,6 +113,8 @@ describe('koaLog middleware', () => {
         ...payload,
         result: LogResult.Error,
         error: String(error),
+        ip,
+        userAgent,
       },
     });
   });

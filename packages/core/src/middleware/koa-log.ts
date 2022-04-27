@@ -48,15 +48,25 @@ export default function koaLog<StateT, ContextT, ResponseBodyT>(): MiddlewareTyp
 
     try {
       await next();
-
-      if (logType) {
-        await saveLog(logType, { ...logPayload, result: LogResult.Success });
-      }
     } catch (error: unknown) {
-      if (logType) {
-        await saveLog(logType, { ...logPayload, result: LogResult.Error, error: String(error) });
-      }
+      // eslint-disable-next-line @silverhand/fp/no-mutation
+      logPayload.error = String(error);
       throw error;
+    } finally {
+      if (logType) {
+        const result = logPayload.error ? LogResult.Error : LogResult.Success;
+        const {
+          ip,
+          headers: { 'user-agent': userAgent },
+        } = ctx.request;
+
+        await saveLog(logType, {
+          ...logPayload,
+          result,
+          ip,
+          userAgent,
+        });
+      }
     }
   };
 }
