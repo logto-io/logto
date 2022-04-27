@@ -113,7 +113,7 @@ const Users = () => {
                 />
               </TableEmpty>
             )}
-            {users?.map(({ id, name, username, lastSignIn }) => (
+            {users?.map(({ id, name, username, lastSignInAt }) => (
               <tr
                 key={id}
                 className={tableStyles.clickable}
@@ -132,7 +132,7 @@ const Users = () => {
                 </td>
                 <td>Application</td>
                 <td>
-                  <DateTime>{lastSignIn}</DateTime>
+                  <DateTime>{lastSignInAt}</DateTime>
                 </td>
               </tr>
             ))}
