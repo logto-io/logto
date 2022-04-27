@@ -1,5 +1,4 @@
-import ky from 'ky';
-
+import api from './api';
 import { bindSocialAccount } from './social';
 
 export const signInBasic = async (username: string, password: string, socialToBind?: string) => {
@@ -7,7 +6,7 @@ export const signInBasic = async (username: string, password: string, socialToBi
     redirectTo: string;
   };
 
-  const result = await ky
+  const result = await api
     .post('/api/session/sign-in/username-password', {
       json: {
         username,
@@ -24,7 +23,7 @@ export const signInBasic = async (username: string, password: string, socialToBi
 };
 
 export const sendSignInSmsPasscode = async (phone: string) => {
-  return ky
+  return api
     .post('/api/session/sign-in/passwordless/sms/send-passcode', {
       json: {
         phone,
@@ -42,7 +41,7 @@ export const verifySignInSmsPasscode = async (
     redirectTo: string;
   };
 
-  const result = await ky
+  const result = await api
     .post('/api/session/sign-in/passwordless/sms/verify-passcode', {
       json: {
         phone,
@@ -59,7 +58,7 @@ export const verifySignInSmsPasscode = async (
 };
 
 export const sendSignInEmailPasscode = async (email: string) => {
-  return ky
+  return api
     .post('/api/session/sign-in/passwordless/email/send-passcode', {
       json: {
         email,
@@ -77,7 +76,7 @@ export const verifySignInEmailPasscode = async (
     redirectTo: string;
   };
 
-  const result = await ky
+  const result = await api
     .post('/api/session/sign-in/passwordless/email/verify-passcode', {
       json: {
         email,
