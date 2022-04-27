@@ -4,7 +4,7 @@
  */
 
 import classNames from 'classnames';
-import React, { useEffect, useCallback, useContext } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { register } from '@/apis/register';
@@ -14,7 +14,6 @@ import PasswordInput from '@/components/Input/PasswordInput';
 import TermsOfUse from '@/containers/TermsOfUse';
 import useApi from '@/hooks/use-api';
 import useForm from '@/hooks/use-form';
-import { PageContext } from '@/hooks/use-page-context';
 import useTerms from '@/hooks/use-terms';
 import {
   usernameValidation,
@@ -41,10 +40,9 @@ const defaultState: FieldState = {
 };
 
 const CreateAccount = ({ className }: Props) => {
-  const { t, i18n } = useTranslation(undefined, { keyPrefix: 'main_flow' });
+  const { t } = useTranslation(undefined, { keyPrefix: 'main_flow' });
   const { termsValidation } = useTerms();
-  const { setToast } = useContext(PageContext);
-  const { error, result, run: asyncRegister } = useApi(register);
+  const { result, run: asyncRegister } = useApi(register);
   const {
     fieldValue,
     setFieldValue,
@@ -69,13 +67,6 @@ const CreateAccount = ({ className }: Props) => {
       window.location.assign(result.redirectTo);
     }
   }, [result]);
-
-  useEffect(() => {
-    // TODO: username exist error message
-    if (error) {
-      setToast(error.message);
-    }
-  }, [error, i18n, setToast, t]);
 
   return (
     <form className={classNames(styles.form, className)}>

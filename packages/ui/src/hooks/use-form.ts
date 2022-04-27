@@ -14,6 +14,7 @@ const useForm = <T>(initialState: T) => {
 
   const [fieldValue, setFieldValue] = useState<T>(initialState);
   const [fieldErrors, setFieldErrors] = useState<ErrorState>({});
+  const [responseErrorMessage, setResponseErrorMessage] = useState<string>();
 
   const fieldValidationsRef = useRef<FieldValidations>({});
 
@@ -61,9 +62,11 @@ const useForm = <T>(initialState: T) => {
   return {
     fieldValue,
     fieldErrors,
+    responseErrorMessage,
     validateForm,
     setFieldValue,
     setFieldErrors,
+    setResponseErrorMessage,
     register,
   };
 };

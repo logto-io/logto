@@ -5,10 +5,9 @@ import reactStringReplace from 'react-string-replace';
 import { useTimer } from 'react-timer-hook';
 
 import { getSendPasscodeApi, getVerifyPasscodeApi } from '@/apis/utils';
-import { ErrorType } from '@/components/ErrorMessage';
 import Passcode, { defaultLength } from '@/components/Passcode';
 import TextLink from '@/components/TextLink';
-import useApi from '@/hooks/use-api';
+import useApi, { ErrorHandlers } from '@/hooks/use-api';
 import { PageContext } from '@/hooks/use-page-context';
 import { UserFlow, SearchParameters } from '@/types';
 import { getSearchParameters } from '@/utils';
@@ -33,7 +32,7 @@ const getTimeout = () => {
 
 const PasscodeValidation = ({ type, method, className, target }: Props) => {
   const [code, setCode] = useState<string[]>([]);
-  const [error, setError] = useState<ErrorType>();
+  const [error, setError] = useState<string>();
   const { setToast } = useContext(PageContext);
   const { t } = useTranslation(undefined, { keyPrefix: 'main_flow' });
 
@@ -42,17 +41,29 @@ const PasscodeValidation = ({ type, method, className, target }: Props) => {
     expiryTimestamp: getTimeout(),
   });
 
-  const {
-    error: verifyPasscodeError,
-    result: verifyPasscodeResult,
-    run: verifyPassCode,
-  } = useApi(getVerifyPasscodeApi(type, method));
+  const verifyPasscodeErrorHandlers: ErrorHandlers = useMemo(
+    () => ({
+      'passcode.expired': (error) => {
+        setError(error.message);
+      },
+      'passcode.code_mismatch': (error) => {
+        setError(error.message);
+      },
+      callback: () => {
+        setCode([]);
+      },
+    }),
+    []
+  );
 
-  const {
-    error: sendPasscodeError,
-    result: sendPasscodeResult,
-    run: sendPassCode,
-  } = useApi(getSendPasscodeApi(type, method));
+  const { result: verifyPasscodeResult, run: verifyPassCode } = useApi(
+    getVerifyPasscodeApi(type, method),
+    verifyPasscodeErrorHandlers
+  );
+
+  const { result: sendPasscodeResult, run: sendPassCode } = useApi(
+    getSendPasscodeApi(type, method)
+  );
 
   useEffect(() => {
     if (code.length === defaultLength && code.every(Boolean)) {
@@ -64,29 +75,16 @@ const PasscodeValidation = ({ type, method, className, target }: Props) => {
   useEffect(() => {
     // Restart count down
     if (sendPasscodeResult) {
+      setToast(t('description.passcode_sent'));
       restart(getTimeout(), true);
     }
-  }, [sendPasscodeResult, restart]);
+  }, [sendPasscodeResult, restart, setToast, t]);
 
   useEffect(() => {
     if (verifyPasscodeResult?.redirectTo) {
       window.location.assign(verifyPasscodeResult.redirectTo);
     }
   }, [verifyPasscodeResult]);
-
-  useEffect(() => {
-    // TODO: move to global handling
-    if (sendPasscodeError) {
-      setToast(t('error.request', { ...sendPasscodeError }));
-    }
-  }, [sendPasscodeError, setToast, t]);
-
-  useEffect(() => {
-    // TODO: load error from api response
-    if (verifyPasscodeError) {
-      setError('invalid_passcode');
-    }
-  }, [verifyPasscodeError]);
 
   const renderCountDownMessage = useMemo(() => {
     const contents = t('description.resend_after_seconds', { seconds });

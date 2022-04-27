@@ -1,6 +1,8 @@
+import { LogtoErrorCode } from '@logto/phrases';
 import { RequestErrorBody } from '@logto/schemas';
 import { HTTPError } from 'ky';
-import { useState, useCallback, useContext } from 'react';
+import { useState, useCallback, useContext, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { PageContext } from '@/hooks/use-page-context';
 
@@ -10,13 +12,22 @@ type UseApi<T extends any[], U> = {
   run: (...args: T) => Promise<void>;
 };
 
+export type ErrorHandlers = {
+  [key in LogtoErrorCode]?: (error: RequestErrorBody) => void;
+} & {
+  global?: (error: RequestErrorBody) => void;
+  callback?: (error: RequestErrorBody) => void;
+};
+
 function useApi<Args extends any[], Response>(
-  api: (...args: Args) => Promise<Response>
+  api: (...args: Args) => Promise<Response>,
+  errorHandlers?: ErrorHandlers
 ): UseApi<Args, Response> {
+  const { t } = useTranslation(undefined, { keyPrefix: 'main_flow' });
   const [error, setError] = useState<RequestErrorBody>();
   const [result, setResult] = useState<Response>();
 
-  const { setLoading } = useContext(PageContext);
+  const { setLoading, setToast } = useContext(PageContext);
 
   const run = useCallback(
     async (...args: Args) => {
@@ -43,6 +54,25 @@ function useApi<Args extends any[], Response>(
     },
     [api, setLoading]
   );
+
+  useEffect(() => {
+    if (!error) {
+      return;
+    }
+
+    const { code } = error;
+    const handler = errorHandlers?.[code] ?? errorHandlers?.global;
+
+    errorHandlers?.callback?.(error);
+
+    if (handler) {
+      handler(error);
+
+      return;
+    }
+
+    setToast(t('error.request', { ...error }));
+  }, [error, errorHandlers, setToast, t]);
 
   return {
     error,
