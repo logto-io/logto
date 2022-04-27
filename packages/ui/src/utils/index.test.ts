@@ -1,4 +1,4 @@
-import { generateRandomString, parseQueryParameters, queryStringfy, getSearchParameters } from '.';
+import { generateRandomString, parseQueryParameters, queryStringify, getSearchParameters } from '.';
 
 describe('util methods', () => {
   it('generateRandomString', () => {
@@ -11,9 +11,9 @@ describe('util methods', () => {
     expect(parameters).toEqual({ foo: 'test', bar: 'test2' });
   });
 
-  it('queryStringfy', () => {
-    expect(queryStringfy('foo=test')).toEqual('foo=test');
-    expect(queryStringfy(new URLSearchParams({ foo: 'test' }))).toEqual('foo=test');
+  it('queryStringify', () => {
+    expect(queryStringify('foo=test')).toEqual('foo=test');
+    expect(queryStringify(new URLSearchParams({ foo: 'test' }))).toEqual('foo=test');
   });
 
   it('getSearchParameters', () => {

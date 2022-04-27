@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import Button from '@/components/Button';
 import useBindSocial from '@/hooks/use-bind-social';
 import { SearchParameters } from '@/types';
-import { queryStringfy } from '@/utils';
+import { queryStringify } from '@/utils';
 
 import SignInMethodsLink from '../SignInMethodsLink';
 import * as styles from './index.module.scss';
@@ -47,7 +47,7 @@ const SocialCreateAccount = ({ connectorId, className }: Props) => {
         signInMethods={localSignInMethods}
         template="social_bind_with"
         className={styles.desc}
-        search={queryStringfy({ [SearchParameters.bindWithSocial]: connectorId })}
+        search={queryStringify({ [SearchParameters.bindWithSocial]: connectorId })}
       />
     </div>
   );
