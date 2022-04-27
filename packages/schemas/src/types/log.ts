@@ -9,6 +9,8 @@ interface BaseLogPayload {
   sessionId?: string;
   result?: LogResult;
   error?: string;
+  ip?: string;
+  userAgent?: string;
 }
 
 interface RegisterUsernamePasswordLogPayload extends BaseLogPayload {
