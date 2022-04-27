@@ -4,14 +4,14 @@ import { ConnectorMetadata, ConnectorType } from '@logto/connector-types';
 import { getFileContents } from '@logto/shared';
 import { z } from 'zod';
 
-export const authorizationEndpoint = 'https://open.weixin.qq.com/connect/qrconnect';
+export const authorizationEndpoint = 'https://wechat.native/'; // This is used to arouse the native WeChat App
 export const accessTokenEndpoint = 'https://api.weixin.qq.com/sns/oauth2/access_token';
 export const userInfoEndpoint = 'https://api.weixin.qq.com/sns/userinfo';
-export const scope = 'snsapi_login';
+export const scope = 'snsapi_userinfo';
 
-export const weChatConfigGuard = z.object({ appId: z.string(), appSecret: z.string() });
+export const weChatNativeConfigGuard = z.object({ appId: z.string(), appSecret: z.string() });
 
-export type WeChatConfig = z.infer<typeof weChatConfigGuard>;
+export type WeChatNativeConfig = z.infer<typeof weChatNativeConfigGuard>;
 
 // eslint-disable-next-line unicorn/prefer-module
 const currentPath = __dirname;
@@ -21,7 +21,7 @@ const readmeContentFallback = 'Please check README.md file directory.';
 const configTemplateFallback = 'Please check config-template.md file directory.';
 
 export const defaultMetadata: ConnectorMetadata = {
-  id: 'wechat',
+  id: 'wechat-native',
   type: ConnectorType.Social,
   name: {
     en: 'Sign In with WeChat',

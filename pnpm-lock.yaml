@@ -204,6 +204,55 @@ importers:
       tsc-watch: 4.6.2_typescript@4.6.3
       typescript: 4.6.3
 
+  packages/connector-wechat-native:
+    specifiers:
+      '@jest/types': ^27.5.1
+      '@logto/connector-types': ^0.1.0
+      '@logto/jest-config': ^0.1.0
+      '@logto/schemas': ^0.1.0
+      '@logto/shared': ^0.1.0
+      '@silverhand/eslint-config': ^0.10.2
+      '@silverhand/essentials': ^1.1.0
+      '@silverhand/ts-config': ^0.10.2
+      '@types/jest': ^27.4.1
+      '@types/node': ^16.3.1
+      eslint: ^8.10.0
+      got: ^11.8.2
+      jest: ^27.5.1
+      jest-matcher-specific-error: ^1.0.0
+      lint-staged: ^11.1.1
+      nock: ^13.2.2
+      prettier: ^2.3.2
+      query-string: ^7.0.1
+      ts-jest: ^27.1.1
+      tsc-watch: ^4.4.0
+      typescript: ^4.6.2
+      zod: ^3.14.3
+    dependencies:
+      '@logto/connector-types': link:../connector-types
+      '@logto/jest-config': link:../jest-config
+      '@logto/schemas': link:../schemas
+      '@logto/shared': link:../shared
+      '@silverhand/essentials': 1.1.7
+      got: 11.8.3
+      query-string: 7.0.1
+      zod: 3.14.3
+    devDependencies:
+      '@jest/types': 27.5.1
+      '@silverhand/eslint-config': 0.10.2_bbe1a6794670f389df81805f22999709
+      '@silverhand/ts-config': 0.10.2_typescript@4.6.3
+      '@types/jest': 27.4.1
+      '@types/node': 16.11.12
+      eslint: 8.10.0
+      jest: 27.5.1
+      jest-matcher-specific-error: 1.0.0
+      lint-staged: 11.2.6
+      nock: 13.2.2
+      prettier: 2.5.1
+      ts-jest: 27.1.1_9985e1834e803358b7be1e6ce5ca0eea
+      tsc-watch: 4.6.2_typescript@4.6.3
+      typescript: 4.6.3
+
   packages/console:
     specifiers:
       '@logto/phrases': ^0.1.0
