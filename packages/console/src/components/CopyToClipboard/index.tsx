@@ -8,7 +8,7 @@ import * as styles from './index.module.scss';
 type Props = {
   value: string;
   className?: string;
-  variant?: 'text' | 'contained';
+  variant?: 'text' | 'contained' | 'border';
 };
 
 const CopyIcon = forwardRef<SVGSVGElement, SVGProps<SVGSVGElement>>(

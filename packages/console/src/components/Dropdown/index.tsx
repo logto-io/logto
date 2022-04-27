@@ -14,9 +14,18 @@ type Props = {
   onClose?: () => void;
   anchorRef: RefObject<HTMLElement>;
   isFullWidth?: boolean;
+  className?: string;
 };
 
-const Dropdown = ({ children, title, isOpen, onClose, anchorRef, isFullWidth }: Props) => {
+const Dropdown = ({
+  children,
+  title,
+  isOpen,
+  onClose,
+  anchorRef,
+  isFullWidth,
+  className,
+}: Props) => {
   const overlayRef = useRef<HTMLDivElement>(null);
 
   const { position, mutate } = usePosition(anchorRef, overlayRef);
@@ -34,7 +43,7 @@ const Dropdown = ({ children, title, isOpen, onClose, anchorRef, isFullWidth }: 
             }
           : { visibility: 'hidden' },
       }}
-      className={classNames(styles.content, position?.isOnTop && styles.onTop)}
+      className={classNames(styles.content, className, position?.isOnTop && styles.onTop)}
       overlayClassName={styles.overlay}
       onRequestClose={onClose}
       onAfterOpen={mutate}

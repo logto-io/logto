@@ -18,7 +18,7 @@ const ActionMenu = ({ children, buttonProps, title }: Props) => {
   const anchorReference = useRef<HTMLDivElement>(null);
 
   return (
-    <div className={styles.actionMenu}>
+    <div>
       <ActionMenuButton
         {...buttonProps}
         ref={anchorReference}
@@ -30,6 +30,7 @@ const ActionMenu = ({ children, buttonProps, title }: Props) => {
         title={title}
         anchorRef={anchorReference}
         isOpen={isOpen}
+        className={styles.content}
         onClose={() => {
           setIsOpen(false);
         }}
