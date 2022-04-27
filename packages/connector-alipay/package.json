@@ -30,7 +30,6 @@
         "dayjs": "^1.10.5",
         "got": "^11.8.2",
         "iconv-lite": "0.6.3",
-        "query-string": "^7.0.1",
         "snakecase-keys": "^5.1.0",
         "zod": "^3.14.3"
     },
