@@ -16,7 +16,6 @@ import {
 } from '@logto/connector-types';
 import { assert } from '@silverhand/essentials';
 import got, { RequestError as GotRequestError } from 'got';
-import { stringify } from 'query-string';
 
 import {
   authorizationEndpoint,
@@ -52,13 +51,15 @@ export class WeChatConnector implements SocialConnector {
   public getAuthorizationUri: GetAuthorizationUri = async (redirectUri, state) => {
     const { appId } = await this.getConfig(this.metadata.id);
 
-    return `${authorizationEndpoint}?${stringify({
+    const queryParameters = new URLSearchParams({
       appid: appId,
       redirect_uri: encodeURI(redirectUri), // The variable `redirectUri` should match {appId, appSecret}
       response_type: 'code',
       scope,
       state,
-    })}`;
+    });
+
+    return `${authorizationEndpoint}?${queryParameters.toString()}`;
   };
 
   public getAccessToken: GetAccessToken = async (code) => {
