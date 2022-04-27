@@ -107,7 +107,11 @@ const ApplicationDetails = () => {
         title="admin_console.application_details.authorization_endpoint"
         className={styles.textField}
       >
-        <CopyToClipboard className={styles.textField} value={oidcConfig.authorization_endpoint} />
+        <CopyToClipboard
+          className={styles.textField}
+          value={oidcConfig.authorization_endpoint}
+          variant="border"
+        />
       </FormField>
       <FormField
         isRequired
@@ -167,10 +171,18 @@ const ApplicationDetails = () => {
   const AdvancedSettingsPage = oidcConfig && (
     <>
       <FormField title="admin_console.application_details.token_endpoint">
-        <CopyToClipboard className={styles.textField} value={oidcConfig.token_endpoint} />
+        <CopyToClipboard
+          className={styles.textField}
+          value={oidcConfig.token_endpoint}
+          variant="border"
+        />
       </FormField>
       <FormField title="admin_console.application_details.user_info_endpoint">
-        <CopyToClipboard className={styles.textField} value={oidcConfig.userinfo_endpoint} />
+        <CopyToClipboard
+          className={styles.textField}
+          value={oidcConfig.userinfo_endpoint}
+          variant="border"
+        />
       </FormField>
     </>
   );
