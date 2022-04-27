@@ -2,13 +2,13 @@
 
 .container {
   display: inline-block;
-  padding: _.unit(2) _.unit(3);
   border-radius: 6px;
   color: var(--color-on-secondary-container);
   font: var(--font-body-medium);
   cursor: default;
 
   &.contained {
+    padding: _.unit(2) _.unit(3);
     background: var(--color-inverse-on-surface);
   }
 
