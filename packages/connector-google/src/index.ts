@@ -15,7 +15,6 @@ import {
 } from '@logto/connector-types';
 import { conditional, assert } from '@silverhand/essentials';
 import got, { RequestError as GotRequestError } from 'got';
-import { stringify } from 'query-string';
 
 import {
   accessTokenEndpoint,
@@ -48,13 +47,15 @@ export class GoogleConnector implements SocialConnector {
   public getAuthorizationUri: GetAuthorizationUri = async (redirectUri, state) => {
     const config = await this.getConfig(this.metadata.id);
 
-    return `${authorizationEndpoint}?${stringify({
+    const queryParameters = new URLSearchParams({
       client_id: config.clientId,
       redirect_uri: redirectUri,
       response_type: 'code',
       state,
       scope,
-    })}`;
+    });
+
+    return `${authorizationEndpoint}?${queryParameters.toString()}`;
   };
 
   public getAccessToken: GetAccessToken = async (code, redirectUri) => {

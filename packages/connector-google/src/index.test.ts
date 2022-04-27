@@ -50,7 +50,7 @@ describe('google connector', () => {
         'some_state'
       );
       expect(authorizationUri).toEqual(
-        `${authorizationEndpoint}?client_id=%3Cclient-id%3E&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fcallback&response_type=code&scope=openid%20profile%20email&state=some_state`
+        `${authorizationEndpoint}?client_id=%3Cclient-id%3E&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fcallback&response_type=code&state=some_state&scope=openid+profile+email`
       );
     });
   });
