@@ -167,7 +167,7 @@ const translation = {
       token_endpoint: 'Token Endpoint',
       user_info_endpoint: 'User Info Endpoint',
       save_changes: 'Save Changes',
-      more_options: 'More Options',
+      more_options: 'MORE OPTIONS',
       options_delete: 'Delete',
       reminder: 'Reminder',
       delete_description:
@@ -190,7 +190,7 @@ const translation = {
     api_resource_details: {
       back_to_api_resources: 'Back to my API resources',
       check_help_guide: 'Check Help Guide',
-      more_options: 'More Options',
+      more_options: 'MORE OPTIONS',
       options_delete: 'Delete',
       settings: 'Settings',
       save_changes: 'Save Changes',
