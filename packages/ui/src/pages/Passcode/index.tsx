@@ -30,17 +30,23 @@ const Passcode = () => {
   useEffect(() => {
     if (invalidSignInMethod || invalidMethod) {
       navigate('/404', { replace: true });
+
+      return;
     }
-  }, [invalidMethod, invalidSignInMethod, navigate]);
+
+    // Navigate to the back if no method value found
+    if (!state?.[method]) {
+      navigate(-1);
+    }
+  }, [invalidMethod, invalidSignInMethod, method, navigate, state]);
 
   if (invalidSignInMethod || invalidMethod) {
     return null;
   }
 
-  const target = state ? state[method] : undefined;
+  const target = state?.[method];
 
   if (!target) {
-    // TODO: no email or phone found
     return null;
   }
 
