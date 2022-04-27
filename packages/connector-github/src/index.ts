@@ -11,7 +11,6 @@ import {
 } from '@logto/connector-types';
 import { assert } from '@silverhand/essentials';
 import got, { RequestError as GotRequestError } from 'got';
-import { stringify } from 'query-string';
 
 import {
   authorizationEndpoint,
@@ -44,12 +43,14 @@ export class GithubConnector implements SocialConnector {
   public getAuthorizationUri: GetAuthorizationUri = async (redirectUri, state) => {
     const config = await this.getConfig(this.metadata.id);
 
-    return `${authorizationEndpoint}?${stringify({
+    const queryParameters = new URLSearchParams({
       client_id: config.clientId,
       redirect_uri: redirectUri,
       state,
       scope, // Only support fixed scope for v1.
-    })}`;
+    });
+
+    return `${authorizationEndpoint}?${queryParameters.toString()}`;
   };
 
   getAccessToken: GetAccessToken = async (code) => {

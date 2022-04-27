@@ -29,7 +29,7 @@ describe('getAuthorizationUri', () => {
       'some_state'
     );
     expect(authorizationUri).toEqual(
-      `${authorizationEndpoint}?client_id=%3Cclient-id%3E&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fcallback&scope=read%3Auser&state=some_state`
+      `${authorizationEndpoint}?client_id=%3Cclient-id%3E&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fcallback&state=some_state&scope=read%3Auser`
     );
   });
 });
