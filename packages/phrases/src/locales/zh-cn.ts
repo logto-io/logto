@@ -38,6 +38,7 @@ const translation = {
       bind: '绑定到 {{address}}',
     },
     description: {
+      not_found: '页面不存在',
       loading: '读取中...',
       redirecting: '页面跳转中...',
       agree_with_terms: '我已阅读并同意 ',

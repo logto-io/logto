@@ -1,0 +1,16 @@
+@use '@/scss/underscore' as _;
+
+.wrapper {
+  position: relative;
+  padding: _.unit(8) _.unit(5);
+  @include _.flex-column;
+
+  .header {
+    margin: _.unit(20) 0 _.unit(12);
+  }
+
+  .error {
+    @include _.title;
+    margin-bottom: _.unit(2);
+  }
+}

@@ -36,6 +36,7 @@ const translation = {
       bind: 'Binding with {{address}}',
     },
     description: {
+      not_found: 'Not Found',
       loading: 'Loading...',
       redirecting: 'Redirecting...',
       agree_with_terms: 'I have read and agree to the ',
