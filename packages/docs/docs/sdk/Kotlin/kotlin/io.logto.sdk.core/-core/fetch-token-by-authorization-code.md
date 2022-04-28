@@ -1,0 +1,4 @@
+# fetchTokenByAuthorizationCode
+
+
+fun [fetchTokenByAuthorizationCode](fetch-token-by-authorization-code.md)(tokenEndpoint: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), clientId: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), redirectUri: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), codeVerifier: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), code: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), resource: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)?, completion: [HttpCompletion](../../io.logto.sdk.core.http/-http-completion/index.md)&lt;[CodeTokenResponse](../../io.logto.sdk.core.type/-code-token-response/index.md)&gt;)
