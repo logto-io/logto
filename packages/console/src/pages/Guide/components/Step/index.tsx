@@ -1,16 +1,7 @@
+import { I18nKey } from '@logto/phrases';
 import { conditional } from '@silverhand/essentials';
 import classNames from 'classnames';
-import React, {
-  cloneElement,
-  isValidElement,
-  PropsWithChildren,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
-import { CodeProps } from 'react-markdown/lib/ast-to-react.js';
+import React, { PropsWithChildren, useEffect, useRef, useState } from 'react';
 
 import Button from '@/components/Button';
 import Card from '@/components/Card';
@@ -21,16 +12,15 @@ import Spacer from '@/components/Spacer';
 import { ArrowDown, ArrowUp } from '@/icons/Arrow';
 import Tick from '@/icons/Tick';
 
-import CodeComponentRenderer from '../CodeComponentRenderer';
 import * as styles from './index.module.scss';
 
 type Props = PropsWithChildren<{
   title: string;
   subtitle?: string;
   index: number;
-  isActive: boolean;
-  isComplete: boolean;
-  isFinalStep: boolean;
+  activeIndex: number;
+  invalidIndex?: number;
+  buttonText?: I18nKey;
   buttonHtmlType: 'submit' | 'button';
   onNext?: () => void;
 }>;
@@ -40,46 +30,30 @@ const Step = ({
   title,
   subtitle,
   index,
-  isActive,
-  isComplete,
-  isFinalStep,
-  buttonHtmlType,
+  activeIndex,
+  invalidIndex,
+  buttonText = 'general.next',
+  buttonHtmlType = 'button',
   onNext,
 }: Props) => {
   const [isExpanded, setIsExpanded] = useState(false);
+  const isActive = index === activeIndex;
+  const isComplete = index < activeIndex;
+  const isInvalid = index === invalidIndex;
   const ref = useRef<HTMLDivElement>(null);
 
-  const scrollToStep = useCallback(() => {
-    ref.current?.scrollIntoView({ block: 'start', behavior: 'smooth' });
-  }, []);
-
-  const onError = useCallback(() => {
-    setIsExpanded(true);
-    scrollToStep();
-  }, [scrollToStep]);
-
   useEffect(() => {
-    if (isActive) {
+    if (isActive || isInvalid) {
       setIsExpanded(true);
     }
-  }, [isActive]);
+  }, [isActive, isInvalid]);
 
   useEffect(() => {
     if (isExpanded) {
-      scrollToStep();
+      ref.current?.scrollIntoView({ block: 'start', behavior: 'smooth' });
     }
-  }, [isExpanded, scrollToStep]);
+  }, [isExpanded]);
 
-  const memoizedComponents = useMemo(
-    () => ({
-      code: ({ ...props }: PropsWithChildren<CodeProps>) => (
-        <CodeComponentRenderer {...props} onError={onError} />
-      ),
-    }),
-    [onError]
-  );
-
-  // TODO: add more styles to markdown renderer
   return (
     <Card key={title} ref={ref} className={styles.card}>
       <div
@@ -106,13 +80,13 @@ const Step = ({
         <IconButton>{isExpanded ? <ArrowUp /> : <ArrowDown />}</IconButton>
       </div>
       <div className={classNames(styles.content, isExpanded && styles.expanded)}>
-        {isValidElement(children) && cloneElement(children, { components: memoizedComponents })}
+        {children}
         <div className={styles.buttonWrapper}>
           <Button
             htmlType={buttonHtmlType}
             type="primary"
-            title={`general.${isFinalStep ? 'done' : 'next'}`}
-            onClick={conditional(!isFinalStep && onNext)}
+            title={buttonText}
+            onClick={conditional(onNext)}
           />
         </div>
       </div>

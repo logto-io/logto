@@ -16,9 +16,9 @@ import Spacer from '@/components/Spacer';
 import useApi from '@/hooks/use-api';
 import Close from '@/icons/Close';
 import SenderTester from '@/pages/ConnectorDetails/components/SenderTester';
-import Step from '@/pages/GetStarted/components/Step';
+import Step from '@/pages/Guide/components/Step';
 import * as modalStyles from '@/scss/modal.module.scss';
-import { GetStartedForm } from '@/types/get-started';
+import { GuideForm } from '@/types/guide';
 
 import * as styles from './index.module.scss';
 
@@ -26,7 +26,7 @@ type Props = {
   connector: ConnectorDTO;
   isOpen: boolean;
   onClose: () => void;
-  onComplete?: (data: GetStartedForm) => Promise<void>;
+  onComplete?: (data: GuideForm) => Promise<void>;
 };
 
 const onClickFetchSampleProject = (name: string) => {
@@ -34,7 +34,7 @@ const onClickFetchSampleProject = (name: string) => {
   window.open(sampleUrl, '_blank');
 };
 
-const GetStartedModal = ({ connector, isOpen, onClose }: Props) => {
+const GuideModal = ({ connector, isOpen, onClose }: Props) => {
   const api = useApi();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const {
@@ -48,7 +48,7 @@ const GetStartedModal = ({ connector, isOpen, onClose }: Props) => {
   const isSocialConnector =
     connectorType !== ConnectorType.SMS && connectorType !== ConnectorType.Email;
   const [activeStepIndex, setActiveStepIndex] = useState<number>(0);
-  const methods = useForm<GetStartedForm>({ reValidateMode: 'onBlur' });
+  const methods = useForm<GuideForm>({ reValidateMode: 'onBlur' });
   const {
     control,
     formState: { isSubmitting },
@@ -126,9 +126,7 @@ const GetStartedModal = ({ connector, isOpen, onClose }: Props) => {
                   title="Enter your json here"
                   subtitle="Lorem ipsum dolor sit amet, consectetuer adipiscing elit."
                   index={0}
-                  isActive={activeStepIndex === 0}
-                  isComplete={activeStepIndex > 0}
-                  isFinalStep={isSocialConnector}
+                  activeIndex={activeStepIndex}
                   buttonHtmlType="submit"
                 >
                   <Controller
@@ -144,13 +142,12 @@ const GetStartedModal = ({ connector, isOpen, onClose }: Props) => {
             </FormProvider>
             {!isSocialConnector && (
               <Step
-                isFinalStep
                 title="Test your message"
                 subtitle="Lorem ipsum dolor sit amet, consectetuer adipiscing elit."
                 index={1}
-                isActive={activeStepIndex === 1}
-                isComplete={activeStepIndex > 1}
+                activeIndex={activeStepIndex}
                 buttonHtmlType="button"
+                buttonText="general.done"
                 onNext={onClose}
               >
                 <SenderTester connectorType={connectorType} />
@@ -163,4 +160,4 @@ const GetStartedModal = ({ connector, isOpen, onClose }: Props) => {
   );
 };
 
-export default GetStartedModal;
+export default GuideModal;

@@ -23,8 +23,7 @@
   inset: 0;
 }
 
-
-// React modal animation
+/* stylelint-disable selector-class-pattern */
 /* stylelint-disable-next-line selector-pseudo-class-no-unknown */
 :global {
   .ReactModal__Content[role='popup'] {
@@ -32,7 +31,6 @@
     transition: transform 0.3s ease-in-out;
   }
 
-  /* stylelint-disable selector-class-pattern */
   .ReactModal__Content--after-open[role='popup'] {
     transform: translateY(0);
   }
@@ -40,5 +38,6 @@
   .ReactModal__Content--before-close[role='popup'] {
     transform: translateY(100%);
   }
-  /* stylelint-enable selector-class-pattern */
 }
+
+/* stylelint-enable selector-class-pattern */

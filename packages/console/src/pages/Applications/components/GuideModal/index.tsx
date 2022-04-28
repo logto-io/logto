@@ -1,10 +1,10 @@
 import React from 'react';
 import Modal from 'react-modal';
 
-import GetStarted from '@/pages/GetStarted';
+import Guide from '@/pages/Guide';
 import * as modalStyles from '@/scss/modal.module.scss';
 import { SupportedJavascriptLibraries } from '@/types/applications';
-import { GetStartedForm } from '@/types/get-started';
+import { GuideForm } from '@/types/guide';
 
 import LibrarySelector from '../LibrarySelector';
 
@@ -12,16 +12,15 @@ type Props = {
   appName: string;
   isOpen: boolean;
   onClose: () => void;
-  onComplete: (data: GetStartedForm) => Promise<void>;
+  onComplete: (data: GuideForm) => Promise<void>;
 };
 
-const GetStartedModal = ({ appName, isOpen, onClose, onComplete }: Props) => (
+const GuideModal = ({ appName, isOpen, onClose, onComplete }: Props) => (
   <Modal isOpen={isOpen} className={modalStyles.fullScreen}>
-    <GetStarted
+    <Guide
       bannerComponent={<LibrarySelector />}
       title={appName}
       subtitle="applications.get_started.header_description"
-      type="application"
       defaultSubtype={SupportedJavascriptLibraries.React}
       onClose={onClose}
       onComplete={onComplete}
@@ -29,4 +28,4 @@ const GetStartedModal = ({ appName, isOpen, onClose, onComplete }: Props) => (
   </Modal>
 );
 
-export default GetStartedModal;
+export default GuideModal;
