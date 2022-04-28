@@ -13,6 +13,8 @@ const translation = {
     loading: '读取中...',
     redirecting: '页面跳转中...',
     added: '已添加',
+    cancel: '取消',
+    confirm: '确认',
   },
   main_flow: {
     input: {
@@ -379,17 +381,17 @@ const translation = {
         terms_of_use_placeholder: 'Terms of use url',
       },
       sign_in_methods: {
-        title: 'SIGN IN METHODS',
-        primary: 'Primary sign in method',
-        enable_secondary: 'Enable secondary sign in',
+        title: '登录方式',
+        primary: '首选登录方式',
+        enable_secondary: '启用其他登录方式',
         enable_secondary_description:
           "Once it's turned on, you app will support more sign in method(s) besides the primary one. ",
-        methods: 'Sign in method',
-        methods_sms: 'Phone number sign in',
-        methods_email: 'Email sign in',
-        methods_social: 'Social sign in',
-        methods_username: 'Username-with-password sign in',
-        methods_primary_tag: '(Primary)',
+        methods: '登录方式',
+        methods_sms: '短信验证码登录',
+        methods_email: '邮箱登录',
+        methods_social: '社交账号登录',
+        methods_username: '用户名密码登录',
+        methods_primary_tag: '（首选）',
         define_social_methods: 'Define social sign in methods',
         transfer: {
           title: 'Social connectors',
@@ -417,6 +419,12 @@ const translation = {
       setup_warning: {
         setup: '设置',
         no_connector: '你尚未添加社交登录连接器。你需要先完成设置才能启用。',
+      },
+      save_alert: {
+        title: '提示',
+        description: '你正在修改登录方式，这可能会影响部分用户。是否继续保存修改？',
+        before: '修改前',
+        after: '修改后',
       },
     },
     settings: {

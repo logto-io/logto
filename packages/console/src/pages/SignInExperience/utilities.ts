@@ -76,3 +76,21 @@ export const signInExperienceParser = {
     };
   },
 };
+
+export const compareSignInMethods = (
+  before: SignInExperience,
+  after: SignInExperience
+): boolean => {
+  if (before.socialSignInConnectorIds.length !== after.socialSignInConnectorIds.length) {
+    return false;
+  }
+
+  if (before.socialSignInConnectorIds.some((id) => !after.socialSignInConnectorIds.includes(id))) {
+    return false;
+  }
+
+  const { signInMethods: beforeMethods } = before;
+  const { signInMethods: afterMethods } = after;
+
+  return Object.values(SignInMethodKey).every((key) => beforeMethods[key] === afterMethods[key]);
+};
