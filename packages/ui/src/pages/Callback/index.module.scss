@@ -4,12 +4,11 @@
 .wrapper {
   position: relative;
   padding: _.unit(8) _.unit(5);
-  height: 100%;
   @include _.flex-column;
 }
 
 .connector {
-  margin-bottom: _.unit(20);
+  margin: _.unit(20) 0;
 }
 
 .loadingLabel {
