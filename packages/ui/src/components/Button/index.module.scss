@@ -15,7 +15,7 @@
 .primary {
   border: none;
   background: var(--color-primary);
-  color: #fff;
+  color: var(--color-primary-button-text);
 
   &.disabled {
     background: var(--color-layer);
