@@ -1,5 +1,5 @@
 import { SignInMethodKey } from '@logto/schemas';
-import React from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
@@ -16,8 +16,44 @@ const signInMethods = Object.values(SignInMethodKey);
 
 const SignInMethodsForm = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { register, watch, control } = useFormContext<SignInExperienceForm>();
+  const { register, watch, control, setValue } = useFormContext<SignInExperienceForm>();
   const primaryMethod = watch('signInMethods.primary');
+  const enableSecondary = watch('signInMethods.enableSecondary');
+  const social = watch('signInMethods.social');
+
+  useEffect(() => {
+    if (primaryMethod) {
+      // When one of the sign-in methods has been primary, it should not be able to be secondary simultaneously.
+      setValue(`signInMethods.${primaryMethod}`, false);
+    }
+  }, [primaryMethod, setValue]);
+
+  const secondaryMethodsFields = useMemo(
+    () =>
+      signInMethods.map((method) => {
+        const label = (
+          <>
+            {t('sign_in_exp.sign_in_methods.methods', { context: method })}
+            {primaryMethod === method && (
+              <span className={styles.primaryTag}>
+                {t('sign_in_exp.sign_in_methods.methods_primary_tag')}
+              </span>
+            )}
+          </>
+        );
+
+        return (
+          <div key={method} className={styles.method}>
+            <Checkbox
+              label={label}
+              disabled={primaryMethod === method}
+              {...register(`signInMethods.${method}`)}
+            />
+          </div>
+        );
+      }),
+    [primaryMethod, register, t]
+  );
 
   return (
     <>
@@ -38,39 +74,39 @@ const SignInMethodsForm = () => {
           )}
         />
       </FormField>
+      {primaryMethod === SignInMethodKey.Social && (
+        <div className={styles.primarySocial}>
+          <Controller
+            name="socialSignInConnectorIds"
+            control={control}
+            render={({ field: { value, onChange } }) => (
+              <ConnectorsTransfer value={value} onChange={onChange} />
+            )}
+          />
+        </div>
+      )}
       <FormField isRequired title="admin_console.sign_in_exp.sign_in_methods.enable_secondary">
         <Switch
           {...register('signInMethods.enableSecondary', { required: true })}
           label={t('sign_in_exp.sign_in_methods.enable_secondary_description')}
         />
-        {signInMethods.map((method) => (
-          <div key={method} className={styles.method}>
-            <Checkbox
-              label={
-                <>
-                  {t('sign_in_exp.sign_in_methods.methods', { context: method })}
-                  {primaryMethod === method && (
-                    <span className={styles.primaryTag}>
-                      {t('sign_in_exp.sign_in_methods.methods_primary_tag')}
-                    </span>
-                  )}
-                </>
-              }
-              disabled={primaryMethod === method}
-              {...register(`signInMethods.${method}`)}
-            />
-          </div>
-        ))}
       </FormField>
-      <FormField title="admin_console.sign_in_exp.sign_in_methods.define_social_methods">
-        <Controller
-          name="socialSignInConnectorIds"
-          control={control}
-          render={({ field: { value, onChange } }) => (
-            <ConnectorsTransfer value={value} onChange={onChange} />
+      {enableSecondary && (
+        <>
+          {secondaryMethodsFields}
+          {social && (
+            <FormField title="admin_console.sign_in_exp.sign_in_methods.define_social_methods">
+              <Controller
+                name="socialSignInConnectorIds"
+                control={control}
+                render={({ field: { value, onChange } }) => (
+                  <ConnectorsTransfer value={value} onChange={onChange} />
+                )}
+              />
+            </FormField>
           )}
-        />
-      </FormField>
+        </>
+      )}
     </>
   );
 };
