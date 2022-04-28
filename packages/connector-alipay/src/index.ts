@@ -20,7 +20,6 @@ import {
 import { assert } from '@silverhand/essentials';
 import dayjs from 'dayjs';
 import got from 'got';
-import { stringify } from 'query-string';
 
 import {
   alipayEndpoint,
@@ -61,12 +60,14 @@ export class AlipayConnector implements SocialConnector {
 
     const redirect_uri = encodeURI(redirectUri);
 
-    return `${authorizationEndpoint}?${stringify({
+    const queryParameters = new URLSearchParams({
       app_id,
       redirect_uri, // The variable `redirectUri` should match {appId, appSecret}
       scope,
       state,
-    })}`;
+    });
+
+    return `${authorizationEndpoint}?${queryParameters.toString()}`;
   };
 
   public getAccessToken: GetAccessToken = async (code): Promise<AccessTokenObject> => {
