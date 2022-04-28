@@ -5,8 +5,7 @@
       "node",
       "jest",
       "jest-matcher-specific-error"
-    ],
-    "module": "ESNext"
+    ]
   },
   "include": [
     "src",
