@@ -40,9 +40,9 @@ describe('koaLog middleware', () => {
       ...createContextWithRouteParameters({ headers: { 'user-agent': userAgent } }),
       log, // Bypass middleware context type assert
     };
+    ctx.request.ip = ip;
 
     next.mockImplementationOnce(async () => {
-      ctx.request.ip = ip;
       ctx.log(type, payload);
     });
 
@@ -65,6 +65,7 @@ describe('koaLog middleware', () => {
       ...createContextWithRouteParameters({ headers: { 'user-agent': userAgent } }),
       log, // Bypass middleware context type assert
     };
+    ctx.request.ip = ip;
 
     const error = new Error('Failed to insert log');
     insertLogMock.mockImplementationOnce(async () => {
@@ -72,7 +73,6 @@ describe('koaLog middleware', () => {
     });
 
     next.mockImplementationOnce(async () => {
-      ctx.request.ip = ip;
       ctx.log(type, payload);
     });
 
@@ -95,11 +95,11 @@ describe('koaLog middleware', () => {
       ...createContextWithRouteParameters({ headers: { 'user-agent': userAgent } }),
       log, // Bypass middleware context type assert
     };
+    ctx.request.ip = ip;
 
     const error = new Error('next error');
 
     next.mockImplementationOnce(async () => {
-      ctx.request.ip = ip;
       ctx.log(type, payload);
       throw error;
     });

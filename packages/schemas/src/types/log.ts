@@ -5,7 +5,7 @@ export enum LogResult {
   Error = 'Error',
 }
 
-interface BaseLogPayload {
+export interface BaseLogPayload {
   sessionId?: string;
   result?: LogResult;
   error?: string;
