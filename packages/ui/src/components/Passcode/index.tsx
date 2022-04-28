@@ -9,7 +9,7 @@ import React, {
   ClipboardEventHandler,
 } from 'react';
 
-import ErrorMessage, { ErrorType } from '../ErrorMessage';
+import ErrorMessage from '../ErrorMessage';
 import * as styles from './index.module.scss';
 
 export const defaultLength = 6;
@@ -19,7 +19,7 @@ export type Props = {
   className?: string;
   length?: number;
   value: string[];
-  error?: ErrorType;
+  error?: string;
   onChange: (value: string[]) => void;
 };
 
@@ -180,12 +180,10 @@ const Passcode = ({ name, className, value, length = defaultLength, error, onCha
   );
 
   useEffect(() => {
-    if (error) {
-      // Clear field and focus
-      onChange([]);
+    if (value.length === 0) {
       inputReferences.current[0]?.focus();
     }
-  }, [error, onChange]);
+  }, [value, onChange]);
 
   return (
     <div className={className}>
@@ -198,7 +196,6 @@ const Passcode = ({ name, className, value, length = defaultLength, error, onCha
             }}
             // eslint-disable-next-line react/no-array-index-key
             key={`${name}_${index}`}
-            autoFocus={index === 0}
             name={`${name}_${index}`}
             data-id={index}
             value={codes[index]}
@@ -213,7 +210,7 @@ const Passcode = ({ name, className, value, length = defaultLength, error, onCha
           />
         ))}
       </div>
-      {error && <ErrorMessage error={error} className={styles.errorMessage} />}
+      {error && <ErrorMessage className={styles.errorMessage}>{error}</ErrorMessage>}
     </div>
   );
 };

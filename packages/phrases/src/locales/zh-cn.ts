@@ -47,6 +47,7 @@ const translation = {
       forgot_password: '忘记密码？',
       or: '或',
       enter_passcode: '验证码已经发送至 {{ address }}',
+      passcode_sent: '验证码已经发送',
       resend_after_seconds: '在 {{ seconds }} 秒后重发',
       resend_passcode: '重发验证码',
       continue_with: '通过以下方式继续',

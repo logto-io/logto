@@ -25,22 +25,28 @@ const Passcode = () => {
   const { method, type } = useParams<Parameters>();
   const state = useLocation().state as StateType;
   const invalidSignInMethod = type !== 'sign-in' && type !== 'register';
-  const invalidChannel = method !== 'email' && method !== 'sms';
+  const invalidMethod = method !== 'email' && method !== 'sms';
 
   useEffect(() => {
-    if (invalidSignInMethod || invalidChannel) {
+    if (invalidSignInMethod || invalidMethod) {
       navigate('/404', { replace: true });
-    }
-  }, [invalidChannel, invalidSignInMethod, navigate]);
 
-  if (invalidSignInMethod || invalidChannel) {
+      return;
+    }
+
+    // Navigate to the back if no method value found
+    if (!state?.[method]) {
+      navigate(-1);
+    }
+  }, [invalidMethod, invalidSignInMethod, method, navigate, state]);
+
+  if (invalidSignInMethod || invalidMethod) {
     return null;
   }
 
-  const target = state ? state[method] : undefined;
+  const target = state?.[method];
 
   if (!target) {
-    // TODO: no email or phone found
     return null;
   }
 

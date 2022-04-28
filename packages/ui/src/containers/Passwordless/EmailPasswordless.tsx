@@ -1,19 +1,15 @@
-/**
- * TODO:
- * 1. API redesign handle api error and loading status globally in PageContext
- */
 import classNames from 'classnames';
-import React, { useCallback, useEffect, useContext } from 'react';
+import React, { useCallback, useEffect, useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
 import { getSendPasscodeApi } from '@/apis/utils';
 import Button from '@/components/Button';
 import Input from '@/components/Input';
+import PasswordlessConfirmModal from '@/containers/PasswordlessConfirmModal';
 import TermsOfUse from '@/containers/TermsOfUse';
-import useApi from '@/hooks/use-api';
+import useApi, { ErrorHandlers } from '@/hooks/use-api';
 import useForm from '@/hooks/use-form';
-import { PageContext } from '@/hooks/use-page-context';
 import useTerms from '@/hooks/use-terms';
 import { UserFlow } from '@/types';
 import { emailValidation } from '@/utils/field-validations';
@@ -32,14 +28,30 @@ type FieldState = {
 const defaultState: FieldState = { email: '' };
 
 const EmailPasswordless = ({ type, className }: Props) => {
+  const [showPasswordlessConfirmModal, setShowPasswordlessConfirmModal] = useState(false);
   const { t } = useTranslation(undefined, { keyPrefix: 'main_flow' });
-  const { setToast } = useContext(PageContext);
   const navigate = useNavigate();
   const { termsValidation } = useTerms();
-  const { fieldValue, setFieldValue, register, validateForm } = useForm(defaultState);
+  const { fieldValue, setFieldValue, setFieldErrors, register, validateForm } =
+    useForm(defaultState);
+
+  const errorHandlers: ErrorHandlers = useMemo(
+    () => ({
+      'user.email_not_exists': () => {
+        setShowPasswordlessConfirmModal(true);
+      },
+      'user.email_exists_register': () => {
+        setShowPasswordlessConfirmModal(true);
+      },
+      'guard.invalid_input': () => {
+        setFieldErrors({ email: 'invalid_email' });
+      },
+    }),
+    [setFieldErrors]
+  );
 
   const sendPasscode = getSendPasscodeApi(type, 'email');
-  const { error, result, run: asyncSendPasscode } = useApi(sendPasscode);
+  const { result, run: asyncSendPasscode } = useApi(sendPasscode, errorHandlers);
 
   const onSubmitHandler = useCallback(() => {
     if (!validateForm()) {
@@ -53,6 +65,10 @@ const EmailPasswordless = ({ type, className }: Props) => {
     void asyncSendPasscode(fieldValue.email);
   }, [validateForm, termsValidation, asyncSendPasscode, fieldValue.email]);
 
+  const onModalCloseHandler = useCallback(() => {
+    setShowPasswordlessConfirmModal(false);
+  }, []);
+
   useEffect(() => {
     if (result) {
       navigate(
@@ -65,30 +81,32 @@ const EmailPasswordless = ({ type, className }: Props) => {
     }
   }, [fieldValue.email, navigate, result, type]);
 
-  useEffect(() => {
-    // TODO: request error
-    if (error) {
-      setToast(t('error.request', { ...error }));
-    }
-  }, [error, t, setToast]);
-
   return (
-    <form className={classNames(styles.form, className)}>
-      <Input
-        className={styles.inputField}
-        name="email"
-        autoComplete="email"
-        placeholder={t('input.email')}
-        {...register('email', emailValidation)}
-        onClear={() => {
-          setFieldValue((state) => ({ ...state, email: '' }));
-        }}
+    <>
+      <form className={classNames(styles.form, className)}>
+        <Input
+          className={styles.inputField}
+          name="email"
+          autoComplete="email"
+          placeholder={t('input.email')}
+          {...register('email', emailValidation)}
+          onClear={() => {
+            setFieldValue((state) => ({ ...state, email: '' }));
+          }}
+        />
+
+        <TermsOfUse className={styles.terms} />
+
+        <Button onClick={onSubmitHandler}>{t('action.continue')}</Button>
+      </form>
+      <PasswordlessConfirmModal
+        isOpen={showPasswordlessConfirmModal}
+        type={type === 'sign-in' ? 'register' : 'sign-in'}
+        method="email"
+        value={fieldValue.email}
+        onClose={onModalCloseHandler}
       />
-
-      <TermsOfUse className={styles.terms} />
-
-      <Button onClick={onSubmitHandler}>{t('action.continue')}</Button>
-    </form>
+    </>
   );
 };
 

@@ -15,7 +15,6 @@ const SignIn = () => {
 
   return (
     <div className={classNames(styles.wrapper)}>
-      {/* TODO: load content from sign-in experience  */}
       <BrandingHeader
         className={styles.header}
         headline={style === BrandingStyle.Logo_Slogan ? slogan : undefined}
