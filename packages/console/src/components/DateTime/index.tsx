@@ -13,7 +13,7 @@ const DateTime = ({ children }: Props) => {
     return <span>-</span>;
   }
 
-  return <span>{date.format('YYYY/MM/DD')}</span>;
+  return <span>{date.toDate().toLocaleDateString()}</span>;
 };
 
 export default DateTime;

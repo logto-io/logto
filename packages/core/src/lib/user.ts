@@ -1,5 +1,4 @@
 import { User, UsersPasswordEncryptionMethod } from '@logto/schemas';
-import dayjs from 'dayjs';
 import { nanoid } from 'nanoid';
 import pRetry from 'p-retry';
 
@@ -66,4 +65,4 @@ export const findUserByUsernameAndPassword = async (
 };
 
 export const updateLastSignInAt = async (userId: string) =>
-  updateUserById(userId, { lastSignInAt: dayjs().valueOf() });
+  updateUserById(userId, { lastSignInAt: Date.now() });
