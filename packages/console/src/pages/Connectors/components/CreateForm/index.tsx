@@ -11,7 +11,7 @@ import UnnamedTrans from '@/components/UnnamedTrans';
 import { RequestError } from '@/hooks/use-api';
 import * as modalStyles from '@/scss/modal.module.scss';
 
-import GetStartedModal from '../GetStartedModal';
+import GuideModal from '../GuideModal';
 import * as styles from './index.module.scss';
 
 type Props = {
@@ -101,7 +101,7 @@ const CreateForm = ({ onClose, isOpen: isFormOpen, type }: Props) => {
           </RadioGroup>
         )}
         {activeConnector && (
-          <GetStartedModal
+          <GuideModal
             connector={activeConnector}
             isOpen={isGetStartedModalOpen}
             onClose={closeModal}

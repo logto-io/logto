@@ -10,9 +10,9 @@ import RadioGroup, { Radio } from '@/components/RadioGroup';
 import TextInput from '@/components/TextInput';
 import useApi from '@/hooks/use-api';
 import { applicationTypeI18nKey } from '@/types/applications';
-import { GetStartedForm } from '@/types/get-started';
+import { GuideForm } from '@/types/guide';
 
-import GetStartedModal from '../GetStartedModal';
+import GuideModal from '../GuideModal';
 import TypeDescription from '../TypeDescription';
 import * as styles from './index.module.scss';
 
@@ -57,7 +57,7 @@ const CreateForm = ({ onClose }: Props) => {
     setIsGetStartedModalOpen(true);
   });
 
-  const onComplete = async (data: GetStartedForm) => {
+  const onComplete = async (data: GuideForm) => {
     if (!createdApp) {
       return;
     }
@@ -118,7 +118,7 @@ const CreateForm = ({ onClose }: Props) => {
         </FormField>
       </form>
       {createdApp && (
-        <GetStartedModal
+        <GuideModal
           appName={createdApp.name}
           isOpen={isGetStartedModalOpen}
           onClose={closeModal}

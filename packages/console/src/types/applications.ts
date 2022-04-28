@@ -7,7 +7,7 @@ export const applicationTypeI18nKey = Object.freeze({
 } as const);
 
 export enum SupportedJavascriptLibraries {
-  Angular = 'Angular',
-  React = 'React',
-  Vue = 'Vue',
+  Angular = 'angular',
+  React = 'react',
+  Vue = 'vue',
 }

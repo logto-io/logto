@@ -1,13 +1,190 @@
-import Step1 from './_step-1.mdx'
-import Step2 from './_step-2.md'
-import Step3 from './_step-3.md'
-import Step4 from './_step-4.md'
-import Step5 from './_step-5.md'
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
 
 # Integrate `@logto/react`
 
-<Step1 />
-<Step2 />
-<Step3 />
-<Step4 />
-<Step5 />
+<Step
+  title="Install SDK"
+  subtitle="Please select your favorite package manager"
+  index={0}
+  activeIndex={props.activeStepIndex}
+  invalidIndex={props.invalidStepIndex}
+  onNext={() => props.onNext(1)}
+>
+<Tabs>
+<TabItem value="npm" label="npm">
+
+```bash
+npm i @logto/react
+```
+
+</TabItem>
+<TabItem value="yarn" label="Yarn">
+
+```bash
+yarn add @logto/react
+```
+
+</TabItem>
+<TabItem value="pnpm" label="pnpm">
+
+```bash
+pnpm add @logto/react
+```
+
+</TabItem>
+<TabItem value="script" label="script">
+
+```html
+<script src="https://logto.io/js/logto-sdk-react/0.1.0/logto-sdk-react.production.js" />
+```
+
+</TabItem>
+<TabItem value="git" label="Git">
+
+```bash
+git clone https://github.com/logto-io/js.git
+pnpm build
+```
+
+</TabItem>
+</Tabs>
+</Step>
+<Step
+  title="Initiate LogtoClient"
+  subtitle="1 step"
+  index={1}
+  activeIndex={props.activeStepIndex}
+  invalidIndex={props.invalidStepIndex}
+  onNext={() => props.onNext(2)}
+>
+
+Add the following code to your main html file. You may need client ID and authorization domain.
+
+```typescript
+import { LogtoProvider, LogtoConfig } from '@logto/react';
+import React from 'react';
+
+//...
+
+const App = () => {
+  const config: LogtoConfig = { clientId: 'foo', endpoint: 'https://your-endpoint-domain.com' };
+
+  return (
+    <BrowserRouter>
+      <LogtoProvider config={config}>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/callback" element={<Callback />} />
+          <Route
+            path="/protected-resource"
+            element={
+              <RequireAuth>
+                <ProtectedResource />
+              </RequireAuth>
+            }
+          />
+        </Routes>
+      </LogtoProvider>
+    </BrowserRouter>
+  );
+};
+```
+
+</Step>
+<Step
+  title="Sign In"
+  subtitle="2 steps"
+  index={2}
+  activeIndex={props.activeStepIndex}
+  invalidIndex={props.invalidStepIndex}
+  onNext={() => props.onNext(3)}
+>
+
+### Setup your login
+
+The Logto React SDK provides you tools and hooks to quickly implement your own authorization flow. First, let’s enter your redirect URI
+
+<MultiTextInputField name="redirectUris" title="Redirect URI" onError={() => props.onError(2)} />
+
+Add the following code to your web app
+
+```typescript
+import React from 'react';
+import { useLogto } from '@logto/react';
+
+const SignInButton = () => {
+  const { signIn } = useLogto();
+  const redirectUrl = window.location.origin + '/callback';
+
+  return <button onClick={() => signIn(redirectUrl)}>Sign In</button>;
+};
+
+export default SignInButton;
+```
+
+### Retrieve Auth Status
+
+```typescript
+import React from "react";
+import { useLogto } from '@logto/react';
+
+const App = () => {
+	const { isAuthenticated, signIn } = useLogto();
+
+  if !(isAuthenticated) {
+		return <SignInButton />
+  }
+
+	return <>
+		<AppContent />
+		<SignOutButton />
+	</>
+};
+```
+
+</Step>
+<Step
+  title="Sign Out"
+  subtitle="1 step"
+  index={3}
+  activeIndex={props.activeStepIndex}
+  invalidIndex={props.invalidStepIndex}
+  onNext={() => props.onNext(4)}
+>
+
+Execute signOut() methods will redirect users to the Logto sign out page. After a success sign out, all use session data and auth status will be cleared.
+
+<MultiTextInputField name="postLogoutRedirectUris" title="Post sign out redirect URI" onError={() => props.onError(3)} />
+
+Add the following code to your web app
+
+```typescript
+import React from 'react';
+import { useLogto } from '@logto/react';
+
+const SignOutButton = () => {
+  const { signOut } = useLogto();
+
+  return <button onClick={() => signOut(window.location.origin)}>Sign out</button>;
+};
+
+export default SignOutButton;
+```
+
+</Step>
+<Step
+  title="Further Readings"
+  subtitle="3 steps"
+  index={4}
+  activeIndex={props.activeStepIndex}
+  invalidIndex={props.invalidStepIndex}
+  buttonText="general.done"
+  buttonHtmlType="submit"
+>
+
+- [SDK Documentation](https://link-url-here.org)
+- [OIDC Documentation](https://link-url-here.org)
+- [Calling API to fetch accessToken](https://link-url-here.org)
+
+</Step>
