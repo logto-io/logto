@@ -1,4 +1,4 @@
-import { LogPayload, LogPayloads, LogResult, LogType } from '@logto/schemas';
+import { BaseLogPayload, LogPayload, LogPayloads, LogResult, LogType } from '@logto/schemas';
 import { Optional } from '@silverhand/essentials';
 import deepmerge from 'deepmerge';
 import { MiddlewareType } from 'koa';
@@ -6,8 +6,35 @@ import { nanoid } from 'nanoid';
 
 import { insertLog } from '@/queries/log';
 
-export type WithLogContext<ContextT> = ContextT & {
-  log: <T extends LogType>(type: T, payload: LogPayloads[T]) => void;
+type MergeLog = <T extends LogType>(type: T, payload: LogPayloads[T]) => void;
+
+export type WithLogContext<ContextT> = ContextT & { log: MergeLog };
+
+const initLog = (baseLogPayload?: Readonly<BaseLogPayload>) => {
+  /* eslint-disable @silverhand/fp/no-let */
+  let type: Optional<LogType>;
+  let payload: LogPayload;
+  /* eslint-enable @silverhand/fp/no-let */
+
+  /* eslint-disable @silverhand/fp/no-mutation */
+  const mergeLog: MergeLog = (logType, logPayload) => {
+    if (type !== logType) {
+      // Reset payload when type changes
+      payload = { result: LogResult.Success, ...baseLogPayload };
+    }
+
+    type = logType;
+    payload = deepmerge(payload, logPayload);
+  };
+
+  const mergeLogError = (error: unknown) => {
+    payload = deepmerge(payload, { result: LogResult.Error, error: String(error) });
+  };
+  /* eslint-enable @silverhand/fp/no-mutation */
+
+  const getLog = () => ({ type, payload });
+
+  return { mergeLog, mergeLogError, getLog };
 };
 
 const saveLog = async (type: LogType, payload: LogPayload) => {
@@ -29,43 +56,24 @@ export default function koaLog<StateT, ContextT, ResponseBodyT>(): MiddlewareTyp
   ResponseBodyT
 > {
   return async (ctx, next) => {
-    // eslint-disable-next-line @silverhand/fp/no-let
-    let logType: Optional<LogType>;
-    // eslint-disable-next-line @silverhand/fp/no-let
-    let logPayload: LogPayload = {};
+    const {
+      ip,
+      headers: { 'user-agent': userAgent },
+    } = ctx.request;
 
-    ctx.log = (type, payload) => {
-      if (logType !== type) {
-        // eslint-disable-next-line @silverhand/fp/no-mutation
-        logPayload = {}; // Reset payload when type changes
-      }
-
-      // eslint-disable-next-line @silverhand/fp/no-mutation
-      logType = type; // Use first initialized log type
-      // eslint-disable-next-line @silverhand/fp/no-mutation
-      logPayload = deepmerge(logPayload, payload);
-    };
+    const { mergeLog, mergeLogError, getLog } = initLog({ ip, userAgent });
+    ctx.log = mergeLog;
 
     try {
       await next();
     } catch (error: unknown) {
-      // eslint-disable-next-line @silverhand/fp/no-mutation
-      logPayload.error = String(error);
+      mergeLogError(error);
       throw error;
     } finally {
-      if (logType) {
-        const result = logPayload.error ? LogResult.Error : LogResult.Success;
-        const {
-          ip,
-          headers: { 'user-agent': userAgent },
-        } = ctx.request;
+      const { type, payload } = getLog();
 
-        await saveLog(logType, {
-          ...logPayload,
-          result,
-          ip,
-          userAgent,
-        });
+      if (type) {
+        void saveLog(type, payload);
       }
     }
   };
