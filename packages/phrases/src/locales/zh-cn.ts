@@ -60,7 +60,8 @@ const translation = {
     },
     error: {
       username_password_mismatch: '用户名和密码不匹配。',
-      required: '{{field}} 必填',
+      username_required: '用户名必填',
+      password_required: '密码必填',
       username_exists: '用户名已存在。',
       username_should_not_start_with_number: '用户名不能以数字开头。',
       username_valid_charset: '用户名只能包含英文字母、数字或下划线。',
