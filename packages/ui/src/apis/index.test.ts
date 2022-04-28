@@ -24,6 +24,7 @@ import {
 } from './social';
 
 jest.mock('ky', () => ({
+  extend: () => ky,
   post: jest.fn(() => ({
     json: jest.fn(),
   })),
