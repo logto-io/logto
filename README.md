@@ -4,4 +4,6 @@ The monorepo for Logto core service.
 
 ## Get Started
 
-TBD
+```bash
+node -e "$(printf "%s" "$(curl -fsSL https://raw.githubusercontent.com/logto-io/logto/master/install.js)")"
+```

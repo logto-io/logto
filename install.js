@@ -22,7 +22,15 @@ const confirm = async (query) => {
   return answer === '' || ['y', 'yes', 'yep', 'yeah'].includes(answer);
 };
 
+const safeExecSync = (command) => {
+  try {
+    return execSync(command, { encoding: 'utf-8' });
+  } catch {}
+};
+
 const directory = 'logto';
+const nodeMajorVersion = 16;
+const postgresMajorVersion = 14;
 
 (async () => {
   if (existsSync(directory)) {
@@ -31,16 +39,16 @@ const directory = 'logto';
 
   const nodeVersion = execSync('node -v', { encoding: 'utf-8' });
 
-  if (!isVersionGreaterThan(trimV(nodeVersion), 16)) {
-    throw new Error('Logto requires NodeJS >= 16.0.0.');
+  if (!isVersionGreaterThan(trimV(nodeVersion), nodeMajorVersion)) {
+    throw new Error(`Logto requires NodeJS >= ${nodeMajorVersion}.0.0.`);
   }
 
-  const pgOutput = execSync('postgres --version', { encoding: 'utf-8' });
+  const pgOutput = safeExecSync('postgres --version') ?? '';
   const pgArray = pgOutput.split(' ');
   const pgVersion = pgArray[pgArray.length - 1];
 
-  if (!isVersionGreaterThan(trimV(pgVersion), 18)) {
-    const answer = await confirm('Logto requires PostgreSQL >= 14.0.0 but cannot find in the current environment.\nDo you have a remote PostgreSQL instance ready?');
+  if (!isVersionGreaterThan(trimV(pgVersion), postgresMajorVersion)) {
+    const answer = await confirm(`Logto requires PostgreSQL >= ${postgresMajorVersion}.0.0 but cannot find in the current environment.\nDo you have a remote PostgreSQL instance ready?`);
     if (!answer) {
       process.exit(1);
     }
