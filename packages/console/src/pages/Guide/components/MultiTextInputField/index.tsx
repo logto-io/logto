@@ -7,7 +7,7 @@ import FormField from '@/components/FormField';
 import MultiTextInput from '@/components/MultiTextInput';
 import { createValidatorForRhf, convertRhfErrorMessage } from '@/components/MultiTextInput/utils';
 import { GuideForm } from '@/types/guide';
-import { noSpaceRegex } from '@/utilities/regex';
+import { uriValidator } from '@/utilities/validator';
 
 type Props = {
   name: 'redirectUris' | 'postLogoutRedirectUris';
@@ -42,8 +42,8 @@ const MultiTextInputField = ({ name, title, onError }: Props) => {
           validate: createValidatorForRhf({
             required: t('errors.required_field_missing_plural', { field: title }),
             pattern: {
-              regex: noSpaceRegex,
-              message: t('errors.no_space_in_uri'),
+              verify: uriValidator(false),
+              message: t('errors.invalid_uri_format'),
             },
           }),
         }}

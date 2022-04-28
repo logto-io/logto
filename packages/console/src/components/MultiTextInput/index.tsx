@@ -10,7 +10,7 @@ import * as styles from './index.module.scss';
 import { MultiTextInputError } from './types';
 
 type Props = {
-  value: string[];
+  value?: string[];
   onChange: (value: string[]) => void;
   error?: MultiTextInputError;
 };
@@ -21,7 +21,7 @@ const MultiTextInput = ({ value, onChange, error }: Props) => {
   });
 
   const fields = useMemo(() => {
-    if (value.length === 0) {
+    if (!value?.length) {
       return [''];
     }
 

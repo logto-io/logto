@@ -1,29 +1,29 @@
-import { conditional } from '@silverhand/essentials';
-
 import { MultiTextInputError, MultiTextInputRule } from './types';
 
 export const validate = (
-  value: string[],
+  value?: string[],
   rule?: MultiTextInputRule
 ): MultiTextInputError | undefined => {
   if (!rule) {
     return;
   }
 
-  const requiredError = conditional(value.filter(Boolean).length === 0 && rule.required);
+  if (!value?.filter(Boolean).length) {
+    if (!rule.required) {
+      return;
+    }
 
-  if (requiredError) {
     return {
-      required: requiredError,
+      required: rule.required,
     };
   }
 
   if (rule.pattern) {
-    const { regex, message } = rule.pattern;
+    const { verify, message } = rule.pattern;
 
     const inputErrors = Object.fromEntries(
       value.map((element, index) => {
-        return [index, regex.test(element) ? undefined : message];
+        return [index, verify(element) ? undefined : message];
       })
     );
 
@@ -40,7 +40,7 @@ export const validate = (
  */
 export const createValidatorForRhf =
   (rule: MultiTextInputRule) =>
-  (value: string[]): boolean | string => {
+  (value?: string[]): boolean | string => {
     const error = validate(value, rule);
 
     if (error) {
