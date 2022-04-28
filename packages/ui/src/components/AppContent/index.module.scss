@@ -29,6 +29,7 @@ $font-family-small: 'PingFang SC', 'SF Pro Text', 'Siyuan Heiti', 'Roboto';
   --color-toast: rgba(25, 28, 29, 80%);
   --color-overlay: rgba(25, 28, 29, 16%);
   --color-base: #fff;
+  --color-dialogue: #fff;
 }
 
 .dark {
@@ -42,8 +43,9 @@ $font-family-small: 'PingFang SC', 'SF Pro Text', 'Siyuan Heiti', 'Roboto';
   --color-layer: linear-gradient(0deg, rgba(202, 190, 255, 14%), rgba(202, 190, 255, 14%)), linear-gradient(0deg, rgba(196, 199, 199, 2%), rgba(196, 199, 199, 2%)), #191c1d;
   --color-error: #dd3730;
   --color-toast: rgba(247, 248, 248, 80%);
-  --color-overlay: rgba(247, 248, 248, 80%);
+  --color-overlay: rgba(25, 28, 29, 40%);
   --color-base: #191c1d;
+  --color-dialogue: linear-gradient(0deg, rgba(202, 190, 255, 8%), rgba(202, 190, 255, 8%)), linear-gradient(0deg, rgba(196, 199, 199, 2%), rgba(196, 199, 199, 2%)), #191c1d;
 }
 
 .mobile {

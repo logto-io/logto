@@ -2,7 +2,7 @@
 
 .socialButton {
   border: _.border(var(--color-outline));
-  background: var(--color-base);
+  background: transparent;
   color: var(--color-text);
 
   .icon {
