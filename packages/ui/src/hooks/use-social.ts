@@ -1,10 +1,11 @@
 import { useEffect, useCallback, useContext, useMemo } from 'react';
-import { useParams } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import { useParams, useNavigate } from 'react-router-dom';
 
 import { invokeSocialSignIn, signInWithSocial } from '@/apis/social';
 import { generateRandomString, parseQueryParameters } from '@/utils';
 
-import useApi from './use-api';
+import useApi, { ErrorHandlers } from './use-api';
 import { PageContext } from './use-page-context';
 import useTerms from './use-terms';
 
@@ -72,6 +73,24 @@ const useSocial = (options?: Options) => {
   const { setToast, experienceSettings } = useContext(PageContext);
   const { termsValidation } = useTerms();
   const parameters = useParams();
+  const navigate = useNavigate();
+  const { t } = useTranslation(undefined, { keyPrefix: 'main_flow' });
+
+  const signInWithSocialErrorHandlers: ErrorHandlers = useMemo(
+    () => ({
+      'user.identity_not_exists': (error) => {
+        if (parameters.connector) {
+          navigate(`/social-register/${parameters.connector}`, {
+            state: {
+              ...(error.data as Record<string, unknown> | undefined),
+            },
+          });
+        }
+        setToast(error.message);
+      },
+    }),
+    [navigate, parameters.connector, setToast]
+  );
 
   // Filter native supported social connectors
   const socialConnectors = useMemo(
@@ -85,7 +104,10 @@ const useSocial = (options?: Options) => {
   const { result: invokeSocialSignInResult, run: asyncInvokeSocialSignIn } =
     useApi(invokeSocialSignIn);
 
-  const { result: signInWithSocialResult, run: asyncSignInWithSocial } = useApi(signInWithSocial);
+  const { result: signInWithSocialResult, run: asyncSignInWithSocial } = useApi(
+    signInWithSocial,
+    signInWithSocialErrorHandlers
+  );
 
   const invokeSocialSignInHandler = useCallback(
     async (connectorId: string) => {
@@ -106,55 +128,54 @@ const useSocial = (options?: Options) => {
   const signInWithSocialHandler = useCallback(
     (connectorId: string, state: string, code: string) => {
       if (!stateValidation(state, connectorId)) {
-        // TODO: Invalid state error message
+        setToast(t('error.invalid_connector_auth'));
+
         return;
       }
       void asyncSignInWithSocial({ connectorId, state, code, redirectUri: '' });
     },
-    [asyncSignInWithSocial]
+    [asyncSignInWithSocial, setToast, t]
   );
 
-  const socialCallbackHandler = useCallback(
-    (connectorId?: string) => {
-      const { state, code, error, error_description } = parseQueryParameters(
-        window.location.search
+  const socialCallbackHandler = useCallback(() => {
+    const { state, code, error, error_description } = parseQueryParameters(window.location.search);
+    const connectorId = parameters.connector;
+
+    if (error) {
+      setToast(`${error}${error_description ? `: ${error_description}` : ''}`);
+    }
+
+    if (!state || !code || !connectorId) {
+      setToast(t('error.missing_auth_data'));
+
+      return;
+    }
+
+    const decodedState = decodeState(state);
+
+    if (!decodedState) {
+      setToast(t('error.missing_auth_data'));
+
+      return;
+    }
+
+    const { platform, callbackLink } = decodedState;
+
+    if (platform === 'web') {
+      window.location.assign(
+        new URL(`${location.origin}/sign-in/callback/${connectorId}/${window.location.search}`)
       );
 
-      if (error) {
-        setToast(`${error}${error_description ? `: ${error_description}` : ''}`);
-      }
+      return;
+    }
 
-      if (!state || !code || !connectorId) {
-        // TODO: error message
-        return;
-      }
+    if (!callbackLink) {
+      // CallbackLink should not empty for native webview
+      throw new Error('CallbackLink is empty');
+    }
 
-      const decodedState = decodeState(state);
-
-      if (!decodedState) {
-        // TODO: invalid state error message
-        return;
-      }
-
-      const { platform, callbackLink } = decodedState;
-
-      if (platform === 'web') {
-        window.location.assign(
-          new URL(`${location.origin}/sign-in/callback/${connectorId}/${window.location.search}`)
-        );
-
-        return;
-      }
-
-      if (!callbackLink) {
-        // TODO: native callbackLink not found error message
-        return;
-      }
-
-      window.location.assign(new URL(`${callbackLink}${window.location.search}`));
-    },
-    [setToast]
-  );
+    window.location.assign(new URL(`${callbackLink}${window.location.search}`));
+  }, [parameters.connector, setToast, t]);
 
   // InvokeSocialSignIn Callback
   useEffect(() => {
@@ -164,6 +185,7 @@ const useSocial = (options?: Options) => {
       return;
     }
 
+    // Callback hook to close the social sign in modal
     options?.onSocialSignInCallback?.();
 
     // Invoke Native Social Sign In flow
@@ -210,7 +232,9 @@ const useSocial = (options?: Options) => {
 
     const nativeMessageHandler = (event: MessageEvent) => {
       if (event.origin === window.location.origin) {
-        setToast(JSON.stringify(event.data));
+        try {
+          setToast(JSON.stringify(event.data));
+        } catch {}
       }
     };
 

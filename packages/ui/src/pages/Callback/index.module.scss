@@ -1,10 +1,21 @@
-.container {
-  padding: 0;
-  margin: 0;
-  width: 100%;
+@use '@/scss/underscore' as _;
+
+
+.wrapper {
+  position: relative;
+  padding: _.unit(8) _.unit(5);
   height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  @include _.flex-column;
+}
+
+.connector {
+  margin-bottom: _.unit(20);
+}
+
+.loadingLabel {
+  margin-bottom: _.unit(6);
+}
+
+.button {
+  max-width: 360px;
 }
