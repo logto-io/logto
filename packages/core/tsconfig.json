@@ -10,10 +10,5 @@
   "include": [
     "src",
     "jest.*.ts"
-  ],
-  "ts-node": {
-    "moduleTypes": {
-      "jest.config.ts": "cjs"
-    }
-  }
+  ]
 }
