@@ -139,7 +139,7 @@ importers:
       lint-staged: ^12.0.0
       prettier: ^2.3.2
       ts-jest: ^27.1.1
-      tsc-watch: ^4.4.0
+      tsc-watch: ^5.0.0
       typescript: ^4.6.2
       zod: ^3.14.3
     dependencies:
@@ -162,7 +162,7 @@ importers:
       lint-staged: 12.4.0
       prettier: 2.5.1
       ts-jest: 27.1.1_9985e1834e803358b7be1e6ce5ca0eea
-      tsc-watch: 4.6.2_typescript@4.6.3
+      tsc-watch: 5.0.3_typescript@4.6.3
       typescript: 4.6.3
 
   packages/connector-facebook:
@@ -232,7 +232,7 @@ importers:
       nock: ^13.2.2
       prettier: ^2.3.2
       ts-jest: ^27.1.1
-      tsc-watch: ^4.4.0
+      tsc-watch: ^5.0.0
       typescript: ^4.6.2
       zod: ^3.14.3
     dependencies:
@@ -256,7 +256,7 @@ importers:
       nock: 13.2.2
       prettier: 2.5.1
       ts-jest: 27.1.1_9985e1834e803358b7be1e6ce5ca0eea
-      tsc-watch: 4.6.2_typescript@4.6.3
+      tsc-watch: 5.0.3_typescript@4.6.3
       typescript: 4.6.3
 
   packages/connector-google:
@@ -279,7 +279,7 @@ importers:
       nock: ^13.2.2
       prettier: ^2.3.2
       ts-jest: ^27.1.1
-      tsc-watch: ^4.4.0
+      tsc-watch: ^5.0.0
       typescript: ^4.6.2
       zod: ^3.14.3
     dependencies:
@@ -303,7 +303,7 @@ importers:
       nock: 13.2.2
       prettier: 2.5.1
       ts-jest: 27.1.1_9985e1834e803358b7be1e6ce5ca0eea
-      tsc-watch: 4.6.2_typescript@4.6.3
+      tsc-watch: 5.0.3_typescript@4.6.3
       typescript: 4.6.3
 
   packages/connector-types:
@@ -359,7 +359,7 @@ importers:
       nock: ^13.2.2
       prettier: ^2.3.2
       ts-jest: ^27.1.1
-      tsc-watch: ^4.4.0
+      tsc-watch: ^5.0.0
       typescript: ^4.6.2
       zod: ^3.14.3
     dependencies:
@@ -383,7 +383,7 @@ importers:
       nock: 13.2.2
       prettier: 2.5.1
       ts-jest: 27.1.1_9985e1834e803358b7be1e6ce5ca0eea
-      tsc-watch: 4.6.2_typescript@4.6.3
+      tsc-watch: 5.0.3_typescript@4.6.3
       typescript: 4.6.3
 
   packages/connector-wechat-native:
@@ -406,7 +406,7 @@ importers:
       nock: ^13.2.2
       prettier: ^2.3.2
       ts-jest: ^27.1.1
-      tsc-watch: ^4.4.0
+      tsc-watch: ^5.0.0
       typescript: ^4.6.2
       zod: ^3.14.3
     dependencies:
@@ -430,7 +430,7 @@ importers:
       nock: 13.2.2
       prettier: 2.5.1
       ts-jest: 27.1.1_9985e1834e803358b7be1e6ce5ca0eea
-      tsc-watch: 4.6.2_typescript@4.6.3
+      tsc-watch: 5.0.3_typescript@4.6.3
       typescript: 4.6.3
 
   packages/console:
@@ -19249,21 +19249,6 @@ packages:
       typescript: 4.6.3
       v8-compile-cache-lib: 3.0.1
       yn: 3.1.1
-    dev: true
-
-  /tsc-watch/4.6.2_typescript@4.6.3:
-    resolution: {integrity: sha512-eHWzZGkPmzXVGQKbqQgf3BFpGiZZw1jQ29ZOJeaSe8JfyUvphbd221NfXmmsJUGGPGA/nnaSS01tXipUcyxAxg==}
-    engines: {node: '>=8.17.0'}
-    hasBin: true
-    peerDependencies:
-      typescript: '*'
-    dependencies:
-      cross-spawn: 7.0.3
-      node-cleanup: 2.1.2
-      ps-tree: 1.2.0
-      string-argv: 0.1.2
-      strip-ansi: 6.0.1
-      typescript: 4.6.3
     dev: true
 
   /tsc-watch/5.0.3_typescript@4.6.2:
