@@ -9,7 +9,7 @@ type MergeLog = <T extends LogType>(type: T, payload: LogPayloads[T] & BaseLogPa
 
 export type WithLogContext<ContextT> = ContextT & { log: MergeLog };
 
-type LogInstance = {
+type Logger = {
   type?: LogType;
   basePayload: BaseLogPayload;
   logPayload: LogPayload;
@@ -19,7 +19,7 @@ type LogInstance = {
 };
 
 /* eslint-disable @silverhand/fp/no-mutation */
-const logger: LogInstance = {
+const logger: Logger = {
   type: undefined,
   basePayload: {},
   logPayload: {},
