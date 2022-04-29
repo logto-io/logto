@@ -4,7 +4,6 @@ import { AliyunSmsConnector } from '@logto/connector-aliyun-sms';
 import { FacebookConnector } from '@logto/connector-facebook';
 import { GithubConnector } from '@logto/connector-github';
 import { GoogleConnector } from '@logto/connector-google';
-import { SmsConnector, EmailConnector, SocialConnector } from '@logto/connector-types';
 import { WeChatConnector } from '@logto/connector-wechat';
 import { WeChatNativeConnector } from '@logto/connector-wechat-native';
 
@@ -15,14 +14,14 @@ import { ConnectorInstance, ConnectorType, IConnector, SocialConnectorInstance }
 import { getConnectorConfig } from './utilities';
 
 const allConnectors: IConnector[] = [
-  new AlipayConnector(getConnectorConfig) as SocialConnector,
-  new AliyunDmConnector(getConnectorConfig) as EmailConnector,
-  new AliyunSmsConnector(getConnectorConfig) as SmsConnector,
-  new FacebookConnector(getConnectorConfig) as SocialConnector,
-  new GithubConnector(getConnectorConfig) as SocialConnector,
-  new GoogleConnector(getConnectorConfig) as SocialConnector,
-  new WeChatConnector(getConnectorConfig) as SocialConnector,
-  new WeChatNativeConnector(getConnectorConfig) as SocialConnector,
+  new AlipayConnector(getConnectorConfig),
+  new AliyunDmConnector(getConnectorConfig),
+  new AliyunSmsConnector(getConnectorConfig),
+  new FacebookConnector(getConnectorConfig),
+  new GithubConnector(getConnectorConfig),
+  new GoogleConnector(getConnectorConfig),
+  new WeChatConnector(getConnectorConfig),
+  new WeChatNativeConnector(getConnectorConfig),
 ];
 
 export const getConnectorInstances = async (): Promise<ConnectorInstance[]> => {
