@@ -174,7 +174,7 @@ const ApplicationDetails = () => {
               </TabNavLink>
             </TabNav>
             <FormProvider {...formMethods}>
-              <form className={styles.form} onSubmit={onSubmit}>
+              <form className={classNames(styles.form, detailsStyles.body)} onSubmit={onSubmit}>
                 <div className={styles.fields}>
                   {isAdvancedSettings ? (
                     <AdvancedSettings oidcConfig={oidcConfig} />

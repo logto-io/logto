@@ -62,8 +62,8 @@ const Settings = () => {
       {!data && !error && <div>loading</div>}
       {error && <div>{`error occurred: ${error.body.message}`}</div>}
       {data && (
-        <>
-          <form className={detailsStyles.body} onSubmit={onSubmit}>
+        <form className={detailsStyles.body} onSubmit={onSubmit}>
+          <div className={styles.fields}>
             <FormField title="admin_console.settings.custom_domain">
               <TextInput {...register('customDomain')} />
             </FormField>
@@ -115,7 +115,7 @@ const Settings = () => {
                 )}
               />
             </FormField>
-          </form>
+          </div>
           <div className={detailsStyles.footer}>
             <div className={detailsStyles.footerMain}>
               <Button
@@ -126,7 +126,7 @@ const Settings = () => {
               />
             </div>
           </div>
-        </>
+        </form>
       )}
     </Card>
   );
