@@ -16,7 +16,7 @@ export type Props = {
 const AppContent = ({ children }: Props) => {
   const theme = useTheme();
   const { toast, loading, setToast } = useContext(PageContext);
-  const deBouncedLoading = useDebouncedLoader(loading);
+  const debouncedLoading = useDebouncedLoader(loading);
 
   // Prevent internal eventListener rebind
   const hideToast = useCallback(() => {
@@ -27,7 +27,7 @@ const AppContent = ({ children }: Props) => {
     <main className={classNames(styles.content, styles.universal, styles.mobile, styles[theme])}>
       {children}
       <Toast message={toast} isVisible={Boolean(toast)} callback={hideToast} />
-      {deBouncedLoading && <LoadingLayer />}
+      {debouncedLoading && <LoadingLayer />}
     </main>
   );
 };
