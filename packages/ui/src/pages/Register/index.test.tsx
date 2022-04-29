@@ -40,4 +40,16 @@ describe('<Register />', () => {
     expect(queryByText('action.create_account')).not.toBeNull();
     expect(container.querySelector('input[name="email"]')).not.toBeNull();
   });
+
+  test('renders non-recognized method', async () => {
+    const { queryByText } = render(
+      <MemoryRouter initialEntries={['/register/test']}>
+        <Routes>
+          <Route path="/register/:method" element={<Register />} />
+        </Routes>
+      </MemoryRouter>
+    );
+    expect(queryByText('action.create_account')).toBeNull();
+    expect(queryByText('description.not_found')).not.toBeNull();
+  });
 });

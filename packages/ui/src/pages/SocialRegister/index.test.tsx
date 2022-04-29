@@ -4,26 +4,8 @@ import { MemoryRouter, Route, Routes } from 'react-router-dom';
 
 import SocialRegister from '.';
 
-const mockNavigate = jest.fn();
-
-jest.mock('react-router-dom', () => ({
-  ...jest.requireActual('react-router-dom'),
-  useNavigate: () => mockNavigate,
-}));
-
 describe('SocialRegister', () => {
-  it('render null and redirect if no connector found', () => {
-    render(
-      <MemoryRouter initialEntries={['/social-register']}>
-        <Routes>
-          <Route path="/social-register" element={<SocialRegister />} />
-        </Routes>
-      </MemoryRouter>
-    );
-    expect(mockNavigate).toBeCalledWith('/404');
-  });
-
-  it('render with connection', () => {
+  it('render', () => {
     const { queryByText } = render(
       <MemoryRouter initialEntries={['/social-register/github']}>
         <Routes>

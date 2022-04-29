@@ -1,10 +1,11 @@
-import React, { useMemo, useEffect } from 'react';
+import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 import NavBar from '@/components/NavBar';
 import { PhonePasswordless, EmailPasswordless } from '@/containers/Passwordless';
 import UsernameSignin from '@/containers/UsernameSignin';
+import NotFound from '@/pages/NotFound';
 
 import * as styles from './index.module.scss';
 
@@ -14,14 +15,7 @@ type Props = {
 
 const SecondarySignIn = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'main_flow' });
-  const navigate = useNavigate();
   const { method = 'username' } = useParams<Props>();
-
-  useEffect(() => {
-    if (method !== 'email' && method !== 'sms' && method !== 'username') {
-      navigate('/404', { replace: true });
-    }
-  }, [method, navigate]);
 
   const signInForm = useMemo(() => {
     if (method === 'sms') {
@@ -34,6 +28,10 @@ const SecondarySignIn = () => {
 
     return <UsernameSignin />;
   }, [method]);
+
+  if (!['email', 'sms', 'username'].includes(method)) {
+    return <NotFound />;
+  }
 
   return (
     <div className={styles.wrapper}>

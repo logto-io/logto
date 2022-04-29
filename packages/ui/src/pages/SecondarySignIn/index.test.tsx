@@ -39,4 +39,16 @@ describe('<SecondarySignIn />', () => {
     expect(queryByText('action.sign_in')).not.toBeNull();
     expect(container.querySelector('input[name="email"]')).not.toBeNull();
   });
+
+  test('render un-recognized method', async () => {
+    const { queryByText } = render(
+      <MemoryRouter initialEntries={['/sign-in/test']}>
+        <Routes>
+          <Route path="/sign-in/:method" element={<SecondarySignIn />} />
+        </Routes>
+      </MemoryRouter>
+    );
+    expect(queryByText('action.sign_in')).toBeNull();
+    expect(queryByText('description.not_found')).not.toBeNull();
+  });
 });

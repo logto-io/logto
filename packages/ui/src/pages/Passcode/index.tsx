@@ -1,12 +1,14 @@
 import { Nullable } from '@silverhand/essentials';
-import React, { useEffect } from 'react';
+import React, { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate, useParams, useLocation } from 'react-router-dom';
+import { useParams, useLocation } from 'react-router-dom';
 
 import NavBar from '@/components/NavBar';
 import PasscodeValidation from '@/containers/PasscodeValidation';
+import { PageContext } from '@/hooks/use-page-context';
 import { UserFlow } from '@/types';
 
+import NotFound from '../NotFound';
 import * as styles from './index.module.scss';
 
 type Parameters = {
@@ -21,32 +23,21 @@ type StateType = Nullable<{
 
 const Passcode = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'main_flow' });
-  const navigate = useNavigate();
   const { method, type } = useParams<Parameters>();
   const state = useLocation().state as StateType;
-  const invalidSignInMethod = type !== 'sign-in' && type !== 'register';
+  const invalidType = type !== 'sign-in' && type !== 'register';
   const invalidMethod = method !== 'email' && method !== 'sms';
+  const { setToast } = useContext(PageContext);
 
-  useEffect(() => {
-    if (invalidSignInMethod || invalidMethod) {
-      navigate('/404', { replace: true });
-
-      return;
-    }
-
-    // Navigate to the back if no method value found
-    if (!state?.[method]) {
-      navigate(-1);
-    }
-  }, [invalidMethod, invalidSignInMethod, method, navigate, state]);
-
-  if (invalidSignInMethod || invalidMethod) {
-    return null;
+  if (invalidType || invalidMethod) {
+    return <NotFound />;
   }
 
   const target = state?.[method];
 
   if (!target) {
+    setToast(t(method === 'email' ? 'error.invalid_email' : 'error.invalid_phone'));
+
     return null;
   }
 
