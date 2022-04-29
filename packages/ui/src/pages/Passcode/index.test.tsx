@@ -1,6 +1,7 @@
-import { render } from '@testing-library/react';
 import React from 'react';
 import { Routes, Route, MemoryRouter } from 'react-router-dom';
+
+import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 
 import Passcode from '.';
 
@@ -13,7 +14,7 @@ jest.mock('react-router-dom', () => ({
 
 describe('Passcode Page', () => {
   it('render properly', () => {
-    const { queryByText } = render(
+    const { queryByText } = renderWithPageContext(
       <MemoryRouter initialEntries={['/sign-in/email/passcode-validation']}>
         <Routes>
           <Route path="/:type/:method/passcode-validation" element={<Passcode />} />
@@ -26,7 +27,7 @@ describe('Passcode Page', () => {
   });
 
   it('render with invalid method', () => {
-    const { queryByText } = render(
+    const { queryByText } = renderWithPageContext(
       <MemoryRouter initialEntries={['/sign-in/username/passcode-validation']}>
         <Routes>
           <Route path="/:type/:method/passcode-validation" element={<Passcode />} />
@@ -39,7 +40,7 @@ describe('Passcode Page', () => {
   });
 
   it('render with invalid type', () => {
-    const { queryByText } = render(
+    const { queryByText } = renderWithPageContext(
       <MemoryRouter initialEntries={['/social-register/email/passcode-validation']}>
         <Routes>
           <Route path="/:type/:method/passcode-validation" element={<Passcode />} />

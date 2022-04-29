@@ -1,10 +1,11 @@
 import { Nullable } from '@silverhand/essentials';
-import React from 'react';
+import React, { useContext, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams, useLocation } from 'react-router-dom';
 
 import NavBar from '@/components/NavBar';
 import PasscodeValidation from '@/containers/PasscodeValidation';
+import { PageContext } from '@/hooks/use-page-context';
 import { UserFlow } from '@/types';
 
 import NotFound from '../NotFound';
@@ -15,10 +16,7 @@ type Parameters = {
   method: string;
 };
 
-type StateType = Nullable<{
-  email?: string;
-  sms?: string;
-}>;
+type StateType = Nullable<Record<string, string>>;
 
 const Passcode = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'main_flow' });
@@ -26,6 +24,13 @@ const Passcode = () => {
   const state = useLocation().state as StateType;
   const invalidType = type !== 'sign-in' && type !== 'register';
   const invalidMethod = method !== 'email' && method !== 'sms';
+  const { setToast } = useContext(PageContext);
+
+  useEffect(() => {
+    if (method && !state?.[method]) {
+      setToast(t(method === 'email' ? 'error.invalid_email' : 'error.invalid_phone'));
+    }
+  }, [method, setToast, state, t]);
 
   if (invalidType || invalidMethod) {
     return <NotFound />;
@@ -34,7 +39,7 @@ const Passcode = () => {
   const target = state?.[method];
 
   if (!target) {
-    return null;
+    return <NotFound />;
   }
 
   return (
