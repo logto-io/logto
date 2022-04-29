@@ -406,7 +406,15 @@ const translation = {
       },
       setup_warning: {
         setup: '设置',
-        no_connector: '你尚未添加社交登录连接器。你需要先完成设置才能启用。',
+        no_connector: '',
+        no_connector_sms:
+          'You haven’t set up SMS connectors yet. Your sign in experience won’t go live until you finish the settings first. ',
+        no_connector_email:
+          'You haven’t set up Email connectors yet. Your sign in experience won’t go live until you finish the settings first. ',
+        no_connector_social:
+          'You haven’t set up any social connectors yet. Your sign in experience won’t go live until you finish the settings first. ',
+        no_added_social_connector:
+          'You’ve set up a few social connectors now. Make sure to add some to your sign in experience. Drag and drop to change the order.',
       },
     },
     settings: {

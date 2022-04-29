@@ -1,4 +1,4 @@
-import { SignInMethodKey } from '@logto/schemas';
+import { ConnectorType, SignInMethodKey } from '@logto/schemas';
 import React, { useEffect, useMemo } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -9,6 +9,7 @@ import Select from '@/components/Select';
 import Switch from '@/components/Switch';
 
 import { SignInExperienceForm } from '../types';
+import ConnectorSetupWarning from './ConnectorSetupWarning';
 import ConnectorsTransfer from './ConnectorsTransfer';
 import * as styles from './index.module.scss';
 
@@ -19,6 +20,8 @@ const SignInMethodsForm = () => {
   const { register, watch, control, setValue } = useFormContext<SignInExperienceForm>();
   const primaryMethod = watch('signInMethods.primary');
   const enableSecondary = watch('signInMethods.enableSecondary');
+  const sms = watch('signInMethods.sms');
+  const email = watch('signInMethods.email');
   const social = watch('signInMethods.social');
 
   useEffect(() => {
@@ -49,10 +52,19 @@ const SignInMethodsForm = () => {
               disabled={primaryMethod === method}
               {...register(`signInMethods.${method}`)}
             />
+            {method === SignInMethodKey.Email && email && (
+              <ConnectorSetupWarning type={ConnectorType.Email} />
+            )}
+            {method === SignInMethodKey.SMS && sms && (
+              <ConnectorSetupWarning type={ConnectorType.SMS} />
+            )}
+            {method === SignInMethodKey.Social && social && (
+              <ConnectorSetupWarning type={ConnectorType.Social} />
+            )}
           </div>
         );
       }),
-    [primaryMethod, register, t]
+    [primaryMethod, register, t, email, social, sms]
   );
 
   return (
@@ -74,6 +86,13 @@ const SignInMethodsForm = () => {
           )}
         />
       </FormField>
+      {primaryMethod === SignInMethodKey.SMS && <ConnectorSetupWarning type={ConnectorType.SMS} />}
+      {primaryMethod === SignInMethodKey.Email && (
+        <ConnectorSetupWarning type={ConnectorType.Email} />
+      )}
+      {primaryMethod === SignInMethodKey.Social && (
+        <ConnectorSetupWarning type={ConnectorType.Social} />
+      )}
       {primaryMethod === SignInMethodKey.Social && (
         <div className={styles.primarySocial}>
           <Controller
