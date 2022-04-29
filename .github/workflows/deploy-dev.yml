@@ -39,7 +39,7 @@ jobs:
           config: ${{ secrets.DEV_SSH_CONFIG }}
 
       - name: Rsync folder
-        run: rsync --filter='exclude .git' -r -a ./ $DEV_SERVER_IP:~/logto
+        run: rsync --filter='exclude .git' -r -a --delete-before --ignore-times ./ $DEV_SERVER_IP:~/logto
         env:
           DEV_SERVER_IP: ${{ secrets.DEV_SERVER_IP }}
 
