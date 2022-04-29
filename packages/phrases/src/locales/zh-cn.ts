@@ -403,6 +403,10 @@ const translation = {
           },
         },
       },
+      setup_warning: {
+        setup: '设置',
+        no_connector: '你尚未添加社交登录连接器。你需要先完成设置才能启用。',
+      },
     },
     settings: {
       title: '设置',
