@@ -165,18 +165,18 @@ const ApiResourceDetails = () => {
                   />
                 </FormField>
               </div>
-            </form>
-            <div className={detailsStyles.footer}>
-              <div className={detailsStyles.footerMain}>
-                <Button
-                  isLoading={isSubmitting}
-                  htmlType="submit"
-                  type="primary"
-                  title="admin_console.api_resource_details.save_changes"
-                  size="large"
-                />
+              <div className={detailsStyles.footer}>
+                <div className={detailsStyles.footerMain}>
+                  <Button
+                    isLoading={isSubmitting}
+                    htmlType="submit"
+                    type="primary"
+                    title="admin_console.api_resource_details.save_changes"
+                    size="large"
+                  />
+                </div>
               </div>
-            </div>
+            </form>
           </Card>
         </>
       )}
