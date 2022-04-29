@@ -61,7 +61,8 @@ const translation = {
     },
     error: {
       username_password_mismatch: 'Username and password do not match.',
-      required: '{{field}} is required.',
+      username_required: 'Username is required.',
+      password_required: 'Password is required.',
       username_exists: 'Username already exists.',
       username_should_not_start_with_number: 'Username should not start with a number.',
       username_valid_charset: 'Username should only contain letters, numbers, or underscore.',

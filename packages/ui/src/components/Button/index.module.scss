@@ -15,7 +15,7 @@
 .primary {
   border: none;
   background: var(--color-primary);
-  color: var(--color-base);
+  color: var(--color-primary-button-text);
 
   &.disabled {
     background: var(--color-layer);
@@ -25,7 +25,7 @@
 
 .secondary {
   border: _.border(var(--color-outline));
-  background: var(--color-base);
+  background: transparent;
   color: var(--color-text);
 
   &.disabled {

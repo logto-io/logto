@@ -39,6 +39,7 @@
     &:-webkit-autofill {
       box-shadow: 0 0 0 30px var(--color-control-background) inset;
       transition: background-color 5000s ease-in-out 0s;
+      -webkit-text-fill-color: var(--color-text);
     }
   }
 }
