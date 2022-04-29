@@ -2,7 +2,7 @@ import { ConnectorMetadata } from '@logto/schemas';
 import classNames from 'classnames';
 import React from 'react';
 
-import styles from './SocialIconButton.module.scss';
+import * as styles from './SocialIconButton.module.scss';
 
 type Props = {
   className?: string;
