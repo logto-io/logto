@@ -1,2 +1,0 @@
-### Aliyun SMS README
-placeholder

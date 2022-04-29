@@ -1,7 +1,7 @@
+import { ConnectorType } from '@logto/connector-types';
 import { Passcode, PasscodeType } from '@logto/schemas';
 
 import { getConnectorInstanceByType } from '@/connectors';
-import { ConnectorType } from '@/connectors/types';
 import RequestError from '@/errors/RequestError';
 import {
   deletePasscodesByIds,
@@ -140,6 +140,7 @@ describe('sendPasscode', () => {
       },
       sendMessage,
       validateConfig: jest.fn(),
+      getConfig: jest.fn(),
     });
     const passcode: Passcode = {
       id: 'id',
