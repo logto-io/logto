@@ -6,41 +6,44 @@ export enum LogResult {
 }
 
 export interface BaseLogPayload {
-  sessionId?: string;
   result?: LogResult;
   error?: string;
   ip?: string;
   userAgent?: string;
 }
 
-interface RegisterUsernamePasswordLogPayload extends BaseLogPayload {
+interface CommonFields {
+  sessionId?: string;
+}
+
+interface RegisterUsernamePasswordLogPayload extends CommonFields {
   userId?: string;
   username?: string;
 }
 
-interface RegisterEmailSendPasscodeLogPayload extends BaseLogPayload {
+interface RegisterEmailSendPasscodeLogPayload extends CommonFields {
   email?: string;
   passcode?: Passcode;
 }
 
-interface RegisterEmailLogPayload extends BaseLogPayload {
+interface RegisterEmailLogPayload extends CommonFields {
   email?: string;
   code?: string;
   userId?: string;
 }
 
-interface RegisterSmsSendPasscodeLogPayload extends BaseLogPayload {
+interface RegisterSmsSendPasscodeLogPayload extends CommonFields {
   phone?: string;
   passcode?: Passcode;
 }
 
-interface RegisterSmsLogPayload extends BaseLogPayload {
+interface RegisterSmsLogPayload extends CommonFields {
   phone?: string;
   code?: string;
   userId?: string;
 }
 
-interface RegisterSocialBindLogPayload extends BaseLogPayload {
+interface RegisterSocialBindLogPayload extends CommonFields {
   connectorId?: string;
   userInfo?: object;
   userId?: string;
@@ -53,34 +56,34 @@ interface RegisterSocialLogPayload extends RegisterSocialBindLogPayload {
   redirectTo?: string;
 }
 
-interface SignInUsernamePasswordLogPayload extends BaseLogPayload {
+interface SignInUsernamePasswordLogPayload extends CommonFields {
   userId?: string;
   username?: string;
 }
 
-interface SignInEmailSendPasscodeLogPayload extends BaseLogPayload {
+interface SignInEmailSendPasscodeLogPayload extends CommonFields {
   email?: string;
   passcode?: Passcode;
 }
 
-interface SignInEmailLogPayload extends BaseLogPayload {
+interface SignInEmailLogPayload extends CommonFields {
   email?: string;
   code?: string;
   userId?: string;
 }
 
-interface SignInSmsSendPasscodeLogPayload extends BaseLogPayload {
+interface SignInSmsSendPasscodeLogPayload extends CommonFields {
   phone?: string;
   passcode?: Passcode;
 }
 
-interface SignInSmsLogPayload extends BaseLogPayload {
+interface SignInSmsLogPayload extends CommonFields {
   phone?: string;
   code?: string;
   userId?: string;
 }
 
-interface SignInSocialBindLogPayload extends BaseLogPayload {
+interface SignInSocialBindLogPayload extends CommonFields {
   connectorId?: string;
   userInfo?: object;
   userId?: string;

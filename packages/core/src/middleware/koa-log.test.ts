@@ -19,8 +19,6 @@ jest.mock('nanoid', () => ({
 
 describe('koaLog middleware', () => {
   const insertLogMock = insertLog as jest.Mock;
-  const next = jest.fn();
-
   const type = 'SignInUsernamePassword';
   const payload: LogPayload = {
     userId: 'foo',
@@ -42,40 +40,9 @@ describe('koaLog middleware', () => {
     };
     ctx.request.ip = ip;
 
-    next.mockImplementationOnce(async () => {
+    const next = async () => {
       ctx.log(type, payload);
-    });
-
-    await koaLog()(ctx, next);
-
-    expect(insertLogMock).toBeCalledWith({
-      id: nanoIdMock,
-      type,
-      payload: {
-        ...payload,
-        result: LogResult.Success,
-        ip,
-        userAgent,
-      },
-    });
-  });
-
-  it('should not block request if insertLog throws error', async () => {
-    const ctx: WithLogContext<ReturnType<typeof createContextWithRouteParameters>> = {
-      ...createContextWithRouteParameters({ headers: { 'user-agent': userAgent } }),
-      log, // Bypass middleware context type assert
     };
-    ctx.request.ip = ip;
-
-    const error = new Error('Failed to insert log');
-    insertLogMock.mockImplementationOnce(async () => {
-      throw error;
-    });
-
-    next.mockImplementationOnce(async () => {
-      ctx.log(type, payload);
-    });
-
     await koaLog()(ctx, next);
 
     expect(insertLogMock).toBeCalledWith({
@@ -99,11 +66,10 @@ describe('koaLog middleware', () => {
 
     const error = new Error('next error');
 
-    next.mockImplementationOnce(async () => {
+    const next = async () => {
       ctx.log(type, payload);
       throw error;
-    });
-
+    };
     await expect(koaLog()(ctx, next)).rejects.toMatchError(error);
 
     expect(insertLogMock).toBeCalledWith({

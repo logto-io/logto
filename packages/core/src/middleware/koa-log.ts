@@ -5,48 +5,58 @@ import { nanoid } from 'nanoid';
 
 import { insertLog } from '@/queries/log';
 
-type MergeLog = <T extends LogType>(type: T, payload: LogPayloads[T] & BaseLogPayload) => void;
+type MergeLog = <T extends LogType>(type: T, payload: LogPayloads[T]) => void;
 
 export type WithLogContext<ContextT> = ContextT & { log: MergeLog };
 
 type Logger = {
   type?: LogType;
-  basePayload: BaseLogPayload;
-  logPayload: LogPayload;
-  set: (base: BaseLogPayload) => void;
+  basePayload?: BaseLogPayload;
+  payload: LogPayload;
+  set: (basePayload: BaseLogPayload) => void;
   log: MergeLog;
-  save: () => Promise<void> | undefined;
+  save: () => Promise<void>;
 };
 
 /* eslint-disable @silverhand/fp/no-mutation */
-const logger: Logger = {
-  type: undefined,
-  basePayload: {},
-  logPayload: {},
-  set: (basePayload) => {
-    logger.basePayload = { ...logger.basePayload, ...basePayload };
-  },
-  log: (type, payload) => {
-    if (type !== logger.type) {
-      logger.type = type;
-      logger.logPayload = payload;
+const initLogger = (basePayload?: Readonly<BaseLogPayload>) => {
+  const logger: Logger = {
+    type: undefined,
+    basePayload,
+    payload: {},
+    set: (basePayload) => {
+      logger.basePayload = {
+        ...logger.basePayload,
+        ...basePayload,
+      };
+    },
+    log: (type, payload) => {
+      if (type !== logger.type) {
+        logger.type = type;
+        logger.payload = payload;
 
-      return;
-    }
+        return;
+      }
 
-    logger.logPayload = deepmerge(logger.logPayload, payload);
-  },
-  save: () => {
-    if (!logger.type) {
-      return;
-    }
+      logger.payload = deepmerge(logger.payload, payload);
+    },
+    save: async () => {
+      if (!logger.type) {
+        return;
+      }
 
-    return insertLog({
-      id: nanoid(),
-      type: logger.type,
-      payload: { ...logger.basePayload, ...logger.logPayload },
-    });
-  },
+      await insertLog({
+        id: nanoid(),
+        type: logger.type,
+        payload: {
+          ...logger.basePayload,
+          ...logger.payload,
+        },
+      });
+    },
+  };
+
+  return logger;
 };
 /* eslint-enable @silverhand/fp/no-mutation */
 
@@ -61,7 +71,7 @@ export default function koaLog<StateT, ContextT, ResponseBodyT>(): MiddlewareTyp
       headers: { 'user-agent': userAgent },
     } = ctx.request;
 
-    logger.set({ ip, userAgent });
+    const logger = initLogger({ result: LogResult.Success, ip, userAgent });
     ctx.log = logger.log;
 
     try {
@@ -70,7 +80,7 @@ export default function koaLog<StateT, ContextT, ResponseBodyT>(): MiddlewareTyp
       logger.set({ result: LogResult.Error, error: String(error) });
       throw error;
     } finally {
-      void logger.save();
+      await logger.save();
     }
   };
 }
