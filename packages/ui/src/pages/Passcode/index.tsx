@@ -1,11 +1,10 @@
 import { Nullable } from '@silverhand/essentials';
-import React, { useContext } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams, useLocation } from 'react-router-dom';
 
 import NavBar from '@/components/NavBar';
 import PasscodeValidation from '@/containers/PasscodeValidation';
-import { PageContext } from '@/hooks/use-page-context';
 import { UserFlow } from '@/types';
 
 import NotFound from '../NotFound';
@@ -27,7 +26,6 @@ const Passcode = () => {
   const state = useLocation().state as StateType;
   const invalidType = type !== 'sign-in' && type !== 'register';
   const invalidMethod = method !== 'email' && method !== 'sms';
-  const { setToast } = useContext(PageContext);
 
   if (invalidType || invalidMethod) {
     return <NotFound />;
@@ -36,8 +34,6 @@ const Passcode = () => {
   const target = state?.[method];
 
   if (!target) {
-    setToast(t(method === 'email' ? 'error.invalid_email' : 'error.invalid_phone'));
-
     return null;
   }
 
