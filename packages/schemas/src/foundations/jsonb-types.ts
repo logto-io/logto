@@ -135,9 +135,9 @@ export type ConnectorIds = z.infer<typeof connectorIdsGuard>;
  */
 
 export enum AppearanceMode {
-  SyncWithSystem = 'SyncWithSystem',
-  LightMode = 'LightMode',
-  DarkMode = 'DarkMode',
+  SyncWithSystem = 'system',
+  LightMode = 'light',
+  DarkMode = 'dark',
 }
 
 export const adminConsoleConfigGuard = z.object({

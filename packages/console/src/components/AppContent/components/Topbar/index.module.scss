@@ -7,8 +7,10 @@
   display: flex;
   align-items: center;
 
-  img {
-    height: 32px;
+  .logo {
+    width: 94px;
+    height: 30px;
+    fill: var(--color-text);
   }
 
   .line {

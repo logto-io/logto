@@ -111,11 +111,11 @@
   --color-background: var(--color-neutral-99);
   --color-on-background: var(--color-neutral-10);
   --color-surface: var(--color-neutral-99);
-  --color-surface-1: #ecebf6; // N99 + 2% NV50 + 5% P40
-  --color-surface-2: #e8e6f6; // N99 + 2% NV50 + 8% P40
-  --color-surface-3: #e3e0f6; // N99 + 2% NV50 + 11% P40
-  --color-surface-4: #e2def6; // N99 + 2% NV50 + 12% P40
-  --color-surface-5: #dcd6f5; // N99 + 2% NV50 + 16% P40
+  --color-surface-1: #ecebf6; // Neutral-99 + 2% Neutral-Variant-50 + 5% Primary-40
+  --color-surface-2: #e8e6f6; // Neutral-99 + 2% Neutral-Variant-50 + 8% Primary-40
+  --color-surface-3: #e3e0f6; // Neutral-99 + 2% Neutral-Variant-50 + 11% Primary-40
+  --color-surface-4: #dfdaf5; // Neutral-99 + 2% Neutral-Variant-50 + 14% Primary-40
+  --color-surface-5: #dcd6f5; // Neutral-99 + 2% Neutral-Variant-50 + 16% Primary-40
   --color-on-surface: var(--color-neutral-10);
   --color-surface-variant: var(--color-neutral-variant-90);
   --color-on-surface-variant: var(--color-neutral-variant-30);
@@ -134,19 +134,20 @@
   --color-layer-1: var(--color-all-100);
   --color-layer-2: var(--color-neutral-95);
   --color-inverse-on-surface: var(--color-neutral-95);
-  --color-hover: rgba(25, 28, 29, 8%); // 8% N10
-  --color-pressed: rgba(25, 28, 29, 12%); // 12% N10
-  --color-focused: rgba(25, 28, 29, 16%); // 16% N10
-  --color-hover-variant: rgba(93, 52, 242, 8%); // 8% P40
-  --color-pressed-variant: rgba(93, 52, 242, 12%); // 12% P40
-  --color-focused-variant: rgba(93, 52, 242, 16%); // 16% P40
-  --shadow-light-s1: 0 4px 8px rgba(66, 41, 159, 8%);
-  --shadow-light-s2: 0 4px 12px rgba(66, 41, 159, 12%);
-  --shadow-light-s2-reversed: 0 -4px 12px rgba(66, 41, 159, 12%);
-  --shadow-light-s3: 0 4px 16px rgba(66, 41, 159, 16%);
+  --color-hover: rgba(25, 28, 29, 8%); // 8% Neutral-10
+  --color-pressed: rgba(25, 28, 29, 12%); // 12% Neutral-10
+  --color-focused: rgba(25, 28, 29, 16%); // 16% Neutral-10
+  --color-hover-variant: rgba(93, 52, 242, 8%); // 8% Primary-40
+  --color-pressed-variant: rgba(93, 52, 242, 12%); // 12% Primary-40
+  --color-focused-variant: rgba(93, 52, 242, 16%); // 16% Primary-40
 
-  // Client specific variables
-  --color-danger-focused: rgba(186, 27, 27, 16%); // 16% ER40
+  // Shadows
+  --shadow-1: 0 4px 8px rgba(66, 41, 159, 8%);
+  --shadow-2: 0 4px 12px rgba(66, 41, 159, 12%);
+  --shadow-3: 0 4px 16px rgba(66, 41, 159, 16%);
+
+  // Client specific variables (not available in design system)
+  --color-danger-focused: rgba(186, 27, 27, 16%); // 16% Error-40
 }
 
 @mixin dark-theme {
@@ -262,11 +263,11 @@
   --color-background: var(--color-neutral-99);
   --color-on-background: var(--color-neutral-10);
   --color-surface: var(--color-neutral-99);
-  --color-surface-1: #25272b; // N99 + 2% NV50 + 5% P40
-  --color-surface-2: #2a2c32; // N99 + 2% NV50 + 8% P40
-  --color-surface-3: #2f3039; // N99 + 2% NV50 + 11% P40
-  --color-surface-4: #31323b; // N99 + 2% NV50 + 12% P40
-  --color-surface-5: #383844; // N99 + 2% NV50 + 16% P40
+  --color-surface-1: #25272b; // Neutral-99 + 2% Neutral-Variant-50 + 5% Primary-40
+  --color-surface-2: #2a2c32; // Neutral-99 + 2% Neutral-Variant-50 + 8% Primary-40
+  --color-surface-3: #2f3039; // Neutral-99 + 2% Neutral-Variant-50 + 11% Primary-40
+  --color-surface-4: #34353f; // Neutral-99 + 2% Neutral-Variant-50 + 14% Primary-40
+  --color-surface-5: #383844; // Neutral-99 + 2% Neutral-Variant-50 + 16% Primary-40
   --color-on-surface: var(--color-neutral-10);
   --color-surface-variant: var(--color-neutral-variant-90);
   --color-on-surface-variant: var(--color-neutral-variant-30);
@@ -281,21 +282,22 @@
   --color-border: var(--color-neutral-80);
   --color-divider: var(--color-neutral-90);
   --color-disabled: var(--color-neutral-80);
-  --color-base: #1e2124; // N99 + 3% P40
+  --color-base: var(--color-surface);
   --color-layer-1: var(--color-surface-2);
   --color-layer-2: var(--color-surface-3);
   --color-inverse-on-surface: var(--color-neutral-95);
-  --color-hover: rgba(247, 248, 248, 8%); // 8% N10
-  --color-pressed: rgba(247, 248, 248, 12%); // 12% N10
-  --color-focused: rgba(247, 248, 248, 16%); // 16% N10
-  --color-hover-variant: rgba(202, 190, 255, 8%); // 8% P40
-  --color-pressed-variant: rgba(202, 190, 255, 12%); // 12% P40
-  --color-focused-variant: rgba(202, 190, 255, 16%); // 16% P40
-  --shadow-light-s1: 0 4px 8px rgba(66, 41, 159, 8%);
-  --shadow-light-s2: 0 4px 12px rgba(66, 41, 159, 12%);
-  --shadow-light-s2-reversed: 0 -4px -12px rgba(66, 41, 159, 12%);
-  --shadow-light-s3: 0 4px 16px rgba(66, 41, 159, 16%);
+  --color-hover: rgba(247, 248, 248, 8%); // 8% Neutral-10
+  --color-pressed: rgba(247, 248, 248, 12%); // 12% Neutral-10
+  --color-focused: rgba(247, 248, 248, 16%); // 16% Neutral-10
+  --color-hover-variant: rgba(202, 190, 255, 8%); // 8% Primary-40
+  --color-pressed-variant: rgba(202, 190, 255, 12%); // 12% Primary-40
+  --color-focused-variant: rgba(202, 190, 255, 16%); // 16% Primary-40
 
-  // Client specific variables
-  --color-danger-focused: rgba(255, 180, 169, 16%); // 16% ER40
+  // Shadows
+  --shadow-1: 0 4px 8px rgba(66, 41, 159, 8%);
+  --shadow-2: 0 4px 12px rgba(66, 41, 159, 12%);
+  --shadow-3: 0 4px 16px rgba(66, 41, 159, 16%);
+
+  // Client specific variables (not available in design system)
+  --color-danger-focused: rgba(255, 180, 169, 16%); // 16% Error-40
 }

@@ -1,4 +1,3 @@
-@use '@/scss/colors' as colors;
 @use '@/scss/underscore' as _;
 
 .app {
@@ -19,13 +18,4 @@
     flex-grow: 1;
     overflow-y: auto;
   }
-}
-
-.light {
-  @include colors.light-theme;
-}
-
-// Currently not in use
-.dark {
-  @include colors.dark-theme;
 }

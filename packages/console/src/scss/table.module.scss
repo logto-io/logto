@@ -1,7 +1,7 @@
 @use '@/scss/underscore' as _;
 
 .base {
-  box-shadow: var(--shadow-light-s1);
+  box-shadow: var(--shadow-1);
 }
 
 tr.clickable {
@@ -16,7 +16,7 @@ tr.clickable {
   overflow-y: auto;
   border: 1px solid var(--color-neutral-90);
   border-radius: _.unit(2);
-  box-shadow: var(--shadow-light-s1);
+  box-shadow: var(--shadow-1);
 
   table {
     border: none;
@@ -27,7 +27,7 @@ tr.clickable {
       top: 0;
 
       th {
-        background: var(--color-on-primary);
+        background: var(--color-layer-1);
       }
     }
   }
