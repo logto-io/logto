@@ -28,11 +28,12 @@ describe('<CreateAccount/>', () => {
   });
 
   test('username and password are required', () => {
-    const { queryAllByText, getByText } = renderWithPageContext(<CreateAccount />);
+    const { queryByText, getByText } = renderWithPageContext(<CreateAccount />);
     const submitButton = getByText('action.create');
     fireEvent.click(submitButton);
 
-    expect(queryAllByText('required')).toHaveLength(2);
+    expect(queryByText('username_required')).not.toBeNull();
+    expect(queryByText('password_required')).not.toBeNull();
 
     expect(register).not.toBeCalled();
   });

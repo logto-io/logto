@@ -27,14 +27,13 @@ describe('<UsernameSignin>', () => {
   });
 
   test('required inputs with error message', () => {
-    const { queryByText, queryAllByText, getByText, container } = renderWithPageContext(
-      <UsernameSignin />
-    );
+    const { queryByText, getByText, container } = renderWithPageContext(<UsernameSignin />);
     const submitButton = getByText('action.sign_in');
 
     fireEvent.click(submitButton);
 
-    expect(queryAllByText('required')).toHaveLength(2);
+    expect(queryByText('username_required')).not.toBeNull();
+    expect(queryByText('password_required')).not.toBeNull();
 
     const usernameInput = container.querySelector('input[name="username"]');
     const passwordInput = container.querySelector('input[name="password"]');
