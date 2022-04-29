@@ -66,6 +66,8 @@ const translation = {
       username_valid_charset: '用户名只能包含英文字母、数字或下划线。',
       invalid_email: '无效的邮箱。',
       invalid_phone: '无效的手机号。',
+      invalid_connector_auth: '登录失败',
+      missing_auth_data: '未找到有效的登录信息',
       password_min_length: '密码最少需要{{min}}个字符。',
       passwords_do_not_match: '密码不匹配。',
       agree_terms_required: '你需要同意使用条款以继续。',

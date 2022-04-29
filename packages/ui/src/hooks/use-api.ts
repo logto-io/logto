@@ -46,13 +46,13 @@ function useApi<Args extends any[], Response>(
           return;
         }
 
-        // TODO: handle unknown server error
-        throw error;
+        setToast(t('error.unknown'));
+        console.log(error);
       } finally {
         setLoading(false);
       }
     },
-    [api, setLoading]
+    [api, setLoading, setToast, t]
   );
 
   useEffect(() => {

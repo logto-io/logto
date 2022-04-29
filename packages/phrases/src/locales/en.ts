@@ -66,6 +66,8 @@ const translation = {
       username_valid_charset: 'Username should only contain letters, numbers, or underscore.',
       invalid_email: 'The email is invalid',
       invalid_phone: 'The phone number is invalid',
+      invalid_connector_auth: 'The authorization is invalid',
+      missing_auth_data: 'The authorization code or state is missing',
       password_min_length: 'Password requires a minimum of {{min}} characters.',
       passwords_do_not_match: 'Passwords do not match.',
       agree_terms_required: 'You must agree to the Terms of Use before continuing.',
