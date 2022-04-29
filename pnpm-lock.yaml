@@ -853,6 +853,9 @@ importers:
       react-timer-hook: ^3.0.5
       stylelint: ^13.13.1
       typescript: ^4.6.2
+      use-debounced-loader: ^0.1.1
+    dependencies:
+      use-debounced-loader: 0.1.1_react@17.0.2
     devDependencies:
       '@logto/jest-config': link:../jest-config
       '@logto/phrases': link:../phrases
@@ -19518,6 +19521,15 @@ packages:
     dependencies:
       react: 17.0.2
     dev: true
+
+  /use-debounced-loader/0.1.1_react@17.0.2:
+    resolution: {integrity: sha512-FbY/ynor7wZV55v1EvvAvu8CvSoEKT1azS2zFb/aLlL0vySbqTM7x9fIcaOJN++E52mVINNDe2VmWWd+Q00S+A==}
+    engines: {node: '>=10'}
+    peerDependencies:
+      react: '>=16'
+    dependencies:
+      react: 17.0.2
+    dev: false
 
   /use-isomorphic-layout-effect/1.1.2_cfedea9b3ed0faf0dded75c187406c5e:
     resolution: {integrity: sha512-49L8yCO3iGT/ZF9QttjwLF/ZD9Iwto5LnH5LmEdk/6cFmXddqi2ulF0edxTwjj+7mqvpVVGQWvbXZdn32wRSHA==}

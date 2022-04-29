@@ -1,5 +1,6 @@
 import classNames from 'classnames';
 import React, { ReactNode, useCallback, useContext } from 'react';
+import { useDebouncedLoader } from 'use-debounced-loader';
 
 import LoadingLayer from '@/components/LoadingLayer';
 import Toast from '@/components/Toast';
@@ -15,6 +16,7 @@ export type Props = {
 const AppContent = ({ children }: Props) => {
   const theme = useTheme();
   const { toast, loading, setToast } = useContext(PageContext);
+  const debouncedLoading = useDebouncedLoader(loading);
 
   // Prevent internal eventListener rebind
   const hideToast = useCallback(() => {
@@ -25,7 +27,7 @@ const AppContent = ({ children }: Props) => {
     <main className={classNames(styles.content, styles.universal, styles.mobile, styles[theme])}>
       {children}
       <Toast message={toast} isVisible={Boolean(toast)} callback={hideToast} />
-      {loading && <LoadingLayer />}
+      {debouncedLoading && <LoadingLayer />}
     </main>
   );
 };
