@@ -407,6 +407,11 @@ const translation = {
           },
         },
       },
+      setup_warning: {
+        setup: 'Set up',
+        no_connector:
+          'You haven’t set up any social connectors yet. Your sign in experience won’t go live until you finish the settings first. ',
+      },
     },
     settings: {
       title: 'settings',

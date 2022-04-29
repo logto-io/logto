@@ -1,0 +1,35 @@
+@use '@/scss/underscore' as _;
+
+.alert {
+  padding: _.unit(3) _.unit(4);
+  margin: _.unit(2) 0;
+  font: var(--font-body-medium);
+  display: flex;
+  border-radius: 8px;
+  align-items: center;
+
+  .icon {
+    width: 20px;
+    height: 20px;
+  }
+
+  .content {
+    flex: 1;
+    margin: 0 _.unit(3);
+  }
+
+  .action {
+    a {
+      color: var(--color-text);
+      text-decoration: underline;
+    }
+  }
+
+  &.info {
+    background: var(--color-surface-variant);
+
+    .icon {
+      color: var(--color-neutral-variant-60);
+    }
+  }
+}
