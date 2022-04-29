@@ -6,7 +6,7 @@ export type MultiTextInputError = {
 export type MultiTextInputRule = {
   required?: string;
   pattern?: {
-    regex: RegExp;
+    verify: (value: string) => boolean;
     message: string;
   };
 };

@@ -29,11 +29,9 @@ export const oidcModelInstancePayloadGuard = z
 
 export type OidcModelInstancePayload = z.infer<typeof oidcModelInstancePayloadGuard>;
 
-const noSpaceRegex = /^\S*$/;
-
 export const oidcClientMetadataGuard = z.object({
-  redirectUris: z.string().regex(noSpaceRegex).array(),
-  postLogoutRedirectUris: z.string().regex(noSpaceRegex).array(),
+  redirectUris: z.string().url().array(),
+  postLogoutRedirectUris: z.string().url().array(),
   logoUri: z.string().optional(),
 });
 
