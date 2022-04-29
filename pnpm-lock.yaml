@@ -543,6 +543,15 @@ importers:
 
   packages/core:
     specifiers:
+      '@logto/connector-alipay': ^0.1.0
+      '@logto/connector-aliyun-dm': ^0.1.0
+      '@logto/connector-aliyun-sms': ^0.1.0
+      '@logto/connector-facebook': ^0.1.0
+      '@logto/connector-github': ^0.1.0
+      '@logto/connector-google': ^0.1.0
+      '@logto/connector-types': ^0.1.0
+      '@logto/connector-wechat': ^0.1.0
+      '@logto/connector-wechat-native': ^0.1.0
       '@logto/jest-config': ^0.1.0
       '@logto/phrases': ^0.1.0
       '@logto/schemas': ^0.1.0
@@ -603,6 +612,15 @@ importers:
       typescript: ^4.6.2
       zod: ^3.14.3
     dependencies:
+      '@logto/connector-alipay': link:../connector-alipay
+      '@logto/connector-aliyun-dm': link:../connector-aliyun-dm
+      '@logto/connector-aliyun-sms': link:../connector-aliyun-sms
+      '@logto/connector-facebook': link:../connector-facebook
+      '@logto/connector-github': link:../connector-github
+      '@logto/connector-google': link:../connector-google
+      '@logto/connector-types': link:../connector-types
+      '@logto/connector-wechat': link:../connector-wechat
+      '@logto/connector-wechat-native': link:../connector-wechat-native
       '@logto/phrases': link:../phrases
       '@logto/schemas': link:../schemas
       '@silverhand/essentials': 1.1.2
