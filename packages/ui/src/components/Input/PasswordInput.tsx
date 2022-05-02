@@ -1,8 +1,9 @@
 import classNames from 'classnames';
 import React, { useState, useRef, HTMLProps } from 'react';
 
-import ErrorMessage, { ErrorType } from '../ErrorMessage';
-import { PrivacyIcon } from '../Icons';
+import ErrorMessage, { ErrorType } from '@/components/ErrorMessage';
+import { PrivacyIcon } from '@/components/Icons';
+
 import * as styles from './index.module.scss';
 
 export type Props = Omit<HTMLProps<HTMLInputElement>, 'type'> & {

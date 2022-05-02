@@ -9,7 +9,8 @@ import React, {
   ClipboardEventHandler,
 } from 'react';
 
-import ErrorMessage from '../ErrorMessage';
+import ErrorMessage from '@/components/ErrorMessage';
+
 import * as styles from './index.module.scss';
 
 export const defaultLength = 6;

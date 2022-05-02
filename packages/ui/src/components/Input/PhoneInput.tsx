@@ -1,10 +1,10 @@
 import classNames from 'classnames';
 import React, { useState, useMemo, useRef } from 'react';
 
+import ErrorMessage, { ErrorType } from '@/components/ErrorMessage';
+import { ClearIcon, DownArrowIcon } from '@/components/Icons';
 import { CountryCallingCode, CountryMetaData } from '@/hooks/use-phone-number';
 
-import ErrorMessage, { ErrorType } from '../ErrorMessage';
-import { ClearIcon, DownArrowIcon } from '../Icons';
 import * as styles from './index.module.scss';
 import * as phoneInputStyles from './phoneInput.module.scss';
 

@@ -2,7 +2,7 @@ import classNames from 'classnames';
 import React, { ReactNode } from 'react';
 import ReactModal from 'react-modal';
 
-import { ClearIcon } from '@/components/Icons';
+import { CloseIcon } from '@/components/Icons';
 
 import * as modalStyles from '../../scss/modal.module.scss';
 import * as styles from './index.module.scss';
@@ -29,7 +29,7 @@ const Drawer = ({ className, isOpen = false, children, onClose }: Props) => {
     >
       <div className={styles.container}>
         <div className={styles.header}>
-          <ClearIcon className={styles.closeIcon} onClick={onClose} />
+          <CloseIcon className={styles.closeIcon} onClick={onClose} />
         </div>
         {children}
       </div>

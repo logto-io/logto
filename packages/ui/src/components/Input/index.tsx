@@ -1,8 +1,9 @@
 import classNames from 'classnames';
 import React, { useState, HTMLProps } from 'react';
 
-import ErrorMessage, { ErrorType } from '../ErrorMessage';
-import { ClearIcon } from '../Icons';
+import ErrorMessage, { ErrorType } from '@/components/ErrorMessage';
+import { ClearIcon } from '@/components/Icons';
+
 import * as styles from './index.module.scss';
 
 export type Props = HTMLProps<HTMLInputElement> & {

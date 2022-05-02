@@ -1,6 +1,7 @@
 import React from 'react';
 
-import { LoadingIcon } from '../Icons';
+import { LoadingIcon } from '@/components/Icons';
+
 import * as styles from './index.module.scss';
 
 const LoadingLayer = () => (

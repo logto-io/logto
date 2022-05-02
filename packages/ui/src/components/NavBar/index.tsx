@@ -1,7 +1,8 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { NavArrowIcon } from '../Icons';
+import { NavArrowIcon } from '@/components/Icons';
+
 import * as styles from './index.module.scss';
 
 type Props = {
