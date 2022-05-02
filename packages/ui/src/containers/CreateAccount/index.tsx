@@ -5,7 +5,6 @@ import { useTranslation } from 'react-i18next';
 import { register } from '@/apis/register';
 import Button from '@/components/Button';
 import Input from '@/components/Input';
-import PasswordInput from '@/components/Input/PasswordInput';
 import TermsOfUse from '@/containers/TermsOfUse';
 import useApi, { ErrorHandlers } from '@/hooks/use-api';
 import useForm from '@/hooks/use-form';
@@ -89,23 +88,29 @@ const CreateAccount = ({ className }: Props) => {
           setFieldValue((state) => ({ ...state, username: '' }));
         }}
       />
-      <PasswordInput
-        forceHidden
+      <Input
         className={styles.inputField}
         name="password"
+        type="password"
         autoComplete="current-password"
         placeholder={t('input.password')}
         {...fieldRegister('password', passwordValidation)}
+        onClear={() => {
+          setFieldValue((state) => ({ ...state, password: '' }));
+        }}
       />
-      <PasswordInput
-        forceHidden
+      <Input
         className={classNames(styles.inputField, styles.confirmPassword)}
         name="confirm_password"
+        type="password"
         autoComplete="current-password"
         placeholder={t('input.confirm_password')}
         {...fieldRegister('confirmPassword', (confirmPassword) =>
           confirmPasswordValidation(fieldValue.password, confirmPassword)
         )}
+        onClear={() => {
+          setFieldValue((state) => ({ ...state, confirmPassword: '' }));
+        }}
       />
       <TermsOfUse className={styles.terms} />
 

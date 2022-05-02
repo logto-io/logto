@@ -9,18 +9,9 @@ import * as styles from './index.module.scss';
 export type Props = Omit<HTMLProps<HTMLInputElement>, 'type'> & {
   className?: string;
   error?: ErrorType;
-  forceHidden?: boolean;
 };
 
-const PasswordInput = ({
-  className,
-  value,
-  error,
-  forceHidden = false,
-  onFocus,
-  onBlur,
-  ...rest
-}: Props) => {
+const PasswordInput = ({ className, value, error, onFocus, onBlur, ...rest }: Props) => {
   // Toggle the password visibility
   const [type, setType] = useState('password');
   const [onInputFocus, setOnInputFocus] = useState(false);
@@ -46,7 +37,7 @@ const PasswordInput = ({
           }}
           {...rest}
         />
-        {!forceHidden && value && onInputFocus && (
+        {value && onInputFocus && (
           <PrivacyIcon
             className={styles.actionButton}
             type={iconType}
