@@ -3,6 +3,15 @@ import { ErrorType } from '@/components/ErrorMessage';
 const usernameRegex = /^[A-Z_a-z-][\w-]*$/;
 const emailRegex = /^\S+@\S+\.\S+$/;
 
+export const requiredValidation = (
+  type: 'username' | 'password',
+  value: string
+): ErrorType | undefined => {
+  if (!value) {
+    return type === 'username' ? 'username_required' : 'password_required';
+  }
+};
+
 export const usernameValidation = (username: string): ErrorType | undefined => {
   if (!username) {
     return 'username_required';
