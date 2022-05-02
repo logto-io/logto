@@ -48,7 +48,7 @@ export const SecondarySection = ({
   if (primarySignInMethod === 'social' && localMethods.length > 0) {
     return (
       <>
-        <Divider label="description.continue_with" className={styles.divider} />
+        <Divider label="description.or" className={styles.divider} />
         <SignInMethodsLink signInMethods={localMethods} className={styles.otherMethodsLink} />
       </>
     );
