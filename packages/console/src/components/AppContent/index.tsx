@@ -8,24 +8,9 @@ import Sidebar from './components/Sidebar';
 import Topbar from './components/Topbar';
 import * as styles from './index.module.scss';
 
-type Theme = 'light' | 'dark';
-
-type Props = {
-  theme: Theme;
-};
-
-const AppContent = ({ theme }: Props) => {
+const AppContent = () => {
   const { isAuthenticated, signIn } = useLogto();
   const href = useHref('/callback');
-
-  useEffect(() => {
-    const className = styles[theme] ?? '';
-    document.body.classList.add(className);
-
-    return () => {
-      document.body.classList.remove(className);
-    };
-  }, [theme]);
 
   useEffect(() => {
     if (!isAuthenticated) {

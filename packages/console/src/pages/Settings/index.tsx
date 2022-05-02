@@ -14,6 +14,7 @@ import FormField from '@/components/FormField';
 import Select from '@/components/Select';
 import TabNav, { TabNavLink } from '@/components/TabNav';
 import TextInput from '@/components/TextInput';
+import { themeStorageKey } from '@/consts';
 import useApi, { RequestError } from '@/hooks/use-api';
 import * as detailsStyles from '@/scss/details.module.scss';
 
@@ -50,6 +51,7 @@ const Settings = () => {
       })
       .json<Setting>();
     void mutate(updatedData);
+    localStorage.setItem(themeStorageKey, updatedData.adminConsole.appearanceMode);
     toast.success(t('settings.saved'));
   });
 

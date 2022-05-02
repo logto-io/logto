@@ -415,7 +415,7 @@ const translation = {
       },
     },
     settings: {
-      title: 'settings',
+      title: 'Settings',
       description: 'Global settings and others',
       tabs: {
         general: 'General',

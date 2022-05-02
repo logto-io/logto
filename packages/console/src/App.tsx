@@ -1,13 +1,16 @@
 import { LogtoProvider } from '@logto/react';
+import { AppearanceMode, Setting } from '@logto/schemas';
 import React, { useEffect } from 'react';
 import { BrowserRouter, Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
-import { SWRConfig } from 'swr';
+import useSWR, { SWRConfig } from 'swr';
 import './scss/normalized.scss';
 
+import * as styles from './App.module.scss';
 import AppContent from './components/AppContent';
 import { getPath, sections } from './components/AppContent/components/Sidebar';
 import Toast from './components/Toast';
-import { logtoApiResource } from './consts/api';
+import { themeStorageKey, logtoApiResource } from './consts';
+import { RequestError } from './hooks/use-api';
 import useSwrFetcher from './hooks/use-swr-fetcher';
 import initI18n from './i18n/init';
 import ApiResourceDetails from './pages/ApiResourceDetails';
@@ -26,11 +29,29 @@ import Users from './pages/Users';
 const isBasenameNeeded = process.env.NODE_ENV !== 'development' || process.env.PORT === '5002';
 
 void initI18n();
+const defaultTheme = localStorage.getItem(themeStorageKey) ?? AppearanceMode.SyncWithSystem;
 
 const Main = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const fetcher = useSwrFetcher();
+  const { data } = useSWR<Setting, RequestError>('/api/settings');
+
+  useEffect(() => {
+    const theme = data?.adminConsole.appearanceMode ?? defaultTheme;
+    const isFollowSystem = theme === AppearanceMode.SyncWithSystem;
+    const className = styles[theme] ?? '';
+
+    if (!isFollowSystem) {
+      document.body.classList.add(className);
+    }
+
+    return () => {
+      if (!isFollowSystem) {
+        document.body.classList.remove(className);
+      }
+    };
+  }, [data?.adminConsole.appearanceMode]);
 
   useEffect(() => {
     if (location.pathname === '/') {
@@ -43,7 +64,7 @@ const Main = () => {
       <Toast />
       <Routes>
         <Route path="callback" element={<Callback />} />
-        <Route element={<AppContent theme="light" />}>
+        <Route element={<AppContent />}>
           <Route path="*" element={<NotFound />} />
           <Route path="applications">
             <Route index element={<Applications />} />

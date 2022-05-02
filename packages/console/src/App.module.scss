@@ -1,0 +1,21 @@
+@use '@/scss/colors' as colors;
+
+.light {
+  @include colors.light-theme;
+}
+
+.dark {
+  @include colors.dark-theme;
+}
+
+@media (prefers-color-scheme: light) {
+  body {
+    @include colors.light-theme;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  body {
+    @include colors.dark-theme;
+  }
+}
