@@ -19,5 +19,10 @@
   ],
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": true,
-  }
+  },
+  "cSpell.words": [
+    "Alipay",
+    "Logto",
+    "Passwordless"
+  ]
 }
