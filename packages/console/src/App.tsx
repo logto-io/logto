@@ -54,6 +54,12 @@ const Main = () => {
   }, [data?.adminConsole.appearanceMode]);
 
   useEffect(() => {
+    (async () => {
+      void initI18n(data?.adminConsole.language);
+    })();
+  }, [data?.adminConsole.language]);
+
+  useEffect(() => {
     if (location.pathname === '/') {
       navigate(getPath(sections[0]?.items[0]?.title ?? ''));
     }
