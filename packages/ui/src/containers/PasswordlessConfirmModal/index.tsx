@@ -44,6 +44,7 @@ const PasswordlessConfirmModal = ({ className, isOpen, type, method, value, onCl
     <ConfirmModal
       className={className}
       isOpen={isOpen}
+      confirmText={type === 'sign-in' ? 'action.sign_in' : 'action.continue'}
       onClose={onClose}
       onConfirm={onConfirmHandler}
     >
