@@ -29,4 +29,13 @@
   .socialLinkButton {
     margin-bottom: _.unit(4);
   }
+
+  .expandIcon {
+    width: 20px;
+    height: 20px;
+
+    &.expanded {
+      transform: rotate(180deg);
+    }
+  }
 }
