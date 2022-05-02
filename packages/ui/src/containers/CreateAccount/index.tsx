@@ -99,7 +99,7 @@ const CreateAccount = ({ className }: Props) => {
       />
       <PasswordInput
         forceHidden
-        className={styles.inputField}
+        className={classNames(styles.inputField, styles.confirmPassword)}
         name="confirm_password"
         autoComplete="current-password"
         placeholder={t('input.confirm_password')}
