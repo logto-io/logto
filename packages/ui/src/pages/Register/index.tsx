@@ -5,8 +5,8 @@ import { useParams } from 'react-router-dom';
 import NavBar from '@/components/NavBar';
 import CreateAccount from '@/containers/CreateAccount';
 import { PhonePasswordless, EmailPasswordless } from '@/containers/Passwordless';
+import NotFound from '@/pages/NotFound';
 
-import NotFound from '../NotFound';
 import * as styles from './index.module.scss';
 
 type Parameters = {

@@ -6,9 +6,9 @@ import { useParams, useLocation } from 'react-router-dom';
 import NavBar from '@/components/NavBar';
 import PasscodeValidation from '@/containers/PasscodeValidation';
 import { PageContext } from '@/hooks/use-page-context';
+import NotFound from '@/pages/NotFound';
 import { UserFlow } from '@/types';
 
-import NotFound from '../NotFound';
 import * as styles from './index.module.scss';
 
 type Parameters = {
