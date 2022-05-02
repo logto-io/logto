@@ -200,7 +200,6 @@ const Passcode = ({ name, className, value, length = defaultLength, error, onCha
             name={`${name}_${index}`}
             data-id={index}
             value={codes[index]}
-            className={error ? styles.error : undefined}
             type="text"
             inputMode="numeric"
             maxLength={2} // Allow overwrite input

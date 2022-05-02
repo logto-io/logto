@@ -28,10 +28,6 @@
       border: _.border(var(--color-primary));
     }
 
-    &.error {
-      border: _.border(var(--color-error));
-    }
-
     &::placeholder {
       color: var(--color-caption);
     }
