@@ -35,7 +35,9 @@ const Main = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const fetcher = useSwrFetcher();
-  const { data } = useSWR<Setting, RequestError>('/api/settings');
+
+  const settingsFetcher = useSwrFetcher<Setting>();
+  const { data } = useSWR<Setting, RequestError>('/api/settings', settingsFetcher);
 
   useEffect(() => {
     const theme = data?.adminConsole.appearanceMode ?? defaultTheme;
