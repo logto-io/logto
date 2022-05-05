@@ -6,3 +6,4 @@ export { default as LoadingIcon } from './LoadingIcon';
 export { default as NavArrowIcon } from './NavArrowIcon';
 export { default as RadioButtonIcon } from './RadioButtonIcon';
 export { default as ExpandMoreIcon } from './ExpandMoreIcon';
+export { default as ErrorIcon } from './ErrorIcon';

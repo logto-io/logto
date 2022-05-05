@@ -1,16 +1,29 @@
 @use '@/scss/underscore' as _;
 
-.wrapper {
-  position: relative;
-  padding: _.unit(8) _.unit(5);
+.container {
+  position: absolute;
+  inset: 0;
   @include _.flex-column;
+  align-items: stretch;
 
-  .header {
-    margin: _.unit(20) 0 _.unit(12);
+  .wrapper {
+    flex: 1;
+    @include _.page-wrapper;
   }
 
-  .error {
+  .icon {
+    margin-top: _.unit(22);
+  }
+
+  .message {
     @include _.title;
-    margin-bottom: _.unit(2);
+  }
+
+  .placeHolder {
+    flex: 1;
+  }
+
+  .backBtn {
+    margin-bottom: _.unit(10);
   }
 }

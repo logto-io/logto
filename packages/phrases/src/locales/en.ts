@@ -34,6 +34,7 @@ const translation = {
       confirm: 'Confirm',
       cancel: 'Cancel',
       bind: 'Binding with {{address}}',
+      back: 'Go Back',
     },
     description: {
       not_found: 'Not Found',

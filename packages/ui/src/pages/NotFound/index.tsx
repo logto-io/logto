@@ -1,23 +1,33 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 
-import BrandingHeader from '@/components/BrandingHeader';
+import Button from '@/components/Button';
+import { ErrorIcon } from '@/components/Icons';
 import NavBar from '@/components/NavBar';
-import { PageContext } from '@/hooks/use-page-context';
 
 import * as styles from './index.module.scss';
 
 const NotFound = () => {
-  const { experienceSettings } = useContext(PageContext);
-  const { logoUrl = '' } = experienceSettings?.branding ?? {};
   const { t } = useTranslation(undefined, { keyPrefix: 'main_flow' });
+  const navigate = useNavigate();
 
   return (
-    <div className={styles.wrapper}>
+    <div className={styles.container}>
       <NavBar />
-      <BrandingHeader className={styles.header} logo={logoUrl} />
-      <div className={styles.error}>404</div>
-      <div>{t('description.not_found')}</div>
+      <div className={styles.wrapper}>
+        <ErrorIcon className={styles.icon} />
+        <div className={styles.message}>404 {t('description.not_found')}</div>
+        <div className={styles.placeHolder} />
+        <Button
+          className={styles.backBtn}
+          onClick={() => {
+            navigate(-1);
+          }}
+        >
+          {t('action.back')}
+        </Button>
+      </div>
     </div>
   );
 };
