@@ -15,7 +15,7 @@
     "generate": "rm -rf src/db-entries && ts-node src/gen/index.ts && eslint \"src/db-entries/**\" --fix",
     "build": "pnpm generate && rm -rf lib/ && tsc --p tsconfig.build.json",
     "lint": "eslint --ext .ts src",
-    "lint:report": "pnpm lint -- --format json --output-file report.json",
+    "lint:report": "pnpm lint --format json --output-file report.json",
     "prepack": "pnpm build"
   },
   "engines": {

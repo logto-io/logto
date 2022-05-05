@@ -16,7 +16,7 @@
         "precommit": "lint-staged",
         "build": "rm -rf lib/ && tsc -p tsconfig.build.json",
         "lint": "eslint --ext .ts src",
-        "lint:report": "pnpm lint -- --format json --output-file report.json",
+        "lint:report": "pnpm lint --format json --output-file report.json",
         "dev": "rm -rf lib/ && tsc-watch -p tsconfig.build.json --preserveWatchOutput --onSuccess \"node ./lib/index.js\"",
         "test": "jest",
         "test:coverage": "jest --coverage --silent",
