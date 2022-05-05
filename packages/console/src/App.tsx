@@ -10,7 +10,6 @@ import AppContent from './components/AppContent';
 import { getPath, sections } from './components/AppContent/components/Sidebar';
 import Toast from './components/Toast';
 import { themeStorageKey, logtoApiResource } from './consts';
-import { RequestError } from './hooks/use-api';
 import useSwrFetcher from './hooks/use-swr-fetcher';
 import initI18n from './i18n/init';
 import ApiResourceDetails from './pages/ApiResourceDetails';
@@ -35,7 +34,7 @@ const Main = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const fetcher = useSwrFetcher();
-  const { data } = useSWR<Setting, RequestError>('/api/settings');
+  const { data } = useSWR('/api/settings', fetcher) as { data?: Setting };
 
   useEffect(() => {
     const theme = data?.adminConsole.appearanceMode ?? defaultTheme;
