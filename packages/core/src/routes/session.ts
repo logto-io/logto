@@ -186,7 +186,7 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
   );
 
   router.post(
-    '/session/sign-in/social/request-authorization',
+    '/session/sign-in/social/send-authorization-request',
     koaGuard({
       body: object({
         connectorId: string(),

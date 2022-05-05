@@ -316,10 +316,10 @@ describe('sessionRoutes', () => {
     });
   });
 
-  describe('POST /session/sign-in/social/request-authorization', () => {
+  describe('POST /session/sign-in/social/send-authorization-request', () => {
     it('should throw when redirectURI is invalid', async () => {
       const response = await sessionRequest
-        .post('/session/sign-in/social/request-authorization')
+        .post('/session/sign-in/social/send-authorization-request')
         .send({
           connectorId: 'social_enabled',
           state: 'state',
@@ -330,7 +330,7 @@ describe('sessionRoutes', () => {
 
     it('sign-in with social and redirect', async () => {
       const response = await sessionRequest
-        .post('/session/sign-in/social/request-authorization')
+        .post('/session/sign-in/social/send-authorization-request')
         .send({
           connectorId: 'social_enabled',
           state: 'state',
@@ -341,7 +341,7 @@ describe('sessionRoutes', () => {
 
     it('throw error when sign-in with social but miss state', async () => {
       const response = await sessionRequest
-        .post('/session/sign-in/social/request-authorization')
+        .post('/session/sign-in/social/send-authorization-request')
         .send({
           connectorId: 'social_enabled',
           redirectUri: 'https://logto.dev',
@@ -351,7 +351,7 @@ describe('sessionRoutes', () => {
 
     it('throw error when sign-in with social but miss redirectUri', async () => {
       const response = await sessionRequest
-        .post('/session/sign-in/social/request-authorization')
+        .post('/session/sign-in/social/send-authorization-request')
         .send({
           connectorId: 'social_enabled',
           state: 'state',
@@ -361,7 +361,7 @@ describe('sessionRoutes', () => {
 
     it('throw error when connector is disabled', async () => {
       const response = await sessionRequest
-        .post('/session/sign-in/social/request-authorization')
+        .post('/session/sign-in/social/send-authorization-request')
         .send({
           connectorId: 'social_disabled',
           state: 'state',
@@ -372,7 +372,7 @@ describe('sessionRoutes', () => {
 
     it('throw error when no social connector is found', async () => {
       const response = await sessionRequest
-        .post('/session/sign-in/social/request-authorization')
+        .post('/session/sign-in/social/send-authorization-request')
         .send({
           connectorId: 'others',
           state: 'state',
