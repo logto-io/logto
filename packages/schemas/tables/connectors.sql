@@ -9,3 +9,5 @@ create table connectors (
   created_at timestamptz not null default(now()),
   primary key (id)
 );
+
+create index connectors__name_platform on connectors (name, platform);
