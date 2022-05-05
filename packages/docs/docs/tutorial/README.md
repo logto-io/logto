@@ -13,20 +13,24 @@ sidebar_position: 1
 - Extendable multi-language support
 - Easy deployment
 
-Boringly, we call it "[customer identity access management](https://en.wikipedia.org/wiki/Customer_identity_access_management)" or "customer identity solution".
+Boringly, we call it "[customer identity access management](https://en.wikipedia.org/wiki/Customer_identity_access_management)" (CIAM) or "customer identity solution."
 
-# Get Started
+## Get Started
 
-## Prerequisites
+### Prerequisites
 
 - NodeJS >= 16.0.0
 - PostgreSQL >= 14.0.0
 
+We recommend using a new empty database which is dedicated for Logto, while it's not a hard requirement.
+
+:::tip
 It's okay that your PostgreSQL instance is not in the same machine as NodeJS (e.g. containers + remote database environment).
+:::
 
-## Run Logto
+### Run a Logto Instance
 
-### Download Script
+#### Download Script
 
 In your terminal:
 
@@ -34,4 +38,18 @@ In your terminal:
 node -e "$(printf "%s" "$(curl -fsSL https://raw.githubusercontent.com/logto-io/logto/master/install.js)")"
 ```
 
-The script will download Logto and create a directory `logto` in the location you ran it.
+The script will download Logto and create a directory `logto` in the location you ran it. After answering [several simple questions](./configuration#questions), you will see the text:
+
+```bash
+Server is listening to port 3001
+```
+
+Heading to http://localhost:3001 to continue the Logto journey. Enjoy!
+
+#### Docker
+
+TBD
+
+### Configuration
+
+Logto uses environment variables for configuration, along with `.env` file support. See [Configuration](./configuration) for detailed usage and full option list.

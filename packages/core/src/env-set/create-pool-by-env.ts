@@ -32,7 +32,7 @@ const inquireForLogtoDsn = async (key: string): Promise<[Optional<string>, boole
     type: 'confirm',
     name: 'value',
     default: false,
-    message: 'Do you have an empty databse for Logto?',
+    message: 'Do you have an empty database for Logto?',
   });
 
   const dsnAnswer = await inquirer.prompt({
