@@ -13,15 +13,10 @@ jobs:
           fetch-depth: 0
 
       - name: Setup Node and pnpm
-        uses: logto-io/actions-node-pnpm-run-steps@v1.1.0
-        with:
-          run-install: false
-
-      - name: Install commitlint
-        run: pnpm add -g @commitlint/{cli,config-conventional}
+        uses: logto-io/actions-node-pnpm-run-steps@v1.2.1
 
       - name: Commitlint
-        run: commitlint --from HEAD~${{ github.event.pull_request.commits }} --to HEAD
+        run: npx commitlint --from HEAD~${{ github.event.pull_request.commits }} --to HEAD
 
       - name: Commitlint on PR title
-        run: echo '${{ github.event.pull_request.title }}' | commitlint
+        run: echo '${{ github.event.pull_request.title }}' | commitlint npx
