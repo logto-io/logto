@@ -19,15 +19,15 @@ const PrimarySocialSignIn = ({ className, isPopup = false, onSocialSignInCallbac
   const [showAll, setShowAll] = useState(false);
   const { invokeSocialSignIn, socialConnectors } = useSocial({ onSocialSignInCallback });
   const isOverSize = socialConnectors.length > defaultSize;
-  const displayAll = isPopup || !isOverSize;
+  const fullDisplay = isPopup || !isOverSize;
 
   const displayConnectors = useMemo(() => {
-    if (displayAll || showAll) {
+    if (fullDisplay || showAll) {
       return socialConnectors;
     }
 
     return socialConnectors.slice(0, defaultSize);
-  }, [displayAll, showAll, socialConnectors]);
+  }, [fullDisplay, showAll, socialConnectors]);
 
   return (
     <div className={classNames(styles.socialLinkList, className)}>
@@ -41,7 +41,7 @@ const PrimarySocialSignIn = ({ className, isPopup = false, onSocialSignInCallbac
           }}
         />
       ))}
-      {!displayAll && (
+      {!fullDisplay && (
         <ExpandMoreIcon
           className={classNames(styles.expandIcon, showAll && styles.expanded)}
           onClick={() => {
