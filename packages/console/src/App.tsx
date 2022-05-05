@@ -109,7 +109,7 @@ const Main = () => {
 const App = () => (
   <BrowserRouter basename={isBasenameNeeded ? '/console' : ''}>
     <LogtoProvider
-      config={{ endpoint: window.location.origin, clientId: 'foo', resources: [logtoApiResource] }}
+      config={{ endpoint: window.location.origin, appId: 'foo', resources: [logtoApiResource] }}
     >
       <Main />
     </LogtoProvider>

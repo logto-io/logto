@@ -436,7 +436,7 @@ importers:
   packages/console:
     specifiers:
       '@logto/phrases': ^0.1.0
-      '@logto/react': ^0.1.3
+      '@logto/react': ^0.1.5
       '@logto/schemas': ^0.1.0
       '@mdx-js/react': ^1.6.22
       '@monaco-editor/react': ^4.3.1
@@ -490,7 +490,7 @@ importers:
       typescript: ^4.6.2
     devDependencies:
       '@logto/phrases': link:../phrases
-      '@logto/react': 0.1.3_react@17.0.2
+      '@logto/react': 0.1.5_react@17.0.2
       '@logto/schemas': link:../schemas
       '@mdx-js/react': 1.6.22_react@17.0.2
       '@monaco-editor/react': 4.3.1_m23risk2t2ktwbmyoufat5z4ue
@@ -4621,22 +4621,23 @@ packages:
       '@lezer/common': 0.15.12
     dev: true
 
-  /@logto/browser/0.1.3:
-    resolution: {integrity: sha512-SsXp7uWnDKSyYGbcCCUkTelcWs8OlUNO0gVnW1hvuAAgm62LAX6EfgsE4EIKCLN/JrcRfjbiJIr98QNfa0riWw==}
+  /@logto/browser/0.1.5:
+    resolution: {integrity: sha512-IKdovieQmI+iVcvLo55tIMtWlNqnnGA6KN+JBjSVXpfJNdo05saNlUaOzJc2AIAbR/dcDszNYogZIoAw3YO4BQ==}
     requiresBuild: true
     dependencies:
-      '@logto/js': 0.1.3
-      '@silverhand/essentials': 1.1.6
+      '@logto/js': 0.1.5
+      '@silverhand/essentials': 1.1.7
       jose: 4.6.0
       lodash.get: 4.4.2
+      lodash.once: 4.1.1
       superstruct: 0.15.4
     dev: true
 
-  /@logto/js/0.1.3:
-    resolution: {integrity: sha512-lxdZNX67w2rntiSHC5ovY2D7IHq8ldcT9AQDaP7ayjKTyIuWIJxW7u9f21BpuPpfBHAIhOsKjgqAvLPBXczjzw==}
+  /@logto/js/0.1.5:
+    resolution: {integrity: sha512-zf/ERfvxhbQ9JgLJ8xhFPcTtoeUJbiZHZ3iP6msGda5X/mdCABlSJLlZI6gtrf3DRKKv1K5Z/2NIDeCFfOMNNw==}
     requiresBuild: true
     dependencies:
-      '@silverhand/essentials': 1.1.6
+      '@silverhand/essentials': 1.1.7
       camelcase-keys: 7.0.2
       jose: 4.6.0
       js-base64: 3.7.2
@@ -4644,14 +4645,14 @@ packages:
       superstruct: 0.15.4
     dev: true
 
-  /@logto/react/0.1.3_react@17.0.2:
-    resolution: {integrity: sha512-cxa+LM+sb0azQY5tGe5smY4B5N6U/yE66GT6RL0CguHC6DXZ3j00wfzaRhwAtOXAl3QL2xULcZTwkI3sY69COw==}
+  /@logto/react/0.1.5_react@17.0.2:
+    resolution: {integrity: sha512-mPMiqE8IIvbnfgJiRGgyMHfqMpVKP/6lTA2N6Vxm0eBDEDjxl2anlfZe9Ey8Gk9L81UGC3/T5EFl/R22PZDqqQ==}
     requiresBuild: true
     peerDependencies:
       react: '>=16.8.0'
     dependencies:
-      '@logto/browser': 0.1.3
-      '@silverhand/essentials': 1.1.6
+      '@logto/browser': 0.1.5
+      '@silverhand/essentials': 1.1.7
       react: 17.0.2
     dev: true
 
@@ -8996,7 +8997,6 @@ packages:
 
   /dayjs/1.10.7:
     resolution: {integrity: sha512-P6twpd70BcPK34K26uJ1KT3wlhpuOAPoMwJzpsIWUxHZ7wpmbdZL/hQqBDfz7hGurYSa5PhzdhDHtt319hL3ig==}
-    dev: false
 
   /debug/2.6.9:
     resolution: {integrity: sha512-bC7ElrdJaJnPbAP+1EotYvqZsb3ecl5wi6Bfi6BJTUcNowp6cvspg0jXznRTKDjm/E7AdgFBVeAPVMNcKGsHMA==}
@@ -13332,6 +13332,10 @@ packages:
 
   /lodash.merge/4.6.2:
     resolution: {integrity: sha512-0KpjqXRVvrYyCsX1swR/XTK0va6VQkQM6MNo7PqW77ByjAhoARA8EfrP1N4+KlKj8YS0ZUCtRT/YUuhyYDujIQ==}
+    dev: true
+
+  /lodash.once/4.1.1:
+    resolution: {integrity: sha1-DdOXEhPHxW34gJd9UEyI+0cal6w=}
     dev: true
 
   /lodash.orderby/4.6.0:
