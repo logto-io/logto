@@ -28,6 +28,7 @@ export type CreateUser = {
   roleNames?: RoleNames;
   identities?: Identities;
   customData?: ArbitraryObject;
+  lastSignInAt?: number | null;
 };
 
 export type User = {
@@ -44,6 +45,7 @@ export type User = {
   roleNames: RoleNames;
   identities: Identities;
   customData: ArbitraryObject;
+  lastSignInAt: number | null;
 };
 
 const createGuard: Guard<CreateUser> = z.object({
@@ -60,6 +62,7 @@ const createGuard: Guard<CreateUser> = z.object({
   roleNames: roleNamesGuard.optional(),
   identities: identitiesGuard.optional(),
   customData: arbitraryObjectGuard.optional(),
+  lastSignInAt: z.number().nullable().optional(),
 });
 
 export const Users: GeneratedSchema<CreateUser> = Object.freeze({
@@ -79,6 +82,7 @@ export const Users: GeneratedSchema<CreateUser> = Object.freeze({
     roleNames: 'role_names',
     identities: 'identities',
     customData: 'custom_data',
+    lastSignInAt: 'last_sign_in_at',
   },
   fieldKeys: [
     'id',
@@ -94,6 +98,7 @@ export const Users: GeneratedSchema<CreateUser> = Object.freeze({
     'roleNames',
     'identities',
     'customData',
+    'lastSignInAt',
   ],
   createGuard,
 });

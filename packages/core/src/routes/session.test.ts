@@ -28,6 +28,7 @@ jest.mock('@/lib/user', () => ({
     passwordEncryptionMethod: 'SaltAndPepper',
     passwordEncryptionSalt: 'user1',
   }),
+  updateLastSignInAt: async (...args: unknown[]) => updateUserById(...args),
 }));
 jest.mock('@/lib/social', () => ({
   ...jest.requireActual('@/lib/social'),

@@ -17,6 +17,7 @@ export const mockUser: User = {
   },
   customData: {},
   applicationId: 'bar',
+  lastSignInAt: 1_650_969_465_789,
 };
 
 export const mockUserResponse = pick(mockUser, ...userInfoSelectFields);
@@ -36,6 +37,7 @@ export const mockUserList: User[] = [
     identities: {},
     customData: {},
     applicationId: 'bar',
+    lastSignInAt: 1_650_969_465_000,
   },
   {
     id: '2',
@@ -51,6 +53,7 @@ export const mockUserList: User[] = [
     identities: {},
     customData: {},
     applicationId: 'bar',
+    lastSignInAt: 1_650_969_465_000,
   },
   {
     id: '3',
@@ -66,6 +69,7 @@ export const mockUserList: User[] = [
     identities: {},
     customData: {},
     applicationId: 'bar',
+    lastSignInAt: 1_650_969_465_000,
   },
   {
     id: '4',
@@ -81,6 +85,7 @@ export const mockUserList: User[] = [
     identities: {},
     customData: {},
     applicationId: 'bar',
+    lastSignInAt: 1_650_969_465_000,
   },
   {
     id: '5',
@@ -96,6 +101,7 @@ export const mockUserList: User[] = [
     identities: {},
     customData: {},
     applicationId: 'bar',
+    lastSignInAt: 1_650_969_465_000,
   },
 ];
 

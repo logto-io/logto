@@ -10,6 +10,7 @@ export const userInfoSelectFields = Object.freeze([
   'roleNames',
   'customData',
   'identities',
+  'lastSignInAt',
 ] as const);
 
 export type UserInfo<Keys extends keyof CreateUser = typeof userInfoSelectFields[number]> = Pick<
