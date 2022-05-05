@@ -23,6 +23,7 @@ import Plus from '@/icons/Plus';
 import * as modalStyles from '@/scss/modal.module.scss';
 import * as tableStyles from '@/scss/table.module.scss';
 
+import ApplicationName from './components/ApplicationName';
 import CreateForm from './components/CreateForm';
 import * as styles from './index.module.scss';
 
@@ -113,7 +114,7 @@ const Users = () => {
                 />
               </TableEmpty>
             )}
-            {users?.map(({ id, name, username, lastSignInAt }) => (
+            {users?.map(({ id, name, username, lastSignInAt, applicationId }) => (
               <tr
                 key={id}
                 className={tableStyles.clickable}
@@ -130,7 +131,7 @@ const Users = () => {
                     size="compact"
                   />
                 </td>
-                <td>Application</td>
+                <td>{applicationId ? <ApplicationName applicationId={applicationId} /> : '-'}</td>
                 <td>
                   <DateTime>{lastSignInAt}</DateTime>
                 </td>
