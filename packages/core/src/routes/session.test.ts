@@ -155,6 +155,7 @@ describe('sessionRoutes', () => {
     provider: new Provider(''),
     middlewares: [
       async (ctx, next) => {
+        ctx.logSession = jest.fn();
         ctx.log = jest.fn();
 
         return next();

@@ -72,10 +72,9 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
       }),
     }),
     async (ctx, next) => {
-      const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
       const { username, password } = ctx.guard.body;
       const type = 'SignInUsernamePassword';
-      ctx.log(type, { sessionId: jti, username });
+      ctx.log(type, { username });
       assertThat(password, 'session.insufficient_info');
 
       const { id } = await findUserByUsernameAndPassword(username, password);
@@ -94,7 +93,7 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
       const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
       const { phone } = ctx.guard.body;
       const type = 'SignInSmsSendPasscode';
-      ctx.log(type, { sessionId: jti, phone });
+      ctx.log(type, { phone });
 
       assertThat(
         await hasUserWithPhone(phone),
@@ -118,7 +117,7 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
       const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
       const { phone, code } = ctx.guard.body;
       const type = 'SignInSms';
-      ctx.log(type, { sessionId: jti, phone, code });
+      ctx.log(type, { phone, code });
 
       assertThat(
         await hasUserWithPhone(phone),
@@ -143,7 +142,7 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
       const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
       const { email } = ctx.guard.body;
       const type = 'SignInEmailSendPasscode';
-      ctx.log(type, { sessionId: jti, email });
+      ctx.log(type, { email });
 
       assertThat(
         await hasUserWithEmail(email),
@@ -167,7 +166,7 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
       const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
       const { email, code } = ctx.guard.body;
       const type = 'SignInEmail';
-      ctx.log(type, { sessionId: jti, email, code });
+      ctx.log(type, { email, code });
 
       assertThat(
         await hasUserWithEmail(email),
@@ -264,12 +263,12 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
       body: object({ connectorId: string() }),
     }),
     async (ctx, next) => {
-      const { jti, result } = await provider.interactionDetails(ctx.req, ctx.res);
+      const { result } = await provider.interactionDetails(ctx.req, ctx.res);
       assertThat(result, 'session.connector_session_not_found');
 
       const { connectorId } = ctx.guard.body;
       const type = 'SignInSocialBind';
-      ctx.log(type, { sessionId: jti, connectorId });
+      ctx.log(type, { connectorId });
 
       const userInfo = await getUserInfoFromInteractionResult(connectorId, result);
       ctx.log(type, { userInfo });
@@ -341,10 +340,9 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
       }),
     }),
     async (ctx, next) => {
-      const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
       const { username, password } = ctx.guard.body;
       const type = 'RegisterUsernamePassword';
-      ctx.log(type, { sessionId: jti, username });
+      ctx.log(type, { username });
 
       assertThat(
         password,
@@ -398,7 +396,7 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
       const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
       const { phone } = ctx.guard.body;
       const type = 'RegisterSmsSendPasscode';
-      ctx.log(type, { sessionId: jti, phone });
+      ctx.log(type, { phone });
 
       assertThat(
         !(await hasUserWithPhone(phone)),
@@ -406,7 +404,7 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
       );
 
       const passcode = await createPasscode(jti, PasscodeType.Register, { phone });
-      ctx.log(type, { sessionId: jti, phone, passcode });
+      ctx.log(type, { phone, passcode });
 
       await sendPasscode(passcode);
       ctx.status = 204;
@@ -422,7 +420,7 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
       const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
       const { phone, code } = ctx.guard.body;
       const type = 'RegisterSms';
-      ctx.log(type, { sessionId: jti, phone, code });
+      ctx.log(type, { phone, code });
 
       assertThat(
         !(await hasUserWithPhone(phone)),
@@ -448,7 +446,7 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
       const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
       const { email } = ctx.guard.body;
       const type = 'RegisterEmailSendPasscode';
-      ctx.log(type, { sessionId: jti, email });
+      ctx.log(type, { email });
 
       assertThat(
         !(await hasUserWithEmail(email)),
@@ -472,7 +470,7 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
       const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
       const { email, code } = ctx.guard.body;
       const type = 'RegisterEmail';
-      ctx.log(type, { sessionId: jti, email, code });
+      ctx.log(type, { email, code });
 
       assertThat(
         !(await hasUserWithEmail(email)),
@@ -499,7 +497,7 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
       }),
     }),
     async (ctx, next) => {
-      const { jti, result } = await provider.interactionDetails(ctx.req, ctx.res);
+      const { result } = await provider.interactionDetails(ctx.req, ctx.res);
       // User can not register with social directly,
       // need to try to sign in with social first, then confirm to register and continue,
       // so the result is expected to be exists.
@@ -507,7 +505,7 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
 
       const { connectorId } = ctx.guard.body;
       const type = 'RegisterSocial';
-      ctx.log(type, { sessionId: jti, connectorId });
+      ctx.log(type, { connectorId });
 
       const userInfo = await getUserInfoFromInteractionResult(connectorId, result);
       ctx.log(type, { userInfo });
@@ -542,14 +540,14 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
       }),
     }),
     async (ctx, next) => {
-      const { jti, result } = await provider.interactionDetails(ctx.req, ctx.res);
+      const { result } = await provider.interactionDetails(ctx.req, ctx.res);
       assertThat(result, 'session.connector_session_not_found');
       const userId = result.login?.accountId;
       assertThat(userId, 'session.unauthorized');
 
       const { connectorId } = ctx.guard.body;
       const type = 'RegisterSocialBind';
-      ctx.log(type, { sessionId: jti, connectorId, userId });
+      ctx.log(type, { connectorId, userId });
 
       const userInfo = await getUserInfoFromInteractionResult(connectorId, result);
       ctx.log(type, { userInfo });
