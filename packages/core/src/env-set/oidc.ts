@@ -24,7 +24,7 @@ const readPrivateKey = async (): Promise<string> => {
     return privateKey;
   }
 
-  const privateKeyPath = getEnv('OIDC_PRIVATE_KEY_PATH', 'oidc-private-key.pem');
+  const privateKeyPath = getEnv('OIDC_PRIVATE_KEY_PATH', './oidc-private-key.pem');
 
   try {
     return readFileSync(privateKeyPath, 'utf-8');
