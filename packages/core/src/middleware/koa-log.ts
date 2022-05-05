@@ -1,27 +1,64 @@
-import { LogPayload, LogPayloads, LogResult, LogType } from '@logto/schemas';
-import { Optional } from '@silverhand/essentials';
+import { BaseLogPayload, LogPayload, LogPayloads, LogResult, LogType } from '@logto/schemas';
 import deepmerge from 'deepmerge';
 import { MiddlewareType } from 'koa';
 import { nanoid } from 'nanoid';
 
 import { insertLog } from '@/queries/log';
 
-export type WithLogContext<ContextT> = ContextT & {
-  log: <T extends LogType>(type: T, payload: LogPayloads[T]) => void;
+type MergeLog = <T extends LogType>(type: T, payload: LogPayloads[T]) => void;
+
+export type WithLogContext<ContextT> = ContextT & { log: MergeLog };
+
+type Logger = {
+  type?: LogType;
+  basePayload?: BaseLogPayload;
+  payload: LogPayload;
+  set: (basePayload: BaseLogPayload) => void;
+  log: MergeLog;
+  save: () => Promise<void>;
 };
 
-const saveLog = async (type: LogType, payload: LogPayload) => {
-  try {
-    await insertLog({
-      id: nanoid(),
-      type,
-      payload,
-    });
-  } catch (error: unknown) {
-    console.error('An error occurred while inserting log');
-    console.error(error);
-  }
+/* eslint-disable @silverhand/fp/no-mutation */
+const initLogger = (basePayload?: Readonly<BaseLogPayload>) => {
+  const logger: Logger = {
+    type: undefined,
+    basePayload,
+    payload: {},
+    set: (basePayload) => {
+      logger.basePayload = {
+        ...logger.basePayload,
+        ...basePayload,
+      };
+    },
+    log: (type, payload) => {
+      if (type !== logger.type) {
+        logger.type = type;
+        logger.payload = payload;
+
+        return;
+      }
+
+      logger.payload = deepmerge(logger.payload, payload);
+    },
+    save: async () => {
+      if (!logger.type) {
+        return;
+      }
+
+      await insertLog({
+        id: nanoid(),
+        type: logger.type,
+        payload: {
+          ...logger.basePayload,
+          ...logger.payload,
+        },
+      });
+    },
+  };
+
+  return logger;
 };
+/* eslint-enable @silverhand/fp/no-mutation */
 
 export default function koaLog<StateT, ContextT, ResponseBodyT>(): MiddlewareType<
   StateT,
@@ -29,34 +66,21 @@ export default function koaLog<StateT, ContextT, ResponseBodyT>(): MiddlewareTyp
   ResponseBodyT
 > {
   return async (ctx, next) => {
-    // eslint-disable-next-line @silverhand/fp/no-let
-    let logType: Optional<LogType>;
-    // eslint-disable-next-line @silverhand/fp/no-let
-    let logPayload: LogPayload = {};
+    const {
+      ip,
+      headers: { 'user-agent': userAgent },
+    } = ctx.request;
 
-    ctx.log = (type, payload) => {
-      if (logType !== type) {
-        // eslint-disable-next-line @silverhand/fp/no-mutation
-        logPayload = {}; // Reset payload when type changes
-      }
-
-      // eslint-disable-next-line @silverhand/fp/no-mutation
-      logType = type; // Use first initialized log type
-      // eslint-disable-next-line @silverhand/fp/no-mutation
-      logPayload = deepmerge(logPayload, payload);
-    };
+    const logger = initLogger({ result: LogResult.Success, ip, userAgent });
+    ctx.log = logger.log;
 
     try {
       await next();
-
-      if (logType) {
-        await saveLog(logType, { ...logPayload, result: LogResult.Success });
-      }
     } catch (error: unknown) {
-      if (logType) {
-        await saveLog(logType, { ...logPayload, result: LogResult.Error, error: String(error) });
-      }
+      logger.set({ result: LogResult.Error, error: String(error) });
       throw error;
+    } finally {
+      await logger.save();
     }
   };
 }
