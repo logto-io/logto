@@ -5,7 +5,7 @@ class WebSocialResultActivity : [Activity](https://developer.android.com/referen
 
 ## Constructors
 
-| | |
+| Name  | Summary |
 |---|---|
 | WebSocialResultActivity | fun WebSocialResultActivity() |
 

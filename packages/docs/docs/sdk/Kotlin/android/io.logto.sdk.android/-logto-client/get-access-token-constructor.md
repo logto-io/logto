@@ -8,7 +8,7 @@ Get access token
 ## Parameters
 
 
-| | |
+| Name  | Summary |
 |---|---|
 | completion | the completion which handles the result. |
 
@@ -19,7 +19,7 @@ Get access token
 ## Parameters
 
 
-| | |
+| Name  | Summary |
 |---|---|
 | resource | the related resource of the retrieving access token. |
 | completion | the completion which handles the retrieved result. |

@@ -5,7 +5,7 @@ class LogtoWebViewAuthActivity : [AppCompatActivity](https://developer.android.c
 
 ## Constructors
 
-| | |
+| Name  | Summary |
 |---|---|
 | LogtoWebViewAuthActivity | fun LogtoWebViewAuthActivity() |
 

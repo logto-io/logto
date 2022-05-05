@@ -5,7 +5,7 @@ class LogtoException(message: [Enum](https://kotlinlang.org/api/latest/jvm/stdli
 
 ## Constructors
 
-| | |
+| Name  | Summary |
 |---|---|
 | LogtoException | fun LogtoException(message: [Enum](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-enum/index.html)&lt;[LogtoException.Message](-message/index.md)&gt;, cause: [Throwable](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-throwable/index.html)? = null) |
 

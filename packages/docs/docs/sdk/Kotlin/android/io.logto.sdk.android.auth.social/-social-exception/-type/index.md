@@ -5,7 +5,7 @@ enum Type : [Enum](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-enum/ind
 
 ## Entries
 
-| | |
+| Name  | Summary |
 |---|---|
 | AUTHENTICATION_FAILED | AUTHENTICATION_FAILED(&quot;authentication_failed&quot;) |
 | INSUFFICIENT_INFORMATION | INSUFFICIENT_INFORMATION(&quot;insufficient_information&quot;) |

@@ -5,7 +5,7 @@ open class LogtoClient(val logtoConfig: [LogtoConfig](../../io.logto.sdk.android
 
 ## Constructors
 
-| | |
+| Name  | Summary |
 |---|---|
 | LogtoClient | fun LogtoClient(logtoConfig: [LogtoConfig](../../io.logto.sdk.android.type/-logto-config/index.md), application: [Application](https://developer.android.com/reference/kotlin/android/app/Application.html)) |
 

@@ -5,7 +5,7 @@ class SocialException(type: [SocialException.Type](-type/index.md)) : [RuntimeEx
 
 ## Constructors
 
-| | |
+| Name  | Summary |
 |---|---|
 | SocialException | fun SocialException(type: [SocialException.Type](-type/index.md)) |
 

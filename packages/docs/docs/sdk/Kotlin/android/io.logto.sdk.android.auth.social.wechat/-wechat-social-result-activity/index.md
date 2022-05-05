@@ -5,7 +5,7 @@ open class WechatSocialResultActivity : [Activity](https://developer.android.com
 
 ## Constructors
 
-| | |
+| Name  | Summary |
 |---|---|
 | WechatSocialResultActivity | fun WechatSocialResultActivity() |
 

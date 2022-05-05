@@ -5,7 +5,7 @@ class LogtoWebViewSocialHandler(webView: [WebView](https://developer.android.com
 
 ## Constructors
 
-| | |
+| Name  | Summary |
 |---|---|
 | LogtoWebViewSocialHandler | fun LogtoWebViewSocialHandler(webView: [WebView](https://developer.android.com/reference/kotlin/android/webkit/WebView.html), hostActivity: [Activity](https://developer.android.com/reference/kotlin/android/app/Activity.html)) |
 

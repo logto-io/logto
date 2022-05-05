@@ -8,6 +8,6 @@ Fetch user info
 ## Parameters
 
 
-| | |
+| Name  | Summary |
 |---|---|
 | completion | the completion which handles the retrieved result. |

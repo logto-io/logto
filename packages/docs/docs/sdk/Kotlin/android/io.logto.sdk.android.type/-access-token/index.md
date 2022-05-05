@@ -5,7 +5,7 @@ data class AccessToken(val token: [String](https://kotlinlang.org/api/latest/jvm
 
 ## Constructors
 
-| | |
+| Name  | Summary |
 |---|---|
 | AccessToken | fun AccessToken(token: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), scope: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), expiresAt: [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html)) |
 

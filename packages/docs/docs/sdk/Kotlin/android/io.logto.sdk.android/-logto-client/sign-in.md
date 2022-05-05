@@ -8,7 +8,7 @@ Sign in
 ## Parameters
 
 
-| | |
+| Name  | Summary |
 |---|---|
 | context | the activity to perform a sign-in action. |
 | redirectUri | one of the redirect URIs of this application. |
