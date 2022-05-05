@@ -19,12 +19,12 @@ const loadEnvValues = async () => {
   return Object.freeze({
     isTest,
     isProduction,
-    isHttpsEnabled: Boolean(process.env.HTTPS_CERT && process.env.HTTPS_KEY),
-    httpsCert: process.env.HTTPS_CERT,
-    httpsKey: process.env.HTTPS_KEY,
+    isHttpsEnabled: Boolean(process.env.HTTPS_CERT_PATH && process.env.HTTPS_KEY_PATH),
+    httpsCert: process.env.HTTPS_CERT_PATH,
+    httpsKey: process.env.HTTPS_KEY_PATH,
     port,
     developmentUserId: getEnv('DEVELOPMENT_USER_ID'),
-    trustingTlsOffloadingProxies: getEnv('TRUSTING_TLS_OFFLOADING_PROXIES') === 'true',
+    trustProxyHeader: getEnv('TRUST_PROXY_HEADER') === 'true',
     password: await loadPasswordValues(isTest),
     oidc: await loadOidcValues(port),
   });
