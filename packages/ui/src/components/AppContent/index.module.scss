@@ -6,7 +6,10 @@ $font-family-small: 'PingFang SC', 'SF Pro Text', 'Siyuan Heiti', 'Roboto';
 
 .content {
   position: absolute;
-  inset: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  min-height: 100%;
   background: var(--color-base);
   color: var(--color-text);
   font: var(--font-body);
