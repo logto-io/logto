@@ -1,10 +1,9 @@
 @use '@/scss/underscore' as _;
 
 .form {
-  width: 100%;
-  max-width: 360px;
   margin: 0 auto;
   @include _.flex-column;
+  @include _.mobile-container-width;
 
   > * {
     width: 100%;

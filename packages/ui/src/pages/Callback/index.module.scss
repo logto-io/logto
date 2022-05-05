@@ -16,5 +16,5 @@
 }
 
 .button {
-  max-width: 360px;
+  @include _.mobile-container-width;
 }

@@ -3,9 +3,12 @@
 .wrapper {
   position: relative;
   padding: _.unit(8) _.unit(5);
+  min-height: 100vh;
   @include _.flex-column;
+  justify-content: flex-start;
 
   .header {
+    margin: _.unit(8);
     margin-bottom: _.unit(12);
   }
 
@@ -14,7 +17,7 @@
   }
 
   .divider {
-    margin-top: _.unit(5);
+    @include _.mobile-container-width;
   }
 
   .primarySignIn {
@@ -30,7 +33,7 @@
   }
 
   .createAccount {
-    position: fixed;
+    position: absolute;
     bottom: _.unit(12);
   }
 }

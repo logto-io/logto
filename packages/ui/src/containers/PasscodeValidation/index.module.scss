@@ -1,8 +1,7 @@
 @use '@/scss/underscore' as _;
 
 .form {
-  width: 100%;
-  max-width: 360px;
+  @include _.mobile-container-width;
   margin: 0 auto;
   @include _.flex-column;
 
