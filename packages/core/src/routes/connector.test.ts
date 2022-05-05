@@ -2,6 +2,7 @@
 import {
   ConnectorError,
   ConnectorErrorCodes,
+  ConnectorPlatform,
   EmailMessageTypes,
   ValidateConfig,
 } from '@logto/connector-types';
@@ -190,14 +191,27 @@ describe('connector route', () => {
         return {
           connector: {
             id: 'connector_0',
+            name: 'connector_0',
+            platform: ConnectorPlatform.NA,
             type: ConnectorType.Social,
             enabled: true,
             config: {},
+            metadata: {
+              id: 'connector_0',
+              type: ConnectorType.Social,
+              platform: ConnectorPlatform.NA,
+              name: {},
+              logo: './logo.png',
+              description: {},
+              readme: 'README.md',
+              configTemplate: 'config-template.md',
+            },
             createdAt: 1_234_567_890_123,
           },
           metadata: {
             id: 'connector_0',
             type: ConnectorType.Social,
+            platform: ConnectorPlatform.NA,
             name: {},
             logo: './logo.png',
             description: {},
@@ -220,6 +234,7 @@ describe('connector route', () => {
         metadata: {
           id: 'connector_0',
           type: ConnectorType.Social,
+          platform: ConnectorPlatform.NA,
           name: {},
           logo: './logo.png',
           description: {},
@@ -235,14 +250,27 @@ describe('connector route', () => {
         return {
           connector: {
             id: 'connector_0',
+            name: 'connector_0',
+            platform: ConnectorPlatform.NA,
             type: ConnectorType.Social,
             enabled: true,
             config: {},
+            metadata: {
+              id: 'connector_0',
+              type: ConnectorType.Social,
+              platform: ConnectorPlatform.NA,
+              name: {},
+              logo: './logo.png',
+              description: {},
+              readme: 'README.md',
+              configTemplate: 'config-template.md',
+            },
             createdAt: 1_234_567_890_123,
           },
           metadata: {
             id: 'connector_0',
             type: ConnectorType.Social,
+            platform: ConnectorPlatform.NA,
             name: {},
             logo: './logo.png',
             description: {},
@@ -265,19 +293,35 @@ describe('connector route', () => {
         return {
           connector: {
             id: 'connector_0',
+            name: 'connector_0',
+            platform: ConnectorPlatform.NA,
             type: ConnectorType.Social,
             enabled: true,
             config: {},
+            metadata: {
+              id: 'connector_0',
+              type: ConnectorType.Social,
+              platform: ConnectorPlatform.NA,
+              name: {},
+              logo: './logo.png',
+              description: {},
+              readme: 'README.md',
+              configTemplate: 'config-template.md',
+            },
             createdAt: 1_234_567_890_123,
           },
           metadata: {
             id: 'connector_0',
             type: ConnectorType.Social,
+            platform: ConnectorPlatform.NA,
             name: {},
             logo: './logo.png',
             description: {},
             readme: 'README.md',
             configTemplate: 'config-template.md',
+          },
+          validateConfig: async () => {
+            throw new ConnectorError(ConnectorErrorCodes.InvalidConfig);
           },
         };
       });
@@ -294,10 +338,12 @@ describe('connector route', () => {
         metadata: {
           id: 'connector_0',
           type: ConnectorType.Social,
+          platform: ConnectorPlatform.NA,
           name: {},
           logo: './logo.png',
           description: {},
           readme: 'README.md',
+          configTemplate: 'config-template.md',
         },
       });
       expect(response).toHaveProperty('statusCode', 200);
@@ -309,14 +355,27 @@ describe('connector route', () => {
         return {
           connector: {
             id: 'connector_1',
+            name: 'connector_1',
+            platform: ConnectorPlatform.NA,
             type: ConnectorType.SMS,
             enabled: true,
             config: {},
+            metadata: {
+              id: 'connector_1',
+              type: ConnectorType.SMS,
+              platform: ConnectorPlatform.NA,
+              name: {},
+              logo: './logo.png',
+              description: {},
+              readme: 'README.md',
+              configTemplate: 'config-template.md',
+            },
             createdAt: 1_234_567_890_234,
           },
           metadata: {
             id: 'connector_1',
             type: ConnectorType.SMS,
+            platform: ConnectorPlatform.NA,
             name: {},
             logo: './logo.png',
             description: {},
@@ -354,10 +413,12 @@ describe('connector route', () => {
         metadata: {
           id: 'connector_1',
           type: ConnectorType.SMS,
+          platform: ConnectorPlatform.NA,
           name: {},
           logo: './logo.png',
           description: {},
           readme: 'README.md',
+          configTemplate: 'config-template.md',
         },
       });
       expect(response).toHaveProperty('statusCode', 200);
@@ -369,14 +430,27 @@ describe('connector route', () => {
         return {
           connector: {
             id: 'connector_1',
+            name: 'connector_1',
+            platform: ConnectorPlatform.NA,
             type: ConnectorType.SMS,
             enabled: true,
             config: {},
+            metadata: {
+              id: 'connector_1',
+              type: ConnectorType.SMS,
+              platform: ConnectorPlatform.NA,
+              name: {},
+              logo: './logo.png',
+              description: {},
+              readme: 'README.md',
+              configTemplate: 'config-template.md',
+            },
             createdAt: 1_234_567_890_234,
           },
           metadata: {
             id: 'connector_1',
             type: ConnectorType.SMS,
+            platform: ConnectorPlatform.NA,
             name: {},
             logo: './logo.png',
             description: {},
@@ -399,14 +473,27 @@ describe('connector route', () => {
         return {
           connector: {
             id: 'connector_4',
+            name: 'connector_4',
+            platform: ConnectorPlatform.NA,
             type: ConnectorType.Email,
             enabled: true,
             config: {},
+            metadata: {
+              id: 'connector_4',
+              type: ConnectorType.Email,
+              platform: ConnectorPlatform.NA,
+              name: {},
+              logo: './logo.png',
+              description: {},
+              readme: 'README.md',
+              configTemplate: 'config-template.md',
+            },
             createdAt: 1_234_567_890_567,
           },
           metadata: {
             id: 'connector_4',
             type: ConnectorType.Email,
+            platform: ConnectorPlatform.NA,
             name: {},
             logo: './logo.png',
             description: {},
@@ -428,10 +515,12 @@ describe('connector route', () => {
         metadata: {
           id: 'connector_4',
           type: ConnectorType.Email,
+          platform: ConnectorPlatform.NA,
           name: {},
           logo: './logo.png',
           description: {},
           readme: 'README.md',
+          configTemplate: 'config-template.md',
         },
       });
       expect(response).toHaveProperty('statusCode', 200);
@@ -480,14 +569,27 @@ describe('connector route', () => {
         return {
           connector: {
             id: 'connector_0',
+            name: 'connector_0',
+            platform: ConnectorPlatform.NA,
             type: ConnectorType.Social,
             enabled: true,
             config: {},
+            metadata: {
+              id: 'connector_0',
+              type: ConnectorType.Social,
+              platform: ConnectorPlatform.NA,
+              name: {},
+              logo: './logo.png',
+              description: {},
+              readme: 'README.md',
+              configTemplate: 'config-template.md',
+            },
             createdAt: 1_234_567_890_123,
           },
           metadata: {
             id: 'connector_0',
             type: ConnectorType.Social,
+            platform: ConnectorPlatform.NA,
             name: {},
             logo: './logo.png',
             description: {},
@@ -510,14 +612,27 @@ describe('connector route', () => {
         return {
           connector: {
             id: 'connector_0',
+            name: 'connector_0',
+            platform: ConnectorPlatform.NA,
             type: ConnectorType.Social,
             enabled: true,
             config: {},
+            metadata: {
+              id: 'connector_0',
+              type: ConnectorType.Social,
+              platform: ConnectorPlatform.NA,
+              name: {},
+              logo: './logo.png',
+              description: {},
+              readme: 'README.md',
+              configTemplate: 'config-template.md',
+            },
             createdAt: 1_234_567_890_123,
           },
           metadata: {
             id: 'connector_0',
             type: ConnectorType.Social,
+            platform: ConnectorPlatform.NA,
             name: {},
             logo: './logo.png',
             description: {},
@@ -540,10 +655,12 @@ describe('connector route', () => {
         metadata: {
           id: 'connector_0',
           type: ConnectorType.Social,
+          platform: ConnectorPlatform.NA,
           name: {},
           logo: './logo.png',
           description: {},
           readme: 'README.md',
+          configTemplate: 'config-template.md',
         },
       });
       expect(response).toHaveProperty('statusCode', 200);
@@ -559,14 +676,27 @@ describe('connector route', () => {
       const mockedEmailConnector: EmailConnectorInstance = {
         connector: {
           id: 'connector_0',
+          name: 'connector_0',
+          platform: ConnectorPlatform.NA,
           type: ConnectorType.Email,
           enabled: true,
           config: {},
+          metadata: {
+            id: 'connector_0',
+            type: ConnectorType.Email,
+            platform: ConnectorPlatform.NA,
+            name: {},
+            logo: './logo.png',
+            description: {},
+            readme: 'README.md',
+            configTemplate: 'config-template.md',
+          },
           createdAt: 1_234_567_890_123,
         },
         metadata: {
           id: 'connector_0',
           type: ConnectorType.Email,
+          platform: ConnectorPlatform.NA,
           name: {},
           logo: './logo.png',
           description: {},
@@ -606,14 +736,27 @@ describe('connector route', () => {
       const mockedSmsConnector: SmsConnectorInstance = {
         connector: {
           id: 'connector_0',
+          name: 'connector_0',
+          platform: ConnectorPlatform.NA,
           type: ConnectorType.SMS,
           enabled: true,
           config: {},
+          metadata: {
+            id: 'connector_0',
+            type: ConnectorType.SMS,
+            platform: ConnectorPlatform.NA,
+            name: {},
+            logo: './logo.png',
+            description: {},
+            readme: 'README.md',
+            configTemplate: 'config-template.md',
+          },
           createdAt: 1_234_567_890_123,
         },
         metadata: {
           id: 'connector_0',
           type: ConnectorType.SMS,
+          platform: ConnectorPlatform.NA,
           name: {},
           logo: './logo.png',
           description: {},

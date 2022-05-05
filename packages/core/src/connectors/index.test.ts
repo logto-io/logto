@@ -1,6 +1,8 @@
+import { ConnectorPlatform } from '@logto/connector-types';
 import { Connector, ConnectorType } from '@logto/schemas';
 import { NotFoundError } from 'slonik';
 
+import { mockMetadata } from '@/__mocks__';
 import {
   getConnectorInstanceById,
   getConnectorInstanceByType,
@@ -13,58 +15,82 @@ import RequestError from '@/errors/RequestError';
 
 const alipayConnector = {
   id: 'alipay',
+  name: 'alipay',
+  platform: ConnectorPlatform.Web,
   type: ConnectorType.Social,
   enabled: true,
   config: {},
+  metadata: { ...mockMetadata, id: 'alipay', type: ConnectorType.Social },
   createdAt: 1_646_382_233_911,
 };
 const aliyunDmConnector = {
   id: 'aliyun-dm',
+  name: 'aliyun-dm',
+  platform: ConnectorPlatform.NA,
   type: ConnectorType.Email,
   enabled: true,
   config: {},
+  metadata: { ...mockMetadata, id: 'aliyun-dm', type: ConnectorType.Email },
   createdAt: 1_646_382_233_911,
 };
 const aliyunSmsConnector = {
   id: 'aliyun-sms',
+  name: 'aliyun-sms',
+  platform: ConnectorPlatform.NA,
   type: ConnectorType.SMS,
   enabled: false,
   config: {},
+  metadata: { ...mockMetadata, id: 'aliyun-sms', type: ConnectorType.SMS },
   createdAt: 1_646_382_233_666,
 };
 const facebookConnector = {
   id: 'facebook',
+  name: 'facebook',
+  platform: ConnectorPlatform.Web,
   type: ConnectorType.Social,
   enabled: true,
   config: {},
+  metadata: { ...mockMetadata, id: 'facebook', type: ConnectorType.Social },
   createdAt: 1_646_382_233_333,
 };
 const githubConnector = {
   id: 'github',
+  name: 'github',
+  platform: ConnectorPlatform.Web,
   type: ConnectorType.Social,
   enabled: true,
   config: {},
+  metadata: { ...mockMetadata, id: 'github', type: ConnectorType.Social },
   createdAt: 1_646_382_233_555,
 };
 const googleConnector = {
   id: 'google',
+  name: 'google',
+  platform: ConnectorPlatform.Web,
   type: ConnectorType.Social,
   enabled: false,
   config: {},
+  metadata: { ...mockMetadata, id: 'google', type: ConnectorType.Social },
   createdAt: 1_646_382_233_000,
 };
 const wechatConnector = {
   id: 'wechat',
+  name: 'wechat',
+  platform: ConnectorPlatform.Web,
   type: ConnectorType.Social,
   enabled: false,
   config: {},
+  metadata: { ...mockMetadata, id: 'wechat', type: ConnectorType.Social },
   createdAt: 1_646_382_233_000,
 };
 const wechatNativeConnector = {
   id: 'wechat-native',
+  name: 'wechat-native',
+  platform: ConnectorPlatform.Native,
   type: ConnectorType.Social,
   enabled: false,
   config: {},
+  metadata: { ...mockMetadata, id: 'wechat-native', type: ConnectorType.Social },
   createdAt: 1_646_382_233_000,
 };
 
@@ -90,12 +116,16 @@ const findConnectorById = jest.fn(async (id: string) => {
 
   return connector;
 });
+const hasConnectorWithId = jest.fn(async () => {
+  return false;
+});
 const insertConnector = jest.fn(async (connector: Connector) => connector);
 
 jest.mock('@/queries/connector', () => ({
   ...jest.requireActual('@/queries/connector'),
   findAllConnectors: async () => findAllConnectors(),
   findConnectorById: async (id: string) => findConnectorById(id),
+  hasConnectorWithId: async () => hasConnectorWithId(),
   insertConnector: async (connector: Connector) => insertConnector(connector),
 }));
 
@@ -186,8 +216,15 @@ describe('initConnectors', () => {
     expect(insertConnector).toHaveBeenCalledTimes(connectors.length);
 
     for (const [i, connector] of connectors.entries()) {
-      const { id, type } = connector;
-      expect(insertConnector).toHaveBeenNthCalledWith(i + 1, { id, type });
+      const { id: name, type, platform } = connector;
+      expect(insertConnector).toHaveBeenNthCalledWith(
+        i + 1,
+        expect.objectContaining({
+          name,
+          platform,
+          type,
+        })
+      );
     }
   });
 
@@ -197,6 +234,7 @@ describe('initConnectors', () => {
   });
 
   afterEach(() => {
+    findAllConnectors.mockClear();
     insertConnector.mockClear();
   });
 });

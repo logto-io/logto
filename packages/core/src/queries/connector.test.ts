@@ -1,6 +1,7 @@
-import { Connectors, ConnectorType, CreateConnector } from '@logto/schemas';
-import { createMockPool, createMockQueryResult, sql, QueryResultRow } from 'slonik';
+import { Connectors } from '@logto/schemas';
+import { createMockPool, createMockQueryResult, sql } from 'slonik';
 
+import { mockConnector } from '@/__mocks__';
 import { convertToIdentifiers } from '@/database/utils';
 import envSet from '@/env-set';
 import { expectSqlAssert, QueryType } from '@/utils/test-utils';
@@ -8,6 +9,7 @@ import { expectSqlAssert, QueryType } from '@/utils/test-utils';
 import {
   findAllConnectors,
   findConnectorById,
+  hasConnectorWithId,
   insertConnector,
   updateConnector,
 } from './connector';
@@ -63,28 +65,55 @@ describe('connector queries', () => {
     await expect(findConnectorById(id)).resolves.toEqual(rowData);
   });
 
+  it('hasConnectorWithId', async () => {
+    const expectSql = sql`
+      SELECT EXISTS(
+        select ${fields.id}
+        from ${table}
+        where ${fields.id}=$1
+      )
+    `;
+
+    mockQuery.mockImplementationOnce(async (sql, values) => {
+      expectSqlAssert(sql, expectSql.sql);
+      expect(values).toEqual([mockConnector.id]);
+
+      return createMockQueryResult([{ exists: true }]);
+    });
+
+    await expect(hasConnectorWithId(mockConnector.id)).resolves.toEqual(true);
+  });
+
   it('insertConnector', async () => {
-    const connector: CreateConnector & QueryResultRow = {
-      id: 'foo',
-      type: ConnectorType.Social,
-      enabled: true,
+    const connector = {
+      ...mockConnector,
+      config: JSON.stringify(mockConnector.config),
+      metadata: JSON.stringify(mockConnector.metadata),
     };
 
     const expectSql = `
-      insert into "connectors" ("id", "type", "enabled")
-      values ($1, $2, $3)
+      insert into "connectors" ("id", "name", "platform", "type", "enabled", "config", "metadata")
+      values ($1, $2, $3, $4, $5, $6, $7)
       returning *
     `;
 
     mockQuery.mockImplementationOnce(async (sql, values) => {
       expectSqlAssert(sql, expectSql);
 
-      expect(values).toEqual([connector.id, connector.type, connector.enabled]);
+      expect(values).toEqual([
+        connector.id,
+        connector.name,
+        connector.platform,
+        connector.type,
+        connector.enabled,
+        connector.config,
+        connector.metadata,
+      ]);
 
       return createMockQueryResult([connector]);
     });
 
-    await expect(insertConnector(connector)).resolves.toEqual(connector);
+    await expect(insertConnector(mockConnector)).resolves.toEqual(connector);
   });
 
   it('updateConnector', async () => {

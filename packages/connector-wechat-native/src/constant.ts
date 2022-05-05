@@ -1,6 +1,6 @@
 import path from 'path';
 
-import { ConnectorMetadata, ConnectorType } from '@logto/connector-types';
+import { ConnectorMetadata, ConnectorType, ConnectorPlatform } from '@logto/connector-types';
 import { getFileContents } from '@logto/shared';
 import { z } from 'zod';
 
@@ -23,6 +23,7 @@ const configTemplateFallback = 'Please check config-template.md file directory.'
 export const defaultMetadata: ConnectorMetadata = {
   id: 'wechat-native',
   type: ConnectorType.Social,
+  platform: ConnectorPlatform.Native,
   name: {
     en: 'Sign In with WeChat',
     'zh-CN': '微信登录',

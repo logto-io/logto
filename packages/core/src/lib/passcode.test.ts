@@ -1,4 +1,4 @@
-import { ConnectorType } from '@logto/connector-types';
+import { ConnectorType, ConnectorPlatform } from '@logto/connector-types';
 import { Passcode, PasscodeType } from '@logto/schemas';
 
 import { getConnectorInstanceByType } from '@/connectors';
@@ -124,14 +124,27 @@ describe('sendPasscode', () => {
     mockedGetConnectorInstanceByType.mockResolvedValue({
       connector: {
         id: 'id',
+        name: 'connector',
+        platform: ConnectorPlatform.NA,
         type: ConnectorType.SMS,
         enabled: true,
         config: {},
+        metadata: {
+          id: 'id',
+          type: ConnectorType.SMS,
+          platform: ConnectorPlatform.NA,
+          name: {},
+          logo: '',
+          description: {},
+          readme: 'README.md',
+          configTemplate: 'config-template.md',
+        },
         createdAt: Date.now(),
       },
       metadata: {
         id: 'id',
         type: ConnectorType.SMS,
+        platform: ConnectorPlatform.NA,
         name: {},
         logo: '',
         description: {},

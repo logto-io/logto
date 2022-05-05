@@ -8,6 +8,7 @@ import { WeChatConnector } from '@logto/connector-wechat';
 import { WeChatNativeConnector } from '@logto/connector-wechat-native';
 
 import RequestError from '@/errors/RequestError';
+import { generateConnectorId } from '@/lib/connector';
 import { findAllConnectors, findConnectorById, insertConnector } from '@/queries/connector';
 
 import { ConnectorInstance, ConnectorType, IConnector, SocialConnectorInstance } from './types';
@@ -108,11 +109,24 @@ export const getConnectorInstanceByType = async <T extends ConnectorInstance>(
 
 export const initConnectors = async () => {
   const connectors = await findAllConnectors();
-  const existingConnectors = new Map(connectors.map((connector) => [connector.id, connector]));
-  const newConnectors = allConnectors.filter(
-    ({ metadata: { id, type } }) => existingConnectors.get(id)?.type !== type
+  const existingConnectors = new Map(
+    connectors.map((connector) => [[connector.name, connector.platform].join(' '), connector])
   );
+  const newConnectors = allConnectors.filter(
+    ({ metadata: { id: name, platform } }) =>
+      existingConnectors.get([name, platform].join(' '))?.platform !== platform
+  );
+
   await Promise.all(
-    newConnectors.map(async ({ metadata: { id, type } }) => insertConnector({ id, type }))
+    newConnectors.map(async ({ metadata }) => {
+      const id = await generateConnectorId();
+      await insertConnector({
+        id,
+        name: metadata.id,
+        platform: metadata.platform,
+        type: metadata.type,
+        metadata,
+      });
+    })
   );
 };

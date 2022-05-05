@@ -1,4 +1,5 @@
-import type { Languages } from '@logto/phrases';
+import { Language } from '@logto/phrases';
+import { z } from 'zod';
 
 export enum ConnectorType {
   Email = 'Email',
@@ -6,15 +7,27 @@ export enum ConnectorType {
   Social = 'Social',
 }
 
-export interface ConnectorMetadata {
-  id: string;
-  type: ConnectorType;
-  name: Record<Languages, string>;
-  logo: string;
-  description: Record<Languages, string>;
-  readme: string;
-  configTemplate: string;
+export enum ConnectorPlatform {
+  General = 'General',
+  Native = 'Native',
+  NA = 'NotApplied',
+  Web = 'Web',
 }
+
+const languageGuard = z.nativeEnum(Language);
+
+export const connectorMetadataGuard = z.object({
+  id: z.string(),
+  type: z.nativeEnum(ConnectorType),
+  platform: z.nativeEnum(ConnectorPlatform), // Should be ConnectorPlatform.NA for SmsConnector and EmailConnector
+  name: z.record(languageGuard, z.string()),
+  logo: z.string(),
+  description: z.record(languageGuard, z.string()),
+  readme: z.string(),
+  configTemplate: z.string(),
+});
+
+export type ConnectorMetadata = z.infer<typeof connectorMetadataGuard>;
 
 export enum ConnectorErrorCodes {
   General,

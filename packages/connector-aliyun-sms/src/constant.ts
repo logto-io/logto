@@ -1,6 +1,6 @@
 import path from 'path';
 
-import { ConnectorMetadata, ConnectorType } from '@logto/connector-types';
+import { ConnectorMetadata, ConnectorType, ConnectorPlatform } from '@logto/connector-types';
 import { getFileContents } from '@logto/shared';
 
 /**
@@ -35,6 +35,7 @@ const configTemplateFallback = 'Please check config-template.md file directory.'
 export const defaultMetadata: ConnectorMetadata = {
   id: 'aliyun-sms',
   type: ConnectorType.SMS,
+  platform: ConnectorPlatform.NA,
   name: {
     en: 'Aliyun Short Message Service',
     'zh-CN': '阿里云短信服务',
