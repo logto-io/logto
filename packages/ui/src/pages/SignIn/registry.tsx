@@ -1,6 +1,7 @@
 import React from 'react';
 
 import Divider from '@/components/Divider';
+import TextLink from '@/components/TextLink';
 import { EmailPasswordless, PhonePasswordless } from '@/containers/Passwordless';
 import SignInMethodsLink from '@/containers/SignInMethodsLink';
 import { PrimarySocialSignIn, SecondarySocialSignIn } from '@/containers/SocialSignIn';
@@ -69,4 +70,29 @@ export const SecondarySection = ({
       )}
     </>
   );
+};
+
+export const CreateAccoutnLink = ({
+  primarySignInMethod,
+}: {
+  primarySignInMethod?: SignInMethod;
+}) => {
+  switch (primarySignInMethod) {
+    case 'username':
+    case 'email':
+    case 'sms':
+      return (
+        <>
+          <div className={styles.placeHolder} />
+          <TextLink
+            className={styles.createAccount}
+            type="secondary"
+            href={`/register/${primarySignInMethod}`}
+            text="action.create_account"
+          />
+        </>
+      );
+    default:
+      return null;
+  }
 };

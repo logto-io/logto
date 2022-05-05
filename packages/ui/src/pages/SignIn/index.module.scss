@@ -33,7 +33,10 @@
   }
 
   .createAccount {
-    position: absolute;
-    bottom: _.unit(12);
+    margin-top: _.unit(8);
+  }
+
+  .placeHolder {
+    flex: 1;
   }
 }

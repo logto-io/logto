@@ -3,11 +3,10 @@ import classNames from 'classnames';
 import React, { useContext } from 'react';
 
 import BrandingHeader from '@/components/BrandingHeader';
-import TextLink from '@/components/TextLink';
 import { PageContext } from '@/hooks/use-page-context';
 
 import * as styles from './index.module.scss';
-import { PrimarySection, SecondarySection } from './registry';
+import { PrimarySection, SecondarySection, CreateAccoutnLink } from './registry';
 
 const SignIn = () => {
   const { experienceSettings } = useContext(PageContext);
@@ -25,12 +24,7 @@ const SignIn = () => {
         primarySignInMethod={experienceSettings?.primarySignInMethod}
         secondarySignInMethods={experienceSettings?.secondarySignInMethods}
       />
-      <TextLink
-        className={styles.createAccount}
-        type="secondary"
-        href="/register"
-        text="action.create_account"
-      />
+      <CreateAccoutnLink primarySignInMethod={experienceSettings?.primarySignInMethod} />
     </div>
   );
 };
