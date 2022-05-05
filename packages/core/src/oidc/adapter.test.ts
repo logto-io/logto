@@ -75,7 +75,7 @@ describe('postgres Adapter', () => {
     const uid = 'fooUser';
     const userCode = 'fooCode';
     const id = 'fooId';
-    const grantId = 'grandId';
+    const grantId = 'grantId';
     const expireAt = 60;
     const adapter = postgresAdapter(modelName);
 

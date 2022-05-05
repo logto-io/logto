@@ -19,7 +19,7 @@ export const saveUserFirstConsentedAppId = async (userId: string, applicationId:
   const { applicationId: firstConsentedAppId } = await findUserById(userId);
 
   if (!firstConsentedAppId) {
-    // Save application id which the user first consented
+    // Save application id that the user first consented
     await updateUserById(userId, { applicationId });
   }
 };

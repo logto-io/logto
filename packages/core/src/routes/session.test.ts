@@ -841,7 +841,7 @@ describe('sessionRoutes', () => {
             details: {},
             reasons: ['consent_prompt', 'native_client_prompt'],
           },
-          grantId: 'grandId',
+          grantId: 'grantId',
         });
         findUserById.mockImplementationOnce(async () => ({ ...mockUser, applicationId: null }));
         const response = await sessionRequest.post('/session/consent');
