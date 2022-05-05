@@ -32,7 +32,7 @@ const inquireForLogtoDsn = async (key: string): Promise<[Optional<string>, boole
     type: 'confirm',
     name: 'value',
     default: false,
-    message: 'Do you have an empty databse for Logto?',
+    message: 'Do you have an empty database for Logto?',
   });
 
   const dsnAnswer = await inquirer.prompt({
@@ -85,7 +85,7 @@ const createPoolByEnv = async (isTest: boolean, localhostUrl: string) => {
       const domain = await inquirer.prompt({
         name: 'value',
         default: localhostUrl,
-        message: 'Enter your domain for Logto:',
+        message: 'Enter your domain for Logto (it can be changed later):',
       });
 
       await cli.createTables();
