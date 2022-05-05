@@ -15,7 +15,7 @@
     "precommit": "lint-staged",
     "build": "rm -rf lib/ && tsc",
     "lint": "eslint --ext .ts jest.config.ts",
-    "lint:report": "pnpm lint -- --format json --output-file report.json",
+    "lint:report": "pnpm lint --format json --output-file report.json",
     "prepack": "pnpm build"
   },
   "engines": {
