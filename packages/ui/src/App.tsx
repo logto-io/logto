@@ -54,7 +54,6 @@ const App = () => {
             <Route path="/callback/:connector" element={<Callback />} />
             <Route path="/social-register/:connector" element={<SocialRegister />} />
             <Route path="/:type/:method/passcode-validation" element={<Passcode />} />
-            <Route path="/404" element={<NotFound />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

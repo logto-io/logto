@@ -1,10 +1,12 @@
 import { Nullable } from '@silverhand/essentials';
-import React, { useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate, useParams, useLocation } from 'react-router-dom';
+import { useParams, useLocation } from 'react-router-dom';
 
 import NavBar from '@/components/NavBar';
 import PasscodeValidation from '@/containers/PasscodeValidation';
+import { PageContext } from '@/hooks/use-page-context';
+import NotFound from '@/pages/NotFound';
 import { UserFlow } from '@/types';
 
 import * as styles from './index.module.scss';
@@ -14,40 +16,30 @@ type Parameters = {
   method: string;
 };
 
-type StateType = Nullable<{
-  email?: string;
-  sms?: string;
-}>;
+type StateType = Nullable<Record<string, string>>;
 
 const Passcode = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'main_flow' });
-  const navigate = useNavigate();
   const { method, type } = useParams<Parameters>();
   const state = useLocation().state as StateType;
-  const invalidSignInMethod = type !== 'sign-in' && type !== 'register';
+  const invalidType = type !== 'sign-in' && type !== 'register';
   const invalidMethod = method !== 'email' && method !== 'sms';
+  const { setToast } = useContext(PageContext);
 
   useEffect(() => {
-    if (invalidSignInMethod || invalidMethod) {
-      navigate('/404', { replace: true });
-
-      return;
+    if (method && !state?.[method]) {
+      setToast(t(method === 'email' ? 'error.invalid_email' : 'error.invalid_phone'));
     }
+  }, [method, setToast, state, t]);
 
-    // Navigate to the back if no method value found
-    if (!state?.[method]) {
-      navigate(-1);
-    }
-  }, [invalidMethod, invalidSignInMethod, method, navigate, state]);
-
-  if (invalidSignInMethod || invalidMethod) {
-    return null;
+  if (invalidType || invalidMethod) {
+    return <NotFound />;
   }
 
   const target = state?.[method];
 
   if (!target) {
-    return null;
+    return <NotFound />;
   }
 
   return (
