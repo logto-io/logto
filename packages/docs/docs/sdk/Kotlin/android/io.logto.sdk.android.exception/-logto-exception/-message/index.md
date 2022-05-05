@@ -26,10 +26,3 @@ enum [Message](index.md) : [Enum](https://kotlinlang.org/api/latest/jvm/stdlib/k
 | [UNGRANTED_RESOURCE_FOUND](-u-n-g-r-a-n-t-e-d_-r-e-s-o-u-r-c-e_-f-o-u-n-d/index.md) | [UNGRANTED_RESOURCE_FOUND](-u-n-g-r-a-n-t-e-d_-r-e-s-o-u-r-c-e_-f-o-u-n-d/index.md)() |
 | [NO_REFRESH_TOKEN_FOUND](-n-o_-r-e-f-r-e-s-h_-t-o-k-e-n_-f-o-u-n-d/index.md) | [NO_REFRESH_TOKEN_FOUND](-n-o_-r-e-f-r-e-s-h_-t-o-k-e-n_-f-o-u-n-d/index.md)() |
 | [NOT_AUTHENTICATED](-n-o-t_-a-u-t-h-e-n-t-i-c-a-t-e-d/index.md) | [NOT_AUTHENTICATED](-n-o-t_-a-u-t-h-e-n-t-i-c-a-t-e-d/index.md)() |
-
-## Properties
-
-| Name | Summary |
-|---|---|
-| [name](-n-o-t_-a-u-t-h-e-n-t-i-c-a-t-e-d/index.md#-372974862%2FProperties%2F1239322798) | val [name](-n-o-t_-a-u-t-h-e-n-t-i-c-a-t-e-d/index.md#-372974862%2FProperties%2F1239322798): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |
-| [ordinal](-n-o-t_-a-u-t-h-e-n-t-i-c-a-t-e-d/index.md#-739389684%2FProperties%2F1239322798) | val [ordinal](-n-o-t_-a-u-t-h-e-n-t-i-c-a-t-e-d/index.md#-739389684%2FProperties%2F1239322798): [Int](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html) |
