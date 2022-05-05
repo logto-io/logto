@@ -1,4 +1,0 @@
-# WECHAT_AUTH_FAILED
-
-
-[WECHAT_AUTH_FAILED](index.md)()

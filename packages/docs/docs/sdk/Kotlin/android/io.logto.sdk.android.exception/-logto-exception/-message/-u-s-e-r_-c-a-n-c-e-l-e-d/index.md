@@ -1,4 +1,0 @@
-# USER_CANCELED
-
-
-[USER_CANCELED](index.md)()

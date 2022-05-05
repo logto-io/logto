@@ -1,4 +1,0 @@
-# ALIPAY_AUTH_FAILED
-
-
-[ALIPAY_AUTH_FAILED](index.md)()

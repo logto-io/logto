@@ -1,7 +1,7 @@
 # fetchUserInfo
 
 
-fun [fetchUserInfo](fetch-user-info.md)(completion: [Completion](../../io.logto.sdk.android.completion/-completion/index.md)&lt;[LogtoException](../../io.logto.sdk.android.exception/-logto-exception/index.md), UserInfoResponse&gt;)
+fun fetchUserInfo(completion: [Completion](../../io.logto.sdk.android.completion/-completion/index.md)&lt;[LogtoException](../../io.logto.sdk.android.exception/-logto-exception/index.md), UserInfoResponse&gt;)
 
 Fetch user info
 

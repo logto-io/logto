@@ -1,13 +1,13 @@
 # WebSocialResultActivity
 
 
-class [WebSocialResultActivity](index.md) : [Activity](https://developer.android.com/reference/kotlin/android/app/Activity.html)
+class WebSocialResultActivity : [Activity](https://developer.android.com/reference/kotlin/android/app/Activity.html)
 
 ## Constructors
 
 | | |
 |---|---|
-| [WebSocialResultActivity](-web-social-result-activity-constructor) | fun [WebSocialResultActivity](-web-social-result-activity-constructor)() |
+| WebSocialResultActivity | fun WebSocialResultActivity() |
 
 ## Types
 

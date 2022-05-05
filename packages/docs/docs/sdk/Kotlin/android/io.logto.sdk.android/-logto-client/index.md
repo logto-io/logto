@@ -1,13 +1,13 @@
 # LogtoClient
 
 
-open class [LogtoClient](index.md)(val logtoConfig: [LogtoConfig](../../io.logto.sdk.android.type/-logto-config/index.md), application: [Application](https://developer.android.com/reference/kotlin/android/app/Application.html))
+open class LogtoClient(val logtoConfig: [LogtoConfig](../../io.logto.sdk.android.type/-logto-config/index.md), application: [Application](https://developer.android.com/reference/kotlin/android/app/Application.html))
 
 ## Constructors
 
 | | |
 |---|---|
-| [LogtoClient](-logto-client-constructor) | fun [LogtoClient](-logto-client-constructor)(logtoConfig: [LogtoConfig](../../io.logto.sdk.android.type/-logto-config/index.md), application: [Application](https://developer.android.com/reference/kotlin/android/app/Application.html)) |
+| LogtoClient | fun LogtoClient(logtoConfig: [LogtoConfig](../../io.logto.sdk.android.type/-logto-config/index.md), application: [Application](https://developer.android.com/reference/kotlin/android/app/Application.html)) |
 
 ## Functions
 
@@ -24,4 +24,4 @@ open class [LogtoClient](index.md)(val logtoConfig: [LogtoConfig](../../io.logto
 | Name | Summary |
 |---|---|
 | [isAuthenticated](is-authenticated.md) | val [isAuthenticated](is-authenticated.md): [Boolean](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html)<br/>Whether the user has been authenticated. |
-| [logtoConfig](logto-config.md) | val [logtoConfig](logto-config.md): [LogtoConfig](../../io.logto.sdk.android.type/-logto-config/index.md) |
+| [logtoConfig](logto-config.md) | val [logtoConfig](logto-config.md): [LogtoConfig](../../io.logto.sdk.android.type/-logto-config/index.md)<br/>The Logto client config |

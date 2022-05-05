@@ -1,13 +1,13 @@
 # LogtoWebViewSocialHandler
 
 
-class [LogtoWebViewSocialHandler](index.md)(webView: [WebView](https://developer.android.com/reference/kotlin/android/webkit/WebView.html), hostActivity: [Activity](https://developer.android.com/reference/kotlin/android/app/Activity.html))
+class LogtoWebViewSocialHandler(webView: [WebView](https://developer.android.com/reference/kotlin/android/webkit/WebView.html), hostActivity: [Activity](https://developer.android.com/reference/kotlin/android/app/Activity.html))
 
 ## Constructors
 
 | | |
 |---|---|
-| [LogtoWebViewSocialHandler](-logto-web-view-social-handler-constructor) | fun [LogtoWebViewSocialHandler](-logto-web-view-social-handler-constructor)(webView: [WebView](https://developer.android.com/reference/kotlin/android/webkit/WebView.html), hostActivity: [Activity](https://developer.android.com/reference/kotlin/android/app/Activity.html)) |
+| LogtoWebViewSocialHandler | fun LogtoWebViewSocialHandler(webView: [WebView](https://developer.android.com/reference/kotlin/android/webkit/WebView.html), hostActivity: [Activity](https://developer.android.com/reference/kotlin/android/app/Activity.html)) |
 
 ## Types
 
@@ -19,5 +19,5 @@ class [LogtoWebViewSocialHandler](index.md)(webView: [WebView](https://developer
 
 | Name | Summary |
 |---|---|
-| [getInjectSocialScript](get-inject-social-script.md) | fun [getInjectSocialScript](get-inject-social-script.md)(): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |
-| [postMessage](post-message.md) | fun [postMessage](post-message.md)(jsonData: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)) |
+| getInjectSocialScript | fun getInjectSocialScript(): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |
+| postMessage | fun postMessage(jsonData: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)) |

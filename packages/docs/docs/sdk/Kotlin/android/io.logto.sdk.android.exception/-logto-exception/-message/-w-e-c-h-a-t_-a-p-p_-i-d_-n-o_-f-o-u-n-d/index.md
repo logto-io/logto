@@ -1,4 +1,0 @@
-# WECHAT_APP_ID_NO_FOUND
-
-
-[WECHAT_APP_ID_NO_FOUND](index.md)()

@@ -1,4 +1,0 @@
-# ALIPAY_APP_ID_NO_FOUND
-
-
-[ALIPAY_APP_ID_NO_FOUND](index.md)()

@@ -1,4 +1,0 @@
-# INVALID_ID_TOKEN
-
-
-[INVALID_ID_TOKEN](index.md)()

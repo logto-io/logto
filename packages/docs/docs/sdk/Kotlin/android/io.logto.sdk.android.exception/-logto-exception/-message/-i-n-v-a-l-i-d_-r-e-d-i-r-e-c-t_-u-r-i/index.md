@@ -1,4 +1,0 @@
-# INVALID_REDIRECT_URI
-
-
-[INVALID_REDIRECT_URI](index.md)()

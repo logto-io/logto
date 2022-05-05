@@ -1,10 +1,10 @@
 # Companion
 
 
-object [Companion](index.md)
+object Companion
 
 ## Functions
 
 | Name | Summary |
 |---|---|
-| [registerSession](register-session.md) | fun [registerSession](register-session.md)(session: [WechatSocialSession](../../-wechat-social-session/index.md)) |
+| registerSession | fun registerSession(session: [WechatSocialSession](../../-wechat-social-session/index.md)) |

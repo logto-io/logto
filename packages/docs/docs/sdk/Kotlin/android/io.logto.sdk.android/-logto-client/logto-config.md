@@ -1,4 +1,6 @@
 # logtoConfig
 
 
-val [logtoConfig](logto-config.md): [LogtoConfig](../../io.logto.sdk.android.type/-logto-config/index.md)
+val logtoConfig: [LogtoConfig](../../io.logto.sdk.android.type/-logto-config/index.md)
+
+The Logto client config

@@ -1,4 +1,0 @@
-# NOT_AUTHENTICATED
-
-
-[NOT_AUTHENTICATED](index.md)()

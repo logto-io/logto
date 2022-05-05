@@ -1,13 +1,13 @@
 # LogtoWebViewAuthActivity
 
 
-class [LogtoWebViewAuthActivity](index.md) : [AppCompatActivity](https://developer.android.com/reference/kotlin/androidx/appcompat/app/AppCompatActivity.html)
+class LogtoWebViewAuthActivity : [AppCompatActivity](https://developer.android.com/reference/kotlin/androidx/appcompat/app/AppCompatActivity.html)
 
 ## Constructors
 
 | | |
 |---|---|
-| [LogtoWebViewAuthActivity](-logto-web-view-auth-activity-constructor) | fun [LogtoWebViewAuthActivity](-logto-web-view-auth-activity-constructor)() |
+| LogtoWebViewAuthActivity | fun LogtoWebViewAuthActivity() |
 
 ## Types
 

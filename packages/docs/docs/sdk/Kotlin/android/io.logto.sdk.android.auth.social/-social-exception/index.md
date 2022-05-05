@@ -1,13 +1,13 @@
 # SocialException
 
 
-class [SocialException](index.md)(type: [SocialException.Type](-type/index.md)) : [RuntimeException](https://developer.android.com/reference/kotlin/java/lang/RuntimeException.html)
+class SocialException(type: [SocialException.Type](-type/index.md)) : [RuntimeException](https://developer.android.com/reference/kotlin/java/lang/RuntimeException.html)
 
 ## Constructors
 
 | | |
 |---|---|
-| [SocialException](-social-exception-constructor) | fun [SocialException](-social-exception-constructor)(type: [SocialException.Type](-type/index.md)) |
+| SocialException | fun SocialException(type: [SocialException.Type](-type/index.md)) |
 
 ## Types
 
@@ -19,6 +19,6 @@ class [SocialException](index.md)(type: [SocialException.Type](-type/index.md)) 
 
 | Name | Summary |
 |---|---|
-| [code](code.md) | val [code](code.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |
-| [socialCode](social-code.md) | var [socialCode](social-code.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)? = null |
-| [socialMessage](social-message.md) | var [socialMessage](social-message.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)? = null |
+| code | val code: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |
+| socialCode | var socialCode: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)? = null |
+| socialMessage | var socialMessage: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)? = null |
