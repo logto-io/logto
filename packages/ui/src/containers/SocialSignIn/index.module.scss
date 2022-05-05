@@ -2,7 +2,7 @@
 
 .socialIconList {
   @include _.flex-row;
-  @include _.mobile-container-width;
+  @include _.container-width;
   justify-content: center;
   margin: 0 auto;
 
@@ -22,7 +22,7 @@
 .socialLinkList {
   margin: 0 auto;
   @include _.flex-column;
-  @include _.mobile-container-width;
+  @include _.container-width;
 
   .socialLinkButton {
     margin-bottom: _.unit(4);

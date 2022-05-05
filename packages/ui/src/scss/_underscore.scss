@@ -29,7 +29,14 @@
   color: var(--color-text);
 }
 
-@mixin mobile-container-width {
+@mixin page-wrapper {
+  position: relative;
+  padding: unit(6) unit(5);
+  @include flex-column;
+  justify-content: flex-start;
+}
+
+@mixin container-width {
   width: 100%;
   max-width: 360px;
 }

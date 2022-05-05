@@ -34,11 +34,13 @@ const SecondarySignIn = () => {
   }
 
   return (
-    <div className={styles.wrapper}>
+    <>
       <NavBar />
-      <div className={styles.title}>{t('action.sign_in')}</div>
-      {signInForm}
-    </div>
+      <div className={styles.wrapper}>
+        <div className={styles.title}>{t('action.sign_in')}</div>
+        {signInForm}
+      </div>
+    </>
   );
 };
 

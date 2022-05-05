@@ -34,11 +34,13 @@ const Register = () => {
   }
 
   return (
-    <div className={styles.wrapper}>
+    <>
       <NavBar />
-      <div className={styles.title}>{t('action.create_account')}</div>
-      {registerForm}
-    </div>
+      <div className={styles.wrapper}>
+        <div className={styles.title}>{t('action.create_account')}</div>
+        {registerForm}
+      </div>
+    </>
   );
 };
 
