@@ -1,10 +1,10 @@
 import React, { SVGProps } from 'react';
 
-import CloseIcon from '@/assets/icons/close-icon.svg';
+import IconClear from '@/assets/icons/clear-icon.svg';
 
 const ClearIcon = (props: SVGProps<SVGSVGElement>) => (
-  <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" {...props}>
-    <use href={`${CloseIcon}#close-icon`} />
+  <svg width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <use href={`${IconClear}#clear`} />
   </svg>
 );
 

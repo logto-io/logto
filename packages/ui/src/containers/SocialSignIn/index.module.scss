@@ -1,11 +1,10 @@
 @use '@/scss/underscore' as _;
 
 .socialIconList {
-  width: 100%;
-  max-width: 360px;
-  margin: 0 auto;
   @include _.flex-row;
+  @include _.mobile-container-width;
   justify-content: center;
+  margin: 0 auto;
 
   .socialButton {
     margin-right: _.unit(8);
@@ -21,12 +20,20 @@
 }
 
 .socialLinkList {
-  width: 100%;
-  max-width: 360px;
   margin: 0 auto;
   @include _.flex-column;
+  @include _.mobile-container-width;
 
   .socialLinkButton {
     margin-bottom: _.unit(4);
+  }
+
+  .expandIcon {
+    width: 20px;
+    height: 20px;
+
+    &.expanded {
+      transform: rotate(180deg);
+    }
   }
 }

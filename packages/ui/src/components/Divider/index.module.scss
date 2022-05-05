@@ -5,8 +5,7 @@
   @include _.flex-row;
   font: var(--font-body);
   color: var(--color-caption);
-  margin: _.unit(4) 0;
-  width: 100%;
+  margin: _.unit(5) 0;
 
   .line {
     flex: 1;

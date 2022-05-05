@@ -29,6 +29,11 @@
   color: var(--color-text);
 }
 
+@mixin mobile-container-width {
+  width: 100%;
+  max-width: 360px;
+}
+
 @function border($color: transparent, $width: 1) {
   @return #{$width}px solid #{$color};
 }

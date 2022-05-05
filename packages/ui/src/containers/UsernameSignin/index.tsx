@@ -13,7 +13,7 @@ import useForm from '@/hooks/use-form';
 import useTerms from '@/hooks/use-terms';
 import { SearchParameters } from '@/types';
 import { getSearchParameters } from '@/utils';
-import { usernameValidation, passwordValidation } from '@/utils/field-validations';
+import { requiredValidation } from '@/utils/field-validations';
 
 import * as styles from './index.module.scss';
 
@@ -81,7 +81,7 @@ const UsernameSignin = ({ className }: Props) => {
         name="username"
         autoComplete="username"
         placeholder={t('input.username')}
-        {...register('username', usernameValidation)}
+        {...register('username', (value) => requiredValidation('username', value))}
         onClear={() => {
           setFieldValue((state) => ({ ...state, username: '' }));
         }}
@@ -91,7 +91,7 @@ const UsernameSignin = ({ className }: Props) => {
         name="password"
         autoComplete="current-password"
         placeholder={t('input.password')}
-        {...register('password', passwordValidation)}
+        {...register('password', (value) => requiredValidation('password', value))}
       />
       {responseErrorMessage && <ErrorMessage>{responseErrorMessage}</ErrorMessage>}
       <TermsOfUse className={styles.terms} />

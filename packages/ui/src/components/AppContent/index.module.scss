@@ -5,8 +5,7 @@ $font-family: 'PingFang SC', 'SF Pro Display', 'Siyuan Heiti', 'Roboto';
 $font-family-small: 'PingFang SC', 'SF Pro Text', 'Siyuan Heiti', 'Roboto';
 
 .content {
-  position: absolute;
-  inset: 0;
+  min-height: 100vh;
   background: var(--color-base);
   color: var(--color-text);
   font: var(--font-body);

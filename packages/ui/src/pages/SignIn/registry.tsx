@@ -1,6 +1,7 @@
 import React from 'react';
 
 import Divider from '@/components/Divider';
+import TextLink from '@/components/TextLink';
 import { EmailPasswordless, PhonePasswordless } from '@/containers/Passwordless';
 import SignInMethodsLink from '@/containers/SignInMethodsLink';
 import { PrimarySocialSignIn, SecondarySocialSignIn } from '@/containers/SocialSignIn';
@@ -49,20 +50,49 @@ export const SecondarySection = ({
     return (
       <>
         <Divider label="description.continue_with" className={styles.divider} />
-        <SignInMethodsLink signInMethods={localMethods} className={styles.otherMethodsLink} />
+        <SignInMethodsLink signInMethods={localMethods} />
       </>
     );
   }
 
   return (
     <>
-      <SignInMethodsLink signInMethods={localMethods} template="sign_in_with" />
+      <SignInMethodsLink
+        signInMethods={localMethods}
+        template="sign_in_with"
+        className={styles.otherMethodsLink}
+      />
       {secondarySignInMethods.includes('social') && (
         <>
-          <Divider label="description.continue_with" className={styles.divider} />
+          <Divider label="description.or" className={styles.divider} />
           <SecondarySocialSignIn />
         </>
       )}
     </>
   );
+};
+
+export const CreateAccoutnLink = ({
+  primarySignInMethod,
+}: {
+  primarySignInMethod?: SignInMethod;
+}) => {
+  switch (primarySignInMethod) {
+    case 'username':
+    case 'email':
+    case 'sms':
+      return (
+        <>
+          <div className={styles.placeHolder} />
+          <TextLink
+            className={styles.createAccount}
+            type="secondary"
+            href={`/register/${primarySignInMethod}`}
+            text="action.create_account"
+          />
+        </>
+      );
+    default:
+      return null;
+  }
 };

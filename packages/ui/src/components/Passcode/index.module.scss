@@ -2,9 +2,8 @@
 
 .passcode {
   @include _.flex-row;
+  @include _.mobile-container-width;
   justify-content: space-between;
-  width: 100%;
-  max-width: 360px;
   margin: 0 auto;
 
   input {
@@ -26,10 +25,6 @@
 
     &:focus {
       border: _.border(var(--color-primary));
-    }
-
-    &.error {
-      border: _.border(var(--color-error));
     }
 
     &::placeholder {

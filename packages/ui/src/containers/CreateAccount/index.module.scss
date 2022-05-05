@@ -1,10 +1,9 @@
 @use '@/scss/underscore' as _;
 
 .form {
-  width: 100%;
-  max-width: 360px;
-  margin: 0 auto;
+  @include _.mobile-container-width;
   @include _.flex-column;
+  margin: 0 auto;
 
   > * {
     width: 100%;
@@ -12,6 +11,10 @@
 
   .inputField {
     margin-bottom: _.unit(4);
+  }
+
+  .confirmPassword > * {
+    border: _.border();
   }
 
   .terms {

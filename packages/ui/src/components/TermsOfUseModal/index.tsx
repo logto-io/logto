@@ -2,8 +2,8 @@ import React, { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import reactStringReplace from 'react-string-replace';
 
-import ConfirmModal from '../ConfirmModal';
-import TextLink from '../TextLink';
+import ConfirmModal from '@/components/ConfirmModal';
+import TextLink from '@/components/TextLink';
 
 type Props = {
   isOpen?: boolean;

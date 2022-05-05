@@ -1,25 +1,17 @@
 import classNames from 'classnames';
 import React, { useState, useRef, HTMLProps } from 'react';
 
-import ErrorMessage, { ErrorType } from '../ErrorMessage';
-import { PrivacyIcon } from '../Icons';
+import ErrorMessage, { ErrorType } from '@/components/ErrorMessage';
+import { PrivacyIcon } from '@/components/Icons';
+
 import * as styles from './index.module.scss';
 
 export type Props = Omit<HTMLProps<HTMLInputElement>, 'type'> & {
   className?: string;
   error?: ErrorType;
-  forceHidden?: boolean;
 };
 
-const PasswordInput = ({
-  className,
-  value,
-  error,
-  forceHidden = false,
-  onFocus,
-  onBlur,
-  ...rest
-}: Props) => {
+const PasswordInput = ({ className, value, error, onFocus, onBlur, ...rest }: Props) => {
   // Toggle the password visibility
   const [type, setType] = useState('password');
   const [onInputFocus, setOnInputFocus] = useState(false);
@@ -45,7 +37,7 @@ const PasswordInput = ({
           }}
           {...rest}
         />
-        {!forceHidden && value && onInputFocus && (
+        {value && onInputFocus && (
           <PrivacyIcon
             className={styles.actionButton}
             type={iconType}
