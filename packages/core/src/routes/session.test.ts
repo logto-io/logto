@@ -316,86 +316,106 @@ describe('sessionRoutes', () => {
     });
   });
 
-  describe('POST /session/sign-in/social', () => {
+  describe('POST /session/sign-in/social/request-authorization', () => {
     it('should throw when redirectURI is invalid', async () => {
-      const response = await sessionRequest.post('/session/sign-in/social').send({
-        connectorId: 'social_enabled',
-        state: 'state',
-        redirectUri: 'logto.dev',
-      });
+      const response = await sessionRequest
+        .post('/session/sign-in/social/request-authorization')
+        .send({
+          connectorId: 'social_enabled',
+          state: 'state',
+          redirectUri: 'logto.dev',
+        });
       expect(response.statusCode).toEqual(400);
     });
 
     it('sign-in with social and redirect', async () => {
-      const response = await sessionRequest.post('/session/sign-in/social').send({
-        connectorId: 'social_enabled',
-        state: 'state',
-        redirectUri: 'https://logto.dev',
-      });
+      const response = await sessionRequest
+        .post('/session/sign-in/social/request-authorization')
+        .send({
+          connectorId: 'social_enabled',
+          state: 'state',
+          redirectUri: 'https://logto.dev',
+        });
       expect(response.body).toHaveProperty('redirectTo', '');
     });
 
     it('throw error when sign-in with social but miss state', async () => {
-      const response = await sessionRequest.post('/session/sign-in/social').send({
-        connectorId: 'social_enabled',
-        redirectUri: 'https://logto.dev',
-      });
+      const response = await sessionRequest
+        .post('/session/sign-in/social/request-authorization')
+        .send({
+          connectorId: 'social_enabled',
+          redirectUri: 'https://logto.dev',
+        });
       expect(response.statusCode).toEqual(400);
     });
 
     it('throw error when sign-in with social but miss redirectUri', async () => {
-      const response = await sessionRequest.post('/session/sign-in/social').send({
-        connectorId: 'social_enabled',
-        state: 'state',
-      });
+      const response = await sessionRequest
+        .post('/session/sign-in/social/request-authorization')
+        .send({
+          connectorId: 'social_enabled',
+          state: 'state',
+        });
       expect(response.statusCode).toEqual(400);
     });
 
     it('throw error when connector is disabled', async () => {
-      const response = await sessionRequest.post('/session/sign-in/social').send({
-        connectorId: 'social_disabled',
-        state: 'state',
-        redirectUri: 'https://logto.dev',
-      });
+      const response = await sessionRequest
+        .post('/session/sign-in/social/request-authorization')
+        .send({
+          connectorId: 'social_disabled',
+          state: 'state',
+          redirectUri: 'https://logto.dev',
+        });
       expect(response.statusCode).toEqual(400);
     });
 
     it('throw error when no social connector is found', async () => {
-      const response = await sessionRequest.post('/session/sign-in/social').send({
-        connectorId: 'others',
-        state: 'state',
-        redirectUri: 'https://logto.dev',
-      });
+      const response = await sessionRequest
+        .post('/session/sign-in/social/request-authorization')
+        .send({
+          connectorId: 'others',
+          state: 'state',
+          redirectUri: 'https://logto.dev',
+        });
       expect(response.statusCode).toEqual(404);
     });
+  });
 
+  describe('POST /session/sign-in/social/handle-authorization-callback', () => {
     it('throw error when auth code is wrong', async () => {
-      const response = await sessionRequest.post('/session/sign-in/social').send({
-        connectorId: 'connectorId',
-        state: 'state',
-        redirectUri: 'https://logto.dev',
-        code: '123455',
-      });
+      const response = await sessionRequest
+        .post('/session/sign-in/social/handle-authorization-callback')
+        .send({
+          connectorId: 'connectorId',
+          state: 'state',
+          redirectUri: 'https://logto.dev',
+          code: '123455',
+        });
       expect(response.statusCode).toEqual(500);
     });
 
     it('throw error when code is provided but connector can not be found', async () => {
-      const response = await sessionRequest.post('/session/sign-in/social').send({
-        connectorId: '_connectorId',
-        state: 'state',
-        redirectUri: 'https://logto.dev',
-        code: '123456',
-      });
+      const response = await sessionRequest
+        .post('/session/sign-in/social/handle-authorization-callback')
+        .send({
+          connectorId: '_connectorId',
+          state: 'state',
+          redirectUri: 'https://logto.dev',
+          code: '123456',
+        });
       expect(response.statusCode).toEqual(422);
     });
 
     it('get and add user info with auth code, as well as assign result and redirect', async () => {
-      const response = await sessionRequest.post('/session/sign-in/social').send({
-        connectorId: 'connectorId',
-        state: 'state',
-        redirectUri: 'https://logto.dev',
-        code: '123456',
-      });
+      const response = await sessionRequest
+        .post('/session/sign-in/social/handle-authorization-callback')
+        .send({
+          connectorId: 'connectorId',
+          state: 'state',
+          redirectUri: 'https://logto.dev',
+          code: '123456',
+        });
       expect(updateUserById).toHaveBeenCalledWith(
         'id',
         expect.objectContaining({
@@ -412,12 +432,14 @@ describe('sessionRoutes', () => {
     });
 
     it('throw error when identity exists', async () => {
-      const response = await sessionRequest.post('/session/sign-in/social').send({
-        connectorId: '_connectorId_',
-        state: 'state',
-        redirectUri: 'https://logto.dev',
-        code: '123456',
-      });
+      const response = await sessionRequest
+        .post('/session/sign-in/social/handle-authorization-callback')
+        .send({
+          connectorId: '_connectorId_',
+          state: 'state',
+          redirectUri: 'https://logto.dev',
+          code: '123456',
+        });
       expect(interactionResult).toHaveBeenCalledWith(
         expect.anything(),
         expect.anything(),
