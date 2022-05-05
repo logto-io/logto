@@ -36,7 +36,7 @@ describe('koaSlonikErrorHandler middleware', () => {
   });
 
   it('Insertion Error', async () => {
-    const error = new InsertionError(Users, { id: '123' });
+    const error = new InsertionError(Users, { id: '123', applicationId: 'bar' });
     next.mockImplementationOnce(() => {
       throw error;
     });

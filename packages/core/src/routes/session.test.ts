@@ -1,7 +1,8 @@
 /* eslint-disable max-lines */
+import { User } from '@logto/schemas';
 import { Provider } from 'oidc-provider';
 
-import { mockSignInExperience } from '@/__mocks__';
+import { mockSignInExperience, mockUser } from '@/__mocks__';
 import { ConnectorType } from '@/connectors/types';
 import RequestError from '@/errors/RequestError';
 import * as signInExperienceQueries from '@/queries/sign-in-experience';
@@ -52,9 +53,10 @@ jest.mock('@/lib/social', () => ({
   },
 }));
 const insertUser = jest.fn(async (..._args: unknown[]) => ({ id: 'id' }));
+const findUserById = jest.fn(async (): Promise<User> => mockUser);
 const updateUserById = jest.fn(async (..._args: unknown[]) => ({ id: 'id' }));
 jest.mock('@/queries/user', () => ({
-  findUserById: async () => ({ id: 'id' }),
+  findUserById: async () => findUserById(),
   findUserByIdentity: async () => ({ id: 'id', identities: {} }),
   findUserByPhone: async () => ({ id: 'id' }),
   findUserByEmail: async () => ({ id: 'id' }),
@@ -789,6 +791,10 @@ describe('sessionRoutes', () => {
 
   describe('POST /session/consent', () => {
     describe('should call grant.save() and assign interaction results', () => {
+      afterEach(() => {
+        updateUserById.mockClear();
+      });
+
       it('with empty details and reusing old grant', async () => {
         interactionDetails.mockResolvedValueOnce({
           session: { accountId: 'accountId' },
@@ -826,6 +832,22 @@ describe('sessionRoutes', () => {
           expect.anything()
         );
       });
+      it('should save application id when the user first consented', async () => {
+        interactionDetails.mockResolvedValueOnce({
+          session: { accountId: mockUser.id },
+          params: { client_id: 'clientId' },
+          prompt: {
+            name: 'consent',
+            details: {},
+            reasons: ['consent_prompt', 'native_client_prompt'],
+          },
+          grantId: 'grantId',
+        });
+        findUserById.mockImplementationOnce(async () => ({ ...mockUser, applicationId: null }));
+        const response = await sessionRequest.post('/session/consent');
+        expect(updateUserById).toHaveBeenCalledWith(mockUser.id, { applicationId: 'clientId' });
+        expect(response.statusCode).toEqual(200);
+      });
       it('missingOIDCScope and missingResourceScopes', async () => {
         interactionDetails.mockResolvedValueOnce({
           session: { accountId: 'accountId' },
@@ -856,7 +878,7 @@ describe('sessionRoutes', () => {
       });
     });
     it('throws if session is missing', async () => {
-      interactionDetails.mockResolvedValueOnce({});
+      interactionDetails.mockResolvedValueOnce({ params: { client_id: 'clientId' } });
       await expect(sessionRequest.post('/session/consent')).resolves.toHaveProperty(
         'statusCode',
         400

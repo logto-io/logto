@@ -1,6 +1,8 @@
 import { Context } from 'koa';
 import { InteractionResults, Provider } from 'oidc-provider';
 
+import { findUserById, updateUserById } from '@/queries/user';
+
 export const assignInteractionResults = async (
   ctx: Context,
   provider: Provider,
@@ -11,4 +13,13 @@ export const assignInteractionResults = async (
     mergeWithLastSubmission: merge,
   });
   ctx.body = { redirectTo };
+};
+
+export const saveUserFirstConsentedAppId = async (userId: string, applicationId: string) => {
+  const { applicationId: firstConsentedAppId } = await findUserById(userId);
+
+  if (!firstConsentedAppId) {
+    // Save application id that the user first consented
+    await updateUserById(userId, { applicationId });
+  }
 };
