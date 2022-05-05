@@ -21,6 +21,27 @@ import { createRequester } from '@/utils/test-utils';
 
 import connectorRoutes from './connector';
 
+const mockMetadata: ConnectorMetadata = {
+  id: 'connector_0',
+  type: ConnectorType.Social,
+  platform: ConnectorPlatform.NA,
+  name: {},
+  logo: './logo.png',
+  description: {},
+  readme: 'README.md',
+  configTemplate: 'config-template.md',
+};
+const mockConnector: Connector = {
+  id: 'connector_0',
+  name: 'connector_0',
+  platform: ConnectorPlatform.NA,
+  type: ConnectorType.Social,
+  enabled: true,
+  metadata: mockMetadata,
+  config: {},
+  createdAt: 1_234_567_890_123,
+};
+
 type ConnectorInstance = {
   connector: Connector;
   metadata: ConnectorMetadata;
@@ -189,35 +210,8 @@ describe('connector route', () => {
     it('enables one of the social connectors (with valid config)', async () => {
       getConnectorInstanceByIdPlaceHolder.mockImplementationOnce(async (_id: string) => {
         return {
-          connector: {
-            id: 'connector_0',
-            name: 'connector_0',
-            platform: ConnectorPlatform.NA,
-            type: ConnectorType.Social,
-            enabled: true,
-            config: {},
-            metadata: {
-              id: 'connector_0',
-              type: ConnectorType.Social,
-              platform: ConnectorPlatform.NA,
-              name: {},
-              logo: './logo.png',
-              description: {},
-              readme: 'README.md',
-              configTemplate: 'config-template.md',
-            },
-            createdAt: 1_234_567_890_123,
-          },
-          metadata: {
-            id: 'connector_0',
-            type: ConnectorType.Social,
-            platform: ConnectorPlatform.NA,
-            name: {},
-            logo: './logo.png',
-            description: {},
-            readme: 'README.md',
-            configTemplate: 'config-template.md',
-          },
+          connector: mockConnector,
+          metadata: mockMetadata,
           validateConfig: jest.fn(),
         };
       });
@@ -231,16 +225,7 @@ describe('connector route', () => {
         })
       );
       expect(response.body).toMatchObject({
-        metadata: {
-          id: 'connector_0',
-          type: ConnectorType.Social,
-          platform: ConnectorPlatform.NA,
-          name: {},
-          logo: './logo.png',
-          description: {},
-          readme: 'README.md',
-          configTemplate: 'config-template.md',
-        },
+        metadata: mockMetadata,
       });
       expect(response).toHaveProperty('statusCode', 200);
     });
@@ -248,35 +233,8 @@ describe('connector route', () => {
     it('enables one of the social connectors (with invalid config)', async () => {
       getConnectorInstanceByIdPlaceHolder.mockImplementationOnce(async (_id: string) => {
         return {
-          connector: {
-            id: 'connector_0',
-            name: 'connector_0',
-            platform: ConnectorPlatform.NA,
-            type: ConnectorType.Social,
-            enabled: true,
-            config: {},
-            metadata: {
-              id: 'connector_0',
-              type: ConnectorType.Social,
-              platform: ConnectorPlatform.NA,
-              name: {},
-              logo: './logo.png',
-              description: {},
-              readme: 'README.md',
-              configTemplate: 'config-template.md',
-            },
-            createdAt: 1_234_567_890_123,
-          },
-          metadata: {
-            id: 'connector_0',
-            type: ConnectorType.Social,
-            platform: ConnectorPlatform.NA,
-            name: {},
-            logo: './logo.png',
-            description: {},
-            readme: 'README.md',
-            configTemplate: 'config-template.md',
-          },
+          connector: mockConnector,
+          metadata: mockMetadata,
           validateConfig: async () => {
             throw new ConnectorError(ConnectorErrorCodes.InvalidConfig);
           },
@@ -291,35 +249,8 @@ describe('connector route', () => {
     it('disables one of the social connectors', async () => {
       getConnectorInstanceByIdPlaceHolder.mockImplementationOnce(async (_id: string) => {
         return {
-          connector: {
-            id: 'connector_0',
-            name: 'connector_0',
-            platform: ConnectorPlatform.NA,
-            type: ConnectorType.Social,
-            enabled: true,
-            config: {},
-            metadata: {
-              id: 'connector_0',
-              type: ConnectorType.Social,
-              platform: ConnectorPlatform.NA,
-              name: {},
-              logo: './logo.png',
-              description: {},
-              readme: 'README.md',
-              configTemplate: 'config-template.md',
-            },
-            createdAt: 1_234_567_890_123,
-          },
-          metadata: {
-            id: 'connector_0',
-            type: ConnectorType.Social,
-            platform: ConnectorPlatform.NA,
-            name: {},
-            logo: './logo.png',
-            description: {},
-            readme: 'README.md',
-            configTemplate: 'config-template.md',
-          },
+          connector: mockConnector,
+          metadata: mockMetadata,
           validateConfig: async () => {
             throw new ConnectorError(ConnectorErrorCodes.InvalidConfig);
           },
@@ -335,53 +266,30 @@ describe('connector route', () => {
         })
       );
       expect(response.body).toMatchObject({
-        metadata: {
-          id: 'connector_0',
-          type: ConnectorType.Social,
-          platform: ConnectorPlatform.NA,
-          name: {},
-          logo: './logo.png',
-          description: {},
-          readme: 'README.md',
-          configTemplate: 'config-template.md',
-        },
+        metadata: mockMetadata,
       });
       expect(response).toHaveProperty('statusCode', 200);
     });
 
     it('enables one of the email/sms connectors (with valid config)', async () => {
       getConnectorInstancesPlaceHolder.mockResolvedValueOnce(mockConnectorInstanceList);
+      const mockedMetadata = {
+        ...mockMetadata,
+        id: 'connector_1',
+        type: ConnectorType.SMS,
+      };
+      const mockedConnector = {
+        ...mockConnector,
+        id: 'connector_1',
+        name: 'connector_1',
+        platform: ConnectorPlatform.NA,
+        type: ConnectorType.SMS,
+        metadata: mockedMetadata,
+      };
       getConnectorInstanceByIdPlaceHolder.mockImplementationOnce(async (_id: string) => {
         return {
-          connector: {
-            id: 'connector_1',
-            name: 'connector_1',
-            platform: ConnectorPlatform.NA,
-            type: ConnectorType.SMS,
-            enabled: true,
-            config: {},
-            metadata: {
-              id: 'connector_1',
-              type: ConnectorType.SMS,
-              platform: ConnectorPlatform.NA,
-              name: {},
-              logo: './logo.png',
-              description: {},
-              readme: 'README.md',
-              configTemplate: 'config-template.md',
-            },
-            createdAt: 1_234_567_890_234,
-          },
-          metadata: {
-            id: 'connector_1',
-            type: ConnectorType.SMS,
-            platform: ConnectorPlatform.NA,
-            name: {},
-            logo: './logo.png',
-            description: {},
-            readme: 'README.md',
-            configTemplate: 'config-template.md',
-          },
+          connector: mockedConnector,
+          metadata: mockedMetadata,
           validateConfig: jest.fn(),
         };
       });
@@ -410,53 +318,30 @@ describe('connector route', () => {
         })
       );
       expect(response.body).toMatchObject({
-        metadata: {
-          id: 'connector_1',
-          type: ConnectorType.SMS,
-          platform: ConnectorPlatform.NA,
-          name: {},
-          logo: './logo.png',
-          description: {},
-          readme: 'README.md',
-          configTemplate: 'config-template.md',
-        },
+        metadata: mockedMetadata,
       });
       expect(response).toHaveProperty('statusCode', 200);
     });
 
     it('enables one of the email/sms connectors (with invalid config)', async () => {
       getConnectorInstancesPlaceHolder.mockResolvedValueOnce(mockConnectorInstanceList);
+      const mockedMetadata = {
+        ...mockMetadata,
+        id: 'connector_1',
+        type: ConnectorType.SMS,
+      };
+      const mockedConnector = {
+        ...mockConnector,
+        id: 'connector_1',
+        name: 'connector_1',
+        platform: ConnectorPlatform.NA,
+        type: ConnectorType.SMS,
+        metadata: mockedMetadata,
+      };
       getConnectorInstanceByIdPlaceHolder.mockImplementationOnce(async (_id: string) => {
         return {
-          connector: {
-            id: 'connector_1',
-            name: 'connector_1',
-            platform: ConnectorPlatform.NA,
-            type: ConnectorType.SMS,
-            enabled: true,
-            config: {},
-            metadata: {
-              id: 'connector_1',
-              type: ConnectorType.SMS,
-              platform: ConnectorPlatform.NA,
-              name: {},
-              logo: './logo.png',
-              description: {},
-              readme: 'README.md',
-              configTemplate: 'config-template.md',
-            },
-            createdAt: 1_234_567_890_234,
-          },
-          metadata: {
-            id: 'connector_1',
-            type: ConnectorType.SMS,
-            platform: ConnectorPlatform.NA,
-            name: {},
-            logo: './logo.png',
-            description: {},
-            readme: 'README.md',
-            configTemplate: 'config-template.md',
-          },
+          connector: mockedConnector,
+          metadata: mockedMetadata,
           validateConfig: async () => {
             throw new ConnectorError(ConnectorErrorCodes.InvalidConfig);
           },
@@ -469,37 +354,24 @@ describe('connector route', () => {
     });
 
     it('disables one of the email/sms connectors', async () => {
+      const mockedMetadata = {
+        ...mockMetadata,
+        id: 'connector_4',
+        type: ConnectorType.Email,
+        platform: ConnectorPlatform.NA,
+      };
+      const mockedConnector = {
+        ...mockConnector,
+        id: 'connector_4',
+        name: 'connector_4',
+        platform: ConnectorPlatform.NA,
+        type: ConnectorType.Email,
+        metadata: mockedMetadata,
+      };
       getConnectorInstanceByIdPlaceHolder.mockImplementationOnce(async (_id: string) => {
         return {
-          connector: {
-            id: 'connector_4',
-            name: 'connector_4',
-            platform: ConnectorPlatform.NA,
-            type: ConnectorType.Email,
-            enabled: true,
-            config: {},
-            metadata: {
-              id: 'connector_4',
-              type: ConnectorType.Email,
-              platform: ConnectorPlatform.NA,
-              name: {},
-              logo: './logo.png',
-              description: {},
-              readme: 'README.md',
-              configTemplate: 'config-template.md',
-            },
-            createdAt: 1_234_567_890_567,
-          },
-          metadata: {
-            id: 'connector_4',
-            type: ConnectorType.Email,
-            platform: ConnectorPlatform.NA,
-            name: {},
-            logo: './logo.png',
-            description: {},
-            readme: 'README.md',
-            configTemplate: 'config-template.md',
-          },
+          connector: mockedConnector,
+          metadata: mockedMetadata,
         };
       });
       const response = await connectorRequest
@@ -512,16 +384,7 @@ describe('connector route', () => {
         })
       );
       expect(response.body).toMatchObject({
-        metadata: {
-          id: 'connector_4',
-          type: ConnectorType.Email,
-          platform: ConnectorPlatform.NA,
-          name: {},
-          logo: './logo.png',
-          description: {},
-          readme: 'README.md',
-          configTemplate: 'config-template.md',
-        },
+        metadata: mockedMetadata,
       });
       expect(response).toHaveProperty('statusCode', 200);
     });
@@ -567,35 +430,8 @@ describe('connector route', () => {
     it('config validation fails', async () => {
       getConnectorInstanceByIdPlaceHolder.mockImplementationOnce(async (_id: string) => {
         return {
-          connector: {
-            id: 'connector_0',
-            name: 'connector_0',
-            platform: ConnectorPlatform.NA,
-            type: ConnectorType.Social,
-            enabled: true,
-            config: {},
-            metadata: {
-              id: 'connector_0',
-              type: ConnectorType.Social,
-              platform: ConnectorPlatform.NA,
-              name: {},
-              logo: './logo.png',
-              description: {},
-              readme: 'README.md',
-              configTemplate: 'config-template.md',
-            },
-            createdAt: 1_234_567_890_123,
-          },
-          metadata: {
-            id: 'connector_0',
-            type: ConnectorType.Social,
-            platform: ConnectorPlatform.NA,
-            name: {},
-            logo: './logo.png',
-            description: {},
-            readme: 'README.md',
-            configTemplate: 'config-template.md',
-          },
+          connector: mockConnector,
+          metadata: mockMetadata,
           validateConfig: async () => {
             throw new ConnectorError(ConnectorErrorCodes.InvalidConfig);
           },
@@ -610,35 +446,8 @@ describe('connector route', () => {
     it('successfully updates connector configs', async () => {
       getConnectorInstanceByIdPlaceHolder.mockImplementationOnce(async (_id: string) => {
         return {
-          connector: {
-            id: 'connector_0',
-            name: 'connector_0',
-            platform: ConnectorPlatform.NA,
-            type: ConnectorType.Social,
-            enabled: true,
-            config: {},
-            metadata: {
-              id: 'connector_0',
-              type: ConnectorType.Social,
-              platform: ConnectorPlatform.NA,
-              name: {},
-              logo: './logo.png',
-              description: {},
-              readme: 'README.md',
-              configTemplate: 'config-template.md',
-            },
-            createdAt: 1_234_567_890_123,
-          },
-          metadata: {
-            id: 'connector_0',
-            type: ConnectorType.Social,
-            platform: ConnectorPlatform.NA,
-            name: {},
-            logo: './logo.png',
-            description: {},
-            readme: 'README.md',
-            configTemplate: 'config-template.md',
-          },
+          connector: mockConnector,
+          metadata: mockMetadata,
           validateConfig: jest.fn(),
         };
       });
@@ -652,16 +461,7 @@ describe('connector route', () => {
         })
       );
       expect(response.body).toMatchObject({
-        metadata: {
-          id: 'connector_0',
-          type: ConnectorType.Social,
-          platform: ConnectorPlatform.NA,
-          name: {},
-          logo: './logo.png',
-          description: {},
-          readme: 'README.md',
-          configTemplate: 'config-template.md',
-        },
+        metadata: mockMetadata,
       });
       expect(response).toHaveProperty('statusCode', 200);
     });
@@ -673,36 +473,18 @@ describe('connector route', () => {
     });
 
     it('should get email connector and send message', async () => {
+      const mockedMetadata = {
+        ...mockMetadata,
+        type: ConnectorType.Email,
+      };
+      const mockedConnector = {
+        ...mockConnector,
+        type: ConnectorType.Email,
+        metadata: mockedMetadata,
+      };
       const mockedEmailConnector: EmailConnectorInstance = {
-        connector: {
-          id: 'connector_0',
-          name: 'connector_0',
-          platform: ConnectorPlatform.NA,
-          type: ConnectorType.Email,
-          enabled: true,
-          config: {},
-          metadata: {
-            id: 'connector_0',
-            type: ConnectorType.Email,
-            platform: ConnectorPlatform.NA,
-            name: {},
-            logo: './logo.png',
-            description: {},
-            readme: 'README.md',
-            configTemplate: 'config-template.md',
-          },
-          createdAt: 1_234_567_890_123,
-        },
-        metadata: {
-          id: 'connector_0',
-          type: ConnectorType.Email,
-          platform: ConnectorPlatform.NA,
-          name: {},
-          logo: './logo.png',
-          description: {},
-          readme: 'README.md',
-          configTemplate: 'config-template.md',
-        },
+        connector: mockedConnector,
+        metadata: mockedMetadata,
         validateConfig: jest.fn(),
         getConfig: jest.fn(),
         sendMessage: async (
@@ -733,36 +515,18 @@ describe('connector route', () => {
     });
 
     it('should get SMS connector and send message', async () => {
-      const mockedSmsConnector: SmsConnectorInstance = {
-        connector: {
-          id: 'connector_0',
-          name: 'connector_0',
-          platform: ConnectorPlatform.NA,
-          type: ConnectorType.SMS,
-          enabled: true,
-          config: {},
-          metadata: {
-            id: 'connector_0',
-            type: ConnectorType.SMS,
-            platform: ConnectorPlatform.NA,
-            name: {},
-            logo: './logo.png',
-            description: {},
-            readme: 'README.md',
-            configTemplate: 'config-template.md',
-          },
-          createdAt: 1_234_567_890_123,
-        },
-        metadata: {
-          id: 'connector_0',
-          type: ConnectorType.SMS,
-          platform: ConnectorPlatform.NA,
-          name: {},
-          logo: './logo.png',
-          description: {},
-          readme: 'README.md',
-          configTemplate: 'config-template.md',
-        },
+      const mockedMetadata = {
+        ...mockMetadata,
+        type: ConnectorType.SMS,
+      };
+      const mockedConnector = {
+        ...mockConnector,
+        type: ConnectorType.SMS,
+        metadata: mockedMetadata,
+      };
+      const mockedSmsConnectorInstance: SmsConnectorInstance = {
+        connector: mockedConnector,
+        metadata: mockedMetadata,
         validateConfig: jest.fn(),
         getConfig: jest.fn(),
         sendMessage: async (
@@ -774,10 +538,10 @@ describe('connector route', () => {
       };
 
       getConnectorInstanceByTypePlaceHolder.mockImplementationOnce(async (_: ConnectorType) => {
-        return mockedSmsConnector;
+        return mockedSmsConnectorInstance;
       });
 
-      const sendMessageSpy = jest.spyOn(mockedSmsConnector, 'sendMessage');
+      const sendMessageSpy = jest.spyOn(mockedSmsConnectorInstance, 'sendMessage');
       const response = await connectorRequest
         .post('/connectors/test/sms')
         .send({ phone: '12345678901' });

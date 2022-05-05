@@ -20,7 +20,12 @@ const alipayConnector = {
   type: ConnectorType.Social,
   enabled: true,
   config: {},
-  metadata: { ...mockMetadata, id: 'alipay', type: ConnectorType.Social },
+  metadata: {
+    ...mockMetadata,
+    id: 'alipay',
+    type: ConnectorType.Social,
+    platform: ConnectorPlatform.Web,
+  },
   createdAt: 1_646_382_233_911,
 };
 const aliyunDmConnector = {
@@ -30,7 +35,12 @@ const aliyunDmConnector = {
   type: ConnectorType.Email,
   enabled: true,
   config: {},
-  metadata: { ...mockMetadata, id: 'aliyun-dm', type: ConnectorType.Email },
+  metadata: {
+    ...mockMetadata,
+    id: 'aliyun-dm',
+    type: ConnectorType.Email,
+    platform: ConnectorPlatform.NA,
+  },
   createdAt: 1_646_382_233_911,
 };
 const aliyunSmsConnector = {
@@ -40,7 +50,12 @@ const aliyunSmsConnector = {
   type: ConnectorType.SMS,
   enabled: false,
   config: {},
-  metadata: { ...mockMetadata, id: 'aliyun-sms', type: ConnectorType.SMS },
+  metadata: {
+    ...mockMetadata,
+    id: 'aliyun-sms',
+    type: ConnectorType.SMS,
+    platform: ConnectorPlatform.NA,
+  },
   createdAt: 1_646_382_233_666,
 };
 const facebookConnector = {
@@ -50,7 +65,12 @@ const facebookConnector = {
   type: ConnectorType.Social,
   enabled: true,
   config: {},
-  metadata: { ...mockMetadata, id: 'facebook', type: ConnectorType.Social },
+  metadata: {
+    ...mockMetadata,
+    id: 'facebook',
+    type: ConnectorType.Social,
+    platform: ConnectorPlatform.Web,
+  },
   createdAt: 1_646_382_233_333,
 };
 const githubConnector = {
@@ -60,7 +80,12 @@ const githubConnector = {
   type: ConnectorType.Social,
   enabled: true,
   config: {},
-  metadata: { ...mockMetadata, id: 'github', type: ConnectorType.Social },
+  metadata: {
+    ...mockMetadata,
+    id: 'github',
+    type: ConnectorType.Social,
+    platform: ConnectorPlatform.Web,
+  },
   createdAt: 1_646_382_233_555,
 };
 const googleConnector = {
@@ -70,7 +95,12 @@ const googleConnector = {
   type: ConnectorType.Social,
   enabled: false,
   config: {},
-  metadata: { ...mockMetadata, id: 'google', type: ConnectorType.Social },
+  metadata: {
+    ...mockMetadata,
+    id: 'google',
+    type: ConnectorType.Social,
+    platform: ConnectorPlatform.Web,
+  },
   createdAt: 1_646_382_233_000,
 };
 const wechatConnector = {
@@ -80,7 +110,12 @@ const wechatConnector = {
   type: ConnectorType.Social,
   enabled: false,
   config: {},
-  metadata: { ...mockMetadata, id: 'wechat', type: ConnectorType.Social },
+  metadata: {
+    ...mockMetadata,
+    id: 'wechat',
+    type: ConnectorType.Social,
+    platform: ConnectorPlatform.Web,
+  },
   createdAt: 1_646_382_233_000,
 };
 const wechatNativeConnector = {
@@ -90,7 +125,12 @@ const wechatNativeConnector = {
   type: ConnectorType.Social,
   enabled: false,
   config: {},
-  metadata: { ...mockMetadata, id: 'wechat-native', type: ConnectorType.Social },
+  metadata: {
+    ...mockMetadata,
+    id: 'wechat-native',
+    type: ConnectorType.Social,
+    platform: ConnectorPlatform.Native,
+  },
   createdAt: 1_646_382_233_000,
 };
 
