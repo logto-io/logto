@@ -1,4 +1,4 @@
-import { ConnectorType, SignInMethodKey } from '@logto/schemas';
+import { SignInMethodKey } from '@logto/schemas';
 import React, { useEffect, useMemo } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -45,6 +45,11 @@ const SignInMethodsForm = () => {
           </>
         );
 
+        const enabled =
+          (method === SignInMethodKey.Email && email) ||
+          (method === SignInMethodKey.SMS && sms) ||
+          (method === SignInMethodKey.Social && social);
+
         return (
           <div key={method} className={styles.method}>
             <Checkbox
@@ -52,15 +57,7 @@ const SignInMethodsForm = () => {
               disabled={primaryMethod === method}
               {...register(`signInMethods.${method}`)}
             />
-            {method === SignInMethodKey.Email && email && (
-              <ConnectorSetupWarning type={ConnectorType.Email} />
-            )}
-            {method === SignInMethodKey.SMS && sms && (
-              <ConnectorSetupWarning type={ConnectorType.SMS} />
-            )}
-            {method === SignInMethodKey.Social && social && (
-              <ConnectorSetupWarning type={ConnectorType.Social} />
-            )}
+            {enabled && <ConnectorSetupWarning method={method} />}
           </div>
         );
       }),
@@ -86,13 +83,7 @@ const SignInMethodsForm = () => {
           )}
         />
       </FormField>
-      {primaryMethod === SignInMethodKey.SMS && <ConnectorSetupWarning type={ConnectorType.SMS} />}
-      {primaryMethod === SignInMethodKey.Email && (
-        <ConnectorSetupWarning type={ConnectorType.Email} />
-      )}
-      {primaryMethod === SignInMethodKey.Social && (
-        <ConnectorSetupWarning type={ConnectorType.Social} />
-      )}
+      {primaryMethod && <ConnectorSetupWarning method={primaryMethod} />}
       {primaryMethod === SignInMethodKey.Social && (
         <div className={styles.primarySocial}>
           <Controller
