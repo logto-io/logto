@@ -11,19 +11,16 @@ import {
 
 export type CreateSetting = {
   id: string;
-  customDomain?: string | null;
   adminConsole: AdminConsoleConfig;
 };
 
 export type Setting = {
   id: string;
-  customDomain: string | null;
   adminConsole: AdminConsoleConfig;
 };
 
 const createGuard: Guard<CreateSetting> = z.object({
   id: z.string(),
-  customDomain: z.string().nullable().optional(),
   adminConsole: adminConsoleConfigGuard,
 });
 
@@ -32,9 +29,8 @@ export const Settings: GeneratedSchema<CreateSetting> = Object.freeze({
   tableSingular: 'setting',
   fields: {
     id: 'id',
-    customDomain: 'custom_domain',
     adminConsole: 'admin_console',
   },
-  fieldKeys: ['id', 'customDomain', 'adminConsole'],
+  fieldKeys: ['id', 'adminConsole'],
   createGuard,
 });

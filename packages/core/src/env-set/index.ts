@@ -1,4 +1,4 @@
-import { conditionalString, getEnv, Optional } from '@silverhand/essentials';
+import { getEnv, Optional } from '@silverhand/essentials';
 import { DatabasePool } from 'slonik';
 
 import createPoolByEnv from './create-pool-by-env';
@@ -59,10 +59,7 @@ function createEnvSet() {
 
     load: async () => {
       values = await loadEnvValues();
-      pool = await createPoolByEnv(
-        values.isTest,
-        `http${conditionalString(values.isHttpsEnabled && 's')}://localhost:${values.port}`
-      );
+      pool = await createPoolByEnv(values.isTest);
     },
   };
 }

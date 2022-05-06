@@ -55,7 +55,7 @@ const inquireForLogtoDsn = async (key: string): Promise<[Optional<string>, boole
   return [dsn, true];
 };
 
-const createPoolByEnv = async (isTest: boolean, localhostUrl: string) => {
+const createPoolByEnv = async (isTest: boolean) => {
   // Database connection is disabled in unit test environment
   if (isTest) {
     return;
@@ -82,14 +82,8 @@ const createPoolByEnv = async (isTest: boolean, localhostUrl: string) => {
     const cli = createDatabaseCli(dsn);
 
     if (needsSeed) {
-      const domain = await inquirer.prompt({
-        name: 'value',
-        default: localhostUrl,
-        message: 'Enter your domain for Logto:',
-      });
-
       await cli.createTables();
-      await cli.seedTables(domain.value);
+      await cli.seedTables();
     }
 
     appendDotEnv(key, dsn);

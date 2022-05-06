@@ -13,7 +13,6 @@ import CardTitle from '@/components/CardTitle';
 import FormField from '@/components/FormField';
 import Select from '@/components/Select';
 import TabNav, { TabNavLink } from '@/components/TabNav';
-import TextInput from '@/components/TextInput';
 import { themeStorageKey } from '@/consts';
 import useApi, { RequestError } from '@/hooks/use-api';
 import * as detailsStyles from '@/scss/details.module.scss';
@@ -26,7 +25,6 @@ const Settings = () => {
   const {
     reset,
     handleSubmit,
-    register,
     control,
     formState: { isSubmitting },
   } = useForm<Setting>();
@@ -66,9 +64,6 @@ const Settings = () => {
       {data && (
         <form className={detailsStyles.body} onSubmit={onSubmit}>
           <div className={styles.fields}>
-            <FormField title="admin_console.settings.custom_domain">
-              <TextInput {...register('customDomain')} />
-            </FormField>
             <FormField isRequired title="admin_console.settings.language">
               <Controller
                 name="adminConsole.language"

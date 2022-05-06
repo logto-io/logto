@@ -40,22 +40,24 @@ describe('setting query', () => {
   });
 
   it('updateSetting', async () => {
-    const customDomain = 'logto.io';
+    const { adminConsole } = mockSetting;
 
     const expectSql = sql`
       update ${table}
-      set ${fields.customDomain}=$1
+      set
+      ${fields.adminConsole}=
+      coalesce("admin_console",'{}'::jsonb)|| $1
       where ${fields.id}=$2
       returning *
     `;
 
     mockQuery.mockImplementationOnce(async (sql, values) => {
       expectSqlAssert(sql, expectSql.sql);
-      expect(values).toEqual([customDomain, defaultSettingId]);
+      expect(values).toEqual([JSON.stringify(adminConsole), defaultSettingId]);
 
       return createMockQueryResult([dbvalue]);
     });
 
-    await expect(updateSetting({ customDomain })).resolves.toEqual(dbvalue);
+    await expect(updateSetting({ adminConsole })).resolves.toEqual(dbvalue);
   });
 });

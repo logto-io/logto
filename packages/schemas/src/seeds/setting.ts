@@ -5,10 +5,9 @@ import { AppearanceMode } from '../foundations';
 
 export const defaultSettingId = 'default';
 
-export const createDefaultSetting = (customDomain: string): Readonly<CreateSetting> =>
+export const createDefaultSetting = (): Readonly<CreateSetting> =>
   Object.freeze({
     id: defaultSettingId,
-    customDomain,
     adminConsole: {
       language: Language.English,
       appearanceMode: AppearanceMode.SyncWithSystem,

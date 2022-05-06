@@ -73,10 +73,10 @@ export const createDatabaseCli = (dsn: string) => {
     }
   };
 
-  const seedTables = async (domain: string) => {
+  const seedTables = async () => {
     await Promise.all([
       pool.query(insertInto(managementResource, 'resources')),
-      pool.query(insertInto(createDefaultSetting(domain), 'settings')),
+      pool.query(insertInto(createDefaultSetting(), 'settings')),
       pool.query(insertInto(defaultSignInExperience, 'sign_in_experiences')),
     ]);
     console.log(`${chalk.blue('[seed-tables]')} Seed tables succeeded.`);
