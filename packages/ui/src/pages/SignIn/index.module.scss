@@ -1,11 +1,7 @@
 @use '@/scss/underscore' as _;
 
 .wrapper {
-  position: relative;
-  padding: _.unit(8) _.unit(5);
-  min-height: 100vh;
-  @include _.flex-column;
-  justify-content: flex-start;
+  @include _.page-wrapper;
 
   .header {
     margin: _.unit(8);
@@ -17,7 +13,7 @@
   }
 
   .divider {
-    @include _.mobile-container-width;
+    @include _.container-width;
   }
 
   .primarySignIn {

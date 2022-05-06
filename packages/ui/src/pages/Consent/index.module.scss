@@ -1,15 +1,14 @@
 @use '@/scss/underscore' as _;
 
 .wrapper {
-  position: relative;
-  padding: _.unit(8) _.unit(5);
-  @include _.flex-column;
+  @include _.page-wrapper;
 
   .header {
-    margin: _.unit(30) 0;
+    margin-top: _.unit(30);
   }
 
   .content {
+    margin-top: _.unit(24);
     @include _.text-hint;
   }
 }

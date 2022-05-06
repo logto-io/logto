@@ -3,7 +3,7 @@
 .form {
   margin: 0 auto;
   @include _.flex-column;
-  @include _.mobile-container-width;
+  @include _.container-width;
 
   > * {
     width: 100%;

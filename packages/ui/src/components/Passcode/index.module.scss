@@ -2,7 +2,7 @@
 
 .passcode {
   @include _.flex-row;
-  @include _.mobile-container-width;
+  @include _.container-width;
   justify-content: space-between;
   margin: 0 auto;
 
