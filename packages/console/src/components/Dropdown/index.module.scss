@@ -2,12 +2,12 @@
 
 .content {
   background: var(--color-layer-1);
-  box-shadow: var(--shadow-light-s2);
+  box-shadow: var(--shadow-2);
   border-radius: _.unit(2);
   position: absolute;
 
   &.onTop {
-    box-shadow: var(--shadow-light-s2-reversed);
+    box-shadow: var(--shadow-2-reversed);
   }
 
   &:focus {
