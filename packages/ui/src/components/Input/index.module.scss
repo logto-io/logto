@@ -8,6 +8,9 @@
   border: _.border();
   background: var(--color-layer);
   color: var(--color-text);
+  // fix in safari input field line-height issue
+  height: 46px;
+  overflow: hidden;
 
 
   > *:not(:first-child) {

@@ -37,6 +37,14 @@ const ConfirmModal = ({
       overlayClassName={classNames(modalStyles.overlay, styles.overlay)}
       parentSelector={() => document.querySelector('main') ?? document.body}
       ariaHideApp={false}
+      onAfterOpen={() => {
+        /* eslint-disable @silverhand/fp/no-mutation */
+        document.body.style.overflow = 'hidden';
+      }}
+      onAfterClose={() => {
+        document.body.style.overflow = 'unset';
+        /* eslint-enable @silverhand/fp/no-mutation */
+      }}
     >
       <div className={styles.container}>
         <div className={styles.content}>{children}</div>

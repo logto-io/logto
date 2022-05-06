@@ -26,6 +26,14 @@ const Drawer = ({ className, isOpen = false, children, onClose }: Props) => {
       appElement={document.querySelector('main') ?? document.body}
       closeTimeoutMS={300}
       onRequestClose={onClose}
+      onAfterOpen={() => {
+        /* eslint-disable @silverhand/fp/no-mutation */
+        document.body.style.overflow = 'hidden';
+      }}
+      onAfterClose={() => {
+        document.body.style.overflow = 'unset';
+        /* eslint-enable @silverhand/fp/no-mutation */
+      }}
     >
       <div className={styles.container}>
         <div className={styles.header}>
