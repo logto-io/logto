@@ -703,17 +703,10 @@ importers:
       typescript: ^4.6.3
     devDependencies:
       '@algolia/client-search': 4.13.0
-<<<<<<< HEAD
-      '@docusaurus/core': 2.0.0-beta.20_fdtqczkawcrswx4npptvkurkw4
-      '@docusaurus/module-type-aliases': 2.0.0-beta.20_sfoxds7t5ydpegc3knd667wn6m
-      '@docusaurus/preset-classic': 2.0.0-beta.20_uvj66givyjjgbdpya4vjtwvhpy
-      '@docusaurus/theme-classic': 2.0.0-beta.18_fdtqczkawcrswx4npptvkurkw4
-=======
-      '@docusaurus/core': 2.0.0-beta.18_28e7016540b0a32b5f8d7be755522ab7
-      '@docusaurus/module-type-aliases': 2.0.0-beta.18_react-dom@17.0.2+react@17.0.2
-      '@docusaurus/preset-classic': 2.0.0-beta.18_a553ef1915c252608df8072a99daa77e
+      '@docusaurus/core': 2.0.0-beta.20_28e7016540b0a32b5f8d7be755522ab7
+      '@docusaurus/module-type-aliases': 2.0.0-beta.20_react-dom@17.0.2+react@17.0.2
+      '@docusaurus/preset-classic': 2.0.0-beta.20_a553ef1915c252608df8072a99daa77e
       '@docusaurus/theme-classic': 2.0.0-beta.18_28e7016540b0a32b5f8d7be755522ab7
->>>>>>> baa4700 (feat(core): separate social sign-in api)
       '@docusaurus/types': 2.0.0-beta.18
       '@mdx-js/react': 1.6.22_react@17.0.2
       '@tsconfig/docusaurus': 1.0.5
@@ -3161,13 +3154,8 @@ packages:
       '@docusaurus/utils-validation': 2.0.0-beta.18
       '@slorber/static-site-generator-webpack-plugin': 4.0.4
       '@svgr/webpack': 6.2.1
-<<<<<<< HEAD
       autoprefixer: 10.4.7_postcss@8.4.13
-      babel-loader: 8.2.5_rb5fcebzp6kx3hqg3ucus54t3m
-=======
-      autoprefixer: 10.4.4_postcss@8.4.12
-      babel-loader: 8.2.4_7ee2ee6f8cbdc1e65df0788b3107bc6d
->>>>>>> baa4700 (feat(core): separate social sign-in api)
+      babel-loader: 8.2.5_887a5110397f957d9e06dd05497793db
       babel-plugin-dynamic-import-node: 2.3.0
       boxen: 6.2.1
       chokidar: 3.5.3
@@ -3175,19 +3163,11 @@ packages:
       cli-table3: 0.6.2
       combine-promises: 1.1.0
       commander: 5.1.0
-<<<<<<< HEAD
       copy-webpack-plugin: 10.2.4_webpack@5.72.0
       core-js: 3.22.4
       css-loader: 6.7.1_webpack@5.72.0
-      css-minimizer-webpack-plugin: 3.4.1_tejugib4y3rw5hvgnfmxavjvsu
+      css-minimizer-webpack-plugin: 3.4.1_clean-css@5.3.0+webpack@5.72.0
       cssnano: 5.1.7_postcss@8.4.13
-=======
-      copy-webpack-plugin: 10.2.4_webpack@5.71.0
-      core-js: 3.21.1
-      css-loader: 6.7.1_webpack@5.71.0
-      css-minimizer-webpack-plugin: 3.4.1_clean-css@5.3.0+webpack@5.71.0
-      cssnano: 5.1.7_postcss@8.4.12
->>>>>>> baa4700 (feat(core): separate social sign-in api)
       del: 6.0.0
       detect-port: 1.3.0
       escape-html: 1.0.3
@@ -3203,27 +3183,15 @@ packages:
       lodash: 4.17.21
       mini-css-extract-plugin: 2.6.0_webpack@5.72.0
       nprogress: 0.2.0
-<<<<<<< HEAD
       postcss: 8.4.13
-      postcss-loader: 6.2.1_g4najheu5gwop3kphiif6aqpde
+      postcss-loader: 6.2.1_postcss@8.4.13+webpack@5.72.0
       prompts: 2.4.2
       react: 17.0.2
-      react-dev-utils: 12.0.1_4dvvomwfbhpgf7xcm7gogbdvgu
+      react-dev-utils: 12.0.1_typescript@4.6.3+webpack@5.72.0
       react-dom: 17.0.2_react@17.0.2
-      react-helmet-async: 1.3.0_sfoxds7t5ydpegc3knd667wn6m
+      react-helmet-async: 1.3.0_react-dom@17.0.2+react@17.0.2
       react-loadable: /@docusaurus/react-loadable/5.5.2_react@17.0.2
-      react-loadable-ssr-addon-v5-slorber: 1.0.1_5grs2dwrf6hqtfkptfcfoiy4bu
-=======
-      postcss: 8.4.12
-      postcss-loader: 6.2.1_postcss@8.4.12+webpack@5.71.0
-      prompts: 2.4.2
-      react: 17.0.2
-      react-dev-utils: 12.0.0_typescript@4.6.3+webpack@5.71.0
-      react-dom: 17.0.2_react@17.0.2
-      react-helmet-async: 1.2.3_react-dom@17.0.2+react@17.0.2
-      react-loadable: /@docusaurus/react-loadable/5.5.2_react@17.0.2
-      react-loadable-ssr-addon-v5-slorber: 1.0.1_fc8cb065053e04bf73bf05d6b2de63ea
->>>>>>> baa4700 (feat(core): separate social sign-in api)
+      react-loadable-ssr-addon-v5-slorber: 1.0.1_e9a32d0ed12f8f09954f994457231c0d
       react-router: 5.2.1_react@17.0.2
       react-router-config: 5.1.1_react-router@5.2.1+react@17.0.2
       react-router-dom: 5.3.0_react@17.0.2
@@ -3235,11 +3203,7 @@ packages:
       terser-webpack-plugin: 5.3.1_webpack@5.72.0
       tslib: 2.4.0
       update-notifier: 5.1.0
-<<<<<<< HEAD
-      url-loader: 4.1.1_csgzzuwaerdr4d7s3u52mzcn7m
-=======
-      url-loader: 4.1.1_file-loader@6.2.0+webpack@5.71.0
->>>>>>> baa4700 (feat(core): separate social sign-in api)
+      url-loader: 4.1.1_file-loader@6.2.0+webpack@5.72.0
       wait-on: 6.0.1
       webpack: 5.72.0
       webpack-bundle-analyzer: 4.5.0
@@ -3262,7 +3226,7 @@ packages:
       - webpack-cli
     dev: true
 
-  /@docusaurus/core/2.0.0-beta.20_fdtqczkawcrswx4npptvkurkw4:
+  /@docusaurus/core/2.0.0-beta.20_28e7016540b0a32b5f8d7be755522ab7:
     resolution: {integrity: sha512-a3UgZ4lIcIOoZd4j9INqVkWSXEDxR7EicJXt8eq2whg4N5hKGqLHoDSnWfrVSPQn4NoG5T7jhPypphSoysImfQ==}
     engines: {node: '>=14'}
     hasBin: true
@@ -3282,7 +3246,7 @@ packages:
       '@babel/traverse': 7.17.10
       '@docusaurus/cssnano-preset': 2.0.0-beta.20
       '@docusaurus/logger': 2.0.0-beta.20
-      '@docusaurus/mdx-loader': 2.0.0-beta.20_sfoxds7t5ydpegc3knd667wn6m
+      '@docusaurus/mdx-loader': 2.0.0-beta.20_react-dom@17.0.2+react@17.0.2
       '@docusaurus/react-loadable': 5.5.2_react@17.0.2
       '@docusaurus/utils': 2.0.0-beta.20
       '@docusaurus/utils-common': 2.0.0-beta.20
@@ -3290,7 +3254,7 @@ packages:
       '@slorber/static-site-generator-webpack-plugin': 4.0.4
       '@svgr/webpack': 6.2.1
       autoprefixer: 10.4.7_postcss@8.4.13
-      babel-loader: 8.2.5_rb5fcebzp6kx3hqg3ucus54t3m
+      babel-loader: 8.2.5_887a5110397f957d9e06dd05497793db
       babel-plugin-dynamic-import-node: 2.3.0
       boxen: 6.2.1
       chokidar: 3.5.3
@@ -3301,7 +3265,7 @@ packages:
       copy-webpack-plugin: 10.2.4_webpack@5.72.0
       core-js: 3.22.4
       css-loader: 6.7.1_webpack@5.72.0
-      css-minimizer-webpack-plugin: 3.4.1_tejugib4y3rw5hvgnfmxavjvsu
+      css-minimizer-webpack-plugin: 3.4.1_clean-css@5.3.0+webpack@5.72.0
       cssnano: 5.1.7_postcss@8.4.13
       del: 6.0.0
       detect-port: 1.3.0
@@ -3317,16 +3281,16 @@ packages:
       lodash: 4.17.21
       mini-css-extract-plugin: 2.6.0_webpack@5.72.0
       postcss: 8.4.13
-      postcss-loader: 6.2.1_g4najheu5gwop3kphiif6aqpde
+      postcss-loader: 6.2.1_postcss@8.4.13+webpack@5.72.0
       prompts: 2.4.2
       react: 17.0.2
-      react-dev-utils: 12.0.1_4dvvomwfbhpgf7xcm7gogbdvgu
+      react-dev-utils: 12.0.1_typescript@4.6.3+webpack@5.72.0
       react-dom: 17.0.2_react@17.0.2
-      react-helmet-async: 1.3.0_sfoxds7t5ydpegc3knd667wn6m
+      react-helmet-async: 1.3.0_react-dom@17.0.2+react@17.0.2
       react-loadable: /@docusaurus/react-loadable/5.5.2_react@17.0.2
-      react-loadable-ssr-addon-v5-slorber: 1.0.1_5grs2dwrf6hqtfkptfcfoiy4bu
+      react-loadable-ssr-addon-v5-slorber: 1.0.1_e9a32d0ed12f8f09954f994457231c0d
       react-router: 5.2.1_react@17.0.2
-      react-router-config: 5.1.1_eui4og74r262zsjriwu2mckbem
+      react-router-config: 5.1.1_react-router@5.2.1+react@17.0.2
       react-router-dom: 5.3.0_react@17.0.2
       remark-admonitions: 1.2.1
       rtl-detect: 1.0.4
@@ -3336,7 +3300,7 @@ packages:
       terser-webpack-plugin: 5.3.1_webpack@5.72.0
       tslib: 2.4.0
       update-notifier: 5.1.0
-      url-loader: 4.1.1_csgzzuwaerdr4d7s3u52mzcn7m
+      url-loader: 4.1.1_file-loader@6.2.0+webpack@5.72.0
       wait-on: 6.0.1
       webpack: 5.72.0
       webpack-bundle-analyzer: 4.5.0
@@ -3414,8 +3378,7 @@ packages:
       stringify-object: 3.3.0
       tslib: 2.4.0
       unist-util-visit: 2.0.3
-<<<<<<< HEAD
-      url-loader: 4.1.1_csgzzuwaerdr4d7s3u52mzcn7m
+      url-loader: 4.1.1_file-loader@6.2.0+webpack@5.72.0
       webpack: 5.72.0
     transitivePeerDependencies:
       - '@swc/core'
@@ -3425,7 +3388,7 @@ packages:
       - webpack-cli
     dev: true
 
-  /@docusaurus/mdx-loader/2.0.0-beta.20_sfoxds7t5ydpegc3knd667wn6m:
+  /@docusaurus/mdx-loader/2.0.0-beta.20_react-dom@17.0.2+react@17.0.2:
     resolution: {integrity: sha512-BBuf77sji3JxbCEW7Qsv3CXlgpm+iSLTQn6JUK7x8vJ1JYZ3KJbNgpo9TmxIIltpcvNQ/QOy6dvqrpSStaWmKQ==}
     engines: {node: '>=14'}
     peerDependencies:
@@ -3448,7 +3411,7 @@ packages:
       stringify-object: 3.3.0
       tslib: 2.4.0
       unist-util-visit: 2.0.3
-      url-loader: 4.1.1_csgzzuwaerdr4d7s3u52mzcn7m
+      url-loader: 4.1.1_file-loader@6.2.0+webpack@5.72.0
       webpack: 5.72.0
     transitivePeerDependencies:
       - '@swc/core'
@@ -3458,7 +3421,7 @@ packages:
       - webpack-cli
     dev: true
 
-  /@docusaurus/module-type-aliases/2.0.0-beta.18_sfoxds7t5ydpegc3knd667wn6m:
+  /@docusaurus/module-type-aliases/2.0.0-beta.18_react-dom@17.0.2+react@17.0.2:
     resolution: {integrity: sha512-e6mples8FZRyT7QyqidGS6BgkROjM+gljJsdOqoctbtBp+SZ5YDjwRHOmoY7eqEfsQNOaFZvT2hK38ui87hCRA==}
     peerDependencies:
       react: '*'
@@ -3470,11 +3433,7 @@ packages:
       '@types/react-router-dom': 5.3.2
       react: 17.0.2
       react-dom: 17.0.2_react@17.0.2
-      react-helmet-async: 1.3.0_sfoxds7t5ydpegc3knd667wn6m
-=======
-      url-loader: 4.1.1_file-loader@6.2.0+webpack@5.71.0
-      webpack: 5.71.0
->>>>>>> baa4700 (feat(core): separate social sign-in api)
+      react-helmet-async: 1.2.3_react-dom@17.0.2+react@17.0.2
     transitivePeerDependencies:
       - '@swc/core'
       - esbuild
@@ -3482,18 +3441,13 @@ packages:
       - webpack-cli
     dev: true
 
-<<<<<<< HEAD
-  /@docusaurus/module-type-aliases/2.0.0-beta.20_sfoxds7t5ydpegc3knd667wn6m:
+  /@docusaurus/module-type-aliases/2.0.0-beta.20_react-dom@17.0.2+react@17.0.2:
     resolution: {integrity: sha512-lUIXLwQEOyYwcb3iCNibPUL6O9ijvYF5xQwehGeVraTEBts/Ch8ZwELFk+XbaGHKh52PiVxuWL2CP4Gdjy5QKw==}
-=======
-  /@docusaurus/module-type-aliases/2.0.0-beta.18_react-dom@17.0.2+react@17.0.2:
-    resolution: {integrity: sha512-e6mples8FZRyT7QyqidGS6BgkROjM+gljJsdOqoctbtBp+SZ5YDjwRHOmoY7eqEfsQNOaFZvT2hK38ui87hCRA==}
->>>>>>> baa4700 (feat(core): separate social sign-in api)
     peerDependencies:
       react: '*'
       react-dom: '*'
     dependencies:
-      '@docusaurus/types': 2.0.0-beta.20_sfoxds7t5ydpegc3knd667wn6m
+      '@docusaurus/types': 2.0.0-beta.20_react-dom@17.0.2+react@17.0.2
       '@types/react': 17.0.37
       '@types/react-router-config': 5.0.6
       '@types/react-router-dom': 5.3.2
@@ -3547,16 +3501,16 @@ packages:
       - webpack-cli
     dev: true
 
-  /@docusaurus/plugin-content-blog/2.0.0-beta.20_fdtqczkawcrswx4npptvkurkw4:
+  /@docusaurus/plugin-content-blog/2.0.0-beta.20_28e7016540b0a32b5f8d7be755522ab7:
     resolution: {integrity: sha512-6aby36Gmny5h2oo/eEZ2iwVsIlBWbRnNNeqT0BYnJO5aj53iCU/ctFPpJVYcw0l2l8+8ITS70FyePIWEsaZ0jA==}
     engines: {node: '>=14'}
     peerDependencies:
       react: ^16.8.4 || ^17.0.0
       react-dom: ^16.8.4 || ^17.0.0
     dependencies:
-      '@docusaurus/core': 2.0.0-beta.20_fdtqczkawcrswx4npptvkurkw4
+      '@docusaurus/core': 2.0.0-beta.20_28e7016540b0a32b5f8d7be755522ab7
       '@docusaurus/logger': 2.0.0-beta.20
-      '@docusaurus/mdx-loader': 2.0.0-beta.20_sfoxds7t5ydpegc3knd667wn6m
+      '@docusaurus/mdx-loader': 2.0.0-beta.20_react-dom@17.0.2+react@17.0.2
       '@docusaurus/utils': 2.0.0-beta.20
       '@docusaurus/utils-common': 2.0.0-beta.20
       '@docusaurus/utils-validation': 2.0.0-beta.20
@@ -3627,16 +3581,16 @@ packages:
       - webpack-cli
     dev: true
 
-  /@docusaurus/plugin-content-docs/2.0.0-beta.20_fdtqczkawcrswx4npptvkurkw4:
+  /@docusaurus/plugin-content-docs/2.0.0-beta.20_28e7016540b0a32b5f8d7be755522ab7:
     resolution: {integrity: sha512-XOgwUqXtr/DStpB3azdN6wgkKtQkOXOx1XetORzhHnjihrSMn6daxg+spmcJh1ki/mpT3n7yBbKJxVNo+VB38Q==}
     engines: {node: '>=14'}
     peerDependencies:
       react: ^16.8.4 || ^17.0.0
       react-dom: ^16.8.4 || ^17.0.0
     dependencies:
-      '@docusaurus/core': 2.0.0-beta.20_fdtqczkawcrswx4npptvkurkw4
+      '@docusaurus/core': 2.0.0-beta.20_28e7016540b0a32b5f8d7be755522ab7
       '@docusaurus/logger': 2.0.0-beta.20
-      '@docusaurus/mdx-loader': 2.0.0-beta.20_sfoxds7t5ydpegc3knd667wn6m
+      '@docusaurus/mdx-loader': 2.0.0-beta.20_react-dom@17.0.2+react@17.0.2
       '@docusaurus/utils': 2.0.0-beta.20
       '@docusaurus/utils-validation': 2.0.0-beta.20
       combine-promises: 1.1.0
@@ -3699,21 +3653,15 @@ packages:
       - webpack-cli
     dev: true
 
-<<<<<<< HEAD
-  /@docusaurus/plugin-content-pages/2.0.0-beta.20_fdtqczkawcrswx4npptvkurkw4:
+  /@docusaurus/plugin-content-pages/2.0.0-beta.20_28e7016540b0a32b5f8d7be755522ab7:
     resolution: {integrity: sha512-ubY6DG4F0skFKjfNGCbfO34Qf+MZy6C05OtpIYsoA2YU8ADx0nRH7qPgdEkwR3ma860DbY612rleRT13ogSlhg==}
-=======
-  /@docusaurus/plugin-debug/2.0.0-beta.18_5a944955b1765b5ba141464277bc76f5:
-    resolution: {integrity: sha512-inLnLERgG7q0WlVmK6nYGHwVqREz13ivkynmNygEibJZToFRdgnIPW+OwD8QzgC5MpQTJw7+uYjcitpBumy1Gw==}
->>>>>>> baa4700 (feat(core): separate social sign-in api)
     engines: {node: '>=14'}
     peerDependencies:
       react: ^16.8.4 || ^17.0.0
       react-dom: ^16.8.4 || ^17.0.0
     dependencies:
-<<<<<<< HEAD
-      '@docusaurus/core': 2.0.0-beta.20_fdtqczkawcrswx4npptvkurkw4
-      '@docusaurus/mdx-loader': 2.0.0-beta.20_sfoxds7t5ydpegc3knd667wn6m
+      '@docusaurus/core': 2.0.0-beta.20_28e7016540b0a32b5f8d7be755522ab7
+      '@docusaurus/mdx-loader': 2.0.0-beta.20_react-dom@17.0.2+react@17.0.2
       '@docusaurus/utils': 2.0.0-beta.20
       '@docusaurus/utils-validation': 2.0.0-beta.20
       fs-extra: 10.1.0
@@ -3738,29 +3686,20 @@ packages:
       - webpack-cli
     dev: true
 
-  /@docusaurus/plugin-debug/2.0.0-beta.20_lkkesvnroznvxikbizbhppdw6u:
+  /@docusaurus/plugin-debug/2.0.0-beta.20_5a944955b1765b5ba141464277bc76f5:
     resolution: {integrity: sha512-acGZmpncPA1XDczpV1ji1ajBCRBY/H2lXN8alSjOB1vh0c/2Qz+KKD05p17lsUbhIyvsnZBa/BaOwtek91Lu7Q==}
     engines: {node: '>=14'}
     peerDependencies:
       react: ^16.8.4 || ^17.0.0
       react-dom: ^16.8.4 || ^17.0.0
     dependencies:
-      '@docusaurus/core': 2.0.0-beta.20_fdtqczkawcrswx4npptvkurkw4
+      '@docusaurus/core': 2.0.0-beta.20_28e7016540b0a32b5f8d7be755522ab7
       '@docusaurus/utils': 2.0.0-beta.20
       fs-extra: 10.1.0
       react: 17.0.2
       react-dom: 17.0.2_react@17.0.2
-      react-json-view: 1.21.3_ku44vyaqhfvsakybl42wrekosu
-      tslib: 2.4.0
-=======
-      '@docusaurus/core': 2.0.0-beta.18_28e7016540b0a32b5f8d7be755522ab7
-      '@docusaurus/utils': 2.0.0-beta.18
-      fs-extra: 10.0.1
-      react: 17.0.2
-      react-dom: 17.0.2_react@17.0.2
       react-json-view: 1.21.3_5539cae010396b202b015f3568914e95
-      tslib: 2.3.1
->>>>>>> baa4700 (feat(core): separate social sign-in api)
+      tslib: 2.4.0
     transitivePeerDependencies:
       - '@parcel/css'
       - '@swc/core'
@@ -3779,25 +3718,15 @@ packages:
       - webpack-cli
     dev: true
 
-<<<<<<< HEAD
-  /@docusaurus/plugin-google-analytics/2.0.0-beta.20_fdtqczkawcrswx4npptvkurkw4:
+  /@docusaurus/plugin-google-analytics/2.0.0-beta.20_28e7016540b0a32b5f8d7be755522ab7:
     resolution: {integrity: sha512-4C5nY25j0R1lntFmpSEalhL7jYA7tWvk0VZObiIxGilLagT/f9gWPQtIjNBe4yzdQvkhiaXpa8xcMcJUAKRJyw==}
-=======
-  /@docusaurus/plugin-google-analytics/2.0.0-beta.18_28e7016540b0a32b5f8d7be755522ab7:
-    resolution: {integrity: sha512-s9dRBWDrZ1uu3wFXPCF7yVLo/+5LUFAeoxpXxzory8gn9GYDt8ZDj80h5DUyCLxiy72OG6bXWNOYS/Vc6cOPXQ==}
->>>>>>> baa4700 (feat(core): separate social sign-in api)
     engines: {node: '>=14'}
     peerDependencies:
       react: ^16.8.4 || ^17.0.0
       react-dom: ^16.8.4 || ^17.0.0
     dependencies:
-<<<<<<< HEAD
-      '@docusaurus/core': 2.0.0-beta.20_fdtqczkawcrswx4npptvkurkw4
+      '@docusaurus/core': 2.0.0-beta.20_28e7016540b0a32b5f8d7be755522ab7
       '@docusaurus/utils-validation': 2.0.0-beta.20
-=======
-      '@docusaurus/core': 2.0.0-beta.18_28e7016540b0a32b5f8d7be755522ab7
-      '@docusaurus/utils-validation': 2.0.0-beta.18
->>>>>>> baa4700 (feat(core): separate social sign-in api)
       react: 17.0.2
       react-dom: 17.0.2_react@17.0.2
       tslib: 2.4.0
@@ -3817,25 +3746,15 @@ packages:
       - webpack-cli
     dev: true
 
-<<<<<<< HEAD
-  /@docusaurus/plugin-google-gtag/2.0.0-beta.20_fdtqczkawcrswx4npptvkurkw4:
+  /@docusaurus/plugin-google-gtag/2.0.0-beta.20_28e7016540b0a32b5f8d7be755522ab7:
     resolution: {integrity: sha512-EMZdiMTNg4NwE60xwjbetcqMDqAOazMTwQAQ4OuNAclv7oh8+VPCvqRF8s8AxCoI2Uqc7vh8yzNUuM307Ne9JA==}
-=======
-  /@docusaurus/plugin-google-gtag/2.0.0-beta.18_28e7016540b0a32b5f8d7be755522ab7:
-    resolution: {integrity: sha512-h7vPuLVo/9pHmbFcvb4tCpjg4SxxX4k+nfVDyippR254FM++Z/nA5pRB0WvvIJ3ZTe0ioOb5Wlx2xdzJIBHUNg==}
->>>>>>> baa4700 (feat(core): separate social sign-in api)
     engines: {node: '>=14'}
     peerDependencies:
       react: ^16.8.4 || ^17.0.0
       react-dom: ^16.8.4 || ^17.0.0
     dependencies:
-<<<<<<< HEAD
-      '@docusaurus/core': 2.0.0-beta.20_fdtqczkawcrswx4npptvkurkw4
+      '@docusaurus/core': 2.0.0-beta.20_28e7016540b0a32b5f8d7be755522ab7
       '@docusaurus/utils-validation': 2.0.0-beta.20
-=======
-      '@docusaurus/core': 2.0.0-beta.18_28e7016540b0a32b5f8d7be755522ab7
-      '@docusaurus/utils-validation': 2.0.0-beta.18
->>>>>>> baa4700 (feat(core): separate social sign-in api)
       react: 17.0.2
       react-dom: 17.0.2_react@17.0.2
       tslib: 2.4.0
@@ -3855,31 +3774,18 @@ packages:
       - webpack-cli
     dev: true
 
-<<<<<<< HEAD
-  /@docusaurus/plugin-sitemap/2.0.0-beta.20_fdtqczkawcrswx4npptvkurkw4:
+  /@docusaurus/plugin-sitemap/2.0.0-beta.20_28e7016540b0a32b5f8d7be755522ab7:
     resolution: {integrity: sha512-Rf5a2vOBWjbe7PJJEBDeLZzDA7lsDi+16bqzKN8OKSXlcZLhxjmIpL5NrjANNbpGpL5vbl9z+iqvjbQmZ3QSmA==}
-=======
-  /@docusaurus/plugin-sitemap/2.0.0-beta.18_28e7016540b0a32b5f8d7be755522ab7:
-    resolution: {integrity: sha512-Klonht0Ye3FivdBpS80hkVYNOH+8lL/1rbCPEV92rKhwYdwnIejqhdKct4tUTCl8TYwWiyeUFQqobC/5FNVZPQ==}
->>>>>>> baa4700 (feat(core): separate social sign-in api)
     engines: {node: '>=14'}
     peerDependencies:
       react: ^16.8.4 || ^17.0.0
       react-dom: ^16.8.4 || ^17.0.0
     dependencies:
-<<<<<<< HEAD
-      '@docusaurus/core': 2.0.0-beta.20_fdtqczkawcrswx4npptvkurkw4
+      '@docusaurus/core': 2.0.0-beta.20_28e7016540b0a32b5f8d7be755522ab7
       '@docusaurus/utils': 2.0.0-beta.20
       '@docusaurus/utils-common': 2.0.0-beta.20
       '@docusaurus/utils-validation': 2.0.0-beta.20
       fs-extra: 10.1.0
-=======
-      '@docusaurus/core': 2.0.0-beta.18_28e7016540b0a32b5f8d7be755522ab7
-      '@docusaurus/utils': 2.0.0-beta.18
-      '@docusaurus/utils-common': 2.0.0-beta.18
-      '@docusaurus/utils-validation': 2.0.0-beta.18
-      fs-extra: 10.0.1
->>>>>>> baa4700 (feat(core): separate social sign-in api)
       react: 17.0.2
       react-dom: 17.0.2_react@17.0.2
       sitemap: 7.1.1
@@ -3900,43 +3806,24 @@ packages:
       - webpack-cli
     dev: true
 
-<<<<<<< HEAD
-  /@docusaurus/preset-classic/2.0.0-beta.20_uvj66givyjjgbdpya4vjtwvhpy:
+  /@docusaurus/preset-classic/2.0.0-beta.20_a553ef1915c252608df8072a99daa77e:
     resolution: {integrity: sha512-artUDjiYFIlGd2fxk0iqqcJ5xSCrgormOAoind1c0pn8TRXY1WSCQWYI6p4X24jjhSCzLv0s6Z9PMDyxZdivhg==}
-=======
-  /@docusaurus/preset-classic/2.0.0-beta.18_a553ef1915c252608df8072a99daa77e:
-    resolution: {integrity: sha512-TfDulvFt/vLWr/Yy7O0yXgwHtJhdkZ739bTlFNwEkRMAy8ggi650e52I1I0T79s67llecb4JihgHPW+mwiVkCQ==}
->>>>>>> baa4700 (feat(core): separate social sign-in api)
     engines: {node: '>=14'}
     peerDependencies:
       react: ^16.8.4 || ^17.0.0
       react-dom: ^16.8.4 || ^17.0.0
     dependencies:
-<<<<<<< HEAD
-      '@docusaurus/core': 2.0.0-beta.20_fdtqczkawcrswx4npptvkurkw4
-      '@docusaurus/plugin-content-blog': 2.0.0-beta.20_fdtqczkawcrswx4npptvkurkw4
-      '@docusaurus/plugin-content-docs': 2.0.0-beta.20_fdtqczkawcrswx4npptvkurkw4
-      '@docusaurus/plugin-content-pages': 2.0.0-beta.20_fdtqczkawcrswx4npptvkurkw4
-      '@docusaurus/plugin-debug': 2.0.0-beta.20_lkkesvnroznvxikbizbhppdw6u
-      '@docusaurus/plugin-google-analytics': 2.0.0-beta.20_fdtqczkawcrswx4npptvkurkw4
-      '@docusaurus/plugin-google-gtag': 2.0.0-beta.20_fdtqczkawcrswx4npptvkurkw4
-      '@docusaurus/plugin-sitemap': 2.0.0-beta.20_fdtqczkawcrswx4npptvkurkw4
-      '@docusaurus/theme-classic': 2.0.0-beta.20_fdtqczkawcrswx4npptvkurkw4
-      '@docusaurus/theme-common': 2.0.0-beta.20_fdtqczkawcrswx4npptvkurkw4
-      '@docusaurus/theme-search-algolia': 2.0.0-beta.20_uvj66givyjjgbdpya4vjtwvhpy
-=======
-      '@docusaurus/core': 2.0.0-beta.18_28e7016540b0a32b5f8d7be755522ab7
-      '@docusaurus/plugin-content-blog': 2.0.0-beta.18_28e7016540b0a32b5f8d7be755522ab7
-      '@docusaurus/plugin-content-docs': 2.0.0-beta.18_28e7016540b0a32b5f8d7be755522ab7
-      '@docusaurus/plugin-content-pages': 2.0.0-beta.18_28e7016540b0a32b5f8d7be755522ab7
-      '@docusaurus/plugin-debug': 2.0.0-beta.18_5a944955b1765b5ba141464277bc76f5
-      '@docusaurus/plugin-google-analytics': 2.0.0-beta.18_28e7016540b0a32b5f8d7be755522ab7
-      '@docusaurus/plugin-google-gtag': 2.0.0-beta.18_28e7016540b0a32b5f8d7be755522ab7
-      '@docusaurus/plugin-sitemap': 2.0.0-beta.18_28e7016540b0a32b5f8d7be755522ab7
-      '@docusaurus/theme-classic': 2.0.0-beta.18_28e7016540b0a32b5f8d7be755522ab7
-      '@docusaurus/theme-common': 2.0.0-beta.18_28e7016540b0a32b5f8d7be755522ab7
-      '@docusaurus/theme-search-algolia': 2.0.0-beta.18_a553ef1915c252608df8072a99daa77e
->>>>>>> baa4700 (feat(core): separate social sign-in api)
+      '@docusaurus/core': 2.0.0-beta.20_28e7016540b0a32b5f8d7be755522ab7
+      '@docusaurus/plugin-content-blog': 2.0.0-beta.20_28e7016540b0a32b5f8d7be755522ab7
+      '@docusaurus/plugin-content-docs': 2.0.0-beta.20_28e7016540b0a32b5f8d7be755522ab7
+      '@docusaurus/plugin-content-pages': 2.0.0-beta.20_28e7016540b0a32b5f8d7be755522ab7
+      '@docusaurus/plugin-debug': 2.0.0-beta.20_5a944955b1765b5ba141464277bc76f5
+      '@docusaurus/plugin-google-analytics': 2.0.0-beta.20_28e7016540b0a32b5f8d7be755522ab7
+      '@docusaurus/plugin-google-gtag': 2.0.0-beta.20_28e7016540b0a32b5f8d7be755522ab7
+      '@docusaurus/plugin-sitemap': 2.0.0-beta.20_28e7016540b0a32b5f8d7be755522ab7
+      '@docusaurus/theme-classic': 2.0.0-beta.20_28e7016540b0a32b5f8d7be755522ab7
+      '@docusaurus/theme-common': 2.0.0-beta.20_28e7016540b0a32b5f8d7be755522ab7
+      '@docusaurus/theme-search-algolia': 2.0.0-beta.20_a553ef1915c252608df8072a99daa77e
       react: 17.0.2
       react-dom: 17.0.2_react@17.0.2
     transitivePeerDependencies:
@@ -4012,19 +3899,18 @@ packages:
       - webpack-cli
     dev: true
 
-<<<<<<< HEAD
-  /@docusaurus/theme-classic/2.0.0-beta.20_fdtqczkawcrswx4npptvkurkw4:
+  /@docusaurus/theme-classic/2.0.0-beta.20_28e7016540b0a32b5f8d7be755522ab7:
     resolution: {integrity: sha512-rs4U68x8Xk6rPsZC/7eaPxCKqzXX1S45FICKmq/IZuaDaQyQIijCvv2ssxYnUyVZUNayZfJK7ZtNu+A0kzYgSQ==}
     engines: {node: '>=14'}
     peerDependencies:
       react: ^16.8.4 || ^17.0.0
       react-dom: ^16.8.4 || ^17.0.0
     dependencies:
-      '@docusaurus/core': 2.0.0-beta.20_fdtqczkawcrswx4npptvkurkw4
-      '@docusaurus/plugin-content-blog': 2.0.0-beta.20_fdtqczkawcrswx4npptvkurkw4
-      '@docusaurus/plugin-content-docs': 2.0.0-beta.20_fdtqczkawcrswx4npptvkurkw4
-      '@docusaurus/plugin-content-pages': 2.0.0-beta.20_fdtqczkawcrswx4npptvkurkw4
-      '@docusaurus/theme-common': 2.0.0-beta.20_fdtqczkawcrswx4npptvkurkw4
+      '@docusaurus/core': 2.0.0-beta.20_28e7016540b0a32b5f8d7be755522ab7
+      '@docusaurus/plugin-content-blog': 2.0.0-beta.20_28e7016540b0a32b5f8d7be755522ab7
+      '@docusaurus/plugin-content-docs': 2.0.0-beta.20_28e7016540b0a32b5f8d7be755522ab7
+      '@docusaurus/plugin-content-pages': 2.0.0-beta.20_28e7016540b0a32b5f8d7be755522ab7
+      '@docusaurus/theme-common': 2.0.0-beta.20_28e7016540b0a32b5f8d7be755522ab7
       '@docusaurus/theme-translations': 2.0.0-beta.20
       '@docusaurus/utils': 2.0.0-beta.20
       '@docusaurus/utils-common': 2.0.0-beta.20
@@ -4058,10 +3944,7 @@ packages:
       - webpack-cli
     dev: true
 
-  /@docusaurus/theme-common/2.0.0-beta.18_fdtqczkawcrswx4npptvkurkw4:
-=======
   /@docusaurus/theme-common/2.0.0-beta.18_28e7016540b0a32b5f8d7be755522ab7:
->>>>>>> baa4700 (feat(core): separate social sign-in api)
     resolution: {integrity: sha512-3pI2Q6ttScDVTDbuUKAx+TdC8wmwZ2hfWk8cyXxksvC9bBHcyzXhSgcK8LTsszn2aANyZ3e3QY2eNSOikTFyng==}
     engines: {node: '>=14'}
     peerDependencies:
@@ -4095,17 +3978,17 @@ packages:
       - webpack-cli
     dev: true
 
-  /@docusaurus/theme-common/2.0.0-beta.20_fdtqczkawcrswx4npptvkurkw4:
+  /@docusaurus/theme-common/2.0.0-beta.20_28e7016540b0a32b5f8d7be755522ab7:
     resolution: {integrity: sha512-lmdGB3/GQM5z0GH0iHGRXUco4Wfqc6sR5eRKuW4j0sx3+UFVvtbVTTIGt0Cie4Dh6omnFxjPbNDlPDgWr/agVQ==}
     engines: {node: '>=14'}
     peerDependencies:
       react: ^16.8.4 || ^17.0.0
       react-dom: ^16.8.4 || ^17.0.0
     dependencies:
-      '@docusaurus/module-type-aliases': 2.0.0-beta.20_sfoxds7t5ydpegc3knd667wn6m
-      '@docusaurus/plugin-content-blog': 2.0.0-beta.20_fdtqczkawcrswx4npptvkurkw4
-      '@docusaurus/plugin-content-docs': 2.0.0-beta.20_fdtqczkawcrswx4npptvkurkw4
-      '@docusaurus/plugin-content-pages': 2.0.0-beta.20_fdtqczkawcrswx4npptvkurkw4
+      '@docusaurus/module-type-aliases': 2.0.0-beta.20_react-dom@17.0.2+react@17.0.2
+      '@docusaurus/plugin-content-blog': 2.0.0-beta.20_28e7016540b0a32b5f8d7be755522ab7
+      '@docusaurus/plugin-content-docs': 2.0.0-beta.20_28e7016540b0a32b5f8d7be755522ab7
+      '@docusaurus/plugin-content-pages': 2.0.0-beta.20_28e7016540b0a32b5f8d7be755522ab7
       clsx: 1.1.1
       parse-numeric-range: 1.3.0
       prism-react-renderer: 1.3.1_react@17.0.2
@@ -4129,37 +4012,21 @@ packages:
       - webpack-cli
     dev: true
 
-<<<<<<< HEAD
-  /@docusaurus/theme-search-algolia/2.0.0-beta.20_uvj66givyjjgbdpya4vjtwvhpy:
+  /@docusaurus/theme-search-algolia/2.0.0-beta.20_a553ef1915c252608df8072a99daa77e:
     resolution: {integrity: sha512-9XAyiXXHgyhDmKXg9RUtnC4WBkYAZUqKT9Ntuk0OaOb4mBwiYUGL74tyP0LLL6T+oa9uEdXiUMlIL1onU8xhvA==}
-=======
-  /@docusaurus/theme-search-algolia/2.0.0-beta.18_a553ef1915c252608df8072a99daa77e:
-    resolution: {integrity: sha512-2w97KO/gnjI49WVtYQqENpQ8iO1Sem0yaTxw7/qv/ndlmIAQD0syU4yx6GsA7bTQCOGwKOWWzZSetCgUmTnWgA==}
->>>>>>> baa4700 (feat(core): separate social sign-in api)
     engines: {node: '>=14'}
     peerDependencies:
       react: ^16.8.4 || ^17.0.0
       react-dom: ^16.8.4 || ^17.0.0
     dependencies:
-<<<<<<< HEAD
-      '@docsearch/react': 3.0.0_joid7qzlusbv23fmwp3my4dfcy
-      '@docusaurus/core': 2.0.0-beta.20_fdtqczkawcrswx4npptvkurkw4
+      '@docsearch/react': 3.0.0_4b903fc32ba4835d6cacb3f6cc706516
+      '@docusaurus/core': 2.0.0-beta.20_28e7016540b0a32b5f8d7be755522ab7
       '@docusaurus/logger': 2.0.0-beta.20
-      '@docusaurus/plugin-content-docs': 2.0.0-beta.20_fdtqczkawcrswx4npptvkurkw4
-      '@docusaurus/theme-common': 2.0.0-beta.20_fdtqczkawcrswx4npptvkurkw4
+      '@docusaurus/plugin-content-docs': 2.0.0-beta.20_28e7016540b0a32b5f8d7be755522ab7
+      '@docusaurus/theme-common': 2.0.0-beta.20_28e7016540b0a32b5f8d7be755522ab7
       '@docusaurus/theme-translations': 2.0.0-beta.20
       '@docusaurus/utils': 2.0.0-beta.20
       '@docusaurus/utils-validation': 2.0.0-beta.20
-=======
-      '@docsearch/react': 3.0.0_4b903fc32ba4835d6cacb3f6cc706516
-      '@docusaurus/core': 2.0.0-beta.18_28e7016540b0a32b5f8d7be755522ab7
-      '@docusaurus/logger': 2.0.0-beta.18
-      '@docusaurus/plugin-content-docs': 2.0.0-beta.18_28e7016540b0a32b5f8d7be755522ab7
-      '@docusaurus/theme-common': 2.0.0-beta.18_28e7016540b0a32b5f8d7be755522ab7
-      '@docusaurus/theme-translations': 2.0.0-beta.18
-      '@docusaurus/utils': 2.0.0-beta.18
-      '@docusaurus/utils-validation': 2.0.0-beta.18
->>>>>>> baa4700 (feat(core): separate social sign-in api)
       algoliasearch: 4.13.0
       algoliasearch-helper: 3.8.2_algoliasearch@4.13.0
       clsx: 1.1.1
@@ -4219,13 +4086,13 @@ packages:
       - webpack-cli
     dev: true
 
-  /@docusaurus/types/2.0.0-beta.20_sfoxds7t5ydpegc3knd667wn6m:
+  /@docusaurus/types/2.0.0-beta.20_react-dom@17.0.2+react@17.0.2:
     resolution: {integrity: sha512-d4ZIpcrzGsUUcZJL3iz8/iSaewobPPiYfn2Lmmv7GTT5ZPtPkOAtR5mE6+LAf/KpjjgqrC7mpwDKADnOL/ic4Q==}
     dependencies:
       commander: 5.1.0
       history: 4.10.1
       joi: 17.6.0
-      react-helmet-async: 1.3.0_sfoxds7t5ydpegc3knd667wn6m
+      react-helmet-async: 1.3.0_react-dom@17.0.2+react@17.0.2
       utility-types: 3.10.0
       webpack: 5.72.0
       webpack-merge: 5.8.0
@@ -4302,9 +4169,8 @@ packages:
       micromatch: 4.0.5
       resolve-pathname: 3.0.0
       shelljs: 0.8.5
-<<<<<<< HEAD
       tslib: 2.4.0
-      url-loader: 4.1.1_csgzzuwaerdr4d7s3u52mzcn7m
+      url-loader: 4.1.1_file-loader@6.2.0+webpack@5.72.0
       webpack: 5.72.0
     transitivePeerDependencies:
       - '@swc/core'
@@ -4331,13 +4197,8 @@ packages:
       resolve-pathname: 3.0.0
       shelljs: 0.8.5
       tslib: 2.4.0
-      url-loader: 4.1.1_csgzzuwaerdr4d7s3u52mzcn7m
+      url-loader: 4.1.1_file-loader@6.2.0+webpack@5.72.0
       webpack: 5.72.0
-=======
-      tslib: 2.3.1
-      url-loader: 4.1.1_file-loader@6.2.0+webpack@5.71.0
-      webpack: 5.71.0
->>>>>>> baa4700 (feat(core): separate social sign-in api)
     transitivePeerDependencies:
       - '@swc/core'
       - esbuild
@@ -8280,13 +8141,8 @@ packages:
       - supports-color
     dev: true
 
-<<<<<<< HEAD
-  /babel-loader/8.2.5_rb5fcebzp6kx3hqg3ucus54t3m:
+  /babel-loader/8.2.5_887a5110397f957d9e06dd05497793db:
     resolution: {integrity: sha512-OSiFfH89LrEMiWd4pLNqGz4CwJDtbs2ZVc+iGu2HrkRfPxId9F2anQj38IxWpmRfsUY0aBZYi1EFcd3mhtRMLQ==}
-=======
-  /babel-loader/8.2.4_7ee2ee6f8cbdc1e65df0788b3107bc6d:
-    resolution: {integrity: sha512-8dytA3gcvPPPv4Grjhnt8b5IIiTcq/zeXOPk4iTYI0SVXcsmuGg7JtBRDp8S9X+gJfhQ8ektjXZlDu1Bb33U8A==}
->>>>>>> baa4700 (feat(core): separate social sign-in api)
     engines: {node: '>= 8.9'}
     peerDependencies:
       '@babel/core': ^7.0.0
@@ -9565,11 +9421,7 @@ packages:
       webpack: 5.72.0
     dev: true
 
-<<<<<<< HEAD
-  /css-minimizer-webpack-plugin/3.4.1_tejugib4y3rw5hvgnfmxavjvsu:
-=======
-  /css-minimizer-webpack-plugin/3.4.1_clean-css@5.3.0+webpack@5.71.0:
->>>>>>> baa4700 (feat(core): separate social sign-in api)
+  /css-minimizer-webpack-plugin/3.4.1_clean-css@5.3.0+webpack@5.72.0:
     resolution: {integrity: sha512-1u6D71zeIfgngN2XNRJefc/hY7Ybsxd74Jm4qngIXyUEk7fss3VUzuHxLAq/R8NAba4QU9OUSaMZlbpRc7bM4Q==}
     engines: {node: '>= 12.13.0'}
     peerDependencies:
@@ -11220,11 +11072,7 @@ packages:
     resolution: {integrity: sha1-+8cfDEGt6zf5bFd60e1C2P2sypE=}
     dev: true
 
-<<<<<<< HEAD
-  /fork-ts-checker-webpack-plugin/6.5.1_4dvvomwfbhpgf7xcm7gogbdvgu:
-=======
-  /fork-ts-checker-webpack-plugin/6.5.1_typescript@4.6.3+webpack@5.71.0:
->>>>>>> baa4700 (feat(core): separate social sign-in api)
+  /fork-ts-checker-webpack-plugin/6.5.1_typescript@4.6.3+webpack@5.72.0:
     resolution: {integrity: sha512-x1wumpHOEf4gDROmKTaB6i4/Q6H3LwmjVO7fIX47vBwlZbtPjU33hgoMuD/Q/y6SU8bnuYSoN6ZQOLshGp0T/g==}
     engines: {node: '>=10', yarn: '>=1.0.0'}
     peerDependencies:
@@ -16380,11 +16228,7 @@ packages:
       postcss: 7.0.39
     dev: true
 
-<<<<<<< HEAD
-  /postcss-loader/6.2.1_g4najheu5gwop3kphiif6aqpde:
-=======
-  /postcss-loader/6.2.1_postcss@8.4.12+webpack@5.71.0:
->>>>>>> baa4700 (feat(core): separate social sign-in api)
+  /postcss-loader/6.2.1_postcss@8.4.13+webpack@5.72.0:
     resolution: {integrity: sha512-WbbYpmAaKcux/P66bZ40bpWsBucjx/TTgVVzRZ9yUO8yQfVBlameJ0ZGVaPfH64hNSBh63a+ICP5nqOpBA0w+Q==}
     engines: {node: '>= 12.13.0'}
     peerDependencies:
@@ -17252,13 +17096,8 @@ packages:
       pure-color: 1.3.0
     dev: true
 
-<<<<<<< HEAD
-  /react-dev-utils/12.0.1_4dvvomwfbhpgf7xcm7gogbdvgu:
+  /react-dev-utils/12.0.1_typescript@4.6.3+webpack@5.72.0:
     resolution: {integrity: sha512-84Ivxmr17KjUupyqzFode6xKhjwuEJDROWKJy/BthkL7Wn6NJ8h4WE6k/exAv6ImS+0oZLRRW5j/aINMHyeGeQ==}
-=======
-  /react-dev-utils/12.0.0_typescript@4.6.3+webpack@5.71.0:
-    resolution: {integrity: sha512-xBQkitdxozPxt1YZ9O1097EJiVpwHr9FoAuEVURCKV0Av8NBERovJauzP7bo1ThvuhZ4shsQ1AJiu4vQpoT1AQ==}
->>>>>>> baa4700 (feat(core): separate social sign-in api)
     engines: {node: '>=14'}
     dependencies:
       '@babel/code-frame': 7.16.7
@@ -17270,11 +17109,7 @@ packages:
       escape-string-regexp: 4.0.0
       filesize: 8.0.7
       find-up: 5.0.0
-<<<<<<< HEAD
-      fork-ts-checker-webpack-plugin: 6.5.1_4dvvomwfbhpgf7xcm7gogbdvgu
-=======
-      fork-ts-checker-webpack-plugin: 6.5.1_typescript@4.6.3+webpack@5.71.0
->>>>>>> baa4700 (feat(core): separate social sign-in api)
+      fork-ts-checker-webpack-plugin: 6.5.1_typescript@4.6.3+webpack@5.72.0
       global-modules: 2.0.0
       globby: 11.1.0
       gzip-size: 6.0.0
@@ -17360,7 +17195,7 @@ packages:
       shallowequal: 1.1.0
     dev: true
 
-  /react-helmet-async/1.3.0_sfoxds7t5ydpegc3knd667wn6m:
+  /react-helmet-async/1.3.0_react-dom@17.0.2+react@17.0.2:
     resolution: {integrity: sha512-9jZ57/dAn9t3q6hneQS0wukqC2ENOBgMNVEhb/ZG9ZSxUetzVIw4iAmEU38IaVg3QGYauQPhSeUTuIUtFglWpg==}
     peerDependencies:
       react: ^16.6.0 || ^17.0.0 || ^18.0.0
@@ -17448,11 +17283,7 @@ packages:
     resolution: {integrity: sha512-fBASbA6LnOU9dOU2eW7aQ8xmYBSXUIWr+UmF9b1efZBazGNO+rcXT/icdKnYm2pTwcRylVUYwW7H1PHfLekVzA==}
     dev: true
 
-<<<<<<< HEAD
-  /react-loadable-ssr-addon-v5-slorber/1.0.1_5grs2dwrf6hqtfkptfcfoiy4bu:
-=======
-  /react-loadable-ssr-addon-v5-slorber/1.0.1_fc8cb065053e04bf73bf05d6b2de63ea:
->>>>>>> baa4700 (feat(core): separate social sign-in api)
+  /react-loadable-ssr-addon-v5-slorber/1.0.1_e9a32d0ed12f8f09954f994457231c0d:
     resolution: {integrity: sha512-lq3Lyw1lGku8zUEJPDxsNm1AfYHBrO9Y1+olAYwpUJ2IGFBskM0DMKok97A6LWUpHm+o7IvQBOWu9MLenp9Z+A==}
     engines: {node: '>=10.13.0'}
     peerDependencies:
@@ -20365,11 +20196,7 @@ packages:
     dependencies:
       punycode: 2.1.1
 
-<<<<<<< HEAD
-  /url-loader/4.1.1_csgzzuwaerdr4d7s3u52mzcn7m:
-=======
-  /url-loader/4.1.1_file-loader@6.2.0+webpack@5.71.0:
->>>>>>> baa4700 (feat(core): separate social sign-in api)
+  /url-loader/4.1.1_file-loader@6.2.0+webpack@5.72.0:
     resolution: {integrity: sha512-3BTV812+AVHHOJQO8O5MkWgZ5aosP7GnROJwvzLS9hWDj00lZ6Z0wNak423Lp9PBZN05N+Jk/N5Si8jRAlGyWA==}
     engines: {node: '>= 10.13.0'}
     peerDependencies:
