@@ -1,5 +1,5 @@
 import { User, UsersPasswordEncryptionMethod } from '@logto/schemas';
-import { nanoid } from 'nanoid';
+import argon2 from 'argon2';
 import pRetry from 'p-retry';
 
 import { findUserByUsername, hasUserWithId, updateUserById } from '@/queries/user';
@@ -23,24 +23,20 @@ export const generateUserId = async (retries = 500) =>
     { retries, factor: 0 } // No need for exponential backoff
   );
 
-export const encryptUserPassword = (
-  userId: string,
+export const encryptUserPassword = async (
   password: string
-): {
-  passwordEncryptionSalt: string;
+): Promise<{
   passwordEncrypted: string;
   passwordEncryptionMethod: UsersPasswordEncryptionMethod;
-} => {
-  const passwordEncryptionSalt = nanoid();
-  const passwordEncryptionMethod = UsersPasswordEncryptionMethod.SaltAndPepper;
-  const passwordEncrypted = encryptPassword(
-    userId,
+}> => {
+  const passwordEncryptionMethod = UsersPasswordEncryptionMethod.Argon2i;
+  const passwordEncrypted = await encryptPassword(
     password,
-    passwordEncryptionSalt,
+
     passwordEncryptionMethod
   );
 
-  return { passwordEncrypted, passwordEncryptionMethod, passwordEncryptionSalt };
+  return { passwordEncrypted, passwordEncryptionMethod };
 };
 
 export const findUserByUsernameAndPassword = async (
@@ -48,18 +44,13 @@ export const findUserByUsernameAndPassword = async (
   password: string
 ): Promise<User> => {
   const user = await findUserByUsername(username);
-  const { id, passwordEncrypted, passwordEncryptionMethod, passwordEncryptionSalt } = user;
+  const { passwordEncrypted, passwordEncryptionMethod } = user;
 
-  assertThat(
-    passwordEncrypted && passwordEncryptionMethod && passwordEncryptionSalt,
-    'session.invalid_sign_in_method'
-  );
+  assertThat(passwordEncrypted && passwordEncryptionMethod, 'session.invalid_sign_in_method');
 
-  assertThat(
-    encryptPassword(id, password, passwordEncryptionSalt, passwordEncryptionMethod) ===
-      passwordEncrypted,
-    'session.invalid_credentials'
-  );
+  const result = await argon2.verify(passwordEncrypted, password);
+
+  assertThat(result, 'session.invalid_credentials');
 
   return user;
 };

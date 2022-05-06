@@ -346,15 +346,13 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
       const id = await generateUserId();
       ctx.log(type, { userId: id });
 
-      const { passwordEncryptionSalt, passwordEncrypted, passwordEncryptionMethod } =
-        encryptUserPassword(id, password);
+      const { passwordEncrypted, passwordEncryptionMethod } = await encryptUserPassword(password);
 
       await insertUser({
         id,
         username,
         passwordEncrypted,
         passwordEncryptionMethod,
-        passwordEncryptionSalt,
       });
       await updateLastSignInAt(id);
       await assignInteractionResults(ctx, provider, { login: { accountId: id } });

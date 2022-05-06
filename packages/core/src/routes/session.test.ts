@@ -23,10 +23,9 @@ jest.mock('@/lib/user', () => ({
     return { id: 'user1' };
   },
   generateUserId: () => 'user1',
-  encryptUserPassword: (userId: string, password: string) => ({
-    passwordEncrypted: userId + '_' + password + '_user1',
-    passwordEncryptionMethod: 'SaltAndPepper',
-    passwordEncryptionSalt: 'user1',
+  encryptUserPassword: (password: string) => ({
+    passwordEncrypted: password + '_user1',
+    passwordEncryptionMethod: 'Argon2i',
   }),
   updateLastSignInAt: async (...args: unknown[]) => updateUserById(...args),
 }));
@@ -490,9 +489,8 @@ describe('sessionRoutes', () => {
         expect.objectContaining({
           id: 'user1',
           username: 'username',
-          passwordEncrypted: 'user1_password_user1',
-          passwordEncryptionMethod: 'SaltAndPepper',
-          passwordEncryptionSalt: 'user1',
+          passwordEncrypted: 'password_user1',
+          passwordEncryptionMethod: 'Argon2i',
         })
       );
       expect(response.body).toHaveProperty('redirectTo');
