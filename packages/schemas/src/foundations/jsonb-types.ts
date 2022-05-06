@@ -143,6 +143,8 @@ export enum AppearanceMode {
 export const adminConsoleConfigGuard = z.object({
   language: z.nativeEnum(Language),
   appearanceMode: z.nativeEnum(AppearanceMode),
+  experienceGuideDone: z.boolean().optional(),
+  experienceNoticeConfirmed: z.boolean().optional(),
 });
 
 export type AdminConsoleConfig = z.infer<typeof adminConsoleConfigGuard>;
