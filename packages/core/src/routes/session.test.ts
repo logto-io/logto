@@ -556,10 +556,10 @@ describe('sessionRoutes', () => {
       expect(response.statusCode).toEqual(400);
     });
 
-    it('throw error if phone not valid (not exactly 11-digits)', async () => {
+    it('throw error if phone not valid (without digits)', async () => {
       const response = await sessionRequest
         .post('/session/register/passwordless/sms/send-passcode')
-        .send({ phone: '1300000000' });
+        .send({ phone: 'abcdefg' });
       expect(response.statusCode).toEqual(400);
     });
 
@@ -596,10 +596,10 @@ describe('sessionRoutes', () => {
       expect(response.statusCode).toEqual(400);
     });
 
-    it('throw error if phone not valid (not exactly 11-digits)', async () => {
+    it('throw error if phone not valid (without digits)', async () => {
       const response = await sessionRequest
         .post('/session/register/passwordless/sms/verify-passcode')
-        .send({ phone: '1300000000', code: '1234' });
+        .send({ phone: 'abcdefg', code: '1234' });
       expect(response.statusCode).toEqual(400);
     });
 
