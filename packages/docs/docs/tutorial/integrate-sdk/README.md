@@ -7,10 +7,10 @@ If the list doesn't cover your desired platform/framework, please file a feature
 ## Web
 
 - Vanilla JS
-- [React](./react.mdx)
+- [React](./react)
 - Vue
 
 ## Native
 
 - iOS
-- [Android](./android.mdx)
+- [Android](./android)
