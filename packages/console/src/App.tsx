@@ -1,4 +1,4 @@
-import { LogtoProvider } from '@logto/react';
+import { LogtoProvider, useLogto } from '@logto/react';
 import { AppearanceMode, Setting } from '@logto/schemas';
 import React, { useEffect } from 'react';
 import { BrowserRouter, Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
@@ -33,12 +33,16 @@ void initI18n();
 const defaultTheme = localStorage.getItem(themeStorageKey) ?? AppearanceMode.SyncWithSystem;
 
 const Main = () => {
+  const { isAuthenticated } = useLogto();
   const location = useLocation();
   const navigate = useNavigate();
   const fetcher = useSwrFetcher();
 
   const settingsFetcher = useSwrFetcher<Setting>();
-  const { data } = useSWR<Setting, RequestError>('/api/settings', settingsFetcher);
+  const { data } = useSWR<Setting, RequestError>(
+    isAuthenticated && '/api/settings',
+    settingsFetcher
+  );
 
   useEffect(() => {
     const theme = data?.adminConsole.appearanceMode ?? defaultTheme;
