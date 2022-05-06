@@ -23,8 +23,6 @@ import Spacer from '@/components/Spacer';
 import Close from '@/icons/Close';
 import { GuideForm } from '@/types/guide';
 
-import MultiTextInputField from './components/MultiTextInputField';
-import Step from './components/Step';
 import * as styles from './index.module.scss';
 
 const Guides: Record<string, LazyExoticComponent<(props: MDXProps) => JSX.Element>> = {
@@ -121,8 +119,9 @@ const Guide = ({
 
                   return <CodeEditor isReadonly language={language} value={String(children)} />;
                 },
-                MultiTextInputField,
-                Step,
+                hr: () => null,
+                h1: () => null,
+                h2: () => null,
               }}
             >
               <Suspense fallback={<div>Loading...</div>}>
