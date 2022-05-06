@@ -19,5 +19,14 @@
   ],
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": true,
-  }
+  },
+  "cSpell.words": [
+    "Alipay",
+    "CIAM",
+    "Logto",
+    "oidc",
+    "Passwordless",
+    "silverhand",
+    "slonik"
+  ]
 }

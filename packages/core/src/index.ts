@@ -18,7 +18,7 @@ import initI18n from './i18n/init';
   try {
     await envSet.load();
     const app = new Koa({
-      proxy: envSet.values.trustingTlsOffloadingProxies,
+      proxy: envSet.values.trustProxyHeader,
     });
     await initConnectors();
     await initI18n();
