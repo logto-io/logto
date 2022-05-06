@@ -5,7 +5,7 @@ import { useParams } from 'react-router-dom';
 import NavBar from '@/components/NavBar';
 import CreateAccount from '@/containers/CreateAccount';
 import { PhonePasswordless, EmailPasswordless } from '@/containers/Passwordless';
-import NotFound from '@/pages/NotFound';
+import ErrorPage from '@/pages/ErrorPage';
 
 import * as styles from './index.module.scss';
 
@@ -30,7 +30,7 @@ const Register = () => {
   }, [method]);
 
   if (!['email', 'sms', 'username'].includes(method)) {
-    return <NotFound />;
+    return <ErrorPage />;
   }
 
   return (

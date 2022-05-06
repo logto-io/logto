@@ -15,8 +15,13 @@
     margin-top: _.unit(22);
   }
 
-  .message {
+  .title {
     @include _.title;
+    margin-bottom: _.unit(4);
+  }
+
+  .message {
+    @include _.text-hint;
   }
 
   .placeHolder {

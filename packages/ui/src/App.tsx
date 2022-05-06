@@ -6,7 +6,7 @@ import usePageContext from './hooks/use-page-context';
 import initI18n from './i18n/init';
 import Callback from './pages/Callback';
 import Consent from './pages/Consent';
-import NotFound from './pages/NotFound';
+import ErrorPage from './pages/ErrorPage';
 import Passcode from './pages/Passcode';
 import Register from './pages/Register';
 import SecondarySignIn from './pages/SecondarySignIn';
@@ -54,7 +54,7 @@ const App = () => {
             <Route path="/callback/:connector" element={<Callback />} />
             <Route path="/social-register/:connector" element={<SocialRegister />} />
             <Route path="/:type/:method/passcode-validation" element={<Passcode />} />
-            <Route path="*" element={<NotFound />} />
+            <Route path="*" element={<ErrorPage />} />
           </Routes>
         </BrowserRouter>
       </AppContent>

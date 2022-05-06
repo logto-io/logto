@@ -39,7 +39,7 @@ const translation = {
       back: '返回',
     },
     description: {
-      not_found: '页面不存在',
+      not_found: '404 页面不存在',
       loading: '读取中...',
       redirecting: '页面跳转中...',
       agree_with_terms: '我已阅读并同意 ',
