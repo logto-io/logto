@@ -186,17 +186,19 @@ const ConnectorDetails = () => {
               {t('connector_details.tab_settings')}
             </TabNavLink>
           </TabNav>
-          <CodeEditor
-            language="json"
-            value={config}
-            onChange={(value) => {
-              setConfig(value);
-            }}
-          />
-          {data.metadata.type !== ConnectorType.Social && (
-            <SenderTester connectorType={data.metadata.type} />
-          )}
-          {saveError && <div>{saveError}</div>}
+          <div className={styles.main}>
+            <CodeEditor
+              language="json"
+              value={config}
+              onChange={(value) => {
+                setConfig(value);
+              }}
+            />
+            {data.metadata.type !== ConnectorType.Social && (
+              <SenderTester connectorType={data.metadata.type} />
+            )}
+            {saveError && <div>{saveError}</div>}
+          </div>
           <div className={detailsStyles.footer}>
             <div className={detailsStyles.footerMain}>
               <Button

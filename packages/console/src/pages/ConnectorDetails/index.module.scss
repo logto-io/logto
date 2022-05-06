@@ -66,4 +66,8 @@
   > :not(:first-child) {
     margin-top: _.unit(4);
   }
+
+  .main {
+    flex: 1;
+  }
 }
