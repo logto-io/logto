@@ -26,17 +26,14 @@ describe('settings routes', () => {
   });
 
   it('PATCH /settings', async () => {
-    const customDomain = 'silverhand-logto.io';
     const { adminConsole } = mockSetting;
 
     const response = await roleRequester.patch('/settings').send({
-      customDomain,
       adminConsole,
     });
 
     expect(response.status).toEqual(200);
     expect(response.body).toEqual({
-      customDomain,
       adminConsole,
     });
   });

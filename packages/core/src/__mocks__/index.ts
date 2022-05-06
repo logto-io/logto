@@ -45,7 +45,6 @@ export const mockRole: Role = {
 
 export const mockSetting: Setting = {
   id: 'foo setting',
-  customDomain: 'mock-logto.dev',
   adminConsole: {
     language: Language.English,
     appearanceMode: AppearanceMode.SyncWithSystem,
