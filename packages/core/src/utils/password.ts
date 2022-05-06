@@ -14,5 +14,5 @@ export const encryptPassword = async (
     { method }
   );
 
-  return argon2.hash(password, { timeCost: 100 });
+  return argon2.hash(password, { timeCost: 10 });
 };

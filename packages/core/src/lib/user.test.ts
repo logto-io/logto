@@ -56,7 +56,7 @@ describe('encryptUserPassword()', () => {
   it('generates salt, encrypted and method', async () => {
     const { passwordEncryptionMethod, passwordEncrypted } = await encryptUserPassword('password');
     expect(passwordEncryptionMethod).toEqual(UsersPasswordEncryptionMethod.Argon2i);
-    expect(passwordEncrypted).toHaveLength(97);
+    expect(passwordEncrypted).toContain('argon2');
   });
 });
 
