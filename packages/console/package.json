@@ -74,7 +74,8 @@
   },
   "alias": {
     "@/*": "./src/$1",
-    "@theme/*": "./src/mdx-components/$1"
+    "@theme/*": "./src/mdx-components/$1",
+    "@components/*": "./src/pages/Guide/components/$1"
   },
   "eslintConfig": {
     "extends": "@silverhand/react"
