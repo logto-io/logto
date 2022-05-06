@@ -11,5 +11,5 @@ export enum PasscodeType {
   ForgotPassword = 'ForgotPassword',
 }
 export enum UsersPasswordEncryptionMethod {
-  SaltAndPepper = 'SaltAndPepper',
+  Argon2i = 'Argon2i',
 }

@@ -1,4 +1,4 @@
-create type users_password_encryption_method as enum ('SaltAndPepper');
+create type users_password_encryption_method as enum ('Argon2i');
 
 create table users (
   id varchar(12) not null,
@@ -7,7 +7,6 @@ create table users (
   primary_phone varchar(128) unique,
   password_encrypted varchar(128),
   password_encryption_method users_password_encryption_method,
-  password_encryption_salt varchar(128),
   name varchar(128),
   avatar varchar(256),
   application_id varchar(21) references applications(id),

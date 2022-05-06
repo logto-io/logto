@@ -53,9 +53,8 @@ jest.mock('@/queries/user', () => ({
 jest.mock('@/lib/user', () => ({
   generateUserId: jest.fn(() => 'fooId'),
   encryptUserPassword: jest.fn(() => ({
-    passwordEncryptionSalt: 'salt',
     passwordEncrypted: 'password',
-    passwordEncryptionMethod: 'saltAndPepper',
+    passwordEncryptionMethod: 'Argon2i',
   })),
 }));
 
@@ -242,7 +241,7 @@ describe('adminUserRoutes', () => {
     const mockedUserId = 'foo';
     const password = '123456';
     const response = await userRequest.patch(`/users/${mockedUserId}/password`).send({ password });
-    expect(encryptUserPassword).toHaveBeenCalledWith(mockedUserId, password);
+    expect(encryptUserPassword).toHaveBeenCalledWith(password);
     expect(updateUserById).toHaveBeenCalledTimes(1);
     expect(response.status).toEqual(200);
     expect(response.body).toEqual({

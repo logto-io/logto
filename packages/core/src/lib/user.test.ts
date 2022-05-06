@@ -53,12 +53,10 @@ describe('generateUserId()', () => {
 });
 
 describe('encryptUserPassword()', () => {
-  it('generates salt, encrypted and method', () => {
-    const { passwordEncryptionMethod, passwordEncrypted, passwordEncryptionSalt } =
-      encryptUserPassword('user-id', 'password');
-    expect(passwordEncryptionMethod).toEqual(UsersPasswordEncryptionMethod.SaltAndPepper);
-    expect(passwordEncrypted).toHaveLength(64);
-    expect(passwordEncryptionSalt).toHaveLength(21);
+  it('generates salt, encrypted and method', async () => {
+    const { passwordEncryptionMethod, passwordEncrypted } = await encryptUserPassword('password');
+    expect(passwordEncryptionMethod).toEqual(UsersPasswordEncryptionMethod.Argon2i);
+    expect(passwordEncrypted).toContain('argon2');
   });
 });
 
