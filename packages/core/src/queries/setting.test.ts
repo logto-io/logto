@@ -42,19 +42,17 @@ describe('setting query', () => {
   it('updateSetting', async () => {
     const { adminConsole } = mockSetting;
 
-    /* eslint-disable sql/no-unsafe-query */
-    const expectSql = `
-      update "settings"
+    const expectSql = sql`
+      update ${table}
       set
-      "admin_console"=
+      ${fields.adminConsole}=
       coalesce("admin_console",'{}'::jsonb)|| $1
-      where "id"=$2
+      where ${fields.id}=$2
       returning *
     `;
-    /* eslint-enable sql/no-unsafe-query */
 
     mockQuery.mockImplementationOnce(async (sql, values) => {
-      expectSqlAssert(sql, expectSql);
+      expectSqlAssert(sql, expectSql.sql);
       expect(values).toEqual([JSON.stringify(adminConsole), defaultSettingId]);
 
       return createMockQueryResult([dbvalue]);
