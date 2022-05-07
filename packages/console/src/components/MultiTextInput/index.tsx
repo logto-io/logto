@@ -68,10 +68,9 @@ const MultiTextInput = ({ title, value, onChange, error }: Props) => {
                 onClick={() => {
                   if (fieldValue.trim().length === 0) {
                     handleRemove(fieldIndex);
-
-                    return;
+                  } else {
+                    setDeleteFieldIndex(fieldIndex);
                   }
-                  setDeleteFieldIndex(fieldIndex);
                 }}
               >
                 <Minus />
