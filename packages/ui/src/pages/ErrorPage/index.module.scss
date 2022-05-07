@@ -1,0 +1,34 @@
+@use '@/scss/underscore' as _;
+
+.container {
+  position: absolute;
+  inset: 0;
+  @include _.flex-column;
+  align-items: stretch;
+
+  .wrapper {
+    flex: 1;
+    @include _.page-wrapper;
+  }
+
+  .icon {
+    margin-top: _.unit(22);
+  }
+
+  .title {
+    @include _.title;
+    margin-bottom: _.unit(4);
+  }
+
+  .message {
+    @include _.text-hint;
+  }
+
+  .placeHolder {
+    flex: 1;
+  }
+
+  .backBtn {
+    margin-bottom: _.unit(10);
+  }
+}

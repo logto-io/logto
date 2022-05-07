@@ -34,9 +34,10 @@ const translation = {
       confirm: 'Confirm',
       cancel: 'Cancel',
       bind: 'Binding with {{address}}',
+      back: 'Go Back',
     },
     description: {
-      not_found: 'Not Found',
+      not_found: '404 Not Found',
       loading: 'Loading...',
       redirecting: 'Redirecting...',
       agree_with_terms: 'I have read and agree to the ',

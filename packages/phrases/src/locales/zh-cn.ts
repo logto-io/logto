@@ -36,9 +36,10 @@ const translation = {
       cancel: '取消',
       confirm: '确认',
       bind: '绑定到 {{address}}',
+      back: '返回',
     },
     description: {
-      not_found: '页面不存在',
+      not_found: '404 页面不存在',
       loading: '读取中...',
       redirecting: '页面跳转中...',
       agree_with_terms: '我已阅读并同意 ',

@@ -6,7 +6,7 @@ import { useParams, useLocation } from 'react-router-dom';
 import NavBar from '@/components/NavBar';
 import PasscodeValidation from '@/containers/PasscodeValidation';
 import { PageContext } from '@/hooks/use-page-context';
-import NotFound from '@/pages/NotFound';
+import ErrorPage from '@/pages/ErrorPage';
 import { UserFlow } from '@/types';
 
 import * as styles from './index.module.scss';
@@ -33,13 +33,13 @@ const Passcode = () => {
   }, [method, setToast, state, t]);
 
   if (invalidType || invalidMethod) {
-    return <NotFound />;
+    return <ErrorPage />;
   }
 
   const target = state?.[method];
 
   if (!target) {
-    return <NotFound />;
+    return <ErrorPage />;
   }
 
   return (
