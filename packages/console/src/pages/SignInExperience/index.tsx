@@ -1,9 +1,10 @@
 import { Setting, SignInExperience as SignInExperienceType } from '@logto/schemas';
 import classNames from 'classnames';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
+import ReactModal from 'react-modal';
 import { useParams } from 'react-router-dom';
 import useSWR from 'swr';
 
@@ -13,25 +14,29 @@ import CardTitle from '@/components/CardTitle';
 import TabNav, { TabNavLink } from '@/components/TabNav';
 import useApi, { RequestError } from '@/hooks/use-api';
 import * as detailsStyles from '@/scss/details.module.scss';
+import * as modalStyles from '@/scss/modal.module.scss';
 
 import BrandingForm from './components/BrandingForm';
 import LanguagesForm from './components/LanguagesForm';
+import SaveAlert from './components/SaveAlert';
 import SignInMethodsForm from './components/SignInMethodsForm';
 import TermsForm from './components/TermsForm';
 import Welcome from './components/Welcome';
 import * as styles from './index.module.scss';
 import { SignInExperienceForm } from './types';
-import { signInExperienceParser } from './utilities';
+import { compareSignInMethods, signInExperienceParser } from './utilities';
 
 const SignInExperience = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { tab } = useParams();
   const { data, error, mutate } = useSWR<SignInExperienceType, RequestError>('/api/sign-in-exp');
   const { data: settings, error: settingsError } = useSWR<Setting, RequestError>('/api/settings');
+  const [dataToCompare, setDataToCompare] = useState<SignInExperienceType>();
   const methods = useForm<SignInExperienceForm>();
   const {
     reset,
     handleSubmit,
+    getValues,
     formState: { isSubmitting },
   } = methods;
   const api = useApi();
@@ -42,18 +47,31 @@ const SignInExperience = () => {
     }
   }, [data, reset]);
 
+  const saveData = async () => {
+    const updatedData = await api
+      .patch('/api/sign-in-exp', {
+        json: signInExperienceParser.toRemoteModel(getValues()),
+      })
+      .json<SignInExperienceType>();
+    void mutate(updatedData);
+    toast.success(t('application_details.save_success'));
+  };
+
   const onSubmit = handleSubmit(async (formData) => {
     if (!data || isSubmitting) {
       return;
     }
 
-    const updatedData = await api
-      .patch('/api/sign-in-exp', {
-        json: signInExperienceParser.toRemoteModel(formData),
-      })
-      .json<SignInExperienceType>();
-    void mutate(updatedData);
-    toast.success(t('application_details.save_success'));
+    const formatted = signInExperienceParser.toRemoteModel(formData);
+
+    // Sign in methods changed, need to show confirm modal first.
+    if (!compareSignInMethods(data, formatted)) {
+      setDataToCompare(formatted);
+
+      return;
+    }
+
+    await saveData();
   });
 
   if (!settings && !settingsError) {
@@ -88,31 +106,51 @@ const SignInExperience = () => {
           {error && <div>{`error occurred: ${error.body.message}`}</div>}
           {data && (
             <FormProvider {...methods}>
-              <form className={classNames(detailsStyles.body, styles.form)} onSubmit={onSubmit}>
-                {tab === 'experience' && (
-                  <>
-                    <BrandingForm />
-                    <TermsForm />
-                  </>
-                )}
-                {tab === 'methods' && <SignInMethodsForm />}
-                {tab === 'others' && <LanguagesForm />}
-              </form>
-              <div className={detailsStyles.footer}>
-                <div className={detailsStyles.footerMain}>
-                  <Button
-                    isLoading={isSubmitting}
-                    type="primary"
-                    htmlType="submit"
-                    title="general.save_changes"
-                  />
+              <form onSubmit={onSubmit}>
+                <div className={classNames(detailsStyles.body, styles.form)}>
+                  {tab === 'experience' && (
+                    <>
+                      <BrandingForm />
+                      <TermsForm />
+                    </>
+                  )}
+                  {tab === 'methods' && <SignInMethodsForm />}
+                  {tab === 'others' && <LanguagesForm />}
                 </div>
-              </div>
+                <div className={detailsStyles.footer}>
+                  <div className={detailsStyles.footerMain}>
+                    <Button
+                      isLoading={isSubmitting}
+                      type="primary"
+                      htmlType="submit"
+                      title="general.save_changes"
+                    />
+                  </div>
+                </div>
+              </form>
             </FormProvider>
           )}
         </Card>
       </div>
       <Card className={styles.preview}>TODO</Card>
+      {data && (
+        <ReactModal
+          isOpen={Boolean(dataToCompare)}
+          className={modalStyles.content}
+          overlayClassName={modalStyles.overlay}
+        >
+          {dataToCompare && (
+            <SaveAlert
+              before={data}
+              after={dataToCompare}
+              onClose={() => {
+                setDataToCompare(undefined);
+              }}
+              onConfirm={saveData}
+            />
+          )}
+        </ReactModal>
+      )}
     </div>
   );
 };

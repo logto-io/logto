@@ -11,6 +11,8 @@ const translation = {
     loading: 'Loading...',
     redirecting: 'Redirecting...',
     added: 'Added',
+    cancel: 'Cancel',
+    confirm: 'Confirm',
   },
   main_flow: {
     input: {
@@ -422,6 +424,13 @@ const translation = {
         setup: 'Set up',
         no_connector:
           'You haven’t set up any social connectors yet. Your sign in experience won’t go live until you finish the settings first. ',
+      },
+      save_alert: {
+        title: 'Reminder',
+        description:
+          'You are changing sign in methods from one to another. This will impact some of your users. Are you sure you want to do that?',
+        before: 'Before',
+        after: 'After',
       },
     },
     settings: {
