@@ -26,7 +26,7 @@ const MultiTextInput = ({ title, value, onChange, error }: Props) => {
     keyPrefix: 'admin_console',
   });
 
-  const [deleteFieldIndex, setDeleteFieldIndex] = useState<number | undefined>();
+  const [deleteFieldIndex, setDeleteFieldIndex] = useState<number>();
 
   const fields = useMemo(() => {
     if (!value?.length) {
