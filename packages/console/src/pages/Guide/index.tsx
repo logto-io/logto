@@ -27,12 +27,7 @@ import * as styles from './index.module.scss';
 
 const Guides: Record<string, LazyExoticComponent<(props: MDXProps) => JSX.Element>> = {
   react: lazy(async () => import('@/assets/docs/tutorial/integrate-sdk/react.mdx')),
-  'react_zh-cn': lazy(
-    async () =>
-      import(
-        '@/assets/i18n/zh-cn/docusaurus-plugin-content-docs/current/tutorial/integrate-sdk/react.mdx'
-      )
-  ),
+  'react_zh-cn': lazy(async () => import('@/assets/docs/tutorial/integrate-sdk/react_zh-cn.mdx')),
 };
 
 type Props = PropsWithChildren<{

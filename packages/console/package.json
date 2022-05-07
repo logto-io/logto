@@ -8,11 +8,10 @@
   "scripts": {
     "preinstall": "npx only-allow pnpm",
     "precommit": "lint-staged",
-    "copyfiles": "copyfiles -u 2 \"../docs/**/*.mdx\" src/assets",
-    "start": "pnpm copyfiles && parcel src/index.html",
-    "dev": "pnpm copyfiles && PORT=5002 parcel src/index.html --public-url /console --no-cache --hmr-port 6002",
+    "start": "parcel src/index.html",
+    "dev": "PORT=5002 parcel src/index.html --public-url /console --no-cache --hmr-port 6002",
     "check": "tsc --noEmit",
-    "build": "pnpm check && rm -rf dist && pnpm copyfiles && parcel build src/index.html --no-autoinstall --no-cache --public-url /console",
+    "build": "pnpm check && rm -rf dist && parcel build src/index.html --no-autoinstall --no-cache --public-url /console",
     "lint": "eslint --ext .ts --ext .tsx src",
     "lint:report": "pnpm lint --format json --output-file report.json",
     "stylelint": "stylelint \"src/**/*.scss\""
@@ -39,7 +38,6 @@
     "@types/react-dom": "^17.0.9",
     "@types/react-modal": "^3.13.1",
     "classnames": "^2.3.1",
-    "copyfiles": "^2.4.1",
     "csstype": "^3.0.11",
     "dayjs": "^1.10.5",
     "dnd-core": "^16.0.0",
@@ -74,8 +72,7 @@
   },
   "alias": {
     "@/*": "./src/$1",
-    "@theme/*": "./src/mdx-components/$1",
-    "@components/*": "./src/pages/Guide/components/$1"
+    "@mdx/components/*": "./src/mdx-components/$1"
   },
   "eslintConfig": {
     "extends": "@silverhand/react"

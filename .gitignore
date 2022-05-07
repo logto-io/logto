@@ -17,9 +17,6 @@ node_modules
 /packages/*/lib
 /packages/*/dist
 
-# docs copied to admin console
-/packages/console/**/*.mdx
-
 # logs
 logs
 *.log*
