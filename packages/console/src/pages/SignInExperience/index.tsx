@@ -1,4 +1,4 @@
-import { SignInExperience as SignInExperienceType } from '@logto/schemas';
+import { Setting, SignInExperience as SignInExperienceType } from '@logto/schemas';
 import classNames from 'classnames';
 import React, { useEffect } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
@@ -18,6 +18,7 @@ import BrandingForm from './components/BrandingForm';
 import LanguagesForm from './components/LanguagesForm';
 import SignInMethodsForm from './components/SignInMethodsForm';
 import TermsForm from './components/TermsForm';
+import Welcome from './components/Welcome';
 import * as styles from './index.module.scss';
 import { SignInExperienceForm } from './types';
 import { signInExperienceParser } from './utilities';
@@ -26,6 +27,7 @@ const SignInExperience = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { tab } = useParams();
   const { data, error, mutate } = useSWR<SignInExperienceType, RequestError>('/api/sign-in-exp');
+  const { data: settings, error: settingsError } = useSWR<Setting, RequestError>('/api/settings');
   const methods = useForm<SignInExperienceForm>();
   const {
     reset,
@@ -53,6 +55,18 @@ const SignInExperience = () => {
     void mutate(updatedData);
     toast.success(t('application_details.save_success'));
   });
+
+  if (!settings && !settingsError) {
+    return <div>loading</div>;
+  }
+
+  if (settingsError) {
+    return <div>{settingsError.body.message}</div>;
+  }
+
+  if (!settings?.adminConsole.experienceGuideDone) {
+    return <Welcome />;
+  }
 
   return (
     <div className={styles.wrapper}>

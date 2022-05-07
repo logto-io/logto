@@ -353,6 +353,11 @@ const translation = {
         methods: 'Sign in methods',
         others: 'Others',
       },
+      welcome: {
+        title:
+          'This is the first time you define your sign in experience. Follow the step by step guide and go through all of settings.',
+        get_started: 'Get started',
+      },
       branding: {
         title: 'BRANDING',
         primary_color: 'Primary color',
