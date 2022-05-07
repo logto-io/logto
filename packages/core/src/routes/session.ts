@@ -564,7 +564,6 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
   );
 
   router.delete('/session', async (ctx, next) => {
-    await provider.interactionDetails(ctx.req, ctx.res);
     const error: LogtoErrorCode = 'oidc.aborted';
     await assignInteractionResults(ctx, provider, { error });
 
