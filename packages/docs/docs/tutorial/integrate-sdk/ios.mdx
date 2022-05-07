@@ -1,0 +1,86 @@
+---
+sidebar_label: iOS
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+# Integrate Logto Swift SDK for iOS
+
+:::note
+This tutorial assumes you have created a Native App in Admin Console. If you are not ready, read this one before continuing.
+:::
+
+## Add Logto SDK as a Dependency
+
+Use the following URL to add Logto SDK as a dependency in Swift Package Manager.
+
+```bash
+https://github.com/logto-io/swift.git
+```
+
+Since Xcode 11, you can [directly import a swift package](https://developer.apple.com/documentation/swift_packages/adding_package_dependencies_to_your_app) w/o any additional tool.
+
+We do not support **Carthage** and **CocoaPods** at the time due to some technical issues.
+
+<details>
+  <summary>Carthage</summary>
+  Carthage <a href="https://github.com/Carthage/Carthage/issues/1226#issuecomment-290931385">needs a `xcodeproj` file to build</a>, but `swift package generate-xcodeproj` will report a failure since we are using binary targets for native social plugins. We will try to find a workaround later.
+</details>
+
+<details>
+  <summary>CocoaPods</summary>
+  CocoaPods <a href="https://github.com/CocoaPods/CocoaPods/issues/3276">does not support local dependency</a> and monorepo, thus it's hard to create a `.podspec` for this repo.
+</details>
+
+## Init `LogtoClient`
+
+```swift
+import Logto
+
+let config = try? LogtoConfig(
+  endpoint: "<your-logto-endpoint>",
+  appId: "<your-application-id>"
+)
+let logtoClient = LogtoClient(useConfig: config)
+```
+
+By default, we store credentials like ID Token and Refresh Token in Keychain. Thus the user doesn't need to sign in again when he returns.
+
+To turn off this behavior, set `usingPersistStorage` to `false`:
+
+```swift
+let config = try? LogtoConfig(
+  // ...
+  usingPersistStorage: false
+)
+```
+
+## Sign In
+
+:::note
+Before calling `.signInWithBrowser(redirectUri:)`, make sure you have correctly [configured Redirect URI](https://logto.io) in Admin Console.
+:::
+
+```swift
+do {
+  try await client.signInWithBrowser(redirectUri: "<your-redirect-uri>")
+  print(client.isAuthenticated) // true
+} catch let error as LogtoClientErrors.SignIn {
+  // error occured during sign in
+}
+```
+
+## Sign Out
+
+```swift
+await client.signOut()
+```
+
+This will clean all the Logto data in Keychain, if it has.
+
+## Further Readings
+
+- [SDK Documentation](https://link-url-here.org)
+- [OIDC Documentation](https://link-url-here.org)
+- [Calling API to fetch accessToken](https://link-url-here.org)
