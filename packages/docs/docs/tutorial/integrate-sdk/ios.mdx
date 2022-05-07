@@ -5,11 +5,12 @@ sidebar_label: iOS
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
+import AppNote from './components/AppNote';
+import SignInNote from './components/SignInNote';
+
 # Integrate Logto Swift SDK for iOS
 
-:::note
-This tutorial assumes you have created a Native App in Admin Console. If you are not ready, read this one before continuing.
-:::
+<AppNote type="Native" />
 
 ## Add Logto SDK as a Dependency
 
@@ -58,9 +59,7 @@ let config = try? LogtoConfig(
 
 ## Sign In
 
-:::note
-Before calling `.signInWithBrowser(redirectUri:)`, make sure you have correctly [configured Redirect URI](https://logto.io) in Admin Console.
-:::
+<SignInNote calling=".signInWithBrowser(redirectUri:)" />
 
 ```swift
 do {
@@ -73,11 +72,11 @@ do {
 
 ## Sign Out
 
+Calling `.signOut()` will clean all the Logto data in Keychain, if it has.
+
 ```swift
 await client.signOut()
 ```
-
-This will clean all the Logto data in Keychain, if it has.
 
 ## Further Readings
 
