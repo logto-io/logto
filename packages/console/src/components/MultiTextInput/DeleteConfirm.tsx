@@ -12,12 +12,12 @@ type Props = {
   onClose: () => void;
 };
 
-const DeletionReminder = ({ title, onConfirm, onClose }: Props) => {
+const DeleteConfirm = ({ title, onConfirm, onClose }: Props) => {
   const { t } = useTranslation();
 
   return (
     <ModalLayout
-      title="form.reminder"
+      title="form.confirm"
       footer={
         <>
           <Button type="outline" title="admin_console.form.cancel" onClick={onClose} />
@@ -41,4 +41,4 @@ const DeletionReminder = ({ title, onConfirm, onClose }: Props) => {
   );
 };
 
-export default DeletionReminder;
+export default DeleteConfirm;

@@ -10,7 +10,7 @@ import * as modalStyles from '@/scss/modal.module.scss';
 
 import IconButton from '../IconButton';
 import TextInput from '../TextInput';
-import DeletionReminder from './DeletionReminder';
+import DeleteConfirm from './DeleteConfirm';
 import * as styles from './index.module.scss';
 import { MultiTextInputError } from './types';
 
@@ -94,7 +94,7 @@ const MultiTextInput = ({ title, value, onChange, error }: Props) => {
         className={modalStyles.content}
         overlayClassName={modalStyles.overlay}
       >
-        <DeletionReminder
+        <DeleteConfirm
           title={title}
           onClose={() => {
             setDeleteFieldIndex(undefined);

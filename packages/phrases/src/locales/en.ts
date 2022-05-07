@@ -88,7 +88,7 @@ const translation = {
     form: {
       required: 'Required',
       add_another: '+ Add Another',
-      reminder: 'Reminder',
+      confirm: 'Reminder',
       cancel: 'Cancel',
       delete: 'Delete',
       deletion_confirmation: 'Are you sure you want to delete this {{title}}?',
