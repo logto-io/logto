@@ -380,6 +380,8 @@ const translation = {
         title:
           'This is the first time you define your sign in experience. Follow the step by step guide and go through all of settings.',
         get_started: '开始',
+        apply_remind: 'Sign in experience will apply to all applications under this account',
+        got_it: 'Got it',
       },
       branding: {
         title: 'BRANDING',
