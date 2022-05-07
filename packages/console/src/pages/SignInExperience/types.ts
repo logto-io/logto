@@ -1,5 +1,5 @@
 import { Language } from '@logto/phrases';
-import { SignInExperience, SignInMethods } from '@logto/schemas';
+import { SignInExperience, SignInMethodKey } from '@logto/schemas';
 
 export enum LanguageMode {
   Auto = 'Auto',
@@ -8,7 +8,7 @@ export enum LanguageMode {
 
 export type SignInExperienceForm = Omit<SignInExperience, 'signInMethods' | 'languageInfo'> & {
   signInMethods: {
-    primary?: keyof SignInMethods;
+    primary?: SignInMethodKey;
     enableSecondary: boolean;
     username: boolean;
     sms: boolean;

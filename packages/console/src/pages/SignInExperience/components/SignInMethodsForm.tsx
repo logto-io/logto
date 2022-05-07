@@ -9,6 +9,7 @@ import Select from '@/components/Select';
 import Switch from '@/components/Switch';
 
 import { SignInExperienceForm } from '../types';
+import ConnectorSetupWarning from './ConnectorSetupWarning';
 import ConnectorsTransfer from './ConnectorsTransfer';
 import * as styles from './index.module.scss';
 
@@ -19,6 +20,8 @@ const SignInMethodsForm = () => {
   const { register, watch, control, setValue } = useFormContext<SignInExperienceForm>();
   const primaryMethod = watch('signInMethods.primary');
   const enableSecondary = watch('signInMethods.enableSecondary');
+  const sms = watch('signInMethods.sms');
+  const email = watch('signInMethods.email');
   const social = watch('signInMethods.social');
 
   useEffect(() => {
@@ -42,6 +45,11 @@ const SignInMethodsForm = () => {
           </>
         );
 
+        const enabled =
+          (method === SignInMethodKey.Email && email) ||
+          (method === SignInMethodKey.SMS && sms) ||
+          (method === SignInMethodKey.Social && social);
+
         return (
           <div key={method} className={styles.method}>
             <Checkbox
@@ -49,10 +57,11 @@ const SignInMethodsForm = () => {
               disabled={primaryMethod === method}
               {...register(`signInMethods.${method}`)}
             />
+            {enabled && <ConnectorSetupWarning method={method} />}
           </div>
         );
       }),
-    [primaryMethod, register, t]
+    [primaryMethod, register, t, email, social, sms]
   );
 
   return (
@@ -74,6 +83,7 @@ const SignInMethodsForm = () => {
           )}
         />
       </FormField>
+      {primaryMethod && <ConnectorSetupWarning method={primaryMethod} />}
       {primaryMethod === SignInMethodKey.Social && (
         <div className={styles.primarySocial}>
           <Controller

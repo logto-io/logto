@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import useSWR from 'swr';
 
+import Alert from '@/components/Alert';
 import Transfer from '@/components/Transfer';
 import UnnamedTrans from '@/components/UnnamedTrans';
 import { RequestError } from '@/hooks/use-api';
@@ -42,21 +43,26 @@ const ConnectorsTransfer = ({ value, onChange }: Props) => {
     : [];
 
   return (
-    <Transfer
-      value={value}
-      datasource={datasource}
-      title={t('sign_in_exp.sign_in_methods.transfer.title')}
-      footer={
-        <div>
-          {t('sign_in_exp.sign_in_methods.transfer.footer.not_in_list')}{' '}
-          <Link to="/connectors/social">
-            {t('sign_in_exp.sign_in_methods.transfer.footer.set_up_more')}
-          </Link>{' '}
-          {t('sign_in_exp.sign_in_methods.transfer.footer.go_to')}
-        </div>
-      }
-      onChange={onChange}
-    />
+    <>
+      {value.length === 0 && (
+        <Alert>{t('sign_in_exp.setup_warning.no_added_social_connector')}</Alert>
+      )}
+      <Transfer
+        value={value}
+        datasource={datasource}
+        title={t('sign_in_exp.sign_in_methods.transfer.title')}
+        footer={
+          <div>
+            {t('sign_in_exp.sign_in_methods.transfer.footer.not_in_list')}{' '}
+            <Link to="/connectors/social">
+              {t('sign_in_exp.sign_in_methods.transfer.footer.set_up_more')}
+            </Link>{' '}
+            {t('sign_in_exp.sign_in_methods.transfer.footer.go_to')}
+          </div>
+        }
+        onChange={onChange}
+      />
+    </>
   );
 };
 
