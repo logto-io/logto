@@ -6,9 +6,10 @@
  */
 
 import { Nullable } from '@silverhand/essentials';
-import React, { useState, isValidElement, type ReactElement, cloneElement } from 'react';
+import React, { useState, isValidElement, type ReactElement, cloneElement, useRef } from 'react';
 
 import type { Props as TabItemProps } from '../TabItem';
+import * as styles from './index.module.scss';
 
 type Props = {
   className?: string;
@@ -35,20 +36,11 @@ const Tabs = ({ className, children }: Props): JSX.Element => {
       label,
     }));
 
-  const [selectedValue, setSelectedValue] = useState<string>();
-  const tabReferences: Array<Nullable<HTMLLIElement>> = [];
-
-  const handleTabChange = (
-    event: React.FocusEvent<HTMLLIElement> | React.MouseEvent<HTMLLIElement>
-  ) => {
-    const newTab = event.currentTarget;
-    const newTabIndex = tabReferences.indexOf(newTab);
-    const newTabValue = values[newTabIndex]?.value;
-
-    if (newTabValue !== selectedValue) {
-      setSelectedValue(newTabValue);
-    }
-  };
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const tabReferences = useRef<Array<Nullable<HTMLLIElement>>>(
+    // eslint-disable-next-line @typescript-eslint/ban-types
+    Array.from<null>({ length }).fill(null)
+  );
 
   const handleKeydown = (event: React.KeyboardEvent<HTMLLIElement>) => {
     // eslint-disable-next-line @silverhand/fp/no-let
@@ -56,17 +48,19 @@ const Tabs = ({ className, children }: Props): JSX.Element => {
 
     switch (event.key) {
       case 'ArrowRight': {
-        const nextTab = tabReferences.indexOf(event.currentTarget) + 1;
+        const nextTab = tabReferences.current.indexOf(event.currentTarget) + 1;
         // eslint-disable-next-line @silverhand/fp/no-mutation
-        focusElement = tabReferences[nextTab] ?? tabReferences[0] ?? null;
+        focusElement = tabReferences.current[nextTab] ?? tabReferences.current[0] ?? null;
         break;
       }
 
       case 'ArrowLeft': {
-        const previousTab = tabReferences.indexOf(event.currentTarget) - 1;
+        const previousTab = tabReferences.current.indexOf(event.currentTarget) - 1;
         // eslint-disable-next-line @silverhand/fp/no-mutation
         focusElement =
-          tabReferences[previousTab] ?? tabReferences[tabReferences.length - 1] ?? null;
+          tabReferences.current[previousTab] ??
+          tabReferences.current[tabReferences.current.length - 1] ??
+          null;
         break;
       }
       default:
@@ -77,27 +71,35 @@ const Tabs = ({ className, children }: Props): JSX.Element => {
   };
 
   return (
-    <div>
+    <div className={styles.container}>
       <ul role="tablist" aria-orientation="horizontal" className={className}>
-        {values.map(({ value, label }) => (
+        {values.map(({ value, label }, index) => (
           <li
             key={value}
-            ref={(tabControl) => tabReferences.concat(tabControl)}
+            ref={(element) => {
+              // eslint-disable-next-line @silverhand/fp/no-mutation
+              tabReferences.current[index] = element;
+            }}
             role="tab"
-            tabIndex={selectedValue === value ? 0 : -1}
-            aria-selected={selectedValue === value}
+            tabIndex={selectedIndex === index ? 0 : -1}
+            aria-selected={selectedIndex === index}
             onKeyDown={handleKeydown}
-            onFocus={handleTabChange}
-            onClick={handleTabChange}
+            onFocus={() => {
+              setSelectedIndex(index);
+            }}
+            onClick={() => {
+              setSelectedIndex(index);
+            }}
           >
             {label ?? value}
           </li>
         ))}
       </ul>
       <div>
-        {verifiedChildren.map((tabItem) =>
+        {verifiedChildren.map((tabItem, index) =>
           cloneElement(tabItem, {
             key: tabItem.props.value,
+            className: index === selectedIndex ? undefined : styles.hidden,
           })
         )}
       </div>
