@@ -274,7 +274,7 @@ const translation = {
         'The tab for managing users, creating a new user, and editing user profiles. Every registered user can be found here.',
       create: 'Add user',
       user_name: 'User',
-      application_name: 'Apps',
+      application_name: 'From application',
       latest_sign_in: 'Latest sign in',
       create_form_username: 'Username',
       create_form_password: 'Password',

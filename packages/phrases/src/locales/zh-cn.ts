@@ -270,7 +270,7 @@ const translation = {
       subtitle: '管理已注册用户, 创建新用户，编辑用户资料。',
       create: '添加用户',
       user_name: '用户',
-      application_name: '应用',
+      application_name: '注册应用',
       latest_sign_in: '最后登录',
       create_form_username: '用户名',
       create_form_password: '密码',
