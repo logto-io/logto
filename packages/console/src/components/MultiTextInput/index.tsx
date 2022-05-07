@@ -66,6 +66,11 @@ const MultiTextInput = ({ title, value, onChange, error }: Props) => {
             {fieldIndex > 0 && (
               <IconButton
                 onClick={() => {
+                  if (fieldValue.trim().length === 0) {
+                    handleRemove(fieldIndex);
+
+                    return;
+                  }
                   setDeleteFieldIndex(fieldIndex);
                 }}
               >
