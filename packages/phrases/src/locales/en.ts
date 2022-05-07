@@ -89,6 +89,10 @@ const translation = {
     form: {
       required: 'Required',
       add_another: '+ Add Another',
+      confirm: 'Reminder',
+      cancel: 'Cancel',
+      delete: 'Delete',
+      deletion_confirmation: 'Are you sure you want to delete this {{title}}?',
     },
     errors: {
       something_went_wrong: 'Oops! Something went wrong',

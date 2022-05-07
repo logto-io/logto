@@ -88,7 +88,11 @@ const translation = {
     },
     form: {
       required: '必填',
-      add_another: '+ Add Another',
+      add_another: '+ 添加其他',
+      confirm: '注意',
+      cancel: '取消',
+      delete: '删除',
+      deletion_confirmation: '你确定要删除这个 {{title}} 吗?',
     },
     errors: {
       something_went_wrong: '哎哟喂，遇到了一个错误',
