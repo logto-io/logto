@@ -1,7 +1,7 @@
 @use '@/scss/dimensions' as dim;
 
-@function unit($factor: 1, $unit: 'px') {
-  @return #{$factor * 4}#{$unit};
+@function unit($factor: 1) {
+  @return #{$factor * 4}px;
 }
 
 @mixin flex-column {
