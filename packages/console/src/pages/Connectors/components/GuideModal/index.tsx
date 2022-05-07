@@ -15,8 +15,8 @@ import IconButton from '@/components/IconButton';
 import Spacer from '@/components/Spacer';
 import useApi from '@/hooks/use-api';
 import Close from '@/icons/Close';
+import Step from '@/mdx-components/Step';
 import SenderTester from '@/pages/ConnectorDetails/components/SenderTester';
-import Step from '@/pages/Guide/components/Step';
 import * as modalStyles from '@/scss/modal.module.scss';
 import { GuideForm } from '@/types/guide';
 
