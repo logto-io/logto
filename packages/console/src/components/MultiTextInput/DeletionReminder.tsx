@@ -34,7 +34,9 @@ const DeletionReminder = ({ title, onConfirm, onClose }: Props) => {
       className={styles.content}
       onClose={onClose}
     >
-      <div>{t('admin_console.form.deletion_confirmation', { title: t(title) })}</div>
+      <div className={styles.confirmation}>
+        {t('admin_console.form.deletion_confirmation', { title: t(title) })}
+      </div>
     </ModalLayout>
   );
 };
