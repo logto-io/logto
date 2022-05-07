@@ -1,24 +1,32 @@
-import React, { useMemo } from 'react';
+import { I18nKey } from '@logto/phrases';
+import classNames from 'classnames';
+import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import Modal from 'react-modal';
 
 import * as textButtonStyles from '@/components/TextButton/index.module.scss';
 import Minus from '@/icons/Minus';
+import * as modalStyles from '@/scss/modal.module.scss';
 
 import IconButton from '../IconButton';
 import TextInput from '../TextInput';
+import DeletionReminder from './DeletionReminder';
 import * as styles from './index.module.scss';
 import { MultiTextInputError } from './types';
 
 type Props = {
+  title: I18nKey;
   value?: string[];
   onChange: (value: string[]) => void;
   error?: MultiTextInputError;
 };
 
-const MultiTextInput = ({ value, onChange, error }: Props) => {
+const MultiTextInput = ({ title, value, onChange, error }: Props) => {
   const { t } = useTranslation(undefined, {
     keyPrefix: 'admin_console',
   });
+
+  const [deleteFieldIndex, setDeleteFieldIndex] = useState<number | undefined>();
 
   const fields = useMemo(() => {
     if (!value?.length) {
@@ -55,10 +63,10 @@ const MultiTextInput = ({ value, onChange, error }: Props) => {
                 handleInputChange(value, fieldIndex);
               }}
             />
-            {fields.length > 1 && (
+            {fieldIndex > 0 && (
               <IconButton
                 onClick={() => {
-                  handleRemove(fieldIndex);
+                  setDeleteFieldIndex(fieldIndex);
                 }}
               >
                 <Minus />
@@ -73,9 +81,26 @@ const MultiTextInput = ({ value, onChange, error }: Props) => {
           )}
         </div>
       ))}
-      <div className={textButtonStyles.button} onClick={handleAdd}>
+      <div className={classNames(textButtonStyles.button, styles.addAnother)} onClick={handleAdd}>
         {t('form.add_another')}
       </div>
+      <Modal
+        isOpen={deleteFieldIndex !== undefined}
+        className={modalStyles.content}
+        overlayClassName={modalStyles.overlay}
+      >
+        <DeletionReminder
+          title={title}
+          onClose={() => {
+            setDeleteFieldIndex(undefined);
+          }}
+          onConfirm={() => {
+            if (deleteFieldIndex !== undefined) {
+              handleRemove(deleteFieldIndex);
+            }
+          }}
+        />
+      </Modal>
     </div>
   );
 };

@@ -67,6 +67,7 @@ const Settings = ({ oidcConfig }: Props) => {
           }}
           render={({ field: { onChange, value }, fieldState: { error } }) => (
             <MultiTextInput
+              title="admin_console.application_details.redirect_uri"
               value={value}
               error={convertRhfErrorMessage(error?.message)}
               onChange={onChange}
@@ -87,6 +88,7 @@ const Settings = ({ oidcConfig }: Props) => {
           }}
           render={({ field: { onChange, value }, fieldState: { error } }) => (
             <MultiTextInput
+              title="admin_console.application_details.post_sign_out_redirect_uri"
               value={value}
               error={convertRhfErrorMessage(error?.message)}
               onChange={onChange}
@@ -107,6 +109,7 @@ const Settings = ({ oidcConfig }: Props) => {
           }}
           render={({ field: { onChange, value }, fieldState: { error } }) => (
             <MultiTextInput
+              title="admin_console.application_details.cors_allowed_origins"
               value={value}
               error={convertRhfErrorMessage(error?.message)}
               onChange={onChange}

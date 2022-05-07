@@ -1,8 +1,8 @@
+import { I18nKey } from '@logto/phrases';
 import React, { useRef } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
-import DangerousRaw from '@/components/DangerousRaw';
 import FormField from '@/components/FormField';
 import MultiTextInput from '@/components/MultiTextInput';
 import { createValidatorForRhf, convertRhfErrorMessage } from '@/components/MultiTextInput/utils';
@@ -11,7 +11,7 @@ import { uriValidator } from '@/utilities/validator';
 
 type Props = {
   name: 'redirectUris' | 'postLogoutRedirectUris';
-  title: string;
+  title: I18nKey;
   onError?: () => void;
 };
 
@@ -33,7 +33,7 @@ const MultiTextInputField = ({ name, title, onError }: Props) => {
   }
 
   return (
-    <FormField isRequired title={<DangerousRaw>{title}</DangerousRaw>}>
+    <FormField isRequired title={title}>
       <Controller
         name={name}
         control={control}
@@ -50,6 +50,7 @@ const MultiTextInputField = ({ name, title, onError }: Props) => {
         render={({ field: { onChange, value }, fieldState: { error } }) => (
           <div ref={ref}>
             <MultiTextInput
+              title={title}
               value={value}
               error={convertRhfErrorMessage(error?.message)}
               onChange={onChange}
