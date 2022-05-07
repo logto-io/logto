@@ -190,26 +190,39 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
     koaGuard({
       body: object({
         connectorId: string(),
-        code: string().optional(),
         state: string(),
         redirectUri: string().regex(redirectUriRegEx),
       }),
     }),
     async (ctx, next) => {
-      const { connectorId, code, state, redirectUri } = ctx.guard.body;
+      const { connectorId, state, redirectUri } = ctx.guard.body;
       const type = 'SignInSocial';
-      ctx.log(type, { connectorId, code, state, redirectUri });
+      ctx.log(type, { connectorId, state, redirectUri });
 
-      if (!code) {
-        assertThat(state && redirectUri, 'session.insufficient_info');
-        const connector = await getSocialConnectorInstanceById(connectorId);
-        assertThat(connector.connector.enabled, 'connector.not_enabled');
-        const redirectTo = await connector.getAuthorizationUri(redirectUri, state);
-        ctx.body = { redirectTo };
-        ctx.log(type, { redirectTo });
+      assertThat(state && redirectUri, 'session.insufficient_info');
+      const connector = await getSocialConnectorInstanceById(connectorId);
+      assertThat(connector.connector.enabled, 'connector.not_enabled');
+      const redirectTo = await connector.getAuthorizationUri(redirectUri, state);
+      ctx.body = { redirectTo };
+      ctx.log(type, { redirectTo });
 
-        return next();
-      }
+      return next();
+    }
+  );
+
+  router.post(
+    '/session/sign-in/social/auth',
+    koaGuard({
+      body: object({
+        connectorId: string(),
+        code: string(),
+        redirectUri: string().regex(redirectUriRegEx),
+      }),
+    }),
+    async (ctx, next) => {
+      const { connectorId, code, redirectUri } = ctx.guard.body;
+      const type = 'SignInSocial';
+      ctx.log(type, { connectorId, code, redirectUri });
 
       const userInfo = await getUserInfoByAuthCode(connectorId, code, redirectUri);
       ctx.log(type, { userInfo });
@@ -241,7 +254,7 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
   );
 
   router.post(
-    '/session/sign-in/bind-social-related-user',
+    '/session/bind-social-related-user',
     koaGuard({
       body: object({ connectorId: string() }),
     }),
