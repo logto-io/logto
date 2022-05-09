@@ -1,0 +1,7 @@
+report:
+  # to report a github commit status (will block PR if it fails)
+  githubStatus: true
+
+comparators:
+  node_modules: false
+  npm_package: false
