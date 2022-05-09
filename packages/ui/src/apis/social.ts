@@ -22,7 +22,6 @@ export const invokeSocialSignIn = async (
 
 export const signInWithSocial = async (parameters: {
   connectorId: string;
-  state: string;
   redirectUri: string;
   code: string;
 }) => {
@@ -31,7 +30,7 @@ export const signInWithSocial = async (parameters: {
   };
 
   return api
-    .post('/api/session/sign-in/social', {
+    .post('/api/session/sign-in/social/auth', {
       json: parameters,
     })
     .json<Response>();
