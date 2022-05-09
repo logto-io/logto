@@ -100,7 +100,7 @@ const CreateAccount = ({ className }: Props) => {
         }}
       />
       <Input
-        className={classNames(styles.inputField, styles.confirmPassword)}
+        className={styles.inputField}
         name="confirm_password"
         type="password"
         autoComplete="current-password"
@@ -108,6 +108,7 @@ const CreateAccount = ({ className }: Props) => {
         {...fieldRegister('confirmPassword', (confirmPassword) =>
           confirmPasswordValidation(fieldValue.password, confirmPassword)
         )}
+        errorStyling={false}
         onClear={() => {
           setFieldValue((state) => ({ ...state, confirmPassword: '' }));
         }}

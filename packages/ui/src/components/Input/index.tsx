@@ -10,6 +10,7 @@ export type Props = HTMLProps<HTMLInputElement> & {
   className?: string;
   error?: ErrorType;
   onClear?: () => void;
+  errorStyling?: boolean;
 };
 
 const Input = ({
@@ -17,6 +18,7 @@ const Input = ({
   type = 'text',
   value,
   error,
+  errorStyling = true,
   onFocus,
   onBlur,
   onClear,
@@ -27,7 +29,11 @@ const Input = ({
   return (
     <div className={className}>
       <div
-        className={classNames(styles.wrapper, onInputFocus && styles.focus, error && styles.error)}
+        className={classNames(
+          styles.wrapper,
+          onInputFocus && styles.focus,
+          error && errorStyling && styles.error
+        )}
       >
         <input
           type={type}
