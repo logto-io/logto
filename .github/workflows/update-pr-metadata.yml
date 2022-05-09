@@ -27,6 +27,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+        with:
+          depth: 0
 
       - name: Call file watcher
         run: npx @adobe/sizewatcher
