@@ -1,10 +1,10 @@
 # ClaimName
 
 
-object [ClaimName](index.md)
+object ClaimName
 
 ## Properties
 
-| Name | Summary |
+| Name | Value |
 |---|---|
-| [AT_HASH](-a-t_-h-a-s-h.md) | const val [AT_HASH](-a-t_-h-a-s-h.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |
+| AT_HASH | at_hash |
