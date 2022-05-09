@@ -33,23 +33,27 @@ The `--no-inquiry` parameter is appended by default in the Docker image.
 
 ### General
 
-| Key                | Default Value            | Type                                                     | Description                                                                                                           |
-| ------------------ | ------------------------ | -------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
-| NODE_ENV           | `undefined`              | <code>'production' &#124; 'test' &#124; undefined</code> | What kind of environment that Logto runs in. If you run Logto via `npm start`, the value will always be `production`. |
-| PORT               | `3001`                   | `number`                                                 | The local port that Logto listens.                                                                                    |
-| DB_URL             | N/A                      | `string`                                                 | The [Postgres DSN](https://www.postgresql.org/docs/14/libpq-connect.html#id-1.7.3.8.3.6) for Logto database.          |
-| HTTPS_CERT_PATH    | `undefined`              | <code>string &#124; undefined</code>                     | See [Enabling HTTPS](#enabling-https) for details.                                                                    |
-| HTTPS_KEY_PATH     | `undefined`              | <code>string &#124; undefined</code>                     | Ditto.                                                                                                                |
-| TRUST_PROXY_HEADER | `false`                  | `boolean`                                                | Ditto.                                                                                                                |
-| ADMIN_RESOURCE     | `'https://api.logto.io'` | `string`                                                 | The resource indicator for Logto management APIs.                                                                     |
+:::caution
+If you run Logto via `npm start`, `NODE_ENV` will always be `production`.
+:::
+
+| Key                | Default Value            | Type                                                     | Description                                                                                                  |
+| ------------------ | ------------------------ | -------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| NODE_ENV           | `undefined`              | <code>'production' &#124; 'test' &#124; undefined</code> | What kind of environment that Logto runs in.                                                                 |
+| PORT               | `3001`                   | `number`                                                 | The local port that Logto listens.                                                                           |
+| DB_URL             | N/A                      | `string`                                                 | The [Postgres DSN](https://www.postgresql.org/docs/14/libpq-connect.html#id-1.7.3.8.3.6) for Logto database. |
+| HTTPS_CERT_PATH    | `undefined`              | <code>string &#124; undefined</code>                     | See [Enabling HTTPS](#enabling-https) for details.                                                           |
+| HTTPS_KEY_PATH     | `undefined`              | <code>string &#124; undefined</code>                     | Ditto.                                                                                                       |
+| TRUST_PROXY_HEADER | `false`                  | `boolean`                                                | Ditto.                                                                                                       |
+| ADMIN_RESOURCE     | `'https://api.logto.io'` | `string`                                                 | The resource indicator for Logto management APIs.                                                            |
 
 ### OIDC
 
-| Key                   | Default Value                   | Type                                 | Description                                                                                                                                                                              |
-| --------------------- | ------------------------------- | ------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| OIDC_PRIVATE_KEY      | N/A                             | <code>string &#124; undefined</code> | The content of private key for [OIDC JWT signing](https://openid.net/specs/openid-connect-core-1_0.html#Signing). <br/> If you'd like to set this in `.env`, you can leverage [multiline values](https://github.com/motdotla/dotenv#multiline-values) support.                                                                       |
-| OIDC_PRIVATE_KEY_PATH | `'./oidc-private-key.pem'`      | <code>string &#124; undefined</code> | The path to the private key file for [OIDC JWT signing](https://openid.net/specs/openid-connect-core-1_0.html#Signing). <br/> Note Logto will *ignore* this value if `OIDC_PRIVATE_KEY` is not empty. |
-| OIDC_ISSUER           | `'http://localhost:$PORT/oidc'` | `string`                             | The [issuer identifier](https://openid.net/specs/openid-connect-core-1_0.html#IssuerIdentifier) for OIDC. Usually it's the URL to your OIDC provider.                                                                                                                         |
+| Key                   | Default Value                   | Type                                 | Description                                                                                                                                                                                                                                                    |
+| --------------------- | ------------------------------- | ------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| OIDC_PRIVATE_KEY      | N/A                             | <code>string &#124; undefined</code> | The content of private key for [OIDC JWT signing](https://openid.net/specs/openid-connect-core-1_0.html#Signing). <br/> If you'd like to set this in `.env`, you can leverage [multiline values](https://github.com/motdotla/dotenv#multiline-values) support. |
+| OIDC_PRIVATE_KEY_PATH | `'./oidc-private-key.pem'`      | <code>string &#124; undefined</code> | The path to the private key file for [OIDC JWT signing](https://openid.net/specs/openid-connect-core-1_0.html#Signing). <br/> Note Logto will *ignore* this value if `OIDC_PRIVATE_KEY` is not empty.                                                          |
+| OIDC_ISSUER           | `'http://localhost:$PORT/oidc'` | `string`                             | The [issuer identifier](https://openid.net/specs/openid-connect-core-1_0.html#IssuerIdentifier) for OIDC. Usually it's the URL to your OIDC provider.                                                                                                          |
 
 #### Supported Key Types
 
