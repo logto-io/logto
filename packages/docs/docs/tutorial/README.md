@@ -44,7 +44,7 @@ node -e "$(printf "%s" "$(curl -fsSL https://raw.githubusercontent.com/logto-io/
 The script will download Logto and create a directory `logto` in the location you ran it. After answering [several simple questions](./tutorial/configuration#questions), you will see the message like:
 
 ```bash
-Server is listening to port 3001
+App is running at http://localhost:3001
 ```
 
 Heading to http://localhost:3001 to continue the Logto journey. Enjoy!
