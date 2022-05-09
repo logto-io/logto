@@ -132,7 +132,11 @@ const useSocial = (options?: Options) => {
 
         return;
       }
-      void asyncSignInWithSocial({ connectorId, state, code, redirectUri: '' });
+      void asyncSignInWithSocial({
+        connectorId,
+        code,
+        redirectUri: `${origin}/callback/${connectorId}`,
+      });
     },
     [asyncSignInWithSocial, setToast, t]
   );
