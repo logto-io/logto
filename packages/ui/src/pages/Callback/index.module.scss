@@ -3,6 +3,8 @@
 
 .wrapper {
   @include _.page-wrapper;
+  position: absolute;
+  inset: 0;
 }
 
 .connector {
@@ -13,6 +15,11 @@
   margin-bottom: _.unit(6);
 }
 
+.placeHolder {
+  flex: 1;
+}
+
 .button {
   @include _.container-width;
+  margin-bottom: _.unit(4);
 }

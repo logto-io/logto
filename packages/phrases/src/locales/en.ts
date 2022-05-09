@@ -47,7 +47,7 @@ const translation = {
       terms_of_use: 'Terms of Use',
       create_account: 'Create Account',
       forgot_password: 'Forgot Password?',
-      or: 'Or',
+      or: 'or',
       enter_passcode: 'The passcode has been sent to {{address}}',
       passcode_sent: 'The passcode has been sent',
       resend_after_seconds: 'Resend after {{seconds}} seconds',

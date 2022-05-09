@@ -5,7 +5,6 @@ import React, {
   useEffect,
   FormEventHandler,
   KeyboardEventHandler,
-  FocusEventHandler,
   ClipboardEventHandler,
 } from 'react';
 
@@ -88,7 +87,6 @@ const Passcode = ({ name, className, value, length = defaultLength, error, onCha
       if (value) {
         const nextTarget = inputReferences.current[targetId + 1];
         nextTarget?.focus();
-        nextTarget?.select();
       }
     },
     [codes, onChange]
@@ -116,18 +114,15 @@ const Passcode = ({ name, className, value, length = defaultLength, error, onCha
       case 'Backspace':
         if (!value) {
           previousTarget?.focus();
-          previousTarget?.select();
         }
         break;
       case 'ArrowLeft':
         event.preventDefault();
         previousTarget?.focus();
-        previousTarget?.select();
         break;
       case 'ArrowRight':
         event.preventDefault();
         nextTarget?.focus();
-        nextTarget?.select();
         break;
       case 'ArrowUp':
       case 'ArrowDown':
@@ -136,10 +131,6 @@ const Passcode = ({ name, className, value, length = defaultLength, error, onCha
       default:
         break;
     }
-  }, []);
-
-  const onFocusHandler: FocusEventHandler<HTMLInputElement> = useCallback(({ target }) => {
-    target.select();
   }, []);
 
   const onPasteHandler: ClipboardEventHandler<HTMLInputElement> = useCallback(
@@ -206,7 +197,6 @@ const Passcode = ({ name, className, value, length = defaultLength, error, onCha
             onPaste={onPasteHandler}
             onInput={onInputHandler}
             onKeyDown={onKeyDownHandler}
-            onFocus={onFocusHandler}
           />
         ))}
       </div>

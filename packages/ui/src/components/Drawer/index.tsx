@@ -26,6 +26,12 @@ const Drawer = ({ className, isOpen = false, children, onClose }: Props) => {
       appElement={document.querySelector('main') ?? document.body}
       closeTimeoutMS={300}
       onRequestClose={onClose}
+      onAfterOpen={() => {
+        document.body.classList.add('static');
+      }}
+      onAfterClose={() => {
+        document.body.classList.remove('static');
+      }}
     >
       <div className={styles.container}>
         <div className={styles.header}>
