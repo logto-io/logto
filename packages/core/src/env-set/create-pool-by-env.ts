@@ -1,4 +1,10 @@
-import { assertEnv, conditional, conditionalString, Optional } from '@silverhand/essentials';
+import {
+  assertEnv,
+  conditional,
+  conditionalString,
+  getEnv,
+  Optional,
+} from '@silverhand/essentials';
 import inquirer from 'inquirer';
 import { createPool } from 'slonik';
 import { createInterceptors } from 'slonik-interceptor-preset';
@@ -6,12 +12,16 @@ import { createInterceptors } from 'slonik-interceptor-preset';
 import { createDatabase, createDatabaseCli } from '@/database/seed';
 
 import { appendDotEnv } from './dot-env';
-import { noInquiry } from './parameters';
+import { allYes, noInquiry } from './parameters';
 
-const defaultDatabaseUrl = 'postgres://localhost:5432';
+const defaultDatabaseUrl = getEnv('DB_URL_DEFAULT', 'postgres://@localhost:5432');
 const defaultDatabaseName = 'logto';
 
 const inquireForLogtoDsn = async (key: string): Promise<[Optional<string>, boolean]> => {
+  if (allYes) {
+    return [await createDatabase(defaultDatabaseUrl, defaultDatabaseName), true];
+  }
+
   const setUp = await inquirer.prompt({
     type: 'confirm',
     name: 'value',

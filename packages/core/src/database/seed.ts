@@ -2,16 +2,20 @@ import { readdir, readFile } from 'fs/promises';
 import path from 'path';
 
 import { SchemaLike, seeds } from '@logto/schemas';
+import { conditionalString } from '@silverhand/essentials';
 import chalk from 'chalk';
 import decamelize from 'decamelize';
 import { createPool, parseDsn, sql, stringifyDsn } from 'slonik';
 import { createInterceptors } from 'slonik-interceptor-preset';
 import { raw } from 'slonik-sql-tag-raw';
 
+import { fromRoot } from '@/env-set/parameters';
+
 import { convertToPrimitiveOrSql } from './utils';
 
 const { managementResource, defaultSignInExperience, createDefaultSetting } = seeds;
-const tableDirectory = 'node_modules/@logto/schemas/tables';
+const tableDirectory =
+  conditionalString(fromRoot && 'packages/core/') + 'node_modules/@logto/schemas/tables';
 
 export const replaceDsnDatabase = (dsn: string, databaseName: string): string =>
   stringifyDsn({ ...parseDsn(dsn), databaseName });

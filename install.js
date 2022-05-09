@@ -54,11 +54,18 @@ const postgresMajorVersion = 14;
     }
   }
 
-
+  // Download and extract
   spawnSync(
     'sh',
     ['-c', 'curl -L https://github.com/logto-io/logto/releases/latest/download/logto.tar.gz | tar -xz'],
     { stdio: 'inherit' },
+  );
+
+  // Rebuild Argon2
+  spawnSync(
+    'sh',
+    ['-c', 'npx node-pre-gyp rebuild -C .'],
+    { stdio: 'inherit', cwd: './logto/packages/core/node_modules/argon2' },
   );
 
   const startCommand = `cd ${directory} && npm start`;

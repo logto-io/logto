@@ -3,7 +3,6 @@ import { DatabasePool } from 'slonik';
 
 import createPoolByEnv from './create-pool-by-env';
 import loadOidcValues from './oidc';
-import loadPasswordValues from './password';
 
 export enum MountedApps {
   Api = 'api',
@@ -25,7 +24,6 @@ const loadEnvValues = async () => {
     port,
     developmentUserId: getEnv('DEVELOPMENT_USER_ID'),
     trustProxyHeader: getEnv('TRUST_PROXY_HEADER') === 'true',
-    password: await loadPasswordValues(isTest),
     oidc: await loadOidcValues(port),
   });
 };
