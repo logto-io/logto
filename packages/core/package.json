@@ -66,7 +66,7 @@
   "devDependencies": {
     "@logto/jest-config": "^0.1.0",
     "@shopify/jest-koa-mocks": "^3.0.8",
-    "@silverhand/eslint-config": "^0.10.2",
+    "@silverhand/eslint-config": "^0.11.0",
     "@silverhand/ts-config": "^0.11.0",
     "@types/inquirer": "^8.2.1",
     "@types/jest": "^27.4.1",
