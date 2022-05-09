@@ -5,7 +5,7 @@ data class UserInfoResponse(val sub: [String](https://kotlinlang.org/api/latest/
 
 ## Constructors
 
-| | |
+| 名称 | 概要 |
 |---|---|
 | UserInfoResponse | fun UserInfoResponse(sub: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)) |
 

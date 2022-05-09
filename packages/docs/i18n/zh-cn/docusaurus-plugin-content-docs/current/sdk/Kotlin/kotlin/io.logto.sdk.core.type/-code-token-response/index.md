@@ -5,7 +5,7 @@ data class CodeTokenResponse(val accessToken: [String](https://kotlinlang.org/ap
 
 ## Constructors
 
-| | |
+| 名称 | 概要 |
 |---|---|
 | CodeTokenResponse | fun CodeTokenResponse(accessToken: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), refreshToken: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), idToken: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), scope: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), expiresIn: [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html)) |
 

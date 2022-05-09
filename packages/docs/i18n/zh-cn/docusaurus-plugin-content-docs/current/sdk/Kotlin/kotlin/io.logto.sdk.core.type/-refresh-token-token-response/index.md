@@ -5,7 +5,7 @@ data class RefreshTokenTokenResponse(val accessToken: [String](https://kotlinlan
 
 ## Constructors
 
-| | |
+| 名称 | 概要 |
 |---|---|
 | RefreshTokenTokenResponse | fun RefreshTokenTokenResponse(accessToken: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), refreshToken: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), idToken: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)?, scope: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), expiresIn: [Long](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html)) |
 

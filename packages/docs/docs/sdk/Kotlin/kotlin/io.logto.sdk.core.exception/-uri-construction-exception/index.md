@@ -5,7 +5,7 @@ class UriConstructionException(type: [UriConstructionException.Type](-type/index
 
 ## Constructors
 
-| | |
+| Name | Summary |
 |---|---|
 | UriConstructionException | fun UriConstructionException(type: [UriConstructionException.Type](-type/index.md), cause: [Throwable](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-throwable/index.html)? = null) |
 

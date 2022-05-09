@@ -5,7 +5,7 @@ class ResponseException(type: [ResponseException.Type](-type/index.md), cause: [
 
 ## Constructors
 
-| | |
+| 名称 | 概要 |
 |---|---|
 | ResponseException | fun ResponseException(type: [ResponseException.Type](-type/index.md), cause: [Throwable](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-throwable/index.html)? = null) |
 
