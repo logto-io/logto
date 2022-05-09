@@ -1,7 +1,6 @@
 import fs from 'fs/promises';
 import https from 'https';
 
-import { conditionalString } from '@silverhand/essentials';
 import chalk from 'chalk';
 import Koa from 'koa';
 import koaLogger from 'koa-logger';
@@ -18,12 +17,8 @@ import koaSpaProxy from '@/middleware/koa-spa-proxy';
 import initOidc from '@/oidc/init';
 import initRouter from '@/routes/init';
 
-const logListening = (port: number, https = false) => {
-  console.log(
-    chalk.bold(
-      chalk.green(`App is running at http${conditionalString(https && 's')}://localhost:${port}`)
-    )
-  );
+const logListening = (port: number, protocol: 'https' | 'http') => {
+  console.log(chalk.bold(chalk.green(`App is running at ${protocol}://localhost:${port}`)));
 };
 
 export default async function initApp(app: Koa): Promise<void> {
@@ -53,13 +48,13 @@ export default async function initApp(app: Koa): Promise<void> {
         app.callback()
       )
       .listen(port, () => {
-        logListening(port, true);
+        logListening(port, 'https');
       });
 
     return;
   }
 
   app.listen(port, () => {
-    logListening(port);
+    logListening(port, 'http');
   });
 }
