@@ -62,14 +62,17 @@ pnpm build
 在项目的 html 文件中，加入如下代码（需提前准备好 client ID 以及 authorization domain）
 Add the following code to your main html file. You may need client ID and authorization domain.
 
-```typescript
+```tsx
 import { LogtoProvider, LogtoConfig } from '@logto/react';
 import React from 'react';
 
 //...
 
 const App = () => {
-  const config: LogtoConfig = { clientId: 'foo', endpoint: 'https://your-endpoint-domain.com' };
+  const config: LogtoConfig = {
+    clientId: 'foo',
+    endpoint: 'https://your-endpoint-domain.com'
+  };
 
   return (
     <BrowserRouter>
@@ -110,7 +113,7 @@ The Logto React SDK provides you tools and hooks to quickly implement your own a
 
 Add the following code to your web app
 
-```typescript
+```tsx
 import React from 'react';
 import { useLogto } from '@logto/react';
 
@@ -126,7 +129,7 @@ export default SignInButton;
 
 ### Retrieve Auth Status
 
-```typescript
+```tsx
 import React from "react";
 import { useLogto } from '@logto/react';
 
@@ -160,7 +163,7 @@ Execute signOut() methods will redirect users to the Logto sign out page. After 
 
 Add the following code to your web app
 
-```typescript
+```tsx
 import React from 'react';
 import { useLogto } from '@logto/react';
 

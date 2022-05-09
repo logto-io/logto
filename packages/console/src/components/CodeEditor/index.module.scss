@@ -1,20 +1,52 @@
 @use '@/scss/underscore' as _;
 
-.editor {
-  border-radius: _.unit(4);
-  padding: _.unit(4) 0;
-  // Use fixed color for both light and dark mode, the same as vs-dark.
-  background: #1e1e1e;
+.container {
+  padding: _.unit(6);
+  border-radius: 16px;
+  // Force dark theme on the code editor
+  background: #2d3132;
+  position: relative;
 
-  .actions {
+  .copy {
     display: flex;
     align-items: center;
     justify-content: right;
-    padding: 0 _.unit(4);
+    position: absolute;
+    top: 24px;
+    right: 24px;
+    opacity: 0%;
+    transition: opacity 0.2s ease-in-out;
+    z-index: 1;
+    cursor: pointer;
+  }
 
-    button:hover {
-      // Clear icons background style since the background color is fixed.
-      background: unset;
+  &:hover {
+    .copy {
+      opacity: 100%;
+    }
+  }
+
+  .editor {
+    position: relative;
+
+    textarea {
+      margin: 0;
+      padding: 0;
+      border: none;
+      background: none;
+      font-size: 14px;
+      line-height: 1.5;
+      font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+      white-space: pre-wrap;
+      word-break: keep-all;
+      overflow-wrap: break-word;
+      position: absolute;
+      inset: 0;
+      resize: none;
+      color: #fefefe;
+      overflow: hidden;
+      -webkit-text-fill-color: transparent;
+      outline: none;
     }
   }
 }

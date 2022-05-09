@@ -114,9 +114,6 @@ const Guide = ({
 
                   return <CodeEditor isReadonly language={language} value={String(children)} />;
                 },
-                hr: () => null,
-                h1: () => null,
-                h2: () => null,
               }}
             >
               <Suspense fallback={<div>Loading...</div>}>

@@ -1,61 +1,52 @@
-import MonacoEditor from '@monaco-editor/react';
-import * as monaco from 'monaco-editor';
-import React from 'react';
+import React, { ChangeEvent } from 'react';
+import { PrismAsyncLight as SyntaxHighlighter } from 'react-syntax-highlighter';
+// eslint-disable-next-line node/file-extension-in-import
+import { a11yDark as theme } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
-import Copy from '@/icons/Copy';
-
-import IconButton from '../IconButton';
+import CopyToClipboard from '../CopyToClipboard';
 import * as styles from './index.module.scss';
 
 type Props = {
   language?: string;
-  height?: string;
   isReadonly?: boolean;
   value?: string;
   onChange?: (value: string) => void;
 };
 
-const CodeEditor = ({ value, onChange, language, height = '300px', isReadonly = false }: Props) => {
-  const handleChange = (changedValue = '') => {
-    onChange?.(changedValue);
-  };
-
-  const handleCopy = async () => {
-    if (!value) {
-      return;
-    }
-    await navigator.clipboard.writeText(value);
-  };
-
-  // See https://microsoft.github.io/monaco-editor/api/enums/monaco.editor.EditorOption.html
-  const options: monaco.editor.IStandaloneEditorConstructionOptions = {
-    readOnly: isReadonly,
-    scrollBeyondLastLine: false,
-    codeLens: false,
-    minimap: {
-      enabled: false,
-    },
-    folding: false,
-    scrollbar: {
-      alwaysConsumeMouseWheel: false,
-    },
+const CodeEditor = ({ language, isReadonly = false, value = '', onChange }: Props) => {
+  const handleChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
+    onChange?.(event.currentTarget.value);
   };
 
   return (
-    <div className={styles.editor}>
-      <div className={styles.actions}>
-        <IconButton onClick={handleCopy}>
-          <Copy />
-        </IconButton>
+    <div className={styles.container}>
+      <CopyToClipboard value={value} variant="icon" className={styles.copy} />
+      <div className={styles.editor}>
+        <textarea
+          autoCapitalize="off"
+          autoComplete="off"
+          autoCorrect="off"
+          data-gramm="false"
+          readOnly={isReadonly}
+          spellCheck="false"
+          onChange={handleChange}
+        >
+          {value}
+        </textarea>
+        <SyntaxHighlighter
+          customStyle={{
+            background: 'transparent',
+            fontSize: '14px',
+            margin: '0',
+            padding: '0',
+            borderRadius: '0',
+          }}
+          language={language}
+          style={theme}
+        >
+          {value}
+        </SyntaxHighlighter>
       </div>
-      <MonacoEditor
-        language={language}
-        height={height}
-        theme="vs-dark"
-        value={value}
-        options={options}
-        onChange={handleChange}
-      />
     </div>
   );
 };

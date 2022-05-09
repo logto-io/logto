@@ -249,7 +249,7 @@ const UserDetails = () => {
                   title="admin_console.user_details.field_custom_data"
                   className={styles.textField}
                 >
-                  <CodeEditor height="200px" language="json" value={value} onChange={onChange} />
+                  <CodeEditor language="json" value={value} onChange={onChange} />
                 </FormField>
               </div>
               <div className={detailsStyles.footer}>
