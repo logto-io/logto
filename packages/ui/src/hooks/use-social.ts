@@ -96,7 +96,7 @@ const useSocial = (options?: Options) => {
   const socialConnectors = useMemo(
     () =>
       (experienceSettings?.socialConnectors ?? []).filter(({ id }) => {
-        return !isNativeWebview() || getLogtoNativeSdk()?.supportedSocialConnectors.includes(id);
+        return !isNativeWebview() || getLogtoNativeSdk()?.supportedSocialConnectorIds.includes(id);
       }),
     [experienceSettings?.socialConnectors]
   );

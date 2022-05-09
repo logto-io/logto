@@ -28,7 +28,7 @@ describe('SecondarySocialSignIn', () => {
       platform: 'web',
       getPostMessage: jest.fn(() => jest.fn()),
       callbackLink: '/logto:',
-      supportedSocialConnectors: socialConnectors.map(({ id }) => id),
+      supportedSocialConnectorIds: socialConnectors.map(({ id }) => id),
     };
     /* eslint-enable @silverhand/fp/no-mutation */
   });
