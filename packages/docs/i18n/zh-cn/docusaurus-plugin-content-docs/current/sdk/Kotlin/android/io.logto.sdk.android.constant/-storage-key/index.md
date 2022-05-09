@@ -5,7 +5,7 @@ object StorageKey
 
 ## Properties
 
-| Name | Value |
+| 字段名 | 值 |
 |---|---|
 | ID_TOKEN | id_token |
 | REFRESH_TOKEN | refresh_token |
