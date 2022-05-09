@@ -1,0 +1,35 @@
+name: Integration Test
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Node and pnpm
+        uses: logto-io/actions-node-pnpm-run-steps@v1.2.1
+
+      - name: Package
+        run: ./package.sh
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: integration-test-${{ github.sha }}
+          path: /tmp/logto.tar.gz
+  
+  run-logto:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/download-artifact@v3
+        with:
+          name: integration-test-${{ github.sha }}
+      
+      - name: Display structure of downloaded files
+        run: ls -R
