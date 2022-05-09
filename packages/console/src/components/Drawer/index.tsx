@@ -16,9 +16,11 @@ const Drawer = ({ isOpen, onClose, children }: Props) => {
   return (
     <ReactModal
       shouldCloseOnOverlayClick
+      role="drawer"
       isOpen={isOpen}
       className={styles.content}
       overlayClassName={styles.overlay}
+      closeTimeoutMS={300}
       onRequestClose={onClose}
     >
       <div className={styles.headline}>

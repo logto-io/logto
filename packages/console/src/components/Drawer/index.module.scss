@@ -26,3 +26,22 @@
   background: rgba(0, 0, 0, 40%);
   inset: 0;
 }
+
+/* stylelint-disable selector-class-pattern */
+/* stylelint-disable-next-line selector-pseudo-class-no-unknown */
+:global {
+  .ReactModal__Content[role='drawer'] {
+    transform: translateX(100%);
+    transition: transform 0.3s ease-in-out;
+  }
+
+  .ReactModal__Content--after-open[role='drawer'] {
+    transform: translateX(0);
+  }
+
+  .ReactModal__Content--before-close[role='drawer'] {
+    transform: translateX(100%);
+  }
+}
+
+/* stylelint-enable selector-class-pattern */
