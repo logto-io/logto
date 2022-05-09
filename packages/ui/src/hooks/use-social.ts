@@ -1,4 +1,4 @@
-import { useEffect, useCallback, useContext, useMemo } from 'react';
+import { useEffect, useCallback, useContext, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams, useNavigate } from 'react-router-dom';
 
@@ -109,6 +109,12 @@ const useSocial = (options?: Options) => {
     signInWithSocialErrorHandlers
   );
 
+  /* 
+    This is needed because the callback useEffect handlers can not get the request parameters
+    Hacky solution. Need to be refactored. This is OK only because our requests are running synchronously
+  */
+  const invokedConnectorIdRef = useRef<string>();
+
   const invokeSocialSignInHandler = useCallback(
     async (connectorId: string) => {
       if (!termsValidation()) {
@@ -119,6 +125,9 @@ const useSocial = (options?: Options) => {
       storeState(state, connectorId);
 
       const { origin } = window.location;
+
+      // eslint-disable-next-line @silverhand/fp/no-mutation
+      invokedConnectorIdRef.current = connectorId;
 
       return asyncInvokeSocialSignIn(connectorId, state, `${origin}/callback/${connectorId}`);
     },
@@ -195,7 +204,7 @@ const useSocial = (options?: Options) => {
     // Invoke Native Social Sign In flow
     if (isNativeWebview()) {
       getLogtoNativeSdk()?.getPostMessage()({
-        callbackUri: redirectTo.replace('/callback', '/sign-in/callback'),
+        callbackUri: `${origin}/callback/${invokedConnectorIdRef.current ?? ''}`,
         redirectTo,
       });
 
