@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Add labels
-        uses: logto-io/actions-add-labels-run-steps@v1.1.2
+        uses: silverhand-io/actions-add-labels-run-steps@v1.1.2
         with:
           title: ${{ github.event.pull_request.title || github.event.issue.title }}
           github-token: ${{ github.token }}
@@ -22,3 +22,60 @@ jobs:
         with:
           github_token: ${{ github.token }}
           assignees: ${{ github.actor }}
+
+  pr-size-diff:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Prepare
+        run: |
+          git checkout master
+          git checkout -
+          curl -fsSLO https://gist.githubusercontent.com/gao-sun/88dac6c38e86f4ae12c8a7c3e777040a/raw/c50d06a4f9b89a7bc9bad580ae96a5fc0db3e24f/git-file-size-diff.sh
+          chmod +x git-file-size-diff.sh
+      
+      - name: Calc Size Diff
+        id: size-diff
+        run: echo "::set-output name=diff::$(./git-file-size-diff.sh --cached master)"
+
+      - uses: actions/github-script@v6
+        id: message
+        with:
+          result-encoding: string
+          script: |
+            const diff = ${{ steps.size-diff.outputs.diff }};
+
+            // https://stackoverflow.com/a/18650828/12514940
+            function formatBytes(bytes, decimals = 2) {
+              if (bytes === 0) return '0 Bytes';
+
+              const k = 1024;
+              const dm = decimals < 0 ? 0 : decimals;
+              const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+
+              const i = Math.floor(Math.log(bytes) / Math.log(k));
+
+              return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+            }
+
+            function getPrefix(bytes) {
+              if (bytes === 0) {
+                return '';
+              }
+
+              return diff > 0 ? ':chart_with_upwards_trend: +' : ':chart_with_downwards_trend: -';
+            }
+
+            return `**Size Diff (compare to \`master\`)** ${
+              diff > 1024 * 5 ? ':warning: ' : ''
+            }${
+              getPrefix(diff)
+            }${formatBytes(Math.abs(diff))}`;
+      
+      - uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          message: |
+            ${{ steps.message.outputs.result }}
