@@ -39,7 +39,7 @@ In your terminal:
 node -e "$(printf "%s" "$(curl -fsSL https://raw.githubusercontent.com/logto-io/logto/master/install.js)")"
 ```
 
-The script will download Logto and create a directory `logto` in the location you ran it. After answering [several simple questions](./configuration#questions), you will see the message like:
+The script will download Logto and create a directory `logto` in the location you ran it. After answering [several simple questions](./tutorial/configuration#questions), you will see the message like:
 
 ```bash
 Server is listening to port 3001
@@ -53,4 +53,4 @@ TBD
 
 ### Configuration
 
-Logto uses environment variables for configuration, along with `.env` file support. See [Configuration](./configuration) for detailed usage and full variable list.
+Logto uses environment variables for configuration, along with `.env` file support. See [Configuration](./tutorial/configuration) for detailed usage and full variable list.
