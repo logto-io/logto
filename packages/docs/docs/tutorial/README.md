@@ -4,7 +4,9 @@ sidebar_position: 1
 
 # Introduction
 
-🤘 Logto helps you quickly focus on everything after signing in with the following components:
+🤘 Logto helps you quickly focus on everything after signing in.
+
+Main features:
 
 - All-platform user sign-in / sign-up experience with SDK support (SPA, iOS and Android)
 - Passwordless (SMS / Email) support
