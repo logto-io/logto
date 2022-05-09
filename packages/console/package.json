@@ -29,7 +29,7 @@
     "@silverhand/eslint-config-react": "^0.10.3",
     "@silverhand/essentials": "^1.1.6",
     "@silverhand/ts-config": "^0.10.2",
-    "@silverhand/ts-config-react": "^0.10.3",
+    "@silverhand/ts-config-react": "^0.11.0",
     "@tsconfig/docusaurus": "^1.0.5",
     "@types/lodash.kebabcase": "^4.1.6",
     "@types/mdx": "^2.0.1",
