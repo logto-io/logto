@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import React, { ReactNode, useCallback, useContext } from 'react';
+import React, { ReactNode, useEffect, useCallback, useContext } from 'react';
 import { useDebouncedLoader } from 'use-debounced-loader';
 
 import LoadingLayer from '@/components/LoadingLayer';
@@ -23,8 +23,14 @@ const AppContent = ({ children }: Props) => {
     setToast('');
   }, [setToast]);
 
+  useEffect(() => {
+    document.body.classList.remove(styles.light ?? '');
+    document.body.classList.remove(styles.dark ?? '');
+    document.body.classList.add(styles[theme] ?? '');
+  }, [theme]);
+
   return (
-    <main className={classNames(styles.content, styles.universal, styles.mobile, styles[theme])}>
+    <main className={classNames(styles.content, styles[theme])}>
       {children}
       <Toast message={toast} isVisible={Boolean(toast)} callback={hideToast} />
       {debouncedLoading && <LoadingLayer />}

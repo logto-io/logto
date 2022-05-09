@@ -20,10 +20,9 @@ const Drawer = ({ className, isOpen = false, children, onClose }: Props) => {
       shouldCloseOnOverlayClick
       role="popup"
       isOpen={isOpen}
-      className={classNames(modalStyles.drawer, className)}
+      className={classNames(styles.drawer, className)}
       overlayClassName={modalStyles.overlay}
-      parentSelector={() => document.querySelector('main') ?? document.body}
-      appElement={document.querySelector('main') ?? document.body}
+      appElement={document.querySelector('main') ?? undefined}
       closeTimeoutMS={300}
       onRequestClose={onClose}
       onAfterOpen={() => {

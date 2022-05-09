@@ -1,15 +1,24 @@
 @use '@/scss/underscore' as _;
+@use '@/scss/colors' as colors;
+@use '@/scss/basic' as basic;
 
 /* Foundation */
-$font-family: -apple-system,
-  system-ui,
-  'BlinkMacSystemFont',
-  'Segoe UI',
-  'Roboto',
-  'Helvetica Neue',
-  'Helvetica',
-  'Arial',
-  sans-serif;
+.light {
+  @include colors.light-theme;
+}
+
+.dark {
+  @include colors.dark-theme;
+}
+
+body {
+  @include colors.universal;
+  @include basic.fonts;
+  @include basic.layout;
+  background: var(--color-base);
+  color: var(--color-text);
+  font: var(--font-body);
+}
 
 .content {
   position: absolute;
@@ -18,51 +27,4 @@ $font-family: -apple-system,
   right: 0;
   min-height: 100%;
   background: var(--color-base);
-  color: var(--color-text);
-  font: var(--font-body);
-}
-
-.universal {
-  --radius: 8px;
-  --color-primary-button-text: #fff;
-}
-
-.light {
-  --color-text: #191c1d;
-  --color-icon: #747778;
-  --color-caption: #747778;
-  --color-outline: #78767f;
-  --color-border: #e0e3e3;
-  --color-disabled: #c4c7c7;
-  --color-primary: #5d34f2;
-  --color-layer: #eff1f1;
-  --color-error: #ba1b1b;
-  --color-toast: rgba(25, 28, 29, 80%);
-  --color-overlay: rgba(25, 28, 29, 16%);
-  --color-base: #fff;
-  --color-dialogue: #fff;
-}
-
-.dark {
-  --color-text: #f7f8f8;
-  --color-icon: #a9acac;
-  --color-caption: #a9acac;
-  --color-outline: #928f9a;
-  --color-border: #444748;
-  --color-disabled: #5c5f60;
-  --color-primary: #7958ff;
-  --color-layer: linear-gradient(0deg, rgba(202, 190, 255, 14%), rgba(202, 190, 255, 14%)), linear-gradient(0deg, rgba(196, 199, 199, 2%), rgba(196, 199, 199, 2%)), #191c1d;
-  --color-error: #dd3730;
-  --color-toast: rgba(247, 248, 248, 80%);
-  --color-overlay: rgba(25, 28, 29, 40%);
-  --color-base: #191c1d;
-  --color-dialogue: linear-gradient(0deg, rgba(202, 190, 255, 8%), rgba(202, 190, 255, 8%)), linear-gradient(0deg, rgba(196, 199, 199, 2%), rgba(196, 199, 199, 2%)), #191c1d;
-}
-
-.mobile {
-  --font-title: 600 32px/40px #{$font-family};
-  --font-body-bold: 500 16px/20px #{$font-family};
-  --font-body: 400 16px/20px #{$font-family};
-  --font-body-small: 500 14px/18px #{$font-family};
-  --font-caption: 400 14px/18px #{$font-family};
 }

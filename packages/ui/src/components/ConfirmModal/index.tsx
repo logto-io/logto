@@ -35,8 +35,7 @@ const ConfirmModal = ({
       isOpen={isOpen}
       className={classNames(modalStyles.modal, className)}
       overlayClassName={classNames(modalStyles.overlay, styles.overlay)}
-      parentSelector={() => document.querySelector('main') ?? document.body}
-      ariaHideApp={false}
+      appElement={document.querySelector('main') ?? undefined}
       onAfterOpen={() => {
         document.body.classList.add('static');
       }}
