@@ -1,6 +1,7 @@
 import fs from 'fs/promises';
 import https from 'https';
 
+import chalk from 'chalk';
 import Koa from 'koa';
 import koaLogger from 'koa-logger';
 import mount from 'koa-mount';
@@ -15,6 +16,10 @@ import koaSlonikErrorHandler from '@/middleware/koa-slonik-error-handler';
 import koaSpaProxy from '@/middleware/koa-spa-proxy';
 import initOidc from '@/oidc/init';
 import initRouter from '@/routes/init';
+
+const logListening = (port: number, protocol: 'https' | 'http') => {
+  console.log(chalk.bold(chalk.green(`App is running at ${protocol}://localhost:${port}`)));
+};
 
 export default async function initApp(app: Koa): Promise<void> {
   app.use(koaErrorHandler());
@@ -43,13 +48,13 @@ export default async function initApp(app: Koa): Promise<void> {
         app.callback()
       )
       .listen(port, () => {
-        console.log(`App is listening on port ${port} with HTTPS`);
+        logListening(port, 'https');
       });
 
     return;
   }
 
   app.listen(port, () => {
-    console.log(`App is listening on port ${port}`);
+    logListening(port, 'http');
   });
 }
