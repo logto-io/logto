@@ -29,11 +29,6 @@ type Props = {
   onComplete?: (data: GuideForm) => Promise<void>;
 };
 
-const onClickFetchSampleProject = (name: string) => {
-  const sampleUrl = `https://github.com/logto-io/js/tree/master/packages/connectors/${name}-sample`;
-  window.open(sampleUrl, '_blank');
-};
-
 const GuideModal = ({ connector, isOpen, onClose }: Props) => {
   const api = useApi();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
@@ -88,19 +83,10 @@ const GuideModal = ({ connector, isOpen, onClose }: Props) => {
           <CardTitle
             size="small"
             title={<DangerousRaw>{connectorName}</DangerousRaw>}
-            subtitle="connectors.get_started.subtitle"
+            subtitle="connectors.guide.subtitle"
           />
           <Spacer />
           <Button type="plain" size="small" title="general.skip" onClick={onClose} />
-          {connectorName && (
-            <Button
-              type="outline"
-              title="admin_console.get_started.get_sample_file"
-              onClick={() => {
-                onClickFetchSampleProject(connectorName);
-              }}
-            />
-          )}
         </div>
         <div className={styles.content}>
           <ReactMarkdown

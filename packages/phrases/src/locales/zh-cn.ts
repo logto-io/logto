@@ -153,7 +153,8 @@ const translation = {
           description: 'E.g.: Node.js, Express, ASP.NET, Java, PHP',
         },
       },
-      get_started: {
+      guide: {
+        get_sample_file: '获取示例工程',
         header_description:
           '参考如下教程，将 Logto 集成到您的应用中。您也可以点击右侧链接，获取我们为您准备好的示范工程。',
         title: '恭喜！您的应用已成功创建。',
@@ -239,7 +240,7 @@ const translation = {
         sms: '设置短信服务商',
         social: '添加社会化登录',
       },
-      get_started: {
+      guide: {
         subtitle: '请参考下列分步指南，配置您的 connector，或点击按钮获取示例配置文件',
       },
     },
@@ -263,9 +264,6 @@ const translation = {
       options_change_sms: '更换短信服务商',
       more_options: '更多选项',
       connector_deleted: '成功删除连接器。',
-    },
-    get_started: {
-      get_sample_file: '获取示例工程',
     },
     users: {
       title: '用户管理',
