@@ -21,6 +21,7 @@ import Applications from './pages/Applications';
 import Callback from './pages/Callback';
 import ConnectorDetails from './pages/ConnectorDetails';
 import Connectors from './pages/Connectors';
+import GetStarted from './pages/GetStarted';
 import NotFound from './pages/NotFound';
 import Settings from './pages/Settings';
 import SignInExperience from './pages/SignInExperience';
@@ -80,6 +81,7 @@ const Main = () => {
           <Route path="callback" element={<Callback />} />
           <Route element={<AppContent />}>
             <Route path="*" element={<NotFound />} />
+            <Route path="get-started" element={<GetStarted />} />
             <Route path="applications">
               <Route index element={<Applications />} />
               <Route path=":id">
