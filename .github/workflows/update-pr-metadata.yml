@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Add labels
-        uses: logto-io/actions-add-labels-run-steps@v1.1.2
+        uses: silverhand-io/actions-add-labels-run-steps@v1.1.2
         with:
           title: ${{ github.event.pull_request.title || github.event.issue.title }}
           github-token: ${{ github.token }}
@@ -22,3 +22,15 @@ jobs:
         with:
           github_token: ${{ github.token }}
           assignees: ${{ github.actor }}
+
+  pr-size-diff:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Calc Size Diff
+        run: |
+          curl -fsSLO https://gist.githubusercontent.com/gao-sun/88dac6c38e86f4ae12c8a7c3e777040a/raw/28bee6843989937c9fd24bd293227436f5981a4a/git-file-size-diff.sh
+          ./git-file-size-diff.sh --cached master
