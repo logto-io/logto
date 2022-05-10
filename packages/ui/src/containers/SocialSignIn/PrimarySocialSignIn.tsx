@@ -17,7 +17,7 @@ type Props = {
 
 const PrimarySocialSignIn = ({ className, isPopup = false, onSocialSignInCallback }: Props) => {
   const [showAll, setShowAll] = useState(false);
-  const { invokeSocialSignIn, socialConnectors } = useSocial({ onSocialSignInCallback });
+  const { invokeSocialSignIn, socialConnectors } = useSocial();
   const isOverSize = socialConnectors.length > defaultSize;
   const fullDisplay = isPopup || !isOverSize;
 
@@ -37,7 +37,7 @@ const PrimarySocialSignIn = ({ className, isPopup = false, onSocialSignInCallbac
           className={styles.socialLinkButton}
           connector={connector}
           onClick={() => {
-            void invokeSocialSignIn(connector.id);
+            void invokeSocialSignIn(connector.id, onSocialSignInCallback);
           }}
         />
       ))}

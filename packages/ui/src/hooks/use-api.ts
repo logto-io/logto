@@ -9,7 +9,7 @@ import { PageContext } from '@/hooks/use-page-context';
 type UseApi<T extends any[], U> = {
   result?: U;
   error: RequestErrorBody | undefined;
-  run: (...args: T) => Promise<void>;
+  run: (...args: T) => Promise<U | undefined>;
 };
 
 export type ErrorHandlers = {
@@ -38,6 +38,8 @@ function useApi<Args extends any[], Response>(
       try {
         const result = await api(...args);
         setResult(result);
+
+        return result;
       } catch (error: unknown) {
         if (error instanceof HTTPError && error.response.body) {
           const kyError = await error.response.json<RequestErrorBody>();
