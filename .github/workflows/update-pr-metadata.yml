@@ -34,19 +34,19 @@ jobs:
         run: |
           git checkout master
           git checkout -
-          curl -fsSLO https://gist.githubusercontent.com/gao-sun/88dac6c38e86f4ae12c8a7c3e777040a/raw/c50d06a4f9b89a7bc9bad580ae96a5fc0db3e24f/git-file-size-diff.sh
+          curl -fsSLO https://gist.githubusercontent.com/gao-sun/88dac6c38e86f4ae12c8a7c3e777040a/raw/07276574142455b3dfeace5d7f4a370447a112b3/git-file-size-diff.sh
           chmod +x git-file-size-diff.sh
-      
-      - name: Calc Size Diff
-        id: size-diff
-        run: echo "::set-output name=diff::$(./git-file-size-diff.sh --cached master)"
 
       - uses: actions/github-script@v6
         id: message
         with:
           result-encoding: string
           script: |
-            const diff = ${{ steps.size-diff.outputs.diff }};
+            const child_process = require('child_process');
+            const result = child_process
+              .execSync('./git-file-size-diff.sh --cached master', { encoding: 'utf-8' })
+              .split('\n');
+            const diff = Number(result.pop());
 
             // https://stackoverflow.com/a/18650828/12514940
             function formatBytes(bytes, decimals = 2) {
@@ -69,11 +69,23 @@ jobs:
               return diff > 0 ? ':chart_with_upwards_trend: +' : ':chart_with_downwards_trend: -';
             }
 
-            return `**Size Diff (compare to \`master\`)** ${
-              diff > 1024 * 5 ? ':warning: ' : ''
-            }${
-              getPrefix(diff)
-            }${formatBytes(Math.abs(diff))}`;
+            function format(bytes) {
+              return `${
+                bytes > 1024 * 10 ? ':warning: ' : ''
+              }${
+                getPrefix(bytes)
+              }${formatBytes(Math.abs(bytes))}`;
+            }
+
+            const filesHeader = `|Name|Diff|\n|---|---|\n`;
+            const filesData = result.map((row) => {
+              const [diff, filename] = row.split('\t');
+              return `|${filename}|${format(Number(diff))}|\n`;
+            });
+
+            return `#### Size Diff (Compare to \`master\`)\n**Total** ${format(diff)}\n${
+              result.length ? `\n${filesHeader}${filesData}` : ''
+            }`;
       
       - uses: marocchino/sticky-pull-request-comment@v2
         with:
