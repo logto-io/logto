@@ -83,8 +83,8 @@ jobs:
               return `|${filename}|${format(Number(diff))}|`;
             }).join('\n');
 
-            return `#### Size Diff (Compare to \`master\`)\n**Total** ${format(diff)}\n${
-              result.length ? `\n<details><summary>Diff by File</summary>\n${filesHeader}${filesData}</details>\n` : ''
+            return `#### COMPARE TO \`master\`\n**Total Size Diff** ${format(diff)}\n${
+              result.length ? `\n<details>\n<summary><b>Diff by File</b></summary>\n\n${filesHeader}${filesData}</details>\n` : ''
             }`;
       
       - uses: marocchino/sticky-pull-request-comment@v2
