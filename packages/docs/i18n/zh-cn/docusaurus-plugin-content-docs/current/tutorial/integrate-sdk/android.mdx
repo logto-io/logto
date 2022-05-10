@@ -76,15 +76,15 @@ import io.logto.sdk.android.LogtoClient
 import io.logto.sdk.android.type.LogtoConfig
 
 class MainActivity : AppCompatActivity() {
-        val logtoConfig = LogtoConfig(
-            endpoint = "<your-logto-endpoint>",
-            appId = "<your-app-id>",
-            scopes = null,
-            resources = null,
-            usingPersistStorage = true,
-        )
+    val logtoConfig = LogtoConfig(
+        endpoint = "<your-logto-endpoint>",
+        appId = "<your-app-id>",
+        scopes = null,
+        resources = null,
+        usingPersistStorage = true,
+    )
 
-        val logtoClient = LogtoClient(logtoConfig, application)
+    val logtoClient = LogtoClient(logtoConfig, application)
 }
 ```
 
@@ -97,22 +97,22 @@ import io.logto.sdk.android.LogtoClient;
 import io.logto.sdk.android.type.LogtoConfig;
 
 public class MainActivity extends AppCompatActivity {
-        private LogtoClient logtoClient;
+    private LogtoClient logtoClient;
 
-        @Override
-        protected void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            setContentView(R.layout.activity_main);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
 
-            LogtoConfig logtoConfig = new LogtoConfig(
-                "<your-logto-endpoint>",
-                "<your-app-id>",
-                null,
-                null,
-                true
-            );
-    
-            logtoClient = new LogtoClient(logtoConfig, getApplication());
+        LogtoConfig logtoConfig = new LogtoConfig(
+            "<your-logto-endpoint>",
+            "<your-app-id>",
+            null,
+            null,
+            true
+        );
+
+        logtoClient = new LogtoClient(logtoConfig, getApplication());
     }
 }
 ```
@@ -179,7 +179,7 @@ logtoClient.getIdTokenClaims { logtoException: LogtoException?, result: IdTokenC
 }
 
 logtoClient.fetchUserInfo { logtoException: LogtoException?, userInfoResponse: UserInfoResponse? ->
-        // 后续处理逻辑
+    // 后续处理逻辑
 }
 ```
 
