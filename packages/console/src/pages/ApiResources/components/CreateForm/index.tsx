@@ -53,7 +53,7 @@ const CreateForm = ({ onClose }: Props) => {
     >
       <form>
         <FormField isRequired title="admin_console.api_resources.api_name">
-          <TextInput {...register('name', { required: true })} />
+          <TextInput autoFocus {...register('name', { required: true })} />
         </FormField>
         <FormField isRequired title="admin_console.api_resources.api_identifier">
           <TextInput {...register('indicator', { required: true })} />
