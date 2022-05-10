@@ -12,6 +12,7 @@ import { isOriginAllowed, validateCustomClientMetadata } from '@/oidc/utils';
 import { findResourceByIndicator } from '@/queries/resource';
 import { findUserById } from '@/queries/user';
 import { routes } from '@/routes/consts';
+import { initTokenExchangeSuccessLogger } from '@/utils/logger';
 
 export default async function initOidc(app: Koa): Promise<Provider> {
   const { issuer, privateKey, defaultIdTokenTtl, defaultRefreshTokenTtl } = envSet.values.oidc;
@@ -116,6 +117,9 @@ export default async function initOidc(app: Koa): Promise<Provider> {
       },
     },
   });
+
+  oidc.on('grant.success', initTokenExchangeSuccessLogger());
+
   app.use(mount('/oidc', oidc.app));
 
   return oidc;

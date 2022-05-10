@@ -100,6 +100,15 @@ interface SignInSocialLogPayload extends SignInSocialBindLogPayload {
   redirectTo?: string;
 }
 
+export type IssuedTokenType = 'accessToken' | 'refreshToken' | 'idToken';
+
+interface ExchangeTokenLogPayload extends ArbitraryLogPayload {
+  userId?: string;
+  params?: Record<string, unknown>;
+  issued?: IssuedTokenType[];
+  scope?: string;
+}
+
 export type LogPayloads = {
   RegisterUsernamePassword: RegisterUsernamePasswordLogPayload;
   RegisterEmailSendPasscode: RegisterEmailSendPasscodeLogPayload;
@@ -115,6 +124,8 @@ export type LogPayloads = {
   SignInSms: SignInSmsLogPayload;
   SignInSocialBind: SignInSocialBindLogPayload;
   SignInSocial: SignInSocialLogPayload;
+  CodeExchangeToken: ExchangeTokenLogPayload;
+  RefreshTokenExchangeToken: ExchangeTokenLogPayload;
 };
 
 export type LogType = keyof LogPayloads;
