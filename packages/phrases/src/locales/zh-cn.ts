@@ -15,6 +15,10 @@ const translation = {
     added: '已添加',
     cancel: '取消',
     confirm: '确认',
+    check_out: '查看',
+    create: '创建',
+    set_up: '配置',
+    customize: '自定义',
   },
   main_flow: {
     input: {
@@ -264,6 +268,29 @@ const translation = {
       options_change_sms: '更换短信服务商',
       more_options: '更多选项',
       connector_deleted: '成功删除连接器。',
+    },
+    get_started: {
+      title: '还不知道如何使用 Logto?',
+      subtitle_part1: '下列是一些适合您快速上手的事情',
+      subtitle_part2: '这配置页面我要看吐了，',
+      hide_this: '退下！',
+      card1_title: 'Logto 是您没有使用过的全新身份管理工具，来看看我们的 Demo 吧',
+      card1_subtitle:
+        '无论是 mobile 应用，SPA web 还是传统 web 应用，您都可以使用 Logto，快速创建和管理身份，实现登录验证服务。',
+      card2_title: '快来创建您的第一款应用吧',
+      card2_subtitle:
+        'Setup a mobile, single page or traditional application to use Logto for Authentication.',
+      card3_title: '轻松配置连接器，实现无密码登录',
+      card3_subtitle:
+        'Setup a mobile, single page or traditional application to use Logto for Authentication.',
+      card4_title: 'One click to sign in',
+      card4_subtitle:
+        'With this step, users can use email or phone numbers to sign in without a password or use social identity to sign in.',
+      card5_title: '自定义您的 sign-in experience',
+      card5_subtitle:
+        'Customize the sign in UI and branding. This is what the end user will see on the app side.',
+      card6_title: 'Further readings',
+      card6_subtitle: 'Learn more about Logto and how to use it.',
     },
     users: {
       title: '用户管理',

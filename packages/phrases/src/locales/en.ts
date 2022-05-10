@@ -13,6 +13,10 @@ const translation = {
     added: 'Added',
     cancel: 'Cancel',
     confirm: 'Confirm',
+    check_out: 'Check out',
+    create: 'Create',
+    set_up: 'Set up',
+    customize: 'Customize',
   },
   main_flow: {
     input: {
@@ -267,6 +271,29 @@ const translation = {
       options_change_sms: 'Change SMS connector',
       more_options: 'MORE OPTIONS',
       connector_deleted: 'The connector has been deleted.',
+    },
+    get_started: {
+      title: 'How do you want to get started with Logto?',
+      subtitle_part1: 'Here are the following things you can do',
+      subtitle_part2: 'I’m done with this set up. ',
+      hide_this: 'Hide this',
+      card1_title: 'Logto is a XXX for customer identity. Check out our demo',
+      card1_subtitle:
+        'Setup a mobile, single page or traditional application to use Logto for Authentication.',
+      card2_title: 'Create and integrate the first application',
+      card2_subtitle:
+        'Setup a mobile, single page or traditional application to use Logto for Authentication.',
+      card3_title: 'Configure connectors to enable passwordless',
+      card3_subtitle:
+        'Setup a mobile, single page or traditional application to use Logto for Authentication.',
+      card4_title: 'One click to sign in',
+      card4_subtitle:
+        'With this step, users can use email or phone numbers to sign in without a password or use social identity to sign in.',
+      card5_title: 'Customize sign-in experience',
+      card5_subtitle:
+        'Customize the sign in UI and branding. This is what the end user will see on the app side.',
+      card6_title: 'Further readings',
+      card6_subtitle: 'Learn more about Logto and how to use it.',
     },
     users: {
       title: 'User Management',
