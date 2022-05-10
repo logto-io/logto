@@ -15,7 +15,7 @@ import CopyToClipboard from '@/components/CopyToClipboard';
 import Drawer from '@/components/Drawer';
 import ImagePlaceholder from '@/components/ImagePlaceholder';
 import LinkButton from '@/components/LinkButton';
-import TabNav, { TabNavLink } from '@/components/TabNav';
+import TabNav, { TabNavItem } from '@/components/TabNav';
 import useApi, { RequestError } from '@/hooks/use-api';
 import Back from '@/icons/Back';
 import Delete from '@/icons/Delete';
@@ -166,12 +166,12 @@ const ApplicationDetails = () => {
           </Card>
           <Card className={classNames(styles.body, detailsStyles.body)}>
             <TabNav>
-              <TabNavLink href={`/applications/${data.id}/settings`}>
+              <TabNavItem href={`/applications/${data.id}/settings`}>
                 {t('application_details.settings')}
-              </TabNavLink>
-              <TabNavLink href={`/applications/${data.id}/advanced-settings`}>
+              </TabNavItem>
+              <TabNavItem href={`/applications/${data.id}/advanced-settings`}>
                 {t('application_details.advanced_settings')}
-              </TabNavLink>
+              </TabNavItem>
             </TabNav>
             <FormProvider {...formMethods}>
               <form className={classNames(styles.form, detailsStyles.body)} onSubmit={onSubmit}>

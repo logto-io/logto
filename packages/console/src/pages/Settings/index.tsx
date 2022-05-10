@@ -12,7 +12,7 @@ import Card from '@/components/Card';
 import CardTitle from '@/components/CardTitle';
 import FormField from '@/components/FormField';
 import Select from '@/components/Select';
-import TabNav, { TabNavLink } from '@/components/TabNav';
+import TabNav, { TabNavItem } from '@/components/TabNav';
 import { themeStorageKey } from '@/consts';
 import useApi, { RequestError } from '@/hooks/use-api';
 import * as detailsStyles from '@/scss/details.module.scss';
@@ -57,7 +57,7 @@ const Settings = () => {
     <Card className={classNames(detailsStyles.container, styles.container)}>
       <CardTitle title="settings.title" subtitle="settings.description" />
       <TabNav>
-        <TabNavLink href="/settings">{t('settings.tabs.general')}</TabNavLink>
+        <TabNavItem href="/settings">{t('settings.tabs.general')}</TabNavItem>
       </TabNav>
       {!data && !error && <div>loading</div>}
       {error && <div>{`error occurred: ${error.body.message}`}</div>}

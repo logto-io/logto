@@ -465,6 +465,17 @@ const translation = {
         before: 'Before',
         after: 'After',
       },
+      preview: {
+        title: 'Sign in preview',
+        languages: {
+          english: 'English',
+          chinese: 'Chinese',
+        },
+        dark: 'Dark',
+        light: 'Light',
+        mobile: 'Mobile',
+        web: 'Web',
+      },
     },
     settings: {
       title: 'Settings',

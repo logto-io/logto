@@ -16,7 +16,7 @@ import Drawer from '@/components/Drawer';
 import FormField from '@/components/FormField';
 import ImagePlaceholder from '@/components/ImagePlaceholder';
 import LinkButton from '@/components/LinkButton';
-import TabNav, { TabNavLink } from '@/components/TabNav';
+import TabNav, { TabNavItem } from '@/components/TabNav';
 import TextInput from '@/components/TextInput';
 import useApi, { RequestError } from '@/hooks/use-api';
 import Back from '@/icons/Back';
@@ -144,7 +144,7 @@ const ApiResourceDetails = () => {
           </Card>
           <Card className={classNames(styles.body, detailsStyles.body)}>
             <TabNav>
-              <TabNavLink href={location.pathname}>{t('api_resource_details.settings')}</TabNavLink>
+              <TabNavItem href={location.pathname}>{t('api_resource_details.settings')}</TabNavItem>
             </TabNav>
             <form className={classNames(styles.form, detailsStyles.body)} onSubmit={onSubmit}>
               <div className={styles.fields}>

@@ -8,7 +8,7 @@ import useSWR from 'swr';
 import Button from '@/components/Button';
 import Card from '@/components/Card';
 import CardTitle from '@/components/CardTitle';
-import TabNav, { TabNavLink } from '@/components/TabNav';
+import TabNav, { TabNavItem } from '@/components/TabNav';
 import TableEmpty from '@/components/Table/TableEmpty';
 import TableError from '@/components/Table/TableError';
 import TableLoading from '@/components/Table/TableLoading';
@@ -67,8 +67,8 @@ const Connectors = () => {
           )}
         </div>
         <TabNav className={styles.tabs}>
-          <TabNavLink href="/connectors">{t('connectors.tab_email_sms')}</TabNavLink>
-          <TabNavLink href="/connectors/social">{t('connectors.tab_social')}</TabNavLink>
+          <TabNavItem href="/connectors">{t('connectors.tab_email_sms')}</TabNavItem>
+          <TabNavItem href="/connectors/social">{t('connectors.tab_social')}</TabNavItem>
         </TabNav>
         <div className={classNames(styles.table, tableStyles.scrollable)}>
           <table>
