@@ -4,7 +4,7 @@ import { readFileSync, writeFileSync } from 'fs';
 import { getEnv } from '@silverhand/essentials';
 import inquirer from 'inquirer';
 
-import { noInquiry } from './parameters';
+import { allYes, noInquiry } from './parameters';
 
 /**
  * Try to read private key with the following order:
@@ -33,14 +33,16 @@ const readPrivateKey = async (): Promise<string> => {
       throw error;
     }
 
-    const answer = await inquirer.prompt({
-      type: 'confirm',
-      name: 'confirm',
-      message: `No private key found in env \`OIDC_PRIVATE_KEY\` nor \`${privateKeyPath}\`, would you like to generate a new one?`,
-    });
+    if (!allYes) {
+      const answer = await inquirer.prompt({
+        type: 'confirm',
+        name: 'confirm',
+        message: `No private key found in env \`OIDC_PRIVATE_KEY\` nor \`${privateKeyPath}\`, would you like to generate a new one?`,
+      });
 
-    if (!answer.confirm) {
-      throw error;
+      if (!answer.confirm) {
+        throw error;
+      }
     }
 
     const { privateKey } = generateKeyPairSync('rsa', {
