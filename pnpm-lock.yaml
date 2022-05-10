@@ -864,6 +864,7 @@ importers:
       postcss-modules: ^4.3.0
       prettier: ^2.3.2
       react: ^17.0.2
+      react-device-detect: ^2.2.2
       react-dom: ^17.0.2
       react-i18next: ^11.15.4
       react-modal: ^3.14.4
@@ -875,6 +876,7 @@ importers:
       typescript: ^4.6.2
       use-debounced-loader: ^0.1.1
     dependencies:
+      react-device-detect: 2.2.2_sfoxds7t5ydpegc3knd667wn6m
       use-debounced-loader: 0.1.1_react@17.0.2
     devDependencies:
       '@logto/jest-config': link:../jest-config
@@ -16755,6 +16757,17 @@ packages:
       - webpack
     dev: true
 
+  /react-device-detect/2.2.2_sfoxds7t5ydpegc3knd667wn6m:
+    resolution: {integrity: sha512-zSN1gIAztUekp5qUT/ybHwQ9fmOqVT1psxpSlTn1pe0CO+fnJHKRLOWWac5nKxOxvOpD/w84hk1I+EydrJp7SA==}
+    peerDependencies:
+      react: '>= 0.14.0'
+      react-dom: '>= 0.14.0'
+    dependencies:
+      react: 17.0.2
+      react-dom: 17.0.2_react@17.0.2
+      ua-parser-js: 1.0.2
+    dev: false
+
   /react-dnd-html5-backend/16.0.0:
     resolution: {integrity: sha512-be3lKEbbT8FQcoTjFlQ4ZXG/NVrFNJu9W0INc5rm/5EFQpHCkz+xpbB2U8j9uh5Bvk7AsJyQrZznEut0hrNPIA==}
     dependencies:
@@ -19529,6 +19542,10 @@ packages:
   /ua-parser-js/0.7.31:
     resolution: {integrity: sha512-qLK/Xe9E2uzmYI3qLeOmI0tEOt+TBBQyUIAh4aAgU05FVYzeZrKUdkAZfBNVGRaHVgV0TDkdEngJSw/SyQchkQ==}
     dev: true
+
+  /ua-parser-js/1.0.2:
+    resolution: {integrity: sha512-00y/AXhx0/SsnI51fTc0rLRmafiGOM4/O+ny10Ps7f+j/b8p/ZY11ytMgznXkOVo4GQ+KwQG5UQLkLGirsACRg==}
+    dev: false
 
   /uglify-js/3.15.3:
     resolution: {integrity: sha512-6iCVm2omGJbsu3JWac+p6kUiOpg3wFO2f8lIXjfEb8RrmLjzog1wTPMmwKB7swfzzqxj9YM+sGUM++u1qN4qJg==}

@@ -20,12 +20,12 @@ const SocialRegister = () => {
   }
 
   return (
-    <>
+    <div className={styles.wrapper}>
       <NavBar title={t('description.bind_account_title')} />
-      <div className={styles.wrapper}>
+      <div className={styles.container}>
         <SocialCreateAccount connectorId={connector} />
       </div>
-    </>
+    </div>
   );
 };
 

@@ -1,8 +1,11 @@
 @use '@/scss/underscore' as _;
 
 .wrapper {
-  @include _.page-wrapper;
-  padding-top: _.unit(2);
+  @include _.full-page;
+}
+
+.container {
+  margin-top: _.unit(2);
 }
 
 

@@ -18,9 +18,9 @@ const ErrorPage = ({ title = 'description.not_found', message }: Props) => {
   const navigate = useNavigate();
 
   return (
-    <div className={styles.container}>
+    <div className={styles.wrapper}>
       <NavBar />
-      <div className={styles.wrapper}>
+      <div className={styles.container}>
         <ErrorIcon className={styles.icon} />
         <div className={styles.title}>{t(title)}</div>
         {message && <div className={styles.message}>{message}</div>}

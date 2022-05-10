@@ -1,14 +1,14 @@
 @use '@/scss/underscore' as _;
 
-.container {
-  position: absolute;
-  inset: 0;
+.wrapper {
+  @include _.full-page;
   @include _.flex-column;
   align-items: stretch;
 
-  .wrapper {
+  .container {
     flex: 1;
-    @include _.page-wrapper;
+    @include _.flex-column;
+    justify-content: flex-start;
   }
 
   .icon {

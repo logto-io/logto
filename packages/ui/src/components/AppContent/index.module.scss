@@ -1,30 +1,62 @@
 @use '@/scss/underscore' as _;
-@use '@/scss/colors' as colors;
-@use '@/scss/basic' as basic;
+@use '@/scss/mobile' as mobile;
+@use '@/scss/desktop' as desktop;
 
-/* Foundation */
-.light {
-  @include colors.light-theme;
-}
-
-.dark {
-  @include colors.dark-theme;
-}
-
-body {
-  @include colors.universal;
-  @include basic.fonts;
-  @include basic.layout;
-  background: var(--color-base);
-  color: var(--color-text);
-  font: var(--font-body);
-}
 
 .content {
+  @include _.flex_column;
+  background-color: var(--color-base);
+}
+
+/* Foundation */
+.mobile {
+  &.light {
+    @include mobile.colors-light-theme;
+  }
+
+  &.dark {
+    @include mobile.colors-dark-theme;
+  }
+
+  @include mobile.colors-universal;
+  @include mobile.fonts;
+  @include mobile.layout;
+
+  .content {
+    flex: 1;
+    align-self: stretch;
+    padding: _.unit(6) _.unit(5);
+    position: relative;
+  }
+}
+
+.desktop {
+  &.light {
+    @include desktop.colors-light-theme;
+  }
+
+  &.dark {
+    @include desktop.colors-dark-theme;
+  }
+
+  @include desktop.colors-universal;
+  @include desktop.fonts;
+  @include desktop.layout;
+
+  .content {
+    width: 640px;
+    min-height: 640px;
+    position: relative;
+    padding: _.unit(6);
+  }
+}
+
+
+main {
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  min-height: 100%;
-  background: var(--color-base);
+  inset: 0;
+  background: var(--color-surface);
+  color: var(--color-text);
+  font: var(--font-body);
+  @include _.flex_column;
 }

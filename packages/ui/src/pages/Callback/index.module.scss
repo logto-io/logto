@@ -2,9 +2,9 @@
 
 
 .wrapper {
-  @include _.page-wrapper;
-  position: absolute;
-  inset: 0;
+  @include _.full-page;
+  @include _.flex-column;
+  justify-content: flex-start;
 }
 
 .connector {
