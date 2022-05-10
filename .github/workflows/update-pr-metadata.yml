@@ -83,9 +83,9 @@ jobs:
               return `|${filename}|${format(Number(diff))}|\n`;
             });
 
-            return `**Size Diff (compare to \`master\`)**\n${
-              result.length ? `${filesHeader}${filesData}\n` : ''
-            }Total ${format(diff)}`;
+            return `#### Size Diff (Compare to \`master\`)\n**Total** ${format(diff)}\n${
+              result.length ? `\n${filesHeader}${filesData}` : ''
+            }`;
       
       - uses: marocchino/sticky-pull-request-comment@v2
         with:
