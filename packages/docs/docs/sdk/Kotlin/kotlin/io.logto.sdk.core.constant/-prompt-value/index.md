@@ -1,10 +1,10 @@
 # PromptValue
 
 
-object [PromptValue](index.md)
+object PromptValue
 
 ## Properties
 
-| Name | Summary |
+| Name | Value |
 |---|---|
-| [CONSENT](-c-o-n-s-e-n-t.md) | const val [CONSENT](-c-o-n-s-e-n-t.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |
+| CONSENT | consent |

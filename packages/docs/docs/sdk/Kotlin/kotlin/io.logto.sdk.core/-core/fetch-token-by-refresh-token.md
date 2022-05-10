@@ -1,4 +1,0 @@
-# fetchTokenByRefreshToken
-
-
-fun [fetchTokenByRefreshToken](fetch-token-by-refresh-token.md)(tokenEndpoint: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), clientId: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), refreshToken: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html), resource: [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)?, scopes: [List](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html)&lt;[String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html)&gt;?, completion: [HttpCompletion](../../io.logto.sdk.core.http/-http-completion/index.md)&lt;[RefreshTokenTokenResponse](../../io.logto.sdk.core.type/-refresh-token-token-response/index.md)&gt;)

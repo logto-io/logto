@@ -1,10 +1,10 @@
 # CodeChallengeMethod
 
 
-object [CodeChallengeMethod](index.md)
+object CodeChallengeMethod
 
 ## Properties
 
-| Name | Summary |
+| Name | Value |
 |---|---|
-| [S256](-s256.md) | const val [S256](-s256.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |
+| S256 | S256 |

@@ -1,10 +1,10 @@
 # ResponseType
 
 
-object [ResponseType](index.md)
+object ResponseType
 
 ## Properties
 
-| Name | Summary |
+| Name | Value |
 |---|---|
-| [CODE](-c-o-d-e.md) | const val [CODE](-c-o-d-e.md): [String](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html) |
+| CODE | code |
