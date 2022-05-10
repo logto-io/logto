@@ -117,8 +117,6 @@ describe('connector queries', () => {
       insert into "connectors" ("id", "target", "platform", "enabled", "config")
       values ($1, $2, $3, $4, $5)
       returning *
-      on conflict ("target", "platform") do update
-      set "id"=excluded."id", "target"=excluded."target", "platform"=excluded."platform", "enabled"=excluded."enabled", "config"=excluded."config", "created_at"=excluded."created_at"
     `;
 
     mockQuery.mockImplementationOnce(async (sql, values) => {

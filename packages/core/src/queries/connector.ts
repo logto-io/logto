@@ -45,10 +45,6 @@ export const findConnectorByTargetAndPlatform = async (
 
 export const insertConnector = buildInsertInto<CreateConnector, Connector>(Connectors, {
   returning: true,
-  onConflict: {
-    fields: [fields.target, fields.platform],
-    setExcludedFields: Object.values(fields),
-  },
 });
 
 export const updateConnector = buildUpdateWhere<CreateConnector, Connector>(Connectors, true);
