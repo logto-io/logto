@@ -33,6 +33,18 @@
       }
     }
   }
+
+  &.icon {
+    .row {
+      > svg {
+        fill: rgba(#fff, 0.8);
+
+        &:hover {
+          fill: #fff;
+        }
+      }
+    }
+  }
 }
 
 div.successTooltip {

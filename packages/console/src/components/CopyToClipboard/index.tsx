@@ -8,7 +8,7 @@ import * as styles from './index.module.scss';
 type Props = {
   value: string;
   className?: string;
-  variant?: 'text' | 'contained' | 'border';
+  variant?: 'text' | 'contained' | 'border' | 'icon';
 };
 
 const CopyIcon = forwardRef<SVGSVGElement, SVGProps<SVGSVGElement>>(
@@ -53,7 +53,7 @@ const CopyToClipboard = ({ value, className, variant = 'contained' }: Props) => 
       }}
     >
       <div className={styles.row}>
-        {value}
+        {variant === 'icon' ? null : value}
         <CopyIcon ref={copyIconReference} onClick={copy} />
         <Tooltip
           className={classNames(copyState === 'copied' && styles.successTooltip)}
