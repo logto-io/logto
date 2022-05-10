@@ -1,7 +1,7 @@
-# Message
+# Type
 
 
-enum Message : [Enum](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-enum/index.html)&lt;LogtoException.Message&gt;
+enum Type : [Enum](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-enum/index.html)&lt;LogtoException.Type&gt;
 
 ## Entries
 
