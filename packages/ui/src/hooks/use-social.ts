@@ -23,10 +23,6 @@ type State = {
   callbackLink?: string;
 };
 
-type Options = {
-  onSocialSignInCallback?: () => void;
-};
-
 const storageKeyPrefix = 'social_auth_state';
 
 const getLogtoNativeSdk = () => {
@@ -69,7 +65,7 @@ const isNativeWebview = () => {
   return ['ios', 'android'].includes(platform);
 };
 
-const useSocial = (options?: Options) => {
+const useSocial = () => {
   const { setToast, experienceSettings } = useContext(PageContext);
   const { termsValidation } = useTerms();
   const parameters = useParams();
@@ -86,31 +82,26 @@ const useSocial = (options?: Options) => {
             },
           });
         }
-        setToast(error.message);
       },
     }),
-    [navigate, parameters.connector, setToast]
+    [navigate, parameters.connector]
   );
 
   // Filter native supported social connectors
   const socialConnectors = useMemo(
     () =>
       (experienceSettings?.socialConnectors ?? []).filter(({ id }) => {
-        return !isNativeWebview() || getLogtoNativeSdk()?.supportedSocialConnectors.includes(id);
+        return !isNativeWebview() || getLogtoNativeSdk()?.supportedSocialConnectorIds.includes(id);
       }),
     [experienceSettings?.socialConnectors]
   );
 
-  const { result: invokeSocialSignInResult, run: asyncInvokeSocialSignIn } =
-    useApi(invokeSocialSignIn);
+  const { run: asyncInvokeSocialSignIn } = useApi(invokeSocialSignIn);
 
-  const { result: signInWithSocialResult, run: asyncSignInWithSocial } = useApi(
-    signInWithSocial,
-    signInWithSocialErrorHandlers
-  );
+  const { run: asyncSignInWithSocial } = useApi(signInWithSocial, signInWithSocialErrorHandlers);
 
   const invokeSocialSignInHandler = useCallback(
-    async (connectorId: string) => {
+    async (connectorId: string, callback?: () => void) => {
       if (!termsValidation()) {
         return;
       }
@@ -120,23 +111,52 @@ const useSocial = (options?: Options) => {
 
       const { origin } = window.location;
 
-      return asyncInvokeSocialSignIn(connectorId, state, `${origin}/callback/${connectorId}`);
+      const result = await asyncInvokeSocialSignIn(
+        connectorId,
+        state,
+        `${origin}/callback/${connectorId}`
+      );
+
+      if (!result?.redirectTo) {
+        return;
+      }
+
+      // Callback hook to close the social sign in modal
+      callback?.();
+
+      // Invoke Native Social Sign In flow
+      if (isNativeWebview()) {
+        getLogtoNativeSdk()?.getPostMessage()({
+          callbackUri: `${origin}/callback/${connectorId}`,
+          redirectTo: result.redirectTo,
+        });
+
+        return;
+      }
+
+      // Invoke Web Social Sign In flow
+      window.location.assign(result.redirectTo);
     },
     [asyncInvokeSocialSignIn, termsValidation]
   );
 
   const signInWithSocialHandler = useCallback(
-    (connectorId: string, state: string, code: string) => {
+    async (connectorId: string, state: string, code: string) => {
       if (!stateValidation(state, connectorId)) {
         setToast(t('error.invalid_connector_auth'));
 
         return;
       }
-      void asyncSignInWithSocial({
+
+      const result = await asyncSignInWithSocial({
         connectorId,
         code,
         redirectUri: `${origin}/callback/${connectorId}`,
       });
+
+      if (result?.redirectTo) {
+        window.location.assign(result.redirectTo);
+      }
     },
     [asyncSignInWithSocial, setToast, t]
   );
@@ -181,38 +201,6 @@ const useSocial = (options?: Options) => {
     window.location.assign(new URL(`${callbackLink}${window.location.search}`));
   }, [parameters.connector, setToast, t]);
 
-  // InvokeSocialSignIn Callback
-  useEffect(() => {
-    const { redirectTo } = invokeSocialSignInResult ?? {};
-
-    if (!redirectTo) {
-      return;
-    }
-
-    // Callback hook to close the social sign in modal
-    options?.onSocialSignInCallback?.();
-
-    // Invoke Native Social Sign In flow
-    if (isNativeWebview()) {
-      getLogtoNativeSdk()?.getPostMessage()({
-        callbackUri: redirectTo.replace('/callback', '/sign-in/callback'),
-        redirectTo,
-      });
-
-      return;
-    }
-
-    // Invoke Web Social Sign In flow
-    window.location.assign(redirectTo);
-  }, [invokeSocialSignInResult, options]);
-
-  // SignInWithSocial Callback
-  useEffect(() => {
-    if (signInWithSocialResult?.redirectTo) {
-      window.location.assign(signInWithSocialResult.redirectTo);
-    }
-  }, [signInWithSocialResult]);
-
   // Social Sign-In Callback Handler
   useEffect(() => {
     if (!location.pathname.includes('/sign-in/callback') || !parameters.connector) {
@@ -225,7 +213,7 @@ const useSocial = (options?: Options) => {
       return;
     }
 
-    signInWithSocialHandler(parameters.connector, state, code);
+    void signInWithSocialHandler(parameters.connector, state, code);
   }, [parameters.connector, signInWithSocialHandler]);
 
   // Monitor Native Error Message
