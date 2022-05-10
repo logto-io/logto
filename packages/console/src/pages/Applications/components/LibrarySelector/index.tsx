@@ -32,8 +32,8 @@ const LibrarySelector = ({
       <Card className={classNames(styles.card, className)}>
         <img src={highFive} alt="success" />
         <div>
-          <div className={styles.title}>{t('applications.get_started.title')}</div>
-          <div className={styles.subtitle}>{t('applications.get_started.subtitle')}</div>
+          <div className={styles.title}>{t('applications.guide.title')}</div>
+          <div className={styles.subtitle}>{t('applications.guide.subtitle')}</div>
         </div>
         <RadioGroup
           className={styles.radioGroup}
@@ -67,9 +67,7 @@ const LibrarySelector = ({
     () => (
       <div className={classNames(styles.card, styles.folded, className)}>
         <img src={tada} alt="Tada!" />
-        <span>
-          {t('applications.get_started.description_by_library', { library: libraryName })}
-        </span>
+        <span>{t('applications.guide.description_by_library', { library: libraryName })}</span>
       </div>
     ),
     [className, libraryName, t]

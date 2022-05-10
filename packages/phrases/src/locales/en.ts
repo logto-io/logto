@@ -153,7 +153,8 @@ const translation = {
           description: 'E.g.: Node.js, Express, ASP.NET, Java, PHP',
         },
       },
-      get_started: {
+      guide: {
+        get_sample_file: 'Get a sample file',
         header_description:
           'Follow a step by step guide to integrate your application or get a sample configured with your account settings',
         title: 'Congratulations! The application has been created successfully.',
@@ -241,7 +242,7 @@ const translation = {
         sms: 'Setup SMS sender',
         social: 'Add social connector',
       },
-      get_started: {
+      guide: {
         subtitle:
           'A step by step guide to integrate your connector or get a sample configured with your account settings',
       },
@@ -266,9 +267,6 @@ const translation = {
       options_change_sms: 'Change SMS connector',
       more_options: 'MORE OPTIONS',
       connector_deleted: 'The connector has been deleted.',
-    },
-    get_started: {
-      get_sample_file: 'Get a sample file',
     },
     users: {
       title: 'User Management',
