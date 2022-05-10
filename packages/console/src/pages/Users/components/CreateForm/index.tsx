@@ -53,7 +53,7 @@ const CreateForm = ({ onClose }: Props) => {
     >
       <form>
         <FormField isRequired title="admin_console.users.create_form_username">
-          <TextInput {...register('username', { required: true })} />
+          <TextInput autoFocus {...register('username', { required: true })} />
         </FormField>
         <FormField isRequired title="admin_console.users.create_form_name">
           <TextInput {...register('name', { required: true })} />
