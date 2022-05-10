@@ -8,12 +8,18 @@
 
 .headline {
   display: flex;
-  justify-content: space-between;
+  align-items: center;
   margin-bottom: _.unit(1);
 
   .title {
     font: var(--font-subhead-2);
     color: var(--color-text);
+  }
+
+  .icon {
+    margin-left: _.unit(1);
+    width: 16px;
+    height: 16px;
   }
 
   .required {
