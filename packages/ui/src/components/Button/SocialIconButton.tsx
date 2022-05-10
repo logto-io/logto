@@ -6,16 +6,16 @@ import * as styles from './SocialIconButton.module.scss';
 
 type Props = {
   className?: string;
-  connector: Pick<ConnectorMetadata, 'id' | 'logo'>;
+  connector: Pick<ConnectorMetadata, 'target' | 'logo'>;
   onClick?: () => void;
 };
 
 const SocialIconButton = ({ className, connector, onClick }: Props) => {
-  const { id, logo } = connector;
+  const { target, logo } = connector;
 
   return (
     <button className={classNames(styles.socialButton, className)} onClick={onClick}>
-      {logo && <img src={logo} alt={id} className={styles.icon} />}
+      {logo && <img src={logo} alt={target} className={styles.icon} />}
     </button>
   );
 };

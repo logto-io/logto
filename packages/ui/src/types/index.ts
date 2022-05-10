@@ -8,7 +8,7 @@ export enum SearchParameters {
   bindWithSocial = 'bw',
 }
 
-type ConnectorData = Pick<ConnectorMetadata, 'id' | 'logo' | 'name'>;
+type ConnectorData = Pick<ConnectorMetadata, 'target' | 'logo' | 'name'>;
 
 export type SignInExperienceSettings = {
   branding: Branding;

@@ -33,11 +33,11 @@ const PrimarySocialSignIn = ({ className, isPopup = false, onSocialSignInCallbac
     <div className={classNames(styles.socialLinkList, className)}>
       {displayConnectors.map((connector) => (
         <SocialLinkButton
-          key={connector.id}
+          key={connector.target}
           className={styles.socialLinkButton}
           connector={connector}
           onClick={() => {
-            void invokeSocialSignIn(connector.id, onSocialSignInCallback);
+            void invokeSocialSignIn(connector.target, onSocialSignInCallback);
           }}
         />
       ))}

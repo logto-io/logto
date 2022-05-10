@@ -7,38 +7,43 @@ export const appLogo = 'https://avatars.githubusercontent.com/u/88327661?s=200&v
 export const appHeadline = 'Build user identity in a modern way';
 export const socialConnectors = [
   {
-    id: 'github',
+    target: 'github',
     logo: 'https://user-images.githubusercontent.com/5717882/156983224-7ea0296b-38fa-419d-9515-67e8a9612e09.png',
     name: {
       en: 'Sign in with GitHub',
+      'zh-CN': '使用 GitHub 登录',
     },
   },
   {
-    id: 'alipay',
+    target: 'alipay',
     logo: 'https://user-images.githubusercontent.com/5717882/156983224-7ea0296b-38fa-419d-9515-67e8a9612e09.png',
     name: {
       en: 'Sign in with Alipay',
+      'zh-CN': '使用 Alipay 登录',
     },
   },
   {
-    id: 'wechat',
+    target: 'wechat',
     logo: 'https://user-images.githubusercontent.com/5717882/156983224-7ea0296b-38fa-419d-9515-67e8a9612e09.png',
     name: {
       en: 'Sign in with WeChat',
+      'zh-CN': '使用 WeChat 登录',
     },
   },
   {
-    id: 'google',
+    target: 'google',
     logo: 'https://user-images.githubusercontent.com/5717882/156983224-7ea0296b-38fa-419d-9515-67e8a9612e09.png',
     name: {
       en: 'Sign in with Google',
+      'zh-CN': '使用 Google 登录',
     },
   },
   {
-    id: 'facebook',
+    target: 'facebook',
     logo: 'https://user-images.githubusercontent.com/5717882/156983224-7ea0296b-38fa-419d-9515-67e8a9612e09.png',
     name: {
       en: 'Sign in with Meta',
+      'zh-CN': '使用 Meta 登录',
     },
   },
 ];
