@@ -36,10 +36,6 @@ export const buildUpdateWhere: BuildUpdateWhere = <
           return;
         }
 
-        if (value === null) {
-          return sql`${fields[key]} is null`;
-        }
-
         if (value && typeof value === 'object' && !Array.isArray(value)) {
           /**
            * Jsonb || operator is used to shallow merge two jsonb types of data
