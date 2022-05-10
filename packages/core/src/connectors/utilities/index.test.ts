@@ -1,8 +1,8 @@
 import { ConnectorPlatform } from '@logto/connector-types';
 
-import { findConnectorByTargetAndPlatform, updateConnector } from '@/queries/connector';
+import { findConnectorByTargetAndPlatform } from '@/queries/connector';
 
-import { buildIndexWithTargetAndPlatform, getConnectorConfig, updateConnectorConfig } from '.';
+import { buildIndexWithTargetAndPlatform, getConnectorConfig } from '.';
 
 jest.mock('@/queries/connector');
 
@@ -27,12 +27,4 @@ it('getConnectorConfig()', async () => {
   });
   const config = await getConnectorConfig('target', null);
   expect(config).toMatchObject({ foo: 'bar' });
-});
-
-it('updateConnectorConfig() should call updateConnector()', async () => {
-  await updateConnectorConfig({ target: 'connectorId', platform: null }, { foo: 'bar' });
-  expect(updateConnector).toHaveBeenCalledWith({
-    where: { target: 'connectorId', platform: null },
-    set: { config: { foo: 'bar' } },
-  });
 });

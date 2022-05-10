@@ -5,12 +5,10 @@ import { NotFoundError } from 'slonik';
 
 import {
   getConnectorInstanceById,
-  getConnectorInstanceByTargetAndPlatform,
   getConnectorInstanceByType,
   getConnectorInstances,
   getEnabledSocialConnectorIds,
   getSocialConnectorInstanceById,
-  getSocialConnectorInstanceByTargetAndPlatform,
   initConnectors,
 } from '@/connectors/index';
 import RequestError from '@/errors/RequestError';
@@ -193,38 +191,6 @@ describe('getConnectorInstanceById', () => {
   });
 });
 
-describe('getConnectorInstanceByTargetAndPlatform', () => {
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
-
-  test('should return the connector existing in DB (with non-null platform)', async () => {
-    const connectorInstance = await getConnectorInstanceByTargetAndPlatform(
-      'alipay',
-      ConnectorPlatform.Web
-    );
-    expect(connectorInstance).toHaveProperty('connector', alipayConnector);
-  });
-
-  test('should return the connector existing in DB (with null platform)', async () => {
-    const connectorInstance = await getConnectorInstanceByTargetAndPlatform('aliyun-dm', null);
-    expect(connectorInstance).toHaveProperty('connector', aliyunDmConnector);
-  });
-
-  test('should throw on invalid target/platform pair (on finding metadata)', async () => {
-    const target = 'invalid_target';
-    const platform = ConnectorPlatform.Web;
-    await expect(getConnectorInstanceByTargetAndPlatform(target, platform)).rejects.toMatchError(
-      new RequestError({
-        code: 'entity.not_found',
-        target,
-        platform,
-        status: 404,
-      })
-    );
-  });
-});
-
 describe('getSocialConnectorInstanceById', () => {
   test('should return the connector existing in DB', async () => {
     const socialConnectorInstance = await getSocialConnectorInstanceById('google');
@@ -237,31 +203,6 @@ describe('getSocialConnectorInstanceById', () => {
       new RequestError({
         code: 'entity.not_found',
         id,
-        status: 404,
-      })
-    );
-  });
-});
-
-describe('getSocialConnectorInstanceByTargetAndPlatform', () => {
-  test('should return the connector existing in DB', async () => {
-    const socialConnectorInstance = await getSocialConnectorInstanceByTargetAndPlatform(
-      'google',
-      ConnectorPlatform.Web
-    );
-    expect(socialConnectorInstance).toHaveProperty('connector', googleConnector);
-  });
-
-  test('should throw on non-social connector', async () => {
-    const target = 'aliyun-dm';
-    const platform = null;
-    await expect(
-      getSocialConnectorInstanceByTargetAndPlatform(target, platform)
-    ).rejects.toMatchError(
-      new RequestError({
-        code: 'entity.not_found',
-        target,
-        platform,
         status: 404,
       })
     );

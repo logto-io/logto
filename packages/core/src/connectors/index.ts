@@ -6,16 +6,10 @@ import { GithubConnector } from '@logto/connector-github';
 import { GoogleConnector } from '@logto/connector-google';
 import { WeChatConnector } from '@logto/connector-wechat';
 import { WeChatNativeConnector } from '@logto/connector-wechat-native';
-import { Nullable } from '@silverhand/essentials';
 import { nanoid } from 'nanoid';
 
 import RequestError from '@/errors/RequestError';
-import {
-  findAllConnectors,
-  findConnectorById,
-  findConnectorByTargetAndPlatform,
-  insertConnector,
-} from '@/queries/connector';
+import { findAllConnectors, findConnectorById, insertConnector } from '@/queries/connector';
 
 import { ConnectorInstance, ConnectorType, IConnector, SocialConnectorInstance } from './types';
 import { buildIndexWithTargetAndPlatform, getConnectorConfig } from './utilities';
@@ -72,28 +66,6 @@ export const getConnectorInstanceById = async (id: string): Promise<ConnectorIns
   return { connector, ...found };
 };
 
-export const getConnectorInstanceByTargetAndPlatform = async (
-  target: string,
-  platform: Nullable<string>
-): Promise<ConnectorInstance> => {
-  const found = allConnectors.find(
-    (element) => element.metadata.target === target && element.metadata.platform === platform
-  );
-
-  if (!found) {
-    throw new RequestError({
-      code: 'entity.not_found',
-      target,
-      platform,
-      status: 404,
-    });
-  }
-
-  const connector = await findConnectorByTargetAndPlatform(target, platform);
-
-  return { connector, ...found };
-};
-
 const isSocialConnectorInstance = (
   connector: ConnectorInstance
 ): connector is SocialConnectorInstance => {
@@ -109,24 +81,6 @@ export const getSocialConnectorInstanceById = async (
     throw new RequestError({
       code: 'entity.not_found',
       id,
-      status: 404,
-    });
-  }
-
-  return connector;
-};
-
-export const getSocialConnectorInstanceByTargetAndPlatform = async (
-  target: string,
-  platform: Nullable<string>
-): Promise<SocialConnectorInstance> => {
-  const connector = await getConnectorInstanceByTargetAndPlatform(target, platform);
-
-  if (!isSocialConnectorInstance(connector)) {
-    throw new RequestError({
-      code: 'entity.not_found',
-      target,
-      platform,
       status: 404,
     });
   }
