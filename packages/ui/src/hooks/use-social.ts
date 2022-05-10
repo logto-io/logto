@@ -82,10 +82,9 @@ const useSocial = () => {
             },
           });
         }
-        setToast(error.message);
       },
     }),
-    [navigate, parameters.connector, setToast]
+    [navigate, parameters.connector]
   );
 
   // Filter native supported social connectors
