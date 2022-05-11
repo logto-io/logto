@@ -408,6 +408,7 @@ const translation = {
           'Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. ',
         terms_of_use: 'Terms of use',
         terms_of_use_placeholder: 'Terms of use url',
+        terms_of_use_tip: 'Terms of use url',
       },
       sign_in_methods: {
         title: 'SIGN IN METHODS',
