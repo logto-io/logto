@@ -10,12 +10,12 @@
 
 **Main Features**
 
+- An OIDC-based identity service
 - All-platform user sign-in/up experience with dark mode and SDK support (SPA, iOS, and Android)
 - Passwordless (SMS / Email) sign-in/up support
 - Out-of-box social sign-in support (GitHub, Google, WeChat, Alipay, etc.)
 - A web UI to control all above (Admin Console)
 - Extendable multi-language support
-- Easy deployment
 
 Boringly, we call it "[customer identity access management](https://en.wikipedia.org/wiki/Customer_identity_access_management)" (CIAM) or "customer identity solution."
 
