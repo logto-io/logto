@@ -42,7 +42,7 @@ const GetStartedProgress = () => {
         anchorRef={anchorRef}
         className={styles.dropdown}
         isOpen={showDropDown}
-        horizontalAlign="right"
+        horizontalAlign="end"
         title={t('get_started.progress_dropdown_title')}
         titleClassName={styles.dropdownTitle}
         onClose={() => {

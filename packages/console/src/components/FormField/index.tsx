@@ -29,7 +29,7 @@ const FormField = ({ title, children, isRequired, className, tooltip }: Props) =
         {tooltip && (
           <div ref={tipRef} className={styles.icon}>
             <Tip />
-            <Tooltip domRef={tipRef} content={t(tooltip)} />
+            <Tooltip anchorRef={tipRef} content={t(tooltip)} />
           </div>
         )}
         <Spacer />

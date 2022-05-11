@@ -1,57 +1,67 @@
-import { Nullable } from '@silverhand/essentials';
 import classNames from 'classnames';
-import React, { ReactNode, RefObject, useEffect, useState } from 'react';
+import React, { ReactNode, RefObject, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
+
+import usePosition from '@/hooks/use-position';
 
 import * as styles from './index.module.scss';
 
-type Props<T> = {
+type Props = {
   content: ReactNode;
-  domRef: RefObject<Nullable<T>>;
+  anchorRef: RefObject<Element>;
   className?: string;
-  behavior?: 'visibleOnHover' | 'visibleByDefault';
+  isKeepOpen?: boolean;
 };
 
-type Position = {
-  top: number;
-  left: number;
-};
-
-const Tooltip = <T extends Element>({
-  content,
-  domRef,
-  className,
-  behavior = 'visibleOnHover',
-}: Props<T>) => {
+const Tooltip = ({ content, anchorRef, className, isKeepOpen = false }: Props) => {
   const [tooltipDom, setTooltipDom] = useState<HTMLDivElement>();
-  const [position, setPosition] = useState<Position>();
-  const positionCaculated = position !== undefined;
+  const tooltipRef = useRef<HTMLDivElement>(null);
+
+  const { position, positionState, mutate } = usePosition({
+    verticalAlign: 'top',
+    horizontalAlign: 'center',
+    offset: { vertical: 12, horizontal: 0 },
+    anchorRef,
+    overlayRef: tooltipRef,
+  });
+
+  const [showUp, setShowUp] = useState(false);
 
   useEffect(() => {
-    if (!domRef.current) {
+    if (!showUp) {
       return;
     }
 
-    const dom = domRef.current;
+    const mutateAnimationFrame = requestAnimationFrame(() => {
+      mutate();
+    });
 
-    if (behavior === 'visibleByDefault') {
-      const { top, left, width } = domRef.current.getBoundingClientRect();
-      const { scrollTop, scrollLeft } = document.documentElement;
-      setPosition({ top: top + scrollTop - 12, left: left + scrollLeft + width / 2 });
+    return () => {
+      cancelAnimationFrame(mutateAnimationFrame);
+    };
+  }, [showUp, mutate]);
+
+  useEffect(() => {
+    if (!anchorRef.current) {
+      return;
+    }
+
+    if (isKeepOpen) {
+      setShowUp(true);
 
       return;
     }
+
+    const dom = anchorRef.current;
 
     const enterHandler = () => {
-      if (domRef.current) {
-        const { top, left, width } = domRef.current.getBoundingClientRect();
-        const { scrollTop, scrollLeft } = document.documentElement;
-        setPosition({ top: top + scrollTop - 12, left: left + scrollLeft + width / 2 });
+      if (!showUp) {
+        setShowUp(true);
       }
     };
 
     const leaveHandler = () => {
-      setPosition(undefined);
+      setShowUp(false);
     };
 
     dom.addEventListener('mouseenter', enterHandler);
@@ -61,10 +71,10 @@ const Tooltip = <T extends Element>({
       dom.removeEventListener('mouseenter', enterHandler);
       dom.removeEventListener('mouseleave', leaveHandler);
     };
-  }, [domRef, behavior]);
+  }, [anchorRef, showUp, isKeepOpen]);
 
   useEffect(() => {
-    if (!positionCaculated) {
+    if (!showUp) {
       if (tooltipDom) {
         tooltipDom.remove();
         setTooltipDom(undefined);
@@ -80,14 +90,24 @@ const Tooltip = <T extends Element>({
     }
 
     return () => tooltipDom?.remove();
-  }, [positionCaculated, tooltipDom]);
+  }, [showUp, tooltipDom]);
 
-  if (!tooltipDom || !position) {
+  useLayoutEffect(() => {
+    mutate();
+  }, [content, mutate]);
+
+  if (!tooltipDom) {
     return null;
   }
 
+  const isArrowUp = positionState.verticalAlign === 'bottom';
+
   return createPortal(
-    <div className={classNames(styles.container, className)} style={{ ...position }}>
+    <div
+      ref={tooltipRef}
+      className={classNames(styles.tooltip, isArrowUp && styles.arrowUp, className)}
+      style={{ ...position }}
+    >
       {content}
     </div>,
     tooltipDom

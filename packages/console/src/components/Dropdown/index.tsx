@@ -2,8 +2,9 @@ import classNames from 'classnames';
 import React, { ReactNode, RefObject, useRef } from 'react';
 import ReactModal from 'react-modal';
 
+import usePosition, { HorizontalAlignment } from '@/hooks/use-position';
+
 import * as styles from './index.module.scss';
-import usePosition, { HorizontalAlignment } from './use-position';
 
 export { default as DropdownItem } from './DropdownItem';
 
@@ -28,26 +29,32 @@ const Dropdown = ({
   isFullWidth,
   className,
   titleClassName,
-  horizontalAlign,
+  horizontalAlign = 'end',
 }: Props) => {
   const overlayRef = useRef<HTMLDivElement>(null);
 
-  const { position, mutate } = usePosition(anchorRef, overlayRef, horizontalAlign);
+  const { position, positionState, mutate } = usePosition({
+    verticalAlign: 'bottom',
+    horizontalAlign,
+    offset: { vertical: 4, horizontal: 0 },
+    anchorRef,
+    overlayRef,
+  });
 
   return (
     <ReactModal
       shouldCloseOnOverlayClick
       isOpen={isOpen}
       style={{
-        content: position
-          ? {
-              left: `${position.left}px`,
-              top: `${position.top}px`,
-              width: isFullWidth ? `${position.width}px` : undefined,
-            }
-          : { visibility: 'hidden' },
+        content: {
+          width:
+            isFullWidth && anchorRef.current
+              ? anchorRef.current.getBoundingClientRect().width
+              : undefined,
+          ...position,
+        },
       }}
-      className={classNames(styles.content, position?.isOnTop && styles.onTop)}
+      className={classNames(styles.content, positionState.verticalAlign === 'top' && styles.onTop)}
       overlayClassName={styles.overlay}
       onRequestClose={onClose}
       onAfterOpen={mutate}
