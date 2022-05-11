@@ -52,12 +52,15 @@ $font-family: -apple-system,
 
 @mixin fonts {
   --font-title: 600 32px/40px #{$font-family};
+  --font-title-medium: 600 28px/36px #{$font-family};
+  --font-title-small: 600 24px/32px #{$font-family};
   --font-body-bold: 500 16px/20px #{$font-family};
   --font-body: 400 16px/20px #{$font-family};
   --font-body-small: 500 14px/18px #{$font-family};
-  --font-caption: 400 14px/18px #{$font-family};
+  --font-caption: 500 14px/20px #{$font-family};
 }
 
 @mixin layout {
   --radius: 8px;
+  --max-width: 400px;
 }

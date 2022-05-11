@@ -40,7 +40,7 @@ const translation = {
       confirm: 'Confirm',
       cancel: 'Cancel',
       bind: 'Binding with {{address}}',
-      back: 'Go Back',
+      back: 'Back',
     },
     description: {
       not_found: '404 Not Found',

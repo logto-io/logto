@@ -3,14 +3,15 @@
 .wrapper {
   @include _.full-page;
   @include _.flex-column;
-  justify-content: flex-start;
 
-  .header {
-    margin-top: _.unit(30);
+  img {
+    width: 96px;
+    height: 96px;
+    @include _.image-align-center;
   }
 
   .content {
-    margin-top: _.unit(24);
+    margin-top: _.unit(2);
     @include _.text-hint;
   }
 }

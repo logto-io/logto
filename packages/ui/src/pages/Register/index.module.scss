@@ -5,12 +5,32 @@
 }
 
 .container {
+  @include _.full-width;
   margin-top: _.unit(2);
 }
 
 
 .title {
-  width: 100%;
   @include _.title;
-  margin-bottom: _.unit(6);
+}
+
+:global(body.mobile) {
+  .container {
+    margin-top: _.unit(2);
+  }
+
+  .title {
+    margin-bottom: _.unit(6);
+  }
+}
+
+:global(body.desktop) {
+  .container {
+    margin-top: _.unit(12);
+  }
+
+  .title {
+    font: var(--font-title-medium);
+    margin-bottom: _.unit(4);
+  }
 }

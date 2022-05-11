@@ -3,32 +3,40 @@
 .wrapper {
   @include _.full-page;
   @include _.flex-column;
-  align-items: stretch;
 
   .container {
     flex: 1;
     @include _.flex-column;
-    justify-content: flex-start;
-  }
-
-  .icon {
-    margin-top: _.unit(22);
-  }
-
-  .title {
-    @include _.title;
-    margin-bottom: _.unit(4);
+    @include _.full-width;
   }
 
   .message {
     @include _.text-hint;
   }
+}
 
-  .placeHolder {
-    flex: 1;
+
+:global(body.mobile) {
+  .title {
+    @include _.title;
+    margin-bottom: _.unit(4);
   }
 
   .backBtn {
-    margin-bottom: _.unit(10);
+    @include _.full-width;
+    margin-bottom: _.unit(4);
+  }
+}
+
+:global(body.desktop) {
+  .title {
+    @include _.title;
+    font: var(--font-title-medium);
+    margin-bottom: _.unit(2);
+  }
+
+  .backBtn {
+    @include _.full-width;
+    margin-bottom: _.unit(12);
   }
 }

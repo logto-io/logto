@@ -41,9 +41,10 @@ const Callback = () => {
 
   return (
     <div className={styles.wrapper}>
-      {connectorLabel}
-      <div className={styles.loadingLabel}>loading...</div>
-      <div className={styles.placeHolder} />
+      <div className={styles.container}>
+        {connectorLabel}
+        <div className={styles.loadingLabel}>loading...</div>
+      </div>
       <Button className={styles.button} onClick={socialCallbackHandler}>
         {t('action.continue')}
       </Button>

@@ -2,11 +2,11 @@
   @return #{$factor * 4}px;
 }
 
-@mixin flex-column {
+@mixin flex-column($align-items: center, $justify-content: center) {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  align-items: $align-items;
+  justify-content: $justify-content;
 }
 
 @mixin flex-row {
@@ -34,9 +34,10 @@
   align-self: stretch;
 }
 
-@mixin container-width {
+@mixin full-width {
   width: 100%;
-  max-width: 360px;
+  max-width: var(--max-width);
+  margin: 0 auto;
 }
 
 @function border($color: transparent, $width: 1) {

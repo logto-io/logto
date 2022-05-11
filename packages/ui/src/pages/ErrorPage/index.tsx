@@ -24,16 +24,15 @@ const ErrorPage = ({ title = 'description.not_found', message }: Props) => {
         <ErrorIcon className={styles.icon} />
         <div className={styles.title}>{t(title)}</div>
         {message && <div className={styles.message}>{message}</div>}
-        <div className={styles.placeHolder} />
-        <Button
-          className={styles.backBtn}
-          onClick={() => {
-            navigate(-1);
-          }}
-        >
-          {t('action.back')}
-        </Button>
       </div>
+      <Button
+        className={styles.backBtn}
+        onClick={() => {
+          navigate(-1);
+        }}
+      >
+        {t('action.back')}
+      </Button>
     </div>
   );
 };

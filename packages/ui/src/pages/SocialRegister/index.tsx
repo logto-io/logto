@@ -1,4 +1,5 @@
 import React from 'react';
+import { isMobile } from 'react-device-detect';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 
@@ -21,8 +22,9 @@ const SocialRegister = () => {
 
   return (
     <div className={styles.wrapper}>
-      <NavBar title={t('description.bind_account_title')} />
+      <NavBar title={isMobile ? t('description.bind_account_title') : undefined} />
       <div className={styles.container}>
+        {!isMobile && <div className={styles.title}>{t('description.bind_account_title')}</div>}
         <SocialCreateAccount connectorId={connector} />
       </div>
     </div>
