@@ -6013,7 +6013,7 @@ packages:
       eslint-import-resolver-typescript: 2.5.0_rnagsyfcubvpoxo2ynj23pim7u
       eslint-plugin-consistent-default-export-name: 0.0.7
       eslint-plugin-eslint-comments: 3.2.0_eslint@8.10.0
-      eslint-plugin-import: 2.25.4_sidoke6kqbkbdht6nlmwbfnany
+      eslint-plugin-import: 2.25.4_eslint@8.10.0
       eslint-plugin-no-use-extend-native: 0.5.0
       eslint-plugin-node: 11.1.0_eslint@8.10.0
       eslint-plugin-prettier: 3.4.1_6pitu4b2tqihty6rv5qeiyb35m
@@ -6024,7 +6024,6 @@ packages:
       prettier: 2.5.1
       typescript: 4.6.2
     transitivePeerDependencies:
-      - eslint-import-resolver-webpack
       - supports-color
     dev: true
 
