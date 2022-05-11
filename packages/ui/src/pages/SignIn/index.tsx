@@ -6,7 +6,7 @@ import BrandingHeader from '@/components/BrandingHeader';
 import { PageContext } from '@/hooks/use-page-context';
 
 import * as styles from './index.module.scss';
-import { PrimarySection, SecondarySection, CreateAccoutnLink } from './registry';
+import { PrimarySection, SecondarySection, CreateAccountLink } from './registry';
 
 const SignIn = () => {
   const { experienceSettings } = useContext(PageContext);
@@ -24,7 +24,7 @@ const SignIn = () => {
         primarySignInMethod={experienceSettings?.primarySignInMethod}
         secondarySignInMethods={experienceSettings?.secondarySignInMethods}
       />
-      <CreateAccoutnLink primarySignInMethod={experienceSettings?.primarySignInMethod} />
+      <CreateAccountLink primarySignInMethod={experienceSettings?.primarySignInMethod} />
     </div>
   );
 };
