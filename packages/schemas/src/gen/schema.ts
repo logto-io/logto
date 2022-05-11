@@ -1,3 +1,5 @@
+// LOG-88: Refactor '@logto/schemas' type gen
+
 import { conditionalString } from '@silverhand/essentials';
 import camelcase from 'camelcase';
 import pluralize from 'pluralize';
@@ -11,6 +13,7 @@ export const generateSchema = ({ name, fields }: TableWithType) => {
   return [
     `export type ${databaseEntryType} = {`,
     ...fields.map(
+      // eslint-disable-next-line complexity
       ({ name, type, isArray, nullable, hasDefaultValue }) =>
         `  ${camelcase(name)}${conditionalString(
           (nullable || hasDefaultValue) && '?'
@@ -30,6 +33,7 @@ export const generateSchema = ({ name, fields }: TableWithType) => {
     '};',
     '',
     `const createGuard: Guard<${databaseEntryType}> = z.object({`,
+    // eslint-disable-next-line complexity
     ...fields.map(({ name, type, isArray, isEnum, nullable, hasDefaultValue, tsType }) => {
       if (tsType) {
         return `  ${camelcase(name)}: ${camelcase(tsType)}Guard${conditionalString(
