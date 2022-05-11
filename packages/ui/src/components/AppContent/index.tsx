@@ -1,3 +1,4 @@
+import { conditionalString } from '@silverhand/essentials';
 import React, { ReactNode, useEffect, useCallback, useContext } from 'react';
 import { isMobile } from 'react-device-detect';
 import { useDebouncedLoader } from 'use-debounced-loader';
@@ -24,18 +25,16 @@ const AppContent = ({ children }: Props) => {
   }, [setToast]);
 
   useEffect(() => {
-    document.body.classList.remove(styles.light ?? '');
-    document.body.classList.remove(styles.dark ?? '');
-    document.body.classList.add(styles[theme] ?? '');
+    document.body.classList.remove(conditionalString(styles.light), conditionalString(styles.dark));
+    document.body.classList.add(conditionalString(styles[theme]));
   }, [theme]);
 
   useEffect(() => {
     if (isMobile) {
-      document.body.classList.add(styles.mobile ?? '');
-
-      return;
+      document.body.classList.add(conditionalString(styles.mobile));
+    } else {
+      document.body.classList.add(conditionalString(styles.desktop));
     }
-    document.body.classList.add(styles.desktop ?? '');
   }, []);
 
   return (
