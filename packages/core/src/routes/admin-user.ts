@@ -8,6 +8,7 @@ import RequestError from '@/errors/RequestError';
 import { encryptUserPassword, generateUserId } from '@/lib/user';
 import koaGuard from '@/middleware/koa-guard';
 import koaPagination from '@/middleware/koa-pagination';
+import { countUserLogs, findUserLogs } from '@/queries/log';
 import { findRolesByRoleNames } from '@/queries/roles';
 import {
   clearUserCustomDataById,
@@ -260,6 +261,36 @@ export default function adminUserRoutes<T extends AuthedRouter>(router: T) {
 
       const updatedUser = await deleteUserIdentity(userId, connectorId);
       ctx.body = pick(updatedUser, ...userInfoSelectFields);
+
+      return next();
+    }
+  );
+
+  router.get(
+    '/users/:userId/logs',
+    koaPagination(),
+    koaGuard({
+      params: object({ userId: string() }),
+      query: object({
+        applicationId: string().optional(),
+        logType: string().optional(),
+      }),
+    }),
+    async (ctx, next) => {
+      const { limit, offset } = ctx.pagination;
+      const {
+        params: { userId },
+        query: { applicationId, logType },
+      } = ctx.guard;
+
+      const [{ count }, userLogs] = await Promise.all([
+        countUserLogs({ userId, applicationId, logType }),
+        findUserLogs(limit, offset, { userId, applicationId, logType }),
+      ]);
+
+      // Return totalCount to pagination middleware
+      ctx.pagination.totalCount = count;
+      ctx.body = userLogs;
 
       return next();
     }
