@@ -422,7 +422,9 @@ describe('sessionRoutes', () => {
       expect(interactionResult).toHaveBeenCalledWith(
         expect.anything(),
         expect.anything(),
-        expect.objectContaining({ connectorId: '_connectorId_', userInfo: { id: 'id' } }),
+        expect.objectContaining({
+          socialUserInfo: { connectorId: '_connectorId_', userInfo: { id: 'id' } },
+        }),
         expect.anything()
       );
       expect(response.statusCode).toEqual(422);
