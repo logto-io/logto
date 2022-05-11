@@ -72,7 +72,7 @@ export const SecondarySection = ({
   );
 };
 
-export const CreateAccoutnLink = ({
+export const CreateAccountLink = ({
   primarySignInMethod,
 }: {
   primarySignInMethod?: SignInMethod;
