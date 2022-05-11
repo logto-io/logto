@@ -15,6 +15,7 @@ import statusRoutes from '@/routes/status';
 import swaggerRoutes from '@/routes/swagger';
 
 import adminUserRoutes from './admin-user';
+import logRoutes from './log';
 import roleRoutes from './role';
 import { AnonymousRouter, AuthedRouter } from './types';
 
@@ -35,6 +36,7 @@ const createRouters = (provider: Provider) => {
   resourceRoutes(authedRouter);
   signInExperiencesRoutes(authedRouter);
   adminUserRoutes(authedRouter);
+  logRoutes(authedRouter);
   roleRoutes(authedRouter);
 
   return [sessionRouter, anonymousRouter, authedRouter];
