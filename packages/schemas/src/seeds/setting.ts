@@ -11,5 +11,11 @@ export const createDefaultSetting = (): Readonly<CreateSetting> =>
     adminConsole: {
       language: Language.English,
       appearanceMode: AppearanceMode.SyncWithSystem,
+      checkDemo: false,
+      createApplication: false,
+      configurePasswordless: false,
+      configureSocialSignIn: false,
+      customizeSignInExperience: false,
+      checkFurtherReadings: false,
     },
   });

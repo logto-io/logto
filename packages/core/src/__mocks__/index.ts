@@ -48,6 +48,12 @@ export const mockSetting: Setting = {
   adminConsole: {
     language: Language.English,
     appearanceMode: AppearanceMode.SyncWithSystem,
+    checkDemo: false,
+    createApplication: false,
+    configurePasswordless: false,
+    configureSocialSignIn: false,
+    customizeSignInExperience: false,
+    checkFurtherReadings: false,
   },
 };
 

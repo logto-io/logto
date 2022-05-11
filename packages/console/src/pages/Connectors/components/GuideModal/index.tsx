@@ -1,4 +1,5 @@
 import { ConnectorDTO, ConnectorType } from '@logto/schemas';
+import { conditional } from '@silverhand/essentials';
 import i18next from 'i18next';
 import React, { useState } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
@@ -14,6 +15,7 @@ import DangerousRaw from '@/components/DangerousRaw';
 import IconButton from '@/components/IconButton';
 import Spacer from '@/components/Spacer';
 import useApi from '@/hooks/use-api';
+import useAdminConsoleConfigs from '@/hooks/use-configs';
 import Close from '@/icons/Close';
 import Step from '@/mdx-components/Step';
 import SenderTester from '@/pages/ConnectorDetails/components/SenderTester';
@@ -31,6 +33,7 @@ type Props = {
 
 const GuideModal = ({ connector, isOpen, onClose }: Props) => {
   const api = useApi();
+  const { updateConfigs } = useAdminConsoleConfigs();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const {
     id: connectorId,
@@ -63,6 +66,10 @@ const GuideModal = ({ connector, isOpen, onClose }: Props) => {
         })
         .json<ConnectorDTO>();
 
+      await updateConfigs({
+        ...conditional(!isSocialConnector && { configurePasswordless: true }),
+        ...conditional(isSocialConnector && { configureSocialSignIn: true }),
+      });
       setActiveStepIndex(activeStepIndex + 1);
       toast.success(t('connector_details.save_success'));
     } catch (error: unknown) {

@@ -8,7 +8,11 @@ import CardTitle from '@/components/CardTitle';
 
 import * as styles from './Welcome.module.scss';
 
-const Welcome = () => {
+type Props = {
+  onStart: () => void;
+};
+
+const Welcome = ({ onStart }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   return (
@@ -17,7 +21,11 @@ const Welcome = () => {
       <div className={styles.content}>
         <img src={WelcomeImage} />
         <div>{t('sign_in_exp.welcome.title')}</div>
-        <Button title="admin_console.sign_in_exp.welcome.get_started" type="primary" />
+        <Button
+          title="admin_console.sign_in_exp.welcome.get_started"
+          type="primary"
+          onClick={onStart}
+        />
       </div>
     </Card>
   );

@@ -283,7 +283,7 @@ const translation = {
       card3_title: '轻松配置连接器，实现无密码登录',
       card3_subtitle:
         'Setup a mobile, single page or traditional application to use Logto for Authentication.',
-      card4_title: 'One click to sign in',
+      card4_title: '轻松连接社会化平台，一键登录',
       card4_subtitle:
         'With this step, users can use email or phone numbers to sign in without a password or use social identity to sign in.',
       card5_title: '自定义您的 sign-in experience',
