@@ -1,6 +1,7 @@
 import { AdminConsoleKey, I18nKey } from '@logto/phrases';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 
 import cakeIcon from '@/assets/images/cake.svg';
 import crabIcon from '@/assets/images/crab.svg';
@@ -11,11 +12,15 @@ import owlIcon from '@/assets/images/owl.svg';
 import Button from '@/components/Button';
 import Card from '@/components/Card';
 import Spacer from '@/components/Spacer';
+import useAdminConsoleConfigs from '@/hooks/use-configs';
 
 import * as styles from './index.module.scss';
 
 const GetStarted = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const { updateConfigs } = useAdminConsoleConfigs();
+  const navigate = useNavigate();
+
   const data: Array<{
     title: AdminConsoleKey;
     subtitle: AdminConsoleKey;
@@ -28,8 +33,9 @@ const GetStarted = () => {
       subtitle: 'get_started.card1_subtitle',
       icon: grinningFaceIcon,
       buttonText: 'general.check_out',
-      onClick: () => {
-        console.log('tada!');
+      onClick: async () => {
+        void updateConfigs({ checkDemo: true });
+        window.open('https://fake.demo.com', '_blank');
       },
     },
     {
@@ -38,7 +44,7 @@ const GetStarted = () => {
       icon: cakeIcon,
       buttonText: 'general.create',
       onClick: () => {
-        console.log('tada!');
+        navigate('/applications');
       },
     },
     {
@@ -47,7 +53,7 @@ const GetStarted = () => {
       icon: drinkIcon,
       buttonText: 'general.create',
       onClick: () => {
-        console.log('tada!');
+        navigate('/connectors');
       },
     },
     {
@@ -56,7 +62,7 @@ const GetStarted = () => {
       icon: crabIcon,
       buttonText: 'general.set_up',
       onClick: () => {
-        console.log('tada!');
+        navigate('/connectors/social');
       },
     },
     {
@@ -65,7 +71,7 @@ const GetStarted = () => {
       icon: owlIcon,
       buttonText: 'general.customize',
       onClick: () => {
-        console.log('tada!');
+        navigate('/sign-in-experience');
       },
     },
     {
@@ -74,7 +80,8 @@ const GetStarted = () => {
       icon: frogIcon,
       buttonText: 'general.check_out',
       onClick: () => {
-        console.log('tada!');
+        void updateConfigs({ checkFurtherReadings: true });
+        window.open('https://further.readings.com', '_blank');
       },
     },
   ];

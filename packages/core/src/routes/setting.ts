@@ -16,11 +16,11 @@ export default function settingRoutes<T extends AuthedRouter>(router: T) {
   router.patch(
     '/settings',
     koaGuard({
-      body: Settings.createGuard.omit({ id: true }).partial(),
+      body: Settings.createGuard.omit({ id: true }).deepPartial(),
     }),
     async (ctx, next) => {
-      const { body: setting } = ctx.guard;
-      const { id, ...rest } = await updateSetting(setting);
+      const { body: partialSettings } = ctx.guard;
+      const { id, ...rest } = await updateSetting(partialSettings);
       ctx.body = rest;
 
       return next();

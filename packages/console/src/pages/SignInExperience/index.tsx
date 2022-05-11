@@ -1,4 +1,4 @@
-import { Setting, SignInExperience as SignInExperienceType } from '@logto/schemas';
+import { SignInExperience as SignInExperienceType } from '@logto/schemas';
 import classNames from 'classnames';
 import React, { useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
@@ -13,6 +13,7 @@ import Card from '@/components/Card';
 import CardTitle from '@/components/CardTitle';
 import TabNav, { TabNavLink } from '@/components/TabNav';
 import useApi, { RequestError } from '@/hooks/use-api';
+import useAdminConsoleConfigs from '@/hooks/use-configs';
 import * as detailsStyles from '@/scss/details.module.scss';
 import * as modalStyles from '@/scss/modal.module.scss';
 
@@ -30,8 +31,10 @@ const SignInExperience = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { tab } = useParams();
   const { data, error, mutate } = useSWR<SignInExperienceType, RequestError>('/api/sign-in-exp');
-  const { data: settings, error: settingsError } = useSWR<Setting, RequestError>('/api/settings');
+  const { configs, error: configError, updateConfigs } = useAdminConsoleConfigs();
   const [dataToCompare, setDataToCompare] = useState<SignInExperienceType>();
+  const [showWelcome, setShowWelcome] = useState(!configs?.customizeSignInExperience);
+
   const methods = useForm<SignInExperienceForm>();
   const {
     reset,
@@ -54,6 +57,7 @@ const SignInExperience = () => {
       })
       .json<SignInExperienceType>();
     void mutate(updatedData);
+    await updateConfigs({ customizeSignInExperience: true });
     toast.success(t('application_details.save_success'));
   };
 
@@ -74,16 +78,22 @@ const SignInExperience = () => {
     await saveData();
   });
 
-  if (!settings && !settingsError) {
+  if (!configs && !configError) {
     return <div>loading</div>;
   }
 
-  if (settingsError) {
-    return <div>{settingsError.body.message}</div>;
+  if (configError) {
+    return <div>{configError.body.message}</div>;
   }
 
-  if (!settings?.adminConsole.experienceGuideDone) {
-    return <Welcome />;
+  if (showWelcome) {
+    return (
+      <Welcome
+        onStart={() => {
+          setShowWelcome(false);
+        }}
+      />
+    );
   }
 
   return (
