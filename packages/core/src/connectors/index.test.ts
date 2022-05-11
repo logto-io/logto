@@ -1,7 +1,5 @@
 import { ConnectorPlatform } from '@logto/connector-types';
 import { Connector, ConnectorType } from '@logto/schemas';
-import { Nullable } from '@silverhand/essentials';
-import { NotFoundError } from 'slonik';
 
 import {
   getConnectorInstanceById,
@@ -12,8 +10,6 @@ import {
   initConnectors,
 } from '@/connectors/index';
 import RequestError from '@/errors/RequestError';
-
-import { buildIndexWithTargetAndPlatform } from './utilities';
 
 const alipayConnector = {
   id: 'alipay',
@@ -90,44 +86,13 @@ const connectors = [
   wechatConnector,
   wechatNativeConnector,
 ];
-const connectorMap = new Map(connectors.map((connector) => [connector.id, connector]));
 
 const findAllConnectors = jest.fn(async () => connectors);
-const findConnectorById = jest.fn(async (id: string) => {
-  const connector = connectorMap.get(id);
-
-  if (!connector) {
-    throw new NotFoundError();
-  }
-
-  return connector;
-});
-const findConnectorByTargetAndPlatform = jest.fn(
-  async (target: string, platform: Nullable<string>) => {
-    const connectorMapCache = new Map(
-      connectors.map((connector) => [
-        buildIndexWithTargetAndPlatform(connector.target, connector.platform),
-        connector,
-      ])
-    );
-
-    const connector = connectorMapCache.get(buildIndexWithTargetAndPlatform(target, platform));
-
-    if (!connector) {
-      throw new NotFoundError();
-    }
-
-    return connector;
-  }
-);
 const insertConnector = jest.fn(async (connector: Connector) => connector);
 
 jest.mock('@/queries/connector', () => ({
   ...jest.requireActual('@/queries/connector'),
   findAllConnectors: async () => findAllConnectors(),
-  findConnectorById: async (id: string) => findConnectorById(id),
-  findConnectorByTargetAndPlatform: async (target: string, platform: Nullable<string>) =>
-    findConnectorByTargetAndPlatform(target, platform),
   insertConnector: async (connector: Connector) => insertConnector(connector),
 }));
 
@@ -178,7 +143,6 @@ describe('getConnectorInstanceById', () => {
   });
 
   test('should throw on invalid id (on finding metadata)', async () => {
-    findConnectorById.mockResolvedValueOnce({ ...alipayConnector, target: 'invalid_target' });
     const id = 'invalid_id';
     await expect(getConnectorInstanceById(id)).rejects.toMatchError(
       new RequestError({

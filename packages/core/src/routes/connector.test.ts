@@ -48,9 +48,6 @@ type ConnectorInstance = {
   validateConfig?: ValidateConfig;
 };
 
-const findConnectorByIdPlaceHolder = jest.fn() as jest.MockedFunction<
-  (connectorId: string) => Promise<Connector>
->;
 const getConnectorInstanceByIdPlaceHolder = jest.fn() as jest.MockedFunction<
   (connectorId: string) => Promise<ConnectorInstance>
 >;
@@ -62,7 +59,6 @@ const getConnectorInstancesPlaceHolder = jest.fn() as jest.MockedFunction<
 >;
 
 jest.mock('@/queries/connector', () => ({
-  findConnectorById: async (connectorId: string) => findConnectorByIdPlaceHolder(connectorId),
   findAllConnectors: jest.fn(),
   updateConnector: jest.fn(),
 }));

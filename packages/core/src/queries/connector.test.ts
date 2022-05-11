@@ -6,13 +6,7 @@ import { convertToIdentifiers } from '@/database/utils';
 import envSet from '@/env-set';
 import { expectSqlAssert, QueryType } from '@/utils/test-utils';
 
-import {
-  findAllConnectors,
-  findConnectorById,
-  findConnectorByTargetAndPlatform,
-  insertConnector,
-  updateConnector,
-} from './connector';
+import { findAllConnectors, insertConnector, updateConnector } from './connector';
 
 const mockQuery: jest.MockedFunction<QueryType> = jest.fn();
 
@@ -43,68 +37,6 @@ describe('connector queries', () => {
     });
 
     await expect(findAllConnectors()).resolves.toEqual([rowData]);
-  });
-
-  it('findConnectorById', async () => {
-    const id = 'foo';
-    const rowData = { id };
-
-    const expectSql = sql`
-      select ${sql.join(Object.values(fields), sql`, `)}
-      from ${table}
-      where ${fields.id}=$1
-    `;
-
-    mockQuery.mockImplementationOnce(async (sql, values) => {
-      expectSqlAssert(sql, expectSql.sql);
-      expect(values).toEqual([id]);
-
-      return createMockQueryResult([rowData]);
-    });
-
-    await expect(findConnectorById(id)).resolves.toEqual(rowData);
-  });
-
-  it('findConnectorByTargetAndPlatform (platform is of ConnectorPlatform type)', async () => {
-    const target = 'foo';
-    const platform = 'Web';
-    const rowData = { target, platform };
-
-    const expectSql = sql`
-      select ${sql.join(Object.values(fields), sql`, `)}
-      from ${table}
-      where ${fields.target}=$1 and ${fields.platform}=$2
-    `;
-
-    mockQuery.mockImplementationOnce(async (sql, values) => {
-      expectSqlAssert(sql, expectSql.sql);
-      expect(values).toEqual([target, platform]);
-
-      return createMockQueryResult([rowData]);
-    });
-
-    await expect(findConnectorByTargetAndPlatform(target, platform)).resolves.toEqual(rowData);
-  });
-
-  it('findConnectorByTargetAndPlatform (platform is null)', async () => {
-    const target = 'foo';
-    const platform = null;
-    const rowData = { target, platform: null };
-
-    const expectSql = sql`
-      select ${sql.join(Object.values(fields), sql`, `)}
-      from ${table}
-      where ${fields.target}=$1 and ${fields.platform} is null
-    `;
-
-    mockQuery.mockImplementationOnce(async (sql, values) => {
-      expectSqlAssert(sql, expectSql.sql);
-      expect(values).toEqual([target]);
-
-      return createMockQueryResult([rowData]);
-    });
-
-    await expect(findConnectorByTargetAndPlatform(target, platform)).resolves.toEqual(rowData);
   });
 
   it('insertConnector', async () => {

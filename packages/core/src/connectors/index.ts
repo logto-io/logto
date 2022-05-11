@@ -9,7 +9,7 @@ import { WeChatNativeConnector } from '@logto/connector-wechat-native';
 import { nanoid } from 'nanoid';
 
 import RequestError from '@/errors/RequestError';
-import { findAllConnectors, findConnectorById, insertConnector } from '@/queries/connector';
+import { findAllConnectors, insertConnector } from '@/queries/connector';
 
 import { ConnectorInstance, ConnectorType, IConnector, SocialConnectorInstance } from './types';
 import { buildIndexWithTargetAndPlatform, getConnectorConfig } from './utilities';
@@ -47,15 +47,10 @@ export const getConnectorInstances = async (): Promise<ConnectorInstance[]> => {
 };
 
 export const getConnectorInstanceById = async (id: string): Promise<ConnectorInstance> => {
-  const connector = await findConnectorById(id);
+  const connectorInstances = await getConnectorInstances();
+  const pickedConnectorInstance = connectorInstances.find(({ connector }) => connector.id === id);
 
-  const found = allConnectors.find(
-    (element) =>
-      element.metadata.target === connector.target &&
-      element.metadata.platform === connector.platform
-  );
-
-  if (!found) {
+  if (!pickedConnectorInstance) {
     throw new RequestError({
       code: 'entity.not_found',
       id,
@@ -63,7 +58,7 @@ export const getConnectorInstanceById = async (id: string): Promise<ConnectorIns
     });
   }
 
-  return { connector, ...found };
+  return pickedConnectorInstance;
 };
 
 const isSocialConnectorInstance = (
