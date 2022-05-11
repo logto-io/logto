@@ -30,11 +30,7 @@ const AppContent = ({ children }: Props) => {
   }, [theme]);
 
   useEffect(() => {
-    if (isMobile) {
-      document.body.classList.add(conditionalString(styles.mobile));
-    } else {
-      document.body.classList.add(conditionalString(styles.desktop));
-    }
+    document.body.classList.add(isMobile ? 'mobile' : 'desktop');
   }, []);
 
   return (

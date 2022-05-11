@@ -8,8 +8,17 @@
   background-color: var(--color-base);
 }
 
+main {
+  position: absolute;
+  inset: 0;
+  background: var(--color-surface);
+  color: var(--color-text);
+  font: var(--font-body);
+  @include _.flex_column;
+}
+
 /* Foundation */
-.mobile {
+:global(body.mobile) {
   &.light {
     @include mobile.colors-light-theme;
   }
@@ -30,7 +39,7 @@
   }
 }
 
-.desktop {
+:global(body.desktop) {
   &.light {
     @include desktop.colors-light-theme;
   }
@@ -49,14 +58,4 @@
     position: relative;
     padding: _.unit(6);
   }
-}
-
-
-main {
-  position: absolute;
-  inset: 0;
-  background: var(--color-surface);
-  color: var(--color-text);
-  font: var(--font-body);
-  @include _.flex_column;
 }

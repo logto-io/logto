@@ -30,7 +30,6 @@
 
 
 /* stylelint-disable selector-class-pattern */
-/* stylelint-disable-next-line selector-pseudo-class-no-unknown */
 :global {
   .ReactModal__Content[role='popup'] {
     transform: translateY(100%);

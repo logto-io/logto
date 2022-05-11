@@ -64,7 +64,17 @@
     "extends": "@silverhand/react"
   },
   "stylelint": {
-    "extends": "@silverhand/eslint-config-react/.stylelintrc"
+    "extends": "@silverhand/eslint-config-react/.stylelintrc",
+    "rules": {
+      "selector-pseudo-class-no-unknown": [
+        true,
+        {
+          "ignorePseudoClasses": [
+            "global"
+          ]
+        }
+      ]
+    }
   },
   "prettier": "@silverhand/eslint-config/.prettierrc",
   "dependencies": {
