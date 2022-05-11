@@ -1,5 +1,6 @@
-import classNames from 'classnames';
+import { conditionalString } from '@silverhand/essentials';
 import React, { ReactNode, useEffect, useCallback, useContext } from 'react';
+import { isMobile } from 'react-device-detect';
 import { useDebouncedLoader } from 'use-debounced-loader';
 
 import LoadingLayer from '@/components/LoadingLayer';
@@ -24,14 +25,17 @@ const AppContent = ({ children }: Props) => {
   }, [setToast]);
 
   useEffect(() => {
-    document.body.classList.remove(styles.light ?? '');
-    document.body.classList.remove(styles.dark ?? '');
-    document.body.classList.add(styles[theme] ?? '');
+    document.body.classList.remove(conditionalString(styles.light), conditionalString(styles.dark));
+    document.body.classList.add(conditionalString(styles[theme]));
   }, [theme]);
 
+  useEffect(() => {
+    document.body.classList.add(isMobile ? 'mobile' : 'desktop');
+  }, []);
+
   return (
-    <main className={classNames(styles.content, styles[theme])}>
-      {children}
+    <main>
+      <div className={styles.content}>{children}</div>
       <Toast message={toast} isVisible={Boolean(toast)} callback={hideToast} />
       {debouncedLoading && <LoadingLayer />}
     </main>

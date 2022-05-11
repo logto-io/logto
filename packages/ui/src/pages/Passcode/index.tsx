@@ -43,14 +43,14 @@ const Passcode = () => {
   }
 
   return (
-    <>
+    <div className={styles.wrapper}>
       <NavBar />
-      <div className={styles.wrapper}>
+      <div className={styles.container}>
         <div className={styles.title}>{t('action.enter_passcode')}</div>
         <div className={styles.detail}>{t('description.enter_passcode', { address: target })}</div>
         <PasscodeValidation type={type} method={method} target={target} />
       </div>
-    </>
+    </div>
   );
 };
 

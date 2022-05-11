@@ -64,10 +64,21 @@
     "extends": "@silverhand/react"
   },
   "stylelint": {
-    "extends": "@silverhand/eslint-config-react/.stylelintrc"
+    "extends": "@silverhand/eslint-config-react/.stylelintrc",
+    "rules": {
+      "selector-pseudo-class-no-unknown": [
+        true,
+        {
+          "ignorePseudoClasses": [
+            "global"
+          ]
+        }
+      ]
+    }
   },
   "prettier": "@silverhand/eslint-config/.prettierrc",
   "dependencies": {
+    "react-device-detect": "^2.2.2",
     "use-debounced-loader": "^0.1.1"
   }
 }

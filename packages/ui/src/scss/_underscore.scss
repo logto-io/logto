@@ -29,11 +29,9 @@
   color: var(--color-text);
 }
 
-@mixin page-wrapper {
-  position: relative;
-  padding: unit(6) unit(5);
-  @include flex-column;
-  justify-content: flex-start;
+@mixin full-page {
+  flex: 1;
+  align-self: stretch;
 }
 
 @mixin container-width {
