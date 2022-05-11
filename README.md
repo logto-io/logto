@@ -4,32 +4,30 @@
     </a>
 </p>
 
-# Logto
+# Logto [WIP]
 
 🤘 Logto[^info] helps you quickly focus on everything after signing in.
 
 **Main Features**
 
+- An OIDC-based identity service
 - All-platform user sign-in/up experience with dark mode and SDK support (SPA, iOS, and Android)
 - Passwordless (SMS / Email) sign-in/up support
 - Out-of-box social sign-in support (GitHub, Google, WeChat, Alipay, etc.)
 - A web UI to control all above (Admin Console)
 - Extendable multi-language support
-- Easy deployment
 
 Boringly, we call it "[customer identity access management](https://en.wikipedia.org/wiki/Customer_identity_access_management)" (CIAM) or "customer identity solution."
 
-## Intro
-
-This is the monorepo for Logto core service. You can find more resources on:
-
-- Website: https://logto.io
-- Docs & Tutorials: https://docs.logto.io (available in [简体中文](https://docs.logto.io/zh-cn))
-- Discord: [Join the channel](https://discord.gg/UEPaF3j5e6)
-
 ## Get Started
 
-A step-by-step guide is available on https://docs.logto.io.
+A step-by-step guide is available on https://docs.logto.io (also in [简体中文](https://docs.logto.io/zh-cn)).
+
+## Resources
+
+- Website: https://logto.io
+- Docs & Tutorials: https://docs.logto.io
+- Discord: [Join the channel](https://discord.gg/UEPaF3j5e6)
 
 ## Bug Report, Feature Request, Feedback
 
