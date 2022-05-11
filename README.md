@@ -21,7 +21,7 @@ Boringly, we call it "[customer identity access management](https://en.wikipedia
 
 ## Get Started
 
-This is the monorepo for Logto core. A step-by-step guide is available on https://docs.logto.io (also in [简体中文](https://docs.logto.io/zh-cn)).
+A step-by-step guide is available on https://docs.logto.io (also in [简体中文](https://docs.logto.io/zh-cn)).
 
 ## Resources
 
