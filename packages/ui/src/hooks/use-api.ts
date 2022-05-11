@@ -29,6 +29,26 @@ function useApi<Args extends any[], Response>(
 
   const { setLoading, setToast } = useContext(PageContext);
 
+  const parseError = useCallback(
+    async (error: unknown) => {
+      if (error instanceof HTTPError) {
+        try {
+          const kyError = await error.response.json<RequestErrorBody>();
+          setError(kyError);
+        } catch {
+          setToast(t('error.unknown'));
+          console.log(error);
+        }
+
+        return;
+      }
+
+      setToast(t('error.unknown'));
+      console.log(error);
+    },
+    [setToast, t]
+  );
+
   const run = useCallback(
     async (...args: Args) => {
       setLoading(true);
@@ -41,20 +61,12 @@ function useApi<Args extends any[], Response>(
 
         return result;
       } catch (error: unknown) {
-        if (error instanceof HTTPError && error.response.body) {
-          const kyError = await error.response.json<RequestErrorBody>();
-          setError(kyError);
-
-          return;
-        }
-
-        setToast(t('error.unknown'));
-        console.log(error);
+        void parseError(error);
       } finally {
         setLoading(false);
       }
     },
-    [api, setLoading, setToast, t]
+    [api, parseError, setLoading]
   );
 
   useEffect(() => {

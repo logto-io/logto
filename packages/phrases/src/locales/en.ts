@@ -81,8 +81,8 @@ const translation = {
       passwords_do_not_match: 'Passwords do not match.',
       agree_terms_required: 'You must agree to the Terms of Use before continuing.',
       invalid_passcode: 'The passcode is invalid.',
-      request: 'Request error ({{code}}):{{message}}',
-      unknown: 'Unknown error, please try again later.',
+      request: 'Request Error:{{message}}',
+      unknown: 'Request Error, please try again later.',
     },
   },
   admin_console: {
