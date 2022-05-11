@@ -75,7 +75,10 @@
     "@mdx/components/*": "./src/mdx-components/$1"
   },
   "eslintConfig": {
-    "extends": "@silverhand/react"
+    "extends": "@silverhand/react",
+    "rules": {
+      "complexity": "off"
+    }
   },
   "stylelint": {
     "extends": "@silverhand/eslint-config-react/.stylelintrc"
