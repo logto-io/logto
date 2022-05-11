@@ -4,7 +4,7 @@
     </a>
 </p>
 
-# Logto
+# Logto [WIP]
 
 🤘 Logto[^info] helps you quickly focus on everything after signing in.
 
