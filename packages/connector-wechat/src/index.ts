@@ -93,6 +93,8 @@ export class WeChatConnector implements SocialConnector {
     return { accessToken, openid };
   };
 
+  // FIXME:
+  // eslint-disable-next-line complexity
   public getUserInfo: GetUserInfo = async (accessTokenObject) => {
     type UserInfoResponse = {
       unionid?: string;

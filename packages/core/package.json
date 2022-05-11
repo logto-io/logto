@@ -99,7 +99,10 @@
     "@": "./build"
   },
   "eslintConfig": {
-    "extends": "@silverhand"
+    "extends": "@silverhand",
+    "rules": {
+      "complexity": "off"
+    }
   },
   "prettier": "@silverhand/eslint-config/.prettierrc"
 }

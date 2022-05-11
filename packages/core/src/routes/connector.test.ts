@@ -1,4 +1,4 @@
-/* eslint-disable max-lines */
+/* eslint-disable max-lines, max-nested-callbacks */
 import {
   ConnectorError,
   ConnectorErrorCodes,
@@ -644,4 +644,4 @@ describe('connector route', () => {
     });
   });
 });
-/* eslint-enable max-lines */
+/* eslint-enable max-lines, max-nested-callbacks */

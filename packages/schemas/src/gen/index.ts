@@ -1,3 +1,4 @@
+// LOG-88: Refactor '@logto/schemas' type gen
 // Consider add the better assert into `essentials` package
 // eslint-disable-next-line no-restricted-imports
 import assert from 'assert';
@@ -56,6 +57,7 @@ const generate = async () => {
                   'references',
                 ].every((constraint) => !value.toLowerCase().startsWith(constraint + ' '))
               )
+              // eslint-disable-next-line complexity
               .map<Field>((value) => {
                 const [nameRaw, typeRaw, ...rest] = value.split(' ');
                 assert(nameRaw && typeRaw, 'Missing column name or type: ' + value);
@@ -155,6 +157,7 @@ const generate = async () => {
       const customTypes: string[] = [];
       const tableWithTypes = tables.map<TableWithType>(({ fields, ...rest }) => ({
         ...rest,
+        // eslint-disable-next-line complexity
         fields: fields.map(({ type, customType, tsType, ...rest }) => {
           const finalType =
             tsType ?? type ?? allTypes.find(({ name }) => name === customType)?.tsName;
