@@ -32,11 +32,18 @@
 .card {
   display: flex;
   padding: _.unit(6) _.unit(8);
+  position: relative;
 
   .icon {
     width: 48px;
     height: 48px;
     margin-right: _.unit(6);
+  }
+
+  .completeIndicator {
+    position: absolute;
+    top: 53px;
+    left: 70px;
   }
 
   .wrapper {

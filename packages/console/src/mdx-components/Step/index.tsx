@@ -8,9 +8,9 @@ import Card from '@/components/Card';
 import CardTitle from '@/components/CardTitle';
 import DangerousRaw from '@/components/DangerousRaw';
 import IconButton from '@/components/IconButton';
+import Index from '@/components/Index';
 import Spacer from '@/components/Spacer';
 import { ArrowDown, ArrowUp } from '@/icons/Arrow';
-import Tick from '@/icons/Tick';
 
 import * as styles from './index.module.scss';
 
@@ -62,15 +62,12 @@ const Step = ({
           setIsExpanded(!isExpanded);
         }}
       >
-        <div
-          className={classNames(
-            styles.index,
-            isActive && styles.active,
-            isComplete && styles.completed
-          )}
-        >
-          {isComplete ? <Tick /> : index + 1}
-        </div>
+        <Index
+          className={styles.index}
+          index={index + 1}
+          isActive={isActive}
+          isComplete={isComplete}
+        />
         <CardTitle
           size="medium"
           title={<DangerousRaw>{title}</DangerousRaw>}

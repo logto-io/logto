@@ -273,6 +273,8 @@ const translation = {
       connector_deleted: 'The connector has been deleted.',
     },
     get_started: {
+      progress: 'Get started guide: {{completed}}/{{total}}',
+      progress_dropdown_title: 'A few things you can do...',
       title: 'How do you want to get started with Logto?',
       subtitle_part1: 'Here are the following things you can do',
       subtitle_part2: 'I’m done with this set up. ',

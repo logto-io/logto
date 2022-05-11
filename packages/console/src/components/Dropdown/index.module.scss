@@ -13,12 +13,12 @@
   &:focus {
     outline: none;
   }
+}
 
-  .title {
-    padding: _.unit(4) _.unit(3) 0 _.unit(3);
-    font: var(--font-subhead-cap-small);
-    color: var(--color-caption);
-  }
+.title {
+  padding: _.unit(4) _.unit(3) 0 _.unit(3);
+  font: var(--font-subhead-cap-small);
+  color: var(--color-caption);
 }
 
 .overlay {
@@ -27,7 +27,7 @@
   inset: 0;
 }
 
-ul.list {
+.list {
   margin: 0;
   padding: _.unit(2) _.unit(1);
 }
