@@ -19,17 +19,15 @@
 
 Boringly, we call it "[customer identity access management](https://en.wikipedia.org/wiki/Customer_identity_access_management)" (CIAM) or "customer identity solution."
 
-## Introduction
-
-This is the monorepo for Logto core service. You can find more resources on:
-
-- Website: https://logto.io
-- Docs & Tutorials: https://docs.logto.io (available in [简体中文](https://docs.logto.io/zh-cn))
-- Discord: [Join the channel](https://discord.gg/UEPaF3j5e6)
-
 ## Get Started
 
-A step-by-step guide is available on https://docs.logto.io.
+This is the monorepo for Logto core. A step-by-step guide is available on https://docs.logto.io (also in [简体中文](https://docs.logto.io/zh-cn)).
+
+## Resources
+
+- Website: https://logto.io
+- Docs & Tutorials: https://docs.logto.io
+- Discord: [Join the channel](https://discord.gg/UEPaF3j5e6)
 
 ## Bug Report, Feature Request, Feedback
 
