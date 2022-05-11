@@ -228,7 +228,12 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
       ctx.log(type, { userInfo });
 
       if (!(await hasUserWithIdentity(connectorId, userInfo.id))) {
-        await assignInteractionResults(ctx, provider, { connectorId, userInfo }, true);
+        await assignInteractionResults(
+          ctx,
+          provider,
+          { socialUserInfo: { connectorId, userInfo } },
+          true
+        );
         const relatedInfo = await findSocialRelatedUser(userInfo);
         throw new RequestError(
           {
