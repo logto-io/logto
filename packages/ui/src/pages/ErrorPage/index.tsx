@@ -21,7 +21,7 @@ const ErrorPage = ({ title = 'description.not_found', message }: Props) => {
     <div className={styles.wrapper}>
       <NavBar />
       <div className={styles.container}>
-        <ErrorIcon className={styles.icon} />
+        <ErrorIcon />
         <div className={styles.title}>{t(title)}</div>
         {message && <div className={styles.message}>{message}</div>}
       </div>
