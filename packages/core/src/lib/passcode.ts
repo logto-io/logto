@@ -43,13 +43,15 @@ export const sendPasscode = async (passcode: Passcode) => {
     throw new RequestError('passcode.phone_email_empty');
   }
 
-  const connector = passcode.email
+  const { connector, metadata, sendMessage } = passcode.email
     ? await getConnectorInstanceByType<EmailConnectorInstance>(ConnectorType.Email)
     : await getConnectorInstanceByType<SmsConnectorInstance>(ConnectorType.SMS);
 
-  return connector.sendMessage(emailOrPhone, passcode.type, {
+  const response = await sendMessage(emailOrPhone, passcode.type, {
     code: passcode.code,
   });
+
+  return { connector, metadata, response };
 };
 
 export const passcodeExpiration = 10 * 60 * 1000; // 10 minutes.
