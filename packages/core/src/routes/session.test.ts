@@ -2,7 +2,15 @@
 import { User } from '@logto/schemas';
 import { Provider } from 'oidc-provider';
 
-import { mockSignInExperience, mockUser } from '@/__mocks__';
+import {
+  mockSignInExperience,
+  mockUser,
+  mockAliyunDmConnectorInstance,
+  mockAliyunSmsConnectorInstance,
+  mockFacebookConnectorInstance,
+  mockGithubConnectorInstance,
+  mockGoogleConnectorInstance,
+} from '@/__mocks__';
 import { ConnectorType } from '@/connectors/types';
 import RequestError from '@/errors/RequestError';
 import * as signInExperienceQueries from '@/queries/sign-in-experience';
@@ -99,6 +107,13 @@ const getConnectorInstanceById = jest.fn(async (connectorId: string) => {
 
   return { connector, metadata, getAuthorizationUri };
 });
+const getConnectorInstances = jest.fn(async () => [
+  mockAliyunDmConnectorInstance,
+  mockAliyunSmsConnectorInstance,
+  mockFacebookConnectorInstance,
+  mockGithubConnectorInstance,
+  mockGoogleConnectorInstance,
+]);
 jest.mock('@/connectors', () => ({
   getSocialConnectorInstanceById: async (connectorId: string) => {
     const connectorInstance = await getConnectorInstanceById(connectorId);
@@ -112,6 +127,7 @@ jest.mock('@/connectors', () => ({
 
     return connectorInstance;
   },
+  getConnectorInstances: async () => getConnectorInstances(),
 }));
 
 const grantSave = jest.fn(async () => 'finalGrantId');
@@ -890,15 +906,23 @@ describe('sessionRoutes', () => {
   });
 
   describe('GET /sign-in-settings', () => {
-    const signInExperienceQuerySpon = jest
+    const signInExperienceQuerySpyOn = jest
       .spyOn(signInExperienceQueries, 'findDefaultSignInExperience')
       .mockResolvedValue(mockSignInExperience);
 
-    it('should call findDefaultSignInExperience', async () => {
+    it('should return github and facebook connector instances', async () => {
       const response = await sessionRequest.get('/sign-in-settings');
-      expect(signInExperienceQuerySpon).toHaveBeenCalledTimes(1);
+      expect(signInExperienceQuerySpyOn).toHaveBeenCalledTimes(1);
       expect(response.status).toEqual(200);
-      expect(response.body).toEqual(mockSignInExperience);
+      expect(response.body).toMatchObject(
+        expect.objectContaining({
+          signInExperience: mockSignInExperience,
+          socialConnectors: [
+            mockGithubConnectorInstance.metadata,
+            mockFacebookConnectorInstance.metadata,
+          ],
+        })
+      );
     });
   });
 

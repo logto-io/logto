@@ -8,7 +8,7 @@ import pick from 'lodash.pick';
 import { Provider } from 'oidc-provider';
 import { object, string } from 'zod';
 
-import { getSocialConnectorInstanceById } from '@/connectors';
+import { getConnectorInstances, getSocialConnectorInstanceById } from '@/connectors';
 import RequestError from '@/errors/RequestError';
 import { createPasscode, sendPasscode, verifyPasscode } from '@/lib/passcode';
 import { assignInteractionResults, saveUserFirstConsentedAppId } from '@/lib/session';
@@ -577,9 +577,15 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
   });
 
   router.get('/sign-in-settings', async (ctx, next) => {
-    // TODO: Social Connector Details
     const signInExperience = await findDefaultSignInExperience();
-    ctx.body = signInExperience;
+    const connectorInstances = await getConnectorInstances();
+    const instanceMap = new Map(
+      connectorInstances.map((instance) => [instance.connector.id, instance])
+    );
+    const socialConnectors = signInExperience.socialSignInConnectorIds.map(
+      (id) => instanceMap.get(id)?.metadata
+    );
+    ctx.body = { signInExperience, socialConnectors };
 
     return next();
   });

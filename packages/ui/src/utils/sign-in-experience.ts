@@ -3,9 +3,8 @@
  * TODO: Remove this once we have a better way to get the sign in experience through SSR
  */
 
-import { SignInMethods } from '@logto/schemas';
+import { SignInMethods, SignInExperience, ConnectorMetadata } from '@logto/schemas';
 
-import { socialConnectors } from '@/__mocks__/logto';
 import { getSignInExperience } from '@/apis/settings';
 import { SignInMethod, SignInExperienceSettings } from '@/types';
 
@@ -28,8 +27,11 @@ const getSecondarySignInMethods = (signInMethods: SignInMethods) =>
     return methods;
   }, []);
 
-const getSignInExperienceSettings = async (): Promise<SignInExperienceSettings> => {
-  const { branding, languageInfo, termsOfUse, signInMethods } = await getSignInExperience();
+const getSignInExperienceSettings = async <
+  T extends SignInExperience & { socialConnectors: ConnectorMetadata[] }
+>(): Promise<SignInExperienceSettings> => {
+  const { branding, languageInfo, termsOfUse, signInMethods, socialConnectors } =
+    await getSignInExperience<T>();
 
   return {
     branding,

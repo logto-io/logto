@@ -6,6 +6,6 @@
 import { SignInExperience } from '@logto/schemas';
 import ky from 'ky';
 
-export const getSignInExperience = async () => {
-  return ky.get('/api/sign-in-settings').json<SignInExperience>();
+export const getSignInExperience = async <T extends SignInExperience>() => {
+  return ky.get('/api/sign-in-settings').json<T>();
 };
