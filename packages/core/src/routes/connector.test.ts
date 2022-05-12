@@ -2,7 +2,6 @@
 import {
   ConnectorError,
   ConnectorErrorCodes,
-  ConnectorPlatform,
   EmailMessageTypes,
   ValidateConfig,
 } from '@logto/connector-types';
@@ -22,22 +21,23 @@ import { createRequester } from '@/utils/test-utils';
 import connectorRoutes from './connector';
 
 const mockMetadata: ConnectorMetadata = {
-  id: 'connector_0',
+  target: 'connector_0',
   type: ConnectorType.Social,
-  platform: ConnectorPlatform.NA,
-  name: {},
+  platform: null,
+  name: {
+    en: 'Connector',
+    'zh-CN': '连接器',
+  },
   logo: './logo.png',
-  description: {},
+  description: { en: 'Connector', 'zh-CN': '连接器' },
   readme: 'README.md',
   configTemplate: 'config-template.md',
 };
 const mockConnector: Connector = {
   id: 'connector_0',
-  name: 'connector_0',
-  platform: ConnectorPlatform.NA,
-  type: ConnectorType.Social,
+  target: 'connector_0',
+  platform: null,
   enabled: true,
-  metadata: mockMetadata,
   config: {},
   createdAt: 1_234_567_890_123,
 };
@@ -117,7 +117,7 @@ describe('connector route', () => {
     it('throws when connector can not be found by given connectorId (locally)', async () => {
       getConnectorInstanceByIdPlaceHolder.mockImplementationOnce(async (_id: string) => {
         const found = mockConnectorInstanceList.find(
-          (connectorInstance) => connectorInstance.metadata.id === 'connector'
+          (connectorInstance) => connectorInstance.connector.id === 'connector'
         );
         assertThat(found, new RequestError({ code: 'entity.not_found', status: 404 }));
 
@@ -130,7 +130,7 @@ describe('connector route', () => {
     it('throws when connector can not be found by given connectorId (remotely)', async () => {
       getConnectorInstanceByIdPlaceHolder.mockImplementationOnce(async (id: string) => {
         const foundConnectorInstance = mockConnectorInstanceList.find(
-          (connectorInstance) => connectorInstance.metadata.id === id
+          (connectorInstance) => connectorInstance.connector.id === id
         );
         assertThat(
           foundConnectorInstance,
@@ -149,7 +149,7 @@ describe('connector route', () => {
     it('shows found connector information', async () => {
       getConnectorInstanceByIdPlaceHolder.mockImplementationOnce(async (id: string) => {
         const foundConnectorInstance = mockConnectorInstanceList.find(
-          (connectorInstance) => connectorInstance.metadata.id === id
+          (connectorInstance) => connectorInstance.connector.id === id
         );
         assertThat(
           foundConnectorInstance,
@@ -174,7 +174,7 @@ describe('connector route', () => {
     it('throws if connector can not be found (locally)', async () => {
       getConnectorInstanceByIdPlaceHolder.mockImplementationOnce(async (_id: string) => {
         const found = mockConnectorInstanceList.find(
-          (connectorInstance) => connectorInstance.metadata.id === 'connector'
+          (connectorInstance) => connectorInstance.connector.id === 'connector'
         );
         assertThat(found, new RequestError({ code: 'entity.not_found', status: 404 }));
 
@@ -189,7 +189,7 @@ describe('connector route', () => {
     it('throws if connector can not be found (remotely)', async () => {
       getConnectorInstanceByIdPlaceHolder.mockImplementationOnce(async (id: string) => {
         const foundConnectorInstance = mockConnectorInstanceList.find(
-          (connectorInstance) => connectorInstance.metadata.id === id
+          (connectorInstance) => connectorInstance.connector.id === id
         );
         assertThat(
           foundConnectorInstance,
@@ -282,7 +282,7 @@ describe('connector route', () => {
         ...mockConnector,
         id: 'connector_1',
         name: 'connector_1',
-        platform: ConnectorPlatform.NA,
+        platform: null,
         type: ConnectorType.SMS,
         metadata: mockedMetadata,
       };
@@ -334,7 +334,7 @@ describe('connector route', () => {
         ...mockConnector,
         id: 'connector_1',
         name: 'connector_1',
-        platform: ConnectorPlatform.NA,
+        platform: null,
         type: ConnectorType.SMS,
         metadata: mockedMetadata,
       };
@@ -358,13 +358,13 @@ describe('connector route', () => {
         ...mockMetadata,
         id: 'connector_4',
         type: ConnectorType.Email,
-        platform: ConnectorPlatform.NA,
+        platform: null,
       };
       const mockedConnector = {
         ...mockConnector,
         id: 'connector_4',
         name: 'connector_4',
-        platform: ConnectorPlatform.NA,
+        platform: null,
         type: ConnectorType.Email,
         metadata: mockedMetadata,
       };
@@ -398,7 +398,7 @@ describe('connector route', () => {
     it('throws when connector can not be found by given connectorId (locally)', async () => {
       getConnectorInstanceByIdPlaceHolder.mockImplementationOnce(async (_id: string) => {
         const found = mockConnectorInstanceList.find(
-          (connectorInstance) => connectorInstance.metadata.id === 'connector'
+          (connectorInstance) => connectorInstance.connector.id === 'connector'
         );
         assertThat(found, new RequestError({ code: 'entity.not_found', status: 404 }));
 
@@ -411,7 +411,7 @@ describe('connector route', () => {
     it('throws when connector can not be found by given connectorId (remotely)', async () => {
       getConnectorInstanceByIdPlaceHolder.mockImplementationOnce(async (id: string) => {
         const foundConnectorInstance = mockConnectorInstanceList.find(
-          (connectorInstance) => connectorInstance.metadata.id === id
+          (connectorInstance) => connectorInstance.connector.id === id
         );
         assertThat(
           foundConnectorInstance,

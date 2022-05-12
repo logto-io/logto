@@ -1,9 +1,6 @@
 import { Language } from '@logto/phrases';
 import { z } from 'zod';
 
-export { connectorMetadataGuard } from '@logto/connector-types';
-export type { ConnectorMetadata } from '@logto/connector-types';
-
 /**
  * Commonly Used
  */

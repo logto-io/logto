@@ -1,4 +1,4 @@
-import { ConnectorType, ConnectorPlatform } from '@logto/connector-types';
+import { ConnectorType } from '@logto/connector-types';
 import { Passcode, PasscodeType } from '@logto/schemas';
 
 import { mockConnector, mockMetadata } from '@/__mocks__';
@@ -126,16 +126,14 @@ describe('sendPasscode', () => {
       ...mockMetadata,
       id: 'id',
       type: ConnectorType.SMS,
-      platform: ConnectorPlatform.NA,
+      platform: null,
     };
     mockedGetConnectorInstanceByType.mockResolvedValue({
       connector: {
         ...mockConnector,
         id: 'id',
-        name: 'connector',
-        platform: ConnectorPlatform.NA,
-        type: ConnectorType.SMS,
-        metadata: mockedMetadata,
+        target: 'connector',
+        platform: null,
       },
       metadata: mockedMetadata,
       sendMessage,

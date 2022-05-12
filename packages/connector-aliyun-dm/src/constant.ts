@@ -1,6 +1,6 @@
 import path from 'path';
 
-import { ConnectorType, ConnectorMetadata, ConnectorPlatform } from '@logto/connector-types';
+import { ConnectorType, ConnectorMetadata } from '@logto/connector-types';
 import { getFileContents } from '@logto/shared';
 
 /**
@@ -36,9 +36,9 @@ const readmeContentFallback = 'Please check README.md file directory.';
 const configTemplateFallback = 'Please check config-template.md file directory.';
 
 export const defaultMetadata: ConnectorMetadata = {
-  id: 'aliyun-dm',
+  target: 'aliyun-dm',
   type: ConnectorType.Email,
-  platform: ConnectorPlatform.NA,
+  platform: null,
   name: {
     en: 'Aliyun Direct Mail',
     'zh-CN': '阿里云邮件推送',

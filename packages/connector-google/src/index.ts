@@ -45,7 +45,7 @@ export class GoogleConnector implements SocialConnector {
   };
 
   public getAuthorizationUri: GetAuthorizationUri = async (redirectUri, state) => {
-    const config = await this.getConfig(this.metadata.id);
+    const config = await this.getConfig(this.metadata.target, this.metadata.platform);
 
     const queryParameters = new URLSearchParams({
       client_id: config.clientId,
@@ -65,7 +65,10 @@ export class GoogleConnector implements SocialConnector {
       token_type: string;
     };
 
-    const { clientId, clientSecret } = await this.getConfig(this.metadata.id);
+    const { clientId, clientSecret } = await this.getConfig(
+      this.metadata.target,
+      this.metadata.platform
+    );
 
     // Note：Need to decodeURIComponent on code
     // https://stackoverflow.com/questions/51058256/google-api-node-js-invalid-grant-malformed-auth-code

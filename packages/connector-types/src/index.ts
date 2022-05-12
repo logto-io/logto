@@ -1,5 +1,4 @@
 import { Language } from '@logto/phrases';
-import { z } from 'zod';
 
 export enum ConnectorType {
   Email = 'Email',
@@ -8,26 +7,22 @@ export enum ConnectorType {
 }
 
 export enum ConnectorPlatform {
-  General = 'General',
   Native = 'Native',
-  NA = 'NotApplied',
+  Universal = 'Universal',
   Web = 'Web',
 }
 
-const languageGuard = z.nativeEnum(Language);
-
-export const connectorMetadataGuard = z.object({
-  id: z.string(),
-  type: z.nativeEnum(ConnectorType),
-  platform: z.nativeEnum(ConnectorPlatform), // Should be ConnectorPlatform.NA for SmsConnector and EmailConnector
-  name: z.record(languageGuard, z.string()),
-  logo: z.string(),
-  description: z.record(languageGuard, z.string()),
-  readme: z.string(),
-  configTemplate: z.string(),
-});
-
-export type ConnectorMetadata = z.infer<typeof connectorMetadataGuard>;
+export interface ConnectorMetadata {
+  target: string;
+  type: ConnectorType;
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  platform: ConnectorPlatform | null;
+  name: Record<Language, string>;
+  logo: string;
+  description: Record<Language, string>;
+  readme: string;
+  configTemplate: string;
+}
 
 export enum ConnectorErrorCodes {
   General,
@@ -107,4 +102,8 @@ export type GetUserInfo = (
   accessTokenObject: AccessTokenObject
 ) => Promise<{ id: string } & Record<string, string | undefined>>;
 
-export type GetConnectorConfig<T = Record<string, unknown>> = (id: string) => Promise<T>;
+export type GetConnectorConfig<T = Record<string, unknown>> = (
+  target: string,
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  platform: ConnectorPlatform | null
+) => Promise<T>;

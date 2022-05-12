@@ -1,29 +1,38 @@
 import { ConnectorPlatform } from '@logto/connector-types';
-import { ConnectorType } from '@logto/schemas';
 
-import { mockMetadata } from '@/__mocks__';
-import { findConnectorById, updateConnector } from '@/queries/connector';
+import { findConnectorByTargetAndPlatform, updateConnector } from '@/queries/connector';
 
-import { getConnectorConfig, updateConnectorConfig } from '.';
+import { buildIndexWithTargetAndPlatform, getConnectorConfig, updateConnectorConfig } from '.';
 
 jest.mock('@/queries/connector');
 
+it('buildIndexWithTargetAndPlatform() with not-null `platform`', async () => {
+  expect(buildIndexWithTargetAndPlatform('target', ConnectorPlatform.Web)).toEqual('target_Web');
+});
+
+it('buildIndexWithTargetAndPlatform() with null `platform`', async () => {
+  expect(buildIndexWithTargetAndPlatform('target', null)).toEqual('target_null');
+});
+
 it('getConnectorConfig()', async () => {
-  (findConnectorById as jest.MockedFunction<typeof findConnectorById>).mockResolvedValueOnce({
+  (
+    findConnectorByTargetAndPlatform as jest.MockedFunction<typeof findConnectorByTargetAndPlatform>
+  ).mockResolvedValueOnce({
     id: 'id',
-    name: 'name',
-    platform: ConnectorPlatform.NA,
-    type: ConnectorType.Social,
+    target: 'target',
+    platform: null,
     enabled: true,
     config: { foo: 'bar' },
-    metadata: mockMetadata,
     createdAt: 0,
   });
-  const config = await getConnectorConfig('connectorId');
+  const config = await getConnectorConfig('target', null);
   expect(config).toMatchObject({ foo: 'bar' });
 });
 
 it('updateConnectorConfig() should call updateConnector()', async () => {
-  await updateConnectorConfig('connectorId', { foo: 'bar' });
-  expect(updateConnector).toHaveBeenCalled();
+  await updateConnectorConfig({ target: 'connectorId', platform: null }, { foo: 'bar' });
+  expect(updateConnector).toHaveBeenCalledWith({
+    where: { target: 'connectorId', platform: null },
+    set: { config: { foo: 'bar' } },
+  });
 });

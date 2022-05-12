@@ -2,149 +2,139 @@ import { ConnectorPlatform } from '@logto/connector-types';
 import { Connector, ConnectorMetadata, ConnectorType } from '@logto/schemas';
 
 export const mockMetadata: ConnectorMetadata = {
-  id: 'connector',
+  target: 'connector',
   type: ConnectorType.Email,
-  platform: ConnectorPlatform.General,
-  name: {},
+  platform: null,
+  name: {
+    en: 'Connector',
+    'zh-CN': '连接器',
+  },
   logo: './logo.png',
-  description: {},
+  description: {
+    en: 'Connector',
+    'zh-CN': '连接器',
+  },
   readme: 'README.md',
   configTemplate: 'config-template.md',
 };
 
 export const mockConnector: Connector = {
   id: 'connector',
-  name: 'connector',
-  platform: ConnectorPlatform.General,
-  type: ConnectorType.Email,
+  target: 'connector',
+  platform: ConnectorPlatform.Universal,
   enabled: true,
-  metadata: mockMetadata,
   config: {},
   createdAt: 1_234_567_890_123,
 };
 
 const mockMetadata0: ConnectorMetadata = {
   ...mockMetadata,
-  id: 'connector_0',
+  target: 'connector_0',
   type: ConnectorType.Email,
-  platform: ConnectorPlatform.General,
+  platform: ConnectorPlatform.Universal,
 };
 
 const mockMetadata1: ConnectorMetadata = {
   ...mockMetadata,
-  id: 'connector_1',
+  target: 'connector_1',
   type: ConnectorType.SMS,
-  platform: ConnectorPlatform.General,
+  platform: ConnectorPlatform.Universal,
 };
 
 const mockMetadata2: ConnectorMetadata = {
   ...mockMetadata,
-  id: 'connector_2',
+  target: 'connector_2',
   type: ConnectorType.Social,
-  platform: ConnectorPlatform.General,
+  platform: ConnectorPlatform.Universal,
 };
 
 const mockMetadata3: ConnectorMetadata = {
   ...mockMetadata,
-  id: 'connector_3',
+  target: 'connector_3',
   type: ConnectorType.Social,
-  platform: ConnectorPlatform.General,
+  platform: ConnectorPlatform.Universal,
 };
 
 const mockMetadata4: ConnectorMetadata = {
   ...mockMetadata,
-  id: 'connector_4',
+  target: 'connector_4',
   type: ConnectorType.Social,
-  platform: ConnectorPlatform.General,
+  platform: ConnectorPlatform.Universal,
 };
 
 const mockMetadata5: ConnectorMetadata = {
   ...mockMetadata,
-  id: 'connector_5',
+  target: 'connector_5',
   type: ConnectorType.Social,
-  platform: ConnectorPlatform.General,
+  platform: ConnectorPlatform.Universal,
 };
 
 const mockMetadata6: ConnectorMetadata = {
   ...mockMetadata,
-  id: 'connector_6',
+  target: 'connector_6',
   type: ConnectorType.Social,
-  platform: ConnectorPlatform.General,
+  platform: ConnectorPlatform.Universal,
 };
 
 const mockConnector0: Connector = {
   id: 'connector_0',
-  name: 'connector_0',
-  platform: ConnectorPlatform.General,
-  type: ConnectorType.Email,
+  target: 'connector_0',
+  platform: ConnectorPlatform.Universal,
   enabled: true,
-  metadata: mockMetadata0,
   config: {},
   createdAt: 1_234_567_890_123,
 };
 
 const mockConnector1: Connector = {
   id: 'connector_1',
-  name: 'connector_1',
-  platform: ConnectorPlatform.General,
-  type: ConnectorType.SMS,
+  target: 'connector_1',
+  platform: ConnectorPlatform.Universal,
   enabled: true,
-  metadata: mockMetadata1,
   config: {},
   createdAt: 1_234_567_890_234,
 };
 
 const mockConnector2: Connector = {
   id: 'connector_2',
-  name: 'connector_2',
-  platform: ConnectorPlatform.General,
-  type: ConnectorType.Social,
+  target: 'connector_2',
+  platform: ConnectorPlatform.Universal,
   enabled: true,
-  metadata: mockMetadata2,
   config: {},
   createdAt: 1_234_567_890_345,
 };
 
 const mockConnector3: Connector = {
   id: 'connector_3',
-  name: 'connector_3',
-  platform: ConnectorPlatform.General,
-  type: ConnectorType.Social,
+  target: 'connector_3',
+  platform: ConnectorPlatform.Universal,
   enabled: true,
-  metadata: mockMetadata3,
   config: {},
   createdAt: 1_234_567_890_456,
 };
 
 const mockConnector4: Connector = {
   id: 'connector_4',
-  name: 'connector_4',
-  platform: ConnectorPlatform.General,
-  type: ConnectorType.Social,
+  target: 'connector_4',
+  platform: ConnectorPlatform.Universal,
   enabled: true,
-  metadata: mockMetadata4,
   config: {},
   createdAt: 1_234_567_890_567,
 };
 
 const mockConnector5: Connector = {
   id: 'connector_5',
-  name: 'connector_5',
-  platform: ConnectorPlatform.General,
-  type: ConnectorType.Social,
+  target: 'connector_5',
+  platform: ConnectorPlatform.Universal,
   enabled: true,
-  metadata: mockMetadata5,
   config: {},
   createdAt: 1_234_567_890_567,
 };
 
 const mockConnector6: Connector = {
   id: 'connector_6',
-  name: 'connector_6',
-  platform: ConnectorPlatform.General,
-  type: ConnectorType.Social,
+  target: 'connector_6',
+  platform: ConnectorPlatform.Universal,
   enabled: true,
-  metadata: mockMetadata6,
   config: {},
   createdAt: 1_234_567_890_567,
 };
@@ -164,11 +154,7 @@ export const mockConnectorInstanceList: Array<{
   metadata: ConnectorMetadata;
 }> = [
   {
-    connector: {
-      ...mockConnector0,
-      type: ConnectorType.Social,
-      metadata: { ...mockConnector0.metadata, type: ConnectorType.Social },
-    },
+    connector: mockConnector0,
     metadata: { ...mockMetadata0, type: ConnectorType.Social },
   },
   {
@@ -186,36 +172,23 @@ export const mockConnectorInstanceList: Array<{
   {
     connector: {
       ...mockConnector4,
-      type: ConnectorType.Email,
-      platform: ConnectorPlatform.NA,
-      metadata: {
-        ...mockConnector4.metadata,
-        type: ConnectorType.Email,
-        platform: ConnectorPlatform.NA,
-      },
+      platform: null,
     },
-    metadata: { ...mockMetadata4, type: ConnectorType.Email, platform: ConnectorPlatform.NA },
+    metadata: { ...mockMetadata4, type: ConnectorType.Email, platform: null },
   },
   {
     connector: {
       ...mockConnector5,
-      type: ConnectorType.SMS,
-      platform: ConnectorPlatform.NA,
-      metadata: {
-        ...mockConnector5.metadata,
-        type: ConnectorType.SMS,
-        platform: ConnectorPlatform.NA,
-      },
+      platform: null,
     },
-    metadata: { ...mockMetadata5, type: ConnectorType.SMS, platform: ConnectorPlatform.NA },
+    metadata: { ...mockMetadata5, type: ConnectorType.SMS, platform: null },
   },
   {
     connector: {
       ...mockConnector6,
-      type: ConnectorType.Email,
-      platform: ConnectorPlatform.NA,
+      platform: null,
     },
-    metadata: { ...mockMetadata6, type: ConnectorType.Email, platform: ConnectorPlatform.NA },
+    metadata: { ...mockMetadata6, type: ConnectorType.Email, platform: null },
   },
 ];
 
@@ -223,18 +196,14 @@ export const mockAliyunDmConnectorInstance = {
   connector: {
     ...mockConnector,
     id: 'aliyun-dm',
-    name: 'aliyun-dm',
-    type: ConnectorType.Email,
-    metadata: {
-      ...mockConnector.metadata,
-      id: 'aliyun-dm',
-      type: ConnectorType.Email,
-    },
+    target: 'aliyun-dm',
+    platform: null,
   },
   metadata: {
-    ...mockConnector.metadata,
-    id: 'aliyun-dm',
+    ...mockMetadata,
+    target: 'aliyun-dm',
     type: ConnectorType.Email,
+    platform: null,
   },
 };
 
@@ -242,18 +211,14 @@ export const mockAliyunSmsConnectorInstance = {
   connector: {
     ...mockConnector,
     id: 'aliyun-sms',
-    name: 'aliyun-sms',
-    type: ConnectorType.SMS,
-    metadata: {
-      ...mockConnector.metadata,
-      id: 'aliyun-sms',
-      type: ConnectorType.SMS,
-    },
+    target: 'aliyun-sms',
+    platform: null,
   },
   metadata: {
-    ...mockConnector.metadata,
-    id: 'aliyun-sms',
+    ...mockMetadata,
+    target: 'aliyun-sms',
     type: ConnectorType.SMS,
+    platform: null,
   },
 };
 
@@ -261,18 +226,14 @@ export const mockFacebookConnectorInstance = {
   connector: {
     ...mockConnector,
     id: 'facebook',
-    name: 'facebook',
-    type: ConnectorType.Social,
-    metadata: {
-      ...mockConnector.metadata,
-      id: 'facebook',
-      type: ConnectorType.Social,
-    },
+    target: 'facebook',
+    platform: ConnectorPlatform.Web,
   },
   metadata: {
-    ...mockConnector.metadata,
-    id: 'facebook',
+    ...mockMetadata,
+    target: 'facebook',
     type: ConnectorType.Social,
+    platform: ConnectorPlatform.Web,
   },
 };
 
@@ -280,18 +241,14 @@ export const mockGithubConnectorInstance = {
   connector: {
     ...mockConnector,
     id: 'github',
-    name: 'github',
-    type: ConnectorType.Social,
-    metadata: {
-      ...mockConnector.metadata,
-      id: 'github',
-      type: ConnectorType.Social,
-    },
+    target: 'github',
+    platform: ConnectorPlatform.Web,
   },
   metadata: {
-    ...mockConnector.metadata,
-    id: 'github',
+    ...mockMetadata,
+    target: 'github',
     type: ConnectorType.Social,
+    platform: ConnectorPlatform.Web,
   },
 };
 
@@ -299,18 +256,14 @@ export const mockGoogleConnectorInstance = {
   connector: {
     ...mockConnector,
     id: 'google',
-    name: 'google',
-    type: ConnectorType.Social,
+    target: 'google',
+    platform: ConnectorPlatform.Web,
     enabled: false,
-    metadata: {
-      ...mockConnector.metadata,
-      id: 'google',
-      type: ConnectorType.Social,
-    },
   },
   metadata: {
-    ...mockConnector.metadata,
-    id: 'google',
+    ...mockMetadata,
+    target: 'google',
     type: ConnectorType.Social,
+    platform: ConnectorPlatform.Web,
   },
 };

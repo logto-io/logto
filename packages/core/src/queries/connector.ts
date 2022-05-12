@@ -8,6 +8,15 @@ import envSet from '@/env-set';
 
 const { table, fields } = convertToIdentifiers(Connectors);
 
+// eslint-disable-next-line @typescript-eslint/ban-types
+const filterByPlatform = (platform: string | null) => {
+  if (!platform) {
+    return sql`${fields.platform} is null`;
+  }
+
+  return sql`${fields.platform}=${platform}`;
+};
+
 export const findAllConnectors = async () =>
   manyRows(
     envSet.pool.query<Connector>(sql`
@@ -24,15 +33,23 @@ export const findConnectorById = async (id: string) =>
     where ${fields.id}=${id}
   `);
 
-export const hasConnectorWithId = async (id: string) =>
-  envSet.pool.exists(sql`
-    select ${fields.id}
+export const findConnectorByTargetAndPlatform = async (
+  target: string,
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  platform: string | null
+) =>
+  envSet.pool.one<Connector>(sql`
+    select ${sql.join(Object.values(fields), sql`, `)}
     from ${table}
-    where ${fields.id}=${id}
+    where ${fields.target}=${target} and ${filterByPlatform(platform)}
   `);
 
 export const insertConnector = buildInsertInto<CreateConnector, Connector>(Connectors, {
   returning: true,
+  onConflict: {
+    fields: [fields.target, fields.platform],
+    setExcludedFields: Object.values(fields),
+  },
 });
 
 export const updateConnector = buildUpdateWhere<CreateConnector, Connector>(Connectors, true);

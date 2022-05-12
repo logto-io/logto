@@ -6,13 +6,18 @@ import { GithubConnector } from '@logto/connector-github';
 import { GoogleConnector } from '@logto/connector-google';
 import { WeChatConnector } from '@logto/connector-wechat';
 import { WeChatNativeConnector } from '@logto/connector-wechat-native';
+import { nanoid } from 'nanoid';
 
 import RequestError from '@/errors/RequestError';
-import { generateConnectorId } from '@/lib/connector';
-import { findAllConnectors, findConnectorById, insertConnector } from '@/queries/connector';
+import {
+  findAllConnectors,
+  findConnectorById,
+  findConnectorByTargetAndPlatform,
+  insertConnector,
+} from '@/queries/connector';
 
 import { ConnectorInstance, ConnectorType, IConnector, SocialConnectorInstance } from './types';
-import { getConnectorConfig } from './utilities';
+import { buildIndexWithTargetAndPlatform, getConnectorConfig } from './utilities';
 
 const allConnectors: IConnector[] = [
   new AlipayConnector(getConnectorConfig),
@@ -27,14 +32,19 @@ const allConnectors: IConnector[] = [
 
 export const getConnectorInstances = async (): Promise<ConnectorInstance[]> => {
   const connectors = await findAllConnectors();
-  const connectorMap = new Map(connectors.map((connector) => [connector.id, connector]));
+  const connectorMap = new Map(
+    connectors.map((connector) => [
+      buildIndexWithTargetAndPlatform(connector.target, connector.platform),
+      connector,
+    ])
+  );
 
   return allConnectors.map((element) => {
-    const { id } = element.metadata;
-    const connector = connectorMap.get(id);
+    const { target, platform } = element.metadata;
+    const connector = connectorMap.get(buildIndexWithTargetAndPlatform(target, platform));
 
     if (!connector) {
-      throw new RequestError({ code: 'entity.not_found', id, status: 404 });
+      throw new RequestError({ code: 'entity.not_found', target, platform, status: 404 });
     }
 
     return { connector, ...element };
@@ -42,7 +52,13 @@ export const getConnectorInstances = async (): Promise<ConnectorInstance[]> => {
 };
 
 export const getConnectorInstanceById = async (id: string): Promise<ConnectorInstance> => {
-  const found = allConnectors.find((element) => element.metadata.id === id);
+  const connector = await findConnectorById(id);
+
+  const found = allConnectors.find(
+    (element) =>
+      element.metadata.target === connector.target &&
+      element.metadata.platform === connector.platform
+  );
 
   if (!found) {
     throw new RequestError({
@@ -52,7 +68,28 @@ export const getConnectorInstanceById = async (id: string): Promise<ConnectorIns
     });
   }
 
-  const connector = await findConnectorById(id);
+  return { connector, ...found };
+};
+
+export const getConnectorInstanceByTargetAndPlatform = async (
+  target: string,
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  platform: string | null
+): Promise<ConnectorInstance> => {
+  const found = allConnectors.find(
+    (element) => element.metadata.target === target && element.metadata.platform === platform
+  );
+
+  if (!found) {
+    throw new RequestError({
+      code: 'entity.not_found',
+      target,
+      platform,
+      status: 404,
+    });
+  }
+
+  const connector = await findConnectorByTargetAndPlatform(target, platform);
 
   return { connector, ...found };
 };
@@ -79,6 +116,25 @@ export const getSocialConnectorInstanceById = async (
   return connector;
 };
 
+export const getSocialConnectorInstanceByTargetAndPlatform = async (
+  target: string,
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  platform: string | null
+): Promise<SocialConnectorInstance> => {
+  const connector = await getConnectorInstanceByTargetAndPlatform(target, platform);
+
+  if (!isSocialConnectorInstance(connector)) {
+    throw new RequestError({
+      code: 'entity.not_found',
+      target,
+      platform,
+      status: 404,
+    });
+  }
+
+  return connector;
+};
+
 export const getEnabledSocialConnectorIds = async <T extends ConnectorInstance>(): Promise<
   string[]
 > => {
@@ -89,7 +145,7 @@ export const getEnabledSocialConnectorIds = async <T extends ConnectorInstance>(
       (instance): instance is T =>
         instance.connector.enabled && instance.metadata.type === ConnectorType.Social
     )
-    .map((instance) => instance.metadata.id);
+    .map((instance) => instance.connector.id);
 };
 
 export const getConnectorInstanceByType = async <T extends ConnectorInstance>(
@@ -110,22 +166,24 @@ export const getConnectorInstanceByType = async <T extends ConnectorInstance>(
 export const initConnectors = async () => {
   const connectors = await findAllConnectors();
   const existingConnectors = new Map(
-    connectors.map((connector) => [[connector.name, connector.platform].join(' '), connector])
+    connectors.map((connector) => [
+      buildIndexWithTargetAndPlatform(connector.target, connector.platform),
+      connector,
+    ])
   );
   const newConnectors = allConnectors.filter(
-    ({ metadata: { id: name, platform } }) =>
-      existingConnectors.get([name, platform].join(' '))?.platform !== platform
+    ({ metadata: { target, platform } }) =>
+      existingConnectors.get(buildIndexWithTargetAndPlatform(target, platform))?.platform !==
+      platform
   );
 
   await Promise.all(
-    newConnectors.map(async ({ metadata }) => {
-      const id = await generateConnectorId();
+    newConnectors.map(async ({ metadata: { target, platform } }) => {
+      const id = nanoid();
       await insertConnector({
         id,
-        name: metadata.id,
-        platform: metadata.platform,
-        type: metadata.type,
-        metadata,
+        target,
+        platform,
       });
     })
   );

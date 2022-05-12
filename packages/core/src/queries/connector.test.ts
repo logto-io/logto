@@ -9,7 +9,7 @@ import { expectSqlAssert, QueryType } from '@/utils/test-utils';
 import {
   findAllConnectors,
   findConnectorById,
-  hasConnectorWithId,
+  findConnectorByTargetAndPlatform,
   insertConnector,
   updateConnector,
 } from './connector';
@@ -65,36 +65,60 @@ describe('connector queries', () => {
     await expect(findConnectorById(id)).resolves.toEqual(rowData);
   });
 
-  it('hasConnectorWithId', async () => {
+  it('findConnectorByTargetAndPlatform (platform is of ConnectorPlatform type)', async () => {
+    const target = 'foo';
+    const platform = 'Web';
+    const rowData = { target, platform };
+
     const expectSql = sql`
-      SELECT EXISTS(
-        select ${fields.id}
-        from ${table}
-        where ${fields.id}=$1
-      )
+      select ${sql.join(Object.values(fields), sql`, `)}
+      from ${table}
+      where ${fields.target}=$1 and ${fields.platform}=$2
     `;
 
     mockQuery.mockImplementationOnce(async (sql, values) => {
       expectSqlAssert(sql, expectSql.sql);
-      expect(values).toEqual([mockConnector.id]);
+      expect(values).toEqual([target, platform]);
 
-      return createMockQueryResult([{ exists: true }]);
+      return createMockQueryResult([rowData]);
     });
 
-    await expect(hasConnectorWithId(mockConnector.id)).resolves.toEqual(true);
+    await expect(findConnectorByTargetAndPlatform(target, platform)).resolves.toEqual(rowData);
+  });
+
+  it('findConnectorByTargetAndPlatform (platform is null)', async () => {
+    const target = 'foo';
+    const platform = null;
+    const rowData = { target, platform: null };
+
+    const expectSql = sql`
+      select ${sql.join(Object.values(fields), sql`, `)}
+      from ${table}
+      where ${fields.target}=$1 and ${fields.platform} is null
+    `;
+
+    mockQuery.mockImplementationOnce(async (sql, values) => {
+      expectSqlAssert(sql, expectSql.sql);
+      expect(values).toEqual([target]);
+
+      return createMockQueryResult([rowData]);
+    });
+
+    await expect(findConnectorByTargetAndPlatform(target, platform)).resolves.toEqual(rowData);
   });
 
   it('insertConnector', async () => {
     const connector = {
       ...mockConnector,
       config: JSON.stringify(mockConnector.config),
-      metadata: JSON.stringify(mockConnector.metadata),
     };
 
     const expectSql = `
-      insert into "connectors" ("id", "name", "platform", "type", "enabled", "config", "metadata")
-      values ($1, $2, $3, $4, $5, $6, $7)
+      insert into "connectors" ("id", "target", "platform", "enabled", "config")
+      values ($1, $2, $3, $4, $5)
       returning *
+      on conflict ("target", "platform") do update
+      set "id"=excluded."id", "target"=excluded."target", "platform"=excluded."platform", "enabled"=excluded."enabled", "config"=excluded."config", "created_at"=excluded."created_at"
     `;
 
     mockQuery.mockImplementationOnce(async (sql, values) => {
@@ -102,12 +126,10 @@ describe('connector queries', () => {
 
       expect(values).toEqual([
         connector.id,
-        connector.name,
+        connector.target,
         connector.platform,
-        connector.type,
         connector.enabled,
         connector.config,
-        connector.metadata,
       ]);
 
       return createMockQueryResult([connector]);
@@ -116,7 +138,7 @@ describe('connector queries', () => {
     await expect(insertConnector(mockConnector)).resolves.toEqual(connector);
   });
 
-  it('updateConnector', async () => {
+  it('updateConnector (with id)', async () => {
     const id = 'foo';
     const enabled = false;
 
@@ -138,5 +160,59 @@ describe('connector queries', () => {
       id,
       enabled,
     });
+  });
+
+  it('updateConnector (with target and not-null platform)', async () => {
+    const target = 'foo';
+    const platform = 'Web';
+    const enabled = false;
+    const rowData = { target, platform, enabled };
+
+    const expectSql = sql`
+      update ${table}
+      set ${fields.enabled}=$1
+      where ${fields.target}=$2 and ${fields.platform}=$3
+      returning *
+    `;
+
+    mockQuery.mockImplementationOnce(async (sql, values) => {
+      expectSqlAssert(sql, expectSql.sql);
+      expect(values).toEqual([enabled, target, platform]);
+
+      return createMockQueryResult([rowData]);
+    });
+
+    await expect(
+      updateConnector({ set: { enabled }, where: { target, platform } })
+    ).resolves.toEqual({
+      target,
+      platform,
+      enabled,
+    });
+  });
+
+  it('updateConnector (with target and null platform)', async () => {
+    const target = 'foo';
+    const platform = null;
+    const enabled = false;
+    const rowData = { target, platform: null, enabled };
+
+    const expectSql = sql`
+      update ${table}
+      set ${fields.enabled}=$1
+      where ${fields.target}=$2 and ${fields.platform} is null
+      returning *
+    `;
+
+    mockQuery.mockImplementationOnce(async (sql, values) => {
+      expectSqlAssert(sql, expectSql.sql);
+      expect(values).toEqual([enabled, target]);
+
+      return createMockQueryResult([rowData]);
+    });
+
+    await expect(
+      updateConnector({ set: { enabled }, where: { target, platform } })
+    ).resolves.toEqual(rowData);
   });
 });

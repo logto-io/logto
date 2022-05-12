@@ -2,45 +2,32 @@
 
 import { z } from 'zod';
 
-import {
-  ArbitraryObject,
-  arbitraryObjectGuard,
-  ConnectorMetadata,
-  connectorMetadataGuard,
-  GeneratedSchema,
-  Guard,
-} from '../foundations';
+import { ArbitraryObject, arbitraryObjectGuard, GeneratedSchema, Guard } from '../foundations';
 
 export type CreateConnector = {
   id: string;
-  name: string;
-  platform: string;
-  type: string;
+  target: string;
+  platform?: string | null;
   enabled?: boolean;
   config?: ArbitraryObject;
-  metadata: ConnectorMetadata;
   createdAt?: number;
 };
 
 export type Connector = {
   id: string;
-  name: string;
-  platform: string;
-  type: string;
+  target: string;
+  platform: string | null;
   enabled: boolean;
   config: ArbitraryObject;
-  metadata: ConnectorMetadata;
   createdAt: number;
 };
 
 const createGuard: Guard<CreateConnector> = z.object({
   id: z.string(),
-  name: z.string(),
-  platform: z.string(),
-  type: z.string(),
+  target: z.string(),
+  platform: z.string().nullable().optional(),
   enabled: z.boolean().optional(),
   config: arbitraryObjectGuard.optional(),
-  metadata: connectorMetadataGuard,
   createdAt: z.number().optional(),
 });
 
@@ -49,14 +36,12 @@ export const Connectors: GeneratedSchema<CreateConnector> = Object.freeze({
   tableSingular: 'connector',
   fields: {
     id: 'id',
-    name: 'name',
+    target: 'target',
     platform: 'platform',
-    type: 'type',
     enabled: 'enabled',
     config: 'config',
-    metadata: 'metadata',
     createdAt: 'created_at',
   },
-  fieldKeys: ['id', 'name', 'platform', 'type', 'enabled', 'config', 'metadata', 'createdAt'],
+  fieldKeys: ['id', 'target', 'platform', 'enabled', 'config', 'createdAt'],
   createGuard,
 });

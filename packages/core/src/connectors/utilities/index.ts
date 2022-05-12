@@ -1,19 +1,33 @@
-import { ArbitraryObject } from '@logto/schemas';
+import { ArbitraryObject, ConnectorPlatform } from '@logto/schemas';
 
-import { findConnectorById, updateConnector } from '@/queries/connector';
+import { findConnectorByTargetAndPlatform, updateConnector } from '@/queries/connector';
 
-export const getConnectorConfig = async <T extends ArbitraryObject>(id: string): Promise<T> => {
-  const connector = await findConnectorById(id);
+export const buildIndexWithTargetAndPlatform = (
+  target: string,
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  platform: string | null
+): string => [target, platform ?? 'null'].join('_');
+
+export const getConnectorConfig = async <T extends ArbitraryObject>(
+  target: string,
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  platform: ConnectorPlatform | null
+): Promise<T> => {
+  const connector = await findConnectorByTargetAndPlatform(target, platform);
 
   return connector.config as T;
 };
 
 export const updateConnectorConfig = async <T extends ArbitraryObject>(
-  id: string,
+  where: {
+    target: string;
+    // eslint-disable-next-line @typescript-eslint/ban-types
+    platform: ConnectorPlatform | null;
+  },
   config: T
 ): Promise<void> => {
   await updateConnector({
-    where: { id },
+    where,
     set: { config },
   });
 };

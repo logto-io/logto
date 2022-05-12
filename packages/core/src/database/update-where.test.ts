@@ -1,4 +1,4 @@
-import { CreateUser, Users, Applications } from '@logto/schemas';
+import { Connectors, CreateUser, Users, Applications } from '@logto/schemas';
 
 import envSet from '@/env-set';
 import { UpdateError } from '@/errors/SlonikError';
@@ -68,6 +68,25 @@ describe('buildUpdateWhere()', () => {
         where: { id: 'foo' },
       })
     ).resolves.toStrictEqual({ id: 'foo', customClientMetadata: '{"idTokenTtl":3600}' });
+  });
+
+  it('return query when `null` found in values', async () => {
+    const pool = createTestPool(
+      'update "connectors"\nset "enabled"=$1\nwhere "target"=$2 and "platform" is null\nreturning *',
+      (_, [enabled]) => ({
+        enabled: String(enabled),
+      })
+    );
+    poolSpy.mockReturnValue(pool);
+
+    const updateWhere = buildUpdateWhere(Connectors, true);
+
+    await expect(
+      updateWhere({
+        set: { enabled: true },
+        where: { target: 'aliyun-sms', platform: null },
+      })
+    ).resolves.toStrictEqual({ enabled: 'true' });
   });
 
   it('throws an error when `undefined` found in values', async () => {

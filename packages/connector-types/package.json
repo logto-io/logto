@@ -20,8 +20,7 @@
     "node": "^16.0.0"
   },
   "dependencies": {
-    "@logto/phrases": "^0.1.0",
-    "zod": "^3.14.3"
+    "@logto/phrases": "^0.1.0"
   },
   "devDependencies": {
     "@jest/types": "^27.5.1",
