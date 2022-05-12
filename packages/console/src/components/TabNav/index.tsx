@@ -3,7 +3,7 @@ import React from 'react';
 
 import * as styles from './index.module.scss';
 
-export { default as TabNavLink } from './TabNavLink';
+export { default as TabNavItem } from './TabNavItem';
 
 type Props = {
   className?: string;

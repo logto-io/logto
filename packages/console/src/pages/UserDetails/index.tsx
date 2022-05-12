@@ -17,7 +17,7 @@ import CopyToClipboard from '@/components/CopyToClipboard';
 import FormField from '@/components/FormField';
 import ImagePlaceholder from '@/components/ImagePlaceholder';
 import LinkButton from '@/components/LinkButton';
-import TabNav, { TabNavLink } from '@/components/TabNav';
+import TabNav, { TabNavItem } from '@/components/TabNav';
 import TextInput from '@/components/TextInput';
 import useApi, { RequestError } from '@/hooks/use-api';
 import Back from '@/icons/Back';
@@ -179,8 +179,8 @@ const UserDetails = () => {
           </Card>
           <Card className={classNames(styles.body, detailsStyles.body)}>
             <TabNav>
-              <TabNavLink href={`/users/${id}`}>{t('user_details.tab_settings')}</TabNavLink>
-              <TabNavLink href={`/users/${id}/logs`}>{t('user_details.tab_logs')}</TabNavLink>
+              <TabNavItem href={`/users/${id}`}>{t('user_details.tab_settings')}</TabNavItem>
+              <TabNavItem href={`/users/${id}/logs`}>{t('user_details.tab_logs')}</TabNavItem>
             </TabNav>
             <form className={styles.form} onSubmit={onSubmit}>
               <div className={styles.fields}>

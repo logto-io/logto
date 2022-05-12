@@ -15,7 +15,7 @@ import ImagePlaceholder from '@/components/ImagePlaceholder';
 import LinkButton from '@/components/LinkButton';
 import Markdown from '@/components/Markdown';
 import Status from '@/components/Status';
-import TabNav, { TabNavLink } from '@/components/TabNav';
+import TabNav, { TabNavItem } from '@/components/TabNav';
 import UnnamedTrans from '@/components/UnnamedTrans';
 import useApi, { RequestError } from '@/hooks/use-api';
 import Back from '@/icons/Back';
@@ -182,9 +182,9 @@ const ConnectorDetails = () => {
       {data && (
         <Card className={classNames(styles.body, detailsStyles.body)}>
           <TabNav>
-            <TabNavLink href={`/connectors/${connectorId ?? ''}`}>
+            <TabNavItem href={`/connectors/${connectorId ?? ''}`}>
               {t('connector_details.tab_settings')}
-            </TabNavLink>
+            </TabNavItem>
           </TabNav>
           <div className={styles.main}>
             <CodeEditor

@@ -11,7 +11,7 @@ import useSWR from 'swr';
 import Button from '@/components/Button';
 import Card from '@/components/Card';
 import CardTitle from '@/components/CardTitle';
-import TabNav, { TabNavLink } from '@/components/TabNav';
+import TabNav, { TabNavItem } from '@/components/TabNav';
 import useApi, { RequestError } from '@/hooks/use-api';
 import useAdminConsoleConfigs from '@/hooks/use-configs';
 import * as detailsStyles from '@/scss/details.module.scss';
@@ -19,6 +19,7 @@ import * as modalStyles from '@/scss/modal.module.scss';
 
 import BrandingForm from './components/BrandingForm';
 import LanguagesForm from './components/LanguagesForm';
+import Preview from './components/Preview';
 import SaveAlert from './components/SaveAlert';
 import SignInMethodsForm from './components/SignInMethodsForm';
 import TermsForm from './components/TermsForm';
@@ -39,9 +40,11 @@ const SignInExperience = () => {
     reset,
     handleSubmit,
     getValues,
+    watch,
     formState: { isSubmitting },
   } = methods;
   const api = useApi();
+  const formData = watch();
 
   useEffect(() => {
     if (data) {
@@ -95,15 +98,15 @@ const SignInExperience = () => {
         <Card className={styles.card}>
           <CardTitle title="sign_in_exp.title" subtitle="sign_in_exp.description" />
           <TabNav className={styles.tabs}>
-            <TabNavLink href="/sign-in-experience/experience">
+            <TabNavItem href="/sign-in-experience/experience">
               {t('sign_in_exp.tabs.experience')}
-            </TabNavLink>
-            <TabNavLink href="/sign-in-experience/methods">
+            </TabNavItem>
+            <TabNavItem href="/sign-in-experience/methods">
               {t('sign_in_exp.tabs.methods')}
-            </TabNavLink>
-            <TabNavLink href="/sign-in-experience/others">
+            </TabNavItem>
+            <TabNavItem href="/sign-in-experience/others">
               {t('sign_in_exp.tabs.others')}
-            </TabNavLink>
+            </TabNavItem>
           </TabNav>
           {!data && !error && <div>loading</div>}
           {error && <div>{`error occurred: ${error.body.message}`}</div>}
@@ -135,7 +138,7 @@ const SignInExperience = () => {
           )}
         </Card>
       </div>
-      <Card className={styles.preview}>TODO</Card>
+      {formData.id && <Preview signInExperience={signInExperienceParser.toRemoteModel(formData)} />}
       {data && (
         <ReactModal
           isOpen={Boolean(dataToCompare)}
