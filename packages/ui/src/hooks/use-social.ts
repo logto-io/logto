@@ -90,8 +90,10 @@ const useSocial = () => {
   // Filter native supported social connectors
   const socialConnectors = useMemo(
     () =>
-      (experienceSettings?.socialConnectors ?? []).filter(({ id }) => {
-        return !isNativeWebview() || getLogtoNativeSdk()?.supportedSocialConnectorIds.includes(id);
+      (experienceSettings?.socialConnectors ?? []).filter(({ target }) => {
+        return (
+          !isNativeWebview() || getLogtoNativeSdk()?.supportedSocialConnectorIds.includes(target)
+        );
       }),
     [experienceSettings?.socialConnectors]
   );

@@ -1,5 +1,5 @@
+import { ConnectorPlatform } from '@logto/connector-types';
 import { Connector, ConnectorType } from '@logto/schemas';
-import { NotFoundError } from 'slonik';
 
 import {
   getConnectorInstanceById,
@@ -13,56 +13,64 @@ import RequestError from '@/errors/RequestError';
 
 const alipayConnector = {
   id: 'alipay',
-  type: ConnectorType.Social,
+  target: 'alipay',
+  platform: ConnectorPlatform.Web,
   enabled: true,
   config: {},
   createdAt: 1_646_382_233_911,
 };
 const aliyunDmConnector = {
   id: 'aliyun-dm',
-  type: ConnectorType.Email,
+  target: 'aliyun-dm',
+  platform: null,
   enabled: true,
   config: {},
   createdAt: 1_646_382_233_911,
 };
 const aliyunSmsConnector = {
   id: 'aliyun-sms',
-  type: ConnectorType.SMS,
+  target: 'aliyun-sms',
+  platform: null,
   enabled: false,
   config: {},
   createdAt: 1_646_382_233_666,
 };
 const facebookConnector = {
   id: 'facebook',
-  type: ConnectorType.Social,
+  target: 'facebook',
+  platform: ConnectorPlatform.Web,
   enabled: true,
   config: {},
   createdAt: 1_646_382_233_333,
 };
 const githubConnector = {
   id: 'github',
-  type: ConnectorType.Social,
+  target: 'github',
+  platform: ConnectorPlatform.Web,
   enabled: true,
   config: {},
   createdAt: 1_646_382_233_555,
 };
 const googleConnector = {
   id: 'google',
-  type: ConnectorType.Social,
+  target: 'google',
+  platform: ConnectorPlatform.Web,
   enabled: false,
   config: {},
   createdAt: 1_646_382_233_000,
 };
 const wechatConnector = {
   id: 'wechat',
-  type: ConnectorType.Social,
+  target: 'wechat',
+  platform: ConnectorPlatform.Web,
   enabled: false,
   config: {},
   createdAt: 1_646_382_233_000,
 };
 const wechatNativeConnector = {
   id: 'wechat-native',
-  type: ConnectorType.Social,
+  target: 'wechat-native',
+  platform: ConnectorPlatform.Native,
   enabled: false,
   config: {},
   createdAt: 1_646_382_233_000,
@@ -78,24 +86,13 @@ const connectors = [
   wechatConnector,
   wechatNativeConnector,
 ];
-const connectorMap = new Map(connectors.map((connector) => [connector.id, connector]));
 
 const findAllConnectors = jest.fn(async () => connectors);
-const findConnectorById = jest.fn(async (id: string) => {
-  const connector = connectorMap.get(id);
-
-  if (!connector) {
-    throw new NotFoundError();
-  }
-
-  return connector;
-});
 const insertConnector = jest.fn(async (connector: Connector) => connector);
 
 jest.mock('@/queries/connector', () => ({
   ...jest.requireActual('@/queries/connector'),
   findAllConnectors: async () => findAllConnectors(),
-  findConnectorById: async (id: string) => findConnectorById(id),
   insertConnector: async (connector: Connector) => insertConnector(connector),
 }));
 
@@ -122,7 +119,7 @@ describe('getConnectorInstances', () => {
 
   test('should access DB only once and should not throw', async () => {
     await expect(getConnectorInstances()).resolves.not.toThrow();
-    expect(findAllConnectors).toHaveBeenCalledTimes(1);
+    expect(findAllConnectors).toHaveBeenCalled();
   });
 
   afterEach(() => {
@@ -131,15 +128,29 @@ describe('getConnectorInstances', () => {
 });
 
 describe('getConnectorInstanceById', () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
   test('should return the connector existing in DB', async () => {
     const connectorInstance = await getConnectorInstanceById('aliyun-dm');
     expect(connectorInstance).toHaveProperty('connector', aliyunDmConnector);
   });
 
-  test('should throw on invalid id', async () => {
+  test('should throw on invalid id (on DB query)', async () => {
+    const id = 'invalid_id';
+    await expect(getConnectorInstanceById(id)).rejects.toThrow();
+  });
+
+  test('should throw on invalid id (on finding metadata)', async () => {
     const id = 'invalid_id';
     await expect(getConnectorInstanceById(id)).rejects.toMatchError(
-      new RequestError({ code: 'entity.not_found', id, status: 404 })
+      new RequestError({
+        code: 'entity.not_found',
+        target: 'invalid_target',
+        platfrom: ConnectorPlatform.Web,
+        status: 404,
+      })
     );
   });
 });
@@ -150,10 +161,14 @@ describe('getSocialConnectorInstanceById', () => {
     expect(socialConnectorInstance).toHaveProperty('connector', googleConnector);
   });
 
-  test('should throw on invalid id', async () => {
-    const id = 'invalid_id';
+  test('should throw on non-social connector', async () => {
+    const id = 'aliyun-dm';
     await expect(getSocialConnectorInstanceById(id)).rejects.toMatchError(
-      new RequestError({ code: 'entity.not_found', id, status: 404 })
+      new RequestError({
+        code: 'entity.not_found',
+        id,
+        status: 404,
+      })
     );
   });
 });
@@ -186,8 +201,14 @@ describe('initConnectors', () => {
     expect(insertConnector).toHaveBeenCalledTimes(connectors.length);
 
     for (const [i, connector] of connectors.entries()) {
-      const { id, type } = connector;
-      expect(insertConnector).toHaveBeenNthCalledWith(i + 1, { id, type });
+      const { target, platform } = connector;
+      expect(insertConnector).toHaveBeenNthCalledWith(
+        i + 1,
+        expect.objectContaining({
+          target,
+          platform,
+        })
+      );
     }
   });
 
@@ -197,6 +218,7 @@ describe('initConnectors', () => {
   });
 
   afterEach(() => {
+    findAllConnectors.mockClear();
     insertConnector.mockClear();
   });
 });

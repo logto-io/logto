@@ -1,4 +1,5 @@
-import type { Languages } from '@logto/phrases';
+import { Language } from '@logto/phrases';
+import { Nullable } from '@silverhand/essentials';
 
 export enum ConnectorType {
   Email = 'Email',
@@ -6,12 +7,19 @@ export enum ConnectorType {
   Social = 'Social',
 }
 
+export enum ConnectorPlatform {
+  Native = 'Native',
+  Universal = 'Universal',
+  Web = 'Web',
+}
+
 export interface ConnectorMetadata {
-  id: string;
+  target: string;
   type: ConnectorType;
-  name: Record<Languages, string>;
+  platform: Nullable<ConnectorPlatform>;
+  name: Record<Language, string>;
   logo: string;
-  description: Record<Languages, string>;
+  description: Record<Language, string>;
   readme: string;
   configTemplate: string;
 }
@@ -94,4 +102,7 @@ export type GetUserInfo = (
   accessTokenObject: AccessTokenObject
 ) => Promise<{ id: string } & Record<string, string | undefined>>;
 
-export type GetConnectorConfig<T = Record<string, unknown>> = (id: string) => Promise<T>;
+export type GetConnectorConfig<T = Record<string, unknown>> = (
+  target: string,
+  platform: Nullable<ConnectorPlatform>
+) => Promise<T>;

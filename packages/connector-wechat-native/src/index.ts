@@ -49,7 +49,7 @@ export class WeChatNativeConnector implements SocialConnector {
   };
 
   public getAuthorizationUri: GetAuthorizationUri = async (redirectUri, state) => {
-    const { appId } = await this.getConfig(this.metadata.id);
+    const { appId } = await this.getConfig(this.metadata.target, this.metadata.platform);
 
     const queryParameters = new URLSearchParams({
       appid: appId,
@@ -71,7 +71,10 @@ export class WeChatNativeConnector implements SocialConnector {
       errcode?: number;
     };
 
-    const { appId: appid, appSecret: secret } = await this.getConfig(this.metadata.id);
+    const { appId: appid, appSecret: secret } = await this.getConfig(
+      this.metadata.target,
+      this.metadata.platform
+    );
 
     const {
       access_token: accessToken,

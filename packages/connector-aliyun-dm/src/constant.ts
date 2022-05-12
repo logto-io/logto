@@ -36,8 +36,9 @@ const readmeContentFallback = 'Please check README.md file directory.';
 const configTemplateFallback = 'Please check config-template.md file directory.';
 
 export const defaultMetadata: ConnectorMetadata = {
-  id: 'aliyun-dm',
+  target: 'aliyun-dm',
   type: ConnectorType.Email,
+  platform: null,
   name: {
     en: 'Aliyun Direct Mail',
     'zh-CN': '阿里云邮件推送',

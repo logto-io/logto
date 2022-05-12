@@ -1,6 +1,6 @@
 import path from 'path';
 
-import { ConnectorType, ConnectorMetadata } from '@logto/connector-types';
+import { ConnectorType, ConnectorMetadata, ConnectorPlatform } from '@logto/connector-types';
 import { getFileContents } from '@logto/shared';
 
 export const authorizationEndpoint = 'https://openauth.alipay.com/oauth2/publicAppAuthorize.htm';
@@ -23,8 +23,9 @@ const readmeContentFallback = 'Please check README.md file directory.';
 const configTemplateFallback = 'Please check config-template.md file directory.';
 
 export const defaultMetadata: ConnectorMetadata = {
-  id: 'alipay',
+  target: 'alipay',
   type: ConnectorType.Social,
+  platform: ConnectorPlatform.Web,
   name: {
     en: 'Sign In with Alipay',
     'zh-CN': '支付宝登录',

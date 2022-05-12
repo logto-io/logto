@@ -25,9 +25,10 @@ describe('Button Component', () => {
 
   it('render SocialLinkButton', () => {
     const connector = {
-      id: 'foo',
+      target: 'foo',
       name: {
         en: 'Sign in with Logto',
+        'zh-CN': '使用 Logto 登录',
       },
       logo: 'http://logto.dev/logto.png',
     };

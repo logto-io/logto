@@ -1,6 +1,6 @@
 import path from 'path';
 
-import { ConnectorMetadata, ConnectorType } from '@logto/connector-types';
+import { ConnectorMetadata, ConnectorType, ConnectorPlatform } from '@logto/connector-types';
 import { getFileContents } from '@logto/shared';
 import { z } from 'zod';
 
@@ -24,8 +24,9 @@ const readmeContentFallback = 'Please check README.md file directory.';
 const configTemplateFallback = 'Please check config-template.md file directory.';
 
 export const defaultMetadata: ConnectorMetadata = {
-  id: 'github',
+  target: 'github',
   type: ConnectorType.Social,
+  platform: ConnectorPlatform.Web,
   name: {
     en: 'Sign In with GitHub',
     'zh-CN': 'GitHub登录',

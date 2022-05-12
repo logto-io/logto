@@ -1,19 +1,26 @@
-import { ArbitraryObject } from '@logto/schemas';
+import { ArbitraryObject, ConnectorPlatform } from '@logto/schemas';
+import { Nullable } from '@silverhand/essentials';
 
-import { findConnectorById, updateConnector } from '@/queries/connector';
+import RequestError from '@/errors/RequestError';
+import { findAllConnectors } from '@/queries/connector';
 
-export const getConnectorConfig = async <T extends ArbitraryObject>(id: string): Promise<T> => {
-  const connector = await findConnectorById(id);
+export const buildIndexWithTargetAndPlatform = (
+  target: string,
+  platform: Nullable<string>
+): string => [target, platform ?? 'null'].join('_');
+
+export const getConnectorConfig = async <T extends ArbitraryObject>(
+  target: string,
+  platform: Nullable<ConnectorPlatform>
+): Promise<T> => {
+  const connectors = await findAllConnectors();
+  const connector = connectors.find(
+    (connector) => connector.target === target && connector.platform === platform
+  );
+
+  if (!connector) {
+    throw new RequestError({ code: 'entity.not_found', target, platform, status: 404 });
+  }
 
   return connector.config as T;
-};
-
-export const updateConnectorConfig = async <T extends ArbitraryObject>(
-  id: string,
-  config: T
-): Promise<void> => {
-  await updateConnector({
-    where: { id },
-    set: { config },
-  });
 };

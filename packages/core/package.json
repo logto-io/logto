@@ -31,7 +31,7 @@
     "@logto/connector-wechat-native": "^0.1.0",
     "@logto/phrases": "^0.1.0",
     "@logto/schemas": "^0.1.0",
-    "@silverhand/essentials": "^1.1.0",
+    "@silverhand/essentials": "^1.1.6",
     "argon2": "^0.28.5",
     "chalk": "^4",
     "dayjs": "^1.10.5",

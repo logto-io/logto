@@ -1,6 +1,7 @@
 import { ConnectorType } from '@logto/connector-types';
 import { Passcode, PasscodeType } from '@logto/schemas';
 
+import { mockConnector, mockMetadata } from '@/__mocks__';
 import { getConnectorInstanceByType } from '@/connectors';
 import RequestError from '@/errors/RequestError';
 import {
@@ -121,23 +122,20 @@ describe('sendPasscode', () => {
 
   it('should call sendPasscode with params matching', async () => {
     const sendMessage = jest.fn();
+    const mockedMetadata = {
+      ...mockMetadata,
+      id: 'id',
+      type: ConnectorType.SMS,
+      platform: null,
+    };
     mockedGetConnectorInstanceByType.mockResolvedValue({
       connector: {
+        ...mockConnector,
         id: 'id',
-        type: ConnectorType.SMS,
-        enabled: true,
-        config: {},
-        createdAt: Date.now(),
+        target: 'connector',
+        platform: null,
       },
-      metadata: {
-        id: 'id',
-        type: ConnectorType.SMS,
-        name: {},
-        logo: '',
-        description: {},
-        readme: 'README.md',
-        configTemplate: 'config-template.md',
-      },
+      metadata: mockedMetadata,
       sendMessage,
       validateConfig: jest.fn(),
       getConfig: jest.fn(),

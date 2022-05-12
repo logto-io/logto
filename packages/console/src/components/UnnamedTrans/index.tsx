@@ -1,9 +1,8 @@
-import { Languages } from '@logto/phrases';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 
 type Props = {
-  resource: Record<Languages, string>;
+  resource: Record<string, string>;
   className?: string;
 };
 
