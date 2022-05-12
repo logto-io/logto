@@ -58,4 +58,5 @@ $font-family: -apple-system,
 
 @mixin layout {
   --radius: 8px;
+  --max-width: 360px;
 }

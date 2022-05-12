@@ -4,22 +4,36 @@
 .wrapper {
   @include _.full-page;
   @include _.flex-column;
-  justify-content: flex-start;
 }
 
-.connector {
-  margin: _.unit(30) 0;
+.connector > img {
+  width: 96px;
+  height: 96px;
+  @include _.image-align-center;
 }
 
 .loadingLabel {
   margin-bottom: _.unit(6);
 }
 
-.placeHolder {
+.container {
   flex: 1;
+  @include _.flex-column;
 }
 
 .button {
-  @include _.container-width;
+  @include _.full-width;
   margin-bottom: _.unit(4);
+}
+
+:global(body.mobile) {
+  .connector {
+    margin-bottom: _.unit(6);
+  }
+}
+
+:global(body.desktop) {
+  .connector {
+    margin-bottom: _.unit(1);
+  }
 }

@@ -2,9 +2,7 @@
 
 
 .container {
-  margin: 0 auto;
   @include _.flex-column;
-  @include _.container-width;
 
   > * {
     width: 100%;

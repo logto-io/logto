@@ -1,8 +1,6 @@
 @use '@/scss/underscore' as _;
 
 .form {
-  @include _.container-width;
-  margin: 0 auto;
   @include _.flex-column;
 
   > * {

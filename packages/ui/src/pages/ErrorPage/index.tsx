@@ -21,19 +21,18 @@ const ErrorPage = ({ title = 'description.not_found', message }: Props) => {
     <div className={styles.wrapper}>
       <NavBar />
       <div className={styles.container}>
-        <ErrorIcon className={styles.icon} />
+        <ErrorIcon />
         <div className={styles.title}>{t(title)}</div>
         {message && <div className={styles.message}>{message}</div>}
-        <div className={styles.placeHolder} />
-        <Button
-          className={styles.backBtn}
-          onClick={() => {
-            navigate(-1);
-          }}
-        >
-          {t('action.back')}
-        </Button>
       </div>
+      <Button
+        className={styles.backButton}
+        onClick={() => {
+          navigate(-1);
+        }}
+      >
+        {t('action.back')}
+      </Button>
     </div>
   );
 };

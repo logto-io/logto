@@ -41,6 +41,7 @@ const translation = {
       cancel: 'Cancel',
       bind: 'Binding with {{address}}',
       back: 'Go Back',
+      nav_back: 'Back',
     },
     description: {
       not_found: '404 Not Found',

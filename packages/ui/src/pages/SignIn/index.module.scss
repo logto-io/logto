@@ -2,39 +2,57 @@
 
 .wrapper {
   @include _.full-page;
-  @include _.flex-column;
-  justify-content: flex-start;
-
-  .header {
-    margin: _.unit(8);
-    margin-bottom: _.unit(12);
-  }
+  @include _.flex-column(normal ,normal);
+  @include _.full-width;
 
   .terms {
     margin-bottom: _.unit(4);
-  }
-
-  .divider {
-    @include _.container-width;
   }
 
   .primarySignIn {
     margin-bottom: _.unit(5);
   }
 
-  .primarySocial {
-    margin-bottom: _.unit(4);
-  }
-
   .otherMethodsLink {
-    margin-bottom: _.unit(1);
+    margin-bottom: _.unit(6);
   }
 
   .createAccount {
-    margin-top: _.unit(8);
+    margin-top: _.unit(6);
+    text-align: center;
   }
 
   .placeHolder {
     flex: 1;
+  }
+}
+
+:global(body.mobile) {
+  .header {
+    margin-top: _.unit(3);
+    margin-bottom: _.unit(12);
+  }
+
+  .primarySocial {
+    margin-bottom: _.unit(8);
+  }
+
+  .divider {
+    margin-bottom: _.unit(5);
+  }
+}
+
+:global(body.desktop) {
+  .header {
+    margin-top: _.unit(6);
+    margin-bottom: _.unit(6);
+  }
+
+  .primarySocial {
+    margin-bottom: _.unit(12);
+  }
+
+  .divider {
+    margin-bottom: _.unit(4);
   }
 }

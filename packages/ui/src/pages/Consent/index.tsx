@@ -2,7 +2,6 @@ import React, { useEffect, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { consent } from '@/apis/consent';
-import BrandingHeader from '@/components/BrandingHeader';
 import useApi from '@/hooks/use-api';
 import { PageContext } from '@/hooks/use-page-context';
 
@@ -10,7 +9,7 @@ import * as styles from './index.module.scss';
 
 const Consent = () => {
   const { experienceSettings } = useContext(PageContext);
-  const { logoUrl = '' } = experienceSettings?.branding ?? {};
+  const logoUrl = experienceSettings?.branding.logoUrl;
   const { result, run: asyncConsent } = useApi(consent);
 
   const { t } = useTranslation(undefined, { keyPrefix: 'main_flow' });
@@ -27,7 +26,7 @@ const Consent = () => {
 
   return (
     <div className={styles.wrapper}>
-      <BrandingHeader className={styles.header} logo={logoUrl} />
+      <img src={logoUrl} />
       <div className={styles.content}>{t('description.loading')}</div>
     </div>
   );

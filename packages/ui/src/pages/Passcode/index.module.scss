@@ -5,18 +5,40 @@
 }
 
 .container {
+  @include _.full-width;
   margin-top: _.unit(2);
 }
 
 .title {
-  width: 100%;
   @include _.title;
   margin-bottom: _.unit(1);
 }
 
 .detail {
-  width: 100%;
   margin-bottom: _.unit(6);
-  font: var(--font-body);
   color: var(--color-caption);
+}
+
+:global(body.mobile) {
+  .container {
+    margin-top: _.unit(2);
+  }
+
+  .detail {
+    font: var(--font-body);
+  }
+}
+
+:global(body.desktop) {
+  .container {
+    margin-top: _.unit(12);
+  }
+
+  .title {
+    font: var(--font-title-medium);
+  }
+
+  .detail {
+    font: var(--font-caption);
+  }
 }

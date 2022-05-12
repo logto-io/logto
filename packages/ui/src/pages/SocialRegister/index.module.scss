@@ -5,5 +5,23 @@
 }
 
 .container {
-  margin-top: _.unit(2);
+  @include _.full-width;
+}
+
+:global(body.mobile) {
+  .container {
+    margin-top: _.unit(2);
+  }
+}
+
+:global(body.desktop) {
+  .container {
+    margin-top: _.unit(12);
+  }
+
+  .title {
+    @include _.title;
+    font: var(--font-title-medium);
+    margin-bottom: _.unit(8);
+  }
 }

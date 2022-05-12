@@ -8,12 +8,20 @@
   padding: _.unit(3) _.unit(10);
   position: relative;
 
-  svg {
+  .backButton {
     position: absolute;
     left: _.unit(-2);
     top: 50%;
     transform: translateY(-50%);
-    fill: var(--color-text);
+    color: --color-text;
+    font: var(--font-caption);
+    @include _.flex-row;
+    cursor: pointer;
+  }
+
+  svg {
+    fill: currentColor;
+    margin-right: _.unit(2);
   }
 
   .title {
