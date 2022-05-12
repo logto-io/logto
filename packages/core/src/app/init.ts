@@ -7,6 +7,7 @@ import koaLogger from 'koa-logger';
 import mount from 'koa-mount';
 
 import envSet, { MountedApps } from '@/env-set';
+import koaClientSessionGuard from '@/middleware/koa-client-session-guard';
 import koaConnectorErrorHandler from '@/middleware/koa-connector-error-handle';
 import koaErrorHandler from '@/middleware/koa-error-handler';
 import koaI18next from '@/middleware/koa-i18next';
@@ -37,6 +38,8 @@ export default async function initApp(app: Koa): Promise<void> {
   app.use(
     mount('/' + MountedApps.Console, koaSpaProxy(MountedApps.Console, 5002, MountedApps.Console))
   );
+
+  app.use(koaClientSessionGuard(provider));
   app.use(koaSpaProxy());
 
   const { httpsCert, httpsKey, port } = envSet.values;

@@ -8,10 +8,10 @@ describe('ErrorPage Page', () => {
   it('render properly', () => {
     const { queryByText } = render(
       <MemoryRouter>
-        <ErrorPage title="description.not_found" message="error message" />
+        <ErrorPage title="description.not_found" message="error.invalid_email" />
       </MemoryRouter>
     );
     expect(queryByText('description.not_found')).not.toBeNull();
-    expect(queryByText('error message')).not.toBeNull();
+    expect(queryByText('error.invalid_email')).not.toBeNull();
   });
 });
