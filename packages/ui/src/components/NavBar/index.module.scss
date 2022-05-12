@@ -14,7 +14,7 @@
     top: 50%;
     transform: translateY(-50%);
     color: --color-text;
-    font: var(--font-caption);
+    font: var(--font-body-bold);
     @include _.flex-row;
     cursor: pointer;
   }
