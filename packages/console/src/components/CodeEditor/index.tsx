@@ -29,10 +29,9 @@ const CodeEditor = ({ language, isReadonly = false, value = '', onChange }: Prop
           data-gramm="false"
           readOnly={isReadonly}
           spellCheck="false"
+          value={value}
           onChange={handleChange}
-        >
-          {value}
-        </textarea>
+        />
         <SyntaxHighlighter
           customStyle={{
             background: 'transparent',
