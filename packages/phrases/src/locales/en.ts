@@ -280,6 +280,8 @@ const translation = {
       subtitle_part1: 'Here are the following things you can do',
       subtitle_part2: 'I’m done with this set up. ',
       hide_this: 'Hide this',
+      confirm: 'Reminder',
+      confirm_message: 'Are you sure you want to hide this page? This action cannot be undone.',
       card1_title: 'Logto is a XXX for customer identity. Check out our demo',
       card1_subtitle:
         'Setup a mobile, single page or traditional application to use Logto for Authentication.',
