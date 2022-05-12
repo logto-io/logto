@@ -2,8 +2,7 @@ import { createHmac } from 'crypto';
 
 import got from 'got';
 
-export type { Response } from 'got';
-export type SendSmsResponse = { BizId: string; Code: string; Message: string; RequestId: string };
+import { PublicParameters } from './types';
 
 // Aliyun has special escape rules.
 // https://help.aliyun.com/document_detail/29442.html
@@ -37,18 +36,6 @@ export const getSignature = (
 
   return createHmac('sha1', `${secret}&`).update(stringToSign).digest('base64');
 };
-
-export interface PublicParameters {
-  AccessKeyId: string;
-  Format?: string; // 'json' or 'xml', default: 'json'
-  RegionId?: string; // 'cn-hangzhou' | 'ap-southeast-1' | 'ap-southeast-2'
-  Signature?: string;
-  SignatureMethod?: string;
-  SignatureNonce?: string;
-  SignatureVersion?: string;
-  Timestamp?: string;
-  Version?: string;
-}
 
 export const request = async <T>(
   url: string,

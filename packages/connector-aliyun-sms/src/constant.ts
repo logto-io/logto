@@ -3,18 +3,6 @@ import path from 'path';
 import { ConnectorMetadata, ConnectorType } from '@logto/connector-types';
 import { getFileContents } from '@logto/shared';
 
-/**
- * @doc https://help.aliyun.com/document_detail/101414.html
- */
-export interface SendSms {
-  OutId?: string;
-  PhoneNumbers: string; // 11 digits w/o prefix (can be multiple phone numbers with separator `,`)
-  SignName: string; // Name of SMS signature
-  SmsUpExtendCode?: string;
-  TemplateCode: string; // Text message template ID
-  TemplateParam?: string; // Stringified JSON (used to fill in text template)
-}
-
 export const endpoint = 'https://dysmsapi.aliyuncs.com/';
 
 export const staticConfigs = {

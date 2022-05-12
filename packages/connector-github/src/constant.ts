@@ -2,19 +2,11 @@ import path from 'path';
 
 import { ConnectorMetadata, ConnectorType, ConnectorPlatform } from '@logto/connector-types';
 import { getFileContents } from '@logto/shared';
-import { z } from 'zod';
 
 export const authorizationEndpoint = 'https://github.com/login/oauth/authorize';
 export const scope = 'read:user';
 export const accessTokenEndpoint = 'https://github.com/login/oauth/access_token';
 export const userInfoEndpoint = 'https://api.github.com/user';
-
-export const githubConfigGuard = z.object({
-  clientId: z.string(),
-  clientSecret: z.string(),
-});
-
-export type GithubConfig = z.infer<typeof githubConfigGuard>;
 
 // eslint-disable-next-line unicorn/prefer-module
 const currentPath = __dirname;

@@ -1,8 +1,9 @@
 import { GetConnectorConfig } from '@logto/connector-types';
 
-import { AliyunSmsConnector, AliyunSmsConfig } from '.';
+import { AliyunSmsConnector } from '.';
 import { mockedConnectorConfig, mockedValidConnectorConfig, phoneTest, codeTest } from './mock';
 import { sendSms } from './single-send-text';
+import { AliyunSmsConfig } from './types';
 
 const getConnectorConfig = jest.fn() as GetConnectorConfig<AliyunSmsConfig>;
 

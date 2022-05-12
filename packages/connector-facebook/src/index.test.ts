@@ -2,13 +2,9 @@ import { ConnectorError, ConnectorErrorCodes, GetConnectorConfig } from '@logto/
 import nock from 'nock';
 
 import { FacebookConnector } from '.';
-import {
-  FacebookConfig,
-  accessTokenEndpoint,
-  authorizationEndpoint,
-  userInfoEndpoint,
-} from './constant';
+import { accessTokenEndpoint, authorizationEndpoint, userInfoEndpoint } from './constant';
 import { clientId, clientSecret, code, dummyRedirectUri, fields, mockedConfig } from './mock';
+import { FacebookConfig } from './types';
 
 const getConnectorConfig = jest.fn() as GetConnectorConfig<FacebookConfig>;
 

@@ -3,30 +3,7 @@ import path from 'path';
 import { ConnectorType, ConnectorMetadata } from '@logto/connector-types';
 import { getFileContents } from '@logto/shared';
 
-/**
- * @doc https://help.aliyun.com/document_detail/29444.html
- */
-export interface SingleSendMail {
-  AccountName: string;
-  AddressType: '0' | '1';
-  ClickTrace?: '0' | '1';
-  FromAlias?: string;
-  HtmlBody?: string;
-  ReplyToAddress: 'true' | 'false';
-  Subject: string;
-  TagName?: string;
-  TextBody?: string;
-  ToAddress: string;
-}
-
 export const endpoint = 'https://dm.aliyuncs.com/';
-
-export const staticConfigs = {
-  Format: 'json',
-  SignatureMethod: 'HMAC-SHA1',
-  SignatureVersion: '1.0',
-  Version: '2015-11-23',
-};
 
 // eslint-disable-next-line unicorn/prefer-module
 const currentPath = __dirname;

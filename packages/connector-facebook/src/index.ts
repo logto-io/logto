@@ -24,9 +24,13 @@ import {
   userInfoEndpoint,
   defaultMetadata,
   defaultTimeout,
-  facebookConfigGuard,
-  FacebookConfig,
 } from './constant';
+import {
+  facebookConfigGuard,
+  AccessTokenResponse,
+  FacebookConfig,
+  UserInfoResponse,
+} from './types';
 
 export class FacebookConnector implements SocialConnector {
   public metadata: ConnectorMetadata = defaultMetadata;
@@ -60,12 +64,6 @@ export class FacebookConnector implements SocialConnector {
   };
 
   public getAccessToken: GetAccessToken = async (code, redirectUri) => {
-    type AccessTokenResponse = {
-      access_token: string;
-      token_type: string;
-      expires_in: number;
-    };
-
     const { clientId: client_id, clientSecret: client_secret } = await this.getConfig(
       this.metadata.target,
       this.metadata.platform
@@ -89,13 +87,6 @@ export class FacebookConnector implements SocialConnector {
   };
 
   public getUserInfo: GetUserInfo = async (accessTokenObject) => {
-    type UserInfoResponse = {
-      id: string;
-      email?: string;
-      name?: string;
-      picture?: { data: { url: string } };
-    };
-
     const { accessToken } = accessTokenObject;
 
     try {

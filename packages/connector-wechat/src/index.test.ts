@@ -2,13 +2,9 @@ import { ConnectorError, ConnectorErrorCodes, GetConnectorConfig } from '@logto/
 import nock from 'nock';
 
 import { WeChatConnector } from '.';
-import {
-  WeChatConfig,
-  accessTokenEndpoint,
-  authorizationEndpoint,
-  userInfoEndpoint,
-} from './constant';
+import { accessTokenEndpoint, authorizationEndpoint, userInfoEndpoint } from './constant';
 import { mockedConfig } from './mock';
+import { WeChatConfig } from './types';
 
 const getConnectorConfig = jest.fn() as GetConnectorConfig<WeChatConfig>;
 

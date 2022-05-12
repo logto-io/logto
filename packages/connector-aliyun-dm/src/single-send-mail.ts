@@ -1,7 +1,8 @@
 import { Response } from 'got';
 
-import { SingleSendMail, endpoint, staticConfigs } from './constant';
-import { PublicParameters, request, SendEmailResponse } from './utils';
+import { endpoint } from './constant';
+import { staticConfigs, PublicParameters, SendEmailResponse, SingleSendMail } from './types';
+import { request } from './utils';
 
 /**
  * @doc https://help.aliyun.com/document_detail/29444.html

@@ -2,7 +2,6 @@ import path from 'path';
 
 import { ConnectorMetadata, ConnectorType, ConnectorPlatform } from '@logto/connector-types';
 import { getFileContents } from '@logto/shared';
-import { z } from 'zod';
 
 /**
  * Note: If you do not include a version number we will default to the oldest available version, so it's recommended to include the version number in your requests.
@@ -17,13 +16,6 @@ export const accessTokenEndpoint = 'https://graph.facebook.com/v13.0/oauth/acces
  */
 export const userInfoEndpoint = 'https://graph.facebook.com/v13.0/me';
 export const scope = 'email,public_profile';
-
-export const facebookConfigGuard = z.object({
-  clientId: z.string(),
-  clientSecret: z.string(),
-});
-
-export type FacebookConfig = z.infer<typeof facebookConfigGuard>;
 
 // eslint-disable-next-line unicorn/prefer-module
 const currentPath = __dirname;
