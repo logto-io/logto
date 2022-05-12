@@ -271,6 +271,8 @@ const translation = {
       connector_deleted: '成功删除连接器。',
     },
     get_started: {
+      progress: '开始使用: {{completed}}/{{total}}',
+      progress_dropdown_title: '快速上手',
       title: '还不知道如何使用 Logto?',
       subtitle_part1: '下列是一些适合您快速上手的事情',
       subtitle_part2: '这配置页面我要看吐了，',
