@@ -26,7 +26,7 @@ const ErrorPage = ({ title = 'description.not_found', message }: Props) => {
         {message && <div className={styles.message}>{message}</div>}
       </div>
       <Button
-        className={styles.backBtn}
+        className={styles.backButton}
         onClick={() => {
           navigate(-1);
         }}

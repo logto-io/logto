@@ -18,7 +18,7 @@ const NavBar = ({ title }: Props) => {
   return (
     <div className={styles.navBar}>
       <div
-        className={styles.backBtn}
+        className={styles.backButton}
         onClick={() => {
           navigate(-1);
         }}

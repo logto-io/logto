@@ -1,4 +1,3 @@
-import { conditionalString } from '@silverhand/essentials';
 import React, { useEffect, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -10,7 +9,7 @@ import * as styles from './index.module.scss';
 
 const Consent = () => {
   const { experienceSettings } = useContext(PageContext);
-  const logoUrl = conditionalString(experienceSettings?.branding.logoUrl);
+  const logoUrl = experienceSettings?.branding.logoUrl;
   const { result, run: asyncConsent } = useApi(consent);
 
   const { t } = useTranslation(undefined, { keyPrefix: 'main_flow' });
