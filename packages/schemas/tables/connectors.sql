@@ -8,4 +8,4 @@ create table connectors (
   primary key (id)
 );
 
-create index connectors__name_platform on connectors (target, platform);
+create index connectors__target_platform on connectors (target, platform);
