@@ -43,6 +43,7 @@ const translation = {
       confirm: '确认',
       bind: '绑定到 {{address}}',
       back: '返回',
+      nav_back: '返回',
     },
     description: {
       not_found: '404 页面不存在',

@@ -24,7 +24,7 @@ const NavBar = ({ title }: Props) => {
         }}
       >
         <NavArrowIcon />
-        {!isMobile && <span>{t('action.back')}</span>}
+        {!isMobile && <span>{t('action.nav_back')}</span>}
       </div>
 
       {title && <div className={styles.title}>{title}</div>}
