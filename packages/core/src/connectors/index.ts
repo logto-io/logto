@@ -6,6 +6,7 @@ import { GithubConnector } from '@logto/connector-github';
 import { GoogleConnector } from '@logto/connector-google';
 import { WeChatConnector } from '@logto/connector-wechat';
 import { WeChatNativeConnector } from '@logto/connector-wechat-native';
+import { Nullable } from '@silverhand/essentials';
 import { nanoid } from 'nanoid';
 
 import RequestError from '@/errors/RequestError';
@@ -73,8 +74,7 @@ export const getConnectorInstanceById = async (id: string): Promise<ConnectorIns
 
 export const getConnectorInstanceByTargetAndPlatform = async (
   target: string,
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  platform: string | null
+  platform: Nullable<string>
 ): Promise<ConnectorInstance> => {
   const found = allConnectors.find(
     (element) => element.metadata.target === target && element.metadata.platform === platform
@@ -118,8 +118,7 @@ export const getSocialConnectorInstanceById = async (
 
 export const getSocialConnectorInstanceByTargetAndPlatform = async (
   target: string,
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  platform: string | null
+  platform: Nullable<string>
 ): Promise<SocialConnectorInstance> => {
   const connector = await getConnectorInstanceByTargetAndPlatform(target, platform);
 

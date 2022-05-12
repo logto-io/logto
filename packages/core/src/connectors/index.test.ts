@@ -1,5 +1,6 @@
 import { ConnectorPlatform } from '@logto/connector-types';
 import { Connector, ConnectorType } from '@logto/schemas';
+import { Nullable } from '@silverhand/essentials';
 import { NotFoundError } from 'slonik';
 
 import {
@@ -104,8 +105,7 @@ const findConnectorById = jest.fn(async (id: string) => {
   return connector;
 });
 const findConnectorByTargetAndPlatform = jest.fn(
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  async (target: string, platform: string | null) => {
+  async (target: string, platform: Nullable<string>) => {
     const connectorMapCache = new Map(
       connectors.map((connector) => [
         buildIndexWithTargetAndPlatform(connector.target, connector.platform),
@@ -128,8 +128,7 @@ jest.mock('@/queries/connector', () => ({
   ...jest.requireActual('@/queries/connector'),
   findAllConnectors: async () => findAllConnectors(),
   findConnectorById: async (id: string) => findConnectorById(id),
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  findConnectorByTargetAndPlatform: async (target: string, platform: string | null) =>
+  findConnectorByTargetAndPlatform: async (target: string, platform: Nullable<string>) =>
     findConnectorByTargetAndPlatform(target, platform),
   insertConnector: async (connector: Connector) => insertConnector(connector),
 }));

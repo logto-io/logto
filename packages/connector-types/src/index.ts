@@ -1,4 +1,5 @@
 import { Language } from '@logto/phrases';
+import { Nullable } from '@silverhand/essentials';
 
 export enum ConnectorType {
   Email = 'Email',
@@ -15,8 +16,7 @@ export enum ConnectorPlatform {
 export interface ConnectorMetadata {
   target: string;
   type: ConnectorType;
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  platform: ConnectorPlatform | null;
+  platform: Nullable<ConnectorPlatform>;
   name: Record<Language, string>;
   logo: string;
   description: Record<Language, string>;
@@ -104,6 +104,5 @@ export type GetUserInfo = (
 
 export type GetConnectorConfig<T = Record<string, unknown>> = (
   target: string,
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  platform: ConnectorPlatform | null
+  platform: Nullable<ConnectorPlatform>
 ) => Promise<T>;

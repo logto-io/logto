@@ -1,17 +1,16 @@
 import { ArbitraryObject, ConnectorPlatform } from '@logto/schemas';
+import { Nullable } from '@silverhand/essentials';
 
 import { findConnectorByTargetAndPlatform, updateConnector } from '@/queries/connector';
 
 export const buildIndexWithTargetAndPlatform = (
   target: string,
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  platform: string | null
+  platform: Nullable<string>
 ): string => [target, platform ?? 'null'].join('_');
 
 export const getConnectorConfig = async <T extends ArbitraryObject>(
   target: string,
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  platform: ConnectorPlatform | null
+  platform: Nullable<ConnectorPlatform>
 ): Promise<T> => {
   const connector = await findConnectorByTargetAndPlatform(target, platform);
 
@@ -21,8 +20,7 @@ export const getConnectorConfig = async <T extends ArbitraryObject>(
 export const updateConnectorConfig = async <T extends ArbitraryObject>(
   where: {
     target: string;
-    // eslint-disable-next-line @typescript-eslint/ban-types
-    platform: ConnectorPlatform | null;
+    platform: Nullable<ConnectorPlatform>;
   },
   config: T
 ): Promise<void> => {

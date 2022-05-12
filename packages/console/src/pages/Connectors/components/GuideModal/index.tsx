@@ -37,12 +37,13 @@ const GuideModal = ({ connector, isOpen, onClose }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const {
     id: connectorId,
-    type: connectorType,
-    metadata: { name, configTemplate, readme },
+    metadata: { type: connectorType, name, configTemplate, readme },
   } = connector;
 
   const locale = i18next.language;
-  const connectorName = name[locale] ?? name.en;
+  // TODO: LOG-2393 should fix name[locale] syntax error
+  const foundName = Object.entries(name).find(([lang]) => lang === locale);
+  const connectorName = foundName ? foundName[1] : name.en;
   const isSocialConnector =
     connectorType !== ConnectorType.SMS && connectorType !== ConnectorType.Email;
   const [activeStepIndex, setActiveStepIndex] = useState<number>(0);

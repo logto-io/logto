@@ -1,4 +1,5 @@
 import { Connector, CreateConnector, Connectors } from '@logto/schemas';
+import { Nullable } from '@silverhand/essentials';
 import { sql } from 'slonik';
 
 import { buildInsertInto } from '@/database/insert-into';
@@ -8,8 +9,7 @@ import envSet from '@/env-set';
 
 const { table, fields } = convertToIdentifiers(Connectors);
 
-// eslint-disable-next-line @typescript-eslint/ban-types
-const filterByPlatform = (platform: string | null) => {
+const filterByPlatform = (platform: Nullable<string>) => {
   if (!platform) {
     return sql`${fields.platform} is null`;
   }
@@ -35,8 +35,7 @@ export const findConnectorById = async (id: string) =>
 
 export const findConnectorByTargetAndPlatform = async (
   target: string,
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  platform: string | null
+  platform: Nullable<string>
 ) =>
   envSet.pool.one<Connector>(sql`
     select ${sql.join(Object.values(fields), sql`, `)}

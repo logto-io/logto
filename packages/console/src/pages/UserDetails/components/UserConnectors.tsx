@@ -1,4 +1,4 @@
-import { Languages } from '@logto/phrases';
+import { Language } from '@logto/phrases';
 import { ConnectorDTO, Identities } from '@logto/schemas';
 import { Optional } from '@silverhand/essentials';
 import React, { useMemo, useState } from 'react';
@@ -23,7 +23,7 @@ type DisplayConnector = {
   id: string;
   userId?: string;
   logo: string;
-  name: Record<Languages, string>;
+  name: Record<Language, string>;
 };
 
 const UserConnectors = ({ userId, connectors, onDelete }: Props) => {
