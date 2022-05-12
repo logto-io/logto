@@ -33,7 +33,6 @@ const SignInExperience = () => {
   const { data, error, mutate } = useSWR<SignInExperienceType, RequestError>('/api/sign-in-exp');
   const { configs, error: configError, updateConfigs } = useAdminConsoleConfigs();
   const [dataToCompare, setDataToCompare] = useState<SignInExperienceType>();
-  const [showWelcome, setShowWelcome] = useState(!configs?.customizeSignInExperience);
 
   const methods = useForm<SignInExperienceForm>();
   const {
@@ -86,14 +85,8 @@ const SignInExperience = () => {
     return <div>{configError.body.message}</div>;
   }
 
-  if (showWelcome) {
-    return (
-      <Welcome
-        onStart={() => {
-          setShowWelcome(false);
-        }}
-      />
-    );
+  if (configs?.customizeSignInExperience) {
+    return <Welcome />;
   }
 
   return (

@@ -8,6 +8,11 @@
   border-radius: 8px;
   align-items: center;
 
+  &.shadow {
+    border: 1px solid var(--color-border);
+    box-shadow: var(--shadow-1);
+  }
+
   .icon {
     width: 20px;
     height: 20px;
