@@ -7,7 +7,6 @@ import { Resource, Language } from './types';
 export { Language } from './types';
 export type LogtoErrorCode = NormalizeKeyPaths<typeof en.errors>;
 export type LogtoErrorI18nKey = `errors:${LogtoErrorCode}`;
-// Export type Languages = keyof Resource;
 export type I18nKey = NormalizeKeyPaths<typeof en.translation>;
 export type AdminConsoleKey = NormalizeKeyPaths<typeof en.translation.admin_console>;
 
