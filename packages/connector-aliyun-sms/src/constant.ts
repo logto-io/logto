@@ -13,6 +13,21 @@ export const staticConfigs = {
   Version: '2017-05-25',
 };
 
+/**
+ * Details of SmsTemplateType can be found at:
+ * https://next.api.aliyun.com/document/Dysmsapi/2017-05-25/QuerySmsTemplateList.
+ *
+ * For our use case is to send passcode sms for passwordless sign-in/up as well as
+ * reset password, the default value of type code is set to be 2.
+ */
+export enum SmsTemplateType {
+  Notification = 0,
+  Promotion = 1,
+  Passcode = 2,
+  InternationalMessage = 6,
+  PureNumber = 7,
+}
+
 // eslint-disable-next-line unicorn/prefer-module
 const currentPath = __dirname;
 const pathToReadmeFile = path.join(currentPath, '..', 'README.md');

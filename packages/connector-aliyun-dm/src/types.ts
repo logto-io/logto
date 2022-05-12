@@ -51,10 +51,3 @@ export interface PublicParameters {
   Timestamp?: string;
   Version?: string;
 }
-
-export const staticConfigs = {
-  Format: 'json',
-  SignatureMethod: 'HMAC-SHA1',
-  SignatureVersion: '1.0',
-  Version: '2015-11-23',
-};

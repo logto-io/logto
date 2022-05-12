@@ -1,7 +1,7 @@
 import { Response } from 'got';
 
-import { endpoint } from './constant';
-import { staticConfigs, PublicParameters, SendEmailResponse, SingleSendMail } from './types';
+import { endpoint, staticConfigs } from './constant';
+import { PublicParameters, SendEmailResponse, SingleSendMail } from './types';
 import { request } from './utils';
 
 /**

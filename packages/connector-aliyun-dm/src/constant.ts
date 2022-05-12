@@ -5,6 +5,13 @@ import { getFileContents } from '@logto/shared';
 
 export const endpoint = 'https://dm.aliyuncs.com/';
 
+export const staticConfigs = {
+  Format: 'json',
+  SignatureMethod: 'HMAC-SHA1',
+  SignatureVersion: '1.0',
+  Version: '2015-11-23',
+};
+
 // eslint-disable-next-line unicorn/prefer-module
 const currentPath = __dirname;
 const pathToReadmeFile = path.join(currentPath, '..', 'README.md');
