@@ -4,14 +4,14 @@ import { createRequester } from '@/utils/test-utils';
 
 const mockUserLogs = [{ id: 1 }, { id: 2 }];
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+/* eslint-disable @typescript-eslint/no-unused-vars */
 const countUserLogs = jest.fn(async (condition: UserLogCondition) => ({
   count: mockUserLogs.length,
 }));
 const findUserLogs = jest.fn(
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async (limit: number, offset: number, condition: UserLogCondition) => mockUserLogs
 );
+/* eslint-enable @typescript-eslint/no-unused-vars */
 
 jest.mock('@/queries/log', () => ({
   countUserLogs: async (condition: UserLogCondition) => countUserLogs(condition),
