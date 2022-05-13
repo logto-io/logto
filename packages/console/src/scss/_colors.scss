@@ -149,6 +149,7 @@
 
   // Client specific variables (not available in design system)
   --color-danger-focused: rgba(186, 27, 27, 16%); // 16% Error-40
+  --color-skeleton-shimmer-rgb: 255, 255, 255; // rgb of Layer-1
 }
 
 @mixin dark-theme {
@@ -302,4 +303,5 @@
 
   // Client specific variables (not available in design system)
   --color-danger-focused: rgba(255, 180, 169, 16%); // 16% Error-40
+  --color-skeleton-shimmer-rgb: 42, 44, 50; // rgb of Layer-1
 }
