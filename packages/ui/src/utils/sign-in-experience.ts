@@ -3,10 +3,10 @@
  * TODO: Remove this once we have a better way to get the sign in experience through SSR
  */
 
-import { SignInMethods, SignInExperience, ConnectorMetadata } from '@logto/schemas';
+import { SignInMethods, SignInExperience } from '@logto/schemas';
 
 import { getSignInExperience } from '@/apis/settings';
-import { SignInMethod, SignInExperienceSettings } from '@/types';
+import { ConnectorData, SignInMethod, SignInExperienceSettings } from '@/types';
 
 const getPrimarySignInMethod = (signInMethods: SignInMethods) => {
   for (const [key, value] of Object.entries(signInMethods)) {
@@ -28,7 +28,7 @@ const getSecondarySignInMethods = (signInMethods: SignInMethods) =>
   }, []);
 
 const getSignInExperienceSettings = async <
-  T extends SignInExperience & { socialConnectors: ConnectorMetadata[] }
+  T extends SignInExperience & { socialConnectors: ConnectorData[] }
 >(): Promise<SignInExperienceSettings> => {
   const { branding, languageInfo, termsOfUse, signInMethods, socialConnectors } =
     await getSignInExperience<T>();

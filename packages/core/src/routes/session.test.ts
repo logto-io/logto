@@ -916,10 +916,16 @@ describe('sessionRoutes', () => {
       expect(response.status).toEqual(200);
       expect(response.body).toMatchObject(
         expect.objectContaining({
-          signInExperience: mockSignInExperience,
+          ...mockSignInExperience,
           socialConnectors: [
-            mockGithubConnectorInstance.metadata,
-            mockFacebookConnectorInstance.metadata,
+            {
+              ...mockGithubConnectorInstance.metadata,
+              id: mockGithubConnectorInstance.connector.id,
+            },
+            {
+              ...mockFacebookConnectorInstance.metadata,
+              id: mockFacebookConnectorInstance.connector.id,
+            },
           ],
         })
       );

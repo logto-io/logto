@@ -13,6 +13,7 @@ export const appLogo = 'https://avatars.githubusercontent.com/u/88327661?s=200&v
 export const appHeadline = 'Build user identity in a modern way';
 export const socialConnectors = [
   {
+    id: 'BE8QXN0VsrOH7xdWFDJZ9',
     target: 'github',
     platform: ConnectorPlatform.Web,
     type: ConnectorType.Social,
@@ -29,6 +30,7 @@ export const socialConnectors = [
     configTemplate: '',
   },
   {
+    id: '24yt_xIUl5btN4UwvFokt',
     target: 'alipay',
     platform: ConnectorPlatform.Web,
     type: ConnectorType.Social,
@@ -45,6 +47,7 @@ export const socialConnectors = [
     configTemplate: '',
   },
   {
+    id: 'E5kb2gdq769qOEYaLg1V5',
     target: 'wechat',
     platform: ConnectorPlatform.Web,
     type: ConnectorType.Social,
@@ -61,6 +64,7 @@ export const socialConnectors = [
     configTemplate: '',
   },
   {
+    id: 'xY2YZEweMFPKxphngGHhy',
     target: 'google',
     platform: ConnectorPlatform.Web,
     type: ConnectorType.Social,
@@ -74,6 +78,7 @@ export const socialConnectors = [
     configTemplate: '',
   },
   {
+    id: 'lcXT4o2GSjbV9kg2shZC7',
     target: 'facebook',
     platform: ConnectorPlatform.Web,
     type: ConnectorType.Social,
@@ -116,7 +121,7 @@ export const mockSignInExperience: SignInExperience = {
     sms: SignInMethodState.Secondary,
     social: SignInMethodState.Secondary,
   },
-  socialSignInConnectorIds: ['github', 'facebook'],
+  socialSignInConnectorIds: ['BE8QXN0VsrOH7xdWFDJZ9', 'lcXT4o2GSjbV9kg2shZC7'],
 };
 
 export const mockSignInExperienceSettings: SignInExperienceSettings = {

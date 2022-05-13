@@ -19,9 +19,7 @@ const Callback = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'main_flow' });
 
   const connectorLabel = useMemo(() => {
-    const connector = experienceSettings?.socialConnectors.find(
-      ({ target }) => target === connectorId
-    );
+    const connector = experienceSettings?.socialConnectors.find(({ id }) => id === connectorId);
 
     if (connector) {
       return (

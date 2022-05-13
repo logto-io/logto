@@ -582,10 +582,10 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
     const instanceMap = new Map(
       connectorInstances.map((instance) => [instance.connector.id, instance])
     );
-    const socialConnectors = signInExperience.socialSignInConnectorIds.map(
-      (id) => instanceMap.get(id)?.metadata
-    );
-    ctx.body = { signInExperience, socialConnectors };
+    const socialConnectors = signInExperience.socialSignInConnectorIds.map((id) => {
+      return { ...instanceMap.get(id)?.metadata, id };
+    });
+    ctx.body = { ...signInExperience, socialConnectors };
 
     return next();
   });

@@ -8,11 +8,15 @@ export enum SearchParameters {
   bindWithSocial = 'bw',
 }
 
+export interface ConnectorData extends ConnectorMetadata {
+  id: string;
+}
+
 export type SignInExperienceSettings = {
   branding: Branding;
   languageInfo: LanguageInfo;
   termsOfUse: TermsOfUse;
   primarySignInMethod: SignInMethod;
   secondarySignInMethods: SignInMethod[];
-  socialConnectors: ConnectorMetadata[];
+  socialConnectors: ConnectorData[];
 };
