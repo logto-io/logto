@@ -79,44 +79,59 @@ const selectHorizontalAlignment = ({
     horizontalCenter - overlayWidth / 2 >= minX && horizontalCenter + overlayWidth / 2 <= maxX;
   const isEndAllowed = horizontalEnd >= minX;
 
-  if (horizontalAlign === 'start') {
-    if (isStartAllowed) {
-      return 'start';
+  switch (horizontalAlign) {
+    case 'start': {
+      if (isStartAllowed) {
+        return 'start';
+      }
+
+      if (isEndAllowed) {
+        return 'end';
+      }
+
+      if (isCenterAllowed) {
+        return 'center';
+      }
+
+      return horizontalAlign;
     }
 
-    if (isEndAllowed) {
-      return 'end';
+    case 'center': {
+      if (isCenterAllowed) {
+        return 'center';
+      }
+
+      if (isStartAllowed) {
+        return 'start';
+      }
+
+      if (isEndAllowed) {
+        return 'end';
+      }
+
+      return horizontalAlign;
     }
 
-    return isCenterAllowed ? 'center' : 'start';
-  }
+    case 'end': {
+      if (isEndAllowed) {
+        return 'end';
+      }
 
-  if (horizontalAlign === 'end') {
-    if (isEndAllowed) {
-      return 'end';
+      if (isStartAllowed) {
+        return 'start';
+      }
+
+      if (isCenterAllowed) {
+        return 'center';
+      }
+
+      return horizontalAlign;
     }
 
-    if (isStartAllowed) {
-      return 'start';
+    default: {
+      return horizontalAlign;
     }
-
-    return isCenterAllowed ? 'center' : 'end';
   }
-
-  // Mark: horizontalAlign === 'center'
-  if (isCenterAllowed) {
-    return 'center';
-  }
-
-  if (isStartAllowed) {
-    return 'start';
-  }
-
-  if (isEndAllowed) {
-    return 'end';
-  }
-
-  return 'center';
 };
 
 export default function usePosition({
