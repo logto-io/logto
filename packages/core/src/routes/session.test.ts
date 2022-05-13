@@ -447,11 +447,11 @@ describe('sessionRoutes', () => {
     });
   });
 
-  describe('POST /session/bind-social-related-user', () => {
+  describe('POST /session/sign-in/bind-social-related-user', () => {
     it('throw if session is not authorized', async () => {
       await expect(
         sessionRequest
-          .post('/session/bind-social-related-user')
+          .post('/session/sign-in/bind-social-related-user')
           .send({ connectorId: 'connectorId' })
       ).resolves.toHaveProperty('statusCode', 400);
     });
@@ -461,7 +461,7 @@ describe('sessionRoutes', () => {
       });
       await expect(
         sessionRequest
-          .post('/session/bind-social-related-user')
+          .post('/session/sign-in/bind-social-related-user')
           .send({ connectorId: 'connectorId' })
       ).resolves.toHaveProperty('statusCode', 400);
     });
@@ -475,7 +475,7 @@ describe('sessionRoutes', () => {
           },
         },
       });
-      const response = await sessionRequest.post('/session/bind-social-related-user').send({
+      const response = await sessionRequest.post('/session/sign-in/bind-social-related-user').send({
         connectorId: 'connectorId',
       });
       expect(response.statusCode).toEqual(200);
