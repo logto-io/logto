@@ -6,7 +6,7 @@ import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider';
 import { socialConnectors, mockSignInExperienceSettings } from '@/__mocks__/logto';
 import * as socialSignInApi from '@/apis/social';
-import { generateState, storeState } from '@/hooks/use-social';
+import { generateState, storeState } from '@/hooks/utils';
 
 import SecondarySocialSignIn, { defaultSize } from './SecondarySocialSignIn';
 

@@ -1,4 +1,10 @@
-import { Branding, LanguageInfo, TermsOfUse, ConnectorMetadata } from '@logto/schemas';
+import {
+  Branding,
+  LanguageInfo,
+  TermsOfUse,
+  ConnectorMetadata,
+  ConnectorPlatform,
+} from '@logto/schemas';
 
 export type UserFlow = 'sign-in' | 'register';
 export type SignInMethod = 'username' | 'email' | 'sms' | 'social';
@@ -10,6 +16,7 @@ export enum SearchParameters {
 
 export interface ConnectorData extends ConnectorMetadata {
   id: string;
+  platform: ConnectorPlatform;
 }
 
 export type SignInExperienceSettings = {

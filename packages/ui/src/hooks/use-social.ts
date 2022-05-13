@@ -3,67 +3,20 @@ import { useTranslation } from 'react-i18next';
 import { useParams, useNavigate } from 'react-router-dom';
 
 import { invokeSocialSignIn, signInWithSocial } from '@/apis/social';
-import { generateRandomString, parseQueryParameters } from '@/utils';
+import { parseQueryParameters } from '@/utils';
 
 import useApi, { ErrorHandlers } from './use-api';
 import { PageContext } from './use-page-context';
 import useTerms from './use-terms';
-
-/**
- * Social Connector State Utility Methods
- * @param state
- * @param state.uuid - unique id
- * @param state.platform - platform
- * @param state.callbackLink - callback uri scheme
- */
-
-type State = {
-  uuid: string;
-  platform: 'web' | 'ios' | 'android';
-  callbackLink?: string;
-};
-
-const storageKeyPrefix = 'social_auth_state';
-
-const getLogtoNativeSdk = () => {
-  if (typeof logtoNativeSdk !== 'undefined') {
-    return logtoNativeSdk;
-  }
-};
-
-export const generateState = () => {
-  const uuid = generateRandomString();
-  const platform = getLogtoNativeSdk()?.platform ?? 'web';
-  const callbackLink = getLogtoNativeSdk()?.callbackLink;
-
-  const state: State = { uuid, platform, callbackLink };
-
-  return btoa(JSON.stringify(state));
-};
-
-export const decodeState = (state: string) => {
-  try {
-    return JSON.parse(atob(state)) as State;
-  } catch {}
-};
-
-export const stateValidation = (state: string, connectorId: string) => {
-  const stateStorage = sessionStorage.getItem(`${storageKeyPrefix}:${connectorId}`);
-
-  return stateStorage === state;
-};
-
-export const storeState = (state: string, connectorId: string) => {
-  sessionStorage.setItem(`${storageKeyPrefix}:${connectorId}`, state);
-};
-
-/* ============================================================================ */
-
-const isNativeWebview = () => {
-  const platform = getLogtoNativeSdk()?.platform ?? '';
-
-  return ['ios', 'android'].includes(platform);
-};
+import {
+  getLogtoNativeSdk,
+  isNativeWebview,
+  generateState,
+  decodeState,
+  stateValidation,
+  storeState,
+  filterSocialConnectors,
+} from './utils';
 
 const useSocial = () => {
   const { setToast, experienceSettings } = useContext(PageContext);
@@ -87,13 +40,9 @@ const useSocial = () => {
     [navigate, parameters.connector]
   );
 
-  // Filter native supported social connectors
   const socialConnectors = useMemo(
-    () =>
-      (experienceSettings?.socialConnectors ?? []).filter(({ id }) => {
-        return !isNativeWebview() || getLogtoNativeSdk()?.supportedSocialConnectorIds.includes(id);
-      }),
-    [experienceSettings?.socialConnectors]
+    () => filterSocialConnectors(experienceSettings?.socialConnectors),
+    [experienceSettings]
   );
 
   const { run: asyncInvokeSocialSignIn } = useApi(invokeSocialSignIn);
