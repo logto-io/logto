@@ -84,7 +84,7 @@ export const initTokenExchangeSuccessLogger = () => {
   return async (ctx: KoaContextWithOIDC & { body: GrantBody }) => {
     const {
       oidc: {
-        entities: { Account: account },
+        entities: { Account: account, Grant: grant, Client: client },
         params,
       },
       request: {
@@ -105,7 +105,13 @@ export const initTokenExchangeSuccessLogger = () => {
       id_token && 'idToken',
     ].filter((value): value is IssuedTokenType => notFalsy(value));
 
-    const logger = initLogger({ result: LogResult.Success, ip, userAgent });
+    const logger = initLogger({
+      result: LogResult.Success,
+      ip,
+      userAgent,
+      applicationId: client?.clientId,
+      sessionId: grant?.jti,
+    });
     const userId = account?.accountId;
     logger.log(logType, { userId, params, issued, scope });
     await logger.save();
