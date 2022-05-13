@@ -7,8 +7,10 @@ import './scss/normalized.scss';
 
 import * as styles from './App.module.scss';
 import AppContent from './components/AppContent';
-import { getPath, sections } from './components/AppContent/components/Sidebar';
+import { getPath } from './components/AppContent/components/Sidebar';
+import { useSidebarMenuItems } from './components/AppContent/components/Sidebar/hook';
 import ErrorBoundary from './components/ErrorBoundary';
+import LogtoLoading from './components/LogtoLoading';
 import Toast from './components/Toast';
 import { themeStorageKey, logtoApiResource } from './consts';
 import { RequestError } from './hooks/use-api';
@@ -45,6 +47,8 @@ const Main = () => {
     settingsFetcher
   );
 
+  const sections = useSidebarMenuItems();
+
   useEffect(() => {
     const theme = data?.adminConsole.appearanceMode ?? defaultTheme;
     const isFollowSystem = theme === AppearanceMode.SyncWithSystem;
@@ -69,9 +73,13 @@ const Main = () => {
 
   useEffect(() => {
     if (location.pathname === '/') {
-      navigate(getPath(sections[0]?.items[0]?.title ?? ''));
+      navigate(getPath(sections?.[0]?.items[0]?.title ?? ''));
     }
-  }, [location.pathname, navigate]);
+  }, [location.pathname, navigate, sections]);
+
+  if (sections?.length === 0) {
+    return <LogtoLoading message="general.loading" />;
+  }
 
   return (
     <ErrorBoundary>

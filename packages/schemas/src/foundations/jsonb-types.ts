@@ -145,6 +145,7 @@ export const adminConsoleConfigGuard = z.object({
   appearanceMode: z.nativeEnum(AppearanceMode),
   experienceNoticeConfirmed: z.boolean().optional(),
   experienceGuideDone: z.boolean().optional(),
+  hideGetStarted: z.boolean().optional(),
   // Get started challenges
   checkDemo: z.boolean(),
   createApplication: z.boolean(),

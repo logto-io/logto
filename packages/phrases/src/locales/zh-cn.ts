@@ -277,6 +277,8 @@ const translation = {
       subtitle_part1: '下列是一些适合您快速上手的事情',
       subtitle_part2: '这配置页面我要看吐了，',
       hide_this: '退下！',
+      confirm: '确认提醒',
+      confirm_message: '您确认要隐藏该页面吗? 本操作将无法恢复。',
       card1_title: 'Logto 是您没有使用过的全新身份管理工具，来看看我们的 Demo 吧',
       card1_subtitle:
         '无论是 mobile 应用，SPA web 还是传统 web 应用，您都可以使用 Logto，快速创建和管理身份，实现登录验证服务。',

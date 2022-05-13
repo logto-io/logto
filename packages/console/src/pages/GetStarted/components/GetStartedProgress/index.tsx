@@ -17,7 +17,7 @@ const GetStartedProgress = () => {
   const [showDropDown, setShowDropdown] = useState(false);
   const { data, completedCount, totalCount } = useGetStartedMetadata();
 
-  if (!configs) {
+  if (!configs || configs.hideGetStarted) {
     return null;
   }
 
