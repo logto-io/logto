@@ -2,15 +2,17 @@
 
 
 @mixin link-split {
-  content: '';
-  width: 1px;
-  height: 12px;
-  position: absolute;
-  top: 50%;
-  right: 0;
-  transform: translateY(-50%);
-  background-color: var(--color-primary);
-  opacity: 60%;
+  &::after {
+    content: '';
+    width: 1px;
+    height: 12px;
+    position: absolute;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
+    background-color: var(--color-primary);
+    opacity: 60%;
+  }
 }
 
 .textLink {
@@ -29,9 +31,7 @@
     padding: 0 _.unit(4);
     position: relative;
 
-    &::after {
-      @include link-split;
-    }
+    @include link-split;
 
     &:first-child {
       padding-left: 0;
@@ -53,9 +53,7 @@
       padding: 0 _.unit(5);
       position: relative;
 
-      &::after {
-        @include link-split;
-      }
+      @include link-split;
 
       &:first-child {
         padding-left: 0;
