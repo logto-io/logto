@@ -67,7 +67,7 @@ const DeleteForm = ({ id, name, onClose }: Props) => {
           t={t}
           i18nKey="application_details.delete_description"
           values={{ name }}
-          components={{ span: <span className={styles.hightlight} /> }}
+          components={{ span: <span className={styles.highlight} /> }}
         />
       </div>
       <TextInput
