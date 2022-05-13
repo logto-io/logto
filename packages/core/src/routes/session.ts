@@ -259,7 +259,7 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
   );
 
   router.post(
-    '/session/bind-social-related-user',
+    '/session/sign-in/bind-social-related-user',
     koaGuard({
       body: object({ connectorId: string() }),
     }),
