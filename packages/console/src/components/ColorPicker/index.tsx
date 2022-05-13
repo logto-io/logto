@@ -18,10 +18,7 @@ const ColorPicker = ({ onChange, value = '#000000' }: Props) => {
   return (
     <div className={styles.container}>
       <input type="color" id={id} value={value} onChange={handleChange} />
-      <label htmlFor={id}>
-        <div className={styles.preview} style={{ backgroundColor: value }} />
-        {value.toUpperCase()}
-      </label>
+      <label htmlFor={id}>{value.toUpperCase()}</label>
     </div>
   );
 };
