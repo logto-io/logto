@@ -76,12 +76,10 @@ jest.mock('@/queries/user', () => ({
   hasUserWithPhone: async (phone: string) => phone === '13000000000',
   hasUserWithEmail: async (email: string) => email === 'a@a.com',
 }));
-const sendPasscode = jest.fn();
+const sendPasscode = jest.fn(async () => ({ connector: { id: 'connectorIdValue' } }));
 jest.mock('@/lib/passcode', () => ({
   createPasscode: async () => ({ id: 'id' }),
-  sendPasscode: () => {
-    sendPasscode();
-  },
+  sendPasscode: async () => sendPasscode(),
   verifyPasscode: async (_a: unknown, _b: unknown, code: string) => {
     if (code !== '1234') {
       throw new RequestError('passcode.code_mismatch');
