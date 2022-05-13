@@ -13,39 +13,57 @@ $font-family: -apple-system,
   --color-surface: #ecebf6;
   --color-base: #fff;
   --color-text: #191c1d;
+  --color-text-disabled: #c4c7c7;
+  --color-border: #c4c7c7;
   --color-caption: #747778;
   --color-icon: #747778;
-  // legacy bellow
-
-
-  --color-outline: #78767f;
-  --color-border: #e0e3e3;
-  --color-disabled: #c4c7c7;
   --color-primary: #5d34f2;
+  --color-focused: rgba(25, 28, 29, 16%);
+  --color-focused-variant: rgba(93, 52, 242, 16%);
+  --color-pressed: rgba(25, 28, 29, 12%);
+  --color-primary-pressed: #4300da;
+  --color-pressed-variant: rgba(93, 52, 242, 12%);
+  --color-hover: rgba(25, 28, 29, 8%);
+  --color-primary-hover: #7958ff;
+  --color-hover-variant: rgba(93, 52, 242, 8%);
+  --color-inverse-on-surface: #f3effa;
+  --color-outline: #78767f;
   --color-layer: #eff1f1;
+  --color-dialogue: #fff;
+  --color-divider: #e0e3e3;
   --color-error: #ba1b1b;
+  // legacy bellow
   --color-toast: rgba(25, 28, 29, 80%);
   --color-overlay: rgba(25, 28, 29, 16%);
-  --color-dialogue: #fff;
 }
 
 @mixin colors-dark-theme {
   --color-surface: #25272b;
   --color-base: #2a2c32;
   --color-text: #f7f8f8;
+  --color-text-disabled: #5c5f60;
+  --color-border: #5c5f60;
   --color-caption: #a9acac;
   --color-icon: #a9acac;
-  // legacy bellow
-
-  --color-outline: #928f9a;
-  --color-border: #444748;
-  --color-disabled: #5c5f60;
   --color-primary: #7958ff;
+  --color-focused: rgba(247, 248, 248, 16%);
+  --color-focused-variant: rgba(202, 190, 255, 16%);
+  --color-hover-variant: rgba(202, 190, 255, 8%);
+  --color-hover: rgba(247, 248, 248, 8%);
+  --color-primary-hover: #947dff;
+  --color-pressed-variant: rgba(202, 190, 255, 12%);
+  --color-pressed: rgba(247, 248, 248, 12%);
+  --color-primary-pressed: #5d34f2;
+  --color-inverse-on-surface: #2d3132;
+  --color-outline: #928f9a;
   --color-layer: linear-gradient(0deg, rgba(202, 190, 255, 14%), rgba(202, 190, 255, 14%)), linear-gradient(0deg, rgba(196, 199, 199, 2%), rgba(196, 199, 199, 2%)), #191c1d;
+  --color-dialogue: linear-gradient(0deg, rgba(202, 190, 255, 8%), rgba(202, 190, 255, 8%)), linear-gradient(0deg, rgba(196, 199, 199, 2%), rgba(196, 199, 199, 2%)), #191c1d;
+  --color-divider: #444748;
   --color-error: #dd3730;
+
+  // legacy bellow
   --color-toast: rgba(247, 248, 248, 80%);
   --color-overlay: rgba(25, 28, 29, 40%);
-  --color-dialogue: linear-gradient(0deg, rgba(202, 190, 255, 8%), rgba(202, 190, 255, 8%)), linear-gradient(0deg, rgba(196, 199, 199, 2%), rgba(196, 199, 199, 2%)), #191c1d;
 }
 
 
@@ -56,7 +74,8 @@ $font-family: -apple-system,
 @mixin fonts {
   --font-title: 600 32px/40px #{$font-family};
   --font-title-medium: 600 28px/36px #{$font-family};
-  --font-title-small: 600 24px/32px #{$font-family};
+  --font-title-small: 600 16px/24px #{$font-family};
+  --font-header: 600 20px/28px #{$font-family};
   --font-body-bold: 500 14px/20px #{$font-family};
   --font-body: 400 14px/20px #{$font-family};
   --font-caption: 400 14px/20px #{$font-family};
