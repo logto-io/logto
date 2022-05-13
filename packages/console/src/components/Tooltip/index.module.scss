@@ -1,12 +1,11 @@
 @use '@/scss/underscore' as _;
 
-.container {
+.tooltip {
   position: absolute;
-  transform: translate(-50%, -100%);
   border-radius: 8px;
-  background: #191c1d;
-  color: #e0e3e3;
-  box-shadow: var(--light-shadow-s1);
+  background: var(--color-on-background);
+  color: var(--color-background);
+  box-shadow: var(--shadow-1);
   padding: _.unit(2) _.unit(3);
   font: var(--font-body-medium);
 
@@ -14,12 +13,16 @@
     content: '';
     display: block;
     position: absolute;
-    border-width: 4px;
-    border-style: solid;
-    border-color: #191c1d transparent transparent;
-    left: 50%;
+    width: 10px;
+    height: 10px;
     top: 100%;
-    transform: translateX(-50%);
-    box-shadow: var(--light-shadow-s1);
+    left: 50%;
+    background-color: inherit;
+    border-radius: _.unit(0.5) 0 _.unit(0.5);
+    transform: translate(-50%, -50%) rotate(45deg);
+  }
+
+  &.arrowUp::after {
+    top: 0%;
   }
 }

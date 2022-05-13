@@ -56,9 +56,9 @@ const CopyToClipboard = ({ value, className, variant = 'contained' }: Props) => 
         {variant === 'icon' ? null : value}
         <CopyIcon ref={copyIconReference} onClick={copy} />
         <Tooltip
-          className={classNames(copyState === 'copied' && styles.successTooltip)}
-          domRef={copyIconReference}
+          anchorRef={copyIconReference}
           content={t(copyState)}
+          className={classNames(copyState === 'copied' && styles.successfulTooltip)}
         />
       </div>
     </div>

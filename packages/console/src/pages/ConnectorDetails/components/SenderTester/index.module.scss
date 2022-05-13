@@ -25,11 +25,6 @@
   color: var(--color-caption);
 }
 
-div.successTooltip {
-  background: #008a71;
-  color: #fff;
-
-  &::after {
-    border-top-color: #008a71;
-  }
+.successfulTooltip {
+  background-color: var(--color-success-60);
 }
