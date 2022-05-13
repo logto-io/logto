@@ -42,20 +42,35 @@ const selectVerticalAlignment = ({
   const isTopAllowed = verticalTop >= minY;
   const isBottomAllowed = verticalBottom + overlayHeight <= maxY;
 
-  if (verticalAlign === 'top') {
-    if (isTopAllowed) {
-      return 'top';
+  switch (verticalAlign) {
+    case 'top': {
+      if (isTopAllowed) {
+        return 'top';
+      }
+
+      if (isBottomAllowed) {
+        return 'bottom';
+      }
+
+      return verticalAlign;
     }
 
-    return isBottomAllowed ? 'bottom' : 'top';
-  }
+    case 'bottom': {
+      if (isBottomAllowed) {
+        return 'bottom';
+      }
 
-  // Mark: VerticalAlign === 'bottom'
-  if (isBottomAllowed) {
-    return 'bottom';
-  }
+      if (isTopAllowed) {
+        return 'top';
+      }
 
-  return isTopAllowed ? 'top' : 'bottom';
+      return verticalAlign;
+    }
+
+    default: {
+      return verticalAlign;
+    }
+  }
 };
 
 const selectHorizontalAlignment = ({
