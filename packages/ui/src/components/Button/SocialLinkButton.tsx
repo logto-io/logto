@@ -1,7 +1,8 @@
-import { ConnectorMetadata } from '@logto/schemas';
 import classNames from 'classnames';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+
+import { ConnectorData } from '@/types';
 
 import * as socialLinkButtonStyles from './SocialLinkButton.module.scss';
 import * as styles from './index.module.scss';
@@ -9,12 +10,12 @@ import * as styles from './index.module.scss';
 export type Props = {
   isDisabled?: boolean;
   className?: string;
-  connector: Pick<ConnectorMetadata, 'target' | 'name' | 'logo'>;
+  connector: ConnectorData;
   onClick?: (id: string) => void;
 };
 
 const SocialLinkButton = ({ isDisabled, className, connector, onClick }: Props) => {
-  const { target, name, logo } = connector;
+  const { id, name, logo } = connector;
 
   const {
     i18n: { language },
@@ -35,7 +36,7 @@ const SocialLinkButton = ({ isDisabled, className, connector, onClick }: Props) 
       )}
       type="button"
       onClick={() => {
-        onClick?.(target);
+        onClick?.(id);
       }}
     >
       {logo && <img src={logo} alt={target} className={socialLinkButtonStyles.icon} />}

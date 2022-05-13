@@ -96,6 +96,24 @@ export const socialConnectors = [
   },
 ];
 
+export const mockSocialConnectorData = {
+  id: 'arbitrary-social-connector-data',
+  target: 'google',
+  platform: ConnectorPlatform.Web,
+  type: ConnectorType.Social,
+  logo: 'http://logto.dev/logto.png',
+  name: {
+    en: 'Sign in with Xxx',
+    'zh-CN': '使用 Xxx 登录',
+  },
+  description: {
+    en: 'Sign in with Xxx',
+    'zh-CN': '使用 Xxx 登录',
+  },
+  readme: '',
+  configTemplate: '',
+};
+
 export const mockSignInExperience: SignInExperience = {
   id: 'foo',
   branding: {
