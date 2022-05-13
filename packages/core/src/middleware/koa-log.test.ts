@@ -7,6 +7,7 @@ import koaLog, { WithLogContext } from './koa-log';
 
 const nanoIdMock = 'mockId';
 
+const addLogContext = jest.fn();
 const log = jest.fn();
 
 jest.mock('@/queries/log', () => ({
@@ -36,7 +37,9 @@ describe('koaLog middleware', () => {
   it('insert log with success response', async () => {
     const ctx: WithLogContext<ReturnType<typeof createContextWithRouteParameters>> = {
       ...createContextWithRouteParameters({ headers: { 'user-agent': userAgent } }),
-      log, // Bypass middleware context type assert
+      // Bypass middleware context type assert
+      addLogContext,
+      log,
     };
     ctx.request.ip = ip;
 
@@ -60,7 +63,9 @@ describe('koaLog middleware', () => {
   it('should insert log with failed result if next throws error', async () => {
     const ctx: WithLogContext<ReturnType<typeof createContextWithRouteParameters>> = {
       ...createContextWithRouteParameters({ headers: { 'user-agent': userAgent } }),
-      log, // Bypass middleware context type assert
+      // Bypass middleware context type assert
+      addLogContext,
+      log,
     };
     ctx.request.ip = ip;
 

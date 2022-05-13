@@ -4,6 +4,7 @@ import Router from 'koa-router';
 import { Provider } from 'oidc-provider';
 
 import koaAuth from '@/middleware/koa-auth';
+import koaLogSession from '@/middleware/koa-log-session';
 import applicationRoutes from '@/routes/application';
 import connectorRoutes from '@/routes/connector';
 import resourceRoutes from '@/routes/resource';
@@ -18,23 +19,25 @@ import roleRoutes from './role';
 import { AnonymousRouter, AuthedRouter } from './types';
 
 const createRouters = (provider: Provider) => {
-  const anonymousRouter: AnonymousRouter = new Router();
+  const sessionRouter: AnonymousRouter = new Router();
+  sessionRouter.use(koaLogSession(provider));
+  sessionRoutes(sessionRouter, provider);
 
+  const anonymousRouter: AnonymousRouter = new Router();
   statusRoutes(anonymousRouter);
-  sessionRoutes(anonymousRouter, provider);
   swaggerRoutes(anonymousRouter);
 
-  const router: AuthedRouter = new Router();
-  router.use(koaAuth());
-  applicationRoutes(router);
-  settingRoutes(router);
-  connectorRoutes(router);
-  resourceRoutes(router);
-  signInExperiencesRoutes(router);
-  adminUserRoutes(router);
-  roleRoutes(router);
+  const authedRouter: AuthedRouter = new Router();
+  authedRouter.use(koaAuth());
+  applicationRoutes(authedRouter);
+  settingRoutes(authedRouter);
+  connectorRoutes(authedRouter);
+  resourceRoutes(authedRouter);
+  signInExperiencesRoutes(authedRouter);
+  adminUserRoutes(authedRouter);
+  roleRoutes(authedRouter);
 
-  return [anonymousRouter, router];
+  return [sessionRouter, anonymousRouter, authedRouter];
 };
 
 export default function initRouter(app: Koa, provider: Provider) {

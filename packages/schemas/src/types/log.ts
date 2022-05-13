@@ -10,40 +10,40 @@ export interface BaseLogPayload {
   error?: string;
   ip?: string;
   userAgent?: string;
-}
-
-interface CommonFields {
+  applicationId?: string;
   sessionId?: string;
 }
 
-interface RegisterUsernamePasswordLogPayload extends CommonFields {
+type ArbitraryLogPayload = Record<string, unknown>;
+
+interface RegisterUsernamePasswordLogPayload extends ArbitraryLogPayload {
   userId?: string;
   username?: string;
 }
 
-interface RegisterEmailSendPasscodeLogPayload extends CommonFields {
+interface RegisterEmailSendPasscodeLogPayload extends ArbitraryLogPayload {
   email?: string;
   passcode?: Passcode;
 }
 
-interface RegisterEmailLogPayload extends CommonFields {
+interface RegisterEmailLogPayload extends ArbitraryLogPayload {
   email?: string;
   code?: string;
   userId?: string;
 }
 
-interface RegisterSmsSendPasscodeLogPayload extends CommonFields {
+interface RegisterSmsSendPasscodeLogPayload extends ArbitraryLogPayload {
   phone?: string;
   passcode?: Passcode;
 }
 
-interface RegisterSmsLogPayload extends CommonFields {
+interface RegisterSmsLogPayload extends ArbitraryLogPayload {
   phone?: string;
   code?: string;
   userId?: string;
 }
 
-interface RegisterSocialBindLogPayload extends CommonFields {
+interface RegisterSocialBindLogPayload extends ArbitraryLogPayload {
   connectorId?: string;
   userInfo?: object;
   userId?: string;
@@ -56,34 +56,34 @@ interface RegisterSocialLogPayload extends RegisterSocialBindLogPayload {
   redirectTo?: string;
 }
 
-interface SignInUsernamePasswordLogPayload extends CommonFields {
+interface SignInUsernamePasswordLogPayload extends ArbitraryLogPayload {
   userId?: string;
   username?: string;
 }
 
-interface SignInEmailSendPasscodeLogPayload extends CommonFields {
+interface SignInEmailSendPasscodeLogPayload extends ArbitraryLogPayload {
   email?: string;
   passcode?: Passcode;
 }
 
-interface SignInEmailLogPayload extends CommonFields {
+interface SignInEmailLogPayload extends ArbitraryLogPayload {
   email?: string;
   code?: string;
   userId?: string;
 }
 
-interface SignInSmsSendPasscodeLogPayload extends CommonFields {
+interface SignInSmsSendPasscodeLogPayload extends ArbitraryLogPayload {
   phone?: string;
   passcode?: Passcode;
 }
 
-interface SignInSmsLogPayload extends CommonFields {
+interface SignInSmsLogPayload extends ArbitraryLogPayload {
   phone?: string;
   code?: string;
   userId?: string;
 }
 
-interface SignInSocialBindLogPayload extends CommonFields {
+interface SignInSocialBindLogPayload extends ArbitraryLogPayload {
   connectorId?: string;
   userInfo?: object;
   userId?: string;

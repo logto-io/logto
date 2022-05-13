@@ -171,6 +171,7 @@ describe('sessionRoutes', () => {
     provider: new Provider(''),
     middlewares: [
       async (ctx, next) => {
+        ctx.addLogContext = jest.fn();
         ctx.log = jest.fn();
 
         return next();

@@ -1,13 +1,25 @@
 import { BaseLogPayload, LogPayload, LogPayloads, LogResult, LogType } from '@logto/schemas';
 import deepmerge from 'deepmerge';
 import { MiddlewareType } from 'koa';
+import { IRouterParamContext } from 'koa-router';
 import { nanoid } from 'nanoid';
 
 import { insertLog } from '@/queries/log';
 
 type MergeLog = <T extends LogType>(type: T, payload: LogPayloads[T]) => void;
 
-export type WithLogContext<ContextT> = ContextT & { log: MergeLog };
+type SessionPayload = {
+  sessionId?: string;
+  applicationId?: string;
+};
+
+type AddLogContext = (sessionPayload: SessionPayload) => void;
+
+export type WithLogContext<ContextT extends IRouterParamContext = IRouterParamContext> =
+  ContextT & {
+    addLogContext: AddLogContext;
+    log: MergeLog;
+  };
 
 type Logger = {
   type?: LogType;
@@ -60,11 +72,11 @@ const initLogger = (basePayload?: Readonly<BaseLogPayload>) => {
 };
 /* eslint-enable @silverhand/fp/no-mutation */
 
-export default function koaLog<StateT, ContextT, ResponseBodyT>(): MiddlewareType<
+export default function koaLog<
   StateT,
-  WithLogContext<ContextT>,
+  ContextT extends IRouterParamContext,
   ResponseBodyT
-> {
+>(): MiddlewareType<StateT, WithLogContext<ContextT>, ResponseBodyT> {
   return async (ctx, next) => {
     const {
       ip,
@@ -72,6 +84,7 @@ export default function koaLog<StateT, ContextT, ResponseBodyT>(): MiddlewareTyp
     } = ctx.request;
 
     const logger = initLogger({ result: LogResult.Success, ip, userAgent });
+    ctx.addLogContext = logger.set;
     ctx.log = logger.log;
 
     try {
