@@ -9,16 +9,16 @@ export type SendSmsResponse = { BizId: string; Code: string; Message: string; Re
 /**
  * @doc https://help.aliyun.com/document_detail/101414.html
  */
-export interface SendSms {
+export type SendSms = {
   OutId?: string;
   PhoneNumbers: string; // 11 digits w/o prefix (can be multiple phone numbers with separator `,`)
   SignName: string; // Name of SMS signature
   SmsUpExtendCode?: string;
   TemplateCode: string; // Text message template ID
   TemplateParam?: string; // Stringified JSON (used to fill in text template)
-}
+};
 
-export interface PublicParameters {
+export type PublicParameters = {
   AccessKeyId: string;
   Format?: string; // 'json' or 'xml', default: 'json'
   RegionId?: string; // 'cn-hangzhou' | 'ap-southeast-1' | 'ap-southeast-2'
@@ -28,7 +28,7 @@ export interface PublicParameters {
   SignatureVersion?: string;
   Timestamp?: string;
   Version?: string;
-}
+};
 
 /**
  * UsageType here is used to specify the use case of the template, can be either

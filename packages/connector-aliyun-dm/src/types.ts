@@ -27,7 +27,7 @@ export type AliyunDmConfig = z.infer<typeof aliyunDmConfigGuard>;
 /**
  * @doc https://help.aliyun.com/document_detail/29444.html
  */
-export interface SingleSendMail {
+export type SingleSendMail = {
   AccountName: string;
   AddressType: '0' | '1';
   ClickTrace?: '0' | '1';
@@ -38,9 +38,9 @@ export interface SingleSendMail {
   TagName?: string;
   TextBody?: string;
   ToAddress: string;
-}
+};
 
-export interface PublicParameters {
+export type PublicParameters = {
   AccessKeyId: string;
   Format?: string; // 'json' or 'xml', default: 'json'
   RegionId?: string; // 'cn-hangzhou' | 'ap-southeast-1' | 'ap-southeast-2'
@@ -50,4 +50,4 @@ export interface PublicParameters {
   SignatureVersion?: string;
   Timestamp?: string;
   Version?: string;
-}
+};
