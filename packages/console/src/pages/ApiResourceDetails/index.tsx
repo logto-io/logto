@@ -12,6 +12,7 @@ import ActionMenu, { ActionMenuItem } from '@/components/ActionMenu';
 import Button from '@/components/Button';
 import Card from '@/components/Card';
 import CopyToClipboard from '@/components/CopyToClipboard';
+import DetailsSkeleton from '@/components/DetailsSkeleton';
 import Drawer from '@/components/Drawer';
 import FormField from '@/components/FormField';
 import ImagePlaceholder from '@/components/ImagePlaceholder';
@@ -82,7 +83,7 @@ const ApiResourceDetails = () => {
         title="admin_console.api_resource_details.back_to_api_resources"
         className={styles.backLink}
       />
-      {isLoading && <div>loading</div>}
+      {isLoading && <DetailsSkeleton />}
       {error && <div>{`error occurred: ${error.body.message}`}</div>}
       {data && (
         <>

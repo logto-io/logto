@@ -10,6 +10,7 @@ import ActionMenu, { ActionMenuItem } from '@/components/ActionMenu';
 import Button from '@/components/Button';
 import Card from '@/components/Card';
 import CodeEditor from '@/components/CodeEditor';
+import DetailsSkeleton from '@/components/DetailsSkeleton';
 import Drawer from '@/components/Drawer';
 import ImagePlaceholder from '@/components/ImagePlaceholder';
 import LinkButton from '@/components/LinkButton';
@@ -105,7 +106,7 @@ const ConnectorDetails = () => {
         title="admin_console.connector_details.back_to_connectors"
         className={styles.backLink}
       />
-      {isLoading && <div>loading</div>}
+      {isLoading && <DetailsSkeleton />}
       {error && <div>{`error occurred: ${error.body.message}`}</div>}
       {data && (
         <Card className={styles.header}>

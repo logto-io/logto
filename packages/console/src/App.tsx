@@ -77,7 +77,7 @@ const Main = () => {
     }
   }, [location.pathname, navigate, sections]);
 
-  if (sections?.length === 0) {
+  if (!sections?.length) {
     return <LogtoLoading message="general.loading" />;
   }
 

@@ -1,6 +1,5 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 
-import ItemPreviewLoading from './ItemPreviewLoading';
 import * as styles from './TableLoading.module.scss';
 
 type Props = {
@@ -8,27 +7,28 @@ type Props = {
 };
 
 const TableLoading = ({ columns }: Props) => {
-  const row = useMemo(
-    () => (
-      <tr className={styles.loading}>
-        <td>
-          <ItemPreviewLoading />
-        </td>
-        {Array.from({ length: columns - 1 }).map((_, index) => (
-          // eslint-disable-next-line react/no-array-index-key
-          <td key={index}>
-            <div className={styles.rect} />
-          </td>
-        ))}
-      </tr>
-    ),
-    [columns]
-  );
-
   return (
     <>
-      {row}
-      {row}
+      {Array.from({ length: 8 }).map((_, rowIndex) => (
+        // eslint-disable-next-line react/no-array-index-key
+        <tr key={`row-${rowIndex}`} className={styles.loading}>
+          <td>
+            <div className={styles.itemPreview}>
+              <div className={styles.avatar} />
+              <div className={styles.content}>
+                <div className={styles.title} />
+                <div className={styles.subTitle} />
+              </div>
+            </div>
+          </td>
+          {Array.from({ length: columns - 1 }).map((_, index) => (
+            // eslint-disable-next-line react/no-array-index-key
+            <td key={index}>
+              <div className={styles.rect} />
+            </td>
+          ))}
+        </tr>
+      ))}
     </>
   );
 };
