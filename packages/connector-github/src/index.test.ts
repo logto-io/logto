@@ -2,13 +2,9 @@ import { ConnectorError, ConnectorErrorCodes, GetConnectorConfig } from '@logto/
 import nock from 'nock';
 
 import { GithubConnector } from '.';
-import {
-  GithubConfig,
-  accessTokenEndpoint,
-  authorizationEndpoint,
-  userInfoEndpoint,
-} from './constant';
+import { accessTokenEndpoint, authorizationEndpoint, userInfoEndpoint } from './constant';
 import { mockedConfig } from './mock';
+import { GithubConfig } from './types';
 
 const getConnectorConfig = jest.fn() as GetConnectorConfig<GithubConfig>;
 

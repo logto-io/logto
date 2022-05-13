@@ -21,11 +21,10 @@ import {
   authorizationEndpoint,
   scope,
   userInfoEndpoint,
-  googleConfigGuard,
-  GoogleConfig,
   defaultMetadata,
   defaultTimeout,
 } from './constant';
+import { googleConfigGuard, AccessTokenResponse, GoogleConfig, UserInfoResponse } from './types';
 
 export class GoogleConnector implements SocialConnector {
   public metadata: ConnectorMetadata = defaultMetadata;
@@ -59,12 +58,6 @@ export class GoogleConnector implements SocialConnector {
   };
 
   public getAccessToken: GetAccessToken = async (code, redirectUri) => {
-    type AccessTokenResponse = {
-      access_token: string;
-      scope: string;
-      token_type: string;
-    };
-
     const { clientId, clientSecret } = await this.getConfig(
       this.metadata.target,
       this.metadata.platform
@@ -92,17 +85,6 @@ export class GoogleConnector implements SocialConnector {
   };
 
   public getUserInfo: GetUserInfo = async (accessTokenObject) => {
-    type UserInfoResponse = {
-      sub: string;
-      name?: string;
-      given_name?: string;
-      family_name?: string;
-      picture?: string;
-      email?: string;
-      email_verified?: boolean;
-      locale?: string;
-    };
-
     const { accessToken } = accessTokenObject;
 
     try {

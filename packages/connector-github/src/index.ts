@@ -17,11 +17,10 @@ import {
   accessTokenEndpoint,
   scope,
   userInfoEndpoint,
-  githubConfigGuard,
-  GithubConfig,
   defaultMetadata,
   defaultTimeout,
 } from './constant';
+import { githubConfigGuard, AccessTokenResponse, GithubConfig, UserInfoResponse } from './types';
 
 export class GithubConnector implements SocialConnector {
   public metadata: ConnectorMetadata = defaultMetadata;
@@ -54,12 +53,6 @@ export class GithubConnector implements SocialConnector {
   };
 
   getAccessToken: GetAccessToken = async (code) => {
-    type AccessTokenResponse = {
-      access_token: string;
-      scope: string;
-      token_type: string;
-    };
-
     const { clientId: client_id, clientSecret: client_secret } = await this.getConfig(
       this.metadata.target,
       this.metadata.platform
@@ -83,13 +76,6 @@ export class GithubConnector implements SocialConnector {
   };
 
   public getUserInfo: GetUserInfo = async (accessTokenObject) => {
-    type UserInfoResponse = {
-      id: number;
-      avatar_url?: string;
-      email?: string;
-      name?: string;
-    };
-
     const { accessToken } = accessTokenObject;
 
     try {

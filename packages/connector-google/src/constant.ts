@@ -2,19 +2,11 @@ import path from 'path';
 
 import { ConnectorMetadata, ConnectorType, ConnectorPlatform } from '@logto/connector-types';
 import { getFileContents } from '@logto/shared';
-import { z } from 'zod';
 
 export const authorizationEndpoint = 'https://accounts.google.com/o/oauth2/v2/auth';
 export const accessTokenEndpoint = 'https://oauth2.googleapis.com/token';
 export const userInfoEndpoint = 'https://openidconnect.googleapis.com/v1/userinfo';
 export const scope = 'openid profile email';
-
-export const googleConfigGuard = z.object({
-  clientId: z.string(),
-  clientSecret: z.string(),
-});
-
-export type GoogleConfig = z.infer<typeof googleConfigGuard>;
 
 // eslint-disable-next-line unicorn/prefer-module
 const currentPath = __dirname;

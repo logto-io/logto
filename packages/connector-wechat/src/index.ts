@@ -24,9 +24,8 @@ import {
   scope,
   defaultMetadata,
   defaultTimeout,
-  weChatConfigGuard,
-  WeChatConfig,
 } from './constant';
+import { weChatConfigGuard, AccessTokenResponse, UserInfoResponse, WeChatConfig } from './types';
 
 // As creating a WeChat Web/Mobile application needs a real App or Website record, the real test is temporarily not finished.
 // TODO: test with our own wechat mobile/web application (LOG-1910), already tested with other verified wechat web application
@@ -63,15 +62,6 @@ export class WeChatConnector implements SocialConnector {
   };
 
   public getAccessToken: GetAccessToken = async (code) => {
-    type AccessTokenResponse = {
-      access_token?: string;
-      openid?: string;
-      expires_in?: number; // In seconds
-      refresh_token?: string;
-      scope?: string;
-      errcode?: number;
-    };
-
     const { appId: appid, appSecret: secret } = await this.getConfig(
       this.metadata.target,
       this.metadata.platform
@@ -99,14 +89,6 @@ export class WeChatConnector implements SocialConnector {
   // FIXME:
   // eslint-disable-next-line complexity
   public getUserInfo: GetUserInfo = async (accessTokenObject) => {
-    type UserInfoResponse = {
-      unionid?: string;
-      headimgurl?: string;
-      nickname?: string;
-      errcode?: number;
-      errmsg?: string;
-    };
-
     const { accessToken, openid } = accessTokenObject;
 
     try {

@@ -3,18 +3,6 @@ import path from 'path';
 import { ConnectorMetadata, ConnectorType } from '@logto/connector-types';
 import { getFileContents } from '@logto/shared';
 
-/**
- * @doc https://help.aliyun.com/document_detail/101414.html
- */
-export interface SendSms {
-  OutId?: string;
-  PhoneNumbers: string; // 11 digits w/o prefix (can be multiple phone numbers with separator `,`)
-  SignName: string; // Name of SMS signature
-  SmsUpExtendCode?: string;
-  TemplateCode: string; // Text message template ID
-  TemplateParam?: string; // Stringified JSON (used to fill in text template)
-}
-
 export const endpoint = 'https://dysmsapi.aliyuncs.com/';
 
 export const staticConfigs = {
@@ -24,6 +12,21 @@ export const staticConfigs = {
   SignatureVersion: '1.0',
   Version: '2017-05-25',
 };
+
+/**
+ * Details of SmsTemplateType can be found at:
+ * https://next.api.aliyun.com/document/Dysmsapi/2017-05-25/QuerySmsTemplateList.
+ *
+ * For our use case is to send passcode sms for passwordless sign-in/up as well as
+ * reset password, the default value of type code is set to be 2.
+ */
+export enum SmsTemplateType {
+  Notification = 0,
+  Promotion = 1,
+  Passcode = 2,
+  InternationalMessage = 6,
+  PureNumber = 7,
+}
 
 // eslint-disable-next-line unicorn/prefer-module
 const currentPath = __dirname;
