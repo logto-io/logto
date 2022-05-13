@@ -76,6 +76,11 @@ export const filterSocialConnectors = (socialConnectors?: ConnectorData[]) => {
         continue;
       }
 
+      /**
+       * Accepts both web and universal platform connectors.
+       * Insert universal connectors only if there is no  web platform connector provided with the same target.
+       * Web platform has higher priority.
+       **/
       if (platform === 'Web' || !connectorMap.get(target)) {
         connectorMap.set(target, connector);
         continue;
@@ -92,6 +97,11 @@ export const filterSocialConnectors = (socialConnectors?: ConnectorData[]) => {
       continue;
     }
 
+    /**
+     * Accepts both Native and universal platform connectors.
+     * Insert universal connectors only if there is no  Native platform connector provided with the same target.
+     * Native platform has higher priority.
+     **/
     if (
       platform === 'Native' &&
       getLogtoNativeSdk()?.supportedSocialConnectorIds.includes(target)
