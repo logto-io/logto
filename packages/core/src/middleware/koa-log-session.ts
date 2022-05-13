@@ -7,14 +7,12 @@ export default function koaLogSession<StateT, ContextT extends WithLogContext, R
   provider: Provider
 ): MiddlewareType<StateT, ContextT, ResponseBodyT> {
   return async (ctx, next) => {
-    const nextPromise = next();
+    await next();
 
     const {
       jti,
       params: { client_id },
     } = await provider.interactionDetails(ctx.req, ctx.res);
     ctx.logSession({ sessionId: jti, applicationId: String(client_id) });
-
-    return nextPromise;
   };
 }
