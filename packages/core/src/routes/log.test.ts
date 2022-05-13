@@ -26,25 +26,27 @@ describe('logRoutes', () => {
     jest.clearAllMocks();
   });
 
-  it('GET /users/:id/logs should call countUserLogs and findUserLogs with correct parameters', async () => {
-    const userId = 'userIdValue';
-    const applicationId = 'foo';
-    const logType = 'SignInUsernamePassword';
-    const page = 1;
-    const pageSize = 5;
+  describe('GET /users/:id/logs', () => {
+    it('should call countUserLogs and findUserLogs with correct parameters', async () => {
+      const userId = 'userIdValue';
+      const applicationId = 'foo';
+      const logType = 'SignInUsernamePassword';
+      const page = 1;
+      const pageSize = 5;
 
-    await userRequest.get(
-      `/users/${userId}/logs?applicationId=${applicationId}&logType=${logType}&page=${page}&page_size=${pageSize}`
-    );
-    expect(countUserLogs).toHaveBeenCalledWith({ userId, applicationId, logType });
-    expect(findUserLogs).toHaveBeenCalledWith(5, 0, { userId, applicationId, logType });
-  });
+      await userRequest.get(
+        `/users/${userId}/logs?applicationId=${applicationId}&logType=${logType}&page=${page}&page_size=${pageSize}`
+      );
+      expect(countUserLogs).toHaveBeenCalledWith({ userId, applicationId, logType });
+      expect(findUserLogs).toHaveBeenCalledWith(5, 0, { userId, applicationId, logType });
+    });
 
-  it('GET /users/:id/logs should return correct response', async () => {
-    const userId = 'userIdValue';
-    const response = await userRequest.get(`/users/${userId}/logs`);
-    expect(response.status).toEqual(200);
-    expect(response.body).toEqual(mockUserLogs);
-    expect(response.header).toHaveProperty('total-number', `${mockUserLogs.length}`);
+    it('should return correct response', async () => {
+      const userId = 'userIdValue';
+      const response = await userRequest.get(`/users/${userId}/logs`);
+      expect(response.status).toEqual(200);
+      expect(response.body).toEqual(mockUserLogs);
+      expect(response.header).toHaveProperty('total-number', `${mockUserLogs.length}`);
+    });
   });
 });
