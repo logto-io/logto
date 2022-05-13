@@ -28,13 +28,7 @@ const Input = ({
 
   return (
     <div className={className}>
-      <div
-        className={classNames(
-          styles.wrapper,
-          onInputFocus && styles.focus,
-          error && errorStyling && styles.error
-        )}
-      >
+      <div className={classNames(styles.wrapper, error && errorStyling && styles.error)}>
         <input
           type={type}
           value={value}

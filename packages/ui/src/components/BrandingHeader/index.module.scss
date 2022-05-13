@@ -4,9 +4,6 @@ $logo-height: 60px;
 
 .container {
   width: 100%;
-  height: 15vh;
-  min-height: 92px;
-  max-height: 148px;
   @include _.flex-column;
 }
 
@@ -14,13 +11,38 @@ $logo-height: 60px;
   height: $logo-height;
   width: auto;
   @include _.image-align-center;
+}
 
-  &:not(:last-child) {
+
+:global(body.mobile) {
+  .container {
+    height: 15vh;
+    min-height: 92px;
+    max-height: 148px;
+  }
+
+  .logo:not(:last-child) {
     margin-bottom: _.unit(2);
+  }
+
+  .headline {
+    font: var(--font-body);
+    color: var(--color-text);
   }
 }
 
-.headline {
-  font: var(--font-body);
-  color: var(--color-text);
+
+:global(body.desktop) {
+  .container {
+    height: 96px;
+  }
+
+  .logo:not(:last-child) {
+    margin-bottom: _.unit(4);
+  }
+
+  .headline {
+    font: var(--font-title-small);
+    color: var(--color-text);
+  }
 }

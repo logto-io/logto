@@ -194,6 +194,7 @@ const Passcode = ({ name, className, value, length = defaultLength, error, onCha
             type="text"
             inputMode="numeric"
             maxLength={2} // Allow overwrite input
+            autoComplete="off"
             onPaste={onPasteHandler}
             onInput={onInputHandler}
             onKeyDown={onKeyDownHandler}

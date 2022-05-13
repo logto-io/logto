@@ -5,15 +5,12 @@
   justify-content: space-between;
 
   input {
-    border-radius: _.unit(2);
-    border: _.border();
-    background: var(--color-layer);
-    caret-color: var(--color-primary);
     width: 44px;
     height: 44px;
     text-align: center;
     font: var(--font-body);
     color: var(--color-text);
+    caret-color: var(--color-primary);
 
     &::-webkit-outer-spin-button,
     &::-webkit-inner-spin-button {
@@ -31,6 +28,36 @@
   }
 }
 
-.errorMessage {
+.passcode + .errorMessage {
   margin-top: _.unit(2);
+}
+
+:global(body.mobile) {
+  .passcode {
+    input {
+      width: 44px;
+      height: 44px;
+      border-radius: _.unit(2);
+      border: _.border();
+      background: var(--color-layer);
+    }
+  }
+}
+
+:global(body.desktop) {
+  .passcode {
+    input {
+      width: 44px;
+      height: 46px;
+      border-radius: _.unit(2);
+      border: _.border(var(--color-border));
+      outline: 3px solid transparent;
+      background: transparent;
+
+      &:focus {
+        border: _.border(var(--color-primary));
+        outline-color: var(--color-focused-variant);
+      }
+    }
+  }
 }
