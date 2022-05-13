@@ -10,9 +10,6 @@ export interface BaseLogPayload {
   error?: string;
   ip?: string;
   userAgent?: string;
-}
-
-export interface SessionLogPayload {
   applicationId?: string;
   sessionId?: string;
 }

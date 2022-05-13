@@ -1,11 +1,4 @@
-import {
-  BaseLogPayload,
-  SessionLogPayload,
-  LogPayload,
-  LogPayloads,
-  LogResult,
-  LogType,
-} from '@logto/schemas';
+import { BaseLogPayload, LogPayload, LogPayloads, LogResult, LogType } from '@logto/schemas';
 import deepmerge from 'deepmerge';
 import { MiddlewareType } from 'koa';
 import { IRouterParamContext } from 'koa-router';
@@ -15,21 +8,24 @@ import { insertLog } from '@/queries/log';
 
 type MergeLog = <T extends LogType>(type: T, payload: LogPayloads[T]) => void;
 
-type MergeSessionLog = (sessionPayload: SessionLogPayload) => void;
+type SessionPayload = {
+  sessionId?: string;
+  applicationId?: string;
+};
+
+type LogSession = (sessionPayload: SessionPayload) => void;
 
 export type WithLogContext<ContextT extends IRouterParamContext = IRouterParamContext> =
   ContextT & {
-    logSession: MergeSessionLog;
+    logSession: LogSession;
     log: MergeLog;
   };
 
 type Logger = {
   type?: LogType;
   basePayload?: BaseLogPayload;
-  sessionPayload: SessionLogPayload;
   payload: LogPayload;
   set: (basePayload: BaseLogPayload) => void;
-  logSession: MergeSessionLog;
   log: MergeLog;
   save: () => Promise<void>;
 };
@@ -39,16 +35,12 @@ const initLogger = (basePayload?: Readonly<BaseLogPayload>) => {
   const logger: Logger = {
     type: undefined,
     basePayload,
-    sessionPayload: {},
     payload: {},
     set: (basePayload) => {
       logger.basePayload = {
         ...logger.basePayload,
         ...basePayload,
       };
-    },
-    logSession: (sessionPayload: SessionLogPayload) => {
-      logger.sessionPayload = deepmerge(logger.sessionPayload, sessionPayload);
     },
     log: (type, payload) => {
       if (type !== logger.type) {
@@ -70,7 +62,6 @@ const initLogger = (basePayload?: Readonly<BaseLogPayload>) => {
         type: logger.type,
         payload: {
           ...logger.basePayload,
-          ...logger.sessionPayload,
           ...logger.payload,
         },
       });
@@ -93,7 +84,7 @@ export default function koaLog<
     } = ctx.request;
 
     const logger = initLogger({ result: LogResult.Success, ip, userAgent });
-    ctx.logSession = logger.logSession;
+    ctx.logSession = logger.set;
     ctx.log = logger.log;
 
     try {
