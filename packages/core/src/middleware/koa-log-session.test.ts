@@ -15,7 +15,7 @@ jest.mock('oidc-provider', () => ({
 describe('koaLogSession', () => {
   const sessionId = 'sessionId';
   const applicationId = 'applicationId';
-  const logSession = jest.fn();
+  const addLogContext = jest.fn();
   const log = jest.fn();
   const next = jest.fn();
 
@@ -33,7 +33,7 @@ describe('koaLogSession', () => {
   it('should get session info from the provider', async () => {
     const ctx: WithLogContext<ReturnType<typeof createContextWithRouteParameters>> = {
       ...createContextWithRouteParameters(),
-      logSession,
+      addLogContext,
       log,
     };
 
@@ -44,18 +44,18 @@ describe('koaLogSession', () => {
   it('should log session id and application id', async () => {
     const ctx: WithLogContext<ReturnType<typeof createContextWithRouteParameters>> = {
       ...createContextWithRouteParameters(),
-      logSession,
+      addLogContext,
       log,
     };
 
     await expect(koaLogSession(new Provider(''))(ctx, next)).resolves.not.toThrow();
-    expect(logSession).toHaveBeenCalledWith({ sessionId, applicationId });
+    expect(addLogContext).toHaveBeenCalledWith({ sessionId, applicationId });
   });
 
   it('should call next', async () => {
     const ctx: WithLogContext<ReturnType<typeof createContextWithRouteParameters>> = {
       ...createContextWithRouteParameters(),
-      logSession,
+      addLogContext,
       log,
     };
 

@@ -7,8 +7,8 @@ import koaLog, { WithLogContext } from './koa-log';
 
 const nanoIdMock = 'mockId';
 
+const addLogContext = jest.fn();
 const log = jest.fn();
-const logSession = jest.fn();
 
 jest.mock('@/queries/log', () => ({
   insertLog: jest.fn(async () => Promise.resolve()),
@@ -38,7 +38,7 @@ describe('koaLog middleware', () => {
     const ctx: WithLogContext<ReturnType<typeof createContextWithRouteParameters>> = {
       ...createContextWithRouteParameters({ headers: { 'user-agent': userAgent } }),
       // Bypass middleware context type assert
-      logSession,
+      addLogContext,
       log,
     };
     ctx.request.ip = ip;
@@ -64,7 +64,7 @@ describe('koaLog middleware', () => {
     const ctx: WithLogContext<ReturnType<typeof createContextWithRouteParameters>> = {
       ...createContextWithRouteParameters({ headers: { 'user-agent': userAgent } }),
       // Bypass middleware context type assert
-      logSession,
+      addLogContext,
       log,
     };
     ctx.request.ip = ip;

@@ -13,6 +13,6 @@ export default function koaLogSession<StateT, ContextT extends WithLogContext, R
       jti,
       params: { client_id },
     } = await provider.interactionDetails(ctx.req, ctx.res);
-    ctx.logSession({ sessionId: jti, applicationId: String(client_id) });
+    ctx.addLogContext({ sessionId: jti, applicationId: String(client_id) });
   };
 }

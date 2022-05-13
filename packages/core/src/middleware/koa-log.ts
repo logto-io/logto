@@ -13,11 +13,11 @@ type SessionPayload = {
   applicationId?: string;
 };
 
-type LogSession = (sessionPayload: SessionPayload) => void;
+type AddLogContext = (sessionPayload: SessionPayload) => void;
 
 export type WithLogContext<ContextT extends IRouterParamContext = IRouterParamContext> =
   ContextT & {
-    logSession: LogSession;
+    addLogContext: AddLogContext;
     log: MergeLog;
   };
 
@@ -84,7 +84,7 @@ export default function koaLog<
     } = ctx.request;
 
     const logger = initLogger({ result: LogResult.Success, ip, userAgent });
-    ctx.logSession = logger.set;
+    ctx.addLogContext = logger.set;
     ctx.log = logger.log;
 
     try {
