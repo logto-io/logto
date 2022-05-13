@@ -20,9 +20,7 @@ const PasswordInput = ({ className, value, error, onFocus, onBlur, ...rest }: Pr
 
   return (
     <div className={className}>
-      <div
-        className={classNames(styles.wrapper, onInputFocus && styles.focus, error && styles.error)}
-      >
+      <div className={classNames(styles.wrapper, error && styles.error)}>
         <input
           ref={inputElement}
           type={type}
