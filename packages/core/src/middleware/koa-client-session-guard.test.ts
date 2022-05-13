@@ -7,7 +7,7 @@ import koaClientSessionGuard, { sessionNotFoundPath } from './koa-client-session
 
 jest.mock('fs/promises', () => ({
   ...jest.requireActual('fs/promises'),
-  readdir: jest.fn().mockResolvedValue(['sign-in']),
+  readdir: jest.fn().mockResolvedValue(['index.js']),
 }));
 
 jest.mock('oidc-provider', () => ({
@@ -72,6 +72,6 @@ describe('koaClientSessionGuard', () => {
       url: '/sign-in',
     });
     await koaClientSessionGuard(provider)(ctx, next);
-    expect(ctx.redirect).not.toBeCalled();
+    expect(ctx.redirect).toBeCalled();
   });
 });
