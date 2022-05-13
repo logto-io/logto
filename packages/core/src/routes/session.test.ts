@@ -2,7 +2,15 @@
 import { User } from '@logto/schemas';
 import { Provider } from 'oidc-provider';
 
-import { mockSignInExperience, mockUser } from '@/__mocks__';
+import {
+  mockSignInExperience,
+  mockUser,
+  mockAliyunDmConnectorInstance,
+  mockAliyunSmsConnectorInstance,
+  mockFacebookConnectorInstance,
+  mockGithubConnectorInstance,
+  mockGoogleConnectorInstance,
+} from '@/__mocks__';
 import { ConnectorType } from '@/connectors/types';
 import RequestError from '@/errors/RequestError';
 import * as signInExperienceQueries from '@/queries/sign-in-experience';
@@ -99,6 +107,13 @@ const getConnectorInstanceById = jest.fn(async (connectorId: string) => {
 
   return { connector, metadata, getAuthorizationUri };
 });
+const getConnectorInstances = jest.fn(async () => [
+  mockAliyunDmConnectorInstance,
+  mockAliyunSmsConnectorInstance,
+  mockFacebookConnectorInstance,
+  mockGithubConnectorInstance,
+  mockGoogleConnectorInstance,
+]);
 jest.mock('@/connectors', () => ({
   getSocialConnectorInstanceById: async (connectorId: string) => {
     const connectorInstance = await getConnectorInstanceById(connectorId);
@@ -112,6 +127,7 @@ jest.mock('@/connectors', () => ({
 
     return connectorInstance;
   },
+  getConnectorInstances: async () => getConnectorInstances(),
 }));
 
 const grantSave = jest.fn(async () => 'finalGrantId');
@@ -431,11 +447,11 @@ describe('sessionRoutes', () => {
     });
   });
 
-  describe('POST /session/bind-social-related-user', () => {
+  describe('POST /session/sign-in/bind-social-related-user', () => {
     it('throw if session is not authorized', async () => {
       await expect(
         sessionRequest
-          .post('/session/bind-social-related-user')
+          .post('/session/sign-in/bind-social-related-user')
           .send({ connectorId: 'connectorId' })
       ).resolves.toHaveProperty('statusCode', 400);
     });
@@ -445,7 +461,7 @@ describe('sessionRoutes', () => {
       });
       await expect(
         sessionRequest
-          .post('/session/bind-social-related-user')
+          .post('/session/sign-in/bind-social-related-user')
           .send({ connectorId: 'connectorId' })
       ).resolves.toHaveProperty('statusCode', 400);
     });
@@ -459,7 +475,7 @@ describe('sessionRoutes', () => {
           },
         },
       });
-      const response = await sessionRequest.post('/session/bind-social-related-user').send({
+      const response = await sessionRequest.post('/session/sign-in/bind-social-related-user').send({
         connectorId: 'connectorId',
       });
       expect(response.statusCode).toEqual(200);
@@ -890,15 +906,29 @@ describe('sessionRoutes', () => {
   });
 
   describe('GET /sign-in-settings', () => {
-    const signInExperienceQuerySpon = jest
+    const signInExperienceQuerySpyOn = jest
       .spyOn(signInExperienceQueries, 'findDefaultSignInExperience')
       .mockResolvedValue(mockSignInExperience);
 
-    it('should call findDefaultSignInExperience', async () => {
+    it('should return github and facebook connector instances', async () => {
       const response = await sessionRequest.get('/sign-in-settings');
-      expect(signInExperienceQuerySpon).toHaveBeenCalledTimes(1);
+      expect(signInExperienceQuerySpyOn).toHaveBeenCalledTimes(1);
       expect(response.status).toEqual(200);
-      expect(response.body).toEqual(mockSignInExperience);
+      expect(response.body).toMatchObject(
+        expect.objectContaining({
+          ...mockSignInExperience,
+          socialConnectors: [
+            {
+              ...mockGithubConnectorInstance.metadata,
+              id: mockGithubConnectorInstance.connector.id,
+            },
+            {
+              ...mockFacebookConnectorInstance.metadata,
+              id: mockFacebookConnectorInstance.connector.id,
+            },
+          ],
+        })
+      );
     });
   });
 

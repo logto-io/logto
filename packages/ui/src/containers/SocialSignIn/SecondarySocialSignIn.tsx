@@ -32,11 +32,11 @@ const SecondarySocialSignIn = ({ className }: Props) => {
       <div className={classNames(styles.socialIconList, className)}>
         {displayConnectors.map((connector) => (
           <SocialIconButton
-            key={connector.target}
+            key={connector.id}
             className={styles.socialButton}
             connector={connector}
             onClick={() => {
-              void invokeSocialSignIn(connector.target);
+              void invokeSocialSignIn(connector.id);
             }}
           />
         ))}
