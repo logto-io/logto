@@ -42,7 +42,7 @@ const SecondarySocialSignIn = ({ className }: Props) => {
         ))}
         {isOverSize && (
           <MoreSocialIcon
-            className={styles.socialButton}
+            className={styles.moreButton}
             onClick={() => {
               setShowModal(true);
             }}

@@ -46,6 +46,7 @@ const translation = {
       nav_back: '返回',
     },
     description: {
+      reminder: '提示',
       not_found: '404 页面不存在',
       loading: '读取中...',
       redirecting: '页面跳转中...',

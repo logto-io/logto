@@ -1,61 +1,12 @@
-import classNames from 'classnames';
-import React, { ReactNode } from 'react';
-import { TFuncKey, useTranslation } from 'react-i18next';
-import ReactModal from 'react-modal';
+import React from 'react';
+import { isMobile } from 'react-device-detect';
 
-import Button from '@/components/Button';
+import AcModal from './AcModal';
+import MobileModal from './MobileModal';
+import { ModalProps } from './type';
 
-import * as modalStyles from '../../scss/modal.module.scss';
-import * as styles from './index.module.scss';
-
-type Props = {
-  className?: string;
-  isOpen?: boolean;
-  children: ReactNode;
-  cancelText?: TFuncKey<'translation', 'main_flow'>;
-  confirmText?: TFuncKey<'translation', 'main_flow'>;
-  onConfirm?: () => void;
-  onClose: () => void;
-};
-
-const ConfirmModal = ({
-  className,
-  isOpen = false,
-  children,
-  cancelText = 'action.cancel',
-  confirmText = 'action.confirm',
-  onConfirm,
-  onClose,
-}: Props) => {
-  const { t } = useTranslation(undefined, { keyPrefix: 'main_flow' });
-
-  return (
-    <ReactModal
-      role="dialog"
-      isOpen={isOpen}
-      className={classNames(modalStyles.modal, className)}
-      overlayClassName={classNames(modalStyles.overlay, styles.overlay)}
-      appElement={document.querySelector('main') ?? undefined}
-      onAfterOpen={() => {
-        document.body.classList.add('static');
-      }}
-      onAfterClose={() => {
-        document.body.classList.remove('static');
-      }}
-    >
-      <div className={styles.container}>
-        <div className={styles.content}>{children}</div>
-        <div className={styles.footer}>
-          <Button type="secondary" size="small" onClick={onClose}>
-            {t(cancelText)}
-          </Button>
-          <Button size="small" onClick={onConfirm ?? onClose}>
-            {t(confirmText)}
-          </Button>
-        </div>
-      </div>
-    </ReactModal>
-  );
+const ConfirmModal = (props: ModalProps) => {
+  return isMobile ? <MobileModal {...props} /> : <AcModal {...props} />;
 };
 
 export default ConfirmModal;

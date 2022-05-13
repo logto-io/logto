@@ -2,8 +2,6 @@
 
 
 .socialButton {
-  width: 48px;
-  height: 48px;
   border-radius: 50%;
   @include _.flex-column;
   background: var(--color-layer);
@@ -11,7 +9,29 @@
 }
 
 .icon {
-  width: 28px;
-  height: 28px;
   @include _.image-align-center;
+}
+
+:global(body.mobile) {
+  .socialButton {
+    width: 48px;
+    height: 48px;
+  }
+
+  .icon {
+    width: 32px;
+    height: 32px;
+  }
+}
+
+:global(body.desktop) {
+  .socialButton {
+    width: 28px;
+    height: 28px;
+  }
+
+  .icon {
+    width: 16px;
+    height: 16px;
+  }
 }

@@ -1,14 +1,8 @@
 @use '@/scss/underscore' as _;
 
-.socialButton {
-  border: _.border(var(--color-outline));
-  background: transparent;
-  color: var(--color-text);
-
-  .icon {
-    width: _.unit(6);
-    height: _.unit(6);
-    @include _.image-align-center;
-    margin-right: _.unit(4);
-  }
+.icon {
+  width: _.unit(6);
+  height: _.unit(6);
+  @include _.image-align-center;
+  margin-right: _.unit(4);
 }

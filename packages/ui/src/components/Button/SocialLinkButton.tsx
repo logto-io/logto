@@ -28,8 +28,9 @@ const SocialLinkButton = ({ isDisabled, className, connector, onClick }: Props) 
       disabled={isDisabled}
       className={classNames(
         styles.button,
+        styles.secondary,
+        styles.large,
         isDisabled && styles.disabled,
-        socialLinkButtonStyles.socialButton,
         className
       )}
       type="button"
