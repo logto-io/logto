@@ -69,7 +69,7 @@ const wechatConnector = {
 };
 const wechatNativeConnector = {
   id: 'wechat-native',
-  target: 'wechat-native',
+  target: 'wechat',
   platform: ConnectorPlatform.Native,
   enabled: false,
   config: {},
@@ -107,6 +107,7 @@ describe('getConnectorInstances', () => {
     expect(connectorInstances[4]).toHaveProperty('connector', githubConnector);
     expect(connectorInstances[5]).toHaveProperty('connector', googleConnector);
     expect(connectorInstances[6]).toHaveProperty('connector', wechatConnector);
+    expect(connectorInstances[7]).toHaveProperty('connector', wechatNativeConnector);
   });
 
   test('should throw if any required connector does not exist in DB', async () => {
