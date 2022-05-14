@@ -154,10 +154,10 @@
 
   &.outline {
     background: var(--color-layer-1);
-    border-color: var(--color-primary);
+    border-color: var(--color-text-link);
     border-width: 1px;
     border-style: solid;
-    color: var(--color-primary);
+    color: var(--color-text-link);
 
     &:disabled {
       border-color: var(--color-neutral-70);
@@ -181,7 +181,7 @@
     background: none;
     border-color: none;
     font: var(--font-body-medium);
-    color: var(--color-primary);
+    color: var(--color-text-link);
 
     &:disabled {
       color: var(--color-disabled);

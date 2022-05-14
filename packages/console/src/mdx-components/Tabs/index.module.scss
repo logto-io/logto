@@ -19,8 +19,8 @@
     }
 
     li[aria-selected='true'] {
-      color: var(--color-primary);
-      border-bottom: 2px solid var(--color-primary);
+      color: var(--color-text-link);
+      border-bottom: 2px solid var(--color-text-link);
       margin-bottom: -1px;
       outline: none;
     }

@@ -17,6 +17,7 @@
     "stylelint": "stylelint \"src/**/*.scss\""
   },
   "devDependencies": {
+    "@fontsource/roboto-mono": "^4.5.7",
     "@logto/phrases": "^0.1.0",
     "@logto/react": "^0.1.5",
     "@logto/schemas": "^0.1.0",
