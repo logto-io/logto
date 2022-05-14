@@ -13,11 +13,11 @@
 }
 
 .selected {
-  color: var(--color-primary);
-  border-bottom: 2px solid var(--color-primary);
+  color: var(--color-text-link);
+  border-bottom: 2px solid var(--color-text-link);
   margin-bottom: -1px;
 
   a {
-    color: var(--color-primary);
+    color: var(--color-text-link);
   }
 }

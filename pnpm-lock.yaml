@@ -435,6 +435,7 @@ importers:
 
   packages/console:
     specifiers:
+      '@fontsource/roboto-mono': ^4.5.7
       '@logto/phrases': ^0.1.0
       '@logto/react': ^0.1.5
       '@logto/schemas': ^0.1.0
@@ -488,6 +489,7 @@ importers:
       swr: ^1.2.2
       typescript: ^4.6.2
     devDependencies:
+      '@fontsource/roboto-mono': 4.5.7
       '@logto/phrases': link:../phrases
       '@logto/react': 0.1.5_react@17.0.2
       '@logto/schemas': link:../schemas
@@ -3541,6 +3543,10 @@ packages:
       strip-json-comments: 3.1.1
     transitivePeerDependencies:
       - supports-color
+    dev: true
+
+  /@fontsource/roboto-mono/4.5.7:
+    resolution: {integrity: sha512-1uBjM95BEz7zJlmmnpNAM5afMvIxx0wqr86eA76vRqZw8OF5wmsRqYfF3caHuVarBH9/AGN7t9h+3UXK8fjq/Q==}
     dev: true
 
   /@gar/promisify/1.1.3:

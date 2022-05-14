@@ -125,6 +125,7 @@
   --color-danger-hover: var(--color-error-50);
   --color-danger-pressed: var(--color-error-30);
   --color-text: var(--color-neutral-10);
+  --color-text-link: var(--color-primary-40);
   --color-icon: var(--color-neutral-50);
   --color-caption: var(--color-neutral-50);
   --color-border: var(--color-neutral-80);
@@ -133,7 +134,10 @@
   --color-base: var(--color-surface-1);
   --color-layer-1: var(--color-all-100);
   --color-layer-2: var(--color-neutral-95);
+  --color-inverse-surface: var(--color-neutral-20);
   --color-inverse-on-surface: var(--color-neutral-95);
+  --color-inverse-primary: var(--color-primary-80);
+  --color-shadow: var(--color-all-100);
   --color-hover: rgba(25, 28, 29, 8%); // 8% Neutral-10
   --color-pressed: rgba(25, 28, 29, 12%); // 12% Neutral-10
   --color-focused: rgba(25, 28, 29, 16%); // 16% Neutral-10
@@ -246,39 +250,40 @@
   --color-alert-99: #2b1700;
 
   // color aliases
-  --color-primary: var(--color-primary-40);
-  --color-on-primary: var(--color-all-100);
+  --color-primary: var(--color-primary-70);
+  --color-on-primary: var(--color-all-0);
   --color-primary-container: var(--color-primary-90);
-  --color-on-primary-container: var(--color-primary-10);
-  --color-secondary: var(--color-secondary-40);
-  --color-on-secondary: var(--color-all-100);
-  --color-secondary-container: var(--color-secondary-30);
-  --color-on-secondary-container: var(--color-secondary-10);
-  --color-tertiary: var(--color-tertiary-40);
-  --color-on-tertiary: var(--color-all-100);
+  --color-on-primary-container: var(--color-primary-30);
+  --color-secondary: var(--color-secondary-70);
+  --color-on-secondary: var(--color-all-0);
+  --color-secondary-container: var(--color-secondary-90);
+  --color-on-secondary-container: var(--color-secondary-30);
+  --color-tertiary: var(--color-tertiary-70);
+  --color-on-tertiary: var(--color-all-0);
   --color-tertiary-container: var(--color-tertiary-90);
-  --color-on-tertiary-container: var(--color-tertiary-10);
-  --color-error: var(--color-error-40);
-  --color-on-error: var(--color-all-100);
+  --color-on-tertiary-container: var(--color-tertiary-30);
+  --color-error: var(--color-error-70);
+  --color-on-error: var(--color-all-0);
   --color-error-container: var(--color-error-90);
-  --color-on-error-container: var(--color-error-10);
+  --color-on-error-container: var(--color-error-30);
   --color-background: var(--color-neutral-99);
   --color-on-background: var(--color-neutral-10);
   --color-surface: var(--color-neutral-99);
-  --color-surface-1: #25272b; // Neutral-99 + 2% Neutral-Variant-50 + 5% Primary-40
-  --color-surface-2: #2a2c32; // Neutral-99 + 2% Neutral-Variant-50 + 8% Primary-40
-  --color-surface-3: #2f3039; // Neutral-99 + 2% Neutral-Variant-50 + 11% Primary-40
-  --color-surface-4: #34353f; // Neutral-99 + 2% Neutral-Variant-50 + 14% Primary-40
-  --color-surface-5: #383844; // Neutral-99 + 2% Neutral-Variant-50 + 16% Primary-40
+  --color-surface-1: #25272b; // Neutral-99 + 2% Neutral-40 + 5% Primary-80
+  --color-surface-2: #2a2c32; // Neutral-99 + 2% Neutral-40 + 8% Primary-80
+  --color-surface-3: #2f3039; // Neutral-99 + 2% Neutral-40 + 11% Primary-80
+  --color-surface-4: #34353f; // Neutral-99 + 2% Neutral-40 + 14% Primary-80
+  --color-surface-5: #383844; // Neutral-99 + 2% Neutral-40 + 16% Primary-80
   --color-on-surface: var(--color-neutral-10);
   --color-surface-variant: var(--color-neutral-variant-90);
-  --color-on-surface-variant: var(--color-neutral-variant-30);
-  --color-outline: var(--color-neutral-variant-50);
+  --color-on-surface-variant: var(--color-neutral-variant-40);
+  --color-outline: var(--color-neutral-variant-60);
   --color-primary-hover: var(--color-primary-60);
   --color-primary-pressed: var(--color-primary-80);
   --color-danger-hover: var(--color-error-60);
   --color-danger-pressed: var(--color-error-80);
   --color-text: var(--color-neutral-10);
+  --color-text-link: var(--color-primary-40);
   --color-icon: var(--color-neutral-50);
   --color-caption: var(--color-neutral-50);
   --color-border: var(--color-neutral-80);
@@ -287,7 +292,10 @@
   --color-base: var(--color-surface);
   --color-layer-1: var(--color-surface-2);
   --color-layer-2: var(--color-surface-3);
+  --color-inverse-surface: var(--color-neutral-20);
   --color-inverse-on-surface: var(--color-neutral-95);
+  --color-inverse-primary: var(--color-primary-80);
+  --color-shadow: var(--color-all-100);
   --color-hover: rgba(247, 248, 248, 8%); // 8% Neutral-10
   --color-pressed: rgba(247, 248, 248, 12%); // 12% Neutral-10
   --color-focused: rgba(247, 248, 248, 16%); // 16% Neutral-10

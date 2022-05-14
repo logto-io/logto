@@ -4,6 +4,8 @@ import React, { useEffect } from 'react';
 import { BrowserRouter, Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import useSWR, { SWRConfig } from 'swr';
 import './scss/normalized.scss';
+// eslint-disable-next-line import/no-unassigned-import
+import '@fontsource/roboto-mono';
 
 import * as styles from './App.module.scss';
 import AppContent from './components/AppContent';
