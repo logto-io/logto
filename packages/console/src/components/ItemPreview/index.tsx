@@ -7,7 +7,7 @@ import * as styles from './index.module.scss';
 type Props = {
   title: ReactNode;
   subtitle?: string;
-  icon?: ReactNode | string;
+  icon?: ReactNode;
   to?: To;
   size?: 'default' | 'compact';
 };
