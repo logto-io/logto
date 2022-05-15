@@ -2,7 +2,7 @@ import classNames from 'classnames';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { RadioButtonIcon } from '@/components/Icons';
+import Checkbox from '@/components/Checkbox';
 import TextLink from '@/components/TextLink';
 
 import * as styles from './index.module.scss';
@@ -27,8 +27,7 @@ const TermsOfUse = ({ name, className, termsUrl, isChecked, onChange }: Props) =
         onChange(!isChecked);
       }}
     >
-      <input disabled readOnly name={name} type="checkbox" checked={isChecked} />
-      <RadioButtonIcon checked={isChecked} className={styles.radioButton} />
+      <Checkbox name={name} checked={isChecked} className={styles.checkBox} />
       <div className={styles.content}>
         {prefix}
         <TextLink

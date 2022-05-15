@@ -3,17 +3,10 @@
 .terms {
   @include _.flex-row;
   width: 100%;
-
-  input[type='checkbox'] {
-    appearance: none;
-    position: absolute;
-    margin: 0;
-    width: 0;
-    height: 0;
-  }
+  user-select: none;
 }
 
-.radioButton {
+.checkBox {
   margin-right: _.unit(2);
   fill: var(--color-icon);
 }

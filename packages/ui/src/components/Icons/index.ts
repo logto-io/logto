@@ -4,6 +4,6 @@ export { default as PrivacyIcon } from './PrivacyIcon';
 export { default as DownArrowIcon } from './DownArrowIcon';
 export { default as LoadingIcon } from './LoadingIcon';
 export { default as NavArrowIcon } from './NavArrowIcon';
-export { default as RadioButtonIcon } from './RadioButtonIcon';
 export { default as ExpandMoreIcon } from './ExpandMoreIcon';
 export { default as ErrorIcon } from './ErrorIcon';
+export { default as CheckBoxIcon } from './CheckBoxIcon';
