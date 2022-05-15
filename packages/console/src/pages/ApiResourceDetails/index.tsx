@@ -8,13 +8,13 @@ import Modal from 'react-modal';
 import { useLocation, useParams } from 'react-router-dom';
 import useSWR from 'swr';
 
+import apiResourceIcon from '@/assets/images/api-resource.svg';
 import ActionMenu, { ActionMenuItem } from '@/components/ActionMenu';
 import Button from '@/components/Button';
 import Card from '@/components/Card';
 import CopyToClipboard from '@/components/CopyToClipboard';
 import Drawer from '@/components/Drawer';
 import FormField from '@/components/FormField';
-import ImagePlaceholder from '@/components/ImagePlaceholder';
 import LinkButton from '@/components/LinkButton';
 import TabNav, { TabNavItem } from '@/components/TabNav';
 import TextInput from '@/components/TextInput';
@@ -88,9 +88,7 @@ const ApiResourceDetails = () => {
         <>
           <Card className={styles.header}>
             <div className={styles.info}>
-              <div className={styles.imagePlaceholder}>
-                <ImagePlaceholder size={60} borderRadius={16} />
-              </div>
+              <img className={styles.icon} src={apiResourceIcon} />
               <div className={styles.meta}>
                 <div className={styles.name}>{data.name}</div>
                 <CopyToClipboard value={data.indicator} className={styles.copy} />

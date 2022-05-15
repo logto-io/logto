@@ -30,8 +30,10 @@
   justify-content: space-between;
   padding: _.unit(6);
 
-  .imagePlaceholder {
+  .icon {
     margin-left: _.unit(2);
+    width: 60px;
+    height: 60px;
   }
 
   > *:not(:first-child) {

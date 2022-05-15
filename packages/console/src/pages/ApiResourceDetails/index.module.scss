@@ -12,8 +12,10 @@
   .info {
     display: flex;
 
-    .imagePlaceholder {
+    .icon {
       margin-left: _.unit(2);
+      width: 60px;
+      height: 60px;
     }
 
     .meta {

@@ -13,7 +13,6 @@ import Button from '@/components/Button';
 import Card from '@/components/Card';
 import CopyToClipboard from '@/components/CopyToClipboard';
 import Drawer from '@/components/Drawer';
-import ImagePlaceholder from '@/components/ImagePlaceholder';
 import LinkButton from '@/components/LinkButton';
 import TabNav, { TabNavItem } from '@/components/TabNav';
 import useApi, { RequestError } from '@/hooks/use-api';
@@ -23,6 +22,7 @@ import More from '@/icons/More';
 import * as detailsStyles from '@/scss/details.module.scss';
 import * as modalStyles from '@/scss/modal.module.scss';
 import { applicationTypeI18nKey } from '@/types/applications';
+import { getAppIcon } from '@/utilities/icon';
 
 import AdvancedSettings from './components/AdvancedSettings';
 import DeleteForm from './components/DeleteForm';
@@ -106,9 +106,7 @@ const ApplicationDetails = () => {
       {data && oidcConfig && (
         <>
           <Card className={styles.header}>
-            <div className={styles.imagePlaceholder}>
-              <ImagePlaceholder size={60} borderRadius={16} />
-            </div>
+            <img className={styles.icon} src={getAppIcon(data.type)} />
             <div className={styles.metadata}>
               <div className={styles.name}>{data.name}</div>
               <div className={styles.details}>

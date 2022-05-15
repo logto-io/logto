@@ -11,7 +11,6 @@ import Button from '@/components/Button';
 import Card from '@/components/Card';
 import CardTitle from '@/components/CardTitle';
 import CopyToClipboard from '@/components/CopyToClipboard';
-import ImagePlaceholder from '@/components/ImagePlaceholder';
 import ItemPreview from '@/components/ItemPreview';
 import Pagination from '@/components/Pagination';
 import TableEmpty from '@/components/Table/TableEmpty';
@@ -22,6 +21,7 @@ import Plus from '@/icons/Plus';
 import * as modalStyles from '@/scss/modal.module.scss';
 import * as tableStyles from '@/scss/table.module.scss';
 import { applicationTypeI18nKey } from '@/types/applications';
+import { getAppIcon } from '@/utilities/icon';
 
 import CreateForm from './components/CreateForm';
 import * as styles from './index.module.scss';
@@ -113,7 +113,7 @@ const Applications = () => {
                   <ItemPreview
                     title={name}
                     subtitle={t(`${applicationTypeI18nKey[type]}.title`)}
-                    icon={<ImagePlaceholder />}
+                    icon={getAppIcon(type)}
                     to={`/applications/${id}`}
                   />
                 </td>
