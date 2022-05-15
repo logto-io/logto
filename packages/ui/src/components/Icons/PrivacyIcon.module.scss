@@ -1,0 +1,15 @@
+@use '@/scss/underscore' as _;
+
+.privacyIcon {
+  > svg {
+    display: none;
+  }
+}
+
+.show > svg:nth-child(1) {
+  display: block;
+}
+
+.hide > svg:nth-child(2) {
+  display: block;
+}
