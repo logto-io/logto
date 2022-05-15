@@ -21,10 +21,21 @@
 
   .message {
     font: var(--font-caption);
-    color: var(--color-text);
 
     > span {
       color: var(--color-primary);
     }
+  }
+}
+
+:global(body.mobile) {
+  .message {
+    color: var(--color-text);
+  }
+}
+
+:global(body.desktop) {
+  .message {
+    color: var(--color-caption);
   }
 }

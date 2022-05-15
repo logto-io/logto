@@ -12,10 +12,12 @@ $font-family: -apple-system,
 @mixin colors-light-theme {
   --color-surface: #ecebf6;
   --color-base: #fff;
-  // legacy bellow
   --color-text: #191c1d;
-  --color-icon: #747778;
   --color-caption: #747778;
+  --color-icon: #747778;
+  // legacy bellow
+
+
   --color-outline: #78767f;
   --color-border: #e0e3e3;
   --color-disabled: #c4c7c7;
@@ -30,10 +32,11 @@ $font-family: -apple-system,
 @mixin colors-dark-theme {
   --color-surface: #25272b;
   --color-base: #2a2c32;
-  // legacy bellow
   --color-text: #f7f8f8;
-  --color-icon: #a9acac;
   --color-caption: #a9acac;
+  --color-icon: #a9acac;
+  // legacy bellow
+
   --color-outline: #928f9a;
   --color-border: #444748;
   --color-disabled: #5c5f60;
@@ -54,10 +57,9 @@ $font-family: -apple-system,
   --font-title: 600 32px/40px #{$font-family};
   --font-title-medium: 600 28px/36px #{$font-family};
   --font-title-small: 600 24px/32px #{$font-family};
-  --font-body-bold: 500 16px/20px #{$font-family};
-  --font-body: 400 16px/20px #{$font-family};
-  --font-body-small: 500 14px/18px #{$font-family};
-  --font-caption: 500 14px/20px #{$font-family};
+  --font-body-bold: 500 14px/20px #{$font-family};
+  --font-body: 400 14px/20px #{$font-family};
+  --font-caption: 400 14px/20px #{$font-family};
 }
 
 @mixin layout {

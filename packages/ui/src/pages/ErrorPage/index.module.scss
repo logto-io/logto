@@ -10,8 +10,13 @@
     @include _.full-width;
   }
 
+  .title {
+    text-align: center;
+  }
+
   .message {
     @include _.text-hint;
+    text-align: center;
   }
 }
 
