@@ -10,12 +10,12 @@
 .content {
   flex-grow: 1;
   display: flex;
-  padding-right: _.unit(6);
   margin-bottom: _.unit(6);
   overflow: hidden;
 
   .main {
     flex-grow: 1;
+    padding-right: _.unit(6);
     overflow-y: auto;
   }
 }
