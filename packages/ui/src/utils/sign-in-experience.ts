@@ -39,7 +39,7 @@ const getSignInExperienceSettings = async <
     termsOfUse,
     primarySignInMethod: getPrimarySignInMethod(signInMethods),
     secondarySignInMethods: getSecondarySignInMethods(signInMethods),
-    socialConnectors, // TODO: get values from api
+    socialConnectors,
   };
 };
 
