@@ -9,10 +9,14 @@ export default function koaLogSession<StateT, ContextT extends WithLogContext, R
   return async (ctx, next) => {
     await next();
 
-    const {
-      jti,
-      params: { client_id },
-    } = await provider.interactionDetails(ctx.req, ctx.res);
-    ctx.addLogContext({ sessionId: jti, applicationId: String(client_id) });
+    try {
+      const {
+        jti,
+        params: { client_id },
+      } = await provider.interactionDetails(ctx.req, ctx.res);
+      ctx.addLogContext({ sessionId: jti, applicationId: String(client_id) });
+    } catch (error: unknown) {
+      console.error(`"${ctx.url}" failed to get oidc provider interaction`, error);
+    }
   };
 }

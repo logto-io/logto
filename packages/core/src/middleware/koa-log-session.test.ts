@@ -62,4 +62,18 @@ describe('koaLogSession', () => {
     await expect(koaLogSession(new Provider(''))(ctx, next)).resolves.not.toThrow();
     expect(next).toHaveBeenCalled();
   });
+
+  it('should not throw when interactionDetails throw error', async () => {
+    const ctx: WithLogContext<ReturnType<typeof createContextWithRouteParameters>> = {
+      ...createContextWithRouteParameters(),
+      addLogContext,
+      log,
+    };
+
+    interactionDetails.mockImplementationOnce(() => {
+      throw new Error('message');
+    });
+
+    await expect(koaLogSession(new Provider(''))(ctx, next)).resolves.not.toThrow();
+  });
 });
