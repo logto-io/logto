@@ -28,8 +28,9 @@ const SocialLinkButton = ({ isDisabled, className, connector, onClick }: Props) 
       disabled={isDisabled}
       className={classNames(
         styles.button,
+        styles.secondary,
+        styles.large,
         isDisabled && styles.disabled,
-        socialLinkButtonStyles.socialButton,
         className
       )}
       type="button"
@@ -37,7 +38,7 @@ const SocialLinkButton = ({ isDisabled, className, connector, onClick }: Props) 
         onClick?.(target);
       }}
     >
-      {logo && <img src={logo} alt={localName} className={socialLinkButtonStyles.icon} />}
+      {logo && <img src={logo} alt={target} className={socialLinkButtonStyles.icon} />}
       {localName}
     </button>
   );

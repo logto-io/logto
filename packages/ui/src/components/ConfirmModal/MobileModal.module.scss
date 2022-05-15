@@ -4,9 +4,18 @@
   z-index: 100;
 }
 
+.modal {
+  position: absolute;
+  left: 20px;
+  right: 20px;
+  top: 50%;
+  transform: translate(0, -50%);
+  outline: none;
+}
+
 .container {
-  background: var(--color-dialogue);
   padding: _.unit(5);
+  background: var(--color-dialogue);
   border-radius: var(--radius);
 }
 

@@ -1,12 +1,3 @@
-.modal {
-  position: absolute;
-  left: 20px;
-  right: 20px;
-  top: 50%;
-  transform: translate(0, -50%);
-  outline: none;
-}
-
 .overlay {
   position: fixed;
   background: var(--color-overlay);

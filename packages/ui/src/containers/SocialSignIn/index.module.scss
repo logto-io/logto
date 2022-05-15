@@ -3,33 +3,48 @@
 .socialIconList {
   @include _.flex-row;
   justify-content: center;
+}
 
-  .socialButton {
-    margin-right: _.unit(8);
+.socialButton {
+  margin-right: _.unit(8);
 
-    &:last-child {
-      margin-right: 0;
-    }
+  &:last-child {
+    margin-right: 0;
   }
+}
 
-  .moreButton {
-    border-radius: 50%;
-  }
+.moreButton {
+  border-radius: 50%;
 }
 
 .socialLinkList {
   @include _.flex-column;
+}
 
-  .socialLinkButton {
-    margin-bottom: _.unit(4);
+.socialLinkButton {
+  margin-bottom: _.unit(4);
+}
+
+.expandIcon {
+  width: 20px;
+  height: 20px;
+
+  &.expanded {
+    transform: rotate(180deg);
   }
+}
 
-  .expandIcon {
-    width: 20px;
-    height: 20px;
+:global(body.mobile) {
+  .moreButton {
+    width: 48px;
+    height: 48px;
+  }
+}
 
-    &.expanded {
-      transform: rotate(180deg);
-    }
+
+:global(body.desktop) {
+  .moreButton {
+    width: 28px;
+    height: 28px;
   }
 }

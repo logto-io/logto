@@ -44,6 +44,7 @@ const translation = {
       nav_back: 'Back',
     },
     description: {
+      reminder: 'Reminder',
       not_found: '404 Not Found',
       loading: 'Loading...',
       redirecting: 'Redirecting...',
