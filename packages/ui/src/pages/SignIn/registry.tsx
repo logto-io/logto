@@ -87,7 +87,7 @@ export const CreateAccountLink = ({
           <TextLink
             className={styles.createAccount}
             type="secondary"
-            href={`/register/${primarySignInMethod}`}
+            to={`/register/${primarySignInMethod}`}
             text="action.create_account"
           />
         </>
