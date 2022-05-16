@@ -103,7 +103,8 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
       const passcode = await createPasscode(jti, PasscodeType.SignIn, { phone });
       ctx.log(type, { passcode });
 
-      await sendPasscode(passcode);
+      const { connector } = await sendPasscode(passcode);
+      ctx.log(type, { connectorId: connector.id });
       ctx.status = 204;
 
       return next();
@@ -152,7 +153,8 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
       const passcode = await createPasscode(jti, PasscodeType.SignIn, { email });
       ctx.log(type, { passcode });
 
-      await sendPasscode(passcode);
+      const { connector } = await sendPasscode(passcode);
+      ctx.log(type, { connectorId: connector.id });
       ctx.status = 204;
 
       return next();
@@ -406,7 +408,8 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
       const passcode = await createPasscode(jti, PasscodeType.Register, { phone });
       ctx.log(type, { phone, passcode });
 
-      await sendPasscode(passcode);
+      const { connector } = await sendPasscode(passcode);
+      ctx.log(type, { connectorId: connector.id });
       ctx.status = 204;
 
       return next();
@@ -456,7 +459,8 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
       const passcode = await createPasscode(jti, PasscodeType.Register, { email });
       ctx.log(type, { passcode });
 
-      await sendPasscode(passcode);
+      const { connector } = await sendPasscode(passcode);
+      ctx.log(type, { connectorId: connector.id });
       ctx.status = 204;
 
       return next();

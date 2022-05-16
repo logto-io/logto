@@ -24,6 +24,7 @@ interface RegisterUsernamePasswordLogPayload extends ArbitraryLogPayload {
 interface RegisterEmailSendPasscodeLogPayload extends ArbitraryLogPayload {
   email?: string;
   passcode?: Passcode;
+  connectorId?: string;
 }
 
 interface RegisterEmailLogPayload extends ArbitraryLogPayload {
@@ -35,6 +36,7 @@ interface RegisterEmailLogPayload extends ArbitraryLogPayload {
 interface RegisterSmsSendPasscodeLogPayload extends ArbitraryLogPayload {
   phone?: string;
   passcode?: Passcode;
+  connectorId?: string;
 }
 
 interface RegisterSmsLogPayload extends ArbitraryLogPayload {
@@ -64,6 +66,7 @@ interface SignInUsernamePasswordLogPayload extends ArbitraryLogPayload {
 interface SignInEmailSendPasscodeLogPayload extends ArbitraryLogPayload {
   email?: string;
   passcode?: Passcode;
+  connectorId?: string;
 }
 
 interface SignInEmailLogPayload extends ArbitraryLogPayload {
@@ -75,6 +78,7 @@ interface SignInEmailLogPayload extends ArbitraryLogPayload {
 interface SignInSmsSendPasscodeLogPayload extends ArbitraryLogPayload {
   phone?: string;
   passcode?: Passcode;
+  connectorId?: string;
 }
 
 interface SignInSmsLogPayload extends ArbitraryLogPayload {
