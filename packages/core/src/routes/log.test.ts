@@ -20,7 +20,7 @@ jest.mock('@/queries/log', () => ({
 }));
 
 describe('logRoutes', () => {
-  const userRequest = createRequester({ authedRoutes: logRoutes });
+  const logRequest = createRequester({ authedRoutes: logRoutes });
 
   afterEach(() => {
     jest.clearAllMocks();
@@ -34,7 +34,7 @@ describe('logRoutes', () => {
       const page = 1;
       const pageSize = 5;
 
-      await userRequest.get(
+      await logRequest.get(
         `/logs?userId=${userId}&applicationId=${applicationId}&logType=${logType}&page=${page}&page_size=${pageSize}`
       );
       expect(countLogs).toHaveBeenCalledWith({ userId, applicationId, logType });
@@ -42,7 +42,7 @@ describe('logRoutes', () => {
     });
 
     it('should return correct response', async () => {
-      const response = await userRequest.get(`/logs`);
+      const response = await logRequest.get(`/logs`);
       expect(response.status).toEqual(200);
       expect(response.body).toEqual(mockLogs);
       expect(response.header).toHaveProperty('total-number', `${mockLogs.length}`);
