@@ -71,7 +71,7 @@ describe('logRoutes', () => {
       const start = '2022-05-01';
       const end = '2022-05-02';
       await logRequest.get(`/dashboard?start=${start}&end=${end}`);
-      expect(getDnuCountsByTimeInterval).toHaveBeenCalledWith(1_651_334_400_000, 1_651_507_200_000);
+      expect(getDnuCountsByTimeInterval).toHaveBeenCalledWith(1_651_363_200_000, 1_651_536_000_000);
     });
 
     it('should return correct response', async () => {
