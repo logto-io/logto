@@ -61,10 +61,10 @@ export default function logRoutes<T extends AuthedRouter>(router: T) {
       // Convert date closed interval to time left-closed right-open interval:
       // e.g. [2022-05-01, 2022-05-02] -> [2022-05-01 00:00:00.000, 2022-05-03 00:00:00.000)
       const endTimeExclusive = endTime + millisecondsInOneDay;
-      const dauCounts = await getDnuCountsByTimeInterval(startTime, endTimeExclusive);
+      const dnuCounts = await getDnuCountsByTimeInterval(startTime, endTimeExclusive);
       ctx.body = {
         // DNU: Daily New User
-        dnuCounts: dauCounts,
+        dnuCounts,
         // DAU: Daily Active User
         dauCounts: {},
       };
