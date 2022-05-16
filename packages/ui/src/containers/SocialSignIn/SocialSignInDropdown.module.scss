@@ -1,0 +1,32 @@
+@use '@/scss/underscore' as _;
+
+.socialDropDown {
+  position: absolute;
+  min-width: 208px;
+  transform: translateY(-100%) scale(0);
+  transform-origin: 12px bottom;
+  opacity: 0%;
+  transition: transform 0.1s, opacity 0.1s;
+}
+
+.socialLogo {
+  width: 24px;
+  height: 24px;
+  margin-right: _.unit(4);
+}
+
+/* stylelint-disable selector-class-pattern */
+:global(.ReactModal__Content--after-open) {
+  &.socialDropDown {
+    transform: translateY(-100%) scale(1);
+    opacity: 100%;
+  }
+}
+
+:global(.ReactModal__Content--before-close) {
+  &.socialDropDown {
+    transform: translateY(-100%) scale(0);
+    opacity: 0%;
+  }
+}
+/* stylelint-enable selector-class-pattern */

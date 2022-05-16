@@ -5,7 +5,7 @@ import SocialLinkButton from '@/components/Button/SocialLinkButton';
 import { ExpandMoreIcon } from '@/components/Icons';
 import useSocial from '@/hooks/use-social';
 
-import * as styles from './index.module.scss';
+import * as styles from './PrimarySocialSignIn.module.scss';
 
 export const defaultSize = 3;
 

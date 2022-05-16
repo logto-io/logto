@@ -17,23 +17,6 @@
   border-radius: 50%;
 }
 
-.socialLinkList {
-  @include _.flex-column;
-}
-
-.socialLinkButton {
-  margin-bottom: _.unit(4);
-}
-
-.expandIcon {
-  width: 20px;
-  height: 20px;
-
-  &.expanded {
-    transform: rotate(180deg);
-  }
-}
-
 :global(body.mobile) {
   .moreButton {
     width: 48px;

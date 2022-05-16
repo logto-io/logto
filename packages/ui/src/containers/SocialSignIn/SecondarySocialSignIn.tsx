@@ -1,12 +1,14 @@
 import classNames from 'classnames';
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useRef } from 'react';
+import { isMobile } from 'react-device-detect';
 
 import SocialIconButton from '@/components/Button/SocialIconButton';
 import MoreSocialIcon from '@/components/Icons/MoreSocialIcon';
 import useSocial from '@/hooks/use-social';
 
+import * as styles from './SecondarySocialSignIn.module.scss';
+import SocialSignInDropdown from './SocialSignInDropdown';
 import SocialSignInPopUp from './SocialSignInPopUp';
-import * as styles from './index.module.scss';
 
 export const defaultSize = 4;
 
@@ -18,6 +20,7 @@ const SecondarySocialSignIn = ({ className }: Props) => {
   const { socialConnectors, invokeSocialSignIn } = useSocial();
   const isOverSize = socialConnectors.length > defaultSize;
   const [showModal, setShowModal] = useState(false);
+  const moreButtonRef = useRef<SVGSVGElement>(null);
 
   const displayConnectors = useMemo(() => {
     if (isOverSize) {
@@ -42,6 +45,7 @@ const SecondarySocialSignIn = ({ className }: Props) => {
         ))}
         {isOverSize && (
           <MoreSocialIcon
+            ref={moreButtonRef}
             className={styles.moreButton}
             onClick={() => {
               setShowModal(true);
@@ -49,9 +53,19 @@ const SecondarySocialSignIn = ({ className }: Props) => {
           />
         )}
       </div>
-      {isOverSize && (
+      {isOverSize && isMobile && (
         <SocialSignInPopUp
           isOpen={showModal}
+          onClose={() => {
+            setShowModal(false);
+          }}
+        />
+      )}
+      {isOverSize && !isMobile && (
+        <SocialSignInDropdown
+          anchorRef={moreButtonRef}
+          isOpen={showModal}
+          connectors={socialConnectors.slice(defaultSize - 1)}
           onClose={() => {
             setShowModal(false);
           }}
