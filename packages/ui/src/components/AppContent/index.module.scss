@@ -19,6 +19,8 @@ main {
 
 /* Foundation */
 :global(body.mobile) {
+  background-color: var(--color-base);
+
   &.light {
     @include mobile.colors-light-theme;
   }
@@ -40,6 +42,8 @@ main {
 }
 
 :global(body.desktop) {
+  background-color: var(--color-base);
+
   &.light {
     @include desktop.colors-light-theme;
   }
