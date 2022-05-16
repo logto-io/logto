@@ -79,7 +79,7 @@ const Main = () => {
     }
   }, [location.pathname, navigate, sections]);
 
-  if (!sections?.length) {
+  if (isAuthenticated && !sections?.length) {
     return <LogtoLoading message="general.loading" />;
   }
 
