@@ -25,8 +25,8 @@ const Contact = ({ isOpen, onCancel }: Props) => {
     >
       <ModalLayout title="contact.title" subtitle="contact.description" onClose={onCancel}>
         <div className={styles.main}>
-          {contacts.map(({ title, icon, description, label }) => (
-            <div key={title} className={styles.row}>
+          {contacts.map(({ title, icon, description, label, link }) => (
+            <div key={title} className={styles.row} onClick={() => window.open(link)}>
               <div className={styles.icon}>
                 <img src={icon} alt={title} />
               </div>
