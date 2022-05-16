@@ -603,6 +603,9 @@ const errors = {
     not_exists_with_id: 'The {{name}} with ID `{{id}}` does not exist.',
     not_found: 'The resource does not exist',
   },
+  dashboard: {
+    wrong_date_range: 'The start date must be greater than or equal to the end date.',
+  },
 };
 
 const en = Object.freeze({

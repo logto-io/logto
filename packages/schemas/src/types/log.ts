@@ -120,3 +120,13 @@ export type LogPayloads = {
 export type LogType = keyof LogPayloads;
 
 export type LogPayload = LogPayloads[LogType];
+
+export const registerLogTypes: LogType[] = [
+  'RegisterUsernamePassword',
+  'RegisterEmailSendPasscode',
+  'RegisterEmail',
+  'RegisterSmsSendPasscode',
+  'RegisterSms',
+  'RegisterSocialBind',
+  'RegisterSocial',
+];

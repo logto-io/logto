@@ -595,6 +595,9 @@ const errors = {
     not_exists_with_id: 'ID 为 `{{id}}` 的 {{name}} 不存在。',
     not_found: '该资源不存在',
   },
+  dashboard: {
+    wrong_date_range: '开始日期必须大于或等于结束日期。',
+  },
 };
 
 const zhCN: typeof en = Object.freeze({

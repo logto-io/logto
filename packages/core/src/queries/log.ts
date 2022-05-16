@@ -1,4 +1,4 @@
-import { CreateLog, Log, Logs } from '@logto/schemas';
+import { CreateLog, Log, Logs, registerLogTypes } from '@logto/schemas';
 import { sql } from 'slonik';
 
 import { buildInsertInto } from '@/database/insert-into';
@@ -43,4 +43,18 @@ export const findLogs = async (limit: number, offset: number, logCondition: LogC
     ${buildLogConditionSql(logCondition)}
     limit ${limit}
     offset ${offset}
+  `);
+
+export const getDnuCountsByTimeInterval = async (
+  startTimeInclusive: number,
+  endTimeExclusive: number
+) =>
+  envSet.pool.any<{ date: string; count: number }>(sql`
+    select date(${fields.createdAt}), count(*)
+    from ${table}
+    where ${fields.createdAt} >= to_timestamp(${startTimeInclusive}::double precision / 1000)
+    and ${fields.createdAt} < to_timestamp(${endTimeExclusive}::double precision / 1000)
+    and ${fields.type} in (${sql.join(registerLogTypes, sql`,`)})
+    and ${fields.payload}->>'result' = 'Success'
+    group by date(${fields.createdAt})
   `);
