@@ -37,8 +37,8 @@ export default function koaSpaSessionGuard<
       ) {
         ctx.redirect(sessionNotFoundPath);
       }
-
-      return next();
     }
+
+    return next();
   };
 }
