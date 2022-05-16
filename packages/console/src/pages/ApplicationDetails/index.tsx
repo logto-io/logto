@@ -12,6 +12,7 @@ import ActionMenu, { ActionMenuItem } from '@/components/ActionMenu';
 import Button from '@/components/Button';
 import Card from '@/components/Card';
 import CopyToClipboard from '@/components/CopyToClipboard';
+import DetailsSkeleton from '@/components/DetailsSkeleton';
 import Drawer from '@/components/Drawer';
 import ImagePlaceholder from '@/components/ImagePlaceholder';
 import LinkButton from '@/components/LinkButton';
@@ -43,7 +44,7 @@ const ApplicationDetails = () => {
     SnakeCaseOidcConfig,
     RequestError
   >('/oidc/.well-known/openid-configuration');
-  const isLoading = !data && !error && !oidcConfig && !fetchOidcConfigError;
+  const isLoading = (!data && !error) || (!oidcConfig && !fetchOidcConfigError);
   const [isReadmeOpen, setIsReadmeOpen] = useState(false);
   const [isDeleteFormOpen, setIsDeleteFormOpen] = useState(false);
   const api = useApi();
@@ -102,7 +103,7 @@ const ApplicationDetails = () => {
         title="admin_console.application_details.back_to_applications"
         className={styles.backLink}
       />
-      {isLoading && <div>loading</div>}
+      {isLoading && <DetailsSkeleton />}
       {data && oidcConfig && (
         <>
           <Card className={styles.header}>
