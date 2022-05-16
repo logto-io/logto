@@ -11,11 +11,11 @@ export type Props = {
   isDisabled?: boolean;
   className?: string;
   connector: ConnectorData;
-  onClick?: (id: string) => void;
+  onClick?: () => void;
 };
 
 const SocialLinkButton = ({ isDisabled, className, connector, onClick }: Props) => {
-  const { id, name, logo } = connector;
+  const { target, name, logo } = connector;
 
   const {
     i18n: { language },
@@ -35,9 +35,7 @@ const SocialLinkButton = ({ isDisabled, className, connector, onClick }: Props) 
         className
       )}
       type="button"
-      onClick={() => {
-        onClick?.(id);
-      }}
+      onClick={onClick}
     >
       {logo && <img src={logo} alt={target} className={socialLinkButtonStyles.icon} />}
       {localName}
