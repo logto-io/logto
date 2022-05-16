@@ -9,7 +9,7 @@ import { toast } from 'react-hot-toast';
 import { logtoApiResource } from '@/consts/api';
 
 export class RequestError extends Error {
-  body: RequestErrorBody;
+  body?: RequestErrorBody;
 
   constructor(body: RequestErrorBody) {
     super('Request error occurred.');

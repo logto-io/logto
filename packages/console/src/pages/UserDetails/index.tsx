@@ -113,7 +113,7 @@ const UserDetails = () => {
         className={styles.backLink}
       />
       {isLoading && <DetailsSkeleton />}
-      {error && <div>{`error occurred: ${error.body.message}`}</div>}
+      {!data && error && <div>{`error occurred: ${error.body?.message ?? error.message}`}</div>}
       {id && data && (
         <>
           <Card className={styles.header}>

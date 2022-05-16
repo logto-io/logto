@@ -84,7 +84,7 @@ const ApiResourceDetails = () => {
         className={styles.backLink}
       />
       {isLoading && <DetailsSkeleton />}
-      {error && <div>{`error occurred: ${error.body.message}`}</div>}
+      {!data && error && <div>{`error occurred: ${error.body?.message ?? error.message}`}</div>}
       {data && (
         <>
           <Card className={styles.header}>
