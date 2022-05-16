@@ -358,8 +358,8 @@ const translation = {
     contact: {
       title: 'Contact us',
       description: 'You can contact us for help and support.',
-      slack: {
-        title: 'Slack channel',
+      discord: {
+        title: 'Discord Channel',
         description: 'Join our public channel to chat with developers.',
         button: 'Join',
       },
