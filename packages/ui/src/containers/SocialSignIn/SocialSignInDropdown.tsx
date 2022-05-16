@@ -37,7 +37,7 @@ const SocialSignInDropdown = ({ isOpen, onClose, connectors, anchorRef }: Props)
               void invokeSocialSignIn(id, onClose);
             }}
           >
-            <img src={logo} alt={id} className={styles.social_logo} />
+            <img src={logo} alt={id} className={styles.socialLogo} />
             <span>{localName}</span>
           </DropdownItem>
         );
@@ -62,7 +62,7 @@ const SocialSignInDropdown = ({ isOpen, onClose, connectors, anchorRef }: Props)
       isOpen={isOpen}
       className={styles.socialDropDown}
       style={{ content: contentStyle }}
-      closeTimeoutMS={200}
+      closeTimeoutMS={100}
       onClose={onClose}
       onAfterOpen={adjustPosition}
       onAfterClose={() => {
