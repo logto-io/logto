@@ -88,7 +88,7 @@ const SignInExperience = () => {
     return <div>{configError.body.message}</div>;
   }
 
-  if (configs?.customizeSignInExperience) {
+  if (!configs?.customizeSignInExperience) {
     return <Welcome />;
   }
 
