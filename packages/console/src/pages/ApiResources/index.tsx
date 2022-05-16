@@ -7,11 +7,11 @@ import Modal from 'react-modal';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import useSWR from 'swr';
 
+import apiResourceIcon from '@/assets/images/api-resource.svg';
 import Button from '@/components/Button';
 import Card from '@/components/Card';
 import CardTitle from '@/components/CardTitle';
 import CopyToClipboard from '@/components/CopyToClipboard';
-import ImagePlaceholder from '@/components/ImagePlaceholder';
 import ItemPreview from '@/components/ItemPreview';
 import Pagination from '@/components/Pagination';
 import TableEmpty from '@/components/Table/TableEmpty';
@@ -113,7 +113,7 @@ const ApiResources = () => {
                 }}
               >
                 <td>
-                  <ItemPreview title={name} icon={<ImagePlaceholder />} to={buildDetailsLink(id)} />
+                  <ItemPreview title={name} icon={apiResourceIcon} to={buildDetailsLink(id)} />
                 </td>
                 <td>
                   <CopyToClipboard value={indicator} variant="text" />

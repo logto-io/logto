@@ -14,9 +14,9 @@ import Card from '@/components/Card';
 import CopyToClipboard from '@/components/CopyToClipboard';
 import DetailsSkeleton from '@/components/DetailsSkeleton';
 import Drawer from '@/components/Drawer';
-import ImagePlaceholder from '@/components/ImagePlaceholder';
 import LinkButton from '@/components/LinkButton';
 import TabNav, { TabNavItem } from '@/components/TabNav';
+import { ApplicationIcon } from '@/consts';
 import useApi, { RequestError } from '@/hooks/use-api';
 import Back from '@/icons/Back';
 import Delete from '@/icons/Delete';
@@ -107,9 +107,7 @@ const ApplicationDetails = () => {
       {data && oidcConfig && (
         <>
           <Card className={styles.header}>
-            <div className={styles.imagePlaceholder}>
-              <ImagePlaceholder size={60} borderRadius={16} />
-            </div>
+            <img className={styles.icon} src={ApplicationIcon[data.type]} />
             <div className={styles.metadata}>
               <div className={styles.name}>{data.name}</div>
               <div className={styles.details}>

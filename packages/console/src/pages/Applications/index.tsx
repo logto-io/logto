@@ -11,12 +11,12 @@ import Button from '@/components/Button';
 import Card from '@/components/Card';
 import CardTitle from '@/components/CardTitle';
 import CopyToClipboard from '@/components/CopyToClipboard';
-import ImagePlaceholder from '@/components/ImagePlaceholder';
 import ItemPreview from '@/components/ItemPreview';
 import Pagination from '@/components/Pagination';
 import TableEmpty from '@/components/Table/TableEmpty';
 import TableError from '@/components/Table/TableError';
 import TableLoading from '@/components/Table/TableLoading';
+import { ApplicationIcon } from '@/consts';
 import { RequestError } from '@/hooks/use-api';
 import Plus from '@/icons/Plus';
 import * as modalStyles from '@/scss/modal.module.scss';
@@ -113,7 +113,7 @@ const Applications = () => {
                   <ItemPreview
                     title={name}
                     subtitle={t(`${applicationTypeI18nKey[type]}.title`)}
-                    icon={<ImagePlaceholder />}
+                    icon={ApplicationIcon[type]}
                     to={`/applications/${id}`}
                   />
                 </td>
