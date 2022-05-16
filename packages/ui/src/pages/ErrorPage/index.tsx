@@ -10,12 +10,15 @@ import * as styles from './index.module.scss';
 
 type Props = {
   title?: TFuncKey<'translation', 'main_flow'>;
-  message?: string;
+  message?: TFuncKey<'translation', 'main_flow'>;
+  rawMessage?: string;
 };
 
-const ErrorPage = ({ title = 'description.not_found', message }: Props) => {
+const ErrorPage = ({ title = 'description.not_found', message, rawMessage }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'main_flow' });
   const navigate = useNavigate();
+
+  const errorMessage = rawMessage || (message && t(message));
 
   return (
     <div className={styles.wrapper}>
@@ -23,7 +26,7 @@ const ErrorPage = ({ title = 'description.not_found', message }: Props) => {
       <div className={styles.container}>
         <ErrorIcon />
         <div className={styles.title}>{t(title)}</div>
-        {message && <div className={styles.message}>{message}</div>}
+        {errorMessage && <div className={styles.message}>{errorMessage}</div>}
       </div>
       <Button
         className={styles.backButton}

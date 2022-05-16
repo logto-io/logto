@@ -54,6 +54,10 @@ const App = () => {
             <Route path="/callback/:connector" element={<Callback />} />
             <Route path="/social-register/:connector" element={<SocialRegister />} />
             <Route path="/:type/:method/passcode-validation" element={<Passcode />} />
+            <Route
+              path="/unknown-session"
+              element={<ErrorPage message="error.invalid_session" />}
+            />
             <Route path="*" element={<ErrorPage />} />
           </Routes>
         </BrowserRouter>

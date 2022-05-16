@@ -83,8 +83,9 @@ const translation = {
       passwords_do_not_match: '密码不匹配。',
       agree_terms_required: '你需要同意使用条款以继续。',
       invalid_passcode: '无效的验证码。',
-      request: '请求异常：{{ message }}',
-      unknown: '请求异常，请稍后重试。',
+      request: '请求错误：{{ message }}',
+      unknown: '未知错误，请稍后重试。',
+      invalid_session: '未找到有效的会话，请重新登录。',
     },
   },
   admin_console: {
