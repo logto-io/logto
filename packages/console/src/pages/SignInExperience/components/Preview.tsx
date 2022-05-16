@@ -1,5 +1,6 @@
 import { Language } from '@logto/phrases';
 import { AppearanceMode, SignInExperience } from '@logto/schemas';
+import classNames from 'classnames';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -11,9 +12,10 @@ import * as styles from './Preview.module.scss';
 
 type Props = {
   signInExperience: SignInExperience;
+  className?: string;
 };
 
-const Preview = ({ signInExperience }: Props) => {
+const Preview = ({ signInExperience, className }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const [language, setLanguage] = useState<Language>(Language.English);
   const [mode, setMode] = useState<AppearanceMode>(AppearanceMode.LightMode);
@@ -30,7 +32,7 @@ const Preview = ({ signInExperience }: Props) => {
   );
 
   return (
-    <Card className={styles.preview}>
+    <Card className={classNames(styles.preview, className)}>
       <div className={styles.header}>
         <div className={styles.title}>{t('sign_in_exp.preview.title')}</div>
         <div className={styles.selects}>

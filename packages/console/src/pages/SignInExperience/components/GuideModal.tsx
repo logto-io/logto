@@ -20,6 +20,7 @@ import { signInExperienceParser } from '../utilities';
 import BrandingForm from './BrandingForm';
 import * as styles from './GuideModal.module.scss';
 import LanguagesForm from './LanguagesForm';
+import Preview from './Preview';
 import SignInMethodsForm from './SignInMethodsForm';
 import TermsForm from './TermsForm';
 
@@ -36,9 +37,11 @@ const GuideModal = ({ isOpen, onClose }: Props) => {
     reset,
     handleSubmit,
     formState: { isSubmitting },
+    watch,
   } = methods;
   const api = useApi();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const formData = watch();
 
   useEffect(() => {
     if (data) {
@@ -110,7 +113,12 @@ const GuideModal = ({ isOpen, onClose }: Props) => {
                     <LanguagesForm />
                   </div>
                 </div>
-                <div className={styles.preview}>TODO</div>
+                {formData.id && (
+                  <Preview
+                    signInExperience={signInExperienceParser.toRemoteModel(formData)}
+                    className={styles.preview}
+                  />
+                )}
               </div>
               <div className={styles.footer}>
                 <Button
