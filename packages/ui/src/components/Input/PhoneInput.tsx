@@ -69,7 +69,7 @@ const PhoneInput = ({
 
   return (
     <div className={className}>
-      <div className={classNames(styles.wrapper, onFocus && styles.focus, error && styles.error)}>
+      <div className={classNames(styles.wrapper, error && styles.error)}>
         {countrySelector}
         <input
           ref={inputReference}

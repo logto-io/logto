@@ -20,8 +20,21 @@
     height: 100%;
     font-size: 0;
   }
+}
 
-  > svg {
-    fill: var(--color-primary);
+:global(body.mobile) {
+  .countryCodeSelector {
+    > svg {
+      fill: var(--color-primary);
+    }
+  }
+}
+
+
+:global(body.desktop) {
+  .countryCodeSelector {
+    > svg {
+      fill: var(--color-icon);
+    }
   }
 }

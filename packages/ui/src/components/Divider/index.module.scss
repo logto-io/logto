@@ -9,7 +9,7 @@
   .line {
     flex: 1;
     height: 1px;
-    background: var(--color-border);
+    background: var(--color-divider);
 
     &:first-child {
       margin-right: _.unit(4);

@@ -15,3 +15,11 @@
     font: var(--font-body);
   }
 }
+
+:global(body.desktop) {
+  .link {
+    &.primary {
+      font: var(--font-body);
+    }
+  }
+}

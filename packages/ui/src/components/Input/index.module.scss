@@ -3,21 +3,20 @@
 .wrapper {
   position: relative;
   @include _.flex-row;
-  padding: 0 _.unit(4);
-  border-radius: var(--radius);
   border: _.border();
-  background: var(--color-layer);
-  color: var(--color-text);
+  border-radius: var(--radius);
   // fix in safari input field line-height issue
   height: 46px;
   overflow: hidden;
-
+  transition-property: outline, border;
+  transition-timing-function: ease-in-out;
+  transition-duration: 0.2s;
 
   > *:not(:first-child) {
     margin-left: _.unit(1);
   }
 
-  &.focus {
+  &:focus-within {
     border: _.border(var(--color-primary));
   }
 
@@ -27,7 +26,6 @@
 
   input {
     flex: 1;
-    border: none;
     background: none;
     padding: _.unit(3) 0;
     caret-color: var(--color-primary);
@@ -53,4 +51,27 @@
 
 .actionButton {
   fill: var(--color-icon);
+}
+
+:global(body.mobile) {
+  .wrapper {
+    padding: 0 _.unit(4);
+    background: var(--color-layer);
+    color: var(--color-text);
+  }
+}
+
+:global(body.desktop) {
+  .wrapper {
+    padding: 0 _.unit(3);
+    background: transparent;
+    border: _.border(var(--color-border));
+    border-radius: 6px;
+    outline: 3px solid transparent;
+
+    &:focus-within {
+      border-color: var(--color-primary);
+      outline-color: var(--color-focused-variant);
+    }
+  }
 }

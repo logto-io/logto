@@ -8,22 +8,28 @@
   transform: translateY(-50%);
   @include _.flex-column;
   pointer-events: none;
+}
 
+.toast {
+  margin: 0 auto;
+  padding: _.unit(2) _.unit(4);
+  max-width: 295px;
+  font: var(--font-body);
+  color: var(--color-text);
+  border-radius: var(--radius);
+  background: var(--color-toast);
+  text-align: center;
+  opacity: 0%;
+  transition: opacity 0.3s ease-in-out;
+  word-break: break-word;
+
+  &[data-visible='true'] {
+    opacity: 100%;
+  }
+}
+
+:global(body.desktop) {
   .toast {
-    max-width: 295px;
-    margin: 0 auto;
-    padding: _.unit(2) _.unit(4);
-    font: var(--font-body);
-    color: var(--color-base);
-    border-radius: var(--radius);
-    background: var(--color-toast);
-    text-align: center;
-    opacity: 0%;
-    transition: opacity 0.3s ease-in-out;
-    word-break: break-word;
-
-    &[data-visible='true'] {
-      opacity: 100%;
-    }
+    padding: _.unit(3) _.unit(4);
   }
 }
