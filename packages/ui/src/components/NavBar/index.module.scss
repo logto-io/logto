@@ -19,9 +19,8 @@
     cursor: pointer;
   }
 
-  svg {
+  > svg {
     fill: currentColor;
-    margin-right: _.unit(2);
   }
 
   .title {

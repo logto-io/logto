@@ -2,8 +2,8 @@ import React from 'react';
 import { TFuncKey, useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
+import ErrorIcon from '@/assets/icons/error-icon.svg';
 import Button from '@/components/Button';
-import { ErrorIcon } from '@/components/Icons';
 import NavBar from '@/components/NavBar';
 
 import * as styles from './index.module.scss';

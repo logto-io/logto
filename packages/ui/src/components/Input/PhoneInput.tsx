@@ -1,8 +1,9 @@
 import classNames from 'classnames';
 import React, { useState, useMemo, useRef } from 'react';
 
+import DownArrowIcon from '@/assets/icons/arrow-down.svg';
+import ClearIcon from '@/assets/icons/clear-icon.svg';
 import ErrorMessage, { ErrorType } from '@/components/ErrorMessage';
-import { ClearIcon, DownArrowIcon } from '@/components/Icons';
 import { CountryCallingCode, CountryMetaData } from '@/hooks/use-phone-number';
 
 import * as styles from './index.module.scss';

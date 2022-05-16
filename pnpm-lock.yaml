@@ -734,6 +734,7 @@ importers:
       jest: ^27.5.1
       jest-matcher-specific-error: ^1.0.0
       jest-transform-stub: ^2.0.0
+      jest-transformer-svg: ^1.0.2
       lint-staged: ^12.0.0
       prettier: ^2.3.2
       ts-jest: ^27.1.1
@@ -752,6 +753,7 @@ importers:
       '@types/node': 16.11.12
       eslint: 8.10.0
       jest: 27.5.1_ts-node@10.7.0
+      jest-transformer-svg: 1.0.2_jest@27.5.1
       lint-staged: 12.4.0
       prettier: 2.5.1
       ts-node: 10.7.0_42uktnex6oapjbpw2i7vzvmrzi
@@ -842,6 +844,7 @@ importers:
       '@logto/schemas': ^0.1.0
       '@parcel/core': ^2.5.0
       '@parcel/transformer-sass': ^2.5.0
+      '@parcel/transformer-svg-react': ^2.5.0
       '@peculiar/webcrypto': ^1.3.3
       '@silverhand/eslint-config': ^0.12.0
       '@silverhand/eslint-config-react': ^0.11.0
@@ -880,15 +883,13 @@ importers:
       stylelint: ^13.13.1
       typescript: ^4.6.2
       use-debounced-loader: ^0.1.1
-    dependencies:
-      react-device-detect: 2.2.2_sfoxds7t5ydpegc3knd667wn6m
-      use-debounced-loader: 0.1.1_react@17.0.2
     devDependencies:
       '@logto/jest-config': link:../jest-config
       '@logto/phrases': link:../phrases
       '@logto/schemas': link:../schemas
       '@parcel/core': 2.5.0
       '@parcel/transformer-sass': 2.5.0_@parcel+core@2.5.0
+      '@parcel/transformer-svg-react': 2.5.0_@parcel+core@2.5.0
       '@peculiar/webcrypto': 1.3.3
       '@silverhand/eslint-config': 0.12.0_hjjt7jwmhwqm7bjf55k5ihcdqq
       '@silverhand/eslint-config-react': 0.11.0_oxzh5pb5bdzd47fiyp3dy75fai
@@ -916,6 +917,7 @@ importers:
       postcss-modules: 4.3.0_postcss@8.4.6
       prettier: 2.5.1
       react: 17.0.2
+      react-device-detect: 2.2.2_sfoxds7t5ydpegc3knd667wn6m
       react-dom: 17.0.2_react@17.0.2
       react-i18next: 11.15.4_fq32mavcto3l2u7t3zyhvdh4yu
       react-modal: 3.14.4_sfoxds7t5ydpegc3knd667wn6m
@@ -925,6 +927,7 @@ importers:
       react-timer-hook: 3.0.5_sfoxds7t5ydpegc3knd667wn6m
       stylelint: 13.13.1
       typescript: 4.6.2
+      use-debounced-loader: 0.1.1_react@17.0.2
 
 packages:
 
@@ -5560,6 +5563,20 @@ packages:
       - '@parcel/core'
     dev: true
 
+  /@parcel/transformer-svg-react/2.5.0_@parcel+core@2.5.0:
+    resolution: {integrity: sha512-jy+fuZ8lbAwe9nvvBd5snd7OJXeR0h8o0seZqtGF5Q80SuMZ4zm1kfhCoDfhEkNQt0fHttlUlOIbGcyaTczXcA==}
+    engines: {node: '>= 12.0.0', parcel: ^2.5.0}
+    dependencies:
+      '@parcel/plugin': 2.5.0_@parcel+core@2.5.0
+      '@svgr/core': 6.2.1
+      '@svgr/plugin-jsx': 6.2.1_@svgr+core@6.2.1
+      '@svgr/plugin-svgo': 6.2.0_@svgr+core@6.2.1
+      camelcase: 6.3.0
+    transitivePeerDependencies:
+      - '@parcel/core'
+      - supports-color
+    dev: true
+
   /@parcel/transformer-svg/2.5.0_@parcel+core@2.5.0:
     resolution: {integrity: sha512-zCGJcrCpICFe0Q/dgjQZfW7sYFkbJEC7NGT4zEJnMo8Cm/kq8Qh6+2ApX6c+vv5Q0WZn5Ic+N0OvxIMkvgdC/w==}
     engines: {node: '>= 12.0.0', parcel: ^2.5.0}
@@ -5712,7 +5729,6 @@ packages:
       stylelint-config-xo-scss: 0.14.0_stylelint@13.13.1
     transitivePeerDependencies:
       - eslint
-      - eslint-import-resolver-webpack
       - prettier
       - supports-color
       - typescript
@@ -5736,7 +5752,7 @@ packages:
       eslint-import-resolver-typescript: 2.5.0_rnagsyfcubvpoxo2ynj23pim7u
       eslint-plugin-consistent-default-export-name: 0.0.7
       eslint-plugin-eslint-comments: 3.2.0_eslint@8.10.0
-      eslint-plugin-import: 2.25.4_sidoke6kqbkbdht6nlmwbfnany
+      eslint-plugin-import: 2.25.4_eslint@8.10.0
       eslint-plugin-no-use-extend-native: 0.5.0
       eslint-plugin-node: 11.1.0_eslint@8.10.0
       eslint-plugin-prettier: 3.4.1_6pitu4b2tqihty6rv5qeiyb35m
@@ -5747,7 +5763,6 @@ packages:
       prettier: 2.5.1
       typescript: 4.6.2
     transitivePeerDependencies:
-      - eslint-import-resolver-webpack
       - supports-color
     dev: true
 
@@ -5769,7 +5784,7 @@ packages:
       eslint-import-resolver-typescript: 2.5.0_rnagsyfcubvpoxo2ynj23pim7u
       eslint-plugin-consistent-default-export-name: 0.0.7
       eslint-plugin-eslint-comments: 3.2.0_eslint@8.10.0
-      eslint-plugin-import: 2.25.4_sidoke6kqbkbdht6nlmwbfnany
+      eslint-plugin-import: 2.25.4_eslint@8.10.0
       eslint-plugin-no-use-extend-native: 0.5.0
       eslint-plugin-node: 11.1.0_eslint@8.10.0
       eslint-plugin-prettier: 3.4.1_6pitu4b2tqihty6rv5qeiyb35m
@@ -5780,7 +5795,6 @@ packages:
       prettier: 2.5.1
       typescript: 4.6.2
     transitivePeerDependencies:
-      - eslint-import-resolver-webpack
       - supports-color
     dev: true
 
@@ -5919,7 +5933,7 @@ packages:
     dependencies:
       '@babel/core': 7.16.0
       postcss: 7.0.39
-      postcss-syntax: 0.36.2_kei4jy7wdgbhc236h4oijypxom
+      postcss-syntax: 0.36.2_postcss@7.0.39
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -5932,7 +5946,7 @@ packages:
       postcss-syntax: '>=0.36.2'
     dependencies:
       postcss: 7.0.39
-      postcss-syntax: 0.36.2_kei4jy7wdgbhc236h4oijypxom
+      postcss-syntax: 0.36.2_postcss@7.0.39
       remark: 13.0.0
       unist-util-find-all-after: 3.0.2
     transitivePeerDependencies:
@@ -9012,22 +9026,12 @@ packages:
 
   /debug/2.6.9:
     resolution: {integrity: sha512-bC7ElrdJaJnPbAP+1EotYvqZsb3ecl5wi6Bfi6BJTUcNowp6cvspg0jXznRTKDjm/E7AdgFBVeAPVMNcKGsHMA==}
-    peerDependencies:
-      supports-color: '*'
-    peerDependenciesMeta:
-      supports-color:
-        optional: true
     dependencies:
       ms: 2.0.0
     dev: true
 
   /debug/3.2.7:
     resolution: {integrity: sha512-CFjzYYAi4ThfiQvizrFQevTTXHtnCqWfe7x1AhgEscTz6ZbLbfoLRLPugTQyBth6f8ZERVUSyWHFD/7Wu4t1XQ==}
-    peerDependencies:
-      supports-color: '*'
-    peerDependenciesMeta:
-      supports-color:
-        optional: true
     dependencies:
       ms: 2.1.3
 
@@ -9724,8 +9728,6 @@ packages:
     dependencies:
       debug: 3.2.7
       resolve: 1.22.0
-    transitivePeerDependencies:
-      - supports-color
     dev: true
 
   /eslint-import-resolver-typescript/2.5.0_rnagsyfcubvpoxo2ynj23pim7u:
@@ -9737,7 +9739,7 @@ packages:
     dependencies:
       debug: 4.3.3
       eslint: 8.10.0
-      eslint-plugin-import: 2.25.4_sidoke6kqbkbdht6nlmwbfnany
+      eslint-plugin-import: 2.25.4_eslint@8.10.0
       glob: 7.2.0
       is-glob: 4.0.3
       resolve: 1.22.0
@@ -9752,33 +9754,6 @@ packages:
     dependencies:
       debug: 3.2.7
       find-up: 2.1.0
-    dev: true
-
-  /eslint-module-utils/2.7.3_l62aq42yiamaj3cnpuf6avthf4:
-    resolution: {integrity: sha512-088JEC7O3lDZM9xGe0RerkOMd0EjFl+Yvd1jPWIkMT5u3H9+HC34mWWPnqPrN13gieT9pBOO+Qt07Nb/6TresQ==}
-    engines: {node: '>=4'}
-    peerDependencies:
-      '@typescript-eslint/parser': '*'
-      eslint-import-resolver-node: '*'
-      eslint-import-resolver-typescript: '*'
-      eslint-import-resolver-webpack: '*'
-    peerDependenciesMeta:
-      '@typescript-eslint/parser':
-        optional: true
-      eslint-import-resolver-node:
-        optional: true
-      eslint-import-resolver-typescript:
-        optional: true
-      eslint-import-resolver-webpack:
-        optional: true
-    dependencies:
-      '@typescript-eslint/parser': 5.14.0_pzezdwkd5bvjkx2hshexc25sxq
-      debug: 3.2.7
-      eslint-import-resolver-node: 0.3.6
-      eslint-import-resolver-typescript: 2.5.0_rnagsyfcubvpoxo2ynj23pim7u
-      find-up: 2.1.0
-    transitivePeerDependencies:
-      - supports-color
     dev: true
 
   /eslint-plugin-consistent-default-export-name/0.0.7:
@@ -9833,37 +9808,6 @@ packages:
       object.values: 1.1.5
       resolve: 1.22.0
       tsconfig-paths: 3.13.0
-    dev: true
-
-  /eslint-plugin-import/2.25.4_sidoke6kqbkbdht6nlmwbfnany:
-    resolution: {integrity: sha512-/KJBASVFxpu0xg1kIBn9AUa8hQVnszpwgE7Ld0lKAlx7Ie87yzEzCgSkekt+le/YVhiaosO4Y14GDAOc41nfxA==}
-    engines: {node: '>=4'}
-    peerDependencies:
-      '@typescript-eslint/parser': '*'
-      eslint: ^2 || ^3 || ^4 || ^5 || ^6 || ^7.2.0 || ^8
-    peerDependenciesMeta:
-      '@typescript-eslint/parser':
-        optional: true
-    dependencies:
-      '@typescript-eslint/parser': 5.14.0_pzezdwkd5bvjkx2hshexc25sxq
-      array-includes: 3.1.4
-      array.prototype.flat: 1.2.5
-      debug: 2.6.9
-      doctrine: 2.1.0
-      eslint: 8.10.0
-      eslint-import-resolver-node: 0.3.6
-      eslint-module-utils: 2.7.3_l62aq42yiamaj3cnpuf6avthf4
-      has: 1.0.3
-      is-core-module: 2.8.1
-      is-glob: 4.0.3
-      minimatch: 3.1.2
-      object.values: 1.1.5
-      resolve: 1.22.0
-      tsconfig-paths: 3.13.0
-    transitivePeerDependencies:
-      - eslint-import-resolver-typescript
-      - eslint-import-resolver-webpack
-      - supports-color
     dev: true
 
   /eslint-plugin-no-use-extend-native/0.5.0:
@@ -12727,6 +12671,15 @@ packages:
   /jest-transform-stub/2.0.0:
     resolution: {integrity: sha512-lspHaCRx/mBbnm3h4uMMS3R5aZzMwyNpNIJLXj4cEsV0mIUtS4IjYJLSoyjRCtnxb6RIGJ4NL2quZzfIeNhbkg==}
     dev: false
+
+  /jest-transformer-svg/1.0.2_jest@27.5.1:
+    resolution: {integrity: sha512-A9z5Vzs+TlPpxekwUOCyVu5sHgcCKUKyJTE1q/bUhtAILpgf3kIj6IjguQrTJG0jN0nRnuNV7ckPUE8Vdf12Jg==}
+    peerDependencies:
+      jest: ^27.0.6
+      react: ^17.0.2
+    dependencies:
+      jest: 27.5.1_ts-node@10.7.0
+    dev: true
 
   /jest-util/27.5.1:
     resolution: {integrity: sha512-Kv2o/8jNvX1MQ0KGtw480E/w4fBCDOnH6+6DmeKi6LZUIlKA5kwY0YNdlzaWTiVgxqAqik11QyxDOKk543aKXw==}
@@ -15696,7 +15649,7 @@ packages:
     dependencies:
       htmlparser2: 3.10.1
       postcss: 7.0.39
-      postcss-syntax: 0.36.2_kei4jy7wdgbhc236h4oijypxom
+      postcss-syntax: 0.36.2_postcss@7.0.39
     dev: true
 
   /postcss-less/3.1.4:
@@ -16096,31 +16049,12 @@ packages:
       svgo: 2.8.0
     dev: true
 
-  /postcss-syntax/0.36.2_kei4jy7wdgbhc236h4oijypxom:
+  /postcss-syntax/0.36.2_postcss@7.0.39:
     resolution: {integrity: sha512-nBRg/i7E3SOHWxF3PpF5WnJM/jQ1YpY9000OaVXlAQj6Zp/kIqJxEDWIZ67tAd7NLuk7zqN4yqe9nc0oNAOs1w==}
     peerDependencies:
       postcss: '>=5.0.0'
-      postcss-html: '*'
-      postcss-jsx: '*'
-      postcss-less: '*'
-      postcss-markdown: '*'
-      postcss-scss: '*'
-    peerDependenciesMeta:
-      postcss-html:
-        optional: true
-      postcss-jsx:
-        optional: true
-      postcss-less:
-        optional: true
-      postcss-markdown:
-        optional: true
-      postcss-scss:
-        optional: true
     dependencies:
       postcss: 7.0.39
-      postcss-html: 0.36.0_j55xdkkcxc32kvnyvx3y7casfm
-      postcss-less: 3.1.4
-      postcss-scss: 2.1.1
     dev: true
 
   /postcss-unique-selectors/5.1.1_postcss@8.4.12:
@@ -16623,7 +16557,7 @@ packages:
       react: 17.0.2
       react-dom: 17.0.2_react@17.0.2
       ua-parser-js: 1.0.2
-    dev: false
+    dev: true
 
   /react-dnd-html5-backend/16.0.0:
     resolution: {integrity: sha512-be3lKEbbT8FQcoTjFlQ4ZXG/NVrFNJu9W0INc5rm/5EFQpHCkz+xpbB2U8j9uh5Bvk7AsJyQrZznEut0hrNPIA==}
@@ -18606,7 +18540,7 @@ packages:
       postcss-sass: 0.4.4
       postcss-scss: 2.1.1
       postcss-selector-parser: 6.0.9
-      postcss-syntax: 0.36.2_kei4jy7wdgbhc236h4oijypxom
+      postcss-syntax: 0.36.2_postcss@7.0.39
       postcss-value-parser: 4.2.0
       resolve-from: 5.0.0
       slash: 3.0.0
@@ -18620,8 +18554,6 @@ packages:
       v8-compile-cache: 2.3.0
       write-file-atomic: 3.0.3
     transitivePeerDependencies:
-      - postcss-jsx
-      - postcss-markdown
       - supports-color
     dev: true
 
@@ -19370,7 +19302,7 @@ packages:
 
   /ua-parser-js/1.0.2:
     resolution: {integrity: sha512-00y/AXhx0/SsnI51fTc0rLRmafiGOM4/O+ny10Ps7f+j/b8p/ZY11ytMgznXkOVo4GQ+KwQG5UQLkLGirsACRg==}
-    dev: false
+    dev: true
 
   /uglify-js/3.15.3:
     resolution: {integrity: sha512-6iCVm2omGJbsu3JWac+p6kUiOpg3wFO2f8lIXjfEb8RrmLjzog1wTPMmwKB7swfzzqxj9YM+sGUM++u1qN4qJg==}
@@ -19696,7 +19628,7 @@ packages:
       react: '>=16'
     dependencies:
       react: 17.0.2
-    dev: false
+    dev: true
 
   /use-isomorphic-layout-effect/1.1.2_z7w6vgz62d5pbxpnoxayoqdmly:
     resolution: {integrity: sha512-49L8yCO3iGT/ZF9QttjwLF/ZD9Iwto5LnH5LmEdk/6cFmXddqi2ulF0edxTwjj+7mqvpVVGQWvbXZdn32wRSHA==}

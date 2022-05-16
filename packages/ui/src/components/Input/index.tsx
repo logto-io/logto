@@ -1,8 +1,8 @@
 import classNames from 'classnames';
-import React, { useState, HTMLProps } from 'react';
+import React, { HTMLProps } from 'react';
 
+import ClearIcon from '@/assets/icons/clear-icon.svg';
 import ErrorMessage, { ErrorType } from '@/components/ErrorMessage';
-import { ClearIcon } from '@/components/Icons';
 
 import * as styles from './index.module.scss';
 
@@ -19,30 +19,14 @@ const Input = ({
   value,
   error,
   errorStyling = true,
-  onFocus,
-  onBlur,
   onClear,
   ...rest
 }: Props) => {
-  const [onInputFocus, setOnInputFocus] = useState(false);
-
   return (
     <div className={className}>
       <div className={classNames(styles.wrapper, error && errorStyling && styles.error)}>
-        <input
-          type={type}
-          value={value}
-          onFocus={(event) => {
-            setOnInputFocus(true);
-            onFocus?.(event);
-          }}
-          onBlur={(event) => {
-            setOnInputFocus(false);
-            onBlur?.(event);
-          }}
-          {...rest}
-        />
-        {value && onInputFocus && onClear && (
+        <input type={type} value={value} {...rest} />
+        {value && onClear && (
           <ClearIcon
             className={styles.actionButton}
             onMouseDown={(event) => {

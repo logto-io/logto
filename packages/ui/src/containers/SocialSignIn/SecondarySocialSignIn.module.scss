@@ -15,19 +15,28 @@
 
 .moreButton {
   border-radius: 50%;
+  @include _.flex-column;
+
+  > svg {
+    color: var(--color-icon);
+  }
 }
 
 :global(body.mobile) {
   .moreButton {
-    width: 48px;
-    height: 48px;
+    > svg {
+      width: 48px;
+      height: 48px;
+    }
   }
 }
 
 
 :global(body.desktop) {
   .moreButton {
-    width: 28px;
-    height: 28px;
+    > svg {
+      width: 28px;
+      height: 28px;
+    }
   }
 }

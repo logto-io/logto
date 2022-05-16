@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { LoadingIcon } from '@/components/Icons';
+import LoadingIcon from '@/assets/icons/loading-icon.svg';
 
 import * as styles from './index.module.scss';
 

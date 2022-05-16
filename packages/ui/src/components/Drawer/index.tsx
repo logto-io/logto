@@ -2,7 +2,7 @@ import classNames from 'classnames';
 import React, { ReactNode } from 'react';
 import ReactModal from 'react-modal';
 
-import { CloseIcon } from '@/components/Icons';
+import CloseIcon from '@/assets/icons/close-icon.svg';
 
 import * as modalStyles from '../../scss/modal.module.scss';
 import * as styles from './index.module.scss';

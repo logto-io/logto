@@ -12,10 +12,12 @@
   justify-content: flex-end;
   align-items: center;
   margin-bottom: _.unit(4);
-}
 
-.closeIcon {
-  fill: var(--color-icon);
+  > svg {
+    color: var(--color-icon);
+    width: 20px;
+    height: 20px;
+  }
 }
 
 .drawer {

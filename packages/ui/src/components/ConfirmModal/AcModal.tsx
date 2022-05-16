@@ -4,10 +4,10 @@ import { isMobile } from 'react-device-detect';
 import { useTranslation } from 'react-i18next';
 import ReactModal from 'react-modal';
 
+import CloseIcon from '@/assets/icons/close-icon.svg';
 import Button from '@/components/Button';
 
 import * as modalStyles from '../../scss/modal.module.scss';
-import { CloseIcon } from '../Icons';
 import * as styles from './Acmodal.module.scss';
 import { ModalProps } from './type';
 

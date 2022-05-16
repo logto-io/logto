@@ -42,8 +42,6 @@ describe('Input Field UI Component', () => {
     );
     const inputField = container.querySelector('input');
 
-    expect(container.querySelector('svg')).toBeNull();
-
     if (inputField) {
       fireEvent.focus(inputField);
     }
