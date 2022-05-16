@@ -58,7 +58,6 @@ const SocialSignInDropdown = ({ isOpen, onClose, connectors, anchorRef }: Props)
 
   return (
     <Dropdown
-      role="dropdown"
       isOpen={isOpen}
       className={styles.socialDropDown}
       style={{ content: contentStyle }}
