@@ -1,4 +1,3 @@
-import dayjs from 'dayjs';
 import { object, string } from 'zod';
 
 import koaGuard from '@/middleware/koa-guard';
@@ -54,8 +53,8 @@ export default function logRoutes<T extends AuthedRouter>(router: T) {
         query: { start, end },
       } = ctx.guard;
 
-      const startTime = dayjs(start).valueOf();
-      const endTime = dayjs(end).valueOf();
+      const startTime = new Date(start).valueOf();
+      const endTime = new Date(end).valueOf();
       assertThat(startTime <= endTime, 'dashboard.wrong_date_range');
 
       // Convert date closed interval to time left-closed right-open interval:
