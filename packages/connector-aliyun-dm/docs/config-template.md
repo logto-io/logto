@@ -6,17 +6,17 @@
   "fromAlias": "<connector-alias>",
   "templates": [
     {
-      "usageType": "SIGN_IN",
+      "usageType": "SignIn",
       "subject": "<sign-in-template-subject>",
       "content": "<sign-in-template-content>"
     },
     {
-      "usageType": "REGISTER",
+      "usageType": "Register",
       "subject": "<register-template-subject>",
       "content": "<register-template-content>"
     },
     {
-      "usageType": "TEST",
+      "usageType": "Test",
       "subject": "<test-template-subject>",
       "content": "<test-template-content>"
     }

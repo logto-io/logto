@@ -26,6 +26,7 @@
     "@logto/connector-facebook": "^0.1.0",
     "@logto/connector-github": "^0.1.0",
     "@logto/connector-google": "^0.1.0",
+    "@logto/connector-sendgrid-email": "^0.1.0",
     "@logto/connector-types": "^0.1.0",
     "@logto/connector-wechat": "^0.1.0",
     "@logto/connector-wechat-native": "^0.1.0",

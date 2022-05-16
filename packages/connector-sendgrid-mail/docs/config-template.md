@@ -1,24 +1,25 @@
 ```json
 {
-  "accessKeyId": "<access-key-id>",
-  "accessKeySecret": "<access-key-secret>",
-  "accountName": "<verified-account-name>",
-  "fromAlias": "<connector-alias>",
+  "apiKey": "apikey",
+  "fromEmail": "noreply@logto.test.io",
   "templates": [
     {
-      "usageType": "SIGN_IN",
-      "subject": "<sign-in-template-subject>",
-      "content": "<sign-in-template-content>"
+      "usageType": "SignIn",
+      "type": "ContextType.TEXT",
+      "subject": "Logto SignIn Template",
+      "content": "This is for sign-in purposes only. Your passcode is {{code}}.",
     },
     {
-      "usageType": "REGISTER",
-      "subject": "<register-template-subject>",
-      "content": "<register-template-content>"
+      "usageType": "Register",
+      "type": "ContextType.TEXT",
+      "subject": "Logto Register Template",
+      "content": "This is for registering purposes only. Your passcode is {{code}}.",
     },
     {
-      "usageType": "TEST",
-      "subject": "<test-template-subject>",
-      "content": "<test-template-content>"
+      "usageType": "Test",
+      "type": "ContextType.TEXT",
+      "subject": "Logto Test Template",
+      "content": "This is for testing purposes only. Your passcode is {{code}}.",
     }
   ]
 }

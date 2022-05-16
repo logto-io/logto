@@ -4,6 +4,7 @@ import { AliyunSmsConnector } from '@logto/connector-aliyun-sms';
 import { FacebookConnector } from '@logto/connector-facebook';
 import { GithubConnector } from '@logto/connector-github';
 import { GoogleConnector } from '@logto/connector-google';
+import { SendGridMailConnector } from '@logto/connector-sendgrid-email';
 import { WeChatConnector } from '@logto/connector-wechat';
 import { WeChatNativeConnector } from '@logto/connector-wechat-native';
 import { nanoid } from 'nanoid';
@@ -21,6 +22,7 @@ const allConnectors: IConnector[] = [
   new FacebookConnector(getConnectorConfig),
   new GithubConnector(getConnectorConfig),
   new GoogleConnector(getConnectorConfig),
+  new SendGridMailConnector(getConnectorConfig),
   new WeChatConnector(getConnectorConfig),
   new WeChatNativeConnector(getConnectorConfig),
 ];
