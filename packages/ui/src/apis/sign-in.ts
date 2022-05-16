@@ -36,7 +36,7 @@ export const sendSignInSmsPasscode = async (phone: string) => {
 
 export const verifySignInSmsPasscode = async (
   phone: string,
-  passcode: string,
+  code: string,
   socialToBind?: string
 ) => {
   type Response = {
@@ -47,7 +47,7 @@ export const verifySignInSmsPasscode = async (
     .post('/api/session/sign-in/passwordless/sms/verify-passcode', {
       json: {
         phone,
-        passcode,
+        code,
       },
     })
     .json<Response>();
@@ -73,7 +73,7 @@ export const sendSignInEmailPasscode = async (email: string) => {
 
 export const verifySignInEmailPasscode = async (
   email: string,
-  passcode: string,
+  code: string,
   socialToBind?: string
 ) => {
   type Response = {
@@ -84,7 +84,7 @@ export const verifySignInEmailPasscode = async (
     .post('/api/session/sign-in/passwordless/email/verify-passcode', {
       json: {
         email,
-        passcode,
+        code,
       },
     })
     .json<Response>();
