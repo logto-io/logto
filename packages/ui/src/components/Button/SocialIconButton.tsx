@@ -1,12 +1,13 @@
-import { ConnectorMetadata } from '@logto/schemas';
 import classNames from 'classnames';
 import React from 'react';
+
+import { ConnectorData } from '@/types';
 
 import * as styles from './SocialIconButton.module.scss';
 
 type Props = {
   className?: string;
-  connector: Pick<ConnectorMetadata, 'target' | 'logo'>;
+  connector: ConnectorData;
   onClick?: () => void;
 };
 

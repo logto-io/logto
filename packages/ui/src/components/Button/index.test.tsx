@@ -1,6 +1,8 @@
 import { render, fireEvent } from '@testing-library/react';
 import React from 'react';
 
+import { mockSocialConnectorData } from '@/__mocks__/logto';
+
 import SocialLinkButton from './SocialLinkButton';
 import Button from './index';
 
@@ -24,14 +26,7 @@ describe('Button Component', () => {
   });
 
   it('render SocialLinkButton', () => {
-    const connector = {
-      target: 'foo',
-      name: {
-        en: 'Sign in with Logto',
-        'zh-CN': '使用 Logto 登录',
-      },
-      logo: 'http://logto.dev/logto.png',
-    };
+    const connector = mockSocialConnectorData;
     const { queryByText, container } = render(
       <SocialLinkButton connector={connector} onClick={onClick} />
     );
