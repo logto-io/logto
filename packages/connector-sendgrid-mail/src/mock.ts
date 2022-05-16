@@ -7,7 +7,7 @@ import {
   SendGridMailConfig,
 } from './types';
 
-const toEmailData: EmailData = { email: 'foo@logto.io' };
+const toEmailData: EmailData[] = [{ email: 'foo@logto.io' }];
 const fromEmailData: EmailData = { email: 'noreply@logto.test.io', name: 'Logto Test' };
 export const mockedParameters: PublicParameters = {
   personalizations: [{ to: toEmailData }] as Personalization[],

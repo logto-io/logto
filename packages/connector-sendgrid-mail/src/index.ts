@@ -8,9 +8,9 @@ import {
   GetConnectorConfig,
 } from '@logto/connector-types';
 import { assert, Nullable } from '@silverhand/essentials';
-import { Response } from 'got';
+import got from 'got';
 
-import { defaultMetadata } from './constant';
+import { defaultMetadata, endpoint } from './constant';
 import {
   sendGridMailConfigGuard,
   SendEmailResponse,
@@ -20,7 +20,7 @@ import {
   Content,
   PublicParameters,
 } from './types';
-import { request } from './utils';
+// Import { request } from './utils';
 
 export class SendGridMailConnector implements EmailConnector {
   public metadata: ConnectorMetadata = defaultMetadata;
@@ -39,7 +39,7 @@ export class SendGridMailConnector implements EmailConnector {
     }
   };
 
-  public sendMessage: EmailSendMessageFunction<Response<Nullable<SendEmailResponse>>> = async (
+  public sendMessage: EmailSendMessageFunction<Nullable<SendEmailResponse>> = async (
     address,
     type,
     data
@@ -57,8 +57,10 @@ export class SendGridMailConnector implements EmailConnector {
       )
     );
 
-    const toEmailData: EmailData = { email: address };
-    const fromEmailData: EmailData = { email: fromEmail, name: fromName };
+    const toEmailData: EmailData[] = [{ email: address }];
+    const fromEmailData: EmailData = fromName
+      ? { email: fromEmail, name: fromName }
+      : { email: fromEmail };
     const personalizations: Personalization = { to: toEmailData };
     const content: Content = {
       type: template.type,
@@ -74,9 +76,16 @@ export class SendGridMailConnector implements EmailConnector {
       from: fromEmailData,
       subject,
       content: [content],
-      send_at: Date.now(),
     };
 
-    return request(parameters, apiKey);
+    return got
+      .post(endpoint, {
+        headers: {
+          Authorization: 'Bearer ' + apiKey,
+          'Content-Type': 'application/json',
+        },
+        json: parameters,
+      })
+      .json<Nullable<SendEmailResponse>>();
   };
 }

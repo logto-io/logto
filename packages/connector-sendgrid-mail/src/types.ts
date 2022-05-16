@@ -16,7 +16,7 @@ export type EmailData = {
 };
 
 export type Personalization = {
-  to: EmailData | EmailData[];
+  to: EmailData[];
   from?: EmailData;
   cc?: EmailData | EmailData[];
   bcc?: EmailData | EmailData[];
