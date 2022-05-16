@@ -64,7 +64,7 @@ describe('koaClientSessionGuard', () => {
     expect(ctx.redirect).not.toBeCalled();
   });
 
-  it('should redirect if seesion not found', async () => {
+  it('should redirect if session not found', async () => {
     const provider = new Provider('');
 
     (provider.interactionDetails as jest.Mock).mockRejectedValue(new Error('session not found'));
