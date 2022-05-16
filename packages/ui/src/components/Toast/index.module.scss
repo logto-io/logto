@@ -13,6 +13,7 @@
 .toast {
   margin: 0 auto;
   padding: _.unit(2) _.unit(4);
+  max-width: 295px;
   font: var(--font-body);
   color: var(--color-text);
   border-radius: var(--radius);
@@ -27,16 +28,8 @@
   }
 }
 
-:global(body.mobile) {
-  .toast {
-    padding: _.unit(2) _.unit(4);
-    max-width: 295px;
-  }
-}
-
 :global(body.desktop) {
   .toast {
-    max-width: 295px;
     padding: _.unit(3) _.unit(4);
   }
 }
