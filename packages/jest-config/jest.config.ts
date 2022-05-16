@@ -36,3 +36,5 @@ export const merge = (
 ): Config.InitialOptions => deepmerge(baseConfig, config, mergeOptions);
 
 export type { Config } from '@jest/types';
+
+process.env.TZ = 'UTC';
