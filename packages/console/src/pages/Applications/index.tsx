@@ -16,12 +16,12 @@ import Pagination from '@/components/Pagination';
 import TableEmpty from '@/components/Table/TableEmpty';
 import TableError from '@/components/Table/TableError';
 import TableLoading from '@/components/Table/TableLoading';
+import { ApplicationIcon } from '@/consts';
 import { RequestError } from '@/hooks/use-api';
 import Plus from '@/icons/Plus';
 import * as modalStyles from '@/scss/modal.module.scss';
 import * as tableStyles from '@/scss/table.module.scss';
 import { applicationTypeI18nKey } from '@/types/applications';
-import { getAppIcon } from '@/utilities/icon';
 
 import CreateForm from './components/CreateForm';
 import * as styles from './index.module.scss';
@@ -113,7 +113,7 @@ const Applications = () => {
                   <ItemPreview
                     title={name}
                     subtitle={t(`${applicationTypeI18nKey[type]}.title`)}
-                    icon={getAppIcon(type)}
+                    icon={ApplicationIcon[type]}
                     to={`/applications/${id}`}
                   />
                 </td>
