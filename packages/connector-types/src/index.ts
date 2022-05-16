@@ -56,7 +56,7 @@ export type EmailMessageTypes = {
   Test: Record<string, unknown>;
 };
 
-type SmsMessageTypes = EmailMessageTypes;
+export type SmsMessageTypes = EmailMessageTypes;
 
 export type EmailSendMessageFunction<T = unknown> = (
   address: string,

@@ -306,6 +306,49 @@ importers:
       tsc-watch: 5.0.3_typescript@4.6.3
       typescript: 4.6.3
 
+  packages/connector-sendgrid-mail:
+    specifiers:
+      '@jest/types': ^27.5.1
+      '@logto/connector-types': ^0.1.0
+      '@logto/jest-config': ^0.1.0
+      '@logto/shared': ^0.1.0
+      '@silverhand/eslint-config': ^0.10.2
+      '@silverhand/essentials': ^1.1.6
+      '@silverhand/ts-config': ^0.11.0
+      '@types/jest': ^27.4.1
+      '@types/node': ^16.3.1
+      eslint: ^8.10.0
+      got: ^11.8.2
+      jest: ^27.5.1
+      jest-matcher-specific-error: ^1.0.0
+      lint-staged: ^12.0.0
+      prettier: ^2.3.2
+      ts-jest: ^27.1.1
+      tsc-watch: ^5.0.0
+      typescript: ^4.6.2
+      zod: ^3.14.3
+    dependencies:
+      '@logto/connector-types': link:../connector-types
+      '@logto/jest-config': link:../jest-config
+      '@logto/shared': link:../shared
+      '@silverhand/essentials': 1.1.7
+      got: 11.8.3
+      zod: 3.14.3
+    devDependencies:
+      '@jest/types': 27.5.1
+      '@silverhand/eslint-config': 0.10.2_xpq2m6kgodzytx4bqbpsfgmxbe
+      '@silverhand/ts-config': 0.11.0_typescript@4.6.3
+      '@types/jest': 27.4.1
+      '@types/node': 16.11.12
+      eslint: 8.10.0
+      jest: 27.5.1
+      jest-matcher-specific-error: 1.0.0
+      lint-staged: 12.4.0
+      prettier: 2.5.1
+      ts-jest: 27.1.1_tgc6da2oqazvrn56dzwolsqo5i
+      tsc-watch: 5.0.3_typescript@4.6.3
+      typescript: 4.6.3
+
   packages/connector-types:
     specifiers:
       '@jest/types': ^27.5.1
@@ -5521,8 +5564,44 @@ packages:
       - typescript
     dev: true
 
+<<<<<<< HEAD
   /@silverhand/eslint-config/0.14.0_hjjt7jwmhwqm7bjf55k5ihcdqq:
     resolution: {integrity: sha512-Fiaf3FUSbHzPeYqmMncgw5sQ/48rF7MMTzKhgKQ5RhVy7ja7rmD7XaptRxqIHkxnsVcQK4NkPMGa+tjIASwRzg==}
+=======
+  /@silverhand/eslint-config/0.10.2_xpq2m6kgodzytx4bqbpsfgmxbe:
+    resolution: {integrity: sha512-MT2nj7NMA2T9sWFEDPq4JP6dWrrNWWfmcD/oHbmH3LAZAZtfJQWtzPtd/yy5EDO6qn7Oo+TZqsvk/v95ah79EA==}
+    engines: {node: '>=14.15.0'}
+    peerDependencies:
+      eslint: ^8.1.0
+      prettier: ^2.3.2
+      typescript: ^4.3.5
+    dependencies:
+      '@silverhand/eslint-plugin-fp': 2.5.0_eslint@8.10.0
+      '@typescript-eslint/eslint-plugin': 5.14.0_axby5tb5ey6mh4iibfluizcx7u
+      '@typescript-eslint/parser': 5.14.0_6ued5m2uqo2r7ksfjlk2bzosza
+      eslint: 8.10.0
+      eslint-config-prettier: 8.5.0_eslint@8.10.0
+      eslint-config-xo: 0.40.0_eslint@8.10.0
+      eslint-config-xo-typescript: 0.50.0_bxagizztfittfwl32gn7ww64qi
+      eslint-import-resolver-typescript: 2.5.0_rnagsyfcubvpoxo2ynj23pim7u
+      eslint-plugin-consistent-default-export-name: 0.0.7
+      eslint-plugin-eslint-comments: 3.2.0_eslint@8.10.0
+      eslint-plugin-import: 2.25.4_eslint@8.10.0
+      eslint-plugin-no-use-extend-native: 0.5.0
+      eslint-plugin-node: 11.1.0_eslint@8.10.0
+      eslint-plugin-prettier: 3.4.1_6pitu4b2tqihty6rv5qeiyb35m
+      eslint-plugin-promise: 6.0.0_eslint@8.10.0
+      eslint-plugin-sql: 2.1.0_eslint@8.10.0
+      eslint-plugin-unicorn: 39.0.0_eslint@8.10.0
+      prettier: 2.5.1
+      typescript: 4.6.3
+    transitivePeerDependencies:
+      - supports-color
+    dev: true
+
+  /@silverhand/eslint-config/0.11.0_hjjt7jwmhwqm7bjf55k5ihcdqq:
+    resolution: {integrity: sha512-l0I2aPf34pWBXZ5skyxY/dk9rGKIF9v0pXpbd+TLizzloEDRADTChpTCmUs6vA1PmgrpWLaa9Gr3AvqadYimvw==}
+>>>>>>> 5d5fbe8e (feat(connector-sendgrid-mail): add SendGrid Mail connector)
     engines: {node: '>=14.15.0'}
     peerDependencies:
       eslint: ^8.1.0
@@ -5726,8 +5805,22 @@ packages:
       typescript: 4.6.2
     dev: true
 
+<<<<<<< HEAD
   /@silverhand/ts-config/0.14.0_typescript@4.6.2:
     resolution: {integrity: sha512-ktL4EvhTejlU7KD4tlq/NcVNRiQoH/NmguaqfcFu2GbswDfHEEBTaPkbi9c6UDzpQtjLhC27dYpzgpH6KkT6LA==}
+=======
+  /@silverhand/ts-config/0.11.0_typescript@4.6.3:
+    resolution: {integrity: sha512-W1mMlhRWjXsI5YVsb6KtDI685QmGSMqAbQ0jl4Z/3LVOYixwnUeyJOWhKa85u3MEwzm+IF4nmJBb3o/5HPATdQ==}
+    engines: {node: '>=14.15.0'}
+    peerDependencies:
+      typescript: ^4.3.5
+    dependencies:
+      typescript: 4.6.3
+    dev: true
+
+  /@silverhand/ts-config/0.12.0_typescript@4.6.2:
+    resolution: {integrity: sha512-+VidYKenVr33P8GDXR1NdUNzkScNarp/ttFRfqus9fGyIWCjP60otygVrY/ZydOlpdZBXnycUgsySC3YqCprCg==}
+>>>>>>> 5d5fbe8e (feat(connector-sendgrid-mail): add SendGrid Mail connector)
     engines: {node: '>=14.15.0'}
     peerDependencies:
       typescript: ^4.3.5
