@@ -23,13 +23,15 @@ export const signInBasic = async (username: string, password: string, socialToBi
 };
 
 export const sendSignInSmsPasscode = async (phone: string) => {
-  return api
+  await api
     .post('/api/session/sign-in/passwordless/sms/send-passcode', {
       json: {
         phone,
       },
     })
     .json();
+
+  return { success: true };
 };
 
 export const verifySignInSmsPasscode = async (
@@ -58,13 +60,15 @@ export const verifySignInSmsPasscode = async (
 };
 
 export const sendSignInEmailPasscode = async (email: string) => {
-  return api
+  await api
     .post('/api/session/sign-in/passwordless/email/send-passcode', {
       json: {
         email,
       },
     })
     .json();
+
+  return { success: true };
 };
 
 export const verifySignInEmailPasscode = async (

@@ -16,13 +16,15 @@ export const register = async (username: string, password: string) => {
 };
 
 export const sendRegisterSmsPasscode = async (phone: string) => {
-  return api
+  await api
     .post('/api/session/register/passwordless/sms/send-passcode', {
       json: {
         phone,
       },
     })
     .json();
+
+  return { success: true };
 };
 
 export const verifyRegisterSmsPasscode = async (phone: string, passcode: string) => {
@@ -41,13 +43,15 @@ export const verifyRegisterSmsPasscode = async (phone: string, passcode: string)
 };
 
 export const sendRegisterEmailPasscode = async (email: string) => {
-  return api
+  await api
     .post('/api/session/register/passwordless/email/send-passcode', {
       json: {
         email,
       },
     })
     .json();
+
+  return { success: true };
 };
 
 export const verifyRegisterEmailPasscode = async (email: string, passcode: string) => {
