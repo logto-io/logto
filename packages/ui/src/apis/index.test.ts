@@ -34,7 +34,7 @@ describe('api', () => {
   const username = 'username';
   const password = 'password';
   const phone = '18888888';
-  const passcode = '111111';
+  const code = '111111';
   const email = 'foo@logto.io';
 
   const mockKyPost = ky.post as jest.Mock;
@@ -93,11 +93,11 @@ describe('api', () => {
         redirectTo: '/',
       }),
     });
-    await verifySignInSmsPasscode(phone, passcode);
+    await verifySignInSmsPasscode(phone, code);
     expect(ky.post).toBeCalledWith('/api/session/sign-in/passwordless/sms/verify-passcode', {
       json: {
         phone,
-        passcode,
+        code,
       },
     });
   });
@@ -117,11 +117,11 @@ describe('api', () => {
         redirectTo: '/',
       }),
     });
-    await verifySignInEmailPasscode(email, passcode);
+    await verifySignInEmailPasscode(email, code);
     expect(ky.post).toBeCalledWith('/api/session/sign-in/passwordless/email/verify-passcode', {
       json: {
         email,
-        passcode,
+        code,
       },
     });
   });
@@ -151,11 +151,11 @@ describe('api', () => {
   });
 
   it('verifyRegisterSmsPasscode', async () => {
-    await verifyRegisterSmsPasscode(phone, passcode);
+    await verifyRegisterSmsPasscode(phone, code);
     expect(ky.post).toBeCalledWith('/api/session/register/passwordless/sms/verify-passcode', {
       json: {
         phone,
-        passcode,
+        code,
       },
     });
   });
@@ -170,11 +170,11 @@ describe('api', () => {
   });
 
   it('verifyRegisterEmailPasscode', async () => {
-    await verifyRegisterEmailPasscode(email, passcode);
+    await verifyRegisterEmailPasscode(email, code);
     expect(ky.post).toBeCalledWith('/api/session/register/passwordless/email/verify-passcode', {
       json: {
         email,
-        passcode,
+        code,
       },
     });
   });
