@@ -15,12 +15,7 @@ type Props = {
 const ItemPreview = ({ title, subtitle, icon, to, size = 'default' }: Props) => {
   return (
     <div className={classNames(styles.item, styles[size])}>
-      {icon &&
-        (typeof icon === 'string' ? (
-          <img className={styles.icon} src={icon} />
-        ) : (
-          <div className={styles.icon}>{icon}</div>
-        ))}
+      {icon && <div className={styles.icon}>{icon}</div>}
       <div className={styles.content}>
         {to && (
           <Link

@@ -113,7 +113,11 @@ const ApiResources = () => {
                 }}
               >
                 <td>
-                  <ItemPreview title={name} icon={apiResourceIcon} to={buildDetailsLink(id)} />
+                  <ItemPreview
+                    title={name}
+                    icon={<img src={apiResourceIcon} />}
+                    to={buildDetailsLink(id)}
+                  />
                 </td>
                 <td>
                   <CopyToClipboard value={indicator} variant="text" />
