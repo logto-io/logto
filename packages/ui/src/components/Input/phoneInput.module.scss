@@ -25,7 +25,10 @@
 :global(body.mobile) {
   .countryCodeSelector {
     > svg {
-      fill: var(--color-primary);
+      color: var(--color-primary);
+      margin-left: _.unit(1);
+      width: 16px;
+      height: 16px;
     }
   }
 }
@@ -34,7 +37,10 @@
 :global(body.desktop) {
   .countryCodeSelector {
     > svg {
-      fill: var(--color-icon);
+      color: var(--color-icon);
+      margin-left: _.unit(2);
+      width: 20px;
+      height: 20px;
     }
   }
 }

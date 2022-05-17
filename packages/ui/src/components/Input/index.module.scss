@@ -12,12 +12,21 @@
   transition-timing-function: ease-in-out;
   transition-duration: 0.2s;
 
+  .actionButton {
+    display: none;
+    color: var(--color-icon);
+  }
+
   > *:not(:first-child) {
     margin-left: _.unit(1);
   }
 
   &:focus-within {
     border: _.border(var(--color-primary));
+
+    .actionButton {
+      display: block;
+    }
   }
 
   &.error {
@@ -49,15 +58,17 @@
   margin-top: _.unit(2);
 }
 
-.actionButton {
-  fill: var(--color-icon);
-}
 
 :global(body.mobile) {
   .wrapper {
     padding: 0 _.unit(4);
     background: var(--color-layer);
     color: var(--color-text);
+
+    .actionButton {
+      width: 24px;
+      height: 24px;
+    }
   }
 }
 
@@ -68,6 +79,11 @@
     border: _.border(var(--color-border));
     border-radius: 6px;
     outline: 3px solid transparent;
+
+    .actionButton {
+      width: 22px;
+      height: 22px;
+    }
 
     &:focus-within {
       border-color: var(--color-primary);

@@ -3,7 +3,7 @@ import { isMobile } from 'react-device-detect';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
-import { NavArrowIcon } from '@/components/Icons';
+import ArrowPrev from '@/assets/icons/arrow-prev.svg';
 
 import * as styles from './index.module.scss';
 
@@ -23,7 +23,7 @@ const NavBar = ({ title }: Props) => {
           navigate(-1);
         }}
       >
-        <NavArrowIcon />
+        <ArrowPrev />
         {!isMobile && <span>{t('action.nav_back')}</span>}
       </div>
 

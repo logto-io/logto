@@ -1,8 +1,8 @@
 import classNames from 'classnames';
 import React, { useState, useMemo } from 'react';
 
+import ExpandIcon from '@/assets/icons/expand-icon.svg';
 import SocialLinkButton from '@/components/Button/SocialLinkButton';
-import { ExpandMoreIcon } from '@/components/Icons';
 import useSocial from '@/hooks/use-social';
 
 import * as styles from './PrimarySocialSignIn.module.scss';
@@ -42,7 +42,7 @@ const PrimarySocialSignIn = ({ className, isPopup = false, onSocialSignInCallbac
         />
       ))}
       {!fullDisplay && (
-        <ExpandMoreIcon
+        <ExpandIcon
           className={classNames(styles.expandIcon, showAll && styles.expanded)}
           onClick={() => {
             setShowAll(!showAll);

@@ -9,7 +9,7 @@ import { ConnectorData } from '@/types';
 import * as styles from './SocialSignInDropdown.module.scss';
 
 type Props = {
-  anchorRef?: React.RefObject<HTMLElement | SVGSVGElement>;
+  anchorRef?: React.RefObject<HTMLElement>;
   isOpen: boolean;
   onClose: () => void;
   connectors: ConnectorData[];

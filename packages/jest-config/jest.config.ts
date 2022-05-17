@@ -6,7 +6,7 @@ const baseConfig: Config.InitialOptions = Object.freeze({
   transform: {
     // Enable JS/JSX transformation
     '\\.(t|j)sx?$': 'ts-jest',
-    '\\.(svg)$': 'jest-transform-stub',
+    '\\.(svg)$': 'jest-transformer-svg',
   },
   transformIgnorePatterns: [
     '[/\\\\]node_modules[/\\\\]((?!ky[/\\\\]).)+\\.(js|jsx|mjs|cjs|ts|tsx)$',

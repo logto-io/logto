@@ -6,15 +6,16 @@
   align-items: center;
 
   .icon {
-    width: 20px;
-    height: 20px;
     margin-right: _.unit(2);
 
-    > svg {
+    > * {
       display: none;
-      color: var(--color-text-disabled);
 
-      &:first-child {
+      &:nth-child(1) {
+        color: var(--color-icon);
+      }
+
+      &:nth-child(2) {
         color: var(--color-primary);
       }
     }
@@ -22,30 +23,17 @@
 
   input {
     position: absolute;
-    width: 20px;
-    height: 20px;
+    width: 18px;
+    height: 18px;
     left: 0;
     top: 0;
     margin: 0;
     opacity: 0%;
   }
 
-  input:checked:not(:disabled) ~ .icon > svg:nth-child(1),
-  input:not(:checked):not(:disabled) ~ .icon > svg:nth-child(2) {
+  input:not(:checked):not(:disabled) ~ .icon > *:nth-child(1),
+  input:checked:not(:disabled) ~ .icon > *:nth-child(2),
+  input:checked:not(:disabled) ~ .icon > *:nth-child(3) {
     display: block;
-  }
-}
-
-:global(body.desktop) {
-  .checkbox {
-    .icon {
-      width: 18px;
-      height: 18px;
-    }
-
-    input {
-      width: 18px;
-      height: 18px;
-    }
   }
 }

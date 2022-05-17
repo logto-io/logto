@@ -2,8 +2,8 @@ import classNames from 'classnames';
 import React, { useMemo, useState, useRef } from 'react';
 import { isMobile } from 'react-device-detect';
 
+import MoreSocialIcon from '@/assets/icons/more-social-icon.svg';
 import SocialIconButton from '@/components/Button/SocialIconButton';
-import MoreSocialIcon from '@/components/Icons/MoreSocialIcon';
 import useSocial from '@/hooks/use-social';
 
 import * as styles from './SecondarySocialSignIn.module.scss';
@@ -20,7 +20,7 @@ const SecondarySocialSignIn = ({ className }: Props) => {
   const { socialConnectors, invokeSocialSignIn } = useSocial();
   const isOverSize = socialConnectors.length > defaultSize;
   const [showModal, setShowModal] = useState(false);
-  const moreButtonRef = useRef<SVGSVGElement>(null);
+  const moreButtonRef = useRef<HTMLElement>(null);
 
   const displayConnectors = useMemo(() => {
     if (isOverSize) {
@@ -44,13 +44,15 @@ const SecondarySocialSignIn = ({ className }: Props) => {
           />
         ))}
         {isOverSize && (
-          <MoreSocialIcon
+          <span
             ref={moreButtonRef}
             className={styles.moreButton}
             onClick={() => {
               setShowModal(true);
             }}
-          />
+          >
+            <MoreSocialIcon />
+          </span>
         )}
       </div>
       {isOverSize && isMobile && (
