@@ -1,6 +1,5 @@
 import React, { ChangeEvent } from 'react';
 import { PrismAsyncLight as SyntaxHighlighter } from 'react-syntax-highlighter';
-// eslint-disable-next-line node/file-extension-in-import
 import { a11yDark as theme } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
 import CopyToClipboard from '../CopyToClipboard';
