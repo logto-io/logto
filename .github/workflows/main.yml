@@ -21,7 +21,7 @@ jobs:
       - name: Lint
         run: pnpm -- lerna run --parallel lint
 
-      - name: Style Lint
+      - name: Stylelint
         run: pnpm -- lerna run --parallel stylelint
 
       - name: Test

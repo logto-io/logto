@@ -83,7 +83,17 @@
     }
   },
   "stylelint": {
-    "extends": "@silverhand/eslint-config-react/.stylelintrc"
+    "extends": "@silverhand/eslint-config-react/.stylelintrc",
+    "rules": {
+      "scss/function-no-unknown": [
+        true,
+        {
+          "ignoreFunctions": [
+            "/^_./"
+          ]
+        }
+      ]
+    }
   },
   "prettier": "@silverhand/eslint-config/.prettierrc"
 }

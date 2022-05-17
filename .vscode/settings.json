@@ -23,11 +23,13 @@
   "cSpell.words": [
     "Alipay",
     "CIAM",
+    "codecov",
     "Logto",
     "oidc",
     "Passwordless",
     "pnpm",
     "silverhand",
-    "slonik"
+    "slonik",
+    "stylelint"
   ]
 }

@@ -81,6 +81,14 @@
             "global"
           ]
         }
+      ],
+      "scss/function-no-unknown": [
+        true,
+        {
+          "ignoreFunctions": [
+            "/^_./"
+          ]
+        }
       ]
     }
   },
