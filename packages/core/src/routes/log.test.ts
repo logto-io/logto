@@ -18,7 +18,7 @@ const mockDailyNewUserCounts = [
   { date: getDateString(dayjs().subtract(4, 'day')), count: 10 },
   { date: getDateString(dayjs().subtract(3, 'day')), count: 11 },
   { date: getDateString(dayjs().subtract(1, 'day')), count: 13 },
-  { date: getDateString(dayjs().subtract(0, 'day')), count: 14 },
+  { date: getDateString(dayjs()), count: 14 },
 ];
 
 /* eslint-disable @typescript-eslint/no-unused-vars */
