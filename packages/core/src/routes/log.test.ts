@@ -83,7 +83,7 @@ describe('logRoutes', () => {
   });
 
   describe('GET /dashboard', () => {
-    it('should call getDnuCountsByTimeInterval with correct parameters', async () => {
+    it('should call getDnuCountsByTimeInterval with the time interval: [today, 14 days ago)', async () => {
       await logRequest.get('/dashboard');
       expect(getDailyNewUserCountsByTimeInterval).toHaveBeenCalledWith(
         dayjs().subtract(14, 'day').valueOf(),
