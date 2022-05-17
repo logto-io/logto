@@ -1,4 +1,4 @@
-import 'module-alias/register.js';
+import 'module-alias/register';
 
 import Koa from 'koa';
 
