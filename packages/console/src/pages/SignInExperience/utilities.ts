@@ -57,11 +57,19 @@ export const signInExperienceParser = {
   },
   toRemoteModel: (setup: SignInExperienceForm): SignInExperience => {
     const {
+      branding,
       languageInfo: { mode, fallbackLanguage, fixedLanguage },
     } = setup;
 
     return {
       ...setup,
+      branding: {
+        ...branding,
+        // Transform empty string to undefined
+        darkPrimaryColor: branding.darkPrimaryColor?.length ? branding.darkPrimaryColor : undefined,
+        darkLogoUrl: branding.darkLogoUrl?.length ? branding.darkLogoUrl : undefined,
+        slogan: branding.slogan?.length ? branding.slogan : undefined,
+      },
       signInMethods: {
         username: findMethodState(setup, 'username'),
         sms: findMethodState(setup, 'sms'),

@@ -23,7 +23,7 @@ const expectPatchResponseStatus = async (signInExperience: any, status: number) 
 
 describe('branding', () => {
   const colorKeys = ['primaryColor', 'darkPrimaryColor'];
-  const invalidColors = [undefined, null, '#0'];
+  const invalidColors = [null, '#0'];
 
   describe('colors', () => {
     test.each(invalidColors)('should fail when color is %p', async (invalidColor) => {
@@ -88,7 +88,7 @@ describe('branding', () => {
       }
     );
 
-    test.each([null, ''])('%p should fail', async (slogan) => {
+    test.each([null])('%p should fail', async (slogan) => {
       const signInExperience = {
         branding: {
           ...mockBranding,

@@ -32,10 +32,10 @@ const BrandingForm = () => {
           )}
         />
       </FormField>
-      <FormField isRequired title="admin_console.sign_in_exp.branding.dark_mode">
+      <FormField title="admin_console.sign_in_exp.branding.dark_mode">
         <Switch
           label={t('sign_in_exp.branding.dark_mode_description')}
-          {...register('branding.isDarkModeEnabled', { required: true })}
+          {...register('branding.isDarkModeEnabled')}
         />
       </FormField>
       <FormField
@@ -69,6 +69,11 @@ const BrandingForm = () => {
       <FormField isRequired title="admin_console.sign_in_exp.branding.logo_image_url">
         <TextInput {...register('branding.logoUrl', { required: true })} />
       </FormField>
+      {isDarkModeEnabled && (
+        <FormField title="admin_console.sign_in_exp.branding.dark_logo_image_url">
+          <TextInput {...register('branding.darkLogoUrl')} />
+        </FormField>
+      )}
       <FormField isRequired={isSloganRequired} title="admin_console.sign_in_exp.branding.slogan">
         <TextInput {...register('branding.slogan', { required: isSloganRequired })} />
       </FormField>

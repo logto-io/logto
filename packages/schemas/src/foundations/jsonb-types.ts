@@ -81,10 +81,11 @@ export const hexColorRegEx = /^#[\da-f]{3}([\da-f]{3})?$/i;
 export const brandingGuard = z.object({
   primaryColor: z.string().regex(hexColorRegEx),
   isDarkModeEnabled: z.boolean(),
-  darkPrimaryColor: z.string().regex(hexColorRegEx),
+  darkPrimaryColor: z.string().regex(hexColorRegEx).optional(),
   style: z.nativeEnum(BrandingStyle),
   logoUrl: z.string().url(),
-  slogan: z.string().nonempty().optional(),
+  darkLogoUrl: z.string().url().optional(),
+  slogan: z.string().optional(),
 });
 
 export type Branding = z.infer<typeof brandingGuard>;
