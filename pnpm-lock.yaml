@@ -734,7 +734,6 @@ importers:
       jest: ^27.5.1
       jest-matcher-specific-error: ^1.0.0
       jest-transform-stub: ^2.0.0
-      jest-transformer-svg: ^1.0.2
       lint-staged: ^12.0.0
       prettier: ^2.3.2
       ts-jest: ^27.1.1
@@ -753,7 +752,6 @@ importers:
       '@types/node': 16.11.12
       eslint: 8.10.0
       jest: 27.5.1_ts-node@10.7.0
-      jest-transformer-svg: 1.0.2_jest@27.5.1
       lint-staged: 12.4.0
       prettier: 2.5.1
       ts-node: 10.7.0_42uktnex6oapjbpw2i7vzvmrzi
@@ -863,6 +861,7 @@ importers:
       i18next: ^21.6.12
       i18next-browser-languagedetector: ^6.1.3
       jest: ^27.5.1
+      jest-transformer-svg: ^1.0.2
       js-base64: ^3.7.2
       ky: ^0.30.0
       libphonenumber-js: ^1.9.49
@@ -908,6 +907,7 @@ importers:
       i18next: 21.6.12
       i18next-browser-languagedetector: 6.1.3
       jest: 27.5.1
+      jest-transformer-svg: 1.0.2_jest@27.5.1+react@17.0.2
       js-base64: 3.7.2
       ky: 0.30.0
       libphonenumber-js: 1.9.49
@@ -12672,13 +12672,14 @@ packages:
     resolution: {integrity: sha512-lspHaCRx/mBbnm3h4uMMS3R5aZzMwyNpNIJLXj4cEsV0mIUtS4IjYJLSoyjRCtnxb6RIGJ4NL2quZzfIeNhbkg==}
     dev: false
 
-  /jest-transformer-svg/1.0.2_jest@27.5.1:
+  /jest-transformer-svg/1.0.2_jest@27.5.1+react@17.0.2:
     resolution: {integrity: sha512-A9z5Vzs+TlPpxekwUOCyVu5sHgcCKUKyJTE1q/bUhtAILpgf3kIj6IjguQrTJG0jN0nRnuNV7ckPUE8Vdf12Jg==}
     peerDependencies:
       jest: ^27.0.6
       react: ^17.0.2
     dependencies:
-      jest: 27.5.1_ts-node@10.7.0
+      jest: 27.5.1
+      react: 17.0.2
     dev: true
 
   /jest-util/27.5.1:
