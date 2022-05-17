@@ -63,7 +63,7 @@ const GuideModal = ({ isOpen, onClose }: Props) => {
       api.patch('/api/sign-in-exp', {
         json: signInExperienceParser.toRemoteModel(formData),
       }),
-      updateConfigs({ experienceGuideDone: true }),
+      updateConfigs({ customizeSignInExperience: true }),
     ]);
 
     location.reload();
