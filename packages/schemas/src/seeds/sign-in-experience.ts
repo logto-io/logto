@@ -26,5 +26,5 @@ export const defaultSignInExperience: Readonly<CreateSignInExperience> = {
     sms: SignInMethodState.Disabled,
     social: SignInMethodState.Disabled,
   },
-  socialSignInConnectorIds: [],
+  socialSignInConnectorTargets: [],
 };

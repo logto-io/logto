@@ -126,9 +126,9 @@ export const signInMethodsGuard = z.object({
 
 export type SignInMethods = z.infer<typeof signInMethodsGuard>;
 
-export const connectorIdsGuard = z.string().array();
+export const connectorTargetsGuard = z.string().array();
 
-export type ConnectorIds = z.infer<typeof connectorIdsGuard>;
+export type ConnectorTargets = z.infer<typeof connectorTargetsGuard>;
 
 /**
  * Settings

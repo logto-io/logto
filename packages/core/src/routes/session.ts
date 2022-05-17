@@ -1,6 +1,7 @@
 /* eslint-disable max-lines */
 import path from 'path';
 
+import { ConnectorMetadata } from '@logto/connector-types';
 import { LogtoErrorCode } from '@logto/phrases';
 import { PasscodeType, userInfoSelectFields } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
@@ -581,12 +582,18 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
   router.get('/sign-in-settings', async (ctx, next) => {
     const signInExperience = await findDefaultSignInExperience();
     const connectorInstances = await getConnectorInstances();
-    const instanceMap = new Map(
-      connectorInstances.map((instance) => [instance.connector.id, instance])
-    );
-    const socialConnectors = signInExperience.socialSignInConnectorIds.map((id) => {
-      return { ...instanceMap.get(id)?.metadata, id };
-    });
+    const socialConnectors = signInExperience.socialSignInConnectorTargets.reduce<
+      Array<ConnectorMetadata & { id: string }>
+    >((previous, connectorTarget) => {
+      const connectors = connectorInstances.filter(
+        ({ metadata: { target } }) => target === connectorTarget
+      );
+
+      return [
+        ...previous,
+        ...connectors.map(({ metadata, connector: { id } }) => ({ ...metadata, id })),
+      ];
+    }, []);
     ctx.body = { ...signInExperience, socialConnectors };
 
     return next();

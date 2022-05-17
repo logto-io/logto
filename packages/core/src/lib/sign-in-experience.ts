@@ -27,7 +27,7 @@ export const isEnabled = (state: SignInMethodState) => state !== SignInMethodSta
 
 export const validateSignInMethods = (
   signInMethods: SignInMethods,
-  socialSignInConnectorIds: Optional<string[]>,
+  socialSignInConnectorTargets: Optional<string[]>,
   enabledConnectorInstances: ConnectorInstance[]
 ) => {
   const signInMethodStates = Object.values(signInMethods);
@@ -60,17 +60,17 @@ export const validateSignInMethods = (
     );
 
     assertThat(
-      socialSignInConnectorIds && socialSignInConnectorIds.length > 0,
+      socialSignInConnectorTargets && socialSignInConnectorTargets.length > 0,
       'sign_in_experiences.empty_social_connectors'
     );
 
-    const enabledSocialConnectorIds = new Set(
-      enabledConnectorInstances
-        .filter((instance) => instance.metadata.type === ConnectorType.Social)
-        .map((instance) => instance.connector.id)
-    );
     assertThat(
-      socialSignInConnectorIds.every((id) => enabledSocialConnectorIds.has(id)),
+      socialSignInConnectorTargets.every((connectorTarget) =>
+        enabledConnectorInstances.some(
+          ({ metadata: { target, type } }) =>
+            target === connectorTarget && type === ConnectorType.Social
+        )
+      ),
       'sign_in_experiences.invalid_social_connectors'
     );
   }

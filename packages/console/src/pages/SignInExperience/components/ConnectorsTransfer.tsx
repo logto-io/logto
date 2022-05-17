@@ -1,14 +1,12 @@
-import { ConnectorDTO } from '@logto/schemas';
 import { conditionalString } from '@silverhand/essentials';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import useSWR from 'swr';
 
 import Alert from '@/components/Alert';
 import Transfer from '@/components/Transfer';
 import UnnamedTrans from '@/components/UnnamedTrans';
-import { RequestError } from '@/hooks/use-api';
+import useConnectorGroups from '@/hooks/use-connector-groups';
 
 import * as styles from './ConnectorsTransfer.module.scss';
 
@@ -18,7 +16,7 @@ type Props = {
 };
 
 const ConnectorsTransfer = ({ value, onChange }: Props) => {
-  const { data, error } = useSWR<ConnectorDTO[], RequestError>('/api/connectors');
+  const { data, error } = useConnectorGroups();
   const isLoading = !data && !error;
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
@@ -31,8 +29,8 @@ const ConnectorsTransfer = ({ value, onChange }: Props) => {
   }
 
   const datasource = data
-    ? data.map(({ id, metadata: { name }, enabled }) => ({
-        value: id,
+    ? data.map(({ target, name, enabled }) => ({
+        value: target,
         title: (
           <UnnamedTrans
             resource={name}
