@@ -60,7 +60,7 @@ export class TwilioSmsConnector implements SmsConnector {
             'Basic ' + Buffer.from([accountSID, authToken].join(':')).toString('base64'),
           'Content-Type': 'application/x-www-form-urlencoded',
         },
-        searchParams: parameters,
+        body: new URLSearchParams(parameters).toString(),
       })
       .json<SendSmsResponse>();
   };

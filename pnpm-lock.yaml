@@ -642,6 +642,7 @@ importers:
       '@logto/connector-github': ^0.1.0
       '@logto/connector-google': ^0.1.0
       '@logto/connector-sendgrid-email': ^0.1.0
+      '@logto/connector-twilio-sms': ^0.1.0
       '@logto/connector-types': ^0.1.0
       '@logto/connector-wechat': ^0.1.0
       '@logto/connector-wechat-native': ^0.1.0
@@ -714,6 +715,7 @@ importers:
       '@logto/connector-github': link:../connector-github
       '@logto/connector-google': link:../connector-google
       '@logto/connector-sendgrid-email': link:../connector-sendgrid-mail
+      '@logto/connector-twilio-sms': link:../connector-twilio-sms
       '@logto/connector-types': link:../connector-types
       '@logto/connector-wechat': link:../connector-wechat
       '@logto/connector-wechat-native': link:../connector-wechat-native
