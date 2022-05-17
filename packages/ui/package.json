@@ -16,7 +16,7 @@
     "test": "jest"
   },
   "devDependencies": {
-    "@logto/jest-config": "^0.1.0",
+    "@silverhand/jest-config": "^0.13.0",
     "@logto/phrases": "^0.1.0",
     "@logto/schemas": "^0.1.0",
     "@parcel/core": "^2.5.0",
