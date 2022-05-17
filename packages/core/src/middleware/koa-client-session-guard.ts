@@ -33,7 +33,8 @@ export default function koaSpaSessionGuard<
 
       if (
         !spaDistFiles.some((file) => requestPath.startsWith('/' + file)) &&
-        !ctx.request.path.endsWith(sessionNotFoundPath)
+        !ctx.request.path.endsWith(sessionNotFoundPath) &&
+        !ctx.request.URL.searchParams.get('preview') // Should not check session on preview mode
       ) {
         ctx.redirect(sessionNotFoundPath);
       }
