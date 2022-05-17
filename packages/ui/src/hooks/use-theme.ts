@@ -1,3 +1,4 @@
+import { AppearanceMode } from '@logto/schemas';
 import { useState, useEffect, useContext } from 'react';
 
 import { PageContext } from './use-page-context';
@@ -7,12 +8,14 @@ export type Theme = 'dark' | 'light';
 const darkThemeWatchMedia = window.matchMedia('(prefers-color-scheme: dark)');
 const getThemeBySystemConfiguration = (): Theme => (darkThemeWatchMedia.matches ? 'dark' : 'light');
 
-export default function useTheme() {
+export default function useTheme(mode: AppearanceMode = AppearanceMode.SyncWithSystem): Theme {
   const { experienceSettings } = useContext(PageContext);
-  const [theme, setTheme] = useState<Theme>('light');
+  const [theme, setTheme] = useState<Theme>(
+    mode === AppearanceMode.SyncWithSystem ? 'light' : mode
+  );
 
   useEffect(() => {
-    if (!experienceSettings?.branding.isDarkModeEnabled) {
+    if (mode !== AppearanceMode.SyncWithSystem || !experienceSettings?.branding.isDarkModeEnabled) {
       return;
     }
 
@@ -27,7 +30,7 @@ export default function useTheme() {
     return () => {
       darkThemeWatchMedia.removeEventListener('change', changeTheme);
     };
-  }, [experienceSettings]);
+  }, [experienceSettings, mode]);
 
   return theme;
 }

@@ -3,6 +3,7 @@ import { Route, Routes, BrowserRouter, Navigate } from 'react-router-dom';
 
 import AppContent from './components/AppContent';
 import usePageContext from './hooks/use-page-context';
+import usePreview from './hooks/use-preview';
 import initI18n from './i18n/init';
 import Callback from './pages/Callback';
 import Consent from './pages/Consent';
@@ -12,18 +13,24 @@ import Register from './pages/Register';
 import SecondarySignIn from './pages/SecondarySignIn';
 import SignIn from './pages/SignIn';
 import SocialRegister from './pages/SocialRegister';
-import getSignInExperienceSettings from './utils/sign-in-experience';
+import getSignInExperienceSettings, {
+  parseSignInExperienceSettings,
+} from './utils/sign-in-experience';
 
 import './scss/normalized.scss';
 
 const App = () => {
   const { context, Provider } = usePageContext();
-  const { experienceSettings, setLoading, setExperienceSettings } = context;
+  const { experienceSettings, setPlatform, setLoading, setExperienceSettings } = context;
+  const [isPreview, previewSettings] = usePreview();
 
   useEffect(() => {
     (async () => {
       setLoading(true);
-      const settings = await getSignInExperienceSettings();
+
+      const settings = previewSettings
+        ? parseSignInExperienceSettings(previewSettings.signInExperience)
+        : await getSignInExperienceSettings();
 
       // Note: i18n must be initialized ahead of global experience settings
       await initI18n(settings.languageInfo);
@@ -32,7 +39,7 @@ const App = () => {
 
       setLoading(false);
     })();
-  }, [setExperienceSettings, setLoading]);
+  }, [isPreview, previewSettings, setExperienceSettings, setLoading, setPlatform]);
 
   if (!experienceSettings) {
     return null;
@@ -40,7 +47,7 @@ const App = () => {
 
   return (
     <Provider value={context}>
-      <AppContent>
+      <AppContent mode={previewSettings?.mode} platform={previewSettings?.platform}>
         <BrowserRouter>
           <Routes>
             {/* always keep route path with param as the last one */}

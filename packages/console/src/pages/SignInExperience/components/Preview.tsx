@@ -22,7 +22,7 @@ const Preview = ({ signInExperience }: Props) => {
   // TODO: is a placeholder
   const config = encodeURIComponent(
     JSON.stringify({
-      ...signInExperience,
+      signInExperience,
       language,
       mode,
       platform,
@@ -75,7 +75,7 @@ const Preview = ({ signInExperience }: Props) => {
         </TabNavItem>
       </TabNav>
       <div className={styles.body}>
-        <iframe src={`/sign-in?config=${config}`} />
+        <iframe src={`/sign-in?config=${config}&preview=true`} />
       </div>
     </Card>
   );

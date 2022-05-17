@@ -1,9 +1,9 @@
 import classNames from 'classnames';
 import React, { useMemo, useState, useRef } from 'react';
-import { isMobile } from 'react-device-detect';
 
 import MoreSocialIcon from '@/assets/icons/more-social-icon.svg';
 import SocialIconButton from '@/components/Button/SocialIconButton';
+import usePlatform from '@/hooks/use-platform';
 import useSocial from '@/hooks/use-social';
 
 import * as styles from './SecondarySocialSignIn.module.scss';
@@ -21,6 +21,7 @@ const SecondarySocialSignIn = ({ className }: Props) => {
   const isOverSize = socialConnectors.length > defaultSize;
   const [showModal, setShowModal] = useState(false);
   const moreButtonRef = useRef<HTMLElement>(null);
+  const { isMobile } = usePlatform();
 
   const displayConnectors = useMemo(() => {
     if (isOverSize) {

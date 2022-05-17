@@ -1,6 +1,5 @@
 import classNames from 'classnames';
 import React from 'react';
-import { isMobile } from 'react-device-detect';
 import { useTranslation } from 'react-i18next';
 import ReactModal from 'react-modal';
 
@@ -43,14 +42,10 @@ const AcModal = ({
         </div>
         <div className={styles.content}>{children}</div>
         <div className={styles.footer}>
-          <Button
-            type={isMobile ? 'secondary' : 'outline'}
-            size={isMobile ? 'large' : 'small'}
-            onClick={onClose}
-          >
+          <Button type="outline" size="small" onClick={onClose}>
             {t(cancelText)}
           </Button>
-          <Button size={isMobile ? 'large' : 'small'} onClick={onConfirm ?? onClose}>
+          <Button size="small" onClick={onConfirm ?? onClose}>
             {t(confirmText)}
           </Button>
         </div>
