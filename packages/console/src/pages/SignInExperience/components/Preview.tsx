@@ -1,12 +1,14 @@
 import { Language } from '@logto/phrases';
-import { AppearanceMode, SignInExperience } from '@logto/schemas';
+import { AppearanceMode, ConnectorDTO, ConnectorMetadata, SignInExperience } from '@logto/schemas';
 import classNames from 'classnames';
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import useSWR from 'swr';
 
 import Card from '@/components/Card';
 import Select from '@/components/Select';
 import TabNav, { TabNavItem } from '@/components/TabNav';
+import { RequestError } from '@/hooks/use-api';
 
 import * as styles from './Preview.module.scss';
 
@@ -20,16 +22,35 @@ const Preview = ({ signInExperience, className }: Props) => {
   const [language, setLanguage] = useState<Language>(Language.English);
   const [mode, setMode] = useState<AppearanceMode>(AppearanceMode.LightMode);
   const [platform, setPlatform] = useState<'web' | 'mobile'>('web');
+  const { data: allConnectors } = useSWR<ConnectorDTO[], RequestError>('/api/connectors');
 
-  // TODO: is a placeholder
-  const config = encodeURIComponent(
-    JSON.stringify({
-      signInExperience,
-      language,
-      mode,
-      platform,
-    })
-  );
+  const config = useMemo(() => {
+    if (!allConnectors) {
+      return '';
+    }
+
+    const socialConnectors = signInExperience.socialSignInConnectorTargets.reduce<
+      Array<ConnectorMetadata & { id: string }>
+    >((previous, connectorTarget) => {
+      const connectors = allConnectors.filter(
+        ({ metadata: { target } }) => target === connectorTarget
+      );
+
+      return [...previous, ...connectors.map(({ metadata, id }) => ({ ...metadata, id }))];
+    }, []);
+
+    return encodeURIComponent(
+      JSON.stringify({
+        signInExperience: {
+          ...signInExperience,
+          socialConnectors,
+        },
+        language,
+        mode,
+        platform,
+      })
+    );
+  }, [allConnectors, language, mode, platform, signInExperience]);
 
   return (
     <Card className={classNames(styles.preview, className)}>

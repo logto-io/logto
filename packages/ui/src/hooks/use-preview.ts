@@ -36,8 +36,6 @@ const usePreview = (): [boolean, PreviewConfig?] => {
           fixedLanguage: language,
           autoDetect: false,
         },
-        // TODO: Remove this once preview returns connectors data
-        socialConnectors: [],
       };
 
       return { signInExperience: settings, language, mode, platform };
