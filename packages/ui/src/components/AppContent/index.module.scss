@@ -33,6 +33,10 @@ main {
   @include mobile.fonts;
   @include mobile.layout;
 
+  main {
+    justify-content: normal;
+  }
+
   .content {
     flex: 1;
     align-self: stretch;
