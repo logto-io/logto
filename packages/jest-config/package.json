@@ -42,6 +42,7 @@
     "identity-obj-proxy": "^3.0.0",
     "jest-matcher-specific-error": "^1.0.0",
     "jest-transform-stub": "^2.0.0",
+    "jest-transformer-svg": "^1.0.2",
     "ts-jest": "^27.1.1"
   }
 }

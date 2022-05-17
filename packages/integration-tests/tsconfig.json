@@ -1,0 +1,14 @@
+{
+  "extends": "@silverhand/ts-config/tsconfig.base",
+  "compilerOptions": {
+    "isolatedModules": false,
+    "noEmit": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": [
+        "src/*"
+      ]
+    }
+  },
+  "include": ["tests", "src", "jest.*.ts"]
+}
