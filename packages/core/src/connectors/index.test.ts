@@ -19,6 +19,14 @@ const alipayConnector = {
   config: {},
   createdAt: 1_646_382_233_911,
 };
+const alipayNativeConnector = {
+  id: 'alipay-native',
+  target: 'alipay',
+  platform: ConnectorPlatform.Native,
+  enabled: false,
+  config: {},
+  createdAt: 1_646_382_233_911,
+};
 const aliyunDmConnector = {
   id: 'aliyun-dm',
   target: 'aliyun-dm',
@@ -94,6 +102,7 @@ const wechatNativeConnector = {
 
 const connectors = [
   alipayConnector,
+  alipayNativeConnector,
   aliyunDmConnector,
   aliyunSmsConnector,
   facebookConnector,
@@ -119,15 +128,16 @@ describe('getConnectorInstances', () => {
     const connectorInstances = await getConnectorInstances();
     expect(connectorInstances).toHaveLength(connectorInstances.length);
     expect(connectorInstances[0]).toHaveProperty('connector', alipayConnector);
-    expect(connectorInstances[1]).toHaveProperty('connector', aliyunDmConnector);
-    expect(connectorInstances[2]).toHaveProperty('connector', aliyunSmsConnector);
-    expect(connectorInstances[3]).toHaveProperty('connector', facebookConnector);
-    expect(connectorInstances[4]).toHaveProperty('connector', githubConnector);
-    expect(connectorInstances[5]).toHaveProperty('connector', googleConnector);
-    expect(connectorInstances[6]).toHaveProperty('connector', sendGridMailConnector);
-    expect(connectorInstances[7]).toHaveProperty('connector', twilioSmsConnector);
-    expect(connectorInstances[8]).toHaveProperty('connector', wechatConnector);
-    expect(connectorInstances[9]).toHaveProperty('connector', wechatNativeConnector);
+    expect(connectorInstances[1]).toHaveProperty('connector', alipayNativeConnector);
+    expect(connectorInstances[2]).toHaveProperty('connector', aliyunDmConnector);
+    expect(connectorInstances[3]).toHaveProperty('connector', aliyunSmsConnector);
+    expect(connectorInstances[4]).toHaveProperty('connector', facebookConnector);
+    expect(connectorInstances[5]).toHaveProperty('connector', githubConnector);
+    expect(connectorInstances[6]).toHaveProperty('connector', googleConnector);
+    expect(connectorInstances[7]).toHaveProperty('connector', sendGridMailConnector);
+    expect(connectorInstances[8]).toHaveProperty('connector', twilioSmsConnector);
+    expect(connectorInstances[9]).toHaveProperty('connector', wechatConnector);
+    expect(connectorInstances[10]).toHaveProperty('connector', wechatNativeConnector);
   });
 
   test('should throw if any required connector does not exist in DB', async () => {

@@ -1,4 +1,5 @@
 import { AlipayConnector } from '@logto/connector-alipay';
+import { AlipayNativeConnector } from '@logto/connector-alipay-native';
 import { AliyunDmConnector } from '@logto/connector-aliyun-dm';
 import { AliyunSmsConnector } from '@logto/connector-aliyun-sms';
 import { FacebookConnector } from '@logto/connector-facebook';
@@ -18,6 +19,7 @@ import { buildIndexWithTargetAndPlatform, getConnectorConfig } from './utilities
 
 const allConnectors: IConnector[] = [
   new AlipayConnector(getConnectorConfig),
+  new AlipayNativeConnector(getConnectorConfig),
   new AliyunDmConnector(getConnectorConfig),
   new AliyunSmsConnector(getConnectorConfig),
   new FacebookConnector(getConnectorConfig),
