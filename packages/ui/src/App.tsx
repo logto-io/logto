@@ -21,7 +21,7 @@ import './scss/normalized.scss';
 
 const App = () => {
   const { context, Provider } = usePageContext();
-  const { experienceSettings, setPlatform, setLoading, setExperienceSettings } = context;
+  const { experienceSettings, setLoading, setExperienceSettings } = context;
   const [isPreview, previewSettings] = usePreview();
 
   useEffect(() => {
@@ -39,7 +39,7 @@ const App = () => {
 
       setLoading(false);
     })();
-  }, [isPreview, previewSettings, setExperienceSettings, setLoading, setPlatform]);
+  }, [isPreview, previewSettings, setExperienceSettings, setLoading]);
 
   if (!experienceSettings) {
     return null;
