@@ -95,10 +95,10 @@ const Users = () => {
             </tr>
           </thead>
           <tbody>
-            {error && (
+            {!data && error && (
               <TableError
                 columns={3}
-                content={error.body.message}
+                content={error.body?.message ?? error.message}
                 onRetry={async () => mutate(undefined, true)}
               />
             )}

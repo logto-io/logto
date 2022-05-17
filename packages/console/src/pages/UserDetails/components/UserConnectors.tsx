@@ -31,20 +31,20 @@ const UserConnectors = ({ userId, connectors, onDelete }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { data, error, mutate } = useSWR<ConnectorDTO[], RequestError>('/api/connectors');
   const isLoading = !data && !error;
-  const [isSubmiting, setIsSubmiting] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleDelete = async (connectorId: string) => {
-    if (isSubmiting) {
+    if (isSubmitting) {
       return;
     }
 
-    setIsSubmiting(true);
+    setIsSubmitting(true);
 
     try {
       await api.delete(`/api/users/${userId}/identities/${connectorId}`);
       onDelete?.(connectorId);
     } finally {
-      setIsSubmiting(false);
+      setIsSubmitting(false);
     }
   };
 
@@ -96,10 +96,10 @@ const UserConnectors = ({ userId, connectors, onDelete }: Props) => {
             </tr>
           </thead>
           <tbody>
-            {error && (
+            {!data && error && (
               <TableError
                 columns={3}
-                content={error.body.message}
+                content={error.body?.message ?? error.message}
                 onRetry={async () => mutate(undefined, true)}
               />
             )}

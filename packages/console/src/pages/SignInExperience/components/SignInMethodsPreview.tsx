@@ -42,7 +42,7 @@ const SignInMethodsPreview = ({ data }: Props) => {
   return (
     <div>
       {!connectors && !error && <div>loading</div>}
-      {error && <div>{error.body.message}</div>}
+      {!connectors && error && <div>{error.body?.message ?? error.message}</div>}
       {connectors &&
         Object.values(SignInMethodKey)
           .filter((key) => signInMethods[key] !== SignInMethodState.Disabled)

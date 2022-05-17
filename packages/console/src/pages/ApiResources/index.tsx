@@ -85,10 +85,10 @@ const ApiResources = () => {
             </tr>
           </thead>
           <tbody>
-            {error && (
+            {!data && error && (
               <TableError
                 columns={2}
-                content={error.body.message}
+                content={error.body?.message ?? error.message}
                 onRetry={async () => mutate(undefined, true)}
               />
             )}

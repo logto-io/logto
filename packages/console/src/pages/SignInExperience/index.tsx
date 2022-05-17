@@ -84,8 +84,8 @@ const SignInExperience = () => {
     return <div>loading</div>;
   }
 
-  if (configError) {
-    return <div>{configError.body.message}</div>;
+  if (!configs && configError) {
+    return <div>{configError.body?.message ?? configError.message}</div>;
   }
 
   if (!configs?.customizeSignInExperience) {
@@ -109,7 +109,7 @@ const SignInExperience = () => {
             </TabNavItem>
           </TabNav>
           {!data && !error && <div>loading</div>}
-          {error && <div>{`error occurred: ${error.body.message}`}</div>}
+          {!data && error && <div>{`error occurred: ${error.body?.message ?? error.message}`}</div>}
           {data && (
             <FormProvider {...methods}>
               <form onSubmit={onSubmit}>

@@ -26,8 +26,8 @@ const ConnectorsTransfer = ({ value, onChange }: Props) => {
     return <div>loading</div>;
   }
 
-  if (error) {
-    <div>{`error occurred: ${error.body.message}`}</div>;
+  if (!data && error) {
+    <div>{`error occurred: ${error.body?.message ?? error.message}`}</div>;
   }
 
   const datasource = data
