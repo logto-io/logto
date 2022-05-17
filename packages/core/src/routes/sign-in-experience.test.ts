@@ -115,7 +115,7 @@ describe('PATCH /sign-in-exp', () => {
 
   it('should succeed to update when the input is valid', async () => {
     const termsOfUse: TermsOfUse = { enabled: false };
-    const socialSignInConnectorTargets = ['github', 'facebook'];
+    const socialSignInConnectorTargets = ['github', 'facebook', 'wechat'];
 
     const validateBranding = jest.spyOn(signInExpLib, 'validateBranding');
     const validateTermsOfUse = jest.spyOn(signInExpLib, 'validateTermsOfUse');

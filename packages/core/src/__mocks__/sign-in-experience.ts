@@ -33,7 +33,7 @@ export const mockSignInExperience: SignInExperience = {
     sms: SignInMethodState.Disabled,
     social: SignInMethodState.Secondary,
   },
-  socialSignInConnectorTargets: ['github', 'facebook'],
+  socialSignInConnectorTargets: ['github', 'facebook', 'wechat'],
 };
 
 export const mockBranding: Branding = {
