@@ -41,12 +41,12 @@ export default function logRoutes<T extends AuthedRouter>(router: T) {
   );
 
   router.get('/dashboard', async (ctx, next) => {
-    const twoWeekAgo = dayjs().subtract(14, 'day');
+    const fourteenDaysAgo = dayjs().subtract(14, 'day');
     const today = dayjs();
 
     const [{ count: totalUserCount }, dailyNewUserCounts] = await Promise.all([
       await countUsers(),
-      getDailyNewUserCountsByTimeInterval(twoWeekAgo.valueOf(), today.valueOf()),
+      getDailyNewUserCountsByTimeInterval(fourteenDaysAgo.valueOf(), today.valueOf()),
     ]);
 
     const recent14DaysDailyNewUserCounts = new Map(
@@ -61,7 +61,7 @@ export default function logRoutes<T extends AuthedRouter>(router: T) {
       .map((index) => getDateString(today.subtract(6 - index, 'day')))
       .reduce((sum, date) => sum + (recent14DaysDailyNewUserCounts.get(date) ?? 0), 0);
     const lastWeekNewUserCount = [...Array.from({ length: 7 }).keys()]
-      .map((index) => getDateString(twoWeekAgo.add(1 + index, 'day')))
+      .map((index) => getDateString(fourteenDaysAgo.add(1 + index, 'day')))
       .reduce((sum, date) => sum + (recent14DaysDailyNewUserCounts.get(date) ?? 0), 0);
 
     ctx.body = {
