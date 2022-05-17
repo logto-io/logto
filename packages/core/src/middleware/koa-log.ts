@@ -1,8 +1,12 @@
-import { LogResult } from '@logto/schemas';
+import { BaseLogPayload, LogPayload, LogPayloads, LogResult, LogType } from '@logto/schemas';
+import deepmerge from 'deepmerge';
 import { MiddlewareType } from 'koa';
 import { IRouterParamContext } from 'koa-router';
+import { nanoid } from 'nanoid';
 
-import { initLogger, MergeLog } from '@/utils/logger';
+import { insertLog } from '@/queries/log';
+
+type MergeLog = <T extends LogType>(type: T, payload: LogPayloads[T]) => void;
 
 type SessionPayload = {
   sessionId?: string;
@@ -16,6 +20,57 @@ export type WithLogContext<ContextT extends IRouterParamContext = IRouterParamCo
     addLogContext: AddLogContext;
     log: MergeLog;
   };
+
+type Logger = {
+  type?: LogType;
+  basePayload?: BaseLogPayload;
+  payload: LogPayload;
+  set: (basePayload: BaseLogPayload) => void;
+  log: MergeLog;
+  save: () => Promise<void>;
+};
+
+/* eslint-disable @silverhand/fp/no-mutation */
+const initLogger = (basePayload?: Readonly<BaseLogPayload>) => {
+  const logger: Logger = {
+    type: undefined,
+    basePayload,
+    payload: {},
+    set: (basePayload) => {
+      logger.basePayload = {
+        ...logger.basePayload,
+        ...basePayload,
+      };
+    },
+    log: (type, payload) => {
+      if (type !== logger.type) {
+        logger.type = type;
+        logger.payload = payload;
+
+        return;
+      }
+
+      logger.payload = deepmerge(logger.payload, payload);
+    },
+    save: async () => {
+      if (!logger.type) {
+        return;
+      }
+
+      await insertLog({
+        id: nanoid(),
+        type: logger.type,
+        payload: {
+          ...logger.basePayload,
+          ...logger.payload,
+        },
+      });
+    },
+  };
+
+  return logger;
+};
+/* eslint-enable @silverhand/fp/no-mutation */
 
 export default function koaLog<
   StateT,

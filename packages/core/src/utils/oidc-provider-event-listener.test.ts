@@ -1,7 +1,7 @@
 import { CreateLog } from '@logto/schemas';
 
 import { OmitAutoSetFields } from '@/database/utils';
-import { initTokenExchangeSuccessLogger } from '@/utils/logger';
+import { grantSuccessListener } from '@/utils/oidc-provider-event-listener';
 import { createContextWithRouteParameters } from '@/utils/test-utils';
 
 const insertLog: (data: OmitAutoSetFields<CreateLog>) => Promise<void> = jest.fn();
@@ -10,7 +10,7 @@ jest.mock('@/queries/log', () => ({
   insertLog: jest.fn(async (data) => insertLog(data)),
 }));
 
-describe('initTokenExchangeSuccessLogger', () => {
+describe('grantSuccessListener', () => {
   const ip = '192.168.0.1';
   const userAgent =
     'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.51 Safari/537.36';
@@ -38,10 +38,9 @@ describe('initTokenExchangeSuccessLogger', () => {
     };
     ctx.request.ip = ip;
 
-    const logger = initTokenExchangeSuccessLogger();
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-expect-error
-    await logger(ctx);
+    await grantSuccessListener(ctx);
     expect(insertLog).toHaveBeenCalledWith(
       expect.objectContaining({
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -74,10 +73,9 @@ describe('initTokenExchangeSuccessLogger', () => {
       },
     };
 
-    const logger = initTokenExchangeSuccessLogger();
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-expect-error
-    await logger(ctx);
+    await grantSuccessListener(ctx);
     expect(insertLog).toHaveBeenCalledWith(
       expect.objectContaining({
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -109,10 +107,9 @@ describe('initTokenExchangeSuccessLogger', () => {
       },
     };
 
-    const logger = initTokenExchangeSuccessLogger();
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-expect-error
-    await logger(ctx);
+    await grantSuccessListener(ctx);
     expect(insertLog).toHaveBeenCalledWith(
       expect.objectContaining({
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
