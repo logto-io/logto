@@ -20,7 +20,6 @@ import {
   Content,
   PublicParameters,
 } from './types';
-// Import { request } from './utils';
 
 export class SendGridMailConnector implements EmailConnector {
   public metadata: ConnectorMetadata = defaultMetadata;

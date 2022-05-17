@@ -1,6 +1,6 @@
 ```json
 {
-  "apiKey": "apikey",
+  "apiKey": "<api-key>",
   "fromEmail": "noreply@logto.test.io",
   "templates": [
     {

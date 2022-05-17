@@ -102,7 +102,7 @@ const templateGuard = z.object({
 
 export const sendGridMailConfigGuard = z.object({
   apiKey: z.string(),
-  fromEmail: z.string(), // TODO: can move RegExps to logto/shared and add it to the config.fromEmail schema
+  fromEmail: z.string(),
   fromName: z.string().optional(),
   templates: z.array(templateGuard),
 });

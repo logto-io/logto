@@ -3,13 +3,11 @@ import { GetConnectorConfig } from '@logto/connector-types';
 import { SendGridMailConnector } from '.';
 import { mockedConfig } from './mock';
 import { ContextType, SendGridMailConfig } from './types';
-// Import { request } from './utils';
 
 const getConnectorConfig = jest.fn() as GetConnectorConfig<SendGridMailConfig>;
 
 const sendGridMailMethods = new SendGridMailConnector(getConnectorConfig);
 
-// Jest.mock('./utils');
 jest.mock('got');
 
 beforeAll(() => {
