@@ -7,6 +7,8 @@
   input {
     width: 44px;
     height: 44px;
+    border-radius: _.unit(2);
+    border: _.border();
     text-align: center;
     font: var(--font-body);
     color: var(--color-text);
@@ -35,10 +37,6 @@
 :global(body.mobile) {
   .passcode {
     input {
-      width: 44px;
-      height: 44px;
-      border-radius: _.unit(2);
-      border: _.border();
       background: var(--color-layer);
     }
   }
@@ -47,9 +45,6 @@
 :global(body.desktop) {
   .passcode {
     input {
-      width: 44px;
-      height: 46px;
-      border-radius: _.unit(2);
       border: _.border(var(--color-border));
       outline: 3px solid transparent;
       background: transparent;

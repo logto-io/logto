@@ -46,6 +46,9 @@ const translation = {
       nav_back: '返回',
     },
     description: {
+      email: '邮箱',
+      phone: '手机',
+      phone_number: '手机',
       reminder: '提示',
       not_found: '404 页面不存在',
       loading: '读取中...',
@@ -56,7 +59,7 @@ const translation = {
       create_account: '创建账号',
       forgot_password: '忘记密码？',
       or: '或',
-      enter_passcode: '验证码已经发送至 {{ address }}',
+      enter_passcode: '验证码已经发送至您的{{ address }}',
       passcode_sent: '验证码已经发送',
       resend_after_seconds: '在 {{ seconds }} 秒后重发',
       resend_passcode: '重发验证码',

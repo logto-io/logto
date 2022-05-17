@@ -47,7 +47,11 @@ const Passcode = () => {
       <NavBar />
       <div className={styles.container}>
         <div className={styles.title}>{t('action.enter_passcode')}</div>
-        <div className={styles.detail}>{t('description.enter_passcode', { address: target })}</div>
+        <div className={styles.detail}>
+          {t('description.enter_passcode', {
+            address: t(`description.${method === 'email' ? 'email' : 'phone'}`),
+          })}
+        </div>
         <PasscodeValidation type={type} method={method} target={target} />
       </div>
     </div>

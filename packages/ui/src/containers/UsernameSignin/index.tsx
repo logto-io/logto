@@ -36,25 +36,27 @@ const UsernameSignin = ({ className }: Props) => {
   const { termsValidation } = useTerms();
   const {
     fieldValue,
-    responseErrorMessage,
+    formErrorMessage,
     setFieldValue,
     register,
     validateForm,
-    setResponseErrorMessage,
+    setFormErrorMessage,
   } = useForm(defaultState);
 
   const errorHandlers: ErrorHandlers = useMemo(
     () => ({
       'session.invalid_credentials': (error) => {
-        setResponseErrorMessage(error.message);
+        setFormErrorMessage(error.message);
       },
     }),
-    [setResponseErrorMessage]
+    [setFormErrorMessage]
   );
 
   const { result, run: asyncSignInBasic } = useApi(signInBasic, errorHandlers);
 
   const onSubmitHandler = useCallback(async () => {
+    setFormErrorMessage(undefined);
+
     if (!validateForm()) {
       return;
     }
@@ -66,7 +68,14 @@ const UsernameSignin = ({ className }: Props) => {
     const socialToBind = getSearchParameters(location.search, SearchParameters.bindWithSocial);
 
     void asyncSignInBasic(fieldValue.username, fieldValue.password, socialToBind);
-  }, [validateForm, termsValidation, asyncSignInBasic, fieldValue]);
+  }, [
+    setFormErrorMessage,
+    validateForm,
+    termsValidation,
+    asyncSignInBasic,
+    fieldValue.username,
+    fieldValue.password,
+  ]);
 
   useEffect(() => {
     if (result?.redirectTo) {
@@ -93,7 +102,9 @@ const UsernameSignin = ({ className }: Props) => {
         placeholder={t('input.password')}
         {...register('password', (value) => requiredValidation('password', value))}
       />
-      {responseErrorMessage && <ErrorMessage>{responseErrorMessage}</ErrorMessage>}
+      {formErrorMessage && (
+        <ErrorMessage className={styles.formErrors}>{formErrorMessage}</ErrorMessage>
+      )}
       <TermsOfUse className={styles.terms} />
 
       <Button onClick={onSubmitHandler}>{t('action.sign_in')}</Button>
