@@ -24,7 +24,7 @@
     },
     "dependencies": {
         "@logto/connector-types": "^0.1.0",
-        "@silverhand/jest-config": "^0.13.0",
+        "@silverhand/jest-config": "^0.14.0",
         "@logto/shared": "^0.1.0",
         "@silverhand/essentials": "^1.1.0",
         "got": "^11.8.2",
