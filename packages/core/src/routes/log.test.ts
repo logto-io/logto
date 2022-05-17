@@ -1,12 +1,24 @@
+import dayjs from 'dayjs';
+
 import { LogCondition } from '@/queries/log';
-import logRoutes from '@/routes/log';
+import logRoutes, { getDateString } from '@/routes/log';
 import { createRequester } from '@/utils/test-utils';
 
 const mockLogs = [{ id: 1 }, { id: 2 }];
 
-const mockDnuCounts = [
-  { date: '2022-05-01', count: 5 },
-  { date: '2022-05-02', count: 10 },
+const mockDailyNewUserCounts = [
+  { date: getDateString(dayjs().subtract(13, 'day')), count: 1 },
+  { date: getDateString(dayjs().subtract(12, 'day')), count: 2 },
+  { date: getDateString(dayjs().subtract(11, 'day')), count: 3 },
+  { date: getDateString(dayjs().subtract(9, 'day')), count: 5 },
+  { date: getDateString(dayjs().subtract(8, 'day')), count: 6 },
+  { date: getDateString(dayjs().subtract(7, 'day')), count: 7 },
+  { date: getDateString(dayjs().subtract(6, 'day')), count: 8 },
+  { date: getDateString(dayjs().subtract(5, 'day')), count: 9 },
+  { date: getDateString(dayjs().subtract(4, 'day')), count: 10 },
+  { date: getDateString(dayjs().subtract(3, 'day')), count: 11 },
+  { date: getDateString(dayjs().subtract(1, 'day')), count: 13 },
+  { date: getDateString(dayjs().subtract(0, 'day')), count: 14 },
 ];
 
 /* eslint-disable @typescript-eslint/no-unused-vars */
@@ -16,8 +28,8 @@ const countLogs = jest.fn(async (condition: LogCondition) => ({
 const findLogs = jest.fn(
   async (limit: number, offset: number, condition: LogCondition) => mockLogs
 );
-const getDnuCountsByTimeInterval = jest.fn(
-  async (startTimeInclusive: number, endTimeExclusive: number) => mockDnuCounts
+const getDailyNewUserCountsByTimeInterval = jest.fn(
+  async (startTimeInclusive: number, endTimeExclusive: number) => mockDailyNewUserCounts
 );
 /* eslint-enable @typescript-eslint/no-unused-vars */
 
@@ -25,9 +37,20 @@ jest.mock('@/queries/log', () => ({
   countLogs: async (condition: LogCondition) => countLogs(condition),
   findLogs: async (limit: number, offset: number, condition: LogCondition) =>
     findLogs(limit, offset, condition),
-  getDnuCountsByTimeInterval: async (startTimeInclusive: number, endTimeExclusive: number) =>
-    getDnuCountsByTimeInterval(startTimeInclusive, endTimeExclusive),
+  getDailyNewUserCountsByTimeInterval: async (
+    startTimeInclusive: number,
+    endTimeExclusive: number
+  ) => getDailyNewUserCountsByTimeInterval(startTimeInclusive, endTimeExclusive),
 }));
+
+const mockTotalUserCount = 100;
+const countUsers = jest.fn(async () => mockTotalUserCount);
+
+jest.mock('@/queries/user', () => ({
+  countUsers: async () => countUsers(),
+}));
+
+dayjs as jest.MockedFunction<typeof dayjs>;
 
 describe('logRoutes', () => {
   const logRequest = createRequester({ authedRoutes: logRoutes });
@@ -60,26 +83,27 @@ describe('logRoutes', () => {
   });
 
   describe('GET /dashboard', () => {
-    it('should fail when start date is earlier than end date', async () => {
-      const start = '2022-05-01';
-      const end = '2022-04-30';
-      const response = await logRequest.get(`/dashboard?start=${start}&end=${end}`);
-      expect(response.status).toEqual(400);
-    });
-
     it('should call getDnuCountsByTimeInterval with correct parameters', async () => {
-      const start = '2022-05-01';
-      const end = '2022-05-02';
-      await logRequest.get(`/dashboard?start=${start}&end=${end}`);
-      expect(getDnuCountsByTimeInterval).toHaveBeenCalledWith(1_651_363_200_000, 1_651_536_000_000);
+      await logRequest.get('/dashboard');
+      expect(getDailyNewUserCountsByTimeInterval).toHaveBeenCalledWith(
+        dayjs().subtract(14, 'day').valueOf(),
+        dayjs().valueOf()
+      );
     });
 
     it('should return correct response', async () => {
-      const start = '2022-05-01';
-      const end = '2022-05-02';
-      const response = await logRequest.get(`/dashboard?start=${start}&end=${end}`);
+      const response = await logRequest.get('/dashboard');
       expect(response.status).toEqual(200);
-      expect(response.body).toEqual({ dnuCounts: mockDnuCounts, dauCounts: {} });
+      expect(response.body).toEqual({
+        totalUserCount: mockTotalUserCount,
+        userCount: {
+          today: 14,
+          yesterday: 13,
+          thisWeek: 65,
+          lastWeek: 24,
+        },
+        dailyActiveUserCounts: [],
+      });
     });
   });
 });

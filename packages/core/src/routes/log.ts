@@ -1,14 +1,14 @@
+import dayjs, { Dayjs } from 'dayjs';
 import { object, string } from 'zod';
 
 import koaGuard from '@/middleware/koa-guard';
 import koaPagination from '@/middleware/koa-pagination';
-import { countLogs, findLogs, getDnuCountsByTimeInterval } from '@/queries/log';
-import assertThat from '@/utils/assert-that';
-import { dateRegex } from '@/utils/regex';
+import { countLogs, findLogs, getDailyNewUserCountsByTimeInterval } from '@/queries/log';
+import { countUsers } from '@/queries/user';
 
 import { AuthedRouter } from './types';
 
-const millisecondsInOneDay = 86_400_000;
+export const getDateString = (day: Dayjs) => day.format('YYYY-MM-DD');
 
 export default function logRoutes<T extends AuthedRouter>(router: T) {
   router.get(
@@ -40,35 +40,41 @@ export default function logRoutes<T extends AuthedRouter>(router: T) {
     }
   );
 
-  router.get(
-    '/dashboard',
-    koaGuard({
-      query: object({
-        start: string().regex(dateRegex),
-        end: string().regex(dateRegex),
-      }),
-    }),
-    async (ctx, next) => {
-      const {
-        query: { start, end },
-      } = ctx.guard;
+  router.get('/dashboard', async (ctx, next) => {
+    const twoWeekAgo = dayjs().subtract(14, 'day');
+    const today = dayjs();
 
-      const startTime = new Date(start).valueOf();
-      const endTime = new Date(end).valueOf();
-      assertThat(startTime <= endTime, 'dashboard.wrong_date_range');
+    const [{ count: totalUserCount }, dailyNewUserCounts] = await Promise.all([
+      await countUsers(),
+      getDailyNewUserCountsByTimeInterval(twoWeekAgo.valueOf(), today.valueOf()),
+    ]);
 
-      // Convert date closed interval to time left-closed right-open interval:
-      // e.g. [2022-05-01, 2022-05-02] -> [2022-05-01 00:00:00.000, 2022-05-03 00:00:00.000)
-      const endTimeExclusive = endTime + millisecondsInOneDay;
-      const dnuCounts = await getDnuCountsByTimeInterval(startTime, endTimeExclusive);
-      ctx.body = {
-        // DNU: Daily New User
-        dnuCounts,
-        // DAU: Daily Active User
-        dauCounts: {},
-      };
+    const recent14DaysDailyNewUserCounts = new Map(
+      dailyNewUserCounts.map(({ date, count }) => [date, count])
+    );
 
-      return next();
-    }
-  );
+    const todayNewUserCount = recent14DaysDailyNewUserCounts.get(getDateString(today)) ?? 0;
+    const yesterdayNewUserCount =
+      recent14DaysDailyNewUserCounts.get(getDateString(dayjs().subtract(1, 'day'))) ?? 0;
+
+    const thisWeekNewUserCount = [...Array.from({ length: 7 }).keys()]
+      .map((index) => getDateString(today.subtract(6 - index, 'day')))
+      .reduce((sum, date) => sum + (recent14DaysDailyNewUserCounts.get(date) ?? 0), 0);
+    const lastWeekNewUserCount = [...Array.from({ length: 7 }).keys()]
+      .map((index) => getDateString(twoWeekAgo.add(1 + index, 'day')))
+      .reduce((sum, date) => sum + (recent14DaysDailyNewUserCounts.get(date) ?? 0), 0);
+
+    ctx.body = {
+      totalUserCount,
+      newUserCounts: {
+        today: todayNewUserCount,
+        yesterday: yesterdayNewUserCount,
+        thisWeek: thisWeekNewUserCount,
+        lastWeek: lastWeekNewUserCount,
+      },
+      dailyActiveUserCounts: [],
+    };
+
+    return next();
+  });
 }

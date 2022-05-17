@@ -45,8 +45,7 @@ export const findLogs = async (limit: number, offset: number, logCondition: LogC
     offset ${offset}
   `);
 
-// DNU: Daily New User
-export const getDnuCountsByTimeInterval = async (
+export const getDailyNewUserCountsByTimeInterval = async (
   startTimeInclusive: number,
   endTimeExclusive: number
 ) =>
