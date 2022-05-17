@@ -26,7 +26,7 @@
     "@parcel/transformer-mdx": "^2.5.0",
     "@parcel/transformer-sass": "^2.5.0",
     "@silverhand/eslint-config": "^0.14.0",
-    "@silverhand/eslint-config-react": "^0.11.0",
+    "@silverhand/eslint-config-react": "^0.14.0",
     "@silverhand/essentials": "^1.1.6",
     "@silverhand/ts-config": "^0.14.0",
     "@silverhand/ts-config-react": "^0.14.0",
@@ -68,7 +68,7 @@
     "react-router-dom": "^6.2.2",
     "react-syntax-highlighter": "^15.5.0",
     "remark-gfm": "^3.0.1",
-    "stylelint": "^13.13.1",
+    "stylelint": "^14.8.2",
     "swr": "^1.2.2",
     "typescript": "^4.6.2"
   },
@@ -83,7 +83,17 @@
     }
   },
   "stylelint": {
-    "extends": "@silverhand/eslint-config-react/.stylelintrc"
+    "extends": "@silverhand/eslint-config-react/.stylelintrc",
+    "rules": {
+      "scss/function-no-unknown": [
+        true,
+        {
+          "ignoreFunctions": [
+            "/^_./"
+          ]
+        }
+      ]
+    }
   },
   "prettier": "@silverhand/eslint-config/.prettierrc"
 }
