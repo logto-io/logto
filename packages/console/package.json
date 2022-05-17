@@ -68,7 +68,7 @@
     "react-router-dom": "^6.2.2",
     "react-syntax-highlighter": "^15.5.0",
     "remark-gfm": "^3.0.1",
-    "stylelint": "^13.13.1",
+    "stylelint": "^14.0.0",
     "swr": "^1.2.2",
     "typescript": "^4.6.2"
   },
