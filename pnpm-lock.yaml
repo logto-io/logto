@@ -349,6 +349,49 @@ importers:
       tsc-watch: 5.0.3_typescript@4.6.4
       typescript: 4.6.4
 
+  packages/connector-twilio-sms:
+    specifiers:
+      '@jest/types': ^27.5.1
+      '@logto/connector-types': ^0.1.0
+      '@logto/shared': ^0.1.0
+      '@silverhand/eslint-config': ^0.14.0
+      '@silverhand/essentials': ^1.1.6
+      '@silverhand/jest-config': ^0.1.0
+      '@silverhand/ts-config': ^0.14.0
+      '@types/jest': ^27.4.1
+      '@types/node': ^16.3.1
+      eslint: ^8.10.0
+      got: ^11.8.2
+      jest: ^27.5.1
+      jest-matcher-specific-error: ^1.0.0
+      lint-staged: ^12.0.0
+      prettier: ^2.3.2
+      ts-jest: ^27.1.1
+      tsc-watch: ^5.0.0
+      typescript: ^4.6.2
+      zod: ^3.14.3
+    dependencies:
+      '@logto/connector-types': link:../connector-types
+      '@logto/shared': link:../shared
+      '@silverhand/essentials': 1.1.7
+      '@silverhand/jest-config': 0.1.0_53ggqi2i4rbcfjtktmjua6zili
+      got: 11.8.3
+      zod: 3.14.3
+    devDependencies:
+      '@jest/types': 27.5.1
+      '@silverhand/eslint-config': 0.14.0_rqoong6vegs374egqglqjbgiwm
+      '@silverhand/ts-config': 0.14.0_typescript@4.6.4
+      '@types/jest': 27.4.1
+      '@types/node': 16.11.12
+      eslint: 8.10.0
+      jest: 27.5.1
+      jest-matcher-specific-error: 1.0.0
+      lint-staged: 12.4.0
+      prettier: 2.5.1
+      ts-jest: 27.1.1_53ggqi2i4rbcfjtktmjua6zili
+      tsc-watch: 5.0.3_typescript@4.6.4
+      typescript: 4.6.4
+
   packages/connector-types:
     specifiers:
       '@jest/types': ^27.5.1
@@ -5692,6 +5735,29 @@ packages:
     dependencies:
       lodash.orderby: 4.6.0
       lodash.pick: 4.4.0
+
+  /@silverhand/jest-config/0.1.0_53ggqi2i4rbcfjtktmjua6zili:
+    resolution: {integrity: sha512-aYfMiXedozuAsABKIwIMOxc+jnxxY7UHZoHf4LwDdldg6JUrWrIhtnTf5YEdyAYeERbdJXC7bv5QDW2exnUWPg==}
+    engines: {node: ^16.0.0}
+    peerDependencies:
+      jest: ^27.5.0
+    dependencies:
+      '@jest/types': 27.5.1
+      deepmerge: 4.2.2
+      identity-obj-proxy: 3.0.0
+      jest: 27.5.1
+      jest-matcher-specific-error: 1.0.0
+      jest-transform-stub: 2.0.0
+      jest-transformer-svg: 1.0.2_jest@27.5.1
+      ts-jest: 27.1.1_53ggqi2i4rbcfjtktmjua6zili
+    transitivePeerDependencies:
+      - '@babel/core'
+      - '@types/jest'
+      - babel-jest
+      - esbuild
+      - react
+      - typescript
+    dev: false
 
   /@silverhand/jest-config/0.14.0_53ggqi2i4rbcfjtktmjua6zili:
     resolution: {integrity: sha512-zK9wh38/RL5iinPlbcZnjEuu8VfL7lQHDXFQ6Mos+zhN3YH0nsoHD6Faq41eHhUlQ6AkVSowov4hSs28S5RlWg==}
@@ -12600,6 +12666,15 @@ packages:
 
   /jest-transform-stub/2.0.0:
     resolution: {integrity: sha512-lspHaCRx/mBbnm3h4uMMS3R5aZzMwyNpNIJLXj4cEsV0mIUtS4IjYJLSoyjRCtnxb6RIGJ4NL2quZzfIeNhbkg==}
+
+  /jest-transformer-svg/1.0.2_jest@27.5.1:
+    resolution: {integrity: sha512-A9z5Vzs+TlPpxekwUOCyVu5sHgcCKUKyJTE1q/bUhtAILpgf3kIj6IjguQrTJG0jN0nRnuNV7ckPUE8Vdf12Jg==}
+    peerDependencies:
+      jest: ^27.0.6
+      react: ^17.0.2
+    dependencies:
+      jest: 27.5.1
+    dev: false
 
   /jest-transformer-svg/1.0.2_jest@27.5.1+react@17.0.2:
     resolution: {integrity: sha512-A9z5Vzs+TlPpxekwUOCyVu5sHgcCKUKyJTE1q/bUhtAILpgf3kIj6IjguQrTJG0jN0nRnuNV7ckPUE8Vdf12Jg==}
