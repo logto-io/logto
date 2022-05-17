@@ -310,10 +310,10 @@ importers:
     specifiers:
       '@jest/types': ^27.5.1
       '@logto/connector-types': ^0.1.0
-      '@logto/jest-config': ^0.1.0
       '@logto/shared': ^0.1.0
       '@silverhand/eslint-config': ^0.10.2
       '@silverhand/essentials': ^1.1.6
+      '@silverhand/jest-config': ^0.13.0
       '@silverhand/ts-config': ^0.11.0
       '@types/jest': ^27.4.1
       '@types/node': ^16.3.1
@@ -329,9 +329,9 @@ importers:
       zod: ^3.14.3
     dependencies:
       '@logto/connector-types': link:../connector-types
-      '@logto/jest-config': link:../jest-config
       '@logto/shared': link:../shared
       '@silverhand/essentials': 1.1.7
+      '@silverhand/jest-config': 0.13.0_tgc6da2oqazvrn56dzwolsqo5i
       got: 11.8.3
       zod: 3.14.3
     devDependencies:
@@ -3712,7 +3712,6 @@ packages:
       pacote: 11.3.5
       semver: 7.3.7
     transitivePeerDependencies:
-      - bluebird
       - supports-color
     dev: true
 
@@ -3881,7 +3880,6 @@ packages:
       whatwg-url: 8.7.0
       yargs-parser: 20.2.4
     transitivePeerDependencies:
-      - bluebird
       - supports-color
     dev: true
 
@@ -4079,7 +4077,6 @@ packages:
       npm-registry-fetch: 9.0.0
       npmlog: 4.1.2
     transitivePeerDependencies:
-      - bluebird
       - supports-color
     dev: true
 
@@ -4109,7 +4106,6 @@ packages:
       pify: 5.0.0
       read-package-json: 3.0.1
     transitivePeerDependencies:
-      - bluebird
       - supports-color
     dev: true
 
@@ -4244,7 +4240,6 @@ packages:
       pacote: 11.3.5
       semver: 7.3.7
     transitivePeerDependencies:
-      - bluebird
       - encoding
       - supports-color
     dev: true
@@ -4543,8 +4538,6 @@ packages:
       promise-retry: 2.0.1
       semver: 7.3.7
       which: 2.0.2
-    transitivePeerDependencies:
-      - bluebird
     dev: true
 
   /@npmcli/installed-package-contents/1.0.7:
@@ -5559,8 +5552,11 @@ packages:
       stylelint-config-xo-scss: 0.15.0_zhymizk4kfitko2u2d4p3qwyee
     transitivePeerDependencies:
       - eslint
+<<<<<<< HEAD
       - eslint-import-resolver-webpack
       - postcss
+=======
+>>>>>>> fa0b32c9 (feat(connector-sendgrid-mail): fix)
       - prettier
       - supports-color
       - typescript
@@ -5608,6 +5604,9 @@ packages:
     peerDependencies:
       eslint: ^8.1.0
       prettier: ^2.3.2
+<<<<<<< HEAD
+=======
+      typescript: ^4.3.5
     dependencies:
       '@silverhand/eslint-plugin-fp': 2.5.0_eslint@8.10.0
       '@typescript-eslint/eslint-plugin': 5.14.0_6qcuxdb42yq5wfvodoovog6mya
@@ -5619,7 +5618,40 @@ packages:
       eslint-import-resolver-typescript: 2.5.0_rnagsyfcubvpoxo2ynj23pim7u
       eslint-plugin-consistent-default-export-name: 0.0.7
       eslint-plugin-eslint-comments: 3.2.0_eslint@8.10.0
-      eslint-plugin-import: 2.25.4_sidoke6kqbkbdht6nlmwbfnany
+      eslint-plugin-import: 2.25.4_eslint@8.10.0
+      eslint-plugin-no-use-extend-native: 0.5.0
+      eslint-plugin-node: 11.1.0_eslint@8.10.0
+      eslint-plugin-prettier: 3.4.1_6pitu4b2tqihty6rv5qeiyb35m
+      eslint-plugin-promise: 6.0.0_eslint@8.10.0
+      eslint-plugin-sql: 2.1.0_eslint@8.10.0
+      eslint-plugin-unicorn: 39.0.0_eslint@8.10.0
+      pkg-dir: 4.2.0
+      prettier: 2.5.1
+      typescript: 4.6.2
+    transitivePeerDependencies:
+      - supports-color
+    dev: true
+
+  /@silverhand/eslint-config/0.12.0_hjjt7jwmhwqm7bjf55k5ihcdqq:
+    resolution: {integrity: sha512-WRR3oGzEt6SAR6GxwCRfUXwMpKqnNXdvSTcb7kBhMW1DDaTi9qNkhJl/NdDTyhqxda+jCqUzS/HF/kYOJwdwpQ==}
+    engines: {node: '>=14.15.0'}
+    peerDependencies:
+      eslint: ^8.1.0
+      prettier: ^2.3.2
+      typescript: ^4.3.5
+>>>>>>> fa0b32c9 (feat(connector-sendgrid-mail): fix)
+    dependencies:
+      '@silverhand/eslint-plugin-fp': 2.5.0_eslint@8.10.0
+      '@typescript-eslint/eslint-plugin': 5.14.0_6qcuxdb42yq5wfvodoovog6mya
+      '@typescript-eslint/parser': 5.14.0_pzezdwkd5bvjkx2hshexc25sxq
+      eslint: 8.10.0
+      eslint-config-prettier: 8.5.0_eslint@8.10.0
+      eslint-config-xo: 0.40.0_eslint@8.10.0
+      eslint-config-xo-typescript: 0.50.0_eimrvegzairgysjagkjjwv3rli
+      eslint-import-resolver-typescript: 2.5.0_rnagsyfcubvpoxo2ynj23pim7u
+      eslint-plugin-consistent-default-export-name: 0.0.7
+      eslint-plugin-eslint-comments: 3.2.0_eslint@8.10.0
+      eslint-plugin-import: 2.25.4_eslint@8.10.0
       eslint-plugin-no-use-extend-native: 0.5.0
       eslint-plugin-node: 11.1.0_eslint@8.10.0
       eslint-plugin-prettier: 3.4.1_6pitu4b2tqihty6rv5qeiyb35m
@@ -5629,7 +5661,6 @@ packages:
       pkg-dir: 4.2.0
       prettier: 2.5.1
     transitivePeerDependencies:
-      - eslint-import-resolver-webpack
       - supports-color
       - typescript
     dev: true
@@ -5651,7 +5682,7 @@ packages:
       eslint-import-resolver-typescript: 2.5.0_rnagsyfcubvpoxo2ynj23pim7u
       eslint-plugin-consistent-default-export-name: 0.0.7
       eslint-plugin-eslint-comments: 3.2.0_eslint@8.10.0
-      eslint-plugin-import: 2.25.4_sidoke6kqbkbdht6nlmwbfnany
+      eslint-plugin-import: 2.25.4_eslint@8.10.0
       eslint-plugin-no-use-extend-native: 0.5.0
       eslint-plugin-node: 11.1.0_eslint@8.10.0
       eslint-plugin-prettier: 3.4.1_6pitu4b2tqihty6rv5qeiyb35m
@@ -5661,7 +5692,6 @@ packages:
       pkg-dir: 4.2.0
       prettier: 2.5.1
     transitivePeerDependencies:
-      - eslint-import-resolver-webpack
       - supports-color
       - typescript
     dev: true
@@ -5683,7 +5713,7 @@ packages:
       eslint-import-resolver-typescript: 2.5.0_rnagsyfcubvpoxo2ynj23pim7u
       eslint-plugin-consistent-default-export-name: 0.0.7
       eslint-plugin-eslint-comments: 3.2.0_eslint@8.10.0
-      eslint-plugin-import: 2.25.4_sidoke6kqbkbdht6nlmwbfnany
+      eslint-plugin-import: 2.25.4_eslint@8.10.0
       eslint-plugin-no-use-extend-native: 0.5.0
       eslint-plugin-node: 11.1.0_eslint@8.10.0
       eslint-plugin-prettier: 3.4.1_6pitu4b2tqihty6rv5qeiyb35m
@@ -5693,7 +5723,6 @@ packages:
       pkg-dir: 4.2.0
       prettier: 2.5.1
     transitivePeerDependencies:
-      - eslint-import-resolver-webpack
       - supports-color
       - typescript
     dev: true
@@ -5878,6 +5907,37 @@ packages:
       webpack-sources: 1.4.3
     dev: true
 
+<<<<<<< HEAD
+=======
+  /@stylelint/postcss-css-in-js/0.37.2_j55xdkkcxc32kvnyvx3y7casfm:
+    resolution: {integrity: sha512-nEhsFoJurt8oUmieT8qy4nk81WRHmJynmVwn/Vts08PL9fhgIsMhk1GId5yAN643OzqEEb5S/6At2TZW7pqPDA==}
+    peerDependencies:
+      postcss: '>=7.0.0'
+      postcss-syntax: '>=0.36.2'
+    dependencies:
+      '@babel/core': 7.16.0
+      postcss: 7.0.39
+      postcss-syntax: 0.36.2_postcss@7.0.39
+    transitivePeerDependencies:
+      - supports-color
+    dev: true
+
+  /@stylelint/postcss-markdown/0.36.2_j55xdkkcxc32kvnyvx3y7casfm:
+    resolution: {integrity: sha512-2kGbqUVJUGE8dM+bMzXG/PYUWKkjLIkRLWNh39OaADkiabDRdw8ATFCgbMz5xdIcvwspPAluSL7uY+ZiTWdWmQ==}
+    deprecated: 'Use the original unforked package instead: postcss-markdown'
+    peerDependencies:
+      postcss: '>=7.0.0'
+      postcss-syntax: '>=0.36.2'
+    dependencies:
+      postcss: 7.0.39
+      postcss-syntax: 0.36.2_postcss@7.0.39
+      remark: 13.0.0
+      unist-util-find-all-after: 3.0.2
+    transitivePeerDependencies:
+      - supports-color
+    dev: true
+
+>>>>>>> fa0b32c9 (feat(connector-sendgrid-mail): fix)
   /@svgr/babel-plugin-add-jsx-attribute/6.0.0_@babel+core@7.17.9:
     resolution: {integrity: sha512-MdPdhdWLtQsjd29Wa4pABdhWbaRMACdM1h31BY+c6FghTZqNGT7pEYdBoaGeKtdTOBC/XNFQaKVj+r/Ei2ryWA==}
     engines: {node: '>=10'}
@@ -7760,8 +7820,6 @@ packages:
       qs: 6.9.7
       raw-body: 2.4.3
       type-is: 1.6.18
-    transitivePeerDependencies:
-      - supports-color
     dev: true
 
   /bonjour-service/1.0.11:
@@ -7937,8 +7995,6 @@ packages:
       ssri: 8.0.1
       tar: 6.1.11
       unique-filename: 1.1.1
-    transitivePeerDependencies:
-      - bluebird
     dev: true
 
   /cache-content-type/1.0.1:
@@ -8454,8 +8510,6 @@ packages:
       on-headers: 1.0.2
       safe-buffer: 5.1.2
       vary: 1.1.2
-    transitivePeerDependencies:
-      - supports-color
     dev: true
 
   /concat-map/0.0.1:
@@ -9031,22 +9085,12 @@ packages:
 
   /debug/2.6.9:
     resolution: {integrity: sha512-bC7ElrdJaJnPbAP+1EotYvqZsb3ecl5wi6Bfi6BJTUcNowp6cvspg0jXznRTKDjm/E7AdgFBVeAPVMNcKGsHMA==}
-    peerDependencies:
-      supports-color: '*'
-    peerDependenciesMeta:
-      supports-color:
-        optional: true
     dependencies:
       ms: 2.0.0
     dev: true
 
   /debug/3.2.7:
     resolution: {integrity: sha512-CFjzYYAi4ThfiQvizrFQevTTXHtnCqWfe7x1AhgEscTz6ZbLbfoLRLPugTQyBth6f8ZERVUSyWHFD/7Wu4t1XQ==}
-    peerDependencies:
-      supports-color: '*'
-    peerDependenciesMeta:
-      supports-color:
-        optional: true
     dependencies:
       ms: 2.1.3
 
@@ -9275,8 +9319,6 @@ packages:
     dependencies:
       address: 1.1.2
       debug: 2.6.9
-    transitivePeerDependencies:
-      - supports-color
     dev: true
 
   /detect-port/1.3.0:
@@ -9286,8 +9328,6 @@ packages:
     dependencies:
       address: 1.1.2
       debug: 2.6.9
-    transitivePeerDependencies:
-      - supports-color
     dev: true
 
   /dezalgo/1.0.3:
@@ -9766,8 +9806,6 @@ packages:
     dependencies:
       debug: 3.2.7
       resolve: 1.22.0
-    transitivePeerDependencies:
-      - supports-color
     dev: true
 
   /eslint-import-resolver-typescript/2.5.0_rnagsyfcubvpoxo2ynj23pim7u:
@@ -9779,7 +9817,7 @@ packages:
     dependencies:
       debug: 4.3.3
       eslint: 8.10.0
-      eslint-plugin-import: 2.25.4_sidoke6kqbkbdht6nlmwbfnany
+      eslint-plugin-import: 2.25.4_eslint@8.10.0
       glob: 7.2.0
       is-glob: 4.0.3
       resolve: 1.22.0
@@ -9788,31 +9826,12 @@ packages:
       - supports-color
     dev: true
 
-  /eslint-module-utils/2.7.3_l62aq42yiamaj3cnpuf6avthf4:
+  /eslint-module-utils/2.7.3:
     resolution: {integrity: sha512-088JEC7O3lDZM9xGe0RerkOMd0EjFl+Yvd1jPWIkMT5u3H9+HC34mWWPnqPrN13gieT9pBOO+Qt07Nb/6TresQ==}
     engines: {node: '>=4'}
-    peerDependencies:
-      '@typescript-eslint/parser': '*'
-      eslint-import-resolver-node: '*'
-      eslint-import-resolver-typescript: '*'
-      eslint-import-resolver-webpack: '*'
-    peerDependenciesMeta:
-      '@typescript-eslint/parser':
-        optional: true
-      eslint-import-resolver-node:
-        optional: true
-      eslint-import-resolver-typescript:
-        optional: true
-      eslint-import-resolver-webpack:
-        optional: true
     dependencies:
-      '@typescript-eslint/parser': 5.14.0_fo4uz55zgcu432252zy2gvpvcu
       debug: 3.2.7
-      eslint-import-resolver-node: 0.3.6
-      eslint-import-resolver-typescript: 2.5.0_rnagsyfcubvpoxo2ynj23pim7u
       find-up: 2.1.0
-    transitivePeerDependencies:
-      - supports-color
     dev: true
 
   /eslint-plugin-consistent-default-export-name/0.0.7:
@@ -9847,24 +9866,19 @@ packages:
       ignore: 5.2.0
     dev: true
 
-  /eslint-plugin-import/2.25.4_sidoke6kqbkbdht6nlmwbfnany:
+  /eslint-plugin-import/2.25.4_eslint@8.10.0:
     resolution: {integrity: sha512-/KJBASVFxpu0xg1kIBn9AUa8hQVnszpwgE7Ld0lKAlx7Ie87yzEzCgSkekt+le/YVhiaosO4Y14GDAOc41nfxA==}
     engines: {node: '>=4'}
     peerDependencies:
-      '@typescript-eslint/parser': '*'
       eslint: ^2 || ^3 || ^4 || ^5 || ^6 || ^7.2.0 || ^8
-    peerDependenciesMeta:
-      '@typescript-eslint/parser':
-        optional: true
     dependencies:
-      '@typescript-eslint/parser': 5.14.0_fo4uz55zgcu432252zy2gvpvcu
       array-includes: 3.1.4
       array.prototype.flat: 1.2.5
       debug: 2.6.9
       doctrine: 2.1.0
       eslint: 8.10.0
       eslint-import-resolver-node: 0.3.6
-      eslint-module-utils: 2.7.3_l62aq42yiamaj3cnpuf6avthf4
+      eslint-module-utils: 2.7.3
       has: 1.0.3
       is-core-module: 2.8.1
       is-glob: 4.0.3
@@ -9872,10 +9886,6 @@ packages:
       object.values: 1.1.5
       resolve: 1.22.0
       tsconfig-paths: 3.13.0
-    transitivePeerDependencies:
-      - eslint-import-resolver-typescript
-      - eslint-import-resolver-webpack
-      - supports-color
     dev: true
 
   /eslint-plugin-no-use-extend-native/0.5.0:
@@ -10267,8 +10277,6 @@ packages:
       type-is: 1.6.18
       utils-merge: 1.0.1
       vary: 1.1.2
-    transitivePeerDependencies:
-      - supports-color
     dev: true
 
   /extend-shallow/2.0.1:
@@ -10465,8 +10473,6 @@ packages:
       parseurl: 1.3.3
       statuses: 1.5.0
       unpipe: 1.0.0
-    transitivePeerDependencies:
-      - supports-color
     dev: true
 
   /find-cache-dir/3.3.2:
@@ -13177,7 +13183,6 @@ packages:
       import-local: 3.1.0
       npmlog: 4.1.2
     transitivePeerDependencies:
-      - bluebird
       - encoding
       - supports-color
     dev: true
@@ -13212,7 +13217,6 @@ packages:
       npm-package-arg: 8.1.5
       npm-registry-fetch: 11.0.0
     transitivePeerDependencies:
-      - bluebird
       - supports-color
     dev: true
 
@@ -13226,7 +13230,6 @@ packages:
       semver: 7.3.7
       ssri: 8.0.1
     transitivePeerDependencies:
-      - bluebird
       - supports-color
     dev: true
 
@@ -13595,7 +13598,6 @@ packages:
       socks-proxy-agent: 5.0.1
       ssri: 8.0.1
     transitivePeerDependencies:
-      - bluebird
       - supports-color
     dev: true
 
@@ -13620,7 +13622,6 @@ packages:
       socks-proxy-agent: 6.1.1
       ssri: 8.0.1
     transitivePeerDependencies:
-      - bluebird
       - supports-color
     dev: true
 
@@ -14693,7 +14694,6 @@ packages:
       minizlib: 2.1.2
       npm-package-arg: 8.1.5
     transitivePeerDependencies:
-      - bluebird
       - supports-color
     dev: true
 
@@ -14710,7 +14710,6 @@ packages:
       minizlib: 2.1.2
       npm-package-arg: 8.1.5
     transitivePeerDependencies:
-      - bluebird
       - supports-color
     dev: true
 
@@ -15149,7 +15148,6 @@ packages:
       ssri: 8.0.1
       tar: 6.1.11
     transitivePeerDependencies:
-      - bluebird
       - supports-color
     dev: true
 
@@ -15542,8 +15540,6 @@ packages:
       async: 2.6.3
       debug: 3.2.7
       mkdirp: 0.5.5
-    transitivePeerDependencies:
-      - supports-color
     dev: true
 
   /postcss-calc/8.2.4_postcss@8.4.12:
@@ -15625,6 +15621,27 @@ packages:
       postcss-selector-parser: 6.0.9
     dev: true
 
+<<<<<<< HEAD
+=======
+  /postcss-html/0.36.0_j55xdkkcxc32kvnyvx3y7casfm:
+    resolution: {integrity: sha512-HeiOxGcuwID0AFsNAL0ox3mW6MHH5cstWN1Z3Y+n6H+g12ih7LHdYxWwEA/QmrebctLjo79xz9ouK3MroHwOJw==}
+    peerDependencies:
+      postcss: '>=5.0.0'
+      postcss-syntax: '>=0.36.0'
+    dependencies:
+      htmlparser2: 3.10.1
+      postcss: 7.0.39
+      postcss-syntax: 0.36.2_postcss@7.0.39
+    dev: true
+
+  /postcss-less/3.1.4:
+    resolution: {integrity: sha512-7TvleQWNM2QLcHqvudt3VYjULVB49uiW6XzEUFmvwHzvsOEF5MwBrIXZDJQvJNFGjJQTzSzZnDoCJ8h/ljyGXA==}
+    engines: {node: '>=6.14.4'}
+    dependencies:
+      postcss: 7.0.39
+    dev: true
+
+>>>>>>> fa0b32c9 (feat(connector-sendgrid-mail): fix)
   /postcss-loader/6.2.1_uc4qctwj44nkyf42gqi5c2c22q:
     resolution: {integrity: sha512-WbbYpmAaKcux/P66bZ40bpWsBucjx/TTgVVzRZ9yUO8yQfVBlameJ0ZGVaPfH64hNSBh63a+ICP5nqOpBA0w+Q==}
     engines: {node: '>= 12.13.0'}
@@ -16020,6 +16037,17 @@ packages:
       svgo: 2.8.0
     dev: true
 
+<<<<<<< HEAD
+=======
+  /postcss-syntax/0.36.2_postcss@7.0.39:
+    resolution: {integrity: sha512-nBRg/i7E3SOHWxF3PpF5WnJM/jQ1YpY9000OaVXlAQj6Zp/kIqJxEDWIZ67tAd7NLuk7zqN4yqe9nc0oNAOs1w==}
+    peerDependencies:
+      postcss: '>=5.0.0'
+    dependencies:
+      postcss: 7.0.39
+    dev: true
+
+>>>>>>> fa0b32c9 (feat(connector-sendgrid-mail): fix)
   /postcss-unique-selectors/5.1.1_postcss@8.4.12:
     resolution: {integrity: sha512-5JiODlELrz8L2HwxfPnhOWZYWDxVHWL83ufOv84NrcgipI7TaeRsatAhK4Tr2/ZiYldpK/wBvw5BD3qfaK96GA==}
     engines: {node: ^10 || ^12 || >=14.0}
@@ -16230,11 +16258,6 @@ packages:
 
   /promise-inflight/1.0.1:
     resolution: {integrity: sha1-mEcocL8igTL8vdhoEputEsPAKeM=}
-    peerDependencies:
-      bluebird: '*'
-    peerDependenciesMeta:
-      bluebird:
-        optional: true
     dev: true
 
   /promise-retry/2.0.1:
@@ -16512,7 +16535,6 @@ packages:
       text-table: 0.2.0
     transitivePeerDependencies:
       - eslint
-      - supports-color
       - typescript
       - vue-template-compiler
       - webpack
@@ -17607,8 +17629,6 @@ packages:
       on-finished: 2.3.0
       range-parser: 1.2.1
       statuses: 1.5.0
-    transitivePeerDependencies:
-      - supports-color
     dev: true
 
   /serialize-error/7.0.1:
@@ -17655,8 +17675,6 @@ packages:
       http-errors: 1.6.3
       mime-types: 2.1.35
       parseurl: 1.3.3
-    transitivePeerDependencies:
-      - supports-color
     dev: true
 
   /serve-static/1.14.2:
@@ -17667,8 +17685,6 @@ packages:
       escape-html: 1.0.3
       parseurl: 1.3.3
       send: 0.17.2
-    transitivePeerDependencies:
-      - supports-color
     dev: true
 
   /set-blocking/2.0.0:
@@ -18492,8 +18508,16 @@ packages:
       postcss: 8.4.13
       postcss-media-query-parser: 0.2.3
       postcss-resolve-nested-selector: 0.1.1
+<<<<<<< HEAD
       postcss-safe-parser: 6.0.0_postcss@8.4.13
       postcss-selector-parser: 6.0.10
+=======
+      postcss-safe-parser: 4.0.2
+      postcss-sass: 0.4.4
+      postcss-scss: 2.1.1
+      postcss-selector-parser: 6.0.9
+      postcss-syntax: 0.36.2_postcss@7.0.39
+>>>>>>> fa0b32c9 (feat(connector-sendgrid-mail): fix)
       postcss-value-parser: 4.2.0
       resolve-from: 5.0.0
       specificity: 0.4.1
