@@ -1,4 +1,4 @@
-import { Config, merge } from '@logto/jest-config';
+import { Config, merge } from '@silverhand/jest-config';
 
 const config: Config.InitialOptions = merge({
   testEnvironment: 'node',
