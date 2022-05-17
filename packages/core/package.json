@@ -38,7 +38,7 @@
     "decamelize": "^5.0.0",
     "deepmerge": "^4.2.2",
     "dotenv": "^16.0.0",
-    "got": "^11.8.2",
+    "got": "^12.0.0",
     "i18next": "^21.0.0",
     "iconv-lite": "0.6.3",
     "inquirer": "^8.2.2",

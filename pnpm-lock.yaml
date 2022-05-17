@@ -34,7 +34,7 @@ importers:
       '@types/supertest': ^2.0.11
       dayjs: ^1.10.5
       eslint: ^8.10.0
-      got: ^11.8.2
+      got: ^12.0.0
       iconv-lite: 0.6.3
       jest: ^27.5.1
       jest-matcher-specific-error: ^1.0.0
@@ -53,7 +53,7 @@ importers:
       '@silverhand/essentials': 1.1.7
       '@silverhand/jest-config': 0.13.0_tgc6da2oqazvrn56dzwolsqo5i
       dayjs: 1.10.7
-      got: 11.8.3
+      got: 12.0.4
       iconv-lite: 0.6.3
       snakecase-keys: 5.1.2
       zod: 3.14.3
@@ -89,7 +89,7 @@ importers:
       '@types/jest': ^27.4.1
       '@types/node': ^16.3.1
       eslint: ^8.10.0
-      got: ^11.8.2
+      got: ^12.0.0
       jest: ^27.5.1
       jest-matcher-specific-error: ^1.0.0
       lint-staged: ^12.0.0
@@ -103,7 +103,7 @@ importers:
       '@logto/shared': link:../shared
       '@silverhand/essentials': 1.1.7
       '@silverhand/jest-config': 0.13.0_tgc6da2oqazvrn56dzwolsqo5i
-      got: 11.8.3
+      got: 12.0.4
       zod: 3.14.3
     devDependencies:
       '@jest/types': 27.5.1
@@ -133,7 +133,7 @@ importers:
       '@types/jest': ^27.4.1
       '@types/node': ^16.3.1
       eslint: ^8.10.0
-      got: ^11.8.2
+      got: ^12.0.0
       jest: ^27.5.1
       jest-matcher-specific-error: ^1.0.0
       lint-staged: ^12.0.0
@@ -148,7 +148,7 @@ importers:
       '@logto/shared': link:../shared
       '@silverhand/essentials': 1.1.7
       '@silverhand/jest-config': 0.13.0_tgc6da2oqazvrn56dzwolsqo5i
-      got: 11.8.3
+      got: 12.0.4
       zod: 3.14.3
     devDependencies:
       '@jest/types': 27.5.1
@@ -178,7 +178,7 @@ importers:
       '@types/jest': ^27.4.1
       '@types/node': ^16.3.1
       eslint: ^8.10.0
-      got: ^11.8.2
+      got: ^12.0.0
       jest: ^27.5.1
       jest-matcher-specific-error: ^1.0.0
       lint-staged: ^12.0.0
@@ -194,7 +194,7 @@ importers:
       '@logto/shared': link:../shared
       '@silverhand/essentials': 1.1.7
       '@silverhand/jest-config': 0.13.0_tgc6da2oqazvrn56dzwolsqo5i
-      got: 11.8.3
+      got: 12.0.4
       zod: 3.14.3
     devDependencies:
       '@jest/types': 27.5.1
@@ -225,7 +225,7 @@ importers:
       '@types/jest': ^27.4.1
       '@types/node': ^16.3.1
       eslint: ^8.10.0
-      got: ^11.8.2
+      got: ^12.0.0
       jest: ^27.5.1
       jest-matcher-specific-error: ^1.0.0
       lint-staged: ^12.0.0
@@ -241,7 +241,7 @@ importers:
       '@logto/shared': link:../shared
       '@silverhand/essentials': 1.1.7
       '@silverhand/jest-config': 0.13.0_tgc6da2oqazvrn56dzwolsqo5i
-      got: 11.8.3
+      got: 12.0.4
       zod: 3.14.3
     devDependencies:
       '@jest/types': 27.5.1
@@ -272,7 +272,7 @@ importers:
       '@types/jest': ^27.4.1
       '@types/node': ^16.3.1
       eslint: ^8.10.0
-      got: ^11.8.2
+      got: ^12.0.0
       jest: ^27.5.1
       jest-matcher-specific-error: ^1.0.0
       lint-staged: ^12.0.0
@@ -288,7 +288,7 @@ importers:
       '@logto/shared': link:../shared
       '@silverhand/essentials': 1.1.7
       '@silverhand/jest-config': 0.13.0_tgc6da2oqazvrn56dzwolsqo5i
-      got: 11.8.3
+      got: 12.0.4
       zod: 3.14.3
     devDependencies:
       '@jest/types': 27.5.1
@@ -352,7 +352,7 @@ importers:
       '@types/jest': ^27.4.1
       '@types/node': ^16.3.1
       eslint: ^8.10.0
-      got: ^11.8.2
+      got: ^12.0.0
       jest: ^27.5.1
       jest-matcher-specific-error: ^1.0.0
       lint-staged: ^12.0.0
@@ -368,7 +368,7 @@ importers:
       '@logto/shared': link:../shared
       '@silverhand/essentials': 1.1.7
       '@silverhand/jest-config': 0.13.0_tgc6da2oqazvrn56dzwolsqo5i
-      got: 11.8.3
+      got: 12.0.4
       zod: 3.14.3
     devDependencies:
       '@jest/types': 27.5.1
@@ -399,7 +399,7 @@ importers:
       '@types/jest': ^27.4.1
       '@types/node': ^16.3.1
       eslint: ^8.10.0
-      got: ^11.8.2
+      got: ^12.0.0
       jest: ^27.5.1
       jest-matcher-specific-error: ^1.0.0
       lint-staged: ^12.0.0
@@ -415,7 +415,7 @@ importers:
       '@logto/shared': link:../shared
       '@silverhand/essentials': 1.1.7
       '@silverhand/jest-config': 0.13.0_tgc6da2oqazvrn56dzwolsqo5i
-      got: 11.8.3
+      got: 12.0.4
       zod: 3.14.3
     devDependencies:
       '@jest/types': 27.5.1
@@ -581,7 +581,7 @@ importers:
       deepmerge: ^4.2.2
       dotenv: ^16.0.0
       eslint: ^8.10.0
-      got: ^11.8.2
+      got: ^12.0.0
       i18next: ^21.0.0
       iconv-lite: 0.6.3
       inquirer: ^8.2.2
@@ -635,7 +635,7 @@ importers:
       decamelize: 5.0.1
       deepmerge: 4.2.2
       dotenv: 16.0.0
-      got: 11.8.3
+      got: 12.0.4
       i18next: 21.6.12
       iconv-lite: 0.6.3
       inquirer: 8.2.2
@@ -731,7 +731,7 @@ importers:
       '@types/jest': ^27.4.1
       '@types/node': ^16.0.0
       eslint: ^8.10.0
-      got: ^11.8.2
+      got: ^12.0.0
       jest: ^27.5.1
       prettier: ^2.3.2
       ts-node: ^10.0.0
@@ -744,7 +744,7 @@ importers:
       '@types/jest': 27.4.1
       '@types/node': 16.11.12
       eslint: 8.10.0
-      got: 11.8.3
+      got: 12.0.4
       jest: 27.5.1_ts-node@10.7.0
       prettier: 2.5.1
       ts-node: 10.7.0_drbbnc2wk7uwp4gsdsdvgzqgya
@@ -6011,6 +6011,11 @@ packages:
   /@sindresorhus/is/4.2.0:
     resolution: {integrity: sha512-VkE3KLBmJwcCaVARtQpfuKcKv8gcBmUubrfHGF84dXuuW6jgsRYxPtzcIhPyK9WAPpRt2/xY6zkD9MnRaJzSyw==}
     engines: {node: '>=10'}
+    dev: false
+
+  /@sindresorhus/is/4.6.0:
+    resolution: {integrity: sha512-t09vSN3MdfsyCHoFcTRCH/iUtG7OJ0CsjzB8cjAmKc/va/kIgeDI/TxsigdncE/4be734m0cvIYwNaV4i2XqAw==}
+    engines: {node: '>=10'}
 
   /@sinonjs/commons/1.8.3:
     resolution: {integrity: sha512-xkNcLAn/wZaX14RPlwizcKicDk9G3F8m2nU3L7Ukm5zBgTwiT0wsoFAHx9Jq56fJA1z/7uKGtCRu16sOUCLIHQ==}
@@ -6226,6 +6231,13 @@ packages:
   /@szmarczak/http-timer/4.0.6:
     resolution: {integrity: sha512-4BAffykYOgO+5nzBWYwE3W90sBgLJoUPRWWcL8wlyiM8IB8ipJz3UMJ9KXQd1RKQXpKp8Tutn80HZtWsu2u76w==}
     engines: {node: '>=10'}
+    dependencies:
+      defer-to-connect: 2.0.1
+    dev: false
+
+  /@szmarczak/http-timer/5.0.1:
+    resolution: {integrity: sha512-+PmQX0PiAYPMeVYe237LJAYvOMYW1j2rH5YROyS3b4CTVJum34HfRvKvAzozHAQG0TnHNdUfY9nCeUyRAs//cw==}
+    engines: {node: '>=14.16'}
     dependencies:
       defer-to-connect: 2.0.1
 
@@ -8159,11 +8171,11 @@ packages:
   /cacheable-lookup/5.0.4:
     resolution: {integrity: sha512-2/kNscPhpcxrOigMZzbiWF7dz8ilhb/nIHU3EyZiXWXpeq/au8qJ8VhdftMkty3n7Gj6HIGalQG8oiBNB3AJgA==}
     engines: {node: '>=10.6.0'}
+    dev: false
 
   /cacheable-lookup/6.0.4:
     resolution: {integrity: sha512-mbcDEZCkv2CZF4G01kr8eBd/5agkt9oCqz75tJMSIsquvRZ2sL6Hi5zGVKi/0OSC9oO1GHfJ2AV0ZIOY9vye0A==}
     engines: {node: '>=10.6.0'}
-    dev: false
 
   /cacheable-request/6.1.0:
     resolution: {integrity: sha512-Oj3cAGPCqOZX7Rz64Uny2GYAZNliQSqfbePrgAQ1wKAihYmCUnraBtJtKcGR4xz7wF+LoJC+ssFZvv5BgF9Igg==}
@@ -10796,6 +10808,9 @@ packages:
       webpack: 5.71.0
     dev: true
 
+  /form-data-encoder/1.7.1:
+    resolution: {integrity: sha512-EFRDrsMm/kyqbTQocNvRXMLjc7Es2Vk+IQFx/YW7hkUH1eBl4J1fqiP34l74Yt0pFLCNpc06fkbVk00008mzjg==}
+
   /form-data/2.3.3:
     resolution: {integrity: sha512-1lLKB2Mu3aGP1Q/2eCOx0fNbRMe7XdwktwOruhfqqd0rIJWwN4Dh+E3hrPSlDCXnSR7UtZ1N38rVXm+6+MEhJQ==}
     engines: {node: '>= 0.12'}
@@ -11020,7 +11035,6 @@ packages:
   /get-stream/6.0.1:
     resolution: {integrity: sha512-ts6Wi+2j3jQjqi70w5AlN8DFnkSwC+MqmxEzdEALB2qXZYV3X/b1CTfgPLGJNMeAWxdPfU8FO1ms3NUfaHCPYg==}
     engines: {node: '>=10'}
-    dev: true
 
   /get-symbol-description/1.0.0:
     resolution: {integrity: sha512-2EmdH1YvIQiZpltCNgkuiUnyukzxM/R6NDJX31Ke3BG1Nq5b0S2PhX59UKi9vZpPDQVdqn+1IcaAwnzTT5vCjw==}
@@ -11235,6 +11249,25 @@ packages:
       http2-wrapper: 1.0.3
       lowercase-keys: 2.0.0
       p-cancelable: 2.1.1
+      responselike: 2.0.0
+    dev: false
+
+  /got/12.0.4:
+    resolution: {integrity: sha512-2Eyz4iU/ktq7wtMFXxzK7g5p35uNYLLdiZarZ5/Yn3IJlNEpBd5+dCgcAyxN8/8guZLszffwe3wVyw+DEVrpBg==}
+    engines: {node: '>=14.16'}
+    dependencies:
+      '@sindresorhus/is': 4.6.0
+      '@szmarczak/http-timer': 5.0.1
+      '@types/cacheable-request': 6.0.2
+      '@types/responselike': 1.0.0
+      cacheable-lookup: 6.0.4
+      cacheable-request: 7.0.2
+      decompress-response: 6.0.0
+      form-data-encoder: 1.7.1
+      get-stream: 6.0.1
+      http2-wrapper: 2.1.11
+      lowercase-keys: 3.0.0
+      p-cancelable: 3.0.0
       responselike: 2.0.0
 
   /got/9.6.0:
@@ -11711,6 +11744,14 @@ packages:
 
   /http2-wrapper/1.0.3:
     resolution: {integrity: sha512-V+23sDMr12Wnz7iTcDeJr3O6AIxlnvT/bmaAAAP/Xda35C90p9599p0F1eHR/N1KILWSoWVAiOMFjBBXaXSMxg==}
+    engines: {node: '>=10.19.0'}
+    dependencies:
+      quick-lru: 5.1.1
+      resolve-alpn: 1.2.1
+    dev: false
+
+  /http2-wrapper/2.1.11:
+    resolution: {integrity: sha512-aNAk5JzLturWEUiuhAN73Jcbq96R7rTitAoXV54FYMatvihnpD2+6PUgU4ce3D/m5VDbw+F5CsyKSF176ptitQ==}
     engines: {node: '>=10.19.0'}
     dependencies:
       quick-lru: 5.1.1
@@ -13780,6 +13821,10 @@ packages:
     resolution: {integrity: sha512-tqNXrS78oMOE73NMxK4EMLQsQowWf8jKooH9g7xPavRT706R6bkQJ6DY2Te7QukaZsulxa30wQ7bk0pm4XiHmA==}
     engines: {node: '>=8'}
 
+  /lowercase-keys/3.0.0:
+    resolution: {integrity: sha512-ozCC6gdQ+glXOQsveKD0YsDy8DSQFjDTz4zyzEHNV5+JP5D62LmfDZ6o1cycFx9ouG940M5dE8C8CTewdj2YWQ==}
+    engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
+
   /lowlight/1.20.0:
     resolution: {integrity: sha512-8Ktj+prEb1RoCPkEOrPMYUN/nCggB7qAWe3a7OpMjWQkh3l2RD5wKRQ+o8Q8YuI9RG/xs95waaI/E6ym/7NsTw==}
     dependencies:
@@ -15271,6 +15316,11 @@ packages:
   /p-cancelable/2.1.1:
     resolution: {integrity: sha512-BZOr3nRQHOntUjTrH8+Lh54smKHoHyur8We1V8DSMVrl5A2malOOwuJRnKRDjSnkoeBh4at6BwEnb5I7Jl31wg==}
     engines: {node: '>=8'}
+    dev: false
+
+  /p-cancelable/3.0.0:
+    resolution: {integrity: sha512-mlVgR3PGuzlo0MmTdk4cXqXWlwQDLnONTAg6sm62XkMJEiRxN3GL3SffkYvqwonbkJBcrI7Uvv5Zh9yjvn2iUw==}
+    engines: {node: '>=12.20'}
 
   /p-defer/3.0.0:
     resolution: {integrity: sha512-ugZxsxmtTln604yeYd29EGrNhazN2lywetzpKhfmQjW/VJmhpDmWbiX+h0zL8V91R0UXkhb3KtPmyq9PZw3aYw==}
