@@ -32,18 +32,18 @@
         "zod": "^3.14.3"
     },
     "devDependencies": {
-        "@jest/types": "^27.5.1",
+        "@jest/types": "^28.0.0",
         "@silverhand/eslint-config": "^0.14.0",
         "@silverhand/ts-config": "^0.12.0",
         "@types/jest": "^27.4.1",
         "@types/node": "^16.3.1",
         "eslint": "^8.10.0",
-        "jest": "^27.5.1",
+        "jest": "^28.0.0",
         "jest-matcher-specific-error": "^1.0.0",
         "lint-staged": "^12.0.0",
         "nock": "^13.2.2",
         "prettier": "^2.3.2",
-        "ts-jest": "^27.1.1",
+        "ts-jest": "^28.0.0",
         "tsc-watch": "^5.0.0",
         "typescript": "^4.6.2"
     },
