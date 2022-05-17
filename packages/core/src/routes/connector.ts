@@ -1,4 +1,5 @@
 import { ConnectorDTO, Connectors, ConnectorType } from '@logto/schemas';
+import { emailRegEx, phoneRegEx } from '@logto/shared';
 import { object, string } from 'zod';
 
 import {
@@ -14,7 +15,6 @@ import {
 import koaGuard from '@/middleware/koa-guard';
 import { updateConnector } from '@/queries/connector';
 import assertThat from '@/utils/assert-that';
-import { emailRegEx, phoneRegEx } from '@/utils/regex';
 
 import { AuthedRouter } from './types';
 

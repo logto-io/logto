@@ -1,4 +1,5 @@
 import { arbitraryObjectGuard, userInfoSelectFields } from '@logto/schemas';
+import { nameRegEx, passwordRegEx, usernameRegEx } from '@logto/shared';
 import { has } from '@silverhand/essentials';
 import pick from 'lodash.pick';
 import { InvalidInputError } from 'slonik';
@@ -21,7 +22,6 @@ import {
   updateUserById,
 } from '@/queries/user';
 import assertThat from '@/utils/assert-that';
-import { nameRegEx, passwordRegEx, usernameRegEx } from '@/utils/regex';
 
 import { AuthedRouter } from './types';
 

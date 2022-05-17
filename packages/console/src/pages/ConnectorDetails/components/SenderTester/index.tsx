@@ -1,4 +1,5 @@
 import { ConnectorType } from '@logto/schemas';
+import { phoneRegEx, emailRegEx } from '@logto/shared';
 import classNames from 'classnames';
 import ky from 'ky';
 import React, { useEffect, useRef, useState } from 'react';
@@ -9,7 +10,6 @@ import Button from '@/components/Button';
 import FormField from '@/components/FormField';
 import TextInput from '@/components/TextInput';
 import Tooltip from '@/components/Tooltip';
-import { phoneRegEx, emailRegEx } from '@/utilities/regex';
 
 import * as styles from './index.module.scss';
 
