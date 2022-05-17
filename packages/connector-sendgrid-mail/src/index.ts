@@ -52,7 +52,7 @@ export class SendGridMailConnector implements EmailConnector {
       template,
       new ConnectorError(
         ConnectorErrorCodes.TemplateNotFound,
-        `Cannot find template for type: ${type}`
+        `Template not found for type: ${type}`
       )
     );
 

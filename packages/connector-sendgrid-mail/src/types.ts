@@ -6,8 +6,8 @@ import { z } from 'zod';
  */
 
 export enum ContextType {
-  'TEXT' = 'text/plain',
-  'HTML' = 'text/html',
+  Text = 'text/plain',
+  Html = 'text/html',
 }
 
 export type EmailData = {
@@ -29,15 +29,15 @@ export type Personalization = {
 };
 
 export type Content = {
-  type: string; // Should either be 'text/html' or 'text/plain'.
+  type: 'text/html' | 'text/plain';
   value: string;
 };
 
 export type Attachment = {
   content: string;
-  type: string; // Should either be 'text/html' or 'text/plain'
+  type: 'text/html' | 'text/plain';
   filename: string;
-  disposition: string; // 'inline' | 'attachment'
+  disposition: 'inline' | 'attachment';
   content_id: string; // The attachment's content ID. This is used when the disposition is set to “inline” and the attachment is an image, allowing the file to be displayed within the body of your email.
 };
 

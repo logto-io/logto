@@ -28,7 +28,7 @@ describe('validateConfig()', () => {
         templates: [
           {
             usageType: 'Test',
-            type: ContextType.TEXT,
+            type: ContextType.Text,
             subject: 'Logto Test Template',
             content: 'This is for testing purposes only. Your passcode is {{code}}.',
           },

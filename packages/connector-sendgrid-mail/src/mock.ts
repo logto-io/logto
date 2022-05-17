@@ -7,11 +7,11 @@ import {
   SendGridMailConfig,
 } from './types';
 
-const toEmailData: EmailData[] = [{ email: 'foo@logto.io' }];
-const fromEmailData: EmailData = { email: 'noreply@logto.test.io', name: 'Logto Test' };
+const receivers: EmailData[] = [{ email: 'foo@logto.io' }];
+const sender: EmailData = { email: 'noreply@logto.test.io', name: 'Logto Test' };
 export const mockedParameters: PublicParameters = {
-  personalizations: [{ to: toEmailData }] as Personalization[],
-  from: fromEmailData,
+  personalizations: [{ to: receivers }] as Personalization[],
+  from: sender,
   subject: 'Test SendGrid Mail',
   content: [{ type: 'text/plain', value: 'This is a test template.' }] as Content[],
 };
@@ -24,7 +24,7 @@ export const mockedConfig: SendGridMailConfig = {
   templates: [
     {
       usageType: 'Test',
-      type: ContextType.TEXT,
+      type: ContextType.Text,
       subject: 'Logto Test Template',
       content: 'This is for testing purposes only. Your passcode is {{code}}.',
     },
