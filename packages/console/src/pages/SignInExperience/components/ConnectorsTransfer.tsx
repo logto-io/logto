@@ -54,7 +54,7 @@ const ConnectorsTransfer = ({ value, onChange }: Props) => {
         footer={
           <div>
             {t('sign_in_exp.sign_in_methods.transfer.footer.not_in_list')}{' '}
-            <Link to="/connectors/social">
+            <Link to="/connectors/social" target="_blank">
               {t('sign_in_exp.sign_in_methods.transfer.footer.set_up_more')}
             </Link>{' '}
             {t('sign_in_exp.sign_in_methods.transfer.footer.go_to')}
