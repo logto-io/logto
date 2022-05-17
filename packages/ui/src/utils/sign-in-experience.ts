@@ -3,10 +3,10 @@
  * TODO: Remove this once we have a better way to get the sign in experience through SSR
  */
 
-import { SignInMethods, SignInExperience } from '@logto/schemas';
+import { SignInMethods } from '@logto/schemas';
 
 import { getSignInExperience } from '@/apis/settings';
-import { ConnectorData, SignInMethod, SignInExperienceSettings } from '@/types';
+import { SignInMethod, SignInExperienceSettingsResponse, SignInExperienceSettings } from '@/types';
 
 const getPrimarySignInMethod = (signInMethods: SignInMethods) => {
   for (const [key, value] of Object.entries(signInMethods)) {
@@ -27,20 +27,19 @@ const getSecondarySignInMethods = (signInMethods: SignInMethods) =>
     return methods;
   }, []);
 
-const getSignInExperienceSettings = async <
-  T extends SignInExperience & { socialConnectors: ConnectorData[] }
->(): Promise<SignInExperienceSettings> => {
-  const { branding, languageInfo, termsOfUse, signInMethods, socialConnectors } =
-    await getSignInExperience<T>();
+export const parseSignInExperienceSettings = ({
+  signInMethods,
+  ...rest
+}: SignInExperienceSettingsResponse) => ({
+  ...rest,
+  primarySignInMethod: getPrimarySignInMethod(signInMethods),
+  secondarySignInMethods: getSecondarySignInMethods(signInMethods),
+});
 
-  return {
-    branding,
-    languageInfo,
-    termsOfUse,
-    primarySignInMethod: getPrimarySignInMethod(signInMethods),
-    secondarySignInMethods: getSecondarySignInMethods(signInMethods),
-    socialConnectors,
-  };
+const getSignInExperienceSettings = async (): Promise<SignInExperienceSettings> => {
+  const response = await getSignInExperience<SignInExperienceSettingsResponse>();
+
+  return parseSignInExperienceSettings(response);
 };
 
 export default getSignInExperienceSettings;

@@ -1,10 +1,10 @@
 import React from 'react';
-import { isMobile } from 'react-device-detect';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 
 import NavBar from '@/components/NavBar';
 import SocialCreateAccount from '@/containers/SocialCreateAccount';
+import usePlatform from '@/hooks/use-platform';
 
 import * as styles from './index.module.scss';
 
@@ -15,6 +15,7 @@ type Parameters = {
 const SocialRegister = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'main_flow' });
   const { connector } = useParams<Parameters>();
+  const { isMobile } = usePlatform();
 
   if (!connector) {
     return null;
