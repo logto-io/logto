@@ -139,7 +139,7 @@ export const mockSignInExperience: SignInExperience = {
     sms: SignInMethodState.Secondary,
     social: SignInMethodState.Secondary,
   },
-  socialSignInConnectorIds: ['BE8QXN0VsrOH7xdWFDJZ9', 'lcXT4o2GSjbV9kg2shZC7'],
+  socialSignInConnectorTargets: ['BE8QXN0VsrOH7xdWFDJZ9', 'lcXT4o2GSjbV9kg2shZC7'],
 };
 
 export const mockSignInExperienceSettings: SignInExperienceSettings = {

@@ -87,7 +87,7 @@ const SignInMethodsForm = () => {
       {primaryMethod === SignInMethodKey.Social && (
         <div className={styles.primarySocial}>
           <Controller
-            name="socialSignInConnectorIds"
+            name="socialSignInConnectorTargets"
             control={control}
             render={({ field: { value, onChange } }) => (
               <ConnectorsTransfer value={value} onChange={onChange} />
@@ -107,7 +107,7 @@ const SignInMethodsForm = () => {
           {social && (
             <FormField title="admin_console.sign_in_exp.sign_in_methods.define_social_methods">
               <Controller
-                name="socialSignInConnectorIds"
+                name="socialSignInConnectorTargets"
                 control={control}
                 render={({ field: { value, onChange } }) => (
                   <ConnectorsTransfer value={value} onChange={onChange} />

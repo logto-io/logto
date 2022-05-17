@@ -252,6 +252,36 @@ export const mockGithubConnectorInstance = {
   },
 };
 
+export const mockWechatConnectorInstance = {
+  connector: {
+    ...mockConnector,
+    id: 'wechat',
+    target: 'wechat',
+    platform: ConnectorPlatform.Web,
+  },
+  metadata: {
+    ...mockMetadata,
+    target: 'wechat',
+    type: ConnectorType.Social,
+    platform: ConnectorPlatform.Web,
+  },
+};
+
+export const mockWechatNativeConnectorInstance = {
+  connector: {
+    ...mockConnector,
+    id: 'wechat-native',
+    target: 'wechat',
+    platform: ConnectorPlatform.Native,
+  },
+  metadata: {
+    ...mockMetadata,
+    target: 'wechat',
+    type: ConnectorType.Social,
+    platform: ConnectorPlatform.Native,
+  },
+};
+
 export const mockGoogleConnectorInstance = {
   connector: {
     ...mockConnector,

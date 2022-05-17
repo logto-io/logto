@@ -195,7 +195,7 @@ describe('signInMethods', () => {
           sms: state,
           social: SignInMethodState.Primary,
         },
-        socialSignInConnectorIds: ['github'],
+        socialSignInConnectorTargets: ['github'],
       };
       await expectPatchResponseStatus(signInExperience, 200);
     });
@@ -211,7 +211,7 @@ describe('signInMethods', () => {
           sms: state,
           social: SignInMethodState.Primary,
         },
-        socialSignInConnectorIds: ['github'],
+        socialSignInConnectorTargets: ['github'],
       };
       await expectPatchResponseStatus(signInExperience, 400);
     });
@@ -229,7 +229,7 @@ describe('signInMethods', () => {
           sms: SignInMethodState.Disabled,
           social: state,
         },
-        socialSignInConnectorIds: ['github'],
+        socialSignInConnectorTargets: ['github'],
       };
       await expectPatchResponseStatus(signInExperience, 200);
     });
@@ -245,21 +245,21 @@ describe('signInMethods', () => {
           sms: SignInMethodState.Disabled,
           social: state,
         },
-        socialSignInConnectorIds: ['github'],
+        socialSignInConnectorTargets: ['github'],
       };
       await expectPatchResponseStatus(signInExperience, 400);
     });
   });
 });
 
-describe('socialSignInConnectorIds', () => {
+describe('socialSignInConnectorTargets', () => {
   test.each([[['facebook']], [['facebook', 'github']]])(
     '%p should success',
-    async (socialSignInConnectorIds) => {
+    async (socialSignInConnectorTargets) => {
       await expectPatchResponseStatus(
         {
           signInMethods: { ...mockSignInMethods, social: SignInMethodState.Secondary },
-          socialSignInConnectorIds,
+          socialSignInConnectorTargets,
         },
         200
       );
@@ -268,11 +268,11 @@ describe('socialSignInConnectorIds', () => {
 
   test.each([[[]], [[null, undefined]], [['', ' \t\n\r']], [[123, 456]]])(
     '%p should fail',
-    async (socialSignInConnectorIds: any[]) => {
+    async (socialSignInConnectorTargets: any[]) => {
       await expectPatchResponseStatus(
         {
           signInMethods: { ...mockSignInMethods, social: SignInMethodState.Secondary },
-          socialSignInConnectorIds,
+          socialSignInConnectorTargets,
         },
         400
       );

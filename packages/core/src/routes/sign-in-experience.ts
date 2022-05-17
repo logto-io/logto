@@ -1,6 +1,6 @@
 import { SignInExperiences } from '@logto/schemas';
 
-import { getConnectorInstances, getEnabledSocialConnectorIds } from '@/connectors';
+import { getConnectorInstances } from '@/connectors';
 import {
   validateBranding,
   validateTermsOfUse,
@@ -21,22 +21,7 @@ export default function signInExperiencesRoutes<T extends AuthedRouter>(router: 
    * always return the default settings in DB for the /sign-in-exp get method
    */
   router.get('/sign-in-exp', async (ctx, next) => {
-    const [signInExperience, enabledSocialConnectorIds] = await Promise.all([
-      findDefaultSignInExperience(),
-      getEnabledSocialConnectorIds(),
-    ]);
-
-    const { socialSignInConnectorIds: selectedSocialSignInConnectorIds } = signInExperience;
-    const enabledSocialConnectorIdSet = new Set(enabledSocialConnectorIds);
-
-    const socialSignInConnectorIds = selectedSocialSignInConnectorIds.filter((id) =>
-      enabledSocialConnectorIdSet.has(id)
-    );
-
-    ctx.body = {
-      ...signInExperience,
-      socialSignInConnectorIds,
-    };
+    ctx.body = await findDefaultSignInExperience();
 
     return next();
   });
@@ -47,7 +32,7 @@ export default function signInExperiencesRoutes<T extends AuthedRouter>(router: 
       body: SignInExperiences.createGuard.omit({ id: true }).partial(),
     }),
     async (ctx, next) => {
-      const { socialSignInConnectorIds, ...rest } = ctx.guard.body;
+      const { socialSignInConnectorTargets, ...rest } = ctx.guard.body;
       const { branding, termsOfUse, signInMethods } = rest;
 
       if (branding) {
@@ -65,10 +50,14 @@ export default function signInExperiencesRoutes<T extends AuthedRouter>(router: 
           (instance) => instance.connector.enabled
         );
 
-        validateSignInMethods(signInMethods, socialSignInConnectorIds, enabledConnectorInstances);
+        validateSignInMethods(
+          signInMethods,
+          socialSignInConnectorTargets,
+          enabledConnectorInstances
+        );
       }
 
-      // Update socialSignInConnectorIds only when social sign-in is enabled.
+      // Update socialSignInConnectorTargets only when social sign-in is enabled.
       const signInExperience =
         signInMethods && isEnabled(signInMethods.social) ? ctx.guard.body : rest;
 

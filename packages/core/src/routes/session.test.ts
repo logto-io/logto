@@ -10,6 +10,8 @@ import {
   mockFacebookConnectorInstance,
   mockGithubConnectorInstance,
   mockGoogleConnectorInstance,
+  mockWechatConnectorInstance,
+  mockWechatNativeConnectorInstance,
 } from '@/__mocks__';
 import { ConnectorType } from '@/connectors/types';
 import RequestError from '@/errors/RequestError';
@@ -111,6 +113,8 @@ const getConnectorInstances = jest.fn(async () => [
   mockFacebookConnectorInstance,
   mockGithubConnectorInstance,
   mockGoogleConnectorInstance,
+  mockWechatConnectorInstance,
+  mockWechatNativeConnectorInstance,
 ]);
 jest.mock('@/connectors', () => ({
   getSocialConnectorInstanceById: async (connectorId: string) => {
@@ -924,6 +928,14 @@ describe('sessionRoutes', () => {
             {
               ...mockFacebookConnectorInstance.metadata,
               id: mockFacebookConnectorInstance.connector.id,
+            },
+            {
+              ...mockWechatConnectorInstance.metadata,
+              id: mockWechatConnectorInstance.connector.id,
+            },
+            {
+              ...mockWechatNativeConnectorInstance.metadata,
+              id: mockWechatNativeConnectorInstance.connector.id,
             },
           ],
         })

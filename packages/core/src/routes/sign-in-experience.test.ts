@@ -59,23 +59,6 @@ describe('GET /sign-in-exp', () => {
     expect(response.status).toEqual(200);
     expect(response.body).toEqual(mockSignInExperience);
   });
-
-  it('should filter enabled social connectors', async () => {
-    const signInExperience = {
-      ...mockSignInExperience,
-      signInMethods: { ...mockSignInMethods, social: SignInMethodState.Secondary },
-      socialSignInConnectorIds: ['facebook', 'github', 'google'],
-    };
-
-    findDefaultSignInExperience.mockImplementationOnce(async () => signInExperience);
-
-    const response = await signInExperienceRequester.get('/sign-in-exp');
-    expect(response.status).toEqual(200);
-    expect(response.body).toEqual({
-      ...signInExperience,
-      socialSignInConnectorIds: ['facebook', 'github'],
-    });
-  });
 });
 
 describe('PATCH /sign-in-exp', () => {
@@ -83,7 +66,7 @@ describe('PATCH /sign-in-exp', () => {
     const signInMethods = { ...mockSignInMethods, social: SignInMethodState.Disabled };
     const response = await signInExperienceRequester.patch('/sign-in-exp').send({
       signInMethods,
-      socialSignInConnectorIds: ['facebook'],
+      socialSignInConnectorTargets: ['facebook'],
     });
     expect(response).toMatchObject({
       status: 200,
@@ -96,10 +79,10 @@ describe('PATCH /sign-in-exp', () => {
 
   it('should update enabled social connector IDs only when social sign-in is enabled', async () => {
     const signInMethods = { ...mockSignInMethods, social: SignInMethodState.Secondary };
-    const socialSignInConnectorIds = ['facebook'];
+    const socialSignInConnectorTargets = ['facebook'];
     const signInExperience = {
       signInMethods,
-      socialSignInConnectorIds,
+      socialSignInConnectorTargets,
     };
     const response = await signInExperienceRequester.patch('/sign-in-exp').send(signInExperience);
     expect(response).toMatchObject({
@@ -107,17 +90,17 @@ describe('PATCH /sign-in-exp', () => {
       body: {
         ...mockSignInExperience,
         signInMethods,
-        socialSignInConnectorIds,
+        socialSignInConnectorTargets,
       },
     });
   });
 
   it('should update social connector IDs in correct sorting order', async () => {
     const signInMethods = { ...mockSignInMethods, social: SignInMethodState.Secondary };
-    const socialSignInConnectorIds = ['github', 'facebook'];
+    const socialSignInConnectorTargets = ['github', 'facebook'];
     const signInExperience = {
       signInMethods,
-      socialSignInConnectorIds,
+      socialSignInConnectorTargets,
     };
     const response = await signInExperienceRequester.patch('/sign-in-exp').send(signInExperience);
     expect(response).toMatchObject({
@@ -125,14 +108,14 @@ describe('PATCH /sign-in-exp', () => {
       body: {
         ...mockSignInExperience,
         signInMethods,
-        socialSignInConnectorIds,
+        socialSignInConnectorTargets,
       },
     });
   });
 
   it('should succeed to update when the input is valid', async () => {
     const termsOfUse: TermsOfUse = { enabled: false };
-    const socialSignInConnectorIds = ['github', 'facebook'];
+    const socialSignInConnectorTargets = ['github', 'facebook', 'wechat'];
 
     const validateBranding = jest.spyOn(signInExpLib, 'validateBranding');
     const validateTermsOfUse = jest.spyOn(signInExpLib, 'validateTermsOfUse');
@@ -142,14 +125,14 @@ describe('PATCH /sign-in-exp', () => {
       branding: mockBranding,
       termsOfUse,
       signInMethods: mockSignInMethods,
-      socialSignInConnectorIds,
+      socialSignInConnectorTargets,
     });
 
     expect(validateBranding).toHaveBeenCalledWith(mockBranding);
     expect(validateTermsOfUse).toHaveBeenCalledWith(termsOfUse);
     expect(validateSignInMethods).toHaveBeenCalledWith(
       mockSignInMethods,
-      socialSignInConnectorIds,
+      socialSignInConnectorTargets,
       [mockFacebookConnectorInstance, mockGithubConnectorInstance]
     );
 
@@ -160,7 +143,7 @@ describe('PATCH /sign-in-exp', () => {
         branding: mockBranding,
         termsOfUse,
         signInMethods: mockSignInMethods,
-        socialSignInConnectorIds,
+        socialSignInConnectorTargets,
       },
     });
   });

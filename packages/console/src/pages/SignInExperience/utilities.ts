@@ -81,11 +81,15 @@ export const compareSignInMethods = (
   before: SignInExperience,
   after: SignInExperience
 ): boolean => {
-  if (before.socialSignInConnectorIds.length !== after.socialSignInConnectorIds.length) {
+  if (before.socialSignInConnectorTargets.length !== after.socialSignInConnectorTargets.length) {
     return false;
   }
 
-  if (before.socialSignInConnectorIds.some((id) => !after.socialSignInConnectorIds.includes(id))) {
+  if (
+    before.socialSignInConnectorTargets.some(
+      (target) => !after.socialSignInConnectorTargets.includes(target)
+    )
+  ) {
     return false;
   }
 

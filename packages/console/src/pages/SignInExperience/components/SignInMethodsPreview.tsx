@@ -1,10 +1,9 @@
-import { ConnectorDTO, SignInExperience, SignInMethodKey, SignInMethodState } from '@logto/schemas';
+import { SignInExperience, SignInMethodKey, SignInMethodState } from '@logto/schemas';
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import useSWR from 'swr';
 
 import UnnamedTrans from '@/components/UnnamedTrans';
-import { RequestError } from '@/hooks/use-api';
+import useConnectorGroups from '@/hooks/use-connector-groups';
 
 import * as styles from './SaveAlert.module.scss';
 
@@ -13,37 +12,33 @@ type Props = {
 };
 
 const SignInMethodsPreview = ({ data }: Props) => {
-  const { data: connectors, error } = useSWR<ConnectorDTO[], RequestError>('/api/connectors');
-  const { signInMethods, socialSignInConnectorIds } = data;
+  const { data: groups, error } = useConnectorGroups();
+  const { signInMethods, socialSignInConnectorTargets } = data;
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   const connectorNames = useMemo(() => {
-    if (!connectors) {
+    if (!groups) {
       return null;
     }
 
-    return socialSignInConnectorIds.map((connectorId) => {
-      const connector = connectors.find(({ id }) => id === connectorId);
+    return socialSignInConnectorTargets.map((connectorTarget) => {
+      const group = groups.find(({ target }) => target === connectorTarget);
 
-      if (!connector) {
+      if (!group) {
         return null;
       }
 
       return (
-        <UnnamedTrans
-          key={connectorId}
-          className={styles.connector}
-          resource={connector.metadata.name}
-        />
+        <UnnamedTrans key={connectorTarget} className={styles.connector} resource={group.name} />
       );
     });
-  }, [connectors, socialSignInConnectorIds]);
+  }, [groups, socialSignInConnectorTargets]);
 
   return (
     <div>
-      {!connectors && !error && <div>loading</div>}
-      {!connectors && error && <div>{error.body?.message ?? error.message}</div>}
-      {connectors &&
+      {!groups && !error && <div>loading</div>}
+      {!groups && error && <div>{error.body?.message ?? error.message}</div>}
+      {groups &&
         Object.values(SignInMethodKey)
           .filter((key) => signInMethods[key] !== SignInMethodState.Disabled)
           .map((key) => (
