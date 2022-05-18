@@ -7,8 +7,10 @@ import { AnonymousRouter } from './types';
 
 export default function signInSettingsRoutes<T extends AnonymousRouter>(router: T) {
   router.get('/sign-in-settings', async (ctx, next) => {
-    const signInExperience = await findDefaultSignInExperience();
-    const connectorInstances = await getConnectorInstances();
+    const [signInExperience, connectorInstances] = await Promise.all([
+      findDefaultSignInExperience(),
+      getConnectorInstances(),
+    ]);
     const socialConnectors = signInExperience.socialSignInConnectorTargets.reduce<
       Array<ConnectorMetadata & { id: string }>
     >((previous, connectorTarget) => {
