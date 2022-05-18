@@ -1,23 +1,24 @@
 ```json
 {
-  "apiKey": "apikey",
-  "fromEmail": "noreply@logto.test.io",
+  "accountSID": "<account-sid>",
+  "authToken": "<auth-token>",
+  "fromMessagingServiceSID": "<from-messaging-service-sid>",
   "templates": [
     {
       "usageType": "SignIn",
-      "type": "ContextType.TEXT",
+      "type": "plain/text",
       "subject": "Logto SignIn Template",
       "content": "This is for sign-in purposes only. Your passcode is {{code}}.",
     },
     {
       "usageType": "Register",
-      "type": "ContextType.TEXT",
+      "type": "plain/text",
       "subject": "Logto Register Template",
       "content": "This is for registering purposes only. Your passcode is {{code}}.",
     },
     {
       "usageType": "Test",
-      "type": "ContextType.TEXT",
+      "type": "plain/text",
       "subject": "Logto Test Template",
       "content": "This is for testing purposes only. Your passcode is {{code}}.",
     }
