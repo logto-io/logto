@@ -83,10 +83,10 @@ importers:
       '@logto/connector-types': ^0.1.0
       '@logto/shared': ^0.1.0
       '@shopify/jest-koa-mocks': ^3.0.8
-      '@silverhand/eslint-config': ^0.12.0
+      '@silverhand/eslint-config': ^0.14.0
       '@silverhand/essentials': ^1.1.0
-      '@silverhand/jest-config': ^0.13.0
-      '@silverhand/ts-config': ^0.12.0
+      '@silverhand/jest-config': ^0.14.0
+      '@silverhand/ts-config': ^0.14.0
       '@types/jest': ^27.4.1
       '@types/lodash.pick': ^4.4.6
       '@types/node': ^16.3.1
@@ -110,7 +110,7 @@ importers:
       '@logto/connector-types': link:../connector-types
       '@logto/shared': link:../shared
       '@silverhand/essentials': 1.1.7
-      '@silverhand/jest-config': 0.13.0_53ggqi2i4rbcfjtktmjua6zili
+      '@silverhand/jest-config': 0.14.0_53ggqi2i4rbcfjtktmjua6zili
       dayjs: 1.10.7
       got: 11.8.3
       iconv-lite: 0.6.3
@@ -119,8 +119,8 @@ importers:
     devDependencies:
       '@jest/types': 27.5.1
       '@shopify/jest-koa-mocks': 3.1.5
-      '@silverhand/eslint-config': 0.12.0_rqoong6vegs374egqglqjbgiwm
-      '@silverhand/ts-config': 0.12.0_typescript@4.6.4
+      '@silverhand/eslint-config': 0.14.0_rqoong6vegs374egqglqjbgiwm
+      '@silverhand/ts-config': 0.14.0_typescript@4.6.4
       '@types/jest': 27.4.1
       '@types/lodash.pick': 4.4.6
       '@types/node': 16.11.12
@@ -5682,38 +5682,6 @@ packages:
       - typescript
     dev: true
 
-  /@silverhand/eslint-config/0.12.0_rqoong6vegs374egqglqjbgiwm:
-    resolution: {integrity: sha512-WRR3oGzEt6SAR6GxwCRfUXwMpKqnNXdvSTcb7kBhMW1DDaTi9qNkhJl/NdDTyhqxda+jCqUzS/HF/kYOJwdwpQ==}
-    engines: {node: '>=14.15.0'}
-    peerDependencies:
-      eslint: ^8.1.0
-      prettier: ^2.3.2
-      typescript: ^4.3.5
-    dependencies:
-      '@silverhand/eslint-plugin-fp': 2.5.0_eslint@8.10.0
-      '@typescript-eslint/eslint-plugin': 5.14.0_lyrhcatghsl22zfuax7wrzsedu
-      '@typescript-eslint/parser': 5.14.0_fo4uz55zgcu432252zy2gvpvcu
-      eslint: 8.10.0
-      eslint-config-prettier: 8.5.0_eslint@8.10.0
-      eslint-config-xo: 0.40.0_eslint@8.10.0
-      eslint-config-xo-typescript: 0.50.0_b6hbb4k6vvsdi73yarkmqk6fhi
-      eslint-import-resolver-typescript: 2.5.0_rnagsyfcubvpoxo2ynj23pim7u
-      eslint-plugin-consistent-default-export-name: 0.0.7
-      eslint-plugin-eslint-comments: 3.2.0_eslint@8.10.0
-      eslint-plugin-import: 2.25.4_eslint@8.10.0
-      eslint-plugin-no-use-extend-native: 0.5.0
-      eslint-plugin-node: 11.1.0_eslint@8.10.0
-      eslint-plugin-prettier: 3.4.1_6pitu4b2tqihty6rv5qeiyb35m
-      eslint-plugin-promise: 6.0.0_eslint@8.10.0
-      eslint-plugin-sql: 2.1.0_eslint@8.10.0
-      eslint-plugin-unicorn: 39.0.0_eslint@8.10.0
-      pkg-dir: 4.2.0
-      prettier: 2.5.1
-      typescript: 4.6.4
-    transitivePeerDependencies:
-      - supports-color
-    dev: true
-
   /@silverhand/eslint-config/0.14.0_hjjt7jwmhwqm7bjf55k5ihcdqq:
     resolution: {integrity: sha512-Fiaf3FUSbHzPeYqmMncgw5sQ/48rF7MMTzKhgKQ5RhVy7ja7rmD7XaptRxqIHkxnsVcQK4NkPMGa+tjIASwRzg==}
     engines: {node: '>=14.15.0'}
@@ -5843,27 +5811,6 @@ packages:
       lodash.orderby: 4.6.0
       lodash.pick: 4.4.0
 
-  /@silverhand/jest-config/0.13.0_53ggqi2i4rbcfjtktmjua6zili:
-    resolution: {integrity: sha512-9yiktlD7LwqCqT8QrCZRTt/8oTcm5T0O2LfAuPY4cXTY1T2d6sfPPaBrmYShhamD1gcPUNEzXfB4f31iR4KAQw==}
-    engines: {node: ^16.0.0}
-    peerDependencies:
-      jest: ^27.5.0
-    dependencies:
-      '@jest/types': 27.5.1
-      deepmerge: 4.2.2
-      identity-obj-proxy: 3.0.0
-      jest: 27.5.1
-      jest-matcher-specific-error: 1.0.0
-      jest-transform-stub: 2.0.0
-      ts-jest: 27.1.1_53ggqi2i4rbcfjtktmjua6zili
-    transitivePeerDependencies:
-      - '@babel/core'
-      - '@types/jest'
-      - babel-jest
-      - esbuild
-      - typescript
-    dev: false
-
   /@silverhand/jest-config/0.14.0_53ggqi2i4rbcfjtktmjua6zili:
     resolution: {integrity: sha512-zK9wh38/RL5iinPlbcZnjEuu8VfL7lQHDXFQ6Mos+zhN3YH0nsoHD6Faq41eHhUlQ6AkVSowov4hSs28S5RlWg==}
     engines: {node: ^16.0.0}
@@ -5934,15 +5881,6 @@ packages:
     dependencies:
       '@silverhand/ts-config': 0.14.0_typescript@4.6.2
       typescript: 4.6.2
-    dev: true
-
-  /@silverhand/ts-config/0.12.0_typescript@4.6.4:
-    resolution: {integrity: sha512-+VidYKenVr33P8GDXR1NdUNzkScNarp/ttFRfqus9fGyIWCjP60otygVrY/ZydOlpdZBXnycUgsySC3YqCprCg==}
-    engines: {node: '>=14.15.0'}
-    peerDependencies:
-      typescript: ^4.3.5
-    dependencies:
-      typescript: 4.6.4
     dev: true
 
   /@silverhand/ts-config/0.14.0_typescript@4.6.2:
