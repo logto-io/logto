@@ -39,7 +39,10 @@ const AppContent = ({ children, mode, platform: platformOverwrite }: Props) => {
     } = experienceSettings;
 
     document.documentElement.style.setProperty('--light-primary-color', primaryColor);
-    document.documentElement.style.setProperty('--dark-primary-color', darkPrimaryColor);
+    document.documentElement.style.setProperty(
+      '--dark-primary-color',
+      darkPrimaryColor ?? primaryColor
+    );
   }, [experienceSettings]);
 
   // Set Platform
