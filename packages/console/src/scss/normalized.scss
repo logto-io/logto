@@ -60,6 +60,10 @@ table {
   width: 8px;
 }
 
+::-webkit-scrollbar:horizontal {
+  height: 8px;
+}
+
 ::-webkit-scrollbar-thumb {
   background: var(--color-neutral-variant-80);
   border-radius: 4px;
