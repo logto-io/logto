@@ -1,9 +1,8 @@
-import { GrantType, IssuedTokenType, LogResult, LogType } from '@logto/schemas';
+import { GrantType, IssuedTokenType, LogType } from '@logto/schemas';
 import { notFalsy } from '@silverhand/essentials';
-import { nanoid } from 'nanoid';
 import { KoaContextWithOIDC } from 'oidc-provider';
 
-import { insertLog } from '@/queries/log';
+import { WithLogContext } from '@/middleware/koa-log';
 
 /**
  * See https://github.com/panva/node-oidc-provider/tree/main/lib/actions/grants
@@ -18,22 +17,20 @@ interface GrantBody {
   scope?: string;
 }
 
-export const grantSuccessListener = async (ctx: KoaContextWithOIDC & { body: GrantBody }) => {
+export const grantSuccessListener = async (
+  ctx: KoaContextWithOIDC & WithLogContext & { body: GrantBody }
+) => {
   const {
     oidc: {
       entities: { Account: account, Grant: grant, Client: client },
       params,
     },
-    request: {
-      ip,
-      headers: { 'user-agent': userAgent },
-    },
     body,
   } = ctx;
-
-  const grantType = params?.grant_type;
-  const type: LogType =
-    grantType === GrantType.AuthorizationCode ? 'CodeExchangeToken' : 'RefreshTokenExchangeToken';
+  ctx.addLogContext({
+    applicationId: client?.clientId,
+    sessionId: grant?.jti,
+  });
 
   const { access_token, refresh_token, id_token, scope } = body;
   const issued: IssuedTokenType[] = [
@@ -42,19 +39,13 @@ export const grantSuccessListener = async (ctx: KoaContextWithOIDC & { body: Gra
     id_token && 'idToken',
   ].filter((value): value is IssuedTokenType => notFalsy(value));
 
-  await insertLog({
-    id: nanoid(),
-    type,
-    payload: {
-      result: LogResult.Success,
-      ip,
-      userAgent,
-      applicationId: client?.clientId,
-      sessionId: grant?.jti,
-      userId: account?.accountId,
-      params,
-      issued,
-      scope,
-    },
+  const grantType = params?.grant_type;
+  const type: LogType =
+    grantType === GrantType.AuthorizationCode ? 'CodeExchangeToken' : 'RefreshTokenExchangeToken';
+  ctx.log(type, {
+    userId: account?.accountId,
+    params,
+    issued,
+    scope,
   });
 };
