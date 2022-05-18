@@ -16,10 +16,10 @@ import CodeEditor from '@/components/CodeEditor';
 import CopyToClipboard from '@/components/CopyToClipboard';
 import DetailsSkeleton from '@/components/DetailsSkeleton';
 import FormField from '@/components/FormField';
-import ImagePlaceholder from '@/components/ImagePlaceholder';
 import LinkButton from '@/components/LinkButton';
 import TabNav, { TabNavItem } from '@/components/TabNav';
 import TextInput from '@/components/TextInput';
+import { getAvatarById } from '@/consts/avatars';
 import useApi, { RequestError } from '@/hooks/use-api';
 import Back from '@/icons/Back';
 import Delete from '@/icons/Delete';
@@ -117,9 +117,7 @@ const UserDetails = () => {
       {id && data && (
         <>
           <Card className={styles.header}>
-            <div className={styles.imagePlaceholder}>
-              <ImagePlaceholder size={60} borderRadius={16} />
-            </div>
+            <img className={styles.avatar} src={data.avatar ?? getAvatarById(id)} />
             <div className={styles.metadata}>
               <div className={styles.name}>{data.name ?? '-'}</div>
               <div>

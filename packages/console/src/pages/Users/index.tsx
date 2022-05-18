@@ -11,13 +11,13 @@ import Button from '@/components/Button';
 import Card from '@/components/Card';
 import CardTitle from '@/components/CardTitle';
 import DateTime from '@/components/DateTime';
-import ImagePlaceholder from '@/components/ImagePlaceholder';
 import ItemPreview from '@/components/ItemPreview';
 import Pagination from '@/components/Pagination';
 import Search from '@/components/Search';
 import TableEmpty from '@/components/Table/TableEmpty';
 import TableError from '@/components/Table/TableError';
 import TableLoading from '@/components/Table/TableLoading';
+import { getAvatarById } from '@/consts/avatars';
 import { RequestError } from '@/hooks/use-api';
 import Plus from '@/icons/Plus';
 import * as modalStyles from '@/scss/modal.module.scss';
@@ -114,7 +114,7 @@ const Users = () => {
                 />
               </TableEmpty>
             )}
-            {users?.map(({ id, name, username, lastSignInAt, applicationId }) => (
+            {users?.map(({ id, name, username, avatar, lastSignInAt, applicationId }) => (
               <tr
                 key={id}
                 className={tableStyles.clickable}
@@ -126,7 +126,7 @@ const Users = () => {
                   <ItemPreview
                     title={name ?? t('users.unnamed')}
                     subtitle={conditionalString(username)}
-                    icon={<ImagePlaceholder size={24} />}
+                    icon={<img className={styles.avatar} src={avatar ?? getAvatarById(id)} />}
                     to={`/users/${id}`}
                     size="compact"
                   />
