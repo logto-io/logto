@@ -1,3 +1,5 @@
+import { Passcode } from '@logto/schemas';
+
 export const maskUserInfo = ({ type, value }: { type: 'email' | 'phone'; value: string }) => {
   if (!value) {
     return value;
@@ -13,3 +15,10 @@ export const maskUserInfo = ({ type, value }: { type: 'email' | 'phone'; value: 
 
   return `${preview}****@${domain}`;
 };
+
+export const maskPasscodeString = (passcode: string) => passcode.replace(/^.{3}/, '***');
+
+export const maskPasscode = (passcode: Passcode) => ({
+  ...passcode,
+  code: maskPasscodeString(passcode.code),
+});

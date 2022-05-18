@@ -9,6 +9,7 @@ import {
   mockFacebookConnectorInstance,
   mockGithubConnectorInstance,
   mockGoogleConnectorInstance,
+  mockPasscode,
   mockWechatConnectorInstance,
   mockWechatNativeConnectorInstance,
 } from '@/__mocks__';
@@ -78,7 +79,7 @@ jest.mock('@/queries/user', () => ({
 }));
 const sendPasscode = jest.fn(async () => ({ connector: { id: 'connectorIdValue' } }));
 jest.mock('@/lib/passcode', () => ({
-  createPasscode: async () => ({ id: 'id' }),
+  createPasscode: async () => mockPasscode,
   sendPasscode: async () => sendPasscode(),
   verifyPasscode: async (_a: unknown, _b: unknown, code: string) => {
     if (code !== '1234') {

@@ -44,7 +44,7 @@ import {
   findUserByIdentity,
 } from '@/queries/user';
 import assertThat from '@/utils/assert-that';
-import { maskUserInfo } from '@/utils/format';
+import { maskPasscode, maskUserInfo } from '@/utils/format';
 
 import { AnonymousRouter } from './types';
 
@@ -101,7 +101,7 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
       );
 
       const passcode = await createPasscode(jti, PasscodeType.SignIn, { phone });
-      ctx.log(type, { passcode });
+      ctx.log(type, { passcode: maskPasscode(passcode) });
 
       const { connector } = await sendPasscode(passcode);
       ctx.log(type, { connectorId: connector.id });
@@ -151,7 +151,7 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
       );
 
       const passcode = await createPasscode(jti, PasscodeType.SignIn, { email });
-      ctx.log(type, { passcode });
+      ctx.log(type, { passcode: maskPasscode(passcode) });
 
       const { connector } = await sendPasscode(passcode);
       ctx.log(type, { connectorId: connector.id });
@@ -403,7 +403,7 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
       );
 
       const passcode = await createPasscode(jti, PasscodeType.Register, { phone });
-      ctx.log(type, { phone, passcode });
+      ctx.log(type, { passcode: maskPasscode(passcode) });
 
       const { connector } = await sendPasscode(passcode);
       ctx.log(type, { connectorId: connector.id });
@@ -454,7 +454,7 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
       );
 
       const passcode = await createPasscode(jti, PasscodeType.Register, { email });
-      ctx.log(type, { passcode });
+      ctx.log(type, { passcode: maskPasscode(passcode) });
 
       const { connector } = await sendPasscode(passcode);
       ctx.log(type, { connectorId: connector.id });
