@@ -152,6 +152,7 @@
   --shadow-3: 0 4px 16px rgba(66, 41, 159, 16%);
 
   // Client specific variables (not available in design system)
+  --color-danger-toast-background: var(--color-error-95);
   --color-danger-focused: rgba(186, 27, 27, 16%); // 16% Error-40
   --color-skeleton-shimmer-rgb: 255, 255, 255; // rgb of Layer-1
 }
@@ -310,6 +311,7 @@
   --shadow-3: 0 4px 16px rgba(66, 41, 159, 16%);
 
   // Client specific variables (not available in design system)
+  --color-danger-toast-background: var(--color-error-99);
   --color-danger-focused: rgba(255, 180, 169, 16%); // 16% Error-40
   --color-skeleton-shimmer-rgb: 42, 44, 50; // rgb of Layer-1
 }
