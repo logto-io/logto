@@ -17,7 +17,7 @@ $font-family: -apple-system,
   --color-divider: #e0e3e3;
   --color-text-disabled: #c4c7c7;
   --color-border: #c4c7c7;
-  --color-primary: #5d34f2;
+  --color-primary: var(--light-primary-color);
   --color-layer: #eff1f1;
   --color-error: #ba1b1b;
   --color-toast: rgba(25, 28, 29, 80%);
@@ -35,7 +35,7 @@ $font-family: -apple-system,
   --color-divider: #444748;
   --color-text-disabled: #5c5f60;
   --color-border: #5c5f60;
-  --color-primary: #7958ff;
+  --color-primary: var(--dark-primary-color);
   --color-layer: linear-gradient(0deg, rgba(202, 190, 255, 14%), rgba(202, 190, 255, 14%)), linear-gradient(0deg, rgba(196, 199, 199, 2%), rgba(196, 199, 199, 2%)), #191c1d;
   --color-error: #dd3730;
   --color-toast: rgba(247, 248, 248, 80%);

@@ -19,7 +19,8 @@ export type Props = {
 
 const AppContent = ({ children, mode, platform: platformOverwrite }: Props) => {
   const theme = useTheme(mode);
-  const { toast, loading, platform, setPlatform, setToast } = useContext(PageContext);
+  const { toast, loading, platform, setPlatform, setToast, experienceSettings } =
+    useContext(PageContext);
   const debouncedLoading = useDebouncedLoader(loading);
 
   // Prevent internal eventListener rebind
@@ -27,17 +28,34 @@ const AppContent = ({ children, mode, platform: platformOverwrite }: Props) => {
     setToast('');
   }, [setToast]);
 
+  // Set Primary ColorTheme
+  useEffect(() => {
+    if (!experienceSettings) {
+      return;
+    }
+
+    const {
+      branding: { primaryColor, darkPrimaryColor },
+    } = experienceSettings;
+
+    document.documentElement.style.setProperty('--light-primary-color', primaryColor);
+    document.documentElement.style.setProperty('--dark-primary-color', darkPrimaryColor);
+  }, [experienceSettings]);
+
+  // Set Platform
   useEffect(() => {
     if (platformOverwrite) {
       setPlatform(platformOverwrite);
     }
   }, [platformOverwrite, setPlatform]);
 
+  // Set Theme Mode
   useEffect(() => {
     document.body.classList.remove(conditionalString(styles.light), conditionalString(styles.dark));
     document.body.classList.add(conditionalString(styles[theme]));
   }, [theme]);
 
+  // Apply Platform Style
   useEffect(() => {
     document.body.classList.remove('desktop', 'mobile');
     document.body.classList.add(platform === 'mobile' ? 'mobile' : 'desktop');

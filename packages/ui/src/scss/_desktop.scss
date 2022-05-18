@@ -17,7 +17,7 @@ $font-family: -apple-system,
   --color-border: #c4c7c7;
   --color-caption: #747778;
   --color-icon: #747778;
-  --color-primary: #5d34f2;
+  --color-primary: var(--light-primary-color);
   --color-focused: rgba(25, 28, 29, 16%);
   --color-focused-variant: rgba(93, 52, 242, 16%);
   --color-pressed: rgba(25, 28, 29, 12%);
@@ -50,7 +50,7 @@ $font-family: -apple-system,
   --color-border: #5c5f60;
   --color-caption: #a9acac;
   --color-icon: #a9acac;
-  --color-primary: #7958ff;
+  --color-primary: var(--dark-primary-color);
   --color-focused: rgba(247, 248, 248, 16%);
   --color-focused-variant: rgba(202, 190, 255, 16%);
   --color-hover-variant: rgba(202, 190, 255, 8%);

@@ -2,6 +2,10 @@
 @use '@/scss/mobile' as mobile;
 @use '@/scss/desktop' as desktop;
 
+:root {
+  --light-primary-color: #5d34f2;
+  --dark-primary-color: #7958ff;
+}
 
 .content {
   @include _.flex_column;
