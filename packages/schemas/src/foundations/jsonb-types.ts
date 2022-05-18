@@ -1,4 +1,5 @@
 import { Language } from '@logto/phrases';
+import { hexColorRegEx } from '@logto/shared';
 import { z } from 'zod';
 
 /**
@@ -75,8 +76,6 @@ export enum BrandingStyle {
   Logo = 'Logo',
   Logo_Slogan = 'Logo_Slogan',
 }
-
-export const hexColorRegEx = /^#[\da-f]{3}([\da-f]{3})?$/i;
 
 export const brandingGuard = z.object({
   primaryColor: z.string().regex(hexColorRegEx),

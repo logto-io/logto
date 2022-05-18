@@ -4,6 +4,13 @@ import path from 'path';
 import { ConnectorMetadata } from '@logto/connector-types';
 import { LogtoErrorCode } from '@logto/phrases';
 import { PasscodeType, userInfoSelectFields } from '@logto/schemas';
+import {
+  redirectUriRegEx,
+  emailRegEx,
+  passwordRegEx,
+  phoneRegEx,
+  usernameRegEx,
+} from '@logto/shared';
 import { conditional } from '@silverhand/essentials';
 import pick from 'lodash.pick';
 import { Provider } from 'oidc-provider';
@@ -39,13 +46,6 @@ import {
   findUserByIdentity,
 } from '@/queries/user';
 import assertThat from '@/utils/assert-that';
-import {
-  redirectUriRegEx,
-  emailRegEx,
-  passwordRegEx,
-  phoneRegEx,
-  usernameRegEx,
-} from '@/utils/regex';
 
 import { AnonymousRouter } from './types';
 
@@ -68,8 +68,8 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
     '/session/sign-in/username-password',
     koaGuard({
       body: object({
-        username: string().regex(usernameRegEx),
-        password: string().regex(passwordRegEx),
+        username: string(),
+        password: string(),
       }),
     }),
     async (ctx, next) => {

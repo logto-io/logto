@@ -526,9 +526,10 @@ describe('sessionRoutes', () => {
     });
 
     it('throw error if username not valid', async () => {
+      const usernameStartedWithNumber = '1username';
       const response = await sessionRequest
         .post('/session/register/username-password')
-        .send({ username: '_', password: 'password' });
+        .send({ username: usernameStartedWithNumber, password: 'password' });
       expect(response.statusCode).toEqual(400);
     });
 
@@ -547,7 +548,10 @@ describe('sessionRoutes', () => {
     });
 
     it('throw error if username not valid', async () => {
-      const response = await sessionRequest.get('/session/register/_u/existence');
+      const usernameStartedWithNumber = '1username';
+      const response = await sessionRequest.get(
+        `/session/register/${usernameStartedWithNumber}/existence`
+      );
       expect(response.statusCode).toEqual(400);
     });
 
