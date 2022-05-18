@@ -1,7 +1,6 @@
 /* eslint-disable max-lines */
 import path from 'path';
 
-import { ConnectorMetadata } from '@logto/connector-types';
 import { LogtoErrorCode } from '@logto/phrases';
 import { PasscodeType, userInfoSelectFields } from '@logto/schemas';
 import {
@@ -16,7 +15,7 @@ import pick from 'lodash.pick';
 import { Provider } from 'oidc-provider';
 import { object, string } from 'zod';
 
-import { getConnectorInstances, getSocialConnectorInstanceById } from '@/connectors';
+import { getSocialConnectorInstanceById } from '@/connectors';
 import RequestError from '@/errors/RequestError';
 import { createPasscode, sendPasscode, verifyPasscode } from '@/lib/passcode';
 import { assignInteractionResults, saveUserFirstConsentedAppId } from '@/lib/session';
@@ -32,7 +31,6 @@ import {
   updateLastSignInAt,
 } from '@/lib/user';
 import koaGuard from '@/middleware/koa-guard';
-import { findDefaultSignInExperience } from '@/queries/sign-in-experience';
 import {
   hasUserWithEmail,
   hasUserWithPhone,
@@ -575,26 +573,6 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
     await provider.interactionDetails(ctx.req, ctx.res);
     const error: LogtoErrorCode = 'oidc.aborted';
     await assignInteractionResults(ctx, provider, { error });
-
-    return next();
-  });
-
-  router.get('/sign-in-settings', async (ctx, next) => {
-    const signInExperience = await findDefaultSignInExperience();
-    const connectorInstances = await getConnectorInstances();
-    const socialConnectors = signInExperience.socialSignInConnectorTargets.reduce<
-      Array<ConnectorMetadata & { id: string }>
-    >((previous, connectorTarget) => {
-      const connectors = connectorInstances.filter(
-        ({ metadata: { target } }) => target === connectorTarget
-      );
-
-      return [
-        ...previous,
-        ...connectors.map(({ metadata, connector: { id } }) => ({ ...metadata, id })),
-      ];
-    }, []);
-    ctx.body = { ...signInExperience, socialConnectors };
 
     return next();
   });
