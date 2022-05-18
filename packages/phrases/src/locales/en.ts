@@ -410,6 +410,7 @@ const translation = {
           logo: 'Logo',
         },
         logo_image_url: 'Logo image URL',
+        dark_logo_image_url: 'Logo image URL (Dark)',
         slogan: 'Slogan',
         slogan_placeholder: 'Unleash your creativity',
       },
