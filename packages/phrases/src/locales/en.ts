@@ -44,6 +44,9 @@ const translation = {
       nav_back: 'Back',
     },
     description: {
+      email: 'email',
+      phone: 'phone',
+      phone_number: 'phone number',
       reminder: 'Reminder',
       not_found: '404 Not Found',
       loading: 'Loading...',
@@ -54,7 +57,7 @@ const translation = {
       create_account: 'Create Account',
       forgot_password: 'Forgot Password?',
       or: 'or',
-      enter_passcode: 'The passcode has been sent to {{address}}',
+      enter_passcode: 'The passcode has been sent to your {{address}}',
       passcode_sent: 'The passcode has been sent',
       resend_after_seconds: 'Resend after {{seconds}} seconds',
       resend_passcode: 'Resend Passcode',

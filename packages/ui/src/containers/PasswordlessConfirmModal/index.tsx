@@ -20,7 +20,6 @@ const PasswordlessConfirmModal = ({ className, isOpen, type, method, value, onCl
   const { t } = useTranslation(undefined, { keyPrefix: 'main_flow' });
   const sendPasscode = getSendPasscodeApi(type, method);
   const navigate = useNavigate();
-  const methodLocalName = t(`input.${method === 'email' ? 'email' : 'phone_number'}`);
 
   const { result, run: asyncSendPasscode } = useApi(sendPasscode);
 
@@ -44,7 +43,7 @@ const PasswordlessConfirmModal = ({ className, isOpen, type, method, value, onCl
     <ConfirmModal
       className={className}
       isOpen={isOpen}
-      confirmText={type === 'sign-in' ? 'action.sign_in' : 'action.continue'}
+      confirmText={type === 'sign-in' ? 'action.sign_in' : 'action.create'}
       onClose={onClose}
       onConfirm={onConfirmHandler}
     >
@@ -52,7 +51,10 @@ const PasswordlessConfirmModal = ({ className, isOpen, type, method, value, onCl
         type === 'sign-in'
           ? 'description.create_account_id_exists'
           : 'description.sign_in_id_does_not_exists',
-        { type: methodLocalName, value }
+        {
+          type: t(`description.${method === 'email' ? 'email' : 'phone_number'}`),
+          value: `${method === 'sms' ? '+' : ''}${value}`,
+        }
       )}
     </ConfirmModal>
   );

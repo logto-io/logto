@@ -85,6 +85,10 @@
       height: 22px;
     }
 
+    &.error {
+      border: _.border(var(--color-error));
+    }
+
     &:focus-within {
       border-color: var(--color-primary);
       outline-color: var(--color-focused-variant);

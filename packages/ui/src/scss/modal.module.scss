@@ -3,3 +3,8 @@
   background: var(--color-overlay);
   inset: 0;
 }
+
+/* stylelint-disable-next-line selector-class-pattern */
+:global(.ReactModal__Body--open) {
+  overflow: hidden;
+}

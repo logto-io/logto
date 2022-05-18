@@ -27,12 +27,6 @@ const MobileModal = ({
       className={classNames(styles.modal, className)}
       overlayClassName={classNames(modalStyles.overlay, styles.overlay)}
       appElement={document.querySelector('main') ?? undefined}
-      onAfterOpen={() => {
-        document.body.classList.add('static');
-      }}
-      onAfterClose={() => {
-        document.body.classList.remove('static');
-      }}
     >
       <div className={styles.container}>
         <div className={styles.content}>{children}</div>
