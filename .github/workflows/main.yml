@@ -16,16 +16,16 @@ jobs:
         uses: logto-io/actions-node-pnpm-run-steps@v1.2.1
 
       - name: Build
-        run: pnpm -- lerna run --stream build
+        run: pnpm ci:build
 
       - name: Lint
-        run: pnpm -- lerna run --parallel lint
+        run: pnpm ci:lint
 
       - name: Stylelint
-        run: pnpm -- lerna run --parallel stylelint
+        run: pnpm ci:stylelint
 
       - name: Test
-        run: pnpm -- lerna run --parallel test:coverage
+        run: pnpm ci:test
 
       - name: Codecov
         uses: codecov/codecov-action@v3
