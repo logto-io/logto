@@ -482,6 +482,7 @@ importers:
       '@logto/phrases': ^0.1.0
       '@logto/react': ^0.1.5
       '@logto/schemas': ^0.1.0
+      '@logto/shared': ^0.1.0
       '@mdx-js/react': ^1.6.22
       '@parcel/core': ^2.5.0
       '@parcel/transformer-mdx': ^2.5.0
@@ -537,6 +538,7 @@ importers:
       '@logto/phrases': link:../phrases
       '@logto/react': 0.1.5_react@17.0.2
       '@logto/schemas': link:../schemas
+      '@logto/shared': link:../shared
       '@mdx-js/react': 1.6.22_react@17.0.2
       '@parcel/core': 2.5.0
       '@parcel/transformer-mdx': 2.5.0_qizmsa7ujgewn5fdmmvyi6cykq
@@ -602,6 +604,7 @@ importers:
       '@logto/connector-wechat-native': ^0.1.0
       '@logto/phrases': ^0.1.0
       '@logto/schemas': ^0.1.0
+      '@logto/shared': ^0.1.0
       '@shopify/jest-koa-mocks': ^3.0.8
       '@silverhand/eslint-config': ^0.14.0
       '@silverhand/essentials': ^1.1.6
@@ -673,6 +676,7 @@ importers:
       '@logto/connector-wechat-native': link:../connector-wechat-native
       '@logto/phrases': link:../phrases
       '@logto/schemas': link:../schemas
+      '@logto/shared': link:../shared
       '@silverhand/essentials': 1.1.7
       argon2: 0.28.5
       chalk: 4.1.2
@@ -818,6 +822,7 @@ importers:
     specifiers:
       '@logto/connector-types': ^0.1.0
       '@logto/phrases': ^0.1.0
+      '@logto/shared': ^0.1.0
       '@silverhand/eslint-config': ^0.14.0
       '@silverhand/essentials': ^1.1.6
       '@silverhand/ts-config': ^0.14.0
@@ -836,6 +841,7 @@ importers:
     dependencies:
       '@logto/connector-types': link:../connector-types
       '@logto/phrases': link:../phrases
+      '@logto/shared': link:../shared
       zod: 3.14.3
     devDependencies:
       '@silverhand/eslint-config': 0.14.0_hjjt7jwmhwqm7bjf55k5ihcdqq
