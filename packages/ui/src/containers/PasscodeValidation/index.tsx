@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import React, { useState, useEffect, useContext, useMemo } from 'react';
+import React, { useState, useEffect, useContext, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import reactStringReplace from 'react-string-replace';
 import { useTimer } from 'react-timer-hook';
@@ -61,9 +61,16 @@ const PasscodeValidation = ({ type, method, className, target }: Props) => {
     verifyPasscodeErrorHandlers
   );
 
-  const { result: sendPasscodeResult, run: sendPassCode } = useApi(
-    getSendPasscodeApi(type, method)
-  );
+  const { run: sendPassCode } = useApi(getSendPasscodeApi(type, method));
+
+  const resendPasscodeHandler = useCallback(async () => {
+    const result = await sendPassCode(target);
+
+    if (result) {
+      setToast(t('description.passcode_sent'));
+      restart(getTimeout(), true);
+    }
+  }, [restart, sendPassCode, setToast, t, target]);
 
   useEffect(() => {
     if (code.length === defaultLength && code.every(Boolean)) {
@@ -71,14 +78,6 @@ const PasscodeValidation = ({ type, method, className, target }: Props) => {
       void verifyPassCode(target, code.join(''), socialToBind);
     }
   }, [code, target, verifyPassCode]);
-
-  useEffect(() => {
-    // Restart count down
-    if (sendPasscodeResult) {
-      setToast(t('description.passcode_sent'));
-      restart(getTimeout(), true);
-    }
-  }, [sendPasscodeResult, restart, setToast, t]);
 
   useEffect(() => {
     if (verifyPasscodeResult?.redirectTo) {
@@ -113,9 +112,7 @@ const PasscodeValidation = ({ type, method, className, target }: Props) => {
         <TextLink
           className={styles.link}
           text="description.resend_passcode"
-          onClick={() => {
-            void sendPassCode(target);
-          }}
+          onClick={resendPasscodeHandler}
         />
       )}
     </form>
