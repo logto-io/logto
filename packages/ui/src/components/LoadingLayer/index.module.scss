@@ -31,3 +31,9 @@
     transform: rotate(360deg);
   }
 }
+
+:global(body.desktop) {
+  .container {
+    border: _.border(var(--color-divider));
+  }
+}

@@ -9,22 +9,24 @@
 
 .content {
   @include _.flex_column;
-  background-color: var(--color-base);
+  background-color: var(--color-surface);
 }
 
 main {
   position: absolute;
   inset: 0;
-  background: var(--color-surface);
+  background: var(--color-base);
   color: var(--color-text);
   font: var(--font-body);
   @include _.flex_column;
 }
 
+body {
+  background-color: var(--color-base);
+}
+
 /* Foundation */
 :global(body.mobile) {
-  background-color: var(--color-base);
-
   &.light {
     @include mobile.colors-light-theme;
   }
@@ -50,8 +52,6 @@ main {
 }
 
 :global(body.desktop) {
-  background-color: var(--color-base);
-
   &.light {
     @include desktop.colors-light-theme;
   }

@@ -15,9 +15,10 @@
   padding: _.unit(2) _.unit(4);
   max-width: 295px;
   font: var(--font-body);
-  color: var(--color-text);
+  color: var(--color-primary-button-text);
   border-radius: var(--radius);
   background: var(--color-toast);
+  box-shadow: var(--shadow-2);
   text-align: center;
   opacity: 0%;
   transition: opacity 0.3s ease-in-out;
@@ -30,6 +31,7 @@
 
 :global(body.desktop) {
   .toast {
+    border: _.border(var(--color-divider));
     padding: _.unit(3) _.unit(4);
   }
 }
