@@ -6,7 +6,7 @@
   "templates": [
     {
       "type": 0,
-      "usageType": "SIGN_IN",
+      "usageType": "SignIn",
       "code": "<temporary-passcode>",
       "name": "<sign-in-template-name>",
       "content": "<sign-in-template-content>",
@@ -14,7 +14,7 @@
     },
     {
       "type": 0,
-      "usageType": "REGISTER",
+      "usageType": "Register",
       "code": "<temporary-passcode>",
       "name": "<register-template-name>",
       "content": "<register-template-content>",
@@ -22,7 +22,7 @@
     },
     {
       "type": 0,
-      "usageType": "TEST",
+      "usageType": "Test",
       "code": "<temporary-passcode>",
       "name": "<test-template-name>",
       "content": "<test-template-content>",

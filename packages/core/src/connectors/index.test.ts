@@ -59,6 +59,14 @@ const googleConnector = {
   config: {},
   createdAt: 1_646_382_233_000,
 };
+const sendGridMailConnector = {
+  id: 'sendgrid-mail',
+  target: 'sendgrid-mail',
+  platform: null,
+  enabled: false,
+  config: {},
+  createdAt: 1_646_382_233_111,
+};
 const wechatConnector = {
   id: 'wechat',
   target: 'wechat',
@@ -83,6 +91,7 @@ const connectors = [
   facebookConnector,
   githubConnector,
   googleConnector,
+  sendGridMailConnector,
   wechatConnector,
   wechatNativeConnector,
 ];
@@ -106,8 +115,9 @@ describe('getConnectorInstances', () => {
     expect(connectorInstances[3]).toHaveProperty('connector', facebookConnector);
     expect(connectorInstances[4]).toHaveProperty('connector', githubConnector);
     expect(connectorInstances[5]).toHaveProperty('connector', googleConnector);
-    expect(connectorInstances[6]).toHaveProperty('connector', wechatConnector);
-    expect(connectorInstances[7]).toHaveProperty('connector', wechatNativeConnector);
+    expect(connectorInstances[6]).toHaveProperty('connector', sendGridMailConnector);
+    expect(connectorInstances[7]).toHaveProperty('connector', wechatConnector);
+    expect(connectorInstances[8]).toHaveProperty('connector', wechatNativeConnector);
   });
 
   test('should throw if any required connector does not exist in DB', async () => {

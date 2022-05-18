@@ -306,6 +306,49 @@ importers:
       tsc-watch: 5.0.3_typescript@4.6.3
       typescript: 4.6.3
 
+  packages/connector-sendgrid-mail:
+    specifiers:
+      '@jest/types': ^27.5.1
+      '@logto/connector-types': ^0.1.0
+      '@logto/shared': ^0.1.0
+      '@silverhand/eslint-config': ^0.14.0
+      '@silverhand/essentials': ^1.1.6
+      '@silverhand/jest-config': ^0.14.0
+      '@silverhand/ts-config': ^0.14.0
+      '@types/jest': ^27.4.1
+      '@types/node': ^16.3.1
+      eslint: ^8.10.0
+      got: ^11.8.2
+      jest: ^27.5.1
+      jest-matcher-specific-error: ^1.0.0
+      lint-staged: ^12.0.0
+      prettier: ^2.3.2
+      ts-jest: ^27.1.1
+      tsc-watch: ^5.0.0
+      typescript: ^4.6.2
+      zod: ^3.14.3
+    dependencies:
+      '@logto/connector-types': link:../connector-types
+      '@logto/shared': link:../shared
+      '@silverhand/essentials': 1.1.7
+      '@silverhand/jest-config': 0.14.0_53ggqi2i4rbcfjtktmjua6zili
+      got: 11.8.3
+      zod: 3.14.3
+    devDependencies:
+      '@jest/types': 27.5.1
+      '@silverhand/eslint-config': 0.14.0_rqoong6vegs374egqglqjbgiwm
+      '@silverhand/ts-config': 0.14.0_typescript@4.6.4
+      '@types/jest': 27.4.1
+      '@types/node': 16.11.12
+      eslint: 8.10.0
+      jest: 27.5.1
+      jest-matcher-specific-error: 1.0.0
+      lint-staged: 12.4.0
+      prettier: 2.5.1
+      ts-jest: 27.1.1_53ggqi2i4rbcfjtktmjua6zili
+      tsc-watch: 5.0.3_typescript@4.6.4
+      typescript: 4.6.4
+
   packages/connector-types:
     specifiers:
       '@jest/types': ^27.5.1
@@ -553,6 +596,7 @@ importers:
       '@logto/connector-facebook': ^0.1.0
       '@logto/connector-github': ^0.1.0
       '@logto/connector-google': ^0.1.0
+      '@logto/connector-sendgrid-email': ^0.1.0
       '@logto/connector-types': ^0.1.0
       '@logto/connector-wechat': ^0.1.0
       '@logto/connector-wechat-native': ^0.1.0
@@ -623,6 +667,7 @@ importers:
       '@logto/connector-facebook': link:../connector-facebook
       '@logto/connector-github': link:../connector-github
       '@logto/connector-google': link:../connector-google
+      '@logto/connector-sendgrid-email': link:../connector-sendgrid-mail
       '@logto/connector-types': link:../connector-types
       '@logto/connector-wechat': link:../connector-wechat
       '@logto/connector-wechat-native': link:../connector-wechat-native
@@ -3667,7 +3712,6 @@ packages:
       pacote: 11.3.5
       semver: 7.3.7
     transitivePeerDependencies:
-      - bluebird
       - supports-color
     dev: true
 
@@ -3836,7 +3880,6 @@ packages:
       whatwg-url: 8.7.0
       yargs-parser: 20.2.4
     transitivePeerDependencies:
-      - bluebird
       - supports-color
     dev: true
 
@@ -4034,7 +4077,6 @@ packages:
       npm-registry-fetch: 9.0.0
       npmlog: 4.1.2
     transitivePeerDependencies:
-      - bluebird
       - supports-color
     dev: true
 
@@ -4064,7 +4106,6 @@ packages:
       pify: 5.0.0
       read-package-json: 3.0.1
     transitivePeerDependencies:
-      - bluebird
       - supports-color
     dev: true
 
@@ -4199,7 +4240,6 @@ packages:
       pacote: 11.3.5
       semver: 7.3.7
     transitivePeerDependencies:
-      - bluebird
       - encoding
       - supports-color
     dev: true
@@ -4498,8 +4538,6 @@ packages:
       promise-retry: 2.0.1
       semver: 7.3.7
       which: 2.0.2
-    transitivePeerDependencies:
-      - bluebird
     dev: true
 
   /@npmcli/installed-package-contents/1.0.7:
@@ -5514,7 +5552,6 @@ packages:
       stylelint-config-xo-scss: 0.15.0_zhymizk4kfitko2u2d4p3qwyee
     transitivePeerDependencies:
       - eslint
-      - eslint-import-resolver-webpack
       - postcss
       - prettier
       - supports-color
@@ -5538,7 +5575,7 @@ packages:
       eslint-import-resolver-typescript: 2.5.0_rnagsyfcubvpoxo2ynj23pim7u
       eslint-plugin-consistent-default-export-name: 0.0.7
       eslint-plugin-eslint-comments: 3.2.0_eslint@8.10.0
-      eslint-plugin-import: 2.25.4_sidoke6kqbkbdht6nlmwbfnany
+      eslint-plugin-import: 2.25.4_eslint@8.10.0
       eslint-plugin-no-use-extend-native: 0.5.0
       eslint-plugin-node: 11.1.0_eslint@8.10.0
       eslint-plugin-prettier: 3.4.1_6pitu4b2tqihty6rv5qeiyb35m
@@ -5548,7 +5585,6 @@ packages:
       pkg-dir: 4.2.0
       prettier: 2.5.1
     transitivePeerDependencies:
-      - eslint-import-resolver-webpack
       - supports-color
       - typescript
     dev: true
@@ -5570,7 +5606,7 @@ packages:
       eslint-import-resolver-typescript: 2.5.0_rnagsyfcubvpoxo2ynj23pim7u
       eslint-plugin-consistent-default-export-name: 0.0.7
       eslint-plugin-eslint-comments: 3.2.0_eslint@8.10.0
-      eslint-plugin-import: 2.25.4_sidoke6kqbkbdht6nlmwbfnany
+      eslint-plugin-import: 2.25.4_eslint@8.10.0
       eslint-plugin-no-use-extend-native: 0.5.0
       eslint-plugin-node: 11.1.0_eslint@8.10.0
       eslint-plugin-prettier: 3.4.1_6pitu4b2tqihty6rv5qeiyb35m
@@ -5580,7 +5616,6 @@ packages:
       pkg-dir: 4.2.0
       prettier: 2.5.1
     transitivePeerDependencies:
-      - eslint-import-resolver-webpack
       - supports-color
       - typescript
     dev: true
@@ -5602,7 +5637,7 @@ packages:
       eslint-import-resolver-typescript: 2.5.0_rnagsyfcubvpoxo2ynj23pim7u
       eslint-plugin-consistent-default-export-name: 0.0.7
       eslint-plugin-eslint-comments: 3.2.0_eslint@8.10.0
-      eslint-plugin-import: 2.25.4_sidoke6kqbkbdht6nlmwbfnany
+      eslint-plugin-import: 2.25.4_eslint@8.10.0
       eslint-plugin-no-use-extend-native: 0.5.0
       eslint-plugin-node: 11.1.0_eslint@8.10.0
       eslint-plugin-prettier: 3.4.1_6pitu4b2tqihty6rv5qeiyb35m
@@ -5612,7 +5647,6 @@ packages:
       pkg-dir: 4.2.0
       prettier: 2.5.1
     transitivePeerDependencies:
-      - eslint-import-resolver-webpack
       - supports-color
       - typescript
     dev: true
@@ -5672,7 +5706,6 @@ packages:
       - babel-jest
       - esbuild
       - typescript
-    dev: true
 
   /@silverhand/jest-config/0.14.0_makj2rl6gt73u7koqro542qsmm:
     resolution: {integrity: sha512-zK9wh38/RL5iinPlbcZnjEuu8VfL7lQHDXFQ6Mos+zhN3YH0nsoHD6Faq41eHhUlQ6AkVSowov4hSs28S5RlWg==}
@@ -7665,8 +7698,6 @@ packages:
       qs: 6.9.7
       raw-body: 2.4.3
       type-is: 1.6.18
-    transitivePeerDependencies:
-      - supports-color
     dev: true
 
   /bonjour-service/1.0.11:
@@ -7842,8 +7873,6 @@ packages:
       ssri: 8.0.1
       tar: 6.1.11
       unique-filename: 1.1.1
-    transitivePeerDependencies:
-      - bluebird
     dev: true
 
   /cache-content-type/1.0.1:
@@ -8359,8 +8388,6 @@ packages:
       on-headers: 1.0.2
       safe-buffer: 5.1.2
       vary: 1.1.2
-    transitivePeerDependencies:
-      - supports-color
     dev: true
 
   /concat-map/0.0.1:
@@ -8936,22 +8963,12 @@ packages:
 
   /debug/2.6.9:
     resolution: {integrity: sha512-bC7ElrdJaJnPbAP+1EotYvqZsb3ecl5wi6Bfi6BJTUcNowp6cvspg0jXznRTKDjm/E7AdgFBVeAPVMNcKGsHMA==}
-    peerDependencies:
-      supports-color: '*'
-    peerDependenciesMeta:
-      supports-color:
-        optional: true
     dependencies:
       ms: 2.0.0
     dev: true
 
   /debug/3.2.7:
     resolution: {integrity: sha512-CFjzYYAi4ThfiQvizrFQevTTXHtnCqWfe7x1AhgEscTz6ZbLbfoLRLPugTQyBth6f8ZERVUSyWHFD/7Wu4t1XQ==}
-    peerDependencies:
-      supports-color: '*'
-    peerDependenciesMeta:
-      supports-color:
-        optional: true
     dependencies:
       ms: 2.1.3
 
@@ -9180,8 +9197,6 @@ packages:
     dependencies:
       address: 1.1.2
       debug: 2.6.9
-    transitivePeerDependencies:
-      - supports-color
     dev: true
 
   /detect-port/1.3.0:
@@ -9191,8 +9206,6 @@ packages:
     dependencies:
       address: 1.1.2
       debug: 2.6.9
-    transitivePeerDependencies:
-      - supports-color
     dev: true
 
   /dezalgo/1.0.3:
@@ -9671,8 +9684,6 @@ packages:
     dependencies:
       debug: 3.2.7
       resolve: 1.22.0
-    transitivePeerDependencies:
-      - supports-color
     dev: true
 
   /eslint-import-resolver-typescript/2.5.0_rnagsyfcubvpoxo2ynj23pim7u:
@@ -9684,7 +9695,7 @@ packages:
     dependencies:
       debug: 4.3.3
       eslint: 8.10.0
-      eslint-plugin-import: 2.25.4_sidoke6kqbkbdht6nlmwbfnany
+      eslint-plugin-import: 2.25.4_eslint@8.10.0
       glob: 7.2.0
       is-glob: 4.0.3
       resolve: 1.22.0
@@ -9693,31 +9704,12 @@ packages:
       - supports-color
     dev: true
 
-  /eslint-module-utils/2.7.3_l62aq42yiamaj3cnpuf6avthf4:
+  /eslint-module-utils/2.7.3:
     resolution: {integrity: sha512-088JEC7O3lDZM9xGe0RerkOMd0EjFl+Yvd1jPWIkMT5u3H9+HC34mWWPnqPrN13gieT9pBOO+Qt07Nb/6TresQ==}
     engines: {node: '>=4'}
-    peerDependencies:
-      '@typescript-eslint/parser': '*'
-      eslint-import-resolver-node: '*'
-      eslint-import-resolver-typescript: '*'
-      eslint-import-resolver-webpack: '*'
-    peerDependenciesMeta:
-      '@typescript-eslint/parser':
-        optional: true
-      eslint-import-resolver-node:
-        optional: true
-      eslint-import-resolver-typescript:
-        optional: true
-      eslint-import-resolver-webpack:
-        optional: true
     dependencies:
-      '@typescript-eslint/parser': 5.14.0_fo4uz55zgcu432252zy2gvpvcu
       debug: 3.2.7
-      eslint-import-resolver-node: 0.3.6
-      eslint-import-resolver-typescript: 2.5.0_rnagsyfcubvpoxo2ynj23pim7u
       find-up: 2.1.0
-    transitivePeerDependencies:
-      - supports-color
     dev: true
 
   /eslint-plugin-consistent-default-export-name/0.0.7:
@@ -9752,24 +9744,19 @@ packages:
       ignore: 5.2.0
     dev: true
 
-  /eslint-plugin-import/2.25.4_sidoke6kqbkbdht6nlmwbfnany:
+  /eslint-plugin-import/2.25.4_eslint@8.10.0:
     resolution: {integrity: sha512-/KJBASVFxpu0xg1kIBn9AUa8hQVnszpwgE7Ld0lKAlx7Ie87yzEzCgSkekt+le/YVhiaosO4Y14GDAOc41nfxA==}
     engines: {node: '>=4'}
     peerDependencies:
-      '@typescript-eslint/parser': '*'
       eslint: ^2 || ^3 || ^4 || ^5 || ^6 || ^7.2.0 || ^8
-    peerDependenciesMeta:
-      '@typescript-eslint/parser':
-        optional: true
     dependencies:
-      '@typescript-eslint/parser': 5.14.0_fo4uz55zgcu432252zy2gvpvcu
       array-includes: 3.1.4
       array.prototype.flat: 1.2.5
       debug: 2.6.9
       doctrine: 2.1.0
       eslint: 8.10.0
       eslint-import-resolver-node: 0.3.6
-      eslint-module-utils: 2.7.3_l62aq42yiamaj3cnpuf6avthf4
+      eslint-module-utils: 2.7.3
       has: 1.0.3
       is-core-module: 2.8.1
       is-glob: 4.0.3
@@ -9777,10 +9764,6 @@ packages:
       object.values: 1.1.5
       resolve: 1.22.0
       tsconfig-paths: 3.13.0
-    transitivePeerDependencies:
-      - eslint-import-resolver-typescript
-      - eslint-import-resolver-webpack
-      - supports-color
     dev: true
 
   /eslint-plugin-no-use-extend-native/0.5.0:
@@ -10172,8 +10155,6 @@ packages:
       type-is: 1.6.18
       utils-merge: 1.0.1
       vary: 1.1.2
-    transitivePeerDependencies:
-      - supports-color
     dev: true
 
   /extend-shallow/2.0.1:
@@ -10370,8 +10351,6 @@ packages:
       parseurl: 1.3.3
       statuses: 1.5.0
       unpipe: 1.0.0
-    transitivePeerDependencies:
-      - supports-color
     dev: true
 
   /find-cache-dir/3.3.2:
@@ -13082,7 +13061,6 @@ packages:
       import-local: 3.1.0
       npmlog: 4.1.2
     transitivePeerDependencies:
-      - bluebird
       - encoding
       - supports-color
     dev: true
@@ -13117,7 +13095,6 @@ packages:
       npm-package-arg: 8.1.5
       npm-registry-fetch: 11.0.0
     transitivePeerDependencies:
-      - bluebird
       - supports-color
     dev: true
 
@@ -13131,7 +13108,6 @@ packages:
       semver: 7.3.7
       ssri: 8.0.1
     transitivePeerDependencies:
-      - bluebird
       - supports-color
     dev: true
 
@@ -13500,7 +13476,6 @@ packages:
       socks-proxy-agent: 5.0.1
       ssri: 8.0.1
     transitivePeerDependencies:
-      - bluebird
       - supports-color
     dev: true
 
@@ -13525,7 +13500,6 @@ packages:
       socks-proxy-agent: 6.1.1
       ssri: 8.0.1
     transitivePeerDependencies:
-      - bluebird
       - supports-color
     dev: true
 
@@ -14598,7 +14572,6 @@ packages:
       minizlib: 2.1.2
       npm-package-arg: 8.1.5
     transitivePeerDependencies:
-      - bluebird
       - supports-color
     dev: true
 
@@ -14615,7 +14588,6 @@ packages:
       minizlib: 2.1.2
       npm-package-arg: 8.1.5
     transitivePeerDependencies:
-      - bluebird
       - supports-color
     dev: true
 
@@ -15054,7 +15026,6 @@ packages:
       ssri: 8.0.1
       tar: 6.1.11
     transitivePeerDependencies:
-      - bluebird
       - supports-color
     dev: true
 
@@ -15447,8 +15418,6 @@ packages:
       async: 2.6.3
       debug: 3.2.7
       mkdirp: 0.5.5
-    transitivePeerDependencies:
-      - supports-color
     dev: true
 
   /postcss-calc/8.2.4_postcss@8.4.12:
@@ -16135,11 +16104,6 @@ packages:
 
   /promise-inflight/1.0.1:
     resolution: {integrity: sha1-mEcocL8igTL8vdhoEputEsPAKeM=}
-    peerDependencies:
-      bluebird: '*'
-    peerDependenciesMeta:
-      bluebird:
-        optional: true
     dev: true
 
   /promise-retry/2.0.1:
@@ -16417,7 +16381,6 @@ packages:
       text-table: 0.2.0
     transitivePeerDependencies:
       - eslint
-      - supports-color
       - typescript
       - vue-template-compiler
       - webpack
@@ -17512,8 +17475,6 @@ packages:
       on-finished: 2.3.0
       range-parser: 1.2.1
       statuses: 1.5.0
-    transitivePeerDependencies:
-      - supports-color
     dev: true
 
   /serialize-error/7.0.1:
@@ -17560,8 +17521,6 @@ packages:
       http-errors: 1.6.3
       mime-types: 2.1.35
       parseurl: 1.3.3
-    transitivePeerDependencies:
-      - supports-color
     dev: true
 
   /serve-static/1.14.2:
@@ -17572,8 +17531,6 @@ packages:
       escape-html: 1.0.3
       parseurl: 1.3.3
       send: 0.17.2
-    transitivePeerDependencies:
-      - supports-color
     dev: true
 
   /set-blocking/2.0.0:
@@ -18809,7 +18766,7 @@ packages:
       '@types/jest': 27.4.1
       bs-logger: 0.2.6
       fast-json-stable-stringify: 2.1.0
-      jest: 27.5.1_ts-node@10.7.0
+      jest: 27.5.1
       jest-util: 27.5.1
       json5: 2.2.1
       lodash.memoize: 4.1.2
@@ -18817,7 +18774,6 @@ packages:
       semver: 7.3.5
       typescript: 4.6.4
       yargs-parser: 20.2.9
-    dev: true
 
   /ts-jest/27.1.1_makj2rl6gt73u7koqro542qsmm:
     resolution: {integrity: sha512-Ds0VkB+cB+8g2JUmP/GKWndeZcCKrbe6jzolGrVWdqVUFByY/2KDHqxJ7yBSon7hDB1TA4PXxjfZ+JjzJisvgA==}
@@ -19006,6 +18962,21 @@ packages:
       string-argv: 0.1.2
       strip-ansi: 6.0.1
       typescript: 4.6.3
+    dev: true
+
+  /tsc-watch/5.0.3_typescript@4.6.4:
+    resolution: {integrity: sha512-Hz2UawwELMSLOf0xHvAFc7anLeMw62cMVXr1flYmhRuOhOyOljwmb1l/O60ZwRyy1k7N1iC1mrn1QYM2zITfuw==}
+    engines: {node: '>=8.17.0'}
+    hasBin: true
+    peerDependencies:
+      typescript: '*'
+    dependencies:
+      cross-spawn: 7.0.3
+      node-cleanup: 2.1.2
+      ps-tree: 1.2.0
+      string-argv: 0.1.2
+      strip-ansi: 6.0.1
+      typescript: 4.6.4
     dev: true
 
   /tsconfig-paths/3.13.0:
