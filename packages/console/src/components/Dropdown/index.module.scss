@@ -1,9 +1,7 @@
 @use '@/scss/underscore' as _;
 
 .content {
-  background: var(--color-layer-1);
   box-shadow: var(--shadow-2);
-  border-radius: _.unit(2);
   position: absolute;
 
   &.onTop {
@@ -15,10 +13,18 @@
   }
 }
 
+.dropdownContainer {
+  background: var(--color-float);
+  border: 1px solid var(--color-divider);
+  border-radius: 8px;
+}
+
 .title {
-  padding: _.unit(4) _.unit(3) 0 _.unit(3);
-  font: var(--font-subhead-cap-small);
+  padding: _.unit(3);
+  font: var(--font-subhead-cap);
   color: var(--color-caption);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
 }
 
 .overlay {

@@ -134,6 +134,7 @@
   --color-base: var(--color-surface-1);
   --color-layer-1: var(--color-all-100);
   --color-layer-2: var(--color-neutral-95);
+  --color-float: var(--color-all-100);
   --color-inverse-surface: var(--color-neutral-20);
   --color-inverse-on-surface: var(--color-neutral-95);
   --color-inverse-primary: var(--color-primary-80);
@@ -146,13 +147,16 @@
   --color-focused-variant: rgba(93, 52, 242, 16%); // 16% Primary-40
 
   // Shadows
-  --shadow-1: 0 4px 8px rgba(66, 41, 159, 8%);
-  --shadow-2: 0 4px 12px rgba(66, 41, 159, 12%);
-  --shadow-2-reversed: 0 -4px 12px rgba(66, 41, 159, 12%);
-  --shadow-3: 0 4px 16px rgba(66, 41, 159, 16%);
+  --shadow-1: 0 4px 8px rgba(0, 0, 0, 8%);
+  --shadow-2: 0 2px 12px rgba(0, 0, 0, 12%);
+  --shadow-2-reversed: 0 -4px 12px rgba(0, 0, 0, 12%);
+  --shadow-3: 0 4px 16px rgba(0, 0, 0, 20%);
 
   // Client specific variables (not available in design system)
   --color-danger-focused: rgba(186, 27, 27, 16%); // 16% Error-40
+  --color-tooltip-background: #34353f; // dark theme Surface-4
+  --color-tooltip-text: var(--color-neutral-99);
+  --color-overlay: rgba(0, 0, 0, 30%);
   --color-skeleton-shimmer-rgb: 255, 255, 255; // rgb of Layer-1
 }
 
@@ -291,7 +295,8 @@
   --color-disabled: var(--color-neutral-80);
   --color-base: var(--color-surface);
   --color-layer-1: var(--color-surface-2);
-  --color-layer-2: var(--color-surface-3);
+  --color-layer-2: var(--color-surface-4);
+  --color-float: var(--color-surface-4);
   --color-inverse-surface: var(--color-neutral-20);
   --color-inverse-on-surface: var(--color-neutral-95);
   --color-inverse-primary: var(--color-primary-80);
@@ -304,12 +309,15 @@
   --color-focused-variant: rgba(202, 190, 255, 16%); // 16% Primary-40
 
   // Shadows
-  --shadow-1: 0 4px 8px rgba(66, 41, 159, 8%);
-  --shadow-2: 0 4px 12px rgba(66, 41, 159, 12%);
-  --shadow-2-reversed: 0 -4px 12px rgba(66, 41, 159, 12%);
-  --shadow-3: 0 4px 16px rgba(66, 41, 159, 16%);
+  --shadow-1: 0 4px 8px rgba(0, 0, 0, 8%);
+  --shadow-2: 0 2px 12px rgba(0, 0, 0, 12%);
+  --shadow-2-reversed: 0 -4px 12px rgba(0, 0, 0, 12%);
+  --shadow-3: 0 4px 16px rgba(0, 0, 0, 20%);
 
   // Client specific variables (not available in design system)
   --color-danger-focused: rgba(255, 180, 169, 16%); // 16% Error-40
+  --color-tooltip-background: var(--color-surface-4);
+  --color-tooltip-text: var(--color-neutral-10);
+  --color-overlay: rgba(0, 0, 0, 30%);
   --color-skeleton-shimmer-rgb: 42, 44, 50; // rgb of Layer-1
 }
