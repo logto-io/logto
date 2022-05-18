@@ -1,15 +1,17 @@
 import { useState, useMemo, createContext } from 'react';
 import { isMobile } from 'react-device-detect';
 
-import { SignInExperienceSettings, Platform } from '@/types';
+import { SignInExperienceSettings, Platform, Theme } from '@/types';
 
 type Context = {
+  theme: Theme;
   toast: string;
   loading: boolean;
   platform: Platform;
   termsAgreement: boolean;
   showTermsModal: boolean;
   experienceSettings: SignInExperienceSettings | undefined;
+  setTheme: (theme: Theme) => void;
   setToast: (message: string) => void;
   setLoading: (loading: boolean) => void;
   setPlatform: (platform: Platform) => void;
@@ -24,11 +26,13 @@ const noop = () => {
 
 export const PageContext = createContext<Context>({
   toast: '',
+  theme: 'light',
   loading: false,
   platform: isMobile ? 'mobile' : 'web',
   termsAgreement: false,
   showTermsModal: false,
   experienceSettings: undefined,
+  setTheme: noop,
   setToast: noop,
   setLoading: noop,
   setPlatform: noop,
@@ -40,6 +44,7 @@ export const PageContext = createContext<Context>({
 const usePageContext = () => {
   const [loading, setLoading] = useState(false);
   const [toast, setToast] = useState('');
+  const [theme, setTheme] = useState<Theme>('light');
   const [platform, setPlatform] = useState<Platform>(isMobile ? 'mobile' : 'web');
   const [experienceSettings, setExperienceSettings] = useState<SignInExperienceSettings>();
   const [termsAgreement, setTermsAgreement] = useState(false);
@@ -47,12 +52,14 @@ const usePageContext = () => {
 
   const context = useMemo(
     () => ({
+      theme,
       toast,
       loading,
       platform,
       termsAgreement,
       showTermsModal,
       experienceSettings,
+      setTheme,
       setLoading,
       setToast,
       setPlatform,
@@ -60,7 +67,7 @@ const usePageContext = () => {
       setShowTermsModal,
       setExperienceSettings,
     }),
-    [experienceSettings, loading, platform, showTermsModal, termsAgreement, toast]
+    [experienceSettings, loading, platform, showTermsModal, termsAgreement, theme, toast]
   );
 
   return {

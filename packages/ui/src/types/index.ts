@@ -16,6 +16,8 @@ export enum SearchParameters {
 
 export type Platform = 'web' | 'mobile';
 
+export type Theme = 'dark' | 'light';
+
 export interface ConnectorData extends ConnectorMetadata {
   id: string;
 }
