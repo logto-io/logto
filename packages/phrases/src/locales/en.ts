@@ -58,7 +58,7 @@ const translation = {
       forgot_password: 'Forgot Password?',
       or: 'or',
       enter_passcode: 'The passcode has been sent to your {{address}}',
-      passcode_sent: 'The passcode has been sent',
+      passcode_sent: 'The passcode has been resent',
       resend_after_seconds: 'Resend after {{seconds}} seconds',
       resend_passcode: 'Resend Passcode',
       continue_with: 'Continue with',
