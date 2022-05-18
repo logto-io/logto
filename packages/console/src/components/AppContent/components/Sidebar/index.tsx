@@ -18,7 +18,7 @@ const Sidebar = () => {
 
   return (
     <div className={styles.sidebar}>
-      {sections?.map(({ title, items }) => (
+      {sections.map(({ title, items }) => (
         <Section key={title} title={t(title)}>
           {items.map(
             ({ title, Icon, isHidden, modal }) =>
