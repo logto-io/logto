@@ -5,19 +5,19 @@
   "templates": [
     {
       "usageType": "SignIn",
-      "type": "ContextType.TEXT",
+      "type": "text/plain",
       "subject": "Logto SignIn Template",
       "content": "This is for sign-in purposes only. Your passcode is {{code}}.",
     },
     {
       "usageType": "Register",
-      "type": "ContextType.TEXT",
+      "type": "text/plain",
       "subject": "Logto Register Template",
       "content": "This is for registering purposes only. Your passcode is {{code}}.",
     },
     {
       "usageType": "Test",
-      "type": "ContextType.TEXT",
+      "type": "text/plain",
       "subject": "Logto Test Template",
       "content": "This is for testing purposes only. Your passcode is {{code}}.",
     }

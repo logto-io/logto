@@ -311,10 +311,10 @@ importers:
       '@jest/types': ^27.5.1
       '@logto/connector-types': ^0.1.0
       '@logto/shared': ^0.1.0
-      '@silverhand/eslint-config': ^0.10.2
+      '@silverhand/eslint-config': ^0.14.0
       '@silverhand/essentials': ^1.1.6
-      '@silverhand/jest-config': ^0.13.0
-      '@silverhand/ts-config': ^0.11.0
+      '@silverhand/jest-config': ^0.14.0
+      '@silverhand/ts-config': ^0.14.0
       '@types/jest': ^27.4.1
       '@types/node': ^16.3.1
       eslint: ^8.10.0
@@ -331,13 +331,13 @@ importers:
       '@logto/connector-types': link:../connector-types
       '@logto/shared': link:../shared
       '@silverhand/essentials': 1.1.7
-      '@silverhand/jest-config': 0.13.0_tgc6da2oqazvrn56dzwolsqo5i
+      '@silverhand/jest-config': 0.14.0_53ggqi2i4rbcfjtktmjua6zili
       got: 11.8.3
       zod: 3.14.3
     devDependencies:
       '@jest/types': 27.5.1
-      '@silverhand/eslint-config': 0.10.2_xpq2m6kgodzytx4bqbpsfgmxbe
-      '@silverhand/ts-config': 0.11.0_typescript@4.6.3
+      '@silverhand/eslint-config': 0.14.0_rqoong6vegs374egqglqjbgiwm
+      '@silverhand/ts-config': 0.14.0_typescript@4.6.4
       '@types/jest': 27.4.1
       '@types/node': 16.11.12
       eslint: 8.10.0
@@ -345,9 +345,9 @@ importers:
       jest-matcher-specific-error: 1.0.0
       lint-staged: 12.4.0
       prettier: 2.5.1
-      ts-jest: 27.1.1_tgc6da2oqazvrn56dzwolsqo5i
-      tsc-watch: 5.0.3_typescript@4.6.3
-      typescript: 4.6.3
+      ts-jest: 27.1.1_53ggqi2i4rbcfjtktmjua6zili
+      tsc-watch: 5.0.3_typescript@4.6.4
+      typescript: 4.6.4
 
   packages/connector-types:
     specifiers:
@@ -5552,94 +5552,18 @@ packages:
       stylelint-config-xo-scss: 0.15.0_zhymizk4kfitko2u2d4p3qwyee
     transitivePeerDependencies:
       - eslint
-<<<<<<< HEAD
-      - eslint-import-resolver-webpack
       - postcss
-=======
->>>>>>> fa0b32c9 (feat(connector-sendgrid-mail): fix)
       - prettier
       - supports-color
       - typescript
     dev: true
 
-<<<<<<< HEAD
   /@silverhand/eslint-config/0.14.0_hjjt7jwmhwqm7bjf55k5ihcdqq:
     resolution: {integrity: sha512-Fiaf3FUSbHzPeYqmMncgw5sQ/48rF7MMTzKhgKQ5RhVy7ja7rmD7XaptRxqIHkxnsVcQK4NkPMGa+tjIASwRzg==}
-=======
-  /@silverhand/eslint-config/0.10.2_xpq2m6kgodzytx4bqbpsfgmxbe:
-    resolution: {integrity: sha512-MT2nj7NMA2T9sWFEDPq4JP6dWrrNWWfmcD/oHbmH3LAZAZtfJQWtzPtd/yy5EDO6qn7Oo+TZqsvk/v95ah79EA==}
     engines: {node: '>=14.15.0'}
     peerDependencies:
       eslint: ^8.1.0
       prettier: ^2.3.2
-      typescript: ^4.3.5
-    dependencies:
-      '@silverhand/eslint-plugin-fp': 2.5.0_eslint@8.10.0
-      '@typescript-eslint/eslint-plugin': 5.14.0_axby5tb5ey6mh4iibfluizcx7u
-      '@typescript-eslint/parser': 5.14.0_6ued5m2uqo2r7ksfjlk2bzosza
-      eslint: 8.10.0
-      eslint-config-prettier: 8.5.0_eslint@8.10.0
-      eslint-config-xo: 0.40.0_eslint@8.10.0
-      eslint-config-xo-typescript: 0.50.0_bxagizztfittfwl32gn7ww64qi
-      eslint-import-resolver-typescript: 2.5.0_rnagsyfcubvpoxo2ynj23pim7u
-      eslint-plugin-consistent-default-export-name: 0.0.7
-      eslint-plugin-eslint-comments: 3.2.0_eslint@8.10.0
-      eslint-plugin-import: 2.25.4_eslint@8.10.0
-      eslint-plugin-no-use-extend-native: 0.5.0
-      eslint-plugin-node: 11.1.0_eslint@8.10.0
-      eslint-plugin-prettier: 3.4.1_6pitu4b2tqihty6rv5qeiyb35m
-      eslint-plugin-promise: 6.0.0_eslint@8.10.0
-      eslint-plugin-sql: 2.1.0_eslint@8.10.0
-      eslint-plugin-unicorn: 39.0.0_eslint@8.10.0
-      prettier: 2.5.1
-      typescript: 4.6.3
-    transitivePeerDependencies:
-      - supports-color
-    dev: true
-
-  /@silverhand/eslint-config/0.11.0_hjjt7jwmhwqm7bjf55k5ihcdqq:
-    resolution: {integrity: sha512-l0I2aPf34pWBXZ5skyxY/dk9rGKIF9v0pXpbd+TLizzloEDRADTChpTCmUs6vA1PmgrpWLaa9Gr3AvqadYimvw==}
->>>>>>> 5d5fbe8e (feat(connector-sendgrid-mail): add SendGrid Mail connector)
-    engines: {node: '>=14.15.0'}
-    peerDependencies:
-      eslint: ^8.1.0
-      prettier: ^2.3.2
-<<<<<<< HEAD
-=======
-      typescript: ^4.3.5
-    dependencies:
-      '@silverhand/eslint-plugin-fp': 2.5.0_eslint@8.10.0
-      '@typescript-eslint/eslint-plugin': 5.14.0_6qcuxdb42yq5wfvodoovog6mya
-      '@typescript-eslint/parser': 5.14.0_pzezdwkd5bvjkx2hshexc25sxq
-      eslint: 8.10.0
-      eslint-config-prettier: 8.5.0_eslint@8.10.0
-      eslint-config-xo: 0.40.0_eslint@8.10.0
-      eslint-config-xo-typescript: 0.50.0_eimrvegzairgysjagkjjwv3rli
-      eslint-import-resolver-typescript: 2.5.0_rnagsyfcubvpoxo2ynj23pim7u
-      eslint-plugin-consistent-default-export-name: 0.0.7
-      eslint-plugin-eslint-comments: 3.2.0_eslint@8.10.0
-      eslint-plugin-import: 2.25.4_eslint@8.10.0
-      eslint-plugin-no-use-extend-native: 0.5.0
-      eslint-plugin-node: 11.1.0_eslint@8.10.0
-      eslint-plugin-prettier: 3.4.1_6pitu4b2tqihty6rv5qeiyb35m
-      eslint-plugin-promise: 6.0.0_eslint@8.10.0
-      eslint-plugin-sql: 2.1.0_eslint@8.10.0
-      eslint-plugin-unicorn: 39.0.0_eslint@8.10.0
-      pkg-dir: 4.2.0
-      prettier: 2.5.1
-      typescript: 4.6.2
-    transitivePeerDependencies:
-      - supports-color
-    dev: true
-
-  /@silverhand/eslint-config/0.12.0_hjjt7jwmhwqm7bjf55k5ihcdqq:
-    resolution: {integrity: sha512-WRR3oGzEt6SAR6GxwCRfUXwMpKqnNXdvSTcb7kBhMW1DDaTi9qNkhJl/NdDTyhqxda+jCqUzS/HF/kYOJwdwpQ==}
-    engines: {node: '>=14.15.0'}
-    peerDependencies:
-      eslint: ^8.1.0
-      prettier: ^2.3.2
-      typescript: ^4.3.5
->>>>>>> fa0b32c9 (feat(connector-sendgrid-mail): fix)
     dependencies:
       '@silverhand/eslint-plugin-fp': 2.5.0_eslint@8.10.0
       '@typescript-eslint/eslint-plugin': 5.14.0_6qcuxdb42yq5wfvodoovog6mya
@@ -5782,7 +5706,6 @@ packages:
       - babel-jest
       - esbuild
       - typescript
-    dev: true
 
   /@silverhand/jest-config/0.14.0_makj2rl6gt73u7koqro542qsmm:
     resolution: {integrity: sha512-zK9wh38/RL5iinPlbcZnjEuu8VfL7lQHDXFQ6Mos+zhN3YH0nsoHD6Faq41eHhUlQ6AkVSowov4hSs28S5RlWg==}
@@ -5836,22 +5759,8 @@ packages:
       typescript: 4.6.2
     dev: true
 
-<<<<<<< HEAD
   /@silverhand/ts-config/0.14.0_typescript@4.6.2:
     resolution: {integrity: sha512-ktL4EvhTejlU7KD4tlq/NcVNRiQoH/NmguaqfcFu2GbswDfHEEBTaPkbi9c6UDzpQtjLhC27dYpzgpH6KkT6LA==}
-=======
-  /@silverhand/ts-config/0.11.0_typescript@4.6.3:
-    resolution: {integrity: sha512-W1mMlhRWjXsI5YVsb6KtDI685QmGSMqAbQ0jl4Z/3LVOYixwnUeyJOWhKa85u3MEwzm+IF4nmJBb3o/5HPATdQ==}
-    engines: {node: '>=14.15.0'}
-    peerDependencies:
-      typescript: ^4.3.5
-    dependencies:
-      typescript: 4.6.3
-    dev: true
-
-  /@silverhand/ts-config/0.12.0_typescript@4.6.2:
-    resolution: {integrity: sha512-+VidYKenVr33P8GDXR1NdUNzkScNarp/ttFRfqus9fGyIWCjP60otygVrY/ZydOlpdZBXnycUgsySC3YqCprCg==}
->>>>>>> 5d5fbe8e (feat(connector-sendgrid-mail): add SendGrid Mail connector)
     engines: {node: '>=14.15.0'}
     peerDependencies:
       typescript: ^4.3.5
@@ -5907,37 +5816,6 @@ packages:
       webpack-sources: 1.4.3
     dev: true
 
-<<<<<<< HEAD
-=======
-  /@stylelint/postcss-css-in-js/0.37.2_j55xdkkcxc32kvnyvx3y7casfm:
-    resolution: {integrity: sha512-nEhsFoJurt8oUmieT8qy4nk81WRHmJynmVwn/Vts08PL9fhgIsMhk1GId5yAN643OzqEEb5S/6At2TZW7pqPDA==}
-    peerDependencies:
-      postcss: '>=7.0.0'
-      postcss-syntax: '>=0.36.2'
-    dependencies:
-      '@babel/core': 7.16.0
-      postcss: 7.0.39
-      postcss-syntax: 0.36.2_postcss@7.0.39
-    transitivePeerDependencies:
-      - supports-color
-    dev: true
-
-  /@stylelint/postcss-markdown/0.36.2_j55xdkkcxc32kvnyvx3y7casfm:
-    resolution: {integrity: sha512-2kGbqUVJUGE8dM+bMzXG/PYUWKkjLIkRLWNh39OaADkiabDRdw8ATFCgbMz5xdIcvwspPAluSL7uY+ZiTWdWmQ==}
-    deprecated: 'Use the original unforked package instead: postcss-markdown'
-    peerDependencies:
-      postcss: '>=7.0.0'
-      postcss-syntax: '>=0.36.2'
-    dependencies:
-      postcss: 7.0.39
-      postcss-syntax: 0.36.2_postcss@7.0.39
-      remark: 13.0.0
-      unist-util-find-all-after: 3.0.2
-    transitivePeerDependencies:
-      - supports-color
-    dev: true
-
->>>>>>> fa0b32c9 (feat(connector-sendgrid-mail): fix)
   /@svgr/babel-plugin-add-jsx-attribute/6.0.0_@babel+core@7.17.9:
     resolution: {integrity: sha512-MdPdhdWLtQsjd29Wa4pABdhWbaRMACdM1h31BY+c6FghTZqNGT7pEYdBoaGeKtdTOBC/XNFQaKVj+r/Ei2ryWA==}
     engines: {node: '>=10'}
@@ -15621,27 +15499,6 @@ packages:
       postcss-selector-parser: 6.0.9
     dev: true
 
-<<<<<<< HEAD
-=======
-  /postcss-html/0.36.0_j55xdkkcxc32kvnyvx3y7casfm:
-    resolution: {integrity: sha512-HeiOxGcuwID0AFsNAL0ox3mW6MHH5cstWN1Z3Y+n6H+g12ih7LHdYxWwEA/QmrebctLjo79xz9ouK3MroHwOJw==}
-    peerDependencies:
-      postcss: '>=5.0.0'
-      postcss-syntax: '>=0.36.0'
-    dependencies:
-      htmlparser2: 3.10.1
-      postcss: 7.0.39
-      postcss-syntax: 0.36.2_postcss@7.0.39
-    dev: true
-
-  /postcss-less/3.1.4:
-    resolution: {integrity: sha512-7TvleQWNM2QLcHqvudt3VYjULVB49uiW6XzEUFmvwHzvsOEF5MwBrIXZDJQvJNFGjJQTzSzZnDoCJ8h/ljyGXA==}
-    engines: {node: '>=6.14.4'}
-    dependencies:
-      postcss: 7.0.39
-    dev: true
-
->>>>>>> fa0b32c9 (feat(connector-sendgrid-mail): fix)
   /postcss-loader/6.2.1_uc4qctwj44nkyf42gqi5c2c22q:
     resolution: {integrity: sha512-WbbYpmAaKcux/P66bZ40bpWsBucjx/TTgVVzRZ9yUO8yQfVBlameJ0ZGVaPfH64hNSBh63a+ICP5nqOpBA0w+Q==}
     engines: {node: '>= 12.13.0'}
@@ -16037,17 +15894,6 @@ packages:
       svgo: 2.8.0
     dev: true
 
-<<<<<<< HEAD
-=======
-  /postcss-syntax/0.36.2_postcss@7.0.39:
-    resolution: {integrity: sha512-nBRg/i7E3SOHWxF3PpF5WnJM/jQ1YpY9000OaVXlAQj6Zp/kIqJxEDWIZ67tAd7NLuk7zqN4yqe9nc0oNAOs1w==}
-    peerDependencies:
-      postcss: '>=5.0.0'
-    dependencies:
-      postcss: 7.0.39
-    dev: true
-
->>>>>>> fa0b32c9 (feat(connector-sendgrid-mail): fix)
   /postcss-unique-selectors/5.1.1_postcss@8.4.12:
     resolution: {integrity: sha512-5JiODlELrz8L2HwxfPnhOWZYWDxVHWL83ufOv84NrcgipI7TaeRsatAhK4Tr2/ZiYldpK/wBvw5BD3qfaK96GA==}
     engines: {node: ^10 || ^12 || >=14.0}
@@ -18508,16 +18354,8 @@ packages:
       postcss: 8.4.13
       postcss-media-query-parser: 0.2.3
       postcss-resolve-nested-selector: 0.1.1
-<<<<<<< HEAD
       postcss-safe-parser: 6.0.0_postcss@8.4.13
       postcss-selector-parser: 6.0.10
-=======
-      postcss-safe-parser: 4.0.2
-      postcss-sass: 0.4.4
-      postcss-scss: 2.1.1
-      postcss-selector-parser: 6.0.9
-      postcss-syntax: 0.36.2_postcss@7.0.39
->>>>>>> fa0b32c9 (feat(connector-sendgrid-mail): fix)
       postcss-value-parser: 4.2.0
       resolve-from: 5.0.0
       specificity: 0.4.1
@@ -18928,7 +18766,7 @@ packages:
       '@types/jest': 27.4.1
       bs-logger: 0.2.6
       fast-json-stable-stringify: 2.1.0
-      jest: 27.5.1_ts-node@10.7.0
+      jest: 27.5.1
       jest-util: 27.5.1
       json5: 2.2.1
       lodash.memoize: 4.1.2
@@ -18936,7 +18774,6 @@ packages:
       semver: 7.3.5
       typescript: 4.6.4
       yargs-parser: 20.2.9
-    dev: true
 
   /ts-jest/27.1.1_makj2rl6gt73u7koqro542qsmm:
     resolution: {integrity: sha512-Ds0VkB+cB+8g2JUmP/GKWndeZcCKrbe6jzolGrVWdqVUFByY/2KDHqxJ7yBSon7hDB1TA4PXxjfZ+JjzJisvgA==}
@@ -19125,6 +18962,21 @@ packages:
       string-argv: 0.1.2
       strip-ansi: 6.0.1
       typescript: 4.6.3
+    dev: true
+
+  /tsc-watch/5.0.3_typescript@4.6.4:
+    resolution: {integrity: sha512-Hz2UawwELMSLOf0xHvAFc7anLeMw62cMVXr1flYmhRuOhOyOljwmb1l/O60ZwRyy1k7N1iC1mrn1QYM2zITfuw==}
+    engines: {node: '>=8.17.0'}
+    hasBin: true
+    peerDependencies:
+      typescript: '*'
+    dependencies:
+      cross-spawn: 7.0.3
+      node-cleanup: 2.1.2
+      ps-tree: 1.2.0
+      string-argv: 0.1.2
+      strip-ansi: 6.0.1
+      typescript: 4.6.4
     dev: true
 
   /tsconfig-paths/3.13.0:

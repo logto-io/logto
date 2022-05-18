@@ -29,13 +29,13 @@ export type Personalization = {
 };
 
 export type Content = {
-  type: 'text/html' | 'text/plain';
+  type: ContextType;
   value: string;
 };
 
 export type Attachment = {
   content: string;
-  type: 'text/html' | 'text/plain';
+  type: ContextType;
   filename: string;
   disposition: 'inline' | 'attachment';
   content_id: string; // The attachment's content ID. This is used when the disposition is set to “inline” and the attachment is an image, allowing the file to be displayed within the body of your email.
