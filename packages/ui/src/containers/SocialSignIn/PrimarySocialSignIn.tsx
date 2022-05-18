@@ -2,6 +2,7 @@ import classNames from 'classnames';
 import React, { useState, useMemo } from 'react';
 
 import ExpandIcon from '@/assets/icons/expand-icon.svg';
+import IconButton from '@/components/Button/IconButton';
 import SocialLinkButton from '@/components/Button/SocialLinkButton';
 import useSocial from '@/hooks/use-social';
 
@@ -42,12 +43,14 @@ const PrimarySocialSignIn = ({ className, isPopup = false, onSocialSignInCallbac
         />
       ))}
       {!fullDisplay && (
-        <ExpandIcon
+        <IconButton
           className={classNames(styles.expandIcon, showAll && styles.expanded)}
           onClick={() => {
             setShowAll(!showAll);
           }}
-        />
+        >
+          <ExpandIcon />
+        </IconButton>
       )}
     </div>
   );

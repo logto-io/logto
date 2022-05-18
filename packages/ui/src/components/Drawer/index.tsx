@@ -5,6 +5,7 @@ import ReactModal from 'react-modal';
 import CloseIcon from '@/assets/icons/close-icon.svg';
 
 import * as modalStyles from '../../scss/modal.module.scss';
+import IconButton from '../Button/IconButton';
 import * as styles from './index.module.scss';
 
 type Props = {
@@ -28,7 +29,9 @@ const Drawer = ({ className, isOpen = false, children, onClose }: Props) => {
     >
       <div className={styles.container}>
         <div className={styles.header}>
-          <CloseIcon onClick={onClose} />
+          <IconButton onClick={onClose}>
+            <CloseIcon />
+          </IconButton>
         </div>
         {children}
       </div>

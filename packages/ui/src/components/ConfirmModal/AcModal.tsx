@@ -5,6 +5,7 @@ import ReactModal from 'react-modal';
 
 import CloseIcon from '@/assets/icons/close-icon.svg';
 import Button from '@/components/Button';
+import IconButton from '@/components/Button/IconButton';
 
 import * as modalStyles from '../../scss/modal.module.scss';
 import * as styles from './Acmodal.module.scss';
@@ -32,7 +33,9 @@ const AcModal = ({
       <div className={styles.container}>
         <div className={styles.header}>
           {t('description.reminder')}
-          <CloseIcon onClick={onClose} />
+          <IconButton onClick={onClose}>
+            <CloseIcon />
+          </IconButton>
         </div>
         <div className={styles.content}>{children}</div>
         <div className={styles.footer}>

@@ -9,9 +9,10 @@
 }
 
 .expandIcon {
-  color: var(--color-icon);
-  width: 20px;
-  height: 20px;
+  > svg {
+    width: 20px;
+    height: 20px;
+  }
 
   &.expanded {
     transform: rotate(180deg);
