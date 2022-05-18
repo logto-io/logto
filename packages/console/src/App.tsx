@@ -1,21 +1,15 @@
-import { LogtoProvider, useLogto } from '@logto/react';
-import { AppearanceMode, Setting } from '@logto/schemas';
-import React, { useEffect } from 'react';
-import { BrowserRouter, Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
-import useSWR, { SWRConfig } from 'swr';
+import { LogtoProvider } from '@logto/react';
+import React from 'react';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
+import { SWRConfig } from 'swr';
 import './scss/normalized.scss';
 // eslint-disable-next-line import/no-unassigned-import
 import '@fontsource/roboto-mono';
 
-import * as styles from './App.module.scss';
 import AppContent from './components/AppContent';
-import { getPath } from './components/AppContent/components/Sidebar';
-import { useSidebarMenuItems } from './components/AppContent/components/Sidebar/hook';
 import ErrorBoundary from './components/ErrorBoundary';
-import LogtoLoading from './components/LogtoLoading';
 import Toast from './components/Toast';
-import { themeStorageKey, logtoApiResource } from './consts';
-import { RequestError } from './hooks/use-api';
+import { logtoApiResource } from './consts';
 import useSwrFetcher from './hooks/use-swr-fetcher';
 import initI18n from './i18n/init';
 import ApiResourceDetails from './pages/ApiResourceDetails';
@@ -31,57 +25,12 @@ import Settings from './pages/Settings';
 import SignInExperience from './pages/SignInExperience';
 import UserDetails from './pages/UserDetails';
 import Users from './pages/Users';
-
-const isBasenameNeeded = process.env.NODE_ENV !== 'development' || process.env.PORT === '5002';
+import { getBasename } from './utilities/app';
 
 void initI18n();
-const defaultTheme = localStorage.getItem(themeStorageKey) ?? AppearanceMode.SyncWithSystem;
 
 const Main = () => {
-  const { isAuthenticated } = useLogto();
-  const location = useLocation();
-  const navigate = useNavigate();
   const fetcher = useSwrFetcher();
-
-  const settingsFetcher = useSwrFetcher<Setting>();
-  const { data } = useSWR<Setting, RequestError>(
-    isAuthenticated && '/api/settings',
-    settingsFetcher
-  );
-
-  const sections = useSidebarMenuItems();
-
-  useEffect(() => {
-    const theme = data?.adminConsole.appearanceMode ?? defaultTheme;
-    const isFollowSystem = theme === AppearanceMode.SyncWithSystem;
-    const className = styles[theme] ?? '';
-
-    if (!isFollowSystem) {
-      document.body.classList.add(className);
-    }
-
-    return () => {
-      if (!isFollowSystem) {
-        document.body.classList.remove(className);
-      }
-    };
-  }, [data?.adminConsole.appearanceMode]);
-
-  useEffect(() => {
-    (async () => {
-      void initI18n(data?.adminConsole.language);
-    })();
-  }, [data?.adminConsole.language]);
-
-  useEffect(() => {
-    if (location.pathname === '/') {
-      navigate(getPath(sections?.[0]?.items[0]?.title ?? ''));
-    }
-  }, [location.pathname, navigate, sections]);
-
-  if (isAuthenticated && !sections?.length) {
-    return <LogtoLoading message="general.loading" />;
-  }
 
   return (
     <ErrorBoundary>
@@ -126,7 +75,7 @@ const Main = () => {
 };
 
 const App = () => (
-  <BrowserRouter basename={isBasenameNeeded ? '/console' : ''}>
+  <BrowserRouter basename={getBasename()}>
     <LogtoProvider
       config={{ endpoint: window.location.origin, appId: 'foo', resources: [logtoApiResource] }}
     >

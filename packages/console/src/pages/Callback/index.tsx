@@ -1,21 +1,11 @@
-import { useHandleSignInCallback, useLogto } from '@logto/react';
-import React, { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useHandleSignInCallback } from '@logto/react';
+import React from 'react';
 
 import LogtoLoading from '@/components/LogtoLoading';
+import { getBasename } from '@/utilities/app';
 
 const Callback = () => {
-  const { isAuthenticated, isLoading } = useLogto();
-  const navigate = useNavigate();
-
-  useHandleSignInCallback();
-
-  // TO-DO: Error handling
-  useEffect(() => {
-    if (isAuthenticated && !isLoading) {
-      navigate('/', { replace: true });
-    }
-  }, [isAuthenticated, isLoading, navigate]);
+  useHandleSignInCallback(getBasename());
 
   return <LogtoLoading message="general.redirecting" />;
 };

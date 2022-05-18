@@ -1,4 +1,5 @@
 @use '@/scss/underscore' as _;
+@use '@/scss/colors' as colors;
 
 .app {
   position: absolute;
@@ -23,5 +24,25 @@
     max-width: 1168px;
     min-width: 604px;
     margin: 0 auto;
+  }
+}
+
+.light {
+  @include colors.light-theme;
+}
+
+.dark {
+  @include colors.dark-theme;
+}
+
+@media (prefers-color-scheme: light) {
+  body {
+    @include colors.light-theme;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  body {
+    @include colors.dark-theme;
   }
 }

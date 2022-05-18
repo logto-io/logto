@@ -1,10 +1,16 @@
+import { useLogto } from '@logto/react';
 import { AdminConsoleConfig, Setting } from '@logto/schemas';
 import useSWR from 'swr';
 
 import useApi, { RequestError } from './use-api';
 
 const useAdminConsoleConfigs = () => {
-  const { data: settings, error, mutate } = useSWR<Setting, RequestError>('/api/settings');
+  const { isAuthenticated } = useLogto();
+  const {
+    data: settings,
+    error,
+    mutate,
+  } = useSWR<Setting, RequestError>(isAuthenticated && '/api/settings');
   const api = useApi();
 
   const updateConfigs = async (delta: Partial<AdminConsoleConfig>) => {

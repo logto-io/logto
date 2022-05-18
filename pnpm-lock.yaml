@@ -480,7 +480,7 @@ importers:
     specifiers:
       '@fontsource/roboto-mono': ^4.5.7
       '@logto/phrases': ^0.1.0
-      '@logto/react': ^0.1.5
+      '@logto/react': ^0.1.7
       '@logto/schemas': ^0.1.0
       '@logto/shared': ^0.1.0
       '@mdx-js/react': ^1.6.22
@@ -536,7 +536,7 @@ importers:
     devDependencies:
       '@fontsource/roboto-mono': 4.5.7
       '@logto/phrases': link:../phrases
-      '@logto/react': 0.1.5_react@17.0.2
+      '@logto/react': 0.1.7_react@17.0.2
       '@logto/schemas': link:../schemas
       '@logto/shared': link:../shared
       '@mdx-js/react': 1.6.22_react@17.0.2
@@ -4401,11 +4401,11 @@ packages:
       '@lezer/common': 0.15.12
     dev: true
 
-  /@logto/browser/0.1.5:
-    resolution: {integrity: sha512-IKdovieQmI+iVcvLo55tIMtWlNqnnGA6KN+JBjSVXpfJNdo05saNlUaOzJc2AIAbR/dcDszNYogZIoAw3YO4BQ==}
+  /@logto/browser/0.1.7:
+    resolution: {integrity: sha512-toP/Fcqj+jWyaK25yFTxlFJ5UAErQr5mbL4vFHP+l9uR6UeLDLmGx9NuEVFKU52zuRIevGoZLRn5Q5XOGax9ig==}
     requiresBuild: true
     dependencies:
-      '@logto/js': 0.1.5
+      '@logto/js': 0.1.7
       '@silverhand/essentials': 1.1.7
       jose: 4.6.0
       lodash.get: 4.4.2
@@ -4413,8 +4413,8 @@ packages:
       superstruct: 0.15.4
     dev: true
 
-  /@logto/js/0.1.5:
-    resolution: {integrity: sha512-zf/ERfvxhbQ9JgLJ8xhFPcTtoeUJbiZHZ3iP6msGda5X/mdCABlSJLlZI6gtrf3DRKKv1K5Z/2NIDeCFfOMNNw==}
+  /@logto/js/0.1.7:
+    resolution: {integrity: sha512-APtl1L+mQsv5FG01rMpqXHdLKa8fratxRSO77h5lumapW2a5qGg4P1BAhkiWCt8Gb6fw2JzW9XpkXKdpVa4MHw==}
     requiresBuild: true
     dependencies:
       '@silverhand/essentials': 1.1.7
@@ -4425,13 +4425,13 @@ packages:
       superstruct: 0.15.4
     dev: true
 
-  /@logto/react/0.1.5_react@17.0.2:
-    resolution: {integrity: sha512-mPMiqE8IIvbnfgJiRGgyMHfqMpVKP/6lTA2N6Vxm0eBDEDjxl2anlfZe9Ey8Gk9L81UGC3/T5EFl/R22PZDqqQ==}
+  /@logto/react/0.1.7_react@17.0.2:
+    resolution: {integrity: sha512-zRg5uQZ0P1IdSA8nkMMRIY+BtRWF0rImS1Ec1Ku0LTWE315BdS/em0mVwDPqDcqlq8HMwyEorE19TXemnunK1Q==}
     requiresBuild: true
     peerDependencies:
       react: '>=16.8.0'
     dependencies:
-      '@logto/browser': 0.1.5
+      '@logto/browser': 0.1.7
       '@silverhand/essentials': 1.1.7
       react: 17.0.2
     dev: true

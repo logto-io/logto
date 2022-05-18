@@ -506,6 +506,12 @@ const translation = {
       appearance_dark: 'Dark mode',
       saved: 'Saved!',
     },
+    session_expire: {
+      title: 'Session Expired',
+      subtitle:
+        'Your session has expired and you have been disconnected. Click the button below to sign in admin console again.',
+      button: 'Sign in again',
+    },
   },
 };
 

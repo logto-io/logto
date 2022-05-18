@@ -27,12 +27,8 @@ type SidebarSection = {
   items: SidebarItem[];
 };
 
-export const useSidebarMenuItems = (): SidebarSection[] | undefined => {
+export const useSidebarMenuItems = (): SidebarSection[] => {
   const { configs } = useAdminConsoleConfigs();
-
-  if (!configs) {
-    return;
-  }
 
   return [
     {
@@ -41,7 +37,7 @@ export const useSidebarMenuItems = (): SidebarSection[] | undefined => {
         {
           Icon: Bolt,
           title: 'get_started',
-          isHidden: configs.hideGetStarted,
+          isHidden: configs?.hideGetStarted,
         },
         {
           Icon: BarGraph,
