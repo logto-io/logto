@@ -41,7 +41,7 @@ describe('getAuthorizationUri', () => {
       .mockResolvedValueOnce(mockedAlipayNativeConfigWithValidPrivateKey);
     const authorizationUri = await alipayNativeMethods.getAuthorizationUri('some_state');
     expect(authorizationUri).toBe(
-      'target_id=some_state&apiname=com.alipay.account.auth&method=alipay.open.auth.sdk.code.get&app_name=mc&biz_type=openservice&product_id=APP_FAST_LOGIN&scope=kuaijie&auth_type=AUTHACCOUNT&app_id=2021000000000000&pid=2088123456789012&sign_type=RSA2&sign=DLbDjZLHsAsB0v6O2ATMa1q8EI906LZrqDG1Fx6ClcaGL7qhBCpBcSFy29XOF4feNV8udtwn3KVxoQj3vHMp7Usb%2BTloFZ79JS3ptDpm6bLbt7SQdtcD43B6fDxNzXuZOcsaBqfpqlQRr28sLmxJR%2BcDO1Y8yMKr5X2jtRuuLSD3kUwy0fFlF0vXyuz5dsPS3hHNi%2Be1rpiOP%2BgHV6bG0soZeASdz98hlKW3JDOuzbir0m3QVqoF5A1ZyHKIsQzcK8VNeXQFEWC470oeRLOFHp6LUYaFALs31UJV1Sw%2FGdZIFlcsljnjleWWcwedyRi7KMq2Z8VeAjsNWWPh%2BIqPsg%3D%3D'
+      'apiname=com.alipay.account.auth&app_id=2021000000000000&app_name=mc&auth_type=AUTHACCOUNT&biz_type=openservice&method=alipay.open.auth.sdk.code.get&pid=2088123456789012&product_id=APP_FAST_LOGIN&scope=kuaijie&sign=DLbDjZLHsAsB0v6O2ATMa1q8EI906LZrqDG1Fx6ClcaGL7qhBCpBcSFy29XOF4feNV8udtwn3KVxoQj3vHMp7Usb%2BTloFZ79JS3ptDpm6bLbt7SQdtcD43B6fDxNzXuZOcsaBqfpqlQRr28sLmxJR%2BcDO1Y8yMKr5X2jtRuuLSD3kUwy0fFlF0vXyuz5dsPS3hHNi%2Be1rpiOP%2BgHV6bG0soZeASdz98hlKW3JDOuzbir0m3QVqoF5A1ZyHKIsQzcK8VNeXQFEWC470oeRLOFHp6LUYaFALs31UJV1Sw%2FGdZIFlcsljnjleWWcwedyRi7KMq2Z8VeAjsNWWPh%2BIqPsg%3D%3D&sign_type=RSA2&target_id=some_state'
     );
   });
 });

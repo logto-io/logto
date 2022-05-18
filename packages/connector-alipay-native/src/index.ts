@@ -72,6 +72,8 @@ export class AlipayNativeConnector implements SocialConnector {
 
     const signedSearchParameters = this.signingPamameters(initSearchParameters);
     const queryParameters = new URLSearchParams(signedSearchParameters);
+    // eslint-disable-next-line @silverhand/fp/no-mutating-methods
+    queryParameters.sort();
 
     return queryParameters.toString();
   };
