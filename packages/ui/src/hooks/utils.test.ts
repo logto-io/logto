@@ -33,7 +33,7 @@ describe('filterSocialConnectors', () => {
     // @ts-expect-error mock global object
     globalThis.logtoNativeSdk = {
       platform: 'ios',
-      supportedSocialConnectorIds: ['Web', 'WeChat'],
+      supportedSocialConnectorTargets: ['Web', 'WeChat'],
     };
     /* eslint-enable @silverhand/fp/no-mutation */
 
