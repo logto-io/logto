@@ -67,6 +67,8 @@ const readPrivateKey = async (): Promise<string> => {
 /**
  * Try to read the [signing cookie keys](https://github.com/panva/node-oidc-provider/blob/main/docs/README.md#cookieskeys).
  *
+ * If failed, then inquire user to generate a new keys array if no `--no-inquiry` presents in argv.
+ *
  * @returns The cookie keys in array.
  */
 const readCookieKeys = async (): Promise<string[]> => {
@@ -87,7 +89,7 @@ const readCookieKeys = async (): Promise<string[]> => {
       const answer = await inquirer.prompt({
         type: 'confirm',
         name: 'confirm',
-        message: `No cookie keys found in env \`${envKey}\`, would you like to generate a new one?`,
+        message: `No cookie keys array found in env \`${envKey}\`, would you like to generate a new one?`,
       });
 
       if (!answer.confirm) {
@@ -102,7 +104,7 @@ const readCookieKeys = async (): Promise<string[]> => {
   }
 
   throw new Error(
-    `Cookie keys for OIDC are missing or in a wrong format. Check env \`${envKey}\`.`
+    `The OIDC cookie keys array is missing or in a wrong format. Please check the value of env \`${envKey}\`.`
   );
 };
 

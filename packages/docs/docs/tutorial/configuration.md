@@ -57,7 +57,7 @@ If you run Logto via `npm start`, `NODE_ENV` will always be `production`.
 | OIDC_PRIVATE_KEY_PATH | `'./oidc-private-key.pem'`      | <code>string &#124; undefined</code> | The path to the private key file for [OIDC JWT signing](https://openid.net/specs/openid-connect-core-1_0.html#Signing). <br/> Note Logto will *ignore* this value if `OIDC_PRIVATE_KEY` is not empty.                                                          |
 | OIDC_ISSUER           | `'http://localhost:$PORT/oidc'` | `string`                             | The [issuer identifier](https://openid.net/specs/openid-connect-core-1_0.html#IssuerIdentifier) for OIDC. Usually it's the URL to your OIDC provider.                                                                                                          |
 
-#### Supported Key Types
+#### Supported Private Key Types
 
 - RSA
 - OKP (Ed25519, Ed448, X25519, X448 sub types)
