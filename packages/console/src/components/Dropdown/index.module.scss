@@ -3,6 +3,7 @@
 .content {
   box-shadow: var(--shadow-2);
   position: absolute;
+  border-radius: 8px;
 
   &.onTop {
     box-shadow: var(--shadow-2-reversed);
