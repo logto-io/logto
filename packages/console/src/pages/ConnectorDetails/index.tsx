@@ -26,6 +26,7 @@ import Reset from '@/icons/Reset';
 import * as detailsStyles from '@/scss/details.module.scss';
 
 import CreateForm from '../Connectors/components/CreateForm';
+import ConnectorTabs from './components/ConnectorTabs';
 import SenderTester from './components/SenderTester';
 import * as styles from './index.module.scss';
 
@@ -108,6 +109,9 @@ const ConnectorDetails = () => {
       />
       {isLoading && <DetailsSkeleton />}
       {!data && error && <div>{`error occurred: ${error.body?.message ?? error.message}`}</div>}
+      {data?.metadata.type === ConnectorType.Social && (
+        <ConnectorTabs target={data.metadata.target} connectorId={data.id} />
+      )}
       {data && (
         <Card className={styles.header}>
           <div className={styles.imagePlaceholder}>
