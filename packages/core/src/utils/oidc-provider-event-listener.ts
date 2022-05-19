@@ -1,6 +1,6 @@
-import { GrantType, IssuedTokenType, LogType } from '@logto/schemas';
+import { GrantType, IssuedTokenType, LogResult, LogType } from '@logto/schemas';
 import { notFalsy } from '@silverhand/essentials';
-import { KoaContextWithOIDC } from 'oidc-provider';
+import { errors, KoaContextWithOIDC } from 'oidc-provider';
 
 import { WithLogContext } from '@/middleware/koa-log';
 
@@ -14,7 +14,7 @@ interface GrantBody {
   access_token?: string;
   refresh_token?: string;
   id_token?: string;
-  scope?: string;
+  scope?: string; // AccessToken.scope
 }
 
 export const grantSuccessListener = async (
@@ -47,5 +47,29 @@ export const grantSuccessListener = async (
     params,
     issued,
     scope,
+  });
+};
+
+export const grantErrorListener = async (
+  ctx: KoaContextWithOIDC & WithLogContext & { body: GrantBody },
+  error: errors.OIDCProviderError
+) => {
+  const {
+    oidc: {
+      entities: { Client: client },
+      params,
+    },
+  } = ctx;
+  ctx.addLogContext({
+    applicationId: client?.clientId,
+  });
+
+  const grantType = params?.grant_type;
+  const type: LogType =
+    grantType === GrantType.AuthorizationCode ? 'CodeExchangeToken' : 'RefreshTokenExchangeToken';
+  ctx.log(type, {
+    result: LogResult.Error,
+    error: String(error),
+    params,
   });
 };

@@ -1,5 +1,10 @@
-import { grantSuccessListener } from '@/utils/oidc-provider-event-listener';
+import { LogResult } from '@logto/schemas';
+
+import { grantErrorListener, grantSuccessListener } from '@/utils/oidc-provider-event-listener';
 import { createContextWithRouteParameters } from '@/utils/test-utils';
+
+const addLogContext = jest.fn();
+const log = jest.fn();
 
 describe('grantSuccessListener', () => {
   const userId = 'userIdValue';
@@ -10,9 +15,6 @@ describe('grantSuccessListener', () => {
     Grant: { jti: sessionId },
     Client: { clientId: applicationId },
   };
-
-  const addLogContext = jest.fn();
-  const log = jest.fn();
 
   afterEach(() => {
     jest.clearAllMocks();
@@ -93,6 +95,66 @@ describe('grantSuccessListener', () => {
       params: parameters,
       scope: 'offline-access',
       userId,
+    });
+  });
+});
+
+describe('grantErrorListener', () => {
+  const applicationId = 'applicationIdValue';
+  const entities = { Client: { clientId: applicationId } };
+  const errorMessage = 'invalid grant';
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('should log type CodeExchangeToken when grant type is authorization_code', async () => {
+    const parameters = { grant_type: 'authorization_code', code: 'codeValue' };
+    const ctx = {
+      ...createContextWithRouteParameters(),
+      addLogContext,
+      log,
+      oidc: { entities, params: parameters },
+      body: {
+        access_token: 'newAccessTokenValue',
+        refresh_token: 'newRefreshTokenValue',
+        id_token: 'newIdToken',
+        scope: 'openid offline-access',
+      },
+    };
+
+    // @ts-expect-error pass complex type check to mock ctx directly
+    await grantErrorListener(ctx, new Error(errorMessage));
+    expect(addLogContext).toHaveBeenCalledWith({ applicationId });
+    expect(log).toHaveBeenCalledWith('CodeExchangeToken', {
+      result: LogResult.Error,
+      error: `Error: ${errorMessage}`,
+      params: parameters,
+    });
+  });
+
+  it('should log type RefreshTokenExchangeToken when grant type is refresh_code', async () => {
+    const parameters = { grant_type: 'refresh_token', refresh_token: 'refreshTokenValue' };
+    const ctx = {
+      ...createContextWithRouteParameters(),
+      addLogContext,
+      log,
+      oidc: { entities, params: parameters },
+      body: {
+        access_token: 'newAccessTokenValue',
+        refresh_token: 'newRefreshTokenValue',
+        id_token: 'newIdToken',
+        scope: 'openid offline-access',
+      },
+    };
+
+    // @ts-expect-error pass complex type check to mock ctx directly
+    await grantErrorListener(ctx, new Error(errorMessage));
+    expect(addLogContext).toHaveBeenCalledWith({ applicationId });
+    expect(log).toHaveBeenCalledWith('RefreshTokenExchangeToken', {
+      result: LogResult.Error,
+      error: `Error: ${errorMessage}`,
+      params: parameters,
     });
   });
 });
