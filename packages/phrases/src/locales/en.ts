@@ -277,6 +277,7 @@ const translation = {
       options_change_sms: 'Change SMS connector',
       more_options: 'MORE OPTIONS',
       connector_deleted: 'The connector has been deleted.',
+      not_set: '(Not set)',
     },
     get_started: {
       progress: 'Get started guide: {{completed}}/{{total}}',

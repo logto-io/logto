@@ -24,29 +24,43 @@ const transpileConnectorInstance = ({ connector, metadata }: ConnectorInstance):
 });
 
 export default function connectorRoutes<T extends AuthedRouter>(router: T) {
-  router.get('/connectors', async (ctx, next) => {
-    const connectorInstances = await getConnectorInstances();
+  router.get(
+    '/connectors',
+    koaGuard({
+      query: object({
+        target: string().optional(),
+      }),
+    }),
+    async (ctx, next) => {
+      const { target: filterTarget } = ctx.query;
+      const connectorInstances = await getConnectorInstances();
 
-    assertThat(
-      connectorInstances.filter(
-        (connector) =>
-          connector.connector.enabled && connector.metadata.type === ConnectorType.Email
-      ).length <= 1,
-      'connector.more_than_one_email'
-    );
-    assertThat(
-      connectorInstances.filter(
-        (connector) => connector.connector.enabled && connector.metadata.type === ConnectorType.SMS
-      ).length <= 1,
-      'connector.more_than_one_sms'
-    );
+      assertThat(
+        connectorInstances.filter(
+          (connector) =>
+            connector.connector.enabled && connector.metadata.type === ConnectorType.Email
+        ).length <= 1,
+        'connector.more_than_one_email'
+      );
+      assertThat(
+        connectorInstances.filter(
+          (connector) =>
+            connector.connector.enabled && connector.metadata.type === ConnectorType.SMS
+        ).length <= 1,
+        'connector.more_than_one_sms'
+      );
 
-    ctx.body = connectorInstances.map((connectorInstance) => {
-      return transpileConnectorInstance(connectorInstance);
-    });
+      const filteredInstances = filterTarget
+        ? connectorInstances.filter(({ metadata: { target } }) => target === filterTarget)
+        : connectorInstances;
 
-    return next();
-  });
+      ctx.body = filteredInstances.map((connectorInstance) => {
+        return transpileConnectorInstance(connectorInstance);
+      });
+
+      return next();
+    }
+  );
 
   router.get(
     '/connectors/:id',
