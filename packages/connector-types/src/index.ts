@@ -94,7 +94,7 @@ export type ValidateConfig<T = Record<string, unknown>> = (config: T) => Promise
 
 export type GetAuthorizationUri = (redirectUri: string, state: string) => Promise<string>;
 
-export type GetNativeAuthorizationUri = (state: string) => Promise<string>;
+export type GetNativeAuthorizationUri = () => Promise<string>;
 
 export type AccessTokenObject = { accessToken: string } & Record<string, string>;
 

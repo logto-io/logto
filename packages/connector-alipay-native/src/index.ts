@@ -25,11 +25,11 @@ import got from 'got';
 
 import {
   alipayEndpoint,
+  authorizationEndpoint,
   methodForAccessToken,
   methodForUserInfo,
   defaultMetadata,
   defaultTimeout,
-  staticParameters,
 } from './constant';
 import {
   alipayNativeConfigGuard,
@@ -61,21 +61,12 @@ export class AlipayNativeConnector implements SocialConnector {
     }
   };
 
-  public getAuthorizationUri: GetNativeAuthorizationUri = async (state) => {
-    const config = await this.getConfig(this.metadata.target, this.metadata.platform);
+  public getAuthorizationUri: GetNativeAuthorizationUri = async () => {
+    const { appId } = await this.getConfig(this.metadata.target, this.metadata.platform);
 
-    const initSearchParameters = {
-      target_id: state,
-      ...staticParameters,
-      ...config,
-    };
+    const queryParameters = new URLSearchParams({ app_id: appId });
 
-    const signedSearchParameters = this.signingPamameters(initSearchParameters);
-    const queryParameters = new URLSearchParams(signedSearchParameters);
-    // eslint-disable-next-line @silverhand/fp/no-mutating-methods
-    queryParameters.sort();
-
-    return queryParameters.toString();
+    return `${authorizationEndpoint}?${queryParameters.toString()}`;
   };
 
   public getAccessToken: GetAccessToken = async (code): Promise<AccessTokenObject> => {
@@ -83,7 +74,7 @@ export class AlipayNativeConnector implements SocialConnector {
     const initSearchParameters = {
       method: methodForAccessToken,
       format: 'JSON',
-      timestamp: this.getTimestamp(),
+      timestamp: dayjs().format('YYYY-MM-DD HH:mm:ss'),
       version: '1.0',
       grant_type: 'authorization_code',
       code,
@@ -122,7 +113,7 @@ export class AlipayNativeConnector implements SocialConnector {
     const initSearchParameters = {
       method: methodForUserInfo,
       format: 'JSON',
-      timestamp: this.getTimestamp(),
+      timestamp: dayjs().format('YYYY-MM-DD HH:mm:ss'),
       version: '1.0',
       grant_type: 'authorization_code',
       auth_token: accessToken,
@@ -161,6 +152,4 @@ export class AlipayNativeConnector implements SocialConnector {
 
     return { id, avatar, name };
   };
-
-  private readonly getTimestamp = (): string => dayjs().format('YYYY-MM-DD HH:mm:ss');
 }

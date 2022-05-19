@@ -1,10 +1,9 @@
 import { z } from 'zod';
 
-import { alipaySigningAlgorithms, pidRegEx } from './constant';
+import { alipaySigningAlgorithms } from './constant';
 
 export const alipayNativeConfigGuard = z.object({
   appId: z.string().max(16),
-  pid: z.string().regex(pidRegEx),
   privateKey: z.string(),
   signType: z.enum(alipaySigningAlgorithms),
 });

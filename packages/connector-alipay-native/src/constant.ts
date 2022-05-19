@@ -3,29 +3,16 @@ import path from 'path';
 import { ConnectorType, ConnectorMetadata, ConnectorPlatform } from '@logto/connector-types';
 import { getFileContents } from '@logto/shared';
 
+export const authorizationEndpoint = 'alipay://'; // This is used to arouse the native Alipay App
 export const alipayEndpoint = 'https://openapi.alipay.com/gateway.do';
 export const methodForAccessToken = 'alipay.system.oauth.token';
 export const methodForUserInfo = 'alipay.user.info.share';
-
-// Constants in this segment are for SDK call
-// See: https://opendocs.alipay.com/open/218/105327
-export const staticParameters = {
-  apiname: 'com.alipay.account.auth',
-  method: 'alipay.open.auth.sdk.code.get',
-  app_name: 'mc',
-  biz_type: 'openservice',
-  product_id: 'APP_FAST_LOGIN',
-  scope: 'kuaijie',
-  auth_type: 'AUTHACCOUNT',
-};
 
 export const alipaySigningAlgorithmMapping = {
   RSA: 'RSA-SHA1',
   RSA2: 'RSA-SHA256',
 } as const;
 export const alipaySigningAlgorithms = ['RSA', 'RSA2'] as const;
-
-export const pidRegEx = /^2088\d{12}$/;
 
 // eslint-disable-next-line unicorn/prefer-module
 const currentPath = __dirname;
