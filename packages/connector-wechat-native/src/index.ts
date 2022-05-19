@@ -6,7 +6,7 @@
 import {
   ConnectorMetadata,
   GetAccessToken,
-  GetAuthorizationUri,
+  GetNativeAuthorizationUri,
   ValidateConfig,
   GetUserInfo,
   ConnectorError,
@@ -21,7 +21,6 @@ import {
   authorizationEndpoint,
   accessTokenEndpoint,
   userInfoEndpoint,
-  scope,
   defaultMetadata,
   defaultTimeout,
 } from './constant';
@@ -52,14 +51,11 @@ export class WeChatNativeConnector implements SocialConnector {
     }
   };
 
-  public getAuthorizationUri: GetAuthorizationUri = async (redirectUri, state) => {
+  public getAuthorizationUri: GetNativeAuthorizationUri = async () => {
     const { appId } = await this.getConfig(this.metadata.target, this.metadata.platform);
 
     const queryParameters = new URLSearchParams({
-      appid: appId,
-      redirect_uri: encodeURI(redirectUri), // The variable `redirectUri` should match {appId, appSecret}
-      scope,
-      state,
+      app_id: appId,
     });
 
     return `${authorizationEndpoint}?${queryParameters.toString()}`;

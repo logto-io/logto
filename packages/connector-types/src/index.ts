@@ -85,7 +85,7 @@ export interface EmailConnector extends BaseConnector {
 }
 
 export interface SocialConnector extends BaseConnector {
-  getAuthorizationUri: GetAuthorizationUri;
+  getAuthorizationUri: GetAuthorizationUri | GetNativeAuthorizationUri;
   getAccessToken: GetAccessToken;
   getUserInfo: GetUserInfo;
 }
@@ -93,6 +93,8 @@ export interface SocialConnector extends BaseConnector {
 export type ValidateConfig<T = Record<string, unknown>> = (config: T) => Promise<void>;
 
 export type GetAuthorizationUri = (redirectUri: string, state: string) => Promise<string>;
+
+export type GetNativeAuthorizationUri = () => Promise<string>;
 
 export type AccessTokenObject = { accessToken: string } & Record<string, string>;
 
