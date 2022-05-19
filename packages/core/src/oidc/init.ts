@@ -42,7 +42,6 @@ export default async function initOidc(app: Koa): Promise<Provider> {
     features: {
       userinfo: { enabled: true },
       revocation: { enabled: true },
-      introspection: { enabled: true },
       devInteractions: { enabled: false },
       resourceIndicators: {
         enabled: true,
