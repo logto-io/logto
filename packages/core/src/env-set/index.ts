@@ -30,7 +30,7 @@ const loadEnvValues = async () => {
 
 const throwNotLoadedError = () => {
   throw new Error(
-    'Env set is not loaded. Make sure to call `await envSet.load()` before using it.'
+    'The env set is not loaded. Make sure to call `await envSet.load()` before using it.'
   );
 };
 
