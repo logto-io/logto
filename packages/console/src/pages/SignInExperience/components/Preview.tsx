@@ -31,13 +31,15 @@ const Preview = ({ signInExperience, className }: Props) => {
 
     const socialConnectors = signInExperience.socialSignInConnectorTargets.reduce<
       Array<ConnectorMetadata & { id: string }>
-    >((previous, connectorTarget) => {
-      const connectors = allConnectors.filter(
-        ({ metadata: { target } }) => target === connectorTarget
-      );
-
-      return [...previous, ...connectors.map(({ metadata, id }) => ({ ...metadata, id }))];
-    }, []);
+    >(
+      (previous, connectorTarget) => [
+        ...previous,
+        ...allConnectors
+          .filter(({ metadata: { target } }) => target === connectorTarget)
+          .map(({ metadata, id }) => ({ ...metadata, id })),
+      ],
+      []
+    );
 
     return encodeURIComponent(
       JSON.stringify({
