@@ -17,6 +17,9 @@ interface GrantBody {
   scope?: string; // AccessToken.scope
 }
 
+const getLogType = (grantType: GrantType): LogType =>
+  grantType === GrantType.AuthorizationCode ? 'CodeExchangeToken' : 'RefreshTokenExchangeToken';
+
 export const grantSuccessListener = async (
   ctx: KoaContextWithOIDC & WithLogContext & { body: GrantBody }
 ) => {
@@ -39,9 +42,8 @@ export const grantSuccessListener = async (
     id_token && 'idToken',
   ].filter((value): value is IssuedTokenType => notFalsy(value));
 
-  const grantType = params?.grant_type;
-  const type: LogType =
-    grantType === GrantType.AuthorizationCode ? 'CodeExchangeToken' : 'RefreshTokenExchangeToken';
+  const grantType: unknown = params?.grant_type;
+  const type = getLogType(grantType as GrantType);
   ctx.log(type, {
     userId: account?.accountId,
     params,
@@ -64,9 +66,8 @@ export const grantErrorListener = async (
     applicationId: client?.clientId,
   });
 
-  const grantType = params?.grant_type;
-  const type: LogType =
-    grantType === GrantType.AuthorizationCode ? 'CodeExchangeToken' : 'RefreshTokenExchangeToken';
+  const grantType: unknown = params?.grant_type;
+  const type = getLogType(grantType as GrantType);
   ctx.log(type, {
     result: LogResult.Error,
     error: String(error),
