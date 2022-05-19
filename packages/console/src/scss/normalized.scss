@@ -57,16 +57,18 @@ table {
 }
 
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 16px;
 }
 
 ::-webkit-scrollbar:horizontal {
-  height: 8px;
+  height: 16px;
 }
 
 ::-webkit-scrollbar-thumb {
   background: var(--color-neutral-variant-80);
-  border-radius: 4px;
+  background-clip: content-box;
+  border: 4px solid transparent;
+  border-radius: 8px;
 }
 
 ::-webkit-scrollbar-track {
