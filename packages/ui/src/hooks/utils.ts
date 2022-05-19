@@ -104,7 +104,7 @@ export const filterSocialConnectors = (socialConnectors?: ConnectorData[]) => {
      **/
     if (
       platform === 'Native' &&
-      getLogtoNativeSdk()?.supportedSocialConnectorIds.includes(target)
+      getLogtoNativeSdk()?.supportedSocialConnectorTargets.includes(target)
     ) {
       connectorMap.set(target, connector);
       continue;
