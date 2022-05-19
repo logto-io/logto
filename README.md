@@ -21,7 +21,7 @@ Boringly, we call it "[customer identity access management](https://en.wikipedia
 
 ## Get Started
 
-A step-by-step guide is available on https://docs.logto.io (also in [简体中文](https://docs.logto.io/zh-cn)).
+Visit our [website](https://logto.io) for a brief introduction if you are new to Logto. A step-by-step guide is available on https://docs.logto.io (also in [简体中文](https://docs.logto.io/zh-cn)).
 
 ## Resources
 
