@@ -3,7 +3,9 @@ import { readFileSync, writeFileSync } from 'fs';
 
 import { getEnv } from '@silverhand/essentials';
 import inquirer from 'inquirer';
+import { nanoid } from 'nanoid';
 
+import { appendDotEnv } from './dot-env';
 import { allYes, noInquiry } from './parameters';
 
 /**
@@ -62,11 +64,55 @@ const readPrivateKey = async (): Promise<string> => {
   }
 };
 
+/**
+ * Try to read the [signing cookie keys](https://github.com/panva/node-oidc-provider/blob/main/docs/README.md#cookieskeys).
+ *
+ * @returns The cookie keys in array.
+ */
+const readCookieKeys = async (): Promise<string[]> => {
+  const envKey = 'OIDC_COOKIE_KEYS';
+
+  try {
+    const keys: unknown = JSON.parse(getEnv(envKey));
+
+    if (Array.isArray(keys) && keys.every((key): key is string => typeof key === 'string')) {
+      return keys;
+    }
+  } catch (error: unknown) {
+    if (noInquiry) {
+      throw error;
+    }
+
+    if (!allYes) {
+      const answer = await inquirer.prompt({
+        type: 'confirm',
+        name: 'confirm',
+        message: `No cookie keys found in env \`${envKey}\`, would you like to generate a new one?`,
+      });
+
+      if (!answer.confirm) {
+        throw error;
+      }
+    }
+
+    const generated = [nanoid()];
+    appendDotEnv(envKey, JSON.stringify(generated));
+
+    return generated;
+  }
+
+  throw new Error(
+    `Cookie keys for OIDC are missing or in a wrong format. Check env \`${envKey}\`.`
+  );
+};
+
 const loadOidcValues = async (port: number) => {
+  const cookieKeys = await readCookieKeys();
   const privateKey = crypto.createPrivateKey(await readPrivateKey());
   const publicKey = crypto.createPublicKey(privateKey);
 
   return Object.freeze({
+    cookieKeys,
     privateKey,
     publicKey,
     issuer: getEnv('OIDC_ISSUER', `http://localhost:${port}/oidc`),
