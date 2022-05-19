@@ -3,7 +3,6 @@ import { User } from '@logto/schemas';
 import { Provider } from 'oidc-provider';
 
 import {
-  mockSignInExperience,
   mockUser,
   mockAliyunDmConnectorInstance,
   mockAliyunSmsConnectorInstance,
@@ -15,7 +14,6 @@ import {
 } from '@/__mocks__';
 import { ConnectorType } from '@/connectors/types';
 import RequestError from '@/errors/RequestError';
-import * as signInExperienceQueries from '@/queries/sign-in-experience';
 import { createRequester } from '@/utils/test-utils';
 
 import sessionRoutes from './session';
@@ -908,41 +906,6 @@ describe('sessionRoutes', () => {
       await expect(sessionRequest.post('/session/consent')).resolves.toHaveProperty(
         'statusCode',
         400
-      );
-    });
-  });
-
-  describe('GET /sign-in-settings', () => {
-    const signInExperienceQuerySpyOn = jest
-      .spyOn(signInExperienceQueries, 'findDefaultSignInExperience')
-      .mockResolvedValue(mockSignInExperience);
-
-    it('should return github and facebook connector instances', async () => {
-      const response = await sessionRequest.get('/sign-in-settings');
-      expect(signInExperienceQuerySpyOn).toHaveBeenCalledTimes(1);
-      expect(response.status).toEqual(200);
-      expect(response.body).toMatchObject(
-        expect.objectContaining({
-          ...mockSignInExperience,
-          socialConnectors: [
-            {
-              ...mockGithubConnectorInstance.metadata,
-              id: mockGithubConnectorInstance.connector.id,
-            },
-            {
-              ...mockFacebookConnectorInstance.metadata,
-              id: mockFacebookConnectorInstance.connector.id,
-            },
-            {
-              ...mockWechatConnectorInstance.metadata,
-              id: mockWechatConnectorInstance.connector.id,
-            },
-            {
-              ...mockWechatNativeConnectorInstance.metadata,
-              id: mockWechatNativeConnectorInstance.connector.id,
-            },
-          ],
-        })
       );
     });
   });
