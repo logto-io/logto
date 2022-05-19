@@ -65,8 +65,8 @@ $font-family: -apple-system,
   --color-toast: #34353f;
   --color-overlay: rgba(0, 0, 0, 30%);
   // shadows
-  --shadow-1: 0 8px 16px rgba(66, 41, 159, 4%);
-  --shadow-2: 0 2px 12px rgba(0, 0, 0, 12%);
+  --shadow-2: 0 4px 12px rgba(0, 0, 0, 12%);
+  --shadow-3: 0 4px 16px rgba(0, 0, 0, 20%);
 }
 
 @mixin fonts {
