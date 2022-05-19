@@ -100,13 +100,24 @@ interface SignInSocialLogPayload extends SignInSocialBindLogPayload {
   redirectTo?: string;
 }
 
-export type IssuedTokenType = 'accessToken' | 'refreshToken' | 'idToken';
+export enum TokenType {
+  AccessToken = 'AccessToken',
+  RefreshToken = 'RefreshToken',
+  IdToken = 'IdToken',
+}
 
 interface ExchangeTokenLogPayload extends ArbitraryLogPayload {
   userId?: string;
   params?: Record<string, unknown>;
-  issued?: IssuedTokenType[];
+  issued?: TokenType[];
   scope?: string;
+}
+
+interface RevokeTokenLogPayload extends ArbitraryLogPayload {
+  userId?: string;
+  params?: Record<string, unknown>;
+  grantId?: string;
+  tokenType?: TokenType;
 }
 
 export type LogPayloads = {
@@ -126,6 +137,7 @@ export type LogPayloads = {
   SignInSocial: SignInSocialLogPayload;
   CodeExchangeToken: ExchangeTokenLogPayload;
   RefreshTokenExchangeToken: ExchangeTokenLogPayload;
+  RevokeToken: RevokeTokenLogPayload;
 };
 
 export type LogType = keyof LogPayloads;

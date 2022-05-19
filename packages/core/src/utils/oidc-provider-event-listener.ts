@@ -1,4 +1,4 @@
-import { GrantType, IssuedTokenType, LogResult } from '@logto/schemas';
+import { GrantType, TokenType, LogResult } from '@logto/schemas';
 import { notFalsy } from '@silverhand/essentials';
 import { errors, KoaContextWithOIDC } from 'oidc-provider';
 
@@ -22,8 +22,7 @@ const getLogType = (grantType: unknown) => {
     !grantType ||
     ![GrantType.AuthorizationCode, GrantType.RefreshToken].includes(grantType as GrantType)
   ) {
-    console.error('Unexpected grant_type:', grantType);
-
+    // Only log token exchange by authorization code or refresh token.
     return;
   }
 
@@ -32,6 +31,7 @@ const getLogType = (grantType: unknown) => {
     : 'RefreshTokenExchangeToken';
 };
 
+// The grant.success event is emitted at https://github.com/panva/node-oidc-provider/blob/564b1095ee869c89381d63dfdb5875c99f870f5f/lib/actions/token.js#L71
 export const grantSuccessListener = async (
   ctx: KoaContextWithOIDC & WithLogContext & { body: GrantBody }
 ) => {
@@ -55,11 +55,11 @@ export const grantSuccessListener = async (
   });
 
   const { access_token, refresh_token, id_token, scope } = body;
-  const issued: IssuedTokenType[] = [
-    access_token && 'accessToken',
-    refresh_token && 'refreshToken',
-    id_token && 'idToken',
-  ].filter((value): value is IssuedTokenType => notFalsy(value));
+  const issued = [
+    access_token && TokenType.AccessToken,
+    refresh_token && TokenType.RefreshToken,
+    id_token && TokenType.IdToken,
+  ].filter((value): value is TokenType => notFalsy(value));
 
   ctx.log(logType, {
     userId: account?.accountId,
@@ -69,6 +69,7 @@ export const grantSuccessListener = async (
   });
 };
 
+// The grant.error event is emitted at https://github.com/panva/node-oidc-provider/blob/564b1095ee869c89381d63dfdb5875c99f870f5f/lib/helpers/initialize_app.js#L153
 export const grantErrorListener = async (
   ctx: KoaContextWithOIDC & WithLogContext & { body: GrantBody },
   error: errors.OIDCProviderError
@@ -94,4 +95,28 @@ export const grantErrorListener = async (
     error: String(error),
     params,
   });
+};
+
+// OAuth 2.0 Token Revocation: https://datatracker.ietf.org/doc/html/rfc7009
+// The grant.revoked event is emitted at https://github.com/panva/node-oidc-provider/blob/564b1095ee869c89381d63dfdb5875c99f870f5f/lib/helpers/revoke.js#L25
+export const grantRevokedListener = async (
+  ctx: KoaContextWithOIDC & WithLogContext,
+  grantId: string
+) => {
+  const {
+    oidc: {
+      entities: { Client: client, AccessToken: accessToken, RefreshToken: refreshToken },
+      params,
+    },
+  } = ctx;
+
+  if (!refreshToken && !accessToken) {
+    // Only log token revocation of access token or refresh token.
+    return;
+  }
+
+  ctx.addLogContext({ applicationId: client?.clientId });
+  const userId = accessToken?.accountId ?? refreshToken?.accountId;
+  const tokenType = accessToken ? TokenType.AccessToken : TokenType.RefreshToken;
+  ctx.log('RevokeToken', { userId, params, grantId, tokenType });
 };
