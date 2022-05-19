@@ -196,15 +196,11 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
     }),
     async (ctx, next) => {
       const { connectorId, state, redirectUri } = ctx.guard.body;
-      const type = 'SignInSocial';
-      ctx.log(type, { connectorId, state, redirectUri });
-
       assertThat(state && redirectUri, 'session.insufficient_info');
       const connector = await getSocialConnectorInstanceById(connectorId);
       assertThat(connector.connector.enabled, 'connector.not_enabled');
       const redirectTo = await connector.getAuthorizationUri(redirectUri, state);
       ctx.body = { redirectTo };
-      ctx.log(type, { redirectTo });
 
       return next();
     }
