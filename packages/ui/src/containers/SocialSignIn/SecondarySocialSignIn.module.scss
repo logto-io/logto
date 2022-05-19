@@ -13,15 +13,6 @@
   }
 }
 
-.moreButton {
-  border-radius: 50%;
-  @include _.flex-column;
-
-  > svg {
-    color: var(--color-icon);
-  }
-}
-
 :global(body.mobile) {
   .moreButton {
     > svg {

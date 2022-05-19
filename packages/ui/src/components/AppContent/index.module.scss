@@ -69,5 +69,7 @@ body {
     min-height: 640px;
     position: relative;
     padding: _.unit(6);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-3);
   }
 }

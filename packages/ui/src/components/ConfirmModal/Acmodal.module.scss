@@ -15,8 +15,8 @@
 
 .container {
   background: var(--color-dialogue);
-  border-radius: var(--radius);
   border: _.border(var(--color-divider));
+  border-radius: 16px;
   padding: _.unit(6);
 }
 
@@ -27,8 +27,7 @@
   justify-content: space-between;
   margin-bottom: _.unit(4);
 
-  > svg {
-    color: var(--color-icon);
+  svg {
     width: 24px;
     height: 24px;
   }
@@ -49,6 +48,6 @@
   }
 
   > button:first-child {
-    margin-right: _.unit(4);
+    margin-right: _.unit(3);
   }
 }
