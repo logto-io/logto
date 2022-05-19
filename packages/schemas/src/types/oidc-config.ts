@@ -7,3 +7,8 @@ export type SnakeCaseOidcConfig = {
 };
 
 export type OidcConfig = KeysToCamelCase<SnakeCaseOidcConfig>;
+
+export enum GrantType {
+  AuthorizationCode = 'authorization_code',
+  RefreshToken = 'refresh_token',
+}

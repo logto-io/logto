@@ -1,4 +1,4 @@
-import { CreateApplication } from '@logto/schemas';
+import { CreateApplication, GrantType } from '@logto/schemas';
 import dayjs from 'dayjs';
 import { AdapterFactory, AllClientMetadata } from 'oidc-provider';
 import snakecaseKeys from 'snakecase-keys';
@@ -28,7 +28,7 @@ export default function postgresAdapter(modelName: string): ReturnType<AdapterFa
       client_id,
       client_name,
       application_type: getApplicationTypeString(type),
-      grant_types: ['authorization_code', 'refresh_token'],
+      grant_types: Object.values(GrantType),
       token_endpoint_auth_method: 'none',
       ...snakecaseKeys(oidcClientMetadata),
       ...customClientMetadata, // OIDC Provider won't camelcase custom parameter keys
