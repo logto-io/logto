@@ -17,6 +17,7 @@ Thus the system environment variable will override the value in `.env`.
 
 For the first time you start Logto with no related environment variable, unless `--no-inquiry` is specified, it'll ask several questions for a smooth experience to fulfill the minimum requirements:
 
+- If you'd like to generate a cookie keys array for the OIDC provider
 - If you'd like to generate a private key for the OIDC provider
 - If you'd like to set up a new Logto database
 - Enter the [Postgres DSN](https://www.postgresql.org/docs/14/libpq-connect.html#id-1.7.3.8.3.6)
@@ -51,11 +52,12 @@ If you run Logto via `npm start`, `NODE_ENV` will always be `production`.
 
 | Key                   | Default Value                   | Type                                 | Description                                                                                                                                                                                                                                                    |
 | --------------------- | ------------------------------- | ------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| OIDC_COOKIE_KEYS      | N/A                             | <code>string[]</code>                | The string array of the [signing cookie keys](https://github.com/panva/node-oidc-provider/blob/main/docs/README.md#cookieskeys).                                                                                                                               |
 | OIDC_PRIVATE_KEY      | N/A                             | <code>string &#124; undefined</code> | The content of private key for [OIDC JWT signing](https://openid.net/specs/openid-connect-core-1_0.html#Signing). <br/> If you'd like to set this in `.env`, you can leverage [multiline values](https://github.com/motdotla/dotenv#multiline-values) support. |
 | OIDC_PRIVATE_KEY_PATH | `'./oidc-private-key.pem'`      | <code>string &#124; undefined</code> | The path to the private key file for [OIDC JWT signing](https://openid.net/specs/openid-connect-core-1_0.html#Signing). <br/> Note Logto will *ignore* this value if `OIDC_PRIVATE_KEY` is not empty.                                                          |
 | OIDC_ISSUER           | `'http://localhost:$PORT/oidc'` | `string`                             | The [issuer identifier](https://openid.net/specs/openid-connect-core-1_0.html#IssuerIdentifier) for OIDC. Usually it's the URL to your OIDC provider.                                                                                                          |
 
-#### Supported Key Types
+#### Supported Private Key Types
 
 - RSA
 - OKP (Ed25519, Ed448, X25519, X448 sub types)

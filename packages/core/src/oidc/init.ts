@@ -15,7 +15,8 @@ import { routes } from '@/routes/consts';
 import { grantErrorListener, grantSuccessListener } from '@/utils/oidc-provider-event-listener';
 
 export default async function initOidc(app: Koa): Promise<Provider> {
-  const { issuer, privateKey, defaultIdTokenTtl, defaultRefreshTokenTtl } = envSet.values.oidc;
+  const { issuer, cookieKeys, privateKey, defaultIdTokenTtl, defaultRefreshTokenTtl } =
+    envSet.values.oidc;
 
   const keys = [await exportJWK(privateKey)];
   const cookieConfig = Object.freeze({
@@ -30,9 +31,7 @@ export default async function initOidc(app: Koa): Promise<Provider> {
       throw error;
     },
     cookies: {
-      // V2: Rotate this when necessary
-      // https://github.com/panva/node-oidc-provider/blob/main/docs/README.md#cookieskeys
-      keys: ['LOGTOSEKRIT1'],
+      keys: cookieKeys,
       long: cookieConfig,
       short: cookieConfig,
     },
