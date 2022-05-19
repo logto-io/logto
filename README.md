@@ -11,8 +11,8 @@
 **Main Features**
 
 - An OIDC-based identity service
-- All-platform user sign-in/up experience with dark mode and SDK support (SPA, iOS, and Android)
-- Passwordless (SMS / Email) sign-in/up support
+- All-platform user sign-in/up experience with dark mode and SDK support (Web, iOS, and Android)
+- Sign-in/up with dynamic SMS/Email passcode
 - Out-of-box social sign-in support (GitHub, Google, WeChat, Alipay, etc.)
 - A web UI to control all above (Admin Console)
 - Extendable multi-language support
@@ -21,7 +21,7 @@ Boringly, we call it "[customer identity access management](https://en.wikipedia
 
 ## Get Started
 
-A step-by-step guide is available on https://docs.logto.io (also in [简体中文](https://docs.logto.io/zh-cn)).
+Visit our [website](https://logto.io) for a brief introduction if you are new to Logto. A step-by-step guide is available on https://docs.logto.io (also in [简体中文](https://docs.logto.io/zh-cn)).
 
 ## Resources
 
