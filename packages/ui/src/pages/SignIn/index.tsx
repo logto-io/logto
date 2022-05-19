@@ -9,22 +9,28 @@ import * as styles from './index.module.scss';
 import { PrimarySection, SecondarySection, CreateAccountLink } from './registry';
 
 const SignIn = () => {
-  const { experienceSettings } = useContext(PageContext);
-  const { slogan, logoUrl = '', style } = experienceSettings?.branding ?? {};
+  const { experienceSettings, theme } = useContext(PageContext);
+
+  if (!experienceSettings) {
+    return null;
+  }
+
+  const { slogan, logoUrl, darkLogoUrl, style } = experienceSettings.branding;
+  const logo = theme === 'light' ? logoUrl : darkLogoUrl ?? logoUrl;
 
   return (
     <div className={classNames(styles.wrapper)}>
       <BrandingHeader
         className={styles.header}
         headline={style === BrandingStyle.Logo_Slogan ? slogan : undefined}
-        logo={logoUrl}
+        logo={logo}
       />
-      <PrimarySection signInMethod={experienceSettings?.primarySignInMethod} />
+      <PrimarySection signInMethod={experienceSettings.primarySignInMethod} />
       <SecondarySection
-        primarySignInMethod={experienceSettings?.primarySignInMethod}
-        secondarySignInMethods={experienceSettings?.secondarySignInMethods}
+        primarySignInMethod={experienceSettings.primarySignInMethod}
+        secondarySignInMethods={experienceSettings.secondarySignInMethods}
       />
-      <CreateAccountLink primarySignInMethod={experienceSettings?.primarySignInMethod} />
+      <CreateAccountLink primarySignInMethod={experienceSettings.primarySignInMethod} />
     </div>
   );
 };
