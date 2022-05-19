@@ -29,8 +29,8 @@ export const defaultMetadata: ConnectorMetadata = {
   type: ConnectorType.Social,
   platform: ConnectorPlatform.Web,
   name: {
-    en: 'Sign In with Facebook',
-    'zh-CN': 'Facebook 登录',
+    en: 'Facebook',
+    'zh-CN': 'Facebook',
   },
   logo: './logo.png',
   description: {

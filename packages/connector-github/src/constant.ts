@@ -20,10 +20,10 @@ export const defaultMetadata: ConnectorMetadata = {
   type: ConnectorType.Social,
   platform: ConnectorPlatform.Web,
   name: {
-    en: 'Sign In with GitHub',
-    'zh-CN': 'GitHub登录',
+    en: 'GitHub',
+    'zh-CN': 'GitHub',
   },
-  logo: 'https://user-images.githubusercontent.com/5717882/156983224-7ea0296b-38fa-419d-9515-67e8a9612e09.png',
+  logo: 'https://user-images.githubusercontent.com/5717882/169224449-687a1680-85ec-4482-bf04-4132b6476246.svg',
   description: {
     en: 'Sign In with GitHub',
     'zh-CN': 'GitHub登录',
