@@ -54,9 +54,9 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
         ? connectorInstances.filter(({ metadata: { target } }) => target === filterTarget)
         : connectorInstances;
 
-      ctx.body = filteredInstances.map((connectorInstance) => {
-        return transpileConnectorInstance(connectorInstance);
-      });
+      ctx.body = filteredInstances.map((connectorInstance) =>
+        transpileConnectorInstance(connectorInstance)
+      );
 
       return next();
     }
