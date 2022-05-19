@@ -1,7 +1,7 @@
 @use '@/scss/underscore' as _;
 
 .item {
-  padding: 6px _.unit(2);
+  padding: _.unit(2);
   border-radius: _.unit(2);
   list-style: none;
   font: var(--font-body-medium);
@@ -11,11 +11,11 @@
   overflow: hidden;
 
   &:hover {
-    background: var(--color-neutral-95);
+    background: var(--color-hover);
   }
 
   &.danger {
-    color: var(--color-error-40);
+    color: var(--color-error);
   }
 
   .icon {

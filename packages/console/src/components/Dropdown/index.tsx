@@ -59,7 +59,7 @@ const Dropdown = ({
       onRequestClose={onClose}
       onAfterOpen={mutate}
     >
-      <div ref={overlayRef}>
+      <div ref={overlayRef} className={styles.dropdownContainer}>
         {title && <div className={classNames(styles.title, titleClassName)}>{title}</div>}
         <ul className={classNames(styles.list, className)} onClick={onClose}>
           {children}

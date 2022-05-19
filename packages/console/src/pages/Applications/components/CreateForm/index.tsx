@@ -98,7 +98,14 @@ const CreateForm = ({ onClose }: Props) => {
     >
       <form>
         <FormField title="admin_console.applications.select_application_type">
-          <RadioGroup ref={ref} name={name} value={value} type="card" onChange={onChange}>
+          <RadioGroup
+            ref={ref}
+            className={styles.radioGroup}
+            name={name}
+            value={value}
+            type="card"
+            onChange={onChange}
+          >
             {Object.values(ApplicationType).map((value) => (
               <Radio key={value} value={value}>
                 <TypeDescription

@@ -2,7 +2,7 @@
 
 .overlay {
   position: fixed;
-  background: rgba(0, 0, 0, 40%);
+  background: var(--color-overlay);
   inset: 0;
   overflow-y: auto;
   padding: _.unit(12) 0;

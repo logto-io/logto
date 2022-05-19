@@ -41,11 +41,16 @@
   width: 20px;
   height: 20px;
   font: var(--font-subhead-cap);
+
+  > svg {
+    width: 16px;
+    height: 16px;
+  }
 }
 
 .dropdownItem {
   height: 44px;
   padding: 0 _.unit(5) 0 _.unit(4);
-  border-top: 1px solid var(--color-neutral-95);
+  border-top: 1px solid var(--color-hover);
   border-radius: unset;
 }

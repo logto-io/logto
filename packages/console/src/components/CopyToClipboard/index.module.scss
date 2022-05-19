@@ -11,7 +11,7 @@
   &.contained,
   &.border {
     padding: _.unit(2) _.unit(3);
-    background: var(--color-inverse-on-surface);
+    background: var(--color-layer-2);
   }
 
   &.border {
@@ -27,11 +27,7 @@
     > svg {
       margin-left: _.unit(3);
       cursor: pointer;
-      fill: var(--color-caption);
-
-      &:hover {
-        fill: var(--color-primary);
-      }
+      fill: var(--color-icon);
     }
   }
 

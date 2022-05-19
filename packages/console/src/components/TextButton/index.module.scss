@@ -13,19 +13,11 @@
     fill: var(--color-primary);
   }
 
-  &:active {
-    background: var(--color-primary-95);
-  }
-
   &:hover {
-    color: var(--color-primary-30);
-
-    svg {
-      fill: var(--color-primary-30);
-    }
+    text-decoration: underline;
   }
 
   &:focus {
-    outline: 2px solid var(--color-primary-80);
+    outline: 2px solid var(--color-focused-variant);
   }
 }

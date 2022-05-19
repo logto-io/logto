@@ -3,8 +3,8 @@
 .tooltip {
   position: absolute;
   border-radius: 8px;
-  background: var(--color-on-background);
-  color: var(--color-background);
+  background: var(--color-tooltip-background);
+  color: var(--color-tooltip-text);
   box-shadow: var(--shadow-1);
   padding: _.unit(2) _.unit(3);
   font: var(--font-body-medium);
