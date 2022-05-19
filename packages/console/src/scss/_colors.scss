@@ -153,6 +153,7 @@
   --shadow-3: 0 4px 16px rgba(0, 0, 0, 20%);
 
   // Client specific variables (not available in design system)
+  --color-danger-toast-background: var(--color-error-95);
   --color-danger-focused: rgba(186, 27, 27, 16%); // 16% Error-40
   --color-tooltip-background: #34353f; // dark theme Surface-4
   --color-tooltip-text: var(--color-neutral-99);
@@ -315,6 +316,7 @@
   --shadow-3: 0 4px 16px rgba(0, 0, 0, 20%);
 
   // Client specific variables (not available in design system)
+  --color-danger-toast-background: var(--color-error-99);
   --color-danger-focused: rgba(255, 180, 169, 16%); // 16% Error-40
   --color-tooltip-background: var(--color-surface-4);
   --color-tooltip-text: var(--color-neutral-10);

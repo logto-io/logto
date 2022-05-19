@@ -1,19 +1,35 @@
 @use '@/scss/underscore' as _;
 
 div.toast {
+  display: flex;
+  align-items: center;
   padding: _.unit(3) _.unit(4);
   font: var(--font-body-medium);
   color: var(--color-text);
   box-shadow: var(--shadow-1);
   border-radius: _.unit(2);
-  max-width: none;
+  max-width: 412px;
 
-  > div[role='status'] {
-    margin: 0 0 0 _.unit(3);
+  .image {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+  }
+
+  .message {
+    flex: 1;
+    margin: 0 _.unit(3);
   }
 
   &.success {
-    border: 1px solid #66bb6a;
-    background: linear-gradient(0deg, rgba(102, 187, 106, 15%), rgba(102, 187, 106, 15%)), #fff;
+    border: 1px solid var(--color-success-70);
+    background-color: var(--color-success-99);
+  }
+
+  &.error {
+    border: 1px solid var(--color-error);
+    background-color: var(--color-danger-toast-background);
   }
 }
