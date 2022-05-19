@@ -1,4 +1,4 @@
-import { GrantType, IssuedTokenType, LogResult, LogType } from '@logto/schemas';
+import { GrantType, IssuedTokenType, LogResult } from '@logto/schemas';
 import { notFalsy } from '@silverhand/essentials';
 import { errors, KoaContextWithOIDC } from 'oidc-provider';
 
@@ -17,8 +17,20 @@ interface GrantBody {
   scope?: string; // AccessToken.scope
 }
 
-const getLogType = (grantType: GrantType): LogType =>
-  grantType === GrantType.AuthorizationCode ? 'CodeExchangeToken' : 'RefreshTokenExchangeToken';
+const getLogType = (grantType: unknown) => {
+  if (
+    !grantType ||
+    ![GrantType.AuthorizationCode, GrantType.RefreshToken].includes(grantType as GrantType)
+  ) {
+    console.error('Unexpected grant_type', grantType);
+
+    return;
+  }
+
+  return grantType === GrantType.AuthorizationCode
+    ? 'CodeExchangeToken'
+    : 'RefreshTokenExchangeToken';
+};
 
 export const grantSuccessListener = async (
   ctx: KoaContextWithOIDC & WithLogContext & { body: GrantBody }
@@ -30,6 +42,13 @@ export const grantSuccessListener = async (
     },
     body,
   } = ctx;
+
+  const logType = getLogType(params?.grant_type);
+
+  if (!logType) {
+    return;
+  }
+
   ctx.addLogContext({
     applicationId: client?.clientId,
     sessionId: grant?.jti,
@@ -42,9 +61,7 @@ export const grantSuccessListener = async (
     id_token && 'idToken',
   ].filter((value): value is IssuedTokenType => notFalsy(value));
 
-  const grantType: unknown = params?.grant_type;
-  const type = getLogType(grantType as GrantType);
-  ctx.log(type, {
+  ctx.log(logType, {
     userId: account?.accountId,
     params,
     issued,
@@ -62,13 +79,17 @@ export const grantErrorListener = async (
       params,
     },
   } = ctx;
+
+  const logType = getLogType(params?.grant_type);
+
+  if (!logType) {
+    return;
+  }
+
   ctx.addLogContext({
     applicationId: client?.clientId,
   });
-
-  const grantType: unknown = params?.grant_type;
-  const type = getLogType(grantType as GrantType);
-  ctx.log(type, {
+  ctx.log(logType, {
     result: LogResult.Error,
     error: String(error),
     params,
