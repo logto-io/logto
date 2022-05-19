@@ -20,7 +20,10 @@ describe('getAuthorizationUri', () => {
   });
 
   it('should get a valid uri by redirectUri and state', async () => {
-    const authorizationUri = await weChatNativeMethods.getAuthorizationUri();
+    const authorizationUri = await weChatNativeMethods.getAuthorizationUri(
+      'dummy-redirectUri',
+      'dummy-state'
+    );
     expect(authorizationUri).toEqual(`${authorizationEndpoint}?app_id=%3Capp-id%3E`);
   });
 });
