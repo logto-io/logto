@@ -258,7 +258,7 @@ describe('grantRevokedListener', () => {
     });
   });
 
-  it('should not log when there is no expected token found in oidc.entities', async () => {
+  it('should not log when the revoked token is neither access token nor refresh token', async () => {
     const ctx = {
       ...createContextWithRouteParameters(),
       addLogContext,
