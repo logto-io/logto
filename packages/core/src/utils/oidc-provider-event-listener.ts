@@ -22,7 +22,7 @@ const getLogType = (grantType: unknown) => {
     !grantType ||
     ![GrantType.AuthorizationCode, GrantType.RefreshToken].includes(grantType as GrantType)
   ) {
-    console.error('Unexpected grant_type', grantType);
+    console.error('Unexpected grant_type:', grantType);
 
     return;
   }

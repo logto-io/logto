@@ -97,6 +97,22 @@ describe('grantSuccessListener', () => {
       userId,
     });
   });
+
+  it('should not log when it found unexpected grant_type', async () => {
+    const parameters = { grant_type: 'client_credentials' };
+    const ctx = {
+      ...createContextWithRouteParameters(),
+      addLogContext,
+      log,
+      oidc: { entities, params: parameters },
+      body: {},
+    };
+
+    // @ts-expect-error pass complex type check to mock ctx directly
+    await grantSuccessListener(ctx);
+    expect(addLogContext).not.toHaveBeenCalled();
+    expect(log).not.toHaveBeenCalled();
+  });
 });
 
 describe('grantErrorListener', () => {
@@ -156,5 +172,21 @@ describe('grantErrorListener', () => {
       error: `Error: ${errorMessage}`,
       params: parameters,
     });
+  });
+
+  it('should not log when it found unexpected grant_type', async () => {
+    const parameters = { grant_type: 'client_credentials' };
+    const ctx = {
+      ...createContextWithRouteParameters(),
+      addLogContext,
+      log,
+      oidc: { entities, params: parameters },
+      body: {},
+    };
+
+    // @ts-expect-error pass complex type check to mock ctx directly
+    await grantErrorListener(ctx, new Error(errorMessage));
+    expect(addLogContext).not.toHaveBeenCalled();
+    expect(log).not.toHaveBeenCalled();
   });
 });
