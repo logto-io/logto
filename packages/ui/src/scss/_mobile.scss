@@ -10,6 +10,8 @@ $font-family: -apple-system,
   sans-serif;
 
 @mixin colors-light-theme {
+  --color-base: #fff;
+  --color-surface: #fff;
   --color-text: #191c1d;
   --color-icon: #747778;
   --color-caption: #747778;
@@ -20,14 +22,13 @@ $font-family: -apple-system,
   --color-primary: var(--light-primary-color);
   --color-layer: #eff1f1;
   --color-error: #ba1b1b;
-  --color-toast: rgba(25, 28, 29, 80%);
-  --color-overlay: rgba(25, 28, 29, 16%);
-  --color-base: #fff;
   --color-surface: #fff;
   --color-dialogue: #fff;
 }
 
 @mixin colors-dark-theme {
+  --color-base: #191c1d;
+  --color-surface: #191c1d;
   --color-text: #f7f8f8;
   --color-icon: #a9acac;
   --color-caption: #a9acac;
@@ -38,16 +39,16 @@ $font-family: -apple-system,
   --color-primary: var(--dark-primary-color);
   --color-layer: linear-gradient(0deg, rgba(202, 190, 255, 14%), rgba(202, 190, 255, 14%)), linear-gradient(0deg, rgba(196, 199, 199, 2%), rgba(196, 199, 199, 2%)), #191c1d;
   --color-error: #dd3730;
-  --color-toast: rgba(247, 248, 248, 80%);
-  --color-overlay: rgba(25, 28, 29, 40%);
-  --color-base: #191c1d;
-  --color-surface: #191c1d;
   --color-dialogue: linear-gradient(0deg, rgba(202, 190, 255, 8%), rgba(202, 190, 255, 8%)), linear-gradient(0deg, rgba(196, 199, 199, 2%), rgba(196, 199, 199, 2%)), #191c1d;
 }
 
 
 @mixin colors-universal {
   --color-primary-button-text: #fff;
+  --color-toast: #34353f;
+  --color-overlay: rgba(0, 0, 0, 30%);
+  // shadows
+  --shadow-2: 0 2px 12px rgba(0, 0, 0, 12%);
 }
 
 @mixin fonts {

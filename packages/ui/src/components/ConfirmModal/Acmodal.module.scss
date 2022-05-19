@@ -16,6 +16,7 @@
 .container {
   background: var(--color-dialogue);
   border-radius: var(--radius);
+  border: _.border(var(--color-divider));
   padding: _.unit(6);
 }
 
