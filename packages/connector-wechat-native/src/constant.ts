@@ -20,8 +20,8 @@ export const defaultMetadata: ConnectorMetadata = {
   type: ConnectorType.Social,
   platform: ConnectorPlatform.Native,
   name: {
-    en: 'Sign In with WeChat',
-    'zh-CN': '微信登录',
+    en: 'WeChat',
+    'zh-CN': '微信',
   },
   logo: './logo.png',
   description: {

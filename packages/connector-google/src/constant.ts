@@ -20,8 +20,8 @@ export const defaultMetadata: ConnectorMetadata = {
   type: ConnectorType.Social,
   platform: ConnectorPlatform.Web,
   name: {
-    en: 'Sign In with Google',
-    'zh-CN': 'Google登录',
+    en: 'Google',
+    'zh-CN': 'Google',
   },
   logo: './logo.png',
   description: {

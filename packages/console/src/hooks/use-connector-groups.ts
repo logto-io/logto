@@ -24,6 +24,7 @@ const useConnectorGroups = () => {
             name: item.metadata.name,
             logo: item.metadata.logo,
             target: item.metadata.target,
+            type: item.metadata.type,
             enabled: item.enabled,
             connectors: [item],
           },

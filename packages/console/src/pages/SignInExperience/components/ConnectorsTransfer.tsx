@@ -1,3 +1,4 @@
+import { ConnectorPlatform, ConnectorType } from '@logto/schemas';
 import { conditionalString } from '@silverhand/essentials';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
@@ -7,6 +8,9 @@ import Alert from '@/components/Alert';
 import Transfer from '@/components/Transfer';
 import UnnamedTrans from '@/components/UnnamedTrans';
 import useConnectorGroups from '@/hooks/use-connector-groups';
+import Native from '@/icons/Native';
+import Universal from '@/icons/Universal';
+import Web from '@/icons/Web';
 
 import * as styles from './ConnectorsTransfer.module.scss';
 
@@ -29,15 +33,32 @@ const ConnectorsTransfer = ({ value, onChange }: Props) => {
   }
 
   const datasource = data
-    ? data.map(({ target, name, enabled }) => ({
-        value: target,
-        title: (
-          <UnnamedTrans
-            resource={name}
-            className={conditionalString(!enabled && styles.disabled)}
-          />
-        ),
-      }))
+    ? data
+        .filter(({ type }) => type === ConnectorType.Social)
+        .map(({ target, name, enabled, connectors, logo }) => ({
+          value: target,
+          title: (
+            <div className={styles.title}>
+              <div className={styles.logo}>
+                <img src={logo} alt={target} />
+              </div>
+              <UnnamedTrans
+                resource={name}
+                className={conditionalString(!enabled && styles.disabled)}
+              />
+              {connectors.length > 1 &&
+                connectors
+                  .filter(({ enabled }) => enabled)
+                  .map(({ platform }) => (
+                    <div key={platform} className={styles.icon}>
+                      {platform === ConnectorPlatform.Web && <Web />}
+                      {platform === ConnectorPlatform.Native && <Native />}
+                      {platform === ConnectorPlatform.Universal && <Universal />}
+                    </div>
+                  ))}
+            </div>
+          ),
+        }))
     : [];
 
   return (
