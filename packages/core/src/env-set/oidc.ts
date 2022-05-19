@@ -65,7 +65,7 @@ const readPrivateKey = async (): Promise<string> => {
 };
 
 /**
- * Try to read the [signing cookie keys](https://github.com/panva/node-oidc-provider/blob/main/docs/README.md#cookieskeys).
+ * Try to read the [signing cookie keys](https://github.com/panva/node-oidc-provider/blob/main/docs/README.md#cookieskeys) from env.
  *
  * If failed, then inquire user to generate a new keys array if no `--no-inquiry` presents in argv.
  *
