@@ -101,7 +101,7 @@ const ConnectorDetails = () => {
   return (
     <div className={detailsStyles.container}>
       <LinkButton
-        to="/connectors"
+        to={data?.metadata.type === ConnectorType.Social ? '/connectors/social' : '/connectors'}
         icon={<Back />}
         title="admin_console.connector_details.back_to_connectors"
         className={styles.backLink}
