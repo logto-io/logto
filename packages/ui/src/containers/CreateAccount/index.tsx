@@ -58,12 +58,12 @@ const CreateAccount = ({ className }: Props) => {
 
   const { result, run: asyncRegister } = useApi(register, registerErrorHandlers);
 
-  const onSubmitHandler = useCallback(() => {
+  const onSubmitHandler = useCallback(async () => {
     if (!validateForm()) {
       return;
     }
 
-    if (!termsValidation()) {
+    if (!(await termsValidation())) {
       return;
     }
 

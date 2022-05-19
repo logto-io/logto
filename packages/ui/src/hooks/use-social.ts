@@ -51,7 +51,7 @@ const useSocial = () => {
 
   const invokeSocialSignInHandler = useCallback(
     async (connectorId: string, callback?: () => void) => {
-      if (!termsValidation()) {
+      if (!(await termsValidation())) {
         return;
       }
 

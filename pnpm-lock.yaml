@@ -919,6 +919,7 @@ importers:
       react-dom: ^17.0.2
       react-i18next: ^11.15.4
       react-modal: ^3.14.4
+      react-modal-promise: ^1.0.2
       react-phone-number-input: ^3.1.46
       react-router-dom: ^6.2.2
       react-string-replace: ^1.0.0
@@ -965,6 +966,7 @@ importers:
       react-dom: 17.0.2_react@17.0.2
       react-i18next: 11.15.4_fq32mavcto3l2u7t3zyhvdh4yu
       react-modal: 3.14.4_sfoxds7t5ydpegc3knd667wn6m
+      react-modal-promise: 1.0.2_sfoxds7t5ydpegc3knd667wn6m
       react-phone-number-input: 3.1.46_sfoxds7t5ydpegc3knd667wn6m
       react-router-dom: 6.2.2_sfoxds7t5ydpegc3knd667wn6m
       react-string-replace: 1.0.0
@@ -16576,6 +16578,16 @@ packages:
       vfile: 5.3.2
     transitivePeerDependencies:
       - supports-color
+    dev: true
+
+  /react-modal-promise/1.0.2_sfoxds7t5ydpegc3knd667wn6m:
+    resolution: {integrity: sha512-dqT618ROhG8qh1+O6EZkia5ELw3zaZWGpMX2YfEH4bgwYENPuFonqKw1W70LFx3K/SCZvVBcD6UYEI12yzYXzg==}
+    peerDependencies:
+      react: '>=16.8.0'
+      react-dom: '>=16.8.0'
+    dependencies:
+      react: 17.0.2
+      react-dom: 17.0.2_react@17.0.2
     dev: true
 
   /react-modal/3.14.4_sfoxds7t5ydpegc3knd667wn6m:

@@ -1,7 +1,7 @@
 import React from 'react';
+import ModalContainer from 'react-modal-promise';
 
 import PureTermsOfUse from '@/components/TermsOfUse';
-import TermsOfUseModal from '@/components/TermsOfUseModal';
 import useTerms from '@/hooks/use-terms';
 
 type Props = {
@@ -9,8 +9,7 @@ type Props = {
 };
 
 const TermsOfUse = ({ className }: Props) => {
-  const { termsAgreement, setTermsAgreement, termsSettings, showTermsModal, setShowTermsModal } =
-    useTerms();
+  const { termsAgreement, setTermsAgreement, termsSettings } = useTerms();
 
   if (!termsSettings?.enabled || !termsSettings.contentUrl) {
     return null;
@@ -27,17 +26,7 @@ const TermsOfUse = ({ className }: Props) => {
           setTermsAgreement(checked);
         }}
       />
-      <TermsOfUseModal
-        isOpen={showTermsModal}
-        termsUrl={termsSettings.contentUrl}
-        onConfirm={() => {
-          setTermsAgreement(true);
-          setShowTermsModal(false);
-        }}
-        onClose={() => {
-          setShowTermsModal(false);
-        }}
-      />
+      <ModalContainer />
     </>
   );
 };

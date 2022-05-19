@@ -56,6 +56,6 @@ describe('<SignIn />', () => {
       </SettingsProvider>
     );
 
-    expect(container.querySelectorAll('button')).toHaveLength(3);
+    expect(container.querySelectorAll('button')).toHaveLength(4); // Plus Expand Button
   });
 });

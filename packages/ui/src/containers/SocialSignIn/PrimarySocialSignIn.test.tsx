@@ -34,7 +34,7 @@ describe('SecondarySocialSignIn', () => {
       </SettingsProvider>
     );
 
-    expect(container.querySelectorAll('button')).toHaveLength(defaultSize);
+    expect(container.querySelectorAll('button')).toHaveLength(defaultSize + 1); // Expand button
 
     const expandButton = container.querySelector('svg');
 
@@ -42,6 +42,6 @@ describe('SecondarySocialSignIn', () => {
       fireEvent.click(expandButton);
     }
 
-    expect(container.querySelectorAll('button')).toHaveLength(socialConnectors.length);
+    expect(container.querySelectorAll('button')).toHaveLength(socialConnectors.length + 1); // Expand button
   });
 });
