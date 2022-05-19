@@ -1,6 +1,6 @@
-import { GrantType, IssuedTokenType, LogType } from '@logto/schemas';
+import { GrantType, IssuedTokenType, LogResult } from '@logto/schemas';
 import { notFalsy } from '@silverhand/essentials';
-import { KoaContextWithOIDC } from 'oidc-provider';
+import { errors, KoaContextWithOIDC } from 'oidc-provider';
 
 import { WithLogContext } from '@/middleware/koa-log';
 
@@ -14,8 +14,23 @@ interface GrantBody {
   access_token?: string;
   refresh_token?: string;
   id_token?: string;
-  scope?: string;
+  scope?: string; // AccessToken.scope
 }
+
+const getLogType = (grantType: unknown) => {
+  if (
+    !grantType ||
+    ![GrantType.AuthorizationCode, GrantType.RefreshToken].includes(grantType as GrantType)
+  ) {
+    console.error('Unexpected grant_type:', grantType);
+
+    return;
+  }
+
+  return grantType === GrantType.AuthorizationCode
+    ? 'CodeExchangeToken'
+    : 'RefreshTokenExchangeToken';
+};
 
 export const grantSuccessListener = async (
   ctx: KoaContextWithOIDC & WithLogContext & { body: GrantBody }
@@ -27,6 +42,13 @@ export const grantSuccessListener = async (
     },
     body,
   } = ctx;
+
+  const logType = getLogType(params?.grant_type);
+
+  if (!logType) {
+    return;
+  }
+
   ctx.addLogContext({
     applicationId: client?.clientId,
     sessionId: grant?.jti,
@@ -39,13 +61,37 @@ export const grantSuccessListener = async (
     id_token && 'idToken',
   ].filter((value): value is IssuedTokenType => notFalsy(value));
 
-  const grantType = params?.grant_type;
-  const type: LogType =
-    grantType === GrantType.AuthorizationCode ? 'CodeExchangeToken' : 'RefreshTokenExchangeToken';
-  ctx.log(type, {
+  ctx.log(logType, {
     userId: account?.accountId,
     params,
     issued,
     scope,
+  });
+};
+
+export const grantErrorListener = async (
+  ctx: KoaContextWithOIDC & WithLogContext & { body: GrantBody },
+  error: errors.OIDCProviderError
+) => {
+  const {
+    oidc: {
+      entities: { Client: client },
+      params,
+    },
+  } = ctx;
+
+  const logType = getLogType(params?.grant_type);
+
+  if (!logType) {
+    return;
+  }
+
+  ctx.addLogContext({
+    applicationId: client?.clientId,
+  });
+  ctx.log(logType, {
+    result: LogResult.Error,
+    error: String(error),
+    params,
   });
 };
