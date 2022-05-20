@@ -43,7 +43,7 @@ export const defaultMetadata: ConnectorMetadata = {
     en: 'Aliyun Short Message Service',
     'zh-CN': '阿里云短信服务',
   },
-  logo: './logo.png',
+  logo: 'https://gist.githubusercontent.com/darcyYe/31bc893a0a305dc43cf831bf0b14f0fc/raw/faf985d3fbeed88180b8f3cb709892320d66ae45/alibabacloud.svg',
   description: {
     en: 'Short Message Service (SMS) has a batch sending feature and various API operations to send one-time password (OTP) messages, notification messages, and promotional messages to customers.',
     'zh-CN':

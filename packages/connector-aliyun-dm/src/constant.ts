@@ -27,7 +27,7 @@ export const defaultMetadata: ConnectorMetadata = {
     en: 'Aliyun Direct Mail',
     'zh-CN': '阿里云邮件推送',
   },
-  logo: './logo.png',
+  logo: 'https://gist.githubusercontent.com/darcyYe/31bc893a0a305dc43cf831bf0b14f0fc/raw/faf985d3fbeed88180b8f3cb709892320d66ae45/alibabacloud.svg',
   description: {
     en: 'A simple and efficient email service to help you send transactional notifications and batch email.',
     'zh-CN':
