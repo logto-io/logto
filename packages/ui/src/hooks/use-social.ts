@@ -15,7 +15,6 @@ import {
   decodeState,
   stateValidation,
   storeState,
-  filterSocialConnectors,
 } from './utils';
 
 const useSocial = () => {
@@ -38,11 +37,6 @@ const useSocial = () => {
       },
     }),
     [navigate, parameters.connector]
-  );
-
-  const socialConnectors = useMemo(
-    () => filterSocialConnectors(experienceSettings?.socialConnectors),
-    [experienceSettings]
   );
 
   const { run: asyncInvokeSocialSignIn } = useApi(invokeSocialSignIn);
@@ -187,7 +181,7 @@ const useSocial = () => {
   }, [setToast]);
 
   return {
-    socialConnectors,
+    socialConnectors: experienceSettings?.socialConnectors ?? [],
     invokeSocialSignIn: invokeSocialSignInHandler,
     socialCallbackHandler,
   };

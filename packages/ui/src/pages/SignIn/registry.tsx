@@ -7,11 +7,17 @@ import SignInMethodsLink from '@/containers/SignInMethodsLink';
 import { PrimarySocialSignIn, SecondarySocialSignIn } from '@/containers/SocialSignIn';
 import TermsOfUse from '@/containers/TermsOfUse';
 import UsernameSignin from '@/containers/UsernameSignin';
-import { SignInMethod, LocalSignInMethod } from '@/types';
+import { SignInMethod, LocalSignInMethod, ConnectorData } from '@/types';
 
 import * as styles from './index.module.scss';
 
-export const PrimarySection = ({ signInMethod }: { signInMethod?: SignInMethod }) => {
+export const PrimarySection = ({
+  signInMethod,
+  socialConnectors = [],
+}: {
+  signInMethod?: SignInMethod;
+  socialConnectors?: ConnectorData[];
+}) => {
   switch (signInMethod) {
     case 'email':
       return <EmailPasswordless type="sign-in" className={styles.primarySignIn} />;
@@ -20,12 +26,12 @@ export const PrimarySection = ({ signInMethod }: { signInMethod?: SignInMethod }
     case 'username':
       return <UsernameSignin className={styles.primarySignIn} />;
     case 'social':
-      return (
+      return socialConnectors.length > 0 ? (
         <>
           <TermsOfUse className={styles.terms} />
           <PrimarySocialSignIn className={styles.primarySocial} />
         </>
-      );
+      ) : null;
     default:
       return null;
   }
@@ -34,9 +40,11 @@ export const PrimarySection = ({ signInMethod }: { signInMethod?: SignInMethod }
 export const SecondarySection = ({
   primarySignInMethod,
   secondarySignInMethods,
+  socialConnectors = [],
 }: {
   primarySignInMethod?: SignInMethod;
   secondarySignInMethods?: SignInMethod[];
+  socialConnectors?: ConnectorData[];
 }) => {
   if (!primarySignInMethod || !secondarySignInMethods?.length) {
     return null;
@@ -49,7 +57,9 @@ export const SecondarySection = ({
   if (primarySignInMethod === 'social' && localMethods.length > 0) {
     return (
       <>
-        <Divider label="description.continue_with" className={styles.divider} />
+        {socialConnectors.length > 0 && (
+          <Divider label="description.continue_with" className={styles.divider} />
+        )}
         <SignInMethodsLink signInMethods={localMethods} />
       </>
     );
@@ -62,7 +72,7 @@ export const SecondarySection = ({
         template="sign_in_with"
         className={styles.otherMethodsLink}
       />
-      {secondarySignInMethods.includes('social') && (
+      {secondarySignInMethods.includes('social') && socialConnectors.length > 0 && (
         <>
           <Divider label="description.or" className={styles.divider} />
           <SecondarySocialSignIn />
