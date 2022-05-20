@@ -6,6 +6,7 @@
 import { SignInMethods } from '@logto/schemas';
 
 import { getSignInExperience } from '@/apis/settings';
+import { filterSocialConnectors } from '@/hooks/utils';
 import { SignInMethod, SignInExperienceSettingsResponse, SignInExperienceSettings } from '@/types';
 
 const getPrimarySignInMethod = (signInMethods: SignInMethods) => {
@@ -29,11 +30,13 @@ const getSecondarySignInMethods = (signInMethods: SignInMethods) =>
 
 export const parseSignInExperienceSettings = ({
   signInMethods,
+  socialConnectors,
   ...rest
 }: SignInExperienceSettingsResponse) => ({
   ...rest,
   primarySignInMethod: getPrimarySignInMethod(signInMethods),
   secondarySignInMethods: getSecondarySignInMethods(signInMethods),
+  socialConnectors: filterSocialConnectors(socialConnectors),
 });
 
 const getSignInExperienceSettings = async (): Promise<SignInExperienceSettings> => {

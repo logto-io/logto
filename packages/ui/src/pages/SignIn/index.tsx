@@ -25,10 +25,14 @@ const SignIn = () => {
         headline={style === BrandingStyle.Logo_Slogan ? slogan : undefined}
         logo={logo}
       />
-      <PrimarySection signInMethod={experienceSettings.primarySignInMethod} />
+      <PrimarySection
+        signInMethod={experienceSettings.primarySignInMethod}
+        socialConnectors={experienceSettings.socialConnectors}
+      />
       <SecondarySection
         primarySignInMethod={experienceSettings.primarySignInMethod}
         secondarySignInMethods={experienceSettings.secondarySignInMethods}
+        socialConnectors={experienceSettings.socialConnectors}
       />
       <CreateAccountLink primarySignInMethod={experienceSettings.primarySignInMethod} />
     </div>
