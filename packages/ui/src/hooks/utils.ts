@@ -68,6 +68,13 @@ export const filterSocialConnectors = (socialConnectors?: ConnectorData[]) => {
 
   const connectorMap = new Map<string, ConnectorData>();
 
+  /**
+   * Browser Environment
+   * Accepts both web and universal platform connectors.
+   * Insert universal connectors only if there is no  web platform connector provided with the same target.
+   * Web platform has higher priority.
+   **/
+
   if (!isNativeWebview()) {
     for (const connector of socialConnectors) {
       const { platform, target } = connector;
@@ -76,11 +83,6 @@ export const filterSocialConnectors = (socialConnectors?: ConnectorData[]) => {
         continue;
       }
 
-      /**
-       * Accepts both web and universal platform connectors.
-       * Insert universal connectors only if there is no  web platform connector provided with the same target.
-       * Web platform has higher priority.
-       **/
       if (platform === 'Web' || !connectorMap.get(target)) {
         connectorMap.set(target, connector);
         continue;
@@ -90,6 +92,13 @@ export const filterSocialConnectors = (socialConnectors?: ConnectorData[]) => {
     return Array.from(connectorMap.values());
   }
 
+  /**
+   * Native Webview Environment
+   * Accepts both Native and universal platform connectors.
+   * Insert universal connectors only if there is no  Native platform connector provided with the same target.
+   * Native platform has higher priority.
+   **/
+
   for (const connector of socialConnectors) {
     const { platform, target } = connector;
 
@@ -97,20 +106,19 @@ export const filterSocialConnectors = (socialConnectors?: ConnectorData[]) => {
       continue;
     }
 
-    /**
-     * Accepts both Native and universal platform connectors.
-     * Insert universal connectors only if there is no  Native platform connector provided with the same target.
-     * Native platform has higher priority.
-     **/
-    if (
-      platform === 'Native' &&
-      getLogtoNativeSdk()?.supportedSocialConnectorTargets.includes(target)
-    ) {
+    const { supportedConnector } = getLogtoNativeSdk() ?? {};
+
+    // No native supportedConnector settings found
+    if (!supportedConnector) {
+      continue;
+    }
+
+    if (platform === 'Native' && supportedConnector.nativeTargets.includes(target)) {
       connectorMap.set(target, connector);
       continue;
     }
 
-    if (platform === 'Universal' && !connectorMap.get(target)) {
+    if (platform === 'Universal' && supportedConnector.universal && !connectorMap.get(target)) {
       connectorMap.set(target, connector);
       continue;
     }

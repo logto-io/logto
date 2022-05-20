@@ -20,7 +20,7 @@ describe('filterSocialConnectors', () => {
     expect(filterSocialConnectors()).toEqual([]);
   });
 
-  it('filter web connectors', () => {
+  it('filter Web Connectors', () => {
     expect(filterSocialConnectors(mockConnectors)).toEqual([
       { platform: 'Web', target: 'facebook' },
       { platform: 'Web', target: 'google' },
@@ -28,17 +28,37 @@ describe('filterSocialConnectors', () => {
     ]);
   });
 
-  it('filter Native connectors', () => {
+  it('filter Native Connectors', () => {
     /* eslint-disable @silverhand/fp/no-mutation */
     // @ts-expect-error mock global object
     globalThis.logtoNativeSdk = {
       platform: 'ios',
-      supportedSocialConnectorTargets: ['Web', 'WeChat'],
+      supportedConnector: {
+        universal: true,
+        nativeTargets: ['Web', 'WeChat'],
+      },
     };
     /* eslint-enable @silverhand/fp/no-mutation */
 
     expect(filterSocialConnectors(mockConnectors)).toEqual([
       { platform: 'Universal', target: 'facebook' },
+      { platform: 'Native', target: 'WeChat' },
+    ]);
+  });
+
+  it('filter Native & Universal Connectors', () => {
+    /* eslint-disable @silverhand/fp/no-mutation */
+    // @ts-expect-error mock global object
+    globalThis.logtoNativeSdk = {
+      platform: 'ios',
+      supportedConnector: {
+        universal: false,
+        nativeTargets: ['Web', 'WeChat'],
+      },
+    };
+    /* eslint-enable @silverhand/fp/no-mutation */
+
+    expect(filterSocialConnectors(mockConnectors)).toEqual([
       { platform: 'Native', target: 'WeChat' },
     ]);
   });
