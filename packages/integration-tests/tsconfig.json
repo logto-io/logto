@@ -2,6 +2,7 @@
   "extends": "@silverhand/ts-config/tsconfig.base",
   "compilerOptions": {
     "isolatedModules": false,
+    "allowJs": true,
     "noEmit": true,
     "baseUrl": ".",
     "paths": {
