@@ -1,4 +1,5 @@
 import { LogtoProvider } from '@logto/react';
+import { adminConsoleApplicationId } from '@logto/schemas';
 import React from 'react';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { SWRConfig } from 'swr';
@@ -77,7 +78,11 @@ const Main = () => {
 const App = () => (
   <BrowserRouter basename={getBasename()}>
     <LogtoProvider
-      config={{ endpoint: window.location.origin, appId: 'foo', resources: [logtoApiResource] }}
+      config={{
+        endpoint: window.location.origin,
+        appId: adminConsoleApplicationId,
+        resources: [logtoApiResource],
+      }}
     >
       <Main />
     </LogtoProvider>

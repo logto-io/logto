@@ -13,18 +13,21 @@ export enum MountedApps {
 const loadEnvValues = async () => {
   const isProduction = getEnv('NODE_ENV') === 'production';
   const isTest = getEnv('NODE_ENV') === 'test';
+  const isHttpsEnabled = Boolean(process.env.HTTPS_CERT_PATH && process.env.HTTPS_KEY_PATH);
   const port = Number(getEnv('PORT', '3001'));
+  const localhostUrl = `${isHttpsEnabled ? 'https' : 'http'}://localhost:${port}`;
 
   return Object.freeze({
     isTest,
     isProduction,
-    isHttpsEnabled: Boolean(process.env.HTTPS_CERT_PATH && process.env.HTTPS_KEY_PATH),
+    isHttpsEnabled,
     httpsCert: process.env.HTTPS_CERT_PATH,
     httpsKey: process.env.HTTPS_KEY_PATH,
     port,
+    localhostUrl,
     developmentUserId: getEnv('DEVELOPMENT_USER_ID'),
     trustProxyHeader: getEnv('TRUST_PROXY_HEADER') === 'true',
-    oidc: await loadOidcValues(port),
+    oidc: await loadOidcValues(`${localhostUrl}/oidc`),
   });
 };
 

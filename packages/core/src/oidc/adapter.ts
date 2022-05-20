@@ -1,8 +1,14 @@
-import { CreateApplication, GrantType } from '@logto/schemas';
+import {
+  adminConsoleApplicationId,
+  ApplicationType,
+  CreateApplication,
+  GrantType,
+} from '@logto/schemas';
 import dayjs from 'dayjs';
 import { AdapterFactory, AllClientMetadata } from 'oidc-provider';
 import snakecaseKeys from 'snakecase-keys';
 
+import envSet from '@/env-set';
 import { findApplicationById } from '@/queries/application';
 import {
   consumeInstanceById,
@@ -14,6 +20,24 @@ import {
 } from '@/queries/oidc-model-instance';
 
 import { getApplicationTypeString } from './utils';
+
+const buildAdminConsoleClientMetadata = (): AllClientMetadata => {
+  const {
+    localhostUrl,
+    oidc: { issuer },
+  } = envSet.values;
+  const urls = [...new Set([localhostUrl, issuer.slice(0, issuer.lastIndexOf('/'))])];
+
+  return {
+    client_id: adminConsoleApplicationId,
+    client_name: 'Admin Console',
+    application_type: getApplicationTypeString(ApplicationType.SPA),
+    grant_types: Object.values(GrantType),
+    token_endpoint_auth_method: 'none',
+    redirect_uris: urls.map((url) => `${url}/console/callback`),
+    post_logout_redirect_uris: urls.map((url) => `${url}/console`),
+  };
+};
 
 export default function postgresAdapter(modelName: string): ReturnType<AdapterFactory> {
   if (modelName === 'Client') {
@@ -36,7 +60,14 @@ export default function postgresAdapter(modelName: string): ReturnType<AdapterFa
 
     return {
       upsert: reject,
-      find: async (id) => transpileClient(await findApplicationById(id)),
+      find: async (id) => {
+        // Directly return client metadata since Admin Console does not belong to any tenant in the OSS version.
+        if (id === adminConsoleApplicationId) {
+          return buildAdminConsoleClientMetadata();
+        }
+
+        return transpileClient(await findApplicationById(id));
+      },
       findByUserCode: reject,
       findByUid: reject,
       consume: reject,
