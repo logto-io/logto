@@ -92,14 +92,12 @@ export default async function initOidc(app: Koa): Promise<Provider> {
 
       return {
         accountId: sub,
-        claims: async () => {
-          return {
-            sub,
-            name: user.name,
-            avatar: user.avatar,
-            custom_data: user.customData,
-          };
-        },
+        claims: async () => ({
+          sub,
+          name: user.name,
+          avatar: user.avatar,
+          custom_data: user.customData,
+        }),
       };
     },
     ttl: {
