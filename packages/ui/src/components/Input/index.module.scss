@@ -80,6 +80,10 @@
     border-radius: 6px;
     outline: 3px solid transparent;
 
+    input {
+      font: var(--font-body);
+    }
+
     .actionButton {
       width: 22px;
       height: 22px;
