@@ -19,7 +19,7 @@ describe('getAuthorizationUri', () => {
     jest.clearAllMocks();
   });
 
-  it('should get a valid uri by redirectUri and state', async () => {
+  it('should get a valid uri', async () => {
     const authorizationUri = await weChatNativeMethods.getAuthorizationUri(
       'dummy-redirectUri',
       'dummy-state'
