@@ -88,15 +88,15 @@ export default async function initOidc(app: Koa): Promise<Provider> {
       openid: ['sub', 'name', 'avatar', 'custom_data'],
     },
     findAccount: async (ctx, sub) => {
-      const user = await findUserById(sub);
+      const { name, avatar, customData } = await findUserById(sub);
 
       return {
         accountId: sub,
         claims: async () => ({
           sub,
-          name: user.name,
-          avatar: user.avatar,
-          custom_data: user.customData,
+          name,
+          avatar,
+          custom_data: customData,
         }),
       };
     },
