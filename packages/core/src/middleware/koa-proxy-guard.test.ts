@@ -3,7 +3,7 @@ import { Provider } from 'oidc-provider';
 import { MountedApps } from '@/env-set';
 import { createContextWithRouteParameters } from '@/utils/test-utils';
 
-import koaClientSessionGuard, { sessionNotFoundPath } from './koa-client-session-guard';
+import koaClientSessionGuard, { sessionNotFoundPath } from './koa-proxy-guard';
 
 jest.mock('fs/promises', () => ({
   ...jest.requireActual('fs/promises'),
