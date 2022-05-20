@@ -1,5 +1,4 @@
-import { Passcode, PasscodeType } from '@logto/schemas';
-
+import { mockPasscode } from '@/__mocks__';
 import { maskPasscode, maskPasscodeString, maskUserInfo } from '@/utils/format';
 
 describe('maskUserInfo', () => {
@@ -28,17 +27,6 @@ describe('maskPasscodeString', () => {
 
 describe('maskPasscode', () => {
   it('should not equal to original content', () => {
-    const passcodeObject: Passcode = {
-      id: '0ciWkpLZBl_To87bjqkpo',
-      code: '123456',
-      type: PasscodeType.Register,
-      email: 'silverhand@silverhand.io',
-      phone: '12345678901',
-      consumed: false,
-      tryCount: 0,
-      createdAt: 1_652_854_353_183,
-      interactionJti: '_XuSax3F6byyYijXsxfpw',
-    };
-    expect(maskPasscode(passcodeObject)).not.toEqual(passcodeObject);
+    expect(maskPasscode(mockPasscode)).not.toEqual(mockPasscode);
   });
 });
