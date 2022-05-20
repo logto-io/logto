@@ -1,6 +1,6 @@
 import { maskUserInfo } from './format';
 
-describe('markUserInfo', () => {
+describe('maskUserInfo', () => {
   it('phone', () => {
     expect(maskUserInfo({ type: 'phone', value: '1234567890' })).toBe('****7890');
   });
