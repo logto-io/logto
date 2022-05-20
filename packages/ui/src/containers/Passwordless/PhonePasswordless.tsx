@@ -63,12 +63,12 @@ const PhonePasswordless = ({ type, className }: Props) => {
     [isValidPhoneNumber]
   );
 
-  const onSubmitHandler = useCallback(() => {
+  const onSubmitHandler = useCallback(async () => {
     if (!validateForm()) {
       return;
     }
 
-    if (!termsValidation()) {
+    if (!(await termsValidation())) {
       return;
     }
 

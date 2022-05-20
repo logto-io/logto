@@ -61,7 +61,7 @@ const UsernameSignin = ({ className }: Props) => {
       return;
     }
 
-    if (!termsValidation()) {
+    if (!(await termsValidation())) {
       return;
     }
 

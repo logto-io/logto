@@ -1,33 +1,33 @@
 import { useContext, useCallback } from 'react';
 
+import { termsOfUseModalPromise } from '@/containers/TermsOfUsePromiseModal';
+
 import { PageContext } from './use-page-context';
 
 const useTerms = () => {
-  const {
-    termsAgreement,
-    setTermsAgreement,
-    showTermsModal,
-    setShowTermsModal,
-    experienceSettings,
-  } = useContext(PageContext);
+  const { termsAgreement, setTermsAgreement, experienceSettings } = useContext(PageContext);
 
-  const termsValidation = useCallback(() => {
-    if (termsAgreement || !experienceSettings?.termsOfUse.enabled) {
+  const { termsOfUse } = experienceSettings ?? {};
+
+  const termsValidation = useCallback(async () => {
+    if (termsAgreement || !termsOfUse?.enabled || !termsOfUse.contentUrl) {
       return true;
     }
 
-    setShowTermsModal(true);
+    try {
+      await termsOfUseModalPromise();
 
-    return false;
-  }, [experienceSettings, termsAgreement, setShowTermsModal]);
+      return true;
+    } catch {
+      return false;
+    }
+  }, [termsAgreement, termsOfUse]);
 
   return {
-    termsSettings: experienceSettings?.termsOfUse,
+    termsSettings: termsOfUse,
     termsAgreement,
-    showTermsModal,
     termsValidation,
     setTermsAgreement,
-    setShowTermsModal,
   };
 };
 

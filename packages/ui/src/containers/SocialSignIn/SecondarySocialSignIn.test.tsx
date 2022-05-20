@@ -61,7 +61,7 @@ describe('SecondarySocialSignIn', () => {
         </MemoryRouter>
       </SettingsProvider>
     );
-    expect(container.querySelectorAll('button')).toHaveLength(defaultSize - 1);
+    expect(container.querySelectorAll('button')).toHaveLength(defaultSize); // Plus Expand button
     expect(container.querySelector('svg')).not.toBeNull();
   });
 

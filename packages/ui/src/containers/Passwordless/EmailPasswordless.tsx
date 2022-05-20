@@ -53,12 +53,12 @@ const EmailPasswordless = ({ type, className }: Props) => {
   const sendPasscode = getSendPasscodeApi(type, 'email');
   const { result, run: asyncSendPasscode } = useApi(sendPasscode, errorHandlers);
 
-  const onSubmitHandler = useCallback(() => {
+  const onSubmitHandler = useCallback(async () => {
     if (!validateForm()) {
       return;
     }
 
-    if (!termsValidation()) {
+    if (!(await termsValidation())) {
       return;
     }
 
