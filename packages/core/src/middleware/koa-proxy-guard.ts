@@ -22,7 +22,6 @@ export default function koaSpaSessionGuard<
 
     // Empty path Redirect
     if (requestPath === '/') {
-      console.log(requestPath);
       ctx.redirect(`/${MountedApps.Console}`);
 
       return next();
