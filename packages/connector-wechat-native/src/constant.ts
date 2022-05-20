@@ -3,7 +3,7 @@ import path from 'path';
 import { ConnectorMetadata, ConnectorType, ConnectorPlatform } from '@logto/connector-types';
 import { getFileContents } from '@logto/shared';
 
-export const authorizationEndpoint = 'https://wechat.native/'; // This is used to arouse the native WeChat App
+export const authorizationEndpoint = 'wechat://'; // This is used to arouse the native WeChat App
 export const accessTokenEndpoint = 'https://api.weixin.qq.com/sns/oauth2/access_token';
 export const userInfoEndpoint = 'https://api.weixin.qq.com/sns/userinfo';
 export const scope = 'snsapi_userinfo';
