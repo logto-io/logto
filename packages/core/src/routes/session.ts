@@ -44,6 +44,7 @@ import {
   findUserByIdentity,
 } from '@/queries/user';
 import assertThat from '@/utils/assert-that';
+import { maskUserInfo } from '@/utils/format';
 
 import { AnonymousRouter } from './types';
 
@@ -231,12 +232,13 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
           true
         );
         const relatedInfo = await findSocialRelatedUser(userInfo);
+
         throw new RequestError(
           {
             code: 'user.identity_not_exists',
             status: 422,
           },
-          relatedInfo && { relatedUser: relatedInfo[0] }
+          relatedInfo && { relatedUser: maskUserInfo(relatedInfo[0]) }
         );
       }
 

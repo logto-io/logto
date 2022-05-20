@@ -1,4 +1,5 @@
 import { User } from '@logto/schemas';
+import { Nullable } from '@silverhand/essentials';
 import { InteractionResults } from 'oidc-provider';
 import { z } from 'zod';
 
@@ -77,19 +78,17 @@ export const getUserInfoFromInteractionResult = async (
  */
 export const findSocialRelatedUser = async (
   info: SocialUserInfo
-  // FIXME:
-  // eslint-disable-next-line @typescript-eslint/ban-types
-): Promise<null | [string, User]> => {
+): Promise<Nullable<[{ type: 'email' | 'phone'; value: string }, User]>> => {
   if (info.phone && (await hasUserWithPhone(info.phone))) {
     const user = await findUserByPhone(info.phone);
 
-    return [info.phone, user];
+    return [{ type: 'phone', value: info.phone }, user];
   }
 
   if (info.email && (await hasUserWithEmail(info.email))) {
     const user = await findUserByEmail(info.email);
 
-    return [info.email, user];
+    return [{ type: 'email', value: info.email }, user];
   }
 
   return null;
