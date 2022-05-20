@@ -24,7 +24,6 @@
   }
 
   .content {
-    overflow-y: auto;
     padding: _.unit(6) _.unit(17);
     // Space for footer
     padding-bottom: 112px;
@@ -38,6 +37,7 @@
 
   .main {
     display: flex;
+    align-items: flex-start;
 
     .form {
       flex: 1;
@@ -55,6 +55,8 @@
 
     .preview {
       margin-left: _.unit(8);
+      position: sticky;
+      top: _.unit(4);
     }
   }
 

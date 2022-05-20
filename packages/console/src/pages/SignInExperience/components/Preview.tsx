@@ -1,10 +1,12 @@
 import { Language } from '@logto/phrases';
 import { AppearanceMode, ConnectorDTO, ConnectorMetadata, SignInExperience } from '@logto/schemas';
 import classNames from 'classnames';
+import dayjs from 'dayjs';
 import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import useSWR from 'swr';
 
+import TopInfoImage from '@/assets/images/phone-top-info.svg';
 import Card from '@/components/Card';
 import Select from '@/components/Select';
 import TabNav, { TabNavItem } from '@/components/TabNav';
@@ -21,7 +23,7 @@ const Preview = ({ signInExperience, className }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const [language, setLanguage] = useState<Language>(Language.English);
   const [mode, setMode] = useState<AppearanceMode>(AppearanceMode.LightMode);
-  const [platform, setPlatform] = useState<'web' | 'mobile'>('web');
+  const [platform, setPlatform] = useState<'web' | 'mobile'>('mobile');
   const { data: allConnectors } = useSWR<ConnectorDTO[], RequestError>('/api/connectors');
 
   const config = useMemo(() => {
@@ -99,8 +101,16 @@ const Preview = ({ signInExperience, className }: Props) => {
           {t('sign_in_exp.preview.mobile')}
         </TabNavItem>
       </TabNav>
-      <div className={styles.body}>
-        <iframe src={`/sign-in?config=${config}&preview=true`} />
+      <div className={classNames(styles.body, styles[platform])}>
+        <div className={styles.device}>
+          {platform === 'mobile' && (
+            <div className={styles.topBar}>
+              <div className={styles.time}>{dayjs().format('HH:mm')}</div>
+              <img src={TopInfoImage} />
+            </div>
+          )}
+          <iframe src={`/sign-in?config=${config}&preview=true`} />
+        </div>
       </div>
     </Card>
   );

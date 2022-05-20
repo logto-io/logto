@@ -1,16 +1,13 @@
 @use '@/scss/underscore' as _;
 
 .preview {
-  width: 578px;
-  max-height: 700px;
-  display: flex;
-  flex-direction: column;
+  width: 480px;
   padding: 0;
   overflow: hidden;
 
   .header {
     display: flex;
-    margin: _.unit(6) _.unit(6) 0;
+    margin: _.unit(6) _.unit(6) _.unit(1);
 
     .title {
       font: var(--font-subhead-1);
@@ -33,15 +30,61 @@
 
   .nav {
     padding: 0 _.unit(6);
+    margin: 0;
   }
 
   .body {
     flex: 1;
+    background: var(--color-surface-variant);
 
     iframe {
       border: none;
-      width: 100%;
-      height: 100%;
+    }
+
+    &.mobile {
+      padding: _.unit(10) 0;
+
+      .device {
+        width: 390px;
+        margin: 0 auto;
+        background: var(--color-on-primary);
+        border-radius: 26px;
+        overflow: hidden;
+
+        .topBar {
+          display: flex;
+          align-items: center;
+          padding: _.unit(3) _.unit(6);
+
+          .time {
+            flex: 1;
+            font: var(--font-subhead-2);
+          }
+        }
+
+        iframe {
+          width: 390px;
+          height: 808px;
+        }
+      }
+    }
+
+    &.web {
+      .device {
+        width: 480px;
+        height: 380px;
+        position: relative;
+        background: var(--color-surface-1);
+
+        iframe {
+          width: 1440px;
+          height: 810px;
+          transform: scale(0.5);
+          position: absolute;
+          top: -202px;
+          left: -468px;
+        }
+      }
     }
   }
 }
