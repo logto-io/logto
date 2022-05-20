@@ -237,6 +237,17 @@ describe('adminUserRoutes', () => {
     expect(updateUserById).not.toHaveBeenCalled();
   });
 
+  it('PATCH /users/:userId should update if roleNames field is an empty array', async () => {
+    const roleNames: string[] = [];
+
+    const response = await userRequest.patch('/users/foo').send({ roleNames });
+    expect(response.status).toEqual(200);
+    expect(response.body).toEqual({
+      ...mockUserResponse,
+      roleNames,
+    });
+  });
+
   it('PATCH /users/:userId/password', async () => {
     const mockedUserId = 'foo';
     const password = '123456';

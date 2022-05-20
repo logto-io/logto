@@ -130,7 +130,7 @@ export default function adminUserRoutes<T extends AuthedRouter>(router: T) {
       }
 
       // Temp solution to validate the existence of input roleNames
-      if (body.roleNames) {
+      if (body.roleNames?.length) {
         const { roleNames } = body;
         const roles = await findRolesByRoleNames(roleNames);
 
