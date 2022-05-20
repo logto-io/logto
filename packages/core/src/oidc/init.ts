@@ -12,11 +12,7 @@ import { isOriginAllowed, validateCustomClientMetadata } from '@/oidc/utils';
 import { findResourceByIndicator } from '@/queries/resource';
 import { findUserById } from '@/queries/user';
 import { routes } from '@/routes/consts';
-import {
-  grantErrorListener,
-  grantRevokedListener,
-  grantSuccessListener,
-} from '@/utils/oidc-provider-event-listener';
+import { addOidcEventListeners } from '@/utils/oidc-provider-event-listener';
 
 export default async function initOidc(app: Koa): Promise<Provider> {
   const { issuer, privateKey, defaultIdTokenTtl, defaultRefreshTokenTtl } = envSet.values.oidc;
@@ -121,14 +117,7 @@ export default async function initOidc(app: Koa): Promise<Provider> {
     },
   });
 
-  /**
-   * OIDC provider listeners and events
-   * https://github.com/panva/node-oidc-provider/blob/main/docs/README.md#im-getting-a-client-authentication-failed-error-with-no-details
-   * https://github.com/panva/node-oidc-provider/blob/v7.x/docs/events.md
-   */
-  oidc.on('grant.success', grantSuccessListener);
-  oidc.on('grant.error', grantErrorListener);
-  oidc.on('grant.revoked', grantRevokedListener);
+  addOidcEventListeners(oidc);
 
   app.use(mount('/oidc', oidc.app));
 

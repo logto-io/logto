@@ -1,8 +1,19 @@
 import { GrantType, TokenType, LogResult } from '@logto/schemas';
 import { notFalsy } from '@silverhand/essentials';
-import { errors, KoaContextWithOIDC } from 'oidc-provider';
+import { errors, KoaContextWithOIDC, Provider } from 'oidc-provider';
 
 import { WithLogContext } from '@/middleware/koa-log';
+
+export const addOidcEventListeners = (provider: Provider) => {
+  /**
+   * OIDC provider listeners and events
+   * https://github.com/panva/node-oidc-provider/blob/main/docs/README.md#im-getting-a-client-authentication-failed-error-with-no-details
+   * https://github.com/panva/node-oidc-provider/blob/v7.x/docs/events.md
+   */
+  provider.addListener('grant.success', grantSuccessListener);
+  provider.addListener('grant.error', grantErrorListener);
+  provider.addListener('grant.revoked', grantRevokedListener);
+};
 
 /**
  * See https://github.com/panva/node-oidc-provider/tree/main/lib/actions/grants

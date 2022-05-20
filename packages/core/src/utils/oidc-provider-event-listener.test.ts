@@ -1,19 +1,49 @@
 import { LogResult, TokenType } from '@logto/schemas';
+import { Provider } from 'oidc-provider';
 
 import {
+  addOidcEventListeners,
   grantErrorListener,
   grantRevokedListener,
   grantSuccessListener,
 } from '@/utils/oidc-provider-event-listener';
 import { createContextWithRouteParameters } from '@/utils/test-utils';
 
+const userId = 'userIdValue';
+const sessionId = 'sessionIdValue';
+const applicationId = 'applicationIdValue';
+
 const addLogContext = jest.fn();
 const log = jest.fn();
+const addListener = jest.fn();
+
+jest.mock('oidc-provider', () => ({ Provider: jest.fn(() => ({ addListener })) }));
+
+describe('addOidcEventListeners', () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('should add grantSuccessListener', () => {
+    const provider = new Provider('');
+    addOidcEventListeners(provider);
+    expect(addListener).toHaveBeenCalledWith('grant.success', grantSuccessListener);
+  });
+
+  it('should add grantErrorListener', () => {
+    const provider = new Provider('');
+    addOidcEventListeners(provider);
+    expect(addListener).toHaveBeenCalledWith('grant.error', grantErrorListener);
+  });
+
+  it('should add grantRevokedListener', () => {
+    const provider = new Provider('');
+    addOidcEventListeners(provider);
+    expect(addListener).toHaveBeenCalledWith('grant.revoked', grantRevokedListener);
+  });
+});
 
 describe('grantSuccessListener', () => {
-  const userId = 'userIdValue';
-  const sessionId = 'sessionIdValue';
-  const applicationId = 'applicationIdValue';
   const entities = {
     Account: { accountId: userId },
     Grant: { jti: sessionId },
@@ -120,7 +150,6 @@ describe('grantSuccessListener', () => {
 });
 
 describe('grantErrorListener', () => {
-  const applicationId = 'applicationIdValue';
   const entities = { Client: { clientId: applicationId } };
   const errorMessage = 'invalid grant';
 
@@ -197,14 +226,10 @@ describe('grantErrorListener', () => {
 
 describe('grantRevokedListener', () => {
   const grantId = 'grantIdValue';
-
   const token = 'tokenValue';
   const parameters = { token };
 
-  const applicationId = 'applicationIdValue';
   const client = { clientId: applicationId };
-
-  const userId = 'userIdValue';
   const accessToken = { accountId: userId };
   const refreshToken = { accountId: userId };
 
