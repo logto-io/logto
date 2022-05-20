@@ -94,8 +94,8 @@ export const filterSocialConnectors = (socialConnectors?: ConnectorData[]) => {
 
   /**
    * Native Webview Environment
-   * Accepts both Native and universal platform connectors.
-   * Insert universal connectors only if there is no  Native platform connector provided with the same target.
+   * Accepts both native and universal platform connectors.
+   * Insert universal connectors only if there is no  native platform connector provided with the same target.
    * Native platform has higher priority.
    **/
 
