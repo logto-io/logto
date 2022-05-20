@@ -1,15 +1,49 @@
-import { LogResult } from '@logto/schemas';
+import { LogResult, TokenType } from '@logto/schemas';
+import { Provider } from 'oidc-provider';
 
-import { grantErrorListener, grantSuccessListener } from '@/utils/oidc-provider-event-listener';
+import {
+  addOidcEventListeners,
+  grantErrorListener,
+  grantRevokedListener,
+  grantSuccessListener,
+} from '@/utils/oidc-provider-event-listener';
 import { createContextWithRouteParameters } from '@/utils/test-utils';
+
+const userId = 'userIdValue';
+const sessionId = 'sessionIdValue';
+const applicationId = 'applicationIdValue';
 
 const addLogContext = jest.fn();
 const log = jest.fn();
+const addListener = jest.fn();
+
+jest.mock('oidc-provider', () => ({ Provider: jest.fn(() => ({ addListener })) }));
+
+describe('addOidcEventListeners', () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('should add grantSuccessListener', () => {
+    const provider = new Provider('');
+    addOidcEventListeners(provider);
+    expect(addListener).toHaveBeenCalledWith('grant.success', grantSuccessListener);
+  });
+
+  it('should add grantErrorListener', () => {
+    const provider = new Provider('');
+    addOidcEventListeners(provider);
+    expect(addListener).toHaveBeenCalledWith('grant.error', grantErrorListener);
+  });
+
+  it('should add grantRevokedListener', () => {
+    const provider = new Provider('');
+    addOidcEventListeners(provider);
+    expect(addListener).toHaveBeenCalledWith('grant.revoked', grantRevokedListener);
+  });
+});
 
 describe('grantSuccessListener', () => {
-  const userId = 'userIdValue';
-  const sessionId = 'sessionIdValue';
-  const applicationId = 'applicationIdValue';
   const entities = {
     Account: { accountId: userId },
     Grant: { jti: sessionId },
@@ -39,7 +73,7 @@ describe('grantSuccessListener', () => {
     await grantSuccessListener(ctx);
     expect(addLogContext).toHaveBeenCalledWith({ applicationId, sessionId });
     expect(log).toHaveBeenCalledWith('CodeExchangeToken', {
-      issued: ['accessToken', 'refreshToken', 'idToken'],
+      issued: Object.values(TokenType),
       params: parameters,
       scope: 'openid offline-access',
       userId,
@@ -65,7 +99,7 @@ describe('grantSuccessListener', () => {
     await grantSuccessListener(ctx);
     expect(addLogContext).toHaveBeenCalledWith({ applicationId, sessionId });
     expect(log).toHaveBeenCalledWith('RefreshTokenExchangeToken', {
-      issued: ['accessToken', 'refreshToken', 'idToken'],
+      issued: Object.values(TokenType),
       params: parameters,
       scope: 'openid offline-access',
       userId,
@@ -91,7 +125,7 @@ describe('grantSuccessListener', () => {
     await grantSuccessListener(ctx);
     expect(addLogContext).toHaveBeenCalledWith({ applicationId, sessionId });
     expect(log).toHaveBeenCalledWith('RefreshTokenExchangeToken', {
-      issued: ['accessToken', 'refreshToken'],
+      issued: [TokenType.AccessToken, TokenType.RefreshToken],
       params: parameters,
       scope: 'offline-access',
       userId,
@@ -116,7 +150,6 @@ describe('grantSuccessListener', () => {
 });
 
 describe('grantErrorListener', () => {
-  const applicationId = 'applicationIdValue';
   const entities = { Client: { clientId: applicationId } };
   const errorMessage = 'invalid grant';
 
@@ -186,6 +219,84 @@ describe('grantErrorListener', () => {
 
     // @ts-expect-error pass complex type check to mock ctx directly
     await grantErrorListener(ctx, new Error(errorMessage));
+    expect(addLogContext).not.toHaveBeenCalled();
+    expect(log).not.toHaveBeenCalled();
+  });
+});
+
+describe('grantRevokedListener', () => {
+  const grantId = 'grantIdValue';
+  const token = 'tokenValue';
+  const parameters = { token };
+
+  const client = { clientId: applicationId };
+  const accessToken = { accountId: userId };
+  const refreshToken = { accountId: userId };
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('should log token type AccessToken when the token is an access token', async () => {
+    const ctx = {
+      ...createContextWithRouteParameters(),
+      addLogContext,
+      log,
+      oidc: {
+        entities: { Client: client, AccessToken: accessToken },
+        params: parameters,
+      },
+      body: { client_id: applicationId, token },
+    };
+
+    // @ts-expect-error pass complex type check to mock ctx directly
+    await grantRevokedListener(ctx, grantId);
+    expect(addLogContext).toHaveBeenCalledWith({ applicationId });
+    expect(log).toHaveBeenCalledWith('RevokeToken', {
+      userId,
+      params: parameters,
+      grantId,
+      tokenType: TokenType.AccessToken,
+    });
+  });
+
+  it('should log token type RefreshToken when the token is a refresh code', async () => {
+    const ctx = {
+      ...createContextWithRouteParameters(),
+      addLogContext,
+      log,
+      oidc: {
+        entities: { Client: client, RefreshToken: refreshToken },
+        params: parameters,
+      },
+      body: { client_id: applicationId, token },
+    };
+
+    // @ts-expect-error pass complex type check to mock ctx directly
+    await grantRevokedListener(ctx, grantId);
+    expect(addLogContext).toHaveBeenCalledWith({ applicationId });
+    expect(log).toHaveBeenCalledWith('RevokeToken', {
+      userId,
+      params: parameters,
+      grantId,
+      tokenType: TokenType.RefreshToken,
+    });
+  });
+
+  it('should not log when the revoked token is neither access token nor refresh token', async () => {
+    const ctx = {
+      ...createContextWithRouteParameters(),
+      addLogContext,
+      log,
+      oidc: {
+        entities: { Client: client },
+        params: parameters,
+      },
+      body: { client_id: applicationId, token },
+    };
+
+    // @ts-expect-error pass complex type check to mock ctx directly
+    await grantRevokedListener(ctx, grantId);
     expect(addLogContext).not.toHaveBeenCalled();
     expect(log).not.toHaveBeenCalled();
   });

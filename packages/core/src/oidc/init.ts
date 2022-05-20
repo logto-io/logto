@@ -12,7 +12,7 @@ import { isOriginAllowed, validateCustomClientMetadata } from '@/oidc/utils';
 import { findResourceByIndicator } from '@/queries/resource';
 import { findUserById } from '@/queries/user';
 import { routes } from '@/routes/consts';
-import { grantErrorListener, grantSuccessListener } from '@/utils/oidc-provider-event-listener';
+import { addOidcEventListeners } from '@/utils/oidc-provider-event-listener';
 
 export default async function initOidc(app: Koa): Promise<Provider> {
   const { issuer, cookieKeys, privateKey, defaultIdTokenTtl, defaultRefreshTokenTtl } =
@@ -116,8 +116,7 @@ export default async function initOidc(app: Koa): Promise<Provider> {
     },
   });
 
-  oidc.on('grant.success', grantSuccessListener);
-  oidc.on('grant.error', grantErrorListener);
+  addOidcEventListeners(oidc);
 
   app.use(mount('/oidc', oidc.app));
 
