@@ -26,8 +26,8 @@ export const defaultMetadata: ConnectorMetadata = {
   type: ConnectorType.Social,
   platform: ConnectorPlatform.Native,
   name: {
-    en: 'Sign In with Alipay',
-    'zh-CN': '支付宝登录',
+    en: 'Alipay',
+    'zh-CN': '支付宝',
   },
   logo: './logo.png',
   description: {

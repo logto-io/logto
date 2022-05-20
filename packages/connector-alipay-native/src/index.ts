@@ -13,7 +13,7 @@ import {
   ConnectorErrorCodes,
   ConnectorMetadata,
   GetAccessToken,
-  GetNativeAuthorizationUri,
+  GetAuthorizationUri,
   GetUserInfo,
   ValidateConfig,
   SocialConnector,
@@ -61,7 +61,7 @@ export class AlipayNativeConnector implements SocialConnector {
     }
   };
 
-  public getAuthorizationUri: GetNativeAuthorizationUri = async () => {
+  public getAuthorizationUri: GetAuthorizationUri = async () => {
     const { appId } = await this.getConfig(this.metadata.target, this.metadata.platform);
 
     const queryParameters = new URLSearchParams({ app_id: appId });

@@ -39,7 +39,10 @@ describe('getAuthorizationUri', () => {
     jest
       .spyOn(alipayNativeMethods, 'getConfig')
       .mockResolvedValueOnce(mockedAlipayNativeConfigWithValidPrivateKey);
-    const authorizationUri = await alipayNativeMethods.getAuthorizationUri();
+    const authorizationUri = await alipayNativeMethods.getAuthorizationUri(
+      'dummy-redirectUri',
+      'dummy-state'
+    );
     expect(authorizationUri).toBe('alipay://?app_id=2021000000000000');
   });
 });
