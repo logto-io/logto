@@ -67,6 +67,14 @@ const sendGridMailConnector = {
   config: {},
   createdAt: 1_646_382_233_111,
 };
+const twilioSmsConnector = {
+  id: 'twilio-sms',
+  target: 'twilio-sms',
+  platform: null,
+  enabled: false,
+  config: {},
+  createdAt: 1_646_382_233_000,
+};
 const wechatConnector = {
   id: 'wechat',
   target: 'wechat',
@@ -92,6 +100,7 @@ const connectors = [
   githubConnector,
   googleConnector,
   sendGridMailConnector,
+  twilioSmsConnector,
   wechatConnector,
   wechatNativeConnector,
 ];
@@ -116,8 +125,9 @@ describe('getConnectorInstances', () => {
     expect(connectorInstances[4]).toHaveProperty('connector', githubConnector);
     expect(connectorInstances[5]).toHaveProperty('connector', googleConnector);
     expect(connectorInstances[6]).toHaveProperty('connector', sendGridMailConnector);
-    expect(connectorInstances[7]).toHaveProperty('connector', wechatConnector);
-    expect(connectorInstances[8]).toHaveProperty('connector', wechatNativeConnector);
+    expect(connectorInstances[7]).toHaveProperty('connector', twilioSmsConnector);
+    expect(connectorInstances[8]).toHaveProperty('connector', wechatConnector);
+    expect(connectorInstances[9]).toHaveProperty('connector', wechatNativeConnector);
   });
 
   test('should throw if any required connector does not exist in DB', async () => {
