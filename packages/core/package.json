@@ -68,7 +68,7 @@
   },
   "devDependencies": {
     "@silverhand/jest-config": "^0.14.0",
-    "@shopify/jest-koa-mocks": "^3.0.8",
+    "@shopify/jest-koa-mocks": "^4.0.0",
     "@silverhand/eslint-config": "^0.14.0",
     "@silverhand/ts-config": "^0.14.0",
     "@types/inquirer": "^8.2.1",
