@@ -108,7 +108,7 @@ const readCookieKeys = async (): Promise<string[]> => {
   );
 };
 
-const loadOidcValues = async (defaultIssuer: string) => {
+const loadOidcValues = async (defaultUrl: string) => {
   const cookieKeys = await readCookieKeys();
   const privateKey = crypto.createPrivateKey(await readPrivateKey());
   const publicKey = crypto.createPublicKey(privateKey);
@@ -117,8 +117,7 @@ const loadOidcValues = async (defaultIssuer: string) => {
     cookieKeys,
     privateKey,
     publicKey,
-    issuer: getEnv('OIDC_ISSUER', defaultIssuer),
-    adminResource: getEnv('ADMIN_RESOURCE', 'https://api.logto.io'),
+    issuer: getEnv('OIDC_ISSUER', `${defaultUrl}/oidc`),
     defaultIdTokenTtl: 60 * 60,
     defaultRefreshTokenTtl: 14 * 24 * 60 * 60,
   });

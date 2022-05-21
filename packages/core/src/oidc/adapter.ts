@@ -22,11 +22,8 @@ import {
 import { getApplicationTypeString } from './utils';
 
 const buildAdminConsoleClientMetadata = (): AllClientMetadata => {
-  const {
-    localhostUrl,
-    oidc: { issuer },
-  } = envSet.values;
-  const urls = [...new Set([localhostUrl, issuer.slice(0, issuer.lastIndexOf('/'))])];
+  const { localhostUrl, adminConsoleUrl } = envSet.values;
+  const urls = [...new Set([`${localhostUrl}/console`, adminConsoleUrl])];
 
   return {
     client_id: adminConsoleApplicationId,
@@ -34,8 +31,8 @@ const buildAdminConsoleClientMetadata = (): AllClientMetadata => {
     application_type: getApplicationTypeString(ApplicationType.SPA),
     grant_types: Object.values(GrantType),
     token_endpoint_auth_method: 'none',
-    redirect_uris: urls.map((url) => `${url}/console/callback`),
-    post_logout_redirect_uris: urls.map((url) => `${url}/console`),
+    redirect_uris: urls.map((url) => `${url}/callback`),
+    post_logout_redirect_uris: urls,
   };
 };
 

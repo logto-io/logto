@@ -1,5 +1,6 @@
 import { IncomingHttpHeaders } from 'http';
 
+import { managementApiResource } from '@logto/schemas';
 import { jwtVerify } from 'jose';
 import { MiddlewareType, Request } from 'koa';
 import { IRouterParamContext } from 'koa-router';
@@ -38,12 +39,12 @@ const getUserIdFromRequest = async (request: Request) => {
     return developmentUserId;
   }
 
-  const { publicKey, issuer, adminResource } = oidc;
+  const { publicKey, issuer } = oidc;
   const {
     payload: { sub },
   } = await jwtVerify(extractBearerTokenFromHeaders(request.headers), publicKey, {
     issuer,
-    audience: adminResource,
+    audience: managementApiResource,
   });
   assertThat(sub, new RequestError({ code: 'auth.jwt_sub_missing', status: 401 }));
 

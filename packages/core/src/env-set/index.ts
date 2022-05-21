@@ -27,7 +27,8 @@ const loadEnvValues = async () => {
     localhostUrl,
     developmentUserId: getEnv('DEVELOPMENT_USER_ID'),
     trustProxyHeader: getEnv('TRUST_PROXY_HEADER') === 'true',
-    oidc: await loadOidcValues(`${localhostUrl}/oidc`),
+    oidc: await loadOidcValues(localhostUrl),
+    adminConsoleUrl: getEnv('ADMIN_CONSOLE_URL', `${localhostUrl}/console`),
   });
 };
 

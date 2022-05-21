@@ -1,12 +1,10 @@
 import { useLogto } from '@logto/react';
-import { RequestErrorBody } from '@logto/schemas';
+import { managementApiResource, RequestErrorBody } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { t } from 'i18next';
 import ky from 'ky';
 import { useMemo } from 'react';
 import { toast } from 'react-hot-toast';
-
-import { logtoApiResource } from '@/consts/api';
 
 export class RequestError extends Error {
   body?: RequestErrorBody;
@@ -51,7 +49,7 @@ const useApi = ({ hideErrorToast }: Props = {}) => {
           beforeRequest: [
             async (request) => {
               if (isAuthenticated) {
-                const accessToken = await getAccessToken(logtoApiResource);
+                const accessToken = await getAccessToken(managementApiResource);
                 request.headers.set('Authorization', `Bearer ${accessToken ?? ''}`);
               }
             },

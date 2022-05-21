@@ -19,3 +19,10 @@ export enum GrantType {
  * This built-in application does not belong to any tenant in the OSS version.
  */
 export const adminConsoleApplicationId = 'admin_console';
+
+/**
+ * The fixed resource indicator for Management APIs.
+ *
+ * Admin Console requires the access token of this resource to be functional.
+ */
+export const managementApiResource = 'https://api.logto.io';
