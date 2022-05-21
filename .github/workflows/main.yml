@@ -18,12 +18,6 @@ jobs:
       - name: Build
         run: pnpm ci:build
 
-      - name: Lint
-        run: pnpm ci:lint
-
-      - name: Stylelint
-        run: pnpm ci:stylelint
-
       - name: Test
         run: pnpm ci:test
 
@@ -32,3 +26,18 @@ jobs:
         with:
           flags: core
           directory: ./packages/core
+
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Node and pnpm
+        uses: logto-io/actions-node-pnpm-run-steps@v1.2.2
+
+      - name: Lint
+        run: pnpm ci:lint
+
+      - name: Stylelint
+        run: pnpm ci:stylelint
