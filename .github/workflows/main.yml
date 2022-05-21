@@ -27,6 +27,9 @@ jobs:
       - name: Setup Node and pnpm
         uses: logto-io/actions-node-pnpm-run-steps@v1.2.2
 
+      - name: Prepack
+        run: pnpm prepack
+
       - name: Lint
         run: pnpm ci:lint
 
