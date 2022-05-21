@@ -6,7 +6,7 @@ on:
   pull_request:
 
 jobs:
-  main:
+  main-build:
     runs-on: ubuntu-latest
 
     steps:
@@ -18,16 +18,7 @@ jobs:
       - name: Build
         run: pnpm ci:build
 
-      - name: Test
-        run: pnpm ci:test
-
-      - name: Codecov
-        uses: codecov/codecov-action@v3
-        with:
-          flags: core
-          directory: ./packages/core
-
-  lint:
+  main-lint:
     runs-on: ubuntu-latest
 
     steps:
@@ -41,3 +32,24 @@ jobs:
 
       - name: Stylelint
         run: pnpm ci:stylelint
+
+  main-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Node and pnpm
+        uses: logto-io/actions-node-pnpm-run-steps@v1.2.2
+
+      - name: Prepack
+        run: pnpm prepack
+
+      - name: Test
+        run: pnpm ci:test
+
+      - name: Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          flags: core
+          directory: ./packages/core
