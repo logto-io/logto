@@ -102,21 +102,6 @@ export const getEnabledSocialConnectorIds = async <T extends ConnectorInstance>(
     .map((instance) => instance.connector.id);
 };
 
-export const getConnectorInstanceByType = async <T extends ConnectorInstance>(
-  type: ConnectorType
-): Promise<T> => {
-  const connectors = await getConnectorInstances();
-  const connector = connectors.find<T>(
-    (connector): connector is T => connector.connector.enabled && connector.metadata.type === type
-  );
-
-  if (!connector) {
-    throw new RequestError({ code: 'connector.not_found', type });
-  }
-
-  return connector;
-};
-
 export const initConnectors = async () => {
   const connectors = await findAllConnectors();
   const existingConnectors = new Map(
