@@ -84,20 +84,19 @@ export default async function initOidc(app: Koa): Promise<Provider> {
     },
     // https://github.com/panva/node-oidc-provider/blob/main/recipes/client_based_origins.md
     clientBasedCORS: (_, origin, client) => isOriginAllowed(origin, client.metadata()),
-    claims: {
-      openid: ['sub', 'name', 'avatar', 'custom_data'],
-    },
     findAccount: async (ctx, sub) => {
-      const { name, avatar, customData } = await findUserById(sub);
+      await findUserById(sub);
 
       return {
         accountId: sub,
-        claims: async () => ({
-          sub,
-          name,
-          avatar,
-          custom_data: customData,
-        }),
+        claims: async (use, scope, claims, rejected) => {
+          console.log('use:', use);
+          console.log('scope:', scope);
+          console.log('claims:', claims);
+          console.log('rejected:', rejected);
+
+          return { sub };
+        },
       };
     },
     ttl: {
