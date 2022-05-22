@@ -9,7 +9,7 @@ import { createContextWithRouteParameters } from '@/utils/test-utils';
 import koaAuth, { WithAuthContext } from './koa-auth';
 
 jest.mock('jose', () => ({
-  jwtVerify: jest.fn(() => ({ payload: { sub: 'fooUser' } })),
+  jwtVerify: jest.fn(() => ({ payload: { sub: 'fooUser', roles: ['admin'] } })),
 }));
 
 describe('koaAuth middleware', () => {
@@ -70,6 +70,34 @@ describe('koaAuth middleware', () => {
   it('expect to throw if jwt sub is missing', async () => {
     const mockJwtVerify = jwtVerify as jest.Mock;
     mockJwtVerify.mockImplementationOnce(() => ({ payload: {} }));
+
+    ctx.request = {
+      ...ctx.request,
+      headers: {
+        authorization: 'Bearer access_token',
+      },
+    };
+
+    await expect(koaAuth()(ctx, next)).rejects.toMatchError(unauthorizedError);
+  });
+
+  it('expect to throw if jwt roles is missing', async () => {
+    const mockJwtVerify = jwtVerify as jest.Mock;
+    mockJwtVerify.mockImplementationOnce(() => ({ payload: { sub: 'fooUser' } }));
+
+    ctx.request = {
+      ...ctx.request,
+      headers: {
+        authorization: 'Bearer access_token',
+      },
+    };
+
+    await expect(koaAuth()(ctx, next)).rejects.toMatchError(unauthorizedError);
+  });
+
+  it('expect to throw if jwt roles does not include admin', async () => {
+    const mockJwtVerify = jwtVerify as jest.Mock;
+    mockJwtVerify.mockImplementationOnce(() => ({ payload: { sub: 'fooUser', roles: ['foo'] } }));
 
     ctx.request = {
       ...ctx.request,

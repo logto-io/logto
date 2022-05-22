@@ -1,6 +1,6 @@
 import { IncomingHttpHeaders } from 'http';
 
-import { managementApiResource } from '@logto/schemas';
+import { managementApiResource, UserRole } from '@logto/schemas';
 import { jwtVerify } from 'jose';
 import { MiddlewareType, Request } from 'koa';
 import { IRouterParamContext } from 'koa-router';
@@ -32,7 +32,7 @@ const extractBearerTokenFromHeaders = ({ authorization }: IncomingHttpHeaders) =
   return authorization.slice(bearerTokenIdentifier.length + 1);
 };
 
-const getUserIdFromRequest = async (request: Request) => {
+const getUserInfoFromRequest = async (request: Request) => {
   const { isProduction, developmentUserId, oidc } = envSet.values;
 
   if (!isProduction && developmentUserId) {
@@ -41,12 +41,18 @@ const getUserIdFromRequest = async (request: Request) => {
 
   const { publicKey, issuer } = oidc;
   const {
-    payload: { sub },
+    payload: { sub, roles },
   } = await jwtVerify(extractBearerTokenFromHeaders(request.headers), publicKey, {
     issuer,
     audience: managementApiResource,
   });
+
   assertThat(sub, new RequestError({ code: 'auth.jwt_sub_missing', status: 401 }));
+
+  assertThat(
+    Array.isArray(roles) && roles.includes(UserRole.Admin),
+    new RequestError({ code: 'auth.unauthorized', status: 401 })
+  );
 
   return sub;
 };
@@ -58,7 +64,7 @@ export default function koaAuth<
 >(): MiddlewareType<StateT, WithAuthContext<ContextT>, ResponseBodyT> {
   return async (ctx, next) => {
     try {
-      const userId = await getUserIdFromRequest(ctx.request);
+      const userId = await getUserInfoFromRequest(ctx.request);
       ctx.auth = userId;
     } catch {
       throw new RequestError({ code: 'auth.unauthorized', status: 401 });
