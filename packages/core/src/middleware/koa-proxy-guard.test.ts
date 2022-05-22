@@ -3,7 +3,7 @@ import { Provider } from 'oidc-provider';
 import { MountedApps } from '@/env-set';
 import { createContextWithRouteParameters } from '@/utils/test-utils';
 
-import koaClientSessionGuard, { sessionNotFoundPath } from './koa-client-session-guard';
+import koaProxyGuard, { sessionNotFoundPath } from './koa-proxy-guard';
 
 jest.mock('fs/promises', () => ({
   ...jest.requireActual('fs/promises'),
@@ -16,7 +16,7 @@ jest.mock('oidc-provider', () => ({
   })),
 }));
 
-describe('koaClientSessionGuard', () => {
+describe('koaProxyGuard', () => {
   const envBackup = process.env;
 
   beforeEach(() => {
@@ -38,7 +38,7 @@ describe('koaClientSessionGuard', () => {
         url: `/${app}/foo`,
       });
 
-      await koaClientSessionGuard(provider)(ctx, next);
+      await koaProxyGuard(provider)(ctx, next);
 
       expect(ctx.redirect).not.toBeCalled();
     });
@@ -49,7 +49,7 @@ describe('koaClientSessionGuard', () => {
     const ctx = createContextWithRouteParameters({
       url: `/sign-in`,
     });
-    await koaClientSessionGuard(provider)(ctx, next);
+    await koaProxyGuard(provider)(ctx, next);
     expect(ctx.redirect).not.toBeCalled();
   });
 
@@ -60,7 +60,7 @@ describe('koaClientSessionGuard', () => {
     const ctx = createContextWithRouteParameters({
       url: `${sessionNotFoundPath}`,
     });
-    await koaClientSessionGuard(provider)(ctx, next);
+    await koaProxyGuard(provider)(ctx, next);
     expect(ctx.redirect).not.toBeCalled();
   });
 
@@ -71,7 +71,7 @@ describe('koaClientSessionGuard', () => {
     const ctx = createContextWithRouteParameters({
       url: '/sign-in',
     });
-    await koaClientSessionGuard(provider)(ctx, next);
+    await koaProxyGuard(provider)(ctx, next);
     expect(ctx.redirect).toBeCalled();
   });
 });

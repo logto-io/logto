@@ -18,18 +18,25 @@ export default function koaSpaSessionGuard<
   return async (ctx, next) => {
     const requestPath = ctx.request.path;
     const packagesPath = fromRoot ? 'packages/' : '..';
-    const distPath = path.join(packagesPath, 'ui', 'dist');
+    const clientPath = path.join(packagesPath, 'ui', 'dist');
 
-    // Guard client routes only
+    // Empty path Redirect
+    if (requestPath === '/') {
+      ctx.redirect(`/${MountedApps.Console}`);
+
+      return next();
+    }
+
+    // Check client routes session status only
     if (Object.values(MountedApps).some((app) => requestPath.startsWith(`/${app}`))) {
       return next();
     }
 
+    // Client session guard
     try {
-      // Find session
       await provider.interactionDetails(ctx.req, ctx.res);
     } catch {
-      const spaDistFiles = await fs.readdir(distPath);
+      const spaDistFiles = await fs.readdir(clientPath);
 
       if (
         !spaDistFiles.some((file) => requestPath.startsWith('/' + file)) &&
