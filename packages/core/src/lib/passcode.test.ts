@@ -120,14 +120,55 @@ describe('sendPasscode', () => {
     );
   });
 
-  it('should call sendPasscode with params matching', async () => {
+  it('should throw error when email or sms connector can not be found', async () => {
     const sendMessage = jest.fn();
-    mockedGetConnectorInstances.mockResolvedValue([
+    const validateConfig = jest.fn();
+    const getConfig = jest.fn();
+    mockedGetConnectorInstances.mockResolvedValueOnce([
       {
         connector: {
           ...mockConnector,
-          id: 'id',
-          target: 'connector',
+          id: 'id1',
+          target: 'connector1',
+          platform: null,
+        },
+        metadata: {
+          ...mockMetadata,
+          type: ConnectorType.Email,
+          platform: null,
+        },
+        sendMessage,
+        validateConfig,
+        getConfig,
+      },
+    ]);
+    const passcode: Passcode = {
+      id: 'id',
+      interactionJti: 'jti',
+      phone: 'phone',
+      email: null,
+      type: PasscodeType.SignIn,
+      code: '1234',
+      consumed: false,
+      tryCount: 0,
+      createdAt: Date.now(),
+    };
+    await expect(sendPasscode(passcode)).rejects.toThrowError(
+      new RequestError({
+        code: 'connector.not_found',
+        type: ConnectorType.SMS,
+      })
+    );
+  });
+
+  it('should call sendPasscode with params matching', async () => {
+    const sendMessage = jest.fn();
+    mockedGetConnectorInstances.mockResolvedValueOnce([
+      {
+        connector: {
+          ...mockConnector,
+          id: 'id0',
+          target: 'connector0',
           platform: null,
         },
         metadata: {
@@ -142,8 +183,8 @@ describe('sendPasscode', () => {
       {
         connector: {
           ...mockConnector,
-          id: 'id',
-          target: 'connector',
+          id: 'id1',
+          target: 'connector1',
           platform: null,
         },
         metadata: {

@@ -3,6 +3,7 @@ import {
   ConnectorError,
   ConnectorErrorCodes,
   EmailMessageTypes,
+  SmsMessageTypes,
   ValidateConfig,
 } from '@logto/connector-types';
 import { Connector, ConnectorType } from '@logto/schemas';
@@ -498,6 +499,36 @@ describe('connector route', () => {
       });
       expect(response).toHaveProperty('statusCode', 204);
     });
+
+    it('should throw when email connector is not found', async () => {
+      const mockedMetadata = {
+        ...mockMetadata,
+        type: ConnectorType.SMS,
+      };
+      const mockedConnector = {
+        ...mockConnector,
+        type: ConnectorType.SMS,
+      };
+      const mockedSmsConnector: SmsConnectorInstance = {
+        connector: mockedConnector,
+        metadata: mockedMetadata,
+        validateConfig: jest.fn(),
+        getConfig: jest.fn(),
+        sendMessage: async (
+          address: string,
+          type: keyof SmsMessageTypes,
+          _payload: SmsMessageTypes[typeof type]
+          // eslint-disable-next-line @typescript-eslint/no-empty-function
+        ): Promise<any> => {},
+      };
+
+      getConnectorInstancesPlaceHolder.mockResolvedValueOnce([mockedSmsConnector]);
+
+      const response = await connectorRequest
+        .post('/connectors/test/email')
+        .send({ email: 'test@email.com' });
+      expect(response).toHaveProperty('statusCode', 400);
+    });
   });
 
   describe('POST /connectors/test/sms', () => {
@@ -539,6 +570,37 @@ describe('connector route', () => {
         code: '123456',
       });
       expect(response).toHaveProperty('statusCode', 204);
+    });
+
+    it('should thorw when sms connector is not found', async () => {
+      const mockedMetadata = {
+        ...mockMetadata,
+        type: ConnectorType.Email,
+      };
+      const mockedConnector = {
+        ...mockConnector,
+        type: ConnectorType.Email,
+        metadata: mockedMetadata,
+      };
+      const mockedEmailConnectorInstance: EmailConnectorInstance = {
+        connector: mockedConnector,
+        metadata: mockedMetadata,
+        validateConfig: jest.fn(),
+        getConfig: jest.fn(),
+        sendMessage: async (
+          address: string,
+          type: keyof EmailMessageTypes,
+          _payload: EmailMessageTypes[typeof type]
+          // eslint-disable-next-line @typescript-eslint/no-empty-function
+        ): Promise<any> => {},
+      };
+
+      getConnectorInstancesPlaceHolder.mockResolvedValueOnce([mockedEmailConnectorInstance]);
+
+      const response = await connectorRequest
+        .post('/connectors/test/sms')
+        .send({ phone: '12345678901' });
+      expect(response).toHaveProperty('statusCode', 400);
     });
   });
 });

@@ -162,6 +162,8 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
           connector.connector.enabled && connector.metadata.type === ConnectorType.Email
       );
 
+      console.log('connector:', connector);
+
       if (!connector) {
         throw new RequestError({ code: 'connector.not_found', type: ConnectorType.Email });
       }
