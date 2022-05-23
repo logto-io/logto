@@ -1,6 +1,6 @@
 import { GetConnectorConfig } from '@logto/connector-types';
 
-import { AliyunDmConnector } from '.';
+import AliyunDmConnector from '.';
 import { mockedConfig } from './mock';
 import { singleSendMail } from './single-send-mail';
 import { AliyunDmConfig } from './types';

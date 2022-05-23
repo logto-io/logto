@@ -21,7 +21,7 @@ import {
   PublicParameters,
 } from './types';
 
-export class SendGridMailConnector implements EmailConnector {
+export default class SendGridMailConnector implements EmailConnector {
   public metadata: ConnectorMetadata = defaultMetadata;
 
   constructor(public readonly getConfig: GetConnectorConfig<SendGridMailConfig>) {}

@@ -756,6 +756,7 @@ importers:
       p-retry: ^4.6.1
       prettier: ^2.3.2
       query-string: ^7.0.1
+      resolve-package-path: ^4.0.3
       roarr: ^7.11.0
       slonik: ^28.0.0
       slonik-interceptor-preset: ^1.2.10
@@ -808,6 +809,7 @@ importers:
       oidc-provider: 7.10.4
       p-retry: 4.6.1
       query-string: 7.0.1
+      resolve-package-path: 4.0.3
       roarr: 7.11.0
       slonik: 28.1.0
       slonik-interceptor-preset: 1.2.10
@@ -15327,6 +15329,18 @@ packages:
   /path-parse/1.0.7:
     resolution: {integrity: sha512-LDJzPVEEEPR+y48z93A0Ed0yXb8pAByGWo/k5YYdYgpY2/2EsOsksJrq7lOHxryrVOn1ejG6oAp8ahvOIQD8sw==}
 
+  /path-root-regex/0.1.2:
+    resolution: {integrity: sha1-v8zcjfWxLcUsi0PsONGNcsBLqW0=}
+    engines: {node: '>=0.10.0'}
+    dev: false
+
+  /path-root/0.1.1:
+    resolution: {integrity: sha1-mkpoFMrBwM1zNgqV8yCDyOpHRbc=}
+    engines: {node: '>=0.10.0'}
+    dependencies:
+      path-root-regex: 0.1.2
+    dev: false
+
   /path-to-regexp/0.1.7:
     resolution: {integrity: sha1-32BBeABfUi8V60SQ5yR6G/qmf4w=}
     dev: true
@@ -17304,6 +17318,13 @@ packages:
     dependencies:
       global-dirs: 0.1.1
     dev: true
+
+  /resolve-package-path/4.0.3:
+    resolution: {integrity: sha512-SRpNAPW4kewOaNUt8VPqhJ0UMxawMwzJD8V7m1cJfdSTK9ieZwS6K7Dabsm4bmLFM96Z5Y/UznrpG5kt1im8yA==}
+    engines: {node: '>= 12'}
+    dependencies:
+      path-root: 0.1.1
+    dev: false
 
   /resolve-path/1.4.0:
     resolution: {integrity: sha1-xL2p9e+y/OZSR4c6s2u02DT+Fvc=}

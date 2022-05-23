@@ -26,7 +26,7 @@ import {
 } from './constant';
 import { googleConfigGuard, AccessTokenResponse, GoogleConfig, UserInfoResponse } from './types';
 
-export class GoogleConnector implements SocialConnector {
+export default class GoogleConnector implements SocialConnector {
   public metadata: ConnectorMetadata = defaultMetadata;
 
   constructor(public readonly getConfig: GetConnectorConfig<GoogleConfig>) {}

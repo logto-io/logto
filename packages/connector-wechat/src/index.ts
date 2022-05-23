@@ -30,7 +30,7 @@ import { weChatConfigGuard, AccessTokenResponse, UserInfoResponse, WeChatConfig 
 // As creating a WeChat Web/Mobile application needs a real App or Website record, the real test is temporarily not finished.
 // TODO: test with our own wechat mobile/web application (LOG-1910), already tested with other verified wechat web application
 
-export class WeChatConnector implements SocialConnector {
+export default class WeChatConnector implements SocialConnector {
   public metadata: ConnectorMetadata = defaultMetadata;
 
   constructor(public readonly getConfig: GetConnectorConfig<WeChatConfig>) {}
