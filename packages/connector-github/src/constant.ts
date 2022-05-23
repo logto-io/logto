@@ -18,7 +18,7 @@ const configTemplateFallback = 'Please check config-template.md file directory.'
 export const defaultMetadata: ConnectorMetadata = {
   target: 'github',
   type: ConnectorType.Social,
-  platform: ConnectorPlatform.Web,
+  platform: ConnectorPlatform.Universal,
   name: {
     en: 'GitHub',
     'zh-CN': 'GitHub',

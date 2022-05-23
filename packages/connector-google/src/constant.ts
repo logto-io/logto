@@ -18,7 +18,7 @@ const configTemplateFallback = 'Please check config-template.md file directory.'
 export const defaultMetadata: ConnectorMetadata = {
   target: 'google',
   type: ConnectorType.Social,
-  platform: ConnectorPlatform.Web,
+  platform: ConnectorPlatform.Universal,
   name: {
     en: 'Google',
     'zh-CN': 'Google',
