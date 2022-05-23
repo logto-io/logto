@@ -1,7 +1,7 @@
 import { Passcode, PasscodeType } from '@logto/schemas';
 import { customAlphabet, nanoid } from 'nanoid';
 
-import { getConnectorInstanceByType } from '@/connectors';
+import { getConnectorInstances } from '@/connectors';
 import { ConnectorType, EmailConnectorInstance, SmsConnectorInstance } from '@/connectors/types';
 import RequestError from '@/errors/RequestError';
 import {
@@ -11,6 +11,7 @@ import {
   insertPasscode,
   updatePasscode,
 } from '@/queries/passcode';
+import assertThat from '@/utils/assert-that';
 
 export const passcodeLength = 6;
 const randomCode = customAlphabet('1234567890', passcodeLength);
@@ -43,9 +44,28 @@ export const sendPasscode = async (passcode: Passcode) => {
     throw new RequestError('passcode.phone_email_empty');
   }
 
-  const { connector, metadata, sendMessage } = passcode.email
-    ? await getConnectorInstanceByType<EmailConnectorInstance>(ConnectorType.Email)
-    : await getConnectorInstanceByType<SmsConnectorInstance>(ConnectorType.SMS);
+  const connectorInstances = await getConnectorInstances();
+
+  const emailConnectorInstance = connectorInstances.find(
+    (connector): connector is EmailConnectorInstance =>
+      connector.connector.enabled && connector.metadata.type === ConnectorType.Email
+  );
+  const smsConnectorInstance = connectorInstances.find(
+    (connector): connector is SmsConnectorInstance =>
+      connector.connector.enabled && connector.metadata.type === ConnectorType.SMS
+  );
+
+  const connectorInstance = passcode.email ? emailConnectorInstance : smsConnectorInstance;
+
+  assertThat(
+    connectorInstance,
+    new RequestError({
+      code: 'connector.not_found',
+      type: passcode.email ? ConnectorType.Email : ConnectorType.SMS,
+    })
+  );
+
+  const { connector, metadata, sendMessage } = connectorInstance;
 
   const response = await sendMessage(emailOrPhone, passcode.type, {
     code: passcode.code,

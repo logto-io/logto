@@ -2,7 +2,7 @@ import { ConnectorType } from '@logto/connector-types';
 import { Passcode, PasscodeType } from '@logto/schemas';
 
 import { mockConnector, mockMetadata } from '@/__mocks__';
-import { getConnectorInstanceByType } from '@/connectors';
+import { getConnectorInstances } from '@/connectors';
 import RequestError from '@/errors/RequestError';
 import {
   deletePasscodesByIds,
@@ -36,8 +36,8 @@ const mockedDeletePasscodesByIds = deletePasscodesByIds as jest.MockedFunction<
   typeof deletePasscodesByIds
 >;
 const mockedInsertPasscode = insertPasscode as jest.MockedFunction<typeof insertPasscode>;
-const mockedGetConnectorInstanceByType = getConnectorInstanceByType as jest.MockedFunction<
-  typeof getConnectorInstanceByType
+const mockedGetConnectorInstances = getConnectorInstances as jest.MockedFunction<
+  typeof getConnectorInstances
 >;
 const mockedUpdatePasscode = updatePasscode as jest.MockedFunction<typeof updatePasscode>;
 
@@ -54,10 +54,7 @@ beforeAll(() => {
 });
 
 afterEach(() => {
-  mockedFindUnconsumedPasscodesByJtiAndType.mockClear();
-  mockedDeletePasscodesByIds.mockClear();
-  mockedInsertPasscode.mockClear();
-  mockedGetConnectorInstanceByType.mockClear();
+  jest.clearAllMocks();
 });
 
 describe('createPasscode', () => {
@@ -120,26 +117,85 @@ describe('sendPasscode', () => {
     );
   });
 
+  it('should throw error when email or sms connector can not be found', async () => {
+    const sendMessage = jest.fn();
+    const validateConfig = jest.fn();
+    const getConfig = jest.fn();
+    mockedGetConnectorInstances.mockResolvedValueOnce([
+      {
+        connector: {
+          ...mockConnector,
+          id: 'id1',
+          target: 'connector1',
+          platform: null,
+        },
+        metadata: {
+          ...mockMetadata,
+          type: ConnectorType.Email,
+          platform: null,
+        },
+        sendMessage,
+        validateConfig,
+        getConfig,
+      },
+    ]);
+    const passcode: Passcode = {
+      id: 'id',
+      interactionJti: 'jti',
+      phone: 'phone',
+      email: null,
+      type: PasscodeType.SignIn,
+      code: '1234',
+      consumed: false,
+      tryCount: 0,
+      createdAt: Date.now(),
+    };
+    await expect(sendPasscode(passcode)).rejects.toThrowError(
+      new RequestError({
+        code: 'connector.not_found',
+        type: ConnectorType.SMS,
+      })
+    );
+  });
+
   it('should call sendPasscode with params matching', async () => {
     const sendMessage = jest.fn();
-    const mockedMetadata = {
-      ...mockMetadata,
-      id: 'id',
-      type: ConnectorType.SMS,
-      platform: null,
-    };
-    mockedGetConnectorInstanceByType.mockResolvedValue({
-      connector: {
-        ...mockConnector,
-        id: 'id',
-        target: 'connector',
-        platform: null,
+    const validateConfig = jest.fn();
+    const getConfig = jest.fn();
+    mockedGetConnectorInstances.mockResolvedValueOnce([
+      {
+        connector: {
+          ...mockConnector,
+          id: 'id0',
+          target: 'connector0',
+          platform: null,
+        },
+        metadata: {
+          ...mockMetadata,
+          type: ConnectorType.SMS,
+          platform: null,
+        },
+        sendMessage,
+        validateConfig,
+        getConfig,
       },
-      metadata: mockedMetadata,
-      sendMessage,
-      validateConfig: jest.fn(),
-      getConfig: jest.fn(),
-    });
+      {
+        connector: {
+          ...mockConnector,
+          id: 'id1',
+          target: 'connector1',
+          platform: null,
+        },
+        metadata: {
+          ...mockMetadata,
+          type: ConnectorType.Email,
+          platform: null,
+        },
+        sendMessage,
+        validateConfig,
+        getConfig,
+      },
+    ]);
     const passcode: Passcode = {
       id: 'id',
       interactionJti: 'jti',

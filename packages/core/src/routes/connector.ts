@@ -2,16 +2,13 @@ import { ConnectorDTO, Connectors, ConnectorType } from '@logto/schemas';
 import { emailRegEx, phoneRegEx } from '@logto/shared';
 import { object, string } from 'zod';
 
-import {
-  getConnectorInstances,
-  getConnectorInstanceById,
-  getConnectorInstanceByType,
-} from '@/connectors';
+import { getConnectorInstances, getConnectorInstanceById } from '@/connectors';
 import {
   ConnectorInstance,
   EmailConnectorInstance,
   SmsConnectorInstance,
 } from '@/connectors/types';
+import RequestError from '@/errors/RequestError';
 import koaGuard from '@/middleware/koa-guard';
 import { updateConnector } from '@/queries/connector';
 import assertThat from '@/utils/assert-that';
@@ -159,11 +156,17 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
     async (ctx, next) => {
       const { email } = ctx.guard.body;
 
-      const connector = await getConnectorInstanceByType<EmailConnectorInstance>(
-        ConnectorType.Email
+      const connectorInstances = await getConnectorInstances();
+      const connector = connectorInstances.find(
+        (connector): connector is EmailConnectorInstance =>
+          connector.connector.enabled && connector.metadata.type === ConnectorType.Email
       );
 
-      // TODO - LOG-1875: SMS & Email Template for Test
+      assertThat(
+        connector,
+        new RequestError({ code: 'connector.not_found', type: ConnectorType.Email })
+      );
+
       await connector.sendMessage(email, 'Test', {
         code: 'email-test',
       });
@@ -184,9 +187,17 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
     async (ctx, next) => {
       const { phone } = ctx.guard.body;
 
-      const connector = await getConnectorInstanceByType<SmsConnectorInstance>(ConnectorType.SMS);
+      const connectorInstances = await getConnectorInstances();
+      const connector = connectorInstances.find(
+        (connector): connector is SmsConnectorInstance =>
+          connector.connector.enabled && connector.metadata.type === ConnectorType.SMS
+      );
 
-      // TODO - LOG-1875: SMS & Email Template for Test
+      assertThat(
+        connector,
+        new RequestError({ code: 'connector.not_found', type: ConnectorType.SMS })
+      );
+
       await connector.sendMessage(phone, 'Test', {
         code: '123456',
       });
