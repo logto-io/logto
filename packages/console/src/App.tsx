@@ -1,4 +1,5 @@
 import { LogtoProvider } from '@logto/react';
+import { adminConsoleApplicationId, managementApiResource } from '@logto/schemas';
 import React from 'react';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { SWRConfig } from 'swr';
@@ -9,7 +10,6 @@ import '@fontsource/roboto-mono';
 import AppContent from './components/AppContent';
 import ErrorBoundary from './components/ErrorBoundary';
 import Toast from './components/Toast';
-import { logtoApiResource } from './consts';
 import useSwrFetcher from './hooks/use-swr-fetcher';
 import initI18n from './i18n/init';
 import ApiResourceDetails from './pages/ApiResourceDetails';
@@ -77,7 +77,11 @@ const Main = () => {
 const App = () => (
   <BrowserRouter basename={getBasename()}>
     <LogtoProvider
-      config={{ endpoint: window.location.origin, appId: 'foo', resources: [logtoApiResource] }}
+      config={{
+        endpoint: window.location.origin,
+        appId: adminConsoleApplicationId,
+        resources: [managementApiResource],
+      }}
     >
       <Main />
     </LogtoProvider>

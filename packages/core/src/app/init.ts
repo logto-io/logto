@@ -18,8 +18,8 @@ import koaSpaProxy from '@/middleware/koa-spa-proxy';
 import initOidc from '@/oidc/init';
 import initRouter from '@/routes/init';
 
-const logListening = (port: number, protocol: 'https' | 'http') => {
-  console.log(chalk.bold(chalk.green(`App is running at ${protocol}://localhost:${port}`)));
+const logListening = () => {
+  console.log(chalk.bold(chalk.green(`App is running at ${envSet.values.localhostUrl}`)));
 };
 
 export default async function initApp(app: Koa): Promise<void> {
@@ -42,22 +42,22 @@ export default async function initApp(app: Koa): Promise<void> {
   app.use(koaProxyGuard(provider));
   app.use(koaSpaProxy());
 
-  const { httpsCert, httpsKey, port } = envSet.values;
+  const { isHttpsEnabled, httpsCert, httpsKey, port } = envSet.values;
 
-  if (httpsCert && httpsKey) {
+  if (isHttpsEnabled && httpsCert && httpsKey) {
     https
       .createServer(
         { cert: await fs.readFile(httpsCert), key: await fs.readFile(httpsKey) },
         app.callback()
       )
       .listen(port, () => {
-        logListening(port, 'https');
+        logListening();
       });
 
     return;
   }
 
   app.listen(port, () => {
-    logListening(port, 'http');
+    logListening();
   });
 }
