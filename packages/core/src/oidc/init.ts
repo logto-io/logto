@@ -124,7 +124,7 @@ export default async function initOidc(app: Koa): Promise<Provider> {
         // Add User Roles to the AccessToken claims. Should be removed once we have RBAC implemented.
         // User Roles should be hidden and  determined by the AccessToken scope only.
         return {
-          roles: roleNames,
+          roleNames,
         };
       }
     },

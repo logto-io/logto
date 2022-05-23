@@ -41,7 +41,7 @@ const getUserInfoFromRequest = async (request: Request) => {
 
   const { publicKey, issuer } = oidc;
   const {
-    payload: { sub, roles },
+    payload: { sub, roleNames },
   } = await jwtVerify(extractBearerTokenFromHeaders(request.headers), publicKey, {
     issuer,
     audience: managementApiResource,
@@ -50,7 +50,7 @@ const getUserInfoFromRequest = async (request: Request) => {
   assertThat(sub, new RequestError({ code: 'auth.jwt_sub_missing', status: 401 }));
 
   assertThat(
-    Array.isArray(roles) && roles.includes(UserRole.Admin),
+    Array.isArray(roleNames) && roleNames.includes(UserRole.Admin),
     new RequestError({ code: 'auth.unauthorized', status: 401 })
   );
 
