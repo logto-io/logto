@@ -45,13 +45,9 @@ export type { AlipayNativeConfig } from './types';
 export class AlipayNativeConnector implements SocialConnector {
   public metadata: ConnectorMetadata = defaultMetadata;
 
-  public getConfig: GetConnectorConfig<AlipayNativeConfig>;
-
   private readonly signingPamameters: SigningPamameters = signingPamameters;
 
-  constructor(getConnectorConfig: GetConnectorConfig<AlipayNativeConfig>) {
-    this.getConfig = getConnectorConfig;
-  }
+  constructor(public readonly getConfig: GetConnectorConfig<AlipayNativeConfig>) {}
 
   public validateConfig: ValidateConfig = async (config: unknown) => {
     const result = alipayNativeConfigGuard.safeParse(config);

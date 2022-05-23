@@ -29,11 +29,7 @@ import { googleConfigGuard, AccessTokenResponse, GoogleConfig, UserInfoResponse 
 export class GoogleConnector implements SocialConnector {
   public metadata: ConnectorMetadata = defaultMetadata;
 
-  public readonly getConfig: GetConnectorConfig<GoogleConfig>;
-
-  constructor(getConnectorConfig: GetConnectorConfig<GoogleConfig>) {
-    this.getConfig = getConnectorConfig;
-  }
+  constructor(public readonly getConfig: GetConnectorConfig<GoogleConfig>) {}
 
   public validateConfig: ValidateConfig = async (config: unknown) => {
     const result = googleConfigGuard.safeParse(config);

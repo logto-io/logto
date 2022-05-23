@@ -35,11 +35,7 @@ import {
 export class FacebookConnector implements SocialConnector {
   public metadata: ConnectorMetadata = defaultMetadata;
 
-  public readonly getConfig: GetConnectorConfig<FacebookConfig>;
-
-  constructor(getConnectorConfig: GetConnectorConfig<FacebookConfig>) {
-    this.getConfig = getConnectorConfig;
-  }
+  constructor(public readonly getConfig: GetConnectorConfig<FacebookConfig>) {}
 
   public validateConfig: ValidateConfig = async (config: unknown) => {
     const result = facebookConfigGuard.safeParse(config);

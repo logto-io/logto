@@ -17,11 +17,7 @@ import { SendEmailResponse, AliyunDmConfig, aliyunDmConfigGuard } from './types'
 export class AliyunDmConnector implements EmailConnector {
   public metadata: ConnectorMetadata = defaultMetadata;
 
-  public readonly getConfig: GetConnectorConfig<AliyunDmConfig>;
-
-  constructor(getConnectorConfig: GetConnectorConfig<AliyunDmConfig>) {
-    this.getConfig = getConnectorConfig;
-  }
+  constructor(public readonly getConfig: GetConnectorConfig<AliyunDmConfig>) {}
 
   public validateConfig: ValidateConfig = async (config: unknown) => {
     const result = aliyunDmConfigGuard.safeParse(config);

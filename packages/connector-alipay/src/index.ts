@@ -39,13 +39,9 @@ export type { AlipayConfig } from './types';
 export class AlipayConnector implements SocialConnector {
   public metadata: ConnectorMetadata = defaultMetadata;
 
-  public getConfig: GetConnectorConfig<AlipayConfig>;
-
   private readonly signingPamameters: SigningPamameters = signingPamameters;
 
-  constructor(getConnectorConfig: GetConnectorConfig<AlipayConfig>) {
-    this.getConfig = getConnectorConfig;
-  }
+  constructor(public readonly getConfig: GetConnectorConfig<AlipayConfig>) {}
 
   public validateConfig: ValidateConfig = async (config: unknown) => {
     const result = alipayConfigGuard.safeParse(config);

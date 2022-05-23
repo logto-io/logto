@@ -24,11 +24,7 @@ import {
 export class SendGridMailConnector implements EmailConnector {
   public metadata: ConnectorMetadata = defaultMetadata;
 
-  public readonly getConfig: GetConnectorConfig<SendGridMailConfig>;
-
-  constructor(getConnectorConfig: GetConnectorConfig<SendGridMailConfig>) {
-    this.getConfig = getConnectorConfig;
-  }
+  constructor(public readonly getConfig: GetConnectorConfig<SendGridMailConfig>) {}
 
   public validateConfig: ValidateConfig = async (config: unknown) => {
     const result = sendGridMailConfigGuard.safeParse(config);

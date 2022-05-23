@@ -37,11 +37,7 @@ import {
 export class WeChatNativeConnector implements SocialConnector {
   public metadata: ConnectorMetadata = defaultMetadata;
 
-  public getConfig: GetConnectorConfig<WeChatNativeConfig>;
-
-  constructor(getConnectorConfig: GetConnectorConfig<WeChatNativeConfig>) {
-    this.getConfig = getConnectorConfig;
-  }
+  constructor(public readonly getConfig: GetConnectorConfig<WeChatNativeConfig>) {}
 
   public validateConfig: ValidateConfig = async (config: unknown) => {
     const result = weChatNativeConfigGuard.safeParse(config);

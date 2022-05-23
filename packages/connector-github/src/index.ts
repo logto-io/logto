@@ -25,11 +25,7 @@ import { githubConfigGuard, AccessTokenResponse, GithubConfig, UserInfoResponse 
 export class GithubConnector implements SocialConnector {
   public metadata: ConnectorMetadata = defaultMetadata;
 
-  public readonly getConfig: GetConnectorConfig<GithubConfig>;
-
-  constructor(getConnectorConfig: GetConnectorConfig<GithubConfig>) {
-    this.getConfig = getConnectorConfig;
-  }
+  constructor(public readonly getConfig: GetConnectorConfig<GithubConfig>) {}
 
   public validateConfig: ValidateConfig = async (config: unknown) => {
     const result = githubConfigGuard.safeParse(config);

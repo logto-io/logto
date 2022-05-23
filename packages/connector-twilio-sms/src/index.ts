@@ -16,11 +16,7 @@ import { twilioSmsConfigGuard, SendSmsResponse, TwilioSmsConfig, PublicParameter
 export class TwilioSmsConnector implements SmsConnector {
   public metadata: ConnectorMetadata = defaultMetadata;
 
-  public readonly getConfig: GetConnectorConfig<TwilioSmsConfig>;
-
-  constructor(getConnectorConfig: GetConnectorConfig<TwilioSmsConfig>) {
-    this.getConfig = getConnectorConfig;
-  }
+  constructor(public readonly getConfig: GetConnectorConfig<TwilioSmsConfig>) {}
 
   public validateConfig: ValidateConfig = async (config: unknown) => {
     const result = twilioSmsConfigGuard.safeParse(config);
