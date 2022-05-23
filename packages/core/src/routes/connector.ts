@@ -17,7 +17,7 @@ import { AuthedRouter } from './types';
 
 const transpileConnectorInstance = ({ connector, metadata }: ConnectorInstance): ConnectorDTO => ({
   ...connector,
-  metadata,
+  ...metadata,
 });
 
 export default function connectorRoutes<T extends AuthedRouter>(router: T) {

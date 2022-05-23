@@ -21,11 +21,11 @@ const ConnectorName = ({ connector, titlePlaceholder = '' }: Props) => {
   return (
     <Link to={`/connectors/${connector.id}`} className={styles.link}>
       <ItemPreview
-        title={<UnnamedTrans resource={connector.metadata.name} />}
+        title={<UnnamedTrans resource={connector.name} />}
         subtitle={connector.id}
         icon={
-          connector.metadata.logo.startsWith('http') ? (
-            <img className={styles.logo} src={connector.metadata.logo} />
+          connector.logo.startsWith('http') ? (
+            <img className={styles.logo} src={connector.logo} />
           ) : (
             <ImagePlaceholder />
           )

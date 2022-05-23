@@ -21,10 +21,10 @@ const useConnectorGroups = () => {
         return [
           ...previous,
           {
-            name: item.metadata.name,
-            logo: item.metadata.logo,
-            target: item.metadata.target,
-            type: item.metadata.type,
+            name: item.name,
+            logo: item.logo,
+            target: item.target,
+            type: item.type,
             enabled: item.enabled,
             connectors: [item],
           },

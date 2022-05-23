@@ -68,7 +68,7 @@ const UserConnectors = ({ userId, connectors, onDelete }: Props) => {
         };
       }
 
-      const { logo, name } = connector.metadata;
+      const { logo, name } = connector;
 
       return {
         logo,

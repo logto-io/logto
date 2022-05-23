@@ -35,10 +35,7 @@ const GuideModal = ({ connector, isOpen, onClose }: Props) => {
   const api = useApi();
   const { updateConfigs } = useAdminConsoleConfigs();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const {
-    id: connectorId,
-    metadata: { type: connectorType, name, configTemplate, readme },
-  } = connector;
+  const { id: connectorId, type: connectorType, name, configTemplate, readme } = connector;
 
   const locale = i18next.language;
   // TODO: LOG-2393 should fix name[locale] syntax error
