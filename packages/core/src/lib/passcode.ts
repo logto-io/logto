@@ -11,6 +11,7 @@ import {
   insertPasscode,
   updatePasscode,
 } from '@/queries/passcode';
+import assertThat from '@/utils/assert-that';
 
 export const passcodeLength = 6;
 const randomCode = customAlphabet('1234567890', passcodeLength);
@@ -45,23 +46,26 @@ export const sendPasscode = async (passcode: Passcode) => {
 
   const connectorInstances = await getConnectorInstances();
 
-  const emailConnectorInstance = connectorInstances.find(
-    (connector): connector is EmailConnectorInstance =>
-      connector.connector.enabled && connector.metadata.type === ConnectorType.Email
+  const enabledConnectorInstances = connectorInstances.filter(
+    (connector) => connector.connector.enabled
   );
-  const smsConnectorInstance = connectorInstances.find(
-    (connector): connector is SmsConnectorInstance =>
-      connector.connector.enabled && connector.metadata.type === ConnectorType.SMS
+  const emailConnectorInstance = enabledConnectorInstances.find(
+    (connector): connector is EmailConnectorInstance =>
+      connector.metadata.type === ConnectorType.Email
+  );
+  const smsConnectorInstance = enabledConnectorInstances.find(
+    (connector): connector is SmsConnectorInstance => connector.metadata.type === ConnectorType.SMS
   );
 
   const connectorInstance = passcode.email ? emailConnectorInstance : smsConnectorInstance;
 
-  if (!connectorInstance) {
-    throw new RequestError({
+  assertThat(
+    connectorInstance,
+    new RequestError({
       code: 'connector.not_found',
       type: passcode.email ? ConnectorType.Email : ConnectorType.SMS,
-    });
-  }
+    })
+  );
 
   const { connector, metadata, sendMessage } = connectorInstance;
 

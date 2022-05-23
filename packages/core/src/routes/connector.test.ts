@@ -572,7 +572,7 @@ describe('connector route', () => {
       expect(response).toHaveProperty('statusCode', 204);
     });
 
-    it('should thorw when sms connector is not found', async () => {
+    it('should throw when sms connector is not found', async () => {
       const mockedMetadata = {
         ...mockMetadata,
         type: ConnectorType.Email,

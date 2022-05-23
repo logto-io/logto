@@ -160,6 +160,8 @@ describe('sendPasscode', () => {
 
   it('should call sendPasscode with params matching', async () => {
     const sendMessage = jest.fn();
+    const validateConfig = jest.fn();
+    const getConfig = jest.fn();
     mockedGetConnectorInstances.mockResolvedValueOnce([
       {
         connector: {
@@ -174,8 +176,8 @@ describe('sendPasscode', () => {
           platform: null,
         },
         sendMessage,
-        validateConfig: jest.fn(),
-        getConfig: jest.fn(),
+        validateConfig,
+        getConfig,
       },
       {
         connector: {
@@ -190,8 +192,8 @@ describe('sendPasscode', () => {
           platform: null,
         },
         sendMessage,
-        validateConfig: jest.fn(),
-        getConfig: jest.fn(),
+        validateConfig,
+        getConfig,
       },
     ]);
     const passcode: Passcode = {

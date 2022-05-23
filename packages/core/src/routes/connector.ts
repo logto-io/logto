@@ -162,11 +162,10 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
           connector.connector.enabled && connector.metadata.type === ConnectorType.Email
       );
 
-      console.log('connector:', connector);
-
-      if (!connector) {
-        throw new RequestError({ code: 'connector.not_found', type: ConnectorType.Email });
-      }
+      assertThat(
+        connector,
+        new RequestError({ code: 'connector.not_found', type: ConnectorType.Email })
+      );
 
       await connector.sendMessage(email, 'Test', {
         code: 'email-test',
@@ -194,9 +193,10 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
           connector.connector.enabled && connector.metadata.type === ConnectorType.SMS
       );
 
-      if (!connector) {
-        throw new RequestError({ code: 'connector.not_found', type: ConnectorType.SMS });
-      }
+      assertThat(
+        connector,
+        new RequestError({ code: 'connector.not_found', type: ConnectorType.SMS })
+      );
 
       await connector.sendMessage(phone, 'Test', {
         code: '123456',
