@@ -36,6 +36,7 @@ const readmeContentFallback = 'Please check README.md file directory.';
 const configTemplateFallback = 'Please check config-template.md file directory.';
 
 export const defaultMetadata: ConnectorMetadata = {
+  id: 'aliyun_short_message_service',
   target: 'aliyun-sms',
   type: ConnectorType.SMS,
   platform: null,

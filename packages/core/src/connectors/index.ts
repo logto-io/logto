@@ -9,13 +9,12 @@ import { SendGridMailConnector } from '@logto/connector-sendgrid-email';
 import { TwilioSmsConnector } from '@logto/connector-twilio-sms';
 import { WeChatConnector } from '@logto/connector-wechat';
 import { WeChatNativeConnector } from '@logto/connector-wechat-native';
-import { nanoid } from 'nanoid';
 
 import RequestError from '@/errors/RequestError';
 import { findAllConnectors, insertConnector } from '@/queries/connector';
 
 import { ConnectorInstance, ConnectorType, IConnector, SocialConnectorInstance } from './types';
-import { buildIndexWithTargetAndPlatform, getConnectorConfig } from './utilities';
+import { getConnectorConfig } from './utilities';
 
 const allConnectors: IConnector[] = [
   new AlipayConnector(getConnectorConfig),
@@ -33,19 +32,14 @@ const allConnectors: IConnector[] = [
 
 export const getConnectorInstances = async (): Promise<ConnectorInstance[]> => {
   const connectors = await findAllConnectors();
-  const connectorMap = new Map(
-    connectors.map((connector) => [
-      buildIndexWithTargetAndPlatform(connector.target, connector.platform),
-      connector,
-    ])
-  );
+  const connectorMap = new Map(connectors.map((connector) => [connector.id, connector]));
 
   return allConnectors.map((element) => {
-    const { target, platform } = element.metadata;
-    const connector = connectorMap.get(buildIndexWithTargetAndPlatform(target, platform));
+    const { id } = element.metadata;
+    const connector = connectorMap.get(id);
 
     if (!connector) {
-      throw new RequestError({ code: 'entity.not_found', target, platform, status: 404 });
+      throw new RequestError({ code: 'entity.not_found', id, status: 404 });
     }
 
     return { connector, ...element };
@@ -104,25 +98,21 @@ export const getEnabledSocialConnectorIds = async <T extends ConnectorInstance>(
 
 export const initConnectors = async () => {
   const connectors = await findAllConnectors();
-  const existingConnectors = new Map(
-    connectors.map((connector) => [
-      buildIndexWithTargetAndPlatform(connector.target, connector.platform),
-      connector,
-    ])
-  );
-  const newConnectors = allConnectors.filter(
-    ({ metadata: { target, platform } }) =>
-      existingConnectors.get(buildIndexWithTargetAndPlatform(target, platform))?.platform !==
-      platform
-  );
+  const existingConnectors = new Map(connectors.map((connector) => [connector.id, connector]));
+  const newConnectors = allConnectors.filter(({ metadata: { id } }) => {
+    const connector = existingConnectors.get(id);
+
+    if (!connector) {
+      return true;
+    }
+
+    return connector.config === JSON.stringify({});
+  });
 
   await Promise.all(
-    newConnectors.map(async ({ metadata: { target, platform } }) => {
-      const id = nanoid();
+    newConnectors.map(async ({ metadata: { id } }) => {
       await insertConnector({
         id,
-        target,
-        platform,
       });
     })
   );

@@ -52,7 +52,7 @@ export class AlipayConnector implements SocialConnector {
   };
 
   public getAuthorizationUri: GetAuthorizationUri = async (redirectUri, state) => {
-    const { appId: app_id } = await this.getConfig(this.metadata.target, this.metadata.platform);
+    const { appId: app_id } = await this.getConfig(this.metadata.id);
 
     const redirect_uri = encodeURI(redirectUri);
 
@@ -67,7 +67,7 @@ export class AlipayConnector implements SocialConnector {
   };
 
   public getAccessToken: GetAccessToken = async (code): Promise<AccessTokenObject> => {
-    const config = await this.getConfig(this.metadata.target, this.metadata.platform);
+    const config = await this.getConfig(this.metadata.id);
     const initSearchParameters = {
       method: methodForAccessToken,
       format: 'JSON',
@@ -100,7 +100,7 @@ export class AlipayConnector implements SocialConnector {
   };
 
   public getUserInfo: GetUserInfo = async (accessTokenObject) => {
-    const config = await this.getConfig(this.metadata.target, this.metadata.platform);
+    const config = await this.getConfig(this.metadata.id);
     const { accessToken } = accessTokenObject;
     assert(
       accessToken && config,

@@ -48,7 +48,7 @@ export class WeChatNativeConnector implements SocialConnector {
   };
 
   public getAuthorizationUri: GetAuthorizationUri = async () => {
-    const { appId } = await this.getConfig(this.metadata.target, this.metadata.platform);
+    const { appId } = await this.getConfig(this.metadata.id);
 
     const queryParameters = new URLSearchParams({
       app_id: appId,
@@ -58,10 +58,7 @@ export class WeChatNativeConnector implements SocialConnector {
   };
 
   public getAccessToken: GetAccessToken = async (code) => {
-    const { appId: appid, appSecret: secret } = await this.getConfig(
-      this.metadata.target,
-      this.metadata.platform
-    );
+    const { appId: appid, appSecret: secret } = await this.getConfig(this.metadata.id);
 
     const {
       access_token: accessToken,

@@ -32,7 +32,7 @@ export class AliyunSmsConnector implements SmsConnector {
     type,
     { code }
   ) => {
-    const config = await this.getConfig(this.metadata.target, this.metadata.platform);
+    const config = await this.getConfig(this.metadata.id);
     await this.validateConfig(config);
     const { accessKeyId, accessKeySecret, signName, templates } = config;
     const template = templates.find(({ usageType }) => usageType === type);

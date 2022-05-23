@@ -27,7 +27,7 @@ export class TwilioSmsConnector implements SmsConnector {
   };
 
   public sendMessage: EmailSendMessageFunction<SendSmsResponse> = async (address, type, data) => {
-    const config = await this.getConfig(this.metadata.target, this.metadata.platform);
+    const config = await this.getConfig(this.metadata.id);
     await this.validateConfig(config);
     const { accountSID, authToken, fromMessagingServiceSID, templates } = config;
     const template = templates.find((template) => template.usageType === type);

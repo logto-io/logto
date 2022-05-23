@@ -32,7 +32,7 @@ export class AliyunDmConnector implements EmailConnector {
     type,
     data
   ) => {
-    const config = await this.getConfig(this.metadata.target, this.metadata.platform);
+    const config = await this.getConfig(this.metadata.id);
     await this.validateConfig(config);
     const { accessKeyId, accessKeySecret, accountName, fromAlias, templates } = config;
     const template = templates.find((template) => template.usageType === type);
