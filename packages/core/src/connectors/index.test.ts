@@ -46,7 +46,7 @@ const aliyunSmsConnector = {
 const facebookConnector = {
   id: 'facebook',
   target: 'facebook',
-  platform: ConnectorPlatform.Web,
+  platform: ConnectorPlatform.Universal,
   enabled: true,
   config: {},
   createdAt: 1_646_382_233_333,
@@ -54,7 +54,7 @@ const facebookConnector = {
 const githubConnector = {
   id: 'github',
   target: 'github',
-  platform: ConnectorPlatform.Web,
+  platform: ConnectorPlatform.Universal,
   enabled: true,
   config: {},
   createdAt: 1_646_382_233_555,
@@ -62,7 +62,7 @@ const githubConnector = {
 const googleConnector = {
   id: 'google',
   target: 'google',
-  platform: ConnectorPlatform.Web,
+  platform: ConnectorPlatform.Universal,
   enabled: false,
   config: {},
   createdAt: 1_646_382_233_000,
