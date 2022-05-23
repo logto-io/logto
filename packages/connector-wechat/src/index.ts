@@ -33,11 +33,7 @@ import { weChatConfigGuard, AccessTokenResponse, UserInfoResponse, WeChatConfig 
 export class WeChatConnector implements SocialConnector {
   public metadata: ConnectorMetadata = defaultMetadata;
 
-  public getConfig: GetConnectorConfig<WeChatConfig>;
-
-  constructor(getConnectorConfig: GetConnectorConfig<WeChatConfig>) {
-    this.getConfig = getConnectorConfig;
-  }
+  constructor(public readonly getConfig: GetConnectorConfig<WeChatConfig>) {}
 
   public validateConfig: ValidateConfig = async (config: unknown) => {
     const result = weChatConfigGuard.safeParse(config);

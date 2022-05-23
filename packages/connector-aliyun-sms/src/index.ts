@@ -17,11 +17,7 @@ import { aliyunSmsConfigGuard, AliyunSmsConfig, SendSmsResponse } from './types'
 export class AliyunSmsConnector implements SmsConnector {
   public metadata: ConnectorMetadata = defaultMetadata;
 
-  public readonly getConfig: GetConnectorConfig<AliyunSmsConfig>;
-
-  constructor(getConnectorConfig: GetConnectorConfig<AliyunSmsConfig>) {
-    this.getConfig = getConnectorConfig;
-  }
+  constructor(public readonly getConfig: GetConnectorConfig<AliyunSmsConfig>) {}
 
   public validateConfig: ValidateConfig = async (config: unknown) => {
     const result = aliyunSmsConfigGuard.safeParse(config);
