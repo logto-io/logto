@@ -20,7 +20,7 @@ export const defaultMetadata: ConnectorMetadata = {
     en: 'SendGrid Mail Service',
     'zh-CN': 'SendGrid 邮件服务',
   },
-  logo: './logo.png',
+  logo: 'https://gist.githubusercontent.com/darcyYe/31bc893a0a305dc43cf831bf0b14f0fc/raw/faf985d3fbeed88180b8f3cb709892320d66ae45/sendgrid.svg',
   description: {
     en: 'Leverage the email service that customer-first brands trust for reliable inbox delivery at scale.',
     'zh-CN': '客户至上品牌信任的电子邮件服务，实现大规模可靠的收件箱递送。',

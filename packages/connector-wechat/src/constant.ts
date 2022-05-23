@@ -23,7 +23,7 @@ export const defaultMetadata: ConnectorMetadata = {
     en: 'WeChat',
     'zh-CN': '微信',
   },
-  logo: './logo.png',
+  logo: 'https://gist.githubusercontent.com/darcyYe/31bc893a0a305dc43cf831bf0b14f0fc/raw/faf985d3fbeed88180b8f3cb709892320d66ae45/wechat.svg',
   description: {
     en: 'Sign In with WeChat',
     'zh-CN': '微信登录',
