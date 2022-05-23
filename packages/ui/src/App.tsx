@@ -13,24 +13,26 @@ import Register from './pages/Register';
 import SecondarySignIn from './pages/SecondarySignIn';
 import SignIn from './pages/SignIn';
 import SocialRegister from './pages/SocialRegister';
-import getSignInExperienceSettings, {
-  parseSignInExperienceSettings,
-} from './utils/sign-in-experience';
+import getSignInExperienceSettings from './utils/sign-in-experience';
 
 import './scss/normalized.scss';
 
 const App = () => {
   const { context, Provider } = usePageContext();
   const { experienceSettings, setLoading, setExperienceSettings } = context;
-  const [isPreview, previewSettings] = usePreview();
+  const [isPreview] = usePreview(context);
 
   useEffect(() => {
+    if (isPreview) {
+      document.body.classList.add('preview');
+
+      return;
+    }
+
     (async () => {
       setLoading(true);
 
-      const settings = previewSettings
-        ? parseSignInExperienceSettings(previewSettings.signInExperience)
-        : await getSignInExperienceSettings();
+      const settings = await getSignInExperienceSettings();
 
       // Note: i18n must be initialized ahead of global experience settings
       await initI18n(settings.languageInfo);
@@ -39,7 +41,7 @@ const App = () => {
 
       setLoading(false);
     })();
-  }, [isPreview, previewSettings, setExperienceSettings, setLoading]);
+  }, [isPreview, setExperienceSettings, setLoading]);
 
   if (!experienceSettings) {
     return null;
@@ -47,7 +49,7 @@ const App = () => {
 
   return (
     <Provider value={context}>
-      <AppContent mode={previewSettings?.mode} platform={previewSettings?.platform}>
+      <AppContent>
         <BrowserRouter>
           <Routes>
             {/* always keep route path with param as the last one */}

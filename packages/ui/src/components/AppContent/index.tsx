@@ -1,4 +1,3 @@
-import { AppearanceMode } from '@logto/schemas';
 import { conditionalString } from '@silverhand/essentials';
 import React, { ReactNode, useEffect, useCallback, useContext } from 'react';
 import { useDebouncedLoader } from 'use-debounced-loader';
@@ -7,20 +6,16 @@ import LoadingLayer from '@/components/LoadingLayer';
 import Toast from '@/components/Toast';
 import { PageContext } from '@/hooks/use-page-context';
 import useTheme from '@/hooks/use-theme';
-import { Platform } from '@/types';
 
 import * as styles from './index.module.scss';
 
 export type Props = {
   children: ReactNode;
-  mode?: AppearanceMode;
-  platform?: Platform;
 };
 
-const AppContent = ({ children, mode, platform: platformOverwrite }: Props) => {
-  const theme = useTheme(mode);
-  const { toast, loading, platform, setPlatform, setToast, experienceSettings } =
-    useContext(PageContext);
+const AppContent = ({ children }: Props) => {
+  const theme = useTheme();
+  const { toast, loading, platform, setToast, experienceSettings } = useContext(PageContext);
   const debouncedLoading = useDebouncedLoader(loading);
 
   // Prevent internal eventListener rebind
@@ -44,13 +39,6 @@ const AppContent = ({ children, mode, platform: platformOverwrite }: Props) => {
       darkPrimaryColor ?? primaryColor
     );
   }, [experienceSettings]);
-
-  // Set Platform
-  useEffect(() => {
-    if (platformOverwrite) {
-      setPlatform(platformOverwrite);
-    }
-  }, [platformOverwrite, setPlatform]);
 
   // Set Theme Mode
   useEffect(() => {

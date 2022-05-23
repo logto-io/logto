@@ -5,7 +5,6 @@ import { useState, useCallback, useContext, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { PageContext } from '@/hooks/use-page-context';
-import usePreview from '@/hooks/use-preview';
 
 type UseApi<T extends any[], U> = {
   result?: U;
@@ -27,7 +26,6 @@ function useApi<Args extends any[], Response>(
   const { t } = useTranslation(undefined, { keyPrefix: 'main_flow' });
   const [error, setError] = useState<RequestErrorBody>();
   const [result, setResult] = useState<Response>();
-  const [isPreview] = usePreview();
 
   const { setLoading, setToast } = useContext(PageContext);
 
@@ -53,10 +51,6 @@ function useApi<Args extends any[], Response>(
 
   const run = useCallback(
     async (...args: Args) => {
-      if (isPreview) {
-        return;
-      }
-
       setLoading(true);
       // eslint-disable-next-line unicorn/no-useless-undefined
       setError(undefined);
@@ -72,7 +66,7 @@ function useApi<Args extends any[], Response>(
         setLoading(false);
       }
     },
-    [isPreview, api, parseError, setLoading]
+    [api, parseError, setLoading]
   );
 
   useEffect(() => {

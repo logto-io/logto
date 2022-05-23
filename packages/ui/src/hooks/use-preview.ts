@@ -1,48 +1,80 @@
 import { Language } from '@logto/phrases';
 import { AppearanceMode } from '@logto/schemas';
-import { useMemo } from 'react';
+import i18next from 'i18next';
+import { useEffect, useMemo, useState } from 'react';
 
+import { Context } from '@/hooks/use-page-context';
+import initI18n from '@/i18n/init';
 import { SignInExperienceSettingsResponse } from '@/types';
 import { parseQueryParameters } from '@/utils';
+import { parseSignInExperienceSettings } from '@/utils/sign-in-experience';
 
 type PreviewConfig = {
   signInExperience: SignInExperienceSettingsResponse;
   language: Language;
-  mode: AppearanceMode;
+  mode: AppearanceMode.LightMode | AppearanceMode.DarkMode;
   platform: 'web' | 'mobile';
 };
 
-const usePreview = (): [boolean, PreviewConfig?] => {
-  const { preview, config } = parseQueryParameters(window.location.search);
+const usePreview = (context: Context): [boolean, PreviewConfig?] => {
+  const [previewConfig, setPreviewConfig] = useState<PreviewConfig>();
+  const { setTheme, setExperienceSettings, setPlatform } = context;
 
-  const previewConfig = useMemo(() => {
-    if (!preview || !config) {
+  const { preview } = parseQueryParameters(window.location.search);
+  const isPreview = useMemo(() => preview === 'true', [preview]);
+
+  useEffect(() => {
+    // Init i18n
+    void initI18n();
+
+    // Post page ready message to the parent window
+    window.parent.postMessage({ pageReady: true, sender: 'logto_ui' }, window.location.origin);
+  }, []);
+
+  useEffect(() => {
+    if (!isPreview) {
       return;
     }
 
-    try {
-      const {
-        signInExperience: { languageInfo, ...rest },
-        language,
-        mode,
-        platform,
-      } = JSON.parse(decodeURIComponent(config)) as PreviewConfig;
+    const previewMessageHandler = (event: MessageEvent) => {
+      if (event.origin !== window.location.origin) {
+        return;
+      }
 
-      // Overwrite languageInfo
-      const settings: SignInExperienceSettingsResponse = {
-        ...rest,
-        languageInfo: {
-          ...languageInfo,
-          fixedLanguage: language,
-          autoDetect: false,
-        },
-      };
+      if (event.data.sender === 'ac_preview') {
+        setPreviewConfig(event.data.config as PreviewConfig);
+      }
+    };
 
-      return { signInExperience: settings, language, mode, platform };
-    } catch {}
-  }, [config, preview]);
+    window.addEventListener('message', previewMessageHandler);
 
-  return [Boolean(preview), previewConfig];
+    return () => {
+      window.removeEventListener('message', previewMessageHandler);
+    };
+  }, [isPreview]);
+
+  useEffect(() => {
+    if (!isPreview || !previewConfig) {
+      return;
+    }
+
+    const { signInExperience, language, mode, platform } = previewConfig;
+    const experienceSettings = parseSignInExperienceSettings(signInExperience);
+
+    void i18next.changeLanguage(language);
+
+    setTheme(mode);
+    setPlatform(platform);
+    setExperienceSettings({
+      ...experienceSettings,
+      branding: {
+        ...experienceSettings.branding,
+        isDarkModeEnabled: false, // Disable theme mode auto detection on preview
+      },
+    });
+  }, [isPreview, previewConfig, setExperienceSettings, setPlatform, setTheme]);
+
+  return [isPreview, previewConfig];
 };
 
 export default usePreview;
