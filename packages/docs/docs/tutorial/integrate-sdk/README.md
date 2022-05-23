@@ -8,7 +8,7 @@ If the list doesn't cover your desired platform/framework, please file a feature
 
 - Vanilla JS
 - [React](./react)
-- Vue
+- [Vue](./vue)
 
 ## Native
 
