@@ -24,7 +24,9 @@ describe('getAuthorizationUri', () => {
       'dummy-redirectUri',
       'dummy-state'
     );
-    expect(authorizationUri).toEqual(`${authorizationEndpoint}?app_id=%3Capp-id%3E`);
+    expect(authorizationUri).toEqual(
+      `${authorizationEndpoint}?app_id=%3Capp-id%3E&state=dummy-state`
+    );
   });
 });
 

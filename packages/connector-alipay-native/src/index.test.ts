@@ -43,7 +43,7 @@ describe('getAuthorizationUri', () => {
       'dummy-redirectUri',
       'dummy-state'
     );
-    expect(authorizationUri).toBe('alipay://?app_id=2021000000000000');
+    expect(authorizationUri).toBe('alipay://?app_id=2021000000000000&state=dummy-state');
   });
 });
 
