@@ -54,10 +54,7 @@ beforeAll(() => {
 });
 
 afterEach(() => {
-  mockedFindUnconsumedPasscodesByJtiAndType.mockClear();
-  mockedDeletePasscodesByIds.mockClear();
-  mockedInsertPasscode.mockClear();
-  mockedGetConnectorInstances.mockClear();
+  jest.clearAllMocks();
 });
 
 describe('createPasscode', () => {

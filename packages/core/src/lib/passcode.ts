@@ -46,10 +46,12 @@ export const sendPasscode = async (passcode: Passcode) => {
   const connectorInstances = await getConnectorInstances();
 
   const emailConnectorInstance = connectorInstances.find(
-    (connector) => connector.connector.enabled && connector.metadata.type === ConnectorType.Email
+    (connector): connector is EmailConnectorInstance =>
+      connector.connector.enabled && connector.metadata.type === ConnectorType.Email
   );
   const smsConnectorInstance = connectorInstances.find(
-    (connector) => connector.connector.enabled && connector.metadata.type === ConnectorType.SMS
+    (connector): connector is SmsConnectorInstance =>
+      connector.connector.enabled && connector.metadata.type === ConnectorType.SMS
   );
 
   const connectorInstance = passcode.email ? emailConnectorInstance : smsConnectorInstance;
@@ -61,9 +63,7 @@ export const sendPasscode = async (passcode: Passcode) => {
     });
   }
 
-  const { connector, metadata, sendMessage } = connectorInstance as
-    | SmsConnectorInstance
-    | EmailConnectorInstance;
+  const { connector, metadata, sendMessage } = connectorInstance;
 
   const response = await sendMessage(emailOrPhone, passcode.type, {
     code: passcode.code,
