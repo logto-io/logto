@@ -10,7 +10,7 @@ $font-family: -apple-system,
   sans-serif;
 
 @mixin colors-light-theme {
-  --color-base: #ecebf6;
+  --color-base: linear-gradient(0deg, rgba(93, 52, 242, 14%), rgba(93, 52, 242, 14%)), linear-gradient(0deg, rgba(120, 118, 127, 2%), rgba(120, 118, 127, 2%)), #f7f8f8;
   --color-surface: #fff;
   --color-text: #191c1d;
   --color-text-disabled: #c4c7c7;
@@ -35,8 +35,8 @@ $font-family: -apple-system,
 }
 
 @mixin colors-dark-theme {
-  --color-base: #191c1d;
-  --color-surface: #2a2c32;
+  --color-base: linear-gradient(0deg, rgba(202, 190, 255, 14%), rgba(202, 190, 255, 14%)), linear-gradient(0deg, rgba(196, 199, 199, 2%), rgba(196, 199, 199, 2%)), #191c1d;
+  --color-surface: #191c1d;
   --color-text: #f7f8f8;
   --color-text-disabled: #5c5f60;
   --color-border: #5c5f60;
@@ -65,8 +65,8 @@ $font-family: -apple-system,
   --color-toast: #34353f;
   --color-overlay: rgba(0, 0, 0, 30%);
   // shadows
+  --shadow-1: 0 4px 8px rgba(0, 0, 0, 8%);
   --shadow-2: 0 4px 12px rgba(0, 0, 0, 12%);
-  --shadow-3: 0 4px 16px rgba(0, 0, 0, 20%);
 }
 
 @mixin fonts {

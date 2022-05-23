@@ -6,32 +6,28 @@
   @include _.flex-column;
   background: var(--color-layer);
   border: none;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
 }
 
 .icon {
   @include _.image-align-center;
-}
-
-:global(body.mobile) {
-  .socialButton {
-    width: 48px;
-    height: 48px;
-  }
-
-  .icon {
-    width: 32px;
-    height: 32px;
-  }
+  width: 24px;
+  height: 24px;
+  overflow: hidden;
 }
 
 :global(body.desktop) {
   .socialButton {
-    width: 28px;
-    height: 28px;
-  }
+    background: var(--color-layer);
 
-  .icon {
-    width: 16px;
-    height: 16px;
+    &:active {
+      background: var(--color-pressed);
+    }
+
+    &:hover:not(:active) {
+      background: var(--color-hover);
+    }
   }
 }

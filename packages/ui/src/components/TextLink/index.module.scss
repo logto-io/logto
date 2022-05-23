@@ -4,6 +4,7 @@
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
 
+
   &.primary {
     color: var(--color-primary);
     font: var(--font-body-bold);
@@ -20,6 +21,16 @@
   .link {
     &.primary {
       font: var(--font-body);
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+
+    &.secondary {
+      &:hover {
+        color: var(--color-primary);
+      }
     }
   }
 }
