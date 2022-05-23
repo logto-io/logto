@@ -1,4 +1,4 @@
-import { ConnectorPlatform, ConnectorType } from '@logto/schemas';
+import { ConnectorType } from '@logto/schemas';
 import { conditionalString } from '@silverhand/essentials';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
@@ -8,9 +8,7 @@ import Alert from '@/components/Alert';
 import Transfer from '@/components/Transfer';
 import UnnamedTrans from '@/components/UnnamedTrans';
 import useConnectorGroups from '@/hooks/use-connector-groups';
-import Native from '@/icons/Native';
-import Universal from '@/icons/Universal';
-import Web from '@/icons/Web';
+import ConnectorPlatformIcon from '@/icons/ConnectorPlatformIcon';
 
 import * as styles from './ConnectorsTransfer.module.scss';
 
@@ -49,11 +47,9 @@ const ConnectorsTransfer = ({ value, onChange }: Props) => {
               {connectors.length > 1 &&
                 connectors
                   .filter(({ enabled }) => enabled)
-                  .map(({ platform }) => (
+                  .map(({ metadata: { platform } }) => (
                     <div key={platform} className={styles.icon}>
-                      {platform === ConnectorPlatform.Web && <Web />}
-                      {platform === ConnectorPlatform.Native && <Native />}
-                      {platform === ConnectorPlatform.Universal && <Universal />}
+                      {platform && <ConnectorPlatformIcon platform={platform} />}
                     </div>
                   ))}
             </div>
