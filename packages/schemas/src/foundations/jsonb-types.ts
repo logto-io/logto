@@ -1,5 +1,5 @@
 import { Language } from '@logto/phrases';
-import { hexColorRegEx } from '@logto/shared';
+import { hexColorRegEx } from '@logto/shared/lib/regex';
 import { z } from 'zod';
 
 /**

@@ -9,7 +9,7 @@ import {
   passwordRegEx,
   phoneRegEx,
   usernameRegEx,
-} from '@logto/shared';
+} from '@logto/shared/lib/regex';
 import { conditional } from '@silverhand/essentials';
 import pick from 'lodash.pick';
 import { Provider } from 'oidc-provider';

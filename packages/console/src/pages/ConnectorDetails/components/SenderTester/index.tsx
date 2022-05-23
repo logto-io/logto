@@ -1,5 +1,5 @@
 import { ConnectorType } from '@logto/schemas';
-import { phoneRegEx, emailRegEx } from '@logto/shared';
+import { phoneRegEx, emailRegEx } from '@logto/shared/lib/regex';
 import classNames from 'classnames';
 import ky from 'ky';
 import React, { useEffect, useRef, useState } from 'react';

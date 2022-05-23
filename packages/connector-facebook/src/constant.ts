@@ -1,7 +1,5 @@
-import path from 'path';
-
 import { ConnectorMetadata, ConnectorType, ConnectorPlatform } from '@logto/connector-types';
-import { getFileContents } from '@logto/shared';
+import { getFileContents } from '@logto/shared/lib/file-utils';
 
 /**
  * Note: If you do not include a version number we will default to the oldest available version, so it's recommended to include the version number in your requests.
@@ -17,10 +15,8 @@ export const accessTokenEndpoint = 'https://graph.facebook.com/v13.0/oauth/acces
 export const userInfoEndpoint = 'https://graph.facebook.com/v13.0/me';
 export const scope = 'email,public_profile';
 
-// eslint-disable-next-line unicorn/prefer-module
-const currentPath = __dirname;
-const pathToReadmeFile = path.join(currentPath, '..', 'README.md');
-const pathToConfigTemplate = path.join(currentPath, '..', 'docs', 'config-template.md');
+const pathToReadmeFile = '../README.md';
+const pathToConfigTemplate = '../docs/config-template.md';
 const readmeContentFallback = 'Please check README.md file directory.';
 const configTemplateFallback = 'Please check config-template.md file directory.';
 

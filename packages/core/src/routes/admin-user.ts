@@ -1,5 +1,5 @@
 import { arbitraryObjectGuard, userInfoSelectFields } from '@logto/schemas';
-import { nameRegEx, passwordRegEx, usernameRegEx } from '@logto/shared';
+import { nameRegEx, passwordRegEx, usernameRegEx } from '@logto/shared/lib/regex';
 import { has } from '@silverhand/essentials';
 import pick from 'lodash.pick';
 import { InvalidInputError } from 'slonik';

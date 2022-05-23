@@ -1,5 +1,5 @@
 import { ConnectorDTO, Connectors, ConnectorType } from '@logto/schemas';
-import { emailRegEx, phoneRegEx } from '@logto/shared';
+import { emailRegEx, phoneRegEx } from '@logto/shared/lib/regex';
 import { object, string } from 'zod';
 
 import {

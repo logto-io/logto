@@ -1,7 +1,5 @@
-import path from 'path';
-
 import { ConnectorMetadata, ConnectorType } from '@logto/connector-types';
-import { getFileContents } from '@logto/shared';
+import { getFileContents } from '@logto/shared/lib/file-utils';
 
 export const endpoint = 'https://dysmsapi.aliyuncs.com/';
 
@@ -28,10 +26,8 @@ export enum SmsTemplateType {
   PureNumber = 7,
 }
 
-// eslint-disable-next-line unicorn/prefer-module
-const currentPath = __dirname;
-const pathToReadmeFile = path.join(currentPath, '..', 'README.md');
-const pathToConfigTemplate = path.join(currentPath, '..', 'docs', 'config-template.md');
+const pathToReadmeFile = '../README.md';
+const pathToConfigTemplate = '../docs/config-template.md';
 const readmeContentFallback = 'Please check README.md file directory.';
 const configTemplateFallback = 'Please check config-template.md file directory.';
 

@@ -1,17 +1,13 @@
-import path from 'path';
-
 import { ConnectorMetadata, ConnectorType, ConnectorPlatform } from '@logto/connector-types';
-import { getFileContents } from '@logto/shared';
+import { getFileContents } from '@logto/shared/lib/file-utils';
 
 export const authorizationEndpoint = 'https://accounts.google.com/o/oauth2/v2/auth';
 export const accessTokenEndpoint = 'https://oauth2.googleapis.com/token';
 export const userInfoEndpoint = 'https://openidconnect.googleapis.com/v1/userinfo';
 export const scope = 'openid profile email';
 
-// eslint-disable-next-line unicorn/prefer-module
-const currentPath = __dirname;
-const pathToReadmeFile = path.join(currentPath, '..', 'README.md');
-const pathToConfigTemplate = path.join(currentPath, '..', 'docs', 'config-template.md');
+const pathToReadmeFile = '../README.md';
+const pathToConfigTemplate = '../docs/config-template.md';
 const readmeContentFallback = 'Please check README.md file directory.';
 const configTemplateFallback = 'Please check config-template.md file directory.';
 
