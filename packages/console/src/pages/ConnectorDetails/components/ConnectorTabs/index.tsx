@@ -1,13 +1,11 @@
-import { ConnectorDTO, ConnectorPlatform } from '@logto/schemas';
+import { ConnectorDTO } from '@logto/schemas';
 import classNames from 'classnames';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import useSWR from 'swr';
 
-import Native from '@/icons/Native';
-import Universal from '@/icons/Universal';
-import Web from '@/icons/Web';
+import ConnectorPlatformIcon from '@/icons/ConnectorPlatformIcon';
 
 import * as styles from './index.module.scss';
 
@@ -32,11 +30,11 @@ const ConnectorTabs = ({ target, connectorId }: Props) => {
           to={`/connectors/${connector.id}`}
           className={classNames(styles.tab, connector.id === connectorId && styles.active)}
         >
-          <div className={styles.icon}>
-            {connector.platform === ConnectorPlatform.Native && <Native />}
-            {connector.platform === ConnectorPlatform.Web && <Web />}
-            {connector.platform === ConnectorPlatform.Universal && <Universal />}
-          </div>
+          {connector.metadata.platform && (
+            <div className={styles.icon}>
+              <ConnectorPlatformIcon platform={connector.metadata.platform} />
+            </div>
+          )}
           {connector.metadata.platform}
           {!connector.enabled && (
             <div className={styles.notSet}>{t('connector_details.not_set')}</div>
