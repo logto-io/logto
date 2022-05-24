@@ -38,14 +38,13 @@ import {
   UserInfoResponse,
 } from './types';
 import { signingParameters } from './utils';
-import type { SigningParameters } from './utils';
 
 export type { AlipayNativeConfig } from './types';
 
 export class AlipayNativeConnector implements SocialConnector {
   public metadata: ConnectorMetadata = defaultMetadata;
 
-  private readonly signingParameters: SigningParameters = signingParameters;
+  private readonly signingParameters = signingParameters;
 
   constructor(public readonly getConfig: GetConnectorConfig<AlipayNativeConfig>) {}
 
