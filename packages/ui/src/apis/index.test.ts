@@ -71,7 +71,7 @@ describe('api', () => {
         password,
       },
     });
-    expect(ky.post).toHaveBeenNthCalledWith(2, '/api/session/sign-in/bind-social', {
+    expect(ky.post).toHaveBeenNthCalledWith(2, '/api/session/bind-social', {
       json: {
         connectorId: 'github',
       },
@@ -204,7 +204,7 @@ describe('api', () => {
 
   it('bindSocialAccount', async () => {
     await bindSocialAccount('connectorId');
-    expect(ky.post).toBeCalledWith('/api/session/sign-in/bind-social', {
+    expect(ky.post).toBeCalledWith('/api/session/bind-social', {
       json: {
         connectorId: 'connectorId',
       },

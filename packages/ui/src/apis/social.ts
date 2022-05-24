@@ -37,17 +37,13 @@ export const signInWithSocial = async (parameters: {
 };
 
 export const bindSocialAccount = async (connectorId: string) => {
-  type Response = {
-    redirectTo: string;
-  };
-
   return api
-    .post('/api/session/sign-in/bind-social', {
+    .post('/api/session/bind-social', {
       json: {
         connectorId,
       },
     })
-    .json<Response>();
+    .json();
 };
 
 export const bindSocialRelatedUser = async (connectorId: string) => {
