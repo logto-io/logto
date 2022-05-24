@@ -2,7 +2,6 @@ import { ConnectorDTO } from '@logto/schemas';
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-import ImagePlaceholder from '@/components/ImagePlaceholder';
 import ItemPreview from '@/components/ItemPreview';
 import UnnamedTrans from '@/components/UnnamedTrans';
 
@@ -11,11 +10,12 @@ import * as styles from './index.module.scss';
 type Props = {
   connector?: ConnectorDTO;
   titlePlaceholder?: string;
+  iconPlaceholder?: string;
 };
 
-const ConnectorName = ({ connector, titlePlaceholder = '' }: Props) => {
+const ConnectorName = ({ connector, titlePlaceholder = '', iconPlaceholder }: Props) => {
   if (!connector) {
-    return <ItemPreview title={titlePlaceholder} icon={<ImagePlaceholder />} />;
+    return <ItemPreview title={titlePlaceholder} icon={<img src={iconPlaceholder} />} />;
   }
 
   return (
