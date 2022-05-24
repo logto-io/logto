@@ -1,38 +1,56 @@
-import { AlipayConnector } from '@logto/connector-alipay';
-import { AlipayNativeConnector } from '@logto/connector-alipay-native';
-import { AliyunDmConnector } from '@logto/connector-aliyun-dm';
-import { AliyunSmsConnector } from '@logto/connector-aliyun-sms';
-import { FacebookConnector } from '@logto/connector-facebook';
-import { GithubConnector } from '@logto/connector-github';
-import { GoogleConnector } from '@logto/connector-google';
-import { SendGridMailConnector } from '@logto/connector-sendgrid-email';
-import { TwilioSmsConnector } from '@logto/connector-twilio-sms';
-import { WeChatConnector } from '@logto/connector-wechat';
-import { WeChatNativeConnector } from '@logto/connector-wechat-native';
+import { existsSync, readFileSync } from 'fs';
+import path from 'path';
+
+import resolvePackagePath from 'resolve-package-path';
 
 import RequestError from '@/errors/RequestError';
 import { findAllConnectors, insertConnector } from '@/queries/connector';
 
+import { connectorPackages } from './consts';
 import { ConnectorInstance, ConnectorType, IConnector, SocialConnectorInstance } from './types';
 import { getConnectorConfig } from './utilities';
 
-const allConnectors: IConnector[] = [
-  new AlipayConnector(getConnectorConfig),
-  new AlipayNativeConnector(getConnectorConfig),
-  new AliyunDmConnector(getConnectorConfig),
-  new AliyunSmsConnector(getConnectorConfig),
-  new FacebookConnector(getConnectorConfig),
-  new GithubConnector(getConnectorConfig),
-  new GoogleConnector(getConnectorConfig),
-  new SendGridMailConnector(getConnectorConfig),
-  new TwilioSmsConnector(getConnectorConfig),
-  new WeChatConnector(getConnectorConfig),
-  new WeChatNativeConnector(getConnectorConfig),
-];
+// eslint-disable-next-line @silverhand/fp/no-let
+let cachedConnectors: IConnector[] | undefined;
+
+const loadConnectors = async () => {
+  if (cachedConnectors) {
+    return cachedConnectors;
+  }
+
+  // eslint-disable-next-line @silverhand/fp/no-mutation
+  cachedConnectors = await Promise.all(
+    connectorPackages.map(async (packageName) => {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      const { default: Builder } = await import(packageName);
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+      const instance = new Builder(getConnectorConfig) as IConnector;
+      // eslint-disable-next-line unicorn/prefer-module
+      const packagePath = resolvePackagePath(packageName, __dirname);
+
+      // For relative path logo url, try to read local asset.
+      if (
+        packagePath &&
+        !instance.metadata.logo.startsWith('http') &&
+        existsSync(path.join(packagePath, '..', instance.metadata.logo))
+      ) {
+        const data = readFileSync(path.join(packagePath, '..', instance.metadata.logo));
+        // eslint-disable-next-line @silverhand/fp/no-mutation
+        instance.metadata.logo = `data:image/svg+xml;base64,${data.toString('base64')}`;
+      }
+
+      return instance;
+    })
+  );
+
+  return cachedConnectors;
+};
 
 export const getConnectorInstances = async (): Promise<ConnectorInstance[]> => {
   const connectors = await findAllConnectors();
   const connectorMap = new Map(connectors.map((connector) => [connector.id, connector]));
+
+  const allConnectors = await loadConnectors();
 
   return allConnectors.map((element) => {
     const { id } = element.metadata;
@@ -99,6 +117,7 @@ export const getEnabledSocialConnectorIds = async <T extends ConnectorInstance>(
 export const initConnectors = async () => {
   const connectors = await findAllConnectors();
   const existingConnectors = new Map(connectors.map((connector) => [connector.id, connector]));
+  const allConnectors = await loadConnectors();
   const newConnectors = allConnectors.filter(({ metadata: { id } }) => {
     const connector = existingConnectors.get(id);
 

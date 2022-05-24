@@ -1,7 +1,7 @@
 import { ConnectorError, ConnectorErrorCodes, GetConnectorConfig } from '@logto/connector-types';
 import nock from 'nock';
 
-import { WeChatConnector } from '.';
+import WeChatConnector from '.';
 import { accessTokenEndpoint, authorizationEndpoint, userInfoEndpoint } from './constant';
 import { mockedConfig } from './mock';
 import { WeChatConfig } from './types';

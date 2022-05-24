@@ -33,7 +33,7 @@ export const defaultMetadata: ConnectorMetadata = {
     en: 'Facebook',
     'zh-CN': 'Facebook',
   },
-  logo: 'https://gist.githubusercontent.com/darcyYe/31bc893a0a305dc43cf831bf0b14f0fc/raw/faf985d3fbeed88180b8f3cb709892320d66ae45/facebook.svg',
+  logo: './logo.svg',
   description: {
     en: 'Sign In with Facebook',
     'zh-CN': 'Facebook 登录',

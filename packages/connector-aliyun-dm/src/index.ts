@@ -14,7 +14,7 @@ import { defaultMetadata } from './constant';
 import { singleSendMail } from './single-send-mail';
 import { SendEmailResponse, AliyunDmConfig, aliyunDmConfigGuard } from './types';
 
-export class AliyunDmConnector implements EmailConnector {
+export default class AliyunDmConnector implements EmailConnector {
   public metadata: ConnectorMetadata = defaultMetadata;
 
   constructor(public readonly getConfig: GetConnectorConfig<AliyunDmConfig>) {}

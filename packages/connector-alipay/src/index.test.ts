@@ -1,7 +1,7 @@
 import { ConnectorError, ConnectorErrorCodes, GetConnectorConfig } from '@logto/connector-types';
 import nock from 'nock';
 
-import { AlipayConnector } from '.';
+import AlipayConnector from '.';
 import { alipayEndpoint, authorizationEndpoint } from './constant';
 import { mockedAlipayConfig, mockedAlipayConfigWithValidPrivateKey } from './mock';
 import { AlipayConfig } from './types';

@@ -22,7 +22,7 @@ import {
 } from './constant';
 import { githubConfigGuard, AccessTokenResponse, GithubConfig, UserInfoResponse } from './types';
 
-export class GithubConnector implements SocialConnector {
+export default class GithubConnector implements SocialConnector {
   public metadata: ConnectorMetadata = defaultMetadata;
 
   constructor(public readonly getConfig: GetConnectorConfig<GithubConfig>) {}

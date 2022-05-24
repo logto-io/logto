@@ -8,7 +8,8 @@
     "license": "MPL-2.0",
     "files": [
         "lib",
-        "docs"
+        "docs",
+        "logo.svg"
     ],
     "private": false,
     "scripts": {

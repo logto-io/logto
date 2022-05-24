@@ -32,7 +32,7 @@ import {
   UserInfoResponse,
 } from './types';
 
-export class FacebookConnector implements SocialConnector {
+export default class FacebookConnector implements SocialConnector {
   public metadata: ConnectorMetadata = defaultMetadata;
 
   constructor(public readonly getConfig: GetConnectorConfig<FacebookConfig>) {}

@@ -1,7 +1,7 @@
 import { ConnectorError, ConnectorErrorCodes, GetConnectorConfig } from '@logto/connector-types';
 import nock from 'nock';
 
-import { GithubConnector } from '.';
+import GithubConnector from '.';
 import { accessTokenEndpoint, authorizationEndpoint, userInfoEndpoint } from './constant';
 import { mockedConfig } from './mock';
 import { GithubConfig } from './types';

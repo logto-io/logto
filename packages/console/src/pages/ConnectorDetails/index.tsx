@@ -12,7 +12,6 @@ import Card from '@/components/Card';
 import CodeEditor from '@/components/CodeEditor';
 import DetailsSkeleton from '@/components/DetailsSkeleton';
 import Drawer from '@/components/Drawer';
-import ImagePlaceholder from '@/components/ImagePlaceholder';
 import LinkButton from '@/components/LinkButton';
 import Markdown from '@/components/Markdown';
 import Status from '@/components/Status';
@@ -115,11 +114,7 @@ const ConnectorDetails = () => {
       {data && (
         <Card className={styles.header}>
           <div className={styles.imagePlaceholder}>
-            {data.logo.startsWith('http') ? (
-              <img src={data.logo} className={styles.logo} />
-            ) : (
-              <ImagePlaceholder size={60} borderRadius={16} />
-            )}
+            <img src={data.logo} className={styles.logo} />
           </div>
           <div className={styles.metadata}>
             <div>

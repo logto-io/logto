@@ -1,6 +1,6 @@
 import { GetConnectorConfig } from '@logto/connector-types';
 
-import { TwilioSmsConnector } from '.';
+import TwilioSmsConnector from '.';
 import { mockedConfig } from './mock';
 import { TwilioSmsConfig } from './types';
 

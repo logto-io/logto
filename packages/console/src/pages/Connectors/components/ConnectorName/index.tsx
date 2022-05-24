@@ -23,13 +23,7 @@ const ConnectorName = ({ connector, titlePlaceholder = '' }: Props) => {
       <ItemPreview
         title={<UnnamedTrans resource={connector.name} />}
         subtitle={connector.id}
-        icon={
-          connector.logo.startsWith('http') ? (
-            <img className={styles.logo} src={connector.logo} />
-          ) : (
-            <ImagePlaceholder />
-          )
-        }
+        icon={<img className={styles.logo} src={connector.logo} />}
       />
     </Link>
   );

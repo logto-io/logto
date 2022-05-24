@@ -1,7 +1,7 @@
 import { ConnectorError, ConnectorErrorCodes, GetConnectorConfig } from '@logto/connector-types';
 import nock from 'nock';
 
-import { GoogleConnector } from '.';
+import GoogleConnector from '.';
 import { accessTokenEndpoint, authorizationEndpoint, userInfoEndpoint } from './constant';
 import { mockedConfig } from './mock';
 import { GoogleConfig } from './types';

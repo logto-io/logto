@@ -1,6 +1,6 @@
 import { GetConnectorConfig } from '@logto/connector-types';
 
-import { SendGridMailConnector } from '.';
+import SendGridMailConnector from '.';
 import { mockedConfig } from './mock';
 import { ContextType, SendGridMailConfig } from './types';
 

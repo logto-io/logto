@@ -1,7 +1,7 @@
 import { ConnectorError, ConnectorErrorCodes, GetConnectorConfig } from '@logto/connector-types';
 import nock from 'nock';
 
-import { FacebookConnector } from '.';
+import FacebookConnector from '.';
 import { accessTokenEndpoint, authorizationEndpoint, userInfoEndpoint } from './constant';
 import { clientId, clientSecret, code, dummyRedirectUri, fields, mockedConfig } from './mock';
 import { FacebookConfig } from './types';
