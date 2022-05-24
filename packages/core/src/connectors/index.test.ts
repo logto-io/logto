@@ -11,67 +11,67 @@ import {
 import RequestError from '@/errors/RequestError';
 
 const alipayConnector = {
-  id: 'alipay_web',
+  id: 'alipay-web',
   enabled: true,
   config: {},
   createdAt: 1_646_382_233_911,
 };
 const alipayNativeConnector = {
-  id: 'alipay_native',
+  id: 'alipay-native',
   enabled: false,
   config: {},
   createdAt: 1_646_382_233_911,
 };
 const aliyunDmConnector = {
-  id: 'aliyun_direct_mail',
+  id: 'aliyun-direct-mail',
   enabled: true,
   config: {},
   createdAt: 1_646_382_233_911,
 };
 const aliyunSmsConnector = {
-  id: 'aliyun_short_message_service',
+  id: 'aliyun-short-message-service',
   enabled: false,
   config: {},
   createdAt: 1_646_382_233_666,
 };
 const facebookConnector = {
-  id: 'facebook_universal',
+  id: 'facebook-universal',
   enabled: true,
   config: {},
   createdAt: 1_646_382_233_333,
 };
 const githubConnector = {
-  id: 'github_universal',
+  id: 'github-universal',
   enabled: true,
   config: {},
   createdAt: 1_646_382_233_555,
 };
 const googleConnector = {
-  id: 'google_universal',
+  id: 'google-universal',
   enabled: false,
   config: {},
   createdAt: 1_646_382_233_000,
 };
 const sendGridMailConnector = {
-  id: 'sendgrid_email_service',
+  id: 'sendgrid-email-service',
   enabled: false,
   config: {},
   createdAt: 1_646_382_233_111,
 };
 const twilioSmsConnector = {
-  id: 'twilio_short_message_service',
+  id: 'twilio-short-message-service',
   enabled: false,
   config: {},
   createdAt: 1_646_382_233_000,
 };
 const wechatConnector = {
-  id: 'wechat_web',
+  id: 'wechat-web',
   enabled: false,
   config: {},
   createdAt: 1_646_382_233_000,
 };
 const wechatNativeConnector = {
-  id: 'wechat_native',
+  id: 'wechat-native',
   enabled: false,
   config: {},
   createdAt: 1_646_382_233_000,
@@ -141,7 +141,7 @@ describe('getConnectorInstanceById', () => {
   });
 
   test('should return the connector existing in DB', async () => {
-    const connectorInstance = await getConnectorInstanceById('aliyun_direct_mail');
+    const connectorInstance = await getConnectorInstanceById('aliyun-direct-mail');
     expect(connectorInstance).toHaveProperty('connector', aliyunDmConnector);
   });
 
@@ -165,12 +165,12 @@ describe('getConnectorInstanceById', () => {
 
 describe('getSocialConnectorInstanceById', () => {
   test('should return the connector existing in DB', async () => {
-    const socialConnectorInstance = await getSocialConnectorInstanceById('google_universal');
+    const socialConnectorInstance = await getSocialConnectorInstanceById('google-universal');
     expect(socialConnectorInstance).toHaveProperty('connector', googleConnector);
   });
 
   test('should throw on non-social connector', async () => {
-    const id = 'aliyun-dm';
+    const id = 'aliyun-direct-mail';
     await expect(getSocialConnectorInstanceById(id)).rejects.toMatchError(
       new RequestError({
         code: 'entity.not_found',
@@ -185,9 +185,9 @@ describe('getEnabledSocialConnectorIds', () => {
   test('should return the enabled social connectors existing in DB', async () => {
     const enabledSocialConnectorIds = await getEnabledSocialConnectorIds();
     expect(enabledSocialConnectorIds).toEqual([
-      'alipay_web',
-      'facebook_universal',
-      'github_universal',
+      'alipay-web',
+      'facebook-universal',
+      'github-universal',
     ]);
   });
 });
