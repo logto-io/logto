@@ -1,4 +1,4 @@
-import { ConnectorData } from '@/types';
+import { ConnectorData, Platform } from '@/types';
 import { generateRandomString } from '@/utils';
 
 /**
@@ -71,7 +71,7 @@ export const filterSocialConnectors = (socialConnectors?: ConnectorData[]) => {
   /**
    * Browser Environment
    * Accepts both web and universal platform connectors.
-   * Insert universal connectors only if there is no  web platform connector provided with the same target.
+   * Insert universal connectors only if there is no web platform connector provided with the same target.
    * Web platform has higher priority.
    **/
 
@@ -95,7 +95,7 @@ export const filterSocialConnectors = (socialConnectors?: ConnectorData[]) => {
   /**
    * Native Webview Environment
    * Accepts both native and universal platform connectors.
-   * Insert universal connectors only if there is no  native platform connector provided with the same target.
+   * Insert universal connectors only if there is no native platform connector provided with the same target.
    * Native platform has higher priority.
    **/
 
@@ -119,6 +119,66 @@ export const filterSocialConnectors = (socialConnectors?: ConnectorData[]) => {
     }
 
     if (platform === 'Universal' && supportedConnector.universal && !connectorMap.get(target)) {
+      connectorMap.set(target, connector);
+      continue;
+    }
+  }
+
+  return Array.from(connectorMap.values());
+};
+
+/**
+ * Social Connectors Filter Utility Methods used in preview mode only
+ */
+export const filterPreviewSocialConnectors = (
+  previewPlatform: Platform,
+  socialConnectors?: ConnectorData[]
+) => {
+  if (!socialConnectors) {
+    return [];
+  }
+
+  const connectorMap = new Map<string, ConnectorData>();
+
+  /**
+   * Browser Environment
+   * Accepts both web and universal platform connectors.
+   * Insert universal connectors only if there is no web platform connector provided with the same target.
+   * Web platform has higher priority.
+   **/
+
+  if (previewPlatform === 'web') {
+    for (const connector of socialConnectors) {
+      const { platform, target } = connector;
+
+      if (platform === 'Native') {
+        continue;
+      }
+
+      if (platform === 'Web' || !connectorMap.get(target)) {
+        connectorMap.set(target, connector);
+        continue;
+      }
+    }
+
+    return Array.from(connectorMap.values());
+  }
+
+  /**
+   * Native Webview Environment
+   * Accepts both native and universal platform connectors.
+   * Insert universal connectors only if there is no native platform connector provided with the same target.
+   * Native platform has higher priority.
+   **/
+
+  for (const connector of socialConnectors) {
+    const { platform, target } = connector;
+
+    if (platform === 'Web') {
+      continue;
+    }
+
+    if (platform === 'Native' || !connectorMap.get(target)) {
       connectorMap.set(target, connector);
       continue;
     }

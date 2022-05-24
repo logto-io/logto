@@ -1,6 +1,6 @@
 import { ConnectorData } from '@/types';
 
-import { filterSocialConnectors } from './utils';
+import { filterSocialConnectors, filterPreviewSocialConnectors } from './utils';
 
 const mockConnectors = [
   { platform: 'Web', target: 'facebook' },
@@ -60,6 +60,33 @@ describe('filterSocialConnectors', () => {
 
     expect(filterSocialConnectors(mockConnectors)).toEqual([
       { platform: 'Native', target: 'WeChat' },
+    ]);
+  });
+});
+
+describe('filterPreviewSocialConnectors', () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('undefined input should return empty list', () => {
+    expect(filterPreviewSocialConnectors('web')).toEqual([]);
+    expect(filterPreviewSocialConnectors('mobile')).toEqual([]);
+  });
+
+  it('filter Web Connectors', () => {
+    expect(filterPreviewSocialConnectors('web', mockConnectors)).toEqual([
+      { platform: 'Web', target: 'facebook' },
+      { platform: 'Web', target: 'google' },
+      { platform: 'Universal', target: 'WeChat' },
+    ]);
+  });
+
+  it('filter Native Connectors', () => {
+    expect(filterPreviewSocialConnectors('mobile', mockConnectors)).toEqual([
+      { platform: 'Universal', target: 'facebook' },
+      { platform: 'Native', target: 'WeChat' },
+      { platform: 'Native', target: 'Alipay' },
     ]);
   });
 });

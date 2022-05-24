@@ -4,16 +4,17 @@ import i18next from 'i18next';
 import { useEffect, useState } from 'react';
 
 import { Context } from '@/hooks/use-page-context';
+import { filterPreviewSocialConnectors } from '@/hooks/utils';
 import initI18n from '@/i18n/init';
-import { SignInExperienceSettingsResponse } from '@/types';
+import { SignInExperienceSettingsResponse, Platform } from '@/types';
 import { parseQueryParameters } from '@/utils';
-import { parseSignInExperienceSettings } from '@/utils/sign-in-experience';
+import { getPrimarySignInMethod, getSecondarySignInMethods } from '@/utils/sign-in-experience';
 
 type PreviewConfig = {
   signInExperience: SignInExperienceSettingsResponse;
   language: Language;
   mode: AppearanceMode.LightMode | AppearanceMode.DarkMode;
-  platform: 'web' | 'mobile';
+  platform: Platform;
 };
 
 const usePreview = (context: Context): [boolean, PreviewConfig?] => {
@@ -53,20 +54,31 @@ const usePreview = (context: Context): [boolean, PreviewConfig?] => {
       return;
     }
 
-    const { signInExperience, language, mode, platform } = previewConfig;
-    const experienceSettings = parseSignInExperienceSettings(signInExperience);
+    const {
+      signInExperience: { signInMethods, socialConnectors, branding, ...rest },
+      language,
+      mode,
+      platform,
+    } = previewConfig;
+
+    const experienceSettings = {
+      ...rest,
+      branding: {
+        ...branding,
+        isDarkModeEnabled: false, // Disable theme mode auto detection on preview
+      },
+      primarySignInMethod: getPrimarySignInMethod(signInMethods),
+      secondarySignInMethods: getSecondarySignInMethods(signInMethods),
+      socialConnectors: filterPreviewSocialConnectors(platform, socialConnectors),
+    };
 
     void i18next.changeLanguage(language);
 
     setTheme(mode);
+
     setPlatform(platform);
-    setExperienceSettings({
-      ...experienceSettings,
-      branding: {
-        ...experienceSettings.branding,
-        isDarkModeEnabled: false, // Disable theme mode auto detection on preview
-      },
-    });
+
+    setExperienceSettings(experienceSettings);
   }, [isPreview, previewConfig, setExperienceSettings, setPlatform, setTheme]);
 
   return [isPreview, previewConfig];
