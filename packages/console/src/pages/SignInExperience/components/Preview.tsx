@@ -2,7 +2,7 @@ import { Language } from '@logto/phrases';
 import { AppearanceMode, ConnectorDTO, ConnectorMetadata, SignInExperience } from '@logto/schemas';
 import classNames from 'classnames';
 import dayjs from 'dayjs';
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState, useRef, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import useSWR from 'swr';
 
@@ -25,10 +25,11 @@ const Preview = ({ signInExperience, className }: Props) => {
   const [mode, setMode] = useState<AppearanceMode>(AppearanceMode.LightMode);
   const [platform, setPlatform] = useState<'web' | 'mobile'>('mobile');
   const { data: allConnectors } = useSWR<ConnectorDTO[], RequestError>('/api/connectors');
+  const previewRef = useRef<HTMLIFrameElement>(null);
 
   const config = useMemo(() => {
     if (!allConnectors) {
-      return '';
+      return;
     }
 
     const socialConnectors = signInExperience.socialSignInConnectorTargets.reduce<
@@ -43,18 +44,39 @@ const Preview = ({ signInExperience, className }: Props) => {
       []
     );
 
-    return encodeURIComponent(
-      JSON.stringify({
-        signInExperience: {
-          ...signInExperience,
-          socialConnectors,
-        },
-        language,
-        mode,
-        platform,
-      })
-    );
+    return {
+      signInExperience: {
+        ...signInExperience,
+        socialConnectors,
+      },
+      language,
+      mode,
+      platform,
+    };
   }, [allConnectors, language, mode, platform, signInExperience]);
+
+  const postPreviewMessage = useCallback(() => {
+    if (!config) {
+      return;
+    }
+
+    previewRef.current?.contentWindow?.postMessage(
+      { sender: 'ac_preview', config },
+      window.location.origin
+    );
+  }, [config]);
+
+  useEffect(() => {
+    postPreviewMessage();
+
+    const iframe = previewRef.current;
+
+    iframe?.addEventListener('load', postPreviewMessage);
+
+    return () => {
+      iframe?.removeEventListener('load', postPreviewMessage);
+    };
+  }, [postPreviewMessage]);
 
   return (
     <Card className={classNames(styles.preview, className)}>
@@ -109,7 +131,7 @@ const Preview = ({ signInExperience, className }: Props) => {
               <img src={TopInfoImage} />
             </div>
           )}
-          <iframe src={`/sign-in?config=${config}&preview=true`} />
+          <iframe ref={previewRef} src="/sign-in?preview=true" />
         </div>
       </div>
     </Card>

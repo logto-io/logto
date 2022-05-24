@@ -3,7 +3,7 @@ import { isMobile } from 'react-device-detect';
 
 import { SignInExperienceSettings, Platform, Theme } from '@/types';
 
-type Context = {
+export type Context = {
   theme: Theme;
   toast: string;
   loading: boolean;
