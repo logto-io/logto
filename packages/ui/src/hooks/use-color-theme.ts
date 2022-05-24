@@ -19,17 +19,17 @@ const generateLightColorLibrary = (primaryColor: color) => ({
   [`--light-focused-variant`]: primaryColor.alpha(0.16).string(),
   [`--light-hover-variant`]: primaryColor.alpha(0.08).string(),
   [`--light-pressed-variant`]: primaryColor.alpha(0.12).string(),
-  [`--light-hover`]: absoluteLighten(primaryColor, 10).hex(),
-  [`--light-pressed`]: absoluteDarken(primaryColor, 10).hex(),
+  [`--light-hover`]: absoluteLighten(primaryColor, 10).string(),
+  [`--light-pressed`]: absoluteDarken(primaryColor, 10).string(),
 });
 
 const generateDarkColorLibrary = (primaryColor: color) => ({
   [`--dark-primary-color`]: primaryColor.hex(),
-  [`--dark-focused-variant`]: absoluteLighten(primaryColor, 17).rgb().alpha(0.16).string(),
+  [`--dark-focused-variant`]: absoluteLighten(primaryColor, 17).alpha(0.16).string(),
   [`--dark-hover-variant`]: absoluteLighten(primaryColor, 17).rgb().alpha(0.08).string(),
   [`--dark-pressed-variant`]: absoluteLighten(primaryColor, 17).rgb().alpha(0.12).string(),
-  [`--dark-hover`]: absoluteLighten(primaryColor, 10).hex(),
-  [`--dark-pressed`]: absoluteDarken(primaryColor, 10).hex(),
+  [`--dark-hover`]: absoluteLighten(primaryColor, 10).string(),
+  [`--dark-pressed`]: absoluteDarken(primaryColor, 10).string(),
 });
 
 const useColorTheme = (primaryColor?: string, darkPrimaryColor?: string) => {
