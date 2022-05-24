@@ -67,22 +67,14 @@ const Preview = ({ signInExperience, className }: Props) => {
   }, [config]);
 
   useEffect(() => {
-    const onIFrameLoadHandler = (event: MessageEvent) => {
-      if (event.origin !== window.location.origin) {
-        return;
-      }
-
-      if (event.data.sender === 'logto_ui' && event.data.pageReady) {
-        postPreviewMessage();
-      }
-    };
-
     postPreviewMessage();
 
-    window.addEventListener('message', onIFrameLoadHandler);
+    const iframe = previewRef.current;
+
+    iframe?.addEventListener('load', postPreviewMessage);
 
     return () => {
-      window.removeEventListener('message', onIFrameLoadHandler);
+      iframe?.removeEventListener('load', postPreviewMessage);
     };
   }, [postPreviewMessage]);
 

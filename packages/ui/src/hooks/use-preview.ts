@@ -24,17 +24,12 @@ const usePreview = (context: Context): [boolean, PreviewConfig?] => {
   const isPreview = preview === 'true';
 
   useEffect(() => {
-    // Init i18n
-    void initI18n();
-
-    // Post page ready message to the parent window
-    window.parent.postMessage({ pageReady: true, sender: 'logto_ui' }, window.location.origin);
-  }, []);
-
-  useEffect(() => {
     if (!isPreview) {
       return;
     }
+
+    // Init i18n
+    void initI18n();
 
     const previewMessageHandler = (event: MessageEvent) => {
       if (event.origin !== window.location.origin) {
