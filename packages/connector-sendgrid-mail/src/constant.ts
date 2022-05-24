@@ -13,7 +13,7 @@ const readmeContentFallback = 'Please check README.md file directory.';
 const configTemplateFallback = 'Please check config-template.md file directory.';
 
 export const defaultMetadata: ConnectorMetadata = {
-  id: 'sendgrid_email_service',
+  id: 'sendgrid-email-service',
   target: 'sendgrid-mail',
   type: ConnectorType.Email,
   platform: null,
