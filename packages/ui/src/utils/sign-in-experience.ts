@@ -9,7 +9,7 @@ import { getSignInExperience } from '@/apis/settings';
 import { filterSocialConnectors } from '@/hooks/utils';
 import { SignInMethod, SignInExperienceSettingsResponse, SignInExperienceSettings } from '@/types';
 
-const getPrimarySignInMethod = (signInMethods: SignInMethods) => {
+export const getPrimarySignInMethod = (signInMethods: SignInMethods) => {
   for (const [key, value] of Object.entries(signInMethods)) {
     if (value === 'primary') {
       return key as keyof SignInMethods;
@@ -19,7 +19,7 @@ const getPrimarySignInMethod = (signInMethods: SignInMethods) => {
   return 'username';
 };
 
-const getSecondarySignInMethods = (signInMethods: SignInMethods) =>
+export const getSecondarySignInMethods = (signInMethods: SignInMethods) =>
   Object.entries(signInMethods).reduce<SignInMethod[]>((methods, [key, value]) => {
     if (value === 'secondary') {
       return [...methods, key as SignInMethod];
@@ -28,21 +28,16 @@ const getSecondarySignInMethods = (signInMethods: SignInMethods) =>
     return methods;
   }, []);
 
-export const parseSignInExperienceSettings = ({
-  signInMethods,
-  socialConnectors,
-  ...rest
-}: SignInExperienceSettingsResponse) => ({
-  ...rest,
-  primarySignInMethod: getPrimarySignInMethod(signInMethods),
-  secondarySignInMethods: getSecondarySignInMethods(signInMethods),
-  socialConnectors: filterSocialConnectors(socialConnectors),
-});
-
 const getSignInExperienceSettings = async (): Promise<SignInExperienceSettings> => {
-  const response = await getSignInExperience<SignInExperienceSettingsResponse>();
+  const { signInMethods, socialConnectors, ...rest } =
+    await getSignInExperience<SignInExperienceSettingsResponse>();
 
-  return parseSignInExperienceSettings(response);
+  return {
+    ...rest,
+    primarySignInMethod: getPrimarySignInMethod(signInMethods),
+    secondarySignInMethods: getSecondarySignInMethods(signInMethods),
+    socialConnectors: filterSocialConnectors(socialConnectors),
+  };
 };
 
 export default getSignInExperienceSettings;
