@@ -2,14 +2,14 @@ import color from 'color';
 import { useEffect } from 'react';
 
 // Color hsl lighten/darken takes percentage value only, need to implement absolute value update
-const absoluteLighten = (basColor: color, delta: number) => {
-  const hslArray = basColor.hsl().round().array() as [number, number, number];
+const absoluteLighten = (baseColor: color, delta: number) => {
+  const hslArray = baseColor.hsl().round().array() as [number, number, number];
 
   return color([hslArray[0], hslArray[1], hslArray[2] + delta], 'hsl');
 };
 
-const absoluteDarken = (basColor: color, delta: number) => {
-  const hslArray = basColor.hsl().round().array() as [number, number, number];
+const absoluteDarken = (baseColor: color, delta: number) => {
+  const hslArray = baseColor.hsl().round().array() as [number, number, number];
 
   return color([hslArray[0], hslArray[1], hslArray[2] - delta], 'hsl');
 };
