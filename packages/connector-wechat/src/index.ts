@@ -43,7 +43,7 @@ export default class WeChatConnector implements SocialConnector {
     }
   };
 
-  public getAuthorizationUri: GetAuthorizationUri = async (redirectUri, state) => {
+  public getAuthorizationUri: GetAuthorizationUri = async (state, redirectUri) => {
     const { appId } = await this.getConfig(this.metadata.id);
 
     const queryParameters = new URLSearchParams({

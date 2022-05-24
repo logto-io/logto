@@ -21,8 +21,8 @@ describe('getAuthorizationUri', () => {
 
   it('should get a valid uri by redirectUri and state', async () => {
     const authorizationUri = await githubMethods.getAuthorizationUri(
-      'http://localhost:3000/callback',
-      'some_state'
+      'some_state',
+      'http://localhost:3000/callback'
     );
     expect(authorizationUri).toEqual(
       `${authorizationEndpoint}?client_id=%3Cclient-id%3E&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fcallback&state=some_state&scope=read%3Auser`

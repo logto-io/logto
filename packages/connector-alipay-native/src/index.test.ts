@@ -40,8 +40,8 @@ describe('getAuthorizationUri', () => {
       .spyOn(alipayNativeMethods, 'getConfig')
       .mockResolvedValueOnce(mockedAlipayNativeConfigWithValidPrivateKey);
     const authorizationUri = await alipayNativeMethods.getAuthorizationUri(
-      'dummy-redirectUri',
-      'dummy-state'
+      'dummy-state',
+      'dummy-redirect-uri'
     );
     expect(authorizationUri).toBe('alipay://?app_id=2021000000000000&state=dummy-state');
   });

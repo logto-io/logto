@@ -21,8 +21,8 @@ describe('getAuthorizationUri', () => {
 
   it('should get a valid uri', async () => {
     const authorizationUri = await weChatNativeMethods.getAuthorizationUri(
-      'dummy-redirectUri',
-      'dummy-state'
+      'dummy-state',
+      'dummy-redirect-uri'
     );
     expect(authorizationUri).toEqual(
       `${authorizationEndpoint}?app_id=%3Capp-id%3E&state=dummy-state`

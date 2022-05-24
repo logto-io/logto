@@ -42,8 +42,8 @@ describe('google connector', () => {
 
     it('should get a valid authorizationUri with redirectUri and state', async () => {
       const authorizationUri = await googleMethods.getAuthorizationUri(
-        'http://localhost:3000/callback',
-        'some_state'
+        'some_state',
+        'http://localhost:3000/callback'
       );
       expect(authorizationUri).toEqual(
         `${authorizationEndpoint}?client_id=%3Cclient-id%3E&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fcallback&response_type=code&state=some_state&scope=openid+profile+email`

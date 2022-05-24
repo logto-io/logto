@@ -47,7 +47,7 @@ export default class WeChatNativeConnector implements SocialConnector {
     }
   };
 
-  public getAuthorizationUri: GetAuthorizationUri = async (_redirectUri, state) => {
+  public getAuthorizationUri: GetAuthorizationUri = async (state, _) => {
     const { appId } = await this.getConfig(this.metadata.id);
 
     const queryParameters = new URLSearchParams({

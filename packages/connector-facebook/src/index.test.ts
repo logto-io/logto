@@ -41,7 +41,7 @@ describe('facebook connector', () => {
     it('should get a valid authorizationUri with redirectUri and state', async () => {
       const redirectUri = 'http://localhost:3000/callback';
       const state = 'some_state';
-      const authorizationUri = await facebookMethods.getAuthorizationUri(redirectUri, state);
+      const authorizationUri = await facebookMethods.getAuthorizationUri(state, redirectUri);
 
       const encodedRedirectUri = encodeURIComponent(redirectUri);
       expect(authorizationUri).toEqual(

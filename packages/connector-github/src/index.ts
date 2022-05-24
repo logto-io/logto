@@ -35,7 +35,7 @@ export default class GithubConnector implements SocialConnector {
     }
   };
 
-  public getAuthorizationUri: GetAuthorizationUri = async (redirectUri, state) => {
+  public getAuthorizationUri: GetAuthorizationUri = async (state, redirectUri) => {
     const config = await this.getConfig(this.metadata.id);
 
     const queryParameters = new URLSearchParams({

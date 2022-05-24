@@ -21,8 +21,8 @@ describe('getAuthorizationUri', () => {
 
   it('should get a valid uri by redirectUri and state', async () => {
     const authorizationUri = await weChatMethods.getAuthorizationUri(
-      'http://localhost:3001/callback',
-      'some_state'
+      'some_state',
+      'http://localhost:3001/callback'
     );
     expect(authorizationUri).toEqual(
       `${authorizationEndpoint}?appid=%3Capp-id%3E&redirect_uri=http%3A%2F%2Flocalhost%3A3001%2Fcallback&response_type=code&scope=snsapi_login&state=some_state`
