@@ -115,6 +115,19 @@ export default async function initOidc(app: Koa): Promise<Provider> {
         return refreshTokenTtl ?? defaultRefreshTokenTtl;
       },
     },
+    extraTokenClaims: async (ctx, token) => {
+      // AccessToken type is not exported by default, need to asset token is AccessToken
+      if (token.kind === 'AccessToken') {
+        const { accountId } = token;
+        const { roleNames } = await findUserById(accountId);
+
+        // Add User Roles to the AccessToken claims. Should be removed once we have RBAC implemented.
+        // User Roles should be hidden and  determined by the AccessToken scope only.
+        return {
+          roleNames,
+        };
+      }
+    },
   });
 
   addOidcEventListeners(oidc);
