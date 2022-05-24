@@ -1,7 +1,7 @@
 import { Language } from '@logto/phrases';
 import { AppearanceMode } from '@logto/schemas';
 import i18next from 'i18next';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { Context } from '@/hooks/use-page-context';
 import initI18n from '@/i18n/init';
@@ -21,7 +21,7 @@ const usePreview = (context: Context): [boolean, PreviewConfig?] => {
   const { setTheme, setExperienceSettings, setPlatform } = context;
 
   const { preview } = parseQueryParameters(window.location.search);
-  const isPreview = useMemo(() => preview === 'true', [preview]);
+  const isPreview = preview === 'true';
 
   useEffect(() => {
     // Init i18n
