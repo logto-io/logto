@@ -1,6 +1,8 @@
+import { conditionalString } from '@silverhand/essentials';
 import React, { useEffect } from 'react';
 import { Route, Routes, BrowserRouter, Navigate } from 'react-router-dom';
 
+import * as styles from './App.module.scss';
 import AppContent from './components/AppContent';
 import usePageContext from './hooks/use-page-context';
 import usePreview from './hooks/use-preview';
@@ -24,7 +26,7 @@ const App = () => {
 
   useEffect(() => {
     if (isPreview) {
-      document.body.classList.add('preview');
+      document.body.classList.add(conditionalString(styles.preview));
 
       return;
     }

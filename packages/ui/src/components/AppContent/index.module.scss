@@ -73,10 +73,3 @@ body {
     box-shadow: var(--shadow-1);
   }
 }
-
-:global(body.preview) {
-  main {
-    pointer-events: none;
-    user-select: none;
-  }
-}
