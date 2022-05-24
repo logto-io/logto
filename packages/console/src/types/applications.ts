@@ -6,8 +6,17 @@ export const applicationTypeI18nKey = Object.freeze({
   [ApplicationType.Traditional]: 'applications.type.traditional',
 } as const);
 
-export enum SupportedJavascriptLibraries {
-  Angular = 'angular',
-  React = 'react',
-  Vue = 'vue',
+export enum SupportedSdk {
+  iOS = 'iOS',
+  Android = 'Android',
+  Angular = 'Angular',
+  React = 'React',
+  Vue = 'Vue',
+  Traditional = 'Traditional',
 }
+
+export const applicationTypeAndSdkTypeMappings = Object.freeze({
+  [ApplicationType.Native]: [SupportedSdk.iOS, SupportedSdk.Android],
+  [ApplicationType.SPA]: [SupportedSdk.Angular, SupportedSdk.React, SupportedSdk.Vue],
+  [ApplicationType.Traditional]: [SupportedSdk.Traditional],
+} as const);

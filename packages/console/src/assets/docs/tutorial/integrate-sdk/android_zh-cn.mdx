@@ -4,25 +4,25 @@ import Tabs from '@mdx/components/Tabs';
 import TabItem from '@mdx/components/TabItem';
 
 <Step
-  title="Install SDK"
-  subtitle="Install Logto Android SDK with Gradle"
+  title="安装 SDK"
+  subtitle="从 Gradle 安装 Logto Android SDK"
   index={0}
   activeIndex={props.activeStepIndex}
   invalidIndex={props.invalidStepIndex}
   onNext={() => props.onNext(1)}
 >
 
-### Prerequisite
-* Minimal Android SDK: Level 24
+### 前提条件
+* 最小 Android SDK 版本: Level 24
 
-Add the `mavenCentral()` repository to your Gradle project build file:
+将 `mavenCentral()` 添加到构建脚本中：
 ```kotlin
 repositories {
     mavenCentral()
 }
 ```
 
-Add the Logto Android SDK to your dependencies:
+添加 Logto Android SDK 依赖：
 <Tabs>
 
 <TabItem value="kotlin" label="Kotlin">
@@ -50,7 +50,7 @@ dependencies {
 </Step>
 
 <Step
-  title="Configure"
+  title="配置"
   subtitle="Configure your application and LogtoClient"
   index={1}
   activeIndex={props.activeStepIndex}
@@ -58,27 +58,27 @@ dependencies {
   onNext={() => props.onNext(2)}
 >
 
-### Configure Redirect URI
+### 配置 Redirect URI
 
-The `Redirect URI` indicates the endpoint that the application used to receive authorization results, which is implemented by the Logto Android SDK internally.
+Redirect URI 指定了应用用来接受授权结果的端口，Logto Android SDK 内部实现了该重定向的功能
 
-### Configure Redirect URI in Admin Console
+### 在管理员控制台中配置 Redirect URI
 
-Add the following value to Redirect URIs input field
+将以下值添加到下面的 Redirect URI 输入框中：
 
 ```bash
 $(LOGTO_REDIRECT_SCHEME)://$(YOUR_APP_PACKAGE)/callback
 ```
 
-Notes: 
-- `LOGTO_REDIRECT_SCHEME` should be a custom scheme in the reverse domain format.
-- Replace `$(LOGTO_REDIRECT_SCHEME)` with your own settings.
+注意: 
+- `LOGTO_REDIRECT_SCHEME` 应为自定义的反向域名格式的一串字符。
+- 将上述的 `$(LOGTO_REDIRECT_SCHEME)` 替换成你定义的值。
 
-e.g. `io.logto.android://io.logto.sample/callback`
+例： `io.logto.android://io.logto.sample/callback`
 
-<MultiTextInputField name="redirectUris" title="Redirect URI" onError={() => props.onError(2)} />
+<MultiTextInputField name="redirectUris" title="Redirect URI" onError={() => props.onError(1)} />
 
-### Configure Logto Android SDK
+### 配置 Logto Android SDK
 
 <Tabs>
 
@@ -136,13 +136,13 @@ public class MainActivity extends AppCompatActivity {
 
 Notes: 
 
-- `<your-logto-endpoint>` is the logto service running in your machine. If you start logto service in `http://localhost:300` then `<your-logto-endpoint` will be `http://localhost:300`
-- `<your-app-id>` is the Application ID of your application, which is created in the Admin Console.
+- `<your-logto-endpoint>` 是你运行 Logto 服务所在的地址. 若你的 Logto 服务运行在 `http://localhost:300`，则 `<your-logto-endpoint` 为 `http://localhost:300`
+- `<your-app-id>` 是你为自己的应用在管理员控制台中所创建的客户端ID.
 
 </Step>
 
 <Step
-  title="Sign In"
+  title="登录"
   subtitle="Sign In to your application by Logto and do some extra works"
   index={2}
   activeIndex={props.activeStepIndex}
@@ -150,7 +150,7 @@ Notes:
   onNext={() => props.onNext(3)}
 >
 
-### Perform a signing-in action
+### 执行登录
 
 <Tabs>
 
@@ -161,7 +161,7 @@ logtoClient.signInWithBrowser(
     this,
     "io.logto.android://io.logto.sample/callback",
 ) { logtoException: LogtoException? ->
-    // custom logic
+    // 后续处理逻辑
 }
 ```
 
@@ -174,7 +174,7 @@ logtoClient.signInWithBrowser(
     this,
     "io.logto.android://io.logto.sample/callback",
     logtoException -> {
-        // custom logic
+        // 后续处理逻辑
     }
 );
 ```
@@ -183,7 +183,7 @@ logtoClient.signInWithBrowser(
 
 </Tabs>
 
-### Implement your business logic after signing-in.
+### 登录成功后，你可以使用 SDK 提供的一些 API 来实现自己的业务逻辑
 
 <Tabs>
 
@@ -191,15 +191,15 @@ logtoClient.signInWithBrowser(
 
 ```kotlin
 logtoClient.getAccessToken { logtoException: LogtoException?, result: AccessToken? ->
-    // custom logic
+    // 后续处理逻辑
 }
 
-logtoClient.getIdTokenClaims { logtoException: LogtoException?, result: IdTokenCliams? ->
-    // custom logic
+logtoClient.getIdTokenClaims { logtoException: LogtoException?, result: IdTokenClaims? ->
+    // 后续处理逻辑
 }
 
 logtoClient.fetchUserInfo { logtoException: LogtoException?, userInfoResponse: UserInfoResponse? ->
-    // custom logic
+    // 后续处理逻辑
 }
 ```
 
@@ -209,15 +209,15 @@ logtoClient.fetchUserInfo { logtoException: LogtoException?, userInfoResponse: U
 
 ```java
 logtoClient.getAccessToken((logtoException, accessToken) -> {
-    // custom logic
+    // 后续处理逻辑
 });
 
 logtoClient.getIdTokenClaims((logtoException, idTokenClaims) -> {
-    // custom logic
+    // 后续处理逻辑
 });
 
 logtoClient.fetchUserInfo((logtoException, userInfoResponse) -> {
-    // custom logic
+    // 后续处理逻辑
 });
 ```
 
@@ -228,14 +228,14 @@ logtoClient.fetchUserInfo((logtoException, userInfoResponse) -> {
 </Step>
 
 <Step
-  title="Sign Out"
+  title="登出"
   index={3}
   activeIndex={props.activeStepIndex}
   invalidIndex={props.invalidStepIndex}
   onNext={() => props.onNext(4)}
 >
 
-### Perform a signing-out action
+### 执行登出
 
 <Tabs>
 
@@ -243,7 +243,7 @@ logtoClient.fetchUserInfo((logtoException, userInfoResponse) -> {
 
 ```kotlin
 logtoClient.signOut { logtoException: LogtoException? ->
-    // custom logic
+    // 后续处理逻辑
 }
 ```
 
@@ -253,7 +253,7 @@ logtoClient.signOut { logtoException: LogtoException? ->
 
 ```java
 logtoClient.signOut(logtoException -> {
-    // custom logic
+    // 后续处理逻辑
 });
 ```
 
@@ -261,14 +261,14 @@ logtoClient.signOut(logtoException -> {
 
 </Tabs>
 
-Notes:
+注意:
 
-- `signOut` will always clear local credentials even if errors occurred.
+- 登出操作会清除本地存储的用户相关凭据，即使在登出过程中发生了异常。
 
 </Step>
 
 <Step
-  title="Further Readings"
+  title="延伸阅读"
   subtitle="3 steps"
   index={4}
   activeIndex={props.activeStepIndex}
@@ -277,8 +277,8 @@ Notes:
   buttonHtmlType="submit"
 >
 
-- Fetch User Info
-- Configure Social Sign-In
-- Access Protected API Resources
+- 获取用户信息
+- 配置社会化登录
+- 访问受保护的 API 资源
 
 </Step>

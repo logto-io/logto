@@ -169,9 +169,8 @@ const translation = {
           'Follow a step by step guide to integrate your application or get a sample configured with your account settings',
         title: 'Congratulations! The application has been created successfully.',
         subtitle:
-          'Now follow the steps below to finish your app settings. Please select the JS library to continue.',
-        description_by_library:
-          'This quickstart demonstrates how to add Logto to {{library}} application.',
+          'Now follow the steps below to finish your app settings. Please select the SDK type to continue.',
+        description_by_sdk: 'This quickstart demonstrates how to add Logto to {{sdk}} application.',
       },
     },
     application_details: {
