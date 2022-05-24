@@ -70,7 +70,7 @@ const useSocial = () => {
       // Invoke Native Social Sign In flow
       if (isNativeWebview()) {
         getLogtoNativeSdk()?.getPostMessage()({
-          callbackUri: `${origin}/callback/${connectorId}`,
+          callbackUri: `${origin}/sign-in/callback/${connectorId}`,
           redirectTo: result.redirectTo,
         });
 
