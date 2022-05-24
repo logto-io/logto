@@ -33,6 +33,7 @@ export enum ConnectorErrorCodes {
   TemplateNotFound,
   SocialAuthCodeInvalid,
   SocialAccessTokenInvalid,
+  SocialIdTokenInvalid,
 }
 
 export class ConnectorError extends Error {

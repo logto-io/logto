@@ -24,6 +24,7 @@
     "@logto/connector-alipay-native": "^0.1.0",
     "@logto/connector-aliyun-dm": "^0.1.0",
     "@logto/connector-aliyun-sms": "^0.1.0",
+    "@logto/connector-apple": "^0.1.0",
     "@logto/connector-facebook": "^0.1.0",
     "@logto/connector-github": "^0.1.0",
     "@logto/connector-google": "^0.1.0",

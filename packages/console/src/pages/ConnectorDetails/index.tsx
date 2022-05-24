@@ -47,7 +47,8 @@ const ConnectorDetails = () => {
 
   useEffect(() => {
     if (data) {
-      setConfig(JSON.stringify(data.config, null, 2));
+      const hasData = Object.keys(data.config).length > 0;
+      setConfig(hasData ? JSON.stringify(data.config, null, 2) : data.configTemplate);
     }
   }, [data]);
 

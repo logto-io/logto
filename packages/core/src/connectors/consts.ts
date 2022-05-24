@@ -4,6 +4,7 @@ export const connectorPackages = [
   '@logto/connector-alipay-native',
   '@logto/connector-aliyun-dm',
   '@logto/connector-aliyun-sms',
+  '@logto/connector-apple',
   '@logto/connector-facebook',
   '@logto/connector-github',
   '@logto/connector-google',

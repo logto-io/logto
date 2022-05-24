@@ -224,6 +224,55 @@ importers:
       tsc-watch: 5.0.3_typescript@4.6.3
       typescript: 4.6.3
 
+  packages/connector-apple:
+    specifiers:
+      '@jest/types': ^27.5.1
+      '@logto/connector-types': ^0.1.0
+      '@logto/schemas': ^0.1.0
+      '@logto/shared': ^0.1.0
+      '@silverhand/eslint-config': ^0.14.0
+      '@silverhand/essentials': ^1.1.0
+      '@silverhand/jest-config': ^0.14.0
+      '@silverhand/ts-config': ^0.14.0
+      '@types/jest': ^27.4.1
+      '@types/node': ^16.3.1
+      eslint: ^8.10.0
+      got: ^11.8.2
+      jest: ^27.5.1
+      jest-matcher-specific-error: ^1.0.0
+      jose: ^4.3.8
+      lint-staged: ^12.0.0
+      nock: ^13.2.2
+      prettier: ^2.3.2
+      ts-jest: ^27.1.1
+      tsc-watch: ^5.0.0
+      typescript: ^4.6.2
+      zod: ^3.14.3
+    dependencies:
+      '@logto/connector-types': link:../connector-types
+      '@logto/schemas': link:../schemas
+      '@logto/shared': link:../shared
+      '@silverhand/essentials': 1.1.7
+      '@silverhand/jest-config': 0.14.0_53ggqi2i4rbcfjtktmjua6zili
+      got: 11.8.3
+      jose: 4.6.0
+      zod: 3.14.3
+    devDependencies:
+      '@jest/types': 27.5.1
+      '@silverhand/eslint-config': 0.14.0_rqoong6vegs374egqglqjbgiwm
+      '@silverhand/ts-config': 0.14.0_typescript@4.6.4
+      '@types/jest': 27.4.1
+      '@types/node': 16.11.12
+      eslint: 8.10.0
+      jest: 27.5.1
+      jest-matcher-specific-error: 1.0.0
+      lint-staged: 12.4.0
+      nock: 13.2.2
+      prettier: 2.5.1
+      ts-jest: 27.1.1_53ggqi2i4rbcfjtktmjua6zili
+      tsc-watch: 5.0.3_typescript@4.6.4
+      typescript: 4.6.4
+
   packages/connector-facebook:
     specifiers:
       '@jest/types': ^27.5.1
@@ -698,6 +747,7 @@ importers:
       '@logto/connector-alipay-native': ^0.1.0
       '@logto/connector-aliyun-dm': ^0.1.0
       '@logto/connector-aliyun-sms': ^0.1.0
+      '@logto/connector-apple': ^0.1.0
       '@logto/connector-facebook': ^0.1.0
       '@logto/connector-github': ^0.1.0
       '@logto/connector-google': ^0.1.0
@@ -773,6 +823,7 @@ importers:
       '@logto/connector-alipay-native': link:../connector-alipay-native
       '@logto/connector-aliyun-dm': link:../connector-aliyun-dm
       '@logto/connector-aliyun-sms': link:../connector-aliyun-sms
+      '@logto/connector-apple': link:../connector-apple
       '@logto/connector-facebook': link:../connector-facebook
       '@logto/connector-github': link:../connector-github
       '@logto/connector-google': link:../connector-google
