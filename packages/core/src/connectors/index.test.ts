@@ -11,89 +11,67 @@ import {
 import RequestError from '@/errors/RequestError';
 
 const alipayConnector = {
-  id: 'alipay',
-  target: 'alipay',
-  platform: ConnectorPlatform.Web,
+  id: 'alipay-web',
   enabled: true,
   config: {},
   createdAt: 1_646_382_233_911,
 };
 const alipayNativeConnector = {
   id: 'alipay-native',
-  target: 'alipay',
-  platform: ConnectorPlatform.Native,
   enabled: false,
   config: {},
   createdAt: 1_646_382_233_911,
 };
 const aliyunDmConnector = {
-  id: 'aliyun-dm',
-  target: 'aliyun-dm',
-  platform: null,
+  id: 'aliyun-direct-mail',
   enabled: true,
   config: {},
   createdAt: 1_646_382_233_911,
 };
 const aliyunSmsConnector = {
-  id: 'aliyun-sms',
-  target: 'aliyun-sms',
-  platform: null,
+  id: 'aliyun-short-message-service',
   enabled: false,
   config: {},
   createdAt: 1_646_382_233_666,
 };
 const facebookConnector = {
-  id: 'facebook',
-  target: 'facebook',
-  platform: ConnectorPlatform.Universal,
+  id: 'facebook-universal',
   enabled: true,
   config: {},
   createdAt: 1_646_382_233_333,
 };
 const githubConnector = {
-  id: 'github',
-  target: 'github',
-  platform: ConnectorPlatform.Universal,
+  id: 'github-universal',
   enabled: true,
   config: {},
   createdAt: 1_646_382_233_555,
 };
 const googleConnector = {
-  id: 'google',
-  target: 'google',
-  platform: ConnectorPlatform.Universal,
+  id: 'google-universal',
   enabled: false,
   config: {},
   createdAt: 1_646_382_233_000,
 };
 const sendGridMailConnector = {
-  id: 'sendgrid-mail',
-  target: 'sendgrid-mail',
-  platform: null,
+  id: 'sendgrid-email-service',
   enabled: false,
   config: {},
   createdAt: 1_646_382_233_111,
 };
 const twilioSmsConnector = {
-  id: 'twilio-sms',
-  target: 'twilio-sms',
-  platform: null,
+  id: 'twilio-short-message-service',
   enabled: false,
   config: {},
   createdAt: 1_646_382_233_000,
 };
 const wechatConnector = {
-  id: 'wechat',
-  target: 'wechat',
-  platform: ConnectorPlatform.Web,
+  id: 'wechat-web',
   enabled: false,
   config: {},
   createdAt: 1_646_382_233_000,
 };
 const wechatNativeConnector = {
   id: 'wechat-native',
-  target: 'wechat',
-  platform: ConnectorPlatform.Native,
   enabled: false,
   config: {},
   createdAt: 1_646_382_233_000,
@@ -163,7 +141,7 @@ describe('getConnectorInstanceById', () => {
   });
 
   test('should return the connector existing in DB', async () => {
-    const connectorInstance = await getConnectorInstanceById('aliyun-dm');
+    const connectorInstance = await getConnectorInstanceById('aliyun-direct-mail');
     expect(connectorInstance).toHaveProperty('connector', aliyunDmConnector);
   });
 
@@ -187,12 +165,12 @@ describe('getConnectorInstanceById', () => {
 
 describe('getSocialConnectorInstanceById', () => {
   test('should return the connector existing in DB', async () => {
-    const socialConnectorInstance = await getSocialConnectorInstanceById('google');
+    const socialConnectorInstance = await getSocialConnectorInstanceById('google-universal');
     expect(socialConnectorInstance).toHaveProperty('connector', googleConnector);
   });
 
   test('should throw on non-social connector', async () => {
-    const id = 'aliyun-dm';
+    const id = 'aliyun-direct-mail';
     await expect(getSocialConnectorInstanceById(id)).rejects.toMatchError(
       new RequestError({
         code: 'entity.not_found',
@@ -206,7 +184,11 @@ describe('getSocialConnectorInstanceById', () => {
 describe('getEnabledSocialConnectorIds', () => {
   test('should return the enabled social connectors existing in DB', async () => {
     const enabledSocialConnectorIds = await getEnabledSocialConnectorIds();
-    expect(enabledSocialConnectorIds).toEqual(['alipay', 'facebook', 'github']);
+    expect(enabledSocialConnectorIds).toEqual([
+      'alipay-web',
+      'facebook-universal',
+      'github-universal',
+    ]);
   });
 });
 
@@ -217,12 +199,11 @@ describe('initConnectors', () => {
     expect(insertConnector).toHaveBeenCalledTimes(connectors.length);
 
     for (const [i, connector] of connectors.entries()) {
-      const { target, platform } = connector;
+      const { id } = connector;
       expect(insertConnector).toHaveBeenNthCalledWith(
         i + 1,
         expect.objectContaining({
-          target,
-          platform,
+          id,
         })
       );
     }

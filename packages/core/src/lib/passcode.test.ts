@@ -126,8 +126,6 @@ describe('sendPasscode', () => {
         connector: {
           ...mockConnector,
           id: 'id1',
-          target: 'connector1',
-          platform: null,
         },
         metadata: {
           ...mockMetadata,
@@ -167,8 +165,6 @@ describe('sendPasscode', () => {
         connector: {
           ...mockConnector,
           id: 'id0',
-          target: 'connector0',
-          platform: null,
         },
         metadata: {
           ...mockMetadata,
@@ -183,8 +179,6 @@ describe('sendPasscode', () => {
         connector: {
           ...mockConnector,
           id: 'id1',
-          target: 'connector1',
-          platform: null,
         },
         metadata: {
           ...mockMetadata,
@@ -197,7 +191,7 @@ describe('sendPasscode', () => {
       },
     ]);
     const passcode: Passcode = {
-      id: 'id',
+      id: 'passcode_id',
       interactionJti: 'jti',
       phone: 'phone',
       email: null,

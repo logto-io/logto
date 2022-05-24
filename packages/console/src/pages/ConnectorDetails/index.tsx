@@ -92,7 +92,7 @@ const ConnectorDetails = () => {
       .json<ConnectorDTO>();
     toast.success(t('connector_details.connector_deleted'));
 
-    if (data?.metadata.type === ConnectorType.Social) {
+    if (data?.type === ConnectorType.Social) {
       navigate(`/connectors/social`);
     } else {
       navigate(`/connectors`);
@@ -102,21 +102,21 @@ const ConnectorDetails = () => {
   return (
     <div className={detailsStyles.container}>
       <LinkButton
-        to={data?.metadata.type === ConnectorType.Social ? '/connectors/social' : '/connectors'}
+        to={data?.type === ConnectorType.Social ? '/connectors/social' : '/connectors'}
         icon={<Back />}
         title="admin_console.connector_details.back_to_connectors"
         className={styles.backLink}
       />
       {isLoading && <DetailsSkeleton />}
       {!data && error && <div>{`error occurred: ${error.body?.message ?? error.message}`}</div>}
-      {data?.metadata.type === ConnectorType.Social && (
-        <ConnectorTabs target={data.metadata.target} connectorId={data.id} />
+      {data?.type === ConnectorType.Social && (
+        <ConnectorTabs target={data.target} connectorId={data.id} />
       )}
       {data && (
         <Card className={styles.header}>
           <div className={styles.imagePlaceholder}>
-            {data.metadata.logo.startsWith('http') ? (
-              <img src={data.metadata.logo} className={styles.logo} />
+            {data.logo.startsWith('http') ? (
+              <img src={data.logo} className={styles.logo} />
             ) : (
               <ImagePlaceholder size={60} borderRadius={16} />
             )}
@@ -124,7 +124,7 @@ const ConnectorDetails = () => {
           <div className={styles.metadata}>
             <div>
               <div className={styles.name}>
-                <UnnamedTrans resource={data.metadata.name} />
+                <UnnamedTrans resource={data.name} />
               </div>
               <div className={styles.id}>{data.id}</div>
             </div>
@@ -150,13 +150,13 @@ const ConnectorDetails = () => {
                 setIsReadMeOpen(false);
               }}
             >
-              <Markdown>{data.metadata.readme}</Markdown>
+              <Markdown>{data.readme}</Markdown>
             </Drawer>
             <ActionMenu
               buttonProps={{ icon: <More />, size: 'large' }}
               title={t('connector_details.more_options')}
             >
-              {data.metadata.type !== ConnectorType.Social && (
+              {data.type !== ConnectorType.Social && (
                 <ActionMenuItem
                   icon={<Reset />}
                   onClick={() => {
@@ -164,7 +164,7 @@ const ConnectorDetails = () => {
                   }}
                 >
                   {t(
-                    data.metadata.type === ConnectorType.SMS
+                    data.type === ConnectorType.SMS
                       ? 'connector_details.options_change_sms'
                       : 'connector_details.options_change_email'
                   )}
@@ -176,7 +176,7 @@ const ConnectorDetails = () => {
             </ActionMenu>
             <CreateForm
               isOpen={isSetupOpen}
-              type={data.metadata.type}
+              type={data.type}
               onClose={() => {
                 setIsSetupOpen(false);
               }}
@@ -199,9 +199,7 @@ const ConnectorDetails = () => {
                 setConfig(value);
               }}
             />
-            {data.metadata.type !== ConnectorType.Social && (
-              <SenderTester connectorType={data.metadata.type} />
-            )}
+            {data.type !== ConnectorType.Social && <SenderTester connectorType={data.type} />}
             {saveError && <div>{saveError}</div>}
           </div>
           <div className={detailsStyles.footer}>

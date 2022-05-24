@@ -27,7 +27,7 @@ const CreateForm = ({ onClose, isOpen: isFormOpen, type }: Props) => {
   const [isGetStartedModalOpen, setIsGetStartedModalOpen] = useState(false);
 
   const connectors = useMemo(
-    () => data?.filter((connector) => connector.metadata.type === type),
+    () => data?.filter((connector) => connector.type === type),
     [data, type]
   );
 
@@ -84,7 +84,7 @@ const CreateForm = ({ onClose, isOpen: isFormOpen, type }: Props) => {
             type="card"
             onChange={setActiveConnectorId}
           >
-            {connectors.map(({ id, metadata: { name, logo, description } }) => (
+            {connectors.map(({ id, name, logo, description }) => (
               <Radio key={id} value={id} className={styles.connector}>
                 <div className={styles.logo}>
                   {logo.startsWith('http') ? <img src={logo} /> : <ImagePlaceholder size={32} />}

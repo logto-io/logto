@@ -47,7 +47,7 @@ const ConnectorsTransfer = ({ value, onChange }: Props) => {
               {connectors.length > 1 &&
                 connectors
                   .filter(({ enabled }) => enabled)
-                  .map(({ metadata: { platform } }) => (
+                  .map(({ platform }) => (
                     <div key={platform} className={styles.icon}>
                       {platform && <ConnectorPlatformIcon platform={platform} />}
                     </div>

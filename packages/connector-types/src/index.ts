@@ -14,6 +14,7 @@ export enum ConnectorPlatform {
 }
 
 export interface ConnectorMetadata {
+  id: string;
   target: string;
   type: ConnectorType;
   platform: Nullable<ConnectorPlatform>;
@@ -102,7 +103,4 @@ export type GetUserInfo = (
   accessTokenObject: AccessTokenObject
 ) => Promise<{ id: string } & Record<string, string | undefined>>;
 
-export type GetConnectorConfig<T = Record<string, unknown>> = (
-  target: string,
-  platform: Nullable<ConnectorPlatform>
-) => Promise<T>;
+export type GetConnectorConfig<T = Record<string, unknown>> = (id: string) => Promise<T>;

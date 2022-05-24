@@ -46,7 +46,7 @@ export class FacebookConnector implements SocialConnector {
   };
 
   public getAuthorizationUri: GetAuthorizationUri = async (redirectUri, state) => {
-    const config = await this.getConfig(this.metadata.target, this.metadata.platform);
+    const config = await this.getConfig(this.metadata.id);
 
     const queryParameters = new URLSearchParams({
       client_id: config.clientId,
@@ -61,8 +61,7 @@ export class FacebookConnector implements SocialConnector {
 
   public getAccessToken: GetAccessToken = async (code, redirectUri) => {
     const { clientId: client_id, clientSecret: client_secret } = await this.getConfig(
-      this.metadata.target,
-      this.metadata.platform
+      this.metadata.id
     );
 
     const { access_token: accessToken } = await got

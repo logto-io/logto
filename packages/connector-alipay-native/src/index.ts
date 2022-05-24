@@ -37,15 +37,14 @@ import {
   AccessTokenResponse,
   UserInfoResponse,
 } from './types';
-import { signingPamameters } from './utils';
-import type { SigningPamameters } from './utils';
+import { signingParameters } from './utils';
 
 export type { AlipayNativeConfig } from './types';
 
 export class AlipayNativeConnector implements SocialConnector {
   public metadata: ConnectorMetadata = defaultMetadata;
 
-  private readonly signingPamameters: SigningPamameters = signingPamameters;
+  private readonly signingParameters = signingParameters;
 
   constructor(public readonly getConfig: GetConnectorConfig<AlipayNativeConfig>) {}
 
@@ -58,7 +57,7 @@ export class AlipayNativeConnector implements SocialConnector {
   };
 
   public getAuthorizationUri: GetAuthorizationUri = async () => {
-    const { appId } = await this.getConfig(this.metadata.target, this.metadata.platform);
+    const { appId } = await this.getConfig(this.metadata.id);
 
     const queryParameters = new URLSearchParams({ app_id: appId });
 
@@ -66,7 +65,7 @@ export class AlipayNativeConnector implements SocialConnector {
   };
 
   public getAccessToken: GetAccessToken = async (code): Promise<AccessTokenObject> => {
-    const config = await this.getConfig(this.metadata.target, this.metadata.platform);
+    const config = await this.getConfig(this.metadata.id);
     const initSearchParameters = {
       method: methodForAccessToken,
       format: 'JSON',
@@ -77,7 +76,7 @@ export class AlipayNativeConnector implements SocialConnector {
       charset: 'UTF8',
       ...config,
     };
-    const signedSearchParameters = this.signingPamameters(initSearchParameters);
+    const signedSearchParameters = this.signingParameters(initSearchParameters);
 
     const response = await got
       .post(alipayEndpoint, {
@@ -99,7 +98,7 @@ export class AlipayNativeConnector implements SocialConnector {
   };
 
   public getUserInfo: GetUserInfo = async (accessTokenObject) => {
-    const config = await this.getConfig(this.metadata.target, this.metadata.platform);
+    const config = await this.getConfig(this.metadata.id);
     const { accessToken } = accessTokenObject;
     assert(
       accessToken && config,
@@ -117,7 +116,7 @@ export class AlipayNativeConnector implements SocialConnector {
       charset: 'UTF8',
       ...config,
     };
-    const signedSearchParameters = this.signingPamameters(initSearchParameters);
+    const signedSearchParameters = this.signingParameters(initSearchParameters);
 
     const response = await got
       .post(alipayEndpoint, {

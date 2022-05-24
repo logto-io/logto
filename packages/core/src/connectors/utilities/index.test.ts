@@ -1,13 +1,12 @@
-import { ConnectorPlatform } from '@logto/connector-types';
 import { Connector } from '@logto/schemas';
 
-import { buildIndexWithTargetAndPlatform, getConnectorConfig } from '.';
+import RequestError from '@/errors/RequestError';
+
+import { getConnectorConfig } from '.';
 
 const connectors: Connector[] = [
   {
     id: 'id',
-    target: 'target',
-    platform: null,
     enabled: true,
     config: { foo: 'bar' },
     createdAt: 0,
@@ -21,15 +20,13 @@ jest.mock('@/queries/connector', () => ({
   findAllConnectors: async () => findAllConnectors(),
 }));
 
-it('buildIndexWithTargetAndPlatform() with not-null `platform`', async () => {
-  expect(buildIndexWithTargetAndPlatform('target', ConnectorPlatform.Web)).toEqual('target_Web');
-});
-
-it('buildIndexWithTargetAndPlatform() with null `platform`', async () => {
-  expect(buildIndexWithTargetAndPlatform('target', null)).toEqual('target_null');
-});
-
-it('getConnectorConfig()', async () => {
-  const config = await getConnectorConfig('target', null);
+it('getConnectorConfig() should return right config', async () => {
+  const config = await getConnectorConfig('id');
   expect(config).toMatchObject({ foo: 'bar' });
+});
+
+it('getConnectorConfig() should throw error if connector not found', async () => {
+  await expect(getConnectorConfig('not-found')).rejects.toMatchError(
+    new RequestError({ code: 'entity.not_found', id: 'not-found', status: 404 })
+  );
 });

@@ -23,6 +23,7 @@ const readmeContentFallback = 'Please check README.md file directory.';
 const configTemplateFallback = 'Please check config-template.md file directory.';
 
 export const defaultMetadata: ConnectorMetadata = {
+  id: 'alipay-web',
   target: 'alipay',
   type: ConnectorType.Social,
   platform: ConnectorPlatform.Web,

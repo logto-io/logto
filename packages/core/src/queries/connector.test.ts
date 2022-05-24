@@ -46,21 +46,15 @@ describe('connector queries', () => {
     };
 
     const expectSql = `
-      insert into "connectors" ("id", "target", "platform", "enabled", "config")
-      values ($1, $2, $3, $4, $5)
+      insert into "connectors" ("id", "enabled", "config")
+      values ($1, $2, $3)
       returning *
     `;
 
     mockQuery.mockImplementationOnce(async (sql, values) => {
       expectSqlAssert(sql, expectSql);
 
-      expect(values).toEqual([
-        connector.id,
-        connector.target,
-        connector.platform,
-        connector.enabled,
-        connector.config,
-      ]);
+      expect(values).toEqual([connector.id, connector.enabled, connector.config]);
 
       return createMockQueryResult([connector]);
     });

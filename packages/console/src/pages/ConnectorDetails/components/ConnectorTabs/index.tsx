@@ -30,12 +30,12 @@ const ConnectorTabs = ({ target, connectorId }: Props) => {
           to={`/connectors/${connector.id}`}
           className={classNames(styles.tab, connector.id === connectorId && styles.active)}
         >
-          {connector.metadata.platform && (
+          {connector.platform && (
             <div className={styles.icon}>
-              <ConnectorPlatformIcon platform={connector.metadata.platform} />
+              <ConnectorPlatformIcon platform={connector.platform} />
             </div>
           )}
-          {connector.metadata.platform}
+          {connector.platform}
           {!connector.enabled && (
             <div className={styles.notSet}>{t('connector_details.not_set')}</div>
           )}

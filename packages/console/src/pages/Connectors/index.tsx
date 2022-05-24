@@ -29,16 +29,12 @@ const Connectors = () => {
   const isLoading = !data && !error;
 
   const emailConnector = useMemo(
-    () =>
-      data?.find(
-        (connector) => connector.enabled && connector.metadata.type === ConnectorType.Email
-      ),
+    () => data?.find((connector) => connector.enabled && connector.type === ConnectorType.Email),
     [data]
   );
 
   const smsConnector = useMemo(
-    () =>
-      data?.find((connector) => connector.enabled && connector.metadata.type === ConnectorType.SMS),
+    () => data?.find((connector) => connector.enabled && connector.type === ConnectorType.SMS),
     [data]
   );
 
@@ -47,7 +43,7 @@ const Connectors = () => {
       return;
     }
 
-    return data?.filter((connector) => connector.metadata.type === ConnectorType.Social);
+    return data?.filter((connector) => connector.type === ConnectorType.Social);
   }, [data, isSocial]);
 
   return (

@@ -16,6 +16,7 @@ const readmeContentFallback = 'Please check README.md file directory.';
 const configTemplateFallback = 'Please check config-template.md file directory.';
 
 export const defaultMetadata: ConnectorMetadata = {
+  id: 'wechat-web',
   target: 'wechat',
   type: ConnectorType.Social,
   platform: ConnectorPlatform.Web,

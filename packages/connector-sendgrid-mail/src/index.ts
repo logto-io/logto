@@ -39,7 +39,7 @@ export class SendGridMailConnector implements EmailConnector {
     type,
     data
   ) => {
-    const config = await this.getConfig(this.metadata.target, this.metadata.platform);
+    const config = await this.getConfig(this.metadata.id);
     await this.validateConfig(config);
     const { apiKey, fromEmail, fromName, templates } = config;
     const template = templates.find((template) => template.usageType === type);

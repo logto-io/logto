@@ -22,6 +22,7 @@ import { createRequester } from '@/utils/test-utils';
 import connectorRoutes from './connector';
 
 const mockMetadata: ConnectorMetadata = {
+  id: 'id0',
   target: 'connector_0',
   type: ConnectorType.Social,
   platform: null,
@@ -35,9 +36,7 @@ const mockMetadata: ConnectorMetadata = {
   configTemplate: 'config-template.md',
 };
 const mockConnector: Connector = {
-  id: 'connector_0',
-  target: 'connector_0',
-  platform: null,
+  id: 'id0',
   enabled: true,
   config: {},
   createdAt: 1_234_567_890_123,
@@ -135,7 +134,7 @@ describe('connector route', () => {
 
         return { foundConnector, ...foundConnectorInstance };
       });
-      const response = await connectorRequest.get('/connectors/connector_0').send({});
+      const response = await connectorRequest.get('/connectors/id0').send({});
       expect(response).toHaveProperty('statusCode', 400);
     });
 
@@ -154,7 +153,7 @@ describe('connector route', () => {
 
         return { foundConnector, ...foundConnectorInstance };
       });
-      const response = await connectorRequest.get('/connectors/connector_0').send({});
+      const response = await connectorRequest.get('/connectors/id0').send({});
       expect(response).toHaveProperty('statusCode', 200);
     });
   });
@@ -195,7 +194,7 @@ describe('connector route', () => {
         return { foundConnector, ...foundConnectorInstance };
       });
       const response = await connectorRequest
-        .patch('/connectors/connector_0/enabled')
+        .patch('/connectors/id0/enabled')
         .send({ enabled: true });
       expect(response).toHaveProperty('statusCode', 400);
     });
@@ -268,12 +267,12 @@ describe('connector route', () => {
       getConnectorInstancesPlaceHolder.mockResolvedValueOnce(mockConnectorInstanceList);
       const mockedMetadata = {
         ...mockMetadata,
-        id: 'connector_1',
+        id: 'id1',
         type: ConnectorType.SMS,
       };
       const mockedConnector = {
         ...mockConnector,
-        id: 'connector_1',
+        id: 'id1',
         name: 'connector_1',
         platform: null,
         type: ConnectorType.SMS,
@@ -287,26 +286,26 @@ describe('connector route', () => {
         };
       });
       const response = await connectorRequest
-        .patch('/connectors/connector_1/enabled')
+        .patch('/connectors/id1/enabled')
         .send({ enabled: true });
       expect(updateConnector).toHaveBeenNthCalledWith(
         1,
         expect.objectContaining({
-          where: { id: 'connector_1' },
+          where: { id: 'id1' },
           set: { enabled: false },
         })
       );
       expect(updateConnector).toHaveBeenNthCalledWith(
         2,
         expect.objectContaining({
-          where: { id: 'connector_5' },
+          where: { id: 'id5' },
           set: { enabled: false },
         })
       );
       expect(updateConnector).toHaveBeenNthCalledWith(
         3,
         expect.objectContaining({
-          where: { id: 'connector_1' },
+          where: { id: 'id1' },
           set: { enabled: true },
         })
       );
@@ -410,12 +409,12 @@ describe('connector route', () => {
           new RequestError({ code: 'entity.not_found', status: 404 })
         );
 
-        const foundConnector = mockConnectorList.find((connector) => connector.id === 'connector0');
+        const foundConnector = mockConnectorList.find((connector) => connector.id === 'id_0');
         assertThat(foundConnector, 'entity.not_found');
 
         return { foundConnector, ...foundConnectorInstance };
       });
-      const response = await connectorRequest.patch('/connectors/connector_0').send({});
+      const response = await connectorRequest.patch('/connectors/id0').send({});
       expect(response).toHaveProperty('statusCode', 400);
     });
 

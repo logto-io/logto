@@ -34,7 +34,7 @@ const ConnectorSetupWarning = ({ method }: Props) => {
     return null;
   }
 
-  if (connectors.some(({ metadata, enabled }) => metadata.type === type && enabled)) {
+  if (connectors.some(({ type: connectorType, enabled }) => connectorType === type && enabled)) {
     return null;
   }
 
