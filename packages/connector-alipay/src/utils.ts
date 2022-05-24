@@ -6,12 +6,12 @@ import snakeCaseKeys from 'snakecase-keys';
 import { alipaySigningAlgorithmMapping } from './constant';
 import { AlipayConfig } from './types';
 
-export type SigningPamameters = (
+export type SigningParameters = (
   parameters: AlipayConfig & Record<string, string | undefined>
 ) => Record<string, string>;
 
 // Reference: https://github.com/alipay/alipay-sdk-nodejs-all/blob/10d78e0adc7f310d5b07567ce7e4c13a3f6c768f/lib/util.ts
-export const signingPamameters: SigningPamameters = (
+export const signingParameters: SigningParameters = (
   parameters: AlipayConfig & Record<string, string | undefined>
 ): Record<string, string> => {
   const { biz_content, privateKey, ...rest } = parameters;

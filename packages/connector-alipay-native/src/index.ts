@@ -37,15 +37,15 @@ import {
   AccessTokenResponse,
   UserInfoResponse,
 } from './types';
-import { signingPamameters } from './utils';
-import type { SigningPamameters } from './utils';
+import { signingParameters } from './utils';
+import type { SigningParameters } from './utils';
 
 export type { AlipayNativeConfig } from './types';
 
 export class AlipayNativeConnector implements SocialConnector {
   public metadata: ConnectorMetadata = defaultMetadata;
 
-  private readonly signingPamameters: SigningPamameters = signingPamameters;
+  private readonly signingParameters: SigningParameters = signingParameters;
 
   constructor(public readonly getConfig: GetConnectorConfig<AlipayNativeConfig>) {}
 
@@ -77,7 +77,7 @@ export class AlipayNativeConnector implements SocialConnector {
       charset: 'UTF8',
       ...config,
     };
-    const signedSearchParameters = this.signingPamameters(initSearchParameters);
+    const signedSearchParameters = this.signingParameters(initSearchParameters);
 
     const response = await got
       .post(alipayEndpoint, {
@@ -117,7 +117,7 @@ export class AlipayNativeConnector implements SocialConnector {
       charset: 'UTF8',
       ...config,
     };
-    const signedSearchParameters = this.signingPamameters(initSearchParameters);
+    const signedSearchParameters = this.signingParameters(initSearchParameters);
 
     const response = await got
       .post(alipayEndpoint, {

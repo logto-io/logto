@@ -31,15 +31,15 @@ import {
   defaultTimeout,
 } from './constant';
 import { alipayConfigGuard, AlipayConfig, AccessTokenResponse, UserInfoResponse } from './types';
-import { signingPamameters } from './utils';
-import type { SigningPamameters } from './utils';
+import { signingParameters } from './utils';
+import type { SigningParameters } from './utils';
 
 export type { AlipayConfig } from './types';
 
 export class AlipayConnector implements SocialConnector {
   public metadata: ConnectorMetadata = defaultMetadata;
 
-  private readonly signingPamameters: SigningPamameters = signingPamameters;
+  private readonly signingParameters: SigningParameters = signingParameters;
 
   constructor(public readonly getConfig: GetConnectorConfig<AlipayConfig>) {}
 
@@ -78,7 +78,7 @@ export class AlipayConnector implements SocialConnector {
       charset: 'UTF8',
       ...config,
     };
-    const signedSearchParameters = this.signingPamameters(initSearchParameters);
+    const signedSearchParameters = this.signingParameters(initSearchParameters);
 
     const response = await got
       .post(alipayEndpoint, {
@@ -118,7 +118,7 @@ export class AlipayConnector implements SocialConnector {
       charset: 'UTF8',
       ...config,
     };
-    const signedSearchParameters = this.signingPamameters(initSearchParameters);
+    const signedSearchParameters = this.signingParameters(initSearchParameters);
 
     const response = await got
       .post(alipayEndpoint, {
