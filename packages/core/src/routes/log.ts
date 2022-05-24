@@ -2,7 +2,7 @@ import { object, string } from 'zod';
 
 import koaGuard from '@/middleware/koa-guard';
 import koaPagination from '@/middleware/koa-pagination';
-import { countLogs, findLogs } from '@/queries/log';
+import { countLogs, findLogById, findLogs } from '@/queries/log';
 
 import { AuthedRouter } from './types';
 
@@ -31,6 +31,20 @@ export default function logRoutes<T extends AuthedRouter>(router: T) {
       // Return totalCount to pagination middleware
       ctx.pagination.totalCount = count;
       ctx.body = logs;
+
+      return next();
+    }
+  );
+
+  router.get(
+    '/logs/:id',
+    koaGuard({ params: object({ id: string().min(1) }) }),
+    async (ctx, next) => {
+      const {
+        params: { id },
+      } = ctx.guard;
+
+      ctx.body = await findLogById(id);
 
       return next();
     }

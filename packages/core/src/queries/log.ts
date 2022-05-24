@@ -44,3 +44,10 @@ export const findLogs = async (limit: number, offset: number, logCondition: LogC
     limit ${limit}
     offset ${offset}
   `);
+
+export const findLogById = async (id: string) =>
+  envSet.pool.one<Log>(sql`
+    select ${sql.join(Object.values(fields), sql`, `)}
+    from ${table}
+    where ${fields.id}=${id}
+  `);
