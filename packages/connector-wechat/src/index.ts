@@ -101,14 +101,14 @@ export default class WeChatConnector implements SocialConnector {
       // These two groups are mutually exclusive: if group (1) is not empty, group (2) should be empty and vice versa.
       // 'errmsg' and 'errcode' turn to be non-empty values or empty values at the same time. Hence, if 'errmsg' is non-empty then 'errcode' should be non-empty.
 
-      assert(errcode === 40_001, new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid));
+      assert(errcode !== 40_001, new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid));
       assert(!errcode, new Error(errmsg));
       assert(openid, new Error(errmsg));
 
       return { id: unionid ?? openid, avatar: headimgurl, name: nickname };
     } catch (error: unknown) {
       assert(
-        error instanceof GotRequestError && error.response?.statusCode === 401,
+        !(error instanceof GotRequestError && error.response?.statusCode === 401),
         new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid)
       );
 
