@@ -4,6 +4,7 @@ import { useDebouncedLoader } from 'use-debounced-loader';
 
 import LoadingLayer from '@/components/LoadingLayer';
 import Toast from '@/components/Toast';
+import useColorTheme from '@/hooks/use-color-theme';
 import { PageContext } from '@/hooks/use-page-context';
 import useTheme from '@/hooks/use-theme';
 
@@ -23,22 +24,11 @@ const AppContent = ({ children }: Props) => {
     setToast('');
   }, [setToast]);
 
-  // Set Primary ColorTheme
-  useEffect(() => {
-    if (!experienceSettings) {
-      return;
-    }
-
-    const {
-      branding: { primaryColor, darkPrimaryColor },
-    } = experienceSettings;
-
-    document.documentElement.style.setProperty('--light-primary-color', primaryColor);
-    document.documentElement.style.setProperty(
-      '--dark-primary-color',
-      darkPrimaryColor ?? primaryColor
-    );
-  }, [experienceSettings]);
+  // Set Primary Color
+  useColorTheme(
+    experienceSettings?.branding.primaryColor,
+    experienceSettings?.branding.darkPrimaryColor
+  );
 
   // Set Theme Mode
   useEffect(() => {

@@ -4,7 +4,17 @@
 
 :root {
   --light-primary-color: #5d34f2;
+  --light-focused-variant: rgba(93, 52, 242, 16%);
+  --light-hover-variant: rgba(93, 52, 242, 8%);
+  --light-pressed-variant: rgba(93, 52, 242, 12%);
+  --light-hover: #7350f4;
+  --light-pressed: #4718f0;
   --dark-primary-color: #7958ff;
+  --dark-focused-variant: rgba(121, 88, 255, 16%);
+  --dark-hover-variant: rgba(121, 88, 255, 8%);
+  --dark-pressed-variant: rgba(121, 88, 255, 12%);
+  --dark-hover: #957aff;
+  --dark-pressed: #5d36ff;
 }
 
 .content {
