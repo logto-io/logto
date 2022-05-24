@@ -64,7 +64,7 @@ describe('filterSocialConnectors', () => {
   });
 });
 
-describe('filterPreviewSOcialConnectors', () => {
+describe('filterPreviewSocialConnectors', () => {
   afterEach(() => {
     jest.clearAllMocks();
   });

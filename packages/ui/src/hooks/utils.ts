@@ -71,7 +71,7 @@ export const filterSocialConnectors = (socialConnectors?: ConnectorData[]) => {
   /**
    * Browser Environment
    * Accepts both web and universal platform connectors.
-   * Insert universal connectors only if there is no  web platform connector provided with the same target.
+   * Insert universal connectors only if there is no web platform connector provided with the same target.
    * Web platform has higher priority.
    **/
 
@@ -95,7 +95,7 @@ export const filterSocialConnectors = (socialConnectors?: ConnectorData[]) => {
   /**
    * Native Webview Environment
    * Accepts both native and universal platform connectors.
-   * Insert universal connectors only if there is no  native platform connector provided with the same target.
+   * Insert universal connectors only if there is no native platform connector provided with the same target.
    * Native platform has higher priority.
    **/
 
@@ -143,7 +143,7 @@ export const filterPreviewSocialConnectors = (
   /**
    * Browser Environment
    * Accepts both web and universal platform connectors.
-   * Insert universal connectors only if there is no  web platform connector provided with the same target.
+   * Insert universal connectors only if there is no web platform connector provided with the same target.
    * Web platform has higher priority.
    **/
 
@@ -167,7 +167,7 @@ export const filterPreviewSocialConnectors = (
   /**
    * Native Webview Environment
    * Accepts both native and universal platform connectors.
-   * Insert universal connectors only if there is no  native platform connector provided with the same target.
+   * Insert universal connectors only if there is no native platform connector provided with the same target.
    * Native platform has higher priority.
    **/
 
