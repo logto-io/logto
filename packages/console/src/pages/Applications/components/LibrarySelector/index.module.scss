@@ -6,6 +6,11 @@
   flex-direction: column;
   scroll-margin: _.unit(5);
 
+  img {
+    display: block;
+    margin: _.unit(1) auto _.unit(8);
+  }
+
   .title {
     font: var(--font-title-large);
   }

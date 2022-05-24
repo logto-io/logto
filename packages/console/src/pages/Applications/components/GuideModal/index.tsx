@@ -17,6 +17,7 @@ import { SupportedJavascriptLibraries } from '@/types/applications';
 import { GuideForm } from '@/types/guide';
 
 import LibrarySelector from '../LibrarySelector';
+import StepsSkeleton from '../StepsSkeleton';
 import * as styles from './index.module.scss';
 
 type Props = {
@@ -28,7 +29,9 @@ type Props = {
 
 const Guides: Record<string, LazyExoticComponent<(props: MDXProps) => JSX.Element>> = {
   react: lazy(async () => import('@/assets/docs/tutorial/integrate-sdk/react.mdx')),
+  vue: lazy(async () => import('@/assets/docs/tutorial/integrate-sdk/vue.mdx')),
   'react_zh-cn': lazy(async () => import('@/assets/docs/tutorial/integrate-sdk/react_zh-cn.mdx')),
+  'vue_zh-cn': lazy(async () => import('@/assets/docs/tutorial/integrate-sdk/vue_zh-cn.mdx')),
 };
 
 const onClickFetchSampleProject = (projectName: string) => {
@@ -37,13 +40,15 @@ const onClickFetchSampleProject = (projectName: string) => {
 };
 
 const GuideModal = ({ appName, isOpen, onClose, onComplete }: Props) => {
-  const [subtype, setSubtype] = useState<string>(SupportedJavascriptLibraries.React);
+  const [subtype, setSubtype] = useState<SupportedJavascriptLibraries>(
+    SupportedJavascriptLibraries.React
+  );
   const [activeStepIndex, setActiveStepIndex] = useState(-1);
   const [invalidStepIndex, setInvalidStepIndex] = useState(-1);
 
   const locale = i18next.language;
-  const guideKey = `${subtype}_${locale}`.toLowerCase();
-  const GuideComponent = Guides[guideKey] ?? Guides[subtype];
+  const guideI18nKey = `${subtype}_${locale}`.toLowerCase();
+  const GuideComponent = Guides[guideI18nKey] ?? Guides[subtype];
 
   const methods = useForm<GuideForm>({ mode: 'onSubmit', reValidateMode: 'onChange' });
   const {
@@ -84,7 +89,7 @@ const GuideModal = ({ appName, isOpen, onClose, onComplete }: Props) => {
         <div className={styles.content}>
           <FormProvider {...methods}>
             <form onSubmit={onSubmit}>
-              {cloneElement(<LibrarySelector />, {
+              {cloneElement(<LibrarySelector libraryName={subtype} />, {
                 className: styles.banner,
                 onChange: setSubtype,
                 onToggle: () => {
@@ -100,7 +105,7 @@ const GuideModal = ({ appName, isOpen, onClose, onComplete }: Props) => {
                   },
                 }}
               >
-                <Suspense fallback={<div>Loading...</div>}>
+                <Suspense fallback={<StepsSkeleton />}>
                   {GuideComponent && (
                     <GuideComponent
                       activeStepIndex={activeStepIndex}

@@ -1,0 +1,196 @@
+import MultiTextInputField from '@mdx/components/MultiTextInputField';
+import Step from '@mdx/components/Step';
+import Tabs from '@mdx/components/Tabs';
+import TabItem from '@mdx/components/TabItem';
+
+<Step
+  title="Install SDK"
+  subtitle="Please select your favorite package manager"
+  index={0}
+  activeIndex={props.activeStepIndex}
+  invalidIndex={props.invalidStepIndex}
+  onNext={() => props.onNext(1)}
+>
+<Tabs>
+<TabItem value="npm" label="npm">
+
+```bash
+npm i @logto/vue
+```
+
+</TabItem>
+<TabItem value="yarn" label="Yarn">
+
+```bash
+yarn add @logto/vue
+```
+
+</TabItem>
+<TabItem value="pnpm" label="pnpm">
+
+```bash
+pnpm add @logto/vue
+```
+
+</TabItem>
+<TabItem value="script" label="script">
+
+{/* This should be CDN URL */}
+```html
+<script src="https://logto.io/js/logto-sdk-vue/0.1.0/logto-sdk-vue.production.js" />
+```
+
+</TabItem>
+</Tabs>
+</Step>
+
+<Step
+  title="Initiate LogtoClient"
+  subtitle="1 step"
+  index={1}
+  activeIndex={props.activeStepIndex}
+  invalidIndex={props.invalidStepIndex}
+  onNext={() => props.onNext(2)}
+>
+
+`import` and use `createLogto` to install Logto plugin:
+
+```ts
+import { createLogto, LogtoConfig } from '@logto/vue';
+
+const config: LogtoConfig = {
+  appId: '<your-application-id>',
+  endpoint: '<your-logto-endpoint>'
+};
+
+const app = createApp(App);
+
+app.use(createLogto, config);
+app.mount("#app");
+```
+
+</Step>
+
+<Step
+  title="Sign In"
+  subtitle="2 steps"
+  index={2}
+  activeIndex={props.activeStepIndex}
+  invalidIndex={props.invalidStepIndex}
+  onNext={() => props.onNext(3)}
+>
+
+We provide two composables `useHandleSignInCallback()` and `useLogto()` which can help you easily manage the authentication flow. 
+
+### Set Up Callback Route
+
+In order to handle what comes from Logto, the application needs to have a dedicated callback route that does NOT require authentication.
+
+First, let’s enter your redirect URI. E.g. `http://localhost:1234/callback`
+
+<MultiTextInputField name="redirectUris" title="Redirect URI" onError={() => props.onError(2)} />
+
+Then let's create a callback component:
+
+```html
+<script setup lang="ts">
+  import { useHandleSignInCallback } from "@logto/vue";
+  const { isLoading } = useHandleSignInCallback();
+</script>
+
+<template>
+  <!-- When it's working in progress -->
+  <p v-if="isLoading">Redirecting...</p>
+</template>
+```
+
+Next, we need to link the callback component with the route. Let's say the path is `/callback` and we are using `vue-router`:
+
+```ts
+const router = createRouter({
+  routes: [
+    {
+      path: "/callback",
+      name: "callback",
+      component: CallbackView,
+    },
+  ]
+});
+```
+
+### Make a Sign In Button
+
+```ts
+import { useLogto } from "@logto/vue";
+
+const { signIn } = useLogto();
+const onClickSignIn = () => signIn(redirectUrl);
+```
+
+```html
+<button @click="onClickSignIn">Sign In</button>
+```
+
+### Retrieve Authentication Status
+
+```ts
+import { useLogto } from '@logto/vue';
+
+const { isAuthenticated } = useLogto();
+```
+
+```html
+<div v-if="!isAuthenticated">
+  <!-- E.g. navigate to the sign in page -->
+</div>
+<div v-else>
+  <!-- Do things when user is authenticated -->
+</div>
+```
+
+</Step>
+
+<Step
+  title="Sign Out"
+  subtitle="1 step"
+  index={3}
+  activeIndex={props.activeStepIndex}
+  invalidIndex={props.invalidStepIndex}
+  onNext={() => props.onNext(4)}
+>
+
+Calling `.signOut()` will clear all the Logto data in memory and LocalStorage, if there is any.
+
+To make the user come back to your application after signing out,
+it's necessary to add `http://localhost:1234` as one of the Post Sign Out URIs and use the URL as the parameter when calling `.signOut()`.
+
+<MultiTextInputField name="postLogoutRedirectUris" title="Post sign out redirect URI" onError={() => props.onError(3)} />
+
+```ts
+import { useLogto } from "@logto/vue";
+
+const { signOut } = useLogto();
+const onClickSignOut = () => signOut('http://localhost:1234');
+```
+
+```html
+<button @click="onClickSignOut">Sign Out</button>
+```
+
+</Step>
+
+<Step
+  title="Further Readings"
+  subtitle="3 steps"
+  index={4}
+  activeIndex={props.activeStepIndex}
+  invalidIndex={props.invalidStepIndex}
+  buttonText="general.done"
+  buttonHtmlType="submit"
+>
+
+- [SDK Documentation](https://link-url-here.org)
+- [OIDC Documentation](https://link-url-here.org)
+- [Calling API to fetch accessToken](https://link-url-here.org)
+
+</Step>
