@@ -12,20 +12,22 @@ $font-family: -apple-system,
 @mixin colors-light-theme {
   --color-base: linear-gradient(0deg, rgba(93, 52, 242, 14%), rgba(93, 52, 242, 14%)), linear-gradient(0deg, rgba(120, 118, 127, 2%), rgba(120, 118, 127, 2%)), #f7f8f8;
   --color-surface: #fff;
-  --color-text: #191c1d;
+  --color-text: #191c1d; // Neutral-10
   --color-text-disabled: #c4c7c7;
   --color-border: #c4c7c7;
   --color-caption: #747778;
   --color-icon: #747778;
+  --color-focused: rgba(25, 28, 29, 16%); // 16% Neutral-10
+  --color-pressed: rgba(25, 28, 29, 12%); // 12% Neutral-10
+  --color-hover: rgba(25, 28, 29, 8%); // 8% Neutral-10
+
   --color-primary: var(--light-primary-color);
-  --color-focused: rgba(25, 28, 29, 16%);
-  --color-focused-variant: rgba(93, 52, 242, 16%);
-  --color-pressed: rgba(25, 28, 29, 12%);
-  --color-primary-pressed: #4300da;
-  --color-pressed-variant: rgba(93, 52, 242, 12%);
-  --color-hover: rgba(25, 28, 29, 8%);
-  --color-primary-hover: #7958ff;
-  --color-hover-variant: rgba(93, 52, 242, 8%);
+  --color-focused-variant: var(--light-focused-variant);
+  --color-hover-variant: var(--light-hover-variant);
+  --color-pressed-variant: var(--light-pressed-variant);
+  --color-primary-pressed: var(--light-pressed);
+  --color-primary-hover: var(--light-hover);
+
   --color-inverse-on-surface: #f3effa;
   --color-outline: #78767f;
   --color-layer: #eff1f1;
@@ -37,20 +39,23 @@ $font-family: -apple-system,
 @mixin colors-dark-theme {
   --color-base: linear-gradient(0deg, rgba(202, 190, 255, 14%), rgba(202, 190, 255, 14%)), linear-gradient(0deg, rgba(196, 199, 199, 2%), rgba(196, 199, 199, 2%)), #191c1d;
   --color-surface: #191c1d;
-  --color-text: #f7f8f8;
+  --color-text: #f7f8f8; // Neutral-10
   --color-text-disabled: #5c5f60;
   --color-border: #5c5f60;
   --color-caption: #a9acac;
   --color-icon: #a9acac;
+  --color-focused: rgba(247, 248, 248, 16%);  // 16% Neutral-10
+  --color-pressed: rgba(247, 248, 248, 12%); // 12% Neutral-10
+  --color-hover: rgba(247, 248, 248, 8%); // 8% Neutral-10
+
   --color-primary: var(--dark-primary-color);
-  --color-focused: rgba(247, 248, 248, 16%);
-  --color-focused-variant: rgba(202, 190, 255, 16%);
-  --color-hover-variant: rgba(202, 190, 255, 8%);
-  --color-hover: rgba(247, 248, 248, 8%);
-  --color-primary-hover: #947dff;
-  --color-pressed-variant: rgba(202, 190, 255, 12%);
-  --color-pressed: rgba(247, 248, 248, 12%);
-  --color-primary-pressed: #5d34f2;
+  --color-focused-variant: var(--dark-focused-variant);
+  --color-hover-variant: var(--dark-hover-variant);
+  --color-pressed-variant: var(--dark-pressed-variant);
+  --color-primary-pressed: var(--dark-pressed);
+  --color-primary-hover: var(--dark-hover);
+
+
   --color-inverse-on-surface: #2d3132;
   --color-outline: #928f9a;
   --color-layer: linear-gradient(0deg, rgba(202, 190, 255, 14%), rgba(202, 190, 255, 14%)), linear-gradient(0deg, rgba(196, 199, 199, 2%), rgba(196, 199, 199, 2%)), #191c1d;
