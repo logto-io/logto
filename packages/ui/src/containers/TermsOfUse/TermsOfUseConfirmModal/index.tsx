@@ -2,9 +2,12 @@ import React, { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import reactStringReplace from 'react-string-replace';
 
-import { WebModal, MobileModal } from '@/components/ConfirmModal';
+import { WebModal as ConfirmModal } from '@/components/ConfirmModal';
 import TextLink from '@/components/TextLink';
-import usePlatform from '@/hooks/use-platform';
+
+/**
+ * For web use only confirm modal, does not contain Terms iframe
+ */
 
 type Props = {
   isOpen?: boolean;
@@ -15,8 +18,6 @@ type Props = {
 
 const TermsOfUseConfirmModal = ({ isOpen = false, termsUrl, onConfirm, onClose }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'main_flow' });
-  const { isMobile } = usePlatform();
-  const ConfirmModal = isMobile ? MobileModal : WebModal;
 
   const terms = t('description.terms_of_use');
   const content = t('description.agree_with_terms_modal', { terms });
@@ -26,7 +27,12 @@ const TermsOfUseConfirmModal = ({ isOpen = false, termsUrl, onConfirm, onClose }
   ));
 
   return (
-    <ConfirmModal isOpen={isOpen} onConfirm={onConfirm} onClose={onClose}>
+    <ConfirmModal
+      isOpen={isOpen}
+      confirmText="action.agree"
+      onConfirm={onConfirm}
+      onClose={onClose}
+    >
       {modalContent}
     </ConfirmModal>
   );

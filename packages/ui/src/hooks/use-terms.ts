@@ -9,11 +9,7 @@ const useTerms = () => {
 
   const { termsOfUse } = experienceSettings ?? {};
 
-  const termsValidation = useCallback(async () => {
-    if (termsAgreement || !termsOfUse?.enabled || !termsOfUse.contentUrl) {
-      return true;
-    }
-
+  const termsOfUserModalHandler = useCallback(async () => {
     try {
       await termsOfUseModalPromise();
 
@@ -21,13 +17,22 @@ const useTerms = () => {
     } catch {
       return false;
     }
-  }, [termsAgreement, termsOfUse]);
+  }, []);
+
+  const termsValidation = useCallback(async () => {
+    if (termsAgreement || !termsOfUse?.enabled || !termsOfUse.contentUrl) {
+      return true;
+    }
+
+    return termsOfUserModalHandler();
+  }, [termsAgreement, termsOfUse, termsOfUserModalHandler]);
 
   return {
     termsSettings: termsOfUse,
     termsAgreement,
     termsValidation,
     setTermsAgreement,
+    termsOfUserModalHandler,
   };
 };
 
