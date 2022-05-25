@@ -120,27 +120,24 @@ export default function dashboardRoutes<T extends AuthedRouter>(router: T) {
       ]);
 
       const previousDate = getDateString(targetDay.subtract(1, 'day'));
-      const previousDAU = last30DauCounts.find(({ date }) => date === previousDate)?.count ?? 0;
       const targetDate = getDateString(targetDay);
-      const dau = last30DauCounts.find(({ date }) => date === targetDate)?.count ?? 0;
 
-      const dauDelta = dau - previousDAU;
-      const wauDelta = wau - previousWAU;
-      const mauDelta = mau - previousMAU;
+      const previousDAU = last30DauCounts.find(({ date }) => date === previousDate)?.count ?? 0;
+      const dau = last30DauCounts.find(({ date }) => date === targetDate)?.count ?? 0;
 
       ctx.body = {
         dauCurve: last30DauCounts,
         dau: {
           count: dau,
-          delta: dauDelta,
+          delta: dau - previousDAU,
         },
         wau: {
           count: wau,
-          delta: wauDelta,
+          delta: wau - previousWAU,
         },
         mau: {
           count: mau,
-          delta: mauDelta,
+          delta: mau - previousMAU,
         },
       };
 
