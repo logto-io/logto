@@ -81,6 +81,7 @@ export default class WeChatConnector implements SocialConnector {
 
   public getUserInfo: GetUserInfo = async (accessTokenObject) => {
     const { accessToken, openid } = accessTokenObject;
+    assert(openid, new Error('`openid` is required for WeChat API.'));
 
     try {
       const { unionid, headimgurl, nickname, errcode, errmsg } = await got
@@ -103,7 +104,6 @@ export default class WeChatConnector implements SocialConnector {
 
       assert(errcode !== 40_001, new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid));
       assert(!errcode, new Error(errmsg));
-      assert(openid, new Error(errmsg));
 
       return { id: unionid ?? openid, avatar: headimgurl, name: nickname };
     } catch (error: unknown) {
