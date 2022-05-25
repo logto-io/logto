@@ -5,8 +5,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { getSendPasscodeApi } from '@/apis/utils';
 import Button from '@/components/Button';
-import PhoneInput from '@/components/Input/PhoneInput';
-import PasswordlessConfirmModal from '@/containers/PasswordlessConfirmModal';
+import { PhoneInput } from '@/components/Input';
 import TermsOfUse from '@/containers/TermsOfUse';
 import useApi, { ErrorHandlers } from '@/hooks/use-api';
 import useForm from '@/hooks/use-form';
@@ -14,6 +13,7 @@ import usePhoneNumber, { countryList } from '@/hooks/use-phone-number';
 import useTerms from '@/hooks/use-terms';
 import { UserFlow } from '@/types';
 
+import PasswordlessConfirmModal from './PasswordlessConfirmModal';
 import * as styles from './index.module.scss';
 
 type Props = {
