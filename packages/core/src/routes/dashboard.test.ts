@@ -76,7 +76,7 @@ describe('dashboardRoutes', () => {
           count: 14,
           delta: 1,
         },
-        recent7Days: {
+        last7Days: {
           count: 54,
           delta: 35,
         },
