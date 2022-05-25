@@ -96,6 +96,19 @@ describe('getUserInfo', () => {
     });
   });
 
+  it('should convert `null` to `undefined` in SocialUserInfo', async () => {
+    nock(userInfoEndpoint).get('').reply(200, {
+      id: 1,
+      avatar_url: null,
+      name: null,
+      email: null,
+    });
+    const socialUserInfo = await githubMethods.getUserInfo({ accessToken: 'code' });
+    expect(socialUserInfo).toMatchObject({
+      id: '1',
+    });
+  });
+
   it('throws SocialAccessTokenInvalid error if remote response code is 401', async () => {
     nock(userInfoEndpoint).get('').reply(401);
     await expect(githubMethods.getUserInfo({ accessToken: 'code' })).rejects.toMatchError(
