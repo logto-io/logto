@@ -73,7 +73,7 @@ describe('dashboardRoutes', () => {
           count: 14,
           difference: 1,
         },
-        past7Days: {
+        recent7Days: {
           count: 54,
           difference: 35,
         },

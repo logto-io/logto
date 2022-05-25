@@ -25,21 +25,21 @@ export default function dashboardRoutes<T extends AuthedRouter>(router: T) {
       tomorrow.valueOf()
     );
 
-    const recent14DaysDailyNewUserCounts = new Map(
+    const recent14DaysNewUserCounts = new Map(
       dailyNewUserCounts.map(({ date, count }) => [date, count])
     );
 
-    const todayNewUserCount = recent14DaysDailyNewUserCounts.get(getDateString(today)) ?? 0;
+    const todayNewUserCount = recent14DaysNewUserCounts.get(getDateString(today)) ?? 0;
     const yesterday = today.subtract(1, 'day');
-    const yesterdayNewUserCount = recent14DaysDailyNewUserCounts.get(getDateString(yesterday)) ?? 0;
+    const yesterdayNewUserCount = recent14DaysNewUserCounts.get(getDateString(yesterday)) ?? 0;
     const todayDifference = todayNewUserCount - yesterdayNewUserCount;
 
     const recent7DaysNewUserCount = [...Array.from({ length: 7 }).keys()]
       .map((index) => getDateString(today.subtract(index, 'day')))
-      .reduce((sum, date) => sum + (recent14DaysDailyNewUserCounts.get(date) ?? 0), 0);
+      .reduce((sum, date) => sum + (recent14DaysNewUserCounts.get(date) ?? 0), 0);
     const newUserCountFrom13DaysAgoTo7DaysAgo = [...Array.from({ length: 7 }).keys()]
       .map((index) => getDateString(today.subtract(7 + index, 'day')))
-      .reduce((sum, date) => sum + (recent14DaysDailyNewUserCounts.get(date) ?? 0), 0);
+      .reduce((sum, date) => sum + (recent14DaysNewUserCounts.get(date) ?? 0), 0);
     const recent7DaysDifference = recent7DaysNewUserCount - newUserCountFrom13DaysAgoTo7DaysAgo;
 
     ctx.body = {
@@ -47,7 +47,7 @@ export default function dashboardRoutes<T extends AuthedRouter>(router: T) {
         count: todayNewUserCount,
         difference: todayDifference,
       },
-      past7Days: {
+      recent7Days: {
         count: recent7DaysNewUserCount,
         difference: recent7DaysDifference,
       },
