@@ -121,8 +121,12 @@ const UserDetails = () => {
             <div className={styles.metadata}>
               <div className={styles.name}>{data.name ?? '-'}</div>
               <div>
-                <div className={styles.username}>{data.username}</div>
-                <div className={styles.verticalBar} />
+                {data.username && (
+                  <>
+                    <div className={styles.username}>{data.username}</div>
+                    <div className={styles.verticalBar} />
+                  </>
+                )}
                 <div className={styles.text}>User ID</div>
                 <CopyToClipboard value={data.id} className={styles.copy} />
               </div>
