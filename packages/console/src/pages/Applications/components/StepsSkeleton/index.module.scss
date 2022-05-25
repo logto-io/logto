@@ -1,0 +1,40 @@
+@use '@/scss/underscore' as _;
+
+.step {
+  display: flex;
+  align-items: center;
+  padding: _.unit(5) _.unit(6);
+  border-radius: 16px;
+  background-color: var(--color-layer-1);
+
+  .index {
+    @include _.shimmering-animation;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    margin-right: _.unit(4);
+  }
+
+  .wrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+
+    .title {
+      @include _.shimmering-animation;
+      width: 140px;
+      height: 24px;
+    }
+
+    .subtitle {
+      @include _.shimmering-animation;
+      width: 400px;
+      height: 20px;
+      margin-top: _.unit(1);
+    }
+  }
+}
+
+.step + .step {
+  margin-top: _.unit(6);
+}

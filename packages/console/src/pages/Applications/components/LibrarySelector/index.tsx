@@ -2,7 +2,7 @@ import classNames from 'classnames';
 import React, { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import highFive from '@/assets/images/high-five.svg';
+import congrats from '@/assets/images/congrats.svg';
 import tada from '@/assets/images/tada.svg';
 import Button from '@/components/Button';
 import Card from '@/components/Card';
@@ -30,7 +30,7 @@ const LibrarySelector = ({
   const librarySelector = useMemo(
     () => (
       <Card className={classNames(styles.card, className)}>
-        <img src={highFive} alt="success" />
+        <img src={congrats} alt="success" />
         <div>
           <div className={styles.title}>{t('applications.guide.title')}</div>
           <div className={styles.subtitle}>{t('applications.guide.subtitle')}</div>
