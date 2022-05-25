@@ -77,59 +77,59 @@ export default function dashboardRoutes<T extends AuthedRouter>(router: T) {
 
       // DAU: Daily Active User
       const thirtyDaysAgo = targetDay.subtract(30, 'day');
-      const dauCounts = await getDailyActiveUserCountsByTimeInterval(
+      const recent30DauCounts = await getDailyActiveUserCountsByTimeInterval(
         // Time interval: (30 days ago 23:59:59.999, target day 23:59:59.999]
         thirtyDaysAgo.endOf('day').valueOf(),
         targetDay.endOf('day').valueOf()
       );
-      const recent30DauCounts = new Map(dauCounts.map(({ date, count }) => [date, count]));
 
-      const targetDAU = recent30DauCounts.get(getDateString(targetDay)) ?? 0;
-      const previousDay = targetDay.subtract(1, 'day');
-      const previousDAU = recent30DauCounts.get(getDateString(previousDay)) ?? 0;
-      const dauDelta = targetDAU - previousDAU;
+      const targetDate = getDateString(targetDay);
+      const dau = recent30DauCounts.find(({ date }) => date === targetDate)?.count ?? 0;
+      const previousDate = getDateString(targetDay.subtract(1, 'day'));
+      const previousDAU = recent30DauCounts.find(({ date }) => date === previousDate)?.count ?? 0;
+      const dauDelta = dau - previousDAU;
 
       // WAU: Weekly Active User
       const sevenDaysAgo = targetDay.subtract(7, 'day');
-      const { count: wauFrom6DaysAgoToTargetDay } = await getActiveUserCountByTimeInterval(
+      const { count: wau } = await getActiveUserCountByTimeInterval(
         // (7 days ago 23:59:59.999, target day 23:59:59.999]
         sevenDaysAgo.endOf('day').valueOf(),
         targetDay.endOf('day').valueOf()
       );
       const fourteenDaysAgo = targetDay.subtract(14, 'day');
-      const { count: wauFrom13DaysAgoTo7DaysAgo } = await getActiveUserCountByTimeInterval(
+      const { count: previousWAU } = await getActiveUserCountByTimeInterval(
         // (14 days ago 23:59:59.999, 7 days ago 23:59:59.999]
         fourteenDaysAgo.endOf('day').valueOf(),
         sevenDaysAgo.endOf('day').valueOf()
       );
-      const wauDelta = wauFrom6DaysAgoToTargetDay - wauFrom13DaysAgoTo7DaysAgo;
+      const wauDelta = wau - previousWAU;
 
       // MAU: Monthly Active User
-      const { count: mauFrom29DaysAgoToTargetDay } = await getActiveUserCountByTimeInterval(
+      const { count: mau } = await getActiveUserCountByTimeInterval(
         // (30 days ago 23:59:59.999, target day 23:59:59.999]
         thirtyDaysAgo.endOf('day').valueOf(),
         targetDay.endOf('day').valueOf()
       );
       const sixtyDaysAgo = targetDay.subtract(60, 'day');
-      const { count: mauFrom59DaysAgoTo30DaysAgo } = await getActiveUserCountByTimeInterval(
+      const { count: previousMAU } = await getActiveUserCountByTimeInterval(
         // (60 days ago 23:59:59.999, 30 days ago 23:59:59.999]
         sixtyDaysAgo.endOf('day').valueOf(),
         thirtyDaysAgo.endOf('day').valueOf()
       );
-      const mauDelta = mauFrom29DaysAgoToTargetDay - mauFrom59DaysAgoTo30DaysAgo;
+      const mauDelta = mau - previousMAU;
 
       ctx.body = {
-        dauCurve: dauCounts,
+        dauCurve: recent30DauCounts,
         dau: {
-          count: targetDAU,
+          count: dau,
           delta: dauDelta,
         },
         wau: {
-          count: wauFrom6DaysAgoToTargetDay,
+          count: wau,
           delta: wauDelta,
         },
         mau: {
-          count: mauFrom29DaysAgoToTargetDay,
+          count: mau,
           delta: mauDelta,
         },
       };
