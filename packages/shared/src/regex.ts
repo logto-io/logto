@@ -5,3 +5,4 @@ export const nameRegEx = /^.+$/;
 export const passwordRegEx = /^.{6,}$/;
 export const redirectUriRegEx = /^https?:\/\//;
 export const hexColorRegEx = /^#[\da-f]{3}([\da-f]{3})?$/i;
+export const dateRegex = /^\d{4}(-\d{2}){2}/;
