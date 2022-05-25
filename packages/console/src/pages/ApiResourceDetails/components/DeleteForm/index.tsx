@@ -71,6 +71,7 @@ const DeleteForm = ({ id, name, onClose }: Props) => {
         />
       </div>
       <TextInput
+        autoFocus
         value={inputName}
         placeholder={t('api_resource_details.enter_your_api_resource_name')}
         hasError={inputMismatched}
