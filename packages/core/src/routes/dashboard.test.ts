@@ -10,18 +10,6 @@ jest.mock('@/queries/user', () => ({
   countUsers: async () => countUsers(),
 }));
 
-const getDailyNewUserCountsByTimeInterval = jest.fn(
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  async (startTimeInclusive: number, endTimeExclusive: number) => mockDailyNewUserCounts
-);
-
-jest.mock('@/queries/log', () => ({
-  getDailyNewUserCountsByTimeInterval: async (
-    startTimeInclusive: number,
-    endTimeExclusive: number
-  ) => getDailyNewUserCountsByTimeInterval(startTimeInclusive, endTimeExclusive),
-}));
-
 const mockDailyNewUserCounts = [
   { date: '2022-05-01', count: 1 },
   { date: '2022-05-02', count: 2 },
@@ -34,6 +22,18 @@ const mockDailyNewUserCounts = [
   { date: '2022-05-13', count: 13 },
   { date: '2022-05-14', count: 14 },
 ];
+
+const getDailyNewUserCountsByTimeInterval = jest.fn(
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  async (startTimeInclusive: number, endTimeExclusive: number) => mockDailyNewUserCounts
+);
+
+jest.mock('@/queries/log', () => ({
+  getDailyNewUserCountsByTimeInterval: async (
+    startTimeInclusive: number,
+    endTimeExclusive: number
+  ) => getDailyNewUserCountsByTimeInterval(startTimeInclusive, endTimeExclusive),
+}));
 
 describe('dashboardRoutes', () => {
   const logRequest = createRequester({ authedRoutes: dashboardRoutes });
