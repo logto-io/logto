@@ -69,7 +69,7 @@ const App = () => (
 
 :::tip
 
-In the following code snippets, we assume the application runs in `http://localhost:1234`.
+In the following code snippets, we assume the application runs on `http://localhost:1234`.
 
 :::
 
@@ -85,10 +85,12 @@ First let's create a callback component:
 import { useHandleSignInCallback } from '@logto/react';
 
 const Callback = () => {
-  useHandleSignInCallback();
+  const { isLoading } = useHandleSignInCallback();
 
   // When it's working in progress
-  return <>Loading...</>;
+  if (isLoading) {
+    return <div>Redirecting...</div>;
+  }
 };
 ```
 
@@ -133,7 +135,7 @@ const Component = () => {
 
 ## Sign Out
 
-Calling `.signOut()` will clean all the Logto data in memory and LocalStorage, if it has.
+Calling `.signOut()` will clear all the Logto data in memory and localStorage, if they exist.
 
 To make the user come back to your application after signing out,
 it's necessary to add `http://localhost:1234` as one of the Post Sign Out URIs and use the URL as the parameter when calling `.signOut()`.

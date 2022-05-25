@@ -145,7 +145,7 @@ const { isAuthenticated } = useLogto();
 
 ## Sign Out
 
-Calling `.signOut()` will clear all the Logto data in memory and LocalStorage, if there is any.
+Calling `.signOut()` will clear all the Logto data in memory and LocalStorage, if they exist.
 
 To make the user come back to your application after signing out,
 it's necessary to add `http://localhost:1234` as one of the Post Sign Out URIs and use the URL as the parameter when calling `.signOut()`.
