@@ -86,7 +86,7 @@ jest.mock('@/lib/passcode', () => ({
     }
   },
 }));
-const getAuthorizationUri = jest.fn(async (_redirectUri: string, _state: string) => {
+const getAuthorizationUri = jest.fn(async (_state: string, _redirectUri: string) => {
   return '';
 });
 const getConnectorInstanceById = jest.fn(async (connectorId: string) => {

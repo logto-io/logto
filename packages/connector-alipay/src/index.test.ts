@@ -38,8 +38,8 @@ describe('getAuthorizationUri', () => {
   it('should get a valid uri by redirectUri and state', async () => {
     jest.spyOn(alipayMethods, 'getConfig').mockResolvedValueOnce(mockedAlipayConfig);
     const authorizationUri = await alipayMethods.getAuthorizationUri(
-      'http://localhost:3001/callback',
-      'some_state'
+      'some_state',
+      'http://localhost:3001/callback'
     );
     expect(authorizationUri).toEqual(
       `${authorizationEndpoint}?app_id=2021000000000000&redirect_uri=http%3A%2F%2Flocalhost%3A3001%2Fcallback&scope=auth_user&state=some_state`

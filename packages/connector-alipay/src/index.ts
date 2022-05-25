@@ -50,7 +50,7 @@ export default class AlipayConnector implements SocialConnector {
     }
   };
 
-  public getAuthorizationUri: GetAuthorizationUri = async (redirectUri, state) => {
+  public getAuthorizationUri: GetAuthorizationUri = async (state, redirectUri) => {
     const { appId: app_id } = await this.getConfig(this.metadata.id);
 
     const redirect_uri = encodeURI(redirectUri);

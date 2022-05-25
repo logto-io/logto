@@ -93,7 +93,7 @@ export interface SocialConnector extends BaseConnector {
 
 export type ValidateConfig<T = Record<string, unknown>> = (config: T) => Promise<void>;
 
-export type GetAuthorizationUri = (redirectUri: string, state: string) => Promise<string>;
+export type GetAuthorizationUri = (state: string, redirectUri: string) => Promise<string>;
 
 export type AccessTokenObject = { accessToken: string } & Record<string, string>;
 

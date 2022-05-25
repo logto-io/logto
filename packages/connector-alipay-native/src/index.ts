@@ -56,10 +56,10 @@ export default class AlipayNativeConnector implements SocialConnector {
     }
   };
 
-  public getAuthorizationUri: GetAuthorizationUri = async () => {
+  public getAuthorizationUri: GetAuthorizationUri = async (state, _) => {
     const { appId } = await this.getConfig(this.metadata.id);
 
-    const queryParameters = new URLSearchParams({ app_id: appId });
+    const queryParameters = new URLSearchParams({ app_id: appId, state });
 
     return `${authorizationEndpoint}?${queryParameters.toString()}`;
   };
