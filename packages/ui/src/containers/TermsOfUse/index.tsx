@@ -2,6 +2,7 @@ import React from 'react';
 import ModalContainer from 'react-modal-promise';
 
 import TermsOfUseComponent from '@/components/TermsOfUse';
+import usePlatform from '@/hooks/use-platform';
 import useTerms from '@/hooks/use-terms';
 
 type Props = {
@@ -9,7 +10,8 @@ type Props = {
 };
 
 const TermsOfUse = ({ className }: Props) => {
-  const { termsAgreement, setTermsAgreement, termsSettings } = useTerms();
+  const { termsAgreement, setTermsAgreement, termsSettings, termsOfUserModalHandler } = useTerms();
+  const { isMobile } = usePlatform();
 
   if (!termsSettings?.enabled || !termsSettings.contentUrl) {
     return null;
@@ -25,6 +27,7 @@ const TermsOfUse = ({ className }: Props) => {
         onChange={(checked) => {
           setTermsAgreement(checked);
         }}
+        onTermsClick={isMobile ? termsOfUserModalHandler : undefined}
       />
       <ModalContainer />
     </>

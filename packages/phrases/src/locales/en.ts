@@ -42,6 +42,7 @@ const translation = {
       bind: 'Binding with {{address}}',
       back: 'Go Back',
       nav_back: 'Back',
+      agree: 'Agree',
     },
     description: {
       email: 'email',

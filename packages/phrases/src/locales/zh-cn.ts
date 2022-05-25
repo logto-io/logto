@@ -44,6 +44,7 @@ const translation = {
       bind: '绑定到 {{address}}',
       back: '返回',
       nav_back: '返回',
+      agree: '同意',
     },
     description: {
       email: '邮箱',

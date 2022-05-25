@@ -13,9 +13,10 @@ type Props = {
   termsUrl: string;
   isChecked?: boolean;
   onChange: (checked: boolean) => void;
+  onTermsClick?: () => void;
 };
 
-const TermsOfUse = ({ name, className, termsUrl, isChecked, onChange }: Props) => {
+const TermsOfUse = ({ name, className, termsUrl, isChecked, onChange, onTermsClick }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'main_flow' });
 
   const prefix = t('description.agree_with_terms');
@@ -33,12 +34,13 @@ const TermsOfUse = ({ name, className, termsUrl, isChecked, onChange }: Props) =
         <TextLink
           className={styles.link}
           text="description.terms_of_use"
-          href={termsUrl}
+          href={onTermsClick ? undefined : termsUrl} // Do not open link if onTermsClick is provided
           target="_blank"
           type="secondary"
           onClick={(event) => {
             // Prevent above parent onClick event being triggered
             event.stopPropagation();
+            onTermsClick?.();
           }}
         />
       </div>
