@@ -7,6 +7,7 @@ import koaAuth from '@/middleware/koa-auth';
 import koaLogSession from '@/middleware/koa-log-session';
 import applicationRoutes from '@/routes/application';
 import connectorRoutes from '@/routes/connector';
+import dashboardRoutes from '@/routes/dashboard';
 import resourceRoutes from '@/routes/resource';
 import sessionRoutes from '@/routes/session';
 import settingRoutes from '@/routes/setting';
@@ -40,6 +41,7 @@ const createRouters = (provider: Provider) => {
   adminUserRoutes(authedRouter);
   logRoutes(authedRouter);
   roleRoutes(authedRouter);
+  dashboardRoutes(authedRouter);
 
   return [sessionRouter, anonymousRouter, authedRouter];
 };
