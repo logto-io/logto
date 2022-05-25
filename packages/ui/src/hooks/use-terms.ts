@@ -1,6 +1,6 @@
 import { useContext, useCallback } from 'react';
 
-import { termsOfUseModalPromise } from '@/containers/TermsOfUsePromiseModal';
+import { termsOfUseModalPromise } from '@/containers/TermsOfUse/TermsOfUsePromiseModal';
 
 import { PageContext } from './use-page-context';
 

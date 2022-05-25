@@ -3,7 +3,7 @@ import { create, InstanceProps } from 'react-modal-promise';
 
 import { PageContext } from '@/hooks/use-page-context';
 
-import TermsOfUseConfirmModal from './TermsOfUseConfirmModal';
+import TermsOfUseConfirmModal from '../TermsOfUseConfirmModal';
 
 const TermsOfUsePromiseModal = ({ isOpen, onResolve, onReject }: InstanceProps<boolean>) => {
   const { setTermsAgreement, experienceSettings } = useContext(PageContext);
