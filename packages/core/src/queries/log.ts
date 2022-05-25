@@ -60,14 +60,14 @@ const registerLogTypes: LogType[] = [
 ];
 
 export const getDailyNewUserCountsByTimeInterval = async (
-  startTimeInclusive: number,
-  endTimeExclusive: number
+  startTimeExclusive: number,
+  endTimeInclusive: number
 ) =>
   envSet.pool.any<{ date: string; count: number }>(sql`
     select date(${fields.createdAt}), count(*)
     from ${table}
-    where ${fields.createdAt} >= to_timestamp(${startTimeInclusive}::double precision / 1000)
-    and ${fields.createdAt} < to_timestamp(${endTimeExclusive}::double precision / 1000)
+    where ${fields.createdAt} > to_timestamp(${startTimeExclusive}::double precision / 1000)
+    and ${fields.createdAt} <= to_timestamp(${endTimeInclusive}::double precision / 1000)
     and ${fields.type} in (${sql.join(registerLogTypes, sql`, `)})
     and ${fields.payload}->>'result' = 'Success'
     group by date(${fields.createdAt})

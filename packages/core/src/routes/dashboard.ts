@@ -17,12 +17,11 @@ export default function dashboardRoutes<T extends AuthedRouter>(router: T) {
 
   router.get('/dashboard/users/new', async (ctx, next) => {
     const today = dayjs();
-
-    const thirteenDaysAgo = today.subtract(13, 'day');
-    const tomorrow = today.add(1, 'day');
+    const fourteenDaysAgo = today.subtract(14, 'day');
     const dailyNewUserCounts = await getDailyNewUserCountsByTimeInterval(
-      thirteenDaysAgo.valueOf(),
-      tomorrow.valueOf()
+      // Time interval: (14 days ago 23:59:59.999, today 23:59:59.999]
+      fourteenDaysAgo.endOf('day').valueOf(),
+      today.endOf('day').valueOf()
     );
 
     const recent14DaysNewUserCounts = new Map(

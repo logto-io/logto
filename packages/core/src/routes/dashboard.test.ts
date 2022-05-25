@@ -37,7 +37,6 @@ const mockDailyNewUserCounts = [
 
 describe('dashboardRoutes', () => {
   const logRequest = createRequester({ authedRoutes: dashboardRoutes });
-  jest.useFakeTimers().setSystemTime(new Date('2022-05-14'));
 
   afterEach(() => {
     jest.clearAllMocks();
@@ -57,11 +56,15 @@ describe('dashboardRoutes', () => {
   });
 
   describe('GET /dashboard/users/new', () => {
-    it('should call getDnuCountsByTimeInterval with the time interval: [13 days ago, tomorrow)', async () => {
+    beforeEach(() => {
+      jest.useFakeTimers().setSystemTime(new Date('2022-05-14'));
+    });
+
+    it('should call getDailyNewUserCountsByTimeInterval with the time interval (13 days ago 23:59:59.999, today 23:59:59.999]', async () => {
       await logRequest.get('/dashboard/users/new');
       expect(getDailyNewUserCountsByTimeInterval).toHaveBeenCalledWith(
-        dayjs().subtract(13, 'day').valueOf(),
-        dayjs().add(1, 'day').valueOf()
+        dayjs().endOf('day').subtract(14, 'day').valueOf(),
+        dayjs().endOf('day').valueOf()
       );
     });
 
