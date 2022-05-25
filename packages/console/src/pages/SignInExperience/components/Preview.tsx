@@ -15,7 +15,7 @@ import { RequestError } from '@/hooks/use-api';
 import * as styles from './Preview.module.scss';
 
 type Props = {
-  signInExperience: SignInExperience;
+  signInExperience?: SignInExperience;
   className?: string;
 };
 
@@ -28,7 +28,7 @@ const Preview = ({ signInExperience, className }: Props) => {
   const previewRef = useRef<HTMLIFrameElement>(null);
 
   const config = useMemo(() => {
-    if (!allConnectors) {
+    if (!allConnectors || !signInExperience) {
       return;
     }
 

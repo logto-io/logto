@@ -1,6 +1,6 @@
 import { SignInExperience as SignInExperienceType } from '@logto/schemas';
 import classNames from 'classnames';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
@@ -41,10 +41,18 @@ const SignInExperience = () => {
     handleSubmit,
     getValues,
     watch,
-    formState: { isSubmitting },
+    formState: { isSubmitting, isDirty },
   } = methods;
   const api = useApi();
   const formData = watch();
+
+  const previewConfigs = useMemo(() => {
+    if (!isDirty) {
+      return data;
+    }
+
+    return signInExperienceParser.toRemoteModel(formData);
+  }, [formData, isDirty, data]);
 
   useEffect(() => {
     if (data) {
@@ -138,7 +146,7 @@ const SignInExperience = () => {
           )}
         </Card>
       </div>
-      {formData.id && <Preview signInExperience={signInExperienceParser.toRemoteModel(formData)} />}
+      {formData.id && <Preview signInExperience={previewConfigs} />}
       {data && (
         <ReactModal
           isOpen={Boolean(dataToCompare)}

@@ -1,5 +1,5 @@
 import { SignInExperience } from '@logto/schemas';
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import Modal from 'react-modal';
@@ -36,12 +36,20 @@ const GuideModal = ({ isOpen, onClose }: Props) => {
   const {
     reset,
     handleSubmit,
-    formState: { isSubmitting },
+    formState: { isSubmitting, isDirty },
     watch,
   } = methods;
   const api = useApi();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const formData = watch();
+
+  const previewConfigs = useMemo(() => {
+    if (!isDirty) {
+      return data;
+    }
+
+    return signInExperienceParser.toRemoteModel(formData);
+  }, [formData, isDirty, data]);
 
   useEffect(() => {
     if (data) {
@@ -114,10 +122,7 @@ const GuideModal = ({ isOpen, onClose }: Props) => {
                   </div>
                 </div>
                 {formData.id && (
-                  <Preview
-                    signInExperience={signInExperienceParser.toRemoteModel(formData)}
-                    className={styles.preview}
-                  />
+                  <Preview signInExperience={previewConfigs} className={styles.preview} />
                 )}
               </div>
               <div className={styles.footer}>
