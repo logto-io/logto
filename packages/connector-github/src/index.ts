@@ -9,7 +9,7 @@ import {
   SocialConnector,
   GetConnectorConfig,
 } from '@logto/connector-types';
-import { assert } from '@silverhand/essentials';
+import { assert, conditional } from '@silverhand/essentials';
 import got, { RequestError as GotRequestError } from 'got';
 
 import {
@@ -90,9 +90,9 @@ export default class GithubConnector implements SocialConnector {
 
       return {
         id: String(id),
-        avatar,
-        email,
-        name,
+        avatar: conditional(avatar),
+        email: conditional(email),
+        name: conditional(name),
       };
     } catch (error: unknown) {
       if (error instanceof GotRequestError && error.response?.statusCode === 401) {
