@@ -2,8 +2,9 @@ import React, { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import reactStringReplace from 'react-string-replace';
 
-import ConfirmModal from '@/components/ConfirmModal';
+import { WebModal, MobileModal } from '@/components/ConfirmModal';
 import TextLink from '@/components/TextLink';
+import usePlatform from '@/hooks/use-platform';
 
 type Props = {
   isOpen?: boolean;
@@ -12,8 +13,10 @@ type Props = {
   termsUrl: string;
 };
 
-const TermsOfUseModal = ({ isOpen = false, termsUrl, onConfirm, onClose }: Props) => {
+const TermsOfUseConfirmModal = ({ isOpen = false, termsUrl, onConfirm, onClose }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'main_flow' });
+  const { isMobile } = usePlatform();
+  const ConfirmModal = isMobile ? MobileModal : WebModal;
 
   const terms = t('description.terms_of_use');
   const content = t('description.agree_with_terms_modal', { terms });
@@ -29,4 +32,4 @@ const TermsOfUseModal = ({ isOpen = false, termsUrl, onConfirm, onClose }: Props
   );
 };
 
-export default TermsOfUseModal;
+export default TermsOfUseConfirmModal;

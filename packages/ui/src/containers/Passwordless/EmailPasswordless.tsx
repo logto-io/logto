@@ -6,7 +6,6 @@ import { useNavigate } from 'react-router-dom';
 import { getSendPasscodeApi } from '@/apis/utils';
 import Button from '@/components/Button';
 import Input from '@/components/Input';
-import PasswordlessConfirmModal from '@/containers/PasswordlessConfirmModal';
 import TermsOfUse from '@/containers/TermsOfUse';
 import useApi, { ErrorHandlers } from '@/hooks/use-api';
 import useForm from '@/hooks/use-form';
@@ -14,6 +13,7 @@ import useTerms from '@/hooks/use-terms';
 import { UserFlow } from '@/types';
 import { emailValidation } from '@/utils/field-validations';
 
+import PasswordlessConfirmModal from './PasswordlessConfirmModal';
 import * as styles from './index.module.scss';
 
 type Props = {

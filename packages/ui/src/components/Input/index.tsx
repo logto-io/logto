@@ -6,6 +6,9 @@ import ErrorMessage, { ErrorType } from '@/components/ErrorMessage';
 
 import * as styles from './index.module.scss';
 
+export { default as PasswordInput } from './PasswordInput';
+export { default as PhoneInput } from './PhoneInput';
+
 export type Props = HTMLProps<HTMLInputElement> & {
   className?: string;
   error?: ErrorType;

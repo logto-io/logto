@@ -1,7 +1,7 @@
 import React from 'react';
 import ModalContainer from 'react-modal-promise';
 
-import PureTermsOfUse from '@/components/TermsOfUse';
+import TermsOfUseComponent from '@/components/TermsOfUse';
 import useTerms from '@/hooks/use-terms';
 
 type Props = {
@@ -17,7 +17,7 @@ const TermsOfUse = ({ className }: Props) => {
 
   return (
     <>
-      <PureTermsOfUse
+      <TermsOfUseComponent
         className={className}
         name="termsAgreement"
         termsUrl={termsSettings.contentUrl}

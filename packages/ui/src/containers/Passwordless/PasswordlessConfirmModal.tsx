@@ -3,8 +3,9 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
 import { getSendPasscodeApi, PasscodeChannel } from '@/apis/utils';
-import ConfirmModal from '@/components/ConfirmModal';
+import { WebModal, MobileModal } from '@/components/ConfirmModal';
 import useApi from '@/hooks/use-api';
+import usePlatform from '@/hooks/use-platform';
 import { UserFlow } from '@/types';
 
 type Props = {
@@ -20,8 +21,10 @@ const PasswordlessConfirmModal = ({ className, isOpen, type, method, value, onCl
   const { t } = useTranslation(undefined, { keyPrefix: 'main_flow' });
   const sendPasscode = getSendPasscodeApi(type, method);
   const navigate = useNavigate();
+  const { isMobile } = usePlatform();
 
   const { result, run: asyncSendPasscode } = useApi(sendPasscode);
+  const ConfirmModal = isMobile ? MobileModal : WebModal;
 
   const onConfirmHandler = useCallback(() => {
     onClose();
