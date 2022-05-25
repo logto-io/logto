@@ -31,7 +31,7 @@ export default function dashboardRoutes<T extends AuthedRouter>(router: T) {
     const todayNewUserCount = recent14DaysNewUserCounts.get(getDateString(today)) ?? 0;
     const yesterday = today.subtract(1, 'day');
     const yesterdayNewUserCount = recent14DaysNewUserCounts.get(getDateString(yesterday)) ?? 0;
-    const todayDifference = todayNewUserCount - yesterdayNewUserCount;
+    const todayDelta = todayNewUserCount - yesterdayNewUserCount;
 
     const recent7DaysNewUserCount = [...Array.from({ length: 7 }).keys()]
       .map((index) => getDateString(today.subtract(index, 'day')))
@@ -39,16 +39,16 @@ export default function dashboardRoutes<T extends AuthedRouter>(router: T) {
     const newUserCountFrom13DaysAgoTo7DaysAgo = [...Array.from({ length: 7 }).keys()]
       .map((index) => getDateString(today.subtract(7 + index, 'day')))
       .reduce((sum, date) => sum + (recent14DaysNewUserCounts.get(date) ?? 0), 0);
-    const recent7DaysDifference = recent7DaysNewUserCount - newUserCountFrom13DaysAgoTo7DaysAgo;
+    const recent7DaysDelta = recent7DaysNewUserCount - newUserCountFrom13DaysAgoTo7DaysAgo;
 
     ctx.body = {
       today: {
         count: todayNewUserCount,
-        difference: todayDifference,
+        delta: todayDelta,
       },
       recent7Days: {
         count: recent7DaysNewUserCount,
-        difference: recent7DaysDifference,
+        delta: recent7DaysDelta,
       },
     };
 

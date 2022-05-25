@@ -74,11 +74,11 @@ describe('dashboardRoutes', () => {
       expect(response.body).toEqual({
         today: {
           count: 14,
-          difference: 1,
+          delta: 1,
         },
         recent7Days: {
           count: 54,
-          difference: 35,
+          delta: 35,
         },
       });
     });
