@@ -80,7 +80,7 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
       const { id } = await findUserByUsernameAndPassword(username, password);
       ctx.log(type, { userId: id });
       await updateLastSignInAt(id);
-      await assignInteractionResults(ctx, provider, { login: { accountId: id } });
+      await assignInteractionResults(ctx, provider, { login: { accountId: id } }, true);
 
       return next();
     }
@@ -128,7 +128,7 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
       ctx.log(type, { userId: id });
 
       await updateLastSignInAt(id);
-      await assignInteractionResults(ctx, provider, { login: { accountId: id } });
+      await assignInteractionResults(ctx, provider, { login: { accountId: id } }, true);
 
       return next();
     }
@@ -176,7 +176,7 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
       ctx.log(type, { userId: id });
 
       await updateLastSignInAt(id);
-      await assignInteractionResults(ctx, provider, { login: { accountId: id } });
+      await assignInteractionResults(ctx, provider, { login: { accountId: id } }, true);
 
       return next();
     }
