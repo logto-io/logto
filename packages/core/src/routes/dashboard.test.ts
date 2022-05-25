@@ -23,16 +23,38 @@ const mockDailyNewUserCounts = [
   { date: '2022-05-14', count: 14 },
 ];
 
+const mockDailyActiveUserCounts = [
+  { date: '2022-05-01', count: 501 },
+  { date: '2022-05-23', count: 523 },
+  { date: '2022-05-29', count: 529 },
+  { date: '2022-05-30', count: 530 },
+];
+
+const mockActiveUserCount = 1000;
+
+/* eslint-disable @typescript-eslint/no-unused-vars */
 const getDailyNewUserCountsByTimeInterval = jest.fn(
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async (startTimeExclusive: number, endTimeInclusive: number) => mockDailyNewUserCounts
 );
+const getDailyActiveUserCountsByTimeInterval = jest.fn(
+  async (startTimeExclusive: number, endTimeInclusive: number) => mockDailyActiveUserCounts
+);
+const countActiveUsersByTimeInterval = jest.fn(
+  async (startTimeExclusive: number, endTimeInclusive: number) => ({ count: mockActiveUserCount })
+);
+/* eslint-enable @typescript-eslint/no-unused-vars */
 
 jest.mock('@/queries/log', () => ({
   getDailyNewUserCountsByTimeInterval: async (
     startTimeExclusive: number,
     endTimeInclusive: number
   ) => getDailyNewUserCountsByTimeInterval(startTimeExclusive, endTimeInclusive),
+  getDailyActiveUserCountsByTimeInterval: async (
+    startTimeExclusive: number,
+    endTimeInclusive: number
+  ) => getDailyActiveUserCountsByTimeInterval(startTimeExclusive, endTimeInclusive),
+  countActiveUsersByTimeInterval: async (startTimeExclusive: number, endTimeInclusive: number) =>
+    countActiveUsersByTimeInterval(startTimeExclusive, endTimeInclusive),
 }));
 
 describe('dashboardRoutes', () => {
@@ -79,6 +101,105 @@ describe('dashboardRoutes', () => {
         last7Days: {
           count: 54,
           delta: 35,
+        },
+      });
+    });
+  });
+
+  describe('GET /dashboard/users/active', () => {
+    const mockToday = '2022-05-30';
+
+    beforeEach(() => {
+      jest.useFakeTimers().setSystemTime(new Date(mockToday));
+    });
+
+    it('should fail when the parameter `date` does not match the date regex', async () => {
+      const response = await logRequest.get('/dashboard/users/active?date=2022.5.1');
+      expect(response.status).toEqual(400);
+    });
+
+    it('should call getDailyActiveUserCountsByTimeInterval with the time interval (2022-05-31, 2022-06-30] when the parameter `date` is 2022-06-30', async () => {
+      const targetDate = '2022-06-30';
+      await logRequest.get(`/dashboard/users/active?date=${targetDate}`);
+      expect(getDailyActiveUserCountsByTimeInterval).toHaveBeenCalledWith(
+        dayjs('2022-05-31').endOf('day').valueOf(),
+        dayjs(targetDate).endOf('day').valueOf()
+      );
+    });
+
+    it('should call getDailyActiveUserCountsByTimeInterval with the time interval (30 days ago, tomorrow] when there is no parameter `date`', async () => {
+      await logRequest.get('/dashboard/users/active');
+      expect(getDailyActiveUserCountsByTimeInterval).toHaveBeenCalledWith(
+        dayjs('2022-04-30').endOf('day').valueOf(),
+        dayjs(mockToday).endOf('day').valueOf()
+      );
+    });
+
+    it('should call countActiveUsersByTimeInterval with correct parameters when the parameter `date` is 2022-06-30', async () => {
+      const targetDate = '2022-06-30';
+      await logRequest.get(`/dashboard/users/active?date=${targetDate}`);
+      expect(countActiveUsersByTimeInterval).toHaveBeenNthCalledWith(
+        1,
+        dayjs('2022-06-16').endOf('day').valueOf(),
+        dayjs('2022-06-23').endOf('day').valueOf()
+      );
+      expect(countActiveUsersByTimeInterval).toHaveBeenNthCalledWith(
+        2,
+        dayjs('2022-06-23').endOf('day').valueOf(),
+        dayjs(targetDate).endOf('day').valueOf()
+      );
+      expect(countActiveUsersByTimeInterval).toHaveBeenNthCalledWith(
+        3,
+        dayjs('2022-05-01').endOf('day').valueOf(),
+        dayjs('2022-05-31').endOf('day').valueOf()
+      );
+      expect(countActiveUsersByTimeInterval).toHaveBeenNthCalledWith(
+        4,
+        dayjs('2022-05-31').endOf('day').valueOf(),
+        dayjs(targetDate).endOf('day').valueOf()
+      );
+    });
+
+    it('should call countActiveUsersByTimeInterval with correct parameters when there is no parameter `date`', async () => {
+      await logRequest.get('/dashboard/users/active');
+      expect(countActiveUsersByTimeInterval).toHaveBeenNthCalledWith(
+        1,
+        dayjs('2022-05-16').endOf('day').valueOf(),
+        dayjs('2022-05-23').endOf('day').valueOf()
+      );
+      expect(countActiveUsersByTimeInterval).toHaveBeenNthCalledWith(
+        2,
+        dayjs('2022-05-23').endOf('day').valueOf(),
+        dayjs(mockToday).endOf('day').valueOf()
+      );
+      expect(countActiveUsersByTimeInterval).toHaveBeenNthCalledWith(
+        3,
+        dayjs('2022-03-31').endOf('day').valueOf(),
+        dayjs('2022-04-30').endOf('day').valueOf()
+      );
+      expect(countActiveUsersByTimeInterval).toHaveBeenNthCalledWith(
+        4,
+        dayjs('2022-04-30').endOf('day').valueOf(),
+        dayjs(mockToday).endOf('day').valueOf()
+      );
+    });
+
+    it('should return correct response', async () => {
+      const response = await logRequest.get('/dashboard/users/active');
+      expect(response.status).toEqual(200);
+      expect(response.body).toEqual({
+        dauCurve: mockDailyActiveUserCounts,
+        dau: {
+          count: 530,
+          delta: 1,
+        },
+        wau: {
+          count: 1000,
+          delta: 0,
+        },
+        mau: {
+          count: 1000,
+          delta: 0,
         },
       });
     });

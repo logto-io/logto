@@ -91,7 +91,7 @@ export const getDailyActiveUserCountsByTimeInterval = async (
     group by date(${fields.createdAt})
   `);
 
-export const getActiveUserCountByTimeInterval = async (
+export const countActiveUsersByTimeInterval = async (
   startTimeExclusive: number,
   endTimeInclusive: number
 ) =>
