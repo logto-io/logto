@@ -32,11 +32,7 @@ export default function dashboardRoutes<T extends AuthedRouter>(router: T) {
     const todayNewUserCount = recent14DaysDailyNewUserCounts.get(getDateString(today)) ?? 0;
     const yesterday = today.subtract(1, 'day');
     const yesterdayNewUserCount = recent14DaysDailyNewUserCounts.get(getDateString(yesterday)) ?? 0;
-    // If yesterdayNewUserCount is 0, todayUpPercent will be not applicable.
-    const todayUpPercent =
-      yesterdayNewUserCount > 0
-        ? Math.round((todayNewUserCount / yesterdayNewUserCount) * 100 - 100)
-        : undefined;
+    const todayDifference = todayNewUserCount - yesterdayNewUserCount;
 
     const recent7DaysNewUserCount = [...Array.from({ length: 7 }).keys()]
       .map((index) => getDateString(today.subtract(index, 'day')))
@@ -44,20 +40,16 @@ export default function dashboardRoutes<T extends AuthedRouter>(router: T) {
     const newUserCountFrom13DaysAgoTo7DaysAgo = [...Array.from({ length: 7 }).keys()]
       .map((index) => getDateString(today.subtract(7 + index, 'day')))
       .reduce((sum, date) => sum + (recent14DaysDailyNewUserCounts.get(date) ?? 0), 0);
-    // If newUserCountFrom13DaysAgoTo7DaysAgo is 0, past7DaysUpPercent will be not applicable.
-    const past7DaysUpPercent =
-      newUserCountFrom13DaysAgoTo7DaysAgo > 0
-        ? Math.round((recent7DaysNewUserCount / newUserCountFrom13DaysAgoTo7DaysAgo) * 100 - 100)
-        : undefined;
+    const recent7DaysDifference = recent7DaysNewUserCount - newUserCountFrom13DaysAgoTo7DaysAgo;
 
     ctx.body = {
       today: {
         count: todayNewUserCount,
-        upPercent: todayUpPercent,
+        difference: todayDifference,
       },
       past7Days: {
         count: recent7DaysNewUserCount,
-        upPercent: past7DaysUpPercent,
+        difference: recent7DaysDifference,
       },
     };
 

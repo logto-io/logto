@@ -71,11 +71,11 @@ describe('dashboardRoutes', () => {
       expect(response.body).toEqual({
         today: {
           count: 14,
-          upPercent: 8,
+          difference: 1,
         },
         past7Days: {
           count: 54,
-          upPercent: 184,
+          difference: 35,
         },
       });
     });
