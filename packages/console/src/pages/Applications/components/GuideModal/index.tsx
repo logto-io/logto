@@ -1,3 +1,4 @@
+import { ApplicationType } from '@logto/schemas';
 import { MDXProvider } from '@mdx-js/react';
 import i18next from 'i18next';
 import { MDXProps } from 'mdx/types';
@@ -13,23 +14,29 @@ import IconButton from '@/components/IconButton';
 import Spacer from '@/components/Spacer';
 import Close from '@/icons/Close';
 import * as modalStyles from '@/scss/modal.module.scss';
-import { SupportedJavascriptLibraries } from '@/types/applications';
+import { applicationTypeAndSdkTypeMappings, SupportedSdk } from '@/types/applications';
 import { GuideForm } from '@/types/guide';
 
-import LibrarySelector from '../LibrarySelector';
+import SdkSelector from '../SdkSelector';
 import StepsSkeleton from '../StepsSkeleton';
 import * as styles from './index.module.scss';
 
 type Props = {
   appName: string;
+  appType: ApplicationType;
   isOpen: boolean;
   onClose: () => void;
   onComplete: (data: GuideForm) => Promise<void>;
 };
 
 const Guides: Record<string, LazyExoticComponent<(props: MDXProps) => JSX.Element>> = {
+  ios: lazy(async () => import('@/assets/docs/tutorial/integrate-sdk/ios.mdx')),
+  android: lazy(async () => import('@/assets/docs/tutorial/integrate-sdk/android.mdx')),
   react: lazy(async () => import('@/assets/docs/tutorial/integrate-sdk/react.mdx')),
   vue: lazy(async () => import('@/assets/docs/tutorial/integrate-sdk/vue.mdx')),
+  'android_zh-cn': lazy(
+    async () => import('@/assets/docs/tutorial/integrate-sdk/android_zh-cn.mdx')
+  ),
   'react_zh-cn': lazy(async () => import('@/assets/docs/tutorial/integrate-sdk/react_zh-cn.mdx')),
   'vue_zh-cn': lazy(async () => import('@/assets/docs/tutorial/integrate-sdk/vue_zh-cn.mdx')),
 };
@@ -39,16 +46,15 @@ const onClickFetchSampleProject = (projectName: string) => {
   window.open(sampleUrl, '_blank');
 };
 
-const GuideModal = ({ appName, isOpen, onClose, onComplete }: Props) => {
-  const [subtype, setSubtype] = useState<SupportedJavascriptLibraries>(
-    SupportedJavascriptLibraries.React
-  );
+const GuideModal = ({ appName, appType, isOpen, onClose, onComplete }: Props) => {
+  const sdks = applicationTypeAndSdkTypeMappings[appType];
+  const [selectedSdk, setSelectedSdk] = useState<SupportedSdk>(sdks[0]);
   const [activeStepIndex, setActiveStepIndex] = useState(-1);
   const [invalidStepIndex, setInvalidStepIndex] = useState(-1);
 
   const locale = i18next.language;
-  const guideI18nKey = `${subtype}_${locale}`.toLowerCase();
-  const GuideComponent = Guides[guideI18nKey] ?? Guides[subtype];
+  const guideI18nKey = `${selectedSdk}_${locale}`.toLowerCase();
+  const GuideComponent = Guides[guideI18nKey] ?? Guides[selectedSdk.toLowerCase()];
 
   const methods = useForm<GuideForm>({ mode: 'onSubmit', reValidateMode: 'onChange' });
   const {
@@ -82,16 +88,16 @@ const GuideModal = ({ appName, isOpen, onClose, onComplete }: Props) => {
             type="outline"
             title="admin_console.applications.guide.get_sample_file"
             onClick={() => {
-              onClickFetchSampleProject(subtype);
+              onClickFetchSampleProject(selectedSdk);
             }}
           />
         </div>
         <div className={styles.content}>
           <FormProvider {...methods}>
             <form onSubmit={onSubmit}>
-              {cloneElement(<LibrarySelector libraryName={subtype} />, {
+              {cloneElement(<SdkSelector sdks={sdks} selectedSdk={selectedSdk} />, {
                 className: styles.banner,
-                onChange: setSubtype,
+                onChange: setSelectedSdk,
                 onToggle: () => {
                   setActiveStepIndex(0);
                 },

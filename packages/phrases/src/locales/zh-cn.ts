@@ -168,8 +168,8 @@ const translation = {
         header_description:
           '参考如下教程，将 Logto 集成到您的应用中。您也可以点击右侧链接，获取我们为您准备好的示范工程。',
         title: '恭喜！您的应用已成功创建。',
-        subtitle: '请参考以下步骤完成您的应用设置。首先，请选择您要使用的 Javascript 框架：',
-        description_by_library: '本教程向您演示如何在 {{library}} 应用中集成 Logto 登录功能',
+        subtitle: '请参考以下步骤完成您的应用设置。首先，请选择您要使用的 SDK 类型：',
+        description_by_sdk: '本教程向您演示如何在 {{sdk}} 应用中集成 Logto 登录功能',
       },
     },
     application_details: {

@@ -130,6 +130,7 @@ const CreateForm = ({ onClose }: Props) => {
       {createdApp && (
         <GuideModal
           appName={createdApp.name}
+          appType={createdApp.type}
           isOpen={isGetStartedModalOpen}
           onClose={closeModal}
           onComplete={onComplete}
