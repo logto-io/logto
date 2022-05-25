@@ -2,7 +2,8 @@ import { LogCondition } from '@/queries/log';
 import logRoutes from '@/routes/log';
 import { createRequester } from '@/utils/test-utils';
 
-const mockLogs = [{ id: 1 }, { id: 2 }];
+const mockLog = { id: 1 };
+const mockLogs = [mockLog, { id: 2 }];
 
 /* eslint-disable @typescript-eslint/no-unused-vars */
 const countLogs = jest.fn(async (condition: LogCondition) => ({
@@ -11,12 +12,14 @@ const countLogs = jest.fn(async (condition: LogCondition) => ({
 const findLogs = jest.fn(
   async (limit: number, offset: number, condition: LogCondition) => mockLogs
 );
+const findLogById = jest.fn(async (id: string) => mockLog);
 /* eslint-enable @typescript-eslint/no-unused-vars */
 
 jest.mock('@/queries/log', () => ({
   countLogs: async (condition: LogCondition) => countLogs(condition),
   findLogs: async (limit: number, offset: number, condition: LogCondition) =>
     findLogs(limit, offset, condition),
+  findLogById: async (id: string) => findLogById(id),
 }));
 
 describe('logRoutes', () => {
@@ -46,6 +49,21 @@ describe('logRoutes', () => {
       expect(response.status).toEqual(200);
       expect(response.body).toEqual(mockLogs);
       expect(response.header).toHaveProperty('total-number', `${mockLogs.length}`);
+    });
+  });
+
+  describe('GET /logs/:id', () => {
+    const logId = 'logIdValue';
+
+    it('should call findLogById with correct parameters', async () => {
+      await logRequest.get(`/logs/${logId}`);
+      expect(findLogById).toHaveBeenCalledWith(logId);
+    });
+
+    it('should return correct response', async () => {
+      const response = await logRequest.get(`/logs/${logId}`);
+      expect(response.status).toEqual(200);
+      expect(response.body).toEqual(mockLog);
     });
   });
 });
