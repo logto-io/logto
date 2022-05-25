@@ -60,7 +60,7 @@ describe('dashboardRoutes', () => {
       jest.useFakeTimers().setSystemTime(new Date('2022-05-14'));
     });
 
-    it('should call getDailyNewUserCountsByTimeInterval with the time interval (13 days ago 23:59:59.999, today 23:59:59.999]', async () => {
+    it('should call getDailyNewUserCountsByTimeInterval with the time interval (14 days ago 23:59:59.999, today 23:59:59.999]', async () => {
       await logRequest.get('/dashboard/users/new');
       expect(getDailyNewUserCountsByTimeInterval).toHaveBeenCalledWith(
         dayjs().endOf('day').subtract(14, 'day').valueOf(),
