@@ -52,10 +52,10 @@ const GuideModal = ({ isOpen, onClose }: Props) => {
   }, [formData, isDirty, data]);
 
   useEffect(() => {
-    if (data) {
+    if (data && !isDirty) {
       reset(signInExperienceParser.toLocalForm(data));
     }
-  }, [data, reset]);
+  }, [data, reset, isDirty]);
 
   const onGotIt = async () => {
     if (!configs) {

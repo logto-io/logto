@@ -55,10 +55,10 @@ const SignInExperience = () => {
   }, [formData, isDirty, data]);
 
   useEffect(() => {
-    if (data) {
+    if (data && !isDirty) {
       reset(signInExperienceParser.toLocalForm(data));
     }
-  }, [data, reset]);
+  }, [data, reset, isDirty]);
 
   const saveData = async () => {
     const updatedData = await api
