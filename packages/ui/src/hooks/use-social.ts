@@ -29,6 +29,7 @@ const useSocial = () => {
       'user.identity_not_exists': (error) => {
         if (parameters.connector) {
           navigate(`/social-register/${parameters.connector}`, {
+            replace: true,
             state: {
               ...(error.data as Record<string, unknown> | undefined),
             },
@@ -129,8 +130,11 @@ const useSocial = () => {
     const { platform, callbackLink } = decodedState;
 
     if (platform === 'web') {
-      window.location.assign(
-        new URL(`${location.origin}/sign-in/callback/${connectorId}/${window.location.search}`)
+      navigate(
+        new URL(`${location.origin}/sign-in/callback/${connectorId}/${window.location.search}`),
+        {
+          replace: true,
+        }
       );
 
       return;
@@ -142,7 +146,7 @@ const useSocial = () => {
     }
 
     window.location.assign(new URL(`${callbackLink}${window.location.search}`));
-  }, [parameters.connector, setToast, t]);
+  }, [navigate, parameters.connector, setToast, t]);
 
   // Social Sign-In Callback Handler
   useEffect(() => {
