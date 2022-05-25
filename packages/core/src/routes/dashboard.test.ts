@@ -25,14 +25,14 @@ const mockDailyNewUserCounts = [
 
 const getDailyNewUserCountsByTimeInterval = jest.fn(
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  async (startTimeInclusive: number, endTimeExclusive: number) => mockDailyNewUserCounts
+  async (startTimeExclusive: number, endTimeInclusive: number) => mockDailyNewUserCounts
 );
 
 jest.mock('@/queries/log', () => ({
   getDailyNewUserCountsByTimeInterval: async (
-    startTimeInclusive: number,
-    endTimeExclusive: number
-  ) => getDailyNewUserCountsByTimeInterval(startTimeInclusive, endTimeExclusive),
+    startTimeExclusive: number,
+    endTimeInclusive: number
+  ) => getDailyNewUserCountsByTimeInterval(startTimeExclusive, endTimeInclusive),
 }));
 
 describe('dashboardRoutes', () => {
