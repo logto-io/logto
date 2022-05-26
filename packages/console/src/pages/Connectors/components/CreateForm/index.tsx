@@ -4,7 +4,6 @@ import Modal from 'react-modal';
 import useSWR from 'swr';
 
 import Button from '@/components/Button';
-import ImagePlaceholder from '@/components/ImagePlaceholder';
 import ModalLayout from '@/components/ModalLayout';
 import RadioGroup, { Radio } from '@/components/RadioGroup';
 import UnnamedTrans from '@/components/UnnamedTrans';
@@ -87,7 +86,7 @@ const CreateForm = ({ onClose, isOpen: isFormOpen, type }: Props) => {
             {connectors.map(({ id, name, logo, description }) => (
               <Radio key={id} value={id} className={styles.connector}>
                 <div className={styles.logo}>
-                  {logo.startsWith('http') ? <img src={logo} /> : <ImagePlaceholder size={32} />}
+                  <img src={logo} />
                 </div>
                 <div className={styles.name}>
                   <UnnamedTrans resource={name} />

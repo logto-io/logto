@@ -1,21 +1,29 @@
-import { ConnectorDTO } from '@logto/schemas';
+import { ConnectorDTO, ConnectorType } from '@logto/schemas';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 
-import ImagePlaceholder from '@/components/ImagePlaceholder';
 import ItemPreview from '@/components/ItemPreview';
 import UnnamedTrans from '@/components/UnnamedTrans';
+import { connectorIconPlaceHolder, connectorTitlePlaceHolder } from '@/consts/connectors';
 
 import * as styles from './index.module.scss';
 
 type Props = {
+  type: ConnectorType;
   connector?: ConnectorDTO;
-  titlePlaceholder?: string;
 };
 
-const ConnectorName = ({ connector, titlePlaceholder = '' }: Props) => {
+const ConnectorName = ({ type, connector }: Props) => {
+  const { t } = useTranslation(undefined);
+
   if (!connector) {
-    return <ItemPreview title={titlePlaceholder} icon={<ImagePlaceholder />} />;
+    return (
+      <ItemPreview
+        title={t(connectorTitlePlaceHolder[type])}
+        icon={<img src={connectorIconPlaceHolder[type]} />}
+      />
+    );
   }
 
   return (

@@ -6,7 +6,6 @@ import { useTranslation } from 'react-i18next';
 import useSWR from 'swr';
 
 import Button from '@/components/Button';
-import ImagePlaceholder from '@/components/ImagePlaceholder';
 import TableError from '@/components/Table/TableError';
 import UnnamedTrans from '@/components/UnnamedTrans';
 import useApi, { RequestError } from '@/hooks/use-api';
@@ -108,11 +107,7 @@ const UserConnectors = ({ userId, connectors, onDelete }: Props) => {
                 <td>
                   <div className={styles.connectorName}>
                     <div>
-                      {connector.logo.startsWith('http') ? (
-                        <img src={connector.logo} />
-                      ) : (
-                        <ImagePlaceholder size={32} />
-                      )}
+                      <img src={connector.logo} />
                     </div>
                     <div className={styles.name}>
                       <UnnamedTrans resource={connector.name} />

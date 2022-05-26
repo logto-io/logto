@@ -1,9 +1,0 @@
-@use '@/scss/underscore' as _;
-
-.container {
-  background: rgba(#ffcc4d, 0.3);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: _.unit(2);
-}
