@@ -49,7 +49,6 @@
       .device {
         width: 390px;
         margin: 0 auto;
-        background: var(--color-on-primary);
         border-radius: 26px;
         overflow: hidden;
 
@@ -61,6 +60,24 @@
           .time {
             flex: 1;
             font: var(--font-subhead-2);
+          }
+        }
+
+        &.dark {
+          // Sync with iframe's UI color
+          background: #1a1c1d;
+
+          .topBar {
+            color: #fff;
+          }
+        }
+
+        &.light {
+          // Sync with iframe's UI color
+          background: #fff;
+
+          .topBar {
+            color: #000;
           }
         }
 
