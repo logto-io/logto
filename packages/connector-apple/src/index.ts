@@ -9,22 +9,14 @@ import {
   SocialConnector,
   GetConnectorConfig,
 } from '@logto/connector-types';
-import { assert } from '@silverhand/essentials';
-import got from 'got';
+import { conditional } from '@silverhand/essentials';
 import { createRemoteJWKSet, jwtVerify } from 'jose';
 
-import {
-  authorizationEndpoint,
-  accessTokenEndpoint,
-  scope,
-  defaultMetadata,
-  defaultTimeout,
-  jwksUri,
-  issuer,
-} from './constant';
-import { appleConfigGuard, AccessTokenResponse, AppleConfig } from './types';
+import { scope, defaultMetadata, jwksUri, issuer } from './constant';
+import { appleConfigGuard, AppleConfig, appleDataGuard } from './types';
 
-export default class AppleConnector implements SocialConnector {
+// TO-DO: support nonce validation
+export default class AppleConnector implements SocialConnector<string> {
   public metadata: ConnectorMetadata = defaultMetadata;
 
   constructor(public readonly getConfig: GetConnectorConfig<AppleConfig>) {}
@@ -37,49 +29,31 @@ export default class AppleConnector implements SocialConnector {
     }
   };
 
-  // Refer to: https://developer.apple.com/documentation/sign_in_with_apple/sign_in_with_apple_js/incorporating_sign_in_with_apple_into_other_platforms
-  public getAuthorizationUri: GetAuthorizationUri = async (redirectUri, state) => {
+  public getAuthorizationUri: GetAuthorizationUri = async (state, redirectUri) => {
     const config = await this.getConfig(this.metadata.id);
 
     const queryParameters = new URLSearchParams({
       client_id: config.clientId,
       redirect_uri: redirectUri,
-      response_type: 'code',
       scope,
-      response_mode: 'form_post',
       state,
     });
 
-    return `${authorizationEndpoint}?${queryParameters.toString()}`;
+    return `${this.metadata.target}://?${queryParameters.toString()}`;
   };
 
-  // Refer to: https://developer.apple.com/documentation/sign_in_with_apple/generate_and_validate_tokens
-  getAccessToken: GetAccessToken = async (code) => {
-    const { clientId: client_id, clientSecret: client_secret } = await this.getConfig(
-      this.metadata.id
-    );
-
-    const { access_token: accessToken, id_token: idToken } = await got
-      .post(accessTokenEndpoint, {
-        form: {
-          code,
-          client_id,
-          client_secret,
-          grant_type: 'authorization_code',
-        },
-        timeout: defaultTimeout,
-      })
-      .json<AccessTokenResponse>();
-
-    assert(accessToken, new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid));
-
-    return { accessToken, idToken };
+  // Directly return now. Refactor with connector interface redesign.
+  getAccessToken: GetAccessToken<string> = async (code) => {
+    return code;
   };
 
-  // Decode user info from ID token
-  // Refer to: https://developer.apple.com/documentation/sign_in_with_apple/generate_and_validate_tokens
-  public getUserInfo: GetUserInfo = async (accessTokenObject) => {
-    const { idToken } = accessTokenObject;
+  // Extract data from JSON string.
+  // Refactor with connector interface redesign.
+  public getUserInfo: GetUserInfo<string> = async (data) => {
+    const {
+      authorization: { id_token: idToken },
+      user,
+    } = appleDataGuard.parse(JSON.parse(data));
 
     if (!idToken) {
       throw new ConnectorError(ConnectorErrorCodes.SocialIdTokenInvalid);
@@ -97,15 +71,13 @@ export default class AppleConnector implements SocialConnector {
         throw new ConnectorError(ConnectorErrorCodes.SocialIdTokenInvalid);
       }
 
-      // Need to check data in payload
-      // Refer to: https://developer.apple.com/documentation/sign_in_with_apple/sign_in_with_apple_js/incorporating_sign_in_with_apple_into_other_platforms
-      console.log(JSON.stringify(payload));
+      const name = [user?.name?.firstName, user?.name?.lastName]
+        .filter((value) => Boolean(value))
+        .join(' ');
 
       return {
         id: payload.sub,
-        // TODO: return user info
-        // name: [payload.name.firstName, payload.name.lastName].join(' '),
-        // email: payload.email_verified,
+        name: conditional(name),
       };
     } catch {
       throw new ConnectorError(ConnectorErrorCodes.SocialIdTokenInvalid);

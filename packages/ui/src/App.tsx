@@ -4,6 +4,7 @@ import { Route, Routes, BrowserRouter, Navigate } from 'react-router-dom';
 
 import * as styles from './App.module.scss';
 import AppContent from './components/AppContent';
+import { isAppleConnector, loadAppleSdk } from './hooks/use-apple-auth';
 import usePageContext from './hooks/use-page-context';
 import usePreview from './hooks/use-preview';
 import initI18n from './i18n/init';
@@ -34,6 +35,11 @@ const App = () => {
 
     (async () => {
       const settings = await getSignInExperienceSettings();
+
+      // Load Apple official SDK if Apple connector is enabled
+      if (settings.socialConnectors.some((connector) => isAppleConnector(connector))) {
+        await loadAppleSdk();
+      }
 
       // Note: i18n must be initialized ahead of global experience settings
       await initI18n(settings.languageInfo);

@@ -1,8 +1,8 @@
-import { ConnectorError, ConnectorErrorCodes, GetConnectorConfig } from '@logto/connector-types';
+import { GetConnectorConfig } from '@logto/connector-types';
 import nock from 'nock';
 
 import AppleConnector from '.';
-import { accessTokenEndpoint, authorizationEndpoint } from './constant';
+import { defaultMetadata } from './constant';
 import { mockedConfig } from './mock';
 import { AppleConfig } from './types';
 
@@ -25,7 +25,7 @@ describe('getAuthorizationUri', () => {
       'some_state'
     );
     expect(authorizationUri).toEqual(
-      `${authorizationEndpoint}?client_id=%3Cclient-id%3E&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fcallback&state=some_state&scope=openid%20email%20name`
+      `${defaultMetadata.target}://?client_id=%3Cclient-id%3E&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fcallback&state=some_state&scope=name`
     );
   });
 });
@@ -36,21 +36,9 @@ describe('getAccessToken', () => {
     jest.clearAllMocks();
   });
 
-  it('should get an accessToken by exchanging with code', async () => {
-    nock(accessTokenEndpoint).post('').reply(200, {
-      access_token: 'access_token',
-      scope: 'scope',
-      token_type: 'token_type',
-    });
-    const { accessToken } = await appleMethods.getAccessToken('code');
-    expect(accessToken).toEqual('access_token');
-  });
-
-  it('throws SocialAuthCodeInvalid error if accessToken not found in response', async () => {
-    nock(accessTokenEndpoint).post('').reply(200, {});
-    await expect(appleMethods.getAccessToken('code')).rejects.toMatchError(
-      new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid)
-    );
+  it('should return code directly', async () => {
+    const accessToken = await appleMethods.getAccessToken('code');
+    expect(accessToken).toEqual('code');
   });
 });
 

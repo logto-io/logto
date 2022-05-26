@@ -4,13 +4,13 @@ import { ConnectorMetadata, ConnectorType, ConnectorPlatform } from '@logto/conn
 import { getFileContents } from '@logto/shared';
 
 // https://appleid.apple.com/.well-known/openid-configuration
-export const authorizationEndpoint = 'https://appleid.apple.com/auth/authorize';
-export const accessTokenEndpoint = 'https://appleid.apple.com/auth/token';
-export const jwksUri = 'https://appleid.apple.com/auth/keys';
 export const issuer = 'https://appleid.apple.com';
+export const authorizationEndpoint = `${issuer}/auth/authorize`;
+export const accessTokenEndpoint = `${issuer}/auth/token`;
+export const jwksUri = `${issuer}/auth/keys`;
 
 // Note: only support fixed scope for v1.
-export const scope = 'openid email name';
+export const scope = 'name';
 
 // eslint-disable-next-line unicorn/prefer-module
 const currentPath = __dirname;
@@ -31,7 +31,7 @@ export const defaultMetadata: ConnectorMetadata = {
   logo: './logo.svg',
   description: {
     en: 'Sign In with Apple',
-    'zh-CN': 'Apple登录',
+    'zh-CN': 'Apple 登录',
   },
   readme: getFileContents(pathToReadmeFile, readmeContentFallback),
   configTemplate: getFileContents(pathToConfigTemplate, configTemplateFallback),
