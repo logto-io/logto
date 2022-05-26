@@ -1,15 +1,11 @@
-import classNames from 'classnames';
 import React, { useMemo, useState, useRef } from 'react';
 
-import MoreSocialIcon from '@/assets/icons/more-social-icon.svg';
-import IconButton from '@/components/Button/IconButton';
-import SocialIconButton from '@/components/Button/SocialIconButton';
 import usePlatform from '@/hooks/use-platform';
 import useSocial from '@/hooks/use-social';
 
 import SocialSignInDropdown from '../SocialSignInDropdown';
+import SocialSignInIconList from '../SocialSignInIconList';
 import SocialSignInPopUp from '../SocialSignInPopUp';
-import * as styles from './index.module.scss';
 
 export const defaultSize = 4;
 
@@ -18,7 +14,7 @@ type Props = {
 };
 
 const SecondarySocialSignIn = ({ className }: Props) => {
-  const { socialConnectors, invokeSocialSignIn } = useSocial();
+  const { socialConnectors } = useSocial();
   const [showModal, setShowModal] = useState(false);
   const moreButtonRef = useRef<HTMLButtonElement>(null);
   const { isMobile } = usePlatform();
@@ -35,29 +31,15 @@ const SecondarySocialSignIn = ({ className }: Props) => {
 
   return (
     <>
-      <div className={classNames(styles.socialIconList, className)}>
-        {displayConnectors.map((connector) => (
-          <SocialIconButton
-            key={connector.id}
-            className={styles.socialButton}
-            connector={connector}
-            onClick={() => {
-              void invokeSocialSignIn(connector.id);
-            }}
-          />
-        ))}
-        {isCollapsed && (
-          <IconButton
-            ref={moreButtonRef}
-            className={styles.moreButton}
-            onClick={() => {
-              setShowModal(true);
-            }}
-          >
-            <MoreSocialIcon />
-          </IconButton>
-        )}
-      </div>
+      <SocialSignInIconList
+        className={className}
+        connectors={displayConnectors}
+        hasMore={isCollapsed}
+        moreButtonRef={moreButtonRef}
+        onMoreButtonClick={() => {
+          setShowModal(true);
+        }}
+      />
       {isCollapsed && isMobile && (
         <SocialSignInPopUp
           isOpen={showModal}
