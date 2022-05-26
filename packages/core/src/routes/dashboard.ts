@@ -28,10 +28,9 @@ export default function dashboardRoutes<T extends AuthedRouter>(router: T) {
 
   router.get('/dashboard/users/new', async (ctx, next) => {
     const today = dayjs();
-    const fourteenDaysAgo = today.subtract(14, 'day');
     const dailyNewUserCounts = await getDailyNewUserCountsByTimeInterval(
       // (14 days ago 23:59:59.999, today 23:59:59.999]
-      lastTimestampOfDay(fourteenDaysAgo),
+      lastTimestampOfDay(today.subtract(14, 'day')),
       lastTimestampOfDay(today)
     );
 
@@ -77,11 +76,6 @@ export default function dashboardRoutes<T extends AuthedRouter>(router: T) {
       } = ctx.guard;
 
       const targetDay = date ? dayjs(date) : dayjs(); // Defaults to today
-      const sevenDaysAgo = targetDay.subtract(7, 'day');
-      const fourteenDaysAgo = targetDay.subtract(14, 'day');
-      const thirtyDaysAgo = targetDay.subtract(30, 'day');
-      const sixtyDaysAgo = targetDay.subtract(60, 'day');
-
       const [
         // DAU: Daily Active User
         last30DauCounts,
@@ -94,27 +88,27 @@ export default function dashboardRoutes<T extends AuthedRouter>(router: T) {
       ] = await Promise.all([
         getDailyActiveUserCountsByTimeInterval(
           // (30 days ago 23:59:59.999, target day 23:59:59.999]
-          lastTimestampOfDay(thirtyDaysAgo),
+          lastTimestampOfDay(targetDay.subtract(30, 'day')),
           lastTimestampOfDay(targetDay)
         ),
         countActiveUsersByTimeInterval(
           // (14 days ago 23:59:59.999, 7 days ago 23:59:59.999]
-          lastTimestampOfDay(fourteenDaysAgo),
-          lastTimestampOfDay(sevenDaysAgo)
+          lastTimestampOfDay(targetDay.subtract(14, 'day')),
+          lastTimestampOfDay(targetDay.subtract(7, 'day'))
         ),
         countActiveUsersByTimeInterval(
           // (7 days ago 23:59:59.999, target day 23:59:59.999]
-          lastTimestampOfDay(sevenDaysAgo),
+          lastTimestampOfDay(targetDay.subtract(7, 'day')),
           lastTimestampOfDay(targetDay)
         ),
         countActiveUsersByTimeInterval(
           // (60 days ago 23:59:59.999, 30 days ago 23:59:59.999]
-          lastTimestampOfDay(sixtyDaysAgo),
-          lastTimestampOfDay(thirtyDaysAgo)
+          lastTimestampOfDay(targetDay.subtract(60, 'day')),
+          lastTimestampOfDay(targetDay.subtract(30, 'day'))
         ),
         countActiveUsersByTimeInterval(
           // (30 days ago 23:59:59.999, target day 23:59:59.999]
-          lastTimestampOfDay(thirtyDaysAgo),
+          lastTimestampOfDay(targetDay.subtract(30, 'day')),
           lastTimestampOfDay(targetDay)
         ),
       ]);
