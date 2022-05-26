@@ -115,6 +115,7 @@ const translation = {
       invalid_uri_format: '无效的 URI 格式',
       required_field_missing: '请输入{{field}}',
       required_field_missing_plural: '{{field}}不能全部为空',
+      more_details: '查看详情',
     },
     tab_sections: {
       overview: '概览',
