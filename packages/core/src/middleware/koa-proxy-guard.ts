@@ -8,7 +8,11 @@ import { Provider } from 'oidc-provider';
 import { MountedApps } from '@/env-set';
 import { fromRoot } from '@/env-set/parameters';
 
+// Need To Align With UI
 export const sessionNotFoundPath = '/unknown-session';
+export const callbackPath = '/callback';
+
+export const exceptionPaths = [sessionNotFoundPath, callbackPath];
 
 export default function koaSpaSessionGuard<
   StateT,
@@ -27,24 +31,26 @@ export default function koaSpaSessionGuard<
       return next();
     }
 
-    // Check client routes session status only
-    if (Object.values(MountedApps).some((app) => requestPath.startsWith(`/${app}`))) {
+    const spaDistFiles = await fs.readdir(clientPath);
+
+    if (
+      // Exclude MountedApps
+      Object.values(MountedApps).some((app) => requestPath.startsWith(`/${app}`)) ||
+      // Exclude static page routes
+      exceptionPaths.some((path) => requestPath.startsWith(path)) ||
+      // Exclude preview mode
+      ctx.request.URL.searchParams.get('preview') ||
+      // Exclude static files
+      spaDistFiles.some((file) => requestPath.startsWith('/' + file))
+    ) {
       return next();
     }
 
-    // Client session guard
+    // Check Session for client routes
     try {
       await provider.interactionDetails(ctx.req, ctx.res);
     } catch {
-      const spaDistFiles = await fs.readdir(clientPath);
-
-      if (
-        !spaDistFiles.some((file) => requestPath.startsWith('/' + file)) &&
-        !ctx.request.path.endsWith(sessionNotFoundPath) &&
-        !ctx.request.URL.searchParams.get('preview') // Should not check session on preview mode
-      ) {
-        ctx.redirect(sessionNotFoundPath);
-      }
+      ctx.redirect(sessionNotFoundPath);
     }
 
     return next();
