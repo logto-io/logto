@@ -2,8 +2,6 @@ import { ConnectorDTO, ConnectorType } from '@logto/schemas';
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import emailConnectorIcon from '@/assets/images/connector-email.svg';
-import smsConnectorIcon from '@/assets/images/connector-sms.svg';
 import Button from '@/components/Button';
 import Status from '@/components/Status';
 
@@ -30,24 +28,10 @@ const ConnectorRow = ({ type, connector, onClickSetup }: Props) => {
     return t('connectors.type.social');
   }, [type, t]);
 
-  const iconPlaceholder = useMemo(() => {
-    if (type === ConnectorType.Email) {
-      return emailConnectorIcon;
-    }
-
-    if (type === ConnectorType.SMS) {
-      return smsConnectorIcon;
-    }
-  }, [type]);
-
   return (
     <tr>
       <td>
-        <ConnectorName
-          connector={connector}
-          titlePlaceholder={typeLabel}
-          iconPlaceholder={iconPlaceholder}
-        />
+        <ConnectorName type={type} connector={connector} />
       </td>
       <td>{typeLabel}</td>
       <td>
