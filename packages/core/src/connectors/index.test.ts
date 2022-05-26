@@ -34,6 +34,12 @@ const aliyunSmsConnector = {
   config: {},
   createdAt: 1_646_382_233_666,
 };
+const appleConnector = {
+  id: 'apple-universal',
+  enabled: false,
+  config: {},
+  createdAt: 1_646_382_233_666,
+};
 const facebookConnector = {
   id: 'facebook-universal',
   enabled: true,
@@ -82,6 +88,7 @@ const connectors = [
   alipayNativeConnector,
   aliyunDmConnector,
   aliyunSmsConnector,
+  appleConnector,
   facebookConnector,
   githubConnector,
   googleConnector,
@@ -103,18 +110,11 @@ jest.mock('@/queries/connector', () => ({
 describe('getConnectorInstances', () => {
   test('should return the connectors existing in DB', async () => {
     const connectorInstances = await getConnectorInstances();
-    expect(connectorInstances).toHaveLength(connectorInstances.length);
-    expect(connectorInstances[0]).toHaveProperty('connector', alipayConnector);
-    expect(connectorInstances[1]).toHaveProperty('connector', alipayNativeConnector);
-    expect(connectorInstances[2]).toHaveProperty('connector', aliyunDmConnector);
-    expect(connectorInstances[3]).toHaveProperty('connector', aliyunSmsConnector);
-    expect(connectorInstances[4]).toHaveProperty('connector', facebookConnector);
-    expect(connectorInstances[5]).toHaveProperty('connector', githubConnector);
-    expect(connectorInstances[6]).toHaveProperty('connector', googleConnector);
-    expect(connectorInstances[7]).toHaveProperty('connector', sendGridMailConnector);
-    expect(connectorInstances[8]).toHaveProperty('connector', twilioSmsConnector);
-    expect(connectorInstances[9]).toHaveProperty('connector', wechatConnector);
-    expect(connectorInstances[10]).toHaveProperty('connector', wechatNativeConnector);
+    expect(connectorInstances).toHaveLength(connectors.length);
+
+    for (const [index, connector] of connectors.entries()) {
+      expect(connectorInstances[index]).toHaveProperty('connector', connector);
+    }
   });
 
   test('should throw if any required connector does not exist in DB', async () => {

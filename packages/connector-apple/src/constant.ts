@@ -10,7 +10,7 @@ export const accessTokenEndpoint = `${issuer}/auth/token`;
 export const jwksUri = `${issuer}/auth/keys`;
 
 // Note: only support fixed scope for v1.
-export const scope = 'name';
+export const scope = ''; // Note: `openid` is required when adding more scope(s)
 
 // eslint-disable-next-line unicorn/prefer-module
 const currentPath = __dirname;

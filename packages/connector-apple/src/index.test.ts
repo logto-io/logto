@@ -21,11 +21,11 @@ describe('getAuthorizationUri', () => {
 
   it('should get a valid uri by redirectUri and state', async () => {
     const authorizationUri = await appleMethods.getAuthorizationUri(
-      'http://localhost:3000/callback',
-      'some_state'
+      'some_state',
+      'http://localhost:3000/callback'
     );
     expect(authorizationUri).toEqual(
-      `${defaultMetadata.target}://?client_id=%3Cclient-id%3E&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fcallback&state=some_state&scope=name`
+      `${defaultMetadata.target}://?client_id=%3Cclient-id%3E&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fcallback&scope=&state=some_state`
     );
   });
 });
@@ -48,25 +48,14 @@ describe('validateConfig', () => {
   });
 
   it('should pass on valid config', async () => {
-    await expect(
-      appleMethods.validateConfig({ clientId: 'clientId', clientSecret: 'clientSecret' })
-    ).resolves.not.toThrow();
+    await expect(appleMethods.validateConfig({ clientId: 'clientId' })).resolves.not.toThrow();
   });
 
   it('should throw on empty config', async () => {
     await expect(appleMethods.validateConfig({})).rejects.toThrowError();
   });
-
-  it('should throw when missing clientSecret', async () => {
-    await expect(appleMethods.validateConfig({ clientId: 'clientId' })).rejects.toThrowError();
-  });
 });
 
 describe('getUserInfo', () => {
-  afterEach(() => {
-    nock.cleanAll();
-    jest.clearAllMocks();
-  });
-
   // TODO: add UTs for getUserInfo
 });
