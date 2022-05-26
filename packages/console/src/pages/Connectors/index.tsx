@@ -1,9 +1,8 @@
-import { ConnectorDTO, ConnectorType } from '@logto/schemas';
+import { ConnectorType } from '@logto/schemas';
 import classNames from 'classnames';
 import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
-import useSWR from 'swr';
 
 import Button from '@/components/Button';
 import Card from '@/components/Card';
@@ -12,7 +11,7 @@ import TabNav, { TabNavItem } from '@/components/TabNav';
 import TableEmpty from '@/components/Table/TableEmpty';
 import TableError from '@/components/Table/TableError';
 import TableLoading from '@/components/Table/TableLoading';
-import { RequestError } from '@/hooks/use-api';
+import useConnectorGroups from '@/hooks/use-connector-groups';
 import Plus from '@/icons/Plus';
 import * as tableStyles from '@/scss/table.module.scss';
 
@@ -25,20 +24,26 @@ const Connectors = () => {
   const isSocial = location.pathname === '/connectors/social';
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const [createType, setCreateType] = useState<ConnectorType>();
-  const { data, error, mutate } = useSWR<ConnectorDTO[], RequestError>('/api/connectors');
+  const { data, error, mutate } = useConnectorGroups();
   const isLoading = !data && !error;
 
-  const emailConnector = useMemo(
-    () => data?.find((connector) => connector.enabled && connector.type === ConnectorType.Email),
-    [data]
-  );
+  const emailConnector = useMemo(() => {
+    const emailConnectorGroup = data?.find(
+      (connector) => connector.enabled && connector.type === ConnectorType.Email
+    );
 
-  const smsConnector = useMemo(
-    () => data?.find((connector) => connector.enabled && connector.type === ConnectorType.SMS),
-    [data]
-  );
+    return emailConnectorGroup?.connectors[0];
+  }, [data]);
 
-  const socialConnectors = useMemo(() => {
+  const smsConnector = useMemo(() => {
+    const smsConnectorGroup = data?.find(
+      (connector) => connector.enabled && connector.type === ConnectorType.SMS
+    );
+
+    return smsConnectorGroup?.connectors[0];
+  }, [data]);
+
+  const socialConnectorGroups = useMemo(() => {
     if (!isSocial) {
       return;
     }
@@ -89,7 +94,7 @@ const Connectors = () => {
                 />
               )}
               {isLoading && <TableLoading columns={3} />}
-              {socialConnectors?.length === 0 && (
+              {socialConnectorGroups?.length === 0 && (
                 <TableEmpty
                   columns={3}
                   title={t('connectors.type.social')}
@@ -100,7 +105,7 @@ const Connectors = () => {
               )}
               {!isLoading && !isSocial && (
                 <ConnectorRow
-                  connector={emailConnector}
+                  connectors={emailConnector ? [emailConnector] : []}
                   type={ConnectorType.Email}
                   onClickSetup={() => {
                     setCreateType(ConnectorType.Email);
@@ -108,14 +113,13 @@ const Connectors = () => {
                 />
               )}
               {!isLoading && !isSocial && (
-                <ConnectorRow connector={smsConnector} type={ConnectorType.SMS} />
-              )}
-              {socialConnectors?.map((connector) => (
                 <ConnectorRow
-                  key={connector.id}
-                  connector={connector}
-                  type={ConnectorType.Social}
+                  connectors={smsConnector ? [smsConnector] : []}
+                  type={ConnectorType.SMS}
                 />
+              )}
+              {socialConnectorGroups?.map(({ connectors, id }) => (
+                <ConnectorRow key={id} connectors={connectors} type={ConnectorType.Social} />
               ))}
             </tbody>
           </table>

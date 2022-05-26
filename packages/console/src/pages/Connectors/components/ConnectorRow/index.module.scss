@@ -1,0 +1,23 @@
+@use '@/scss/underscore' as _;
+
+.statusItems {
+  display: flex;
+
+  .statusItem {
+    display: flex;
+    align-items: center;
+
+    &:not(:last-child) {
+      .line {
+        margin: 0 _.unit(2);
+        height: 16px;
+        @include _.vertical-bar;
+      }
+    }
+
+    .platform {
+      margin-left: _.unit(1);
+      color: var(--color-caption);
+    }
+  }
+}

@@ -21,6 +21,7 @@ const useConnectorGroups = () => {
         return [
           ...previous,
           {
+            id: item.id, // Take first connector's id as groupId, only used for indexing.
             name: item.name,
             logo: item.logo,
             target: item.target,
