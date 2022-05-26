@@ -6,29 +6,33 @@ import IconButton from '@/components/Button/IconButton';
 import SocialLinkButton from '@/components/Button/SocialLinkButton';
 import useSocial from '@/hooks/use-social';
 
-import * as styles from './PrimarySocialSignIn.module.scss';
+import * as styles from './index.module.scss';
 
-export const defaultSize = 3;
+export const defaultSize = 4;
 
 type Props = {
   className?: string;
-  isPopup?: boolean;
+  isCollapseEnabled?: boolean;
   onSocialSignInCallback?: () => void;
 };
 
-const PrimarySocialSignIn = ({ className, isPopup = false, onSocialSignInCallback }: Props) => {
-  const [showAll, setShowAll] = useState(false);
+const SocialSignInList = ({
+  className,
+  isCollapseEnabled = true,
+  onSocialSignInCallback,
+}: Props) => {
+  const [expand, setExpand] = useState(false);
   const { invokeSocialSignIn, socialConnectors } = useSocial();
   const isOverSize = socialConnectors.length > defaultSize;
-  const fullDisplay = isPopup || !isOverSize;
+  const displayAll = !isOverSize || !isCollapseEnabled;
 
   const displayConnectors = useMemo(() => {
-    if (fullDisplay || showAll) {
+    if (displayAll || expand) {
       return socialConnectors;
     }
 
     return socialConnectors.slice(0, defaultSize);
-  }, [fullDisplay, showAll, socialConnectors]);
+  }, [displayAll, expand, socialConnectors]);
 
   return (
     <div className={classNames(styles.socialLinkList, className)}>
@@ -42,11 +46,11 @@ const PrimarySocialSignIn = ({ className, isPopup = false, onSocialSignInCallbac
           }}
         />
       ))}
-      {!fullDisplay && (
+      {!displayAll && (
         <IconButton
-          className={classNames(styles.expandIcon, showAll && styles.expanded)}
+          className={classNames(styles.expandIcon, expand && styles.expanded)}
           onClick={() => {
-            setShowAll(!showAll);
+            setExpand(!expand);
           }}
         >
           <ExpandIcon />
@@ -56,4 +60,4 @@ const PrimarySocialSignIn = ({ className, isPopup = false, onSocialSignInCallbac
   );
 };
 
-export default PrimarySocialSignIn;
+export default SocialSignInList;

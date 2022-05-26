@@ -1,12 +1,12 @@
 import { Language } from '@logto/phrases';
-import React, { useMemo, useState, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import Dropdown, { DropdownItem } from '@/components/Dropdown';
 import useSocial from '@/hooks/use-social';
 import { ConnectorData } from '@/types';
 
-import * as styles from './SocialSignInDropdown.module.scss';
+import * as styles from './index.module.scss';
 
 type Props = {
   anchorRef?: React.RefObject<HTMLElement>;
@@ -19,31 +19,8 @@ const SocialSignInDropdown = ({ isOpen, onClose, connectors, anchorRef }: Props)
   const {
     i18n: { language },
   } = useTranslation();
-
-  const { invokeSocialSignIn } = useSocial();
-
   const [contentStyle, setContentStyle] = useState<{ top?: number; left?: number }>();
-
-  const items = useMemo(
-    () =>
-      connectors.map(({ id, name, logo }) => {
-        const languageKey = Object.keys(name).find((key) => key === language) ?? 'en';
-        const localName = name[languageKey as Language];
-
-        return (
-          <DropdownItem
-            key={id}
-            onClick={() => {
-              void invokeSocialSignIn(id, onClose);
-            }}
-          >
-            <img src={logo} alt={id} className={styles.socialLogo} />
-            <span>{localName}</span>
-          </DropdownItem>
-        );
-      }),
-    [connectors, language, invokeSocialSignIn, onClose]
-  );
+  const { invokeSocialSignIn } = useSocial();
 
   const adjustPosition = useCallback(() => {
     if (anchorRef?.current) {
@@ -68,7 +45,22 @@ const SocialSignInDropdown = ({ isOpen, onClose, connectors, anchorRef }: Props)
         setContentStyle(undefined);
       }}
     >
-      {items}
+      {connectors.map(({ id, name, logo }) => {
+        const languageKey = Object.keys(name).find((key) => key === language) ?? 'en';
+        const localName = name[languageKey as Language];
+
+        return (
+          <DropdownItem
+            key={id}
+            onClick={() => {
+              void invokeSocialSignIn(id, onClose);
+            }}
+          >
+            <img src={logo} alt={id} className={styles.socialLogo} />
+            <span>{localName}</span>
+          </DropdownItem>
+        );
+      })}
     </Dropdown>
   );
 };

@@ -7,9 +7,9 @@ import SocialIconButton from '@/components/Button/SocialIconButton';
 import usePlatform from '@/hooks/use-platform';
 import useSocial from '@/hooks/use-social';
 
-import * as styles from './SecondarySocialSignIn.module.scss';
-import SocialSignInDropdown from './SocialSignInDropdown';
-import SocialSignInPopUp from './SocialSignInPopUp';
+import SocialSignInDropdown from '../SocialSignInDropdown';
+import SocialSignInPopUp from '../SocialSignInPopUp';
+import * as styles from './index.module.scss';
 
 export const defaultSize = 4;
 
@@ -19,18 +19,19 @@ type Props = {
 
 const SecondarySocialSignIn = ({ className }: Props) => {
   const { socialConnectors, invokeSocialSignIn } = useSocial();
-  const isOverSize = socialConnectors.length > defaultSize;
   const [showModal, setShowModal] = useState(false);
   const moreButtonRef = useRef<HTMLButtonElement>(null);
   const { isMobile } = usePlatform();
 
+  const isCollapsed = socialConnectors.length > defaultSize;
+
   const displayConnectors = useMemo(() => {
-    if (isOverSize) {
+    if (isCollapsed) {
       return socialConnectors.slice(0, defaultSize - 1);
     }
 
     return socialConnectors;
-  }, [socialConnectors, isOverSize]);
+  }, [socialConnectors, isCollapsed]);
 
   return (
     <>
@@ -45,7 +46,7 @@ const SecondarySocialSignIn = ({ className }: Props) => {
             }}
           />
         ))}
-        {isOverSize && (
+        {isCollapsed && (
           <IconButton
             ref={moreButtonRef}
             className={styles.moreButton}
@@ -57,7 +58,7 @@ const SecondarySocialSignIn = ({ className }: Props) => {
           </IconButton>
         )}
       </div>
-      {isOverSize && isMobile && (
+      {isCollapsed && isMobile && (
         <SocialSignInPopUp
           isOpen={showModal}
           onClose={() => {
@@ -65,7 +66,7 @@ const SecondarySocialSignIn = ({ className }: Props) => {
           }}
         />
       )}
-      {isOverSize && !isMobile && (
+      {isCollapsed && !isMobile && (
         <SocialSignInDropdown
           anchorRef={moreButtonRef}
           isOpen={showModal}
