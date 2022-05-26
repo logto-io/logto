@@ -15,8 +15,8 @@ type UseApi<T extends any[], U> = {
 export type ErrorHandlers = {
   [key in LogtoErrorCode]?: (error: RequestErrorBody) => void;
 } & {
-  global?: (error: RequestErrorBody) => void;
-  callback?: (error: RequestErrorBody) => void;
+  global?: (error: RequestErrorBody) => void; // Overwrite default global error handle logic
+  callback?: (error: RequestErrorBody) => void; // Callback method
 };
 
 function useApi<Args extends any[], Response>(
