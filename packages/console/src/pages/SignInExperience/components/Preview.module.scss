@@ -4,6 +4,8 @@
   width: 480px;
   padding: 0;
   overflow: hidden;
+  box-shadow: var(--shadow-1);
+  border: 1px solid var(--color-border);
 
   .header {
     display: flex;
