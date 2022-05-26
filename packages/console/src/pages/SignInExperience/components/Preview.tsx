@@ -6,11 +6,11 @@ import React, { useEffect, useMemo, useState, useRef, useCallback } from 'react'
 import { useTranslation } from 'react-i18next';
 import useSWR from 'swr';
 
-import TopInfoImage from '@/assets/images/phone-top-info.svg';
 import Card from '@/components/Card';
 import Select from '@/components/Select';
 import TabNav, { TabNavItem } from '@/components/TabNav';
 import { RequestError } from '@/hooks/use-api';
+import PhoneInfo from '@/icons/PhoneInfo';
 
 import * as styles from './Preview.module.scss';
 
@@ -122,11 +122,11 @@ const Preview = ({ signInExperience, className }: Props) => {
         </TabNavItem>
       </TabNav>
       <div className={classNames(styles.body, styles[platform])}>
-        <div className={styles.device}>
+        <div className={classNames(styles.device, styles[mode])}>
           {platform === 'mobile' && (
             <div className={styles.topBar}>
               <div className={styles.time}>{dayjs().format('HH:mm')}</div>
-              <img src={TopInfoImage} />
+              <PhoneInfo />
             </div>
           )}
           <iframe ref={previewRef} src="/sign-in?preview=true" />
