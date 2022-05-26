@@ -68,7 +68,6 @@ export default class GoogleConnector implements SocialConnector {
           grant_type: 'authorization_code',
         },
         timeout: defaultTimeout,
-        followRedirect: true,
       })
       .json<AccessTokenResponse>();
 
