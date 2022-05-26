@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 
 import Button from '@/components/Button';
 import { PageContext } from '@/hooks/use-page-context';
-import useSocial from '@/hooks/use-social';
+import useSocialCallbackHandler from '@/hooks/use-social-callback-handler';
 
 import * as styles from './index.module.scss';
 
@@ -14,9 +14,10 @@ type Props = {
 
 const Callback = () => {
   const { connector: connectorId } = useParams<Props>();
-  const { socialCallbackHandler } = useSocial();
   const { experienceSettings } = useContext(PageContext);
   const { t } = useTranslation(undefined, { keyPrefix: 'main_flow' });
+
+  const socialCallbackHandler = useSocialCallbackHandler();
 
   const connectorLabel = useMemo(() => {
     const connector = experienceSettings?.socialConnectors.find(({ id }) => id === connectorId);

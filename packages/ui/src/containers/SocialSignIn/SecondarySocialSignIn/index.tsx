@@ -2,6 +2,7 @@ import React, { useMemo, useState, useRef } from 'react';
 
 import usePlatform from '@/hooks/use-platform';
 import useSocial from '@/hooks/use-social';
+import useSocialSignInListener from '@/hooks/use-social-signin-listener';
 
 import SocialSignInDropdown from '../SocialSignInDropdown';
 import SocialSignInIconList from '../SocialSignInIconList';
@@ -18,6 +19,8 @@ const SecondarySocialSignIn = ({ className }: Props) => {
   const [showModal, setShowModal] = useState(false);
   const moreButtonRef = useRef<HTMLButtonElement>(null);
   const { isMobile } = usePlatform();
+
+  useSocialSignInListener();
 
   const isCollapsed = socialConnectors.length > defaultSize;
 

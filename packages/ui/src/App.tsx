@@ -32,16 +32,12 @@ const App = () => {
     }
 
     (async () => {
-      setLoading(true);
-
       const settings = await getSignInExperienceSettings();
 
       // Note: i18n must be initialized ahead of global experience settings
       await initI18n(settings.languageInfo);
 
       setExperienceSettings(settings);
-
-      setLoading(false);
     })();
   }, [isPreview, setExperienceSettings, setLoading]);
 
