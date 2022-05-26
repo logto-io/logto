@@ -1,5 +1,5 @@
 import { SignInExperience } from '@logto/schemas';
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import Modal from 'react-modal';
@@ -15,6 +15,7 @@ import useAdminConsoleConfigs from '@/hooks/use-configs';
 import Close from '@/icons/Close';
 import * as modalStyles from '@/scss/modal.module.scss';
 
+import usePreviewConfigs from '../hooks';
 import { SignInExperienceForm } from '../types';
 import { signInExperienceParser } from '../utilities';
 import BrandingForm from './BrandingForm';
@@ -43,13 +44,7 @@ const GuideModal = ({ isOpen, onClose }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const formData = watch();
 
-  const previewConfigs = useMemo(() => {
-    if (!isDirty) {
-      return data;
-    }
-
-    return signInExperienceParser.toRemoteModel(formData);
-  }, [formData, isDirty, data]);
+  const previewConfigs = usePreviewConfigs(formData, isDirty, data);
 
   useEffect(() => {
     if (data && !isDirty) {
