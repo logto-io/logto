@@ -3,7 +3,7 @@ import { Provider } from 'oidc-provider';
 import { MountedApps } from '@/env-set';
 import { createContextWithRouteParameters } from '@/utils/test-utils';
 
-import koaProxyGuard, { sessionNotFoundPath } from './koa-proxy-guard';
+import koaProxyGuard, { sessionNotFoundPath, guardedPath } from './koa-proxy-guard';
 
 jest.mock('fs/promises', () => ({
   ...jest.requireActual('fs/promises'),
@@ -44,16 +44,7 @@ describe('koaProxyGuard', () => {
     });
   }
 
-  it('should not redirect if session found', async () => {
-    const provider = new Provider('');
-    const ctx = createContextWithRouteParameters({
-      url: `/sign-in`,
-    });
-    await koaProxyGuard(provider)(ctx, next);
-    expect(ctx.redirect).not.toBeCalled();
-  });
-
-  it('should not redirect if path is sessionNotFoundPath', async () => {
+  it(`should not redirect for path ${sessionNotFoundPath}`, async () => {
     const provider = new Provider('');
 
     (provider.interactionDetails as jest.Mock).mockRejectedValue(new Error('session not found'));
@@ -64,14 +55,37 @@ describe('koaProxyGuard', () => {
     expect(ctx.redirect).not.toBeCalled();
   });
 
-  it('should redirect if session not found', async () => {
+  it(`should not redirect for path /callback`, async () => {
     const provider = new Provider('');
 
     (provider.interactionDetails as jest.Mock).mockRejectedValue(new Error('session not found'));
     const ctx = createContextWithRouteParameters({
-      url: '/sign-in',
+      url: '/callback/github',
     });
     await koaProxyGuard(provider)(ctx, next);
-    expect(ctx.redirect).toBeCalled();
+    expect(ctx.redirect).not.toBeCalled();
   });
+
+  it('should not redirect if session found', async () => {
+    const provider = new Provider('');
+    const ctx = createContextWithRouteParameters({
+      url: `/sign-in`,
+    });
+    await koaProxyGuard(provider)(ctx, next);
+    expect(ctx.redirect).not.toBeCalled();
+  });
+
+  for (const path of guardedPath) {
+    // eslint-disable-next-line @typescript-eslint/no-loop-func
+    it(`should redirect if session not found for ${path}`, async () => {
+      const provider = new Provider('');
+
+      (provider.interactionDetails as jest.Mock).mockRejectedValue(new Error('session not found'));
+      const ctx = createContextWithRouteParameters({
+        url: `${path}/foo`,
+      });
+      await koaProxyGuard(provider)(ctx, next);
+      expect(ctx.redirect).toBeCalled();
+    });
+  }
 });
