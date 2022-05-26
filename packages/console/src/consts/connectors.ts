@@ -21,5 +21,6 @@ type IconPlaceHolder = {
 export const connectorIconPlaceHolder: IconPlaceHolder = Object.freeze({
   [ConnectorType.SMS]: smsConnectorIcon,
   [ConnectorType.Email]: emailConnectorIcon,
-  [ConnectorType.Social]: '', // Note: we don't need icon placeholder for social connector
+  // Note: we don't need icon placeholder for social connector
+  [ConnectorType.Social]: '',
 });
