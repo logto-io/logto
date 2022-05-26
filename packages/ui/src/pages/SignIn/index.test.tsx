@@ -4,6 +4,7 @@ import { MemoryRouter } from 'react-router-dom';
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider';
 import { mockSignInExperienceSettings } from '@/__mocks__/logto';
+import { defaultSize } from '@/containers/SocialSignIn/SocialSignInList';
 import SignIn from '@/pages/SignIn';
 
 describe('<SignIn />', () => {
@@ -56,6 +57,6 @@ describe('<SignIn />', () => {
       </SettingsProvider>
     );
 
-    expect(container.querySelectorAll('button')).toHaveLength(4); // Plus Expand Button
+    expect(container.querySelectorAll('button')).toHaveLength(defaultSize + 1); // Plus Expand Button
   });
 });

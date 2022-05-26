@@ -6,9 +6,9 @@ import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider';
 import { socialConnectors, mockSignInExperienceSettings } from '@/__mocks__/logto';
 
-import PrimarySocialSignIn, { defaultSize } from './PrimarySocialSignIn';
+import SocialSignInList, { defaultSize } from '.';
 
-describe('SecondarySocialSignIn', () => {
+describe('SocialSignInList', () => {
   it('less than three connectors', () => {
     const { container } = renderWithPageContext(
       <SettingsProvider
@@ -18,7 +18,7 @@ describe('SecondarySocialSignIn', () => {
         }}
       >
         <MemoryRouter>
-          <PrimarySocialSignIn />
+          <SocialSignInList />
         </MemoryRouter>
       </SettingsProvider>
     );
@@ -29,7 +29,7 @@ describe('SecondarySocialSignIn', () => {
     const { container } = renderWithPageContext(
       <SettingsProvider>
         <MemoryRouter>
-          <PrimarySocialSignIn />
+          <SocialSignInList />
         </MemoryRouter>
       </SettingsProvider>
     );

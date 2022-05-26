@@ -8,7 +8,7 @@ import { socialConnectors, mockSignInExperienceSettings } from '@/__mocks__/logt
 import * as socialSignInApi from '@/apis/social';
 import { generateState, storeState } from '@/hooks/utils';
 
-import SecondarySocialSignIn, { defaultSize } from './SecondarySocialSignIn';
+import SecondarySocialSignIn, { defaultSize } from '.';
 
 describe('SecondarySocialSignIn', () => {
   const mockOrigin = 'https://logto.dev';

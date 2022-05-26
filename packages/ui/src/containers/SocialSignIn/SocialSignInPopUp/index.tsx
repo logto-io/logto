@@ -2,7 +2,7 @@ import React from 'react';
 
 import Drawer from '@/components/Drawer';
 
-import PrimarySocialSignIn from './PrimarySocialSignIn';
+import SocialSignInList from '../SocialSignInList';
 
 type Props = {
   isOpen?: boolean;
@@ -12,7 +12,7 @@ type Props = {
 
 const SocialSignInPopUp = ({ isOpen = false, onClose, className }: Props) => (
   <Drawer className={className} isOpen={isOpen} onClose={onClose}>
-    <PrimarySocialSignIn isPopup onSocialSignInCallback={onClose} />
+    <SocialSignInList isCollapseEnabled={false} onSocialSignInCallback={onClose} />
   </Drawer>
 );
 
