@@ -59,6 +59,11 @@
       font: var(--font-subhead-2);
       color: var(--color-caption);
     }
+
+    .verticalBar {
+      @include _.vertical-bar;
+      height: 12px;
+    }
   }
 }
 

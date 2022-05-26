@@ -26,6 +26,7 @@ import * as detailsStyles from '@/scss/details.module.scss';
 
 import CreateForm from '../Connectors/components/CreateForm';
 import ConnectorTabs from './components/ConnectorTabs';
+import ConnectorTypeName from './components/ConnectorTypeName';
 import SenderTester from './components/SenderTester';
 import * as styles from './index.module.scss';
 
@@ -121,14 +122,17 @@ const ConnectorDetails = () => {
               <div className={styles.name}>
                 <UnnamedTrans resource={data.name} />
               </div>
-              <div className={styles.id}>{data.id}</div>
             </div>
             <div>
-              <Status status={data.enabled ? 'enabled' : 'disabled'}>
+              <ConnectorTypeName type={data.type} />
+              <div className={styles.verticalBar} />
+              <Status status={data.enabled ? 'enabled' : 'disabled'} varient="outlined">
                 {t('connectors.connector_status', {
                   context: data.enabled ? 'enabled' : 'disabled',
                 })}
               </Status>
+              <div className={styles.verticalBar} />
+              <div className={styles.id}>{data.id}</div>
             </div>
           </div>
           <div className={styles.operations}>
