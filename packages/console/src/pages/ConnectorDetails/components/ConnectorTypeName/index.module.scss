@@ -1,0 +1,9 @@
+@use '@/scss/underscore' as _;
+
+.connectorType {
+  background: var(--color-surface-variant);
+  border-radius: 10px;
+  padding: _.unit(0.5) _.unit(2);
+  color: var(--color-text);
+  font: var(--font-label-medium);
+}

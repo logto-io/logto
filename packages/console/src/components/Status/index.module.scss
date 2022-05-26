@@ -3,16 +3,29 @@
 .status {
   display: flex;
   align-items: center;
-}
+  font: var(--font-label-medium);
 
-.icon {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  margin-right: _.unit(2);
-  background: var(--color-success-70);
-}
+  .icon {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-right: _.unit(2);
+    background: var(--color-success-70);
+  }
 
-.status.offline .icon {
-  background: var(--color-neutral-70);
+  &.disabled {
+    .icon {
+      background: var(--color-neutral-70);
+    }
+  }
+
+  &.outlined {
+    padding: _.unit(0.5) _.unit(2);
+    border-radius: 10px;
+    background: var(--color-success-99);
+
+    &.disabled {
+      background: var(--color-neutral-variant-95);
+    }
+  }
 }

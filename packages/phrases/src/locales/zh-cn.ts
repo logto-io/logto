@@ -276,6 +276,9 @@ const translation = {
       more_options: '更多选项',
       connector_deleted: '成功删除连接器。',
       not_set: '（未设置）',
+      type_email: '邮件连接器',
+      type_sms: '短信连接器',
+      type_social: '社交连接器',
     },
     get_started: {
       progress: '开始使用: {{completed}}/{{total}}',
