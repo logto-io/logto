@@ -115,6 +115,7 @@ const translation = {
       invalid_uri_format: 'Invalid URI format',
       required_field_missing: 'Please enter {{field}}',
       required_field_missing_plural: 'You have to enter at least one {{field}}',
+      more_details: 'More details',
     },
     tab_sections: {
       overview: 'Overview',

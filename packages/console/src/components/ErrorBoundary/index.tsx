@@ -1,14 +1,10 @@
 import { conditional } from '@silverhand/essentials';
 import React, { Component, ReactNode } from 'react';
-import { TFunction, withTranslation } from 'react-i18next';
 
-import ErrorImage from '@/assets/images/table-error.svg';
-
-import * as styles from './index.module.scss';
+import AppError from '../AppError';
 
 type Props = {
   children: ReactNode;
-  t: TFunction;
 };
 
 type State = {
@@ -40,26 +36,15 @@ class ErrorBoundary extends Component<Props, State> {
   };
 
   render() {
-    const { children, t } = this.props;
+    const { children } = this.props;
     const { callStack, errorMessage, hasError } = this.state;
 
     if (hasError) {
-      return (
-        <div className={styles.container}>
-          <div className={styles.wrapper}>
-            <img src={ErrorImage} alt="oops" />
-            <h2>{t('admin_console.errors.something_went_wrong')}</h2>
-            <details open>
-              <summary>{errorMessage}</summary>
-              {callStack}
-            </details>
-          </div>
-        </div>
-      );
+      return <AppError errorMessage={errorMessage} callStack={callStack} />;
     }
 
     return children;
   }
 }
 
-export default withTranslation()(ErrorBoundary);
+export default ErrorBoundary;
