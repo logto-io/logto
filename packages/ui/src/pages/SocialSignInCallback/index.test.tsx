@@ -7,9 +7,11 @@ import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider
 import * as socialSignInApi from '@/apis/social';
 import { generateState, storeState } from '@/hooks/utils';
 
-import SocialCallback from './SocialCallback';
+import SocialCallback from '.';
 
-describe('SocialCallbackPage', () => {
+const origin = 'http://localhost:3000';
+
+describe('SocialCallbackPage with code', () => {
   const signInWithSocialSpy = jest
     .spyOn(socialSignInApi, 'signInWithSocial')
     .mockResolvedValue({ redirectTo: `/sign-in` });
@@ -21,6 +23,7 @@ describe('SocialCallbackPage', () => {
     /* eslint-disable @silverhand/fp/no-mutating-methods */
     Object.defineProperty(window, 'location', {
       value: {
+        origin,
         href: `/sign-in/callback?state=${state}&code=foo`,
         search: `?state=${state}&code=foo`,
         pathname: '/sign-in/callback',

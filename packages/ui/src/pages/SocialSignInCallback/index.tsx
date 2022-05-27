@@ -2,12 +2,12 @@ import React from 'react';
 
 import useSocialSignInListener from '@/hooks/use-social-sign-in-listener';
 
-import SignIn from '.';
+import SignIn from '../SignIn';
 
-const SocialCallback = () => {
+const SocialSignInCallback = () => {
   useSocialSignInListener();
 
   return <SignIn />;
 };
 
-export default SocialCallback;
+export default SocialSignInCallback;

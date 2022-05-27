@@ -14,8 +14,8 @@ import Passcode from './pages/Passcode';
 import Register from './pages/Register';
 import SecondarySignIn from './pages/SecondarySignIn';
 import SignIn from './pages/SignIn';
-import SocialSignInCallback from './pages/SignIn/SocialCallback';
 import SocialRegister from './pages/SocialRegister';
+import SocialSignInCallback from './pages/SocialSignInCallback';
 import getSignInExperienceSettings from './utils/sign-in-experience';
 
 import './scss/normalized.scss';
