@@ -41,7 +41,7 @@ const useSocialSignInListener = () => {
       void asyncSignInWithSocial({
         connectorId,
         code,
-        redirectUri: `${origin}/callback/${connectorId}`, // For validation use only
+        redirectUri: `${window.location.origin}/callback/${connectorId}`, // For validation use only
       });
     },
     [asyncSignInWithSocial]
@@ -59,19 +59,15 @@ const useSocialSignInListener = () => {
       return;
     }
 
-    const { state, code } = parseQueryParameters(window.location.search);
+    const { state, code, ...rest } = parseQueryParameters(window.location.search);
 
-    if (!state || !code) {
-      return;
-    }
-
-    if (!stateValidation(state, parameters.connector)) {
+    if (!state || !stateValidation(state, parameters.connector)) {
       setToast(t('error.invalid_connector_auth'));
 
       return;
     }
 
-    void signInWithSocialHandler(parameters.connector, state, code);
+    void signInWithSocialHandler(parameters.connector, state, code ?? JSON.stringify(rest));
   }, [parameters.connector, setToast, signInWithSocialHandler, t]);
 };
 

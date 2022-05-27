@@ -12,7 +12,6 @@ describe('util methods', () => {
   });
 
   it('queryStringify', () => {
-    expect(queryStringify('foo=test')).toEqual('foo=test');
     expect(queryStringify(new URLSearchParams({ foo: 'test' }))).toEqual('foo=test');
   });
 

@@ -14,7 +14,7 @@ const useSocialCallbackHandler = () => {
   const navigate = useNavigate();
 
   const socialCallbackHandler = useCallback(() => {
-    const { state, code, error, error_description } = parseQueryParameters(window.location.search);
+    const { state, error, error_description } = parseQueryParameters(window.location.search);
     const connectorId = parameters.connector;
 
     // Connector auth error
@@ -23,7 +23,7 @@ const useSocialCallbackHandler = () => {
     }
 
     // Connector auth missing state
-    if (!state || !code || !connectorId) {
+    if (!state || !connectorId) {
       setToast(t('error.missing_auth_data'));
 
       return;
