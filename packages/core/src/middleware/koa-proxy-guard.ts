@@ -24,10 +24,10 @@ export default function koaSpaSessionGuard<
     }
 
     // Session guard
-    if (
-      guardedPath.some((path) => requestPath.startsWith(path)) &&
-      !ctx.request.URL.searchParams.get('preview')
-    ) {
+    const isPreview = ctx.request.URL.searchParams.get('preview');
+    const isSessionRequiredPath = guardedPath.some((path) => requestPath.startsWith(path));
+
+    if (isSessionRequiredPath && !isPreview) {
       try {
         await provider.interactionDetails(ctx.req, ctx.res);
       } catch {
