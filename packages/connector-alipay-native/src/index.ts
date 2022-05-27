@@ -41,6 +41,20 @@ import { signingParameters } from './utils';
 
 export type { AlipayNativeConfig } from './types';
 
+type CodePayload = {
+  auth_code: string;
+};
+
+const parseCodeFromJson = (json: string): string => {
+  try {
+    const { auth_code } = JSON.parse(json) as CodePayload;
+
+    return auth_code;
+  } catch {
+    return json;
+  }
+};
+
 export default class AlipayNativeConnector implements SocialConnector {
   public metadata: ConnectorMetadata = defaultMetadata;
 
@@ -72,7 +86,7 @@ export default class AlipayNativeConnector implements SocialConnector {
       timestamp: dayjs().format('YYYY-MM-DD HH:mm:ss'),
       version: '1.0',
       grant_type: 'authorization_code',
-      code,
+      code: parseCodeFromJson(code),
       charset: 'UTF8',
       ...config,
     };
