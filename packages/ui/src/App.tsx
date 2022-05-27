@@ -4,7 +4,7 @@ import { Route, Routes, BrowserRouter, Navigate } from 'react-router-dom';
 
 import * as styles from './App.module.scss';
 import AppContent from './components/AppContent';
-import { isAppleConnector, loadAppleSdk } from './hooks/use-apple-auth';
+import { loadAppleSdk } from './hooks/use-apple-auth';
 import usePageContext from './hooks/use-page-context';
 import usePreview from './hooks/use-preview';
 import initI18n from './i18n/init';
@@ -17,7 +17,7 @@ import SecondarySignIn from './pages/SecondarySignIn';
 import SignIn from './pages/SignIn';
 import SocialRegister from './pages/SocialRegister';
 import SocialSignInCallback from './pages/SocialSignInCallback';
-import getSignInExperienceSettings from './utils/sign-in-experience';
+import getSignInExperienceSettings, { isAppleConnectorEnabled } from './utils/sign-in-experience';
 
 import './scss/normalized.scss';
 
@@ -37,7 +37,7 @@ const App = () => {
       const settings = await getSignInExperienceSettings();
 
       // Load Apple official SDK if Apple connector is enabled
-      if (settings.socialConnectors.some((connector) => isAppleConnector(connector))) {
+      if (isAppleConnectorEnabled(settings)) {
         await loadAppleSdk();
       }
 

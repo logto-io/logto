@@ -6,6 +6,7 @@
 import { SignInMethods } from '@logto/schemas';
 
 import { getSignInExperience } from '@/apis/settings';
+import { isAppleConnector } from '@/hooks/use-apple-auth';
 import { filterSocialConnectors } from '@/hooks/utils';
 import { SignInMethod, SignInExperienceSettingsResponse, SignInExperienceSettings } from '@/types';
 
@@ -27,6 +28,14 @@ export const getSecondarySignInMethods = (signInMethods: SignInMethods) =>
 
     return methods;
   }, []);
+
+export const isAppleConnectorEnabled = ({
+  primarySignInMethod,
+  secondarySignInMethods,
+  socialConnectors,
+}: SignInExperienceSettings) =>
+  (primarySignInMethod === 'social' || secondarySignInMethods.includes('social')) &&
+  socialConnectors.some((connector) => isAppleConnector(connector));
 
 const getSignInExperienceSettings = async (): Promise<SignInExperienceSettings> => {
   const { signInMethods, socialConnectors, ...rest } =

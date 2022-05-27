@@ -1,7 +1,7 @@
 import camelcaseKeys from 'camelcase-keys';
 import { useNavigate } from 'react-router-dom';
 
-import { inOperator } from '@/utils';
+import { inOperator, parseQueryParameters } from '@/utils';
 
 export const loadAppleSdk = async () =>
   new Promise((resolve, reject) => {
@@ -51,7 +51,7 @@ const useAppleAuth = () => {
 
   const auth = async (connectorId: string, redirectUri: string) => {
     const url = new URL(redirectUri);
-    const { redirect_uri: redirectURI, ...rest } = Object.fromEntries(url.searchParams);
+    const { redirect_uri: redirectURI, ...rest } = parseQueryParameters(url.searchParams);
 
     const config = {
       redirectURI: redirectURI ?? '',
