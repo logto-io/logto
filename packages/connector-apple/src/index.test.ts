@@ -57,5 +57,5 @@ describe('validateConfig', () => {
 });
 
 describe('getUserInfo', () => {
-  // TODO: add UTs for getUserInfo
+  // LOG-2726
 });
