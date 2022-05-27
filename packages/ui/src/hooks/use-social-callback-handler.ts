@@ -43,7 +43,10 @@ const useSocialCallbackHandler = () => {
     // Web/Mobile-Web redirect to sign-in/callback page to login
     if (platform === 'web') {
       navigate(
-        new URL(`${location.origin}/sign-in/callback/${connectorId}/${window.location.search}`),
+        {
+          pathname: `/sign-in/callback/${connectorId}`,
+          search: window.location.search,
+        },
         {
           replace: true,
         }

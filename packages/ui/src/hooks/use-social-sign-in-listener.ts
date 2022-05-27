@@ -6,7 +6,6 @@ import { signInWithSocial } from '@/apis/social';
 import { parseQueryParameters } from '@/utils';
 
 import useApi, { ErrorHandlers } from './use-api';
-import useNativeMessageListener from './use-native-message-listener';
 import { PageContext } from './use-page-context';
 import { stateValidation } from './utils';
 
@@ -15,8 +14,6 @@ const useSocialSignInListener = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'main_flow' });
   const parameters = useParams();
   const navigate = useNavigate();
-
-  useNativeMessageListener();
 
   const signInWithSocialErrorHandlers: ErrorHandlers = useMemo(
     () => ({
@@ -58,7 +55,7 @@ const useSocialSignInListener = () => {
 
   // Social Sign-In Callback Handler
   useEffect(() => {
-    if (!location.pathname.includes('/sign-in/callback') || !parameters.connector) {
+    if (!parameters.connector) {
       return;
     }
 

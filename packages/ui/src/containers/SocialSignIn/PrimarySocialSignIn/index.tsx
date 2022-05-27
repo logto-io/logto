@@ -1,6 +1,6 @@
 import React from 'react';
 
-import useSocialSignInListener from '@/hooks/use-social-signin-listener';
+import useNativeMessageListener from '@/hooks/use-native-message-listener';
 
 import SocialSignInList from '../SocialSignInList';
 
@@ -11,7 +11,7 @@ type Props = {
 };
 
 const PrimarySocialSignIn = ({ className }: Props) => {
-  useSocialSignInListener();
+  useNativeMessageListener();
 
   return <SocialSignInList className={className} />;
 };
