@@ -124,9 +124,7 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
     '/connectors/:id',
     koaGuard({
       params: object({ id: string().min(1) }),
-      body: Connectors.createGuard
-        .omit({ id: true, type: true, enabled: true, createdAt: true })
-        .partial(),
+      body: Connectors.createGuard.omit({ id: true, enabled: true, createdAt: true }).partial(),
     }),
     async (ctx, next) => {
       const {
