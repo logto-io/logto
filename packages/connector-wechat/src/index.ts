@@ -81,7 +81,14 @@ export default class WeChatConnector implements SocialConnector {
 
   public getUserInfo: GetUserInfo = async (accessTokenObject) => {
     const { accessToken, openid } = accessTokenObject;
-    assert(openid, new Error('`openid` is required for WeChat API.'));
+
+    // 'openid' is defined as a required input argument in WeChat API doc, but it does not necessarily have to
+    // be the return value from getAccessToken per testing.
+    // In other words, 'openid' is required but the response of getUserInfo is consistent as long as
+    // access_token is valid.
+    // We are expecting to get 41009 'missing openid' response according to the developers doc, but the
+    // fact is that we still got 40001 'invalid credentials' response.
+    assert(openid, new Error('`openid` is required by WeChat API.'));
 
     try {
       const { unionid, headimgurl, nickname, errcode, errmsg } = await got
@@ -91,16 +98,9 @@ export default class WeChatConnector implements SocialConnector {
         })
         .json<UserInfoResponse>();
 
-      // 'openid' is defined as a required input argument in WeChat API doc, but it does not necessarily to
-      // be the return value from getAccessToken per testing.
-      // In another word, 'openid' is required but the response of getUserInfo is consistent as long as
-      // access_token is valid.
-      // We are expecting to get 41009 'missing openid' response according to the developers doc, but the
-      // fact is that we still got 40001 'invalid credentials' response.
-
       // Response properties of user info can be separated into two groups: (1) {unionid, headimgurl, nickname}, (2) {errcode, errmsg}.
       // These two groups are mutually exclusive: if group (1) is not empty, group (2) should be empty and vice versa.
-      // 'errmsg' and 'errcode' turn to be non-empty values or empty values at the same time. Hence, if 'errmsg' is non-empty then 'errcode' should be non-empty.
+      // 'errmsg' and 'errcode' turn to non-empty values or empty values at the same time. Hence, if 'errmsg' is non-empty then 'errcode' should be non-empty.
 
       assert(errcode !== 40_001, new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid));
       assert(!errcode, new Error(errmsg));

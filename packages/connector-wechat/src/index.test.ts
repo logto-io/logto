@@ -115,7 +115,7 @@ describe('getUserInfo', () => {
       nickname: 'wechat bot',
     });
     await expect(weChatMethods.getUserInfo({ accessToken: 'accessToken' })).rejects.toMatchError(
-      new Error('`openid` is required for WeChat API.')
+      new Error('`openid` is required by WeChat API.')
     );
   });
 

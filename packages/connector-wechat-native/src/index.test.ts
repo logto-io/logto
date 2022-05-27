@@ -116,7 +116,7 @@ describe('getUserInfo', () => {
     });
     await expect(
       weChatNativeMethods.getUserInfo({ accessToken: 'accessToken' })
-    ).rejects.toMatchError(new Error('`openid` is required for WeChat API.'));
+    ).rejects.toMatchError(new Error('`openid` is required by WeChat API.'));
   });
 
   it('throws SocialAccessTokenInvalid error if errcode is 40001', async () => {
