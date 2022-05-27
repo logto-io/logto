@@ -7,7 +7,7 @@ export const parseQueryParameters = (parameters: string | URLSearchParams) => {
   const searchParameters =
     parameters instanceof URLSearchParams ? parameters : new URLSearchParams(parameters);
 
-  return Object.fromEntries(searchParameters.entries());
+  return Object.fromEntries(searchParameters);
 };
 
 export const queryStringify = (parameters: URLSearchParams | Record<string, string>) => {
@@ -31,3 +31,9 @@ type Entries<T> = Array<
 >;
 
 export const entries = <T>(object: T): Entries<T> => Object.entries(object) as Entries<T>;
+
+// eslint-disable-next-line @typescript-eslint/ban-types
+export const inOperator = <K extends string, T extends object>(
+  key: K,
+  object: T
+): object is T & Record<K, unknown> => key in object;

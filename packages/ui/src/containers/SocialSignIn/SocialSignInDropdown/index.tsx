@@ -45,7 +45,7 @@ const SocialSignInDropdown = ({ isOpen, onClose, connectors, anchorRef }: Props)
         setContentStyle(undefined);
       }}
     >
-      {connectors.map(({ id, name, logo }) => {
+      {connectors.map(({ id, name, logo, target }) => {
         const languageKey = Object.keys(name).find((key) => key === language) ?? 'en';
         const localName = name[languageKey as Language];
 
@@ -53,7 +53,7 @@ const SocialSignInDropdown = ({ isOpen, onClose, connectors, anchorRef }: Props)
           <DropdownItem
             key={id}
             onClick={() => {
-              void invokeSocialSignIn(id, onClose);
+              void invokeSocialSignIn(id, target, onClose);
             }}
           >
             <img src={logo} alt={id} className={styles.socialLogo} />

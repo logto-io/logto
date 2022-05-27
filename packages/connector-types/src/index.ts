@@ -33,6 +33,7 @@ export enum ConnectorErrorCodes {
   TemplateNotFound,
   SocialAuthCodeInvalid,
   SocialAccessTokenInvalid,
+  SocialIdTokenInvalid,
 }
 
 export class ConnectorError extends Error {
@@ -85,10 +86,10 @@ export interface EmailConnector extends BaseConnector {
   sendMessage: EmailSendMessageFunction;
 }
 
-export interface SocialConnector extends BaseConnector {
+export interface SocialConnector<TokenObject = AccessTokenObject> extends BaseConnector {
   getAuthorizationUri: GetAuthorizationUri;
-  getAccessToken: GetAccessToken;
-  getUserInfo: GetUserInfo;
+  getAccessToken: GetAccessToken<TokenObject>;
+  getUserInfo: GetUserInfo<TokenObject>;
 }
 
 export type ValidateConfig<T = Record<string, unknown>> = (config: T) => Promise<void>;
@@ -97,10 +98,13 @@ export type GetAuthorizationUri = (state: string, redirectUri: string) => Promis
 
 export type AccessTokenObject = { accessToken: string } & Record<string, string>;
 
-export type GetAccessToken = (code: string, redirectUri?: string) => Promise<AccessTokenObject>;
+export type GetAccessToken<TokenObject = AccessTokenObject> = (
+  code: string,
+  redirectUri?: string
+) => Promise<TokenObject>;
 
-export type GetUserInfo = (
-  accessTokenObject: AccessTokenObject
+export type GetUserInfo<TokenObject = AccessTokenObject> = (
+  accessTokenObject: TokenObject
 ) => Promise<{ id: string } & Record<string, string | undefined>>;
 
 export type GetConnectorConfig<T = Record<string, unknown>> = (id: string) => Promise<T>;
