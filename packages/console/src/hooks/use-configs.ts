@@ -5,12 +5,12 @@ import useSWR from 'swr';
 import useApi, { RequestError } from './use-api';
 
 const useAdminConsoleConfigs = () => {
-  const { isAuthenticated } = useLogto();
+  const { isAuthenticated, error: authError } = useLogto();
   const {
     data: settings,
     error,
     mutate,
-  } = useSWR<Setting, RequestError>(isAuthenticated && '/api/settings');
+  } = useSWR<Setting, RequestError>(isAuthenticated && !authError && '/api/settings');
   const api = useApi();
 
   const updateConfigs = async (delta: Partial<AdminConsoleConfig>) => {

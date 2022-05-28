@@ -28,13 +28,13 @@
     display: flex;
     align-items: center;
     margin-top: _.unit(4);
-
-    span {
-      display: inline-block;
-      font: var(--font-body-medium);
-    }
+    max-width: 470px;
+    font: var(--font-body-medium);
+    text-align: center;
 
     .expander {
+      display: inline-flex;
+      align-items: center;
       margin-left: _.unit(2);
       color: var(--color-primary);
       cursor: pointer;
