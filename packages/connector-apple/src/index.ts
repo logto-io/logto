@@ -9,10 +9,9 @@ import {
   SocialConnector,
   GetConnectorConfig,
 } from '@logto/connector-types';
-import { conditional } from '@silverhand/essentials';
 import { createRemoteJWKSet, jwtVerify } from 'jose';
 
-import { scope, defaultMetadata, jwksUri, issuer } from './constant';
+import { scope, defaultMetadata, jwksUri, issuer, authorizationEndpoint } from './constant';
 import { appleConfigGuard, AppleConfig, appleDataGuard } from './types';
 
 // TO-DO: support nonce validation
@@ -37,9 +36,12 @@ export default class AppleConnector implements SocialConnector<string> {
       redirect_uri: redirectUri,
       scope,
       state,
+      // https://developer.apple.com/documentation/sign_in_with_apple/sign_in_with_apple_js/incorporating_sign_in_with_apple_into_other_platforms#3332113
+      response_type: 'code id_token',
+      response_mode: 'fragment',
     });
 
-    return `${this.metadata.target}://?${queryParameters.toString()}`;
+    return `${authorizationEndpoint}?${queryParameters.toString()}`;
   };
 
   // Directly return now. Refactor with connector interface redesign.
@@ -50,10 +52,7 @@ export default class AppleConnector implements SocialConnector<string> {
   // Extract data from JSON string.
   // Refactor with connector interface redesign.
   public getUserInfo: GetUserInfo<string> = async (data) => {
-    const {
-      authorization: { id_token: idToken },
-      user,
-    } = appleDataGuard.parse(JSON.parse(data));
+    const { id_token: idToken } = appleDataGuard.parse(JSON.parse(data));
 
     if (!idToken) {
       throw new ConnectorError(ConnectorErrorCodes.SocialIdTokenInvalid);
@@ -71,13 +70,8 @@ export default class AppleConnector implements SocialConnector<string> {
         throw new ConnectorError(ConnectorErrorCodes.SocialIdTokenInvalid);
       }
 
-      const name = [user?.name?.firstName, user?.name?.lastName]
-        .filter((value) => Boolean(value))
-        .join(' ');
-
       return {
         id: payload.sub,
-        name: conditional(name),
       };
     } catch {
       throw new ConnectorError(ConnectorErrorCodes.SocialIdTokenInvalid);

@@ -37,7 +37,7 @@ const useSocialSignInListener = () => {
   );
 
   const signInWithSocialHandler = useCallback(
-    async (connectorId: string, state: string, code: string) => {
+    async (connectorId: string, code: string) => {
       void asyncSignInWithSocial({
         connectorId,
         code,
@@ -59,7 +59,7 @@ const useSocialSignInListener = () => {
       return;
     }
 
-    const { state, code, ...rest } = parseQueryParameters(window.location.search);
+    const { state, ...rest } = parseQueryParameters(window.location.search);
 
     if (!state || !stateValidation(state, parameters.connector)) {
       setToast(t('error.invalid_connector_auth'));
@@ -67,7 +67,7 @@ const useSocialSignInListener = () => {
       return;
     }
 
-    void signInWithSocialHandler(parameters.connector, state, code ?? JSON.stringify(rest));
+    void signInWithSocialHandler(parameters.connector, JSON.stringify(rest));
   }, [parameters.connector, setToast, signInWithSocialHandler, t]);
 };
 

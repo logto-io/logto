@@ -2,7 +2,7 @@ import { GetConnectorConfig } from '@logto/connector-types';
 import nock from 'nock';
 
 import AppleConnector from '.';
-import { defaultMetadata } from './constant';
+import { authorizationEndpoint } from './constant';
 import { mockedConfig } from './mock';
 import { AppleConfig } from './types';
 
@@ -25,7 +25,7 @@ describe('getAuthorizationUri', () => {
       'http://localhost:3000/callback'
     );
     expect(authorizationUri).toEqual(
-      `${defaultMetadata.target}://?client_id=%3Cclient-id%3E&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fcallback&scope=&state=some_state`
+      `${authorizationEndpoint}?client_id=%3Cclient-id%3E&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fcallback&scope=&state=some_state&response_type=code+id_token&response_mode=fragment`
     );
   });
 });

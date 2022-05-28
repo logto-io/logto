@@ -40,8 +40,14 @@ export const getUserInfoByAuthCode = async (
   authCode: string,
   redirectUri: string
 ): Promise<SocialUserInfo> => {
+  // TO-DO: rename and refactor connector methods
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  const data = JSON.parse(authCode);
   const connector = await getConnector(connectorId);
-  const accessTokenObject = await connector.getAccessToken(authCode, redirectUri);
+  const accessTokenObject = await connector.getAccessToken(
+    Object.keys(data).length > 1 ? authCode : data.code,
+    redirectUri
+  );
 
   return connector.getUserInfo(accessTokenObject);
 };

@@ -14,7 +14,8 @@ const useSocialCallbackHandler = () => {
   const navigate = useNavigate();
 
   const socialCallbackHandler = useCallback(() => {
-    const { state, error, error_description } = parseQueryParameters(window.location.search);
+    const data = window.location.search || '?' + window.location.hash.slice(1);
+    const { state, error, error_description } = parseQueryParameters(data);
     const connectorId = parameters.connector;
 
     // Connector auth error
@@ -45,7 +46,7 @@ const useSocialCallbackHandler = () => {
       navigate(
         {
           pathname: `/sign-in/callback/${connectorId}`,
-          search: window.location.search,
+          search: data,
         },
         {
           replace: true,
@@ -60,7 +61,7 @@ const useSocialCallbackHandler = () => {
       throw new Error('CallbackLink is empty');
     }
 
-    window.location.assign(new URL(`${callbackLink}${window.location.search}`));
+    window.location.assign(new URL(`${callbackLink}${data}`));
   }, [navigate, parameters.connector, setToast, t]);
 
   return socialCallbackHandler;
