@@ -507,9 +507,9 @@ const translation = {
       appearance_dark: '深色模式',
       saved: '已保存',
     },
-    session_expire: {
+    session_expired: {
       title: '会话已过期',
-      subtitle: '由于会话过期，您已被登出. 请点击下方按钮重新登录到管理界面.',
+      subtitle: '会话可能已过期，您已被登出. 请点击下方按钮重新登录到管理界面.',
       button: '重新登录',
     },
   },

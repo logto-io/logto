@@ -3,30 +3,31 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHref } from 'react-router-dom';
 
-import WarningIcon from '@/assets/images/warning.svg';
-
+import AppError from '../AppError';
 import Button from '../Button';
 import * as styles from './index.module.scss';
 
 const SessionExpired = () => {
-  const { signIn } = useLogto();
+  const { error, signIn } = useLogto();
   const href = useHref('/callback');
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   return (
-    <div className={styles.container}>
-      <img src={WarningIcon} />
-      <div className={styles.title}>{t('session_expire.title')}</div>
-      <div className={styles.subtitle}>{t('session_expire.subtitle')}</div>
+    <AppError
+      title={t('session_expired.title')}
+      errorMessage={t('session_expired.subtitle')}
+      callStack={error?.stack}
+    >
       <Button
+        className={styles.retryButton}
         size="large"
         type="outline"
-        title="admin_console.session_expire.button"
+        title="admin_console.session_expired.button"
         onClick={() => {
           void signIn(new URL(href, window.location.origin).toString());
         }}
       />
-    </div>
+    </AppError>
   );
 };
 

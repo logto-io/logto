@@ -1,14 +1,15 @@
-import { useLogto } from '@logto/react';
+import { LogtoClientError, useLogto } from '@logto/react';
 import { AppearanceMode } from '@logto/schemas';
 import React, { useEffect } from 'react';
 import { Outlet, useHref, useLocation, useNavigate } from 'react-router-dom';
 
+import AppError from '@/components/AppError';
+import LogtoLoading from '@/components/LogtoLoading';
+import SessionExpired from '@/components/SessionExpired';
 import { themeStorageKey } from '@/consts';
 import useAdminConsoleConfigs from '@/hooks/use-configs';
 import initI18n from '@/i18n/init';
 
-import LogtoLoading from '../LogtoLoading';
-import SessionExpired from '../SessionExpired';
 import Sidebar, { getPath } from './components/Sidebar';
 import { useSidebarMenuItems } from './components/Sidebar/hook';
 import Topbar from './components/Topbar';
@@ -61,12 +62,16 @@ const AppContent = () => {
     }
   }, [location.pathname, configs, sections, navigate]);
 
-  if (!isAuthenticated || isLoadingConfigs) {
-    return <LogtoLoading message="general.loading" />;
+  if (error) {
+    if (error instanceof LogtoClientError) {
+      return <SessionExpired />;
+    }
+
+    return <AppError errorMessage={error.message} callStack={error.stack} />;
   }
 
-  if (error) {
-    return <SessionExpired />;
+  if (!isAuthenticated || isLoadingConfigs) {
+    return <LogtoLoading message="general.loading" />;
   }
 
   return (

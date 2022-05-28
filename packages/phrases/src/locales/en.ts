@@ -511,10 +511,10 @@ const translation = {
       appearance_dark: 'Dark mode',
       saved: 'Saved!',
     },
-    session_expire: {
+    session_expired: {
       title: 'Session Expired',
       subtitle:
-        'Your session has expired and you have been disconnected. Click the button below to sign in admin console again.',
+        'Your session might have expired and you have been disconnected. Click the button below to sign in to admin console again.',
       button: 'Sign in again',
     },
   },
