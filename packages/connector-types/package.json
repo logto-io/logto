@@ -23,18 +23,18 @@
     "@logto/phrases": "^0.1.0"
   },
   "devDependencies": {
-    "@jest/types": "^27.5.1",
+    "@jest/types": "^28.0.0",
     "@shopify/jest-koa-mocks": "^4.0.0",
     "@silverhand/eslint-config": "^0.14.0",
     "@silverhand/essentials": "^1.1.6",
     "@silverhand/ts-config": "^0.14.0",
     "@types/jest": "^27.4.1",
     "eslint": "^8.10.0",
-    "jest": "^27.5.1",
+    "jest": "^28.0.0",
     "jest-matcher-specific-error": "^1.0.0",
     "lint-staged": "^12.0.0",
     "prettier": "^2.3.2",
-    "ts-jest": "^27.1.1",
+    "ts-jest": "^28.0.0",
     "typescript": "^4.6.2"
   },
   "eslintConfig": {
