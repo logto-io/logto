@@ -54,5 +54,6 @@
     font: var(--font-body-medium);
     padding: _.unit(6);
     white-space: pre-wrap;
+    word-break: break-all;
   }
 }
