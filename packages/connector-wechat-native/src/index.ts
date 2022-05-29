@@ -83,8 +83,6 @@ export default class WeChatNativeConnector implements SocialConnector {
     return { accessToken, openid };
   };
 
-  // FIXME:
-
   public getUserInfo: GetUserInfo = async (data) => {
     const { code } = codeDataGuard.parse(data);
     const { accessToken, openid } = await this.getAccessToken(code);
