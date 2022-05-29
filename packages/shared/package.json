@@ -5,7 +5,8 @@
   "author": "Silverhand Inc. <contact@silverhand.io>",
   "license": "MPL-2.0",
   "files": [
-    "lib"
+    "lib",
+    "scss"
   ],
   "private": true,
   "scripts": {
