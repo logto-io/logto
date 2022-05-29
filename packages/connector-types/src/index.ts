@@ -1,5 +1,6 @@
 import { Language } from '@logto/phrases';
 import { Nullable } from '@silverhand/essentials';
+import { z } from 'zod';
 
 export enum ConnectorType {
   Email = 'Email',
@@ -86,25 +87,33 @@ export interface EmailConnector extends BaseConnector {
   sendMessage: EmailSendMessageFunction;
 }
 
-export interface SocialConnector<TokenObject = AccessTokenObject> extends BaseConnector {
+export interface SocialConnector extends BaseConnector {
   getAuthorizationUri: GetAuthorizationUri;
-  getAccessToken: GetAccessToken<TokenObject>;
-  getUserInfo: GetUserInfo<TokenObject>;
+  getUserInfo: GetUserInfo;
 }
 
 export type ValidateConfig<T = Record<string, unknown>> = (config: T) => Promise<void>;
 
-export type GetAuthorizationUri = (state: string, redirectUri: string) => Promise<string>;
+export type GetAuthorizationUri = (payload: {
+  state: string;
+  redirectUri: string;
+}) => Promise<string>;
 
-export type AccessTokenObject = { accessToken: string } & Record<string, string>;
-
-export type GetAccessToken<TokenObject = AccessTokenObject> = (
-  code: string,
-  redirectUri?: string
-) => Promise<TokenObject>;
-
-export type GetUserInfo<TokenObject = AccessTokenObject> = (
-  accessTokenObject: TokenObject
+export type GetUserInfo = (
+  data: unknown
 ) => Promise<{ id: string } & Record<string, string | undefined>>;
 
 export type GetConnectorConfig<T = Record<string, unknown>> = (id: string) => Promise<T>;
+
+export const codeDataGuard = z.object({
+  code: z.string(),
+});
+
+export type CodeData = z.infer<typeof codeDataGuard>;
+
+export const codeWithRedirectDataGuard = z.object({
+  code: z.string(),
+  redirectUri: z.string(),
+});
+
+export type CodeWithRedirectData = z.infer<typeof codeWithRedirectDataGuard>;

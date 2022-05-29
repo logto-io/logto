@@ -13,7 +13,7 @@ import {
 import { conditional } from '@silverhand/essentials';
 import pick from 'lodash.pick';
 import { Provider } from 'oidc-provider';
-import { object, string } from 'zod';
+import { object, string, unknown } from 'zod';
 
 import { getSocialConnectorInstanceById } from '@/connectors';
 import RequestError from '@/errors/RequestError';
@@ -196,7 +196,7 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
       assertThat(state && redirectUri, 'session.insufficient_info');
       const connector = await getSocialConnectorInstanceById(connectorId);
       assertThat(connector.connector.enabled, 'connector.not_enabled');
-      const redirectTo = await connector.getAuthorizationUri(state, redirectUri);
+      const redirectTo = await connector.getAuthorizationUri({ state, redirectUri });
       ctx.body = { redirectTo };
 
       return next();
@@ -208,16 +208,15 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
     koaGuard({
       body: object({
         connectorId: string(),
-        code: string(),
-        redirectUri: string().regex(redirectUriRegEx),
+        data: unknown(),
       }),
     }),
     async (ctx, next) => {
-      const { connectorId, code, redirectUri } = ctx.guard.body;
+      const { connectorId, data } = ctx.guard.body;
       const type = 'SignInSocial';
-      ctx.log(type, { connectorId, code, redirectUri });
+      ctx.log(type, { connectorId, data });
 
-      const userInfo = await getUserInfoByAuthCode(connectorId, code, redirectUri);
+      const userInfo = await getUserInfoByAuthCode(connectorId, data);
       ctx.log(type, { userInfo });
 
       if (!(await hasUserWithIdentity(connectorId, userInfo.id))) {

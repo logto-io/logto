@@ -7,12 +7,12 @@ import {
   ConnectorError,
   ConnectorErrorCodes,
   ConnectorMetadata,
-  GetAccessToken,
   GetAuthorizationUri,
   GetUserInfo,
   ValidateConfig,
   SocialConnector,
   GetConnectorConfig,
+  codeWithRedirectDataGuard,
 } from '@logto/connector-types';
 import { assert } from '@silverhand/essentials';
 import got, { RequestError as GotRequestError } from 'got';
@@ -45,7 +45,7 @@ export default class FacebookConnector implements SocialConnector {
     }
   };
 
-  public getAuthorizationUri: GetAuthorizationUri = async (state, redirectUri) => {
+  public getAuthorizationUri: GetAuthorizationUri = async ({ state, redirectUri }) => {
     const config = await this.getConfig(this.metadata.id);
 
     const queryParameters = new URLSearchParams({
@@ -59,7 +59,7 @@ export default class FacebookConnector implements SocialConnector {
     return `${authorizationEndpoint}?${queryParameters.toString()}`;
   };
 
-  public getAccessToken: GetAccessToken = async (code, redirectUri) => {
+  public getAccessToken = async (code: string, redirectUri: string) => {
     const { clientId: client_id, clientSecret: client_secret } = await this.getConfig(
       this.metadata.id
     );
@@ -81,8 +81,9 @@ export default class FacebookConnector implements SocialConnector {
     return { accessToken };
   };
 
-  public getUserInfo: GetUserInfo = async (accessTokenObject) => {
-    const { accessToken } = accessTokenObject;
+  public getUserInfo: GetUserInfo = async (data) => {
+    const { code, redirectUri } = codeWithRedirectDataGuard.parse(data);
+    const { accessToken } = await this.getAccessToken(code, redirectUri);
 
     try {
       const { id, email, name, picture } = await got

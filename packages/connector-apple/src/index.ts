@@ -1,6 +1,5 @@
 import {
   ConnectorMetadata,
-  GetAccessToken,
   GetAuthorizationUri,
   ValidateConfig,
   GetUserInfo,
@@ -12,10 +11,10 @@ import {
 import { createRemoteJWKSet, jwtVerify } from 'jose';
 
 import { scope, defaultMetadata, jwksUri, issuer, authorizationEndpoint } from './constant';
-import { appleConfigGuard, AppleConfig, appleDataGuard } from './types';
+import { appleConfigGuard, AppleConfig, dataGuard } from './types';
 
 // TO-DO: support nonce validation
-export default class AppleConnector implements SocialConnector<string> {
+export default class AppleConnector implements SocialConnector {
   public metadata: ConnectorMetadata = defaultMetadata;
 
   constructor(public readonly getConfig: GetConnectorConfig<AppleConfig>) {}
@@ -28,7 +27,7 @@ export default class AppleConnector implements SocialConnector<string> {
     }
   };
 
-  public getAuthorizationUri: GetAuthorizationUri = async (state, redirectUri) => {
+  public getAuthorizationUri: GetAuthorizationUri = async ({ state, redirectUri }) => {
     const config = await this.getConfig(this.metadata.id);
 
     const queryParameters = new URLSearchParams({
@@ -44,15 +43,8 @@ export default class AppleConnector implements SocialConnector<string> {
     return `${authorizationEndpoint}?${queryParameters.toString()}`;
   };
 
-  // Directly return now. Refactor with connector interface redesign.
-  getAccessToken: GetAccessToken<string> = async (code) => {
-    return code;
-  };
-
-  // Extract data from JSON string.
-  // Refactor with connector interface redesign.
-  public getUserInfo: GetUserInfo<string> = async (data) => {
-    const { id_token: idToken } = appleDataGuard.parse(JSON.parse(data));
+  public getUserInfo: GetUserInfo = async (data) => {
+    const { id_token: idToken } = dataGuard.parse(data);
 
     if (!idToken) {
       throw new ConnectorError(ConnectorErrorCodes.SocialIdTokenInvalid);

@@ -20,10 +20,10 @@ describe('getAuthorizationUri', () => {
   });
 
   it('should get a valid uri by redirectUri and state', async () => {
-    const authorizationUri = await githubMethods.getAuthorizationUri(
-      'some_state',
-      'http://localhost:3000/callback'
-    );
+    const authorizationUri = await githubMethods.getAuthorizationUri({
+      state: 'some_state',
+      redirectUri: 'http://localhost:3000/callback',
+    });
     expect(authorizationUri).toEqual(
       `${authorizationEndpoint}?client_id=%3Cclient-id%3E&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fcallback&state=some_state&scope=read%3Auser`
     );
@@ -75,6 +75,14 @@ describe('validateConfig', () => {
 });
 
 describe('getUserInfo', () => {
+  beforeEach(() => {
+    nock(accessTokenEndpoint).post('').reply(200, {
+      access_token: 'access_token',
+      scope: 'scope',
+      token_type: 'token_type',
+    });
+  });
+
   afterEach(() => {
     nock.cleanAll();
     jest.clearAllMocks();
@@ -87,7 +95,7 @@ describe('getUserInfo', () => {
       name: 'monalisa octocat',
       email: 'octocat@github.com',
     });
-    const socialUserInfo = await githubMethods.getUserInfo({ accessToken: 'code' });
+    const socialUserInfo = await githubMethods.getUserInfo({ code: 'code' });
     expect(socialUserInfo).toMatchObject({
       id: '1',
       avatar: 'https://github.com/images/error/octocat_happy.gif',
@@ -103,7 +111,7 @@ describe('getUserInfo', () => {
       name: null,
       email: null,
     });
-    const socialUserInfo = await githubMethods.getUserInfo({ accessToken: 'code' });
+    const socialUserInfo = await githubMethods.getUserInfo({ code: 'code' });
     expect(socialUserInfo).toMatchObject({
       id: '1',
     });
@@ -111,13 +119,13 @@ describe('getUserInfo', () => {
 
   it('throws SocialAccessTokenInvalid error if remote response code is 401', async () => {
     nock(userInfoEndpoint).get('').reply(401);
-    await expect(githubMethods.getUserInfo({ accessToken: 'code' })).rejects.toMatchError(
+    await expect(githubMethods.getUserInfo({ code: 'code' })).rejects.toMatchError(
       new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid)
     );
   });
 
   it('throws unrecognized error', async () => {
     nock(userInfoEndpoint).get('').reply(500);
-    await expect(githubMethods.getUserInfo({ accessToken: 'code' })).rejects.toThrow();
+    await expect(githubMethods.getUserInfo({ code: 'code' })).rejects.toThrow();
   });
 });

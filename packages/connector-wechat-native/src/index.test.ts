@@ -20,10 +20,10 @@ describe('getAuthorizationUri', () => {
   });
 
   it('should get a valid uri', async () => {
-    const authorizationUri = await weChatNativeMethods.getAuthorizationUri(
-      'dummy-state',
-      'dummy-redirect-uri'
-    );
+    const authorizationUri = await weChatNativeMethods.getAuthorizationUri({
+      state: 'dummy-state',
+      redirectUri: 'dummy-redirect-uri',
+    });
     expect(authorizationUri).toEqual(
       `${authorizationEndpoint}?app_id=%3Capp-id%3E&state=dummy-state`
     );
@@ -83,13 +83,31 @@ describe('validateConfig', () => {
 });
 
 describe('getUserInfo', () => {
+  beforeEach(() => {
+    const accessTokenEndpointUrl = new URL(accessTokenEndpoint);
+    const parameters = new URLSearchParams({
+      appid: '<app-id>',
+      secret: '<app-secret>',
+      code: 'code',
+      grant_type: 'authorization_code',
+    });
+
+    nock(accessTokenEndpointUrl.origin)
+      .get(accessTokenEndpointUrl.pathname)
+      .query(parameters)
+      .reply(200, {
+        access_token: 'access_token',
+        openid: 'openid',
+      });
+  });
+
   afterEach(() => {
     nock.cleanAll();
     jest.clearAllMocks();
   });
 
   const userInfoEndpointUrl = new URL(userInfoEndpoint);
-  const parameters = new URLSearchParams({ access_token: 'accessToken', openid: 'openid' });
+  const parameters = new URLSearchParams({ access_token: 'access_token', openid: 'openid' });
 
   it('should get valid SocialUserInfo', async () => {
     nock(userInfoEndpointUrl.origin).get(userInfoEndpointUrl.pathname).query(parameters).reply(0, {
@@ -97,10 +115,7 @@ describe('getUserInfo', () => {
       headimgurl: 'https://github.com/images/error/octocat_happy.gif',
       nickname: 'wechat bot',
     });
-    const socialUserInfo = await weChatNativeMethods.getUserInfo({
-      accessToken: 'accessToken',
-      openid: 'openid',
-    });
+    const socialUserInfo = await weChatNativeMethods.getUserInfo({ code: 'code' });
     expect(socialUserInfo).toMatchObject({
       id: 'this_is_an_arbitrary_wechat_union_id',
       avatar: 'https://github.com/images/error/octocat_happy.gif',
@@ -124,16 +139,14 @@ describe('getUserInfo', () => {
       .get(userInfoEndpointUrl.pathname)
       .query(parameters)
       .reply(200, { errcode: 40_001 });
-    await expect(
-      weChatNativeMethods.getUserInfo({ accessToken: 'accessToken', openid: 'openid' })
-    ).rejects.toMatchError(new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid));
+    await expect(weChatNativeMethods.getUserInfo({ code: 'code' })).rejects.toMatchError(
+      new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid)
+    );
   });
 
   it('throws unrecognized error', async () => {
     nock(userInfoEndpointUrl.origin).get(userInfoEndpointUrl.pathname).query(parameters).reply(500);
-    await expect(
-      weChatNativeMethods.getUserInfo({ accessToken: 'accessToken', openid: 'openid' })
-    ).rejects.toThrow();
+    await expect(weChatNativeMethods.getUserInfo({ code: 'code' })).rejects.toThrow();
   });
 
   it('throws Error if request failed and errcode is not 40001', async () => {
@@ -141,18 +154,15 @@ describe('getUserInfo', () => {
       .get(userInfoEndpointUrl.pathname)
       .query(parameters)
       .reply(200, { errcode: 40_003, errmsg: 'invalid openid' });
-    await expect(
-      weChatNativeMethods.getUserInfo({ accessToken: 'accessToken', openid: 'openid' })
-    ).rejects.toMatchError(new Error('invalid openid'));
+    await expect(weChatNativeMethods.getUserInfo({ code: 'code' })).rejects.toMatchError(
+      new Error('invalid openid')
+    );
   });
 
   it('throws SocialAccessTokenInvalid error if response code is 401', async () => {
-    nock(userInfoEndpointUrl.origin)
-      .get(userInfoEndpointUrl.pathname)
-      .query(new URLSearchParams({ access_token: 'wrongAccessToken', openid: 'openid' }))
-      .reply(401);
-    await expect(
-      weChatNativeMethods.getUserInfo({ accessToken: 'wrongAccessToken', openid: 'openid' })
-    ).rejects.toMatchError(new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid));
+    nock(userInfoEndpointUrl.origin).get(userInfoEndpointUrl.pathname).query(parameters).reply(401);
+    await expect(weChatNativeMethods.getUserInfo({ code: 'code' })).rejects.toMatchError(
+      new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid)
+    );
   });
 });

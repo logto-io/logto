@@ -6,16 +6,15 @@
  */
 
 import {
-  AccessTokenObject,
   ConnectorError,
   ConnectorErrorCodes,
   ConnectorMetadata,
-  GetAccessToken,
   GetAuthorizationUri,
   GetUserInfo,
   ValidateConfig,
   SocialConnector,
   GetConnectorConfig,
+  codeDataGuard,
 } from '@logto/connector-types';
 import { assert } from '@silverhand/essentials';
 import dayjs from 'dayjs';
@@ -64,7 +63,7 @@ export default class AlipayConnector implements SocialConnector {
     }
   };
 
-  public getAuthorizationUri: GetAuthorizationUri = async (state, redirectUri) => {
+  public getAuthorizationUri: GetAuthorizationUri = async ({ state, redirectUri }) => {
     const { appId: app_id } = await this.getConfig(this.metadata.id);
 
     const redirect_uri = encodeURI(redirectUri);
@@ -79,7 +78,7 @@ export default class AlipayConnector implements SocialConnector {
     return `${authorizationEndpoint}?${queryParameters.toString()}`;
   };
 
-  public getAccessToken: GetAccessToken = async (code): Promise<AccessTokenObject> => {
+  public getAccessToken = async (code: string) => {
     const config = await this.getConfig(this.metadata.id);
     const initSearchParameters = {
       method: methodForAccessToken,
@@ -112,9 +111,11 @@ export default class AlipayConnector implements SocialConnector {
     return { accessToken };
   };
 
-  public getUserInfo: GetUserInfo = async (accessTokenObject) => {
+  public getUserInfo: GetUserInfo = async (data) => {
+    const { code } = codeDataGuard.parse(data);
     const config = await this.getConfig(this.metadata.id);
-    const { accessToken } = accessTokenObject;
+    const { accessToken } = await this.getAccessToken(code);
+
     assert(
       accessToken && config,
       new ConnectorError(ConnectorErrorCodes.InsufficientRequestParameters)
@@ -147,11 +148,11 @@ export default class AlipayConnector implements SocialConnector {
       sub_msg,
       sub_code,
       msg,
-      code,
+      code: responseCode,
     } = response.alipay_user_info_share_response;
 
     if (sub_msg || sub_code) {
-      if (code === '20001') {
+      if (responseCode === '20001') {
         throw new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid, msg);
       }
       throw new ConnectorError(ConnectorErrorCodes.General);
