@@ -8,6 +8,7 @@ export enum MountedApps {
   Api = 'api',
   Oidc = 'oidc',
   Console = 'console',
+  DemoApp = 'demo-app',
 }
 
 const loadEnvValues = async () => {

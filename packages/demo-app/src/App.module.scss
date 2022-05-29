@@ -1,0 +1,20 @@
+@use '@logto/shared/scss/console-themes' as themes;
+
+body {
+  background: #edebf6;
+}
+
+.app {
+  @include themes.light;
+
+  .card {
+    background: var(--color-background);
+    border-radius: 16px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 640px;
+    height: 640px;
+    transform: translate(-50%, -50%);
+  }
+}

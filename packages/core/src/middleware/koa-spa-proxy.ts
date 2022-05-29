@@ -39,6 +39,8 @@ export default function koaSpaProxy<StateT, ContextT extends IRouterParamContext
   return async (ctx, next) => {
     const requestPath = ctx.request.path;
 
+    console.log(prefix, requestPath);
+
     // Route has been handled by one of mounted apps
     if (
       !prefix &&

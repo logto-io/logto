@@ -1,5 +1,5 @@
 @use '@/scss/underscore' as _;
-@use '@/scss/colors' as colors;
+@use '@logto/shared/scss/console-themes' as themes;
 
 .app {
   position: absolute;
@@ -28,21 +28,21 @@
 }
 
 .light {
-  @include colors.light-theme;
+  @include themes.light;
 }
 
 .dark {
-  @include colors.dark-theme;
+  @include themes.dark;
 }
 
 @media (prefers-color-scheme: light) {
   body {
-    @include colors.light-theme;
+    @include themes.light;
   }
 }
 
 @media (prefers-color-scheme: dark) {
   body {
-    @include colors.dark-theme;
+    @include themes.dark;
   }
 }
