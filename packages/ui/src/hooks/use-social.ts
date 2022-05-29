@@ -1,6 +1,7 @@
-import { useCallback, useContext, useMemo } from 'react';
+import { useCallback, useContext } from 'react';
 
 import { invokeSocialSignIn } from '@/apis/social';
+import { ConnectorData } from '@/types';
 
 import useApi from './use-api';
 import { PageContext } from './use-page-context';
@@ -17,37 +18,29 @@ const useSocial = () => {
   const { experienceSettings } = useContext(PageContext);
   const { termsValidation } = useTerms();
 
-  const socialConnectors = useMemo(
-    () => experienceSettings?.socialConnectors ?? [],
-    [experienceSettings]
-  );
-
-  const { origin } = window.location;
-
   const { run: asyncInvokeSocialSignIn } = useApi(invokeSocialSignIn);
 
-  const nativeSignInHandler = useCallback(
-    (redirectTo: string, connectorId: string) => {
-      const connector = socialConnectors.find(({ id }) => id === connectorId);
+  const nativeSignInHandler = useCallback((redirectTo: string, connector: ConnectorData) => {
+    const { id: connectorId, platform } = connector;
 
-      const redirectUri =
-        connector?.platform === 'Universal'
-          ? buildSocialLandingUri(`/social-landing/${connectorId}`, redirectTo).toString()
-          : redirectTo;
+    const redirectUri =
+      platform === 'Universal'
+        ? buildSocialLandingUri(`/social-landing/${connectorId}`, redirectTo).toString()
+        : redirectTo;
 
-      getLogtoNativeSdk()?.getPostMessage()({
-        callbackUri: `${origin}/sign-in/callback/${connectorId}`,
-        redirectTo: redirectUri,
-      });
-    },
-    [origin, socialConnectors]
-  );
+    getLogtoNativeSdk()?.getPostMessage()({
+      callbackUri: `${window.location.origin}/sign-in/callback/${connectorId}`,
+      redirectTo: redirectUri,
+    });
+  }, []);
 
   const invokeSocialSignInHandler = useCallback(
-    async (connectorId: string, target: string, callback?: () => void) => {
+    async (connector: ConnectorData, callback?: () => void) => {
       if (!(await termsValidation())) {
         return;
       }
+
+      const { id: connectorId } = connector;
 
       const state = generateState();
       storeState(state, connectorId);
@@ -55,7 +48,7 @@ const useSocial = () => {
       const result = await asyncInvokeSocialSignIn(
         connectorId,
         state,
-        `${origin}/callback/${connectorId}`
+        `${window.location.origin}/callback/${connectorId}`
       );
 
       if (!result?.redirectTo) {
@@ -67,7 +60,7 @@ const useSocial = () => {
 
       // Invoke Native Social Sign In flow
       if (isNativeWebview()) {
-        nativeSignInHandler(result.redirectTo, connectorId);
+        nativeSignInHandler(result.redirectTo, connector);
 
         return;
       }
@@ -75,11 +68,11 @@ const useSocial = () => {
       // Invoke Web Social Sign In flow
       window.location.assign(result.redirectTo);
     },
-    [asyncInvokeSocialSignIn, nativeSignInHandler, origin, termsValidation]
+    [asyncInvokeSocialSignIn, nativeSignInHandler, termsValidation]
   );
 
   return {
-    socialConnectors,
+    socialConnectors: experienceSettings?.socialConnectors ?? [],
     invokeSocialSignIn: invokeSocialSignInHandler,
   };
 };
