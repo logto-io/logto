@@ -1,0 +1,62 @@
+{
+  "name": "@logto/demo-app",
+  "version": "0.1.0",
+  "description": "Logto demo app.",
+  "author": "Silverhand Inc. <contact@silverhand.io>",
+  "license": "MPL-2.0",
+  "scripts": {
+    "preinstall": "npx only-allow pnpm",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "precommit": "lint-staged",
+    "start": "parcel src/index.html",
+    "dev": "PORT=5003 parcel src/index.html --public-url /console --no-cache --hmr-port 6003",
+    "check": "tsc --noEmit",
+    "build": "pnpm check && rm -rf dist && parcel build src/index.html --no-autoinstall --no-cache --public-url /demo-app",
+    "lint": "eslint --ext .ts --ext .tsx src",
+    "lint:report": "pnpm lint --format json --output-file report.json",
+    "stylelint": "stylelint \"src/**/*.scss\""
+  },
+  "devDependencies": {
+    "@logto/shared": "^0.1.0",
+    "@parcel/core": "2.5.0",
+    "@parcel/transformer-sass": "2.5.0",
+    "@silverhand/eslint-config": "^0.14.0",
+    "@silverhand/eslint-config-react": "^0.14.0",
+    "@silverhand/ts-config": "^0.14.0",
+    "@silverhand/ts-config-react": "^0.14.0",
+    "@types/react": "^17.0.14",
+    "@types/react-dom": "^17.0.9",
+    "eslint": "^8.10.0",
+    "lint-staged": "^12.0.0",
+    "parcel": "2.5.0",
+    "postcss": "^8.4.6",
+    "prettier": "^2.3.2",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "stylelint": "^14.8.2",
+    "typescript": "^4.7.2"
+  },
+  "alias": {
+    "@/*": "./src/$1"
+  },
+  "eslintConfig": {
+    "extends": "@silverhand/react",
+    "rules": {
+      "complexity": "off"
+    }
+  },
+  "stylelint": {
+    "extends": "@silverhand/eslint-config-react/.stylelintrc",
+    "rules": {
+      "scss/function-no-unknown": [
+        true,
+        {
+          "ignoreFunctions": [
+            "/^_./"
+          ]
+        }
+      ]
+    }
+  },
+  "prettier": "@silverhand/eslint-config/.prettierrc"
+}
