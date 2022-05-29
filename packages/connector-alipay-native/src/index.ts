@@ -8,11 +8,9 @@
  */
 
 import {
-  AccessTokenObject,
   ConnectorError,
   ConnectorErrorCodes,
   ConnectorMetadata,
-  GetAccessToken,
   GetAuthorizationUri,
   GetUserInfo,
   ValidateConfig,
@@ -22,6 +20,7 @@ import {
 import { assert } from '@silverhand/essentials';
 import dayjs from 'dayjs';
 import got from 'got';
+import { z } from 'zod';
 
 import {
   alipayEndpoint,
@@ -41,19 +40,7 @@ import { signingParameters } from './utils';
 
 export type { AlipayNativeConfig } from './types';
 
-type CodePayload = {
-  auth_code: string;
-};
-
-const parseCodeFromJson = (json: string): string => {
-  try {
-    const { auth_code } = JSON.parse(json) as CodePayload;
-
-    return auth_code;
-  } catch {
-    return json;
-  }
-};
+const dataGuard = z.object({ authCode: z.string() });
 
 export default class AlipayNativeConnector implements SocialConnector {
   public metadata: ConnectorMetadata = defaultMetadata;
@@ -70,7 +57,7 @@ export default class AlipayNativeConnector implements SocialConnector {
     }
   };
 
-  public getAuthorizationUri: GetAuthorizationUri = async (state, _) => {
+  public getAuthorizationUri: GetAuthorizationUri = async ({ state }) => {
     const { appId } = await this.getConfig(this.metadata.id);
 
     const queryParameters = new URLSearchParams({ app_id: appId, state });
@@ -78,7 +65,7 @@ export default class AlipayNativeConnector implements SocialConnector {
     return `${authorizationEndpoint}?${queryParameters.toString()}`;
   };
 
-  public getAccessToken: GetAccessToken = async (code): Promise<AccessTokenObject> => {
+  public getAccessToken = async (code: string) => {
     const config = await this.getConfig(this.metadata.id);
     const initSearchParameters = {
       method: methodForAccessToken,
@@ -86,7 +73,7 @@ export default class AlipayNativeConnector implements SocialConnector {
       timestamp: dayjs().format('YYYY-MM-DD HH:mm:ss'),
       version: '1.0',
       grant_type: 'authorization_code',
-      code: parseCodeFromJson(code),
+      code,
       charset: 'UTF8',
       ...config,
     };
@@ -111,9 +98,10 @@ export default class AlipayNativeConnector implements SocialConnector {
     return { accessToken };
   };
 
-  public getUserInfo: GetUserInfo = async (accessTokenObject) => {
+  public getUserInfo: GetUserInfo = async (data) => {
+    const { authCode } = dataGuard.parse(data);
     const config = await this.getConfig(this.metadata.id);
-    const { accessToken } = accessTokenObject;
+    const { accessToken } = await this.getAccessToken(authCode);
     assert(
       accessToken && config,
       new ConnectorError(ConnectorErrorCodes.InsufficientRequestParameters)
@@ -146,11 +134,11 @@ export default class AlipayNativeConnector implements SocialConnector {
       sub_msg,
       sub_code,
       msg,
-      code,
+      code: responseCode,
     } = response.alipay_user_info_share_response;
 
     if (sub_msg || sub_code) {
-      if (code === '20001') {
+      if (responseCode === '20001') {
         throw new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid, msg);
       }
       throw new ConnectorError(ConnectorErrorCodes.General);

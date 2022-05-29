@@ -5,7 +5,6 @@
 
 import {
   ConnectorMetadata,
-  GetAccessToken,
   GetAuthorizationUri,
   ValidateConfig,
   GetUserInfo,
@@ -13,6 +12,7 @@ import {
   ConnectorErrorCodes,
   SocialConnector,
   GetConnectorConfig,
+  codeDataGuard,
 } from '@logto/connector-types';
 import { assert } from '@silverhand/essentials';
 import got, { RequestError as GotRequestError } from 'got';
@@ -47,18 +47,21 @@ export default class WeChatNativeConnector implements SocialConnector {
     }
   };
 
-  public getAuthorizationUri: GetAuthorizationUri = async (state, _) => {
-    const { appId } = await this.getConfig(this.metadata.id);
+  public getAuthorizationUri: GetAuthorizationUri = async ({ state }) => {
+    const { appId, universalLinks } = await this.getConfig(this.metadata.id);
 
     const queryParameters = new URLSearchParams({
       app_id: appId,
       state,
+      // `universalLinks` is used by Wechat open platform website,
+      // while `universal_link` is their API requirement.
+      ...(universalLinks && { universal_link: universalLinks }),
     });
 
     return `${authorizationEndpoint}?${queryParameters.toString()}`;
   };
 
-  public getAccessToken: GetAccessToken = async (code) => {
+  public getAccessToken = async (code: string) => {
     const { appId: appid, appSecret: secret } = await this.getConfig(this.metadata.id);
 
     const {
@@ -80,9 +83,11 @@ export default class WeChatNativeConnector implements SocialConnector {
     return { accessToken, openid };
   };
 
-  public getUserInfo: GetUserInfo = async (accessTokenObject) => {
-    const { accessToken, openid } = accessTokenObject;
+  public getUserInfo: GetUserInfo = async (data) => {
+    const { code } = codeDataGuard.parse(data);
+    const { accessToken, openid } = await this.getAccessToken(code);
 
+    // TO-DO: @Darcy refactor this
     // 'openid' is defined as a required input argument in WeChat API doc, but it does not necessarily have to
     // be the return value from getAccessToken per testing.
     // In other words, 'openid' is required but the response of getUserInfo is consistent as long as

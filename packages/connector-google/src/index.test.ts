@@ -41,10 +41,10 @@ describe('google connector', () => {
     });
 
     it('should get a valid authorizationUri with redirectUri and state', async () => {
-      const authorizationUri = await googleMethods.getAuthorizationUri(
-        'some_state',
-        'http://localhost:3000/callback'
-      );
+      const authorizationUri = await googleMethods.getAuthorizationUri({
+        state: 'some_state',
+        redirectUri: 'http://localhost:3000/callback',
+      });
       expect(authorizationUri).toEqual(
         `${authorizationEndpoint}?client_id=%3Cclient-id%3E&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fcallback&response_type=code&state=some_state&scope=openid+profile+email`
       );
@@ -76,6 +76,14 @@ describe('google connector', () => {
   });
 
   describe('getUserInfo', () => {
+    beforeEach(() => {
+      nock(accessTokenEndpoint).post('').reply(200, {
+        access_token: 'access_token',
+        scope: 'scope',
+        token_type: 'token_type',
+      });
+    });
+
     afterEach(() => {
       nock.cleanAll();
       jest.clearAllMocks();
@@ -92,7 +100,7 @@ describe('google connector', () => {
         email_verified: true,
         locale: 'en',
       });
-      const socialUserInfo = await googleMethods.getUserInfo({ accessToken: 'code' });
+      const socialUserInfo = await googleMethods.getUserInfo({ code: 'code', redirectUri: '' });
       expect(socialUserInfo).toMatchObject({
         id: '1234567890',
         avatar: 'https://github.com/images/error/octocat_happy.gif',
@@ -103,14 +111,14 @@ describe('google connector', () => {
 
     it('throws SocialAccessTokenInvalid error if remote response code is 401', async () => {
       nock(userInfoEndpoint).post('').reply(401);
-      await expect(googleMethods.getUserInfo({ accessToken: 'code' })).rejects.toMatchError(
-        new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid)
-      );
+      await expect(
+        googleMethods.getUserInfo({ code: 'code', redirectUri: '' })
+      ).rejects.toMatchError(new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid));
     });
 
     it('throws unrecognized error', async () => {
       nock(userInfoEndpoint).post('').reply(500);
-      await expect(googleMethods.getUserInfo({ accessToken: 'code' })).rejects.toThrow();
+      await expect(googleMethods.getUserInfo({ code: 'code', redirectUri: '' })).rejects.toThrow();
     });
   });
 });

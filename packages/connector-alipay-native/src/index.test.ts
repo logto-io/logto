@@ -39,10 +39,10 @@ describe('getAuthorizationUri', () => {
     jest
       .spyOn(alipayNativeMethods, 'getConfig')
       .mockResolvedValueOnce(mockedAlipayNativeConfigWithValidPrivateKey);
-    const authorizationUri = await alipayNativeMethods.getAuthorizationUri(
-      'dummy-state',
-      'dummy-redirect-uri'
-    );
+    const authorizationUri = await alipayNativeMethods.getAuthorizationUri({
+      state: 'dummy-state',
+      redirectUri: 'dummy-redirect-uri',
+    });
     expect(authorizationUri).toBe('alipay://?app_id=2021000000000000&state=dummy-state');
   });
 });
@@ -124,6 +124,27 @@ describe('getAccessToken', () => {
 });
 
 describe('getUserInfo', () => {
+  beforeEach(() => {
+    jest
+      .spyOn(alipayNativeMethods, 'getConfig')
+      .mockResolvedValueOnce(mockedAlipayNativeConfigWithValidPrivateKey);
+
+    const alipayEndpointUrl = new URL(alipayEndpoint);
+    nock(alipayEndpointUrl.origin)
+      .post(alipayEndpointUrl.pathname)
+      .query(true)
+      .reply(200, {
+        alipay_system_oauth_token_response: {
+          user_id: '2088000000000000',
+          access_token: 'access_token',
+          expires_in: '3600',
+          refresh_token: 'refresh_token',
+          re_expires_in: '7200', // Expiring time of refresh token, in seconds
+        },
+        sign: '<signature>',
+      });
+  });
+
   afterEach(() => {
     nock.cleanAll();
     jest.clearAllMocks();
@@ -149,9 +170,7 @@ describe('getUserInfo', () => {
         sign: '<signature>',
       });
 
-    const { id, name, avatar } = await alipayNativeMethods.getUserInfo({
-      accessToken: 'access_token',
-    });
+    const { id, name, avatar } = await alipayNativeMethods.getUserInfo({ authCode: 'code' });
     expect(id).toEqual('2088000000000000');
     expect(name).toEqual('PlayboyEric');
     expect(avatar).toEqual('https://www.alipay.com/xxx.jpg');
@@ -173,9 +192,7 @@ describe('getUserInfo', () => {
         sign: '<signature>',
       });
 
-    await expect(
-      alipayNativeMethods.getUserInfo({ accessToken: 'wrong_access_token' })
-    ).rejects.toMatchError(
+    await expect(alipayNativeMethods.getUserInfo({ authCode: 'wrong_code' })).rejects.toMatchError(
       new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid, 'Invalid auth token')
     );
   });
@@ -196,9 +213,9 @@ describe('getUserInfo', () => {
         sign: '<signature>',
       });
 
-    await expect(
-      alipayNativeMethods.getUserInfo({ accessToken: 'wrong_access_token' })
-    ).rejects.toMatchError(new ConnectorError(ConnectorErrorCodes.General));
+    await expect(alipayNativeMethods.getUserInfo({ authCode: 'wrong_code' })).rejects.toMatchError(
+      new ConnectorError(ConnectorErrorCodes.General)
+    );
   });
 
   it('should throw with right accessToken but empty userInfo', async () => {
@@ -219,9 +236,9 @@ describe('getUserInfo', () => {
         sign: '<signature>',
       });
 
-    await expect(
-      alipayNativeMethods.getUserInfo({ accessToken: 'access_token' })
-    ).rejects.toMatchError(new ConnectorError(ConnectorErrorCodes.InvalidResponse));
+    await expect(alipayNativeMethods.getUserInfo({ authCode: 'wrong_code' })).rejects.toMatchError(
+      new ConnectorError(ConnectorErrorCodes.InvalidResponse)
+    );
   });
 
   it('should throw with other request errors', async () => {
@@ -230,8 +247,6 @@ describe('getUserInfo', () => {
       .mockResolvedValueOnce(mockedAlipayNativeConfigWithValidPrivateKey);
     nock(alipayEndpointUrl.origin).post(alipayEndpointUrl.pathname).query(true).reply(500);
 
-    await expect(
-      alipayNativeMethods.getUserInfo({ accessToken: 'access_token' })
-    ).rejects.toThrow();
+    await expect(alipayNativeMethods.getUserInfo({ authCode: 'wrong_code' })).rejects.toThrow();
   });
 });

@@ -1,5 +1,4 @@
 import { GetConnectorConfig } from '@logto/connector-types';
-import nock from 'nock';
 
 import AppleConnector from '.';
 import { authorizationEndpoint } from './constant';
@@ -20,25 +19,13 @@ describe('getAuthorizationUri', () => {
   });
 
   it('should get a valid uri by redirectUri and state', async () => {
-    const authorizationUri = await appleMethods.getAuthorizationUri(
-      'some_state',
-      'http://localhost:3000/callback'
-    );
+    const authorizationUri = await appleMethods.getAuthorizationUri({
+      state: 'some_state',
+      redirectUri: 'http://localhost:3000/callback',
+    });
     expect(authorizationUri).toEqual(
       `${authorizationEndpoint}?client_id=%3Cclient-id%3E&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fcallback&scope=&state=some_state&response_type=code+id_token&response_mode=fragment`
     );
-  });
-});
-
-describe('getAccessToken', () => {
-  afterEach(() => {
-    nock.cleanAll();
-    jest.clearAllMocks();
-  });
-
-  it('should return code directly', async () => {
-    const accessToken = await appleMethods.getAccessToken('code');
-    expect(accessToken).toEqual('code');
   });
 });
 

@@ -41,7 +41,7 @@ describe('facebook connector', () => {
     it('should get a valid authorizationUri with redirectUri and state', async () => {
       const redirectUri = 'http://localhost:3000/callback';
       const state = 'some_state';
-      const authorizationUri = await facebookMethods.getAuthorizationUri(state, redirectUri);
+      const authorizationUri = await facebookMethods.getAuthorizationUri({ state, redirectUri });
 
       const encodedRedirectUri = encodeURIComponent(redirectUri);
       expect(authorizationUri).toEqual(
@@ -93,6 +93,22 @@ describe('facebook connector', () => {
   });
 
   describe('getUserInfo', () => {
+    beforeEach(() => {
+      nock(accessTokenEndpoint)
+        .get('')
+        .query({
+          code,
+          client_id: clientId,
+          client_secret: clientSecret,
+          redirect_uri: dummyRedirectUri,
+        })
+        .reply(200, {
+          access_token: 'access_token',
+          scope: 'scope',
+          token_type: 'token_type',
+        });
+    });
+
     afterEach(() => {
       nock.cleanAll();
       jest.clearAllMocks();
@@ -110,7 +126,10 @@ describe('facebook connector', () => {
           picture: { data: { url: avatar } },
         });
 
-      const socialUserInfo = await facebookMethods.getUserInfo({ accessToken: code });
+      const socialUserInfo = await facebookMethods.getUserInfo({
+        code,
+        redirectUri: dummyRedirectUri,
+      });
       expect(socialUserInfo).toMatchObject({
         id: '1234567890',
         avatar,
@@ -121,14 +140,16 @@ describe('facebook connector', () => {
 
     it('throws SocialAccessTokenInvalid error if remote response code is 401', async () => {
       nock(userInfoEndpoint).get('').query({ fields }).reply(400);
-      await expect(facebookMethods.getUserInfo({ accessToken: code })).rejects.toMatchError(
-        new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid)
-      );
+      await expect(
+        facebookMethods.getUserInfo({ code, redirectUri: dummyRedirectUri })
+      ).rejects.toMatchError(new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid));
     });
 
     it('throws unrecognized error', async () => {
       nock(userInfoEndpoint).get('').reply(500);
-      await expect(facebookMethods.getUserInfo({ accessToken: code })).rejects.toThrow();
+      await expect(
+        facebookMethods.getUserInfo({ code, redirectUri: dummyRedirectUri })
+      ).rejects.toThrow();
     });
   });
 });

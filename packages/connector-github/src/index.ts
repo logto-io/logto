@@ -1,6 +1,5 @@
 import {
   ConnectorMetadata,
-  GetAccessToken,
   GetAuthorizationUri,
   ValidateConfig,
   GetUserInfo,
@@ -8,6 +7,7 @@ import {
   ConnectorErrorCodes,
   SocialConnector,
   GetConnectorConfig,
+  codeDataGuard,
 } from '@logto/connector-types';
 import { assert, conditional } from '@silverhand/essentials';
 import got, { RequestError as GotRequestError } from 'got';
@@ -35,7 +35,7 @@ export default class GithubConnector implements SocialConnector {
     }
   };
 
-  public getAuthorizationUri: GetAuthorizationUri = async (state, redirectUri) => {
+  public getAuthorizationUri: GetAuthorizationUri = async ({ state, redirectUri }) => {
     const config = await this.getConfig(this.metadata.id);
 
     const queryParameters = new URLSearchParams({
@@ -48,7 +48,7 @@ export default class GithubConnector implements SocialConnector {
     return `${authorizationEndpoint}?${queryParameters.toString()}`;
   };
 
-  getAccessToken: GetAccessToken = async (code) => {
+  getAccessToken = async (code: string) => {
     const { clientId: client_id, clientSecret: client_secret } = await this.getConfig(
       this.metadata.id
     );
@@ -70,8 +70,9 @@ export default class GithubConnector implements SocialConnector {
     return { accessToken };
   };
 
-  public getUserInfo: GetUserInfo = async (accessTokenObject) => {
-    const { accessToken } = accessTokenObject;
+  public getUserInfo: GetUserInfo = async (data) => {
+    const { code } = codeDataGuard.parse(data);
+    const { accessToken } = await this.getAccessToken(code);
 
     try {
       const {

@@ -7,7 +7,9 @@ export const parseQueryParameters = (parameters: string | URLSearchParams) => {
   const searchParameters =
     parameters instanceof URLSearchParams ? parameters : new URLSearchParams(parameters);
 
-  return Object.fromEntries(searchParameters);
+  return Object.fromEntries(
+    [...searchParameters.entries()].map(([key, value]) => [key, decodeURIComponent(value)])
+  );
 };
 
 export const queryStringify = (parameters: URLSearchParams | Record<string, string>) => {

@@ -37,11 +37,13 @@ const useSocialSignInListener = () => {
   );
 
   const signInWithSocialHandler = useCallback(
-    async (connectorId: string, code: string) => {
+    async (connectorId: string, data: Record<string, unknown>) => {
       void asyncSignInWithSocial({
         connectorId,
-        code,
-        redirectUri: `${window.location.origin}/callback/${connectorId}`, // For validation use only
+        data: {
+          redirectUri: `${window.location.origin}/callback/${connectorId}`, // For validation use only
+          ...data,
+        },
       });
     },
     [asyncSignInWithSocial]
@@ -67,7 +69,7 @@ const useSocialSignInListener = () => {
       return;
     }
 
-    void signInWithSocialHandler(parameters.connector, JSON.stringify(rest));
+    void signInWithSocialHandler(parameters.connector, rest);
   }, [parameters.connector, setToast, signInWithSocialHandler, t]);
 };
 

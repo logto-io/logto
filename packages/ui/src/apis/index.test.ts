@@ -193,8 +193,10 @@ describe('api', () => {
   it('signInWithSocial', async () => {
     const parameters = {
       connectorId: 'connectorId',
-      redirectUri: 'redirectUri',
-      code: 'code',
+      data: {
+        redirectUri: 'redirectUri',
+        code: 'code',
+      },
     };
     await signInWithSocial(parameters);
     expect(ky.post).toBeCalledWith('/api/session/sign-in/social/auth', {

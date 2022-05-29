@@ -20,18 +20,14 @@ export const invokeSocialSignIn = async (
     .json<Response>();
 };
 
-export const signInWithSocial = async (parameters: {
-  connectorId: string;
-  redirectUri: string;
-  code: string;
-}) => {
+export const signInWithSocial = async (json: { connectorId: string; data: unknown }) => {
   type Response = {
     redirectTo: string;
   };
 
   return api
     .post('/api/session/sign-in/social/auth', {
-      json: parameters,
+      json,
     })
     .json<Response>();
 };
