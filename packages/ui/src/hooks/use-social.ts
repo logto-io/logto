@@ -75,7 +75,7 @@ const useSocial = () => {
       // Invoke Web Social Sign In flow
       window.location.assign(result.redirectTo);
     },
-    [appleAuth, asyncInvokeSocialSignIn, nativeSignInHandler, origin, termsValidation]
+    [asyncInvokeSocialSignIn, nativeSignInHandler, origin, termsValidation]
   );
 
   return {
