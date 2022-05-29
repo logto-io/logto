@@ -82,6 +82,22 @@ describe('validateConfig', () => {
   });
 });
 
+const nockNoOpenIdAccessTokenResponse = () => {
+  const accessTokenEndpointUrl = new URL(accessTokenEndpoint);
+  const parameters = new URLSearchParams({
+    appid: '<app-id>',
+    secret: '<app-secret>',
+    code: 'code',
+    grant_type: 'authorization_code',
+  });
+  nock(accessTokenEndpointUrl.origin)
+    .get(accessTokenEndpointUrl.pathname)
+    .query(parameters)
+    .reply(200, {
+      access_token: 'access_token',
+    });
+};
+
 describe('getUserInfo', () => {
   beforeEach(() => {
     const accessTokenEndpointUrl = new URL(accessTokenEndpoint);
@@ -125,13 +141,15 @@ describe('getUserInfo', () => {
   });
 
   it('throws error if `openid` is missing', async () => {
+    nock.cleanAll();
     nock(userInfoEndpointUrl.origin).get(userInfoEndpointUrl.pathname).query(parameters).reply(0, {
       unionid: 'this_is_an_arbitrary_wechat_union_id',
       headimgurl: 'https://github.com/images/error/octocat_happy.gif',
       nickname: 'wechat bot',
     });
-    await expect(weChatMethods.getUserInfo({ accessToken: 'accessToken' })).rejects.toMatchError(
-      new Error('`openid` is required by WeChat API.')
+    nockNoOpenIdAccessTokenResponse();
+    await expect(weChatMethods.getUserInfo({ code: 'code' })).rejects.toMatchError(
+      new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid)
     );
   });
 

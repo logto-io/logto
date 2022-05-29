@@ -87,6 +87,7 @@ export default class WeChatNativeConnector implements SocialConnector {
     const { code } = codeDataGuard.parse(data);
     const { accessToken, openid } = await this.getAccessToken(code);
 
+    // TO-DO: @Darcy refactor this
     // 'openid' is defined as a required input argument in WeChat API doc, but it does not necessarily have to
     // be the return value from getAccessToken per testing.
     // In other words, 'openid' is required but the response of getUserInfo is consistent as long as
