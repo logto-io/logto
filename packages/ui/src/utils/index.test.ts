@@ -11,6 +11,12 @@ describe('util methods', () => {
     expect(parameters).toEqual({ foo: 'test', bar: 'test2' });
   });
 
+  it('parseQueryParameters with encoded url', () => {
+    const url = 'http://logto.io';
+    const parameters = parseQueryParameters(`?callback=${encodeURIComponent(url)}`);
+    expect(parameters).toEqual({ callback: url });
+  });
+
   it('queryStringify', () => {
     expect(queryStringify(new URLSearchParams({ foo: 'test' }))).toEqual('foo=test');
   });

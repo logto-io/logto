@@ -14,6 +14,7 @@ import Passcode from './pages/Passcode';
 import Register from './pages/Register';
 import SecondarySignIn from './pages/SecondarySignIn';
 import SignIn from './pages/SignIn';
+import SocialLanding from './pages/SocialLanding';
 import SocialRegister from './pages/SocialRegister';
 import SocialSignInCallback from './pages/SocialSignInCallback';
 import getSignInExperienceSettings from './utils/sign-in-experience';
@@ -55,12 +56,16 @@ const App = () => {
             <Route path="/" element={<Navigate replace to="/sign-in" />} />
             <Route path="/sign-in" element={<SignIn />} />
             <Route path="/sign-in/consent" element={<Consent />} />
-            <Route path="/sign-in/callback/:connector" element={<SocialSignInCallback />} />
             <Route path="/sign-in/:method" element={<SecondarySignIn />} />
             <Route path="/register" element={<Register />} />
             <Route path="/register/:method" element={<Register />} />
+
+            {/* social sign-in pages */}
+            <Route path="/sign-in/callback/:connector" element={<SocialSignInCallback />} />
             <Route path="/callback/:connector" element={<Callback />} />
             <Route path="/social-register/:connector" element={<SocialRegister />} />
+            <Route path="/social-landing/:connector" element={<SocialLanding />} />
+
             <Route path="/:type/:method/passcode-validation" element={<Passcode />} />
             <Route
               path="/unknown-session"

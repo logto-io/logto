@@ -1,0 +1,22 @@
+@use '@/scss/underscore' as _;
+
+.connector > img {
+  width: 96px;
+  height: 96px;
+  @include _.image-align-center;
+}
+
+.message {
+  margin-top: _.unit(2);
+}
+
+.container {
+  @include _.flex-column;
+}
+
+
+:global(body.desktop) {
+  .message {
+    margin-top: _.unit(1);
+  }
+}

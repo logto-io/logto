@@ -11,7 +11,9 @@ export type SignInMethod = 'username' | 'email' | 'sms' | 'social';
 export type LocalSignInMethod = 'username' | 'email' | 'sms';
 
 export enum SearchParameters {
-  bindWithSocial = 'bw',
+  bindWithSocial = 'bind_with',
+  nativeCallbackLink = 'native_callback',
+  redirectTo = 'redirect_to',
 }
 
 export type Platform = 'web' | 'mobile';

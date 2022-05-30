@@ -34,7 +34,7 @@ const SocialSignInIconList = ({
           className={styles.socialButton}
           connector={connector}
           onClick={() => {
-            void invokeSocialSignIn(connector.id, connector.target);
+            void invokeSocialSignIn(connector);
           }}
         />
       ))}

@@ -1,50 +1,48 @@
-import React, { useEffect, useContext, useMemo } from 'react';
+import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 
 import Button from '@/components/Button';
-import { PageContext } from '@/hooks/use-page-context';
+import SocialLanding from '@/containers/SocialLanding';
 import useSocialCallbackHandler from '@/hooks/use-social-callback-handler';
 
 import * as styles from './index.module.scss';
 
 type Props = {
-  connector?: string;
+  connector: string;
 };
 
 const Callback = () => {
   const { connector: connectorId } = useParams<Props>();
-  const { experienceSettings } = useContext(PageContext);
   const { t } = useTranslation(undefined, { keyPrefix: 'main_flow' });
 
   const socialCallbackHandler = useSocialCallbackHandler();
 
-  const connectorLabel = useMemo(() => {
-    const connector = experienceSettings?.socialConnectors.find(({ id }) => id === connectorId);
-
-    if (connector) {
-      return (
-        <div className={styles.connector}>
-          <img src={connector.logo} />
-        </div>
-      );
-    }
-
-    return <div className={styles.connector}>{connectorId}</div>;
-  }, [connectorId, experienceSettings?.socialConnectors]);
-
   // SocialSignIn Callback Handler
   useEffect(() => {
-    socialCallbackHandler();
-  }, [socialCallbackHandler]);
+    if (!connectorId) {
+      return;
+    }
+    socialCallbackHandler(connectorId);
+  }, [socialCallbackHandler, connectorId]);
+
+  if (!connectorId) {
+    return null;
+  }
 
   return (
     <div className={styles.wrapper}>
-      <div className={styles.container}>
-        {connectorLabel}
-        <div className={styles.loadingLabel}>loading...</div>
-      </div>
-      <Button className={styles.button} onClick={socialCallbackHandler}>
+      <SocialLanding
+        className={styles.connectorContainer}
+        connectorId={connectorId}
+        message={t('description.redirecting')}
+      />
+      <Button
+        className={styles.button}
+        onClick={() => {
+          socialCallbackHandler(connectorId);
+        }}
+      >
         {t('action.continue')}
       </Button>
     </div>

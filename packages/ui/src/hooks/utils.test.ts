@@ -1,6 +1,10 @@
-import { ConnectorData } from '@/types';
+import { ConnectorData, SearchParameters } from '@/types';
 
-import { filterSocialConnectors, filterPreviewSocialConnectors } from './utils';
+import {
+  filterSocialConnectors,
+  filterPreviewSocialConnectors,
+  buildSocialLandingUri,
+} from './utils';
 
 const mockConnectors = [
   { platform: 'Web', target: 'facebook' },
@@ -88,5 +92,27 @@ describe('filterPreviewSocialConnectors', () => {
       { platform: 'Native', target: 'WeChat' },
       { platform: 'Native', target: 'Alipay' },
     ]);
+  });
+});
+
+describe('buildSocialLandingUri', () => {
+  it('buildSocialLandingUri', () => {
+    /* eslint-disable @silverhand/fp/no-mutation */
+    // @ts-expect-error mock global object
+    globalThis.logtoNativeSdk = {
+      platform: 'ios',
+      callbackLink: 'logto://callback',
+    };
+    /* eslint-enable @silverhand/fp/no-mutation */
+
+    const redirectUri = 'https://www.example.com/callback';
+    const socialLandingPath = '/social-landing';
+    const callbackUri = buildSocialLandingUri(socialLandingPath, redirectUri);
+
+    expect(callbackUri.pathname).toEqual(socialLandingPath);
+    expect(callbackUri.searchParams.get(SearchParameters.redirectTo)).toEqual(redirectUri);
+    expect(callbackUri.searchParams.get(SearchParameters.nativeCallbackLink)).toEqual(
+      'logto://callback'
+    );
   });
 });

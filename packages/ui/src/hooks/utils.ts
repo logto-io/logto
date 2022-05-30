@@ -1,4 +1,4 @@
-import { ConnectorData, Platform } from '@/types';
+import { ConnectorData, Platform, SearchParameters } from '@/types';
 import { generateRandomString } from '@/utils';
 
 /**
@@ -18,44 +18,51 @@ export const isNativeWebview = () => {
 
 /**
  * Social Connector State Utility Methods
- * @param state
- * @param state.uuid - unique id
- * @param state.platform - platform
- * @param state.callbackLink - callback uri scheme
  */
 
-type State = {
-  uuid: string;
-  platform: 'web' | 'ios' | 'android';
-  callbackLink?: string;
-};
-
-const storageKeyPrefix = 'social_auth_state';
+const storageStateKeyPrefix = 'social_auth_state';
 
 export const generateState = () => {
   const uuid = generateRandomString();
-  const platform = getLogtoNativeSdk()?.platform ?? 'web';
-  const callbackLink = getLogtoNativeSdk()?.callbackLink;
 
-  const state: State = { uuid, platform, callbackLink };
-
-  return btoa(JSON.stringify(state));
+  return uuid;
 };
 
-export const decodeState = (state: string) => {
-  try {
-    return JSON.parse(atob(state)) as State;
-  } catch {}
+export const storeState = (state: string, connectorId: string) => {
+  sessionStorage.setItem(`${storageStateKeyPrefix}:${connectorId}`, state);
 };
 
 export const stateValidation = (state: string, connectorId: string) => {
-  const stateStorage = sessionStorage.getItem(`${storageKeyPrefix}:${connectorId}`);
+  const stateStorage = sessionStorage.getItem(`${storageStateKeyPrefix}:${connectorId}`);
 
   return stateStorage === state;
 };
 
-export const storeState = (state: string, connectorId: string) => {
-  sessionStorage.setItem(`${storageKeyPrefix}:${connectorId}`, state);
+/**
+ * Native Social Redirect Utility Methods
+ */
+export const storageCallbackLinkKeyPrefix = 'social_callback_data';
+
+export const buildSocialLandingUri = (path: string, redirectTo: string) => {
+  const { origin } = window.location;
+  const url = new URL(`${origin}${path}`);
+  url.searchParams.set(SearchParameters.redirectTo, redirectTo);
+
+  const callbackLink = getLogtoNativeSdk()?.callbackLink;
+
+  if (callbackLink) {
+    url.searchParams.set(SearchParameters.nativeCallbackLink, callbackLink);
+  }
+
+  return url;
+};
+
+export const storeCallbackLink = (connectorId: string, callbackLink: string) => {
+  sessionStorage.setItem(`${storageCallbackLinkKeyPrefix}:${connectorId}`, callbackLink);
+};
+
+export const getCallbackLinkFromStorage = (connectorId: string) => {
+  return sessionStorage.getItem(`${storageCallbackLinkKeyPrefix}:${connectorId}`);
 };
 
 /**
