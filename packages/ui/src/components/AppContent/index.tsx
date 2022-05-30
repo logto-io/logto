@@ -43,11 +43,11 @@ const AppContent = ({ children }: Props) => {
   }, [platform]);
 
   return (
-    <main>
-      <div className={styles.content}>{children}</div>
+    <div className={styles.container}>
+      <main className={styles.content}>{children}</main>
       <Toast message={toast} isVisible={Boolean(toast)} callback={hideToast} />
       {debouncedLoading && <LoadingLayer />}
-    </main>
+    </div>
   );
 };
 

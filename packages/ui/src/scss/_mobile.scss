@@ -12,6 +12,7 @@ $font-family: -apple-system,
 @mixin colors-light-theme {
   --color-base: #fff;
   --color-surface: #fff;
+  --color-surface-variant: #e5e1ec;
   --color-text: #191c1d;
   --color-icon: #747778;
   --color-caption: #747778;
@@ -28,6 +29,7 @@ $font-family: -apple-system,
 @mixin colors-dark-theme {
   --color-base: #191c1d;
   --color-surface: #191c1d;
+  --color-surface-variant: #47464e;
   --color-text: #f7f8f8;
   --color-icon: #a9acac;
   --color-caption: #a9acac;
