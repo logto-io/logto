@@ -1,0 +1,12 @@
+@use '@/scss/underscore' as _;
+
+.spinner {
+  width: 16px;
+  height: 16px;
+  display: inline-flex;
+  align-items: center;
+
+  svg {
+    @include _.rotating-animation;
+  }
+}

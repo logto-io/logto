@@ -1,12 +1,14 @@
 @use '@/scss/underscore' as _;
 
 .button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   border: none;
   outline: none;
   border-radius: _.unit(2);
   font: var(--font-button);
-  transition: background 0.2s ease-in-out;
-  align-items: center;
+  transition: background-color 0.2s ease-in-out;
   white-space: nowrap;
   user-select: none;
   position: relative;
@@ -20,16 +22,9 @@
     opacity: 60%;
 
     .spinner {
-      width: 16px;
-      height: 16px;
       position: absolute;
-      top: 50%;
       left: 50%;
-      transform: translate(-50%, -50%);
-
-      svg {
-        @include _.rotating-animation;
-      }
+      transform: translateX(-50%);
     }
 
     .spinner ~ span {

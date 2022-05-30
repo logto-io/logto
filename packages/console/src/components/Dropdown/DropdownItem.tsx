@@ -1,10 +1,10 @@
 import classNames from 'classnames';
-import React from 'react';
+import React, { MouseEvent } from 'react';
 
 import * as styles from './DropdownItem.module.scss';
 
 type Props = {
-  onClick?: () => void;
+  onClick?: (event: MouseEvent<HTMLLIElement>) => void;
   className?: string;
   children: React.ReactNode;
   icon?: React.ReactNode;
