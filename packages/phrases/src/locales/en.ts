@@ -283,7 +283,6 @@ const translation = {
       options_change_sms: 'Change SMS connector',
       more_options: 'MORE OPTIONS',
       connector_deleted: 'The connector has been deleted.',
-      not_set: '(Not set)',
       type_email: 'Email connector',
       type_sms: 'SMS connector',
       type_social: 'Social connector',
