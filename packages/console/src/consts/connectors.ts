@@ -1,5 +1,5 @@
 import { I18nKey } from '@logto/phrases';
-import { ConnectorType } from '@logto/schemas';
+import { ConnectorPlatform, ConnectorType } from '@logto/schemas';
 
 import emailConnectorIcon from '@/assets/images/connector-email.svg';
 import smsConnectorIcon from '@/assets/images/connector-sms.svg';
@@ -23,4 +23,14 @@ export const connectorIconPlaceHolder: IconPlaceHolder = Object.freeze({
   [ConnectorType.Email]: emailConnectorIcon,
   // Note: we don't need icon placeholder for social connector
   [ConnectorType.Social]: '',
+});
+
+type ConnectorPlatformLabel = {
+  [key in ConnectorPlatform]: I18nKey;
+};
+
+export const connectorPlatformLabel: ConnectorPlatformLabel = Object.freeze({
+  [ConnectorPlatform.Native]: 'admin_console.connectors.platform.native',
+  [ConnectorPlatform.Universal]: 'admin_console.connectors.platform.universal',
+  [ConnectorPlatform.Web]: 'admin_console.connectors.platform.web',
 });

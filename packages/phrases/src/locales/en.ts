@@ -257,6 +257,11 @@ const translation = {
         subtitle:
           'A step by step guide to integrate your connector or get a sample configured with your account settings',
       },
+      platform: {
+        universal: 'Universal',
+        web: 'Web',
+        native: 'Native',
+      },
     },
     connector_details: {
       back_to_connectors: 'Back to Connectors',

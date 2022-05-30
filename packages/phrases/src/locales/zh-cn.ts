@@ -255,6 +255,11 @@ const translation = {
       guide: {
         subtitle: '请参考下列分步指南，配置您的 connector，或点击按钮获取示例配置文件',
       },
+      platform: {
+        universal: '通用',
+        web: '网页',
+        native: '原生',
+      },
     },
     connector_details: {
       back_to_connectors: '返回连接器',
