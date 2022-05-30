@@ -15,6 +15,7 @@ import useAdminConsoleConfigs from '@/hooks/use-configs';
 import Close from '@/icons/Close';
 import * as modalStyles from '@/scss/modal.module.scss';
 
+import usePreviewConfigs from '../hooks';
 import { SignInExperienceForm } from '../types';
 import { signInExperienceParser } from '../utilities';
 import BrandingForm from './BrandingForm';
@@ -36,18 +37,20 @@ const GuideModal = ({ isOpen, onClose }: Props) => {
   const {
     reset,
     handleSubmit,
-    formState: { isSubmitting },
+    formState: { isSubmitting, isDirty },
     watch,
   } = methods;
   const api = useApi();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const formData = watch();
 
+  const previewConfigs = usePreviewConfigs(formData, isDirty, data);
+
   useEffect(() => {
-    if (data) {
+    if (data && !isDirty) {
       reset(signInExperienceParser.toLocalForm(data));
     }
-  }, [data, reset]);
+  }, [data, reset, isDirty]);
 
   const onGotIt = async () => {
     if (!configs) {
@@ -114,10 +117,7 @@ const GuideModal = ({ isOpen, onClose }: Props) => {
                   </div>
                 </div>
                 {formData.id && (
-                  <Preview
-                    signInExperience={signInExperienceParser.toRemoteModel(formData)}
-                    className={styles.preview}
-                  />
+                  <Preview signInExperience={previewConfigs} className={styles.preview} />
                 )}
               </div>
               <div className={styles.footer}>

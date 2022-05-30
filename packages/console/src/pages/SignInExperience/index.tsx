@@ -24,6 +24,7 @@ import SaveAlert from './components/SaveAlert';
 import SignInMethodsForm from './components/SignInMethodsForm';
 import TermsForm from './components/TermsForm';
 import Welcome from './components/Welcome';
+import usePreviewConfigs from './hooks';
 import * as styles from './index.module.scss';
 import { SignInExperienceForm } from './types';
 import { compareSignInMethods, signInExperienceParser } from './utilities';
@@ -41,16 +42,18 @@ const SignInExperience = () => {
     handleSubmit,
     getValues,
     watch,
-    formState: { isSubmitting },
+    formState: { isSubmitting, isDirty },
   } = methods;
   const api = useApi();
   const formData = watch();
 
+  const previewConfigs = usePreviewConfigs(formData, isDirty, data);
+
   useEffect(() => {
-    if (data) {
+    if (data && !isDirty) {
       reset(signInExperienceParser.toLocalForm(data));
     }
-  }, [data, reset]);
+  }, [data, reset, isDirty]);
 
   const saveData = async () => {
     const updatedData = await api
@@ -138,7 +141,7 @@ const SignInExperience = () => {
           )}
         </Card>
       </div>
-      {formData.id && <Preview signInExperience={signInExperienceParser.toRemoteModel(formData)} />}
+      {formData.id && <Preview signInExperience={previewConfigs} />}
       {data && (
         <ReactModal
           isOpen={Boolean(dataToCompare)}
