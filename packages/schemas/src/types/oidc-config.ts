@@ -26,3 +26,5 @@ export const adminConsoleApplicationId = 'admin_console';
  * Admin Console requires the access token of this resource to be functional.
  */
 export const managementApiResource = 'https://api.logto.io';
+
+export const demoAppApplicationId = 'demo_app';

@@ -901,6 +901,7 @@ importers:
   packages/demo-app:
     specifiers:
       '@logto/react': ^0.1.11
+      '@logto/schemas': ^0.1.0
       '@logto/shared': ^0.1.0
       '@parcel/core': 2.5.0
       '@parcel/transformer-sass': 2.5.0
@@ -921,6 +922,7 @@ importers:
       typescript: ^4.7.2
     devDependencies:
       '@logto/react': 0.1.11_react@17.0.2
+      '@logto/schemas': link:../schemas
       '@logto/shared': link:../shared
       '@parcel/core': 2.5.0
       '@parcel/transformer-sass': 2.5.0_@parcel+core@2.5.0
@@ -6709,6 +6711,7 @@ packages:
       stylelint-config-xo-scss: 0.15.0_cazrl3eatzhkw4y7xb6glndqh4
     transitivePeerDependencies:
       - eslint
+      - eslint-import-resolver-webpack
       - postcss
       - prettier
       - supports-color
@@ -6828,7 +6831,7 @@ packages:
       eslint-import-resolver-typescript: 2.5.0_rnagsyfcubvpoxo2ynj23pim7u
       eslint-plugin-consistent-default-export-name: 0.0.7
       eslint-plugin-eslint-comments: 3.2.0_eslint@8.10.0
-      eslint-plugin-import: 2.25.4_eslint@8.10.0
+      eslint-plugin-import: 2.25.4_sidoke6kqbkbdht6nlmwbfnany
       eslint-plugin-no-use-extend-native: 0.5.0
       eslint-plugin-node: 11.1.0_eslint@8.10.0
       eslint-plugin-prettier: 3.4.1_6pitu4b2tqihty6rv5qeiyb35m
@@ -6838,6 +6841,7 @@ packages:
       pkg-dir: 4.2.0
       prettier: 2.5.1
     transitivePeerDependencies:
+      - eslint-import-resolver-webpack
       - supports-color
       - typescript
     dev: true
@@ -10412,12 +10416,22 @@ packages:
 
   /debug/2.6.9:
     resolution: {integrity: sha512-bC7ElrdJaJnPbAP+1EotYvqZsb3ecl5wi6Bfi6BJTUcNowp6cvspg0jXznRTKDjm/E7AdgFBVeAPVMNcKGsHMA==}
+    peerDependencies:
+      supports-color: '*'
+    peerDependenciesMeta:
+      supports-color:
+        optional: true
     dependencies:
       ms: 2.0.0
     dev: true
 
   /debug/3.2.7:
     resolution: {integrity: sha512-CFjzYYAi4ThfiQvizrFQevTTXHtnCqWfe7x1AhgEscTz6ZbLbfoLRLPugTQyBth6f8ZERVUSyWHFD/7Wu4t1XQ==}
+    peerDependencies:
+      supports-color: '*'
+    peerDependenciesMeta:
+      supports-color:
+        optional: true
     dependencies:
       ms: 2.1.3
 
@@ -11186,21 +11200,13 @@ packages:
     dependencies:
       debug: 4.3.3
       eslint: 8.10.0
-      eslint-plugin-import: 2.25.4_eslint@8.10.0
+      eslint-plugin-import: 2.25.4_sidoke6kqbkbdht6nlmwbfnany
       glob: 7.2.0
       is-glob: 4.0.3
       resolve: 1.22.0
       tsconfig-paths: 3.13.0
     transitivePeerDependencies:
       - supports-color
-    dev: true
-
-  /eslint-module-utils/2.7.3:
-    resolution: {integrity: sha512-088JEC7O3lDZM9xGe0RerkOMd0EjFl+Yvd1jPWIkMT5u3H9+HC34mWWPnqPrN13gieT9pBOO+Qt07Nb/6TresQ==}
-    engines: {node: '>=4'}
-    dependencies:
-      debug: 3.2.7
-      find-up: 2.1.0
     dev: true
 
   /eslint-module-utils/2.7.3_l62aq42yiamaj3cnpuf6avthf4:
@@ -11221,7 +11227,7 @@ packages:
       eslint-import-resolver-webpack:
         optional: true
     dependencies:
-      '@typescript-eslint/parser': 5.14.0_gy6ulhlk526fafafzkwfpebbuq
+      '@typescript-eslint/parser': 5.14.0_fo4uz55zgcu432252zy2gvpvcu
       debug: 3.2.7
       eslint-import-resolver-node: 0.3.6
       eslint-import-resolver-typescript: 2.5.0_rnagsyfcubvpoxo2ynj23pim7u
@@ -11262,28 +11268,6 @@ packages:
       ignore: 5.2.0
     dev: true
 
-  /eslint-plugin-import/2.25.4_eslint@8.10.0:
-    resolution: {integrity: sha512-/KJBASVFxpu0xg1kIBn9AUa8hQVnszpwgE7Ld0lKAlx7Ie87yzEzCgSkekt+le/YVhiaosO4Y14GDAOc41nfxA==}
-    engines: {node: '>=4'}
-    peerDependencies:
-      eslint: ^2 || ^3 || ^4 || ^5 || ^6 || ^7.2.0 || ^8
-    dependencies:
-      array-includes: 3.1.4
-      array.prototype.flat: 1.2.5
-      debug: 2.6.9
-      doctrine: 2.1.0
-      eslint: 8.10.0
-      eslint-import-resolver-node: 0.3.6
-      eslint-module-utils: 2.7.3
-      has: 1.0.3
-      is-core-module: 2.8.1
-      is-glob: 4.0.3
-      minimatch: 3.1.2
-      object.values: 1.1.5
-      resolve: 1.22.0
-      tsconfig-paths: 3.13.0
-    dev: true
-
   /eslint-plugin-import/2.25.4_sidoke6kqbkbdht6nlmwbfnany:
     resolution: {integrity: sha512-/KJBASVFxpu0xg1kIBn9AUa8hQVnszpwgE7Ld0lKAlx7Ie87yzEzCgSkekt+le/YVhiaosO4Y14GDAOc41nfxA==}
     engines: {node: '>=4'}
@@ -11294,7 +11278,7 @@ packages:
       '@typescript-eslint/parser':
         optional: true
     dependencies:
-      '@typescript-eslint/parser': 5.14.0_gy6ulhlk526fafafzkwfpebbuq
+      '@typescript-eslint/parser': 5.14.0_fo4uz55zgcu432252zy2gvpvcu
       array-includes: 3.1.4
       array.prototype.flat: 1.2.5
       debug: 2.6.9
