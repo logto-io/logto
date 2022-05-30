@@ -26,7 +26,7 @@ const buildLogConditionSql = (logCondition: LogCondition) =>
       ),
     ].filter(({ sql }) => sql);
 
-    return sql`where ${sql.join(subConditions, sql` and `)}`;
+    return subConditions.length > 0 ? sql`where ${sql.join(subConditions, sql` and `)}` : sql``;
   });
 
 export const countLogs = async (condition: LogCondition) =>
