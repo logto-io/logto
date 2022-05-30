@@ -33,7 +33,7 @@ const Drawer = ({ className, isOpen = false, children, onClose }: Props) => {
             <CloseIcon />
           </IconButton>
         </div>
-        {children}
+        <div className={styles.content}>{children}</div>
       </div>
     </ReactModal>
   );
