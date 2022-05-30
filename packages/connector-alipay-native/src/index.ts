@@ -40,7 +40,7 @@ import { signingParameters } from './utils';
 
 export type { AlipayNativeConfig } from './types';
 
-const dataGuard = z.object({ authCode: z.string() });
+const dataGuard = z.object({ auth_code: z.string() });
 
 export default class AlipayNativeConnector implements SocialConnector {
   public metadata: ConnectorMetadata = defaultMetadata;
@@ -99,9 +99,9 @@ export default class AlipayNativeConnector implements SocialConnector {
   };
 
   public getUserInfo: GetUserInfo = async (data) => {
-    const { authCode } = dataGuard.parse(data);
+    const { auth_code } = dataGuard.parse(data);
     const config = await this.getConfig(this.metadata.id);
-    const { accessToken } = await this.getAccessToken(authCode);
+    const { accessToken } = await this.getAccessToken(auth_code);
     assert(
       accessToken && config,
       new ConnectorError(ConnectorErrorCodes.InsufficientRequestParameters)
