@@ -170,7 +170,7 @@ describe('getUserInfo', () => {
         sign: '<signature>',
       });
 
-    const { id, name, avatar } = await alipayNativeMethods.getUserInfo({ authCode: 'code' });
+    const { id, name, avatar } = await alipayNativeMethods.getUserInfo({ auth_code: 'code' });
     expect(id).toEqual('2088000000000000');
     expect(name).toEqual('PlayboyEric');
     expect(avatar).toEqual('https://www.alipay.com/xxx.jpg');
@@ -192,7 +192,7 @@ describe('getUserInfo', () => {
         sign: '<signature>',
       });
 
-    await expect(alipayNativeMethods.getUserInfo({ authCode: 'wrong_code' })).rejects.toMatchError(
+    await expect(alipayNativeMethods.getUserInfo({ auth_code: 'wrong_code' })).rejects.toMatchError(
       new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid, 'Invalid auth token')
     );
   });
@@ -213,7 +213,7 @@ describe('getUserInfo', () => {
         sign: '<signature>',
       });
 
-    await expect(alipayNativeMethods.getUserInfo({ authCode: 'wrong_code' })).rejects.toMatchError(
+    await expect(alipayNativeMethods.getUserInfo({ auth_code: 'wrong_code' })).rejects.toMatchError(
       new ConnectorError(ConnectorErrorCodes.General)
     );
   });
@@ -236,7 +236,7 @@ describe('getUserInfo', () => {
         sign: '<signature>',
       });
 
-    await expect(alipayNativeMethods.getUserInfo({ authCode: 'wrong_code' })).rejects.toMatchError(
+    await expect(alipayNativeMethods.getUserInfo({ auth_code: 'wrong_code' })).rejects.toMatchError(
       new ConnectorError(ConnectorErrorCodes.InvalidResponse)
     );
   });
@@ -247,6 +247,6 @@ describe('getUserInfo', () => {
       .mockResolvedValueOnce(mockedAlipayNativeConfigWithValidPrivateKey);
     nock(alipayEndpointUrl.origin).post(alipayEndpointUrl.pathname).query(true).reply(500);
 
-    await expect(alipayNativeMethods.getUserInfo({ authCode: 'wrong_code' })).rejects.toThrow();
+    await expect(alipayNativeMethods.getUserInfo({ auth_code: 'wrong_code' })).rejects.toThrow();
   });
 });
