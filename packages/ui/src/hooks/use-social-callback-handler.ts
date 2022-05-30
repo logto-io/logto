@@ -14,6 +14,7 @@ const useSocialCallbackHandler = () => {
 
   const socialCallbackHandler = useCallback(
     (connectorId: string) => {
+      // Apple use fragment mode to store auth parameter. Need to support it.
       const data = window.location.search || '?' + window.location.hash.slice(1);
       const { state, error, error_description } = parseQueryParameters(data);
 
@@ -35,7 +36,7 @@ const useSocialCallbackHandler = () => {
       const callbackLink = getCallbackLinkFromStorage(connectorId);
 
       if (callbackLink) {
-        window.location.replace(new URL(`${callbackLink}${window.location.search}`));
+        window.location.replace(new URL(`${callbackLink}${data}`));
 
         return;
       }
