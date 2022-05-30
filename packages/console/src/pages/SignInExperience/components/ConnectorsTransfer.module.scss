@@ -1,9 +1,5 @@
 @use '@/scss/underscore' as _;
 
-.disabled {
-  color: var(--color-disabled);
-}
-
 .title {
   display: flex;
   align-items: center;

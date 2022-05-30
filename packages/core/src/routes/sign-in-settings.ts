@@ -15,7 +15,7 @@ export default function signInSettingsRoutes<T extends AnonymousRouter>(router: 
       Array<ConnectorMetadata & { id: string }>
     >((previous, connectorTarget) => {
       const connectors = connectorInstances.filter(
-        ({ metadata: { target } }) => target === connectorTarget
+        ({ metadata: { target }, connector: { enabled } }) => target === connectorTarget && enabled
       );
 
       return [
