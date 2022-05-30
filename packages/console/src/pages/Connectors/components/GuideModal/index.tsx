@@ -8,12 +8,10 @@ import { useTranslation } from 'react-i18next';
 import ReactMarkdown from 'react-markdown';
 import Modal from 'react-modal';
 
-import Button from '@/components/Button';
 import CardTitle from '@/components/CardTitle';
 import CodeEditor from '@/components/CodeEditor';
 import DangerousRaw from '@/components/DangerousRaw';
 import IconButton from '@/components/IconButton';
-import Spacer from '@/components/Spacer';
 import useApi from '@/hooks/use-api';
 import useAdminConsoleConfigs from '@/hooks/use-configs';
 import Close from '@/icons/Close';
@@ -44,6 +42,7 @@ const GuideModal = ({ connector, isOpen, onClose }: Props) => {
   const isSocialConnector =
     connectorType !== ConnectorType.SMS && connectorType !== ConnectorType.Email;
   const [activeStepIndex, setActiveStepIndex] = useState<number>(0);
+  const steps = isSocialConnector ? 1 : 2;
   const methods = useForm<GuideForm>({ reValidateMode: 'onBlur' });
   const {
     control,
@@ -63,12 +62,22 @@ const GuideModal = ({ connector, isOpen, onClose }: Props) => {
           json: { config },
         })
         .json<ConnectorDTO>();
+      await api
+        .patch(`/api/connectors/${connectorId}/enabled`, {
+          json: { enabled: true },
+        })
+        .json<ConnectorDTO>();
 
       await updateConfigs({
         ...conditional(!isSocialConnector && { configurePasswordless: true }),
         ...conditional(isSocialConnector && { configureSocialSignIn: true }),
       });
-      setActiveStepIndex(activeStepIndex + 1);
+
+      if (activeStepIndex === steps - 1) {
+        onClose();
+      } else {
+        setActiveStepIndex(activeStepIndex + 1);
+      }
       toast.success(t('connector_details.save_success'));
     } catch (error: unknown) {
       if (error instanceof SyntaxError) {
@@ -90,8 +99,6 @@ const GuideModal = ({ connector, isOpen, onClose }: Props) => {
             title={<DangerousRaw>{connectorName}</DangerousRaw>}
             subtitle="connectors.guide.subtitle"
           />
-          <Spacer />
-          <Button type="plain" size="small" title="general.skip" onClick={onClose} />
         </div>
         <div className={styles.content}>
           <ReactMarkdown
@@ -119,6 +126,7 @@ const GuideModal = ({ connector, isOpen, onClose }: Props) => {
                   index={0}
                   activeIndex={activeStepIndex}
                   buttonHtmlType="submit"
+                  buttonText={steps === 1 ? 'general.done' : undefined}
                 >
                   <Controller
                     name="connectorConfigJson"

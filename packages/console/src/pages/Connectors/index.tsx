@@ -116,6 +116,9 @@ const Connectors = () => {
                 <ConnectorRow
                   connectors={smsConnector ? [smsConnector] : []}
                   type={ConnectorType.SMS}
+                  onClickSetup={() => {
+                    setCreateType(ConnectorType.SMS);
+                  }}
                 />
               )}
               {socialConnectorGroups?.map(({ connectors, id }) => (
