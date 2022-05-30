@@ -1,5 +1,4 @@
 import { ConnectorType } from '@logto/schemas';
-import { conditionalString } from '@silverhand/essentials';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
@@ -33,17 +32,15 @@ const ConnectorsTransfer = ({ value, onChange }: Props) => {
   const datasource = data
     ? data
         .filter(({ type }) => type === ConnectorType.Social)
-        .map(({ target, name, enabled, connectors, logo }) => ({
+        .filter(({ enabled }) => enabled)
+        .map(({ target, name, connectors, logo }) => ({
           value: target,
           title: (
             <div className={styles.title}>
               <div className={styles.logo}>
                 <img src={logo} alt={target} />
               </div>
-              <UnnamedTrans
-                resource={name}
-                className={conditionalString(!enabled && styles.disabled)}
-              />
+              <UnnamedTrans resource={name} />
               {connectors.length > 1 &&
                 connectors
                   .filter(({ enabled }) => enabled)
