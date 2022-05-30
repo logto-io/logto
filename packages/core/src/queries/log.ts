@@ -41,6 +41,7 @@ export const findLogs = async (limit: number, offset: number, logCondition: LogC
     select ${sql.join(Object.values(fields), sql`,`)}
     from ${table}
     ${buildLogConditionSql(logCondition)}
+    order by ${fields.createdAt} desc
     limit ${limit}
     offset ${offset}
   `);
