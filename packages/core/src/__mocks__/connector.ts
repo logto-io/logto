@@ -16,7 +16,7 @@ export const mockMetadata: ConnectorMetadata = {
     'zh-CN': '连接器',
   },
   readme: 'README.md',
-  configTemplate: 'config-template.md',
+  configTemplate: 'config-template.json',
 };
 
 export const mockConnector: Connector = {

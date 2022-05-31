@@ -15,9 +15,9 @@ export const scope = ''; // Note: `openid` is required when adding more scope(s)
 // eslint-disable-next-line unicorn/prefer-module
 const currentPath = __dirname;
 const pathToReadmeFile = path.join(currentPath, '..', 'README.md');
-const pathToConfigTemplate = path.join(currentPath, '..', 'docs', 'config-template.md');
+const pathToConfigTemplate = path.join(currentPath, '..', 'docs', 'config-template.json');
 const readmeContentFallback = 'Please check README.md file directory.';
-const configTemplateFallback = 'Please check config-template.md file directory.';
+const configTemplateFallback = 'Please check config-template.json file directory.';
 
 export const defaultMetadata: ConnectorMetadata = {
   id: 'apple-universal',
