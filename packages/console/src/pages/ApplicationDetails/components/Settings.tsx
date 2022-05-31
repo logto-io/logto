@@ -23,7 +23,7 @@ const Settings = ({ oidcConfig }: Props) => {
 
   const uriPatternRules: MultiTextInputRule = {
     pattern: {
-      verify: uriValidator({ allowBlank: false }),
+      verify: uriValidator({ verifyBlank: false }),
       message: t('errors.invalid_uri_format'),
     },
   };
@@ -107,7 +107,7 @@ const Settings = ({ oidcConfig }: Props) => {
           rules={{
             validate: createValidatorForRhf({
               pattern: {
-                verify: uriOriginValidator({ allowBlank: false }),
+                verify: uriOriginValidator({ verifyBlank: false }),
                 message: t('errors.invalid_origin_format'),
               },
             }),

@@ -1,6 +1,6 @@
-export const uriValidator = ({ allowBlank = true }) => {
+export const uriValidator = ({ verifyBlank = true }) => {
   return (value: string) => {
-    if (!allowBlank && value.trim().length === 0) {
+    if (!verifyBlank && value.trim().length === 0) {
       return true;
     }
 
@@ -15,9 +15,9 @@ export const uriValidator = ({ allowBlank = true }) => {
   };
 };
 
-export const uriOriginValidator = ({ allowBlank = true }) => {
+export const uriOriginValidator = ({ verifyBlank = true }) => {
   return (value: string) => {
-    if (!allowBlank && value.trim().length === 0) {
+    if (!verifyBlank && value.trim().length === 0) {
       return true;
     }
 
