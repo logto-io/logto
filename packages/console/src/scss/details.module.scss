@@ -18,7 +18,6 @@
   }
 
   .footer {
-    text-align: right;
     position: sticky;
     bottom: 0;
     margin: 0 _.unit(-6);
@@ -27,6 +26,8 @@
     background: var(--color-base);
 
     .footerMain {
+      display: flex;
+      justify-content: flex-end;
       border-bottom-left-radius: 16px;
       border-bottom-right-radius: 16px;
       background: var(--color-layer-1);

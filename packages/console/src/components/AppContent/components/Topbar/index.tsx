@@ -5,6 +5,7 @@ import Spacer from '@/components/Spacer';
 import Logo from '@/icons/Logo';
 import GetStartedProgress from '@/pages/GetStarted/components/GetStartedProgress';
 
+import UserInfo from '../UserInfo';
 import * as styles from './index.module.scss';
 
 const Topbar = () => {
@@ -17,6 +18,7 @@ const Topbar = () => {
       <div className={styles.text}>{t('admin_console.title')}</div>
       <Spacer />
       <GetStartedProgress />
+      <UserInfo />
     </div>
   );
 };
