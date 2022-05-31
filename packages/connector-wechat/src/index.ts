@@ -28,7 +28,7 @@ import {
 import { weChatConfigGuard, AccessTokenResponse, UserInfoResponse, WeChatConfig } from './types';
 
 // As creating a WeChat Web/Mobile application needs a real App or Website record, the real test is temporarily not finished.
-// TODO: test with our own wechat mobile/web application (LOG-1910), already tested with other verified wechat web application
+// TODO: test with our own WeChat web application (LOG-2719), already tested with other verified WeChat web application
 
 export default class WeChatConnector implements SocialConnector {
   public metadata: ConnectorMetadata = defaultMetadata;
@@ -83,7 +83,6 @@ export default class WeChatConnector implements SocialConnector {
     const { code } = codeDataGuard.parse(data);
     const { accessToken, openid } = await this.getAccessToken(code);
 
-    // TO-DO: @Darcy refactor this
     // 'openid' is defined as a required input argument in WeChat API doc, but it does not necessarily have to
     // be the return value from getAccessToken per testing.
     // In other words, 'openid' is required but the response of getUserInfo is consistent as long as
