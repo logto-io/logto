@@ -1,0 +1,5 @@
+{
+  "appId": "<app-id>",
+  "appSecret": "<app-secret>",
+  "universalLinks": "<optional-universal-links>"
+}

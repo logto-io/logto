@@ -1,4 +1,3 @@
-```json
 {
   "accessKeyId": "<access-key-id>",
   "accessKeySecret": "<access-key-secret>",
@@ -27,7 +26,6 @@
       "name": "<test-template-name>",
       "content": "<test-template-content>",
       "remark": "<test-template-remark>"
-    },
+    }
   ]
 }
-```

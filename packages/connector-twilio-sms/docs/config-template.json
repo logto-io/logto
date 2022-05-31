@@ -1,4 +1,3 @@
-```json
 {
   "accountSID": "<account-sid>",
   "authToken": "<auth-token>",
@@ -6,16 +5,15 @@
   "templates": [
     {
       "usageType": "SignIn",
-      "content": "This is for sign-in purposes only. Your passcode is {{code}}.",
+      "content": "This is for sign-in purposes only. Your passcode is {{code}}."
     },
     {
       "usageType": "Register",
-      "content": "This is for registering purposes only. Your passcode is {{code}}.",
+      "content": "This is for registering purposes only. Your passcode is {{code}}."
     },
     {
       "usageType": "Test",
-      "content": "This is for testing purposes only. Your passcode is {{code}}.",
+      "content": "This is for testing purposes only. Your passcode is {{code}}."
     }
   ]
 }
-```
