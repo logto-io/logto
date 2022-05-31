@@ -13,7 +13,8 @@ const ApplicationName = ({ applicationId }: Props) => {
 
   const name = isAdminConsole ? 'Admin Console' : data?.name;
 
-  return <span>{name ?? '-'}</span>;
+  // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+  return <span>{name || '-'}</span>;
 };
 
 export default ApplicationName;
