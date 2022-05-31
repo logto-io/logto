@@ -517,6 +517,16 @@ const translation = {
       appearance_dark: 'Dark mode',
       saved: 'Saved!',
     },
+    dashboard: {
+      title: 'Dashboard',
+      description: 'Get an overview about your app performace',
+      total_users: 'Total users',
+      new_users_today: 'New users today',
+      new_users_7_days: 'New users past 7 days',
+      daily_active_users: 'Daily active users',
+      weekly_active_users: 'Weeky active users',
+      monthly_active_users: 'Monthly active users',
+    },
     session_expired: {
       title: 'Session Expired',
       subtitle:

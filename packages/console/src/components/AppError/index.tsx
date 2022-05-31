@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import ErrorImage from '@/assets/images/warning.svg';
-import { ArrowDown, ArrowUp } from '@/icons/Arrow';
+import { KeyboardArrowDown, KeyboardArrowUp } from '@/icons/Arrow';
 
 import * as styles from './index.module.scss';
 
@@ -35,7 +35,7 @@ const AppError = ({ title, errorCode, errorMessage, callStack, children }: Props
               }}
             >
               {t('errors.more_details')}
-              {isDetailsOpen ? <ArrowUp /> : <ArrowDown />}
+              {isDetailsOpen ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
             </span>
           )}
         </span>

@@ -10,7 +10,7 @@ import DangerousRaw from '@/components/DangerousRaw';
 import IconButton from '@/components/IconButton';
 import Index from '@/components/Index';
 import Spacer from '@/components/Spacer';
-import { ArrowDown, ArrowUp } from '@/icons/Arrow';
+import { KeyboardArrowDown, KeyboardArrowUp } from '@/icons/Arrow';
 
 import * as styles from './index.module.scss';
 
@@ -74,7 +74,7 @@ const Step = ({
           subtitle={<DangerousRaw>{subtitle}</DangerousRaw>}
         />
         <Spacer />
-        <IconButton>{isExpanded ? <ArrowUp /> : <ArrowDown />}</IconButton>
+        <IconButton>{isExpanded ? <KeyboardArrowUp /> : <KeyboardArrowDown />}</IconButton>
       </div>
       <div className={classNames(styles.content, isExpanded && styles.expanded)}>
         {children}
