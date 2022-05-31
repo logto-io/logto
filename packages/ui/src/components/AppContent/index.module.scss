@@ -17,12 +17,11 @@
   --dark-pressed: #5d36ff;
 }
 
-.content {
-  @include _.flex_column;
-  background-color: var(--color-surface);
+body {
+  background-color: var(--color-base);
 }
 
-main {
+.container {
   position: absolute;
   inset: 0;
   background: var(--color-base);
@@ -31,8 +30,9 @@ main {
   @include _.flex_column;
 }
 
-body {
-  background-color: var(--color-base);
+.content {
+  @include _.flex_column;
+  background-color: var(--color-surface);
 }
 
 /* Foundation */
@@ -49,7 +49,7 @@ body {
   @include mobile.fonts;
   @include mobile.layout;
 
-  main {
+  .container {
     justify-content: normal;
   }
 

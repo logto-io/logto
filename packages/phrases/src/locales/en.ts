@@ -43,6 +43,7 @@ const translation = {
       back: 'Go Back',
       nav_back: 'Back',
       agree: 'Agree',
+      got_it: 'Got it',
     },
     description: {
       email: 'email',
@@ -71,6 +72,7 @@ const translation = {
       social_create_account: 'No account? You can create a new account and bind.',
       social_bind_account: 'Already have an account? Sign in to bind it with your social identity.',
       social_bind_with_existing: 'We find a related account, you can bind it directly.',
+      demo_message: 'Use the Admin username and password to sign in this demo.',
     },
     error: {
       username_password_mismatch: 'Username and password do not match.',
