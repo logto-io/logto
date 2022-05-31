@@ -1,7 +1,8 @@
 import { useEffect, useContext } from 'react';
 
+import { isNativeWebview } from '@/utils/native-sdk';
+
 import { PageContext } from './use-page-context';
-import { isNativeWebview } from './utils';
 
 const useNativeMessageListener = () => {
   const { setToast } = useContext(PageContext);

@@ -2,17 +2,12 @@ import { useCallback, useContext } from 'react';
 
 import { invokeSocialSignIn } from '@/apis/social';
 import { ConnectorData } from '@/types';
+import { getLogtoNativeSdk, isNativeWebview } from '@/utils/native-sdk';
+import { generateState, storeState, buildSocialLandingUri } from '@/utils/social-connectors';
 
 import useApi from './use-api';
 import { PageContext } from './use-page-context';
 import useTerms from './use-terms';
-import {
-  getLogtoNativeSdk,
-  isNativeWebview,
-  generateState,
-  storeState,
-  buildSocialLandingUri,
-} from './utils';
 
 const useSocial = () => {
   const { experienceSettings } = useContext(PageContext);

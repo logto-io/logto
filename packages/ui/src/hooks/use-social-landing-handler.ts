@@ -3,9 +3,9 @@ import { useTranslation } from 'react-i18next';
 
 import { SearchParameters } from '@/types';
 import { getSearchParameters } from '@/utils';
+import { storeCallbackLink } from '@/utils/social-connectors';
 
 import { PageContext } from './use-page-context';
-import { storeCallbackLink } from './utils';
 
 const useSocialLandingHandler = (connectorId?: string) => {
   const { setToast } = useContext(PageContext);

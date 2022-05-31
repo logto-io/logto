@@ -4,10 +4,10 @@ import { useParams, useNavigate } from 'react-router-dom';
 
 import { signInWithSocial } from '@/apis/social';
 import { parseQueryParameters } from '@/utils';
+import { stateValidation } from '@/utils/social-connectors';
 
 import useApi, { ErrorHandlers } from './use-api';
 import { PageContext } from './use-page-context';
-import { stateValidation } from './utils';
 
 const useSocialSignInListener = () => {
   const { setToast } = useContext(PageContext);

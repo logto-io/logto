@@ -4,9 +4,9 @@ import { MemoryRouter, Route, Routes } from 'react-router-dom';
 
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider';
-import { getCallbackLinkFromStorage } from '@/hooks/utils';
 import { SearchParameters } from '@/types';
 import { queryStringify } from '@/utils';
+import { getCallbackLinkFromStorage } from '@/utils/social-connectors';
 
 import SocialLanding from '.';
 

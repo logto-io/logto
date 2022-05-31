@@ -5,7 +5,7 @@ import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider';
 import * as socialSignInApi from '@/apis/social';
-import { generateState, storeState } from '@/hooks/utils';
+import { generateState, storeState } from '@/utils/social-connectors';
 
 import SocialCallback from '.';
 
