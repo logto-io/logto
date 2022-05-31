@@ -3,9 +3,9 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
 import { parseQueryParameters } from '@/utils';
+import { getCallbackLinkFromStorage } from '@/utils/social-connectors';
 
 import { PageContext } from './use-page-context';
-import { getCallbackLinkFromStorage } from './utils';
 
 const useSocialCallbackHandler = () => {
   const { setToast } = useContext(PageContext);

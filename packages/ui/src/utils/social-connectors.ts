@@ -1,5 +1,28 @@
 import { ConnectorData, Platform, SearchParameters } from '@/types';
+import { generateRandomString } from '@/utils';
 import { getLogtoNativeSdk, isNativeWebview } from '@/utils/native-sdk';
+
+/**
+ * Social Connector State Utility Methods
+ */
+
+const storageStateKeyPrefix = 'social_auth_state';
+
+export const generateState = () => {
+  const uuid = generateRandomString();
+
+  return uuid;
+};
+
+export const storeState = (state: string, connectorId: string) => {
+  sessionStorage.setItem(`${storageStateKeyPrefix}:${connectorId}`, state);
+};
+
+export const stateValidation = (state: string, connectorId: string) => {
+  const stateStorage = sessionStorage.getItem(`${storageStateKeyPrefix}:${connectorId}`);
+
+  return stateStorage === state;
+};
 
 /**
  * Native Social Redirect Utility Methods

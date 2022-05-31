@@ -6,8 +6,8 @@
 import { SignInMethods } from '@logto/schemas';
 
 import { getSignInExperience } from '@/apis/settings';
-import { filterSocialConnectors } from '@/hooks/utils';
 import { SignInMethod, SignInExperienceSettingsResponse, SignInExperienceSettings } from '@/types';
+import { filterSocialConnectors } from '@/utils/social-connectors';
 
 export const getPrimarySignInMethod = (signInMethods: SignInMethods) => {
   for (const [key, value] of Object.entries(signInMethods)) {

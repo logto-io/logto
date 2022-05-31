@@ -4,7 +4,7 @@ import {
   filterSocialConnectors,
   filterPreviewSocialConnectors,
   buildSocialLandingUri,
-} from './utils';
+} from './social-connectors';
 
 const mockConnectors = [
   { platform: 'Web', target: 'facebook' },

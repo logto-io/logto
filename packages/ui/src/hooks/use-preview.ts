@@ -4,11 +4,11 @@ import i18next from 'i18next';
 import { useEffect, useState } from 'react';
 
 import { Context } from '@/hooks/use-page-context';
-import { filterPreviewSocialConnectors } from '@/hooks/utils';
 import initI18n from '@/i18n/init';
 import { SignInExperienceSettingsResponse, Platform } from '@/types';
 import { parseQueryParameters } from '@/utils';
 import { getPrimarySignInMethod, getSecondarySignInMethods } from '@/utils/sign-in-experience';
+import { filterPreviewSocialConnectors } from '@/utils/social-connectors';
 
 type PreviewConfig = {
   signInExperience: SignInExperienceSettingsResponse;
