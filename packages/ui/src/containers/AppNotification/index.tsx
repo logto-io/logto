@@ -2,7 +2,7 @@ import { Nullable } from '@silverhand/essentials';
 import React, { useState, useEffect, useCallback } from 'react';
 
 import Notification from '@/components/Notification';
-import { getAppNotificationInfo } from '@/utils/session-storage';
+import { getAppNotificationInfo, clearAppNotificationInfo } from '@/utils/session-storage';
 
 import * as styles from './index.module.scss';
 
@@ -11,6 +11,7 @@ const AppNotification = () => {
 
   const onClose = useCallback(() => {
     setNotification(null);
+    clearAppNotificationInfo();
   }, []);
 
   useEffect(() => {
