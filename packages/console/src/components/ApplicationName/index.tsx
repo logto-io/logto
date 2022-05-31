@@ -2,6 +2,8 @@ import { adminConsoleApplicationId, Application } from '@logto/schemas';
 import React from 'react';
 import useSWR from 'swr';
 
+import { RequestError } from '@/hooks/use-api';
+
 type Props = {
   applicationId: string;
 };
