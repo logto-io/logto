@@ -26,11 +26,6 @@ const createRouters = (provider: Provider) => {
   sessionRouter.use(koaLogSession(provider));
   sessionRoutes(sessionRouter, provider);
 
-  const anonymousRouter: AnonymousRouter = new Router();
-  signInSettingsRoutes(anonymousRouter);
-  statusRoutes(anonymousRouter);
-  swaggerRoutes(anonymousRouter);
-
   const authedRouter: AuthedRouter = new Router();
   authedRouter.use(koaAuth());
   applicationRoutes(authedRouter);
@@ -42,6 +37,12 @@ const createRouters = (provider: Provider) => {
   logRoutes(authedRouter);
   roleRoutes(authedRouter);
   dashboardRoutes(authedRouter);
+
+  const anonymousRouter: AnonymousRouter = new Router();
+  signInSettingsRoutes(anonymousRouter);
+  statusRoutes(anonymousRouter);
+  // The swagger.json should contain all API routers.
+  swaggerRoutes(anonymousRouter, [sessionRouter, authedRouter]);
 
   return [sessionRouter, anonymousRouter, authedRouter];
 };

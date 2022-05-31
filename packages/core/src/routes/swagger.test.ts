@@ -1,12 +1,22 @@
-import { createRequester } from '@/utils/test-utils';
+import Koa from 'koa';
+import Router from 'koa-router';
+import request from 'supertest';
 
-import statusRoutes from './status';
+import { AnonymousRouter, AuthedRouter } from '@/routes/types';
+
 import swaggerRoutes from './swagger';
 
 describe('swagger api', () => {
-  const swaggerRequest = createRequester({ anonymousRoutes: [swaggerRoutes, statusRoutes] });
+  const anonymousRouter: AnonymousRouter = new Router();
+  const anotherRouter: AuthedRouter = new Router();
+  swaggerRoutes(anonymousRouter, [anotherRouter]);
 
-  it('GET /swagger', async () => {
+  const app = new Koa();
+  app.use(anonymousRouter.routes()).use(anonymousRouter.allowedMethods());
+
+  const swaggerRequest = request(app.callback());
+
+  it('GET /swagger.json', async () => {
     const response = await swaggerRequest.get('/swagger.json');
     expect(response.status).toEqual(200);
     expect(response.body).toHaveProperty('openapi');

@@ -1,5 +1,5 @@
 import { toTitle } from '@silverhand/essentials';
-import { IMiddleware } from 'koa-router';
+import Router, { IMiddleware } from 'koa-router';
 import { OpenAPIV3 } from 'openapi-types';
 
 import { isGuardMiddleware, WithGuardConfig } from '@/middleware/koa-guard';
@@ -7,18 +7,23 @@ import { zodTypeToSwagger } from '@/utils/zod';
 
 import { AnonymousRouter } from './types';
 
-export default function swaggerRoutes<T extends AnonymousRouter>(router: T) {
+export default function swaggerRoutes<T extends AnonymousRouter, R extends Router<unknown, any>>(
+  router: T,
+  otherRouters: R[]
+) {
   router.get('/swagger.json', async (ctx, next) => {
-    const routes = ctx.router.stack.map(({ path, stack, methods }) => {
-      const guard = stack.find((function_): function_ is WithGuardConfig<IMiddleware> =>
-        isGuardMiddleware(function_)
-      );
+    const routes = [router, ...otherRouters].flatMap((router) =>
+      router.stack.map(({ path, stack, methods }) => {
+        const guard = stack.find((function_): function_ is WithGuardConfig<IMiddleware> =>
+          isGuardMiddleware(function_)
+        );
 
-      return { path, methods, guard };
-    });
+        return { path, methods, guard };
+      })
+    );
 
-    const paths = Object.fromEntries(
-      routes.map<[string, OpenAPIV3.PathItemObject]>(({ path, methods, guard }) => {
+    const routeEntries = routes.map<[string, OpenAPIV3.PathItemObject]>(
+      ({ path, methods, guard }) => {
         const body = guard?.config.body;
 
         return [
@@ -45,7 +50,40 @@ export default function swaggerRoutes<T extends AnonymousRouter>(router: T) {
             ])
           ),
         ];
-      })
+      }
+    );
+
+    /**
+     * Avoid `Object.fromEntries()` overwriting the former `path1` entry with the latter one:
+     * e.g. convert
+     * [
+     *   [ path1, { head: { ... }, get: { ... } } ],
+     *   [ path2, { post: { ... }, patch: { ... } } ],
+     *   [ path1, { delete: { ... } } ],
+     *   ...
+     * ]
+     * to
+     * {
+     *   path1: { head: { ... }, get: { ... }, delete: { ... } } ,
+     *   path2: { post: { ... }, patch: { ... } } ,
+     *   ...
+     * }
+     */
+    const paths = Object.fromEntries(
+      routeEntries.reduce((map, [path, methods]) => {
+        const existingMethods = map.get(path) as [string, Record<string, unknown>] | undefined;
+
+        if (existingMethods) {
+          map.set(
+            path,
+            Object.fromEntries([...Object.entries(existingMethods), ...Object.entries(methods)])
+          );
+        } else {
+          map.set(path, methods);
+        }
+
+        return map;
+      }, new Map<string, Record<string, unknown>>())
     );
 
     const document: OpenAPIV3.Document = {
