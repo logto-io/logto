@@ -18,7 +18,18 @@ const initI18n = async (languageSettings?: LanguageInfo) => {
       ? { ...baseOptions, lng: languageSettings.fixedLanguage }
       : baseOptions;
 
-  return i18next.use(initReactI18next).use(LanguageDetector).init(options);
+  const i18n = i18next.use(initReactI18next).use(LanguageDetector).init(options);
+
+  // @ts-expect-error - i18next doesn't have a type definition for this. called after i18next is initialized
+  i18next.services.formatter.add('zhOrSpaces', (value: string, lng) => {
+    if (lng !== 'zh-CN') {
+      return value;
+    }
+
+    return value.replaceAll(/或/g, ' 或 ');
+  });
+
+  return i18n;
 };
 
 export default initI18n;
