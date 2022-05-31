@@ -54,7 +54,7 @@ describe('getUserInfo', () => {
     jest.clearAllMocks();
   });
 
-  it('should get user id from id token payload', async () => {
+  it('should get user info from id token payload', async () => {
     const userId = 'userId';
     const mockJwtVerify = jwtVerify as jest.Mock;
     mockJwtVerify.mockImplementationOnce(() => ({ payload: { sub: userId } }));
