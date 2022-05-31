@@ -8,6 +8,7 @@
   bottom: 0;
   background-color: var(--color-overlay);
   @include _.flex-column;
+  z-index: 300;
 }
 
 .container {

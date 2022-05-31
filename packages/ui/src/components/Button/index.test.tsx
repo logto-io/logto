@@ -31,7 +31,7 @@ describe('Button Component', () => {
       <SocialLinkButton connector={connector} onClick={onClick} />
     );
 
-    expect(queryByText(connector.name.en)).not.toBeNull();
+    expect(queryByText('action.sign_in_with')).not.toBeNull();
 
     const button = container.querySelector('button');
     const icon = container.querySelector('img');

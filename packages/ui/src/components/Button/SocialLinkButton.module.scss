@@ -1,5 +1,11 @@
 @use '@/scss/underscore' as _;
 
+
+.socialButton {
+  justify-content: normal;
+  padding: _.unit(3) _.unit(16);
+}
+
 .icon {
   width: _.unit(6);
   height: _.unit(6);

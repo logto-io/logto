@@ -20,7 +20,7 @@ describe(`SocialLanding Page`, () => {
     Object.defineProperty(window, 'location', {
       value: {
         origin,
-        href: `/social-landing?`,
+        href: `/social/landing?`,
         search: queryStringify({
           [SearchParameters.redirectTo]: redirectUri,
           [SearchParameters.nativeCallbackLink]: callbackLink,
@@ -32,9 +32,9 @@ describe(`SocialLanding Page`, () => {
 
     renderWithPageContext(
       <SettingsProvider>
-        <MemoryRouter initialEntries={['/social-landing/github']}>
+        <MemoryRouter initialEntries={['/social/landing/github']}>
           <Routes>
-            <Route path="/social-landing/:connector" element={<SocialLanding />} />
+            <Route path="/social/landing/:connector" element={<SocialLanding />} />
           </Routes>
         </MemoryRouter>
       </SettingsProvider>

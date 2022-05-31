@@ -7,9 +7,9 @@ import SocialRegister from '.';
 describe('SocialRegister', () => {
   it('render', () => {
     const { queryByText } = render(
-      <MemoryRouter initialEntries={['/social-register/github']}>
+      <MemoryRouter initialEntries={['/social/register/github']}>
         <Routes>
-          <Route path="/social-register/:connector" element={<SocialRegister />} />
+          <Route path="/social/register/:connector" element={<SocialRegister />} />
         </Routes>
       </MemoryRouter>
     );

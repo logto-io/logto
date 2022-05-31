@@ -81,7 +81,7 @@ const PasscodeValidation = ({ type, method, className, target }: Props) => {
 
   useEffect(() => {
     if (verifyPasscodeResult?.redirectTo) {
-      window.location.assign(verifyPasscodeResult.redirectTo);
+      window.location.replace(verifyPasscodeResult.redirectTo);
     }
   }, [verifyPasscodeResult]);
 

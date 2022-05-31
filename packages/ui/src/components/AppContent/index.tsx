@@ -44,7 +44,9 @@ const AppContent = ({ children }: Props) => {
 
   return (
     <div className={styles.container}>
+      {platform === 'web' && <div className={styles.placeHolder} />}
       <main className={styles.content}>{children}</main>
+      {platform === 'web' && <div className={styles.placeHolder} />}
       <Toast message={toast} isVisible={Boolean(toast)} callback={hideToast} />
       {debouncedLoading && <LoadingLayer />}
     </div>

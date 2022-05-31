@@ -44,6 +44,7 @@ const translation = {
       nav_back: 'Back',
       agree: 'Agree',
       got_it: 'Got it',
+      sign_in_with: 'Sign in with {{name}}',
     },
     description: {
       email: 'email',

@@ -18,8 +18,9 @@ const SocialLinkButton = ({ isDisabled, className, connector, onClick }: Props) 
   const { target, name, logo } = connector;
 
   const {
+    t,
     i18n: { language },
-  } = useTranslation();
+  } = useTranslation(undefined, { keyPrefix: 'main_flow' });
   // TODO: LOG-2393 should fix name[locale] syntax error
   const foundName = Object.entries(name).find(([lang]) => lang === language);
   const localName = foundName ? foundName[1] : name.en;
@@ -31,6 +32,7 @@ const SocialLinkButton = ({ isDisabled, className, connector, onClick }: Props) 
         styles.button,
         styles.secondary,
         styles.large,
+        socialLinkButtonStyles.socialButton,
         isDisabled && styles.disabled,
         className
       )}
@@ -38,7 +40,7 @@ const SocialLinkButton = ({ isDisabled, className, connector, onClick }: Props) 
       onClick={onClick}
     >
       {logo && <img src={logo} alt={target} className={socialLinkButtonStyles.icon} />}
-      {localName}
+      {t('action.sign_in_with', { name: localName })}
     </button>
   );
 };

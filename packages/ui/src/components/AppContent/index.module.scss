@@ -27,12 +27,17 @@ body {
   background: var(--color-base);
   color: var(--color-text);
   font: var(--font-body);
-  @include _.flex_column;
+  overflow: auto;
+  @include _.flex_column(center, normal);
 }
 
 .content {
   @include _.flex_column;
   background-color: var(--color-surface);
+}
+
+.placeHolder {
+  flex: 1;
 }
 
 /* Foundation */
@@ -49,9 +54,6 @@ body {
   @include mobile.fonts;
   @include mobile.layout;
 
-  .container {
-    justify-content: normal;
-  }
 
   .content {
     flex: 1;

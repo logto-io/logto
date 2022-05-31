@@ -63,8 +63,8 @@ const App = () => {
             {/* social sign-in pages */}
             <Route path="/sign-in/callback/:connector" element={<SocialSignInCallback />} />
             <Route path="/callback/:connector" element={<Callback />} />
-            <Route path="/social-register/:connector" element={<SocialRegister />} />
-            <Route path="/social-landing/:connector" element={<SocialLanding />} />
+            <Route path="/social/register/:connector" element={<SocialRegister />} />
+            <Route path="/social/landing/:connector" element={<SocialLanding />} />
 
             <Route path="/:type/:method/passcode-validation" element={<Passcode />} />
             <Route

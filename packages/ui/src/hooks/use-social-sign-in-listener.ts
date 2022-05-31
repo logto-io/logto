@@ -19,7 +19,7 @@ const useSocialSignInListener = () => {
     () => ({
       'user.identity_not_exists': (error) => {
         if (parameters.connector) {
-          navigate(`/social-register/${parameters.connector}`, {
+          navigate(`/social/register/${parameters.connector}`, {
             replace: true,
             state: {
               ...(error.data as Record<string, unknown> | undefined),
@@ -51,7 +51,7 @@ const useSocialSignInListener = () => {
 
   useEffect(() => {
     if (result?.redirectTo) {
-      window.location.assign(result.redirectTo);
+      window.location.replace(result.redirectTo);
     }
   }, [result]);
 
