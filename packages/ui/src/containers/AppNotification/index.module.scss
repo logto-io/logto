@@ -1,0 +1,29 @@
+@use '@/scss/underscore' as _;
+
+
+.appNotification {
+  position: absolute;
+  top: _.unit(6);
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+
+:global(body.mobile) {
+  .appNotification {
+    top: _.unit(6);
+    left: _.unit(5);
+    right: _.unit(5);
+    transform: none;
+  }
+}
+
+
+:global(body.desktop) {
+  .appNotification {
+    top: _.unit(-6);
+    transform: translate(-50%, -100%);
+    width: 100%;
+    max-width: 520px;
+  }
+}

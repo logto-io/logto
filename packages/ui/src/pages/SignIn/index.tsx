@@ -3,6 +3,7 @@ import classNames from 'classnames';
 import React, { useContext } from 'react';
 
 import BrandingHeader from '@/components/BrandingHeader';
+import AppNotification from '@/containers/AppNotification';
 import { PageContext } from '@/hooks/use-page-context';
 
 import * as styles from './index.module.scss';
@@ -35,6 +36,7 @@ const SignIn = () => {
         socialConnectors={experienceSettings.socialConnectors}
       />
       <CreateAccountLink primarySignInMethod={experienceSettings.primarySignInMethod} />
+      <AppNotification />
     </div>
   );
 };
