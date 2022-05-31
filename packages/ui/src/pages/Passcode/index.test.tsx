@@ -41,7 +41,7 @@ describe('Passcode Page', () => {
 
   it('render with invalid type', () => {
     const { queryByText } = renderWithPageContext(
-      <MemoryRouter initialEntries={['/social-register/email/passcode-validation']}>
+      <MemoryRouter initialEntries={['/social/email/passcode-validation']}>
         <Routes>
           <Route path="/:type/:method/passcode-validation" element={<Passcode />} />
         </Routes>

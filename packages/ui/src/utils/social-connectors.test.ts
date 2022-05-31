@@ -106,7 +106,7 @@ describe('buildSocialLandingUri', () => {
     /* eslint-enable @silverhand/fp/no-mutation */
 
     const redirectUri = 'https://www.example.com/callback';
-    const socialLandingPath = '/social-landing';
+    const socialLandingPath = '/social/landing';
     const callbackUri = buildSocialLandingUri(socialLandingPath, redirectUri);
 
     expect(callbackUri.pathname).toEqual(socialLandingPath);

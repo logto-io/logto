@@ -20,7 +20,7 @@ const useSocial = () => {
 
     const redirectUri =
       platform === 'Universal'
-        ? buildSocialLandingUri(`/social-landing/${connectorId}`, redirectTo).toString()
+        ? buildSocialLandingUri(`/social/landing/${connectorId}`, redirectTo).toString()
         : redirectTo;
 
     getLogtoNativeSdk()?.getPostMessage()({
