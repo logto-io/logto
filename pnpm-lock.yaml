@@ -766,11 +766,13 @@ importers:
       '@silverhand/essentials': ^1.1.6
       '@silverhand/jest-config': ^0.14.0
       '@silverhand/ts-config': ^0.14.0
+      '@types/debug': ^4.1.7
       '@types/inquirer': ^8.2.1
       '@types/jest': ^27.4.1
       '@types/koa': ^2.13.3
       '@types/koa-logger': ^3.1.1
       '@types/koa-mount': ^4.0.0
+      '@types/koa-send': ^4.1.3
       '@types/koa-static': ^4.0.2
       '@types/lodash.pick': ^4.4.6
       '@types/node': ^16.3.1
@@ -780,6 +782,7 @@ importers:
       chalk: ^4
       copyfiles: ^2.4.1
       dayjs: ^1.10.5
+      debug: ^4.3.4
       decamelize: ^5.0.0
       deepmerge: ^4.2.2
       dotenv: ^16.0.0
@@ -797,6 +800,7 @@ importers:
       koa-mount: ^4.0.0
       koa-proxies: ^0.12.1
       koa-router: ^10.0.0
+      koa-send: ^5.0.1
       koa-static: ^5.0.0
       lint-staged: ^12.0.0
       lodash.pick: ^4.4.0
@@ -841,6 +845,7 @@ importers:
       argon2: 0.28.5
       chalk: 4.1.2
       dayjs: 1.10.7
+      debug: 4.3.4
       decamelize: 5.0.1
       deepmerge: 4.2.2
       dotenv: 16.0.0
@@ -853,8 +858,9 @@ importers:
       koa-body: 5.0.0
       koa-logger: 3.2.1
       koa-mount: 4.0.0
-      koa-proxies: 0.12.1_koa@2.13.4
+      koa-proxies: 0.12.1_debug@4.3.4+koa@2.13.4
       koa-router: 10.1.1
+      koa-send: 5.0.1
       koa-static: 5.0.0
       lodash.pick: 4.4.0
       module-alias: 2.2.2
@@ -874,11 +880,13 @@ importers:
       '@silverhand/eslint-config': 0.14.0_hjjt7jwmhwqm7bjf55k5ihcdqq
       '@silverhand/jest-config': 0.14.0_makj2rl6gt73u7koqro542qsmm
       '@silverhand/ts-config': 0.14.0_typescript@4.6.2
+      '@types/debug': 4.1.7
       '@types/inquirer': 8.2.1
       '@types/jest': 27.4.1
       '@types/koa': 2.13.4
       '@types/koa-logger': 3.1.2
       '@types/koa-mount': 4.0.1
+      '@types/koa-send': 4.1.3
       '@types/koa-static': 4.0.2
       '@types/lodash.pick': 4.4.6
       '@types/node': 16.11.12
@@ -10406,6 +10414,7 @@ packages:
         optional: true
     dependencies:
       ms: 2.1.2
+    dev: true
 
   /debug/4.3.3_supports-color@9.2.2:
     resolution: {integrity: sha512-/zxw5+vh1Tfv+4Qn7a5nsbcJKPaSvCDhojn6FEl9vupwK2VCSDtEiEtqr8DFtzYFOdz63LBkxec7DYuc2jon6Q==}
@@ -11881,6 +11890,19 @@ packages:
     peerDependenciesMeta:
       debug:
         optional: true
+    dev: true
+
+  /follow-redirects/1.14.6_debug@4.3.4:
+    resolution: {integrity: sha512-fhUl5EwSJbbl8AR+uYL2KQDxLkdSjZGR36xy46AO7cOMTrCMON6Sa28FmAnC2tRTDbd/Uuzz3aJBv7EBN7JH8A==}
+    engines: {node: '>=4.0'}
+    peerDependencies:
+      debug: '*'
+    peerDependenciesMeta:
+      debug:
+        optional: true
+    dependencies:
+      debug: 4.3.4
+    dev: false
 
   /follow-redirects/1.14.9:
     resolution: {integrity: sha512-MQDfihBQYMcyy5dhRDJUHcw7lb2Pv/TuE6xP1vyraLukNDHKbDxDNaOE3NbCAdKQApno+GPRyo1YAp89yCjK4w==}
@@ -12879,6 +12901,18 @@ packages:
       requires-port: 1.0.0
     transitivePeerDependencies:
       - debug
+    dev: true
+
+  /http-proxy/1.18.1_debug@4.3.4:
+    resolution: {integrity: sha512-7mz/721AbnJwIVbnaSv1Cz3Am0ZLT/UBwkC92VlxhXv/k/BBQfM2fXElQNC27BVGr0uwUpplYPQM9LnaBMR5NQ==}
+    engines: {node: '>=8.0.0'}
+    dependencies:
+      eventemitter3: 4.0.7
+      follow-redirects: 1.14.6_debug@4.3.4
+      requires-port: 1.0.0
+    transitivePeerDependencies:
+      - debug
+    dev: false
 
   /http2-wrapper/1.0.3:
     resolution: {integrity: sha512-V+23sDMr12Wnz7iTcDeJr3O6AIxlnvT/bmaAAAP/Xda35C90p9599p0F1eHR/N1KILWSoWVAiOMFjBBXaXSMxg==}
@@ -14461,18 +14495,18 @@ packages:
     resolution: {integrity: sha512-rm71jaA/P+6HeCpoRhmCv8KVBIi0tfGuO/dMKicbQnQW/YJntJ6MnnspkodoA4QstMVEZArsCphmd0bJEtoMjQ==}
     engines: {node: '>= 7.6.0'}
     dependencies:
-      debug: 4.3.3
+      debug: 4.3.4
       koa-compose: 4.1.0
     transitivePeerDependencies:
       - supports-color
     dev: false
 
-  /koa-proxies/0.12.1_koa@2.13.4:
+  /koa-proxies/0.12.1_debug@4.3.4+koa@2.13.4:
     resolution: {integrity: sha512-qCOGY7Qoe/Ewn2VskP9TdLMZffmsv8JUBWllNlmTJmgl1059nxt5jl7QBWNniqx2BthVSU5TIBuhUULA5d6t+A==}
     peerDependencies:
       koa: '>=2'
     dependencies:
-      http-proxy: 1.18.1
+      http-proxy: 1.18.1_debug@4.3.4
       koa: 2.13.4
       path-match: 1.2.4
     transitivePeerDependencies:
@@ -14483,7 +14517,7 @@ packages:
     resolution: {integrity: sha512-z/OzxVjf5NyuNO3t9nJpx7e1oR3FSBAauiwXtMQu4ppcnuNZzTaQ4p21P8A6r2Es8uJJM339oc4oVW+qX7SqnQ==}
     engines: {node: '>= 8.0.0'}
     dependencies:
-      debug: 4.3.3
+      debug: 4.3.4
       http-errors: 1.8.1
       koa-compose: 4.1.0
       methods: 1.1.2
@@ -14496,7 +14530,7 @@ packages:
     resolution: {integrity: sha512-tmcyQ/wXXuxpDxyNXv5yNNkdAMdFRqwtegBXUaowiQzUKqJehttS0x2j0eOZDQAyloAth5w6wwBImnFzkUz3pQ==}
     engines: {node: '>= 8'}
     dependencies:
-      debug: 4.3.3
+      debug: 4.3.4
       http-errors: 1.8.1
       resolve-path: 1.4.0
     transitivePeerDependencies:
@@ -14522,7 +14556,7 @@ packages:
       content-disposition: 0.5.4
       content-type: 1.0.4
       cookies: 0.8.0
-      debug: 4.3.3
+      debug: 4.3.4
       delegates: 1.0.0
       depd: 2.0.0
       destroy: 1.0.4
@@ -16287,7 +16321,7 @@ packages:
     dependencies:
       '@koa/cors': 3.1.0
       cacheable-lookup: 6.0.4
-      debug: 4.3.3
+      debug: 4.3.4
       ejs: 3.1.6
       got: 11.8.3
       jose: 4.6.0
