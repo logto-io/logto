@@ -1,21 +1,30 @@
+import { Nullable } from '@silverhand/essentials';
 import React, { useState, useEffect, useCallback } from 'react';
-import { useTranslation } from 'react-i18next';
 
 import Notification from '@/components/Notification';
+import { getAppNotificationInfo } from '@/utils/session-storage';
+
+import * as styles from './index.module.scss';
 
 const AppNotification = () => {
-  const { t } = useTranslation(undefined, { keyPrefix: 'main_flow' });
-  const [isOpen, setIsOpen] = useState(false);
+  const [notification, setNotification] = useState<Nullable<string>>(null);
 
   const onClose = useCallback(() => {
-    setIsOpen(false);
+    setNotification(null);
   }, []);
 
   useEffect(() => {
-    setIsOpen(true);
+    const notification = getAppNotificationInfo();
+    setNotification(notification);
   }, []);
 
-  return <Notification isOpen={isOpen} message={t('description.demo_message')} onClose={onClose} />;
+  if (!notification) {
+    return null;
+  }
+
+  return (
+    <Notification className={styles.appNotification} message={notification} onClose={onClose} />
+  );
 };
 
 export default AppNotification;

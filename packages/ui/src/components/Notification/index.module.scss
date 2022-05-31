@@ -1,10 +1,5 @@
 @use '@/scss/underscore' as _;
 
-.overlay {
-  background: transparent;
-  position: absolute;
-}
-
 .notification {
   padding: _.unit(3) _.unit(4);
   font: var(--font-body);
@@ -15,14 +10,11 @@
   max-width: 520px;
   margin: 0 auto _.unit(2);
   box-shadow: var(--shadow-1);
+  @include _.flex_row;
 
   &:focus-visible {
     outline: none;
   }
-}
-
-.container {
-  @include _.flex_row;
 }
 
 .icon {
@@ -42,23 +34,8 @@
   cursor: pointer;
 }
 
-:global(body.mobile) {
-  .overlay {
-    top: _.unit(6);
-    left: _.unit(5);
-    right: _.unit(5);
-  }
-}
-
 
 :global(body.desktop) {
-  .overlay {
-    top: _.unit(-6);
-    left: 0;
-    width: 100%;
-    transform: translateY(-100%);
-  }
-
   .link {
     &:hover {
       color: var(--color-primary);
