@@ -530,6 +530,14 @@ const translation = {
       weekly_active_users: 'Weeky active users',
       monthly_active_users: 'Monthly active users',
     },
+    logs: {
+      title: 'Audit Logs',
+      subtitle: 'View log data of authentication events made by your admin and users.',
+      event: 'Event',
+      user: 'User',
+      application: 'Application',
+      time: 'Time',
+    },
     session_expired: {
       title: 'Session Expired',
       subtitle:

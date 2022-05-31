@@ -526,6 +526,14 @@ const translation = {
       weekly_active_users: '周活用户',
       monthly_active_users: '月活用户',
     },
+    logs: {
+      title: '审计日志',
+      subtitle: '查看用户日志',
+      event: '事件',
+      user: '用户',
+      application: '应用',
+      time: '时间',
+    },
     session_expired: {
       title: '会话已过期',
       subtitle: '会话可能已过期，您已被登出. 请点击下方按钮重新登录到管理界面.',
