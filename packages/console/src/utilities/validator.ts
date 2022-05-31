@@ -1,19 +1,30 @@
-export const uriValidator = (verifyBlank = true, originOnly = false) => {
+export const uriValidator = ({ verifyBlank = true }) => {
   return (value: string) => {
     if (!verifyBlank && value.trim().length === 0) {
       return true;
     }
 
     try {
-      const uri = new URL(value);
-
-      if (originOnly) {
-        return uri.origin === value;
-      }
+      // eslint-disable-next-line no-new
+      new URL(value);
     } catch {
       return false;
     }
 
     return true;
+  };
+};
+
+export const uriOriginValidator = ({ verifyBlank = true }) => {
+  return (value: string) => {
+    if (!verifyBlank && value.trim().length === 0) {
+      return true;
+    }
+
+    try {
+      return new URL(value).origin === value;
+    } catch {
+      return false;
+    }
   };
 };

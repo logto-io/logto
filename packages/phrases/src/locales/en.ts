@@ -113,7 +113,7 @@ const translation = {
       unknown_server_error: 'Unknown server error occurred.',
       empty: 'No Data',
       missing_total_number: 'Unable to find Total-Number in response headers.',
-      invalid_uri_format: 'Invalid URI format',
+      invalid_uri_format: 'Invalid URI origin format',
       invalid_origin_format: 'Invalid origin format',
       required_field_missing: 'Please enter {{field}}',
       required_field_missing_plural: 'You have to enter at least one {{field}}',
