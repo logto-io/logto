@@ -42,13 +42,13 @@ const useBindSocial = () => {
 
   useEffect(() => {
     if (registerResult?.redirectTo) {
-      window.location.assign(registerResult.redirectTo);
+      window.location.replace(registerResult.redirectTo);
     }
   }, [registerResult]);
 
   useEffect(() => {
     if (bindUserResult?.redirectTo) {
-      window.location.assign(bindUserResult.redirectTo);
+      window.location.replace(bindUserResult.redirectTo);
     }
   }, [bindUserResult]);
 

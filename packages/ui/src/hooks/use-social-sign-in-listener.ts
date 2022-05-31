@@ -51,7 +51,7 @@ const useSocialSignInListener = () => {
 
   useEffect(() => {
     if (result?.redirectTo) {
-      window.location.assign(result.redirectTo);
+      window.location.replace(result.redirectTo);
     }
   }, [result]);
 

@@ -27,7 +27,7 @@ describe('SocialCallbackPage with code', () => {
         href: `/sign-in/callback?state=${state}&code=foo`,
         search: `?state=${state}&code=foo`,
         pathname: '/sign-in/callback',
-        assign: jest.fn(),
+        replace: jest.fn(),
       },
     });
     /* eslint-enable @silverhand/fp/no-mutating-methods */
