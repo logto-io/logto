@@ -78,12 +78,11 @@ export default class AlipayConnector implements SocialConnector {
     return `${authorizationEndpoint}?${queryParameters.toString()}`;
   };
 
-  public getAccessToken = async (code: string) => {
-    const config = await this.getConfig(this.metadata.id);
+  public getAccessToken = async (code: string, config: AlipayConfig) => {
     const initSearchParameters = {
       method: methodForAccessToken,
       format: 'JSON',
-      timestamp: this.getTimestamp(),
+      timestamp: dayjs().format('YYYY-MM-DD HH:mm:ss'),
       version: '1.0',
       grant_type: 'authorization_code',
       code: parseCodeFromJson(code),
@@ -114,7 +113,7 @@ export default class AlipayConnector implements SocialConnector {
   public getUserInfo: GetUserInfo = async (data) => {
     const { code } = codeDataGuard.parse(data);
     const config = await this.getConfig(this.metadata.id);
-    const { accessToken } = await this.getAccessToken(code);
+    const { accessToken } = await this.getAccessToken(code, config);
 
     assert(
       accessToken && config,
@@ -124,7 +123,7 @@ export default class AlipayConnector implements SocialConnector {
     const initSearchParameters = {
       method: methodForUserInfo,
       format: 'JSON',
-      timestamp: this.getTimestamp(),
+      timestamp: dayjs().format('YYYY-MM-DD HH:mm:ss'),
       version: '1.0',
       grant_type: 'authorization_code',
       auth_token: accessToken,
@@ -163,6 +162,4 @@ export default class AlipayConnector implements SocialConnector {
 
     return { id, avatar, name };
   };
-
-  private readonly getTimestamp = (): string => dayjs().format('YYYY-MM-DD HH:mm:ss');
 }
