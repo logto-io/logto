@@ -1,4 +1,4 @@
-@mixin light-theme {
+@mixin light {
   // tonal palettes
   --color-all-0: #000;
   --color-all-100: #fff;
@@ -161,7 +161,7 @@
   --color-skeleton-shimmer-rgb: 255, 255, 255; // rgb of Layer-1
 }
 
-@mixin dark-theme {
+@mixin dark {
   // tonal palettes
   --color-all-0: #fff;
   --color-all-100: #000;

@@ -38,6 +38,9 @@ export default async function initApp(app: Koa): Promise<void> {
   app.use(
     mount('/' + MountedApps.Console, koaSpaProxy(MountedApps.Console, 5002, MountedApps.Console))
   );
+  app.use(
+    mount('/' + MountedApps.DemoApp, koaSpaProxy(MountedApps.DemoApp, 5003, MountedApps.DemoApp))
+  );
 
   app.use(koaProxyGuard(provider));
   app.use(koaSpaProxy());

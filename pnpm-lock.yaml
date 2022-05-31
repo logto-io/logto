@@ -900,6 +900,8 @@ importers:
 
   packages/demo-app:
     specifiers:
+      '@logto/react': ^0.1.11
+      '@logto/schemas': ^0.1.0
       '@logto/shared': ^0.1.0
       '@parcel/core': 2.5.0
       '@parcel/transformer-sass': 2.5.0
@@ -919,6 +921,8 @@ importers:
       stylelint: ^14.8.2
       typescript: ^4.7.2
     devDependencies:
+      '@logto/react': 0.1.11_react@17.0.2
+      '@logto/schemas': link:../schemas
       '@logto/shared': link:../shared
       '@parcel/core': 2.5.0
       '@parcel/transformer-sass': 2.5.0_@parcel+core@2.5.0
@@ -1063,21 +1067,29 @@ importers:
   packages/shared:
     specifiers:
       '@silverhand/eslint-config': ^0.14.0
+      '@silverhand/eslint-config-react': ^0.14.0
       '@silverhand/essentials': ^1.1.6
       '@silverhand/ts-config': ^0.14.0
+      '@silverhand/ts-config-react': ^0.14.0
       '@types/node': ^16.3.1
       eslint: ^8.10.0
       lint-staged: ^12.0.0
+      postcss: ^8.4.6
       prettier: ^2.3.2
+      stylelint: ^14.8.2
       typescript: ^4.6.2
     devDependencies:
       '@silverhand/eslint-config': 0.14.0_xpq2m6kgodzytx4bqbpsfgmxbe
+      '@silverhand/eslint-config-react': 0.14.0_wfs3lj7jctdcr2gsfi4lvs3yoa
       '@silverhand/essentials': 1.1.7
       '@silverhand/ts-config': 0.14.0_typescript@4.6.3
+      '@silverhand/ts-config-react': 0.14.0_typescript@4.6.3
       '@types/node': 16.11.12
       eslint: 8.10.0
       lint-staged: 12.4.0
+      postcss: 8.4.14
       prettier: 2.5.1
+      stylelint: 14.8.2
       typescript: 4.6.3
 
   packages/ui:
@@ -6686,6 +6698,26 @@ packages:
       - typescript
     dev: true
 
+  /@silverhand/eslint-config-react/0.14.0_wfs3lj7jctdcr2gsfi4lvs3yoa:
+    resolution: {integrity: sha512-7ylw/SFiYHbcCUNCki9Hv+zdMBIieW6AmNNmqjX3Orn8CvlN/yAUxN/hy9JPpuOCOXquz6mVMDYtmWFGndwy2Q==}
+    peerDependencies:
+      stylelint: ^14.8.2
+    dependencies:
+      '@silverhand/eslint-config': 0.14.0_xpq2m6kgodzytx4bqbpsfgmxbe
+      eslint-config-xo-react: 0.25.0_4sqgcfzewo5ft67t52hgdwo42a
+      eslint-plugin-react: 7.29.3_eslint@8.10.0
+      eslint-plugin-react-hooks: 4.3.0_eslint@8.10.0
+      stylelint: 14.8.2
+      stylelint-config-xo-scss: 0.15.0_cazrl3eatzhkw4y7xb6glndqh4
+    transitivePeerDependencies:
+      - eslint
+      - eslint-import-resolver-webpack
+      - postcss
+      - prettier
+      - supports-color
+      - typescript
+    dev: true
+
   /@silverhand/eslint-config/0.14.0_hjjt7jwmhwqm7bjf55k5ihcdqq:
     resolution: {integrity: sha512-Fiaf3FUSbHzPeYqmMncgw5sQ/48rF7MMTzKhgKQ5RhVy7ja7rmD7XaptRxqIHkxnsVcQK4NkPMGa+tjIASwRzg==}
     engines: {node: '>=14.15.0'}
@@ -6920,6 +6952,16 @@ packages:
     dependencies:
       '@silverhand/ts-config': 0.14.0_typescript@4.6.2
       typescript: 4.6.2
+    dev: true
+
+  /@silverhand/ts-config-react/0.14.0_typescript@4.6.3:
+    resolution: {integrity: sha512-5LMSGFOagoYGUJ6GyawZYraUfET2hOm8qE6d4J6m/pr2C0JsamuW0lO9eTNQ6lUZSGRotvJwMgMT3gC+Ylgysw==}
+    engines: {node: '>=14.15.0'}
+    peerDependencies:
+      typescript: ^4.3.5
+    dependencies:
+      '@silverhand/ts-config': 0.14.0_typescript@4.6.3
+      typescript: 4.6.3
     dev: true
 
   /@silverhand/ts-config-react/0.14.0_typescript@4.7.2:
@@ -10433,7 +10475,7 @@ packages:
     dev: true
 
   /decamelize-keys/1.1.0:
-    resolution: {integrity: sha1-0XGoeTMlKAfrPLYdwcFEXQeN8tk=}
+    resolution: {integrity: sha512-ocLWuYzRPoS9bfiSdDd3cxvrzovVMZnRDVEzAs+hWIVXGDbHxWMECij2OBuyB/An0FFW/nLuq6Kv1i/YC5Qfzg==}
     engines: {node: '>=0.10.0'}
     dependencies:
       decamelize: 1.2.0
@@ -10441,7 +10483,7 @@ packages:
     dev: true
 
   /decamelize/1.2.0:
-    resolution: {integrity: sha1-9lNNFRSCabIDUue+4m9QH5oZEpA=}
+    resolution: {integrity: sha512-z2S+W9X73hAUUki+N+9Za2lBlun89zigOyGrsax+KUQ6wKW4ZoWpEYBkGhQjwAjjDCkWxhY0VKEhk8wzY7F5cA==}
     engines: {node: '>=0.10.0'}
     dev: true
 
@@ -11147,8 +11189,6 @@ packages:
     dependencies:
       debug: 3.2.7
       resolve: 1.22.0
-    transitivePeerDependencies:
-      - supports-color
     dev: true
 
   /eslint-import-resolver-typescript/2.5.0_rnagsyfcubvpoxo2ynj23pim7u:
@@ -12376,7 +12416,7 @@ packages:
     dev: true
 
   /globjoin/0.1.4:
-    resolution: {integrity: sha1-L0SUrIkZ43Z8XLtpHp9GMyQoXUM=}
+    resolution: {integrity: sha512-xYfnw62CKG8nLkZBfWbhWwDw02CHty86jfPcc2cr3ZfeuK9ysoVPPEUxf21bAD/rWAgk52SuBrLJlefNy8mvFg==}
     dev: true
 
   /goober/2.1.8_csstype@3.0.11:
@@ -17484,13 +17524,13 @@ packages:
     resolution: {integrity: sha1-Kcy8fDfe36wwTp//C/FZaz9qDk4=}
     dev: true
 
-  /postcss-safe-parser/6.0.0_postcss@8.4.13:
+  /postcss-safe-parser/6.0.0_postcss@8.4.14:
     resolution: {integrity: sha512-FARHN8pwH+WiS2OPCxJI8FuRJpTVnn6ZNFiqAM2aeW2LwTHWWmWgIyKC6cUo0L8aeKiF/14MNvnpls6R2PBeMQ==}
     engines: {node: '>=12.0'}
     peerDependencies:
       postcss: ^8.3.3
     dependencies:
-      postcss: 8.4.13
+      postcss: 8.4.14
     dev: true
 
   /postcss-scss/4.0.4_postcss@8.4.14:
@@ -17537,12 +17577,12 @@ packages:
       sort-css-media-queries: 2.0.4
     dev: true
 
-  /postcss-sorting/7.0.1_postcss@8.4.13:
+  /postcss-sorting/7.0.1_postcss@8.4.14:
     resolution: {integrity: sha512-iLBFYz6VRYyLJEJsBJ8M3TCqNcckVzz4wFounSc5Oez35ogE/X+aoC5fFu103Ot7NyvjU3/xqIXn93Gp3kJk4g==}
     peerDependencies:
       postcss: ^8.3.9
     dependencies:
-      postcss: 8.4.13
+      postcss: 8.4.14
     dev: true
 
   /postcss-svgo/5.1.0_postcss@8.4.14:
@@ -17581,15 +17621,6 @@ packages:
 
   /postcss/8.4.12:
     resolution: {integrity: sha512-lg6eITwYe9v6Hr5CncVbK70SoioNQIq81nsaG86ev5hAidQvmOeETBqs7jm43K2F5/Ley3ytDtriImV6TpNiSg==}
-    engines: {node: ^10 || ^12 || >=14}
-    dependencies:
-      nanoid: 3.3.4
-      picocolors: 1.0.0
-      source-map-js: 1.0.2
-    dev: true
-
-  /postcss/8.4.13:
-    resolution: {integrity: sha512-jtL6eTBrza5MPzy8oJLFuUscHDXTV5KcLlqAWHl5q5WYRfnNRGSmOZmOZ1T6Gy7A99mOZfqungmZMpMmCVJ8ZA==}
     engines: {node: ^10 || ^12 || >=14}
     dependencies:
       nanoid: 3.3.4
@@ -20027,8 +20058,8 @@ packages:
     peerDependencies:
       stylelint: ^14.0.0
     dependencies:
-      postcss: 8.4.13
-      postcss-sorting: 7.0.1_postcss@8.4.13
+      postcss: 8.4.14
+      postcss-sorting: 7.0.1_postcss@8.4.14
       stylelint: 14.8.2
     dev: true
 
@@ -20075,10 +20106,10 @@ packages:
       normalize-path: 3.0.0
       normalize-selector: 0.2.0
       picocolors: 1.0.0
-      postcss: 8.4.13
+      postcss: 8.4.14
       postcss-media-query-parser: 0.2.3
       postcss-resolve-nested-selector: 0.1.1
-      postcss-safe-parser: 6.0.0_postcss@8.4.13
+      postcss-safe-parser: 6.0.0_postcss@8.4.14
       postcss-selector-parser: 6.0.10
       postcss-value-parser: 4.2.0
       resolve-from: 5.0.0

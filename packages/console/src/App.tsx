@@ -1,5 +1,6 @@
 import { LogtoProvider } from '@logto/react';
 import { adminConsoleApplicationId, managementApiResource } from '@logto/schemas';
+import { getBasename } from '@logto/shared';
 import React from 'react';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { SWRConfig } from 'swr';
@@ -25,7 +26,6 @@ import Settings from './pages/Settings';
 import SignInExperience from './pages/SignInExperience';
 import UserDetails from './pages/UserDetails';
 import Users from './pages/Users';
-import { getBasename } from './utilities/app';
 
 void initI18n();
 
@@ -75,7 +75,7 @@ const Main = () => {
 };
 
 const App = () => (
-  <BrowserRouter basename={getBasename()}>
+  <BrowserRouter basename={getBasename('console', '5002')}>
     <LogtoProvider
       config={{
         endpoint: window.location.origin,
