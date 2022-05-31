@@ -1,4 +1,4 @@
-import { Application } from '@logto/schemas';
+import { adminConsoleApplicationId, Application } from '@logto/schemas';
 import React from 'react';
 import useSWR from 'swr';
 
@@ -7,9 +7,13 @@ type Props = {
 };
 
 const ApplicationName = ({ applicationId }: Props) => {
-  const { data } = useSWR<Application>(`/api/applications/${applicationId}`);
+  const isAdminConsole = applicationId === adminConsoleApplicationId;
 
-  return <span>{data?.name ?? '-'}</span>;
+  const { data } = useSWR<Application>(!isAdminConsole && `/api/applications/${applicationId}`);
+
+  const name = isAdminConsole ? 'Admin Console' : data?.name;
+
+  return <span>{name ?? '-'}</span>;
 };
 
 export default ApplicationName;
