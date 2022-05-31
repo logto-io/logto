@@ -46,6 +46,7 @@ const translation = {
       nav_back: '返回',
       agree: '同意',
       got_it: '知道了',
+      sign_in_with: '通过 {{name}} 登录',
     },
     description: {
       email: '邮箱',
