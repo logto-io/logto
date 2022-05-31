@@ -1,12 +1,15 @@
-export const uriValidator = (verifyBlank = true) => {
+export const uriValidator = (verifyBlank = true, originOnly = false) => {
   return (value: string) => {
     if (!verifyBlank && value.trim().length === 0) {
       return true;
     }
 
     try {
-      // eslint-disable-next-line no-new
-      new URL(value);
+      const uri = new URL(value);
+
+      if (originOnly) {
+        return uri.origin === value;
+      }
     } catch {
       return false;
     }

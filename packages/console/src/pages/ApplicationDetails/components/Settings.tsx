@@ -105,7 +105,12 @@ const Settings = ({ oidcConfig }: Props) => {
           control={control}
           defaultValue={[]}
           rules={{
-            validate: createValidatorForRhf(uriPatternRules),
+            validate: createValidatorForRhf({
+              pattern: {
+                verify: uriValidator(false, true),
+                message: t('errors.invalid_origin_format'),
+              },
+            }),
           }}
           render={({ field: { onChange, value }, fieldState: { error } }) => (
             <MultiTextInput

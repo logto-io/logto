@@ -33,6 +33,9 @@ import * as styles from './index.module.scss';
 const mapToUriFormatArrays = (value?: string[]) =>
   value?.filter(Boolean).map((uri) => decodeURIComponent(uri));
 
+const mapToUriOriginFormatArrays = (value?: string[]) =>
+  value?.filter(Boolean).map((uri) => decodeURIComponent(new URL(uri).origin));
+
 const ApplicationDetails = () => {
   const { id } = useParams();
   const location = useLocation();
@@ -82,7 +85,7 @@ const ApplicationDetails = () => {
           },
           customClientMetadata: {
             ...formData.customClientMetadata,
-            corsAllowedOrigins: mapToUriFormatArrays(
+            corsAllowedOrigins: mapToUriOriginFormatArrays(
               formData.customClientMetadata.corsAllowedOrigins
             ),
           },
