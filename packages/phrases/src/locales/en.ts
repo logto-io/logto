@@ -298,8 +298,7 @@ const translation = {
       confirm: 'Reminder',
       confirm_message: 'Are you sure you want to hide this page? This action cannot be undone.',
       card1_title: 'Check out the demo',
-      card1_subtitle:
-        'Try Logto sign in experience now to see how it works.',
+      card1_subtitle: 'Try Logto sign in experience now to see how it works.',
       card2_title: 'Create and integrate the first application',
       card2_subtitle:
         'Setup a mobile, single page or traditional application to use Logto for authentication.',
@@ -310,8 +309,7 @@ const translation = {
       card4_subtitle:
         'Give your customers the ability to sign in to your app with the social identities in one click.',
       card5_title: 'Customize sign-in experience',
-      card5_subtitle:
-        'Customize the sign in UI to match your brand and preview in real time.',
+      card5_subtitle: 'Customize the sign in UI to match your brand and preview in real time.',
       card6_title: 'Further readings',
       card6_subtitle: 'Check out our step-by-step, scenario-based docs without tedious concepts.',
     },
@@ -375,7 +373,8 @@ const translation = {
     },
     contact: {
       title: 'Contact Us',
-      description: 'Join in our community to provide feedback, ask for help and share your thoughts with other developers.',
+      description:
+        'Join in our community to provide feedback, ask for help and share your thoughts with other developers.',
       discord: {
         title: 'Discord Channel',
         description: 'Join our public channel to chat with developers.',
@@ -404,7 +403,8 @@ const translation = {
         title:
           'This is the first time you define sign-in experience. This guide will help you go through all necessary settings and quicly get started.',
         get_started: 'Get started',
-        apply_remind: 'Please note that sign-in experience will apply to all applications under this account.',
+        apply_remind:
+          'Please note that sign-in experience will apply to all applications under this account.',
         got_it: 'Got it',
       },
       branding: {
