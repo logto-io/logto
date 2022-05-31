@@ -37,6 +37,9 @@
   }
 
   &.small {
+    height: 24px;
+    width: 24px;
+
     > svg {
       height: 16px;
       width: 16px;
@@ -44,6 +47,9 @@
   }
 
   &.medium {
+    height: 28px;
+    width: 28px;
+
     > svg {
       height: 20px;
       width: 20px;
@@ -51,6 +57,9 @@
   }
 
   &.large {
+    height: 32px;
+    width: 32px;
+
     > svg {
       height: 24px;
       width: 24px;

@@ -534,6 +534,7 @@ const translation = {
       user: '用户',
       application: '应用',
       time: '时间',
+      filter_by: '过滤',
     },
     session_expired: {
       title: '会话已过期',

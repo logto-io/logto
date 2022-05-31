@@ -36,6 +36,13 @@
     }
   }
 
+  .clear {
+    position: absolute;
+    right: _.unit(2);
+    top: 6px;
+    display: none;
+  }
+
   .arrow {
     position: absolute;
     right: _.unit(2);
@@ -43,6 +50,16 @@
 
     svg {
       fill: var(--color-icon);
+    }
+  }
+
+  &.clearable:hover {
+    .clear {
+      display: block;
+    }
+
+    .arrow {
+      display: none;
     }
   }
 }
