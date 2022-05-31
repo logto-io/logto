@@ -65,8 +65,7 @@ export default class AlipayNativeConnector implements SocialConnector {
     return `${authorizationEndpoint}?${queryParameters.toString()}`;
   };
 
-  public getAccessToken = async (code: string) => {
-    const config = await this.getConfig(this.metadata.id);
+  public getAccessToken = async (code: string, config: AlipayNativeConfig) => {
     const initSearchParameters = {
       method: methodForAccessToken,
       format: 'JSON',
@@ -101,7 +100,8 @@ export default class AlipayNativeConnector implements SocialConnector {
   public getUserInfo: GetUserInfo = async (data) => {
     const { auth_code } = dataGuard.parse(data);
     const config = await this.getConfig(this.metadata.id);
-    const { accessToken } = await this.getAccessToken(auth_code);
+    const { accessToken } = await this.getAccessToken(auth_code, config);
+
     assert(
       accessToken && config,
       new ConnectorError(ConnectorErrorCodes.InsufficientRequestParameters)

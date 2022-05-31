@@ -56,9 +56,6 @@ describe('getAccessToken', () => {
   const alipayEndpointUrl = new URL(alipayEndpoint);
 
   it('should get an accessToken by exchanging with code', async () => {
-    jest
-      .spyOn(alipayNativeMethods, 'getConfig')
-      .mockResolvedValueOnce(mockedAlipayNativeConfigWithValidPrivateKey);
     nock(alipayEndpointUrl.origin)
       .post(alipayEndpointUrl.pathname)
       .query(true)
@@ -73,15 +70,15 @@ describe('getAccessToken', () => {
         sign: '<signature>',
       });
 
-    const response = await alipayNativeMethods.getAccessToken('code');
+    const response = await alipayNativeMethods.getAccessToken(
+      'code',
+      mockedAlipayNativeConfigWithValidPrivateKey
+    );
     const { accessToken } = response;
     expect(accessToken).toEqual('access_token');
   });
 
   it('should throw when accessToken is empty', async () => {
-    jest
-      .spyOn(alipayNativeMethods, 'getConfig')
-      .mockResolvedValueOnce(mockedAlipayNativeConfigWithValidPrivateKey);
     nock(alipayEndpointUrl.origin)
       .post(alipayEndpointUrl.pathname)
       .query(true)
@@ -96,15 +93,12 @@ describe('getAccessToken', () => {
         sign: '<signature>',
       });
 
-    await expect(alipayNativeMethods.getAccessToken('code')).rejects.toMatchError(
-      new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid)
-    );
+    await expect(
+      alipayNativeMethods.getAccessToken('code', mockedAlipayNativeConfigWithValidPrivateKey)
+    ).rejects.toMatchError(new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid));
   });
 
   it('should fail with wrong code', async () => {
-    jest
-      .spyOn(alipayNativeMethods, 'getConfig')
-      .mockResolvedValueOnce(mockedAlipayNativeConfigWithValidPrivateKey);
     nock(alipayEndpointUrl.origin)
       .post(alipayEndpointUrl.pathname)
       .query(true)
@@ -117,7 +111,9 @@ describe('getAccessToken', () => {
         sign: '<signature>',
       });
 
-    await expect(alipayNativeMethods.getAccessToken('wrong_code')).rejects.toMatchError(
+    await expect(
+      alipayNativeMethods.getAccessToken('wrong_code', mockedAlipayNativeConfigWithValidPrivateKey)
+    ).rejects.toMatchError(
       new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid, 'Invalid code')
     );
   });
@@ -127,22 +123,10 @@ describe('getUserInfo', () => {
   beforeEach(() => {
     jest
       .spyOn(alipayNativeMethods, 'getConfig')
-      .mockResolvedValueOnce(mockedAlipayNativeConfigWithValidPrivateKey);
-
-    const alipayEndpointUrl = new URL(alipayEndpoint);
-    nock(alipayEndpointUrl.origin)
-      .post(alipayEndpointUrl.pathname)
-      .query(true)
-      .reply(200, {
-        alipay_system_oauth_token_response: {
-          user_id: '2088000000000000',
-          access_token: 'access_token',
-          expires_in: '3600',
-          refresh_token: 'refresh_token',
-          re_expires_in: '7200', // Expiring time of refresh token, in seconds
-        },
-        sign: '<signature>',
-      });
+      .mockResolvedValue(mockedAlipayNativeConfigWithValidPrivateKey);
+    jest
+      .spyOn(alipayNativeMethods, 'getAccessToken')
+      .mockResolvedValue({ accessToken: 'access_token' });
   });
 
   afterEach(() => {
@@ -153,9 +137,6 @@ describe('getUserInfo', () => {
   const alipayEndpointUrl = new URL(alipayEndpoint);
 
   it('should get userInfo with accessToken', async () => {
-    jest
-      .spyOn(alipayNativeMethods, 'getConfig')
-      .mockResolvedValueOnce(mockedAlipayNativeConfigWithValidPrivateKey);
     nock(alipayEndpointUrl.origin)
       .post(alipayEndpointUrl.pathname)
       .query(true)
@@ -177,9 +158,6 @@ describe('getUserInfo', () => {
   });
 
   it('should throw with wrong accessToken', async () => {
-    jest
-      .spyOn(alipayNativeMethods, 'getConfig')
-      .mockResolvedValueOnce(mockedAlipayNativeConfigWithValidPrivateKey);
     nock(alipayEndpointUrl.origin)
       .post(alipayEndpointUrl.pathname)
       .query(true)
@@ -198,9 +176,6 @@ describe('getUserInfo', () => {
   });
 
   it('should throw General error with other response error codes', async () => {
-    jest
-      .spyOn(alipayNativeMethods, 'getConfig')
-      .mockResolvedValueOnce(mockedAlipayNativeConfigWithValidPrivateKey);
     nock(alipayEndpointUrl.origin)
       .post(alipayEndpointUrl.pathname)
       .query(true)
@@ -219,9 +194,6 @@ describe('getUserInfo', () => {
   });
 
   it('should throw with right accessToken but empty userInfo', async () => {
-    jest
-      .spyOn(alipayNativeMethods, 'getConfig')
-      .mockResolvedValueOnce(mockedAlipayNativeConfigWithValidPrivateKey);
     nock(alipayEndpointUrl.origin)
       .post(alipayEndpointUrl.pathname)
       .query(true)
@@ -242,9 +214,6 @@ describe('getUserInfo', () => {
   });
 
   it('should throw with other request errors', async () => {
-    jest
-      .spyOn(alipayNativeMethods, 'getConfig')
-      .mockResolvedValueOnce(mockedAlipayNativeConfigWithValidPrivateKey);
     nock(alipayEndpointUrl.origin).post(alipayEndpointUrl.pathname).query(true).reply(500);
 
     await expect(alipayNativeMethods.getUserInfo({ auth_code: 'wrong_code' })).rejects.toThrow();
