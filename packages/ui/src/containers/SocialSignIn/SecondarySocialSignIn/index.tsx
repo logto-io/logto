@@ -45,6 +45,7 @@ const SecondarySocialSignIn = ({ className }: Props) => {
       />
       {isCollapsed && isMobile && (
         <SocialSignInPopUp
+          connectors={socialConnectors.slice(defaultSize - 1)}
           isOpen={showModal}
           onClose={() => {
             setShowModal(false);

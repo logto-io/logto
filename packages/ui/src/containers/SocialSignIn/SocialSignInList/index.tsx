@@ -5,6 +5,7 @@ import ExpandIcon from '@/assets/icons/expand-icon.svg';
 import IconButton from '@/components/Button/IconButton';
 import SocialLinkButton from '@/components/Button/SocialLinkButton';
 import useSocial from '@/hooks/use-social';
+import { ConnectorData } from '@/types';
 
 import * as styles from './index.module.scss';
 
@@ -12,17 +13,19 @@ export const defaultSize = 4;
 
 type Props = {
   className?: string;
+  socialConnectors?: ConnectorData[];
   isCollapseEnabled?: boolean;
   onSocialSignInCallback?: () => void;
 };
 
 const SocialSignInList = ({
   className,
+  socialConnectors = [],
   isCollapseEnabled = true,
   onSocialSignInCallback,
 }: Props) => {
   const [expand, setExpand] = useState(false);
-  const { invokeSocialSignIn, socialConnectors } = useSocial();
+  const { invokeSocialSignIn } = useSocial();
   const isOverSize = socialConnectors.length > defaultSize;
   const displayAll = !isOverSize || !isCollapseEnabled;
 

@@ -4,21 +4,16 @@ import { MemoryRouter } from 'react-router-dom';
 
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider';
-import { socialConnectors, mockSignInExperienceSettings } from '@/__mocks__/logto';
+import { socialConnectors } from '@/__mocks__/logto';
 
 import SocialSignInList, { defaultSize } from '.';
 
 describe('SocialSignInList', () => {
   it('less than three connectors', () => {
     const { container } = renderWithPageContext(
-      <SettingsProvider
-        settings={{
-          ...mockSignInExperienceSettings,
-          socialConnectors: socialConnectors.slice(0, defaultSize),
-        }}
-      >
+      <SettingsProvider>
         <MemoryRouter>
-          <SocialSignInList />
+          <SocialSignInList socialConnectors={socialConnectors.slice(0, defaultSize)} />
         </MemoryRouter>
       </SettingsProvider>
     );
@@ -29,7 +24,7 @@ describe('SocialSignInList', () => {
     const { container } = renderWithPageContext(
       <SettingsProvider>
         <MemoryRouter>
-          <SocialSignInList />
+          <SocialSignInList socialConnectors={socialConnectors} />
         </MemoryRouter>
       </SettingsProvider>
     );
