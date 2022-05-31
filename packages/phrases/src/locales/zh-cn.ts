@@ -114,6 +114,7 @@ const translation = {
       empty: '没有数据',
       missing_total_number: '无法从返回的头部信息中找到 Total-Number。',
       invalid_uri_format: '无效的 URI 格式',
+      invalid_origin_format: '无效的 URI origin 格式',
       required_field_missing: '请输入{{field}}',
       required_field_missing_plural: '{{field}}不能全部为空',
       more_details: '查看详情',

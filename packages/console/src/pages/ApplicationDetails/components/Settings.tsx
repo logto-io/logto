@@ -9,7 +9,7 @@ import MultiTextInput from '@/components/MultiTextInput';
 import { MultiTextInputRule } from '@/components/MultiTextInput/types';
 import { createValidatorForRhf, convertRhfErrorMessage } from '@/components/MultiTextInput/utils';
 import TextInput from '@/components/TextInput';
-import { uriValidator } from '@/utilities/validator';
+import { uriOriginValidator, uriValidator } from '@/utilities/validator';
 
 import * as styles from '../index.module.scss';
 
@@ -23,7 +23,7 @@ const Settings = ({ oidcConfig }: Props) => {
 
   const uriPatternRules: MultiTextInputRule = {
     pattern: {
-      verify: uriValidator(false),
+      verify: uriValidator({ verifyBlank: false }),
       message: t('errors.invalid_uri_format'),
     },
   };
@@ -105,7 +105,12 @@ const Settings = ({ oidcConfig }: Props) => {
           control={control}
           defaultValue={[]}
           rules={{
-            validate: createValidatorForRhf(uriPatternRules),
+            validate: createValidatorForRhf({
+              pattern: {
+                verify: uriOriginValidator({ verifyBlank: false }),
+                message: t('errors.invalid_origin_format'),
+              },
+            }),
           }}
           render={({ field: { onChange, value }, fieldState: { error } }) => (
             <MultiTextInput
