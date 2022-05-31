@@ -1,20 +1,6 @@
 import { ConnectorData, Platform, SearchParameters } from '@/types';
 import { generateRandomString } from '@/utils';
-
-/**
- * Native SDK Utility Methods
- */
-export const getLogtoNativeSdk = () => {
-  if (typeof logtoNativeSdk !== 'undefined') {
-    return logtoNativeSdk;
-  }
-};
-
-export const isNativeWebview = () => {
-  const platform = getLogtoNativeSdk()?.platform ?? '';
-
-  return ['ios', 'android'].includes(platform);
-};
+import { getLogtoNativeSdk, isNativeWebview } from '@/utils/native-sdk';
 
 /**
  * Social Connector State Utility Methods
