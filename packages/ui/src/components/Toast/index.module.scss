@@ -8,6 +8,7 @@
   transform: translateY(-50%);
   @include _.flex-column;
   pointer-events: none;
+  z-index: 300;
 }
 
 .toast {
