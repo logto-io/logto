@@ -1,4 +1,5 @@
 import { GetConnectorConfig } from '@logto/connector-types';
+import { jwtVerify } from 'jose';
 
 import AppleConnector from '.';
 import { authorizationEndpoint } from './constant';
@@ -8,6 +9,11 @@ import { AppleConfig } from './types';
 const getConnectorConfig = jest.fn() as GetConnectorConfig<AppleConfig>;
 
 const appleMethods = new AppleConnector(getConnectorConfig);
+
+jest.mock('jose', () => ({
+  jwtVerify: jest.fn(),
+  createRemoteJWKSet: jest.fn(),
+}));
 
 beforeAll(() => {
   jest.spyOn(appleMethods, 'getConfig').mockResolvedValue(mockedConfig);
@@ -44,5 +50,35 @@ describe('validateConfig', () => {
 });
 
 describe('getUserInfo', () => {
-  // LOG-2726
+  afterAll(() => {
+    jest.clearAllMocks();
+  });
+
+  it('should get user info from id token payload', async () => {
+    const userId = 'userId';
+    const mockJwtVerify = jwtVerify as jest.Mock;
+    mockJwtVerify.mockImplementationOnce(() => ({ payload: { sub: userId } }));
+    const userInfo = await appleMethods.getUserInfo({ id_token: 'idToken' });
+    expect(userInfo).toEqual({ id: userId });
+  });
+
+  it('should throw if id token is missing', async () => {
+    await expect(appleMethods.getUserInfo({})).rejects.toThrowError();
+  });
+
+  it('should throw if verify id token failed', async () => {
+    const mockJwtVerify = jwtVerify as jest.Mock;
+    mockJwtVerify.mockImplementationOnce(() => {
+      throw new Error('jwtVerify failed');
+    });
+    await expect(appleMethods.getUserInfo({ idToken: 'idToken' })).rejects.toThrowError();
+  });
+
+  it('should throw if the id token payload does not contains sub', async () => {
+    const mockJwtVerify = jwtVerify as jest.Mock;
+    mockJwtVerify.mockImplementationOnce(() => ({
+      payload: { iat: 123_456 },
+    }));
+    await expect(appleMethods.getUserInfo({ idToken: 'idToken' })).rejects.toThrowError();
+  });
 });
