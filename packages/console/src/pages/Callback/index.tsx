@@ -4,7 +4,6 @@ import { useHref } from 'react-router-dom';
 
 import AppError from '@/components/AppError';
 import LogtoLoading from '@/components/LogtoLoading';
-// Import { getBasename } from '@/utilities/app';
 
 const Callback = () => {
   const basename = useHref('/');
