@@ -7,7 +7,6 @@
   "files": [
     "lib"
   ],
-  "private": false,
   "scripts": {
     "preinstall": "npx only-allow pnpm",
     "precommit": "lint-staged",
