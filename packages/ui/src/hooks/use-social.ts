@@ -30,7 +30,7 @@ const useSocial = () => {
   }, []);
 
   const invokeSocialSignInHandler = useCallback(
-    async (connector: ConnectorData, callback?: () => void) => {
+    async (connector: ConnectorData) => {
       if (!(await termsValidation())) {
         return;
       }
@@ -49,9 +49,6 @@ const useSocial = () => {
       if (!result?.redirectTo) {
         return;
       }
-
-      // Callback hook to close the social sign in modal
-      callback?.();
 
       // Invoke Native Social Sign In flow
       if (isNativeWebview()) {

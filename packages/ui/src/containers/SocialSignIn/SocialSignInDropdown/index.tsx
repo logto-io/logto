@@ -54,7 +54,8 @@ const SocialSignInDropdown = ({ isOpen, onClose, connectors, anchorRef }: Props)
           <DropdownItem
             key={id}
             onClick={() => {
-              void invokeSocialSignIn(connector, onClose);
+              void invokeSocialSignIn(connector);
+              onClose();
             }}
           >
             <img src={logo} alt={id} className={styles.socialLogo} />

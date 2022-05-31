@@ -45,7 +45,8 @@ const SocialSignInList = ({
           className={styles.socialLinkButton}
           connector={connector}
           onClick={() => {
-            void invokeSocialSignIn(connector, onSocialSignInCallback);
+            void invokeSocialSignIn(connector);
+            onSocialSignInCallback?.();
           }}
         />
       ))}
