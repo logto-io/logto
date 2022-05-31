@@ -42,7 +42,7 @@ const MultiTextInputField = ({ name, title, onError }: Props) => {
           validate: createValidatorForRhf({
             required: t('errors.required_field_missing_plural', { field: title }),
             pattern: {
-              verify: uriValidator({ verifyBlank: false }),
+              verify: uriValidator({ allowBlank: false }),
               message: t('errors.invalid_uri_format'),
             },
           }),
