@@ -25,7 +25,7 @@ export default function serve(root: string) {
       await send(ctx, ctx.path, {
         ...options,
         // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-        ...(!['/', `/${options.index || ''}`].includes(ctx.path) && {
+        ...(!['/', `/${options.index || ''}`].some((path) => ctx.path.endsWith(path)) && {
           maxage: 604_800_000 /* 7 days */,
         }),
       });
