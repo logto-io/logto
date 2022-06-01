@@ -5,6 +5,7 @@ import { exportJWK } from 'jose';
 import Koa from 'koa';
 import mount from 'koa-mount';
 import { Provider, errors } from 'oidc-provider';
+import snakecaseKeys from 'snakecase-keys';
 
 import envSet from '@/env-set';
 import postgresAdapter from '@/oidc/adapter';
@@ -26,7 +27,7 @@ export default async function initOidc(app: Koa): Promise<Provider> {
   } as const);
   const oidc = new Provider(issuer, {
     adapter: postgresAdapter,
-    renderError: (ctx, out, error) => {
+    renderError: (_ctx, _out, error) => {
       console.log('OIDC error', error);
       throw error;
     },
@@ -85,18 +86,25 @@ export default async function initOidc(app: Koa): Promise<Provider> {
     // https://github.com/panva/node-oidc-provider/blob/main/recipes/client_based_origins.md
     clientBasedCORS: (ctx, origin, client) =>
       ctx.request.origin === origin || isOriginAllowed(origin, client.metadata()),
-    findAccount: async (ctx, sub) => {
-      await findUserById(sub);
+    // https://github.com/panva/node-oidc-provider/blob/main/recipes/claim_configuration.md
+    claims: {
+      profile: ['username', 'name', 'avatar', 'roles'],
+    },
+    // https://github.com/panva/node-oidc-provider/tree/main/docs#findaccount
+    findAccount: async (_ctx, sub) => {
+      const { username, name, avatar, roleNames, customData } = await findUserById(sub);
 
       return {
         accountId: sub,
-        claims: async (use, scope, claims, rejected) => {
-          console.log('use:', use);
-          console.log('scope:', scope);
-          console.log('claims:', claims);
-          console.log('rejected:', rejected);
-
-          return { sub };
+        claims: async (use) => {
+          return snakecaseKeys({
+            sub,
+            username,
+            name,
+            avatar,
+            roles: roleNames,
+            ...(use === 'userinfo' && { customData }),
+          });
         },
       };
     },
@@ -104,18 +112,18 @@ export default async function initOidc(app: Koa): Promise<Provider> {
       /**
        * [OIDC Provider Default Settings](https://github.com/panva/node-oidc-provider/blob/main/docs/README.md#ttl)
        */
-      IdToken: (ctx, token, client) => {
+      IdToken: (_ctx, _token, client) => {
         const { idTokenTtl } = client.metadata();
 
         return idTokenTtl ?? defaultIdTokenTtl;
       },
-      RefreshToken: (ctx, token, client) => {
+      RefreshToken: (_ctx, _token, client) => {
         const { refreshTokenTtl } = client.metadata();
 
         return refreshTokenTtl ?? defaultRefreshTokenTtl;
       },
     },
-    extraTokenClaims: async (ctx, token) => {
+    extraTokenClaims: async (_ctx, token) => {
       // AccessToken type is not exported by default, need to asset token is AccessToken
       if (token.kind === 'AccessToken') {
         const { accountId } = token;
