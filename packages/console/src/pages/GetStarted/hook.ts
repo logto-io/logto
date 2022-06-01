@@ -33,7 +33,7 @@ const useGetStartedMetadata = () => {
       isComplete: configs?.checkDemo,
       onClick: async () => {
         void updateConfigs({ checkDemo: true });
-        window.open('https://logto.io/', '_blank');
+        window.open('/demo-app', '_blank');
       },
     },
     {

@@ -65,7 +65,7 @@ const inquireForLogtoDsn = async (key: string): Promise<[Optional<string>, boole
   return [dsn, true];
 };
 
-const createPoolByEnv = async (isTest: boolean) => {
+const createPoolByEnv = async (isTest: boolean, demoAppUrl: string) => {
   // Database connection is disabled in unit test environment
   if (isTest) {
     return;
@@ -89,7 +89,7 @@ const createPoolByEnv = async (isTest: boolean) => {
       throw error;
     }
 
-    const cli = createDatabaseCli(dsn);
+    const cli = createDatabaseCli(dsn, demoAppUrl);
 
     if (needsSeed) {
       await cli.createTables();

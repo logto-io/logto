@@ -62,7 +62,7 @@ function createEnvSet() {
 
     load: async () => {
       values = await loadEnvValues();
-      pool = await createPoolByEnv(values.isTest);
+      pool = await createPoolByEnv(values.isTest, `${values.localhostUrl}/${MountedApps.DemoApp}`);
     },
   };
 }

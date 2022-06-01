@@ -1,5 +1,5 @@
 import { LogtoProvider } from '@logto/react';
-import { adminConsoleApplicationId, managementApiResource } from '@logto/schemas';
+import { adminConsoleApplicationId, managementResource } from '@logto/schemas/lib/seeds';
 import { getBasename } from '@logto/shared';
 import React from 'react';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
@@ -107,7 +107,7 @@ const App = () => (
       config={{
         endpoint: window.location.origin,
         appId: adminConsoleApplicationId,
-        resources: [managementApiResource],
+        resources: [managementResource.indicator],
       }}
     >
       <Main />
