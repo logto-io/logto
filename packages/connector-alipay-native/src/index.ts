@@ -29,6 +29,7 @@ import {
   methodForUserInfo,
   defaultMetadata,
   defaultTimeout,
+  timeStampFormat,
 } from './constant';
 import {
   alipayNativeConfigGuard,
@@ -69,7 +70,7 @@ export default class AlipayNativeConnector implements SocialConnector {
     const initSearchParameters = {
       method: methodForAccessToken,
       format: 'JSON',
-      timestamp: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+      timestamp: dayjs().format(timeStampFormat),
       version: '1.0',
       grant_type: 'authorization_code',
       code,
@@ -110,7 +111,7 @@ export default class AlipayNativeConnector implements SocialConnector {
     const initSearchParameters = {
       method: methodForUserInfo,
       format: 'JSON',
-      timestamp: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+      timestamp: dayjs().format(timeStampFormat),
       version: '1.0',
       grant_type: 'authorization_code',
       auth_token: accessToken,
