@@ -88,7 +88,7 @@ export default async function initOidc(app: Koa): Promise<Provider> {
       ctx.request.origin === origin || isOriginAllowed(origin, client.metadata()),
     // https://github.com/panva/node-oidc-provider/blob/main/recipes/claim_configuration.md
     claims: {
-      profile: ['username', 'name', 'avatar', 'roles'],
+      profile: ['username', 'name', 'avatar', 'role_names', 'custom_data'],
     },
     // https://github.com/panva/node-oidc-provider/tree/main/docs#findaccount
     findAccount: async (_ctx, sub) => {
@@ -102,7 +102,7 @@ export default async function initOidc(app: Koa): Promise<Provider> {
             username,
             name,
             avatar,
-            roles: roleNames,
+            roleNames,
             ...(use === 'userinfo' && { customData }),
           });
         },
