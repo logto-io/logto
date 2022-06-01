@@ -40,3 +40,5 @@ export const defaultMetadata: ConnectorMetadata = {
 };
 
 export const defaultTimeout = 5000;
+
+export const timestampFormat = 'YYYY-MM-DD HH:mm:ss';
