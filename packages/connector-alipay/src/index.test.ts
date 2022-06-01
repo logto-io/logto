@@ -147,7 +147,7 @@ describe('getUserInfo', () => {
         sign: '<signature>',
       });
 
-    const { id, name, avatar } = await alipayMethods.getUserInfo({ code: 'code' });
+    const { id, name, avatar } = await alipayMethods.getUserInfo({ auth_code: 'code' });
     expect(id).toEqual('2088000000000000');
     expect(name).toEqual('PlayboyEric');
     expect(avatar).toEqual('https://www.alipay.com/xxx.jpg');
@@ -166,7 +166,7 @@ describe('getUserInfo', () => {
         sign: '<signature>',
       });
 
-    await expect(alipayMethods.getUserInfo({ code: 'wrong_code' })).rejects.toMatchError(
+    await expect(alipayMethods.getUserInfo({ auth_code: 'wrong_code' })).rejects.toMatchError(
       new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid, 'Invalid auth token')
     );
   });
@@ -184,7 +184,7 @@ describe('getUserInfo', () => {
         sign: '<signature>',
       });
 
-    await expect(alipayMethods.getUserInfo({ code: 'wrong_code' })).rejects.toMatchError(
+    await expect(alipayMethods.getUserInfo({ auth_code: 'wrong_code' })).rejects.toMatchError(
       new ConnectorError(ConnectorErrorCodes.General)
     );
   });
@@ -204,7 +204,7 @@ describe('getUserInfo', () => {
         sign: '<signature>',
       });
 
-    await expect(alipayMethods.getUserInfo({ code: 'code' })).rejects.toMatchError(
+    await expect(alipayMethods.getUserInfo({ auth_code: 'code' })).rejects.toMatchError(
       new ConnectorError(ConnectorErrorCodes.InvalidResponse)
     );
   });
@@ -212,6 +212,6 @@ describe('getUserInfo', () => {
   it('should throw with other request errors', async () => {
     nock(alipayEndpointUrl.origin).post(alipayEndpointUrl.pathname).query(true).reply(500);
 
-    await expect(alipayMethods.getUserInfo({ code: 'code' })).rejects.toThrow();
+    await expect(alipayMethods.getUserInfo({ auth_code: 'code' })).rejects.toThrow();
   });
 });
