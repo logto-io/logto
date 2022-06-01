@@ -11,12 +11,12 @@ import assertThat from '@/utils/assert-that';
 const debug = buildDebug('koa-static');
 
 export default function serve(root: string) {
+  assertThat(root, new Error('Root directory is required to serve files.'));
+
   const options: send.SendOptions = {
     root: path.resolve(root),
     index: 'index.html',
   };
-
-  assertThat(root, new Error('Root directory is required to serve files.'));
 
   debug('static "%s"', root);
 
