@@ -26,23 +26,3 @@
     margin: 0 auto;
   }
 }
-
-.light {
-  @include themes.light;
-}
-
-.dark {
-  @include themes.dark;
-}
-
-@media (prefers-color-scheme: light) {
-  body {
-    @include themes.light;
-  }
-}
-
-@media (prefers-color-scheme: dark) {
-  body {
-    @include themes.dark;
-  }
-}
