@@ -238,6 +238,7 @@ const translation = {
       title: 'Connectors',
       subtitle: 'Setup connectors to enable passwordless and social sign in experience.',
       create: 'Add Social Connector',
+      added: 'Added',
       set_up: 'Set Up',
       tab_email_sms: 'Email and SMS connectors',
       tab_social: 'Social connectors',

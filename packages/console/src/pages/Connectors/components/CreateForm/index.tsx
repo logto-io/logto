@@ -83,8 +83,14 @@ const CreateForm = ({ onClose, isOpen: isFormOpen, type }: Props) => {
             type="card"
             onChange={setActiveConnectorId}
           >
-            {connectors.map(({ id, name, logo, description }) => (
-              <Radio key={id} value={id} className={styles.connector}>
+            {connectors.map(({ id, name, logo, description, enabled }) => (
+              <Radio
+                key={id}
+                value={id}
+                isDisabled={enabled}
+                className={styles.connector}
+                disabledLabel="connectors.added"
+              >
                 <div className={styles.logo}>
                   <img src={logo} />
                 </div>
