@@ -516,6 +516,16 @@ const translation = {
       appearance_dark: '深色模式',
       saved: '已保存',
     },
+    dashboard: {
+      title: '仪表盘',
+      description: '查看运行总览',
+      total_users: '总用户',
+      new_users_today: '今日新增',
+      new_users_7_days: '7日新增',
+      daily_active_users: '日活用户',
+      weekly_active_users: '周活用户',
+      monthly_active_users: '月活用户',
+    },
     session_expired: {
       title: '会话已过期',
       subtitle: '会话可能已过期，您已被登出. 请点击下方按钮重新登录到管理界面.',

@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import React, { ReactNode, useRef, useState } from 'react';
 
-import { ArrowDown, ArrowUp } from '@/icons/Arrow';
+import { KeyboardArrowDown, KeyboardArrowUp } from '@/icons/Arrow';
 
 import Dropdown, { DropdownItem } from '../Dropdown';
 import * as styles from './index.module.scss';
@@ -47,7 +47,7 @@ const Select = ({ value, options, onChange, isReadOnly, hasError }: Props) => {
         }}
       >
         {current?.title}
-        <div className={styles.arrow}>{isOpen ? <ArrowUp /> : <ArrowDown />}</div>
+        <div className={styles.arrow}>{isOpen ? <KeyboardArrowUp /> : <KeyboardArrowDown />}</div>
       </div>
       <Dropdown
         isFullWidth
