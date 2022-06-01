@@ -1,0 +1,28 @@
+@use '@/scss/underscore' as _;
+
+.eventName {
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+
+  .icon {
+    flex-shrink: 0;
+    margin-right: _.unit(1);
+    width: 24px;
+    height: 24px;
+
+    &.success {
+      color: var(--color-success-60);
+    }
+
+    &.fail {
+      color: var(--color-error-40);
+    }
+  }
+
+  .title {
+    font: var(--font-body-medium);
+    color: var(--color-text-link);
+    text-decoration: none;
+  }
+}

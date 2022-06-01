@@ -1,3 +1,5 @@
+import { Log } from '../db-entries';
+
 export enum LogResult {
   Success = 'Success',
   Error = 'Error',
@@ -137,3 +139,11 @@ export type LogPayloads = {
 export type LogType = keyof LogPayloads;
 
 export type LogPayload = LogPayloads[LogType];
+
+export type LogDTO = Omit<Log, 'payload'> & {
+  payload: {
+    userId?: string;
+    applicationId?: string;
+    result?: string;
+  };
+};

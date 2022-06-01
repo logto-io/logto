@@ -7,6 +7,7 @@ import Modal from 'react-modal';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import useSWR from 'swr';
 
+import ApplicationName from '@/components/ApplicationName';
 import Button from '@/components/Button';
 import Card from '@/components/Card';
 import CardTitle from '@/components/CardTitle';
@@ -23,7 +24,6 @@ import Plus from '@/icons/Plus';
 import * as modalStyles from '@/scss/modal.module.scss';
 import * as tableStyles from '@/scss/table.module.scss';
 
-import ApplicationName from './components/ApplicationName';
 import CreateForm from './components/CreateForm';
 import * as styles from './index.module.scss';
 

@@ -18,6 +18,7 @@ import ApiResourceDetails from './pages/ApiResourceDetails';
 import ApiResources from './pages/ApiResources';
 import ApplicationDetails from './pages/ApplicationDetails';
 import Applications from './pages/Applications';
+import AuditLogs from './pages/AuditLogs';
 import Callback from './pages/Callback';
 import ConnectorDetails from './pages/ConnectorDetails';
 import Connectors from './pages/Connectors';
@@ -83,6 +84,9 @@ const Main = () => {
             <Route path="users">
               <Route index element={<Users />} />
               <Route path=":id" element={<UserDetails />} />
+            </Route>
+            <Route path="audit-logs">
+              <Route index element={<AuditLogs />} />
             </Route>
             <Route path="sign-in-experience">
               <Route index element={<Navigate to="experience" />} />
