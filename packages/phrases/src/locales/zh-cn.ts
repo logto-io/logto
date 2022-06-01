@@ -29,9 +29,9 @@ const translation = {
       confirm_password: '确认密码',
     },
     secondary: {
-      sign_in_with: '通过 {{methods, list(type: disjunction;)}} 登录',
+      sign_in_with: '通过 {{methods, list(type: disjunction;), zhOrSpaces}} 登录',
       social_bind_with:
-        'Already have an account? Sign in to bind {{methods, list(type: disjunction;)}} with your social identity.',
+        '绑定到已有账户? 使用 {{methods, list(type: disjunction;), zhOrSpaces}} 登录并绑定。',
     },
     action: {
       sign_in: '登录',
@@ -67,8 +67,8 @@ const translation = {
       resend_after_seconds: '在 {{ seconds }} 秒后重发',
       resend_passcode: '重发验证码',
       continue_with: '通过以下方式继续',
-      create_account_id_exists: '{{ type }}为 {{ value }} 的账号已存在，您要登录吗？',
-      sign_in_id_does_not_exists: '{{ type }}为 {{ value }} 的账号不存在，您要创建一个新账号吗？',
+      create_account_id_exists: '{{type}}为 {{ value }} 的账号已存在，您要登录吗？',
+      sign_in_id_does_not_exists: '{{type}}为 {{ value }} 的账号不存在，您要创建一个新账号吗？',
       bind_account_title: '绑定 Logto 账号',
       social_create_account: 'No account? You can create a new account and bind.',
       social_bind_account: 'Already have an account? Sign in to bind it with your social identity.',
