@@ -198,7 +198,6 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
       assertThat(connector.connector.enabled, 'connector.not_enabled');
       const redirectTo = await connector.getAuthorizationUri({ state, redirectUri });
       ctx.body = { redirectTo };
-      console.log('redirectTo:', redirectTo);
 
       return next();
     }
