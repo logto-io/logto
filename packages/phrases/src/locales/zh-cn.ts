@@ -237,6 +237,7 @@ const translation = {
       title: '连接器',
       subtitle: 'Setup connectors to enable passwordless and social sign in experience.',
       create: '添加社会化登录',
+      added: '已添加',
       set_up: '设置',
       tab_email_sms: '邮件/短信服务商',
       tab_social: '社会化登录',

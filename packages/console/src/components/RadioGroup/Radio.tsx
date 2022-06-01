@@ -27,6 +27,8 @@ export type Props = {
   onClick?: () => void;
   tabIndex?: number;
   type?: 'card' | 'plain';
+  isDisabled?: boolean;
+  disabledLabel?: AdminConsoleKey;
 };
 
 const Radio = ({
@@ -39,24 +41,35 @@ const Radio = ({
   onClick,
   tabIndex,
   type,
+  isDisabled,
+  disabledLabel,
 }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   const handleKeyPress: KeyboardEventHandler<HTMLDivElement> = useCallback(
     (event) => {
+      if (isDisabled) {
+        return;
+      }
+
       if ([' ', 'Enter'].includes(event.key)) {
         onClick?.();
         event.preventDefault();
       }
     },
-    [onClick]
+    [isDisabled, onClick]
   );
 
   return (
     <div
-      className={classNames(styles.radio, className, isChecked && styles.checked)}
+      className={classNames(
+        styles.radio,
+        className,
+        isChecked && styles.checked,
+        isDisabled && styles.disabled
+      )}
       tabIndex={tabIndex}
-      onClick={onClick}
+      onClick={isDisabled ? undefined : onClick}
       onKeyPress={handleKeyPress}
     >
       <input readOnly disabled type="radio" name={name} value={value} checked={isChecked} />
@@ -64,6 +77,9 @@ const Radio = ({
       {children}
       {type === 'plain' && <div className={styles.indicator} />}
       {title && t(title)}
+      {isDisabled && disabledLabel && (
+        <div className={styles.disabledLabel}>{t(disabledLabel)}</div>
+      )}
     </div>
   );
 };
