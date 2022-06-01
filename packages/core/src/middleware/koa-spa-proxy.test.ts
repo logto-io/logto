@@ -12,7 +12,7 @@ jest.mock('fs/promises', () => ({
 }));
 
 jest.mock('koa-proxies', () => jest.fn(() => mockProxyMiddleware));
-jest.mock('koa-static', () => jest.fn(() => mockStaticMiddleware));
+jest.mock('@/middleware/koa-serve-static', () => jest.fn(() => mockStaticMiddleware));
 
 describe('koaSpaProxy middleware', () => {
   const envBackup = process.env;

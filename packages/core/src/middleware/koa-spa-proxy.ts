@@ -4,10 +4,10 @@ import path from 'path';
 import { MiddlewareType } from 'koa';
 import proxy from 'koa-proxies';
 import { IRouterParamContext } from 'koa-router';
-import serveStatic from 'koa-static';
 
 import envSet, { MountedApps } from '@/env-set';
 import { fromRoot } from '@/env-set/parameters';
+import serveStatic from '@/middleware/koa-serve-static';
 
 export default function koaSpaProxy<StateT, ContextT extends IRouterParamContext, ResponseBodyT>(
   packagePath = 'ui',
