@@ -14,11 +14,11 @@ import {
   ValidateConfig,
   SocialConnector,
   GetConnectorConfig,
-  codeDataGuard,
 } from '@logto/connector-types';
 import { assert } from '@silverhand/essentials';
 import dayjs from 'dayjs';
 import got from 'got';
+import { z } from 'zod';
 
 import {
   alipayEndpoint,
@@ -35,19 +35,7 @@ import { signingParameters } from './utils';
 
 export type { AlipayConfig } from './types';
 
-type CodePayload = {
-  auth_code: string;
-};
-
-const parseCodeFromJson = (json: string): string => {
-  try {
-    const { auth_code } = JSON.parse(json) as CodePayload;
-
-    return auth_code;
-  } catch {
-    return json;
-  }
-};
+const dataGuard = z.object({ auth_code: z.string() });
 
 export default class AlipayConnector implements SocialConnector {
   public metadata: ConnectorMetadata = defaultMetadata;
@@ -86,7 +74,7 @@ export default class AlipayConnector implements SocialConnector {
       timestamp: dayjs().format(timestampFormat),
       version: '1.0',
       grant_type: 'authorization_code',
-      code: parseCodeFromJson(code),
+      code,
       charset: 'UTF8',
       ...config,
     };
@@ -112,9 +100,9 @@ export default class AlipayConnector implements SocialConnector {
   };
 
   public getUserInfo: GetUserInfo = async (data) => {
-    const { code } = codeDataGuard.parse(data);
+    const { auth_code } = dataGuard.parse(data);
     const config = await this.getConfig(this.metadata.id);
-    const { accessToken } = await this.getAccessToken(code, config);
+    const { accessToken } = await this.getAccessToken(auth_code, config);
 
     assert(
       accessToken && config,
