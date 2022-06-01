@@ -29,7 +29,6 @@ export const zodTypeToSwagger = (config: unknown): OpenAPIV3.SchemaObject => {
 
   if (config instanceof ZodNativeEnum) {
     return {
-      description: 'enum',
       type: 'string',
       enum: Object.values(config.enum),
     };
