@@ -8,6 +8,7 @@ import './scss/normalized.scss';
 // eslint-disable-next-line import/no-unassigned-import
 import '@fontsource/roboto-mono';
 
+import AppBoundary from './components/AppBoundary';
 import AppContent from './components/AppContent';
 import ErrorBoundary from './components/ErrorBoundary';
 import Toast from './components/Toast';
@@ -36,19 +37,39 @@ const Main = () => {
   return (
     <ErrorBoundary>
       <SWRConfig value={{ fetcher }}>
-        <Toast />
-        <Routes>
-          <Route path="callback" element={<Callback />} />
-          <Route element={<AppContent />}>
-            <Route path="*" element={<NotFound />} />
-            <Route path="get-started" element={<GetStarted />} />
-            <Route path="applications">
-              <Route index element={<Applications />} />
-              <Route path=":id">
-                <Route index element={<Navigate to="settings" />} />
-                <Route path="settings" element={<ApplicationDetails />} />
-                <Route path="advanced-settings" element={<ApplicationDetails />} />
+        <AppBoundary>
+          <Toast />
+          <Routes>
+            <Route path="callback" element={<Callback />} />
+            <Route element={<AppContent />}>
+              <Route path="*" element={<NotFound />} />
+              <Route path="get-started" element={<GetStarted />} />
+              <Route path="applications">
+                <Route index element={<Applications />} />
+                <Route path=":id">
+                  <Route index element={<Navigate to="settings" />} />
+                  <Route path="settings" element={<ApplicationDetails />} />
+                  <Route path="advanced-settings" element={<ApplicationDetails />} />
+                </Route>
               </Route>
+              <Route path="api-resources">
+                <Route index element={<ApiResources />} />
+                <Route path=":id" element={<ApiResourceDetails />} />
+              </Route>
+              <Route path="connectors">
+                <Route index element={<Connectors />} />
+                <Route path="social" element={<Connectors />} />
+                <Route path=":connectorId" element={<ConnectorDetails />} />
+              </Route>
+              <Route path="users">
+                <Route index element={<Users />} />
+                <Route path=":id" element={<UserDetails />} />
+              </Route>
+              <Route path="sign-in-experience">
+                <Route index element={<Navigate to="experience" />} />
+                <Route path=":tab" element={<SignInExperience />} />
+              </Route>
+              <Route path="settings" element={<Settings />} />
             </Route>
             <Route path="api-resources">
               <Route index element={<ApiResources />} />
@@ -69,8 +90,8 @@ const Main = () => {
             </Route>
             <Route path="settings" element={<Settings />} />
             <Route path="dashboard" element={<Dashboard />} />
-          </Route>
-        </Routes>
+          </Routes>
+        </AppBoundary>
       </SWRConfig>
     </ErrorBoundary>
   );

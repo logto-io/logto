@@ -1,21 +1,16 @@
 import { LogtoClientError, useLogto } from '@logto/react';
-import { AppearanceMode } from '@logto/schemas';
 import React, { useEffect } from 'react';
 import { Outlet, useHref, useLocation, useNavigate } from 'react-router-dom';
 
 import AppError from '@/components/AppError';
 import LogtoLoading from '@/components/LogtoLoading';
 import SessionExpired from '@/components/SessionExpired';
-import { themeStorageKey } from '@/consts';
 import useAdminConsoleConfigs from '@/hooks/use-configs';
-import initI18n from '@/i18n/init';
 
 import Sidebar, { getPath } from './components/Sidebar';
 import { useSidebarMenuItems } from './components/Sidebar/hook';
 import Topbar from './components/Topbar';
 import * as styles from './index.module.scss';
-
-const defaultTheme = localStorage.getItem(themeStorageKey) ?? AppearanceMode.SyncWithSystem;
 
 const AppContent = () => {
   const { isAuthenticated, error, signIn } = useLogto();
@@ -32,28 +27,6 @@ const AppContent = () => {
       void signIn(new URL(href, window.location.origin).toString());
     }
   }, [href, isAuthenticated, signIn]);
-
-  useEffect(() => {
-    const theme = configs?.appearanceMode ?? defaultTheme;
-    const isFollowSystem = theme === AppearanceMode.SyncWithSystem;
-    const className = styles[theme] ?? '';
-
-    if (!isFollowSystem) {
-      document.body.classList.add(className);
-    }
-
-    return () => {
-      if (!isFollowSystem) {
-        document.body.classList.remove(className);
-      }
-    };
-  }, [configs?.appearanceMode]);
-
-  useEffect(() => {
-    (async () => {
-      void initI18n(configs?.language);
-    })();
-  }, [configs?.language]);
 
   useEffect(() => {
     // Navigate to the first menu item after configs are loaded.
