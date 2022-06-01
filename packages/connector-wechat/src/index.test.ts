@@ -57,13 +57,23 @@ describe('getAccessToken', () => {
     expect(openid).toEqual('openid');
   });
 
-  it('throws SocialAuthCodeInvalid error if accessToken not found in response', async () => {
+  it('throws SocialAuthCodeInvalid error if errcode is 40029', async () => {
     nock(accessTokenEndpointUrl.origin)
       .get(accessTokenEndpointUrl.pathname)
       .query(parameters)
-      .reply(200, {});
+      .reply(200, { errcode: 40_029, errmsg: 'invalid code' });
     await expect(weChatMethods.getAccessToken('code')).rejects.toMatchError(
       new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid)
+    );
+  });
+
+  it('throws error if errcode is neither 40029 nor undefined', async () => {
+    nock(accessTokenEndpointUrl.origin)
+      .get(accessTokenEndpointUrl.pathname)
+      .query(true)
+      .reply(200, { errcode: 40_163, errmsg: 'invalid code' });
+    await expect(weChatMethods.getAccessToken('wrong_code')).rejects.toMatchError(
+      new Error('invalid code')
     );
   });
 });
@@ -84,18 +94,9 @@ describe('validateConfig', () => {
 
 const nockNoOpenIdAccessTokenResponse = () => {
   const accessTokenEndpointUrl = new URL(accessTokenEndpoint);
-  const parameters = new URLSearchParams({
-    appid: '<app-id>',
-    secret: '<app-secret>',
-    code: 'code',
-    grant_type: 'authorization_code',
+  nock(accessTokenEndpointUrl.origin).get(accessTokenEndpointUrl.pathname).query(true).reply(200, {
+    access_token: 'access_token',
   });
-  nock(accessTokenEndpointUrl.origin)
-    .get(accessTokenEndpointUrl.pathname)
-    .query(parameters)
-    .reply(200, {
-      access_token: 'access_token',
-    });
 };
 
 describe('getUserInfo', () => {
@@ -107,6 +108,7 @@ describe('getUserInfo', () => {
       code: 'code',
       grant_type: 'authorization_code',
     });
+
     nock(accessTokenEndpointUrl.origin)
       .get(accessTokenEndpointUrl.pathname)
       .query(parameters)
@@ -141,15 +143,16 @@ describe('getUserInfo', () => {
   });
 
   it('throws error if `openid` is missing', async () => {
-    nock.cleanAll();
-    nock(userInfoEndpointUrl.origin).get(userInfoEndpointUrl.pathname).query(parameters).reply(0, {
-      unionid: 'this_is_an_arbitrary_wechat_union_id',
-      headimgurl: 'https://github.com/images/error/octocat_happy.gif',
-      nickname: 'wechat bot',
-    });
     nockNoOpenIdAccessTokenResponse();
+    nock(userInfoEndpointUrl.origin)
+      .get(userInfoEndpointUrl.pathname)
+      .query(parameters)
+      .reply(200, {
+        errcode: 41_009,
+        errmsg: 'missing openid',
+      });
     await expect(weChatMethods.getUserInfo({ code: 'code' })).rejects.toMatchError(
-      new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid)
+      new Error('missing openid')
     );
   });
 
@@ -157,7 +160,7 @@ describe('getUserInfo', () => {
     nock(userInfoEndpointUrl.origin)
       .get(userInfoEndpointUrl.pathname)
       .query(parameters)
-      .reply(200, { errcode: 40_001 });
+      .reply(200, { errcode: 40_001, errmsg: 'invalid credential' });
     await expect(weChatMethods.getUserInfo({ code: 'code' })).rejects.toMatchError(
       new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid)
     );
