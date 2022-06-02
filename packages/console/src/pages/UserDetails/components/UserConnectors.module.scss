@@ -30,6 +30,12 @@
           padding-left: _.unit(4);
         }
       }
+
+      &:last-child {
+        td {
+          border-bottom: none;
+        }
+      }
     }
   }
 
