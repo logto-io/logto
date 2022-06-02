@@ -1,7 +1,7 @@
 import React, { FC, ReactNode } from 'react';
 import { TFuncKey } from 'react-i18next';
 
-import useAdminConsoleConfigs from '@/hooks/use-configs';
+import useUserPreferences from '@/hooks/use-user-preferences';
 
 import Contact from './components/Contact';
 import BarGraph from './icons/BarGraph';
@@ -28,7 +28,9 @@ type SidebarSection = {
 };
 
 export const useSidebarMenuItems = (): SidebarSection[] => {
-  const { configs } = useAdminConsoleConfigs();
+  const {
+    data: { hideGetStarted },
+  } = useUserPreferences();
 
   return [
     {
@@ -37,7 +39,7 @@ export const useSidebarMenuItems = (): SidebarSection[] => {
         {
           Icon: Bolt,
           title: 'get_started',
-          isHidden: configs?.hideGetStarted,
+          isHidden: hideGetStarted,
         },
         {
           Icon: BarGraph,

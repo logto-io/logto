@@ -5,7 +5,8 @@ import { Outlet, useHref, useLocation, useNavigate } from 'react-router-dom';
 import AppError from '@/components/AppError';
 import LogtoLoading from '@/components/LogtoLoading';
 import SessionExpired from '@/components/SessionExpired';
-import useAdminConsoleConfigs from '@/hooks/use-configs';
+import useSettings from '@/hooks/use-settings';
+import useUserPreferences from '@/hooks/use-user-preferences';
 
 import Sidebar, { getPath } from './components/Sidebar';
 import { useSidebarMenuItems } from './components/Sidebar/hook';
@@ -15,8 +16,9 @@ import * as styles from './index.module.scss';
 const AppContent = () => {
   const { isAuthenticated, error, signIn } = useLogto();
   const href = useHref('/callback');
-  const { configs, error: configsError } = useAdminConsoleConfigs();
-  const isLoadingConfigs = !configs && !configsError;
+  const { isLoading: isPreferencesLoading } = useUserPreferences();
+  const { isLoading: isSettingsLoading } = useSettings();
+  const isLoading = isPreferencesLoading || isSettingsLoading;
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -30,10 +32,10 @@ const AppContent = () => {
 
   useEffect(() => {
     // Navigate to the first menu item after configs are loaded.
-    if (configs && location.pathname === '/') {
+    if (!isLoading && location.pathname === '/') {
       navigate(getPath(sections[0]?.items[0]?.title ?? ''));
     }
-  }, [location.pathname, configs, sections, navigate]);
+  }, [location.pathname, isLoading, sections, navigate]);
 
   if (error) {
     if (error instanceof LogtoClientError) {
@@ -43,7 +45,7 @@ const AppContent = () => {
     return <AppError errorMessage={error.message} callStack={error.stack} />;
   }
 
-  if (!isAuthenticated || isLoadingConfigs) {
+  if (!isAuthenticated || isLoading) {
     return <LogtoLoading message="general.loading" />;
   }
 

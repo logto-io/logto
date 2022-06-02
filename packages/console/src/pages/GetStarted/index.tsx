@@ -7,7 +7,7 @@ import Button from '@/components/Button';
 import Card from '@/components/Card';
 import ConfirmModal from '@/components/ConfirmModal';
 import Spacer from '@/components/Spacer';
-import useAdminConsoleConfigs from '@/hooks/use-configs';
+import useUserPreferences from '@/hooks/use-user-preferences';
 
 import useGetStartedMetadata from './hook';
 import * as styles from './index.module.scss';
@@ -16,11 +16,11 @@ const GetStarted = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const navigate = useNavigate();
   const { data } = useGetStartedMetadata();
-  const { updateConfigs } = useAdminConsoleConfigs();
+  const { update } = useUserPreferences();
   const [showConfirmModal, setShowConfirmModal] = useState(false);
 
   const hideGetStarted = () => {
-    void updateConfigs({ hideGetStarted: true });
+    void update({ hideGetStarted: true });
     // Navigate to next menu item
     navigate('/dashboard');
   };

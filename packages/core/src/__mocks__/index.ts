@@ -1,6 +1,4 @@
-import { Language } from '@logto/phrases';
 import {
-  AppearanceMode,
   Application,
   ApplicationType,
   Passcode,
@@ -46,8 +44,6 @@ export const mockRole: Role = {
 export const mockSetting: Setting = {
   id: 'foo setting',
   adminConsole: {
-    language: Language.English,
-    appearanceMode: AppearanceMode.SyncWithSystem,
     checkDemo: false,
     createApplication: false,
     configurePasswordless: false,

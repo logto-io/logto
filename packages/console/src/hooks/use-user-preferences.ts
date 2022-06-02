@@ -1,0 +1,81 @@
+import { Language } from '@logto/phrases';
+import { useLogto } from '@logto/react';
+import { AppearanceMode } from '@logto/schemas';
+import { Nullable, Optional } from '@silverhand/essentials';
+import { useEffect } from 'react';
+import useSWR from 'swr';
+import { z } from 'zod';
+
+import { themeStorageKey } from '@/consts';
+
+import useApi, { RequestError } from './use-api';
+
+const userPreferencesGuard = z.object({
+  language: z.nativeEnum(Language),
+  appearanceMode: z.nativeEnum(AppearanceMode),
+  experienceNoticeConfirmed: z.boolean().optional(),
+  hideGetStarted: z.boolean().optional(),
+});
+
+export type UserPreferences = z.infer<typeof userPreferencesGuard>;
+
+const key = 'adminConsolePreferences';
+
+const getEnumFromArray = <T extends string>(
+  array: T[],
+  value: Nullable<Optional<string>>
+): Optional<T> => array.find((element) => element === value);
+
+const useUserPreferences = () => {
+  const { isAuthenticated, error: authError } = useLogto();
+  const shouldFetch = isAuthenticated && !authError;
+  const { data, mutate, error } = useSWR<unknown, RequestError>(
+    shouldFetch && '/api/me/custom-data'
+  );
+  const api = useApi();
+
+  const parseData = (): UserPreferences => {
+    try {
+      return z.object({ [key]: userPreferencesGuard }).parse(data).adminConsolePreferences;
+    } catch {
+      return {
+        language: Language.English,
+        appearanceMode:
+          getEnumFromArray(Object.values(AppearanceMode), localStorage.getItem(themeStorageKey)) ??
+          AppearanceMode.SyncWithSystem,
+      };
+    }
+  };
+
+  const userPreferences = parseData();
+
+  const update = async (data: Partial<UserPreferences>) => {
+    const updated = await api
+      .patch('/api/me/custom-data', {
+        json: {
+          customData: {
+            [key]: {
+              ...userPreferences,
+              ...data,
+            },
+          },
+        },
+      })
+      .json();
+    void mutate(updated);
+  };
+
+  useEffect(() => {
+    localStorage.setItem(themeStorageKey, userPreferences.appearanceMode);
+  }, [userPreferences.appearanceMode]);
+
+  return {
+    isLoading: !data && !error,
+    isLoaded: data && !error,
+    data: userPreferences,
+    update,
+    error,
+  };
+};
+
+export default useUserPreferences;

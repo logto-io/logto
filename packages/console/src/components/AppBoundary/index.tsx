@@ -1,8 +1,7 @@
 import { AppearanceMode } from '@logto/schemas';
 import React, { ReactNode, useEffect } from 'react';
 
-import { themeStorageKey } from '@/consts';
-import useAdminConsoleConfigs from '@/hooks/use-configs';
+import useUserPreferences from '@/hooks/use-user-preferences';
 import initI18n from '@/i18n/init';
 
 import * as styles from './index.module.scss';
@@ -12,13 +11,13 @@ type Props = {
 };
 
 const AppBoundary = ({ children }: Props) => {
-  const defaultTheme = localStorage.getItem(themeStorageKey) ?? AppearanceMode.SyncWithSystem;
-  const { configs } = useAdminConsoleConfigs();
-  const theme = configs?.appearanceMode ?? defaultTheme;
+  const {
+    data: { appearanceMode, language },
+  } = useUserPreferences();
 
   useEffect(() => {
-    const isFollowSystem = theme === AppearanceMode.SyncWithSystem;
-    const className = styles[theme] ?? '';
+    const isFollowSystem = appearanceMode === AppearanceMode.SyncWithSystem;
+    const className = styles[appearanceMode] ?? '';
 
     if (!isFollowSystem) {
       document.body.classList.add(className);
@@ -29,13 +28,13 @@ const AppBoundary = ({ children }: Props) => {
         document.body.classList.remove(className);
       }
     };
-  }, [theme]);
+  }, [appearanceMode]);
 
   useEffect(() => {
     (async () => {
-      void initI18n(configs?.language);
+      void initI18n(language);
     })();
-  }, [configs?.language]);
+  }, [language]);
 
   // eslint-disable-next-line react/jsx-no-useless-fragment
   return <>{children}</>;

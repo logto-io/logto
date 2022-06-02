@@ -7,7 +7,7 @@ import customizeIcon from '@/assets/images/customize.svg';
 import furtherReadingsIcon from '@/assets/images/further-readings.svg';
 import oneClickIcon from '@/assets/images/one-click.svg';
 import passwordlessIcon from '@/assets/images/passwordless.svg';
-import useAdminConsoleConfigs from '@/hooks/use-configs';
+import useSettings from '@/hooks/use-settings';
 
 type GetStartedMetadata = {
   id: string;
@@ -20,7 +20,7 @@ type GetStartedMetadata = {
 };
 
 const useGetStartedMetadata = () => {
-  const { configs, updateConfigs } = useAdminConsoleConfigs();
+  const { settings, updateSettings } = useSettings();
   const navigate = useNavigate();
 
   const data: GetStartedMetadata[] = [
@@ -30,9 +30,9 @@ const useGetStartedMetadata = () => {
       subtitle: 'get_started.card1_subtitle',
       icon: checkDemoIcon,
       buttonText: 'general.check_out',
-      isComplete: configs?.checkDemo,
+      isComplete: settings?.checkDemo,
       onClick: async () => {
-        void updateConfigs({ checkDemo: true });
+        void updateSettings({ checkDemo: true });
         window.open('/demo-app', '_blank');
       },
     },
@@ -42,7 +42,7 @@ const useGetStartedMetadata = () => {
       subtitle: 'get_started.card2_subtitle',
       icon: createAppIcon,
       buttonText: 'general.create',
-      isComplete: configs?.createApplication,
+      isComplete: settings?.createApplication,
       onClick: () => {
         navigate('/applications');
       },
@@ -53,7 +53,7 @@ const useGetStartedMetadata = () => {
       subtitle: 'get_started.card3_subtitle',
       icon: passwordlessIcon,
       buttonText: 'general.create',
-      isComplete: configs?.configurePasswordless,
+      isComplete: settings?.configurePasswordless,
       onClick: () => {
         navigate('/connectors');
       },
@@ -74,7 +74,7 @@ const useGetStartedMetadata = () => {
       subtitle: 'get_started.card5_subtitle',
       icon: customizeIcon,
       buttonText: 'general.customize',
-      isComplete: configs?.customizeSignInExperience,
+      isComplete: settings?.customizeSignInExperience,
       onClick: () => {
         navigate('/sign-in-experience');
       },
@@ -85,9 +85,9 @@ const useGetStartedMetadata = () => {
       subtitle: 'get_started.card6_subtitle',
       icon: furtherReadingsIcon,
       buttonText: 'general.check_out',
-      isComplete: configs?.checkFurtherReadings,
+      isComplete: settings?.checkFurtherReadings,
       onClick: () => {
-        void updateConfigs({ checkFurtherReadings: true });
+        void updateSettings({ checkFurtherReadings: true });
         window.open('https://docs.logto.io/', '_blank');
       },
     },

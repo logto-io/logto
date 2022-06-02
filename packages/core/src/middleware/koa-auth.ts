@@ -2,6 +2,7 @@ import { IncomingHttpHeaders } from 'http';
 
 import { UserRole } from '@logto/schemas';
 import { managementResource } from '@logto/schemas/lib/seeds';
+import { conditional } from '@silverhand/essentials';
 import { jwtVerify } from 'jose';
 import { MiddlewareType, Request } from 'koa';
 import { IRouterParamContext } from 'koa-router';
@@ -33,12 +34,17 @@ const extractBearerTokenFromHeaders = ({ authorization }: IncomingHttpHeaders) =
   return authorization.slice(bearerTokenIdentifier.length + 1);
 };
 
-const getUserInfoFromRequest = async (request: Request) => {
+type UserInfo = {
+  sub: string;
+  roleNames?: string[];
+};
+
+const getUserInfoFromRequest = async (request: Request): Promise<UserInfo> => {
   const { isProduction, developmentUserId, oidc } = envSet.values;
   const userId = developmentUserId || request.headers['development-user-id']?.toString();
 
   if (!isProduction && userId) {
-    return userId;
+    return { sub: userId, roleNames: [UserRole.Admin] };
   }
 
   const { publicKey, issuer } = oidc;
@@ -51,23 +57,24 @@ const getUserInfoFromRequest = async (request: Request) => {
 
   assertThat(sub, new RequestError({ code: 'auth.jwt_sub_missing', status: 401 }));
 
-  assertThat(
-    Array.isArray(roleNames) && roleNames.includes(UserRole.Admin),
-    new RequestError({ code: 'auth.unauthorized', status: 401 })
-  );
-
-  return sub;
+  return { sub, roleNames: conditional(Array.isArray(roleNames) && roleNames) };
 };
 
-export default function koaAuth<
-  StateT,
-  ContextT extends IRouterParamContext,
-  ResponseBodyT
->(): MiddlewareType<StateT, WithAuthContext<ContextT>, ResponseBodyT> {
+export default function koaAuth<StateT, ContextT extends IRouterParamContext, ResponseBodyT>(
+  forRole?: UserRole
+): MiddlewareType<StateT, WithAuthContext<ContextT>, ResponseBodyT> {
   return async (ctx, next) => {
     try {
-      const userId = await getUserInfoFromRequest(ctx.request);
-      ctx.auth = userId;
+      const { sub, roleNames } = await getUserInfoFromRequest(ctx.request);
+
+      if (forRole) {
+        assertThat(
+          roleNames?.includes(forRole),
+          new RequestError({ code: 'auth.unauthorized', status: 401 })
+        );
+      }
+
+      ctx.auth = sub;
     } catch {
       throw new RequestError({ code: 'auth.unauthorized', status: 401 });
     }

@@ -1,3 +1,4 @@
+import { UserRole } from '@logto/schemas';
 import { jwtVerify } from 'jose';
 import { Context } from 'koa';
 import { IRouterParamContext } from 'koa-router';
@@ -105,7 +106,7 @@ describe('koaAuth middleware', () => {
       },
     };
 
-    await expect(koaAuth()(ctx, next)).rejects.toMatchError(unauthorizedError);
+    await expect(koaAuth(UserRole.Admin)(ctx, next)).rejects.toMatchError(unauthorizedError);
   });
 
   it('expect to throw if jwt role_names does not include admin', async () => {
@@ -121,6 +122,6 @@ describe('koaAuth middleware', () => {
       },
     };
 
-    await expect(koaAuth()(ctx, next)).rejects.toMatchError(unauthorizedError);
+    await expect(koaAuth(UserRole.Admin)(ctx, next)).rejects.toMatchError(unauthorizedError);
   });
 });

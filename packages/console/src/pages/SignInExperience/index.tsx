@@ -13,7 +13,7 @@ import Card from '@/components/Card';
 import CardTitle from '@/components/CardTitle';
 import TabNav, { TabNavItem } from '@/components/TabNav';
 import useApi, { RequestError } from '@/hooks/use-api';
-import useAdminConsoleConfigs from '@/hooks/use-configs';
+import useSettings from '@/hooks/use-settings';
 import * as detailsStyles from '@/scss/details.module.scss';
 import * as modalStyles from '@/scss/modal.module.scss';
 
@@ -33,7 +33,7 @@ const SignInExperience = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { tab } = useParams();
   const { data, error, mutate } = useSWR<SignInExperienceType, RequestError>('/api/sign-in-exp');
-  const { configs, error: configError, updateConfigs } = useAdminConsoleConfigs();
+  const { settings, error: settingsError, updateSettings } = useSettings();
   const [dataToCompare, setDataToCompare] = useState<SignInExperienceType>();
 
   const methods = useForm<SignInExperienceForm>();
@@ -62,7 +62,7 @@ const SignInExperience = () => {
       })
       .json<SignInExperienceType>();
     void mutate(updatedData);
-    await updateConfigs({ customizeSignInExperience: true });
+    await updateSettings({ customizeSignInExperience: true });
     toast.success(t('application_details.save_success'));
   };
 
@@ -83,15 +83,15 @@ const SignInExperience = () => {
     await saveData();
   });
 
-  if (!configs && !configError) {
+  if (!settings && !settingsError) {
     return <div>loading</div>;
   }
 
-  if (!configs && configError) {
-    return <div>{configError.body?.message ?? configError.message}</div>;
+  if (!settings && settingsError) {
+    return <div>{settingsError.body?.message ?? settingsError.message}</div>;
   }
 
-  if (!configs?.customizeSignInExperience) {
+  if (!settings?.customizeSignInExperience) {
     return <Welcome />;
   }
 

@@ -674,6 +674,7 @@ importers:
       stylelint: ^14.8.2
       swr: ^1.2.2
       typescript: ^4.6.2
+      zod: ^3.14.3
     devDependencies:
       '@fontsource/roboto-mono': 4.5.7
       '@logto/phrases': link:../phrases
@@ -730,6 +731,7 @@ importers:
       stylelint: 14.8.2
       swr: 1.2.2_react@17.0.2
       typescript: 4.6.2
+      zod: 3.14.3
 
   packages/core:
     specifiers:
@@ -21935,7 +21937,6 @@ packages:
 
   /zod/3.14.3:
     resolution: {integrity: sha512-OzwRCSXB1+/8F6w6HkYHdbuWysYWnAF4fkRgKDcSFc54CE+Sv0rHXKfeNUReGCrHukm1LNpi6AYeXotznhYJbQ==}
-    dev: false
 
   /zwitch/1.0.5:
     resolution: {integrity: sha512-V50KMwwzqJV0NpZIZFwfOD5/lyny3WlSzRiXgA0G7VUnRlqttta1L6UQIHzd6EuBY/cHGfwTIck7w1yH6Q5zUw==}
