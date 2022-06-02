@@ -1,8 +1,8 @@
 @use '@/scss/underscore' as _;
 
 .title {
+  @include _.subhead-cap;
   color: var(--color-neutral-variant-60);
-  font: var(--font-subhead-cap);
   margin-top: _.unit(8);
 }
 
