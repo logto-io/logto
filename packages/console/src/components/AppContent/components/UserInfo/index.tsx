@@ -1,5 +1,5 @@
-import { useLogto } from '@logto/react';
-import { User, UserRole } from '@logto/schemas';
+import { useLogto, UserInfoResponse } from '@logto/react';
+import { UserRole } from '@logto/schemas';
 import classNames from 'classnames';
 import React, { useEffect, useRef, useState, MouseEvent } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -13,33 +13,29 @@ import SignOut from '@/icons/SignOut';
 import * as styles from './index.module.scss';
 
 const UserInfo = () => {
-  const { isAuthenticated, getIdTokenClaims, signOut } = useLogto();
+  const { isAuthenticated, fetchUserInfo, signOut } = useLogto();
   const api = useApi();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const anchorRef = useRef<HTMLDivElement>(null);
   const [showDropDown, setShowDropdown] = useState(false);
-  const [user, setUser] = useState<User>();
+  const [user, setUser] = useState<UserInfoResponse>();
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     (async () => {
       if (isAuthenticated) {
-        const { sub: userId } = getIdTokenClaims() ?? {};
-
-        if (userId) {
-          const data = await api.get(`/api/users/${userId}`).json<User>();
-          setUser(data);
-        }
+        const userInfo = await fetchUserInfo();
+        setUser(userInfo);
       }
     })();
-  }, [api, isAuthenticated, getIdTokenClaims]);
+  }, [api, isAuthenticated, fetchUserInfo]);
 
   if (!user) {
     return null;
   }
 
-  const { id, name, avatar, roleNames } = user;
-  const isAdmin = roleNames.includes(UserRole.Admin);
+  const { sub: id, name, avatar, role_names: roleNames } = user;
+  const isAdmin = roleNames?.includes(UserRole.Admin);
 
   return (
     <>
