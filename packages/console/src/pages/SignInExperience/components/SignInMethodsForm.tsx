@@ -67,7 +67,7 @@ const SignInMethodsForm = () => {
   return (
     <>
       <div className={styles.title}>{t('sign_in_exp.sign_in_methods.title')}</div>
-      <FormField isRequired title="admin_console.sign_in_exp.sign_in_methods.primary">
+      <FormField title="admin_console.sign_in_exp.sign_in_methods.primary">
         <Controller
           name="signInMethods.primary"
           control={control}
@@ -95,7 +95,7 @@ const SignInMethodsForm = () => {
           />
         </div>
       )}
-      <FormField isRequired title="admin_console.sign_in_exp.sign_in_methods.enable_secondary">
+      <FormField title="admin_console.sign_in_exp.sign_in_methods.enable_secondary">
         <Switch
           {...register('signInMethods.enableSecondary', { required: true })}
           label={t('sign_in_exp.sign_in_methods.enable_secondary_description')}

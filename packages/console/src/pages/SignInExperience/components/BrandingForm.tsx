@@ -23,7 +23,7 @@ const BrandingForm = () => {
   return (
     <>
       <div className={styles.title}>{t('sign_in_exp.branding.title')}</div>
-      <FormField isRequired title="admin_console.sign_in_exp.branding.primary_color">
+      <FormField title="admin_console.sign_in_exp.branding.primary_color">
         <Controller
           name="branding.primaryColor"
           control={control}
@@ -39,10 +39,7 @@ const BrandingForm = () => {
         />
       </FormField>
       {isDarkModeEnabled && (
-        <FormField
-          isRequired={isDarkModeEnabled}
-          title="admin_console.sign_in_exp.branding.dark_primary_color"
-        >
+        <FormField title="admin_console.sign_in_exp.branding.dark_primary_color">
           <Controller
             name="branding.darkPrimaryColor"
             control={control}
@@ -52,7 +49,7 @@ const BrandingForm = () => {
           />
         </FormField>
       )}
-      <FormField isRequired title="admin_console.sign_in_exp.branding.ui_style">
+      <FormField title="admin_console.sign_in_exp.branding.ui_style">
         <Controller
           name="branding.style"
           control={control}
