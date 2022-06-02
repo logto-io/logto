@@ -547,6 +547,29 @@ const translation = {
         'Your session might have expired and you have been disconnected. Click the button below to sign in to admin console again.',
       button: 'Sign in again',
     },
+    register: {
+      action: {
+        create: 'Create Account',
+      },
+      input: {
+        username: 'Username',
+        password: 'Password',
+        confirm_password: 'Confirm password',
+      },
+      description: {
+        welcome_title: 'Welcome to Logto Admin Console',
+        welcome_description:
+          'Admin console is a web app to manage Logto without coding requirements. Let’s first create an admin account.',
+      },
+      error: {
+        username_required: 'Username is required',
+        username_invalid_format:
+          'Username Should not start with a number, only  letters, numbers and underscores is allowed.',
+        password_min_length: 'Password should be at least {{min}} characters',
+        password_required: 'Password is required',
+        password_not_match: 'Passwords do not match',
+      },
+    },
   },
 };
 

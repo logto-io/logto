@@ -1,0 +1,10 @@
+@use '@/scss/underscore' as _;
+
+.input {
+  margin-bottom: _.unit(4);
+}
+
+.submitButton {
+  margin-top: _.unit(12);
+  width: 100%;
+}

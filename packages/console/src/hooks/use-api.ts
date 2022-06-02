@@ -1,7 +1,6 @@
 import { useLogto } from '@logto/react';
 import { RequestErrorBody } from '@logto/schemas';
 import { managementResource } from '@logto/schemas/lib/seeds';
-import { conditional } from '@silverhand/essentials';
 import { t } from 'i18next';
 import ky from 'ky';
 import { useMemo } from 'react';
@@ -36,17 +35,17 @@ const useApi = ({ hideErrorToast }: Props = {}) => {
     () =>
       ky.create({
         hooks: {
-          beforeError: conditional(
-            !hideErrorToast && [
-              (error) => {
-                const { response } = error;
+          beforeError: hideErrorToast
+            ? []
+            : [
+                (error) => {
+                  const { response } = error;
 
-                void toastError(response);
+                  void toastError(response);
 
-                return error;
-              },
-            ]
-          ),
+                  return error;
+                },
+              ],
           beforeRequest: [
             async (request) => {
               if (isAuthenticated) {
