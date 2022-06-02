@@ -67,7 +67,7 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
     '/session/sign-in/username-password',
     koaGuard({
       body: object({
-        username: string(),
+        username: string().nonempty(),
         password: string().nonempty(),
       }),
     }),
