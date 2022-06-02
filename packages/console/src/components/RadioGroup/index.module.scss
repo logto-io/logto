@@ -113,5 +113,18 @@
         }
       }
     }
+
+    &.disabled {
+      cursor: not-allowed;
+      color: var(--color-disabled);
+
+      .indicator {
+        border-color: var(--color-disabled);
+
+        &::before {
+          background: var(--color-layer-1);
+        }
+      }
+    }
   }
 }

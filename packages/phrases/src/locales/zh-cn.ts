@@ -264,6 +264,7 @@ const translation = {
         web: '网页',
         native: '原生',
       },
+      add_multi_platform: ' 支持多平台，请选择一个平台继续',
     },
     connector_details: {
       back_to_connectors: '返回连接器',
