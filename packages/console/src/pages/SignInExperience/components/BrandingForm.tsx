@@ -38,18 +38,20 @@ const BrandingForm = () => {
           {...register('branding.isDarkModeEnabled')}
         />
       </FormField>
-      <FormField
-        isRequired={isDarkModeEnabled}
-        title="admin_console.sign_in_exp.branding.dark_primary_color"
-      >
-        <Controller
-          name="branding.darkPrimaryColor"
-          control={control}
-          render={({ field: { onChange, value } }) => (
-            <ColorPicker value={value} onChange={onChange} />
-          )}
-        />
-      </FormField>
+      {isDarkModeEnabled && (
+        <FormField
+          isRequired={isDarkModeEnabled}
+          title="admin_console.sign_in_exp.branding.dark_primary_color"
+        >
+          <Controller
+            name="branding.darkPrimaryColor"
+            control={control}
+            render={({ field: { onChange, value } }) => (
+              <ColorPicker value={value} onChange={onChange} />
+            )}
+          />
+        </FormField>
+      )}
       <FormField isRequired title="admin_console.sign_in_exp.branding.ui_style">
         <Controller
           name="branding.style"
