@@ -7,81 +7,77 @@ import { zodTypeToSwagger } from '@/utils/zod';
 
 import { AnonymousRouter } from './types';
 
-type Guard = WithGuardConfig<IMiddleware> | undefined;
+type HttpMethod = 'get' | 'head' | 'patch' | 'post' | 'delete';
 
-type Route = { path: string; method: string; guard: Guard };
+type RouteObject = {
+  path: string;
+  method: HttpMethod;
+  operationObject: OpenAPIV3.OperationObject;
+};
+
+type MethodsObject = Partial<Record<HttpMethod, OpenAPIV3.OperationObject>>;
+
+type PathsObject = Record<string, MethodsObject>;
+
+const buildOperationObject = (stack: IMiddleware[], path: string) => {
+  const guard = stack.find((function_): function_ is WithGuardConfig<IMiddleware> =>
+    isGuardMiddleware(function_)
+  );
+  const body = guard?.config.body;
+
+  return {
+    tags: [toTitle(path.split('/')[1] ?? 'General')],
+    requestBody: body && {
+      required: true,
+      content: {
+        'application/json': {
+          schema: zodTypeToSwagger(body),
+        },
+      },
+    },
+    responses: {
+      '200': {
+        description: 'OK',
+      },
+    },
+  };
+};
 
 export default function swaggerRoutes<T extends AnonymousRouter, R extends Router<unknown, any>>(
   router: T,
   allRouters: R[]
 ) {
   router.get('/swagger.json', async (ctx, next) => {
-    const routes = allRouters.flatMap((router) =>
-      router.stack.flatMap(({ path, stack, methods }) => {
-        const guard = stack.find((function_): function_ is WithGuardConfig<IMiddleware> =>
-          isGuardMiddleware(function_)
-        );
-
-        return (
-          methods
-            // There is no need to show the HEAD method.
-            .filter((method) => method !== 'HEAD')
-            .map((method) => ({ path, method, guard }))
-        );
-      })
+    const routes = allRouters.flatMap<RouteObject>((router) =>
+      router.stack.flatMap<RouteObject>(({ path, stack, methods }) =>
+        methods
+          // There is no need to show the HEAD method.
+          .filter((method) => method !== 'HEAD')
+          .map((method) => ({
+            path: `/api${path}`,
+            method: method.toLowerCase() as HttpMethod,
+            operationObject: buildOperationObject(stack, path),
+          }))
+      )
     );
 
     // Group routes by path
-    const uniquePaths = Array.from(
-      routes
-        .reduce<Map<string, Map<string, Guard>>>((map, { path, method, guard }: Route) => {
-          // eslint-disable-next-line @silverhand/fp/no-let
-          let methodMap = map.get(path);
+    // eslint-disable-next-line unicorn/prefer-object-from-entries
+    const paths = routes.reduce<PathsObject>(
+      (pathsObject, { path, method, operationObject }: RouteObject) => {
+        const methodObject = pathsObject[path];
 
-          if (!methodMap) {
-            // eslint-disable-next-line @silverhand/fp/no-mutation
-            methodMap = new Map();
-            map.set(path, methodMap);
-          }
+        /* eslint-disable @silverhand/fp/no-mutation */
+        if (methodObject) {
+          methodObject[method] = operationObject;
+        } else {
+          pathsObject[path] = { [method]: operationObject };
+        }
+        /* eslint-enable @silverhand/fp/no-mutation */
 
-          methodMap.set(method, guard);
-
-          return map;
-        }, new Map())
-        .entries()
-    );
-
-    const paths = Object.fromEntries(
-      uniquePaths.map<[string, OpenAPIV3.PathItemObject]>(([path, methodMap]) => [
-        `/api${path}`,
-        Object.fromEntries(
-          Array.from<[string, Guard]>(methodMap.entries()).map<[string, OpenAPIV3.OperationObject]>(
-            ([method, guard]) => {
-              const body = guard?.config.body;
-
-              return [
-                method.toLowerCase(),
-                {
-                  tags: [toTitle(path.split('/')[1] ?? 'General')],
-                  requestBody: body && {
-                    required: true,
-                    content: {
-                      'application/json': {
-                        schema: zodTypeToSwagger(body),
-                      },
-                    },
-                  },
-                  responses: {
-                    '200': {
-                      description: 'OK',
-                    },
-                  },
-                },
-              ];
-            }
-          )
-        ),
-      ])
+        return pathsObject;
+      },
+      Object.create(null)
     );
 
     const document: OpenAPIV3.Document = {
