@@ -55,7 +55,7 @@
       color: var(--color-text);
     }
 
-    .id {
+    .text {
       font: var(--font-subhead-2);
       color: var(--color-caption);
     }
@@ -63,6 +63,10 @@
     .verticalBar {
       @include _.vertical-bar;
       height: 12px;
+    }
+
+    .copy {
+      padding: _.unit(1) _.unit(2);
     }
   }
 }
