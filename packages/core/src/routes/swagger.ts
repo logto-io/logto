@@ -12,14 +12,14 @@ type HttpMethod = 'get' | 'head' | 'patch' | 'post' | 'delete';
 type RouteObject = {
   path: string;
   method: HttpMethod;
-  operationObject: OpenAPIV3.OperationObject;
+  operation: OpenAPIV3.OperationObject;
 };
 
 type MethodsObject = Partial<Record<HttpMethod, OpenAPIV3.OperationObject>>;
 
 type PathsObject = Record<string, MethodsObject>;
 
-const buildOperationObject = (stack: IMiddleware[], path: string): OpenAPIV3.OperationObject => {
+const buildOperation = (stack: IMiddleware[], path: string): OpenAPIV3.OperationObject => {
   const guard = stack.find((function_): function_ is WithGuardConfig<IMiddleware> =>
     isGuardMiddleware(function_)
   );
@@ -56,7 +56,7 @@ export default function swaggerRoutes<T extends AnonymousRouter, R extends Route
           .map((method) => ({
             path: `/api${path}`,
             method: method.toLowerCase() as HttpMethod,
-            operationObject: buildOperationObject(stack, path),
+            operation: buildOperation(stack, path),
           }))
       )
     );
@@ -64,14 +64,14 @@ export default function swaggerRoutes<T extends AnonymousRouter, R extends Route
     // Group routes by path
     // eslint-disable-next-line unicorn/prefer-object-from-entries
     const paths = routes.reduce<PathsObject>(
-      (pathsObject, { path, method, operationObject }: RouteObject) => {
+      (pathsObject, { path, method, operation }: RouteObject) => {
         const methodObject = pathsObject[path];
 
         /* eslint-disable @silverhand/fp/no-mutation */
         if (methodObject) {
-          methodObject[method] = operationObject;
+          methodObject[method] = operation;
         } else {
-          pathsObject[path] = { [method]: operationObject };
+          pathsObject[path] = { [method]: operation };
         }
         /* eslint-enable @silverhand/fp/no-mutation */
 
