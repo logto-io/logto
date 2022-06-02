@@ -1,3 +1,4 @@
+import { arbitraryObjectGuard } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { OpenAPIV3 } from 'openapi-types';
 import {
@@ -9,13 +10,19 @@ import {
   ZodObject,
   ZodOptional,
   ZodString,
-  ZodUnion,
   ZodUnknown,
 } from 'zod';
 
 import RequestError from '@/errors/RequestError';
 
 export const zodTypeToSwagger = (config: unknown): OpenAPIV3.SchemaObject => {
+  if (config === arbitraryObjectGuard) {
+    return {
+      type: 'object',
+      description: 'arbitrary',
+    };
+  }
+
   if (config instanceof ZodOptional) {
     return zodTypeToSwagger(config._def.innerType);
   }
@@ -34,14 +41,8 @@ export const zodTypeToSwagger = (config: unknown): OpenAPIV3.SchemaObject => {
     };
   }
 
-  if (config instanceof ZodUnion) {
-    return {
-      description: 'union',
-    };
-  }
-
   if (config instanceof ZodUnknown) {
-    return { description: 'unknown' };
+    return {};
   }
 
   if (config instanceof ZodObject) {
