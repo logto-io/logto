@@ -1,4 +1,5 @@
 import { LogtoProvider, useLogto } from '@logto/react';
+import { signInNotificationStorageKey } from '@logto/schemas';
 import { demoAppApplicationId } from '@logto/schemas/lib/seeds';
 import React, { useEffect } from 'react';
 
@@ -17,6 +18,10 @@ const Main = () => {
 
   useEffect(() => {
     if (!isAuthenticated && !isInCallback) {
+      sessionStorage.setItem(
+        signInNotificationStorageKey,
+        'Use the admin username and password to sign in this demo.'
+      );
       void signIn(window.location.href);
     }
   }, [isAuthenticated, isInCallback, signIn]);
