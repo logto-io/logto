@@ -19,3 +19,19 @@ a.link {
     margin-right: _.unit(2);
   }
 }
+
+.platforms {
+  display: flex;
+  align-items: center;
+
+  .platform {
+    display: flex;
+    align-items: center;
+
+    &:not(:last-child) {
+      padding-right: _.unit(1);
+      margin-right: _.unit(1);
+      border-right: 1px solid var(--color-border);
+    }
+  }
+}
