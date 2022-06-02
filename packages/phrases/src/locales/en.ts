@@ -503,6 +503,7 @@ const translation = {
         light: 'Light',
         mobile: 'Mobile',
         web: 'Web',
+        mobile_description: 'Mobile includes mobile web, Android and iOS.',
       },
     },
     settings: {
