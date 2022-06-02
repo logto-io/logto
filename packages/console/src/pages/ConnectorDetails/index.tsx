@@ -146,7 +146,7 @@ const ConnectorDetails = () => {
               )}
               <div className={styles.verticalBar} />
               <div className={styles.text}>ID</div>
-              <CopyToClipboard value={data.id} className={styles.copy} />
+              <CopyToClipboard value={data.id} />
             </div>
           </div>
           <div className={styles.operations}>

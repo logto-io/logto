@@ -92,7 +92,7 @@ const ApiResourceDetails = () => {
               <img className={styles.icon} src={apiResourceIcon} />
               <div className={styles.meta}>
                 <div className={styles.name}>{data.name}</div>
-                <CopyToClipboard value={data.indicator} className={styles.copy} />
+                <CopyToClipboard value={data.indicator} />
               </div>
             </div>
             <div className={styles.operations}>
