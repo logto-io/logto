@@ -1,9 +1,11 @@
+import { adminConsoleApplicationId } from '@logto/schemas/lib/seeds';
 import { Provider } from 'oidc-provider';
 
 import { MountedApps } from '@/env-set';
+import { hasAdminUsers } from '@/queries/user';
 import { createContextWithRouteParameters } from '@/utils/test-utils';
 
-import koaProxyGuard, { sessionNotFoundPath, guardedPath } from './koa-proxy-guard';
+import koaUiGuard, { sessionNotFoundPath, guardedPath } from './koa-ui-guard';
 
 jest.mock('fs/promises', () => ({
   ...jest.requireActual('fs/promises'),
@@ -16,7 +18,11 @@ jest.mock('oidc-provider', () => ({
   })),
 }));
 
-describe('koaProxyGuard', () => {
+jest.mock('@/queries/user', () => ({
+  hasAdminUsers: jest.fn(),
+}));
+
+describe('koaUiGuard', () => {
   const envBackup = process.env;
 
   beforeEach(() => {
@@ -38,7 +44,7 @@ describe('koaProxyGuard', () => {
         url: `/${app}/foo`,
       });
 
-      await koaProxyGuard(provider)(ctx, next);
+      await koaUiGuard(provider)(ctx, next);
 
       expect(ctx.redirect).not.toBeCalled();
     });
@@ -51,7 +57,7 @@ describe('koaProxyGuard', () => {
     const ctx = createContextWithRouteParameters({
       url: `${sessionNotFoundPath}`,
     });
-    await koaProxyGuard(provider)(ctx, next);
+    await koaUiGuard(provider)(ctx, next);
     expect(ctx.redirect).not.toBeCalled();
   });
 
@@ -62,16 +68,21 @@ describe('koaProxyGuard', () => {
     const ctx = createContextWithRouteParameters({
       url: '/callback/github',
     });
-    await koaProxyGuard(provider)(ctx, next);
+    await koaUiGuard(provider)(ctx, next);
     expect(ctx.redirect).not.toBeCalled();
   });
 
   it('should not redirect if session found', async () => {
     const provider = new Provider('');
+
+    (provider.interactionDetails as jest.Mock).mockResolvedValue({
+      params: {},
+    });
+
     const ctx = createContextWithRouteParameters({
       url: `/sign-in`,
     });
-    await koaProxyGuard(provider)(ctx, next);
+    await koaUiGuard(provider)(ctx, next);
     expect(ctx.redirect).not.toBeCalled();
   });
 
@@ -84,8 +95,26 @@ describe('koaProxyGuard', () => {
       const ctx = createContextWithRouteParameters({
         url: `${path}/foo`,
       });
-      await koaProxyGuard(provider)(ctx, next);
+      await koaUiGuard(provider)(ctx, next);
       expect(ctx.redirect).toBeCalled();
     });
   }
+
+  it(`should redirect to AC register if client id is ${adminConsoleApplicationId} and no admin users find`, async () => {
+    (hasAdminUsers as jest.Mock).mockResolvedValue(false);
+
+    const provider = new Provider('');
+
+    (provider.interactionDetails as jest.Mock).mockResolvedValue({
+      params: { client_id: adminConsoleApplicationId },
+    });
+
+    const ctx = createContextWithRouteParameters({
+      url: '/sign-in',
+    });
+
+    await koaUiGuard(provider)(ctx, next);
+
+    expect(ctx.redirect).toBeCalledWith(`/${MountedApps.Console}/register`);
+  });
 });

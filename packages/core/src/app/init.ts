@@ -14,9 +14,10 @@ import koaErrorHandler from '@/middleware/koa-error-handler';
 import koaI18next from '@/middleware/koa-i18next';
 import koaLog from '@/middleware/koa-log';
 import koaOIDCErrorHandler from '@/middleware/koa-oidc-error-handler';
-import koaProxyGuard from '@/middleware/koa-proxy-guard';
+import koaRootProxy from '@/middleware/koa-root-proxy';
 import koaSlonikErrorHandler from '@/middleware/koa-slonik-error-handler';
 import koaSpaProxy from '@/middleware/koa-spa-proxy';
+import koaUiGuard from '@/middleware/koa-ui-guard';
 import initOidc from '@/oidc/init';
 import initRouter from '@/routes/init';
 
@@ -37,9 +38,14 @@ export default async function initApp(app: Koa): Promise<void> {
   const provider = await initOidc(app);
   initRouter(app, provider);
 
+  app.use(koaRootProxy());
+
+  // Admin Console
   app.use(
     mount('/' + MountedApps.Console, koaSpaProxy(MountedApps.Console, 5002, MountedApps.Console))
   );
+
+  // Demo App
   app.use(
     mount(
       '/' + MountedApps.DemoApp,
@@ -47,7 +53,8 @@ export default async function initApp(app: Koa): Promise<void> {
     )
   );
 
-  app.use(koaProxyGuard(provider));
+  // Main Flow
+  app.use(koaUiGuard(provider));
   app.use(koaSpaProxy());
 
   const { isHttpsEnabled, httpsCert, httpsKey, port } = envSet.values;

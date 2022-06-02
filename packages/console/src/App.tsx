@@ -42,6 +42,7 @@ const Main = () => {
           <Toast />
           <Routes>
             <Route path="callback" element={<Callback />} />
+            <Route path="register" element={<div>register</div>} />
             <Route element={<AppContent />}>
               <Route path="*" element={<NotFound />} />
               <Route path="get-started" element={<GetStarted />} />
