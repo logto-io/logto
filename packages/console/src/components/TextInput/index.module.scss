@@ -8,6 +8,7 @@
   transition-timing-function: ease-in-out;
   transition-duration: 0.2s;
   padding: _.unit(2) _.unit(3);
+  background: var(--color-layer-1);
   font: var(--font-body-medium);
 
   &.withIcon {
@@ -29,9 +30,9 @@
   input {
     width: 100%;
     appearance: none;
-    background: var(--color-layer-1);
     color: var(--color-text);
     font: var(--font-body-medium);
+    background: transparent;
     padding: 0;
 
     &::placeholder {
@@ -40,7 +41,7 @@
 
     // Overwrite webkit auto-fill style
     &:-webkit-autofill {
-      box-shadow: 0 0 0 30px var(--color-control-background) inset;
+      box-shadow: 0 0 0 30px transparent inset;
       transition: background-color 5000s ease-in-out 0s;
       -webkit-text-fill-color: var(--color-text);
     }
@@ -50,21 +51,12 @@
     background: var(--color-inverse-on-surface);
     color: var(--color-caption);
     border-color: var(--color-border);
-
-    input {
-      background: none;
-    }
   }
 
   &.readOnly {
     background: var(--color-inverse-on-surface);
     color: var(--color-text);
     border-color: var(--color-border);
-
-    input {
-      background: none;
-    }
-
 
     &:focus-within {
       border-color: var(--color-border);
