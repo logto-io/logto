@@ -538,6 +538,7 @@ const translation = {
       user: 'User',
       application: 'Application',
       time: 'Time',
+      filter_by: 'Filter by',
     },
     session_expired: {
       title: 'Session Expired',

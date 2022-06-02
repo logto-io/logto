@@ -1,9 +1,11 @@
 import classNames from 'classnames';
-import React, { ReactNode, useRef, useState } from 'react';
+import React, { ReactEventHandler, ReactNode, useRef, useState } from 'react';
 
 import { KeyboardArrowDown, KeyboardArrowUp } from '@/icons/Arrow';
+import Close from '@/icons/Close';
 
 import Dropdown, { DropdownItem } from '../Dropdown';
+import IconButton from '../IconButton';
 import * as styles from './index.module.scss';
 
 type Option = {
@@ -14,12 +16,22 @@ type Option = {
 type Props = {
   value?: string;
   options: Option[];
-  onChange?: (value: string) => void;
+  onChange?: (value?: string) => void;
   isReadOnly?: boolean;
   hasError?: boolean;
+  placeholder?: ReactNode;
+  isClearable?: boolean;
 };
 
-const Select = ({ value, options, onChange, isReadOnly, hasError }: Props) => {
+const Select = ({
+  value,
+  options,
+  onChange,
+  isReadOnly,
+  hasError,
+  placeholder,
+  isClearable,
+}: Props) => {
   const [isOpen, setIsOpen] = useState(false);
   const anchorRef = useRef<HTMLInputElement>(null);
   const current = options.find((option) => value && option.value === value);
@@ -27,6 +39,12 @@ const Select = ({ value, options, onChange, isReadOnly, hasError }: Props) => {
   const handleSelect = (value: string) => {
     onChange?.(value);
     setIsOpen(false);
+  };
+
+  const handleClear: ReactEventHandler<HTMLButtonElement> = (event) => {
+    onChange?.(undefined);
+    setIsOpen(false);
+    event.stopPropagation();
   };
 
   return (
@@ -37,7 +55,8 @@ const Select = ({ value, options, onChange, isReadOnly, hasError }: Props) => {
           styles.select,
           isOpen && styles.open,
           isReadOnly && styles.readOnly,
-          hasError && styles.error
+          hasError && styles.error,
+          isClearable && value && styles.clearable
         )}
         role="button"
         onClick={() => {
@@ -46,7 +65,12 @@ const Select = ({ value, options, onChange, isReadOnly, hasError }: Props) => {
           }
         }}
       >
-        {current?.title}
+        {current?.title ?? placeholder}
+        {isClearable && (
+          <IconButton className={styles.clear} size="small" onClick={handleClear}>
+            <Close />
+          </IconButton>
+        )}
         <div className={styles.arrow}>{isOpen ? <KeyboardArrowUp /> : <KeyboardArrowDown />}</div>
       </div>
       <Dropdown

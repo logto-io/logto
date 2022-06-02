@@ -34,7 +34,7 @@ const RoleSelect = ({ value, onChange }: Props) => {
     throw new Error('Unsupported user role value');
   }, [value]);
 
-  const handleChange = (value: string) => {
+  const handleChange = (value?: string) => {
     onChange?.(value === roleAdmin ? ['admin'] : []);
   };
 

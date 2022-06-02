@@ -1,4 +1,5 @@
 import { LogDTO, LogResult } from '@logto/schemas';
+import { conditionalString } from '@silverhand/essentials';
 import classNames from 'classnames';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
@@ -16,7 +17,9 @@ import UserName from '@/components/UserName';
 import { RequestError } from '@/hooks/use-api';
 import * as tableStyles from '@/scss/table.module.scss';
 
+import ApplicationSelector from './components/ApplicationSelector';
 import EventName from './components/EventName';
+import EventSelector from './components/EventSelector';
 import * as styles from './index.module.scss';
 
 const pageSize = 20;
@@ -25,8 +28,12 @@ const AuditLogs = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const [query, setQuery] = useSearchParams();
   const pageIndex = Number(query.get('page') ?? '1');
+  const event = query.get('event');
+  const applicationId = query.get('applicationId');
   const { data, error, mutate } = useSWR<[LogDTO[], number], RequestError>(
-    `/api/logs?page=${pageIndex}&page_size=${pageSize}`
+    `/api/logs?page=${pageIndex}&page_size=${pageSize}${conditionalString(
+      event && `&logType=${event}`
+    )}${conditionalString(applicationId && `&applicationId=${applicationId}`)}`
   );
   const isLoading = !data && !error;
   const navigate = useNavigate();
@@ -36,6 +43,25 @@ const AuditLogs = () => {
     <Card className={styles.card}>
       <div className={styles.headline}>
         <CardTitle title="logs.title" subtitle="logs.subtitle" />
+      </div>
+      <div className={styles.filter}>
+        <div className={styles.title}>{t('logs.filter_by')}</div>
+        <div className={styles.eventSelector}>
+          <EventSelector
+            value={event ?? undefined}
+            onChange={(value) => {
+              setQuery({ event: value ?? '' });
+            }}
+          />
+        </div>
+        <div className={styles.applicationSelector}>
+          <ApplicationSelector
+            value={applicationId ?? undefined}
+            onChange={(value) => {
+              setQuery({ applicationId: value ?? '' });
+            }}
+          />
+        </div>
       </div>
       <div className={classNames(styles.table, tableStyles.scrollable)}>
         <table>
@@ -61,8 +87,8 @@ const AuditLogs = () => {
                 onRetry={async () => mutate(undefined, true)}
               />
             )}
-            {isLoading && <TableLoading columns={2} />}
-            {logs?.length === 0 && <TableEmpty columns={2} />}
+            {isLoading && <TableLoading columns={4} />}
+            {logs?.length === 0 && <TableEmpty columns={4} />}
             {logs?.map(({ type, payload, createdAt, id }) => (
               <tr
                 key={id}
