@@ -117,7 +117,7 @@ const ApplicationDetails = () => {
                 <div className={styles.type}>{t(`${applicationTypeI18nKey[data.type]}.title`)}</div>
                 <div className={styles.verticalBar} />
                 <div className={styles.text}>App ID</div>
-                <CopyToClipboard value={data.id} className={styles.copy} />
+                <CopyToClipboard value={data.id} />
               </div>
             </div>
             <div className={styles.operations}>

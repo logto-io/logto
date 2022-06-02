@@ -128,7 +128,7 @@ const UserDetails = () => {
                   </>
                 )}
                 <div className={styles.text}>User ID</div>
-                <CopyToClipboard value={data.id} className={styles.copy} />
+                <CopyToClipboard value={data.id} />
               </div>
             </div>
             <div>

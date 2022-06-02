@@ -10,6 +10,7 @@ import ActionMenu, { ActionMenuItem } from '@/components/ActionMenu';
 import Button from '@/components/Button';
 import Card from '@/components/Card';
 import CodeEditor from '@/components/CodeEditor';
+import CopyToClipboard from '@/components/CopyToClipboard';
 import DetailsSkeleton from '@/components/DetailsSkeleton';
 import Drawer from '@/components/Drawer';
 import LinkButton from '@/components/LinkButton';
@@ -144,7 +145,8 @@ const ConnectorDetails = () => {
                 </Status>
               )}
               <div className={styles.verticalBar} />
-              <div className={styles.id}>{data.id}</div>
+              <div className={styles.text}>ID</div>
+              <CopyToClipboard value={data.id} />
             </div>
           </div>
           <div className={styles.operations}>
