@@ -1,5 +1,5 @@
 import { LogtoProvider, useLogto } from '@logto/react';
-import { demoAppApplicationId } from '@logto/schemas';
+import { demoAppApplicationId } from '@logto/schemas/lib/seeds';
 import React, { useEffect } from 'react';
 
 import '@/scss/normalized.scss';

@@ -2,6 +2,7 @@ import { readdir, readFile } from 'fs/promises';
 import path from 'path';
 
 import { SchemaLike, seeds } from '@logto/schemas';
+import { createDemoAppApplication } from '@logto/schemas/lib/seeds';
 import { conditionalString } from '@silverhand/essentials';
 import chalk from 'chalk';
 import decamelize from 'decamelize';
@@ -56,7 +57,7 @@ export const insertInto = <T extends SchemaLike>(object: T, table: string) => {
   `;
 };
 
-export const createDatabaseCli = (dsn: string) => {
+export const createDatabaseCli = (dsn: string, demoAppUrl: string) => {
   const pool = createPool(dsn, { interceptors: createInterceptors() });
 
   const createTables = async () => {
@@ -82,6 +83,7 @@ export const createDatabaseCli = (dsn: string) => {
       pool.query(insertInto(managementResource, 'resources')),
       pool.query(insertInto(createDefaultSetting(), 'settings')),
       pool.query(insertInto(defaultSignInExperience, 'sign_in_experiences')),
+      pool.query(insertInto(createDemoAppApplication([demoAppUrl]), 'applications')),
     ]);
     console.log(`${chalk.blue('[seed-tables]')} Seed tables succeeded.`);
   };

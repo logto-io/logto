@@ -3,10 +3,12 @@ import https from 'https';
 
 import chalk from 'chalk';
 import Koa from 'koa';
+import compose from 'koa-compose';
 import koaLogger from 'koa-logger';
 import mount from 'koa-mount';
 
 import envSet, { MountedApps } from '@/env-set';
+import koaCheckDemoApp from '@/middleware/koa-check-demo-app';
 import koaConnectorErrorHandler from '@/middleware/koa-connector-error-handle';
 import koaErrorHandler from '@/middleware/koa-error-handler';
 import koaI18next from '@/middleware/koa-i18next';
@@ -39,7 +41,10 @@ export default async function initApp(app: Koa): Promise<void> {
     mount('/' + MountedApps.Console, koaSpaProxy(MountedApps.Console, 5002, MountedApps.Console))
   );
   app.use(
-    mount('/' + MountedApps.DemoApp, koaSpaProxy(MountedApps.DemoApp, 5003, MountedApps.DemoApp))
+    mount(
+      '/' + MountedApps.DemoApp,
+      compose([koaCheckDemoApp(), koaSpaProxy(MountedApps.DemoApp, 5003, MountedApps.DemoApp)])
+    )
   );
 
   app.use(koaProxyGuard(provider));

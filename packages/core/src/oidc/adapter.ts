@@ -1,9 +1,5 @@
-import {
-  adminConsoleApplicationId,
-  ApplicationType,
-  CreateApplication,
-  GrantType,
-} from '@logto/schemas';
+import { ApplicationType, CreateApplication, GrantType } from '@logto/schemas';
+import { adminConsoleApplicationId } from '@logto/schemas/lib/seeds';
 import dayjs from 'dayjs';
 import { AdapterFactory, AllClientMetadata } from 'oidc-provider';
 import snakecaseKeys from 'snakecase-keys';

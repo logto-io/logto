@@ -1,6 +1,7 @@
 import { IncomingHttpHeaders } from 'http';
 
-import { managementApiResource, UserRole } from '@logto/schemas';
+import { UserRole } from '@logto/schemas';
+import { managementResource } from '@logto/schemas/lib/seeds';
 import { jwtVerify } from 'jose';
 import { MiddlewareType, Request } from 'koa';
 import { IRouterParamContext } from 'koa-router';
@@ -44,7 +45,7 @@ const getUserInfoFromRequest = async (request: Request) => {
     payload: { sub, role_names: roleNames },
   } = await jwtVerify(extractBearerTokenFromHeaders(request.headers), publicKey, {
     issuer,
-    audience: managementApiResource,
+    audience: managementResource.indicator,
   });
 
   assertThat(sub, new RequestError({ code: 'auth.jwt_sub_missing', status: 401 }));
