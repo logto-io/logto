@@ -38,7 +38,7 @@
         "@types/node": "^16.3.1",
         "eslint": "^8.10.0",
         "jest": "^27.5.1",
-        "lint-staged": "^12.0.0",
+        "lint-staged": "^13.0.0",
         "prettier": "^2.3.2",
         "ts-jest": "^27.1.1",
         "tsc-watch": "^5.0.0",
