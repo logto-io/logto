@@ -41,7 +41,7 @@ const getUserInfoFromRequest = async (request: Request) => {
 
   const { publicKey, issuer } = oidc;
   const {
-    payload: { sub, roleNames },
+    payload: { sub, role_names: roleNames },
   } = await jwtVerify(extractBearerTokenFromHeaders(request.headers), publicKey, {
     issuer,
     audience: managementApiResource,
