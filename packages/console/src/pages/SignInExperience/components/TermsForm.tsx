@@ -17,7 +17,7 @@ const TermsForm = () => {
   return (
     <>
       <div className={styles.title}>{t('sign_in_exp.terms_of_use.title')}</div>
-      <FormField isRequired title="admin_console.sign_in_exp.terms_of_use.enable">
+      <FormField title="admin_console.sign_in_exp.terms_of_use.enable">
         <Switch
           {...register('termsOfUse.enabled', { required: true })}
           label={t('sign_in_exp.terms_of_use.description')}

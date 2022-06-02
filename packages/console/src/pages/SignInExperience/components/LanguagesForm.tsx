@@ -32,7 +32,7 @@ const LanguagesForm = () => {
   return (
     <>
       <div className={styles.title}>{t('sign_in_exp.others.languages.title')}</div>
-      <FormField isRequired title="admin_console.sign_in_exp.others.languages.mode">
+      <FormField title="admin_console.sign_in_exp.others.languages.mode">
         <Controller
           name="languageInfo.mode"
           control={control}
@@ -46,7 +46,7 @@ const LanguagesForm = () => {
         />
       </FormField>
       {mode === LanguageMode.Auto && (
-        <FormField isRequired title="admin_console.sign_in_exp.others.languages.fallback_language">
+        <FormField title="admin_console.sign_in_exp.others.languages.fallback_language">
           <Controller
             name="languageInfo.fallbackLanguage"
             control={control}
@@ -57,7 +57,7 @@ const LanguagesForm = () => {
         </FormField>
       )}
       {mode === LanguageMode.Fixed && (
-        <FormField isRequired title="admin_console.sign_in_exp.others.languages.fixed_language">
+        <FormField title="admin_console.sign_in_exp.others.languages.fixed_language">
           <Controller
             name="languageInfo.fixedLanguage"
             control={control}

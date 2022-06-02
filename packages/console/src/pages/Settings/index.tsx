@@ -64,11 +64,7 @@ const Settings = () => {
       {data && (
         <form className={detailsStyles.body} onSubmit={onSubmit}>
           <div className={styles.fields}>
-            <FormField
-              isRequired
-              title="admin_console.settings.language"
-              className={styles.textField}
-            >
+            <FormField title="admin_console.settings.language" className={styles.textField}>
               <Controller
                 name="adminConsole.language"
                 control={control}
@@ -90,11 +86,7 @@ const Settings = () => {
                 )}
               />
             </FormField>
-            <FormField
-              isRequired
-              title="admin_console.settings.appearance"
-              className={styles.textField}
-            >
+            <FormField title="admin_console.settings.appearance" className={styles.textField}>
               <Controller
                 name="adminConsole.appearanceMode"
                 control={control}
