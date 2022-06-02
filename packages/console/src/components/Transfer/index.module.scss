@@ -35,6 +35,7 @@
 
           > svg {
             margin-right: _.unit(2);
+            margin-left: -5px; // use to align svg content with text
           }
 
           &:hover {
