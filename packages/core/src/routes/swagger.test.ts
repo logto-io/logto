@@ -9,9 +9,12 @@ import swaggerRoutes from './swagger';
 describe('swagger api', () => {
   const authedRouter: AuthedRouter = new Router();
   authedRouter.get('/mock', () => ({}));
+  authedRouter.patch('/mock', () => ({}));
+  authedRouter.post('/mock', () => ({}));
+  authedRouter.delete('/mock', () => ({}));
 
   const anonymousRouter: AnonymousRouter = new Router();
-  swaggerRoutes(anonymousRouter, [authedRouter]);
+  swaggerRoutes(anonymousRouter, [authedRouter, anonymousRouter]);
 
   const app = new Koa();
   app.use(anonymousRouter.routes()).use(anonymousRouter.allowedMethods());
@@ -46,11 +49,12 @@ describe('swagger api', () => {
         expect.objectContaining({
           /* eslint-disable @typescript-eslint/no-unsafe-assignment */
           '/api/mock': expect.objectContaining({
-            head: expect.anything(),
             get: expect.anything(),
+            patch: expect.anything(),
+            post: expect.anything(),
+            delete: expect.anything(),
           }),
           '/api/swagger.json': expect.objectContaining({
-            head: expect.anything(),
             get: expect.anything(),
           }),
           /* eslint-enable @typescript-eslint/no-unsafe-assignment */

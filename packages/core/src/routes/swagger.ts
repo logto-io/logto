@@ -7,83 +7,81 @@ import { zodTypeToSwagger } from '@/utils/zod';
 
 import { AnonymousRouter } from './types';
 
+type Guard = WithGuardConfig<IMiddleware> | undefined;
+
+type Route = { path: string; method: string; guard: Guard };
+
 export default function swaggerRoutes<T extends AnonymousRouter, R extends Router<unknown, any>>(
   router: T,
-  otherRouters: R[]
+  allRouters: R[]
 ) {
   router.get('/swagger.json', async (ctx, next) => {
-    const routes = [router, ...otherRouters].flatMap((router) =>
-      router.stack.map(({ path, stack, methods }) => {
+    const routes = allRouters.flatMap((router) =>
+      router.stack.flatMap(({ path, stack, methods }) => {
         const guard = stack.find((function_): function_ is WithGuardConfig<IMiddleware> =>
           isGuardMiddleware(function_)
         );
 
-        return { path, methods, guard };
+        return (
+          methods
+            // There is no need to show the HEAD method.
+            .filter((method) => method !== 'HEAD')
+            .map((method) => ({ path, method, guard }))
+        );
       })
     );
 
-    const routeEntries = routes.map<[string, OpenAPIV3.PathItemObject]>(
-      ({ path, methods, guard }) => {
-        const body = guard?.config.body;
+    // Group routes by path
+    const uniquePaths = Array.from(
+      routes
+        .reduce<Map<string, Map<string, Guard>>>((map, { path, method, guard }: Route) => {
+          // eslint-disable-next-line @silverhand/fp/no-let
+          let methodMap = map.get(path);
 
-        return [
-          `/api${path}`,
-          Object.fromEntries(
-            methods.map<[string, OpenAPIV3.OperationObject]>((method) => [
-              method.toLowerCase(),
-              {
-                tags: [toTitle(path.split('/')[1] ?? 'General')],
-                requestBody: body && {
-                  required: true,
-                  content: {
-                    'application/json': {
-                      schema: zodTypeToSwagger(body),
+          if (!methodMap) {
+            // eslint-disable-next-line @silverhand/fp/no-mutation
+            methodMap = new Map();
+            map.set(path, methodMap);
+          }
+
+          methodMap.set(method, guard);
+
+          return map;
+        }, new Map())
+        .entries()
+    );
+
+    const paths = Object.fromEntries(
+      uniquePaths.map<[string, OpenAPIV3.PathItemObject]>(([path, methodMap]) => [
+        `/api${path}`,
+        Object.fromEntries(
+          Array.from<[string, Guard]>(methodMap.entries()).map<[string, OpenAPIV3.OperationObject]>(
+            ([method, guard]) => {
+              const body = guard?.config.body;
+
+              return [
+                method.toLowerCase(),
+                {
+                  tags: [toTitle(path.split('/')[1] ?? 'General')],
+                  requestBody: body && {
+                    required: true,
+                    content: {
+                      'application/json': {
+                        schema: zodTypeToSwagger(body),
+                      },
+                    },
+                  },
+                  responses: {
+                    '200': {
+                      description: 'OK',
                     },
                   },
                 },
-                responses: {
-                  '200': {
-                    description: 'OK',
-                  },
-                },
-              },
-            ])
-          ),
-        ];
-      }
-    );
-
-    /**
-     * Avoid `Object.fromEntries()` overwriting the former `path1` entry with the latter one:
-     * e.g. convert
-     * [
-     *   [ path1, { head: { ... }, get: { ... } } ],
-     *   [ path2, { post: { ... }, patch: { ... } } ],
-     *   [ path1, { delete: { ... } } ],
-     *   ...
-     * ]
-     * to
-     * {
-     *   path1: { head: { ... }, get: { ... }, delete: { ... } } ,
-     *   path2: { post: { ... }, patch: { ... } } ,
-     *   ...
-     * }
-     */
-    const paths = Object.fromEntries(
-      routeEntries.reduce((map, [path, methods]) => {
-        const existingMethods = map.get(path) as [string, Record<string, unknown>] | undefined;
-
-        if (existingMethods) {
-          map.set(
-            path,
-            Object.fromEntries([...Object.entries(existingMethods), ...Object.entries(methods)])
-          );
-        } else {
-          map.set(path, methods);
-        }
-
-        return map;
-      }, new Map<string, Record<string, unknown>>())
+              ];
+            }
+          )
+        ),
+      ])
     );
 
     const document: OpenAPIV3.Document = {

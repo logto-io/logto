@@ -42,7 +42,7 @@ const createRouters = (provider: Provider) => {
   signInSettingsRoutes(anonymousRouter);
   statusRoutes(anonymousRouter);
   // The swagger.json should contain all API routers.
-  swaggerRoutes(anonymousRouter, [sessionRouter, authedRouter]);
+  swaggerRoutes(anonymousRouter, [sessionRouter, authedRouter, anonymousRouter]);
 
   return [sessionRouter, anonymousRouter, authedRouter];
 };
