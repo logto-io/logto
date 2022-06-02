@@ -89,7 +89,7 @@ const translation = {
       invalid_passcode: 'The passcode is invalid.',
       invalid_connector_auth: 'The authorization is invalid.',
       invalid_connector_request: 'The connector data is invalid.',
-      request: 'Request error {{message}}',
+      request: 'Request error: {{message}}',
       unknown: 'Unknown error, please try again later.',
       invalid_session: 'Session not found. Please go back and sign in again.',
     },
@@ -584,6 +584,7 @@ const errors = {
     phone_exists_register: 'The phone number has been registered.',
     invalid_email: 'Invalid email address.',
     invalid_phone: 'Invalid phone number.',
+    username_not_exists: 'The username has not been registered yet.',
     email_not_exists: 'The email address has not been registered yet.',
     phone_not_exists: 'The phone number has not been registered yet.',
     identity_not_exists: 'The social account has not been registered yet.',
@@ -602,7 +603,7 @@ const errors = {
     connector_id_mismatch: 'The connectorId is mismatched with session record.',
     connector_session_not_found: 'Connector session not found. Please go back and sign in again.',
     unauthorized: 'Please sign in first.',
-    unsupported_prompt_name: 'Unsupported prompt name',
+    unsupported_prompt_name: 'Unsupported prompt name.',
   },
   connector: {
     general: 'An unexpected error occurred in connector.',
@@ -645,7 +646,7 @@ const errors = {
     create_failed: 'Failed to create {{name}}.',
     not_exists: 'The {{name}} does not exist.',
     not_exists_with_id: 'The {{name}} with ID `{{id}}` does not exist.',
-    not_found: 'The resource does not exist',
+    not_found: 'The resource does not exist.',
   },
 };
 

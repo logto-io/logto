@@ -10,7 +10,7 @@ import { DeletionError, UpdateError } from '@/errors/SlonikError';
 const { table, fields } = convertToIdentifiers(Users);
 
 export const findUserByUsername = async (username: string) =>
-  envSet.pool.one<User>(sql`
+  envSet.pool.maybeOne<User>(sql`
     select ${sql.join(Object.values(fields), sql`,`)}
     from ${table}
     where ${fields.username}=${username}
