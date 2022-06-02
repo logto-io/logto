@@ -1,4 +1,6 @@
 import { LogtoClientError, useLogto } from '@logto/react';
+import { signInClientNameStorageKey } from '@logto/schemas';
+import { adminConsoleApplicationId } from '@logto/schemas/lib/seeds';
 import React, { useEffect } from 'react';
 import { Outlet, useHref, useLocation, useNavigate } from 'react-router-dom';
 
@@ -24,6 +26,7 @@ const AppContent = () => {
 
   useEffect(() => {
     if (!isAuthenticated) {
+      sessionStorage.setItem(signInClientNameStorageKey, adminConsoleApplicationId);
       void signIn(new URL(href, window.location.origin).toString());
     }
   }, [href, isAuthenticated, signIn]);
