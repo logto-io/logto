@@ -131,6 +131,9 @@ const Preview = ({ signInExperience, className }: Props) => {
           )}
           <iframe ref={previewRef} src="/sign-in?preview=true" />
         </div>
+        {platform === 'mobile' && (
+          <div className={styles.description}>{t('sign_in_exp.preview.mobile_description')}</div>
+        )}
       </div>
     </Card>
   );
