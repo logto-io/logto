@@ -19,7 +19,7 @@ type MethodsObject = Partial<Record<HttpMethod, OpenAPIV3.OperationObject>>;
 
 type PathsObject = Record<string, MethodsObject>;
 
-const buildOperationObject = (stack: IMiddleware[], path: string) => {
+const buildOperationObject = (stack: IMiddleware[], path: string): OpenAPIV3.OperationObject => {
   const guard = stack.find((function_): function_ is WithGuardConfig<IMiddleware> =>
     isGuardMiddleware(function_)
   );
