@@ -18,6 +18,7 @@ import Status from '@/components/Status';
 import TabNav, { TabNavItem } from '@/components/TabNav';
 import UnnamedTrans from '@/components/UnnamedTrans';
 import useApi, { RequestError } from '@/hooks/use-api';
+import useConnectorInUse from '@/hooks/use-connector-in-use';
 import Back from '@/icons/Back';
 import Delete from '@/icons/Delete';
 import More from '@/icons/More';
@@ -41,6 +42,7 @@ const ConnectorDetails = () => {
   const { data, error } = useSWR<ConnectorDTO, RequestError>(
     connectorId && `/api/connectors/${connectorId}`
   );
+  const inUse = useConnectorInUse(data?.type === ConnectorType.Social ? data.target : undefined);
   const isLoading = !data && !error;
   const api = useApi();
   const navigate = useNavigate();
@@ -127,11 +129,20 @@ const ConnectorDetails = () => {
             <div>
               <ConnectorTypeName type={data.type} />
               <div className={styles.verticalBar} />
-              <Status status={data.enabled ? 'enabled' : 'disabled'} varient="outlined">
-                {t('connectors.connector_status', {
-                  context: data.enabled ? 'enabled' : 'disabled',
-                })}
-              </Status>
+              {data.type === ConnectorType.Social && inUse !== undefined && (
+                <Status status={inUse ? 'enabled' : 'disabled'} varient="outlined">
+                  {t('connectors.connector_status', {
+                    context: inUse ? 'in_use' : 'not_in_use',
+                  })}
+                </Status>
+              )}
+              {data.type !== ConnectorType.Social && (
+                <Status status={data.enabled ? 'enabled' : 'disabled'} varient="outlined">
+                  {t('connectors.connector_status', {
+                    context: data.enabled ? 'in_use' : 'not_in_use',
+                  })}
+                </Status>
+              )}
               <div className={styles.verticalBar} />
               <div className={styles.id}>{data.id}</div>
             </div>

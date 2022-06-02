@@ -4,6 +4,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 
+import Button from '@/components/Button';
 import ItemPreview from '@/components/ItemPreview';
 import UnnamedTrans from '@/components/UnnamedTrans';
 import { connectorIconPlaceHolder, connectorTitlePlaceHolder } from '@/consts/connectors';
@@ -14,15 +15,23 @@ type Props = {
   type: ConnectorType;
   connector?: ConnectorDTO;
   isShowId?: boolean;
+  onClickSetup?: () => void;
 };
 
-const ConnectorName = ({ type, connector, isShowId = false }: Props) => {
+const ConnectorName = ({ type, connector, onClickSetup, isShowId = false }: Props) => {
   const { t } = useTranslation(undefined);
 
   if (!connector) {
     return (
       <ItemPreview
-        title={t(connectorTitlePlaceHolder[type])}
+        title={
+          <div className={styles.previewTitle}>
+            <div>{t(connectorTitlePlaceHolder[type])}</div>
+            {type !== ConnectorType.Social && (
+              <Button title="admin_console.connectors.set_up" onClick={onClickSetup} />
+            )}
+          </div>
+        }
         icon={<img src={connectorIconPlaceHolder[type]} />}
       />
     );

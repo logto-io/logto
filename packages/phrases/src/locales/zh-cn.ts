@@ -243,9 +243,9 @@ const translation = {
       tab_social: '社会化登录',
       connector_name: '连接器',
       connector_type: '类型',
-      connector_status: '状态',
-      connector_status_enabled: '已启用',
-      connector_status_disabled: '已禁用',
+      connector_status: '登录体验',
+      connector_status_in_use: '使用中',
+      connector_status_not_in_use: '未使用',
       social_connector_eg: '如: 微信登录，支付宝登录，微博登录',
       next: '下一步',
       type: {

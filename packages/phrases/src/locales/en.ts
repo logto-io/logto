@@ -244,9 +244,9 @@ const translation = {
       tab_social: 'Social connectors',
       connector_name: 'Connector name',
       connector_type: 'Type',
-      connector_status: 'Status',
-      connector_status_enabled: 'Enabled',
-      connector_status_disabled: 'Disabled',
+      connector_status: 'Sign in Experience',
+      connector_status_in_use: 'In use',
+      connector_status_not_in_use: 'Not in use',
       social_connector_eg: 'e.g.: Google, Facebook, Twitter',
       next: 'Next',
       type: {

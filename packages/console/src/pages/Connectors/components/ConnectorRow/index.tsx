@@ -1,13 +1,13 @@
 import { ConnectorDTO, ConnectorType } from '@logto/schemas';
+import { conditional } from '@silverhand/essentials';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 
-import Button from '@/components/Button';
 import Status from '@/components/Status';
-import { connectorPlatformLabel, connectorTitlePlaceHolder } from '@/consts/connectors';
+import { connectorTitlePlaceHolder } from '@/consts/connectors';
+import useConnectorInUse from '@/hooks/use-connector-in-use';
 
 import ConnectorName from '../ConnectorName';
-import * as styles from './index.module.scss';
 
 type Props = {
   type: ConnectorType;
@@ -17,6 +17,9 @@ type Props = {
 
 const ConnectorRow = ({ type, connectors, onClickSetup }: Props) => {
   const { t } = useTranslation(undefined);
+  const inUse = useConnectorInUse(
+    conditional(type === ConnectorType.Social && connectors[0]?.target)
+  );
 
   return (
     <tr>
@@ -25,41 +28,22 @@ const ConnectorRow = ({ type, connectors, onClickSetup }: Props) => {
           type={type}
           connector={connectors[0]}
           isShowId={type !== ConnectorType.Social}
+          onClickSetup={onClickSetup}
         />
       </td>
       <td>{t(connectorTitlePlaceHolder[type])}</td>
       <td>
-        {type === ConnectorType.Social && (
-          <div className={styles.statusItems}>
-            {connectors.map(({ id, enabled, platform }) => {
-              const status = enabled ? 'enabled' : 'disabled';
-
-              return (
-                <div key={id} className={styles.statusItem}>
-                  <Status status={enabled ? 'enabled' : 'disabled'}>
-                    {t(`admin_console.connectors.connector_status_${status}`)}
-                  </Status>
-                  <div className={styles.platform}>
-                    {platform && t(connectorPlatformLabel[platform])}
-                  </div>
-                  <div className={styles.line} />
-                </div>
-              );
+        {type === ConnectorType.Social && inUse !== undefined && (
+          <Status status={inUse ? 'enabled' : 'disabled'}>
+            {t('admin_console.connectors.connector_status', {
+              context: inUse ? 'in_use' : 'not_in_use',
             })}
-          </div>
+          </Status>
         )}
         {type !== ConnectorType.Social && connectors[0] && (
-          <Status status="enabled">{t('admin_console.connectors.connector_status_enabled')}</Status>
+          <Status status="enabled">{t('admin_console.connectors.connector_status_in_use')}</Status>
         )}
-        {type !== ConnectorType.Social && !connectors[0] && (
-          <Button
-            title="admin_console.connectors.set_up"
-            type="outline"
-            onClick={() => {
-              onClickSetup?.();
-            }}
-          />
-        )}
+        {type !== ConnectorType.Social && !connectors[0] && '-'}
       </td>
     </tr>
   );
