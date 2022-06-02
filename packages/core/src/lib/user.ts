@@ -44,6 +44,7 @@ export const findUserByUsernameAndPassword = async (
   password: string
 ): Promise<User> => {
   const user = await findUserByUsername(username);
+  assertThat(user, 'user.username_not_exists');
   const { passwordEncrypted, passwordEncryptionMethod } = user;
 
   assertThat(passwordEncrypted && passwordEncryptionMethod, 'session.invalid_sign_in_method');

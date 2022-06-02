@@ -89,7 +89,7 @@ const translation = {
       invalid_passcode: '无效的验证码。',
       invalid_connector_auth: '登录失败。',
       invalid_connector_request: '无效的登录请求。',
-      request: '请求错误：{{ message }}。',
+      request: '请求错误：{{ message }}', // All error messages end with '。'.
       unknown: '未知错误，请稍后重试。',
       invalid_session: '未找到有效的会话，请重新登录。',
     },
@@ -579,6 +579,7 @@ const errors = {
     phone_exists_register: '手机号码已被注册。',
     invalid_email: '邮箱地址不正确。',
     invalid_phone: '手机号码不正确。',
+    username_not_exists: '用户名尚未注册。',
     email_not_exists: '邮箱地址尚未注册。',
     phone_not_exists: '手机号码尚未注册。',
     identity_not_exists: '该社交账号尚未注册。',
@@ -638,7 +639,7 @@ const errors = {
     create_failed: '创建 {{name}} 失败。',
     not_exists: '该 {{name}} 不存在。',
     not_exists_with_id: 'ID 为 `{{id}}` 的 {{name}} 不存在。',
-    not_found: '该资源不存在',
+    not_found: '该资源不存在。',
   },
 };
 
