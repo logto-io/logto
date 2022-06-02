@@ -89,7 +89,7 @@ const translation = {
       invalid_passcode: '无效的验证码。',
       invalid_connector_auth: '登录失败。',
       invalid_connector_request: '无效的登录请求。',
-      request: '请求错误：{{ message }}', // All error messages are end with '。'.
+      request: '请求错误：{{ message }}', // All error messages end with '。'.
       unknown: '未知错误，请稍后重试。',
       invalid_session: '未找到有效的会话，请重新登录。',
     },

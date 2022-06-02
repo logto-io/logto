@@ -68,14 +68,13 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
     koaGuard({
       body: object({
         username: string(),
-        password: string(),
+        password: string().nonempty(),
       }),
     }),
     async (ctx, next) => {
       const { username, password } = ctx.guard.body;
       const type = 'SignInUsernamePassword';
       ctx.log(type, { username });
-      assertThat(password, 'session.insufficient_info');
 
       const { id } = await findUserByUsernameAndPassword(username, password);
       ctx.log(type, { userId: id });
