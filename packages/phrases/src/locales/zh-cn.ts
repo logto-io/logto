@@ -531,6 +531,28 @@ const translation = {
       subtitle: '会话可能已过期，您已被登出. 请点击下方按钮重新登录到管理界面.',
       button: '重新登录',
     },
+    register: {
+      action: {
+        create: '创建账户',
+      },
+      input: {
+        username: '用户名',
+        password: '密码',
+        confirm_password: '确认密码',
+      },
+      description: {
+        welcome_title: '欢迎使用 Logto 管理平台',
+        welcome_description:
+          'Admin console is a web app to manage Logto without coding requirements. Let’s first create an admin account.',
+      },
+      error: {
+        username_required: '用户名不能为空',
+        username_invalid_format: '用户名只能包含英文字母、数字或下划线, 且不能以数字开头。',
+        password_min_length: '密码长度不能小于 {{min}} 个字符',
+        password_required: '密码不能为空',
+        password_not_match: '两次输入的密码不一致',
+      },
+    },
   },
 };
 

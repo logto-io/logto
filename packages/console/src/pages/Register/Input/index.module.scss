@@ -1,0 +1,68 @@
+@use '@/scss/underscore' as _;
+
+.container {
+  border-radius: 6px;
+  border: 1px solid var(--color-border);
+  outline: 3px solid transparent;
+  transition-property: outline, border;
+  transition-timing-function: ease-in-out;
+  transition-duration: 0.2s;
+  font: var(--font-body-medium);
+  display: flex;
+  align-items: center;
+  background-color: var(--color-base);
+  overflow: hidden;
+
+
+  .actionButton {
+    width: 22px;
+    height: 22px;
+    display: none;
+    color: var(--color-icon);
+    margin-right: _.unit(3);
+  }
+
+  &:focus-within {
+    border-color: var(--color-primary);
+    outline-color: var(--color-focused-variant);
+
+    .actionButton {
+      display: block;
+    }
+  }
+
+  &.error {
+    border-color: var(--color-error);
+
+    &:focus-within {
+      outline-color: var(--color-danger-focused);
+    }
+  }
+
+  input {
+    flex: 1;
+    width: 100%;
+    appearance: none;
+    background: none;
+    color: var(--color-text);
+    font: var(--font-body-medium);
+    padding: _.unit(3) _.unit(3);
+    caret-color: var(--color-primary);
+
+    &::placeholder {
+      color: var(--color-caption);
+    }
+
+    // Overwrite webkit auto-fill style
+    &:-webkit-autofill {
+      box-shadow: 0 0 0 30px var(--color-base) inset;
+      -webkit-text-fill-color: var(--color-text);
+    }
+  }
+}
+
+.errorMessage {
+  margin-top: _.unit(2);
+  color: var(--color-error);
+  font: var(--font-body-medium);
+}

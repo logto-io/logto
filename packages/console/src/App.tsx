@@ -25,6 +25,7 @@ import Connectors from './pages/Connectors';
 import Dashboard from './pages/Dashboard';
 import GetStarted from './pages/GetStarted';
 import NotFound from './pages/NotFound';
+import Register from './pages/Register';
 import Settings from './pages/Settings';
 import SignInExperience from './pages/SignInExperience';
 import UserDetails from './pages/UserDetails';
@@ -41,6 +42,7 @@ const Main = () => {
         <AppBoundary>
           <Toast />
           <Routes>
+            <Route path="/register" element={<Register />} />
             <Route path="callback" element={<Callback />} />
             <Route path="register" element={<div>register</div>} />
             <Route element={<AppContent />}>

@@ -10,6 +10,7 @@
   padding: _.unit(2) _.unit(3);
   background: var(--color-layer-1);
   font: var(--font-body-medium);
+  overflow: hidden;
 
   &.withIcon {
     display: flex;
@@ -41,8 +42,7 @@
 
     // Overwrite webkit auto-fill style
     &:-webkit-autofill {
-      box-shadow: 0 0 0 30px transparent inset;
-      transition: background-color 5000s ease-in-out 0s;
+      box-shadow: 0 0 0 30px var(--color-layer-1) inset;
       -webkit-text-fill-color: var(--color-text);
     }
   }
