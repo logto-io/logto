@@ -30,7 +30,7 @@
     "@types/pluralize": "^0.0.29",
     "camelcase": "^6.2.0",
     "eslint": "^8.10.0",
-    "lint-staged": "^12.0.0",
+    "lint-staged": "^13.0.0",
     "lodash.uniq": "^4.5.0",
     "pluralize": "^8.0.0",
     "prettier": "^2.3.2",

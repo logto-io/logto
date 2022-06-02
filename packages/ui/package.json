@@ -48,7 +48,7 @@
     "js-base64": "^3.7.2",
     "ky": "^0.30.0",
     "libphonenumber-js": "^1.9.49",
-    "lint-staged": "^12.0.0",
+    "lint-staged": "^13.0.0",
     "parcel": "2.5.0",
     "postcss": "^8.4.6",
     "postcss-modules": "^4.3.0",
