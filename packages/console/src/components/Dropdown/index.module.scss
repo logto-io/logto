@@ -21,11 +21,8 @@
 }
 
 .title {
+  @include _.subhead-cap;
   padding: _.unit(3);
-  font: var(--font-subhead-cap);
-  color: var(--color-caption);
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
 }
 
 .overlay {

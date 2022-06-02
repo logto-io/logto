@@ -26,6 +26,18 @@
   width: 0;
 }
 
+@mixin subhead-cap {
+  color: var(--color-caption);
+  font: var(--font-subhead-cap);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+@mixin subhead-cap-small {
+  @include subhead-cap;
+  font: var(--font-subhead-cap-small);
+}
+
 @mixin rotating-animation {
   animation: rotating 1s ease-in-out infinite;
 }
