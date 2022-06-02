@@ -41,6 +41,19 @@ describe('koaAuth middleware', () => {
     spy.mockRestore();
   });
 
+  it('should read `development-user-id` from headers if not production', async () => {
+    const mockCtx = {
+      ...ctx,
+      request: {
+        ...ctx.request,
+        headers: { ...ctx.request.headers, 'development-user-id': 'foo' },
+      },
+    };
+
+    await koaAuth()(mockCtx, next);
+    expect(mockCtx.auth).toEqual('foo');
+  });
+
   it('should set user auth with given sub returned from accessToken', async () => {
     ctx.request = {
       ...ctx.request,

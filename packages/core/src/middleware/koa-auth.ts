@@ -35,9 +35,10 @@ const extractBearerTokenFromHeaders = ({ authorization }: IncomingHttpHeaders) =
 
 const getUserInfoFromRequest = async (request: Request) => {
   const { isProduction, developmentUserId, oidc } = envSet.values;
+  const userId = developmentUserId || request.headers['development-user-id']?.toString();
 
-  if (!isProduction && developmentUserId) {
-    return developmentUserId;
+  if (!isProduction && userId) {
+    return userId;
   }
 
   const { publicKey, issuer } = oidc;
