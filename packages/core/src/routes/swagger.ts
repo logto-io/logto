@@ -7,7 +7,8 @@ import { zodTypeToSwagger } from '@/utils/zod';
 
 import { AnonymousRouter } from './types';
 
-type HttpMethod = 'get' | 'head' | 'patch' | 'post' | 'delete';
+// According to the HTTP methods that are declared in the koa-router.
+type HttpMethod = 'get' | 'post' | 'put' | 'link' | 'unlink' | 'delete' | 'options';
 
 type RouteObject = {
   path: string;
@@ -15,9 +16,9 @@ type RouteObject = {
   operation: OpenAPIV3.OperationObject;
 };
 
-type MethodsObject = Partial<Record<HttpMethod, OpenAPIV3.OperationObject>>;
-
-type PathsObject = Record<string, MethodsObject>;
+type MethodMap = {
+  [key in HttpMethod]?: OpenAPIV3.OperationObject;
+};
 
 const buildOperation = (stack: IMiddleware[], path: string): OpenAPIV3.OperationObject => {
   const guard = stack.find((function_): function_ is WithGuardConfig<IMiddleware> =>
@@ -61,24 +62,12 @@ export default function swaggerRoutes<T extends AnonymousRouter, R extends Route
       )
     );
 
+    const pathMap = new Map<string, MethodMap>();
+
     // Group routes by path
-    // eslint-disable-next-line unicorn/prefer-object-from-entries
-    const paths = routes.reduce<PathsObject>(
-      (pathsObject, { path, method, operation }: RouteObject) => {
-        const methodObject = pathsObject[path];
-
-        /* eslint-disable @silverhand/fp/no-mutation */
-        if (methodObject) {
-          methodObject[method] = operation;
-        } else {
-          pathsObject[path] = { [method]: operation };
-        }
-        /* eslint-enable @silverhand/fp/no-mutation */
-
-        return pathsObject;
-      },
-      Object.create(null)
-    );
+    for (const { path, method, operation } of routes) {
+      pathMap.set(path, { ...pathMap.get(path), [method]: operation });
+    }
 
     const document: OpenAPIV3.Document = {
       openapi: '3.0.1',
@@ -86,7 +75,7 @@ export default function swaggerRoutes<T extends AnonymousRouter, R extends Route
         title: 'Logto Core',
         version: '0.1.0',
       },
-      paths,
+      paths: Object.fromEntries(pathMap),
     };
 
     ctx.body = document;
