@@ -7,17 +7,14 @@ import { zodTypeToSwagger } from '@/utils/zod';
 
 import { AnonymousRouter } from './types';
 
-// According to the HTTP methods that are declared in the koa-router.
-type HttpMethod = 'get' | 'post' | 'put' | 'link' | 'unlink' | 'delete' | 'options';
-
 type RouteObject = {
   path: string;
-  method: HttpMethod;
+  method: OpenAPIV3.HttpMethods;
   operation: OpenAPIV3.OperationObject;
 };
 
 type MethodMap = {
-  [key in HttpMethod]?: OpenAPIV3.OperationObject;
+  [key in OpenAPIV3.HttpMethods]?: OpenAPIV3.OperationObject;
 };
 
 const buildOperation = (stack: IMiddleware[], path: string): OpenAPIV3.OperationObject => {
@@ -56,7 +53,7 @@ export default function swaggerRoutes<T extends AnonymousRouter, R extends Route
           .filter((method) => method !== 'HEAD')
           .map((method) => ({
             path: `/api${path}`,
-            method: method.toLowerCase() as HttpMethod,
+            method: method.toLowerCase() as OpenAPIV3.HttpMethods,
             operation: buildOperation(stack, path),
           }))
       )
