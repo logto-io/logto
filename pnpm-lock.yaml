@@ -798,7 +798,7 @@ importers:
       nanoid: ^3.1.23
       nock: ^13.2.2
       oidc-provider: ^7.10.0
-      openapi-types: ^11.0.0
+      openapi-types: ^12.0.0
       p-retry: ^4.6.1
       prettier: ^2.3.2
       query-string: ^7.0.1
@@ -890,7 +890,7 @@ importers:
       jest-matcher-specific-error: 1.0.0
       lint-staged: 13.0.0
       nock: 13.2.2
-      openapi-types: 11.0.0
+      openapi-types: 12.0.0
       prettier: 2.5.1
       snake-case: 3.0.4
       supertest: 6.2.2
@@ -16296,8 +16296,8 @@ packages:
       is-wsl: 2.2.0
     dev: true
 
-  /openapi-types/11.0.0:
-    resolution: {integrity: sha512-GB+QO6o1hAtKsb8tP3/FTD5jpkdKrf42L4Gel9UySngMurzr+Q9pO+dtnmySQCzoCEfJr39IH6bveEn71xNcVg==}
+  /openapi-types/12.0.0:
+    resolution: {integrity: sha512-6Wd9k8nmGQHgCbehZCP6wwWcfXcvinhybUTBatuhjRsCxUIujuYFZc9QnGeae75CyHASewBtxs0HX/qwREReUw==}
     dev: true
 
   /opener/1.5.2:
