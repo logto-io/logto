@@ -67,7 +67,7 @@ const RegisterForm = () => {
   });
 
   return (
-    <form className={styles.form}>
+    <form>
       <Input
         className={styles.input}
         {...register('username', {
