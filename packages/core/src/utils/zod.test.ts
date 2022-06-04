@@ -54,10 +54,6 @@ describe('zodTypeToSwagger', () => {
     expect(zodTypeToSwagger(string().nullable())).toEqual({ type: 'string', nullable: true });
   });
 
-  it('nullable type', () => {
-    expect(zodTypeToSwagger(string().nullable())).toEqual({ type: 'string', nullable: true });
-  });
-
   it('native enum type', () => {
     expect(zodTypeToSwagger(nativeEnum(ApplicationType))).toEqual({
       type: 'string',
