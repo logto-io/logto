@@ -22,7 +22,7 @@ const AppContent = () => {
 
   const location = useLocation();
   const navigate = useNavigate();
-  const sections = useSidebarMenuItems();
+  const [, firstItem] = useSidebarMenuItems();
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -33,9 +33,9 @@ const AppContent = () => {
   useEffect(() => {
     // Navigate to the first menu item after configs are loaded.
     if (!isLoading && location.pathname === '/') {
-      navigate(getPath(sections[0]?.items[0]?.title ?? ''));
+      navigate(getPath(firstItem?.title ?? ''));
     }
-  }, [location.pathname, isLoading, sections, navigate]);
+  }, [firstItem?.title, isLoading, location.pathname, navigate]);
 
   if (error) {
     if (error instanceof LogtoClientError) {

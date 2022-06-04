@@ -1,3 +1,4 @@
+import { Optional } from '@silverhand/essentials';
 import React, { FC, ReactNode } from 'react';
 import { TFuncKey } from 'react-i18next';
 
@@ -27,12 +28,22 @@ type SidebarSection = {
   items: SidebarItem[];
 };
 
-export const useSidebarMenuItems = (): SidebarSection[] => {
+const findFirstItem = (sections: SidebarSection[]): Optional<SidebarItem> => {
+  for (const section of sections) {
+    const found = section.items.find((item) => !item.isHidden);
+
+    if (found) {
+      return found;
+    }
+  }
+};
+
+export const useSidebarMenuItems = (): [SidebarSection[], Optional<SidebarItem>] => {
   const {
     data: { hideGetStarted },
   } = useUserPreferences();
 
-  return [
+  const sections: SidebarSection[] = [
     {
       title: 'overview',
       items: [
@@ -96,4 +107,6 @@ export const useSidebarMenuItems = (): SidebarSection[] => {
       ],
     },
   ];
+
+  return [sections, findFirstItem(sections)];
 };
