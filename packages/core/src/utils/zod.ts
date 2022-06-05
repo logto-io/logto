@@ -1,12 +1,47 @@
 import { conditional } from '@silverhand/essentials';
 import { OpenAPIV3 } from 'openapi-types';
-import { ZodArray, ZodBoolean, ZodNumber, ZodObject, ZodOptional, ZodString } from 'zod';
+import {
+  ZodArray,
+  ZodBoolean,
+  ZodNativeEnum,
+  ZodNullable,
+  ZodNumber,
+  ZodObject,
+  ZodOptional,
+  ZodString,
+  ZodUnion,
+  ZodUnknown,
+} from 'zod';
 
 import RequestError from '@/errors/RequestError';
 
 export const zodTypeToSwagger = (config: unknown): OpenAPIV3.SchemaObject => {
   if (config instanceof ZodOptional) {
     return zodTypeToSwagger(config._def.innerType);
+  }
+
+  if (config instanceof ZodNullable) {
+    return {
+      nullable: true,
+      ...zodTypeToSwagger(config._def.innerType),
+    };
+  }
+
+  if (config instanceof ZodNativeEnum) {
+    return {
+      type: 'string',
+      enum: Object.values(config.enum),
+    };
+  }
+
+  if (config instanceof ZodUnion) {
+    return {
+      description: 'union',
+    };
+  }
+
+  if (config instanceof ZodUnknown) {
+    return { description: 'unknown' };
   }
 
   if (config instanceof ZodObject) {

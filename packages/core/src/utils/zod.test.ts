@@ -1,4 +1,5 @@
-import { string, boolean, number, object } from 'zod';
+import { ApplicationType } from '@logto/schemas';
+import { string, boolean, number, object, nativeEnum } from 'zod';
 
 import RequestError from '@/errors/RequestError';
 
@@ -45,7 +46,24 @@ describe('zodTypeToSwagger', () => {
     expect(zodTypeToSwagger(string().optional())).toEqual({ type: 'string' });
   });
 
-  it('unknow type', () => {
+  it('nullable type', () => {
+    expect(zodTypeToSwagger(string().nullable())).toEqual({ type: 'string', nullable: true });
+  });
+
+  it('unknown type', () => {
+    expect(zodTypeToSwagger(string().nullable())).toEqual({ type: 'string', nullable: true });
+  });
+
+  it('native enum type', () => {
+    expect(zodTypeToSwagger(nativeEnum(ApplicationType))).toEqual({
+      type: 'string',
+      enum: Object.values(ApplicationType),
+    });
+  });
+
+  // TODO: ZodUnion, ZodUnknown, and etc.
+
+  it('unexpected type', () => {
     expect(() => zodTypeToSwagger('test')).toMatchError(
       new RequestError('swagger.invalid_zod_type', 'test')
     );

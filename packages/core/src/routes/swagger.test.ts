@@ -1,18 +1,65 @@
-import { createRequester } from '@/utils/test-utils';
+import Koa from 'koa';
+import Router from 'koa-router';
+import request from 'supertest';
 
-import statusRoutes from './status';
+import { AnonymousRouter, AuthedRouter } from '@/routes/types';
+
 import swaggerRoutes from './swagger';
 
 describe('swagger api', () => {
-  const swaggerRequest = createRequester({ anonymousRoutes: [swaggerRoutes, statusRoutes] });
+  const authedRouter: AuthedRouter = new Router();
+  authedRouter.get('/mock', () => ({}));
+  authedRouter.patch('/mock', () => ({}));
+  authedRouter.post('/mock', () => ({}));
+  authedRouter.delete('/mock', () => ({}));
 
-  it('GET /swagger', async () => {
-    const response = await swaggerRequest.get('/swagger.json');
-    expect(response.status).toEqual(200);
-    expect(response.body).toHaveProperty('openapi');
-    expect(response.body).toHaveProperty('info');
+  const anonymousRouter: AnonymousRouter = new Router();
+  swaggerRoutes(anonymousRouter, [authedRouter, anonymousRouter]);
 
-    // TODO: find a better way to test the paths details should contain api list
-    expect(response.body).toHaveProperty('paths');
+  const app = new Koa();
+  app.use(anonymousRouter.routes()).use(anonymousRouter.allowedMethods());
+
+  const swaggerRequest = request(app.callback());
+
+  describe('GET /swagger.json', () => {
+    it('should contain standard fields', async () => {
+      const response = await swaggerRequest.get('/swagger.json');
+      expect(response.status).toEqual(200);
+      expect(response.body).toMatchObject(
+        expect.objectContaining({
+          /* eslint-disable @typescript-eslint/no-unsafe-assignment */
+          openapi: expect.any(String),
+          info: expect.objectContaining({
+            title: expect.any(String),
+            version: expect.any(String),
+          }),
+          paths: expect.any(Object),
+          /* eslint-enable @typescript-eslint/no-unsafe-assignment */
+        })
+      );
+    });
+
+    it('should contain specific paths', async () => {
+      const response = await swaggerRequest.get('/swagger.json');
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      const { paths } = response.body;
+
+      expect(Object.entries(paths)).toHaveLength(2);
+      expect(paths).toMatchObject(
+        expect.objectContaining({
+          /* eslint-disable @typescript-eslint/no-unsafe-assignment */
+          '/api/mock': expect.objectContaining({
+            get: expect.anything(),
+            patch: expect.anything(),
+            post: expect.anything(),
+            delete: expect.anything(),
+          }),
+          '/api/swagger.json': expect.objectContaining({
+            get: expect.anything(),
+          }),
+          /* eslint-enable @typescript-eslint/no-unsafe-assignment */
+        })
+      );
+    });
   });
 });
