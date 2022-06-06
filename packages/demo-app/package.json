@@ -17,7 +17,7 @@
     "stylelint": "stylelint \"src/**/*.scss\""
   },
   "devDependencies": {
-    "@logto/react": "^0.1.13",
+    "@logto/react": "^0.1.14",
     "@logto/schemas": "^0.1.0",
     "@logto/shared": "^0.1.0",
     "@parcel/core": "2.5.0",
