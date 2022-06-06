@@ -1,12 +1,12 @@
 ### Google
-The Google connector provides a succinct way to let your application can use Google’s OAuth 2.0 authentication system for user login.
+The Google connector provides a succinct way for your application to use Google’s OAuth 2.0 authentication system for users to login.
 
 # Prerequisite
 
 - A Google account
-- OAuth 2.0 credentials ( a client id an a client secret)
+- OAuth 2.0 credentials (client ID an a client secret)
 
-You can create Web OAuth 2.0 credentials according to [the officer guide](https://developers.google.com/identity/protocols/oauth2/openid-connect#appsetup) and remember to create a client id for the web application. 
+You follow the [Google Identity OAuth 2.0 Guideline](https://developers.google.com/identity/protocols/oauth2/openid-connect#appsetup) to create Web OAuth 2.0 credentials and don't forget to create a client ID for your web application. 
 Finally, you should get a client ID and client secret.
 
 # Setting up the client
