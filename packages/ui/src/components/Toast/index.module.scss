@@ -32,7 +32,7 @@
 
 :global(body.desktop) {
   .toast {
-    border: _.border(var(--color-divider));
+    border: _.border(var(--color-toast-border));
     padding: _.unit(3) _.unit(4);
   }
 }

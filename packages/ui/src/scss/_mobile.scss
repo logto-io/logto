@@ -47,6 +47,7 @@ $font-family: -apple-system,
 @mixin colors-universal {
   --color-primary-button-text: #fff;
   --color-toast: #34353f;
+  --color-toast-border: #444748;
   --color-overlay: rgba(0, 0, 0, 30%);
   // shadows
   --shadow-2: 0 4px 12px rgba(0, 0, 0, 12%);

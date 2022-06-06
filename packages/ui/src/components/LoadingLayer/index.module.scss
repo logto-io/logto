@@ -35,6 +35,6 @@
 
 :global(body.desktop) {
   .container {
-    border: _.border(var(--color-divider));
+    border: _.border(var(--color-toast-border));
   }
 }
