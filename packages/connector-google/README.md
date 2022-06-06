@@ -13,8 +13,8 @@ Finally, you should get a client ID and client secret.
 
 1. Select the **Credentials** page in API Console
 2. Click the client you have just created in the **OAuth 2.0 Client IDs** section
-3. Set up the ****Authorized JavaScript origins****, which are origins where the logto authorization page is hosted. In our case this will be `${your_logto_domain}`.
-4. Set up the ****Authorized redirect URIs****, which is used to redirect the user to the application after the user has logged in. In our case, this will be `${your_logto_domain}/callback/google-universal`.
+3. Set up the ****Authorized JavaScript origins****, which are origins where the logto authorization page is hosted. In our case this will be `${your_logto_origin}`. eg.`https://logto.dev`.
+4. Set up the ****Authorized redirect URIs****, which is used to redirect the user to the application after the user has logged in. In our case, this will be `${your_logto_origin}/callback/google-universal`. eg. `https://logto.dev/callback/google-universal`.
 
 # Settings
 | Name | Type |
