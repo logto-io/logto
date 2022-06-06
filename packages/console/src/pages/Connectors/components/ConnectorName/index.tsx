@@ -55,7 +55,7 @@ const ConnectorName = ({ type, connectors, onClickSetup }: Props) => {
                     platform && (
                       <div key={id} className={styles.platform}>
                         <ConnectorPlatformIcon platform={platform} />
-                        {t(connectorPlatformLabel[platform])}
+                        {t(`admin_console.${connectorPlatformLabel[platform]}`)}
                       </div>
                     )
                 )}
