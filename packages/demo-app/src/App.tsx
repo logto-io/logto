@@ -1,36 +1,44 @@
-import { LogtoProvider, useLogto } from '@logto/react';
+import { LogtoProvider, useLogto, UserInfoResponse } from '@logto/react';
 import { signInNotificationStorageKey } from '@logto/schemas';
 import { demoAppApplicationId } from '@logto/schemas/lib/seeds';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import '@/scss/normalized.scss';
 import * as styles from './App.module.scss';
 import Callback from './Callback';
 import congrats from './assets/congrats.svg';
+import initI18n from './i18n/init';
+
+void initI18n();
 
 const Main = () => {
-  const { isAuthenticated, signIn } = useLogto();
+  const { isAuthenticated, fetchUserInfo, signIn, signOut } = useLogto();
+  const [user, setUser] = useState<UserInfoResponse>();
+  const { t } = useTranslation(undefined, { keyPrefix: 'demo_app' });
   const isInCallback = Boolean(new URL(window.location.href).searchParams.get('code'));
-
-  // Pending SDK fix
-  const username = 'foo';
-  const userId = 'bar';
 
   useEffect(() => {
     if (!isAuthenticated && !isInCallback) {
-      sessionStorage.setItem(
-        signInNotificationStorageKey,
-        'Use the admin username and password to sign in this demo.'
-      );
+      sessionStorage.setItem(signInNotificationStorageKey, t('notification'));
       void signIn(window.location.href);
     }
-  }, [isAuthenticated, isInCallback, signIn]);
+  }, [isAuthenticated, isInCallback, signIn, t]);
+
+  useEffect(() => {
+    (async () => {
+      if (isAuthenticated) {
+        const userInfo = await fetchUserInfo();
+        setUser(userInfo);
+      }
+    })();
+  }, [isAuthenticated, fetchUserInfo]);
 
   if (isInCallback) {
     return <Callback />;
   }
 
-  if (!isAuthenticated) {
+  if (!isAuthenticated || !user) {
     return null;
   }
 
@@ -38,29 +46,35 @@ const Main = () => {
     <div className={styles.app}>
       <div className={styles.card}>
         <img src={congrats} alt="Congrats" />
-        <div className={styles.title}>You&apos;ve successfully signed in the demo app!</div>
-        <div className={styles.text}>Here is your personal information:</div>
+        <div className={styles.title}>{t('title')}</div>
+        <div className={styles.text}>{t('subtitle')}</div>
         <div className={styles.infoCard}>
-          <p>
-            Username: <b>{username}</b>
-          </p>
-          <p>
-            User ID: <b>{userId}</b>
-          </p>
+          <div>
+            {t('username')}
+            <span>{user.username}</span>
+          </div>
+          <div>
+            {t('user_id')}
+            <span>{user.sub}</span>
+          </div>
         </div>
-        {/* Pending SDK fix */}
-        <div className={styles.button}>Sign out the demo app</div>
+        <div
+          className={styles.button}
+          onClick={async () => signOut(`${window.location.origin}/demo-app`)}
+        >
+          {t('sign_out')}
+        </div>
         <div className={styles.continue}>
           <div className={styles.hr} />
-          or continue to explore
+          {t('continue_explore')}
           <div className={styles.hr} />
         </div>
         <div className={styles.actions}>
-          <a href="#">Customize sign-in experience</a>
+          <a href="#">{t('customize_sign_in_experience')}</a>
           <span />
-          <a href="#">Enable passwordless</a>
+          <a href="#">{t('enable_passwordless')}</a>
           <span />
-          <a href="#">Add a social connector</a>
+          <a href="#">{t('add_social_connector')}</a>
         </div>
       </div>
     </div>
