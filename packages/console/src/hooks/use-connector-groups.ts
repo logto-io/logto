@@ -1,4 +1,4 @@
-import { ConnectorDTO } from '@logto/schemas';
+import { ConnectorDTO, ConnectorType } from '@logto/schemas';
 import { useMemo } from 'react';
 import useSWR from 'swr';
 
@@ -15,7 +15,10 @@ const useConnectorGroups = () => {
     }
 
     return data.reduce<ConnectorGroup[]>((previous, item) => {
-      const groupIndex = previous.findIndex(({ target }) => target === item.target);
+      const groupIndex = previous.findIndex(
+        // Only group social connectors
+        ({ target }) => target === item.target && item.type === ConnectorType.Social
+      );
 
       if (groupIndex === -1) {
         return [
@@ -24,6 +27,7 @@ const useConnectorGroups = () => {
             id: item.id, // Take first connector's id as groupId, only used for indexing.
             name: item.name,
             logo: item.logo,
+            description: item.description,
             target: item.target,
             type: item.type,
             enabled: item.enabled,
@@ -50,6 +54,7 @@ const useConnectorGroups = () => {
   return {
     ...rest,
     data: groups,
+    connectors: data,
   };
 };
 

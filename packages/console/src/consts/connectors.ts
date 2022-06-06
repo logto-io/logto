@@ -1,4 +1,4 @@
-import { I18nKey } from '@logto/phrases';
+import { AdminConsoleKey, I18nKey } from '@logto/phrases';
 import { ConnectorPlatform, ConnectorType } from '@logto/schemas';
 
 import emailConnectorIcon from '@/assets/images/connector-email.svg';
@@ -26,11 +26,11 @@ export const connectorIconPlaceHolder: IconPlaceHolder = Object.freeze({
 });
 
 type ConnectorPlatformLabel = {
-  [key in ConnectorPlatform]: I18nKey;
+  [key in ConnectorPlatform]: AdminConsoleKey;
 };
 
 export const connectorPlatformLabel: ConnectorPlatformLabel = Object.freeze({
-  [ConnectorPlatform.Native]: 'admin_console.connectors.platform.native',
-  [ConnectorPlatform.Universal]: 'admin_console.connectors.platform.universal',
-  [ConnectorPlatform.Web]: 'admin_console.connectors.platform.web',
+  [ConnectorPlatform.Native]: 'connectors.platform.native',
+  [ConnectorPlatform.Universal]: 'connectors.platform.universal',
+  [ConnectorPlatform.Web]: 'connectors.platform.web',
 });
