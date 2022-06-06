@@ -28,28 +28,29 @@ describe('validateConfig()', () => {
 });
 
 describe('sendMessage()', () => {
+  beforeEach(() => {
+    jest.spyOn(aliyunSmsMethods, 'getConfig').mockResolvedValueOnce(mockedConnectorConfig);
+  });
+
   afterEach(() => {
     jest.clearAllMocks();
   });
 
   it('should call singleSendMail() and replace code in content', async () => {
-    jest.spyOn(aliyunSmsMethods, 'getConfig').mockResolvedValueOnce(mockedConnectorConfig);
     await aliyunSmsMethods.sendMessage(phoneTest, 'SignIn', { code: codeTest });
-    const { templates, ...credentials } = mockedConnectorConfig;
     expect(sendSms).toHaveBeenCalledWith(
       expect.objectContaining({
-        AccessKeyId: credentials.accessKeyId,
+        AccessKeyId: mockedConnectorConfig.accessKeyId,
         PhoneNumbers: phoneTest,
-        SignName: credentials.signName,
+        SignName: mockedConnectorConfig.signName,
         TemplateCode: 'code',
         TemplateParam: `{"code":"${codeTest}"}`,
       }),
-      'accessKeySecret'
+      mockedConnectorConfig.accessKeySecret
     );
   });
 
   it('throws if template is missing', async () => {
-    jest.spyOn(aliyunSmsMethods, 'getConfig').mockResolvedValueOnce(mockedConnectorConfig);
     await expect(
       aliyunSmsMethods.sendMessage(phoneTest, 'Register', { code: codeTest })
     ).rejects.toThrow();

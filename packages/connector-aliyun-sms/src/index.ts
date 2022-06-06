@@ -11,7 +11,7 @@ import { assert } from '@silverhand/essentials';
 
 import { defaultMetadata } from './constant';
 import { sendSms } from './single-send-text';
-import { aliyunSmsConfigGuard, AliyunSmsConfig } from './types';
+import { aliyunSmsConfigGuard, AliyunSmsConfig, sendSmsResponseGuard } from './types';
 
 export default class AliyunSmsConnector implements SmsConnector {
   public metadata: ConnectorMetadata = defaultMetadata;
@@ -37,7 +37,7 @@ export default class AliyunSmsConnector implements SmsConnector {
       new ConnectorError(ConnectorErrorCodes.TemplateNotFound, `Cannot find template!`)
     );
 
-    const { body } = await sendSms(
+    const httpResponse = await sendSms(
       {
         AccessKeyId: accessKeyId,
         PhoneNumbers: phone,
@@ -47,7 +47,12 @@ export default class AliyunSmsConnector implements SmsConnector {
       },
       accessKeySecret
     );
+    const { body: rawBody } = httpResponse;
+    assert(typeof rawBody === 'string', new ConnectorError(ConnectorErrorCodes.InvalidResponse));
+    const body = sendSmsResponseGuard.parse(JSON.parse(rawBody));
 
     assert(body.Code === 'OK', new ConnectorError(ConnectorErrorCodes.General, body.Message));
+
+    return httpResponse;
   };
 }

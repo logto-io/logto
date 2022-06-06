@@ -1,7 +1,7 @@
 import { Response } from 'got';
 
 import { endpoint, staticConfigs } from './constant';
-import { PublicParameters, SendSms, SendSmsResponse } from './types';
+import { PublicParameters, SendSms } from './types';
 import { request } from './utils';
 
 /**
@@ -10,10 +10,6 @@ import { request } from './utils';
 export const sendSms = async (
   parameters: PublicParameters & SendSms,
   accessKeySecret: string
-): Promise<Response<SendSmsResponse>> => {
-  return request<SendSmsResponse>(
-    endpoint,
-    { Action: 'SendSms', ...staticConfigs, ...parameters },
-    accessKeySecret
-  );
+): Promise<Response> => {
+  return request(endpoint, { Action: 'SendSms', ...staticConfigs, ...parameters }, accessKeySecret);
 };
