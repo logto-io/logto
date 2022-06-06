@@ -75,13 +75,7 @@ const BrandingForm = () => {
         <TextInput
           {...register('branding.logoUrl', {
             required: true,
-            validate: (value) => {
-              if (uriValidator({ verifyBlank: false })(value)) {
-                return true;
-              }
-
-              return t('errors.invalid_uri_format');
-            },
+            validate: (value) => !value || uriValidator(value) || t('errors.invalid_uri_format'),
           })}
           hasError={Boolean(errors.branding?.logoUrl)}
           errorMessage={errors.branding?.logoUrl?.message}
@@ -91,17 +85,7 @@ const BrandingForm = () => {
         <FormField title="admin_console.sign_in_exp.branding.dark_logo_image_url">
           <TextInput
             {...register('branding.darkLogoUrl', {
-              validate: (value) => {
-                if (!value) {
-                  return true;
-                }
-
-                if (uriValidator({ verifyBlank: false })(value)) {
-                  return true;
-                }
-
-                return t('errors.invalid_uri_format');
-              },
+              validate: (value) => !value || uriValidator(value) || t('errors.invalid_uri_format'),
             })}
             hasError={Boolean(errors.branding?.darkLogoUrl)}
             errorMessage={errors.branding?.darkLogoUrl?.message}

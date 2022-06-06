@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import FormField from '@/components/FormField';
 import Switch from '@/components/Switch';
 import TextInput from '@/components/TextInput';
+import { uriValidator } from '@/utilities/validator';
 
 import { SignInExperienceForm } from '../types';
 import * as styles from './index.module.scss';
@@ -33,8 +34,12 @@ const TermsForm = () => {
         tooltip="admin_console.sign_in_exp.terms_of_use.terms_of_use_tip"
       >
         <TextInput
-          {...register('termsOfUse.contentUrl', { required: enabled })}
+          {...register('termsOfUse.contentUrl', {
+            required: enabled,
+            validate: (value) => !value || uriValidator(value) || t('errors.invalid_uri_format'),
+          })}
           hasError={Boolean(errors.termsOfUse)}
+          errorMessage={errors.termsOfUse?.contentUrl?.message}
         />
       </FormField>
     </>
