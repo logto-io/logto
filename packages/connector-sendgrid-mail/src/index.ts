@@ -70,20 +70,17 @@ export default class SendGridMailConnector implements EmailConnector {
     };
 
     try {
-      const httpResponse = await got.post(endpoint, {
+      return await got.post(endpoint, {
         headers: {
           Authorization: 'Bearer ' + apiKey,
           'Content-Type': 'application/json',
         },
         json: parameters,
       });
-      const { body, statusCode: httpCode } = httpResponse;
-
-      return { body, httpCode };
     } catch (error: unknown) {
       if (error instanceof HTTPError) {
         const {
-          response: { body: rawBody, statusCode: httpCode },
+          response: { body: rawBody },
         } = error;
         assert(
           typeof rawBody === 'string',
@@ -91,7 +88,7 @@ export default class SendGridMailConnector implements EmailConnector {
         );
         const body = sendEmailErrorResponseGuard.parse(JSON.parse(rawBody));
 
-        return { body, httpCode };
+        throw new ConnectorError(ConnectorErrorCodes.General, body.errors[0]?.message);
       }
 
       throw error;

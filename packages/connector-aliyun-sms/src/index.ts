@@ -37,7 +37,7 @@ export default class AliyunSmsConnector implements SmsConnector {
       new ConnectorError(ConnectorErrorCodes.TemplateNotFound, `Cannot find template!`)
     );
 
-    const httpResponse = await sendSms(
+    const { body } = await sendSms(
       {
         AccessKeyId: accessKeyId,
         PhoneNumbers: phone,
@@ -47,8 +47,7 @@ export default class AliyunSmsConnector implements SmsConnector {
       },
       accessKeySecret
     );
-    const { body, statusCode } = httpResponse;
 
-    return { body, httpCode: body.Code === 'OK' ? statusCode : 400 };
+    assert(body.Code === 'OK', new ConnectorError(ConnectorErrorCodes.General, body.Message));
   };
 }

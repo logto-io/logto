@@ -14,7 +14,6 @@ import { defaultMetadata, endpoint } from './constant';
 import {
   twilioSmsConfigGuard,
   sendSmsErrorResponseGuard,
-  SendSmsResponse,
   TwilioSmsConfig,
   PublicParameters,
 } from './types';
@@ -56,24 +55,18 @@ export default class TwilioSmsConnector implements SmsConnector {
     };
 
     try {
-      const httpResponse = await got.post<SendSmsResponse>(
-        endpoint.replace(/{{accountSID}}/g, accountSID),
-        {
-          headers: {
-            Authorization:
-              'Basic ' + Buffer.from([accountSID, authToken].join(':')).toString('base64'),
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
-          body: new URLSearchParams(parameters).toString(),
-        }
-      );
-      const { body, statusCode: httpCode } = httpResponse;
-
-      return { body, httpCode };
+      return await got.post(endpoint.replace(/{{accountSID}}/g, accountSID), {
+        headers: {
+          Authorization:
+            'Basic ' + Buffer.from([accountSID, authToken].join(':')).toString('base64'),
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: new URLSearchParams(parameters).toString(),
+      });
     } catch (error: unknown) {
       if (error instanceof HTTPError) {
         const {
-          response: { body: rawBody, statusCode: httpCode },
+          response: { body: rawBody },
         } = error;
         assert(
           typeof rawBody === 'string',
@@ -81,7 +74,7 @@ export default class TwilioSmsConnector implements SmsConnector {
         );
         const body = sendSmsErrorResponseGuard.parse(JSON.parse(rawBody));
 
-        return { body, httpCode };
+        throw new ConnectorError(ConnectorErrorCodes.General, body.message);
       }
 
       throw error;

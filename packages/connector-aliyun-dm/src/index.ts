@@ -42,7 +42,7 @@ export default class AliyunDmConnector implements EmailConnector {
     );
 
     try {
-      const httpResponse = await singleSendMail(
+      return await singleSendMail(
         {
           AccessKeyId: accessKeyId,
           AccountName: accountName,
@@ -58,13 +58,10 @@ export default class AliyunDmConnector implements EmailConnector {
         },
         accessKeySecret
       );
-      const { body, statusCode: httpCode } = httpResponse;
-
-      return { body, httpCode };
     } catch (error: unknown) {
       if (error instanceof HTTPError) {
         const {
-          response: { body: rawBody, statusCode: httpCode },
+          response: { body: rawBody },
         } = error;
         assert(
           typeof rawBody === 'string',
@@ -72,7 +69,7 @@ export default class AliyunDmConnector implements EmailConnector {
         );
         const body = singleSendMailErrorResponseGuard.parse(JSON.parse(rawBody));
 
-        return { body, httpCode };
+        throw new ConnectorError(ConnectorErrorCodes.General, body.Message);
       }
 
       throw error;
