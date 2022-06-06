@@ -42,7 +42,7 @@ export const zodTypeToSwagger = (config: unknown): OpenAPIV3.SchemaObject => {
   }
 
   if (config instanceof ZodUnknown) {
-    return {};
+    return {}; // I.e. any data type
   }
 
   if (config instanceof ZodObject) {
