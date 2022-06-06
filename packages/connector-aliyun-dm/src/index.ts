@@ -8,11 +8,11 @@ import {
   GetConnectorConfig,
 } from '@logto/connector-types';
 import { assert } from '@silverhand/essentials';
-import { Response } from 'got';
+import { HTTPError } from 'got';
 
 import { defaultMetadata } from './constant';
 import { singleSendMail } from './single-send-mail';
-import { SendEmailResponse, AliyunDmConfig, aliyunDmConfigGuard } from './types';
+import { AliyunDmConfig, aliyunDmConfigGuard, singleSendMailErrorResponseGuard } from './types';
 
 export default class AliyunDmConnector implements EmailConnector {
   public metadata: ConnectorMetadata = defaultMetadata;
@@ -27,11 +27,7 @@ export default class AliyunDmConnector implements EmailConnector {
     }
   };
 
-  public sendMessage: EmailSendMessageFunction<Response<SendEmailResponse>> = async (
-    address,
-    type,
-    data
-  ) => {
+  public sendMessage: EmailSendMessageFunction = async (address, type, data) => {
     const config = await this.getConfig(this.metadata.id);
     await this.validateConfig(config);
     const { accessKeyId, accessKeySecret, accountName, fromAlias, templates } = config;
@@ -45,21 +41,41 @@ export default class AliyunDmConnector implements EmailConnector {
       )
     );
 
-    return singleSendMail(
-      {
-        AccessKeyId: accessKeyId,
-        AccountName: accountName,
-        ReplyToAddress: 'false',
-        AddressType: '1',
-        ToAddress: address,
-        FromAlias: fromAlias,
-        Subject: template.subject,
-        HtmlBody:
-          typeof data.code === 'string'
-            ? template.content.replace(/{{code}}/g, data.code)
-            : template.content,
-      },
-      accessKeySecret
-    );
+    try {
+      const httpResponse = await singleSendMail(
+        {
+          AccessKeyId: accessKeyId,
+          AccountName: accountName,
+          ReplyToAddress: 'false',
+          AddressType: '1',
+          ToAddress: address,
+          FromAlias: fromAlias,
+          Subject: template.subject,
+          HtmlBody:
+            typeof data.code === 'string'
+              ? template.content.replace(/{{code}}/g, data.code)
+              : template.content,
+        },
+        accessKeySecret
+      );
+      const { body, statusCode: httpCode } = httpResponse;
+
+      return { body, httpCode };
+    } catch (error: unknown) {
+      if (error instanceof HTTPError) {
+        const {
+          response: { body: rawBody, statusCode: httpCode },
+        } = error;
+        assert(
+          typeof rawBody === 'string',
+          new ConnectorError(ConnectorErrorCodes.InvalidResponse)
+        );
+        const body = singleSendMailErrorResponseGuard.parse(JSON.parse(rawBody));
+
+        return { body, httpCode };
+      }
+
+      throw error;
+    }
   };
 }

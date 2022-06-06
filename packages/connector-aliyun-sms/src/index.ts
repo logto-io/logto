@@ -47,8 +47,8 @@ export default class AliyunSmsConnector implements SmsConnector {
       },
       accessKeySecret
     );
-    const { headers, statusCode, body } = httpResponse;
+    const { body, statusCode } = httpResponse;
 
-    return { body, headers, httpCode: body.Code === 'OK' ? statusCode : 400 };
+    return { body, httpCode: body.Code === 'OK' ? statusCode : 400 };
   };
 }

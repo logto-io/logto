@@ -1,7 +1,5 @@
 import { z } from 'zod';
 
-export type { Response } from 'got';
-
 export type SendEmailResponse = { EnvId: string; RequestId: string };
 
 /**
@@ -51,3 +49,15 @@ export type PublicParameters = {
   Timestamp?: string;
   Version?: string;
 };
+
+/**
+ * @doc https://next.api.aliyun.com/troubleshoot
+ */
+export const singleSendMailErrorResponseGuard = z.object({
+  Code: z.string(),
+  Message: z.string(),
+  RequestId: z.string(),
+  HostId: z.string(),
+});
+
+export type SingleSendMailErrorResponse = z.infer<typeof singleSendMailErrorResponseGuard>;

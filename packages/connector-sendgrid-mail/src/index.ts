@@ -7,13 +7,13 @@ import {
   EmailConnector,
   GetConnectorConfig,
 } from '@logto/connector-types';
-import { assert, Nullable } from '@silverhand/essentials';
-import got from 'got';
+import { assert } from '@silverhand/essentials';
+import got, { HTTPError } from 'got';
 
 import { defaultMetadata, endpoint } from './constant';
 import {
   sendGridMailConfigGuard,
-  SendEmailResponse,
+  sendEmailErrorResponseGuard,
   SendGridMailConfig,
   EmailData,
   Personalization,
@@ -34,11 +34,7 @@ export default class SendGridMailConnector implements EmailConnector {
     }
   };
 
-  public sendMessage: EmailSendMessageFunction<Nullable<SendEmailResponse>> = async (
-    address,
-    type,
-    data
-  ) => {
+  public sendMessage: EmailSendMessageFunction = async (address, type, data) => {
     const config = await this.getConfig(this.metadata.id);
     await this.validateConfig(config);
     const { apiKey, fromEmail, fromName, templates } = config;
@@ -73,14 +69,32 @@ export default class SendGridMailConnector implements EmailConnector {
       content: [content],
     };
 
-    return got
-      .post(endpoint, {
+    try {
+      const httpResponse = await got.post(endpoint, {
         headers: {
           Authorization: 'Bearer ' + apiKey,
           'Content-Type': 'application/json',
         },
         json: parameters,
-      })
-      .json<Nullable<SendEmailResponse>>();
+      });
+      const { body, statusCode: httpCode } = httpResponse;
+
+      return { body, httpCode };
+    } catch (error: unknown) {
+      if (error instanceof HTTPError) {
+        const {
+          response: { body: rawBody, statusCode: httpCode },
+        } = error;
+        assert(
+          typeof rawBody === 'string',
+          new ConnectorError(ConnectorErrorCodes.InvalidResponse)
+        );
+        const body = sendEmailErrorResponseGuard.parse(JSON.parse(rawBody));
+
+        return { body, httpCode };
+      }
+
+      throw error;
+    }
   };
 }
