@@ -64,6 +64,8 @@ const PasscodeValidation = ({ type, method, className, target }: Props) => {
   const { run: sendPassCode } = useApi(getSendPasscodeApi(type, method));
 
   const resendPasscodeHandler = useCallback(async () => {
+    setError(undefined);
+
     const result = await sendPassCode(target);
 
     if (result) {
