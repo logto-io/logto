@@ -24,12 +24,7 @@ const ConnectorRow = ({ type, connectors, onClickSetup }: Props) => {
   return (
     <tr>
       <td>
-        <ConnectorName
-          type={type}
-          connector={connectors[0]}
-          isShowId={type !== ConnectorType.Social}
-          onClickSetup={onClickSetup}
-        />
+        <ConnectorName type={type} connectors={connectors} onClickSetup={onClickSetup} />
       </td>
       <td>{t(connectorTitlePlaceHolder[type])}</td>
       <td>

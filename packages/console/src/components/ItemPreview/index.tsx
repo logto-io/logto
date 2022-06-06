@@ -6,7 +6,7 @@ import * as styles from './index.module.scss';
 
 type Props = {
   title: ReactNode;
-  subtitle?: string;
+  subtitle?: ReactNode;
   icon?: ReactNode;
   to?: To;
   size?: 'default' | 'compact';
@@ -29,7 +29,7 @@ const ItemPreview = ({ title, subtitle, icon, to, size = 'default' }: Props) => 
           </Link>
         )}
         {!to && <div className={styles.title}>{title}</div>}
-        {subtitle && <div className={styles.subtitle}>{String(subtitle)}</div>}
+        {subtitle && <div className={styles.subtitle}>{subtitle}</div>}
       </div>
     </div>
   );

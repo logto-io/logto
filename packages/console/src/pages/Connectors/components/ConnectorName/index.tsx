@@ -1,5 +1,4 @@
 import { ConnectorDTO, ConnectorType } from '@logto/schemas';
-import { conditional } from '@silverhand/essentials';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
@@ -7,19 +6,24 @@ import { Link } from 'react-router-dom';
 import Button from '@/components/Button';
 import ItemPreview from '@/components/ItemPreview';
 import UnnamedTrans from '@/components/UnnamedTrans';
-import { connectorIconPlaceHolder, connectorTitlePlaceHolder } from '@/consts/connectors';
+import {
+  connectorIconPlaceHolder,
+  connectorPlatformLabel,
+  connectorTitlePlaceHolder,
+} from '@/consts/connectors';
+import ConnectorPlatformIcon from '@/icons/ConnectorPlatformIcon';
 
 import * as styles from './index.module.scss';
 
 type Props = {
   type: ConnectorType;
-  connector?: ConnectorDTO;
-  isShowId?: boolean;
+  connectors: ConnectorDTO[];
   onClickSetup?: () => void;
 };
 
-const ConnectorName = ({ type, connector, onClickSetup, isShowId = false }: Props) => {
+const ConnectorName = ({ type, connectors, onClickSetup }: Props) => {
   const { t } = useTranslation(undefined);
+  const connector = connectors[0];
 
   if (!connector) {
     return (
@@ -41,7 +45,24 @@ const ConnectorName = ({ type, connector, onClickSetup, isShowId = false }: Prop
     <Link to={`/connectors/${connector.id}`} className={styles.link}>
       <ItemPreview
         title={<UnnamedTrans resource={connector.name} />}
-        subtitle={conditional(isShowId && connector.id)}
+        subtitle={
+          <>
+            {type !== ConnectorType.Social && connector.id}
+            {type === ConnectorType.Social && connectors.length > 1 && (
+              <div className={styles.platforms}>
+                {connectors.map(
+                  ({ id, platform }) =>
+                    platform && (
+                      <div key={id} className={styles.platform}>
+                        <ConnectorPlatformIcon platform={platform} />
+                        {t(connectorPlatformLabel[platform])}
+                      </div>
+                    )
+                )}
+              </div>
+            )}
+          </>
+        }
         icon={<img className={styles.logo} src={connector.logo} />}
       />
     </Link>
