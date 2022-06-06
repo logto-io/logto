@@ -71,29 +71,11 @@ const Main = () => {
                 <Route path=":tab" element={<SignInExperience />} />
               </Route>
               <Route path="settings" element={<Settings />} />
+              <Route path="audit-logs">
+                <Route index element={<AuditLogs />} />
+              </Route>
+              <Route path="dashboard" element={<Dashboard />} />
             </Route>
-            <Route path="api-resources">
-              <Route index element={<ApiResources />} />
-              <Route path=":id" element={<ApiResourceDetails />} />
-            </Route>
-            <Route path="connectors">
-              <Route index element={<Connectors />} />
-              <Route path="social" element={<Connectors />} />
-              <Route path=":connectorId" element={<ConnectorDetails />} />
-            </Route>
-            <Route path="users">
-              <Route index element={<Users />} />
-              <Route path=":id" element={<UserDetails />} />
-            </Route>
-            <Route path="audit-logs">
-              <Route index element={<AuditLogs />} />
-            </Route>
-            <Route path="sign-in-experience">
-              <Route index element={<Navigate to="experience" />} />
-              <Route path=":tab" element={<SignInExperience />} />
-            </Route>
-            <Route path="settings" element={<Settings />} />
-            <Route path="dashboard" element={<Dashboard />} />
           </Routes>
         </AppBoundary>
       </SWRConfig>
