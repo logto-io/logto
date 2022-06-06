@@ -21,24 +21,19 @@ type MethodMap = {
 
 // Parameter serialization: https://swagger.io/docs/specification/serialization
 const buildParameters = (
-  parameters: unknown,
+  zodParameters: unknown,
   inWhere: 'path' | 'query'
 ): OpenAPIV3.ParameterObject[] => {
-  if (!parameters) {
+  if (!zodParameters) {
     return [];
   }
 
-  assertThat(parameters instanceof ZodObject, 'swagger.not_supported_zod_type_for_params');
+  assertThat(zodParameters instanceof ZodObject, 'swagger.not_supported_zod_type_for_params');
 
-  const entries = Object.entries(parameters.shape);
-  const requiredKeys = new Set(
-    entries.filter(([, value]) => !(value instanceof ZodOptional)).map(([key]) => key)
-  );
-
-  return entries.map(([key, value]) => ({
+  return Object.entries(zodParameters.shape).map(([key, value]) => ({
     name: key,
     in: inWhere,
-    required: requiredKeys.has(key),
+    required: !(value instanceof ZodOptional),
     schema: zodTypeToSwagger(value),
   }));
 };
