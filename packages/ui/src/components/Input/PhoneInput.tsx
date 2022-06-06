@@ -74,6 +74,7 @@ const PhoneInput = ({
         {countrySelector}
         <input
           ref={inputReference}
+          autoFocus
           name={name}
           placeholder={placeholder}
           value={nationalNumber}

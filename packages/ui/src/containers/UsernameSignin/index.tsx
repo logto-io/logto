@@ -85,6 +85,7 @@ const UsernameSignin = ({ className }: Props) => {
   return (
     <form className={classNames(styles.form, className)}>
       <Input
+        autoFocus
         className={styles.inputField}
         name="username"
         autoComplete="username"

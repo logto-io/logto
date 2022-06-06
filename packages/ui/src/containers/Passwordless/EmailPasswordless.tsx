@@ -97,6 +97,7 @@ const EmailPasswordless = ({ type, className }: Props) => {
     <>
       <form className={classNames(styles.form, className)}>
         <Input
+          autoFocus
           className={styles.inputField}
           name="email"
           autoComplete="email"
