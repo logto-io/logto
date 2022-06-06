@@ -121,6 +121,8 @@ const translation = {
       required_field_missing: '请输入{{field}}',
       required_field_missing_plural: '{{field}}不能全部为空',
       more_details: '查看详情',
+      username_pattern_error: '用户名只能包含英文字母、数字或下划线，且不以数字开头。',
+      password_pattern_error: '密码应不少于 6 位。',
     },
     tab_sections: {
       overview: '概览',

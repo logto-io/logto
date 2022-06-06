@@ -11,7 +11,11 @@ import * as styles from './index.module.scss';
 
 const TermsForm = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { watch, register } = useFormContext<SignInExperienceForm>();
+  const {
+    watch,
+    register,
+    formState: { errors },
+  } = useFormContext<SignInExperienceForm>();
   const enabled = watch('termsOfUse.enabled');
 
   return (
@@ -28,7 +32,10 @@ const TermsForm = () => {
         title="admin_console.sign_in_exp.terms_of_use.terms_of_use"
         tooltip="admin_console.sign_in_exp.terms_of_use.terms_of_use_tip"
       >
-        <TextInput {...register('termsOfUse.contentUrl', { required: enabled })} />
+        <TextInput
+          {...register('termsOfUse.contentUrl', { required: enabled })}
+          hasError={Boolean(enabled && errors.termsOfUse)}
+        />
       </FormField>
     </>
   );
