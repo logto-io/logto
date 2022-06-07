@@ -8,22 +8,22 @@ import Dropdown, { DropdownItem } from '../Dropdown';
 import IconButton from '../IconButton';
 import * as styles from './index.module.scss';
 
-type Option = {
-  value: string;
+type Option<T> = {
+  value: T;
   title: ReactNode;
 };
 
-type Props = {
-  value?: string;
-  options: Option[];
-  onChange?: (value?: string) => void;
+type Props<T> = {
+  value?: T;
+  options: Array<Option<T>>;
+  onChange?: (value?: T) => void;
   isReadOnly?: boolean;
   hasError?: boolean;
   placeholder?: ReactNode;
   isClearable?: boolean;
 };
 
-const Select = ({
+const Select = <T extends string>({
   value,
   options,
   onChange,
@@ -31,12 +31,12 @@ const Select = ({
   hasError,
   placeholder,
   isClearable,
-}: Props) => {
+}: Props<T>) => {
   const [isOpen, setIsOpen] = useState(false);
   const anchorRef = useRef<HTMLInputElement>(null);
   const current = options.find((option) => value && option.value === value);
 
-  const handleSelect = (value: string) => {
+  const handleSelect = (value: T) => {
     onChange?.(value);
     setIsOpen(false);
   };

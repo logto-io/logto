@@ -88,7 +88,9 @@ const Preview = ({ signInExperience, className }: Props) => {
               { value: Language.Chinese, title: t('sign_in_exp.preview.languages.chinese') },
             ]}
             onChange={(value) => {
-              setLanguage(value as Language);
+              if (value) {
+                setLanguage(value);
+              }
             }}
           />
           <Select
@@ -98,7 +100,9 @@ const Preview = ({ signInExperience, className }: Props) => {
               { value: AppearanceMode.DarkMode, title: t('sign_in_exp.preview.dark') },
             ]}
             onChange={(value) => {
-              setMode(value as AppearanceMode);
+              if (value) {
+                setMode(value);
+              }
             }}
           />
         </div>
