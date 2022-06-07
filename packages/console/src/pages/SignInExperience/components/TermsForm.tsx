@@ -34,7 +34,7 @@ const TermsForm = () => {
       >
         <TextInput
           {...register('termsOfUse.contentUrl', { required: enabled })}
-          hasError={Boolean(enabled && errors.termsOfUse)}
+          hasError={Boolean(errors.termsOfUse)}
         />
       </FormField>
     </>

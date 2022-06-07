@@ -111,7 +111,7 @@ const BrandingForm = () => {
       <FormField isRequired={isSloganRequired} title="admin_console.sign_in_exp.branding.slogan">
         <TextInput
           {...register('branding.slogan', { required: isSloganRequired })}
-          hasError={Boolean(isSloganRequired && errors.branding?.slogan)}
+          hasError={Boolean(errors.branding?.slogan)}
         />
       </FormField>
     </>

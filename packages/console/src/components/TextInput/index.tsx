@@ -14,22 +14,21 @@ const TextInput = (
   reference: ForwardedRef<HTMLInputElement>
 ) => {
   return (
-    <>
+    <div className={classNames(className)}>
       <div
         className={classNames(
           styles.container,
           hasError && styles.error,
           icon && styles.withIcon,
           disabled && styles.disabled,
-          readOnly && styles.readOnly,
-          className
+          readOnly && styles.readOnly
         )}
       >
         {icon && <span className={styles.icon}>{icon}</span>}
         <input type="text" {...rest} ref={reference} disabled={disabled} readOnly={readOnly} />
       </div>
       {hasError && errorMessage && <div className={styles.errorMessage}>{errorMessage}</div>}
-    </>
+    </div>
   );
 };
 
