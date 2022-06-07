@@ -8,13 +8,19 @@ import FormField from '@/components/FormField';
 import RadioGroup, { Radio } from '@/components/RadioGroup';
 import Switch from '@/components/Switch';
 import TextInput from '@/components/TextInput';
+import { uriValidator } from '@/utilities/validator';
 
 import { SignInExperienceForm } from '../types';
 import * as styles from './index.module.scss';
 
 const BrandingForm = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { watch, register, control } = useFormContext<SignInExperienceForm>();
+  const {
+    watch,
+    register,
+    control,
+    formState: { errors },
+  } = useFormContext<SignInExperienceForm>();
 
   const isDarkModeEnabled = watch('branding.isDarkModeEnabled');
   const style = watch('branding.style');
@@ -66,15 +72,47 @@ const BrandingForm = () => {
         />
       </FormField>
       <FormField isRequired title="admin_console.sign_in_exp.branding.logo_image_url">
-        <TextInput {...register('branding.logoUrl', { required: true })} />
+        <TextInput
+          {...register('branding.logoUrl', {
+            required: true,
+            validate: (value) => {
+              if (uriValidator({ verifyBlank: false })(value)) {
+                return true;
+              }
+
+              return t('errors.invalid_uri_format');
+            },
+          })}
+          hasError={Boolean(errors.branding?.logoUrl)}
+          errorMessage={errors.branding?.logoUrl?.message}
+        />
       </FormField>
       {isDarkModeEnabled && (
         <FormField title="admin_console.sign_in_exp.branding.dark_logo_image_url">
-          <TextInput {...register('branding.darkLogoUrl')} />
+          <TextInput
+            {...register('branding.darkLogoUrl', {
+              validate: (value) => {
+                if (!value) {
+                  return true;
+                }
+
+                if (uriValidator({ verifyBlank: false })(value)) {
+                  return true;
+                }
+
+                return t('errors.invalid_uri_format');
+              },
+            })}
+            hasError={Boolean(errors.branding?.darkLogoUrl)}
+            errorMessage={errors.branding?.darkLogoUrl?.message}
+          />
         </FormField>
       )}
       <FormField isRequired={isSloganRequired} title="admin_console.sign_in_exp.branding.slogan">
-        <TextInput {...register('branding.slogan', { required: isSloganRequired })} />
+        <TextInput
+          {...register('branding.slogan', { required: isSloganRequired })}
+          hasError={Boolean(isSloganRequired && errors.branding?.slogan)}
+        />
       </FormField>
     </>
   );

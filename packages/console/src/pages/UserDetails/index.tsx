@@ -28,6 +28,7 @@ import Reset from '@/icons/Reset';
 import * as detailsStyles from '@/scss/details.module.scss';
 import * as modalStyles from '@/scss/modal.module.scss';
 import { safeParseJson } from '@/utilities/json';
+import { uriValidator } from '@/utilities/validator';
 
 import CreateSuccess from './components/CreateSuccess';
 import DeleteForm from './components/DeleteForm';
@@ -60,7 +61,7 @@ const UserDetails = () => {
     register,
     control,
     reset,
-    formState: { isSubmitting },
+    formState: { isSubmitting, errors },
     getValues,
   } = useForm<FormData>();
 
@@ -221,7 +222,23 @@ const UserDetails = () => {
                   title="admin_console.user_details.field_avatar"
                   className={styles.textField}
                 >
-                  <TextInput {...register('avatar')} />
+                  <TextInput
+                    {...register('avatar', {
+                      validate: (value) => {
+                        if (!value) {
+                          return true;
+                        }
+
+                        if (uriValidator({ verifyBlank: true })(value)) {
+                          return true;
+                        }
+
+                        return t('errors.invalid_uri_format');
+                      },
+                    })}
+                    hasError={Boolean(errors.avatar)}
+                    errorMessage={errors.avatar?.message}
+                  />
                 </FormField>
                 <FormField
                   title="admin_console.user_details.field_roles"

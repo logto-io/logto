@@ -18,7 +18,11 @@ type Props = {
 };
 
 const Settings = ({ oidcConfig }: Props) => {
-  const { control, register } = useFormContext<Application>();
+  const {
+    control,
+    register,
+    formState: { errors },
+  } = useFormContext<Application>();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   const uriPatternRules: MultiTextInputRule = {
@@ -35,7 +39,7 @@ const Settings = ({ oidcConfig }: Props) => {
         title="admin_console.application_details.application_name"
         className={styles.textField}
       >
-        <TextInput {...register('name', { required: true })} />
+        <TextInput {...register('name', { required: true })} hasError={Boolean(errors.name)} />
       </FormField>
       <FormField title="admin_console.application_details.description" className={styles.textField}>
         <TextInput {...register('description')} />

@@ -1,6 +1,8 @@
 import { User } from '@logto/schemas';
+import { passwordRegEx, usernameRegEx } from '@logto/shared';
 import React from 'react';
 import { useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 
 import Button from '@/components/Button';
 import FormField from '@/components/FormField';
@@ -22,8 +24,10 @@ const CreateForm = ({ onClose }: Props) => {
   const {
     handleSubmit,
     register,
-    formState: { isSubmitting },
+    formState: { isSubmitting, errors },
   } = useForm<FormData>();
+  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+
   const api = useApi();
 
   const onSubmit = handleSubmit(async (data) => {
@@ -53,13 +57,40 @@ const CreateForm = ({ onClose }: Props) => {
     >
       <form>
         <FormField isRequired title="admin_console.users.create_form_username">
-          <TextInput autoFocus {...register('username', { required: true })} />
+          <TextInput
+            autoFocus
+            {...register('username', {
+              required: true,
+              pattern: {
+                value: usernameRegEx,
+                message: t('errors.username_pattern_error'),
+              },
+            })}
+            hasError={Boolean(errors.username)}
+            errorMessage={errors.username?.message}
+          />
         </FormField>
         <FormField isRequired title="admin_console.users.create_form_name">
-          <TextInput {...register('name', { required: true })} />
+          <TextInput
+            {...register('name', {
+              required: true,
+            })}
+            hasError={Boolean(errors.name)}
+            errorMessage={errors.name?.message}
+          />
         </FormField>
         <FormField isRequired title="admin_console.users.create_form_password">
-          <TextInput {...register('password', { required: true })} />
+          <TextInput
+            {...register('password', {
+              required: true,
+              pattern: {
+                value: passwordRegEx,
+                message: t('errors.password_pattern_error'),
+              },
+            })}
+            hasError={Boolean(errors.password)}
+            errorMessage={errors.password?.message}
+          />
         </FormField>
       </form>
     </ModalLayout>

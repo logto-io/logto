@@ -46,7 +46,7 @@ const ApiResourceDetails = () => {
     handleSubmit,
     register,
     reset,
-    formState: { isSubmitting },
+    formState: { isSubmitting, errors },
   } = useForm<FormData>({
     defaultValues: data,
   });
@@ -152,7 +152,10 @@ const ApiResourceDetails = () => {
                   title="admin_console.api_resources.api_name"
                   className={styles.textField}
                 >
-                  <TextInput {...register('name', { required: true })} />
+                  <TextInput
+                    {...register('name', { required: true })}
+                    hasError={Boolean(errors.name)}
+                  />
                 </FormField>
                 <FormField
                   isRequired
@@ -161,6 +164,7 @@ const ApiResourceDetails = () => {
                 >
                   <TextInput
                     {...register('accessTokenTtl', { required: true, valueAsNumber: true })}
+                    hasError={Boolean(errors.accessTokenTtl)}
                   />
                 </FormField>
               </div>

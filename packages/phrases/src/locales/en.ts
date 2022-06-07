@@ -121,6 +121,9 @@ const translation = {
       required_field_missing: 'Please enter {{field}}',
       required_field_missing_plural: 'You have to enter at least one {{field}}',
       more_details: 'More details',
+      username_pattern_error:
+        'Username should only contain letters, numbers, or underscore and should not start with a number.',
+      password_pattern_error: 'Password requires a minimum of 6 characters.',
     },
     tab_sections: {
       overview: 'Overview',
