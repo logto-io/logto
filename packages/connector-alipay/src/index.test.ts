@@ -85,7 +85,7 @@ describe('getAccessToken', () => {
       .reply(200, {
         alipay_system_oauth_token_response: {
           user_id: '2088000000000000',
-          access_token: undefined,
+          access_token: '',
           expires_in: '3600',
           refresh_token: 'refresh_token',
           re_expires_in: '7200', // Expiring time of refresh token, in seconds
