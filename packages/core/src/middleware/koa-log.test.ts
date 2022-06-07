@@ -23,7 +23,7 @@ jest.mock('nanoid', () => ({
 describe('koaLog middleware', () => {
   const insertLogMock = insertLog as jest.Mock;
   const type = 'SignInUsernamePassword';
-  const payload: LogPayload = {
+  const mockPayload: LogPayload = {
     userId: 'foo',
     username: 'Bar',
   };
@@ -46,7 +46,7 @@ describe('koaLog middleware', () => {
     ctx.request.ip = ip;
 
     const next = async () => {
-      ctx.log(type, payload);
+      ctx.log(type, mockPayload);
     };
     await koaLog()(ctx, next);
 
@@ -54,7 +54,7 @@ describe('koaLog middleware', () => {
       id: nanoIdMock,
       type,
       payload: {
-        ...payload,
+        ...mockPayload,
         result: LogResult.Success,
         ip,
         userAgent,
@@ -76,7 +76,7 @@ describe('koaLog middleware', () => {
       const error = new Error(message);
 
       const next = async () => {
-        ctx.log(type, payload);
+        ctx.log(type, mockPayload);
         throw error;
       };
       await expect(koaLog()(ctx, next)).rejects.toMatchError(error);
@@ -85,7 +85,7 @@ describe('koaLog middleware', () => {
         id: nanoIdMock,
         type,
         payload: {
-          ...payload,
+          ...mockPayload,
           result: LogResult.Error,
           error: `Error: ${message}`,
           ip,
@@ -104,12 +104,12 @@ describe('koaLog middleware', () => {
       ctx.request.ip = ip;
 
       const errorMessage = 'Error message';
-      jest.spyOn(i18next, 't').mockReturnValue(errorMessage);
+      jest.spyOn(i18next, 't').mockReturnValueOnce(errorMessage); // Used in
       const errorCode = 'connector.general';
       const error = new RequestError(errorCode, { foo: 'bar', num: 123 });
 
       const next = async () => {
-        ctx.log(type, payload);
+        ctx.log(type, mockPayload);
         throw error;
       };
       await expect(koaLog()(ctx, next)).rejects.toMatchError(error);
@@ -118,9 +118,9 @@ describe('koaLog middleware', () => {
         id: nanoIdMock,
         type,
         payload: {
-          ...payload,
+          ...mockPayload,
           result: LogResult.Error,
-          error: `{"message":"${errorMessage}","code":"${errorMessage}","data":{"foo":"bar","num":123}}`,
+          error: `{"message":"${errorMessage}","code":"${errorCode}","data":{"foo":"bar","num":123}}`,
           ip,
           userAgent,
         },
