@@ -50,7 +50,7 @@ const createRouters = (provider: Provider) => {
   // The swagger.json should contain all API routers.
   swaggerRoutes(anonymousRouter, [sessionRouter, managementRouter, meRouter, anonymousRouter]);
 
-  return [sessionRouter, anonymousRouter, managementRouter, meRouter];
+  return [sessionRouter, managementRouter, meRouter, anonymousRouter];
 };
 
 export default function initRouter(app: Koa, provider: Provider) {
