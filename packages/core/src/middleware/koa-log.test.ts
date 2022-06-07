@@ -103,10 +103,11 @@ describe('koaLog middleware', () => {
       };
       ctx.request.ip = ip;
 
-      const errorMessage = 'Error message';
-      jest.spyOn(i18next, 't').mockReturnValueOnce(errorMessage); // Used in
-      const errorCode = 'connector.general';
-      const error = new RequestError(errorCode, { foo: 'bar', num: 123 });
+      const message = 'Error message';
+      jest.spyOn(i18next, 't').mockReturnValueOnce(message); // Used in
+      const code = 'connector.general';
+      const data = { foo: 'bar', num: 123 };
+      const error = new RequestError(code, data);
 
       const next = async () => {
         ctx.log(type, mockPayload);
@@ -120,7 +121,7 @@ describe('koaLog middleware', () => {
         payload: {
           ...mockPayload,
           result: LogResult.Error,
-          error: `{"message":"${errorMessage}","code":"${errorCode}","data":{"foo":"bar","num":123}}`,
+          error: { message, code, data },
           ip,
           userAgent,
         },

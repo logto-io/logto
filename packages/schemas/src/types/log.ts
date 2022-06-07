@@ -7,7 +7,7 @@ export enum LogResult {
 
 export interface BaseLogPayload {
   result?: LogResult;
-  error?: string;
+  error?: Record<string, unknown>;
   ip?: string;
   userAgent?: string;
   applicationId?: string;
