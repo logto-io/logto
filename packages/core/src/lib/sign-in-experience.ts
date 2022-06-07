@@ -8,6 +8,7 @@ import {
 import { Optional } from '@silverhand/essentials';
 
 import { ConnectorInstance, ConnectorType } from '@/connectors/types';
+import RequestError from '@/errors/RequestError';
 import assertThat from '@/utils/assert-that';
 
 export const validateBranding = (branding: Branding) => {
@@ -39,24 +40,30 @@ export const validateSignInMethods = (
   if (isEnabled(signInMethods.email)) {
     assertThat(
       enabledConnectorInstances.some((item) => item.metadata.type === ConnectorType.Email),
-      'sign_in_experiences.enabled_connector_not_found',
-      { type: ConnectorType.Email }
+      new RequestError({
+        code: 'sign_in_experiences.enabled_connector_not_found',
+        type: ConnectorType.Email,
+      })
     );
   }
 
   if (isEnabled(signInMethods.sms)) {
     assertThat(
       enabledConnectorInstances.some((item) => item.metadata.type === ConnectorType.SMS),
-      'sign_in_experiences.enabled_connector_not_found',
-      { type: ConnectorType.SMS }
+      new RequestError({
+        code: 'sign_in_experiences.enabled_connector_not_found',
+        type: ConnectorType.SMS,
+      })
     );
   }
 
   if (isEnabled(signInMethods.social)) {
     assertThat(
       enabledConnectorInstances.some((item) => item.metadata.type === ConnectorType.Social),
-      'sign_in_experiences.enabled_connector_not_found',
-      { type: ConnectorType.Social }
+      new RequestError({
+        code: 'sign_in_experiences.enabled_connector_not_found',
+        type: ConnectorType.Social,
+      })
     );
 
     assertThat(
