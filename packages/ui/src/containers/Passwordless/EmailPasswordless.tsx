@@ -43,7 +43,7 @@ const EmailPasswordless = ({ type, className }: Props) => {
       'user.email_not_exists': (error) => {
         const socialToBind = getSearchParameters(location.search, SearchParameters.bindWithSocial);
 
-        // Directly throw error if user is trying to bind with social
+        // Directly display the  error if user is trying to bind with social
         if (socialToBind) {
           setToast(error.message);
 
