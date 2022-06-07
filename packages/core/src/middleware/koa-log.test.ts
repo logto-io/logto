@@ -72,7 +72,7 @@ describe('koaLog middleware', () => {
       };
       ctx.request.ip = ip;
 
-      const message = 'normal error';
+      const message = 'Normal error';
       const error = new Error(message);
 
       const next = async () => {
@@ -87,7 +87,7 @@ describe('koaLog middleware', () => {
         payload: {
           ...mockPayload,
           result: LogResult.Error,
-          error: `Error: ${message}`,
+          error: { message: `Error: ${message}` },
           ip,
           userAgent,
         },
