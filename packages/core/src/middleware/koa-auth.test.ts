@@ -22,6 +22,19 @@ describe('koaAuth middleware', () => {
   };
 
   const unauthorizedError = new RequestError({ code: 'auth.unauthorized', status: 401 });
+  const jwtSubMissingError = new RequestError({ code: 'auth.jwt_sub_missing', status: 401 });
+  const authHeaderMissingError = new RequestError({
+    code: 'auth.authorization_header_missing',
+    status: 401,
+  });
+  const tokenNotSupportedError = new RequestError(
+    {
+      code: 'auth.authorization_token_type_not_supported',
+      status: 401,
+    },
+    { supportedTypes: ['Bearer'] }
+  );
+  const forbiddenError = new RequestError({ code: 'auth.forbidden', status: 403 });
 
   const next = jest.fn();
 
@@ -67,7 +80,7 @@ describe('koaAuth middleware', () => {
   });
 
   it('expect to throw if authorization header is missing', async () => {
-    await expect(koaAuth()(ctx, next)).rejects.toMatchError(unauthorizedError);
+    await expect(koaAuth()(ctx, next)).rejects.toMatchError(authHeaderMissingError);
   });
 
   it('expect to throw if authorization header token type not recognized ', async () => {
@@ -78,7 +91,9 @@ describe('koaAuth middleware', () => {
       },
     };
 
-    await expect(koaAuth()(ctx, next)).rejects.toMatchError(unauthorizedError);
+    console.log('????????????????', tokenNotSupportedError);
+
+    await expect(koaAuth()(ctx, next)).rejects.toMatchError(tokenNotSupportedError);
   });
 
   it('expect to throw if jwt sub is missing', async () => {
@@ -92,7 +107,7 @@ describe('koaAuth middleware', () => {
       },
     };
 
-    await expect(koaAuth()(ctx, next)).rejects.toMatchError(unauthorizedError);
+    await expect(koaAuth()(ctx, next)).rejects.toMatchError(jwtSubMissingError);
   });
 
   it('expect to throw if jwt role_names is missing', async () => {
@@ -106,7 +121,7 @@ describe('koaAuth middleware', () => {
       },
     };
 
-    await expect(koaAuth(UserRole.Admin)(ctx, next)).rejects.toMatchError(unauthorizedError);
+    await expect(koaAuth(UserRole.Admin)(ctx, next)).rejects.toMatchError(forbiddenError);
   });
 
   it('expect to throw if jwt role_names does not include admin', async () => {
@@ -122,6 +137,21 @@ describe('koaAuth middleware', () => {
       },
     };
 
-    await expect(koaAuth(UserRole.Admin)(ctx, next)).rejects.toMatchError(unauthorizedError);
+    await expect(koaAuth(UserRole.Admin)(ctx, next)).rejects.toMatchError(forbiddenError);
+  });
+
+  it('expect to throw unauthorized error if unknown error occurs', async () => {
+    const mockJwtVerify = jwtVerify as jest.Mock;
+    mockJwtVerify.mockImplementationOnce(() => {
+      throw new Error('unknown error');
+    });
+    ctx.request = {
+      ...ctx.request,
+      headers: {
+        authorization: 'Bearer access_token',
+      },
+    };
+
+    await expect(koaAuth()(ctx, next)).rejects.toMatchError(unauthorizedError);
   });
 });
