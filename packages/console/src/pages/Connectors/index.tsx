@@ -72,7 +72,7 @@ const Connectors = () => {
           <TabNavItem href="/connectors/social">{t('connectors.tab_social')}</TabNavItem>
         </TabNav>
         <div className={classNames(styles.table, tableStyles.scrollable)}>
-          <table>
+          <table className={classNames(!data && tableStyles.empty)}>
             <colgroup>
               <col className={styles.connectorName} />
               <col />

@@ -20,9 +20,7 @@ const TableError = ({ title, content, onRetry, columns }: Props) => {
     <tr>
       <td colSpan={columns}>
         <div className={styles.tableError}>
-          <div className={styles.image}>
-            <img src={ErrorImage} />
-          </div>
+          <img src={ErrorImage} />
           <div className={styles.title}>
             {title ?? t('admin_console.errors.something_went_wrong')}
           </div>
