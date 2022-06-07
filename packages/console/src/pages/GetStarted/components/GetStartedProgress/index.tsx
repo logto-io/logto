@@ -17,7 +17,7 @@ const GetStartedProgress = () => {
   } = useUserPreferences();
   const anchorRef = useRef<HTMLDivElement>(null);
   const [showDropDown, setShowDropdown] = useState(false);
-  const { data, completedCount, totalCount } = useGetStartedMetadata();
+  const { data, completedCount, totalCount } = useGetStartedMetadata({ checkDemoAppExists: false });
 
   if (hideGetStarted) {
     return null;
