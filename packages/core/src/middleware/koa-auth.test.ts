@@ -91,8 +91,6 @@ describe('koaAuth middleware', () => {
       },
     };
 
-    console.log('????????????????', tokenNotSupportedError);
-
     await expect(koaAuth()(ctx, next)).rejects.toMatchError(tokenNotSupportedError);
   });
 
