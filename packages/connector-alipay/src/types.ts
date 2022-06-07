@@ -21,9 +21,9 @@ export const errorResponseGuard = z.object({
 export const alipaySystemOauthTokenResponseGuard = z.object({
   user_id: z.string(), // Unique Alipay ID, 16 digits starts with '2088'
   access_token: z.string(),
-  expires_in: z.string(), // In seconds
+  expires_in: z.number(), // In seconds (is string type in docs which is not true)
   refresh_token: z.string(),
-  re_expires_in: z.string(), // Expiring time of refresh token, in seconds
+  re_expires_in: z.number(), // Expiring time of refresh token, in seconds (is string type in docs which is not true)
 });
 
 export const accessTokenResponseGuard = z.object({

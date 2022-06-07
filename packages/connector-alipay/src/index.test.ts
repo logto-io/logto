@@ -63,9 +63,9 @@ describe('getAccessToken', () => {
         alipay_system_oauth_token_response: {
           user_id: '2088000000000000',
           access_token: 'access_token',
-          expires_in: '3600',
+          expires_in: 3600,
           refresh_token: 'refresh_token',
-          re_expires_in: '7200', // Expiring time of refresh token, in seconds
+          re_expires_in: 7200, // Expiring time of refresh token, in seconds
         },
         sign: '<signature>',
       });
@@ -86,9 +86,9 @@ describe('getAccessToken', () => {
         alipay_system_oauth_token_response: {
           user_id: '2088000000000000',
           access_token: '',
-          expires_in: '3600',
+          expires_in: 3600,
           refresh_token: 'refresh_token',
-          re_expires_in: '7200', // Expiring time of refresh token, in seconds
+          re_expires_in: 7200, // Expiring time of refresh token, in seconds
         },
         sign: '<signature>',
       });
