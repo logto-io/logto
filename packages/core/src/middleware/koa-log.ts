@@ -92,13 +92,12 @@ export default function koaLog<
     try {
       await next();
     } catch (error: unknown) {
-      const errorInfo =
-        error instanceof RequestError
-          ? pick(error, 'message', 'code', 'data')
-          : { message: String(error) };
       logger.set({
         result: LogResult.Error,
-        error: errorInfo,
+        error:
+          error instanceof RequestError
+            ? pick(error, 'message', 'code', 'data')
+            : { message: String(error) },
       });
       throw error;
     } finally {
