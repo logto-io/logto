@@ -70,12 +70,15 @@ export default function koaAuth<StateT, ContextT extends IRouterParamContext, Re
       if (forRole) {
         assertThat(
           roleNames?.includes(forRole),
-          new RequestError({ code: 'auth.unauthorized', status: 401 })
+          new RequestError({ code: 'auth.forbidden', status: 403 })
         );
       }
 
       ctx.auth = sub;
-    } catch {
+    } catch (error: unknown) {
+      if (error instanceof RequestError) {
+        throw error;
+      }
       throw new RequestError({ code: 'auth.unauthorized', status: 401 });
     }
 
