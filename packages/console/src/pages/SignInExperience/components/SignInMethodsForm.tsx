@@ -1,5 +1,5 @@
 import { SignInMethodKey } from '@logto/schemas';
-import React, { useEffect, useMemo, useRef } from 'react';
+import React, { useMemo } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
@@ -17,30 +17,27 @@ const signInMethods = Object.values(SignInMethodKey);
 
 const SignInMethodsForm = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { register, watch, control, setValue } = useFormContext<SignInExperienceForm>();
-  const oldPrimaryMethod = useRef<SignInMethodKey>();
+  const { register, watch, control, getValues, setValue } = useFormContext<SignInExperienceForm>();
   const primaryMethod = watch('signInMethods.primary');
   const enableSecondary = watch('signInMethods.enableSecondary');
   const sms = watch('signInMethods.sms');
   const email = watch('signInMethods.email');
   const social = watch('signInMethods.social');
 
-  useEffect(() => {
+  const postPrimaryMethodChange = (
+    oldPrimaryMethod?: SignInMethodKey,
+    primaryMethod?: SignInMethodKey
+  ) => {
+    if (oldPrimaryMethod) {
+      // The secondary sign in method should select the old primary method by default.
+      setValue(`signInMethods.${oldPrimaryMethod}`, true);
+    }
+
     if (primaryMethod) {
-      if (oldPrimaryMethod.current) {
-        // The secondary sign in method should select the old primary method by default.
-        setValue(`signInMethods.${oldPrimaryMethod.current}`, true);
-        // eslint-disable-next-line @silverhand/fp/no-mutation
-        oldPrimaryMethod.current = undefined;
-      }
-
-      // eslint-disable-next-line @silverhand/fp/no-mutation
-      oldPrimaryMethod.current = primaryMethod;
-
       // When one of the sign-in methods has been primary, it should not be able to be secondary simultaneously.
       setValue(`signInMethods.${primaryMethod}`, false);
     }
-  }, [primaryMethod, setValue]);
+  };
 
   const secondaryMethodsFields = useMemo(
     () =>
@@ -89,7 +86,11 @@ const SignInMethodsForm = () => {
                 value: method,
                 title: t('sign_in_exp.sign_in_methods.methods', { context: method }),
               }))}
-              onChange={onChange}
+              onChange={(value) => {
+                const oldPrimaryMethod = getValues('signInMethods.primary');
+                onChange(value);
+                postPrimaryMethodChange(oldPrimaryMethod, getValues('signInMethods.primary'));
+              }}
             />
           )}
         />
