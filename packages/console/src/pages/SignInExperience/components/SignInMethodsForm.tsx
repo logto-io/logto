@@ -89,7 +89,7 @@ const SignInMethodsForm = () => {
               onChange={(value) => {
                 const oldPrimaryMethod = getValues('signInMethods.primary');
                 onChange(value);
-                postPrimaryMethodChange(oldPrimaryMethod, value as SignInMethodKey);
+                postPrimaryMethodChange(oldPrimaryMethod, value);
               }}
             />
           )}
