@@ -657,7 +657,9 @@ const errors = {
       'There must be one and only one primary sign-in method. Please check your input.',
   },
   swagger: {
-    invalid_zod_type: 'Invalid Zod type, please check route guard config.',
+    invalid_zod_type: 'Invalid Zod type. Please check route guard config.',
+    not_supported_zod_type_for_params:
+      'Not supported Zod type for the parameters. Please check route guard config.',
   },
   entity: {
     create_failed: 'Failed to create {{name}}.',

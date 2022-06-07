@@ -1,11 +1,18 @@
-import { ApplicationType } from '@logto/schemas';
-import { string, boolean, number, object, nativeEnum } from 'zod';
+import { ApplicationType, arbitraryObjectGuard } from '@logto/schemas';
+import { string, boolean, number, object, nativeEnum, unknown } from 'zod';
 
 import RequestError from '@/errors/RequestError';
 
 import { zodTypeToSwagger } from './zod';
 
 describe('zodTypeToSwagger', () => {
+  it('arbitrary object guard', () => {
+    expect(zodTypeToSwagger(arbitraryObjectGuard)).toEqual({
+      type: 'object',
+      description: 'arbitrary',
+    });
+  });
+
   it('string type', () => {
     expect(zodTypeToSwagger(string())).toEqual({ type: 'string' });
   });
@@ -51,7 +58,7 @@ describe('zodTypeToSwagger', () => {
   });
 
   it('unknown type', () => {
-    expect(zodTypeToSwagger(string().nullable())).toEqual({ type: 'string', nullable: true });
+    expect(zodTypeToSwagger(unknown())).toEqual({});
   });
 
   it('native enum type', () => {
@@ -60,8 +67,6 @@ describe('zodTypeToSwagger', () => {
       enum: Object.values(ApplicationType),
     });
   });
-
-  // TODO: ZodUnion, ZodUnknown, and etc.
 
   it('unexpected type', () => {
     expect(() => zodTypeToSwagger('test')).toMatchError(
