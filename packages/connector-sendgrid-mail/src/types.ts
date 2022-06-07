@@ -1,4 +1,3 @@
-import { Nullable } from '@silverhand/essentials';
 import { z } from 'zod';
 
 /**
@@ -112,8 +111,17 @@ export type SendGridMailConfig = z.infer<typeof sendGridMailConfigGuard>;
 /**
  * @doc https://docs.sendgrid.com/api-reference/mail-send/mail-send#responses
  */
-type HelpObject = Record<string, unknown>; // Helper text or docs for troubleshooting
+const helpObjectGuard = z.record(z.string(), z.unknown()); // Helper text or docs for troubleshooting
 
-type ErrorObject = { message: string; field?: Nullable<string>; help?: HelpObject };
+const errorObjectGuard = z.object({
+  message: z.string(),
+  field: z.string().nullable().optional(),
+  help: helpObjectGuard.optional(),
+});
 
-export type SendEmailResponse = { errors: ErrorObject; id?: string };
+export const sendEmailErrorResponseGuard = z.object({
+  errors: z.array(errorObjectGuard),
+  id: z.string().optional(),
+});
+
+export type SendEmailErrorResponse = z.infer<typeof sendEmailErrorResponseGuard>;

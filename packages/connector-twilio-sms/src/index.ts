@@ -8,10 +8,10 @@ import {
   GetConnectorConfig,
 } from '@logto/connector-types';
 import { assert } from '@silverhand/essentials';
-import got from 'got';
+import got, { HTTPError } from 'got';
 
 import { defaultMetadata, endpoint } from './constant';
-import { twilioSmsConfigGuard, SendSmsResponse, TwilioSmsConfig, PublicParameters } from './types';
+import { twilioSmsConfigGuard, TwilioSmsConfig, PublicParameters } from './types';
 
 export default class TwilioSmsConnector implements SmsConnector {
   public metadata: ConnectorMetadata = defaultMetadata;
@@ -26,7 +26,7 @@ export default class TwilioSmsConnector implements SmsConnector {
     }
   };
 
-  public sendMessage: EmailSendMessageFunction<SendSmsResponse> = async (address, type, data) => {
+  public sendMessage: EmailSendMessageFunction = async (address, type, data) => {
     const config = await this.getConfig(this.metadata.id);
     await this.validateConfig(config);
     const { accountSID, authToken, fromMessagingServiceSID, templates } = config;
@@ -49,15 +49,29 @@ export default class TwilioSmsConnector implements SmsConnector {
           : template.content,
     };
 
-    return got
-      .post(endpoint.replace(/{{accountSID}}/g, accountSID), {
+    try {
+      return await got.post(endpoint.replace(/{{accountSID}}/g, accountSID), {
         headers: {
           Authorization:
             'Basic ' + Buffer.from([accountSID, authToken].join(':')).toString('base64'),
           'Content-Type': 'application/x-www-form-urlencoded',
         },
         body: new URLSearchParams(parameters).toString(),
-      })
-      .json<SendSmsResponse>();
+      });
+    } catch (error: unknown) {
+      if (error instanceof HTTPError) {
+        const {
+          response: { body: rawBody },
+        } = error;
+        assert(
+          typeof rawBody === 'string',
+          new ConnectorError(ConnectorErrorCodes.InvalidResponse)
+        );
+
+        throw new ConnectorError(ConnectorErrorCodes.General, rawBody);
+      }
+
+      throw error;
+    }
   };
 }

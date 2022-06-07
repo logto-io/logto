@@ -2,9 +2,14 @@ import { z } from 'zod';
 
 import { SmsTemplateType } from './constant';
 
-export type { Response } from 'got';
+export const sendSmsResponseGuard = z.object({
+  BizId: z.string().optional(),
+  Code: z.string(),
+  Message: z.string(),
+  RequestId: z.string(),
+});
 
-export type SendSmsResponse = { BizId: string; Code: string; Message: string; RequestId: string };
+export type SendSmsResponse = z.infer<typeof sendSmsResponseGuard>;
 
 /**
  * @doc https://help.aliyun.com/document_detail/101414.html

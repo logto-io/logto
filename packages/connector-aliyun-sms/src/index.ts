@@ -8,11 +8,10 @@ import {
   GetConnectorConfig,
 } from '@logto/connector-types';
 import { assert } from '@silverhand/essentials';
-import { Response } from 'got';
 
 import { defaultMetadata } from './constant';
 import { sendSms } from './single-send-text';
-import { aliyunSmsConfigGuard, AliyunSmsConfig, SendSmsResponse } from './types';
+import { aliyunSmsConfigGuard, AliyunSmsConfig, sendSmsResponseGuard } from './types';
 
 export default class AliyunSmsConnector implements SmsConnector {
   public metadata: ConnectorMetadata = defaultMetadata;
@@ -27,11 +26,7 @@ export default class AliyunSmsConnector implements SmsConnector {
     }
   };
 
-  public sendMessage: SmsSendMessageFunction<Response<SendSmsResponse>> = async (
-    phone,
-    type,
-    { code }
-  ) => {
+  public sendMessage: SmsSendMessageFunction = async (phone, type, { code }) => {
     const config = await this.getConfig(this.metadata.id);
     await this.validateConfig(config);
     const { accessKeyId, accessKeySecret, signName, templates } = config;
@@ -42,7 +37,7 @@ export default class AliyunSmsConnector implements SmsConnector {
       new ConnectorError(ConnectorErrorCodes.TemplateNotFound, `Cannot find template!`)
     );
 
-    return sendSms(
+    const httpResponse = await sendSms(
       {
         AccessKeyId: accessKeyId,
         PhoneNumbers: phone,
@@ -52,5 +47,11 @@ export default class AliyunSmsConnector implements SmsConnector {
       },
       accessKeySecret
     );
+    const { body: rawBody } = httpResponse;
+    const { Code } = sendSmsResponseGuard.parse(JSON.parse(rawBody));
+
+    assert(Code === 'OK', new ConnectorError(ConnectorErrorCodes.General, rawBody));
+
+    return httpResponse;
   };
 }

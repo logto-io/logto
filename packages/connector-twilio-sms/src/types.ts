@@ -61,3 +61,12 @@ export type SendSmsResponse = {
   to: string;
   uri: string;
 };
+
+export const sendSmsErrorResponseGuard = z.object({
+  code: z.number(),
+  message: z.string(),
+  more_info: z.string(),
+  status: z.number(),
+});
+
+export type SendSmsErrorResponse = z.infer<typeof sendSmsErrorResponseGuard>;
