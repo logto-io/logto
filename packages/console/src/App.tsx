@@ -12,7 +12,7 @@ import AppBoundary from './components/AppBoundary';
 import AppContent from './components/AppContent';
 import ErrorBoundary from './components/ErrorBoundary';
 import Toast from './components/Toast';
-import useSwrFetcher from './hooks/use-swr-fetcher';
+import useSwrOptions from './hooks/use-swr-options';
 import initI18n from './i18n/init';
 import ApiResourceDetails from './pages/ApiResourceDetails';
 import ApiResources from './pages/ApiResources';
@@ -33,11 +33,11 @@ import Users from './pages/Users';
 void initI18n();
 
 const Main = () => {
-  const fetcher = useSwrFetcher();
+  const swrOptions = useSwrOptions();
 
   return (
     <ErrorBoundary>
-      <SWRConfig value={{ fetcher }}>
+      <SWRConfig value={swrOptions}>
         <AppBoundary>
           <Toast />
           <Routes>
