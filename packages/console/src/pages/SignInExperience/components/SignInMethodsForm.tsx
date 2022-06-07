@@ -1,5 +1,5 @@
 import { SignInMethodKey } from '@logto/schemas';
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
@@ -18,6 +18,7 @@ const signInMethods = Object.values(SignInMethodKey);
 const SignInMethodsForm = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { register, watch, control, setValue } = useFormContext<SignInExperienceForm>();
+  const oldPrimaryMethod = useRef<SignInMethodKey>();
   const primaryMethod = watch('signInMethods.primary');
   const enableSecondary = watch('signInMethods.enableSecondary');
   const sms = watch('signInMethods.sms');
@@ -26,6 +27,16 @@ const SignInMethodsForm = () => {
 
   useEffect(() => {
     if (primaryMethod) {
+      if (oldPrimaryMethod.current) {
+        // The secondary sign in method should select the old primary method by default.
+        setValue(`signInMethods.${oldPrimaryMethod.current}`, true);
+        // eslint-disable-next-line @silverhand/fp/no-mutation
+        oldPrimaryMethod.current = undefined;
+      }
+
+      // eslint-disable-next-line @silverhand/fp/no-mutation
+      oldPrimaryMethod.current = primaryMethod;
+
       // When one of the sign-in methods has been primary, it should not be able to be secondary simultaneously.
       setValue(`signInMethods.${primaryMethod}`, false);
     }
