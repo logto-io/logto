@@ -2,8 +2,10 @@ import { BaseLogPayload, LogPayload, LogPayloads, LogResult, LogType } from '@lo
 import deepmerge from 'deepmerge';
 import { MiddlewareType } from 'koa';
 import { IRouterParamContext } from 'koa-router';
+import pick from 'lodash.pick';
 import { nanoid } from 'nanoid';
 
+import RequestError from '@/errors/RequestError';
 import { insertLog } from '@/queries/log';
 
 type MergeLog = <T extends LogType>(type: T, payload: LogPayloads[T]) => void;
@@ -90,7 +92,13 @@ export default function koaLog<
     try {
       await next();
     } catch (error: unknown) {
-      logger.set({ result: LogResult.Error, error: String(error) });
+      logger.set({
+        result: LogResult.Error,
+        error:
+          error instanceof RequestError
+            ? pick(error, 'message', 'code', 'data')
+            : { message: String(error) },
+      });
       throw error;
     } finally {
       await logger.save();

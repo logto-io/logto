@@ -1,5 +1,7 @@
 import { LogPayload, LogResult } from '@logto/schemas';
+import i18next from 'i18next';
 
+import RequestError from '@/errors/RequestError';
 import { insertLog } from '@/queries/log';
 import { createContextWithRouteParameters } from '@/utils/test-utils';
 
@@ -21,7 +23,7 @@ jest.mock('nanoid', () => ({
 describe('koaLog middleware', () => {
   const insertLogMock = insertLog as jest.Mock;
   const type = 'SignInUsernamePassword';
-  const payload: LogPayload = {
+  const mockPayload: LogPayload = {
     userId: 'foo',
     username: 'Bar',
   };
@@ -34,7 +36,7 @@ describe('koaLog middleware', () => {
     jest.clearAllMocks();
   });
 
-  it('insert log with success response', async () => {
+  it('should insert a success log when next() does not throw an error', async () => {
     const ctx: WithLogContext<ReturnType<typeof createContextWithRouteParameters>> = {
       ...createContextWithRouteParameters({ headers: { 'user-agent': userAgent } }),
       // Bypass middleware context type assert
@@ -44,7 +46,7 @@ describe('koaLog middleware', () => {
     ctx.request.ip = ip;
 
     const next = async () => {
-      ctx.log(type, payload);
+      ctx.log(type, mockPayload);
     };
     await koaLog()(ctx, next);
 
@@ -52,7 +54,7 @@ describe('koaLog middleware', () => {
       id: nanoIdMock,
       type,
       payload: {
-        ...payload,
+        ...mockPayload,
         result: LogResult.Success,
         ip,
         userAgent,
@@ -60,33 +62,70 @@ describe('koaLog middleware', () => {
     });
   });
 
-  it('should insert log with failed result if next throws error', async () => {
-    const ctx: WithLogContext<ReturnType<typeof createContextWithRouteParameters>> = {
-      ...createContextWithRouteParameters({ headers: { 'user-agent': userAgent } }),
-      // Bypass middleware context type assert
-      addLogContext,
-      log,
-    };
-    ctx.request.ip = ip;
+  describe('should insert an error log with the error message when next() throws an error', () => {
+    it('should log with error message when next throws a normal Error', async () => {
+      const ctx: WithLogContext<ReturnType<typeof createContextWithRouteParameters>> = {
+        ...createContextWithRouteParameters({ headers: { 'user-agent': userAgent } }),
+        // Bypass middleware context type assert
+        addLogContext,
+        log,
+      };
+      ctx.request.ip = ip;
 
-    const error = new Error('next error');
+      const message = 'Normal error';
+      const error = new Error(message);
 
-    const next = async () => {
-      ctx.log(type, payload);
-      throw error;
-    };
-    await expect(koaLog()(ctx, next)).rejects.toMatchError(error);
+      const next = async () => {
+        ctx.log(type, mockPayload);
+        throw error;
+      };
+      await expect(koaLog()(ctx, next)).rejects.toMatchError(error);
 
-    expect(insertLogMock).toBeCalledWith({
-      id: nanoIdMock,
-      type,
-      payload: {
-        ...payload,
-        result: LogResult.Error,
-        error: String(error),
-        ip,
-        userAgent,
-      },
+      expect(insertLogMock).toBeCalledWith({
+        id: nanoIdMock,
+        type,
+        payload: {
+          ...mockPayload,
+          result: LogResult.Error,
+          error: { message: `Error: ${message}` },
+          ip,
+          userAgent,
+        },
+      });
+    });
+
+    it('should insert an error log with the error body when next() throws a RequestError', async () => {
+      const ctx: WithLogContext<ReturnType<typeof createContextWithRouteParameters>> = {
+        ...createContextWithRouteParameters({ headers: { 'user-agent': userAgent } }),
+        // Bypass middleware context type assert
+        addLogContext,
+        log,
+      };
+      ctx.request.ip = ip;
+
+      const message = 'Error message';
+      jest.spyOn(i18next, 't').mockReturnValueOnce(message); // Used in
+      const code = 'connector.general';
+      const data = { foo: 'bar', num: 123 };
+      const error = new RequestError(code, data);
+
+      const next = async () => {
+        ctx.log(type, mockPayload);
+        throw error;
+      };
+      await expect(koaLog()(ctx, next)).rejects.toMatchError(error);
+
+      expect(insertLogMock).toBeCalledWith({
+        id: nanoIdMock,
+        type,
+        payload: {
+          ...mockPayload,
+          result: LogResult.Error,
+          error: { message, code, data },
+          ip,
+          userAgent,
+        },
+      });
     });
   });
 });
