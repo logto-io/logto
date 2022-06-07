@@ -79,9 +79,9 @@ const CreateAccount = ({ className }: Props) => {
   return (
     <form className={classNames(styles.form, className)}>
       <Input
+        autoFocus
         className={styles.inputField}
         name="username"
-        autoComplete="username"
         placeholder={t('input.username')}
         {...fieldRegister('username', usernameValidation)}
         onClear={() => {
@@ -92,7 +92,6 @@ const CreateAccount = ({ className }: Props) => {
         className={styles.inputField}
         name="password"
         type="password"
-        autoComplete="current-password"
         placeholder={t('input.password')}
         {...fieldRegister('password', passwordValidation)}
         onClear={() => {
@@ -103,7 +102,6 @@ const CreateAccount = ({ className }: Props) => {
         className={styles.inputField}
         name="confirm_password"
         type="password"
-        autoComplete="current-password"
         placeholder={t('input.confirm_password')}
         {...fieldRegister('confirmPassword', (confirmPassword) =>
           confirmPasswordValidation(fieldValue.password, confirmPassword)

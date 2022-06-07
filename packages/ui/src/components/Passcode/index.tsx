@@ -191,7 +191,7 @@ const Passcode = ({ name, className, value, length = defaultLength, error, onCha
             name={`${name}_${index}`}
             data-id={index}
             value={codes[index]}
-            type="text"
+            type="text" // Number type allows 'e' as input but returns empty value
             inputMode="numeric"
             maxLength={2} // Allow overwrite input
             autoComplete="off"

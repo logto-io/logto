@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import React, { useCallback, useEffect, useState, useMemo } from 'react';
+import React, { useCallback, useEffect, useState, useMemo, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
@@ -9,8 +9,10 @@ import Input from '@/components/Input';
 import TermsOfUse from '@/containers/TermsOfUse';
 import useApi, { ErrorHandlers } from '@/hooks/use-api';
 import useForm from '@/hooks/use-form';
+import { PageContext } from '@/hooks/use-page-context';
 import useTerms from '@/hooks/use-terms';
-import { UserFlow } from '@/types';
+import { UserFlow, SearchParameters } from '@/types';
+import { getSearchParameters } from '@/utils';
 import { emailValidation } from '@/utils/field-validations';
 
 import PasswordlessConfirmModal from './PasswordlessConfirmModal';
@@ -28,6 +30,7 @@ type FieldState = {
 const defaultState: FieldState = { email: '' };
 
 const EmailPasswordless = ({ type, className }: Props) => {
+  const { setToast } = useContext(PageContext);
   const [showPasswordlessConfirmModal, setShowPasswordlessConfirmModal] = useState(false);
   const { t } = useTranslation(undefined, { keyPrefix: 'main_flow' });
   const navigate = useNavigate();
@@ -37,7 +40,16 @@ const EmailPasswordless = ({ type, className }: Props) => {
 
   const errorHandlers: ErrorHandlers = useMemo(
     () => ({
-      'user.email_not_exists': () => {
+      'user.email_not_exists': (error) => {
+        const socialToBind = getSearchParameters(location.search, SearchParameters.bindWithSocial);
+
+        // Directly display the  error if user is trying to bind with social
+        if (socialToBind) {
+          setToast(error.message);
+
+          return;
+        }
+
         setShowPasswordlessConfirmModal(true);
       },
       'user.email_exists_register': () => {
@@ -47,7 +59,7 @@ const EmailPasswordless = ({ type, className }: Props) => {
         setFieldErrors({ email: 'invalid_email' });
       },
     }),
-    [setFieldErrors]
+    [setFieldErrors, setToast]
   );
 
   const sendPasscode = getSendPasscodeApi(type, 'email');
@@ -85,6 +97,7 @@ const EmailPasswordless = ({ type, className }: Props) => {
     <>
       <form className={classNames(styles.form, className)}>
         <Input
+          autoFocus
           className={styles.inputField}
           name="email"
           autoComplete="email"

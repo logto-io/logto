@@ -19,6 +19,8 @@
 
 body {
   background-color: var(--color-base);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: auto;
 }
 
 .container {
