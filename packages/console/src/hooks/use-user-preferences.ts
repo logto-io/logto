@@ -2,7 +2,7 @@ import { Language } from '@logto/phrases';
 import { useLogto } from '@logto/react';
 import { AppearanceMode } from '@logto/schemas';
 import { Nullable, Optional } from '@silverhand/essentials';
-import { useEffect } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import useSWR from 'swr';
 import { z } from 'zod';
 
@@ -34,7 +34,7 @@ const useUserPreferences = () => {
   );
   const api = useApi();
 
-  const parseData = (): UserPreferences => {
+  const parseData = useCallback((): UserPreferences => {
     try {
       return z.object({ [key]: userPreferencesGuard }).parse(data).adminConsolePreferences;
     } catch {
@@ -45,9 +45,9 @@ const useUserPreferences = () => {
           AppearanceMode.SyncWithSystem,
       };
     }
-  };
+  }, [data]);
 
-  const userPreferences = parseData();
+  const userPreferences = useMemo(() => parseData(), [parseData]);
 
   const update = async (data: Partial<UserPreferences>) => {
     const updated = await api

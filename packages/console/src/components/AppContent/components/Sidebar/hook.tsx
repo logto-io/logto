@@ -38,7 +38,10 @@ const findFirstItem = (sections: SidebarSection[]): Optional<SidebarItem> => {
   }
 };
 
-export const useSidebarMenuItems = (): [SidebarSection[], Optional<SidebarItem>] => {
+export const useSidebarMenuItems = (): {
+  sections: SidebarSection[];
+  firstItem: Optional<SidebarItem>;
+} => {
   const {
     data: { hideGetStarted },
   } = useUserPreferences();
@@ -108,5 +111,5 @@ export const useSidebarMenuItems = (): [SidebarSection[], Optional<SidebarItem>]
     },
   ];
 
-  return [sections, findFirstItem(sections)];
+  return { sections, firstItem: findFirstItem(sections) };
 };

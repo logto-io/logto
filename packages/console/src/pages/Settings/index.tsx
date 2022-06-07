@@ -42,9 +42,7 @@ const Settings = () => {
         <TabNavItem href="/settings">{t('settings.tabs.general')}</TabNavItem>
       </TabNav>
       {isLoading && <div>loading</div>}
-      {!isLoading && error && (
-        <div>{`error occurred: ${error.body?.message ?? error.message}`}</div>
-      )}
+      {error && <div>{`error occurred: ${error.body?.message ?? error.message}`}</div>}
       {isLoaded && (
         <form className={detailsStyles.body} onSubmit={onSubmit}>
           <div className={styles.fields}>

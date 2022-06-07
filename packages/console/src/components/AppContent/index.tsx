@@ -22,7 +22,7 @@ const AppContent = () => {
 
   const location = useLocation();
   const navigate = useNavigate();
-  const [, firstItem] = useSidebarMenuItems();
+  const { firstItem } = useSidebarMenuItems();
 
   useEffect(() => {
     if (!isAuthenticated) {

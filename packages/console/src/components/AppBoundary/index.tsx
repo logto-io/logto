@@ -16,15 +16,15 @@ const AppBoundary = ({ children }: Props) => {
   } = useUserPreferences();
 
   useEffect(() => {
-    const isFollowSystem = appearanceMode === AppearanceMode.SyncWithSystem;
+    const isSyncWithSystem = appearanceMode === AppearanceMode.SyncWithSystem;
     const className = styles[appearanceMode] ?? '';
 
-    if (!isFollowSystem) {
+    if (!isSyncWithSystem) {
       document.body.classList.add(className);
     }
 
     return () => {
-      if (!isFollowSystem) {
+      if (!isSyncWithSystem) {
         document.body.classList.remove(className);
       }
     };
