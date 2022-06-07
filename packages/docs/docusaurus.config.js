@@ -65,6 +65,12 @@ const config = {
             label: 'SDK',
           },
           {
+            href: '/api',
+            target: '_blank',
+            position: 'left',
+            label: 'API',
+          },
+          {
             type: 'localeDropdown',
             position: 'right',
           },
