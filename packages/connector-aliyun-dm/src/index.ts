@@ -12,7 +12,7 @@ import { HTTPError } from 'got';
 
 import { defaultMetadata } from './constant';
 import { singleSendMail } from './single-send-mail';
-import { AliyunDmConfig, aliyunDmConfigGuard, singleSendMailErrorResponseGuard } from './types';
+import { AliyunDmConfig, aliyunDmConfigGuard } from './types';
 
 export default class AliyunDmConnector implements EmailConnector {
   public metadata: ConnectorMetadata = defaultMetadata;
@@ -67,9 +67,8 @@ export default class AliyunDmConnector implements EmailConnector {
           typeof rawBody === 'string',
           new ConnectorError(ConnectorErrorCodes.InvalidResponse)
         );
-        const body = singleSendMailErrorResponseGuard.parse(JSON.parse(rawBody));
 
-        throw new ConnectorError(ConnectorErrorCodes.General, body.Message);
+        throw new ConnectorError(ConnectorErrorCodes.General, rawBody);
       }
 
       throw error;

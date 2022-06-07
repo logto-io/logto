@@ -11,12 +11,7 @@ import { assert } from '@silverhand/essentials';
 import got, { HTTPError } from 'got';
 
 import { defaultMetadata, endpoint } from './constant';
-import {
-  twilioSmsConfigGuard,
-  sendSmsErrorResponseGuard,
-  TwilioSmsConfig,
-  PublicParameters,
-} from './types';
+import { twilioSmsConfigGuard, TwilioSmsConfig, PublicParameters } from './types';
 
 export default class TwilioSmsConnector implements SmsConnector {
   public metadata: ConnectorMetadata = defaultMetadata;
@@ -72,9 +67,8 @@ export default class TwilioSmsConnector implements SmsConnector {
           typeof rawBody === 'string',
           new ConnectorError(ConnectorErrorCodes.InvalidResponse)
         );
-        const body = sendSmsErrorResponseGuard.parse(JSON.parse(rawBody));
 
-        throw new ConnectorError(ConnectorErrorCodes.General, body.message);
+        throw new ConnectorError(ConnectorErrorCodes.General, rawBody);
       }
 
       throw error;

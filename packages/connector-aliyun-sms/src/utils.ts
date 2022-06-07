@@ -37,7 +37,7 @@ export const getSignature = (
   return createHmac('sha1', `${secret}&`).update(stringToSign).digest('base64');
 };
 
-export const request = async <T>(
+export const request = async (
   url: string,
   parameters: PublicParameters & Record<string, string>,
   accessKeySecret: string
@@ -56,7 +56,7 @@ export const request = async <T>(
   }
   payload.append('Signature', signature);
 
-  return got.post<T>({
+  return got.post({
     url,
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',

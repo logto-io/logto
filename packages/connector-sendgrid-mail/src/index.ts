@@ -13,7 +13,6 @@ import got, { HTTPError } from 'got';
 import { defaultMetadata, endpoint } from './constant';
 import {
   sendGridMailConfigGuard,
-  sendEmailErrorResponseGuard,
   SendGridMailConfig,
   EmailData,
   Personalization,
@@ -86,9 +85,8 @@ export default class SendGridMailConnector implements EmailConnector {
           typeof rawBody === 'string',
           new ConnectorError(ConnectorErrorCodes.InvalidResponse)
         );
-        const body = sendEmailErrorResponseGuard.parse(JSON.parse(rawBody));
 
-        throw new ConnectorError(ConnectorErrorCodes.General, body.errors[0]?.message);
+        throw new ConnectorError(ConnectorErrorCodes.General, rawBody);
       }
 
       throw error;

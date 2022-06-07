@@ -9,7 +9,16 @@ const getConnectorConfig = jest.fn() as GetConnectorConfig<AliyunSmsConfig>;
 
 const aliyunSmsMethods = new AliyunSmsConnector(getConnectorConfig);
 
-jest.mock('./single-send-text');
+jest.mock('./single-send-text', () => {
+  return {
+    sendSms: jest.fn(() => {
+      return {
+        body: JSON.stringify({ Code: 'OK', RequestId: 'request-id', Message: 'OK' }),
+        statusCode: 200,
+      };
+    }),
+  };
+});
 
 describe('validateConfig()', () => {
   afterEach(() => {

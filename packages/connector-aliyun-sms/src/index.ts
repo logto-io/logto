@@ -48,10 +48,9 @@ export default class AliyunSmsConnector implements SmsConnector {
       accessKeySecret
     );
     const { body: rawBody } = httpResponse;
-    assert(typeof rawBody === 'string', new ConnectorError(ConnectorErrorCodes.InvalidResponse));
-    const body = sendSmsResponseGuard.parse(JSON.parse(rawBody));
+    const { Code } = sendSmsResponseGuard.parse(JSON.parse(rawBody));
 
-    assert(body.Code === 'OK', new ConnectorError(ConnectorErrorCodes.General, body.Message));
+    assert(Code === 'OK', new ConnectorError(ConnectorErrorCodes.General, rawBody));
 
     return httpResponse;
   };
