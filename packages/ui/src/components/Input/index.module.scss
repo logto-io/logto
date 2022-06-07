@@ -5,16 +5,20 @@
   @include _.flex-row;
   border: _.border();
   border-radius: var(--radius);
+  background: var(--color-layer);
   // fix in safari input field line-height issue
-  height: 46px;
+  height: 44px;
   overflow: hidden;
   transition-property: outline, border;
   transition-timing-function: ease-in-out;
   transition-duration: 0.2s;
+  padding: 0 _.unit(4);
 
   .actionButton {
     display: none;
     color: var(--color-icon);
+    width: 24px;
+    height: 24px;
   }
 
   > *:not(:first-child) {
@@ -36,10 +40,10 @@
   input {
     flex: 1;
     background: none;
-    padding: _.unit(3) 0;
     caret-color: var(--color-primary);
     font: var(--font-body-bold);
     color: var(--color-text);
+    align-self: stretch;
 
     &::placeholder {
       color: var(--color-caption);
@@ -47,8 +51,7 @@
 
     // Overwrite webkit auto-fill style
     &:-webkit-autofill {
-      box-shadow: 0 0 0 30px var(--color-control-background) inset;
-      transition: background-color 5000s ease-in-out 0s;
+      box-shadow: 0 0 0 30px var(--color-layer) inset;
       -webkit-text-fill-color: var(--color-text);
     }
   }
@@ -59,29 +62,22 @@
 }
 
 
-:global(body.mobile) {
-  .wrapper {
-    padding: 0 _.unit(4);
-    background: var(--color-layer);
-    color: var(--color-text);
-
-    .actionButton {
-      width: 24px;
-      height: 24px;
-    }
-  }
-}
-
 :global(body.desktop) {
   .wrapper {
     padding: 0 _.unit(3);
-    background: transparent;
     border: _.border(var(--color-border));
     border-radius: 6px;
     outline: 3px solid transparent;
+    background: var(--color-surface);
 
     input {
       font: var(--font-body);
+
+      // Overwrite webkit auto-fill style
+      &:-webkit-autofill {
+        box-shadow: 0 0 0 30px var(--color-surface) inset;
+        -webkit-text-fill-color: var(--color-text);
+      }
     }
 
     .actionButton {
