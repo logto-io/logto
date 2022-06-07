@@ -224,17 +224,8 @@ const UserDetails = () => {
                 >
                   <TextInput
                     {...register('avatar', {
-                      validate: (value) => {
-                        if (!value) {
-                          return true;
-                        }
-
-                        if (uriValidator({ verifyBlank: true })(value)) {
-                          return true;
-                        }
-
-                        return t('errors.invalid_uri_format');
-                      },
+                      validate: (value) =>
+                        !value || uriValidator(value) || t('errors.invalid_uri_format'),
                     })}
                     hasError={Boolean(errors.avatar)}
                     errorMessage={errors.avatar?.message}
