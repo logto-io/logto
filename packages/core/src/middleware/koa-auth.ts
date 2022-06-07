@@ -19,13 +19,16 @@ export type WithAuthContext<ContextT extends IRouterParamContext = IRouterParamC
 const bearerTokenIdentifier = 'Bearer';
 
 const extractBearerTokenFromHeaders = ({ authorization }: IncomingHttpHeaders) => {
-  assertThat(authorization, new RequestError('auth.authorization_header_missing', { status: 401 }));
+  assertThat(
+    authorization,
+    new RequestError({ code: 'auth.authorization_header_missing', status: 401 })
+  );
   assertThat(
     authorization.startsWith(bearerTokenIdentifier),
-    new RequestError('auth.authorization_token_type_not_supported', {
-      status: 401,
-      supportedTypes: [bearerTokenIdentifier],
-    })
+    new RequestError(
+      { code: 'auth.authorization_token_type_not_supported', status: 401 },
+      { supportedTypes: [bearerTokenIdentifier] }
+    )
   );
 
   return authorization.slice(bearerTokenIdentifier.length + 1);
@@ -52,7 +55,7 @@ const getUserInfoFromRequest = async (request: Request): Promise<UserInfo> => {
     audience: managementResource.indicator,
   });
 
-  assertThat(sub, new RequestError('auth.jwt_sub_missing', { status: 401 }));
+  assertThat(sub, new RequestError({ code: 'auth.jwt_sub_missing', status: 401 }));
 
   return { sub, roleNames: conditional(Array.isArray(roleNames) && roleNames) };
 };
@@ -67,13 +70,13 @@ export default function koaAuth<StateT, ContextT extends IRouterParamContext, Re
       if (forRole) {
         assertThat(
           roleNames?.includes(forRole),
-          new RequestError('auth.unauthorized', { status: 401 })
+          new RequestError({ code: 'auth.unauthorized', status: 401 })
         );
       }
 
       ctx.auth = sub;
     } catch {
-      throw new RequestError('auth.unauthorized', { status: 401 });
+      throw new RequestError({ code: 'auth.unauthorized', status: 401 });
     }
 
     return next();
