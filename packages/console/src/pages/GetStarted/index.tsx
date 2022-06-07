@@ -9,13 +9,14 @@ import ConfirmModal from '@/components/ConfirmModal';
 import Spacer from '@/components/Spacer';
 import useUserPreferences from '@/hooks/use-user-preferences';
 
+import Skeleton from './components/Skeleton';
 import useGetStartedMetadata from './hook';
 import * as styles from './index.module.scss';
 
 const GetStarted = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const navigate = useNavigate();
-  const { data } = useGetStartedMetadata();
+  const { data, isLoading } = useGetStartedMetadata();
   const { update } = useUserPreferences();
   const [showConfirmModal, setShowConfirmModal] = useState(false);
 
@@ -45,23 +46,28 @@ const GetStarted = () => {
           </span>
         </div>
       </div>
-      {data.map(({ id, title, subtitle, icon, isComplete, buttonText, onClick }) => (
-        <Card key={id} className={styles.card}>
-          <img className={styles.icon} src={icon} />
-          {isComplete && <img className={styles.completeIndicator} src={completeIndicator} />}
-          <div className={styles.wrapper}>
-            <div className={styles.title}>{t(title)}</div>
-            <div className={styles.subtitle}>{t(subtitle)}</div>
-          </div>
-          <Button
-            className={styles.button}
-            type="outline"
-            size="large"
-            title={buttonText}
-            onClick={onClick}
-          />
-        </Card>
-      ))}
+      {isLoading && <Skeleton />}
+      {!isLoading &&
+        data.map(
+          ({ id, title, subtitle, icon, isComplete, isHidden, buttonText, onClick }) =>
+            !isHidden && (
+              <Card key={id} className={styles.card}>
+                <img className={styles.icon} src={icon} />
+                {isComplete && <img className={styles.completeIndicator} src={completeIndicator} />}
+                <div className={styles.wrapper}>
+                  <div className={styles.title}>{t(title)}</div>
+                  <div className={styles.subtitle}>{t(subtitle)}</div>
+                </div>
+                <Button
+                  className={styles.button}
+                  type="outline"
+                  size="large"
+                  title={buttonText}
+                  onClick={onClick}
+                />
+              </Card>
+            )
+        )}
       <ConfirmModal
         title="get_started.confirm"
         isOpen={showConfirmModal}

@@ -1,5 +1,7 @@
 import { AdminConsoleKey, I18nKey } from '@logto/phrases';
+import { Application } from '@logto/schemas';
 import { useNavigate } from 'react-router-dom';
+import useSWR from 'swr';
 
 import checkDemoIcon from '@/assets/images/check-demo.svg';
 import createAppIcon from '@/assets/images/create-app.svg';
@@ -7,6 +9,7 @@ import customizeIcon from '@/assets/images/customize.svg';
 import furtherReadingsIcon from '@/assets/images/further-readings.svg';
 import oneClickIcon from '@/assets/images/one-click.svg';
 import passwordlessIcon from '@/assets/images/passwordless.svg';
+import { RequestError } from '@/hooks/use-api';
 import useSettings from '@/hooks/use-settings';
 
 type GetStartedMetadata = {
@@ -16,12 +19,24 @@ type GetStartedMetadata = {
   icon: string;
   buttonText: I18nKey;
   isComplete?: boolean;
+  isHidden?: boolean;
   onClick: () => void;
 };
 
 const useGetStartedMetadata = () => {
   const { settings, updateSettings } = useSettings();
+  const { data: demoApp, error } = useSWR<Application, RequestError>('/api/applications/demo_app', {
+    shouldRetryOnError: (error: unknown) => {
+      if (error instanceof RequestError) {
+        return error.status !== 404;
+      }
+
+      return true;
+    },
+  });
   const navigate = useNavigate();
+  const isLoadingDemoApp = !demoApp && !error;
+  const hideDemo = error?.status === 404;
 
   const data: GetStartedMetadata[] = [
     {
@@ -31,6 +46,7 @@ const useGetStartedMetadata = () => {
       icon: checkDemoIcon,
       buttonText: 'general.check_out',
       isComplete: settings?.checkDemo,
+      isHidden: hideDemo,
       onClick: async () => {
         void updateSettings({ checkDemo: true });
         window.open('/demo-app', '_blank');
@@ -97,6 +113,7 @@ const useGetStartedMetadata = () => {
     data,
     completedCount: data.filter(({ isComplete }) => isComplete).length,
     totalCount: data.length,
+    isLoading: isLoadingDemoApp,
   };
 };
 
