@@ -74,7 +74,7 @@ export default class WeChatNativeConnector implements SocialConnector {
       .json<AccessTokenResponse>();
 
     assert(errcode !== 40_029, new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid));
-    assert(!errcode && accessToken && openid, new Error(errmsg));
+    assert(!errcode && accessToken && openid, new Error(errmsg ?? ''));
 
     return { accessToken, openid };
   };
@@ -94,7 +94,6 @@ export default class WeChatNativeConnector implements SocialConnector {
       // Response properties of user info can be separated into two groups: (1) {unionid, headimgurl, nickname}, (2) {errcode, errmsg}.
       // These two groups are mutually exclusive: if group (1) is not empty, group (2) should be empty and vice versa.
       // 'errmsg' and 'errcode' turn to non-empty values or empty values at the same time. Hence, if 'errmsg' is non-empty then 'errcode' should be non-empty.
-      // 'openid' is required but the response of getUserInfo is consistent as long as access_token is valid. In other words, 'openid' can be an arbitrary non-empty string, but it makes no sense that 'openid' can be some other strings other than its own value.
 
       assert(errcode !== 40_001, new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid));
       assert(!errcode, new Error(errmsg));
