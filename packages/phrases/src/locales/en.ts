@@ -549,6 +549,18 @@ const translation = {
       button: 'Sign in again',
     },
   },
+  demo_app: {
+    notification: 'Use the admin username and password to sign in this demo.',
+    title: "You've successfully signed in the demo app!",
+    subtitle: 'Here is your personal information:',
+    username: 'Username: ',
+    user_id: 'User ID: ',
+    sign_out: 'Sign out the demo app',
+    continue_explore: 'Or continue to explore',
+    customize_sign_in_experience: 'Customize sign-in experience',
+    enable_passwordless: 'Enable passwordless',
+    add_social_connector: 'Add a social connector',
+  },
 };
 
 const errors = {

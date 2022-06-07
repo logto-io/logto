@@ -900,6 +900,7 @@ importers:
 
   packages/demo-app:
     specifiers:
+      '@logto/phrases': ^0.1.0
       '@logto/react': ^0.1.14
       '@logto/schemas': ^0.1.0
       '@logto/shared': ^0.1.0
@@ -911,16 +912,21 @@ importers:
       '@silverhand/ts-config-react': ^0.14.0
       '@types/react': ^17.0.14
       '@types/react-dom': ^17.0.9
+      cross-env: ^7.0.3
       eslint: ^8.10.0
+      i18next: ^21.6.12
+      i18next-browser-languagedetector: ^6.1.3
       lint-staged: ^13.0.0
       parcel: 2.5.0
       postcss: ^8.4.6
       prettier: ^2.3.2
       react: ^17.0.2
       react-dom: ^17.0.2
+      react-i18next: ^11.15.4
       stylelint: ^14.8.2
       typescript: ^4.7.2
     devDependencies:
+      '@logto/phrases': link:../phrases
       '@logto/react': 0.1.14_react@17.0.2
       '@logto/schemas': link:../schemas
       '@logto/shared': link:../shared
@@ -932,13 +938,17 @@ importers:
       '@silverhand/ts-config-react': 0.14.0_typescript@4.7.2
       '@types/react': 17.0.37
       '@types/react-dom': 17.0.11
+      cross-env: 7.0.3
       eslint: 8.10.0
+      i18next: 21.6.12
+      i18next-browser-languagedetector: 6.1.3
       lint-staged: 13.0.0
       parcel: 2.5.0_postcss@8.4.14
       postcss: 8.4.14
       prettier: 2.5.1
       react: 17.0.2
       react-dom: 17.0.2_react@17.0.2
+      react-i18next: 11.15.4_fq32mavcto3l2u7t3zyhvdh4yu
       stylelint: 14.8.2
       typescript: 4.7.2
 
