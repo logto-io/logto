@@ -41,7 +41,7 @@ const useSwrFetcher: useSwrFetcherHook = <T>() => {
         if (error instanceof HTTPError) {
           const { response } = error;
           const metadata = await response.json<RequestErrorBody>();
-          throw new RequestError(metadata);
+          throw new RequestError(response.status, metadata);
         }
         throw error;
       }
