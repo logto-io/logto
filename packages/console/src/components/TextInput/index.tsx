@@ -14,7 +14,7 @@ const TextInput = (
   reference: ForwardedRef<HTMLInputElement>
 ) => {
   return (
-    <div className={classNames(className)}>
+    <div className={className}>
       <div
         className={classNames(
           styles.container,
