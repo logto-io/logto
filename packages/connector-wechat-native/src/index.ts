@@ -31,9 +31,6 @@ import {
   WeChatNativeConfig,
 } from './types';
 
-// As creating a WeChat Web/Mobile application needs a real App or Website record, the real test is temporarily not finished.
-// TODO: test with our own wechat mobile/web application (LOG-1910), already tested with other verified wechat web application
-
 export default class WeChatNativeConnector implements SocialConnector {
   public metadata: ConnectorMetadata = defaultMetadata;
 
@@ -68,6 +65,7 @@ export default class WeChatNativeConnector implements SocialConnector {
       access_token: accessToken,
       openid,
       errcode,
+      errmsg,
     } = await got
       .get(accessTokenEndpoint, {
         searchParams: { appid, secret, code, grant_type: 'authorization_code' },
@@ -75,10 +73,8 @@ export default class WeChatNativeConnector implements SocialConnector {
       })
       .json<AccessTokenResponse>();
 
-    assert(
-      errcode !== 40_029 && accessToken && openid,
-      new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid)
-    );
+    assert(errcode !== 40_029, new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid));
+    assert(!errcode && accessToken && openid, new Error(errmsg ?? ''));
 
     return { accessToken, openid };
   };
@@ -86,15 +82,6 @@ export default class WeChatNativeConnector implements SocialConnector {
   public getUserInfo: GetUserInfo = async (data) => {
     const { code } = codeDataGuard.parse(data);
     const { accessToken, openid } = await this.getAccessToken(code);
-
-    // TO-DO: @Darcy refactor this
-    // 'openid' is defined as a required input argument in WeChat API doc, but it does not necessarily have to
-    // be the return value from getAccessToken per testing.
-    // In other words, 'openid' is required but the response of getUserInfo is consistent as long as
-    // access_token is valid.
-    // We are expecting to get 41009 'missing openid' response according to the developers doc, but the
-    // fact is that we still got 40001 'invalid credentials' response.
-    assert(openid, new Error('`openid` is required by WeChat API.'));
 
     try {
       const { unionid, headimgurl, nickname, errcode, errmsg } = await got

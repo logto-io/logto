@@ -15,6 +15,7 @@ export type AccessTokenResponse = {
   refresh_token?: string;
   scope?: string;
   errcode?: number;
+  errmsg?: string;
 };
 
 export type UserInfoResponse = {
