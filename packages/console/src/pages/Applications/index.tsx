@@ -70,7 +70,7 @@ const Applications = () => {
         </Modal>
       </div>
       <div className={classNames(styles.table, tableStyles.scrollable)}>
-        <table>
+        <table className={classNames(!data && tableStyles.empty)}>
           <colgroup>
             <col className={styles.applicationName} />
             <col />

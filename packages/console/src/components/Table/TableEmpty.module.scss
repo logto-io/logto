@@ -1,8 +1,10 @@
 @use '@/scss/underscore' as _;
 
 .tableEmpty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   padding: _.unit(4) 0;
-  text-align: center;
 
   .title {
     font: var(--font-subhead-2);
