@@ -47,7 +47,7 @@ const useSocialCallbackHandler = () => {
       // Web flow
       navigate(
         {
-          pathname: `/sign-in/callback/${connectorId}`,
+          pathname: `/social/sign-in-callback/${connectorId}`,
           search: data,
         },
         {

@@ -24,9 +24,9 @@ describe('SocialCallbackPage with code', () => {
     Object.defineProperty(window, 'location', {
       value: {
         origin,
-        href: `/sign-in/callback?state=${state}&code=foo`,
+        href: `/social/sign-in-callback?state=${state}&code=foo`,
         search: `?state=${state}&code=foo`,
-        pathname: '/sign-in/callback',
+        pathname: '/social/sign-in-callback',
         replace: jest.fn(),
       },
     });
@@ -34,9 +34,9 @@ describe('SocialCallbackPage with code', () => {
 
     renderWithPageContext(
       <SettingsProvider>
-        <MemoryRouter initialEntries={['/sign-in/callback/github']}>
+        <MemoryRouter initialEntries={['/social/sign-in-callback/github']}>
           <Routes>
-            <Route path="/sign-in/callback/:connector" element={<SocialCallback />} />
+            <Route path="/social/sign-in-callback/:connector" element={<SocialCallback />} />
           </Routes>
         </MemoryRouter>
       </SettingsProvider>
