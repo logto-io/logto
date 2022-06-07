@@ -21,6 +21,7 @@ const ApiResources = React.lazy(async () => import('@/pages/ApiResources'));
 const ApplicationDetails = React.lazy(async () => import('@/pages/ApplicationDetails'));
 const Applications = React.lazy(async () => import('@/pages/Applications'));
 const AuditLogs = React.lazy(async () => import('@/pages/AuditLogs'));
+const AuditLogDetails = React.lazy(async () => import('@/pages/AuditLogDetails'));
 const Callback = React.lazy(async () => import('@/pages/Callback'));
 const ConnectorDetails = React.lazy(async () => import('@/pages/ConnectorDetails'));
 const Connectors = React.lazy(async () => import('@/pages/Connectors'));
@@ -76,6 +77,7 @@ const Main = () => {
                 <Route path="settings" element={<Settings />} />
                 <Route path="audit-logs">
                   <Route index element={<AuditLogs />} />
+                  <Route path=":logId" element={<AuditLogDetails />} />
                 </Route>
                 <Route path="dashboard" element={<Dashboard />} />
               </Route>

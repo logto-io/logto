@@ -545,6 +545,20 @@ const translation = {
       time: 'Time',
       filter_by: 'Filter by',
     },
+    log_details: {
+      back_to_logs: 'Back to Audit Logs',
+      success: 'Success',
+      failed: 'Failed',
+      event_type: 'Event Type',
+      application: 'Application',
+      ip_address: 'IP Address',
+      user: 'User',
+      log_id: 'Log ID',
+      time: 'Time',
+      user_agent: 'User Agent',
+      tab_details: 'Details',
+      raw_data: 'Raw data',
+    },
     session_expired: {
       title: 'Session Expired',
       subtitle:

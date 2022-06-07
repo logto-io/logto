@@ -145,5 +145,7 @@ export type LogDTO = Omit<Log, 'payload'> & {
     userId?: string;
     applicationId?: string;
     result?: string;
+    userAgent?: string;
+    ip?: string;
   };
 };
