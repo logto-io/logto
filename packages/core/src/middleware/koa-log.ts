@@ -4,6 +4,7 @@ import { MiddlewareType } from 'koa';
 import { IRouterParamContext } from 'koa-router';
 import { nanoid } from 'nanoid';
 
+import RequestError from '@/errors/RequestError';
 import { insertLog } from '@/queries/log';
 
 type MergeLog = <T extends LogType>(type: T, payload: LogPayloads[T]) => void;
@@ -90,7 +91,11 @@ export default function koaLog<
     try {
       await next();
     } catch (error: unknown) {
-      logger.set({ result: LogResult.Error, error: String(error) });
+      const errorInfo = error instanceof RequestError ? JSON.stringify(error.body) : String(error);
+      logger.set({
+        result: LogResult.Error,
+        error: errorInfo,
+      });
       throw error;
     } finally {
       await logger.save();
