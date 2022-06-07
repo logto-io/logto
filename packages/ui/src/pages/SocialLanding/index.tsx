@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 
 import SocialLandingContainer from '@/containers/SocialLanding';
@@ -12,7 +12,15 @@ type Parameters = {
 
 const SocialLanding = () => {
   const { connector: connectorId } = useParams<Parameters>();
-  const { loading } = useSocialLandingHandler(connectorId);
+  const { loading, socialLandingHandler } = useSocialLandingHandler();
+
+  // SocialSignIn Callback Handler
+  useEffect(() => {
+    if (!connectorId) {
+      return;
+    }
+    socialLandingHandler(connectorId);
+  }, [connectorId, socialLandingHandler]);
 
   if (!connectorId) {
     return null;

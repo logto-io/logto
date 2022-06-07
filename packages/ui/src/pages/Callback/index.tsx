@@ -1,20 +1,17 @@
 import React, { useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 
-import Button from '@/components/Button';
 import SocialLanding from '@/containers/SocialLanding';
 import useSocialCallbackHandler from '@/hooks/use-social-callback-handler';
 
 import * as styles from './index.module.scss';
 
-type Props = {
+type Paramters = {
   connector: string;
 };
 
 const Callback = () => {
-  const { connector: connectorId } = useParams<Props>();
-  const { t } = useTranslation(undefined, { keyPrefix: 'main_flow' });
+  const { connector: connectorId } = useParams<Paramters>();
 
   const { socialCallbackHandler, loading } = useSocialCallbackHandler();
 
@@ -37,14 +34,6 @@ const Callback = () => {
         connectorId={connectorId}
         isLoading={loading}
       />
-      <Button
-        className={styles.button}
-        onClick={() => {
-          socialCallbackHandler(connectorId);
-        }}
-      >
-        {t('action.continue')}
-      </Button>
     </div>
   );
 };
