@@ -4,16 +4,17 @@ import useSWR from 'swr';
 
 import useApi, { RequestError } from './use-api';
 
-const useAdminConsoleConfigs = () => {
+const useSettings = () => {
   const { isAuthenticated, error: authError } = useLogto();
+  const shouldFetch = isAuthenticated && !authError;
   const {
     data: settings,
     error,
     mutate,
-  } = useSWR<Setting, RequestError>(isAuthenticated && !authError && '/api/settings');
+  } = useSWR<Setting, RequestError>(shouldFetch && '/api/settings');
   const api = useApi();
 
-  const updateConfigs = async (delta: Partial<AdminConsoleConfig>) => {
+  const updateSettings = async (delta: Partial<AdminConsoleConfig>) => {
     const updatedSettings = await api
       .patch('/api/settings', {
         json: {
@@ -27,10 +28,11 @@ const useAdminConsoleConfigs = () => {
   };
 
   return {
-    configs: settings?.adminConsole,
+    isLoading: !settings && !error,
+    settings: settings?.adminConsole,
     error,
-    updateConfigs,
+    updateSettings,
   };
 };
 
-export default useAdminConsoleConfigs;
+export default useSettings;

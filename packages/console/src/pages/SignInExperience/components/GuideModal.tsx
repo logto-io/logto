@@ -11,7 +11,8 @@ import CardTitle from '@/components/CardTitle';
 import IconButton from '@/components/IconButton';
 import Spacer from '@/components/Spacer';
 import useApi from '@/hooks/use-api';
-import useAdminConsoleConfigs from '@/hooks/use-configs';
+import useSettings from '@/hooks/use-settings';
+import useUserPreferences from '@/hooks/use-user-preferences';
 import Close from '@/icons/Close';
 import * as modalStyles from '@/scss/modal.module.scss';
 
@@ -32,7 +33,8 @@ type Props = {
 
 const GuideModal = ({ isOpen, onClose }: Props) => {
   const { data } = useSWR<SignInExperience>('/api/sign-in-exp');
-  const { configs, updateConfigs } = useAdminConsoleConfigs();
+  const { data: preferences, update: updatePreferences } = useUserPreferences();
+  const { updateSettings } = useSettings();
   const methods = useForm<SignInExperienceForm>();
   const {
     reset,
@@ -53,15 +55,11 @@ const GuideModal = ({ isOpen, onClose }: Props) => {
   }, [data, reset, isDirty]);
 
   const onGotIt = async () => {
-    if (!configs) {
-      return;
-    }
-
-    await updateConfigs({ experienceNoticeConfirmed: true });
+    await updatePreferences({ experienceNoticeConfirmed: true });
   };
 
   const onSubmit = handleSubmit(async (formData) => {
-    if (!data || isSubmitting || !configs) {
+    if (!data || isSubmitting) {
       return;
     }
 
@@ -69,7 +67,7 @@ const GuideModal = ({ isOpen, onClose }: Props) => {
       api.patch('/api/sign-in-exp', {
         json: signInExperienceParser.toRemoteModel(formData),
       }),
-      updateConfigs({ customizeSignInExperience: true }),
+      updateSettings({ customizeSignInExperience: true }),
     ]);
 
     location.reload();
@@ -88,7 +86,7 @@ const GuideModal = ({ isOpen, onClose }: Props) => {
           <Button type="plain" size="small" title="general.skip" onClick={onClose} />
         </div>
         <div className={styles.content}>
-          {configs && !configs.experienceNoticeConfirmed && (
+          {!preferences.experienceNoticeConfirmed && (
             <div className={styles.reminder}>
               <Alert
                 action="admin_console.sign_in_exp.welcome.got_it"

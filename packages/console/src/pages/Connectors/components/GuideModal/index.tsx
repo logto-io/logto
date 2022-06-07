@@ -13,7 +13,7 @@ import CodeEditor from '@/components/CodeEditor';
 import DangerousRaw from '@/components/DangerousRaw';
 import IconButton from '@/components/IconButton';
 import useApi from '@/hooks/use-api';
-import useAdminConsoleConfigs from '@/hooks/use-configs';
+import useSettings from '@/hooks/use-settings';
 import Close from '@/icons/Close';
 import Step from '@/mdx-components/Step';
 import SenderTester from '@/pages/ConnectorDetails/components/SenderTester';
@@ -31,7 +31,7 @@ type Props = {
 
 const GuideModal = ({ connector, isOpen, onClose }: Props) => {
   const api = useApi();
-  const { updateConfigs } = useAdminConsoleConfigs();
+  const { updateSettings } = useSettings();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { id: connectorId, type: connectorType, name, configTemplate, readme } = connector;
 
@@ -68,7 +68,7 @@ const GuideModal = ({ connector, isOpen, onClose }: Props) => {
         })
         .json<ConnectorDTO>();
 
-      await updateConfigs({
+      await updateSettings({
         ...conditional(!isSocialConnector && { configurePasswordless: true }),
         ...conditional(isSocialConnector && { configureSocialSignIn: true }),
       });

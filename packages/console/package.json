@@ -22,6 +22,7 @@
     "@logto/react": "^0.1.14",
     "@logto/shared": "^0.1.0",
     "@logto/schemas": "^0.1.0",
+    "@logto/shared": "^0.1.0",
     "@mdx-js/react": "^1.6.22",
     "@parcel/core": "2.5.0",
     "@parcel/transformer-mdx": "2.5.0",
@@ -71,7 +72,8 @@
     "remark-gfm": "^3.0.1",
     "stylelint": "^14.8.2",
     "swr": "^1.2.2",
-    "typescript": "^4.6.2"
+    "typescript": "^4.6.2",
+    "zod": "^3.14.3"
   },
   "alias": {
     "@/*": "./src/$1",

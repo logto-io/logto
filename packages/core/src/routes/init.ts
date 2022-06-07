@@ -1,3 +1,4 @@
+import { UserRole } from '@logto/schemas';
 import Koa from 'koa';
 import mount from 'koa-mount';
 import Router from 'koa-router';
@@ -18,6 +19,7 @@ import swaggerRoutes from '@/routes/swagger';
 
 import adminUserRoutes from './admin-user';
 import logRoutes from './log';
+import meRoutes from './me';
 import roleRoutes from './role';
 import { AnonymousRouter, AuthedRouter } from './types';
 
@@ -26,25 +28,29 @@ const createRouters = (provider: Provider) => {
   sessionRouter.use(koaLogSession(provider));
   sessionRoutes(sessionRouter, provider);
 
-  const authedRouter: AuthedRouter = new Router();
-  authedRouter.use(koaAuth());
-  applicationRoutes(authedRouter);
-  settingRoutes(authedRouter);
-  connectorRoutes(authedRouter);
-  resourceRoutes(authedRouter);
-  signInExperiencesRoutes(authedRouter);
-  adminUserRoutes(authedRouter);
-  logRoutes(authedRouter);
-  roleRoutes(authedRouter);
-  dashboardRoutes(authedRouter);
+  const managementRouter: AuthedRouter = new Router();
+  managementRouter.use(koaAuth(UserRole.Admin));
+  applicationRoutes(managementRouter);
+  settingRoutes(managementRouter);
+  connectorRoutes(managementRouter);
+  resourceRoutes(managementRouter);
+  signInExperiencesRoutes(managementRouter);
+  adminUserRoutes(managementRouter);
+  logRoutes(managementRouter);
+  roleRoutes(managementRouter);
+  dashboardRoutes(managementRouter);
+
+  const meRouter: AuthedRouter = new Router();
+  meRouter.use(koaAuth());
+  meRoutes(meRouter);
 
   const anonymousRouter: AnonymousRouter = new Router();
   signInSettingsRoutes(anonymousRouter);
   statusRoutes(anonymousRouter);
   // The swagger.json should contain all API routers.
-  swaggerRoutes(anonymousRouter, [sessionRouter, authedRouter, anonymousRouter]);
+  swaggerRoutes(anonymousRouter, [sessionRouter, managementRouter, meRouter, anonymousRouter]);
 
-  return [sessionRouter, anonymousRouter, authedRouter];
+  return [sessionRouter, managementRouter, meRouter, anonymousRouter];
 };
 
 export default function initRouter(app: Koa, provider: Provider) {

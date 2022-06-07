@@ -5,19 +5,21 @@ import { useTranslation } from 'react-i18next';
 import icon from '@/assets/images/tada.svg';
 import Dropdown, { DropdownItem } from '@/components/Dropdown';
 import Index from '@/components/Index';
-import useConfigs from '@/hooks/use-configs';
+import useUserPreferences from '@/hooks/use-user-preferences';
 
 import useGetStartedMetadata from '../../hook';
 import * as styles from './index.module.scss';
 
 const GetStartedProgress = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { configs } = useConfigs();
+  const {
+    data: { hideGetStarted },
+  } = useUserPreferences();
   const anchorRef = useRef<HTMLDivElement>(null);
   const [showDropDown, setShowDropdown] = useState(false);
   const { data, completedCount, totalCount } = useGetStartedMetadata();
 
-  if (!configs || configs.hideGetStarted) {
+  if (hideGetStarted) {
     return null;
   }
 

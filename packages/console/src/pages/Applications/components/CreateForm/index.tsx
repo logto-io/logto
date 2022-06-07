@@ -9,7 +9,7 @@ import ModalLayout from '@/components/ModalLayout';
 import RadioGroup, { Radio } from '@/components/RadioGroup';
 import TextInput from '@/components/TextInput';
 import useApi from '@/hooks/use-api';
-import useAdminConsoleConfigs from '@/hooks/use-configs';
+import useSettings from '@/hooks/use-settings';
 import { applicationTypeI18nKey } from '@/types/applications';
 import { GuideForm } from '@/types/guide';
 
@@ -28,7 +28,7 @@ type Props = {
 };
 
 const CreateForm = ({ onClose }: Props) => {
-  const { updateConfigs } = useAdminConsoleConfigs();
+  const { updateSettings } = useSettings();
   const [createdApp, setCreatedApp] = useState<Application>();
   const [isGetStartedModalOpen, setIsGetStartedModalOpen] = useState(false);
   const {
@@ -74,7 +74,7 @@ const CreateForm = ({ onClose }: Props) => {
         },
       })
       .json<Application>();
-    await updateConfigs({ createApplication: true });
+    await updateSettings({ createApplication: true });
     setCreatedApp(application);
     closeModal();
   };

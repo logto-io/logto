@@ -14,7 +14,7 @@ const Sidebar = () => {
     keyPrefix: 'admin_console.tab_sections',
   });
   const location = useLocation();
-  const sections = useSidebarMenuItems();
+  const { sections } = useSidebarMenuItems();
 
   return (
     <div className={styles.sidebar}>

@@ -1,11 +1,10 @@
 import { Language } from '@logto/phrases';
-import { AppearanceMode, Setting } from '@logto/schemas';
+import { AppearanceMode } from '@logto/schemas';
 import classNames from 'classnames';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
-import useSWR from 'swr';
 
 import Button from '@/components/Button';
 import Card from '@/components/Card';
@@ -13,43 +12,26 @@ import CardTitle from '@/components/CardTitle';
 import FormField from '@/components/FormField';
 import Select from '@/components/Select';
 import TabNav, { TabNavItem } from '@/components/TabNav';
-import { themeStorageKey } from '@/consts';
-import useApi, { RequestError } from '@/hooks/use-api';
+import useUserPreferences, { UserPreferences } from '@/hooks/use-user-preferences';
 import * as detailsStyles from '@/scss/details.module.scss';
 
 import * as styles from './index.module.scss';
 
 const Settings = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { data, error, mutate } = useSWR<Setting, RequestError>('/api/settings');
+  const { data, error, update, isLoading, isLoaded } = useUserPreferences();
   const {
-    reset,
     handleSubmit,
     control,
     formState: { isSubmitting },
-  } = useForm<Setting>();
-  const api = useApi();
-
-  useEffect(() => {
-    if (data) {
-      reset(data);
-    }
-  }, [data, reset]);
+  } = useForm<UserPreferences>({ defaultValues: data });
 
   const onSubmit = handleSubmit(async (formData) => {
-    if (!data || isSubmitting) {
+    if (isSubmitting) {
       return;
     }
 
-    const updatedData = await api
-      .patch('/api/settings', {
-        json: {
-          ...formData,
-        },
-      })
-      .json<Setting>();
-    void mutate(updatedData);
-    localStorage.setItem(themeStorageKey, updatedData.adminConsole.appearanceMode);
+    await update(formData);
     toast.success(t('settings.saved'));
   });
 
@@ -59,14 +41,14 @@ const Settings = () => {
       <TabNav>
         <TabNavItem href="/settings">{t('settings.tabs.general')}</TabNavItem>
       </TabNav>
-      {!data && !error && <div>loading</div>}
-      {!data && error && <div>{`error occurred: ${error.body?.message ?? error.message}`}</div>}
-      {data && (
+      {isLoading && <div>loading</div>}
+      {error && <div>{`error occurred: ${error.body?.message ?? error.message}`}</div>}
+      {isLoaded && (
         <form className={detailsStyles.body} onSubmit={onSubmit}>
           <div className={styles.fields}>
             <FormField title="admin_console.settings.language" className={styles.textField}>
               <Controller
-                name="adminConsole.language"
+                name="language"
                 control={control}
                 render={({ field: { value, onChange } }) => (
                   <Select
@@ -88,7 +70,7 @@ const Settings = () => {
             </FormField>
             <FormField title="admin_console.settings.appearance" className={styles.textField}>
               <Controller
-                name="adminConsole.appearanceMode"
+                name="appearanceMode"
                 control={control}
                 render={({ field: { value, onChange } }) => (
                   <Select

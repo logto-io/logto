@@ -1,7 +1,8 @@
+import { Optional } from '@silverhand/essentials';
 import React, { FC, ReactNode } from 'react';
 import { TFuncKey } from 'react-i18next';
 
-import useAdminConsoleConfigs from '@/hooks/use-configs';
+import useUserPreferences from '@/hooks/use-user-preferences';
 
 import Contact from './components/Contact';
 import BarGraph from './icons/BarGraph';
@@ -27,17 +28,32 @@ type SidebarSection = {
   items: SidebarItem[];
 };
 
-export const useSidebarMenuItems = (): SidebarSection[] => {
-  const { configs } = useAdminConsoleConfigs();
+const findFirstItem = (sections: SidebarSection[]): Optional<SidebarItem> => {
+  for (const section of sections) {
+    const found = section.items.find((item) => !item.isHidden);
 
-  return [
+    if (found) {
+      return found;
+    }
+  }
+};
+
+export const useSidebarMenuItems = (): {
+  sections: SidebarSection[];
+  firstItem: Optional<SidebarItem>;
+} => {
+  const {
+    data: { hideGetStarted },
+  } = useUserPreferences();
+
+  const sections: SidebarSection[] = [
     {
       title: 'overview',
       items: [
         {
           Icon: Bolt,
           title: 'get_started',
-          isHidden: configs?.hideGetStarted,
+          isHidden: hideGetStarted,
         },
         {
           Icon: BarGraph,
@@ -94,4 +110,6 @@ export const useSidebarMenuItems = (): SidebarSection[] => {
       ],
     },
   ];
+
+  return { sections, firstItem: findFirstItem(sections) };
 };
