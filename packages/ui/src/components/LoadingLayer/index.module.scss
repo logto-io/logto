@@ -20,7 +20,7 @@
 }
 
 .loadingIcon {
-  animation: rotating 1s linear infinite;
+  animation: rotating 1s steps(12, end) infinite;
 }
 
 @keyframes rotating {

@@ -54,8 +54,6 @@ const translation = {
       phone_number: '手机',
       reminder: '提示',
       not_found: '404 页面不存在',
-      loading: '读取中...',
-      redirecting: '页面跳转中...',
       agree_with_terms: '我已阅读并同意 ',
       agree_with_terms_modal: 'Please read the {{terms}} and then agree the box first.',
       terms_of_use: '使用条款',

@@ -1,4 +1,4 @@
-import { useEffect, useContext } from 'react';
+import { useEffect, useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { SearchParameters } from '@/types';
@@ -8,6 +8,7 @@ import { storeCallbackLink } from '@/utils/social-connectors';
 import { PageContext } from './use-page-context';
 
 const useSocialLandingHandler = (connectorId?: string) => {
+  const [loading, setLoading] = useState(true);
   const { setToast } = useContext(PageContext);
   const { t } = useTranslation(undefined, { keyPrefix: 'main_flow' });
   const { search } = window.location;
@@ -16,6 +17,7 @@ const useSocialLandingHandler = (connectorId?: string) => {
     const redirectUri = getSearchParameters(search, SearchParameters.redirectTo);
 
     if (!redirectUri || !connectorId) {
+      setLoading(false);
       setToast(t('error.invalid_connector_request'));
 
       return;
@@ -28,7 +30,9 @@ const useSocialLandingHandler = (connectorId?: string) => {
     }
 
     window.location.replace(redirectUri);
-  }, [connectorId, search, setToast, t]);
+  }, [connectorId, search, setLoading, setToast, t]);
+
+  return { loading };
 };
 
 export default useSocialLandingHandler;

@@ -1,18 +1,22 @@
 import React, { useEffect, useContext } from 'react';
-import { useTranslation } from 'react-i18next';
 
 import { consent } from '@/apis/consent';
+import { LoadingIcon, LoadingIconLight } from '@/components/LoadingLayer';
 import useApi from '@/hooks/use-api';
 import { PageContext } from '@/hooks/use-page-context';
 
 import * as styles from './index.module.scss';
 
 const Consent = () => {
-  const { experienceSettings } = useContext(PageContext);
-  const logoUrl = experienceSettings?.branding.logoUrl;
-  const { result, run: asyncConsent } = useApi(consent);
+  const { experienceSettings, theme } = useContext(PageContext);
+  const { error, result, run: asyncConsent } = useApi(consent);
 
-  const { t } = useTranslation(undefined, { keyPrefix: 'main_flow' });
+  const logoUrl =
+    theme === 'light'
+      ? experienceSettings?.branding.logoUrl
+      : experienceSettings?.branding.darkLogoUrl;
+
+  const Loading = theme === 'light' ? LoadingIconLight : LoadingIcon;
 
   useEffect(() => {
     void asyncConsent();
@@ -27,7 +31,7 @@ const Consent = () => {
   return (
     <div className={styles.wrapper}>
       <img src={logoUrl} />
-      <div className={styles.content}>{t('description.loading')}</div>
+      {!error && <Loading />}
     </div>
   );
 };

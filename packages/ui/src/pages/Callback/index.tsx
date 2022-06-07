@@ -16,7 +16,7 @@ const Callback = () => {
   const { connector: connectorId } = useParams<Props>();
   const { t } = useTranslation(undefined, { keyPrefix: 'main_flow' });
 
-  const socialCallbackHandler = useSocialCallbackHandler();
+  const { socialCallbackHandler, loading } = useSocialCallbackHandler();
 
   // SocialSignIn Callback Handler
   useEffect(() => {
@@ -35,7 +35,7 @@ const Callback = () => {
       <SocialLanding
         className={styles.connectorContainer}
         connectorId={connectorId}
-        message={t('description.redirecting')}
+        isLoading={loading}
       />
       <Button
         className={styles.button}

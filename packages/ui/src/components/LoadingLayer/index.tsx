@@ -1,13 +1,15 @@
 import React from 'react';
 
-import LoadingIcon from '@/assets/icons/loading-icon.svg';
-
+import LoadingIcon from './LoadingIcon';
 import * as styles from './index.module.scss';
+
+export { default as LoadingIcon } from './LoadingIcon';
+export { default as LoadingIconLight } from './LoadingIconLight';
 
 const LoadingLayer = () => (
   <div className={styles.overlay}>
     <div className={styles.container}>
-      <LoadingIcon className={styles.loadingIcon} />
+      <LoadingIcon />
     </div>
   </div>
 );

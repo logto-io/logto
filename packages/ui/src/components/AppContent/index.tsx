@@ -1,8 +1,6 @@
 import { conditionalString } from '@silverhand/essentials';
 import React, { ReactNode, useEffect, useCallback, useContext } from 'react';
-import { useDebouncedLoader } from 'use-debounced-loader';
 
-import LoadingLayer from '@/components/LoadingLayer';
 import Toast from '@/components/Toast';
 import useColorTheme from '@/hooks/use-color-theme';
 import { PageContext } from '@/hooks/use-page-context';
@@ -16,8 +14,7 @@ export type Props = {
 
 const AppContent = ({ children }: Props) => {
   const theme = useTheme();
-  const { toast, loading, platform, setToast, experienceSettings } = useContext(PageContext);
-  const debouncedLoading = useDebouncedLoader(loading);
+  const { toast, platform, setToast, experienceSettings } = useContext(PageContext);
 
   // Prevent internal eventListener rebind
   const hideToast = useCallback(() => {
@@ -48,7 +45,6 @@ const AppContent = ({ children }: Props) => {
       <main className={styles.content}>{children}</main>
       {platform === 'web' && <div className={styles.placeHolder} />}
       <Toast message={toast} isVisible={Boolean(toast)} callback={hideToast} />
-      {debouncedLoading && <LoadingLayer />}
     </div>
   );
 };
