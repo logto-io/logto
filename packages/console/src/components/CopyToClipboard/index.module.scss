@@ -25,20 +25,25 @@
     justify-content: space-between;
     cursor: text;
 
-    > svg {
+    .copyIcon {
       margin-left: _.unit(3);
       cursor: pointer;
-      fill: var(--color-icon);
+
+      > svg {
+        color: var(--color-icon);
+      }
     }
   }
 
   &.icon {
     .row {
-      > svg {
-        fill: rgba(#fff, 0.8);
+      .copyIcon {
+        > svg {
+          color: rgba(#fff, 0.8);
+        }
 
-        &:hover {
-          fill: #fff;
+        :hover {
+          color: #fff;
         }
       }
     }

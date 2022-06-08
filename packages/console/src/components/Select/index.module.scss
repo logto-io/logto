@@ -41,6 +41,7 @@
     right: _.unit(2);
     top: 6px;
     display: none;
+    color: var(--color-icon);
   }
 
   .arrow {
@@ -49,7 +50,7 @@
     top: 6px;
 
     svg {
-      fill: var(--color-icon);
+      color: var(--color-icon);
     }
   }
 

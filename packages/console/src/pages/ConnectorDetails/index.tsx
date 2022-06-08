@@ -166,7 +166,7 @@ const ConnectorDetails = () => {
               <Markdown>{data.readme}</Markdown>
             </Drawer>
             <ActionMenu
-              buttonProps={{ icon: <More />, size: 'large' }}
+              buttonProps={{ icon: <More className={styles.moreIcon} />, size: 'large' }}
               title={t('connector_details.more_options')}
             >
               {data.type !== ConnectorType.Social && (

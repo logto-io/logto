@@ -78,7 +78,7 @@ const GuideModal = ({ isOpen, onClose }: Props) => {
       <div className={styles.container}>
         <div className={styles.header}>
           <IconButton size="large" onClick={onClose}>
-            <Close />
+            <Close className={styles.closeIcon} />
           </IconButton>
           <div className={styles.separator} />
           <CardTitle size="small" title="sign_in_exp.title" subtitle="sign_in_exp.description" />

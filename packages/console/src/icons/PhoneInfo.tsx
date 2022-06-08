@@ -1,7 +1,14 @@
-import React from 'react';
+import React, { SVGProps } from 'react';
 
-const PhoneInfo = () => (
-  <svg width="55" height="10" viewBox="0 0 55 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+const PhoneInfo = (props: SVGProps<SVGSVGElement>) => (
+  <svg
+    width="55"
+    height="10"
+    viewBox="0 0 55 10"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
     <path
       opacity="0.35"
       d="M35.2003 3.00015C35.2003 2.04286 35.9763 1.26682 36.9336 1.26682H50.267C51.2243 1.26682 52.0003 2.04286 52.0003 3.00015V7.80016C52.0003 8.75745 51.2243 9.53349 50.267 9.53349H36.9336C35.9763 9.53349 35.2003 8.75745 35.2003 7.80015V3.00015Z"

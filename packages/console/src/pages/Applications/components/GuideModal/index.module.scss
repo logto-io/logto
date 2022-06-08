@@ -22,6 +22,10 @@
       height: 20px;
       margin: 0 _.unit(5) 0 _.unit(4);
     }
+
+    .closeIcon {
+      color: var(--color-icon);
+    }
   }
 
   .content {

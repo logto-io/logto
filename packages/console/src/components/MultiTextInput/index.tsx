@@ -73,7 +73,7 @@ const MultiTextInput = ({ title, value, onChange, error }: Props) => {
                   }
                 }}
               >
-                <Minus />
+                <Minus className={styles.minusIcon} />
               </IconButton>
             )}
           </div>

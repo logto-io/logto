@@ -35,7 +35,7 @@ const Toast = () => {
               toast.remove();
             }}
           >
-            <Close />
+            <Close className={styles.closeIcon} />
           </IconButton>
         </div>
       )}

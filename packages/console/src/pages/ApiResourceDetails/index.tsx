@@ -113,7 +113,7 @@ const ApiResourceDetails = () => {
                 <div>TBD</div>
               </Drawer>
               <ActionMenu
-                buttonProps={{ icon: <More />, size: 'large' }}
+                buttonProps={{ icon: <More className={styles.moreIcon} />, size: 'large' }}
                 title={t('api_resource_details.more_options')}
               >
                 <ActionMenuItem

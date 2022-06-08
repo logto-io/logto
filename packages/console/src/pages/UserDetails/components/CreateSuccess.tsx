@@ -75,7 +75,7 @@ const CreateSuccess = ({ username }: Props) => {
                   setPasswordVisible((previous) => !previous);
                 }}
               >
-                <Eye />
+                <Eye className={styles.eyeIcon} />
               </IconButton>
             </div>
           </div>
