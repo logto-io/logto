@@ -23,17 +23,24 @@ type GetStartedMetadata = {
   onClick: () => void;
 };
 
-const useGetStartedMetadata = () => {
-  const { settings, updateSettings } = useSettings();
-  const { data: demoApp, error } = useSWR<Application, RequestError>('/api/applications/demo_app', {
-    shouldRetryOnError: (error: unknown) => {
-      if (error instanceof RequestError) {
-        return error.status !== 404;
-      }
+type Props = {
+  checkDemoAppExists: boolean;
+};
 
-      return true;
-    },
-  });
+const useGetStartedMetadata = ({ checkDemoAppExists }: Props) => {
+  const { settings, updateSettings } = useSettings();
+  const { data: demoApp, error } = useSWR<Application, RequestError>(
+    checkDemoAppExists && '/api/applications/demo_app',
+    {
+      shouldRetryOnError: (error: unknown) => {
+        if (error instanceof RequestError) {
+          return error.status !== 404;
+        }
+
+        return true;
+      },
+    }
+  );
   const navigate = useNavigate();
   const isLoadingDemoApp = !demoApp && !error;
   const hideDemo = error?.status === 404;

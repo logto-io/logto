@@ -16,7 +16,7 @@ import * as styles from './index.module.scss';
 const GetStarted = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const navigate = useNavigate();
-  const { data, isLoading } = useGetStartedMetadata();
+  const { data, isLoading } = useGetStartedMetadata({ checkDemoAppExists: true });
   const { update } = useUserPreferences();
   const [showConfirmModal, setShowConfirmModal] = useState(false);
 
