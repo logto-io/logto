@@ -47,11 +47,27 @@ export default class AliyunSmsConnector implements SmsConnector {
       },
       accessKeySecret
     );
-    const { body: rawBody } = httpResponse;
-    const { Code } = sendSmsResponseGuard.parse(JSON.parse(rawBody));
 
-    assert(Code === 'OK', new ConnectorError(ConnectorErrorCodes.General, rawBody));
+    const { body: rawBody } = httpResponse;
+    const result = sendSmsResponseGuard.safeParse(JSON.parse(rawBody));
+
+    if (!result.success) {
+      throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, result.error.message);
+    }
+
+    const { Code } = result.data;
+
+    this.errorHandler(Code, rawBody);
 
     return httpResponse;
+  };
+
+  private readonly errorHandler = (code: string, message: string) => {
+    // See https://help.aliyun.com/document_detail/101346.htm?spm=a2c4g.11186623.0.0.29d710f5TUxolJ
+    assert(
+      !(code === 'isv.ACCOUNT_NOT_EXISTS' || code === 'isv.SMS_TEMPLATE_ILLEGAL'),
+      new ConnectorError(ConnectorErrorCodes.InvalidConfig, message)
+    );
+    assert(code === 'OK', new ConnectorError(ConnectorErrorCodes.General, message));
   };
 }
