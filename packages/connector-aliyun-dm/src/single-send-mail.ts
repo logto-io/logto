@@ -1,7 +1,5 @@
-import { Response } from 'got';
-
 import { endpoint, staticConfigs } from './constant';
-import { PublicParameters, SendEmailResponse, SingleSendMail } from './types';
+import { PublicParameters, SingleSendMail } from './types';
 import { request } from './utils';
 
 /**
@@ -10,8 +8,8 @@ import { request } from './utils';
 export const singleSendMail = async (
   parameters: PublicParameters & SingleSendMail,
   accessKeySecret: string
-): Promise<Response<SendEmailResponse>> => {
-  return request<SendEmailResponse>(
+) => {
+  return request(
     endpoint,
     { Action: 'SingleSendMail', ...staticConfigs, ...parameters },
     accessKeySecret

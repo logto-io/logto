@@ -12,7 +12,12 @@ import { HTTPError } from 'got';
 
 import { defaultMetadata } from './constant';
 import { singleSendMail } from './single-send-mail';
-import { AliyunDmConfig, aliyunDmConfigGuard } from './types';
+import {
+  AliyunDmConfig,
+  aliyunDmConfigGuard,
+  sendEmailResponseGuard,
+  sendMailErrorResponseGuard,
+} from './types';
 
 export default class AliyunDmConnector implements EmailConnector {
   public metadata: ConnectorMetadata = defaultMetadata;
@@ -42,7 +47,7 @@ export default class AliyunDmConnector implements EmailConnector {
     );
 
     try {
-      return await singleSendMail(
+      const httpResponse = await singleSendMail(
         {
           AccessKeyId: accessKeyId,
           AccountName: accountName,
@@ -58,6 +63,14 @@ export default class AliyunDmConnector implements EmailConnector {
         },
         accessKeySecret
       );
+
+      const result = sendEmailResponseGuard.safeParse(JSON.parse(httpResponse.body));
+
+      if (!result.success) {
+        throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, result.error.message);
+      }
+
+      return result.data;
     } catch (error: unknown) {
       if (error instanceof HTTPError) {
         const {
@@ -67,11 +80,32 @@ export default class AliyunDmConnector implements EmailConnector {
           typeof rawBody === 'string',
           new ConnectorError(ConnectorErrorCodes.InvalidResponse)
         );
-
+        this.errorHandler(rawBody);
         throw new ConnectorError(ConnectorErrorCodes.General, rawBody);
       }
 
       throw error;
     }
+  };
+
+  private readonly errorHandler = (errorResponseBody: string) => {
+    const result = sendMailErrorResponseGuard.safeParse(JSON.parse(errorResponseBody));
+
+    if (!result.success) {
+      throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, result.error.message);
+    }
+
+    const { Code } = result.data;
+
+    // See https://help.aliyun.com/document_detail/29444.html.
+    assert(
+      !(
+        Code === 'InvalidBody' ||
+        Code === 'InvalidTemplate.NotFound' ||
+        Code === 'InvalidSubject.Malformed' ||
+        Code === 'InvalidFromAlias.Malformed'
+      ),
+      new ConnectorError(ConnectorErrorCodes.InvalidConfig, errorResponseBody)
+    );
   };
 }

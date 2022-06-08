@@ -9,7 +9,16 @@ const getConnectorConfig = jest.fn() as GetConnectorConfig<AliyunDmConfig>;
 
 const aliyunDmMethods = new AliyunDmConnector(getConnectorConfig);
 
-jest.mock('./single-send-mail');
+jest.mock('./single-send-mail', () => {
+  return {
+    singleSendMail: jest.fn(() => {
+      return {
+        body: JSON.stringify({ EnvId: 'env-id', RequestId: 'request-id' }),
+        statusCode: 200,
+      };
+    }),
+  };
+});
 
 beforeAll(() => {
   jest.spyOn(aliyunDmMethods, 'getConfig').mockResolvedValue(mockedConfig);
