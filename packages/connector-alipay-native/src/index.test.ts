@@ -63,9 +63,9 @@ describe('getAccessToken', () => {
         alipay_system_oauth_token_response: {
           user_id: '2088000000000000',
           access_token: 'access_token',
-          expires_in: '3600',
+          expires_in: 3600,
           refresh_token: 'refresh_token',
-          re_expires_in: '7200', // Expiring time of refresh token, in seconds
+          re_expires_in: 7200, // Expiring time of refresh token, in seconds
         },
         sign: '<signature>',
       });
@@ -85,10 +85,10 @@ describe('getAccessToken', () => {
       .reply(200, {
         alipay_system_oauth_token_response: {
           user_id: '2088000000000000',
-          access_token: undefined,
-          expires_in: '3600',
+          access_token: '',
+          expires_in: 3600,
           refresh_token: 'refresh_token',
-          re_expires_in: '7200', // Expiring time of refresh token, in seconds
+          re_expires_in: 7200, // Expiring time of refresh token, in seconds
         },
         sign: '<signature>',
       });
@@ -157,7 +157,7 @@ describe('getUserInfo', () => {
     expect(avatar).toEqual('https://www.alipay.com/xxx.jpg');
   });
 
-  it('should throw with wrong accessToken', async () => {
+  it('should throw SocialAccessTokenInvalid with code 20001', async () => {
     nock(alipayEndpointUrl.origin)
       .post(alipayEndpointUrl.pathname)
       .query(true)
@@ -166,12 +166,35 @@ describe('getUserInfo', () => {
           code: '20001',
           msg: 'Invalid auth token',
           sub_code: 'aop.invalid-auth-token',
+          sub_msg: '无效的访问令牌',
         },
         sign: '<signature>',
       });
 
     await expect(alipayNativeMethods.getUserInfo({ auth_code: 'wrong_code' })).rejects.toMatchError(
-      new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid, 'Invalid auth token')
+      new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid, '无效的访问令牌')
+    );
+  });
+
+  it('should throw SocialAuthCodeInvalid with sub_code `isv.code-invalid`', async () => {
+    nock(alipayEndpointUrl.origin)
+      .post(alipayEndpointUrl.pathname)
+      .query(true)
+      .reply(200, {
+        alipay_user_info_share_response: {
+          code: '40002',
+          msg: 'Invalid auth code',
+          sub_code: 'isv.code-invalid',
+          sub_msg: '授权码 (auth_code) 错误、状态不对或过期',
+        },
+        sign: '<signature>',
+      });
+
+    await expect(alipayNativeMethods.getUserInfo({ auth_code: 'wrong_code' })).rejects.toMatchError(
+      new ConnectorError(
+        ConnectorErrorCodes.SocialAuthCodeInvalid,
+        '授权码 (auth_code) 错误、状态不对或过期'
+      )
     );
   });
 
@@ -184,12 +207,13 @@ describe('getUserInfo', () => {
           code: '40002',
           msg: 'Invalid parameter',
           sub_code: 'isv.invalid-parameter',
+          sub_msg: '参数无效',
         },
         sign: '<signature>',
       });
 
     await expect(alipayNativeMethods.getUserInfo({ auth_code: 'wrong_code' })).rejects.toMatchError(
-      new ConnectorError(ConnectorErrorCodes.General)
+      new ConnectorError(ConnectorErrorCodes.General, '参数无效')
     );
   });
 

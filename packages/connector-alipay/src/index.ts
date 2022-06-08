@@ -146,7 +146,6 @@ export default class AlipayConnector implements SocialConnector {
     }
 
     const { alipay_user_info_share_response } = result.data;
-    console.log('result.data:', result.data);
 
     const {
       user_id: id,
