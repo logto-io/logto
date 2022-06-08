@@ -8,13 +8,13 @@ export default function koaWelcomeProxy<
   ContextT extends IRouterParamContext,
   ResponseBodyT
 >(): MiddlewareType<StateT, ContextT, ResponseBodyT> {
-  return async (ctx, next) => {
+  return async (ctx) => {
     if (await hasAdminUsers()) {
       ctx.redirect('/console');
 
       return;
     }
 
-    await next();
+    ctx.redirect('/console/register');
   };
 }

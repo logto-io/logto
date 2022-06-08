@@ -21,6 +21,8 @@ export default function koaSpaSessionGuard<
         await provider.interactionDetails(ctx.req, ctx.res);
       } catch {
         ctx.redirect(sessionNotFoundPath);
+
+        return;
       }
     }
 

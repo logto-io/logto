@@ -41,12 +41,7 @@ export default async function initApp(app: Koa): Promise<void> {
 
   app.use(mount('/', koaRootProxy()));
 
-  app.use(
-    mount(
-      '/' + MountedApps.Welcome,
-      compose([koaCheckAdmin(), koaSpaProxy(MountedApps.Console, 5002, MountedApps.Console)])
-    )
-  );
+  app.use(mount('/' + MountedApps.Welcome, koaCheckAdmin()));
 
   app.use(
     mount('/' + MountedApps.Console, koaSpaProxy(MountedApps.Console, 5002, MountedApps.Console))
@@ -59,8 +54,7 @@ export default async function initApp(app: Koa): Promise<void> {
     )
   );
 
-  app.use(koaSpaSessionGuard(provider));
-  app.use(koaSpaProxy());
+  app.use(compose([koaSpaSessionGuard(provider), koaSpaProxy()]));
 
   const { isHttpsEnabled, httpsCert, httpsKey, port } = envSet.values;
 
