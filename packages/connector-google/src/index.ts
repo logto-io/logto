@@ -24,7 +24,12 @@ import {
   defaultMetadata,
   defaultTimeout,
 } from './constant';
-import { googleConfigGuard, AccessTokenResponse, GoogleConfig, UserInfoResponse } from './types';
+import {
+  googleConfigGuard,
+  GoogleConfig,
+  accessTokenResponseGuard,
+  userInfoResponseGuard,
+} from './types';
 
 export default class GoogleConnector implements SocialConnector {
   public metadata: ConnectorMetadata = defaultMetadata;
@@ -58,18 +63,24 @@ export default class GoogleConnector implements SocialConnector {
 
     // Note：Need to decodeURIComponent on code
     // https://stackoverflow.com/questions/51058256/google-api-node-js-invalid-grant-malformed-auth-code
-    const { access_token: accessToken } = await got
-      .post(accessTokenEndpoint, {
-        form: {
-          code: decodeURIComponent(code),
-          client_id: clientId,
-          client_secret: clientSecret,
-          redirect_uri: redirectUri,
-          grant_type: 'authorization_code',
-        },
-        timeout: defaultTimeout,
-      })
-      .json<AccessTokenResponse>();
+    const httpResponse = await got.post(accessTokenEndpoint, {
+      form: {
+        code: decodeURIComponent(code),
+        client_id: clientId,
+        client_secret: clientSecret,
+        redirect_uri: redirectUri,
+        grant_type: 'authorization_code',
+      },
+      timeout: defaultTimeout,
+    });
+
+    const result = accessTokenResponseGuard.safeParse(JSON.parse(httpResponse.body));
+
+    if (!result.success) {
+      throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, result.error.message);
+    }
+
+    const { access_token: accessToken } = result.data;
 
     assert(accessToken, new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid));
 
@@ -81,20 +92,19 @@ export default class GoogleConnector implements SocialConnector {
     const { accessToken } = await this.getAccessToken(code, redirectUri);
 
     try {
-      const {
-        sub: id,
-        picture: avatar,
-        email,
-        email_verified,
-        name,
-      } = await got
-        .post(userInfoEndpoint, {
-          headers: {
-            authorization: `Bearer ${accessToken}`,
-          },
-          timeout: defaultTimeout,
-        })
-        .json<UserInfoResponse>();
+      const httpResponse = await got.post(userInfoEndpoint, {
+        headers: {
+          authorization: `Bearer ${accessToken}`,
+        },
+        timeout: defaultTimeout,
+      });
+
+      const result = userInfoResponseGuard.safeParse(JSON.parse(httpResponse.body));
+
+      if (!result.success) {
+        throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, result.error.message);
+      }
+      const { sub: id, picture: avatar, email, email_verified, name } = result.data;
 
       return {
         id,
@@ -103,9 +113,11 @@ export default class GoogleConnector implements SocialConnector {
         name,
       };
     } catch (error: unknown) {
-      if (error instanceof GotRequestError && error.response?.statusCode === 401) {
-        throw new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid);
-      }
+      assert(
+        !(error instanceof GotRequestError && error.response?.statusCode === 401),
+        new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid)
+      );
+
       throw error;
     }
   };

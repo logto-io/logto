@@ -71,7 +71,7 @@ export default class GithubConnector implements SocialConnector {
     const result = accessTokenResponseGuard.safeParse(JSON.parse(httpResponse.body));
 
     if (!result.success) {
-      throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, result.error.message);
+      throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, result.error.message);
     }
 
     const { access_token: accessToken } = result.data;
@@ -96,7 +96,7 @@ export default class GithubConnector implements SocialConnector {
       const result = userInfoResponseGuard.safeParse(JSON.parse(httpResponse.body));
 
       if (!result.success) {
-        throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, result.error.message);
+        throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, result.error.message);
       }
       const { id, avatar_url: avatar, email, name } = result.data;
 

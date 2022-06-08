@@ -105,7 +105,7 @@ export default class FacebookConnector implements SocialConnector {
       const result = userInfoResponseGuard.safeParse(JSON.parse(httpResponse.body));
 
       if (!result.success) {
-        throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, result.error.message);
+        throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, result.error.message);
       }
 
       const { id, email, name, picture } = result.data;

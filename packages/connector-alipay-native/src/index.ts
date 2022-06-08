@@ -88,7 +88,7 @@ export default class AlipayNativeConnector implements SocialConnector {
     const result = accessTokenResponseGuard.safeParse(JSON.parse(httpResponse.body));
 
     if (!result.success) {
-      throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, result.error.message);
+      throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, result.error.message);
     }
 
     const { error_response, alipay_system_oauth_token_response } = result.data;
@@ -136,7 +136,7 @@ export default class AlipayNativeConnector implements SocialConnector {
     const result = userInfoResponseGuard.safeParse(JSON.parse(httpResponse.body));
 
     if (!result.success) {
-      throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, result.error.message);
+      throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, result.error.message);
     }
 
     const { alipay_user_info_share_response } = result.data;

@@ -67,7 +67,7 @@ export default class AliyunDmConnector implements EmailConnector {
       const result = sendEmailResponseGuard.safeParse(JSON.parse(httpResponse.body));
 
       if (!result.success) {
-        throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, result.error.message);
+        throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, result.error.message);
       }
 
       return result.data;
@@ -92,7 +92,7 @@ export default class AliyunDmConnector implements EmailConnector {
     const result = sendMailErrorResponseGuard.safeParse(JSON.parse(errorResponseBody));
 
     if (!result.success) {
-      throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, result.error.message);
+      throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, result.error.message);
     }
 
     const { Code } = result.data;
