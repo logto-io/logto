@@ -35,6 +35,7 @@ import {
   AlipayConfig,
   accessTokenResponseGuard,
   userInfoResponseGuard,
+  ErrorHandler,
 } from './types';
 import { signingParameters } from './utils';
 
@@ -151,19 +152,27 @@ export default class AlipayConnector implements SocialConnector {
       user_id: id,
       avatar,
       nick_name: name,
-      sub_msg,
-      sub_code,
-      msg,
       code,
+      msg,
+      sub_code,
+      sub_msg,
     } = alipay_user_info_share_response;
 
+    this.errorHandler({ code, msg, sub_code, sub_msg });
+    assert(id, new ConnectorError(ConnectorErrorCodes.InvalidResponse));
+
+    return { id, avatar, name };
+  };
+
+  private readonly errorHandler: ErrorHandler = ({ code, msg, sub_code, sub_msg }) => {
     assert(
       code !== '20001',
       new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid, sub_msg ?? msg)
     );
-    assert(!(sub_msg ?? sub_code), new ConnectorError(ConnectorErrorCodes.General));
-    assert(id, new ConnectorError(ConnectorErrorCodes.InvalidResponse));
-
-    return { id, avatar, name };
+    assert(
+      sub_code !== 'isv.code-invalid',
+      new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid, sub_msg ?? msg)
+    );
+    assert(!(sub_msg ?? sub_code), new ConnectorError(ConnectorErrorCodes.General, sub_msg ?? msg));
   };
 }

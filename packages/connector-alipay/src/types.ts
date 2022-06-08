@@ -53,3 +53,10 @@ export const userInfoResponseGuard = z.object({
 });
 
 export type UserInfoResponse = z.infer<typeof userInfoResponseGuard>;
+
+export type ErrorHandler = (response: {
+  code: string;
+  msg: string;
+  sub_code?: string;
+  sub_msg?: string;
+}) => void;
