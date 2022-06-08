@@ -8,20 +8,28 @@ export const weChatNativeConfigGuard = z.object({
 
 export type WeChatNativeConfig = z.infer<typeof weChatNativeConfigGuard>;
 
-export type AccessTokenResponse = {
-  access_token?: string;
-  openid?: string;
-  expires_in?: number; // In seconds
-  refresh_token?: string;
-  scope?: string;
-  errcode?: number;
-  errmsg?: string;
-};
+export const accessTokenResponseGuard = z.object({
+  access_token: z.string().optional(),
+  openid: z.string().optional(),
+  expires_in: z.number().optional(), // In seconds
+  refresh_token: z.string().optional(),
+  scope: z.string().optional(),
+  errcode: z.number().optional(),
+  errmsg: z.string().optional(),
+});
 
-export type UserInfoResponse = {
-  unionid?: string;
-  headimgurl?: string;
-  nickname?: string;
-  errcode?: number;
-  errmsg?: string;
-};
+export type AccessTokenResponse = z.infer<typeof accessTokenResponseGuard>;
+
+export type GetAccessTokenErrorHandler = (accessToken: Partial<AccessTokenResponse>) => void;
+
+export const userInfoResponseGuard = z.object({
+  unionid: z.string().optional(),
+  headimgurl: z.string().optional(),
+  nickname: z.string().optional(),
+  errcode: z.number().optional(),
+  errmsg: z.string().optional(),
+});
+
+export type UserInfoResponse = z.infer<typeof userInfoResponseGuard>;
+
+export type GetUserInfoErrorHandler = (UserInfo: Partial<UserInfoResponse>) => void;
