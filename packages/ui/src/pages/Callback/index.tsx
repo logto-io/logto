@@ -6,12 +6,12 @@ import useSocialCallbackHandler from '@/hooks/use-social-callback-handler';
 
 import * as styles from './index.module.scss';
 
-type Paramters = {
+type Parameters = {
   connector: string;
 };
 
 const Callback = () => {
-  const { connector: connectorId } = useParams<Paramters>();
+  const { connector: connectorId } = useParams<Parameters>();
 
   const { socialCallbackHandler, loading } = useSocialCallbackHandler();
 
