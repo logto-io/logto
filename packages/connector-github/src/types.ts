@@ -7,15 +7,19 @@ export const githubConfigGuard = z.object({
 
 export type GithubConfig = z.infer<typeof githubConfigGuard>;
 
-export type AccessTokenResponse = {
-  access_token: string;
-  scope: string;
-  token_type: string;
-};
+export const accessTokenResponseGuard = z.object({
+  access_token: z.string(),
+  scope: z.string(),
+  token_type: z.string(),
+});
 
-export type UserInfoResponse = {
-  id: number;
-  avatar_url?: string;
-  email?: string;
-  name?: string;
-};
+export type AccessTokenResponse = z.infer<typeof accessTokenResponseGuard>;
+
+export const userInfoResponseGuard = z.object({
+  id: z.number(),
+  avatar_url: z.string().optional().nullable(),
+  email: z.string().optional().nullable(),
+  name: z.string().optional().nullable(),
+});
+
+export type UserInfoResponse = z.infer<typeof userInfoResponseGuard>;
