@@ -60,7 +60,7 @@
     "koa-send": "^5.0.1",
     "lodash.pick": "^4.4.0",
     "module-alias": "^2.2.2",
-    "nanoid": "^3.1.23",
+    "nanoid": "^4.0.0",
     "oidc-provider": "^7.10.0",
     "p-retry": "^4.6.1",
     "query-string": "^7.0.1",
