@@ -16,6 +16,6 @@ export const logEventTitle: LogEventTitle = Object.freeze({
   SignInSocialBind: 'Sign in with social related account',
   SignInSocial: 'Sign in with social account',
   CodeExchangeToken: 'Exchange token by auth code',
-  RefreshTokenExchangeToken: 'Exchagne token by refresh token',
+  RefreshTokenExchangeToken: 'Exchange token by refresh token',
   RevokeToken: 'Revoke token',
 });
