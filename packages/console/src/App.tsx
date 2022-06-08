@@ -45,6 +45,8 @@ const Main = () => {
           <Suspense fallback={<LogtoLoading message="general.loading" />}>
             <Routes>
               <Route path="callback" element={<Callback />} />
+              {/* TODO: add register route */}
+              <Route path="register" element={<div>register</div>} />
               <Route element={<AppContent />}>
                 <Route path="*" element={<NotFound />} />
                 <Route path="get-started" element={<GetStarted />} />

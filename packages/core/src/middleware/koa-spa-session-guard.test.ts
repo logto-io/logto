@@ -3,7 +3,7 @@ import { Provider } from 'oidc-provider';
 import { MountedApps } from '@/env-set';
 import { createContextWithRouteParameters } from '@/utils/test-utils';
 
-import koaProxyGuard, { sessionNotFoundPath, guardedPath } from './koa-proxy-guard';
+import koaSpaSessionGuard, { sessionNotFoundPath, guardedPath } from './koa-spa-session-guard';
 
 jest.mock('fs/promises', () => ({
   ...jest.requireActual('fs/promises'),
@@ -16,7 +16,7 @@ jest.mock('oidc-provider', () => ({
   })),
 }));
 
-describe('koaProxyGuard', () => {
+describe('koaSpaSessionGuard', () => {
   const envBackup = process.env;
 
   beforeEach(() => {
@@ -38,7 +38,7 @@ describe('koaProxyGuard', () => {
         url: `/${app}/foo`,
       });
 
-      await koaProxyGuard(provider)(ctx, next);
+      await koaSpaSessionGuard(provider)(ctx, next);
 
       expect(ctx.redirect).not.toBeCalled();
     });
@@ -51,7 +51,7 @@ describe('koaProxyGuard', () => {
     const ctx = createContextWithRouteParameters({
       url: `${sessionNotFoundPath}`,
     });
-    await koaProxyGuard(provider)(ctx, next);
+    await koaSpaSessionGuard(provider)(ctx, next);
     expect(ctx.redirect).not.toBeCalled();
   });
 
@@ -62,7 +62,7 @@ describe('koaProxyGuard', () => {
     const ctx = createContextWithRouteParameters({
       url: '/callback/github',
     });
-    await koaProxyGuard(provider)(ctx, next);
+    await koaSpaSessionGuard(provider)(ctx, next);
     expect(ctx.redirect).not.toBeCalled();
   });
 
@@ -71,7 +71,7 @@ describe('koaProxyGuard', () => {
     const ctx = createContextWithRouteParameters({
       url: `/sign-in`,
     });
-    await koaProxyGuard(provider)(ctx, next);
+    await koaSpaSessionGuard(provider)(ctx, next);
     expect(ctx.redirect).not.toBeCalled();
   });
 
@@ -84,7 +84,7 @@ describe('koaProxyGuard', () => {
       const ctx = createContextWithRouteParameters({
         url: `${path}/foo`,
       });
-      await koaProxyGuard(provider)(ctx, next);
+      await koaSpaSessionGuard(provider)(ctx, next);
       expect(ctx.redirect).toBeCalled();
     });
   }

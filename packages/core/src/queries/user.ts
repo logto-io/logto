@@ -1,4 +1,4 @@
-import { User, CreateUser, Users } from '@logto/schemas';
+import { User, CreateUser, Users, UserRole } from '@logto/schemas';
 import { sql } from 'slonik';
 
 import { buildInsertInto } from '@/database/insert-into';
@@ -146,4 +146,11 @@ export const deleteUserIdentity = async (userId: string, connectorId: string) =>
     set ${fields.identities}=${fields.identities}::jsonb-${connectorId}
     where ${fields.id}=${userId}
     returning *
+  `);
+
+export const hasAdminUsers = async () =>
+  envSet.pool.exists(sql`
+    select ${fields.id}
+    from ${table}
+    where ${fields.roleNames} ? ${UserRole.Admin}
   `);
