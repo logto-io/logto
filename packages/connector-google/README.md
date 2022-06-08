@@ -52,3 +52,6 @@ Now you should have the Google OAuth 2.0 consent screen configured.
 | --- | --- |
 | clientId | string |
 | clientSecret | string |
+
+## References
+* [Google Identity: Setting up OAuth 2.0](https://developers.google.com/identity/protocols/oauth2/openid-connect#appsetup)
