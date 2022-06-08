@@ -63,17 +63,27 @@ describe('getAccessToken', () => {
       .query(parameters)
       .reply(200, { errcode: 40_029, errmsg: 'invalid code' });
     await expect(weChatMethods.getAccessToken('code')).rejects.toMatchError(
-      new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid)
+      new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid, 'invalid code')
     );
   });
 
-  it('throws error if errcode is neither 40029 nor undefined', async () => {
+  it('throws SocialAuthCodeInvalid error if errcode is 40163', async () => {
     nock(accessTokenEndpointUrl.origin)
       .get(accessTokenEndpointUrl.pathname)
       .query(true)
-      .reply(200, { errcode: 40_163, errmsg: 'invalid code' });
+      .reply(200, { errcode: 40_163, errmsg: 'code been used' });
+    await expect(weChatMethods.getAccessToken('code')).rejects.toMatchError(
+      new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid, 'code been used')
+    );
+  });
+
+  it('throws error with message otherwise', async () => {
+    nock(accessTokenEndpointUrl.origin)
+      .get(accessTokenEndpointUrl.pathname)
+      .query(true)
+      .reply(200, { errcode: -1, errmsg: 'system error' });
     await expect(weChatMethods.getAccessToken('wrong_code')).rejects.toMatchError(
-      new Error('invalid code')
+      new ConnectorError(ConnectorErrorCodes.General, 'system error')
     );
   });
 });
