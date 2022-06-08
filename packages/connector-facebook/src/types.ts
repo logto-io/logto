@@ -7,15 +7,25 @@ export const facebookConfigGuard = z.object({
 
 export type FacebookConfig = z.infer<typeof facebookConfigGuard>;
 
-export type AccessTokenResponse = {
-  access_token: string;
-  token_type: string;
-  expires_in: number;
-};
+export const accessTokenResponseGuard = z.object({
+  access_token: z.string(),
+  token_type: z.string(),
+  expires_in: z.number(),
+});
 
-export type UserInfoResponse = {
-  id: string;
-  email?: string;
-  name?: string;
-  picture?: { data: { url: string } };
-};
+export type AccessTokenResponse = z.infer<typeof accessTokenResponseGuard>;
+
+export const userInfoResponseGuard = z.object({
+  id: z.string(),
+  email: z.string().optional(),
+  name: z.string().optional(),
+  picture: z
+    .object({
+      data: z.object({
+        url: z.string(),
+      }),
+    })
+    .optional(),
+});
+
+export type UserInfoResponse = z.infer<typeof userInfoResponseGuard>;
