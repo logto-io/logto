@@ -338,13 +338,6 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
       ctx.log(type, { username });
 
       assertThat(
-        password,
-        new RequestError({
-          code: 'session.insufficient_info',
-          status: 400,
-        })
-      );
-      assertThat(
         !(await hasUser(username)),
         new RequestError({
           code: 'user.username_exists_register',
@@ -365,18 +358,6 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
       });
       await updateLastSignInAt(id);
       await assignInteractionResults(ctx, provider, { login: { accountId: id } });
-
-      return next();
-    }
-  );
-
-  router.get(
-    '/session/register/:username/existence',
-    koaGuard({ params: object({ username: string().regex(usernameRegEx) }) }),
-    async (ctx, next) => {
-      const { username } = ctx.guard.params;
-
-      ctx.body = { existence: await hasUser(username) };
 
       return next();
     }
