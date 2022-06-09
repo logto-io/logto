@@ -124,7 +124,6 @@ export default function adminUserRoutes<T extends AuthedRouter>(router: T) {
       await findUserById(userId);
 
       // Clear customData to achieve full replacement,
-      // to partial update, call patch /users/:userId/custom-data
       if (body.customData) {
         await clearUserCustomDataById(userId);
       }
@@ -195,50 +194,6 @@ export default function adminUserRoutes<T extends AuthedRouter>(router: T) {
       await deleteUserById(userId);
 
       ctx.status = 204;
-
-      return next();
-    }
-  );
-
-  router.patch(
-    '/users/:userId/custom-data',
-    koaGuard({
-      params: object({ userId: string() }),
-      body: object({ customData: arbitraryObjectGuard }),
-    }),
-    async (ctx, next) => {
-      const {
-        params: { userId },
-        body: { customData },
-      } = ctx.guard;
-
-      await findUserById(userId);
-
-      const user = await updateUserById(userId, {
-        customData,
-      });
-
-      ctx.body = pick(user, ...userInfoSelectFields);
-
-      return next();
-    }
-  );
-
-  router.delete(
-    '/users/:userId/custom-data',
-    koaGuard({
-      params: object({ userId: string() }),
-    }),
-    async (ctx, next) => {
-      const {
-        params: { userId },
-      } = ctx.guard;
-
-      await findUserById(userId);
-
-      await clearUserCustomDataById(userId);
-
-      ctx.status = 200;
 
       return next();
     }
