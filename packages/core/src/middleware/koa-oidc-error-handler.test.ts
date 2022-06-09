@@ -9,11 +9,11 @@ describe('koaOIDCErrorHandler middleware', () => {
   const next = jest.fn();
   const ctx = createContextWithRouteParameters();
 
-  it('should throw no errors if no errors are catched', async () => {
+  it('should throw no errors if no errors are caught', async () => {
     await expect(koaOIDCErrorHandler()(ctx, next)).resolves.not.toThrow();
   });
 
-  it('should throw original error if error type is no OIDCProviderError', async () => {
+  it('should throw original error if error type is not OIDCProviderError', async () => {
     const error = new Error('err');
 
     next.mockImplementationOnce(() => {
