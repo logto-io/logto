@@ -298,67 +298,6 @@ describe('adminUserRoutes', () => {
     expect(deleteUserById).not.toHaveBeenCalled();
   });
 
-  it('PATCH /users/:userId/custom-data', async () => {
-    const customData = { level: 1 };
-    const response = await userRequest.patch('/users/foo/custom-data').send({ customData });
-    expect(findUserById).toHaveBeenCalledTimes(1);
-    expect(updateUserById).toHaveBeenCalledTimes(1);
-    expect(response.status).toEqual(200);
-    expect(response.body).toHaveProperty('customData', customData);
-  });
-
-  it('PATCH /users/:userId/custom-data should throw if user not found', async () => {
-    const notExistedUserId = 'notExisitedUserId';
-    const mockedFindUserById = findUserById as jest.Mock;
-    mockedFindUserById.mockImplementationOnce((userId) => {
-      if (userId === notExistedUserId) {
-        throw new Error(' ');
-      }
-    });
-    await expect(
-      userRequest.patch(`/users/${notExistedUserId}/custom-data`).send({ customData: { level: 1 } })
-    ).resolves.toHaveProperty('status', 500);
-    expect(updateUserById).not.toHaveBeenCalled();
-  });
-
-  it('PATCH /users/:userId/custom-data should throw if customData is not an object', async () => {
-    await expect(
-      userRequest.patch(`/users/foo/custom-data`).send({ customData: 123_456 })
-    ).resolves.toHaveProperty('status', 400);
-
-    await expect(
-      userRequest.patch(`/users/foo/custom-data`).send({ customData: ['customDataContent'] })
-    ).resolves.toHaveProperty('status', 400);
-
-    await expect(
-      userRequest.patch(`/users/foo/custom-data`).send({ customData: 'customDataContent' })
-    ).resolves.toHaveProperty('status', 400);
-
-    expect(updateUserById).not.toHaveBeenCalled();
-  });
-
-  it('DELETE /users/:userId/custom-data', async () => {
-    const response = await userRequest.delete('/users/foo/custom-data');
-    expect(findUserById).toHaveBeenCalledTimes(1);
-    expect(clearUserCustomDataById).toHaveBeenCalledTimes(1);
-    expect(response.status).toEqual(200);
-  });
-
-  it('DELETE /users/:userId/custom-data should throw if user not found', async () => {
-    const notExistedUserId = 'notExisitedUserId';
-    const mockedFindUserById = findUserById as jest.Mock;
-    mockedFindUserById.mockImplementationOnce((userId) => {
-      if (userId === notExistedUserId) {
-        throw new Error(' ');
-      }
-    });
-    await expect(
-      userRequest.delete(`/users/${notExistedUserId}/custom-data`)
-    ).resolves.toHaveProperty('status', 500);
-    expect(findUserById).toHaveBeenCalledTimes(1);
-    expect(clearUserCustomDataById).not.toHaveBeenCalled();
-  });
-
   it('DELETE /users/:userId/identities/:connectorId should throw if user not found', async () => {
     const notExistedUserId = 'notExisitedUserId';
     const arbitraryConnectorId = 'arbitraryConnectorId';
