@@ -35,7 +35,7 @@ const Search = ({ defaultValue = '', onSearch }: Props) => {
       <div className={styles.searchInput}>
         <TextInput
           value={inputValue}
-          icon={<SearchIcon />}
+          icon={<SearchIcon className={styles.searchIcon} />}
           onChange={handleSearchChange}
           onKeyPress={handleSearchKeyPress}
         />

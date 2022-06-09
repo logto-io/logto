@@ -30,7 +30,7 @@ const Drawer = ({ isOpen, onClose, children }: Props) => {
             onClose?.();
           }}
         >
-          <Close />
+          <Close className={styles.closeIcon} />
         </IconButton>
       </div>
       <div>{children}</div>

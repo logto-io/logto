@@ -98,7 +98,7 @@ const Transfer = ({ title, datasource, value = [], footer, onChange }: Props) =>
               {selectedItems.map(({ value, title }, index) => (
                 <DraggableItem key={value} sortIndex={index} id={value} moveItem={onMoveItem}>
                   <div className={classNames(styles.item, styles.draggable)}>
-                    <Draggable />
+                    <Draggable className={styles.draggableIcon} />
                     <div className={styles.itemTitle}>{title}</div>
                     <IconButton
                       size="small"

@@ -63,7 +63,7 @@ const UserInfo = () => {
       >
         <DropdownItem
           className={classNames(styles.dropdownItem, isLoading && styles.loading)}
-          icon={<SignOut />}
+          icon={<SignOut className={styles.signOutIcon} />}
           onClick={(event: MouseEvent<HTMLLIElement>) => {
             event.stopPropagation();
 

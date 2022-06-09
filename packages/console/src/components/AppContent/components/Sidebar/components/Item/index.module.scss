@@ -19,7 +19,7 @@
     flex: 0 0 _.unit(5);
 
     svg {
-      fill: var(--color-neutral-variant-50);
+      color: var(--color-neutral-variant-50);
       width: _.unit(5);
       height: _.unit(5);
     }
@@ -34,7 +34,7 @@
     color: var(--color-text-link);
 
     .icon svg {
-      fill: var(--color-primary-50);
+      color: var(--color-primary-50);
     }
   }
 

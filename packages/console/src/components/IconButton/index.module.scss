@@ -15,12 +15,12 @@
   align-items: center;
 
   > svg {
-    fill: var(--color-caption);
+    color: var(--color-caption);
   }
 
   &:disabled {
     > svg {
-      fill: var(--color-neutral-80);
+      color: var(--color-neutral-80);
     }
   }
 

@@ -31,6 +31,10 @@
 
           &.draggable {
             cursor: move;
+
+            .draggableIcon {
+              color: var(--color-icon);
+            }
           }
 
           > svg {

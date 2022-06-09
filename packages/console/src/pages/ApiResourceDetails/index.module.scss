@@ -36,6 +36,10 @@
     display: flex;
     align-items: center;
 
+    .moreIcon {
+      color: var(--color-icon);
+    }
+
     > *:not(:first-child) {
       margin-left: _.unit(3);
     }

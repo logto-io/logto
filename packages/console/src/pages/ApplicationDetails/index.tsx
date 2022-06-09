@@ -138,7 +138,7 @@ const ApplicationDetails = () => {
                 <div>TBD</div>
               </Drawer>
               <ActionMenu
-                buttonProps={{ icon: <More />, size: 'large' }}
+                buttonProps={{ icon: <More className={styles.moreIcon} />, size: 'large' }}
                 title={t('application_details.more_options')}
               >
                 <ActionMenuItem

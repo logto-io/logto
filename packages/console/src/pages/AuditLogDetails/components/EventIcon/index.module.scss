@@ -1,14 +1,14 @@
+.success {
+  color: var(--color-success-60);
+}
+
+.fail {
+  color: var(--color-error-40);
+}
+
 .icon {
   width: 60px;
   height: 60px;
-
-  &.success {
-    color: var(--color-success-60);
-  }
-
-  &.fail {
-    color: var(--color-error-40);
-  }
 }
 
 .label {

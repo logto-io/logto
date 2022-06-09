@@ -38,7 +38,7 @@ const ModalLayout = ({
               onClose();
             }}
           >
-            <Close />
+            <Close className={styles.closeIcon} />
           </IconButton>
         )}
       </div>

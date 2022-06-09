@@ -74,7 +74,7 @@ const GuideModal = ({ appName, appType, isOpen, onClose, onComplete }: Props) =>
       <div className={styles.container}>
         <div className={styles.header}>
           <IconButton size="large" onClick={onClose}>
-            <Close />
+            <Close className={styles.closeIcon} />
           </IconButton>
           <div className={styles.separator} />
           <CardTitle
