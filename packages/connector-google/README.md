@@ -31,7 +31,7 @@ Now you will be on the **Edit app registration** page. You need to complete the 
 
 ### Add Test Users
 
-1. Click **ADD USERS**** and add test users to allow these users to access your application while testing.
+1. Click **ADD USERS** and add test users to allow these users to access your application while testing.
 2. Click **SAVE AND CONTINUE** to continue.
 
 Now you should have the Google OAuth 2.0 consent screen configured.
