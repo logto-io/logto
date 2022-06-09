@@ -61,7 +61,7 @@ export default function koaConnectorErrorHandler<StateT, ContextT>(): Middleware
         case ConnectorErrorCodes.SocialAccessTokenInvalid:
           throw new RequestError(
             {
-              code: 'connector.access_token_invalid',
+              code: 'connector.invalid_access_token',
               status: 401,
             },
             data
@@ -69,7 +69,7 @@ export default function koaConnectorErrorHandler<StateT, ContextT>(): Middleware
         case ConnectorErrorCodes.SocialIdTokenInvalid:
           throw new RequestError(
             {
-              code: 'connector.id_token_invalid',
+              code: 'connector.invalid_id_token',
               status: 401,
             },
             data
