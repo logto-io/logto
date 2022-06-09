@@ -82,6 +82,7 @@ const Preview = ({ signInExperience, className }: Props) => {
         <div className={styles.title}>{t('sign_in_exp.preview.title')}</div>
         <div className={styles.selects}>
           <Select
+            size="small"
             value={language}
             options={[
               { value: Language.English, title: t('sign_in_exp.preview.languages.english') },
@@ -94,6 +95,7 @@ const Preview = ({ signInExperience, className }: Props) => {
             }}
           />
           <Select
+            size="small"
             value={mode}
             options={[
               { value: AppearanceMode.LightMode, title: t('sign_in_exp.preview.light') },
