@@ -14,6 +14,7 @@ import useSWR from 'swr';
 import Card from '@/components/Card';
 
 import Block from './components/Block';
+import Skeleton from './components/Skeleton';
 import * as styles from './index.module.scss';
 import { ActiveUsersResponse, NewUsersResponse, TotalUsersResponse } from './types';
 
@@ -31,6 +32,7 @@ const Dashboard = () => {
         <div className={styles.title}>{t('dashboard.title')}</div>
         <div className={styles.subtitle}>{t('dashboard.description')}</div>
       </div>
+      {isLoading && <Skeleton />}
       {!isLoading && (
         <>
           <div className={styles.blocks}>
