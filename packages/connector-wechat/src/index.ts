@@ -137,14 +137,14 @@ export default class WeChatConnector implements SocialConnector {
       errcode !== 42_003,
       new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid, errmsg)
     );
-    assert(!errcode, new ConnectorError(ConnectorErrorCodes.General, errmsg ?? ''));
+    assert(!errcode, new ConnectorError(ConnectorErrorCodes.General, errmsg));
   };
 
   private readonly getUserInfoErrorHandler: GetUserInfoErrorHandler = (userInfo) => {
     const { errcode, errmsg } = userInfo;
     assert(
       !(errcode === 40_001 || errcode === 40_014),
-      new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid)
+      new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid, errmsg)
     );
     assert(!errcode, new Error(errmsg ?? ''));
   };

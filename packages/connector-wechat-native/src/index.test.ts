@@ -179,7 +179,7 @@ describe('getUserInfo', () => {
       .query(parameters)
       .reply(200, { errcode: 40_001, errmsg: 'invalid credential' });
     await expect(weChatNativeMethods.getUserInfo({ code: 'code' })).rejects.toMatchError(
-      new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid)
+      new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid, 'invalid credential')
     );
   });
 

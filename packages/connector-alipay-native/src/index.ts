@@ -148,24 +148,20 @@ export default class AlipayNativeConnector implements SocialConnector {
       code,
       msg,
       sub_code,
-      sub_msg,
     } = alipay_user_info_share_response;
 
-    this.errorHandler({ code, msg, sub_code, sub_msg });
+    this.errorHandler({ code, msg, sub_code });
     assert(id, new ConnectorError(ConnectorErrorCodes.InvalidResponse));
 
     return { id, avatar, name };
   };
 
-  private readonly errorHandler: ErrorHandler = ({ code, msg, sub_code, sub_msg }) => {
-    assert(
-      code !== '20001',
-      new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid, sub_msg ?? msg)
-    );
+  private readonly errorHandler: ErrorHandler = ({ code, msg, sub_code }) => {
+    assert(code !== '20001', new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid, msg));
     assert(
       sub_code !== 'isv.code-invalid',
-      new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid, sub_msg ?? msg)
+      new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid, msg)
     );
-    assert(!(sub_msg ?? sub_code), new ConnectorError(ConnectorErrorCodes.General, sub_msg ?? msg));
+    assert(!sub_code, new ConnectorError(ConnectorErrorCodes.General, msg));
   };
 }

@@ -23,7 +23,7 @@ export const alipaySystemOauthTokenResponseGuard = z.object({
   access_token: z.string(),
   expires_in: z.number(), // In seconds (is string type in docs which is not true)
   refresh_token: z.string(),
-  re_expires_in: z.number(), // Expiring time of refresh token, in seconds (is string type in docs which is not true)
+  re_expires_in: z.number(), // Expiration timeout of refresh token, in seconds (is string type in docs which is not true)
 });
 
 export const accessTokenResponseGuard = z.object({

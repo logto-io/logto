@@ -65,7 +65,7 @@ describe('getAccessToken', () => {
           access_token: 'access_token',
           expires_in: 3600,
           refresh_token: 'refresh_token',
-          re_expires_in: 7200, // Expiring time of refresh token, in seconds
+          re_expires_in: 7200, // Expiration timeout of refresh token, in seconds
         },
         sign: '<signature>',
       });
@@ -88,7 +88,7 @@ describe('getAccessToken', () => {
           access_token: '',
           expires_in: 3600,
           refresh_token: 'refresh_token',
-          re_expires_in: 7200, // Expiring time of refresh token, in seconds
+          re_expires_in: 7200, // Expiration timeout of refresh token, in seconds
         },
         sign: '<signature>',
       });
@@ -172,7 +172,7 @@ describe('getUserInfo', () => {
       });
 
     await expect(alipayNativeMethods.getUserInfo({ auth_code: 'wrong_code' })).rejects.toMatchError(
-      new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid, '无效的访问令牌')
+      new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid, 'Invalid auth token')
     );
   });
 
@@ -191,10 +191,7 @@ describe('getUserInfo', () => {
       });
 
     await expect(alipayNativeMethods.getUserInfo({ auth_code: 'wrong_code' })).rejects.toMatchError(
-      new ConnectorError(
-        ConnectorErrorCodes.SocialAuthCodeInvalid,
-        '授权码 (auth_code) 错误、状态不对或过期'
-      )
+      new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid, 'Invalid auth code')
     );
   });
 
@@ -213,7 +210,7 @@ describe('getUserInfo', () => {
       });
 
     await expect(alipayNativeMethods.getUserInfo({ auth_code: 'wrong_code' })).rejects.toMatchError(
-      new ConnectorError(ConnectorErrorCodes.General, '参数无效')
+      new ConnectorError(ConnectorErrorCodes.General, 'Invalid parameter')
     );
   });
 
