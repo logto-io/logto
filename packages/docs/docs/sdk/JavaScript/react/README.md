@@ -1,4 +1,8 @@
-# React
+---
+sidebar_position: 3
+---
+
+# @logto/react
 
 ## Table of contents
 

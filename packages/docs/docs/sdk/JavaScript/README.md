@@ -1,1 +1,1 @@
-# @logto-io/js
+# JavaScript
