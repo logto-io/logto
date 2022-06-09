@@ -35,6 +35,7 @@ describe('koaCheckAdmin', () => {
     });
 
     await koaCheckAdmin()(ctx, next);
-    expect(next).toBeCalled();
+    expect(ctx.redirect).toBeCalledWith(`/${MountedApps.Console}/register`);
+    expect(next).not.toBeCalled();
   });
 });
