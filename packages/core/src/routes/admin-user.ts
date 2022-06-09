@@ -123,7 +123,7 @@ export default function adminUserRoutes<T extends AuthedRouter>(router: T) {
 
       await findUserById(userId);
 
-      // Clear customData to achieve full replacement,
+      // Clear customData to achieve full replacement
       if (body.customData) {
         await clearUserCustomDataById(userId);
       }
