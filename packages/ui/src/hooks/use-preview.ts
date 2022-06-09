@@ -1,8 +1,10 @@
 import { Language } from '@logto/phrases';
 import { AppearanceMode } from '@logto/schemas';
+import { conditionalString } from '@silverhand/essentials';
 import i18next from 'i18next';
 import { useEffect, useState } from 'react';
 
+import * as styles from '@/App.module.scss';
 import { Context } from '@/hooks/use-page-context';
 import initI18n from '@/i18n/init';
 import { SignInExperienceSettingsResponse, Platform } from '@/types';
@@ -31,6 +33,9 @@ const usePreview = (context: Context): [boolean, PreviewConfig?] => {
 
     // Init i18n
     void initI18n();
+
+    // Block pointer event
+    document.body.classList.add(conditionalString(styles.preview));
 
     const previewMessageHandler = (event: MessageEvent) => {
       if (event.origin !== window.location.origin) {
