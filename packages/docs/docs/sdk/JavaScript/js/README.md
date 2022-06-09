@@ -1,4 +1,8 @@
-# JS Core
+---
+sidebar_position: 1
+---
+
+# @logto/js
 
 ## Table of contents
 

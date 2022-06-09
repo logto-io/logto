@@ -1,4 +1,8 @@
-# Vue
+---
+sidebar_position: 4
+---
+
+# @logto/vue
 
 ## Table of contents
 

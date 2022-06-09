@@ -1,4 +1,8 @@
-# Browser
+---
+sidebar_position: 2
+---
+
+# @logto/browser
 
 ## Table of contents
 
