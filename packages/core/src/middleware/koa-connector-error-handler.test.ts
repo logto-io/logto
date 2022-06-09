@@ -13,7 +13,7 @@ describe('koaConnectorErrorHandler middleware', () => {
     await expect(koaConnectorErrorHandler()(ctx, next)).resolves.not.toThrow();
   });
 
-  it('should throw original error if error type is no OIDCProviderError', async () => {
+  it('should throw original error if error type is no ConnectorError', async () => {
     const error = new Error('err');
 
     next.mockImplementationOnce(() => {
