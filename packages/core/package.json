@@ -38,7 +38,7 @@
     "@logto/shared": "^0.1.0",
     "@silverhand/essentials": "^1.1.6",
     "argon2": "^0.28.5",
-    "chalk": "^4",
+    "chalk": "^5.0.0",
     "dayjs": "^1.10.5",
     "debug": "^4.3.4",
     "decamelize": "^5.0.0",
