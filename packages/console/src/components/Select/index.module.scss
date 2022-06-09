@@ -8,7 +8,6 @@
   transition-property: outline, border;
   transition-timing-function: ease-in-out;
   transition-duration: 0.2s;
-  padding: _.unit(2) _.unit(5) _.unit(2) _.unit(3);
   font: var(--font-body-medium);
   cursor: pointer;
   position: relative;
@@ -36,22 +35,17 @@
     }
   }
 
-  .clear {
+  .icon {
     position: absolute;
     right: _.unit(2);
-    top: 6px;
-    display: none;
-    color: var(--color-icon);
-  }
 
-  .arrow {
-    position: absolute;
-    right: _.unit(2);
-    top: 6px;
-
-    svg {
+    > svg {
       color: var(--color-icon);
     }
+  }
+
+  .clear {
+    display: none;
   }
 
   &.clearable:hover {
@@ -61,6 +55,22 @@
 
     .arrow {
       display: none;
+    }
+  }
+
+  &.small {
+    padding: _.unit(1) _.unit(4) _.unit(1) _.unit(3);
+
+    .icon {
+      top: 2px;
+    }
+  }
+
+  &.medium {
+    padding: _.unit(2) _.unit(5) _.unit(2) _.unit(3);
+
+    .icon {
+      top: 6px;
     }
   }
 }

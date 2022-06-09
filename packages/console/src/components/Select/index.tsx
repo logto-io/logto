@@ -21,6 +21,7 @@ type Props<T> = {
   hasError?: boolean;
   placeholder?: ReactNode;
   isClearable?: boolean;
+  size?: 'small' | 'medium';
 };
 
 const Select = <T extends string>({
@@ -31,6 +32,7 @@ const Select = <T extends string>({
   hasError,
   placeholder,
   isClearable,
+  size = 'medium',
 }: Props<T>) => {
   const [isOpen, setIsOpen] = useState(false);
   const anchorRef = useRef<HTMLInputElement>(null);
@@ -53,6 +55,7 @@ const Select = <T extends string>({
         ref={anchorRef}
         className={classNames(
           styles.select,
+          styles[size],
           isOpen && styles.open,
           isReadOnly && styles.readOnly,
           hasError && styles.error,
@@ -67,11 +70,17 @@ const Select = <T extends string>({
       >
         {current?.title ?? placeholder}
         {isClearable && (
-          <IconButton className={styles.clear} size="small" onClick={handleClear}>
+          <IconButton
+            className={classNames(styles.icon, styles.clear)}
+            size="small"
+            onClick={handleClear}
+          >
             <Close />
           </IconButton>
         )}
-        <div className={styles.arrow}>{isOpen ? <KeyboardArrowUp /> : <KeyboardArrowDown />}</div>
+        <div className={classNames(styles.icon, styles.arrow)}>
+          {isOpen ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
+        </div>
       </div>
       <Dropdown
         isFullWidth
