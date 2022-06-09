@@ -14,9 +14,11 @@ import koaErrorHandler from '@/middleware/koa-error-handler';
 import koaI18next from '@/middleware/koa-i18next';
 import koaLog from '@/middleware/koa-log';
 import koaOIDCErrorHandler from '@/middleware/koa-oidc-error-handler';
-import koaProxyGuard from '@/middleware/koa-proxy-guard';
+import koaRootProxy from '@/middleware/koa-root-proxy';
 import koaSlonikErrorHandler from '@/middleware/koa-slonik-error-handler';
 import koaSpaProxy from '@/middleware/koa-spa-proxy';
+import koaSpaSessionGuard from '@/middleware/koa-spa-session-guard';
+import koaWelcomeProxy from '@/middleware/koa-welcome-proxy';
 import initOidc from '@/oidc/init';
 import initRouter from '@/routes/init';
 
@@ -37,9 +39,14 @@ export default async function initApp(app: Koa): Promise<void> {
   const provider = await initOidc(app);
   initRouter(app, provider);
 
+  app.use(mount('/', koaRootProxy()));
+
+  app.use(mount('/' + MountedApps.Welcome, koaWelcomeProxy()));
+
   app.use(
     mount('/' + MountedApps.Console, koaSpaProxy(MountedApps.Console, 5002, MountedApps.Console))
   );
+
   app.use(
     mount(
       '/' + MountedApps.DemoApp,
@@ -47,8 +54,7 @@ export default async function initApp(app: Koa): Promise<void> {
     )
   );
 
-  app.use(koaProxyGuard(provider));
-  app.use(koaSpaProxy());
+  app.use(compose([koaSpaSessionGuard(provider), koaSpaProxy()]));
 
   const { isHttpsEnabled, httpsCert, httpsKey, port } = envSet.values;
 

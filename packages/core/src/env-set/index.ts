@@ -9,6 +9,7 @@ export enum MountedApps {
   Oidc = 'oidc',
   Console = 'console',
   DemoApp = 'demo-app',
+  Welcome = 'welcome',
 }
 
 const loadEnvValues = async () => {

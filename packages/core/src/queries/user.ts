@@ -147,3 +147,10 @@ export const deleteUserIdentity = async (userId: string, connectorId: string) =>
     where ${fields.id}=${userId}
     returning *
   `);
+
+export const hasActiveUsers = async () =>
+  envSet.pool.exists(sql`
+    select ${fields.id}
+    from ${table}
+    limit 1
+  `);
