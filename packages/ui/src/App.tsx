@@ -4,6 +4,7 @@ import { Route, Routes, BrowserRouter, Navigate } from 'react-router-dom';
 
 import * as styles from './App.module.scss';
 import AppContent from './components/AppContent';
+import LoadingLayerProvider from './containers/LoadingLayerProvider';
 import usePageContext from './hooks/use-page-context';
 import usePreview from './hooks/use-preview';
 import initI18n from './i18n/init';
@@ -52,25 +53,28 @@ const App = () => {
       <AppContent>
         <BrowserRouter>
           <Routes>
-            {/* always keep route path with param as the last one */}
             <Route path="/" element={<Navigate replace to="/sign-in" />} />
-            <Route path="/sign-in" element={<SignIn />} />
             <Route path="/sign-in/consent" element={<Consent />} />
-            <Route path="/sign-in/:method" element={<SecondarySignIn />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/register/:method" element={<Register />} />
-
-            {/* social sign-in pages */}
-            <Route path="/sign-in/callback/:connector" element={<SocialSignInCallback />} />
-            <Route path="/callback/:connector" element={<Callback />} />
-            <Route path="/social/register/:connector" element={<SocialRegister />} />
-            <Route path="/social/landing/:connector" element={<SocialLanding />} />
-
-            <Route path="/:type/:method/passcode-validation" element={<Passcode />} />
             <Route
               path="/unknown-session"
               element={<ErrorPage message="error.invalid_session" />}
             />
+
+            <Route element={<LoadingLayerProvider />}>
+              {/* always keep route path with param as the last one */}
+              <Route path="/sign-in" element={<SignIn />} />
+              <Route path="/sign-in/:method" element={<SecondarySignIn />} />
+              <Route path="/register" element={<Register />} />
+              <Route path="/register/:method" element={<Register />} />
+
+              {/* social sign-in pages */}
+              <Route path="/sign-in/callback/:connector" element={<SocialSignInCallback />} />
+              <Route path="/callback/:connector" element={<Callback />} />
+              <Route path="/social/register/:connector" element={<SocialRegister />} />
+              <Route path="/social/landing/:connector" element={<SocialLanding />} />
+              <Route path="/:type/:method/passcode-validation" element={<Passcode />} />
+            </Route>
+
             <Route path="*" element={<ErrorPage />} />
           </Routes>
         </BrowserRouter>

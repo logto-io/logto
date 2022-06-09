@@ -8,10 +8,6 @@
     width: 96px;
     height: 96px;
     @include _.image-align-center;
-  }
-
-  .content {
-    margin-top: _.unit(2);
-    @include _.text-hint;
+    margin-bottom: _.unit(4);
   }
 }

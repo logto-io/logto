@@ -1,4 +1,4 @@
-import { useEffect, useContext } from 'react';
+import { useContext, useState, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { SearchParameters } from '@/types';
@@ -7,28 +7,35 @@ import { storeCallbackLink } from '@/utils/social-connectors';
 
 import { PageContext } from './use-page-context';
 
-const useSocialLandingHandler = (connectorId?: string) => {
+const useSocialLandingHandler = () => {
+  const [loading, setLoading] = useState(true);
   const { setToast } = useContext(PageContext);
   const { t } = useTranslation(undefined, { keyPrefix: 'main_flow' });
   const { search } = window.location;
 
-  useEffect(() => {
-    const redirectUri = getSearchParameters(search, SearchParameters.redirectTo);
+  const socialLandingHandler = useCallback(
+    (connectorId: string) => {
+      const redirectUri = getSearchParameters(search, SearchParameters.redirectTo);
 
-    if (!redirectUri || !connectorId) {
-      setToast(t('error.invalid_connector_request'));
+      if (!redirectUri) {
+        setLoading(false);
+        setToast(t('error.invalid_connector_request'));
 
-      return;
-    }
+        return;
+      }
 
-    const nativeCallbackLink = getSearchParameters(search, SearchParameters.nativeCallbackLink);
+      const nativeCallbackLink = getSearchParameters(search, SearchParameters.nativeCallbackLink);
 
-    if (nativeCallbackLink) {
-      storeCallbackLink(connectorId, nativeCallbackLink);
-    }
+      if (nativeCallbackLink) {
+        storeCallbackLink(connectorId, nativeCallbackLink);
+      }
 
-    window.location.replace(redirectUri);
-  }, [connectorId, search, setToast, t]);
+      window.location.replace(redirectUri);
+    },
+    [search, setToast, t]
+  );
+
+  return { loading, socialLandingHandler };
 };
 
 export default useSocialLandingHandler;

@@ -1,4 +1,4 @@
-import { useCallback, useContext } from 'react';
+import { useCallback, useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
@@ -8,6 +8,7 @@ import { getCallbackLinkFromStorage } from '@/utils/social-connectors';
 import { PageContext } from './use-page-context';
 
 const useSocialCallbackHandler = () => {
+  const [loading, setLoading] = useState(true);
   const { setToast } = useContext(PageContext);
   const { t } = useTranslation(undefined, { keyPrefix: 'main_flow' });
   const navigate = useNavigate();
@@ -20,6 +21,7 @@ const useSocialCallbackHandler = () => {
 
       // Connector auth error
       if (error) {
+        setLoading(false);
         setToast(`${error}${error_description ? `: ${error_description}` : ''}`);
 
         return;
@@ -27,6 +29,7 @@ const useSocialCallbackHandler = () => {
 
       // Connector auth missing state
       if (!state || !connectorId) {
+        setLoading(false);
         setToast(t('error.invalid_connector_auth'));
 
         return;
@@ -55,7 +58,7 @@ const useSocialCallbackHandler = () => {
     [navigate, setToast, t]
   );
 
-  return socialCallbackHandler;
+  return { socialCallbackHandler, loading };
 };
 
 export default useSocialCallbackHandler;

@@ -52,8 +52,6 @@ const translation = {
       phone_number: 'phone number',
       reminder: 'Reminder',
       not_found: '404 Not Found',
-      loading: 'Loading...',
-      redirecting: 'Redirecting...',
       agree_with_terms: 'I have read and agree to the ',
       agree_with_terms_modal: 'Please read the {{terms}} and then agree the box first.',
       terms_of_use: 'Terms of Use',

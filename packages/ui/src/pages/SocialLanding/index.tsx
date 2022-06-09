@@ -1,5 +1,4 @@
-import React from 'react';
-import { useTranslation } from 'react-i18next';
+import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 
 import SocialLandingContainer from '@/containers/SocialLanding';
@@ -13,9 +12,15 @@ type Parameters = {
 
 const SocialLanding = () => {
   const { connector: connectorId } = useParams<Parameters>();
-  const { t } = useTranslation(undefined, { keyPrefix: 'main_flow' });
+  const { loading, socialLandingHandler } = useSocialLandingHandler();
 
-  useSocialLandingHandler(connectorId);
+  // SocialSignIn Callback Handler
+  useEffect(() => {
+    if (!connectorId) {
+      return;
+    }
+    socialLandingHandler(connectorId);
+  }, [connectorId, socialLandingHandler]);
 
   if (!connectorId) {
     return null;
@@ -26,7 +31,7 @@ const SocialLanding = () => {
       <SocialLandingContainer
         className={styles.connectorContainer}
         connectorId={connectorId}
-        message={t('description.redirecting')}
+        isLoading={loading}
       />
     </div>
   );
