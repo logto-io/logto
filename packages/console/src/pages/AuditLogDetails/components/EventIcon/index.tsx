@@ -1,9 +1,9 @@
-import classNames from 'classnames';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 
-import Failed from './Failed';
-import Success from './Success';
+import Failed from '@/icons/Failed';
+import Success from '@/icons/Success';
+
 import * as styles from './index.module.scss';
 
 type Props = {
@@ -15,8 +15,8 @@ const EventIcon = ({ isSuccess }: Props) => {
 
   return (
     <div>
-      <div className={classNames(styles.icon, isSuccess ? styles.success : styles.fail)}>
-        {isSuccess ? <Success /> : <Failed />}
+      <div className={isSuccess ? styles.success : styles.fail}>
+        {isSuccess ? <Success className={styles.icon} /> : <Failed className={styles.icon} />}
       </div>
       <div className={styles.label}>
         {t(isSuccess ? 'log_details.success' : 'log_details.failed')}
