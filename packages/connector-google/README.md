@@ -10,26 +10,27 @@ The Google connector provides a succinct way for your application to use Googleâ
 
 ## Configure your consent screen
 
+### Configure and register your application
+
 1. On the left **APIs & Services** menu, click the **OAuth consent screen** button.
-2. Choose the **User Type** you want, and click the **Create** button.
+2. Choose the **User Type** you want, and click the **Create** button. (Note: If you select **External** as your **User Type**, you will need to add test users later.)
 
-Now you will be on the **Edit app registration** page. You need to complete the following steps:
-1. Config **OAuth consent screen**.
-2. Config **Scopes**.
-3. Add Test users.
+Now you will be on the **Edit app registration** page.
 
-### Config OAuth consent screen
+### Edit app registration
+
+#### 1. Config OAuth consent screen
 
 1. Follow the instructions to fill out the **OAuth consent screen** form.
 2. Click **SAVE AND CONTINUE** to continue.
 
-### Config Scopes
+#### 2. Config Scopes
 
 1. Click **ADD OR REMOVE SCOPES** and select `../auth/userinfo.email`, `../auth/userinfo.profile` and `openid` in the popup drawer, and click **UPDATE** to finish.
 2. Fill out the form as you need.
 3. Click **SAVE AND CONTINUE** to continue.
 
-### Add Test Users
+#### 3. Add Test Users (External user type only)
 
 1. Click **ADD USERS** and add test users to allow these users to access your application while testing.
 2. Click **SAVE AND CONTINUE** to continue.
