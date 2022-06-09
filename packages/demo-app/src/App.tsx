@@ -19,20 +19,20 @@ const Main = () => {
   const isInCallback = Boolean(new URL(window.location.href).searchParams.get('code'));
 
   useEffect(() => {
-    if (!isAuthenticated && !isInCallback) {
+    if (isInCallback) {
+      return;
+    }
+
+    if (isAuthenticated) {
+      (async () => {
+        const userInfo = await fetchUserInfo();
+        setUser(userInfo);
+      })();
+    } else {
       sessionStorage.setItem(signInNotificationStorageKey, t('notification'));
       void signIn(window.location.href);
     }
-  }, [isAuthenticated, isInCallback, signIn, t]);
-
-  useEffect(() => {
-    (async () => {
-      if (isAuthenticated) {
-        const userInfo = await fetchUserInfo();
-        setUser(userInfo);
-      }
-    })();
-  }, [isAuthenticated, fetchUserInfo]);
+  }, [fetchUserInfo, isAuthenticated, isInCallback, signIn, t]);
 
   if (isInCallback) {
     return <Callback />;

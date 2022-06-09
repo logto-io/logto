@@ -1,13 +1,15 @@
 import { LogtoError, OidcError, useHandleSignInCallback } from '@logto/react';
 import React from 'react';
-import { useHref } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import AppError from '@/components/AppError';
 import LogtoLoading from '@/components/LogtoLoading';
 
 const Callback = () => {
-  const basename = useHref('/');
-  const { error } = useHandleSignInCallback(basename.slice(0, -1));
+  const navigate = useNavigate();
+  const { error } = useHandleSignInCallback(() => {
+    navigate('/');
+  });
 
   if (error) {
     const errorCode =
