@@ -12,8 +12,10 @@ import {
 } from 'recharts';
 import useSWR from 'swr';
 
+import AppError from '@/components/AppError';
 import Card from '@/components/Card';
 import TextInput from '@/components/TextInput';
+import { RequestError } from '@/hooks/use-api';
 
 import Block from './components/Block';
 import Skeleton from './components/Skeleton';
@@ -21,15 +23,21 @@ import * as styles from './index.module.scss';
 import { ActiveUsersResponse, NewUsersResponse, TotalUsersResponse } from './types';
 
 const Dashboard = () => {
-  const [date, setDate] = useState<string>(dayjs().format('YYYY-MM-DD'));
-  const { data: totalData } = useSWR<TotalUsersResponse>('/api/dashboard/users/total');
-  const { data: newData } = useSWR<NewUsersResponse>('/api/dashboard/users/new');
-  const { data: activeData } = useSWR<ActiveUsersResponse>(
-    `/api/dashboard/users/active?date=${date}`
+  const { data: totalData, error: totalError } = useSWR<TotalUsersResponse, RequestError>(
+    '/api/dashboard/users/total'
+  );
+  const { data: newData, error: newError } = useSWR<NewUsersResponse, RequestError>(
+    '/api/dashboard/users/new'
+  );
+  const { data: activeData, error: activeError } = useSWR<ActiveUsersResponse, RequestError>(
+    '/api/dashboard/users/active'
   );
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const [date, setDate] = useState<string>(dayjs().format('YYYY-MM-DD'));
 
-  const isLoading = !totalData || !newData || !activeData;
+  // Pick an error as the page's error
+  const error = totalError ?? newError ?? activeError;
+  const isLoading = (!totalData || !newData || !activeData) && !error;
 
   const handleDateChange: ChangeEventHandler<HTMLInputElement> = (event) => {
     setDate(event.target.value);
@@ -42,7 +50,8 @@ const Dashboard = () => {
         <div className={styles.subtitle}>{t('dashboard.description')}</div>
       </div>
       {isLoading && <Skeleton />}
-      {!isLoading && (
+      {error && <AppError errorMessage={error.body?.message} />}
+      {!isLoading && totalData && newData && activeData && (
         <>
           <div className={styles.blocks}>
             <Block
