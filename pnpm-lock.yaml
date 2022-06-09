@@ -621,7 +621,7 @@ importers:
     specifiers:
       '@fontsource/roboto-mono': ^4.5.7
       '@logto/phrases': ^0.1.0
-      '@logto/react': ^0.1.14
+      '@logto/react': ^0.1.15
       '@logto/schemas': ^0.1.0
       '@logto/shared': ^0.1.0
       '@mdx-js/react': ^1.6.22
@@ -679,7 +679,7 @@ importers:
     devDependencies:
       '@fontsource/roboto-mono': 4.5.7
       '@logto/phrases': link:../phrases
-      '@logto/react': 0.1.14_react@17.0.2
+      '@logto/react': 0.1.15_react@17.0.2
       '@logto/schemas': link:../schemas
       '@logto/shared': link:../shared
       '@mdx-js/react': 1.6.22_react@17.0.2
@@ -905,7 +905,7 @@ importers:
   packages/demo-app:
     specifiers:
       '@logto/phrases': ^0.1.0
-      '@logto/react': ^0.1.14
+      '@logto/react': ^0.1.15
       '@logto/schemas': ^0.1.0
       '@logto/shared': ^0.1.0
       '@parcel/core': 2.5.0
@@ -931,7 +931,7 @@ importers:
       typescript: ^4.7.2
     devDependencies:
       '@logto/phrases': link:../phrases
-      '@logto/react': 0.1.14_react@17.0.2
+      '@logto/react': 0.1.15_react@17.0.2
       '@logto/schemas': link:../schemas
       '@logto/shared': link:../shared
       '@parcel/core': 2.5.0
@@ -5411,8 +5411,8 @@ packages:
       superstruct: 0.15.4
     dev: true
 
-  /@logto/react/0.1.14_react@17.0.2:
-    resolution: {integrity: sha512-7brsrAQPUCDrKNy/G1uJ0EEw3eniwY4B8UJ4qj9WH6WVSHJj1jQj7SIC3FDIkOrBUMF6KSvDh97bRmrebLBSyQ==}
+  /@logto/react/0.1.15_react@17.0.2:
+    resolution: {integrity: sha512-GCbVRooMdCOBWJLvfDpChkKYt96Hr/Ki03xjO/gDb5KKQ3zrK9fSvN36vtUidRpddbWUsJJCK40J+FzCwUsHGg==}
     requiresBuild: true
     peerDependencies:
       react: '>=16.8.0'
