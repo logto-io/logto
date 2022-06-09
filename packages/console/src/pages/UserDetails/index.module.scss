@@ -76,4 +76,8 @@
   .textField {
     @include _.form-text-field;
   }
+
+  .logs {
+    padding: _.unit(6) 0;
+  }
 }

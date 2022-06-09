@@ -6,10 +6,11 @@ import { Controller, useController, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import ReactModal from 'react-modal';
-import { useParams } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import useSWR from 'swr';
 
 import ActionMenu, { ActionMenuItem } from '@/components/ActionMenu';
+import AuditLogTable from '@/components/AuditLogTable';
 import Button from '@/components/Button';
 import Card from '@/components/Card';
 import CodeEditor from '@/components/CodeEditor';
@@ -48,6 +49,8 @@ type FormData = {
 };
 
 const UserDetails = () => {
+  const location = useLocation();
+  const isLogs = location.pathname.endsWith('/logs');
   const { id } = useParams();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const [isDeleteFormOpen, setIsDeleteFormOpen] = useState(false);
@@ -186,95 +189,101 @@ const UserDetails = () => {
               <TabNavItem href={`/users/${id}`}>{t('user_details.tab_settings')}</TabNavItem>
               <TabNavItem href={`/users/${id}/logs`}>{t('user_details.tab_logs')}</TabNavItem>
             </TabNav>
-            <form className={styles.form} onSubmit={onSubmit}>
-              <div className={styles.fields}>
-                {getValues('primaryEmail') && (
-                  <FormField
-                    title="admin_console.user_details.field_email"
-                    className={styles.textField}
-                  >
-                    <TextInput readOnly {...register('primaryEmail')} />
-                  </FormField>
-                )}
-                {getValues('primaryPhone') && (
-                  <FormField
-                    title="admin_console.user_details.field_phone"
-                    className={styles.textField}
-                  >
-                    <TextInput readOnly {...register('primaryPhone')} />
-                  </FormField>
-                )}
-                {getValues('username') && (
-                  <FormField
-                    title="admin_console.user_details.field_username"
-                    className={styles.textField}
-                  >
-                    <TextInput readOnly {...register('username')} />
-                  </FormField>
-                )}
-                <FormField
-                  title="admin_console.user_details.field_name"
-                  className={styles.textField}
-                >
-                  <TextInput {...register('name')} />
-                </FormField>
-                <FormField
-                  title="admin_console.user_details.field_avatar"
-                  className={styles.textField}
-                >
-                  <TextInput
-                    {...register('avatar', {
-                      validate: (value) =>
-                        !value || uriValidator(value) || t('errors.invalid_uri_format'),
-                    })}
-                    hasError={Boolean(errors.avatar)}
-                    errorMessage={errors.avatar?.message}
-                  />
-                </FormField>
-                <FormField
-                  title="admin_console.user_details.field_roles"
-                  className={styles.textField}
-                >
-                  <Controller
-                    name="roleNames"
-                    control={control}
-                    render={({ field: { value, onChange } }) => (
-                      <RoleSelect value={value} onChange={onChange} />
-                    )}
-                  />
-                </FormField>
-                <FormField
-                  title="admin_console.user_details.field_connectors"
-                  className={styles.textField}
-                >
-                  <UserConnectors
-                    userId={data.id}
-                    connectors={data.identities}
-                    onDelete={() => {
-                      void mutate();
-                    }}
-                  />
-                </FormField>
-                <FormField
-                  isRequired
-                  title="admin_console.user_details.field_custom_data"
-                  className={styles.textField}
-                >
-                  <CodeEditor language="json" value={value} onChange={onChange} />
-                </FormField>
+            {isLogs ? (
+              <div className={styles.logs}>
+                <AuditLogTable userId={data.id} />
               </div>
-              <div className={detailsStyles.footer}>
-                <div className={detailsStyles.footerMain}>
-                  <Button
-                    isLoading={isSubmitting}
-                    htmlType="submit"
-                    type="primary"
-                    title="admin_console.user_details.save_changes"
-                    size="large"
-                  />
+            ) : (
+              <form className={styles.form} onSubmit={onSubmit}>
+                <div className={styles.fields}>
+                  {getValues('primaryEmail') && (
+                    <FormField
+                      title="admin_console.user_details.field_email"
+                      className={styles.textField}
+                    >
+                      <TextInput readOnly {...register('primaryEmail')} />
+                    </FormField>
+                  )}
+                  {getValues('primaryPhone') && (
+                    <FormField
+                      title="admin_console.user_details.field_phone"
+                      className={styles.textField}
+                    >
+                      <TextInput readOnly {...register('primaryPhone')} />
+                    </FormField>
+                  )}
+                  {getValues('username') && (
+                    <FormField
+                      title="admin_console.user_details.field_username"
+                      className={styles.textField}
+                    >
+                      <TextInput readOnly {...register('username')} />
+                    </FormField>
+                  )}
+                  <FormField
+                    title="admin_console.user_details.field_name"
+                    className={styles.textField}
+                  >
+                    <TextInput {...register('name')} />
+                  </FormField>
+                  <FormField
+                    title="admin_console.user_details.field_avatar"
+                    className={styles.textField}
+                  >
+                    <TextInput
+                      {...register('avatar', {
+                        validate: (value) =>
+                          !value || uriValidator(value) || t('errors.invalid_uri_format'),
+                      })}
+                      hasError={Boolean(errors.avatar)}
+                      errorMessage={errors.avatar?.message}
+                    />
+                  </FormField>
+                  <FormField
+                    title="admin_console.user_details.field_roles"
+                    className={styles.textField}
+                  >
+                    <Controller
+                      name="roleNames"
+                      control={control}
+                      render={({ field: { value, onChange } }) => (
+                        <RoleSelect value={value} onChange={onChange} />
+                      )}
+                    />
+                  </FormField>
+                  <FormField
+                    title="admin_console.user_details.field_connectors"
+                    className={styles.textField}
+                  >
+                    <UserConnectors
+                      userId={data.id}
+                      connectors={data.identities}
+                      onDelete={() => {
+                        void mutate();
+                      }}
+                    />
+                  </FormField>
+                  <FormField
+                    isRequired
+                    title="admin_console.user_details.field_custom_data"
+                    className={styles.textField}
+                  >
+                    <CodeEditor language="json" value={value} onChange={onChange} />
+                  </FormField>
                 </div>
-              </div>
-            </form>
+                <div className={detailsStyles.footer}>
+                  <div className={detailsStyles.footerMain}>
+                    <Button
+                      isLoading={isSubmitting}
+                      htmlType="submit"
+                      type="primary"
+                      title="admin_console.user_details.save_changes"
+                      size="large"
+                    />
+                  </div>
+                </div>
+              </form>
+            )}
           </Card>
         </>
       )}

@@ -71,6 +71,7 @@ const Main = () => {
                 <Route path="users">
                   <Route index element={<Users />} />
                   <Route path=":id" element={<UserDetails />} />
+                  <Route path=":id/logs" element={<UserDetails />} />
                 </Route>
                 <Route path="sign-in-experience">
                   <Route index element={<Navigate to="experience" />} />

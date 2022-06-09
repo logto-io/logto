@@ -1,0 +1,36 @@
+@use '@/scss/underscore' as _;
+
+.filter {
+  display: flex;
+  justify-content: right;
+  align-items: center;
+
+  .title {
+    color: var(--color-caption);
+    font: var(--font-body-medium);
+  }
+
+  .eventSelector {
+    width: 300px;
+    margin-left: _.unit(2);
+  }
+
+  .applicationSelector {
+    width: 250px;
+    margin-left: _.unit(2);
+  }
+}
+
+.table {
+  margin-top: _.unit(4);
+  flex: 1;
+}
+
+.pagination {
+  margin-top: _.unit(4);
+  min-height: 32px;
+}
+
+.eventName {
+  width: 360px;
+}
