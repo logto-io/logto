@@ -543,26 +543,6 @@ describe('sessionRoutes', () => {
     });
   });
 
-  describe('GET /session/register/:username/existence', () => {
-    it('property existence is false in response if username exists', async () => {
-      const response = await sessionRequest.get('/session/register/username/existence');
-      expect(response.body).toHaveProperty('existence', false);
-    });
-
-    it('throw error if username not valid', async () => {
-      const usernameStartedWithNumber = '1username';
-      const response = await sessionRequest.get(
-        `/session/register/${usernameStartedWithNumber}/existence`
-      );
-      expect(response.statusCode).toEqual(400);
-    });
-
-    it('property existence is true in response if username exists', async () => {
-      const response = await sessionRequest.get('/session/register/username1/existence');
-      expect(response.body).toHaveProperty('existence', true);
-    });
-  });
-
   describe('POST /session/register/passwordless/sms/send-passcode', () => {
     beforeAll(() => {
       interactionDetails.mockResolvedValueOnce({
