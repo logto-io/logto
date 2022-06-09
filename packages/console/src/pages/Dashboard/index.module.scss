@@ -28,6 +28,17 @@
   margin-bottom: _.unit(4);
 }
 
+.activeCard {
+  position: relative;
+
+  .datePicker {
+    position: absolute;
+    right: _.unit(6);
+    top: _.unit(6);
+    width: 160px;
+  }
+}
+
 .curve {
   margin: _.unit(10) 0 _.unit(6);
   width: 100%;

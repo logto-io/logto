@@ -1,4 +1,5 @@
-import React from 'react';
+import dayjs from 'dayjs';
+import React, { ChangeEventHandler, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   Area,
@@ -12,18 +13,26 @@ import {
 import useSWR from 'swr';
 
 import Card from '@/components/Card';
+import TextInput from '@/components/TextInput';
 
 import Block from './components/Block';
 import * as styles from './index.module.scss';
 import { ActiveUsersResponse, NewUsersResponse, TotalUsersResponse } from './types';
 
 const Dashboard = () => {
+  const [date, setDate] = useState<string>(dayjs().format('YYYY-MM-DD'));
   const { data: totalData } = useSWR<TotalUsersResponse>('/api/dashboard/users/total');
   const { data: newData } = useSWR<NewUsersResponse>('/api/dashboard/users/new');
-  const { data: activeData } = useSWR<ActiveUsersResponse>('/api/dashboard/users/active');
+  const { data: activeData } = useSWR<ActiveUsersResponse>(
+    `/api/dashboard/users/active?date=${date}`
+  );
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   const isLoading = !totalData || !newData || !activeData;
+
+  const handleDateChange: ChangeEventHandler<HTMLInputElement> = (event) => {
+    setDate(event.target.value);
+  };
 
   return (
     <div className={styles.container}>
@@ -46,13 +55,16 @@ const Dashboard = () => {
               delta={newData.last7Days.delta}
             />
           </div>
-          <Card>
+          <Card className={styles.activeCard}>
             <Block
               title="dashboard.daily_active_users"
               count={activeData.dau.count}
               delta={activeData.dau.delta}
               varient="plain"
             />
+            <div className={styles.datePicker}>
+              <TextInput type="date" value={date} onChange={handleDateChange} />
+            </div>
             <div className={styles.curve}>
               <ResponsiveContainer>
                 <AreaChart

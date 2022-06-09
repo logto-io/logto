@@ -29,7 +29,7 @@ const Block = ({ varient = 'default', count, delta, title }: Props) => {
         <div className={styles.number}>{formatNumberWithComma(count)}</div>
         {delta !== undefined && (
           <div className={classNames(styles.delta, delta < 0 && styles.down)}>
-            <span>(${deltaLable})</span>
+            <span>({deltaLable})</span>
             {delta > 0 && <ArrowUp />}
             {delta < 0 && <ArrowDown />}
           </div>
