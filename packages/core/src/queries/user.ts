@@ -1,4 +1,4 @@
-import { User, CreateUser, Users, UserRole } from '@logto/schemas';
+import { User, CreateUser, Users } from '@logto/schemas';
 import { sql } from 'slonik';
 
 import { buildInsertInto } from '@/database/insert-into';
@@ -148,9 +148,9 @@ export const deleteUserIdentity = async (userId: string, connectorId: string) =>
     returning *
   `);
 
-export const hasAdminUsers = async () =>
+export const hasActiveUsers = async () =>
   envSet.pool.exists(sql`
     select ${fields.id}
     from ${table}
-    where ${fields.roleNames} ? ${UserRole.Admin}
+    limit 1
   `);

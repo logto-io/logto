@@ -1,14 +1,14 @@
 import { MountedApps } from '@/env-set';
-import { hasAdminUsers } from '@/queries/user';
+import { hasActiveUsers } from '@/queries/user';
 import { createContextWithRouteParameters } from '@/utils/test-utils';
 
-import koaCheckAdmin from './koa-check-admin';
+import koaWelcomeProxy from './koa-welcome-proxy';
 
 jest.mock('@/queries/user', () => ({
-  hasAdminUsers: jest.fn(),
+  hasActiveUsers: jest.fn(),
 }));
 
-describe('koaCheckAdmin', () => {
+describe('koaWelcomeProxy', () => {
   const next = jest.fn();
 
   afterEach(() => {
@@ -17,24 +17,24 @@ describe('koaCheckAdmin', () => {
   });
 
   it('should redirect to admin console if has AdminUsers', async () => {
-    (hasAdminUsers as jest.Mock).mockResolvedValue(true);
+    (hasActiveUsers as jest.Mock).mockResolvedValue(true);
     const ctx = createContextWithRouteParameters({
       url: `/${MountedApps.Welcome}`,
     });
 
-    await koaCheckAdmin()(ctx, next);
+    await koaWelcomeProxy()(ctx, next);
 
     expect(ctx.redirect).toBeCalledWith(`/${MountedApps.Console}`);
     expect(next).not.toBeCalled();
   });
 
   it('should redirect to register if has no AdminUsers', async () => {
-    (hasAdminUsers as jest.Mock).mockResolvedValue(false);
+    (hasActiveUsers as jest.Mock).mockResolvedValue(false);
     const ctx = createContextWithRouteParameters({
       url: `/${MountedApps.Welcome}`,
     });
 
-    await koaCheckAdmin()(ctx, next);
+    await koaWelcomeProxy()(ctx, next);
     expect(ctx.redirect).toBeCalledWith(`/${MountedApps.Console}/register`);
     expect(next).not.toBeCalled();
   });

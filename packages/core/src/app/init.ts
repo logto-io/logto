@@ -8,7 +8,6 @@ import koaLogger from 'koa-logger';
 import mount from 'koa-mount';
 
 import envSet, { MountedApps } from '@/env-set';
-import koaCheckAdmin from '@/middleware/koa-check-admin';
 import koaCheckDemoApp from '@/middleware/koa-check-demo-app';
 import koaConnectorErrorHandler from '@/middleware/koa-connector-error-handle';
 import koaErrorHandler from '@/middleware/koa-error-handler';
@@ -19,6 +18,7 @@ import koaRootProxy from '@/middleware/koa-root-proxy';
 import koaSlonikErrorHandler from '@/middleware/koa-slonik-error-handler';
 import koaSpaProxy from '@/middleware/koa-spa-proxy';
 import koaSpaSessionGuard from '@/middleware/koa-spa-session-guard';
+import koaWelcomeProxy from '@/middleware/koa-welcome-proxy';
 import initOidc from '@/oidc/init';
 import initRouter from '@/routes/init';
 
@@ -41,7 +41,7 @@ export default async function initApp(app: Koa): Promise<void> {
 
   app.use(mount('/', koaRootProxy()));
 
-  app.use(mount('/' + MountedApps.Welcome, koaCheckAdmin()));
+  app.use(mount('/' + MountedApps.Welcome, koaWelcomeProxy()));
 
   app.use(
     mount('/' + MountedApps.Console, koaSpaProxy(MountedApps.Console, 5002, MountedApps.Console))
