@@ -34,14 +34,20 @@ const Dashboard = () => {
       {!isLoading && (
         <>
           <div className={styles.blocks}>
-            <Block title="dashboard.total_users" count={totalData.totalUserCount} />
+            <Block
+              title="dashboard.total_users"
+              tooltip="dashboard.total_users_tip"
+              count={totalData.totalUserCount}
+            />
             <Block
               title="dashboard.new_users_today"
+              tooltip="dashboard.new_users_today_tip"
               count={newData.today.count}
               delta={newData.today.delta}
             />
             <Block
               title="dashboard.new_users_7_days"
+              tooltip="dashboard.new_users_7_days_tip"
               count={newData.last7Days.count}
               delta={newData.last7Days.delta}
             />
@@ -49,6 +55,7 @@ const Dashboard = () => {
           <Card>
             <Block
               title="dashboard.daily_active_users"
+              tooltip="dashboard.daily_active_users_tip"
               count={activeData.dau.count}
               delta={activeData.dau.delta}
               varient="plain"
@@ -81,12 +88,14 @@ const Dashboard = () => {
             <div className={styles.blocks}>
               <Block
                 title="dashboard.weekly_active_users"
+                tooltip="dashboard.weekly_active_users_tip"
                 count={activeData.wau.count}
                 delta={activeData.wau.delta}
                 varient="bordered"
               />
               <Block
                 title="dashboard.monthly_active_users"
+                tooltip="dashboard.monthly_active_users_tip"
                 count={activeData.mau.count}
                 delta={activeData.mau.delta}
                 varient="bordered"
