@@ -1,4 +1,5 @@
 import { ConnectorData, SearchParameters } from '@/types';
+import { getLogtoNativeSdk, isNativeWebview } from '@/utils/native-sdk';
 
 import {
   filterSocialConnectors,
@@ -15,9 +16,18 @@ const mockConnectors = [
   { platform: 'Native', target: 'Alipay' },
 ] as ConnectorData[];
 
+jest.mock('@/utils/native-sdk', () => ({
+  isNativeWebview: jest.fn(),
+  getLogtoNativeSdk: jest.fn(),
+}));
+
+const getLogtoNativeSdkMock = getLogtoNativeSdk as jest.Mock;
+const isNativeWebviewMock = isNativeWebview as jest.Mock;
+
 describe('filterSocialConnectors', () => {
   afterEach(() => {
     jest.clearAllMocks();
+    jest.resetAllMocks();
   });
 
   it('undefined input should return empty list', () => {
@@ -25,6 +35,7 @@ describe('filterSocialConnectors', () => {
   });
 
   it('filter Web Connectors', () => {
+    isNativeWebviewMock.mockImplementation(() => false);
     expect(filterSocialConnectors(mockConnectors)).toEqual([
       { platform: 'Web', target: 'facebook' },
       { platform: 'Web', target: 'google' },
@@ -32,17 +43,28 @@ describe('filterSocialConnectors', () => {
     ]);
   });
 
-  it('filter Native Connectors', () => {
-    /* eslint-disable @silverhand/fp/no-mutation */
-    // @ts-expect-error mock global object
-    globalThis.logtoNativeSdk = {
-      platform: 'ios',
+  it('Native Platform should return empty if not getPostMessage method is injected', () => {
+    isNativeWebviewMock.mockImplementation(() => true);
+    getLogtoNativeSdkMock.mockImplementation(() => ({
       supportedConnector: {
         universal: true,
-        nativeTargets: ['Web', 'WeChat'],
+        nativeTargets: ['WeChat', 'Alipay'],
       },
-    };
-    /* eslint-enable @silverhand/fp/no-mutation */
+    }));
+
+    expect(filterSocialConnectors(mockConnectors)).toEqual([]);
+  });
+
+  it('filter Native & Universal  Connectors', () => {
+    isNativeWebviewMock.mockImplementation(() => true);
+    getLogtoNativeSdkMock.mockImplementation(() => ({
+      supportedConnector: {
+        universal: true,
+        nativeTargets: ['WeChat'],
+      },
+      getPostMessage: jest.fn(),
+      callbackLink: 'logto://callback',
+    }));
 
     expect(filterSocialConnectors(mockConnectors)).toEqual([
       { platform: 'Universal', target: 'facebook' },
@@ -50,17 +72,31 @@ describe('filterSocialConnectors', () => {
     ]);
   });
 
-  it('filter Native & Universal Connectors', () => {
-    /* eslint-disable @silverhand/fp/no-mutation */
-    // @ts-expect-error mock global object
-    globalThis.logtoNativeSdk = {
+  it('filter Native & Universal Connectors with out callbackLink should only return native connectors', () => {
+    isNativeWebviewMock.mockImplementation(() => true);
+    getLogtoNativeSdkMock.mockImplementation(() => ({
+      supportedConnector: {
+        universal: true,
+        nativeTargets: ['WeChat'],
+      },
+      getPostMessage: jest.fn(),
+    }));
+
+    expect(filterSocialConnectors(mockConnectors)).toEqual([
+      { platform: 'Native', target: 'WeChat' },
+    ]);
+  });
+
+  it('filter Native Connectors', () => {
+    isNativeWebviewMock.mockImplementation(() => true);
+    getLogtoNativeSdkMock.mockImplementation(() => ({
       platform: 'ios',
       supportedConnector: {
         universal: false,
-        nativeTargets: ['Web', 'WeChat'],
+        nativeTargets: ['WeChat'],
       },
-    };
-    /* eslint-enable @silverhand/fp/no-mutation */
+      getPostMessage: jest.fn(),
+    }));
 
     expect(filterSocialConnectors(mockConnectors)).toEqual([
       { platform: 'Native', target: 'WeChat' },
@@ -71,6 +107,7 @@ describe('filterSocialConnectors', () => {
 describe('filterPreviewSocialConnectors', () => {
   afterEach(() => {
     jest.clearAllMocks();
+    jest.resetAllMocks();
   });
 
   it('undefined input should return empty list', () => {
@@ -97,13 +134,10 @@ describe('filterPreviewSocialConnectors', () => {
 
 describe('buildSocialLandingUri', () => {
   it('buildSocialLandingUri', () => {
-    /* eslint-disable @silverhand/fp/no-mutation */
-    // @ts-expect-error mock global object
-    globalThis.logtoNativeSdk = {
+    getLogtoNativeSdkMock.mockImplementation(() => ({
       platform: 'ios',
       callbackLink: 'logto://callback',
-    };
-    /* eslint-enable @silverhand/fp/no-mutation */
+    }));
 
     const redirectUri = 'https://www.example.com/callback';
     const socialLandingPath = '/social/landing';

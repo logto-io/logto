@@ -88,9 +88,15 @@ export const filterSocialConnectors = (socialConnectors?: ConnectorData[]) => {
   /**
    * Native Webview Environment
    * Accepts both native and universal platform connectors.
-   * Insert universal connectors only if there is no native platform connector provided with the same target.
    * Native platform has higher priority.
    **/
+
+  const { supportedConnector, getPostMessage, callbackLink } = getLogtoNativeSdk() ?? {};
+
+  if (!getPostMessage) {
+    // Invalid Native SDK bridge injections, not able to sign in with any social connectors.
+    return [];
+  }
 
   for (const connector of socialConnectors) {
     const { platform, target } = connector;
@@ -99,19 +105,28 @@ export const filterSocialConnectors = (socialConnectors?: ConnectorData[]) => {
       continue;
     }
 
-    const { supportedConnector } = getLogtoNativeSdk() ?? {};
-
-    // No native supportedConnector settings found
+    // Native SupportedConnector Settings is required
     if (!supportedConnector) {
       continue;
     }
 
+    // Native supported nativeTargets flag is required
     if (platform === 'Native' && supportedConnector.nativeTargets.includes(target)) {
       connectorMap.set(target, connector);
       continue;
     }
 
-    if (platform === 'Universal' && supportedConnector.universal && !connectorMap.get(target)) {
+    /**
+     *  Native supportedConnector.universal flag is required
+     *  Native callback link settings is required
+     *  Only if there is no native platform connector provided with the same target.
+     **/
+    if (
+      platform === 'Universal' &&
+      supportedConnector.universal &&
+      callbackLink &&
+      !connectorMap.get(target)
+    ) {
       connectorMap.set(target, connector);
       continue;
     }
