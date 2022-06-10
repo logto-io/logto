@@ -1,12 +1,9 @@
 @use '@/scss/underscore' as _;
 
-.spinner {
-  width: 16px;
-  height: 16px;
-  display: inline-flex;
-  align-items: center;
+.ring {
+  @include _.rotating-animation;
+}
 
-  svg {
-    @include _.rotating-animation;
-  }
+.daisy {
+  animation: rotating 1s steps(12, end) infinite;
 }

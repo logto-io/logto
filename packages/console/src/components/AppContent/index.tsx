@@ -3,7 +3,7 @@ import React, { useEffect } from 'react';
 import { Outlet, useHref, useLocation, useNavigate } from 'react-router-dom';
 
 import AppError from '@/components/AppError';
-import LogtoLoading from '@/components/LogtoLoading';
+import AppLoading from '@/components/AppLoading';
 import SessionExpired from '@/components/SessionExpired';
 import useSettings from '@/hooks/use-settings';
 import useUserPreferences from '@/hooks/use-user-preferences';
@@ -46,7 +46,7 @@ const AppContent = () => {
   }
 
   if (!isAuthenticated || isLoading) {
-    return <LogtoLoading message="general.loading" />;
+    return <AppLoading />;
   }
 
   return (

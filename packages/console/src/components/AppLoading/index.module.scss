@@ -6,10 +6,10 @@
   height: 100vh;
   color: var(--color-text);
   align-items: center;
+  justify-content: center;
   overflow: hidden;
 
   img {
-    height: 300px;
-    margin: _.unit(25) 0 _.unit(6);
+    margin-bottom: _.unit(4);
   }
 }
