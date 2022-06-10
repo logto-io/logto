@@ -36,6 +36,7 @@ $font-family: -apple-system,
   --color-dialogue: #fff;
   --color-divider: #e0e3e3;
   --color-error: #ba1b1b;
+  --color-loading-icon: #191c1d;
 }
 
 @mixin colors-dark-theme {
@@ -66,6 +67,7 @@ $font-family: -apple-system,
   --color-dialogue: linear-gradient(0deg, rgba(202, 190, 255, 8%), rgba(202, 190, 255, 8%)), linear-gradient(0deg, rgba(196, 199, 199, 2%), rgba(196, 199, 199, 2%)), #191c1d;
   --color-divider: #444748;
   --color-error: #dd3730;
+  --color-loading-icon: #f7f8f8;
 }
 
 
@@ -74,6 +76,7 @@ $font-family: -apple-system,
   --color-toast: #34353f;
   --color-toast-border: #444748;
   --color-overlay: rgba(0, 0, 0, 30%);
+  --color-loading-icon-light: #f7f8f8;
   // shadows
   --shadow-1: 0 4px 8px rgba(0, 0, 0, 8%);
   --shadow-2: 0 4px 12px rgba(0, 0, 0, 12%);

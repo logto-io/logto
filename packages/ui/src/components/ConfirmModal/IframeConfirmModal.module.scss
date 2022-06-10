@@ -24,6 +24,15 @@
 .content {
   padding: _.unit(5);
   flex: 1;
+  @include _.flex_column;
+}
+
+iframe {
+  display: block;
+
+  &.hidden {
+    display: none;
+  }
 }
 
 
