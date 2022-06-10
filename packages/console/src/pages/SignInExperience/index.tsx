@@ -135,6 +135,7 @@ const SignInExperience = () => {
                     <Button
                       isLoading={isSubmitting}
                       type="primary"
+                      size="large"
                       htmlType="submit"
                       title="general.save_changes"
                     />

@@ -206,6 +206,7 @@ const ConnectorDetails = () => {
           </TabNav>
           <div className={styles.main}>
             <CodeEditor
+              className={styles.codeEditor}
               language="json"
               value={config}
               onChange={(value) => {
@@ -219,6 +220,7 @@ const ConnectorDetails = () => {
             <div className={detailsStyles.footerMain}>
               <Button
                 type="primary"
+                size="large"
                 title="admin_console.connector_details.save_changes"
                 isLoading={isSubmitting}
                 onClick={handleSave}

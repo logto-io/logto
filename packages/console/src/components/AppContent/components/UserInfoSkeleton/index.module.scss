@@ -1,0 +1,24 @@
+@use '@/scss/underscore' as _;
+
+.container {
+  display: flex;
+  align-items: center;
+  padding: _.unit(2);
+  margin-left: _.unit(4);
+  border-radius: 8px;
+
+  .image {
+    @include _.shimmering-animation;
+    width: 36px;
+    height: 36px;
+    margin-right: _.unit(2);
+    border-radius: 6px;
+  }
+
+  .name {
+    @include _.shimmering-animation;
+    width: 85px;
+    height: 20px;
+    color: var(--color-text);
+  }
+}

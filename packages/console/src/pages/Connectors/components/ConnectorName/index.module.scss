@@ -28,10 +28,16 @@ a.link {
     display: flex;
     align-items: center;
 
-    &:not(:last-child) {
-      padding-right: _.unit(1);
-      margin-right: _.unit(1);
+    &:not(:last-child)::after {
+      content: '';
+      width: 0;
+      height: 12px;
       border-right: 1px solid var(--color-border);
+      margin: 0 _.unit(1);
+    }
+
+    svg {
+      margin-right: _.unit(1);
     }
   }
 }

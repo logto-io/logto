@@ -48,6 +48,7 @@ const Applications = () => {
           icon={<Plus />}
           title="admin_console.applications.create"
           type="primary"
+          size="large"
           onClick={() => {
             setIsCreateFormOpen(true);
           }}

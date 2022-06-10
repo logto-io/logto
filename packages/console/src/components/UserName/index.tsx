@@ -18,7 +18,7 @@ const UserName = ({ userId, isLink = false }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   const isLoading = !data && !error;
-  const name = data?.name ?? t('users.unnamed');
+  const name = data?.name || t('users.unnamed');
 
   if (isLoading) {
     return null;

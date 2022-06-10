@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import useSWR from 'swr';
 
 import Button from '@/components/Button';
+import CopyToClipboard from '@/components/CopyToClipboard';
 import TableError from '@/components/Table/TableError';
 import UnnamedTrans from '@/components/UnnamedTrans';
 import useApi, { RequestError } from '@/hooks/use-api';
@@ -87,6 +88,11 @@ const UserConnectors = ({ userId, connectors, onDelete }: Props) => {
       {isLoading && <div>Loading</div>}
       {displayConnectors && (
         <table className={styles.table}>
+          <colgroup>
+            <col width="156px" />
+            <col />
+            <col width="110px" />
+          </colgroup>
           <thead>
             <tr>
               <th>{t('user_details.connectors.connectors')}</th>
@@ -102,25 +108,26 @@ const UserConnectors = ({ userId, connectors, onDelete }: Props) => {
                 onRetry={async () => mutate(undefined, true)}
               />
             )}
-            {displayConnectors.map((connector) => (
-              <tr key={connector.id}>
+            {displayConnectors.map(({ id, userId = '', name, logo }) => (
+              <tr key={id}>
                 <td>
                   <div className={styles.connectorName}>
-                    <div>
-                      <img src={connector.logo} />
-                    </div>
+                    <img src={logo} />
                     <div className={styles.name}>
-                      <UnnamedTrans resource={connector.name} />
+                      <UnnamedTrans resource={name} />
                     </div>
                   </div>
                 </td>
-                <td>{connector.userId}</td>
+                <td className={styles.connectorId}>
+                  <span>{userId || '-'}</span>
+                  <CopyToClipboard variant="icon" value={userId} />
+                </td>
                 <td>
                   <Button
                     title="admin_console.user_details.connectors.remove"
                     type="plain"
                     onClick={() => {
-                      void handleDelete(connector.id);
+                      void handleDelete(id);
                     }}
                   />
                 </td>

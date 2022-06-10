@@ -6,6 +6,7 @@
   flex-grow: 0;
   flex-shrink: 0;
   width: 248px;
+  overflow-y: auto;
 
   > div + div {
     margin-top: _.unit(6);
