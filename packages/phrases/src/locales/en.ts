@@ -87,7 +87,6 @@ const translation = {
       invalid_passcode: 'The passcode is invalid.',
       invalid_connector_auth: 'The authorization is invalid.',
       invalid_connector_request: 'The connector data is invalid.',
-      request: 'Request error: {{message}}',
       unknown: 'Unknown error, please try again later.',
       invalid_session: 'Session not found. Please go back and sign in again.',
     },

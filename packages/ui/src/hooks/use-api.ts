@@ -74,7 +74,7 @@ function useApi<Args extends any[], Response>(
       return;
     }
 
-    const { code } = error;
+    const { code, message } = error;
     const handler = errorHandlers?.[code] ?? errorHandlers?.global;
 
     errorHandlers?.callback?.(error);
@@ -85,7 +85,7 @@ function useApi<Args extends any[], Response>(
       return;
     }
 
-    setToast(t('error.request', { ...error }));
+    setToast(message);
   }, [error, errorHandlers, setToast, t]);
 
   return {
