@@ -1,9 +1,10 @@
 import classNames from 'classnames';
-import React from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import ReactModal from 'react-modal';
 
 import Button from '@/components/Button';
+import { LoadingIcon } from '@/components/LoadingLayer';
 
 import * as modalStyles from '../../scss/modal.module.scss';
 import * as styles from './IframeConfirmModal.module.scss';
@@ -21,6 +22,7 @@ const IframeConfirmModal = ({
   onClose,
 }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'main_flow' });
+  const [isLoading, setIsLoading] = useState(true);
 
   return (
     <ReactModal
@@ -32,13 +34,21 @@ const IframeConfirmModal = ({
     >
       <div className={styles.container}>
         <div className={styles.content}>
+          {isLoading && <LoadingIcon />}
           <iframe
+            className={isLoading ? styles.hidden : undefined}
             role="iframe"
             src={url}
             title="terms"
             frameBorder="0"
             width="100%"
             height="100%"
+            onLoad={() => {
+              setIsLoading(false);
+            }}
+            onError={() => {
+              setIsLoading(false);
+            }}
           />
         </div>
         <div className={styles.footer}>

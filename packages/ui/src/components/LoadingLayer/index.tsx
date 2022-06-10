@@ -4,7 +4,6 @@ import LoadingIcon from './LoadingIcon';
 import * as styles from './index.module.scss';
 
 export { default as LoadingIcon } from './LoadingIcon';
-export { default as LoadingIconLight } from './LoadingIconLight';
 
 const LoadingLayer = () => (
   <div className={styles.overlay}>

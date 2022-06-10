@@ -1,7 +1,7 @@
 import React, { useEffect, useContext } from 'react';
 
 import { consent } from '@/apis/consent';
-import { LoadingIcon, LoadingIconLight } from '@/components/LoadingLayer';
+import { LoadingIcon } from '@/components/LoadingLayer';
 import useApi from '@/hooks/use-api';
 import { PageContext } from '@/hooks/use-page-context';
 
@@ -16,8 +16,6 @@ const Consent = () => {
       ? experienceSettings?.branding.logoUrl
       : experienceSettings?.branding.darkLogoUrl;
 
-  const Loading = theme === 'light' ? LoadingIconLight : LoadingIcon;
-
   useEffect(() => {
     void asyncConsent();
   }, [asyncConsent]);
@@ -31,7 +29,7 @@ const Consent = () => {
   return (
     <div className={styles.wrapper}>
       <img src={logoUrl} />
-      {!error && <Loading />}
+      {!error && <LoadingIcon />}
     </div>
   );
 };

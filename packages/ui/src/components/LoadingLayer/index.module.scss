@@ -11,16 +11,21 @@
   z-index: 300;
 }
 
+.loadingIcon {
+  color: var(--color-loading-icon);
+  animation: rotating 1s steps(12, end) infinite;
+}
+
 .container {
   width: 60px;
   height: 60px;
   border-radius: var(--radius);
   background-color: var(--color-toast);
   @include _.flex-column;
-}
 
-.loadingIcon {
-  animation: rotating 1s steps(12, end) infinite;
+  .loadingIcon {
+    color: var(--color-loading-icon-light);
+  }
 }
 
 @keyframes rotating {
