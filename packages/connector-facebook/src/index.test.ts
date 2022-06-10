@@ -69,6 +69,7 @@ describe('facebook connector', () => {
           access_token: 'access_token',
           scope: 'scope',
           token_type: 'token_type',
+          expires_in: 3600,
         });
 
       const { accessToken } = await facebookMethods.getAccessToken(code, dummyRedirectUri);
@@ -84,7 +85,12 @@ describe('facebook connector', () => {
           client_secret: clientSecret,
           redirect_uri: dummyRedirectUri,
         })
-        .reply(200, {});
+        .reply(200, {
+          access_token: '',
+          scope: 'scope',
+          token_type: 'token_type',
+          expires_in: 3600,
+        });
 
       await expect(facebookMethods.getAccessToken(code, dummyRedirectUri)).rejects.toMatchError(
         new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid)
@@ -106,6 +112,7 @@ describe('facebook connector', () => {
           access_token: 'access_token',
           scope: 'scope',
           token_type: 'token_type',
+          expires_in: 3600,
         });
     });
 

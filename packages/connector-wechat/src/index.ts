@@ -25,7 +25,14 @@ import {
   defaultMetadata,
   defaultTimeout,
 } from './constant';
-import { weChatConfigGuard, AccessTokenResponse, UserInfoResponse, WeChatConfig } from './types';
+import {
+  weChatConfigGuard,
+  accessTokenResponseGuard,
+  GetAccessTokenErrorHandler,
+  userInfoResponseGuard,
+  GetUserInfoErrorHandler,
+  WeChatConfig,
+} from './types';
 
 // As creating a WeChat Web/Mobile application needs a real App or Website record, the real test is temporarily not finished.
 // TODO: test with our own WeChat web application (LOG-2719), already tested with other verified WeChat web application
@@ -57,23 +64,26 @@ export default class WeChatConnector implements SocialConnector {
     return `${authorizationEndpoint}?${queryParameters.toString()}`;
   };
 
-  public getAccessToken = async (code: string) => {
+  public getAccessToken = async (
+    code: string
+  ): Promise<{ accessToken: string; openid: string }> => {
     const { appId: appid, appSecret: secret } = await this.getConfig(this.metadata.id);
 
-    const {
-      access_token: accessToken,
-      openid,
-      errcode,
-      errmsg,
-    } = await got
-      .get(accessTokenEndpoint, {
-        searchParams: { appid, secret, code, grant_type: 'authorization_code' },
-        timeout: defaultTimeout,
-      })
-      .json<AccessTokenResponse>();
+    const httpResponse = await got.get(accessTokenEndpoint, {
+      searchParams: { appid, secret, code, grant_type: 'authorization_code' },
+      timeout: defaultTimeout,
+    });
 
-    assert(errcode !== 40_029, new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid));
-    assert(!errcode && accessToken && openid, new Error(errmsg ?? ''));
+    const result = accessTokenResponseGuard.safeParse(JSON.parse(httpResponse.body));
+
+    if (!result.success) {
+      throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, result.error.message);
+    }
+
+    const { access_token: accessToken, openid } = result.data;
+
+    this.getAccessTokenErrorHandler(result.data);
+    assert(accessToken && openid, new ConnectorError(ConnectorErrorCodes.InvalidResponse));
 
     return { accessToken, openid };
   };
@@ -83,19 +93,23 @@ export default class WeChatConnector implements SocialConnector {
     const { accessToken, openid } = await this.getAccessToken(code);
 
     try {
-      const { unionid, headimgurl, nickname, errcode, errmsg } = await got
-        .get(userInfoEndpoint, {
-          searchParams: { access_token: accessToken, openid },
-          timeout: defaultTimeout,
-        })
-        .json<UserInfoResponse>();
+      const httpResponse = await got.get(userInfoEndpoint, {
+        searchParams: { access_token: accessToken, openid },
+        timeout: defaultTimeout,
+      });
+
+      const result = userInfoResponseGuard.safeParse(JSON.parse(httpResponse.body));
+
+      if (!result.success) {
+        throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, result.error.message);
+      }
+
+      const { unionid, headimgurl, nickname } = result.data;
 
       // Response properties of user info can be separated into two groups: (1) {unionid, headimgurl, nickname}, (2) {errcode, errmsg}.
       // These two groups are mutually exclusive: if group (1) is not empty, group (2) should be empty and vice versa.
       // 'errmsg' and 'errcode' turn to non-empty values or empty values at the same time. Hence, if 'errmsg' is non-empty then 'errcode' should be non-empty.
-
-      assert(errcode !== 40_001, new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid));
-      assert(!errcode, new Error(errmsg ?? ''));
+      this.getUserInfoErrorHandler(result.data);
 
       return { id: unionid ?? openid, avatar: headimgurl, name: nickname };
     } catch (error: unknown) {
@@ -106,5 +120,32 @@ export default class WeChatConnector implements SocialConnector {
 
       throw error;
     }
+  };
+
+  // See https://developers.weixin.qq.com/doc/oplatform/Return_codes/Return_code_descriptions_new.html
+  private readonly getAccessTokenErrorHandler: GetAccessTokenErrorHandler = (accessToken) => {
+    const { errcode, errmsg } = accessToken;
+    assert(
+      errcode !== 40_029,
+      new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid, errmsg)
+    );
+    assert(
+      errcode !== 40_163,
+      new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid, errmsg)
+    );
+    assert(
+      errcode !== 42_003,
+      new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid, errmsg)
+    );
+    assert(!errcode, new ConnectorError(ConnectorErrorCodes.General, errmsg));
+  };
+
+  private readonly getUserInfoErrorHandler: GetUserInfoErrorHandler = (userInfo) => {
+    const { errcode, errmsg } = userInfo;
+    assert(
+      !(errcode === 40_001 || errcode === 40_014),
+      new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid, errmsg)
+    );
+    assert(!errcode, new Error(errmsg ?? ''));
   };
 }

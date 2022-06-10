@@ -20,7 +20,12 @@ import {
   defaultMetadata,
   defaultTimeout,
 } from './constant';
-import { githubConfigGuard, AccessTokenResponse, GithubConfig, UserInfoResponse } from './types';
+import {
+  githubConfigGuard,
+  accessTokenResponseGuard,
+  GithubConfig,
+  userInfoResponseGuard,
+} from './types';
 
 export default class GithubConnector implements SocialConnector {
   public metadata: ConnectorMetadata = defaultMetadata;
@@ -53,17 +58,23 @@ export default class GithubConnector implements SocialConnector {
       this.metadata.id
     );
 
-    const { access_token: accessToken } = await got
-      .post({
-        url: accessTokenEndpoint,
-        json: {
-          client_id,
-          client_secret,
-          code,
-        },
-        timeout: defaultTimeout,
-      })
-      .json<AccessTokenResponse>();
+    const httpResponse = await got.post({
+      url: accessTokenEndpoint,
+      json: {
+        client_id,
+        client_secret,
+        code,
+      },
+      timeout: defaultTimeout,
+    });
+
+    const result = accessTokenResponseGuard.safeParse(JSON.parse(httpResponse.body));
+
+    if (!result.success) {
+      throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, result.error.message);
+    }
+
+    const { access_token: accessToken } = result.data;
 
     assert(accessToken, new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid));
 
@@ -75,19 +86,19 @@ export default class GithubConnector implements SocialConnector {
     const { accessToken } = await this.getAccessToken(code);
 
     try {
-      const {
-        id,
-        avatar_url: avatar,
-        email,
-        name,
-      } = await got
-        .get(userInfoEndpoint, {
-          headers: {
-            authorization: `token ${accessToken}`,
-          },
-          timeout: defaultTimeout,
-        })
-        .json<UserInfoResponse>();
+      const httpResponse = await got.get(userInfoEndpoint, {
+        headers: {
+          authorization: `token ${accessToken}`,
+        },
+        timeout: defaultTimeout,
+      });
+
+      const result = userInfoResponseGuard.safeParse(JSON.parse(httpResponse.body));
+
+      if (!result.success) {
+        throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, result.error.message);
+      }
+      const { id, avatar_url: avatar, email, name } = result.data;
 
       return {
         id: String(id),

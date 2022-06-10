@@ -27,9 +27,9 @@ import {
 } from './constant';
 import {
   facebookConfigGuard,
-  AccessTokenResponse,
+  accessTokenResponseGuard,
   FacebookConfig,
-  UserInfoResponse,
+  userInfoResponseGuard,
 } from './types';
 
 export default class FacebookConnector implements SocialConnector {
@@ -64,17 +64,23 @@ export default class FacebookConnector implements SocialConnector {
       this.metadata.id
     );
 
-    const { access_token: accessToken } = await got
-      .get(accessTokenEndpoint, {
-        searchParams: {
-          code,
-          client_id,
-          client_secret,
-          redirect_uri: redirectUri,
-        },
-        timeout: defaultTimeout,
-      })
-      .json<AccessTokenResponse>();
+    const httpResponse = await got.get(accessTokenEndpoint, {
+      searchParams: {
+        code,
+        client_id,
+        client_secret,
+        redirect_uri: redirectUri,
+      },
+      timeout: defaultTimeout,
+    });
+
+    const result = accessTokenResponseGuard.safeParse(JSON.parse(httpResponse.body));
+
+    if (!result.success) {
+      throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, result.error.message);
+    }
+
+    const { access_token: accessToken } = result.data;
 
     assert(accessToken, new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid));
 
@@ -86,17 +92,23 @@ export default class FacebookConnector implements SocialConnector {
     const { accessToken } = await this.getAccessToken(code, redirectUri);
 
     try {
-      const { id, email, name, picture } = await got
-        .get(userInfoEndpoint, {
-          headers: {
-            authorization: `Bearer ${accessToken}`,
-          },
-          searchParams: {
-            fields: 'id,name,email,picture',
-          },
-          timeout: defaultTimeout,
-        })
-        .json<UserInfoResponse>();
+      const httpResponse = await got.get(userInfoEndpoint, {
+        headers: {
+          authorization: `Bearer ${accessToken}`,
+        },
+        searchParams: {
+          fields: 'id,name,email,picture',
+        },
+        timeout: defaultTimeout,
+      });
+
+      const result = userInfoResponseGuard.safeParse(JSON.parse(httpResponse.body));
+
+      if (!result.success) {
+        throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, result.error.message);
+      }
+
+      const { id, email, name, picture } = result.data;
 
       return {
         id,

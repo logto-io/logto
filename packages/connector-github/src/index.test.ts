@@ -47,7 +47,9 @@ describe('getAccessToken', () => {
   });
 
   it('throws SocialAuthCodeInvalid error if accessToken not found in response', async () => {
-    nock(accessTokenEndpoint).post('').reply(200, {});
+    nock(accessTokenEndpoint)
+      .post('')
+      .reply(200, { access_token: '', scope: 'scope', token_type: 'token_type' });
     await expect(githubMethods.getAccessToken('code')).rejects.toMatchError(
       new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid)
     );

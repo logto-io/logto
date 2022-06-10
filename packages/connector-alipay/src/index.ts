@@ -30,7 +30,13 @@ import {
   defaultTimeout,
   timestampFormat,
 } from './constant';
-import { alipayConfigGuard, AlipayConfig, AccessTokenResponse, UserInfoResponse } from './types';
+import {
+  alipayConfigGuard,
+  AlipayConfig,
+  accessTokenResponseGuard,
+  userInfoResponseGuard,
+  ErrorHandler,
+} from './types';
 import { signingParameters } from './utils';
 
 export type { AlipayConfig } from './types';
@@ -80,20 +86,26 @@ export default class AlipayConnector implements SocialConnector {
     };
     const signedSearchParameters = this.signingParameters(initSearchParameters);
 
-    const response = await got
-      .post(alipayEndpoint, {
-        searchParams: signedSearchParameters,
-        timeout: defaultTimeout,
-      })
-      .json<AccessTokenResponse>();
+    const httpResponse = await got.post(alipayEndpoint, {
+      searchParams: signedSearchParameters,
+      timeout: defaultTimeout,
+    });
 
-    const { msg, sub_msg } = response.error_response ?? {};
+    const result = accessTokenResponseGuard.safeParse(JSON.parse(httpResponse.body));
+
+    if (!result.success) {
+      throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, result.error.message);
+    }
+
+    const { error_response, alipay_system_oauth_token_response } = result.data;
+
+    const { msg, sub_msg } = error_response ?? {};
+
     assert(
-      response.alipay_system_oauth_token_response,
+      alipay_system_oauth_token_response,
       new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid, msg ?? sub_msg)
     );
-    const { access_token: accessToken } = response.alipay_system_oauth_token_response;
-
+    const { access_token: accessToken } = alipay_system_oauth_token_response;
     assert(accessToken, new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid));
 
     return { accessToken };
@@ -122,33 +134,40 @@ export default class AlipayConnector implements SocialConnector {
     };
     const signedSearchParameters = this.signingParameters(initSearchParameters);
 
-    const response = await got
-      .post(alipayEndpoint, {
-        searchParams: signedSearchParameters,
-        timeout: defaultTimeout,
-      })
-      .json<UserInfoResponse>();
+    const httpResponse = await got.post(alipayEndpoint, {
+      searchParams: signedSearchParameters,
+      timeout: defaultTimeout,
+    });
+
+    const result = userInfoResponseGuard.safeParse(JSON.parse(httpResponse.body));
+
+    if (!result.success) {
+      throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, result.error.message);
+    }
+
+    const { alipay_user_info_share_response } = result.data;
 
     const {
       user_id: id,
       avatar,
       nick_name: name,
-      sub_msg,
-      sub_code,
+      code,
       msg,
-      code: responseCode,
-    } = response.alipay_user_info_share_response;
+      sub_code,
+    } = alipay_user_info_share_response;
 
-    if (sub_msg || sub_code) {
-      if (responseCode === '20001') {
-        throw new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid, msg);
-      }
-      throw new ConnectorError(ConnectorErrorCodes.General);
-    }
-    // TODO: elaborate on the error messages for all social connectors (see LOG-2157)
-
+    this.errorHandler({ code, msg, sub_code });
     assert(id, new ConnectorError(ConnectorErrorCodes.InvalidResponse));
 
     return { id, avatar, name };
+  };
+
+  private readonly errorHandler: ErrorHandler = ({ code, msg, sub_code }) => {
+    assert(code !== '20001', new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid, msg));
+    assert(
+      sub_code !== 'isv.code-invalid',
+      new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid, msg)
+    );
+    assert(!sub_code, new ConnectorError(ConnectorErrorCodes.General, msg));
   };
 }

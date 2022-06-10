@@ -1,6 +1,11 @@
 import { z } from 'zod';
 
-export type SendEmailResponse = { EnvId: string; RequestId: string };
+export const sendEmailResponseGuard = z.object({
+  EnvId: z.string(),
+  RequestId: z.string(),
+});
+
+export type SendEmailResponse = z.infer<typeof sendEmailResponseGuard>;
 
 /**
  * UsageType here is used to specify the use case of the template, can be either
@@ -53,11 +58,11 @@ export type PublicParameters = {
 /**
  * @doc https://next.api.aliyun.com/troubleshoot
  */
-export const singleSendMailErrorResponseGuard = z.object({
+export const sendMailErrorResponseGuard = z.object({
   Code: z.string(),
   Message: z.string(),
-  RequestId: z.string(),
-  HostId: z.string(),
+  RequestId: z.string().optional(),
+  HostId: z.string().optional(),
 });
 
-export type SingleSendMailErrorResponse = z.infer<typeof singleSendMailErrorResponseGuard>;
+export type SendMailErrorResponse = z.infer<typeof sendMailErrorResponseGuard>;

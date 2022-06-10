@@ -11,35 +11,52 @@ export const alipayNativeConfigGuard = z.object({
 export type AlipayNativeConfig = z.infer<typeof alipayNativeConfigGuard>;
 
 // `error_response` and `alipay_system_oauth_token_response` are mutually exclusive.
-export type AccessTokenResponse = {
-  error_response?: {
-    code: string;
-    msg: string; // To know `code` and `msg` details, see: https://opendocs.alipay.com/common/02km9f
-    sub_code?: string;
-    sub_msg?: string;
-  };
-  sign: string; // To know `sign` details, see: https://opendocs.alipay.com/common/02kf5q
-  alipay_system_oauth_token_response?: {
-    user_id: string; // Unique Alipay ID, 16 digits starts with '2088'
-    access_token: string;
-    expires_in: string; // In seconds
-    refresh_token: string;
-    re_expires_in: string; // Expiring time of refresh token, in seconds
-  };
-};
+export const errorResponseGuard = z.object({
+  code: z.string(),
+  msg: z.string(), // To know `code` and `msg` details, see: https://opendocs.alipay.com/common/02km9f
+  sub_code: z.string().optional(),
+  sub_msg: z.string().optional(),
+});
 
-export type UserInfoResponse = {
-  sign: string; // To know `sign` details, see: https://opendocs.alipay.com/common/02kf5q
-  alipay_user_info_share_response: {
-    user_id?: string; // String of digits with max length of 16
-    avatar?: string; // URL of avatar
-    province?: string;
-    city?: string;
-    nick_name?: string;
-    gender?: string; // Enum type: 'F' for female, 'M' for male
-    code: string;
-    msg: string; // To know `code` and `msg` details, see: https://opendocs.alipay.com/common/02km9f
-    sub_code?: string;
-    sub_msg?: string;
-  };
-};
+export const alipaySystemOauthTokenResponseGuard = z.object({
+  user_id: z.string(), // Unique Alipay ID, 16 digits starts with '2088'
+  access_token: z.string(),
+  expires_in: z.number(), // In seconds (is string type in docs which is not true)
+  refresh_token: z.string(),
+  re_expires_in: z.number(), // Expiration timeout of refresh token, in seconds (is string type in docs which is not true)
+});
+
+export const accessTokenResponseGuard = z.object({
+  sign: z.string(), // To know `sign` details, see: https://opendocs.alipay.com/common/02kf5q
+  error_response: z.optional(errorResponseGuard),
+  alipay_system_oauth_token_response: z.optional(alipaySystemOauthTokenResponseGuard),
+});
+
+export type AccessTokenResponse = z.infer<typeof accessTokenResponseGuard>;
+
+export const alipayUserInfoShareResponseGuard = z.object({
+  user_id: z.string().optional(), // String of digits with max length of 16
+  avatar: z.string().optional(), // URL of avatar
+  province: z.string().optional(),
+  city: z.string().optional(),
+  nick_name: z.string().optional(),
+  gender: z.string().optional(), // Enum type: 'F' for female, 'M' for male
+  code: z.string(),
+  msg: z.string(), // To know `code` and `msg` details, see: https://opendocs.alipay.com/common/02km9f
+  sub_code: z.string().optional(),
+  sub_msg: z.string().optional(),
+});
+
+export const userInfoResponseGuard = z.object({
+  sign: z.string(), // To know `sign` details, see: https://opendocs.alipay.com/common/02kf5q
+  alipay_user_info_share_response: alipayUserInfoShareResponseGuard,
+});
+
+export type UserInfoResponse = z.infer<typeof userInfoResponseGuard>;
+
+export type ErrorHandler = (response: {
+  code: string;
+  msg: string;
+  sub_code?: string;
+  sub_msg?: string;
+}) => void;
