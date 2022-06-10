@@ -1,5 +1,6 @@
 import { ConnectorError, ConnectorErrorCodes, GetConnectorConfig } from '@logto/connector-types';
 import nock from 'nock';
+import * as qs from 'query-string';
 
 import GithubConnector from '.';
 import { accessTokenEndpoint, authorizationEndpoint, userInfoEndpoint } from './constant';
@@ -37,11 +38,16 @@ describe('getAccessToken', () => {
   });
 
   it('should get an accessToken by exchanging with code', async () => {
-    nock(accessTokenEndpoint).post('').reply(200, {
-      access_token: 'access_token',
-      scope: 'scope',
-      token_type: 'token_type',
-    });
+    nock(accessTokenEndpoint)
+      .post('')
+      .reply(
+        200,
+        qs.stringify({
+          access_token: 'access_token',
+          scope: 'scope',
+          token_type: 'token_type',
+        })
+      );
     const { accessToken } = await githubMethods.getAccessToken('code');
     expect(accessToken).toEqual('access_token');
   });
@@ -49,7 +55,7 @@ describe('getAccessToken', () => {
   it('throws SocialAuthCodeInvalid error if accessToken not found in response', async () => {
     nock(accessTokenEndpoint)
       .post('')
-      .reply(200, { access_token: '', scope: 'scope', token_type: 'token_type' });
+      .reply(200, qs.stringify({ access_token: '', scope: 'scope', token_type: 'token_type' }));
     await expect(githubMethods.getAccessToken('code')).rejects.toMatchError(
       new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid)
     );
@@ -78,11 +84,16 @@ describe('validateConfig', () => {
 
 describe('getUserInfo', () => {
   beforeEach(() => {
-    nock(accessTokenEndpoint).post('').reply(200, {
-      access_token: 'access_token',
-      scope: 'scope',
-      token_type: 'token_type',
-    });
+    nock(accessTokenEndpoint)
+      .post('')
+      .reply(
+        200,
+        qs.stringify({
+          access_token: 'access_token',
+          scope: 'scope',
+          token_type: 'token_type',
+        })
+      );
   });
 
   afterEach(() => {
