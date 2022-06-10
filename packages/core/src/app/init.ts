@@ -9,7 +9,7 @@ import mount from 'koa-mount';
 
 import envSet, { MountedApps } from '@/env-set';
 import koaCheckDemoApp from '@/middleware/koa-check-demo-app';
-import koaConnectorErrorHandler from '@/middleware/koa-connector-error-handle';
+import koaConnectorErrorHandler from '@/middleware/koa-connector-error-handler';
 import koaErrorHandler from '@/middleware/koa-error-handler';
 import koaI18next from '@/middleware/koa-i18next';
 import koaLog from '@/middleware/koa-log';

@@ -11,7 +11,7 @@ describe('koaSlonikErrorHandler middleware', () => {
   const next = jest.fn();
   const ctx = createContextWithRouteParameters();
 
-  it('should throw no errors if no errors are catched', async () => {
+  it('should throw no errors if no errors are caught', async () => {
     await expect(koaSlonikErrorHandler()(ctx, next)).resolves.not.toThrow();
   });
 
