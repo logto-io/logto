@@ -111,6 +111,7 @@ const translation = {
     },
     errors: {
       something_went_wrong: '哎哟喂，遇到了一个错误',
+      page_not_found: '找不到页面',
       unknown_server_error: '服务器发生未知错误。',
       empty: '没有数据',
       missing_total_number: '无法从返回的头部信息中找到 Total-Number。',

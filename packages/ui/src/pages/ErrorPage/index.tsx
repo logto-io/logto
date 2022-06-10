@@ -2,7 +2,7 @@ import React from 'react';
 import { TFuncKey, useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
-import ErrorIcon from '@/assets/icons/error-icon.svg';
+import ErrorImage from '@/assets/icons/error.svg';
 import Button from '@/components/Button';
 import NavBar from '@/components/NavBar';
 
@@ -24,7 +24,7 @@ const ErrorPage = ({ title = 'description.not_found', message, rawMessage }: Pro
     <div className={styles.wrapper}>
       <NavBar />
       <div className={styles.container}>
-        <ErrorIcon />
+        <ErrorImage />
         <div className={styles.title}>{t(title)}</div>
         {errorMessage && <div className={styles.message}>{errorMessage}</div>}
       </div>

@@ -111,6 +111,7 @@ const translation = {
     },
     errors: {
       something_went_wrong: 'Oops! Something went wrong',
+      page_not_found: 'Page not found',
       unknown_server_error: 'Unknown server error occurred.',
       empty: 'No data',
       missing_total_number: 'Unable to find Total-Number in response headers.',
