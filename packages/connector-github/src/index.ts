@@ -11,6 +11,7 @@ import {
 } from '@logto/connector-types';
 import { assert, conditional } from '@silverhand/essentials';
 import got, { RequestError as GotRequestError } from 'got';
+import * as qs from 'query-string';
 
 import {
   authorizationEndpoint,
@@ -68,7 +69,7 @@ export default class GithubConnector implements SocialConnector {
       timeout: defaultTimeout,
     });
 
-    const result = accessTokenResponseGuard.safeParse(JSON.parse(httpResponse.body));
+    const result = accessTokenResponseGuard.safeParse(qs.parse(httpResponse.body));
 
     if (!result.success) {
       throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, result.error.message);
@@ -98,6 +99,7 @@ export default class GithubConnector implements SocialConnector {
       if (!result.success) {
         throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, result.error.message);
       }
+
       const { id, avatar_url: avatar, email, name } = result.data;
 
       return {
