@@ -9,6 +9,7 @@ import { PageContext } from './use-page-context';
 
 const useSocialCallbackHandler = () => {
   const [loading, setLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState<string>();
   const { setToast } = useContext(PageContext);
   const { t } = useTranslation(undefined, { keyPrefix: 'main_flow' });
   const navigate = useNavigate();
@@ -17,12 +18,12 @@ const useSocialCallbackHandler = () => {
     (connectorId: string) => {
       // Apple use fragment mode to store auth parameter. Need to support it.
       const data = window.location.search || '?' + window.location.hash.slice(1);
-      const { state, error, error_description } = parseQueryParameters(data);
+      const { state, error, error_description = '' } = parseQueryParameters(data);
 
       // Connector auth error
       if (error) {
         setLoading(false);
-        setToast(`${error}${error_description ? `: ${error_description}` : ''}`);
+        setErrorMessage(`${error}${error_description ? `: ${error_description}` : ''}`);
 
         return;
       }
@@ -58,7 +59,7 @@ const useSocialCallbackHandler = () => {
     [navigate, setToast, t]
   );
 
-  return { socialCallbackHandler, loading };
+  return { socialCallbackHandler, loading, errorMessage };
 };
 
 export default useSocialCallbackHandler;
