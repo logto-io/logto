@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import React, { HTMLProps, ReactElement, ReactNode, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import Spinner from '@/components/Spinner';
+import { Ring as Spinner } from '@/components/Spinner';
 
 import DangerousRaw from '../DangerousRaw';
 import * as styles from './index.module.scss';

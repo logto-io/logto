@@ -5,7 +5,7 @@ import React, { useEffect, useRef, useState, MouseEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import Dropdown, { DropdownItem } from '@/components/Dropdown';
-import Spinner from '@/components/Spinner';
+import { Ring as Spinner } from '@/components/Spinner';
 import { getAvatarById } from '@/consts/avatars';
 import useApi from '@/hooks/use-api';
 import SignOut from '@/icons/SignOut';

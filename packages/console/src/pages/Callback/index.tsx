@@ -3,7 +3,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import AppError from '@/components/AppError';
-import LogtoLoading from '@/components/LogtoLoading';
+import AppLoading from '@/components/AppLoading';
 
 const Callback = () => {
   const navigate = useNavigate();
@@ -24,7 +24,7 @@ const Callback = () => {
     return <AppError errorCode={errorCode} errorMessage={errorMessage} callStack={error.stack} />;
   }
 
-  return <LogtoLoading message="general.redirecting" />;
+  return <AppLoading />;
 };
 
 export default Callback;

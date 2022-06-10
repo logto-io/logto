@@ -9,8 +9,8 @@ import './scss/normalized.scss';
 // eslint-disable-next-line import/no-unassigned-import
 import '@fontsource/roboto-mono';
 import AppBoundary from '@/components/AppBoundary';
+import AppLoading from '@/components/AppLoading';
 import ErrorBoundary from '@/components/ErrorBoundary';
-import LogtoLoading from '@/components/LogtoLoading';
 import Toast from '@/components/Toast';
 import useSwrOptions from '@/hooks/use-swr-options';
 import initI18n from '@/i18n/init';
@@ -43,7 +43,7 @@ const Main = () => {
       <SWRConfig value={swrOptions}>
         <AppBoundary>
           <Toast />
-          <Suspense fallback={<LogtoLoading message="general.loading" />}>
+          <Suspense fallback={<AppLoading />}>
             <Routes>
               <Route path="callback" element={<Callback />} />
               {/* TODO: add register route */}
