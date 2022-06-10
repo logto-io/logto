@@ -17,14 +17,16 @@ import {
 
 import * as styles from './index.module.scss';
 
+type Props = {
+  className?: string;
+  // eslint-disable-next-line react/boolean-prop-naming
+  autoFocus?: boolean;
+};
+
 type FieldState = {
   username: string;
   password: string;
   confirmPassword: string;
-};
-
-type Props = {
-  className?: string;
 };
 
 const defaultState: FieldState = {
@@ -33,7 +35,7 @@ const defaultState: FieldState = {
   confirmPassword: '',
 };
 
-const CreateAccount = ({ className }: Props) => {
+const CreateAccount = ({ className, autoFocus }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'main_flow' });
   const { termsValidation } = useTerms();
   const {
@@ -79,7 +81,7 @@ const CreateAccount = ({ className }: Props) => {
   return (
     <form className={classNames(styles.form, className)}>
       <Input
-        autoFocus
+        autoFocus={autoFocus}
         className={styles.inputField}
         name="username"
         placeholder={t('input.username')}

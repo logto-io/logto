@@ -21,6 +21,8 @@ import * as styles from './index.module.scss';
 type Props = {
   type: UserFlow;
   className?: string;
+  // eslint-disable-next-line react/boolean-prop-naming
+  autoFocus?: boolean;
 };
 
 type FieldState = {
@@ -29,7 +31,7 @@ type FieldState = {
 
 const defaultState: FieldState = { email: '' };
 
-const EmailPasswordless = ({ type, className }: Props) => {
+const EmailPasswordless = ({ type, autoFocus, className }: Props) => {
   const { setToast } = useContext(PageContext);
   const [showPasswordlessConfirmModal, setShowPasswordlessConfirmModal] = useState(false);
   const { t } = useTranslation(undefined, { keyPrefix: 'main_flow' });
@@ -97,7 +99,7 @@ const EmailPasswordless = ({ type, className }: Props) => {
     <>
       <form className={classNames(styles.form, className)}>
         <Input
-          autoFocus
+          autoFocus={autoFocus}
           className={styles.inputField}
           name="email"
           autoComplete="email"

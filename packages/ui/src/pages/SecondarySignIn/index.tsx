@@ -19,14 +19,14 @@ const SecondarySignIn = () => {
 
   const signInForm = useMemo(() => {
     if (method === 'sms') {
-      return <PhonePasswordless type="sign-in" />;
+      return <PhonePasswordless autoFocus type="sign-in" />;
     }
 
     if (method === 'email') {
-      return <EmailPasswordless type="sign-in" />;
+      return <EmailPasswordless autoFocus type="sign-in" />;
     }
 
-    return <UsernameSignin />;
+    return <UsernameSignin autoFocus />;
   }, [method]);
 
   if (!['email', 'sms', 'username'].includes(method)) {

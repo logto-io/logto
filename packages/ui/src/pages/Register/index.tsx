@@ -19,14 +19,14 @@ const Register = () => {
 
   const registerForm = useMemo(() => {
     if (method === 'sms') {
-      return <PhonePasswordless type="register" />;
+      return <PhonePasswordless autoFocus type="register" />;
     }
 
     if (method === 'email') {
-      return <EmailPasswordless type="register" />;
+      return <EmailPasswordless autoFocus type="register" />;
     }
 
-    return <CreateAccount />;
+    return <CreateAccount autoFocus />;
   }, [method]);
 
   if (!['email', 'sms', 'username'].includes(method)) {

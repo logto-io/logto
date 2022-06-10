@@ -16,13 +16,15 @@ import { requiredValidation } from '@/utils/field-validations';
 
 import * as styles from './index.module.scss';
 
+type Props = {
+  className?: string;
+  // eslint-disable-next-line react/boolean-prop-naming
+  autoFocus?: boolean;
+};
+
 type FieldState = {
   username: string;
   password: string;
-};
-
-type Props = {
-  className?: string;
 };
 
 const defaultState: FieldState = {
@@ -30,7 +32,7 @@ const defaultState: FieldState = {
   password: '',
 };
 
-const UsernameSignin = ({ className }: Props) => {
+const UsernameSignin = ({ className, autoFocus }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'main_flow' });
   const { termsValidation } = useTerms();
   const {
@@ -85,7 +87,7 @@ const UsernameSignin = ({ className }: Props) => {
   return (
     <form className={classNames(styles.form, className)}>
       <Input
-        autoFocus
+        autoFocus={autoFocus}
         className={styles.inputField}
         name="username"
         autoComplete="username"
