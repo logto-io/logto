@@ -67,7 +67,7 @@ const useGetStartedMetadata = ({ checkDemoAppExists }: Props) => {
       buttonText: 'general.create',
       isComplete: settings?.createApplication,
       onClick: () => {
-        navigate('/applications');
+        navigate('/applications/create');
       },
     },
     {

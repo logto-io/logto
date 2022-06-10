@@ -1,10 +1,10 @@
 import { Application } from '@logto/schemas';
 import classNames from 'classnames';
-import React, { useState } from 'react';
+import React from 'react';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import Modal from 'react-modal';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import useSWR from 'swr';
 
 import Button from '@/components/Button';
@@ -29,7 +29,9 @@ import * as styles from './index.module.scss';
 const pageSize = 20;
 
 const Applications = () => {
-  const [isCreateFormOpen, setIsCreateFormOpen] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const isCreateNew = location.pathname.endsWith('/create');
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const [query, setQuery] = useSearchParams();
   const pageIndex = Number(query.get('page') ?? '1');
@@ -37,7 +39,6 @@ const Applications = () => {
     `/api/applications?page=${pageIndex}&page_size=${pageSize}`
   );
   const isLoading = !data && !error;
-  const navigate = useNavigate();
   const [applications, totalCount] = data ?? [];
 
   return (
@@ -49,17 +50,17 @@ const Applications = () => {
           title="admin_console.applications.create"
           type="primary"
           onClick={() => {
-            setIsCreateFormOpen(true);
+            navigate('/applications/create');
           }}
         />
         <Modal
-          isOpen={isCreateFormOpen}
+          isOpen={isCreateNew}
           className={modalStyles.content}
           overlayClassName={modalStyles.overlay}
         >
           <CreateForm
             onClose={(createdApp) => {
-              setIsCreateFormOpen(false);
+              navigate('/applications');
 
               if (createdApp) {
                 toast.success(t('applications.application_created', { name: createdApp.name }));
@@ -96,7 +97,7 @@ const Applications = () => {
                   title="admin_console.applications.create"
                   type="outline"
                   onClick={() => {
-                    setIsCreateFormOpen(true);
+                    navigate('/applications/create');
                   }}
                 />
               </TableEmpty>
