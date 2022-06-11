@@ -36,18 +36,6 @@ export const buildUpdateWhere: BuildUpdateWhere = <
           return;
         }
 
-        if (value && typeof value === 'object' && !Array.isArray(value)) {
-          /**
-           * Jsonb || operator is used to shallow merge two jsonb types of data
-           * all jsonb data field must be non-nullable
-           * https://www.postgresql.org/docs/current/functions-json.html
-           */
-          return sql`
-            ${fields[key]}=
-              coalesce(${fields[key]},'{}'::jsonb)|| ${convertToPrimitiveOrSql(key, value)}
-          `;
-        }
-
         return sql`${fields[key]}=${convertToPrimitiveOrSql(key, value)}`;
       })
       .filter((value): value is Truthy<typeof value> => notFalsy(value));

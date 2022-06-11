@@ -44,9 +44,7 @@ describe('setting query', () => {
 
     const expectSql = sql`
       update ${table}
-      set
-      ${fields.adminConsole}=
-      coalesce("admin_console",'{}'::jsonb)|| $1
+      set ${fields.adminConsole}=$1
       where ${fields.id}=$2
       returning *
     `;
