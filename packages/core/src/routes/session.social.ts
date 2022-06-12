@@ -1,0 +1,210 @@
+import { userInfoSelectFields } from '@logto/schemas';
+import { redirectUriRegEx } from '@logto/shared';
+import pick from 'lodash.pick';
+import { Provider } from 'oidc-provider';
+import { object, string, unknown } from 'zod';
+
+import { getSocialConnectorInstanceById } from '@/connectors';
+import RequestError from '@/errors/RequestError';
+import { assignInteractionResults } from '@/lib/session';
+import {
+  findSocialRelatedUser,
+  getUserInfoByAuthCode,
+  getUserInfoFromInteractionResult,
+} from '@/lib/social';
+import { generateUserId, updateLastSignInAt } from '@/lib/user';
+import koaGuard from '@/middleware/koa-guard';
+import {
+  hasUserWithIdentity,
+  insertUser,
+  findUserById,
+  updateUserById,
+  findUserByIdentity,
+} from '@/queries/user';
+import assertThat from '@/utils/assert-that';
+import { maskUserInfo } from '@/utils/format';
+
+import { AnonymousRouter } from './types';
+
+export default function sessionSocialRoutes<T extends AnonymousRouter>(
+  router: T,
+  provider: Provider
+) {
+  router.post(
+    '/session/sign-in/social',
+    koaGuard({
+      body: object({
+        connectorId: string(),
+        state: string(),
+        redirectUri: string().regex(redirectUriRegEx),
+      }),
+    }),
+    async (ctx, next) => {
+      const { connectorId, state, redirectUri } = ctx.guard.body;
+      assertThat(state && redirectUri, 'session.insufficient_info');
+      const connector = await getSocialConnectorInstanceById(connectorId);
+      assertThat(connector.connector.enabled, 'connector.not_enabled');
+      const redirectTo = await connector.getAuthorizationUri({ state, redirectUri });
+      ctx.body = { redirectTo };
+
+      return next();
+    }
+  );
+
+  router.post(
+    '/session/sign-in/social/auth',
+    koaGuard({
+      body: object({
+        connectorId: string(),
+        data: unknown(),
+      }),
+    }),
+    async (ctx, next) => {
+      const { connectorId, data } = ctx.guard.body;
+      const type = 'SignInSocial';
+      ctx.log(type, { connectorId, data });
+
+      const userInfo = await getUserInfoByAuthCode(connectorId, data);
+      ctx.log(type, { userInfo });
+
+      if (!(await hasUserWithIdentity(connectorId, userInfo.id))) {
+        await assignInteractionResults(
+          ctx,
+          provider,
+          { socialUserInfo: { connectorId, userInfo } },
+          true
+        );
+        const relatedInfo = await findSocialRelatedUser(userInfo);
+
+        throw new RequestError(
+          {
+            code: 'user.identity_not_exists',
+            status: 422,
+          },
+          relatedInfo && { relatedUser: maskUserInfo(relatedInfo[0]) }
+        );
+      }
+
+      const { id, identities } = await findUserByIdentity(connectorId, userInfo.id);
+      ctx.log(type, { userId: id });
+
+      // Update social connector's user info
+      await updateUserById(id, {
+        identities: { ...identities, [connectorId]: { userId: userInfo.id, details: userInfo } },
+      });
+      await updateLastSignInAt(id);
+      await assignInteractionResults(ctx, provider, { login: { accountId: id } });
+
+      return next();
+    }
+  );
+
+  router.post(
+    '/session/sign-in/bind-social-related-user',
+    koaGuard({
+      body: object({ connectorId: string() }),
+    }),
+    async (ctx, next) => {
+      const { result } = await provider.interactionDetails(ctx.req, ctx.res);
+      assertThat(result, 'session.connector_session_not_found');
+
+      const { connectorId } = ctx.guard.body;
+      const type = 'SignInSocialBind';
+      ctx.log(type, { connectorId });
+
+      const userInfo = await getUserInfoFromInteractionResult(connectorId, result);
+      ctx.log(type, { userInfo });
+
+      const relatedInfo = await findSocialRelatedUser(userInfo);
+      assertThat(relatedInfo, 'session.connector_session_not_found');
+
+      const { id, identities } = relatedInfo[1];
+      ctx.log(type, { userId: id });
+
+      await updateUserById(id, {
+        identities: { ...identities, [connectorId]: { userId: userInfo.id, details: userInfo } },
+      });
+      await updateLastSignInAt(id);
+      await assignInteractionResults(ctx, provider, { login: { accountId: id } });
+
+      return next();
+    }
+  );
+
+  router.post(
+    '/session/register/social',
+    koaGuard({
+      body: object({
+        connectorId: string(),
+      }),
+    }),
+    async (ctx, next) => {
+      const { result } = await provider.interactionDetails(ctx.req, ctx.res);
+      // User can not register with social directly,
+      // need to try to sign in with social first, then confirm to register and continue,
+      // so the result is expected to be exists.
+      assertThat(result, 'session.connector_session_not_found');
+
+      const { connectorId } = ctx.guard.body;
+      const type = 'RegisterSocial';
+      ctx.log(type, { connectorId });
+
+      const userInfo = await getUserInfoFromInteractionResult(connectorId, result);
+      ctx.log(type, { userInfo });
+      assertThat(!(await hasUserWithIdentity(connectorId, userInfo.id)), 'user.identity_exists');
+
+      const id = await generateUserId();
+      await insertUser({
+        id,
+        name: userInfo.name ?? null,
+        avatar: userInfo.avatar ?? null,
+        identities: {
+          [connectorId]: {
+            userId: userInfo.id,
+            details: userInfo,
+          },
+        },
+      });
+      ctx.log(type, { userId: id });
+
+      await updateLastSignInAt(id);
+      await assignInteractionResults(ctx, provider, { login: { accountId: id } });
+
+      return next();
+    }
+  );
+
+  router.post(
+    '/session/bind-social',
+    koaGuard({
+      body: object({
+        connectorId: string(),
+      }),
+    }),
+    async (ctx, next) => {
+      const { result } = await provider.interactionDetails(ctx.req, ctx.res);
+      assertThat(result, 'session.connector_session_not_found');
+      const userId = result.login?.accountId;
+      assertThat(userId, 'session.unauthorized');
+
+      const { connectorId } = ctx.guard.body;
+      const type = 'RegisterSocialBind';
+      ctx.log(type, { connectorId, userId });
+
+      const userInfo = await getUserInfoFromInteractionResult(connectorId, result);
+      ctx.log(type, { userInfo });
+
+      const user = await findUserById(userId);
+      const updatedUser = await updateUserById(userId, {
+        identities: {
+          ...user.identities,
+          [connectorId]: { userId: userInfo.id, details: userInfo },
+        },
+      });
+
+      ctx.body = pick(updatedUser, ...userInfoSelectFields);
+
+      return next();
+    }
+  );
+}
