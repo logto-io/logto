@@ -5,7 +5,7 @@ import { mockUser } from '@/__mocks__';
 import RequestError from '@/errors/RequestError';
 import { createRequester } from '@/utils/test-utils';
 
-import sessionPasswordlessRoutes from './session-passwordless';
+import sessionPasswordlessRoutes from './passwordless';
 
 jest.mock('@/lib/user', () => ({
   generateUserId: () => 'user1',

@@ -15,7 +15,7 @@ import { ConnectorType } from '@/connectors/types';
 import RequestError from '@/errors/RequestError';
 import { createRequester } from '@/utils/test-utils';
 
-import sessionSocialRoutes from './session-social';
+import sessionSocialRoutes from './social';
 
 jest.mock('@/lib/user', () => ({
   generateUserId: () => 'user1',
