@@ -1,5 +1,4 @@
 import { useLogto, UserInfoResponse } from '@logto/react';
-import { UserRole } from '@logto/schemas';
 import classNames from 'classnames';
 import React, { useEffect, useRef, useState, MouseEvent } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -10,6 +9,7 @@ import { getAvatarById } from '@/consts/avatars';
 import useApi from '@/hooks/use-api';
 import SignOut from '@/icons/SignOut';
 
+import UserInfoSkeleton from '../UserInfoSkeleton';
 import * as styles from './index.module.scss';
 
 const UserInfo = () => {
@@ -31,11 +31,10 @@ const UserInfo = () => {
   }, [api, isAuthenticated, fetchUserInfo]);
 
   if (!user) {
-    return null;
+    return <UserInfoSkeleton />;
   }
 
-  const { sub: id, name, avatar, role_names: roleNames } = user;
-  const isAdmin = roleNames?.includes(UserRole.Admin);
+  const { sub: id, name, avatar } = user;
 
   return (
     <>
@@ -48,8 +47,7 @@ const UserInfo = () => {
       >
         <img src={avatar ?? getAvatarById(id)} />
         <div className={styles.wrapper}>
-          <div className={styles.name}>{name}</div>
-          {isAdmin && <div className={styles.role}>{t('user_details.roles.admin')}</div>}
+          <div className={styles.name}>{name || t('users.unnamed')}</div>
         </div>
       </div>
       <Dropdown

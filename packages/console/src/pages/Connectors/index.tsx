@@ -60,6 +60,7 @@ const Connectors = () => {
             <Button
               title="admin_console.connectors.create"
               type="primary"
+              size="large"
               icon={<Plus />}
               onClick={() => {
                 setCreateType(ConnectorType.Social);

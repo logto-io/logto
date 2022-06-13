@@ -26,25 +26,14 @@
     cursor: text;
 
     .copyIcon {
+      display: flex;
+      align-items: center;
       margin-left: _.unit(3);
+      color: var(--color-icon);
       cursor: pointer;
 
-      > svg {
-        color: var(--color-icon);
-      }
-    }
-  }
-
-  &.icon {
-    .row {
-      .copyIcon {
-        > svg {
-          color: rgba(#fff, 0.8);
-        }
-
-        :hover {
-          color: #fff;
-        }
+      &:hover {
+        color: var(--color-text);
       }
     }
   }

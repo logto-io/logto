@@ -78,5 +78,9 @@
 
   .main {
     flex: 1;
+
+    .codeEditor {
+      margin-bottom: _.unit(6);
+    }
   }
 }

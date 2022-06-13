@@ -1,3 +1,4 @@
+import classNames from 'classnames';
 import React, { ChangeEvent } from 'react';
 import { PrismAsyncLight as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { a11yDark as theme } from 'react-syntax-highlighter/dist/esm/styles/prism';
@@ -6,19 +7,20 @@ import CopyToClipboard from '../CopyToClipboard';
 import * as styles from './index.module.scss';
 
 type Props = {
+  className?: string;
   language?: string;
   isReadonly?: boolean;
   value?: string;
   onChange?: (value: string) => void;
 };
 
-const CodeEditor = ({ language, isReadonly = false, value = '', onChange }: Props) => {
+const CodeEditor = ({ className, language, isReadonly = false, value = '', onChange }: Props) => {
   const handleChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
     onChange?.(event.currentTarget.value);
   };
 
   return (
-    <div className={styles.container}>
+    <div className={classNames(styles.container, className)}>
       <CopyToClipboard value={value} variant="icon" className={styles.copy} />
       <div className={styles.editor}>
         {/* SyntaxHighlighter is a readonly component, so a transparent <textarea> layer is needed

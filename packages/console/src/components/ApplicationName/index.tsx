@@ -16,7 +16,6 @@ const ApplicationName = ({ applicationId, isLink = false }: Props) => {
 
   const { data } = useSWR<Application>(!isAdminConsole && `/api/applications/${applicationId}`);
 
-  // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
   const name = (isAdminConsole ? 'Admin Console' : data?.name) || '-';
 
   if (isLink && !isAdminConsole) {

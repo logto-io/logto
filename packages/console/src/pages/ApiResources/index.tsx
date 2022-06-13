@@ -48,6 +48,7 @@ const ApiResources = () => {
         <Button
           title="admin_console.api_resources.create"
           type="primary"
+          size="large"
           icon={<Plus />}
           onClick={() => {
             setIsCreateFormOpen(true);

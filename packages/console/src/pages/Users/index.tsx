@@ -50,6 +50,7 @@ const Users = () => {
         <CardTitle title="users.title" subtitle="users.subtitle" />
         <Button
           title="admin_console.users.create"
+          size="large"
           type="primary"
           icon={<Plus />}
           onClick={() => {
@@ -124,7 +125,7 @@ const Users = () => {
               >
                 <td>
                   <ItemPreview
-                    title={name ?? t('users.unnamed')}
+                    title={name || t('users.unnamed')}
                     subtitle={conditionalString(username)}
                     icon={<img className={styles.avatar} src={avatar ?? getAvatarById(id)} />}
                     to={`/users/${id}`}
