@@ -39,6 +39,10 @@
       width: 16px;
       height: 16px;
       color: var(--color-caption);
+
+      > svg {
+        display: block;
+      }
     }
   }
 
