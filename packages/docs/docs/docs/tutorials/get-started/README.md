@@ -1,4 +1,4 @@
-# Get Started
+# 🌟 Get Started
 
 Before we start, it'll be good to know how Logto works. To simplify, we divide Logto into four parts: Admin Console, Sign-in Experience, Core Service, and SDKs.
 

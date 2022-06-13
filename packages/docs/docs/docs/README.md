@@ -3,7 +3,7 @@ sidebar_position: 1
 slug: /
 ---
 
-# Introduction
+# 💁 Introduction
 
 🤘 Logto helps you quickly focus on everything after signing in.
 
