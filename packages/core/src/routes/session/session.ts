@@ -18,7 +18,7 @@ import koaGuard from '@/middleware/koa-guard';
 import { hasUser, insertUser } from '@/queries/user';
 import assertThat from '@/utils/assert-that';
 
-import { AnonymousRouter } from './types';
+import { AnonymousRouter } from '../types';
 
 export default function sessionRoutes<T extends AnonymousRouter>(router: T, provider: Provider) {
   router.post('/session', async (ctx, next) => {

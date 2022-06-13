@@ -24,7 +24,7 @@ import {
 import assertThat from '@/utils/assert-that';
 import { maskUserInfo } from '@/utils/format';
 
-import { AnonymousRouter } from './types';
+import { AnonymousRouter } from '../types';
 
 export default function sessionSocialRoutes<T extends AnonymousRouter>(
   router: T,

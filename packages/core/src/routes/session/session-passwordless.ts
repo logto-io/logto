@@ -17,7 +17,7 @@ import {
 } from '@/queries/user';
 import assertThat from '@/utils/assert-that';
 
-import { AnonymousRouter } from './types';
+import { AnonymousRouter } from '../types';
 
 export default function sessionPasswordlessRoutes<T extends AnonymousRouter>(
   router: T,
