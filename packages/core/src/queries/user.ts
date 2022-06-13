@@ -37,12 +37,12 @@ export const findUserById = async (id: string) =>
     where ${fields.id}=${id}
   `);
 
-export const findUserByIdentity = async (connectorId: string, userId: string) =>
+export const findUserByIdentity = async (target: string, userId: string) =>
   envSet.pool.one<User>(
     sql`
       select ${sql.join(Object.values(fields), sql`,`)}
       from ${table}
-      where ${fields.identities}::json#>>'{${sql.identifier([connectorId])},userId}' = ${userId}
+      where ${fields.identities}::json#>>'{${sql.identifier([target])},userId}' = ${userId}
     `
   );
 
@@ -74,12 +74,12 @@ export const hasUserWithPhone = async (phone: string) =>
     where ${fields.primaryPhone}=${phone}
   `);
 
-export const hasUserWithIdentity = async (connectorId: string, userId: string) =>
+export const hasUserWithIdentity = async (target: string, userId: string) =>
   envSet.pool.exists(
     sql`
       select ${fields.id}
       from ${table}
-      where ${fields.identities}::json#>>'{${sql.identifier([connectorId])},userId}' = ${userId}
+      where ${fields.identities}::json#>>'{${sql.identifier([target])},userId}' = ${userId}
     `
   );
 
@@ -143,10 +143,10 @@ export const clearUserCustomDataById = async (id: string) => {
   }
 };
 
-export const deleteUserIdentity = async (userId: string, connectorId: string) =>
+export const deleteUserIdentity = async (userId: string, target: string) =>
   envSet.pool.one<User>(sql`
     update ${table}
-    set ${fields.identities}=${fields.identities}::jsonb-${connectorId}
+    set ${fields.identities}=${fields.identities}::jsonb-${target}
     where ${fields.id}=${userId}
     returning *
   `);
