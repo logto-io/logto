@@ -1,0 +1,27 @@
+---
+sidebar_position: 2
+---
+
+import Columns from '@components/Columns';
+
+# Create and integrate the first application
+
+Click the "Create" button on the right, and the browser will redirect to the Application tab. Then click the "Create Application" button on this page.
+
+In the opening modal, choose which type of application you'd like to integrate and enter the application name, e.g., "Bookstore".
+
+Here's a brief explanation of each type:
+
+- **Native App** is an app that runs in a native environment, e.g., iOS app, Android app.
+- **Single Page App** is an app that runs in a web browser, which updates the page with the new data from the server without loading entire new pages. E.g., React DOM app, Vue app.
+- **Traditional Web App** is an app that renders and updates pages by the web server alone. E.g., JSP, PHP.
+
+We prepared different tutorials for each application type, and it'll be helpful if you choose the type properly. Meanwhile, Logto offers some official SDKs to bring the integration experience to another level.
+
+Pick the tutorial you need from the list below:
+
+<Columns columns={[
+  { title: 'Native App', items: [{ key: 'iOS' }, { key: 'Android' }] },
+  { title: 'Single Page App', items: [{ key: 'Vanilla JS' }, { key: 'React' }, { key: 'Vue' }] },
+  { title: 'Tranditional Web App', items: [{ key: 'ExpressJS' }, { key: 'Other Web Servers' }] },
+]} />

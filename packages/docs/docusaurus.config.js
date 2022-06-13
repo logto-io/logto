@@ -124,7 +124,8 @@ const config = {
           '@components': path.resolve(__dirname, './src/components')
         } } })
       });
-    }
+    },
+    'docusaurus-plugin-sass'
   ]
 };
 

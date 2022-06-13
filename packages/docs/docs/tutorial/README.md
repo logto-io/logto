@@ -18,7 +18,7 @@ Main features:
 
 Boringly, we call it "[customer identity access management](https://en.wikipedia.org/wiki/Customer_identity_access_management)" (CIAM) or "customer identity solution."
 
-## Get Started
+## Installation
 
 ### Prerequisites
 
@@ -53,6 +53,6 @@ Heading to http://localhost:3001 to continue the Logto journey. Enjoy!
 
 TBD
 
-### Configuration
+## Configuration
 
 Logto uses environment variables for configuration, along with `.env` file support. See [Configuration](./tutorial/configuration) for detailed usage and full variable list.

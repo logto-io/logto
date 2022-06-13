@@ -1,0 +1,12 @@
+.container {
+  display: flex;
+  justify-content: space-between;
+
+  > :not(:first-child) {
+    margin-left: 12px;
+  }
+
+  ul > li {
+    margin-left: -8px;
+  }
+}
