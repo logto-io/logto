@@ -46,7 +46,7 @@ const config = {
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
       navbar: {
-        title: 'Logto Docs',
+        title: 'Logto',
         logo: {
           alt: 'Logto Logo',
           src: 'img/logo.svg',
@@ -54,9 +54,9 @@ const config = {
         items: [
           {
             type: 'doc',
-            docId: 'tutorial/README',
+            docId: 'docs/README',
             position: 'left',
-            label: 'Tutorial',
+            label: 'Docs',
           },
           {
             type: 'doc',
@@ -88,7 +88,7 @@ const config = {
             title: 'Docs',
             items: [
               {
-                label: 'Tutorial',
+                label: 'Docs',
                 to: '/',
               },
             ],

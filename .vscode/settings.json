@@ -26,6 +26,7 @@
     "codecov",
     "Logto",
     "oidc",
+    "passcode",
     "Passwordless",
     "pnpm",
     "silverhand",
