@@ -188,19 +188,41 @@ describe('dashboardRoutes', () => {
       const response = await logRequest.get('/dashboard/users/active');
       expect(response.status).toEqual(200);
       expect(response.body).toEqual({
-        dauCurve: mockDailyActiveUserCounts,
-        dau: {
-          count: 530,
-          delta: 1,
-        },
-        wau: {
-          count: 1000,
-          delta: 0,
-        },
-        mau: {
-          count: 1000,
-          delta: 0,
-        },
+        dauCurve: [
+          { date: '2022-05-01', count: 501 },
+          { date: '2022-05-02', count: 0 },
+          { date: '2022-05-03', count: 0 },
+          { date: '2022-05-04', count: 0 },
+          { date: '2022-05-05', count: 0 },
+          { date: '2022-05-06', count: 0 },
+          { date: '2022-05-07', count: 0 },
+          { date: '2022-05-08', count: 0 },
+          { date: '2022-05-09', count: 0 },
+          { date: '2022-05-10', count: 0 },
+          { date: '2022-05-11', count: 0 },
+          { date: '2022-05-12', count: 0 },
+          { date: '2022-05-13', count: 0 },
+          { date: '2022-05-14', count: 0 },
+          { date: '2022-05-15', count: 0 },
+          { date: '2022-05-16', count: 0 },
+          { date: '2022-05-17', count: 0 },
+          { date: '2022-05-18', count: 0 },
+          { date: '2022-05-19', count: 0 },
+          { date: '2022-05-20', count: 0 },
+          { date: '2022-05-21', count: 0 },
+          { date: '2022-05-22', count: 0 },
+          { date: '2022-05-23', count: 523 },
+          { date: '2022-05-24', count: 0 },
+          { date: '2022-05-25', count: 0 },
+          { date: '2022-05-26', count: 0 },
+          { date: '2022-05-27', count: 0 },
+          { date: '2022-05-28', count: 0 },
+          { date: '2022-05-29', count: 529 },
+          { date: '2022-05-30', count: 530 },
+        ],
+        dau: { count: 530, delta: 1 },
+        wau: { count: 1000, delta: 0 },
+        mau: { count: 1000, delta: 0 },
       });
     });
   });

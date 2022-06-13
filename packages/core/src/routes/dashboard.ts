@@ -14,9 +14,9 @@ import { AuthedRouter } from './types';
 
 const getDateString = (day: Dayjs) => day.format('YYYY-MM-DD');
 
-const lastTimestampOfDay = (day: Dayjs) => day.endOf('day').valueOf();
+const indices = (length: number) => [...Array.from({ length }).keys()];
 
-const indicesFrom0To6 = [...Array.from({ length: 7 }).keys()];
+const lastTimestampOfDay = (day: Dayjs) => day.endOf('day').valueOf();
 
 export default function dashboardRoutes<T extends AuthedRouter>(router: T) {
   router.get('/dashboard/users/total', async (ctx, next) => {
@@ -43,10 +43,10 @@ export default function dashboardRoutes<T extends AuthedRouter>(router: T) {
     const yesterdayNewUserCount = last14DaysNewUserCounts.get(getDateString(yesterday)) ?? 0;
     const todayDelta = todayNewUserCount - yesterdayNewUserCount;
 
-    const last7DaysNewUserCount = indicesFrom0To6
+    const last7DaysNewUserCount = indices(7)
       .map((index) => getDateString(today.subtract(index, 'day')))
       .reduce((sum, date) => sum + (last14DaysNewUserCounts.get(date) ?? 0), 0);
-    const newUserCountFrom13DaysAgoTo7DaysAgo = indicesFrom0To6
+    const newUserCountFrom13DaysAgoTo7DaysAgo = indices(7)
       .map((index) => getDateString(today.subtract(7 + index, 'day')))
       .reduce((sum, date) => sum + (last14DaysNewUserCounts.get(date) ?? 0), 0);
     const last7DaysDelta = last7DaysNewUserCount - newUserCountFrom13DaysAgoTo7DaysAgo;
@@ -119,8 +119,15 @@ export default function dashboardRoutes<T extends AuthedRouter>(router: T) {
       const previousDAU = last30DauCounts.find(({ date }) => date === previousDate)?.count ?? 0;
       const dau = last30DauCounts.find(({ date }) => date === targetDate)?.count ?? 0;
 
+      const dauCurve = indices(30).map((index) => {
+        const dateString = getDateString(targetDay.subtract(29 - index, 'day'));
+        const count = last30DauCounts.find(({ date }) => date === dateString)?.count ?? 0;
+
+        return { date: dateString, count };
+      });
+
       ctx.body = {
-        dauCurve: last30DauCounts,
+        dauCurve,
         dau: {
           count: dau,
           delta: dau - previousDAU,
