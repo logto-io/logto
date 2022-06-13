@@ -58,7 +58,7 @@ describe('zodTypeToSwagger', () => {
   });
 
   it('unknown type', () => {
-    expect(zodTypeToSwagger(unknown())).toEqual({});
+    expect(zodTypeToSwagger(unknown())).toEqual({ example: {} });
   });
 
   it('native enum type', () => {
