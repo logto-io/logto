@@ -137,7 +137,7 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
         await validateConfig(body.config);
       }
 
-      const connector = await updateConnector({ set: body, where: { id } });
+      const connector = await updateConnector({ set: body, where: { id }, fullyReplace: true });
       ctx.body = { ...connector, metadata };
 
       return next();

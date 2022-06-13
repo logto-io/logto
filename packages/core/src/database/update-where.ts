@@ -29,14 +29,14 @@ export const buildUpdateWhere: BuildUpdateWhere = <
 ) => {
   const { table, fields } = convertToIdentifiers(schema);
   const isKeyOfSchema = isKeyOf(schema);
-  const connectKeyValueWithEqualSign = (data: Partial<Schema>) =>
+  const connectKeyValueWithEqualSign = (data: Partial<Schema>, fullyReplace?: boolean) =>
     Object.entries(data)
       .map(([key, value]) => {
         if (!isKeyOfSchema(key)) {
           return;
         }
 
-        if (value && typeof value === 'object' && !Array.isArray(value)) {
+        if (!fullyReplace && value && typeof value === 'object' && !Array.isArray(value)) {
           /**
            * Jsonb || operator is used to shallow merge two jsonb types of data
            * all jsonb data field must be non-nullable
@@ -52,12 +52,12 @@ export const buildUpdateWhere: BuildUpdateWhere = <
       })
       .filter((value): value is Truthy<typeof value> => notFalsy(value));
 
-  return async ({ set, where }: UpdateWhereData<Schema>) => {
+  return async ({ set, where, fullyReplace }: UpdateWhereData<Schema>) => {
     const {
       rows: [data],
     } = await envSet.pool.query<ReturnType>(sql`
       update ${table}
-      set ${sql.join(connectKeyValueWithEqualSign(set), sql`, `)}
+      set ${sql.join(connectKeyValueWithEqualSign(set, fullyReplace), sql`, `)}
       where ${sql.join(connectKeyValueWithEqualSign(where), sql` and `)}
       ${conditionalSql(returning, () => sql`returning *`)}
     `);
