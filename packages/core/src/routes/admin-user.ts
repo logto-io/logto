@@ -1,5 +1,5 @@
 import { arbitraryObjectGuard, userInfoSelectFields } from '@logto/schemas';
-import { nameRegEx, passwordRegEx, usernameRegEx } from '@logto/shared';
+import { passwordRegEx, usernameRegEx } from '@logto/shared';
 import { has } from '@silverhand/essentials';
 import pick from 'lodash.pick';
 import { InvalidInputError } from 'slonik';
@@ -73,7 +73,7 @@ export default function adminUserRoutes<T extends AuthedRouter>(router: T) {
       body: object({
         username: string().regex(usernameRegEx),
         password: string().regex(passwordRegEx),
-        name: string().regex(nameRegEx),
+        name: string(),
       }),
     }),
     async (ctx, next) => {
@@ -109,7 +109,7 @@ export default function adminUserRoutes<T extends AuthedRouter>(router: T) {
     koaGuard({
       params: object({ userId: string() }),
       body: object({
-        name: string().regex(nameRegEx).optional(),
+        name: string().nullable().optional(),
         avatar: string().url().nullable().optional(),
         customData: arbitraryObjectGuard.optional(),
         roleNames: string().array().optional(),
