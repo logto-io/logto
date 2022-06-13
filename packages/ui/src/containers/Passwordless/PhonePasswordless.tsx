@@ -20,6 +20,8 @@ import * as styles from './index.module.scss';
 
 type Props = {
   type: UserFlow;
+  // eslint-disable-next-line react/boolean-prop-naming
+  autoFocus?: boolean;
   className?: string;
 };
 
@@ -29,7 +31,7 @@ type FieldState = {
 
 const defaultState: FieldState = { phone: '' };
 
-const PhonePasswordless = ({ type, className }: Props) => {
+const PhonePasswordless = ({ type, autoFocus, className }: Props) => {
   const { setToast } = useContext(PageContext);
   const [showPasswordlessConfirmModal, setShowPasswordlessConfirmModal] = useState(false);
   const { t } = useTranslation(undefined, { keyPrefix: 'main_flow' });
@@ -118,6 +120,7 @@ const PhonePasswordless = ({ type, className }: Props) => {
           placeholder={t('input.phone_number')}
           countryCallingCode={phoneNumber.countryCallingCode}
           nationalNumber={phoneNumber.nationalNumber}
+          autoFocus={autoFocus}
           countryList={countryList}
           {...register('phone', phoneNumberValidation)}
           onChange={(data) => {

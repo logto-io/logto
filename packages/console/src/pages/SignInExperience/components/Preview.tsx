@@ -135,7 +135,7 @@ const Preview = ({ signInExperience, className }: Props) => {
               <PhoneInfo />
             </div>
           )}
-          <iframe ref={previewRef} src="/sign-in?preview=true" />
+          <iframe ref={previewRef} src="/sign-in?preview=true" tabIndex={-1} />
         </div>
         {platform === 'mobile' && (
           <div className={styles.description}>{t('sign_in_exp.preview.mobile_description')}</div>
