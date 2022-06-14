@@ -14,7 +14,8 @@
   --ifm-color-primary-lighter: #359962;
   --ifm-color-primary-lightest: #3cad6e;
   --ifm-code-font-size: 95%;
-  --doc-sidebar-width: 450px !important;
+  --doc-sidebar-width: 400px !important;
+  --doc-sidebar-section-title: #eee;
 }
 
 /* For readability concerns, you should choose a lighter palette in dark mode. */
@@ -26,6 +27,7 @@
   --ifm-color-primary-light: #29d5b0;
   --ifm-color-primary-lighter: #32d8b4;
   --ifm-color-primary-lightest: #4fddbf;
+  --doc-sidebar-section-title: #777;
 }
 
 .docusaurus-highlight-code-line {
@@ -37,4 +39,16 @@
 
 [data-theme='dark'] .docusaurus-highlight-code-line {
   background-color: rgba(0, 0, 0, 0.3);
+}
+
+.sidebar-section {
+  color: var(--doc-sidebar-section-title);
+  padding: var(--ifm-menu-link-padding-vertical) var(--ifm-menu-link-padding-horizontal);
+  text-transform: uppercase;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.sidebar-section:not(:first-child) {
+  margin-top: calc(var(--ifm-menu-link-padding-vertical) * 2);
 }

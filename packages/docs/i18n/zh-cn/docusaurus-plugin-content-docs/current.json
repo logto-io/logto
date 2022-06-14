@@ -2,25 +2,25 @@
   "version.label": {
     "message": "下一个"
   },
-  "sidebar.tutorialSidebar.category.Integrate SDK": {
+  "sidebar.docsSidebar.category.Integrate SDK": {
     "message": "集成 SDK"
   },
-  "sidebar.sdkSidebar.category.Classes": {
+  "sidebar.docsSidebar.category.Classes": {
     "message": "类（Classes）"
   },
-  "sidebar.sdkSidebar.category.Enums": {
+  "sidebar.docsSidebar.category.Enums": {
     "message": "枚举（Enums）"
   },
-  "sidebar.sdkSidebar.category.Protocols": {
+  "sidebar.docsSidebar.category.Protocols": {
     "message": "接口（Protocols）"
   },
-  "sidebar.sdkSidebar.category.Typealiases": {
+  "sidebar.docsSidebar.category.Typealiases": {
     "message": "类型别名（Typealiases）"
   },
-  "sidebar.sdkSidebar.category.Extensions": {
+  "sidebar.docsSidebar.category.Extensions": {
     "message": "扩展（Extensions）"
   },
-  "sidebar.sdkSidebar.category.Structs": {
+  "sidebar.docsSidebar.category.Structs": {
     "message": "结构体（Structs）"
   }
 }

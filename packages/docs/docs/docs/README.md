@@ -3,7 +3,7 @@ sidebar_position: 1
 slug: /
 ---
 
-# Introduction
+# 💁 Introduction
 
 🤘 Logto helps you quickly focus on everything after signing in.
 
@@ -41,7 +41,7 @@ In your terminal:
 node -e "$(printf "%s" "$(curl -fsSL https://raw.githubusercontent.com/logto-io/logto/master/install.js)")"
 ```
 
-The script will download Logto and create a directory `logto` in the location you ran it. After answering [several simple questions](./tutorial/configuration#questions), you will see the message like:
+The script will download Logto and create a directory `logto` in the location you ran it. After answering [several simple questions](./docs/references/core/configuration#questions), you will see the message like:
 
 ```bash
 App is running at http://localhost:3001
@@ -55,4 +55,4 @@ TBD
 
 ## Configuration
 
-Logto uses environment variables for configuration, along with `.env` file support. See [Configuration](./tutorial/configuration) for detailed usage and full variable list.
+Logto uses environment variables for configuration, along with `.env` file support. See [Configuration](./docs/references/core/configuration) for detailed usage and full variable list.
