@@ -10,9 +10,12 @@
   user-select: none;
   cursor: pointer;
 
-  &:hover,
+  &:hover {
+    background-color: var(--color-hover-variant);
+  }
+
   &.active {
-    background-color: var(--color-surface-5);
+    background-color: var(--color-focused-variant);
   }
 
   img {
