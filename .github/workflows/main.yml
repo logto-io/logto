@@ -1,9 +1,11 @@
 name: Main
 
 on:
-  push:
-    branches: [master]
   pull_request:
+
+concurrency: 
+  group: ${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   main-build:
