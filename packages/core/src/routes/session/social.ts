@@ -4,7 +4,7 @@ import pick from 'lodash.pick';
 import { Provider } from 'oidc-provider';
 import { object, string, unknown } from 'zod';
 
-import { getSocialConnectorInstanceById } from '@/connectors';
+import { getConnectorInstanceById, getSocialConnectorInstanceById } from '@/connectors';
 import RequestError from '@/errors/RequestError';
 import { assignInteractionResults } from '@/lib/session';
 import {
@@ -63,11 +63,14 @@ export default function sessionSocialRoutes<T extends AnonymousRouter>(
       const { connectorId, data } = ctx.guard.body;
       const type = 'SignInSocial';
       ctx.log(type, { connectorId, data });
+      const {
+        metadata: { target },
+      } = await getConnectorInstanceById(connectorId);
 
       const userInfo = await getUserInfoByAuthCode(connectorId, data);
       ctx.log(type, { userInfo });
 
-      if (!(await hasUserWithIdentity(connectorId, userInfo.id))) {
+      if (!(await hasUserWithIdentity(target, userInfo.id))) {
         await assignInteractionResults(
           ctx,
           provider,
@@ -85,12 +88,12 @@ export default function sessionSocialRoutes<T extends AnonymousRouter>(
         );
       }
 
-      const { id, identities } = await findUserByIdentity(connectorId, userInfo.id);
+      const { id, identities } = await findUserByIdentity(target, userInfo.id);
       ctx.log(type, { userId: id });
 
       // Update social connector's user info
       await updateUserById(id, {
-        identities: { ...identities, [connectorId]: { userId: userInfo.id, details: userInfo } },
+        identities: { ...identities, [target]: { userId: userInfo.id, details: userInfo } },
       });
       await updateLastSignInAt(id);
       await assignInteractionResults(ctx, provider, { login: { accountId: id } });
@@ -111,6 +114,9 @@ export default function sessionSocialRoutes<T extends AnonymousRouter>(
       const { connectorId } = ctx.guard.body;
       const type = 'SignInSocialBind';
       ctx.log(type, { connectorId });
+      const {
+        metadata: { target },
+      } = await getConnectorInstanceById(connectorId);
 
       const userInfo = await getUserInfoFromInteractionResult(connectorId, result);
       ctx.log(type, { userInfo });
@@ -122,7 +128,7 @@ export default function sessionSocialRoutes<T extends AnonymousRouter>(
       ctx.log(type, { userId: id });
 
       await updateUserById(id, {
-        identities: { ...identities, [connectorId]: { userId: userInfo.id, details: userInfo } },
+        identities: { ...identities, [target]: { userId: userInfo.id, details: userInfo } },
       });
       await updateLastSignInAt(id);
       await assignInteractionResults(ctx, provider, { login: { accountId: id } });
@@ -148,10 +154,13 @@ export default function sessionSocialRoutes<T extends AnonymousRouter>(
       const { connectorId } = ctx.guard.body;
       const type = 'RegisterSocial';
       ctx.log(type, { connectorId });
+      const {
+        metadata: { target },
+      } = await getConnectorInstanceById(connectorId);
 
       const userInfo = await getUserInfoFromInteractionResult(connectorId, result);
       ctx.log(type, { userInfo });
-      assertThat(!(await hasUserWithIdentity(connectorId, userInfo.id)), 'user.identity_exists');
+      assertThat(!(await hasUserWithIdentity(target, userInfo.id)), 'user.identity_exists');
 
       const id = await generateUserId();
       await insertUser({
@@ -159,7 +168,7 @@ export default function sessionSocialRoutes<T extends AnonymousRouter>(
         name: userInfo.name ?? null,
         avatar: userInfo.avatar ?? null,
         identities: {
-          [connectorId]: {
+          [target]: {
             userId: userInfo.id,
             details: userInfo,
           },
@@ -190,6 +199,9 @@ export default function sessionSocialRoutes<T extends AnonymousRouter>(
       const { connectorId } = ctx.guard.body;
       const type = 'RegisterSocialBind';
       ctx.log(type, { connectorId, userId });
+      const {
+        metadata: { target },
+      } = await getConnectorInstanceById(connectorId);
 
       const userInfo = await getUserInfoFromInteractionResult(connectorId, result);
       ctx.log(type, { userInfo });
@@ -198,7 +210,7 @@ export default function sessionSocialRoutes<T extends AnonymousRouter>(
       const updatedUser = await updateUserById(userId, {
         identities: {
           ...user.identities,
-          [connectorId]: { userId: userInfo.id, details: userInfo },
+          [target]: { userId: userInfo.id, details: userInfo },
         },
       });
 
