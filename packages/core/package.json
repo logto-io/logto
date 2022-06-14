@@ -7,7 +7,6 @@
   "license": "MPL-2.0",
   "private": true,
   "scripts": {
-    "preinstall": "npx only-allow pnpm",
     "precommit": "lint-staged",
     "copyfiles": "copyfiles -u 1 src/**/*.md build",
     "build": "rm -rf build/ && tsc -p tsconfig.build.json && pnpm run copyfiles",

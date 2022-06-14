@@ -6,7 +6,6 @@
   "homepage": "https://github.com/logto-io/logto#readme",
   "license": "MPL-2.0",
   "scripts": {
-    "preinstall": "npx only-allow pnpm",
     "precommit": "lint-staged",
     "start": "parcel src/index.html",
     "dev": "cross-env PORT=5002 parcel src/index.html --public-url /console --no-cache --hmr-port 6002",

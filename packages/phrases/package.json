@@ -15,7 +15,6 @@
     "url": "git+https://github.com/logto-io/logto.git"
   },
   "scripts": {
-    "preinstall": "npx only-allow pnpm",
     "precommit": "lint-staged",
     "build": "rm -rf lib/ && tsc",
     "lint": "eslint --ext .ts src",

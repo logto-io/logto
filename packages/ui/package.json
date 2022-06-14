@@ -4,7 +4,6 @@
   "license": "MPL-2.0",
   "private": true,
   "scripts": {
-    "preinstall": "npx only-allow pnpm",
     "precommit": "lint-staged",
     "start": "parcel src/index.html",
     "dev": "cross-env PORT=5001 parcel src/index.html --no-cache --hmr-port 6001",

@@ -8,7 +8,6 @@
     "lib"
   ],
   "scripts": {
-    "preinstall": "npx only-allow pnpm",
     "precommit": "lint-staged",
     "build": "rm -rf lib/ && tsc --p tsconfig.build.json",
     "lint": "eslint --ext .ts src",
