@@ -5,7 +5,6 @@
   "author": "Silverhand Inc. <contact@silverhand.io>",
   "license": "MPL-2.0",
   "scripts": {
-    "preinstall": "npx only-allow pnpm",
     "test": "echo \"Error: no test specified\" && exit 1",
     "precommit": "lint-staged",
     "start": "parcel src/index.html",
