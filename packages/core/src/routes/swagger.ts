@@ -66,7 +66,7 @@ const buildOperation = (stack: IMiddleware[], path: string): OpenAPIV3.Operation
   const guard = stack.find((function_): function_ is WithGuardConfig<IMiddleware> =>
     isGuardMiddleware(function_)
   );
-  const hasPagination = Boolean(stack.some((function_) => isPaginationMiddleware(function_)));
+  const hasPagination = stack.some((function_) => isPaginationMiddleware(function_));
 
   const body = guard?.config.body;
   const requestBody = body && {
