@@ -18,7 +18,7 @@ export const getSetting = async () =>
 
 export const updateSetting = async (
   setting: Partial<OmitAutoSetFields<CreateSetting>>,
-  jsonbMode: 'replace' | 'merge'
+  jsonbMode: 'replace' | 'merge' = 'merge'
 ) => {
   return buildUpdateWhere<CreateSetting, Setting>(
     Settings,

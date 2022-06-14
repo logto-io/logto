@@ -16,7 +16,7 @@ const id = 'default';
 
 export const updateDefaultSignInExperience = async (
   set: Partial<CreateSignInExperience>,
-  jsonbMode: 'replace' | 'merge'
+  jsonbMode: 'replace' | 'merge' = 'merge'
 ) => updateSignInExperience({ set, where: { id }, jsonbMode });
 
 export const findDefaultSignInExperience = async () =>

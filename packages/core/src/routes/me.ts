@@ -25,13 +25,9 @@ export default function meRoutes<T extends AuthedRouter>(router: T) {
 
       await findUserById(ctx.auth);
 
-      const user = await updateUserById(
-        ctx.auth,
-        {
-          customData,
-        },
-        'merge'
-      );
+      const user = await updateUserById(ctx.auth, {
+        customData,
+      });
 
       ctx.body = user.customData;
 

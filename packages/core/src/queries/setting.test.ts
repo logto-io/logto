@@ -58,6 +58,6 @@ describe('setting query', () => {
       return createMockQueryResult([dbvalue]);
     });
 
-    await expect(updateSetting({ adminConsole }, 'merge')).resolves.toEqual(dbvalue);
+    await expect(updateSetting({ adminConsole })).resolves.toEqual(dbvalue);
   });
 });

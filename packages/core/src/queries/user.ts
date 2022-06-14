@@ -117,7 +117,7 @@ const updateUser = buildUpdateWhere<CreateUser, User>(Users, true);
 export const updateUserById = async (
   id: string,
   set: Partial<OmitAutoSetFields<CreateUser>>,
-  jsonbMode: 'replace' | 'merge'
+  jsonbMode: 'replace' | 'merge' = 'merge'
 ) => updateUser({ set, where: { id }, jsonbMode });
 
 export const deleteUserById = async (id: string) => {

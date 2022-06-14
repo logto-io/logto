@@ -50,7 +50,7 @@ const updateResource = buildUpdateWhere<CreateResource, Resource>(Resources, tru
 export const updateResourceById = async (
   id: string,
   set: Partial<OmitAutoSetFields<CreateResource>>,
-  jsonbMode: 'replace' | 'merge'
+  jsonbMode: 'replace' | 'merge' = 'merge'
 ) => updateResource({ set, where: { id }, jsonbMode });
 
 export const deleteResourceById = async (id: string) => {

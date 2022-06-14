@@ -34,7 +34,7 @@ jest.mock('@/queries/user', () => ({
   findUserById: jest.fn(async (): Promise<User> => mockUser),
   hasUser: jest.fn(async () => false),
   updateUserById: jest.fn(
-    async (_, data: Partial<CreateUser>, _jsonbMode): Promise<User> => ({
+    async (_, data: Partial<CreateUser>): Promise<User> => ({
       ...mockUser,
       ...data,
     })

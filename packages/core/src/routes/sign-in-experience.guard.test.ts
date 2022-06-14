@@ -28,10 +28,7 @@ jest.mock('@/connectors', () => ({
 
 jest.mock('@/queries/sign-in-experience', () => ({
   updateDefaultSignInExperience: jest.fn(
-    async (
-      data: Partial<CreateSignInExperience>,
-      _jsonbMode: 'replace' | 'merge'
-    ): Promise<SignInExperience> => ({
+    async (data: Partial<CreateSignInExperience>): Promise<SignInExperience> => ({
       ...mockSignInExperience,
       ...data,
     })

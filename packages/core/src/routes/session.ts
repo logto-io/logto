@@ -240,13 +240,9 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
       ctx.log(type, { userId: id });
 
       // Update social connector's user info
-      await updateUserById(
-        id,
-        {
-          identities: { ...identities, [connectorId]: { userId: userInfo.id, details: userInfo } },
-        },
-        'merge'
-      );
+      await updateUserById(id, {
+        identities: { ...identities, [connectorId]: { userId: userInfo.id, details: userInfo } },
+      });
       await updateLastSignInAt(id);
       await assignInteractionResults(ctx, provider, { login: { accountId: id } });
 
@@ -276,13 +272,9 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
       const { id, identities } = relatedInfo[1];
       ctx.log(type, { userId: id });
 
-      await updateUserById(
-        id,
-        {
-          identities: { ...identities, [connectorId]: { userId: userInfo.id, details: userInfo } },
-        },
-        'merge'
-      );
+      await updateUserById(id, {
+        identities: { ...identities, [connectorId]: { userId: userInfo.id, details: userInfo } },
+      });
       await updateLastSignInAt(id);
       await assignInteractionResults(ctx, provider, { login: { accountId: id } });
 
@@ -533,16 +525,12 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
       ctx.log(type, { userInfo });
 
       const user = await findUserById(userId);
-      const updatedUser = await updateUserById(
-        userId,
-        {
-          identities: {
-            ...user.identities,
-            [connectorId]: { userId: userInfo.id, details: userInfo },
-          },
+      const updatedUser = await updateUserById(userId, {
+        identities: {
+          ...user.identities,
+          [connectorId]: { userId: userInfo.id, details: userInfo },
         },
-        'merge'
-      );
+      });
 
       ctx.body = pick(updatedUser, ...userInfoSelectFields);
 

@@ -44,7 +44,7 @@ const updateApplication = buildUpdateWhere<CreateApplication, Application>(Appli
 export const updateApplicationById = async (
   id: string,
   set: Partial<OmitAutoSetFields<CreateApplication>>,
-  jsonbMode: 'replace' | 'merge'
+  jsonbMode: 'replace' | 'merge' = 'merge'
 ) => updateApplication({ set, where: { id }, jsonbMode });
 
 export const deleteApplicationById = async (id: string) => {

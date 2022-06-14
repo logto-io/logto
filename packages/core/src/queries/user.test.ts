@@ -329,7 +329,7 @@ describe('user query', () => {
       return createMockQueryResult([dbvalue]);
     });
 
-    await expect(updateUserById(id, { username }, 'merge')).resolves.toEqual(dbvalue);
+    await expect(updateUserById(id, { username })).resolves.toEqual(dbvalue);
   });
 
   it('deleteUserById', async () => {

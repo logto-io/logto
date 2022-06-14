@@ -39,10 +39,7 @@ const findDefaultSignInExperience = jest.fn(async () => mockSignInExperience);
 jest.mock('@/queries/sign-in-experience', () => ({
   findDefaultSignInExperience: jest.fn(async () => findDefaultSignInExperience()),
   updateDefaultSignInExperience: jest.fn(
-    async (
-      data: Partial<CreateSignInExperience>,
-      _jsonbMode: 'replace' | 'merge'
-    ): Promise<SignInExperience> => ({
+    async (data: Partial<CreateSignInExperience>): Promise<SignInExperience> => ({
       ...mockSignInExperience,
       ...data,
     })

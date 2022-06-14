@@ -420,8 +420,7 @@ describe('sessionRoutes', () => {
         'id',
         expect.objectContaining({
           identities: { connectorId: { userId: 'id', details: { id: 'id' } } },
-        }),
-        'merge'
+        })
       );
       expect(response.body).toHaveProperty('redirectTo');
       expect(interactionResult).toHaveBeenCalledWith(
@@ -494,8 +493,7 @@ describe('sessionRoutes', () => {
               userId: 'connectorUser',
             },
           },
-        }),
-        'merge'
+        })
       );
       expect(response.body).toHaveProperty('redirectTo');
       expect(interactionResult).toHaveBeenCalledWith(
@@ -794,8 +792,7 @@ describe('sessionRoutes', () => {
               userId: 'connectorUser',
             },
           },
-        }),
-        'merge'
+        })
       );
     });
   });
@@ -856,11 +853,7 @@ describe('sessionRoutes', () => {
         });
         findUserById.mockImplementationOnce(async () => ({ ...mockUser, applicationId: null }));
         const response = await sessionRequest.post('/session/consent');
-        expect(updateUserById).toHaveBeenCalledWith(
-          mockUser.id,
-          { applicationId: 'clientId' },
-          'merge'
-        );
+        expect(updateUserById).toHaveBeenCalledWith(mockUser.id, { applicationId: 'clientId' });
         expect(response.statusCode).toEqual(200);
       });
       it('missingOIDCScope and missingResourceScopes', async () => {
