@@ -1,17 +1,7 @@
-/* eslint-disable max-lines */
 import { User } from '@logto/schemas';
 import { Provider } from 'oidc-provider';
 
-import {
-  mockUser,
-  mockAliyunDmConnectorInstance,
-  mockAliyunSmsConnectorInstance,
-  mockFacebookConnectorInstance,
-  mockGithubConnectorInstance,
-  mockGoogleConnectorInstance,
-  mockWechatConnectorInstance,
-  mockWechatNativeConnectorInstance,
-} from '@/__mocks__';
+import { mockUser, mockConnectorInstances } from '@/__mocks__';
 import { getConnectorInstanceById } from '@/connectors';
 import { ConnectorType } from '@/connectors/types';
 import RequestError from '@/errors/RequestError';
@@ -57,7 +47,6 @@ jest.mock('@/queries/user', () => ({
   hasUserWithIdentity: async (target: string, userId: string) =>
     target === 'connectorTarget' && userId === 'id',
 }));
-const getAuthorizationUri = jest.fn(async () => '');
 const getConnectorInstanceByIdHelper = jest.fn(async (connectorId: string) => {
   const connector = {
     enabled: connectorId === 'social_enabled',
@@ -72,17 +61,8 @@ const getConnectorInstanceByIdHelper = jest.fn(async (connectorId: string) => {
     type: connectorId.startsWith('social') ? ConnectorType.Social : ConnectorType.SMS,
   };
 
-  return { connector, metadata, getAuthorizationUri };
+  return { connector, metadata, getAuthorizationUri: jest.fn(async () => '') };
 });
-const getConnectorInstances = jest.fn(async () => [
-  mockAliyunDmConnectorInstance,
-  mockAliyunSmsConnectorInstance,
-  mockFacebookConnectorInstance,
-  mockGithubConnectorInstance,
-  mockGoogleConnectorInstance,
-  mockWechatConnectorInstance,
-  mockWechatNativeConnectorInstance,
-]);
 jest.mock('@/connectors', () => ({
   getSocialConnectorInstanceById: async (connectorId: string) => {
     const connectorInstance = await getConnectorInstanceByIdHelper(connectorId);
@@ -96,7 +76,7 @@ jest.mock('@/connectors', () => ({
 
     return connectorInstance;
   },
-  getConnectorInstances: async () => getConnectorInstances(),
+  getConnectorInstances: jest.fn(async () => mockConnectorInstances),
   getConnectorInstanceById: jest.fn(),
 }));
 
@@ -268,10 +248,9 @@ describe('sessionSocialRoutes', () => {
 
   describe('POST /session/sign-in/bind-social-related-user', () => {
     beforeEach(() => {
-      const connectorTarget = 'connectorTarget';
       const mockGetConnectorInstanceById = getConnectorInstanceById as jest.Mock;
       mockGetConnectorInstanceById.mockResolvedValueOnce({
-        metadata: { target: connectorTarget },
+        metadata: { target: 'connectorTarget' },
       });
     });
     afterEach(() => {
@@ -331,10 +310,9 @@ describe('sessionSocialRoutes', () => {
 
   describe('POST /session/register/social', () => {
     beforeEach(() => {
-      const connectorTarget = 'connectorTarget';
       const mockGetConnectorInstanceById = getConnectorInstanceById as jest.Mock;
       mockGetConnectorInstanceById.mockResolvedValueOnce({
-        metadata: { target: connectorTarget },
+        metadata: { target: 'connectorTarget' },
       });
     });
     afterEach(() => {
@@ -398,10 +376,9 @@ describe('sessionSocialRoutes', () => {
 
   describe('POST /session/bind-social', () => {
     beforeEach(() => {
-      const connectorTarget = 'connectorTarget';
       const mockGetConnectorInstanceById = getConnectorInstanceById as jest.Mock;
       mockGetConnectorInstanceById.mockResolvedValueOnce({
-        metadata: { target: connectorTarget },
+        metadata: { target: 'connectorTarget' },
       });
     });
     afterEach(() => {
@@ -451,4 +428,3 @@ describe('sessionSocialRoutes', () => {
     });
   });
 });
-/* eslint-enable max-lines */
