@@ -69,7 +69,7 @@ describe('sessionPasswordlessRoutes', () => {
         jti: 'jti',
       });
     });
-    it('it should call sendPasscode', async () => {
+    it('should call sendPasscode', async () => {
       const response = await sessionRequest
         .post('/session/sign-in/passwordless/sms/send-passcode')
         .send({ phone: '13000000000' });
@@ -118,7 +118,7 @@ describe('sessionPasswordlessRoutes', () => {
         jti: 'jti',
       });
     });
-    it('it should call sendPasscode', async () => {
+    it('should call sendPasscode', async () => {
       const response = await sessionRequest
         .post('/session/sign-in/passwordless/email/send-passcode')
         .send({ email: 'a@a.com' });
@@ -168,7 +168,7 @@ describe('sessionPasswordlessRoutes', () => {
       });
     });
 
-    it('it should call sendPasscode', async () => {
+    it('should call sendPasscode', async () => {
       const response = await sessionRequest
         .post('/session/register/passwordless/sms/send-passcode')
         .send({ phone: '13000000001' });
@@ -216,7 +216,7 @@ describe('sessionPasswordlessRoutes', () => {
       );
     });
 
-    it('throw error if phone not valid (characters other than digits)', async () => {
+    it('throw error if phone is invalid (characters other than digits)', async () => {
       const response = await sessionRequest
         .post('/session/register/passwordless/sms/verify-passcode')
         .send({ phone: '1300000000a', code: '1234' });
@@ -252,7 +252,7 @@ describe('sessionPasswordlessRoutes', () => {
       });
     });
 
-    it('it should call sendPasscode', async () => {
+    it('should call sendPasscode', async () => {
       const response = await sessionRequest
         .post('/session/register/passwordless/email/send-passcode')
         .send({ email: 'b@a.com' });
