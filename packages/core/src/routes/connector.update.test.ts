@@ -88,6 +88,7 @@ describe('connector PATCH routes', () => {
         expect.objectContaining({
           where: { id: 'id' },
           set: { enabled: true },
+          jsonbMode: 'merge',
         })
       );
       expect(response.body).toMatchObject({
@@ -126,6 +127,7 @@ describe('connector PATCH routes', () => {
         expect.objectContaining({
           where: { id: 'id' },
           set: { enabled: false },
+          jsonbMode: 'merge',
         })
       );
       expect(response.body).toMatchObject({
@@ -160,6 +162,7 @@ describe('connector PATCH routes', () => {
         expect.objectContaining({
           where: { id: 'id1' },
           set: { enabled: false },
+          jsonbMode: 'merge',
         })
       );
       expect(updateConnector).toHaveBeenNthCalledWith(
@@ -167,6 +170,7 @@ describe('connector PATCH routes', () => {
         expect.objectContaining({
           where: { id: 'id5' },
           set: { enabled: false },
+          jsonbMode: 'merge',
         })
       );
       expect(updateConnector).toHaveBeenNthCalledWith(
@@ -174,6 +178,7 @@ describe('connector PATCH routes', () => {
         expect.objectContaining({
           where: { id: 'id1' },
           set: { enabled: true },
+          jsonbMode: 'merge',
         })
       );
       expect(response.body).toMatchObject({
@@ -214,6 +219,7 @@ describe('connector PATCH routes', () => {
         expect.objectContaining({
           where: { id: 'id' },
           set: { enabled: false },
+          jsonbMode: 'merge',
         })
       );
       expect(response.body).toMatchObject({
@@ -270,6 +276,7 @@ describe('connector PATCH routes', () => {
         expect.objectContaining({
           where: { id: 'id' },
           set: { config: { cliend_id: 'client_id', client_secret: 'client_secret' } },
+          jsonbMode: 'replace',
         })
       );
       expect(response.body).toMatchObject({

@@ -132,7 +132,7 @@ describe('application query', () => {
       return createMockQueryResult([{ id, description }]);
     });
 
-    await updateApplicationById(id, { description });
+    await updateApplicationById(id, { description }, 'merge');
   });
 
   it('deleteApplicationById', async () => {

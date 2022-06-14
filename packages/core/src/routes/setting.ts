@@ -20,7 +20,7 @@ export default function settingRoutes<T extends AuthedRouter>(router: T) {
     }),
     async (ctx, next) => {
       const { body: partialSettings } = ctx.guard;
-      const { id, ...rest } = await updateSetting(partialSettings);
+      const { id, ...rest } = await updateSetting(partialSettings, 'merge');
       ctx.body = rest;
 
       return next();

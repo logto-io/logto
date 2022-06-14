@@ -146,7 +146,7 @@ describe('resource query', () => {
       return createMockQueryResult([mockResource]);
     });
 
-    await expect(updateResourceById(id, { name })).resolves.toEqual(mockResource);
+    await expect(updateResourceById(id, { name }, 'merge')).resolves.toEqual(mockResource);
   });
 
   it('deleteResourceById', async () => {

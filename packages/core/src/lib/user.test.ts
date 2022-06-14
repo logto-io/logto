@@ -69,7 +69,8 @@ describe('updateLastSignIn()', () => {
     await updateLastSignInAt('user-id');
     expect(updateUserById).toHaveBeenCalledWith(
       'user-id',
-      expect.objectContaining({ lastSignInAt: new Date('2020-01-01').getTime() })
+      expect.objectContaining({ lastSignInAt: new Date('2020-01-01').getTime() }),
+      'merge'
     );
   });
 });

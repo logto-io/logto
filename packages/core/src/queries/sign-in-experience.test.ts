@@ -70,6 +70,6 @@ describe('sign-in-experience query', () => {
       return createMockQueryResult([dbvalue]);
     });
 
-    await expect(updateDefaultSignInExperience({ termsOfUse })).resolves.toEqual(dbvalue);
+    await expect(updateDefaultSignInExperience({ termsOfUse }, 'merge')).resolves.toEqual(dbvalue);
   });
 });

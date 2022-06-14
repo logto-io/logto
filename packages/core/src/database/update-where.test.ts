@@ -1,9 +1,10 @@
-import { CreateUser, Users, Applications } from '@logto/schemas';
+import { CreateUser, Users, Applications, User } from '@logto/schemas';
 
 import envSet from '@/env-set';
 import { UpdateError } from '@/errors/SlonikError';
 import { createTestPool } from '@/utils/test-utils';
 
+import { UpdateWhereData } from './types';
 import { buildUpdateWhere } from './update-where';
 
 const poolSpy = jest.spyOn(envSet, 'pool', 'get');
@@ -20,6 +21,7 @@ describe('buildUpdateWhere()', () => {
       updateWhere({
         set: { username: '123' },
         where: { id: 'foo', username: '456' },
+        jsonbMode: 'merge',
       })
     ).resolves.toBe(undefined);
   });
@@ -47,6 +49,7 @@ describe('buildUpdateWhere()', () => {
       updateWhere({
         set: { username: '123', primaryEmail: 'foo@bar.com', applicationId: 'bar' },
         where: { id: 'foo' },
+        jsonbMode: 'merge',
       })
     ).resolves.toStrictEqual(user);
   });
@@ -66,6 +69,7 @@ describe('buildUpdateWhere()', () => {
       updateWhere({
         set: { customClientMetadata: { idTokenTtl: 3600 } },
         where: { id: 'foo' },
+        jsonbMode: 'merge',
       })
     ).resolves.toStrictEqual({ id: 'foo', customClientMetadata: '{"idTokenTtl":3600}' });
   });
@@ -82,6 +86,7 @@ describe('buildUpdateWhere()', () => {
       updateWhere({
         set: { username: '123', id: undefined },
         where: { id: 'foo', username: '456' },
+        jsonbMode: 'merge',
       })
     ).rejects.toMatchError(new Error(`Cannot convert id to primitive`));
   });
@@ -91,7 +96,11 @@ describe('buildUpdateWhere()', () => {
     poolSpy.mockReturnValue(pool);
 
     const updateWhere = buildUpdateWhere(Users, true);
-    const updateWhereData = { set: { username: '123' }, where: { id: 'foo' } };
+    const updateWhereData: UpdateWhereData<User> = {
+      set: { username: '123' },
+      where: { id: 'foo' },
+      jsonbMode: 'merge',
+    };
 
     await expect(updateWhere(updateWhereData)).rejects.toMatchError(
       new UpdateError(Users, updateWhereData)
@@ -105,8 +114,14 @@ describe('buildUpdateWhere()', () => {
     poolSpy.mockReturnValue(pool);
 
     const updateWhere = buildUpdateWhere(Users, true);
-    const updateData = { set: { username: '123' }, where: { username: 'foo' } };
+    const updateWhereData: UpdateWhereData<User> = {
+      set: { username: '123' },
+      where: { username: 'foo' },
+      jsonbMode: 'merge',
+    };
 
-    await expect(updateWhere(updateData)).rejects.toMatchError(new UpdateError(Users, updateData));
+    await expect(updateWhere(updateWhereData)).rejects.toMatchError(
+      new UpdateError(Users, updateWhereData)
+    );
   });
 });

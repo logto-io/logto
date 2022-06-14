@@ -50,7 +50,11 @@ describe('koaSlonikErrorHandler middleware', () => {
   });
 
   it('Update Error', async () => {
-    const error = new UpdateError(Users, { set: { name: 'punk' }, where: { id: '123' } });
+    const error = new UpdateError(Users, {
+      set: { name: 'punk' },
+      where: { id: '123' },
+      jsonbMode: 'merge',
+    });
     next.mockImplementationOnce(() => {
       throw error;
     });

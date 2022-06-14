@@ -61,7 +61,7 @@ export default function signInExperiencesRoutes<T extends AuthedRouter>(router: 
       const signInExperience =
         signInMethods && isEnabled(signInMethods.social) ? ctx.guard.body : rest;
 
-      ctx.body = await updateDefaultSignInExperience(signInExperience);
+      ctx.body = await updateDefaultSignInExperience(signInExperience, 'merge');
 
       return next();
     }

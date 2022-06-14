@@ -35,6 +35,6 @@ export const saveUserFirstConsentedAppId = async (userId: string, applicationId:
 
   if (!firstConsentedAppId) {
     // Save application id that the user first consented
-    await updateUserById(userId, { applicationId });
+    await updateUserById(userId, { applicationId }, 'merge');
   }
 };

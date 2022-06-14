@@ -83,9 +83,13 @@ export default function applicationRoutes<T extends AuthedRouter>(router: T) {
         body,
       } = ctx.guard;
 
-      ctx.body = await updateApplicationById(id, {
-        ...body,
-      });
+      ctx.body = await updateApplicationById(
+        id,
+        {
+          ...body,
+        },
+        'merge'
+      );
 
       return next();
     }

@@ -80,7 +80,9 @@ describe('connector queries', () => {
       return createMockQueryResult([{ id, enabled }]);
     });
 
-    await expect(updateConnector({ where: { id }, set: { enabled } })).resolves.toEqual({
+    await expect(
+      updateConnector({ where: { id }, set: { enabled }, jsonbMode: 'merge' })
+    ).resolves.toEqual({
       id,
       enabled,
     });

@@ -114,8 +114,11 @@ export const findUsers = async (limit: number, offset: number, search?: string) 
 
 const updateUser = buildUpdateWhere<CreateUser, User>(Users, true);
 
-export const updateUserById = async (id: string, set: Partial<OmitAutoSetFields<CreateUser>>) =>
-  updateUser({ set, where: { id } });
+export const updateUserById = async (
+  id: string,
+  set: Partial<OmitAutoSetFields<CreateUser>>,
+  jsonbMode: 'replace' | 'merge'
+) => updateUser({ set, where: { id }, jsonbMode });
 
 export const deleteUserById = async (id: string) => {
   const { rowCount } = await envSet.pool.query(sql`
@@ -136,7 +139,7 @@ export const clearUserCustomDataById = async (id: string) => {
   `);
 
   if (rowCount < 1) {
-    throw new UpdateError(Users, { set: { customData: {} }, where: { id } });
+    throw new UpdateError(Users, { set: { customData: {} }, where: { id }, jsonbMode: 'replace' });
   }
 };
 

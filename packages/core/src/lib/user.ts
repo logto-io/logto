@@ -57,4 +57,4 @@ export const findUserByUsernameAndPassword = async (
 };
 
 export const updateLastSignInAt = async (userId: string) =>
-  updateUserById(userId, { lastSignInAt: Date.now() });
+  updateUserById(userId, { lastSignInAt: Date.now() }, 'merge');

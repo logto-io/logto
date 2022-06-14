@@ -142,9 +142,13 @@ export default function adminUserRoutes<T extends AuthedRouter>(router: T) {
         }
       }
 
-      const user = await updateUserById(userId, {
-        ...body,
-      });
+      const user = await updateUserById(
+        userId,
+        {
+          ...body,
+        },
+        'merge'
+      );
 
       ctx.body = pick(user, ...userInfoSelectFields);
 
@@ -168,10 +172,14 @@ export default function adminUserRoutes<T extends AuthedRouter>(router: T) {
 
       const { passwordEncrypted, passwordEncryptionMethod } = await encryptUserPassword(password);
 
-      const user = await updateUserById(userId, {
-        passwordEncrypted,
-        passwordEncryptionMethod,
-      });
+      const user = await updateUserById(
+        userId,
+        {
+          passwordEncrypted,
+          passwordEncryptionMethod,
+        },
+        'merge'
+      );
 
       ctx.body = pick(user, ...userInfoSelectFields);
 

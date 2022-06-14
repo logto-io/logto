@@ -78,7 +78,7 @@ export default function resourceRoutes<T extends AuthedRouter>(router: T) {
         body,
       } = ctx.guard;
 
-      const resource = await updateResourceById(id, body);
+      const resource = await updateResourceById(id, body, 'merge');
       ctx.body = resource;
 
       return next();
