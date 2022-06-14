@@ -150,7 +150,7 @@ const translation = {
       select_application_type: '选择一个应用类型',
       no_application_type_selected: '你还没有选用任意一种应用类型.',
       application_created: '应用 {{name}} 成功创建! \n现在请完成你的应用设置.',
-      client_id: 'Client ID',
+      app_id: 'App ID',
       type: {
         native: {
           title: '原生应用',

@@ -80,7 +80,7 @@ const Applications = () => {
           <thead>
             <tr>
               <th>{t('applications.application_name')}</th>
-              <th>{t('applications.client_id')}</th>
+              <th>{t('applications.app_id')}</th>
             </tr>
           </thead>
           <tbody>
