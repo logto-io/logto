@@ -320,8 +320,8 @@ describe('adminUserRoutes', () => {
 
   it('DELETE /users/:userId/identities/:connectorId should throw if user found and connector is not found', async () => {
     const arbitraryUserId = 'arbitraryUserId';
-    const notExistedConnectorId = 'notExistedConnectorId';
-    const notExistedTarget = 'notExistedTarget';
+    const nonExistentConnectorId = 'nonExistentConnectorId';
+    const nonExistentTarget = 'nonExistentTarget';
     const mockedFindUserById = findUserById as jest.Mock;
     mockedFindUserById.mockImplementationOnce((userId) => {
       if (userId === arbitraryUserId) {
@@ -330,10 +330,10 @@ describe('adminUserRoutes', () => {
     });
     const mockGetConnectorInstanceById = getConnectorInstanceById as jest.Mock;
     mockGetConnectorInstanceById.mockResolvedValueOnce({
-      metadata: { target: notExistedTarget },
+      metadata: { target: nonExistentTarget },
     });
     await expect(
-      userRequest.delete(`/users/${arbitraryUserId}/identities/${notExistedConnectorId}`)
+      userRequest.delete(`/users/${arbitraryUserId}/identities/${nonExistentConnectorId}`)
     ).resolves.toHaveProperty('status', 404);
     expect(deleteUserIdentity).not.toHaveBeenCalled();
   });
