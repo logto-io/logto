@@ -1,4 +1,4 @@
-# Integrate SDK
+# Integrate Logto
 
 We provide a bunch of SDKs to let you integrate Logto with frontend clients with ease. If you are using traditional web technology (i.e., server directly renders frontend), please check out our integration guide.
 
