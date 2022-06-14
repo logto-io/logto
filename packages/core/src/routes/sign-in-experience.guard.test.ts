@@ -67,9 +67,16 @@ describe('terms of use', () => {
       }
     );
 
-    test.each([null, '', ' \t\n\r', 'non-url'])('%p should fail', async (contentUrl) => {
+    test.each([null, ' \t\n\r', 'non-url'])('%p should fail', async (contentUrl) => {
       const signInExperience = { termsOfUse: { ...mockTermsOfUse, enabled: false, contentUrl } };
       await expectPatchResponseStatus(signInExperience, 400);
+    });
+
+    test('should allow empty contentUrl', async () => {
+      const signInExperience = {
+        termsOfUse: { ...mockTermsOfUse, enabled: false, contentUrl: '' },
+      };
+      await expectPatchResponseStatus(signInExperience, 200);
     });
   });
 });
