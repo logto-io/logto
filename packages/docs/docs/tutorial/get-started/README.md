@@ -4,12 +4,12 @@ sidebar_position: 2
 
 # Get Started
 
-Before we start, it'll be good to know how Logto works. To simplify, we divide Logto into four parts: Admin Console, Sign-in Experience, Core Service, and SDK.
+Before we start, it'll be good to know how Logto works. To simplify, we divide Logto into four parts: Admin Console, Sign-in Experience, Core Service, and SDKs.
 
 - **Admin Console** is a web app that will be your friend for customizing sign in and managing users.
 - **Sign-in Experience** is the UI that directly faces your end-users, including signing in, creating an account, etc.
 - **Core Service** is the foundation of Logto, which provides essential APIs to support everything else.
-- **SDK** is the bridge between your application and Logto.
+- **SDKs** are the bridges between your application and Logto.
 
 :::note
 **TBD** need a simple infra figure here
@@ -33,8 +33,8 @@ For now, you cannot create multiple admin accounts via Admin Console, and only t
 
 On the create account page, enter your username and password to continue.
 
-## Get Started Guide
+## "Get Started" Tab
 
-Once we create the admin account, the browser will redirect you to the "Get Started" tab in Admin Console, which shows a few things that let you glance at what Logto can do.
+Once you create the admin account, the browser will redirect you to the "Get Started" tab in Admin Console, which shows a few things that Logto can do at a glance.
 
 Our tutorial will follow the order you are seeing. So let's begin!

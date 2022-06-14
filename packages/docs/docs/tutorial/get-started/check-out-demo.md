@@ -15,5 +15,5 @@ Logto has only one user identity system as the single source of truth, so you ca
 The app itself is pretty simple: a congrats page with your Username and User ID, followed by a sign-out button.
 
 :::tip
-Sign out the demo app before proceeding. After finishing the "Customize sign-in experience" section, open the demo app again to see the changes.
+Sign out the demo app before further explorations. After finishing the "Customize sign-in experience" section, open the demo app again to see the changes.
 :::
