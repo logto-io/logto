@@ -1,7 +1,0 @@
-{
-  // Just make IDE happy
-  "extends": "@tsconfig/docusaurus/tsconfig.json",
-  "compilerOptions": {
-    "baseUrl": "."
-  }
-}
