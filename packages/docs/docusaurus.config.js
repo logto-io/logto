@@ -82,6 +82,10 @@ const config = {
         ],
       },
       footer: {
+        logo: {
+          alt: 'Logto Logo',
+          src: 'img/footer-logo.svg',
+        },
         style: 'dark',
         links: [
           {
@@ -96,15 +100,23 @@ const config = {
           {
             title: 'Community',
             items: [
+              {
+                label: 'GitHub',
+                href: 'https://github.com/logto-io/logto',
+              },
             ],
           },
           {
             title: 'More',
             items: [
               {
-                label: 'GitHub',
-                href: 'https://github.com/logto-io/logto',
+                label: 'About Us',
+                href: 'https://logto-io.github.io/website/about',
               },
+              {
+                label: 'Contact Us',
+                href: 'mailto: contact@logto.io'
+              }
             ],
           },
         ],
