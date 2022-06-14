@@ -4,7 +4,7 @@ on:
   push:
 
 concurrency: 
-  group: ${{ github.ref }}
+  group: integration-test-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:

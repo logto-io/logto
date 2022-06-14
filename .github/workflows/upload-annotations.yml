@@ -7,7 +7,7 @@ on:
     branches: [master]
 
 concurrency: 
-  group: ${{ github.ref }}
+  group: upload-annotations-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:

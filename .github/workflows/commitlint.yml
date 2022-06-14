@@ -5,7 +5,7 @@ on:
     types: [opened, edited, synchronize, reopened]
 
 concurrency: 
-  group: ${{ github.ref }}
+  group: commitlint-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
