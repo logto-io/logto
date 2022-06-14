@@ -4,6 +4,7 @@ import { OpenAPIV3 } from 'openapi-types';
 import { ZodObject, ZodOptional } from 'zod';
 
 import { isGuardMiddleware, WithGuardConfig } from '@/middleware/koa-guard';
+import { isPaginationMiddleware, fallbackDefaultPageSize } from '@/middleware/koa-pagination';
 import assertThat from '@/utils/assert-that';
 import { zodTypeToSwagger } from '@/utils/zod';
 
@@ -18,6 +19,29 @@ type RouteObject = {
 type MethodMap = {
   [key in OpenAPIV3.HttpMethods]?: OpenAPIV3.OperationObject;
 };
+
+export const paginationParameters: OpenAPIV3.ParameterObject[] = [
+  {
+    name: 'page',
+    in: 'query',
+    required: false,
+    schema: {
+      type: 'integer',
+      minimum: 1,
+      default: 1,
+    },
+  },
+  {
+    name: 'page_size',
+    in: 'query',
+    required: false,
+    schema: {
+      type: 'integer',
+      minimum: 1,
+      default: fallbackDefaultPageSize,
+    },
+  },
+];
 
 // Parameter serialization: https://swagger.io/docs/specification/serialization
 const buildParameters = (
@@ -42,6 +66,7 @@ const buildOperation = (stack: IMiddleware[], path: string): OpenAPIV3.Operation
   const guard = stack.find((function_): function_ is WithGuardConfig<IMiddleware> =>
     isGuardMiddleware(function_)
   );
+  const hasPagination = Boolean(stack.some((function_) => isPaginationMiddleware(function_)));
 
   const body = guard?.config.body;
   const requestBody = body && {
@@ -54,7 +79,10 @@ const buildOperation = (stack: IMiddleware[], path: string): OpenAPIV3.Operation
   };
 
   const pathParameters = buildParameters(guard?.config.params, 'path');
-  const queryParameters = buildParameters(guard?.config.query, 'query');
+  const queryParameters = [
+    ...buildParameters(guard?.config.query, 'query'),
+    ...(hasPagination ? paginationParameters : []),
+  ];
 
   return {
     tags: [toTitle(path.split('/')[1] ?? 'General')],
