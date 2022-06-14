@@ -29,14 +29,14 @@ export const buildUpdateWhere: BuildUpdateWhere = <
 ) => {
   const { table, fields } = convertToIdentifiers(schema);
   const isKeyOfSchema = isKeyOf(schema);
-  const connectKeyValueWithEqualSign = (data: Partial<Schema>) =>
+  const connectKeyValueWithEqualSign = (data: Partial<Schema>, jsonbMode: 'replace' | 'merge') =>
     Object.entries(data)
       .map(([key, value]) => {
         if (!isKeyOfSchema(key)) {
           return;
         }
 
-        if (value && typeof value === 'object' && !Array.isArray(value)) {
+        if (jsonbMode === 'merge' && value && typeof value === 'object' && !Array.isArray(value)) {
           /**
            * Jsonb || operator is used to shallow merge two jsonb types of data
            * all jsonb data field must be non-nullable
@@ -52,17 +52,17 @@ export const buildUpdateWhere: BuildUpdateWhere = <
       })
       .filter((value): value is Truthy<typeof value> => notFalsy(value));
 
-  return async ({ set, where }: UpdateWhereData<Schema>) => {
+  return async ({ set, where, jsonbMode }: UpdateWhereData<Schema>) => {
     const {
       rows: [data],
     } = await envSet.pool.query<ReturnType>(sql`
       update ${table}
-      set ${sql.join(connectKeyValueWithEqualSign(set), sql`, `)}
-      where ${sql.join(connectKeyValueWithEqualSign(where), sql` and `)}
+      set ${sql.join(connectKeyValueWithEqualSign(set, jsonbMode), sql`, `)}
+      where ${sql.join(connectKeyValueWithEqualSign(where, jsonbMode), sql` and `)}
       ${conditionalSql(returning, () => sql`returning *`)}
     `);
 
-    assertThat(!returning || data, new UpdateError(schema, { set, where }));
+    assertThat(!returning || data, new UpdateError(schema, { set, where, jsonbMode }));
 
     return data;
   };

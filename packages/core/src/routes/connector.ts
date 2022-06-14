@@ -108,12 +108,16 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
                 connector.metadata.type === metadata.type && connector.connector.enabled
             )
             .map(async ({ connector: { id } }) =>
-              updateConnector({ set: { enabled: false }, where: { id } })
+              updateConnector({ set: { enabled: false }, where: { id }, jsonbMode: 'merge' })
             )
         );
       }
 
-      const connector = await updateConnector({ set: { enabled }, where: { id } });
+      const connector = await updateConnector({
+        set: { enabled },
+        where: { id },
+        jsonbMode: 'merge',
+      });
       ctx.body = { ...connector, metadata };
 
       return next();
@@ -137,7 +141,7 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
         await validateConfig(body.config);
       }
 
-      const connector = await updateConnector({ set: body, where: { id } });
+      const connector = await updateConnector({ set: body, where: { id }, jsonbMode: 'replace' });
       ctx.body = { ...connector, metadata };
 
       return next();

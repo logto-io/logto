@@ -20,4 +20,5 @@ export type FindManyData<Schema extends SchemaLike> = {
 export type UpdateWhereData<Schema extends SchemaLike> = {
   set: Partial<Schema>;
   where: Partial<Schema>;
+  jsonbMode: 'replace' | 'merge';
 };

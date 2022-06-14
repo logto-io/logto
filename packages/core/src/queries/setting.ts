@@ -16,9 +16,12 @@ export const getSetting = async () =>
     where ${fields.id}=${defaultSettingId}
   `);
 
-export const updateSetting = async (setting: Partial<OmitAutoSetFields<CreateSetting>>) => {
+export const updateSetting = async (
+  setting: Partial<OmitAutoSetFields<CreateSetting>>,
+  jsonbMode: 'replace' | 'merge' = 'merge'
+) => {
   return buildUpdateWhere<CreateSetting, Setting>(
     Settings,
     true
-  )({ set: setting, where: { id: defaultSettingId } });
+  )({ set: setting, where: { id: defaultSettingId }, jsonbMode });
 };

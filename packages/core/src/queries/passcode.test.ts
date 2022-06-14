@@ -112,7 +112,9 @@ describe('passcode query', () => {
       return createMockQueryResult([{ ...mockPasscode, tryCount }]);
     });
 
-    await expect(updatePasscode({ where: { id }, set: { tryCount } })).resolves.toEqual({
+    await expect(
+      updatePasscode({ where: { id }, set: { tryCount }, jsonbMode: 'merge' })
+    ).resolves.toEqual({
       ...mockPasscode,
       tryCount,
     });
