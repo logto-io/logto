@@ -9,10 +9,11 @@ type Props = {
   subtitle?: ReactNode;
   icon?: ReactNode;
   to?: To;
+  locationState?: any;
   size?: 'default' | 'compact';
 };
 
-const ItemPreview = ({ title, subtitle, icon, to, size = 'default' }: Props) => {
+const ItemPreview = ({ title, subtitle, icon, to, locationState, size = 'default' }: Props) => {
   return (
     <div className={classNames(styles.item, styles[size])}>
       {icon && <div className={styles.icon}>{icon}</div>}
@@ -21,6 +22,8 @@ const ItemPreview = ({ title, subtitle, icon, to, size = 'default' }: Props) => 
           <Link
             className={styles.title}
             to={to}
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+            state={locationState}
             onClick={(event) => {
               event.stopPropagation();
             }}

@@ -35,6 +35,8 @@ const Applications = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const [query, setQuery] = useSearchParams();
   const pageIndex = Number(query.get('page') ?? '1');
+  const locationState = { page: `${pageIndex}` };
+
   const { data, error, mutate } = useSWR<[Application[], number], RequestError>(
     `/api/applications?page=${pageIndex}&page_size=${pageSize}`
   );
@@ -108,7 +110,7 @@ const Applications = () => {
                 key={id}
                 className={tableStyles.clickable}
                 onClick={() => {
-                  navigate(`/applications/${id}`);
+                  navigate(`/applications/${id}`, { state: locationState });
                 }}
               >
                 <td>
@@ -117,6 +119,7 @@ const Applications = () => {
                     subtitle={t(`${applicationTypeI18nKey[type]}.title`)}
                     icon={<img src={ApplicationIcon[type]} />}
                     to={`/applications/${id}`}
+                    locationState={locationState}
                   />
                 </td>
                 <td>

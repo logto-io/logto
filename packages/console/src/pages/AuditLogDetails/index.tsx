@@ -1,9 +1,10 @@
 import { LogDTO } from '@logto/schemas';
+import { conditionalString } from '@silverhand/essentials';
 import classNames from 'classnames';
 import dayjs from 'dayjs';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { useParams } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import useSWR from 'swr';
 
 import ApplicationName from '@/components/ApplicationName';
@@ -17,11 +18,16 @@ import { logEventTitle } from '@/consts/logs';
 import { RequestError } from '@/hooks/use-api';
 import Back from '@/icons/Back';
 import * as detailsStyles from '@/scss/details.module.scss';
+import { queryStringify } from '@/utilities/query-stringify';
 
 import EventIcon from './components/EventIcon';
 import * as styles from './index.module.scss';
 
 const AuditLogDetails = () => {
+  const { state: locationState } = useLocation();
+  const backLink = `/audit-logs${conditionalString(
+    locationState && `?${queryStringify(locationState as Record<string, string>)}`
+  )}`;
   const { logId } = useParams();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { data, error } = useSWR<LogDTO, RequestError>(logId && `/api/logs/${logId}`);
@@ -30,7 +36,7 @@ const AuditLogDetails = () => {
   return (
     <div className={detailsStyles.container}>
       <LinkButton
-        to="/audit-logs"
+        to={backLink}
         icon={<Back />}
         title="admin_console.log_details.back_to_logs"
         className={styles.backLink}
@@ -87,7 +93,7 @@ const AuditLogDetails = () => {
           </Card>
           <Card className={classNames(styles.body, detailsStyles.body)}>
             <TabNav>
-              <TabNavItem href={`/audit-logs/${logId ?? ''}`}>
+              <TabNavItem href={`/audit-logs/${logId ?? ''}`} locationState={locationState}>
                 {t('log_details.tab_details')}
               </TabNavItem>
             </TabNav>

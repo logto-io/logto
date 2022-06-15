@@ -1,5 +1,5 @@
 import { User } from '@logto/schemas';
-import { conditionalString } from '@silverhand/essentials';
+import { conditional, conditionalString } from '@silverhand/essentials';
 import classNames from 'classnames';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -35,11 +35,13 @@ const Users = () => {
   const [query, setQuery] = useSearchParams();
   const pageIndex = Number(query.get('page') ?? '1');
   const keyword = query.get('search') ?? '';
+  const locationState = { page: `${pageIndex}`, ...conditional(keyword && { search: keyword }) };
   const { data, error, mutate } = useSWR<[User[], number], RequestError>(
     `/api/users?page=${pageIndex}&page_size=${pageSize}${conditionalString(
       keyword && `&search=${keyword}`
     )}`
   );
+
   const isLoading = !data && !error;
   const navigate = useNavigate();
   const [users, totalCount] = data ?? [];
@@ -120,7 +122,7 @@ const Users = () => {
                 key={id}
                 className={tableStyles.clickable}
                 onClick={() => {
-                  navigate(`/users/${id}`);
+                  navigate(`/users/${id}`, { state: locationState });
                 }}
               >
                 <td>
@@ -129,6 +131,7 @@ const Users = () => {
                     subtitle={conditionalString(username)}
                     icon={<img className={styles.avatar} src={avatar ?? getAvatarById(id)} />}
                     to={`/users/${id}`}
+                    locationState={locationState}
                     size="compact"
                   />
                 </td>

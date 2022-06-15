@@ -34,6 +34,7 @@ const ApiResources = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const [query, setQuery] = useSearchParams();
   const pageIndex = Number(query.get('page') ?? '1');
+  const locationState = { page: `${pageIndex}` };
   const { data, error, mutate } = useSWR<[Resource[], number], RequestError>(
     `/api/resources?page=${pageIndex}&page_size=${pageSize}`
   );
@@ -110,7 +111,7 @@ const ApiResources = () => {
                 key={id}
                 className={tableStyles.clickable}
                 onClick={() => {
-                  navigate(buildDetailsLink(id));
+                  navigate(buildDetailsLink(id), { state: locationState });
                 }}
               >
                 <td>
@@ -118,6 +119,7 @@ const ApiResources = () => {
                     title={name}
                     icon={<img src={apiResourceIcon} />}
                     to={buildDetailsLink(id)}
+                    locationState={locationState}
                   />
                 </td>
                 <td>

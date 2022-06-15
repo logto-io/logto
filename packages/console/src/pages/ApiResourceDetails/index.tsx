@@ -1,4 +1,5 @@
 import { Resource } from '@logto/schemas';
+import { conditionalString } from '@silverhand/essentials';
 import classNames from 'classnames';
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -25,6 +26,7 @@ import Delete from '@/icons/Delete';
 import More from '@/icons/More';
 import * as detailsStyles from '@/scss/details.module.scss';
 import * as modalStyles from '@/scss/modal.module.scss';
+import { queryStringify } from '@/utilities/query-stringify';
 
 import DeleteForm from './components/DeleteForm';
 import * as styles from './index.module.scss';
@@ -35,9 +37,13 @@ type FormData = {
 };
 
 const ApiResourceDetails = () => {
-  const location = useLocation();
+  const { pathname, state: locationState } = useLocation();
   const { id } = useParams();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+
+  const backLink = `/api-resources${conditionalString(
+    locationState && `?${queryStringify(locationState as Record<string, string>)}`
+  )}`;
 
   const { data, error, mutate } = useSWR<Resource, RequestError>(id && `/api/resources/${id}`);
   const isLoading = !data && !error;
@@ -78,7 +84,7 @@ const ApiResourceDetails = () => {
   return (
     <div className={detailsStyles.container}>
       <LinkButton
-        to="/api-resources"
+        to={backLink}
         icon={<Back />}
         title="admin_console.api_resource_details.back_to_api_resources"
         className={styles.backLink}
@@ -143,7 +149,7 @@ const ApiResourceDetails = () => {
           </Card>
           <Card className={classNames(styles.body, detailsStyles.body)}>
             <TabNav>
-              <TabNavItem href={location.pathname}>{t('api_resource_details.settings')}</TabNavItem>
+              <TabNavItem href={pathname}>{t('api_resource_details.settings')}</TabNavItem>
             </TabNav>
             <form className={classNames(styles.form, detailsStyles.body)} onSubmit={onSubmit}>
               <div className={styles.fields}>

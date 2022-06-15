@@ -1,8 +1,9 @@
+import { I18nKey } from '@logto/phrases';
 import { User } from '@logto/schemas';
-import { Nullable } from '@silverhand/essentials';
+import { conditionalString, Nullable } from '@silverhand/essentials';
 import classNames from 'classnames';
 import React, { useEffect, useState } from 'react';
-import { Controller, useController, useForm } from 'react-hook-form';
+import { Controller, FieldPath, useController, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import ReactModal from 'react-modal';
@@ -29,6 +30,7 @@ import Reset from '@/icons/Reset';
 import * as detailsStyles from '@/scss/details.module.scss';
 import * as modalStyles from '@/scss/modal.module.scss';
 import { safeParseJson } from '@/utilities/json';
+import { queryStringify } from '@/utilities/query-stringify';
 import { uriValidator } from '@/utilities/validator';
 
 import CreateSuccess from './components/CreateSuccess';
@@ -49,13 +51,15 @@ type FormData = {
 };
 
 const UserDetails = () => {
-  const location = useLocation();
-  const isLogs = location.pathname.endsWith('/logs');
+  const { pathname, state: locationState } = useLocation();
+  const isLogs = pathname.endsWith('/logs');
   const { id } = useParams();
+  const backLink = `/users${conditionalString(
+    locationState && `?${queryStringify(locationState as Record<string, string>)}`
+  )}`;
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const [isDeleteFormOpen, setIsDeleteFormOpen] = useState(false);
   const [isResetPasswordFormOpen, setIsResetPasswordFormOpen] = useState(false);
-
   const { data, error, mutate } = useSWR<User, RequestError>(id && `/api/users/${id}`);
   const isLoading = !data && !error;
 
@@ -108,10 +112,17 @@ const UserDetails = () => {
     toast.success(t('user_details.saved'));
   });
 
+  const renderReadOnlyField = (field: FieldPath<FormData>, title: I18nKey) =>
+    getValues(field) && (
+      <FormField title={title} className={styles.textField}>
+        <TextInput readOnly {...register(field)} />
+      </FormField>
+    );
+
   return (
     <div className={detailsStyles.container}>
       <LinkButton
-        to="/users"
+        to={backLink}
         icon={<Back />}
         title="admin_console.user_details.back_to_users"
         className={styles.backLink}
@@ -186,8 +197,12 @@ const UserDetails = () => {
           </Card>
           <Card className={classNames(styles.body, detailsStyles.body)}>
             <TabNav>
-              <TabNavItem href={`/users/${id}`}>{t('user_details.tab_settings')}</TabNavItem>
-              <TabNavItem href={`/users/${id}/logs`}>{t('user_details.tab_logs')}</TabNavItem>
+              <TabNavItem href={`/users/${id}`} locationState={locationState}>
+                {t('user_details.tab_settings')}
+              </TabNavItem>
+              <TabNavItem href={`/users/${id}/logs`} locationState={locationState}>
+                {t('user_details.tab_logs')}
+              </TabNavItem>
             </TabNav>
             {isLogs ? (
               <div className={styles.logs}>
@@ -196,30 +211,9 @@ const UserDetails = () => {
             ) : (
               <form className={styles.form} onSubmit={onSubmit}>
                 <div className={styles.fields}>
-                  {getValues('primaryEmail') && (
-                    <FormField
-                      title="admin_console.user_details.field_email"
-                      className={styles.textField}
-                    >
-                      <TextInput readOnly {...register('primaryEmail')} />
-                    </FormField>
-                  )}
-                  {getValues('primaryPhone') && (
-                    <FormField
-                      title="admin_console.user_details.field_phone"
-                      className={styles.textField}
-                    >
-                      <TextInput readOnly {...register('primaryPhone')} />
-                    </FormField>
-                  )}
-                  {getValues('username') && (
-                    <FormField
-                      title="admin_console.user_details.field_username"
-                      className={styles.textField}
-                    >
-                      <TextInput readOnly {...register('username')} />
-                    </FormField>
-                  )}
+                  {renderReadOnlyField('primaryEmail', 'admin_console.user_details.field_email')}
+                  {renderReadOnlyField('primaryPhone', 'admin_console.user_details.field_phone')}
+                  {renderReadOnlyField('username', 'admin_console.user_details.field_username')}
                   <FormField
                     title="admin_console.user_details.field_name"
                     className={styles.textField}

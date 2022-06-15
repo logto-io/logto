@@ -1,4 +1,5 @@
 import { Application, SnakeCaseOidcConfig } from '@logto/schemas';
+import { conditionalString } from '@silverhand/essentials';
 import classNames from 'classnames';
 import React, { useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
@@ -24,6 +25,7 @@ import More from '@/icons/More';
 import * as detailsStyles from '@/scss/details.module.scss';
 import * as modalStyles from '@/scss/modal.module.scss';
 import { applicationTypeI18nKey } from '@/types/applications';
+import { queryStringify } from '@/utilities/query-stringify';
 
 import AdvancedSettings from './components/AdvancedSettings';
 import DeleteForm from './components/DeleteForm';
@@ -38,11 +40,16 @@ const mapToUriOriginFormatArrays = (value?: string[]) =>
 
 const ApplicationDetails = () => {
   const { id } = useParams();
-  const location = useLocation();
+  const { pathname, state: locationState } = useLocation();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { data, error, mutate } = useSWR<Application, RequestError>(
     id && `/api/applications/${id}`
   );
+
+  const backLink = `/applications${conditionalString(
+    locationState && `?${queryStringify(locationState as Record<string, string>)}`
+  )}`;
+
   const { data: oidcConfig, error: fetchOidcConfigError } = useSWR<
     SnakeCaseOidcConfig,
     RequestError
@@ -96,12 +103,12 @@ const ApplicationDetails = () => {
     toast.success(t('application_details.save_success'));
   });
 
-  const isAdvancedSettings = location.pathname.includes('advanced-settings');
+  const isAdvancedSettings = pathname.includes('advanced-settings');
 
   return (
     <div className={detailsStyles.container}>
       <LinkButton
-        to="/applications"
+        to={backLink}
         icon={<Back />}
         title="admin_console.application_details.back_to_applications"
         className={styles.backLink}
@@ -168,10 +175,13 @@ const ApplicationDetails = () => {
           </Card>
           <Card className={classNames(styles.body, detailsStyles.body)}>
             <TabNav>
-              <TabNavItem href={`/applications/${data.id}/settings`}>
+              <TabNavItem href={`/applications/${data.id}`} locationState={locationState}>
                 {t('application_details.settings')}
               </TabNavItem>
-              <TabNavItem href={`/applications/${data.id}/advanced-settings`}>
+              <TabNavItem
+                href={`/applications/${data.id}/advanced-settings`}
+                locationState={locationState}
+              >
                 {t('application_details.advanced_settings')}
               </TabNavItem>
             </TabNav>

@@ -1,5 +1,5 @@
 import { LogDTO, LogResult } from '@logto/schemas';
-import { conditionalString } from '@silverhand/essentials';
+import { conditional } from '@silverhand/essentials';
 import classNames from 'classnames';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
@@ -14,6 +14,7 @@ import TableLoading from '@/components/Table/TableLoading';
 import UserName from '@/components/UserName';
 import { RequestError } from '@/hooks/use-api';
 import * as tableStyles from '@/scss/table.module.scss';
+import { queryStringify } from '@/utilities/query-stringify';
 
 import ApplicationSelector from './components/ApplicationSelector';
 import EventName from './components/EventName';
@@ -32,15 +33,17 @@ const AuditLogTable = ({ userId }: Props) => {
   const pageIndex = Number(query.get('page') ?? '1');
   const event = query.get('event');
   const applicationId = query.get('applicationId');
-  const queryString = [
-    `page=${pageIndex}`,
-    `page_size=${pageSize}`,
-    conditionalString(event && `logType=${event}`),
-    conditionalString(applicationId && `applicationId=${applicationId}`),
-    conditionalString(userId && `userId=${userId}`),
-  ]
-    .filter(Boolean)
-    .join('&');
+
+  const locationState = {
+    page: `${pageIndex}`,
+    page_size: `${pageSize}`,
+    ...conditional(event && { event }),
+    ...conditional(applicationId && { applicationId }),
+    ...conditional(userId && { userId }),
+  };
+
+  const queryString = queryStringify(locationState);
+
   const { data, error, mutate } = useSWR<[LogDTO[], number], RequestError>(
     `/api/logs?${queryString}`
   );
@@ -114,7 +117,7 @@ const AuditLogTable = ({ userId }: Props) => {
                 key={id}
                 className={tableStyles.clickable}
                 onClick={() => {
-                  navigate(`/audit-logs/${id}`);
+                  navigate(`/audit-logs/${id}`, { state: locationState });
                 }}
               >
                 <td>

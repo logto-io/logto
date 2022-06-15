@@ -6,18 +6,26 @@ import * as styles from './TabNavItem.module.scss';
 
 type Props = {
   href?: string;
+  locationState?: any;
   isActive?: boolean;
   onClick?: () => void;
   children: React.ReactNode;
 };
 
-const TabNavItem = ({ children, href, isActive, onClick }: Props) => {
+const TabNavItem = ({ children, href, locationState, isActive, onClick }: Props) => {
   const location = useLocation();
   const selected = href ? location.pathname === href : isActive;
 
   return (
     <div className={classNames(styles.link, selected && styles.selected)}>
-      {href ? <Link to={href}>{children}</Link> : <a onClick={onClick}>{children}</a>}
+      {href ? (
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        <Link to={href} state={locationState}>
+          {children}
+        </Link>
+      ) : (
+        <a onClick={onClick}>{children}</a>
+      )}
     </div>
   );
 };
