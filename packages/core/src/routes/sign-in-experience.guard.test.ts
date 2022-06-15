@@ -72,11 +72,18 @@ describe('terms of use', () => {
       await expectPatchResponseStatus(signInExperience, 400);
     });
 
-    test('should allow empty contentUrl', async () => {
+    test('should allow empty contentUrl if termsOfUse is disabled', async () => {
       const signInExperience = {
         termsOfUse: { ...mockTermsOfUse, enabled: false, contentUrl: '' },
       };
       await expectPatchResponseStatus(signInExperience, 200);
+    });
+
+    test('should not allow empty contentUrl if termsOfUse is enabled', async () => {
+      const signInExperience = {
+        termsOfUse: { ...mockTermsOfUse, enabled: true, contentUrl: '' },
+      };
+      await expectPatchResponseStatus(signInExperience, 400);
     });
   });
 });
