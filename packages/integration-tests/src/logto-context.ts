@@ -1,18 +1,14 @@
-import {
-  generateCodeVerifier,
-  generateState,
-  generateCodeChallenge,
-  generateSignInUri,
-} from '@logto/js';
-import got, { Response } from 'got/dist/source';
-
-import { authorizationEndpoint, adminConsoleAppId, redirectUri } from './constants';
-import { extractCookie } from './utils';
+import { generateCodeVerifier, generateState, generateCodeChallenge } from '@logto/js';
 
 type ContextData = {
   codeVerifier: string;
+  codeChallenge: string;
   state: string;
+  authorizationCode: string;
   interactionCookie: string;
+  authorizationEndpoint: string;
+  tokenEndpoint: string;
+  nextRedirectTo: string;
 };
 
 type ContextDataKey = keyof ContextData;
@@ -25,8 +21,13 @@ type ContextStore = {
 const createContextStore = (): ContextStore => {
   const data: ContextData = {
     codeVerifier: '',
+    codeChallenge: '',
     state: '',
     interactionCookie: '',
+    authorizationCode: '',
+    authorizationEndpoint: '',
+    tokenEndpoint: '',
+    nextRedirectTo: '',
   };
 
   return {
@@ -46,11 +47,18 @@ type Account = {
 export type LogtoContext = {
   account: Account;
   getCodeVerifier: () => string;
+  getCodeChallenge: () => string;
   getState: () => string;
+  getAuthorizationCode: () => string;
   getInteractionCookie: () => string;
-  startInteraction: () => Promise<void>;
-  resetInteraction: () => void;
+  getNextRedirectTo: () => string;
+  getAuthorizationEndpoint: () => string;
+  getTokenEndpoint: () => string;
+  initInteraction: () => Promise<void>;
   updateCookie: (cookie: string) => void;
+  setNextRedirectTo: (redirectTo: string) => void;
+  setAuthorizationCode: (authorizationCode: string) => void;
+  setUpEndpoints: (endpoints: { authorizationEndpoint: string; tokenEndpoint: string }) => void;
 };
 
 export const createLogtoContext = (account: Account): LogtoContext => {
@@ -58,44 +66,51 @@ export const createLogtoContext = (account: Account): LogtoContext => {
 
   const startInteraction = async () => {
     const codeVerifier = generateCodeVerifier();
-    setData('codeVerifier', codeVerifier);
     const codeChallenge = await generateCodeChallenge(codeVerifier);
-
     const state = generateState();
+
+    setData('codeVerifier', codeVerifier);
+    setData('codeChallenge', codeChallenge);
     setData('state', state);
-
-    const signInUri = generateSignInUri({
-      authorizationEndpoint,
-      clientId: adminConsoleAppId,
-      redirectUri,
-      codeChallenge,
-      state,
-    });
-
-    const response: Response = await got(signInUri, {
-      followRedirect: false,
-    });
-
-    setData('interactionCookie', extractCookie(response));
-  };
-
-  const resetInteraction = () => {
-    setData('codeVerifier', '');
-    setData('state', '');
-    setData('interactionCookie', '');
   };
 
   const updateCookie = (cookie: string) => {
     setData('interactionCookie', cookie);
   };
 
+  const setUpEndpoints = ({
+    authorizationEndpoint,
+    tokenEndpoint,
+  }: {
+    authorizationEndpoint: string;
+    tokenEndpoint: string;
+  }) => {
+    setData('authorizationEndpoint', authorizationEndpoint);
+    setData('tokenEndpoint', tokenEndpoint);
+  };
+
+  const setNextRedirectTo = (redirectTo: string) => {
+    setData('nextRedirectTo', redirectTo);
+  };
+
+  const setAuthorizationCode = (authorizationCode: string) => {
+    setData('authorizationCode', authorizationCode);
+  };
+
   return {
     account,
     getCodeVerifier: () => getData('codeVerifier'),
-    getInteractionCookie: () => getData('interactionCookie'),
+    getCodeChallenge: () => getData('codeChallenge'),
     getState: () => getData('state'),
-    startInteraction,
-    resetInteraction,
+    getAuthorizationCode: () => getData('authorizationCode'),
+    getInteractionCookie: () => getData('interactionCookie'),
+    getNextRedirectTo: () => getData('nextRedirectTo'),
+    getAuthorizationEndpoint: () => getData('authorizationEndpoint'),
+    getTokenEndpoint: () => getData('tokenEndpoint'),
+    initInteraction: startInteraction,
     updateCookie,
+    setNextRedirectTo,
+    setAuthorizationCode,
+    setUpEndpoints,
   };
 };
