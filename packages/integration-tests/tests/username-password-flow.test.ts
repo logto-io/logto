@@ -61,7 +61,7 @@ describe('username and password flow', () => {
 
     // Note: this will redirect to the ui sign in page
     expect(response.statusCode).toBe(303);
-    expect(response.body).toBe('Redirecting to <a href="/sign-in">/sign-in</a>.');
+    expect(response.headers.location).toBe('/sign-in');
 
     const cookie = extractCookie(response);
     expect(cookie).toBeTruthy();
@@ -122,9 +122,7 @@ describe('username and password flow', () => {
 
     // Note: Redirect to consent page
     expect(invokeAuthResponse).toHaveProperty('statusCode', 303);
-    expect(invokeAuthResponse.body).toBe(
-      'Redirecting to <a href="/sign-in/consent">/sign-in/consent</a>.'
-    );
+    expect(invokeAuthResponse.headers.location).toBe('/sign-in/consent');
 
     const cookie = extractCookie(invokeAuthResponse);
     expect(cookie).toBeTruthy();
