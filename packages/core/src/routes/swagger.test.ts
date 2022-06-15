@@ -4,9 +4,10 @@ import request from 'supertest';
 import { number, object, string } from 'zod';
 
 import koaGuard from '@/middleware/koa-guard';
+import koaPagination from '@/middleware/koa-pagination';
 import { AnonymousRouter } from '@/routes/types';
 
-import swaggerRoutes from './swagger';
+import swaggerRoutes, { paginationParameters } from './swagger';
 
 const createSwaggerRequest = (
   allRouters: Array<Router<unknown, any>>,
@@ -123,48 +124,68 @@ describe('GET /swagger.json', () => {
     );
   });
 
-  it('should parse the query parameters', async () => {
-    const queryParametersRouter = new Router();
-    queryParametersRouter.get(
-      '/mock',
-      koaGuard({
-        query: object({
-          id: number(),
-          name: string().optional(),
-        }),
-      }),
-      () => ({})
-    );
-    const swaggerRequest = createSwaggerRequest([queryParametersRouter]);
-    const response = await swaggerRequest.get('/swagger.json');
-    expect(response.body.paths).toMatchObject(
-      expect.objectContaining({
-        /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-        '/api/mock': {
-          get: expect.objectContaining({
-            parameters: [
-              {
-                name: 'id',
-                in: 'query',
-                required: true,
-                schema: {
-                  type: 'number',
-                },
-              },
-              {
-                name: 'name',
-                in: 'query',
-                required: false,
-                schema: {
-                  type: 'string',
-                },
-              },
-            ],
+  describe('parse query parameters', () => {
+    it('should parse the normal query parameters', async () => {
+      const queryParametersRouter = new Router();
+      queryParametersRouter.get(
+        '/mock',
+        koaGuard({
+          query: object({
+            id: number(),
+            name: string().optional(),
           }),
-        },
-        /* eslint-enable @typescript-eslint/no-unsafe-assignment */
-      })
-    );
+        }),
+        () => ({})
+      );
+      const swaggerRequest = createSwaggerRequest([queryParametersRouter]);
+      const response = await swaggerRequest.get('/swagger.json');
+      expect(response.body.paths).toMatchObject(
+        expect.objectContaining({
+          /* eslint-disable @typescript-eslint/no-unsafe-assignment */
+          '/api/mock': {
+            get: expect.objectContaining({
+              parameters: [
+                {
+                  name: 'id',
+                  in: 'query',
+                  required: true,
+                  schema: {
+                    type: 'number',
+                  },
+                },
+                {
+                  name: 'name',
+                  in: 'query',
+                  required: false,
+                  schema: {
+                    type: 'string',
+                  },
+                },
+              ],
+            }),
+          },
+          /* eslint-enable @typescript-eslint/no-unsafe-assignment */
+        })
+      );
+    });
+
+    it('should append page and page_size to the query parameters when the route uses pagination', async () => {
+      const queryParametersRouter = new Router();
+      queryParametersRouter.get('/mock', koaPagination(), () => ({}));
+      const swaggerRequest = createSwaggerRequest([queryParametersRouter]);
+      const response = await swaggerRequest.get('/swagger.json');
+      expect(response.body.paths).toMatchObject(
+        expect.objectContaining({
+          /* eslint-disable @typescript-eslint/no-unsafe-assignment */
+          '/api/mock': {
+            get: expect.objectContaining({
+              parameters: paginationParameters,
+            }),
+          },
+          /* eslint-enable @typescript-eslint/no-unsafe-assignment */
+        })
+      );
+    });
   });
 
   it('should parse the request body', async () => {

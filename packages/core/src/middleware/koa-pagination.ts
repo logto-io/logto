@@ -1,4 +1,5 @@
 import { MiddlewareType } from 'koa';
+import { IMiddleware } from 'koa-router';
 import { number } from 'zod';
 
 import RequestError from '@/errors/RequestError';
@@ -19,11 +20,22 @@ export interface PaginationConfig {
   maxPageSize?: number;
 }
 
+export const isPaginationMiddleware = <Type extends IMiddleware>(
+  function_: Type
+): function_ is WithPaginationContext<Type> => function_.name === 'paginationMiddleware';
+
+export const fallbackDefaultPageSize = 20;
+
 export default function koaPagination<StateT, ContextT, ResponseBodyT>({
-  defaultPageSize = 20,
+  defaultPageSize = fallbackDefaultPageSize,
   maxPageSize = 100,
 }: PaginationConfig = {}): MiddlewareType<StateT, WithPaginationContext<ContextT>, ResponseBodyT> {
-  return async (ctx, next) => {
+  // Name this anonymous function for the utility function `isPaginationMiddleware` to identify it
+  const paginationMiddleware: MiddlewareType<
+    StateT,
+    WithPaginationContext<ContextT>,
+    ResponseBodyT
+  > = async (ctx, next) => {
     try {
       const {
         request: {
@@ -67,4 +79,6 @@ export default function koaPagination<StateT, ContextT, ResponseBodyT>({
       ctx.append('Link', buildLink(ctx.request, page + 1, 'next'));
     }
   };
+
+  return paginationMiddleware;
 }
