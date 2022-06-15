@@ -30,6 +30,7 @@ export default function koaPagination<StateT, ContextT, ResponseBodyT>({
   defaultPageSize = fallbackDefaultPageSize,
   maxPageSize = 100,
 }: PaginationConfig = {}): MiddlewareType<StateT, WithPaginationContext<ContextT>, ResponseBodyT> {
+  // Name this anonymous function for the utility function `isPaginationMiddleware` to identify it
   const paginationMiddleware: MiddlewareType<
     StateT,
     WithPaginationContext<ContextT>,
