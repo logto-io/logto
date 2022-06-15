@@ -82,10 +82,9 @@ describe('username and password flow', () => {
       })
       .json<RegisterResponse>();
 
-    const { redirectTo } = registerResponse;
+    const { redirectTo: invokeAuthUrl } = registerResponse;
 
-    expect(redirectTo).toBeTruthy();
-    expect(redirectTo.startsWith(`${logtoUrl}/oidc/auth`)).toBeTruthy();
+    expect(invokeAuthUrl.startsWith(`${logtoUrl}/oidc/auth`)).toBeTruthy();
   });
 
   it('should sign in with username and password and redirect to oidc/auth endpoint to start an auth process', async () => {
@@ -105,7 +104,6 @@ describe('username and password flow', () => {
 
     const { redirectTo: invokeAuthUrl } = signInResponse;
 
-    expect(invokeAuthUrl).toBeTruthy();
     expect(invokeAuthUrl.startsWith(`${logtoUrl}/oidc/auth`)).toBeTruthy();
 
     setNextRedirectTo(invokeAuthUrl);
@@ -147,7 +145,6 @@ describe('username and password flow', () => {
 
     const { redirectTo: completeAuthUrl } = consentResponse;
 
-    expect(completeAuthUrl).toBeTruthy();
     expect(completeAuthUrl.startsWith(`${logtoUrl}/oidc/auth`)).toBeTruthy();
 
     setNextRedirectTo(completeAuthUrl);
