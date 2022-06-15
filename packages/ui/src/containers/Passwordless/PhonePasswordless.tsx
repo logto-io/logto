@@ -115,9 +115,8 @@ const PhonePasswordless = ({ type, autoFocus, className }: Props) => {
       <form className={classNames(styles.form, className)}>
         <PhoneInput
           name="phone"
-          className={styles.inputField}
-          autoComplete="mobile"
           placeholder={t('input.phone_number')}
+          className={styles.inputField}
           countryCallingCode={phoneNumber.countryCallingCode}
           nationalNumber={phoneNumber.nationalNumber}
           autoFocus={autoFocus}

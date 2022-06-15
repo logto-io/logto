@@ -83,7 +83,7 @@ describe('Passcode Component', () => {
 
     if (inputElements[2]) {
       fireEvent.input(inputElements[2], { target: { value: '37' } });
-      expect(onChange).toBeCalledWith(['1', '2', '7', '4', '5', '6']);
+      expect(onChange).toBeCalledWith(['1', '2', '3', '7', '5', '6']);
     }
   });
 

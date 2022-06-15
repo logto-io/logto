@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react';
 import * as styles from '@/App.module.scss';
 import { Context } from '@/hooks/use-page-context';
 import initI18n from '@/i18n/init';
-import { SignInExperienceSettingsResponse, Platform } from '@/types';
+import { SignInExperienceSettingsResponse, SignInExperienceSettings, Platform } from '@/types';
 import { parseQueryParameters } from '@/utils';
 import { getPrimarySignInMethod, getSecondarySignInMethods } from '@/utils/sign-in-experience';
 import { filterPreviewSocialConnectors } from '@/utils/social-connectors';
@@ -66,7 +66,7 @@ const usePreview = (context: Context): [boolean, PreviewConfig?] => {
       platform,
     } = previewConfig;
 
-    const experienceSettings = {
+    const experienceSettings: SignInExperienceSettings = {
       ...rest,
       branding: {
         ...branding,

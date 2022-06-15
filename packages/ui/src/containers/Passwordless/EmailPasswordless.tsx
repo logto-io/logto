@@ -99,11 +99,13 @@ const EmailPasswordless = ({ type, autoFocus, className }: Props) => {
     <>
       <form className={classNames(styles.form, className)}>
         <Input
-          autoFocus={autoFocus}
-          className={styles.inputField}
+          type="email"
           name="email"
           autoComplete="email"
+          inputMode="email"
           placeholder={t('input.email')}
+          autoFocus={autoFocus}
+          className={styles.inputField}
           {...register('email', emailValidation)}
           onClear={() => {
             setFieldValue((state) => ({ ...state, email: '' }));

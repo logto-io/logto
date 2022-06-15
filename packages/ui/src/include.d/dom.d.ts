@@ -69,7 +69,9 @@ type AutoCompleteType =
   | 'sex'
   | 'url'
   | 'photo'
-  | 'mobile';
+  | 'tel'
+  | 'tel-country-code'
+  | 'tel-national';
 
 // TO-DO: remove me
 interface Body {

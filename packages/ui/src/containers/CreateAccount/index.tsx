@@ -94,6 +94,7 @@ const CreateAccount = ({ className, autoFocus }: Props) => {
         className={styles.inputField}
         name="password"
         type="password"
+        autoComplete="new-password"
         placeholder={t('input.password')}
         {...fieldRegister('password', passwordValidation)}
         onClear={() => {
@@ -104,6 +105,7 @@ const CreateAccount = ({ className, autoFocus }: Props) => {
         className={styles.inputField}
         name="confirm_password"
         type="password"
+        autoComplete="new-password"
         placeholder={t('input.confirm_password')}
         {...fieldRegister('confirmPassword', (confirmPassword) =>
           confirmPasswordValidation(fieldValue.password, confirmPassword)

@@ -23,7 +23,7 @@ export type Props = {
   onChange: (value: string[]) => void;
 };
 
-const isNumeric = (char: string) => /^\d*$/.test(char);
+const isNumeric = (char: string) => /^\d+$/.test(char);
 
 const normalize = (value: string[], length: number): string[] => {
   if (value.length > length) {
@@ -38,15 +38,6 @@ const normalize = (value: string[], length: number): string[] => {
   return value;
 };
 
-const trim = (oldValue: string | undefined, newValue: string) => {
-  // Pop oldValue from the latest input to get the updated Digit
-  if (newValue.length > 1 && oldValue) {
-    return newValue.replace(oldValue, '');
-  }
-
-  return newValue;
-};
-
 const Passcode = ({ name, className, value, length = defaultLength, error, onChange }: Props) => {
   /* eslint-disable @typescript-eslint/ban-types */
   const inputReferences = useRef<Array<HTMLInputElement | null>>(
@@ -55,6 +46,32 @@ const Passcode = ({ name, className, value, length = defaultLength, error, onCha
   /* eslint-enable @typescript-eslint/ban-types */
 
   const codes = useMemo(() => normalize(value, length), [length, value]);
+
+  const updateValue = useCallback(
+    (data: string, targetId: number) => {
+      // Filter non-numeric input
+      if (!isNumeric(data)) {
+        return;
+      }
+
+      const chars = data.split('');
+      const trimmedChars = chars.slice(0, Math.min(chars.length, codes.length - targetId));
+
+      const value = [
+        ...codes.slice(0, targetId),
+        ...trimmedChars,
+        ...codes.slice(targetId + trimmedChars.length, codes.length),
+      ];
+
+      onChange(value);
+
+      // Move to the next target
+      const nextTarget =
+        inputReferences.current[Math.min(targetId + trimmedChars.length, codes.length - 1)];
+      nextTarget?.focus();
+    },
+    [codes, onChange]
+  );
 
   const onInputHandler: FormEventHandler<HTMLInputElement> = useCallback(
     (event) => {
@@ -67,71 +84,15 @@ const Passcode = ({ name, className, value, length = defaultLength, error, onCha
       const { value, dataset } = target;
 
       // Unrecognized target input field
-      if (dataset.id === undefined) {
+      if (!dataset.id) {
         return;
       }
 
       event.preventDefault();
-
-      // Filter non-numeric input
-      if (!isNumeric(value)) {
-        return;
-      }
-
-      const targetId = Number(dataset.id);
-
-      // Update the root input value
-      onChange(Object.assign([], codes, { [targetId]: trim(codes[targetId], value) }));
-
-      // Move to the next target
-      if (value) {
-        const nextTarget = inputReferences.current[targetId + 1];
-        nextTarget?.focus();
-      }
+      updateValue(value, Number(dataset.id));
     },
-    [codes, onChange]
+    [updateValue]
   );
-
-  const onKeyDownHandler: KeyboardEventHandler<HTMLInputElement> = useCallback((event) => {
-    const { key, target } = event;
-
-    if (!(target instanceof HTMLInputElement)) {
-      return;
-    }
-
-    const { value, dataset } = target;
-
-    if (!dataset.id) {
-      return;
-    }
-
-    const targetId = Number(dataset.id);
-
-    const nextTarget = inputReferences.current[targetId + 1];
-    const previousTarget = inputReferences.current[targetId - 1];
-
-    switch (key) {
-      case 'Backspace':
-        if (!value) {
-          previousTarget?.focus();
-        }
-        break;
-      case 'ArrowLeft':
-        event.preventDefault();
-        previousTarget?.focus();
-        break;
-      case 'ArrowRight':
-        event.preventDefault();
-        nextTarget?.focus();
-        break;
-      case 'ArrowUp':
-      case 'ArrowDown':
-        event.preventDefault();
-        break;
-      default:
-        break;
-    }
-  }, []);
 
   const onPasteHandler: ClipboardEventHandler<HTMLInputElement> = useCallback(
     (event) => {
@@ -144,29 +105,64 @@ const Passcode = ({ name, className, value, length = defaultLength, error, onCha
         clipboardData,
       } = event;
 
+      const data = clipboardData.getData('text');
+
+      // Unrecognized target input field
       if (!dataset.id) {
         return;
       }
 
       event.preventDefault();
+      updateValue(data, Number(dataset.id));
+    },
+    [updateValue]
+  );
 
-      const data = clipboardData.getData('text');
+  const onKeyDownHandler: KeyboardEventHandler<HTMLInputElement> = useCallback(
+    (event) => {
+      const { key, target } = event;
 
-      if (!data || !isNumeric(data)) {
+      if (!(target instanceof HTMLInputElement)) {
         return;
       }
 
-      const chars = data.split('');
+      const { value, dataset } = target;
+
+      if (!dataset.id) {
+        return;
+      }
+
       const targetId = Number(dataset.id);
-      const trimmedChars = chars.slice(0, Math.min(chars.length, codes.length - targetId));
 
-      const value = [
-        ...codes.slice(0, targetId),
-        ...trimmedChars,
-        ...codes.slice(targetId + trimmedChars.length, codes.length),
-      ];
+      const nextTarget = inputReferences.current[targetId + 1];
+      const previousTarget = inputReferences.current[targetId - 1];
 
-      onChange(value);
+      switch (key) {
+        case 'Backspace':
+          event.preventDefault();
+
+          if (!value) {
+            previousTarget?.focus();
+            break;
+          }
+
+          onChange(Object.assign([], codes, { [targetId]: '' }));
+          break;
+        case 'ArrowLeft':
+          event.preventDefault();
+          previousTarget?.focus();
+          break;
+        case 'ArrowRight':
+          event.preventDefault();
+          nextTarget?.focus();
+          break;
+        case 'ArrowUp':
+        case 'ArrowDown':
+          event.preventDefault();
+          break;
+        default:
+          break;
+      }
     },
     [codes, onChange]
   );
@@ -191,9 +187,9 @@ const Passcode = ({ name, className, value, length = defaultLength, error, onCha
             name={`${name}_${index}`}
             data-id={index}
             value={codes[index]}
-            type="text" // Number type allows 'e' as input but returns empty value
+            type="number"
             inputMode="numeric"
-            maxLength={2} // Allow overwrite input
+            pattern="[0-9]*"
             autoComplete="off"
             onPaste={onPasteHandler}
             onInput={onInputHandler}
