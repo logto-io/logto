@@ -4,16 +4,44 @@ import { OpenAPIV3 } from 'openapi-types';
 import {
   ZodArray,
   ZodBoolean,
+  ZodLiteral,
   ZodNativeEnum,
   ZodNullable,
   ZodNumber,
   ZodObject,
   ZodOptional,
   ZodString,
+  ZodType,
+  ZodUnion,
   ZodUnknown,
 } from 'zod';
 
 import RequestError from '@/errors/RequestError';
+
+const zodLiteralToSwagger = (zodLiteral: ZodLiteral<unknown>): OpenAPIV3.SchemaObject => {
+  const { value } = zodLiteral;
+
+  switch (typeof value) {
+    case 'boolean':
+      return {
+        type: 'boolean',
+        format: String(value),
+      };
+    case 'bigint':
+    case 'number':
+      return {
+        type: 'number',
+        format: String(value),
+      };
+    case 'string':
+      return {
+        type: 'string',
+        format: `"${value}"`,
+      };
+    default:
+      throw new RequestError('swagger.invalid_zod_type', zodLiteral);
+  }
+};
 
 export const zodTypeToSwagger = (config: unknown): OpenAPIV3.SchemaObject => {
   if (config === arbitraryObjectGuard) {
@@ -41,8 +69,18 @@ export const zodTypeToSwagger = (config: unknown): OpenAPIV3.SchemaObject => {
     };
   }
 
+  if (config instanceof ZodLiteral) {
+    return zodLiteralToSwagger(config);
+  }
+
   if (config instanceof ZodUnknown) {
     return { example: {} }; // Any data type
+  }
+
+  if (config instanceof ZodUnion) {
+    return {
+      oneOf: (config.options as ZodType[]).map((option) => zodTypeToSwagger(option)),
+    };
   }
 
   if (config instanceof ZodObject) {
