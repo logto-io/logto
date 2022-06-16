@@ -64,6 +64,12 @@ const sendGridMailConnector = {
   config: {},
   createdAt: 1_646_382_233_111,
 };
+const smtpConnector = {
+  id: 'simple-mail-transfer-protocol',
+  enabled: false,
+  config: {},
+  createdAt: 1_646_382_233_111,
+};
 const twilioSmsConnector = {
   id: 'twilio-short-message-service',
   enabled: false,
@@ -93,6 +99,7 @@ const connectors = [
   githubConnector,
   googleConnector,
   sendGridMailConnector,
+  smtpConnector,
   twilioSmsConnector,
   wechatConnector,
   wechatNativeConnector,
