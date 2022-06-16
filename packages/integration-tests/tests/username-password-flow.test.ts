@@ -11,13 +11,10 @@ import api from '@/api';
 
 import { adminConsoleApplicationId, discoveryUrl, logtoUrl, redirectUri } from '../src/constants';
 import { LogtoContext } from '../src/logto-context';
-import { extractCookie, generatePassword, generateUsername } from '../src/utils';
+import { extractCookie } from '../src/utils';
 
 describe('username and password flow', () => {
-  const logtoContext = new LogtoContext({
-    username: generatePassword(),
-    password: generateUsername(),
-  });
+  const logtoContext = new LogtoContext();
 
   beforeAll(async () => {
     await logtoContext.init();
