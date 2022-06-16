@@ -50,8 +50,6 @@ export default function signInSettingsRoutes<T extends AnonymousRouter>(
           socialConnectors: [],
         };
 
-        console.log(ctx.body);
-
         return next();
       }
 
