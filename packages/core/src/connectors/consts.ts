@@ -9,6 +9,7 @@ export const connectorPackages = [
   '@logto/connector-github',
   '@logto/connector-google',
   '@logto/connector-sendgrid-email',
+  '@logto/connector-smtp',
   '@logto/connector-twilio-sms',
   '@logto/connector-wechat',
   '@logto/connector-wechat-native',
