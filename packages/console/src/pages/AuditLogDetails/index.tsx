@@ -1,4 +1,4 @@
-import { LogDTO } from '@logto/schemas';
+import { LogDTO, User } from '@logto/schemas';
 import classNames from 'classnames';
 import dayjs from 'dayjs';
 import React from 'react';
@@ -9,6 +9,7 @@ import useSWR from 'swr';
 import ApplicationName from '@/components/ApplicationName';
 import Card from '@/components/Card';
 import CodeEditor from '@/components/CodeEditor';
+import DangerousRaw from '@/components/DangerousRaw';
 import DetailsSkeleton from '@/components/DetailsSkeleton';
 import LinkButton from '@/components/LinkButton';
 import TabNav, { TabNavItem } from '@/components/TabNav';
@@ -22,19 +23,23 @@ import EventIcon from './components/EventIcon';
 import * as styles from './index.module.scss';
 
 const AuditLogDetails = () => {
-  const { logId } = useParams();
+  const { id: userId, logId } = useParams();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { data, error } = useSWR<LogDTO, RequestError>(logId && `/api/logs/${logId}`);
+  const { data: userData } = useSWR<User, RequestError>(userId && `/api/users/${userId}`);
+
   const isLoading = !data && !error;
+
+  const backLink = userId ? `/users/${userId}` : '/audit-logs';
+  const backLinkTitle = userId ? (
+    <DangerousRaw>{t('log_details.back_to_user', { name: userData?.name ?? '-' })}</DangerousRaw>
+  ) : (
+    'admin_console.log_details.back_to_logs'
+  );
 
   return (
     <div className={detailsStyles.container}>
-      <LinkButton
-        to="/audit-logs"
-        icon={<Back />}
-        title="admin_console.log_details.back_to_logs"
-        className={styles.backLink}
-      />
+      <LinkButton to={backLink} icon={<Back />} title={backLinkTitle} className={styles.backLink} />
       {isLoading && <DetailsSkeleton />}
       {!data && error && <div>{`error occurred: ${error.body?.message ?? error.message}`}</div>}
       {data && (

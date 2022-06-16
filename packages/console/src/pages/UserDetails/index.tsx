@@ -191,7 +191,7 @@ const UserDetails = () => {
             </TabNav>
             {isLogs ? (
               <div className={styles.logs}>
-                <AuditLogTable userId={data.id} />
+                <AuditLogTable userId={data.id} detailBaseUrl={`/users/${id}/logs`} />
               </div>
             ) : (
               <form className={styles.form} onSubmit={onSubmit}>

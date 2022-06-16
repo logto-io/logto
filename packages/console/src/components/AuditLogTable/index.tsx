@@ -23,10 +23,11 @@ import * as styles from './index.module.scss';
 const pageSize = 20;
 
 type Props = {
+  detailBaseUrl: string;
   userId?: string;
 };
 
-const AuditLogTable = ({ userId }: Props) => {
+const AuditLogTable = ({ userId, detailBaseUrl }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const [query, setQuery] = useSearchParams();
   const pageIndex = Number(query.get('page') ?? '1');
@@ -114,7 +115,7 @@ const AuditLogTable = ({ userId }: Props) => {
                 key={id}
                 className={tableStyles.clickable}
                 onClick={() => {
-                  navigate(`/audit-logs/${id}`);
+                  navigate(`${detailBaseUrl}/${id}`);
                 }}
               >
                 <td>
