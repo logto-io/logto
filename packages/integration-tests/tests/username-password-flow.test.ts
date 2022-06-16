@@ -10,32 +10,17 @@ import got from 'got/dist/source';
 import api from '@/api';
 
 import { adminConsoleApplicationId, discoveryUrl, logtoUrl, redirectUri } from '../src/constants';
-import { createLogtoContext } from '../src/logto-context';
+import { LogtoContext } from '../src/logto-context';
 import { extractCookie, generatePassword, generateUsername } from '../src/utils';
 
 describe('username and password flow', () => {
-  const {
-    account,
-    getInteractionCookie,
-    getState,
-    getCodeVerifier,
-    getCodeChallenge,
-    getAuthorizationCode,
-    getNextRedirectTo,
-    getAuthorizationEndpoint,
-    getTokenEndpoint,
-    initInteraction,
-    updateCookie,
-    setAuthorizationCode,
-    setNextRedirectTo,
-    setUpEndpoints,
-  } = createLogtoContext({
+  const logtoContext = new LogtoContext({
     username: generatePassword(),
     password: generateUsername(),
   });
 
   beforeAll(async () => {
-    await initInteraction();
+    await logtoContext.init();
   });
 
   it('should fetch OIDC configuration', async () => {
@@ -43,16 +28,18 @@ describe('username and password flow', () => {
     const { authorizationEndpoint, tokenEndpoint } = oidcConfig;
     expect(authorizationEndpoint).toBeTruthy();
     expect(tokenEndpoint).toBeTruthy();
-    setUpEndpoints({ authorizationEndpoint, tokenEndpoint });
+
+    logtoContext.setData('authorizationEndpoint', authorizationEndpoint);
+    logtoContext.setData('tokenEndpoint', tokenEndpoint);
   });
 
   it('should visit authorization endpoint and get interaction cookie', async () => {
     const signInUri = generateSignInUri({
-      authorizationEndpoint: getAuthorizationEndpoint(),
+      authorizationEndpoint: logtoContext.authorizationEndpoint,
       clientId: adminConsoleApplicationId,
       redirectUri,
-      codeChallenge: getCodeChallenge(),
-      state: getState(),
+      codeChallenge: logtoContext.codeChallenge,
+      state: logtoContext.state,
     });
 
     const response = await got(signInUri, {
@@ -65,7 +52,8 @@ describe('username and password flow', () => {
 
     const cookie = extractCookie(response);
     expect(cookie).toBeTruthy();
-    updateCookie(cookie);
+
+    logtoContext.setData('interactionCookie', cookie);
   });
 
   it('should register with username and password and redirect to oidc/auth endpoint to start an auth process', async () => {
@@ -76,9 +64,9 @@ describe('username and password flow', () => {
     const registerResponse = await api
       .post('session/register/username-password', {
         headers: {
-          cookie: getInteractionCookie(),
+          cookie: logtoContext.interactionCookie,
         },
-        json: account,
+        json: logtoContext.account,
       })
       .json<RegisterResponse>();
 
@@ -95,9 +83,9 @@ describe('username and password flow', () => {
     const signInResponse = await api
       .post('session/sign-in/username-password', {
         headers: {
-          cookie: getInteractionCookie(),
+          cookie: logtoContext.interactionCookie,
         },
-        json: account,
+        json: logtoContext.account,
         followRedirect: false,
       })
       .json<SignInResponse>();
@@ -106,14 +94,14 @@ describe('username and password flow', () => {
 
     expect(invokeAuthUrl.startsWith(`${logtoUrl}/oidc/auth`)).toBeTruthy();
 
-    setNextRedirectTo(invokeAuthUrl);
+    logtoContext.setData('nextRedirectTo', invokeAuthUrl);
   });
 
   it('should invoke the auth process and redirect to the consent page with session cookie', async () => {
-    const invokeAuthUrl = getNextRedirectTo();
+    const invokeAuthUrl = logtoContext.nextRedirectTo;
     const invokeAuthResponse = await got.get(invokeAuthUrl, {
       headers: {
-        cookie: getInteractionCookie(),
+        cookie: logtoContext.interactionCookie,
       },
       followRedirect: false,
     });
@@ -126,7 +114,7 @@ describe('username and password flow', () => {
     expect(cookie).toBeTruthy();
     expect(cookie.includes('_session.sig')).toBeTruthy();
 
-    updateCookie(cookie);
+    logtoContext.setData('interactionCookie', cookie);
   });
 
   it('should redirect to oidc/auth endpoint to complete the auth process after consent', async () => {
@@ -137,7 +125,7 @@ describe('username and password flow', () => {
     const consentResponse = await api
       .post('session/consent', {
         headers: {
-          cookie: getInteractionCookie(),
+          cookie: logtoContext.interactionCookie,
         },
         followRedirect: false,
       })
@@ -147,14 +135,14 @@ describe('username and password flow', () => {
 
     expect(completeAuthUrl.startsWith(`${logtoUrl}/oidc/auth`)).toBeTruthy();
 
-    setNextRedirectTo(completeAuthUrl);
+    logtoContext.setData('nextRedirectTo', completeAuthUrl);
   });
 
   it('should get the authorization code from the callback uri when the auth process is completed', async () => {
-    const completeAuthUrl = getNextRedirectTo();
+    const completeAuthUrl = logtoContext.nextRedirectTo;
     const authCodeResponse = await got.get(completeAuthUrl, {
       headers: {
-        cookie: getInteractionCookie(),
+        cookie: logtoContext.interactionCookie,
       },
     });
 
@@ -169,21 +157,21 @@ describe('username and password flow', () => {
     const authorizationCode = verifyAndParseCodeFromCallbackUri(
       callbackUri,
       redirectUri,
-      getState()
+      logtoContext.state
     );
     expect(authorizationCode).toBeTruthy();
 
-    setAuthorizationCode(authorizationCode);
+    logtoContext.setData('authorizationCode', authorizationCode);
   });
 
   it('should fetch token by authorization code', async () => {
     const token = await fetchTokenByAuthorizationCode(
       {
         clientId: adminConsoleApplicationId,
-        tokenEndpoint: getTokenEndpoint(),
+        tokenEndpoint: logtoContext.tokenEndpoint,
         redirectUri,
-        codeVerifier: getCodeVerifier(),
-        code: getAuthorizationCode(),
+        codeVerifier: logtoContext.codeVerifier,
+        code: logtoContext.authorizationCode,
       },
       createRequester()
     );

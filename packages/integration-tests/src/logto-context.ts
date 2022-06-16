@@ -44,73 +44,55 @@ type Account = {
   password: string;
 };
 
-export type LogtoContext = {
-  account: Account;
-  getCodeVerifier: () => string;
-  getCodeChallenge: () => string;
-  getState: () => string;
-  getAuthorizationCode: () => string;
-  getInteractionCookie: () => string;
-  getNextRedirectTo: () => string;
-  getAuthorizationEndpoint: () => string;
-  getTokenEndpoint: () => string;
-  initInteraction: () => Promise<void>;
-  updateCookie: (cookie: string) => void;
-  setNextRedirectTo: (redirectTo: string) => void;
-  setAuthorizationCode: (authorizationCode: string) => void;
-  setUpEndpoints: (endpoints: { authorizationEndpoint: string; tokenEndpoint: string }) => void;
-};
+export class LogtoContext {
+  private readonly contextData: ContextStore;
 
-export const createLogtoContext = (account: Account): LogtoContext => {
-  const { getData, setData } = createContextStore();
+  constructor(public readonly account: Account) {
+    this.contextData = createContextStore();
+  }
 
-  const startInteraction = async () => {
+  public async init() {
     const codeVerifier = generateCodeVerifier();
     const codeChallenge = await generateCodeChallenge(codeVerifier);
-    const state = generateState();
 
-    setData('codeVerifier', codeVerifier);
-    setData('codeChallenge', codeChallenge);
-    setData('state', state);
-  };
+    this.setData('codeVerifier', codeVerifier);
+    this.setData('codeChallenge', codeChallenge);
+    this.setData('state', generateState());
+  }
 
-  const updateCookie = (cookie: string) => {
-    setData('interactionCookie', cookie);
-  };
+  public get codeVerifier(): string {
+    return this.contextData.getData('codeVerifier');
+  }
 
-  const setUpEndpoints = ({
-    authorizationEndpoint,
-    tokenEndpoint,
-  }: {
-    authorizationEndpoint: string;
-    tokenEndpoint: string;
-  }) => {
-    setData('authorizationEndpoint', authorizationEndpoint);
-    setData('tokenEndpoint', tokenEndpoint);
-  };
+  public get codeChallenge(): string {
+    return this.contextData.getData('codeChallenge');
+  }
 
-  const setNextRedirectTo = (redirectTo: string) => {
-    setData('nextRedirectTo', redirectTo);
-  };
+  public get state(): string {
+    return this.contextData.getData('state');
+  }
 
-  const setAuthorizationCode = (authorizationCode: string) => {
-    setData('authorizationCode', authorizationCode);
-  };
+  public get authorizationCode(): string {
+    return this.contextData.getData('authorizationCode');
+  }
 
-  return {
-    account,
-    getCodeVerifier: () => getData('codeVerifier'),
-    getCodeChallenge: () => getData('codeChallenge'),
-    getState: () => getData('state'),
-    getAuthorizationCode: () => getData('authorizationCode'),
-    getInteractionCookie: () => getData('interactionCookie'),
-    getNextRedirectTo: () => getData('nextRedirectTo'),
-    getAuthorizationEndpoint: () => getData('authorizationEndpoint'),
-    getTokenEndpoint: () => getData('tokenEndpoint'),
-    initInteraction: startInteraction,
-    updateCookie,
-    setNextRedirectTo,
-    setAuthorizationCode,
-    setUpEndpoints,
-  };
-};
+  public get interactionCookie(): string {
+    return this.contextData.getData('interactionCookie');
+  }
+
+  public get authorizationEndpoint(): string {
+    return this.contextData.getData('authorizationEndpoint');
+  }
+
+  public get tokenEndpoint(): string {
+    return this.contextData.getData('tokenEndpoint');
+  }
+
+  public get nextRedirectTo(): string {
+    return this.contextData.getData('nextRedirectTo');
+  }
+
+  public setData(key: ContextDataKey, value: string): void {
+    this.contextData.setData(key, value);
+  }
+}
