@@ -145,11 +145,6 @@ describe('zodTypeToSwagger', () => {
         type: 'number',
         format: '999',
       });
-
-      const bigIntLiteral = literal(BigInt(1_000_000_000));
-      expect(() => zodTypeToSwagger(bigIntLiteral)).toMatchError(
-        new RequestError('swagger.invalid_zod_type', bigIntLiteral)
-      );
     });
 
     it('string', () => {
@@ -164,11 +159,17 @@ describe('zodTypeToSwagger', () => {
     });
 
     it('unexpected', () => {
+      const bigIntLiteral = literal(BigInt(1_000_000_000));
+      expect(() => zodTypeToSwagger(bigIntLiteral)).toMatchError(
+        new RequestError('swagger.invalid_zod_type', bigIntLiteral)
+      );
+
       // eslint-disable-next-line unicorn/no-useless-undefined
       const undefinedLiteral = literal(undefined);
       expect(() => zodTypeToSwagger(undefinedLiteral)).toMatchError(
         new RequestError('swagger.invalid_zod_type', undefinedLiteral)
       );
+
       const nullLiteral = literal(null);
       expect(() => zodTypeToSwagger(nullLiteral)).toMatchError(
         new RequestError('swagger.invalid_zod_type', nullLiteral)
