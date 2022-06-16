@@ -31,4 +31,4 @@ export const smtpConfigGuard = z.object({
   templates: z.array(templateGuard),
 });
 
-export type SMTPConfig = z.infer<typeof smtpConfigGuard>;
+export type SmtpConfig = z.infer<typeof smtpConfigGuard>;

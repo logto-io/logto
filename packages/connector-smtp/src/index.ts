@@ -12,12 +12,12 @@ import nodemailer from 'nodemailer';
 import SMTPTransport from 'nodemailer/lib/smtp-transport';
 
 import { defaultMetadata } from './constant';
-import { ContextType, smtpConfigGuard, SMTPConfig } from './types';
+import { ContextType, smtpConfigGuard, SmtpConfig } from './types';
 
-export default class SMTPConnector implements EmailConnector {
+export default class SmtpConnector implements EmailConnector {
   public metadata: ConnectorMetadata = defaultMetadata;
 
-  constructor(public readonly getConfig: GetConnectorConfig<SMTPConfig>) {}
+  constructor(public readonly getConfig: GetConnectorConfig<SmtpConfig>) {}
 
   public validateConfig: ValidateConfig = async (config: unknown) => {
     const result = smtpConfigGuard.safeParse(config);
@@ -83,9 +83,16 @@ export default class SMTPConnector implements EmailConnector {
   };
 
   private readonly parseContents = (contents: string, contentType: ContextType) => {
-    const textBody = contentType === 'text/plain' ? contents : undefined;
-    const htmlBody = contentType === 'text/html' ? contents : undefined;
-
-    return { text: textBody, html: htmlBody };
+    switch (contentType) {
+      case ContextType.Text:
+        return { text: contents };
+      case ContextType.Html:
+        return { html: contents };
+      default:
+        throw new ConnectorError(
+          ConnectorErrorCodes.InvalidConfig,
+          '`contentType` should be ContextType.'
+        );
+    }
   };
 }

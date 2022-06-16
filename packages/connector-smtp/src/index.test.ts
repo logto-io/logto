@@ -1,11 +1,11 @@
 import { GetConnectorConfig } from '@logto/connector-types';
 
-import SMTPConnector from '.';
-import { SMTPConfig } from './types';
+import SmtpConnector from '.';
+import { SmtpConfig } from './types';
 
-const getConnectorConfig = jest.fn() as GetConnectorConfig<SMTPConfig>;
+const getConnectorConfig = jest.fn() as GetConnectorConfig<SmtpConfig>;
 
-const smtpMethods = new SMTPConnector(getConnectorConfig);
+const smtpMethods = new SmtpConnector(getConnectorConfig);
 
 describe('validateConfig()', () => {
   afterEach(() => {

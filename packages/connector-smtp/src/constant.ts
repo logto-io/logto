@@ -21,7 +21,7 @@ export const defaultMetadata: ConnectorMetadata = {
   },
   logo: './logo.svg',
   description: {
-    en: 'Simple mail transfer protocol.',
+    en: 'Simple Mail Transfer Protocol.',
     'zh-CN': '简单邮件传输协议。',
   },
   readme: getFileContents(pathToReadmeFile, readmeContentFallback),
