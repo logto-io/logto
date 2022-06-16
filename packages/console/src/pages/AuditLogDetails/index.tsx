@@ -30,7 +30,7 @@ const AuditLogDetails = () => {
 
   const isLoading = !data && !error;
 
-  const backLink = userId ? `/users/${userId}` : '/audit-logs';
+  const backLink = userId ? `/users/${userId}/logs` : '/audit-logs';
   const backLinkTitle = userId ? (
     <DangerousRaw>{t('log_details.back_to_user', { name: userData?.name ?? '-' })}</DangerousRaw>
   ) : (
