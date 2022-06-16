@@ -1,5 +1,5 @@
 import { User } from '@logto/schemas';
-import { conditionalString } from '@silverhand/essentials';
+import { conditional, conditionalString } from '@silverhand/essentials';
 import classNames from 'classnames';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -147,7 +147,7 @@ const Users = () => {
             pageCount={Math.ceil(totalCount / pageSize)}
             pageIndex={pageIndex}
             onChange={(page) => {
-              setQuery({ page: String(page) });
+              setQuery({ page: String(page), ...conditional(keyword && { search: keyword }) });
             }}
           />
         )}
