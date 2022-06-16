@@ -3,7 +3,7 @@ import { string, boolean, number, object, nativeEnum, unknown, literal, union } 
 
 import RequestError from '@/errors/RequestError';
 
-import { zodTypeToSwagger } from './zod';
+import { ZodStringCheck, zodTypeToSwagger } from './zod';
 
 describe('zodTypeToSwagger', () => {
   it('arbitrary object guard', () => {
@@ -74,6 +74,13 @@ describe('zodTypeToSwagger', () => {
         maxLength: 128,
         pattern: notStartingWithDigitRegex.toString(),
       });
+    });
+
+    it('unexpected check', () => {
+      const unexpectedCheck = { kind: 'unexpected' };
+      expect(() =>
+        zodTypeToSwagger(string()._addCheck(unexpectedCheck as ZodStringCheck))
+      ).toMatchError(new RequestError('swagger.invalid_zod_type', unexpectedCheck));
     });
   });
 

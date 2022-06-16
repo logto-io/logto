@@ -19,7 +19,7 @@ import {
 
 import RequestError from '@/errors/RequestError';
 
-type ZodStringCheck = ValuesOf<ZodStringDef['checks']>;
+export type ZodStringCheck = ValuesOf<ZodStringDef['checks']>;
 
 const zodStringCheckToSwaggerFormat = (zodStringCheck: ZodStringCheck) => {
   const { kind } = zodStringCheck;
