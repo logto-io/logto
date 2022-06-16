@@ -4,6 +4,7 @@ import {
   TermsOfUse,
   SignInExperience,
   ConnectorMetadata,
+  SignInMode,
 } from '@logto/schemas';
 
 export type UserFlow = 'sign-in' | 'register';
@@ -35,4 +36,5 @@ export type SignInExperienceSettings = {
   primarySignInMethod: SignInMethod;
   secondarySignInMethods: SignInMethod[];
   socialConnectors: ConnectorData[];
+  signInMode: SignInMode;
 };

@@ -1,4 +1,4 @@
-import { BrandingStyle } from '@logto/schemas';
+import { BrandingStyle, SignInMode } from '@logto/schemas';
 import classNames from 'classnames';
 import React, { useContext } from 'react';
 
@@ -29,13 +29,17 @@ const SignIn = () => {
       <PrimarySection
         signInMethod={experienceSettings.primarySignInMethod}
         socialConnectors={experienceSettings.socialConnectors}
+        signInMode={experienceSettings.signInMode}
       />
       <SecondarySection
         primarySignInMethod={experienceSettings.primarySignInMethod}
         secondarySignInMethods={experienceSettings.secondarySignInMethods}
         socialConnectors={experienceSettings.socialConnectors}
       />
-      <CreateAccountLink primarySignInMethod={experienceSettings.primarySignInMethod} />
+      {experienceSettings.signInMode === SignInMode.SignInAndRegister && (
+        <CreateAccountLink primarySignInMethod={experienceSettings.primarySignInMethod} />
+      )}
+
       <AppNotification />
     </div>
   );

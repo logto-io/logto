@@ -1,4 +1,6 @@
-import { ConnectorType } from '@logto/schemas';
+import { ConnectorType, SignInMode } from '@logto/schemas';
+import { adminConsoleApplicationId, adminConsoleSignInMethods } from '@logto/schemas/lib/seeds';
+import { Provider } from 'oidc-provider';
 
 import {
   mockAliyunDmConnectorInstance,
@@ -25,6 +27,7 @@ const getConnectorInstances = jest.fn(async () => [
   mockWechatConnectorInstance,
   mockWechatNativeConnectorInstance,
 ]);
+
 jest.mock('@/connectors', () => ({
   getSocialConnectorInstanceById: async (connectorId: string) => {
     const connectorInstance = await getConnectorInstanceById(connectorId);
@@ -41,9 +44,28 @@ jest.mock('@/connectors', () => ({
   getConnectorInstances: async () => getConnectorInstances(),
 }));
 
+jest.mock('@/queries/user', () => ({
+  hasActiveUsers: jest.fn().mockResolvedValue(true),
+}));
+
+const interactionDetails: jest.MockedFunction<() => Promise<unknown>> = jest.fn(async () => ({
+  params: {},
+}));
+
+jest.mock('oidc-provider', () => ({
+  Provider: jest.fn(() => ({
+    interactionDetails,
+  })),
+}));
+
 describe('GET /sign-in-settings', () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
   const sessionRequest = createRequester({
     anonymousRoutes: signInSettingsRoutes,
+    provider: new Provider(''),
     middlewares: [
       async (ctx, next) => {
         ctx.addLogContext = jest.fn();
@@ -83,6 +105,22 @@ describe('GET /sign-in-settings', () => {
             id: mockWechatNativeConnectorInstance.connector.id,
           },
         ],
+      })
+    );
+  });
+
+  it('should return admin console settings', async () => {
+    interactionDetails.mockResolvedValue({ params: { client_id: adminConsoleApplicationId } });
+    const response = await sessionRequest.get('/sign-in-settings');
+    expect(signInExperienceQuerySpyOn).toHaveBeenCalledTimes(1);
+    expect(response.status).toEqual(200);
+
+    expect(response.body).toMatchObject(
+      expect.objectContaining({
+        ...mockSignInExperience,
+        signInMethods: adminConsoleSignInMethods,
+        socialConnectors: [],
+        signInMode: SignInMode.SignIn,
       })
     );
   });

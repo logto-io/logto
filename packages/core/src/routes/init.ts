@@ -49,7 +49,7 @@ const createRouters = (provider: Provider) => {
   meRoutes(meRouter);
 
   const anonymousRouter: AnonymousRouter = new Router();
-  signInSettingsRoutes(anonymousRouter);
+  signInSettingsRoutes(anonymousRouter, provider);
   statusRoutes(anonymousRouter);
   // The swagger.json should contain all API routers.
   swaggerRoutes(anonymousRouter, [sessionRouter, managementRouter, meRouter, anonymousRouter]);
