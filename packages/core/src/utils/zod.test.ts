@@ -13,8 +13,68 @@ describe('zodTypeToSwagger', () => {
     });
   });
 
-  it('string type', () => {
-    expect(zodTypeToSwagger(string())).toEqual({ type: 'string' });
+  describe('string type', () => {
+    const notStartingWithDigitRegex = /^\D/;
+
+    it('nonempty check', () => {
+      expect(zodTypeToSwagger(string().nonempty())).toEqual({
+        type: 'string',
+        minLength: 1,
+      });
+    });
+
+    it('min check', () => {
+      expect(zodTypeToSwagger(string().min(1))).toEqual({
+        type: 'string',
+        minLength: 1,
+      });
+    });
+
+    it('max check', () => {
+      expect(zodTypeToSwagger(string().max(6))).toEqual({
+        type: 'string',
+        maxLength: 6,
+      });
+    });
+
+    it('regex check', () => {
+      expect(zodTypeToSwagger(string().regex(notStartingWithDigitRegex))).toEqual({
+        type: 'string',
+        format: 'regex',
+        pattern: notStartingWithDigitRegex.toString(),
+      });
+    });
+
+    it('other kinds check', () => {
+      expect(zodTypeToSwagger(string().email())).toEqual({
+        type: 'string',
+        format: 'email',
+      });
+      expect(zodTypeToSwagger(string().url())).toEqual({
+        type: 'string',
+        format: 'url',
+      });
+      expect(zodTypeToSwagger(string().uuid())).toEqual({
+        type: 'string',
+        format: 'uuid',
+      });
+      expect(zodTypeToSwagger(string().cuid())).toEqual({
+        type: 'string',
+        format: 'cuid',
+      });
+    });
+
+    it('combination check', () => {
+      expect(
+        zodTypeToSwagger(string().min(1).max(128).email().uuid().regex(notStartingWithDigitRegex))
+      ).toEqual({
+        type: 'string',
+        format: 'email | uuid | regex',
+        minLength: 1,
+        maxLength: 128,
+        pattern: notStartingWithDigitRegex.toString(),
+      });
+    });
   });
 
   it('boolean type', () => {
@@ -78,16 +138,17 @@ describe('zodTypeToSwagger', () => {
         type: 'number',
         format: '999',
       });
-      expect(zodTypeToSwagger(literal(BigInt(1_000_000_000)))).toEqual({
-        type: 'number',
-        format: '1000000000',
-      });
+
+      const bigIntLiteral = literal(BigInt(1_000_000_000));
+      expect(() => zodTypeToSwagger(bigIntLiteral)).toMatchError(
+        new RequestError('swagger.invalid_zod_type', bigIntLiteral)
+      );
     });
 
     it('string', () => {
       expect(zodTypeToSwagger(literal(''))).toEqual({
         type: 'string',
-        format: '""',
+        format: 'empty',
       });
       expect(zodTypeToSwagger(literal('nonempty'))).toEqual({
         type: 'string',

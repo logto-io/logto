@@ -1,5 +1,5 @@
 import { arbitraryObjectGuard } from '@logto/schemas';
-import { conditional } from '@silverhand/essentials';
+import { conditional, ValuesOf } from '@silverhand/essentials';
 import { OpenAPIV3 } from 'openapi-types';
 import {
   ZodArray,
@@ -11,6 +11,7 @@ import {
   ZodObject,
   ZodOptional,
   ZodString,
+  ZodStringDef,
   ZodType,
   ZodUnion,
   ZodUnknown,
@@ -18,6 +19,56 @@ import {
 
 import RequestError from '@/errors/RequestError';
 
+type ZodStringCheck = ValuesOf<ZodStringDef['checks']>;
+
+const zodStringCheckToSwaggerFormat = (zodStringCheck: ZodStringCheck) => {
+  const { kind } = zodStringCheck;
+
+  switch (kind) {
+    case 'email':
+    case 'url':
+    case 'uuid':
+    case 'cuid':
+    case 'regex':
+      return kind;
+
+    case 'min':
+    case 'max':
+      // Do nothing here
+      return;
+
+    default:
+      throw new RequestError('swagger.invalid_zod_type', zodStringCheck);
+  }
+};
+
+// https://github.com/colinhacks/zod#strings
+const zodStringToSwagger = (zodString: ZodString): OpenAPIV3.SchemaObject => {
+  const { checks } = zodString._def;
+
+  const formats = checks
+    .map((zodStringCheck) => zodStringCheckToSwaggerFormat(zodStringCheck))
+    .filter((format) => format);
+  const minLength = checks.find(
+    (check): check is { kind: 'min'; value: number } => check.kind === 'min'
+  )?.value;
+  const maxLength = checks.find(
+    (check): check is { kind: 'max'; value: number } => check.kind === 'max'
+  )?.value;
+  const pattern = checks
+    .find((check): check is { kind: 'regex'; regex: RegExp } => check.kind === 'regex')
+    ?.regex.toString();
+
+  return {
+    type: 'string',
+    format: formats.length > 0 ? formats.join(' | ') : undefined,
+    minLength,
+    maxLength,
+    pattern,
+  };
+};
+
+// https://github.com/colinhacks/zod#literals
 const zodLiteralToSwagger = (zodLiteral: ZodLiteral<unknown>): OpenAPIV3.SchemaObject => {
   const { value } = zodLiteral;
 
@@ -27,7 +78,6 @@ const zodLiteralToSwagger = (zodLiteral: ZodLiteral<unknown>): OpenAPIV3.SchemaO
         type: 'boolean',
         format: String(value),
       };
-    case 'bigint':
     case 'number':
       return {
         type: 'number',
@@ -36,7 +86,7 @@ const zodLiteralToSwagger = (zodLiteral: ZodLiteral<unknown>): OpenAPIV3.SchemaO
     case 'string':
       return {
         type: 'string',
-        format: `"${value}"`,
+        format: value === '' ? 'empty' : `"${value}"`,
       };
     default:
       throw new RequestError('swagger.invalid_zod_type', zodLiteral);
@@ -104,9 +154,7 @@ export const zodTypeToSwagger = (config: unknown): OpenAPIV3.SchemaObject => {
   }
 
   if (config instanceof ZodString) {
-    return {
-      type: 'string',
-    };
+    return zodStringToSwagger(config);
   }
 
   if (config instanceof ZodNumber) {
