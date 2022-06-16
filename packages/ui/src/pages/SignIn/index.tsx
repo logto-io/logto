@@ -31,11 +31,15 @@ const SignIn = () => {
         socialConnectors={experienceSettings.socialConnectors}
         signInMode={experienceSettings.signInMode}
       />
-      <SecondarySection
-        primarySignInMethod={experienceSettings.primarySignInMethod}
-        secondarySignInMethods={experienceSettings.secondarySignInMethods}
-        socialConnectors={experienceSettings.socialConnectors}
-      />
+
+      {experienceSettings.signInMode !== SignInMode.Register && (
+        <SecondarySection
+          primarySignInMethod={experienceSettings.primarySignInMethod}
+          secondarySignInMethods={experienceSettings.secondarySignInMethods}
+          socialConnectors={experienceSettings.socialConnectors}
+        />
+      )}
+
       {experienceSettings.signInMode === SignInMode.SignInAndRegister && (
         <CreateAccountLink primarySignInMethod={experienceSettings.primarySignInMethod} />
       )}
