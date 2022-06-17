@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
 import completeIndicator from '@/assets/images/circle-tick.svg';
 import Button from '@/components/Button';
 import Card from '@/components/Card';
-import ConfirmModal from '@/components/ConfirmModal';
 import Spacer from '@/components/Spacer';
+import useConfirmModal from '@/hooks/use-confirm-modal';
 import useUserPreferences from '@/hooks/use-user-preferences';
 
 import Skeleton from './components/Skeleton';
@@ -18,9 +18,20 @@ const GetStarted = () => {
   const navigate = useNavigate();
   const { data, isLoading } = useGetStartedMetadata({ checkDemoAppExists: true });
   const { update } = useUserPreferences();
-  const [showConfirmModal, setShowConfirmModal] = useState(false);
 
-  const hideGetStarted = () => {
+  const { confirm } = useConfirmModal();
+
+  const hideGetStarted = async () => {
+    const confirmed = await confirm({
+      content: t('get_started.confirm_message'),
+      confirmButtonType: 'primary',
+      confirmButtonText: 'admin_console.get_started.hide_this',
+    });
+
+    if (!confirmed) {
+      return;
+    }
+
     void update({ hideGetStarted: true });
     // Navigate to next menu item
     navigate('/dashboard');
@@ -35,12 +46,7 @@ const GetStarted = () => {
           <Spacer />
           <span>
             {t('get_started.subtitle_part2')}
-            <span
-              className={styles.hideButton}
-              onClick={() => {
-                setShowConfirmModal(true);
-              }}
-            >
+            <span className={styles.hideButton} onClick={hideGetStarted}>
               {t('get_started.hide_this')}
             </span>
           </span>
@@ -68,17 +74,6 @@ const GetStarted = () => {
               </Card>
             )
         )}
-      <ConfirmModal
-        title="get_started.confirm"
-        isOpen={showConfirmModal}
-        confirmButtonText="admin_console.get_started.hide_this"
-        onConfirm={hideGetStarted}
-        onCancel={() => {
-          setShowConfirmModal(false);
-        }}
-      >
-        {t('get_started.confirm_message')}
-      </ConfirmModal>
     </div>
   );
 };

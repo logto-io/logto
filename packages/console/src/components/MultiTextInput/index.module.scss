@@ -30,15 +30,3 @@
     margin-top: _.unit(1);
   }
 }
-
-.reminder {
-  .content {
-    > :not(:first-child) {
-      margin: _.unit(6) 0;
-    }
-
-    .confirmation {
-      font: var(--font-body-medium);
-    }
-  }
-}

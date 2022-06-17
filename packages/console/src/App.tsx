@@ -2,6 +2,7 @@ import { LogtoProvider } from '@logto/react';
 import { adminConsoleApplicationId, managementResource } from '@logto/schemas/lib/seeds';
 import { getBasename } from '@logto/shared';
 import React from 'react';
+import ConfirmModalContainer from 'react-modal-promise';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { SWRConfig } from 'swr';
 
@@ -41,6 +42,7 @@ const Main = () => {
     <ErrorBoundary>
       <SWRConfig value={swrOptions}>
         <AppBoundary>
+          <ConfirmModalContainer />
           <Toast />
           <Routes>
             <Route path="callback" element={<Callback />} />

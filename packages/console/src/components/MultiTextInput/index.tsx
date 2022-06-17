@@ -1,16 +1,14 @@
 import { I18nKey } from '@logto/phrases';
 import classNames from 'classnames';
-import React, { useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import Modal from 'react-modal';
 
 import * as textButtonStyles from '@/components/TextButton/index.module.scss';
+import useConfirmModal from '@/hooks/use-confirm-modal';
 import Minus from '@/icons/Minus';
-import * as modalStyles from '@/scss/modal.module.scss';
 
 import IconButton from '../IconButton';
 import TextInput from '../TextInput';
-import DeleteConfirm from './DeleteConfirm';
 import * as styles from './index.module.scss';
 import { MultiTextInputError } from './types';
 
@@ -22,11 +20,9 @@ type Props = {
 };
 
 const MultiTextInput = ({ title, value, onChange, error }: Props) => {
-  const { t } = useTranslation(undefined, {
-    keyPrefix: 'admin_console',
-  });
+  const { t } = useTranslation();
 
-  const [deleteFieldIndex, setDeleteFieldIndex] = useState<number>();
+  const { confirm } = useConfirmModal();
 
   const fields = useMemo(() => {
     if (!value?.length) {
@@ -40,7 +36,18 @@ const MultiTextInput = ({ title, value, onChange, error }: Props) => {
     onChange([...fields, '']);
   };
 
-  const handleRemove = (index: number) => {
+  const handleRemove = async (index: number, needConfirm = true) => {
+    if (needConfirm) {
+      const confirmed = await confirm({
+        content: t('admin_console.form.deletion_confirmation', { title: t(title) }),
+        confirmButtonText: 'admin_console.form.delete',
+      });
+
+      if (!confirmed) {
+        return;
+      }
+    }
+
     onChange(fields.filter((_, i) => i !== index));
   };
 
@@ -65,12 +72,8 @@ const MultiTextInput = ({ title, value, onChange, error }: Props) => {
             />
             {fieldIndex > 0 && (
               <IconButton
-                onClick={() => {
-                  if (fieldValue.trim().length === 0) {
-                    handleRemove(fieldIndex);
-                  } else {
-                    setDeleteFieldIndex(fieldIndex);
-                  }
+                onClick={async () => {
+                  await handleRemove(fieldIndex, Boolean(fieldValue.trim()));
                 }}
               >
                 <Minus className={styles.minusIcon} />
@@ -86,25 +89,8 @@ const MultiTextInput = ({ title, value, onChange, error }: Props) => {
         </div>
       ))}
       <div className={classNames(textButtonStyles.button, styles.addAnother)} onClick={handleAdd}>
-        {t('form.add_another')}
+        {t('admin_console.form.add_another')}
       </div>
-      <Modal
-        isOpen={deleteFieldIndex !== undefined}
-        className={modalStyles.content}
-        overlayClassName={modalStyles.overlay}
-      >
-        <DeleteConfirm
-          title={title}
-          onClose={() => {
-            setDeleteFieldIndex(undefined);
-          }}
-          onConfirm={() => {
-            if (deleteFieldIndex !== undefined) {
-              handleRemove(deleteFieldIndex);
-            }
-          }}
-        />
-      </Modal>
     </div>
   );
 };

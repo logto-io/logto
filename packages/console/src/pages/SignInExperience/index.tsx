@@ -1,10 +1,9 @@
 import { SignInExperience as SignInExperienceType } from '@logto/schemas';
 import classNames from 'classnames';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
-import ReactModal from 'react-modal';
 import { useParams } from 'react-router-dom';
 import useSWR from 'swr';
 
@@ -13,14 +12,14 @@ import Card from '@/components/Card';
 import CardTitle from '@/components/CardTitle';
 import TabNav, { TabNavItem } from '@/components/TabNav';
 import useApi, { RequestError } from '@/hooks/use-api';
+import useConfirmModal from '@/hooks/use-confirm-modal';
 import useSettings from '@/hooks/use-settings';
 import * as detailsStyles from '@/scss/details.module.scss';
-import * as modalStyles from '@/scss/modal.module.scss';
 
 import BrandingForm from './components/BrandingForm';
 import LanguagesForm from './components/LanguagesForm';
 import Preview from './components/Preview';
-import SaveAlert from './components/SaveAlert';
+import SignInMethodsChangePreview from './components/SignInMethodsChangePreview';
 import SignInMethodsForm from './components/SignInMethodsForm';
 import TermsForm from './components/TermsForm';
 import Welcome from './components/Welcome';
@@ -34,7 +33,6 @@ const SignInExperience = () => {
   const { tab } = useParams();
   const { data, error, mutate } = useSWR<SignInExperienceType, RequestError>('/api/sign-in-exp');
   const { settings, error: settingsError, updateSettings } = useSettings();
-  const [dataToCompare, setDataToCompare] = useState<SignInExperienceType>();
 
   const methods = useForm<SignInExperienceForm>();
   const {
@@ -48,6 +46,8 @@ const SignInExperience = () => {
   const formData = watch();
 
   const previewConfigs = usePreviewConfigs(formData, isDirty, data);
+
+  const { confirm } = useConfirmModal();
 
   useEffect(() => {
     if (data && !isDirty) {
@@ -75,9 +75,13 @@ const SignInExperience = () => {
 
     // Sign in methods changed, need to show confirm modal first.
     if (!compareSignInMethods(data, formatted)) {
-      setDataToCompare(formatted);
+      const confirmed = await confirm({
+        content: <SignInMethodsChangePreview before={data} after={formatted} />,
+      });
 
-      return;
+      if (!confirmed) {
+        return;
+      }
     }
 
     await saveData();
@@ -143,24 +147,6 @@ const SignInExperience = () => {
         </Card>
       </div>
       {formData.id && <Preview signInExperience={previewConfigs} />}
-      {data && (
-        <ReactModal
-          isOpen={Boolean(dataToCompare)}
-          className={modalStyles.content}
-          overlayClassName={modalStyles.overlay}
-        >
-          {dataToCompare && (
-            <SaveAlert
-              before={data}
-              after={dataToCompare}
-              onClose={() => {
-                setDataToCompare(undefined);
-              }}
-              onConfirm={saveData}
-            />
-          )}
-        </ReactModal>
-      )}
     </div>
   );
 };
