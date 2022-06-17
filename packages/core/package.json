@@ -28,6 +28,7 @@
     "@logto/connector-github": "^0.1.0",
     "@logto/connector-google": "^0.1.0",
     "@logto/connector-sendgrid-email": "^0.1.0",
+    "@logto/connector-smtp": "^0.1.0",
     "@logto/connector-twilio-sms": "^0.1.0",
     "@logto/connector-types": "^0.1.0",
     "@logto/connector-wechat": "^0.1.0",
