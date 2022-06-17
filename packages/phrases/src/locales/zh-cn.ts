@@ -535,7 +535,7 @@ const translation = {
     },
     log_details: {
       back_to_logs: '返回审计日志',
-      back_to_user: '返回{{name}}',
+      back_to_user: '返回 {{name}}',
       success: '成功',
       failed: '失败',
       event_type: '事件类型',

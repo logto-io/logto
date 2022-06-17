@@ -36,7 +36,9 @@ const AuditLogDetails = () => {
 
   const backLink = getAuditLogDetailsRelatedResourceLink(pathname);
   const backLinkTitle = userId ? (
-    <DangerousRaw>{t('log_details.back_to_user', { name: userData?.name ?? '-' })}</DangerousRaw>
+    <DangerousRaw>
+      {t('log_details.back_to_user', { name: userData?.name ?? t('users.unnamed') })}
+    </DangerousRaw>
   ) : (
     'admin_console.log_details.back_to_logs'
   );
