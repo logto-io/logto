@@ -1,22 +1,14 @@
 import React from 'react';
-import { useTranslation } from 'react-i18next';
+
+import { translateUnnamed } from '@/utilities/translation';
 
 type Props = {
   resource: Record<string, string>;
   className?: string;
 };
 
-const UnnamedTrans = ({ resource, className }: Props) => {
-  const {
-    i18n: { languages },
-  } = useTranslation();
-  const matchedLanguage = languages.find((language) => resource[language]);
-
-  if (!matchedLanguage) {
-    return null;
-  }
-
-  return <span className={className}>{resource[matchedLanguage]}</span>;
-};
+const UnnamedTrans = ({ resource, className }: Props) => (
+  <span className={className}>{translateUnnamed(resource)}</span>
+);
 
 export default UnnamedTrans;
