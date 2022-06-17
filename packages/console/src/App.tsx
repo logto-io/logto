@@ -52,7 +52,7 @@ const Main = () => {
                 <Route index element={<Applications />} />
                 <Route path="create" element={<Applications />} />
                 <Route path=":id">
-                  <Route index element={<Navigate to="settings" />} />
+                  <Route index element={<Navigate replace to="settings" />} />
                   <Route path="settings" element={<ApplicationDetails />} />
                   <Route path="advanced-settings" element={<ApplicationDetails />} />
                 </Route>
@@ -73,7 +73,7 @@ const Main = () => {
                 <Route path=":userId/logs/:logId" element={<AuditLogDetails />} />
               </Route>
               <Route path="sign-in-experience">
-                <Route index element={<Navigate to="experience" />} />
+                <Route index element={<Navigate replace to="experience" />} />
                 <Route path=":tab" element={<SignInExperience />} />
               </Route>
               <Route path="settings" element={<Settings />} />
