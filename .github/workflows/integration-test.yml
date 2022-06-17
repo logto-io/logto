@@ -2,8 +2,10 @@ name: Integration Test
 
 on:
   push:
-    branches: [master]
-  pull_request:
+
+concurrency: 
+  group: integration-test-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   package:

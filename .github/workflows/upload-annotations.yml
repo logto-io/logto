@@ -6,6 +6,10 @@ on:
   pull_request:
     branches: [master]
 
+concurrency: 
+  group: upload-annotations-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   upload-annotations:
     runs-on: ubuntu-latest

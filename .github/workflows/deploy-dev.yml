@@ -4,10 +4,11 @@ on:
   push:
     branches: [ master ]
 
+concurrency: deploy-dev
+
 jobs:
   deploy:
     environment: dev
-    concurrency: deploy-dev
     runs-on: ubuntu-latest
 
     steps:
