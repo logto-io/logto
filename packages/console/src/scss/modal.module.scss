@@ -15,6 +15,10 @@
   align-items: center;
   flex: 0 0;
   min-height: 100%;
+
+  &:focus-visible {
+    outline: none;
+  }
 }
 
 .fullScreen {

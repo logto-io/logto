@@ -1,5 +1,6 @@
 import { User } from '@logto/schemas';
-import { passwordRegEx, usernameRegEx } from '@logto/shared';
+import { usernameRegEx } from '@logto/shared';
+import { nanoid } from 'nanoid';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -12,7 +13,6 @@ import useApi from '@/hooks/use-api';
 
 type FormData = {
   username: string;
-  password: string;
   name: string;
 };
 
@@ -35,8 +35,10 @@ const CreateForm = ({ onClose }: Props) => {
       return;
     }
 
-    const createdUser = await api.post('/api/users', { json: data }).json<User>();
-    onClose?.(createdUser, btoa(data.password));
+    const password = nanoid();
+
+    const createdUser = await api.post('/api/users', { json: { ...data, password } }).json<User>();
+    onClose?.(createdUser, btoa(password));
   });
 
   return (
@@ -77,19 +79,6 @@ const CreateForm = ({ onClose }: Props) => {
             })}
             hasError={Boolean(errors.name)}
             errorMessage={errors.name?.message}
-          />
-        </FormField>
-        <FormField isRequired title="admin_console.users.create_form_password">
-          <TextInput
-            {...register('password', {
-              required: true,
-              pattern: {
-                value: passwordRegEx,
-                message: t('errors.password_pattern_error'),
-              },
-            })}
-            hasError={Boolean(errors.password)}
-            errorMessage={errors.password?.message}
           />
         </FormField>
       </form>
