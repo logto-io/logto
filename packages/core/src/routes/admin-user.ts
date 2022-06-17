@@ -12,7 +12,6 @@ import koaGuard from '@/middleware/koa-guard';
 import koaPagination from '@/middleware/koa-pagination';
 import { findRolesByRoleNames } from '@/queries/roles';
 import {
-  clearUserCustomDataById,
   deleteUserById,
   deleteUserIdentity,
   findUsers,
@@ -124,11 +123,6 @@ export default function adminUserRoutes<T extends AuthedRouter>(router: T) {
 
       await findUserById(userId);
 
-      // Clear customData to achieve full replacement
-      if (body.customData) {
-        await clearUserCustomDataById(userId);
-      }
-
       // Temp solution to validate the existence of input roleNames
       if (body.roleNames?.length) {
         const { roleNames } = body;
@@ -143,9 +137,13 @@ export default function adminUserRoutes<T extends AuthedRouter>(router: T) {
         }
       }
 
-      const user = await updateUserById(userId, {
-        ...body,
-      });
+      const user = await updateUserById(
+        userId,
+        {
+          ...body,
+        },
+        'replace'
+      );
 
       ctx.body = pick(user, ...userInfoSelectFields);
 

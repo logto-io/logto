@@ -23,7 +23,6 @@ import {
   findUsers,
   updateUserById,
   deleteUserById,
-  clearUserCustomDataById,
   deleteUserIdentity,
 } from './user';
 
@@ -364,42 +363,6 @@ describe('user query', () => {
     });
 
     await expect(deleteUserById(id)).rejects.toMatchError(new DeletionError(Users.table, id));
-  });
-
-  it('clearUserCustomDataById', async () => {
-    const id = 'foo';
-    const expectSql = sql`
-      update ${table}
-      set ${fields.customData}='{}'::jsonb
-      where ${fields.id}=$1
-    `;
-
-    mockQuery.mockImplementationOnce(async (sql, values) => {
-      expectSqlAssert(sql, expectSql.sql);
-      expect(values).toEqual([id]);
-
-      return createMockQueryResult([dbvalue]);
-    });
-
-    await clearUserCustomDataById(id);
-  });
-
-  it('clearUserCustomDataById should throw when user can not be found by id', async () => {
-    const id = 'foo';
-    const expectSql = sql`
-      update ${table}
-      set ${fields.customData}='{}'::jsonb
-      where ${fields.id}=$1
-    `;
-
-    mockQuery.mockImplementationOnce(async (sql, values) => {
-      expectSqlAssert(sql, expectSql.sql);
-      expect(values).toEqual([id]);
-
-      return createMockQueryResult([]);
-    });
-
-    await expect(clearUserCustomDataById(id)).rejects.toThrowError();
   });
 
   it('deleteUserIdentity', async () => {

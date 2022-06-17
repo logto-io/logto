@@ -43,9 +43,8 @@ const updateApplication = buildUpdateWhere<CreateApplication, Application>(Appli
 
 export const updateApplicationById = async (
   id: string,
-  set: Partial<OmitAutoSetFields<CreateApplication>>,
-  jsonbMode: 'replace' | 'merge' = 'merge'
-) => updateApplication({ set, where: { id }, jsonbMode });
+  set: Partial<OmitAutoSetFields<CreateApplication>>
+) => updateApplication({ set, where: { id }, jsonbMode: 'replace' });
 
 export const deleteApplicationById = async (id: string) => {
   const { rowCount } = await envSet.pool.query(sql`

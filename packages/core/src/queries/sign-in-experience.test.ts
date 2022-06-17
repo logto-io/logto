@@ -55,9 +55,7 @@ describe('sign-in-experience query', () => {
     /* eslint-disable sql/no-unsafe-query */
     const expectSql = `
       update "sign_in_experiences"
-      set
-      "terms_of_use"=
-      coalesce("terms_of_use",'{}'::jsonb)|| $1
+      set "terms_of_use"=$1
       where "id"=$2
       returning *
     `;

@@ -11,7 +11,6 @@ import {
   updateUserById,
   deleteUserIdentity,
   deleteUserById,
-  clearUserCustomDataById,
 } from '@/queries/user';
 import { createRequester } from '@/utils/test-utils';
 
@@ -51,7 +50,6 @@ jest.mock('@/queries/user', () => ({
       ...user,
     })
   ),
-  clearUserCustomDataById: jest.fn(),
   deleteUserIdentity: jest.fn(),
 }));
 
@@ -167,15 +165,6 @@ describe('adminUserRoutes', () => {
       name,
       avatar,
     });
-  });
-
-  it('PATCH /users/:userId should call clearUserCustomDataById if customData is present', async () => {
-    const updateNameResponse = await userRequest.patch('/users/foo').send({ customData: {} });
-    expect(updateNameResponse.status).toEqual(200);
-    expect(updateNameResponse.body).toEqual({
-      ...mockUserResponse,
-    });
-    expect(clearUserCustomDataById).toHaveBeenCalledTimes(1);
   });
 
   it('PATCH /users/:userId should updated with one field if the other is undefined', async () => {
