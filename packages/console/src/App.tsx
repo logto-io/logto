@@ -30,6 +30,7 @@ import Settings from '@/pages/Settings';
 import SignInExperience from '@/pages/SignInExperience';
 import UserDetails from '@/pages/UserDetails';
 import Users from '@/pages/Users';
+import Welcome from '@/pages/Welcome';
 
 void initI18n();
 
@@ -43,8 +44,7 @@ const Main = () => {
           <Toast />
           <Routes>
             <Route path="callback" element={<Callback />} />
-            {/* TODO: add register route */}
-            <Route path="register" element={<div>register</div>} />
+            <Route path="welcome" element={<Welcome />} />
             <Route element={<AppContent />}>
               <Route path="*" element={<NotFound />} />
               <Route path="get-started" element={<GetStarted />} />

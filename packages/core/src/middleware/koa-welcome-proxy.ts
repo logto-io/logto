@@ -15,6 +15,6 @@ export default function koaWelcomeProxy<
       return;
     }
 
-    ctx.redirect('/console/register');
+    ctx.redirect('/console/welcome');
   };
 }

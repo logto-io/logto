@@ -570,6 +570,12 @@ const translation = {
         'Your session might have expired and you have been disconnected. Click the button below to sign in to admin console again.',
       button: 'Sign in again',
     },
+    welcome: {
+      title: 'Welcome to Admin Console',
+      description:
+        'Admin console is a web app to manage Logto without coding requirements. Let’s first create an admin account. With this account, you can manage Logto by yourself or on behalf of your company.',
+      create_account: 'Create Account',
+    },
   },
   demo_app: {
     notification: 'Use the admin username and password to sign in this demo.',

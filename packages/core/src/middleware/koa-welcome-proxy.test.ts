@@ -28,14 +28,14 @@ describe('koaWelcomeProxy', () => {
     expect(next).not.toBeCalled();
   });
 
-  it('should redirect to register if has no AdminUsers', async () => {
+  it('should redirect to welcome page if has no Users', async () => {
     (hasActiveUsers as jest.Mock).mockResolvedValue(false);
     const ctx = createContextWithRouteParameters({
       url: `/${MountedApps.Welcome}`,
     });
 
     await koaWelcomeProxy()(ctx, next);
-    expect(ctx.redirect).toBeCalledWith(`/${MountedApps.Console}/register`);
+    expect(ctx.redirect).toBeCalledWith(`/${MountedApps.Console}/welcome`);
     expect(next).not.toBeCalled();
   });
 });
