@@ -13,7 +13,6 @@ type Value = { countryCallingCode?: CountryCallingCode; nationalNumber?: string 
 
 export type Props = {
   name: string;
-  autoComplete?: AutoCompleteType;
   // eslint-disable-next-line react/boolean-prop-naming
   autoFocus?: boolean;
   className?: string;
@@ -27,7 +26,6 @@ export type Props = {
 
 const PhoneInput = ({
   name,
-  autoComplete,
   autoFocus,
   className,
   placeholder,
@@ -50,6 +48,7 @@ const PhoneInput = ({
         <span>{`+${countryCallingCode}`}</span>
         <DownArrowIcon />
         <select
+          autoComplete="tel-country-code"
           onChange={({ target: { value } }) => {
             onChange({ countryCallingCode: value });
 
@@ -77,13 +76,13 @@ const PhoneInput = ({
         {countrySelector}
         <input
           ref={inputReference}
+          type="tel"
+          inputMode="tel"
+          autoComplete="tel-national"
           autoFocus={autoFocus}
           name={name}
           placeholder={placeholder}
           value={nationalNumber}
-          type="tel"
-          inputMode="numeric"
-          autoComplete={autoComplete}
           onFocus={() => {
             setOnFocus(true);
           }}
