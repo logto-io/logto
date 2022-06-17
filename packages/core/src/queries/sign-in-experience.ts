@@ -14,10 +14,8 @@ const updateSignInExperience = buildUpdateWhere<CreateSignInExperience, SignInEx
 
 const id = 'default';
 
-export const updateDefaultSignInExperience = async (
-  set: Partial<CreateSignInExperience>,
-  jsonbMode: 'replace' | 'merge' = 'merge'
-) => updateSignInExperience({ set, where: { id }, jsonbMode });
+export const updateDefaultSignInExperience = async (set: Partial<CreateSignInExperience>) =>
+  updateSignInExperience({ set, where: { id }, jsonbMode: 'replace' });
 
 export const findDefaultSignInExperience = async () =>
   envSet.pool.one<SignInExperience>(sql`

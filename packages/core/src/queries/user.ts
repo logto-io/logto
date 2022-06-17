@@ -5,7 +5,7 @@ import { buildInsertInto } from '@/database/insert-into';
 import { buildUpdateWhere } from '@/database/update-where';
 import { conditionalSql, convertToIdentifiers, OmitAutoSetFields } from '@/database/utils';
 import envSet from '@/env-set';
-import { DeletionError, UpdateError } from '@/errors/SlonikError';
+import { DeletionError } from '@/errors/SlonikError';
 
 const { table, fields } = convertToIdentifiers(Users);
 
@@ -128,18 +128,6 @@ export const deleteUserById = async (id: string) => {
 
   if (rowCount < 1) {
     throw new DeletionError(Users.table, id);
-  }
-};
-
-export const clearUserCustomDataById = async (id: string) => {
-  const { rowCount } = await envSet.pool.query<User>(sql`
-    update ${table}
-    set ${fields.customData}='{}'::jsonb
-    where ${fields.id}=${id}
-  `);
-
-  if (rowCount < 1) {
-    throw new UpdateError(Users, { set: { customData: {} }, where: { id }, jsonbMode: 'replace' });
   }
 };
 
