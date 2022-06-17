@@ -2,7 +2,6 @@ import { readdir, readFile } from 'fs/promises';
 import path from 'path';
 
 import { SchemaLike, seeds } from '@logto/schemas';
-import { createDemoAppApplication } from '@logto/schemas/lib/seeds';
 import { conditionalString } from '@silverhand/essentials';
 import chalk from 'chalk';
 import decamelize from 'decamelize';
@@ -14,7 +13,13 @@ import { fromRoot } from '@/env-set/parameters';
 
 import { convertToPrimitiveOrSql } from './utils';
 
-const { managementResource, defaultSignInExperience, createDefaultSetting } = seeds;
+const {
+  managementResource,
+  defaultSignInExperience,
+  createDefaultSetting,
+  createDemoAppApplication,
+  defaultRole,
+} = seeds;
 const tableDirectory =
   conditionalString(fromRoot && 'packages/core/') + 'node_modules/@logto/schemas/tables';
 
@@ -84,6 +89,7 @@ export const createDatabaseCli = (dsn: string, demoAppUrl: string) => {
       pool.query(insertInto(createDefaultSetting(), 'settings')),
       pool.query(insertInto(defaultSignInExperience, 'sign_in_experiences')),
       pool.query(insertInto(createDemoAppApplication([demoAppUrl]), 'applications')),
+      pool.query(insertInto(defaultRole, 'roles')),
     ]);
     console.log(`${chalk.blue('[seed-tables]')} Seed tables succeeded.`);
   };
