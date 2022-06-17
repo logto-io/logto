@@ -1,3 +1,5 @@
+create type sign_in_mode as enum ('SignIn', 'Register', 'SignInAndRegister');
+
 create table sign_in_experiences (
   id varchar(21) not null,
   branding jsonb /* @use Branding */ not null,
@@ -5,5 +7,6 @@ create table sign_in_experiences (
   terms_of_use jsonb /* @use TermsOfUse */ not null,
   sign_in_methods jsonb /* @use SignInMethods */ not null,
   social_sign_in_connector_targets jsonb /* @use ConnectorTargets */ not null default '[]'::jsonb,
+  sign_in_mode sign_in_mode not null default 'SignInAndRegister',
   primary key (id)
 );

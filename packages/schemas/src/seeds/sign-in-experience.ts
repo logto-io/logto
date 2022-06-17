@@ -1,6 +1,6 @@
 import { Language } from '@logto/phrases';
 
-import { CreateSignInExperience } from '../db-entries';
+import { CreateSignInExperience, SignInMode } from '../db-entries';
 import { BrandingStyle, SignInMethodState } from '../foundations';
 
 export const defaultSignInExperience: Readonly<CreateSignInExperience> = {
@@ -28,4 +28,12 @@ export const defaultSignInExperience: Readonly<CreateSignInExperience> = {
     social: SignInMethodState.Disabled,
   },
   socialSignInConnectorTargets: [],
+  signInMode: SignInMode.SignInAndRegister,
+};
+
+export const adminConsoleSignInMethods = {
+  username: SignInMethodState.Primary,
+  email: SignInMethodState.Disabled,
+  sms: SignInMethodState.Disabled,
+  social: SignInMethodState.Disabled,
 };

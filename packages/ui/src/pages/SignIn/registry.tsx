@@ -1,7 +1,9 @@
+import { SignInMode } from '@logto/schemas';
 import React from 'react';
 
 import Divider from '@/components/Divider';
 import TextLink from '@/components/TextLink';
+import CreateAccount from '@/containers/CreateAccount';
 import { EmailPasswordless, PhonePasswordless } from '@/containers/Passwordless';
 import SignInMethodsLink from '@/containers/SignInMethodsLink';
 import { PrimarySocialSignIn, SecondarySocialSignIn } from '@/containers/SocialSignIn';
@@ -14,17 +16,33 @@ import * as styles from './index.module.scss';
 export const PrimarySection = ({
   signInMethod,
   socialConnectors = [],
+  signInMode,
 }: {
   signInMethod?: SignInMethod;
   socialConnectors?: ConnectorData[];
+  signInMode?: SignInMode;
 }) => {
   switch (signInMethod) {
     case 'email':
-      return <EmailPasswordless type="sign-in" className={styles.primarySignIn} />;
+      return (
+        <EmailPasswordless
+          type={signInMode === SignInMode.Register ? 'register' : 'sign-in'}
+          className={styles.primarySignIn}
+        />
+      );
     case 'sms':
-      return <PhonePasswordless type="sign-in" className={styles.primarySignIn} />;
+      return (
+        <PhonePasswordless
+          type={signInMode === SignInMode.Register ? 'register' : 'sign-in'}
+          className={styles.primarySignIn}
+        />
+      );
     case 'username':
-      return <UsernameSignin className={styles.primarySignIn} />;
+      return signInMode === SignInMode.Register ? (
+        <CreateAccount />
+      ) : (
+        <UsernameSignin className={styles.primarySignIn} />
+      );
     case 'social':
       return socialConnectors.length > 0 ? (
         <>

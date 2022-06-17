@@ -5,6 +5,7 @@ import {
   ConnectorType,
   SignInExperience,
   SignInMethodState,
+  SignInMode,
 } from '@logto/schemas';
 
 import { SignInExperienceSettings } from '@/types';
@@ -140,6 +141,7 @@ export const mockSignInExperience: SignInExperience = {
     social: SignInMethodState.Secondary,
   },
   socialSignInConnectorTargets: ['BE8QXN0VsrOH7xdWFDJZ9', 'lcXT4o2GSjbV9kg2shZC7'],
+  signInMode: SignInMode.SignInAndRegister,
 };
 
 export const mockSignInExperienceSettings: SignInExperienceSettings = {
@@ -149,4 +151,5 @@ export const mockSignInExperienceSettings: SignInExperienceSettings = {
   primarySignInMethod: 'username',
   secondarySignInMethods: ['email', 'sms', 'social'],
   socialConnectors,
+  signInMode: SignInMode.SignInAndRegister,
 };

@@ -7,6 +7,7 @@ import {
   SignInMethods,
   SignInMethodState,
   TermsOfUse,
+  SignInMode,
 } from '@logto/schemas';
 
 export const mockSignInExperience: SignInExperience = {
@@ -34,6 +35,7 @@ export const mockSignInExperience: SignInExperience = {
     social: SignInMethodState.Secondary,
   },
   socialSignInConnectorTargets: ['github', 'facebook', 'wechat'],
+  signInMode: SignInMode.SignInAndRegister,
 };
 
 export const mockBranding: Branding = {
