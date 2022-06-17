@@ -72,7 +72,7 @@ export const getUserInfoFromInteractionResult = async (
  * if both phone and email exist, take phone for priority.
  *
  * @param info SocialUserInfo
- * @returns null | [string, User] the first string idicating phone or email
+ * @returns null | [string, User] the first string indicating phone or email
  */
 export const findSocialRelatedUser = async (
   info: SocialUserInfo

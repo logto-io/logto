@@ -1,15 +1,15 @@
 import { Language } from '@logto/phrases';
-import { ConnectorDTO, Identities } from '@logto/schemas';
+import { Identities } from '@logto/schemas';
 import { Optional } from '@silverhand/essentials';
 import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import useSWR from 'swr';
 
 import Button from '@/components/Button';
 import CopyToClipboard from '@/components/CopyToClipboard';
 import TableError from '@/components/Table/TableError';
 import UnnamedTrans from '@/components/UnnamedTrans';
-import useApi, { RequestError } from '@/hooks/use-api';
+import useApi from '@/hooks/use-api';
+import useConnectorGroups from '@/hooks/use-connector-groups';
 
 import * as styles from './UserConnectors.module.scss';
 
@@ -29,8 +29,8 @@ type DisplayConnector = {
 const UserConnectors = ({ userId, connectors, onDelete }: Props) => {
   const api = useApi();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { data, error, mutate } = useSWR<ConnectorDTO[], RequestError>('/api/connectors');
-  const isLoading = !data && !error;
+  const { data: connectorGroups, error, mutate } = useConnectorGroups();
+  const isLoading = !connectorGroups && !error;
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleDelete = async (connectorId: string) => {
@@ -49,12 +49,12 @@ const UserConnectors = ({ userId, connectors, onDelete }: Props) => {
   };
 
   const displayConnectors: Optional<DisplayConnector[]> = useMemo(() => {
-    if (!data) {
+    if (!connectorGroups) {
       return;
     }
 
     return Object.keys(connectors).map((key) => {
-      const connector = data.find(({ id }) => id === key);
+      const connector = connectorGroups.find(({ target }) => target === key);
 
       if (!connector) {
         return {
@@ -77,7 +77,7 @@ const UserConnectors = ({ userId, connectors, onDelete }: Props) => {
         userId: connectors[key]?.userId,
       };
     });
-  }, [data, connectors]);
+  }, [connectorGroups, connectors]);
 
   if (Object.keys(connectors).length === 0) {
     return <div className={styles.empty}>{t('user_details.connectors.not_connected')}</div>;
@@ -101,7 +101,7 @@ const UserConnectors = ({ userId, connectors, onDelete }: Props) => {
             </tr>
           </thead>
           <tbody>
-            {!data && error && (
+            {!connectorGroups && error && (
               <TableError
                 columns={3}
                 content={error.body?.message ?? error.message}

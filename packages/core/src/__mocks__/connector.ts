@@ -273,3 +273,13 @@ export const mockGoogleConnectorInstance = {
     platform: ConnectorPlatform.Web,
   },
 };
+
+export const mockConnectorInstances = [
+  mockAliyunDmConnectorInstance,
+  mockAliyunSmsConnectorInstance,
+  mockFacebookConnectorInstance,
+  mockGithubConnectorInstance,
+  mockGoogleConnectorInstance,
+  mockWechatConnectorInstance,
+  mockWechatNativeConnectorInstance,
+];

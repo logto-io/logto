@@ -118,12 +118,12 @@ describe('user query', () => {
   });
 
   it('findUserByIdentity', async () => {
-    const connectorId = 'github_foo';
+    const target = 'github';
 
     const expectSql = sql`
       select ${sql.join(Object.values(fields), sql`,`)}
       from ${table}
-      where ${fields.identities}::json#>>'{${sql.identifier([connectorId])},userId}' = $1
+      where ${fields.identities}::json#>>'{${sql.identifier([target])},userId}' = $1
     `;
 
     mockQuery.mockImplementationOnce(async (sql, values) => {
@@ -133,7 +133,7 @@ describe('user query', () => {
       return createMockQueryResult([dbvalue]);
     });
 
-    await expect(findUserByIdentity(connectorId, mockUser.id)).resolves.toEqual(dbvalue);
+    await expect(findUserByIdentity(target, mockUser.id)).resolves.toEqual(dbvalue);
   });
 
   it('hasUser', async () => {
@@ -216,13 +216,13 @@ describe('user query', () => {
   });
 
   it('hasUserWithIdentity', async () => {
-    const connectorId = 'github_foo';
+    const target = 'github';
 
     const expectSql = sql`
       SELECT EXISTS(
         select ${fields.id}
         from ${table}
-        where ${fields.identities}::json#>>'{${sql.identifier([connectorId])},userId}' = $1
+        where ${fields.identities}::json#>>'{${sql.identifier([target])},userId}' = $1
       )
     `;
 
@@ -233,7 +233,7 @@ describe('user query', () => {
       return createMockQueryResult([{ exists: true }]);
     });
 
-    await expect(hasUserWithIdentity(connectorId, mockUser.id)).resolves.toEqual(true);
+    await expect(hasUserWithIdentity(target, mockUser.id)).resolves.toEqual(true);
   });
 
   it('insertUser', async () => {
@@ -404,7 +404,7 @@ describe('user query', () => {
 
   it('deleteUserIdentity', async () => {
     const userId = 'foo';
-    const connectorId = 'connector1';
+    const target = 'connector1';
 
     const { connector1, ...restIdentities } = mockUser.identities;
     const finalDbvalue = {
@@ -423,11 +423,11 @@ describe('user query', () => {
 
     mockQuery.mockImplementationOnce(async (sql, values) => {
       expectSqlAssert(sql, expectSql.sql);
-      expect(values).toEqual([connectorId, mockUser.id]);
+      expect(values).toEqual([target, mockUser.id]);
 
       return createMockQueryResult([finalDbvalue]);
     });
 
-    await expect(deleteUserIdentity(userId, connectorId)).resolves.toEqual(finalDbvalue);
+    await expect(deleteUserIdentity(userId, target)).resolves.toEqual(finalDbvalue);
   });
 });
