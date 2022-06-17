@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import dayjs from 'dayjs';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { useLocation, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import useSWR from 'swr';
 
 import ApplicationName from '@/components/ApplicationName';
@@ -23,16 +23,14 @@ import EventIcon from './components/EventIcon';
 import * as styles from './index.module.scss';
 
 const AuditLogDetails = () => {
-  const { id: userId, logId } = useParams();
-  const { pathname } = useLocation();
+  const { userId, logId } = useParams();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { data, error } = useSWR<LogDTO, RequestError>(logId && `/api/logs/${logId}`);
   const { data: userData } = useSWR<User, RequestError>(userId && `/api/users/${userId}`);
 
   const isLoading = !data && !error;
 
-  const backLink =
-    pathname.startsWith('/users') && userId ? `/users/${userId}/logs` : '/audit-logs';
+  const backLink = userId ? `/users/${userId}/logs` : '/audit-logs';
   const backLinkTitle = userId ? (
     <DangerousRaw>{t('log_details.back_to_user', { name: userData?.name ?? '-' })}</DangerousRaw>
   ) : (

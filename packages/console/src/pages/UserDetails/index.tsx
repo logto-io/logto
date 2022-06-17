@@ -51,12 +51,12 @@ type FormData = {
 const UserDetails = () => {
   const location = useLocation();
   const isLogs = location.pathname.endsWith('/logs');
-  const { id } = useParams();
+  const { userId } = useParams();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const [isDeleteFormOpen, setIsDeleteFormOpen] = useState(false);
   const [isResetPasswordFormOpen, setIsResetPasswordFormOpen] = useState(false);
 
-  const { data, error, mutate } = useSWR<User, RequestError>(id && `/api/users/${id}`);
+  const { data, error, mutate } = useSWR<User, RequestError>(userId && `/api/users/${userId}`);
   const isLoading = !data && !error;
 
   const {
@@ -118,10 +118,10 @@ const UserDetails = () => {
       />
       {isLoading && <DetailsSkeleton />}
       {!data && error && <div>{`error occurred: ${error.body?.message ?? error.message}`}</div>}
-      {id && data && (
+      {userId && data && (
         <>
           <Card className={styles.header}>
-            <img className={styles.avatar} src={data.avatar ?? getAvatarById(id)} />
+            <img className={styles.avatar} src={data.avatar ?? getAvatarById(userId)} />
             <div className={styles.metadata}>
               <div className={styles.name}>{data.name ?? '-'}</div>
               <div>
@@ -186,8 +186,8 @@ const UserDetails = () => {
           </Card>
           <Card className={classNames(styles.body, detailsStyles.body)}>
             <TabNav>
-              <TabNavItem href={`/users/${id}`}>{t('user_details.tab_settings')}</TabNavItem>
-              <TabNavItem href={`/users/${id}/logs`}>{t('user_details.tab_logs')}</TabNavItem>
+              <TabNavItem href={`/users/${userId}`}>{t('user_details.tab_settings')}</TabNavItem>
+              <TabNavItem href={`/users/${userId}/logs`}>{t('user_details.tab_logs')}</TabNavItem>
             </TabNav>
             {isLogs ? (
               <div className={styles.logs}>
