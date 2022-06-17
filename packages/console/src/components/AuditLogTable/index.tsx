@@ -3,7 +3,7 @@ import { conditionalString } from '@silverhand/essentials';
 import classNames from 'classnames';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import useSWR from 'swr';
 
 import ApplicationName from '@/components/ApplicationName';
@@ -28,6 +28,7 @@ type Props = {
 
 const AuditLogTable = ({ userId }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const { pathname } = useLocation();
   const [query, setQuery] = useSearchParams();
   const pageIndex = Number(query.get('page') ?? '1');
   const event = query.get('event');
@@ -114,7 +115,7 @@ const AuditLogTable = ({ userId }: Props) => {
                 key={id}
                 className={tableStyles.clickable}
                 onClick={() => {
-                  navigate(`/audit-logs/${id}`);
+                  navigate(`${pathname}/${id}`);
                 }}
               >
                 <td>

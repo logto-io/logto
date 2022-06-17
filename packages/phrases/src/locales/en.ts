@@ -551,6 +551,7 @@ const translation = {
     },
     log_details: {
       back_to_logs: 'Back to Audit Logs',
+      back_to_user: 'Back to {{name}}',
       success: 'Success',
       failed: 'Failed',
       event_type: 'Event Type',
