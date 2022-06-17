@@ -12,7 +12,7 @@ const AuditLogs = () => {
       <div className={styles.headline}>
         <CardTitle title="logs.title" subtitle="logs.subtitle" />
       </div>
-      <AuditLogTable detailBaseUrl="/audit-logs" />
+      <AuditLogTable />
     </Card>
   );
 };
