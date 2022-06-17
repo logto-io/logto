@@ -8,7 +8,7 @@ create table users (
   password_encrypted varchar(128),
   password_encryption_method users_password_encryption_method,
   name varchar(128),
-  avatar varchar(256),
+  avatar varchar(2048),
   application_id varchar(21),
   role_names jsonb /* @use RoleNames */ not null default '[]'::jsonb,
   identities jsonb /* @use Identities */ not null default '{}'::jsonb,
