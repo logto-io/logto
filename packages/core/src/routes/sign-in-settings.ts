@@ -17,7 +17,7 @@ export default function signInSettingsRoutes<T extends AnonymousRouter>(
   router.get(
     '/sign-in-settings',
     async (ctx, next) => {
-      const [signInExperience, connectorInstances, interactions] = await Promise.all([
+      const [signInExperience, connectorInstances, interaction] = await Promise.all([
         findDefaultSignInExperience(),
         getConnectorInstances(),
         provider.interactionDetails(ctx.req, ctx.res),
@@ -39,7 +39,7 @@ export default function signInSettingsRoutes<T extends AnonymousRouter>(
 
       const {
         params: { client_id },
-      } = interactions;
+      } = interaction;
 
       // Hard code AdminConsole sign-in methods settings.
       if (client_id === adminConsoleApplicationId) {

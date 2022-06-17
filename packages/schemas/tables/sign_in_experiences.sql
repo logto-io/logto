@@ -1,6 +1,5 @@
 create type sign_in_mode as enum ('SignIn', 'Register', 'SignInAndRegister');
 
-
 create table sign_in_experiences (
   id varchar(21) not null,
   branding jsonb /* @use Branding */ not null,
