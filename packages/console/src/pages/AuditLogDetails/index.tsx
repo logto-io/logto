@@ -22,6 +22,9 @@ import * as detailsStyles from '@/scss/details.module.scss';
 import EventIcon from './components/EventIcon';
 import * as styles from './index.module.scss';
 
+const getAuditLogDetailsRelatedResourceLink = (pathname: string) =>
+  `/${pathname.slice(0, pathname.lastIndexOf('/'))}`;
+
 const AuditLogDetails = () => {
   const { userId, logId } = useParams();
   const { pathname } = useLocation();
@@ -31,7 +34,7 @@ const AuditLogDetails = () => {
 
   const isLoading = !data && !error;
 
-  const backLink = `/${pathname.slice(0, pathname.lastIndexOf('/'))}`;
+  const backLink = getAuditLogDetailsRelatedResourceLink(pathname);
   const backLinkTitle = userId ? (
     <DangerousRaw>{t('log_details.back_to_user', { name: userData?.name ?? '-' })}</DangerousRaw>
   ) : (
