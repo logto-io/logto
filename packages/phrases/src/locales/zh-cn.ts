@@ -363,6 +363,7 @@ const translation = {
         user_id: '用户ID',
         remove: '删除',
         not_connected: '该用户还没有绑定社交账号。',
+        deletion_confirmation: '您在正要删除现有的 {{name}} 身份，是否确认？',
       },
       roles: {
         default: '默认',

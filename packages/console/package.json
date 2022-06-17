@@ -65,6 +65,7 @@
     "react-i18next": "^11.15.4",
     "react-markdown": "^8.0.0",
     "react-modal": "^3.14.4",
+    "react-modal-promise": "^1.0.2",
     "react-paginate": "^8.1.2",
     "react-router-dom": "^6.2.2",
     "react-syntax-highlighter": "^15.5.0",

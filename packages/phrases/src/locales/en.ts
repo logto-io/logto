@@ -372,6 +372,8 @@ const translation = {
         user_id: 'User ID',
         remove: 'Remove',
         not_connected: 'The user is not connected to any social connector.',
+        deletion_confirmation:
+          'You are removing the existing {{name}} identity. Are you want to do that?',
       },
       roles: {
         default: 'Default',

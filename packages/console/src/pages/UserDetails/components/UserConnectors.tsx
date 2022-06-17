@@ -5,11 +5,13 @@ import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import Button from '@/components/Button';
+import { confirmModalPromise } from '@/components/ConfirmModal';
 import CopyToClipboard from '@/components/CopyToClipboard';
 import TableError from '@/components/Table/TableError';
 import UnnamedTrans from '@/components/UnnamedTrans';
 import useApi from '@/hooks/use-api';
 import useConnectorGroups from '@/hooks/use-connector-groups';
+import { translateUnnamed } from '@/utilities/translation';
 
 import * as styles from './UserConnectors.module.scss';
 
@@ -33,8 +35,16 @@ const UserConnectors = ({ userId, connectors, onDelete }: Props) => {
   const isLoading = !connectorGroups && !error;
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleDelete = async (connectorId: string) => {
+  const handleDelete = async (connectorId: string, connectorName: string) => {
     if (isSubmitting) {
+      return;
+    }
+
+    const confirmed = await confirmModalPromise({
+      content: t('user_details.connectors.deletion_confirmation', { name: connectorName }),
+    });
+
+    if (!confirmed) {
       return;
     }
 
@@ -127,7 +137,7 @@ const UserConnectors = ({ userId, connectors, onDelete }: Props) => {
                     title="admin_console.user_details.connectors.remove"
                     type="plain"
                     onClick={() => {
-                      void handleDelete(id);
+                      void handleDelete(id, translateUnnamed(name));
                     }}
                   />
                 </td>
