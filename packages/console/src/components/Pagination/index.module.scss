@@ -14,13 +14,19 @@
 
     .button {
       border-radius: 6px;
-      min-width: 32px;
+      min-width: 28px;
       padding: 0 6px;
-      height: 32px;
+      height: 28px;
       text-overflow: unset;
+      border: 1px solid var(--color-border);
 
       > span {
         margin: 0 auto;
+      }
+
+      &.active {
+        border-color: var(--color-primary);
+        color: var(--color-primary);
       }
     }
 
