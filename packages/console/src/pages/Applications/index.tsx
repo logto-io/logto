@@ -115,7 +115,7 @@ const Applications = () => {
                   <ItemPreview
                     title={name}
                     subtitle={t(`${applicationTypeI18nKey[type]}.title`)}
-                    icon={<img src={ApplicationIcon[type]} />}
+                    icon={<img className={styles.icon} src={ApplicationIcon[type]} />}
                     to={`/applications/${id}`}
                   />
                 </td>

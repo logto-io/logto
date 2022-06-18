@@ -116,7 +116,7 @@ const ApiResources = () => {
                 <td>
                   <ItemPreview
                     title={name}
-                    icon={<img src={apiResourceIcon} />}
+                    icon={<img className={styles.icon} src={apiResourceIcon} />}
                     to={buildDetailsLink(id)}
                   />
                 </td>
