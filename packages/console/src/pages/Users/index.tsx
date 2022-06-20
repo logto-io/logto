@@ -81,7 +81,7 @@ const Users = () => {
           }}
         />
       </div>
-      <div className={classNames(styles.table, tableStyles.scrollable)}>
+      <div className={classNames(styles.tableContainer, tableStyles.scrollable)}>
         <table className={classNames(!data && tableStyles.empty)}>
           <colgroup>
             <col className={styles.userName} />

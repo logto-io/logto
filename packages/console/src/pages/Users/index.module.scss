@@ -13,8 +13,19 @@
   margin: _.unit(4) 0;
 }
 
-.table {
+.tableContainer {
   flex: 1;
+
+  >table {
+    >tbody {
+      >tr {
+        >td {
+          padding-top: 10px;
+          padding-bottom: 10px;
+        }
+      }
+    }
+  }
 }
 
 .pagination {
@@ -23,12 +34,13 @@
 }
 
 .avatar {
-  width: 24px;
-  height: 24px;
+  width: 28px;
+  height: 28px;
   border-radius: 6px;
   object-fit: cover;
 }
 
 .userName {
   width: 360px;
+  font: var(--font-body-medium);
 }
