@@ -12,16 +12,11 @@
     text-decoration: none;
     padding: 6px 12px;
     border-radius: 100px;
-    background: var(--color-on-primary);
-    border: 1px solid var(--color-text-link);
+    background: var(--color-layer-1);
+    border: 1px solid var(--color-surface-5);
 
     &:not(:last-child) {
       margin-right: _.unit(4);
-    }
-
-    &.active {
-      background: var(--color-surface-5);
-      border-color: var(--color-surface-5);
     }
 
     .icon {
@@ -30,6 +25,16 @@
       object-fit: cover;
       margin-right: _.unit(1);
       color: var(--color-text-link);
+    }
+
+    &.active {
+      background: var(--color-inverse-primary);
+      color: var(--color-white);
+      border-color: var(--color-inverse-primary);
+
+      .icon {
+        color: var(--color-button-icon);
+      }
     }
   }
 }

@@ -137,8 +137,10 @@
   --color-float: var(--color-all-100);
   --color-inverse-surface: var(--color-neutral-20);
   --color-inverse-on-surface: var(--color-neutral-95);
-  --color-inverse-primary: var(--color-primary-80);
+  --color-inverse-primary: var(--color-primary-50);
   --color-shadow: var(--color-all-100);
+  --color-white: #fff;
+  --color-button-icon: var(--color-primary-80);
   --color-hover: rgba(25, 28, 29, 8%); // 8% Neutral-10
   --color-pressed: rgba(25, 28, 29, 12%); // 12% Neutral-10
   --color-focused: rgba(25, 28, 29, 16%); // 16% Neutral-10
@@ -257,7 +259,7 @@
   // color aliases
   --color-primary: var(--color-primary-70);
   --color-on-primary: var(--color-all-0);
-  --color-primary-container: var(--color-primary-90);
+  --color-primary-container: var(--color-primary-30);
   --color-on-primary-container: var(--color-primary-30);
   --color-secondary: var(--color-secondary-70);
   --color-on-secondary: var(--color-all-0);
@@ -302,6 +304,8 @@
   --color-inverse-on-surface: var(--color-neutral-95);
   --color-inverse-primary: var(--color-primary-80);
   --color-shadow: var(--color-all-100);
+  --color-white: #fff;
+  --color-button-icon: var(--color-primary-20);
   --color-hover: rgba(247, 248, 248, 8%); // 8% Neutral-10
   --color-pressed: rgba(247, 248, 248, 12%); // 12% Neutral-10
   --color-focused: rgba(247, 248, 248, 16%); // 16% Neutral-10
