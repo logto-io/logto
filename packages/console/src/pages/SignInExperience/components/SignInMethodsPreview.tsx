@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import UnnamedTrans from '@/components/UnnamedTrans';
 import useConnectorGroups from '@/hooks/use-connector-groups';
 
-import * as styles from './SaveAlert.module.scss';
+import * as styles from './SignInMethodsChangePreview.module.scss';
 
 type Props = {
   data: SignInExperience;

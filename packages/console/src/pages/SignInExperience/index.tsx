@@ -4,23 +4,22 @@ import React, { useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
-import ReactModal from 'react-modal';
 import { useParams } from 'react-router-dom';
 import useSWR from 'swr';
 
 import Button from '@/components/Button';
 import Card from '@/components/Card';
 import CardTitle from '@/components/CardTitle';
+import ConfirmModal from '@/components/ConfirmModal';
 import TabNav, { TabNavItem } from '@/components/TabNav';
 import useApi, { RequestError } from '@/hooks/use-api';
 import useSettings from '@/hooks/use-settings';
 import * as detailsStyles from '@/scss/details.module.scss';
-import * as modalStyles from '@/scss/modal.module.scss';
 
 import BrandingForm from './components/BrandingForm';
 import LanguagesForm from './components/LanguagesForm';
 import Preview from './components/Preview';
-import SaveAlert from './components/SaveAlert';
+import SignInMethodsChangePreview from './components/SignInMethodsChangePreview';
 import SignInMethodsForm from './components/SignInMethodsForm';
 import TermsForm from './components/TermsForm';
 import Welcome from './components/Welcome';
@@ -144,22 +143,18 @@ const SignInExperience = () => {
       </div>
       {formData.id && <Preview signInExperience={previewConfigs} />}
       {data && (
-        <ReactModal
+        <ConfirmModal
           isOpen={Boolean(dataToCompare)}
-          className={modalStyles.content}
-          overlayClassName={modalStyles.overlay}
+          onCancel={() => {
+            setDataToCompare(undefined);
+          }}
+          onConfirm={async () => {
+            await saveData();
+            setDataToCompare(undefined);
+          }}
         >
-          {dataToCompare && (
-            <SaveAlert
-              before={data}
-              after={dataToCompare}
-              onClose={() => {
-                setDataToCompare(undefined);
-              }}
-              onConfirm={saveData}
-            />
-          )}
-        </ReactModal>
+          {dataToCompare && <SignInMethodsChangePreview before={data} after={dataToCompare} />}
+        </ConfirmModal>
       )}
     </div>
   );
