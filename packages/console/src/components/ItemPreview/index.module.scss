@@ -6,18 +6,13 @@
   white-space: nowrap;
 
   > div:not(:first-child) {
-    margin-left: _.unit(4);
-  }
-
-  .icon {
-    flex-shrink: 0;
+    margin-left: _.unit(3);
   }
 
   .title {
     font: var(--font-body-medium);
     color: var(--color-text-link);
     text-decoration: none;
-    margin-bottom: _.unit(1);
   }
 
   .subtitle {
