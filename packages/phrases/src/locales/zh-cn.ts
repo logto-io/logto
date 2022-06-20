@@ -553,6 +553,12 @@ const translation = {
       subtitle: '会话可能已过期，您已被登出. 请点击下方按钮重新登录到管理界面.',
       button: '重新登录',
     },
+    welcome: {
+      title: '欢迎使用管理控制台',
+      description:
+        '控制台是一个无需编码要求即可管理 Logto 的 Web 应用。让我们首先创建一个管理员帐户。使用此帐户，您可以自己或代表您的公司管理 Logto。',
+      create_account: '创建账户',
+    },
   },
   demo_app: {
     notification: '请使用管理员账号密码登录本示例应用',
