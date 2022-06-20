@@ -1,11 +1,9 @@
 @use '@/scss/underscore' as _;
 
-.confirmModal {
-  .content {
-    font: var(--font-body-medium);
+.content {
+  font: var(--font-body-medium);
 
-    > :not(:first-child) {
-      margin: _.unit(6) 0;
-    }
+  > :not(:first-child) {
+    margin: _.unit(6) 0;
   }
 }
