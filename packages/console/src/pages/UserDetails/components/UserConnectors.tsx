@@ -54,7 +54,7 @@ const UserConnectors = ({ userId, connectors, onDelete }: Props) => {
     }
 
     return Object.keys(connectors).map((key) => {
-      const connector = connectorGroups.find(({ id }) => id === key);
+      const connector = connectorGroups.find(({ target }) => target === key);
 
       if (!connector) {
         return {
