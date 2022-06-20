@@ -2,9 +2,9 @@
 
 .wrapper {
   display: flex;
-  align-items: flex-start;
-  height: 100%;
+  align-items: stretch;
   min-width: 950px;
+  height: 100%;
 
   .setup {
     flex: 1;

@@ -14,7 +14,6 @@ import CardTitle from '@/components/CardTitle';
 import TabNav, { TabNavItem } from '@/components/TabNav';
 import useApi, { RequestError } from '@/hooks/use-api';
 import useSettings from '@/hooks/use-settings';
-import useUserPreferences from '@/hooks/use-user-preferences';
 import * as detailsStyles from '@/scss/details.module.scss';
 import * as modalStyles from '@/scss/modal.module.scss';
 
@@ -35,9 +34,6 @@ const SignInExperience = () => {
   const { tab } = useParams();
   const { data, error, mutate } = useSWR<SignInExperienceType, RequestError>('/api/sign-in-exp');
   const { settings, error: settingsError, updateSettings } = useSettings();
-  const {
-    data: { experienceNoticeConfirmed },
-  } = useUserPreferences();
   const [dataToCompare, setDataToCompare] = useState<SignInExperienceType>();
 
   const methods = useForm<SignInExperienceForm>();
@@ -95,7 +91,7 @@ const SignInExperience = () => {
     return <div>{settingsError.body?.message ?? settingsError.message}</div>;
   }
 
-  if (!experienceNoticeConfirmed) {
+  if (!settings?.customizeSignInExperience) {
     return <Welcome />;
   }
 

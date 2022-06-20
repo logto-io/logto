@@ -111,14 +111,6 @@ const Preview = ({ signInExperience, className }: Props) => {
       </div>
       <TabNav className={styles.nav}>
         <TabNavItem
-          isActive={platform === 'web'}
-          onClick={() => {
-            setPlatform('web');
-          }}
-        >
-          {t('sign_in_exp.preview.web')}
-        </TabNavItem>
-        <TabNavItem
           isActive={platform === 'mobile'}
           onClick={() => {
             setPlatform('mobile');
@@ -126,20 +118,30 @@ const Preview = ({ signInExperience, className }: Props) => {
         >
           {t('sign_in_exp.preview.mobile')}
         </TabNavItem>
+        <TabNavItem
+          isActive={platform === 'web'}
+          onClick={() => {
+            setPlatform('web');
+          }}
+        >
+          {t('sign_in_exp.preview.web')}
+        </TabNavItem>
       </TabNav>
       <div className={classNames(styles.body, styles[platform])}>
-        <div className={classNames(styles.device, styles[mode])}>
+        <div className={styles.deviceWrapper}>
+          <div className={classNames(styles.device, styles[mode])}>
+            {platform === 'mobile' && (
+              <div className={styles.topBar}>
+                <div className={styles.time}>{dayjs().format('HH:mm')}</div>
+                <PhoneInfo />
+              </div>
+            )}
+            <iframe ref={previewRef} src="/sign-in?preview=true" tabIndex={-1} />
+          </div>
           {platform === 'mobile' && (
-            <div className={styles.topBar}>
-              <div className={styles.time}>{dayjs().format('HH:mm')}</div>
-              <PhoneInfo />
-            </div>
+            <div className={styles.description}>{t('sign_in_exp.preview.mobile_description')}</div>
           )}
-          <iframe ref={previewRef} src="/sign-in?preview=true" tabIndex={-1} />
         </div>
-        {platform === 'mobile' && (
-          <div className={styles.description}>{t('sign_in_exp.preview.mobile_description')}</div>
-        )}
       </div>
     </Card>
   );
