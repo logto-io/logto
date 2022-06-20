@@ -6,5 +6,5 @@ import { UserRole } from '../types';
  */
 export const defaultRole: Readonly<CreateRole> = {
   name: UserRole.Admin,
-  description: 'Admin role for Logto Admin Console.',
+  description: 'Admin role for Logto.',
 };
