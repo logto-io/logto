@@ -101,6 +101,7 @@ const Settings = () => {
                 isLoading={isSubmitting}
                 type="primary"
                 htmlType="submit"
+                size="large"
                 title="general.save_changes"
               />
             </div>

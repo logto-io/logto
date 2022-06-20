@@ -7,7 +7,7 @@ const translation = {
     retry: 'Try again',
     done: 'Done',
     search: 'Search',
-    save_changes: 'Save changes',
+    save_changes: 'Save Changes',
     loading: 'Loading...',
     redirecting: 'Redirecting...',
     added: 'Added',
