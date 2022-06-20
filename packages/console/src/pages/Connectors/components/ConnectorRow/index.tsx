@@ -19,9 +19,7 @@ type Props = {
 
 const ConnectorRow = ({ type, connectors, onClickSetup }: Props) => {
   const { t } = useTranslation(undefined);
-  const inUse = useConnectorInUse(
-    conditional(type === ConnectorType.Social && connectors[0]?.target)
-  );
+  const inUse = useConnectorInUse(type, connectors[0]?.target);
   const navigate = useNavigate();
   const showSetupButton = type !== ConnectorType.Social && !connectors[0];
 
@@ -40,17 +38,14 @@ const ConnectorRow = ({ type, connectors, onClickSetup }: Props) => {
       </td>
       <td>{t(connectorTitlePlaceHolder[type])}</td>
       <td>
-        {type === ConnectorType.Social && inUse !== undefined && (
+        {inUse !== undefined && (
           <Status status={inUse ? 'enabled' : 'disabled'}>
             {t('admin_console.connectors.connector_status', {
               context: inUse ? 'in_use' : 'not_in_use',
             })}
           </Status>
         )}
-        {type !== ConnectorType.Social && connectors[0] && (
-          <Status status="enabled">{t('admin_console.connectors.connector_status_in_use')}</Status>
-        )}
-        {type !== ConnectorType.Social && !connectors[0] && '-'}
+        {inUse === undefined && !connectors[0] && '-'}
       </td>
     </tr>
   );

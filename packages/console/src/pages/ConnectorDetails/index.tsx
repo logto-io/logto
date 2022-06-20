@@ -43,7 +43,7 @@ const ConnectorDetails = () => {
   const { data, error } = useSWR<ConnectorDTO, RequestError>(
     connectorId && `/api/connectors/${connectorId}`
   );
-  const inUse = useConnectorInUse(data?.type === ConnectorType.Social ? data.target : undefined);
+  const inUse = useConnectorInUse(data?.type, data?.target);
   const isLoading = !data && !error;
   const api = useApi();
   const navigate = useNavigate();
@@ -130,17 +130,10 @@ const ConnectorDetails = () => {
             <div>
               <ConnectorTypeName type={data.type} />
               <div className={styles.verticalBar} />
-              {data.type === ConnectorType.Social && inUse !== undefined && (
+              {inUse !== undefined && (
                 <Status status={inUse ? 'enabled' : 'disabled'} varient="outlined">
                   {t('connectors.connector_status', {
                     context: inUse ? 'in_use' : 'not_in_use',
-                  })}
-                </Status>
-              )}
-              {data.type !== ConnectorType.Social && (
-                <Status status={data.enabled ? 'enabled' : 'disabled'} varient="outlined">
-                  {t('connectors.connector_status', {
-                    context: data.enabled ? 'in_use' : 'not_in_use',
                   })}
                 </Status>
               )}
