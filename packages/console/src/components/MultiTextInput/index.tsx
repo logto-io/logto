@@ -2,15 +2,13 @@ import { I18nKey } from '@logto/phrases';
 import classNames from 'classnames';
 import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import Modal from 'react-modal';
 
 import * as textButtonStyles from '@/components/TextButton/index.module.scss';
 import Minus from '@/icons/Minus';
-import * as modalStyles from '@/scss/modal.module.scss';
 
+import ConfirmModal from '../ConfirmModal';
 import IconButton from '../IconButton';
 import TextInput from '../TextInput';
-import DeleteConfirm from './DeleteConfirm';
 import * as styles from './index.module.scss';
 import { MultiTextInputError } from './types';
 
@@ -22,9 +20,7 @@ type Props = {
 };
 
 const MultiTextInput = ({ title, value, onChange, error }: Props) => {
-  const { t } = useTranslation(undefined, {
-    keyPrefix: 'admin_console',
-  });
+  const { t } = useTranslation();
 
   const [deleteFieldIndex, setDeleteFieldIndex] = useState<number>();
 
@@ -86,25 +82,23 @@ const MultiTextInput = ({ title, value, onChange, error }: Props) => {
         </div>
       ))}
       <div className={classNames(textButtonStyles.button, styles.addAnother)} onClick={handleAdd}>
-        {t('form.add_another')}
+        {t('admin_console.form.add_another')}
       </div>
-      <Modal
+      <ConfirmModal
         isOpen={deleteFieldIndex !== undefined}
-        className={modalStyles.content}
-        overlayClassName={modalStyles.overlay}
-      >
-        <DeleteConfirm
-          title={title}
-          onClose={() => {
+        confirmButtonText="admin_console.form.delete"
+        onCancel={() => {
+          setDeleteFieldIndex(undefined);
+        }}
+        onConfirm={() => {
+          if (deleteFieldIndex !== undefined) {
+            handleRemove(deleteFieldIndex);
             setDeleteFieldIndex(undefined);
-          }}
-          onConfirm={() => {
-            if (deleteFieldIndex !== undefined) {
-              handleRemove(deleteFieldIndex);
-            }
-          }}
-        />
-      </Modal>
+          }
+        }}
+      >
+        {t('admin_console.form.deletion_confirmation', { title: t(title) })}
+      </ConfirmModal>
     </div>
   );
 };

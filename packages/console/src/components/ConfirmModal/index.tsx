@@ -1,55 +1,58 @@
 import { AdminConsoleKey, I18nKey } from '@logto/phrases';
-import React from 'react';
-import Modal from 'react-modal';
+import classNames from 'classnames';
+import React, { ReactNode } from 'react';
+import ReactModal from 'react-modal';
 
+import Button, { ButtonType } from '@/components/Button';
 import * as modalStyles from '@/scss/modal.module.scss';
 
-import Button from '../Button';
 import ModalLayout from '../ModalLayout';
+import * as styles from './index.module.scss';
 
-type Props = {
-  title: AdminConsoleKey;
-  children: React.ReactNode;
+export type ConfirmModalProps = {
+  children: ReactNode;
   className?: string;
+  title?: AdminConsoleKey;
+  confirmButtonType?: ButtonType;
   confirmButtonText?: I18nKey;
   cancelButtonText?: I18nKey;
   isOpen: boolean;
-  isPending?: boolean;
-  onConfirm: () => void;
   onCancel: () => void;
+  onConfirm: () => void;
 };
 
 const ConfirmModal = ({
-  title,
   children,
   className,
+  title = 'form.confirm',
+  confirmButtonType = 'danger',
   confirmButtonText = 'general.confirm',
   cancelButtonText = 'general.cancel',
   isOpen,
-  isPending,
-  onConfirm,
   onCancel,
-}: Props) => (
-  <Modal isOpen={isOpen} className={modalStyles.content} overlayClassName={modalStyles.overlay}>
-    <ModalLayout
-      title={title}
-      footer={
-        <>
-          <Button type="outline" title={cancelButtonText} onClick={onCancel} />
-          <Button
-            isLoading={isPending}
-            type="primary"
-            title={confirmButtonText}
-            onClick={onConfirm}
-          />
-        </>
-      }
-      className={className}
-      onClose={onCancel}
+  onConfirm,
+}: ConfirmModalProps) => {
+  return (
+    <ReactModal
+      isOpen={isOpen}
+      className={modalStyles.content}
+      overlayClassName={modalStyles.overlay}
     >
-      {children}
-    </ModalLayout>
-  </Modal>
-);
+      <ModalLayout
+        title={title}
+        footer={
+          <>
+            <Button type="outline" title={cancelButtonText} onClick={onCancel} />
+            <Button type={confirmButtonType} title={confirmButtonText} onClick={onConfirm} />
+          </>
+        }
+        className={classNames(styles.content, className)}
+        onClose={onCancel}
+      >
+        {children}
+      </ModalLayout>
+    </ReactModal>
+  );
+};
 
 export default ConfirmModal;

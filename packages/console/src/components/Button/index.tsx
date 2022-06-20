@@ -8,9 +8,11 @@ import { Ring as Spinner } from '@/components/Spinner';
 import DangerousRaw from '../DangerousRaw';
 import * as styles from './index.module.scss';
 
+export type ButtonType = 'primary' | 'danger' | 'outline' | 'plain' | 'default';
+
 type BaseProps = Omit<HTMLProps<HTMLButtonElement>, 'type' | 'size' | 'title'> & {
   htmlType?: 'button' | 'submit' | 'reset';
-  type?: 'primary' | 'danger' | 'outline' | 'plain' | 'default';
+  type?: ButtonType;
   size?: 'small' | 'medium' | 'large';
   isLoading?: boolean;
   loadingDelay?: number;
