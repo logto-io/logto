@@ -189,10 +189,6 @@ describe('sessionRoutes', () => {
 
       expect(insertUser).toHaveBeenCalledWith(
         expect.objectContaining({
-          id: 'user1',
-          username: 'username',
-          passwordEncrypted: 'password_user1',
-          passwordEncryptionMethod: 'Argon2i',
           roleNames: ['admin'],
         })
       );
@@ -209,10 +205,6 @@ describe('sessionRoutes', () => {
 
       expect(insertUser).toHaveBeenCalledWith(
         expect.objectContaining({
-          id: 'user1',
-          username: 'username',
-          passwordEncrypted: 'password_user1',
-          passwordEncryptionMethod: 'Argon2i',
           roleNames: [],
         })
       );

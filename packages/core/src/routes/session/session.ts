@@ -128,10 +128,11 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
 
       const createAdminUser =
         String(client_id) === adminConsoleApplicationId && !(await hasActiveUsers());
+      const roleNames = createAdminUser ? [UserRole.Admin] : [];
 
       const id = await generateUserId();
 
-      ctx.log(type, { userId: id });
+      ctx.log(type, { userId: id, roleNames });
 
       const { passwordEncrypted, passwordEncryptionMethod } = await encryptUserPassword(password);
 
@@ -140,7 +141,7 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
         username,
         passwordEncrypted,
         passwordEncryptionMethod,
-        roleNames: createAdminUser ? [UserRole.Admin] : [],
+        roleNames,
       });
       await updateLastSignInAt(id);
       await assignInteractionResults(ctx, provider, { login: { accountId: id } });
