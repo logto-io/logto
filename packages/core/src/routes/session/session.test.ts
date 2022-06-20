@@ -1,4 +1,5 @@
 import { User } from '@logto/schemas';
+import { adminConsoleApplicationId } from '@logto/schemas/lib/seeds';
 import { Provider } from 'oidc-provider';
 
 import { mockUser } from '@/__mocks__';
@@ -29,6 +30,8 @@ jest.mock('@/lib/user', () => ({
 const insertUser = jest.fn(async (..._args: unknown[]) => ({ id: 'id' }));
 const findUserById = jest.fn(async (): Promise<User> => mockUser);
 const updateUserById = jest.fn(async (..._args: unknown[]) => ({ id: 'id' }));
+const hasActiveUsers = jest.fn(async () => true);
+
 jest.mock('@/queries/user', () => ({
   findUserById: async () => findUserById(),
   findUserByIdentity: async () => ({ id: 'id', identities: {} }),
@@ -41,6 +44,7 @@ jest.mock('@/queries/user', () => ({
     connectorId === 'connectorId' && userId === 'id',
   hasUserWithPhone: async (phone: string) => phone === '13000000000',
   hasUserWithEmail: async (email: string) => email === 'a@a.com',
+  hasActiveUsers: async () => hasActiveUsers(),
 }));
 
 const grantSave = jest.fn(async () => 'finalGrantId');
@@ -149,6 +153,8 @@ describe('sessionRoutes', () => {
 
   describe('POST /session/register/username-password', () => {
     it('assign result and redirect', async () => {
+      interactionDetails.mockResolvedValueOnce({ params: {} });
+
       const response = await sessionRequest
         .post('/session/register/username-password')
         .send({ username: 'username', password: 'password' });
@@ -158,6 +164,7 @@ describe('sessionRoutes', () => {
           username: 'username',
           passwordEncrypted: 'password_user1',
           passwordEncryptionMethod: 'Argon2i',
+          roleNames: [],
         })
       );
       expect(response.body).toHaveProperty('redirectTo');
@@ -166,6 +173,40 @@ describe('sessionRoutes', () => {
         expect.anything(),
         expect.objectContaining({ login: { accountId: 'user1' } }),
         expect.anything()
+      );
+    });
+
+    it('register user with admin role for admin console if no active user found', async () => {
+      interactionDetails.mockResolvedValueOnce({
+        params: { client_id: adminConsoleApplicationId },
+      });
+
+      hasActiveUsers.mockResolvedValueOnce(false);
+
+      await sessionRequest
+        .post('/session/register/username-password')
+        .send({ username: 'username', password: 'password' });
+
+      expect(insertUser).toHaveBeenCalledWith(
+        expect.objectContaining({
+          roleNames: ['admin'],
+        })
+      );
+    });
+
+    it('should not register user with admin role for admin console if any active user found', async () => {
+      interactionDetails.mockResolvedValueOnce({
+        params: { client_id: adminConsoleApplicationId },
+      });
+
+      await sessionRequest
+        .post('/session/register/username-password')
+        .send({ username: 'username', password: 'password' });
+
+      expect(insertUser).toHaveBeenCalledWith(
+        expect.objectContaining({
+          roleNames: [],
+        })
       );
     });
 

@@ -1,6 +1,8 @@
 import path from 'path';
 
 import { LogtoErrorCode } from '@logto/phrases';
+import { UserRole } from '@logto/schemas';
+import { adminConsoleApplicationId } from '@logto/schemas/lib/seeds';
 import { passwordRegEx, usernameRegEx } from '@logto/shared';
 import { conditional } from '@silverhand/essentials';
 import { Provider } from 'oidc-provider';
@@ -15,7 +17,7 @@ import {
   updateLastSignInAt,
 } from '@/lib/user';
 import koaGuard from '@/middleware/koa-guard';
-import { hasUser, insertUser } from '@/queries/user';
+import { hasUser, insertUser, hasActiveUsers } from '@/queries/user';
 import assertThat from '@/utils/assert-that';
 
 import { AnonymousRouter } from '../types';
@@ -120,8 +122,17 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
         })
       );
 
+      const {
+        params: { client_id },
+      } = await provider.interactionDetails(ctx.req, ctx.res);
+
+      const createAdminUser =
+        String(client_id) === adminConsoleApplicationId && !(await hasActiveUsers());
+      const roleNames = createAdminUser ? [UserRole.Admin] : [];
+
       const id = await generateUserId();
-      ctx.log(type, { userId: id });
+
+      ctx.log(type, { userId: id, roleNames });
 
       const { passwordEncrypted, passwordEncryptionMethod } = await encryptUserPassword(password);
 
@@ -130,6 +141,7 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
         username,
         passwordEncrypted,
         passwordEncryptionMethod,
+        roleNames,
       });
       await updateLastSignInAt(id);
       await assignInteractionResults(ctx, provider, { login: { accountId: id } });
