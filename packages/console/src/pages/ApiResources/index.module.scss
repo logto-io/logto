@@ -15,7 +15,7 @@
 }
 
 .icon {
-  @include _.image-block;
+  display: block;
 }
 
 .pagination {

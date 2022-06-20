@@ -38,7 +38,7 @@
   height: 28px;
   border-radius: 6px;
   object-fit: cover;
-  @include _.image-block;
+  display: block;
 }
 
 .userName {

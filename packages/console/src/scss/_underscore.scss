@@ -38,10 +38,6 @@
   font: var(--font-subhead-cap-small);
 }
 
-@mixin image-block {
-  display: block;
-}
-
 @mixin rotating-animation {
   animation: rotating 1s ease-in-out infinite;
 }
