@@ -7,8 +7,14 @@ type Props = {
   className?: string;
 };
 
-const UnnamedTrans = ({ resource, className }: Props) => (
-  <span className={className}>{translateUnnamed(resource)}</span>
-);
+const UnnamedTrans = ({ resource, className }: Props) => {
+  const translation = translateUnnamed(resource);
+
+  if (!translation) {
+    return null;
+  }
+
+  return <span className={className}>{translation}</span>;
+};
 
 export default UnnamedTrans;
