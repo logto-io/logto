@@ -2,13 +2,17 @@
 
 .link {
   font: var(--font-subhead-2);
-  margin-right: _.unit(6);
-  padding-bottom: _.unit(1);
+
+  &:not(:last-child) {
+    margin-right: _.unit(6);
+  }
 
   a {
+    display: inline-block;
     color: var(--color-caption);
     text-decoration: none;
     cursor: pointer;
+    padding-bottom: _.unit(1);
   }
 }
 
