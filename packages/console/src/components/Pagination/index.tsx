@@ -1,3 +1,4 @@
+import classNames from 'classnames';
 import React from 'react';
 import ReactPaginate from 'react-paginate';
 
@@ -22,7 +23,7 @@ const Pagination = ({ pageIndex, pageCount, onChange }: Props) => {
       pageLabelBuilder={(page: number) => (
         <Button
           type={page === pageIndex ? 'outline' : 'default'}
-          className={styles.button}
+          className={classNames(styles.button, page === pageIndex && styles.active)}
           size="small"
           title={<DangerousRaw>{page}</DangerousRaw>}
         />
