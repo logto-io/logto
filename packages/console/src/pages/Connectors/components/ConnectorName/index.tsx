@@ -23,7 +23,8 @@ type Props = {
 
 const ConnectorName = ({ type, connectors, onClickSetup }: Props) => {
   const { t } = useTranslation(undefined);
-  const connector = connectors[0];
+  const enabledConnectors = connectors.filter(({ enabled }) => enabled);
+  const connector = enabledConnectors[0];
 
   if (!connector) {
     return (
@@ -48,9 +49,9 @@ const ConnectorName = ({ type, connectors, onClickSetup }: Props) => {
         subtitle={
           <>
             {type !== ConnectorType.Social && connector.id}
-            {type === ConnectorType.Social && connectors.length > 1 && (
+            {type === ConnectorType.Social && enabledConnectors.length > 1 && (
               <div className={styles.platforms}>
-                {connectors.map(
+                {enabledConnectors.map(
                   ({ id, platform }) =>
                     platform && (
                       <div key={id} className={styles.platform}>

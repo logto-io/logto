@@ -29,7 +29,7 @@ const Connectors = () => {
 
   const emailConnector = useMemo(() => {
     const emailConnectorGroup = data?.find(
-      (connector) => connector.enabled && connector.type === ConnectorType.Email
+      ({ enabled, type }) => enabled && type === ConnectorType.Email
     );
 
     return emailConnectorGroup?.connectors[0];
@@ -37,7 +37,7 @@ const Connectors = () => {
 
   const smsConnector = useMemo(() => {
     const smsConnectorGroup = data?.find(
-      (connector) => connector.enabled && connector.type === ConnectorType.SMS
+      ({ enabled, type }) => enabled && type === ConnectorType.SMS
     );
 
     return smsConnectorGroup?.connectors[0];
@@ -48,7 +48,7 @@ const Connectors = () => {
       return;
     }
 
-    return data?.filter((connector) => connector.type === ConnectorType.Social);
+    return data?.filter(({ enabled, type }) => enabled && type === ConnectorType.Social);
   }, [data, isSocial]);
 
   return (
