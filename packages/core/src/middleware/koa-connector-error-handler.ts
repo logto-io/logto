@@ -74,6 +74,14 @@ export default function koaConnectorErrorHandler<StateT, ContextT>(): Middleware
             },
             data
           );
+        case ConnectorErrorCodes.UnsuccessfulAuthorization:
+          throw new RequestError(
+            {
+              code: 'connector.unsuccessful_authorization',
+              status: 401,
+            },
+            data
+          );
 
         default:
           throw new RequestError(

@@ -78,6 +78,12 @@ describe('getAccessToken', () => {
     expect(accessToken).toEqual('access_token');
   });
 
+  it('throw General error if auth_code not provided in input', async () => {
+    await expect(alipayNativeMethods.getUserInfo({})).rejects.toMatchError(
+      new ConnectorError(ConnectorErrorCodes.General, '{}')
+    );
+  });
+
   it('should throw when accessToken is empty', async () => {
     nock(alipayEndpointUrl.origin)
       .post(alipayEndpointUrl.pathname)

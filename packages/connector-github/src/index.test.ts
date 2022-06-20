@@ -137,6 +137,48 @@ describe('getUserInfo', () => {
     );
   });
 
+  it('throws UnsuccessfulAuthorization error if error is access_denied', async () => {
+    nock(userInfoEndpoint).get('').reply(200, {
+      id: 1,
+      avatar_url: 'https://github.com/images/error/octocat_happy.gif',
+      name: 'monalisa octocat',
+      email: 'octocat@github.com',
+    });
+    await expect(
+      githubMethods.getUserInfo({
+        error: 'access_denied',
+        error_description: 'The user has denied your application access.',
+        error_uri:
+          'https://docs.github.com/apps/troubleshooting-authorization-request-errors#access-denied',
+      })
+    ).rejects.toMatchError(
+      new ConnectorError(
+        ConnectorErrorCodes.UnsuccessfulAuthorization,
+        'The user has denied your application access.'
+      )
+    );
+  });
+
+  it('throws General error if error is not access_denied', async () => {
+    nock(userInfoEndpoint).get('').reply(200, {
+      id: 1,
+      avatar_url: 'https://github.com/images/error/octocat_happy.gif',
+      name: 'monalisa octocat',
+      email: 'octocat@github.com',
+    });
+    await expect(
+      githubMethods.getUserInfo({
+        error: 'general_error',
+        error_description: 'General error encountered.',
+      })
+    ).rejects.toMatchError(
+      new ConnectorError(
+        ConnectorErrorCodes.General,
+        '{"error":"general_error","error_description":"General error encountered."}'
+      )
+    );
+  });
+
   it('throws unrecognized error', async () => {
     nock(userInfoEndpoint).get('').reply(500);
     await expect(githubMethods.getUserInfo({ code: 'code' })).rejects.toThrow();

@@ -235,6 +235,7 @@ importers:
       eslint: ^8.10.0
       got: ^11.8.2
       jest: ^27.5.1
+      jest-matcher-specific-error: ^1.0.0
       jose: ^4.3.8
       lint-staged: ^13.0.0
       nock: ^13.2.2
@@ -260,6 +261,7 @@ importers:
       '@types/node': 16.11.12
       eslint: 8.10.0
       jest: 27.5.1
+      jest-matcher-specific-error: 1.0.0
       lint-staged: 13.0.0
       nock: 13.2.2
       prettier: 2.5.1

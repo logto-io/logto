@@ -118,6 +118,30 @@ describe('google connector', () => {
       ).rejects.toMatchError(new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid));
     });
 
+    it('throws General error', async () => {
+      nock(userInfoEndpoint).post('').reply(200, {
+        sub: '1234567890',
+        name: 'monalisa octocat',
+        given_name: 'monalisa',
+        family_name: 'octocat',
+        picture: 'https://github.com/images/error/octocat_happy.gif',
+        email: 'octocat@google.com',
+        email_verified: true,
+        locale: 'en',
+      });
+      await expect(
+        googleMethods.getUserInfo({
+          error: 'general_error',
+          error_description: 'General error encountered.',
+        })
+      ).rejects.toMatchError(
+        new ConnectorError(
+          ConnectorErrorCodes.General,
+          '{"error":"general_error","error_description":"General error encountered."}'
+        )
+      );
+    });
+
     it('throws unrecognized error', async () => {
       nock(userInfoEndpoint).post('').reply(500);
       await expect(googleMethods.getUserInfo({ code: 'code', redirectUri: '' })).rejects.toThrow();

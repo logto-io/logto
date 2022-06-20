@@ -29,3 +29,10 @@ export const userInfoResponseGuard = z.object({
 });
 
 export type UserInfoResponse = z.infer<typeof userInfoResponseGuard>;
+
+export const authorizationCallbackErrorGuard = z.object({
+  error: z.string(),
+  error_code: z.number().optional(),
+  error_description: z.string(),
+  error_reason: z.string(),
+});

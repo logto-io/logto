@@ -88,7 +88,7 @@ export default class GoogleConnector implements SocialConnector {
   };
 
   public getUserInfo: GetUserInfo = async (data) => {
-    const { code, redirectUri } = codeWithRedirectDataGuard.parse(data);
+    const { code, redirectUri } = await this.authorizationCallbackHandler(data);
     const { accessToken } = await this.getAccessToken(code, redirectUri);
 
     try {
@@ -120,5 +120,15 @@ export default class GoogleConnector implements SocialConnector {
 
       throw error;
     }
+  };
+
+  private readonly authorizationCallbackHandler = async (parameterObject: unknown) => {
+    const result = codeWithRedirectDataGuard.safeParse(parameterObject);
+
+    if (result.success) {
+      return result.data;
+    }
+
+    throw new ConnectorError(ConnectorErrorCodes.General, JSON.stringify(parameterObject));
   };
 }

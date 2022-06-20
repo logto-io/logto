@@ -659,6 +659,7 @@ const errors = {
     invalid_access_token: "The connector's access token is invalid.",
     invalid_auth_code: "The connector's auth code is invalid.",
     invalid_id_token: "The connector's id token is invalid.",
+    unsuccessful_authorization: "The user's authorization process is unsuccessful.",
     oauth_code_invalid: 'Unable to get access token, please check authorization code.',
     more_than_one_sms: 'The number of SMS connectors is larger then 1.',
     more_than_one_email: 'The number of Email connectors is larger then 1.',

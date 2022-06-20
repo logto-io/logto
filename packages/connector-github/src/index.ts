@@ -22,6 +22,7 @@ import {
   defaultTimeout,
 } from './constant';
 import {
+  authorizationCallbackErrorGuard,
   githubConfigGuard,
   accessTokenResponseGuard,
   GithubConfig,
@@ -54,7 +55,7 @@ export default class GithubConnector implements SocialConnector {
     return `${authorizationEndpoint}?${queryParameters.toString()}`;
   };
 
-  getAccessToken = async (code: string) => {
+  public getAccessToken = async (code: string) => {
     const { clientId: client_id, clientSecret: client_secret } = await this.getConfig(
       this.metadata.id
     );
@@ -83,7 +84,7 @@ export default class GithubConnector implements SocialConnector {
   };
 
   public getUserInfo: GetUserInfo = async (data) => {
-    const { code } = codeDataGuard.parse(data);
+    const { code } = await this.authorizationCallbackHandler(data);
     const { accessToken } = await this.getAccessToken(code);
 
     try {
@@ -114,5 +115,24 @@ export default class GithubConnector implements SocialConnector {
       }
       throw error;
     }
+  };
+
+  private readonly authorizationCallbackHandler = async (parameterObject: unknown) => {
+    const result = codeDataGuard.safeParse(parameterObject);
+
+    if (result.success) {
+      return result.data;
+    }
+
+    const parsedError = authorizationCallbackErrorGuard.safeParse(parameterObject);
+
+    if (parsedError.success && parsedError.data.error === 'access_denied') {
+      throw new ConnectorError(
+        ConnectorErrorCodes.UnsuccessfulAuthorization,
+        parsedError.data.error_description
+      );
+    }
+
+    throw new ConnectorError(ConnectorErrorCodes.General, JSON.stringify(parameterObject));
   };
 }

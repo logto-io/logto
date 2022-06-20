@@ -152,6 +152,55 @@ describe('facebook connector', () => {
       ).rejects.toMatchError(new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid));
     });
 
+    it('throws UnsuccessfulAuthorization error if error is access_denied', async () => {
+      const avatar = 'https://github.com/images/error/octocat_happy.gif';
+      nock(userInfoEndpoint)
+        .get('')
+        .query({ fields })
+        .reply(200, {
+          id: '1234567890',
+          name: 'monalisa octocat',
+          email: 'octocat@facebook.com',
+          picture: { data: { url: avatar } },
+        });
+      await expect(
+        facebookMethods.getUserInfo({
+          error: 'access_denied',
+          error_code: 200,
+          error_description: 'Permissions error.',
+          error_reason: 'user_denied',
+        })
+      ).rejects.toMatchError(
+        new ConnectorError(ConnectorErrorCodes.UnsuccessfulAuthorization, 'Permissions error.')
+      );
+    });
+
+    it('throws General error if error is not access_denied', async () => {
+      const avatar = 'https://github.com/images/error/octocat_happy.gif';
+      nock(userInfoEndpoint)
+        .get('')
+        .query({ fields })
+        .reply(200, {
+          id: '1234567890',
+          name: 'monalisa octocat',
+          email: 'octocat@facebook.com',
+          picture: { data: { url: avatar } },
+        });
+      await expect(
+        facebookMethods.getUserInfo({
+          error: 'general_error',
+          error_code: 200,
+          error_description: 'General error encountered.',
+          error_reason: 'user_denied',
+        })
+      ).rejects.toMatchError(
+        new ConnectorError(
+          ConnectorErrorCodes.General,
+          '{"error":"general_error","error_code":200,"error_description":"General error encountered.","error_reason":"user_denied"}'
+        )
+      );
+    });
+
     it('throws unrecognized error', async () => {
       nock(userInfoEndpoint).get('').reply(500);
       await expect(
