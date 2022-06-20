@@ -83,6 +83,7 @@ const SenderTester = ({ connectorType }: Props) => {
         >
           <TextInput
             hasError={Boolean(inputError?.message)}
+            type={isSms ? 'tel' : 'email'}
             {...register('sendTo', {
               required: true,
               pattern: {
