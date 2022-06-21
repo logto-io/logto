@@ -17,7 +17,7 @@ const TableEmpty = ({ title, content, children, columns }: Props) => {
 
   return (
     <tr>
-      <td colSpan={columns}>
+      <td colSpan={columns} className={styles.tableEmptyTableData}>
         <div className={styles.tableEmpty}>
           <div>
             <img src={EmptyImage} />

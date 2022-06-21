@@ -1,5 +1,9 @@
 @use '@/scss/underscore' as _;
 
+.tableEmptyTableData {
+  border-bottom: unset;
+}
+
 .tableEmpty {
   display: flex;
   flex-direction: column;
