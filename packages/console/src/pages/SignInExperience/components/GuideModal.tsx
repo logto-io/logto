@@ -23,7 +23,6 @@ import BrandingForm from './BrandingForm';
 import * as styles from './GuideModal.module.scss';
 import LanguagesForm from './LanguagesForm';
 import Preview from './Preview';
-import SignInMethodsForm from './SignInMethodsForm';
 import TermsForm from './TermsForm';
 
 type Props = {
@@ -106,9 +105,6 @@ const GuideModal = ({ isOpen, onClose }: Props) => {
                   </div>
                   <div className={styles.card}>
                     <TermsForm />
-                  </div>
-                  <div className={styles.card}>
-                    <SignInMethodsForm />
                   </div>
                   <div className={styles.card}>
                     <LanguagesForm />
