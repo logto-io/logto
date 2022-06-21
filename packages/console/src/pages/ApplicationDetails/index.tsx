@@ -25,6 +25,7 @@ import * as detailsStyles from '@/scss/details.module.scss';
 import * as modalStyles from '@/scss/modal.module.scss';
 import { applicationTypeI18nKey } from '@/types/applications';
 
+import Guide from '../Applications/components/Guide';
 import AdvancedSettings from './components/AdvancedSettings';
 import DeleteForm from './components/DeleteForm';
 import Settings from './components/Settings';
@@ -128,14 +129,14 @@ const ApplicationDetails = () => {
                   setIsReadmeOpen(true);
                 }}
               />
-              <Drawer
-                isOpen={isReadmeOpen}
-                onClose={() => {
-                  setIsReadmeOpen(false);
-                }}
-              >
-                {/* TODO - Implement the content when the documentation website is ready. */}
-                <div>TBD</div>
+              <Drawer isOpen={isReadmeOpen}>
+                <Guide
+                  isCompact
+                  app={data}
+                  onClose={() => {
+                    setIsReadmeOpen(false);
+                  }}
+                />
               </Drawer>
               <ActionMenu
                 buttonProps={{ icon: <More className={styles.moreIcon} />, size: 'large' }}
