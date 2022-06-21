@@ -127,7 +127,7 @@ const Users = () => {
                   <ItemPreview
                     title={name || t('users.unnamed')}
                     subtitle={conditionalString(username)}
-                    icon={<img className={styles.avatar} src={avatar ?? getAvatarById(id)} />}
+                    icon={<img className={styles.avatar} src={avatar || getAvatarById(id)} />}
                     to={`/users/${id}`}
                     size="compact"
                   />

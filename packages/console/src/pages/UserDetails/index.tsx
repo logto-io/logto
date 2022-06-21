@@ -121,7 +121,7 @@ const UserDetails = () => {
       {userId && data && (
         <>
           <Card className={styles.header}>
-            <img className={styles.avatar} src={data.avatar ?? getAvatarById(userId)} />
+            <img className={styles.avatar} src={data.avatar || getAvatarById(userId)} />
             <div className={styles.metadata}>
               <div className={styles.name}>{data.name ?? '-'}</div>
               <div>
