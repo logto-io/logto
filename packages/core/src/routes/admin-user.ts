@@ -5,7 +5,6 @@ import pick from 'lodash.pick';
 import { InvalidInputError } from 'slonik';
 import { object, string } from 'zod';
 
-import { getConnectorInstanceById } from '@/connectors';
 import RequestError from '@/errors/RequestError';
 import { encryptUserPassword, generateUserId } from '@/lib/user';
 import koaGuard from '@/middleware/koa-guard';
@@ -199,17 +198,14 @@ export default function adminUserRoutes<T extends AuthedRouter>(router: T) {
   );
 
   router.delete(
-    '/users/:userId/identities/:connectorId',
-    koaGuard({ params: object({ userId: string(), connectorId: string() }) }),
+    '/users/:userId/identities/:target',
+    koaGuard({ params: object({ userId: string(), target: string() }) }),
     async (ctx, next) => {
       const {
-        params: { userId, connectorId },
+        params: { userId, target },
       } = ctx.guard;
 
       const { identities } = await findUserById(userId);
-      const {
-        metadata: { target },
-      } = await getConnectorInstanceById(connectorId);
 
       if (!has(identities, target)) {
         throw new RequestError({ code: 'user.identity_not_exists', status: 404 });

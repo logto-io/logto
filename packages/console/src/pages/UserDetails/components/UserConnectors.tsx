@@ -35,7 +35,7 @@ const UserConnectors = ({ userId, connectors, onDelete }: Props) => {
   const isLoading = !connectorGroups && !error;
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleDelete = async (connectorId: string) => {
+  const handleDelete = async (target: string) => {
     if (isSubmitting) {
       return;
     }
@@ -43,8 +43,8 @@ const UserConnectors = ({ userId, connectors, onDelete }: Props) => {
     setIsSubmitting(true);
 
     try {
-      await api.delete(`/api/users/${userId}/identities/${connectorId}`);
-      onDelete?.(connectorId);
+      await api.delete(`/api/users/${userId}/identities/${target}`);
+      onDelete?.(target);
     } finally {
       setIsSubmitting(false);
     }
