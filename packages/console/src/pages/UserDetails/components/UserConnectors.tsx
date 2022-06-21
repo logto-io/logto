@@ -110,31 +110,35 @@ const UserConnectors = ({ userId, connectors, onDelete }: Props) => {
                 onRetry={async () => mutate(undefined, true)}
               />
             )}
-            {displayConnectors.map((connector) => (
-              <tr key={connector.id}>
-                <td>
-                  <div className={styles.connectorName}>
-                    <img src={connector.logo} />
-                    <div className={styles.name}>
-                      <UnnamedTrans resource={connector.name} />
+            {displayConnectors.map((connector) => {
+              const { id, userId = '', name, logo } = connector;
+
+              return (
+                <tr key={id}>
+                  <td>
+                    <div className={styles.connectorName}>
+                      <img src={logo} />
+                      <div className={styles.name}>
+                        <UnnamedTrans resource={name} />
+                      </div>
                     </div>
-                  </div>
-                </td>
-                <td className={styles.connectorId}>
-                  <span>{connector.userId || '-'}</span>
-                  <CopyToClipboard variant="icon" value={connector.userId ?? '-'} />
-                </td>
-                <td>
-                  <Button
-                    title="admin_console.user_details.connectors.remove"
-                    type="plain"
-                    onClick={() => {
-                      setDeletingConnector(connector);
-                    }}
-                  />
-                </td>
-              </tr>
-            ))}
+                  </td>
+                  <td className={styles.connectorId}>
+                    <span>{userId || '-'}</span>
+                    <CopyToClipboard variant="icon" value={userId} />
+                  </td>
+                  <td>
+                    <Button
+                      title="admin_console.user_details.connectors.remove"
+                      type="plain"
+                      onClick={() => {
+                        setDeletingConnector(connector);
+                      }}
+                    />
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       )}
