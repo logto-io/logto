@@ -73,10 +73,10 @@ export default class AppleConnector implements SocialConnector {
   private readonly authorizationCallbackHandler = async (parameterObject: unknown) => {
     const result = dataGuard.safeParse(parameterObject);
 
-    if (result.success) {
-      return result.data;
+    if (!result.success) {
+      throw new ConnectorError(ConnectorErrorCodes.General, JSON.stringify(parameterObject));
     }
 
-    throw new ConnectorError(ConnectorErrorCodes.General, JSON.stringify(parameterObject));
+    return result.data;
   };
 }

@@ -134,7 +134,11 @@ export default class FacebookConnector implements SocialConnector {
 
     const parsedError = authorizationCallbackErrorGuard.safeParse(parameterObject);
 
-    if (parsedError.success && parsedError.data.error === 'access_denied') {
+    if (!parsedError.success) {
+      throw new ConnectorError(ConnectorErrorCodes.General, JSON.stringify(parameterObject));
+    }
+
+    if (parsedError.data.error === 'access_denied') {
       throw new ConnectorError(
         ConnectorErrorCodes.UnsuccessfulAuthorization,
         parsedError.data.error_description

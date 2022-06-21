@@ -174,10 +174,10 @@ export default class AlipayConnector implements SocialConnector {
 
     const result = dataGuard.safeParse(parameterObject);
 
-    if (result.success) {
-      return result.data;
+    if (!result.success) {
+      throw new ConnectorError(ConnectorErrorCodes.General, JSON.stringify(parameterObject));
     }
 
-    throw new ConnectorError(ConnectorErrorCodes.General, JSON.stringify(parameterObject));
+    return result.data;
   };
 }
