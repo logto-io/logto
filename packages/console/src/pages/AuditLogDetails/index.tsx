@@ -104,7 +104,7 @@ const AuditLogDetails = () => {
               </TabNavItem>
             </TabNav>
             <div className={styles.main}>
-              <FormField isRequired title="admin_console.log_details.raw_data">
+              <FormField title="admin_console.log_details.raw_data">
                 <CodeEditor language="json" value={JSON.stringify(data.payload, null, 2)} />
               </FormField>
             </div>
