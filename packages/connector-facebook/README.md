@@ -42,7 +42,7 @@ You can also [take the app live](#take-the-facebook-app-live) directly so that a
 Usually, only the test, admin, and developer users can sign in with the related app under [development mode](https://developers.facebook.com/docs/development/build-and-test/app-modes#development-mode).
 
 To enable normal Facebook users sign-in with the app in the production environment, you maybe need to switch your Facebook app to **[live mode](https://developers.facebook.com/docs/development/build-and-test/app-modes#live-mode)**, depending on the app type.
-E.g., the pure **Business type** app doesn't have the **Live** switch button, and cannot and no need to click it.
+E.g., the pure **business type** app doesn't have the **live** switch button, but it won't block your use.
 
 1. In the Facebook app dashboard page, click the sidebar -> **Settings** -> **Basic**.
 2. Fill out the **Privacy Policy URL** and **User data deletion** fields on the panel if required.
