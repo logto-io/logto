@@ -48,6 +48,14 @@
 
     &[type='date'] {
       height: 20px;
+
+      &::-webkit-calendar-picker-indicator {
+        background-image: none;
+        background-color: var(--color-icon);
+        mask-image: url('../../assets/images/calendar.svg');
+        width: 16px;
+        height: 18px;
+      }
     }
   }
 
