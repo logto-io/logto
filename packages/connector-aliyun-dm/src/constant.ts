@@ -29,6 +29,7 @@ export const defaultMetadata: ConnectorMetadata = {
     'zh-CN': '阿里云邮件推送',
   },
   logo: './logo.svg',
+  logo_dark: null,
   description: {
     en: 'A simple and efficient email service to help you send transactional notifications and batch email.',
     'zh-CN':

@@ -25,6 +25,7 @@ export const defaultMetadata: ConnectorMetadata = {
     'zh-CN': 'Google',
   },
   logo: './logo.svg',
+  logo_dark: null,
   description: {
     en: 'Sign In with Google',
     'zh-CN': 'Google登录',

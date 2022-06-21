@@ -21,6 +21,7 @@ export interface ConnectorMetadata {
   platform: Nullable<ConnectorPlatform>;
   name: Record<Language, string>;
   logo: string;
+  logo_dark: Nullable<string>;
   description: Record<Language, string>;
   readme: string;
   configTemplate: string;

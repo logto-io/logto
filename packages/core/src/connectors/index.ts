@@ -39,6 +39,17 @@ const loadConnectors = async () => {
         instance.metadata.logo = `data:image/svg+xml;base64,${data.toString('base64')}`;
       }
 
+      if (
+        packagePath &&
+        instance.metadata.logo_dark &&
+        !instance.metadata.logo_dark.startsWith('http') &&
+        existsSync(path.join(packagePath, '..', instance.metadata.logo_dark))
+      ) {
+        const data = readFileSync(path.join(packagePath, '..', instance.metadata.logo_dark));
+        // eslint-disable-next-line @silverhand/fp/no-mutation
+        instance.metadata.logo_dark = `data:image/svg+xml;base64,${data.toString('base64')}`;
+      }
+
       return instance;
     })
   );
