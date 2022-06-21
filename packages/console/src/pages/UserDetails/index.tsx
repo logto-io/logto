@@ -142,6 +142,7 @@ const UserDetails = () => {
               >
                 <ActionMenuItem
                   icon={<Reset />}
+                  iconClassName={styles.resetIcon}
                   onClick={() => {
                     setIsResetPasswordFormOpen(true);
                   }}
