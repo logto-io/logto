@@ -110,26 +110,25 @@ const UserConnectors = ({ userId, connectors, onDelete }: Props) => {
                 onRetry={async () => mutate(undefined, true)}
               />
             )}
-            {displayConnectors.map(({ id, userId = '', name, logo }) => (
-              <tr key={id}>
+            {displayConnectors.map((connector) => (
+              <tr key={connector.id}>
                 <td>
                   <div className={styles.connectorName}>
-                    <img src={logo} />
+                    <img src={connector.logo} />
                     <div className={styles.name}>
-                      <UnnamedTrans resource={name} />
+                      <UnnamedTrans resource={connector.name} />
                     </div>
                   </div>
                 </td>
                 <td className={styles.connectorId}>
-                  <span>{userId || '-'}</span>
-                  <CopyToClipboard variant="icon" value={userId} />
+                  <span>{connector.userId || '-'}</span>
+                  <CopyToClipboard variant="icon" value={connector.userId ?? '-'} />
                 </td>
                 <td>
                   <Button
                     title="admin_console.user_details.connectors.remove"
                     type="plain"
                     onClick={() => {
-                      const connector = displayConnectors.find((connector) => connector.id === id);
                       setDeletingConnector(connector);
                     }}
                   />
