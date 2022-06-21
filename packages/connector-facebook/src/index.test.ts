@@ -152,7 +152,7 @@ describe('facebook connector', () => {
       ).rejects.toMatchError(new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid));
     });
 
-    it('throws UnsuccessfulAuthorization error if error is access_denied', async () => {
+    it('throws AuthorizationFailed error if error is access_denied', async () => {
       const avatar = 'https://github.com/images/error/octocat_happy.gif';
       nock(userInfoEndpoint)
         .get('')
@@ -171,7 +171,7 @@ describe('facebook connector', () => {
           error_reason: 'user_denied',
         })
       ).rejects.toMatchError(
-        new ConnectorError(ConnectorErrorCodes.UnsuccessfulAuthorization, 'Permissions error.')
+        new ConnectorError(ConnectorErrorCodes.AuthorizationFailed, 'Permissions error.')
       );
     });
 

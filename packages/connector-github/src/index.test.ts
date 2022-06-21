@@ -137,7 +137,7 @@ describe('getUserInfo', () => {
     );
   });
 
-  it('throws UnsuccessfulAuthorization error if error is access_denied', async () => {
+  it('throws AuthorizationFailed error if error is access_denied', async () => {
     nock(userInfoEndpoint).get('').reply(200, {
       id: 1,
       avatar_url: 'https://github.com/images/error/octocat_happy.gif',
@@ -153,7 +153,7 @@ describe('getUserInfo', () => {
       })
     ).rejects.toMatchError(
       new ConnectorError(
-        ConnectorErrorCodes.UnsuccessfulAuthorization,
+        ConnectorErrorCodes.AuthorizationFailed,
         'The user has denied your application access.'
       )
     );

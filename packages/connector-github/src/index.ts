@@ -132,7 +132,7 @@ export default class GithubConnector implements SocialConnector {
 
     if (parsedError.data.error === 'access_denied') {
       throw new ConnectorError(
-        ConnectorErrorCodes.UnsuccessfulAuthorization,
+        ConnectorErrorCodes.AuthorizationFailed,
         parsedError.data.error_description
       );
     }
