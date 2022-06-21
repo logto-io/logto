@@ -8,8 +8,7 @@ import TabItem from '@mdx/components/TabItem';
   subtitle="Install Logto Android SDK with Gradle"
   index={0}
   activeIndex={props.activeStepIndex}
-  invalidIndex={props.invalidStepIndex}
-  onNext={() => props.onNext(1)}
+  onButtonClick={() => props.onNext(1)}
 >
 
 ### Prerequisite
@@ -54,8 +53,7 @@ dependencies {
   subtitle="Configure your application and LogtoClient"
   index={1}
   activeIndex={props.activeStepIndex}
-  invalidIndex={props.invalidStepIndex}
-  onNext={() => props.onNext(2)}
+  onButtonClick={() => props.onNext(2)}
 >
 
 ### Configure Redirect URI
@@ -76,7 +74,7 @@ Notes:
 
 e.g. `io.logto.android://io.logto.sample/callback`
 
-<MultiTextInputField name="redirectUris" title="Redirect URI" onError={() => props.onError(2)} />
+<MultiTextInputField name="redirectUris" title="Redirect URI" />
 
 ### Configure Logto Android SDK
 
@@ -146,8 +144,7 @@ Notes:
   subtitle="Sign In to your application by Logto and do some extra works"
   index={2}
   activeIndex={props.activeStepIndex}
-  invalidIndex={props.invalidStepIndex}
-  onNext={() => props.onNext(3)}
+  onButtonClick={() => props.onNext(3)}
 >
 
 ### Perform a signing-in action
@@ -231,8 +228,7 @@ logtoClient.fetchUserInfo((logtoException, userInfoResponse) -> {
   title="Sign Out"
   index={3}
   activeIndex={props.activeStepIndex}
-  invalidIndex={props.invalidStepIndex}
-  onNext={() => props.onNext(4)}
+  onButtonClick={() => props.onNext(4)}
 >
 
 ### Perform a signing-out action
@@ -272,9 +268,8 @@ Notes:
   subtitle="3 steps"
   index={4}
   activeIndex={props.activeStepIndex}
-  invalidIndex={props.invalidStepIndex}
   buttonText="general.done"
-  buttonHtmlType="submit"
+  onButtonClick={props.onComplete}
 >
 
 - Fetch User Info

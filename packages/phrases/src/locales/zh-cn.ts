@@ -9,6 +9,7 @@ const translation = {
     retry: '重试',
     done: '完成',
     search: '搜索',
+    save: '保存',
     save_changes: '保存更改',
     loading: '读取中...',
     redirecting: '页面跳转中...',

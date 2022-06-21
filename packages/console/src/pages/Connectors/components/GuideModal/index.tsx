@@ -125,7 +125,6 @@ const GuideModal = ({ connector, isOpen, onClose }: Props) => {
                   subtitle="Lorem ipsum dolor sit amet, consectetuer adipiscing elit."
                   index={0}
                   activeIndex={activeStepIndex}
-                  buttonHtmlType="submit"
                   buttonText={steps === 1 ? 'general.done' : undefined}
                 >
                   <Controller
@@ -145,9 +144,8 @@ const GuideModal = ({ connector, isOpen, onClose }: Props) => {
                 subtitle="Lorem ipsum dolor sit amet, consectetuer adipiscing elit."
                 index={1}
                 activeIndex={activeStepIndex}
-                buttonHtmlType="button"
                 buttonText="general.done"
-                onNext={onClose}
+                onButtonClick={onClose}
               >
                 <SenderTester connectorType={connectorType} />
               </Step>

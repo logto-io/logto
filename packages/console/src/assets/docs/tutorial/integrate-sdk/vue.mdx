@@ -8,8 +8,7 @@ import TabItem from '@mdx/components/TabItem';
   subtitle="Please select your favorite package manager"
   index={0}
   activeIndex={props.activeStepIndex}
-  invalidIndex={props.invalidStepIndex}
-  onNext={() => props.onNext(1)}
+  onButtonClick={() => props.onNext(1)}
 >
 <Tabs>
 <TabItem value="npm" label="npm">
@@ -48,8 +47,7 @@ pnpm add @logto/vue
   subtitle="1 step"
   index={1}
   activeIndex={props.activeStepIndex}
-  invalidIndex={props.invalidStepIndex}
-  onNext={() => props.onNext(2)}
+  onButtonClick={() => props.onNext(2)}
 >
 
 `import` and use `createLogto` to install Logto plugin:
@@ -74,8 +72,7 @@ app.mount("#app");
   subtitle="2 steps"
   index={2}
   activeIndex={props.activeStepIndex}
-  invalidIndex={props.invalidStepIndex}
-  onNext={() => props.onNext(3)}
+  onButtonClick={() => props.onNext(3)}
 >
 
 We provide two composables `useHandleSignInCallback()` and `useLogto()` which can help you easily manage the authentication flow. 
@@ -86,7 +83,7 @@ In order to handle what comes from Logto, the application needs to have a dedica
 
 First, let’s enter your redirect URI. E.g. `http://localhost:1234/callback`
 
-<MultiTextInputField name="redirectUris" title="Redirect URI" onError={() => props.onError(2)} />
+<MultiTextInputField name="redirectUris" title="Redirect URI" />
 
 Then let's create a callback component:
 
@@ -152,8 +149,7 @@ const { isAuthenticated } = useLogto();
   subtitle="1 step"
   index={3}
   activeIndex={props.activeStepIndex}
-  invalidIndex={props.invalidStepIndex}
-  onNext={() => props.onNext(4)}
+  onButtonClick={() => props.onNext(4)}
 >
 
 Calling `.signOut()` will clear all the Logto data in memory and LocalStorage, if there is any.
@@ -161,7 +157,7 @@ Calling `.signOut()` will clear all the Logto data in memory and LocalStorage, i
 To make the user come back to your application after signing out,
 it's necessary to add `http://localhost:1234` as one of the Post Sign Out URIs and use the URL as the parameter when calling `.signOut()`.
 
-<MultiTextInputField name="postLogoutRedirectUris" title="Post sign out redirect URI" onError={() => props.onError(3)} />
+<MultiTextInputField name="postLogoutRedirectUris" title="Post sign out redirect URI" />
 
 ```ts
 import { useLogto } from "@logto/vue";
@@ -180,9 +176,8 @@ const onClickSignOut = () => signOut('http://localhost:1234');
   subtitle="3 steps"
   index={4}
   activeIndex={props.activeStepIndex}
-  invalidIndex={props.invalidStepIndex}
   buttonText="general.done"
-  buttonHtmlType="submit"
+  onButtonClick={props.onComplete}
 >
 
 - [SDK Documentation](https://link-url-here.org)

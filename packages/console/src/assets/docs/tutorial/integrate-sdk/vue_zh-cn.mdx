@@ -8,8 +8,7 @@ import TabItem from '@mdx/components/TabItem';
   subtitle="请选择你喜欢的包管理工具"
   index={0}
   activeIndex={props.activeStepIndex}
-  invalidIndex={props.invalidStepIndex}
-  onNext={() => props.onNext(1)}
+  onButtonClick={() => props.onNext(1)}
 >
 <Tabs>
 <TabItem value="npm" label="npm">
@@ -48,8 +47,7 @@ pnpm add @logto/vue
   subtitle="1 step"
   index={1}
   activeIndex={props.activeStepIndex}
-  invalidIndex={props.invalidStepIndex}
-  onNext={() => props.onNext(2)}
+  onButtonClick={() => props.onNext(2)}
 >
 
 `import` 并使用 `createLogto` 以插件的形式安装 Logto:
@@ -74,8 +72,7 @@ app.mount("#app");
   subtitle="2 steps"
   index={2}
   activeIndex={props.activeStepIndex}
-  invalidIndex={props.invalidStepIndex}
-  onNext={() => props.onNext(3)}
+  onButtonClick={() => props.onNext(3)}
 >
 
 我们提供了两个组合式 API `useHandleSignInCallback()` 和 `useLogto()`，它们可以帮助你轻松完成登录认证流程。 
@@ -86,7 +83,7 @@ app.mount("#app");
 
 但首先, 让我们先在下方输入 redirect URI，如：`http://localhost:1234/callback`
 
-<MultiTextInputField name="redirectUris" title="Redirect URI" onError={() => props.onError(2)} />
+<MultiTextInputField name="redirectUris" title="Redirect URI" />
 
 然后，让我们来创建一个 CallbackView 组件：
 
@@ -153,15 +150,14 @@ const { isAuthenticated } = useLogto();
   subtitle="1 step"
   index={3}
   activeIndex={props.activeStepIndex}
-  invalidIndex={props.invalidStepIndex}
-  onNext={() => props.onNext(4)}
+  onButtonClick={() => props.onNext(4)}
 >
 
 调用 `.signOut()` 方法会清除所有在缓存或者 localStorage 中的 Logto 数据（如果有）。
 
 为了确保用户登出后能够跳转回你的应用，我们需要首先在管理界面中将 `http://localhost:1234` 添加到允许登出后跳转的地址列表（Post Sign Out URIs）中。
 
-<MultiTextInputField name="postLogoutRedirectUris" title="Post sign out redirect URI" onError={() => props.onError(3)} />
+<MultiTextInputField name="postLogoutRedirectUris" title="Post sign out redirect URI" />
 
 ```ts
 import { useLogto } from "@logto/vue";
@@ -180,9 +176,8 @@ const onClickSignOut = () => signOut('http://localhost:1234');
   subtitle="3 steps"
   index={4}
   activeIndex={props.activeStepIndex}
-  invalidIndex={props.invalidStepIndex}
   buttonText="general.done"
-  buttonHtmlType="submit"
+  onButtonClick={props.onComplete}
 >
 
 - [SDK Documentation](https://link-url-here.org)

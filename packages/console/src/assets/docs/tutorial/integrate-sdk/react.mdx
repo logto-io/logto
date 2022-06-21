@@ -8,8 +8,7 @@ import TabItem from '@mdx/components/TabItem';
   subtitle="Please select your favorite package manager"
   index={0}
   activeIndex={props.activeStepIndex}
-  invalidIndex={props.invalidStepIndex}
-  onNext={() => props.onNext(1)}
+  onButtonClick={() => props.onNext(1)}
 >
 <Tabs>
 <TabItem value="npm" label="npm">
@@ -56,8 +55,7 @@ pnpm build
   subtitle="1 step"
   index={1}
   activeIndex={props.activeStepIndex}
-  invalidIndex={props.invalidStepIndex}
-  onNext={() => props.onNext(2)}
+  onButtonClick={() => props.onNext(2)}
 >
 
 Add the following code to your main html file. You may need client ID and authorization domain.
@@ -71,7 +69,7 @@ import React from 'react';
 const App = () => {
   const config: LogtoConfig = {
     clientId: 'foo',
-    endpoint: 'https://your-endpoint-domain.com'
+    endpoint: 'https://your-endpoint-domain.com',
   };
 
   return (
@@ -102,15 +100,18 @@ const App = () => {
   subtitle="2 steps"
   index={2}
   activeIndex={props.activeStepIndex}
-  invalidIndex={props.invalidStepIndex}
-  onNext={() => props.onNext(3)}
+  onButtonClick={() => props.onNext(3)}
 >
 
-### Setup your login
+### Step 1: Setup your login
 
 The Logto React SDK provides you tools and hooks to quickly implement your own authorization flow. First, let’s enter your redirect URI
 
-<MultiTextInputField name="redirectUris" title="Redirect URI" onError={() => props.onError(2)} />
+<MultiTextInputField
+  appId={props.appId}
+  name="redirectUris"
+  title="Redirect URI"
+/>
 
 Add the following code to your web app
 
@@ -128,7 +129,7 @@ const SignInButton = () => {
 export default SignInButton;
 ```
 
-### Retrieve Auth Status
+### Step 2: Retrieve Auth Status
 
 ```tsx
 import React from "react";
@@ -155,13 +156,16 @@ const App = () => {
   subtitle="1 step"
   index={3}
   activeIndex={props.activeStepIndex}
-  invalidIndex={props.invalidStepIndex}
-  onNext={() => props.onNext(4)}
+  onButtonClick={() => props.onNext(4)}
 >
 
 Execute signOut() methods will redirect users to the Logto sign out page. After a success sign out, all use session data and auth status will be cleared.
 
-<MultiTextInputField name="postLogoutRedirectUris" title="Post sign out redirect URI" onError={() => props.onError(3)} />
+<MultiTextInputField
+  appId={props.appId}
+  name="postLogoutRedirectUris"
+  title="Post sign out redirect URI"
+/>
 
 Add the following code to your web app
 
@@ -185,9 +189,8 @@ export default SignOutButton;
   subtitle="3 steps"
   index={4}
   activeIndex={props.activeStepIndex}
-  invalidIndex={props.invalidStepIndex}
   buttonText="general.done"
-  buttonHtmlType="submit"
+  onButtonClick={props.onComplete}
 >
 
 - [SDK Documentation](https://link-url-here.org)

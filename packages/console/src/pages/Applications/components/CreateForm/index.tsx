@@ -2,6 +2,7 @@ import { Application, ApplicationType } from '@logto/schemas';
 import React, { useState } from 'react';
 import { useController, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+import Modal from 'react-modal';
 
 import Button from '@/components/Button';
 import FormField from '@/components/FormField';
@@ -10,10 +11,10 @@ import RadioGroup, { Radio } from '@/components/RadioGroup';
 import TextInput from '@/components/TextInput';
 import useApi from '@/hooks/use-api';
 import useSettings from '@/hooks/use-settings';
+import * as modalStyles from '@/scss/modal.module.scss';
 import { applicationTypeI18nKey } from '@/types/applications';
-import { GuideForm } from '@/types/guide';
 
-import GuideModal from '../GuideModal';
+import Guide from '../Guide';
 import TypeDescription from '../TypeDescription';
 import * as styles from './index.module.scss';
 
@@ -55,29 +56,9 @@ const CreateForm = ({ onClose }: Props) => {
 
     const createdApp = await api.post('/api/applications', { json: data }).json<Application>();
     setCreatedApp(createdApp);
-
     setIsGetStartedModalOpen(true);
+    void updateSettings({ createApplication: true });
   });
-
-  const onComplete = async (data: GuideForm) => {
-    if (!createdApp) {
-      return;
-    }
-
-    const application = await api
-      .patch(`/api/applications/${createdApp.id}`, {
-        json: {
-          oidcClientMetadata: {
-            redirectUris: data.redirectUris.filter(Boolean),
-            postLogoutRedirectUris: data.postLogoutRedirectUris.filter(Boolean),
-          },
-        },
-      })
-      .json<Application>();
-    await updateSettings({ createApplication: true });
-    setCreatedApp(application);
-    closeModal();
-  };
 
   return (
     <ModalLayout
@@ -128,13 +109,9 @@ const CreateForm = ({ onClose }: Props) => {
         </FormField>
       </form>
       {createdApp && (
-        <GuideModal
-          appName={createdApp.name}
-          appType={createdApp.type}
-          isOpen={isGetStartedModalOpen}
-          onClose={closeModal}
-          onComplete={onComplete}
-        />
+        <Modal isOpen={isGetStartedModalOpen} className={modalStyles.fullScreen}>
+          <Guide app={createdApp} onClose={closeModal} />
+        </Modal>
       )}
     </ModalLayout>
   );

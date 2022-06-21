@@ -8,8 +8,7 @@ import TabItem from '@mdx/components/TabItem';
   subtitle="Add Logto SDK as a Dependency"
   index={0}
   activeIndex={props.activeStepIndex}
-  invalidIndex={props.invalidStepIndex}
-  onNext={() => props.onNext(1)}
+  onButtonClick={() => props.onNext(1)}
 >
 
 Use the following URL to add Logto SDK as a dependency in Swift Package Manager.
@@ -37,8 +36,7 @@ We do not support **Carthage** and **CocoaPods** at the time due to some technic
   title="Init LogtoClient"
   index={1}
   activeIndex={props.activeStepIndex}
-  invalidIndex={props.invalidStepIndex}
-  onNext={() => props.onNext(2)}
+  onButtonClick={() => props.onNext(2)}
 >
 
 ```swift
@@ -67,13 +65,12 @@ let config = try? LogtoConfig(
   title="Sign In"
   index={2}
   activeIndex={props.activeStepIndex}
-  invalidIndex={props.invalidStepIndex}
-  onNext={() => props.onNext(3)}
+  onButtonClick={() => props.onNext(3)}
 >
 
 First, let’s configure your redirect URI
 
-<MultiTextInputField name="redirectUris" title="Redirect URI" onError={() => props.onError(2)} />
+<MultiTextInputField name="redirectUris" title="Redirect URI" />
 
 ```swift
 do {
@@ -90,8 +87,7 @@ do {
   subtitle="1 step"
   index={3}
   activeIndex={props.activeStepIndex}
-  invalidIndex={props.invalidStepIndex}
-  onNext={() => props.onNext(4)}
+  onButtonClick={() => props.onNext(4)}
 >
 
 Calling `.signOut()` will clean all the Logto data in Keychain, if it has.
@@ -106,9 +102,8 @@ await client.signOut()
   subtitle="3 steps"
   index={4}
   activeIndex={props.activeStepIndex}
-  invalidIndex={props.invalidStepIndex}
   buttonText="general.done"
-  buttonHtmlType="submit"
+  onButtonClick={props.onComplete}
 >
 
 - [SDK Documentation](https://link-url-here.org)

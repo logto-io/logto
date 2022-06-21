@@ -8,8 +8,7 @@ import TabItem from '@mdx/components/TabItem';
   subtitle="从 Gradle 安装 Logto Android SDK"
   index={0}
   activeIndex={props.activeStepIndex}
-  invalidIndex={props.invalidStepIndex}
-  onNext={() => props.onNext(1)}
+  onButtonClick={() => props.onNext(1)}
 >
 
 ### 前提条件
@@ -54,8 +53,7 @@ dependencies {
   subtitle="Configure your application and LogtoClient"
   index={1}
   activeIndex={props.activeStepIndex}
-  invalidIndex={props.invalidStepIndex}
-  onNext={() => props.onNext(2)}
+  onButtonClick={() => props.onNext(2)}
 >
 
 ### 配置 Redirect URI
@@ -76,7 +74,7 @@ $(LOGTO_REDIRECT_SCHEME)://$(YOUR_APP_PACKAGE)/callback
 
 例： `io.logto.android://io.logto.sample/callback`
 
-<MultiTextInputField name="redirectUris" title="Redirect URI" onError={() => props.onError(1)} />
+<MultiTextInputField name="redirectUris" title="Redirect URI" />
 
 ### 配置 Logto Android SDK
 
@@ -146,8 +144,7 @@ Notes:
   subtitle="Sign In to your application by Logto and do some extra works"
   index={2}
   activeIndex={props.activeStepIndex}
-  invalidIndex={props.invalidStepIndex}
-  onNext={() => props.onNext(3)}
+  onButtonClick={() => props.onNext(3)}
 >
 
 ### 执行登录
@@ -231,8 +228,7 @@ logtoClient.fetchUserInfo((logtoException, userInfoResponse) -> {
   title="登出"
   index={3}
   activeIndex={props.activeStepIndex}
-  invalidIndex={props.invalidStepIndex}
-  onNext={() => props.onNext(4)}
+  onButtonClick={() => props.onNext(4)}
 >
 
 ### 执行登出
@@ -272,9 +268,8 @@ logtoClient.signOut(logtoException -> {
   subtitle="3 steps"
   index={4}
   activeIndex={props.activeStepIndex}
-  invalidIndex={props.invalidStepIndex}
   buttonText="general.done"
-  buttonHtmlType="submit"
+  onButtonClick={props.onComplete}
 >
 
 - 获取用户信息

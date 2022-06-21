@@ -14,6 +14,7 @@ type Option<T> = {
 };
 
 type Props<T> = {
+  className?: string;
   value?: T;
   options: Array<Option<T>>;
   onChange?: (value?: T) => void;
@@ -21,10 +22,11 @@ type Props<T> = {
   hasError?: boolean;
   placeholder?: ReactNode;
   isClearable?: boolean;
-  size?: 'small' | 'medium';
+  size?: 'small' | 'medium' | 'large';
 };
 
 const Select = <T extends string>({
+  className,
   value,
   options,
   onChange,
@@ -32,7 +34,7 @@ const Select = <T extends string>({
   hasError,
   placeholder,
   isClearable,
-  size = 'medium',
+  size = 'large',
 }: Props<T>) => {
   const [isOpen, setIsOpen] = useState(false);
   const anchorRef = useRef<HTMLInputElement>(null);
@@ -59,7 +61,8 @@ const Select = <T extends string>({
           isOpen && styles.open,
           isReadOnly && styles.readOnly,
           hasError && styles.error,
-          isClearable && value && styles.clearable
+          isClearable && value && styles.clearable,
+          className
         )}
         role="button"
         onClick={() => {
