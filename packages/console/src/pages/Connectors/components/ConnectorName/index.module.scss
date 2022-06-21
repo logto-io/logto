@@ -5,10 +5,19 @@ a.link {
   text-decoration: none;
 }
 
-.logo {
+.logoContainer {
   width: 40px;
   height: 40px;
-  border-radius: 5px;
+  border-radius: 8px;
+  background-color: var(--color-hover);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo {
+  width: 28px;
+  height: 28px;
 }
 
 .previewTitle {

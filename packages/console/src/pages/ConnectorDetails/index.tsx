@@ -119,7 +119,7 @@ const ConnectorDetails = () => {
       )}
       {data && (
         <Card className={styles.header}>
-          <div className={styles.imagePlaceholder}>
+          <div className={styles.logoContainer}>
             <img src={data.logo} className={styles.logo} />
           </div>
           <div className={styles.metadata}>
