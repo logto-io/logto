@@ -2,9 +2,10 @@ import { Language } from '@logto/phrases';
 import { Identities } from '@logto/schemas';
 import { Optional } from '@silverhand/essentials';
 import React, { useMemo, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 
 import Button from '@/components/Button';
+import ConfirmModal from '@/components/ConfirmModal';
 import CopyToClipboard from '@/components/CopyToClipboard';
 import TableError from '@/components/Table/TableError';
 import UnnamedTrans from '@/components/UnnamedTrans';
@@ -30,6 +31,7 @@ const UserConnectors = ({ userId, connectors, onDelete }: Props) => {
   const api = useApi();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { data: connectorGroups, error, mutate } = useConnectorGroups();
+  const [deletingConnector, setDeletingConnector] = useState<DisplayConnector>();
   const isLoading = !connectorGroups && !error;
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -108,34 +110,59 @@ const UserConnectors = ({ userId, connectors, onDelete }: Props) => {
                 onRetry={async () => mutate(undefined, true)}
               />
             )}
-            {displayConnectors.map(({ id, userId = '', name, logo }) => (
-              <tr key={id}>
-                <td>
-                  <div className={styles.connectorName}>
-                    <img src={logo} />
-                    <div className={styles.name}>
-                      <UnnamedTrans resource={name} />
+            {displayConnectors.map((connector) => {
+              const { id, userId = '', name, logo } = connector;
+
+              return (
+                <tr key={id}>
+                  <td>
+                    <div className={styles.connectorName}>
+                      <img src={logo} />
+                      <div className={styles.name}>
+                        <UnnamedTrans resource={name} />
+                      </div>
                     </div>
-                  </div>
-                </td>
-                <td className={styles.connectorId}>
-                  <span>{userId || '-'}</span>
-                  <CopyToClipboard variant="icon" value={userId} />
-                </td>
-                <td>
-                  <Button
-                    title="admin_console.user_details.connectors.remove"
-                    type="plain"
-                    onClick={() => {
-                      void handleDelete(id);
-                    }}
-                  />
-                </td>
-              </tr>
-            ))}
+                  </td>
+                  <td className={styles.connectorId}>
+                    <span>{userId || '-'}</span>
+                    <CopyToClipboard variant="icon" value={userId} />
+                  </td>
+                  <td>
+                    <Button
+                      title="admin_console.user_details.connectors.remove"
+                      type="plain"
+                      onClick={() => {
+                        setDeletingConnector(connector);
+                      }}
+                    />
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       )}
+      <ConfirmModal
+        isOpen={deletingConnector !== undefined}
+        confirmButtonText="admin_console.form.delete"
+        onCancel={() => {
+          setDeletingConnector(undefined);
+        }}
+        onConfirm={async () => {
+          if (deletingConnector !== undefined) {
+            await handleDelete(deletingConnector.id);
+            setDeletingConnector(undefined);
+          }
+        }}
+      >
+        {deletingConnector && (
+          <Trans
+            t={t}
+            i18nKey="user_details.connectors.deletion_confirmation"
+            components={{ name: <UnnamedTrans resource={deletingConnector.name} /> }}
+          />
+        )}
+      </ConfirmModal>
     </div>
   );
 };
