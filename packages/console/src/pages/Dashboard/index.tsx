@@ -22,6 +22,12 @@ import Skeleton from './components/Skeleton';
 import * as styles from './index.module.scss';
 import { ActiveUsersResponse, NewUsersResponse, TotalUsersResponse } from './types';
 
+const tickStyle = {
+  fill: 'var(--color-caption)',
+  fontSize: 11,
+  fontFamily: 'var(--font-family)',
+};
+
 const Dashboard = () => {
   const { data: totalData, error: totalError } = useSWR<TotalUsersResponse, RequestError>(
     '/api/dashboard/users/total'
@@ -98,12 +104,12 @@ const Dashboard = () => {
                   <Area
                     type="monotone"
                     dataKey="count"
-                    stroke="#5D34F2"
+                    stroke="var(--color-primary)"
                     strokeWidth={2}
-                    fill="#F2EFFD"
+                    fill="var(--color-hover-variant)"
                   />
-                  <XAxis dataKey="date" />
-                  <YAxis orientation="right" axisLine={false} tickLine={false} />
+                  <XAxis dataKey="date" tickLine={false} tick={tickStyle} />
+                  <YAxis orientation="right" axisLine={false} tickLine={false} tick={tickStyle} />
                   <Tooltip />
                 </AreaChart>
               </ResponsiveContainer>
