@@ -11,6 +11,7 @@ import Card from '@/components/Card';
 import CodeEditor from '@/components/CodeEditor';
 import DangerousRaw from '@/components/DangerousRaw';
 import DetailsSkeleton from '@/components/DetailsSkeleton';
+import FormField from '@/components/FormField';
 import LinkButton from '@/components/LinkButton';
 import TabNav, { TabNavItem } from '@/components/TabNav';
 import UserName from '@/components/UserName';
@@ -103,7 +104,9 @@ const AuditLogDetails = () => {
               </TabNavItem>
             </TabNav>
             <div className={styles.main}>
-              <CodeEditor language="json" value={JSON.stringify(data.payload, null, 2)} />
+              <FormField title="admin_console.log_details.raw_data">
+                <CodeEditor language="json" value={JSON.stringify(data.payload, null, 2)} />
+              </FormField>
             </div>
           </Card>
         </>

@@ -281,6 +281,7 @@ const translation = {
       save_success: 'Saved!',
       send: 'Send',
       send_error_invalid_format: 'Invalid input',
+      edit_config_label: 'Enter your json here',
       test_email_sender: 'Test your email sender',
       test_sms_sender: 'Test your SMS sender',
       test_message_sent: 'Test message sent!',
