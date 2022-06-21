@@ -1,0 +1,10 @@
+@use '@/scss/underscore' as _;
+
+.field {
+  width: 556px;
+}
+
+.wrapper {
+  display: flex;
+  align-items: flex-start;
+}

@@ -31,6 +31,11 @@
     max-width: unset;
   }
 
+  .select {
+    background: var(--color-guide-dropdown-background);
+    border-color: var(--color-guide-dropdown-border);
+  }
+
   &.folded {
     display: flex;
     flex-direction: row;
@@ -44,11 +49,12 @@
     color: var(--color-text);
 
     img {
-      margin-right: _.unit(3);
+      margin: 0 _.unit(4) 0 0;
     }
   }
 
   .buttonWrapper {
+    width: 100%;
     display: flex;
     justify-content: flex-end;
     margin-top: _.unit(6);

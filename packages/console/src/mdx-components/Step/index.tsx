@@ -1,5 +1,4 @@
 import { I18nKey } from '@logto/phrases';
-import { conditional } from '@silverhand/essentials';
 import classNames from 'classnames';
 import React, { PropsWithChildren, useEffect, useRef, useState } from 'react';
 
@@ -19,10 +18,8 @@ type Props = PropsWithChildren<{
   subtitle?: string;
   index: number;
   activeIndex: number;
-  invalidIndex?: number;
   buttonText?: I18nKey;
-  buttonHtmlType: 'submit' | 'button';
-  onNext?: () => void;
+  onButtonClick?: () => void;
 }>;
 
 const Step = ({
@@ -31,22 +28,19 @@ const Step = ({
   subtitle,
   index,
   activeIndex,
-  invalidIndex,
   buttonText = 'general.next',
-  buttonHtmlType = 'button',
-  onNext,
+  onButtonClick,
 }: Props) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const isActive = index === activeIndex;
   const isComplete = index < activeIndex;
-  const isInvalid = index === invalidIndex;
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (isActive || isInvalid) {
+    if (isActive) {
       setIsExpanded(true);
     }
-  }, [isActive, isInvalid]);
+  }, [isActive]);
 
   useEffect(() => {
     if (isExpanded) {
@@ -79,12 +73,7 @@ const Step = ({
       <div className={classNames(styles.content, isExpanded && styles.expanded)}>
         {children}
         <div className={styles.buttonWrapper}>
-          <Button
-            htmlType={buttonHtmlType}
-            type="primary"
-            title={buttonText}
-            onClick={conditional(onNext)}
-          />
+          <Button type="outline" size="large" title={buttonText} onClick={onButtonClick} />
         </div>
       </div>
     </Card>

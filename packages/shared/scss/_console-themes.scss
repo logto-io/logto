@@ -160,6 +160,9 @@
   --color-tooltip-background: #34353f; // dark theme Surface-4
   --color-tooltip-text: var(--color-neutral-99);
   --color-overlay: rgba(0, 0, 0, 30%);
+  --color-drawer-overlay: rgba(0, 0, 0, 40%);
+  --color-guide-dropdown-background: var(--color-white);
+  --color-guide-dropdown-border: var(--color-border);
   --color-skeleton-shimmer-rgb: 255, 255, 255; // rgb of Layer-1
 }
 
@@ -325,5 +328,8 @@
   --color-tooltip-background: var(--color-surface-4);
   --color-tooltip-text: var(--color-neutral-10);
   --color-overlay: rgba(0, 0, 0, 30%);
+  --color-drawer-overlay: rgba(0, 0, 0, 60%);
+  --color-guide-dropdown-background: var(--color-neutral-variant-80);
+  --color-guide-dropdown-border: var(--color-neutral-variant-70);
   --color-skeleton-shimmer-rgb: 42, 44, 50; // rgb of Layer-1
 }

@@ -75,7 +75,7 @@ export default function applicationRoutes<T extends AuthedRouter>(router: T) {
     '/applications/:id',
     koaGuard({
       params: object({ id: string().min(1) }),
-      body: Applications.createGuard.omit({ id: true, createdAt: true }).partial(),
+      body: Applications.createGuard.omit({ id: true, createdAt: true }).deepPartial(),
     }),
     async (ctx, next) => {
       const {

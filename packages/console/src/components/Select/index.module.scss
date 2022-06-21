@@ -1,6 +1,10 @@
 @use '@/scss/underscore' as _;
 
 .select {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 _.unit(3);
   background: var(--color-layer-1);
   border: 1px solid var(--color-border);
   border-radius: 6px;
@@ -36,16 +40,20 @@
   }
 
   .icon {
-    position: absolute;
-    right: _.unit(2);
-
-    > svg {
-      color: var(--color-icon);
-    }
+    display: flex;
+    margin-left: _.unit(3);
+    color: var(--color-icon);
   }
 
   .clear {
     display: none;
+  }
+
+  .arrow {
+    svg {
+      width: 20px;
+      height: 20px;
+    }
   }
 
   &.clearable:hover {
@@ -59,18 +67,14 @@
   }
 
   &.small {
-    padding: _.unit(1) _.unit(4) _.unit(1) _.unit(3);
-
-    .icon {
-      top: 2px;
-    }
+    height: 30px;
   }
 
   &.medium {
-    padding: _.unit(2) _.unit(5) _.unit(2) _.unit(3);
+    height: 32px;
+  }
 
-    .icon {
-      top: 6px;
-    }
+  &.large {
+    height: 36px;
   }
 }

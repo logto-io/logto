@@ -1,6 +1,6 @@
 import { I18nKey } from '@logto/phrases';
 import classNames from 'classnames';
-import React, { useMemo, useState } from 'react';
+import React, { KeyboardEvent, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import * as textButtonStyles from '@/components/TextButton/index.module.scss';
@@ -16,10 +16,11 @@ type Props = {
   title: I18nKey;
   value?: string[];
   onChange: (value: string[]) => void;
+  onKeyPress?: (event: KeyboardEvent<HTMLInputElement>) => void;
   error?: MultiTextInputError;
 };
 
-const MultiTextInput = ({ title, value, onChange, error }: Props) => {
+const MultiTextInput = ({ title, value, onChange, onKeyPress, error }: Props) => {
   const { t } = useTranslation();
 
   const [deleteFieldIndex, setDeleteFieldIndex] = useState<number>();
@@ -58,6 +59,7 @@ const MultiTextInput = ({ title, value, onChange, error }: Props) => {
               onChange={({ currentTarget: { value } }) => {
                 handleInputChange(value, fieldIndex);
               }}
+              onKeyPress={onKeyPress}
             />
             {fieldIndex > 0 && (
               <IconButton

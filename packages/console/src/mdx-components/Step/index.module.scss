@@ -29,14 +29,39 @@
 
   .content {
     margin-top: 0;
-    max-height: 0;
+    height: 0;
     overflow: hidden;
 
     &.expanded {
-      margin-top: _.unit(6);
-      max-height: 9999px;
+      height: auto;
       overflow: unset;
     }
+  }
+
+  ul {
+    padding-inline-start: 1ch;
+  }
+
+  li {
+    list-style-type: '-';
+    margin-block-end: _.unit(6);
+    padding-inline-start: _.unit(1.5);
+  }
+
+  a {
+    font: var(--font-body-medium);
+    color: var(--color-text-link);
+  }
+
+  h3 {
+    font: var(--font-title-medium);
+    color: var(--color-caption);
+    margin: _.unit(6) 0;
+  }
+
+  p {
+    font: var(--font-body-medium);
+    margin: _.unit(6) 0;
   }
 }
 
