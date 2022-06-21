@@ -3,7 +3,7 @@ import { passwordRegEx, usernameRegEx } from '@logto/shared';
 import { has } from '@silverhand/essentials';
 import pick from 'lodash.pick';
 import { InvalidInputError } from 'slonik';
-import { object, string } from 'zod';
+import { literal, object, string } from 'zod';
 
 import RequestError from '@/errors/RequestError';
 import { encryptUserPassword, generateUserId } from '@/lib/user';
@@ -28,16 +28,19 @@ export default function adminUserRoutes<T extends AuthedRouter>(router: T) {
   router.get(
     '/users',
     koaPagination(),
-    koaGuard({ query: object({ search: string().optional() }) }),
+    koaGuard({
+      query: object({ search: string().optional(), hideAdminUser: literal('true').optional() }),
+    }),
     async (ctx, next) => {
       const { limit, offset } = ctx.pagination;
       const {
-        query: { search },
+        query: { search, hideAdminUser: _hideAdminUser },
       } = ctx.guard;
 
+      const hideAdminUser = _hideAdminUser === 'true';
       const [{ count }, users] = await Promise.all([
-        countUsers(search),
-        findUsers(limit, offset, search),
+        countUsers(search, hideAdminUser),
+        findUsers(limit, offset, search, hideAdminUser),
       ]);
 
       ctx.pagination.totalCount = count;
