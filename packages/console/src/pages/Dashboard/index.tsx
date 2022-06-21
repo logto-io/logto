@@ -18,6 +18,7 @@ import TextInput from '@/components/TextInput';
 import { RequestError } from '@/hooks/use-api';
 
 import Block from './components/Block';
+import ChartTooltip from './components/ChartTooltip';
 import Skeleton from './components/Skeleton';
 import * as styles from './index.module.scss';
 import { ActiveUsersResponse, NewUsersResponse, TotalUsersResponse } from './types';
@@ -110,7 +111,7 @@ const Dashboard = () => {
                   />
                   <XAxis dataKey="date" tickLine={false} tick={tickStyle} />
                   <YAxis orientation="right" axisLine={false} tickLine={false} tick={tickStyle} />
-                  <Tooltip />
+                  <Tooltip content={<ChartTooltip />} cursor={{ stroke: 'var(--color-primary' }} />
                 </AreaChart>
               </ResponsiveContainer>
             </div>
