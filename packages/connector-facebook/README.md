@@ -15,7 +15,7 @@ The Facebook connector provides a concise way for your application to use Facebo
 5. In the Facebook Login Settings page, fill `${your_logto_origin}/callback/facebook-universal` in the **Valid OAuth Redirect URIs** field. E.g.:
     - `https://logto.dev/callback/facebook-universal` for production
     - `https://localhost:3001/callback/facebook-universal` for testing in the local environment
-6. Click the "**Save changes**" button at the bottom right corner.
+6. Click the **Save changes** button at the bottom right corner.
 
 ## Set up the Logto connector settings
 
