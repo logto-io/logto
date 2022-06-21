@@ -13,6 +13,7 @@ import CodeEditor from '@/components/CodeEditor';
 import CopyToClipboard from '@/components/CopyToClipboard';
 import DetailsSkeleton from '@/components/DetailsSkeleton';
 import Drawer from '@/components/Drawer';
+import FormField from '@/components/FormField';
 import LinkButton from '@/components/LinkButton';
 import Markdown from '@/components/Markdown';
 import Status from '@/components/Status';
@@ -198,14 +199,16 @@ const ConnectorDetails = () => {
             </TabNavItem>
           </TabNav>
           <div className={styles.main}>
-            <CodeEditor
-              className={styles.codeEditor}
-              language="json"
-              value={config}
-              onChange={(value) => {
-                setConfig(value);
-              }}
-            />
+            <FormField title="admin_console.connector_details.edit_config_label">
+              <CodeEditor
+                className={styles.codeEditor}
+                language="json"
+                value={config}
+                onChange={(value) => {
+                  setConfig(value);
+                }}
+              />
+            </FormField>
             {data.type !== ConnectorType.Social && <SenderTester connectorType={data.type} />}
             {saveError && <div>{saveError}</div>}
           </div>

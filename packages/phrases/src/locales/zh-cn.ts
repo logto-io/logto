@@ -276,6 +276,7 @@ const translation = {
       save_success: '保存成功',
       send: 'Send',
       send_error_invalid_format: 'Invalid input',
+      edit_config_label: '请在此输入你的 JSON 配置',
       test_email_sender: 'Test your email sender',
       test_sms_sender: 'Test your SMS sender',
       test_message_sent: 'Test Message Sent!',
