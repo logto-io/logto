@@ -2,7 +2,7 @@ import { ConnectorMetadata } from '@logto/connector-types';
 import { SignInMode } from '@logto/schemas';
 import { adminConsoleApplicationId, adminConsoleSignInMethods } from '@logto/schemas/lib/seeds';
 import etag from 'etag';
-import { Provider } from 'oidc-provider';
+import { Provider, errors } from 'oidc-provider';
 
 import { getConnectorInstances } from '@/connectors';
 import { findDefaultSignInExperience } from '@/queries/sign-in-experience';
@@ -20,7 +20,14 @@ export default function signInSettingsRoutes<T extends AnonymousRouter>(
       const [signInExperience, connectorInstances, interaction] = await Promise.all([
         findDefaultSignInExperience(),
         getConnectorInstances(),
-        provider.interactionDetails(ctx.req, ctx.res),
+        provider.interactionDetails(ctx.req, ctx.res).catch((error: unknown) => {
+          // Should not block if interaction is not found
+          if (error instanceof errors.SessionNotFound) {
+            return null;
+          }
+
+          throw error;
+        }),
       ]);
 
       const socialConnectors = signInExperience.socialSignInConnectorTargets.reduce<
@@ -37,12 +44,8 @@ export default function signInSettingsRoutes<T extends AnonymousRouter>(
         ];
       }, []);
 
-      const {
-        params: { client_id },
-      } = interaction;
-
       // Hard code AdminConsole sign-in methods settings.
-      if (client_id === adminConsoleApplicationId) {
+      if (interaction?.params.client_id === adminConsoleApplicationId) {
         ctx.body = {
           ...signInExperience,
           signInMethods: adminConsoleSignInMethods,
