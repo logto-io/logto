@@ -10,7 +10,7 @@ The Facebook connector provides a concise way for your application to use Facebo
 
 1. Visit the [Apps](https://developers.facebook.com/apps) page.
 2. Click your existing app or [create a new one](https://developers.facebook.com/docs/development/create-an-app) if needed.
-   - The app type is up to you.
+   - The selected [app type](https://developers.facebook.com/docs/development/create-an-app/app-dashboard/app-types) is up to you, but it should have the product **Facebook Login**.
 3. On the app dashboard page, scroll to the **Add a product** section and click the **Set up** button on the **Facebook Login** card.
 4. Skip the Facebook Login Quickstart page, and click the sidebar -> **Products** -> **Facebook Login** -> **Settings**.
 5. In the Facebook Login Settings page, fill `${your_logto_origin}/callback/facebook-universal` in the **Valid OAuth Redirect URIs** field. E.g.:
