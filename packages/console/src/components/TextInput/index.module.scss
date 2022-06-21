@@ -45,6 +45,10 @@
       transition: background-color 5000s ease-in-out 0s;
       -webkit-text-fill-color: var(--color-text);
     }
+
+    &[type='date'] {
+      height: 20px;
+    }
   }
 
   &.disabled {
