@@ -18,9 +18,16 @@ import TextInput from '@/components/TextInput';
 import { RequestError } from '@/hooks/use-api';
 
 import Block from './components/Block';
+import ChartTooltip from './components/ChartTooltip';
 import Skeleton from './components/Skeleton';
 import * as styles from './index.module.scss';
 import { ActiveUsersResponse, NewUsersResponse, TotalUsersResponse } from './types';
+
+const tickStyle = {
+  fill: 'var(--color-caption)',
+  fontSize: 11,
+  fontFamily: 'var(--font-family)',
+};
 
 const Dashboard = () => {
   const { data: totalData, error: totalError } = useSWR<TotalUsersResponse, RequestError>(
@@ -98,13 +105,13 @@ const Dashboard = () => {
                   <Area
                     type="monotone"
                     dataKey="count"
-                    stroke="#5D34F2"
+                    stroke="var(--color-primary)"
                     strokeWidth={2}
-                    fill="#F2EFFD"
+                    fill="var(--color-hover-variant)"
                   />
-                  <XAxis dataKey="date" />
-                  <YAxis orientation="right" axisLine={false} tickLine={false} />
-                  <Tooltip />
+                  <XAxis dataKey="date" tickLine={false} tick={tickStyle} />
+                  <YAxis orientation="right" axisLine={false} tickLine={false} tick={tickStyle} />
+                  <Tooltip content={<ChartTooltip />} cursor={{ stroke: 'var(--color-primary' }} />
                 </AreaChart>
               </ResponsiveContainer>
             </div>

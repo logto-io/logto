@@ -11,6 +11,7 @@ $font-family:
   'Apple Color Emoji';
 
 :root {
+  --font-family: #{$font-family};
   --font-headline-large: 600 32px/40px #{$font-family};
   --font-headline-medium: 600 28px/36px #{$font-family};
   --font-headline-small: 600 24px/32px #{$font-family};
