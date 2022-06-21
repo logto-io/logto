@@ -67,10 +67,14 @@
 
   .form {
     margin-top: _.unit(8);
+    flex: 1;
+    display: flex;
+    flex-direction: column;
   }
 
   .fields {
     padding-bottom: _.unit(10);
+    flex: 1;
   }
 
   .textField {
