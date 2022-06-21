@@ -165,6 +165,7 @@ const ConnectorDetails = () => {
               {data.type !== ConnectorType.Social && (
                 <ActionMenuItem
                   icon={<Reset />}
+                  iconClassName={styles.resetIcon}
                   onClick={() => {
                     setIsSetupOpen(true);
                   }}
