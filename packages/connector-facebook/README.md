@@ -10,8 +10,9 @@ The Facebook connector provides a concise way for your application to use Facebo
 
 1. Visit the [Apps](https://developers.facebook.com/apps) page.
 2. Click your existing app or [create a new one](https://developers.facebook.com/docs/development/create-an-app) if needed.
+   - The app type is up to you.
 3. On the app dashboard page, scroll to the **Add a product** section and click the **Set up** button on the **Facebook Login** card.
-4. Skip the Facebook Login Quickstart page, and click the left sidebar -> **Products** -> **Facebook Login** -> **Settings**.
+4. Skip the Facebook Login Quickstart page, and click the sidebar -> **Products** -> **Facebook Login** -> **Settings**.
 5. In the Facebook Login Settings page, fill `${your_logto_origin}/callback/facebook-universal` in the **Valid OAuth Redirect URIs** field. E.g.:
     - `https://logto.dev/callback/facebook-universal` for production
     - `https://localhost:3001/callback/facebook-universal` for testing in the local environment
@@ -19,8 +20,8 @@ The Facebook connector provides a concise way for your application to use Facebo
 
 ## Set up the Logto connector settings
 
-1. In the Facebook app dashboard page, click the left sidebar -> **Settings** -> **Basic**.
-2. You will see the **App ID** and **App secret** on the right column.
+1. In the Facebook app dashboard page, click the sidebar -> **Settings** -> **Basic**.
+2. You will see the **App ID** and **App secret** on the panel.
 3. Click the **Show** button following the App secret input box to copy its content.
 4. Fill out the Logto connector settings:
     - Fill out the `clientId` field with the string from **App ID**.
@@ -28,20 +29,22 @@ The Facebook connector provides a concise way for your application to use Facebo
 
 ## Debug sign-in with the test users
 
-You can use the accounts of the test users and the admin developers to test sign-in with the related app.
+You can use the accounts of the test, developer, and admin users to test sign-in with the related app under both development and live [app modes](https://developers.facebook.com/docs/development/build-and-test/app-modes).
 
-- In the app dashboard page, click the left sidebar -> **Roles** -> **Test Users**.
+You can also [take the app live](#take-the-facebook-app-live) directly so that any Facebook user can test sign-in with the app.
+
+- In the app dashboard page, click the sidebar -> **Roles** -> **Test Users**.
 - Click the **Create test users** button to create a testing user while testing.
-- Click the **Options** button of the existing test user, and you will see more manipulations, e.g., "Change name and password".
+- Click the **Options** button of the existing test user, and you will see more operations, e.g., "Change name and password".
 
 ## Take the Facebook app live
 
-Only the test, admin, and developer users can sign in with the related app under [development mode](https://developers.facebook.com/docs/development/build-and-test/app-modes#development-mode).
+Usually, only the test, admin, and developer users can sign in with the related app under [development mode](https://developers.facebook.com/docs/development/build-and-test/app-modes#development-mode).
 
-To enable normal Facebook users sign-in with the app in the production environment, you must switch your Facebook app to **[live mode](https://developers.facebook.com/docs/development/build-and-test/app-modes#live-mode)**.
+To enable normal Facebook users sign-in with the app in the production environment, you maybe need to switch your Facebook app to **[live mode](https://developers.facebook.com/docs/development/build-and-test/app-modes#live-mode)**, depending on the app type. _E.g., The **Business type** app doesn't have the **Live** switch button._
 
-1. In the Facebook app dashboard page, click the left sidebar -> **Settings** -> **Basic**.
-2. Fill out the required **Privacy Policy URL** field on the right column to take the app live.
+1. In the Facebook app dashboard page, click the sidebar -> **Settings** -> **Basic**.
+2. Fill out the **Privacy Policy URL** and **User data deletion** fields on the panel if required.
 3. Click the **Save changes** button at the bottom right corner.
 4. Click the **Live** switch button on the app top bar.
 
