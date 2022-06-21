@@ -20,7 +20,7 @@ const Tooltip = ({ content, anchorRef, className, isKeepOpen = false }: Props) =
   const { position, positionState, mutate } = usePosition({
     verticalAlign: 'top',
     horizontalAlign: 'center',
-    offset: { vertical: 12, horizontal: 0 },
+    offset: { vertical: 20, horizontal: 0 },
     anchorRef,
     overlayRef: tooltipRef,
   });
