@@ -162,6 +162,19 @@ describe('adminUserRoutes', () => {
     });
   });
 
+  it('PATCH /users/:userId should allow updated with empty avatar', async () => {
+    const name = 'Micheal';
+    const avatar = '';
+
+    const response = await userRequest.patch('/users/foo').send({ name, avatar });
+    expect(response.status).toEqual(200);
+    expect(response.body).toEqual({
+      ...mockUserResponse,
+      name,
+      avatar,
+    });
+  });
+
   it('PATCH /users/:userId should updated with one field if the other is undefined', async () => {
     const name = 'Micheal';
 

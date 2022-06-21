@@ -112,7 +112,7 @@ export default function adminUserRoutes<T extends AuthedRouter>(router: T) {
       params: object({ userId: string() }),
       body: object({
         name: string().nullable().optional(),
-        avatar: string().url().nullable().optional(),
+        avatar: string().url().or(literal('')).nullable().optional(),
         customData: arbitraryObjectGuard.optional(),
         roleNames: string().array().optional(),
       }),

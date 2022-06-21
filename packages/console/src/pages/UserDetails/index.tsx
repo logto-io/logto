@@ -69,7 +69,7 @@ const UserDetails = () => {
 
   const {
     field: { onChange, value },
-  } = useController({ name: 'customData', control, rules: { required: true } });
+  } = useController({ name: 'customData', control });
   const api = useApi();
 
   useEffect(() => {
@@ -87,7 +87,9 @@ const UserDetails = () => {
       return;
     }
 
-    const customData = safeParseJson(formData.customData);
+    const { customData: inputCustomData, name, avatar, roleNames } = formData;
+
+    const customData = inputCustomData ? safeParseJson(inputCustomData) : {};
 
     if (!customData) {
       toast.error(t('user_details.custom_data_invalid'));
@@ -96,9 +98,9 @@ const UserDetails = () => {
     }
 
     const payload: Partial<User> = {
-      name: formData.name,
-      avatar: formData.avatar,
-      roleNames: formData.roleNames,
+      name,
+      avatar,
+      roleNames,
       customData,
     };
 
