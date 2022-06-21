@@ -96,6 +96,8 @@ const translation = {
     title: 'Admin Console',
     sign_out: 'Sign out',
     profile: 'Profile',
+    admin_user: 'Admin',
+    system_app: 'System',
     copy: {
       pending: 'Copy',
       copying: 'Copying',
