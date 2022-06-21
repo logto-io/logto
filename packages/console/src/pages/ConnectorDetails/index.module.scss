@@ -14,15 +14,20 @@
     margin-left: _.unit(6);
   }
 
-  .imagePlaceholder {
+  .logoContainer {
     margin-left: _.unit(2);
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+    background: var(--color-hover);
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .logo {
-    display: block;
-    width: 60px;
-    height: 60px;
-    border-radius: 16px;
+    width: 42px;
+    height: 42px;
   }
 
   .operations {
