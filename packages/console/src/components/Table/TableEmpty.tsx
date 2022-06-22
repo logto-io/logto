@@ -1,27 +1,30 @@
+import { AppearanceMode } from '@logto/schemas';
 import React, { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import EmptyImage from '@/assets/images/table-empty.svg';
+import EmptyDark from '@/assets/images/table-empty-dark.svg';
+import Empty from '@/assets/images/table-empty.svg';
+import { useTheme } from '@/hooks/use-theme';
 
 import * as styles from './TableEmpty.module.scss';
 
 type Props = {
   title?: string;
   content?: string;
+  image?: ReactNode;
   children?: ReactNode;
   columns: number;
 };
 
-const TableEmpty = ({ title, content, children, columns }: Props) => {
+const TableEmpty = ({ title, content, image, children, columns }: Props) => {
   const { t } = useTranslation();
+  const theme = useTheme();
 
   return (
     <tr>
       <td colSpan={columns} className={styles.tableEmptyTableData}>
         <div className={styles.tableEmpty}>
-          <div>
-            <img src={EmptyImage} />
-          </div>
+          {image ?? (theme === AppearanceMode.LightMode ? <Empty /> : <EmptyDark />)}
           <div className={styles.title}>{title ?? t('admin_console.errors.empty')}</div>
           {content && <div className={styles.content}>{content}</div>}
           {children}

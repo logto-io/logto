@@ -1,4 +1,4 @@
-import { Resource } from '@logto/schemas';
+import { AppearanceMode, Resource } from '@logto/schemas';
 import classNames from 'classnames';
 import React, { useState } from 'react';
 import { toast } from 'react-hot-toast';
@@ -7,7 +7,8 @@ import Modal from 'react-modal';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import useSWR from 'swr';
 
-import apiResourceIcon from '@/assets/images/api-resource.svg';
+import ApiResourceDark from '@/assets/images/api-resource-dark.svg';
+import ApiResource from '@/assets/images/api-resource.svg';
 import Button from '@/components/Button';
 import Card from '@/components/Card';
 import CardTitle from '@/components/CardTitle';
@@ -18,6 +19,7 @@ import TableEmpty from '@/components/Table/TableEmpty';
 import TableError from '@/components/Table/TableError';
 import TableLoading from '@/components/Table/TableLoading';
 import { RequestError } from '@/hooks/use-api';
+import { useTheme } from '@/hooks/use-theme';
 import Plus from '@/icons/Plus';
 import * as modalStyles from '@/scss/modal.module.scss';
 import * as tableStyles from '@/scss/table.module.scss';
@@ -39,6 +41,7 @@ const ApiResources = () => {
   );
   const isLoading = !data && !error;
   const navigate = useNavigate();
+  const theme = useTheme();
   const [apiResources, totalCount] = data ?? [];
 
   return (
@@ -116,7 +119,9 @@ const ApiResources = () => {
                 <td>
                   <ItemPreview
                     title={name}
-                    icon={<img src={apiResourceIcon} />}
+                    icon={
+                      theme === AppearanceMode.LightMode ? <ApiResource /> : <ApiResourceDark />
+                    }
                     to={buildDetailsLink(id)}
                   />
                 </td>

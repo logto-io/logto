@@ -1,12 +1,15 @@
 import { LogtoClientError, useLogto } from '@logto/react';
+import { AppearanceMode } from '@logto/schemas';
 import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useHref } from 'react-router-dom';
 
-import WelcomeIcon from '@/assets/images/welcome-icon.svg';
+import WelcomeDark from '@/assets/images/welcome-dark.svg';
+import WelcomeIcon from '@/assets/images/welcome.svg';
 import AppError from '@/components/AppError';
 import Button from '@/components/Button';
 import SessionExpired from '@/components/SessionExpired';
+import { useTheme } from '@/hooks/use-theme';
 import Logo from '@/icons/Logo';
 
 import * as styles from './index.module.scss';
@@ -16,6 +19,7 @@ const Welcome = () => {
   const navigate = useNavigate();
   const { isAuthenticated, error, signIn } = useLogto();
   const href = useHref('/callback');
+  const theme = useTheme();
 
   useEffect(() => {
     // If Authenticated, navigate to the Admin Console root page. directly
@@ -38,7 +42,7 @@ const Welcome = () => {
         <Logo className={styles.logo} />
       </div>
       <main>
-        <img src={WelcomeIcon} alt="welcome" className={styles.icon} />
+        {theme === AppearanceMode.LightMode ? <WelcomeIcon /> : <WelcomeDark />}
         <div className={styles.title}>{t('welcome.title')}</div>
         <div className={styles.description}>{t('welcome.description')}</div>
         <Button

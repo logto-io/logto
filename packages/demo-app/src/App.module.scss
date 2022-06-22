@@ -20,6 +20,11 @@
     font-size: 14px;
     line-height: 20px;
 
+    img {
+      width: 120px;
+      height: 120px;
+    }
+
     .title {
       margin-top: _.unit(6);
       color: var(--color-neutral-10);

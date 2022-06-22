@@ -1,7 +1,10 @@
+import { AppearanceMode } from '@logto/schemas';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import ErrorImage from '@/assets/images/warning.svg';
+import ErrorDark from '@/assets/images/error-dark.svg';
+import Error from '@/assets/images/error.svg';
+import { useTheme } from '@/hooks/use-theme';
 import { KeyboardArrowDown, KeyboardArrowUp } from '@/icons/Arrow';
 
 import * as styles from './index.module.scss';
@@ -17,10 +20,11 @@ type Props = {
 const AppError = ({ title, errorCode, errorMessage, callStack, children }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+  const theme = useTheme();
 
   return (
     <div className={styles.container}>
-      <img src={ErrorImage} alt="oops" />
+      {theme === AppearanceMode.LightMode ? <Error /> : <ErrorDark />}
       <label>{title ?? t('errors.something_went_wrong')}</label>
       <div className={styles.summary}>
         <span>

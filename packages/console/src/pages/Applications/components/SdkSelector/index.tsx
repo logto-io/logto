@@ -1,14 +1,18 @@
+import { AppearanceMode } from '@logto/schemas';
 import classNames from 'classnames';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import congrats from '@/assets/images/congrats.svg';
-import tada from '@/assets/images/tada.svg';
+import CongratsDark from '@/assets/images/congrats-dark.svg';
+import Congrats from '@/assets/images/congrats.svg';
+import TadaDark from '@/assets/images/tada-dark.svg';
+import Tada from '@/assets/images/tada.svg';
 import Button from '@/components/Button';
 import Card from '@/components/Card';
 import RadioGroup, { Radio } from '@/components/RadioGroup';
 import Select from '@/components/Select';
 import Spacer from '@/components/Spacer';
+import { useTheme } from '@/hooks/use-theme';
 import { SupportedSdk } from '@/types/applications';
 
 import * as styles from './index.module.scss';
@@ -32,11 +36,15 @@ const SdkSelector = ({
 }: Props) => {
   const [isFolded, setIsFolded] = useState(isCompact);
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const theme = useTheme();
+  const isLightMode = theme === AppearanceMode.LightMode;
+  const CongratsIcon = isLightMode ? Congrats : CongratsDark;
+  const TadaIcon = isLightMode ? Tada : TadaDark;
 
   if (isFolded) {
     return (
       <div className={classNames(styles.card, styles.folded, className)}>
-        <img src={tada} alt="Tada!" />
+        <TadaIcon className={styles.tada} />
         <span>{t('applications.guide.description_by_sdk', { sdk: selectedSdk })}</span>
         <Spacer />
         <Select
@@ -54,7 +62,7 @@ const SdkSelector = ({
 
   return (
     <Card className={classNames(styles.card, className)}>
-      <img src={congrats} alt="success" />
+      <CongratsIcon className={styles.congrats} />
       <div>
         <div className={styles.title}>{t('applications.guide.title')}</div>
         <div className={styles.subtitle}>{t('applications.guide.subtitle')}</div>

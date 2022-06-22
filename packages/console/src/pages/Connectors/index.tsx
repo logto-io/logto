@@ -1,9 +1,11 @@
-import { ConnectorType } from '@logto/schemas';
+import { AppearanceMode, ConnectorType } from '@logto/schemas';
 import classNames from 'classnames';
 import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
 
+import SocialConnectorEmptyDark from '@/assets/images/social-connector-empty-dark.svg';
+import SocialConnectorEmpty from '@/assets/images/social-connector-empty.svg';
 import Button from '@/components/Button';
 import Card from '@/components/Card';
 import CardTitle from '@/components/CardTitle';
@@ -12,6 +14,7 @@ import TableEmpty from '@/components/Table/TableEmpty';
 import TableError from '@/components/Table/TableError';
 import TableLoading from '@/components/Table/TableLoading';
 import useConnectorGroups from '@/hooks/use-connector-groups';
+import { useTheme } from '@/hooks/use-theme';
 import Plus from '@/icons/Plus';
 import * as tableStyles from '@/scss/table.module.scss';
 
@@ -26,6 +29,8 @@ const Connectors = () => {
   const [createType, setCreateType] = useState<ConnectorType>();
   const { data, error, mutate } = useConnectorGroups();
   const isLoading = !data && !error;
+  const theme = useTheme();
+  const isLightMode = theme === AppearanceMode.LightMode;
 
   const emailConnector = useMemo(() => {
     const emailConnectorGroup = data?.find(
@@ -100,6 +105,7 @@ const Connectors = () => {
                   columns={3}
                   title={t('connectors.type.social')}
                   content={t('connectors.social_connector_eg')}
+                  image={isLightMode ? <SocialConnectorEmpty /> : <SocialConnectorEmptyDark />}
                 >
                   <Button title="admin_console.connectors.create" type="outline" />
                 </TableEmpty>

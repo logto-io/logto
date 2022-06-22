@@ -7,6 +7,7 @@ import Modal from 'react-modal';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import useSWR from 'swr';
 
+import ApplicationIcon from '@/components/ApplicationIcon';
 import Button from '@/components/Button';
 import Card from '@/components/Card';
 import CardTitle from '@/components/CardTitle';
@@ -16,7 +17,6 @@ import Pagination from '@/components/Pagination';
 import TableEmpty from '@/components/Table/TableEmpty';
 import TableError from '@/components/Table/TableError';
 import TableLoading from '@/components/Table/TableLoading';
-import { ApplicationIcon } from '@/consts';
 import { RequestError } from '@/hooks/use-api';
 import Plus from '@/icons/Plus';
 import * as modalStyles from '@/scss/modal.module.scss';
@@ -115,7 +115,7 @@ const Applications = () => {
                   <ItemPreview
                     title={name}
                     subtitle={t(`${applicationTypeI18nKey[type]}.title`)}
-                    icon={<img src={ApplicationIcon[type]} />}
+                    icon={<ApplicationIcon type={type} />}
                     to={`/applications/${id}`}
                   />
                 </td>
