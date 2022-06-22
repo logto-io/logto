@@ -45,7 +45,7 @@ export const defaultMetadata: ConnectorMetadata = {
     'zh-CN': '阿里云短信服务',
   },
   logo: './logo.svg',
-  logo_dark: null,
+  logoDark: null,
   description: {
     en: 'Short Message Service (SMS) has a batch sending feature and various API operations to send one-time password (OTP) messages, notification messages, and promotional messages to customers.',
     'zh-CN':

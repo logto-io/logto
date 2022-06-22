@@ -11,7 +11,7 @@ export const mockMetadata: ConnectorMetadata = {
     'zh-CN': '连接器',
   },
   logo: './logo.png',
-  logo_dark: './logo_dark.png',
+  logoDark: './logo_dark.png',
   description: {
     en: 'Connector',
     'zh-CN': '连接器',

@@ -25,7 +25,7 @@ export const defaultMetadata: ConnectorMetadata = {
     'zh-CN': 'GitHub',
   },
   logo: './logo.svg',
-  logo_dark: './logo_dark.svg',
+  logoDark: './logo_dark.svg',
   description: {
     en: 'Sign In with GitHub',
     'zh-CN': 'GitHub登录',

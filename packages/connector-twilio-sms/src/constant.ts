@@ -22,7 +22,7 @@ export const defaultMetadata: ConnectorMetadata = {
     'zh-CN': 'Twilio 短信服务',
   },
   logo: './logo.svg',
-  logo_dark: null,
+  logoDark: null,
   description: {
     en: 'Messaging APIs for reliable SMS delivery.',
     'zh-CN': '可信赖的短信消息 API。',
