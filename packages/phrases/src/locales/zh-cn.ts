@@ -352,7 +352,6 @@ const translation = {
       field_username: '用户名',
       field_name: '名称',
       field_avatar: '头像图片链接',
-      field_roles: '角色',
       field_custom_data: '自定义数据',
       field_connectors: '社交账号',
       custom_data_invalid: '自定义数据必须是有效的 JSON',
@@ -363,10 +362,6 @@ const translation = {
         user_id: '用户ID',
         remove: '删除',
         not_connected: '该用户还没有绑定社交账号。',
-      },
-      roles: {
-        default: '默认',
-        admin: '管理员',
       },
     },
     contact: {

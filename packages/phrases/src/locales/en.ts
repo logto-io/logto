@@ -361,7 +361,6 @@ const translation = {
       field_username: 'Username',
       field_name: 'Name',
       field_avatar: 'Avatar image URL',
-      field_roles: 'Roles',
       field_custom_data: 'Custom data',
       field_connectors: 'Social connectors',
       custom_data_invalid: 'Custom data must be a valid JSON',
@@ -372,10 +371,6 @@ const translation = {
         user_id: 'User ID',
         remove: 'Remove',
         not_connected: 'The user is not connected to any social connector.',
-      },
-      roles: {
-        default: 'Default',
-        admin: 'Admin',
       },
     },
     contact: {
