@@ -1,7 +1,6 @@
 import { ConnectorType } from '@logto/schemas';
 import { phoneRegEx, emailRegEx } from '@logto/shared';
 import classNames from 'classnames';
-import ky from 'ky';
 import React, { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -10,18 +9,21 @@ import Button from '@/components/Button';
 import FormField from '@/components/FormField';
 import TextInput from '@/components/TextInput';
 import Tooltip from '@/components/Tooltip';
+import useApi from '@/hooks/use-api';
 
 import * as styles from './index.module.scss';
 
 type Props = {
   connectorType: Exclude<ConnectorType, ConnectorType.Social>;
+  config?: string;
+  className?: string;
 };
 
 type FormData = {
   sendTo: string;
 };
 
-const SenderTester = ({ connectorType }: Props) => {
+const SenderTester = ({ connectorType, config, className }: Props) => {
   const buttonPosReference = useRef(null);
   const [showTooltip, setShowTooltip] = useState(false);
   const [isSubmitting, seIsSubmitting] = useState(false);
@@ -33,6 +35,7 @@ const SenderTester = ({ connectorType }: Props) => {
     },
   } = useForm<FormData>();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const api = useApi();
   const isSms = connectorType === ConnectorType.SMS;
 
   useEffect(() => {
@@ -52,12 +55,13 @@ const SenderTester = ({ connectorType }: Props) => {
 
   const onSubmit = handleSubmit(async (formData) => {
     const { sendTo } = formData;
+    const configJson = config ? (JSON.parse(config) as JSON) : undefined;
     seIsSubmitting(true);
 
-    const data = isSms ? { phone: sendTo } : { email: sendTo };
+    const data = { config: configJson, ...(isSms ? { phone: sendTo } : { email: sendTo }) };
 
     try {
-      await ky
+      await api
         .post(`/api/connectors/test/${connectorType.toLowerCase()}`, {
           json: data,
         })
@@ -70,7 +74,7 @@ const SenderTester = ({ connectorType }: Props) => {
   });
 
   return (
-    <form onSubmit={onSubmit}>
+    <form className={className}>
       <div className={styles.fields}>
         <FormField
           isRequired
@@ -95,10 +99,10 @@ const SenderTester = ({ connectorType }: Props) => {
         </FormField>
         <div ref={buttonPosReference} className={styles.send}>
           <Button
-            htmlType="submit"
             isLoading={isSubmitting}
             title="admin_console.connector_details.send"
             type="outline"
+            onClick={onSubmit}
           />
         </div>
         {showTooltip && (

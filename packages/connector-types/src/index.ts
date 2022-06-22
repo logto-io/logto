@@ -64,13 +64,15 @@ export type SmsMessageTypes = EmailMessageTypes;
 export type EmailSendMessageFunction<T = unknown> = (
   address: string,
   type: keyof EmailMessageTypes,
-  payload: EmailMessageTypes[typeof type]
+  payload: EmailMessageTypes[typeof type],
+  config?: Record<string, unknown>
 ) => Promise<T>;
 
 export type SmsSendMessageFunction<T = unknown> = (
   phone: string,
   type: keyof SmsMessageTypes,
-  payload: SmsMessageTypes[typeof type]
+  payload: SmsMessageTypes[typeof type],
+  config?: Record<string, unknown>
 ) => Promise<T>;
 
 export interface BaseConnector {

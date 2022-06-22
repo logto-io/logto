@@ -123,11 +123,16 @@ describe('connector route', () => {
       const sendMessageSpy = jest.spyOn(mockedEmailConnector, 'sendMessage');
       const response = await connectorRequest
         .post('/connectors/test/email')
-        .send({ email: 'test@email.com' });
+        .send({ email: 'test@email.com', config: { test: 123 } });
       expect(sendMessageSpy).toHaveBeenCalledTimes(1);
-      expect(sendMessageSpy).toHaveBeenCalledWith('test@email.com', 'Test', {
-        code: 'email-test',
-      });
+      expect(sendMessageSpy).toHaveBeenCalledWith(
+        'test@email.com',
+        'Test',
+        {
+          code: 'email-test',
+        },
+        { test: 123 }
+      );
       expect(response).toHaveProperty('statusCode', 204);
     });
 
@@ -166,11 +171,16 @@ describe('connector route', () => {
       const sendMessageSpy = jest.spyOn(mockedSmsConnectorInstance, 'sendMessage');
       const response = await connectorRequest
         .post('/connectors/test/sms')
-        .send({ phone: '12345678901' });
+        .send({ phone: '12345678901', config: { test: 123 } });
       expect(sendMessageSpy).toHaveBeenCalledTimes(1);
-      expect(sendMessageSpy).toHaveBeenCalledWith('12345678901', 'Test', {
-        code: '123456',
-      });
+      expect(sendMessageSpy).toHaveBeenCalledWith(
+        '12345678901',
+        'Test',
+        {
+          code: '123456',
+        },
+        { test: 123 }
+      );
       expect(response).toHaveProperty('statusCode', 204);
     });
 

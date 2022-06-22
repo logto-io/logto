@@ -210,7 +210,9 @@ const ConnectorDetails = () => {
                 }}
               />
             </FormField>
-            {data.type !== ConnectorType.Social && <SenderTester connectorType={data.type} />}
+            {data.type !== ConnectorType.Social && (
+              <SenderTester connectorType={data.type} config={config} />
+            )}
             {saveError && <div>{saveError}</div>}
           </div>
           <div className={detailsStyles.footer}>
