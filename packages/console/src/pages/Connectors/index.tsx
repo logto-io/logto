@@ -134,6 +134,7 @@ const Connectors = () => {
         type={createType}
         onClose={() => {
           setCreateType(undefined);
+          void mutate();
         }}
       />
     </>

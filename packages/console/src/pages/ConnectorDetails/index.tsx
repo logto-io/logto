@@ -157,7 +157,7 @@ const ConnectorDetails = () => {
                 setIsReadMeOpen(false);
               }}
             >
-              <Markdown>{data.readme}</Markdown>
+              <Markdown className={styles.readme}>{data.readme}</Markdown>
             </Drawer>
             <ActionMenu
               buttonProps={{ icon: <More className={styles.moreIcon} />, size: 'large' }}

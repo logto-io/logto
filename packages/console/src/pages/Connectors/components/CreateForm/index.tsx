@@ -9,7 +9,7 @@ import UnnamedTrans from '@/components/UnnamedTrans';
 import useConnectorGroups from '@/hooks/use-connector-groups';
 import * as modalStyles from '@/scss/modal.module.scss';
 
-import GuideModal from '../GuideModal';
+import Guide from '../Guide';
 import PlatformSelector from './PlatformSelector';
 import * as styles from './index.module.scss';
 
@@ -132,11 +132,9 @@ const CreateForm = ({ onClose, isOpen: isFormOpen, type }: Props) => {
           />
         )}
         {activeConnector && (
-          <GuideModal
-            connector={activeConnector}
-            isOpen={isGetStartedModalOpen}
-            onClose={closeModal}
-          />
+          <Modal isOpen={isGetStartedModalOpen} className={modalStyles.fullScreen}>
+            <Guide connector={activeConnector} onClose={closeModal} />
+          </Modal>
         )}
       </ModalLayout>
     </Modal>

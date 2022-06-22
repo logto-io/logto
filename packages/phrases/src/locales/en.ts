@@ -253,6 +253,7 @@ const translation = {
       connector_status_not_in_use: 'Not in use',
       social_connector_eg: 'e.g.: Google, Facebook, Twitter',
       next: 'Next',
+      save_and_done: 'Save and done',
       type: {
         email: 'Email sender',
         sms: 'SMS sender',

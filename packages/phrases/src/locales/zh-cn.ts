@@ -249,6 +249,7 @@ const translation = {
       connector_status_not_in_use: '未使用',
       social_connector_eg: '如: 微信登录，支付宝登录，微博登录',
       next: '下一步',
+      save_and_done: '保存并完成',
       type: {
         email: '邮件服务商',
         sms: '短信服务商',
