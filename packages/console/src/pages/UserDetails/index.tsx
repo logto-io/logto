@@ -87,9 +87,9 @@ const UserDetails = () => {
       return;
     }
 
-    const { customData: inputCustomData, name, avatar, roleNames } = formData;
+    const { customData: inputtedCustomData, name, avatar, roleNames } = formData;
 
-    const customData = inputCustomData ? safeParseJson(inputCustomData) : {};
+    const customData = inputtedCustomData ? safeParseJson(inputtedCustomData) : {};
 
     if (!customData) {
       toast.error(t('user_details.custom_data_invalid'));
