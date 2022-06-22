@@ -1,0 +1,35 @@
+name: Master Codecov Report
+
+on:
+  push:
+    branches: [master]
+
+concurrency: master-codecov-report
+
+jobs:
+  report-coverage:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Node and pnpm
+        uses: silverhand-io/actions-node-pnpm-run-steps@v1.2.2
+
+      - name: Prepack
+        run: pnpm prepack
+
+      - name: Test
+        run: pnpm ci:test
+
+      - name: Codecov Core
+        uses: codecov/codecov-action@v3
+        with:
+          flags: core
+          directory: ./packages/core
+
+      - name: Codecov UI
+        uses: codecov/codecov-action@v3
+        with:
+          flags: ui
+          directory: ./packages/ui
