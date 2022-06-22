@@ -45,7 +45,7 @@ const UserInfo = () => {
           setShowDropdown(true);
         }}
       >
-        <img src={avatar ?? getAvatarById(id)} />
+        <img src={avatar || getAvatarById(id)} />
         <div className={styles.wrapper}>
           <div className={styles.name}>{name || t('users.unnamed')}</div>
         </div>
