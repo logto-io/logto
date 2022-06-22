@@ -21,7 +21,7 @@ type Props = {
 };
 
 type DisplayConnector = {
-  id: string;
+  target: string;
   userId?: string;
   logo: string;
   name: Record<Language, string>;
@@ -65,7 +65,7 @@ const UserConnectors = ({ userId, connectors, onDelete }: Props) => {
             'zh-CN': '未知连接器',
             en: 'Unknown Connector',
           },
-          id: key,
+          target: key,
           userId: connectors[key]?.userId,
         };
       }
@@ -75,7 +75,7 @@ const UserConnectors = ({ userId, connectors, onDelete }: Props) => {
       return {
         logo,
         name,
-        id: key,
+        target: key,
         userId: connectors[key]?.userId,
       };
     });
@@ -111,10 +111,10 @@ const UserConnectors = ({ userId, connectors, onDelete }: Props) => {
               />
             )}
             {displayConnectors.map((connector) => {
-              const { id, userId = '', name, logo } = connector;
+              const { target, userId = '', name, logo } = connector;
 
               return (
-                <tr key={id}>
+                <tr key={target}>
                   <td>
                     <div className={styles.connectorName}>
                       <img src={logo} />
@@ -150,7 +150,7 @@ const UserConnectors = ({ userId, connectors, onDelete }: Props) => {
         }}
         onConfirm={async () => {
           if (deletingConnector !== undefined) {
-            await handleDelete(deletingConnector.id);
+            await handleDelete(deletingConnector.target);
             setDeletingConnector(undefined);
           }
         }}
