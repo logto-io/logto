@@ -2,7 +2,7 @@ name: Deploy Dev
 
 on:
   push:
-    branches: [ master ]
+    branches: [master]
 
 concurrency: deploy-dev
 

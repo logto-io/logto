@@ -2,6 +2,7 @@ name: Dockerize
 
 on:
   push:
+    branches: [master]
 
 concurrency:
   group: dockerize-${{ github.ref }}
@@ -37,7 +38,6 @@ jobs:
         run: curl http://localhost:3001/api/status -If
 
       - name: Upload artifact
-        if: ${{ github.ref_name == 'master' }}
         uses: actions/upload-artifact@v3
         with:
           name: logto.${{ github.sha }}
