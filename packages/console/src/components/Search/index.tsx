@@ -8,10 +8,12 @@ import * as styles from './index.module.scss';
 
 type Props = {
   defaultValue?: string;
+  isClearable?: boolean;
   onSearch?: (value: string) => void;
+  onClearSearch?: () => void;
 };
 
-const Search = ({ defaultValue = '', onSearch }: Props) => {
+const Search = ({ defaultValue = '', isClearable = false, onSearch, onClearSearch }: Props) => {
   const [inputValue, setInputValue] = useState<string>(defaultValue);
 
   const handleSearchKeyPress: KeyboardEventHandler<HTMLInputElement> = (event) => {
@@ -25,9 +27,7 @@ const Search = ({ defaultValue = '', onSearch }: Props) => {
   };
 
   const handleClick = () => {
-    if (inputValue) {
-      onSearch?.(inputValue);
-    }
+    onSearch?.(inputValue);
   };
 
   return (
@@ -41,6 +41,9 @@ const Search = ({ defaultValue = '', onSearch }: Props) => {
         />
       </div>
       <Button title="general.search" onClick={handleClick} />
+      {isClearable && (
+        <Button size="small" type="plain" title="general.clear_result" onClick={onClearSearch} />
+      )}
     </div>
   );
 };
