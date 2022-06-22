@@ -1,4 +1,4 @@
-import { Users } from '@logto/schemas';
+import { UserRole, Users } from '@logto/schemas';
 import { createMockPool, createMockQueryResult, sql } from 'slonik';
 
 import { mockUser } from '@/__mocks__';
@@ -280,6 +280,31 @@ describe('user query', () => {
     await expect(countUsers(search)).resolves.toEqual(dbvalue);
   });
 
+  it('countUsers with hideAdminUser', async () => {
+    const search = 'foo';
+    const expectSql = sql`
+      select count(*)
+      from ${table}
+      where not (${fields.roleNames}::jsonb?$1)
+      and (${fields.primaryEmail} like $2 or ${fields.primaryPhone} like $3 or ${fields.username} like $4 or ${fields.name} like $5)
+    `;
+
+    mockQuery.mockImplementationOnce(async (sql, values) => {
+      expectSqlAssert(sql, expectSql.sql);
+      expect(values).toEqual([
+        UserRole.Admin,
+        `%${search}%`,
+        `%${search}%`,
+        `%${search}%`,
+        `%${search}%`,
+      ]);
+
+      return createMockQueryResult([dbvalue]);
+    });
+
+    await expect(countUsers(search, true)).resolves.toEqual(dbvalue);
+  });
+
   it('findUsers', async () => {
     const search = 'foo';
     const limit = 100;
@@ -309,6 +334,39 @@ describe('user query', () => {
     });
 
     await expect(findUsers(limit, offset, search)).resolves.toEqual([dbvalue]);
+  });
+
+  it('findUsers with hideAdminUser', async () => {
+    const search = 'foo';
+    const limit = 100;
+    const offset = 1;
+    const expectSql = sql`
+      select ${sql.join(Object.values(fields), sql`,`)}
+      from ${table}
+      where not (${fields.roleNames}::jsonb?$1)
+      and (${fields.primaryEmail} like $2 or ${fields.primaryPhone} like $3 or ${
+      fields.username
+    } like $4 or ${fields.name} like $5)
+      limit $6
+      offset $7
+    `;
+
+    mockQuery.mockImplementationOnce(async (sql, values) => {
+      expectSqlAssert(sql, expectSql.sql);
+      expect(values).toEqual([
+        UserRole.Admin,
+        `%${search}%`,
+        `%${search}%`,
+        `%${search}%`,
+        `%${search}%`,
+        limit,
+        offset,
+      ]);
+
+      return createMockQueryResult([dbvalue]);
+    });
+
+    await expect(findUsers(limit, offset, search, true)).resolves.toEqual([dbvalue]);
   });
 
   it('updateUserById', async () => {

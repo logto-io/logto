@@ -1,6 +1,7 @@
 import { Application } from '@logto/schemas';
 import { adminConsoleApplicationId } from '@logto/schemas/lib/seeds';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import useSWR from 'swr';
 
@@ -15,8 +16,9 @@ const ApplicationName = ({ applicationId, isLink = false }: Props) => {
   const isAdminConsole = applicationId === adminConsoleApplicationId;
 
   const { data } = useSWR<Application>(!isAdminConsole && `/api/applications/${applicationId}`);
+  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
-  const name = (isAdminConsole ? 'Admin Console' : data?.name) || '-';
+  const name = (isAdminConsole ? <>Admin Console ({t('system_app')})</> : data?.name) || '-';
 
   if (isLink && !isAdminConsole) {
     return (

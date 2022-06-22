@@ -1,4 +1,4 @@
-import { User, CreateUser, Users } from '@logto/schemas';
+import { User, CreateUser, Users, UserRole } from '@logto/schemas';
 import { sql } from 'slonik';
 
 import { buildInsertInto } from '@/database/insert-into';
@@ -94,19 +94,37 @@ const buildUserSearchConditionSql = (search: string) => {
   return sql`${sql.join(conditions, sql` or `)}`;
 };
 
-export const countUsers = async (search?: string) =>
+const buildUserConditions = (search?: string, hideAdminUser?: boolean) => {
+  if (hideAdminUser) {
+    return sql`
+      where not (${fields.roleNames}::jsonb?${UserRole.Admin})
+      ${conditionalSql(search, (search) => sql`and (${buildUserSearchConditionSql(search)})`)}
+    `;
+  }
+
+  return sql`
+    ${conditionalSql(search, (search) => sql`where ${buildUserSearchConditionSql(search)}`)}
+  `;
+};
+
+export const countUsers = async (search?: string, hideAdminUser?: boolean) =>
   envSet.pool.one<{ count: number }>(sql`
     select count(*)
     from ${table}
-    ${conditionalSql(search, (search) => sql`where ${buildUserSearchConditionSql(search)}`)}
+    ${buildUserConditions(search, hideAdminUser)}
   `);
 
-export const findUsers = async (limit: number, offset: number, search?: string) =>
+export const findUsers = async (
+  limit: number,
+  offset: number,
+  search?: string,
+  hideAdminUser?: boolean
+) =>
   envSet.pool.any<User>(
     sql`
       select ${sql.join(Object.values(fields), sql`,`)}
       from ${table}
-      ${conditionalSql(search, (search) => sql`where ${buildUserSearchConditionSql(search)}`)}
+      ${buildUserConditions(search, hideAdminUser)}
       limit ${limit}
       offset ${offset}
     `

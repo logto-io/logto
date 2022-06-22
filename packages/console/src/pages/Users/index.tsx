@@ -36,7 +36,7 @@ const Users = () => {
   const pageIndex = Number(query.get('page') ?? '1');
   const keyword = query.get('search') ?? '';
   const { data, error, mutate } = useSWR<[User[], number], RequestError>(
-    `/api/users?page=${pageIndex}&page_size=${pageSize}${conditionalString(
+    `/api/users?page=${pageIndex}&page_size=${pageSize}&hideAdminUser=true${conditionalString(
       keyword && `&search=${keyword}`
     )}`
   );

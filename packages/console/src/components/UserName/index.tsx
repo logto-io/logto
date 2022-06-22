@@ -1,4 +1,4 @@
-import { User } from '@logto/schemas';
+import { User, UserRole } from '@logto/schemas';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
@@ -20,18 +20,23 @@ const UserName = ({ userId, isLink = false }: Props) => {
   const isLoading = !data && !error;
   const name = data?.name || t('users.unnamed');
 
+  const isAdmin = data?.roleNames.includes(UserRole.Admin);
+
   if (isLoading) {
     return null;
   }
 
   return (
     <div className={styles.userName}>
-      {isLink ? (
+      {isLink && !isAdmin ? (
         <Link to={`/users/${userId}`} target="_blank" className={styles.link}>
           {name}
         </Link>
       ) : (
-        <span>{name}</span>
+        <span>
+          {name}
+          {isAdmin && <> ({t('admin_user')})</>}
+        </span>
       )}
       <span className={styles.userId}>{userId}</span>
     </div>

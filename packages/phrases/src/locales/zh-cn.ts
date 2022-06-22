@@ -96,6 +96,8 @@ const translation = {
     title: '管理面板',
     sign_out: '登出',
     profile: '账户管理',
+    admin_user: '管理员',
+    system_app: '系统应用',
     copy: {
       pending: '拷贝',
       copying: '拷贝中',
