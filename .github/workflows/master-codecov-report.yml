@@ -28,7 +28,7 @@ jobs:
           flags: core
           directory: ./packages/core
 
-      - name: Codecov ui
+      - name: Codecov UI
         uses: codecov/codecov-action@v3
         with:
           flags: ui
