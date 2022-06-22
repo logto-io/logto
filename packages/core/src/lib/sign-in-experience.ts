@@ -70,15 +70,5 @@ export const validateSignInMethods = (
       socialSignInConnectorTargets && socialSignInConnectorTargets.length > 0,
       'sign_in_experiences.empty_social_connectors'
     );
-
-    assertThat(
-      socialSignInConnectorTargets.every((connectorTarget) =>
-        enabledConnectorInstances.some(
-          ({ metadata: { target, type } }) =>
-            target === connectorTarget && type === ConnectorType.Social
-        )
-      ),
-      'sign_in_experiences.invalid_social_connectors'
-    );
   }
 };

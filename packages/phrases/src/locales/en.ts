@@ -682,8 +682,6 @@ const errors = {
     empty_social_connectors:
       'Empty social connectors. Please add enabled social connectors when the social sign-in method is enabled.',
     enabled_connector_not_found: 'Enabled {{type}} connector not found.',
-    invalid_social_connectors:
-      'Invalid social connectors, Please confirm all your selected social connectors are enabled.',
     not_one_and_only_one_primary_sign_in_method:
       'There must be one and only one primary sign-in method. Please check your input.',
   },

@@ -12,6 +12,7 @@ import {
   mockBranding,
   mockSignInExperience,
   mockSignInMethods,
+  mockWechatConnectorInstance,
 } from '@/__mocks__';
 import * as signInExpLib from '@/lib/sign-in-experience';
 import { createRequester } from '@/utils/test-utils';
@@ -22,6 +23,7 @@ const connectorInstances = [
   mockFacebookConnectorInstance,
   mockGithubConnectorInstance,
   mockGoogleConnectorInstance,
+  mockWechatConnectorInstance,
 ];
 
 const getConnectorInstances = jest.fn(async () => connectorInstances);
@@ -29,7 +31,7 @@ const getConnectorInstances = jest.fn(async () => connectorInstances);
 jest.mock('@/connectors', () => {
   return {
     ...jest.requireActual('@/connectors'),
-    getEnabledSocialConnectorIds: jest.fn(async () => ['facebook', 'github']),
+    getEnabledSocialConnectorIds: jest.fn(async () => ['facebook', 'github', 'wechat']),
     getConnectorInstances: jest.fn(async () => getConnectorInstances()),
   };
 });
@@ -62,7 +64,7 @@ describe('GET /sign-in-exp', () => {
 });
 
 describe('PATCH /sign-in-exp', () => {
-  it('should not update social connector ids when social sign-in is disabled', async () => {
+  it('should not update social connector targets when social sign-in is disabled', async () => {
     const signInMethods = { ...mockSignInMethods, social: SignInMethodState.Disabled };
     const response = await signInExperienceRequester.patch('/sign-in-exp').send({
       signInMethods,
@@ -77,7 +79,7 @@ describe('PATCH /sign-in-exp', () => {
     });
   });
 
-  it('should update enabled social connector IDs only when social sign-in is enabled', async () => {
+  it('should update enabled social connector targets only when social sign-in is enabled', async () => {
     const signInMethods = { ...mockSignInMethods, social: SignInMethodState.Secondary };
     const socialSignInConnectorTargets = ['facebook'];
     const signInExperience = {
@@ -95,7 +97,7 @@ describe('PATCH /sign-in-exp', () => {
     });
   });
 
-  it('should update social connector IDs in correct sorting order', async () => {
+  it('should update social connector targets in correct sorting order', async () => {
     const signInMethods = { ...mockSignInMethods, social: SignInMethodState.Secondary };
     const socialSignInConnectorTargets = ['github', 'facebook'];
     const signInExperience = {
@@ -109,6 +111,24 @@ describe('PATCH /sign-in-exp', () => {
         ...mockSignInExperience,
         signInMethods,
         socialSignInConnectorTargets,
+      },
+    });
+  });
+
+  it('should filter out unavailable social connector targets', async () => {
+    const signInMethods = { ...mockSignInMethods, social: SignInMethodState.Secondary };
+    const socialSignInConnectorTargets = ['github', 'facebook', 'google'];
+    const signInExperience = {
+      signInMethods,
+      socialSignInConnectorTargets,
+    };
+    const response = await signInExperienceRequester.patch('/sign-in-exp').send(signInExperience);
+    expect(response).toMatchObject({
+      status: 200,
+      body: {
+        ...mockSignInExperience,
+        signInMethods,
+        socialSignInConnectorTargets: ['github', 'facebook'],
       },
     });
   });
@@ -133,7 +153,7 @@ describe('PATCH /sign-in-exp', () => {
     expect(validateSignInMethods).toHaveBeenCalledWith(
       mockSignInMethods,
       socialSignInConnectorTargets,
-      [mockFacebookConnectorInstance, mockGithubConnectorInstance]
+      [mockFacebookConnectorInstance, mockGithubConnectorInstance, mockWechatConnectorInstance]
     );
 
     expect(response).toMatchObject({

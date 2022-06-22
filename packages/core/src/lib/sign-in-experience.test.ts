@@ -141,7 +141,7 @@ describe('validate sign-in methods', () => {
     });
   });
 
-  test('should throw when the social connector IDs are empty and social sign-in method is enabled', () => {
+  test('should throw when the social connector targets are empty and social sign-in method is enabled', () => {
     expect(() => {
       validateSignInMethods(
         { ...mockSignInMethods, social: SignInMethodState.Secondary },
@@ -149,37 +149,5 @@ describe('validate sign-in methods', () => {
         enabledConnectorInstances as ConnectorInstance[]
       );
     }).toMatchError(new RequestError('sign_in_experiences.empty_social_connectors'));
-  });
-
-  describe('Selected social connectors must be enabled only when social sign-in method is enabled.', () => {
-    test('should not validate selected social connectors when social sign-in method is disabled', () => {
-      expect(() => {
-        validateSignInMethods(
-          { ...mockSignInMethods, social: SignInMethodState.Disabled },
-          ['google', 'facebook'],
-          enabledConnectorInstances as ConnectorInstance[]
-        );
-      }).not.toThrow();
-    });
-
-    test('should throw when some selected social connector are disabled and social sign-in method is enabled', () => {
-      expect(() => {
-        validateSignInMethods(
-          { ...mockSignInMethods, social: SignInMethodState.Secondary },
-          ['google', 'facebook'],
-          enabledConnectorInstances as ConnectorInstance[]
-        );
-      }).toMatchError(new RequestError('sign_in_experiences.invalid_social_connectors'));
-    });
-
-    test('should not throw when all selected social connectors are enabled and social sign-in method is enabled', () => {
-      expect(() => {
-        validateSignInMethods(
-          { ...mockSignInMethods, social: SignInMethodState.Secondary },
-          ['facebook', 'github'],
-          enabledConnectorInstances as ConnectorInstance[]
-        );
-      }).not.toThrow();
-    });
   });
 });
