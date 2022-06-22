@@ -29,7 +29,7 @@ export const defaultMetadata: ConnectorMetadata = {
     'zh-CN': 'Apple',
   },
   logo: './logo.svg',
-  logo_dark: null,
+  logo_dark: './logo_dark.svg',
   description: {
     en: 'Sign In with Apple',
     'zh-CN': 'Apple 登录',
