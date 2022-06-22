@@ -4,7 +4,7 @@ services:
   app:
     depends_on:
       - postgres
-    build: .
+    image: logto:latest
     ports:
       - 3001:3001
     environment:
