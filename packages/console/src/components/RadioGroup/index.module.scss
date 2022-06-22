@@ -33,6 +33,8 @@
     &.disabled {
       cursor: not-allowed;
       background-color: var(--color-layer-2);
+      border-color: var(--color-layer-2);
+      outline: unset;
     }
 
     &:not(.disabled):focus {
