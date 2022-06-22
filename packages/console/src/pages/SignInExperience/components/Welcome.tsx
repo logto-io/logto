@@ -9,7 +9,11 @@ import CardTitle from '@/components/CardTitle';
 import GuideModal from './GuideModal';
 import * as styles from './Welcome.module.scss';
 
-const Welcome = () => {
+type Props = {
+  mutate: () => void;
+};
+
+const Welcome = ({ mutate }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const [isOpen, setIsOpen] = useState(false);
 
@@ -33,6 +37,7 @@ const Welcome = () => {
         isOpen={isOpen}
         onClose={() => {
           setIsOpen(false);
+          mutate();
         }}
       />
     </>

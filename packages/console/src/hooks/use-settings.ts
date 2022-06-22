@@ -31,6 +31,7 @@ const useSettings = () => {
     isLoading: !settings && !error,
     settings: settings?.adminConsole,
     error,
+    mutate,
     updateSettings,
   };
 };
