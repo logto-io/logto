@@ -3,7 +3,7 @@ name: Main
 on:
   pull_request:
 
-concurrency: 
+concurrency:
   group: main-${{ github.ref }}
   cancel-in-progress: true
 
@@ -53,8 +53,14 @@ jobs:
       - name: Test
         run: pnpm ci:test
 
-      - name: Codecov
+      - name: Codecov core
         uses: codecov/codecov-action@v3
         with:
           flags: core
           directory: ./packages/core
+
+      - name: Codecov ui
+        uses: codecov/codecov-action@v3
+        with:
+          flags: ui
+          directory: ./packages/ui
