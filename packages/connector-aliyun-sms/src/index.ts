@@ -26,10 +26,11 @@ export default class AliyunSmsConnector implements SmsConnector {
     }
   };
 
-  public sendMessage: SmsSendMessageFunction = async (phone, type, { code }) => {
-    const config = await this.getConfig(this.metadata.id);
-    await this.validateConfig(config);
-    const { accessKeyId, accessKeySecret, signName, templates } = config;
+  public sendMessage: SmsSendMessageFunction = async (phone, type, { code }, config) => {
+    const smsConfig =
+      (config as AliyunSmsConfig | undefined) ?? (await this.getConfig(this.metadata.id));
+    await this.validateConfig(smsConfig);
+    const { accessKeyId, accessKeySecret, signName, templates } = smsConfig;
     const template = templates.find(({ usageType }) => usageType === type);
 
     assert(

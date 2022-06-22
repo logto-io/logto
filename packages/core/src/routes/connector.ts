@@ -1,4 +1,4 @@
-import { ConnectorDTO, Connectors, ConnectorType } from '@logto/schemas';
+import { arbitraryObjectGuard, ConnectorDTO, Connectors, ConnectorType } from '@logto/schemas';
 import { emailRegEx, phoneRegEx } from '@logto/shared';
 import { object, string } from 'zod';
 
@@ -153,15 +153,16 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
     koaGuard({
       body: object({
         email: string().regex(emailRegEx),
+        config: arbitraryObjectGuard.optional(),
       }),
     }),
     async (ctx, next) => {
-      const { email } = ctx.guard.body;
+      const { email, config } = ctx.guard.body;
 
       const connectorInstances = await getConnectorInstances();
       const connector = connectorInstances.find(
         (connector): connector is EmailConnectorInstance =>
-          connector.connector.enabled && connector.metadata.type === ConnectorType.Email
+          connector.metadata.type === ConnectorType.Email
       );
 
       assertThat(
@@ -169,9 +170,18 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
         new RequestError({ code: 'connector.not_found', type: ConnectorType.Email })
       );
 
-      await connector.sendMessage(email, 'Test', {
-        code: 'email-test',
-      });
+      if (config) {
+        await connector.validateConfig(config);
+      }
+
+      await connector.sendMessage(
+        email,
+        'Test',
+        {
+          code: 'email-test',
+        },
+        config
+      );
 
       ctx.status = 204;
 
@@ -184,15 +194,16 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
     koaGuard({
       body: object({
         phone: string().regex(phoneRegEx),
+        config: arbitraryObjectGuard.optional(),
       }),
     }),
     async (ctx, next) => {
-      const { phone } = ctx.guard.body;
+      const { phone, config } = ctx.guard.body;
 
       const connectorInstances = await getConnectorInstances();
       const connector = connectorInstances.find(
         (connector): connector is SmsConnectorInstance =>
-          connector.connector.enabled && connector.metadata.type === ConnectorType.SMS
+          connector.metadata.type === ConnectorType.SMS
       );
 
       assertThat(
@@ -200,9 +211,14 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
         new RequestError({ code: 'connector.not_found', type: ConnectorType.SMS })
       );
 
-      await connector.sendMessage(phone, 'Test', {
-        code: '123456',
-      });
+      await connector.sendMessage(
+        phone,
+        'Test',
+        {
+          code: '123456',
+        },
+        config
+      );
 
       ctx.status = 204;
 

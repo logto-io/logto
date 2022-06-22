@@ -32,10 +32,12 @@ export default class AliyunDmConnector implements EmailConnector {
     }
   };
 
-  public sendMessage: EmailSendMessageFunction = async (address, type, data) => {
-    const config = await this.getConfig(this.metadata.id);
-    await this.validateConfig(config);
-    const { accessKeyId, accessKeySecret, accountName, fromAlias, templates } = config;
+  // eslint-disable-next-line complexity
+  public sendMessage: EmailSendMessageFunction = async (address, type, data, config) => {
+    const emailConfig =
+      (config as AliyunDmConfig | undefined) ?? (await this.getConfig(this.metadata.id));
+    await this.validateConfig(emailConfig);
+    const { accessKeyId, accessKeySecret, accountName, fromAlias, templates } = emailConfig;
     const template = templates.find((template) => template.usageType === type);
 
     assert(
