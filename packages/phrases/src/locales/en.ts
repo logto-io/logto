@@ -363,7 +363,6 @@ const translation = {
       field_username: 'Username',
       field_name: 'Name',
       field_avatar: 'Avatar image URL',
-      field_roles: 'Roles',
       field_custom_data: 'Custom data',
       field_connectors: 'Social connectors',
       custom_data_invalid: 'Custom data must be a valid JSON',
@@ -376,10 +375,6 @@ const translation = {
         not_connected: 'The user is not connected to any social connector.',
         deletion_confirmation:
           'You are removing the existing <name/> identity. Are you want to do that?',
-      },
-      roles: {
-        default: 'Default',
-        admin: 'Admin',
       },
     },
     contact: {

@@ -2,7 +2,7 @@ import { User } from '@logto/schemas';
 import { Nullable } from '@silverhand/essentials';
 import classNames from 'classnames';
 import React, { useEffect, useState } from 'react';
-import { Controller, useController, useForm } from 'react-hook-form';
+import { useController, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import ReactModal from 'react-modal';
@@ -34,7 +34,6 @@ import { uriValidator } from '@/utilities/validator';
 import CreateSuccess from './components/CreateSuccess';
 import DeleteForm from './components/DeleteForm';
 import ResetPasswordForm from './components/ResetPasswordForm';
-import RoleSelect from './components/RoleSelect';
 import UserConnectors from './components/UserConnectors';
 import * as styles from './index.module.scss';
 
@@ -238,18 +237,6 @@ const UserDetails = () => {
                       })}
                       hasError={Boolean(errors.avatar)}
                       errorMessage={errors.avatar?.message}
-                    />
-                  </FormField>
-                  <FormField
-                    title="admin_console.user_details.field_roles"
-                    className={styles.textField}
-                  >
-                    <Controller
-                      name="roleNames"
-                      control={control}
-                      render={({ field: { value, onChange } }) => (
-                        <RoleSelect value={value} onChange={onChange} />
-                      )}
                     />
                   </FormField>
                   <FormField
