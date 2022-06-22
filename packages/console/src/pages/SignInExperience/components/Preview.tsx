@@ -27,6 +27,50 @@ const Preview = ({ signInExperience, className }: Props) => {
   const { data: allConnectors } = useSWR<ConnectorDTO[], RequestError>('/api/connectors');
   const previewRef = useRef<HTMLIFrameElement>(null);
 
+  const modeOptions = useMemo(() => {
+    const light = { value: AppearanceMode.LightMode, title: t('sign_in_exp.preview.light') };
+    const dark = { value: AppearanceMode.DarkMode, title: t('sign_in_exp.preview.dark') };
+
+    if (!signInExperience?.branding.isDarkModeEnabled) {
+      return [light];
+    }
+
+    return [light, dark];
+  }, [signInExperience, t]);
+
+  useEffect(() => {
+    if (!modeOptions[0]) {
+      return;
+    }
+
+    if (!modeOptions.some(({ value }) => value === mode)) {
+      setMode(modeOptions[0].value);
+    }
+  }, [modeOptions, mode]);
+
+  const languageOptions = useMemo(() => {
+    const options = [
+      { value: Language.English, title: t('sign_in_exp.preview.languages.english') },
+      { value: Language.Chinese, title: t('sign_in_exp.preview.languages.chinese') },
+    ];
+
+    if (signInExperience && !signInExperience.languageInfo.autoDetect) {
+      return options.filter(({ value }) => value === signInExperience.languageInfo.fixedLanguage);
+    }
+
+    return options;
+  }, [signInExperience, t]);
+
+  useEffect(() => {
+    if (!languageOptions[0]) {
+      return;
+    }
+
+    if (!languageOptions.some(({ value }) => value === language)) {
+      setLanguage(languageOptions[0].value);
+    }
+  }, [language, languageOptions]);
+
   const config = useMemo(() => {
     if (!allConnectors || !signInExperience) {
       return;
@@ -84,10 +128,7 @@ const Preview = ({ signInExperience, className }: Props) => {
           <Select
             size="small"
             value={language}
-            options={[
-              { value: Language.English, title: t('sign_in_exp.preview.languages.english') },
-              { value: Language.Chinese, title: t('sign_in_exp.preview.languages.chinese') },
-            ]}
+            options={languageOptions}
             onChange={(value) => {
               if (value) {
                 setLanguage(value);
@@ -97,10 +138,7 @@ const Preview = ({ signInExperience, className }: Props) => {
           <Select
             size="small"
             value={mode}
-            options={[
-              { value: AppearanceMode.LightMode, title: t('sign_in_exp.preview.light') },
-              { value: AppearanceMode.DarkMode, title: t('sign_in_exp.preview.dark') },
-            ]}
+            options={modeOptions}
             onChange={(value) => {
               if (value) {
                 setMode(value);
