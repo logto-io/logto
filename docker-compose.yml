@@ -1,0 +1,18 @@
+# This compose file is for demonstration only, do not use in prod.
+version: "3.9"
+services:
+  app:
+    depends_on:
+      - postgres
+    build: .
+    ports:
+      - 3001:3001
+    environment:
+      ALL_YES: 1
+      NO_INQUIRY: 0
+      DB_URL_DEFAULT: postgres://postgres:p0stgr3s@postgres:5432
+  postgres:
+    image: postgres:14-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: p0stgr3s

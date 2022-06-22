@@ -1,0 +1,31 @@
+name: Dockerize
+
+on:
+  push:
+
+concurrency:
+  group: dockerize-${{ github.ref }}  
+
+jobs:
+  dockerize:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Build and export
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          tags: logto:latest
+          outputs: type=docker,dest=/tmp/logto.tar
+
+      - name: Upload artifact
+        if: ${{ github.ref_name == 'master' }}
+        uses: actions/upload-artifact@v3
+        with:
+          name: logto.${{ github.sha }}
+          path: /tmp/logto.tar
