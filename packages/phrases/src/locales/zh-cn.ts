@@ -662,8 +662,6 @@ const errors = {
     empty_social_connectors:
       '空的 social 连接器。当启用社交网络连接器的登录方式时，请添加可用的 social 连接器。',
     enabled_connector_not_found: '未找到可用的 {{type}} 类型的连接器。',
-    invalid_social_connectors:
-      '无效的 social 连接器。请确认你选择的所有连接器都可用，并且是 social 类型的。',
     not_one_and_only_one_primary_sign_in_method: '主要的登录方式必须有且仅有一个，请检查你的输入。',
   },
   swagger: {

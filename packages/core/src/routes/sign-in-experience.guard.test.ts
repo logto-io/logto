@@ -279,17 +279,4 @@ describe('socialSignInConnectorTargets', () => {
       );
     }
   );
-
-  test.each([[[]], [[null, undefined]], [['', ' \t\n\r']], [[123, 456]]])(
-    '%p should fail',
-    async (socialSignInConnectorTargets: any[]) => {
-      await expectPatchResponseStatus(
-        {
-          signInMethods: { ...mockSignInMethods, social: SignInMethodState.Secondary },
-          socialSignInConnectorTargets,
-        },
-        400
-      );
-    }
-  );
 });
