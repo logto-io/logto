@@ -274,6 +274,8 @@ const translation = {
         native: 'Native',
       },
       add_multi_platform: ' supports multiple platform, select a platform to continue',
+      drawer_title: 'Connector Guide',
+      drawer_subtitle: 'Follow the instructions to integrate your connector',
     },
     connector_details: {
       back_to_connectors: 'Back to Connectors',
