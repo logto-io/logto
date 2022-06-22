@@ -5,10 +5,11 @@
   top: 0;
   right: 0;
   bottom: 0;
-  width: 700px;
+  width: 50%;
+  max-width: 900px;
+  min-width: 770px;
   outline: none;
   background: var(--color-layer-1);
-  padding: _.unit(6);
   overflow-y: auto;
 
   .headline {
@@ -27,7 +28,7 @@
 
 .overlay {
   position: fixed;
-  background: rgba(0, 0, 0, 40%);
+  background: var(--color-drawer-overlay);
   inset: 0;
 }
 

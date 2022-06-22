@@ -23,16 +23,13 @@ const Drawer = ({ isOpen, onClose, children }: Props) => {
       closeTimeoutMS={300}
       onRequestClose={onClose}
     >
-      <div className={styles.headline}>
-        <IconButton
-          size="large"
-          onClick={() => {
-            onClose?.();
-          }}
-        >
-          <Close className={styles.closeIcon} />
-        </IconButton>
-      </div>
+      {onClose && (
+        <div className={styles.headline}>
+          <IconButton size="large" onClick={onClose}>
+            <Close className={styles.closeIcon} />
+          </IconButton>
+        </div>
+      )}
       <div>{children}</div>
     </ReactModal>
   );
