@@ -20,7 +20,7 @@ import FormField from '@/components/FormField';
 import LinkButton from '@/components/LinkButton';
 import TabNav, { TabNavItem } from '@/components/TabNav';
 import TextInput from '@/components/TextInput';
-import { getAvatarById } from '@/consts/avatars';
+import { generateAvatarPlaceHolderById } from '@/consts/avatars';
 import useApi, { RequestError } from '@/hooks/use-api';
 import Back from '@/icons/Back';
 import Delete from '@/icons/Delete';
@@ -122,7 +122,10 @@ const UserDetails = () => {
       {userId && data && (
         <>
           <Card className={styles.header}>
-            <img className={styles.avatar} src={data.avatar || getAvatarById(userId)} />
+            <img
+              className={styles.avatar}
+              src={data.avatar || generateAvatarPlaceHolderById(userId)}
+            />
             <div className={styles.metadata}>
               <div className={styles.name}>{data.name ?? '-'}</div>
               <div>

@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 
 import Dropdown, { DropdownItem } from '@/components/Dropdown';
 import { Ring as Spinner } from '@/components/Spinner';
-import { getAvatarById } from '@/consts/avatars';
+import { generateAvatarPlaceHolderById } from '@/consts/avatars';
 import useApi from '@/hooks/use-api';
 import SignOut from '@/icons/SignOut';
 
@@ -45,7 +45,7 @@ const UserInfo = () => {
           setShowDropdown(true);
         }}
       >
-        <img src={avatar || getAvatarById(id)} />
+        <img src={avatar || generateAvatarPlaceHolderById(id)} />
         <div className={styles.wrapper}>
           <div className={styles.name}>{name || t('users.unnamed')}</div>
         </div>

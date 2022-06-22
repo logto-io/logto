@@ -22,4 +22,5 @@ export const Avatars = [
   avatar010,
 ];
 
-export const getAvatarById = (id: string) => Avatars[(id.codePointAt(0) ?? 0) % Avatars.length];
+export const generateAvatarPlaceHolderById = (id: string) =>
+  Avatars[(id.codePointAt(0) ?? 0) % Avatars.length];
