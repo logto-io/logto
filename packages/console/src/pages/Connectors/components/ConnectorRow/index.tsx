@@ -32,7 +32,7 @@ const ConnectorRow = ({ type, connectors, onClickSetup }: Props) => {
   };
 
   return (
-    <tr className={conditional(showSetupButton && tableStyles.clickable)} onClick={handleClickRow}>
+    <tr className={conditional(!showSetupButton && tableStyles.clickable)} onClick={handleClickRow}>
       <td>
         <ConnectorName type={type} connectors={connectors} onClickSetup={onClickSetup} />
       </td>

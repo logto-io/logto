@@ -9,19 +9,25 @@
   max-width: 900px;
   min-width: 770px;
   outline: none;
-  background: var(--color-layer-1);
-  overflow-y: auto;
+  background: var(--color-base);
 
-  .headline {
+  .wrapper {
     display: flex;
-    justify-content: right;
+    flex-direction: column;
+    height: 100%;
 
-    > svg {
-      cursor: pointer;
+    .header {
+      display: flex;
+      align-items: center;
+      flex-shrink: 0;
+      background-color: var(--color-layer-1);
+      height: 64px;
+      padding: 0 _.unit(6);
     }
 
-    .closeIcon {
-      color: var(--color-icon);
+    .body {
+      flex: 1;
+      overflow-y: auto;
     }
   }
 }

@@ -269,6 +269,8 @@ const translation = {
         native: '原生',
       },
       add_multi_platform: ' 支持多平台，请选择一个平台继续',
+      drawer_title: '连接器配置指南',
+      drawer_subtitle: '请参考下列连接器配置指南',
     },
     connector_details: {
       back_to_connectors: '返回连接器',

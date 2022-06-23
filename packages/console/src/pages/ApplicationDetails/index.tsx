@@ -97,6 +97,10 @@ const ApplicationDetails = () => {
     toast.success(t('application_details.save_success'));
   });
 
+  const onCloseDrawer = () => {
+    setIsReadmeOpen(false);
+  };
+
   const isAdvancedSettings = location.pathname.includes('advanced-settings');
 
   return (
@@ -129,14 +133,8 @@ const ApplicationDetails = () => {
                   setIsReadmeOpen(true);
                 }}
               />
-              <Drawer isOpen={isReadmeOpen}>
-                <Guide
-                  isCompact
-                  app={data}
-                  onClose={() => {
-                    setIsReadmeOpen(false);
-                  }}
-                />
+              <Drawer isOpen={isReadmeOpen} onClose={onCloseDrawer}>
+                <Guide isCompact app={data} onClose={onCloseDrawer} />
               </Drawer>
               <ActionMenu
                 buttonProps={{ icon: <More className={styles.moreIcon} />, size: 'large' }}

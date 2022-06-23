@@ -152,6 +152,8 @@ const ConnectorDetails = () => {
               }}
             />
             <Drawer
+              title="connectors.title"
+              subtitle="connectors.subtitle"
               isOpen={isReadMeOpen}
               onClose={() => {
                 setIsReadMeOpen(false);
