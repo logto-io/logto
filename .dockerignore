@@ -28,3 +28,4 @@ cache
 .vscode
 .git
 .github
+.gitignore
