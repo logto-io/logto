@@ -31,7 +31,7 @@ const Preview = ({ signInExperience, className }: Props) => {
     const light = { value: AppearanceMode.LightMode, title: t('sign_in_exp.preview.light') };
     const dark = { value: AppearanceMode.DarkMode, title: t('sign_in_exp.preview.dark') };
 
-    if (!signInExperience?.branding.isDarkModeEnabled) {
+    if (!signInExperience?.color.isDarkModeEnabled) {
       return [light];
     }
 
