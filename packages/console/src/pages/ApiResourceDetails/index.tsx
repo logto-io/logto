@@ -15,7 +15,6 @@ import Button from '@/components/Button';
 import Card from '@/components/Card';
 import CopyToClipboard from '@/components/CopyToClipboard';
 import DetailsSkeleton from '@/components/DetailsSkeleton';
-import Drawer from '@/components/Drawer';
 import FormField from '@/components/FormField';
 import LinkButton from '@/components/LinkButton';
 import TabNav, { TabNavItem } from '@/components/TabNav';
@@ -58,7 +57,6 @@ const ApiResourceDetails = () => {
   const api = useApi();
 
   const [isDeleteFormOpen, setIsDeleteFormOpen] = useState(false);
-  const [isReadmeOpen, setIsReadmeOpen] = useState(false);
 
   useEffect(() => {
     if (!data) {
@@ -100,22 +98,6 @@ const ApiResourceDetails = () => {
               </div>
             </div>
             <div className={styles.operations}>
-              <Button
-                title="admin_console.api_resource_details.check_help_guide"
-                size="large"
-                onClick={() => {
-                  setIsReadmeOpen(true);
-                }}
-              />
-              <Drawer
-                isOpen={isReadmeOpen}
-                onClose={() => {
-                  setIsReadmeOpen(false);
-                }}
-              >
-                {/* TODO - Implement the content when the documentation website is ready. */}
-                <div>TBD</div>
-              </Drawer>
               <ActionMenu
                 buttonProps={{ icon: <More className={styles.moreIcon} />, size: 'large' }}
                 title={t('api_resource_details.more_options')}

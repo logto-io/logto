@@ -219,7 +219,6 @@ const translation = {
     },
     api_resource_details: {
       back_to_api_resources: '返回我的 API 资源',
-      check_help_guide: '查看帮助引导',
       more_options: '更多选项',
       options_delete: '删除',
       settings: '设置',

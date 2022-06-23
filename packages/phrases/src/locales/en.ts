@@ -223,7 +223,6 @@ const translation = {
     },
     api_resource_details: {
       back_to_api_resources: 'Back to API resources',
-      check_help_guide: 'Check Help Guide',
       more_options: 'MORE OPTIONS',
       options_delete: 'Delete',
       settings: 'Settings',
