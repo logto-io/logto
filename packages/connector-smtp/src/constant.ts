@@ -20,6 +20,7 @@ export const defaultMetadata: ConnectorMetadata = {
     'zh-CN': 'SMTP',
   },
   logo: './logo.svg',
+  logoDark: null,
   description: {
     en: 'Simple Mail Transfer Protocol.',
     'zh-CN': '简单邮件传输协议。',

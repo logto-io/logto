@@ -32,6 +32,7 @@ export const defaultMetadata: ConnectorMetadata = {
     'zh-CN': '支付宝',
   },
   logo: './logo.svg',
+  logoDark: null,
   description: {
     en: 'Sign In with Alipay',
     'zh-CN': '支付宝登录',
