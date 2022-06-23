@@ -406,7 +406,7 @@ const translation = {
       title: 'Sign-in Experience',
       description: 'Customize the sign in UI to match your brand and preview in real time.',
       tabs: {
-        experience: 'Experience',
+        branding: 'Branding',
         methods: 'Sign in methods',
         others: 'Others',
       },
@@ -418,14 +418,17 @@ const translation = {
           'Please note that sign-in experience will apply to all applications under this account.',
         got_it: 'Got it',
       },
-      branding: {
-        title: 'BRANDING',
+      color: {
+        title: 'COLOR',
         primary_color: 'Brand color',
         dark_primary_color: 'Brand color (Dark)',
         dark_mode: 'Enable dark mode',
         dark_mode_description:
           'Your app will have an auto-generated dark mode theme based on your brand color and Logto algorithm. You are free to customize.',
-        ui_style: 'Branding area',
+      },
+      branding: {
+        title: 'BRANDING AREA',
+        ui_style: 'Style',
         styles: {
           logo_slogan: 'App logo with slogan',
           logo: 'App logo',

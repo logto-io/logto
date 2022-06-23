@@ -72,15 +72,20 @@ export type Identities = z.infer<typeof identitiesGuard>;
  * SignIn Experiences
  */
 
+export const colorGuard = z.object({
+  primaryColor: z.string().regex(hexColorRegEx),
+  isDarkModeEnabled: z.boolean(),
+  darkPrimaryColor: z.string().regex(hexColorRegEx).optional(),
+});
+
+export type Color = z.infer<typeof colorGuard>;
+
 export enum BrandingStyle {
   Logo = 'Logo',
   Logo_Slogan = 'Logo_Slogan',
 }
 
 export const brandingGuard = z.object({
-  primaryColor: z.string().regex(hexColorRegEx),
-  isDarkModeEnabled: z.boolean(),
-  darkPrimaryColor: z.string().regex(hexColorRegEx).optional(),
   style: z.nativeEnum(BrandingStyle),
   logoUrl: z.string().url(),
   darkLogoUrl: z.string().url().optional(),

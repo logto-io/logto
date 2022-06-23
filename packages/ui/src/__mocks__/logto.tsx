@@ -123,10 +123,12 @@ export const mockSocialConnectorData = {
 
 export const mockSignInExperience: SignInExperience = {
   id: 'foo',
-  branding: {
+  color: {
     primaryColor: '#000',
     isDarkModeEnabled: true,
     darkPrimaryColor: '#fff',
+  },
+  branding: {
     style: BrandingStyle.Logo_Slogan,
     logoUrl: 'http://logto.png',
     slogan: 'logto',
@@ -151,6 +153,7 @@ export const mockSignInExperience: SignInExperience = {
 };
 
 export const mockSignInExperienceSettings: SignInExperienceSettings = {
+  color: mockSignInExperience.color,
   branding: mockSignInExperience.branding,
   termsOfUse: mockSignInExperience.termsOfUse,
   languageInfo: mockSignInExperience.languageInfo,

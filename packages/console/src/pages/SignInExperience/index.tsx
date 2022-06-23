@@ -17,6 +17,7 @@ import useSettings from '@/hooks/use-settings';
 import * as detailsStyles from '@/scss/details.module.scss';
 
 import BrandingForm from './components/BrandingForm';
+import ColorForm from './components/ColorForm';
 import LanguagesForm from './components/LanguagesForm';
 import Preview from './components/Preview';
 import SignInMethodsChangePreview from './components/SignInMethodsChangePreview';
@@ -100,8 +101,8 @@ const SignInExperience = () => {
         <Card className={styles.card}>
           <CardTitle title="sign_in_exp.title" subtitle="sign_in_exp.description" />
           <TabNav className={styles.tabs}>
-            <TabNavItem href="/sign-in-experience/experience">
-              {t('sign_in_exp.tabs.experience')}
+            <TabNavItem href="/sign-in-experience/branding">
+              {t('sign_in_exp.tabs.branding')}
             </TabNavItem>
             <TabNavItem href="/sign-in-experience/methods">
               {t('sign_in_exp.tabs.methods')}
@@ -116,14 +117,19 @@ const SignInExperience = () => {
             <FormProvider {...methods}>
               <form onSubmit={onSubmit}>
                 <div className={classNames(detailsStyles.body, styles.form)}>
-                  {tab === 'experience' && (
+                  {tab === 'branding' && (
                     <>
+                      <ColorForm />
                       <BrandingForm />
-                      <TermsForm />
                     </>
                   )}
                   {tab === 'methods' && <SignInMethodsForm />}
-                  {tab === 'others' && <LanguagesForm />}
+                  {tab === 'others' && (
+                    <>
+                      <TermsForm />
+                      <LanguagesForm />
+                    </>
+                  )}
                 </div>
                 <div className={detailsStyles.footer}>
                   <div className={detailsStyles.footerMain}>

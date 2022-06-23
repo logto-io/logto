@@ -5,6 +5,7 @@ import {
   SignInExperience,
   ConnectorMetadata,
   SignInMode,
+  Color,
 } from '@logto/schemas';
 
 export type UserFlow = 'sign-in' | 'register';
@@ -30,6 +31,7 @@ export type SignInExperienceSettingsResponse = SignInExperience & {
 };
 
 export type SignInExperienceSettings = {
+  color: Color;
   branding: Branding;
   languageInfo: LanguageInfo;
   termsOfUse: TermsOfUse;
