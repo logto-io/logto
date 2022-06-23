@@ -343,7 +343,7 @@ const translation = {
       back_to_users: 'Back to User Management',
       created_title: 'Congratulations! This user has been successfully created.',
       created_guide: 'You can send the following log in information to the user.',
-      created_username: 'User username:',
+      created_username: 'Username:',
       created_password: 'Initial password:',
       created_button_close: 'Close',
       created_button_copy: 'Copy',
