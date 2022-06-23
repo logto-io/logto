@@ -3,7 +3,11 @@
 .title {
   @include _.subhead-cap;
   color: var(--color-neutral-variant-60);
-  margin-top: _.unit(8);
+  margin-top: _.unit(12);
+
+  &:first-child {
+    margin-top: _.unit(6);
+  }
 }
 
 .primaryTag {
