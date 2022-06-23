@@ -101,51 +101,7 @@ describe('connector route', () => {
     });
   });
 
-  describe('POST /connectors/test/email', () => {
-    afterEach(() => {
-      jest.clearAllMocks();
-    });
-
-    it('should get email connector and send message', async () => {
-      const mockedEmailConnector: EmailConnectorInstance = {
-        connector: mockConnector,
-        metadata: mockMetadata,
-        validateConfig: jest.fn(),
-        getConfig: jest.fn(),
-        sendMessage: async (
-          address: string,
-          type: keyof EmailMessageTypes,
-          _payload: EmailMessageTypes[typeof type]
-          // eslint-disable-next-line @typescript-eslint/no-empty-function
-        ): Promise<any> => {},
-      };
-      getConnectorInstancesPlaceHolder.mockResolvedValueOnce([mockedEmailConnector]);
-      const sendMessageSpy = jest.spyOn(mockedEmailConnector, 'sendMessage');
-      const response = await connectorRequest
-        .post('/connectors/test/email')
-        .send({ email: 'test@email.com', config: { test: 123 } });
-      expect(sendMessageSpy).toHaveBeenCalledTimes(1);
-      expect(sendMessageSpy).toHaveBeenCalledWith(
-        'test@email.com',
-        'Test',
-        {
-          code: 'email-test',
-        },
-        { test: 123 }
-      );
-      expect(response).toHaveProperty('statusCode', 204);
-    });
-
-    it('should throw when email connector is not found', async () => {
-      getConnectorInstancesPlaceHolder.mockResolvedValueOnce([]);
-      const response = await connectorRequest
-        .post('/connectors/test/email')
-        .send({ email: 'test@email.com' });
-      expect(response).toHaveProperty('statusCode', 400);
-    });
-  });
-
-  describe('POST /connectors/test/sms', () => {
+  describe('POST /connectors/:id/test', () => {
     afterEach(() => {
       jest.clearAllMocks();
     });
@@ -170,7 +126,7 @@ describe('connector route', () => {
       getConnectorInstancesPlaceHolder.mockResolvedValueOnce([mockedSmsConnectorInstance]);
       const sendMessageSpy = jest.spyOn(mockedSmsConnectorInstance, 'sendMessage');
       const response = await connectorRequest
-        .post('/connectors/test/sms')
+        .post('/connectors/id/test')
         .send({ phone: '12345678901', config: { test: 123 } });
       expect(sendMessageSpy).toHaveBeenCalledTimes(1);
       expect(sendMessageSpy).toHaveBeenCalledWith(
@@ -184,11 +140,54 @@ describe('connector route', () => {
       expect(response).toHaveProperty('statusCode', 204);
     });
 
+    it('should get email connector and send message', async () => {
+      const mockedEmailConnector: EmailConnectorInstance = {
+        connector: mockConnector,
+        metadata: mockMetadata,
+        validateConfig: jest.fn(),
+        getConfig: jest.fn(),
+        sendMessage: async (
+          address: string,
+          type: keyof EmailMessageTypes,
+          _payload: EmailMessageTypes[typeof type]
+          // eslint-disable-next-line @typescript-eslint/no-empty-function
+        ): Promise<any> => {},
+      };
+      getConnectorInstancesPlaceHolder.mockResolvedValueOnce([mockedEmailConnector]);
+      const sendMessageSpy = jest.spyOn(mockedEmailConnector, 'sendMessage');
+      const response = await connectorRequest
+        .post('/connectors/id/test')
+        .send({ email: 'test@email.com', config: { test: 123 } });
+      expect(sendMessageSpy).toHaveBeenCalledTimes(1);
+      expect(sendMessageSpy).toHaveBeenCalledWith(
+        'test@email.com',
+        'Test',
+        {
+          code: 'email-test',
+        },
+        { test: 123 }
+      );
+      expect(response).toHaveProperty('statusCode', 204);
+    });
+
+    it('should throw when neither phone nor email is provided', async () => {
+      const response = await connectorRequest.post('/connectors/id/test').send({});
+      expect(response).toHaveProperty('statusCode', 400);
+    });
+
     it('should throw when sms connector is not found', async () => {
       getConnectorInstancesPlaceHolder.mockResolvedValueOnce([]);
       const response = await connectorRequest
-        .post('/connectors/test/sms')
+        .post('/connectors/id/test')
         .send({ phone: '12345678901' });
+      expect(response).toHaveProperty('statusCode', 400);
+    });
+
+    it('should throw when email connector is not found', async () => {
+      getConnectorInstancesPlaceHolder.mockResolvedValueOnce([]);
+      const response = await connectorRequest
+        .post('/connectors/id/test')
+        .send({ email: 'test@email.com' });
       expect(response).toHaveProperty('statusCode', 400);
     });
   });

@@ -14,6 +14,7 @@ import useApi from '@/hooks/use-api';
 import * as styles from './index.module.scss';
 
 type Props = {
+  connectorId: string;
   connectorType: Exclude<ConnectorType, ConnectorType.Social>;
   config?: string;
   className?: string;
@@ -23,7 +24,7 @@ type FormData = {
   sendTo: string;
 };
 
-const SenderTester = ({ connectorType, config, className }: Props) => {
+const SenderTester = ({ connectorId, connectorType, config, className }: Props) => {
   const buttonPosReference = useRef(null);
   const [showTooltip, setShowTooltip] = useState(false);
   const [isSubmitting, seIsSubmitting] = useState(false);
@@ -62,7 +63,7 @@ const SenderTester = ({ connectorType, config, className }: Props) => {
 
     try {
       await api
-        .post(`/api/connectors/test/${connectorType.toLowerCase()}`, {
+        .post(`/api/connectors/${connectorId}/test`, {
           json: data,
         })
         .json();

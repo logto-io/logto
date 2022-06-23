@@ -149,25 +149,42 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
   );
 
   router.post(
-    '/connectors/test/email',
+    '/connectors/:id/test',
     koaGuard({
+      params: object({ id: string().min(1) }),
       body: object({
-        email: string().regex(emailRegEx),
+        phone: string().regex(phoneRegEx).optional(),
+        email: string().regex(emailRegEx).optional(),
         config: arbitraryObjectGuard.optional(),
       }),
     }),
     async (ctx, next) => {
-      const { email, config } = ctx.guard.body;
+      const {
+        params: { id },
+        body,
+      } = ctx.guard;
+      const { phone, email, config } = body;
 
       const connectorInstances = await getConnectorInstances();
-      const connector = connectorInstances.find(
-        (connector): connector is EmailConnectorInstance =>
-          connector.metadata.type === ConnectorType.Email
-      );
+      const subject = phone ?? email;
+      assertThat(subject, new RequestError({ code: 'guard.invalid_input' }));
+
+      const connector: SmsConnectorInstance | EmailConnectorInstance | undefined = phone
+        ? connectorInstances.find(
+            (connector): connector is SmsConnectorInstance =>
+              connector.metadata.id === id && connector.metadata.type === ConnectorType.SMS
+          )
+        : connectorInstances.find(
+            (connector): connector is EmailConnectorInstance =>
+              connector.metadata.id === id && connector.metadata.type === ConnectorType.Email
+          );
 
       assertThat(
         connector,
-        new RequestError({ code: 'connector.not_found', type: ConnectorType.Email })
+        new RequestError({
+          code: 'connector.not_found',
+          type: phone ? ConnectorType.SMS : ConnectorType.Email,
+        })
       );
 
       if (config) {
@@ -175,47 +192,10 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
       }
 
       await connector.sendMessage(
-        email,
+        subject,
         'Test',
         {
-          code: 'email-test',
-        },
-        config
-      );
-
-      ctx.status = 204;
-
-      return next();
-    }
-  );
-
-  router.post(
-    '/connectors/test/sms',
-    koaGuard({
-      body: object({
-        phone: string().regex(phoneRegEx),
-        config: arbitraryObjectGuard.optional(),
-      }),
-    }),
-    async (ctx, next) => {
-      const { phone, config } = ctx.guard.body;
-
-      const connectorInstances = await getConnectorInstances();
-      const connector = connectorInstances.find(
-        (connector): connector is SmsConnectorInstance =>
-          connector.metadata.type === ConnectorType.SMS
-      );
-
-      assertThat(
-        connector,
-        new RequestError({ code: 'connector.not_found', type: ConnectorType.SMS })
-      );
-
-      await connector.sendMessage(
-        phone,
-        'Test',
-        {
-          code: '123456',
+          code: phone ? '123456' : 'email-test',
         },
         config
       );

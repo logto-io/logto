@@ -213,7 +213,7 @@ const ConnectorDetails = () => {
               />
             </FormField>
             {data.type !== ConnectorType.Social && (
-              <SenderTester connectorType={data.type} config={config} />
+              <SenderTester connectorId={data.id} connectorType={data.type} config={config} />
             )}
             {saveError && <div>{saveError}</div>}
           </div>
