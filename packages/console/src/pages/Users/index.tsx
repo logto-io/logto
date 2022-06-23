@@ -76,8 +76,12 @@ const Users = () => {
       <div className={styles.filter}>
         <Search
           defaultValue={keyword}
+          isClearable={Boolean(keyword)}
           onSearch={(value) => {
-            setQuery({ search: value });
+            setQuery(value ? { search: value } : {});
+          }}
+          onClearSearch={() => {
+            setQuery({});
           }}
         />
       </div>
