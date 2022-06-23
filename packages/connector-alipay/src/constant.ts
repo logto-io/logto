@@ -34,8 +34,8 @@ export const defaultMetadata: ConnectorMetadata = {
   logo: './logo.svg',
   logoDark: null,
   description: {
-    en: 'Sign In with Alipay',
-    'zh-CN': '支付宝登录',
+    en: 'Allow your users to log in through their Alipay account.',
+    'zh-CN': '让用户可以通过支付宝账号登录。',
   },
   readme: getFileContents(pathToReadmeFile, readmeContentFallback),
   configTemplate: getFileContents(pathToConfigTemplate, configTemplateFallback),

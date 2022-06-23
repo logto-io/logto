@@ -27,8 +27,8 @@ export const defaultMetadata: ConnectorMetadata = {
   logo: './logo.svg',
   logoDark: './logo-dark.svg',
   description: {
-    en: 'Sign In with GitHub',
-    'zh-CN': 'GitHub登录',
+    en: 'Make signing into Logto seamlessly for GitHub users.',
+    'zh-CN': '让 GitHub 用户无缝登录 Logto。',
   },
   readme: getFileContents(pathToReadmeFile, readmeContentFallback),
   configTemplate: getFileContents(pathToConfigTemplate, configTemplateFallback),

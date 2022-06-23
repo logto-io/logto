@@ -27,8 +27,8 @@ export const defaultMetadata: ConnectorMetadata = {
   logo: './logo.svg',
   logoDark: null,
   description: {
-    en: 'Sign In with Google',
-    'zh-CN': 'Google登录',
+    en: 'Gives users the ability to sign in with their Google account.',
+    'zh-CN': '赋予用户用 Google 账号登录的能力。',
   },
   readme: getFileContents(pathToReadmeFile, readmeContentFallback),
   configTemplate: getFileContents(pathToConfigTemplate, configTemplateFallback),
