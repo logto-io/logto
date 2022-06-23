@@ -1,5 +1,5 @@
 import { Language } from '@logto/phrases';
-import { AppearanceMode } from '@logto/schemas';
+import { AppearanceMode, ConnectorPlatform } from '@logto/schemas';
 import { conditionalString } from '@silverhand/essentials';
 import i18next from 'i18next';
 import { useEffect, useState } from 'react';
@@ -17,6 +17,7 @@ type PreviewConfig = {
   language: Language;
   mode: AppearanceMode.LightMode | AppearanceMode.DarkMode;
   platform: Platform;
+  isNative: boolean;
 };
 
 const usePreview = (context: Context): [boolean, PreviewConfig?] => {
@@ -64,6 +65,7 @@ const usePreview = (context: Context): [boolean, PreviewConfig?] => {
       language,
       mode,
       platform,
+      isNative,
     } = previewConfig;
 
     const experienceSettings: SignInExperienceSettings = {
@@ -74,7 +76,10 @@ const usePreview = (context: Context): [boolean, PreviewConfig?] => {
       },
       primarySignInMethod: getPrimarySignInMethod(signInMethods),
       secondarySignInMethods: getSecondarySignInMethods(signInMethods),
-      socialConnectors: filterPreviewSocialConnectors(platform, socialConnectors),
+      socialConnectors: filterPreviewSocialConnectors(
+        isNative ? ConnectorPlatform.Native : ConnectorPlatform.Web,
+        socialConnectors
+      ),
     };
 
     void i18next.changeLanguage(language);

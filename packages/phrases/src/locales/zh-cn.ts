@@ -493,9 +493,9 @@ const translation = {
         },
         dark: 'Dark',
         light: 'Light',
-        mobile: 'Mobile',
-        web: 'Web',
-        mobile_description: 'Mobile includes mobile web, Android and iOS.',
+        mobile: '移动',
+        desktop_web: '桌面网页',
+        mobile_web: '移动网页',
       },
     },
     settings: {

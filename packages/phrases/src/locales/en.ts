@@ -511,8 +511,8 @@ const translation = {
         dark: 'Dark',
         light: 'Light',
         mobile: 'Mobile',
-        web: 'Web',
-        mobile_description: 'Mobile includes mobile web, Android and iOS.',
+        desktop_web: 'Desktop Web',
+        mobile_web: 'Mobile Web',
       },
     },
     settings: {

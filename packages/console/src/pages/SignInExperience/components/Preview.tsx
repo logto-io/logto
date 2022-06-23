@@ -23,7 +23,7 @@ const Preview = ({ signInExperience, className }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const [language, setLanguage] = useState<Language>(Language.English);
   const [mode, setMode] = useState<AppearanceMode>(AppearanceMode.LightMode);
-  const [platform, setPlatform] = useState<'web' | 'mobile'>('mobile');
+  const [platform, setPlatform] = useState<'desktopWeb' | 'mobile' | 'mobileWeb'>('mobile');
   const { data: allConnectors } = useSWR<ConnectorDTO[], RequestError>('/api/connectors');
   const previewRef = useRef<HTMLIFrameElement>(null);
 
@@ -31,7 +31,7 @@ const Preview = ({ signInExperience, className }: Props) => {
     const light = { value: AppearanceMode.LightMode, title: t('sign_in_exp.preview.light') };
     const dark = { value: AppearanceMode.DarkMode, title: t('sign_in_exp.preview.dark') };
 
-    if (!signInExperience?.branding.isDarkModeEnabled) {
+    if (!signInExperience?.color.isDarkModeEnabled) {
       return [light];
     }
 
@@ -93,7 +93,8 @@ const Preview = ({ signInExperience, className }: Props) => {
       },
       language,
       mode,
-      platform,
+      platform: platform === 'desktopWeb' ? 'web' : 'mobile',
+      isNative: platform === 'mobile',
     };
   }, [allConnectors, language, mode, platform, signInExperience]);
 
@@ -157,18 +158,28 @@ const Preview = ({ signInExperience, className }: Props) => {
           {t('sign_in_exp.preview.mobile')}
         </TabNavItem>
         <TabNavItem
-          isActive={platform === 'web'}
+          isActive={platform === 'desktopWeb'}
           onClick={() => {
-            setPlatform('web');
+            setPlatform('desktopWeb');
           }}
         >
-          {t('sign_in_exp.preview.web')}
+          {t('sign_in_exp.preview.desktop_web')}
+        </TabNavItem>
+        <TabNavItem
+          isActive={platform === 'mobileWeb'}
+          onClick={() => {
+            setPlatform('mobileWeb');
+          }}
+        >
+          {t('sign_in_exp.preview.mobile_web')}
         </TabNavItem>
       </TabNav>
-      <div className={classNames(styles.body, styles[platform])}>
+      <div
+        className={classNames(styles.body, platform === 'desktopWeb' ? styles.web : styles.mobile)}
+      >
         <div className={styles.deviceWrapper}>
           <div className={classNames(styles.device, styles[mode])}>
-            {platform === 'mobile' && (
+            {platform !== 'desktopWeb' && (
               <div className={styles.topBar}>
                 <div className={styles.time}>{dayjs().format('HH:mm')}</div>
                 <PhoneInfo />
@@ -176,9 +187,6 @@ const Preview = ({ signInExperience, className }: Props) => {
             )}
             <iframe ref={previewRef} src="/sign-in?preview=true" tabIndex={-1} />
           </div>
-          {platform === 'mobile' && (
-            <div className={styles.description}>{t('sign_in_exp.preview.mobile_description')}</div>
-          )}
         </div>
       </div>
     </Card>
