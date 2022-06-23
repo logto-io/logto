@@ -18,7 +18,7 @@ import Search from '@/components/Search';
 import TableEmpty from '@/components/Table/TableEmpty';
 import TableError from '@/components/Table/TableError';
 import TableLoading from '@/components/Table/TableLoading';
-import { getAvatarById } from '@/consts/avatars';
+import { generateAvatarPlaceHolderById } from '@/consts/avatars';
 import { RequestError } from '@/hooks/use-api';
 import Plus from '@/icons/Plus';
 import * as modalStyles from '@/scss/modal.module.scss';
@@ -127,7 +127,12 @@ const Users = () => {
                   <ItemPreview
                     title={name || t('users.unnamed')}
                     subtitle={conditionalString(username)}
-                    icon={<img className={styles.avatar} src={avatar || getAvatarById(id)} />}
+                    icon={
+                      <img
+                        className={styles.avatar}
+                        src={avatar || generateAvatarPlaceHolderById(id)}
+                      />
+                    }
                     to={`/users/${id}`}
                     size="compact"
                   />
