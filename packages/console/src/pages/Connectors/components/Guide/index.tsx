@@ -120,6 +120,7 @@ const Guide = ({ connector, onClose }: Props) => {
                 {!isSocialConnector && (
                   <SenderTester
                     className={styles.tester}
+                    connectorId={connectorId}
                     connectorType={connectorType}
                     config={watch('connectorConfigJson')}
                   />
