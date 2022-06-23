@@ -6,8 +6,10 @@
   flex-direction: column;
   scroll-margin: _.unit(5);
 
-  img {
+  .congrats {
     display: block;
+    width: 160px;
+    height: 160px;
     margin: _.unit(1) auto _.unit(8);
   }
 
@@ -48,7 +50,7 @@
     font: var(--font-body-medium);
     color: var(--color-text);
 
-    img {
+    .tada {
       margin: 0 _.unit(4) 0 0;
     }
   }

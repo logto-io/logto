@@ -6,7 +6,7 @@ import Button from '@/components/Button';
 import ModalLayout from '@/components/ModalLayout';
 import * as modalStyles from '@/scss/modal.module.scss';
 
-import { contacts } from './const';
+import { useContacts } from './hook';
 import * as styles from './index.module.scss';
 
 type Props = {
@@ -16,6 +16,7 @@ type Props = {
 
 const Contact = ({ isOpen, onCancel }: Props) => {
   const { t } = useTranslation();
+  const contacts = useContacts();
 
   return (
     <ReactModal
@@ -25,10 +26,10 @@ const Contact = ({ isOpen, onCancel }: Props) => {
     >
       <ModalLayout title="contact.title" subtitle="contact.description" onClose={onCancel}>
         <div className={styles.main}>
-          {contacts.map(({ title, icon, description, label, link }) => (
+          {contacts.map(({ title, icon: ContactIcon, description, label, link }) => (
             <div key={title} className={styles.row} onClick={() => window.open(link)}>
               <div className={styles.icon}>
-                <img src={icon} alt={title} />
+                <ContactIcon />
               </div>
               <div className={styles.text}>
                 <div className={styles.title}>{t(title)}</div>

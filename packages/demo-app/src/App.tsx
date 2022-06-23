@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import '@/scss/normalized.scss';
 import * as styles from './App.module.scss';
 import Callback from './Callback';
+import congratsDark from './assets/congrats-dark.svg';
 import congrats from './assets/congrats.svg';
 import initI18n from './i18n/init';
 
@@ -17,6 +18,8 @@ const Main = () => {
   const [user, setUser] = useState<UserInfoResponse>();
   const { t } = useTranslation(undefined, { keyPrefix: 'demo_app' });
   const isInCallback = Boolean(new URL(window.location.href).searchParams.get('code'));
+  const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  const [congratsIcon, setCongratsIcon] = useState<string>(isDarkMode ? congratsDark : congrats);
 
   useEffect(() => {
     if (isInCallback) {
@@ -34,6 +37,21 @@ const Main = () => {
     }
   }, [fetchUserInfo, isAuthenticated, isInCallback, signIn, t]);
 
+  useEffect(() => {
+    const onThemeChange = (event: MediaQueryListEvent) => {
+      const isDarkMode = event.matches;
+      setCongratsIcon(isDarkMode ? congratsDark : congrats);
+    };
+
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', onThemeChange);
+
+    return () => {
+      window
+        .matchMedia('(prefers-color-scheme: dark)')
+        .removeEventListener('change', onThemeChange);
+    };
+  }, []);
+
   if (isInCallback) {
     return <Callback />;
   }
@@ -45,7 +63,7 @@ const Main = () => {
   return (
     <div className={styles.app}>
       <div className={styles.card}>
-        <img src={congrats} alt="Congrats" />
+        {congratsIcon && <img src={congratsIcon} alt="Congrats" />}
         <div className={styles.title}>{t('title')}</div>
         <div className={styles.text}>{t('subtitle')}</div>
         <div className={styles.infoCard}>

@@ -16,5 +16,11 @@
     > *:not(:last-child) {
       margin-bottom: _.unit(5);
     }
+
+    .text {
+      font: var(--font-body-medium);
+      max-width: 410px;
+      text-align: center;
+    }
   }
 }

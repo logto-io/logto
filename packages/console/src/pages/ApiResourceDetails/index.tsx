@@ -1,4 +1,4 @@
-import { Resource } from '@logto/schemas';
+import { AppearanceMode, Resource } from '@logto/schemas';
 import classNames from 'classnames';
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -8,7 +8,8 @@ import Modal from 'react-modal';
 import { useLocation, useParams } from 'react-router-dom';
 import useSWR from 'swr';
 
-import apiResourceIcon from '@/assets/images/api-resource.svg';
+import ApiResourceDark from '@/assets/images/api-resource-dark.svg';
+import ApiResource from '@/assets/images/api-resource.svg';
 import ActionMenu, { ActionMenuItem } from '@/components/ActionMenu';
 import Button from '@/components/Button';
 import Card from '@/components/Card';
@@ -20,6 +21,7 @@ import LinkButton from '@/components/LinkButton';
 import TabNav, { TabNavItem } from '@/components/TabNav';
 import TextInput from '@/components/TextInput';
 import useApi, { RequestError } from '@/hooks/use-api';
+import { useTheme } from '@/hooks/use-theme';
 import Back from '@/icons/Back';
 import Delete from '@/icons/Delete';
 import More from '@/icons/More';
@@ -41,6 +43,8 @@ const ApiResourceDetails = () => {
 
   const { data, error, mutate } = useSWR<Resource, RequestError>(id && `/api/resources/${id}`);
   const isLoading = !data && !error;
+  const theme = useTheme();
+  const Icon = theme === AppearanceMode.LightMode ? ApiResource : ApiResourceDark;
 
   const {
     handleSubmit,
@@ -89,7 +93,7 @@ const ApiResourceDetails = () => {
         <>
           <Card className={styles.header}>
             <div className={styles.info}>
-              <img className={styles.icon} src={apiResourceIcon} />
+              <Icon className={styles.icon} />
               <div className={styles.meta}>
                 <div className={styles.name}>{data.name}</div>
                 <CopyToClipboard value={data.indicator} />

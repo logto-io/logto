@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
-import completeIndicator from '@/assets/images/circle-tick.svg';
+import CompleteIndicator from '@/assets/images/circle-tick.svg';
 import Button from '@/components/Button';
 import Card from '@/components/Card';
 import ConfirmModal from '@/components/ConfirmModal';
@@ -49,11 +49,11 @@ const GetStarted = () => {
       {isLoading && <Skeleton />}
       {!isLoading &&
         data.map(
-          ({ id, title, subtitle, icon, isComplete, isHidden, buttonText, onClick }) =>
+          ({ id, title, subtitle, icon: CardIcon, isComplete, isHidden, buttonText, onClick }) =>
             !isHidden && (
               <Card key={id} className={styles.card}>
-                <img className={styles.icon} src={icon} />
-                {isComplete && <img className={styles.completeIndicator} src={completeIndicator} />}
+                <CardIcon className={styles.icon} />
+                {isComplete && <CompleteIndicator className={styles.completeIndicator} />}
                 <div className={styles.wrapper}>
                   <div className={styles.title}>{t(title)}</div>
                   <div className={styles.subtitle}>{t(subtitle)}</div>

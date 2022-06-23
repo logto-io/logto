@@ -2,8 +2,8 @@ import classNames from 'classnames';
 import React from 'react';
 import { Toaster, resolveValue, toast } from 'react-hot-toast';
 
-import errorIcon from '@/assets/images/toast-error.svg';
-import successIcon from '@/assets/images/toast-success.svg';
+import Error from '@/assets/images/toast-error.svg';
+import Success from '@/assets/images/toast-success.svg';
 import Close from '@/icons/Close';
 
 import IconButton from '../IconButton';
@@ -16,11 +16,11 @@ const Toast = () => {
         className: styles.toast,
         success: {
           className: classNames(styles.toast, styles.success),
-          icon: <img src={successIcon} />,
+          icon: <Success />,
         },
         error: {
           className: classNames(styles.toast, styles.error),
-          icon: <img src={errorIcon} />,
+          icon: <Error />,
         },
       }}
     >

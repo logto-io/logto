@@ -1,22 +1,29 @@
 import { AdminConsoleKey, I18nKey } from '@logto/phrases';
-import { Application } from '@logto/schemas';
+import { AppearanceMode, Application } from '@logto/schemas';
 import { useNavigate } from 'react-router-dom';
 import useSWR from 'swr';
 
-import checkDemoIcon from '@/assets/images/check-demo.svg';
-import createAppIcon from '@/assets/images/create-app.svg';
-import customizeIcon from '@/assets/images/customize.svg';
-import furtherReadingsIcon from '@/assets/images/further-readings.svg';
-import oneClickIcon from '@/assets/images/one-click.svg';
-import passwordlessIcon from '@/assets/images/passwordless.svg';
+import CheckDemoDark from '@/assets/images/check-demo-dark.svg';
+import CheckDemo from '@/assets/images/check-demo.svg';
+import CreateAppDark from '@/assets/images/create-app-dark.svg';
+import CreateApp from '@/assets/images/create-app.svg';
+import CustomizeDark from '@/assets/images/customize-dark.svg';
+import Customize from '@/assets/images/customize.svg';
+import FurtherReadingsDark from '@/assets/images/further-readings-dark.svg';
+import FurtherReadings from '@/assets/images/further-readings.svg';
+import OneClickDark from '@/assets/images/one-click-dark.svg';
+import OneClick from '@/assets/images/one-click.svg';
+import PasswordlessDark from '@/assets/images/passwordless-dark.svg';
+import Passwordless from '@/assets/images/passwordless.svg';
 import { RequestError } from '@/hooks/use-api';
 import useSettings from '@/hooks/use-settings';
+import { useTheme } from '@/hooks/use-theme';
 
 type GetStartedMetadata = {
   id: string;
   title: AdminConsoleKey;
   subtitle: AdminConsoleKey;
-  icon: string;
+  icon: SvgComponent;
   buttonText: I18nKey;
   isComplete?: boolean;
   isHidden?: boolean;
@@ -29,6 +36,8 @@ type Props = {
 
 const useGetStartedMetadata = ({ checkDemoAppExists }: Props) => {
   const { settings, updateSettings } = useSettings();
+  const theme = useTheme();
+  const isLightMode = theme === AppearanceMode.LightMode;
   const { data: demoApp, error } = useSWR<Application, RequestError>(
     checkDemoAppExists && '/api/applications/demo_app',
     {
@@ -50,7 +59,7 @@ const useGetStartedMetadata = ({ checkDemoAppExists }: Props) => {
       id: 'checkDemo',
       title: 'get_started.card1_title',
       subtitle: 'get_started.card1_subtitle',
-      icon: checkDemoIcon,
+      icon: isLightMode ? CheckDemo : CheckDemoDark,
       buttonText: 'general.check_out',
       isComplete: settings?.checkDemo,
       isHidden: hideDemo,
@@ -63,7 +72,7 @@ const useGetStartedMetadata = ({ checkDemoAppExists }: Props) => {
       id: 'createApplication',
       title: 'get_started.card2_title',
       subtitle: 'get_started.card2_subtitle',
-      icon: createAppIcon,
+      icon: isLightMode ? CreateApp : CreateAppDark,
       buttonText: 'general.create',
       isComplete: settings?.createApplication,
       onClick: () => {
@@ -74,7 +83,7 @@ const useGetStartedMetadata = ({ checkDemoAppExists }: Props) => {
       id: 'configurePasswordless',
       title: 'get_started.card3_title',
       subtitle: 'get_started.card3_subtitle',
-      icon: passwordlessIcon,
+      icon: isLightMode ? Passwordless : PasswordlessDark,
       buttonText: 'general.create',
       isComplete: settings?.configurePasswordless,
       onClick: () => {
@@ -85,7 +94,7 @@ const useGetStartedMetadata = ({ checkDemoAppExists }: Props) => {
       id: 'configureSocialSignIn',
       title: 'get_started.card4_title',
       subtitle: 'get_started.card4_subtitle',
-      icon: oneClickIcon,
+      icon: isLightMode ? OneClick : OneClickDark,
       buttonText: 'general.set_up',
       onClick: () => {
         navigate('/connectors/social');
@@ -95,7 +104,7 @@ const useGetStartedMetadata = ({ checkDemoAppExists }: Props) => {
       id: 'customizeSignInExperience',
       title: 'get_started.card5_title',
       subtitle: 'get_started.card5_subtitle',
-      icon: customizeIcon,
+      icon: isLightMode ? Customize : CustomizeDark,
       buttonText: 'general.customize',
       isComplete: settings?.customizeSignInExperience,
       onClick: () => {
@@ -106,7 +115,7 @@ const useGetStartedMetadata = ({ checkDemoAppExists }: Props) => {
       id: 'checkFurtherReadings',
       title: 'get_started.card6_title',
       subtitle: 'get_started.card6_subtitle',
-      icon: furtherReadingsIcon,
+      icon: isLightMode ? FurtherReadings : FurtherReadingsDark,
       buttonText: 'general.check_out',
       isComplete: settings?.checkFurtherReadings,
       onClick: () => {

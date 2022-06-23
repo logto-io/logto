@@ -6,13 +6,10 @@ import { Link } from 'react-router-dom';
 import Button from '@/components/Button';
 import ItemPreview from '@/components/ItemPreview';
 import UnnamedTrans from '@/components/UnnamedTrans';
-import {
-  connectorIconPlaceHolder,
-  connectorPlatformLabel,
-  connectorTitlePlaceHolder,
-} from '@/consts/connectors';
+import { connectorPlatformLabel, connectorTitlePlaceHolder } from '@/consts/connectors';
 import ConnectorPlatformIcon from '@/icons/ConnectorPlatformIcon';
 
+import ConnectorPlaceholderIcon from '../ConnectorPlaceholderIcon';
 import * as styles from './index.module.scss';
 
 type Props = {
@@ -39,7 +36,7 @@ const ConnectorName = ({ type, connectors, onClickSetup }: Props) => {
         }
         icon={
           <div className={styles.logoContainer}>
-            <img src={connectorIconPlaceHolder[type]} />
+            <ConnectorPlaceholderIcon type={type} />
           </div>
         }
       />

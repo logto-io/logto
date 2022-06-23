@@ -1,10 +1,13 @@
+import { AppearanceMode } from '@logto/schemas';
 import classNames from 'classnames';
 import React, { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import icon from '@/assets/images/tada.svg';
+import TadaDark from '@/assets/images/tada-dark.svg';
+import Tada from '@/assets/images/tada.svg';
 import Dropdown, { DropdownItem } from '@/components/Dropdown';
 import Index from '@/components/Index';
+import { useTheme } from '@/hooks/use-theme';
 import useUserPreferences from '@/hooks/use-user-preferences';
 
 import useGetStartedMetadata from '../../hook';
@@ -15,6 +18,8 @@ const GetStartedProgress = () => {
   const {
     data: { hideGetStarted },
   } = useUserPreferences();
+  const theme = useTheme();
+  const Icon = theme === AppearanceMode.LightMode ? Tada : TadaDark;
   const anchorRef = useRef<HTMLDivElement>(null);
   const [showDropDown, setShowDropdown] = useState(false);
   const { data, completedCount, totalCount } = useGetStartedMetadata({ checkDemoAppExists: false });
@@ -32,7 +37,7 @@ const GetStartedProgress = () => {
           setShowDropdown(true);
         }}
       >
-        <img src={icon} />
+        <Icon className={styles.icon} />
         <span>
           {t('get_started.progress', {
             completed: completedCount,

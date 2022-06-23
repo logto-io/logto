@@ -29,17 +29,11 @@ main {
   margin: 0 auto;
 }
 
-.icon {
-  width: 256px;
-  height: 256px;
-  margin-bottom: _.unit(2);
-}
-
 .title {
   font: var(--font-headline-medium);
   color: var(--color-text);
   text-align: center;
-  margin-bottom: _.unit(3);
+  margin: _.unit(2) 0 _.unit(3);
 }
 
 .description {
