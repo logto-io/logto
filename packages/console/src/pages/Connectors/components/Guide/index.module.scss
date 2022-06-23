@@ -3,7 +3,7 @@
 .container {
   display: flex;
   flex-direction: column;
-  background-color: var(--color-surface-1);
+  background-color: var(--color-base);
   height: 100vh;
 
   .header {
@@ -37,19 +37,22 @@
     > * {
       flex: 1;
       margin: 0 12px;
-      display: flex;
-      flex-direction: column;
       overflow-y: auto;
     }
 
     .readme {
-      background-color: var(--color-surface-variant);
+      background-color: var(--color-layer-1);
       border-radius: 16px;
-      padding: _.unit(6);
+      padding: 0 _.unit(6);
     }
 
     form + div {
       margin-top: _.unit(6);
     }
   }
+}
+
+.editor,
+.tester {
+  margin-top: _.unit(6);
 }

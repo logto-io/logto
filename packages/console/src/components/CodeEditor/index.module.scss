@@ -47,5 +47,10 @@
       -webkit-text-fill-color: transparent;
       outline: none;
     }
+
+    textarea,
+    pre {
+      min-height: 20px;
+    }
   }
 }

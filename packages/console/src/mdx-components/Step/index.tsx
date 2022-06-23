@@ -19,6 +19,8 @@ type Props = PropsWithChildren<{
   index: number;
   activeIndex: number;
   buttonText?: I18nKey;
+  buttonHtmlType?: 'submit' | 'button';
+  isLoading?: boolean;
   onButtonClick?: () => void;
 }>;
 
@@ -29,6 +31,8 @@ const Step = ({
   index,
   activeIndex,
   buttonText = 'general.next',
+  buttonHtmlType = 'button',
+  isLoading,
   onButtonClick,
 }: Props) => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -73,7 +77,14 @@ const Step = ({
       <div className={classNames(styles.content, isExpanded && styles.expanded)}>
         {children}
         <div className={styles.buttonWrapper}>
-          <Button type="outline" size="large" title={buttonText} onClick={onButtonClick} />
+          <Button
+            type="outline"
+            size="large"
+            isLoading={isLoading}
+            htmlType={buttonHtmlType}
+            title={buttonText}
+            onClick={onButtonClick}
+          />
         </div>
       </div>
     </Card>
