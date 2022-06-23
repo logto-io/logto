@@ -11,7 +11,7 @@ const Switch = ({ label, ...rest }: Props, ref?: Ref<HTMLInputElement>) => {
     <div className={styles.wrapper}>
       <div className={styles.label}>{label}</div>
       <label className={styles.switch}>
-        <input type="checkbox" {...rest} ref={ref} />
+        <input type="checkbox" defaultChecked={false} {...rest} ref={ref} />
         <span className={styles.slider} />
       </label>
     </div>
