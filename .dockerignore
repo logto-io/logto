@@ -1,0 +1,31 @@
+# dependencies
+node_modules
+
+# testing
+/packages/*/coverage
+
+# report
+/report.json
+/packages/*/report.json
+
+# production
+/packages/*/build
+/packages/*/lib
+/packages/*/dist
+
+# logs
+logs
+*.log*
+
+# misc
+cache
+.*cache
+.DS_Store
+*.env
+.idea/
+*.pem
+.history
+.vscode
+.git
+.github
+.gitignore
