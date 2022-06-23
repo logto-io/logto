@@ -114,7 +114,7 @@ const SignInExperience = () => {
           {!data && error && <div>{`error occurred: ${error.body?.message ?? error.message}`}</div>}
           {data && (
             <FormProvider {...methods}>
-              <form onSubmit={onSubmit}>
+              <form className={styles.formWrapper} onSubmit={onSubmit}>
                 <div className={classNames(detailsStyles.body, styles.form)}>
                   {tab === 'experience' && (
                     <>
