@@ -27,7 +27,7 @@ export const defaultMetadata: ConnectorMetadata = {
   logo: './logo.svg',
   logoDark: null,
   description: {
-    en: 'Allow your users to log in through their WeChat account.',
+    en: 'Allow your users to sign in through their WeChat account.',
     'zh-CN': '让用户可以通过微信账号登录。',
   },
   readme: getFileContents(pathToReadmeFile, readmeContentFallback),
