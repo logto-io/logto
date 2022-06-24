@@ -107,7 +107,13 @@ const Connectors = () => {
                   content={t('connectors.social_connector_eg')}
                   image={isLightMode ? <SocialConnectorEmpty /> : <SocialConnectorEmptyDark />}
                 >
-                  <Button title="admin_console.connectors.create" type="outline" />
+                  <Button
+                    title="admin_console.connectors.create"
+                    type="outline"
+                    onClick={() => {
+                      setCreateType(ConnectorType.Social);
+                    }}
+                  />
                 </TableEmpty>
               )}
               {!isLoading && !isSocial && (
