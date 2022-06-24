@@ -6,7 +6,6 @@ on:
 
 concurrency:
   group: dockerize-${{ github.ref }}
-  cancel-in-progress: true
 
 jobs:
   dockerize:
@@ -18,15 +17,19 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
-      - name: Build and export
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: silverhand-bot
+          password: ${{ secrets.BOT_PAT }}
+
+      - name: Build and push
         uses: docker/build-push-action@v3
         with:
           context: .
-          tags: logto
-          outputs: type=docker,dest=/tmp/logto.tar
-      
-      - name: Load image
-        run: docker load -i /tmp/logto.tar
+          push: true
+          tags: ghcr.io/logto-io/logto:latest
       
       - name: Compose up
         run: docker compose up -d
@@ -36,9 +39,3 @@ jobs:
       
       - name: Health check
         run: curl http://localhost:3001/api/status -If
-
-      - name: Upload artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: logto.${{ github.sha }}
-          path: /tmp/logto.tar
