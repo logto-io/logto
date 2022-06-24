@@ -329,6 +329,8 @@ const translation = {
         dark_mode: 'Enable dark mode',
         dark_mode_description:
           'Your app will have an auto-generated dark mode theme based on your brand color and Logto algorithm. You are free to customize.',
+        dark_mode_reset_tip: 'Reset to auto-generated dark mode color based on brand color.',
+        reset: 'Reset',
       },
       branding: {
         title: 'BRANDING AREA',

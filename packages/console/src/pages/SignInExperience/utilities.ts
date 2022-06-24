@@ -58,18 +58,12 @@ export const signInExperienceParser = {
   },
   toRemoteModel: (setup: SignInExperienceForm): SignInExperience => {
     const {
-      color,
       branding,
       languageInfo: { mode, fallbackLanguage, fixedLanguage },
     } = setup;
 
     return {
       ...setup,
-      color: {
-        ...color,
-        // Transform empty string to undefined
-        darkPrimaryColor: conditional(color.darkPrimaryColor?.length && color.darkPrimaryColor),
-      },
       branding: {
         ...branding,
         // Transform empty string to undefined

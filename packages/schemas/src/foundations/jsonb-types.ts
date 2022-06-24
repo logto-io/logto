@@ -75,7 +75,7 @@ export type Identities = z.infer<typeof identitiesGuard>;
 export const colorGuard = z.object({
   primaryColor: z.string().regex(hexColorRegEx),
   isDarkModeEnabled: z.boolean(),
-  darkPrimaryColor: z.string().regex(hexColorRegEx).optional(),
+  darkPrimaryColor: z.string().regex(hexColorRegEx),
 });
 
 export type Color = z.infer<typeof colorGuard>;
