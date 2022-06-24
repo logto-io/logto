@@ -1,32 +1,20 @@
 import { AppearanceMode, ApplicationType } from '@logto/schemas';
 import React from 'react';
 
-import NativeAppDark from '@/assets/images/native-app-dark.svg';
-import NativeApp from '@/assets/images/native-app.svg';
-import SinglePageAppDark from '@/assets/images/single-page-app-dark.svg';
-import SinglePageApp from '@/assets/images/single-page-app.svg';
-import TraditionalWebAppDark from '@/assets/images/traditional-web-app-dark.svg';
-import TraditionalWebApp from '@/assets/images/traditional-web-app.svg';
+import { darkModeApplicationIconMap, lightModeApplicationIconMap } from '@/consts';
 import { useTheme } from '@/hooks/use-theme';
 
 type Props = {
   type: ApplicationType;
+  className?: string;
 };
 
-const ApplicationIcon = ({ type }: Props) => {
+const ApplicationIcon = ({ type, className }: Props) => {
   const theme = useTheme();
   const isLightMode = theme === AppearanceMode.LightMode;
+  const Icon = isLightMode ? lightModeApplicationIconMap[type] : darkModeApplicationIconMap[type];
 
-  switch (type) {
-    case ApplicationType.Native:
-      return isLightMode ? <NativeApp /> : <NativeAppDark />;
-    case ApplicationType.SPA:
-      return isLightMode ? <SinglePageApp /> : <SinglePageAppDark />;
-    case ApplicationType.Traditional:
-      return isLightMode ? <TraditionalWebApp /> : <TraditionalWebAppDark />;
-    default:
-      return null;
-  }
+  return <Icon className={className} />;
 };
 
 export default ApplicationIcon;

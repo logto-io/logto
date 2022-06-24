@@ -115,7 +115,7 @@ const ApplicationDetails = () => {
       {data && oidcConfig && (
         <>
           <Card className={styles.header}>
-            <ApplicationIcon type={data.type} />
+            <ApplicationIcon type={data.type} className={styles.icon} />
             <div className={styles.metadata}>
               <div className={styles.name}>{data.name}</div>
               <div className={styles.details}>
