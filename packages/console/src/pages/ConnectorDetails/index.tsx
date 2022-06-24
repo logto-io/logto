@@ -1,4 +1,4 @@
-import { ConnectorDTO, ConnectorType } from '@logto/schemas';
+import { AppearanceMode, ConnectorDTO, ConnectorType } from '@logto/schemas';
 import classNames from 'classnames';
 import React, { useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
@@ -21,6 +21,7 @@ import TabNav, { TabNavItem } from '@/components/TabNav';
 import UnnamedTrans from '@/components/UnnamedTrans';
 import useApi, { RequestError } from '@/hooks/use-api';
 import useConnectorInUse from '@/hooks/use-connector-in-use';
+import { useTheme } from '@/hooks/use-theme';
 import Back from '@/icons/Back';
 import Delete from '@/icons/Delete';
 import More from '@/icons/More';
@@ -48,6 +49,7 @@ const ConnectorDetails = () => {
   const isLoading = !data && !error;
   const api = useApi();
   const navigate = useNavigate();
+  const theme = useTheme();
 
   useEffect(() => {
     if (data) {
@@ -120,7 +122,10 @@ const ConnectorDetails = () => {
       {data && (
         <Card className={styles.header}>
           <div className={styles.logoContainer}>
-            <img src={data.logo} className={styles.logo} />
+            <img
+              src={theme === AppearanceMode.DarkMode && data.logoDark ? data.logoDark : data.logo}
+              className={styles.logo}
+            />
           </div>
           <div className={styles.metadata}>
             <div>
