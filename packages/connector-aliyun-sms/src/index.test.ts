@@ -52,7 +52,7 @@ describe('sendMessage()', () => {
         AccessKeyId: mockedConnectorConfig.accessKeyId,
         PhoneNumbers: phoneTest,
         SignName: mockedConnectorConfig.signName,
-        TemplateCode: 'code',
+        TemplateCode: 'TemplateCode',
         TemplateParam: `{"code":"${codeTest}"}`,
       }),
       mockedConnectorConfig.accessKeySecret
