@@ -20,6 +20,7 @@ import usePreviewConfigs from '../hooks';
 import { SignInExperienceForm } from '../types';
 import { signInExperienceParser } from '../utilities';
 import BrandingForm from './BrandingForm';
+import ColorForm from './ColorForm';
 import * as styles from './GuideModal.module.scss';
 import LanguagesForm from './LanguagesForm';
 import Preview from './Preview';
@@ -100,6 +101,9 @@ const GuideModal = ({ isOpen, onClose }: Props) => {
             <form onSubmit={onSubmit}>
               <div className={styles.main}>
                 <div className={styles.form}>
+                  <div className={styles.card}>
+                    <ColorForm />
+                  </div>
                   <div className={styles.card}>
                     <BrandingForm />
                   </div>

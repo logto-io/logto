@@ -73,7 +73,7 @@ const Main = () => {
                 <Route path=":userId/logs/:logId" element={<AuditLogDetails />} />
               </Route>
               <Route path="sign-in-experience">
-                <Route index element={<Navigate replace to="experience" />} />
+                <Route index element={<Navigate replace to="branding" />} />
                 <Route path=":tab" element={<SignInExperience />} />
               </Route>
               <Route path="settings" element={<Settings />} />

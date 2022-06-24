@@ -11,7 +11,7 @@ export default function useTheme(): Theme {
   const { experienceSettings, theme, setTheme } = useContext(PageContext);
 
   useEffect(() => {
-    if (!experienceSettings?.branding.isDarkModeEnabled) {
+    if (!experienceSettings?.color.isDarkModeEnabled) {
       return;
     }
 

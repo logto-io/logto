@@ -5,10 +5,12 @@ import { BrandingStyle, SignInMethodState } from '../foundations';
 
 export const defaultSignInExperience: Readonly<CreateSignInExperience> = {
   id: 'default',
-  branding: {
+  color: {
     primaryColor: '#6139F6',
     isDarkModeEnabled: false,
     darkPrimaryColor: '#6139F6',
+  },
+  branding: {
     style: BrandingStyle.Logo,
     logoUrl: 'https://logto.io/logo.svg',
     darkLogoUrl: 'https://logto.io/logo.svg',

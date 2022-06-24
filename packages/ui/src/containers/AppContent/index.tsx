@@ -22,10 +22,7 @@ const AppContent = ({ children }: Props) => {
   }, [setToast]);
 
   // Set Primary Color
-  useColorTheme(
-    experienceSettings?.branding.primaryColor,
-    experienceSettings?.branding.darkPrimaryColor
-  );
+  useColorTheme(experienceSettings?.color.primaryColor, experienceSettings?.color.darkPrimaryColor);
 
   // Set Theme Mode
   useEffect(() => {

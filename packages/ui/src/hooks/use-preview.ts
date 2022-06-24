@@ -60,7 +60,7 @@ const usePreview = (context: Context): [boolean, PreviewConfig?] => {
     }
 
     const {
-      signInExperience: { signInMethods, socialConnectors, branding, ...rest },
+      signInExperience: { signInMethods, socialConnectors, color, ...rest },
       language,
       mode,
       platform,
@@ -68,8 +68,8 @@ const usePreview = (context: Context): [boolean, PreviewConfig?] => {
 
     const experienceSettings: SignInExperienceSettings = {
       ...rest,
-      branding: {
-        ...branding,
+      color: {
+        ...color,
         isDarkModeEnabled: false, // Disable theme mode auto detection on preview
       },
       primarySignInMethod: getPrimarySignInMethod(signInMethods),

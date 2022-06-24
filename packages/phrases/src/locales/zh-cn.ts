@@ -396,7 +396,7 @@ const translation = {
       title: '登录体验',
       description: '自定义登录界面，并实时预览真实效果。',
       tabs: {
-        experience: '体验',
+        branding: '品牌',
         methods: '登录方式',
         others: '其它',
       },
@@ -406,14 +406,17 @@ const translation = {
         apply_remind: '请注意，登录体验将会应用到当前账户下的所有应用。',
         got_it: '知道了',
       },
-      branding: {
-        title: '品牌',
+      color: {
+        title: '颜色',
         primary_color: '品牌颜色',
-        dark_primary_color: '品牌颜色 (暗黑)',
-        dark_mode: '开启暗黑模式',
+        dark_primary_color: '品牌颜色 (深色)',
+        dark_mode: '开启深色模式',
         dark_mode_description:
-          '基于你的品牌颜色和 Logto 的算法，你的应用将会有一个自动生成的暗黑模式。当然，你可以自定义和修改。',
-        ui_style: '品牌定制区',
+          '基于你的品牌颜色和 Logto 的算法，你的应用将会有一个自动生成的深色模式。当然，你可以自定义和修改。',
+      },
+      branding: {
+        title: '品牌定制区',
+        ui_style: '样式',
         styles: {
           logo_slogan: 'App logo 和标语',
           logo: '仅有Logo',

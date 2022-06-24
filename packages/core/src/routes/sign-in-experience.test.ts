@@ -13,6 +13,7 @@ import {
   mockSignInExperience,
   mockSignInMethods,
   mockWechatConnectorInstance,
+  mockColor,
 } from '@/__mocks__';
 import * as signInExpLib from '@/lib/sign-in-experience';
 import { createRequester } from '@/utils/test-utils';
@@ -142,6 +143,7 @@ describe('PATCH /sign-in-exp', () => {
     const validateSignInMethods = jest.spyOn(signInExpLib, 'validateSignInMethods');
 
     const response = await signInExperienceRequester.patch('/sign-in-exp').send({
+      color: mockColor,
       branding: mockBranding,
       termsOfUse,
       signInMethods: mockSignInMethods,
@@ -160,6 +162,7 @@ describe('PATCH /sign-in-exp', () => {
       status: 200,
       body: {
         ...mockSignInExperience,
+        color: mockColor,
         branding: mockBranding,
         termsOfUse,
         signInMethods: mockSignInMethods,

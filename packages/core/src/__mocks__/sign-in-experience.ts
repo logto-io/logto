@@ -8,14 +8,17 @@ import {
   SignInMethodState,
   TermsOfUse,
   SignInMode,
+  Color,
 } from '@logto/schemas';
 
 export const mockSignInExperience: SignInExperience = {
   id: 'foo',
-  branding: {
+  color: {
     primaryColor: '#000',
     isDarkModeEnabled: true,
     darkPrimaryColor: '#fff',
+  },
+  branding: {
     style: BrandingStyle.Logo,
     logoUrl: 'http://logto.png',
     slogan: 'logto',
@@ -38,10 +41,13 @@ export const mockSignInExperience: SignInExperience = {
   signInMode: SignInMode.SignInAndRegister,
 };
 
-export const mockBranding: Branding = {
+export const mockColor: Color = {
   primaryColor: '#000',
   isDarkModeEnabled: true,
   darkPrimaryColor: '#fff',
+};
+
+export const mockBranding: Branding = {
   style: BrandingStyle.Logo_Slogan,
   logoUrl: 'http://silverhand.png',
   slogan: 'Silverhand.',

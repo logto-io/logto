@@ -3,10 +3,8 @@ import React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
-import ColorPicker from '@/components/ColorPicker';
 import FormField from '@/components/FormField';
 import RadioGroup, { Radio } from '@/components/RadioGroup';
-import Switch from '@/components/Switch';
 import TextInput from '@/components/TextInput';
 import { uriValidator } from '@/utilities/validator';
 
@@ -22,39 +20,13 @@ const BrandingForm = () => {
     formState: { errors },
   } = useFormContext<SignInExperienceForm>();
 
-  const isDarkModeEnabled = watch('branding.isDarkModeEnabled');
+  const isDarkModeEnabled = watch('color.isDarkModeEnabled');
   const style = watch('branding.style');
   const isSloganRequired = style === BrandingStyle.Logo_Slogan;
 
   return (
     <>
       <div className={styles.title}>{t('sign_in_exp.branding.title')}</div>
-      <FormField title="admin_console.sign_in_exp.branding.primary_color">
-        <Controller
-          name="branding.primaryColor"
-          control={control}
-          render={({ field: { onChange, value } }) => (
-            <ColorPicker value={value} onChange={onChange} />
-          )}
-        />
-      </FormField>
-      <FormField title="admin_console.sign_in_exp.branding.dark_mode">
-        <Switch
-          label={t('sign_in_exp.branding.dark_mode_description')}
-          {...register('branding.isDarkModeEnabled')}
-        />
-      </FormField>
-      {isDarkModeEnabled && (
-        <FormField title="admin_console.sign_in_exp.branding.dark_primary_color">
-          <Controller
-            name="branding.darkPrimaryColor"
-            control={control}
-            render={({ field: { onChange, value } }) => (
-              <ColorPicker value={value} onChange={onChange} />
-            )}
-          />
-        </FormField>
-      )}
       <FormField title="admin_console.sign_in_exp.branding.ui_style">
         <Controller
           name="branding.style"

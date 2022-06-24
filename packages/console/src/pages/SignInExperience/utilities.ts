@@ -4,6 +4,7 @@ import {
   SignInMethods,
   SignInMethodState,
 } from '@logto/schemas';
+import { conditional } from '@silverhand/essentials';
 
 import { LanguageMode, SignInExperienceForm } from './types';
 
@@ -57,18 +58,23 @@ export const signInExperienceParser = {
   },
   toRemoteModel: (setup: SignInExperienceForm): SignInExperience => {
     const {
+      color,
       branding,
       languageInfo: { mode, fallbackLanguage, fixedLanguage },
     } = setup;
 
     return {
       ...setup,
+      color: {
+        ...color,
+        // Transform empty string to undefined
+        darkPrimaryColor: conditional(color.darkPrimaryColor?.length && color.darkPrimaryColor),
+      },
       branding: {
         ...branding,
         // Transform empty string to undefined
-        darkPrimaryColor: branding.darkPrimaryColor?.length ? branding.darkPrimaryColor : undefined,
-        darkLogoUrl: branding.darkLogoUrl?.length ? branding.darkLogoUrl : undefined,
-        slogan: branding.slogan?.length ? branding.slogan : undefined,
+        darkLogoUrl: conditional(branding.darkLogoUrl?.length && branding.darkLogoUrl),
+        slogan: conditional(branding.slogan?.length && branding.slogan),
       },
       signInMethods: {
         username: findMethodState(setup, 'username'),
