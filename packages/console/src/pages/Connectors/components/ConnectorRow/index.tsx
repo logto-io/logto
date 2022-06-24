@@ -19,16 +19,17 @@ type Props = {
 
 const ConnectorRow = ({ type, connectors, onClickSetup }: Props) => {
   const { t } = useTranslation(undefined);
-  const inUse = useConnectorInUse(type, connectors[0]?.target);
+  const firstEnabledConnector = connectors.find(({ enabled }) => enabled);
+  const inUse = useConnectorInUse(type, firstEnabledConnector?.target);
   const navigate = useNavigate();
-  const showSetupButton = type !== ConnectorType.Social && !connectors[0];
+  const showSetupButton = type !== ConnectorType.Social && !firstEnabledConnector;
 
   const handleClickRow = () => {
-    if (showSetupButton || !connectors[0]) {
+    if (showSetupButton || !firstEnabledConnector) {
       return;
     }
 
-    navigate(`/connectors/${connectors[0].id}`);
+    navigate(`/connectors/${firstEnabledConnector.id}`);
   };
 
   return (
