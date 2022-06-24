@@ -6,17 +6,17 @@
     {
       "type": 2,
       "usageType": "SignIn",
-      "code": "<temporary-passcode>"
+      "code": "<template-code>"
     },
     {
       "type": 2,
       "usageType": "Register",
-      "code": "<temporary-passcode>"
+      "code": "<template-code>"
     },
     {
       "type": 2,
       "usageType": "Test",
-      "code": "<temporary-passcode>"
+      "code": "<template-code>"
     }
   ]
 }
