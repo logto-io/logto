@@ -46,7 +46,7 @@ export type PublicParameters = {
 const templateGuard = z.object({
   type: z.nativeEnum(SmsTemplateType).default(2),
   usageType: z.string(),
-  code: z.string(),
+  templateCode: z.string(),
 });
 
 export const aliyunSmsConfigGuard = z.object({

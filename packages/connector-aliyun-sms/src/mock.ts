@@ -6,7 +6,7 @@ export const mockedConnectorConfig = {
     {
       type: 2,
       usageType: 'SignIn',
-      code: 'code',
+      templateCode: 'TemplateCode',
     },
   ],
 };

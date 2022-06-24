@@ -6,17 +6,17 @@
     {
       "type": 2,
       "usageType": "SignIn",
-      "code": "<template-code>"
+      "templateCode": "<template-code>"
     },
     {
       "type": 2,
       "usageType": "Register",
-      "code": "<template-code>"
+      "templateCode": "<template-code>"
     },
     {
       "type": 2,
       "usageType": "Test",
-      "code": "<template-code>"
+      "templateCode": "<template-code>"
     }
   ]
 }
