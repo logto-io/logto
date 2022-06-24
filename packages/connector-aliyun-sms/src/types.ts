@@ -47,9 +47,6 @@ const templateGuard = z.object({
   type: z.nativeEnum(SmsTemplateType).default(2),
   usageType: z.string(),
   code: z.string(),
-  name: z.string().min(1).max(30),
-  content: z.string().min(1).max(500),
-  remark: z.string(),
 });
 
 export const aliyunSmsConfigGuard = z.object({
