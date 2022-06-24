@@ -36,8 +36,8 @@ export const defaultMetadata: ConnectorMetadata = {
   logo: './logo.svg',
   logoDark: null,
   description: {
-    en: 'Sign In with Facebook',
-    'zh-CN': 'Facebook 登录',
+    en: 'Provide users with the option to sign in with their Facebook account.',
+    'zh-CN': '为用户提供 Facebook 账号登录的选项。',
   },
   readme: getFileContents(pathToReadmeFile, readmeContentFallback),
   configTemplate: getFileContents(pathToConfigTemplate, configTemplateFallback),
