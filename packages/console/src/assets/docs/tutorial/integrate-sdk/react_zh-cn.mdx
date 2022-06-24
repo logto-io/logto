@@ -108,7 +108,7 @@ const App = () => {
 
 The Logto React SDK provides you tools and hooks to quickly implement your own authorization flow. First, let’s enter your redirect URI
 
-<MultiTextInputField name="redirectUris" title="Redirect URI" />
+<MultiTextInputField appId={props.appId} name="redirectUris" title="Redirect URI" />
 
 Add the following code to your web app
 
@@ -158,7 +158,7 @@ const App = () => {
 
 Execute signOut() methods will redirect users to the Logto sign out page. After a success sign out, all use session data and auth status will be cleared.
 
-<MultiTextInputField name="postLogoutRedirectUris" title="Post sign out redirect URI" />
+<MultiTextInputField appId={props.appId} name="postLogoutRedirectUris" title="Post sign out redirect URI" />
 
 Add the following code to your web app
 
