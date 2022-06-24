@@ -1,3 +1,5 @@
+import { ConnectorPlatform } from '@logto/schemas';
+
 import { ConnectorData, SearchParameters } from '@/types';
 import { getLogtoNativeSdk, isNativeWebview } from '@/utils/native-sdk';
 
@@ -111,12 +113,12 @@ describe('filterPreviewSocialConnectors', () => {
   });
 
   it('undefined input should return empty list', () => {
-    expect(filterPreviewSocialConnectors('web')).toEqual([]);
-    expect(filterPreviewSocialConnectors('mobile')).toEqual([]);
+    expect(filterPreviewSocialConnectors(ConnectorPlatform.Native)).toEqual([]);
+    expect(filterPreviewSocialConnectors(ConnectorPlatform.Web)).toEqual([]);
   });
 
   it('filter Web Connectors', () => {
-    expect(filterPreviewSocialConnectors('web', mockConnectors)).toEqual([
+    expect(filterPreviewSocialConnectors(ConnectorPlatform.Web, mockConnectors)).toEqual([
       { platform: 'Web', target: 'facebook' },
       { platform: 'Web', target: 'google' },
       { platform: 'Universal', target: 'WeChat' },
@@ -124,7 +126,7 @@ describe('filterPreviewSocialConnectors', () => {
   });
 
   it('filter Native Connectors', () => {
-    expect(filterPreviewSocialConnectors('mobile', mockConnectors)).toEqual([
+    expect(filterPreviewSocialConnectors(ConnectorPlatform.Native, mockConnectors)).toEqual([
       { platform: 'Universal', target: 'facebook' },
       { platform: 'Native', target: 'WeChat' },
       { platform: 'Native', target: 'Alipay' },

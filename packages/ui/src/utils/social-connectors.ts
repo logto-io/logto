@@ -1,4 +1,6 @@
-import { ConnectorData, Platform, SearchParameters } from '@/types';
+import { ConnectorPlatform } from '@logto/schemas';
+
+import { ConnectorData, SearchParameters } from '@/types';
 import { generateRandomString } from '@/utils';
 import { getLogtoNativeSdk, isNativeWebview } from '@/utils/native-sdk';
 
@@ -139,7 +141,7 @@ export const filterSocialConnectors = (socialConnectors?: ConnectorData[]) => {
  * Social Connectors Filter Utility Methods used in preview mode only
  */
 export const filterPreviewSocialConnectors = (
-  previewPlatform: Platform,
+  platform: ConnectorPlatform.Native | ConnectorPlatform.Web,
   socialConnectors?: ConnectorData[]
 ) => {
   if (!socialConnectors) {
@@ -155,7 +157,7 @@ export const filterPreviewSocialConnectors = (
    * Web platform has higher priority.
    **/
 
-  if (previewPlatform === 'web') {
+  if (platform === ConnectorPlatform.Web) {
     for (const connector of socialConnectors) {
       const { platform, target } = connector;
 
