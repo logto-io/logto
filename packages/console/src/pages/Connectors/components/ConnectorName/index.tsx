@@ -1,4 +1,4 @@
-import { ConnectorDTO, ConnectorType } from '@logto/schemas';
+import { AppearanceMode, ConnectorDTO, ConnectorType } from '@logto/schemas';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
@@ -7,6 +7,7 @@ import Button from '@/components/Button';
 import ItemPreview from '@/components/ItemPreview';
 import UnnamedTrans from '@/components/UnnamedTrans';
 import { connectorPlatformLabel, connectorTitlePlaceHolder } from '@/consts/connectors';
+import { useTheme } from '@/hooks/use-theme';
 import ConnectorPlatformIcon from '@/icons/ConnectorPlatformIcon';
 
 import ConnectorPlaceholderIcon from '../ConnectorPlaceholderIcon';
@@ -22,6 +23,7 @@ const ConnectorName = ({ type, connectors, onClickSetup }: Props) => {
   const { t } = useTranslation(undefined);
   const enabledConnectors = connectors.filter(({ enabled }) => enabled);
   const connector = enabledConnectors[0];
+  const theme = useTheme();
 
   if (!connector) {
     return (
@@ -67,7 +69,14 @@ const ConnectorName = ({ type, connectors, onClickSetup }: Props) => {
         }
         icon={
           <div className={styles.logoContainer}>
-            <img className={styles.logo} src={connector.logo} />
+            <img
+              className={styles.logo}
+              src={
+                theme === AppearanceMode.DarkMode && connector.logoDark
+                  ? connector.logoDark
+                  : connector.logo
+              }
+            />
           </div>
         }
       />
