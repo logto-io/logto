@@ -12,7 +12,11 @@ import { useTheme } from '@/hooks/use-theme';
 import GuideModal from './GuideModal';
 import * as styles from './Welcome.module.scss';
 
-const Welcome = () => {
+type Props = {
+  mutate: () => void;
+};
+
+const Welcome = ({ mutate }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const [isOpen, setIsOpen] = useState(false);
   const theme = useTheme();
@@ -37,6 +41,7 @@ const Welcome = () => {
         isOpen={isOpen}
         onClose={() => {
           setIsOpen(false);
+          mutate();
         }}
       />
     </>

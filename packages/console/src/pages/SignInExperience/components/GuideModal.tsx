@@ -69,7 +69,7 @@ const GuideModal = ({ isOpen, onClose }: Props) => {
       updateSettings({ customizeSignInExperience: true }),
     ]);
 
-    location.reload();
+    onClose();
   });
 
   return (

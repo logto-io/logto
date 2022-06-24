@@ -32,7 +32,7 @@ const SignInExperience = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { tab } = useParams();
   const { data, error, mutate } = useSWR<SignInExperienceType, RequestError>('/api/sign-in-exp');
-  const { settings, error: settingsError, updateSettings } = useSettings();
+  const { settings, error: settingsError, updateSettings, mutate: mutateSettings } = useSettings();
   const [dataToCompare, setDataToCompare] = useState<SignInExperienceType>();
 
   const methods = useForm<SignInExperienceForm>();
@@ -91,7 +91,7 @@ const SignInExperience = () => {
   }
 
   if (!settings?.customizeSignInExperience) {
-    return <Welcome />;
+    return <Welcome mutate={mutateSettings} />;
   }
 
   return (
