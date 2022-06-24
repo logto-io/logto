@@ -60,10 +60,17 @@ const SignInMethodsForm = () => {
 
         return (
           <div key={method} className={styles.method}>
-            <Checkbox
-              label={label}
-              disabled={primaryMethod === method}
-              {...register(`signInMethods.${method}`)}
+            <Controller
+              name={`signInMethods.${method}`}
+              control={control}
+              render={({ field: { value, onChange } }) => (
+                <Checkbox
+                  label={label}
+                  disabled={primaryMethod === method}
+                  value={value}
+                  onChange={onChange}
+                />
+              )}
             />
             {enabled && <ConnectorSetupWarning method={method} />}
           </div>
