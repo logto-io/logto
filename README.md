@@ -11,7 +11,7 @@
 **Main Features**
 
 - An OIDC-based identity service
-- All-platform user sign-in/up experience with dark mode and SDKs (Web, iOS, and Android)
+- Multi-platform user sign-in/up experience with dark mode and SDKs (Web, iOS, and Android)
 - Sign-in/up with dynamic SMS/Email passcode
 - Out-of-box social sign-in integration (GitHub, Google, WeChat, Alipay, etc.)
 - A web UI to control all above (Admin Console)
