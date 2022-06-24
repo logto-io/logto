@@ -37,7 +37,7 @@ const Preview = ({ signInExperience, className }: Props) => {
     >(
       (previous, connectorTarget) => [
         ...previous,
-        ...allConnectors.filter(({ target }) => target === connectorTarget),
+        ...allConnectors.filter(({ target, enabled }) => target === connectorTarget && enabled),
       ],
       []
     );
