@@ -4,28 +4,19 @@
   "signName": "<sign-name>",
   "templates": [
     {
-      "type": 0,
+      "type": 2,
       "usageType": "SignIn",
-      "code": "<temporary-passcode>",
-      "name": "<sign-in-template-name>",
-      "content": "<sign-in-template-content>",
-      "remark": "<sign-in-template-remark>"
+      "templateCode": "<template-code>"
     },
     {
-      "type": 0,
+      "type": 2,
       "usageType": "Register",
-      "code": "<temporary-passcode>",
-      "name": "<register-template-name>",
-      "content": "<register-template-content>",
-      "remark": "<register-template-remark>"
+      "templateCode": "<template-code>"
     },
     {
-      "type": 0,
+      "type": 2,
       "usageType": "Test",
-      "code": "<temporary-passcode>",
-      "name": "<test-template-name>",
-      "content": "<test-template-content>",
-      "remark": "<test-template-remark>"
+      "templateCode": "<template-code>"
     }
   ]
 }
