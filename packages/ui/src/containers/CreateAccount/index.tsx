@@ -83,7 +83,7 @@ const CreateAccount = ({ className, autoFocus }: Props) => {
       <Input
         autoFocus={autoFocus}
         className={styles.inputField}
-        name="username"
+        name="new-username"
         placeholder={t('input.username')}
         {...fieldRegister('username', usernameValidation)}
         onClear={() => {
@@ -92,7 +92,7 @@ const CreateAccount = ({ className, autoFocus }: Props) => {
       />
       <Input
         className={styles.inputField}
-        name="password"
+        name="new-password"
         type="password"
         autoComplete="new-password"
         placeholder={t('input.password')}
@@ -103,7 +103,7 @@ const CreateAccount = ({ className, autoFocus }: Props) => {
       />
       <Input
         className={styles.inputField}
-        name="confirm_password"
+        name="confirm-new-password"
         type="password"
         autoComplete="new-password"
         placeholder={t('input.confirm_password')}
