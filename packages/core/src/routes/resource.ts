@@ -1,5 +1,4 @@
 import { Resources } from '@logto/schemas';
-import { managementResource } from '@logto/schemas/lib/seeds';
 import { object, string } from 'zod';
 
 import koaGuard from '@/middleware/koa-guard';
@@ -12,7 +11,6 @@ import {
   updateResourceById,
   deleteResourceById,
 } from '@/queries/resource';
-import assertThat from '@/utils/assert-that';
 import { buildIdGenerator } from '@/utils/id';
 
 import { AuthedRouter } from './types';
@@ -80,15 +78,6 @@ export default function resourceRoutes<T extends AuthedRouter>(router: T) {
         body,
       } = ctx.guard;
 
-      const { name } = body;
-
-      if (id === managementResource.id) {
-        assertThat(
-          name === managementResource.name,
-          'resource.not_allowed_to_rename_management_resource'
-        );
-      }
-
       const resource = await updateResourceById(id, body);
       ctx.body = resource;
 
@@ -102,12 +91,6 @@ export default function resourceRoutes<T extends AuthedRouter>(router: T) {
     async (ctx, next) => {
       const { id } = ctx.guard.params;
       await findResourceById(id);
-
-      assertThat(
-        id !== managementResource.id,
-        'resource.not_allowed_to_delete_management_resource'
-      );
-
       await deleteResourceById(id);
       ctx.status = 204;
 

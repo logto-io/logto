@@ -636,10 +636,6 @@ const errors = {
     unauthorized: '请先登录。',
     unsupported_prompt_name: '不支持的 prompt name。',
   },
-  resource: {
-    not_allowed_to_rename_management_resource: '不允许重命名 Management API 资源。',
-    not_allowed_to_delete_management_resource: '不允许删除 Management API 资源。',
-  },
   connector: {
     general: '连接器发生未知错误。',
     not_found: '找不到可用的 {{type}} 类型的连接器。',

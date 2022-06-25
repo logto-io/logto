@@ -655,12 +655,6 @@ const errors = {
     unauthorized: 'Please sign in first.',
     unsupported_prompt_name: 'Unsupported prompt name.',
   },
-  resource: {
-    not_allowed_to_rename_management_resource:
-      'You are not allowed to rename the Management API resource.',
-    not_allowed_to_delete_management_resource:
-      'You are not allowed to delete the Management API resource.',
-  },
   connector: {
     general: 'An unexpected error occurred in connector.',
     not_found: 'Cannot find any available connector for type: {{type}}.',

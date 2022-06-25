@@ -1,5 +1,4 @@
 import { Resource, CreateResource } from '@logto/schemas';
-import { managementResource } from '@logto/schemas/lib/seeds';
 
 import { mockResource } from '@/__mocks__';
 import { createRequester } from '@/utils/test-utils';
@@ -106,20 +105,7 @@ describe('resource routes', () => {
     expect(response.status).toEqual(400);
   });
 
-  it('PATCH /resources/:id should throw if the name of the management api resource is going to update', async () => {
-    const response = await resourceRequest
-      .patch(`/resources/${managementResource.id}`)
-      .send({ name: `New ${managementResource.name}` });
-    expect(response.status).toEqual(400);
-  });
-
   it('DELETE /resources/:id', async () => {
     await expect(resourceRequest.delete('/resources/foo')).resolves.toHaveProperty('status', 204);
-  });
-
-  it('DELETE /resources/:id should throw if the management api resource is going to be deleted.', async () => {
-    await expect(
-      resourceRequest.delete(`/resources/${managementResource.id}`)
-    ).resolves.toHaveProperty('status', 400);
   });
 });
