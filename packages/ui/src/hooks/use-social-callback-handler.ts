@@ -1,46 +1,21 @@
-import { useCallback, useContext, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { parseQueryParameters } from '@/utils';
 import { getCallbackLinkFromStorage } from '@/utils/social-connectors';
 
-import { PageContext } from './use-page-context';
-
 const useSocialCallbackHandler = () => {
-  const [loading, setLoading] = useState(true);
-  const [errorMessage, setErrorMessage] = useState<string>();
-  const { setToast } = useContext(PageContext);
-  const { t } = useTranslation(undefined, { keyPrefix: 'main_flow' });
   const navigate = useNavigate();
 
   const socialCallbackHandler = useCallback(
     (connectorId: string) => {
       // Apple use fragment mode to store auth parameter. Need to support it.
-      const data = window.location.search || '?' + window.location.hash.slice(1);
-      const { state, error, error_description = '' } = parseQueryParameters(data);
-
-      // Connector auth error
-      if (error) {
-        setLoading(false);
-        setErrorMessage(`${error}${error_description ? `: ${error_description}` : ''}`);
-
-        return;
-      }
-
-      // Connector auth missing state
-      if (!state || !connectorId) {
-        setLoading(false);
-        setToast(t('error.invalid_connector_auth'));
-
-        return;
-      }
+      const search = window.location.search || '?' + window.location.hash.slice(1);
 
       // Get native callback link from storage
       const callbackLink = getCallbackLinkFromStorage(connectorId);
 
       if (callbackLink) {
-        window.location.replace(new URL(`${callbackLink}${data}`));
+        window.location.replace(new URL(`${callbackLink}${search}`));
 
         return;
       }
@@ -49,17 +24,17 @@ const useSocialCallbackHandler = () => {
       navigate(
         {
           pathname: `/social/sign-in-callback/${connectorId}`,
-          search: data,
+          search,
         },
         {
           replace: true,
         }
       );
     },
-    [navigate, setToast, t]
+    [navigate]
   );
 
-  return { socialCallbackHandler, loading, errorMessage };
+  return { socialCallbackHandler };
 };
 
 export default useSocialCallbackHandler;
