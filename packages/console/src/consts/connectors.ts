@@ -27,17 +27,17 @@ export const connectorPlatformLabel: ConnectorPlatformLabel = Object.freeze({
 });
 
 type ConnectorPlaceholderIcon = {
-  [key in ConnectorType]: SvgComponent;
+  [key in ConnectorType]?: SvgComponent;
 };
 
 export const lightModeConnectorPlaceholderIcon: ConnectorPlaceholderIcon = Object.freeze({
   [ConnectorType.SMS]: SmsConnectorIcon,
   [ConnectorType.Email]: EmailConnector,
-  [ConnectorType.Social]: EmailConnector, // We don't need a icon for social right now.
+  [ConnectorType.Social]: undefined,
 } as const);
 
 export const darkModeConnectorPlaceholderIcon: ConnectorPlaceholderIcon = Object.freeze({
   [ConnectorType.SMS]: SmsConnectorIconDark,
   [ConnectorType.Email]: EmailConnectorDark,
-  [ConnectorType.Social]: EmailConnectorDark, // We don't need a icon for social right now.
+  [ConnectorType.Social]: undefined,
 } as const);

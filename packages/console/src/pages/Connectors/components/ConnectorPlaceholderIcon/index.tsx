@@ -16,6 +16,10 @@ const ConnectorPlaceholderIcon = ({ type, className }: Props) => {
     ? lightModeConnectorPlaceholderIcon[type]
     : darkModeConnectorPlaceholderIcon[type];
 
+  if (!Icon) {
+    return null;
+  }
+
   return <Icon className={className} />;
 };
 
