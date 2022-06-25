@@ -33,11 +33,9 @@ type ConnectorPlaceholderIcon = {
 export const lightModeConnectorPlaceholderIcon: ConnectorPlaceholderIcon = Object.freeze({
   [ConnectorType.SMS]: SmsConnectorIcon,
   [ConnectorType.Email]: EmailConnector,
-  [ConnectorType.Social]: undefined,
 } as const);
 
 export const darkModeConnectorPlaceholderIcon: ConnectorPlaceholderIcon = Object.freeze({
   [ConnectorType.SMS]: SmsConnectorIconDark,
   [ConnectorType.Email]: EmailConnectorDark,
-  [ConnectorType.Social]: undefined,
 } as const);
