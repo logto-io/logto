@@ -2,6 +2,8 @@ import { BrandingStyle, SignInMode } from '@logto/schemas';
 import classNames from 'classnames';
 import React, { useContext } from 'react';
 
+import darkLogto from '@/assets/logo/logto-dark.svg';
+import lightLogto from '@/assets/logo/logto-light.svg';
 import BrandingHeader from '@/components/BrandingHeader';
 import AppNotification from '@/containers/AppNotification';
 import { PageContext } from '@/hooks/use-page-context';
@@ -17,14 +19,21 @@ const SignIn = () => {
   }
 
   const { slogan, logoUrl, darkLogoUrl, style } = experienceSettings.branding;
-  const logo = theme === 'light' ? logoUrl : darkLogoUrl ?? logoUrl;
+
+  const getLogto = () => {
+    if (theme === 'light') {
+      return logoUrl || lightLogto;
+    }
+
+    return darkLogoUrl ? darkLogoUrl : logoUrl || darkLogto;
+  };
 
   return (
     <div className={classNames(styles.wrapper)}>
       <BrandingHeader
         className={styles.header}
         headline={style === BrandingStyle.Logo_Slogan ? slogan : undefined}
-        logo={logo}
+        logo={getLogto()}
       />
       <PrimarySection
         signInMethod={experienceSettings.primarySignInMethod}
