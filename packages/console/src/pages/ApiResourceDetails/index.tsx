@@ -1,4 +1,5 @@
 import { AppearanceMode, Resource } from '@logto/schemas';
+import { managementResource } from '@logto/schemas/lib/seeds';
 import classNames from 'classnames';
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -44,6 +45,8 @@ const ApiResourceDetails = () => {
   const isLoading = !data && !error;
   const theme = useTheme();
   const Icon = theme === AppearanceMode.LightMode ? ApiResource : ApiResourceDark;
+
+  const isLogtoManagementApiResource = data?.id === managementResource.id;
 
   const {
     handleSubmit,
@@ -97,35 +100,37 @@ const ApiResourceDetails = () => {
                 <CopyToClipboard value={data.indicator} />
               </div>
             </div>
-            <div className={styles.operations}>
-              <ActionMenu
-                buttonProps={{ icon: <More className={styles.moreIcon} />, size: 'large' }}
-                title={t('api_resource_details.more_options')}
-              >
-                <ActionMenuItem
-                  icon={<Delete />}
-                  type="danger"
-                  onClick={() => {
-                    setIsDeleteFormOpen(true);
-                  }}
+            {!isLogtoManagementApiResource && (
+              <div className={styles.operations}>
+                <ActionMenu
+                  buttonProps={{ icon: <More className={styles.moreIcon} />, size: 'large' }}
+                  title={t('api_resource_details.more_options')}
                 >
-                  {t('api_resource_details.options_delete')}
-                </ActionMenuItem>
-              </ActionMenu>
-              <Modal
-                isOpen={isDeleteFormOpen}
-                className={modalStyles.content}
-                overlayClassName={modalStyles.overlay}
-              >
-                <DeleteForm
-                  id={data.id}
-                  name={data.name}
-                  onClose={() => {
-                    setIsDeleteFormOpen(false);
-                  }}
-                />
-              </Modal>
-            </div>
+                  <ActionMenuItem
+                    icon={<Delete />}
+                    type="danger"
+                    onClick={() => {
+                      setIsDeleteFormOpen(true);
+                    }}
+                  >
+                    {t('api_resource_details.options_delete')}
+                  </ActionMenuItem>
+                </ActionMenu>
+                <Modal
+                  isOpen={isDeleteFormOpen}
+                  className={modalStyles.content}
+                  overlayClassName={modalStyles.overlay}
+                >
+                  <DeleteForm
+                    id={data.id}
+                    name={data.name}
+                    onClose={() => {
+                      setIsDeleteFormOpen(false);
+                    }}
+                  />
+                </Modal>
+              </div>
+            )}
           </Card>
           <Card className={classNames(styles.body, detailsStyles.body)}>
             <TabNav>
@@ -141,6 +146,7 @@ const ApiResourceDetails = () => {
                   <TextInput
                     {...register('name', { required: true })}
                     hasError={Boolean(errors.name)}
+                    readOnly={isLogtoManagementApiResource}
                   />
                 </FormField>
                 <FormField
