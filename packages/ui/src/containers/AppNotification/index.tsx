@@ -1,23 +1,27 @@
-import { Nullable } from '@silverhand/essentials';
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useCallback, useContext } from 'react';
 
 import Notification from '@/components/Notification';
-import { getAppNotificationInfo, clearAppNotificationInfo } from '@/utils/session-storage';
+import { PageContext } from '@/hooks/use-page-context';
 
 import * as styles from './index.module.scss';
 
 const AppNotification = () => {
-  const [notification, setNotification] = useState<Nullable<string>>(null);
+  const { experienceSettings, setExperienceSettings } = useContext(PageContext);
+  const notification = experienceSettings?.notification;
 
   const onClose = useCallback(() => {
-    setNotification(null);
-    clearAppNotificationInfo();
-  }, []);
+    // Clear notification
+    setExperienceSettings((settings) => {
+      if (!settings) {
+        return;
+      }
 
-  useEffect(() => {
-    const notification = getAppNotificationInfo();
-    setNotification(notification);
-  }, []);
+      return {
+        ...settings,
+        notification: undefined,
+      };
+    });
+  }, [setExperienceSettings]);
 
   if (!notification) {
     return null;

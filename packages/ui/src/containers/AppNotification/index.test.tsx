@@ -1,23 +1,31 @@
-import { signInNotificationStorageKey } from '@logto/schemas';
-import { render, fireEvent } from '@testing-library/react';
+import { fireEvent } from '@testing-library/react';
 import React from 'react';
 
-import AppNotification from '.';
+import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
+import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider';
+import { mockSignInExperienceSettings } from '@/__mocks__/logto';
 
-describe('AppNotification', () => {
-  it('render properly', () => {
-    const message = 'This is a notification message';
-    sessionStorage.setItem(signInNotificationStorageKey, message);
-    const { queryByText, getByText } = render(<AppNotification />);
+import Notification from './index';
 
-    expect(queryByText(message)).not.toBeNull();
+describe('Notification', () => {
+  it('render Notification', () => {
+    const notification = 'text notification';
 
-    const closeLink = getByText('action.got_it');
+    const { queryByText, getByText } = renderWithPageContext(
+      <SettingsProvider
+        settings={{
+          ...mockSignInExperienceSettings,
+          notification,
+        }}
+      >
+        <Notification />
+      </SettingsProvider>
+    );
 
-    expect(closeLink).not.toBeNull();
+    expect(queryByText(notification)).not.toBeNull();
 
-    fireEvent.click(closeLink);
-
-    expect(queryByText(message)).toBeNull();
+    const closeButton = getByText('action.got_it');
+    fireEvent.click(closeButton);
+    expect(queryByText(notification)).toBeNull();
   });
 });

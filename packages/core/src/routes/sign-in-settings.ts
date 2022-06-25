@@ -1,7 +1,12 @@
 import { ConnectorMetadata } from '@logto/connector-types';
 import { SignInMode } from '@logto/schemas';
-import { adminConsoleApplicationId, adminConsoleSignInMethods } from '@logto/schemas/lib/seeds';
+import {
+  adminConsoleApplicationId,
+  adminConsoleSignInMethods,
+  demoAppApplicationId,
+} from '@logto/schemas/lib/seeds';
 import etag from 'etag';
+import i18next from 'i18next';
 import { Provider, errors } from 'oidc-provider';
 
 import { getConnectorInstances } from '@/connectors';
@@ -51,6 +56,17 @@ export default function signInSettingsRoutes<T extends AnonymousRouter>(
           signInMethods: adminConsoleSignInMethods,
           signInMode: (await hasActiveUsers()) ? SignInMode.SignIn : SignInMode.Register,
           socialConnectors: [],
+        };
+
+        return next();
+      }
+
+      // Insert Notification Message to DemoApp
+      if (interaction?.params.client_id === demoAppApplicationId) {
+        ctx.body = {
+          ...signInExperience,
+          socialConnectors,
+          notification: i18next.t('demo_app.notification'),
         };
 
         return next();
