@@ -1,13 +1,11 @@
 @use '@/scss/underscore' as _;
 
-
 .appNotification {
   position: absolute;
   top: _.unit(6);
   left: 50%;
   transform: translateX(-50%);
 }
-
 
 :global(body.mobile) {
   .appNotification {
@@ -18,12 +16,10 @@
   }
 }
 
-
 :global(body.desktop) {
   .appNotification {
     top: _.unit(-6);
     transform: translate(-50%, -100%);
-    width: 100%;
     max-width: 520px;
   }
 }

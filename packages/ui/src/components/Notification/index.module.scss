@@ -7,7 +7,6 @@
   background: var(--color-surface-variant);
   border: _.border(var(--color-border-variant));
   border-radius: var(--radius);
-  max-width: 520px;
   margin: 0 auto _.unit(2);
   box-shadow: var(--shadow-1);
   @include _.flex_row;
@@ -26,14 +25,13 @@
 
 .message {
   flex: 1;
-  margin-right: _.unit(3);
+  margin-right: _.unit(4);
 }
 
 .link {
   text-decoration: underline;
   cursor: pointer;
 }
-
 
 :global(body.desktop) {
   .link {
