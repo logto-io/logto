@@ -12,6 +12,7 @@
   -webkit-tap-highlight-color: transparent;
   transition: background 0.2s ease-in-out;
   white-space: nowrap;
+  user-select: none;
 }
 
 .large {
@@ -70,7 +71,6 @@
     }
   }
 }
-
 
 :global(body.desktop) {
   .primary {
