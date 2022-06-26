@@ -24,13 +24,13 @@ Now you will be on the **Edit app registration** page.
 - Follow the instructions to fill out the **OAuth consent screen** form.
 - Click **SAVE AND CONTINUE** to continue.
 
-#### Config Scopes
+#### Config scopes
 
 - Click **ADD OR REMOVE SCOPES** and select `../auth/userinfo.email`, `../auth/userinfo.profile` and `openid` in the popup drawer, and click **UPDATE** to finish.
 - Fill out the form as you need.
 - Click **SAVE AND CONTINUE** to continue.
 
-#### Add Test Users (External user type only)
+#### Add test users (External user type only)
 
 - Click **ADD USERS** and add test users to allow these users to access your application while testing.
 - Click **SAVE AND CONTINUE** to continue.
