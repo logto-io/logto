@@ -157,7 +157,7 @@ Calling `.signOut()` will clear all the Logto data in memory and LocalStorage, i
 To make the user come back to your application after signing out,
 it's necessary to add `http://localhost:1234` as one of the Post Sign Out URIs and use the URL as the parameter when calling `.signOut()`.
 
-<MultiTextInputField appId={props.appId} name="postLogoutRedirectUris" title="Post sign out redirect URI" />
+<MultiTextInputField appId={props.appId} name="postLogoutRedirectUris" title="Post Sign-out Redirect URI" />
 
 ```ts
 import { useLogto } from "@logto/vue";
