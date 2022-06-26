@@ -157,7 +157,7 @@ const { isAuthenticated } = useLogto();
 
 为了确保用户登出后能够跳转回你的应用，我们需要首先在管理界面中将 `http://localhost:1234` 添加到允许登出后跳转的地址列表（Post Sign Out URIs）中。
 
-<MultiTextInputField appId={props.appId} name="postLogoutRedirectUris" title="Post sign out redirect URI" />
+<MultiTextInputField appId={props.appId} name="postLogoutRedirectUris" title="Post Sign-out Redirect URI" />
 
 ```ts
 import { useLogto } from "@logto/vue";

@@ -190,7 +190,7 @@ const translation = {
       description: '描述',
       authorization_endpoint: 'Authorization Endpoint',
       redirect_uri: 'Redirect URI',
-      post_sign_out_redirect_uri: 'Post Sign Out Redirect URI',
+      post_sign_out_redirect_uri: 'Post Sign-out Redirect URI',
       cors_allowed_origins: 'CORS Allowed Origins',
       add_another: '继续添加',
       id_token_expiration: 'ID Token Expiration',
