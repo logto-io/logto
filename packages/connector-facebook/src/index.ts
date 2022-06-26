@@ -26,6 +26,7 @@ import {
   defaultTimeout,
 } from './constant';
 import {
+  authorizationCallbackErrorGuard,
   facebookConfigGuard,
   accessTokenResponseGuard,
   FacebookConfig,
@@ -88,7 +89,7 @@ export default class FacebookConnector implements SocialConnector {
   };
 
   public getUserInfo: GetUserInfo = async (data) => {
-    const { code, redirectUri } = codeWithRedirectDataGuard.parse(data);
+    const { code, redirectUri } = await this.authorizationCallbackHandler(data);
     const { accessToken } = await this.getAccessToken(code, redirectUri);
 
     try {
@@ -122,5 +123,28 @@ export default class FacebookConnector implements SocialConnector {
       }
       throw error;
     }
+  };
+
+  private readonly authorizationCallbackHandler = async (parameterObject: unknown) => {
+    const result = codeWithRedirectDataGuard.safeParse(parameterObject);
+
+    if (result.success) {
+      return result.data;
+    }
+
+    const parsedError = authorizationCallbackErrorGuard.safeParse(parameterObject);
+
+    if (!parsedError.success) {
+      throw new ConnectorError(ConnectorErrorCodes.General, JSON.stringify(parameterObject));
+    }
+
+    if (parsedError.data.error === 'access_denied') {
+      throw new ConnectorError(
+        ConnectorErrorCodes.AuthorizationFailed,
+        parsedError.data.error_description
+      );
+    }
+
+    throw new ConnectorError(ConnectorErrorCodes.General, JSON.stringify(parameterObject));
   };
 }

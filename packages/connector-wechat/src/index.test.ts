@@ -152,6 +152,12 @@ describe('getUserInfo', () => {
     });
   });
 
+  it('throws General error if code not provided in input', async () => {
+    await expect(weChatMethods.getUserInfo({})).rejects.toMatchError(
+      new ConnectorError(ConnectorErrorCodes.General, '{}')
+    );
+  });
+
   it('throws error if `openid` is missing', async () => {
     nockNoOpenIdAccessTokenResponse();
     nock(userInfoEndpointUrl.origin)

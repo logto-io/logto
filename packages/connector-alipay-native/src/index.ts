@@ -42,8 +42,6 @@ import { signingParameters } from './utils';
 
 export type { AlipayNativeConfig } from './types';
 
-const dataGuard = z.object({ auth_code: z.string() });
-
 export default class AlipayNativeConnector implements SocialConnector {
   public metadata: ConnectorMetadata = defaultMetadata;
 
@@ -106,7 +104,7 @@ export default class AlipayNativeConnector implements SocialConnector {
   };
 
   public getUserInfo: GetUserInfo = async (data) => {
-    const { auth_code } = dataGuard.parse(data);
+    const { auth_code } = await this.authorizationCallbackHandler(data);
     const config = await this.getConfig(this.metadata.id);
     const { accessToken } = await this.getAccessToken(auth_code, config);
 
@@ -163,5 +161,17 @@ export default class AlipayNativeConnector implements SocialConnector {
       new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid, msg)
     );
     assert(!sub_code, new ConnectorError(ConnectorErrorCodes.General, msg));
+  };
+
+  private readonly authorizationCallbackHandler = async (parameterObject: unknown) => {
+    const dataGuard = z.object({ auth_code: z.string() });
+
+    const result = dataGuard.safeParse(parameterObject);
+
+    if (!result.success) {
+      throw new ConnectorError(ConnectorErrorCodes.General, JSON.stringify(parameterObject));
+    }
+
+    return result.data;
   };
 }

@@ -149,6 +149,24 @@ describe('koaConnectorErrorHandler middleware', () => {
     );
   });
 
+  it('Authorization Failed', async () => {
+    const message = 'Mock Authorization Failed';
+    const error = new ConnectorError(ConnectorErrorCodes.AuthorizationFailed, message);
+    next.mockImplementationOnce(() => {
+      throw error;
+    });
+
+    await expect(koaConnectorErrorHandler()(ctx, next)).rejects.toMatchError(
+      new RequestError(
+        {
+          code: 'connector.authorization_failed',
+          status: 401,
+        },
+        { message }
+      )
+    );
+  });
+
   it('General connector errors', async () => {
     const message = 'Mock General connector errors';
     const error = new ConnectorError(ConnectorErrorCodes.General, message);

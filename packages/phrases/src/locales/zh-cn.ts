@@ -647,6 +647,7 @@ const errors = {
     invalid_access_token: '当前连接器的 access_token 无效。',
     invalid_auth_code: '当前连接器的授权码无效。',
     invalid_id_token: '当前连接器的 id_token 无效。',
+    authorization_failed: '用户授权流程失败。',
     oauth_code_invalid: '无法获取 access_token，请检查授权 code 是否有效。',
     more_than_one_sms: '同时存在超过 1 个短信连接器。',
     more_than_one_email: '同时存在超过 1 个邮件连接器。',

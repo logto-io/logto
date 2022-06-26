@@ -36,6 +36,7 @@ export enum ConnectorErrorCodes {
   SocialAuthCodeInvalid,
   SocialAccessTokenInvalid,
   SocialIdTokenInvalid,
+  AuthorizationFailed,
 }
 
 export class ConnectorError extends Error {

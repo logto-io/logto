@@ -44,7 +44,7 @@ export default class AppleConnector implements SocialConnector {
   };
 
   public getUserInfo: GetUserInfo = async (data) => {
-    const { id_token: idToken } = dataGuard.parse(data);
+    const { id_token: idToken } = await this.authorizationCallbackHandler(data);
 
     if (!idToken) {
       throw new ConnectorError(ConnectorErrorCodes.SocialIdTokenInvalid);
@@ -68,5 +68,15 @@ export default class AppleConnector implements SocialConnector {
     } catch {
       throw new ConnectorError(ConnectorErrorCodes.SocialIdTokenInvalid);
     }
+  };
+
+  private readonly authorizationCallbackHandler = async (parameterObject: unknown) => {
+    const result = dataGuard.safeParse(parameterObject);
+
+    if (!result.success) {
+      throw new ConnectorError(ConnectorErrorCodes.General, JSON.stringify(parameterObject));
+    }
+
+    return result.data;
   };
 }

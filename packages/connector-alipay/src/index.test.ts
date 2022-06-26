@@ -153,6 +153,12 @@ describe('getUserInfo', () => {
     expect(avatar).toEqual('https://www.alipay.com/xxx.jpg');
   });
 
+  it('throw General error if auth_code not provided in input', async () => {
+    await expect(alipayMethods.getUserInfo({})).rejects.toMatchError(
+      new ConnectorError(ConnectorErrorCodes.General, '{}')
+    );
+  });
+
   it('should throw SocialAccessTokenInvalid with code 20001', async () => {
     nock(alipayEndpointUrl.origin)
       .post(alipayEndpointUrl.pathname)

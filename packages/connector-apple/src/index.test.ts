@@ -1,4 +1,4 @@
-import { GetConnectorConfig } from '@logto/connector-types';
+import { ConnectorError, ConnectorErrorCodes, GetConnectorConfig } from '@logto/connector-types';
 import { jwtVerify } from 'jose';
 
 import AppleConnector from '.';
@@ -63,7 +63,9 @@ describe('getUserInfo', () => {
   });
 
   it('should throw if id token is missing', async () => {
-    await expect(appleMethods.getUserInfo({})).rejects.toThrowError();
+    await expect(appleMethods.getUserInfo({})).rejects.toMatchError(
+      new ConnectorError(ConnectorErrorCodes.General, '{}')
+    );
   });
 
   it('should throw if verify id token failed', async () => {
@@ -71,7 +73,9 @@ describe('getUserInfo', () => {
     mockJwtVerify.mockImplementationOnce(() => {
       throw new Error('jwtVerify failed');
     });
-    await expect(appleMethods.getUserInfo({ idToken: 'idToken' })).rejects.toThrowError();
+    await expect(appleMethods.getUserInfo({ id_token: 'id_token' })).rejects.toMatchError(
+      new ConnectorError(ConnectorErrorCodes.SocialIdTokenInvalid)
+    );
   });
 
   it('should throw if the id token payload does not contains sub', async () => {
@@ -79,6 +83,8 @@ describe('getUserInfo', () => {
     mockJwtVerify.mockImplementationOnce(() => ({
       payload: { iat: 123_456 },
     }));
-    await expect(appleMethods.getUserInfo({ idToken: 'idToken' })).rejects.toThrowError();
+    await expect(appleMethods.getUserInfo({ id_token: 'id_token' })).rejects.toMatchError(
+      new ConnectorError(ConnectorErrorCodes.SocialIdTokenInvalid)
+    );
   });
 });

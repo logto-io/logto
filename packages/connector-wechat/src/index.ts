@@ -89,7 +89,7 @@ export default class WeChatConnector implements SocialConnector {
   };
 
   public getUserInfo: GetUserInfo = async (data) => {
-    const { code } = codeDataGuard.parse(data);
+    const { code } = await this.authorizationCallbackHandler(data);
     const { accessToken, openid } = await this.getAccessToken(code);
 
     try {
@@ -147,5 +147,15 @@ export default class WeChatConnector implements SocialConnector {
       new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid, errmsg)
     );
     assert(!errcode, new Error(errmsg ?? ''));
+  };
+
+  private readonly authorizationCallbackHandler = async (parameterObject: unknown) => {
+    const result = codeDataGuard.safeParse(parameterObject);
+
+    if (!result.success) {
+      throw new ConnectorError(ConnectorErrorCodes.General, JSON.stringify(parameterObject));
+    }
+
+    return result.data;
   };
 }
