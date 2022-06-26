@@ -50,6 +50,26 @@ const loadConnectors = async () => {
         instance.metadata.logoDark = `data:image/svg+xml;base64,${data.toString('base64')}`;
       }
 
+      if (
+        packagePath &&
+        instance.metadata.readme &&
+        existsSync(path.join(packagePath, '..', instance.metadata.readme))
+      ) {
+        const data = readFileSync(path.join(packagePath, '..', instance.metadata.readme));
+        // eslint-disable-next-line @silverhand/fp/no-mutation
+        instance.metadata.readme = `data:text/plain;base64,${data.toString('base64')}`;
+      }
+
+      if (
+        packagePath &&
+        instance.metadata.configTemplate &&
+        existsSync(path.join(packagePath, '..', instance.metadata.configTemplate))
+      ) {
+        const data = readFileSync(path.join(packagePath, '..', instance.metadata.configTemplate));
+        // eslint-disable-next-line @silverhand/fp/no-mutation
+        instance.metadata.configTemplate = `data:text/plain;base64,${data.toString('base64')}`;
+      }
+
       return instance;
     })
   );

@@ -1,19 +1,9 @@
-import path from 'path';
-
 import { ConnectorMetadata, ConnectorType, ConnectorPlatform } from '@logto/connector-types';
-import { getFileContents } from '@logto/shared';
 
 export const authorizationEndpoint = 'https://accounts.google.com/o/oauth2/v2/auth';
 export const accessTokenEndpoint = 'https://oauth2.googleapis.com/token';
 export const userInfoEndpoint = 'https://openidconnect.googleapis.com/v1/userinfo';
 export const scope = 'openid profile email';
-
-// eslint-disable-next-line unicorn/prefer-module
-const currentPath = __dirname;
-const pathToReadmeFile = path.join(currentPath, '..', 'README.md');
-const pathToConfigTemplate = path.join(currentPath, '..', 'docs', 'config-template.json');
-const readmeContentFallback = 'Please check README.md file directory.';
-const configTemplateFallback = 'Please check config-template.json file directory.';
 
 export const defaultMetadata: ConnectorMetadata = {
   id: 'google-universal',
@@ -30,8 +20,8 @@ export const defaultMetadata: ConnectorMetadata = {
     en: 'Gives users the ability to sign in with their Google account.',
     'zh-CN': '赋予用户用 Google 账号登录的能力。',
   },
-  readme: getFileContents(pathToReadmeFile, readmeContentFallback),
-  configTemplate: getFileContents(pathToConfigTemplate, configTemplateFallback),
+  readme: './README.md',
+  configTemplate: './docs/config-template.json',
 };
 
 export const defaultTimeout = 5000;

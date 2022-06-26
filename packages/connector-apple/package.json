@@ -10,6 +10,7 @@
     "lib",
     "docs",
     "logo.svg",
+    "README.md",
     "logo-dark.svg"
   ],
   "scripts": {

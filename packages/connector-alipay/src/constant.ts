@@ -1,7 +1,4 @@
-import path from 'path';
-
 import { ConnectorType, ConnectorMetadata, ConnectorPlatform } from '@logto/connector-types';
-import { getFileContents } from '@logto/shared';
 
 export const authorizationEndpoint = 'https://openauth.alipay.com/oauth2/publicAppAuthorize.htm';
 export const alipayEndpoint = 'https://openapi.alipay.com/gateway.do';
@@ -14,13 +11,6 @@ export const alipaySigningAlgorithmMapping = {
   RSA2: 'RSA-SHA256',
 } as const;
 export const alipaySigningAlgorithms = ['RSA', 'RSA2'] as const;
-
-// eslint-disable-next-line unicorn/prefer-module
-const currentPath = __dirname;
-const pathToReadmeFile = path.join(currentPath, '..', 'README.md');
-const pathToConfigTemplate = path.join(currentPath, '..', 'docs', 'config-template.json');
-const readmeContentFallback = 'Please check README.md file directory.';
-const configTemplateFallback = 'Please check config-template.json file directory.';
 
 export const defaultMetadata: ConnectorMetadata = {
   id: 'alipay-web',
@@ -37,8 +27,8 @@ export const defaultMetadata: ConnectorMetadata = {
     en: 'Allow your users to sign in through their Alipay account.',
     'zh-CN': '让用户可以通过支付宝账号登录。',
   },
-  readme: getFileContents(pathToReadmeFile, readmeContentFallback),
-  configTemplate: getFileContents(pathToConfigTemplate, configTemplateFallback),
+  readme: './README.md',
+  configTemplate: './docs/config-template.json',
 };
 
 export const defaultTimeout = 5000;

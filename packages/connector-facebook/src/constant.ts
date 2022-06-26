@@ -1,7 +1,4 @@
-import path from 'path';
-
 import { ConnectorMetadata, ConnectorType, ConnectorPlatform } from '@logto/connector-types';
-import { getFileContents } from '@logto/shared';
 
 /**
  * Note: If you do not include a version number we will default to the oldest available version, so it's recommended to include the version number in your requests.
@@ -16,13 +13,6 @@ export const accessTokenEndpoint = 'https://graph.facebook.com/v13.0/oauth/acces
  */
 export const userInfoEndpoint = 'https://graph.facebook.com/v13.0/me';
 export const scope = 'email,public_profile';
-
-// eslint-disable-next-line unicorn/prefer-module
-const currentPath = __dirname;
-const pathToReadmeFile = path.join(currentPath, '..', 'README.md');
-const pathToConfigTemplate = path.join(currentPath, '..', 'docs', 'config-template.json');
-const readmeContentFallback = 'Please check README.md file directory.';
-const configTemplateFallback = 'Please check config-template.json file directory.';
 
 export const defaultMetadata: ConnectorMetadata = {
   id: 'facebook-universal',
@@ -39,8 +29,8 @@ export const defaultMetadata: ConnectorMetadata = {
     en: 'Provide users with the option to sign in with their Facebook account.',
     'zh-CN': '为用户提供 Facebook 账号登录的选项。',
   },
-  readme: getFileContents(pathToReadmeFile, readmeContentFallback),
-  configTemplate: getFileContents(pathToConfigTemplate, configTemplateFallback),
+  readme: './README.md',
+  configTemplate: './docs/config-template.json',
 };
 
 export const defaultTimeout = 5000;
