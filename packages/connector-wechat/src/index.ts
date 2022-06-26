@@ -26,24 +26,21 @@ import {
   defaultTimeout,
 } from './constant';
 import {
-  weChatConfigGuard,
+  wechatConfigGuard,
   accessTokenResponseGuard,
   GetAccessTokenErrorHandler,
   userInfoResponseGuard,
   GetUserInfoErrorHandler,
-  WeChatConfig,
+  WechatConfig,
 } from './types';
 
-// As creating a WeChat Web/Mobile application needs a real App or Website record, the real test is temporarily not finished.
-// TODO: test with our own WeChat web application (LOG-2719), already tested with other verified WeChat web application
-
-export default class WeChatConnector implements SocialConnector {
+export default class WechatConnector implements SocialConnector {
   public metadata: ConnectorMetadata = defaultMetadata;
 
-  constructor(public readonly getConfig: GetConnectorConfig<WeChatConfig>) {}
+  constructor(public readonly getConfig: GetConnectorConfig<WechatConfig>) {}
 
   public validateConfig: ValidateConfig = async (config: unknown) => {
-    const result = weChatConfigGuard.safeParse(config);
+    const result = wechatConfigGuard.safeParse(config);
 
     if (!result.success) {
       throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, result.error.message);
