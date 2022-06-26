@@ -13,7 +13,7 @@ type Parameters = {
 const Callback = () => {
   const { connector: connectorId } = useParams<Parameters>();
 
-  const { socialCallbackHandler, loading, errorMessage } = useSocialCallbackHandler();
+  const { socialCallbackHandler } = useSocialCallbackHandler();
 
   // SocialSignIn Callback Handler
   useEffect(() => {
@@ -29,12 +29,7 @@ const Callback = () => {
 
   return (
     <div className={styles.wrapper}>
-      <SocialLanding
-        className={styles.connectorContainer}
-        connectorId={connectorId}
-        isLoading={loading}
-        message={errorMessage}
-      />
+      <SocialLanding isLoading className={styles.connectorContainer} connectorId={connectorId} />
     </div>
   );
 };

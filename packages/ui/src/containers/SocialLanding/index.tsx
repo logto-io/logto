@@ -10,10 +10,9 @@ type Props = {
   className?: string;
   connectorId: string;
   isLoading?: boolean;
-  message?: string;
 };
 
-const SocialLanding = ({ className, connectorId, message, isLoading = false }: Props) => {
+const SocialLanding = ({ className, connectorId, isLoading = false }: Props) => {
   const { experienceSettings } = useContext(PageContext);
   const connector = experienceSettings?.socialConnectors.find(({ id }) => id === connectorId);
 
@@ -23,7 +22,6 @@ const SocialLanding = ({ className, connectorId, message, isLoading = false }: P
         {connector?.logo ? <img src={connector.logo} /> : connectorId}
       </div>
       {isLoading && <LoadingIcon />}
-      {!isLoading && message && <div className={styles.message}>{message}</div>}
     </div>
   );
 };
