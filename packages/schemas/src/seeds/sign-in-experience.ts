@@ -7,13 +7,13 @@ export const defaultSignInExperience: Readonly<CreateSignInExperience> = {
   id: 'default',
   color: {
     primaryColor: '#6139F6',
-    isDarkModeEnabled: false,
+    isDarkModeEnabled: true,
     darkPrimaryColor: '#6139F6',
   },
   branding: {
     style: BrandingStyle.Logo,
-    logoUrl: 'https://logto.io/logo.svg',
-    darkLogoUrl: 'https://logto.io/logo.svg',
+    logoUrl: '',
+    darkLogoUrl: '',
   },
   languageInfo: {
     autoDetect: true,
