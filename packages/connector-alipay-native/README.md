@@ -6,7 +6,7 @@ Alipay Native connector works closely with Logto SDK on mobile platforms. It tak
 
 [Register an Alipay developer account](https://certifyweb.alipay.com/certify/reg/guide#/) if you don't have one.
 
-## Create and Configure Alipay Apps
+## Create and configure Alipay app
 
 1. Sign in to the Alipay console with the account you have just registered.
 2. Go to **Web & Mobile Apps** tab in **My Application** panel.
@@ -18,7 +18,7 @@ Alipay Native connector works closely with Logto SDK on mobile platforms. It tak
 8. Set up **Authorization Redirect URI** by clicking **set up** button on the bottom of the Alipay console page. `${your_logto_origin}/callback/alipay-native` is the default redirect URI used in Logto core.
 9. After finishing all these steps, go back to the top right corner of Alipay console page, and click **Submit for review**. Once the review is approved, you are good to go with a smooth Alipay sign-in flow.
 
-## Set up the Logto Alipay Native Connector settings
+## Set up the Logto Alipay Native connector settings
 
 1. In [the Alipay console workspace](https://open.alipay.com/dev/workspace) go to **My application** panel and click **Web & Mobile Apps** tab, you can find APPID of all applications.
 2. In step 7 of the previous part, you have already generated a key pair including a private key and a public key.
