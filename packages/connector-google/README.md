@@ -49,9 +49,9 @@ Now you should have the Google OAuth 2.0 consent screen configured.
 
 ## Settings
 
-| Name | Type |
-| --- | --- |
-| clientId | string |
+|     Name     |  Type  |
+|:------------:|:------:|
+|   clientId   | string |
 | clientSecret | string |
 
 ## References
