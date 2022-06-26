@@ -25,21 +25,21 @@ import {
   defaultTimeout,
 } from './constant';
 import {
-  weChatNativeConfigGuard,
+  wechatNativeConfigGuard,
   accessTokenResponseGuard,
   GetAccessTokenErrorHandler,
   userInfoResponseGuard,
   GetUserInfoErrorHandler,
-  WeChatNativeConfig,
+  WechatNativeConfig,
 } from './types';
 
-export default class WeChatNativeConnector implements SocialConnector {
+export default class WechatNativeConnector implements SocialConnector {
   public metadata: ConnectorMetadata = defaultMetadata;
 
-  constructor(public readonly getConfig: GetConnectorConfig<WeChatNativeConfig>) {}
+  constructor(public readonly getConfig: GetConnectorConfig<WechatNativeConfig>) {}
 
   public validateConfig: ValidateConfig = async (config: unknown) => {
-    const result = weChatNativeConfigGuard.safeParse(config);
+    const result = wechatNativeConfigGuard.safeParse(config);
 
     if (!result.success) {
       throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, result.error.message);
