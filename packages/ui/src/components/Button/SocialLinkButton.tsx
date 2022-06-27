@@ -40,7 +40,11 @@ const SocialLinkButton = ({ isDisabled, className, connector, onClick }: Props) 
       onClick={onClick}
     >
       {logo && <img src={logo} alt={target} className={socialLinkButtonStyles.icon} />}
-      {t('action.sign_in_with', { name: localName })}
+      <div className={socialLinkButtonStyles.name}>
+        <div className={socialLinkButtonStyles.placeHolder} />
+        <span>{t('action.sign_in_with', { name: localName })}</span>
+        <div className={socialLinkButtonStyles.placeHolder} />
+      </div>
     </button>
   );
 };
