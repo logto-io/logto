@@ -1,4 +1,4 @@
-import MultiTextInputField from '@mdx/components/MultiTextInputField';
+import UriInputField from '@mdx/components/UriInputField';
 import Step from '@mdx/components/Step';
 import Tabs from '@mdx/components/Tabs';
 import TabItem from '@mdx/components/TabItem';
@@ -74,7 +74,7 @@ $(LOGTO_REDIRECT_SCHEME)://$(YOUR_APP_PACKAGE)/callback
 
 例： `io.logto.android://io.logto.sample/callback`
 
-<MultiTextInputField appId={props.appId} name="redirectUris" title="Redirect URI" />
+<UriInputField appId={props.appId} isSingle={!props.isCompact} name="redirectUris" title="Redirect URI" />
 
 ### 配置 Logto Android SDK
 

@@ -1,4 +1,4 @@
-import MultiTextInputField from '@mdx/components/MultiTextInputField';
+import UriInputField from '@mdx/components/UriInputField';
 import Step from '@mdx/components/Step';
 import Tabs from '@mdx/components/Tabs';
 import TabItem from '@mdx/components/TabItem';
@@ -70,7 +70,7 @@ let config = try? LogtoConfig(
 
 First, let’s configure your redirect URI
 
-<MultiTextInputField appId={props.appId} name="redirectUris" title="Redirect URI" />
+<UriInputField appId={props.appId} isSingle={!props.isCompact} name="redirectUris" title="Redirect URI" />
 
 ```swift
 do {

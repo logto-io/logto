@@ -71,6 +71,7 @@ const Guide = ({ app, isCompact, onClose }: Props) => {
               <GuideComponent
                 appId={appId}
                 activeStepIndex={activeStepIndex}
+                isCompact={isCompact}
                 onNext={(nextIndex: number) => {
                   setActiveStepIndex(nextIndex);
                 }}

@@ -1,4 +1,4 @@
-import MultiTextInputField from '@mdx/components/MultiTextInputField';
+import UriInputField from '@mdx/components/UriInputField';
 import Step from '@mdx/components/Step';
 import Tabs from '@mdx/components/Tabs';
 import TabItem from '@mdx/components/TabItem';
@@ -83,7 +83,7 @@ In order to handle what comes from Logto, the application needs to have a dedica
 
 First, let’s enter your redirect URI. E.g. `http://localhost:1234/callback`
 
-<MultiTextInputField appId={props.appId} name="redirectUris" title="Redirect URI" />
+<UriInputField appId={props.appId} isSingle={!props.isCompact} name="redirectUris" title="Redirect URI" />
 
 Then let's create a callback component:
 
@@ -157,7 +157,7 @@ Calling `.signOut()` will clear all the Logto data in memory and LocalStorage, i
 To make the user come back to your application after signing out,
 it's necessary to add `http://localhost:1234` as one of the Post Sign Out URIs and use the URL as the parameter when calling `.signOut()`.
 
-<MultiTextInputField appId={props.appId} name="postLogoutRedirectUris" title="Post Sign-out Redirect URI" />
+<UriInputField appId={props.appId} isSingle={!props.isCompact} name="postLogoutRedirectUris" title="Post Sign-out Redirect URI" />
 
 ```ts
 import { useLogto } from "@logto/vue";

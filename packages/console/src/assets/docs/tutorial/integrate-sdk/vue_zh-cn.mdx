@@ -1,4 +1,4 @@
-import MultiTextInputField from '@mdx/components/MultiTextInputField';
+import UriInputField from '@mdx/components/UriInputField';
 import Step from '@mdx/components/Step';
 import Tabs from '@mdx/components/Tabs';
 import TabItem from '@mdx/components/TabItem';
@@ -83,7 +83,7 @@ app.mount("#app");
 
 但首先, 让我们先在下方输入 redirect URI，如：`http://localhost:1234/callback`
 
-<MultiTextInputField appId={props.appId} name="redirectUris" title="Redirect URI" />
+<UriInputField appId={props.appId} isSingle={!props.isCompact} name="redirectUris" title="Redirect URI" />
 
 然后，让我们来创建一个 CallbackView 组件：
 
@@ -157,7 +157,7 @@ const { isAuthenticated } = useLogto();
 
 为了确保用户登出后能够跳转回你的应用，我们需要首先在管理界面中将 `http://localhost:1234` 添加到允许登出后跳转的地址列表（Post Sign Out URIs）中。
 
-<MultiTextInputField appId={props.appId} name="postLogoutRedirectUris" title="Post Sign-out Redirect URI" />
+<UriInputField appId={props.appId} isSingle={!props.isCompact} name="postLogoutRedirectUris" title="Post Sign-out Redirect URI" />
 
 ```ts
 import { useLogto } from "@logto/vue";
