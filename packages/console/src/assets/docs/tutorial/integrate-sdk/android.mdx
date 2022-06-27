@@ -82,22 +82,24 @@ e.g. `io.logto.android://io.logto.sample/callback`
 
 <TabItem value="kotlin" label="Kotlin">
 
-```kotlin
-import io.logto.sdk.android.LogtoClient
+<pre>
+<code className="language-kotlin">
+{`import io.logto.sdk.android.LogtoClient
 import io.logto.sdk.android.type.LogtoConfig
 
 class MainActivity : AppCompatActivity() {
     val logtoConfig = LogtoConfig(
-        endpoint = "<your-logto-endpoint>",
-        appId = "<your-app-id>",
+        endpoint = "${props.endpoint}",
+        appId = "${props.appId}",
         scopes = null,
         resources = null,
         usingPersistStorage = true,
     )
 
     val logtoClient = LogtoClient(logtoConfig, application)
-}
-```
+}`}
+</code>
+</pre>
 
 </TabItem>
 

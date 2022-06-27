@@ -60,16 +60,17 @@ pnpm build
 
 Add the following code to your main html file. You may need client ID and authorization domain.
 
-```tsx
-import { LogtoProvider, LogtoConfig } from '@logto/react';
+<pre>
+<code className="language-tsx">
+{`import { LogtoProvider, LogtoConfig } from '@logto/react';
 import React from 'react';
 
 //...
 
 const App = () => {
   const config: LogtoConfig = {
-    clientId: 'foo',
-    endpoint: 'https://your-endpoint-domain.com',
+    clientId: '${props.appId}',
+    endpoint: '${props.endpoint}',
   };
 
   return (
@@ -90,8 +91,9 @@ const App = () => {
       </LogtoProvider>
     </BrowserRouter>
   );
-};
-```
+};`}
+</code>
+</pre>
 
 </Step>
 

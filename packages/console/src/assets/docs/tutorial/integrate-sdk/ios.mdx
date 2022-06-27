@@ -39,15 +39,17 @@ We do not support **Carthage** and **CocoaPods** at the time due to some technic
   onButtonClick={() => props.onNext(2)}
 >
 
-```swift
-import Logto
+<pre>
+<code className="language-swift">
+{`import Logto
 
 let config = try? LogtoConfig(
-  endpoint: "<your-logto-endpoint>",
-  appId: "<your-application-id>"
+  endpoint: "${props.endpoint}",
+  appId: "${props.appId}",
 )
-let logtoClient = LogtoClient(useConfig: config)
-```
+let logtoClient = LogtoClient(useConfig: config)`}
+</code>
+</pre>
 
 By default, we store credentials like ID Token and Refresh Token in Keychain. Thus the user doesn't need to sign in again when he returns.
 
