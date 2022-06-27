@@ -10,7 +10,15 @@ type Props = HTMLProps<HTMLInputElement> & {
 };
 
 const TextInput = (
-  { hasError = false, errorMessage, icon, disabled, className, readOnly, ...rest }: Props,
+  {
+    errorMessage,
+    hasError = Boolean(errorMessage),
+    icon,
+    disabled,
+    className,
+    readOnly,
+    ...rest
+  }: Props,
   reference: ForwardedRef<HTMLInputElement>
 ) => {
   return (
