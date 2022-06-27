@@ -14,6 +14,10 @@
   flex: 1;
 }
 
+.icon {
+  flex-shrink: 0;
+}
+
 .pagination {
   margin-top: _.unit(4);
   min-height: 32px;
