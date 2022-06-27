@@ -30,5 +30,20 @@ Go to the [Aliyun website](https://cn.aliyun.com/) and register your Aliyun acco
         - Fill the `templateCode` field, which is how you can control SMS context, with "Template Code" from step 2.
         - Fill out `usageType` field with either `Register`, `SignIn` or `Test` for different use cases.
 
+## Settings
+
+|       Name      |    Type    |
+|:---------------:|:----------:|
+|   accessKeyId   |   string   |
+| accessKeySecret |   string   |
+|     signName    |   string   |
+|    templates    | Template[] |
+
+| Template Properties |     Type    |            Enum values           |
+|:-------------------:|:-----------:|:--------------------------------:|
+|     templateCode    |    string   |                N/A               |
+|      usageType      | enum string | 'Register' \| 'SignIn' \| 'Test' |
+
+
 ## References
 - [Aliyun SMS - Quick Start](https://dysms.console.aliyun.com/quickstart)
