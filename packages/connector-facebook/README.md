@@ -27,6 +27,13 @@ The Facebook connector provides a concise way for your application to use Facebo
     - Fill out the `clientId` field with the string from **App ID**.
     - Fill out the `clientSecret` field with the string from **App secret**.
 
+## Settings
+
+|     Name     |  Type  |
+|:------------:|:------:|
+|   clientId   | string |
+| clientSecret | string |
+
 ## Debug sign-in with the test users
 
 You can use the accounts of the test, developer, and admin users to test sign-in with the related app under both development and live [app modes](https://developers.facebook.com/docs/development/build-and-test/app-modes).
