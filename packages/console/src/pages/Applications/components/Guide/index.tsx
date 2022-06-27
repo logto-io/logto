@@ -70,6 +70,7 @@ const Guide = ({ app, isCompact, onClose }: Props) => {
             {GuideComponent && (
               <GuideComponent
                 appId={appId}
+                endpoint={window.location.origin}
                 activeStepIndex={activeStepIndex}
                 isCompact={isCompact}
                 onNext={(nextIndex: number) => {

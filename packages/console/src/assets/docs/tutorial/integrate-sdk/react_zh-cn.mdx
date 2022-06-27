@@ -58,19 +58,19 @@ pnpm build
   onButtonClick={() => props.onNext(2)}
 >
 
-在项目的 html 文件中，加入如下代码（需提前准备好 client ID 以及 authorization domain）
-Add the following code to your main html file. You may need client ID and authorization domain.
+在项目的 App.tsx 文件中，加入如下代码（需提前准备好 client ID 以及 authorization domain）
 
-```tsx
-import { LogtoProvider, LogtoConfig } from '@logto/react';
+<pre>
+<code className="language-tsx">
+{`import { LogtoProvider, LogtoConfig } from '@logto/react';
 import React from 'react';
 
 //...
 
 const App = () => {
   const config: LogtoConfig = {
-    clientId: 'foo',
-    endpoint: 'https://your-endpoint-domain.com'
+    clientId: '${props.appId}',
+    endpoint: '${props.endpoint}',
   };
 
   return (
@@ -91,8 +91,9 @@ const App = () => {
       </LogtoProvider>
     </BrowserRouter>
   );
-};
-```
+};`}
+</code>
+</pre>
 
 </Step>
 

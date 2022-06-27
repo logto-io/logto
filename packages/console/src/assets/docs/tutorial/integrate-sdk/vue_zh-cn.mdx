@@ -52,19 +52,21 @@ pnpm add @logto/vue
 
 `import` 并使用 `createLogto` 以插件的形式安装 Logto:
 
-```ts
-import { createLogto, LogtoConfig } from '@logto/vue';
+<pre>
+<code className="language-ts">
+{`import { createLogto, LogtoConfig } from '@logto/vue';
 
 const config: LogtoConfig = {
-  appId: '<your-application-id>',
-  endpoint: '<your-logto-endpoint>'
+  appId: '${props.appId}',
+  endpoint: '${props.endpoint}',
 };
 
 const app = createApp(App);
 
 app.use(createLogto, config);
-app.mount("#app");
-```
+app.mount("#app");`}
+</code>
+</pre>
 
 </Step>
 <Step
