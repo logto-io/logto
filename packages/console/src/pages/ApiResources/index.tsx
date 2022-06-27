@@ -108,28 +108,31 @@ const ApiResources = () => {
                 />
               </TableEmpty>
             )}
-            {apiResources?.map(({ id, name, indicator }) => (
-              <tr
-                key={id}
-                className={tableStyles.clickable}
-                onClick={() => {
-                  navigate(buildDetailsLink(id));
-                }}
-              >
-                <td>
-                  <ItemPreview
-                    title={name}
-                    icon={
-                      theme === AppearanceMode.LightMode ? <ApiResource /> : <ApiResourceDark />
-                    }
-                    to={buildDetailsLink(id)}
-                  />
-                </td>
-                <td>
-                  <CopyToClipboard value={indicator} variant="text" />
-                </td>
-              </tr>
-            ))}
+            {apiResources?.map(({ id, name, indicator }) => {
+              const ResourceIcon =
+                theme === AppearanceMode.LightMode ? ApiResource : ApiResourceDark;
+
+              return (
+                <tr
+                  key={id}
+                  className={tableStyles.clickable}
+                  onClick={() => {
+                    navigate(buildDetailsLink(id));
+                  }}
+                >
+                  <td>
+                    <ItemPreview
+                      title={name}
+                      icon={<ResourceIcon className={styles.icon} />}
+                      to={buildDetailsLink(id)}
+                    />
+                  </td>
+                  <td>
+                    <CopyToClipboard value={indicator} variant="text" />
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>
