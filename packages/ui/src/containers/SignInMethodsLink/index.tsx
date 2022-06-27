@@ -13,11 +13,11 @@ type Props = {
   signInMethods: LocalSignInMethod[];
   search?: string;
   className?: string;
-  template?: TFuncKey<'translation', 'main_flow.secondary'>;
+  template?: TFuncKey<'translation', 'secondary'>;
 };
 
 const SignInMethodsKeyMap: {
-  [key in LocalSignInMethod]: TFuncKey<'translation', 'main_flow.input'>;
+  [key in LocalSignInMethod]: TFuncKey<'translation', 'input'>;
 } = {
   username: 'username',
   email: 'email',
@@ -26,7 +26,7 @@ const SignInMethodsKeyMap: {
 
 const SignInMethodsLink = ({ signInMethods, template, search, className }: Props) => {
   const navigate = useNavigate();
-  const { t } = useTranslation(undefined, { keyPrefix: 'main_flow' });
+  const { t } = useTranslation();
 
   const signInMethodsLink = useMemo(
     () =>

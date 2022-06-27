@@ -14,7 +14,7 @@ type Props = {
 };
 
 const SecondarySignIn = () => {
-  const { t } = useTranslation(undefined, { keyPrefix: 'main_flow' });
+  const { t } = useTranslation();
   const { method = 'username' } = useParams<Props>();
 
   const signInForm = useMemo(() => {

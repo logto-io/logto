@@ -12,7 +12,7 @@ type Props = {
 
 const NavBar = ({ title }: Props) => {
   const navigate = useNavigate();
-  const { t } = useTranslation(undefined, { keyPrefix: 'main_flow' });
+  const { t } = useTranslation();
 
   return (
     <div className={styles.navBar}>

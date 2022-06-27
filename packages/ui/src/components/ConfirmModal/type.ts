@@ -5,8 +5,8 @@ export type ModalProps = {
   className?: string;
   isOpen?: boolean;
   children: ReactNode;
-  cancelText?: TFuncKey<'translation', 'main_flow'>;
-  confirmText?: TFuncKey<'translation', 'main_flow'>;
+  cancelText?: TFuncKey;
+  confirmText?: TFuncKey;
   onConfirm?: () => void;
   onClose: () => void;
 };

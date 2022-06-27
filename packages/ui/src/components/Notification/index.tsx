@@ -13,7 +13,7 @@ type Props = {
 };
 
 const Notification = ({ className, message, onClose }: Props) => {
-  const { t } = useTranslation(undefined, { keyPrefix: 'main_flow' });
+  const { t } = useTranslation();
 
   return (
     <div className={classNames(styles.notification, className)}>

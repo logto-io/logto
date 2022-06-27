@@ -1,4 +1,4 @@
-import { Language } from '@logto/phrases';
+import { Language } from '@logto/phrases/lib/types.js';
 
 import { CreateSetting } from '../db-entries';
 import { AppearanceMode } from '../foundations';

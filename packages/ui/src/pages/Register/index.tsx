@@ -14,7 +14,7 @@ type Parameters = {
 };
 
 const Register = () => {
-  const { t } = useTranslation(undefined, { keyPrefix: 'main_flow' });
+  const { t } = useTranslation();
   const { method = 'username' } = useParams<Parameters>();
 
   const registerForm = useMemo(() => {

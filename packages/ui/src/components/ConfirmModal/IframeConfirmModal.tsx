@@ -21,7 +21,7 @@ const IframeConfirmModal = ({
   onConfirm,
   onClose,
 }: Props) => {
-  const { t } = useTranslation(undefined, { keyPrefix: 'main_flow' });
+  const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState(true);
 
   return (

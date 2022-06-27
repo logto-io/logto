@@ -1,4 +1,3 @@
-import { Language } from '@logto/phrases';
 import {
   BrandingStyle,
   ConnectorPlatform,
@@ -7,6 +6,7 @@ import {
   SignInMethodState,
   SignInMode,
 } from '@logto/schemas';
+import { Language } from '@logto/ui-phrases';
 
 import { SignInExperienceSettings } from '@/types';
 

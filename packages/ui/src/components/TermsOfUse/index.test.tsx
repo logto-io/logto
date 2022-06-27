@@ -7,7 +7,7 @@ import TermsOfUse from '.';
 describe('Terms of Use', () => {
   const onChange = jest.fn();
   const contentUrl = 'http://logto.dev/';
-  const { t } = useTranslation(undefined, { keyPrefix: 'main_flow' });
+  const { t } = useTranslation();
   const prefix = t('description.agree_with_terms');
 
   beforeEach(() => {

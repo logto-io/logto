@@ -1,5 +1,5 @@
-import { Language } from '@logto/phrases';
 import { hexColorRegEx } from '@logto/shared';
+import { Language } from '@logto/ui-phrases/lib/types.js';
 import { z } from 'zod';
 
 /**

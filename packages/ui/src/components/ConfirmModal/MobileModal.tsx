@@ -18,7 +18,7 @@ const MobileModal = ({
   onConfirm,
   onClose,
 }: ModalProps) => {
-  const { t } = useTranslation(undefined, { keyPrefix: 'main_flow' });
+  const { t } = useTranslation();
 
   return (
     <ReactModal

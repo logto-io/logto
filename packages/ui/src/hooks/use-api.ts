@@ -1,4 +1,4 @@
-import { LogtoErrorCode } from '@logto/phrases';
+import type { LogtoErrorCode } from '@logto/phrases';
 import { RequestErrorBody } from '@logto/schemas';
 import { HTTPError } from 'ky';
 import { useState, useCallback, useContext, useEffect } from 'react';
@@ -23,7 +23,7 @@ function useApi<Args extends any[], Response>(
   api: (...args: Args) => Promise<Response>,
   errorHandlers?: ErrorHandlers
 ): UseApi<Args, Response> {
-  const { t } = useTranslation(undefined, { keyPrefix: 'main_flow' });
+  const { t } = useTranslation();
   const [error, setError] = useState<RequestErrorBody>();
   const [result, setResult] = useState<Response>();
 

@@ -10,7 +10,7 @@ import { PageContext } from './use-page-context';
 const useSocialLandingHandler = () => {
   const [loading, setLoading] = useState(true);
   const { setToast } = useContext(PageContext);
-  const { t } = useTranslation(undefined, { keyPrefix: 'main_flow' });
+  const { t } = useTranslation();
   const { search } = window.location;
 
   const socialLandingHandler = useCallback(

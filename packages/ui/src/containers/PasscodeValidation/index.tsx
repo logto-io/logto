@@ -34,7 +34,7 @@ const PasscodeValidation = ({ type, method, className, target }: Props) => {
   const [code, setCode] = useState<string[]>([]);
   const [error, setError] = useState<string>();
   const { setToast } = useContext(PageContext);
-  const { t } = useTranslation(undefined, { keyPrefix: 'main_flow' });
+  const { t } = useTranslation();
 
   const { seconds, isRunning, restart } = useTimer({
     autoStart: true,

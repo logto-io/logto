@@ -34,7 +34,7 @@ const defaultState: FieldState = { email: '' };
 const EmailPasswordless = ({ type, autoFocus, className }: Props) => {
   const { setToast } = useContext(PageContext);
   const [showPasswordlessConfirmModal, setShowPasswordlessConfirmModal] = useState(false);
-  const { t } = useTranslation(undefined, { keyPrefix: 'main_flow' });
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { termsValidation } = useTerms();
   const { fieldValue, setFieldValue, setFieldErrors, register, validateForm } =

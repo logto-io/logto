@@ -8,13 +8,13 @@ import * as styles from './index.module.scss';
 export type Props = AnchorHTMLAttributes<HTMLAnchorElement> & {
   className?: string;
   children?: ReactNode;
-  text?: TFuncKey<'translation', 'main_flow'>;
+  text?: TFuncKey;
   type?: 'primary' | 'secondary';
   to?: string;
 };
 
 const TextLink = ({ className, children, text, type = 'primary', to, ...rest }: Props) => {
-  const { t } = useTranslation(undefined, { keyPrefix: 'main_flow' });
+  const { t } = useTranslation();
 
   if (to) {
     return (
