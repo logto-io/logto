@@ -561,7 +561,6 @@ const errors = {
     phone_exists_register: 'The phone number has been registered.',
     invalid_email: 'Invalid email address.',
     invalid_phone: 'Invalid phone number.',
-    username_not_exists: 'The username has not been registered yet.',
     email_not_exists: 'The email address has not been registered yet.',
     phone_not_exists: 'The phone number has not been registered yet.',
     identity_not_exists: 'The social account has not been registered yet.',

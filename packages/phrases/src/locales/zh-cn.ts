@@ -544,7 +544,6 @@ const errors = {
     phone_exists_register: '手机号码已被注册。',
     invalid_email: '邮箱地址不正确。',
     invalid_phone: '手机号码不正确。',
-    username_not_exists: '用户名尚未注册。',
     email_not_exists: '邮箱地址尚未注册。',
     phone_not_exists: '手机号码尚未注册。',
     identity_not_exists: '该社交账号尚未注册。',
