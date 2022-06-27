@@ -22,4 +22,17 @@ describe('modalPromisify', () => {
 
     expect(onResolve).toBeCalled();
   });
+
+  it('reject with message', () => {
+    const PromisifyModal = modalPromisify(TermsOfUseConfirmModal);
+
+    const { getByText } = renderWithPageContext(
+      <PromisifyModal isOpen instanceId="foo" onResolve={onResolve} onReject={onReject} />
+    );
+
+    const cancelButton = getByText('action.cancel');
+    fireEvent.click(cancelButton);
+
+    expect(onReject).toBeCalled();
+  });
 });

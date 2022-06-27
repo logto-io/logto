@@ -1,4 +1,4 @@
-import { screen } from '@testing-library/react';
+import { screen, fireEvent } from '@testing-library/react';
 import React from 'react';
 
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
@@ -12,7 +12,7 @@ describe('TermsOfUseModal', () => {
   const onCancel = jest.fn();
 
   it('render properly', () => {
-    const { queryByText } = renderWithPageContext(
+    const { queryByText, getByText } = renderWithPageContext(
       <SettingsProvider>
         <TermsOfUseIframeModal isOpen onConfirm={onConfirm} onClose={onCancel} />
       </SettingsProvider>
@@ -27,5 +27,11 @@ describe('TermsOfUseModal', () => {
     if (iframe) {
       expect(iframe).toHaveProperty('src', mockSignInExperienceSettings.termsOfUse.contentUrl);
     }
+
+    const confirmButton = getByText('action.agree');
+
+    fireEvent.click(confirmButton);
+
+    expect(onConfirm).toBeCalled();
   });
 });
