@@ -4,17 +4,14 @@
   "signName": "<sign-name>",
   "templates": [
     {
-      "type": 2,
       "usageType": "SignIn",
       "templateCode": "<template-code>"
     },
     {
-      "type": 2,
       "usageType": "Register",
       "templateCode": "<template-code>"
     },
     {
-      "type": 2,
       "usageType": "Test",
       "templateCode": "<template-code>"
     }
