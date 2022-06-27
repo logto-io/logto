@@ -2,6 +2,7 @@ name: Main
 
 on:
   push:
+  pull_request:
 
 concurrency:
   group: main-${{ github.ref }}
