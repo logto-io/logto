@@ -1,7 +1,4 @@
-import path from 'path';
-
 import { ConnectorMetadata, ConnectorType } from '@logto/connector-types';
-import { getFileContents } from '@logto/shared';
 
 export const endpoint = 'https://dysmsapi.aliyuncs.com/';
 
@@ -28,13 +25,6 @@ export enum SmsTemplateType {
   PureNumber = 7,
 }
 
-// eslint-disable-next-line unicorn/prefer-module
-const currentPath = __dirname;
-const pathToReadmeFile = path.join(currentPath, '..', 'README.md');
-const pathToConfigTemplate = path.join(currentPath, '..', 'docs', 'config-template.json');
-const readmeContentFallback = 'Please check README.md file directory.';
-const configTemplateFallback = 'Please check config-template.json file directory.';
-
 export const defaultMetadata: ConnectorMetadata = {
   id: 'aliyun-short-message-service',
   target: 'aliyun-sms',
@@ -51,6 +41,6 @@ export const defaultMetadata: ConnectorMetadata = {
     'zh-CN':
       '短信服务（Short Message Service）是指通过调用短信发送API，将指定短信内容发送给指定手机用户。',
   },
-  readme: getFileContents(pathToReadmeFile, readmeContentFallback),
-  configTemplate: getFileContents(pathToConfigTemplate, configTemplateFallback),
+  readme: './README.md',
+  configTemplate: './docs/config-template.json',
 };

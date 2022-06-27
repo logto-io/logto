@@ -1,7 +1,4 @@
-import path from 'path';
-
 import { ConnectorMetadata, ConnectorType, ConnectorPlatform } from '@logto/connector-types';
-import { getFileContents } from '@logto/shared';
 
 // https://appleid.apple.com/.well-known/openid-configuration
 export const issuer = 'https://appleid.apple.com';
@@ -11,13 +8,6 @@ export const jwksUri = `${issuer}/auth/keys`;
 
 // Note: only support fixed scope for v1.
 export const scope = ''; // Note: `openid` is required when adding more scope(s)
-
-// eslint-disable-next-line unicorn/prefer-module
-const currentPath = __dirname;
-const pathToReadmeFile = path.join(currentPath, '..', 'README.md');
-const pathToConfigTemplate = path.join(currentPath, '..', 'docs', 'config-template.json');
-const readmeContentFallback = 'Please check README.md file directory.';
-const configTemplateFallback = 'Please check config-template.json file directory.';
 
 export const defaultMetadata: ConnectorMetadata = {
   id: 'apple-universal',
@@ -34,8 +24,8 @@ export const defaultMetadata: ConnectorMetadata = {
     en: 'Enables users to sign in to the Logto app through their Apple account.',
     'zh-CN': '让用户能够通过 Apple 账号登录 Logto 应用。',
   },
-  readme: getFileContents(pathToReadmeFile, readmeContentFallback),
-  configTemplate: getFileContents(pathToConfigTemplate, configTemplateFallback),
+  readme: './README.md',
+  configTemplate: './docs/config-template.json',
 };
 
 export const defaultTimeout = 5000;
