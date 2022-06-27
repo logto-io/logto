@@ -30,3 +30,7 @@ export type SignInExperienceSettings = Omit<
   primarySignInMethod: SignInMethod;
   secondarySignInMethods: SignInMethod[];
 };
+
+export enum TermsOfUseModalMessage {
+  SHOW_DETAIL_MODAL = 'SHOW_DETAIL_MODAL',
+}
