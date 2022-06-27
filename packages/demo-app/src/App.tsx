@@ -1,5 +1,4 @@
 import { LogtoProvider, useLogto, UserInfoResponse } from '@logto/react';
-import { signInNotificationStorageKey } from '@logto/schemas';
 import { demoAppApplicationId } from '@logto/schemas/lib/seeds';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -32,7 +31,6 @@ const Main = () => {
         setUser(userInfo);
       })();
     } else {
-      sessionStorage.setItem(signInNotificationStorageKey, t('notification'));
       void signIn(window.location.href);
     }
   }, [fetchUserInfo, isAuthenticated, isInCallback, signIn, t]);

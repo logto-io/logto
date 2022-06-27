@@ -1,12 +1,4 @@
-import {
-  Branding,
-  LanguageInfo,
-  TermsOfUse,
-  SignInExperience,
-  ConnectorMetadata,
-  SignInMode,
-  Color,
-} from '@logto/schemas';
+import { SignInExperience, ConnectorMetadata } from '@logto/schemas';
 
 export type UserFlow = 'sign-in' | 'register';
 export type SignInMethod = 'username' | 'email' | 'sms' | 'social';
@@ -28,15 +20,13 @@ export interface ConnectorData extends ConnectorMetadata {
 
 export type SignInExperienceSettingsResponse = SignInExperience & {
   socialConnectors: ConnectorData[];
+  notification?: string;
 };
 
-export type SignInExperienceSettings = {
-  color: Color;
-  branding: Branding;
-  languageInfo: LanguageInfo;
-  termsOfUse: TermsOfUse;
+export type SignInExperienceSettings = Omit<
+  SignInExperienceSettingsResponse,
+  'id' | 'signInMethods' | 'socialSignInConnectorTargets'
+> & {
   primarySignInMethod: SignInMethod;
   secondarySignInMethods: SignInMethod[];
-  socialConnectors: ConnectorData[];
-  signInMode: SignInMode;
 };

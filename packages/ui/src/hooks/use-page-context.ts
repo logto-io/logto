@@ -10,12 +10,12 @@ export type Context = {
   platform: Platform;
   termsAgreement: boolean;
   experienceSettings: SignInExperienceSettings | undefined;
-  setTheme: (theme: Theme) => void;
-  setToast: (message: string) => void;
-  setLoading: (loading: boolean) => void;
-  setPlatform: (platform: Platform) => void;
-  setTermsAgreement: (termsAgreement: boolean) => void;
-  setExperienceSettings: (settings: SignInExperienceSettings) => void;
+  setTheme: React.Dispatch<React.SetStateAction<Theme>>;
+  setToast: React.Dispatch<React.SetStateAction<string>>;
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  setPlatform: React.Dispatch<React.SetStateAction<Platform>>;
+  setTermsAgreement: React.Dispatch<React.SetStateAction<boolean>>;
+  setExperienceSettings: React.Dispatch<React.SetStateAction<SignInExperienceSettings | undefined>>;
 };
 
 const noop = () => {
