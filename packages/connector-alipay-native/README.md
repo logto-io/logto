@@ -8,7 +8,7 @@ Alipay Native connector works closely with Logto SDK on mobile platforms. It tak
 
 ## Create and configure Alipay app
 
-1. Sign in to the Alipay console with the account you have just registered.
+1. Sign in to the [Alipay console](https://open.alipay.com/) with the account you have just registered.
 2. Go to **Web & Mobile Apps** tab in **My Application** panel.
 3. Click **Create an App** button to start configuring your application.
 4. Name your application in **Application Name** following the naming conventions and upload your **Application Icon**, make sure you choose **mobile application** as **App type**. For building iOS App, a unique **bundle ID** is required. Also, **application signature** and **application package name** are required for Android apps.
@@ -35,7 +35,7 @@ Alipay Native connector works closely with Logto SDK on mobile platforms. It tak
 | privateKey |    string   |       N/A       |
 |  signType  | enum string | 'RSA' \| 'RSA2' |
 
-## Reference
+## References
 
 - [Alipay Docs - Access Preparation - How to create an app](https://opendocs.alipay.com/support/01rau6)
 - [Alipay Docs - Web & Mobile Apps - Create an app](https://opendocs.alipay.com/open/200/105310)
