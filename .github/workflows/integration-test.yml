@@ -2,6 +2,7 @@ name: Integration Test
 
 on:
   push:
+  pull_request:
 
 concurrency: 
   group: integration-test-${{ github.ref }}
