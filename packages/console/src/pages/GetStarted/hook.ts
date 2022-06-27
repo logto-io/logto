@@ -80,9 +80,20 @@ const useGetStartedMetadata = ({ checkDemoAppExists }: Props) => {
       },
     },
     {
-      id: 'configurePasswordless',
+      id: 'customizeSignInExperience',
       title: 'get_started.card3_title',
       subtitle: 'get_started.card3_subtitle',
+      icon: isLightMode ? Customize : CustomizeDark,
+      buttonText: 'general.customize',
+      isComplete: settings?.customizeSignInExperience,
+      onClick: () => {
+        navigate('/sign-in-experience');
+      },
+    },
+    {
+      id: 'configurePasswordless',
+      title: 'get_started.card4_title',
+      subtitle: 'get_started.card4_subtitle',
       icon: isLightMode ? Passwordless : PasswordlessDark,
       buttonText: 'general.create',
       isComplete: settings?.configurePasswordless,
@@ -92,23 +103,12 @@ const useGetStartedMetadata = ({ checkDemoAppExists }: Props) => {
     },
     {
       id: 'configureSocialSignIn',
-      title: 'get_started.card4_title',
-      subtitle: 'get_started.card4_subtitle',
+      title: 'get_started.card5_title',
+      subtitle: 'get_started.card5_subtitle',
       icon: isLightMode ? OneClick : OneClickDark,
       buttonText: 'general.set_up',
       onClick: () => {
         navigate('/connectors/social');
-      },
-    },
-    {
-      id: 'customizeSignInExperience',
-      title: 'get_started.card5_title',
-      subtitle: 'get_started.card5_subtitle',
-      icon: isLightMode ? Customize : CustomizeDark,
-      buttonText: 'general.customize',
-      isComplete: settings?.customizeSignInExperience,
-      onClick: () => {
-        navigate('/sign-in-experience');
       },
     },
     {
