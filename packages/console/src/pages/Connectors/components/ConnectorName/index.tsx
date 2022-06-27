@@ -38,7 +38,7 @@ const ConnectorName = ({ type, connectors, onClickSetup }: Props) => {
         }
         icon={
           <div className={styles.logoContainer}>
-            <ConnectorPlaceholderIcon type={type} />
+            <ConnectorPlaceholderIcon type={type} className={styles.logo} />
           </div>
         }
       />
