@@ -9,13 +9,13 @@ import NavBar from '@/components/NavBar';
 import * as styles from './index.module.scss';
 
 type Props = {
-  title?: TFuncKey<'translation', 'main_flow'>;
-  message?: TFuncKey<'translation', 'main_flow'>;
+  title?: TFuncKey;
+  message?: TFuncKey;
   rawMessage?: string;
 };
 
 const ErrorPage = ({ title = 'description.not_found', message, rawMessage }: Props) => {
-  const { t } = useTranslation(undefined, { keyPrefix: 'main_flow' });
+  const { t } = useTranslation();
   const navigate = useNavigate();
 
   const errorMessage = rawMessage || (message && t(message));

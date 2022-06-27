@@ -11,7 +11,7 @@ import { PageContext } from './use-page-context';
 
 const useSocialSignInListener = () => {
   const { setToast } = useContext(PageContext);
-  const { t } = useTranslation(undefined, { keyPrefix: 'main_flow' });
+  const { t } = useTranslation();
   const parameters = useParams();
   const navigate = useNavigate();
 

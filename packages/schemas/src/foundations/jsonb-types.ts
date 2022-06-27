@@ -1,4 +1,4 @@
-import { Language } from '@logto/phrases';
+import { Language } from '@logto/phrases-ui';
 import { hexColorRegEx } from '@logto/shared';
 import { z } from 'zod';
 

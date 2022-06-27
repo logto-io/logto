@@ -8,7 +8,7 @@
     "start": "parcel src/index.html",
     "dev": "cross-env PORT=5001 parcel src/index.html --no-cache --hmr-port 6001",
     "check": "tsc --noEmit",
-    "build": "pnpm check && rm -rf dist && parcel build src/index.html --no-autoinstall --no-cache",
+    "build": "pnpm check && rm -rf dist && parcel build src/index.html --no-autoinstall --no-cache --detailed-report",
     "lint": "eslint --ext .ts --ext .tsx src",
     "lint:report": "pnpm lint --format json --output-file report.json",
     "stylelint": "stylelint \"src/**/*.scss\"",
@@ -18,6 +18,7 @@
   "devDependencies": {
     "@logto/phrases": "^0.1.0",
     "@logto/schemas": "^0.1.0",
+    "@logto/phrases-ui": "^0.1.0",
     "@parcel/core": "2.6.2",
     "@parcel/transformer-sass": "2.6.2",
     "@parcel/transformer-svg-react": "2.6.2",

@@ -17,7 +17,7 @@ type Props = {
 };
 
 const TermsOfUse = ({ name, className, termsUrl, isChecked, onChange, onTermsClick }: Props) => {
-  const { t } = useTranslation(undefined, { keyPrefix: 'main_flow' });
+  const { t } = useTranslation();
 
   const prefix = t('description.agree_with_terms');
 

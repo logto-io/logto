@@ -17,7 +17,7 @@ type Props = {
 };
 
 const TermsOfUseConfirmModal = ({ isOpen = false, termsUrl, onConfirm, onClose }: Props) => {
-  const { t } = useTranslation(undefined, { keyPrefix: 'main_flow' });
+  const { t } = useTranslation();
 
   const terms = t('description.terms_of_use');
   const content = t('description.agree_with_terms_modal', { terms });

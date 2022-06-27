@@ -1,4 +1,4 @@
-import { Language } from '@logto/phrases';
+import { Language } from '@logto/phrases-ui';
 import { AppearanceMode, ConnectorPlatform } from '@logto/schemas';
 import { conditionalString } from '@silverhand/essentials';
 import i18next from 'i18next';

@@ -13,7 +13,7 @@ type Parameters = {
 };
 
 const SocialRegister = () => {
-  const { t } = useTranslation(undefined, { keyPrefix: 'main_flow' });
+  const { t } = useTranslation();
   const { connector } = useParams<Parameters>();
   const { isMobile } = usePlatform();
 

@@ -18,7 +18,7 @@ type Props = {
 };
 
 const PasswordlessConfirmModal = ({ className, isOpen, type, method, value, onClose }: Props) => {
-  const { t } = useTranslation(undefined, { keyPrefix: 'main_flow' });
+  const { t } = useTranslation();
   const sendPasscode = getSendPasscodeApi(type, method);
   const navigate = useNavigate();
   const { isMobile } = usePlatform();

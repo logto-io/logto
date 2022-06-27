@@ -4,7 +4,7 @@ import { TFuncKey, useTranslation } from 'react-i18next';
 
 import * as styles from './index.module.scss';
 
-type ErrorCode = TFuncKey<'translation', 'main_flow.error'>;
+type ErrorCode = TFuncKey<'translation', 'error'>;
 
 export type ErrorType = ErrorCode | { code: ErrorCode; data?: Record<string, unknown> };
 
@@ -15,7 +15,7 @@ export type Props = {
 };
 
 const ErrorMessage = ({ error, className, children }: Props) => {
-  const { t } = useTranslation(undefined, { keyPrefix: 'main_flow.error' });
+  const { t } = useTranslation(undefined, { keyPrefix: 'error' });
 
   const getMessage = () => {
     if (!error) {

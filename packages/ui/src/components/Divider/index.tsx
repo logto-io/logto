@@ -6,11 +6,11 @@ import * as styles from './index.module.scss';
 
 type Props = {
   className?: string;
-  label?: TFuncKey<'translation', 'main_flow'>;
+  label?: TFuncKey;
 };
 
 const Divider = ({ className, label }: Props) => {
-  const { t } = useTranslation(undefined, { keyPrefix: 'main_flow' });
+  const { t } = useTranslation();
 
   return (
     <div className={classNames(styles.divider, className)}>

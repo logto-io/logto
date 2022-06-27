@@ -19,7 +19,7 @@ type Parameters = {
 type StateType = Nullable<Record<string, string>>;
 
 const Passcode = () => {
-  const { t } = useTranslation(undefined, { keyPrefix: 'main_flow' });
+  const { t } = useTranslation();
   const { method, type } = useParams<Parameters>();
   const state = useLocation().state as StateType;
   const invalidType = type !== 'sign-in' && type !== 'register';

@@ -33,7 +33,7 @@ const defaultState: FieldState = {
 };
 
 const UsernameSignin = ({ className, autoFocus }: Props) => {
-  const { t } = useTranslation(undefined, { keyPrefix: 'main_flow' });
+  const { t } = useTranslation();
   const { termsValidation } = useTerms();
   const {
     fieldValue,

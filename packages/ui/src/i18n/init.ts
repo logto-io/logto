@@ -1,4 +1,4 @@
-import resources from '@logto/phrases';
+import resources from '@logto/phrases-ui';
 import { LanguageInfo } from '@logto/schemas';
 import i18next, { InitOptions } from 'i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
