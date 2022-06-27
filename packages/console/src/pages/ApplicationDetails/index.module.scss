@@ -34,6 +34,12 @@
     margin-left: _.unit(6);
   }
 
+  .icon {
+    margin-left: _.unit(2);
+    width: 60px;
+    height: 60px;
+  }
+
   .operations {
     display: flex;
     align-items: center;
