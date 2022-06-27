@@ -1,4 +1,4 @@
-import { Language } from '@logto/ui-phrases';
+import { Language } from '@logto/phrases-ui';
 import React, { useState, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 

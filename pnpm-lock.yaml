@@ -1064,12 +1064,31 @@ importers:
       prettier: 2.5.1
       typescript: 4.6.2
 
+  packages/phrases-ui:
+    specifiers:
+      '@silverhand/eslint-config': ^0.14.0
+      '@silverhand/essentials': ^1.1.4
+      '@silverhand/ts-config': ^0.14.0
+      eslint: ^8.10.0
+      lint-staged: ^13.0.0
+      prettier: ^2.3.2
+      typescript: ^4.6.2
+    dependencies:
+      '@silverhand/essentials': 1.1.7
+    devDependencies:
+      '@silverhand/eslint-config': 0.14.0_j52666lpucfyl6yew5a5mxpfce
+      '@silverhand/ts-config': 0.14.0_typescript@4.7.2
+      eslint: 8.10.0
+      lint-staged: 13.0.0
+      prettier: 2.5.1
+      typescript: 4.7.2
+
   packages/schemas:
     specifiers:
       '@logto/connector-types': ^0.1.0
       '@logto/phrases': ^0.1.0
+      '@logto/phrases-ui': ^0.1.0
       '@logto/shared': ^0.1.0
-      '@logto/ui-phrases': ^0.1.0
       '@silverhand/eslint-config': ^0.14.0
       '@silverhand/essentials': ^1.1.6
       '@silverhand/ts-config': ^0.14.0
@@ -1088,8 +1107,8 @@ importers:
     dependencies:
       '@logto/connector-types': link:../connector-types
       '@logto/phrases': link:../phrases
+      '@logto/phrases-ui': link:../phrases-ui
       '@logto/shared': link:../shared
-      '@logto/ui-phrases': link:../ui-phrases
       zod: 3.14.3
     devDependencies:
       '@silverhand/eslint-config': 0.14.0_hjjt7jwmhwqm7bjf55k5ihcdqq
@@ -1138,8 +1157,8 @@ importers:
   packages/ui:
     specifiers:
       '@logto/phrases': ^0.1.0
+      '@logto/phrases-ui': ^0.1.0
       '@logto/schemas': ^0.1.0
-      '@logto/ui-phrases': ^0.1.0
       '@parcel/core': 2.6.2
       '@parcel/transformer-sass': 2.6.2
       '@parcel/transformer-svg-react': 2.6.2
@@ -1189,8 +1208,8 @@ importers:
       use-debounced-loader: ^0.1.1
     devDependencies:
       '@logto/phrases': link:../phrases
+      '@logto/phrases-ui': link:../phrases-ui
       '@logto/schemas': link:../schemas
-      '@logto/ui-phrases': link:../ui-phrases
       '@parcel/core': 2.6.2
       '@parcel/transformer-sass': 2.6.2_@parcel+core@2.6.2
       '@parcel/transformer-svg-react': 2.6.2_@parcel+core@2.6.2
@@ -1238,25 +1257,6 @@ importers:
       stylelint: 14.8.2
       typescript: 4.6.2
       use-debounced-loader: 0.1.1_react@17.0.2
-
-  packages/ui-phrases:
-    specifiers:
-      '@silverhand/eslint-config': ^0.14.0
-      '@silverhand/essentials': ^1.1.4
-      '@silverhand/ts-config': ^0.14.0
-      eslint: ^8.10.0
-      lint-staged: ^13.0.0
-      prettier: ^2.3.2
-      typescript: ^4.6.2
-    dependencies:
-      '@silverhand/essentials': 1.1.7
-    devDependencies:
-      '@silverhand/eslint-config': 0.14.0_j52666lpucfyl6yew5a5mxpfce
-      '@silverhand/ts-config': 0.14.0_typescript@4.7.2
-      eslint: 8.10.0
-      lint-staged: 13.0.0
-      prettier: 2.5.1
-      typescript: 4.7.2
 
 packages:
 

@@ -1,4 +1,4 @@
-# `@logto/ui-phrases`
+# `@logto/phrases-ui`
 
 > TODO: description
 

@@ -1,4 +1,4 @@
-import { Language } from '@logto/ui-phrases/lib/types.js';
+import { Language } from '@logto/phrases-ui';
 
 import { CreateSignInExperience, SignInMode } from '../db-entries';
 import { BrandingStyle, SignInMethodState } from '../foundations';
