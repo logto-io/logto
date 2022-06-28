@@ -13,13 +13,17 @@ type Props = {
 };
 
 const SocialLanding = ({ className, connectorId, isLoading = false }: Props) => {
-  const { experienceSettings } = useContext(PageContext);
+  const { experienceSettings, theme } = useContext(PageContext);
   const connector = experienceSettings?.socialConnectors.find(({ id }) => id === connectorId);
 
   return (
     <div className={classNames(styles.container, className)}>
       <div className={styles.connector}>
-        {connector?.logo ? <img src={connector.logo} /> : connectorId}
+        {connector ? (
+          <img src={theme === 'dark' ? connector.logoDark ?? connector.logo : connector.logo} />
+        ) : (
+          connectorId
+        )}
       </div>
       {isLoading && <LoadingIcon />}
     </div>
