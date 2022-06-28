@@ -1,62 +1,39 @@
 import { User } from '@logto/schemas';
+import { nanoid } from 'nanoid';
 import React from 'react';
-import { useForm } from 'react-hook-form';
-import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 
-import Button from '@/components/Button';
-import FormField from '@/components/FormField';
-import ModalLayout from '@/components/ModalLayout';
-import TextInput from '@/components/TextInput';
+import ConfirmModal from '@/components/ConfirmModal';
 import useApi from '@/hooks/use-api';
-
-type FormData = {
-  password: string;
-};
 
 type Props = {
   userId: string;
-  onClose?: () => void;
+  onClose?: (password?: string) => void;
 };
 
 const ResetPasswordForm = ({ onClose, userId }: Props) => {
   const { t } = useTranslation(undefined, {
     keyPrefix: 'admin_console',
   });
-  const {
-    handleSubmit,
-    register,
-    formState: { isSubmitting },
-  } = useForm<FormData>();
   const api = useApi();
 
-  const onSubmit = handleSubmit(async (data) => {
-    await api.patch(`/api/users/${userId}/password`, { json: data }).json<User>();
-    onClose?.();
-    toast.success(t('user_details.reset_password.reset_password_success'));
-  });
+  const onSubmit = async () => {
+    const password = nanoid();
+    await api.patch(`/api/users/${userId}/password`, { json: { password } }).json<User>();
+    onClose?.(btoa(password));
+  };
 
   return (
-    <ModalLayout
+    <ConfirmModal
+      isOpen
       title="user_details.reset_password.title"
-      footer={
-        <Button
-          isLoading={isSubmitting}
-          htmlType="submit"
-          title="admin_console.user_details.reset_password.reset_password"
-          size="large"
-          type="primary"
-          onClick={onSubmit}
-        />
-      }
-      onClose={onClose}
+      onCancel={() => {
+        onClose?.();
+      }}
+      onConfirm={onSubmit}
     >
-      <form>
-        <FormField isRequired title="admin_console.user_details.reset_password.label">
-          <TextInput {...register('password', { required: true })} />
-        </FormField>
-      </form>
-    </ModalLayout>
+      {t('user_details.reset_password.content')}
+    </ConfirmModal>
   );
 };
 

@@ -244,10 +244,10 @@ const translation = {
       delete_description: '本操作将永久删除该用户，且无法撤销。',
       deleted: '用户已成功删除！',
       reset_password: {
-        title: '重置密码',
-        label: '新密码：',
         reset_password: '重置密码',
-        reset_password_success: '密码已成功重置',
+        title: '确定要重置密码？',
+        content: '本操作不可撤销，将会重置用户的登录信息。',
+        congratulations: '该用户已被重置',
       },
       tab_logs: '用户日志',
       field_email: '主要邮箱',
