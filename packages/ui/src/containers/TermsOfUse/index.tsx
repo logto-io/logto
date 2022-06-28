@@ -10,7 +10,8 @@ type Props = {
 };
 
 const TermsOfUse = ({ className }: Props) => {
-  const { termsAgreement, setTermsAgreement, termsSettings, termsOfUserModalHandler } = useTerms();
+  const { termsAgreement, setTermsAgreement, termsSettings, termsOfUseIframeModalHandler } =
+    useTerms();
   const { isMobile } = usePlatform();
 
   if (!termsSettings?.enabled || !termsSettings.contentUrl) {
@@ -27,7 +28,7 @@ const TermsOfUse = ({ className }: Props) => {
         onChange={(checked) => {
           setTermsAgreement(checked);
         }}
-        onTermsClick={isMobile ? termsOfUserModalHandler : undefined}
+        onTermsClick={isMobile ? termsOfUseIframeModalHandler : undefined}
       />
       <ModalContainer />
     </>

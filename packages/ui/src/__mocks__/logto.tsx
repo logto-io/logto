@@ -135,7 +135,7 @@ export const mockSignInExperience: SignInExperience = {
   },
   termsOfUse: {
     enabled: true,
-    contentUrl: 'http://terms.of.use',
+    contentUrl: 'http://terms.of.use/',
   },
   languageInfo: {
     autoDetect: true,

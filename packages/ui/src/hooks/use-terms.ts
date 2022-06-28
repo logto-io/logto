@@ -1,6 +1,8 @@
 import { useContext, useCallback } from 'react';
 
-import { termsOfUseModalPromise } from '@/containers/TermsOfUse/TermsOfUsePromiseModal';
+import { termsOfUseConfirmModalPromise } from '@/containers/TermsOfUse/TermsOfUseConfirmModal';
+import { termsOfUseIframeModalPromise } from '@/containers/TermsOfUse/TermsOfUseIframeModal';
+import { TermsOfUseModalMessage } from '@/types';
 
 import { PageContext } from './use-page-context';
 
@@ -9,9 +11,9 @@ const useTerms = () => {
 
   const { termsOfUse } = experienceSettings ?? {};
 
-  const termsOfUserModalHandler = useCallback(async () => {
+  const termsOfUseIframeModalHandler = useCallback(async () => {
     try {
-      await termsOfUseModalPromise();
+      await termsOfUseIframeModalPromise();
 
       return true;
     } catch {
@@ -19,20 +21,37 @@ const useTerms = () => {
     }
   }, []);
 
+  const termsOfUseConfirmModalHandler = useCallback(async () => {
+    try {
+      await termsOfUseConfirmModalPromise();
+
+      return true;
+    } catch (error: unknown) {
+      if (error === TermsOfUseModalMessage.SHOW_DETAIL_MODAL) {
+        const result = await termsOfUseIframeModalHandler();
+
+        return result;
+      }
+
+      return false;
+    }
+  }, [termsOfUseIframeModalHandler]);
+
   const termsValidation = useCallback(async () => {
     if (termsAgreement || !termsOfUse?.enabled || !termsOfUse.contentUrl) {
       return true;
     }
 
-    return termsOfUserModalHandler();
-  }, [termsAgreement, termsOfUse, termsOfUserModalHandler]);
+    return termsOfUseConfirmModalHandler();
+  }, [termsAgreement, termsOfUse, termsOfUseConfirmModalHandler]);
 
   return {
     termsSettings: termsOfUse,
     termsAgreement,
     termsValidation,
     setTermsAgreement,
-    termsOfUserModalHandler,
+    termsOfUseConfirmModalHandler,
+    termsOfUseIframeModalHandler,
   };
 };
 

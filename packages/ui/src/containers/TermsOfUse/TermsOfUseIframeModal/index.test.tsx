@@ -1,5 +1,9 @@
-import { render, screen } from '@testing-library/react';
+import { screen, fireEvent } from '@testing-library/react';
 import React from 'react';
+
+import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
+import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider';
+import { mockSignInExperienceSettings } from '@/__mocks__/logto';
 
 import TermsOfUseIframeModal from '.';
 
@@ -8,13 +12,10 @@ describe('TermsOfUseModal', () => {
   const onCancel = jest.fn();
 
   it('render properly', () => {
-    const { queryByText } = render(
-      <TermsOfUseIframeModal
-        isOpen
-        termsUrl="https://www.google.com/"
-        onConfirm={onConfirm}
-        onClose={onCancel}
-      />
+    const { queryByText, getByText } = renderWithPageContext(
+      <SettingsProvider>
+        <TermsOfUseIframeModal isOpen onConfirm={onConfirm} onClose={onCancel} />
+      </SettingsProvider>
     );
 
     expect(queryByText('action.agree')).not.toBeNull();
@@ -24,7 +25,13 @@ describe('TermsOfUseModal', () => {
     expect(iframe).not.toBeNull();
 
     if (iframe) {
-      expect(iframe).toHaveProperty('src', 'https://www.google.com/');
+      expect(iframe).toHaveProperty('src', mockSignInExperienceSettings.termsOfUse.contentUrl);
     }
+
+    const confirmButton = getByText('action.agree');
+
+    fireEvent.click(confirmButton);
+
+    expect(onConfirm).toBeCalled();
   });
 });
