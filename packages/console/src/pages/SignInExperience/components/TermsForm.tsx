@@ -28,20 +28,22 @@ const TermsForm = () => {
           label={t('sign_in_exp.terms_of_use.description')}
         />
       </FormField>
-      <FormField
-        isRequired={enabled}
-        title="admin_console.sign_in_exp.terms_of_use.terms_of_use"
-        tooltip="admin_console.sign_in_exp.terms_of_use.terms_of_use_tip"
-      >
-        <TextInput
-          {...register('termsOfUse.contentUrl', {
-            required: enabled,
-            validate: (value) => !value || uriValidator(value) || t('errors.invalid_uri_format'),
-          })}
-          hasError={Boolean(errors.termsOfUse)}
-          errorMessage={errors.termsOfUse?.contentUrl?.message}
-        />
-      </FormField>
+      {enabled && (
+        <FormField
+          isRequired
+          title="admin_console.sign_in_exp.terms_of_use.terms_of_use"
+          tooltip="admin_console.sign_in_exp.terms_of_use.terms_of_use_tip"
+        >
+          <TextInput
+            {...register('termsOfUse.contentUrl', {
+              required: true,
+              validate: (value) => !value || uriValidator(value) || t('errors.invalid_uri_format'),
+            })}
+            hasError={Boolean(errors.termsOfUse)}
+            errorMessage={errors.termsOfUse?.contentUrl?.message}
+          />
+        </FormField>
+      )}
     </>
   );
 };
