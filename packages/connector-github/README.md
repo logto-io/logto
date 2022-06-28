@@ -12,6 +12,7 @@ Follow the [Creating an OAuth App](https://docs.github.com/en/developers/apps/bu
 
 Name your new OAuth application in **Application name** and fill up **Homepage URL** of the app.
 You can leave **Application description** field blank and customize **Authorization callback URL** as `${your_logto_origin}/callback/github-universal`.
+
 We suggest not to check the box before **Enable Device Flow**, or users who sign in with GitHub on mobile devices must confirm the initial sign-in action in the GitHub app. Many GitHub users do not install the GitHub mobile app on their phones, which could block the sign-in flow. Please ignore our suggestion if you are expecting end-users to confirm their sign-in flow.
 
 You can also enable end-users to sign in with GitHub accounts by [creating a GitHub app](https://docs.github.com/en/developers/apps/building-github-apps/creating-a-github-app).
@@ -29,7 +30,7 @@ Fill out the `clientId` and `clientSecret` field with **Client ID** and **Client
 
 ## Settings
 
-|     Name     |  Type  |
-|:------------:|:------:|
-|   clientId   | string |
+| Name         | Type   |
+|--------------|--------|
+| clientId     | string |
 | clientSecret | string |
