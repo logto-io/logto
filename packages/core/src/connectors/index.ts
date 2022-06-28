@@ -57,7 +57,7 @@ const loadConnectors = async () => {
       ) {
         const data = readFileSync(path.join(packagePath, '..', instance.metadata.readme));
         // eslint-disable-next-line @silverhand/fp/no-mutation
-        instance.metadata.readme = `data:text/plain;base64,${data.toString('base64')}`;
+        instance.metadata.readme = `data:text/plain,${data.toString()}`;
       }
 
       if (
@@ -67,7 +67,7 @@ const loadConnectors = async () => {
       ) {
         const data = readFileSync(path.join(packagePath, '..', instance.metadata.configTemplate));
         // eslint-disable-next-line @silverhand/fp/no-mutation
-        instance.metadata.configTemplate = `data:text/plain;base64,${data.toString('base64')}`;
+        instance.metadata.configTemplate = `data:text/plain,${data.toString()}`;
       }
 
       return instance;
