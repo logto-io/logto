@@ -75,7 +75,7 @@ const translation = {
     applications: {
       title: 'Applications',
       subtitle:
-        'Setup a mobile, single page or traditional application to use Logto for authentication',
+        'Set up a mobile, single page or traditional application to use Logto for authentication',
       create: 'Create Application',
       application_name: 'Application name',
       application_description: 'Application description',
@@ -105,7 +105,7 @@ const translation = {
         get_sample_file: 'Get the sample project',
         header_description:
           'Follow a step by step guide to integrate your application or get a sample configured with your account settings',
-        title: 'Congratulations! The application has been created successfully.',
+        title: 'The application has been successfully created',
         subtitle:
           'Now follow the steps below to finish your app settings. Please select the SDK type to continue.',
         description_by_sdk:
@@ -130,16 +130,16 @@ const translation = {
       delete_description:
         'This action cannot be undone. It will permanently delete the application. Please enter the application name <span>{{name}}</span> to confirm.',
       enter_your_application_name: 'Enter your application name',
-      application_deleted: 'Application {{name}} has been successfully deleted.',
+      application_deleted: 'Application {{name}} has been successfully deleted',
       redirect_uri_required: 'You must enter at least one redirect URI',
     },
     api_resources: {
       title: 'API Resources',
-      subtitle: 'Define APIs that you can consume from your authorized applications.',
+      subtitle: 'Define APIs that you can consume from your authorized applications',
       create: 'Create API Resource',
       api_name: 'API name',
       api_identifier: 'API identifier',
-      api_resource_created: 'The API resource {{name}} has been successfully created!',
+      api_resource_created: 'The API resource {{name}} has been successfully created',
     },
     api_resource_details: {
       back_to_api_resources: 'Back to API resources',
@@ -198,7 +198,7 @@ const translation = {
       test_sender_description: 'You will receive a message if your json is rightly configured',
       options_change_email: 'Change email connector',
       options_change_sms: 'Change SMS connector',
-      connector_deleted: 'The connector has been successfully deleted.',
+      connector_deleted: 'The connector has been successfully deleted',
       type_email: 'Email connector',
       type_sms: 'SMS connector',
       type_social: 'Social connector',
@@ -208,8 +208,8 @@ const translation = {
       progress_dropdown_title: 'A few things you can do...',
       title: 'How do you want to get started with Logto?',
       subtitle_part1: 'A few things you can do to quickly get value of Logto',
-      subtitle_part2: 'I’m done with this set up',
-      hide_this: 'Hide this',
+      subtitle_part2: 'I’m done with this set up.',
+      hide_this: ' Hide this',
       confirm_message: 'Are you sure you want to hide this page? This action cannot be undone.',
       card1_title: 'Check out the demo',
       card1_subtitle: 'Try Logto sign-in experience now to see how it works',
@@ -242,7 +242,7 @@ const translation = {
     },
     user_details: {
       back_to_users: 'Back to User Management',
-      created_title: 'Congratulations! This user has been successfully created.',
+      created_title: 'This user has been successfully created',
       created_guide: 'You can send the following log in information to the user',
       created_username: 'Username:',
       created_password: 'Initial password:',
@@ -344,9 +344,9 @@ const translation = {
         enable_secondary_description:
           "Once it's turned on, you app will support more sign in method(s) besides the primary one. ",
         methods: 'Sign in method',
-        methods_sms: 'Phone number sign-in',
-        methods_email: 'Email sign-in',
-        methods_social: 'Social sign-in',
+        methods_sms: 'Phone number sign in',
+        methods_email: 'Email sign in',
+        methods_social: 'Social sign in',
         methods_username: 'Username-with-password sign in',
         methods_primary_tag: '(Primary)',
         define_social_methods: 'Define social sign-in methods',
@@ -467,21 +467,21 @@ const translation = {
     welcome: {
       title: 'Welcome to Logto Admin Console',
       description:
-        'Admin console is a web app to manage Logto without coding requirements. Let’s first create an admin account. With this account, you can manage Logto by yourself or on behalf of your company.',
+        'Admin console is a web app to manage Logto without coding requirements. Let’s first create an account. With this account, you can manage Logto by yourself or on behalf of your company.',
       create_account: 'Create Account',
     },
   },
   demo_app: {
-    notification: 'Use the admin username and password to sign in this demo.',
+    notification: 'Use the username and password to sign in this demo.',
     title: "You've successfully signed in the demo app!",
-    subtitle: 'Here is your personal information:',
+    subtitle: 'Here is your log in information:',
     username: 'Username: ',
     user_id: 'User ID: ',
     sign_out: 'Sign out the demo app',
     continue_explore: 'Or continue to explore',
-    customize_sign_in_experience: 'Customize sign-in experience',
-    enable_passwordless: 'Enable passwordless',
-    add_social_connector: 'Add a social connector',
+    customize_sign_in_experience: 'Customize Sign-in Experience',
+    enable_passwordless: 'Enable Passwordless',
+    add_social_connector: 'Add Social Connector',
   },
 };
 
