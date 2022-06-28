@@ -1,5 +1,5 @@
 import { SignInExperience } from '@logto/schemas';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import Modal from 'react-modal';
@@ -45,6 +45,7 @@ const GuideModal = ({ isOpen, onClose }: Props) => {
   const api = useApi();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const formData = watch();
+  const [isLoading, setIsLoading] = useState(false);
 
   const previewConfigs = usePreviewConfigs(formData, isDirty, data);
 
@@ -73,17 +74,30 @@ const GuideModal = ({ isOpen, onClose }: Props) => {
     onClose();
   });
 
+  const onSkip = async () => {
+    setIsLoading(true);
+    await updateSettings({ customizeSignInExperience: true });
+    setIsLoading(false);
+    onClose();
+  };
+
   return (
     <Modal isOpen={isOpen} className={modalStyles.fullScreen}>
       <div className={styles.container}>
         <div className={styles.header}>
-          <IconButton size="large" onClick={onClose}>
+          <IconButton size="large" disabled={isLoading} onClick={onSkip}>
             <Close className={styles.closeIcon} />
           </IconButton>
           <div className={styles.separator} />
           <CardTitle size="small" title="sign_in_exp.title" subtitle="sign_in_exp.description" />
           <Spacer />
-          <Button type="plain" size="small" title="admin_console.general.skip" onClick={onClose} />
+          <Button
+            type="plain"
+            size="small"
+            title="admin_console.general.skip"
+            isLoading={isLoading}
+            onClick={onSkip}
+          />
         </div>
         <div className={styles.content}>
           {!preferences.experienceNoticeConfirmed && (
