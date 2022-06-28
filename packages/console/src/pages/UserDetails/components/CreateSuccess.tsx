@@ -1,8 +1,8 @@
+import { AdminConsoleKey } from '@logto/phrases';
 import React, { useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import ReactModal from 'react-modal';
-import { useSearchParams } from 'react-router-dom';
 
 import Button from '@/components/Button';
 import IconButton from '@/components/IconButton';
@@ -14,19 +14,14 @@ import * as styles from './CreateSuccess.module.scss';
 
 type Props = {
   username: string;
+  password: string;
+  title: AdminConsoleKey;
+  onClose: () => void;
 };
 
-const CreateSuccess = ({ username }: Props) => {
-  const [searchParameters, setSearchParameters] = useSearchParams();
-  const [passwordVisible, setPasswordVisible] = useState(false);
+const CreateSuccess = ({ username, password, title, onClose }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-
-  const passwordEncoded = searchParameters.get('password');
-  const password = passwordEncoded && atob(passwordEncoded);
-
-  const handleClose = () => {
-    setSearchParameters({});
-  };
+  const [passwordVisible, setPasswordVisible] = useState(false);
 
   const handleCopy = async () => {
     if (!password) {
@@ -45,10 +40,10 @@ const CreateSuccess = ({ username }: Props) => {
   return (
     <ReactModal isOpen className={modalStyles.content} overlayClassName={modalStyles.overlay}>
       <ModalLayout
-        title="user_details.created_title"
+        title={title}
         footer={
           <>
-            <Button title="admin_console.general.close" onClick={handleClose} />
+            <Button title="admin_console.general.close" onClick={onClose} />
             <Button type="primary" title="admin_console.general.copy" onClick={handleCopy} />
           </>
         }

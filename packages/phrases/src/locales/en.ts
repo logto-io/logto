@@ -250,10 +250,10 @@ const translation = {
       delete_description: 'This action cannot be undone. It will permanently delete the user.',
       deleted: 'The user has been successfully deleted',
       reset_password: {
-        title: 'Reset password',
-        label: 'New password:',
         reset_password: 'Reset password',
-        reset_password_success: 'Password has been successfully reset',
+        title: 'Are you sure you want to reset the password?',
+        content: "This action cannot be undone. This will reset the user's log in information.",
+        congratulations: 'This user has been reset',
       },
       tab_logs: 'User logs',
       field_email: 'Primary email',
