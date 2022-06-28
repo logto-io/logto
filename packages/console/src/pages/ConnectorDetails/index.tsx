@@ -63,6 +63,8 @@ const ConnectorDetails = () => {
       return;
     }
 
+    setSaveError(undefined);
+
     if (!config) {
       setSaveError(t('connector_details.save_error_empty_config'));
 
