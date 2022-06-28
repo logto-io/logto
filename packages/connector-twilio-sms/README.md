@@ -6,7 +6,7 @@ Twilio provides programmable communication tools for making and receiving phone 
 
 Go to https://www.twilio.com to register a new account and sign in to Twilio afterward. You may skip the registration step if you've already got an account.
 
-## Set up sender's phone numbers and get account credentials
+## Set up sender's phone numbers
 
 Go to the [Twilio console page](https://console.twilio.com/) and sign in with your Twilio account.
 
@@ -18,11 +18,13 @@ Go to _Messaging_ -> _Services_ and click _Create Messaging Service_ button on t
     1. Name your messaging service and type in the name in _Messaging Service friendly name_ field. Choose the proper purpose, in our case, is `Notify my users`.
     2. Go to _Add Senders_, choose `Phone Number` as _Sender Type_, and continue. Select the sender you want to link to the messaging service that is currently being created and move on by clicking _Add Phone Numbers_. Need to notice that a phone number (or sender) can only be bound to one messaging service.
 
-## Compose the connector JSON
+## Get account credentials
 
 Starting from the [Twilio console page](https://console.twilio.com/), go to the _API keys & tokens_ page from _Account_ in the top-right corner, and you can find `Account SID` and `Auth token` at the bottom of the page.
 
 Back to the [Twilio console page](https://console.twilio.com/), and go along path _Messaging_ -> _Services_ from the sidebar. Messaging services' `Sid`s are shown in the second column in the table.
+
+## Compose the connector JSON
 
 Fill out the _accountSID_, _authToken_ and _fromMessagingServiceSID_ fields with `Account SID`, `Auth token` and `Sid` of the corresponding messaging service.
 
