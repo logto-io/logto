@@ -28,6 +28,15 @@ As for managing GitHub Apps we mentioned in the last section, go to the [GitHub 
 
 Fill out the `clientId` and `clientSecret` field with **Client ID** and **Client Secret** you've got from OAuth app detail pages mentioned in the previous section.
 
+Here is an example of GitHub connector config JSON.
+
+```json
+{
+    "clientID": "<your-client-id>",
+    "clientSecret": "<your-client-secret>"
+}
+```
+
 ## Settings
 
 | Name         | Type   |
