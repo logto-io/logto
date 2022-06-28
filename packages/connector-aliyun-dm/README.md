@@ -1,4 +1,4 @@
-### Aliyun Direct Mail
+### Aliyun direct mail connector
 
 Aliyun is a primary cloud service provider in Asia, offering many cloud services, including DM (direct mail). Aliyun DM Connector is a plugin provided by the Logto team to call the Aliyun DM service APIs, with the help of which Logto end-users can register and sign in to their Logto account via mail verification code (or in other words, passcode).
 
@@ -15,7 +15,7 @@ Go to the [Aliyun website](https://cn.aliyun.com/) and register your Aliyun acco
 5. Customize **Sender Addresses** and **Email Tags** respectively which can be found in the [DM admin console page](https://dm.console.aliyun.com/) sidebar.
 6. After finishing settings, you can go to either the **Overview** tab and find all the different ways of testing at the bottom of the page or the **Email Tasks** tab to create a testing task.
 
-## Set up Aliyun DM Connector settings
+## Compose the connector JSON
 
 1. From the [DM admin console page](https://dm.console.aliyun.com/), hover on your avatar in the top right corner and go to "AccessKey Management", and click "Create AccessKey". You will get an "AccessKey ID" and "AccessKey Secret" pair after finishing security verification. Please keep them properly.
 2. Go to the **Sender Addresses** or **Email Tags** tab you just visited from the [DM admin console page](https://dm.console.aliyun.com/), you can find "Sender Address" or "Email Tag" easily.
@@ -55,8 +55,7 @@ Here is an example of Aliyun DM connector config JSON.
 }
 ```
 
-
-## Settings
+### Config types
 
 | Name            | Type       |
 |-----------------|------------|

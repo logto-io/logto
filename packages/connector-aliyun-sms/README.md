@@ -1,4 +1,4 @@
-# Aliyun Short Message Service
+# Aliyun short message service connector
 
 Aliyun is a primary cloud service provider in Asia, offering many cloud services, including SMS (short message service). Aliyun SMS Connector is a plugin provided by the Logto team to call the Aliyun SMS service, with the help of which Logto end-users can register and sign in to their Logto account via SMS verification code (or in other words, passcode).
 
@@ -19,7 +19,7 @@ Go to the [Aliyun website](https://cn.aliyun.com/) and register your Aliyun acco
     - You may need to recharge a small amount of money before sending test messages.
     - You may also be asked to bind a test phone number before sending test messages. For more details, go to "Quick start" tab from the sidebar of the [SMS service console page](https://dysms.console.aliyun.com/overview).
 
-## Set up Aliyun SMS Connector settings
+## Compose the connector JSON
 
 1. From the [SMS service console page](https://dysms.console.aliyun.com/overview), hover on your avatar in the top right corner and go to "AccessKey Management", and click "Create AccessKey". You will get an "AccessKey ID" and "AccessKey Secret" pair after finishing security verification. Please keep them properly.
 2. Go to the "Domestic Messages" or "International / Hong Kong, Macao and Taiwan Messages" tab you just visited, you can find "Signature Name" and "Template Code" easily.
@@ -54,7 +54,8 @@ Here is an example of Aliyun SMS connector config JSON.
 }
 ```
 
-## Settings
+### Config types
+
 
 | Name            | Type       |
 |-----------------|------------|
@@ -70,4 +71,5 @@ Here is an example of Aliyun SMS connector config JSON.
 
 
 ## References
+
 - [Aliyun SMS - Quick Start](https://dysms.console.aliyun.com/quickstart)

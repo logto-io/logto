@@ -1,4 +1,4 @@
-# Github
+# Github connector
 
 The GitHub connector enables users to have access to your application using their own GitHub accounts via GitHub OAuth 2.0 authentication protocol.
 
