@@ -417,6 +417,18 @@ const translation = {
       appearance_system: 'Sync with system',
       appearance_light: 'Light mode',
       appearance_dark: 'Dark mode',
+      saved: 'Saved!',
+      change_password: 'Change password',
+      change_password_description:
+        'You can change your password for this account. You will use your current username with new password to sign in Admin Console.',
+      change_modal_title: 'Change Account Password',
+      change_modal_description:
+        'You will use your current username with new password to sign in Admin Console.',
+      new_password: 'New password',
+      new_password_placeholder: 'Enter your password',
+      confirm_password: 'Confirm password',
+      confirm_password_placeholder: 'Confirm your password',
+      password_changed: 'Password changed!',
     },
     dashboard: {
       title: 'Dashboard',

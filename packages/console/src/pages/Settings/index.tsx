@@ -15,6 +15,7 @@ import TabNav, { TabNavItem } from '@/components/TabNav';
 import useUserPreferences, { UserPreferences } from '@/hooks/use-user-preferences';
 import * as detailsStyles from '@/scss/details.module.scss';
 
+import ChangePassword from './components/ChangePassword';
 import * as styles from './index.module.scss';
 
 const Settings = () => {
@@ -94,6 +95,7 @@ const Settings = () => {
                 )}
               />
             </FormField>
+            <ChangePassword />
           </div>
           <div className={detailsStyles.footer}>
             <div className={detailsStyles.footerMain}>
