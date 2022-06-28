@@ -27,18 +27,47 @@ Go to the [Aliyun website](https://cn.aliyun.com/) and register your Aliyun acco
         - Fill out the `content` field with arbitrary string-type contents. Do not forget to leave `{{code}}` placeholder for random passcode.
         - Fill out `usageType` field with either `Register`, `SignIn` or `Test` for different use cases.
 
+Here is an example of Aliyun DM connector config JSON.
+
+```json
+{
+    "accessKeyId": "<your-access-key-id>",
+    "accessKeySecret": "<your-access-key-secret>",
+    "accountName": "<noreply@logto.io>",
+    "fromAlias": "<logto>",
+    "templates": [
+        {
+            "subject": "<register-template-subject>",
+            "content": "<Logto: Your passcode is {{code}}. (regitser template)>",
+            "usageType": "Register"
+        },
+        {
+            "subject": "<sign-in-template-subject>",
+            "content": "<Logto: Your passcode is {{code}}. (sign-in template)>",
+            "usageType": "SignIn"
+        },
+        {
+            "subject": "<test-template-subject>",
+            "content": "<Logto: Your passcode is {{code}}. (test template)>",
+            "usageType": "Test"
+        },
+    ]
+}
+```
+
+
 ## Settings
 
-|       Name      |    Type    |
-|:---------------:|:----------:|
-|   accessKeyId   |   string   |
-| accessKeySecret |   string   |
-|   accountName   |   string   |
-|    fromAlias    |   string   |
-|    templates    | Template[] |
+| Name            | Type       |
+|-----------------|------------|
+| accessKeyId     | string     |
+| accessKeySecret | string     |
+| accountName     | string     |
+| fromAlias       | string     |
+| templates       | Template[] |
 
-| Template Properties |     Type    |            Enum values           |
-|:-------------------:|:-----------:|:--------------------------------:|
-|       subject       |    string   |                N/A               |
-|       content       |    string   |                N/A               |
-|      usageType      | enum string | 'Register' \| 'SignIn' \| 'Test' |
+| Template Properties | Type        | Enum values                      |
+|---------------------|-------------|----------------------------------|
+| subject             | string      | N/A                              |
+| content             | string      | N/A                              |
+| usageType           | enum string | 'Register' \| 'SignIn' \| 'Test' |
