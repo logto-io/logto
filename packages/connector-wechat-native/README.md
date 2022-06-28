@@ -2,7 +2,7 @@
 
 The official Logto connector for WeChat social sign-in in native apps (iOS and Android).
 
-微信原生应用社交登录官方 Logto 连接器（iOS 和 Android）[中文文档](#zh-CN)
+微信原生应用社交登录官方 Logto 连接器（iOS 和 Android）[中文文档](#微信原生连接器)
 
 ## Get started
 
@@ -75,7 +75,7 @@ After passing the review, go to the application details page and generate an App
 {
   "appId": "wx123456789",
   "appSecret": "some-random-string",
-  "universalLink": "https://your.domain/path/" // The universal link to your app
+  "universalLink": "https://your.universal.link/path/"
 }
 ```
 
@@ -89,7 +89,9 @@ Add the framework:
 
 <img src="./docs/add-framework.png" alt="Add framework" width="500px" />
 
-And add `-ObjC` to your build settings:
+And add `-ObjC` to your Build Settings > Linking > Other Linker Flags:
+
+<img src="./docs/linker-flags.png" alt="Linker flags" width="500px" />
 
 **2. Add the plugin to your `LogtoClient` init options**
 
@@ -101,6 +103,10 @@ let logtoClient = LogtoClient(
 ```
 
 **3. Handle `onOpenURL` properly**
+
+:::info
+The function `LogtoClient.handle(url:)` will handle all the native connectors you enabled. You only need to call it once.
+:::
 
 ```swift
 // SwiftUI
@@ -123,6 +129,6 @@ After WeChat native connector is enabled, you can build and run your app to see 
 WeChat doesn't have a plan for those devices without the WeChat app installed. Logto will hide this connector during sign-in if so (which is the recommended way from the [official development guide](https://developers.weixin.qq.com/doc/oplatform/en/Mobile_App/WeChat_Login/Development_Guide.html)).
 :::
 
-# 微信原生连接器 {#zh-CN}
+# 微信原生连接器
 
 TBD
