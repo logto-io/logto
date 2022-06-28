@@ -55,9 +55,11 @@ const loadConnectors = async () => {
         instance.metadata.readme &&
         existsSync(path.join(packagePath, '..', instance.metadata.readme))
       ) {
-        const data = readFileSync(path.join(packagePath, '..', instance.metadata.readme));
         // eslint-disable-next-line @silverhand/fp/no-mutation
-        instance.metadata.readme = `data:text/plain,${data.toString()}`;
+        instance.metadata.readme = readFileSync(
+          path.join(packagePath, '..', instance.metadata.readme),
+          'utf8'
+        );
       }
 
       if (
@@ -65,9 +67,11 @@ const loadConnectors = async () => {
         instance.metadata.configTemplate &&
         existsSync(path.join(packagePath, '..', instance.metadata.configTemplate))
       ) {
-        const data = readFileSync(path.join(packagePath, '..', instance.metadata.configTemplate));
         // eslint-disable-next-line @silverhand/fp/no-mutation
-        instance.metadata.configTemplate = `data:text/plain,${data.toString()}`;
+        instance.metadata.configTemplate = readFileSync(
+          path.join(packagePath, '..', instance.metadata.configTemplate),
+          'utf8'
+        );
       }
 
       return instance;
