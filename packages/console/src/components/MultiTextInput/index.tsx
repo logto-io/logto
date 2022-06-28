@@ -84,7 +84,7 @@ const MultiTextInput = ({ title, value, onChange, onKeyPress, error }: Props) =>
         </div>
       ))}
       <div className={classNames(textButtonStyles.button, styles.addAnother)} onClick={handleAdd}>
-        {t('admin_console.form.add_another')}
+        {t('admin_console.general.add_another')}
       </div>
       <ConfirmModal
         isOpen={deleteFieldIndex !== undefined}
@@ -99,7 +99,7 @@ const MultiTextInput = ({ title, value, onChange, onKeyPress, error }: Props) =>
           }
         }}
       >
-        {t('admin_console.form.deletion_confirmation', { title: t(title) })}
+        {t('admin_console.general.deletion_confirmation', { title: t(title) })}
       </ConfirmModal>
     </div>
   );

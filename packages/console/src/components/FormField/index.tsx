@@ -33,7 +33,7 @@ const FormField = ({ title, children, isRequired, className, tooltip }: Props) =
           </div>
         )}
         <Spacer />
-        {isRequired && <div className={styles.required}>{t('admin_console.form.required')}</div>}
+        {isRequired && <div className={styles.required}>{t('admin_console.general.required')}</div>}
       </div>
       {children}
     </div>
