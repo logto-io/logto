@@ -86,7 +86,7 @@ const CreateForm = ({ onClose, isOpen: isFormOpen, type }: Props) => {
         title={cardTitle}
         footer={
           <Button
-            title="admin_console.connectors.next"
+            title="admin_console.general.next"
             type="primary"
             disabled={!activeConnectorId}
             onClick={() => {
@@ -108,7 +108,7 @@ const CreateForm = ({ onClose, isOpen: isFormOpen, type }: Props) => {
                 value={id}
                 isDisabled={connectors.every(({ enabled }) => enabled)}
                 className={styles.connector}
-                disabledLabel="connectors.added"
+                disabledLabel="general.added"
               >
                 <div className={styles.logo}>
                   <img src={logo} />

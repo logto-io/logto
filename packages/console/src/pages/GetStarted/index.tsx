@@ -69,7 +69,6 @@ const GetStarted = () => {
             )
         )}
       <ConfirmModal
-        title="get_started.confirm"
         isOpen={showConfirmModal}
         confirmButtonType="primary"
         confirmButtonText="admin_console.get_started.hide_this"

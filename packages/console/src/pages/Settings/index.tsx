@@ -32,7 +32,7 @@ const Settings = () => {
     }
 
     await update(formData);
-    toast.success(t('settings.saved'));
+    toast.success(t('general.saved'));
   });
 
   return (
@@ -102,7 +102,7 @@ const Settings = () => {
                 type="primary"
                 htmlType="submit"
                 size="large"
-                title="general.save_changes"
+                title="admin_console.general.save_changes"
               />
             </div>
           </div>

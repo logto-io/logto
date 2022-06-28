@@ -30,7 +30,7 @@ const Step = ({
   subtitle,
   index,
   activeIndex,
-  buttonText = 'general.next',
+  buttonText = 'admin_console.general.next',
   buttonHtmlType = 'button',
   isLoading,
   onButtonClick,

@@ -106,7 +106,7 @@ const UserDetails = () => {
 
     const updatedUser = await api.patch(`/api/users/${data.id}`, { json: payload }).json<User>();
     void mutate(updatedUser);
-    toast.success(t('user_details.saved'));
+    toast.success(t('general.saved'));
   });
 
   return (
@@ -142,7 +142,7 @@ const UserDetails = () => {
             <div>
               <ActionMenu
                 buttonProps={{ icon: <More className={styles.moreIcon} />, size: 'large' }}
-                title={t('user_details.more_options')}
+                title={t('general.more_options')}
               >
                 <ActionMenuItem
                   icon={<Reset />}
@@ -160,7 +160,7 @@ const UserDetails = () => {
                     setIsDeleteFormOpen(true);
                   }}
                 >
-                  {t('user_details.menu_delete')}
+                  {t('general.delete')}
                 </ActionMenuItem>
               </ActionMenu>
               <ReactModal
@@ -191,7 +191,7 @@ const UserDetails = () => {
           </Card>
           <Card className={classNames(styles.body, detailsStyles.body)}>
             <TabNav>
-              <TabNavItem href={`/users/${userId}`}>{t('user_details.tab_settings')}</TabNavItem>
+              <TabNavItem href={`/users/${userId}`}>{t('general.settings_nav')}</TabNavItem>
               <TabNavItem href={`/users/${userId}/logs`}>{t('user_details.tab_logs')}</TabNavItem>
             </TabNav>
             {isLogs ? (
@@ -270,7 +270,7 @@ const UserDetails = () => {
                       isLoading={isSubmitting}
                       htmlType="submit"
                       type="primary"
-                      title="admin_console.user_details.save_changes"
+                      title="admin_console.general.save_changes"
                       size="large"
                     />
                   </div>

@@ -144,7 +144,7 @@ const UserConnectors = ({ userId, connectors, onDelete }: Props) => {
       )}
       <ConfirmModal
         isOpen={deletingConnector !== undefined}
-        confirmButtonText="admin_console.form.delete"
+        confirmButtonText="admin_console.general.delete"
         onCancel={() => {
           setDeletingConnector(undefined);
         }}

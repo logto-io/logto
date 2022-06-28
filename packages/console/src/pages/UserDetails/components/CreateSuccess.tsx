@@ -35,7 +35,7 @@ const CreateSuccess = ({ username }: Props) => {
     await navigator.clipboard.writeText(
       `User username: ${username}\nInitial password: ${password}`
     );
-    toast.success(t('copy.copied'));
+    toast.success(t('general.copied'));
   };
 
   if (!password) {
@@ -48,12 +48,8 @@ const CreateSuccess = ({ username }: Props) => {
         title="user_details.created_title"
         footer={
           <>
-            <Button title="admin_console.user_details.created_button_close" onClick={handleClose} />
-            <Button
-              type="primary"
-              title="admin_console.user_details.created_button_copy"
-              onClick={handleCopy}
-            />
+            <Button title="admin_console.general.close" onClick={handleClose} />
+            <Button type="primary" title="admin_console.general.copy" onClick={handleCopy} />
           </>
         }
         className={styles.content}

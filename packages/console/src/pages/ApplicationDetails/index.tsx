@@ -94,7 +94,7 @@ const ApplicationDetails = () => {
       })
       .json<Application>();
     void mutate(updatedApplication);
-    toast.success(t('application_details.save_success'));
+    toast.success(t('general.saved'));
   });
 
   const onCloseDrawer = () => {
@@ -138,7 +138,7 @@ const ApplicationDetails = () => {
               </Drawer>
               <ActionMenu
                 buttonProps={{ icon: <More className={styles.moreIcon} />, size: 'large' }}
-                title={t('application_details.more_options')}
+                title={t('general.more_options')}
               >
                 <ActionMenuItem
                   icon={<Delete />}
@@ -147,7 +147,7 @@ const ApplicationDetails = () => {
                     setIsDeleteFormOpen(true);
                   }}
                 >
-                  {t('application_details.options_delete')}
+                  {t('general.delete')}
                 </ActionMenuItem>
               </ActionMenu>
               <Modal
@@ -168,7 +168,7 @@ const ApplicationDetails = () => {
           <Card className={classNames(styles.body, detailsStyles.body)}>
             <TabNav>
               <TabNavItem href={`/applications/${data.id}/settings`}>
-                {t('application_details.settings')}
+                {t('general.settings_nav')}
               </TabNavItem>
               <TabNavItem href={`/applications/${data.id}/advanced-settings`}>
                 {t('application_details.advanced_settings')}
@@ -190,7 +190,7 @@ const ApplicationDetails = () => {
                       htmlType="submit"
                       type="primary"
                       size="large"
-                      title="admin_console.application_details.save_changes"
+                      title="admin_console.general.save_changes"
                     />
                   </div>
                 </div>

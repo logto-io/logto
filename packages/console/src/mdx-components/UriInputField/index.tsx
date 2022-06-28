@@ -118,7 +118,7 @@ const UriInputField = ({ appId, name, title, isSingle = false }: Props) => {
                     className={styles.saveButton}
                     disabled={!isDirty}
                     isLoading={isSubmitting}
-                    title="general.save"
+                    title="admin_console.general.save"
                     type="primary"
                     onClick={handleSubmit(async () => onSubmit(value))}
                   />

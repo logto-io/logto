@@ -35,18 +35,14 @@ const DeleteForm = ({ id, onClose }: Props) => {
 
   return (
     <ModalLayout
-      title="user_details.delete_title"
+      title="general.reminder"
       footer={
         <>
-          <Button
-            type="outline"
-            title="admin_console.user_details.delete_cancel"
-            onClick={onClose}
-          />
+          <Button type="outline" title="admin_console.general.cancel" onClick={onClose} />
           <Button
             disabled={loading}
             type="danger"
-            title="admin_console.user_details.delete_confirm"
+            title="admin_console.general.delete"
             onClick={handleDelete}
           />
         </>

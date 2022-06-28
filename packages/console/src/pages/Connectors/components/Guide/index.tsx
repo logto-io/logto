@@ -69,7 +69,7 @@ const Guide = ({ connector, onClose }: Props) => {
       });
 
       onClose();
-      toast.success(t('connector_details.save_success'));
+      toast.success(t('general.saved'));
     } catch (error: unknown) {
       if (error instanceof SyntaxError) {
         toast.error(t('connector_details.save_error_json_parse_error'));

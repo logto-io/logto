@@ -32,7 +32,7 @@ const ConnectorName = ({ type, connectors, onClickSetup }: Props) => {
           <div className={styles.previewTitle}>
             <div>{t(connectorTitlePlaceHolder[type])}</div>
             {type !== ConnectorType.Social && (
-              <Button title="admin_console.connectors.set_up" onClick={onClickSetup} />
+              <Button title="admin_console.general.set_up" onClick={onClickSetup} />
             )}
           </div>
         }

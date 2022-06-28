@@ -13,16 +13,16 @@ type Props = {
   variant?: 'text' | 'contained' | 'border' | 'icon';
 };
 
-type CopyState = TFuncKey<'translation', 'admin_console.copy'>;
+type CopyState = TFuncKey<'translation', 'admin_console.general'>;
 
 const CopyToClipboard = ({ value, className, variant = 'contained' }: Props) => {
   const copyIconReference = useRef<HTMLDivElement>(null);
-  const [copyState, setCopyState] = useState<CopyState>('pending');
-  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.copy' });
+  const [copyState, setCopyState] = useState<CopyState>('copy');
+  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console.general' });
 
   useEffect(() => {
     copyIconReference.current?.addEventListener('mouseleave', () => {
-      setCopyState('pending');
+      setCopyState('copy');
     });
   }, []);
 
