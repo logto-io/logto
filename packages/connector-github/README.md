@@ -2,9 +2,9 @@
 
 The GitHub connector enables users to have access to your application using their own GitHub accounts via GitHub OAuth 2.0 authentication protocol.
 
-## Sign-in with GitHub account
+## Sign in with GitHub account
 
-Go to [GitHub website](https://github.com/) and sign in with your GitHub account. You may register a new account if you don't have one.
+Go to the [GitHub website](https://github.com/) and sign in with your GitHub account. You may register a new account if you don't have one.
 
 ## Create and configure GitHub OAuth app
 
@@ -24,7 +24,7 @@ You can also find `Client ID` and generate `Client secrets` in OAuth app detail 
 
 As for managing GitHub Apps we mentioned in the last section, go to the [GitHub Apps page](https://github.com/settings/apps).
 
-## Set up the Logto GitHub connector settings
+## Compose the connector JSON
 
 Fill out the `clientId` and `clientSecret` field with **Client ID** and **Client Secret** you've got from OAuth app detail pages mentioned in the previous section.
 
@@ -37,7 +37,7 @@ Here is an example of GitHub connector config JSON.
 }
 ```
 
-## Settings
+### Config types
 
 | Name         | Type   |
 |--------------|--------|

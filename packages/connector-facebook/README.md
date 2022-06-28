@@ -27,7 +27,7 @@ The Facebook connector provides a concise way for your application to use Facebo
     - Fill out the `clientId` field with the string from **App ID**.
     - Fill out the `clientSecret` field with the string from **App secret**.
 
-## Settings
+### Config types
 
 |     Name     |  Type  |
 |:------------:|:------:|
