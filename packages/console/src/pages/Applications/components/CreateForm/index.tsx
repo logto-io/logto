@@ -102,10 +102,17 @@ const CreateForm = ({ onClose }: Props) => {
           )}
         </FormField>
         <FormField isRequired title="admin_console.applications.application_name">
-          <TextInput {...register('name', { required: true })} hasError={Boolean(errors.name)} />
+          <TextInput
+            {...register('name', { required: true })}
+            placeholder={t('applications.application_name_placeholder')}
+            hasError={Boolean(errors.name)}
+          />
         </FormField>
         <FormField title="admin_console.applications.application_description">
-          <TextInput {...register('description')} />
+          <TextInput
+            {...register('description')}
+            placeholder={t('applications.application_description_placeholder')}
+          />
         </FormField>
       </form>
       {createdApp && (

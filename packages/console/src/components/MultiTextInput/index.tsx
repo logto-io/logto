@@ -18,9 +18,10 @@ type Props = {
   onChange: (value: string[]) => void;
   onKeyPress?: (event: KeyboardEvent<HTMLInputElement>) => void;
   error?: MultiTextInputError;
+  placeholder?: string;
 };
 
-const MultiTextInput = ({ title, value, onChange, onKeyPress, error }: Props) => {
+const MultiTextInput = ({ title, value, onChange, onKeyPress, error, placeholder }: Props) => {
   const { t } = useTranslation();
 
   const [deleteFieldIndex, setDeleteFieldIndex] = useState<number>();
@@ -56,6 +57,7 @@ const MultiTextInput = ({ title, value, onChange, onKeyPress, error }: Props) =>
                 error?.inputs?.[fieldIndex] || (fieldIndex === 0 && error?.required)
               )}
               value={fieldValue}
+              placeholder={placeholder}
               onChange={({ currentTarget: { value } }) => {
                 handleInputChange(value, fieldIndex);
               }}

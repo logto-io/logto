@@ -250,6 +250,7 @@ const UserDetails = () => {
                       })}
                       hasError={Boolean(errors.avatar)}
                       errorMessage={errors.avatar?.message}
+                      placeholder={t('user_details.field_avatar_placeholder')}
                     />
                   </FormField>
                   <FormField

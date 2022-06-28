@@ -1,6 +1,7 @@
 import { Resource } from '@logto/schemas';
 import React from 'react';
 import { useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 
 import Button from '@/components/Button';
 import FormField from '@/components/FormField';
@@ -23,6 +24,7 @@ const CreateForm = ({ onClose }: Props) => {
     register,
     formState: { isSubmitting },
   } = useForm<FormData>();
+  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   const api = useApi();
 
@@ -53,10 +55,17 @@ const CreateForm = ({ onClose }: Props) => {
     >
       <form>
         <FormField isRequired title="admin_console.api_resources.api_name">
-          <TextInput autoFocus {...register('name', { required: true })} />
+          <TextInput
+            autoFocus
+            {...register('name', { required: true })}
+            placeholder={t('api_resources.api_name_placeholder')}
+          />
         </FormField>
         <FormField isRequired title="admin_console.api_resources.api_identifier">
-          <TextInput {...register('indicator', { required: true })} />
+          <TextInput
+            {...register('indicator', { required: true })}
+            placeholder={t('api_resources.api_identifier_placeholder')}
+          />
         </FormField>
       </form>
     </ModalLayout>
