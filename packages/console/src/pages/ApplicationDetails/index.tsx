@@ -168,7 +168,7 @@ const ApplicationDetails = () => {
           <Card className={classNames(styles.body, detailsStyles.body)}>
             <TabNav>
               <TabNavItem href={`/applications/${data.id}/settings`}>
-                {t('application_details.settings')}
+                {t('general.settings_nav')}
               </TabNavItem>
               <TabNavItem href={`/applications/${data.id}/advanced-settings`}>
                 {t('application_details.advanced_settings')}

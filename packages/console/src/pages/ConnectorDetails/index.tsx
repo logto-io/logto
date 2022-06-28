@@ -203,7 +203,7 @@ const ConnectorDetails = () => {
         <Card className={classNames(styles.body, detailsStyles.body)}>
           <TabNav>
             <TabNavItem href={`/connectors/${connectorId ?? ''}`}>
-              {t('connector_details.tab_settings')}
+              {t('general.settings_nav')}
             </TabNavItem>
           </TabNav>
           <div className={styles.main}>

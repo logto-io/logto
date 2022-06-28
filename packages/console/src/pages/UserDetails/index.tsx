@@ -191,7 +191,7 @@ const UserDetails = () => {
           </Card>
           <Card className={classNames(styles.body, detailsStyles.body)}>
             <TabNav>
-              <TabNavItem href={`/users/${userId}`}>{t('user_details.tab_settings')}</TabNavItem>
+              <TabNavItem href={`/users/${userId}`}>{t('general.settings_nav')}</TabNavItem>
               <TabNavItem href={`/users/${userId}/logs`}>{t('user_details.tab_logs')}</TabNavItem>
             </TabNav>
             {isLogs ? (

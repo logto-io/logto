@@ -134,7 +134,7 @@ const ApiResourceDetails = () => {
           </Card>
           <Card className={classNames(styles.body, detailsStyles.body)}>
             <TabNav>
-              <TabNavItem href={location.pathname}>{t('api_resource_details.settings')}</TabNavItem>
+              <TabNavItem href={location.pathname}>{t('general.settings_nav')}</TabNavItem>
             </TabNav>
             <form className={classNames(styles.form, detailsStyles.body)} onSubmit={onSubmit}>
               <div className={styles.fields}>

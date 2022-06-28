@@ -36,6 +36,7 @@ const translation = {
       required: 'Required',
       add_another: '+ Add Another',
       deletion_confirmation: 'Are you sure you want to delete this {{title}}?',
+      settings_nav: 'Settings',
     },
     errors: {
       something_went_wrong: 'Oops! Something went wrong.',
@@ -114,7 +115,6 @@ const translation = {
     application_details: {
       back_to_applications: 'Back to Applications',
       check_help_guide: 'Check Help Guide',
-      settings: 'Settings',
       advanced_settings: 'Advanced settings',
       application_name: 'Application name',
       description: 'Description',
@@ -143,7 +143,6 @@ const translation = {
     },
     api_resource_details: {
       back_to_api_resources: 'Back to API resources',
-      settings: 'Settings',
       token_expiration_time_in_seconds: 'Token expiration time (in seconds)',
       delete_description:
         'This action cannot be undone. It will permanently delete the API resource. Please enter the api resource name <span>{{name}}</span> to confirm.',
@@ -188,7 +187,6 @@ const translation = {
     connector_details: {
       back_to_connectors: 'Back to Connectors',
       check_readme: 'Check README',
-      tab_settings: 'Settings',
       save_error_empty_config: 'Please enter config',
       save_error_json_parse_error: 'Please enter valid JSON',
       send: 'Send',
@@ -257,7 +255,6 @@ const translation = {
         reset_password: 'Reset password',
         reset_password_success: 'Password has been successfully reset',
       },
-      tab_settings: 'Settings',
       tab_logs: 'User logs',
       field_email: 'Primary email',
       field_phone: 'Primary phone',

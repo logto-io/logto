@@ -38,6 +38,7 @@ const translation = {
       required: '必填',
       add_another: '+ 新增',
       deletion_confirmation: '你确定要删除这个 {{title}} 吗?',
+      settings_nav: '设置',
     },
     errors: {
       something_went_wrong: '哎呀，出错了！',
@@ -111,7 +112,6 @@ const translation = {
     application_details: {
       back_to_applications: '返回全部应用',
       check_help_guide: '查看帮助引导',
-      settings: '设置',
       advanced_settings: '高级设置',
       application_name: '应用名称',
       description: '描述',
@@ -140,7 +140,6 @@ const translation = {
     },
     api_resource_details: {
       back_to_api_resources: '返回 API 资源',
-      settings: '设置',
       token_expiration_time_in_seconds: 'Token 过期时间（秒）',
       delete_description:
         '本操作会永久性地删除该 API 资源，且不可撤销。输入 API 资源名称 <span>{{name}}</span> 确认。',
@@ -185,7 +184,6 @@ const translation = {
     connector_details: {
       back_to_connectors: '返回连接器',
       check_readme: '查看 README',
-      tab_settings: '设置',
       save_error_empty_config: '请输入配置内容',
       save_error_json_parse_error: '请输入符合 JSON 格式的配置',
       send: '发送',
@@ -251,7 +249,6 @@ const translation = {
         reset_password: '重置密码',
         reset_password_success: '密码已成功重置',
       },
-      tab_settings: '设置',
       tab_logs: '用户日志',
       field_email: '主要邮箱',
       field_phone: '主要手机号码',
