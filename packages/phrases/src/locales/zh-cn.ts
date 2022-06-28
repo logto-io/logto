@@ -104,7 +104,7 @@ const translation = {
         get_sample_file: '获取示例工程',
         header_description:
           '参考如下教程，将 Logto 集成到你的应用中。你也可以点击右侧链接，获取我们为你准备好的示范工程。',
-        title: '恭喜！应用创建成功。',
+        title: '应用创建成功',
         subtitle: '参考以下步骤完成你的应用设置。首先，选择你要使用的 SDK 类型：',
         description_by_sdk: '本教程向你演示如何在 {{sdk}} 应用中集成 Logto 登录功能',
       },
@@ -177,7 +177,7 @@ const translation = {
         web: '网页',
         native: '原生',
       },
-      add_multi_platform: ' 支持多平台，选择一个平台继续',
+      add_multi_platform: '支持多平台，选择一个平台继续',
       drawer_title: '连接器配置指南',
       drawer_subtitle: '参考以下步骤完善或修改你的连接器设置',
     },
@@ -205,8 +205,8 @@ const translation = {
       progress_dropdown_title: '一些快速上手的操作',
       title: '还不知道如何使用 Logto?',
       subtitle_part1: '下列是一些可以快速上手的操作，通过这些，你可以更好地感受 Logto 的价值',
-      subtitle_part2: '我已经完成了这些设置',
-      hide_this: '隐藏引导',
+      subtitle_part2: '我已经完成了这些设置。',
+      hide_this: ' 隐藏引导',
       confirm_message: '你确认要隐藏该页面吗? 本操作将无法恢复。',
       card1_title: '看看 Demo',
       card1_subtitle: '来体验 Logto 登录吧',
@@ -236,7 +236,7 @@ const translation = {
     },
     user_details: {
       back_to_users: '返回用户管理',
-      created_title: '恭喜！用户创建成功',
+      created_title: '用户创建成功',
       created_guide: '你可以将以下登录信息发送给用户',
       created_username: '用户名：',
       created_password: '初始密码：',
@@ -296,7 +296,7 @@ const translation = {
       welcome: {
         title: '这是你首次定义你的登录体验。跟随引导，完成登录体验的必要设置项。',
         get_started: '开始',
-        apply_remind: '请注意，登录体验将会应用到当前账户下的所有应用。',
+        apply_remind: '请注意，登录体验将会应用到当前帐户下的所有应用。',
         got_it: '知道了',
       },
       color: {
@@ -305,7 +305,7 @@ const translation = {
         dark_primary_color: '品牌颜色 (深色)',
         dark_mode: '开启深色模式',
         dark_mode_description:
-          '基于你的品牌颜色和 Logto 的算法，你的应用将会有一个自动生成的深色模式。当然，你可以自定义和修改。',
+          '基于你的品牌颜色和 Logto 算法，你的应用将会有一个自动生成的深色模式。当然，你可以自定义和修改。',
       },
       branding: {
         title: '品牌定制区',
@@ -452,8 +452,8 @@ const translation = {
     welcome: {
       title: '欢迎使用管理控制台',
       description:
-        '管理控制台是一个无代码应用。你可以用它来管理你的登录体验。让我们首先创建一个管理员帐户。你可以用这个账号自己或代表你的公司管理 Logto。',
-      create_account: '创建帐户',
+        '管理控制台是一个无需代码操作的应用。你可以用它来管理登录体验。让我们首先创建一个帐号。你可以用它以个人或公司的身份管理 Logto。',
+      create_account: '创建帐号',
     },
   },
   demo_app: {
@@ -466,7 +466,7 @@ const translation = {
     continue_explore: '或继续探索',
     customize_sign_in_experience: '自定义登录体验',
     enable_passwordless: '启用无密码登录',
-    add_social_connector: '添加社叫连接器',
+    add_social_connector: '添加社交连接器',
   },
 };
 
