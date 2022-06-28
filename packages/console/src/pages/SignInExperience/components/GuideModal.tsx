@@ -83,7 +83,7 @@ const GuideModal = ({ isOpen, onClose }: Props) => {
           <div className={styles.separator} />
           <CardTitle size="small" title="sign_in_exp.title" subtitle="sign_in_exp.description" />
           <Spacer />
-          <Button type="plain" size="small" title="general.skip" onClick={onClose} />
+          <Button type="plain" size="small" title="admin_console.general.skip" onClick={onClose} />
         </div>
         <div className={styles.content}>
           {!preferences.experienceNoticeConfirmed && (
@@ -123,7 +123,7 @@ const GuideModal = ({ isOpen, onClose }: Props) => {
                   isLoading={isSubmitting}
                   type="primary"
                   htmlType="submit"
-                  title="general.done"
+                  title="admin_console.general.done"
                 />
               </div>
             </form>

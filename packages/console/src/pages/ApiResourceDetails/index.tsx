@@ -77,7 +77,7 @@ const ApiResourceDetails = () => {
       .patch(`/api/resources/${data.id}`, { json: formData })
       .json<Resource>();
     void mutate(updatedApiResource);
-    toast.success(t('api_resource_details.save_success'));
+    toast.success(t('general.saved'));
   });
 
   return (
@@ -104,7 +104,7 @@ const ApiResourceDetails = () => {
               <div className={styles.operations}>
                 <ActionMenu
                   buttonProps={{ icon: <More className={styles.moreIcon} />, size: 'large' }}
-                  title={t('api_resource_details.more_options')}
+                  title={t('general.more_options')}
                 >
                   <ActionMenuItem
                     icon={<Delete />}
@@ -113,7 +113,7 @@ const ApiResourceDetails = () => {
                       setIsDeleteFormOpen(true);
                     }}
                   >
-                    {t('api_resource_details.options_delete')}
+                    {t('general.delete')}
                   </ActionMenuItem>
                 </ActionMenu>
                 <Modal
@@ -166,7 +166,7 @@ const ApiResourceDetails = () => {
                     isLoading={isSubmitting}
                     htmlType="submit"
                     type="primary"
-                    title="admin_console.api_resource_details.save_changes"
+                    title="admin_console.general.save_changes"
                     size="large"
                   />
                 </div>

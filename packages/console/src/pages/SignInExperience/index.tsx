@@ -63,7 +63,7 @@ const SignInExperience = () => {
       .json<SignInExperienceType>();
     void mutate(updatedData);
     await updateSettings({ customizeSignInExperience: true });
-    toast.success(t('application_details.save_success'));
+    toast.success(t('general.saved'));
   };
 
   const onSubmit = handleSubmit(async (formData) => {
@@ -138,7 +138,7 @@ const SignInExperience = () => {
                       type="primary"
                       size="large"
                       htmlType="submit"
-                      title="general.save_changes"
+                      title="admin_console.general.save_changes"
                     />
                   </div>
                 </div>

@@ -25,7 +25,9 @@ type Props = {
 };
 
 const Transfer = ({ title, datasource, value = [], footer, onChange }: Props) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation(undefined, {
+    keyPrefix: 'admin_console',
+  });
 
   const selectedItems = useMemo(() => {
     return value

@@ -77,7 +77,7 @@ const ConnectorDetails = () => {
           json: { config: configJson },
         })
         .json<ConnectorDTO>();
-      toast.success(t('connector_details.save_success'));
+      toast.success(t('general.saved'));
     } catch (error: unknown) {
       if (error instanceof SyntaxError) {
         setSaveError(t('connector_details.save_error_json_parse_error'));
@@ -168,7 +168,7 @@ const ConnectorDetails = () => {
             </Drawer>
             <ActionMenu
               buttonProps={{ icon: <More className={styles.moreIcon} />, size: 'large' }}
-              title={t('connector_details.more_options')}
+              title={t('general.more_options')}
             >
               {data.type !== ConnectorType.Social && (
                 <ActionMenuItem
@@ -186,7 +186,7 @@ const ConnectorDetails = () => {
                 </ActionMenuItem>
               )}
               <ActionMenuItem icon={<Delete />} type="danger" onClick={handleDelete}>
-                {t('connector_details.options_delete')}
+                {t('general.delete')}
               </ActionMenuItem>
             </ActionMenu>
             <CreateForm
@@ -227,7 +227,7 @@ const ConnectorDetails = () => {
               <Button
                 type="primary"
                 size="large"
-                title="admin_console.connector_details.save_changes"
+                title="admin_console.general.save_changes"
                 isLoading={isSubmitting}
                 onClick={handleSave}
               />

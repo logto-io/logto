@@ -24,10 +24,10 @@ export type ConfirmModalProps = {
 const ConfirmModal = ({
   children,
   className,
-  title = 'form.confirm',
+  title = 'general.reminder',
   confirmButtonType = 'danger',
-  confirmButtonText = 'general.confirm',
-  cancelButtonText = 'general.cancel',
+  confirmButtonText = 'admin_console.general.confirm',
+  cancelButtonText = 'admin_console.general.cancel',
   isOpen,
   onCancel,
   onConfirm,

@@ -31,7 +31,7 @@ const TableError = ({ title, content, onRetry, columns }: Props) => {
           <div className={styles.content}>
             {content ?? t('admin_console.errors.unknown_server_error')}
           </div>
-          {onRetry && <Button title="general.retry" onClick={onRetry} />}
+          {onRetry && <Button title="admin_console.general.retry" onClick={onRetry} />}
         </div>
       </td>
     </tr>

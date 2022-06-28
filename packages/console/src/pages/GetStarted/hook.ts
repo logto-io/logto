@@ -60,7 +60,7 @@ const useGetStartedMetadata = ({ checkDemoAppExists }: Props) => {
       title: 'get_started.card1_title',
       subtitle: 'get_started.card1_subtitle',
       icon: isLightMode ? CheckDemo : CheckDemoDark,
-      buttonText: 'general.check_out',
+      buttonText: 'admin_console.general.check_out',
       isComplete: settings?.checkDemo,
       isHidden: hideDemo,
       onClick: async () => {
@@ -73,7 +73,7 @@ const useGetStartedMetadata = ({ checkDemoAppExists }: Props) => {
       title: 'get_started.card2_title',
       subtitle: 'get_started.card2_subtitle',
       icon: isLightMode ? CreateApp : CreateAppDark,
-      buttonText: 'general.create',
+      buttonText: 'admin_console.general.create',
       isComplete: settings?.createApplication,
       onClick: () => {
         navigate('/applications/create');
@@ -84,7 +84,7 @@ const useGetStartedMetadata = ({ checkDemoAppExists }: Props) => {
       title: 'get_started.card3_title',
       subtitle: 'get_started.card3_subtitle',
       icon: isLightMode ? Customize : CustomizeDark,
-      buttonText: 'general.customize',
+      buttonText: 'admin_console.general.customize',
       isComplete: settings?.customizeSignInExperience,
       onClick: () => {
         navigate('/sign-in-experience');
@@ -95,7 +95,7 @@ const useGetStartedMetadata = ({ checkDemoAppExists }: Props) => {
       title: 'get_started.card4_title',
       subtitle: 'get_started.card4_subtitle',
       icon: isLightMode ? Passwordless : PasswordlessDark,
-      buttonText: 'general.create',
+      buttonText: 'admin_console.general.create',
       isComplete: settings?.configurePasswordless,
       onClick: () => {
         navigate('/connectors');
@@ -106,7 +106,7 @@ const useGetStartedMetadata = ({ checkDemoAppExists }: Props) => {
       title: 'get_started.card5_title',
       subtitle: 'get_started.card5_subtitle',
       icon: isLightMode ? OneClick : OneClickDark,
-      buttonText: 'general.set_up',
+      buttonText: 'admin_console.general.set_up',
       onClick: () => {
         navigate('/connectors/social');
       },
@@ -116,7 +116,7 @@ const useGetStartedMetadata = ({ checkDemoAppExists }: Props) => {
       title: 'get_started.card6_title',
       subtitle: 'get_started.card6_subtitle',
       icon: isLightMode ? FurtherReadings : FurtherReadingsDark,
-      buttonText: 'general.check_out',
+      buttonText: 'admin_console.general.check_out',
       isComplete: settings?.checkFurtherReadings,
       onClick: () => {
         void updateSettings({ checkFurtherReadings: true });

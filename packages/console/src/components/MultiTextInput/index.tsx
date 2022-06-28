@@ -88,7 +88,7 @@ const MultiTextInput = ({ title, value, onChange, onKeyPress, error }: Props) =>
       </div>
       <ConfirmModal
         isOpen={deleteFieldIndex !== undefined}
-        confirmButtonText="admin_console.form.delete"
+        confirmButtonText="admin_console.general.delete"
         onCancel={() => {
           setDeleteFieldIndex(undefined);
         }}
