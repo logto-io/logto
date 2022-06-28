@@ -24,20 +24,25 @@ const SocialSignInIconList = ({
   moreButtonRef,
   onMoreButtonClick,
 }: Props) => {
-  const { invokeSocialSignIn } = useSocial();
+  const { invokeSocialSignIn, theme } = useSocial();
 
   return (
     <div className={classNames(styles.socialIconList, className)}>
-      {connectors.map((connector) => (
-        <SocialIconButton
-          key={connector.id}
-          className={styles.socialButton}
-          connector={connector}
-          onClick={() => {
-            void invokeSocialSignIn(connector);
-          }}
-        />
-      ))}
+      {connectors.map((connector) => {
+        const { id, target, logo, logoDark } = connector;
+
+        return (
+          <SocialIconButton
+            key={id}
+            className={styles.socialButton}
+            logo={theme === 'dark' && target !== 'apple' ? logoDark ?? logo : logo}
+            target={target}
+            onClick={() => {
+              void invokeSocialSignIn(connector);
+            }}
+          />
+        );
+      })}
       {hasMore && (
         <IconButton ref={moreButtonRef} className={styles.moreButton} onClick={onMoreButtonClick}>
           <MoreSocialIcon />

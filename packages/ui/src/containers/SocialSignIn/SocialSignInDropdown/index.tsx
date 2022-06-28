@@ -20,7 +20,7 @@ const SocialSignInDropdown = ({ isOpen, onClose, connectors, anchorRef }: Props)
     i18n: { language },
   } = useTranslation();
   const [contentStyle, setContentStyle] = useState<{ top?: number; left?: number }>();
-  const { invokeSocialSignIn } = useSocial();
+  const { invokeSocialSignIn, theme } = useSocial();
 
   const adjustPosition = useCallback(() => {
     if (anchorRef?.current) {
@@ -46,7 +46,7 @@ const SocialSignInDropdown = ({ isOpen, onClose, connectors, anchorRef }: Props)
       }}
     >
       {connectors.map((connector) => {
-        const { id, name, logo } = connector;
+        const { id, name, logo, logoDark } = connector;
         const languageKey = Object.keys(name).find((key) => key === language) ?? 'en';
         const localName = name[languageKey as Language];
 
@@ -58,7 +58,11 @@ const SocialSignInDropdown = ({ isOpen, onClose, connectors, anchorRef }: Props)
               onClose();
             }}
           >
-            <img src={logo} alt={id} className={styles.socialLogo} />
+            <img
+              src={theme === 'dark' ? logoDark ?? logo : logo}
+              alt={id}
+              className={styles.socialLogo}
+            />
             <span>{localName}</span>
           </DropdownItem>
         );

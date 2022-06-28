@@ -10,7 +10,7 @@ import { PageContext } from './use-page-context';
 import useTerms from './use-terms';
 
 const useSocial = () => {
-  const { experienceSettings } = useContext(PageContext);
+  const { experienceSettings, theme } = useContext(PageContext);
   const { termsValidation } = useTerms();
 
   const { run: asyncInvokeSocialSignIn } = useApi(invokeSocialSignIn);
@@ -64,6 +64,7 @@ const useSocial = () => {
   );
 
   return {
+    theme,
     socialConnectors: experienceSettings?.socialConnectors ?? [],
     invokeSocialSignIn: invokeSocialSignInHandler,
   };
