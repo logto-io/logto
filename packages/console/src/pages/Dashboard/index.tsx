@@ -30,6 +30,7 @@ const tickStyle = {
 };
 
 const Dashboard = () => {
+  const [date, setDate] = useState<string>(dayjs().format('YYYY-MM-DD'));
   const { data: totalData, error: totalError } = useSWR<TotalUsersResponse, RequestError>(
     '/api/dashboard/users/total'
   );
@@ -37,10 +38,9 @@ const Dashboard = () => {
     '/api/dashboard/users/new'
   );
   const { data: activeData, error: activeError } = useSWR<ActiveUsersResponse, RequestError>(
-    '/api/dashboard/users/active'
+    `/api/dashboard/users/active?date=${date}`
   );
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const [date, setDate] = useState<string>(dayjs().format('YYYY-MM-DD'));
 
   // Pick an error as the page's error
   const error = totalError ?? newError ?? activeError;
