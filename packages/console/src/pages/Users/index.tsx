@@ -119,7 +119,7 @@ const Users = () => {
                 />
               </TableEmpty>
             )}
-            {users?.map(({ id, name, username, avatar, lastSignInAt, applicationId }) => (
+            {users?.map(({ id, name, avatar, lastSignInAt, applicationId }) => (
               <tr
                 key={id}
                 className={tableStyles.clickable}
@@ -130,7 +130,7 @@ const Users = () => {
                 <td>
                   <ItemPreview
                     title={name || t('users.unnamed')}
-                    subtitle={conditionalString(username)}
+                    subtitle={id}
                     icon={
                       <img
                         className={styles.avatar}
