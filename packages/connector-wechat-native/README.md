@@ -43,6 +43,10 @@ Click "Next step" to move on.
 
 ### Platform info
 
+You can configure one or both of iOS and Android platforms for integrating Logto with WeChat native sign-in.
+
+#### iOS app (iOS应用)
+
 Check "iOS app" (iOS 应用), then check the target device type of your app accordingly.
 
 ![App platform](/packages/connector-wechat-native/docs/platform.png)
@@ -59,9 +63,32 @@ Fill out _Bundle ID_, _Test version Bundle ID_, and _Universal Links_ (actually,
 > 
 > WeChat requires Universal Link for native sign-in. If you haven't set up or don't know it, please refer to the [Apple official doc](https://developer.apple.com/ios/universal-links/).
 
-Click "Submit Review" to continue.
+#### Android app (Android 应用)
+
+Check "Android app" (Android 应用).
+
+<img src="./docs/platform-android-app.png" alt="Android app platform" width="200px" />
+
+Fill out _Application Signing Signature(应用签名）_ and _Application Package Name(应用包名）_.
+
+> **Note**
+> 
+>You need to sign your app before you can sign in with WeChat natively.
+Refer to the [Sign your app](https://developer.android.com/studio/publish/app-signing) for more information. 
+
+After you finish signing your app, you can execute the `signingReport` task to get the signing signature.
+
+`./gradlew your-android-project:signingReport`
+
+<img src="./docs/android-signing-report.png" alt="Android app platform" width="1000px" />
+
+The corresponding variant `MD5` value will be the _Application Signing Signature(应用签名）_, but remember to remove all semicolons from the value and cast it to lowercase.
+
+e.g. `1A:2B:3C:4D` -> `1a2b3c4d`
 
 ### Waiting for the review result
+
+After you have finished filling out the platform info, Click "Submit Review" to continue and wait for the review result.
 
 Usually, the review goes fast, which will end within 1-2 days.
 
@@ -79,7 +106,9 @@ After passing the review, go to the application details page and generate an App
 }
 ```
 
-## Add the Logto social plugin to your app
+## Set up WeChat native sign in with your app
+
+### iOS
 
 We assume you have integrated [Logto iOS SDK](https://docs.logto.io/docs/recipes/integrate-logto/ios) in your app. In this case, things are pretty simple, and you don't even need to read the WeChat SDK doc:
 
@@ -121,7 +150,74 @@ func application(_ app: UIApplication, open url: URL, options: /*...*/) -> Bool 
 }
 ```
 
-That's it. Don't forget to [Enable connector in sign-in experience](https://docs.logto.io/docs/tutorials/get-started/enable-social-sign-in#enable-connector-in-sign-in-experience).
+### Android
+
+We assume you have integrated [Logto Android SDK](https://docs.logto.io/docs/recipes/integrate-logto/android) in your app. In this case, things are pretty simple, and you don't even need to read the WeChat SDK doc:
+
+**1. Add `Wechat Open SDK` to your project**
+
+Add the `mavenCentral()` repository to your Gradle project repositories:
+
+```kotlin
+// kotlin-script
+repositories {
+  // ...
+  mavenCentral()
+}
+```
+
+Add the Wechat Open SDK to your dependencies:
+
+```kotlin
+// kotlin-script
+dependencies {
+  // ...
+  api("com.tencent.mm.opensdk:wechat-sdk-android:6.8.0")
+}
+```
+
+**2. Introduce `WXEntryActivity` to your project**
+
+Create a `wxapi` package under your package root and add the `WXEntryActivity` in the `wxapi` package (Take `com.sample.app` as an example):
+
+```kotlin
+// WXEntryActivity.kt
+package com.sample.app.wxapi
+
+import io.logto.sdk.android.auth.social.wechat.WechatSocialResultActivity
+
+class WXEntryActivity: WechatSocialResultActivity()
+```
+
+The final position of the `WXEntryActivity` under the project should look like this:
+
+```bash
+src/main/kotlin/com/sample/app/wxapi/WXEntryActivity.kt
+```
+
+**3. Modify the `AndroidManifest.xml`**
+
+Add the following lines to your `AndroidManifest.xml`:
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+  package="com.sample.app">
+  <queries>
+    <!-- line to be added -->
+    <package android:name="com.tencent.mm" />
+  </queries>
+
+  <application>
+    <!-- line to be added -->
+    <activity android:name=".wxapi.WXEntryActivity" android:exported="true"/>
+  </application>
+</manifest>
+```
+
+### Enable WeChat native connector
+
+After you have set up WeChat native sign in. Don't forget to [Enable connector in sign-in experience](https://docs.logto.io/docs/tutorials/get-started/enable-social-sign-in#enable-connector-in-sign-in-experience).
 
 After WeChat native connector is enabled, you can build and run your app to see if it works.
 
