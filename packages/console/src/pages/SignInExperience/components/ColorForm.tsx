@@ -35,7 +35,7 @@ const ColorForm = () => {
       return;
     }
 
-    // If is enabled, won't change, users need to click "reset".
+    // If it's enabled, the original dark mode color won't change, users need to click "reset".
     if (!isDarkModeEnabled) {
       handleResetColor();
     }

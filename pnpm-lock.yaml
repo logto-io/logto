@@ -727,8 +727,6 @@ importers:
       swr: ^1.2.2
       typescript: ^4.6.2
       zod: ^3.14.3
-    dependencies:
-      color: 4.2.3
     devDependencies:
       '@fontsource/roboto-mono': 4.5.7
       '@logto/phrases': link:../phrases
@@ -755,6 +753,7 @@ importers:
       '@types/react-modal': 3.13.1
       '@types/react-syntax-highlighter': 15.5.1
       classnames: 2.3.1
+      color: 4.2.3
       cross-env: 7.0.3
       csstype: 3.0.11
       dayjs: 1.10.7
@@ -7703,7 +7702,7 @@ packages:
       eslint-import-resolver-webpack:
         optional: true
     dependencies:
-      '@typescript-eslint/parser': 5.14.0_pzezdwkd5bvjkx2hshexc25sxq
+      '@typescript-eslint/parser': 5.14.0_fo4uz55zgcu432252zy2gvpvcu
       debug: 3.2.7
       eslint-import-resolver-node: 0.3.6
       eslint-import-resolver-typescript: 2.5.0_rnagsyfcubvpoxo2ynj23pim7u
@@ -7754,7 +7753,7 @@ packages:
       '@typescript-eslint/parser':
         optional: true
     dependencies:
-      '@typescript-eslint/parser': 5.14.0_pzezdwkd5bvjkx2hshexc25sxq
+      '@typescript-eslint/parser': 5.14.0_fo4uz55zgcu432252zy2gvpvcu
       array-includes: 3.1.4
       array.prototype.flat: 1.2.5
       debug: 2.6.9
