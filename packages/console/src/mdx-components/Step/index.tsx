@@ -20,6 +20,7 @@ type Props = PropsWithChildren<{
   activeIndex: number;
   buttonText?: I18nKey;
   buttonHtmlType?: 'submit' | 'button';
+  buttonType?: 'primary' | 'outline';
   isLoading?: boolean;
   onButtonClick?: () => void;
 }>;
@@ -32,6 +33,7 @@ const Step = ({
   activeIndex,
   buttonText = 'admin_console.general.next',
   buttonHtmlType = 'button',
+  buttonType = 'outline',
   isLoading,
   onButtonClick,
 }: Props) => {
@@ -78,7 +80,7 @@ const Step = ({
         {children}
         <div className={styles.buttonWrapper}>
           <Button
-            type="outline"
+            type={buttonType}
             size="large"
             isLoading={isLoading}
             htmlType={buttonHtmlType}

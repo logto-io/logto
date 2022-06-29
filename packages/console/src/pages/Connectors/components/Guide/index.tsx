@@ -102,6 +102,7 @@ const Guide = ({ connector, onClose }: Props) => {
                 activeIndex={0}
                 buttonText="admin_console.connectors.save_and_done"
                 buttonHtmlType="submit"
+                buttonType="primary"
                 isLoading={isSubmitting}
               >
                 <Controller
