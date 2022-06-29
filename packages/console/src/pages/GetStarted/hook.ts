@@ -95,7 +95,7 @@ const useGetStartedMetadata = ({ checkDemoAppExists }: Props) => {
       title: 'get_started.card4_title',
       subtitle: 'get_started.card4_subtitle',
       icon: isLightMode ? Passwordless : PasswordlessDark,
-      buttonText: 'admin_console.general.create',
+      buttonText: 'admin_console.general.enable',
       isComplete: settings?.configurePasswordless,
       onClick: () => {
         navigate('/connectors');
