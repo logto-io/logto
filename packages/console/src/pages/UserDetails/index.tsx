@@ -304,6 +304,7 @@ const UserDetails = () => {
           title="user_details.reset_password.congratulations"
           username={data.username ?? '-'}
           password={resetResult}
+          passwordLabel={t('user_details.reset_password.new_password')}
           onClose={() => {
             setResetResult(undefined);
           }}

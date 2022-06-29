@@ -266,6 +266,7 @@ const translation = {
         title: 'Are you sure you want to reset the password?',
         content: "This action cannot be undone. This will reset the user's log in information.",
         congratulations: 'This user has been reset',
+        new_password: 'New password:',
       },
       tab_logs: 'User logs',
       field_email: 'Primary email',
