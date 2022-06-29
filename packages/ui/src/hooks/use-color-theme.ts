@@ -1,18 +1,6 @@
+import { absoluteDarken, absoluteLighten } from '@logto/shared';
 import color from 'color';
 import { useEffect } from 'react';
-
-// Color hsl lighten/darken takes percentage value only, need to implement absolute value update
-const absoluteLighten = (baseColor: color, delta: number) => {
-  const hslArray = baseColor.hsl().round().array() as [number, number, number];
-
-  return color([hslArray[0], hslArray[1], hslArray[2] + delta], 'hsl');
-};
-
-const absoluteDarken = (baseColor: color, delta: number) => {
-  const hslArray = baseColor.hsl().round().array() as [number, number, number];
-
-  return color([hslArray[0], hslArray[1], hslArray[2] - delta], 'hsl');
-};
 
 const generateLightColorLibrary = (primaryColor: color) => ({
   [`--light-primary-color`]: primaryColor.hex(),
@@ -39,9 +27,7 @@ const useColorTheme = (primaryColor?: string, darkPrimaryColor?: string) => {
     }
 
     const lightPrimary = color(primaryColor);
-    const darkPrimary = darkPrimaryColor
-      ? color(darkPrimaryColor)
-      : absoluteLighten(lightPrimary, 10);
+    const darkPrimary = color(darkPrimaryColor);
 
     const lightColorLibrary = generateLightColorLibrary(lightPrimary);
     const darkColorLibrary = generateDarkColorLibrary(darkPrimary);

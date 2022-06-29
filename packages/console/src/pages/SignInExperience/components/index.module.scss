@@ -21,3 +21,10 @@
 .primarySocial {
   margin-top: _.unit(2);
 }
+
+.darkModeTip {
+  display: flex;
+  align-items: baseline;
+  font: var(--font-body-medium);
+  color: var(--color-caption);
+}

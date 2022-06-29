@@ -318,7 +318,9 @@ const translation = {
         dark_primary_color: '品牌颜色 (深色)',
         dark_mode: '开启深色模式',
         dark_mode_description:
-          '基于你的品牌颜色和 Logto 算法，你的应用将会有一个自动生成的深色模式。当然，你可以自定义和修改。',
+          '基于你的品牌颜色和 Logto 的算法，你的应用将会有一个自动生成的深色模式。当然，你可以自定义和修改。',
+        dark_mode_reset_tip: '重置为基于品牌颜色自动生成的深色模式颜色。',
+        reset: '重置',
       },
       branding: {
         title: '品牌定制区',

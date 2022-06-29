@@ -97,5 +97,8 @@
       ]
     }
   },
-  "prettier": "@silverhand/eslint-config/.prettierrc"
+  "prettier": "@silverhand/eslint-config/.prettierrc",
+  "dependencies": {
+    "@logto/shared": "^0.1.0"
+  }
 }
