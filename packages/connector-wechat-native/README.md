@@ -6,7 +6,7 @@ The official Logto connector for WeChat social sign-in in native apps (iOS and A
 
 ## Get started
 
-If you don't know the concept of the connector or haven't add this connector to your Sign-in experience yet, please see [Logto tutorial](https://docs.logto.io/docs/tutorials/get-started/enable-social-sign-in).
+If you don't know the concept of the connector or haven't added this connector to your Sign-in experience yet, please see [Logto tutorial](https://docs.logto.io/docs/tutorials/get-started/enable-social-sign-in).
 
 In native apps, you cannot use the web as a sign-in method of WeChat. Navigation to WeChat is required, and it also requires using their SDK.
 
@@ -43,15 +43,15 @@ Click "Next step" to move on.
 
 ### Platform info
 
-You can configure one or both of iOS and Android platforms for integrating Logto with WeChat native sign-in.
+You can configure one or both of the iOS and Android platforms for integrating Logto with WeChat native sign-in.
 
-#### iOS app (iOS应用)
+#### iOS app
 
 Check "iOS app" (iOS 应用), then check the target device type of your app accordingly.
 
 ![App platform](/packages/connector-wechat-native/docs/platform.png)
 
-If you chose "No" for the App Store availability, you cloud skip filling out "AppStore download address" here.
+If you chose "No" for the App Store availability, you cloud skip filling out the "AppStore download address" here.
 
 Fill out _Bundle ID_, _Test version Bundle ID_, and _Universal Links_ (actually, only one link is needed 😂).
 
@@ -63,7 +63,7 @@ Fill out _Bundle ID_, _Test version Bundle ID_, and _Universal Links_ (actually,
 > 
 > WeChat requires Universal Link for native sign-in. If you haven't set up or don't know it, please refer to the [Apple official doc](https://developer.apple.com/ios/universal-links/).
 
-#### Android app (Android 应用)
+#### Android app
 
 Check "Android app" (Android 应用).
 
@@ -73,8 +73,7 @@ Fill out _Application Signing Signature(应用签名）_ and _Application Packag
 
 > **Note**
 > 
->You need to sign your app before you can sign in with WeChat natively.
-Refer to the [Sign your app](https://developer.android.com/studio/publish/app-signing) for more information. 
+>You need to sign your app to get a signature before your users can sign in with WeChat. Refer to the [Sign your app](https://developer.android.com/studio/publish/app-signing) for more information. 
 
 After you finish signing your app, you can execute the `signingReport` task to get the signing signature.
 
@@ -82,9 +81,9 @@ After you finish signing your app, you can execute the `signingReport` task to g
 
 ![Android signing report](/packages/connector-wechat-native/docs/android-signing-report.png)
 
-The corresponding variant `MD5` value will be the _Application Signing Signature(应用签名）_, but remember to remove all semicolons from the value and cast it to lowercase.
+The `MD5` value of the corresponding build variant will be the _Application Signing Signature(应用签名）_, but remember to remove all semicolons from the value and cast it to lowercase.
 
-e.g. `1A:2B:3C:4D` -> `1a2b3c4d`
+E.g. `1A:2B:3C:4D` -> `1a2b3c4d`
 
 ### Waiting for the review result
 
@@ -106,7 +105,7 @@ After passing the review, go to the application details page and generate an App
 }
 ```
 
-## Set up WeChat native sign in with your app
+## Add the Logto social support to your app
 
 ### iOS
 
@@ -159,7 +158,6 @@ We assume you have integrated [Logto Android SDK](https://docs.logto.io/docs/rec
 Add the `mavenCentral()` repository to your Gradle project repositories:
 
 ```kotlin
-// kotlin-script
 repositories {
   // ...
   mavenCentral()
@@ -176,6 +174,14 @@ dependencies {
 }
 ```
 
+```groovy
+// groovy-script
+dependencies {
+  // ...
+  api 'com.tencent.mm.opensdk:wechat-sdk-android:6.8.0'
+}
+```
+
 **2. Introduce `WXEntryActivity` to your project**
 
 Create a `wxapi` package under your package root and add the `WXEntryActivity` in the `wxapi` package (Take `com.sample.app` as an example):
@@ -189,7 +195,16 @@ import io.logto.sdk.android.auth.social.wechat.WechatSocialResultActivity
 class WXEntryActivity: WechatSocialResultActivity()
 ```
 
-The final position of the `WXEntryActivity` under the project should look like this:
+```java
+// WXEntryActivity.java
+package com.sample.app.wxapi
+
+import io.logto.sdk.android.auth.social.wechat.WechatSocialResultActivity
+
+public class WXEntryActivity extends WechatSocialResultActivity {}
+```
+
+The final position of the `WXEntryActivity` under the project should look like this (Take kotlin file as an example):
 
 ```bash
 src/main/kotlin/com/sample/app/wxapi/WXEntryActivity.kt
