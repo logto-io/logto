@@ -1,22 +1,24 @@
 # SendGrid mail connector
 
-SendGrid (also known as Twilio SendGrid) is a customer communication platform for transactional and marketing email. We can use its email sending function to send a "verification code" (or in other words, passcode).
+SendGrid (a.k.a. Twilio SendGrid) is a customer communication platform for transactional and marketing email. We can use its email sending function to send a "verification code".
 
-## Register and sign in SendGrid account
+## Register SendGrid account
 
-Go to https://app.sendgrid.com/ to register a new account and sign in to SendGrid afterward. You may skip the registration step if you've already got an account.
+Create a new account at [SendGrid website](https://app.sendgrid.com/). You may skip this step if you've already got an account.
 
 ## Verify senders
 
-Senders are the email addresses where the emails containing verification codes come from. In order to send emails via the SendGrid mail server, you need to verify at least one sender.
+Go to the [SendGrid console page](https://app.sendgrid.com/) and sign in with your SendGrid account.
+
+Senders indicate the addresses our verification code email will be sent from. In order to send emails via the SendGrid mail server, you need to verify at least one sender.
 
 Starting from the [SendGrid console page](https://app.sendgrid.com/), go to _Settings_ -> _Sender Authentication_ from the sidebar.
 
-Domain Authentication is recommended but it is not obligated. You can click _Get Started_ in _Authenticate Your Domain_ card and follow the guide.
+Domain Authentication is recommended but not obligatory. You can click _Get Started_ in _Authenticate Your Domain_ card and follow the upcoming guide to link and verify a sender to SendGrid.
 
 By clicking the _Verify a Single Sender_ button in the panel, you are now focusing on a form requiring some critical information to create a sender. Follow the guide, fill out all these fields, and hit the _Create_ button.
 
-After the single sender is created, an email with a verification link should be sent to your sender's email address. Go to your mailbox, find the verification mail and finish verifying the single sender by clicking the link given in the email. You can now send email via SendGrid email connector using the sender you've just verified.
+After the single sender is created, an email with a verification link should be sent to your sender's email address. Go to your mailbox, find the verification mail and finish verifying the single sender by clicking the link given in the email. You can now send emails via SendGrid connector using the sender you've just verified.
 
 ## Create API keys
 
