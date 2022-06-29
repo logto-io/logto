@@ -27,6 +27,7 @@ const translation = {
       create: 'Create',
       set_up: 'Set Up',
       customize: 'Customize',
+      enable: 'Enable',
       reminder: 'Reminder',
       delete: 'Delete',
       more_options: 'MORE OPTIONS',

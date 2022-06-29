@@ -29,6 +29,7 @@ const translation = {
       create: '创建',
       set_up: '配置',
       customize: '自定义',
+      enable: '启用',
       reminder: '提示',
       delete: '删除',
       more_options: '更多选项',
