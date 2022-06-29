@@ -14,7 +14,7 @@ We know it sounds scary, but don't worry. We'll handle it easily in this tutoria
 
 ## Create a mobile app in the WeChat Open Platform
 
-> **Note**
+> 💡 **Tip**
 > 
 > You can skip some sections if you already finished.
 
@@ -51,11 +51,11 @@ If you chose "No" for the App Store availability, you cloud skip filling out "Ap
 
 Fill out _Bundle ID_, _Test version Bundle ID_, and _Universal Links_ (actually, only one link is needed 😂).
 
-> **Note**
+> ℹ️ **Note**
 > 
 > _Bundle ID_ and _Test version Bundle ID_ can be the same value.
 
-> **Warning**
+> 💡 **Tip**
 > 
 > WeChat requires Universal Link for native sign-in. If you haven't set up or don't know it, please refer to the [Apple official doc](https://developer.apple.com/ios/universal-links/).
 
@@ -104,7 +104,7 @@ let logtoClient = LogtoClient(
 
 **3. Handle `onOpenURL` properly**
 
-> **Note**
+> ℹ️ **Note**
 > 
 > The function `LogtoClient.handle(url:)` will handle all the native connectors you enabled. You only need to call it once.
 
@@ -125,7 +125,7 @@ That's it. Don't forget to [Enable connector in sign-in experience](https://docs
 
 After WeChat native connector is enabled, you can build and run your app to see if it works.
 
-> **Note**
+> ⚠️ **Caution**
 > 
 > WeChat doesn't have a plan for those devices without the WeChat app installed. Logto will hide this connector during sign-in if so (which is the recommended way from the [official development guide](https://developers.weixin.qq.com/doc/oplatform/en/Mobile_App/WeChat_Login/Development_Guide.html)).
 
