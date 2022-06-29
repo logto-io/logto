@@ -38,19 +38,39 @@
     }
   }
 
-  ul {
-    padding-inline-start: 1ch;
+  li {
+    font: var(--font-body-medium);
+
+    ul,
+    ol {
+      padding-inline-start: 1ch;
+    }
   }
 
-  li {
-    list-style-type: '-';
-    margin-block-end: _.unit(6);
-    padding-inline-start: _.unit(1.5);
+  ul {
+    padding-inline-start: 4ch;
+
+    > li {
+      margin-block-start: _.unit(2);
+      margin-block-end: _.unit(2);
+      padding-inline-start: _.unit(1);
+    }
+  }
+
+  ol {
+    padding-inline-start: 2ch;
+
+    > li {
+      margin-block-start: _.unit(3);
+      margin-block-end: _.unit(3);
+      padding-inline-start: _.unit(1);
+    }
   }
 
   a {
     font: var(--font-body-medium);
     color: var(--color-text-link);
+    text-decoration: none;
   }
 
   h3 {
