@@ -4,9 +4,9 @@ Twilio provides programmable communication tools for making and receiving phone 
 
 ## Register Twilio account
 
-Create a new account at https://www.twilio.com. (Jump to the next step if you already have one.)
+Create a new account at [Twilio](https://www.twilio.com). (Jump to the next step if you already have one.)
 
-## Set up sender's phone numbers
+## Set up senders' phone numbers
 
 Go to the [Twilio console page](https://console.twilio.com/) and sign in with your Twilio account.
 
