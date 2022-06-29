@@ -170,6 +170,7 @@ Add the Wechat Open SDK to your dependencies:
 dependencies {
   // ...
   api("com.tencent.mm.opensdk:wechat-sdk-android:6.8.0")  // kotlin-script
+  // or
   api 'com.tencent.mm.opensdk:wechat-sdk-android:6.8.0'   // groovy-script
 }
 ```
