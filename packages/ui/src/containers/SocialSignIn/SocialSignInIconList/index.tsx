@@ -6,6 +6,7 @@ import IconButton from '@/components/Button/IconButton';
 import SocialIconButton from '@/components/Button/SocialIconButton';
 import useSocial from '@/hooks/use-social';
 import { ConnectorData } from '@/types';
+import { isAppleConnector } from '@/utils/social-connectors';
 
 import * as styles from './index.module.scss';
 
@@ -35,7 +36,7 @@ const SocialSignInIconList = ({
           <SocialIconButton
             key={id}
             className={styles.socialButton}
-            logo={theme === 'dark' && target !== 'apple' ? logoDark ?? logo : logo}
+            logo={(theme === 'dark' && !isAppleConnector(target) && logoDark) || logo}
             target={target}
             onClick={() => {
               void invokeSocialSignIn(connector);

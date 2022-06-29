@@ -47,7 +47,7 @@ const SocialSignInList = ({
             key={id}
             className={styles.socialLinkButton}
             name={name}
-            logo={theme === 'dark' ? logoDark ?? logo : logo}
+            logo={(theme === 'dark' && logoDark) || logo}
             target={target}
             onClick={() => {
               void invokeSocialSignIn(connector);

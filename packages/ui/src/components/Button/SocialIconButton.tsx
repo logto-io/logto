@@ -1,6 +1,8 @@
 import classNames from 'classnames';
 import React from 'react';
 
+import { isAppleConnector } from '@/utils/social-connectors';
+
 import * as styles from './SocialIconButton.module.scss';
 
 type Props = {
@@ -10,17 +12,17 @@ type Props = {
   onClick?: () => void;
 };
 
-const SocialIconButton = ({ className, logo, target, onClick }: Props) => {
-  const inverseBackground = target === 'apple';
-
-  return (
-    <button
-      className={classNames(styles.socialButton, inverseBackground && styles.inverse, className)}
-      onClick={onClick}
-    >
-      {logo && <img src={logo} alt={target} className={styles.icon} />}
-    </button>
-  );
-};
+const SocialIconButton = ({ className, logo, target, onClick }: Props) => (
+  <button
+    className={classNames(
+      styles.socialButton,
+      isAppleConnector('target') && styles.inverse,
+      className
+    )}
+    onClick={onClick}
+  >
+    {logo && <img src={logo} alt={target} className={styles.icon} />}
+  </button>
+);
 
 export default SocialIconButton;
