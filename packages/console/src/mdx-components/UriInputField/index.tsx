@@ -2,6 +2,7 @@ import { I18nKey } from '@logto/phrases';
 import { Application } from '@logto/schemas';
 import React, { useRef, KeyboardEvent } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
+import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import useSWR from 'swr';
 
@@ -50,6 +51,7 @@ const UriInputField = ({ appId, name, title, isSingle = false }: Props) => {
       })
       .json<Application>();
     void mutate(updatedApp);
+    toast.success(t('general.saved'));
 
     // Reset form to set 'isDirty' to false
     reset(getValues());
