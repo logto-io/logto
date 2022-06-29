@@ -69,7 +69,7 @@ Check "Android app" (Android 应用).
 
 ![Android app platform](/packages/connector-wechat-native/docs/platform-android-app.png)
 
-Fill out _Application Signing Signature(应用签名）_ and _Application Package Name(应用包名）_.
+Fill out _Application Signing Signature_(应用签名) and _Application Package Name_(应用包名).
 
 > **Note**
 > 
@@ -77,9 +77,11 @@ Fill out _Application Signing Signature(应用签名）_ and _Application Packag
 
 After you finish signing your app, you can execute the `signingReport` task to get the signing signature.
 
-`./gradlew your-android-project:signingReport`
+```bash
+./gradlew your-android-project:signingReport
+```
 
-The `MD5` value of the corresponding build variant's report will be the _Application Signing Signature(应用签名）_, but remember to remove all semicolons from the value and cast it to lowercase.
+The `MD5` value of the corresponding build variant's report will be the _Application Signing Signature_(应用签名), but remember to remove all semicolons from the value and cast it to lowercase.
 
 E.g. `1A:2B:3C:4D` -> `1a2b3c4d`
 
@@ -153,7 +155,7 @@ We assume you have integrated [Logto Android SDK](https://docs.logto.io/docs/rec
 
 **1. Add `Wechat Open SDK` to your project**
 
-Add the `mavenCentral()` repository to your Gradle project repositories:
+Ensure the `mavenCentral()` repository is in your Gradle project repositories:
 
 ```kotlin
 repositories {
@@ -165,18 +167,10 @@ repositories {
 Add the Wechat Open SDK to your dependencies:
 
 ```kotlin
-// kotlin-script
 dependencies {
   // ...
-  api("com.tencent.mm.opensdk:wechat-sdk-android:6.8.0")
-}
-```
-
-```groovy
-// groovy-script
-dependencies {
-  // ...
-  api 'com.tencent.mm.opensdk:wechat-sdk-android:6.8.0'
+  api("com.tencent.mm.opensdk:wechat-sdk-android:6.8.0")  // kotlin-script
+  api 'com.tencent.mm.opensdk:wechat-sdk-android:6.8.0'   // groovy-script
 }
 ```
 
@@ -202,7 +196,7 @@ import io.logto.sdk.android.auth.social.wechat.WechatSocialResultActivity
 public class WXEntryActivity extends WechatSocialResultActivity {}
 ```
 
-The final position of the `WXEntryActivity` under the project should look like this (Take kotlin file as an example):
+The final position of the `WXEntryActivity` under the project should look like this (Take Kotlin as an example):
 
 ```bash
 src/main/kotlin/com/sample/app/wxapi/WXEntryActivity.kt
