@@ -6,7 +6,7 @@
 
 # Logto [WIP]
 
-🤘 Logto[^info] helps you quickly focus on everything after signing in.
+Logto[^info] helps you build the sign-in experience and user identity within minutes.
 
 **Main Features**
 
