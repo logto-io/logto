@@ -6,14 +6,17 @@ Aliyun is a primary cloud service provider in Asia, offering many cloud services
 
 Go to the [Aliyun website](https://cn.aliyun.com/) and register your Aliyun account if you don't have one.
 
-## Enable and Configure Aliyun Direct Mail
+## Enable and configure Aliyun Direct Mail
 
-1. Sign-in with your Aliyun account at the [Aliyun website](https://cn.aliyun.com/) and go to the [DM service console page](https://www.aliyun.com/product/directmail).
-2. Click the "Apply to enable" button on the top left of the DM service page and begin the configuration process.
-3. After enabling the service, go back to the [DM admin console page](https://dm.console.aliyun.com/).
-4. Go to **Email Domains** in the sidebar and add **New Domain** following the instructions.
-5. Customize **Sender Addresses** and **Email Tags** respectively which can be found in the [DM admin console page](https://dm.console.aliyun.com/) sidebar.
-6. After finishing settings, you can go to either the **Overview** tab and find all the different ways of testing at the bottom of the page or the **Email Tasks** tab to create a testing task.
+Go to the [DM service console page](https://www.aliyun.com/product/directmail) and sign in. Enable the Direct Mail service by clicking the _Apply to enable_ button on the top left of the page and begin the configuration process.
+
+Starting from the [DM admin console page](https://dm.console.aliyun.com/), you should:
+1. Go to _Email Domains_ from the sidebar and add _New Domain_ following the instructions.
+2. Customize _Sender Addresses_ and _Email Tags_ respectively.
+
+After finishing setup, there are two different ways to test:
+- Go to the [DirectMail Overview page](https://dm.console.aliyun.com/), find _Operation Guide_ at the bottom of the page, and click on _Send Emails_. You will find all the different kinds of testing methods.
+- Follow the path _Send Emails_ -> _Email Tasks_ in the sidebar to create a testing task.
 
 ## Compose the connector JSON
 
