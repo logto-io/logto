@@ -70,7 +70,6 @@ const DeleteForm = ({ id, name, onClose }: Props) => {
         autoFocus
         value={inputName}
         placeholder={t('api_resource_details.enter_your_api_resource_name')}
-        hasError={inputMismatched}
         onChange={(event) => {
           setInputName(event.currentTarget.value);
         }}
