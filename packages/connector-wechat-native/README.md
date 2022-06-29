@@ -225,9 +225,9 @@ Add the following lines to your `AndroidManifest.xml`:
 
 ### Enable WeChat native connector
 
-After you have set up WeChat native sign in. Don't forget to [Enable connector in sign-in experience](https://docs.logto.io/docs/tutorials/get-started/enable-social-sign-in#enable-connector-in-sign-in-experience).
+After you have added the Logto social support to your app, don't forget to [Enable connector in sign-in experience](https://docs.logto.io/docs/tutorials/get-started/enable-social-sign-in#enable-connector-in-sign-in-experience).
 
-After WeChat native connector is enabled, you can build and run your app to see if it works.
+Once WeChat native connector is enabled, you can build and run your app to see if it works.
 
 > **Note**
 > 
