@@ -27,12 +27,12 @@ type FormData = {
 const SenderTester = ({ connectorId, connectorType, config, className }: Props) => {
   const buttonPosReference = useRef(null);
   const [showTooltip, setShowTooltip] = useState(false);
-  const [isSubmitting, seIsSubmitting] = useState(false);
   const {
     handleSubmit,
     register,
     formState: {
       errors: { sendTo: inputError },
+      isSubmitting,
     },
   } = useForm<FormData>();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
@@ -46,7 +46,6 @@ const SenderTester = ({ connectorId, connectorType, config, className }: Props) 
 
     const tooltipTimeout = setTimeout(() => {
       setShowTooltip(false);
-      seIsSubmitting(false);
     }, 2000);
 
     return () => {
@@ -57,21 +56,15 @@ const SenderTester = ({ connectorId, connectorType, config, className }: Props) 
   const onSubmit = handleSubmit(async (formData) => {
     const { sendTo } = formData;
     const configJson = config ? (JSON.parse(config) as JSON) : undefined;
-    seIsSubmitting(true);
 
     const data = { config: configJson, ...(isSms ? { phone: sendTo } : { email: sendTo }) };
 
-    try {
-      await api
-        .post(`/api/connectors/${connectorId}/test`, {
-          json: data,
-        })
-        .json();
-      setShowTooltip(true);
-    } catch (error: unknown) {
-      console.error(error);
-      seIsSubmitting(false);
-    }
+    await api
+      .post(`/api/connectors/${connectorId}/test`, {
+        json: data,
+      })
+      .json();
+    setShowTooltip(true);
   });
 
   return (
