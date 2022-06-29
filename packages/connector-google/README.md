@@ -47,7 +47,7 @@ Now you should have the Google OAuth 2.0 consent screen configured.
 - Click **+ Add URI** in the ****Authorized redirect URIs**** section to set up the ****Authorized redirect URIs****, which redirect the user to the application after logging in. In our case, this will be `${your_logto_origin}/callback/google-universal`. e.g. `https://logto.dev/callback/google-universal`.
 - Click **Create** to finish and then you will get the **Client ID** and **Client Secret**.
 
-## Settings
+### Config types
 
 |     Name     |  Type  |
 |:------------:|:------:|

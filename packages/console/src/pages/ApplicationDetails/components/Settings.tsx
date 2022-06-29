@@ -39,10 +39,17 @@ const Settings = ({ oidcConfig }: Props) => {
         title="admin_console.application_details.application_name"
         className={styles.textField}
       >
-        <TextInput {...register('name', { required: true })} hasError={Boolean(errors.name)} />
+        <TextInput
+          {...register('name', { required: true })}
+          hasError={Boolean(errors.name)}
+          placeholder={t('application_details.application_name_placeholder')}
+        />
       </FormField>
       <FormField title="admin_console.application_details.description" className={styles.textField}>
-        <TextInput {...register('description')} />
+        <TextInput
+          {...register('description')}
+          placeholder={t('application_details.description_placeholder')}
+        />
       </FormField>
       <FormField
         title="admin_console.application_details.authorization_endpoint"
@@ -74,6 +81,7 @@ const Settings = ({ oidcConfig }: Props) => {
               title="admin_console.application_details.redirect_uri"
               value={value}
               error={convertRhfErrorMessage(error?.message)}
+              placeholder={t('application_details.redirect_uri_placeholder')}
               onChange={onChange}
             />
           )}
@@ -95,6 +103,7 @@ const Settings = ({ oidcConfig }: Props) => {
               title="admin_console.application_details.post_sign_out_redirect_uri"
               value={value}
               error={convertRhfErrorMessage(error?.message)}
+              placeholder={t('application_details.post_sign_out_redirect_uri_placeholder')}
               onChange={onChange}
             />
           )}
@@ -121,6 +130,7 @@ const Settings = ({ oidcConfig }: Props) => {
               title="admin_console.application_details.cors_allowed_origins"
               value={value}
               error={convertRhfErrorMessage(error?.message)}
+              placeholder={t('application_details.cors_allowed_origins_placeholder')}
               onChange={onChange}
             />
           )}

@@ -51,6 +51,7 @@ const BrandingForm = () => {
           })}
           hasError={Boolean(errors.branding?.logoUrl)}
           errorMessage={errors.branding?.logoUrl?.message}
+          placeholder={t('sign_in_exp.branding.logo_image_url_placeholder')}
         />
       </FormField>
       {isDarkModeEnabled && (
@@ -61,6 +62,7 @@ const BrandingForm = () => {
             })}
             hasError={Boolean(errors.branding?.darkLogoUrl)}
             errorMessage={errors.branding?.darkLogoUrl?.message}
+            placeholder={t('sign_in_exp.branding.dark_logo_image_url_placeholder')}
           />
         </FormField>
       )}
@@ -68,6 +70,7 @@ const BrandingForm = () => {
         <TextInput
           {...register('branding.slogan', { required: isSloganRequired })}
           hasError={Boolean(errors.branding?.slogan)}
+          placeholder={t('sign_in_exp.branding.slogan_placeholder')}
         />
       </FormField>
     </>

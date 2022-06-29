@@ -147,6 +147,7 @@ const ApiResourceDetails = () => {
                     {...register('name', { required: true })}
                     hasError={Boolean(errors.name)}
                     readOnly={isLogtoManagementApiResource}
+                    placeholder={t('api_resources.api_name_placeholder')}
                   />
                 </FormField>
                 <FormField
@@ -157,6 +158,9 @@ const ApiResourceDetails = () => {
                   <TextInput
                     {...register('accessTokenTtl', { required: true, valueAsNumber: true })}
                     hasError={Boolean(errors.accessTokenTtl)}
+                    placeholder={t(
+                      'api_resource_details.token_expiration_time_in_seconds_placeholder'
+                    )}
                   />
                 </FormField>
               </div>
