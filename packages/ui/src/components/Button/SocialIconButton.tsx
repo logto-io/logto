@@ -16,7 +16,7 @@ const SocialIconButton = ({ className, logo, target, onClick }: Props) => (
   <button
     className={classNames(
       styles.socialButton,
-      isAppleConnector('target') && styles.inverse,
+      isAppleConnector(target) && styles.inverse,
       className
     )}
     onClick={onClick}
