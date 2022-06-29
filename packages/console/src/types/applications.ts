@@ -9,14 +9,14 @@ export const applicationTypeI18nKey = Object.freeze({
 export enum SupportedSdk {
   iOS = 'iOS',
   Android = 'Android',
-  Angular = 'Angular',
   React = 'React',
   Vue = 'Vue',
+  Vanilla = 'Vanilla',
   Traditional = 'Traditional',
 }
 
 export const applicationTypeAndSdkTypeMappings = Object.freeze({
   [ApplicationType.Native]: [SupportedSdk.iOS, SupportedSdk.Android],
-  [ApplicationType.SPA]: [SupportedSdk.Angular, SupportedSdk.React, SupportedSdk.Vue],
+  [ApplicationType.SPA]: [SupportedSdk.React, SupportedSdk.Vue, SupportedSdk.Vanilla],
   [ApplicationType.Traditional]: [SupportedSdk.Traditional],
 } as const);

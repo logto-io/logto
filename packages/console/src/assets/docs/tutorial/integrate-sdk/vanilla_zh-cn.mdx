@@ -15,21 +15,21 @@ import Alert from '@/components/Alert';
 <TabItem value="npm" label="npm">
 
 ```bash
-npm i @logto/react
+npm i @logto/browser
 ```
 
 </TabItem>
 <TabItem value="yarn" label="Yarn">
 
 ```bash
-yarn add @logto/react
+yarn add @logto/browser
 ```
 
 </TabItem>
 <TabItem value="pnpm" label="pnpm">
 
 ```bash
-pnpm add @logto/react
+pnpm add @logto/browser
 ```
 
 </TabItem>
@@ -44,22 +44,16 @@ pnpm add @logto/react
   onButtonClick={() => props.onNext(2)}
 >
 
-Import 并使用 `LogtoProvider` 来提供 Logto context:
+Import 并传入 config 以初始化 `LogtoClient`：
 
 <pre>
-<code className="language-tsx">
-{`import { LogtoProvider, LogtoConfig } from '@logto/react';
+<code className="language-ts">
+{`import LogtoClient from '@logto/browser';
 
-const config: LogtoConfig = {
+const logtoClient = new LogtoClient({
   endpoint: '${props.endpoint}',
   clientId: '${props.appId}',
-};
-
-const App = () => (
-  <LogtoProvider config={config}>
-    <YourAppContent />
-  </LogtoProvider>
-);`}
+});`}
 </code>
 </pre>
 
@@ -74,66 +68,41 @@ const App = () => (
 >
 
 <Alert>
-  在如下代码示例中, 我们均先假设你的 React 应用运行在 <code>http://localhost:1234</code> 上。
+  在如下代码示例中, 我们均先假设你的应用运行在 <code>http://localhost:1234</code> 上。
 </Alert>
 
 ### 配置 Redirect URI
 
-首先，我们来添加 Redirect URI，如：`http://localhost:1234/callback`。
+首先，我们来添加 redirect URI，如： `http://localhost:1234/callback`。
 
 <UriInputField appId={props.appId} isSingle={!props.isCompact} name="redirectUris" title="Redirect URI" />
 
 ### 实现登录按钮
 
-我们提供了两个 hook 方法 `useHandleSignInCallback()` 和 `useLogto()`，它们可以帮助你轻松完成登录认证流程。
-
 返回你的 IDE 或编辑器，使用如下代码来实现一个登录按钮：
 
-```tsx
-import { useLogto } from '@logto/react';
-
-const SignIn = () => {
-  const { signIn, isAuthenticated } = useLogto();
-
-  if (isAuthenticated) {
-    return <div>已登录</div>;
-  }
-
-  return (
-    <button onClick={() => signIn('http://localhost:1234/callback')}>
-      登录
-    </button>
-  );
-};
+```html
+<button onclick="logtoClient.signIn('http://localhost:1234/callback')">
+  登录
+</button>
 ```
 
 ### 处理重定向
 
 马上就要大功告成！在上一步，我们将 `http://localhost:1234/callback` 用作 Redirect URI，现在我们需要对其妥善处理。
 
-首先，让我们来创建一个 callback 组件：
+在你的 `/callback` 路由下插入如下代码：
 
-```tsx
-import { useHandleSignInCallback } from '@logto/react';
-
-const Callback = () => {
-  const { isLoading } = useHandleSignInCallback(() => {
-    // 完成时跳转至根路由
-  });
-
-  // 当登录认证尚未完成时
-  if (isLoading) {
-    return <div>正在重定向...</div>;
-  }
-};
+```ts
+try {
+  await logtoClient.handleSignInCallback();
+  console.log(logtoClient.isAuthenticated); // true
+} catch {
+  // 处理错误
+}
 ```
 
-最后我们插入如下代码来实现一个 _无需_ 登录的 `/callback` 路由：
-
-```tsx
-// 假设用 react-router
-<Route path="/callback" element={<Callback />} />
-```
+现在可以测试登录流程了。
 
 </Step>
 
@@ -153,16 +122,10 @@ const Callback = () => {
 
 ### 实现退出登录按钮
 
-```tsx
-const SignOut = () => {
-  const { signOut } = useLogto();
-
-  return (
-    <button onClick={() => signOut('http://localhost:1234')}>
-      退出登录
-    </button>
-  );
-};
+```html
+<button onclick="logtoClient.signOut('http://localhost:1234')">
+  退出登录
+</button>
 ```
 
 </Step>
