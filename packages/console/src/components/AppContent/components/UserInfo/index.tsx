@@ -25,7 +25,7 @@ const UserInfo = () => {
     (async () => {
       if (isAuthenticated) {
         const userInfo = getIdTokenClaims();
-        setUser(userInfo);
+        setUser(userInfo ?? { sub: '', name: 'N/A' }); // Provide a fallback to avoid infinite loading state
       }
     })();
   }, [api, isAuthenticated, getIdTokenClaims]);

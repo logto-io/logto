@@ -40,11 +40,12 @@ export default async function initOidc(app: Koa): Promise<Provider> {
       keys,
     },
     features: {
-      userinfo: { enabled: true },
+      userinfo: { enabled: false },
       revocation: { enabled: true },
       devInteractions: { enabled: false },
       resourceIndicators: {
         enabled: true,
+        defaultResource: () => '',
         // Disable the auto use of authorization_code granted resource feature
         // https://github.com/panva/node-oidc-provider/blob/main/docs/README.md#usegrantedresource
         useGrantedResource: () => false,
