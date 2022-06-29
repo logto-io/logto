@@ -10,7 +10,7 @@ Logto Team provides Aliyun direct mail connector and SendGrid mail connector, an
 
 ### Integrating with SendGrid SMTP API
 
-Initially, we assume that you already have a SendGrid account. If not, go to https://app.sendgrid.com/ to register a new account.
+Initially, we assume that you already have a SendGrid account. If not, create a new account at the [SendGrid website](https://app.sendgrid.com/).
 
 You can find a step-by-step guide on [Integrating with the SMTP API](https://docs.sendgrid.com/for-developers/sending-email/integrating-with-the-smtp-api).
 
@@ -31,32 +31,20 @@ After going through the guide, your connector JSON should look like this:
             "content": "<Logto: Your passcode is {{code}}. (regitser template)>",
             "usageType": "Register",
             "contentType": "text/plain"
-        },
-        {
-            "subject": "<sign-in-template-subject>",
-            "content": "<Logto: Your passcode is {{code}}. (sign-in template)>",
-            "usageType": "SignIn",
-            "contentType": "text/plain"
-        },
-        {
-            "subject": "<test-template-subject>",
-            "content": "<Logto: Your passcode is {{code}}. (test template)>",
-            "usageType": "Test",
-            "contentType": "text/plain"
         }
     ]
 }
 ```
 
-### Configuration with Aliyun SMS account
+### Configuration with Aliyun direct mail account
 
-Sign in to [Aliyun website](https://cn.aliyun.com/). Register a new account if you don't have one.
+Sign in to the [Aliyun website](https://cn.aliyun.com/). Register a new account if you don't have one.
 
 Follow the [Send emails using SMTP guide](https://www.alibabacloud.com/help/en/directmail/latest/send-emails-using-smtp) and finish those 'tasks' to get those required settings and information.
 
 You can go to [SMTP service address page](https://www.alibabacloud.com/help/en/directmail/latest/smtp-service-address) to choose a proper SMTP service address host and port number.
 
-To check _Sender Addresses_, you can find the entrance on the left-side navigation pane on [DirectMail console](https://dm.console.aliyun.com/). `Sender address` and `SMTP Password` can be found here.
+To check _Sender Addresses_, you can find the entrance on the left-side navigation pane on [DirectMail console](https://dm.console.aliyun.com/). You should see `Sender address` and `SMTP Password` here.
 
 After going through the guide, your connector JSON should look like this:
 
@@ -73,25 +61,13 @@ After going through the guide, your connector JSON should look like this:
             "content": "<Logto: Your passcode is {{code}}. (regitser template)>",
             "usageType": "Register",
             "contentType": "text/plain"
-        },
-        {
-            "subject": "<sign-in-template-subject>",
-            "content": "<Logto: Your passcode is {{code}}. (sign-in template)>",
-            "usageType": "SignIn",
-            "contentType": "text/plain"
-        },
-        {
-            "subject": "<test-template-subject>",
-            "content": "<Logto: Your passcode is {{code}}. (test template)>",
-            "usageType": "Test",
-            "contentType": "text/plain"
         }
     ]
 }
 ```
 
 > **Note**
-> 
+> Only one sample template is provided in the previous cases to keep things simple. You should add more templates for other use cases.
 > You should change values wrapped with "<" and ">" according to your SendGrid or Aliyun account settings and choose to keep other fields w/o "<" and ">".
 
 #### Config types
