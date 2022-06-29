@@ -1,4 +1,4 @@
-# Facebook
+# Facebook connector
 
 The Facebook connector provides a concise way for your application to use Facebook's OAuth 2.0 authentication system.
 
