@@ -1,20 +1,20 @@
 # SMTP connector
 
-The SMTP (Simple Mail Transfer Protocol) is an internet standard communication protocol for electronic mail transmission. Mail servers and other message transfer agents use SMTP to send and receive mail messages.
+The SMTP (Simple Mail Transfer Protocol) is an internet standard communication protocol for electronic mail transmission. Mail servers and other message transfer agents use SMTP to send and receive messages.
 
 ## Set up SMTP connector
 
-As SMTP is a transmission protocol, is not exclusive to some specific email service providers, but can work with all email service providers.
+SMTP is a transmission protocol that is not exclusive to some specific email service providers but can work with all providers.
 
-Logto Team provides Aliyun direct mail connector and SendGrid mail connector, we now give guides on how to use SMTP connector to send emails with these providers.
+Logto Team provides Aliyun direct mail connector and SendGrid mail connector, and we now offer guides on how to use SMTP connector to send emails with these providers.
 
 ### Integrating with SendGrid SMTP API
 
-In the very beginning, we assume that you already have a SendGrid account, if not, go to https://app.sendgrid.com/ to register a new account.
+Initially, we assume that you already have a SendGrid account. If not, go to https://app.sendgrid.com/ to register a new account.
 
-You can find step by step guide on [Integrating with the SMTP API](https://docs.sendgrid.com/for-developers/sending-email/integrating-with-the-smtp-api).
+You can find a step-by-step guide on [Integrating with the SMTP API](https://docs.sendgrid.com/for-developers/sending-email/integrating-with-the-smtp-api).
 
-Verified senders and their details can be accessed on the [_Sender Management_ page](https://mc.sendgrid.com/senders).
+Developers can access _Verified senders' details_ on the [_Sender Management_ page](https://mc.sendgrid.com/senders).
 
 After going through the guide, your connector JSON should look like this:
 
@@ -90,7 +90,9 @@ After going through the guide, your connector JSON should look like this:
 }
 ```
 
-You should change values wrapped with "<" and ">" according to your SendGrid account settings and choose to keep other fields w/o "<" and ">".
+> **Note**
+> 
+> You should change values wrapped with "<" and ">" according to your SendGrid or Aliyun account settings and choose to keep other fields w/o "<" and ">".
 
 #### Config types
 
