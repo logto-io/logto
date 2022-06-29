@@ -1,6 +1,8 @@
 import { arbitraryObjectGuard } from '@logto/schemas';
-import { object } from 'zod';
+import { passwordRegEx } from '@logto/shared';
+import { object, string } from 'zod';
 
+import { encryptUserPassword } from '@/lib/user';
 import koaGuard from '@/middleware/koa-guard';
 import { findUserById, updateUserById } from '@/queries/user';
 
@@ -30,6 +32,27 @@ export default function meRoutes<T extends AuthedRouter>(router: T) {
       });
 
       ctx.body = user.customData;
+
+      return next();
+    }
+  );
+
+  router.patch(
+    '/me/password',
+    koaGuard({ body: object({ password: string().regex(passwordRegEx) }) }),
+    async (ctx, next) => {
+      const {
+        body: { password },
+      } = ctx.guard;
+
+      const { passwordEncrypted, passwordEncryptionMethod } = await encryptUserPassword(password);
+
+      await updateUserById(ctx.auth, {
+        passwordEncrypted,
+        passwordEncryptionMethod,
+      });
+
+      ctx.status = 204;
 
       return next();
     }
