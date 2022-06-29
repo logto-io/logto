@@ -42,7 +42,7 @@
   animation: rotating 1s ease-in-out infinite;
 }
 
-@mixin shimmering-animation($baseColor: var(--color-neutral-95)) {
+@mixin shimmering-animation($baseColor: var(--color-layer-2)) {
   background-color: $baseColor;
   position: relative;
   overflow: hidden;
