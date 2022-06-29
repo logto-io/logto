@@ -79,9 +79,7 @@ After you finish signing your app, you can execute the `signingReport` task to g
 
 `./gradlew your-android-project:signingReport`
 
-![Android signing report](/packages/connector-wechat-native/docs/android-signing-report.png)
-
-The `MD5` value of the corresponding build variant will be the _Application Signing Signature(应用签名）_, but remember to remove all semicolons from the value and cast it to lowercase.
+The `MD5` value of the corresponding build variant's report will be the _Application Signing Signature(应用签名）_, but remember to remove all semicolons from the value and cast it to lowercase.
 
 E.g. `1A:2B:3C:4D` -> `1a2b3c4d`
 
