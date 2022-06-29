@@ -41,6 +41,7 @@ const TermsForm = () => {
             })}
             hasError={Boolean(errors.termsOfUse)}
             errorMessage={errors.termsOfUse?.contentUrl?.message}
+            placeholder={t('sign_in_exp.terms_of_use.terms_of_use_placeholder')}
           />
         </FormField>
       )}

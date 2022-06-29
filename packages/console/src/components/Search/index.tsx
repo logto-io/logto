@@ -1,4 +1,5 @@
 import React, { FormEventHandler, KeyboardEventHandler, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import SearchIcon from '@/icons/Search';
 
@@ -15,6 +16,7 @@ type Props = {
 
 const Search = ({ defaultValue = '', isClearable = false, onSearch, onClearSearch }: Props) => {
   const [inputValue, setInputValue] = useState<string>(defaultValue);
+  const { t } = useTranslation();
 
   const handleSearchKeyPress: KeyboardEventHandler<HTMLInputElement> = (event) => {
     if (event.key === 'Enter' && inputValue) {
@@ -36,6 +38,7 @@ const Search = ({ defaultValue = '', isClearable = false, onSearch, onClearSearc
         <TextInput
           value={inputValue}
           icon={<SearchIcon className={styles.searchIcon} />}
+          placeholder={t('admin_console.general.search_placeholder')}
           onChange={handleSearchChange}
           onKeyPress={handleSearchKeyPress}
         />
