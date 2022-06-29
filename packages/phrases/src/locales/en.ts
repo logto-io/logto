@@ -447,19 +447,24 @@ const translation = {
     },
     dashboard: {
       title: 'Dashboard',
-      description: 'Get an overview about your app performace',
+      description: 'Get an overview about your app performance',
       total_users: 'Total users',
       total_users_tip: 'Total users',
       new_users_today: 'New users today',
-      new_users_today_tip: 'New users today',
+      new_users_today_tip:
+        'The number of new users registered on your apps today (from {{today}} to {{now}})',
       new_users_7_days: 'New users past 7 days',
-      new_users_7_days_tip: 'New users past 7 days',
+      new_users_7_days_tip:
+        'The number of new users registered on your apps in the past 7 days (from {{daysAgo}} to {{now}})',
       daily_active_users: 'Daily active users',
-      daily_active_users_tip: 'Daily active users',
-      weekly_active_users: 'Weeky active users',
-      weekly_active_users_tip: 'Weeky active users',
+      daily_active_users_tip:
+        'The number of unique users exchanged tokens on your apps today (from {{today}} to {{now}})',
+      weekly_active_users: 'Weekly active users',
+      weekly_active_users_tip:
+        'The number of unique users exchanged tokens on your apps in the past 7 days (from {{daysAgo}} to {{now}})',
       monthly_active_users: 'Monthly active users',
-      monthly_active_users_tip: 'Monthly active users',
+      monthly_active_users_tip:
+        'The number of unique users exchanged tokens on your apps in the past 30 days (from {{daysAgo}} to {{now}})',
     },
     logs: {
       title: 'Audit Logs',

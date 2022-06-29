@@ -435,15 +435,18 @@ const translation = {
       total_users: '总用户',
       total_users_tip: '总用户',
       new_users_today: '今日新增',
-      new_users_today_tip: '今日新增',
+      new_users_today_tip: '今日注册到你应用上的新用户数（从 {{today}} 到 {{now}} 期间）',
       new_users_7_days: '7日新增',
-      new_users_7_days_tip: '7日新增',
+      new_users_7_days_tip: '最近7日注册到你应用上的新用户数（从 {{daysAgo}} 到 {{now}} 期间）',
       daily_active_users: '日活用户',
-      daily_active_users_tip: '日活用户',
+      daily_active_users_tip:
+        '今日在你的应用上交换过 token 的唯一身份用户数（从 {{today}} 到 {{now}} 期间）',
       weekly_active_users: '周活用户',
-      weekly_active_users_tip: '周活用户',
+      weekly_active_users_tip:
+        '最近7日在你的应用上交换过 token 的唯一身份用户数（从 {{daysAgo}} 到 {{now}} 期间）',
       monthly_active_users: '月活用户',
-      monthly_active_users_tip: '月活用户',
+      monthly_active_users_tip:
+        '最近30日在你的应用上交换过 token 的唯一身份用户数（从 {{daysAgo}} 到 {{now}} 期间）',
     },
     logs: {
       title: '审计日志',
