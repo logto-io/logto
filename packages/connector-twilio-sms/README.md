@@ -1,16 +1,14 @@
 # Twilio short message service connector
 
-Twilio provides programmable communication tools for making and receiving phone calls, sending and receiving text messages, as well as other communication functions using its web service APIs. We can take advantage of its sending text message function to send a "verification code".
+Twilio provides programmable communication tools for making and receiving phone calls, sending and receiving text messages, and other communication functions. We can send the "verification code" text messages through its web service APIs.
 
 ## Register Twilio account
 
-Create a new account at [Twilio](https://www.twilio.com). (Jump to the next step if you already have one.)
+Create a new account on [Twilio](https://www.twilio.com). (Jump to the next step if you already have one.)
 
 ## Set up senders' phone numbers
 
 Go to the [Twilio console page](https://console.twilio.com/) and sign in with your Twilio account.
-
-Click on the _Develop_ tab on the top of the sidebar, and then unfold _Phone Numbers_ and _Messaging_.
 
 Purchase a phone number under _Phone Numbers_ -> _Manage_ -> **_Buy a number_**.
 
