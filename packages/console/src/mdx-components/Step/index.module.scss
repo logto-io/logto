@@ -83,6 +83,13 @@
     font: var(--font-body-medium);
     margin: _.unit(6) 0;
   }
+
+  code:not(pre > code) {
+    background: var(--color-layer-2);
+    font: var(--font-body-medium);
+    padding: _.unit(1) _.unit(1);
+    border-radius: 4px;
+  }
 }
 
 .card + .card {
