@@ -13,7 +13,7 @@ import UserInfoSkeleton from '../UserInfoSkeleton';
 import * as styles from './index.module.scss';
 
 const UserInfo = () => {
-  const { isAuthenticated, fetchUserInfo, signOut } = useLogto();
+  const { isAuthenticated, getIdTokenClaims, signOut } = useLogto();
   const api = useApi();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const anchorRef = useRef<HTMLDivElement>(null);
@@ -24,11 +24,11 @@ const UserInfo = () => {
   useEffect(() => {
     (async () => {
       if (isAuthenticated) {
-        const userInfo = await fetchUserInfo();
+        const userInfo = getIdTokenClaims();
         setUser(userInfo);
       }
     })();
-  }, [api, isAuthenticated, fetchUserInfo]);
+  }, [api, isAuthenticated, getIdTokenClaims]);
 
   if (!user) {
     return <UserInfoSkeleton />;
