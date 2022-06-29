@@ -24,7 +24,7 @@ Following the next step, choose `Phone Number` as _Sender Type_, and link the ph
 
 ## Get account credentials
 
-We will need the API credentials to make the connector work. Let's begin with the [Twilio console page](https://console.twilio.com/).
+We will need the API credentials to make the connector work. Let's begin from the [Twilio console page](https://console.twilio.com/).
 
 Click on the _Account_ menu in the top-right corner, then go to the _API keys & tokens_ page to get your `Account SID` and `Auth token`.
 
