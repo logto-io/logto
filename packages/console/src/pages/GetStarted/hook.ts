@@ -107,6 +107,7 @@ const useGetStartedMetadata = ({ checkDemoAppExists }: Props) => {
       subtitle: 'get_started.card5_subtitle',
       icon: isLightMode ? OneClick : OneClickDark,
       buttonText: 'admin_console.general.set_up',
+      isComplete: settings?.configureSocialSignIn,
       onClick: () => {
         navigate('/connectors/social');
       },
