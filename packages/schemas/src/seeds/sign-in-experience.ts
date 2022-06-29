@@ -8,7 +8,7 @@ export const defaultSignInExperience: Readonly<CreateSignInExperience> = {
   color: {
     primaryColor: '#6139F6',
     isDarkModeEnabled: true,
-    darkPrimaryColor: '#6139F6',
+    darkPrimaryColor: '#8768F8',
   },
   branding: {
     style: BrandingStyle.Logo,
