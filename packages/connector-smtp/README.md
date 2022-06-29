@@ -1,2 +1,117 @@
-### SMTP README
-placeholder
+# SMTP connector
+
+The SMTP (Simple Mail Transfer Protocol) is an internet standard communication protocol for electronic mail transmission. Mail servers and other message transfer agents use SMTP to send and receive mail messages.
+
+## Set up SMTP connector
+
+As SMTP is a transmission protocol, is not exclusive to some specific email service providers, but can work with all email service providers.
+
+Logto Team provides Aliyun direct mail connector and SendGrid mail connector, we now give guides on how to use SMTP connector to send emails with these providers.
+
+### Integrating with SendGrid SMTP API
+
+In the very beginning, we assume that you already have a SendGrid account, if not, go to https://app.sendgrid.com/ to register a new account.
+
+You can find step by step guide on [Integrating with the SMTP API](https://docs.sendgrid.com/for-developers/sending-email/integrating-with-the-smtp-api).
+
+Verified senders and their details can be accessed on the [_Sender Management_ page](https://mc.sendgrid.com/senders).
+
+After going through the guide, your connector JSON should look like this:
+
+```json
+{
+    "host": "smtp.sendgrid.net",
+    "port": 587,
+    "username": "apiKey",
+    "password": "<api-key-with-at-least-mail-permission>",
+    "fromEmail": "<email-address-of-a-verified-sender>",
+    "templates": [
+        {
+            "subject": "<register-template-subject>",
+            "content": "<Logto: Your passcode is {{code}}. (regitser template)>",
+            "usageType": "Register",
+            "contentType": "text/plain"
+        },
+        {
+            "subject": "<sign-in-template-subject>",
+            "content": "<Logto: Your passcode is {{code}}. (sign-in template)>",
+            "usageType": "SignIn",
+            "contentType": "text/plain"
+        },
+        {
+            "subject": "<test-template-subject>",
+            "content": "<Logto: Your passcode is {{code}}. (test template)>",
+            "usageType": "Test",
+            "contentType": "text/plain"
+        }
+    ]
+}
+```
+
+### Configuration with Aliyun SMS account
+
+Sign in to [Aliyun website](https://cn.aliyun.com/). Register a new account if you don't have one.
+
+Follow the [Send emails using SMTP guide](https://www.alibabacloud.com/help/en/directmail/latest/send-emails-using-smtp) and finish those 'tasks' to get those required settings and information.
+
+You can go to [SMTP service address page](https://www.alibabacloud.com/help/en/directmail/latest/smtp-service-address) to choose a proper SMTP service address host and port number.
+
+To check _Sender Addresses_, you can find the entrance on the left-side navigation pane on [DirectMail console](https://dm.console.aliyun.com/). `Sender address` and `SMTP Password` can be found here.
+
+After going through the guide, your connector JSON should look like this:
+
+```json
+{
+    "host": "<SMTP-service-address>",
+    "port": <port-number>,
+    "username": "<email-address-of-chosen-sender-address>",
+    "password": "<api-key-with-at-least-mail-permission>",
+    "fromEmail": "<email-address-of-a-verified-sender-should-be-the-same-as-`username`>",
+    "templates": [
+        {
+            "subject": "<register-template-subject>",
+            "content": "<Logto: Your passcode is {{code}}. (regitser template)>",
+            "usageType": "Register",
+            "contentType": "text/plain"
+        },
+        {
+            "subject": "<sign-in-template-subject>",
+            "content": "<Logto: Your passcode is {{code}}. (sign-in template)>",
+            "usageType": "SignIn",
+            "contentType": "text/plain"
+        },
+        {
+            "subject": "<test-template-subject>",
+            "content": "<Logto: Your passcode is {{code}}. (test template)>",
+            "usageType": "Test",
+            "contentType": "text/plain"
+        }
+    ]
+}
+```
+
+You should change values wrapped with "<" and ">" according to your SendGrid account settings and choose to keep other fields w/o "<" and ">".
+
+#### Config types
+
+| Name      | Type       |
+|-----------|------------|
+| host      | string     |
+| port      | string     |
+| username  | string     |
+| password  | string     |
+| fromEmail | string     |
+| templates | Template[] |
+
+| Template Properties | Type        | Enum values                      |
+|---------------------|-------------|----------------------------------|
+| subject             | string      | N/A                              |
+| content             | string      | N/A                              |
+| usageType           | enum string | 'Register' \| 'SignIn' \| 'Test' |
+| contentType         | enum string | 'text/plain' \| 'text/html'      |
+
+## References
+
+- [SendGrid - Integrating with the SMTP API](https://docs.sendgrid.com/for-developers/sending-email/integrating-with-the-smtp-api)
+- [Aliyun Direct Mail - Send emails using SMTP](https://www.alibabacloud.com/help/en/directmail/latest/send-emails-using-smtp)
+- [Aliyun Direct Mail - SMTP Reference](https://www.alibabacloud.com/help/en/directmail/latest/smtp-reference)
