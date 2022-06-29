@@ -2,9 +2,10 @@ import UriInputField from '@mdx/components/UriInputField';
 import Step from '@mdx/components/Step';
 import Tabs from '@mdx/components/Tabs';
 import TabItem from '@mdx/components/TabItem';
+import Alert from '@/components/Alert';
 
 <Step
-  title="Install SDK"
+  title="Add Logto SDK as a dependency"
   subtitle="Please select your favorite package manager"
   index={0}
   activeIndex={props.activeStepIndex}
@@ -32,66 +33,33 @@ pnpm add @logto/react
 ```
 
 </TabItem>
-<TabItem value="script" label="script">
-
-```html
-<script src="https://logto.io/js/logto-sdk-react/0.1.0/logto-sdk-react.production.js" />
-```
-
-</TabItem>
-<TabItem value="git" label="Git">
-
-```bash
-git clone https://github.com/logto-io/js.git
-pnpm build
-```
-
-</TabItem>
 </Tabs>
 </Step>
 
 <Step
-  title="Initiate LogtoClient"
+  title="Init LogtoClient"
   subtitle="1 step"
   index={1}
   activeIndex={props.activeStepIndex}
   onButtonClick={() => props.onNext(2)}
 >
 
-Add the following code to your main html file. You may need client ID and authorization domain.
+Import and use `LogtoProvider` to provide a Logto context:
 
 <pre>
 <code className="language-tsx">
 {`import { LogtoProvider, LogtoConfig } from '@logto/react';
-import React from 'react';
 
-//...
+const config: LogtoConfig = {
+  endpoint: '${props.endpoint}',
+  clientId: '${props.appId}',
+};
 
-const App = () => {
-  const config: LogtoConfig = {
-    clientId: '${props.appId}',
-    endpoint: '${props.endpoint}',
-  };
-
-  return (
-    <BrowserRouter>
-      <LogtoProvider config={config}>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/callback" element={<Callback />} />
-          <Route
-            path="/protected-resource"
-            element={
-              <RequireAuth>
-                <ProtectedResource />
-              </RequireAuth>
-            }
-          />
-        </Routes>
-      </LogtoProvider>
-    </BrowserRouter>
-  );
-};`}
+const App = () => (
+  <LogtoProvider config={config}>
+    <YourAppContent />
+  </LogtoProvider>
+);`}
 </code>
 </pre>
 
@@ -99,52 +67,72 @@ const App = () => {
 
 <Step
   title="Sign In"
-  subtitle="2 steps"
+  subtitle="3 steps"
   index={2}
   activeIndex={props.activeStepIndex}
   onButtonClick={() => props.onNext(3)}
 >
 
-### Step 1: Setup your login
+<Alert>
+  In the following steps, we assume your app is running on <code>http://localhost:1234</code>.
+</Alert>
 
-The Logto React SDK provides you tools and hooks to quickly implement your own authorization flow. First, let’s enter your redirect URI
+### Configure Redirect URI
+
+First, let’s enter your redirect URI. E.g. `http://localhost:1234/callback`.
 
 <UriInputField appId={props.appId} isSingle={!props.isCompact} name="redirectUris" title="Redirect URI" />
 
-Add the following code to your web app
+### Implement a sign-in button
+
+We provide two hooks `useHandleSignInCallback()` and `useLogto()` which can help you easily manage the authentication flow.
+
+Go back to your IDE/editor, use the following code to implement the sign-in button:
 
 ```tsx
-import React from 'react';
 import { useLogto } from '@logto/react';
 
-const SignInButton = () => {
-  const { signIn } = useLogto();
-  const redirectUrl = window.location.origin + '/callback';
+const SignIn = () => {
+  const { signIn, isAuthenticated } = useLogto();
 
-  return <button onClick={() => signIn(redirectUrl)}>Sign In</button>;
-};
-
-export default SignInButton;
-```
-
-### Step 2: Retrieve Auth Status
-
-```tsx
-import React from "react";
-import { useLogto } from '@logto/react';
-
-const App = () => {
-  const { isAuthenticated, signIn } = useLogto();
-
-  if !(isAuthenticated) {
-    return <SignInButton />
+  if (isAuthenticated) {
+    return <div>Signed in</div>;
   }
 
-  return <>
-    <AppContent />
-    <SignOutButton />
-  </>
+  return (
+    <button onClick={() => signIn('http://localhost:1234/callback')}>
+      Sign In
+    </button>
+  );
 };
+```
+
+### Handle redirect
+
+We're almost there! In the last step, we use `http://localhost:1234/callback` as the Redirect URI, and now we need to handle it properly.
+
+First let's create a callback component:
+
+```tsx
+import { useHandleSignInCallback } from '@logto/react';
+
+const Callback = () => {
+  const { isLoading } = useHandleSignInCallback(() => {
+    // Navigate to root path when finished
+  });
+
+  // When it's working in progress
+  if (isLoading) {
+    return <div>Redirecting...</div>;
+  }
+};
+```
+
+Finally insert the code below to create a `/callback` route which does NOT require authentication:
+
+```tsx
+// Assuming react-router
+<Route path="/callback" element={<Callback />} />
 ```
 
 </Step>
@@ -157,30 +145,31 @@ const App = () => {
   onButtonClick={() => props.onNext(4)}
 >
 
-Execute signOut() methods will redirect users to the Logto sign out page. After a success sign out, all use session data and auth status will be cleared.
+Calling `.signOut()` will clear all the Logto data in memory and localStorage if they exist.
+
+After signing out, it'll be great to redirect user back to your website. Let's add `http://localhost:1234` as the Post Sign-out URI below, and use it as the parameter when calling `.signOut()`.
 
 <UriInputField appId={props.appId} isSingle={!props.isCompact} name="postLogoutRedirectUris" title="Post Sign-out Redirect URI" />
 
-Add the following code to your web app
+### Implement a sign-out button
 
 ```tsx
-import React from 'react';
-import { useLogto } from '@logto/react';
-
-const SignOutButton = () => {
+const SignOut = () => {
   const { signOut } = useLogto();
 
-  return <button onClick={() => signOut(window.location.origin)}>Sign out</button>;
+  return (
+    <button onClick={() => signOut('http://localhost:1234')}>
+      Sign out
+    </button>
+  );
 };
-
-export default SignOutButton;
 ```
 
 </Step>
 
 <Step
-  title="Further Readings"
-  subtitle="3 steps"
+  title="Further readings"
+  subtitle="4 articles"
   index={4}
   activeIndex={props.activeStepIndex}
   buttonText="admin_console.general.done"
@@ -188,8 +177,9 @@ export default SignOutButton;
   onButtonClick={props.onComplete}
 >
 
-- [SDK Documentation](https://link-url-here.org)
-- [OIDC Documentation](https://link-url-here.org)
-- [Calling API to fetch accessToken](https://link-url-here.org)
+- [Customize sign-in experience](https://docs.logto.io/docs/recipes/customize-sie)
+- [Enable SMS or email passcode sign-in](https://docs.logto.io/docs/tutorials/get-started/enable-passcode-sign-in)
+- [Enable social sign-in](https://docs.logto.io/docs/tutorials/get-started/enable-social-sign-in)
+- [Protect your API](https://docs.logto.io/docs/recipes/protect-your-api)
 
 </Step>

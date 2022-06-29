@@ -62,8 +62,17 @@ const Guide = ({ app, isCompact, onClose }: Props) => {
             code: ({ className, children }) => {
               const [, language] = /language-(\w+)/.exec(className ?? '') ?? [];
 
-              return <CodeEditor isReadonly language={language} value={String(children)} />;
+              return language ? (
+                <CodeEditor isReadonly language={language} value={String(children)} />
+              ) : (
+                <code>{String(children)}</code>
+              );
             },
+            a: ({ children, ...props }) => (
+              <a {...props} target="_blank" rel="noopener noreferrer">
+                {children}
+              </a>
+            ),
           }}
         >
           <Suspense fallback={<StepsSkeleton />}>
