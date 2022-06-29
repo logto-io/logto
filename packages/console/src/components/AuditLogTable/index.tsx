@@ -48,6 +48,7 @@ const AuditLogTable = ({ userId }: Props) => {
   const isLoading = !data && !error;
   const navigate = useNavigate();
   const [logs, totalCount] = data ?? [];
+  const showUserColumn = !userId;
 
   const updateQuery = (key: string, value: string) => {
     const queries: Record<string, string> = {};
@@ -88,14 +89,14 @@ const AuditLogTable = ({ userId }: Props) => {
         <table className={classNames(logs?.length === 0 && tableStyles.empty)}>
           <colgroup>
             <col className={styles.eventName} />
-            <col />
+            {showUserColumn && <col />}
             <col />
             <col />
           </colgroup>
           <thead>
             <tr>
               <th>{t('logs.event')}</th>
-              <th>{t('logs.user')}</th>
+              {showUserColumn && <th>{t('logs.user')}</th>}
               <th>{t('logs.application')}</th>
               <th>{t('logs.time')}</th>
             </tr>
@@ -121,7 +122,9 @@ const AuditLogTable = ({ userId }: Props) => {
                 <td>
                   <EventName type={type} isSuccess={payload.result === LogResult.Success} />
                 </td>
-                <td>{payload.userId ? <UserName userId={payload.userId} /> : '-'}</td>
+                {showUserColumn && (
+                  <td>{payload.userId ? <UserName userId={payload.userId} /> : '-'}</td>
+                )}
                 <td>
                   {payload.applicationId ? (
                     <ApplicationName applicationId={payload.applicationId} />
