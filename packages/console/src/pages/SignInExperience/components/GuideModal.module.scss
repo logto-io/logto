@@ -42,6 +42,7 @@
   .main {
     display: flex;
     align-items: flex-start;
+    @include _.main-content-width;
 
     .form {
       flex: 1;

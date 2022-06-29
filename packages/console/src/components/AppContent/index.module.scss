@@ -21,8 +21,6 @@
   overflow-y: auto;
 
   > * {
-    max-width: 1168px;
-    min-width: 604px;
-    margin: 0 auto;
+    @include _.main-content-width;
   }
 }
