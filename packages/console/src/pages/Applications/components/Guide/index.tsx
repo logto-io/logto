@@ -23,11 +23,15 @@ const Guides: Record<string, LazyExoticComponent<(props: MDXProps) => JSX.Elemen
   android: lazy(async () => import('@/assets/docs/tutorial/integrate-sdk/android.mdx')),
   react: lazy(async () => import('@/assets/docs/tutorial/integrate-sdk/react.mdx')),
   vue: lazy(async () => import('@/assets/docs/tutorial/integrate-sdk/vue.mdx')),
+  vanilla: lazy(async () => import('@/assets/docs/tutorial/integrate-sdk/vanilla.mdx')),
   'android_zh-cn': lazy(
     async () => import('@/assets/docs/tutorial/integrate-sdk/android_zh-cn.mdx')
   ),
   'react_zh-cn': lazy(async () => import('@/assets/docs/tutorial/integrate-sdk/react_zh-cn.mdx')),
   'vue_zh-cn': lazy(async () => import('@/assets/docs/tutorial/integrate-sdk/vue_zh-cn.mdx')),
+  'vanilla_zh-cn': lazy(
+    async () => import('@/assets/docs/tutorial/integrate-sdk/vanilla_zh-cn.mdx')
+  ),
 };
 
 const Guide = ({ app, isCompact, onClose }: Props) => {
