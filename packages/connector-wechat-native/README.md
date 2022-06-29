@@ -67,7 +67,7 @@ Fill out _Bundle ID_, _Test version Bundle ID_, and _Universal Links_ (actually,
 
 Check "Android app" (Android 应用).
 
-<img src="./docs/platform-android-app.png" alt="Android app platform" width="200px" />
+![Android app platform](/packages/connector-wechat-native/docs/platform-android-app.png)
 
 Fill out _Application Signing Signature(应用签名）_ and _Application Package Name(应用包名）_.
 
@@ -80,7 +80,7 @@ After you finish signing your app, you can execute the `signingReport` task to g
 
 `./gradlew your-android-project:signingReport`
 
-<img src="./docs/android-signing-report.png" alt="Android app platform" width="1000px" />
+![Android signing report](/packages/connector-wechat-native/docs/android-signing-report.png)
 
 The corresponding variant `MD5` value will be the _Application Signing Signature(应用签名）_, but remember to remove all semicolons from the value and cast it to lowercase.
 
