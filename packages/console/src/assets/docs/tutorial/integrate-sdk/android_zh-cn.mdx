@@ -2,19 +2,22 @@ import UriInputField from '@mdx/components/UriInputField';
 import Step from '@mdx/components/Step';
 import Tabs from '@mdx/components/Tabs';
 import TabItem from '@mdx/components/TabItem';
+import Alert from '@/components/Alert';
 
 <Step
-  title="安装 SDK"
-  subtitle="从 Gradle 安装 Logto Android SDK"
+  title="在 Android 应用中集成 Logto Android SDK"
+  subtitle="将 Logto SDK 添加至依赖"
   index={0}
   activeIndex={props.activeStepIndex}
   onButtonClick={() => props.onNext(1)}
 >
 
-### 前提条件
-* 最小 Android SDK 版本: Level 24
+<Alert>
+  Logto Andorid SDK 支持的最小 Android API 级别为 24
+</Alert>
 
 将 `mavenCentral()` 添加到构建脚本中：
+
 ```kotlin
 repositories {
     mavenCentral()
@@ -22,6 +25,7 @@ repositories {
 ```
 
 添加 Logto Android SDK 依赖：
+
 <Tabs>
 
 <TabItem value="kotlin" label="Kotlin">
@@ -49,34 +53,12 @@ dependencies {
 </Step>
 
 <Step
-  title="配置"
-  subtitle="Configure your application and LogtoClient"
+  title="初始化 LogtoClient"
+  subtitle="共 1 步"
   index={1}
   activeIndex={props.activeStepIndex}
   onButtonClick={() => props.onNext(2)}
 >
-
-### 配置 Redirect URI
-
-Redirect URI 指定了应用用来接受授权结果的端口，Logto Android SDK 内部实现了该重定向的功能
-
-### 在管理员控制台中配置 Redirect URI
-
-将以下值添加到下面的 Redirect URI 输入框中：
-
-```bash
-$(LOGTO_REDIRECT_SCHEME)://$(YOUR_APP_PACKAGE)/callback
-```
-
-注意: 
-- `LOGTO_REDIRECT_SCHEME` 应为自定义的反向域名格式的一串字符。
-- 将上述的 `$(LOGTO_REDIRECT_SCHEME)` 替换成你定义的值。
-
-例： `io.logto.android://io.logto.sample/callback`
-
-<UriInputField appId={props.appId} isSingle={!props.isCompact} name="redirectUris" title="Redirect URI" />
-
-### 配置 Logto Android SDK
 
 <Tabs>
 
@@ -105,8 +87,9 @@ class MainActivity : AppCompatActivity() {
 
 <TabItem value="java" label="Java">
 
-```java
-import io.logto.sdk.android.LogtoClient;
+<pre>
+<code className="language-java">
+{`import io.logto.sdk.android.LogtoClient;
 import io.logto.sdk.android.type.LogtoConfig;
 
 public class MainActivity extends AppCompatActivity {
@@ -118,8 +101,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         LogtoConfig logtoConfig = new LogtoConfig(
-            "<your-logto-endpoint>",
-            "<your-app-id>",
+            "${props.endpoint}",
+            "${props.appId}",
             null,
             null,
             true
@@ -127,40 +110,39 @@ public class MainActivity extends AppCompatActivity {
 
         logtoClient = new LogtoClient(logtoConfig, getApplication());
     }
-}
-```
+}`}
+</code>
+</pre>
 
 </TabItem>
 
 </Tabs>
-
-Notes: 
-
-- `<your-logto-endpoint>` 是你运行 Logto 服务所在的地址. 若你的 Logto 服务运行在 `http://localhost:300`，则 `<your-logto-endpoint` 为 `http://localhost:300`
-- `<your-app-id>` 是你为自己的应用在管理员控制台中所创建的客户端ID.
 
 </Step>
 
 <Step
   title="登录"
-  subtitle="Sign In to your application by Logto and do some extra works"
+  subtitle="共 2 步"
   index={2}
   activeIndex={props.activeStepIndex}
   onButtonClick={() => props.onNext(3)}
 >
 
-### 执行登录
+### 配置 Redirect URI
+
+首先，我们来添加 Redirect URI。例如 `io.logto.android://io.logto.sample/callback`
+
+<UriInputField appId={props.appId} isSingle={!props.isCompact} name="redirectUris" title="Redirect URI" />
+
+返回你的 IDE 或编辑器，使用如下代码实现登录：
 
 <Tabs>
 
 <TabItem value="kotlin" label="Kotlin">
 
 ```kotlin
-logtoClient.signInWithBrowser(
-    this,
-    "io.logto.android://io.logto.sample/callback",
-) { logtoException: LogtoException? ->
-    // 后续处理逻辑
+logtoClient.signIn(this, "<your-redirect-uri>") { logtoException: LogtoException? ->
+    // 当 `logtoException` 为 null 时，则登录成功。
 }
 ```
 
@@ -169,71 +151,28 @@ logtoClient.signInWithBrowser(
 <TabItem value="java" label="Java">
 
 ```java
-logtoClient.signInWithBrowser(
-    this,
-    "io.logto.android://io.logto.sample/callback",
-    logtoException -> {
-        // 后续处理逻辑
-    }
-);
-```
-
-</TabItem>
-
-</Tabs>
-
-### 登录成功后，你可以使用 SDK 提供的一些 API 来实现自己的业务逻辑
-
-<Tabs>
-
-<TabItem value="kotlin" label="Kotlin">
-
-```kotlin
-logtoClient.getAccessToken { logtoException: LogtoException?, result: AccessToken? ->
-    // 后续处理逻辑
-}
-
-logtoClient.getIdTokenClaims { logtoException: LogtoException?, result: IdTokenClaims? ->
-    // 后续处理逻辑
-}
-
-logtoClient.fetchUserInfo { logtoException: LogtoException?, userInfoResponse: UserInfoResponse? ->
-    // 后续处理逻辑
-}
-```
-
-</TabItem>
-
-<TabItem value="java" label="Java">
-
-```java
-logtoClient.getAccessToken((logtoException, accessToken) -> {
-    // 后续处理逻辑
-});
-
-logtoClient.getIdTokenClaims((logtoException, idTokenClaims) -> {
-    // 后续处理逻辑
-});
-
-logtoClient.fetchUserInfo((logtoException, userInfoResponse) -> {
-    // 后续处理逻辑
+logtoClient.signIn(this, "<your-redirect-uri>", logtoException -> {
+    // 当 `logtoException` 为 null 时，则登录成功。
 });
 ```
 
 </TabItem>
 
 </Tabs>
+
+当成功登录后，`logtoClient.isAuthenticated` 的值将为 `true`。
 
 </Step>
 
 <Step
-  title="登出"
+  title="退出登录"
+  subtitle="共 1 步"
   index={3}
   activeIndex={props.activeStepIndex}
   onButtonClick={() => props.onNext(4)}
 >
 
-### 执行登出
+调用 `.signOut(completion)` 操作会清除本地存储的用户相关凭据，即使在退出登录过程中发生了异常。
 
 <Tabs>
 
@@ -241,7 +180,7 @@ logtoClient.fetchUserInfo((logtoException, userInfoResponse) -> {
 
 ```kotlin
 logtoClient.signOut { logtoException: LogtoException? ->
-    // 后续处理逻辑
+    // 无论是否存在 `logtoException`，本地存储的用户相关凭据都已清除。
 }
 ```
 
@@ -251,7 +190,7 @@ logtoClient.signOut { logtoException: LogtoException? ->
 
 ```java
 logtoClient.signOut(logtoException -> {
-    // 后续处理逻辑
+    // 无论是否存在 `logtoException`，本地存储的用户相关凭据都已清除。
 });
 ```
 
@@ -259,15 +198,11 @@ logtoClient.signOut(logtoException -> {
 
 </Tabs>
 
-注意:
-
-- 登出操作会清除本地存储的用户相关凭据，即使在登出过程中发生了异常。
-
 </Step>
 
 <Step
-  title="延伸阅读"
-  subtitle="3 steps"
+  title="延展阅读"
+  subtitle="共 4 篇"
   index={4}
   activeIndex={props.activeStepIndex}
   buttonText="admin_console.general.done"
@@ -275,8 +210,9 @@ logtoClient.signOut(logtoException -> {
   onButtonClick={props.onComplete}
 >
 
-- 获取用户信息
-- 配置社会化登录
-- 访问受保护的 API 资源
+- [自定义登录体验](https://docs.logto.io/zh-cn/docs/recipes/customize-sie)
+- [启用短信或邮件验证码登录](https://docs.logto.io/zh-cn/docs/tutorials/get-started/enable-passcode-sign-in)
+- [启用社交登录](https://docs.logto.io/zh-cn/docs/tutorials/get-started/enable-social-sign-in)
+- [保护你的 API](https://docs.logto.io/zh-cn/docs/recipes/protect-your-api)
 
 </Step>

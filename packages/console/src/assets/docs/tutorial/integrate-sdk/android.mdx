@@ -2,26 +2,30 @@ import UriInputField from '@mdx/components/UriInputField';
 import Step from '@mdx/components/Step';
 import Tabs from '@mdx/components/Tabs';
 import TabItem from '@mdx/components/TabItem';
+import Alert from '@/components/Alert';
 
 <Step
-  title="Install SDK"
-  subtitle="Install Logto Android SDK with Gradle"
+  title="Integrate Logto Android SDK"
+  subtitle="Add Logto SDK as a dependency"
   index={0}
   activeIndex={props.activeStepIndex}
   onButtonClick={() => props.onNext(1)}
 >
 
-### Prerequisite
-* Minimal Android SDK: Level 24
+<Alert>
+  The minimum supported Android API is level 24
+</Alert>
 
 Add the `mavenCentral()` repository to your Gradle project build file:
+
 ```kotlin
 repositories {
     mavenCentral()
 }
 ```
 
-Add the Logto Android SDK to your dependencies:
+Add Logto Android SDK to your dependencies:
+
 <Tabs>
 
 <TabItem value="kotlin" label="Kotlin">
@@ -49,34 +53,12 @@ dependencies {
 </Step>
 
 <Step
-  title="Configure"
-  subtitle="Configure your application and LogtoClient"
+  title="Init LogtoClient"
+  subtitle="1 step"
   index={1}
   activeIndex={props.activeStepIndex}
   onButtonClick={() => props.onNext(2)}
 >
-
-### Configure Redirect URI
-
-The `Redirect URI` indicates the endpoint that the application used to receive authorization results, which is implemented by the Logto Android SDK internally.
-
-### Configure Redirect URI in Admin Console
-
-Add the following value to Redirect URIs input field
-
-```bash
-$(LOGTO_REDIRECT_SCHEME)://$(YOUR_APP_PACKAGE)/callback
-```
-
-Notes: 
-- `LOGTO_REDIRECT_SCHEME` should be a custom scheme in the reverse domain format.
-- Replace `$(LOGTO_REDIRECT_SCHEME)` with your own settings.
-
-e.g. `io.logto.android://io.logto.sample/callback`
-
-<UriInputField appId={props.appId} isSingle={!props.isCompact} name="redirectUris" title="Redirect URI" />
-
-### Configure Logto Android SDK
 
 <Tabs>
 
@@ -105,8 +87,9 @@ class MainActivity : AppCompatActivity() {
 
 <TabItem value="java" label="Java">
 
-```java
-import io.logto.sdk.android.LogtoClient;
+<pre>
+<code className="language-java">
+{`import io.logto.sdk.android.LogtoClient;
 import io.logto.sdk.android.type.LogtoConfig;
 
 public class MainActivity extends AppCompatActivity {
@@ -118,8 +101,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         LogtoConfig logtoConfig = new LogtoConfig(
-            "<your-logto-endpoint>",
-            "<your-app-id>",
+            "${props.endpoint}",
+            "${props.appId}",
             null,
             null,
             true
@@ -127,40 +110,39 @@ public class MainActivity extends AppCompatActivity {
 
         logtoClient = new LogtoClient(logtoConfig, getApplication());
     }
-}
-```
+}`}
+</code>
+</pre>
 
 </TabItem>
 
 </Tabs>
-
-Notes: 
-
-- `<your-logto-endpoint>` is the logto service running in your machine. If you start logto service in `http://localhost:300` then `<your-logto-endpoint` will be `http://localhost:300`
-- `<your-app-id>` is the Application ID of your application, which is created in the Admin Console.
 
 </Step>
 
 <Step
   title="Sign In"
-  subtitle="Sign In to your application by Logto and do some extra works"
+  subtitle="2 steps"
   index={2}
   activeIndex={props.activeStepIndex}
   onButtonClick={() => props.onNext(3)}
 >
 
-### Perform a signing-in action
+### Configure Redirect URI
+
+First, let’s configure your redirect URI. E.g. `io.logto.android://io.logto.sample/callback`
+
+<UriInputField appId={props.appId} isSingle={!props.isCompact} name="redirectUris" title="Redirect URI" />
+
+Go back to your IDE/editor, use the following code to implement sign-in:
 
 <Tabs>
 
 <TabItem value="kotlin" label="Kotlin">
 
 ```kotlin
-logtoClient.signInWithBrowser(
-    this,
-    "io.logto.android://io.logto.sample/callback",
-) { logtoException: LogtoException? ->
-    // custom logic
+logtoClient.signIn(this, "<your-redirect-uri>") { logtoException: LogtoException? ->
+    // User signed in successfully if `logtoException` is null.
 }
 ```
 
@@ -169,71 +151,28 @@ logtoClient.signInWithBrowser(
 <TabItem value="java" label="Java">
 
 ```java
-logtoClient.signInWithBrowser(
-    this,
-    "io.logto.android://io.logto.sample/callback",
-    logtoException -> {
-        // custom logic
-    }
-);
-```
-
-</TabItem>
-
-</Tabs>
-
-### Implement your business logic after signing-in.
-
-<Tabs>
-
-<TabItem value="kotlin" label="Kotlin">
-
-```kotlin
-logtoClient.getAccessToken { logtoException: LogtoException?, result: AccessToken? ->
-    // custom logic
-}
-
-logtoClient.getIdTokenClaims { logtoException: LogtoException?, result: IdTokenCliams? ->
-    // custom logic
-}
-
-logtoClient.fetchUserInfo { logtoException: LogtoException?, userInfoResponse: UserInfoResponse? ->
-    // custom logic
-}
-```
-
-</TabItem>
-
-<TabItem value="java" label="Java">
-
-```java
-logtoClient.getAccessToken((logtoException, accessToken) -> {
-    // custom logic
-});
-
-logtoClient.getIdTokenClaims((logtoException, idTokenClaims) -> {
-    // custom logic
-});
-
-logtoClient.fetchUserInfo((logtoException, userInfoResponse) -> {
-    // custom logic
+logtoClient.signIn(this, "<your-redirect-uri>", logtoException -> {
+    // User signed in successfully if `logtoException` is null.
 });
 ```
 
 </TabItem>
 
 </Tabs>
+
+After signing in successfully, `logtoClient.isAuthenticated` will be `true`.
 
 </Step>
 
 <Step
   title="Sign Out"
+  subtitle="1 step"
   index={3}
   activeIndex={props.activeStepIndex}
   onButtonClick={() => props.onNext(4)}
 >
 
-### Perform a signing-out action
+Calling `.signOut(completion)` will always clear local credentials even if errors occurred.
 
 <Tabs>
 
@@ -241,7 +180,7 @@ logtoClient.fetchUserInfo((logtoException, userInfoResponse) -> {
 
 ```kotlin
 logtoClient.signOut { logtoException: LogtoException? ->
-    // custom logic
+    // Local credentials are cleared regardless of whether `logtoException` is null.
 }
 ```
 
@@ -251,7 +190,7 @@ logtoClient.signOut { logtoException: LogtoException? ->
 
 ```java
 logtoClient.signOut(logtoException -> {
-    // custom logic
+    // Local credentials are cleared regardless of whether `logtoException` is null.
 });
 ```
 
@@ -259,15 +198,11 @@ logtoClient.signOut(logtoException -> {
 
 </Tabs>
 
-Notes:
-
-- `signOut` will always clear local credentials even if errors occurred.
-
 </Step>
 
 <Step
-  title="Further Readings"
-  subtitle="3 steps"
+  title="Further readings"
+  subtitle="4 articles"
   index={4}
   activeIndex={props.activeStepIndex}
   buttonText="admin_console.general.done"
@@ -275,8 +210,9 @@ Notes:
   onButtonClick={props.onComplete}
 >
 
-- Fetch User Info
-- Configure Social Sign-In
-- Access Protected API Resources
+- [Customize sign-in experience](https://docs.logto.io/docs/recipes/customize-sie)
+- [Enable SMS or email passcode sign-in](https://docs.logto.io/docs/tutorials/get-started/enable-passcode-sign-in)
+- [Enable social sign-in](https://docs.logto.io/docs/tutorials/get-started/enable-social-sign-in)
+- [Protect your API](https://docs.logto.io/docs/recipes/protect-your-api)
 
 </Step>
