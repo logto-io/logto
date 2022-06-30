@@ -17,6 +17,18 @@
     color: var(--color-icon);
   }
 
+  .githubIcon {
+    margin-right: _.unit(4);
+
+    div {
+      display: flex;
+    }
+
+    svg {
+      color: var(--color-text);
+    }
+  }
+
   .getSampleButton {
     margin: 0 _.unit(15) 0 _.unit(6);
   }

@@ -108,7 +108,7 @@ const translation = {
       guide: {
         get_sample_file: 'Get the sample project',
         header_description:
-          'Follow a step by step guide to integrate your application or get a sample configured with your account settings',
+          'Follow a step by step guide to integrate your application or click the right button to get the sample project',
         title: 'The application has been successfully created',
         subtitle:
           'Now follow the steps below to finish your app settings. Please select the SDK type to continue.',
