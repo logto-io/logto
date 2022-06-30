@@ -1,4 +1,4 @@
-import { LogtoProvider, useLogto, IdTokenClaims } from '@logto/react';
+import { LogtoProvider, useLogto, IdTokenClaims, Prompt } from '@logto/react';
 import { demoAppApplicationId } from '@logto/schemas/lib/seeds';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -103,6 +103,7 @@ const App = () => {
       config={{
         endpoint: window.location.origin,
         appId: demoAppApplicationId,
+        prompt: Prompt.Login,
       }}
     >
       <Main />

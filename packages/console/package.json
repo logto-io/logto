@@ -18,7 +18,7 @@
   "devDependencies": {
     "@fontsource/roboto-mono": "^4.5.7",
     "@logto/phrases": "^0.1.0",
-    "@logto/react": "^0.2.0",
+    "@logto/react": "^0.2.2",
     "@logto/schemas": "^0.1.0",
     "@logto/shared": "^0.1.0",
     "@mdx-js/react": "^1.6.22",
