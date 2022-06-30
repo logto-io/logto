@@ -24,6 +24,7 @@ const Guides: Record<string, LazyExoticComponent<(props: MDXProps) => JSX.Elemen
   react: lazy(async () => import('@/assets/docs/tutorial/integrate-sdk/react.mdx')),
   vue: lazy(async () => import('@/assets/docs/tutorial/integrate-sdk/vue.mdx')),
   vanilla: lazy(async () => import('@/assets/docs/tutorial/integrate-sdk/vanilla.mdx')),
+  'ios_zh-cn': lazy(async () => import('@/assets/docs/tutorial/integrate-sdk/ios_zh-cn.mdx')),
   'android_zh-cn': lazy(
     async () => import('@/assets/docs/tutorial/integrate-sdk/android_zh-cn.mdx')
   ),
