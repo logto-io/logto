@@ -668,7 +668,7 @@ importers:
     specifiers:
       '@fontsource/roboto-mono': ^4.5.7
       '@logto/phrases': ^0.1.0
-      '@logto/react': ^0.2.0
+      '@logto/react': ^0.2.2
       '@logto/schemas': ^0.1.0
       '@logto/shared': ^0.1.0
       '@mdx-js/react': ^1.6.22
@@ -730,7 +730,7 @@ importers:
     devDependencies:
       '@fontsource/roboto-mono': 4.5.7
       '@logto/phrases': link:../phrases
-      '@logto/react': 0.2.0_react@17.0.2
+      '@logto/react': 0.2.2_react@17.0.2
       '@logto/schemas': link:../schemas
       '@logto/shared': link:../shared
       '@mdx-js/react': 1.6.22_react@17.0.2
@@ -962,7 +962,7 @@ importers:
   packages/demo-app:
     specifiers:
       '@logto/phrases': ^0.1.0
-      '@logto/react': ^0.2.0
+      '@logto/react': ^0.2.2
       '@logto/schemas': ^0.1.0
       '@logto/shared': ^0.1.0
       '@parcel/core': 2.6.2
@@ -988,7 +988,7 @@ importers:
       typescript: ^4.7.2
     devDependencies:
       '@logto/phrases': link:../phrases
-      '@logto/react': 0.2.0_react@17.0.2
+      '@logto/react': 0.2.2_react@17.0.2
       '@logto/schemas': link:../schemas
       '@logto/shared': link:../shared
       '@parcel/core': 2.6.2
@@ -2929,8 +2929,8 @@ packages:
     dev: true
     optional: true
 
-  /@logto/browser/0.2.0:
-    resolution: {integrity: sha512-2xruVNWrJ7v2ct4114j4gVJVzoMeFop0qsvoQqv1fkKoJFeW1seFo+hNeSf9kdRT4WUJAqR6BJZXcTy7VbzkZQ==}
+  /@logto/browser/0.2.2:
+    resolution: {integrity: sha512-RaFcj0EQ6s7BCQ67aVcWjsGSZV7og3EOCLqX4tVyCE/+KBLfiaAPEYrsgleSnpea21n6gfqSIiw4D/B20Wh0aQ==}
     dependencies:
       '@logto/js': 0.2.0
       '@silverhand/essentials': 1.1.7
@@ -2951,12 +2951,12 @@ packages:
       superstruct: 0.16.0
     dev: true
 
-  /@logto/react/0.2.0_react@17.0.2:
-    resolution: {integrity: sha512-YuySrZszH4SwUWCX+WeZt3AuDQjQDN6nUz52NcG5bRWz8+/ABb01gxVnAlZkI32CaOzmHvM3DwyWKvPOZmPTCA==}
+  /@logto/react/0.2.2_react@17.0.2:
+    resolution: {integrity: sha512-FVSu3u/uR9gLI2qMWCWOeEw1Kh9+QyBurfpp8VD2M3vd4a8p+CYjXXfMjTe0OufcEuhK312aEWHjIwf57YMK4A==}
     peerDependencies:
       react: '>=16.8.0'
     dependencies:
-      '@logto/browser': 0.2.0
+      '@logto/browser': 0.2.2
       '@silverhand/essentials': 1.1.7
       react: 17.0.2
     dev: true
@@ -4518,6 +4518,7 @@ packages:
       - babel-jest
       - esbuild
       - typescript
+    dev: false
 
   /@silverhand/jest-config/0.14.0_u4suh3umvg724wu2nufptihvny:
     resolution: {integrity: sha512-zK9wh38/RL5iinPlbcZnjEuu8VfL7lQHDXFQ6Mos+zhN3YH0nsoHD6Faq41eHhUlQ6AkVSowov4hSs28S5RlWg==}
@@ -4538,6 +4539,7 @@ packages:
       - babel-jest
       - esbuild
       - typescript
+    dev: false
 
   /@silverhand/ts-config-react/0.14.0_typescript@4.6.2:
     resolution: {integrity: sha512-5LMSGFOagoYGUJ6GyawZYraUfET2hOm8qE6d4J6m/pr2C0JsamuW0lO9eTNQ6lUZSGRotvJwMgMT3gC+Ylgysw==}
@@ -7686,7 +7688,7 @@ packages:
       eslint-import-resolver-webpack:
         optional: true
     dependencies:
-      '@typescript-eslint/parser': 5.14.0_fo4uz55zgcu432252zy2gvpvcu
+      '@typescript-eslint/parser': 5.14.0_gy6ulhlk526fafafzkwfpebbuq
       debug: 3.2.7
       eslint-import-resolver-node: 0.3.6
       eslint-import-resolver-typescript: 2.5.0_rnagsyfcubvpoxo2ynj23pim7u
@@ -7737,7 +7739,7 @@ packages:
       '@typescript-eslint/parser':
         optional: true
     dependencies:
-      '@typescript-eslint/parser': 5.14.0_fo4uz55zgcu432252zy2gvpvcu
+      '@typescript-eslint/parser': 5.14.0_gy6ulhlk526fafafzkwfpebbuq
       array-includes: 3.1.4
       array.prototype.flat: 1.2.5
       debug: 2.6.9
