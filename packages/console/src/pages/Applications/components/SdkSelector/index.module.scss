@@ -13,6 +13,10 @@
     margin: _.unit(1) auto _.unit(8);
   }
 
+  .congratsText {
+    width: 100%;
+  }
+
   .title {
     font: var(--font-title-large);
   }
@@ -24,7 +28,9 @@
   }
 
   .radioGroup {
+    width: 100%;
     margin-top: _.unit(6);
+    margin-right: 0;
   }
 
   .radio {
