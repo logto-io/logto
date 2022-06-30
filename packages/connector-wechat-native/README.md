@@ -2,7 +2,7 @@
 
 The official Logto connector for WeChat social sign-in in native apps (iOS and Android).
 
-微信原生应用社交登录官方 Logto 连接器（iOS 和 Android）[中文文档](#微信原生连接器)
+微信原生应用社交登录 Logto 官方连接器（iOS 和 Android）[中文文档](#微信原生连接器)
 
 **Table of contents**
 
@@ -18,7 +18,7 @@ The official Logto connector for WeChat social sign-in in native apps (iOS and A
   - [Enable WeChat native sign-in in your app](#enable-wechat-native-sign-in-in-your-app)
     - [iOS](#ios)
     - [Android](#android)
-    - [Test WeChat native connector](#test-wechat-native-connector)
+  - [Test WeChat native connector](#test-wechat-native-connector)
 - [微信原生连接器](#微信原生连接器)
   - [开始上手](#开始上手)
   - [在微信开放平台中创建一个移动应用](#在微信开放平台中创建一个移动应用)
@@ -31,7 +31,7 @@ The official Logto connector for WeChat social sign-in in native apps (iOS and A
   - [在你的应用中启用微信原生连接器](#在你的应用中启用微信原生连接器)
     - [iOS](#ios-1)
     - [Android](#android-1)
-    - [测试微信原生连接器](#测试微信原生连接器)
+  - [测试微信原生连接器](#测试微信原生连接器)
 
 
 ## Get started
@@ -251,7 +251,7 @@ Add the following lines to your `AndroidManifest.xml`:
 </manifest>
 ```
 
-### Test WeChat native connector
+## Test WeChat native connector
 
 That's it. Don't forget to [Enable connector in sign-in experience](https://docs.logto.io/docs/tutorials/get-started/enable-social-sign-in#enable-connector-in-sign-in-experience).
 
@@ -408,7 +408,7 @@ func application(_ app: UIApplication, open url: URL, options: /*...*/) -> Bool 
 
 TBD
 
-### 测试微信原生连接器
+## 测试微信原生连接器
 
 大功告成。别忘了 [在登录体验中启用社交登录](https://docs.logto.io/zh-cn/docs/tutorials/get-started/enable-social-sign-in/#%E5%9C%A8%E7%99%BB%E5%BD%95%E4%BD%93%E9%AA%8C%E4%B8%AD%E5%90%AF%E7%94%A8%E8%BF%9E%E6%8E%A5%E5%99%A8)。
 
