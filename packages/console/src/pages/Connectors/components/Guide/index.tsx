@@ -92,7 +92,7 @@ const Guide = ({ connector, onClose }: Props) => {
       </div>
       <div className={styles.content}>
         <Markdown className={styles.readme}>{readme}</Markdown>
-        <div>
+        <div className={styles.setup}>
           <FormProvider {...methods}>
             <form onSubmit={onSubmit}>
               <Step

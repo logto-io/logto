@@ -32,11 +32,9 @@
     flex: 1;
     display: flex;
     overflow: hidden;
-    padding: _.unit(6) _.unit(15);
 
     > * {
       flex: 1;
-      margin: 0 12px;
       overflow-y: auto;
     }
 
@@ -44,6 +42,11 @@
       background-color: var(--color-layer-1);
       border-radius: 16px;
       padding: 0 _.unit(6);
+      margin: _.unit(6) _.unit(10) _.unit(6) _.unit(18);
+    }
+
+    .setup {
+      padding: _.unit(6) _.unit(18) _.unit(6) 0;
     }
 
     form + div {
