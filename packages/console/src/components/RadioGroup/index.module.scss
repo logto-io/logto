@@ -43,7 +43,7 @@
     }
 
     &:not(.disabled):hover {
-      background-color: var(--color-layer-2);
+      box-shadow: var(--shadow-2);
     }
 
     svg {
