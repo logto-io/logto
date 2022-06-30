@@ -5,6 +5,7 @@ import { MDXProps } from 'mdx/types';
 import React, { cloneElement, lazy, LazyExoticComponent, Suspense, useState } from 'react';
 
 import CodeEditor from '@/components/CodeEditor';
+import DetailsSummary from '@/mdx-components/DetailsSummary';
 import { applicationTypeAndSdkTypeMappings, SupportedSdk } from '@/types/applications';
 
 import GuideHeader from '../GuideHeader';
@@ -78,6 +79,7 @@ const Guide = ({ app, isCompact, onClose }: Props) => {
                 {children}
               </a>
             ),
+            details: DetailsSummary,
           }}
         >
           <Suspense fallback={<StepsSkeleton />}>
