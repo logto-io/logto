@@ -149,6 +149,10 @@ And add `-ObjC` to your Build Settings > Linking > Other Linker Flags:
 
 ![Linker flags](/packages/connector-wechat-native/docs/linker-flags.png)
 
+> ℹ️ **Note**
+> 
+> The plugin includes WeChat Open SDK 1.9.2. You can directly use `import WechatOpenSDK` once imported the plugin.
+
 **2. Add the plugin to your `LogtoClient` init options**
 
 ```swift
@@ -375,6 +379,10 @@ Once WeChat native connector is enabled, you can build and run your app to see i
 并添加 `-ObjC` 至 Build Settings > Linking > Other Linker Flags：
 
 ![Linker flags](/packages/connector-wechat-native/docs/linker-flags.png)
+
+> ℹ️ **Note**
+> 
+> 该插件已包含 WeChat Open SDK 1.9.2。在引入插件后你可以直接使用 `import WechatOpenSDK`。
 
 **2. 将插件添加至 `LogtoClient` 的初始化项**
 
