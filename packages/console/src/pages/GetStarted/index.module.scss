@@ -25,6 +25,10 @@
     .hideButton {
       color: var(--color-text-link);
       cursor: pointer;
+
+      &:hover {
+        text-decoration: underline;
+      }
     }
   }
 }
