@@ -35,6 +35,35 @@ Alipay Native connector works closely with Logto SDK on mobile platforms. It tak
 | privateKey |    string   |       N/A       |
 |  signType  | enum string | 'RSA' \| 'RSA2' |
 
+## Enable Alipay native sign-in in your app
+
+### iOS
+
+We assume you have integrated [Logto iOS SDK](https://docs.logto.io/docs/recipes/integrate-logto/ios) in your app. In this case, things are pretty simple, and you don't even need to read the Alipay SDK doc:
+
+**1. Add `LogtoSocialPluginAlipay` to your Xcode project**
+
+Add the framework:
+
+![Add framework](/packages/connector-alipay-native/docs/add-framework.png)
+
+**2. Add the plugin to your `LogtoClient` init options**
+
+```swift
+let logtoClient = LogtoClient(
+  useConfig: config,
+  socialPlugins: [LogtoSocialPluginAlipay(callbackScheme: "your-scheme")]
+)
+```
+
+Where `callbackScheme` is one of the [custom URL Schemes](https://developer.apple.com/documentation/xcode/defining-a-custom-url-scheme-for-your-app) that can navigate to your app.
+
+### Test Alipay native connector
+
+That's it. Don't forget to [Enable connector in sign-in experience](https://docs.logto.io/docs/tutorials/get-started/enable-social-sign-in#enable-connector-in-sign-in-experience).
+
+Once Alipay native connector is enabled, you can build and run your app to see if it works.
+
 ## References
 
 - [Alipay Docs - Access Preparation - How to create an app](https://opendocs.alipay.com/support/01rau6)
