@@ -54,7 +54,7 @@ export class LogtoContext {
   public async init() {
     const account = {
       username: generatePassword(),
-      password: generateUsername(),
+      password: generateUsername().replace('-', '_'),
     };
     const codeVerifier = generateCodeVerifier();
     const codeChallenge = await generateCodeChallenge(codeVerifier);
