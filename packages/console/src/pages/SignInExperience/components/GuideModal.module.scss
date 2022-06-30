@@ -71,7 +71,12 @@
     left: 0;
     right: 0;
     background: var(--color-layer-1);
-    padding: _.unit(6) _.unit(20);
-    text-align: right;
+
+    .footerContent {
+      padding: _.unit(6) 0;
+      display: flex;
+      justify-content: right;
+      @include _.main-content-width;
+    }
   }
 }

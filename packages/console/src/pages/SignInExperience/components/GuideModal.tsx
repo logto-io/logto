@@ -133,12 +133,14 @@ const GuideModal = ({ isOpen, onClose }: Props) => {
                 )}
               </div>
               <div className={styles.footer}>
-                <Button
-                  isLoading={isSubmitting}
-                  type="primary"
-                  htmlType="submit"
-                  title="admin_console.general.done"
-                />
+                <div className={styles.footerContent}>
+                  <Button
+                    isLoading={isSubmitting}
+                    type="primary"
+                    htmlType="submit"
+                    title="admin_console.general.done"
+                  />
+                </div>
               </div>
             </form>
           </FormProvider>
