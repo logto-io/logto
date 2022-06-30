@@ -1,4 +1,4 @@
-import { useLogto, UserInfoResponse } from '@logto/react';
+import { useLogto, IdTokenClaims } from '@logto/react';
 import classNames from 'classnames';
 import React, { useEffect, useRef, useState, MouseEvent } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -18,14 +18,14 @@ const UserInfo = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const anchorRef = useRef<HTMLDivElement>(null);
   const [showDropDown, setShowDropdown] = useState(false);
-  const [user, setUser] = useState<UserInfoResponse>();
+  const [user, setUser] = useState<Pick<IdTokenClaims, 'sub' | 'name' | 'avatar'>>();
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     (async () => {
       if (isAuthenticated) {
         const userInfo = getIdTokenClaims();
-        setUser(userInfo);
+        setUser(userInfo ?? { sub: '', name: 'N/A' }); // Provide a fallback to avoid infinite loading state
       }
     })();
   }, [api, isAuthenticated, getIdTokenClaims]);
