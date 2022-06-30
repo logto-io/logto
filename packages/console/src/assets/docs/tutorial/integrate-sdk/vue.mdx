@@ -2,9 +2,10 @@ import UriInputField from '@mdx/components/UriInputField';
 import Step from '@mdx/components/Step';
 import Tabs from '@mdx/components/Tabs';
 import TabItem from '@mdx/components/TabItem';
+import Alert from '@/components/Alert';
 
 <Step
-  title="Install SDK"
+  title="Add Logto SDK as a dependency"
   subtitle="Please select your favorite package manager"
   index={0}
   activeIndex={props.activeStepIndex}
@@ -32,33 +33,30 @@ pnpm add @logto/vue
 ```
 
 </TabItem>
-<TabItem value="script" label="script">
-
-{/* This should be CDN URL */}
-```html
-<script src="https://logto.io/js/logto-sdk-vue/0.1.0/logto-sdk-vue.production.js" />
-```
-
-</TabItem>
 </Tabs>
 </Step>
+
 <Step
-  title="Initiate LogtoClient"
+  title="Init LogtoClient"
   subtitle="1 step"
   index={1}
   activeIndex={props.activeStepIndex}
   onButtonClick={() => props.onNext(2)}
 >
 
-`import` and use `createLogto` to install Logto plugin:
+<Alert>
+  We only support Vue 3 Composition API at this point. Will add support to Vue Options API and possibly Vue 2 in future releases.
+</Alert>
+
+Import and use `createLogto` to install Logto plugin:
 
 <pre>
 <code className="language-ts">
 {`import { createLogto, LogtoConfig } from '@logto/vue';
 
 const config: LogtoConfig = {
-  appId: '${props.appId}',
   endpoint: '${props.endpoint}',
+  appId: '${props.appId}',
 };
 
 const app = createApp(App);
@@ -69,83 +67,85 @@ app.mount("#app");`}
 </pre>
 
 </Step>
+
 <Step
   title="Sign In"
-  subtitle="2 steps"
+  subtitle="3 steps"
   index={2}
   activeIndex={props.activeStepIndex}
   onButtonClick={() => props.onNext(3)}
 >
 
-We provide two composables `useHandleSignInCallback()` and `useLogto()` which can help you easily manage the authentication flow. 
+<Alert>
+  In the following steps, we assume your app is running on <code>http://localhost:1234</code>.
+</Alert>
 
-### Set Up Callback Route
+### Configure Redirect URI
 
-In order to handle what comes from Logto, the application needs to have a dedicated callback route that does NOT require authentication.
-
-First, let’s enter your redirect URI. E.g. `http://localhost:1234/callback`
+First, let’s enter your redirect URI. E.g. `http://localhost:1234/callback`.
 
 <UriInputField appId={props.appId} isSingle={!props.isCompact} name="redirectUris" title="Redirect URI" />
 
-Then let's create a callback component:
+### Implement a sign-in button
+
+We provide two composables `useHandleSignInCallback()` and `useLogto()`, which can help you easily manage the authentication flow. 
+
+Go back to your IDE/editor, use the following code to implement the sign-in button:
+
+```ts
+import { useLogto } from "@logto/vue";
+
+const { signIn, isAuthenticated } = useLogto();
+const onClickSignIn = () => signIn('http://localhost:1234/callback');
+```
 
 ```html
-<script setup lang="ts">
-  import { useHandleSignInCallback } from "@logto/vue";
-  const { isLoading } = useHandleSignInCallback();
-</script>
+<div v-if="isAuthenticated">
+  <div>Signed in</div>
+</div>
+<div v-else>
+  <button @click="onClickSignIn">Sign In</button>
+</div>
+```
 
+### Handle redirect
+
+We're almost there! In the last step, we use `http://localhost:1234/callback` as the Redirect URI, and now we need to handle it properly.
+
+First let's create a callback component:
+
+```ts
+// CallbackView.vue
+import { useHandleSignInCallback } from '@logto/vue';
+const { isLoading } = useHandleSignInCallback(() => {
+  // Navigate to root path when finished
+});
+```
+
+```html
 <template>
   <!-- When it's working in progress -->
   <p v-if="isLoading">Redirecting...</p>
 </template>
 ```
 
-Next, we need to link the callback component with the route. Let's say the path is `/callback` and we are using `vue-router`:
+Finally insert the code below to create a `/callback` route which does NOT require authentication:
 
 ```ts
+// Assuming vue-router
 const router = createRouter({
   routes: [
     {
-      path: "/callback",
-      name: "callback",
+      path: '/callback',
+      name: 'callback',
       component: CallbackView,
     },
-  ]
+  ],
 });
 ```
 
-### Make a Sign In Button
-
-```ts
-import { useLogto } from "@logto/vue";
-
-const { signIn } = useLogto();
-const onClickSignIn = () => signIn(redirectUrl);
-```
-
-```html
-<button @click="onClickSignIn">Sign In</button>
-```
-
-### Retrieve Authentication Status
-
-```ts
-import { useLogto } from '@logto/vue';
-
-const { isAuthenticated } = useLogto();
-```
-
-```html
-<div v-if="!isAuthenticated">
-  <!-- E.g. navigate to the sign in page -->
-</div>
-<div v-else>
-  <!-- Do things when user is authenticated -->
-</div>
-```
-
 </Step>
+
 <Step
   title="Sign Out"
   subtitle="1 step"
@@ -154,12 +154,13 @@ const { isAuthenticated } = useLogto();
   onButtonClick={() => props.onNext(4)}
 >
 
-Calling `.signOut()` will clear all the Logto data in memory and LocalStorage, if there is any.
+Calling `.signOut()` will clear all the Logto data in memory and localStorage if they exist.
 
-To make the user come back to your application after signing out,
-it's necessary to add `http://localhost:1234` as one of the Post Sign Out URIs and use the URL as the parameter when calling `.signOut()`.
+After signing out, it'll be great to redirect user back to your website. Let's add `http://localhost:1234` as the Post Sign-out URI below, and use it as the parameter when calling `.signOut()`.
 
 <UriInputField appId={props.appId} isSingle={!props.isCompact} name="postLogoutRedirectUris" title="Post Sign-out Redirect URI" />
+
+### Implement a sign-out button
 
 ```ts
 import { useLogto } from "@logto/vue";
@@ -173,9 +174,10 @@ const onClickSignOut = () => signOut('http://localhost:1234');
 ```
 
 </Step>
+
 <Step
-  title="Further Readings"
-  subtitle="3 steps"
+  title="Further readings"
+  subtitle="4 articles"
   index={4}
   activeIndex={props.activeStepIndex}
   buttonText="admin_console.general.done"
@@ -183,8 +185,9 @@ const onClickSignOut = () => signOut('http://localhost:1234');
   onButtonClick={props.onComplete}
 >
 
-- [SDK Documentation](https://link-url-here.org)
-- [OIDC Documentation](https://link-url-here.org)
-- [Calling API to fetch accessToken](https://link-url-here.org)
+- [Customize sign-in experience](https://docs.logto.io/docs/recipes/customize-sie)
+- [Enable SMS or email passcode sign-in](https://docs.logto.io/docs/tutorials/get-started/enable-passcode-sign-in)
+- [Enable social sign-in](https://docs.logto.io/docs/tutorials/get-started/enable-social-sign-in)
+- [Protect your API](https://docs.logto.io/docs/recipes/protect-your-api)
 
 </Step>
