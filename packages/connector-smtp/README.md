@@ -10,6 +10,8 @@ We are now offering guides on how to use the SMTP connector to send emails follo
 - _Gmail_ is the most popular email service vendor worldwide.
 - _Aliyun direct mail_ and _SendGrid mail_. Some of you might be familiar with these two email service providers because Logto Team provided corresponding connectors; you will likely have a general idea of them.
 
+We hope you can figure out all other email vendors' setups with the following examples :rocket:
+
 ### Set up for Gmail use
 
 You can get a new Gmail account at [Gmail](https://mail.google.com/), or you can use an existing account if you have one.
