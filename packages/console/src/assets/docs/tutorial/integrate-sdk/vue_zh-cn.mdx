@@ -2,10 +2,11 @@ import UriInputField from '@mdx/components/UriInputField';
 import Step from '@mdx/components/Step';
 import Tabs from '@mdx/components/Tabs';
 import TabItem from '@mdx/components/TabItem';
+import Alert from '@/components/Alert';
 
 <Step
-  title="安装 SDK"
-  subtitle="请选择你喜欢的包管理工具"
+  title="将 Logto SDK 添加至依赖"
+  subtitle="选择你熟悉的包管理工具"
   index={0}
   activeIndex={props.activeStepIndex}
   onButtonClick={() => props.onNext(1)}
@@ -32,33 +33,30 @@ pnpm add @logto/vue
 ```
 
 </TabItem>
-<TabItem value="script" label="script">
-
-{/* This should be CDN URL */}
-```html
-<script src="https://logto.io/js/logto-sdk-vue/0.1.0/logto-sdk-vue.production.js" />
-```
-
-</TabItem>
 </Tabs>
 </Step>
+
 <Step
   title="初始化 LogtoClient"
-  subtitle="1 step"
+  subtitle="共 1 步"
   index={1}
   activeIndex={props.activeStepIndex}
   onButtonClick={() => props.onNext(2)}
 >
 
-`import` 并使用 `createLogto` 以插件的形式安装 Logto:
+<Alert>
+  目前仅支持 Vue 3 的 组合式（Composition）API，我们会在后续版本中陆续添加对选项式（Options）API 和 Vue 2 的支持。
+</Alert>
+
+Import 并使用 `createLogto` 以插件的形式安装 Logto:
 
 <pre>
 <code className="language-ts">
 {`import { createLogto, LogtoConfig } from '@logto/vue';
 
 const config: LogtoConfig = {
-  appId: '${props.appId}',
   endpoint: '${props.endpoint}',
+  appId: '${props.appId}',
 };
 
 const app = createApp(App);
@@ -69,99 +67,100 @@ app.mount("#app");`}
 </pre>
 
 </Step>
+
 <Step
-  title="Sign In"
-  subtitle="2 steps"
+  title="登录"
+  subtitle="共 3 步"
   index={2}
   activeIndex={props.activeStepIndex}
   onButtonClick={() => props.onNext(3)}
 >
 
-我们提供了两个组合式 API `useHandleSignInCallback()` 和 `useLogto()`，它们可以帮助你轻松完成登录认证流程。 
+<Alert>
+  在如下代码示例中, 我们均先假设你的 Vue 应用运行在 <code>http://localhost:1234</code> 上。
+</Alert>
 
-### 设置回调路由
+### 配置 Redirect URI
 
-为了让登录认证流程能够正常工作，我们需要设置一个回调路由，以便在认证结束后跳转回你的应用时它能够处理认证结果。（请注意：此路由地址不能受登录保护）
-
-但首先, 让我们先在下方输入 redirect URI，如：`http://localhost:1234/callback`
+首先，我们来添加 Redirect URI，如：`http://localhost:1234/callback`。
 
 <UriInputField appId={props.appId} isSingle={!props.isCompact} name="redirectUris" title="Redirect URI" />
 
-然后，让我们来创建一个 CallbackView 组件：
+### 实现登录按钮
 
-```html
-<script setup lang="ts">
-  import { useHandleSignInCallback } from "@logto/vue";
-  const { isLoading } = useHandleSignInCallback();
-</script>
+我们提供了两个组合式 API `useHandleSignInCallback()` 和 `useLogto()`，它们可以帮助你轻松完成登录认证流程。
 
-<template>
-  <!-- 当登录认证尚未完成时 -->
-  <p v-if="isLoading">页面跳转中...</p>
-</template>
-```
-
-接下来，我们就可以在路由表中添加这个回调路由。假设我们的路由地址定义为 `/callback`，且使用的路由工具为 `vue-router`:
-
-```ts
-const router = createRouter({
-  ...
-  routes: [
-    {
-      path: "/callback",
-      name: "callback",
-      component: CallbackView,
-    },
-  ]
-});
-```
-
-### 创建一个登录按钮
+返回你的 IDE 或编辑器，使用如下代码来实现一个登录按钮：
 
 ```ts
 import { useLogto } from "@logto/vue";
 
-const { signIn } = useLogto();
-const onClickSignIn = () => signIn(redirectUrl);
+const { signIn, isAuthenticated } = useLogto();
+const onClickSignIn = () => signIn('http://localhost:1234/callback');
 ```
 
 ```html
-<button @click="onClickSignIn">登录</button>
-```
-
-### 判断当前登录状态
-
-```ts
-import { useLogto } from '@logto/vue';
-
-const { isAuthenticated } = useLogto();
-```
-
-```html
-<div v-if="!isAuthenticated">
-  <!-- 跳转到登录页面 -->
+<div v-if="isAuthenticated">
+  <div>已登录</div>
 </div>
 <div v-else>
-  <!-- 实现用户登录之后的业务逻辑 -->
+  <button @click="onClickSignIn">登录</button>
 </div>
+```
+
+### 处理重定向
+
+马上就要大功告成！在上一步，我们将 `http://localhost:1234/callback` 用作 Redirect URI，现在我们需要对其妥善处理。
+
+首先，让我们来创建一个 Callback 组件：
+
+```ts
+// CallbackView.vue
+import { useHandleSignInCallback } from '@logto/vue';
+const { isLoading } = useHandleSignInCallback(() => {
+  // 完成时跳转至根路由
+});
+```
+
+```html
+<template>
+  <!-- 当登录认证尚未完成时 -->
+  <p v-if="isLoading">正在重定向...</p>
+</template>
+```
+
+最后我们插入如下代码来实现一个 _无需_ 登录的 `/callback` 路由：
+
+```ts
+// 假设用 vue-router
+const router = createRouter({
+  routes: [
+    {
+      path: '/callback',
+      name: 'callback',
+      component: CallbackView,
+    },
+  ],
+});
 ```
 
 </Step>
+
 <Step
-  title="Sign Out"
-  subtitle="1 step"
+  title="退出登录"
+  subtitle="共 1 步"
   index={3}
   activeIndex={props.activeStepIndex}
-  buttonText="admin_console.general.done"
-  buttonType="primary"
   onButtonClick={() => props.onNext(4)}
 >
 
-调用 `.signOut()` 方法会清除所有在缓存或者 localStorage 中的 Logto 数据（如果有）。
+调用 `.signOut()` 将清理内存与 localStorage 中的所有 Logto 数据（如果有）。
 
-为了确保用户登出后能够跳转回你的应用，我们需要首先在管理界面中将 `http://localhost:1234` 添加到允许登出后跳转的地址列表（Post Sign Out URIs）中。
+在退出登录后，让你的用户重新回到你的网站是个不错的选择。让我们将 `http://localhost:1234` 添加至下面的输入框，并将其作为调用 `.signOut()` 的参数。
 
 <UriInputField appId={props.appId} isSingle={!props.isCompact} name="postLogoutRedirectUris" title="Post Sign-out Redirect URI" />
+
+### 实现退出登录按钮
 
 ```ts
 import { useLogto } from "@logto/vue";
@@ -171,21 +170,24 @@ const onClickSignOut = () => signOut('http://localhost:1234');
 ```
 
 ```html
-<button @click="onClickSignOut">登出</button>
+<button @click="onClickSignOut">退出登录</button>
 ```
 
 </Step>
+
 <Step
-  title="延伸阅读"
-  subtitle="3 steps"
+  title="延展阅读"
+  subtitle="共 4 篇"
   index={4}
   activeIndex={props.activeStepIndex}
   buttonText="admin_console.general.done"
+  buttonType="primary"
   onButtonClick={props.onComplete}
 >
 
-- [SDK Documentation](https://link-url-here.org)
-- [OIDC Documentation](https://link-url-here.org)
-- [Calling API to fetch accessToken](https://link-url-here.org)
+- [自定义登录体验](https://docs.logto.io/zh-cn/docs/recipes/customize-sie)
+- [启用短信或邮件验证码登录](https://docs.logto.io/zh-cn/docs/tutorials/get-started/enable-passcode-sign-in)
+- [启用社交登录](https://docs.logto.io/zh-cn/docs/tutorials/get-started/enable-social-sign-in)
+- [保护你的 API](https://docs.logto.io/zh-cn/docs/recipes/protect-your-api)
 
 </Step>
