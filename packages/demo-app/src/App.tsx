@@ -1,4 +1,4 @@
-import { LogtoProvider, useLogto, UserInfoResponse } from '@logto/react';
+import { LogtoProvider, useLogto, IdTokenClaims } from '@logto/react';
 import { demoAppApplicationId } from '@logto/schemas/lib/seeds';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -14,7 +14,7 @@ void initI18n();
 
 const Main = () => {
   const { isAuthenticated, getIdTokenClaims, signIn, signOut } = useLogto();
-  const [user, setUser] = useState<UserInfoResponse>();
+  const [user, setUser] = useState<Pick<IdTokenClaims, 'sub' | 'username'>>();
   const { t } = useTranslation(undefined, { keyPrefix: 'demo_app' });
   const isInCallback = Boolean(new URL(window.location.href).searchParams.get('code'));
   const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
@@ -28,7 +28,7 @@ const Main = () => {
     if (isAuthenticated) {
       (async () => {
         const userInfo = getIdTokenClaims();
-        setUser(userInfo);
+        setUser(userInfo ?? { sub: 'N/A', username: 'N/A' });
       })();
     } else {
       void signIn(window.location.href);
