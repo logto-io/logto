@@ -1,12 +1,10 @@
 import classNames from 'classnames';
 import React from 'react';
-import { Toaster, resolveValue, toast } from 'react-hot-toast';
+import { Toaster, resolveValue } from 'react-hot-toast';
 
 import Error from '@/assets/images/toast-error.svg';
 import Success from '@/assets/images/toast-success.svg';
-import Close from '@/icons/Close';
 
-import IconButton from '../IconButton';
 import * as styles from './index.module.scss';
 
 const Toast = () => {
@@ -30,13 +28,6 @@ const Toast = () => {
           <span className={styles.message}>
             {resolveValue(toastInstance.message, toastInstance)}
           </span>
-          <IconButton
-            onClick={() => {
-              toast.remove();
-            }}
-          >
-            <Close className={styles.closeIcon} />
-          </IconButton>
         </div>
       )}
     </Toaster>
