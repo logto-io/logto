@@ -63,7 +63,7 @@ const SdkSelector = ({
   return (
     <Card className={classNames(styles.card, className)}>
       <CongratsIcon className={styles.congrats} />
-      <div>
+      <div className={styles.congratsText}>
         <div className={styles.title}>{t('applications.guide.title')}</div>
         <div className={styles.subtitle}>{t('applications.guide.subtitle')}</div>
       </div>
