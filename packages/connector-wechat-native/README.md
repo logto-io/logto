@@ -4,11 +4,41 @@ The official Logto connector for WeChat social sign-in in native apps (iOS and A
 
 微信原生应用社交登录官方 Logto 连接器（iOS 和 Android）[中文文档](#微信原生连接器)
 
+**Table of contents**
+
+- [WeChat native connector](#wechat-native-connector)
+  - [Get started](#get-started)
+  - [Create a mobile app in the WeChat Open Platform](#create-a-mobile-app-in-the-wechat-open-platform)
+    - [Create an account](#create-an-account)
+    - [Create a mobile app](#create-a-mobile-app)
+      - [Basic info](#basic-info)
+      - [Platform info](#platform-info)
+      - [Waiting for the review result](#waiting-for-the-review-result)
+  - [Compose the connector JSON](#compose-the-connector-json)
+  - [Enable WeChat native sign-in in your app](#enable-wechat-native-sign-in-in-your-app)
+    - [iOS](#ios)
+    - [Android](#android)
+    - [Test WeChat native connector](#test-wechat-native-connector)
+- [微信原生连接器](#微信原生连接器)
+  - [开始上手](#开始上手)
+  - [在微信开放平台中创建一个移动应用](#在微信开放平台中创建一个移动应用)
+    - [创建一个帐户](#创建一个帐户)
+    - [创建一个移动应用](#创建一个移动应用)
+      - [基础信息](#基础信息)
+      - [平台信息](#平台信息)
+      - [等待审核结果](#等待审核结果)
+  - [编写连接器的 JSON](#编写连接器的-json)
+  - [在你的应用中启用微信原生连接器](#在你的应用中启用微信原生连接器)
+    - [iOS](#ios-1)
+    - [Android](#android-1)
+    - [测试微信原生连接器](#测试微信原生连接器)
+
+
 ## Get started
 
 If you don't know the concept of the connector or haven't added this connector to your Sign-in experience yet, please see [Logto tutorial](https://docs.logto.io/docs/tutorials/get-started/enable-social-sign-in).
 
-In native apps, you cannot use the web as a sign-in method of WeChat. Navigation to WeChat is required, and it also requires using their SDK.
+In native apps, you cannot use the web as a sign-in method of WeChat: navigation to the WeChat app is required, and it also requires using their SDK.
 
 We know it sounds scary, but don't worry. We'll handle it easily in this tutorial.
 
@@ -32,7 +62,7 @@ Let's fill out the required info in the application form.
 
 ![Create a mobile app](/packages/connector-wechat-native/docs/create-mobile-app.png)
 
-### Basic info
+#### Basic info
 
 Most of them are pretty straightforward, and we have several tips here:
 
@@ -41,11 +71,11 @@ Most of them are pretty straightforward, and we have several tips here:
 
 Click "Next step" to move on.
 
-### Platform info
+#### Platform info
 
-You can configure one or both of the iOS and Android platforms for integrating Logto with WeChat native sign-in.
+You can configure one or both iOS and Android platforms to integrate Logto with WeChat native sign-in.
 
-#### iOS app
+**iOS app**
 
 Check "iOS app" (iOS 应用), then check the target device type of your app accordingly.
 
@@ -63,39 +93,37 @@ Fill out _Bundle ID_, _Test version Bundle ID_, and _Universal Links_ (actually,
 > 
 > WeChat requires Universal Link for native sign-in. If you haven't set up or don't know it, please refer to the [Apple official doc](https://developer.apple.com/ios/universal-links/).
 
-#### Android app
+**Android app**
 
 Check "Android app" (Android 应用).
 
 ![Android app platform](/packages/connector-wechat-native/docs/platform-android-app.png)
 
-Fill out _Application Signing Signature_(应用签名) and _Application Package Name_(应用包名).
+Fill out _Application Signing Signature_ (应用签名) and _Application Package Name_ (应用包名).
 
 > **Note**
 > 
->You need to sign your app to get a signature before your users can sign in with WeChat. Refer to the [Sign your app](https://developer.android.com/studio/publish/app-signing) for more information. 
+> You need to sign your app to get a signature. Refer to the [Sign your app](https://developer.android.com/studio/publish/app-signing) for more info. 
 
-After you finish signing your app, you can execute the `signingReport` task to get the signing signature.
+After finish signing, you can execute the `signingReport` task to get the signing signature.
 
 ```bash
 ./gradlew your-android-project:signingReport
 ```
 
-The `MD5` value of the corresponding build variant's report will be the _Application Signing Signature_(应用签名), but remember to remove all semicolons from the value and cast it to lowercase.
+The `MD5` value of the corresponding build variant's report will be the _Application Signing Signature_ (应用签名), but remember to remove all semicolons from the value and lowercase it.
 
-E.g. `1A:2B:3C:4D` -> `1a2b3c4d`
+E.g. `1A:2B:3C:4D` -> `1a2b3c4d`.
 
-### Waiting for the review result
+#### Waiting for the review result
 
-After you have finished filling out the platform info, Click "Submit Review" to continue and wait for the review result.
+After filling out the platform info, click "Submit Review" to continue. Usually, the review goes fast, which will end within 1-2 days.
 
-Usually, the review goes fast, which will end within 1-2 days.
-
-We suspect the reviewer is allocated randomly on each submission, and the standard is floating. You may get rejected the first time, but don't give up! State your status quo and ask the reviewer how to modify it.
+We suspect the reviewer is allocated randomly on each submission, since the standard is floating. You may get rejected the first time, but don't give up! State your status quo and ask the reviewer how to modify it.
 
 ## Compose the connector JSON
 
-After passing the review, go to the application details page and generate an AppSecret. Compose the connector JSON with the following format:
+Once passed the review, go to the application details page and generate an AppSecret. Compose the connector JSON with the following format:
 
 ```json
 {
@@ -105,7 +133,7 @@ After passing the review, go to the application details page and generate an App
 }
 ```
 
-## Add the Logto social support to your app
+## Enable WeChat native sign-in in your app
 
 ### iOS
 
@@ -223,9 +251,9 @@ Add the following lines to your `AndroidManifest.xml`:
 </manifest>
 ```
 
-### Enable WeChat native connector
+### Test WeChat native connector
 
-After you have added the Logto social support to your app, don't forget to [Enable connector in sign-in experience](https://docs.logto.io/docs/tutorials/get-started/enable-social-sign-in#enable-connector-in-sign-in-experience).
+That's it. Don't forget to [Enable connector in sign-in experience](https://docs.logto.io/docs/tutorials/get-started/enable-social-sign-in#enable-connector-in-sign-in-experience).
 
 Once WeChat native connector is enabled, you can build and run your app to see if it works.
 
@@ -235,4 +263,157 @@ Once WeChat native connector is enabled, you can build and run your app to see i
 
 # 微信原生连接器
 
+## 开始上手
+
+如果你还不知道连接器的概念，或者还没有将本连接器添加至你的「登录体验」，请先参见 [Logto 教程](https://docs.logto.io/zh-cn/docs/tutorials/get-started/enable-social-sign-in)。
+
+在原生应用中，你无法通过 web 进行微信登录：必须跳转至微信 app，并使用他们提供的 SDK 才能完成。
+
+听起来比较吓人？没关系。我们将在这个教程中轻松解决。
+## 在微信开放平台中创建一个移动应用
+
+> 💡 **Tip**
+> 
+> 你可以跳过已经完成的部分。
+
+### 创建一个帐户
+
+打开 https://open.weixin.qq.com/，点按右上角的「注册」按钮，并完成注册流程。
+
+### 创建一个移动应用
+
+用刚创建的帐号登录。在「移动应用」标签页，点按大而绿的「创建移动应用」按钮。
+
+![App tabs](/packages/connector-wechat-native/docs/app-tabs.png)
+
+让我们填写一下申请表单里的必要信息。
+
+![Create a mobile app](/packages/connector-wechat-native/docs/create-mobile-app.png)
+
+#### 基础信息
+
+大多数字段都很直接，我们也有一些小提示：
+
+- 如果你只是想测试微信登录，且你的应用还没上架，你可以在「应用已上架」区域中选择「否」以跳过填写「已上架应用下载链接」。
+- 「App 运行流程图」这一项看起来很诡异。从我们的经验来说，你需要准备一个简单的流程图和一些应用截图来提升通过审核的概率。
+
+点按「下一步」以继续。
+
+#### 平台信息
+
+你可以单独或同时配置 iOS 和 Android 平台，以在 Logto 中集成微信登录。
+
+**iOS 应用**
+
+勾选「iOS 应用」与你的应用的目标平台。
+
+![App platform](/packages/connector-wechat-native/docs/platform.png)
+
+如果你在「应用已上架」中选择了「否」，你可以在这一步跳过「AppStore 下载地址」的填写。
+
+填写 _Bundle ID_、_测试版本 Bundle ID_ 和 _Universal Links_（实际上不需要填写多个 link，只填一个即可）。
+
+> ℹ️ **Note**
+> 
+> _Bundle ID_ 和 _测试版本 Bundle ID_ 的值可以相同。
+
+> 💡 **Tip**
+> 
+> 微信要求在原生应用中使用 Universal Link 来登录。如果你还没有设置好或者不知道这是什么，请参见 [苹果官方文档](https://developer.apple.com/ios/universal-links/)。
+
+**Android 应用**
+
+勾选「安卓应用」。
+
+![Android app platform](/packages/connector-wechat-native/docs/platform-android-app.png)
+
+填写「应用签名」和「应用包名」。
+
+> **Note**
+> 你需要对你的应用签名并填写 signature。参见 [Sign your app](https://developer.android.com/studio/publish/app-signing) 以了解更多。
+
+在完成签名后，你可以执行 `signingReport` 任务来获取 signature。
+
+```bash
+./gradlew your-android-project:signingReport
+```
+
+「应用签名」源于相关构建变体报告中 `MD5` 的值。记得移除所有冒号并转换成小写。
+
+例如 `1A:2B:3C:4D` -> `1a2b3c4d`。
+
+#### 等待审核结果
+
+在填写完平台信息后，点按「提交审核」以继续。审核速度通常很快，1-2 天即可完成。
+
+我们怀疑每次提交审核者都是随机分配的，因为审核标准飘忽不定。第一次提交也许会被拒绝，但别灰心！陈述你的现状并询问审核者如何修改。
+
+## 编写连接器的 JSON
+
+在通过审核后，进入应用详情页生成 AppSecret；并用以下格式编写连接器的 JSON：
+
+```json
+{
+  "appId": "wx123456789",
+  "appSecret": "some-random-string",
+  "universalLink": "https://your.universal.link/path/"
+}
+```
+
+## 在你的应用中启用微信原生连接器
+
+### iOS
+
+我们假设你已经在你的应用中集成了 [Logto iOS SDK](https://docs.logto.io/zh-cn/docs/recipes/integrate-logto/ios/)。之后的流程很简单，你甚至不需要阅读微信 SDK 文档：
+
+**1. 添加 `LogtoSocialPluginWechat` 到你的 Xcode 项目**
+
+添加 framework：
+
+![Add framework](/packages/connector-wechat-native/docs/add-framework.png)
+
+并添加 `-ObjC` 至 Build Settings > Linking > Other Linker Flags：
+
+![Linker flags](/packages/connector-wechat-native/docs/linker-flags.png)
+
+**2. 将插件添加至 `LogtoClient` 的初始化项**
+
+```swift
+let logtoClient = LogtoClient(
+  useConfig: config,
+  socialPlugins: [LogtoSocialPluginWechat()]
+)
+```
+
+**3. 妥当处理 `onOpenURL`**
+
+> ℹ️ **Note**
+> 
+> `LogtoClient.handle(url:)` 这个函数将处理你启用的所有原生连接器。你只需要调用该函数一次即可。
+
+```swift
+// SwiftUI
+YourRootView()
+  .onOpenURL { url in
+      LogtoClient.handle(url: url)
+  }
+
+// or AppDelegate
+func application(_ app: UIApplication, open url: URL, options: /*...*/) -> Bool {
+  LogtoClient.handle(url: url)
+}
+```
+
+### Android
+
 TBD
+
+### 测试微信原生连接器
+
+大功告成。别忘了 [在登录体验中启用社交登录](https://docs.logto.io/zh-cn/docs/tutorials/get-started/enable-social-sign-in/#%E5%9C%A8%E7%99%BB%E5%BD%95%E4%BD%93%E9%AA%8C%E4%B8%AD%E5%90%AF%E7%94%A8%E8%BF%9E%E6%8E%A5%E5%99%A8)。
+
+在微信原生连接器启用后，你可以构建并运行你的应用看看是否生效。
+
+> ⚠️ **Caution**
+> 
+> 微信并不负责没装微信的设备。Logto 将在这些设备上隐藏本连接器（也是微信官方的 [推荐做法](https://developers.weixin.qq.com/doc/oplatform/Mobile_App/WeChat_Login/Development_Guide.html)）。
