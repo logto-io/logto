@@ -113,7 +113,7 @@ const translation = {
         subtitle:
           'Now follow the steps below to finish your app settings. Please select the SDK type to continue.',
         description_by_sdk:
-          'This quick start guide demonstrates how to integrate Logto to {{sdk}} application',
+          'This quick start guide demonstrates how to integrate Logto into {{sdk}} app',
       },
     },
     application_details: {
