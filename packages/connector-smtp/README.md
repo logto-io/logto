@@ -14,7 +14,7 @@ We are now offering guides on how to use the SMTP connector to send emails follo
 
 You can get a new Gmail account at [Gmail](https://mail.google.com/), or you can use an existing account if you have one.
 
-An [Gmail official post](https://support.google.com/a/answer/176600) shows how to determine required properties' values to operate Gmail via an SMTP connector.
+A [Gmail official post](https://support.google.com/a/answer/176600) shows how to determine required properties' values to operate Gmail via an SMTP connector.
 
 By following the post, your connector JSON should be like this:
 
@@ -118,6 +118,7 @@ After going through the guide, your connector JSON should look like this:
 
 ## References
 
+- [Gmail - Send email from a printer, scanner, or app](https://support.google.com/a/answer/176600)
 - [SendGrid - Integrating with the SMTP API](https://docs.sendgrid.com/for-developers/sending-email/integrating-with-the-smtp-api)
 - [Aliyun Direct Mail - Send emails using SMTP](https://www.alibabacloud.com/help/en/directmail/latest/send-emails-using-smtp)
 - [Aliyun Direct Mail - SMTP Reference](https://www.alibabacloud.com/help/en/directmail/latest/smtp-reference)
