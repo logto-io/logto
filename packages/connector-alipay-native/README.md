@@ -47,6 +47,10 @@ Add the framework:
 
 ![Add framework](/packages/connector-alipay-native/docs/add-framework.png)
 
+> ℹ️ **Note**
+> 
+> The plugin includes Alipay "minimalist SDK" (极简版 SDK). You can directly use `import AFServiceSDK` once imported the plugin.
+
 **2. Add the plugin to your `LogtoClient` init options**
 
 ```swift
