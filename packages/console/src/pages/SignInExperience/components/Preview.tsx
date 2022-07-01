@@ -1,5 +1,6 @@
 import { Language } from '@logto/phrases';
 import { AppearanceMode, ConnectorDTO, ConnectorMetadata, SignInExperience } from '@logto/schemas';
+import { conditional } from '@silverhand/essentials';
 import classNames from 'classnames';
 import dayjs from 'dayjs';
 import React, { useEffect, useMemo, useState, useRef, useCallback } from 'react';
@@ -176,6 +177,12 @@ const Preview = ({ signInExperience, className }: Props) => {
       </TabNav>
       <div
         className={classNames(styles.body, platform === 'desktopWeb' ? styles.web : styles.mobile)}
+        style={conditional(
+          platform === 'desktopWeb' && {
+            // Set background color to match iframe's background color on both dark and light mode.
+            backgroundColor: mode === AppearanceMode.DarkMode ? '#2A2C31' : '#e5e1ec',
+          }
+        )}
       >
         <div className={styles.deviceWrapper}>
           <div className={classNames(styles.device, styles[mode])}>
