@@ -8,6 +8,10 @@
   flex-direction: column;
 }
 
+.topbarShadow {
+  box-shadow: var(--shadow-2);
+}
+
 .content {
   flex-grow: 1;
   display: flex;
