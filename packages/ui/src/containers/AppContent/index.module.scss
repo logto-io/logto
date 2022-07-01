@@ -56,11 +56,10 @@ body {
   @include mobile.fonts;
   @include mobile.layout;
 
-
   .content {
     flex: 1;
     align-self: stretch;
-    padding: _.unit(6) _.unit(5);
+    padding: _.unit(4) _.unit(5);
     position: relative;
   }
 }
