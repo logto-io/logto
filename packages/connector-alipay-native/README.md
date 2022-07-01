@@ -68,7 +68,7 @@ We assume you have integrated [Logto Android SDK](https://docs.logto.io/docs/rec
 
 **1. Download the Alipay "minimalist SDK" and add it to your project**
 
-Download the Alipay "minimalist SDK" (极简版 SDK) from [Logto 3rd-party Social SDKs](https://github.com/logto-io/social-sdks/blob/master/alipay/android/alipaySdk-15.7.9-20200727142846.aar) and add it to your project under the `libs` folder:
+Download the Alipay "minimalist SDK" (极简版 SDK) from [Logto 3rd-party Social SDKs](https://github.com/logto-io/social-sdks/blob/master/alipay/android/alipaySdk-15.7.9-20200727142846.aar) to your project's `libs` folder:
 
 ```bash
 project-path/app/libs/alipaySdk-15.7.9-20200727142846.aar
@@ -77,6 +77,7 @@ project-path/app/libs/alipaySdk-15.7.9-20200727142846.aar
 **2. Add the Alipay "minimalist SDK" as a dependency**
 
 Open your `build.gradle` file:
+
 ```bash
 project-path/app/build.gradle
 ```
