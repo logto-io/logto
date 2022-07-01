@@ -11,7 +11,7 @@ export default function koaRootProxy<
 
     // Empty path return 404
     if (requestPath === '/') {
-      ctx.throw(404);
+      ctx.redirect('/welcome');
 
       return;
     }
