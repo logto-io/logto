@@ -46,7 +46,7 @@ We know it sounds scary, but don't worry. We'll handle it easily in this tutoria
 
 > 💡 **Tip**
 > 
-> You can skip some sections if you already finished.
+> You can skip some sections if you have already finished.
 
 ### Create an account
 
@@ -117,9 +117,9 @@ E.g. `1A:2B:3C:4D` -> `1a2b3c4d`.
 
 #### Waiting for the review result
 
-After filling out the platform info, click "Submit Review" to continue. Usually, the review goes fast, which will end within 1-2 days.
+After completing the platform info, click "Submit Review" to continue. Usually, the review goes fast, which will end within 1-2 days.
 
-We suspect the reviewer is allocated randomly on each submission, since the standard is floating. You may get rejected the first time, but don't give up! State your status quo and ask the reviewer how to modify it.
+We suspect the reviewer is allocated randomly on each submission since the standard is floating. You may get rejected the first time, but don't give up! State your status quo and ask the reviewer how to modify it.
 
 ## Compose the connector JSON
 
