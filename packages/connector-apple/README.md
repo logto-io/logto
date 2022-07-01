@@ -4,6 +4,8 @@ The official Logto connector for Apple social sign-in.
 
 Apple 社交登录 Logto 官方连接器 [中文文档](#)
 
+**Table of contents**
+
 - [Get started](#get-started)
   - [Enable Sign in with Apple for your app](#enable-sign-in-with-apple-for-your-app)
   - [Create an identifier](#create-an-identifier)
