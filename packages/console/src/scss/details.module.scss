@@ -4,6 +4,7 @@
   height: 100%;
   display: flex;
   flex-direction: column;
+  min-width: min-content;
 
   > *:not(:first-child) {
     margin-top: _.unit(4);
