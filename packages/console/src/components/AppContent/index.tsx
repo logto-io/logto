@@ -26,7 +26,7 @@ const AppContent = () => {
   const navigate = useNavigate();
   const { firstItem } = useSidebarMenuItems();
   const mainRef = useRef<HTMLDivElement>(null);
-  const { scrollTop } = useScroll(mainRef.current ?? undefined);
+  const { scrollTop } = useScroll(mainRef.current);
 
   useEffect(() => {
     if (!isAuthenticated) {
