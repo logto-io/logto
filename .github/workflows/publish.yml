@@ -10,9 +10,12 @@ on:
         description: Pre ID
         required: true
         default: alpha
+      append:
+        description: Additional options
 
 jobs:
   publish:
+    environment: release
     runs-on: ubuntu-latest
 
     steps:
@@ -32,7 +35,7 @@ jobs:
       - name: Publish to GitHub
         # add `no-verify-access` due to https://github.com/lerna/lerna/issues/2788
         run: |
-          pnpm -- lerna publish -m "release: %s" --conventional-commits --preid=${{ github.event.inputs.preid }} --no-verify-access --create-release=github --yes ${{ github.event.inputs.semver }}
+          pnpm lerna publish -m "release: %s" --conventional-commits --preid=${{ github.event.inputs.preid }} --no-verify-access --create-release=github --yes ${{ github.event.inputs.semver }}
         env:
           GH_TOKEN: ${{ secrets.BOT_PAT }}
 
