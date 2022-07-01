@@ -1,8 +1,21 @@
-### WeChat web connector
+# WeChat web connector
 
 The official Logto connector for WeChat social sign-in in web apps.
 
 微信 web 应用社交登录官方 Logto 连接器 [中文文档](#)
+
+**Table of contents**
+
+- [WeChat web connector](#wechat-web-connector)
+  - [Get started](#get-started)
+  - [Create a web app in the WeChat Open Platform](#create-a-web-app-in-the-wechat-open-platform)
+    - [Create an account](#create-an-account)
+    - [Create a web app](#create-a-web-app)
+      - [Basic info](#basic-info)
+      - [Website info](#website-info)
+      - [Waiting for the review result](#waiting-for-the-review-result)
+  - [Compose the connector JSON](#compose-the-connector-json)
+    - [Test WeChat web connector](#test-wechat-web-connector)
 
 ## Get started
 
