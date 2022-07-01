@@ -1,29 +1,29 @@
 import { useState, useEffect, useCallback } from 'react';
 
-const useScroll = (ref?: HTMLDivElement) => {
+const useScroll = (contentRef?: HTMLDivElement) => {
   const [scrollTop, setScrollTop] = useState(0);
   const [scrollLeft, setScrollLeft] = useState(0);
 
   const handleScroll = useCallback(() => {
-    if (!ref) {
+    if (!contentRef) {
       return;
     }
-    const { scrollTop, scrollLeft } = ref;
+    const { scrollTop, scrollLeft } = contentRef;
     setScrollTop(scrollTop);
     setScrollLeft(scrollLeft);
-  }, [ref]);
+  }, [contentRef]);
 
   useEffect(() => {
-    if (!ref) {
+    if (!contentRef) {
       return;
     }
 
-    ref.addEventListener('scroll', handleScroll);
+    contentRef.addEventListener('scroll', handleScroll);
 
     return () => {
-      ref.removeEventListener('scroll', handleScroll);
+      contentRef.removeEventListener('scroll', handleScroll);
     };
-  }, [handleScroll, ref]);
+  }, [handleScroll, contentRef]);
 
   return {
     scrollTop,
