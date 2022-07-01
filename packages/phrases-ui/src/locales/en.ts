@@ -9,7 +9,7 @@ const translation = {
   secondary: {
     sign_in_with: 'Sign in with {{methods, list(type: disjunction;)}}',
     social_bind_with:
-      'Already have an account? Sign in to bind {{methods, list(type: disjunction;)}} with your social identity.',
+      'Already have an account? Sign in to link {{methods, list(type: disjunction;)}} with your social identity.',
   },
   action: {
     sign_in: 'Sign In',
@@ -19,7 +19,7 @@ const translation = {
     enter_passcode: 'Enter Passcode',
     confirm: 'Confirm',
     cancel: 'Cancel',
-    bind: 'Binding with {{address}}',
+    bind: 'Link with {{address}}',
     back: 'Go Back',
     nav_back: 'Back',
     agree: 'Agree',
@@ -28,7 +28,6 @@ const translation = {
   },
   description: {
     email: 'email',
-    phone: 'phone',
     phone_number: 'phone number',
     reminder: 'Reminder',
     not_found: '404 Not Found',
@@ -47,10 +46,10 @@ const translation = {
       'The account with {{type}} {{value}} already exists, would you like to sign in?',
     sign_in_id_does_not_exists:
       'The account with {{type}} {{value}} does not exist, would you like to create a new account?',
-    bind_account_title: 'Binding Logto account',
-    social_create_account: 'No account? You can create a new account and bind.',
-    social_bind_account: 'Already have an account? Sign in to bind it with your social identity.',
-    social_bind_with_existing: 'We find a related account, you can bind it directly.',
+    bind_account_title: 'Link account',
+    social_create_account: 'No account? You can create a new account and link.',
+    social_bind_account: 'Already have an account? Sign in to link it with your social identity.',
+    social_bind_with_existing: 'We find a related account, you can link it directly.',
   },
   error: {
     username_password_mismatch: 'Username and password do not match',
@@ -66,7 +65,7 @@ const translation = {
     invalid_passcode: 'The passcode is invalid',
     invalid_connector_auth: 'The authorization is invalid',
     invalid_connector_request: 'The connector data is invalid',
-    unknown: 'Unknown error, please try again later.',
+    unknown: 'Unknown error. Please try again later.',
     invalid_session: 'Session not found. Please go back and sign in again.',
   },
 };

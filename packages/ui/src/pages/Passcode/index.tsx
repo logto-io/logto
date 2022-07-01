@@ -49,7 +49,7 @@ const Passcode = () => {
         <div className={styles.title}>{t('action.enter_passcode')}</div>
         <div className={styles.detail}>
           {t('description.enter_passcode', {
-            address: t(`description.${method === 'email' ? 'email' : 'phone'}`),
+            address: t(`description.${method === 'email' ? 'email' : 'phone_number'}`),
           })}
         </div>
         <PasscodeValidation type={type} method={method} target={target} />
