@@ -1,4 +1,4 @@
-import { Application, SnakeCaseOidcConfig } from '@logto/schemas';
+import { Application, ApplicationType, SnakeCaseOidcConfig } from '@logto/schemas';
 import React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -14,10 +14,11 @@ import { uriOriginValidator, uriValidator } from '@/utilities/validator';
 import * as styles from '../index.module.scss';
 
 type Props = {
+  applicationType: ApplicationType;
   oidcConfig: SnakeCaseOidcConfig;
 };
 
-const Settings = ({ oidcConfig }: Props) => {
+const Settings = ({ applicationType, oidcConfig }: Props) => {
   const {
     control,
     register,
@@ -81,7 +82,11 @@ const Settings = ({ oidcConfig }: Props) => {
               title="admin_console.application_details.redirect_uri"
               value={value}
               error={convertRhfErrorMessage(error?.message)}
-              placeholder={t('application_details.redirect_uri_placeholder')}
+              placeholder={
+                applicationType === ApplicationType.Native
+                  ? t('application_details.redirect_uri_placeholder_native')
+                  : t('application_details.redirect_uri_placeholder')
+              }
               onChange={onChange}
             />
           )}
