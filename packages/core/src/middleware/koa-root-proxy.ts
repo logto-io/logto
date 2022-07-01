@@ -9,7 +9,7 @@ export default function koaRootProxy<
   return async (ctx, next) => {
     const requestPath = ctx.request.path;
 
-    // Empty path return 404
+    // Redirect root path to the Admin Console welcome page
     if (requestPath === '/') {
       ctx.redirect('/welcome');
 
