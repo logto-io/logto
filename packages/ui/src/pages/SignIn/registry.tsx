@@ -114,7 +114,6 @@ export const CreateAccountLink = ({
           <div className={styles.placeHolder} />
           <TextLink
             className={styles.createAccount}
-            type="secondary"
             to={`/register/${primarySignInMethod}`}
             text="action.create_account"
           />

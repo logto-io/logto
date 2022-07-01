@@ -2,7 +2,7 @@
 
 .wrapper {
   @include _.full-page;
-  @include _.flex-column(normal ,normal);
+  @include _.flex-column(normal, normal);
   @include _.full-width;
 
   .terms {
@@ -39,6 +39,10 @@
 
   .divider {
     margin-bottom: _.unit(5);
+  }
+
+  .createAccount {
+    padding-bottom: env(safe-area-inset-bottom);
   }
 }
 
