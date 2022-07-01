@@ -14,13 +14,13 @@
     transform: translate(-50%, -50%);
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
     text-align: center;
     font-size: 14px;
     line-height: 20px;
 
     img {
+      margin-top: _.unit(25);
       width: 120px;
       height: 120px;
     }
