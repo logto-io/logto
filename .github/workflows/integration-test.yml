@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+      - 'push-action/**'
   pull_request:
 
 concurrency: 
