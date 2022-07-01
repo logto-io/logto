@@ -15,12 +15,9 @@ import { hasActiveUsers } from '@/queries/user';
 
 import { AnonymousRouter } from './types';
 
-export default function signInSettingsRoutes<T extends AnonymousRouter>(
-  router: T,
-  provider: Provider
-) {
+export default function wellKnownRoutes<T extends AnonymousRouter>(router: T, provider: Provider) {
   router.get(
-    '/sign-in-settings',
+    '/.well-known/sign-in-exp',
     async (ctx, next) => {
       const [signInExperience, connectorInstances, interaction] = await Promise.all([
         findDefaultSignInExperience(),

@@ -15,9 +15,9 @@ import sessionRoutes from '@/routes/session/session';
 import sessionSocialRoutes from '@/routes/session/social';
 import settingRoutes from '@/routes/setting';
 import signInExperiencesRoutes from '@/routes/sign-in-experience';
-import signInSettingsRoutes from '@/routes/sign-in-settings';
 import statusRoutes from '@/routes/status';
 import swaggerRoutes from '@/routes/swagger';
+import wellKnownRoutes from '@/routes/well-known';
 
 import adminUserRoutes from './admin-user';
 import logRoutes from './log';
@@ -49,7 +49,7 @@ const createRouters = (provider: Provider) => {
   meRoutes(meRouter);
 
   const anonymousRouter: AnonymousRouter = new Router();
-  signInSettingsRoutes(anonymousRouter, provider);
+  wellKnownRoutes(anonymousRouter, provider);
   statusRoutes(anonymousRouter);
   // The swagger.json should contain all API routers.
   swaggerRoutes(anonymousRouter, [sessionRouter, managementRouter, meRouter, anonymousRouter]);

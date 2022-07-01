@@ -15,7 +15,7 @@ import {
 import { getConnectorInstanceById } from '@/connectors';
 import RequestError from '@/errors/RequestError';
 import * as signInExperienceQueries from '@/queries/sign-in-experience';
-import signInSettingsRoutes from '@/routes/sign-in-settings';
+import wellKnownRoutes from '@/routes/well-known';
 import { createRequester } from '@/utils/test-utils';
 
 const getConnectorInstances = jest.fn(async () => [
@@ -58,13 +58,13 @@ jest.mock('oidc-provider', () => ({
   })),
 }));
 
-describe('GET /sign-in-settings', () => {
+describe('GET /.well-known/sign-in-exp', () => {
   afterEach(() => {
     jest.clearAllMocks();
   });
 
   const sessionRequest = createRequester({
-    anonymousRoutes: signInSettingsRoutes,
+    anonymousRoutes: wellKnownRoutes,
     provider: new Provider(''),
     middlewares: [
       async (ctx, next) => {
@@ -81,7 +81,7 @@ describe('GET /sign-in-settings', () => {
     .mockResolvedValue(mockSignInExperience);
 
   it('should return github and facebook connector instances', async () => {
-    const response = await sessionRequest.get('/sign-in-settings');
+    const response = await sessionRequest.get('/.well-known/sign-in-exp');
     expect(signInExperienceQuerySpyOn).toHaveBeenCalledTimes(1);
     expect(response.status).toEqual(200);
     expect(response.body).toMatchObject(
@@ -111,7 +111,7 @@ describe('GET /sign-in-settings', () => {
 
   it('should return admin console settings', async () => {
     interactionDetails.mockResolvedValue({ params: { client_id: adminConsoleApplicationId } });
-    const response = await sessionRequest.get('/sign-in-settings');
+    const response = await sessionRequest.get('/.well-known/sign-in-exp');
     expect(signInExperienceQuerySpyOn).toHaveBeenCalledTimes(1);
     expect(response.status).toEqual(200);
 
