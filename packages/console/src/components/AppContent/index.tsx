@@ -1,10 +1,12 @@
 import { LogtoClientError, useLogto } from '@logto/react';
+import { conditional } from '@silverhand/essentials';
 import React, { useEffect } from 'react';
 import { Outlet, useHref, useLocation, useNavigate } from 'react-router-dom';
 
 import AppError from '@/components/AppError';
 import AppLoading from '@/components/AppLoading';
 import SessionExpired from '@/components/SessionExpired';
+import useScroll from '@/hooks/use-scroll';
 import useSettings from '@/hooks/use-settings';
 import useUserPreferences from '@/hooks/use-user-preferences';
 
@@ -23,6 +25,8 @@ const AppContent = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { firstItem } = useSidebarMenuItems();
+  const mainRef = React.useRef<HTMLDivElement>(null);
+  const { scrollTop } = useScroll(mainRef.current ?? undefined);
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -51,10 +55,10 @@ const AppContent = () => {
 
   return (
     <div className={styles.app}>
-      <Topbar />
+      <Topbar className={conditional(scrollTop > 0 && styles.topbarShadow)} />
       <div className={styles.content}>
         <Sidebar />
-        <div className={styles.main}>
+        <div ref={mainRef} className={styles.main}>
           <Outlet />
         </div>
       </div>
