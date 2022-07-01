@@ -28,7 +28,7 @@ The official Logto connector for WeChat social sign-in in native apps (iOS and A
       - [平台信息](#平台信息)
       - [等待审核结果](#等待审核结果)
   - [编写连接器的 JSON](#编写连接器的-json)
-  - [在你的应用中启用微信原生连接器](#在你的应用中启用微信原生连接器)
+  - [在你的应用中启用微信原生登录](#在你的应用中启用微信原生登录)
     - [iOS](#ios-1)
     - [Android](#android-1)
     - [测试微信原生连接器](#测试微信原生连接器)
@@ -360,7 +360,7 @@ Once WeChat native connector is enabled, you can build and run your app to see i
 }
 ```
 
-## 在你的应用中启用微信原生连接器
+## 在你的应用中启用微信原生登录
 
 ### iOS
 
