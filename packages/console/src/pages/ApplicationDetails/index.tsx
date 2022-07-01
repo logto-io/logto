@@ -180,7 +180,7 @@ const ApplicationDetails = () => {
                   {isAdvancedSettings ? (
                     <AdvancedSettings oidcConfig={oidcConfig} />
                   ) : (
-                    <Settings oidcConfig={oidcConfig} />
+                    <Settings applicationType={data.type} oidcConfig={oidcConfig} />
                   )}
                 </div>
                 <div className={detailsStyles.footer}>
