@@ -18,14 +18,14 @@ const UserInfo = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const anchorRef = useRef<HTMLDivElement>(null);
   const [showDropDown, setShowDropdown] = useState(false);
-  const [user, setUser] = useState<Pick<IdTokenClaims, 'sub' | 'name' | 'avatar'>>();
+  const [user, setUser] = useState<Pick<IdTokenClaims, 'sub' | 'username' | 'avatar'>>();
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     (async () => {
       if (isAuthenticated) {
         const userInfo = getIdTokenClaims();
-        setUser(userInfo ?? { sub: '', name: 'N/A' }); // Provide a fallback to avoid infinite loading state
+        setUser(userInfo ?? { sub: '', username: 'N/A' }); // Provide a fallback to avoid infinite loading state
       }
     })();
   }, [api, isAuthenticated, getIdTokenClaims]);
@@ -34,7 +34,7 @@ const UserInfo = () => {
     return <UserInfoSkeleton />;
   }
 
-  const { sub: id, name, avatar } = user;
+  const { sub: id, username, avatar } = user;
 
   return (
     <>
@@ -47,7 +47,7 @@ const UserInfo = () => {
       >
         <img src={avatar || generateAvatarPlaceHolderById(id)} />
         <div className={styles.wrapper}>
-          <div className={styles.name}>{name || t('users.unnamed')}</div>
+          <div className={styles.name}>{username}</div>
         </div>
       </div>
       <Dropdown
