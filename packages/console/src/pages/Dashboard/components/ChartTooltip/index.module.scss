@@ -1,7 +1,7 @@
 @use '@/scss/underscore' as _;
 
 .chartTooltip {
-  background: var(--color-on-primary);
+  background: var(--color-float);
   border: 1px solid var(--color-divider);
   box-shadow: var(--shadow-2);
   border-radius: 4px;
