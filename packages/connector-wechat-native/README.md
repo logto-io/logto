@@ -432,7 +432,8 @@ dependencies {
 
 **2. 将 `WXEntryActivity` 引入到项目中**
 
-在项目的根 package 下创建一个 `wxapi` package，并在`wxapi` package 中创建 `WXEntryActivity`（以 `com.sample.app` 为例）：
+在项目的根 package 下创建一个 `wxapi` package，并在`wxapi` package 中创建 `WXEntryActivity`。
+以 `com.sample.app` 为例）：
 
 ```kotlin
 // WXEntryActivity.kt
