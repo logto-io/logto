@@ -80,18 +80,6 @@ const Main = () => {
         >
           {t('sign_out')}
         </div>
-        <div className={styles.continue}>
-          <div className={styles.hr} />
-          {t('continue_explore')}
-          <div className={styles.hr} />
-        </div>
-        <div className={styles.actions}>
-          <a href="#">{t('customize_sign_in_experience')}</a>
-          <span />
-          <a href="#">{t('enable_passwordless')}</a>
-          <span />
-          <a href="#">{t('add_social_connector')}</a>
-        </div>
       </div>
     </div>
   );
