@@ -17,9 +17,10 @@ type Props = {
   password: string;
   title: AdminConsoleKey;
   onClose: () => void;
+  passwordLabel?: string;
 };
 
-const CreateSuccess = ({ username, password, title, onClose }: Props) => {
+const CreateSuccess = ({ username, password, title, onClose, passwordLabel }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const [passwordVisible, setPasswordVisible] = useState(false);
 
@@ -28,7 +29,9 @@ const CreateSuccess = ({ username, password, title, onClose }: Props) => {
       return null;
     }
     await navigator.clipboard.writeText(
-      `User username: ${username}\nInitial password: ${password}`
+      `${t('user_details.created_username')} ${username}\n${
+        passwordLabel ?? t('user_details.created_password')
+      } ${password}`
     );
     toast.success(t('general.copied'));
   };
@@ -56,7 +59,7 @@ const CreateSuccess = ({ username, password, title, onClose }: Props) => {
             <div className={styles.infoContent}>{username}</div>
           </div>
           <div className={styles.infoLine}>
-            <div>{t('user_details.created_password')}</div>
+            <div>{passwordLabel ?? t('user_details.created_password')}</div>
             <div className={styles.infoContent}>
               {passwordVisible ? password : password.replace(/./g, '*')}
             </div>

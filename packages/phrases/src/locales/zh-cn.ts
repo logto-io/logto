@@ -260,6 +260,7 @@ const translation = {
         title: '确定要重置密码？',
         content: '本操作不可撤销，将会重置用户的登录信息。',
         congratulations: '该用户已被重置',
+        new_password: '新密码：',
       },
       tab_logs: '用户日志',
       field_email: '主要邮箱',
