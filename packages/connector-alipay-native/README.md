@@ -62,6 +62,36 @@ let logtoClient = LogtoClient(
 
 Where `callbackScheme` is one of the [custom URL Schemes](https://developer.apple.com/documentation/xcode/defining-a-custom-url-scheme-for-your-app) that can navigate to your app.
 
+### Android
+
+We assume you have integrated [Logto Android SDK](https://docs.logto.io/docs/recipes/integrate-logto/android) in your app. In this case, things are pretty simple, and you don't even need to read the Alipay SDK doc:
+
+**1. Download the Alipay "minimalist SDK" and add it to your project**
+
+Download the Alipay "minimalist SDK" (极简版 SDK) from [Logto 3rd-party Social SDKs](https://github.com/logto-io/social-sdks/blob/master/alipay/android/alipaySdk-15.7.9-20200727142846.aar) and add it to your project under the `libs` folder:
+
+```bash
+project-path/app/libs/alipaySdk-15.7.9-20200727142846.aar
+```
+
+**2. Add the Alipay "minimalist SDK" as a dependency**
+
+Open your `build.gradle` file:
+```bash
+project-path/app/build.gradle
+```
+
+Add the dependency:
+
+```kotlin
+dependencies {
+  // ...
+  implementation(files("./libs/alipaySdk-15.7.9-20200727142846.aar"))  // kotlin-script
+  // or
+  implementation files('./libs/alipaySdk-15.7.9-20200727142846.aar')  // groovy-script
+}
+```
+
 ### Test Alipay native connector
 
 That's it. Don't forget to [Enable connector in sign-in experience](https://docs.logto.io/docs/tutorials/get-started/enable-social-sign-in#enable-connector-in-sign-in-experience).
