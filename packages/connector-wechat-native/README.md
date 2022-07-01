@@ -91,7 +91,7 @@ Fill out _Bundle ID_, _Test version Bundle ID_, and _Universal Links_ (actually,
 
 > 💡 **Tip**
 > 
-> WeChat requires Universal Link for native sign-in. If you haven't set up or don't know it, please refer to the [Apple official doc](https://developer.apple.com/ios/universal-links/).
+> WeChat requires universal link for native sign-in. If you haven't set up or don't know it, please refer to the [Apple official doc](https://developer.apple.com/ios/universal-links/).
 
 **Android app**
 
@@ -139,7 +139,25 @@ Once passed the review, go to the application details page and generate an AppSe
 
 We assume you have integrated [Logto iOS SDK](https://docs.logto.io/docs/recipes/integrate-logto/ios) in your app. In this case, things are pretty simple, and you don't even need to read the WeChat SDK doc:
 
-**1. Add `LogtoSocialPluginWechat` to your Xcode project**
+**1. Configure universal link and URL scheme in your Xcode project**
+
+In the Xcode project -> Signing & Capabilities tab, add the "Associated Domains" capability and the universal link you configured before.
+
+![Universal link](/packages/connector-wechat-native/docs/universal-link.png)
+
+Then goes to the "Info" tab, add a [custom URL scheme](https://developer.apple.com/documentation/xcode/defining-a-custom-url-scheme-for-your-app) with the WeChat App ID.
+
+![Custom URL scheme](/packages/connector-wechat-native/docs/custom-url-scheme.png)
+
+Finally open your `Info.plist`, add `weixinULAPI` and `weixin` under `LSApplicationQueriesSchemes`.
+
+![Plist](/packages/connector-wechat-native/docs/plist.png)
+
+> 🤦 **Note**
+> 
+> We know these actions are not very reasonable, but this is the minimum workable solution we found. See the [magical official guide](https://developers.weixin.qq.com/doc/oplatform/en/Mobile_App/Access_Guide/iOS.html) for more info.
+
+**2. Add `LogtoSocialPluginWechat` to your Xcode project**
 
 Add the framework:
 
@@ -149,7 +167,11 @@ And add `-ObjC` to your Build Settings > Linking > Other Linker Flags:
 
 ![Linker flags](/packages/connector-wechat-native/docs/linker-flags.png)
 
-**2. Add the plugin to your `LogtoClient` init options**
+> ℹ️ **Note**
+> 
+> The plugin includes WeChat Open SDK 1.9.2. You can directly use `import WechatOpenSDK` once imported the plugin.
+
+**3. Add the plugin to your `LogtoClient` init options**
 
 ```swift
 let logtoClient = LogtoClient(
@@ -158,7 +180,7 @@ let logtoClient = LogtoClient(
 )
 ```
 
-**3. Handle `onOpenURL` properly**
+**4. Handle `onOpenURL` properly**
 
 > ℹ️ **Note**
 > 
@@ -319,7 +341,7 @@ Once WeChat native connector is enabled, you can build and run your app to see i
 
 > 💡 **Tip**
 > 
-> 微信要求在原生应用中使用 Universal Link 来登录。如果你还没有设置好或者不知道这是什么，请参见 [苹果官方文档](https://developer.apple.com/ios/universal-links/)。
+> 微信要求在原生应用中使用 universal link 来登录。如果你还没有设置好或者不知道这是什么，请参见 [苹果官方文档](https://developer.apple.com/ios/universal-links/)。
 
 **Android 应用**
 
@@ -366,7 +388,25 @@ Once WeChat native connector is enabled, you can build and run your app to see i
 
 我们假设你已经在你的应用中集成了 [Logto iOS SDK](https://docs.logto.io/zh-cn/docs/recipes/integrate-logto/ios/)。之后的流程很简单，你甚至不需要阅读微信 SDK 文档：
 
-**1. 添加 `LogtoSocialPluginWechat` 到你的 Xcode 项目**
+**1. 在你的 Xcode 工程中配置 universal link 与 URL scheme**
+
+在 Xcode 工程 -> Signing & Capabilities 标签页中添加 "Associated Domains" capability 与你之前配置的 universal link。
+
+![Universal link](/packages/connector-wechat-native/docs/universal-link.png)
+
+接着切换到 "Info" 标签页，用微信 App ID 添加一个 [custom URL scheme](https://developer.apple.com/documentation/xcode/defining-a-custom-url-scheme-for-your-app)。
+
+![Custom URL scheme](/packages/connector-wechat-native/docs/custom-url-scheme.png)
+
+最终打开 `Info.plist`，在 `LSApplicationQueriesSchemes` 中添加 `weixinULAPI` 和 `weixin`。
+
+![Plist](/packages/connector-wechat-native/docs/plist.png)
+
+> 🤦 **Note**
+> 
+> 我们知道这些操作不是特别合理，但是这是我们找到的最小可工作方案。欲知详情请见 [奇妙的微信官方文档](https://developers.weixin.qq.com/doc/oplatform/Mobile_App/Access_Guide/iOS.html)。
+
+**2. 添加 `LogtoSocialPluginWechat` 到你的 Xcode 工程**
 
 添加 framework：
 
@@ -376,7 +416,11 @@ Once WeChat native connector is enabled, you can build and run your app to see i
 
 ![Linker flags](/packages/connector-wechat-native/docs/linker-flags.png)
 
-**2. 将插件添加至 `LogtoClient` 的初始化项**
+> ℹ️ **Note**
+> 
+> 该插件已包含 WeChat Open SDK 1.9.2。在引入插件后你可以直接使用 `import WechatOpenSDK`。
+
+**3. 将插件添加至 `LogtoClient` 的初始化项**
 
 ```swift
 let logtoClient = LogtoClient(
@@ -385,7 +429,7 @@ let logtoClient = LogtoClient(
 )
 ```
 
-**3. 妥当处理 `onOpenURL`**
+**4. 妥当处理 `onOpenURL`**
 
 > ℹ️ **Note**
 > 
