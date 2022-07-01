@@ -1,9 +1,11 @@
 import { ConnectorDTO } from '@logto/schemas';
 import classNames from 'classnames';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import useSWR from 'swr';
 
+import { connectorPlatformLabel } from '@/consts';
 import ConnectorPlatformIcon from '@/icons/ConnectorPlatformIcon';
 
 import * as styles from './index.module.scss';
@@ -14,6 +16,7 @@ type Props = {
 };
 
 const ConnectorTabs = ({ target, connectorId }: Props) => {
+  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { data } = useSWR<ConnectorDTO[]>(`/api/connectors?target=${target}`);
 
   if (!data) {
@@ -35,7 +38,7 @@ const ConnectorTabs = ({ target, connectorId }: Props) => {
                 <ConnectorPlatformIcon platform={connector.platform} />
               </div>
             )}
-            {connector.platform}
+            {connector.platform && t(connectorPlatformLabel[connector.platform])}
           </Link>
         ))}
     </div>
