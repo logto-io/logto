@@ -1,6 +1,5 @@
 @use '@/scss/underscore' as _;
 
-
 .socialButton {
   border-radius: 50%;
   @include _.flex-column;
@@ -9,6 +8,10 @@
   width: 40px;
   height: 40px;
   cursor: pointer;
+
+  &.inverse {
+    background: #fff;
+  }
 }
 
 .icon {
@@ -20,13 +23,11 @@
 
 :global(body.desktop) {
   .socialButton {
-    background: var(--color-layer);
-
-    &:active {
+    &:not(.inverse):active {
       background: var(--color-pressed);
     }
 
-    &:hover:not(:active) {
+    &:not(.inverse):hover:not(:active) {
       background: var(--color-hover);
     }
   }

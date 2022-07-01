@@ -6,6 +6,7 @@ import IconButton from '@/components/Button/IconButton';
 import SocialIconButton from '@/components/Button/SocialIconButton';
 import useSocial from '@/hooks/use-social';
 import { ConnectorData } from '@/types';
+import { isAppleConnector } from '@/utils/social-connectors';
 
 import * as styles from './index.module.scss';
 
@@ -24,20 +25,25 @@ const SocialSignInIconList = ({
   moreButtonRef,
   onMoreButtonClick,
 }: Props) => {
-  const { invokeSocialSignIn } = useSocial();
+  const { invokeSocialSignIn, theme } = useSocial();
 
   return (
     <div className={classNames(styles.socialIconList, className)}>
-      {connectors.map((connector) => (
-        <SocialIconButton
-          key={connector.id}
-          className={styles.socialButton}
-          connector={connector}
-          onClick={() => {
-            void invokeSocialSignIn(connector);
-          }}
-        />
-      ))}
+      {connectors.map((connector) => {
+        const { id, target, logo, logoDark } = connector;
+
+        return (
+          <SocialIconButton
+            key={id}
+            className={styles.socialButton}
+            logo={(theme === 'dark' && !isAppleConnector(target) && logoDark) || logo}
+            target={target}
+            onClick={() => {
+              void invokeSocialSignIn(connector);
+            }}
+          />
+        );
+      })}
       {hasMore && (
         <IconButton ref={moreButtonRef} className={styles.moreButton} onClick={onMoreButtonClick}>
           <MoreSocialIcon />

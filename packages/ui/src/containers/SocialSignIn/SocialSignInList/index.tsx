@@ -25,7 +25,7 @@ const SocialSignInList = ({
   onSocialSignInCallback,
 }: Props) => {
   const [expand, setExpand] = useState(false);
-  const { invokeSocialSignIn } = useSocial();
+  const { invokeSocialSignIn, theme } = useSocial();
   const isOverSize = socialConnectors.length > defaultSize;
   const displayAll = !isOverSize || !isCollapseEnabled;
 
@@ -39,17 +39,23 @@ const SocialSignInList = ({
 
   return (
     <div className={classNames(styles.socialLinkList, className)}>
-      {displayConnectors.map((connector) => (
-        <SocialLinkButton
-          key={connector.id}
-          className={styles.socialLinkButton}
-          connector={connector}
-          onClick={() => {
-            void invokeSocialSignIn(connector);
-            onSocialSignInCallback?.();
-          }}
-        />
-      ))}
+      {displayConnectors.map((connector) => {
+        const { id, name, logo, logoDark, target } = connector;
+
+        return (
+          <SocialLinkButton
+            key={id}
+            className={styles.socialLinkButton}
+            name={name}
+            logo={(theme === 'dark' && logoDark) || logo}
+            target={target}
+            onClick={() => {
+              void invokeSocialSignIn(connector);
+              onSocialSignInCallback?.();
+            }}
+          />
+        );
+      })}
       {!displayAll && (
         <IconButton
           className={classNames(styles.expandIcon, expand && styles.expanded)}

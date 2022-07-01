@@ -28,7 +28,12 @@ describe('Button Component', () => {
   it('render SocialLinkButton', () => {
     const connector = mockSocialConnectorData;
     const { queryByText, container } = render(
-      <SocialLinkButton connector={connector} onClick={onClick} />
+      <SocialLinkButton
+        logo={connector.logo}
+        name={connector.name}
+        target={connector.target}
+        onClick={onClick}
+      />
     );
 
     expect(queryByText('action.sign_in_with')).not.toBeNull();
