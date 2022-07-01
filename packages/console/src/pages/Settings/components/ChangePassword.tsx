@@ -58,6 +58,7 @@ const ChangePassword = () => {
       >
         <ModalLayout
           title="settings.change_modal_title"
+          subtitle="settings.change_modal_description"
           footer={
             <Button
               type="primary"
@@ -70,8 +71,7 @@ const ChangePassword = () => {
             setIsOpen(false);
           }}
         >
-          <div className={styles.modal}>
-            <div className={styles.description}>{t('settings.change_modal_description')}</div>
+          <div>
             <FormField title="admin_console.settings.new_password">
               <TextInput {...register('password', { required: true })} type="password" />
             </FormField>
