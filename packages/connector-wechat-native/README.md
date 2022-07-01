@@ -390,7 +390,7 @@ Once WeChat native connector is enabled, you can build and run your app to see i
 
 **1. 在你的 Xcode 工程中配置 universal link 与 URL scheme**
 
-在 Xcode 工程 -> Signing & Capabilities 标签页，添加 "Associated Domains" capability 与你之前配置的 universal link。
+在 Xcode 工程 -> Signing & Capabilities 标签页中添加 "Associated Domains" capability 与你之前配置的 universal link。
 
 ![Universal link](/packages/connector-wechat-native/docs/universal-link.png)
 
