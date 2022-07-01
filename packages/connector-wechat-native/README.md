@@ -406,7 +406,78 @@ func application(_ app: UIApplication, open url: URL, options: /*...*/) -> Bool 
 
 ### Android
 
-TBD
+我们假设你已经在你的应用中集成了 [Logto Android SDK](https://docs.logto.io/docs/recipes/integrate-logto/android)。之后的流程很简单，你甚至不需要阅读微信 SDK 文档：
+
+**1. 添加 `Wechat Open SDK` 到你的项目中**
+
+确保 `mavenCentral()` 已经被添加至你 Gradle 项目中的 repositories 中:
+
+```kotlin
+repositories {
+  // ...
+  mavenCentral()
+}
+```
+
+添加 Wechat Open SDK 依赖:
+
+```kotlin
+dependencies {
+  // ...
+  api("com.tencent.mm.opensdk:wechat-sdk-android:6.8.0")  // kotlin-script
+  // 或
+  api 'com.tencent.mm.opensdk:wechat-sdk-android:6.8.0'   // groovy-script
+}
+```
+
+**2. 将 `WXEntryActivity` 引入到项目中**
+
+在项目的根 package 下创建一个 `wxapi` package，并在`wxapi` package 中创建 `WXEntryActivity`。
+以 `com.sample.app` 为例）：
+
+```kotlin
+// WXEntryActivity.kt
+package com.sample.app.wxapi
+
+import io.logto.sdk.android.auth.social.wechat.WechatSocialResultActivity
+
+class WXEntryActivity: WechatSocialResultActivity()
+```
+
+```java
+// WXEntryActivity.java
+package com.sample.app.wxapi
+
+import io.logto.sdk.android.auth.social.wechat.WechatSocialResultActivity
+
+public class WXEntryActivity extends WechatSocialResultActivity {}
+```
+
+最终 `WXEntryActivity` 在项目中位置应该是这样的（以 Kotlin 为例）：
+
+```bash
+src/main/kotlin/com/sample/app/wxapi/WXEntryActivity.kt
+```
+
+**3. 编辑 `AndroidManifest.xml`**
+
+将以下代码添加到项目的 `AndroidManifest.xml` 中:
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+  package="com.sample.app">
+  <queries>
+    <!-- 添加的代码 -->
+    <package android:name="com.tencent.mm" />
+  </queries>
+
+  <application>
+    <!-- 添加的代码 -->
+    <activity android:name=".wxapi.WXEntryActivity" android:exported="true"/>
+  </application>
+</manifest>
+```
 
 ### 测试微信原生连接器
 
