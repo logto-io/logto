@@ -7,7 +7,6 @@
   "private": true,
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "version": "pnpm i --frozen-lockfile=false",
     "precommit": "lint-staged",
     "start": "parcel src/index.html",
     "dev": "cross-env PORT=5003 parcel src/index.html --public-url /demo-app --no-cache --hmr-port 6003",
