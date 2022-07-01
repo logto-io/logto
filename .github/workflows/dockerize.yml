@@ -27,6 +27,7 @@ jobs:
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
             type=semver,pattern={{major}}
+            type=raw,value=dev
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
@@ -47,7 +48,7 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
       
       - name: Compose up
-        run: docker compose up -d
+        run: TAG=dev docker compose up -d
 
       - name: Sleep for 30 seconds
         run: sleep 30s
