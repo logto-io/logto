@@ -6,13 +6,13 @@
   "exports": "./lib/index.js",
   "author": "Silverhand Inc. <contact@silverhand.io>",
   "license": "MPL-2.0",
+  "private": true,
   "files": [
     "lib",
     "docs",
     "logo.svg",
     "README.md"
   ],
-  "private": false,
   "scripts": {
     "precommit": "lint-staged",
     "build": "rm -rf lib/ && tsc -p tsconfig.build.json",
