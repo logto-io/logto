@@ -21,8 +21,8 @@ importers:
   packages/connector-alipay:
     specifiers:
       '@jest/types': ^27.5.1
-      '@logto/connector-types': ^0.1.0
-      '@logto/shared': ^0.1.0
+      '@logto/connector-types': ^0.1.1-alpha.0
+      '@logto/shared': ^0.1.1-alpha.0
       '@shopify/jest-koa-mocks': ^4.0.0
       '@silverhand/eslint-config': ^0.14.0
       '@silverhand/essentials': ^1.1.0
@@ -80,8 +80,8 @@ importers:
   packages/connector-alipay-native:
     specifiers:
       '@jest/types': ^27.5.1
-      '@logto/connector-types': ^0.1.0
-      '@logto/shared': ^0.1.0
+      '@logto/connector-types': ^0.1.1-alpha.0
+      '@logto/shared': ^0.1.1-alpha.0
       '@shopify/jest-koa-mocks': ^3.0.8
       '@silverhand/eslint-config': ^0.14.0
       '@silverhand/essentials': ^1.1.0
@@ -139,8 +139,8 @@ importers:
   packages/connector-aliyun-dm:
     specifiers:
       '@jest/types': ^27.5.1
-      '@logto/connector-types': ^0.1.0
-      '@logto/shared': ^0.1.0
+      '@logto/connector-types': ^0.1.1-alpha.0
+      '@logto/shared': ^0.1.1-alpha.0
       '@silverhand/eslint-config': ^0.14.0
       '@silverhand/essentials': ^1.1.0
       '@silverhand/jest-config': ^0.14.0
@@ -180,9 +180,9 @@ importers:
   packages/connector-aliyun-sms:
     specifiers:
       '@jest/types': ^27.5.1
-      '@logto/connector-types': ^0.1.0
-      '@logto/schemas': ^0.1.0
-      '@logto/shared': ^0.1.0
+      '@logto/connector-types': ^0.1.1-alpha.0
+      '@logto/schemas': ^0.1.1-alpha.0
+      '@logto/shared': ^0.1.1-alpha.0
       '@silverhand/eslint-config': ^0.14.0
       '@silverhand/essentials': ^1.1.0
       '@silverhand/jest-config': ^0.14.0
@@ -223,9 +223,9 @@ importers:
   packages/connector-apple:
     specifiers:
       '@jest/types': ^27.5.1
-      '@logto/connector-types': ^0.1.0
-      '@logto/schemas': ^0.1.0
-      '@logto/shared': ^0.1.0
+      '@logto/connector-types': ^0.1.1-alpha.0
+      '@logto/schemas': ^0.1.1-alpha.0
+      '@logto/shared': ^0.1.1-alpha.0
       '@silverhand/eslint-config': ^0.14.0
       '@silverhand/essentials': ^1.1.0
       '@silverhand/jest-config': ^0.14.0
@@ -272,9 +272,9 @@ importers:
   packages/connector-facebook:
     specifiers:
       '@jest/types': ^27.5.1
-      '@logto/connector-types': ^0.1.0
-      '@logto/schemas': ^0.1.0
-      '@logto/shared': ^0.1.0
+      '@logto/connector-types': ^0.1.1-alpha.0
+      '@logto/schemas': ^0.1.1-alpha.0
+      '@logto/shared': ^0.1.1-alpha.0
       '@silverhand/eslint-config': ^0.14.0
       '@silverhand/essentials': ^1.1.0
       '@silverhand/jest-config': ^0.14.0
@@ -319,9 +319,9 @@ importers:
   packages/connector-github:
     specifiers:
       '@jest/types': ^27.5.1
-      '@logto/connector-types': ^0.1.0
-      '@logto/schemas': ^0.1.0
-      '@logto/shared': ^0.1.0
+      '@logto/connector-types': ^0.1.1-alpha.0
+      '@logto/schemas': ^0.1.1-alpha.0
+      '@logto/shared': ^0.1.1-alpha.0
       '@silverhand/eslint-config': ^0.14.0
       '@silverhand/essentials': ^1.1.0
       '@silverhand/jest-config': ^0.14.0
@@ -368,9 +368,9 @@ importers:
   packages/connector-google:
     specifiers:
       '@jest/types': ^27.5.1
-      '@logto/connector-types': ^0.1.0
-      '@logto/schemas': ^0.1.0
-      '@logto/shared': ^0.1.0
+      '@logto/connector-types': ^0.1.1-alpha.0
+      '@logto/schemas': ^0.1.1-alpha.0
+      '@logto/shared': ^0.1.1-alpha.0
       '@silverhand/eslint-config': ^0.14.0
       '@silverhand/essentials': ^1.1.0
       '@silverhand/jest-config': ^0.14.0
@@ -415,8 +415,8 @@ importers:
   packages/connector-sendgrid-mail:
     specifiers:
       '@jest/types': ^27.5.1
-      '@logto/connector-types': ^0.1.0
-      '@logto/shared': ^0.1.0
+      '@logto/connector-types': ^0.1.1-alpha.0
+      '@logto/shared': ^0.1.1-alpha.0
       '@silverhand/eslint-config': ^0.14.0
       '@silverhand/essentials': ^1.1.6
       '@silverhand/jest-config': ^0.14.0
@@ -456,8 +456,8 @@ importers:
   packages/connector-smtp:
     specifiers:
       '@jest/types': ^27.5.1
-      '@logto/connector-types': ^0.1.0
-      '@logto/shared': ^0.1.0
+      '@logto/connector-types': ^0.1.1-alpha.0
+      '@logto/shared': ^0.1.1-alpha.0
       '@silverhand/eslint-config': ^0.14.0
       '@silverhand/essentials': ^1.1.6
       '@silverhand/jest-config': ^0.14.0
@@ -499,8 +499,8 @@ importers:
   packages/connector-twilio-sms:
     specifiers:
       '@jest/types': ^27.5.1
-      '@logto/connector-types': ^0.1.0
-      '@logto/shared': ^0.1.0
+      '@logto/connector-types': ^0.1.1-alpha.0
+      '@logto/shared': ^0.1.1-alpha.0
       '@silverhand/eslint-config': ^0.14.0
       '@silverhand/essentials': ^1.1.6
       '@silverhand/jest-config': ^0.14.0
@@ -540,7 +540,7 @@ importers:
   packages/connector-types:
     specifiers:
       '@jest/types': ^27.5.1
-      '@logto/phrases': ^0.1.0
+      '@logto/phrases': ^0.1.1-alpha.0
       '@shopify/jest-koa-mocks': ^4.0.0
       '@silverhand/eslint-config': ^0.14.0
       '@silverhand/essentials': ^1.1.6
@@ -573,9 +573,9 @@ importers:
   packages/connector-wechat:
     specifiers:
       '@jest/types': ^27.5.1
-      '@logto/connector-types': ^0.1.0
-      '@logto/schemas': ^0.1.0
-      '@logto/shared': ^0.1.0
+      '@logto/connector-types': ^0.1.1-alpha.0
+      '@logto/schemas': ^0.1.1-alpha.0
+      '@logto/shared': ^0.1.1-alpha.0
       '@silverhand/eslint-config': ^0.14.0
       '@silverhand/essentials': ^1.1.0
       '@silverhand/jest-config': ^0.14.0
@@ -620,9 +620,9 @@ importers:
   packages/connector-wechat-native:
     specifiers:
       '@jest/types': ^27.5.1
-      '@logto/connector-types': ^0.1.0
-      '@logto/schemas': ^0.1.0
-      '@logto/shared': ^0.1.0
+      '@logto/connector-types': ^0.1.1-alpha.0
+      '@logto/schemas': ^0.1.1-alpha.0
+      '@logto/shared': ^0.1.1-alpha.0
       '@silverhand/eslint-config': ^0.14.0
       '@silverhand/essentials': ^1.1.0
       '@silverhand/jest-config': ^0.14.0
@@ -667,10 +667,10 @@ importers:
   packages/console:
     specifiers:
       '@fontsource/roboto-mono': ^4.5.7
-      '@logto/phrases': ^0.1.0
+      '@logto/phrases': ^0.1.1-alpha.0
       '@logto/react': ^0.2.2
-      '@logto/schemas': ^0.1.0
-      '@logto/shared': ^0.1.0
+      '@logto/schemas': ^0.1.1-alpha.0
+      '@logto/shared': ^0.1.1-alpha.0
       '@mdx-js/react': ^1.6.22
       '@parcel/core': 2.6.2
       '@parcel/transformer-mdx': 2.6.2
@@ -794,23 +794,23 @@ importers:
 
   packages/core:
     specifiers:
-      '@logto/connector-alipay': ^0.1.0
-      '@logto/connector-alipay-native': ^0.1.0
-      '@logto/connector-aliyun-dm': ^0.1.0
-      '@logto/connector-aliyun-sms': ^0.1.0
-      '@logto/connector-apple': ^0.1.0
-      '@logto/connector-facebook': ^0.1.0
-      '@logto/connector-github': ^0.1.0
-      '@logto/connector-google': ^0.1.0
-      '@logto/connector-sendgrid-email': ^0.1.0
-      '@logto/connector-smtp': ^0.1.0
-      '@logto/connector-twilio-sms': ^0.1.0
-      '@logto/connector-types': ^0.1.0
-      '@logto/connector-wechat': ^0.1.0
-      '@logto/connector-wechat-native': ^0.1.0
-      '@logto/phrases': ^0.1.0
-      '@logto/schemas': ^0.1.0
-      '@logto/shared': ^0.1.0
+      '@logto/connector-alipay': ^0.1.1-alpha.0
+      '@logto/connector-alipay-native': ^0.1.1-alpha.0
+      '@logto/connector-aliyun-dm': ^0.1.1-alpha.0
+      '@logto/connector-aliyun-sms': ^0.1.1-alpha.0
+      '@logto/connector-apple': ^0.1.1-alpha.0
+      '@logto/connector-facebook': ^0.1.1-alpha.0
+      '@logto/connector-github': ^0.1.1-alpha.0
+      '@logto/connector-google': ^0.1.1-alpha.0
+      '@logto/connector-sendgrid-email': ^0.1.1-alpha.0
+      '@logto/connector-smtp': ^0.1.1-alpha.0
+      '@logto/connector-twilio-sms': ^0.1.1-alpha.0
+      '@logto/connector-types': ^0.1.1-alpha.0
+      '@logto/connector-wechat': ^0.1.1-alpha.0
+      '@logto/connector-wechat-native': ^0.1.1-alpha.0
+      '@logto/phrases': ^0.1.1-alpha.0
+      '@logto/schemas': ^0.1.1-alpha.0
+      '@logto/shared': ^0.1.1-alpha.0
       '@shopify/jest-koa-mocks': ^4.0.0
       '@silverhand/eslint-config': ^0.14.0
       '@silverhand/essentials': ^1.1.6
@@ -963,10 +963,10 @@ importers:
 
   packages/demo-app:
     specifiers:
-      '@logto/phrases': ^0.1.0
+      '@logto/phrases': ^0.1.1-alpha.0
       '@logto/react': ^0.2.2
-      '@logto/schemas': ^0.1.0
-      '@logto/shared': ^0.1.0
+      '@logto/schemas': ^0.1.1-alpha.0
+      '@logto/shared': ^0.1.1-alpha.0
       '@parcel/core': 2.6.2
       '@parcel/transformer-sass': 2.6.2
       '@silverhand/eslint-config': ^0.14.0
@@ -1093,10 +1093,10 @@ importers:
 
   packages/schemas:
     specifiers:
-      '@logto/connector-types': ^0.1.0
-      '@logto/phrases': ^0.1.0
-      '@logto/phrases-ui': ^0.1.0
-      '@logto/shared': ^0.1.0
+      '@logto/connector-types': ^0.1.1-alpha.0
+      '@logto/phrases': ^0.1.1-alpha.0
+      '@logto/phrases-ui': ^0.1.1-alpha.0
+      '@logto/shared': ^0.1.1-alpha.0
       '@silverhand/eslint-config': ^0.14.0
       '@silverhand/essentials': ^1.1.6
       '@silverhand/ts-config': ^0.14.0
@@ -1169,10 +1169,10 @@ importers:
 
   packages/ui:
     specifiers:
-      '@logto/phrases': ^0.1.0
-      '@logto/phrases-ui': ^0.1.0
-      '@logto/schemas': ^0.1.0
-      '@logto/shared': ^0.1.0
+      '@logto/phrases': ^0.1.1-alpha.0
+      '@logto/phrases-ui': ^0.1.1-alpha.0
+      '@logto/schemas': ^0.1.1-alpha.0
+      '@logto/shared': ^0.1.1-alpha.0
       '@parcel/core': 2.6.2
       '@parcel/transformer-sass': 2.6.2
       '@parcel/transformer-svg-react': 2.6.2
@@ -2227,7 +2227,6 @@ packages:
       pacote: 13.4.1
       semver: 7.3.7
     transitivePeerDependencies:
-      - bluebird
       - supports-color
     dev: true
 
@@ -2258,7 +2257,6 @@ packages:
       p-waterfall: 2.1.1
       semver: 7.3.7
     transitivePeerDependencies:
-      - bluebird
       - supports-color
     dev: true
 
@@ -2399,7 +2397,6 @@ packages:
       whatwg-url: 8.7.0
       yargs-parser: 20.2.4
     transitivePeerDependencies:
-      - bluebird
       - supports-color
     dev: true
 
@@ -2597,7 +2594,6 @@ packages:
       npm-registry-fetch: 9.0.0
       npmlog: 4.1.2
     transitivePeerDependencies:
-      - bluebird
       - supports-color
     dev: true
 
@@ -2627,7 +2623,6 @@ packages:
       pify: 5.0.0
       read-package-json: 3.0.1
     transitivePeerDependencies:
-      - bluebird
       - supports-color
     dev: true
 
@@ -2666,7 +2661,6 @@ packages:
       npmlog: 4.1.2
       tar: 6.1.11
     transitivePeerDependencies:
-      - bluebird
       - supports-color
     dev: true
 
@@ -2765,7 +2759,6 @@ packages:
       pacote: 13.4.1
       semver: 7.3.7
     transitivePeerDependencies:
-      - bluebird
       - encoding
       - supports-color
     dev: true
@@ -2811,7 +2804,6 @@ packages:
       '@npmcli/run-script': 3.0.2
       npmlog: 4.1.2
     transitivePeerDependencies:
-      - bluebird
       - supports-color
     dev: true
 
@@ -2913,7 +2905,6 @@ packages:
       slash: 3.0.0
       write-json-file: 4.3.0
     transitivePeerDependencies:
-      - bluebird
       - encoding
       - supports-color
     dev: true
@@ -3142,7 +3133,6 @@ packages:
       treeverse: 2.0.0
       walk-up-path: 1.0.0
     transitivePeerDependencies:
-      - bluebird
       - supports-color
     dev: true
 
@@ -3178,8 +3168,6 @@ packages:
       promise-retry: 2.0.1
       semver: 7.3.7
       which: 2.0.2
-    transitivePeerDependencies:
-      - bluebird
     dev: true
 
   /@npmcli/installed-package-contents/1.0.7:
@@ -3210,7 +3198,6 @@ packages:
       pacote: 13.4.1
       semver: 7.3.7
     transitivePeerDependencies:
-      - bluebird
       - supports-color
     dev: true
 
@@ -3262,7 +3249,6 @@ packages:
       node-gyp: 9.0.0
       read-package-json-fast: 2.0.3
     transitivePeerDependencies:
-      - bluebird
       - supports-color
     dev: true
 
@@ -4302,7 +4288,6 @@ packages:
       stylelint-config-xo-scss: 0.15.0_cazrl3eatzhkw4y7xb6glndqh4
     transitivePeerDependencies:
       - eslint
-      - eslint-import-resolver-webpack
       - postcss
       - prettier
       - supports-color
@@ -4341,7 +4326,6 @@ packages:
       stylelint-config-xo-scss: 0.15.0_cazrl3eatzhkw4y7xb6glndqh4
     transitivePeerDependencies:
       - eslint
-      - eslint-import-resolver-webpack
       - postcss
       - prettier
       - supports-color
@@ -4396,7 +4380,7 @@ packages:
       eslint-import-resolver-typescript: 2.5.0_rnagsyfcubvpoxo2ynj23pim7u
       eslint-plugin-consistent-default-export-name: 0.0.7
       eslint-plugin-eslint-comments: 3.2.0_eslint@8.10.0
-      eslint-plugin-import: 2.25.4_sidoke6kqbkbdht6nlmwbfnany
+      eslint-plugin-import: 2.25.4_eslint@8.10.0
       eslint-plugin-no-use-extend-native: 0.5.0
       eslint-plugin-node: 11.1.0_eslint@8.10.0
       eslint-plugin-prettier: 3.4.1_6pitu4b2tqihty6rv5qeiyb35m
@@ -4406,7 +4390,6 @@ packages:
       pkg-dir: 4.2.0
       prettier: 2.5.1
     transitivePeerDependencies:
-      - eslint-import-resolver-webpack
       - supports-color
       - typescript
     dev: true
@@ -4428,7 +4411,7 @@ packages:
       eslint-import-resolver-typescript: 2.5.0_rnagsyfcubvpoxo2ynj23pim7u
       eslint-plugin-consistent-default-export-name: 0.0.7
       eslint-plugin-eslint-comments: 3.2.0_eslint@8.10.0
-      eslint-plugin-import: 2.25.4_sidoke6kqbkbdht6nlmwbfnany
+      eslint-plugin-import: 2.25.4_eslint@8.10.0
       eslint-plugin-no-use-extend-native: 0.5.0
       eslint-plugin-node: 11.1.0_eslint@8.10.0
       eslint-plugin-prettier: 3.4.1_6pitu4b2tqihty6rv5qeiyb35m
@@ -4438,7 +4421,6 @@ packages:
       pkg-dir: 4.2.0
       prettier: 2.5.1
     transitivePeerDependencies:
-      - eslint-import-resolver-webpack
       - supports-color
       - typescript
     dev: true
@@ -4460,7 +4442,7 @@ packages:
       eslint-import-resolver-typescript: 2.5.0_rnagsyfcubvpoxo2ynj23pim7u
       eslint-plugin-consistent-default-export-name: 0.0.7
       eslint-plugin-eslint-comments: 3.2.0_eslint@8.10.0
-      eslint-plugin-import: 2.25.4_sidoke6kqbkbdht6nlmwbfnany
+      eslint-plugin-import: 2.25.4_eslint@8.10.0
       eslint-plugin-no-use-extend-native: 0.5.0
       eslint-plugin-node: 11.1.0_eslint@8.10.0
       eslint-plugin-prettier: 3.4.1_6pitu4b2tqihty6rv5qeiyb35m
@@ -4470,7 +4452,6 @@ packages:
       pkg-dir: 4.2.0
       prettier: 2.5.1
     transitivePeerDependencies:
-      - eslint-import-resolver-webpack
       - supports-color
       - typescript
     dev: true
@@ -6394,8 +6375,6 @@ packages:
       ssri: 8.0.1
       tar: 6.1.11
       unique-filename: 1.1.1
-    transitivePeerDependencies:
-      - bluebird
     dev: true
 
   /cacache/16.1.0:
@@ -6420,8 +6399,6 @@ packages:
       ssri: 9.0.1
       tar: 6.1.11
       unique-filename: 1.1.1
-    transitivePeerDependencies:
-      - bluebird
     dev: true
 
   /cache-content-type/1.0.1:
@@ -7781,33 +7758,6 @@ packages:
       find-up: 2.1.0
     dev: true
 
-  /eslint-module-utils/2.7.3_l62aq42yiamaj3cnpuf6avthf4:
-    resolution: {integrity: sha512-088JEC7O3lDZM9xGe0RerkOMd0EjFl+Yvd1jPWIkMT5u3H9+HC34mWWPnqPrN13gieT9pBOO+Qt07Nb/6TresQ==}
-    engines: {node: '>=4'}
-    peerDependencies:
-      '@typescript-eslint/parser': '*'
-      eslint-import-resolver-node: '*'
-      eslint-import-resolver-typescript: '*'
-      eslint-import-resolver-webpack: '*'
-    peerDependenciesMeta:
-      '@typescript-eslint/parser':
-        optional: true
-      eslint-import-resolver-node:
-        optional: true
-      eslint-import-resolver-typescript:
-        optional: true
-      eslint-import-resolver-webpack:
-        optional: true
-    dependencies:
-      '@typescript-eslint/parser': 5.14.0_gy6ulhlk526fafafzkwfpebbuq
-      debug: 3.2.7
-      eslint-import-resolver-node: 0.3.6
-      eslint-import-resolver-typescript: 2.5.0_rnagsyfcubvpoxo2ynj23pim7u
-      find-up: 2.1.0
-    transitivePeerDependencies:
-      - supports-color
-    dev: true
-
   /eslint-plugin-consistent-default-export-name/0.0.7:
     resolution: {integrity: sha512-5gQqnXniMBCzB4TTai/XX28CLgfSk2/bb9GYD5DiuIKlEUSklLdB068nq9zwG3808pjPFlYTm0dLyRk/qDolaQ==}
     engines: {node: '>=0.10.0'}
@@ -7860,37 +7810,6 @@ packages:
       object.values: 1.1.5
       resolve: 1.22.0
       tsconfig-paths: 3.13.0
-    dev: true
-
-  /eslint-plugin-import/2.25.4_sidoke6kqbkbdht6nlmwbfnany:
-    resolution: {integrity: sha512-/KJBASVFxpu0xg1kIBn9AUa8hQVnszpwgE7Ld0lKAlx7Ie87yzEzCgSkekt+le/YVhiaosO4Y14GDAOc41nfxA==}
-    engines: {node: '>=4'}
-    peerDependencies:
-      '@typescript-eslint/parser': '*'
-      eslint: ^2 || ^3 || ^4 || ^5 || ^6 || ^7.2.0 || ^8
-    peerDependenciesMeta:
-      '@typescript-eslint/parser':
-        optional: true
-    dependencies:
-      '@typescript-eslint/parser': 5.14.0_gy6ulhlk526fafafzkwfpebbuq
-      array-includes: 3.1.4
-      array.prototype.flat: 1.2.5
-      debug: 2.6.9
-      doctrine: 2.1.0
-      eslint: 8.10.0
-      eslint-import-resolver-node: 0.3.6
-      eslint-module-utils: 2.7.3_l62aq42yiamaj3cnpuf6avthf4
-      has: 1.0.3
-      is-core-module: 2.8.1
-      is-glob: 4.0.3
-      minimatch: 3.1.2
-      object.values: 1.1.5
-      resolve: 1.22.0
-      tsconfig-paths: 3.13.0
-    transitivePeerDependencies:
-      - eslint-import-resolver-typescript
-      - eslint-import-resolver-webpack
-      - supports-color
     dev: true
 
   /eslint-plugin-no-use-extend-native/0.5.0:
@@ -10655,7 +10574,6 @@ packages:
       import-local: 3.1.0
       npmlog: 4.1.2
     transitivePeerDependencies:
-      - bluebird
       - encoding
       - supports-color
     dev: true
@@ -10690,7 +10608,6 @@ packages:
       npm-package-arg: 8.1.5
       npm-registry-fetch: 11.0.0
     transitivePeerDependencies:
-      - bluebird
       - supports-color
     dev: true
 
@@ -10704,7 +10621,6 @@ packages:
       semver: 7.3.7
       ssri: 8.0.1
     transitivePeerDependencies:
-      - bluebird
       - supports-color
     dev: true
 
@@ -11012,7 +10928,6 @@ packages:
       socks-proxy-agent: 6.1.1
       ssri: 9.0.1
     transitivePeerDependencies:
-      - bluebird
       - supports-color
     dev: true
 
@@ -11036,7 +10951,6 @@ packages:
       socks-proxy-agent: 5.0.1
       ssri: 8.0.1
     transitivePeerDependencies:
-      - bluebird
       - supports-color
     dev: true
 
@@ -11061,7 +10975,6 @@ packages:
       socks-proxy-agent: 6.1.1
       ssri: 8.0.1
     transitivePeerDependencies:
-      - bluebird
       - supports-color
     dev: true
 
@@ -11885,7 +11798,6 @@ packages:
       tar: 6.1.11
       which: 2.0.2
     transitivePeerDependencies:
-      - bluebird
       - supports-color
     dev: true
 
@@ -12052,7 +11964,6 @@ packages:
       minizlib: 2.1.2
       npm-package-arg: 8.1.5
     transitivePeerDependencies:
-      - bluebird
       - supports-color
     dev: true
 
@@ -12068,7 +11979,6 @@ packages:
       npm-package-arg: 9.0.2
       proc-log: 2.0.1
     transitivePeerDependencies:
-      - bluebird
       - supports-color
     dev: true
 
@@ -12085,7 +11995,6 @@ packages:
       minizlib: 2.1.2
       npm-package-arg: 8.1.5
     transitivePeerDependencies:
-      - bluebird
       - supports-color
     dev: true
 
@@ -12480,7 +12389,6 @@ packages:
       ssri: 9.0.1
       tar: 6.1.11
     transitivePeerDependencies:
-      - bluebird
       - supports-color
     dev: true
 
@@ -13168,11 +13076,6 @@ packages:
 
   /promise-inflight/1.0.1:
     resolution: {integrity: sha1-mEcocL8igTL8vdhoEputEsPAKeM=}
-    peerDependencies:
-      bluebird: '*'
-    peerDependenciesMeta:
-      bluebird:
-        optional: true
     dev: true
 
   /promise-retry/2.0.1:
