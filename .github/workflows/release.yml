@@ -10,6 +10,9 @@ on:
 concurrency:
   group: dockerize-${{ github.ref }}
 
+env:
+  IMAGE: ghcr.io/logto-io/logto
+
 jobs:
   dockerize:
     runs-on: ubuntu-latest
@@ -24,7 +27,7 @@ jobs:
         uses: docker/metadata-action@v4
         with:
           images: |
-            ghcr.io/logto-io/logto
+            ${{ env.IMAGE }}
           tags: |
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
@@ -48,9 +51,16 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+
+      - name: Build and export to Docker
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          load: true
+          tags: ${{ env.IMAGE }}:test
       
       - name: Compose up
-        run: TAG=${{ steps.meta.outputs.tags[0] }} docker compose up -d
+        run: TAG=test docker compose up -d
 
       - name: Sleep for 30 seconds
         run: sleep 30s
@@ -76,4 +86,5 @@ jobs:
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
+          token: ${{ secrets.BOT_PAT }}
           files: /tmp/logto.tar.gz
