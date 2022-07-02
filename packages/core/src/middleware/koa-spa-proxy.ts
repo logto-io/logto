@@ -6,7 +6,6 @@ import proxy from 'koa-proxies';
 import { IRouterParamContext } from 'koa-router';
 
 import envSet, { MountedApps } from '@/env-set';
-import { fromRoot } from '@/env-set/parameters';
 import serveStatic from '@/middleware/koa-serve-static';
 
 export default function koaSpaProxy<StateT, ContextT extends IRouterParamContext, ResponseBodyT>(
@@ -16,7 +15,7 @@ export default function koaSpaProxy<StateT, ContextT extends IRouterParamContext
 ): MiddlewareType<StateT, ContextT, ResponseBodyT> {
   type Middleware = MiddlewareType<StateT, ContextT, ResponseBodyT>;
 
-  const packagesPath = fromRoot ? 'packages/' : '..';
+  const packagesPath = '..';
   const distPath = path.join(packagesPath, packagePath, 'dist');
 
   const spaProxy: Middleware = envSet.values.isProduction
