@@ -181,7 +181,7 @@ importers:
     specifiers:
       '@jest/types': ^27.5.1
       '@logto/connector-types': ^0.1.1-alpha.0
-      '@logto/schemas': ^0.1.1-alpha.0
+      '@logto/schemas': ^0.1.2-alpha.0
       '@logto/shared': ^0.1.1-alpha.0
       '@silverhand/eslint-config': ^0.14.0
       '@silverhand/essentials': ^1.1.0
@@ -224,7 +224,7 @@ importers:
     specifiers:
       '@jest/types': ^27.5.1
       '@logto/connector-types': ^0.1.1-alpha.0
-      '@logto/schemas': ^0.1.1-alpha.0
+      '@logto/schemas': ^0.1.2-alpha.0
       '@logto/shared': ^0.1.1-alpha.0
       '@silverhand/eslint-config': ^0.14.0
       '@silverhand/essentials': ^1.1.0
@@ -273,7 +273,7 @@ importers:
     specifiers:
       '@jest/types': ^27.5.1
       '@logto/connector-types': ^0.1.1-alpha.0
-      '@logto/schemas': ^0.1.1-alpha.0
+      '@logto/schemas': ^0.1.2-alpha.0
       '@logto/shared': ^0.1.1-alpha.0
       '@silverhand/eslint-config': ^0.14.0
       '@silverhand/essentials': ^1.1.0
@@ -320,7 +320,7 @@ importers:
     specifiers:
       '@jest/types': ^27.5.1
       '@logto/connector-types': ^0.1.1-alpha.0
-      '@logto/schemas': ^0.1.1-alpha.0
+      '@logto/schemas': ^0.1.2-alpha.0
       '@logto/shared': ^0.1.1-alpha.0
       '@silverhand/eslint-config': ^0.14.0
       '@silverhand/essentials': ^1.1.0
@@ -369,7 +369,7 @@ importers:
     specifiers:
       '@jest/types': ^27.5.1
       '@logto/connector-types': ^0.1.1-alpha.0
-      '@logto/schemas': ^0.1.1-alpha.0
+      '@logto/schemas': ^0.1.2-alpha.0
       '@logto/shared': ^0.1.1-alpha.0
       '@silverhand/eslint-config': ^0.14.0
       '@silverhand/essentials': ^1.1.0
@@ -574,7 +574,7 @@ importers:
     specifiers:
       '@jest/types': ^27.5.1
       '@logto/connector-types': ^0.1.1-alpha.0
-      '@logto/schemas': ^0.1.1-alpha.0
+      '@logto/schemas': ^0.1.2-alpha.0
       '@logto/shared': ^0.1.1-alpha.0
       '@silverhand/eslint-config': ^0.14.0
       '@silverhand/essentials': ^1.1.0
@@ -621,7 +621,7 @@ importers:
     specifiers:
       '@jest/types': ^27.5.1
       '@logto/connector-types': ^0.1.1-alpha.0
-      '@logto/schemas': ^0.1.1-alpha.0
+      '@logto/schemas': ^0.1.2-alpha.0
       '@logto/shared': ^0.1.1-alpha.0
       '@silverhand/eslint-config': ^0.14.0
       '@silverhand/essentials': ^1.1.0
@@ -669,7 +669,7 @@ importers:
       '@fontsource/roboto-mono': ^4.5.7
       '@logto/phrases': ^0.1.1-alpha.0
       '@logto/react': ^0.2.2
-      '@logto/schemas': ^0.1.1-alpha.0
+      '@logto/schemas': ^0.1.2-alpha.0
       '@logto/shared': ^0.1.1-alpha.0
       '@mdx-js/react': ^1.6.22
       '@parcel/core': 2.6.2
@@ -797,19 +797,19 @@ importers:
       '@logto/connector-alipay': ^0.1.1-alpha.0
       '@logto/connector-alipay-native': ^0.1.1-alpha.0
       '@logto/connector-aliyun-dm': ^0.1.1-alpha.0
-      '@logto/connector-aliyun-sms': ^0.1.1-alpha.0
-      '@logto/connector-apple': ^0.1.1-alpha.0
-      '@logto/connector-facebook': ^0.1.1-alpha.0
-      '@logto/connector-github': ^0.1.1-alpha.0
-      '@logto/connector-google': ^0.1.1-alpha.0
+      '@logto/connector-aliyun-sms': ^0.1.2-alpha.0
+      '@logto/connector-apple': ^0.1.2-alpha.0
+      '@logto/connector-facebook': ^0.1.2-alpha.0
+      '@logto/connector-github': ^0.1.2-alpha.0
+      '@logto/connector-google': ^0.1.2-alpha.0
       '@logto/connector-sendgrid-email': ^0.1.1-alpha.0
       '@logto/connector-smtp': ^0.1.1-alpha.0
       '@logto/connector-twilio-sms': ^0.1.1-alpha.0
       '@logto/connector-types': ^0.1.1-alpha.0
-      '@logto/connector-wechat': ^0.1.1-alpha.0
-      '@logto/connector-wechat-native': ^0.1.1-alpha.0
+      '@logto/connector-wechat': ^0.1.2-alpha.0
+      '@logto/connector-wechat-native': ^0.1.2-alpha.0
       '@logto/phrases': ^0.1.1-alpha.0
-      '@logto/schemas': ^0.1.1-alpha.0
+      '@logto/schemas': ^0.1.2-alpha.0
       '@logto/shared': ^0.1.1-alpha.0
       '@shopify/jest-koa-mocks': ^4.0.0
       '@silverhand/eslint-config': ^0.14.0
@@ -965,7 +965,7 @@ importers:
     specifiers:
       '@logto/phrases': ^0.1.1-alpha.0
       '@logto/react': ^0.2.2
-      '@logto/schemas': ^0.1.1-alpha.0
+      '@logto/schemas': ^0.1.2-alpha.0
       '@logto/shared': ^0.1.1-alpha.0
       '@parcel/core': 2.6.2
       '@parcel/transformer-sass': 2.6.2
@@ -1171,7 +1171,7 @@ importers:
     specifiers:
       '@logto/phrases': ^0.1.1-alpha.0
       '@logto/phrases-ui': ^0.1.1-alpha.0
-      '@logto/schemas': ^0.1.1-alpha.0
+      '@logto/schemas': ^0.1.2-alpha.0
       '@logto/shared': ^0.1.1-alpha.0
       '@parcel/core': 2.6.2
       '@parcel/transformer-sass': 2.6.2
