@@ -21,7 +21,7 @@ jobs:
           github-token: ${{ github.token }}
 
       - name: Add assignees
-        if: ${{ github.event_name == 'pull_request' }}
+        if: github.event_name == 'pull_request'
         uses: actions-ecosystem/action-add-assignees@v1
         with:
           github_token: ${{ github.token }}

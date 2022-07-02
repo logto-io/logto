@@ -21,6 +21,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
+          ref: master
           fetch-depth: 0
           token: ${{ secrets.BOT_PAT }}
           
@@ -48,18 +49,18 @@ jobs:
             --conventional-commits \
             --preid=${{ github.event.inputs.preid }} \
             --no-verify-access \
-            --create-release=github \
             --sign-git-commit \
             --sign-git-tag \
+            --no-push \
             --yes \
             ${{ github.event.inputs.semver }} ${{ github.event.inputs.append }}
         env:
           GH_TOKEN: ${{ secrets.BOT_PAT }}
 
-      - name: Package
-        run: ./package.sh
-
-      - name: Upload tar to GitHub release
-        uses: softprops/action-gh-release@v1
+      - name: Push to protected branch
+        uses: CasperWA/push-protected@v2
         with:
-          files: /tmp/logto.tar.gz
+          token: ${{ secrets.BOT_PAT }}
+          branch: master
+          tags: true
+          timeout: 20
