@@ -50,7 +50,7 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
       
       - name: Compose up
-        run: TAG=dev docker compose up -d
+        run: TAG=${{ steps.meta.outputs.tags[0] }} docker compose up -d
 
       - name: Sleep for 30 seconds
         run: sleep 30s
