@@ -1,3 +1,5 @@
+set -eo pipefail
+
 echo Building packages
 pnpm -- lerna run build --stream
 

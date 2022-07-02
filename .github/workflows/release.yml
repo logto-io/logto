@@ -50,7 +50,7 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
       
       - name: Compose up
-        run: TAG=dev docker compose up -d
+        run: TAG=${{ steps.meta.outputs.tags[0] }} docker compose up -d
 
       - name: Sleep for 30 seconds
         run: sleep 30s
@@ -66,6 +66,9 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
+
+      - name: Setup Node and pnpm
+        uses: silverhand-io/actions-node-pnpm-run-steps@v1.2.2
 
       - name: Package
         run: ./package.sh
