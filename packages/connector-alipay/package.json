@@ -1,6 +1,6 @@
 {
   "name": "@logto/connector-alipay",
-  "version": "0.1.1-alpha.0",
+  "version": "0.1.2-alpha.1",
   "description": "Alipay implementation.",
   "main": "./lib/index.js",
   "exports": "./lib/index.js",
@@ -24,8 +24,8 @@
     "prepack": "pnpm build"
   },
   "dependencies": {
-    "@logto/connector-types": "^0.1.1-alpha.0",
-    "@logto/shared": "^0.1.1-alpha.0",
+    "@logto/connector-types": "^0.1.2-alpha.1",
+    "@logto/shared": "^0.1.2-alpha.1",
     "@silverhand/essentials": "^1.1.0",
     "@silverhand/jest-config": "^0.14.0",
     "dayjs": "^1.10.5",

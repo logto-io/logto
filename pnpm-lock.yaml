@@ -21,8 +21,8 @@ importers:
   packages/connector-alipay:
     specifiers:
       '@jest/types': ^27.5.1
-      '@logto/connector-types': ^0.1.1-alpha.0
-      '@logto/shared': ^0.1.1-alpha.0
+      '@logto/connector-types': ^0.1.2-alpha.1
+      '@logto/shared': ^0.1.2-alpha.1
       '@shopify/jest-koa-mocks': ^4.0.0
       '@silverhand/eslint-config': ^0.14.0
       '@silverhand/essentials': ^1.1.0
@@ -80,8 +80,8 @@ importers:
   packages/connector-alipay-native:
     specifiers:
       '@jest/types': ^27.5.1
-      '@logto/connector-types': ^0.1.1-alpha.0
-      '@logto/shared': ^0.1.1-alpha.0
+      '@logto/connector-types': ^0.1.2-alpha.1
+      '@logto/shared': ^0.1.2-alpha.1
       '@shopify/jest-koa-mocks': ^3.0.8
       '@silverhand/eslint-config': ^0.14.0
       '@silverhand/essentials': ^1.1.0
@@ -139,8 +139,8 @@ importers:
   packages/connector-aliyun-dm:
     specifiers:
       '@jest/types': ^27.5.1
-      '@logto/connector-types': ^0.1.1-alpha.0
-      '@logto/shared': ^0.1.1-alpha.0
+      '@logto/connector-types': ^0.1.2-alpha.1
+      '@logto/shared': ^0.1.2-alpha.1
       '@silverhand/eslint-config': ^0.14.0
       '@silverhand/essentials': ^1.1.0
       '@silverhand/jest-config': ^0.14.0
@@ -180,9 +180,9 @@ importers:
   packages/connector-aliyun-sms:
     specifiers:
       '@jest/types': ^27.5.1
-      '@logto/connector-types': ^0.1.1-alpha.0
-      '@logto/schemas': ^0.1.2-alpha.0
-      '@logto/shared': ^0.1.1-alpha.0
+      '@logto/connector-types': ^0.1.2-alpha.1
+      '@logto/schemas': ^0.1.2-alpha.1
+      '@logto/shared': ^0.1.2-alpha.1
       '@silverhand/eslint-config': ^0.14.0
       '@silverhand/essentials': ^1.1.0
       '@silverhand/jest-config': ^0.14.0
@@ -223,9 +223,9 @@ importers:
   packages/connector-apple:
     specifiers:
       '@jest/types': ^27.5.1
-      '@logto/connector-types': ^0.1.1-alpha.0
-      '@logto/schemas': ^0.1.2-alpha.0
-      '@logto/shared': ^0.1.1-alpha.0
+      '@logto/connector-types': ^0.1.2-alpha.1
+      '@logto/schemas': ^0.1.2-alpha.1
+      '@logto/shared': ^0.1.2-alpha.1
       '@silverhand/eslint-config': ^0.14.0
       '@silverhand/essentials': ^1.1.0
       '@silverhand/jest-config': ^0.14.0
@@ -272,9 +272,9 @@ importers:
   packages/connector-facebook:
     specifiers:
       '@jest/types': ^27.5.1
-      '@logto/connector-types': ^0.1.1-alpha.0
-      '@logto/schemas': ^0.1.2-alpha.0
-      '@logto/shared': ^0.1.1-alpha.0
+      '@logto/connector-types': ^0.1.2-alpha.1
+      '@logto/schemas': ^0.1.2-alpha.1
+      '@logto/shared': ^0.1.2-alpha.1
       '@silverhand/eslint-config': ^0.14.0
       '@silverhand/essentials': ^1.1.0
       '@silverhand/jest-config': ^0.14.0
@@ -319,9 +319,9 @@ importers:
   packages/connector-github:
     specifiers:
       '@jest/types': ^27.5.1
-      '@logto/connector-types': ^0.1.1-alpha.0
-      '@logto/schemas': ^0.1.2-alpha.0
-      '@logto/shared': ^0.1.1-alpha.0
+      '@logto/connector-types': ^0.1.2-alpha.1
+      '@logto/schemas': ^0.1.2-alpha.1
+      '@logto/shared': ^0.1.2-alpha.1
       '@silverhand/eslint-config': ^0.14.0
       '@silverhand/essentials': ^1.1.0
       '@silverhand/jest-config': ^0.14.0
@@ -368,9 +368,9 @@ importers:
   packages/connector-google:
     specifiers:
       '@jest/types': ^27.5.1
-      '@logto/connector-types': ^0.1.1-alpha.0
-      '@logto/schemas': ^0.1.2-alpha.0
-      '@logto/shared': ^0.1.1-alpha.0
+      '@logto/connector-types': ^0.1.2-alpha.1
+      '@logto/schemas': ^0.1.2-alpha.1
+      '@logto/shared': ^0.1.2-alpha.1
       '@silverhand/eslint-config': ^0.14.0
       '@silverhand/essentials': ^1.1.0
       '@silverhand/jest-config': ^0.14.0
@@ -415,8 +415,8 @@ importers:
   packages/connector-sendgrid-mail:
     specifiers:
       '@jest/types': ^27.5.1
-      '@logto/connector-types': ^0.1.1-alpha.0
-      '@logto/shared': ^0.1.1-alpha.0
+      '@logto/connector-types': ^0.1.2-alpha.1
+      '@logto/shared': ^0.1.2-alpha.1
       '@silverhand/eslint-config': ^0.14.0
       '@silverhand/essentials': ^1.1.6
       '@silverhand/jest-config': ^0.14.0
@@ -456,8 +456,8 @@ importers:
   packages/connector-smtp:
     specifiers:
       '@jest/types': ^27.5.1
-      '@logto/connector-types': ^0.1.1-alpha.0
-      '@logto/shared': ^0.1.1-alpha.0
+      '@logto/connector-types': ^0.1.2-alpha.1
+      '@logto/shared': ^0.1.2-alpha.1
       '@silverhand/eslint-config': ^0.14.0
       '@silverhand/essentials': ^1.1.6
       '@silverhand/jest-config': ^0.14.0
@@ -499,8 +499,8 @@ importers:
   packages/connector-twilio-sms:
     specifiers:
       '@jest/types': ^27.5.1
-      '@logto/connector-types': ^0.1.1-alpha.0
-      '@logto/shared': ^0.1.1-alpha.0
+      '@logto/connector-types': ^0.1.2-alpha.1
+      '@logto/shared': ^0.1.2-alpha.1
       '@silverhand/eslint-config': ^0.14.0
       '@silverhand/essentials': ^1.1.6
       '@silverhand/jest-config': ^0.14.0
@@ -540,7 +540,7 @@ importers:
   packages/connector-types:
     specifiers:
       '@jest/types': ^27.5.1
-      '@logto/phrases': ^0.1.1-alpha.0
+      '@logto/phrases': ^0.1.2-alpha.1
       '@shopify/jest-koa-mocks': ^4.0.0
       '@silverhand/eslint-config': ^0.14.0
       '@silverhand/essentials': ^1.1.6
@@ -573,9 +573,9 @@ importers:
   packages/connector-wechat:
     specifiers:
       '@jest/types': ^27.5.1
-      '@logto/connector-types': ^0.1.1-alpha.0
-      '@logto/schemas': ^0.1.2-alpha.0
-      '@logto/shared': ^0.1.1-alpha.0
+      '@logto/connector-types': ^0.1.2-alpha.1
+      '@logto/schemas': ^0.1.2-alpha.1
+      '@logto/shared': ^0.1.2-alpha.1
       '@silverhand/eslint-config': ^0.14.0
       '@silverhand/essentials': ^1.1.0
       '@silverhand/jest-config': ^0.14.0
@@ -620,9 +620,9 @@ importers:
   packages/connector-wechat-native:
     specifiers:
       '@jest/types': ^27.5.1
-      '@logto/connector-types': ^0.1.1-alpha.0
-      '@logto/schemas': ^0.1.2-alpha.0
-      '@logto/shared': ^0.1.1-alpha.0
+      '@logto/connector-types': ^0.1.2-alpha.1
+      '@logto/schemas': ^0.1.2-alpha.1
+      '@logto/shared': ^0.1.2-alpha.1
       '@silverhand/eslint-config': ^0.14.0
       '@silverhand/essentials': ^1.1.0
       '@silverhand/jest-config': ^0.14.0
@@ -667,10 +667,10 @@ importers:
   packages/console:
     specifiers:
       '@fontsource/roboto-mono': ^4.5.7
-      '@logto/phrases': ^0.1.1-alpha.0
+      '@logto/phrases': ^0.1.2-alpha.1
       '@logto/react': ^0.2.2
-      '@logto/schemas': ^0.1.2-alpha.0
-      '@logto/shared': ^0.1.1-alpha.0
+      '@logto/schemas': ^0.1.2-alpha.1
+      '@logto/shared': ^0.1.2-alpha.1
       '@mdx-js/react': ^1.6.22
       '@parcel/core': 2.6.2
       '@parcel/transformer-mdx': 2.6.2
@@ -794,23 +794,23 @@ importers:
 
   packages/core:
     specifiers:
-      '@logto/connector-alipay': ^0.1.1-alpha.0
-      '@logto/connector-alipay-native': ^0.1.1-alpha.0
-      '@logto/connector-aliyun-dm': ^0.1.1-alpha.0
-      '@logto/connector-aliyun-sms': ^0.1.2-alpha.0
-      '@logto/connector-apple': ^0.1.2-alpha.0
-      '@logto/connector-facebook': ^0.1.2-alpha.0
-      '@logto/connector-github': ^0.1.2-alpha.0
-      '@logto/connector-google': ^0.1.2-alpha.0
-      '@logto/connector-sendgrid-email': ^0.1.1-alpha.0
-      '@logto/connector-smtp': ^0.1.1-alpha.0
-      '@logto/connector-twilio-sms': ^0.1.1-alpha.0
-      '@logto/connector-types': ^0.1.1-alpha.0
-      '@logto/connector-wechat': ^0.1.2-alpha.0
-      '@logto/connector-wechat-native': ^0.1.2-alpha.0
-      '@logto/phrases': ^0.1.1-alpha.0
-      '@logto/schemas': ^0.1.2-alpha.0
-      '@logto/shared': ^0.1.1-alpha.0
+      '@logto/connector-alipay': ^0.1.2-alpha.1
+      '@logto/connector-alipay-native': ^0.1.2-alpha.1
+      '@logto/connector-aliyun-dm': ^0.1.2-alpha.1
+      '@logto/connector-aliyun-sms': ^0.1.2-alpha.1
+      '@logto/connector-apple': ^0.1.2-alpha.1
+      '@logto/connector-facebook': ^0.1.2-alpha.1
+      '@logto/connector-github': ^0.1.2-alpha.1
+      '@logto/connector-google': ^0.1.2-alpha.1
+      '@logto/connector-sendgrid-email': ^0.1.2-alpha.1
+      '@logto/connector-smtp': ^0.1.2-alpha.1
+      '@logto/connector-twilio-sms': ^0.1.2-alpha.1
+      '@logto/connector-types': ^0.1.2-alpha.1
+      '@logto/connector-wechat': ^0.1.2-alpha.1
+      '@logto/connector-wechat-native': ^0.1.2-alpha.1
+      '@logto/phrases': ^0.1.2-alpha.1
+      '@logto/schemas': ^0.1.2-alpha.1
+      '@logto/shared': ^0.1.2-alpha.1
       '@shopify/jest-koa-mocks': ^4.0.0
       '@silverhand/eslint-config': ^0.14.0
       '@silverhand/essentials': ^1.1.6
@@ -963,10 +963,10 @@ importers:
 
   packages/demo-app:
     specifiers:
-      '@logto/phrases': ^0.1.1-alpha.0
+      '@logto/phrases': ^0.1.2-alpha.1
       '@logto/react': ^0.2.2
-      '@logto/schemas': ^0.1.2-alpha.0
-      '@logto/shared': ^0.1.1-alpha.0
+      '@logto/schemas': ^0.1.2-alpha.1
+      '@logto/shared': ^0.1.2-alpha.1
       '@parcel/core': 2.6.2
       '@parcel/transformer-sass': 2.6.2
       '@silverhand/eslint-config': ^0.14.0
@@ -1093,10 +1093,10 @@ importers:
 
   packages/schemas:
     specifiers:
-      '@logto/connector-types': ^0.1.1-alpha.0
-      '@logto/phrases': ^0.1.1-alpha.0
-      '@logto/phrases-ui': ^0.1.1-alpha.0
-      '@logto/shared': ^0.1.1-alpha.0
+      '@logto/connector-types': ^0.1.2-alpha.1
+      '@logto/phrases': ^0.1.2-alpha.1
+      '@logto/phrases-ui': ^0.1.2-alpha.1
+      '@logto/shared': ^0.1.2-alpha.1
       '@silverhand/eslint-config': ^0.14.0
       '@silverhand/essentials': ^1.1.6
       '@silverhand/ts-config': ^0.14.0
@@ -1169,10 +1169,10 @@ importers:
 
   packages/ui:
     specifiers:
-      '@logto/phrases': ^0.1.1-alpha.0
-      '@logto/phrases-ui': ^0.1.1-alpha.0
-      '@logto/schemas': ^0.1.2-alpha.0
-      '@logto/shared': ^0.1.1-alpha.0
+      '@logto/phrases': ^0.1.2-alpha.1
+      '@logto/phrases-ui': ^0.1.2-alpha.1
+      '@logto/schemas': ^0.1.2-alpha.1
+      '@logto/shared': ^0.1.2-alpha.1
       '@parcel/core': 2.6.2
       '@parcel/transformer-sass': 2.6.2
       '@parcel/transformer-svg-react': 2.6.2

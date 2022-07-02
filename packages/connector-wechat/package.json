@@ -1,6 +1,6 @@
 {
   "name": "@logto/connector-wechat",
-  "version": "0.1.2-alpha.0",
+  "version": "0.1.2-alpha.1",
   "description": "Wechat Web connector implementation.",
   "main": "./lib/index.js",
   "exports": "./lib/index.js",
@@ -24,9 +24,9 @@
     "prepack": "pnpm build"
   },
   "dependencies": {
-    "@logto/connector-types": "^0.1.1-alpha.0",
-    "@logto/schemas": "^0.1.2-alpha.0",
-    "@logto/shared": "^0.1.1-alpha.0",
+    "@logto/connector-types": "^0.1.2-alpha.1",
+    "@logto/schemas": "^0.1.2-alpha.1",
+    "@logto/shared": "^0.1.2-alpha.1",
     "@silverhand/essentials": "^1.1.0",
     "@silverhand/jest-config": "^0.14.0",
     "got": "^11.8.2",
