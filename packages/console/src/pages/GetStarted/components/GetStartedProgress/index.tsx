@@ -16,7 +16,7 @@ import * as styles from './index.module.scss';
 const GetStartedProgress = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const {
-    data: { hideGetStarted },
+    data: { getStartedHidden },
   } = useUserPreferences();
   const theme = useTheme();
   const Icon = theme === AppearanceMode.LightMode ? Tada : TadaDark;
@@ -24,7 +24,7 @@ const GetStartedProgress = () => {
   const [showDropDown, setShowDropdown] = useState(false);
   const { data, completedCount, totalCount } = useGetStartedMetadata({ checkDemoAppExists: false });
 
-  if (hideGetStarted) {
+  if (getStartedHidden) {
     return null;
   }
 

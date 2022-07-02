@@ -64,8 +64,8 @@ const Guide = ({ connector, onClose }: Props) => {
         .json<ConnectorDTO>();
 
       await updateSettings({
-        ...conditional(!isSocialConnector && { configurePasswordless: true }),
-        ...conditional(isSocialConnector && { configureSocialSignIn: true }),
+        ...conditional(!isSocialConnector && { passwordlessConfigured: true }),
+        ...conditional(isSocialConnector && { socialSignInConfigured: true }),
       });
 
       onClose();

@@ -147,12 +147,12 @@ export enum AppearanceMode {
 
 export const adminConsoleConfigGuard = z.object({
   // Get started challenges
-  checkDemo: z.boolean(),
-  createApplication: z.boolean(),
-  configurePasswordless: z.boolean(),
-  configureSocialSignIn: z.boolean(),
-  customizeSignInExperience: z.boolean(),
-  checkFurtherReadings: z.boolean(),
+  demoChecked: z.boolean(),
+  applicationCreated: z.boolean(),
+  signInExperienceCustomized: z.boolean(),
+  passwordlessConfigured: z.boolean(),
+  socialSignInConfigured: z.boolean(),
+  furtherReadingsChecked: z.boolean(),
 });
 
 export type AdminConsoleConfig = z.infer<typeof adminConsoleConfigGuard>;

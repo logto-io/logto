@@ -44,12 +44,12 @@ export const mockRole: Role = {
 export const mockSetting: Setting = {
   id: 'foo setting',
   adminConsole: {
-    checkDemo: false,
-    createApplication: false,
-    configurePasswordless: false,
-    configureSocialSignIn: false,
-    customizeSignInExperience: false,
-    checkFurtherReadings: false,
+    demoChecked: false,
+    applicationCreated: false,
+    signInExperienceCustomized: false,
+    passwordlessConfigured: false,
+    socialSignInConfigured: false,
+    furtherReadingsChecked: false,
   },
 };
 

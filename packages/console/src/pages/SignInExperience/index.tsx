@@ -62,7 +62,7 @@ const SignInExperience = () => {
       })
       .json<SignInExperienceType>();
     void mutate(updatedData);
-    await updateSettings({ customizeSignInExperience: true });
+    await updateSettings({ signInExperienceCustomized: true });
     toast.success(t('general.saved'));
   };
 
@@ -91,7 +91,7 @@ const SignInExperience = () => {
     return <div>{settingsError.body?.message ?? settingsError.message}</div>;
   }
 
-  if (!settings?.customizeSignInExperience) {
+  if (!settings?.signInExperienceCustomized) {
     return <Welcome mutate={mutateSettings} />;
   }
 

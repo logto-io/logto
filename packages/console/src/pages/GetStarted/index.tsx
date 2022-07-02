@@ -21,7 +21,7 @@ const GetStarted = () => {
   const [showConfirmModal, setShowConfirmModal] = useState(false);
 
   const hideGetStarted = () => {
-    void update({ hideGetStarted: true });
+    void update({ getStartedHidden: true });
     // Navigate to next menu item
     navigate('/dashboard');
   };
