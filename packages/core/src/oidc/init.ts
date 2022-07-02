@@ -1,5 +1,7 @@
 /* istanbul ignore file */
 
+import { readFileSync } from 'fs';
+
 import { CustomClientMetadataKey } from '@logto/schemas';
 import { exportJWK } from 'jose';
 import Koa from 'koa';
@@ -18,6 +20,7 @@ import { addOidcEventListeners } from '@/utils/oidc-provider-event-listener';
 export default async function initOidc(app: Koa): Promise<Provider> {
   const { issuer, cookieKeys, privateKey, defaultIdTokenTtl, defaultRefreshTokenTtl } =
     envSet.values.oidc;
+  const logoutSource = readFileSync('static/html/logout.html', 'utf-8');
 
   const keys = [await exportJWK(privateKey)];
   const cookieConfig = Object.freeze({
@@ -43,6 +46,12 @@ export default async function initOidc(app: Koa): Promise<Provider> {
       userinfo: { enabled: false },
       revocation: { enabled: true },
       devInteractions: { enabled: false },
+      rpInitiatedLogout: {
+        logoutSource: (ctx, form) => {
+          // eslint-disable-next-line no-template-curly-in-string
+          ctx.body = logoutSource.replace('${form}', form);
+        },
+      },
       // https://github.com/panva/node-oidc-provider/blob/main/docs/README.md#featuresresourceindicators
       resourceIndicators: {
         enabled: true,

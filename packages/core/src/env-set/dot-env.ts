@@ -9,10 +9,9 @@ export const appendDotEnv = (key: string, value: string) => {
 };
 
 export const configDotEnv = () => {
-  // Started from project root, change working directory
   if (fromRoot) {
-    process.chdir('../..');
+    dotenv.config({ path: '../../.env' });
+  } else {
+    dotenv.config();
   }
-
-  dotenv.config();
 };
