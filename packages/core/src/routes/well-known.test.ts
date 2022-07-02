@@ -1,5 +1,5 @@
 import { ConnectorType, SignInMode } from '@logto/schemas';
-import { adminConsoleApplicationId, adminConsoleSignInMethods } from '@logto/schemas/lib/seeds';
+import { adminConsoleApplicationId, adminConsoleSignInExperience } from '@logto/schemas/lib/seeds';
 import { Provider } from 'oidc-provider';
 
 import {
@@ -58,6 +58,10 @@ jest.mock('oidc-provider', () => ({
   })),
 }));
 
+jest.mock('i18next', () => ({
+  t: (key: string) => key,
+}));
+
 describe('GET /.well-known/sign-in-exp', () => {
   afterEach(() => {
     jest.clearAllMocks();
@@ -112,13 +116,16 @@ describe('GET /.well-known/sign-in-exp', () => {
   it('should return admin console settings', async () => {
     interactionDetails.mockResolvedValue({ params: { client_id: adminConsoleApplicationId } });
     const response = await sessionRequest.get('/.well-known/sign-in-exp');
-    expect(signInExperienceQuerySpyOn).toHaveBeenCalledTimes(1);
+    expect(signInExperienceQuerySpyOn).not.toBeCalled();
     expect(response.status).toEqual(200);
 
     expect(response.body).toMatchObject(
       expect.objectContaining({
-        ...mockSignInExperience,
-        signInMethods: adminConsoleSignInMethods,
+        ...adminConsoleSignInExperience,
+        branding: {
+          ...adminConsoleSignInExperience.branding,
+          slogan: 'admin_console.welcome.title',
+        },
         socialConnectors: [],
         signInMode: SignInMode.SignIn,
       })

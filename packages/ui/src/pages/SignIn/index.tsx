@@ -12,7 +12,7 @@ import * as styles from './index.module.scss';
 import { PrimarySection, SecondarySection, CreateAccountLink } from './registry';
 
 const SignIn = () => {
-  const { experienceSettings, theme } = useContext(PageContext);
+  const { experienceSettings, theme, platform } = useContext(PageContext);
 
   if (!experienceSettings) {
     return null;
@@ -29,32 +29,36 @@ const SignIn = () => {
   };
 
   return (
-    <div className={classNames(styles.wrapper)}>
-      <BrandingHeader
-        className={styles.header}
-        headline={style === BrandingStyle.Logo_Slogan ? slogan : undefined}
-        logo={getLogto()}
-      />
-      <PrimarySection
-        signInMethod={experienceSettings.primarySignInMethod}
-        socialConnectors={experienceSettings.socialConnectors}
-        signInMode={experienceSettings.signInMode}
-      />
-
-      {experienceSettings.signInMode !== SignInMode.Register && (
-        <SecondarySection
-          primarySignInMethod={experienceSettings.primarySignInMethod}
-          secondarySignInMethods={experienceSettings.secondarySignInMethods}
-          socialConnectors={experienceSettings.socialConnectors}
+    <>
+      {platform === 'web' && <div className={styles.placeHolderTop} />}
+      <div className={classNames(styles.wrapper)}>
+        <BrandingHeader
+          className={styles.header}
+          headline={style === BrandingStyle.Logo_Slogan ? slogan : undefined}
+          logo={getLogto()}
         />
-      )}
+        <PrimarySection
+          signInMethod={experienceSettings.primarySignInMethod}
+          socialConnectors={experienceSettings.socialConnectors}
+          signInMode={experienceSettings.signInMode}
+        />
 
-      {experienceSettings.signInMode === SignInMode.SignInAndRegister && (
-        <CreateAccountLink primarySignInMethod={experienceSettings.primarySignInMethod} />
-      )}
+        {experienceSettings.signInMode !== SignInMode.Register && (
+          <SecondarySection
+            primarySignInMethod={experienceSettings.primarySignInMethod}
+            secondarySignInMethods={experienceSettings.secondarySignInMethods}
+            socialConnectors={experienceSettings.socialConnectors}
+          />
+        )}
 
-      <AppNotification />
-    </div>
+        {experienceSettings.signInMode === SignInMode.SignInAndRegister && (
+          <CreateAccountLink primarySignInMethod={experienceSettings.primarySignInMethod} />
+        )}
+
+        <AppNotification />
+      </div>
+      {platform === 'web' && <div className={styles.placeHolderBottom} />}
+    </>
   );
 };
 

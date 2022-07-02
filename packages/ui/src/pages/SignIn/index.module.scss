@@ -27,6 +27,14 @@
   }
 }
 
+.placeHolderTop {
+  flex: 2;
+}
+
+.placeHolderBottom {
+  flex: 3;
+}
+
 :global(body.mobile) {
   .header {
     margin-top: _.unit(3);
@@ -48,7 +56,6 @@
 
 :global(body.desktop) {
   .header {
-    margin-top: _.unit(6);
     margin-bottom: _.unit(6);
   }
 

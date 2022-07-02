@@ -33,9 +33,11 @@ export const defaultSignInExperience: Readonly<CreateSignInExperience> = {
   signInMode: SignInMode.SignInAndRegister,
 };
 
-export const adminConsoleSignInMethods = {
-  username: SignInMethodState.Primary,
-  email: SignInMethodState.Disabled,
-  sms: SignInMethodState.Disabled,
-  social: SignInMethodState.Disabled,
+export const adminConsoleSignInExperience: CreateSignInExperience = {
+  ...defaultSignInExperience,
+  branding: {
+    style: BrandingStyle.Logo_Slogan,
+    logoUrl: '',
+    darkLogoUrl: '',
+  },
 };

@@ -2,7 +2,7 @@ import { ConnectorMetadata } from '@logto/connector-types';
 import { SignInMode } from '@logto/schemas';
 import {
   adminConsoleApplicationId,
-  adminConsoleSignInMethods,
+  adminConsoleSignInExperience,
   demoAppApplicationId,
 } from '@logto/schemas/lib/seeds';
 import etag from 'etag';
@@ -19,17 +19,36 @@ export default function wellKnownRoutes<T extends AnonymousRouter>(router: T, pr
   router.get(
     '/.well-known/sign-in-exp',
     async (ctx, next) => {
-      const [signInExperience, connectorInstances, interaction] = await Promise.all([
-        findDefaultSignInExperience(),
-        getConnectorInstances(),
-        provider.interactionDetails(ctx.req, ctx.res).catch((error: unknown) => {
+      const interaction = await provider
+        .interactionDetails(ctx.req, ctx.res)
+        .catch((error: unknown) => {
           // Should not block if interaction is not found
           if (error instanceof errors.SessionNotFound) {
             return null;
           }
 
           throw error;
-        }),
+        });
+
+      // Hard code AdminConsole sign-in methods settings.
+      if (interaction?.params.client_id === adminConsoleApplicationId) {
+        ctx.body = {
+          ...adminConsoleSignInExperience,
+          branding: {
+            ...adminConsoleSignInExperience.branding,
+            slogan: i18next.t('admin_console.welcome.title'),
+          },
+          signInMode: (await hasActiveUsers()) ? SignInMode.SignIn : SignInMode.Register,
+          socialConnectors: [],
+        };
+
+        return next();
+      }
+
+      // Custom Applications
+      const [signInExperience, connectorInstances] = await Promise.all([
+        findDefaultSignInExperience(),
+        getConnectorInstances(),
       ]);
 
       const socialConnectors = signInExperience.socialSignInConnectorTargets.reduce<
@@ -46,30 +65,12 @@ export default function wellKnownRoutes<T extends AnonymousRouter>(router: T, pr
         ];
       }, []);
 
-      // Hard code AdminConsole sign-in methods settings.
-      if (interaction?.params.client_id === adminConsoleApplicationId) {
-        ctx.body = {
-          ...signInExperience,
-          signInMethods: adminConsoleSignInMethods,
-          signInMode: (await hasActiveUsers()) ? SignInMode.SignIn : SignInMode.Register,
-          socialConnectors: [],
-        };
+      const notification =
+        interaction?.params.client_id === demoAppApplicationId
+          ? i18next.t('demo_app.notification')
+          : undefined;
 
-        return next();
-      }
-
-      // Insert Notification Message to DemoApp
-      if (interaction?.params.client_id === demoAppApplicationId) {
-        ctx.body = {
-          ...signInExperience,
-          socialConnectors,
-          notification: i18next.t('demo_app.notification'),
-        };
-
-        return next();
-      }
-
-      ctx.body = { ...signInExperience, socialConnectors };
+      ctx.body = { ...signInExperience, socialConnectors, notification };
 
       return next();
     },
