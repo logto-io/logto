@@ -1,4 +1,4 @@
-name: Dockerize
+name: Release
 
 on:
   push:
@@ -16,6 +16,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
       - name: Docker meta
         id: meta
@@ -27,7 +29,7 @@ jobs:
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
             type=semver,pattern={{major}}
-            type=raw,value=dev
+            type=edge
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
@@ -55,3 +57,20 @@ jobs:
       
       - name: Health check
         run: curl http://localhost:3001/api/status -If
+
+  create-github-release:
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/')
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Package
+        run: ./package.sh
+
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: /tmp/logto.tar.gz
