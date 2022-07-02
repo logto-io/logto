@@ -43,7 +43,7 @@ export const useSidebarMenuItems = (): {
   firstItem: Optional<SidebarItem>;
 } => {
   const {
-    data: { hideGetStarted },
+    data: { getStartedHidden },
   } = useUserPreferences();
 
   const sections: SidebarSection[] = [
@@ -53,7 +53,7 @@ export const useSidebarMenuItems = (): {
         {
           Icon: Bolt,
           title: 'get_started',
-          isHidden: hideGetStarted,
+          isHidden: getStartedHidden,
         },
         {
           Icon: BarGraph,

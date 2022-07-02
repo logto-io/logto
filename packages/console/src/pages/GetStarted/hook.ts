@@ -61,10 +61,10 @@ const useGetStartedMetadata = ({ checkDemoAppExists }: Props) => {
       subtitle: 'get_started.card1_subtitle',
       icon: isLightMode ? CheckDemo : CheckDemoDark,
       buttonText: 'admin_console.general.check_out',
-      isComplete: settings?.checkDemo,
+      isComplete: settings?.demoChecked,
       isHidden: hideDemo,
       onClick: async () => {
-        void updateSettings({ checkDemo: true });
+        void updateSettings({ demoChecked: true });
         window.open('/demo-app', '_blank');
       },
     },
@@ -74,7 +74,7 @@ const useGetStartedMetadata = ({ checkDemoAppExists }: Props) => {
       subtitle: 'get_started.card2_subtitle',
       icon: isLightMode ? CreateApp : CreateAppDark,
       buttonText: 'admin_console.general.create',
-      isComplete: settings?.createApplication,
+      isComplete: settings?.applicationCreated,
       onClick: () => {
         navigate('/applications/create');
       },
@@ -85,7 +85,7 @@ const useGetStartedMetadata = ({ checkDemoAppExists }: Props) => {
       subtitle: 'get_started.card3_subtitle',
       icon: isLightMode ? Customize : CustomizeDark,
       buttonText: 'admin_console.general.customize',
-      isComplete: settings?.customizeSignInExperience,
+      isComplete: settings?.signInExperienceCustomized,
       onClick: () => {
         navigate('/sign-in-experience');
       },
@@ -96,7 +96,7 @@ const useGetStartedMetadata = ({ checkDemoAppExists }: Props) => {
       subtitle: 'get_started.card4_subtitle',
       icon: isLightMode ? Passwordless : PasswordlessDark,
       buttonText: 'admin_console.general.enable',
-      isComplete: settings?.configurePasswordless,
+      isComplete: settings?.passwordlessConfigured,
       onClick: () => {
         navigate('/connectors');
       },
@@ -107,7 +107,7 @@ const useGetStartedMetadata = ({ checkDemoAppExists }: Props) => {
       subtitle: 'get_started.card5_subtitle',
       icon: isLightMode ? OneClick : OneClickDark,
       buttonText: 'admin_console.general.set_up',
-      isComplete: settings?.configureSocialSignIn,
+      isComplete: settings?.socialSignInConfigured,
       onClick: () => {
         navigate('/connectors/social');
       },
@@ -118,9 +118,9 @@ const useGetStartedMetadata = ({ checkDemoAppExists }: Props) => {
       subtitle: 'get_started.card6_subtitle',
       icon: isLightMode ? FurtherReadings : FurtherReadingsDark,
       buttonText: 'admin_console.general.check_out',
-      isComplete: settings?.checkFurtherReadings,
+      isComplete: settings?.furtherReadingsChecked,
       onClick: () => {
-        void updateSettings({ checkFurtherReadings: true });
+        void updateSettings({ furtherReadingsChecked: true });
         window.open('https://docs.logto.io/', '_blank');
       },
     },

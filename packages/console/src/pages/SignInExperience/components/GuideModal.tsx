@@ -68,7 +68,7 @@ const GuideModal = ({ isOpen, onClose }: Props) => {
       api.patch('/api/sign-in-exp', {
         json: signInExperienceParser.toRemoteModel(formData),
       }),
-      updateSettings({ customizeSignInExperience: true }),
+      updateSettings({ signInExperienceCustomized: true }),
     ]);
 
     onClose();
@@ -76,7 +76,7 @@ const GuideModal = ({ isOpen, onClose }: Props) => {
 
   const onSkip = async () => {
     setIsLoading(true);
-    await updateSettings({ customizeSignInExperience: true });
+    await updateSettings({ signInExperienceCustomized: true });
     setIsLoading(false);
     onClose();
   };

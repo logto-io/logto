@@ -14,7 +14,7 @@ const userPreferencesGuard = z.object({
   language: z.nativeEnum(Language),
   appearanceMode: z.nativeEnum(AppearanceMode),
   experienceNoticeConfirmed: z.boolean().optional(),
-  hideGetStarted: z.boolean().optional(),
+  getStartedHidden: z.boolean().optional(),
 });
 
 export type UserPreferences = z.infer<typeof userPreferencesGuard>;
