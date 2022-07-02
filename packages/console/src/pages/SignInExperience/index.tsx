@@ -22,6 +22,7 @@ import LanguagesForm from './components/LanguagesForm';
 import Preview from './components/Preview';
 import SignInMethodsChangePreview from './components/SignInMethodsChangePreview';
 import SignInMethodsForm from './components/SignInMethodsForm';
+import Skeleton from './components/Skeleton';
 import TermsForm from './components/TermsForm';
 import Welcome from './components/Welcome';
 import usePreviewConfigs from './hooks';
@@ -83,8 +84,8 @@ const SignInExperience = () => {
     await saveData();
   });
 
-  if (!settings && !settingsError) {
-    return <div>loading</div>;
+  if ((!settings && !settingsError) || (!data && !error)) {
+    return <Skeleton />;
   }
 
   if (!settings && settingsError) {
@@ -111,7 +112,6 @@ const SignInExperience = () => {
               {t('sign_in_exp.tabs.others')}
             </TabNavItem>
           </TabNav>
-          {!data && !error && <div>loading</div>}
           {!data && error && <div>{`error occurred: ${error.body?.message ?? error.message}`}</div>}
           {data && (
             <FormProvider {...methods}>
