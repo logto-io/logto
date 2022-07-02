@@ -505,7 +505,7 @@ const translation = {
     },
   },
   demo_app: {
-    notification: 'Use the username and password to sign in this demo.',
+    notification: 'Use your admin console account to sign in to this demo app.',
     title: "You've successfully signed in the demo app!",
     subtitle: 'Here is your log in information:',
     username: 'Username: ',

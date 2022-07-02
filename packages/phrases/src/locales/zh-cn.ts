@@ -486,7 +486,7 @@ const translation = {
     },
   },
   demo_app: {
-    notification: '请使用管理员帐号密码登录本示例应用',
+    notification: '请使用你的管理控制台帐号来登录本示例应用',
     title: '恭喜！你已成功登录到示例应用！',
     subtitle: '以下是你本次登录的用户信息：',
     username: '用户名：',

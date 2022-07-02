@@ -20,6 +20,7 @@
   .appNotification {
     top: _.unit(-6);
     transform: translate(-50%, -100%);
+    width: fit-content;
     max-width: 520px;
   }
 }
