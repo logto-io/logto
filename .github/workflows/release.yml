@@ -67,6 +67,9 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Setup Node and pnpm
+        uses: silverhand-io/actions-node-pnpm-run-steps@v1.2.2
+
       - name: Package
         run: ./package.sh
 
