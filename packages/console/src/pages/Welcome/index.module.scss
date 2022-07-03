@@ -1,23 +1,22 @@
 @use '@/scss/underscore' as _;
 
 .container {
-  position: fixed;
-  inset: 0;
   background-color: var(--color-surface-1);
   display: flex;
+  height: 100vh;
   flex-direction: column;
   min-width: 1280px;
-  min-height: 984px;
-  margin-bottom: _.unit(10);
 
   &.light {
-    background: url('../../assets/icons/welcome.svg') no-repeat;
-    background-position: right bottom;
+    background-image: url('../../assets/icons/welcome.svg');
+    background-position: right 0 bottom 40px;
+    background-repeat: no-repeat;
   }
 
   &.dark {
-    background: url('../../assets/icons/welcome-dark.svg') no-repeat;
-    background-position: right bottom;
+    background-image: url('../../assets/icons/welcome-dark.svg');
+    background-position: right 0 bottom 40px;
+    background-repeat: no-repeat;
 
     &::after {
       content: '';
