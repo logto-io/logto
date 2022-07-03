@@ -21,18 +21,13 @@ Boringly, we call it "[customer identity access management](https://en.wikipedia
 
 ## Get Started
 
-Visit our [website](https://logto.io) for a brief introduction if you are new to Logto. A step-by-step guide is available on https://docs.logto.io (also in [简体中文](https://docs.logto.io/zh-cn)).
-
-## Resources
-
-- Website: https://logto.io
-- Docs & Tutorials: https://docs.logto.io
-- Discord: [Join the channel](https://discord.gg/UEPaF3j5e6)
+- Visit our 🎨 [website](https://logto.io) for a brief introduction if you are new to Logto.
+- A step-by-step guide is available on 📖 [docs.logto.io](https://docs.logto.io) (also in [简体中文](https://docs.logto.io/zh-cn)).
 
 ## Bug Report, Feature Request, Feedback
 
-- Our team takes security seriously, especially when it relates to identity. If you find any existing or potential security issues, please do not hesitate to email [security@silverhand.io](mailto:security@silverhand.io).
-- About other bug reports, feature requests, and feedback, you can directly open an issue on GitHub or join our Discord channel to have a live chat.
+- Our team takes security seriously, especially when it relates to identity. If you find any existing or potential security issues, please do not hesitate to email 🔒 [security@silverhand.io](mailto:security@silverhand.io).
+- About other bug reports, feature requests, and feedback, you can directly 🙋 [open an issue](https://github.com/logto-io/logto/issues/new) on GitHub or 💬 [join our Discord channel](https://discord.gg/UEPaF3j5e6) to have a live chat.
 
 <br/>
 
