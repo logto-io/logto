@@ -1,6 +1,6 @@
 {
   "name": "@logto/integration-tests",
-  "version": "0.1.2-alpha.1",
+  "version": "0.1.2-alpha.5",
   "description": "Integration tests for Logto.",
   "author": "Silverhand Inc. <contact@silverhand.io>",
   "license": "MPL-2.0",
