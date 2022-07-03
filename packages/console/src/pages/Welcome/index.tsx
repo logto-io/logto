@@ -1,11 +1,9 @@
 import { LogtoClientError, useLogto } from '@logto/react';
-import { AppearanceMode } from '@logto/schemas';
+import classNames from 'classnames';
 import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useHref } from 'react-router-dom';
 
-import WelcomeDark from '@/assets/images/welcome-dark.svg';
-import WelcomeIcon from '@/assets/images/welcome.svg';
 import AppError from '@/components/AppError';
 import Button from '@/components/Button';
 import SessionExpired from '@/components/SessionExpired';
@@ -37,23 +35,24 @@ const Welcome = () => {
   }
 
   return (
-    <div className={styles.container}>
+    <div className={classNames(styles.container, styles[theme])}>
       <div className={styles.header}>
         <Logo className={styles.logo} />
       </div>
       <main>
-        {theme === AppearanceMode.LightMode ? <WelcomeIcon /> : <WelcomeDark />}
-        <div className={styles.title}>{t('welcome.title')}</div>
-        <div className={styles.description}>{t('welcome.description')}</div>
-        <Button
-          className={styles.button}
-          size="large"
-          type="primary"
-          title="admin_console.welcome.create_account"
-          onClick={() => {
-            void signIn(new URL(href, window.location.origin).toString());
-          }}
-        />
+        <div className={styles.content}>
+          <div className={styles.title}>{t('welcome.title')}</div>
+          <div className={styles.description}>{t('welcome.description')}</div>
+          <Button
+            className={styles.button}
+            size="large"
+            type="branding"
+            title="admin_console.welcome.create_account"
+            onClick={() => {
+              void signIn(new URL(href, window.location.origin).toString());
+            }}
+          />
+        </div>
       </main>
     </div>
   );

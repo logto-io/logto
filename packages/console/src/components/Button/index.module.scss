@@ -101,6 +101,15 @@
     }
   }
 
+  &.branding {
+    background: linear-gradient(90deg, #5d34f2 32%, #bd31ff 102%);
+    color: var(--color-on-primary);
+
+    &:focus-visible {
+      outline: 3px solid var(--color-focused-variant);
+    }
+  }
+
   &.primary {
     background: var(--color-primary);
     color: var(--color-on-primary);
