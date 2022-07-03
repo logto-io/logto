@@ -30,7 +30,7 @@ const SignIn = () => {
 
   return (
     <>
-      {platform === 'web' && <div className={styles.placeHolderTop} />}
+      {platform === 'web' && <div className={styles.placeholderTop} />}
       <div className={classNames(styles.wrapper)}>
         <BrandingHeader
           className={styles.header}
@@ -57,7 +57,7 @@ const SignIn = () => {
 
         <AppNotification />
       </div>
-      {platform === 'web' && <div className={styles.placeHolderBottom} />}
+      {platform === 'web' && <div className={styles.placeholderBottom} />}
     </>
   );
 };
