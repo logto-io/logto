@@ -115,7 +115,7 @@ const translation = {
     },
     application_details: {
       back_to_applications: '返回全部应用',
-      check_help_guide: '查看帮助引导',
+      check_guide: '查看指南',
       advanced_settings: '高级设置',
       application_name: '应用名称',
       application_name_placeholder: '我的应用',
