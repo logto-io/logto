@@ -28,11 +28,12 @@ jobs:
         with:
           images: |
             ${{ env.IMAGE }}
+          # https://github.com/docker/metadata-action#typesemver
           tags: |
             type=semver,pattern={{version}}
+            type=semver,pattern={{version}},value=prerelease
             type=semver,pattern={{major}}.{{minor}}
             type=semver,pattern={{major}}
-            type=semver,pattern=prerelease
             type=edge
 
       - name: Set up Docker Buildx
