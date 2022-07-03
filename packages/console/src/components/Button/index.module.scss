@@ -101,6 +101,27 @@
     }
   }
 
+  &.branding {
+    background: linear-gradient(90deg, #5d34f2 32%, #bd31ff 102%);
+    color: var(--color-on-primary);
+
+    &:focus-visible {
+      outline: 3px solid var(--color-focused-variant);
+    }
+
+    &:active {
+      background:
+        linear-gradient(0deg, rgba(0, 0, 0, 20%), rgba(0, 0, 0, 20%)),
+        linear-gradient(69.73deg, #492ef3 5.52%, #cf69ff 94.22%);
+    }
+
+    &:not(:disabled):not(:active):hover {
+      background:
+        linear-gradient(0deg, rgba(0, 0, 0, 20%), rgba(0, 0, 0, 20%)),
+        linear-gradient(69.73deg, #492ef3 5.52%, #cf69ff 94.22%);
+    }
+  }
+
   &.primary {
     background: var(--color-primary);
     color: var(--color-on-primary);

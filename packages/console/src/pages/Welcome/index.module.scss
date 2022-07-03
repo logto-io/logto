@@ -1,12 +1,34 @@
 @use '@/scss/underscore' as _;
 
-
 .container {
-  position: fixed;
-  inset: 0;
   background-color: var(--color-surface-1);
   display: flex;
+  height: 100vh;
   flex-direction: column;
+  min-width: 1280px;
+
+  &.light {
+    background-image: url('../../assets/icons/welcome.svg');
+    background-position: right 0 bottom 40px;
+    background-repeat: no-repeat;
+  }
+
+  &.dark {
+    background-image: url('../../assets/icons/welcome-dark.svg');
+    background-position: right 0 bottom 40px;
+    background-repeat: no-repeat;
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 92px;
+      width: 273px;
+      height: 221px;
+      background: url('../../assets/icons/snowflake.svg') no-repeat;
+      background-position: center;
+    }
+  }
 }
 
 .header {
@@ -21,28 +43,30 @@
 
 main {
   flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  width: 400px;
-  margin: 0 auto;
+}
+
+.content {
+  position: absolute;
+  top: 25%;
+  left: 8.333%;
+  width: 585px;
 }
 
 .title {
-  font: var(--font-headline-medium);
+  font-weight: 600;
+  font-size: 57px;
+  line-height: 64px;
+  letter-spacing: -0.25px;
   color: var(--color-text);
-  text-align: center;
   margin: _.unit(2) 0 _.unit(3);
 }
 
 .description {
   font: var(--font-body-large);
-  color: var(--color-neutral-variant-30);
-  text-align: center;
+  color: var(--color-caption);
   margin-bottom: _.unit(8);
 }
 
 .button {
-  width: 100%;
+  width: 400px;
 }
