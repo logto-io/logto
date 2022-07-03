@@ -388,7 +388,7 @@ const translation = {
         no_connector_email: '你还没有设置 email 连接器。你需完成设置后登录体验才会生效。',
         no_connector_social: '你还没有设置社交连接器。你需完成设置后登录体验才会生效。',
         no_added_social_connector:
-          '你已经成功设置了一些社会化连接器。确认添加一些到你的登录体验。你可以拖拽改变他们的顺序。',
+          '你已经成功设置了一些社交连接器。点按「+」添加一些到你的登录体验。',
       },
       save_alert: {
         description: '你正在修改登录方式，这可能会影响部分用户。是否继续保存修改？',
