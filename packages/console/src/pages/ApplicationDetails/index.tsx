@@ -127,7 +127,7 @@ const ApplicationDetails = () => {
             </div>
             <div className={styles.operations}>
               <Button
-                title="admin_console.application_details.check_help_guide"
+                title="admin_console.application_details.check_guide"
                 size="large"
                 onClick={() => {
                   setIsReadmeOpen(true);
