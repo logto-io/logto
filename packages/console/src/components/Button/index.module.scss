@@ -108,6 +108,18 @@
     &:focus-visible {
       outline: 3px solid var(--color-focused-variant);
     }
+
+    &:active {
+      background:
+        linear-gradient(0deg, rgba(0, 0, 0, 20%), rgba(0, 0, 0, 20%)),
+        linear-gradient(69.73deg, #492ef3 5.52%, #cf69ff 94.22%);
+    }
+
+    &:not(:disabled):not(:active):hover {
+      background:
+        linear-gradient(0deg, rgba(0, 0, 0, 20%), rgba(0, 0, 0, 20%)),
+        linear-gradient(69.73deg, #492ef3 5.52%, #cf69ff 94.22%);
+    }
   }
 
   &.primary {
