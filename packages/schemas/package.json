@@ -2,7 +2,6 @@
   "name": "@logto/schemas",
   "version": "0.1.2-alpha.2",
   "main": "lib/index.js",
-  "repository": "https://github.com/logto-io/schemas",
   "author": "Silverhand Inc. <contact@silverhand.io>",
   "license": "MPL-2.0",
   "files": [
