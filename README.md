@@ -22,7 +22,7 @@ Boringly, we call it "[customer identity access management](https://en.wikipedia
 ## Get Started
 
 - Visit our 🎨 [website](https://logto.io) for a brief introduction if you are new to Logto.
-- A step-by-step guide is available on 📖 https://docs.logto.io (also in [简体中文](https://docs.logto.io/zh-cn)).
+- A step-by-step guide is available on 📖 [docs.logto.io](https://docs.logto.io) (also in [简体中文](https://docs.logto.io/zh-cn)).
 
 ## Bug Report, Feature Request, Feedback
 
