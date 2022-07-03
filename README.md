@@ -4,7 +4,7 @@
     </a>
 </p>
 
-# Logto [WIP]
+# Logto
 
 Logto[^info] helps you build the sign-in experience and user identity within minutes.
 
