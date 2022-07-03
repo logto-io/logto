@@ -118,19 +118,19 @@ const Connectors = () => {
               )}
               {!isLoading && !isSocial && (
                 <ConnectorRow
-                  connectors={emailConnector ? [emailConnector] : []}
-                  type={ConnectorType.Email}
+                  connectors={smsConnector ? [smsConnector] : []}
+                  type={ConnectorType.SMS}
                   onClickSetup={() => {
-                    setCreateType(ConnectorType.Email);
+                    setCreateType(ConnectorType.SMS);
                   }}
                 />
               )}
               {!isLoading && !isSocial && (
                 <ConnectorRow
-                  connectors={smsConnector ? [smsConnector] : []}
-                  type={ConnectorType.SMS}
+                  connectors={emailConnector ? [emailConnector] : []}
+                  type={ConnectorType.Email}
                   onClickSetup={() => {
-                    setCreateType(ConnectorType.SMS);
+                    setCreateType(ConnectorType.Email);
                   }}
                 />
               )}
