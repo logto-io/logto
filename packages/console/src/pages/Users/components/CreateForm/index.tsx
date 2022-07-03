@@ -44,7 +44,6 @@ const CreateForm = ({ onClose }: Props) => {
   return (
     <ModalLayout
       title="users.create"
-      subtitle="users.subtitle"
       footer={
         <Button
           disabled={isSubmitting}
@@ -72,11 +71,9 @@ const CreateForm = ({ onClose }: Props) => {
             errorMessage={errors.username?.message}
           />
         </FormField>
-        <FormField isRequired title="admin_console.users.create_form_name">
+        <FormField title="admin_console.users.create_form_name">
           <TextInput
-            {...register('name', {
-              required: true,
-            })}
+            {...register('name')}
             hasError={Boolean(errors.name)}
             errorMessage={errors.name?.message}
           />
