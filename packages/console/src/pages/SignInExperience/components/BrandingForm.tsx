@@ -66,13 +66,15 @@ const BrandingForm = () => {
           />
         </FormField>
       )}
-      <FormField isRequired={isSloganRequired} title="admin_console.sign_in_exp.branding.slogan">
-        <TextInput
-          {...register('branding.slogan', { required: isSloganRequired })}
-          hasError={Boolean(errors.branding?.slogan)}
-          placeholder={t('sign_in_exp.branding.slogan_placeholder')}
-        />
-      </FormField>
+      {isSloganRequired && (
+        <FormField isRequired={isSloganRequired} title="admin_console.sign_in_exp.branding.slogan">
+          <TextInput
+            {...register('branding.slogan', { required: isSloganRequired })}
+            hasError={Boolean(errors.branding?.slogan)}
+            placeholder={t('sign_in_exp.branding.slogan_placeholder')}
+          />
+        </FormField>
+      )}
     </>
   );
 };

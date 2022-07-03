@@ -328,8 +328,8 @@ const translation = {
         title: '品牌定制区',
         ui_style: '样式',
         styles: {
-          logo_slogan: 'App logo 和标语',
-          logo: '仅有Logo',
+          logo_slogan: 'Logo 和标语',
+          logo: '仅有 Logo',
         },
         logo_image_url: 'Logo 图片 URL',
         logo_image_url_placeholder: 'https://your.cdn.domain/logo.png',
