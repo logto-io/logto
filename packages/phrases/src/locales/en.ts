@@ -118,7 +118,7 @@ const translation = {
     },
     application_details: {
       back_to_applications: 'Back to Applications',
-      check_help_guide: 'Check Help Guide',
+      check_help_guide: 'Check Guide',
       advanced_settings: 'Advanced settings',
       application_name: 'Application name',
       application_name_placeholder: 'My App',
@@ -164,7 +164,7 @@ const translation = {
     },
     connectors: {
       title: 'Connectors',
-      subtitle: 'Setup connectors to enable passwordless and social sign in experience',
+      subtitle: 'Set up connectors to enable passwordless and social sign in experience',
       create: 'Add Social Connector',
       tab_email_sms: 'Email and SMS connectors',
       tab_social: 'Social connectors',
@@ -258,7 +258,7 @@ const translation = {
       created_title: 'This user has been successfully created',
       created_guide: 'You can send the following log in information to the user',
       created_username: 'Username:',
-      created_password: 'Initial password:',
+      created_password: 'Password:',
       menu_delete: 'Delete',
       delete_description: 'This action cannot be undone. It will permanently delete the user.',
       deleted: 'The user has been successfully deleted',
@@ -318,7 +318,7 @@ const translation = {
       },
       welcome: {
         title:
-          'This is the first time you define sign-in experience. This guide will help you go through all necessary settings and quicly get started.',
+          'This is the first time you define sign-in experience. This guide will help you go through all necessary settings and quickly get started.',
         get_started: 'Get Started',
         apply_remind:
           'Please note that sign-in experience will apply to all applications under this account.',
@@ -331,8 +331,8 @@ const translation = {
         dark_mode: 'Enable dark mode',
         dark_mode_description:
           'Your app will have an auto-generated dark mode theme based on your brand color and Logto algorithm. You are free to customize.',
-        dark_mode_reset_tip: 'Reset to auto-generated dark mode color based on brand color.',
-        reset: 'Reset',
+        dark_mode_reset_tip: 'Recalculate dark mode color based on brand color.',
+        reset: 'Recalculate',
       },
       branding: {
         title: 'BRANDING AREA',
@@ -401,7 +401,7 @@ const translation = {
         no_connector_social:
           'You haven’t set up any social connectors yet. Your sign in experience won’t go live until you finish the settings first. ',
         no_added_social_connector:
-          'You’ve set up a few social connectors now. Click "+" to add some to your sign in experience.',
+          'You’ve set up a few social connectors now. Make sure to add some to your sign in experience. Drag and drop to change the order.',
       },
       save_alert: {
         description:
@@ -410,7 +410,7 @@ const translation = {
         after: 'After',
       },
       preview: {
-        title: 'Sign in preview',
+        title: 'Sign In Preview',
         languages: {
           english: 'English',
           chinese: 'Chinese',
@@ -437,12 +437,12 @@ const translation = {
       appearance_light: 'Light mode',
       appearance_dark: 'Dark mode',
       saved: 'Saved!',
-      change_password: 'Change password',
+      change_password: 'Change Password',
       change_password_description:
-        'You can change your password for this account. You will use your current username with new password to sign in Admin Console.',
+        'You can change password for this account. You will use current username with new password to sign in Admin Console.',
       change_modal_title: 'Change Account Password',
       change_modal_description:
-        'You will use your current username with new password to sign in Admin Console.',
+        'You will use current username with new password to sign in Admin Console.',
       new_password: 'New password',
       new_password_placeholder: 'Enter your password',
       confirm_password: 'Confirm password',
@@ -495,7 +495,7 @@ const translation = {
       title: 'Session Expired',
       subtitle:
         'Your session might have expired and you have been disconnected. Click the button below to sign in to admin console again.',
-      button: 'Sign in again',
+      button: 'Sign In Again',
     },
     welcome: {
       title: 'Welcome to Admin Console',
@@ -510,7 +510,7 @@ const translation = {
     subtitle: 'Here is your log in information:',
     username: 'Username: ',
     user_id: 'User ID: ',
-    sign_out: 'Sign out the demo app',
+    sign_out: 'Sign Out The Demo App',
     continue_explore: 'Or continue to explore',
     customize_sign_in_experience: 'Customize Sign-in Experience',
     enable_passwordless: 'Enable Passwordless',
