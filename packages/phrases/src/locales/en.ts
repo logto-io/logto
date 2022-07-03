@@ -118,7 +118,7 @@ const translation = {
     },
     application_details: {
       back_to_applications: 'Back to Applications',
-      check_help_guide: 'Check Guide',
+      check_guide: 'Check Guide',
       advanced_settings: 'Advanced settings',
       application_name: 'Application name',
       application_name_placeholder: 'My App',
