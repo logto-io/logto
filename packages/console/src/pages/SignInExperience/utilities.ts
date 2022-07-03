@@ -18,6 +18,10 @@ const findMethodState = (
     return SignInMethodState.Primary;
   }
 
+  if (!signInMethods.enableSecondary) {
+    return SignInMethodState.Disabled;
+  }
+
   if (signInMethods[method]) {
     return SignInMethodState.Secondary;
   }
