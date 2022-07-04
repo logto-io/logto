@@ -4,6 +4,12 @@
     </a>
 </p>
 
+<p align="center">
+    <span><img src="https://img.shields.io/github/v/release/logto-io/logto?color=7958FF" alt="release" /></span>
+    <span><img src="https://img.shields.io/codecov/c/github/logto-io/logto?label=core%20coverage" alt="core coverage" /></span>
+    <span><img src="https://img.shields.io/github/checks-status/logto-io/logto/master" alt="checks"></span>
+</p>
+
 # Logto
 
 Logto[^info] helps you build the sign-in experience and user identity within minutes.
