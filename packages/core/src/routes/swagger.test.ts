@@ -68,15 +68,20 @@ describe('GET /swagger.json', () => {
   });
 
   it('should generate the tags', async () => {
-    const response = await mockSwaggerRequest.get('/swagger.json');
+    const testTagRouter = new Router();
+    testTagRouter.get('/mock', () => ({}));
+    testTagRouter.put('/.well-known', () => ({}));
+    const swaggerRequest = createSwaggerRequest([testTagRouter]);
+
+    const response = await swaggerRequest.get('/swagger.json');
     expect(response.body.paths).toMatchObject(
       expect.objectContaining({
         /* eslint-disable @typescript-eslint/no-unsafe-assignment */
         '/api/mock': expect.objectContaining({
           get: expect.objectContaining({ tags: ['Mock'] }),
         }),
-        '/api/test': expect.objectContaining({
-          put: expect.objectContaining({ tags: ['Test'] }),
+        '/api/.well-known': expect.objectContaining({
+          put: expect.objectContaining({ tags: ['.well-known'] }),
         }),
         /* eslint-enable @typescript-eslint/no-unsafe-assignment */
       })
