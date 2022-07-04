@@ -38,6 +38,6 @@ export const adminConsoleSignInExperience: CreateSignInExperience = {
   branding: {
     style: BrandingStyle.Logo_Slogan,
     logoUrl: 'https://logto.io/logo.svg',
-    darkLogoUrl: '',
+    darkLogoUrl: 'https://logto.io/logo-dark.svg',
   },
 };
