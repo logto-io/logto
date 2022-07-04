@@ -156,7 +156,7 @@ const Preview = ({ signInExperience, className }: Props) => {
             setPlatform('mobile');
           }}
         >
-          {t('sign_in_exp.preview.mobile')}
+          {t('sign_in_exp.preview.native')}
         </TabNavItem>
         <TabNavItem
           isActive={platform === 'desktopWeb'}

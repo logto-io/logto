@@ -29,7 +29,7 @@ const SignInMethodsForm = () => {
     primaryMethod?: SignInMethodKey
   ) => {
     if (oldPrimaryMethod) {
-      // The secondary sign in method should select the old primary method by default.
+      // The secondary sign-in method should select the old primary method by default.
       setValue(`signInMethods.${oldPrimaryMethod}`, true);
     }
 

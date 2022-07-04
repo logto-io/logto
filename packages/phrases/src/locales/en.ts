@@ -313,7 +313,7 @@ const translation = {
       description: 'Customize the sign in UI to match your brand and view in real time',
       tabs: {
         branding: 'Branding',
-        methods: 'Sign in methods',
+        methods: 'Sign-in methods',
         others: 'Others',
       },
       welcome: {
@@ -357,12 +357,12 @@ const translation = {
         terms_of_use_tip: 'Terms of use URL',
       },
       sign_in_methods: {
-        title: 'SIGN IN METHODS',
-        primary: 'Primary sign in method',
+        title: 'SIGN-IN METHODS',
+        primary: 'Primary sign-in method',
         enable_secondary: 'Enable secondary sign in',
         enable_secondary_description:
-          "Once it's turned on, you app will support more sign in method(s) besides the primary one. ",
-        methods: 'Sign in method',
+          "Once it's turned on, you app will support more sign-in method(s) besides the primary one. ",
+        methods: 'Sign-in method',
         methods_sms: 'Phone number sign in',
         methods_email: 'Email sign in',
         methods_social: 'Social sign in',
@@ -405,19 +405,19 @@ const translation = {
       },
       save_alert: {
         description:
-          'You are changing sign in methods. This will impact some of your users. Are you sure you want to do that?',
+          'You are changing sign-in methods. This will impact some of your users. Are you sure you want to do that?',
         before: 'Before',
         after: 'After',
       },
       preview: {
-        title: 'Sign In Preview',
+        title: 'Sign-in Preview',
         languages: {
           english: 'English',
           chinese: 'Chinese',
         },
         dark: 'Dark',
         light: 'Light',
-        mobile: 'Mobile',
+        native: 'native',
         desktop_web: 'Desktop Web',
         mobile_web: 'Mobile Web',
       },
