@@ -1,6 +1,6 @@
 import { absoluteLighten } from '@logto/shared';
 import color from 'color';
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
@@ -24,11 +24,16 @@ const ColorForm = () => {
 
   const isDarkModeEnabled = watch('color.isDarkModeEnabled');
   const primaryColor = watch('color.primaryColor');
+  const darkPrimaryColor = watch('color.darkPrimaryColor');
 
   const handleResetColor = useCallback(() => {
     const darkPrimaryColor = absoluteLighten(color(primaryColor), 10);
     setValue('color.darkPrimaryColor', darkPrimaryColor.hex());
   }, [primaryColor, setValue]);
+
+  const showReset = useMemo(() => {
+    return absoluteLighten(color(primaryColor), 10).hex() !== darkPrimaryColor;
+  }, [darkPrimaryColor, primaryColor]);
 
   useEffect(() => {
     if (!isDirty) {
@@ -70,15 +75,17 @@ const ColorForm = () => {
               )}
             />
           </FormField>
-          <div className={styles.darkModeTip}>
-            {t('sign_in_exp.color.dark_mode_reset_tip')}
-            <Button
-              type="plain"
-              size="small"
-              title="admin_console.sign_in_exp.color.reset"
-              onClick={handleResetColor}
-            />
-          </div>
+          {showReset && (
+            <div className={styles.darkModeTip}>
+              {t('sign_in_exp.color.dark_mode_reset_tip')}
+              <Button
+                type="plain"
+                size="small"
+                title="admin_console.sign_in_exp.color.reset"
+                onClick={handleResetColor}
+              />
+            </div>
+          )}
         </>
       )}
     </>
