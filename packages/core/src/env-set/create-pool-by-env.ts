@@ -12,28 +12,31 @@ import { allYes, noInquiry } from './parameters';
 const defaultDatabaseUrl = getEnv('DB_URL_DEFAULT', 'postgres://@localhost:5432');
 const defaultDatabaseName = 'logto';
 
-const createDatabaseIfNotExists = async (dsn: string): Promise<[string, boolean]> => {
+const initDatabase = async (dsn: string): Promise<[string, boolean]> => {
   try {
     return [await createDatabase(dsn, defaultDatabaseName), true];
   } catch (error: unknown) {
     const result = z.object({ code: z.string() }).safeParse(error);
 
     // https://www.postgresql.org/docs/12/errcodes-appendix.html
-    // Database already exists
-    if (result.success && result.data.code === '42P04') {
-      if (allYes) {
-        return [replaceDsnDatabase(dsn, defaultDatabaseName), false];
-      }
+    const databaseExists = result.success && result.data.code === '42P04';
 
-      const useCurrent = await inquirer.prompt({
-        type: 'confirm',
-        name: 'value',
-        message: `A database named "${defaultDatabaseName}" already exists. Would you like to use it without seeding?`,
-      });
+    if (!databaseExists) {
+      throw error;
+    }
 
-      if (useCurrent.value) {
-        return [replaceDsnDatabase(dsn, defaultDatabaseName), false];
-      }
+    if (allYes) {
+      return [replaceDsnDatabase(dsn, defaultDatabaseName), false];
+    }
+
+    const useCurrent = await inquirer.prompt({
+      type: 'confirm',
+      name: 'value',
+      message: `A database named "${defaultDatabaseName}" already exists. Would you like to use it without filling the initial data?`,
+    });
+
+    if (useCurrent.value) {
+      return [replaceDsnDatabase(dsn, defaultDatabaseName), false];
     }
 
     throw error;
@@ -42,7 +45,7 @@ const createDatabaseIfNotExists = async (dsn: string): Promise<[string, boolean]
 
 const inquireForLogtoDsn = async (key: string): Promise<[Optional<string>, boolean]> => {
   if (allYes) {
-    return createDatabaseIfNotExists(defaultDatabaseUrl);
+    return initDatabase(defaultDatabaseUrl);
   }
 
   const setUp = await inquirer.prompt({
@@ -72,7 +75,7 @@ const inquireForLogtoDsn = async (key: string): Promise<[Optional<string>, boole
     return [dsn, false];
   }
 
-  return createDatabaseIfNotExists(dsn);
+  return initDatabase(dsn);
 };
 
 const createPoolByEnv = async (isTest: boolean, demoAppUrl: string) => {
