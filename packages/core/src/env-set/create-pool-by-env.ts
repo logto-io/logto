@@ -1,15 +1,10 @@
-import {
-  assertEnv,
-  conditional,
-  conditionalString,
-  getEnv,
-  Optional,
-} from '@silverhand/essentials';
+import { assertEnv, conditional, getEnv, Optional } from '@silverhand/essentials';
 import inquirer from 'inquirer';
 import { createPool } from 'slonik';
 import { createInterceptors } from 'slonik-interceptor-preset';
+import { z } from 'zod';
 
-import { createDatabase, createDatabaseCli } from '@/database/seed';
+import { createDatabase, createDatabaseCli, replaceDsnDatabase } from '@/database/seed';
 
 import { appendDotEnv } from './dot-env';
 import { allYes, noInquiry } from './parameters';
@@ -17,9 +12,40 @@ import { allYes, noInquiry } from './parameters';
 const defaultDatabaseUrl = getEnv('DB_URL_DEFAULT', 'postgres://@localhost:5432');
 const defaultDatabaseName = 'logto';
 
+const initDatabase = async (dsn: string): Promise<[string, boolean]> => {
+  try {
+    return [await createDatabase(dsn, defaultDatabaseName), true];
+  } catch (error: unknown) {
+    const result = z.object({ code: z.string() }).safeParse(error);
+
+    // https://www.postgresql.org/docs/12/errcodes-appendix.html
+    const databaseExists = result.success && result.data.code === '42P04';
+
+    if (!databaseExists) {
+      throw error;
+    }
+
+    if (allYes) {
+      return [replaceDsnDatabase(dsn, defaultDatabaseName), false];
+    }
+
+    const useCurrent = await inquirer.prompt({
+      type: 'confirm',
+      name: 'value',
+      message: `A database named "${defaultDatabaseName}" already exists. Would you like to use it without filling the initial data?`,
+    });
+
+    if (useCurrent.value) {
+      return [replaceDsnDatabase(dsn, defaultDatabaseName), false];
+    }
+
+    throw error;
+  }
+};
+
 const inquireForLogtoDsn = async (key: string): Promise<[Optional<string>, boolean]> => {
   if (allYes) {
-    return [await createDatabase(defaultDatabaseUrl, defaultDatabaseName), true];
+    return initDatabase(defaultDatabaseUrl);
   }
 
   const setUp = await inquirer.prompt({
@@ -38,19 +64,10 @@ const inquireForLogtoDsn = async (key: string): Promise<[Optional<string>, boole
     return [conditional<string>(dsn.value && String(dsn.value)), false];
   }
 
-  const hasEmptyDatabase = await inquirer.prompt({
-    type: 'confirm',
-    name: 'value',
-    default: false,
-    message: 'Do you have an empty database for Logto?',
-  });
-
   const dsnAnswer = await inquirer.prompt({
     name: 'value',
-    default: new URL(hasEmptyDatabase.value ? defaultDatabaseName : '', defaultDatabaseUrl).href,
-    message: `Please input the DSN _WITH${conditionalString(
-      !hasEmptyDatabase.value && 'OUT'
-    )}_ database name:`,
+    default: new URL(defaultDatabaseUrl).href,
+    message: `Please input the DSN _WITHOUT_ database name:`,
   });
   const dsn = conditional<string>(dsnAnswer.value && String(dsnAnswer.value));
 
@@ -58,11 +75,7 @@ const inquireForLogtoDsn = async (key: string): Promise<[Optional<string>, boole
     return [dsn, false];
   }
 
-  if (!hasEmptyDatabase.value) {
-    return [await createDatabase(dsn, defaultDatabaseName), true];
-  }
-
-  return [dsn, true];
+  return initDatabase(dsn);
 };
 
 const createPoolByEnv = async (isTest: boolean, demoAppUrl: string) => {
