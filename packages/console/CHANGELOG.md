@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.0-alpha.0](https://github.com/logto-io/logto/compare/v0.1.2-alpha.5...v1.0.0-alpha.0) (2022-07-04)
+
+
+### Features
+
+* **console:** update task complete icon ([#1395](https://github.com/logto-io/logto/issues/1395)) ([06f190b](https://github.com/logto-io/logto/commit/06f190b2c48acfc853c9f675bf918c43c17f800a))
+
+
+### Bug Fixes
+
+* **console:** disable secondary should remove sign in methods ([#1384](https://github.com/logto-io/logto/issues/1384)) ([6e3c461](https://github.com/logto-io/logto/commit/6e3c461a88c2ae39089fcf2df26ee06a139381a0))
+* **console:** hide reset description on dark-mode primary color matched ([#1394](https://github.com/logto-io/logto/issues/1394)) ([de8f476](https://github.com/logto-io/logto/commit/de8f476b372134cf23dd01a1c7872b16bbc5e5c4))
+* **console:** remove userinfo endpoint on application details page ([#1391](https://github.com/logto-io/logto/issues/1391)) ([a837d79](https://github.com/logto-io/logto/commit/a837d793d0e7bc9818013ba0adc2f8c03e4fab21))
+* **console:** save sie when secondary method is disabled ([#1410](https://github.com/logto-io/logto/issues/1410)) ([52fee4c](https://github.com/logto-io/logto/commit/52fee4c4226c1fbc3d906f12dd2613200e56595f))
+* **console:** use png for calendar icon ([#1385](https://github.com/logto-io/logto/issues/1385)) ([f01390a](https://github.com/logto-io/logto/commit/f01390a7b2f103f0ab7ec0817ea6e2e267390923))
+
+
+
 ### [0.1.2-alpha.5](https://github.com/logto-io/logto/compare/v0.1.2-alpha.4...v0.1.2-alpha.5) (2022-07-03)
 
 **Note:** Version bump only for package @logto/console
