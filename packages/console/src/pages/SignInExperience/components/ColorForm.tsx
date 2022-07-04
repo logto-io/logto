@@ -26,14 +26,13 @@ const ColorForm = () => {
   const primaryColor = watch('color.primaryColor');
   const darkPrimaryColor = watch('color.darkPrimaryColor');
 
-  const handleResetColor = useCallback(() => {
-    const darkPrimaryColor = absoluteLighten(color(primaryColor), 10);
-    setValue('color.darkPrimaryColor', darkPrimaryColor.hex());
-  }, [primaryColor, setValue]);
+  const calculatedDarkPrimaryColor = useMemo(() => {
+    return absoluteLighten(color(primaryColor), 10).hex();
+  }, [primaryColor]);
 
-  const showReset = useMemo(() => {
-    return absoluteLighten(color(primaryColor), 10).hex() !== darkPrimaryColor;
-  }, [darkPrimaryColor, primaryColor]);
+  const handleResetColor = useCallback(() => {
+    setValue('color.darkPrimaryColor', calculatedDarkPrimaryColor);
+  }, [calculatedDarkPrimaryColor, setValue]);
 
   useEffect(() => {
     if (!isDirty) {
@@ -75,7 +74,7 @@ const ColorForm = () => {
               )}
             />
           </FormField>
-          {showReset && (
+          {calculatedDarkPrimaryColor !== darkPrimaryColor && (
             <div className={styles.darkModeTip}>
               {t('sign_in_exp.color.dark_mode_reset_tip')}
               <Button
