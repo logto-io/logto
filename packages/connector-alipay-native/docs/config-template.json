@@ -1,5 +1,5 @@
 {
   "appId": "<app-id>",
-  "signType": "<signing-algorithm>",
+  "signType": "<signing-algorithm-either-RSA-or-RSA2>",
   "privateKey": "<private-key>"
 }
