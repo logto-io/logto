@@ -1,5 +1,6 @@
 import { AdminConsoleKey, I18nKey } from '@logto/phrases';
 import { AppearanceMode, Application } from '@logto/schemas';
+import { demoAppApplicationId } from '@logto/schemas/lib/seeds';
 import { useNavigate } from 'react-router-dom';
 import useSWR from 'swr';
 
@@ -39,7 +40,7 @@ const useGetStartedMetadata = ({ checkDemoAppExists }: Props) => {
   const theme = useTheme();
   const isLightMode = theme === AppearanceMode.LightMode;
   const { data: demoApp, error } = useSWR<Application, RequestError>(
-    checkDemoAppExists && '/api/applications/demo_app',
+    checkDemoAppExists && `/api/applications/${demoAppApplicationId}`,
     {
       shouldRetryOnError: (error: unknown) => {
         if (error instanceof RequestError) {

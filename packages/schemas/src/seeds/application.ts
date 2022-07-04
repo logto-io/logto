@@ -7,7 +7,7 @@ import { ApplicationType, CreateApplication } from '../db-entries';
  */
 export const adminConsoleApplicationId = 'admin_console';
 
-export const demoAppApplicationId = 'demo_app';
+export const demoAppApplicationId = 'demo-app';
 
 export const createDemoAppApplication = (urls: string[]): Readonly<CreateApplication> => ({
   id: demoAppApplicationId,
