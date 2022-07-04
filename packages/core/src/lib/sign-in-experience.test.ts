@@ -29,6 +29,17 @@ describe('validate branding', () => {
     }).toMatchError(new RequestError('sign_in_experiences.empty_slogan'));
   });
 
+  test('should throw when the logo is empty', () => {
+    expect(() => {
+      validateBranding({
+        ...mockBranding,
+        style: BrandingStyle.Logo,
+        logoUrl: ' ',
+        slogan: '',
+      });
+    }).toMatchError(new RequestError('sign_in_experiences.empty_logo'));
+  });
+
   test('should throw when the UI style contains the slogan and slogan is blank', () => {
     expect(() => {
       validateBranding({

@@ -12,7 +12,7 @@ export const defaultSignInExperience: Readonly<CreateSignInExperience> = {
   },
   branding: {
     style: BrandingStyle.Logo,
-    logoUrl: '',
+    logoUrl: 'https://raw.githubusercontent.com/logto-io/logto/master/logo.png',
     darkLogoUrl: '',
   },
   languageInfo: {
@@ -37,7 +37,7 @@ export const adminConsoleSignInExperience: CreateSignInExperience = {
   ...defaultSignInExperience,
   branding: {
     style: BrandingStyle.Logo_Slogan,
-    logoUrl: '',
+    logoUrl: 'https://raw.githubusercontent.com/logto-io/logto/master/logo.png',
     darkLogoUrl: '',
   },
 };

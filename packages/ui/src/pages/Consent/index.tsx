@@ -11,11 +11,6 @@ const Consent = () => {
   const { experienceSettings, theme } = useContext(PageContext);
   const { error, result, run: asyncConsent } = useApi(consent);
 
-  const logoUrl =
-    theme === 'light'
-      ? experienceSettings?.branding.logoUrl
-      : experienceSettings?.branding.darkLogoUrl;
-
   useEffect(() => {
     void asyncConsent();
   }, [asyncConsent]);
@@ -28,7 +23,12 @@ const Consent = () => {
 
   return (
     <div className={styles.wrapper}>
-      <img src={logoUrl} />
+      <img
+        src={
+          (theme === 'dark' && experienceSettings?.branding.darkLogoUrl) ||
+          experienceSettings?.branding.logoUrl
+        }
+      />
       {!error && <LoadingIcon />}
     </div>
   );

@@ -15,6 +15,8 @@ export const validateBranding = (branding: Branding) => {
   if (branding.style === BrandingStyle.Logo_Slogan) {
     assertThat(branding.slogan?.trim(), 'sign_in_experiences.empty_slogan');
   }
+
+  assertThat(branding.logoUrl.trim(), 'sign_in_experiences.empty_logo');
 };
 
 export const validateTermsOfUse = (termsOfUse: TermsOfUse) => {
