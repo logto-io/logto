@@ -1,3 +1,4 @@
+import { load } from 'js-yaml';
 import Koa from 'koa';
 import Router from 'koa-router';
 import request from 'supertest';
@@ -7,9 +8,13 @@ import koaGuard from '@/middleware/koa-guard';
 import koaPagination from '@/middleware/koa-pagination';
 import { AnonymousRouter } from '@/routes/types';
 
-import swaggerRoutes, { paginationParameters } from './swagger';
+import swaggerRoutes, { defaultResponses, paginationParameters } from './swagger';
 
-const createSwaggerRequest = (
+jest.mock('js-yaml', () => ({
+  load: jest.fn().mockReturnValue({ paths: {} }),
+}));
+
+export const createSwaggerRequest = (
   allRouters: Array<Router<unknown, any>>,
   swaggerRouter: AnonymousRouter = new Router()
 ) => {
@@ -232,5 +237,61 @@ describe('GET /swagger.json', () => {
         /* eslint-enable @typescript-eslint/no-unsafe-assignment */
       })
     );
+  });
+
+  describe('should use correct responses', () => {
+    it('should use "defaultResponses" if there is no custom "responses" from the additional swagger', async () => {
+      (load as jest.Mock).mockReturnValueOnce({
+        paths: { '/api/mock': { delete: {} } },
+      });
+
+      const swaggerRequest = createSwaggerRequest([mockRouter]);
+      const response = await swaggerRequest.get('/swagger.json');
+      expect(response.body.paths).toMatchObject({
+        /* eslint-disable @typescript-eslint/no-unsafe-assignment */
+        '/api/mock': expect.objectContaining({
+          delete: expect.objectContaining({ responses: defaultResponses }),
+        }),
+        /* eslint-enable @typescript-eslint/no-unsafe-assignment */
+      });
+    });
+
+    it('should use custom "responses" from the additional swagger if it exists', async () => {
+      (load as jest.Mock).mockReturnValueOnce({
+        paths: {
+          '/api/mock': {
+            get: {
+              responses: {
+                '204': { description: 'No Content' },
+              },
+            },
+            patch: {
+              responses: {
+                '202': { description: 'Accepted' },
+              },
+            },
+          },
+        },
+      });
+
+      const swaggerRequest = createSwaggerRequest([mockRouter]);
+      const response = await swaggerRequest.get('/swagger.json');
+      expect(response.body.paths).toMatchObject({
+        /* eslint-disable @typescript-eslint/no-unsafe-assignment */
+        '/api/mock': {
+          get: expect.objectContaining({
+            responses: {
+              '204': { description: 'No Content' },
+            },
+          }),
+          patch: expect.objectContaining({
+            responses: {
+              '202': { description: 'Accepted' },
+            },
+          }),
+        },
+        /* eslint-enable @typescript-eslint/no-unsafe-assignment */
+      });
+    });
   });
 });
