@@ -1,13 +1,6 @@
 /* Foundation */
-$font-family: -apple-system,
-  system-ui,
-  'BlinkMacSystemFont',
-  'Segoe UI',
-  'Roboto',
-  'Helvetica Neue',
-  'Helvetica',
-  'Arial',
-  sans-serif;
+$font-family: -apple-system, system-ui, 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue',
+  'Helvetica', 'Arial', sans-serif;
 
 @mixin colors-light-theme {
   --color-base: #fff;
@@ -25,6 +18,8 @@ $font-family: -apple-system,
   --color-error: #ba1b1b;
   --color-dialogue: #fff;
   --color-loading-icon: #191c1d;
+
+  --color-inverse-social-bg: #000;
 }
 
 @mixin colors-dark-theme {
@@ -41,10 +36,14 @@ $font-family: -apple-system,
   --color-primary: var(--dark-primary-color);
   --color-layer: #2a2c32;
   --color-error: #dd3730;
-  --color-dialogue: linear-gradient(0deg, rgba(202, 190, 255, 8%), rgba(202, 190, 255, 8%)), linear-gradient(0deg, rgba(196, 199, 199, 2%), rgba(196, 199, 199, 2%)), #191c1d;
+  --color-dialogue:
+    linear-gradient(0deg, rgba(202, 190, 255, 8%), rgba(202, 190, 255, 8%)),
+    linear-gradient(0deg, rgba(196, 199, 199, 2%), rgba(196, 199, 199, 2%)),
+    #191c1d;
   --color-loading-icon: #f7f8f8;
-}
 
+  --color-inverse-social-bg: #fff;
+}
 
 @mixin colors-universal {
   --color-primary-button-text: #fff;

@@ -8,10 +8,10 @@
   width: 40px;
   height: 40px;
   cursor: pointer;
+}
 
-  &.inverse {
-    background: #fff;
-  }
+.inverse {
+  background: var(--color-inverse-social-bg);
 }
 
 .icon {
@@ -29,6 +29,16 @@
 
     &:not(.inverse):hover:not(:active) {
       background: var(--color-hover);
+    }
+  }
+
+  .inverse {
+    &:active {
+      background: var(--color-inverse-social-pressed);
+    }
+
+    &:hover:not(:active) {
+      background: var(--color-inverse-social-hover);
     }
   }
 }
