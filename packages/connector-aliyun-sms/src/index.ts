@@ -45,7 +45,7 @@ export default class AliyunSmsConnector implements SmsConnector {
           AccessKeyId: accessKeyId,
           PhoneNumbers: phone,
           SignName: signName,
-          TemplateCode: template.code,
+          TemplateCode: template.templateCode,
           TemplateParam: JSON.stringify({ code }),
         },
         accessKeySecret
