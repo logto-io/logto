@@ -12,22 +12,13 @@ type Props = {
 
 const AdvancedSettings = ({ oidcConfig }: Props) => {
   return (
-    <>
-      <FormField title="admin_console.application_details.token_endpoint">
-        <CopyToClipboard
-          className={styles.textField}
-          value={oidcConfig.token_endpoint}
-          variant="border"
-        />
-      </FormField>
-      <FormField title="admin_console.application_details.user_info_endpoint">
-        <CopyToClipboard
-          className={styles.textField}
-          value={oidcConfig.userinfo_endpoint}
-          variant="border"
-        />
-      </FormField>
-    </>
+    <FormField title="admin_console.application_details.token_endpoint">
+      <CopyToClipboard
+        className={styles.textField}
+        value={oidcConfig.token_endpoint}
+        variant="border"
+      />
+    </FormField>
   );
 };
 
