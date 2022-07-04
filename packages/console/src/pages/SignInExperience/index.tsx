@@ -74,7 +74,7 @@ const SignInExperience = () => {
 
     const formatted = signInExperienceParser.toRemoteModel(formData);
 
-    // Sign in methods changed, need to show confirm modal first.
+    // Sign-in methods changed, need to show confirm modal first.
     if (!compareSignInMethods(data, formatted)) {
       setDataToCompare(formatted);
 

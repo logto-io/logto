@@ -59,7 +59,7 @@ describe('validate terms of use', () => {
   });
 });
 
-describe('check whether the social sign in method state is enabled', () => {
+describe('check whether the social sign-in method state is enabled', () => {
   it('should be truthy when sign-in method state is primary', () => {
     expect(isEnabled(SignInMethodState.Primary)).toBeTruthy();
   });

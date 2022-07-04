@@ -403,7 +403,7 @@ const translation = {
         },
         dark: '深色',
         light: '浅色',
-        mobile: '移动',
+        native: '原生',
         desktop_web: '桌面网页',
         mobile_web: '移动网页',
       },
