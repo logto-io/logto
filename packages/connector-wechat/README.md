@@ -2,7 +2,7 @@
 
 The official Logto connector for WeChat social sign-in in web apps.
 
-微信 web 应用社交登录官方 Logto 连接器 [中文文档](#)
+微信 web 应用社交登录官方 Logto 连接器 [中文文档](#微信网页连接器)
 
 **Table of contents**
 
