@@ -91,8 +91,6 @@ Once WeChat web connector is enabled, you can sign in to your app again to see i
 ## 开始上手
 
 如果你还不知道连接器的概念，或者还没有将本连接器添加至你的「登录体验」，请先参见 [Logto 教程](https://docs.logto.io/zh-cn/docs/tutorials/get-started/enable-social-sign-in)。
-
-
 > **⚠️ Caution**
 > 
 > 这个连接器只适用于网页应用。如果你在寻找移动端原生应用的微信登录解决方案，请移步 [微信原生连接器](https://github.com/logto-io/logto/tree/master/packages/connector-wechat-native)。
@@ -123,7 +121,7 @@ Once WeChat web connector is enabled, you can sign in to your app again to see i
 
 #### 网站信息
 
-用你的 Logto 域（例如 `logto.io`）填写「授权回调域」。
+用你的 Logto 域名（例如 `logto.io`）填写「授权回调域」。
 
 #### 等待审核结果
 
