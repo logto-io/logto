@@ -17,8 +17,8 @@ export const defaultMetadata: ConnectorMetadata = {
   logo: './logo.svg',
   logoDark: './logo-dark.svg',
   description: {
-    en: 'Make signing into Logto seamlessly for GitHub users.',
-    'zh-CN': '让 GitHub 用户无缝登录 Logto。',
+    en: 'GitHub is a provider of Internet hosting for software development and version control using Git.',
+    'zh-CN': 'GitHub 是全球最大的代码托管仓库。',
   },
   readme: './README.md',
   configTemplate: './docs/config-template.json',

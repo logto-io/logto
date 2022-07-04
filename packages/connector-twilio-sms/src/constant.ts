@@ -14,8 +14,8 @@ export const defaultMetadata: ConnectorMetadata = {
   logo: './logo.svg',
   logoDark: null,
   description: {
-    en: 'Messaging APIs for reliable SMS delivery.',
-    'zh-CN': '可信赖的短信消息 API。',
+    en: 'Twilio provides programmable communication tools for phone calls and text messages using its web service APIs.',
+    'zh-CN': 'Twilio 是一个提供面向消费者的可编程通讯服务的平台。',
   },
   readme: './README.md',
   configTemplate: './docs/config-template.json',

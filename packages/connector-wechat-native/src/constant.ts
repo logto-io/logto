@@ -17,8 +17,8 @@ export const defaultMetadata: ConnectorMetadata = {
   logo: './logo.svg',
   logoDark: null,
   description: {
-    en: 'Allow your users to sign in through their WeChat account.',
-    'zh-CN': '让用户可以通过微信账号登录。',
+    en: 'WeChat is a cross-platform instant messaging app.',
+    'zh-CN': '微信是一款跨平台的即时通讯软件。',
   },
   readme: './README.md',
   configTemplate: './docs/config-template.json',

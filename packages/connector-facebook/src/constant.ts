@@ -26,8 +26,8 @@ export const defaultMetadata: ConnectorMetadata = {
   logo: './logo.svg',
   logoDark: null,
   description: {
-    en: 'Provide users with the option to sign in with their Facebook account.',
-    'zh-CN': '为用户提供 Facebook 账号登录的选项。',
+    en: 'Facebook is a worldwide social media platform with the most active users.',
+    'zh-CN': 'Facebook 是世界使用人数最多的社交平台。',
   },
   readme: './README.md',
   configTemplate: './docs/config-template.json',
