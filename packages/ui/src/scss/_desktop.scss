@@ -1,13 +1,6 @@
 /* Foundation */
-$font-family: -apple-system,
-  system-ui,
-  'BlinkMacSystemFont',
-  'Segoe UI',
-  'Roboto',
-  'Helvetica Neue',
-  'Helvetica',
-  'Arial',
-  sans-serif;
+$font-family: -apple-system, system-ui, 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue',
+  'Helvetica', 'Arial', sans-serif;
 
 @mixin colors-light-theme {
   --color-base: #e5e1ec;
@@ -37,6 +30,10 @@ $font-family: -apple-system,
   --color-divider: #e0e3e3;
   --color-error: #ba1b1b;
   --color-loading-icon: #191c1d;
+
+  --color-inverse-social-bg: #000;
+  --color-inverse-social-hover: rgba(0, 0, 0, 92%);
+  --color-inverse-social-pressed: rgba(0, 0, 0, 88%);
 }
 
 @mixin colors-dark-theme {
@@ -49,7 +46,7 @@ $font-family: -apple-system,
   --color-border-variant: #5f5d67;
   --color-caption: #a9acac;
   --color-icon: #a9acac;
-  --color-focused: rgba(247, 248, 248, 16%);  // 16% Neutral-10
+  --color-focused: rgba(247, 248, 248, 16%); // 16% Neutral-10
   --color-pressed: rgba(247, 248, 248, 12%); // 12% Neutral-10
   --color-hover: rgba(247, 248, 248, 8%); // 8% Neutral-10
 
@@ -60,16 +57,21 @@ $font-family: -apple-system,
   --color-primary-pressed: var(--dark-pressed);
   --color-primary-hover: var(--dark-hover);
 
-
   --color-inverse-on-surface: #2d3132;
   --color-outline: #928f9a;
   --color-layer: #2a2c32;
-  --color-dialogue: linear-gradient(0deg, rgba(202, 190, 255, 8%), rgba(202, 190, 255, 8%)), linear-gradient(0deg, rgba(196, 199, 199, 2%), rgba(196, 199, 199, 2%)), #191c1d;
+  --color-dialogue:
+    linear-gradient(0deg, rgba(202, 190, 255, 8%), rgba(202, 190, 255, 8%)),
+    linear-gradient(0deg, rgba(196, 199, 199, 2%), rgba(196, 199, 199, 2%)),
+    #191c1d;
   --color-divider: #444748;
   --color-error: #dd3730;
   --color-loading-icon: #f7f8f8;
-}
 
+  --color-inverse-social-bg: #fff;
+  --color-inverse-social-hover: rgba(255, 255, 255, 92%);
+  --color-inverse-social-pressed: rgba(255, 255, 255, 88%);
+}
 
 @mixin colors-universal {
   --color-primary-button-text: #fff;

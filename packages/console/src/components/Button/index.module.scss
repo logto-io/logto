@@ -106,19 +106,21 @@
     color: var(--color-on-primary);
 
     &:focus-visible {
-      outline: 3px solid var(--color-focused-variant);
+      background:
+        linear-gradient(0deg, rgba(0, 0, 0, 20%), rgba(0, 0, 0, 20%)),
+        linear-gradient(90deg, #5d34f2 32%, #bd31ff 102%);
     }
 
     &:active {
       background:
         linear-gradient(0deg, rgba(0, 0, 0, 20%), rgba(0, 0, 0, 20%)),
-        linear-gradient(69.73deg, #492ef3 5.52%, #cf69ff 94.22%);
+        linear-gradient(90deg, #5d34f2 32%, #bd31ff 102%);
     }
 
     &:not(:disabled):not(:active):hover {
       background:
-        linear-gradient(0deg, rgba(0, 0, 0, 20%), rgba(0, 0, 0, 20%)),
-        linear-gradient(69.73deg, #492ef3 5.52%, #cf69ff 94.22%);
+        linear-gradient(0deg, rgba(255, 255, 255, 20%), rgba(255, 255, 255, 20%)),
+        linear-gradient(90deg, #5d34f2 32%, #bd31ff 102%);
     }
   }
 

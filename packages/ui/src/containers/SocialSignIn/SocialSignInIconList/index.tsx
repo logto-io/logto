@@ -32,11 +32,19 @@ const SocialSignInIconList = ({
       {connectors.map((connector) => {
         const { id, target, logo, logoDark } = connector;
 
+        const getLogo = () => {
+          if (theme === 'dark') {
+            return (!isAppleConnector(target) && logoDark) || logo;
+          }
+
+          return (isAppleConnector(target) && logoDark) || logo;
+        };
+
         return (
           <SocialIconButton
             key={id}
             className={styles.socialButton}
-            logo={(theme === 'dark' && !isAppleConnector(target) && logoDark) || logo}
+            logo={getLogo()}
             target={target}
             onClick={() => {
               void invokeSocialSignIn(connector);
