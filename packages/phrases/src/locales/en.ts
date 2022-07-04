@@ -417,7 +417,7 @@ const translation = {
         },
         dark: 'Dark',
         light: 'Light',
-        native: 'native',
+        native: 'Native',
         desktop_web: 'Desktop Web',
         mobile_web: 'Mobile Web',
       },
