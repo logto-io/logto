@@ -52,12 +52,8 @@ const GetStarted = () => {
           ({ id, title, subtitle, icon: CardIcon, isComplete, isHidden, buttonText, onClick }) =>
             !isHidden && (
               <Card key={id} className={styles.card}>
-                {isComplete ? (
-                  <CompleteIndicator className={styles.icon} />
-                ) : (
-                  <CardIcon className={styles.icon} />
-                )}
-
+                {!isComplete && <CardIcon className={styles.icon} />}
+                {isComplete && <CompleteIndicator className={styles.icon} />}
                 <div className={styles.wrapper}>
                   <div className={styles.title}>{t(title)}</div>
                   <div className={styles.subtitle}>{t(subtitle)}</div>
