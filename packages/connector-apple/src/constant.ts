@@ -21,8 +21,8 @@ export const defaultMetadata: ConnectorMetadata = {
   logo: './logo.svg',
   logoDark: './logo-dark.svg',
   description: {
-    en: 'Enables users to sign in to the Logto app through their Apple account.',
-    'zh-CN': '让用户能够通过 Apple 账号登录 Logto 应用。',
+    en: 'Apple is a multinational high-end provider of hardware and software.',
+    'zh-CN': 'Apple 是全球领先的高端消费者软硬件提供商。',
   },
   readme: './README.md',
   configTemplate: './docs/config-template.json',

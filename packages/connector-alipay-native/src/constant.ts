@@ -23,8 +23,8 @@ export const defaultMetadata: ConnectorMetadata = {
   logo: './logo.svg',
   logoDark: null,
   description: {
-    en: 'Allow your users to sign in through their Alipay account.',
-    'zh-CN': '让用户可以通过支付宝账号登录。',
+    en: 'Alipay is a third-party mobile and online payment platform.',
+    'zh-CN': '支付宝是一个第三方支付平台。',
   },
   readme: './README.md',
   configTemplate: './docs/config-template.json',

@@ -12,8 +12,8 @@ export const defaultMetadata: ConnectorMetadata = {
   logo: './logo.svg',
   logoDark: null,
   description: {
-    en: 'Simple Mail Transfer Protocol.',
-    'zh-CN': '简单邮件传输协议。',
+    en: 'The Simple Mail Transfer Protocol is an internet standard communication protocol for electronic mail transmission.',
+    'zh-CN': 'SMTP 是简单邮件通讯协议的缩写，可以对接几乎所有邮件服务提供商。',
   },
   readme: './README.md',
   configTemplate: './docs/config-template.json',

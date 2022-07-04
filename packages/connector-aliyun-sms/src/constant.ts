@@ -37,9 +37,8 @@ export const defaultMetadata: ConnectorMetadata = {
   logo: './logo.svg',
   logoDark: null,
   description: {
-    en: 'Short Message Service (SMS) has a batch sending feature and various API operations to send one-time password (OTP) messages, notification messages, and promotional messages to customers.',
-    'zh-CN':
-      '短信服务（Short Message Service）是指通过调用短信发送API，将指定短信内容发送给指定手机用户。',
+    en: "Aliyun provides cloud computing services to online businesses and Alibaba's e-commerce ecosystem.",
+    'zh-CN': '阿里云是全球性的云服务提供商。',
   },
   readme: './README.md',
   configTemplate: './docs/config-template.json',

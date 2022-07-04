@@ -14,8 +14,8 @@ export const defaultMetadata: ConnectorMetadata = {
   logo: './logo.svg',
   logoDark: null,
   description: {
-    en: 'Leverage the email service that customer-first brands trust for reliable inbox delivery at scale.',
-    'zh-CN': '客户至上品牌信任的电子邮件服务，实现大规模可靠的收件箱递送。',
+    en: 'SendGrid is a customer communication platform for transactional and marketing email.',
+    'zh-CN': 'SendGrid 是一个面向消费者的邮件通讯平台。',
   },
   readme: './README.md',
   configTemplate: './docs/config-template.json',

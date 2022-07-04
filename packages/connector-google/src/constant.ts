@@ -17,8 +17,8 @@ export const defaultMetadata: ConnectorMetadata = {
   logo: './logo.svg',
   logoDark: null,
   description: {
-    en: 'Gives users the ability to sign in with their Google account.',
-    'zh-CN': '赋予用户用 Google 账号登录的能力。',
+    en: 'Google is the biggest search engine technology and email service provider.',
+    'zh-CN': 'Google 是全球最大的搜索引擎和邮件服务提供商。',
   },
   readme: './README.md',
   configTemplate: './docs/config-template.json',
