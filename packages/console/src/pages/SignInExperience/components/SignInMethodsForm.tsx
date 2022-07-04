@@ -76,7 +76,7 @@ const SignInMethodsForm = () => {
           </div>
         );
       }),
-    [primaryMethod, register, t, email, social, sms]
+    [t, primaryMethod, email, sms, social, control]
   );
 
   return (
@@ -116,7 +116,11 @@ const SignInMethodsForm = () => {
       )}
       <FormField title="admin_console.sign_in_exp.sign_in_methods.enable_secondary">
         <Switch
-          {...register('signInMethods.enableSecondary', { required: true })}
+          /**
+           * DO NOT SET THIS FIELD TO REQUIRED UNLESS YOU KNOW WHAT YOU ARE DOING.
+           * https://github.com/react-hook-form/react-hook-form/issues/2323
+           */
+          {...register('signInMethods.enableSecondary')}
           label={t('sign_in_exp.sign_in_methods.enable_secondary_description')}
         />
       </FormField>
