@@ -24,7 +24,7 @@ export const defaultMetadata: ConnectorMetadata = {
   logoDark: null,
   description: {
     en: 'Alipay is a third-party mobile and online payment platform.',
-    'zh-CN': '支付宝是一款第三方支付平台。',
+    'zh-CN': '支付宝是一个第三方支付平台。',
   },
   readme: './README.md',
   configTemplate: './docs/config-template.json',
