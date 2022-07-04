@@ -53,7 +53,7 @@ Sign in with the account you just created. In the "Web Application" (网页应�
 
 Let's fill out the required info in the application form.
 
-![Create a mobile app](/packages/connector-wechat/docs/create-web-app.png)
+![Create a web app](/packages/connector-wechat/docs/create-web-app.png)
 
 #### Basic info
 
@@ -99,7 +99,7 @@ Once WeChat web connector is enabled, you can sign in to your app again to see i
 
 > 💡 **Tip**
 > 
-> 如果你已经完成了某些步骤可以选择直接跳过。
+> 你可以跳过已经完成的部分。
 
 ### 创建一个账号
 
@@ -113,7 +113,7 @@ Once WeChat web connector is enabled, you can sign in to your app again to see i
 
 让我们填写一下申请表单里的必要信息。
 
-![Create a mobile app](/packages/connector-wechat/docs/create-web-app.png)
+![Create a web app](/packages/connector-wechat/docs/create-web-app.png)
 
 #### 基础信息
 
