@@ -17,17 +17,17 @@
     background-image: url('../../assets/icons/welcome-dark.svg');
     background-position: right 0 bottom 40px;
     background-repeat: no-repeat;
+  }
 
-    &::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      right: 92px;
-      width: 273px;
-      height: 221px;
-      background: url('../../assets/icons/snowflake.svg') no-repeat;
-      background-position: center;
-    }
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 92px;
+    width: 273px;
+    height: 221px;
+    background: url('../../assets/icons/snowflake.svg') no-repeat;
+    background-position: center;
   }
 }
 
