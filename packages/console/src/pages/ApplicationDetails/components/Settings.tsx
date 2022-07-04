@@ -1,5 +1,5 @@
 import { Application, ApplicationType, SnakeCaseOidcConfig } from '@logto/schemas';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
@@ -9,6 +9,7 @@ import MultiTextInput from '@/components/MultiTextInput';
 import { MultiTextInputRule } from '@/components/MultiTextInput/types';
 import { createValidatorForRhf, convertRhfErrorMessage } from '@/components/MultiTextInput/utils';
 import TextInput from '@/components/TextInput';
+import { useUnsavedChangesAlertModal } from '@/hooks/use-unsaved-changes-alert-modal';
 import { uriOriginValidator, uriValidator } from '@/utilities/validator';
 
 import * as styles from '../index.module.scss';
@@ -16,15 +17,27 @@ import * as styles from '../index.module.scss';
 type Props = {
   applicationType: ApplicationType;
   oidcConfig: SnakeCaseOidcConfig;
+  defaultData: Application;
 };
 
-const Settings = ({ applicationType, oidcConfig }: Props) => {
+const Settings = ({ applicationType, oidcConfig, defaultData }: Props) => {
+  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const {
     control,
     register,
-    formState: { errors },
+    reset,
+    formState: { errors, isDirty },
   } = useFormContext<Application>();
-  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+
+  useEffect(() => {
+    reset(defaultData);
+
+    return () => {
+      reset(defaultData);
+    };
+  }, [reset, defaultData]);
+
+  const UnsavedChangesAlertModal = useUnsavedChangesAlertModal(isDirty);
 
   const uriPatternRules: MultiTextInputRule = {
     pattern: {
@@ -141,6 +154,7 @@ const Settings = ({ applicationType, oidcConfig }: Props) => {
           )}
         />
       </FormField>
+      <UnsavedChangesAlertModal />
     </>
   );
 };

@@ -22,6 +22,7 @@ import TabNav, { TabNavItem } from '@/components/TabNav';
 import TextInput from '@/components/TextInput';
 import useApi, { RequestError } from '@/hooks/use-api';
 import { useTheme } from '@/hooks/use-theme';
+import { useUnsavedChangesAlertModal } from '@/hooks/use-unsaved-changes-alert-modal';
 import Back from '@/icons/Back';
 import Delete from '@/icons/Delete';
 import More from '@/icons/More';
@@ -52,10 +53,12 @@ const ApiResourceDetails = () => {
     handleSubmit,
     register,
     reset,
-    formState: { isSubmitting, errors },
+    formState: { isDirty, isSubmitting, errors },
   } = useForm<FormData>({
     defaultValues: data,
   });
+
+  const UnsavedChangesAlertModal = useUnsavedChangesAlertModal(isDirty);
 
   const api = useApi();
 
@@ -179,6 +182,7 @@ const ApiResourceDetails = () => {
           </Card>
         </>
       )}
+      <UnsavedChangesAlertModal />
     </div>
   );
 };

@@ -1,6 +1,6 @@
 import { SignInExperience as SignInExperienceType } from '@logto/schemas';
 import classNames from 'classnames';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
@@ -16,17 +16,15 @@ import useApi, { RequestError } from '@/hooks/use-api';
 import useSettings from '@/hooks/use-settings';
 import * as detailsStyles from '@/scss/details.module.scss';
 
-import BrandingForm from './components/BrandingForm';
-import ColorForm from './components/ColorForm';
-import LanguagesForm from './components/LanguagesForm';
 import Preview from './components/Preview';
 import SignInMethodsChangePreview from './components/SignInMethodsChangePreview';
-import SignInMethodsForm from './components/SignInMethodsForm';
 import Skeleton from './components/Skeleton';
-import TermsForm from './components/TermsForm';
 import Welcome from './components/Welcome';
 import usePreviewConfigs from './hooks';
 import * as styles from './index.module.scss';
+import BrandingTab from './tabs/BrandingTab';
+import OthersTab from './tabs/OthersTab';
+import SignInMethodsTab from './tabs/SignInMethodsTab';
 import { SignInExperienceForm } from './types';
 import { compareSignInMethods, signInExperienceParser } from './utilities';
 
@@ -50,11 +48,19 @@ const SignInExperience = () => {
 
   const previewConfigs = usePreviewConfigs(formData, isDirty, data);
 
-  useEffect(() => {
-    if (data && !isDirty) {
-      reset(signInExperienceParser.toLocalForm(data));
+  const defaultFormData = useMemo(() => {
+    if (!data) {
+      return;
     }
-  }, [data, reset, isDirty]);
+
+    return signInExperienceParser.toLocalForm(data);
+  }, [data]);
+
+  useEffect(() => {
+    if (defaultFormData && !isDirty) {
+      reset(defaultFormData);
+    }
+  }, [reset, isDirty, defaultFormData]);
 
   const saveData = async () => {
     const updatedData = await api
@@ -113,22 +119,18 @@ const SignInExperience = () => {
             </TabNavItem>
           </TabNav>
           {!data && error && <div>{`error occurred: ${error.body?.message ?? error.message}`}</div>}
-          {data && (
+          {data && defaultFormData && (
             <FormProvider {...methods}>
               <form className={styles.formWrapper} onSubmit={onSubmit}>
                 <div className={classNames(detailsStyles.body, styles.form)}>
                   {tab === 'branding' && (
-                    <>
-                      <ColorForm />
-                      <BrandingForm />
-                    </>
+                    <BrandingTab defaultData={defaultFormData} isDataDirty={isDirty} />
                   )}
-                  {tab === 'methods' && <SignInMethodsForm />}
+                  {tab === 'methods' && (
+                    <SignInMethodsTab defaultData={defaultFormData} isDataDirty={isDirty} />
+                  )}
                   {tab === 'others' && (
-                    <>
-                      <TermsForm />
-                      <LanguagesForm />
-                    </>
+                    <OthersTab defaultData={defaultFormData} isDataDirty={isDirty} />
                   )}
                 </div>
                 <div className={detailsStyles.footer}>

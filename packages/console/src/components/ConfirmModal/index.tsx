@@ -19,6 +19,7 @@ export type ConfirmModalProps = {
   isOpen: boolean;
   onCancel: () => void;
   onConfirm: () => void;
+  onClose?: () => void;
 };
 
 const ConfirmModal = ({
@@ -31,6 +32,7 @@ const ConfirmModal = ({
   isOpen,
   onCancel,
   onConfirm,
+  onClose = onCancel,
 }: ConfirmModalProps) => {
   return (
     <ReactModal
@@ -47,7 +49,7 @@ const ConfirmModal = ({
           </>
         }
         className={classNames(styles.content, className)}
-        onClose={onCancel}
+        onClose={onClose}
       >
         {children}
       </ModalLayout>

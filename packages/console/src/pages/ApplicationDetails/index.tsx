@@ -39,7 +39,7 @@ const mapToUriOriginFormatArrays = (value?: string[]) =>
 
 const ApplicationDetails = () => {
   const { id } = useParams();
-  const location = useLocation();
+  const { pathname } = useLocation();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { data, error, mutate } = useSWR<Application, RequestError>(
     id && `/api/applications/${id}`
@@ -101,7 +101,7 @@ const ApplicationDetails = () => {
     setIsReadmeOpen(false);
   };
 
-  const isAdvancedSettings = location.pathname.includes('advanced-settings');
+  const isAdvancedSettings = pathname.includes('advanced-settings');
 
   return (
     <div className={detailsStyles.container}>
@@ -177,10 +177,15 @@ const ApplicationDetails = () => {
             <FormProvider {...formMethods}>
               <form className={classNames(styles.form, detailsStyles.body)} onSubmit={onSubmit}>
                 <div className={styles.fields}>
-                  {isAdvancedSettings ? (
-                    <AdvancedSettings oidcConfig={oidcConfig} />
-                  ) : (
-                    <Settings applicationType={data.type} oidcConfig={oidcConfig} />
+                  {isAdvancedSettings && (
+                    <AdvancedSettings oidcConfig={oidcConfig} defaultData={data} />
+                  )}
+                  {!isAdvancedSettings && (
+                    <Settings
+                      applicationType={data.type}
+                      oidcConfig={oidcConfig}
+                      defaultData={data}
+                    />
                   )}
                 </div>
                 <div className={detailsStyles.footer}>
