@@ -1,6 +1,6 @@
 import { AppearanceMode, ConnectorDTO, ConnectorType } from '@logto/schemas';
 import classNames from 'classnames';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -9,11 +9,9 @@ import useSWR from 'swr';
 import ActionMenu, { ActionMenuItem } from '@/components/ActionMenu';
 import Button from '@/components/Button';
 import Card from '@/components/Card';
-import CodeEditor from '@/components/CodeEditor';
 import CopyToClipboard from '@/components/CopyToClipboard';
 import DetailsSkeleton from '@/components/DetailsSkeleton';
 import Drawer from '@/components/Drawer';
-import FormField from '@/components/FormField';
 import LinkButton from '@/components/LinkButton';
 import Markdown from '@/components/Markdown';
 import Status from '@/components/Status';
@@ -29,20 +27,17 @@ import Reset from '@/icons/Reset';
 import * as detailsStyles from '@/scss/details.module.scss';
 
 import CreateForm from '../Connectors/components/CreateForm';
+import ConnectorContent from './components/ConnectorContent';
 import ConnectorTabs from './components/ConnectorTabs';
 import ConnectorTypeName from './components/ConnectorTypeName';
-import SenderTester from './components/SenderTester';
 import * as styles from './index.module.scss';
 
 const ConnectorDetails = () => {
   const { connectorId } = useParams();
   const [isReadMeOpen, setIsReadMeOpen] = useState(false);
-  const [config, setConfig] = useState<string>();
-  const [saveError, setSaveError] = useState<string>();
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSetupOpen, setIsSetupOpen] = useState(false);
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { data, error } = useSWR<ConnectorDTO, RequestError>(
+  const { data, error, mutate } = useSWR<ConnectorDTO, RequestError>(
     connectorId && `/api/connectors/${connectorId}`
   );
   const inUse = useConnectorInUse(data?.type, data?.target);
@@ -50,44 +45,6 @@ const ConnectorDetails = () => {
   const api = useApi();
   const navigate = useNavigate();
   const theme = useTheme();
-
-  useEffect(() => {
-    if (data) {
-      const hasData = Object.keys(data.config).length > 0;
-      setConfig(hasData ? JSON.stringify(data.config, null, 2) : data.configTemplate);
-    }
-  }, [data]);
-
-  const handleSave = async () => {
-    if (!connectorId) {
-      return;
-    }
-
-    setSaveError(undefined);
-
-    if (!config) {
-      setSaveError(t('connector_details.save_error_empty_config'));
-
-      return;
-    }
-
-    try {
-      const configJson = JSON.parse(config) as JSON;
-      setIsSubmitting(true);
-      await api
-        .patch(`/api/connectors/${connectorId}`, {
-          json: { config: configJson },
-        })
-        .json<ConnectorDTO>();
-      toast.success(t('general.saved'));
-    } catch (error: unknown) {
-      if (error instanceof SyntaxError) {
-        setSaveError(t('connector_details.save_error_json_parse_error'));
-      }
-    }
-
-    setIsSubmitting(false);
-  };
 
   const handleDelete = async () => {
     if (!connectorId) {
@@ -208,33 +165,13 @@ const ConnectorDetails = () => {
               {t('general.settings_nav')}
             </TabNavItem>
           </TabNav>
-          <div className={styles.main}>
-            <FormField title="admin_console.connector_details.edit_config_label">
-              <CodeEditor
-                className={styles.codeEditor}
-                language="json"
-                value={config}
-                onChange={(value) => {
-                  setConfig(value);
-                }}
-              />
-            </FormField>
-            {data.type !== ConnectorType.Social && (
-              <SenderTester connectorId={data.id} connectorType={data.type} config={config} />
-            )}
-            {saveError && <div>{saveError}</div>}
-          </div>
-          <div className={detailsStyles.footer}>
-            <div className={detailsStyles.footerMain}>
-              <Button
-                type="primary"
-                size="large"
-                title="admin_console.general.save_changes"
-                isLoading={isSubmitting}
-                onClick={handleSave}
-              />
-            </div>
-          </div>
+          <ConnectorContent
+            connectorId={connectorId}
+            data={data}
+            onMutate={(connector) => {
+              void mutate(connector);
+            }}
+          />
         </Card>
       )}
     </div>
