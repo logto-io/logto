@@ -26,10 +26,10 @@ export const useUnsavedChangesAlertModal = (when: boolean) => {
       location: { pathname },
     } = navigator as BlockerNavigator;
 
-    const unblock = block((tx) => {
+    const unblock = block((transition) => {
       const {
         location: { pathname: targetPathname },
-      } = tx;
+      } = transition;
 
       // Note: We don't want to show the alert if the user is navigating to the same page.
       if (targetPathname === pathname) {
@@ -39,10 +39,10 @@ export const useUnsavedChangesAlertModal = (when: boolean) => {
       setDisplayAlert(true);
 
       setTransition({
-        ...tx,
+        ...transition,
         retry() {
           unblock();
-          tx.retry();
+          transition.retry();
         },
       });
     });
