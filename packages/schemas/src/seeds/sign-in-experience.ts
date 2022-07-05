@@ -7,7 +7,7 @@ export const defaultSignInExperience: Readonly<CreateSignInExperience> = {
   id: 'default',
   color: {
     primaryColor: '#6139F6',
-    isDarkModeEnabled: true,
+    isDarkModeEnabled: false,
     darkPrimaryColor: '#8768F8',
   },
   branding: {
@@ -35,6 +35,10 @@ export const defaultSignInExperience: Readonly<CreateSignInExperience> = {
 
 export const adminConsoleSignInExperience: CreateSignInExperience = {
   ...defaultSignInExperience,
+  color: {
+    ...defaultSignInExperience.color,
+    isDarkModeEnabled: true,
+  },
   branding: {
     style: BrandingStyle.Logo_Slogan,
     logoUrl: 'https://logto.io/logo.svg',
