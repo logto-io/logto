@@ -25,10 +25,9 @@ export const validateCustomClientMetadata = (key: string, value: unknown) => {
 
 export const isOriginAllowed = (
   origin: string,
-  customClientMetadata: CustomClientMetadata,
+  { corsAllowedOrigins = [] }: CustomClientMetadata,
   redirectUris: string[] = []
 ) => {
-  const { corsAllowedOrigins = [] } = customClientMetadata;
   const redirectUriOrigins = redirectUris.map((uri) => new URL(uri).origin);
 
   return [...corsAllowedOrigins, ...redirectUriOrigins].includes(origin);
