@@ -5,6 +5,7 @@ import { appendPath } from '@/utils/url';
 
 import createPoolByEnv from './create-pool-by-env';
 import loadOidcValues from './oidc';
+import { isTrue } from './parameters';
 
 export enum MountedApps {
   Api = 'api',
@@ -32,7 +33,7 @@ const loadEnvValues = async () => {
     localhostUrl,
     endpoint,
     developmentUserId: getEnv('DEVELOPMENT_USER_ID'),
-    trustProxyHeader: getEnv('TRUST_PROXY_HEADER') === 'true',
+    trustProxyHeader: isTrue(getEnv('TRUST_PROXY_HEADER')),
     oidc: await loadOidcValues(appendPath(endpoint, '/oidc').toString()),
     adminConsoleUrl: appendPath(endpoint, '/console'),
   });
