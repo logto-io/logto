@@ -255,21 +255,18 @@ src/main/kotlin/com/sample/app/wxapi/WXEntryActivity.kt
 
 **3. Modify the `AndroidManifest.xml`**
 
-Add the following lines to your `AndroidManifest.xml`:
+Add the following line to your `AndroidManifest.xml`:
 
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
   package="com.sample.app">
-  <queries>
-    <!-- line to be added -->
-    <package android:name="com.tencent.mm" />
-  </queries>
 
   <application>
     <!-- line to be added -->
     <activity android:name=".wxapi.WXEntryActivity" android:exported="true"/>
   </application>
+
 </manifest>
 ```
 
@@ -511,15 +508,12 @@ src/main/kotlin/com/sample/app/wxapi/WXEntryActivity.kt
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
   package="com.sample.app">
-  <queries>
-    <!-- 添加的代码 -->
-    <package android:name="com.tencent.mm" />
-  </queries>
 
   <application>
     <!-- 添加的代码 -->
     <activity android:name=".wxapi.WXEntryActivity" android:exported="true"/>
   </application>
+
 </manifest>
 ```
 
