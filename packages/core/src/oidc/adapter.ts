@@ -31,7 +31,7 @@ const buildAdminConsoleClientMetadata = (): AllClientMetadata => {
     grant_types: Object.values(GrantType),
     token_endpoint_auth_method: 'none',
     redirect_uris: urls.map((url) => appendPath(url, '/callback').toString()),
-    post_logout_redirect_uris: urls.map((url) => url.toString()),
+    post_logout_redirect_uris: urls,
   };
 };
 

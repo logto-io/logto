@@ -28,7 +28,7 @@ export default async function initOidc(app: Koa): Promise<Provider> {
     path: '/',
     signed: true,
   } as const);
-  const oidc = new Provider(issuer.toString(), {
+  const oidc = new Provider(issuer, {
     adapter: postgresAdapter,
     renderError: (_ctx, _out, error) => {
       console.log('OIDC error', error);
