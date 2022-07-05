@@ -68,12 +68,10 @@ const UnsavedChangesAlertModal = ({ hasUnsavedChanges }: Props) => {
   return (
     <ConfirmModal
       isOpen={displayAlert}
-      confirmButtonType="primary"
-      confirmButtonText="admin_console.general.stay_on_page"
-      cancelButtonText="admin_console.general.leave_page"
-      onCancel={leavePage}
-      onConfirm={stayOnPage}
-      onClose={stayOnPage}
+      confirmButtonText="admin_console.general.leave_page"
+      cancelButtonText="admin_console.general.stay_on_page"
+      onCancel={stayOnPage}
+      onConfirm={leavePage}
     >
       {t('general.unsaved_changes_warning')}
     </ConfirmModal>
