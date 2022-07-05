@@ -23,7 +23,11 @@ import initOidc from '@/oidc/init';
 import initRouter from '@/routes/init';
 
 const logListening = () => {
-  console.log(chalk.bold(chalk.green(`App is running at ${envSet.values.localhostUrl}`)));
+  const { localhostUrl, endpoint } = envSet.values;
+
+  for (const url of new Set([localhostUrl, endpoint])) {
+    console.log(chalk.bold(chalk.green(`App is running at ${url}`)));
+  }
 };
 
 export default async function initApp(app: Koa): Promise<void> {
