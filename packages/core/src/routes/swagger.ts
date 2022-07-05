@@ -63,13 +63,13 @@ const buildParameters = (
 };
 
 function buildTag(path: string) {
-  const part = path.split('/')[1];
+  const root = path.split('/')[1];
 
-  if (part?.startsWith('.')) {
-    return part;
+  if (root?.startsWith('.')) {
+    return root;
   }
 
-  return toTitle(part ?? 'General');
+  return toTitle(root ?? 'General');
 }
 
 const buildOperation = (stack: IMiddleware[], path: string): OpenAPIV3.OperationObject => {
