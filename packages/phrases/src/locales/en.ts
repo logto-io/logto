@@ -132,7 +132,7 @@ const translation = {
       post_sign_out_redirect_uri_placeholder: 'https://your.website.com/home',
       cors_allowed_origins: 'CORS allowed origins',
       cors_allowed_origins_placeholder: 'https://your.website.com',
-      cors_allowed_origins_tip: 'By default, all your redirect URIs will be allowed.',
+      cors_allowed_origins_tip: 'By default, all your Redirect URIs will be allowed.',
       add_another: 'Add Another',
       id_token_expiration: 'ID Token expiration',
       refresh_token_expiration: 'Refresh Token expiration',
