@@ -63,7 +63,7 @@ const translation = {
       help_and_support: '帮助与支持',
     },
     tabs: {
-      get_started: '开始使用',
+      get_started: '开始上手',
       dashboard: '仪表盘',
       applications: '全部应用',
       api_resources: 'API 资源',
@@ -214,7 +214,7 @@ const translation = {
       type_social: '社交连接器',
     },
     get_started: {
-      progress: '开始使用: {{completed}}/{{total}}',
+      progress: '开始上手: {{completed}}/{{total}}',
       progress_dropdown_title: '一些快速上手的操作',
       title: '还不知道如何使用 Logto?',
       subtitle_part1: '下列是一些可以快速上手的操作，通过这些，你可以更好地感受 Logto 的价值',
