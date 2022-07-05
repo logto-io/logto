@@ -13,7 +13,7 @@ export const defaultSignInExperience: Readonly<CreateSignInExperience> = {
   branding: {
     style: BrandingStyle.Logo,
     logoUrl: 'https://logto.io/logo.svg',
-    darkLogoUrl: '',
+    darkLogoUrl: 'https://logto.io/logo-dark.svg',
   },
   languageInfo: {
     autoDetect: true,
