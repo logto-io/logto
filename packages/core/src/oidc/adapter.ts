@@ -1,10 +1,10 @@
-import { ApplicationType, CreateApplication, GrantType } from '@logto/schemas';
-import { adminConsoleApplicationId } from '@logto/schemas/lib/seeds';
+import { ApplicationType, CreateApplication, GrantType, OidcClientMetadata } from '@logto/schemas';
+import { adminConsoleApplicationId, demoAppApplicationId } from '@logto/schemas/lib/seeds';
 import dayjs from 'dayjs';
 import { AdapterFactory, AllClientMetadata } from 'oidc-provider';
 import snakecaseKeys from 'snakecase-keys';
 
-import envSet from '@/env-set';
+import envSet, { MountedApps } from '@/env-set';
 import { findApplicationById } from '@/queries/application';
 import {
   consumeInstanceById,
@@ -14,12 +14,15 @@ import {
   revokeInstanceByGrantId,
   upsertInstance,
 } from '@/queries/oidc-model-instance';
+import { appendPath } from '@/utils/url';
 
 import { getApplicationTypeString } from './utils';
 
 const buildAdminConsoleClientMetadata = (): AllClientMetadata => {
   const { localhostUrl, adminConsoleUrl } = envSet.values;
-  const urls = [...new Set([`${localhostUrl}/console`, adminConsoleUrl])];
+  const urls = [
+    ...new Set([appendPath(localhostUrl, '/console').toString(), adminConsoleUrl.toString()]),
+  ];
 
   return {
     client_id: adminConsoleApplicationId,
@@ -27,9 +30,26 @@ const buildAdminConsoleClientMetadata = (): AllClientMetadata => {
     application_type: getApplicationTypeString(ApplicationType.SPA),
     grant_types: Object.values(GrantType),
     token_endpoint_auth_method: 'none',
-    redirect_uris: urls.map((url) => `${url}/callback`),
-    post_logout_redirect_uris: urls,
+    redirect_uris: urls.map((url) => appendPath(url, '/callback').toString()),
+    post_logout_redirect_uris: urls.map((url) => url.toString()),
   };
+};
+
+const buildDemoAppUris = (
+  oidcClientMetadata: OidcClientMetadata
+): Pick<OidcClientMetadata, 'redirectUris' | 'postLogoutRedirectUris'> => {
+  const { localhostUrl, endpoint } = envSet.values;
+  const urls = [
+    appendPath(localhostUrl, MountedApps.DemoApp).toString(),
+    appendPath(endpoint, MountedApps.DemoApp).toString(),
+  ];
+
+  const data = {
+    redirectUris: [...new Set([...urls, ...oidcClientMetadata.redirectUris])],
+    postLogoutRedirectUris: [...new Set([...urls, ...oidcClientMetadata.postLogoutRedirectUris])],
+  };
+
+  return data;
 };
 
 export default function postgresAdapter(modelName: string): ReturnType<AdapterFactory> {
@@ -48,7 +68,10 @@ export default function postgresAdapter(modelName: string): ReturnType<AdapterFa
       grant_types: Object.values(GrantType),
       token_endpoint_auth_method: 'none',
       ...snakecaseKeys(oidcClientMetadata),
-      ...customClientMetadata, // OIDC Provider won't camelcase custom parameter keys
+      ...(client_id === demoAppApplicationId &&
+        snakecaseKeys(buildDemoAppUris(oidcClientMetadata))),
+      // `node-oidc-provider` won't camelCase custom parameter keys, so we need to keep the keys camelCased
+      ...customClientMetadata,
     });
 
     return {

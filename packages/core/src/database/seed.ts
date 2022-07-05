@@ -58,7 +58,7 @@ export const insertInto = <T extends SchemaLike>(object: T, table: string) => {
   `;
 };
 
-export const createDatabaseCli = (dsn: string, demoAppUrl: string) => {
+export const createDatabaseCli = (dsn: string) => {
   const pool = createPool(dsn, { interceptors: createInterceptors() });
 
   const createTables = async () => {
@@ -84,7 +84,7 @@ export const createDatabaseCli = (dsn: string, demoAppUrl: string) => {
       pool.query(insertInto(managementResource, 'resources')),
       pool.query(insertInto(createDefaultSetting(), 'settings')),
       pool.query(insertInto(defaultSignInExperience, 'sign_in_experiences')),
-      pool.query(insertInto(createDemoAppApplication([demoAppUrl]), 'applications')),
+      pool.query(insertInto(createDemoAppApplication(), 'applications')),
       pool.query(insertInto(defaultRole, 'roles')),
     ]);
     console.log(`${chalk.blue('[seed-tables]')} Seed tables succeeded.`);

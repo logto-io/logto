@@ -51,7 +51,7 @@ const getUserInfoFromRequest = async (request: Request): Promise<UserInfo> => {
   const {
     payload: { sub, role_names: roleNames },
   } = await jwtVerify(extractBearerTokenFromHeaders(request.headers), publicKey, {
-    issuer,
+    issuer: issuer.toString(),
     audience: managementResource.indicator,
   });
 
