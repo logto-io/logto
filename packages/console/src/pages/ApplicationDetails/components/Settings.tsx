@@ -117,6 +117,7 @@ const Settings = ({ applicationType, oidcConfig }: Props) => {
       <FormField
         title="admin_console.application_details.cors_allowed_origins"
         className={styles.textField}
+        tooltip="admin_console.application_details.cors_allowed_origins_tip"
       >
         <Controller
           name="customClientMetadata.corsAllowedOrigins"

@@ -129,6 +129,7 @@ const translation = {
       post_sign_out_redirect_uri_placeholder: 'https://your.website.com/home',
       cors_allowed_origins: 'CORS Allowed Origins',
       cors_allowed_origins_placeholder: 'https://your.website.com',
+      cors_allowed_origins_tip: '所有 Redirect URI 默认为 CORS 所允许。',
       add_another: '新增',
       id_token_expiration: 'ID Token 过期时间',
       refresh_token_expiration: 'Refresh Token 过期时间',
