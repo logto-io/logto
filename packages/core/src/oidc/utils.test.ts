@@ -88,4 +88,16 @@ describe('isOriginAllowed', () => {
       })
     ).toBeTruthy();
   });
+
+  it('should return true if redirectUris include the origin', () => {
+    expect(
+      isOriginAllowed(
+        'https://logto.dev',
+        {
+          [CustomClientMetadataKey.CorsAllowedOrigins]: [],
+        },
+        ['https://logto.dev/callback']
+      )
+    ).toBeTruthy();
+  });
 });

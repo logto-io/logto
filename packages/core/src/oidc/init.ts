@@ -95,7 +95,8 @@ export default async function initOidc(app: Koa): Promise<Provider> {
     },
     // https://github.com/panva/node-oidc-provider/blob/main/recipes/client_based_origins.md
     clientBasedCORS: (ctx, origin, client) =>
-      ctx.request.origin === origin || isOriginAllowed(origin, client.metadata()),
+      ctx.request.origin === origin ||
+      isOriginAllowed(origin, client.metadata(), client.redirectUris),
     // https://github.com/panva/node-oidc-provider/blob/main/recipes/claim_configuration.md
     claims: {
       profile: ['username', 'name', 'avatar', 'role_names'],
