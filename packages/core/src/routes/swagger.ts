@@ -62,6 +62,16 @@ const buildParameters = (
   }));
 };
 
+function buildTag(path: string) {
+  const root = path.split('/')[1];
+
+  if (root?.startsWith('.')) {
+    return root;
+  }
+
+  return toTitle(root ?? 'General');
+}
+
 const buildOperation = (stack: IMiddleware[], path: string): OpenAPIV3.OperationObject => {
   const guard = stack.find((function_): function_ is WithGuardConfig<IMiddleware> =>
     isGuardMiddleware(function_)
@@ -85,7 +95,7 @@ const buildOperation = (stack: IMiddleware[], path: string): OpenAPIV3.Operation
   ];
 
   return {
-    tags: [toTitle(path.split('/')[1] ?? 'General')],
+    tags: [buildTag(path)],
     parameters: [...pathParameters, ...queryParameters],
     requestBody,
     responses: {
