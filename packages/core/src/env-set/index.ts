@@ -33,7 +33,7 @@ const loadEnvValues = async () => {
     endpoint,
     developmentUserId: getEnv('DEVELOPMENT_USER_ID'),
     trustProxyHeader: getEnv('TRUST_PROXY_HEADER') === 'true',
-    oidc: await loadOidcValues(endpoint),
+    oidc: await loadOidcValues(appendPath(endpoint, '/oidc').toString()),
     adminConsoleUrl: appendPath(endpoint, '/console'),
   });
 };
