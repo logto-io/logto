@@ -139,7 +139,7 @@ const ConnectorDetails = () => {
               <ConnectorTypeName type={data.type} />
               <div className={styles.verticalBar} />
               {inUse !== undefined && (
-                <Status status={inUse ? 'enabled' : 'disabled'} varient="outlined">
+                <Status status={inUse ? 'enabled' : 'disabled'} variant="outlined">
                   {t('connectors.connector_status', {
                     context: inUse ? 'in_use' : 'not_in_use',
                   })}

@@ -17,17 +17,17 @@ type Props = {
   delta?: number;
   title: AdminConsoleKey;
   tooltip?: AdminConsoleKey;
-  varient?: 'bordered' | 'default' | 'plain';
+  variant?: 'bordered' | 'default' | 'plain';
 };
 
-const Block = ({ varient = 'default', count, delta, title, tooltip }: Props) => {
+const Block = ({ variant = 'default', count, delta, title, tooltip }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const tipRef = useRef<HTMLDivElement>(null);
 
   const deltaLable = delta !== undefined && `${conditionalString(delta >= 0 && '+')}${delta}`;
 
   return (
-    <Card className={classNames(styles.block, styles[varient])}>
+    <Card className={classNames(styles.block, styles[variant])}>
       <div className={styles.title}>
         {t(title)}
         {tooltip && (
