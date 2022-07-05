@@ -4,7 +4,7 @@ import { useFormContext } from 'react-hook-form';
 
 import CopyToClipboard from '@/components/CopyToClipboard';
 import FormField from '@/components/FormField';
-import { useUnsavedChangesAlertModal } from '@/hooks/use-unsaved-changes-alert-modal';
+import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 
 import * as styles from '../index.module.scss';
 
@@ -27,8 +27,6 @@ const AdvancedSettings = ({ oidcConfig, defaultData }: Props) => {
     };
   }, [reset, defaultData]);
 
-  const UnsavedChangesAlertModal = useUnsavedChangesAlertModal(isDirty);
-
   return (
     <>
       <FormField title="admin_console.application_details.token_endpoint">
@@ -38,7 +36,7 @@ const AdvancedSettings = ({ oidcConfig, defaultData }: Props) => {
           variant="border"
         />
       </FormField>
-      <UnsavedChangesAlertModal />
+      <UnsavedChangesAlertModal hasUnsavedChanges={isDirty} />
     </>
   );
 };

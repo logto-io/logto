@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useFormContext } from 'react-hook-form';
 
-import { useUnsavedChangesAlertModal } from '@/hooks/use-unsaved-changes-alert-modal';
+import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 
 import BrandingForm from '../components/BrandingForm';
 import ColorForm from '../components/ColorForm';
@@ -23,13 +23,11 @@ const BrandingTab = ({ defaultData, isDataDirty }: Props) => {
     };
   }, [reset, defaultData]);
 
-  const UnsavedChangesAlertModal = useUnsavedChangesAlertModal(isDataDirty);
-
   return (
     <>
       <ColorForm />
       <BrandingForm />
-      <UnsavedChangesAlertModal />
+      <UnsavedChangesAlertModal hasUnsavedChanges={isDataDirty} />
     </>
   );
 };

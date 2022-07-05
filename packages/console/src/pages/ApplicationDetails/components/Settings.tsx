@@ -9,7 +9,7 @@ import MultiTextInput from '@/components/MultiTextInput';
 import { MultiTextInputRule } from '@/components/MultiTextInput/types';
 import { createValidatorForRhf, convertRhfErrorMessage } from '@/components/MultiTextInput/utils';
 import TextInput from '@/components/TextInput';
-import { useUnsavedChangesAlertModal } from '@/hooks/use-unsaved-changes-alert-modal';
+import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import { uriOriginValidator, uriValidator } from '@/utilities/validator';
 
 import * as styles from '../index.module.scss';
@@ -36,8 +36,6 @@ const Settings = ({ applicationType, oidcConfig, defaultData }: Props) => {
       reset(defaultData);
     };
   }, [reset, defaultData]);
-
-  const UnsavedChangesAlertModal = useUnsavedChangesAlertModal(isDirty);
 
   const uriPatternRules: MultiTextInputRule = {
     pattern: {
@@ -154,7 +152,7 @@ const Settings = ({ applicationType, oidcConfig, defaultData }: Props) => {
           )}
         />
       </FormField>
-      <UnsavedChangesAlertModal />
+      <UnsavedChangesAlertModal hasUnsavedChanges={isDirty} />
     </>
   );
 };

@@ -3,21 +3,27 @@ import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { UNSAFE_NavigationContext, Navigator } from 'react-router-dom';
 
-import ConfirmModal from '@/components/ConfirmModal';
+import ConfirmModal from '../ConfirmModal';
 
 type BlockerNavigator = Navigator & {
   location: Location;
   block(blocker: Blocker): () => void;
 };
 
-export const useUnsavedChangesAlertModal = (when: boolean) => {
+type Props = {
+  hasUnsavedChanges: boolean;
+};
+
+const UnsavedChangesAlertModal = ({ hasUnsavedChanges }: Props) => {
   const { navigator } = useContext(UNSAFE_NavigationContext);
 
   const [displayAlert, setDisplayAlert] = useState(false);
   const [transition, setTransition] = useState<Transition>();
 
+  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+
   useEffect(() => {
-    if (!when) {
+    if (!hasUnsavedChanges) {
       return;
     }
 
@@ -48,7 +54,7 @@ export const useUnsavedChangesAlertModal = (when: boolean) => {
     });
 
     return unblock;
-  }, [navigator, when]);
+  }, [navigator, hasUnsavedChanges]);
 
   const leavePage = useCallback(() => {
     transition?.retry();
@@ -59,23 +65,19 @@ export const useUnsavedChangesAlertModal = (when: boolean) => {
     setDisplayAlert(false);
   }, [setDisplayAlert]);
 
-  const UnsavedChangesAlertModal = () => {
-    const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-
-    return (
-      <ConfirmModal
-        isOpen={displayAlert}
-        confirmButtonType="primary"
-        confirmButtonText="admin_console.general.stay_on_page"
-        cancelButtonText="admin_console.general.leave_page"
-        onCancel={leavePage}
-        onConfirm={stayOnPage}
-        onClose={stayOnPage}
-      >
-        {t('general.unsaved_changes_warning')}
-      </ConfirmModal>
-    );
-  };
-
-  return UnsavedChangesAlertModal;
+  return (
+    <ConfirmModal
+      isOpen={displayAlert}
+      confirmButtonType="primary"
+      confirmButtonText="admin_console.general.stay_on_page"
+      cancelButtonText="admin_console.general.leave_page"
+      onCancel={leavePage}
+      onConfirm={stayOnPage}
+      onClose={stayOnPage}
+    >
+      {t('general.unsaved_changes_warning')}
+    </ConfirmModal>
+  );
 };
+
+export default UnsavedChangesAlertModal;

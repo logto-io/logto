@@ -20,9 +20,9 @@ import FormField from '@/components/FormField';
 import LinkButton from '@/components/LinkButton';
 import TabNav, { TabNavItem } from '@/components/TabNav';
 import TextInput from '@/components/TextInput';
+import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import useApi, { RequestError } from '@/hooks/use-api';
 import { useTheme } from '@/hooks/use-theme';
-import { useUnsavedChangesAlertModal } from '@/hooks/use-unsaved-changes-alert-modal';
 import Back from '@/icons/Back';
 import Delete from '@/icons/Delete';
 import More from '@/icons/More';
@@ -57,8 +57,6 @@ const ApiResourceDetails = () => {
   } = useForm<FormData>({
     defaultValues: data,
   });
-
-  const UnsavedChangesAlertModal = useUnsavedChangesAlertModal(isDirty);
 
   const api = useApi();
 
@@ -182,7 +180,7 @@ const ApiResourceDetails = () => {
           </Card>
         </>
       )}
-      <UnsavedChangesAlertModal />
+      <UnsavedChangesAlertModal hasUnsavedChanges={isDirty} />
     </div>
   );
 };
