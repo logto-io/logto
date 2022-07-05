@@ -1,11 +1,12 @@
 import { Blocker, Transition } from 'history';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { UNSAFE_NavigationContext } from 'react-router-dom';
+import { UNSAFE_NavigationContext, Navigator } from 'react-router-dom';
 
 import ConfirmModal from '@/components/ConfirmModal';
 
-type NavigatorWithBlock = Navigator & {
+type BlockerNavigator = Navigator & {
+  location: Location;
   block(blocker: Blocker): () => void;
 };
 
@@ -20,8 +21,23 @@ export const useUnsavedChangesAlertModal = (when: boolean) => {
       return;
     }
 
-    const unblock = (navigator as any as NavigatorWithBlock).block((tx) => {
+    const {
+      block,
+      location: { pathname },
+    } = navigator as BlockerNavigator;
+
+    const unblock = block((tx) => {
+      const {
+        location: { pathname: targetPathname },
+      } = tx;
+
+      // Note: We don't want to show the alert if the user is navigating to the same page.
+      if (targetPathname === pathname) {
+        return;
+      }
+
       setDisplayAlert(true);
+
       setTransition({
         ...tx,
         retry() {
@@ -36,6 +52,7 @@ export const useUnsavedChangesAlertModal = (when: boolean) => {
 
   const leavePage = useCallback(() => {
     transition?.retry();
+    setDisplayAlert(false);
   }, [transition]);
 
   const stayOnPage = useCallback(() => {
