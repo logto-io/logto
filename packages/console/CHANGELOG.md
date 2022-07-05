@@ -3,6 +3,21 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.0-alpha.1](https://github.com/logto-io/logto/compare/v1.0.0-alpha.0...v1.0.0-alpha.1) (2022-07-05)
+
+
+### Features
+
+* **console:** unsaved changes alert ([#1409](https://github.com/logto-io/logto/issues/1409)) ([098367e](https://github.com/logto-io/logto/commit/098367e1a380d81261e056f222131f34fb6e10c5))
+
+
+### Bug Fixes
+
+* **console:** dashbaord chart grid color ([#1417](https://github.com/logto-io/logto/issues/1417)) ([1d5f69d](https://github.com/logto-io/logto/commit/1d5f69db127a939f4c893f27230a96f6acb67f6e))
+* **console:** leave page button should be primary on unsaved changes alert modal ([#1421](https://github.com/logto-io/logto/issues/1421)) ([be004fa](https://github.com/logto-io/logto/commit/be004fa4dab3c61b8396194c7604641ab2d82aad))
+
+
+
 ## [1.0.0-alpha.0](https://github.com/logto-io/logto/compare/v0.1.2-alpha.5...v1.0.0-alpha.0) (2022-07-04)
 
 

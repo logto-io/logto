@@ -1,6 +1,6 @@
 {
   "name": "@logto/connector-facebook",
-  "version": "1.0.0-alpha.0",
+  "version": "1.0.0-alpha.1",
   "description": "Facebook web connector implementation.",
   "main": "./lib/index.js",
   "exports": "./lib/index.js",
@@ -24,8 +24,8 @@
     "prepack": "pnpm build"
   },
   "dependencies": {
-    "@logto/connector-types": "^1.0.0-alpha.0",
-    "@logto/schemas": "^1.0.0-alpha.0",
+    "@logto/connector-types": "^1.0.0-alpha.1",
+    "@logto/schemas": "^1.0.0-alpha.1",
     "@logto/shared": "^0.1.2-alpha.5",
     "@silverhand/essentials": "^1.1.0",
     "@silverhand/jest-config": "^0.14.0",
