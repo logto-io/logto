@@ -20,6 +20,7 @@ import FormField from '@/components/FormField';
 import LinkButton from '@/components/LinkButton';
 import TabNav, { TabNavItem } from '@/components/TabNav';
 import TextInput from '@/components/TextInput';
+import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import useApi, { RequestError } from '@/hooks/use-api';
 import { useTheme } from '@/hooks/use-theme';
 import Back from '@/icons/Back';
@@ -52,7 +53,7 @@ const ApiResourceDetails = () => {
     handleSubmit,
     register,
     reset,
-    formState: { isSubmitting, errors },
+    formState: { isDirty, isSubmitting, errors },
   } = useForm<FormData>({
     defaultValues: data,
   });
@@ -179,6 +180,7 @@ const ApiResourceDetails = () => {
           </Card>
         </>
       )}
+      <UnsavedChangesAlertModal hasUnsavedChanges={isDirty} />
     </div>
   );
 };

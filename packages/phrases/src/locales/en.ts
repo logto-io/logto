@@ -39,6 +39,10 @@ const translation = {
       add_another: '+ Add Another',
       deletion_confirmation: 'Are you sure you want to delete this {{title}}?',
       settings_nav: 'Settings',
+      unsaved_changes_warning:
+        'You have made some changes. Are you sure you want to leave this page?',
+      leave_page: 'Leave Page',
+      stay_on_page: 'Stay on Page',
     },
     errors: {
       something_went_wrong: 'Oops! Something went wrong.',
