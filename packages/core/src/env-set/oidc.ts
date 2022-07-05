@@ -108,7 +108,7 @@ const readCookieKeys = async (): Promise<string[]> => {
   );
 };
 
-const loadOidcValues = async (defaultUrl: string) => {
+const loadOidcValues = async (issuer: string) => {
   const cookieKeys = await readCookieKeys();
   const privateKey = crypto.createPrivateKey(await readPrivateKey());
   const publicKey = crypto.createPublicKey(privateKey);
@@ -117,7 +117,7 @@ const loadOidcValues = async (defaultUrl: string) => {
     cookieKeys,
     privateKey,
     publicKey,
-    issuer: getEnv('OIDC_ISSUER', `${defaultUrl}/oidc`),
+    issuer,
     defaultIdTokenTtl: 60 * 60,
     defaultRefreshTokenTtl: 14 * 24 * 60 * 60,
   });

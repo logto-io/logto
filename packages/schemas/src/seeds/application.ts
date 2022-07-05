@@ -5,14 +5,14 @@ import { ApplicationType, CreateApplication } from '../db-entries';
  *
  * This built-in application does not belong to any tenant in the OSS version.
  */
-export const adminConsoleApplicationId = 'admin_console';
+export const adminConsoleApplicationId = 'admin-console';
 
 export const demoAppApplicationId = 'demo-app';
 
-export const createDemoAppApplication = (urls: string[]): Readonly<CreateApplication> => ({
+export const createDemoAppApplication = (): Readonly<CreateApplication> => ({
   id: demoAppApplicationId,
   name: 'Demo App',
   description: 'Logto demo app.',
   type: ApplicationType.SPA,
-  oidcClientMetadata: { redirectUris: urls, postLogoutRedirectUris: urls },
+  oidcClientMetadata: { redirectUris: [], postLogoutRedirectUris: [] },
 });

@@ -1,6 +1,8 @@
 import { getEnv, Optional } from '@silverhand/essentials';
 import { DatabasePool } from 'slonik';
 
+import { appendPath } from '@/utils/url';
+
 import createPoolByEnv from './create-pool-by-env';
 import loadOidcValues from './oidc';
 
@@ -18,6 +20,7 @@ const loadEnvValues = async () => {
   const isHttpsEnabled = Boolean(process.env.HTTPS_CERT_PATH && process.env.HTTPS_KEY_PATH);
   const port = Number(getEnv('PORT', '3001'));
   const localhostUrl = `${isHttpsEnabled ? 'https' : 'http'}://localhost:${port}`;
+  const endpoint = getEnv('ENDPOINT', localhostUrl);
 
   return Object.freeze({
     isTest,
@@ -27,10 +30,11 @@ const loadEnvValues = async () => {
     httpsKey: process.env.HTTPS_KEY_PATH,
     port,
     localhostUrl,
+    endpoint,
     developmentUserId: getEnv('DEVELOPMENT_USER_ID'),
     trustProxyHeader: getEnv('TRUST_PROXY_HEADER') === 'true',
-    oidc: await loadOidcValues(localhostUrl),
-    adminConsoleUrl: getEnv('ADMIN_CONSOLE_URL', `${localhostUrl}/console`),
+    oidc: await loadOidcValues(appendPath(endpoint, '/oidc').toString()),
+    adminConsoleUrl: appendPath(endpoint, '/console'),
   });
 };
 
@@ -63,7 +67,7 @@ function createEnvSet() {
 
     load: async () => {
       values = await loadEnvValues();
-      pool = await createPoolByEnv(values.isTest, `${values.localhostUrl}/${MountedApps.DemoApp}`);
+      pool = await createPoolByEnv(values.isTest);
     },
   };
 }
