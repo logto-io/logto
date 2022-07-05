@@ -1,0 +1,13 @@
+tasks:
+  - name: Start Logto
+    init: |
+      docker-compose pull
+    command: |
+      ENDPOINT=$(gp url 3001) docker compose -p logto up
+    env:
+      TAG: edge
+
+ports:
+  - name: Logto
+    description: The Logto core service
+    port: 3001
