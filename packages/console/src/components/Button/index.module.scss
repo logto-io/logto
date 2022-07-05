@@ -207,12 +207,8 @@
       outline: 2px solid var(--color-focused-variant);
     }
 
-    &:active {
-      background: var(--color-pressed-variant);
-    }
-
-    &:not(:disabled):not(:active):hover {
-      background: var(--color-hover-variant);
+    &:not(:disabled):hover {
+      text-decoration: underline;
     }
   }
 }
