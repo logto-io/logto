@@ -8,6 +8,9 @@
   <a href="https://github.com/logto-io/logto/releases">
     <img src="https://img.shields.io/github/v/release/logto-io/logto?color=7958FF" alt="release" />
   </a>
+  <a href="https://gitpod.io/#https://github.com/logto-io/logto">
+    <img src="https://img.shields.io/badge/gitpod-available-blue" alt="gitpod">
+  </a>
   <a href="https://app.codecov.io/gh/logto-io/logto">
     <img src="https://img.shields.io/codecov/c/github/logto-io/logto?label=core%20coverage" alt="core coverage" />
   </a>
