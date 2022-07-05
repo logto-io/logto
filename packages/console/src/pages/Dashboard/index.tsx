@@ -101,7 +101,7 @@ const Dashboard = () => {
                   width={1100}
                   height={168}
                 >
-                  <CartesianGrid vertical={false} />
+                  <CartesianGrid vertical={false} stroke="var(--color-divider)" />
                   <Area
                     type="monotone"
                     dataKey="count"
