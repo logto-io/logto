@@ -16,6 +16,7 @@ services:
       - ENDPOINT
   postgres:
     image: postgres:14-alpine
+    user: postgres
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: p0stgr3s
