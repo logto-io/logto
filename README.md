@@ -1,13 +1,19 @@
 <p align="center">
-    <a href="https://logto.io" target="_blank" align="center" alt="Logto Logo">
-        <img src="./logo.png" width="100">
-    </a>
+  <a href="https://logto.io" target="_blank" align="center" alt="Logto Logo">
+    <img src="./logo.png" width="100">
+  </a>
 </p>
 
 <p align="center">
-    <span><img src="https://img.shields.io/github/v/release/logto-io/logto?color=7958FF" alt="release" /></span>
-    <span><img src="https://img.shields.io/codecov/c/github/logto-io/logto?label=core%20coverage" alt="core coverage" /></span>
-    <span><img src="https://img.shields.io/github/checks-status/logto-io/logto/master" alt="checks"></span>
+  <a href="https://github.com/logto-io/logto/releases">
+    <img src="https://img.shields.io/github/v/release/logto-io/logto?color=7958FF" alt="release" />
+  </a>
+  <a href="https://app.codecov.io/gh/logto-io/logto">
+    <img src="https://img.shields.io/codecov/c/github/logto-io/logto?label=core%20coverage" alt="core coverage" />
+  </a>
+  <a href="https://github.com/logto-io/logto/actions?query=branch%3Amaster">
+    <img src="https://img.shields.io/github/checks-status/logto-io/logto/master" alt="checks">
+  </a>
 </p>
 
 # Logto
