@@ -255,7 +255,7 @@ src/main/kotlin/com/sample/app/wxapi/WXEntryActivity.kt
 
 **3. Modify the `AndroidManifest.xml`**
 
-Add the line to your `AndroidManifest.xml`:
+Add the following line to your `AndroidManifest.xml`:
 
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
