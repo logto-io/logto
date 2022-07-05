@@ -41,8 +41,8 @@ const translation = {
       add_another: '+ 新增',
       deletion_confirmation: '你确定要删除这个 {{title}} 吗?',
       settings_nav: '设置',
-      unsaved_changes_warning: '你有未保存的更改, 确定要离开吗？',
-      leave_page: '离开此面',
+      unsaved_changes_warning: '还有未保存的变更, 确定要离开吗？',
+      leave_page: '离开此页',
       stay_on_page: '留在此页',
     },
     errors: {
