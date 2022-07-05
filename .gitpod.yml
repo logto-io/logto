@@ -5,7 +5,7 @@ tasks:
     command: |
       ENDPOINT=$(gp url 3001) docker compose -p logto up
     env:
-      TAG: edge
+      TAG: prerelease
 
 ports:
   - name: Logto
