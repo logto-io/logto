@@ -101,7 +101,7 @@ Check "Android app" (Android 应用).
 
 Fill out _Application Signing Signature_ (应用签名) and _Application Package Name_ (应用包名).
 
-> **Note**
+> ℹ️ **Note**
 > 
 > You need to sign your app to get a signature. Refer to the [Sign your app](https://developer.android.com/studio/publish/app-signing) for more info. 
 
@@ -348,7 +348,8 @@ Once WeChat native connector is enabled, you can build and run your app to see i
 
 填写「应用签名」和「应用包名」。
 
-> **Note**
+> ℹ️ **Note**
+> 
 > 你需要对你的应用签名并填写 signature。参见 [Sign your app](https://developer.android.com/studio/publish/app-signing) 以了解更多。
 
 在完成签名后，你可以执行 `signingReport` 任务来获取 signature。
