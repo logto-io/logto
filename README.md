@@ -27,9 +27,9 @@ Logto[^info] helps you build the sign-in experience and user identity within min
 
 - An OIDC-based identity service
 - Multi-platform user sign-in/up experience with dark mode and SDKs (Web, iOS, and Android)
-- Sign-in/up with dynamic SMS/Email passcode
+- Sign in/up with dynamic SMS/Email passcode (Passwordless)
 - Out-of-box social sign-in integration (GitHub, Google, WeChat, Alipay, etc.)
-- A web UI to control all above (Admin Console)
+- A web UI to control all the above (Admin Console)
 - Extendable multi-language support
 
 Boringly, we call it "[customer identity access management](https://en.wikipedia.org/wiki/Customer_identity_access_management)" (CIAM) or "customer identity solution."
@@ -38,6 +38,10 @@ Boringly, we call it "[customer identity access management](https://en.wikipedia
 
 - Visit our 🎨 [website](https://logto.io) for a brief introduction if you are new to Logto.
 - A step-by-step guide is available on 📖 [docs.logto.io](https://docs.logto.io) (also in [简体中文](https://docs.logto.io/zh-cn)).
+
+### Try it online (GitPod)
+
+[Click here](https://gitpod.io/#https://github.com/logto-io/logto) to launch Logto in GitPod. Once you see the message like `App is running at https://3001-...gitpod.io` in the terminal, press Cmd (or Ctrl) and click the URL to continue your Logto journey.
 
 ## Bug Report, Feature Request, Feedback
 
