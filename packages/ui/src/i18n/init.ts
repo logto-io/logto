@@ -12,8 +12,8 @@ const initI18n = async (languageSettings?: LanguageInfo) => {
       escapeValue: false,
     },
     detection: {
-      lookupLocalStorage: 'i18nextLngMainFlow',
-      lookupSessionStorage: 'i18nextLngMainFlow',
+      lookupLocalStorage: 'i18nextUILng',
+      lookupSessionStorage: 'i18nextUILng',
     },
   };
 
