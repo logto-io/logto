@@ -1,6 +1,6 @@
 import { User } from '@logto/schemas';
 import classNames from 'classnames';
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import ReactModal from 'react-modal';
 import { useLocation, useParams, useSearchParams } from 'react-router-dom';
@@ -42,6 +42,17 @@ const UserDetails = () => {
 
   const { data, error, mutate } = useSWR<User, RequestError>(userId && `/api/users/${userId}`);
   const isLoading = !data && !error;
+
+  const userFormData = useMemo(() => {
+    if (!data) {
+      return;
+    }
+
+    return {
+      ...data,
+      customData: JSON.stringify(data.customData, null, 2),
+    };
+  }, [data]);
 
   return (
     <div className={detailsStyles.container}>
@@ -133,9 +144,10 @@ const UserDetails = () => {
               <TabNavItem href={`/users/${userId}/logs`}>{t('user_details.tab_logs')}</TabNavItem>
             </TabNav>
             {isLogs && <UserLogs userId={data.id} />}
-            {!isLogs && (
+            {!isLogs && userFormData && (
               <UserSettingsForm
-                data={data}
+                userData={data}
+                userFormData={userFormData}
                 onMutate={(user) => {
                   void mutate(user);
                 }}

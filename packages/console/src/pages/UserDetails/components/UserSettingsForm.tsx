@@ -29,11 +29,12 @@ type FormData = {
 };
 
 type Props = {
-  data: User;
+  userData: User;
+  userFormData: FormData;
   onMutate: (user?: User) => void;
 };
 
-const UserSettingsForm = ({ data, onMutate }: Props) => {
+const UserSettingsForm = ({ userData, userFormData, onMutate }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   const {
@@ -52,16 +53,8 @@ const UserSettingsForm = ({ data, onMutate }: Props) => {
   const api = useApi();
 
   useEffect(() => {
-    const defaultData = {
-      ...data,
-      customData: JSON.stringify(data.customData, null, 2),
-    };
-    reset(defaultData);
-
-    return () => {
-      reset(defaultData);
-    };
-  }, [data, reset]);
+    reset(userFormData);
+  }, [reset, userFormData]);
 
   const onSubmit = handleSubmit(async (formData) => {
     if (isSubmitting) {
@@ -85,7 +78,9 @@ const UserSettingsForm = ({ data, onMutate }: Props) => {
       customData,
     };
 
-    const updatedUser = await api.patch(`/api/users/${data.id}`, { json: payload }).json<User>();
+    const updatedUser = await api
+      .patch(`/api/users/${userData.id}`, { json: payload })
+      .json<User>();
     onMutate(updatedUser);
     toast.success(t('general.saved'));
   });
@@ -123,8 +118,8 @@ const UserSettingsForm = ({ data, onMutate }: Props) => {
         </FormField>
         <FormField title="admin_console.user_details.field_connectors" className={styles.textField}>
           <UserConnectors
-            userId={data.id}
-            connectors={data.identities}
+            userId={userData.id}
+            connectors={userData.identities}
             onDelete={() => {
               onMutate();
             }}
