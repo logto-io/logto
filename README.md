@@ -39,6 +39,10 @@ Boringly, we call it "[customer identity access management](https://en.wikipedia
 - Visit our 🎨 [website](https://logto.io) for a brief introduction if you are new to Logto.
 - A step-by-step guide is available on 📖 [docs.logto.io](https://docs.logto.io) (also in [简体中文](https://docs.logto.io/zh-cn)).
 
+### Try it online (GitPod)
+
+[Click here](https://gitpod.io/#https://github.com/logto-io/logto) to launch Logto in GitPod. Once you see the message like `App is running at https://3001-...gitpod.io` in the terminal, press Cmd (or Ctrl) and click the URL to continue your Logto journey.
+
 ## Bug Report, Feature Request, Feedback
 
 - Our team takes security seriously, especially when it relates to identity. If you find any existing or potential security issues, please do not hesitate to email 🔒 [security@silverhand.io](mailto:security@silverhand.io).
