@@ -1,14 +1,17 @@
 import { Language } from '@logto/phrases-ui';
+import { generateDarkColor } from '@logto/shared';
 
 import { CreateSignInExperience, SignInMode } from '../db-entries';
 import { BrandingStyle, SignInMethodState } from '../foundations';
 
+const defaultPrimaryColor = '#6139F6';
+
 export const defaultSignInExperience: Readonly<CreateSignInExperience> = {
   id: 'default',
   color: {
-    primaryColor: '#6139F6',
+    primaryColor: defaultPrimaryColor,
     isDarkModeEnabled: false,
-    darkPrimaryColor: '#8768F8',
+    darkPrimaryColor: generateDarkColor(defaultPrimaryColor),
   },
   branding: {
     style: BrandingStyle.Logo,
