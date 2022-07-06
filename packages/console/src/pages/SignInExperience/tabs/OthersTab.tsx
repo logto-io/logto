@@ -16,8 +16,6 @@ const OthersTab = ({ defaultData, isDataDirty }: Props) => {
   const { reset } = useFormContext<SignInExperienceForm>();
 
   useEffect(() => {
-    reset(defaultData);
-
     return () => {
       reset(defaultData);
     };
