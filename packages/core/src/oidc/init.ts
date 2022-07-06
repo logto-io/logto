@@ -132,6 +132,16 @@ export default async function initOidc(app: Koa): Promise<Provider> {
 
         return refreshTokenTtl ?? defaultRefreshTokenTtl;
       },
+      AccessToken: (ctx, token) => {
+        if (token.resourceServer) {
+          return token.resourceServer.accessTokenTTL ?? 60 * 60; // 1 hour in seconds
+        }
+
+        return 60 * 60; // 1 hour in seconds
+      },
+      Interaction: 3600 /* 1 hour in seconds */,
+      Session: 1_209_600 /* 14 days in seconds */,
+      Grant: 1_209_600 /* 14 days in seconds */,
     },
     extraTokenClaims: async (_ctx, token) => {
       // AccessToken type is not exported by default, need to asset token is AccessToken
