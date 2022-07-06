@@ -166,9 +166,8 @@ const ConnectorDetails = () => {
             </TabNavItem>
           </TabNav>
           <ConnectorContent
-            connectorId={connectorId}
-            data={data}
-            onMutate={(connector) => {
+            connectorData={data}
+            onConnectorUpdated={(connector) => {
               void mutate(connector);
             }}
           />

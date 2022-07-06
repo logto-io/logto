@@ -14,12 +14,11 @@ import * as styles from '../index.module.scss';
 import SenderTester from './SenderTester';
 
 type Props = {
-  connectorId?: string;
-  data: ConnectorDTO;
-  onMutate: (connector: ConnectorDTO) => void;
+  connectorData: ConnectorDTO;
+  onConnectorUpdated: (connector: ConnectorDTO) => void;
 };
 
-const ConnectorContent = ({ connectorId, data, onMutate }: Props) => {
+const ConnectorContent = ({ connectorData, onConnectorUpdated }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const [config, setConfig] = useState<string>();
   const [saveError, setSaveError] = useState<string>();
@@ -27,10 +26,10 @@ const ConnectorContent = ({ connectorId, data, onMutate }: Props) => {
   const api = useApi();
 
   const defaultConfig = useMemo(() => {
-    const hasData = Object.keys(data.config).length > 0;
+    const hasData = Object.keys(connectorData.config).length > 0;
 
-    return hasData ? JSON.stringify(data.config, null, 2) : data.configTemplate;
-  }, [data]);
+    return hasData ? JSON.stringify(connectorData.config, null, 2) : connectorData.configTemplate;
+  }, [connectorData]);
 
   useEffect(() => {
     setConfig(defaultConfig);
@@ -55,10 +54,6 @@ const ConnectorContent = ({ connectorId, data, onMutate }: Props) => {
   }, [config, defaultConfig]);
 
   const handleSave = async () => {
-    if (!connectorId) {
-      return;
-    }
-
     setSaveError(undefined);
 
     if (!config) {
@@ -71,7 +66,7 @@ const ConnectorContent = ({ connectorId, data, onMutate }: Props) => {
       const configJson = JSON.parse(config) as JSON;
       setIsSubmitting(true);
       const { metadata, ...reset } = await api
-        .patch(`/api/connectors/${connectorId}`, {
+        .patch(`/api/connectors/${connectorData.id}`, {
           json: { config: configJson },
         })
         .json<
@@ -79,7 +74,7 @@ const ConnectorContent = ({ connectorId, data, onMutate }: Props) => {
             metadata: ConnectorMetadata;
           }
         >();
-      onMutate({ ...reset, ...metadata });
+      onConnectorUpdated({ ...reset, ...metadata });
       toast.success(t('general.saved'));
     } catch (error: unknown) {
       if (error instanceof SyntaxError) {
@@ -103,8 +98,12 @@ const ConnectorContent = ({ connectorId, data, onMutate }: Props) => {
             }}
           />
         </FormField>
-        {data.type !== ConnectorType.Social && (
-          <SenderTester connectorId={data.id} connectorType={data.type} config={config} />
+        {connectorData.type !== ConnectorType.Social && (
+          <SenderTester
+            connectorId={connectorData.id}
+            connectorType={connectorData.type}
+            config={config}
+          />
         )}
         {saveError && <div>{saveError}</div>}
       </div>
