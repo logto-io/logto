@@ -85,7 +85,7 @@ const Dashboard = () => {
               tooltip="dashboard.daily_active_users_tip"
               count={activeData.dau.count}
               delta={activeData.dau.delta}
-              varient="plain"
+              variant="plain"
             />
             <div className={styles.datePicker}>
               <TextInput type="date" value={date} onChange={handleDateChange} />
@@ -121,14 +121,14 @@ const Dashboard = () => {
                 tooltip="dashboard.weekly_active_users_tip"
                 count={activeData.wau.count}
                 delta={activeData.wau.delta}
-                varient="bordered"
+                variant="bordered"
               />
               <Block
                 title="dashboard.monthly_active_users"
                 tooltip="dashboard.monthly_active_users_tip"
                 count={activeData.mau.count}
                 delta={activeData.mau.delta}
-                varient="bordered"
+                variant="bordered"
               />
             </div>
           </Card>
