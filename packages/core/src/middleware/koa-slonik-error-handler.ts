@@ -47,7 +47,6 @@ export default function koaSlonikErrorHandler<StateT, ContextT>(): Middleware<St
             code: 'entity.not_exists',
             name: (error as InsertionError<SchemaLike>).schema.tableSingular,
           });
-        // TODO: LOG-1665 Refactor Deletion Handle
         case DeletionError:
         case NotFoundError:
           throw new RequestError({
