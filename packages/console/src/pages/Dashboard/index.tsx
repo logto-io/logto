@@ -110,7 +110,13 @@ const Dashboard = () => {
                     fill="var(--color-hover-variant)"
                   />
                   <XAxis dataKey="date" tickLine={false} tick={tickStyle} />
-                  <YAxis orientation="right" axisLine={false} tickLine={false} tick={tickStyle} />
+                  <YAxis
+                    orientation="right"
+                    width={30}
+                    axisLine={false}
+                    tickLine={false}
+                    tick={tickStyle}
+                  />
                   <Tooltip content={<ChartTooltip />} cursor={{ stroke: 'var(--color-primary' }} />
                 </AreaChart>
               </ResponsiveContainer>
