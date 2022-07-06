@@ -25,7 +25,7 @@ import CreateSuccess from './components/CreateSuccess';
 import DeleteForm from './components/DeleteForm';
 import ResetPasswordForm from './components/ResetPasswordForm';
 import UserLogs from './components/UserLogs';
-import UserSettingsForm from './components/UserSettingsForm';
+import UserSettings from './components/UserSettings';
 import * as styles from './index.module.scss';
 
 const UserDetails = () => {
@@ -145,10 +145,10 @@ const UserDetails = () => {
             </TabNav>
             {isLogs && <UserLogs userId={data.id} />}
             {!isLogs && userFormData && (
-              <UserSettingsForm
+              <UserSettings
                 userData={data}
                 userFormData={userFormData}
-                onMutate={(user) => {
+                onUserUpdated={(user) => {
                   void mutate(user);
                 }}
               />

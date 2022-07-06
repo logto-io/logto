@@ -31,10 +31,10 @@ type FormData = {
 type Props = {
   userData: User;
   userFormData: FormData;
-  onMutate: (user?: User) => void;
+  onUserUpdated: (user?: User) => void;
 };
 
-const UserSettingsForm = ({ userData, userFormData, onMutate }: Props) => {
+const UserSettings = ({ userData, userFormData, onUserUpdated }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   const {
@@ -81,7 +81,7 @@ const UserSettingsForm = ({ userData, userFormData, onMutate }: Props) => {
     const updatedUser = await api
       .patch(`/api/users/${userData.id}`, { json: payload })
       .json<User>();
-    onMutate(updatedUser);
+    onUserUpdated(updatedUser);
     toast.success(t('general.saved'));
   });
 
@@ -121,7 +121,7 @@ const UserSettingsForm = ({ userData, userFormData, onMutate }: Props) => {
             userId={userData.id}
             connectors={userData.identities}
             onDelete={() => {
-              onMutate();
+              onUserUpdated();
             }}
           />
         </FormField>
@@ -149,4 +149,4 @@ const UserSettingsForm = ({ userData, userFormData, onMutate }: Props) => {
   );
 };
 
-export default UserSettingsForm;
+export default UserSettings;
