@@ -11,6 +11,10 @@ const initI18n = async (languageSettings?: LanguageInfo) => {
     interpolation: {
       escapeValue: false,
     },
+    detection: {
+      lookupLocalStorage: 'i18nextLngMainFlow',
+      lookupSessionStorage: 'i18nextLngMainFlow',
+    },
   };
 
   const options: InitOptions =
