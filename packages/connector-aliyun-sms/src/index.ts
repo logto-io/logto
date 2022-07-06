@@ -113,7 +113,7 @@ export default class AliyunSmsConnector implements SmsConnector {
       throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, message);
     }
 
-    if (code === 'OK') {
+    if (code !== 'OK') {
       throw new ConnectorError(ConnectorErrorCodes.General, message);
     }
   };
