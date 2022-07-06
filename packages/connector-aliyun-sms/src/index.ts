@@ -27,6 +27,7 @@ export default class AliyunSmsConnector implements SmsConnector {
     }
   };
 
+  /* eslint-disable complexity */
   public sendMessage: SmsSendMessageFunction = async (phone, type, { code }, config) => {
     const smsConfig =
       (config as AliyunSmsConfig | undefined) ?? (await this.getConfig(this.metadata.id));
@@ -60,12 +61,13 @@ export default class AliyunSmsConnector implements SmsConnector {
 
       const { Code } = result.data;
 
-      /**
-       * You may wonder why the errorHandler is called twice here. We found that the SendSms API of
-       * the Aliyun SMS service may throw an error directly after receiving the request, or it may
-       * need developers to determine whether the request succeeded by `Code` getting from the response.
-       */
-      this.errorHandler(rawBody, Code);
+      if (Code === 'isv.ACCOUNT_NOT_EXISTS' || Code === 'isv.SMS_TEMPLATE_ILLEGAL') {
+        throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, rawBody);
+      }
+
+      if (Code !== 'OK') {
+        throw new ConnectorError(ConnectorErrorCodes.General, rawBody);
+      }
 
       return httpResponse;
     } catch (error: unknown) {
@@ -79,42 +81,26 @@ export default class AliyunSmsConnector implements SmsConnector {
           new ConnectorError(ConnectorErrorCodes.InvalidResponse)
         );
 
-        this.errorHandler(rawBody);
+        const result = sendSmsResponseGuard.safeParse(JSON.parse(rawBody));
+
+        if (!result.success) {
+          throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, result.error.message);
+        }
+
+        const { Code } = result.data;
+
+        if (Code.includes('InvalidAccessKeyId')) {
+          throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, rawBody);
+        }
+
+        if (Code === 'SignatureDoesNotMatch' || Code === 'IncompleteSignature') {
+          throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, rawBody);
+        }
+
+        throw new ConnectorError(ConnectorErrorCodes.General, rawBody);
       }
 
       throw error;
-    }
-  };
-
-  /* eslint-disable complexity */
-  private readonly errorHandler = (message: string, code?: string) => {
-    if (!code) {
-      const result = sendSmsResponseGuard.safeParse(JSON.parse(message));
-
-      if (!result.success) {
-        throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, result.error.message);
-      }
-
-      const { Code } = result.data;
-
-      if (Code.includes('InvalidAccessKeyId')) {
-        throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, message);
-      }
-
-      if (Code === 'SignatureDoesNotMatch' || Code === 'IncompleteSignature') {
-        throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, message);
-      }
-
-      throw new ConnectorError(ConnectorErrorCodes.General, message);
-    }
-
-    // See https://help.aliyun.com/document_detail/101346.htm?spm=a2c4g.11186623.0.0.29d710f5TUxolJ
-    if (code === 'isv.ACCOUNT_NOT_EXISTS' || code === 'isv.SMS_TEMPLATE_ILLEGAL') {
-      throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, message);
-    }
-
-    if (code !== 'OK') {
-      throw new ConnectorError(ConnectorErrorCodes.General, message);
     }
   };
   /* eslint-enable complexity */
