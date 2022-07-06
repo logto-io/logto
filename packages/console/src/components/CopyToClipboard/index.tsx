@@ -4,6 +4,7 @@ import { TFuncKey, useTranslation } from 'react-i18next';
 
 import Copy from '@/icons/Copy';
 
+import IconButton from '../IconButton';
 import Tooltip from '../Tooltip';
 import * as styles from './index.module.scss';
 
@@ -26,7 +27,7 @@ const CopyToClipboard = ({ value, className, variant = 'contained' }: Props) => 
     });
   }, []);
 
-  const copy: MouseEventHandler<HTMLDivElement> = async () => {
+  const copy: MouseEventHandler<HTMLButtonElement> = async () => {
     setCopyState('copying');
     await navigator.clipboard.writeText(value);
     setCopyState('copied');
@@ -41,8 +42,10 @@ const CopyToClipboard = ({ value, className, variant = 'contained' }: Props) => 
     >
       <div className={styles.row}>
         {variant === 'icon' ? null : value}
-        <div ref={copyIconReference} className={styles.copyIcon} onClick={copy}>
-          <Copy />
+        <div ref={copyIconReference} className={styles.copyIcon}>
+          <IconButton onClick={copy}>
+            <Copy />
+          </IconButton>
         </div>
         <Tooltip
           anchorRef={copyIconReference}
