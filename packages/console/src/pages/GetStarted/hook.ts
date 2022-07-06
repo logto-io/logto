@@ -96,7 +96,7 @@ const useGetStartedMetadata = ({ checkDemoAppExists }: Props) => {
       title: 'get_started.card4_title',
       subtitle: 'get_started.card4_subtitle',
       icon: isLightMode ? Passwordless : PasswordlessDark,
-      buttonText: 'admin_console.general.enable',
+      buttonText: 'admin_console.general.set_up',
       isComplete: settings?.passwordlessConfigured,
       onClick: () => {
         navigate('/connectors');
@@ -107,7 +107,7 @@ const useGetStartedMetadata = ({ checkDemoAppExists }: Props) => {
       title: 'get_started.card5_title',
       subtitle: 'get_started.card5_subtitle',
       icon: isLightMode ? OneClick : OneClickDark,
-      buttonText: 'admin_console.general.set_up',
+      buttonText: 'admin_console.general.add',
       isComplete: settings?.socialSignInConfigured,
       onClick: () => {
         navigate('/connectors/social');

@@ -20,6 +20,7 @@ const translation = {
       saved: 'Saved!',
       loading: 'Loading...',
       redirecting: 'Redirecting...',
+      add: 'Add',
       added: 'Added',
       cancel: 'Cancel',
       confirm: 'Confirm',
@@ -236,12 +237,12 @@ const translation = {
         'Set up a mobile, single page or traditional application to use Logto for authentication',
       card3_title: 'Customize sign-in experience',
       card3_subtitle: 'Customize the sign in UI to match your brand and view in real time',
-      card4_title: 'Enable phone number sign-in and email sign-in',
+      card4_title: 'Set up SMS and email connector',
       card4_subtitle:
-        'Try passwordless sign in and enable a secure and frictionless experience for your customer',
+        'Try passwordless sign in with phone number or email to enable a secure and frictionless customer experience',
       card5_title: 'Add a social connector',
       card5_subtitle:
-        'Let your customer sign in to your app with the social identities in one click',
+        'Let your customers sign in to your app with the social identities in one click',
       card6_title: 'Further readings',
       card6_subtitle: 'Check out our step-by-step, scenario-based docs without tedious concepts',
     },
