@@ -86,6 +86,7 @@ export default class AliyunSmsConnector implements SmsConnector {
     }
   };
 
+  /* eslint-disable complexity */
   private readonly errorHandler = (message: string, code?: string) => {
     if (!code) {
       const result = sendSmsResponseGuard.safeParse(JSON.parse(message));
@@ -96,23 +97,25 @@ export default class AliyunSmsConnector implements SmsConnector {
 
       const { Code } = result.data;
 
-      assert(
-        !Code.includes('InvalidAccessKeyId'),
-        new ConnectorError(ConnectorErrorCodes.InvalidConfig, message)
-      );
-      assert(
-        Code !== 'SignatureDoesNotMatch' && Code !== 'IncompleteSignature',
-        new ConnectorError(ConnectorErrorCodes.InvalidConfig, message)
-      );
+      if (Code.includes('InvalidAccessKeyId')) {
+        throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, message);
+      }
+
+      if (Code === 'SignatureDoesNotMatch' || Code === 'IncompleteSignature') {
+        throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, message);
+      }
 
       throw new ConnectorError(ConnectorErrorCodes.General, message);
     }
 
     // See https://help.aliyun.com/document_detail/101346.htm?spm=a2c4g.11186623.0.0.29d710f5TUxolJ
-    assert(
-      !(code === 'isv.ACCOUNT_NOT_EXISTS' || code === 'isv.SMS_TEMPLATE_ILLEGAL'),
-      new ConnectorError(ConnectorErrorCodes.InvalidConfig, message)
-    );
-    assert(code === 'OK', new ConnectorError(ConnectorErrorCodes.General, message));
+    if (code === 'isv.ACCOUNT_NOT_EXISTS' || code === 'isv.SMS_TEMPLATE_ILLEGAL') {
+      throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, message);
+    }
+
+    if (code === 'OK') {
+      throw new ConnectorError(ConnectorErrorCodes.General, message);
+    }
   };
+  /* eslint-enable complexity */
 }
