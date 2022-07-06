@@ -27,9 +27,9 @@ Logto[^info] helps you build the sign-in experience and user identity within min
 
 - An OIDC-based identity service
 - Multi-platform user sign-in/up experience with dark mode and SDKs (Web, iOS, and Android)
-- Sign-in/up with dynamic SMS/Email passcode
+- Sign in/up with dynamic SMS/Email passcode (Passwordless)
 - Out-of-box social sign-in integration (GitHub, Google, WeChat, Alipay, etc.)
-- A web UI to control all above (Admin Console)
+- A web UI to control all the above (Admin Console)
 - Extendable multi-language support
 
 Boringly, we call it "[customer identity access management](https://en.wikipedia.org/wiki/Customer_identity_access_management)" (CIAM) or "customer identity solution."
