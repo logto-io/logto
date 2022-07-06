@@ -53,13 +53,8 @@ export default class AliyunSmsConnector implements SmsConnector {
       );
 
       const { body: rawBody } = httpResponse;
-      const result = sendSmsResponseGuard.safeParse(JSON.parse(rawBody));
 
-      if (!result.success) {
-        throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, result.error.message);
-      }
-
-      const { Code } = result.data;
+      const { Code } = this.parseResponseString(rawBody);
 
       if (Code === 'isv.ACCOUNT_NOT_EXISTS' || Code === 'isv.SMS_TEMPLATE_ILLEGAL') {
         throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, rawBody);
@@ -71,37 +66,38 @@ export default class AliyunSmsConnector implements SmsConnector {
 
       return httpResponse;
     } catch (error: unknown) {
-      if (error instanceof HTTPError) {
-        const {
-          response: { body: rawBody },
-        } = error;
-
-        assert(
-          typeof rawBody === 'string',
-          new ConnectorError(ConnectorErrorCodes.InvalidResponse)
-        );
-
-        const result = sendSmsResponseGuard.safeParse(JSON.parse(rawBody));
-
-        if (!result.success) {
-          throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, result.error.message);
-        }
-
-        const { Code } = result.data;
-
-        if (Code.includes('InvalidAccessKeyId')) {
-          throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, rawBody);
-        }
-
-        if (Code === 'SignatureDoesNotMatch' || Code === 'IncompleteSignature') {
-          throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, rawBody);
-        }
-
-        throw new ConnectorError(ConnectorErrorCodes.General, rawBody);
+      if (!(error instanceof HTTPError)) {
+        throw error;
       }
 
-      throw error;
+      const {
+        response: { body: rawBody },
+      } = error;
+
+      assert(typeof rawBody === 'string', new ConnectorError(ConnectorErrorCodes.InvalidResponse));
+
+      const { Code } = this.parseResponseString(rawBody);
+
+      if (Code.includes('InvalidAccessKeyId')) {
+        throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, rawBody);
+      }
+
+      if (Code === 'SignatureDoesNotMatch' || Code === 'IncompleteSignature') {
+        throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, rawBody);
+      }
+
+      throw new ConnectorError(ConnectorErrorCodes.General, rawBody);
     }
   };
   /* eslint-enable complexity */
+
+  private readonly parseResponseString = (response: string) => {
+    const result = sendSmsResponseGuard.safeParse(JSON.parse(response));
+
+    if (!result.success) {
+      throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, result.error.message);
+    }
+
+    return result.data;
+  };
 }
