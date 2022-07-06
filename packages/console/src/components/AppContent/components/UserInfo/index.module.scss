@@ -46,9 +46,6 @@
 }
 
 .dropdownItem {
-  height: 40px;
-  padding: 0 _.unit(5) 0 _.unit(4);
-  border-radius: 8px;
   min-width: 170px;
 
   &.loading {
