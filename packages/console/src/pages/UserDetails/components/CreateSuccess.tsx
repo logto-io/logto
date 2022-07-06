@@ -46,11 +46,12 @@ const CreateSuccess = ({ username, password, title, onClose, passwordLabel }: Pr
         title={title}
         footer={
           <>
-            <Button title="admin_console.general.close" onClick={onClose} />
+            <Button title="admin_console.general.done" onClick={onClose} />
             <Button type="primary" title="admin_console.general.copy" onClick={handleCopy} />
           </>
         }
         className={styles.content}
+        onClose={onClose}
       >
         <div>{t('user_details.created_guide')}</div>
         <div className={styles.info}>
