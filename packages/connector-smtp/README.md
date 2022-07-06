@@ -96,7 +96,8 @@ After going through the guide, your connector JSON should look like this:
 }
 ```
 
-> **Note**
+> ℹ️ **Note**
+>
 > Only one sample template is provided in the previous cases to keep things simple. You should add more templates for other use cases.
 > You should change values wrapped with "<" and ">" according to your SendGrid or Aliyun account settings and choose to keep other fields w/o "<" and ">".
 

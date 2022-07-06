@@ -17,7 +17,8 @@ Once we have a valid number claimed, nav to the _Messaging_ -> **_Services_**. C
 Give a friendly service name and choose **_Notify my users_** as our service purpose.
 Following the next step, choose `Phone Number` as _Sender Type_, and link the phone number we just claimed to this service.
 
-> **Note**
+> ℹ️ **Note**
+>
 > Each phone number can only be linked with one messaging service.
 
 ## Get account credentials
