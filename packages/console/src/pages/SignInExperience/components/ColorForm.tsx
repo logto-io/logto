@@ -1,5 +1,4 @@
-import { absoluteLighten } from '@logto/shared';
-import color from 'color';
+import { generateDarkColor } from '@logto/shared';
 import React, { useCallback, useEffect, useMemo } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -27,7 +26,7 @@ const ColorForm = () => {
   const darkPrimaryColor = watch('color.darkPrimaryColor');
 
   const calculatedDarkPrimaryColor = useMemo(() => {
-    return absoluteLighten(color(primaryColor), 10).hex();
+    return generateDarkColor(primaryColor);
   }, [primaryColor]);
 
   const handleResetColor = useCallback(() => {
