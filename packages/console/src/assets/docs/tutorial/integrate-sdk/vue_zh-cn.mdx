@@ -92,12 +92,14 @@ app.mount("#app");`}
 
 返回你的 IDE 或编辑器，使用如下代码来实现一个登录按钮：
 
-```ts
-import { useLogto } from "@logto/vue";
+<pre>
+<code className="language-ts">
+{`import { useLogto } from "@logto/vue";
 
 const { signIn, isAuthenticated } = useLogto();
-const onClickSignIn = () => signIn('http://localhost:1234/callback');
-```
+const onClickSignIn = () => signIn('${props.redirectUris[0] ?? 'http://localhost:1234/callback'}');`}
+</code>
+</pre>
 
 ```html
 <div v-if="isAuthenticated">
@@ -162,12 +164,14 @@ const router = createRouter({
 
 ### 实现退出登录按钮
 
-```ts
-import { useLogto } from "@logto/vue";
+<pre>
+<code className="language-ts">
+{`import { useLogto } from "@logto/vue";
 
 const { signOut } = useLogto();
-const onClickSignOut = () => signOut('http://localhost:1234');
-```
+const onClickSignOut = () => signOut('${props.postLogoutRedirectUris[0] ?? 'http://localhost:1234'}');`}
+</code>
+</pre>
 
 ```html
 <button @click="onClickSignOut">退出登录</button>

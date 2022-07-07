@@ -140,21 +140,25 @@ public class MainActivity extends AppCompatActivity {
 
 <TabItem value="kotlin" label="Kotlin">
 
-```kotlin
-logtoClient.signIn(this, "<your-redirect-uri>") { logtoException: LogtoException? ->
-    // 当 `logtoException` 为 null 时，则登录成功。
-}
-```
+<pre>
+<code className="language-kotlin">
+{`logtoClient.signIn(this, "${props.redirectUris[0] ?? '<your-redirect-uri>'}") { logtoException: LogtoException? ->
+    // 当 \`logtoException\` 为 null 时，则登录成功。
+}`}
+</code>
+</pre>
 
 </TabItem>
 
 <TabItem value="java" label="Java">
 
-```java
-logtoClient.signIn(this, "<your-redirect-uri>", logtoException -> {
-    // 当 `logtoException` 为 null 时，则登录成功。
-});
-```
+<pre>
+<code className="language-java">
+{`logtoClient.signIn(this, "${props.redirectUris[0] ?? '<your-redirect-uri>'}", logtoException -> {
+    // 当 \`logtoException\` 为 null 时，则登录成功。
+});`}
+</code>
+</pre>
 
 </TabItem>
 

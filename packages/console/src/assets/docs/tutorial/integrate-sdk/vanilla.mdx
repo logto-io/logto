@@ -81,11 +81,13 @@ First, let’s enter your redirect URI. E.g. `http://localhost:1234/callback`.
 
 Go back to your IDE/editor, use the following code to implement the sign-in button:
 
-```html
-<button onclick="logtoClient.signIn('http://localhost:1234/callback')">
+<pre>
+<code className="language-html">
+{`<button onclick="logtoClient.signIn('${props.redirectUris[0] ?? 'http://localhost:1234/callback'}')">
   Sign In
-</button>
-```
+</button>`}
+</code>
+</pre>
 
 ### Handle redirect
 
@@ -122,11 +124,13 @@ After signing out, it'll be great to redirect user back to your website. Let's a
 
 ### Implement a sign-out button
 
-```html
-<button onclick="logtoClient.signOut('http://localhost:1234')">
+<pre>
+<code className="language-html">
+{`<button onclick="logtoClient.signOut('${props.postLogoutRedirectUris[0] ?? 'http://localhost:1234'}')">
   Sign Out
-</button>
-```
+</button>`}
+</code>
+</pre>
 
 </Step>
 

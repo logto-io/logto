@@ -92,12 +92,14 @@ We provide two composables `useHandleSignInCallback()` and `useLogto()`, which c
 
 Go back to your IDE/editor, use the following code to implement the sign-in button:
 
-```ts
-import { useLogto } from "@logto/vue";
+<pre>
+<code className="language-ts">
+{`import { useLogto } from "@logto/vue";
 
 const { signIn, isAuthenticated } = useLogto();
-const onClickSignIn = () => signIn('http://localhost:1234/callback');
-```
+const onClickSignIn = () => signIn('${props.redirectUris[0] ?? 'http://localhost:1234/callback'}');`}
+</code>
+</pre>
 
 ```html
 <div v-if="isAuthenticated">
@@ -162,12 +164,14 @@ After signing out, it'll be great to redirect user back to your website. Let's a
 
 ### Implement a sign-out button
 
-```ts
-import { useLogto } from "@logto/vue";
+<pre>
+<code className="language-ts">
+{`import { useLogto } from "@logto/vue";
 
 const { signOut } = useLogto();
-const onClickSignOut = () => signOut('http://localhost:1234');
-```
+const onClickSignOut = () => signOut('${props.postLogoutRedirectUris[0] ?? 'http://localhost:1234'}');`}
+</code>
+</pre>
 
 ```html
 <button @click="onClickSignOut">Sign Out</button>

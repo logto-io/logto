@@ -81,11 +81,13 @@ const logtoClient = new LogtoClient({
 
 返回你的 IDE 或编辑器，使用如下代码来实现一个登录按钮：
 
-```html
-<button onclick="logtoClient.signIn('http://localhost:1234/callback')">
+<pre>
+<code className="language-html">
+{`<button onclick="logtoClient.signIn('${props.redirectUris[0] ?? 'http://localhost:1234/callback'}')">
   登录
-</button>
-```
+</button>`}
+</code>
+</pre>
 
 ### 处理重定向
 
@@ -122,11 +124,13 @@ try {
 
 ### 实现退出登录按钮
 
-```html
-<button onclick="logtoClient.signOut('http://localhost:1234')">
+<pre>
+<code className="language-html">
+{`<button onclick="logtoClient.signOut('${props.postLogoutRedirectUris[0] ?? 'http://localhost:1234'}')">
   退出登录
-</button>
-```
+</button>`}
+</code>
+</pre>
 
 </Step>
 

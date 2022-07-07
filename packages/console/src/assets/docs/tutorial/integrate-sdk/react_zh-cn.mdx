@@ -89,8 +89,9 @@ const App = () => (
 
 返回你的 IDE 或编辑器，使用如下代码来实现一个登录按钮：
 
-```tsx
-import { useLogto } from '@logto/react';
+<pre>
+<code className="language-tsx">
+{`import { useLogto } from '@logto/react';
 
 const SignIn = () => {
   const { signIn, isAuthenticated } = useLogto();
@@ -100,12 +101,13 @@ const SignIn = () => {
   }
 
   return (
-    <button onClick={() => signIn('http://localhost:1234/callback')}>
+    <button onClick={() => signIn('${props.redirectUris[0] ?? 'http://localhost:1234/callback'}')}>
       登录
     </button>
   );
-};
-```
+};`}
+</code>
+</pre>
 
 ### 处理重定向
 
@@ -153,17 +155,19 @@ const Callback = () => {
 
 ### 实现退出登录按钮
 
-```tsx
-const SignOut = () => {
+<pre>
+<code className="language-tsx">
+{`const SignOut = () => {
   const { signOut } = useLogto();
 
   return (
-    <button onClick={() => signOut('http://localhost:1234')}>
+    <button onClick={() => signOut('${props.postLogoutRedirectUris[0] ?? 'http://localhost:1234'}')}>
       退出登录
     </button>
   );
-};
-```
+};`}
+</code>
+</pre>
 
 </Step>
 
