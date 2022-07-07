@@ -1034,6 +1034,8 @@ importers:
       got: ^11.8.2
       jest: ^27.5.1
       node-fetch: ^2.6.7
+      openapi-schema-validator: ^12.0.0
+      openapi-types: ^12.0.0
       prettier: ^2.3.2
       text-encoder: ^0.0.4
       ts-node: ^10.0.0
@@ -1052,6 +1054,8 @@ importers:
       got: 11.8.3
       jest: 27.5.1_ts-node@10.7.0
       node-fetch: 2.6.7
+      openapi-schema-validator: 12.0.0
+      openapi-types: 12.0.0
       prettier: 2.5.1
       text-encoder: 0.0.4
       ts-node: 10.7.0_drbbnc2wk7uwp4gsdsdvgzqgya
@@ -5808,6 +5812,15 @@ packages:
     dependencies:
       clean-stack: 2.2.0
       indent-string: 4.0.0
+    dev: true
+
+  /ajv-formats/2.1.1:
+    resolution: {integrity: sha512-Wx0Kx52hxE7C18hkMEggYlEifqWZtYaRgouJor+WMdPnQyEK13vgEWyVNup7SoeeoLMsr4kf5h6dOW11I15MUA==}
+    peerDependenciesMeta:
+      ajv:
+        optional: true
+    dependencies:
+      ajv: 8.8.2
     dev: true
 
   /ajv/6.12.6:
@@ -12071,6 +12084,15 @@ packages:
   /only/0.0.2:
     resolution: {integrity: sha1-Kv3oTQPlC5qO3EROMGEKcCle37Q=}
 
+  /openapi-schema-validator/12.0.0:
+    resolution: {integrity: sha512-dtQ5iCiCluL/SXmd5LWqfPXvN/WbVJeCp+3+exF6BHBN3fry5tNAhFllZICYHQ2kTfQxrfwbQcy0fqaw9wOb+w==}
+    dependencies:
+      ajv: 8.8.2
+      ajv-formats: 2.1.1
+      lodash.merge: 4.6.2
+      openapi-types: 12.0.0
+    dev: true
+
   /openapi-types/12.0.0:
     resolution: {integrity: sha512-6Wd9k8nmGQHgCbehZCP6wwWcfXcvinhybUTBatuhjRsCxUIujuYFZc9QnGeae75CyHASewBtxs0HX/qwREReUw==}
     dev: true
@@ -14982,7 +15004,7 @@ packages:
       '@types/jest': 27.4.1
       bs-logger: 0.2.6
       fast-json-stable-stringify: 2.1.0
-      jest: 27.5.1
+      jest: 27.5.1_ts-node@10.7.0
       jest-util: 27.5.1
       json5: 2.2.1
       lodash.memoize: 4.1.2
