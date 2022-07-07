@@ -1,6 +1,6 @@
-import { Optional } from '@silverhand/essentials';
+import { conditionalString, Optional } from '@silverhand/essentials';
 import React, { FC, ReactNode } from 'react';
-import { TFuncKey } from 'react-i18next';
+import { TFuncKey, useTranslation } from 'react-i18next';
 
 import useUserPreferences from '@/hooks/use-user-preferences';
 
@@ -46,6 +46,9 @@ export const useSidebarMenuItems = (): {
   const {
     data: { getStartedHidden },
   } = useUserPreferences();
+  const {
+    i18n: { language },
+  } = useTranslation();
 
   const sections: SidebarSection[] = [
     {
@@ -106,8 +109,10 @@ export const useSidebarMenuItems = (): {
         },
         {
           Icon: Document,
-          title: 'documentation',
-          externalLink: 'https://docs.logto.io',
+          title: 'docs',
+          externalLink: `https://docs.logto.io/${conditionalString(
+            language !== 'en' && language.toLowerCase()
+          )}`,
         },
       ],
     },

@@ -75,7 +75,7 @@ const translation = {
       connectors: 'Connectors',
       users: 'User Management',
       audit_logs: 'Audit Logs',
-      documentation: 'Documentation',
+      docs: 'Docs',
       contact_us: 'Contact Us',
       settings: 'Settings',
     },
