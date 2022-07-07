@@ -21,6 +21,7 @@ type SidebarItem = {
   title: TFuncKey<'translation', 'admin_console.tabs'>;
   isHidden?: boolean;
   modal?: (isOpen: boolean, onCancel: () => void) => ReactNode;
+  externalLink?: string;
 };
 
 type SidebarSection = {
@@ -106,6 +107,7 @@ export const useSidebarMenuItems = (): {
         {
           Icon: Document,
           title: 'documentation',
+          externalLink: 'https://docs.logto.io',
         },
       ],
     },

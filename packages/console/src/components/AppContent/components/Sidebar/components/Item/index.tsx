@@ -11,9 +11,10 @@ type Props = {
   titleKey: TFuncKey<'translation', 'admin_console.tabs'>;
   isActive?: boolean;
   modal?: (isOpen: boolean, onCancel: () => void) => ReactNode;
+  externalLink?: string;
 };
 
-const Item = ({ icon, titleKey, modal, isActive = false }: Props) => {
+const Item = ({ icon, titleKey, modal, externalLink, isActive = false }: Props) => {
   const { t } = useTranslation(undefined, {
     keyPrefix: 'admin_console.tabs',
   });
@@ -29,28 +30,36 @@ const Item = ({ icon, titleKey, modal, isActive = false }: Props) => {
     [icon, t, titleKey]
   );
 
-  if (!modal) {
+  if (modal) {
     return (
-      <Link to={getPath(titleKey)} className={classNames(styles.row, isActive && styles.active)}>
+      <>
+        <button
+          className={styles.row}
+          onClick={() => {
+            setIsOpen(true);
+          }}
+        >
+          {content}
+        </button>
+        {modal(isOpen, () => {
+          setIsOpen(false);
+        })}
+      </>
+    );
+  }
+
+  if (externalLink) {
+    return (
+      <a href={externalLink} target="_blank" rel="noreferrer" className={styles.row}>
         {content}
-      </Link>
+      </a>
     );
   }
 
   return (
-    <>
-      <button
-        className={styles.row}
-        onClick={() => {
-          setIsOpen(true);
-        }}
-      >
-        {content}
-      </button>
-      {modal(isOpen, () => {
-        setIsOpen(false);
-      })}
-    </>
+    <Link to={getPath(titleKey)} className={classNames(styles.row, isActive && styles.active)}>
+      {content}
+    </Link>
   );
 };
 

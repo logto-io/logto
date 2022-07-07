@@ -21,7 +21,7 @@ const Sidebar = () => {
       {sections.map(({ title, items }) => (
         <Section key={title} title={t(title)}>
           {items.map(
-            ({ title, Icon, isHidden, modal }) =>
+            ({ title, Icon, isHidden, modal, externalLink }) =>
               !isHidden && (
                 <Item
                   key={title}
@@ -29,6 +29,7 @@ const Sidebar = () => {
                   icon={<Icon />}
                   isActive={location.pathname.startsWith(getPath(title))}
                   modal={modal}
+                  externalLink={externalLink}
                 />
               )
           )}
