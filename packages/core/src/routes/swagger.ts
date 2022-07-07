@@ -120,7 +120,7 @@ export default function swaggerRoutes<T extends AnonymousRouter, R extends Route
   allRouters: R[]
 ) {
   router.get('/swagger.json', async (ctx, next) => {
-    // Confirm the final correctness with integration tests.
+    // Use `as` here since we'll check typing with integration tests
     const additionalSwagger = load(
       await readFile('static/yaml/additional-swagger.yaml', { encoding: 'utf-8' })
     ) as OpenAPIV3.Document;
