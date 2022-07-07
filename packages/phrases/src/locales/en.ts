@@ -130,14 +130,21 @@ const translation = {
       description: 'Description',
       description_placeholder: 'Enter your application description',
       authorization_endpoint: 'Authorization endpoint',
+      authorization_endpoint_tip:
+        "The endpoint to perform authentication and authorization. It's used for OpenID Connect Authentication.",
       redirect_uri: 'Redirect URIs',
       redirect_uri_placeholder: 'https://your.website.com/app',
       redirect_uri_placeholder_native: 'io.logto://callback',
+      redirect_uri_tip:
+        'The URI redirects after a user sign-in (whether successful or not). See OpenID Connect AuthRequest for more info.',
       post_sign_out_redirect_uri: 'Post Sign-out Redirect URIs',
       post_sign_out_redirect_uri_placeholder: 'https://your.website.com/home',
+      post_sign_out_redirect_uri_tip:
+        'The URI redirects after a user sign-out (optional). It may have no practical effect in some app types.',
       cors_allowed_origins: 'CORS allowed origins',
       cors_allowed_origins_placeholder: 'https://your.website.com',
-      cors_allowed_origins_tip: 'By default, all the origins of Redirect URIs will be allowed.',
+      cors_allowed_origins_tip:
+        'By default, all the origins of Redirect URIs will be allowed. Usually no action is required for this field.',
       add_another: 'Add Another',
       id_token_expiration: 'ID Token expiration',
       refresh_token_expiration: 'Refresh Token expiration',
@@ -156,6 +163,8 @@ const translation = {
       api_name: 'API name',
       api_name_placeholder: 'Enter your API name',
       api_identifier: 'API identifier',
+      api_identifier_tip:
+        'The unique identifier to the API resource. It must be an absolute URI and has no fragment (#) component. Equals to the resource parameter in OAuth 2.0.',
       api_resource_created: 'The API resource {{name}} has been successfully created',
       api_identifier_placeholder: 'https://your-api-identifier/',
     },
@@ -283,6 +292,8 @@ const translation = {
       field_avatar: 'Avatar image URL',
       field_avatar_placeholder: 'https://your.cdn.domain/avatar.png',
       field_custom_data: 'Custom data',
+      field_custom_data_tip:
+        'Additional user info not listed in the pre-defined user properties, such as user-preferred color and language.',
       field_connectors: 'Social connections',
       custom_data_invalid: 'Custom data must be a valid JSON',
       connectors: {
@@ -391,6 +402,8 @@ const translation = {
           auto: 'Auto',
           fixed: 'Fixed',
           fallback_language: 'Fallback language',
+          fallback_language_tip:
+            'Which language to fall back if Logto finds no proper language phrase-set.',
           fixed_language: 'Fixed language',
           languages: {
             english: 'English',

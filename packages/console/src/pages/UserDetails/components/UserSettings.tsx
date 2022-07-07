@@ -129,6 +129,7 @@ const UserSettings = ({ userData, userFormData, onUserUpdated }: Props) => {
           isRequired
           title="admin_console.user_details.field_custom_data"
           className={styles.textField}
+          tooltip="admin_console.user_details.field_custom_data_tip"
         >
           <CodeEditor language="json" value={value} onChange={onChange} />
         </FormField>

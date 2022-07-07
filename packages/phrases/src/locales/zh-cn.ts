@@ -126,14 +126,21 @@ const translation = {
       description: '描述',
       description_placeholder: '请输入应用描述',
       authorization_endpoint: 'Authorization Endpoint',
+      authorization_endpoint_tip:
+        '进行鉴权与授权的端点 endpoint。用于 OpenID Connect 中的鉴权流程。',
       redirect_uri: 'Redirect URIs',
       redirect_uri_placeholder: 'https://your.website.com/app',
       redirect_uri_placeholder_native: 'io.logto://callback',
+      redirect_uri_tip:
+        '在用户登录完成（不论成功与否）后重定向的目标 URI。参见 OpenID Connect AuthRequest 以了解更多。',
       post_sign_out_redirect_uri: 'Post sign out redirect URIs',
       post_sign_out_redirect_uri_placeholder: 'https://your.website.com/home',
+      post_sign_out_redirect_uri_tip:
+        '在用户登出后重定向的目标 URI（可选）。在某些应用类型中可能无实质作用。',
       cors_allowed_origins: 'CORS Allowed Origins',
       cors_allowed_origins_placeholder: 'https://your.website.com',
-      cors_allowed_origins_tip: '所有 Redirect URI 的 origin 将默认被允许。',
+      cors_allowed_origins_tip:
+        '所有 Redirect URI 的 origin 将默认被允许。通常不需要对此字段进行操作。',
       add_another: '新增',
       id_token_expiration: 'ID Token 过期时间',
       refresh_token_expiration: 'Refresh Token 过期时间',
@@ -153,6 +160,8 @@ const translation = {
       api_name_placeholder: '输入API名称',
       api_identifier: 'API Identifier',
       api_identifier_placeholder: 'https://your-api-identifier/',
+      api_identifier_tip:
+        '对于 API 资源的唯一标识符。它必须是一个绝对 URI 并没有 fragment (#) 组件。等价于 OAuth 2.0 中的 resource parameter。',
       api_resource_created: ' API 资源 {{name}} 已成功创建！',
     },
     api_resource_details: {
@@ -276,6 +285,7 @@ const translation = {
       field_avatar: '头像图片链接',
       field_avatar_placeholder: 'https://your.cdn.domain/avatar.png',
       field_custom_data: '自定义数据',
+      field_custom_data_tip: '预定义属性之外的用户信息，例如用户偏好的颜色和语言。',
       field_connectors: '社交帐号',
       custom_data_invalid: '自定义数据必须是有效的 JSON',
       connectors: {
@@ -380,6 +390,7 @@ const translation = {
           auto: '自动',
           fixed: '固定',
           fallback_language: '备用语言',
+          fallback_language_tip: '如果 Logto 找不到合适的语言包，将回退至哪种语言。',
           fixed_language: '固定语言',
           languages: {
             english: '英文',

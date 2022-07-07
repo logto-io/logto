@@ -46,7 +46,10 @@ const LanguagesForm = () => {
         />
       </FormField>
       {mode === LanguageMode.Auto && (
-        <FormField title="admin_console.sign_in_exp.others.languages.fallback_language">
+        <FormField
+          title="admin_console.sign_in_exp.others.languages.fallback_language"
+          tooltip="admin_console.sign_in_exp.others.languages.fallback_language_tip"
+        >
           <Controller
             name="languageInfo.fallbackLanguage"
             control={control}
