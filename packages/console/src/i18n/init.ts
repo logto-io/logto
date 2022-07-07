@@ -15,8 +15,8 @@ const initI18n = async (language?: Language) =>
       },
       lng: language,
       detection: {
-        lookupLocalStorage: 'i18nextLogtoACLng',
-        lookupSessionStorage: 'i18nextLogtoACLng',
+        lookupLocalStorage: 'i18nextLogtoAcLng',
+        lookupSessionStorage: 'i18nextLogtoAcLng',
       },
     });
 
