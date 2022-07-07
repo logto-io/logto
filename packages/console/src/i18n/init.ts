@@ -14,6 +14,10 @@ const initI18n = async (language?: Language) =>
         escapeValue: false,
       },
       lng: language,
+      detection: {
+        lookupLocalStorage: 'i18nextLogtoAcLng',
+        lookupSessionStorage: 'i18nextLogtoAcLng',
+      },
     });
 
 export default initI18n;
