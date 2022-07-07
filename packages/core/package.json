@@ -57,7 +57,7 @@
     "koa-logger": "^3.2.1",
     "koa-mount": "^4.0.0",
     "koa-proxies": "^0.12.1",
-    "koa-router": "^10.0.0",
+    "koa-router": "^11.0.0",
     "koa-send": "^5.0.1",
     "lodash.pick": "^4.4.0",
     "module-alias": "^2.2.2",

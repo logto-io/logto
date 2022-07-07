@@ -854,7 +854,7 @@ importers:
       koa-logger: ^3.2.1
       koa-mount: ^4.0.0
       koa-proxies: ^0.12.1
-      koa-router: ^10.0.0
+      koa-router: ^11.0.0
       koa-send: ^5.0.1
       lint-staged: ^13.0.0
       lodash.pick: ^4.4.0
@@ -917,7 +917,7 @@ importers:
       koa-logger: 3.2.1
       koa-mount: 4.0.0
       koa-proxies: 0.12.1_debug@4.3.4+koa@2.13.4
-      koa-router: 10.1.1
+      koa-router: 11.0.1
       koa-send: 5.0.1
       lodash.pick: 4.4.0
       module-alias: 2.2.2
@@ -8929,6 +8929,17 @@ packages:
       statuses: 1.5.0
       toidentifier: 1.0.1
 
+  /http-errors/2.0.0:
+    resolution: {integrity: sha512-FtwrG/euBzaEjYeRqOgly7G0qviiXoJWnvEH2Z1plBdXgbyjv34pHTSb9zoeHMyDy33+DWy5Wt9Wo+TURtOYSQ==}
+    engines: {node: '>= 0.8'}
+    dependencies:
+      depd: 2.0.0
+      inherits: 2.0.4
+      setprototypeof: 1.2.0
+      statuses: 2.0.1
+      toidentifier: 1.0.1
+    dev: false
+
   /http-proxy-agent/4.0.1:
     resolution: {integrity: sha512-k0zdNgqWTGA6aeIRVpvfVob4fL52dTfaehylg0Y4UvSySvOq/Y+BOyPrgpUrA7HylqvU8vIZGsRuXmspskV0Tg==}
     engines: {node: '>= 6'}
@@ -10367,17 +10378,14 @@ packages:
       - debug
     dev: false
 
-  /koa-router/10.1.1:
-    resolution: {integrity: sha512-z/OzxVjf5NyuNO3t9nJpx7e1oR3FSBAauiwXtMQu4ppcnuNZzTaQ4p21P8A6r2Es8uJJM339oc4oVW+qX7SqnQ==}
-    engines: {node: '>= 8.0.0'}
+  /koa-router/11.0.1:
+    resolution: {integrity: sha512-n6/AbNu9JbW+6pBqfFE5MRshXdkjMjEdNHlT79FCab/+VfG+THOh5vIs8GlFUeBldYjkof9H3HCPabLWiZO4vQ==}
+    engines: {node: '>= 12'}
     dependencies:
-      debug: 4.3.4
-      http-errors: 1.8.1
+      http-errors: 2.0.0
       koa-compose: 4.1.0
       methods: 1.1.2
-      path-to-regexp: 6.2.0
-    transitivePeerDependencies:
-      - supports-color
+      path-to-regexp: 6.2.1
     dev: false
 
   /koa-send/5.0.1:
@@ -12466,8 +12474,8 @@ packages:
       isarray: 0.0.1
     dev: false
 
-  /path-to-regexp/6.2.0:
-    resolution: {integrity: sha512-f66KywYG6+43afgE/8j/GoiNyygk/bnoCbps++3ErRKsIYkGGupyv07R2Ok5m9i67Iqc+T2g1eAUGUPzWhYTyg==}
+  /path-to-regexp/6.2.1:
+    resolution: {integrity: sha512-JLyh7xT1kizaEvcaXOQwOc2/Yhw6KZOvPf1S8401UyLk86CU79LN3vl7ztXGm/pZ+YjoyAJ4rxmHwbkBXJX+yw==}
     dev: false
 
   /path-type/3.0.0:
@@ -14358,6 +14366,11 @@ packages:
   /statuses/1.5.0:
     resolution: {integrity: sha1-Fhx9rBd2Wf2YEfQ3cfqZOBR4Yow=}
     engines: {node: '>= 0.6'}
+
+  /statuses/2.0.1:
+    resolution: {integrity: sha512-RwNA9Z/7PrK06rYLIzFMlaF+l73iwpzsqRIFgbMLbTcLD6cOao82TaWefPXQvB2fOC4AjuYSEndS7N/mTCbkdQ==}
+    engines: {node: '>= 0.8'}
+    dev: false
 
   /stream-combiner/0.0.4:
     resolution: {integrity: sha1-TV5DPBhSYd3mI8o/RMWGvPXErRQ=}
