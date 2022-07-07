@@ -52,7 +52,7 @@ Import and init `LogtoClient` by passing config:
 
 const logtoClient = new LogtoClient({
   endpoint: '${props.endpoint}',
-  clientId: '${props.appId}',
+  appId: '${props.appId}',
 });`}
 </code>
 </pre>
@@ -97,7 +97,7 @@ Insert the code below in your `/callback` route:
 
 ```ts
 try {
-  await logtoClient.handleSignInCallback();
+  await logtoClient.handleSignInCallback(window.location.href);
   console.log(logtoClient.isAuthenticated); // true
 } catch {
   // Handle error

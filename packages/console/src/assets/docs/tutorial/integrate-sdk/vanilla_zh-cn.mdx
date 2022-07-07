@@ -52,7 +52,7 @@ Import 并传入 config 以初始化 `LogtoClient`：
 
 const logtoClient = new LogtoClient({
   endpoint: '${props.endpoint}',
-  clientId: '${props.appId}',
+  appId: '${props.appId}',
 });`}
 </code>
 </pre>
@@ -97,7 +97,7 @@ const logtoClient = new LogtoClient({
 
 ```ts
 try {
-  await logtoClient.handleSignInCallback();
+  await logtoClient.handleSignInCallback(window.location.href);
   console.log(logtoClient.isAuthenticated); // true
 } catch {
   // 处理错误
