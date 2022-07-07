@@ -49,10 +49,11 @@ CocoaPods [不支持本地依赖](https://github.com/CocoaPods/CocoaPods/issues/
 <pre>
 <code className="language-swift">
 {`import Logto
+import LogtoClient
 
 let config = try? LogtoConfig(
   endpoint: "${props.endpoint}",
-  appId: "${props.appId}",
+  appId: "${props.appId}"
 )
 let logtoClient = LogtoClient(useConfig: config)`}
 </code>
