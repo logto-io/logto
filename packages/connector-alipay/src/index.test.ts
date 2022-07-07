@@ -17,7 +17,12 @@ describe('validateConfig', () => {
 
   it('should pass on valid config', async () => {
     await expect(
-      alipayMethods.validateConfig({ appId: 'appId', privateKey: 'privateKey', signType: 'RSA' })
+      alipayMethods.validateConfig({
+        appId: 'appId',
+        privateKey: 'privateKey',
+        signType: 'RSA',
+        charset: 'UTF8',
+      })
     ).resolves.not.toThrow();
   });
 

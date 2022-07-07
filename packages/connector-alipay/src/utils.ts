@@ -33,7 +33,7 @@ export const signingParameters: SigningParameters = (
 
       if (value) {
         // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-        return `${key}=${iconv.encode(value, rest.charset ?? 'UTF8')}`;
+        return `${key}=${iconv.encode(value, rest.charset)}`;
       }
 
       return '';
