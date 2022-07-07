@@ -45,7 +45,7 @@ Alipay Web connector is designed for desktop Web applications. It takes advantag
     - Fill out the `appId` field with APPID you've got from step 1.
     - Fill out the `privateKey` field with contents from the private key file mentioned in step 2. Remember to use '\n' to replace all newlines.
     - Fill out the `signType` field with 'RSA2' due to the `Public key` signing mode we chose in step 7 of **Create And Configure Alipay Apps**.
-    - Fill out the `charset` field with either 'GBK' or 'UTF8'.
+    - Fill out the `charset` field with either 'GBK' or 'UTF8'. Fill in 'UTF8' if you do not have preference.
 
 ### Config types
 
