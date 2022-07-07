@@ -36,7 +36,7 @@ The official Logto connector for WeChat social sign-in in native apps (iOS and A
 
 ## Get started
 
-If you don't know the concept of the connector or haven't added this connector to your Sign-in experience yet, please see [Logto tutorial](https://docs.logto.io/docs/tutorials/get-started/enable-social-sign-in).
+If you don't know the concept of the connector or don't how to added this connector to your Sign-in experience, please see [Logto tutorial](https://docs.logto.io/docs/tutorials/get-started/enable-social-sign-in).
 
 In native apps, you cannot use the web as a sign-in method of WeChat: navigation to the WeChat app is required, and it also requires using their SDK.
 
@@ -284,7 +284,7 @@ Once WeChat native connector is enabled, you can build and run your app to see i
 
 ## 开始上手
 
-如果你还不知道连接器的概念，或者还没有将本连接器添加至你的「登录体验」，请先参见 [Logto 教程](https://docs.logto.io/zh-cn/docs/tutorials/get-started/enable-social-sign-in)。
+如果你还不知道连接器的概念，或者还不知道如何将本连接器添加至你的「登录体验」，请先参见 [Logto 教程](https://docs.logto.io/zh-cn/docs/tutorials/get-started/enable-social-sign-in)。
 
 在原生应用中，你无法通过 web 进行微信登录：必须跳转至微信 app，并使用他们提供的 SDK 才能完成。
 
@@ -520,7 +520,7 @@ src/main/kotlin/com/sample/app/wxapi/WXEntryActivity.kt
 
 ## 测试微信原生连接器
 
-大功告成。别忘了 [在登录体验中启用社交登录](https://docs.logto.io/zh-cn/docs/tutorials/get-started/enable-social-sign-in/#%E5%9C%A8%E7%99%BB%E5%BD%95%E4%BD%93%E9%AA%8C%E4%B8%AD%E5%90%AF%E7%94%A8%E8%BF%9E%E6%8E%A5%E5%99%A8)。
+大功告成。别忘了 [在登录体验中启用本连接器](https://docs.logto.io/zh-cn/docs/tutorials/get-started/enable-social-sign-in/#%E5%9C%A8%E7%99%BB%E5%BD%95%E4%BD%93%E9%AA%8C%E4%B8%AD%E5%90%AF%E7%94%A8%E8%BF%9E%E6%8E%A5%E5%99%A8)。
 
 在微信原生连接器启用后，你可以构建并运行你的应用看看是否生效。
 
