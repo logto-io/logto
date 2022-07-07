@@ -99,7 +99,14 @@ const SignInExperience = () => {
   }
 
   if (!settings?.signInExperienceCustomized) {
-    return <Welcome mutate={mutateSettings} />;
+    return (
+      <Welcome
+        mutate={() => {
+          void mutateSettings();
+          void mutate();
+        }}
+      />
+    );
   }
 
   return (
