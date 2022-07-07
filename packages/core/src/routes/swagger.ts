@@ -1,10 +1,13 @@
+import { readFile } from 'fs/promises';
+
 import { toTitle } from '@silverhand/essentials';
+import { load } from 'js-yaml';
 import Router, { IMiddleware } from 'koa-router';
 import { OpenAPIV3 } from 'openapi-types';
 import { ZodObject, ZodOptional } from 'zod';
 
 import { isGuardMiddleware, WithGuardConfig } from '@/middleware/koa-guard';
-import { isPaginationMiddleware, fallbackDefaultPageSize } from '@/middleware/koa-pagination';
+import { fallbackDefaultPageSize, isPaginationMiddleware } from '@/middleware/koa-pagination';
 import assertThat from '@/utils/assert-that';
 import { zodTypeToSwagger } from '@/utils/zod';
 
@@ -62,7 +65,7 @@ const buildParameters = (
   }));
 };
 
-function buildTag(path: string) {
+const buildTag = (path: string) => {
   const root = path.split('/')[1];
 
   if (root?.startsWith('.')) {
@@ -70,13 +73,29 @@ function buildTag(path: string) {
   }
 
   return toTitle(root ?? 'General');
-}
+};
 
-const buildOperation = (stack: IMiddleware[], path: string): OpenAPIV3.OperationObject => {
+export const defaultResponses: OpenAPIV3.ResponsesObject = {
+  '200': {
+    description: 'OK',
+  },
+};
+
+const buildOperation = (
+  stack: IMiddleware[],
+  path: string,
+  customResponses?: OpenAPIV3.ResponsesObject
+): OpenAPIV3.OperationObject => {
   const guard = stack.find((function_): function_ is WithGuardConfig<IMiddleware> =>
     isGuardMiddleware(function_)
   );
+  const pathParameters = buildParameters(guard?.config.params, 'path');
+
   const hasPagination = stack.some((function_) => isPaginationMiddleware(function_));
+  const queryParameters = [
+    ...buildParameters(guard?.config.query, 'query'),
+    ...(hasPagination ? paginationParameters : []),
+  ];
 
   const body = guard?.config.body;
   const requestBody = body && {
@@ -88,21 +107,11 @@ const buildOperation = (stack: IMiddleware[], path: string): OpenAPIV3.Operation
     },
   };
 
-  const pathParameters = buildParameters(guard?.config.params, 'path');
-  const queryParameters = [
-    ...buildParameters(guard?.config.query, 'query'),
-    ...(hasPagination ? paginationParameters : []),
-  ];
-
   return {
     tags: [buildTag(path)],
     parameters: [...pathParameters, ...queryParameters],
     requestBody,
-    responses: {
-      '200': {
-        description: 'OK',
-      },
-    },
+    responses: customResponses ?? defaultResponses,
   };
 };
 
@@ -111,16 +120,29 @@ export default function swaggerRoutes<T extends AnonymousRouter, R extends Route
   allRouters: R[]
 ) {
   router.get('/swagger.json', async (ctx, next) => {
+    // Use `as` here since we'll check typing with integration tests
+    const additionalSwagger = load(
+      await readFile('static/yaml/additional-swagger.yaml', { encoding: 'utf-8' })
+    ) as OpenAPIV3.Document;
+
     const routes = allRouters.flatMap<RouteObject>((router) =>
-      router.stack.flatMap<RouteObject>(({ path, stack, methods }) =>
+      router.stack.flatMap<RouteObject>(({ path: routerPath, stack, methods }) =>
         methods
           // There is no need to show the HEAD method.
           .filter((method) => method !== 'HEAD')
-          .map((method) => ({
-            path: `/api${path}`,
-            method: method.toLowerCase() as OpenAPIV3.HttpMethods,
-            operation: buildOperation(stack, path),
-          }))
+          .map((method) => {
+            const path = `/api${routerPath}`;
+            const httpMethod = method.toLowerCase() as OpenAPIV3.HttpMethods;
+
+            const additionalPathItem = additionalSwagger.paths[path] ?? {};
+            const additionalResponses = additionalPathItem[httpMethod]?.responses;
+
+            return {
+              path,
+              method: httpMethod,
+              operation: buildOperation(stack, routerPath, additionalResponses),
+            };
+          })
       )
     );
 
