@@ -122,7 +122,6 @@ export default class GoogleConnector implements SocialConnector {
           throw new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid);
         }
 
-        // TODO: maybe add errorResponse zod object to parse error here
         throw new ConnectorError(ConnectorErrorCodes.General, JSON.stringify(rawBody));
       }
 

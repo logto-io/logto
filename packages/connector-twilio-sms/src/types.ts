@@ -62,11 +62,12 @@ export type SendSmsResponse = {
   uri: string;
 };
 
+// See https://www.twilio.com/docs/usage/twilios-response
 export const sendSmsErrorResponseGuard = z.object({
-  code: z.number(),
-  message: z.string(),
-  more_info: z.string(),
   status: z.number(),
+  message: z.string(),
+  code: z.number().optional(),
+  more_info: z.string().optional(),
 });
 
 export type SendSmsErrorResponse = z.infer<typeof sendSmsErrorResponseGuard>;
