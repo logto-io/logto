@@ -49,12 +49,12 @@ Alipay Web connector is designed for desktop Web applications. It takes advantag
 
 ### Config types
 
-| Name       | Type                     | Enum values                  |
-|------------|--------------------------|------------------------------|
-| appId      | string                   | N/A                          |
-| privateKey | string                   | N/A                          |
-| signType   | enum string              | 'RSA' \| 'RSA2'              |
-| charset    | enum string (_optional_) | 'GBK' \| 'UTF8' \| undefined |
+| Name       | Type                   | Enum values                  |
+|------------|------------------------|------------------------------|
+| appId      | string                 | N/A                          |
+| privateKey | string                 | N/A                          |
+| signType   | enum string            | 'RSA' \| 'RSA2'              |
+| charset    | enum string (OPTIONAL) | 'GBK' \| 'UTF8' \| undefined |
 
 ## Test Alipay web connector
 
