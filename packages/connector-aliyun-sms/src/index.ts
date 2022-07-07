@@ -8,6 +8,7 @@ import {
   GetConnectorConfig,
 } from '@logto/connector-types';
 import { assert } from '@silverhand/essentials';
+import { HTTPError } from 'got';
 
 import { defaultMetadata } from './constant';
 import { sendSms } from './single-send-text';
@@ -26,6 +27,7 @@ export default class AliyunSmsConnector implements SmsConnector {
     }
   };
 
+  /* eslint-disable complexity */
   public sendMessage: SmsSendMessageFunction = async (phone, type, { code }, config) => {
     const smsConfig =
       (config as AliyunSmsConfig | undefined) ?? (await this.getConfig(this.metadata.id));
@@ -38,37 +40,64 @@ export default class AliyunSmsConnector implements SmsConnector {
       new ConnectorError(ConnectorErrorCodes.TemplateNotFound, `Cannot find template!`)
     );
 
-    const httpResponse = await sendSms(
-      {
-        AccessKeyId: accessKeyId,
-        PhoneNumbers: phone,
-        SignName: signName,
-        TemplateCode: template.templateCode,
-        TemplateParam: JSON.stringify({ code }),
-      },
-      accessKeySecret
-    );
+    try {
+      const httpResponse = await sendSms(
+        {
+          AccessKeyId: accessKeyId,
+          PhoneNumbers: phone,
+          SignName: signName,
+          TemplateCode: template.templateCode,
+          TemplateParam: JSON.stringify({ code }),
+        },
+        accessKeySecret
+      );
 
-    const { body: rawBody } = httpResponse;
-    const result = sendSmsResponseGuard.safeParse(JSON.parse(rawBody));
+      const { body: rawBody } = httpResponse;
+
+      const { Code } = this.parseResponseString(rawBody);
+
+      if (Code === 'isv.ACCOUNT_NOT_EXISTS' || Code === 'isv.SMS_TEMPLATE_ILLEGAL') {
+        throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, rawBody);
+      }
+
+      if (Code !== 'OK') {
+        throw new ConnectorError(ConnectorErrorCodes.General, rawBody);
+      }
+
+      return httpResponse;
+    } catch (error: unknown) {
+      if (!(error instanceof HTTPError)) {
+        throw error;
+      }
+
+      const {
+        response: { body: rawBody },
+      } = error;
+
+      assert(typeof rawBody === 'string', new ConnectorError(ConnectorErrorCodes.InvalidResponse));
+
+      const { Code } = this.parseResponseString(rawBody);
+
+      if (Code.includes('InvalidAccessKeyId')) {
+        throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, rawBody);
+      }
+
+      if (Code === 'SignatureDoesNotMatch' || Code === 'IncompleteSignature') {
+        throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, rawBody);
+      }
+
+      throw new ConnectorError(ConnectorErrorCodes.General, rawBody);
+    }
+  };
+  /* eslint-enable complexity */
+
+  private readonly parseResponseString = (response: string) => {
+    const result = sendSmsResponseGuard.safeParse(JSON.parse(response));
 
     if (!result.success) {
       throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, result.error.message);
     }
 
-    const { Code } = result.data;
-
-    this.errorHandler(Code, rawBody);
-
-    return httpResponse;
-  };
-
-  private readonly errorHandler = (code: string, message: string) => {
-    // See https://help.aliyun.com/document_detail/101346.htm?spm=a2c4g.11186623.0.0.29d710f5TUxolJ
-    assert(
-      !(code === 'isv.ACCOUNT_NOT_EXISTS' || code === 'isv.SMS_TEMPLATE_ILLEGAL'),
-      new ConnectorError(ConnectorErrorCodes.InvalidConfig, message)
-    );
-    assert(code === 'OK', new ConnectorError(ConnectorErrorCodes.General, message));
+    return result.data;
   };
 }
