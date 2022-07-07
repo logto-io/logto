@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.0-alpha.3](https://github.com/logto-io/logto/compare/v1.0.0-alpha.2...v1.0.0-alpha.3) (2022-07-07)
+
+
+### Features
+
+* **console:** open docs on documentation tab clicked ([#1444](https://github.com/logto-io/logto/issues/1444)) ([340c641](https://github.com/logto-io/logto/commit/340c641f4e135077b90ad83c291d380d930aacf8))
+
+
+### Bug Fixes
+
+* **console:** language auto detection ([7c880fc](https://github.com/logto-io/logto/commit/7c880fc3e6c45dca11e59f1bb4d4623cf2415255))
+* **console:** mutate data after sie welcome done ([#1447](https://github.com/logto-io/logto/issues/1447)) ([33106aa](https://github.com/logto-io/logto/commit/33106aac93fdb87579dcc178e034360decca9a4f))
+* **console:** set user select to none for link button ([#1446](https://github.com/logto-io/logto/issues/1446)) ([d293de0](https://github.com/logto-io/logto/commit/d293de0d031821b0ea9aa388eb599bfafb8a23c0))
+* **console:** vanilla sdk integration guide ([58fe92e](https://github.com/logto-io/logto/commit/58fe92e914dd1e5e52ff3942123299eefde56cd0))
+
+
+
 ## [1.0.0-alpha.2](https://github.com/logto-io/logto/compare/v1.0.0-alpha.1...v1.0.0-alpha.2) (2022-07-07)
 
 
