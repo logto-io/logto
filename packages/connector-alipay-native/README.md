@@ -138,7 +138,7 @@ Once Alipay native connector is enabled, you can build and run your app to see i
 ## 在支付宝开放平台上创建并且配置应用
 
 1. 使用你所创建的支付宝开发者账号登录[支付宝开放平台控制台](https://open.alipay.com/)。
-2. 在「我的应用」中选择「网页&移动应用」切页。
+2. 在「我的应用」中选择「网页&移动应用」标签页。
 3. 点击「立即创建」开始创建并且配置你的应用
 4. 根据平台的命名规则通过「应用名称」字段给你的应用命名；在「应用图标」中上传应用图标；将「应用类型」设定为「移动应用」。当要创建一个 iOS 应用时, 需要提供「Bundle ID」。当创建的是 Android 应用时，则需要提供「应用签名」和「应用名」。
 5. 当应用创建成功后，我们进入到了「概览」页面，接下来我们在「能力列表」中点击「+ 添加能力」，将「App 支付宝登录」、「获取会员信息」、「第三方应用授权」添加到能力列表中。
@@ -180,7 +180,7 @@ Once Alipay native connector is enabled, you can build and run your app to see i
 >
 > 该插件已包含支付宝极简 SDK。在引入插件后你可以直接使用 `import AFServiceSDK`。
 
-**3. 将插件添加至 `LogtoClient` 的初始化项**
+**2. 将插件添加至 `LogtoClient` 的初始化项**
 
 ```swift
 let logtoClient = LogtoClient(
