@@ -3,6 +3,26 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.0-alpha.2](https://github.com/logto-io/logto/compare/v1.0.0-alpha.1...v1.0.0-alpha.2) (2022-07-07)
+
+
+### Features
+
+* **console:** add unsaved changes alert for connector config ([#1414](https://github.com/logto-io/logto/issues/1414)) ([78407fc](https://github.com/logto-io/logto/commit/78407fc6c9d8a18d8253e0052c63ea1dd63de576))
+* **console:** user settings unsaved changes alert ([#1411](https://github.com/logto-io/logto/issues/1411)) ([14b27b6](https://github.com/logto-io/logto/commit/14b27b6d0de226518ad1e31dd117c1a567e05015))
+
+
+### Bug Fixes
+
+* **console:** chagne user added modal button to done ([#1438](https://github.com/logto-io/logto/issues/1438)) ([ec82507](https://github.com/logto-io/logto/commit/ec82507ca1107154676599afe16491e382a1d524))
+* **console:** dashboard chart yaxios width ([#1435](https://github.com/logto-io/logto/issues/1435)) ([b26fb0c](https://github.com/logto-io/logto/commit/b26fb0c0c32e7bf2e361acd5e71cf20740bba25b))
+* **console:** fix typo for variant ([#1423](https://github.com/logto-io/logto/issues/1423)) ([f6be19e](https://github.com/logto-io/logto/commit/f6be19e1e321eafd5672b88c6e7f54976032d673))
+* **console:** use icon button in copytoclipboard ([#1440](https://github.com/logto-io/logto/issues/1440)) ([f8a9743](https://github.com/logto-io/logto/commit/f8a9743b2ea978fa2802ac8da4f51f7801d3a87a))
+* **ui:** dark mode seed ([#1426](https://github.com/logto-io/logto/issues/1426)) ([be73dbf](https://github.com/logto-io/logto/commit/be73dbf4ef14cf49779775dd95848ba73904a4b2))
+* **ui:** set ui specific i18n storage key ([#1441](https://github.com/logto-io/logto/issues/1441)) ([5b121d7](https://github.com/logto-io/logto/commit/5b121d78551d471125737daf31d4e0505e69e409))
+
+
+
 ## [1.0.0-alpha.1](https://github.com/logto-io/logto/compare/v1.0.0-alpha.0...v1.0.0-alpha.1) (2022-07-05)
 
 
