@@ -575,7 +575,7 @@ const errors = {
     unsupported_prompt_name: '不支持的 prompt name',
   },
   connector: {
-    general: '连接器发生未知错误',
+    general: '连接器发生未知错误\n{{errorDescription}}',
     not_found: '找不到可用的 {{type}} 类型的连接器',
     not_enabled: '连接器尚未启用',
     insufficient_request_parameters: '请求参数缺失',

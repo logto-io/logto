@@ -48,6 +48,8 @@ export const alipayUserInfoShareResponseGuard = z.object({
   sub_msg: z.string().optional(),
 });
 
+type AlipayUserInfoShareResponse = z.infer<typeof alipayUserInfoShareResponseGuard>;
+
 export const userInfoResponseGuard = z.object({
   sign: z.string(), // To know `sign` details, see: https://opendocs.alipay.com/common/02kf5q
   alipay_user_info_share_response: alipayUserInfoShareResponseGuard,
@@ -55,9 +57,4 @@ export const userInfoResponseGuard = z.object({
 
 export type UserInfoResponse = z.infer<typeof userInfoResponseGuard>;
 
-export type ErrorHandler = (response: {
-  code: string;
-  msg: string;
-  sub_code?: string;
-  sub_msg?: string;
-}) => void;
+export type ErrorHandler = (response: AlipayUserInfoShareResponse) => void;

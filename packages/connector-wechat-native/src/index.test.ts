@@ -83,7 +83,7 @@ describe('getAccessToken', () => {
       .query(true)
       .reply(200, { errcode: -1, errmsg: 'system error' });
     await expect(wechatNativeMethods.getAccessToken('wrong_code')).rejects.toMatchError(
-      new ConnectorError(ConnectorErrorCodes.General, 'system error')
+      new ConnectorError(ConnectorErrorCodes.General, { errorDescription: 'system error' })
     );
   });
 });
@@ -175,7 +175,7 @@ describe('getUserInfo', () => {
         errmsg: 'missing openid',
       });
     await expect(wechatNativeMethods.getUserInfo({ code: 'code' })).rejects.toMatchError(
-      new Error('missing openid')
+      new ConnectorError(ConnectorErrorCodes.General, { errorDescription: 'missing openid' })
     );
   });
 
@@ -200,7 +200,7 @@ describe('getUserInfo', () => {
       .query(parameters)
       .reply(200, { errcode: 40_003, errmsg: 'invalid openid' });
     await expect(wechatNativeMethods.getUserInfo({ code: 'code' })).rejects.toMatchError(
-      new Error('invalid openid')
+      new ConnectorError(ConnectorErrorCodes.General, { errorDescription: 'invalid openid' })
     );
   });
 

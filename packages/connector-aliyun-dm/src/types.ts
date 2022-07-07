@@ -63,6 +63,7 @@ export const sendMailErrorResponseGuard = z.object({
   Message: z.string(),
   RequestId: z.string().optional(),
   HostId: z.string().optional(),
+  Recommend: z.string().optional(),
 });
 
 export type SendMailErrorResponse = z.infer<typeof sendMailErrorResponseGuard>;

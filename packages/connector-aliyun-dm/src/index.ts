@@ -78,12 +78,13 @@ export default class AliyunDmConnector implements EmailConnector {
         const {
           response: { body: rawBody },
         } = error;
+
         assert(
           typeof rawBody === 'string',
           new ConnectorError(ConnectorErrorCodes.InvalidResponse)
         );
+
         this.errorHandler(rawBody);
-        throw new ConnectorError(ConnectorErrorCodes.General, rawBody);
       }
 
       throw error;
@@ -97,17 +98,8 @@ export default class AliyunDmConnector implements EmailConnector {
       throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, result.error.message);
     }
 
-    const { Code } = result.data;
+    const { Message: errorDescription, ...rest } = result.data;
 
-    // See https://help.aliyun.com/document_detail/29444.html.
-    assert(
-      !(
-        Code === 'InvalidBody' ||
-        Code === 'InvalidTemplate.NotFound' ||
-        Code === 'InvalidSubject.Malformed' ||
-        Code === 'InvalidFromAlias.Malformed'
-      ),
-      new ConnectorError(ConnectorErrorCodes.InvalidConfig, errorResponseBody)
-    );
+    throw new ConnectorError(ConnectorErrorCodes.General, { errorDescription, ...rest });
   };
 }

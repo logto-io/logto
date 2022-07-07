@@ -14,7 +14,7 @@ import {
   codeWithRedirectDataGuard,
 } from '@logto/connector-types';
 import { conditional, assert } from '@silverhand/essentials';
-import got, { RequestError as GotRequestError } from 'got';
+import got, { HTTPError } from 'got';
 
 import {
   accessTokenEndpoint,
@@ -87,6 +87,7 @@ export default class GoogleConnector implements SocialConnector {
     return { accessToken };
   };
 
+  // eslint-disable-next-line complexity
   public getUserInfo: GetUserInfo = async (data) => {
     const { code, redirectUri } = await this.authorizationCallbackHandler(data);
     const { accessToken } = await this.getAccessToken(code, redirectUri);
@@ -104,6 +105,7 @@ export default class GoogleConnector implements SocialConnector {
       if (!result.success) {
         throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, result.error.message);
       }
+
       const { sub: id, picture: avatar, email, email_verified, name } = result.data;
 
       return {
@@ -113,10 +115,16 @@ export default class GoogleConnector implements SocialConnector {
         name,
       };
     } catch (error: unknown) {
-      assert(
-        !(error instanceof GotRequestError && error.response?.statusCode === 401),
-        new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid)
-      );
+      if (error instanceof HTTPError) {
+        const { statusCode, body: rawBody } = error.response;
+
+        if (statusCode === 401) {
+          throw new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid);
+        }
+
+        // TODO: maybe add errorResponse zod object to parse error here
+        throw new ConnectorError(ConnectorErrorCodes.General, JSON.stringify(rawBody));
+      }
 
       throw error;
     }

@@ -597,7 +597,7 @@ const errors = {
     unsupported_prompt_name: 'Unsupported prompt name.',
   },
   connector: {
-    general: 'An unexpected error occurred in connector.',
+    general: 'An unexpected error occurred in connector.\n{{errorDescription}}',
     not_found: 'Cannot find any available connector for type: {{type}}.',
     not_enabled: 'The connector is not enabled.',
     insufficient_request_parameters: 'The request might miss some input parameters.',
