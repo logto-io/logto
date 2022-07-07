@@ -40,6 +40,7 @@ export default function sessionSocialRoutes<T extends AnonymousRouter>(
       }),
     }),
     async (ctx, next) => {
+      await provider.interactionDetails(ctx.req, ctx.res);
       const { connectorId, state, redirectUri } = ctx.guard.body;
       assertThat(state && redirectUri, 'session.insufficient_info');
       const connector = await getSocialConnectorInstanceById(connectorId);
@@ -60,6 +61,8 @@ export default function sessionSocialRoutes<T extends AnonymousRouter>(
       }),
     }),
     async (ctx, next) => {
+      await provider.interactionDetails(ctx.req, ctx.res);
+
       const { connectorId, data } = ctx.guard.body;
       const type = 'SignInSocial';
       ctx.log(type, { connectorId, data });

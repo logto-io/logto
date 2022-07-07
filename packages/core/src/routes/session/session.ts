@@ -46,6 +46,7 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
       }),
     }),
     async (ctx, next) => {
+      await provider.interactionDetails(ctx.req, ctx.res);
       const { username, password } = ctx.guard.body;
       const type = 'SignInUsernamePassword';
       ctx.log(type, { username });
