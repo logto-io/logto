@@ -1,11 +1,12 @@
 import { z } from 'zod';
 
-import { alipaySigningAlgorithms } from './constant';
+import { alipaySigningAlgorithms, chatSetEnum } from './constant';
 
 export const alipayConfigGuard = z.object({
   appId: z.string(),
   privateKey: z.string(),
   signType: z.enum(alipaySigningAlgorithms),
+  charset: z.enum(chatSetEnum),
 });
 
 export type AlipayConfig = z.infer<typeof alipayConfigGuard>;

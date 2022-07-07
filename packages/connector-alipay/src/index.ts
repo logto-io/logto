@@ -79,7 +79,6 @@ export default class AlipayConnector implements SocialConnector {
       version: '1.0',
       grant_type: 'authorization_code',
       code,
-      charset: 'UTF8',
       ...config,
     };
     const signedSearchParameters = this.signingParameters(initSearchParameters);
@@ -127,7 +126,6 @@ export default class AlipayConnector implements SocialConnector {
       grant_type: 'authorization_code',
       auth_token: accessToken,
       biz_content: JSON.stringify({}),
-      charset: 'UTF8',
       ...config,
     };
     const signedSearchParameters = this.signingParameters(initSearchParameters);
