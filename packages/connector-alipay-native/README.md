@@ -103,3 +103,109 @@ Once Alipay native connector is enabled, you can build and run your app to see i
 
 - [Alipay Docs - Access Preparation - How to create an app](https://opendocs.alipay.com/support/01rau6)
 - [Alipay Docs - Web & Mobile Apps - Create an app](https://opendocs.alipay.com/open/200/105310)
+
+# 支付宝原生连接器
+
+支付宝原生连接器与 Logto 所提供的原生平台上的 SDK 紧密搭配使用。 它利用支付宝所提供的 OAuth 2.0 身份认证服务，使支付宝用户无需繁琐的注册流程，即可直接用其在支付宝上公开的身份信息登录其他应用。
+
+## 注册支付宝开发者账号
+
+如果你还没有支付宝开发者账号，参考链接：[注册一个支付宝开发者账号](https://certifyweb.alipay.com/certify/reg/guide#/)
+
+## 在支付宝开放平台上创建并且配置应用
+
+1. 使用你所创建的支付宝开发者账号登录[支付宝开放平台控制台](https://open.alipay.com/)。
+2. 在「我的应用」中选择「网页&移动应用」切页。
+3. 点击「立即创建」开始创建并且配置你的应用
+4. 根据平台的命名规则通过「应用名称」字段给你的应用命名；在「应用图标」中上传应用图标；将「应用类型」设定为「移动应用」。当要创建一个 iOS 应用时, 需要提供「Bundle ID」。当创建的是 Android 应用时，则需要提供「应用签名」和「应用名」。
+5. 当应用创建成功后，我们进入到了「概览」页面，接下来我们在「能力列表」中点击「+ 添加能力」，将「App 支付宝登录」、「获取会员信息」、「第三方应用授权」添加到能力列表中。
+6. 使用开发者账号登录[支付宝商家中心](https://b.alipay.com/index2.htm)后，从顶栏菜单的进入「账号中心」，然后选择从左侧的菜单栏底部进入「APPID 绑定」页面。点击「+ 添加绑定」，之后输入你在步骤 4 中所创建的应用的 APPID。 当此步骤完成后，步骤 5 中所添加的各种「能力」即可生效。
+7. 回到「支付宝开放平台控制台」中第 5 步所创建的应用的「概览」页面, 在该页面的「开发信息」中点击「接口加签方式（密钥/证书）」的「设置」链接，将「选择加签模式」设定为「公钥」,然后将你生成的公钥填入下方「填写公钥字符」的文本编辑框中。
+8. 点击「授权回调地址」的「设置链接」，选择你所需要的「回调地址类型」，将 Logto Core 默认使用的 `${your_logto_origin}/callback/alipay-native` 设置为「回调地址」。
+9. 当设置完以上的所有步骤，点击「概览」页面上方的「提交审核」，当审核通过后，你将可以顺利地使用支付宝登录自己的应用。
+
+## 设置支付宝原生连接器
+
+1. 在[支付宝开放平台控制台](https://open.alipay.com/dev/workspace)中，点击「我的应用」面板中的「网页&移动应用」，获取应用的 APPID。
+2. 获取你在上一部分的第 7 个步骤中生成的密钥对。
+3. 配置你的应用的支付宝原生连接器:
+    - 将你在第 1 步中获取的 APPID 填入 `appId` 字段。
+    - 将你在第 2 步中获得的密钥对的私钥填入 `privateKey` 字段，使用 '\n' 换行。
+    - 将你在第 2 步中所获得的密钥的签名模式 'RSA2' 填入 `signType` 字段。
+
+### 配置类型
+
+|    名称     |     类型    |   枚举值         |
+|:----------:|:-----------:|:---------------:|
+|    appId   |    string   |       N/A       |
+| privateKey |    string   |       N/A       |
+|  signType  | enum string | 'RSA' \| 'RSA2' |
+
+## 在你的应用中启用支付宝原生登录
+
+### iOS
+
+我们假设你已经在你的应用中集成了 [Logto iOS SDK](https://docs.logto.io/zh-cn/docs/recipes/integrate-logto/ios/)。之后的流程很简单，你甚至不需要阅读支付宝 SDK 文档：
+
+**1. 添加 `LogtoSocialPluginAlipay` 到你的 Xcode 工程**
+
+添加 framework：
+
+![Add framework](/packages/connector-alipay-native/docs/add-framework.png)
+
+> ℹ️ **Note**
+>
+> 该插件已包含支付宝极简 SDK。在引入插件后你可以直接使用 `import AFServiceSDK`。
+
+**3. 将插件添加至 `LogtoClient` 的初始化项**
+
+```swift
+let logtoClient = LogtoClient(
+  useConfig: config,
+  socialPlugins: [LogtoSocialPluginAlipay(callbackScheme: "your-scheme")]
+)
+```
+
+其中 `callbackScheme` 是 [custom URL Schemes](https://developer.apple.com/documentation/xcode/defining-a-custom-url-scheme-for-your-app) 中之一，它将被用来在登录成功后跳转回应用。
+
+### Android
+
+我们假设你已经在你的应用中集成了 [Logto Android SDK](https://docs.logto.io/docs/recipes/integrate-logto/android)。之后的流程很简单，你甚至不需要阅读支付宝 SDK 文档：
+
+**1. 下载支付宝极简版 SDK 到你的项目中**
+
+从 [Logto 3rd-party Social SDKs](https://github.com/logto-io/social-sdks/blob/master/alipay/android/alipaySdk-15.7.9-20200727142846.aar) 下载支付宝极简版 SDK 到项目的 `app/libs` 目录下:
+
+```bash
+project-path/app/libs/alipaySdk-15.7.9-20200727142846.aar
+```
+
+**2. 添加支付宝极简版 SDK 为项目依赖项**
+
+打开 `build.gradle` 文件:
+
+```bash
+project-path/app/build.gradle
+```
+
+添加依赖:
+
+```kotlin
+dependencies {
+  // ...
+  implementation(files("./libs/alipaySdk-15.7.9-20200727142846.aar"))  // kotlin-script
+  // or
+  implementation files('./libs/alipaySdk-15.7.9-20200727142846.aar')  // groovy-script
+}
+```
+
+## 测试支付宝原生连接器
+
+大功告成。别忘了 [在登录体验中启用社交登录](https://docs.logto.io/zh-cn/docs/tutorials/get-started/enable-social-sign-in/#%E5%9C%A8%E7%99%BB%E5%BD%95%E4%BD%93%E9%AA%8C%E4%B8%AD%E5%90%AF%E7%94%A8%E8%BF%9E%E6%8E%A5%E5%99%A8)。
+
+在支付宝原生连接器启用后，你可以构建并运行你的应用看看是否生效。
+
+## 参考
+
+- [支付宝文档中心 - 接入准备 - 如何创建应用](https://opendocs.alipay.com/support/01rau6)
+- [支付宝文档中心 - 网页&移动应用 - 创建应用](https://opendocs.alipay.com/open/200/105310)
