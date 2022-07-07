@@ -82,7 +82,7 @@ let config = try? LogtoConfig(
 
 ### 配置 Redirect URI
 
-首先，我们来配置你的 redirect URI scheme。例如 `logto://callback`
+首先，我们来配置你的 redirect URI scheme。例如 `io.logto://callback`
 
 <UriInputField appId={props.appId} isSingle={!props.isCompact} name="redirectUris" title="Redirect URI" />
 
@@ -92,14 +92,16 @@ let config = try? LogtoConfig(
 
 回到 Xcode，使用如下代码实现登录：
 
-```swift
-do {
-  try await client.signInWithBrowser(redirectUri: "logto://callback")
+<pre>
+<code className="language-swift">
+{`do {
+  try await client.signInWithBrowser(redirectUri: "${props.redirectUris[0] ?? 'io.logto://callback'}")
   print(client.isAuthenticated) // true
 } catch let error as LogtoClientErrors.SignIn {
   // 登录过程中有错误发生
-}
-```
+}`}
+</code>
+</pre>
 
 </Step>
 

@@ -140,21 +140,25 @@ Go back to your IDE/editor, use the following code to implement sign-in:
 
 <TabItem value="kotlin" label="Kotlin">
 
-```kotlin
-logtoClient.signIn(this, "<your-redirect-uri>") { logtoException: LogtoException? ->
-    // User signed in successfully if `logtoException` is null.
-}
-```
+<pre>
+<code className="language-kotlin">
+{`logtoClient.signIn(this, "${props.redirectUris[0] ?? '<your-redirect-uri>'}") { logtoException: LogtoException? ->
+    // User signed in successfully if \`logtoException\` is null.
+}`}
+</code>
+</pre>
 
 </TabItem>
 
 <TabItem value="java" label="Java">
 
-```java
-logtoClient.signIn(this, "<your-redirect-uri>", logtoException -> {
-    // User signed in successfully if `logtoException` is null.
-});
-```
+<pre>
+<code className="language-java">
+{`logtoClient.signIn(this, "${props.redirectUris[0] ?? '<your-redirect-uri>'}", logtoException -> {
+    // User signed in successfully if \`logtoException\` is null.
+});`}
+</code>
+</pre>
 
 </TabItem>
 

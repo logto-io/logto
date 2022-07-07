@@ -41,7 +41,7 @@ const Guides: Record<string, LazyExoticComponent<(props: MDXProps) => JSX.Elemen
 };
 
 const Guide = ({ app, isCompact, onClose }: Props) => {
-  const { id: appId, name: appName, type: appType } = app;
+  const { id: appId, name: appName, type: appType, oidcClientMetadata } = app;
   const sdks = applicationTypeAndSdkTypeMappings[appType];
   const [selectedSdk, setSelectedSdk] = useState<SupportedSdk>(sdks[0]);
   const [activeStepIndex, setActiveStepIndex] = useState(-1);
@@ -91,6 +91,8 @@ const Guide = ({ app, isCompact, onClose }: Props) => {
               <GuideComponent
                 appId={appId}
                 endpoint={window.location.origin}
+                redirectUris={oidcClientMetadata.redirectUris}
+                postLogoutRedirectUris={oidcClientMetadata.postLogoutRedirectUris}
                 activeStepIndex={activeStepIndex}
                 isCompact={isCompact}
                 onNext={(nextIndex: number) => {

@@ -89,8 +89,9 @@ We provide two hooks `useHandleSignInCallback()` and `useLogto()` which can help
 
 Go back to your IDE/editor, use the following code to implement the sign-in button:
 
-```tsx
-import { useLogto } from '@logto/react';
+<pre>
+<code className="language-tsx">
+{`import { useLogto } from '@logto/react';
 
 const SignIn = () => {
   const { signIn, isAuthenticated } = useLogto();
@@ -100,12 +101,13 @@ const SignIn = () => {
   }
 
   return (
-    <button onClick={() => signIn('http://localhost:1234/callback')}>
+    <button onClick={() => signIn('${props.redirectUris[0] ?? 'http://localhost:1234/callback'}')}>
       Sign In
     </button>
   );
-};
-```
+};`}
+</code>
+</pre>
 
 ### Handle redirect
 
@@ -153,17 +155,19 @@ After signing out, it'll be great to redirect user back to your website. Let's a
 
 ### Implement a sign-out button
 
-```tsx
-const SignOut = () => {
+<pre>
+<code className="language-tsx">
+{`const SignOut = () => {
   const { signOut } = useLogto();
 
   return (
-    <button onClick={() => signOut('http://localhost:1234')}>
+    <button onClick={() => signOut('${props.postLogoutRedirectUris[0] ?? 'http://localhost:1234'}')}>
       Sign out
     </button>
   );
-};
-```
+};`}
+</code>
+</pre>
 
 </Step>
 
