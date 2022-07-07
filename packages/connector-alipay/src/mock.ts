@@ -22,6 +22,5 @@ export const mockedAlipayPublicParameters = {
   grantType: 'authorization_code',
   timestamp: mockedTimestamp,
   version: '1.0',
-  charset: 'UTF8',
   method: '<method-placeholder>',
 };

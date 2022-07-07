@@ -3,7 +3,7 @@ import * as crypto from 'crypto';
 import * as iconv from 'iconv-lite';
 import snakeCaseKeys from 'snakecase-keys';
 
-import { alipaySigningAlgorithmMapping } from './constant';
+import { alipaySigningAlgorithmMapping, fallbackCharset } from './constant';
 import { AlipayConfig } from './types';
 
 export type SigningParameters = (
@@ -33,7 +33,7 @@ export const signingParameters: SigningParameters = (
 
       if (value) {
         // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-        return `${key}=${iconv.encode(value, rest.charset)}`;
+        return `${key}=${iconv.encode(value, rest.charset ?? fallbackCharset)}`;
       }
 
       return '';

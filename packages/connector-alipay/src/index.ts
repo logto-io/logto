@@ -29,6 +29,7 @@ import {
   defaultMetadata,
   defaultTimeout,
   timestampFormat,
+  fallbackCharset,
 } from './constant';
 import {
   alipayConfigGuard,
@@ -72,6 +73,7 @@ export default class AlipayConnector implements SocialConnector {
   };
 
   public getAccessToken = async (code: string, config: AlipayConfig) => {
+    const { charset, ...rest } = config;
     const initSearchParameters = {
       method: methodForAccessToken,
       format: 'JSON',
@@ -79,7 +81,8 @@ export default class AlipayConnector implements SocialConnector {
       version: '1.0',
       grant_type: 'authorization_code',
       code,
-      ...config,
+      ...rest,
+      charset: charset ?? fallbackCharset,
     };
     const signedSearchParameters = this.signingParameters(initSearchParameters);
 
@@ -118,6 +121,7 @@ export default class AlipayConnector implements SocialConnector {
       new ConnectorError(ConnectorErrorCodes.InsufficientRequestParameters)
     );
 
+    const { charset, ...rest } = config;
     const initSearchParameters = {
       method: methodForUserInfo,
       format: 'JSON',
@@ -126,7 +130,8 @@ export default class AlipayConnector implements SocialConnector {
       grant_type: 'authorization_code',
       auth_token: accessToken,
       biz_content: JSON.stringify({}),
-      ...config,
+      ...rest,
+      charset: charset ?? fallbackCharset,
     };
     const signedSearchParameters = this.signingParameters(initSearchParameters);
 

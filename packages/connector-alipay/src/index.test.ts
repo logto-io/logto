@@ -21,7 +21,6 @@ describe('validateConfig', () => {
         appId: 'appId',
         privateKey: 'privateKey',
         signType: 'RSA',
-        charset: 'UTF8',
       })
     ).resolves.not.toThrow();
   });

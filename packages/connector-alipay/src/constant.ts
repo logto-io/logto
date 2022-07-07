@@ -11,7 +11,8 @@ export const alipaySigningAlgorithmMapping = {
   RSA2: 'RSA-SHA256',
 } as const;
 export const alipaySigningAlgorithms = ['RSA', 'RSA2'] as const;
-export const chatSetEnum = ['GBK', 'UTF8'] as const;
+export const charsetEnum = ['GBK', 'UTF8'] as const;
+export const fallbackCharset = 'UTF8';
 
 export const defaultMetadata: ConnectorMetadata = {
   id: 'alipay-web',
