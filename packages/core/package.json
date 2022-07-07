@@ -74,7 +74,7 @@
     "zod": "^3.14.3"
   },
   "devDependencies": {
-    "@shopify/jest-koa-mocks": "^4.0.0",
+    "@shopify/jest-koa-mocks": "^5.0.0",
     "@silverhand/eslint-config": "^0.14.0",
     "@silverhand/jest-config": "^0.14.0",
     "@silverhand/ts-config": "^0.14.0",
