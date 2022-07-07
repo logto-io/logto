@@ -61,7 +61,11 @@ const CreateForm = ({ onClose }: Props) => {
             placeholder={t('api_resources.api_name_placeholder')}
           />
         </FormField>
-        <FormField isRequired title="admin_console.api_resources.api_identifier">
+        <FormField
+          isRequired
+          title="admin_console.api_resources.api_identifier"
+          tooltip="admin_console.api_resources.api_identifier_tip"
+        >
           <TextInput
             {...register('indicator', { required: true })}
             placeholder={t('api_resources.api_identifier_placeholder')}

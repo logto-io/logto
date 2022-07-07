@@ -66,6 +66,7 @@ const Settings = ({ applicationType, oidcConfig, defaultData }: Props) => {
       <FormField
         title="admin_console.application_details.authorization_endpoint"
         className={styles.textField}
+        tooltip="admin_console.application_details.authorization_endpoint_tip"
       >
         <CopyToClipboard
           className={styles.textField}
@@ -77,6 +78,7 @@ const Settings = ({ applicationType, oidcConfig, defaultData }: Props) => {
         isRequired
         title="admin_console.application_details.redirect_uri"
         className={styles.textField}
+        tooltip="admin_console.application_details.redirect_uri_tip"
       >
         <Controller
           name="oidcClientMetadata.redirectUris"
@@ -106,6 +108,7 @@ const Settings = ({ applicationType, oidcConfig, defaultData }: Props) => {
       <FormField
         title="admin_console.application_details.post_sign_out_redirect_uri"
         className={styles.textField}
+        tooltip="admin_console.application_details.post_sign_out_redirect_uri_tip"
       >
         <Controller
           name="oidcClientMetadata.postLogoutRedirectUris"
