@@ -126,31 +126,31 @@ export default function swaggerRoutes<T extends AnonymousRouter, R extends Route
     ) as OpenAPIV3.Document;
 
     const routes = allRouters.flatMap<RouteObject>((router) =>
-      router.stack.flatMap<RouteObject>(({ path, stack, methods }) =>
+      router.stack.flatMap<RouteObject>(({ path: routerPath, stack, methods }) =>
         methods
           // There is no need to show the HEAD method.
           .filter((method) => method !== 'HEAD')
           .map((method) => {
-            const realPath = `/api${path}`;
+            const path = `/api${routerPath}`;
             const httpMethod = method.toLowerCase() as OpenAPIV3.HttpMethods;
 
-            const additionalPathItem = additionalSwagger.paths[realPath] ?? {};
+            const additionalPathItem = additionalSwagger.paths[path] ?? {};
             const additionalResponses = additionalPathItem[httpMethod]?.responses;
 
             return {
-              path: realPath,
+              path,
               method: httpMethod,
-              operation: buildOperation(stack, path, additionalResponses),
+              operation: buildOperation(stack, routerPath, additionalResponses),
             };
           })
       )
     );
 
-    const paths = new Map<string, MethodMap>();
+    const pathMap = new Map<string, MethodMap>();
 
     // Group routes by path
     for (const { path, method, operation } of routes) {
-      paths.set(path, { ...paths.get(path), [method]: operation });
+      pathMap.set(path, { ...pathMap.get(path), [method]: operation });
     }
 
     const document: OpenAPIV3.Document = {
@@ -159,7 +159,7 @@ export default function swaggerRoutes<T extends AnonymousRouter, R extends Route
         title: 'Logto Core',
         version: '0.1.0',
       },
-      paths: Object.fromEntries(paths),
+      paths: Object.fromEntries(pathMap),
     };
 
     ctx.body = document;
