@@ -69,7 +69,6 @@ export const defaultCountryCode: CountryCode = 'CN';
 export const defaultCountryCallingCode = getCountryCallingCode(defaultCountryCode);
 
 const usePhoneNumber = () => {
-  // TODO:  Get Default Country Code
   const [phoneNumber, setPhoneNumber] = useState<PhoneNumberData>({
     countryCallingCode: defaultCountryCallingCode,
     nationalNumber: '',

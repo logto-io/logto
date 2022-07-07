@@ -27,8 +27,6 @@ export default function resourceRoutes<T extends AuthedRouter>(router: T) {
     ]);
 
     ctx.pagination.totalCount = count;
-
-    // TODO: query scopes of all resources and insert into the response data
     ctx.body = resources;
 
     return next();
