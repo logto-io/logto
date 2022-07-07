@@ -26,15 +26,7 @@
     cursor: text;
 
     .copyIcon {
-      display: flex;
-      align-items: center;
       margin-left: _.unit(3);
-      color: var(--color-icon);
-      cursor: pointer;
-
-      &:hover {
-        color: var(--color-text);
-      }
     }
   }
 }
