@@ -420,7 +420,7 @@ const translation = {
         no_connector_social:
           'You haven’t set up any social connectors yet. Your sign in experience won’t go live until you finish the settings first. ',
         no_added_social_connector:
-          'You’ve set up a few social connectors now. Make sure to add some to your sign in experience. Drag and drop to change the order.',
+          'You’ve set up a few social connectors now. Make sure to add some to your sign in experience.',
       },
       save_alert: {
         description:
