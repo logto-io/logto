@@ -1,6 +1,7 @@
 import { CreateLog, Log, Logs, LogType } from '@logto/schemas';
 import { sql } from 'slonik';
 
+import { buildFindEntityById } from '@/database/find-entity-by-id';
 import { buildInsertInto } from '@/database/insert-into';
 import { conditionalSql, convertToIdentifiers } from '@/database/utils';
 import envSet from '@/env-set';
@@ -46,12 +47,7 @@ export const findLogs = async (limit: number, offset: number, logCondition: LogC
     offset ${offset}
   `);
 
-export const findLogById = async (id: string) =>
-  envSet.pool.one<Log>(sql`
-    select ${sql.join(Object.values(fields), sql`, `)}
-    from ${table}
-    where ${fields.id}=${id}
-  `);
+export const findLogById = buildFindEntityById<CreateLog, Log>(Logs);
 
 const registerLogTypes: LogType[] = [
   'RegisterUsernamePassword',
