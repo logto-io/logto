@@ -135,7 +135,7 @@ export default class WechatConnector implements SocialConnector {
     }
 
     if (errcode) {
-      throw new ConnectorError(ConnectorErrorCodes.General, { errorDescription: errmsg });
+      throw new ConnectorError(ConnectorErrorCodes.General, { errorDescription: errmsg, errcode });
     }
   };
 
@@ -147,7 +147,7 @@ export default class WechatConnector implements SocialConnector {
     }
 
     if (errcode) {
-      throw new ConnectorError(ConnectorErrorCodes.General, { errorDescription: errmsg });
+      throw new ConnectorError(ConnectorErrorCodes.General, { errorDescription: errmsg, errcode });
     }
   };
 
