@@ -55,6 +55,10 @@
     font: var(--font-body-medium);
     margin: _.unit(3) 0;
   }
+
+  table + table {
+    margin-top: _.unit(3);
+  }
 }
 
 .inlineCode {
