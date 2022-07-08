@@ -96,8 +96,7 @@ const Guide = ({ connector, onClose }: Props) => {
           <FormProvider {...methods}>
             <form onSubmit={onSubmit}>
               <Step
-                title="Enter your json here"
-                subtitle="Lorem ipsum dolor sit amet, consectetuer adipiscing elit."
+                title={t('connector_details.edit_config_label')}
                 index={0}
                 activeIndex={0}
                 buttonText="admin_console.connectors.save_and_done"
