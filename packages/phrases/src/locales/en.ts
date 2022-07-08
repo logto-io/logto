@@ -222,6 +222,8 @@ const translation = {
       edit_config_label: 'Enter your json here',
       test_email_sender: 'Test your email connector',
       test_sms_sender: 'Test your SMS connector',
+      test_email_placeholder: 'Enter a test email address',
+      test_sms_placeholder: 'Enter a test phone number',
       test_message_sent: 'Test message sent!',
       test_sender_description: 'You will receive a message if your json is rightly configured',
       options_change_email: 'Change email connector',
