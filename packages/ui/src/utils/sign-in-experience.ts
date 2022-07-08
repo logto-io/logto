@@ -1,8 +1,3 @@
-/**
- * Temp Solution for getting the sign in experience
- * TODO: Remove this once we have a better way to get the sign in experience through SSR
- */
-
 import { SignInMethods } from '@logto/schemas';
 
 import { getSignInExperience } from '@/apis/settings';

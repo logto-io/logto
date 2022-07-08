@@ -51,7 +51,6 @@ export default function adminUserRoutes<T extends AuthedRouter>(router: T) {
 
   router.get(
     '/users/:userId',
-    // TODO: No need to guard
     koaGuard({
       params: object({ userId: string() }),
     }),
