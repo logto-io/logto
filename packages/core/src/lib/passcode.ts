@@ -106,7 +106,6 @@ export const verifyPasscode = async (
   }
 
   if (code !== passcode.code) {
-    // TODO use SQL's native +1
     await updatePasscode({
       where: { id: passcode.id },
       set: { tryCount: passcode.tryCount + 1 },
