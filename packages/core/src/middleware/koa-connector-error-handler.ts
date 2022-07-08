@@ -1,4 +1,5 @@
 import { ConnectorError, ConnectorErrorCodes } from '@logto/connector-types';
+import { conditional } from '@silverhand/essentials';
 import { Middleware } from 'koa';
 import { z } from 'zod';
 
@@ -17,7 +18,7 @@ export default function koaConnectorErrorHandler<StateT, ContextT>(): Middleware
 
       const errorDescriptionGuard = z.object({ errorDescription: z.string() });
       const result = errorDescriptionGuard.safeParse(data);
-      const errorMessage = result.success ? result.data.errorDescription : undefined;
+      const errorMessage = conditional(result.success && '\n' + result.data.errorDescription);
 
       switch (code) {
         case ConnectorErrorCodes.InsufficientRequestParameters:
@@ -90,7 +91,7 @@ export default function koaConnectorErrorHandler<StateT, ContextT>(): Middleware
             {
               code: 'connector.general',
               status: 500,
-              errorDescription: errorMessage ? '\n' + errorMessage : undefined,
+              errorDescription: errorMessage,
             },
             data
           );
