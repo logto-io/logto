@@ -61,10 +61,8 @@
   margin-top: _.unit(2);
 }
 
-
 :global(body.desktop) {
   .wrapper {
-    padding: 0 _.unit(3);
     border: _.border(var(--color-border));
     border-radius: 6px;
     outline: 3px solid transparent;
