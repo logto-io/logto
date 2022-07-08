@@ -14,11 +14,12 @@ import * as styles from '../index.module.scss';
 import SenderTester from './SenderTester';
 
 type Props = {
+  isDeleted: boolean;
   connectorData: ConnectorDTO;
   onConnectorUpdated: (connector: ConnectorDTO) => void;
 };
 
-const ConnectorContent = ({ connectorData, onConnectorUpdated }: Props) => {
+const ConnectorContent = ({ isDeleted, connectorData, onConnectorUpdated }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const [config, setConfig] = useState<string>();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -116,7 +117,7 @@ const ConnectorContent = ({ connectorData, onConnectorUpdated }: Props) => {
           />
         </div>
       </div>
-      <UnsavedChangesAlertModal hasUnsavedChanges={hasUnsavedChanges} />
+      <UnsavedChangesAlertModal hasUnsavedChanges={!isDeleted && hasUnsavedChanges} />
     </>
   );
 };
