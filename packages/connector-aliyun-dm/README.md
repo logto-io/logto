@@ -2,7 +2,7 @@
 
 The official Logto connector for Aliyun connector for direct mail service.
 
-阿里云邮件推送服务官方 Logto 连接器 [中文文档](#阿里云邮件连接器)
+阿里云邮件推送服务 Logto 官方连接器 [中文文档](#阿里云邮件连接器)
 
 **Table of contents**
 
@@ -33,7 +33,7 @@ Aliyun is a primary cloud service provider in Asia, offering many cloud services
 > 
 > You can skip some sections if you have already finished.
 
-### Register Aliyun account
+### Create an Aliyun account
 
 Head to [Aliyun](https://aliyun.com/) and create your Aliyun account if you don't have one.
 
@@ -131,20 +131,20 @@ That's it. Don't forget to [Enable connector in sign-in experience](https://docs
 
 ### 启用并配置阿里云邮件服务
 
-来到 [阿里云邮件服务页面](https://www.aliyun.com/product/directmail) 然后登录。点按页面左上的「申请开通」按钮以开通邮件服务并开始配置流程。
+来到 [阿里云邮件服务](https://www.aliyun.com/product/directmail) 然后登录。点按页面左上的「申请开通」按钮以开通邮件服务并开始配置流程。
 
-从 [邮件服务管理控制台页面](https://dm.console.aliyun.com/) 开始：
+从 [邮件服务管理控制台](https://dm.console.aliyun.com/) 开始：
 1. 从侧边栏进入到「发信域名」，点按「新建域名」并完成指引。
 2. 依次配置好「发信地址」和「邮件标签」。
 
 在完成了设置之后，这里提供了两种测试的方法：
-- 前往 [邮件服务管理控制台概览页](https://dm.console.aliyun.com/)，在该页面底部找到「操作引导」框并点按「发送邮件」。你可以找到很多不同的测试方法。
+- 前往 [邮件服务管理控制台概览](https://dm.console.aliyun.com/)，在该页面底部找到「操作引导」框并点按「发送邮件」。你可以找到很多不同的测试方法。
 - 在侧边栏中选择「发送邮件」->「发送邮件」，在这里你可以「新建发送任务」来测试。
 
 ## 编写连接器的 JSON
 
-1. 在 [邮件服务管理控制台页面](https://dm.console.aliyun.com/)，鼠标停在右上角你的头像上，进入「AccessKey 管理」，点按「创建 AccessKey」。完成了安全验证之后，你会得到一对「AccessKey ID」和「AccessKey Secret」，请妥善保管他们。
-2. 从 [邮件服务管理控制台页面](https://dm.console.aliyun.com/) 的侧边栏，分别进入「发信地址」和「邮件标签」。这里你可以找到之前创建的 _发信地址_ 和 _邮件标签_。
+1. 在 [邮件服务管理控制台](https://dm.console.aliyun.com/)，鼠标停在右上角你的头像上，进入「AccessKey 管理」，点按「创建 AccessKey」。完成了安全验证之后，你会得到一对「AccessKey ID」和「AccessKey Secret」，请妥善保管他们。
+2. 从 [邮件服务管理控制台](https://dm.console.aliyun.com/) 的侧边栏，分别进入「发信地址」和「邮件标签」。这里你可以找到之前创建的 _发信地址_ 和 _邮件标签_。
 3. 完成阿里云邮件服务连接器的设置：
     - 用你在步骤 1 中拿到的一对「AccessKey ID」和「AccessKey Secret」来分别填入 `accessKeyId` 和 `accessKeySecret`。
     - 用步骤 2 中的 _发信地址_ 和 _邮件标签_ 填写 `accountName` 和 `fromAlias`。
