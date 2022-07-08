@@ -2,7 +2,7 @@
   "accessKeyId": "<access-key-id>",
   "accessKeySecret": "<access-key-secret>",
   "accountName": "<verified-account-name>",
-  "fromAlias": "<connector-alias>",
+  "fromAlias": "<OPTIONAL-connector-alias>",
   "templates": [
     {
       "usageType": "SignIn",

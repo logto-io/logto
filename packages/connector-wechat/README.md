@@ -104,7 +104,7 @@ Once WeChat web connector is enabled, you can sign in to your app again to see i
 
 ### 创建一个账号
 
-打开 https://open.weixin.qq.com/，点按右上角的「注册」按钮，根据引导完成注册流程。
+打开 [https://open.weixin.qq.com/](https://open.weixin.qq.com/)，点按右上角的「注册」按钮，根据引导完成注册流程。
 
 ### 创建一个网页应用
 
