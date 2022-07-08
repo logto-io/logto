@@ -218,6 +218,8 @@ const translation = {
       edit_config_label: '请在此输入你的 JSON 配置',
       test_email_sender: '测试你的邮件连接器',
       test_sms_sender: '测试你的短信连接器',
+      test_email_placeholder: '请输入一个用于测试的邮件地址',
+      test_sms_placeholder: '请输入一个用于测试的手机号码',
       test_message_sent: '测试信息已发送！',
       test_sender_description: '如果你的 JSON 配置正确，你会收到一条测试消息。',
       options_change_email: '更换邮件连接器',

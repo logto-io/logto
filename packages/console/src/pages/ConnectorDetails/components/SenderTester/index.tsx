@@ -82,6 +82,11 @@ const SenderTester = ({ connectorId, connectorType, config, className }: Props) 
           <TextInput
             hasError={Boolean(inputError?.message)}
             type={isSms ? 'tel' : 'email'}
+            placeholder={
+              isSms
+                ? t('connector_details.test_sms_placeholder')
+                : t('connector_details.test_email_placeholder')
+            }
             {...register('sendTo', {
               required: true,
               pattern: {
