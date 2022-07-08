@@ -67,7 +67,7 @@ const UriInputField = ({ appId, name, title, isSingle = false }: Props) => {
   return (
     <FormProvider {...methods}>
       <form>
-        <FormField isRequired className={styles.field} title={title}>
+        <FormField isRequired={name === 'redirectUris'} className={styles.field} title={title}>
           <Controller
             name={name}
             control={control}
