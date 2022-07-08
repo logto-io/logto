@@ -40,6 +40,7 @@ const Welcome = () => {
         <Logo className={styles.logo} />
       </div>
       <main>
+        <div className={styles.placeholderTop} />
         <div className={styles.content}>
           <div className={styles.title}>{t('welcome.title')}</div>
           <div className={styles.description}>{t('welcome.description')}</div>
@@ -53,6 +54,7 @@ const Welcome = () => {
             }}
           />
         </div>
+        <div className={styles.placeholderBottom} />
       </main>
     </div>
   );
