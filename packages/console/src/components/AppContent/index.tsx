@@ -1,6 +1,7 @@
-import { LogtoClientError, useLogto } from '@logto/react';
+import { LogtoClientError, LogtoError, useLogto } from '@logto/react';
 import { conditional } from '@silverhand/essentials';
 import React, { useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Outlet, useHref, useLocation, useNavigate } from 'react-router-dom';
 
 import AppError from '@/components/AppError';
@@ -27,6 +28,7 @@ const AppContent = () => {
   const { firstItem } = useSidebarMenuItems();
   const mainRef = useRef<HTMLDivElement>(null);
   const { scrollTop } = useScroll(mainRef.current);
+  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -44,6 +46,10 @@ const AppContent = () => {
   if (error) {
     if (error instanceof LogtoClientError) {
       return <SessionExpired />;
+    }
+
+    if (error instanceof LogtoError && error.code === 'crypto_subtle_unavailable') {
+      return <AppError errorMessage={t('errors.insecure_contexts')} callStack={error.stack} />;
     }
 
     return <AppError errorMessage={error.message} callStack={error.stack} />;
