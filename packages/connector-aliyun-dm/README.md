@@ -35,7 +35,7 @@ Aliyun is a primary cloud service provider in Asia, offering many cloud services
 
 ### Register Aliyun account
 
-Go to the [Aliyun website](https://cn.aliyun.com/) and register your Aliyun account if you don't have one.
+Head to [Aliyun](https://aliyun.com/) and create your Aliyun account if you don't have one.
 
 ### Enable and configure Aliyun Direct Mail
 
@@ -117,7 +117,7 @@ Once WeChat web connector is enabled, you can sign in to your app again to see i
 
 阿里云是亚洲地区一个重要的云服务厂商，提供了包括邮件服务在内的诸多云服务。
 
-阿里云邮件连接器是 Logto 团队官方提供的，帮助终端用户能够通过邮件收取验证码从而能够注册和登录 Logto 帐号的插件工具。
+本连接器是 Logto 官方提供的阿里云邮件连接器，帮助终端用户通过邮件验证码进行登录注册。
 
 ## 在阿里云邮件服务控制台中配置一个邮件服务
 
@@ -127,7 +127,7 @@ Once WeChat web connector is enabled, you can sign in to your app again to see i
 
 ### 注册阿里云帐号
 
-来到 [阿里云网站](https://cn.aliyun.com/) 并完成帐号的注册。
+前往 [阿里云](https://aliyun.com/) 并完成帐号的注册。
 
 ### 启用并配置阿里云邮件服务
 
@@ -139,7 +139,7 @@ Once WeChat web connector is enabled, you can sign in to your app again to see i
 
 在完成了设置之后，这里提供了两种测试的方法：
 - 来到 [邮件服务管理控制台概览页](https://dm.console.aliyun.com/)，在该页面底部找到「操作引导」框并点击「发送邮件」。你可以找到很多不同的测试方法。
-- 从侧边栏开始，选择「发送邮件」->「发送邮件」，在这里你可以「新建发送任务」来测试。
+- 在侧边栏中选择「发送邮件」->「发送邮件」，在这里你可以「新建发送任务」来测试。
 
 ## 编写连接器的 JSON
 
