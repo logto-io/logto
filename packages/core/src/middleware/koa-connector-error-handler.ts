@@ -12,10 +12,7 @@ export default function koaConnectorErrorHandler<StateT, ContextT>(): Middleware
         throw error;
       }
 
-      const { code, message } = error;
-
-      // Original OIDCProvider Error description and details are provided in the data field
-      const data = { message };
+      const { code, data } = error;
 
       switch (code) {
         case ConnectorErrorCodes.InsufficientRequestParameters:

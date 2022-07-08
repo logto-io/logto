@@ -546,7 +546,7 @@ const errors = {
     jwt_sub_missing: 'Missing `sub` in JWT.',
   },
   guard: {
-    invalid_input: 'The request input is invalid.',
+    invalid_input: 'The request {{type}} is invalid.',
     invalid_pagination: 'The request pagination value is invalid.',
   },
   oidc: {
