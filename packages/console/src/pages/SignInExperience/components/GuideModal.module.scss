@@ -2,10 +2,12 @@
 
 .container {
   background-color: var(--color-surface-1);
+  display: flex;
+  flex-direction: column;
   height: 100vh;
-  overflow-y: auto;
 
   .header {
+    flex-shrink: 0;
     display: flex;
     align-items: center;
     background-color: var(--color-layer-1);
@@ -28,14 +30,21 @@
   }
 
   .content {
-    padding: _.unit(6) _.unit(17);
-    // Space for footer
-    padding-bottom: 112px;
-    position: relative;
+    flex: 1;
+    overflow-y: auto;
+    flex-direction: column;
+    align-items: center;
 
     .reminder {
       width: 550px;
       margin: 0 auto _.unit(8);
+    }
+
+    > .form {
+      position: relative;
+      padding: _.unit(6) _.unit(17);
+      // Space for footer
+      padding-bottom: 112px;
     }
   }
 
