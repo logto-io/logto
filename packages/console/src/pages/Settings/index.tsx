@@ -19,7 +19,10 @@ import ChangePassword from './components/ChangePassword';
 import * as styles from './index.module.scss';
 
 const Settings = () => {
-  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const {
+    t,
+    i18n: { language },
+  } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { data, error, update, isLoading, isLoaded } = useUserPreferences();
   const {
     handleSubmit,
@@ -53,7 +56,7 @@ const Settings = () => {
                 control={control}
                 render={({ field: { value, onChange } }) => (
                   <Select
-                    value={value}
+                    value={value ?? language}
                     options={[
                       {
                         value: Language.English,
