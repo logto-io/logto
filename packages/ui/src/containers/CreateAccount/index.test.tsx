@@ -7,7 +7,9 @@ import { register } from '@/apis/register';
 
 import CreateAccount from '.';
 
-jest.mock('@/apis/register', () => ({ register: jest.fn(async () => Promise.resolve()) }));
+jest.mock('@/apis/register', () => ({
+  register: jest.fn(async () => Promise.resolve({ redirectTo: '/' })),
+}));
 
 describe('<CreateAccount/>', () => {
   test('default render', () => {
@@ -139,6 +141,56 @@ describe('<CreateAccount/>', () => {
     }
 
     expect(queryByText('passwords_do_not_match')).toBeNull();
+  });
+
+  test('should clear value when click clear button', async () => {
+    const { queryByText, getByText, container } = renderWithPageContext(<CreateAccount />);
+
+    const passwordInput = container.querySelector('input[name="new-password"]');
+    const confirmPasswordInput = container.querySelector('input[name="confirm-new-password"]');
+    const usernameInput = container.querySelector('input[name="new-username"]');
+    const submitButton = getByText('action.create');
+
+    if (usernameInput) {
+      fireEvent.change(usernameInput, { target: { value: 'username' } });
+    }
+
+    if (passwordInput) {
+      fireEvent.change(passwordInput, { target: { value: '123456' } });
+    }
+
+    if (confirmPasswordInput) {
+      fireEvent.change(confirmPasswordInput, { target: { value: '123456' } });
+    }
+
+    const confirmClearButton = confirmPasswordInput?.parentElement?.querySelector('svg');
+    const usernameClearButton = usernameInput?.parentElement?.querySelector('svg');
+    const passwordClearButton = passwordInput?.parentElement?.querySelector('svg');
+
+    if (confirmClearButton) {
+      fireEvent.mouseDown(confirmClearButton);
+    }
+
+    await waitFor(() => {
+      fireEvent.click(submitButton);
+    });
+
+    expect(queryByText('passwords_do_not_match')).not.toBeNull();
+
+    if (usernameClearButton) {
+      fireEvent.mouseDown(usernameClearButton);
+    }
+
+    if (passwordClearButton) {
+      fireEvent.mouseDown(passwordClearButton);
+    }
+
+    await waitFor(() => {
+      fireEvent.click(submitButton);
+    });
+
+    expect(queryByText('username_required')).not.toBeNull();
+    expect(queryByText('password_required')).not.toBeNull();
   });
 
   test('submit form properly with terms settings enabled', async () => {
