@@ -15,7 +15,7 @@ import {
   codeDataGuard,
 } from '@logto/connector-types';
 import { assert } from '@silverhand/essentials';
-import got, { RequestError as GotRequestError } from 'got';
+import got, { HTTPError } from 'got';
 
 import {
   authorizationEndpoint,
@@ -23,6 +23,8 @@ import {
   userInfoEndpoint,
   defaultMetadata,
   defaultTimeout,
+  invalidAccessTokenErrcode,
+  invalidAuthCodeErrcode,
 } from './constant';
 import {
   wechatNativeConfigGuard,
@@ -84,6 +86,7 @@ export default class WechatNativeConnector implements SocialConnector {
     return { accessToken, openid };
   };
 
+  // eslint-disable-next-line complexity
   public getUserInfo: GetUserInfo = async (data) => {
     const { code } = await this.authorizationCallbackHandler(data);
     const { accessToken, openid } = await this.getAccessToken(code);
@@ -109,10 +112,15 @@ export default class WechatNativeConnector implements SocialConnector {
 
       return { id: unionid ?? openid, avatar: headimgurl, name: nickname };
     } catch (error: unknown) {
-      assert(
-        !(error instanceof GotRequestError && error.response?.statusCode === 401),
-        new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid)
-      );
+      if (error instanceof HTTPError) {
+        const { statusCode, body: rawBody } = error.response;
+
+        if (statusCode === 401) {
+          throw new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid);
+        }
+
+        throw new ConnectorError(ConnectorErrorCodes.General, JSON.stringify(rawBody));
+      }
 
       throw error;
     }
@@ -121,28 +129,28 @@ export default class WechatNativeConnector implements SocialConnector {
   // See https://developers.weixin.qq.com/doc/oplatform/Return_codes/Return_code_descriptions_new.html
   private readonly getAccessTokenErrorHandler: GetAccessTokenErrorHandler = (accessToken) => {
     const { errcode, errmsg } = accessToken;
-    assert(
-      errcode !== 40_029,
-      new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid, errmsg)
-    );
-    assert(
-      errcode !== 40_163,
-      new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid, errmsg)
-    );
-    assert(
-      errcode !== 42_003,
-      new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid, errmsg)
-    );
-    assert(!errcode, new ConnectorError(ConnectorErrorCodes.General, errmsg));
+
+    if (errcode) {
+      assert(
+        !invalidAuthCodeErrcode.includes(errcode),
+        new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid, errmsg)
+      );
+
+      throw new ConnectorError(ConnectorErrorCodes.General, { errorDescription: errmsg, errcode });
+    }
   };
 
   private readonly getUserInfoErrorHandler: GetUserInfoErrorHandler = (userInfo) => {
     const { errcode, errmsg } = userInfo;
-    assert(
-      !(errcode === 40_001 || errcode === 40_014),
-      new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid, errmsg)
-    );
-    assert(!errcode, new Error(errmsg ?? ''));
+
+    if (errcode) {
+      assert(
+        !invalidAccessTokenErrcode.includes(errcode),
+        new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid, errmsg)
+      );
+
+      throw new ConnectorError(ConnectorErrorCodes.General, { errorDescription: errmsg, errcode });
+    }
   };
 
   private readonly authorizationCallbackHandler = async (parameterObject: unknown) => {

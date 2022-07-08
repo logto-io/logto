@@ -30,6 +30,8 @@ import {
   defaultMetadata,
   defaultTimeout,
   timestampFormat,
+  invalidAccessTokenCode,
+  invalidAccessTokenSubCode,
 } from './constant';
 import {
   alipayNativeConfigGuard,
@@ -139,28 +141,35 @@ export default class AlipayNativeConnector implements SocialConnector {
 
     const { alipay_user_info_share_response } = result.data;
 
-    const {
-      user_id: id,
-      avatar,
-      nick_name: name,
-      code,
-      msg,
-      sub_code,
-    } = alipay_user_info_share_response;
+    this.errorHandler(alipay_user_info_share_response);
 
-    this.errorHandler({ code, msg, sub_code });
-    assert(id, new ConnectorError(ConnectorErrorCodes.InvalidResponse));
+    const { user_id: id, avatar, nick_name: name } = alipay_user_info_share_response;
+
+    if (!id) {
+      throw new ConnectorError(ConnectorErrorCodes.InvalidResponse);
+    }
 
     return { id, avatar, name };
   };
 
-  private readonly errorHandler: ErrorHandler = ({ code, msg, sub_code }) => {
-    assert(code !== '20001', new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid, msg));
-    assert(
-      sub_code !== 'isv.code-invalid',
-      new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid, msg)
-    );
-    assert(!sub_code, new ConnectorError(ConnectorErrorCodes.General, msg));
+  private readonly errorHandler: ErrorHandler = ({ code, msg, sub_code, sub_msg }) => {
+    if (invalidAccessTokenCode.includes(code)) {
+      throw new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid, msg);
+    }
+
+    if (sub_code) {
+      assert(
+        !invalidAccessTokenSubCode.includes(sub_code),
+        new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid, msg)
+      );
+
+      throw new ConnectorError(ConnectorErrorCodes.General, {
+        errorDescription: msg,
+        code,
+        sub_code,
+        sub_msg,
+      });
+    }
   };
 
   private readonly authorizationCallbackHandler = async (parameterObject: unknown) => {

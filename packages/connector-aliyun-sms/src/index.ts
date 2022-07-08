@@ -27,7 +27,6 @@ export default class AliyunSmsConnector implements SmsConnector {
     }
   };
 
-  /* eslint-disable complexity */
   public sendMessage: SmsSendMessageFunction = async (phone, type, { code }, config) => {
     const smsConfig =
       (config as AliyunSmsConfig | undefined) ?? (await this.getConfig(this.metadata.id));
@@ -54,14 +53,14 @@ export default class AliyunSmsConnector implements SmsConnector {
 
       const { body: rawBody } = httpResponse;
 
-      const { Code } = this.parseResponseString(rawBody);
-
-      if (Code === 'isv.ACCOUNT_NOT_EXISTS' || Code === 'isv.SMS_TEMPLATE_ILLEGAL') {
-        throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, rawBody);
-      }
+      const { Code, Message, ...rest } = this.parseResponseString(rawBody);
 
       if (Code !== 'OK') {
-        throw new ConnectorError(ConnectorErrorCodes.General, rawBody);
+        throw new ConnectorError(ConnectorErrorCodes.General, {
+          errorDescription: Message,
+          Code,
+          ...rest,
+        });
       }
 
       return httpResponse;
@@ -76,20 +75,15 @@ export default class AliyunSmsConnector implements SmsConnector {
 
       assert(typeof rawBody === 'string', new ConnectorError(ConnectorErrorCodes.InvalidResponse));
 
-      const { Code } = this.parseResponseString(rawBody);
+      const { Code, Message, ...rest } = this.parseResponseString(rawBody);
 
-      if (Code.includes('InvalidAccessKeyId')) {
-        throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, rawBody);
-      }
-
-      if (Code === 'SignatureDoesNotMatch' || Code === 'IncompleteSignature') {
-        throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, rawBody);
-      }
-
-      throw new ConnectorError(ConnectorErrorCodes.General, rawBody);
+      throw new ConnectorError(ConnectorErrorCodes.General, {
+        errorDescription: Message,
+        Code,
+        ...rest,
+      });
     }
   };
-  /* eslint-enable complexity */
 
   private readonly parseResponseString = (response: string) => {
     const result = sendSmsResponseGuard.safeParse(JSON.parse(response));

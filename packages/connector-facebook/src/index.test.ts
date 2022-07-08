@@ -194,10 +194,12 @@ describe('facebook connector', () => {
           error_reason: 'user_denied',
         })
       ).rejects.toMatchError(
-        new ConnectorError(
-          ConnectorErrorCodes.General,
-          '{"error":"general_error","error_code":200,"error_description":"General error encountered.","error_reason":"user_denied"}'
-        )
+        new ConnectorError(ConnectorErrorCodes.General, {
+          error: 'general_error',
+          error_code: 200,
+          errorDescription: 'General error encountered.',
+          error_reason: 'user_denied',
+        })
       );
     });
 

@@ -15,7 +15,7 @@ import {
   codeWithRedirectDataGuard,
 } from '@logto/connector-types';
 import { assert } from '@silverhand/essentials';
-import got, { RequestError as GotRequestError } from 'got';
+import got, { HTTPError } from 'got';
 
 import {
   accessTokenEndpoint,
@@ -118,9 +118,16 @@ export default class FacebookConnector implements SocialConnector {
         name,
       };
     } catch (error: unknown) {
-      if (error instanceof GotRequestError && error.response?.statusCode === 400) {
-        throw new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid);
+      if (error instanceof HTTPError) {
+        const { statusCode, body: rawBody } = error.response;
+
+        if (statusCode === 400) {
+          throw new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid);
+        }
+
+        throw new ConnectorError(ConnectorErrorCodes.General, JSON.stringify(rawBody));
       }
+
       throw error;
     }
   };
@@ -135,16 +142,23 @@ export default class FacebookConnector implements SocialConnector {
     const parsedError = authorizationCallbackErrorGuard.safeParse(parameterObject);
 
     if (!parsedError.success) {
-      throw new ConnectorError(ConnectorErrorCodes.General, JSON.stringify(parameterObject));
-    }
-
-    if (parsedError.data.error === 'access_denied') {
       throw new ConnectorError(
-        ConnectorErrorCodes.AuthorizationFailed,
-        parsedError.data.error_description
+        ConnectorErrorCodes.InvalidResponse,
+        JSON.stringify(parameterObject)
       );
     }
 
-    throw new ConnectorError(ConnectorErrorCodes.General, JSON.stringify(parameterObject));
+    const { error, error_code, error_description, error_reason } = parsedError.data;
+
+    if (error === 'access_denied') {
+      throw new ConnectorError(ConnectorErrorCodes.AuthorizationFailed, error_description);
+    }
+
+    throw new ConnectorError(ConnectorErrorCodes.General, {
+      error,
+      error_code,
+      errorDescription: error_description,
+      error_reason,
+    });
   };
 }

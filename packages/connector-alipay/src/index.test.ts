@@ -159,7 +159,7 @@ describe('getUserInfo', () => {
 
   it('throw General error if auth_code not provided in input', async () => {
     await expect(alipayMethods.getUserInfo({})).rejects.toMatchError(
-      new ConnectorError(ConnectorErrorCodes.General, '{}')
+      new ConnectorError(ConnectorErrorCodes.InvalidResponse, '{}')
     );
   });
 
@@ -216,7 +216,12 @@ describe('getUserInfo', () => {
       });
 
     await expect(alipayMethods.getUserInfo({ auth_code: 'wrong_code' })).rejects.toMatchError(
-      new ConnectorError(ConnectorErrorCodes.General, 'Invalid parameter')
+      new ConnectorError(ConnectorErrorCodes.General, {
+        errorDescription: 'Invalid parameter',
+        code: '40002',
+        sub_code: 'isv.invalid-parameter',
+        sub_msg: '参数无效',
+      })
     );
   });
 

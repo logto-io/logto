@@ -10,7 +10,7 @@ import {
   codeDataGuard,
 } from '@logto/connector-types';
 import { assert, conditional } from '@silverhand/essentials';
-import got, { RequestError as GotRequestError } from 'got';
+import got, { HTTPError } from 'got';
 import * as qs from 'query-string';
 
 import {
@@ -110,9 +110,16 @@ export default class GithubConnector implements SocialConnector {
         name: conditional(name),
       };
     } catch (error: unknown) {
-      if (error instanceof GotRequestError && error.response?.statusCode === 401) {
-        throw new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid);
+      if (error instanceof HTTPError) {
+        const { statusCode, body: rawBody } = error.response;
+
+        if (statusCode === 401) {
+          throw new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid);
+        }
+
+        throw new ConnectorError(ConnectorErrorCodes.General, JSON.stringify(rawBody));
       }
+
       throw error;
     }
   };
@@ -130,13 +137,16 @@ export default class GithubConnector implements SocialConnector {
       throw new ConnectorError(ConnectorErrorCodes.General, JSON.stringify(parameterObject));
     }
 
-    if (parsedError.data.error === 'access_denied') {
-      throw new ConnectorError(
-        ConnectorErrorCodes.AuthorizationFailed,
-        parsedError.data.error_description
-      );
+    const { error, error_description, error_uri } = parsedError.data;
+
+    if (error === 'access_denied') {
+      throw new ConnectorError(ConnectorErrorCodes.AuthorizationFailed, error_description);
     }
 
-    throw new ConnectorError(ConnectorErrorCodes.General, JSON.stringify(parameterObject));
+    throw new ConnectorError(ConnectorErrorCodes.General, {
+      error,
+      errorDescription: error_description,
+      error_uri,
+    });
   };
 }

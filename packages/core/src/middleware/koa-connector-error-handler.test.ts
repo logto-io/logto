@@ -167,7 +167,7 @@ describe('koaConnectorErrorHandler middleware', () => {
     );
   });
 
-  it('General connector errors', async () => {
+  it('General connector errors with string type messages', async () => {
     const message = 'Mock General connector errors';
     const error = new ConnectorError(ConnectorErrorCodes.General, message);
     next.mockImplementationOnce(() => {
@@ -181,6 +181,25 @@ describe('koaConnectorErrorHandler middleware', () => {
           status: 500,
         },
         { message }
+      )
+    );
+  });
+
+  it('General connector errors with message objects', async () => {
+    const message = { errorCode: 400, errorDescription: 'Mock General connector errors' };
+    const error = new ConnectorError(ConnectorErrorCodes.General, message);
+    next.mockImplementationOnce(() => {
+      throw error;
+    });
+
+    await expect(koaConnectorErrorHandler()(ctx, next)).rejects.toMatchError(
+      new RequestError(
+        {
+          code: 'connector.general',
+          status: 500,
+          errorDescription: '\nMock General connector errors',
+        },
+        message
       )
     );
   });

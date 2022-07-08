@@ -216,7 +216,12 @@ describe('getUserInfo', () => {
       });
 
     await expect(alipayNativeMethods.getUserInfo({ auth_code: 'wrong_code' })).rejects.toMatchError(
-      new ConnectorError(ConnectorErrorCodes.General, 'Invalid parameter')
+      new ConnectorError(ConnectorErrorCodes.General, {
+        errorDescription: 'Invalid parameter',
+        code: '40002',
+        sub_code: 'isv.invalid-parameter',
+        sub_msg: '参数无效',
+      })
     );
   });
 
