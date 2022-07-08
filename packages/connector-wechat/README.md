@@ -29,7 +29,7 @@ The official Logto connector for WeChat social sign-in in web apps.
 
 ## Get started
 
-If you don't know the concept of the connector or haven't added this connector to your Sign-in experience yet, please see [Logto tutorial](https://docs.logto.io/docs/tutorials/get-started/enable-social-sign-in).
+If you don't know the concept of the connector or don't know how to add this connector to your Sign-in experience, please see [Logto tutorial](https://docs.logto.io/docs/tutorials/get-started/enable-social-sign-in).
 
 > **⚠️ Caution**
 > 
@@ -90,7 +90,8 @@ Once WeChat web connector is enabled, you can sign in to your app again to see i
 
 ## 开始上手
 
-如果你还不知道连接器的概念，或者还没有将本连接器添加至你的「登录体验」，请先参见 [Logto 教程](https://docs.logto.io/zh-cn/docs/tutorials/get-started/enable-social-sign-in)。
+如果你还不知道连接器的概念，或者还不知道如何将本连接器添加至你的「登录体验」，请先参见 [Logto 教程](https://docs.logto.io/zh-cn/docs/tutorials/get-started/enable-social-sign-in)。
+
 > **⚠️ Caution**
 > 
 > 这个连接器只适用于网页应用。如果你在寻找移动端原生应用的微信登录解决方案，请移步 [微信原生连接器](https://github.com/logto-io/logto/tree/master/packages/connector-wechat-native)。
@@ -142,6 +143,6 @@ Once WeChat web connector is enabled, you can sign in to your app again to see i
 
 ### 测试微信网页连接器
 
-大功告成。别忘了 [在登录体验中启用社交登录](https://docs.logto.io/zh-cn/docs/tutorials/get-started/enable-social-sign-in/#%E5%9C%A8%E7%99%BB%E5%BD%95%E4%BD%93%E9%AA%8C%E4%B8%AD%E5%90%AF%E7%94%A8%E8%BF%9E%E6%8E%A5%E5%99%A8)。
+大功告成。别忘了 [在登录体验中启用本连接器](https://docs.logto.io/zh-cn/docs/tutorials/get-started/enable-social-sign-in/#%E5%9C%A8%E7%99%BB%E5%BD%95%E4%BD%93%E9%AA%8C%E4%B8%AD%E5%90%AF%E7%94%A8%E8%BF%9E%E6%8E%A5%E5%99%A8)。
 
 在微信原生连接器启用后，你可以构建并运行你的应用看看是否生效。
