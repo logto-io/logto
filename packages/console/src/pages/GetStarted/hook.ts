@@ -1,7 +1,9 @@
 import { AdminConsoleKey, I18nKey } from '@logto/phrases';
 import { AppearanceMode, Application } from '@logto/schemas';
 import { demoAppApplicationId } from '@logto/schemas/lib/seeds';
+import { conditionalString } from '@silverhand/essentials';
 import { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import useSWR from 'swr';
 
@@ -33,6 +35,9 @@ type GetStartedMetadata = {
 };
 
 const useGetStartedMetadata = () => {
+  const {
+    i18n: { language },
+  } = useTranslation();
   const { settings, updateSettings } = useSettings();
   const theme = useTheme();
   const isLightMode = theme === AppearanceMode.LightMode;
@@ -120,7 +125,12 @@ const useGetStartedMetadata = () => {
         isComplete: settings?.furtherReadingsChecked,
         onClick: () => {
           void updateSettings({ furtherReadingsChecked: true });
-          window.open('https://docs.logto.io/', '_blank');
+          window.open(
+            `https://docs.logto.io/${conditionalString(
+              language !== 'en' && language.toLowerCase()
+            )}/docs/tutorials/get-started/further-readings`,
+            '_blank'
+          );
         },
       },
     ];
@@ -129,6 +139,7 @@ const useGetStartedMetadata = () => {
   }, [
     hideDemo,
     isLightMode,
+    language,
     navigate,
     settings?.applicationCreated,
     settings?.demoChecked,
