@@ -68,7 +68,7 @@ Here is an example of Aliyun DM connector config JSON.
     "accessKeyId": "<your-access-key-id>",
     "accessKeySecret": "<your-access-key-secret>",
     "accountName": "<noreply@logto.io>",
-    "fromAlias": "<logto>",
+    "fromAlias": "<OPTIONAL-logto>",
     "templates": [
         {
             "subject": "<register-template-subject>",
