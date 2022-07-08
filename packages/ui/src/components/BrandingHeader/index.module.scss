@@ -13,7 +13,6 @@ $logo-height: 60px;
   @include _.image-align-center;
 }
 
-
 :global(body.mobile) {
   .container {
     height: 15vh;
@@ -31,10 +30,9 @@ $logo-height: 60px;
   }
 }
 
-
 :global(body.desktop) {
   .container {
-    height: 96px;
+    min-height: 96px;
   }
 
   .logo:not(:last-child) {
@@ -44,5 +42,12 @@ $logo-height: 60px;
   .headline {
     font: var(--font-title-small);
     color: var(--color-text);
+    text-align: center;
+    text-overflow: ellipsis;
+    /* stylelint-disable-next-line value-no-vendor-prefix */
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
 }
