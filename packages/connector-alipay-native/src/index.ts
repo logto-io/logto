@@ -53,7 +53,7 @@ export default class AlipayNativeConnector implements SocialConnector {
     const result = alipayNativeConfigGuard.safeParse(config);
 
     if (!result.success) {
-      throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, result.error.message);
+      throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, result.error);
     }
   };
 

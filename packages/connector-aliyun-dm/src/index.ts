@@ -28,7 +28,7 @@ export default class AliyunDmConnector implements EmailConnector {
     const result = aliyunDmConfigGuard.safeParse(config);
 
     if (!result.success) {
-      throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, result.error.message);
+      throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, result.error);
     }
   };
 

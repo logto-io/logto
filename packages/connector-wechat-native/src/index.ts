@@ -42,7 +42,7 @@ export default class WechatNativeConnector implements SocialConnector {
     const result = wechatNativeConfigGuard.safeParse(config);
 
     if (!result.success) {
-      throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, result.error.message);
+      throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, result.error);
     }
   };
 

@@ -22,7 +22,7 @@ export default class TwilioSmsConnector implements SmsConnector {
     const result = twilioSmsConfigGuard.safeParse(config);
 
     if (!result.success) {
-      throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, result.error.message);
+      throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, result.error);
     }
   };
 
