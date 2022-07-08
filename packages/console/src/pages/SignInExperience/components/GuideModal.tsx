@@ -100,19 +100,19 @@ const GuideModal = ({ isOpen, onClose }: Props) => {
           />
         </div>
         <div className={styles.content}>
-          {!preferences.experienceNoticeConfirmed && (
-            <div className={styles.reminder}>
-              <Alert
-                action="admin_console.sign_in_exp.welcome.got_it"
-                variant="shadow"
-                onClick={onGotIt}
-              >
-                {t('sign_in_exp.welcome.apply_remind')}
-              </Alert>
-            </div>
-          )}
           <FormProvider {...methods}>
-            <form onSubmit={onSubmit}>
+            <form className={styles.form} onSubmit={onSubmit}>
+              {!preferences.experienceNoticeConfirmed && (
+                <div className={styles.reminder}>
+                  <Alert
+                    action="admin_console.sign_in_exp.welcome.got_it"
+                    variant="shadow"
+                    onClick={onGotIt}
+                  >
+                    {t('sign_in_exp.welcome.apply_remind')}
+                  </Alert>
+                </div>
+              )}
               <div className={styles.main}>
                 <div className={styles.form}>
                   <div className={styles.card}>
