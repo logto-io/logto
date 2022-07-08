@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
-import useSWR from 'swr';
+import useSWR, { useSWRConfig } from 'swr';
 
 import ActionMenu, { ActionMenuItem } from '@/components/ActionMenu';
 import Button from '@/components/Button';
@@ -34,6 +34,7 @@ import * as styles from './index.module.scss';
 
 const ConnectorDetails = () => {
   const { connectorId } = useParams();
+  const { mutate: mutateGlobal } = useSWRConfig();
   const [isReadMeOpen, setIsReadMeOpen] = useState(false);
   const [isSetupOpen, setIsSetupOpen] = useState(false);
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
@@ -58,10 +59,12 @@ const ConnectorDetails = () => {
       .json<ConnectorDTO>();
     toast.success(t('connector_details.connector_deleted'));
 
+    await mutateGlobal('/api/connectors');
+
     if (data?.type === ConnectorType.Social) {
-      navigate(`/connectors/social`);
+      navigate(`/connectors/social`, { replace: true });
     } else {
-      navigate(`/connectors`);
+      navigate(`/connectors`, { replace: true });
     }
   };
 
