@@ -96,4 +96,7 @@
 
 .readme {
   padding: 0 _.unit(6);
+  margin: _.unit(6);
+  background-color: var(--color-layer-1);
+  border-radius: 16px;
 }
