@@ -128,7 +128,7 @@ const useGetStartedMetadata = () => {
           window.open(
             `https://docs.logto.io/${conditionalString(
               language !== 'en' && language.toLowerCase()
-            )}`,
+            )}/docs/tutorials/get-started/further-readings`,
             '_blank'
           );
         },
