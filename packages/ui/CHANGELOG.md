@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.0-alpha.4](https://github.com/logto-io/logto/compare/v1.0.0-alpha.3...v1.0.0-alpha.4) (2022-07-08)
+
+
+### Bug Fixes
+
+* **ui:** add form submit event ([#1489](https://github.com/logto-io/logto/issues/1489)) ([f52fa58](https://github.com/logto-io/logto/commit/f52fa5891d70bf9a50c76eb3efa35f6031dc88cb))
+
+
+
 ## [1.0.0-alpha.3](https://github.com/logto-io/logto/compare/v1.0.0-alpha.2...v1.0.0-alpha.3) (2022-07-07)
 
 

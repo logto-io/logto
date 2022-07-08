@@ -3,6 +3,40 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.0-alpha.4](https://github.com/logto-io/logto/compare/v1.0.0-alpha.3...v1.0.0-alpha.4) (2022-07-08)
+
+
+### Features
+
+* **connector:** connector error handler, throw errmsg on general errors ([#1458](https://github.com/logto-io/logto/issues/1458)) ([7da1de3](https://github.com/logto-io/logto/commit/7da1de33e97de4aeeec9f9b6cea59d1bf90ba623))
+* **console:** add placeholder for connector sender test ([#1476](https://github.com/logto-io/logto/issues/1476)) ([8e85a11](https://github.com/logto-io/logto/commit/8e85a115ec6fa009a53311553a5fc9e9d800c361))
+* expose zod error ([#1474](https://github.com/logto-io/logto/issues/1474)) ([81b63f0](https://github.com/logto-io/logto/commit/81b63f07bb412abf1f2b42059bac2ffcfc86272c))
+
+
+### Bug Fixes
+
+* **console:** add unsaved changes warning in settings page ([2cdbf37](https://github.com/logto-io/logto/commit/2cdbf3774594b3078764bd6b0b837cfcdb081ba3))
+* **console:** admin console language detection ([a8f18e5](https://github.com/logto-io/logto/commit/a8f18e53a297303953bf893b1e30f50c4c674b93))
+* **console:** connector guide should not have sub title ([#1471](https://github.com/logto-io/logto/issues/1471)) ([8009d9b](https://github.com/logto-io/logto/commit/8009d9bd576ff413ad49833e0c615dd34f5bde85))
+* **console:** connector placeholder icon should not have background color ([#1472](https://github.com/logto-io/logto/issues/1472)) ([130817f](https://github.com/logto-io/logto/commit/130817f1012ca21b92e58c49f417f95976f913db))
+* **console:** do not show unsaved alert after delete connector ([#1496](https://github.com/logto-io/logto/issues/1496)) ([61a6b1a](https://github.com/logto-io/logto/commit/61a6b1ab4feba88d3175e60d7cf6ba13debe4d5f))
+* **console:** docs link in get-started should be localized ([#1482](https://github.com/logto-io/logto/issues/1482)) ([800f047](https://github.com/logto-io/logto/commit/800f04744daec154223f3d94e5d169e2c47bf291))
+* **console:** hide demo-app from topbar get-started progress if it is deleted ([b0bdd90](https://github.com/logto-io/logto/commit/b0bdd9027b85bdb00e496e7a139d6c37bb60ae24))
+* **console:** hide single platform universal connector tab ([3d944a5](https://github.com/logto-io/logto/commit/3d944a518b1f96753ed5312bfda486a5da814dd2))
+* **console:** hide the add connectors hint when no connectors found on sign-in-experience page ([#1473](https://github.com/logto-io/logto/issues/1473)) ([d309400](https://github.com/logto-io/logto/commit/d3094005f12b9a9f3c9e12a6ec06fa60646ffb69))
+* **console:** improve error handling in connector details and sender tester ([d9ce4a0](https://github.com/logto-io/logto/commit/d9ce4a01542da0d8ca5fc45a5086314d28e8f4da))
+* **console:** mutate after connector delete ([#1475](https://github.com/logto-io/logto/issues/1475)) ([da882ce](https://github.com/logto-io/logto/commit/da882cee85461899ff32e6db2a07943830e41512))
+* **console:** pagination color should be color-text-link ([#1466](https://github.com/logto-io/logto/issues/1466)) ([481b6a0](https://github.com/logto-io/logto/commit/481b6a05583891572bd405baefc9f44dabfb2942))
+* **console:** provide fallback value for language field in settings ([5ad5eb2](https://github.com/logto-io/logto/commit/5ad5eb2ad9ef0cabefb6386ca1d84456f17dc547))
+* **console:** remove session doc link ([#1479](https://github.com/logto-io/logto/issues/1479)) ([bb790ce](https://github.com/logto-io/logto/commit/bb790ce4d1c552dd6392a0fedb29c655aa41c979))
+* **console:** set language in request header ([#1485](https://github.com/logto-io/logto/issues/1485)) ([f2195dd](https://github.com/logto-io/logto/commit/f2195dd8f314b766c6a47bdc094061f695c59b89))
+* **console:** specify toast type ([#1499](https://github.com/logto-io/logto/issues/1499)) ([bdbeee0](https://github.com/logto-io/logto/commit/bdbeee0db58834b2c9633ef8a75accedfa3a7f0f))
+* **core:** add session check ([#1453](https://github.com/logto-io/logto/issues/1453)) ([78e06d5](https://github.com/logto-io/logto/commit/78e06d5c7f458d9174f4d057ba83f738717510f5))
+* **demo-app:** username should not overflow info card ([#1498](https://github.com/logto-io/logto/issues/1498)) ([58558e5](https://github.com/logto-io/logto/commit/58558e50110349262c7a28f0195a7042f6fca732))
+* **ui:** add form submit event ([#1489](https://github.com/logto-io/logto/issues/1489)) ([f52fa58](https://github.com/logto-io/logto/commit/f52fa5891d70bf9a50c76eb3efa35f6031dc88cb))
+
+
+
 ## [1.0.0-alpha.3](https://github.com/logto-io/logto/compare/v1.0.0-alpha.2...v1.0.0-alpha.3) (2022-07-07)
 
 

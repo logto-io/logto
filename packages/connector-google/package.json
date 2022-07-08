@@ -1,6 +1,6 @@
 {
   "name": "@logto/connector-google",
-  "version": "1.0.0-alpha.3",
+  "version": "1.0.0-alpha.4",
   "description": "Google web connector implementation.",
   "main": "./lib/index.js",
   "exports": "./lib/index.js",
@@ -24,8 +24,8 @@
     "prepack": "pnpm build"
   },
   "dependencies": {
-    "@logto/connector-types": "^1.0.0-alpha.3",
-    "@logto/schemas": "^1.0.0-alpha.3",
+    "@logto/connector-types": "^1.0.0-alpha.4",
+    "@logto/schemas": "^1.0.0-alpha.4",
     "@logto/shared": "^1.0.0-alpha.3",
     "@silverhand/essentials": "^1.1.0",
     "@silverhand/jest-config": "^0.14.0",

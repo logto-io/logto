@@ -1,6 +1,6 @@
 {
   "name": "@logto/connector-aliyun-dm",
-  "version": "1.0.0-alpha.3",
+  "version": "1.0.0-alpha.4",
   "description": "Aliyun DM connector implementation.",
   "main": "./lib/index.js",
   "exports": "./lib/index.js",
@@ -24,7 +24,7 @@
     "prepack": "pnpm build"
   },
   "dependencies": {
-    "@logto/connector-types": "^1.0.0-alpha.3",
+    "@logto/connector-types": "^1.0.0-alpha.4",
     "@logto/shared": "^1.0.0-alpha.3",
     "@silverhand/essentials": "^1.1.0",
     "@silverhand/jest-config": "^0.14.0",

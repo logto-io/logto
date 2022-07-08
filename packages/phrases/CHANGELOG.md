@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.0-alpha.4](https://github.com/logto-io/logto/compare/v1.0.0-alpha.3...v1.0.0-alpha.4) (2022-07-08)
+
+
+### Features
+
+* **connector:** connector error handler, throw errmsg on general errors ([#1458](https://github.com/logto-io/logto/issues/1458)) ([7da1de3](https://github.com/logto-io/logto/commit/7da1de33e97de4aeeec9f9b6cea59d1bf90ba623))
+* **console:** add placeholder for connector sender test ([#1476](https://github.com/logto-io/logto/issues/1476)) ([8e85a11](https://github.com/logto-io/logto/commit/8e85a115ec6fa009a53311553a5fc9e9d800c361))
+* expose zod error ([#1474](https://github.com/logto-io/logto/issues/1474)) ([81b63f0](https://github.com/logto-io/logto/commit/81b63f07bb412abf1f2b42059bac2ffcfc86272c))
+
+
+### Bug Fixes
+
+* **console:** improve error handling in connector details and sender tester ([d9ce4a0](https://github.com/logto-io/logto/commit/d9ce4a01542da0d8ca5fc45a5086314d28e8f4da))
+
+
+
 ## [1.0.0-alpha.3](https://github.com/logto-io/logto/compare/v1.0.0-alpha.2...v1.0.0-alpha.3) (2022-07-07)
 
 **Note:** Version bump only for package @logto/phrases
