@@ -24,6 +24,8 @@ import {
   scope,
   defaultMetadata,
   defaultTimeout,
+  invalidAccessTokenErrcode,
+  invalidAuthCodeErrcode,
 } from './constant';
 import {
   wechatConfigGuard,
@@ -130,11 +132,12 @@ export default class WechatConnector implements SocialConnector {
   private readonly getAccessTokenErrorHandler: GetAccessTokenErrorHandler = (accessToken) => {
     const { errcode, errmsg } = accessToken;
 
-    if (errcode === 40_029 || errcode === 40_163 || errcode === 42_003) {
-      throw new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid, errmsg);
-    }
-
     if (errcode) {
+      assert(
+        !invalidAuthCodeErrcode.includes(errcode),
+        new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid, errmsg)
+      );
+
       throw new ConnectorError(ConnectorErrorCodes.General, { errorDescription: errmsg, errcode });
     }
   };
@@ -142,11 +145,12 @@ export default class WechatConnector implements SocialConnector {
   private readonly getUserInfoErrorHandler: GetUserInfoErrorHandler = (userInfo) => {
     const { errcode, errmsg } = userInfo;
 
-    if (errcode === 40_001 || errcode === 40_014) {
-      throw new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid, errmsg);
-    }
-
     if (errcode) {
+      assert(
+        !invalidAccessTokenErrcode.includes(errcode),
+        new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid, errmsg)
+      );
+
       throw new ConnectorError(ConnectorErrorCodes.General, { errorDescription: errmsg, errcode });
     }
   };

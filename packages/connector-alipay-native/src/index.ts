@@ -30,6 +30,8 @@ import {
   defaultMetadata,
   defaultTimeout,
   timestampFormat,
+  invalidAccessTokenCode,
+  invalidAccessTokenSubCode,
 } from './constant';
 import {
   alipayNativeConfigGuard,
@@ -153,15 +155,16 @@ export default class AlipayNativeConnector implements SocialConnector {
   private readonly errorHandler: ErrorHandler = (response) => {
     const { code, msg, sub_code, sub_msg } = response;
 
-    if (code === '20001') {
+    if (invalidAccessTokenCode.includes(code)) {
       throw new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid, msg);
     }
 
-    if (sub_code === 'isv.code-invalid') {
-      throw new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid, msg);
-    }
-
     if (sub_code) {
+      assert(
+        !invalidAccessTokenSubCode.includes(sub_code),
+        new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid, msg)
+      );
+
       throw new ConnectorError(ConnectorErrorCodes.General, {
         errorDescription: msg,
         code,

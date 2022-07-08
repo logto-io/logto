@@ -11,6 +11,10 @@ export const alipaySigningAlgorithmMapping = {
 } as const;
 export const alipaySigningAlgorithms = ['RSA', 'RSA2'] as const;
 
+export const invalidAccessTokenCode = ['20001'];
+
+export const invalidAccessTokenSubCode = ['isv.code-invalid'];
+
 export const defaultMetadata: ConnectorMetadata = {
   id: 'alipay-native',
   target: 'alipay',

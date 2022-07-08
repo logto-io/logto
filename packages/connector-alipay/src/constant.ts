@@ -14,6 +14,10 @@ export const alipaySigningAlgorithms = ['RSA', 'RSA2'] as const;
 export const charsetEnum = ['GBK', 'UTF8'] as const;
 export const fallbackCharset = 'UTF8';
 
+export const invalidAccessTokenCode = ['20001'];
+
+export const invalidAccessTokenSubCode = ['isv.code-invalid'];
+
 export const defaultMetadata: ConnectorMetadata = {
   id: 'alipay-web',
   target: 'alipay',
