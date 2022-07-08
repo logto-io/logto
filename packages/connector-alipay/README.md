@@ -44,15 +44,17 @@ Alipay Web connector is designed for desktop Web applications. It takes advantag
 3. Fill out the Logto connector settings:
     - Fill out the `appId` field with APPID you've got from step 1.
     - Fill out the `privateKey` field with contents from the private key file mentioned in step 2. Remember to use '\n' to replace all newlines.
-    - Fill out the `signType` filed with 'RSA2' due to the `Public key` signing mode we chose in step 7 of **Create And Configure Alipay Apps**.
+    - Fill out the `signType` field with 'RSA2' due to the `Public key` signing mode we chose in step 7 of **Create And Configure Alipay Apps**.
+    - Fill out the `charset` field with either 'GBK' or 'UTF8'. You can leave this field blank as it is OPTIONAL. The default value is set to be 'UTF8'.
 
 ### Config types
 
-|    Name    |     Type    |   Enum values   |
-|:----------:|:-----------:|:---------------:|
-|    appId   |    string   |       N/A       |
-| privateKey |    string   |       N/A       |
-|  signType  | enum string | 'RSA' \| 'RSA2' |
+| Name       | Type                   | Enum values                  |
+|------------|------------------------|------------------------------|
+| appId      | string                 | N/A                          |
+| privateKey | string                 | N/A                          |
+| signType   | enum string            | 'RSA' \| 'RSA2'              |
+| charset    | enum string (OPTIONAL) | 'GBK' \| 'UTF8' \| undefined |
 
 ## Test Alipay web connector
 
@@ -91,14 +93,16 @@ Once Alipay web connector is enabled, you can build and run your web app to see 
     - 将你在第 1 步中获取的 APPID 填入 `appId` 字段。
     - 将你在第 2 步中获得的密钥对的私钥填入 `privateKey` 字段，使用 '\n' 换行。
     - 将你在第 2 步中所获得的密钥的签名模式 'RSA2' 填入 `signType` 字段。
+    - 在 `charset` 字段中填入 'GBK' 或 'UTF8' 字符串。这个字段也可以选择不填，此时我们会使用 'UTF8' 的默认值。
 
 ### 配置类型
 
-|    名称     |     类型    |      枚举值      |
-|:----------:|:-----------:|:---------------:|
-|    appId   |    string   |       N/A       |
-| privateKey |    string   |       N/A       |
-|  signType  | enum string | 'RSA' \| 'RSA2' |
+| 名称       | 类型                   | 枚举值                       |
+|------------|------------------------|------------------------------|
+| appId      | string                 | N/A                          |
+| privateKey | string                 | N/A                          |
+| signType   | enum string            | 'RSA' \| 'RSA2'              |
+| charset    | enum string (OPTIONAL) | 'GBK' \| 'UTF8' \| undefined |
 
 ## 测试支付宝网页连接器
 
