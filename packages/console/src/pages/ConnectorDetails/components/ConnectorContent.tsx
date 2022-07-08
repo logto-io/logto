@@ -55,7 +55,7 @@ const ConnectorContent = ({ isDeleted, connectorData, onConnectorUpdated }: Prop
 
   const handleSave = async () => {
     if (!config) {
-      toast(t('connector_details.save_error_empty_config'));
+      toast.error(t('connector_details.save_error_empty_config'));
 
       return;
     }
