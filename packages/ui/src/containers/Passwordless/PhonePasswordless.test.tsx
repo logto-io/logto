@@ -6,7 +6,7 @@ import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider';
 import { sendRegisterSmsPasscode } from '@/apis/register';
 import { sendSignInSmsPasscode } from '@/apis/sign-in';
-import { defaultCountryCallingCode } from '@/hooks/use-phone-number';
+import { getDefaultCountryCallingCode } from '@/utils/country-code';
 
 import PhonePasswordless from './PhonePasswordless';
 
@@ -16,9 +16,13 @@ jest.mock('@/apis/sign-in', () => ({
 jest.mock('@/apis/register', () => ({
   sendRegisterSmsPasscode: jest.fn(async () => Promise.resolve()),
 }));
+jest.mock('i18next', () => ({
+  language: 'en',
+}));
 
 describe('<PhonePasswordless/>', () => {
-  const phoneNumber = '18888888888';
+  const phoneNumber = '8573333333';
+  const defaultCountryCallingCode = getDefaultCountryCallingCode();
 
   test('render', () => {
     const { queryByText, container } = renderWithPageContext(

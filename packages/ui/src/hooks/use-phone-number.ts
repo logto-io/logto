@@ -5,39 +5,21 @@
 
 import {
   parsePhoneNumberWithError,
-  getCountries,
-  getCountryCallingCode,
   CountryCallingCode,
-  CountryCode,
   E164Number,
   ParseError,
-} from 'libphonenumber-js';
+  CountryCode,
+} from 'libphonenumber-js/mobile';
 import { useState } from 'react';
-// Should not need the react-phone-number-input package, but we use its locale country name for now
-import en from 'react-phone-number-input/locale/en.json';
+
+import { getDefaultCountryCallingCode, getCountryList } from '@/utils/country-code';
 
 export type { CountryCallingCode } from 'libphonenumber-js';
 
-/**
- * Provide Country Code Options
- * TODO: Country Name i18n
- */
 export type CountryMetaData = {
   countryCode: CountryCode;
   countryCallingCode: CountryCallingCode;
-  countryName?: string;
 };
-
-export const countryList: CountryMetaData[] = getCountries().map((code) => {
-  const callingCode = getCountryCallingCode(code);
-  const countryName = en[code];
-
-  return {
-    countryCode: code,
-    countryCallingCode: callingCode,
-    countryName,
-  };
-});
 
 type PhoneNumberData = {
   countryCallingCode: string;
@@ -65,16 +47,14 @@ const isValidPhoneNumber = (value: string): boolean => {
   }
 };
 
-export const defaultCountryCode: CountryCode = 'CN';
-export const defaultCountryCallingCode = getCountryCallingCode(defaultCountryCode);
-
 const usePhoneNumber = () => {
   const [phoneNumber, setPhoneNumber] = useState<PhoneNumberData>({
-    countryCallingCode: defaultCountryCallingCode,
+    countryCallingCode: getDefaultCountryCallingCode(),
     nationalNumber: '',
   });
 
   return {
+    countryList: getCountryList(),
     phoneNumber,
     setPhoneNumber,
     isValidPhoneNumber,

@@ -10,7 +10,7 @@ import TermsOfUse from '@/containers/TermsOfUse';
 import useApi, { ErrorHandlers } from '@/hooks/use-api';
 import useForm from '@/hooks/use-form';
 import { PageContext } from '@/hooks/use-page-context';
-import usePhoneNumber, { countryList } from '@/hooks/use-phone-number';
+import usePhoneNumber from '@/hooks/use-phone-number';
 import useTerms from '@/hooks/use-terms';
 import { UserFlow, SearchParameters } from '@/types';
 import { getSearchParameters } from '@/utils';
@@ -35,7 +35,7 @@ const PhonePasswordless = ({ type, autoFocus, className }: Props) => {
   const { setToast } = useContext(PageContext);
   const [showPasswordlessConfirmModal, setShowPasswordlessConfirmModal] = useState(false);
   const { t } = useTranslation();
-  const { phoneNumber, setPhoneNumber, isValidPhoneNumber } = usePhoneNumber();
+  const { countryList, phoneNumber, setPhoneNumber, isValidPhoneNumber } = usePhoneNumber();
   const navigate = useNavigate();
   const { termsValidation } = useTerms();
   const { fieldValue, setFieldValue, setFieldErrors, validateForm, register } =

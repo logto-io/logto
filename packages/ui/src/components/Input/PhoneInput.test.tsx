@@ -1,9 +1,13 @@
 import { render, fireEvent } from '@testing-library/react';
 import React from 'react';
 
-import { defaultCountryCallingCode, countryList } from '@/hooks/use-phone-number';
+import { getCountryList, getDefaultCountryCallingCode } from '@/utils/country-code';
 
 import PhoneInput from './PhoneInput';
+
+jest.mock('i18next', () => ({
+  language: 'en',
+}));
 
 describe('Phone Input Field UI Component', () => {
   const onChange = jest.fn();
@@ -11,6 +15,8 @@ describe('Phone Input Field UI Component', () => {
   beforeEach(() => {
     onChange.mockClear();
   });
+
+  const defaultCountryCallingCode = getDefaultCountryCallingCode();
 
   it('render empty PhoneInput', () => {
     const { queryByText, container } = render(
@@ -21,18 +27,18 @@ describe('Phone Input Field UI Component', () => {
   });
 
   it('render with country list', () => {
-    const { queryByText, container } = render(
+    const { queryAllByText, container } = render(
       <PhoneInput
         name="PhoneInput"
         nationalNumber=""
-        countryList={countryList}
+        countryList={getCountryList()}
         countryCallingCode={defaultCountryCallingCode}
         onChange={onChange}
       />
     );
 
-    const countryCode = queryByText(`+${defaultCountryCallingCode}`);
-    expect(countryCode).not.toBeNull();
+    const countryCode = queryAllByText(`+${defaultCountryCallingCode}`);
+    expect(countryCode).toHaveLength(2);
 
     const selector = container.querySelector('select');
     expect(selector).not.toBeNull();

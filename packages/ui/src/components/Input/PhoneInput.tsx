@@ -39,7 +39,7 @@ const PhoneInput = ({
   const inputReference = useRef<HTMLInputElement>(null);
 
   const countrySelector = useMemo(() => {
-    if (!countryCallingCode || !countryList) {
+    if (countryCallingCode === undefined || !countryList?.length) {
       return null;
     }
 
@@ -60,9 +60,9 @@ const PhoneInput = ({
             }
           }}
         >
-          {countryList.map(({ countryCode, countryCallingCode, countryName }) => (
+          {countryList.map(({ countryCallingCode, countryCode }) => (
             <option key={countryCode} value={countryCallingCode}>
-              {`${countryName ?? countryCode}: +${countryCallingCode}`}
+              {`+${countryCallingCode}`}
             </option>
           ))}
         </select>
