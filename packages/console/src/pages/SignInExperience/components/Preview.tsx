@@ -24,7 +24,7 @@ const Preview = ({ signInExperience, className }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const [language, setLanguage] = useState<Language>(Language.English);
   const [mode, setMode] = useState<AppearanceMode>(AppearanceMode.LightMode);
-  const [platform, setPlatform] = useState<'desktopWeb' | 'mobile' | 'mobileWeb'>('mobile');
+  const [platform, setPlatform] = useState<'desktopWeb' | 'mobile' | 'mobileWeb'>('desktopWeb');
   const { data: allConnectors } = useSWR<ConnectorDTO[], RequestError>('/api/connectors');
   const previewRef = useRef<HTMLIFrameElement>(null);
 
