@@ -7,6 +7,10 @@ import { mockSignInExperienceSettings } from '@/__mocks__/logto';
 import { defaultSize } from '@/containers/SocialSignIn/SocialSignInList';
 import SignIn from '@/pages/SignIn';
 
+jest.mock('i18next', () => ({
+  language: 'en',
+}));
+
 describe('<SignIn />', () => {
   test('renders with username as primary', async () => {
     const { queryByText, container } = renderWithPageContext(

@@ -5,6 +5,9 @@ import { Routes, Route, MemoryRouter } from 'react-router-dom';
 import Register from '@/pages/Register';
 
 jest.mock('@/apis/register', () => ({ register: jest.fn(async () => Promise.resolve()) }));
+jest.mock('i18next', () => ({
+  language: 'en',
+}));
 
 describe('<Register />', () => {
   test('renders without exploding', async () => {
