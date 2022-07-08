@@ -56,7 +56,7 @@ const ConnectorsTransfer = ({ value, onChange }: Props) => {
 
   return (
     <>
-      {value.length === 0 && (
+      {datasource.length > 0 && value.length === 0 && (
         <Alert>{t('sign_in_exp.setup_warning.no_added_social_connector')}</Alert>
       )}
       <Transfer
