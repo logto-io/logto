@@ -12,6 +12,7 @@ import CardTitle from '@/components/CardTitle';
 import FormField from '@/components/FormField';
 import Select from '@/components/Select';
 import TabNav, { TabNavItem } from '@/components/TabNav';
+import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import useUserPreferences, { UserPreferences } from '@/hooks/use-user-preferences';
 import * as detailsStyles from '@/scss/details.module.scss';
 
@@ -27,7 +28,7 @@ const Settings = () => {
   const {
     handleSubmit,
     control,
-    formState: { isSubmitting },
+    formState: { isSubmitting, isDirty },
   } = useForm<UserPreferences>({ defaultValues: data });
 
   const onSubmit = handleSubmit(async (formData) => {
@@ -113,6 +114,7 @@ const Settings = () => {
           </div>
         </form>
       )}
+      <UnsavedChangesAlertModal hasUnsavedChanges={isDirty} />
     </Card>
   );
 };
