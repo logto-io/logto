@@ -85,7 +85,7 @@ Once Alipay web connector is enabled, you can build and run your web app to see 
 
 ## 设置支付宝网页连接器
 
-1. 在[支付宝开放平台控制台](https://open.alipay.com/dev/workspace)中，点击「我的应用」面板中的「网页&移动应用」，获取应用的 APPID。
+1. 在 [支付宝开放平台控制台](https://open.alipay.com/dev/workspace) 中，点击「我的应用」面板中的「网页&移动应用」，获取应用的 APPID。
 2. 获取你在上一部分的第 7 个步骤中生成的密钥对。
 3. 配置你的应用的支付宝网页连接器:
     - 将你在第 1 步中获取的 APPID 填入 `appId` 字段。
