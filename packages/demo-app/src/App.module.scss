@@ -46,6 +46,12 @@
       border-radius: 8px;
       width: 400px;
 
+      div {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
       span {
         font: var(--font-label-large);
       }
