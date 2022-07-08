@@ -2,7 +2,7 @@
 
 Alipay Web connector is designed for desktop Web applications. It takes advantage of Alipay's OAuth 2.0 authentication workflow and enables Alipay users to sign in to other Apps using public Alipay user profiles without going through a troublesome register process.
 
-支付宝网页链接器是为桌面网页应用设计的。它采用了支付宝的OAuth 2.0认证流程，并使支付宝用户可以使用公开的支付宝用户信息登录其他应用，而不需要进行令人困惑的注册过程。
+支付宝网页链接器是为桌面网页应用设计的。它采用了支付宝的 OAuth 2.0 认证流程，并使支付宝用户可以使用公开的支付宝用户信息登录其他应用，而不需要进行令人困惑的注册过程。
 
 **Table of contents**
 
