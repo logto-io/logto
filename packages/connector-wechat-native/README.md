@@ -36,7 +36,7 @@ The official Logto connector for WeChat social sign-in in native apps (iOS and A
 
 ## Get started
 
-If you don't know the concept of the connector or don't how to added this connector to your Sign-in experience, please see [Logto tutorial](https://docs.logto.io/docs/tutorials/get-started/enable-social-sign-in).
+If you don't know the concept of the connector or don't know how to add this connector to your Sign-in experience, please see [Logto tutorial](https://docs.logto.io/docs/tutorials/get-started/enable-social-sign-in).
 
 In native apps, you cannot use the web as a sign-in method of WeChat: navigation to the WeChat app is required, and it also requires using their SDK.
 

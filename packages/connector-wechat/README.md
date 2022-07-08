@@ -29,7 +29,7 @@ The official Logto connector for WeChat social sign-in in web apps.
 
 ## Get started
 
-If you don't know the concept of the connector or don't how to added this connector to your Sign-in experience, please see [Logto tutorial](https://docs.logto.io/docs/tutorials/get-started/enable-social-sign-in).
+If you don't know the concept of the connector or don't know how to add this connector to your Sign-in experience, please see [Logto tutorial](https://docs.logto.io/docs/tutorials/get-started/enable-social-sign-in).
 
 > **⚠️ Caution**
 > 

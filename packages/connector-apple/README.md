@@ -23,7 +23,7 @@ Apple 社交登录 Logto 官方连接器 [中文文档](#apple-连接器)
 
 ## Get started
 
-If you don't know the concept of the connector or don't how to added this connector to your Sign-in experience, please see [Logto tutorial](https://docs.logto.io/docs/tutorials/get-started/enable-social-sign-in).
+If you don't know the concept of the connector or don't know how to add this connector to your Sign-in experience, please see [Logto tutorial](https://docs.logto.io/docs/tutorials/get-started/enable-social-sign-in).
 
 > ℹ️ **Note**
 > 
@@ -114,7 +114,7 @@ That's it. The Apple connector should be available in both web and native apps. 
 
 1. 访问 [Certificates, Identifiers & Profiles](https://developer.apple.com/account/resources/identifiers/list/serviceId)，并点按在「Identifier」旁边的「+」按钮。
 2. 在「Register a new identifier」页面，选择「Services IDs」并点按「Continue」。
-3. 填写「Description」与「Identifier」（例如 `Logto Test` 和 `io.logto.test`），并点按「继续」。
+3. 填写「Description」与「Identifier」（例如 `Logto Test` 和 `io.logto.test`），并点按「Continue」。
 4. 再次检查相关信息并点按「Register」。
 
 ### 为你的 identifier 启用「通过 Apple 登录」
