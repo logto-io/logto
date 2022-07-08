@@ -67,17 +67,22 @@ const EmailPasswordless = ({ type, autoFocus, className }: Props) => {
   const sendPasscode = getSendPasscodeApi(type, 'email');
   const { result, run: asyncSendPasscode } = useApi(sendPasscode, errorHandlers);
 
-  const onSubmitHandler = useCallback(async () => {
-    if (!validateForm()) {
-      return;
-    }
+  const onSubmitHandler = useCallback(
+    async (event?: React.FormEvent<HTMLFormElement>) => {
+      event?.preventDefault();
 
-    if (!(await termsValidation())) {
-      return;
-    }
+      if (!validateForm()) {
+        return;
+      }
 
-    void asyncSendPasscode(fieldValue.email);
-  }, [validateForm, termsValidation, asyncSendPasscode, fieldValue.email]);
+      if (!(await termsValidation())) {
+        return;
+      }
+
+      void asyncSendPasscode(fieldValue.email);
+    },
+    [validateForm, termsValidation, asyncSendPasscode, fieldValue.email]
+  );
 
   const onModalCloseHandler = useCallback(() => {
     setShowPasswordlessConfirmModal(false);
@@ -97,13 +102,7 @@ const EmailPasswordless = ({ type, autoFocus, className }: Props) => {
 
   return (
     <>
-      <form
-        className={classNames(styles.form, className)}
-        onSubmit={(event) => {
-          event.preventDefault();
-          void onSubmitHandler();
-        }}
-      >
+      <form className={classNames(styles.form, className)} onSubmit={onSubmitHandler}>
         <Input
           type="email"
           name="email"
@@ -120,7 +119,7 @@ const EmailPasswordless = ({ type, autoFocus, className }: Props) => {
 
         <TermsOfUse className={styles.terms} />
 
-        <Button onClick={onSubmitHandler}>{t('action.continue')}</Button>
+        <Button onClick={async () => onSubmitHandler()}>{t('action.continue')}</Button>
       </form>
       <PasswordlessConfirmModal
         isOpen={showPasswordlessConfirmModal}

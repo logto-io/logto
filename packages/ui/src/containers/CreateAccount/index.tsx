@@ -60,17 +60,22 @@ const CreateAccount = ({ className, autoFocus }: Props) => {
 
   const { result, run: asyncRegister } = useApi(register, registerErrorHandlers);
 
-  const onSubmitHandler = useCallback(async () => {
-    if (!validateForm()) {
-      return;
-    }
+  const onSubmitHandler = useCallback(
+    async (event?: React.FormEvent<HTMLFormElement>) => {
+      event?.preventDefault();
 
-    if (!(await termsValidation())) {
-      return;
-    }
+      if (!validateForm()) {
+        return;
+      }
 
-    void asyncRegister(fieldValue.username, fieldValue.password);
-  }, [validateForm, termsValidation, asyncRegister, fieldValue]);
+      if (!(await termsValidation())) {
+        return;
+      }
+
+      void asyncRegister(fieldValue.username, fieldValue.password);
+    },
+    [validateForm, termsValidation, asyncRegister, fieldValue]
+  );
 
   useEffect(() => {
     if (result?.redirectTo) {
@@ -79,13 +84,7 @@ const CreateAccount = ({ className, autoFocus }: Props) => {
   }, [result]);
 
   return (
-    <form
-      className={classNames(styles.form, className)}
-      onSubmit={(event) => {
-        event.preventDefault();
-        void onSubmitHandler();
-      }}
-    >
+    <form className={classNames(styles.form, className)} onSubmit={onSubmitHandler}>
       <Input
         autoFocus={autoFocus}
         className={styles.inputField}
@@ -123,7 +122,7 @@ const CreateAccount = ({ className, autoFocus }: Props) => {
       />
       <TermsOfUse className={styles.terms} />
 
-      <Button onClick={onSubmitHandler}>{t('action.create')}</Button>
+      <Button onClick={async () => onSubmitHandler()}>{t('action.create')}</Button>
     </form>
   );
 };

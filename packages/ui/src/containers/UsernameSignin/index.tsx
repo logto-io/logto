@@ -55,28 +55,33 @@ const UsernameSignin = ({ className, autoFocus }: Props) => {
 
   const { result, run: asyncSignInBasic } = useApi(signInBasic, errorHandlers);
 
-  const onSubmitHandler = useCallback(async () => {
-    setFormErrorMessage(undefined);
+  const onSubmitHandler = useCallback(
+    async (event?: React.FormEvent<HTMLFormElement>) => {
+      event?.preventDefault();
 
-    if (!validateForm()) {
-      return;
-    }
+      setFormErrorMessage(undefined);
 
-    if (!(await termsValidation())) {
-      return;
-    }
+      if (!validateForm()) {
+        return;
+      }
 
-    const socialToBind = getSearchParameters(location.search, SearchParameters.bindWithSocial);
+      if (!(await termsValidation())) {
+        return;
+      }
 
-    void asyncSignInBasic(fieldValue.username, fieldValue.password, socialToBind);
-  }, [
-    setFormErrorMessage,
-    validateForm,
-    termsValidation,
-    asyncSignInBasic,
-    fieldValue.username,
-    fieldValue.password,
-  ]);
+      const socialToBind = getSearchParameters(location.search, SearchParameters.bindWithSocial);
+
+      void asyncSignInBasic(fieldValue.username, fieldValue.password, socialToBind);
+    },
+    [
+      setFormErrorMessage,
+      validateForm,
+      termsValidation,
+      asyncSignInBasic,
+      fieldValue.username,
+      fieldValue.password,
+    ]
+  );
 
   useEffect(() => {
     if (result?.redirectTo) {
@@ -85,13 +90,7 @@ const UsernameSignin = ({ className, autoFocus }: Props) => {
   }, [result]);
 
   return (
-    <form
-      className={classNames(styles.form, className)}
-      onSubmit={(event) => {
-        event.preventDefault();
-        void onSubmitHandler();
-      }}
-    >
+    <form className={classNames(styles.form, className)} onSubmit={onSubmitHandler}>
       <Input
         autoFocus={autoFocus}
         className={styles.inputField}
@@ -115,7 +114,7 @@ const UsernameSignin = ({ className, autoFocus }: Props) => {
       )}
       <TermsOfUse className={styles.terms} />
 
-      <Button onClick={onSubmitHandler}>{t('action.sign_in')}</Button>
+      <Button onClick={async () => onSubmitHandler()}>{t('action.sign_in')}</Button>
     </form>
   );
 };
