@@ -35,6 +35,7 @@ import * as styles from './index.module.scss';
 const ConnectorDetails = () => {
   const { connectorId } = useParams();
   const { mutate: mutateGlobal } = useSWRConfig();
+  const [isDeleted, setIsDeleted] = useState(false);
   const [isReadMeOpen, setIsReadMeOpen] = useState(false);
   const [isSetupOpen, setIsSetupOpen] = useState(false);
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
@@ -60,6 +61,7 @@ const ConnectorDetails = () => {
     toast.success(t('connector_details.connector_deleted'));
 
     await mutateGlobal('/api/connectors');
+    setIsDeleted(true);
 
     if (data?.type === ConnectorType.Social) {
       navigate(`/connectors/social`, { replace: true });
@@ -169,6 +171,7 @@ const ConnectorDetails = () => {
             </TabNavItem>
           </TabNav>
           <ConnectorContent
+            isDeleted={isDeleted}
             connectorData={data}
             onConnectorUpdated={(connector) => {
               void mutate(connector);
