@@ -9,7 +9,7 @@ The official Logto connector for Aliyun connector for direct mail service.
 - [Aliyun direct mail connector](#aliyun-direct-mail-connector)
   - [Get started](#get-started)
   - [Set up an email service in Aliyun DirectMail Console](#set-up-an-email-service-in-aliyun-directmail-console)
-    - [Register Aliyun account](#register-aliyun-account)
+    - [Create an Aliyun account](#create-an-aliyun-account)
     - [Enable and configure Aliyun Direct Mail](#enable-and-configure-aliyun-direct-mail)
   - [Compose the connector JSON](#compose-the-connector-json)
     - [Test Aliyun DM connector](#test-aliyun-dm-connector)
@@ -55,7 +55,7 @@ After finishing setup, there are two different ways to test:
 2. Go to the "Sender Addresses" (发信地址) or "Email Tags" (邮件标签) tab you just visited from the [DM admin console page](https://dm.console.aliyun.com/), you can find _Sender Address_ or _Email Tag_ easily.
 3. Fill out the Aliyun DM Connector settings:
     - Fill out the `accessKeyId` and `accessKeySecret` fields with access key pairs you've got from step 1.
-    - Fill out the `accountName` and `fromAlias` field with "Sender Address" and "Email Tag" which were found in step 2. All templates will share this signature name.
+    - Fill out the `accountName` and `fromAlias` field with "Sender Address" and "Email Tag" which were found in step 2. All templates will share this signature name. (You can leave `fromAlias` blank as it is OPTIONAL.)
     - You can add multiple DM connector templates for different cases. Here is an example of adding a single template:
         - Fill out the `subject` field, which will work as title of the sending email.
         - Fill out the `content` field with arbitrary string-type contents. Do not forget to leave `{{code}}` placeholder for random passcode.
@@ -97,13 +97,13 @@ That's it. Don't forget to [Enable connector in sign-in experience](https://docs
 
 ### Config types
 
-| Name            | Type       |
-|-----------------|------------|
-| accessKeyId     | string     |
-| accessKeySecret | string     |
-| accountName     | string     |
-| fromAlias       | string     |
-| templates       | Template[] |
+| Name            | Type              |
+|-----------------|-------------------|
+| accessKeyId     | string            |
+| accessKeySecret | string            |
+| accountName     | string            |
+| fromAlias       | string (OPTIONAL) |
+| templates       | Template[]        |
 
 | Template Properties | Type        | Enum values                      |
 |---------------------|-------------|----------------------------------|
@@ -147,7 +147,7 @@ That's it. Don't forget to [Enable connector in sign-in experience](https://docs
 2. 从 [邮件服务管理控制台](https://dm.console.aliyun.com/) 的侧边栏，分别进入「发信地址」和「邮件标签」。这里你可以找到之前创建的 _发信地址_ 和 _邮件标签_。
 3. 完成阿里云邮件服务连接器的设置：
     - 用你在步骤 1 中拿到的一对「AccessKey ID」和「AccessKey Secret」来分别填入 `accessKeyId` 和 `accessKeySecret`。
-    - 用步骤 2 中的 _发信地址_ 和 _邮件标签_ 填写 `accountName` 和 `fromAlias`。
+    - 用步骤 2 中的 _发信地址_ 和 _邮件标签_ 填写 `accountName` 和 `fromAlias`。（`fromAlias` 可以不填写，它是 **可选的**。）
     - 你可以添加多个邮件服务模板以应对不同的用户场景。这里展示填写单个模板的例子：
       - 在 `subject` 栏填写发送邮件的 _标题_。
       - 在 `content` 栏中填写字符形式的内容。不要忘了在内容中插入 `{{code}}` 占位符，在真实发送时他会被替换成随机生成的验证码。
@@ -160,7 +160,7 @@ That's it. Don't forget to [Enable connector in sign-in experience](https://docs
     "accessKeyId": "<your-access-key-id>",
     "accessKeySecret": "<your-access-key-secret>",
     "accountName": "<noreply@logto.io>",
-    "fromAlias": "<logto>",
+    "fromAlias": "<OPTIONAL-logto>",
     "templates": [
         {
             "subject": "<register-template-subject>",
@@ -189,13 +189,13 @@ That's it. Don't forget to [Enable connector in sign-in experience](https://docs
 
 ### 配置类型
 
-| 名称            | 类型       |
-|-----------------|------------|
-| accessKeyId     | string     |
-| accessKeySecret | string     |
-| accountName     | string     |
-| fromAlias       | string     |
-| templates       | Template[] |
+| 名称            | 类型              |
+|-----------------|-------------------|
+| accessKeyId     | string            |
+| accessKeySecret | string            |
+| accountName     | string            |
+| fromAlias       | string (OPTIONAL) |
+| templates       | Template[]        |
 
 | 模板属性   | 类型        | 枚举值                             |
 |-----------|-------------|----------------------------------|
