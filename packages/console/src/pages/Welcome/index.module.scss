@@ -6,32 +6,28 @@
   height: 100vh;
   flex-direction: column;
   min-width: 1280px;
+  min-height: 806px;
 
   &.light {
     background-image: url('../../assets/icons/welcome.svg');
-    background-position: right 0 bottom 40px;
+    background-position: right bottom;
+    background-size: contain;
     background-repeat: no-repeat;
   }
 
   &.dark {
     background-image: url('../../assets/icons/welcome-dark.svg');
-    background-position: right 0 bottom 40px;
+    background-position: right bottom;
+    background-size: contain;
     background-repeat: no-repeat;
-  }
-
-  &::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    right: 92px;
-    width: 273px;
-    height: 221px;
-    background: url('../../assets/icons/snowflake.svg') no-repeat;
-    background-position: center;
   }
 }
 
 .header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
   padding: _.unit(12);
 }
 
@@ -43,12 +39,20 @@
 
 main {
   flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.placeHolderTop {
+  flex: 1;
+}
+
+.placeHolderBottom {
+  flex: 2;
 }
 
 .content {
-  position: absolute;
-  top: 25%;
-  left: 8.333%;
+  margin-left: 98px;
   width: 585px;
 }
 
