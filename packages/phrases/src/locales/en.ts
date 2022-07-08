@@ -59,6 +59,7 @@ const translation = {
       username_pattern_error:
         'Username should only contain letters, numbers, or underscore and should not start with a number.',
       password_pattern_error: 'Password requires a minimum of 6 characters',
+      insecure_contexts: 'Insecure contexts (non-HTTPS) are not supported.',
       unexpected_error: 'An unexpected error occurred',
     },
     tab_sections: {

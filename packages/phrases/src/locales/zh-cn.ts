@@ -59,6 +59,7 @@ const translation = {
       more_details: '查看详情',
       username_pattern_error: '用户名只能包含英文字母、数字或下划线，且不以数字开头。',
       password_pattern_error: '密码应不少于 6 位',
+      insecure_contexts: '不支持不安全的上下文（非 HTTPS）。',
       unexpected_error: '发生未知错误',
     },
     tab_sections: {
