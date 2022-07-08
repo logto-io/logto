@@ -23,7 +23,7 @@ export default class AliyunSmsConnector implements SmsConnector {
     const result = aliyunSmsConfigGuard.safeParse(config);
 
     if (!result.success) {
-      throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, result.error.message);
+      throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, result.error);
     }
   };
 

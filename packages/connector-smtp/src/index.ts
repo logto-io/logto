@@ -23,7 +23,7 @@ export default class SmtpConnector implements EmailConnector {
     const result = smtpConfigGuard.safeParse(config);
 
     if (!result.success) {
-      throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, result.error.message);
+      throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, result.error);
     }
   };
 

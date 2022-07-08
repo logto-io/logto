@@ -29,7 +29,7 @@ export default class SendGridMailConnector implements EmailConnector {
     const result = sendGridMailConfigGuard.safeParse(config);
 
     if (!result.success) {
-      throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, result.error.message);
+      throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, result.error);
     }
   };
 
