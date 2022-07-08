@@ -6,11 +6,14 @@ import { Link } from 'react-router-dom';
 import Button from '@/components/Button';
 import ItemPreview from '@/components/ItemPreview';
 import UnnamedTrans from '@/components/UnnamedTrans';
-import { connectorPlatformLabel, connectorTitlePlaceHolder } from '@/consts/connectors';
+import {
+  connectorPlaceholderIcon,
+  connectorPlatformLabel,
+  connectorTitlePlaceHolder,
+} from '@/consts/connectors';
 import { useTheme } from '@/hooks/use-theme';
 import ConnectorPlatformIcon from '@/icons/ConnectorPlatformIcon';
 
-import ConnectorPlaceholderIcon from '../ConnectorPlaceholderIcon';
 import * as styles from './index.module.scss';
 
 type Props = {
@@ -26,6 +29,8 @@ const ConnectorName = ({ type, connectors, onClickSetup }: Props) => {
   const theme = useTheme();
 
   if (!connector) {
+    const PlaceholderIcon = connectorPlaceholderIcon[type];
+
     return (
       <ItemPreview
         title={
@@ -38,7 +43,7 @@ const ConnectorName = ({ type, connectors, onClickSetup }: Props) => {
         }
         icon={
           <div className={styles.logoContainer}>
-            <ConnectorPlaceholderIcon type={type} className={styles.logo} />
+            {PlaceholderIcon && <PlaceholderIcon className={styles.logo} />}
           </div>
         }
       />

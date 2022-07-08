@@ -1,9 +1,7 @@
 import { AdminConsoleKey, I18nKey } from '@logto/phrases';
 import { ConnectorPlatform, ConnectorType } from '@logto/schemas';
 
-import EmailConnectorDark from '@/assets/images/connector-email-dark.svg';
 import EmailConnector from '@/assets/images/connector-email.svg';
-import SmsConnectorIconDark from '@/assets/images/connector-sms-dark.svg';
 import SmsConnectorIcon from '@/assets/images/connector-sms.svg';
 
 type TitlePlaceHolder = {
@@ -30,12 +28,7 @@ type ConnectorPlaceholderIcon = {
   [key in ConnectorType]?: SvgComponent;
 };
 
-export const lightModeConnectorPlaceholderIcon: ConnectorPlaceholderIcon = Object.freeze({
+export const connectorPlaceholderIcon: ConnectorPlaceholderIcon = Object.freeze({
   [ConnectorType.SMS]: SmsConnectorIcon,
   [ConnectorType.Email]: EmailConnector,
-} as const);
-
-export const darkModeConnectorPlaceholderIcon: ConnectorPlaceholderIcon = Object.freeze({
-  [ConnectorType.SMS]: SmsConnectorIconDark,
-  [ConnectorType.Email]: EmailConnectorDark,
 } as const);
