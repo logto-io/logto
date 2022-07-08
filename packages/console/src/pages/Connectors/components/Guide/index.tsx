@@ -32,7 +32,7 @@ const Guide = ({ connector, onClose }: Props) => {
   const { id: connectorId, type: connectorType, name, configTemplate, readme } = connector;
 
   const locale = i18next.language;
-  // TODO: LOG-2393 should fix name[locale] syntax error
+
   const foundName = Object.entries(name).find(([lang]) => lang === locale);
   const connectorName = foundName ? foundName[1] : name.en;
   const isSocialConnector =
