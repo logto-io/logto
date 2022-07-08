@@ -423,7 +423,7 @@ const translation = {
         },
         dark: '深色',
         light: '浅色',
-        native: '原生',
+        native: '移动原生',
         desktop_web: '桌面网页',
         mobile_web: '移动网页',
       },

@@ -24,7 +24,7 @@ const Preview = ({ signInExperience, className }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const [language, setLanguage] = useState<Language>(Language.English);
   const [mode, setMode] = useState<AppearanceMode>(AppearanceMode.LightMode);
-  const [platform, setPlatform] = useState<'desktopWeb' | 'mobile' | 'mobileWeb'>('mobile');
+  const [platform, setPlatform] = useState<'desktopWeb' | 'mobile' | 'mobileWeb'>('desktopWeb');
   const { data: allConnectors } = useSWR<ConnectorDTO[], RequestError>('/api/connectors');
   const previewRef = useRef<HTMLIFrameElement>(null);
 
@@ -151,14 +151,6 @@ const Preview = ({ signInExperience, className }: Props) => {
       </div>
       <TabNav className={styles.nav}>
         <TabNavItem
-          isActive={platform === 'mobile'}
-          onClick={() => {
-            setPlatform('mobile');
-          }}
-        >
-          {t('sign_in_exp.preview.native')}
-        </TabNavItem>
-        <TabNavItem
           isActive={platform === 'desktopWeb'}
           onClick={() => {
             setPlatform('desktopWeb');
@@ -173,6 +165,14 @@ const Preview = ({ signInExperience, className }: Props) => {
           }}
         >
           {t('sign_in_exp.preview.mobile_web')}
+        </TabNavItem>
+        <TabNavItem
+          isActive={platform === 'mobile'}
+          onClick={() => {
+            setPlatform('mobile');
+          }}
+        >
+          {t('sign_in_exp.preview.native')}
         </TabNavItem>
       </TabNav>
       <div
