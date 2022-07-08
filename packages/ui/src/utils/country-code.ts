@@ -13,8 +13,9 @@ export const countryCallingCodeMap: Record<string, CountryCode> = {
   en: 'US',
 };
 
-export const isValidCountryCode = (countryCode: string) => {
+export const isValidCountryCode = (countryCode: string): countryCode is CountryCode => {
   try {
+    // Use getCountryCallingCode method to guard the input's value is in CountryCode union type, if type not match exceptions are expected
     getCountryCallingCode(countryCode as CountryCode);
 
     return true;
@@ -25,16 +26,15 @@ export const isValidCountryCode = (countryCode: string) => {
 
 export const getDefaultCountryCode = (): CountryCode => {
   const { language } = i18next;
-  const detectedCountryCode = countryCallingCodeMap[language];
 
   // Extract the country code from language tag suffix
   const [, countryCode] = language.split('-');
 
   if (countryCode && isValidCountryCode(countryCode)) {
-    return countryCode as CountryCode;
+    return countryCode;
   }
 
-  return detectedCountryCode ?? fallbackCountryCode;
+  return countryCallingCodeMap[language] ?? fallbackCountryCode;
 };
 
 export const getDefaultCountryCallingCode = () => getCountryCallingCode(getDefaultCountryCode());
@@ -51,7 +51,6 @@ export const getCountryList = (): CountryMetaData[] => {
   const defaultCountryCode = getDefaultCountryCode();
   const defaultCountryCallingCode = getCountryCallingCode(defaultCountryCode);
 
-  // eslint-disable-next-line @silverhand/fp/no-mutating-methods
   const countryList = getCountries()
     .map((code) => ({
       countryCode: code,
@@ -67,6 +66,7 @@ export const getCountryList = (): CountryMetaData[] => {
         self.findIndex((element) => element.countryCallingCode === countryCallingCode) === index
       );
     })
+    .slice()
     // Sort by countryCallingCode
     .sort((previous, next) => (next.countryCallingCode > previous.countryCallingCode ? -1 : 1));
 
