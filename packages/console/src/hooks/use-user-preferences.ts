@@ -11,7 +11,7 @@ import { themeStorageKey } from '@/consts';
 import useApi, { RequestError } from './use-api';
 
 const userPreferencesGuard = z.object({
-  language: z.nativeEnum(Language),
+  language: z.nativeEnum(Language).optional(),
   appearanceMode: z.nativeEnum(AppearanceMode),
   experienceNoticeConfirmed: z.boolean().optional(),
   getStartedHidden: z.boolean().optional(),
@@ -39,7 +39,6 @@ const useUserPreferences = () => {
       return z.object({ [key]: userPreferencesGuard }).parse(data).adminConsolePreferences;
     } catch {
       return {
-        language: Language.English,
         appearanceMode:
           getEnumFromArray(Object.values(AppearanceMode), localStorage.getItem(themeStorageKey)) ??
           AppearanceMode.SyncWithSystem,
