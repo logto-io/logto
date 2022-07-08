@@ -73,7 +73,7 @@ Once Alipay web connector is enabled, you can build and run your web app to see 
 
 ## 在支付宝开放平台上创建并且配置应用
 
-1. 使用你所创建的支付宝开发者账号登录[支付宝开放平台控制台](https://open.alipay.com/)。
+1. 使用你所创建的支付宝开发者账号登录 [支付宝开放平台控制台](https://open.alipay.com/)。
 2. 在「我的应用」中选择「网页&移动应用」标签页。
 3. 点击「立即创建」开始创建并且配置你的应用
 4. 根据平台的命名规则通过「应用名称」字段给你的应用命名；在「应用图标」中上传应用图标；将「应用类型」设定为「网页应用」。
