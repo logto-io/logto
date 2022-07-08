@@ -234,7 +234,7 @@ describe('adminUserRoutes', () => {
     );
     await expect(
       userRequest.patch('/users/foo').send({ roleNames: ['admin'] })
-    ).resolves.toHaveProperty('status', 500);
+    ).resolves.toHaveProperty('status', 400);
     expect(findUserById).toHaveBeenCalledTimes(1);
     expect(updateUserById).not.toHaveBeenCalled();
   });

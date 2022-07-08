@@ -8,7 +8,6 @@
  *  ForeignKeyIntegrityConstraintViolationError,
  *  IntegrityConstraintViolationError,
  *  InvalidConfigurationError,
- *  InvalidInputError,
  *  NotFoundError,
  *  NotNullIntegrityConstraintViolationError,
  *  StatementCancelledError,

@@ -2,7 +2,6 @@ import { arbitraryObjectGuard, userInfoSelectFields } from '@logto/schemas';
 import { passwordRegEx, usernameRegEx } from '@logto/shared';
 import { has } from '@silverhand/essentials';
 import pick from 'lodash.pick';
-import { InvalidInputError } from 'slonik';
 import { literal, object, string } from 'zod';
 
 import RequestError from '@/errors/RequestError';
@@ -134,8 +133,13 @@ export default function adminUserRoutes<T extends AuthedRouter>(router: T) {
           const resourcesNotFound = roleNames.filter(
             (roleName) => !roles.some(({ name }) => roleName === name)
           );
-          // TODO: Should be cached by the error handler and return request error
-          throw new InvalidInputError(`role names (${resourcesNotFound.join(',')}) are not valid`);
+          throw new RequestError({
+            status: 400,
+            code: 'user.invalid_role_names',
+            data: {
+              roleNames: resourcesNotFound.join(','),
+            },
+          });
         }
       }
 
