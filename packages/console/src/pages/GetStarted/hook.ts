@@ -1,6 +1,7 @@
 import { AdminConsoleKey, I18nKey } from '@logto/phrases';
 import { AppearanceMode, Application } from '@logto/schemas';
 import { demoAppApplicationId } from '@logto/schemas/lib/seeds';
+import { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useSWR from 'swr';
 
@@ -31,16 +32,12 @@ type GetStartedMetadata = {
   onClick: () => void;
 };
 
-type Props = {
-  checkDemoAppExists: boolean;
-};
-
-const useGetStartedMetadata = ({ checkDemoAppExists }: Props) => {
+const useGetStartedMetadata = () => {
   const { settings, updateSettings } = useSettings();
   const theme = useTheme();
   const isLightMode = theme === AppearanceMode.LightMode;
   const { data: demoApp, error } = useSWR<Application, RequestError>(
-    checkDemoAppExists && `/api/applications/${demoAppApplicationId}`,
+    `/api/applications/${demoAppApplicationId}`,
     {
       shouldRetryOnError: (error: unknown) => {
         if (error instanceof RequestError) {
@@ -55,77 +52,92 @@ const useGetStartedMetadata = ({ checkDemoAppExists }: Props) => {
   const isLoadingDemoApp = !demoApp && !error;
   const hideDemo = error?.status === 404;
 
-  const data: GetStartedMetadata[] = [
-    {
-      id: 'checkDemo',
-      title: 'get_started.card1_title',
-      subtitle: 'get_started.card1_subtitle',
-      icon: isLightMode ? CheckDemo : CheckDemoDark,
-      buttonText: 'admin_console.general.check_out',
-      isComplete: settings?.demoChecked,
-      isHidden: hideDemo,
-      onClick: async () => {
-        void updateSettings({ demoChecked: true });
-        window.open('/demo-app', '_blank');
+  const data = useMemo(() => {
+    const metadataItems: GetStartedMetadata[] = [
+      {
+        id: 'checkDemo',
+        title: 'get_started.card1_title',
+        subtitle: 'get_started.card1_subtitle',
+        icon: isLightMode ? CheckDemo : CheckDemoDark,
+        buttonText: 'admin_console.general.check_out',
+        isComplete: settings?.demoChecked,
+        isHidden: hideDemo,
+        onClick: async () => {
+          void updateSettings({ demoChecked: true });
+          window.open('/demo-app', '_blank');
+        },
       },
-    },
-    {
-      id: 'createApplication',
-      title: 'get_started.card2_title',
-      subtitle: 'get_started.card2_subtitle',
-      icon: isLightMode ? CreateApp : CreateAppDark,
-      buttonText: 'admin_console.general.create',
-      isComplete: settings?.applicationCreated,
-      onClick: () => {
-        navigate('/applications/create');
+      {
+        id: 'createApplication',
+        title: 'get_started.card2_title',
+        subtitle: 'get_started.card2_subtitle',
+        icon: isLightMode ? CreateApp : CreateAppDark,
+        buttonText: 'admin_console.general.create',
+        isComplete: settings?.applicationCreated,
+        onClick: () => {
+          navigate('/applications/create');
+        },
       },
-    },
-    {
-      id: 'customizeSignInExperience',
-      title: 'get_started.card3_title',
-      subtitle: 'get_started.card3_subtitle',
-      icon: isLightMode ? Customize : CustomizeDark,
-      buttonText: 'admin_console.general.customize',
-      isComplete: settings?.signInExperienceCustomized,
-      onClick: () => {
-        navigate('/sign-in-experience');
+      {
+        id: 'customizeSignInExperience',
+        title: 'get_started.card3_title',
+        subtitle: 'get_started.card3_subtitle',
+        icon: isLightMode ? Customize : CustomizeDark,
+        buttonText: 'admin_console.general.customize',
+        isComplete: settings?.signInExperienceCustomized,
+        onClick: () => {
+          navigate('/sign-in-experience');
+        },
       },
-    },
-    {
-      id: 'configurePasswordless',
-      title: 'get_started.card4_title',
-      subtitle: 'get_started.card4_subtitle',
-      icon: isLightMode ? Passwordless : PasswordlessDark,
-      buttonText: 'admin_console.general.set_up',
-      isComplete: settings?.passwordlessConfigured,
-      onClick: () => {
-        navigate('/connectors');
+      {
+        id: 'configurePasswordless',
+        title: 'get_started.card4_title',
+        subtitle: 'get_started.card4_subtitle',
+        icon: isLightMode ? Passwordless : PasswordlessDark,
+        buttonText: 'admin_console.general.set_up',
+        isComplete: settings?.passwordlessConfigured,
+        onClick: () => {
+          navigate('/connectors');
+        },
       },
-    },
-    {
-      id: 'configureSocialSignIn',
-      title: 'get_started.card5_title',
-      subtitle: 'get_started.card5_subtitle',
-      icon: isLightMode ? OneClick : OneClickDark,
-      buttonText: 'admin_console.general.add',
-      isComplete: settings?.socialSignInConfigured,
-      onClick: () => {
-        navigate('/connectors/social');
+      {
+        id: 'configureSocialSignIn',
+        title: 'get_started.card5_title',
+        subtitle: 'get_started.card5_subtitle',
+        icon: isLightMode ? OneClick : OneClickDark,
+        buttonText: 'admin_console.general.add',
+        isComplete: settings?.socialSignInConfigured,
+        onClick: () => {
+          navigate('/connectors/social');
+        },
       },
-    },
-    {
-      id: 'checkFurtherReadings',
-      title: 'get_started.card6_title',
-      subtitle: 'get_started.card6_subtitle',
-      icon: isLightMode ? FurtherReadings : FurtherReadingsDark,
-      buttonText: 'admin_console.general.check_out',
-      isComplete: settings?.furtherReadingsChecked,
-      onClick: () => {
-        void updateSettings({ furtherReadingsChecked: true });
-        window.open('https://docs.logto.io/', '_blank');
+      {
+        id: 'checkFurtherReadings',
+        title: 'get_started.card6_title',
+        subtitle: 'get_started.card6_subtitle',
+        icon: isLightMode ? FurtherReadings : FurtherReadingsDark,
+        buttonText: 'admin_console.general.check_out',
+        isComplete: settings?.furtherReadingsChecked,
+        onClick: () => {
+          void updateSettings({ furtherReadingsChecked: true });
+          window.open('https://docs.logto.io/', '_blank');
+        },
       },
-    },
-  ];
+    ];
+
+    return metadataItems.filter(({ isHidden }) => !isHidden);
+  }, [
+    hideDemo,
+    isLightMode,
+    navigate,
+    settings?.applicationCreated,
+    settings?.demoChecked,
+    settings?.furtherReadingsChecked,
+    settings?.passwordlessConfigured,
+    settings?.signInExperienceCustomized,
+    settings?.socialSignInConfigured,
+    updateSettings,
+  ]);
 
   return {
     data,

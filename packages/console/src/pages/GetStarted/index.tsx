@@ -16,7 +16,7 @@ import * as styles from './index.module.scss';
 const GetStarted = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const navigate = useNavigate();
-  const { data, isLoading } = useGetStartedMetadata({ checkDemoAppExists: true });
+  const { data, isLoading } = useGetStartedMetadata();
   const { update } = useUserPreferences();
   const [showConfirmModal, setShowConfirmModal] = useState(false);
 
@@ -48,26 +48,23 @@ const GetStarted = () => {
       </div>
       {isLoading && <Skeleton />}
       {!isLoading &&
-        data.map(
-          ({ id, title, subtitle, icon: CardIcon, isComplete, isHidden, buttonText, onClick }) =>
-            !isHidden && (
-              <Card key={id} className={styles.card}>
-                {!isComplete && <CardIcon className={styles.icon} />}
-                {isComplete && <CompleteIndicator className={styles.icon} />}
-                <div className={styles.wrapper}>
-                  <div className={styles.title}>{t(title)}</div>
-                  <div className={styles.subtitle}>{t(subtitle)}</div>
-                </div>
-                <Button
-                  className={styles.button}
-                  type="outline"
-                  size="large"
-                  title={buttonText}
-                  onClick={onClick}
-                />
-              </Card>
-            )
-        )}
+        data.map(({ id, title, subtitle, icon: CardIcon, isComplete, buttonText, onClick }) => (
+          <Card key={id} className={styles.card}>
+            {!isComplete && <CardIcon className={styles.icon} />}
+            {isComplete && <CompleteIndicator className={styles.icon} />}
+            <div className={styles.wrapper}>
+              <div className={styles.title}>{t(title)}</div>
+              <div className={styles.subtitle}>{t(subtitle)}</div>
+            </div>
+            <Button
+              className={styles.button}
+              type="outline"
+              size="large"
+              title={buttonText}
+              onClick={onClick}
+            />
+          </Card>
+        ))}
       <ConfirmModal
         isOpen={showConfirmModal}
         confirmButtonType="primary"
