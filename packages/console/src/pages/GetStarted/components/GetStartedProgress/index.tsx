@@ -22,7 +22,7 @@ const GetStartedProgress = () => {
   const Icon = theme === AppearanceMode.LightMode ? Tada : TadaDark;
   const anchorRef = useRef<HTMLDivElement>(null);
   const [showDropDown, setShowDropdown] = useState(false);
-  const { data, completedCount, totalCount } = useGetStartedMetadata({ checkDemoAppExists: false });
+  const { data, completedCount, totalCount } = useGetStartedMetadata();
 
   if (getStartedHidden) {
     return null;
