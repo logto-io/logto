@@ -112,7 +112,13 @@ const PhonePasswordless = ({ type, autoFocus, className }: Props) => {
 
   return (
     <>
-      <form className={classNames(styles.form, className)}>
+      <form
+        className={classNames(styles.form, className)}
+        onSubmit={(event) => {
+          event.preventDefault();
+          void onSubmitHandler();
+        }}
+      >
         <PhoneInput
           name="phone"
           placeholder={t('input.phone_number')}

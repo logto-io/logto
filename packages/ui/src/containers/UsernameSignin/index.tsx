@@ -85,7 +85,13 @@ const UsernameSignin = ({ className, autoFocus }: Props) => {
   }, [result]);
 
   return (
-    <form className={classNames(styles.form, className)}>
+    <form
+      className={classNames(styles.form, className)}
+      onSubmit={(event) => {
+        event.preventDefault();
+        void onSubmitHandler();
+      }}
+    >
       <Input
         autoFocus={autoFocus}
         className={styles.inputField}

@@ -97,7 +97,13 @@ const EmailPasswordless = ({ type, autoFocus, className }: Props) => {
 
   return (
     <>
-      <form className={classNames(styles.form, className)}>
+      <form
+        className={classNames(styles.form, className)}
+        onSubmit={(event) => {
+          event.preventDefault();
+          void onSubmitHandler();
+        }}
+      >
         <Input
           type="email"
           name="email"
