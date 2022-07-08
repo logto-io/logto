@@ -23,7 +23,7 @@ export default class AppleConnector implements SocialConnector {
     const result = appleConfigGuard.safeParse(config);
 
     if (!result.success) {
-      throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, result.error.message);
+      throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, result.error);
     }
   };
 

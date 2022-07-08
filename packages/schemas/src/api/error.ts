@@ -6,4 +6,9 @@ export type RequestErrorMetadata = Record<string, unknown> & {
   expose?: boolean;
 };
 
-export type RequestErrorBody = { message: string; data: unknown; code: LogtoErrorCode };
+export type RequestErrorBody = {
+  message: string;
+  data: unknown;
+  code: LogtoErrorCode;
+  details?: string;
+};

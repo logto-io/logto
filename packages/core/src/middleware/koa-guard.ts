@@ -1,4 +1,4 @@
-import { has } from '@silverhand/essentials';
+import { has, Optional } from '@silverhand/essentials';
 import { MiddlewareType } from 'koa';
 import koaBody from 'koa-body';
 import { IMiddleware, IRouterParamContext } from 'koa-router';
@@ -41,6 +41,18 @@ export const isGuardMiddleware = <Type extends IMiddleware>(
 ): function_ is WithGuardConfig<Type> =>
   function_.name === 'guardMiddleware' && has(function_, 'config');
 
+const tryParse = <Output, Definition, Input>(
+  type: 'query' | 'body' | 'params',
+  guard: Optional<ZodType<Output, Definition, Input>>,
+  data: unknown
+) => {
+  try {
+    return guard?.parse(data);
+  } catch (error: unknown) {
+    throw new RequestError({ code: 'guard.invalid_input', type }, error);
+  }
+};
+
 export default function koaGuard<
   StateT,
   ContextT extends IRouterParamContext,
@@ -62,16 +74,12 @@ export default function koaGuard<
     WithGuardedContext<ContextT, GuardQueryT, GuardBodyT, GuardParametersT>,
     ResponseBodyT
   > = async (ctx, next) => {
-    try {
-      // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-      ctx.guard = {
-        query: query?.parse(ctx.request.query),
-        body: body?.parse(ctx.request.body),
-        params: params?.parse(ctx.params),
-      } as Guarded<GuardQueryT, GuardBodyT, GuardParametersT>; // Have to do this since it's too complicated for TS
-    } catch (error: unknown) {
-      throw new RequestError('guard.invalid_input', error);
-    }
+    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+    ctx.guard = {
+      query: tryParse('query', query, ctx.request.query),
+      body: tryParse('body', body, ctx.request.body),
+      params: tryParse('params', params, ctx.params),
+    } as Guarded<GuardQueryT, GuardBodyT, GuardParametersT>; // Have to do this since it's too complicated for TS
 
     return next();
   };

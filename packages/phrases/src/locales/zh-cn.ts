@@ -524,7 +524,7 @@ const errors = {
     jwt_sub_missing: 'JWT 缺失 `sub`',
   },
   guard: {
-    invalid_input: '请求输入无效',
+    invalid_input: '请求中 {{type}} 无效',
     invalid_pagination: '分页参数无效',
   },
   oidc: {
