@@ -197,9 +197,9 @@ describe('koaConnectorErrorHandler middleware', () => {
         {
           code: 'connector.general',
           status: 500,
-          errorDescription: 'Mock General connector errors',
+          errorDescription: '\nMock General connector errors',
         },
-        { message: JSON.stringify(message) }
+        message
       )
     );
   });
