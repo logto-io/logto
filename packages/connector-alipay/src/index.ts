@@ -163,9 +163,7 @@ export default class AlipayConnector implements SocialConnector {
     return { id, avatar, name };
   };
 
-  private readonly errorHandler: ErrorHandler = (response) => {
-    const { code, msg, sub_code, sub_msg } = response;
-
+  private readonly errorHandler: ErrorHandler = ({ code, msg, sub_code, sub_msg }) => {
     if (invalidAccessTokenCode.includes(code)) {
       throw new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid, msg);
     }
