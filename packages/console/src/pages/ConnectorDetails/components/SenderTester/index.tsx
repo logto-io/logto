@@ -3,6 +3,7 @@ import { phoneRegEx, emailRegEx } from '@logto/shared';
 import classNames from 'classnames';
 import React, { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 
 import Button from '@/components/Button';
@@ -55,16 +56,25 @@ const SenderTester = ({ connectorId, connectorType, config, className }: Props) 
 
   const onSubmit = handleSubmit(async (formData) => {
     const { sendTo } = formData;
-    const configJson = config ? (JSON.parse(config) as JSON) : undefined;
 
-    const data = { config: configJson, ...(isSms ? { phone: sendTo } : { email: sendTo }) };
+    try {
+      const configJson = config ? (JSON.parse(config) as JSON) : undefined;
+      const data = { config: configJson, ...(isSms ? { phone: sendTo } : { email: sendTo }) };
 
-    await api
-      .post(`/api/connectors/${connectorId}/test`, {
-        json: data,
-      })
-      .json();
-    setShowTooltip(true);
+      await api
+        .post(`/api/connectors/${connectorId}/test`, {
+          json: data,
+        })
+        .json();
+
+      setShowTooltip(true);
+    } catch (error: unknown) {
+      if (error instanceof SyntaxError) {
+        toast.error(t('connector_details.save_error_json_parse_error'));
+      } else {
+        toast.error(t('errors.unexpected_error'));
+      }
+    }
   });
 
   return (

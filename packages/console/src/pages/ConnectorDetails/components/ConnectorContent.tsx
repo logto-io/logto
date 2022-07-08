@@ -21,7 +21,6 @@ type Props = {
 const ConnectorContent = ({ connectorData, onConnectorUpdated }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const [config, setConfig] = useState<string>();
-  const [saveError, setSaveError] = useState<string>();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const api = useApi();
 
@@ -54,10 +53,8 @@ const ConnectorContent = ({ connectorData, onConnectorUpdated }: Props) => {
   }, [config, defaultConfig]);
 
   const handleSave = async () => {
-    setSaveError(undefined);
-
     if (!config) {
-      setSaveError(t('connector_details.save_error_empty_config'));
+      toast(t('connector_details.save_error_empty_config'));
 
       return;
     }
@@ -78,7 +75,9 @@ const ConnectorContent = ({ connectorData, onConnectorUpdated }: Props) => {
       toast.success(t('general.saved'));
     } catch (error: unknown) {
       if (error instanceof SyntaxError) {
-        setSaveError(t('connector_details.save_error_json_parse_error'));
+        toast.error(t('connector_details.save_error_json_parse_error'));
+      } else {
+        toast.error(t('errors.unexpected_error'));
       }
     }
 
@@ -105,7 +104,6 @@ const ConnectorContent = ({ connectorData, onConnectorUpdated }: Props) => {
             config={config}
           />
         )}
-        {saveError && <div>{saveError}</div>}
       </div>
       <div className={detailsStyles.footer}>
         <div className={detailsStyles.footerMain}>
