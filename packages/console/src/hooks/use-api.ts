@@ -5,6 +5,7 @@ import { t } from 'i18next';
 import ky from 'ky';
 import { useMemo } from 'react';
 import { toast } from 'react-hot-toast';
+import { useTranslation } from 'react-i18next';
 
 export class RequestError extends Error {
   status: number;
@@ -34,6 +35,7 @@ type Props = {
 
 const useApi = ({ hideErrorToast }: Props = {}) => {
   const { isAuthenticated, getAccessToken } = useLogto();
+  const { i18n } = useTranslation();
 
   const api = useMemo(
     () =>
@@ -53,12 +55,13 @@ const useApi = ({ hideErrorToast }: Props = {}) => {
               if (isAuthenticated) {
                 const accessToken = await getAccessToken(managementResource.indicator);
                 request.headers.set('Authorization', `Bearer ${accessToken ?? ''}`);
+                request.headers.set('Accept-Language', i18n.language);
               }
             },
           ],
         },
       }),
-    [getAccessToken, isAuthenticated, hideErrorToast]
+    [hideErrorToast, isAuthenticated, getAccessToken, i18n.language]
   );
 
   return api;
