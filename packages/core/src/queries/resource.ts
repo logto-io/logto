@@ -1,6 +1,7 @@
 import { Resource, CreateResource, Resources } from '@logto/schemas';
 import { sql } from 'slonik';
 
+import { buildFindEntityById } from '@/database/find-entity-by-id';
 import { buildInsertInto } from '@/database/insert-into';
 import { getTotalRowCount } from '@/database/row-count';
 import { buildUpdateWhere } from '@/database/update-where';
@@ -34,12 +35,7 @@ export const findResourceByIndicator = async (indicator: string) =>
     where ${fields.indicator}=${indicator}
   `);
 
-export const findResourceById = async (id: string) =>
-  envSet.pool.one<Resource>(sql`
-    select ${sql.join(Object.values(fields), sql`, `)}
-    from ${table}
-    where ${fields.id}=${id}
-  `);
+export const findResourceById = buildFindEntityById<CreateResource, Resource>(Resources);
 
 export const insertResource = buildInsertInto<CreateResource, Resource>(Resources, {
   returning: true,

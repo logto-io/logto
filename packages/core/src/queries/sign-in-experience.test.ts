@@ -34,7 +34,7 @@ describe('sign-in-experience query', () => {
     const expectSql = `
       select "id", "color", "branding", "language_info", "terms_of_use", "sign_in_methods", "social_sign_in_connector_targets", "sign_in_mode"
       from "sign_in_experiences"
-      where "id" = $1
+      where "id"=$1
     `;
     /* eslint-enable sql/no-unsafe-query */
 

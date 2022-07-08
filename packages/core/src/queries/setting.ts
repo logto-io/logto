@@ -1,20 +1,13 @@
 import { Setting, CreateSetting, Settings } from '@logto/schemas';
-import { sql } from 'slonik';
 
+import { buildFindEntityById } from '@/database/find-entity-by-id';
 import { buildUpdateWhere } from '@/database/update-where';
-import { convertToIdentifiers, OmitAutoSetFields } from '@/database/utils';
-import envSet from '@/env-set';
+import { OmitAutoSetFields } from '@/database/utils';
 
 export const defaultSettingId = 'default';
 
-const { table, fields } = convertToIdentifiers(Settings);
-
 export const getSetting = async () =>
-  envSet.pool.one<Setting>(sql`
-    select ${sql.join(Object.values(fields), sql`, `)}
-    from ${table}
-    where ${fields.id}=${defaultSettingId}
-  `);
+  buildFindEntityById<CreateSetting, Setting>(Settings)(defaultSettingId);
 
 export const updateSetting = async (setting: Partial<OmitAutoSetFields<CreateSetting>>) => {
   return buildUpdateWhere<CreateSetting, Setting>(

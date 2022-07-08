@@ -1,6 +1,7 @@
 import { Application, CreateApplication, Applications } from '@logto/schemas';
 import { sql } from 'slonik';
 
+import { buildFindEntityById } from '@/database/find-entity-by-id';
 import { buildInsertInto } from '@/database/insert-into';
 import { getTotalRowCount } from '@/database/row-count';
 import { buildUpdateWhere } from '@/database/update-where';
@@ -28,12 +29,9 @@ export const findAllApplications = async (limit: number, offset: number) =>
     `)
   );
 
-export const findApplicationById = async (id: string) =>
-  envSet.pool.one<Application>(sql`
-    select ${sql.join(Object.values(fields), sql`, `)}
-    from ${table}
-    where ${fields.id}=${id}
-  `);
+export const findApplicationById = buildFindEntityById<CreateApplication, Application>(
+  Applications
+);
 
 export const insertApplication = buildInsertInto<CreateApplication, Application>(Applications, {
   returning: true,
