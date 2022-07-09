@@ -45,7 +45,7 @@ Boringly, we call it "[customer identity access management](https://en.wikipedia
 
 ## Bug Report, Feature Request, Feedback
 
-- Our team takes security seriously, especially when it relates to identity. If you find any existing or potential security issues, please do not hesitate to email 🔒 [security@silverhand.io](mailto:security@silverhand.io).
+- Our team takes security seriously, especially when it relates to identity. If you find any existing or potential security issues, please do not hesitate to email 🔒 [security@logto.io](mailto:security@logto.io).
 - About other bug reports, feature requests, and feedback, you can directly 🙋 [open an issue](https://github.com/logto-io/logto/issues/new) on GitHub or 💬 [join our Discord channel](https://discord.gg/UEPaF3j5e6) to have a live chat.
 
 <br/>
