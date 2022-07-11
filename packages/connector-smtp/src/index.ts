@@ -27,10 +27,11 @@ export default class SmtpConnector implements EmailConnector {
     }
   };
 
-  public sendMessage: EmailSendMessageFunction = async (address, type, data) => {
-    const config = await this.getConfig(this.metadata.id);
-    await this.validateConfig(config);
-    const { host, port, username, password, fromEmail, replyTo, templates } = config;
+  public sendMessage: EmailSendMessageFunction = async (address, type, data, config) => {
+    const emailConfig =
+      (config as SmtpConfig | undefined) ?? (await this.getConfig(this.metadata.id));
+    await this.validateConfig(emailConfig);
+    const { host, port, username, password, fromEmail, replyTo, templates } = emailConfig;
     const template = templates.find((template) => template.usageType === type);
 
     assert(

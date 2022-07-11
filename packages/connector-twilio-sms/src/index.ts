@@ -2,7 +2,7 @@ import {
   ConnectorError,
   ConnectorErrorCodes,
   ConnectorMetadata,
-  EmailSendMessageFunction,
+  SmsSendMessageFunction,
   ValidateConfig,
   SmsConnector,
   GetConnectorConfig,
@@ -26,10 +26,11 @@ export default class TwilioSmsConnector implements SmsConnector {
     }
   };
 
-  public sendMessage: EmailSendMessageFunction = async (address, type, data) => {
-    const config = await this.getConfig(this.metadata.id);
-    await this.validateConfig(config);
-    const { accountSID, authToken, fromMessagingServiceSID, templates } = config;
+  public sendMessage: SmsSendMessageFunction = async (address, type, data, config) => {
+    const smsConfig =
+      (config as TwilioSmsConfig | undefined) ?? (await this.getConfig(this.metadata.id));
+    await this.validateConfig(smsConfig);
+    const { accountSID, authToken, fromMessagingServiceSID, templates } = smsConfig;
     const template = templates.find((template) => template.usageType === type);
 
     assert(

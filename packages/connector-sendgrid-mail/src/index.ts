@@ -33,10 +33,12 @@ export default class SendGridMailConnector implements EmailConnector {
     }
   };
 
-  public sendMessage: EmailSendMessageFunction = async (address, type, data) => {
-    const config = await this.getConfig(this.metadata.id);
-    await this.validateConfig(config);
-    const { apiKey, fromEmail, fromName, templates } = config;
+  // eslint-disable-next-line complexity
+  public sendMessage: EmailSendMessageFunction = async (address, type, data, config) => {
+    const emailConfig =
+      (config as SendGridMailConfig | undefined) ?? (await this.getConfig(this.metadata.id));
+    await this.validateConfig(emailConfig);
+    const { apiKey, fromEmail, fromName, templates } = emailConfig;
     const template = templates.find((template) => template.usageType === type);
 
     assert(
