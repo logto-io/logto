@@ -82,7 +82,7 @@ const SignInMethodsForm = () => {
   return (
     <>
       <div className={styles.title}>{t('sign_in_exp.sign_in_methods.title')}</div>
-      <FormField title="admin_console.sign_in_exp.sign_in_methods.primary">
+      <FormField title="sign_in_exp.sign_in_methods.primary">
         <Controller
           name="signInMethods.primary"
           control={control}
@@ -114,7 +114,7 @@ const SignInMethodsForm = () => {
           />
         </div>
       )}
-      <FormField title="admin_console.sign_in_exp.sign_in_methods.enable_secondary">
+      <FormField title="sign_in_exp.sign_in_methods.enable_secondary">
         <Switch
           /**
            * DO NOT SET THIS FIELD TO REQUIRED UNLESS YOU KNOW WHAT YOU ARE DOING.
@@ -128,7 +128,7 @@ const SignInMethodsForm = () => {
         <>
           {secondaryMethodsFields}
           {social && (
-            <FormField title="admin_console.sign_in_exp.sign_in_methods.define_social_methods">
+            <FormField title="sign_in_exp.sign_in_methods.define_social_methods">
               <Controller
                 name="socialSignInConnectorTargets"
                 control={control}

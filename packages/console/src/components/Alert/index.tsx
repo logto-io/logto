@@ -1,4 +1,4 @@
-import { I18nKey } from '@logto/phrases';
+import { AdminConsoleKey } from '@logto/phrases';
 import classNames from 'classnames';
 import React, { ReactNode } from 'react';
 
@@ -11,7 +11,7 @@ import * as styles from './index.module.scss';
 type Props = {
   severity?: 'info';
   children?: ReactNode;
-  action?: I18nKey;
+  action?: AdminConsoleKey;
   href?: string;
   onClick?: () => void;
   variant?: 'plain' | 'shadow';

@@ -108,7 +108,7 @@ const ApplicationDetails = () => {
       <LinkButton
         to="/applications"
         icon={<Back />}
-        title="admin_console.application_details.back_to_applications"
+        title="application_details.back_to_applications"
         className={styles.backLink}
       />
       {isLoading && <DetailsSkeleton />}
@@ -127,7 +127,7 @@ const ApplicationDetails = () => {
             </div>
             <div className={styles.operations}>
               <Button
-                title="admin_console.application_details.check_guide"
+                title="application_details.check_guide"
                 size="large"
                 onClick={() => {
                   setIsReadmeOpen(true);
@@ -195,7 +195,7 @@ const ApplicationDetails = () => {
                       htmlType="submit"
                       type="primary"
                       size="large"
-                      title="admin_console.general.save_changes"
+                      title="general.save_changes"
                     />
                   </div>
                 </div>

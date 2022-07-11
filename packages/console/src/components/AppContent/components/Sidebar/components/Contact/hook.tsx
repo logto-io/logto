@@ -1,4 +1,4 @@
-import { I18nKey } from '@logto/phrases';
+import { AdminConsoleKey } from '@logto/phrases';
 import { AppearanceMode } from '@logto/schemas';
 
 import DiscordDark from '@/assets/images/discord-dark.svg';
@@ -11,9 +11,9 @@ import { useTheme } from '@/hooks/use-theme';
 
 type ContactItem = {
   icon: SvgComponent;
-  title: I18nKey;
-  description: I18nKey;
-  label: I18nKey;
+  title: AdminConsoleKey;
+  description: AdminConsoleKey;
+  label: AdminConsoleKey;
   link: string;
 };
 
@@ -23,24 +23,24 @@ export const useContacts = (): ContactItem[] => {
 
   return [
     {
-      title: 'admin_console.contact.discord.title',
+      title: 'contact.discord.title',
       icon: isLightMode ? Discord : DiscordDark,
-      description: 'admin_console.contact.discord.description',
-      label: 'admin_console.contact.discord.button',
+      description: 'contact.discord.description',
+      label: 'contact.discord.button',
       link: 'https://discord.gg/UEPaF3j5e6',
     },
     {
-      title: 'admin_console.contact.github.title',
+      title: 'contact.github.title',
       icon: isLightMode ? Github : GithubDark,
-      description: 'admin_console.contact.github.description',
-      label: 'admin_console.contact.github.button',
+      description: 'contact.github.description',
+      label: 'contact.github.button',
       link: 'https://github.com/logto-io/logto',
     },
     {
-      title: 'admin_console.contact.email.title',
+      title: 'contact.email.title',
       icon: isLightMode ? Email : EmailDark,
-      description: 'admin_console.contact.email.description',
-      label: 'admin_console.contact.email.button',
+      description: 'contact.email.description',
+      label: 'contact.email.button',
       link: 'mailto:feedback@logto.io',
     },
   ];

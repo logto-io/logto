@@ -1,4 +1,4 @@
-import { I18nKey } from '@logto/phrases';
+import { AdminConsoleKey } from '@logto/phrases';
 import classNames from 'classnames';
 import React, { ReactElement, ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -9,13 +9,13 @@ import * as styles from './index.module.scss';
 
 type Props = {
   to: string;
-  title: I18nKey | ReactElement<typeof DangerousRaw>;
+  title: AdminConsoleKey | ReactElement<typeof DangerousRaw>;
   icon?: ReactNode;
   className?: string;
 };
 
 const LinkButton = ({ to, title, icon, className }: Props) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   return (
     <Link to={to} className={classNames(styles.linkButton, className)}>

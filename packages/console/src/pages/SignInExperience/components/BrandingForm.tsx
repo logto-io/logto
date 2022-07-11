@@ -27,7 +27,7 @@ const BrandingForm = () => {
   return (
     <>
       <div className={styles.title}>{t('sign_in_exp.branding.title')}</div>
-      <FormField title="admin_console.sign_in_exp.branding.ui_style">
+      <FormField title="sign_in_exp.branding.ui_style">
         <Controller
           name="branding.style"
           control={control}
@@ -43,7 +43,7 @@ const BrandingForm = () => {
           )}
         />
       </FormField>
-      <FormField isRequired title="admin_console.sign_in_exp.branding.logo_image_url">
+      <FormField isRequired title="sign_in_exp.branding.logo_image_url">
         <TextInput
           {...register('branding.logoUrl', {
             required: true,
@@ -55,7 +55,7 @@ const BrandingForm = () => {
         />
       </FormField>
       {isDarkModeEnabled && (
-        <FormField title="admin_console.sign_in_exp.branding.dark_logo_image_url">
+        <FormField title="sign_in_exp.branding.dark_logo_image_url">
           <TextInput
             {...register('branding.darkLogoUrl', {
               validate: (value) => !value || uriValidator(value) || t('errors.invalid_uri_format'),
@@ -67,7 +67,7 @@ const BrandingForm = () => {
         </FormField>
       )}
       {isSloganRequired && (
-        <FormField isRequired={isSloganRequired} title="admin_console.sign_in_exp.branding.slogan">
+        <FormField isRequired={isSloganRequired} title="sign_in_exp.branding.slogan">
           <TextInput
             {...register('branding.slogan', { required: isSloganRequired })}
             hasError={Boolean(errors.branding?.slogan)}

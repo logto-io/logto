@@ -1,4 +1,4 @@
-import { I18nKey } from '@logto/phrases';
+import { AdminConsoleKey } from '@logto/phrases';
 import classNames from 'classnames';
 import React, { PropsWithChildren, useEffect, useRef, useState } from 'react';
 
@@ -18,7 +18,7 @@ type Props = PropsWithChildren<{
   subtitle?: string;
   index: number;
   activeIndex: number;
-  buttonText?: I18nKey;
+  buttonText?: AdminConsoleKey;
   buttonHtmlType?: 'submit' | 'button';
   buttonType?: 'primary' | 'outline';
   isLoading?: boolean;
@@ -31,7 +31,7 @@ const Step = ({
   subtitle,
   index,
   activeIndex,
-  buttonText = 'admin_console.general.next',
+  buttonText = 'general.next',
   buttonHtmlType = 'button',
   buttonType = 'outline',
   isLoading,

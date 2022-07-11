@@ -69,7 +69,7 @@ const CreateForm = ({ onClose }: Props) => {
         <Button
           isLoading={isSubmitting}
           htmlType="submit"
-          title="admin_console.applications.create"
+          title="applications.create"
           size="large"
           type="primary"
           onClick={onSubmit}
@@ -78,7 +78,7 @@ const CreateForm = ({ onClose }: Props) => {
       onClose={onClose}
     >
       <form>
-        <FormField title="admin_console.applications.select_application_type">
+        <FormField title="applications.select_application_type">
           <RadioGroup
             ref={ref}
             className={styles.radioGroup}
@@ -101,14 +101,14 @@ const CreateForm = ({ onClose }: Props) => {
             <div className={styles.error}>{t('applications.no_application_type_selected')}</div>
           )}
         </FormField>
-        <FormField isRequired title="admin_console.applications.application_name">
+        <FormField isRequired title="applications.application_name">
           <TextInput
             {...register('name', { required: true })}
             placeholder={t('applications.application_name_placeholder')}
             hasError={Boolean(errors.name)}
           />
         </FormField>
-        <FormField title="admin_console.applications.application_description">
+        <FormField title="applications.application_description">
           <TextInput
             {...register('description')}
             placeholder={t('applications.application_description_placeholder')}

@@ -14,13 +14,13 @@ type Props = {
 };
 
 const Topbar = ({ className }: Props) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   return (
     <div className={classNames(styles.topbar, className)}>
       <Logo className={styles.logo} />
       <div className={styles.line} />
-      <div className={styles.text}>{t('admin_console.title')}</div>
+      <div className={styles.text}>{t('title')}</div>
       <Spacer />
       <GetStartedProgress />
       <UserInfo />

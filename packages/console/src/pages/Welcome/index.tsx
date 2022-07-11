@@ -48,7 +48,7 @@ const Welcome = () => {
             className={styles.button}
             size="large"
             type="branding"
-            title="admin_console.welcome.create_account"
+            title="welcome.create_account"
             onClick={() => {
               void signIn(new URL(href, window.location.origin).toString());
             }}

@@ -1,17 +1,17 @@
-import { AdminConsoleKey, I18nKey } from '@logto/phrases';
+import { AdminConsoleKey } from '@logto/phrases';
 import { ConnectorPlatform, ConnectorType } from '@logto/schemas';
 
 import EmailConnector from '@/assets/images/connector-email.svg';
 import SmsConnectorIcon from '@/assets/images/connector-sms.svg';
 
 type TitlePlaceHolder = {
-  [key in ConnectorType]: I18nKey;
+  [key in ConnectorType]: AdminConsoleKey;
 };
 
 export const connectorTitlePlaceHolder: TitlePlaceHolder = Object.freeze({
-  [ConnectorType.SMS]: 'admin_console.connectors.type.sms',
-  [ConnectorType.Email]: 'admin_console.connectors.type.email',
-  [ConnectorType.Social]: 'admin_console.connectors.type.social',
+  [ConnectorType.SMS]: 'connectors.type.sms',
+  [ConnectorType.Email]: 'connectors.type.email',
+  [ConnectorType.Social]: 'connectors.type.social',
 });
 
 type ConnectorPlatformLabel = {

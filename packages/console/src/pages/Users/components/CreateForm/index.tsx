@@ -48,7 +48,7 @@ const CreateForm = ({ onClose }: Props) => {
         <Button
           disabled={isSubmitting}
           htmlType="submit"
-          title="admin_console.users.create"
+          title="users.create"
           size="large"
           type="primary"
           onClick={onSubmit}
@@ -57,7 +57,7 @@ const CreateForm = ({ onClose }: Props) => {
       onClose={onClose}
     >
       <form>
-        <FormField isRequired title="admin_console.users.create_form_username">
+        <FormField isRequired title="users.create_form_username">
           <TextInput
             autoFocus
             {...register('username', {
@@ -71,7 +71,7 @@ const CreateForm = ({ onClose }: Props) => {
             errorMessage={errors.username?.message}
           />
         </FormField>
-        <FormField title="admin_console.users.create_form_name">
+        <FormField title="users.create_form_name">
           <TextInput
             {...register('name')}
             hasError={Boolean(errors.name)}

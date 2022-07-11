@@ -63,7 +63,7 @@ const Connectors = () => {
           <CardTitle title="connectors.title" subtitle="connectors.subtitle" />
           {isSocial && (
             <Button
-              title="admin_console.connectors.create"
+              title="connectors.create"
               type="primary"
               size="large"
               icon={<Plus />}
@@ -108,7 +108,7 @@ const Connectors = () => {
                   image={isLightMode ? <SocialConnectorEmpty /> : <SocialConnectorEmptyDark />}
                 >
                   <Button
-                    title="admin_console.connectors.create"
+                    title="connectors.create"
                     type="outline"
                     onClick={() => {
                       setCreateType(ConnectorType.Social);

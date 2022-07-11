@@ -89,24 +89,24 @@ const UserSettings = ({ userData, userFormData, onUserUpdated }: Props) => {
     <form className={styles.form} onSubmit={onSubmit}>
       <div className={styles.fields}>
         {getValues('primaryEmail') && (
-          <FormField title="admin_console.user_details.field_email" className={styles.textField}>
+          <FormField title="user_details.field_email" className={styles.textField}>
             <TextInput readOnly {...register('primaryEmail')} />
           </FormField>
         )}
         {getValues('primaryPhone') && (
-          <FormField title="admin_console.user_details.field_phone" className={styles.textField}>
+          <FormField title="user_details.field_phone" className={styles.textField}>
             <TextInput readOnly {...register('primaryPhone')} />
           </FormField>
         )}
         {getValues('username') && (
-          <FormField title="admin_console.user_details.field_username" className={styles.textField}>
+          <FormField title="user_details.field_username" className={styles.textField}>
             <TextInput readOnly {...register('username')} />
           </FormField>
         )}
-        <FormField title="admin_console.user_details.field_name" className={styles.textField}>
+        <FormField title="user_details.field_name" className={styles.textField}>
           <TextInput {...register('name')} />
         </FormField>
-        <FormField title="admin_console.user_details.field_avatar" className={styles.textField}>
+        <FormField title="user_details.field_avatar" className={styles.textField}>
           <TextInput
             {...register('avatar', {
               validate: (value) => !value || uriValidator(value) || t('errors.invalid_uri_format'),
@@ -116,7 +116,7 @@ const UserSettings = ({ userData, userFormData, onUserUpdated }: Props) => {
             placeholder={t('user_details.field_avatar_placeholder')}
           />
         </FormField>
-        <FormField title="admin_console.user_details.field_connectors" className={styles.textField}>
+        <FormField title="user_details.field_connectors" className={styles.textField}>
           <UserConnectors
             userId={userData.id}
             connectors={userData.identities}
@@ -127,9 +127,9 @@ const UserSettings = ({ userData, userFormData, onUserUpdated }: Props) => {
         </FormField>
         <FormField
           isRequired
-          title="admin_console.user_details.field_custom_data"
+          title="user_details.field_custom_data"
           className={styles.textField}
-          tooltip="admin_console.user_details.field_custom_data_tip"
+          tooltip="user_details.field_custom_data_tip"
         >
           <CodeEditor language="json" value={value} onChange={onChange} />
         </FormField>
@@ -140,7 +140,7 @@ const UserSettings = ({ userData, userFormData, onUserUpdated }: Props) => {
             isLoading={isSubmitting}
             htmlType="submit"
             type="primary"
-            title="admin_console.general.save_changes"
+            title="general.save_changes"
             size="large"
           />
         </div>

@@ -17,7 +17,7 @@ type Props = {
 };
 
 const TableEmpty = ({ title, content, image, children, columns }: Props) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const theme = useTheme();
 
   return (
@@ -25,7 +25,7 @@ const TableEmpty = ({ title, content, image, children, columns }: Props) => {
       <td colSpan={columns} className={styles.tableEmptyTableData}>
         <div className={styles.tableEmpty}>
           {image ?? (theme === AppearanceMode.LightMode ? <Empty /> : <EmptyDark />)}
-          <div className={styles.title}>{title ?? t('admin_console.errors.empty')}</div>
+          <div className={styles.title}>{title ?? t('errors.empty')}</div>
           {content && <div className={styles.content}>{content}</div>}
           {children}
         </div>

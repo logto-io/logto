@@ -1,4 +1,4 @@
-import { AdminConsoleKey, I18nKey } from '@logto/phrases';
+import { AdminConsoleKey } from '@logto/phrases';
 import { AppearanceMode, Application } from '@logto/schemas';
 import { demoAppApplicationId } from '@logto/schemas/lib/seeds';
 import { conditionalString } from '@silverhand/essentials';
@@ -28,7 +28,7 @@ type GetStartedMetadata = {
   title: AdminConsoleKey;
   subtitle: AdminConsoleKey;
   icon: SvgComponent;
-  buttonText: I18nKey;
+  buttonText: AdminConsoleKey;
   isComplete?: boolean;
   isHidden?: boolean;
   onClick: () => void;
@@ -64,7 +64,7 @@ const useGetStartedMetadata = () => {
         title: 'get_started.card1_title',
         subtitle: 'get_started.card1_subtitle',
         icon: isLightMode ? CheckDemo : CheckDemoDark,
-        buttonText: 'admin_console.general.check_out',
+        buttonText: 'general.check_out',
         isComplete: settings?.demoChecked,
         isHidden: hideDemo,
         onClick: async () => {
@@ -77,7 +77,7 @@ const useGetStartedMetadata = () => {
         title: 'get_started.card2_title',
         subtitle: 'get_started.card2_subtitle',
         icon: isLightMode ? CreateApp : CreateAppDark,
-        buttonText: 'admin_console.general.create',
+        buttonText: 'general.create',
         isComplete: settings?.applicationCreated,
         onClick: () => {
           navigate('/applications/create');
@@ -88,7 +88,7 @@ const useGetStartedMetadata = () => {
         title: 'get_started.card3_title',
         subtitle: 'get_started.card3_subtitle',
         icon: isLightMode ? Customize : CustomizeDark,
-        buttonText: 'admin_console.general.customize',
+        buttonText: 'general.customize',
         isComplete: settings?.signInExperienceCustomized,
         onClick: () => {
           navigate('/sign-in-experience');
@@ -99,7 +99,7 @@ const useGetStartedMetadata = () => {
         title: 'get_started.card4_title',
         subtitle: 'get_started.card4_subtitle',
         icon: isLightMode ? Passwordless : PasswordlessDark,
-        buttonText: 'admin_console.general.set_up',
+        buttonText: 'general.set_up',
         isComplete: settings?.passwordlessConfigured,
         onClick: () => {
           navigate('/connectors');
@@ -110,7 +110,7 @@ const useGetStartedMetadata = () => {
         title: 'get_started.card5_title',
         subtitle: 'get_started.card5_subtitle',
         icon: isLightMode ? OneClick : OneClickDark,
-        buttonText: 'admin_console.general.add',
+        buttonText: 'general.add',
         isComplete: settings?.socialSignInConfigured,
         onClick: () => {
           navigate('/connectors/social');
@@ -121,7 +121,7 @@ const useGetStartedMetadata = () => {
         title: 'get_started.card6_title',
         subtitle: 'get_started.card6_subtitle',
         icon: isLightMode ? FurtherReadings : FurtherReadingsDark,
-        buttonText: 'admin_console.general.check_out',
+        buttonText: 'general.check_out',
         isComplete: settings?.furtherReadingsChecked,
         onClick: () => {
           void updateSettings({ furtherReadingsChecked: true });

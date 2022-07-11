@@ -83,9 +83,7 @@ const SenderTester = ({ connectorId, connectorType, config, className }: Props) 
         <FormField
           isRequired
           title={
-            isSms
-              ? 'admin_console.connector_details.test_sms_sender'
-              : 'admin_console.connector_details.test_email_sender'
+            isSms ? 'connector_details.test_sms_sender' : 'connector_details.test_email_sender'
           }
           className={styles.textField}
         >
@@ -109,7 +107,7 @@ const SenderTester = ({ connectorId, connectorType, config, className }: Props) 
         <div ref={buttonPosReference} className={styles.send}>
           <Button
             isLoading={isSubmitting}
-            title="admin_console.connector_details.send"
+            title="connector_details.send"
             type="outline"
             onClick={onSubmit}
           />

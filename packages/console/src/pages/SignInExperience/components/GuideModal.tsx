@@ -94,7 +94,7 @@ const GuideModal = ({ isOpen, onClose }: Props) => {
           <Button
             type="plain"
             size="small"
-            title="admin_console.general.skip"
+            title="general.skip"
             isLoading={isLoading}
             onClick={onSkip}
           />
@@ -104,11 +104,7 @@ const GuideModal = ({ isOpen, onClose }: Props) => {
             <form className={styles.form} onSubmit={onSubmit}>
               {!preferences.experienceNoticeConfirmed && (
                 <div className={styles.reminder}>
-                  <Alert
-                    action="admin_console.sign_in_exp.welcome.got_it"
-                    variant="shadow"
-                    onClick={onGotIt}
-                  >
+                  <Alert action="sign_in_exp.welcome.got_it" variant="shadow" onClick={onGotIt}>
                     {t('sign_in_exp.welcome.apply_remind')}
                   </Alert>
                 </div>
@@ -138,7 +134,7 @@ const GuideModal = ({ isOpen, onClose }: Props) => {
                     isLoading={isSubmitting}
                     type="primary"
                     htmlType="submit"
-                    title="admin_console.general.done"
+                    title="general.done"
                   />
                 </div>
               </div>

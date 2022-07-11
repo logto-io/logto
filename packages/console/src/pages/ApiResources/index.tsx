@@ -49,7 +49,7 @@ const ApiResources = () => {
       <div className={styles.headline}>
         <CardTitle title="api_resources.title" subtitle="api_resources.subtitle" />
         <Button
-          title="admin_console.api_resources.create"
+          title="api_resources.create"
           type="primary"
           size="large"
           icon={<Plus />}
@@ -100,7 +100,7 @@ const ApiResources = () => {
             {apiResources?.length === 0 && (
               <TableEmpty columns={2}>
                 <Button
-                  title="admin_console.api_resources.create"
+                  title="api_resources.create"
                   type="outline"
                   onClick={() => {
                     setIsCreateFormOpen(true);

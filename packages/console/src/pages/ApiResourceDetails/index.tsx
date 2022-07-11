@@ -86,7 +86,7 @@ const ApiResourceDetails = () => {
       <LinkButton
         to="/api-resources"
         icon={<Back />}
-        title="admin_console.api_resource_details.back_to_api_resources"
+        title="api_resource_details.back_to_api_resources"
         className={styles.backLink}
       />
       {isLoading && <DetailsSkeleton />}
@@ -139,11 +139,7 @@ const ApiResourceDetails = () => {
             </TabNav>
             <form className={classNames(styles.form, detailsStyles.body)} onSubmit={onSubmit}>
               <div className={styles.fields}>
-                <FormField
-                  isRequired
-                  title="admin_console.api_resources.api_name"
-                  className={styles.textField}
-                >
+                <FormField isRequired title="api_resources.api_name" className={styles.textField}>
                   <TextInput
                     {...register('name', { required: true })}
                     hasError={Boolean(errors.name)}
@@ -153,7 +149,7 @@ const ApiResourceDetails = () => {
                 </FormField>
                 <FormField
                   isRequired
-                  title="admin_console.api_resource_details.token_expiration_time_in_seconds"
+                  title="api_resource_details.token_expiration_time_in_seconds"
                   className={styles.textField}
                 >
                   <TextInput
@@ -171,7 +167,7 @@ const ApiResourceDetails = () => {
                     isLoading={isSubmitting}
                     htmlType="submit"
                     type="primary"
-                    title="admin_console.general.save_changes"
+                    title="general.save_changes"
                     size="large"
                   />
                 </div>

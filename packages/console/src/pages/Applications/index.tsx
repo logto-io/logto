@@ -47,7 +47,7 @@ const Applications = () => {
         <CardTitle title="applications.title" subtitle="applications.subtitle" />
         <Button
           icon={<Plus />}
-          title="admin_console.applications.create"
+          title="applications.create"
           type="primary"
           size="large"
           onClick={() => {
@@ -95,7 +95,7 @@ const Applications = () => {
             {applications?.length === 0 && (
               <TableEmpty columns={2}>
                 <Button
-                  title="admin_console.applications.create"
+                  title="applications.create"
                   type="outline"
                   onClick={() => {
                     navigate('/applications/create');

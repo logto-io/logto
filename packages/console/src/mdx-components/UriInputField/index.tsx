@@ -1,4 +1,4 @@
-import { I18nKey } from '@logto/phrases';
+import { AdminConsoleKey } from '@logto/phrases';
 import { Application } from '@logto/schemas';
 import React, { useRef, KeyboardEvent } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
@@ -20,7 +20,7 @@ import * as styles from './index.module.scss';
 type Props = {
   appId: string;
   name: 'redirectUris' | 'postLogoutRedirectUris';
-  title: I18nKey;
+  title: AdminConsoleKey;
   isSingle?: boolean;
 };
 
@@ -120,7 +120,7 @@ const UriInputField = ({ appId, name, title, isSingle = false }: Props) => {
                     className={styles.saveButton}
                     disabled={!isDirty}
                     isLoading={isSubmitting}
-                    title="admin_console.general.save"
+                    title="general.save"
                     type="primary"
                     onClick={handleSubmit(async () => onSubmit(value))}
                   />

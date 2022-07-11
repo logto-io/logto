@@ -47,7 +47,7 @@ const ColorForm = () => {
   return (
     <>
       <div className={styles.title}>{t('sign_in_exp.color.title')}</div>
-      <FormField title="admin_console.sign_in_exp.color.primary_color">
+      <FormField title="sign_in_exp.color.primary_color">
         <Controller
           name="color.primaryColor"
           control={control}
@@ -56,7 +56,7 @@ const ColorForm = () => {
           )}
         />
       </FormField>
-      <FormField title="admin_console.sign_in_exp.color.dark_mode">
+      <FormField title="sign_in_exp.color.dark_mode">
         <Switch
           label={t('sign_in_exp.color.dark_mode_description')}
           {...register('color.isDarkModeEnabled')}
@@ -64,7 +64,7 @@ const ColorForm = () => {
       </FormField>
       {isDarkModeEnabled && (
         <>
-          <FormField isRequired title="admin_console.sign_in_exp.color.dark_primary_color">
+          <FormField isRequired title="sign_in_exp.color.dark_primary_color">
             <Controller
               name="color.darkPrimaryColor"
               control={control}
@@ -79,7 +79,7 @@ const ColorForm = () => {
               <Button
                 type="plain"
                 size="small"
-                title="admin_console.sign_in_exp.color.reset"
+                title="sign_in_exp.color.reset"
                 onClick={handleResetColor}
               />
             </div>

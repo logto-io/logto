@@ -15,7 +15,7 @@ type useSwrFetcherHook = {
 
 const useSwrFetcher: useSwrFetcherHook = <T>() => {
   const api = useApi({ hideErrorToast: true });
-  const { t } = useTranslation();
+  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const fetcher = useCallback<BareFetcher<T | withTotalNumber<T>>>(
     async (resource, init) => {
       try {
@@ -29,7 +29,7 @@ const useSwrFetcher: useSwrFetcherHook = <T>() => {
             const number = response.headers.get('Total-Number');
 
             if (!number) {
-              throw new Error(t('admin_console.errors.missing_total_number'));
+              throw new Error(t('errors.missing_total_number'));
             }
 
             return [data, Number(number)];

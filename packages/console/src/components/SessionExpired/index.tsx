@@ -22,7 +22,7 @@ const SessionExpired = () => {
         className={styles.retryButton}
         size="large"
         type="outline"
-        title="admin_console.session_expired.button"
+        title="session_expired.button"
         onClick={() => {
           void signIn(new URL(href, window.location.origin).toString());
         }}

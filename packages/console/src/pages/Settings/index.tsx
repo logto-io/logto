@@ -53,7 +53,7 @@ const Settings = () => {
       {isLoaded && (
         <form className={detailsStyles.body} onSubmit={onSubmit}>
           <div className={styles.fields}>
-            <FormField title="admin_console.settings.language" className={styles.textField}>
+            <FormField title="settings.language" className={styles.textField}>
               <Controller
                 name="language"
                 control={control}
@@ -75,7 +75,7 @@ const Settings = () => {
                 )}
               />
             </FormField>
-            <FormField title="admin_console.settings.appearance" className={styles.textField}>
+            <FormField title="settings.appearance" className={styles.textField}>
               <Controller
                 name="appearanceMode"
                 control={control}
@@ -110,7 +110,7 @@ const Settings = () => {
                 type="primary"
                 htmlType="submit"
                 size="large"
-                title="admin_console.general.save_changes"
+                title="general.save_changes"
               />
             </div>
           </div>

@@ -75,7 +75,7 @@ const ConnectorDetails = () => {
       <LinkButton
         to={data?.type === ConnectorType.Social ? '/connectors/social' : '/connectors'}
         icon={<Back />}
-        title="admin_console.connector_details.back_to_connectors"
+        title="connector_details.back_to_connectors"
         className={styles.backLink}
       />
       {isLoading && <DetailsSkeleton />}
@@ -114,7 +114,7 @@ const ConnectorDetails = () => {
           </div>
           <div className={styles.operations}>
             <Button
-              title="admin_console.connector_details.check_readme"
+              title="connector_details.check_readme"
               size="large"
               onClick={() => {
                 setIsReadMeOpen(true);

@@ -40,7 +40,7 @@ const ConnectorSetupWarning = ({ method }: Props) => {
 
   return (
     <Alert
-      action="admin_console.general.set_up"
+      action="general.set_up"
       href={type === ConnectorType.Social ? '/connectors/social' : '/connectors'}
     >
       {t('sign_in_exp.setup_warning.no_connector', { context: type.toLowerCase() })}

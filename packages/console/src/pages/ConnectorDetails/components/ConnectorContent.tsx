@@ -88,7 +88,7 @@ const ConnectorContent = ({ isDeleted, connectorData, onConnectorUpdated }: Prop
   return (
     <>
       <div className={styles.main}>
-        <FormField title="admin_console.connector_details.edit_config_label">
+        <FormField title="connector_details.edit_config_label">
           <CodeEditor
             className={styles.codeEditor}
             language="json"
@@ -111,7 +111,7 @@ const ConnectorContent = ({ isDeleted, connectorData, onConnectorUpdated }: Prop
           <Button
             type="primary"
             size="large"
-            title="admin_console.general.save_changes"
+            title="general.save_changes"
             isLoading={isSubmitting}
             onClick={handleSave}
           />
