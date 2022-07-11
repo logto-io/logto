@@ -34,8 +34,9 @@ Back to _Messaging_ -> _Services_ settings page starting from the sidebar, and f
 Fill out the _accountSID_, _authToken_ and _fromMessagingServiceSID_ fields with `Account SID`, `Auth token` and `Sid` of the corresponding messaging service.
 
 You can add multiple SMS connector templates for different cases. Here is an example of adding a single template:
-    - Fill out the `content` field with arbitrary string-typed contents. Do not forget to leave `{{code}}` placeholder for random passcode.
-    - Fill out the `usageType` field with either `Register`, `SignIn` or `Test` for different use cases.
+
+- Fill out the `content` field with arbitrary string-typed contents. Do not forget to leave `{{code}}` placeholder for random passcode.
+- Fill out the `usageType` field with either `Register`, `SignIn` or `Test` for different use cases.
 
 Here is an example of Twilio SMS connector config JSON.
 
