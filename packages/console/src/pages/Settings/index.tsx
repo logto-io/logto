@@ -28,6 +28,7 @@ const Settings = () => {
   const {
     handleSubmit,
     control,
+    reset,
     formState: { isSubmitting, isDirty },
   } = useForm<UserPreferences>({ defaultValues: data });
 
@@ -37,6 +38,7 @@ const Settings = () => {
     }
 
     await update(formData);
+    reset(formData);
     toast.success(t('general.saved'));
   });
 
