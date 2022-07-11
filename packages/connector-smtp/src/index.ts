@@ -76,10 +76,9 @@ export default class SmtpConnector implements EmailConnector {
     try {
       return await transporter.sendMail(mailOptions);
     } catch (error: unknown) {
-      throw new ConnectorError(
-        ConnectorErrorCodes.General,
-        error instanceof Error ? error.message : ''
-      );
+      throw new ConnectorError(ConnectorErrorCodes.General, {
+        errorDescription: error instanceof Error ? error.message : undefined,
+      });
     }
   };
 
