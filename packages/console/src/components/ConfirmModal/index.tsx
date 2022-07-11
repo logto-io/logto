@@ -1,4 +1,4 @@
-import { AdminConsoleKey, I18nKey } from '@logto/phrases';
+import { AdminConsoleKey } from '@logto/phrases';
 import classNames from 'classnames';
 import React, { ReactNode } from 'react';
 import ReactModal from 'react-modal';
@@ -14,8 +14,8 @@ export type ConfirmModalProps = {
   className?: string;
   title?: AdminConsoleKey;
   confirmButtonType?: ButtonType;
-  confirmButtonText?: I18nKey;
-  cancelButtonText?: I18nKey;
+  confirmButtonText?: AdminConsoleKey;
+  cancelButtonText?: AdminConsoleKey;
   isOpen: boolean;
   onCancel: () => void;
   onConfirm: () => void;
@@ -26,8 +26,8 @@ const ConfirmModal = ({
   className,
   title = 'general.reminder',
   confirmButtonType = 'danger',
-  confirmButtonText = 'admin_console.general.confirm',
-  cancelButtonText = 'admin_console.general.cancel',
+  confirmButtonText = 'general.confirm',
+  cancelButtonText = 'general.cancel',
   isOpen,
   onCancel,
   onConfirm,

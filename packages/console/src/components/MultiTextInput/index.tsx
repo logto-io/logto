@@ -1,4 +1,4 @@
-import { I18nKey } from '@logto/phrases';
+import { AdminConsoleKey } from '@logto/phrases';
 import classNames from 'classnames';
 import React, { KeyboardEvent, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -13,7 +13,7 @@ import * as styles from './index.module.scss';
 import { MultiTextInputError } from './types';
 
 type Props = {
-  title: I18nKey;
+  title: AdminConsoleKey;
   value?: string[];
   onChange: (value: string[]) => void;
   onKeyPress?: (event: KeyboardEvent<HTMLInputElement>) => void;
@@ -22,7 +22,7 @@ type Props = {
 };
 
 const MultiTextInput = ({ title, value, onChange, onKeyPress, error, placeholder }: Props) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   const [deleteFieldIndex, setDeleteFieldIndex] = useState<number>();
 
@@ -86,11 +86,11 @@ const MultiTextInput = ({ title, value, onChange, onKeyPress, error, placeholder
         </div>
       ))}
       <div className={classNames(textButtonStyles.button, styles.addAnother)} onClick={handleAdd}>
-        {t('admin_console.general.add_another')}
+        {t('general.add_another')}
       </div>
       <ConfirmModal
         isOpen={deleteFieldIndex !== undefined}
-        confirmButtonText="admin_console.general.delete"
+        confirmButtonText="general.delete"
         onCancel={() => {
           setDeleteFieldIndex(undefined);
         }}
@@ -101,7 +101,7 @@ const MultiTextInput = ({ title, value, onChange, onKeyPress, error, placeholder
           }
         }}
       >
-        {t('admin_console.general.deletion_confirmation', { title: t(title) })}
+        {t('general.deletion_confirmation', { title: t(title) })}
       </ConfirmModal>
     </div>
   );

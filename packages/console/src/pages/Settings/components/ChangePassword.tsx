@@ -39,11 +39,11 @@ const ChangePassword = () => {
 
   return (
     <>
-      <FormField title="admin_console.settings.change_password">
+      <FormField title="settings.change_password">
         <div className={styles.changePassword}>
           <div className={styles.description}>{t('settings.change_password_description')}</div>
           <Button
-            title="admin_console.settings.change_password"
+            title="settings.change_password"
             type="default"
             onClick={() => {
               setIsOpen(true);
@@ -62,7 +62,7 @@ const ChangePassword = () => {
           footer={
             <Button
               type="primary"
-              title="admin_console.general.confirm"
+              title="general.confirm"
               disabled={isDisabled || isLoading}
               onClick={onSubmit}
             />
@@ -72,10 +72,10 @@ const ChangePassword = () => {
           }}
         >
           <div>
-            <FormField title="admin_console.settings.new_password">
+            <FormField title="settings.new_password">
               <TextInput {...register('password', { required: true })} type="password" />
             </FormField>
-            <FormField title="admin_console.settings.confirm_password">
+            <FormField title="settings.confirm_password">
               <TextInput {...register('confirmPassword', { required: true })} type="password" />
             </FormField>
           </div>

@@ -45,7 +45,7 @@ const CreateForm = ({ onClose }: Props) => {
         <Button
           isLoading={isSubmitting}
           htmlType="submit"
-          title="admin_console.api_resources.create"
+          title="api_resources.create"
           size="large"
           type="primary"
           onClick={onSubmit}
@@ -54,7 +54,7 @@ const CreateForm = ({ onClose }: Props) => {
       onClose={onClose}
     >
       <form>
-        <FormField isRequired title="admin_console.api_resources.api_name">
+        <FormField isRequired title="api_resources.api_name">
           <TextInput
             autoFocus
             {...register('name', { required: true })}
@@ -63,8 +63,8 @@ const CreateForm = ({ onClose }: Props) => {
         </FormField>
         <FormField
           isRequired
-          title="admin_console.api_resources.api_identifier"
-          tooltip="admin_console.api_resources.api_identifier_tip"
+          title="api_resources.api_identifier"
+          tooltip="api_resources.api_identifier_tip"
         >
           <TextInput
             {...register('indicator', { required: true })}

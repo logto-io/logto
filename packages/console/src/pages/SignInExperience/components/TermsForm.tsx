@@ -22,7 +22,7 @@ const TermsForm = () => {
   return (
     <>
       <div className={styles.title}>{t('sign_in_exp.terms_of_use.title')}</div>
-      <FormField title="admin_console.sign_in_exp.terms_of_use.enable">
+      <FormField title="sign_in_exp.terms_of_use.enable">
         <Switch
           {...register('termsOfUse.enabled')}
           label={t('sign_in_exp.terms_of_use.description')}
@@ -31,8 +31,8 @@ const TermsForm = () => {
       {enabled && (
         <FormField
           isRequired
-          title="admin_console.sign_in_exp.terms_of_use.terms_of_use"
-          tooltip="admin_console.sign_in_exp.terms_of_use.terms_of_use_tip"
+          title="sign_in_exp.terms_of_use.terms_of_use"
+          tooltip="sign_in_exp.terms_of_use.terms_of_use_tip"
         >
           <TextInput
             {...register('termsOfUse.contentUrl', {

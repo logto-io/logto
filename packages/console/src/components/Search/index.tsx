@@ -16,7 +16,7 @@ type Props = {
 
 const Search = ({ defaultValue = '', isClearable = false, onSearch, onClearSearch }: Props) => {
   const [inputValue, setInputValue] = useState<string>(defaultValue);
-  const { t } = useTranslation();
+  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   const handleSearchKeyPress: KeyboardEventHandler<HTMLInputElement> = (event) => {
     if (event.key === 'Enter' && inputValue) {
@@ -38,19 +38,14 @@ const Search = ({ defaultValue = '', isClearable = false, onSearch, onClearSearc
         <TextInput
           value={inputValue}
           icon={<SearchIcon className={styles.searchIcon} />}
-          placeholder={t('admin_console.general.search_placeholder')}
+          placeholder={t('general.search_placeholder')}
           onChange={handleSearchChange}
           onKeyPress={handleSearchKeyPress}
         />
       </div>
-      <Button title="admin_console.general.search" onClick={handleClick} />
+      <Button title="general.search" onClick={handleClick} />
       {isClearable && (
-        <Button
-          size="small"
-          type="plain"
-          title="admin_console.general.clear_result"
-          onClick={onClearSearch}
-        />
+        <Button size="small" type="plain" title="general.clear_result" onClick={onClearSearch} />
       )}
     </div>
   );

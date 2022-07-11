@@ -49,7 +49,7 @@ const Users = () => {
       <div className={styles.headline}>
         <CardTitle title="users.title" subtitle="users.subtitle" />
         <Button
-          title="admin_console.users.create"
+          title="users.create"
           size="large"
           type="primary"
           icon={<Plus />}
@@ -111,7 +111,7 @@ const Users = () => {
             {users?.length === 0 && (
               <TableEmpty columns={3}>
                 <Button
-                  title="admin_console.users.create"
+                  title="users.create"
                   type="outline"
                   onClick={() => {
                     setIsCreateFormOpen(true);

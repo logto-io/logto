@@ -17,7 +17,7 @@ type Props = {
 };
 
 const TableError = ({ title, content, onRetry, columns }: Props) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const theme = useTheme();
 
   return (
@@ -25,13 +25,9 @@ const TableError = ({ title, content, onRetry, columns }: Props) => {
       <td colSpan={columns}>
         <div className={styles.tableError}>
           {theme === AppearanceMode.LightMode ? <Error /> : <ErrorDark />}
-          <div className={styles.title}>
-            {title ?? t('admin_console.errors.something_went_wrong')}
-          </div>
-          <div className={styles.content}>
-            {content ?? t('admin_console.errors.unknown_server_error')}
-          </div>
-          {onRetry && <Button title="admin_console.general.retry" onClick={onRetry} />}
+          <div className={styles.title}>{title ?? t('errors.something_went_wrong')}</div>
+          <div className={styles.content}>{content ?? t('errors.unknown_server_error')}</div>
+          {onRetry && <Button title="general.retry" onClick={onRetry} />}
         </div>
       </td>
     </tr>

@@ -84,7 +84,7 @@ const SdkSelector = ({
       <div className={styles.buttonWrapper}>
         <Button
           type="outline"
-          title="admin_console.general.next"
+          title="general.next"
           size="large"
           onClick={() => {
             setIsFolded(true);

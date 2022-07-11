@@ -129,7 +129,7 @@ const UserConnectors = ({ userId, connectors, onDelete }: Props) => {
                   </td>
                   <td>
                     <Button
-                      title="admin_console.user_details.connectors.remove"
+                      title="user_details.connectors.remove"
                       type="plain"
                       onClick={() => {
                         setDeletingConnector(connector);
@@ -144,7 +144,7 @@ const UserConnectors = ({ userId, connectors, onDelete }: Props) => {
       )}
       <ConfirmModal
         isOpen={deletingConnector !== undefined}
-        confirmButtonText="admin_console.general.delete"
+        confirmButtonText="general.delete"
         onCancel={() => {
           setDeletingConnector(undefined);
         }}

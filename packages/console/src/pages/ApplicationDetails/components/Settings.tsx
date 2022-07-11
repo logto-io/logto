@@ -48,7 +48,7 @@ const Settings = ({ applicationType, oidcConfig, defaultData }: Props) => {
     <>
       <FormField
         isRequired
-        title="admin_console.application_details.application_name"
+        title="application_details.application_name"
         className={styles.textField}
       >
         <TextInput
@@ -57,16 +57,16 @@ const Settings = ({ applicationType, oidcConfig, defaultData }: Props) => {
           placeholder={t('application_details.application_name_placeholder')}
         />
       </FormField>
-      <FormField title="admin_console.application_details.description" className={styles.textField}>
+      <FormField title="application_details.description" className={styles.textField}>
         <TextInput
           {...register('description')}
           placeholder={t('application_details.description_placeholder')}
         />
       </FormField>
       <FormField
-        title="admin_console.application_details.authorization_endpoint"
+        title="application_details.authorization_endpoint"
         className={styles.textField}
-        tooltip="admin_console.application_details.authorization_endpoint_tip"
+        tooltip="application_details.authorization_endpoint_tip"
       >
         <CopyToClipboard
           className={styles.textField}
@@ -76,9 +76,9 @@ const Settings = ({ applicationType, oidcConfig, defaultData }: Props) => {
       </FormField>
       <FormField
         isRequired
-        title="admin_console.application_details.redirect_uri"
+        title="application_details.redirect_uri"
         className={styles.textField}
-        tooltip="admin_console.application_details.redirect_uri_tip"
+        tooltip="application_details.redirect_uri_tip"
       >
         <Controller
           name="oidcClientMetadata.redirectUris"
@@ -92,7 +92,7 @@ const Settings = ({ applicationType, oidcConfig, defaultData }: Props) => {
           }}
           render={({ field: { onChange, value }, fieldState: { error } }) => (
             <MultiTextInput
-              title="admin_console.application_details.redirect_uri"
+              title="application_details.redirect_uri"
               value={value}
               error={convertRhfErrorMessage(error?.message)}
               placeholder={
@@ -106,9 +106,9 @@ const Settings = ({ applicationType, oidcConfig, defaultData }: Props) => {
         />
       </FormField>
       <FormField
-        title="admin_console.application_details.post_sign_out_redirect_uri"
+        title="application_details.post_sign_out_redirect_uri"
         className={styles.textField}
-        tooltip="admin_console.application_details.post_sign_out_redirect_uri_tip"
+        tooltip="application_details.post_sign_out_redirect_uri_tip"
       >
         <Controller
           name="oidcClientMetadata.postLogoutRedirectUris"
@@ -119,7 +119,7 @@ const Settings = ({ applicationType, oidcConfig, defaultData }: Props) => {
           }}
           render={({ field: { onChange, value }, fieldState: { error } }) => (
             <MultiTextInput
-              title="admin_console.application_details.post_sign_out_redirect_uri"
+              title="application_details.post_sign_out_redirect_uri"
               value={value}
               error={convertRhfErrorMessage(error?.message)}
               placeholder={t('application_details.post_sign_out_redirect_uri_placeholder')}
@@ -129,9 +129,9 @@ const Settings = ({ applicationType, oidcConfig, defaultData }: Props) => {
         />
       </FormField>
       <FormField
-        title="admin_console.application_details.cors_allowed_origins"
+        title="application_details.cors_allowed_origins"
         className={styles.textField}
-        tooltip="admin_console.application_details.cors_allowed_origins_tip"
+        tooltip="application_details.cors_allowed_origins_tip"
       >
         <Controller
           name="customClientMetadata.corsAllowedOrigins"
@@ -147,7 +147,7 @@ const Settings = ({ applicationType, oidcConfig, defaultData }: Props) => {
           }}
           render={({ field: { onChange, value }, fieldState: { error } }) => (
             <MultiTextInput
-              title="admin_console.application_details.cors_allowed_origins"
+              title="application_details.cors_allowed_origins"
               value={value}
               error={convertRhfErrorMessage(error?.message)}
               placeholder={t('application_details.cors_allowed_origins_placeholder')}

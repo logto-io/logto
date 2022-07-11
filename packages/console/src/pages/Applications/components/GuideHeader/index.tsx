@@ -83,11 +83,11 @@ const GuideHeader = ({ appName, selectedSdk, isCompact = false, onClose }: Props
             subtitle="applications.guide.header_description"
           />
           <Spacer />
-          <Button type="plain" size="small" title="admin_console.general.skip" onClick={onClose} />
+          <Button type="plain" size="small" title="general.skip" onClick={onClose} />
           <Button
             className={styles.getSampleButton}
             type="outline"
-            title="admin_console.applications.guide.get_sample_file"
+            title="applications.guide.get_sample_file"
             onClick={onClickGetSample}
           />
         </>

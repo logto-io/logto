@@ -18,7 +18,7 @@ type Props = {
 };
 
 const ConnectorRow = ({ type, connectors, onClickSetup }: Props) => {
-  const { t } = useTranslation(undefined);
+  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const firstEnabledConnector = connectors.find(({ enabled }) => enabled);
   const inUse = useConnectorInUse(type, firstEnabledConnector?.target);
   const navigate = useNavigate();
@@ -41,7 +41,7 @@ const ConnectorRow = ({ type, connectors, onClickSetup }: Props) => {
       <td>
         {inUse !== undefined && (
           <Status status={inUse ? 'enabled' : 'disabled'}>
-            {t('admin_console.connectors.connector_status', {
+            {t('connectors.connector_status', {
               context: inUse ? 'in_use' : 'not_in_use',
             })}
           </Status>

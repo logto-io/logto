@@ -29,7 +29,7 @@ const AdvancedSettings = ({ oidcConfig, defaultData }: Props) => {
 
   return (
     <>
-      <FormField title="admin_console.application_details.token_endpoint">
+      <FormField title="application_details.token_endpoint">
         <CopyToClipboard
           className={styles.textField}
           value={oidcConfig.token_endpoint}

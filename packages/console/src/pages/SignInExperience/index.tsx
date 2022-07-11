@@ -147,7 +147,7 @@ const SignInExperience = () => {
                       type="primary"
                       size="large"
                       htmlType="submit"
-                      title="admin_console.general.save_changes"
+                      title="general.save_changes"
                     />
                   </div>
                 </div>

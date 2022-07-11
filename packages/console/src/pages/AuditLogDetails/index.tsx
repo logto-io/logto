@@ -41,7 +41,7 @@ const AuditLogDetails = () => {
       {t('log_details.back_to_user', { name: userData?.name ?? t('users.unnamed') })}
     </DangerousRaw>
   ) : (
-    'admin_console.log_details.back_to_logs'
+    'log_details.back_to_logs'
   );
 
   return (
@@ -104,7 +104,7 @@ const AuditLogDetails = () => {
               </TabNavItem>
             </TabNav>
             <div className={styles.main}>
-              <FormField title="admin_console.log_details.raw_data">
+              <FormField title="log_details.raw_data">
                 <CodeEditor language="json" value={JSON.stringify(data.payload, null, 2)} />
               </FormField>
             </div>

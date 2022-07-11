@@ -86,7 +86,7 @@ const CreateForm = ({ onClose, isOpen: isFormOpen, type }: Props) => {
         title={cardTitle}
         footer={
           <Button
-            title="admin_console.general.next"
+            title="general.next"
             type="primary"
             disabled={!activeConnectorId}
             onClick={() => {

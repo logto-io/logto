@@ -29,7 +29,7 @@ const Welcome = ({ mutate }: Props) => {
           {theme === AppearanceMode.LightMode ? <WelcomeImage /> : <WelcomeImageDark />}
           <div className={styles.text}>{t('sign_in_exp.welcome.title')}</div>
           <Button
-            title="admin_console.sign_in_exp.welcome.get_started"
+            title="sign_in_exp.welcome.get_started"
             type="primary"
             onClick={() => {
               setIsOpen(true);

@@ -15,7 +15,7 @@ type Props = {
 };
 
 const Contact = ({ isOpen, onCancel }: Props) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const contacts = useContacts();
 
   return (

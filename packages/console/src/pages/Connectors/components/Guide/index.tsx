@@ -99,7 +99,7 @@ const Guide = ({ connector, onClose }: Props) => {
                 title={t('connector_details.edit_config_label')}
                 index={0}
                 activeIndex={0}
-                buttonText="admin_console.connectors.save_and_done"
+                buttonText="connectors.save_and_done"
                 buttonHtmlType="submit"
                 buttonType="primary"
                 isLoading={isSubmitting}

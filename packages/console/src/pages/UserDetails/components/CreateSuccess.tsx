@@ -46,8 +46,8 @@ const CreateSuccess = ({ username, password, title, onClose, passwordLabel }: Pr
         title={title}
         footer={
           <>
-            <Button title="admin_console.general.done" onClick={onClose} />
-            <Button type="primary" title="admin_console.general.copy" onClick={handleCopy} />
+            <Button title="general.done" onClick={onClose} />
+            <Button type="primary" title="general.copy" onClick={handleCopy} />
           </>
         }
         className={styles.content}

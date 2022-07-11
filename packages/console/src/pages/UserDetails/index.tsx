@@ -59,7 +59,7 @@ const UserDetails = () => {
       <LinkButton
         to="/users"
         icon={<Back />}
-        title="admin_console.user_details.back_to_users"
+        title="user_details.back_to_users"
         className={styles.backLink}
       />
       {isLoading && <DetailsSkeleton />}

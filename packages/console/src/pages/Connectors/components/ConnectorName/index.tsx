@@ -23,7 +23,7 @@ type Props = {
 };
 
 const ConnectorName = ({ type, connectors, onClickSetup }: Props) => {
-  const { t } = useTranslation(undefined);
+  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const enabledConnectors = connectors.filter(({ enabled }) => enabled);
   const connector = enabledConnectors[0];
   const theme = useTheme();
@@ -37,7 +37,7 @@ const ConnectorName = ({ type, connectors, onClickSetup }: Props) => {
           <div className={styles.previewTitle}>
             <div>{t(connectorTitlePlaceHolder[type])}</div>
             {type !== ConnectorType.Social && (
-              <Button title="admin_console.general.set_up" onClick={onClickSetup} />
+              <Button title="general.set_up" onClick={onClickSetup} />
             )}
           </div>
         }
@@ -64,7 +64,7 @@ const ConnectorName = ({ type, connectors, onClickSetup }: Props) => {
                     platform && (
                       <div key={id} className={styles.platform}>
                         <ConnectorPlatformIcon platform={platform} />
-                        {t(`admin_console.${connectorPlatformLabel[platform]}`)}
+                        {t(`${connectorPlatformLabel[platform]}`)}
                       </div>
                     )
                 )}

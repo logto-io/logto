@@ -1,4 +1,4 @@
-import { I18nKey } from '@logto/phrases';
+import { AdminConsoleKey } from '@logto/phrases';
 import classNames from 'classnames';
 import React, { HTMLProps, ReactElement, ReactNode, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -19,12 +19,12 @@ type BaseProps = Omit<HTMLProps<HTMLButtonElement>, 'type' | 'size' | 'title'> &
 };
 
 type TitleButtonProps = BaseProps & {
-  title: I18nKey | ReactElement<typeof DangerousRaw>;
+  title: AdminConsoleKey | ReactElement<typeof DangerousRaw>;
   icon?: ReactNode;
 };
 
 type IconButtonProps = BaseProps & {
-  title?: I18nKey | ReactElement<typeof DangerousRaw>;
+  title?: AdminConsoleKey | ReactElement<typeof DangerousRaw>;
   icon: ReactNode;
 };
 
@@ -42,7 +42,7 @@ const Button = ({
   onClick,
   ...rest
 }: Props) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const [showSpinner, setShowSpinner] = useState(false);
   const timerRef = useRef<number>();
 

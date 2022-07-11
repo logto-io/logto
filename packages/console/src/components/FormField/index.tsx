@@ -1,4 +1,4 @@
-import { I18nKey } from '@logto/phrases';
+import { AdminConsoleKey } from '@logto/phrases';
 import classNames from 'classnames';
 import React, { ReactElement, ReactNode, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -11,15 +11,15 @@ import Tooltip from '../Tooltip';
 import * as styles from './index.module.scss';
 
 type Props = {
-  title: I18nKey | ReactElement<typeof DangerousRaw>;
+  title: AdminConsoleKey | ReactElement<typeof DangerousRaw>;
   children: ReactNode;
   isRequired?: boolean;
   className?: string;
-  tooltip?: I18nKey;
+  tooltip?: AdminConsoleKey;
 };
 
 const FormField = ({ title, children, isRequired, className, tooltip }: Props) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const tipRef = useRef<HTMLDivElement>(null);
 
   return (
@@ -33,7 +33,7 @@ const FormField = ({ title, children, isRequired, className, tooltip }: Props) =
           </div>
         )}
         <Spacer />
-        {isRequired && <div className={styles.required}>{t('admin_console.general.required')}</div>}
+        {isRequired && <div className={styles.required}>{t('general.required')}</div>}
       </div>
       {children}
     </div>
