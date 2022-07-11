@@ -1,7 +1,7 @@
 import { Language } from '@logto/phrases';
 import { AppearanceMode } from '@logto/schemas';
 import classNames from 'classnames';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
@@ -28,8 +28,15 @@ const Settings = () => {
   const {
     handleSubmit,
     control,
+    reset,
     formState: { isSubmitting, isDirty },
-  } = useForm<UserPreferences>({ defaultValues: data });
+  } = useForm<UserPreferences>();
+
+  useEffect(() => {
+    if (isLoaded) {
+      reset(data);
+    }
+  }, [isLoaded, data, reset]);
 
   const onSubmit = handleSubmit(async (formData) => {
     if (isSubmitting) {
