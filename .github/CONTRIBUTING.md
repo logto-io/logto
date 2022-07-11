@@ -62,7 +62,7 @@ We use the monorepo approach for development. Since pnpm supports monorepo natur
 You'll need these installed to proceed:
 
 - [Node.js](https://nodejs.org/) `^16.13.0`
-- [PNpM](https://pnpm.io/) `^7.0`
+- [pnpm](https://pnpm.io/) `^7.0`
 - A [Postgres](https://postgresql.org/) `^14.0` instance
 
 ### Clone and install dependencies
