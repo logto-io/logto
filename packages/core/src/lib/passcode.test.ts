@@ -25,7 +25,6 @@ import {
 jest.mock('@/queries/passcode');
 jest.mock('@/connectors');
 
-const mockedConsumePasscode = consumePasscode as jest.MockedFunction<typeof consumePasscode>;
 const mockedFindUnconsumedPasscodesByJtiAndType =
   findUnconsumedPasscodesByJtiAndType as jest.MockedFunction<
     typeof findUnconsumedPasscodesByJtiAndType
@@ -37,12 +36,13 @@ const mockedFindUnconsumedPasscodeByJtiAndType =
 const mockedDeletePasscodesByIds = deletePasscodesByIds as jest.MockedFunction<
   typeof deletePasscodesByIds
 >;
-const mockedIncreasePasscodeTryCount = increasePasscodeTryCount as jest.MockedFunction<
-  typeof increasePasscodeTryCount
->;
 const mockedInsertPasscode = insertPasscode as jest.MockedFunction<typeof insertPasscode>;
 const mockedGetConnectorInstances = getConnectorInstances as jest.MockedFunction<
   typeof getConnectorInstances
+>;
+const mockedConsumePasscode = consumePasscode as jest.MockedFunction<typeof consumePasscode>;
+const mockedIncreasePasscodeTryCount = increasePasscodeTryCount as jest.MockedFunction<
+  typeof increasePasscodeTryCount
 >;
 
 beforeAll(() => {
