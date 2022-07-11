@@ -1,7 +1,7 @@
 import { Language } from '@logto/phrases';
 import { AppearanceMode } from '@logto/schemas';
 import classNames from 'classnames';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
@@ -30,13 +30,7 @@ const Settings = () => {
     control,
     reset,
     formState: { isSubmitting, isDirty },
-  } = useForm<UserPreferences>();
-
-  useEffect(() => {
-    if (isLoaded) {
-      reset(data);
-    }
-  }, [isLoaded, data, reset]);
+  } = useForm<UserPreferences>({ defaultValues: data });
 
   const onSubmit = handleSubmit(async (formData) => {
     if (isSubmitting) {
@@ -44,6 +38,7 @@ const Settings = () => {
     }
 
     await update(formData);
+    reset(formData);
     toast.success(t('general.saved'));
   });
 
