@@ -30,7 +30,7 @@ export const consumePasscode = async (id: string) =>
   envSet.pool.query<Passcode>(sql`
     update ${table}
     set ${fields.consumed}=true
-    where ${fields.id}=${sql`${id}`}
+    where ${fields.id}=${id}
     returning ${sql.join(Object.values(fields), sql`, `)}
   `);
 
@@ -38,7 +38,7 @@ export const increasePasscodeTryCount = async (id: string) =>
   envSet.pool.query<Passcode>(sql`
     update ${table}
     set ${fields.tryCount}=${fields.tryCount}+1
-    where ${fields.id}=${sql`${id}`}
+    where ${fields.id}=${id}
     returning ${sql.join(Object.values(fields), sql`, `)}
   `);
 
