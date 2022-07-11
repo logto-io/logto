@@ -16,7 +16,6 @@ import {
   findUnconsumedPasscodeByJtiAndType,
   findUnconsumedPasscodesByJtiAndType,
   insertPasscode,
-  updatePasscode,
   deletePasscodeById,
   deletePasscodesByIds,
 } from './passcode';
@@ -92,32 +91,6 @@ describe('passcode query', () => {
     });
 
     await expect(insertPasscode(mockPasscode)).resolves.toEqual(mockPasscode);
-  });
-
-  it('updatePasscode', async () => {
-    const id = 'foo';
-    const tryCount = 3;
-
-    const expectSql = sql`
-      update ${table}
-      set ${fields.tryCount}=$1
-      where ${fields.id}=$2
-      returning *
-    `;
-
-    mockQuery.mockImplementationOnce(async (sql, values) => {
-      expectSqlAssert(sql, expectSql.sql);
-      expect(values).toEqual([tryCount, id]);
-
-      return createMockQueryResult([{ ...mockPasscode, tryCount }]);
-    });
-
-    await expect(
-      updatePasscode({ where: { id }, set: { tryCount }, jsonbMode: 'merge' })
-    ).resolves.toEqual({
-      ...mockPasscode,
-      tryCount,
-    });
   });
 
   it('deletePasscodeById', async () => {

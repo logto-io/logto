@@ -5,11 +5,12 @@ import { getConnectorInstances } from '@/connectors';
 import { ConnectorType, EmailConnectorInstance, SmsConnectorInstance } from '@/connectors/types';
 import RequestError from '@/errors/RequestError';
 import {
+  consumePasscode,
   deletePasscodesByIds,
   findUnconsumedPasscodeByJtiAndType,
   findUnconsumedPasscodesByJtiAndType,
+  increasePasscodeTryCount,
   insertPasscode,
-  updatePasscode,
 } from '@/queries/passcode';
 import assertThat from '@/utils/assert-that';
 
@@ -106,13 +107,9 @@ export const verifyPasscode = async (
   }
 
   if (code !== passcode.code) {
-    await updatePasscode({
-      where: { id: passcode.id },
-      set: { tryCount: passcode.tryCount + 1 },
-      jsonbMode: 'merge',
-    });
+    await increasePasscodeTryCount(passcode.id);
     throw new RequestError('passcode.code_mismatch');
   }
 
-  await updatePasscode({ where: { id: passcode.id }, set: { consumed: true }, jsonbMode: 'merge' });
+  await consumePasscode(passcode.id);
 };
