@@ -2,7 +2,6 @@ import { PasscodeType, Passcode, Passcodes, CreatePasscode } from '@logto/schema
 import { sql } from 'slonik';
 
 import { buildInsertInto } from '@/database/insert-into';
-import { buildUpdateWhere } from '@/database/update-where';
 import { convertToIdentifiers } from '@/database/utils';
 import envSet from '@/env-set';
 import { DeletionError } from '@/errors/SlonikError';
@@ -27,7 +26,21 @@ export const insertPasscode = buildInsertInto<CreatePasscode, Passcode>(Passcode
   returning: true,
 });
 
-export const updatePasscode = buildUpdateWhere<CreatePasscode, Passcode>(Passcodes, true);
+export const consumePasscode = async (id: string) =>
+  envSet.pool.query<Passcode>(sql`
+    update ${table}
+    set ${fields.consumed}=true
+    where ${fields.id}=${sql`${id}`}
+    returning ${sql.join(Object.values(fields), sql`, `)}
+  `);
+
+export const increasePasscodeTryCount = async (id: string) =>
+  envSet.pool.query<Passcode>(sql`
+    update ${table}
+    set ${fields.tryCount}=${fields.tryCount}+1
+    where ${fields.id}=${sql`${id}`}
+    returning ${sql.join(Object.values(fields), sql`, `)}
+  `);
 
 export const deletePasscodeById = async (id: string) => {
   const { rowCount } = await envSet.pool.query(sql`

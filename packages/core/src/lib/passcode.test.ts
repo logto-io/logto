@@ -5,11 +5,12 @@ import { mockConnector, mockMetadata } from '@/__mocks__';
 import { getConnectorInstances } from '@/connectors';
 import RequestError from '@/errors/RequestError';
 import {
+  consumePasscode,
   deletePasscodesByIds,
   findUnconsumedPasscodeByJtiAndType,
   findUnconsumedPasscodesByJtiAndType,
+  increasePasscodeTryCount,
   insertPasscode,
-  updatePasscode,
 } from '@/queries/passcode';
 
 import {
@@ -24,6 +25,7 @@ import {
 jest.mock('@/queries/passcode');
 jest.mock('@/connectors');
 
+const mockedConsumePasscode = consumePasscode as jest.MockedFunction<typeof consumePasscode>;
 const mockedFindUnconsumedPasscodesByJtiAndType =
   findUnconsumedPasscodesByJtiAndType as jest.MockedFunction<
     typeof findUnconsumedPasscodesByJtiAndType
@@ -35,11 +37,13 @@ const mockedFindUnconsumedPasscodeByJtiAndType =
 const mockedDeletePasscodesByIds = deletePasscodesByIds as jest.MockedFunction<
   typeof deletePasscodesByIds
 >;
+const mockedIncreasePasscodeTryCount = increasePasscodeTryCount as jest.MockedFunction<
+  typeof increasePasscodeTryCount
+>;
 const mockedInsertPasscode = insertPasscode as jest.MockedFunction<typeof insertPasscode>;
 const mockedGetConnectorInstances = getConnectorInstances as jest.MockedFunction<
   typeof getConnectorInstances
 >;
-const mockedUpdatePasscode = updatePasscode as jest.MockedFunction<typeof updatePasscode>;
 
 beforeAll(() => {
   mockedFindUnconsumedPasscodesByJtiAndType.mockResolvedValue([]);
@@ -224,11 +228,7 @@ describe('verifyPasscode', () => {
   it('should mark as consumed on successful verification', async () => {
     mockedFindUnconsumedPasscodeByJtiAndType.mockResolvedValue(passcode);
     await verifyPasscode(passcode.interactionJti, passcode.type, passcode.code, { phone: 'phone' });
-    expect(mockedUpdatePasscode).toHaveBeenCalledWith(
-      expect.objectContaining({
-        set: { consumed: true },
-      })
-    );
+    expect(mockedConsumePasscode).toHaveBeenCalledWith(passcode.id);
   });
 
   it('should fail when passcode not found', async () => {
@@ -285,10 +285,6 @@ describe('verifyPasscode', () => {
     await expect(
       verifyPasscode(passcode.interactionJti, passcode.type, 'invalid', { phone: 'phone' })
     ).rejects.toThrow(new RequestError('passcode.code_mismatch'));
-    expect(mockedUpdatePasscode).toHaveBeenCalledWith(
-      expect.objectContaining({
-        set: { tryCount: passcode.tryCount + 1 },
-      })
-    );
+    expect(mockedIncreasePasscodeTryCount).toHaveBeenCalledWith(passcode.id);
   });
 });
