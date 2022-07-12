@@ -10,17 +10,17 @@ import * as styles from './index.module.scss';
 type Props = {
   isOpen: boolean;
   isLoading: boolean;
-  resourceName: string;
+  expectedInput: string;
   messageTemplate: AdminConsoleKey;
   inputPlaceholder: string;
   onCancel: () => void;
   onConfirm: () => void;
 };
 
-const ResourceDeleteConfirmModal = ({
+const RequireInputConfirmModal = ({
   isOpen,
   isLoading,
-  resourceName,
+  expectedInput,
   messageTemplate,
   inputPlaceholder,
   onCancel,
@@ -28,8 +28,8 @@ const ResourceDeleteConfirmModal = ({
 }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
-  const [inputName, setInputName] = useState('');
-  const inputMismatched = inputName !== resourceName;
+  const [input, setInput] = useState('');
+  const inputMismatched = input !== expectedInput;
 
   return (
     <ConfirmModal
@@ -43,19 +43,19 @@ const ResourceDeleteConfirmModal = ({
     >
       <div className={styles.description}>
         <Trans components={{ span: <span className={styles.highlight} /> }}>
-          {t(messageTemplate, { name: resourceName })}
+          {t(messageTemplate, { name: expectedInput })}
         </Trans>
       </div>
       <TextInput
         autoFocus
-        value={inputName}
+        value={input}
         placeholder={inputPlaceholder}
         onChange={(event) => {
-          setInputName(event.currentTarget.value);
+          setInput(event.currentTarget.value);
         }}
       />
     </ConfirmModal>
   );
 };
 
-export default ResourceDeleteConfirmModal;
+export default RequireInputConfirmModal;

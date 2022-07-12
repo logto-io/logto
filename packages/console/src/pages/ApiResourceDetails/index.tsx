@@ -17,7 +17,7 @@ import CopyToClipboard from '@/components/CopyToClipboard';
 import DetailsSkeleton from '@/components/DetailsSkeleton';
 import FormField from '@/components/FormField';
 import LinkButton from '@/components/LinkButton';
-import ResourceDeleteConfirmModal from '@/components/ResourceDeleteConfirmModal';
+import RequireInputConfirmModal from '@/components/RequireInputConfirmModal';
 import TabNav, { TabNavItem } from '@/components/TabNav';
 import TextInput from '@/components/TextInput';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
@@ -137,10 +137,10 @@ const ApiResourceDetails = () => {
                     {t('general.delete')}
                   </ActionMenuItem>
                 </ActionMenu>
-                <ResourceDeleteConfirmModal
+                <RequireInputConfirmModal
                   isOpen={isDeleteFormOpen}
                   isLoading={isDeleting}
-                  resourceName={data.name}
+                  expectedInput={data.name}
                   messageTemplate="api_resource_details.delete_description"
                   inputPlaceholder={t('api_resource_details.enter_your_api_resource_name')}
                   onCancel={() => {

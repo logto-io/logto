@@ -15,7 +15,7 @@ import CopyToClipboard from '@/components/CopyToClipboard';
 import DetailsSkeleton from '@/components/DetailsSkeleton';
 import Drawer from '@/components/Drawer';
 import LinkButton from '@/components/LinkButton';
-import ResourceDeleteConfirmModal from '@/components/ResourceDeleteConfirmModal';
+import RequireInputConfirmModal from '@/components/RequireInputConfirmModal';
 import TabNav, { TabNavItem } from '@/components/TabNav';
 import useApi, { RequestError } from '@/hooks/use-api';
 import Back from '@/icons/Back';
@@ -168,10 +168,10 @@ const ApplicationDetails = () => {
                   {t('general.delete')}
                 </ActionMenuItem>
               </ActionMenu>
-              <ResourceDeleteConfirmModal
+              <RequireInputConfirmModal
                 isOpen={isDeleteFormOpen}
                 isLoading={isDeleting}
-                resourceName={data.name}
+                expectedInput={data.name}
                 messageTemplate="application_details.delete_description"
                 inputPlaceholder={t('application_details.enter_your_application_name')}
                 onCancel={() => {
