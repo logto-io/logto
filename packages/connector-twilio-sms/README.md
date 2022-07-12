@@ -137,11 +137,11 @@ Twilio 提供可编程的通信工具，用于拨打和接听电话、发送和�
 >
 > 有时候你会碰到某些国家或区域的号码不支持短信服务的情况，挑选一个其他区域的号码来绕过该限制。
 
-获取了有效号码之后，按照导航前往 "Messaging" -> "Services"，点击 "Create Messaging Service" 按钮新建一个短信服务。
+获取了有效号码之后，按照导航前往 "Messaging" -> "Services"，点按 "Create Messaging Service" 按钮新建一个短信服务。
 
 填写一个服务名称然后在服务用途选择 _Notify my users_。
 
-继续下一步，为 _Sender Type_ 选择 `Phone number` 并把之前获取的电话号码添加为这个发信服务的 _sender_。
+继续下一步，为 _Sender Type_ 选择 `Phone number` 并把之前获取的手机号添加为这个发信服务的 _sender_。
 
 > ℹ️ **注意**
 >
@@ -151,13 +151,13 @@ Twilio 提供可编程的通信工具，用于拨打和接听电话、发送和�
 
 我们需要获取 API 密钥来使得连接器正常工作。从 [Twilio 控制台](https://console.twilio.com/) 开始获取密钥的流程。
 
-点击页面右上角的 "Account" 菜单并前往 "API keys & tokens" 页面，通过验证后获取 `Account SID` 和 `Auth token`。
+点按页面右上角的 "Account" 菜单并前往 "API keys & tokens" 页面，通过验证后获取 `Account SID` 和 `Auth token`。
 
 通过侧边栏回到 "Messaging" -> "Services" 设置页面，找到发信服务的 `Sid`。
 
 ## 编写连接器的 JSON
 
-用发信服务中获取的 `Account SID`，`Auth token` 和 `Sid` 信息分别对应填写 _accountSID_，_authToken_ 和 _fromMessagingServiceSID_ 栏。
+用发信服务中获取的 `Account SID`、`Auth token` 和 `Sid` 信息分别对应填写 _accountSID_、_authToken_ 和 _fromMessagingServiceSID_ 栏。
 
 你可以添加多个短信连接器的内容模板以应对不同的使用场景。这里我们以添加单个内容模板举例：
 
