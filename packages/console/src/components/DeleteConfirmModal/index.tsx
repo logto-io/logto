@@ -25,13 +25,13 @@ const DeleteConfirmModal = ({
   onConfirm,
 }: Props) => {
   const [input, setInput] = useState('');
-  const inputMismatched = input !== expectedInput;
+  const isConfirmBlocked = Boolean(expectedInput) && input !== expectedInput;
 
   return (
     <ConfirmModal
       isOpen={isOpen}
       isLoading={isLoading}
-      isConfirmButtonDisabled={Boolean(expectedInput) && inputMismatched}
+      isConfirmButtonDisabled={isConfirmBlocked}
       confirmButtonText="general.delete"
       className={className}
       onCancel={onCancel}

@@ -4,6 +4,6 @@
   font: var(--font-body-medium);
 
   > :not(:first-child) {
-    margin: _.unit(6) 0;
+    margin: _.unit(6) 0 0;
   }
 }
