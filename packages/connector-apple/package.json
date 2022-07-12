@@ -36,7 +36,7 @@
   },
   "devDependencies": {
     "@jest/types": "^27.5.1",
-    "@silverhand/eslint-config": "^0.14.0",
+    "@silverhand/eslint-config": "^0.15.0",
     "@silverhand/ts-config": "^0.14.0",
     "@types/jest": "^27.4.1",
     "@types/node": "^16.3.1",
