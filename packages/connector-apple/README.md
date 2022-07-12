@@ -81,6 +81,12 @@ You need to use the identifier that fills in the [Create an identifier](#create-
 }
 ```
 
+> ℹ️ **Note**
+> 
+> This connector doesn't support customizing `scope` (e.g., name, email) yet since Apple requires `form_post` response mode when `scope` is not empty, which is incompatible with the current connector design.
+> 
+> We'll figure out this later.
+
 ## Test Apple connector
 
 That's it. The Apple connector should be available in both web and native apps. Don't forget to [Enable connector in sign-in experience](https://docs.logto.io/docs/tutorials/get-started/enable-social-sign-in#enable-connector-in-sign-in-experience).
@@ -146,6 +152,12 @@ That's it. The Apple connector should be available in both web and native apps. 
   "clientId": "io.logto.test"
 }
 ```
+
+> ℹ️ **Note**
+> 
+> 本连接器暂时不支持自定义 `scope`（例如 name，email）。因为在 `scope` 非空时，Apple 要求 `response_mode` 为 `form_post`，与现在连接器的设计不兼容。
+> 
+> 我们将稍后解决这个问题。
 
 ## 测试 Apple 连接器
 
