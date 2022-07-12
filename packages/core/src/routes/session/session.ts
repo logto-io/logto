@@ -46,12 +46,23 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
       }),
     }),
     async (ctx, next) => {
-      await provider.interactionDetails(ctx.req, ctx.res);
+      const {
+        params: { client_id },
+      } = await provider.interactionDetails(ctx.req, ctx.res);
       const { username, password } = ctx.guard.body;
       const type = 'SignInUsernamePassword';
       ctx.log(type, { username });
 
-      const { id } = await findUserByUsernameAndPassword(username, password);
+      const { id, roleNames } = await findUserByUsernameAndPassword(username, password);
+
+      // Temp solution before migrating to RBAC. As AC sign-in exp currently hardcoded to username password only.
+      if (String(client_id) === adminConsoleApplicationId) {
+        assertThat(
+          roleNames.includes(UserRole.Admin),
+          new RequestError({ code: 'auth.forbidden', status: 403 })
+        );
+      }
+
       ctx.log(type, { userId: id });
       await updateLastSignInAt(id);
       await assignInteractionResults(ctx, provider, { login: { accountId: id } }, true);
