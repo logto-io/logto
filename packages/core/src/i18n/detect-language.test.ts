@@ -5,6 +5,7 @@ import detectLanguage from './detect-language';
 
 describe('detectLanguage', () => {
   it('detectLanguage with request header', () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const ctx: ParameterizedContext<any, any, any> = createMockContext({
       headers: {
         'accept-language': 'en,en-US;q=0.9',
@@ -17,6 +18,7 @@ describe('detectLanguage', () => {
   });
 
   it('return empty if non-language is detected', () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const ctx: ParameterizedContext<any, any, any> = createMockContext({
       headers: {
         'accept-language': '; q=0.9',

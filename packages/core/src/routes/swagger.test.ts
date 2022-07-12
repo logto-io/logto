@@ -15,7 +15,7 @@ jest.mock('js-yaml', () => ({
 }));
 
 export const createSwaggerRequest = (
-  allRouters: Array<Router<unknown, any>>,
+  allRouters: Router[],
   swaggerRouter: AnonymousRouter = new Router()
 ) => {
   swaggerRoutes(swaggerRouter, allRouters);

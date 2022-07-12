@@ -5,7 +5,7 @@ declare module 'koa-body' {
   declare function koaBody<
     StateT = Record<string, unknown>,
     ContextT = Record<string, unknown>,
-    ResponseBodyT = any
+    ResponseBodyT = unknown
   >(options?: IKoaBodyOptions): MiddlewareType<StateT, ContextT, ResponseBodyT>;
 
   export = koaBody;

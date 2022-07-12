@@ -3,7 +3,7 @@ export type Resource = Record<Language, ResourceLanguage>;
 
 export type ResourceLanguage = Record<string, ResourceKey>;
 
-export type ResourceKey = string | Record<string, any>;
+export type ResourceKey = string | Record<string, unknown>;
 
 export enum Language {
   English = 'en',

@@ -25,7 +25,7 @@
   "devDependencies": {
     "@jest/types": "^27.5.1",
     "@shopify/jest-koa-mocks": "^5.0.0",
-    "@silverhand/eslint-config": "^0.14.0",
+    "@silverhand/eslint-config": "^0.15.0",
     "@silverhand/essentials": "^1.1.6",
     "@silverhand/ts-config": "^0.14.0",
     "@types/jest": "^27.4.1",

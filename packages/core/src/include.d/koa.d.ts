@@ -7,12 +7,12 @@ declare module 'koa' {
   export type MiddlewareType<
     StateT = DefaultState,
     ContextT = DefaultContext,
-    ResponseBodyT = any,
+    ResponseBodyT = unknown,
     NextT = void
   > = KoaMiddleware<ParameterizedContext<StateT, ContextT, ResponseBodyT>, NextT>;
 
   interface Request extends BaseRequest {
-    body?: any;
+    body?: unknown;
     files?: Files;
   }
 }
