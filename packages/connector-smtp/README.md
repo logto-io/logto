@@ -125,6 +125,7 @@ After going through the guide, your connector JSON should look like this:
 >
 > Only one sample template is provided in the previous cases to keep things simple. You should add more templates for other use cases.
 > You should change values wrapped with "<" and ">" according to your Gmail, SendGrid or Aliyun account settings and choose to keep other fields w/o "<" and ">".
+> Add `{{code}}` as a placeholder in templates' content to show random passcode in sending emails.
 
 #### Config types
 
@@ -256,6 +257,7 @@ SMTP 是一个所有邮件服务提供商通用的传输协议。
 >
 > 简单起见，前面提及的所有例子都只给出了一个模板样例。如果要满足其他更多场景的使用，你需要自己添加更多模板。
 > 用尖括号 "<" 和 ">" 包起来的值需要根据 Google，SendGrid 或阿里云账号来重新填写，其他的设置可以按需进行调整。
+> 在模板的内容中加上 `{{code}}` 的占位符以在所发送邮件正文的相同位置插入随机验证码。
 
 #### 配置类型
 

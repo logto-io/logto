@@ -7,25 +7,25 @@
   "templates": [
       {
           "contentType": "text/plain",
-          "content": "This is for testing purposes only.",
+          "content": "This is for testing purposes only. Your verification code is {{code}}.",
           "subject": "Logto Test with SMTP",
           "usageType": "Test"
       },
       {
           "contentType": "text/plain",
-          "content": "This is for sign-in purposes only.",
+          "content": "This is for sign-in purposes only. Your verification code is {{code}}.",
           "subject": "Logto Sign In with SMTP",
           "usageType": "SignIn"
       },
       {
           "contentType": "text/plain",
-          "content": "This is for register purposes only.",
+          "content": "This is for register purposes only. Your verification code is {{code}}.",
           "subject": "Logto Register with SMTP",
           "usageType": "Register"
       },
       {
           "contentType": "text/plain",
-          "content": "This is for forgot-password purposes only.",
+          "content": "This is for forgot-password purposes only. Your verification code is {{code}}.",
           "subject": "Logto Forgot Password with SMTP",
           "usageType": "ForgotPassword"
       }
