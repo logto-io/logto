@@ -1,4 +1,4 @@
-import { LogDTO, LogResult } from '@logto/schemas';
+import { LogDto, LogResult } from '@logto/schemas';
 import { conditionalString } from '@silverhand/essentials';
 import classNames from 'classnames';
 import React from 'react';
@@ -42,7 +42,7 @@ const AuditLogTable = ({ userId }: Props) => {
   ]
     .filter(Boolean)
     .join('&');
-  const { data, error, mutate } = useSWR<[LogDTO[], number], RequestError>(
+  const { data, error, mutate } = useSWR<[LogDto[], number], RequestError>(
     `/api/logs?${queryString}`
   );
   const isLoading = !data && !error;

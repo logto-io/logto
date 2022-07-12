@@ -1,5 +1,5 @@
 import { Language } from '@logto/phrases';
-import { AppearanceMode, ConnectorDTO, ConnectorMetadata, SignInExperience } from '@logto/schemas';
+import { AppearanceMode, ConnectorDto, ConnectorMetadata, SignInExperience } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import classNames from 'classnames';
 import dayjs from 'dayjs';
@@ -25,7 +25,7 @@ const Preview = ({ signInExperience, className }: Props) => {
   const [language, setLanguage] = useState<Language>(Language.English);
   const [mode, setMode] = useState<AppearanceMode>(AppearanceMode.LightMode);
   const [platform, setPlatform] = useState<'desktopWeb' | 'mobile' | 'mobileWeb'>('desktopWeb');
-  const { data: allConnectors } = useSWR<ConnectorDTO[], RequestError>('/api/connectors');
+  const { data: allConnectors } = useSWR<ConnectorDto[], RequestError>('/api/connectors');
   const previewRef = useRef<HTMLIFrameElement>(null);
 
   const modeOptions = useMemo(() => {

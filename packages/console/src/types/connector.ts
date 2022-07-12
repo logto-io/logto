@@ -1,10 +1,10 @@
-import { ConnectorDTO } from '@logto/schemas';
+import { ConnectorDto } from '@logto/schemas';
 
 export type ConnectorGroup = Pick<
-  ConnectorDTO,
+  ConnectorDto,
   'name' | 'logo' | 'logoDark' | 'target' | 'type' | 'description'
 > & {
   id: string;
   enabled: boolean;
-  connectors: ConnectorDTO[];
+  connectors: ConnectorDto[];
 };

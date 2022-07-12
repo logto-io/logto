@@ -1,4 +1,4 @@
-import { AppearanceMode, ConnectorDTO, ConnectorType } from '@logto/schemas';
+import { AppearanceMode, ConnectorDto, ConnectorType } from '@logto/schemas';
 import classNames from 'classnames';
 import React, { useState } from 'react';
 import { toast } from 'react-hot-toast';
@@ -39,7 +39,7 @@ const ConnectorDetails = () => {
   const [isReadMeOpen, setIsReadMeOpen] = useState(false);
   const [isSetupOpen, setIsSetupOpen] = useState(false);
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { data, error, mutate } = useSWR<ConnectorDTO, RequestError>(
+  const { data, error, mutate } = useSWR<ConnectorDto, RequestError>(
     connectorId && `/api/connectors/${connectorId}`
   );
   const inUse = useConnectorInUse(data?.type, data?.target);
@@ -57,7 +57,7 @@ const ConnectorDetails = () => {
       .patch(`/api/connectors/${connectorId}/enabled`, {
         json: { enabled: false },
       })
-      .json<ConnectorDTO>();
+      .json<ConnectorDto>();
     toast.success(t('connector_details.connector_deleted'));
 
     await mutateGlobal('/api/connectors');

@@ -1,4 +1,4 @@
-import { ConnectorDTO, ConnectorPlatform } from '@logto/schemas';
+import { ConnectorDto, ConnectorPlatform } from '@logto/schemas';
 import classNames from 'classnames';
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -17,7 +17,7 @@ type Props = {
 
 const ConnectorTabs = ({ target, connectorId }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { data } = useSWR<ConnectorDTO[]>(`/api/connectors?target=${target}`);
+  const { data } = useSWR<ConnectorDto[]>(`/api/connectors?target=${target}`);
 
   const connectors = useMemo(() => {
     if (!data) {

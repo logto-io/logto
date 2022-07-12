@@ -1,4 +1,4 @@
-import { arbitraryObjectGuard, ConnectorDTO, Connectors, ConnectorType } from '@logto/schemas';
+import { arbitraryObjectGuard, ConnectorDto, Connectors, ConnectorType } from '@logto/schemas';
 import { emailRegEx, phoneRegEx } from '@logto/shared';
 import { object, string } from 'zod';
 
@@ -15,7 +15,7 @@ import assertThat from '@/utils/assert-that';
 
 import { AuthedRouter } from './types';
 
-const transpileConnectorInstance = ({ connector, metadata }: ConnectorInstance): ConnectorDTO => ({
+const transpileConnectorInstance = ({ connector, metadata }: ConnectorInstance): ConnectorDto => ({
   ...connector,
   ...metadata,
 });
