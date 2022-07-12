@@ -31,7 +31,7 @@ const DeleteConfirmModal = ({
     <ConfirmModal
       isOpen={isOpen}
       isLoading={isLoading}
-      isConfirmButtonDisabled={inputMismatched}
+      isConfirmButtonDisabled={Boolean(expectedInput) && inputMismatched}
       confirmButtonText="general.delete"
       className={className}
       onCancel={onCancel}
