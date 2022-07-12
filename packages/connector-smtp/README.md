@@ -47,10 +47,10 @@ A [Gmail official post](https://support.google.com/a/answer/176600) shows how to
 
 By following the post, your connector JSON should be like this:
 
-```json
+```jsonc
 {
     "host": "smtp.gmail.com",
-    "port": <port-number>,
+    "port": 587, // your SMTP port
     "username": "<your-gmail-address>",
     "password": "<password-to-previous-gmail-address>",
     "fromEmail": "<your-gmail-address>",
@@ -75,10 +75,10 @@ Developers can access _sender_ details on the ["Sender Management"](https://mc.s
 
 After going through the guide, your connector JSON should look like this:
 
-```json
+```jsonc
 {
     "host": "smtp.sendgrid.net",
-    "port": 587,
+    "port": 587, // your SMTP port
     "username": "apiKey",
     "password": "<api-key-with-at-least-mail-permission>",
     "fromEmail": "<email-address-of-a-verified-sender>",
@@ -105,10 +105,10 @@ To check "Sender Addresses", you can find the entrance on the left-side navigati
 
 After going through the guide, your connector JSON should look like this:
 
-```json
+```jsonc
 {
     "host": "<SMTP-service-address>",
-    "port": <port-number>,
+    "port": 1234, // your SMTP port
     "username": "<email-address-of-chosen-sender-address>",
     "password": "<api-key-with-at-least-mail-permission>",
     "fromEmail": "<email-address-of-a-verified-sender-should-be-the-same-as-`username`>",
@@ -185,10 +185,10 @@ SMTP 是一个所有邮件服务提供商通用的传输协议。
 
 根据文档的描述，并结合 Logto 的实现，你的 SMTP 连接器配置 JSON 应该如下：
 
-```json
+```jsonc
 {
     "host": "smtp.gmail.com",
-    "port": <port-number>,
+    "port": 587, // your SMTP port
     "username": "<your-gmail-address>",
     "password": "<password-to-previous-gmail-address>",
     "fromEmail": "<your-gmail-address>",
@@ -213,10 +213,10 @@ SMTP 是一个所有邮件服务提供商通用的传输协议。
 
 跟随配置指南，你的连接器配置 JSON 应该如下：
 
-```json
+```jsonc
 {
     "host": "smtp.sendgrid.net",
-    "port": 587,
+    "port": 587, // your SMTP port
     "username": "apiKey",
     "password": "<api-key-with-at-least-mail-permission>",
     "fromEmail": "<email-address-of-a-verified-sender>",
@@ -243,10 +243,10 @@ SMTP 是一个所有邮件服务提供商通用的传输协议。
 
 跟随配置指南，你的连接器配置 JSON 应该如下：
 
-```json
+```jsonc
 {
     "host": "<SMTP-service-address>",
-    "port": <port-number>,
+    "port": 1234, // your SMTP port
     "username": "<email-address-of-chosen-sender-address>",
     "password": "<api-key-with-at-least-mail-permission>",
     "fromEmail": "<email-address-of-a-verified-sender-should-be-the-same-as-`username`>",
