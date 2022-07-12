@@ -35,7 +35,7 @@ const ResourceDeleteConfirmModal = ({
     <ConfirmModal
       isOpen={isOpen}
       isLoading={isLoading}
-      isConfirmDisabled={inputMismatched}
+      isConfirmButtonDisabled={inputMismatched}
       confirmButtonText="general.delete"
       className={styles.content}
       onCancel={onCancel}
