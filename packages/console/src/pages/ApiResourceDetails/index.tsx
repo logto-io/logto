@@ -5,8 +5,7 @@ import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
-import Modal from 'react-modal';
-import { useLocation, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import useSWR from 'swr';
 
 import ApiResourceDark from '@/assets/images/api-resource-dark.svg';
@@ -18,6 +17,7 @@ import CopyToClipboard from '@/components/CopyToClipboard';
 import DetailsSkeleton from '@/components/DetailsSkeleton';
 import FormField from '@/components/FormField';
 import LinkButton from '@/components/LinkButton';
+import ResourceDeleteConfirmModal from '@/components/ResourceDeleteConfirmModal';
 import TabNav, { TabNavItem } from '@/components/TabNav';
 import TextInput from '@/components/TextInput';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
@@ -27,9 +27,7 @@ import Back from '@/icons/Back';
 import Delete from '@/icons/Delete';
 import More from '@/icons/More';
 import * as detailsStyles from '@/scss/details.module.scss';
-import * as modalStyles from '@/scss/modal.module.scss';
 
-import DeleteForm from './components/DeleteForm';
 import * as styles from './index.module.scss';
 
 type FormData = {
@@ -41,13 +39,16 @@ const ApiResourceDetails = () => {
   const location = useLocation();
   const { id } = useParams();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-
+  const navigate = useNavigate();
   const { data, error, mutate } = useSWR<Resource, RequestError>(id && `/api/resources/${id}`);
   const isLoading = !data && !error;
   const theme = useTheme();
   const Icon = theme === AppearanceMode.LightMode ? ApiResource : ApiResourceDark;
 
   const isLogtoManagementApiResource = data?.id === managementResource.id;
+
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [isDeleted, setIsDeleted] = useState(false);
 
   const {
     handleSubmit,
@@ -80,6 +81,25 @@ const ApiResourceDetails = () => {
     void mutate(updatedApiResource);
     toast.success(t('general.saved'));
   });
+
+  const onDelete = async () => {
+    if (!data || isDeleting) {
+      return;
+    }
+
+    setIsDeleting(true);
+
+    try {
+      await api.delete(`/api/resources/${data.id}`);
+      setIsDeleted(true);
+      setIsDeleting(false);
+      setIsDeleteFormOpen(false);
+      toast.success(t('api_resource_details.api_resource_deleted', { name: data.name }));
+      navigate(`/api-resources`);
+    } catch {
+      setIsDeleting(false);
+    }
+  };
 
   return (
     <div className={detailsStyles.container}>
@@ -117,19 +137,17 @@ const ApiResourceDetails = () => {
                     {t('general.delete')}
                   </ActionMenuItem>
                 </ActionMenu>
-                <Modal
+                <ResourceDeleteConfirmModal
                   isOpen={isDeleteFormOpen}
-                  className={modalStyles.content}
-                  overlayClassName={modalStyles.overlay}
-                >
-                  <DeleteForm
-                    id={data.id}
-                    name={data.name}
-                    onClose={() => {
-                      setIsDeleteFormOpen(false);
-                    }}
-                  />
-                </Modal>
+                  isLoading={isDeleting}
+                  name={data.name}
+                  messageTemplate="api_resource_details.delete_description"
+                  inputPlaceholder={t('api_resource_details.enter_your_api_resource_name')}
+                  onCancel={() => {
+                    setIsDeleteFormOpen(false);
+                  }}
+                  onConfirm={onDelete}
+                />
               </div>
             )}
           </Card>
@@ -176,7 +194,7 @@ const ApiResourceDetails = () => {
           </Card>
         </>
       )}
-      <UnsavedChangesAlertModal hasUnsavedChanges={isDirty} />
+      <UnsavedChangesAlertModal hasUnsavedChanges={!isDeleted && isDirty} />
     </div>
   );
 };

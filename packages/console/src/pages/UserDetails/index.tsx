@@ -1,19 +1,21 @@
 import { User } from '@logto/schemas';
 import classNames from 'classnames';
 import React, { useMemo, useState } from 'react';
+import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import ReactModal from 'react-modal';
-import { useLocation, useParams, useSearchParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import useSWR from 'swr';
 
 import ActionMenu, { ActionMenuItem } from '@/components/ActionMenu';
 import Card from '@/components/Card';
+import ConfirmModal from '@/components/ConfirmModal';
 import CopyToClipboard from '@/components/CopyToClipboard';
 import DetailsSkeleton from '@/components/DetailsSkeleton';
 import LinkButton from '@/components/LinkButton';
 import TabNav, { TabNavItem } from '@/components/TabNav';
 import { generateAvatarPlaceHolderById } from '@/consts/avatars';
-import { RequestError } from '@/hooks/use-api';
+import useApi, { RequestError } from '@/hooks/use-api';
 import Back from '@/icons/Back';
 import Delete from '@/icons/Delete';
 import More from '@/icons/More';
@@ -22,7 +24,6 @@ import * as detailsStyles from '@/scss/details.module.scss';
 import * as modalStyles from '@/scss/modal.module.scss';
 
 import CreateSuccess from './components/CreateSuccess';
-import DeleteForm from './components/DeleteForm';
 import ResetPasswordForm from './components/ResetPasswordForm';
 import UserLogs from './components/UserLogs';
 import UserSettings from './components/UserSettings';
@@ -37,11 +38,15 @@ const UserDetails = () => {
   const password = passwordEncoded && atob(passwordEncoded);
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const [isDeleteFormOpen, setIsDeleteFormOpen] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [isDeleted, setIsDeleted] = useState(false);
   const [isResetPasswordFormOpen, setIsResetPasswordFormOpen] = useState(false);
   const [resetResult, setResetResult] = useState<string>();
 
   const { data, error, mutate } = useSWR<User, RequestError>(userId && `/api/users/${userId}`);
   const isLoading = !data && !error;
+  const api = useApi();
+  const navigate = useNavigate();
 
   const userFormData = useMemo(() => {
     if (!data) {
@@ -53,6 +58,25 @@ const UserDetails = () => {
       customData: JSON.stringify(data.customData, null, 2),
     };
   }, [data]);
+
+  const onDelete = async () => {
+    if (!data || isDeleting) {
+      return;
+    }
+
+    setIsDeleting(true);
+
+    try {
+      await api.delete(`/api/users/${data.id}`);
+      setIsDeleted(true);
+      setIsDeleting(false);
+      setIsDeleteFormOpen(false);
+      toast.success(t('user_details.deleted', { name: data.name }));
+      navigate('/users');
+    } catch {
+      setIsDeleting(false);
+    }
+  };
 
   return (
     <div className={detailsStyles.container}>
@@ -124,18 +148,16 @@ const UserDetails = () => {
                   }}
                 />
               </ReactModal>
-              <ReactModal
+              <ConfirmModal
                 isOpen={isDeleteFormOpen}
-                className={modalStyles.content}
-                overlayClassName={modalStyles.overlay}
+                isLoading={isDeleting}
+                onCancel={() => {
+                  setIsDeleteFormOpen(false);
+                }}
+                onConfirm={onDelete}
               >
-                <DeleteForm
-                  id={data.id}
-                  onClose={() => {
-                    setIsDeleteFormOpen(false);
-                  }}
-                />
-              </ReactModal>
+                <div>{t('user_details.delete_description')}</div>
+              </ConfirmModal>
             </div>
           </Card>
           <Card className={classNames(styles.body, detailsStyles.body)}>
@@ -148,6 +170,7 @@ const UserDetails = () => {
               <UserSettings
                 userData={data}
                 userFormData={userFormData}
+                isDeleted={isDeleted}
                 onUserUpdated={(user) => {
                   void mutate(user);
                 }}
