@@ -171,7 +171,7 @@ const ApplicationDetails = () => {
               <ResourceDeleteConfirmModal
                 isOpen={isDeleteFormOpen}
                 isLoading={isDeleting}
-                name={data.name}
+                resourceName={data.name}
                 messageTemplate="application_details.delete_description"
                 inputPlaceholder={t('application_details.enter_your_application_name')}
                 onCancel={() => {

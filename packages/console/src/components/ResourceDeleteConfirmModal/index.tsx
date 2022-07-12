@@ -10,7 +10,7 @@ import * as styles from './index.module.scss';
 type Props = {
   isOpen: boolean;
   isLoading: boolean;
-  name: string;
+  resourceName: string;
   messageTemplate: AdminConsoleKey;
   inputPlaceholder: string;
   onCancel: () => void;
@@ -20,7 +20,7 @@ type Props = {
 const ResourceDeleteConfirmModal = ({
   isOpen,
   isLoading,
-  name,
+  resourceName,
   messageTemplate,
   inputPlaceholder,
   onCancel,
@@ -29,7 +29,7 @@ const ResourceDeleteConfirmModal = ({
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   const [inputName, setInputName] = useState('');
-  const inputMismatched = inputName !== name;
+  const inputMismatched = inputName !== resourceName;
 
   return (
     <ConfirmModal
@@ -43,7 +43,7 @@ const ResourceDeleteConfirmModal = ({
     >
       <div className={styles.description}>
         <Trans components={{ span: <span className={styles.highlight} /> }}>
-          {t(messageTemplate, { name })}
+          {t(messageTemplate, { name: resourceName })}
         </Trans>
       </div>
       <TextInput

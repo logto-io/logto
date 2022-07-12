@@ -140,7 +140,7 @@ const ApiResourceDetails = () => {
                 <ResourceDeleteConfirmModal
                   isOpen={isDeleteFormOpen}
                   isLoading={isDeleting}
-                  name={data.name}
+                  resourceName={data.name}
                   messageTemplate="api_resource_details.delete_description"
                   inputPlaceholder={t('api_resource_details.enter_your_api_resource_name')}
                   onCancel={() => {
