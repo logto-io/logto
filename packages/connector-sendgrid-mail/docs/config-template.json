@@ -1,6 +1,7 @@
 {
   "apiKey": "<api-key>",
-  "fromEmail": "noreply@logto.test.io",
+  "fromEmail": "<noreply@logto.test.io>",
+  "fromName": "<OPTIONAL-logto>",
   "templates": [
     {
       "usageType": "SignIn",
