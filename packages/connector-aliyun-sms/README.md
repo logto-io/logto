@@ -1,6 +1,6 @@
 # Aliyun short message service connector
 
-The official Logto connector for Aliyun connector for short message service.
+The official Logto connector for Aliyun short message service.
 
 阿里云短信服务 Logto 官方连接器 [中文文档](#阿里云短信连接器)
 
