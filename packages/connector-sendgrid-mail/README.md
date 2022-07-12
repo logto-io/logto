@@ -35,10 +35,11 @@ Fill out the `apiKey` field with the API Key created in **Create API keys** sect
 Fill out the `fromEmail` and `fromName` fields with the senders' _From Address_ and _Nickname_. You can find the sender's details on the [_Sender Management_ page](https://mc.sendgrid.com/senders).
 
 You can add multiple SendGrid mail connector templates for different cases. Here is an example of adding a single template:
-    - Fill out the `subject` field, which works as the title of emails.
-    - Fill out the `content` field with arbitrary string-typed contents. Do not forget to leave the `{{code}}` placeholder for the random passcode.
-    - Fill out `usageType` field with either `Register`, `SignIn` or `Test` for different use cases.
-    - Fill out `type` field with either `text/plain` or `text/html` for different types of content.
+
+- Fill out the `subject` field, which works as the title of emails.
+- Fill out the `content` field with arbitrary string-typed contents. Do not forget to leave the `{{code}}` placeholder for the random passcode.
+- Fill out `usageType` field with either `Register`, `SignIn` or `Test` for different use cases.
+- Fill out `type` field with either `text/plain` or `text/html` for different types of content.
 
 
 Here is an example of Aliyun DM connector config JSON.
