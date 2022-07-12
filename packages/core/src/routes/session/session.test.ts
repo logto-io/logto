@@ -1,4 +1,4 @@
-import { User } from '@logto/schemas';
+import { User, UserRole } from '@logto/schemas';
 import { adminConsoleApplicationId } from '@logto/schemas/lib/seeds';
 import { Provider } from 'oidc-provider';
 
@@ -10,7 +10,7 @@ import sessionRoutes from './session';
 
 jest.mock('@/lib/user', () => ({
   async findUserByUsernameAndPassword(username: string, password: string) {
-    if (username !== 'username') {
+    if (username !== 'username' && username !== 'admin') {
       throw new RequestError('session.invalid_credentials');
     }
 
@@ -18,7 +18,9 @@ jest.mock('@/lib/user', () => ({
       throw new RequestError('session.invalid_credentials');
     }
 
-    return { id: 'user1' };
+    const roleNames = username === 'admin' ? [UserRole.Admin] : [];
+
+    return { id: 'user1', roleNames };
   },
   generateUserId: () => 'user1',
   encryptUserPassword: (password: string) => ({
@@ -120,6 +122,7 @@ describe('sessionRoutes', () => {
 
   describe('POST /session/sign-in/username-password', () => {
     it('assign result and redirect', async () => {
+      interactionDetails.mockResolvedValueOnce({ params: {} });
       const response = await sessionRequest.post('/session/sign-in/username-password').send({
         username: 'username',
         password: 'password',
@@ -135,6 +138,7 @@ describe('sessionRoutes', () => {
     });
 
     it('throw if user not found', async () => {
+      interactionDetails.mockResolvedValueOnce({ params: {} });
       const response = await sessionRequest.post('/session/sign-in/username-password').send({
         username: 'notexistuser',
         password: 'password',
@@ -143,11 +147,37 @@ describe('sessionRoutes', () => {
     });
 
     it('throw if user found but wrong password', async () => {
+      interactionDetails.mockResolvedValueOnce({ params: {} });
       const response = await sessionRequest.post('/session/sign-in/username-password').send({
         username: 'username',
         password: '_password',
       });
       expect(response.statusCode).toEqual(400);
+    });
+
+    it('throw if non-admin user log in to AC', async () => {
+      interactionDetails.mockResolvedValueOnce({
+        params: { client_id: adminConsoleApplicationId },
+      });
+      const response = await sessionRequest.post('/session/sign-in/username-password').send({
+        username: 'username',
+        password: 'password',
+      });
+
+      expect(response.statusCode).toEqual(403);
+      console.log(response);
+    });
+
+    it('should throw if admin user log in to AC', async () => {
+      interactionDetails.mockResolvedValueOnce({
+        params: { client_id: adminConsoleApplicationId },
+      });
+      const response = await sessionRequest.post('/session/sign-in/username-password').send({
+        username: 'admin',
+        password: 'password',
+      });
+
+      expect(response.statusCode).toEqual(200);
     });
   });
 
