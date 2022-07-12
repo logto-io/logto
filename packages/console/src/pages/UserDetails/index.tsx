@@ -91,9 +91,15 @@ const UserDetails = () => {
       {userId && data && (
         <>
           <Card className={styles.header}>
+            {/**
+             * Some social connectors like Google will block the references to its image resource,
+             * without specifying the referrerPolicy attribute. Reference:
+             * https://stackoverflow.com/questions/40570117/http403-forbidden-error-when-trying-to-load-img-src-with-google-profile-pic
+             */}
             <img
               className={styles.avatar}
               src={data.avatar || generateAvatarPlaceHolderById(userId)}
+              referrerPolicy="no-referrer"
             />
             <div className={styles.metadata}>
               <div className={styles.name}>{data.name ?? '-'}</div>
