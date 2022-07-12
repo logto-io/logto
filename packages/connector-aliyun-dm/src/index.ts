@@ -37,7 +37,7 @@ export default class AliyunDmConnector implements EmailConnector {
     const emailConfig = await this.getConfig(this.metadata.id);
     await this.validateConfig(emailConfig);
 
-    return this.sendMessageCore(address, type, data, emailConfig);
+    return this.sendMessageBy(emailConfig, address, type, data);
   };
 
   public sendTestMessage: EmailSendMessageFunction = async (address, type, data, config) => {
@@ -47,14 +47,14 @@ export default class AliyunDmConnector implements EmailConnector {
 
     await this.validateConfig(config);
 
-    return this.sendMessageCore(address, type, data, config as AliyunDmConfig);
+    return this.sendMessageBy(config as AliyunDmConfig, address, type, data);
   };
 
-  private readonly sendMessageCore = async (
+  private readonly sendMessageBy = async (
+    config: AliyunDmConfig,
     address: string,
     type: keyof EmailMessageTypes,
-    data: EmailMessageTypes[typeof type],
-    config: AliyunDmConfig
+    data: EmailMessageTypes[typeof type]
   ) => {
     const { accessKeyId, accessKeySecret, accountName, fromAlias, templates } = config;
     const template = templates.find((template) => template.usageType === type);

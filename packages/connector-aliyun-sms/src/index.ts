@@ -32,7 +32,7 @@ export default class AliyunSmsConnector implements SmsConnector {
     const smsConfig = await this.getConfig(this.metadata.id);
     await this.validateConfig(smsConfig);
 
-    return this.sendMessageCore(phone, type, { code }, smsConfig);
+    return this.sendMessageBy(smsConfig, phone, type, { code });
   };
 
   public sendTestMessage: SmsSendMessageFunction = async (phone, type, { code }, config) => {
@@ -42,14 +42,14 @@ export default class AliyunSmsConnector implements SmsConnector {
 
     await this.validateConfig(config);
 
-    return this.sendMessageCore(phone, type, { code }, config as AliyunSmsConfig);
+    return this.sendMessageBy(config as AliyunSmsConfig, phone, type, { code });
   };
 
-  private readonly sendMessageCore = async (
+  private readonly sendMessageBy = async (
+    config: AliyunSmsConfig,
     phone: string,
     type: keyof SmsMessageTypes,
-    data: SmsMessageTypes[typeof type],
-    config: AliyunSmsConfig
+    data: SmsMessageTypes[typeof type]
   ) => {
     const { accessKeyId, accessKeySecret, signName, templates } = config;
     const template = templates.find(({ usageType }) => usageType === type);

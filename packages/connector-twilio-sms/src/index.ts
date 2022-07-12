@@ -31,7 +31,7 @@ export default class TwilioSmsConnector implements SmsConnector {
     const smsConfig = await this.getConfig(this.metadata.id);
     await this.validateConfig(smsConfig);
 
-    return this.sendMessageCore(address, type, data, smsConfig);
+    return this.sendMessageBy(smsConfig, address, type, data);
   };
 
   public sendTestMessage: SmsSendMessageFunction = async (address, type, data, config) => {
@@ -41,14 +41,14 @@ export default class TwilioSmsConnector implements SmsConnector {
 
     await this.validateConfig(config);
 
-    return this.sendMessageCore(address, type, data, config as TwilioSmsConfig);
+    return this.sendMessageBy(config as TwilioSmsConfig, address, type, data);
   };
 
-  private readonly sendMessageCore = async (
+  private readonly sendMessageBy = async (
+    config: TwilioSmsConfig,
     phone: string,
     type: keyof SmsMessageTypes,
-    data: SmsMessageTypes[typeof type],
-    config: TwilioSmsConfig
+    data: SmsMessageTypes[typeof type]
   ) => {
     const { accountSID, authToken, fromMessagingServiceSID, templates } = config;
     const template = templates.find((template) => template.usageType === type);
