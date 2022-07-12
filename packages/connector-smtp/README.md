@@ -12,7 +12,8 @@ SMTP Logto 官方连接器 [中文文档](#smtp-连接器)
     - [Set up for Gmail use](#set-up-for-gmail-use)
     - [Integrate with SendGrid SMTP API](#integrate-with-sendgrid-smtp-api)
     - [Configure with Aliyun direct mail account](#configure-with-aliyun-direct-mail-account)
-      - [Config types](#config-types)
+    - [Test SMTP connector](#test-smtp-connector)
+    - [Config types](#config-types)
   - [References](#references)
 - [SMTP 连接器](#smtp-连接器)
   - [开始上手](#开始上手)
@@ -20,7 +21,8 @@ SMTP Logto 官方连接器 [中文文档](#smtp-连接器)
     - [SMTP 连接器对接 Gmail 的配置](#smtp-连接器对接-gmail-的配置)
     - [集成 SendGrid SMTP API](#集成-sendgrid-smtp-api)
     - [针对阿里云邮件帐号的配置](#针对阿里云邮件帐号的配置)
-      - [配置类型](#配置类型)
+    - [测试 SMTP 连接器](#测试-smtp-连接器)
+    - [配置类型](#配置类型)
   - [参考](#参考)
 
 ## Get started
@@ -127,7 +129,13 @@ After going through the guide, your connector JSON should look like this:
 > You should change values wrapped with "<" and ">" according to your Gmail, SendGrid or Aliyun account settings and choose to keep other fields w/o "<" and ">".
 > Add `{{code}}` as a placeholder in templates' content to show random passcode in sending emails.
 
-#### Config types
+### Test SMTP connector
+
+You can type in an email address and click on "Send" to see whether the settings can work before "Save and Done".
+
+That's it. Don't forget to [Enable connector in sign-in experience](https://docs.logto.io/docs/tutorials/get-started/enable-passcode-sign-in/#enable-connector-in-sign-in-experience).
+
+### Config types
 
 | Name      | Type       |
 |-----------|------------|
@@ -259,7 +267,13 @@ SMTP 是一个所有邮件服务提供商通用的传输协议。
 > 用尖括号 "<" 和 ">" 包起来的值需要根据 Google，SendGrid 或阿里云账号来重新填写，其他的设置可以按需进行调整。
 > 在模板的内容中加上 `{{code}}` 的占位符以在所发送邮件正文的相同位置插入随机验证码。
 
-#### 配置类型
+### 测试 SMTP 连接器
+
+你可以在「保存并完成」之前输入一个手机号码并点按「发送」来测试配置是否可以正常工作。
+
+大功告成！快去 [启用短信或邮件验证码登录](https://docs.logto.io/zh-cn/docs/tutorials/get-started/enable-passcode-sign-in/#%E5%9C%A8%E7%99%BB%E5%BD%95%E4%BD%93%E9%AA%8C%E4%B8%AD%E5%90%AF%E7%94%A8%E8%BF%9E%E6%8E%A5%E5%99%A8) 吧。
+
+### 配置类型
 
 | 名称      | 类型        |
 |-----------|------------|
