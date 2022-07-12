@@ -68,7 +68,7 @@ Here is an example of Twilio SMS connector config JSON.
 
 ### Test Twilio SMS connector
 
-You can type in a phone number and click on "Send" to see whether the settings can work before "Save and Done".
+You can enter a phone number and click on "Send" to see whether the settings can work before "Save and Done".
 
 That's it. Don't forget to [Enable connector in sign-in experience](https://docs.logto.io/docs/tutorials/get-started/enable-passcode-sign-in/#enable-connector-in-sign-in-experience).
 
