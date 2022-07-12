@@ -8,6 +8,7 @@
   box-shadow: var(--shadow-1);
   padding: _.unit(2) _.unit(3);
   font: var(--font-body-medium);
+  max-width: 300px;
 
   &::after {
     content: '';
@@ -24,5 +25,22 @@
 
   &.arrowUp::after {
     top: 0%;
+  }
+
+  &.start::after {
+    left: _.unit(10);
+  }
+
+  &.end::after {
+    right: _.unit(10);
+  }
+
+  .content {
+    // https://css-tricks.com/almanac/properties/l/line-clamp/
+    /* stylelint-disable-next-line value-no-vendor-prefix */
+    display: -webkit-box;
+    -webkit-line-clamp: 6;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
 }

@@ -2,7 +2,7 @@ import classNames from 'classnames';
 import React, { ReactNode, RefObject, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 
-import usePosition from '@/hooks/use-position';
+import usePosition, { HorizontalAlignment } from '@/hooks/use-position';
 
 import * as styles from './index.module.scss';
 
@@ -11,24 +11,42 @@ type Props = {
   anchorRef: RefObject<Element>;
   className?: string;
   isKeepOpen?: boolean;
+  horizontalAlign?: HorizontalAlignment;
 };
 
-const Tooltip = ({ content, anchorRef, className, isKeepOpen = false }: Props) => {
+const getHorizontalOffset = (alignment: HorizontalAlignment): number => {
+  switch (alignment) {
+    case 'start':
+      return -32;
+    case 'end':
+      return 32;
+    default:
+      return 0;
+  }
+};
+
+const Tooltip = ({
+  content,
+  anchorRef,
+  className,
+  isKeepOpen = false,
+  horizontalAlign = 'start',
+}: Props) => {
   const [tooltipDom, setTooltipDom] = useState<HTMLDivElement>();
   const tooltipRef = useRef<HTMLDivElement>(null);
 
   const { position, positionState, mutate } = usePosition({
     verticalAlign: 'top',
-    horizontalAlign: 'center',
-    offset: { vertical: 20, horizontal: 0 },
+    horizontalAlign,
+    offset: { vertical: 16, horizontal: getHorizontalOffset(horizontalAlign) },
     anchorRef,
     overlayRef: tooltipRef,
   });
 
-  const [showUp, setShowUp] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
-    if (!showUp) {
+    if (!isVisible) {
       return;
     }
 
@@ -39,7 +57,7 @@ const Tooltip = ({ content, anchorRef, className, isKeepOpen = false }: Props) =
     return () => {
       cancelAnimationFrame(mutateAnimationFrame);
     };
-  }, [showUp, mutate]);
+  }, [isVisible, mutate]);
 
   useEffect(() => {
     if (!anchorRef.current) {
@@ -47,7 +65,7 @@ const Tooltip = ({ content, anchorRef, className, isKeepOpen = false }: Props) =
     }
 
     if (isKeepOpen) {
-      setShowUp(true);
+      setIsVisible(true);
 
       return;
     }
@@ -55,13 +73,13 @@ const Tooltip = ({ content, anchorRef, className, isKeepOpen = false }: Props) =
     const dom = anchorRef.current;
 
     const enterHandler = () => {
-      if (!showUp) {
-        setShowUp(true);
+      if (!isVisible) {
+        setIsVisible(true);
       }
     };
 
     const leaveHandler = () => {
-      setShowUp(false);
+      setIsVisible(false);
     };
 
     dom.addEventListener('mouseenter', enterHandler);
@@ -71,10 +89,10 @@ const Tooltip = ({ content, anchorRef, className, isKeepOpen = false }: Props) =
       dom.removeEventListener('mouseenter', enterHandler);
       dom.removeEventListener('mouseleave', leaveHandler);
     };
-  }, [anchorRef, showUp, isKeepOpen]);
+  }, [anchorRef, isVisible, isKeepOpen]);
 
   useEffect(() => {
-    if (!showUp) {
+    if (!isVisible) {
       if (tooltipDom) {
         tooltipDom.remove();
         setTooltipDom(undefined);
@@ -90,7 +108,7 @@ const Tooltip = ({ content, anchorRef, className, isKeepOpen = false }: Props) =
     }
 
     return () => tooltipDom?.remove();
-  }, [showUp, tooltipDom]);
+  }, [isVisible, tooltipDom]);
 
   useLayoutEffect(() => {
     mutate();
@@ -105,10 +123,15 @@ const Tooltip = ({ content, anchorRef, className, isKeepOpen = false }: Props) =
   return createPortal(
     <div
       ref={tooltipRef}
-      className={classNames(styles.tooltip, isArrowUp && styles.arrowUp, className)}
+      className={classNames(
+        styles.tooltip,
+        isArrowUp && styles.arrowUp,
+        styles[horizontalAlign],
+        className
+      )}
       style={{ ...position }}
     >
-      {content}
+      <div className={styles.content}>{content}</div>
     </div>,
     tooltipDom
   );
