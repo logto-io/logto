@@ -1,4 +1,4 @@
-import { LogDTO, User } from '@logto/schemas';
+import { LogDto, User } from '@logto/schemas';
 import classNames from 'classnames';
 import dayjs from 'dayjs';
 import React from 'react';
@@ -30,7 +30,7 @@ const AuditLogDetails = () => {
   const { userId, logId } = useParams();
   const { pathname } = useLocation();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { data, error } = useSWR<LogDTO, RequestError>(logId && `/api/logs/${logId}`);
+  const { data, error } = useSWR<LogDto, RequestError>(logId && `/api/logs/${logId}`);
   const { data: userData } = useSWR<User, RequestError>(userId && `/api/users/${userId}`);
 
   const isLoading = !data && !error;

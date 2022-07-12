@@ -1,4 +1,4 @@
-import { ConnectorDTO, ConnectorType } from '@logto/schemas';
+import { ConnectorDto, ConnectorType } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
@@ -13,7 +13,7 @@ import ConnectorName from '../ConnectorName';
 
 type Props = {
   type: ConnectorType;
-  connectors: ConnectorDTO[];
+  connectors: ConnectorDto[];
   onClickSetup?: () => void;
 };
 

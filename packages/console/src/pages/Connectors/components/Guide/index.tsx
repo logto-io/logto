@@ -1,4 +1,4 @@
-import { ConnectorDTO, ConnectorType } from '@logto/schemas';
+import { ConnectorDto, ConnectorType } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import i18next from 'i18next';
 import React from 'react';
@@ -21,7 +21,7 @@ import { GuideForm } from '@/types/guide';
 import * as styles from './index.module.scss';
 
 type Props = {
-  connector: ConnectorDTO;
+  connector: ConnectorDto;
   onClose: () => void;
 };
 
@@ -56,12 +56,12 @@ const Guide = ({ connector, onClose }: Props) => {
         .patch(`/api/connectors/${connectorId}`, {
           json: { config },
         })
-        .json<ConnectorDTO>();
+        .json<ConnectorDto>();
       await api
         .patch(`/api/connectors/${connectorId}/enabled`, {
           json: { enabled: true },
         })
-        .json<ConnectorDTO>();
+        .json<ConnectorDto>();
 
       await updateSettings({
         ...conditional(!isSocialConnector && { passwordlessConfigured: true }),

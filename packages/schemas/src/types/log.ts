@@ -140,7 +140,7 @@ export type LogType = keyof LogPayloads;
 
 export type LogPayload = LogPayloads[LogType];
 
-export type LogDTO = Omit<Log, 'payload'> & {
+export type LogDto = Omit<Log, 'payload'> & {
   payload: {
     userId?: string;
     applicationId?: string;

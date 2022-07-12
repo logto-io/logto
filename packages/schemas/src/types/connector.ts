@@ -5,4 +5,4 @@ import { Connector } from '../db-entries';
 export type { ConnectorMetadata } from '@logto/connector-types';
 export { ConnectorType, ConnectorPlatform } from '@logto/connector-types';
 
-export type ConnectorDTO = Connector & ConnectorMetadata;
+export type ConnectorDto = Connector & ConnectorMetadata;

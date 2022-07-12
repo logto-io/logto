@@ -1,4 +1,4 @@
-import { AppearanceMode, ConnectorDTO, ConnectorType } from '@logto/schemas';
+import { AppearanceMode, ConnectorDto, ConnectorType } from '@logto/schemas';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
@@ -18,7 +18,7 @@ import * as styles from './index.module.scss';
 
 type Props = {
   type: ConnectorType;
-  connectors: ConnectorDTO[];
+  connectors: ConnectorDto[];
   onClickSetup?: () => void;
 };
 
