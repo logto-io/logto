@@ -4,6 +4,7 @@ import {
   ConnectorMetadata,
   EmailMessageTypes,
   EmailSendMessageFunction,
+  EmailSendTestMessageFunction,
   ValidateConfig,
   EmailConnector,
   GetConnectorConfig,
@@ -40,11 +41,7 @@ export default class AliyunDmConnector implements EmailConnector {
     return this.sendMessageBy(emailConfig, address, type, data);
   };
 
-  public sendTestMessage: EmailSendMessageFunction = async (address, type, data, config) => {
-    if (!config) {
-      throw new ConnectorError(ConnectorErrorCodes.InsufficientRequestParameters);
-    }
-
+  public sendTestMessage: EmailSendTestMessageFunction = async (address, type, data, config) => {
     await this.validateConfig(config);
 
     return this.sendMessageBy(config as AliyunDmConfig, address, type, data);

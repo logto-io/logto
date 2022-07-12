@@ -4,6 +4,7 @@ import {
   ConnectorMetadata,
   SmsMessageTypes,
   SmsSendMessageFunction,
+  SmsSendTestMessageFunction,
   ValidateConfig,
   SmsConnector,
   GetConnectorConfig,
@@ -34,14 +35,10 @@ export default class TwilioSmsConnector implements SmsConnector {
     return this.sendMessageBy(smsConfig, address, type, data);
   };
 
-  public sendTestMessage: SmsSendMessageFunction = async (address, type, data, config) => {
-    if (!config) {
-      throw new ConnectorError(ConnectorErrorCodes.InsufficientRequestParameters);
-    }
-
+  public sendTestMessage: SmsSendTestMessageFunction = async (phone, type, data, config) => {
     await this.validateConfig(config);
 
-    return this.sendMessageBy(config as TwilioSmsConfig, address, type, data);
+    return this.sendMessageBy(config as TwilioSmsConfig, phone, type, data);
   };
 
   private readonly sendMessageBy = async (

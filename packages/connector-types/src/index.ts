@@ -33,6 +33,7 @@ export enum ConnectorErrorCodes {
   InvalidConfig,
   InvalidResponse,
   TemplateNotFound,
+  NotImplemented,
   SocialAuthCodeInvalid,
   SocialAccessTokenInvalid,
   SocialIdTokenInvalid,
@@ -69,15 +70,27 @@ export type SmsMessageTypes = EmailMessageTypes;
 export type EmailSendMessageFunction<T = unknown> = (
   address: string,
   type: keyof EmailMessageTypes,
+  payload: EmailMessageTypes[typeof type]
+) => Promise<T>;
+
+export type EmailSendTestMessageFunction<T = unknown> = (
+  address: string,
+  type: keyof EmailMessageTypes,
   payload: EmailMessageTypes[typeof type],
-  config?: Record<string, unknown>
+  config: Record<string, unknown>
 ) => Promise<T>;
 
 export type SmsSendMessageFunction<T = unknown> = (
   phone: string,
   type: keyof SmsMessageTypes,
+  payload: SmsMessageTypes[typeof type]
+) => Promise<T>;
+
+export type SmsSendTestMessageFunction<T = unknown> = (
+  phone: string,
+  type: keyof SmsMessageTypes,
   payload: SmsMessageTypes[typeof type],
-  config?: Record<string, unknown>
+  config: Record<string, unknown>
 ) => Promise<T>;
 
 export interface BaseConnector {
@@ -88,12 +101,12 @@ export interface BaseConnector {
 
 export interface SmsConnector extends BaseConnector {
   sendMessage: SmsSendMessageFunction;
-  sendTestMessage: SmsSendMessageFunction;
+  sendTestMessage?: SmsSendTestMessageFunction;
 }
 
 export interface EmailConnector extends BaseConnector {
   sendMessage: EmailSendMessageFunction;
-  sendTestMessage: EmailSendMessageFunction;
+  sendTestMessage?: EmailSendTestMessageFunction;
 }
 
 export interface SocialConnector extends BaseConnector {

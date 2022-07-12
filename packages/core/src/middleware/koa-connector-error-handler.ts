@@ -53,6 +53,14 @@ export default function koaConnectorErrorHandler<StateT, ContextT>(): Middleware
             },
             data
           );
+        case ConnectorErrorCodes.NotImplemented:
+          throw new RequestError(
+            {
+              code: 'connector.not_implemented',
+              status: 500,
+            },
+            data
+          );
         case ConnectorErrorCodes.SocialAuthCodeInvalid:
           throw new RequestError(
             {

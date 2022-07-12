@@ -4,6 +4,7 @@ import {
   ConnectorMetadata,
   SmsMessageTypes,
   SmsSendMessageFunction,
+  SmsSendTestMessageFunction,
   ValidateConfig,
   SmsConnector,
   GetConnectorConfig,
@@ -35,14 +36,10 @@ export default class AliyunSmsConnector implements SmsConnector {
     return this.sendMessageBy(smsConfig, phone, type, { code });
   };
 
-  public sendTestMessage: SmsSendMessageFunction = async (phone, type, { code }, config) => {
-    if (!config) {
-      throw new ConnectorError(ConnectorErrorCodes.InsufficientRequestParameters);
-    }
-
+  public sendTestMessage: SmsSendTestMessageFunction = async (phone, type, data, config) => {
     await this.validateConfig(config);
 
-    return this.sendMessageBy(config as AliyunSmsConfig, phone, type, { code });
+    return this.sendMessageBy(config as AliyunSmsConfig, phone, type, data);
   };
 
   private readonly sendMessageBy = async (

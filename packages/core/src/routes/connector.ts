@@ -187,17 +187,16 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
         })
       );
 
-      if (config) {
-        await connector.validateConfig(config);
-      }
+      const { sendTestMessage } = connector;
+      assertThat(sendTestMessage, new RequestError('connector.not_implemented'));
 
-      await connector.sendTestMessage(
+      await sendTestMessage(
         subject,
         'Test',
         {
           code: phone ? '123456' : 'email-test',
         },
-        config
+        config as Record<string, unknown>
       );
 
       ctx.status = 204;
