@@ -4,7 +4,7 @@ import classNames from 'classnames';
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import useSWR from 'swr';
 
@@ -14,10 +14,10 @@ import ActionMenu, { ActionMenuItem } from '@/components/ActionMenu';
 import Button from '@/components/Button';
 import Card from '@/components/Card';
 import CopyToClipboard from '@/components/CopyToClipboard';
+import DeleteConfirmModal from '@/components/DeleteConfirmModal';
 import DetailsSkeleton from '@/components/DetailsSkeleton';
 import FormField from '@/components/FormField';
 import LinkButton from '@/components/LinkButton';
-import RequireInputConfirmModal from '@/components/RequireInputConfirmModal';
 import TabNav, { TabNavItem } from '@/components/TabNav';
 import TextInput from '@/components/TextInput';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
@@ -137,17 +137,23 @@ const ApiResourceDetails = () => {
                     {t('general.delete')}
                   </ActionMenuItem>
                 </ActionMenu>
-                <RequireInputConfirmModal
+                <DeleteConfirmModal
                   isOpen={isDeleteFormOpen}
                   isLoading={isDeleting}
                   expectedInput={data.name}
-                  messageTemplate="api_resource_details.delete_description"
+                  className={styles.deleteConfirm}
                   inputPlaceholder={t('api_resource_details.enter_your_api_resource_name')}
                   onCancel={() => {
                     setIsDeleteFormOpen(false);
                   }}
                   onConfirm={onDelete}
-                />
+                >
+                  <div className={styles.description}>
+                    <Trans components={{ span: <span className={styles.highlight} /> }}>
+                      {t('api_resource_details.delete_description', { name: data.name })}
+                    </Trans>
+                  </div>
+                </DeleteConfirmModal>
               </div>
             )}
           </Card>

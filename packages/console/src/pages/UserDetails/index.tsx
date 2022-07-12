@@ -9,8 +9,8 @@ import useSWR from 'swr';
 
 import ActionMenu, { ActionMenuItem } from '@/components/ActionMenu';
 import Card from '@/components/Card';
-import ConfirmModal from '@/components/ConfirmModal';
 import CopyToClipboard from '@/components/CopyToClipboard';
+import DeleteConfirmModal from '@/components/DeleteConfirmModal';
 import DetailsSkeleton from '@/components/DetailsSkeleton';
 import LinkButton from '@/components/LinkButton';
 import TabNav, { TabNavItem } from '@/components/TabNav';
@@ -148,7 +148,7 @@ const UserDetails = () => {
                   }}
                 />
               </ReactModal>
-              <ConfirmModal
+              <DeleteConfirmModal
                 isOpen={isDeleteFormOpen}
                 isLoading={isDeleting}
                 onCancel={() => {
@@ -157,7 +157,7 @@ const UserDetails = () => {
                 onConfirm={onDelete}
               >
                 <div>{t('user_details.delete_description')}</div>
-              </ConfirmModal>
+              </DeleteConfirmModal>
             </div>
           </Card>
           <Card className={classNames(styles.body, detailsStyles.body)}>

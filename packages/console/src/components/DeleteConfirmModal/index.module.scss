@@ -1,6 +1,6 @@
 @use '@/scss/underscore' as _;
 
-.content {
+.deleteConfirm {
   > :not(:first-child) {
     margin-top: _.unit(6);
   }

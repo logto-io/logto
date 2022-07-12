@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import React, { useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import useSWR from 'swr';
 
@@ -12,10 +12,10 @@ import ApplicationIcon from '@/components/ApplicationIcon';
 import Button from '@/components/Button';
 import Card from '@/components/Card';
 import CopyToClipboard from '@/components/CopyToClipboard';
+import DeleteConfirmModal from '@/components/DeleteConfirmModal';
 import DetailsSkeleton from '@/components/DetailsSkeleton';
 import Drawer from '@/components/Drawer';
 import LinkButton from '@/components/LinkButton';
-import RequireInputConfirmModal from '@/components/RequireInputConfirmModal';
 import TabNav, { TabNavItem } from '@/components/TabNav';
 import useApi, { RequestError } from '@/hooks/use-api';
 import Back from '@/icons/Back';
@@ -168,17 +168,23 @@ const ApplicationDetails = () => {
                   {t('general.delete')}
                 </ActionMenuItem>
               </ActionMenu>
-              <RequireInputConfirmModal
+              <DeleteConfirmModal
                 isOpen={isDeleteFormOpen}
                 isLoading={isDeleting}
                 expectedInput={data.name}
-                messageTemplate="application_details.delete_description"
                 inputPlaceholder={t('application_details.enter_your_application_name')}
+                className={styles.deleteConfirm}
                 onCancel={() => {
                   setIsDeleteFormOpen(false);
                 }}
                 onConfirm={onDelete}
-              />
+              >
+                <div className={styles.description}>
+                  <Trans components={{ span: <span className={styles.highlight} /> }}>
+                    {t('application_details.delete_description', { name: data.name })}
+                  </Trans>
+                </div>
+              </DeleteConfirmModal>
             </div>
           </Card>
           <Card className={classNames(styles.body, detailsStyles.body)}>

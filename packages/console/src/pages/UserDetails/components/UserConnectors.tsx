@@ -5,8 +5,8 @@ import React, { useMemo, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
 import Button from '@/components/Button';
-import ConfirmModal from '@/components/ConfirmModal';
 import CopyToClipboard from '@/components/CopyToClipboard';
+import DeleteConfirmModal from '@/components/DeleteConfirmModal';
 import TableError from '@/components/Table/TableError';
 import UnnamedTrans from '@/components/UnnamedTrans';
 import useApi from '@/hooks/use-api';
@@ -142,9 +142,8 @@ const UserConnectors = ({ userId, connectors, onDelete }: Props) => {
           </tbody>
         </table>
       )}
-      <ConfirmModal
+      <DeleteConfirmModal
         isOpen={deletingConnector !== undefined}
-        confirmButtonText="general.delete"
         onCancel={() => {
           setDeletingConnector(undefined);
         }}
@@ -162,7 +161,7 @@ const UserConnectors = ({ userId, connectors, onDelete }: Props) => {
             components={{ name: <UnnamedTrans resource={deletingConnector.name} /> }}
           />
         )}
-      </ConfirmModal>
+      </DeleteConfirmModal>
     </div>
   );
 };
