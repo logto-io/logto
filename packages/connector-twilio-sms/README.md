@@ -19,7 +19,7 @@ Twilio 短信服务 Logto 官方连接器 [中文文档](#twilio-短信连接器
   - [开始上手](#开始上手)
   - [创建 Twilio 帐号](#创建-twilio-帐号)
   - [设置 sender 号码](#设置-sender-号码)
-  - [获取帐号密钥](#获取帐号密钥)
+  - [获取帐号凭据](#获取帐号凭据)
   - [编写连接器的 JSON](#编写连接器的-json)
     - [测试 Twilio 短信连接器](#测试-twilio-短信连接器)
     - [配置类型](#配置类型)
@@ -147,9 +147,9 @@ Twilio 提供可编程的通信工具，用于拨打和接听电话、发送和�
 >
 > 每个号码只能绑定到唯一一个发信服务。
 
-## 获取帐号密钥
+## 获取帐号凭据
 
-我们需要获取 API 密钥来使得连接器正常工作。从 [Twilio 控制台](https://console.twilio.com/) 开始获取密钥的流程。
+我们需要获取 API 凭据来使得连接器正常工作。从 [Twilio 控制台](https://console.twilio.com/) 开始获取密钥的流程。
 
 点按页面右上角的 "Account" 菜单并前往 "API keys & tokens" 页面，通过验证后获取 `Account SID` 和 `Auth token`。
 
