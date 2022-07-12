@@ -2,7 +2,7 @@
 
 The official Logto connector for SendGrid email service.
 
-SendGrid 邮件服务 Logto 官方连接器 [中文文档](#)
+SendGrid 邮件服务 Logto 官方连接器 [中文文档](#sendgrid-邮件连接器)
 
 **Table of contents**
 
