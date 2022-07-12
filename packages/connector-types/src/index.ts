@@ -66,19 +66,19 @@ export type EmailMessageTypes = {
 
 export type SmsMessageTypes = EmailMessageTypes;
 
-export type EmailSendMessageFunction<T = Record<string, unknown>, U = unknown> = (
+export type EmailSendMessageFunction<T = unknown> = (
   address: string,
   type: keyof EmailMessageTypes,
   payload: EmailMessageTypes[typeof type],
-  config?: T
-) => Promise<U>;
+  config?: Record<string, unknown>
+) => Promise<T>;
 
-export type SmsSendMessageFunction<T = Record<string, unknown>, U = unknown> = (
+export type SmsSendMessageFunction<T = unknown> = (
   phone: string,
   type: keyof SmsMessageTypes,
   payload: SmsMessageTypes[typeof type],
-  config?: T
-) => Promise<U>;
+  config?: Record<string, unknown>
+) => Promise<T>;
 
 export interface BaseConnector {
   metadata: ConnectorMetadata;
