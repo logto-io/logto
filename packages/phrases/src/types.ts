@@ -7,7 +7,7 @@ export interface ResourceLanguage {
   [namespace: string]: ResourceKey;
 }
 
-export type ResourceKey = string | { [key: string]: any };
+export type ResourceKey = string | { [key: string]: unknown };
 
 export enum Language {
   English = 'en',

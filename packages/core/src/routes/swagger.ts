@@ -115,6 +115,8 @@ const buildOperation = (
   };
 };
 
+// Keep using `any` to accept various custom context types.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default function swaggerRoutes<T extends AnonymousRouter, R extends Router<unknown, any>>(
   router: T,
   allRouters: R[]

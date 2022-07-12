@@ -17,10 +17,10 @@ declare module 'koa-router' {
   // TypeScript Version: 2.3
 
   /* =================== USAGE ===================
-  
+
       import * as Router from "koa-router";
       var router = new Router();
-  
+
    =============================================== */
 
   import * as Koa from 'koa';
@@ -49,7 +49,7 @@ declare module 'koa-router' {
       strict?: boolean | undefined;
     }
 
-    export interface IRouterParamContext<StateT = any, CustomT = Record<string, unknown>> {
+    export interface IRouterParamContext<StateT = unknown, CustomT = Record<string, unknown>> {
       /**
        * Url params
        */
@@ -66,7 +66,7 @@ declare module 'koa-router' {
     }
 
     export type RouterContext<
-      StateT = any,
+      StateT = unknown,
       CustomT = Record<string, unknown>
     > = Koa.ParameterizedContext<StateT, CustomT & IRouterParamContext<StateT, CustomT>>;
 
@@ -74,16 +74,16 @@ declare module 'koa-router' {
     // But it's deprecated - please use `RouterContext` instead
     export interface IRouterContext extends RouterContext {}
 
-    export type IMiddleware<StateT = any, CustomT = Record<string, unknown>> = Koa.Middleware<
+    export type IMiddleware<StateT = unknown, CustomT = Record<string, unknown>> = Koa.Middleware<
       StateT,
       CustomT & IRouterParamContext<StateT, CustomT>
     >;
 
-    export type IParamMiddleware<STateT = any, CustomT = Record<string, unknown>> = (
+    export type IParamMiddleware<STateT = unknown, CustomT = Record<string, unknown>> = (
       param: string,
       ctx: RouterContext<STateT, CustomT>,
-      next: () => Promise<any>
-    ) => any;
+      next: () => Promise<unknown>
+    ) => unknown;
 
     export interface IRouterAllowedMethodsOptions {
       /**
@@ -93,11 +93,11 @@ declare module 'koa-router' {
       /**
        * Throw the returned value in place of the default NotImplemented error
        */
-      notImplemented?: (() => any) | undefined;
+      notImplemented?: (() => unknown) | undefined;
       /**
        * Throw the returned value in place of the default MethodNotAllowed error
        */
-      methodNotAllowed?: (() => any) | undefined;
+      methodNotAllowed?: (() => unknown) | undefined;
     }
 
     export interface ILayerOptions {
@@ -182,7 +182,7 @@ declare module 'koa-router' {
     }
   }
 
-  declare class Router<StateT = any, CustomT = Record<string, unknown>> {
+  declare class Router<StateT = unknown, CustomT = Record<string, unknown>> {
     params: Record<string, unknown>;
     stack: Router.Layer[];
 
@@ -699,8 +699,8 @@ declare module 'koa-router' {
      * // => "/users/3?limit=1"
      *
      */
-    url(name: string, params: any, options?: Router.IUrlOptionsQuery): string;
-    url(name: string, params: any, options?: Router.IUrlOptionsQuery): Error;
+    url(name: string, params: unknown, options?: Router.IUrlOptionsQuery): string;
+    url(name: string, params: unknown, options?: Router.IUrlOptionsQuery): Error;
 
     /**
      * Match given `path` and return corresponding routes.

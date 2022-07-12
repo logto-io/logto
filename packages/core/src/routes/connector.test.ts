@@ -120,8 +120,9 @@ describe('connector route', () => {
           address: string,
           type: keyof EmailMessageTypes,
           _payload: EmailMessageTypes[typeof type]
-          // eslint-disable-next-line @typescript-eslint/no-empty-function
-        ): Promise<any> => {},
+        ): Promise<string> => {
+          return '';
+        },
       };
       getConnectorInstancesPlaceHolder.mockResolvedValueOnce([mockedSmsConnectorInstance]);
       const sendMessageSpy = jest.spyOn(mockedSmsConnectorInstance, 'sendMessage');
@@ -150,8 +151,9 @@ describe('connector route', () => {
           address: string,
           type: keyof EmailMessageTypes,
           _payload: EmailMessageTypes[typeof type]
-          // eslint-disable-next-line @typescript-eslint/no-empty-function
-        ): Promise<any> => {},
+        ): Promise<string> => {
+          return '';
+        },
       };
       getConnectorInstancesPlaceHolder.mockResolvedValueOnce([mockedEmailConnector]);
       const sendMessageSpy = jest.spyOn(mockedEmailConnector, 'sendMessage');

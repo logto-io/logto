@@ -22,7 +22,7 @@ export type Personalization = {
   subject?: string;
   headers?: Record<string, string>;
   substitutions?: Record<string, string>;
-  dynamic_template_data?: Record<string, any>;
+  dynamic_template_data?: Record<string, unknown>;
   custom_args?: Record<string, string>;
   sendAt?: number;
 };

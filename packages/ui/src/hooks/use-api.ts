@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 
 import { PageContext } from '@/hooks/use-page-context';
 
-type UseApi<T extends any[], U> = {
+type UseApi<T extends unknown[], U> = {
   result?: U;
   error: RequestErrorBody | undefined;
   run: (...args: T) => Promise<U | undefined>;
@@ -19,7 +19,7 @@ export type ErrorHandlers = {
   callback?: (error: RequestErrorBody) => void; // Callback method
 };
 
-function useApi<Args extends any[], Response>(
+function useApi<Args extends unknown[], Response>(
   api: (...args: Args) => Promise<Response>,
   errorHandlers?: ErrorHandlers
 ): UseApi<Args, Response> {
