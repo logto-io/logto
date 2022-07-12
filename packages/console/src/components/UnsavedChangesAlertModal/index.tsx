@@ -1,5 +1,5 @@
 import type { Blocker, Transition } from 'history';
-import React, { useCallback, useContext, useEffect, useState } from 'react';
+import React, { useCallback, useContext, useLayoutEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { UNSAFE_NavigationContext, Navigator } from 'react-router-dom';
 
@@ -22,7 +22,7 @@ const UnsavedChangesAlertModal = ({ hasUnsavedChanges }: Props) => {
 
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!hasUnsavedChanges) {
       return;
     }

@@ -32,9 +32,10 @@ type Props = {
   userData: User;
   userFormData: FormData;
   onUserUpdated: (user?: User) => void;
+  isDeleted: boolean;
 };
 
-const UserSettings = ({ userData, userFormData, onUserUpdated }: Props) => {
+const UserSettings = ({ userData, userFormData, isDeleted, onUserUpdated }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   const {
@@ -145,7 +146,7 @@ const UserSettings = ({ userData, userFormData, onUserUpdated }: Props) => {
           />
         </div>
       </div>
-      <UnsavedChangesAlertModal hasUnsavedChanges={isDirty} />
+      <UnsavedChangesAlertModal hasUnsavedChanges={!isDeleted && isDirty} />
     </form>
   );
 };

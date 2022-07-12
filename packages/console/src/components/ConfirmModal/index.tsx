@@ -17,6 +17,8 @@ export type ConfirmModalProps = {
   confirmButtonText?: AdminConsoleKey;
   cancelButtonText?: AdminConsoleKey;
   isOpen: boolean;
+  isConfirmButtonDisabled?: boolean;
+  isLoading?: boolean;
   onCancel: () => void;
   onConfirm: () => void;
 };
@@ -29,6 +31,8 @@ const ConfirmModal = ({
   confirmButtonText = 'general.confirm',
   cancelButtonText = 'general.cancel',
   isOpen,
+  isConfirmButtonDisabled = false,
+  isLoading = false,
   onCancel,
   onConfirm,
 }: ConfirmModalProps) => {
@@ -43,7 +47,13 @@ const ConfirmModal = ({
         footer={
           <>
             <Button type="outline" title={cancelButtonText} onClick={onCancel} />
-            <Button type={confirmButtonType} title={confirmButtonText} onClick={onConfirm} />
+            <Button
+              type={confirmButtonType}
+              title={confirmButtonText}
+              disabled={isConfirmButtonDisabled}
+              isLoading={isLoading}
+              onClick={onConfirm}
+            />
           </>
         }
         className={classNames(styles.content, className)}

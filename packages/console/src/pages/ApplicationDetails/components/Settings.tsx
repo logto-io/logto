@@ -18,9 +18,10 @@ type Props = {
   applicationType: ApplicationType;
   oidcConfig: SnakeCaseOidcConfig;
   defaultData: Application;
+  isDeleted: boolean;
 };
 
-const Settings = ({ applicationType, oidcConfig, defaultData }: Props) => {
+const Settings = ({ applicationType, oidcConfig, defaultData, isDeleted }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const {
     control,
@@ -156,7 +157,7 @@ const Settings = ({ applicationType, oidcConfig, defaultData }: Props) => {
           )}
         />
       </FormField>
-      <UnsavedChangesAlertModal hasUnsavedChanges={isDirty} />
+      <UnsavedChangesAlertModal hasUnsavedChanges={!isDeleted && isDirty} />
     </>
   );
 };

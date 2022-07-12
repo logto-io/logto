@@ -3,9 +3,8 @@ import classNames from 'classnames';
 import React, { useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
-import { useTranslation } from 'react-i18next';
-import Modal from 'react-modal';
-import { useLocation, useParams } from 'react-router-dom';
+import { Trans, useTranslation } from 'react-i18next';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import useSWR from 'swr';
 
 import ActionMenu, { ActionMenuItem } from '@/components/ActionMenu';
@@ -13,6 +12,7 @@ import ApplicationIcon from '@/components/ApplicationIcon';
 import Button from '@/components/Button';
 import Card from '@/components/Card';
 import CopyToClipboard from '@/components/CopyToClipboard';
+import DeleteConfirmModal from '@/components/DeleteConfirmModal';
 import DetailsSkeleton from '@/components/DetailsSkeleton';
 import Drawer from '@/components/Drawer';
 import LinkButton from '@/components/LinkButton';
@@ -22,12 +22,10 @@ import Back from '@/icons/Back';
 import Delete from '@/icons/Delete';
 import More from '@/icons/More';
 import * as detailsStyles from '@/scss/details.module.scss';
-import * as modalStyles from '@/scss/modal.module.scss';
 import { applicationTypeI18nKey } from '@/types/applications';
 
 import Guide from '../Applications/components/Guide';
 import AdvancedSettings from './components/AdvancedSettings';
-import DeleteForm from './components/DeleteForm';
 import Settings from './components/Settings';
 import * as styles from './index.module.scss';
 
@@ -51,7 +49,10 @@ const ApplicationDetails = () => {
   const isLoading = (!data && !error) || (!oidcConfig && !fetchOidcConfigError);
   const [isReadmeOpen, setIsReadmeOpen] = useState(false);
   const [isDeleteFormOpen, setIsDeleteFormOpen] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [isDeleted, setIsDeleted] = useState(false);
   const api = useApi();
+  const navigate = useNavigate();
   const formMethods = useForm<Application>();
 
   const {
@@ -96,6 +97,23 @@ const ApplicationDetails = () => {
     void mutate(updatedApplication);
     toast.success(t('general.saved'));
   });
+
+  const onDelete = async () => {
+    if (!data || isDeleting) {
+      return;
+    }
+
+    try {
+      await api.delete(`/api/applications/${data.id}`);
+      setIsDeleted(true);
+      setIsDeleting(false);
+      setIsDeleteFormOpen(false);
+      toast.success(t('application_details.application_deleted', { name: data.name }));
+      navigate(`/applications`);
+    } catch {
+      setIsDeleting(false);
+    }
+  };
 
   const onCloseDrawer = () => {
     setIsReadmeOpen(false);
@@ -150,19 +168,23 @@ const ApplicationDetails = () => {
                   {t('general.delete')}
                 </ActionMenuItem>
               </ActionMenu>
-              <Modal
+              <DeleteConfirmModal
                 isOpen={isDeleteFormOpen}
-                className={modalStyles.content}
-                overlayClassName={modalStyles.overlay}
+                isLoading={isDeleting}
+                expectedInput={data.name}
+                inputPlaceholder={t('application_details.enter_your_application_name')}
+                className={styles.deleteConfirm}
+                onCancel={() => {
+                  setIsDeleteFormOpen(false);
+                }}
+                onConfirm={onDelete}
               >
-                <DeleteForm
-                  id={data.id}
-                  name={data.name}
-                  onClose={() => {
-                    setIsDeleteFormOpen(false);
-                  }}
-                />
-              </Modal>
+                <div className={styles.description}>
+                  <Trans components={{ span: <span className={styles.highlight} /> }}>
+                    {t('application_details.delete_description', { name: data.name })}
+                  </Trans>
+                </div>
+              </DeleteConfirmModal>
             </div>
           </Card>
           <Card className={classNames(styles.body, detailsStyles.body)}>
@@ -178,13 +200,18 @@ const ApplicationDetails = () => {
               <form className={classNames(styles.form, detailsStyles.body)} onSubmit={onSubmit}>
                 <div className={styles.fields}>
                   {isAdvancedSettings && (
-                    <AdvancedSettings oidcConfig={oidcConfig} defaultData={data} />
+                    <AdvancedSettings
+                      oidcConfig={oidcConfig}
+                      defaultData={data}
+                      isDeleted={isDeleted}
+                    />
                   )}
                   {!isAdvancedSettings && (
                     <Settings
                       applicationType={data.type}
                       oidcConfig={oidcConfig}
                       defaultData={data}
+                      isDeleted={isDeleted}
                     />
                   )}
                 </div>

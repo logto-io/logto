@@ -4,6 +4,20 @@
   margin: _.unit(1) 0 0 _.unit(1);
 }
 
+.deleteConfirm {
+  > :not(:first-child) {
+    margin-top: _.unit(6);
+  }
+
+  .description {
+    font: var(--font-body-medium);
+  }
+
+  .highlight {
+    color: var(--color-primary-50);
+  }
+}
+
 .header {
   display: flex;
   justify-content: space-between;

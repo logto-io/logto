@@ -11,9 +11,10 @@ import * as styles from '../index.module.scss';
 type Props = {
   oidcConfig: SnakeCaseOidcConfig;
   defaultData: Application;
+  isDeleted: boolean;
 };
 
-const AdvancedSettings = ({ oidcConfig, defaultData }: Props) => {
+const AdvancedSettings = ({ oidcConfig, defaultData, isDeleted }: Props) => {
   const {
     reset,
     formState: { isDirty },
@@ -36,7 +37,7 @@ const AdvancedSettings = ({ oidcConfig, defaultData }: Props) => {
           variant="border"
         />
       </FormField>
-      <UnsavedChangesAlertModal hasUnsavedChanges={isDirty} />
+      <UnsavedChangesAlertModal hasUnsavedChanges={!isDeleted && isDirty} />
     </>
   );
 };
