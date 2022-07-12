@@ -55,6 +55,7 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
 
       const { id, roleNames } = await findUserByUsernameAndPassword(username, password);
 
+      // Temp solution before migrating to RBAC. As AC sign-in exp currently hardcoded to username password only.
       if (String(client_id) === adminConsoleApplicationId) {
         assertThat(
           roleNames.includes(UserRole.Admin),
