@@ -2,6 +2,7 @@ import {
   ConnectorError,
   ConnectorErrorCodes,
   ConnectorMetadata,
+  SmsMessageTypes,
   SmsSendMessageFunction,
   ValidateConfig,
   SmsConnector,
@@ -27,11 +28,30 @@ export default class AliyunSmsConnector implements SmsConnector {
     }
   };
 
-  public sendMessage: SmsSendMessageFunction = async (phone, type, { code }, config) => {
-    const smsConfig =
-      (config as AliyunSmsConfig | undefined) ?? (await this.getConfig(this.metadata.id));
+  public sendMessage: SmsSendMessageFunction = async (phone, type, { code }) => {
+    const smsConfig = await this.getConfig(this.metadata.id);
     await this.validateConfig(smsConfig);
-    const { accessKeyId, accessKeySecret, signName, templates } = smsConfig;
+
+    return this.sendMessageCore(phone, type, { code }, smsConfig);
+  };
+
+  public sendTestMessage: SmsSendMessageFunction = async (phone, type, { code }, config) => {
+    if (!config) {
+      throw new ConnectorError(ConnectorErrorCodes.InsufficientRequestParameters);
+    }
+
+    await this.validateConfig(config);
+
+    return this.sendMessageCore(phone, type, { code }, config as AliyunSmsConfig);
+  };
+
+  private readonly sendMessageCore = async (
+    phone: string,
+    type: keyof SmsMessageTypes,
+    data: SmsMessageTypes[typeof type],
+    config: AliyunSmsConfig
+  ) => {
+    const { accessKeyId, accessKeySecret, signName, templates } = config;
     const template = templates.find(({ usageType }) => usageType === type);
 
     assert(
@@ -46,7 +66,7 @@ export default class AliyunSmsConnector implements SmsConnector {
           PhoneNumbers: phone,
           SignName: signName,
           TemplateCode: template.templateCode,
-          TemplateParam: JSON.stringify({ code }),
+          TemplateParam: JSON.stringify(data),
         },
         accessKeySecret
       );

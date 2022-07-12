@@ -2,6 +2,7 @@ import {
   ConnectorError,
   ConnectorErrorCodes,
   ConnectorMetadata,
+  EmailMessageTypes,
   EmailSendMessageFunction,
   ValidateConfig,
   EmailConnector,
@@ -27,11 +28,30 @@ export default class SmtpConnector implements EmailConnector {
     }
   };
 
-  public sendMessage: EmailSendMessageFunction = async (address, type, data, config) => {
-    const emailConfig =
-      (config as SmtpConfig | undefined) ?? (await this.getConfig(this.metadata.id));
+  public sendMessage: EmailSendMessageFunction = async (address, type, data) => {
+    const emailConfig = await this.getConfig(this.metadata.id);
     await this.validateConfig(emailConfig);
-    const { host, port, username, password, fromEmail, replyTo, templates } = emailConfig;
+
+    return this.sendMessageCore(address, type, data, emailConfig);
+  };
+
+  public sendTestMessage: EmailSendMessageFunction = async (address, type, data, config) => {
+    if (!config) {
+      throw new ConnectorError(ConnectorErrorCodes.InsufficientRequestParameters);
+    }
+
+    await this.validateConfig(config);
+
+    return this.sendMessageCore(address, type, data, config as SmtpConfig);
+  };
+
+  private readonly sendMessageCore = async (
+    address: string,
+    type: keyof EmailMessageTypes,
+    data: EmailMessageTypes[typeof type],
+    config: SmtpConfig
+  ) => {
+    const { host, port, username, password, fromEmail, replyTo, templates } = config;
     const template = templates.find((template) => template.usageType === type);
 
     assert(

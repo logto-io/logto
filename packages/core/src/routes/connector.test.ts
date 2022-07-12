@@ -116,15 +116,16 @@ describe('connector route', () => {
         metadata: mockedMetadata,
         validateConfig: jest.fn(),
         getConfig: jest.fn(),
-        sendMessage: async (
+        sendTestMessage: async (
           address: string,
           type: keyof EmailMessageTypes,
           _payload: EmailMessageTypes[typeof type]
           // eslint-disable-next-line @typescript-eslint/no-empty-function
         ): Promise<any> => {},
+        sendMessage: jest.fn(),
       };
       getConnectorInstancesPlaceHolder.mockResolvedValueOnce([mockedSmsConnectorInstance]);
-      const sendMessageSpy = jest.spyOn(mockedSmsConnectorInstance, 'sendMessage');
+      const sendMessageSpy = jest.spyOn(mockedSmsConnectorInstance, 'sendTestMessage');
       const response = await connectorRequest
         .post('/connectors/id/test')
         .send({ phone: '12345678901', config: { test: 123 } });
@@ -146,15 +147,16 @@ describe('connector route', () => {
         metadata: mockMetadata,
         validateConfig: jest.fn(),
         getConfig: jest.fn(),
-        sendMessage: async (
+        sendTestMessage: async (
           address: string,
           type: keyof EmailMessageTypes,
           _payload: EmailMessageTypes[typeof type]
           // eslint-disable-next-line @typescript-eslint/no-empty-function
         ): Promise<any> => {},
+        sendMessage: jest.fn(),
       };
       getConnectorInstancesPlaceHolder.mockResolvedValueOnce([mockedEmailConnector]);
-      const sendMessageSpy = jest.spyOn(mockedEmailConnector, 'sendMessage');
+      const sendMessageSpy = jest.spyOn(mockedEmailConnector, 'sendTestMessage');
       const response = await connectorRequest
         .post('/connectors/id/test')
         .send({ email: 'test@email.com', config: { test: 123 } });

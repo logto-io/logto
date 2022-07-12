@@ -2,6 +2,7 @@ import {
   ConnectorError,
   ConnectorErrorCodes,
   ConnectorMetadata,
+  SmsMessageTypes,
   SmsSendMessageFunction,
   ValidateConfig,
   SmsConnector,
@@ -26,11 +27,30 @@ export default class TwilioSmsConnector implements SmsConnector {
     }
   };
 
-  public sendMessage: SmsSendMessageFunction = async (address, type, data, config) => {
-    const smsConfig =
-      (config as TwilioSmsConfig | undefined) ?? (await this.getConfig(this.metadata.id));
+  public sendMessage: SmsSendMessageFunction = async (address, type, data) => {
+    const smsConfig = await this.getConfig(this.metadata.id);
     await this.validateConfig(smsConfig);
-    const { accountSID, authToken, fromMessagingServiceSID, templates } = smsConfig;
+
+    return this.sendMessageCore(address, type, data, smsConfig);
+  };
+
+  public sendTestMessage: SmsSendMessageFunction = async (address, type, data, config) => {
+    if (!config) {
+      throw new ConnectorError(ConnectorErrorCodes.InsufficientRequestParameters);
+    }
+
+    await this.validateConfig(config);
+
+    return this.sendMessageCore(address, type, data, config as TwilioSmsConfig);
+  };
+
+  private readonly sendMessageCore = async (
+    phone: string,
+    type: keyof SmsMessageTypes,
+    data: SmsMessageTypes[typeof type],
+    config: TwilioSmsConfig
+  ) => {
+    const { accountSID, authToken, fromMessagingServiceSID, templates } = config;
     const template = templates.find((template) => template.usageType === type);
 
     assert(
@@ -42,7 +62,7 @@ export default class TwilioSmsConnector implements SmsConnector {
     );
 
     const parameters: PublicParameters = {
-      To: address,
+      To: phone,
       MessagingServiceSid: fromMessagingServiceSID,
       Body:
         typeof data.code === 'string'

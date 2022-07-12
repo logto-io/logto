@@ -2,6 +2,7 @@ import {
   ConnectorError,
   ConnectorErrorCodes,
   ConnectorMetadata,
+  EmailMessageTypes,
   EmailSendMessageFunction,
   ValidateConfig,
   EmailConnector,
@@ -32,12 +33,30 @@ export default class AliyunDmConnector implements EmailConnector {
     }
   };
 
-  // eslint-disable-next-line complexity
-  public sendMessage: EmailSendMessageFunction = async (address, type, data, config) => {
-    const emailConfig =
-      (config as AliyunDmConfig | undefined) ?? (await this.getConfig(this.metadata.id));
+  public sendMessage: EmailSendMessageFunction = async (address, type, data) => {
+    const emailConfig = await this.getConfig(this.metadata.id);
     await this.validateConfig(emailConfig);
-    const { accessKeyId, accessKeySecret, accountName, fromAlias, templates } = emailConfig;
+
+    return this.sendMessageCore(address, type, data, emailConfig);
+  };
+
+  public sendTestMessage: EmailSendMessageFunction = async (address, type, data, config) => {
+    if (!config) {
+      throw new ConnectorError(ConnectorErrorCodes.InsufficientRequestParameters);
+    }
+
+    await this.validateConfig(config);
+
+    return this.sendMessageCore(address, type, data, config as AliyunDmConfig);
+  };
+
+  private readonly sendMessageCore = async (
+    address: string,
+    type: keyof EmailMessageTypes,
+    data: EmailMessageTypes[typeof type],
+    config: AliyunDmConfig
+  ) => {
+    const { accessKeyId, accessKeySecret, accountName, fromAlias, templates } = config;
     const template = templates.find((template) => template.usageType === type);
 
     assert(

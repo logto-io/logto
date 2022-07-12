@@ -191,7 +191,7 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
         await connector.validateConfig(config);
       }
 
-      await connector.sendMessage(
+      await connector.sendTestMessage(
         subject,
         'Test',
         {

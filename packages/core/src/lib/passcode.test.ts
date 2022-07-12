@@ -119,6 +119,7 @@ describe('sendPasscode', () => {
 
   it('should throw error when email or sms connector can not be found', async () => {
     const sendMessage = jest.fn();
+    const sendTestMessage = jest.fn();
     const validateConfig = jest.fn();
     const getConfig = jest.fn();
     mockedGetConnectorInstances.mockResolvedValueOnce([
@@ -133,6 +134,7 @@ describe('sendPasscode', () => {
           platform: null,
         },
         sendMessage,
+        sendTestMessage,
         validateConfig,
         getConfig,
       },
@@ -158,6 +160,7 @@ describe('sendPasscode', () => {
 
   it('should call sendPasscode with params matching', async () => {
     const sendMessage = jest.fn();
+    const sendTestMessage = jest.fn();
     const validateConfig = jest.fn();
     const getConfig = jest.fn();
     mockedGetConnectorInstances.mockResolvedValueOnce([
@@ -172,6 +175,7 @@ describe('sendPasscode', () => {
           platform: null,
         },
         sendMessage,
+        sendTestMessage,
         validateConfig,
         getConfig,
       },
@@ -186,6 +190,7 @@ describe('sendPasscode', () => {
           platform: null,
         },
         sendMessage,
+        sendTestMessage,
         validateConfig,
         getConfig,
       },

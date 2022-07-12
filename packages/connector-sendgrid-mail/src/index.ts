@@ -2,6 +2,7 @@ import {
   ConnectorError,
   ConnectorErrorCodes,
   ConnectorMetadata,
+  EmailMessageTypes,
   EmailSendMessageFunction,
   ValidateConfig,
   EmailConnector,
@@ -33,12 +34,30 @@ export default class SendGridMailConnector implements EmailConnector {
     }
   };
 
-  // eslint-disable-next-line complexity
-  public sendMessage: EmailSendMessageFunction = async (address, type, data, config) => {
-    const emailConfig =
-      (config as SendGridMailConfig | undefined) ?? (await this.getConfig(this.metadata.id));
+  public sendMessage: EmailSendMessageFunction = async (address, type, data) => {
+    const emailConfig = await this.getConfig(this.metadata.id);
     await this.validateConfig(emailConfig);
-    const { apiKey, fromEmail, fromName, templates } = emailConfig;
+
+    return this.sendMessageCore(address, type, data, emailConfig);
+  };
+
+  public sendTestMessage: EmailSendMessageFunction = async (address, type, data, config) => {
+    if (!config) {
+      throw new ConnectorError(ConnectorErrorCodes.InsufficientRequestParameters);
+    }
+
+    await this.validateConfig(config);
+
+    return this.sendMessageCore(address, type, data, config as SendGridMailConfig);
+  };
+
+  private readonly sendMessageCore = async (
+    address: string,
+    type: keyof EmailMessageTypes,
+    data: EmailMessageTypes[typeof type],
+    config: SendGridMailConfig
+  ) => {
+    const { apiKey, fromEmail, fromName, templates } = config;
     const template = templates.find((template) => template.usageType === type);
 
     assert(
