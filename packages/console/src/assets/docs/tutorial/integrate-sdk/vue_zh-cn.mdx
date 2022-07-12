@@ -93,21 +93,25 @@ app.mount("#app");`}
 返回你的 IDE 或编辑器，使用如下代码来实现一个登录按钮：
 
 <pre>
-<code className="language-ts">
-{`import { useLogto } from "@logto/vue";
+<code className="language-html">
+{`<script setup lang="ts">
+  import { useLogto } from "@logto/vue";
 
-const { signIn, isAuthenticated } = useLogto();
-const onClickSignIn = () => signIn('${props.redirectUris[0] ?? 'http://localhost:1234/callback'}');`}
+  const { signIn, isAuthenticated } = useLogto();
+  const onClickSignIn = () => signIn('${props.redirectUris[0] ?? 'http://localhost:1234/callback'}');
+</script>`}
 </code>
 </pre>
 
 ```html
-<div v-if="isAuthenticated">
-  <div>已登录</div>
-</div>
-<div v-else>
-  <button @click="onClickSignIn">登录</button>
-</div>
+<template>
+  <div v-if="isAuthenticated">
+    <div>已登录</div>
+  </div>
+  <div v-else>
+    <button @click="onClickSignIn">登录</button>
+  </div>
+</template>
 ```
 
 ### 处理重定向
@@ -116,12 +120,14 @@ const onClickSignIn = () => signIn('${props.redirectUris[0] ?? 'http://localhost
 
 首先，让我们来创建一个 Callback 组件：
 
-```ts
-// CallbackView.vue
-import { useHandleSignInCallback } from '@logto/vue';
-const { isLoading } = useHandleSignInCallback(() => {
-  // 完成时跳转至根路由
-});
+```html
+<!-- CallbackView.vue -->
+<script setup lang="ts">
+  import { useHandleSignInCallback } from '@logto/vue';
+  const { isLoading } = useHandleSignInCallback(() => {
+    // 完成时跳转至根路由
+  });
+</script>
 ```
 
 ```html
@@ -165,16 +171,20 @@ const router = createRouter({
 ### 实现退出登录按钮
 
 <pre>
-<code className="language-ts">
-{`import { useLogto } from "@logto/vue";
+<code className="language-html">
+{`<script setup lang="ts">
+  import { useLogto } from "@logto/vue";
 
-const { signOut } = useLogto();
-const onClickSignOut = () => signOut('${props.postLogoutRedirectUris[0] ?? 'http://localhost:1234'}');`}
+  const { signOut } = useLogto();
+  const onClickSignOut = () => signOut('${props.postLogoutRedirectUris[0] ?? 'http://localhost:1234'}');
+</script>`}
 </code>
 </pre>
 
 ```html
-<button @click="onClickSignOut">退出登录</button>
+<template>
+  <button @click="onClickSignOut">退出登录</button>
+</template>
 ```
 
 </Step>

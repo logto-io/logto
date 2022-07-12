@@ -88,26 +88,30 @@ First, let’s enter your redirect URI. E.g. `http://localhost:1234/callback`.
 
 ### Implement a sign-in button
 
-We provide two composables `useHandleSignInCallback()` and `useLogto()`, which can help you easily manage the authentication flow. 
+We provide two composables `useHandleSignInCallback()` and `useLogto()`, which can help you easily manage the authentication flow.
 
 Go back to your IDE/editor, use the following code to implement the sign-in button:
 
 <pre>
-<code className="language-ts">
-{`import { useLogto } from "@logto/vue";
+<code className="language-html">
+{`<script setup lang="ts">
+  import { useLogto } from "@logto/vue";
 
-const { signIn, isAuthenticated } = useLogto();
-const onClickSignIn = () => signIn('${props.redirectUris[0] ?? 'http://localhost:1234/callback'}');`}
+  const { signIn, isAuthenticated } = useLogto();
+  const onClickSignIn = () => signIn('${props.redirectUris[0] ?? 'http://localhost:1234/callback'}');
+</script>`}
 </code>
 </pre>
 
 ```html
-<div v-if="isAuthenticated">
-  <div>Signed in</div>
-</div>
-<div v-else>
-  <button @click="onClickSignIn">Sign In</button>
-</div>
+<template>
+  <div v-if="isAuthenticated">
+    <div>Signed in</div>
+  </div>
+  <div v-else>
+    <button @click="onClickSignIn">Sign In</button>
+  </div>
+</template>
 ```
 
 ### Handle redirect
@@ -116,12 +120,14 @@ We're almost there! In the last step, we use `http://localhost:1234/callback` as
 
 First let's create a callback component:
 
-```ts
-// CallbackView.vue
-import { useHandleSignInCallback } from '@logto/vue';
-const { isLoading } = useHandleSignInCallback(() => {
-  // Navigate to root path when finished
-});
+```html
+<!-- CallbackView.vue -->
+<script setup lang="ts">
+  import { useHandleSignInCallback } from '@logto/vue';
+  const { isLoading } = useHandleSignInCallback(() => {
+    // Navigate to root path when finished
+  });
+</script>
 ```
 
 ```html
@@ -165,16 +171,20 @@ After signing out, it'll be great to redirect user back to your website. Let's a
 ### Implement a sign-out button
 
 <pre>
-<code className="language-ts">
-{`import { useLogto } from "@logto/vue";
+<code className="language-html">
+{`<script setup lang="ts">
+  import { useLogto } from "@logto/vue";
 
-const { signOut } = useLogto();
-const onClickSignOut = () => signOut('${props.postLogoutRedirectUris[0] ?? 'http://localhost:1234'}');`}
+  const { signOut } = useLogto();
+  const onClickSignOut = () => signOut('${props.postLogoutRedirectUris[0] ?? 'http://localhost:1234'}');
+</script>`}
 </code>
 </pre>
 
 ```html
-<button @click="onClickSignOut">Sign Out</button>
+<template>
+  <button @click="onClickSignOut">Sign Out</button>
+</template>
 ```
 
 </Step>
