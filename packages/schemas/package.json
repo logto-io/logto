@@ -20,14 +20,14 @@
     "node": "^16.0.0"
   },
   "devDependencies": {
-    "@silverhand/eslint-config": "^0.15.0",
+    "@silverhand/eslint-config": "^0.16.2",
     "@silverhand/essentials": "^1.1.6",
-    "@silverhand/ts-config": "^0.15.0",
+    "@silverhand/ts-config": "^0.16.2",
     "@types/lodash.uniq": "^4.5.6",
     "@types/node": "16",
     "@types/pluralize": "^0.0.29",
     "camelcase": "^6.2.0",
-    "eslint": "^8.10.0",
+    "eslint": "^8.19.0",
     "lint-staged": "^13.0.0",
     "lodash.uniq": "^4.5.0",
     "pluralize": "^8.0.0",
@@ -37,6 +37,7 @@
   },
   "eslintConfig": {
     "extends": "@silverhand",
+    "ignorePatterns": ["src/db-entries/*"],
     "rules": {
       "@typescript-eslint/ban-types": "off"
     }

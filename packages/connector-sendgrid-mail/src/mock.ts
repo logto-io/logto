@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-syntax */
 import {
   Content,
   ContextType,
@@ -30,3 +31,4 @@ export const mockedConfig: SendGridMailConfig = {
     },
   ],
 };
+/* eslint-enable no-restricted-syntax */
