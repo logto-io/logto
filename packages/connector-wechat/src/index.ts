@@ -39,18 +39,21 @@ import {
 export default class WechatConnector implements SocialConnector {
   public metadata: ConnectorMetadata = defaultMetadata;
 
-  constructor(public readonly getConfig: GetConnectorConfig<WechatConfig>) {}
+  constructor(public readonly getConfig: GetConnectorConfig) {}
 
-  public validateConfig: ValidateConfig = async (config: unknown) => {
+  public validateConfig: ValidateConfig<WechatConfig> = async (config: unknown) => {
     const result = wechatConfigGuard.safeParse(config);
 
     if (!result.success) {
       throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, result.error);
     }
+
+    return result.data;
   };
 
   public getAuthorizationUri: GetAuthorizationUri = async ({ state, redirectUri }) => {
-    const { appId } = await this.getConfig(this.metadata.id);
+    const rawConfig = await this.getConfig(this.metadata.id);
+    const { appId } = await this.validateConfig(rawConfig);
 
     const queryParameters = new URLSearchParams({
       appid: appId,
@@ -66,7 +69,8 @@ export default class WechatConnector implements SocialConnector {
   public getAccessToken = async (
     code: string
   ): Promise<{ accessToken: string; openid: string }> => {
-    const { appId: appid, appSecret: secret } = await this.getConfig(this.metadata.id);
+    const rawConfig = await this.getConfig(this.metadata.id);
+    const { appId: appid, appSecret: secret } = await this.validateConfig(rawConfig);
 
     const httpResponse = await got.get(accessTokenEndpoint, {
       searchParams: { appid, secret, code, grant_type: 'authorization_code' },

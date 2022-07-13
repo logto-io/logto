@@ -23,19 +23,21 @@ import {
 export default class SendGridMailConnector implements EmailConnector {
   public metadata: ConnectorMetadata = defaultMetadata;
 
-  constructor(public readonly getConfig: GetConnectorConfig<SendGridMailConfig>) {}
+  constructor(public readonly getConfig: GetConnectorConfig) {}
 
-  public validateConfig: ValidateConfig = async (config: unknown) => {
+  public validateConfig: ValidateConfig<SendGridMailConfig> = async (config: unknown) => {
     const result = sendGridMailConfigGuard.safeParse(config);
 
     if (!result.success) {
       throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, result.error);
     }
+
+    return result.data;
   };
 
   public sendMessage: EmailSendMessageFunction = async (address, type, data) => {
-    const config = await this.getConfig(this.metadata.id);
-    await this.validateConfig(config);
+    const rawConfig = await this.getConfig(this.metadata.id);
+    const config = await this.validateConfig(rawConfig);
     const { apiKey, fromEmail, fromName, templates } = config;
     const template = templates.find((template) => template.usageType === type);
 

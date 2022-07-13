@@ -2,9 +2,8 @@ import { GetConnectorConfig } from '@logto/connector-types';
 
 import TwilioSmsConnector from '.';
 import { mockedConfig } from './mock';
-import { TwilioSmsConfig } from './types';
 
-const getConnectorConfig = jest.fn() as GetConnectorConfig<TwilioSmsConfig>;
+const getConnectorConfig = jest.fn() as GetConnectorConfig;
 
 const twilioSmsMethods = new TwilioSmsConnector(getConnectorConfig);
 

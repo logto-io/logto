@@ -22,21 +22,22 @@ import {
 export default class AliyunDmConnector implements EmailConnector {
   public metadata: ConnectorMetadata = defaultMetadata;
 
-  constructor(public readonly getConfig: GetConnectorConfig<AliyunDmConfig>) {}
+  constructor(public readonly getConfig: GetConnectorConfig) {}
 
-  public validateConfig: ValidateConfig = async (config: unknown) => {
+  public validateConfig: ValidateConfig<AliyunDmConfig> = async (config: unknown) => {
     const result = aliyunDmConfigGuard.safeParse(config);
 
     if (!result.success) {
       throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, result.error);
     }
+
+    return result.data;
   };
 
   // eslint-disable-next-line complexity
   public sendMessage: EmailSendMessageFunction = async (address, type, data, config) => {
-    const emailConfig =
-      (config as AliyunDmConfig | undefined) ?? (await this.getConfig(this.metadata.id));
-    await this.validateConfig(emailConfig);
+    const emailRawConfig = config ?? (await this.getConfig(this.metadata.id));
+    const emailConfig = await this.validateConfig(emailRawConfig);
     const { accessKeyId, accessKeySecret, accountName, fromAlias, templates } = emailConfig;
     const template = templates.find((template) => template.usageType === type);
 

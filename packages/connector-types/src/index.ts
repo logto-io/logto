@@ -99,7 +99,7 @@ export interface SocialConnector extends BaseConnector {
   getUserInfo: GetUserInfo;
 }
 
-export type ValidateConfig<T = Record<string, unknown>> = (config: T) => Promise<void>;
+export type ValidateConfig<T = unknown> = (config: unknown) => Promise<T>;
 
 export type GetAuthorizationUri = (payload: {
   state: string;
@@ -110,7 +110,7 @@ export type GetUserInfo = (
   data: unknown
 ) => Promise<{ id: string } & Record<string, string | undefined>>;
 
-export type GetConnectorConfig<T = Record<string, unknown>> = (id: string) => Promise<T>;
+export type GetConnectorConfig = (id: string) => Promise<unknown>;
 
 export const codeDataGuard = z.object({
   code: z.string(),

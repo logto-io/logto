@@ -4,9 +4,8 @@ import { jwtVerify } from 'jose';
 import AppleConnector from '.';
 import { authorizationEndpoint } from './constant';
 import { mockedConfig } from './mock';
-import { AppleConfig } from './types';
 
-const getConnectorConfig = jest.fn() as GetConnectorConfig<AppleConfig>;
+const getConnectorConfig = jest.fn() as GetConnectorConfig;
 
 const appleMethods = new AppleConnector(getConnectorConfig);
 

@@ -4,9 +4,8 @@ import nock from 'nock';
 import FacebookConnector from '.';
 import { accessTokenEndpoint, authorizationEndpoint, userInfoEndpoint } from './constant';
 import { clientId, clientSecret, code, dummyRedirectUri, fields, mockedConfig } from './mock';
-import { FacebookConfig } from './types';
 
-const getConnectorConfig = jest.fn() as GetConnectorConfig<FacebookConfig>;
+const getConnectorConfig = jest.fn() as GetConnectorConfig;
 
 const facebookMethods = new FacebookConnector(getConnectorConfig);
 

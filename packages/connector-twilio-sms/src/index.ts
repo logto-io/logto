@@ -16,19 +16,21 @@ import { twilioSmsConfigGuard, TwilioSmsConfig, PublicParameters } from './types
 export default class TwilioSmsConnector implements SmsConnector {
   public metadata: ConnectorMetadata = defaultMetadata;
 
-  constructor(public readonly getConfig: GetConnectorConfig<TwilioSmsConfig>) {}
+  constructor(public readonly getConfig: GetConnectorConfig) {}
 
-  public validateConfig: ValidateConfig = async (config: unknown) => {
+  public validateConfig: ValidateConfig<TwilioSmsConfig> = async (config: unknown) => {
     const result = twilioSmsConfigGuard.safeParse(config);
 
     if (!result.success) {
       throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, result.error);
     }
+
+    return result.data;
   };
 
   public sendMessage: EmailSendMessageFunction = async (address, type, data) => {
-    const config = await this.getConfig(this.metadata.id);
-    await this.validateConfig(config);
+    const rawConfig = await this.getConfig(this.metadata.id);
+    const config = await this.validateConfig(rawConfig);
     const { accountSID, authToken, fromMessagingServiceSID, templates } = config;
     const template = templates.find((template) => template.usageType === type);
 

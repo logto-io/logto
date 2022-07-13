@@ -17,20 +17,21 @@ import { aliyunSmsConfigGuard, AliyunSmsConfig, sendSmsResponseGuard } from './t
 export default class AliyunSmsConnector implements SmsConnector {
   public metadata: ConnectorMetadata = defaultMetadata;
 
-  constructor(public readonly getConfig: GetConnectorConfig<AliyunSmsConfig>) {}
+  constructor(public readonly getConfig: GetConnectorConfig) {}
 
-  public validateConfig: ValidateConfig = async (config: unknown) => {
+  public validateConfig: ValidateConfig<AliyunSmsConfig> = async (config: unknown) => {
     const result = aliyunSmsConfigGuard.safeParse(config);
 
     if (!result.success) {
       throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, result.error);
     }
+
+    return result.data;
   };
 
   public sendMessage: SmsSendMessageFunction = async (phone, type, { code }, config) => {
-    const smsConfig =
-      (config as AliyunSmsConfig | undefined) ?? (await this.getConfig(this.metadata.id));
-    await this.validateConfig(smsConfig);
+    const smsRawConfig = config ?? (await this.getConfig(this.metadata.id));
+    const smsConfig = await this.validateConfig(smsRawConfig);
     const { accessKeyId, accessKeySecret, signName, templates } = smsConfig;
     const template = templates.find(({ usageType }) => usageType === type);
 

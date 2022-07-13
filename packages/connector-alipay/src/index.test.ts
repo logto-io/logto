@@ -4,9 +4,8 @@ import nock from 'nock';
 import AlipayConnector from '.';
 import { alipayEndpoint, authorizationEndpoint } from './constant';
 import { mockedAlipayConfig, mockedAlipayConfigWithValidPrivateKey } from './mock';
-import { AlipayConfig } from './types';
 
-const getConnectorConfig = jest.fn() as GetConnectorConfig<AlipayConfig>;
+const getConnectorConfig = jest.fn() as GetConnectorConfig;
 
 const alipayMethods = new AlipayConnector(getConnectorConfig);
 

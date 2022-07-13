@@ -5,9 +5,8 @@ import * as qs from 'query-string';
 import GithubConnector from '.';
 import { accessTokenEndpoint, authorizationEndpoint, userInfoEndpoint } from './constant';
 import { mockedConfig } from './mock';
-import { GithubConfig } from './types';
 
-const getConnectorConfig = jest.fn() as GetConnectorConfig<GithubConfig>;
+const getConnectorConfig = jest.fn() as GetConnectorConfig;
 
 const githubMethods = new GithubConnector(getConnectorConfig);
 

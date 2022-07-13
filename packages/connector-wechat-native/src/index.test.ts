@@ -4,9 +4,8 @@ import nock from 'nock';
 import WechatNativeConnector from '.';
 import { accessTokenEndpoint, authorizationEndpoint, userInfoEndpoint } from './constant';
 import { mockedConfig } from './mock';
-import { WechatNativeConfig } from './types';
 
-const getConnectorConfig = jest.fn() as GetConnectorConfig<WechatNativeConfig>;
+const getConnectorConfig = jest.fn() as GetConnectorConfig;
 
 const wechatNativeMethods = new WechatNativeConnector(getConnectorConfig);
 

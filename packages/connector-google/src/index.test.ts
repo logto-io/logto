@@ -4,9 +4,8 @@ import nock from 'nock';
 import GoogleConnector from '.';
 import { accessTokenEndpoint, authorizationEndpoint, userInfoEndpoint } from './constant';
 import { mockedConfig } from './mock';
-import { GoogleConfig } from './types';
 
-const getConnectorConfig = jest.fn() as GetConnectorConfig<GoogleConfig>;
+const getConnectorConfig = jest.fn() as GetConnectorConfig;
 
 const googleMethods = new GoogleConnector(getConnectorConfig);
 

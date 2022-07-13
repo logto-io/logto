@@ -3,9 +3,8 @@ import { GetConnectorConfig } from '@logto/connector-types';
 import AliyunDmConnector from '.';
 import { mockedConfig } from './mock';
 import { singleSendMail } from './single-send-mail';
-import { AliyunDmConfig } from './types';
 
-const getConnectorConfig = jest.fn() as GetConnectorConfig<AliyunDmConfig>;
+const getConnectorConfig = jest.fn() as GetConnectorConfig;
 
 const aliyunDmMethods = new AliyunDmConnector(getConnectorConfig);
 

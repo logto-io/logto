@@ -36,18 +36,21 @@ import {
 export default class FacebookConnector implements SocialConnector {
   public metadata: ConnectorMetadata = defaultMetadata;
 
-  constructor(public readonly getConfig: GetConnectorConfig<FacebookConfig>) {}
+  constructor(public readonly getConfig: GetConnectorConfig) {}
 
-  public validateConfig: ValidateConfig = async (config: unknown) => {
+  public validateConfig: ValidateConfig<FacebookConfig> = async (config: unknown) => {
     const result = facebookConfigGuard.safeParse(config);
 
     if (!result.success) {
       throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, result.error);
     }
+
+    return result.data;
   };
 
   public getAuthorizationUri: GetAuthorizationUri = async ({ state, redirectUri }) => {
-    const config = await this.getConfig(this.metadata.id);
+    const rawConfig = await this.getConfig(this.metadata.id);
+    const config = await this.validateConfig(rawConfig);
 
     const queryParameters = new URLSearchParams({
       client_id: config.clientId,
@@ -61,8 +64,9 @@ export default class FacebookConnector implements SocialConnector {
   };
 
   public getAccessToken = async (code: string, redirectUri: string) => {
-    const { clientId: client_id, clientSecret: client_secret } = await this.getConfig(
-      this.metadata.id
+    const rawConfig = await this.getConfig(this.metadata.id);
+    const { clientId: client_id, clientSecret: client_secret } = await this.validateConfig(
+      rawConfig
     );
 
     const httpResponse = await got.get(accessTokenEndpoint, {

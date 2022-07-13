@@ -1,9 +1,8 @@
 import { GetConnectorConfig } from '@logto/connector-types';
 
 import SmtpConnector from '.';
-import { SmtpConfig } from './types';
 
-const getConnectorConfig = jest.fn() as GetConnectorConfig<SmtpConfig>;
+const getConnectorConfig = jest.fn() as GetConnectorConfig;
 
 const smtpMethods = new SmtpConnector(getConnectorConfig);
 
