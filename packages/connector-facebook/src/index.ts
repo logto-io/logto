@@ -9,14 +9,12 @@ import {
   ConnectorMetadata,
   GetAuthorizationUri,
   GetUserInfo,
-  ValidateConfig,
   SocialConnector,
   GetConnectorConfig,
   codeWithRedirectDataGuard,
 } from '@logto/connector-types';
 import { assert } from '@silverhand/essentials';
 import got, { HTTPError } from 'got';
-import { ZodError } from 'zod';
 
 import {
   accessTokenEndpoint,
@@ -34,38 +32,23 @@ import {
   userInfoResponseGuard,
 } from './types';
 
-export default class FacebookConnector implements SocialConnector {
+export default class FacebookConnector<T = FacebookConfig> implements SocialConnector<T> {
   public metadata: ConnectorMetadata = defaultMetadata;
-  private _configZodError: ZodError = new ZodError([]);
-
-  private get configZodError() {
-    return this._configZodError;
-  }
-
-  private set configZodError(zodError: ZodError) {
-    this._configZodError = zodError;
-  }
 
   constructor(public readonly getConfig: GetConnectorConfig) {}
 
-  public validateConfig: ValidateConfig<FacebookConfig> = (
-    config: unknown
-  ): config is FacebookConfig => {
+  public validateConfig(config: unknown): asserts config is FacebookConfig {
     const result = facebookConfigGuard.safeParse(config);
 
     if (!result.success) {
-      this.configZodError = result.error;
+      throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, result.error);
     }
-
-    return result.success;
-  };
+  }
 
   public getAuthorizationUri: GetAuthorizationUri = async ({ state, redirectUri }) => {
     const config = await this.getConfig(this.metadata.id);
 
-    if (!this.validateConfig(config)) {
-      throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, this.configZodError);
-    }
+    this.validateConfig(config);
 
     const queryParameters = new URLSearchParams({
       client_id: config.clientId,
@@ -81,9 +64,7 @@ export default class FacebookConnector implements SocialConnector {
   public getAccessToken = async (code: string, redirectUri: string) => {
     const config = await this.getConfig(this.metadata.id);
 
-    if (!this.validateConfig(config)) {
-      throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, this.configZodError);
-    }
+    this.validateConfig(config);
 
     const { clientId: client_id, clientSecret: client_secret } = config;
 

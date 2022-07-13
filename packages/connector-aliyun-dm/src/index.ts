@@ -3,13 +3,11 @@ import {
   ConnectorErrorCodes,
   ConnectorMetadata,
   EmailSendMessageFunction,
-  ValidateConfig,
   EmailConnector,
   GetConnectorConfig,
 } from '@logto/connector-types';
 import { assert } from '@silverhand/essentials';
 import { HTTPError } from 'got';
-import { ZodError } from 'zod';
 
 import { defaultMetadata } from './constant';
 import { singleSendMail } from './single-send-mail';
@@ -20,39 +18,23 @@ import {
   sendMailErrorResponseGuard,
 } from './types';
 
-export default class AliyunDmConnector implements EmailConnector {
+export default class AliyunDmConnector<T = AliyunDmConfig> implements EmailConnector<T> {
   public metadata: ConnectorMetadata = defaultMetadata;
-  private _configZodError: ZodError = new ZodError([]);
-
-  private get configZodError() {
-    return this._configZodError;
-  }
-
-  private set configZodError(zodError: ZodError) {
-    this._configZodError = zodError;
-  }
-
   constructor(public readonly getConfig: GetConnectorConfig) {}
 
-  public validateConfig: ValidateConfig<AliyunDmConfig> = (
-    config: unknown
-  ): config is AliyunDmConfig => {
+  public validateConfig(config: unknown): asserts config is AliyunDmConfig {
     const result = aliyunDmConfigGuard.safeParse(config);
 
     if (!result.success) {
-      this.configZodError = result.error;
+      throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, result.error);
     }
-
-    return result.success;
-  };
+  }
 
   // eslint-disable-next-line complexity
   public sendMessage: EmailSendMessageFunction = async (address, type, data, config) => {
     const emailConfig = config ?? (await this.getConfig(this.metadata.id));
 
-    if (!this.validateConfig(emailConfig)) {
-      throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, this.configZodError);
-    }
+    this.validateConfig(emailConfig);
 
     const { accessKeyId, accessKeySecret, accountName, fromAlias, templates } = emailConfig;
     const template = templates.find((template) => template.usageType === type);

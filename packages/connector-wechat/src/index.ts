@@ -6,7 +6,6 @@
 import {
   ConnectorMetadata,
   GetAuthorizationUri,
-  ValidateConfig,
   GetUserInfo,
   ConnectorError,
   ConnectorErrorCodes,
@@ -16,7 +15,6 @@ import {
 } from '@logto/connector-types';
 import { assert } from '@silverhand/essentials';
 import got, { HTTPError } from 'got';
-import { ZodError } from 'zod';
 
 import {
   authorizationEndpoint,
@@ -37,38 +35,23 @@ import {
   WechatConfig,
 } from './types';
 
-export default class WechatConnector implements SocialConnector {
+export default class WechatConnector<T = WechatConfig> implements SocialConnector<T> {
   public metadata: ConnectorMetadata = defaultMetadata;
-  private _configZodError: ZodError = new ZodError([]);
-
-  private get configZodError() {
-    return this._configZodError;
-  }
-
-  private set configZodError(zodError: ZodError) {
-    this._configZodError = zodError;
-  }
 
   constructor(public readonly getConfig: GetConnectorConfig) {}
 
-  public validateConfig: ValidateConfig<WechatConfig> = (
-    config: unknown
-  ): config is WechatConfig => {
+  public validateConfig(config: unknown): asserts config is WechatConfig {
     const result = wechatConfigGuard.safeParse(config);
 
     if (!result.success) {
-      this.configZodError = result.error;
+      throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, result.error);
     }
-
-    return result.success;
-  };
+  }
 
   public getAuthorizationUri: GetAuthorizationUri = async ({ state, redirectUri }) => {
     const config = await this.getConfig(this.metadata.id);
 
-    if (!this.validateConfig(config)) {
-      throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, this.configZodError);
-    }
+    this.validateConfig(config);
 
     const { appId } = config;
 
@@ -88,9 +71,7 @@ export default class WechatConnector implements SocialConnector {
   ): Promise<{ accessToken: string; openid: string }> => {
     const config = await this.getConfig(this.metadata.id);
 
-    if (!this.validateConfig(config)) {
-      throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, this.configZodError);
-    }
+    this.validateConfig(config);
 
     const { appId: appid, appSecret: secret } = config;
 

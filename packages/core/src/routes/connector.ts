@@ -91,7 +91,7 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
       } = await getConnectorInstanceById(id);
 
       if (enabled) {
-        await validateConfig(config);
+        validateConfig(config);
       }
 
       // Only allow one enabled connector for SMS and Email.
@@ -138,7 +138,7 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
       const { metadata, validateConfig } = await getConnectorInstanceById(id);
 
       if (body.config) {
-        await validateConfig(body.config);
+        validateConfig(body.config);
       }
 
       const connector = await updateConnector({ set: body, where: { id }, jsonbMode: 'replace' });

@@ -11,14 +11,13 @@ import {
   ConnectorMetadata,
   GetAuthorizationUri,
   GetUserInfo,
-  ValidateConfig,
   SocialConnector,
   GetConnectorConfig,
 } from '@logto/connector-types';
 import { assert } from '@silverhand/essentials';
 import dayjs from 'dayjs';
 import got from 'got';
-import { z, ZodError } from 'zod';
+import { z } from 'zod';
 
 import {
   alipayEndpoint,
@@ -44,40 +43,25 @@ import { signingParameters } from './utils';
 
 export type { AlipayConfig } from './types';
 
-export default class AlipayConnector implements SocialConnector {
+export default class AlipayConnector<T = AlipayConfig> implements SocialConnector<T> {
   public metadata: ConnectorMetadata = defaultMetadata;
 
   private readonly signingParameters = signingParameters;
-  private _configZodError: ZodError = new ZodError([]);
-
-  private get configZodError() {
-    return this._configZodError;
-  }
-
-  private set configZodError(zodError: ZodError) {
-    this._configZodError = zodError;
-  }
 
   constructor(public readonly getConfig: GetConnectorConfig) {}
 
-  public validateConfig: ValidateConfig<AlipayConfig> = (
-    config: unknown
-  ): config is AlipayConfig => {
+  public validateConfig(config: unknown): asserts config is AlipayConfig {
     const result = alipayConfigGuard.safeParse(config);
 
     if (!result.success) {
-      this.configZodError = result.error;
+      throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, result.error);
     }
-
-    return result.success;
-  };
+  }
 
   public getAuthorizationUri: GetAuthorizationUri = async ({ state, redirectUri }) => {
     const config = await this.getConfig(this.metadata.id);
 
-    if (!this.validateConfig(config)) {
-      throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, this.configZodError);
-    }
+    this.validateConfig(config);
 
     const { appId: app_id } = config;
 
@@ -132,14 +116,11 @@ export default class AlipayConnector implements SocialConnector {
     return { accessToken };
   };
 
-  // eslint-disable-next-line complexity
   public getUserInfo: GetUserInfo = async (data) => {
     const { auth_code } = await this.authorizationCallbackHandler(data);
     const config = await this.getConfig(this.metadata.id);
 
-    if (!this.validateConfig(config)) {
-      throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, this.configZodError);
-    }
+    this.validateConfig(config);
 
     const { accessToken } = await this.getAccessToken(auth_code, config);
 

@@ -6,17 +6,16 @@
 import {
   ConnectorMetadata,
   GetAuthorizationUri,
-  ValidateConfig,
   GetUserInfo,
   ConnectorError,
   ConnectorErrorCodes,
   SocialConnector,
   GetConnectorConfig,
   codeDataGuard,
+  ValidateConfig,
 } from '@logto/connector-types';
 import { assert } from '@silverhand/essentials';
 import got, { HTTPError } from 'got';
-import { ZodError } from 'zod';
 
 import {
   authorizationEndpoint,
@@ -36,38 +35,23 @@ import {
   WechatNativeConfig,
 } from './types';
 
-export default class WechatNativeConnector implements SocialConnector {
+export default class WechatNativeConnector<T = WechatNativeConfig> implements SocialConnector<T> {
   public metadata: ConnectorMetadata = defaultMetadata;
-  private _configZodError: ZodError = new ZodError([]);
-
-  private get configZodError() {
-    return this._configZodError;
-  }
-
-  private set configZodError(zodError: ZodError) {
-    this._configZodError = zodError;
-  }
 
   constructor(public readonly getConfig: GetConnectorConfig) {}
 
-  public validateConfig: ValidateConfig<WechatNativeConfig> = (
-    config: unknown
-  ): config is WechatNativeConfig => {
+  public validateConfig(config: unknown): asserts config is WechatNativeConfig {
     const result = wechatNativeConfigGuard.safeParse(config);
 
     if (!result.success) {
-      this.configZodError = result.error;
+      throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, result.error);
     }
-
-    return result.success;
-  };
+  }
 
   public getAuthorizationUri: GetAuthorizationUri = async ({ state }) => {
     const config = await this.getConfig(this.metadata.id);
 
-    if (!this.validateConfig(config)) {
-      throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, this.configZodError);
-    }
+    this.validateConfig(config);
 
     const { appId, universalLinks } = config;
 
@@ -87,9 +71,7 @@ export default class WechatNativeConnector implements SocialConnector {
   ): Promise<{ accessToken: string; openid: string }> => {
     const config = await this.getConfig(this.metadata.id);
 
-    if (!this.validateConfig(config)) {
-      throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, this.configZodError);
-    }
+    this.validateConfig(config);
 
     const { appId: appid, appSecret: secret } = config;
 

@@ -1,7 +1,6 @@
 import {
   ConnectorMetadata,
   GetAuthorizationUri,
-  ValidateConfig,
   GetUserInfo,
   ConnectorError,
   ConnectorErrorCodes,
@@ -9,42 +8,28 @@ import {
   GetConnectorConfig,
 } from '@logto/connector-types';
 import { createRemoteJWKSet, jwtVerify } from 'jose';
-import { ZodError } from 'zod';
 
 import { scope, defaultMetadata, jwksUri, issuer, authorizationEndpoint } from './constant';
 import { appleConfigGuard, AppleConfig, dataGuard } from './types';
 
 // TO-DO: support nonce validation
-export default class AppleConnector implements SocialConnector {
+export default class AppleConnector<T = AppleConfig> implements SocialConnector<T> {
   public metadata: ConnectorMetadata = defaultMetadata;
-  private _configZodError: ZodError = new ZodError([]);
-
-  private get configZodError() {
-    return this._configZodError;
-  }
-
-  private set configZodError(zodError: ZodError) {
-    this._configZodError = zodError;
-  }
 
   constructor(public readonly getConfig: GetConnectorConfig) {}
 
-  public validateConfig: ValidateConfig<AppleConfig> = (config: unknown): config is AppleConfig => {
+  public validateConfig(config: unknown): asserts config is AppleConfig {
     const result = appleConfigGuard.safeParse(config);
 
     if (!result.success) {
-      this.configZodError = result.error;
+      throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, result.error);
     }
-
-    return result.success;
-  };
+  }
 
   public getAuthorizationUri: GetAuthorizationUri = async ({ state, redirectUri }) => {
     const config = await this.getConfig(this.metadata.id);
 
-    if (!this.validateConfig(config)) {
-      throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, this.configZodError);
-    }
+    this.validateConfig(config);
 
     const queryParameters = new URLSearchParams({
       client_id: config.clientId,
@@ -68,9 +53,7 @@ export default class AppleConnector implements SocialConnector {
 
     const config = await this.getConfig(this.metadata.id);
 
-    if (!this.validateConfig(config)) {
-      throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, this.configZodError);
-    }
+    this.validateConfig(config);
 
     const { clientId } = config;
 

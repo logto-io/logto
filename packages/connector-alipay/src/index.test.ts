@@ -25,7 +25,7 @@ describe('validateConfig', () => {
   });
 
   it('should fail on empty config', async () => {
-    expect(alipayMethods.validateConfig({})).toEqual(false);
+    expect(alipayMethods.validateConfig({})).toThrow();
   });
 
   it('should fail when missing required properties', async () => {

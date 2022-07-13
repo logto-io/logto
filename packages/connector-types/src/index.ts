@@ -80,26 +80,26 @@ export type SmsSendMessageFunction<T = unknown> = (
   config?: Record<string, unknown>
 ) => Promise<T>;
 
-export interface BaseConnector {
+export interface BaseConnector<T = unknown> {
   metadata: ConnectorMetadata;
-  validateConfig: ValidateConfig;
+  validateConfig: ValidateConfig<T>;
   getConfig: GetConnectorConfig;
 }
 
-export interface SmsConnector extends BaseConnector {
+export interface SmsConnector<T = unknown> extends BaseConnector<T> {
   sendMessage: SmsSendMessageFunction;
 }
 
-export interface EmailConnector extends BaseConnector {
+export interface EmailConnector<T = unknown> extends BaseConnector<T> {
   sendMessage: EmailSendMessageFunction;
 }
 
-export interface SocialConnector extends BaseConnector {
+export interface SocialConnector<T = unknown> extends BaseConnector<T> {
   getAuthorizationUri: GetAuthorizationUri;
   getUserInfo: GetUserInfo;
 }
 
-export type ValidateConfig<T = unknown> = (config: unknown) => config is T;
+export type ValidateConfig<T = unknown> = (config: unknown) => asserts config is T;
 
 export type GetAuthorizationUri = (payload: {
   state: string;

@@ -3,13 +3,11 @@ import {
   ConnectorErrorCodes,
   ConnectorMetadata,
   EmailSendMessageFunction,
-  ValidateConfig,
   EmailConnector,
   GetConnectorConfig,
 } from '@logto/connector-types';
 import { assert } from '@silverhand/essentials';
 import got, { HTTPError } from 'got';
-import { ZodError } from 'zod';
 
 import { defaultMetadata, endpoint } from './constant';
 import {
@@ -21,39 +19,22 @@ import {
   PublicParameters,
 } from './types';
 
-export default class SendGridMailConnector implements EmailConnector {
+export default class SendGridMailConnector<T = SendGridMailConfig> implements EmailConnector<T> {
   public metadata: ConnectorMetadata = defaultMetadata;
-  private _configZodError: ZodError = new ZodError([]);
-
-  private get configZodError() {
-    return this._configZodError;
-  }
-
-  private set configZodError(zodError: ZodError) {
-    this._configZodError = zodError;
-  }
-
   constructor(public readonly getConfig: GetConnectorConfig) {}
 
-  public validateConfig: ValidateConfig<SendGridMailConfig> = (
-    config: unknown
-  ): config is SendGridMailConfig => {
+  public validateConfig(config: unknown): asserts config is SendGridMailConfig {
     const result = sendGridMailConfigGuard.safeParse(config);
 
     if (!result.success) {
-      this.configZodError = result.error;
+      throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, result.error);
     }
+  }
 
-    return result.success;
-  };
-
-  // eslint-disable-next-line complexity
   public sendMessage: EmailSendMessageFunction = async (address, type, data) => {
     const config = await this.getConfig(this.metadata.id);
 
-    if (!this.validateConfig(config)) {
-      throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, this.configZodError);
-    }
+    this.validateConfig(config);
 
     const { apiKey, fromEmail, fromName, templates } = config;
     const template = templates.find((template) => template.usageType === type);
