@@ -138,7 +138,7 @@ _Sender_ 指的是验证码邮件发出的地址。若是要通过 SendGrid 邮�
 
 _Domain Authentication_ 是推荐，但是不强制的。你可以点按 "Authenticate Your Domain" 卡片中的 "Get Started" 按钮，并各随其中的流程完成对 SendGrid _sender_ 的验证。
 
-点按 "Verify a Single Sender" 按钮，便会弹出需要输入一些重要信息以创建 _sender_ 的页面。跟随指引，把相关信息填入输入栏中，点击 "Create" 按钮。
+点按 "Verify a Single Sender" 按钮，便会弹出需要输入一些重要信息以创建 _sender_ 的页面。跟随指引，把相关信息填入输入栏中，点按 "Create" 按钮。
 
 在创建好了单个的 _sender_ 以后，你会收到一封带有验证链接的邮件发送到你配置的 _sender_ 邮箱。前往收件箱，找到邮件并通过其中的链接完成验证。如此一来，你便可以通过 SendGrid 连接器从你验证过的 _sender_ 邮件地址发送邮件了。
 
