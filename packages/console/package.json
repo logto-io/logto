@@ -27,7 +27,7 @@
     "@parcel/transformer-mdx": "2.6.2",
     "@parcel/transformer-sass": "2.6.2",
     "@parcel/transformer-svg-react": "2.6.2",
-    "@silverhand/eslint-config": "^0.15.0",
+    "@silverhand/eslint-config": "^0.16.0",
     "@silverhand/eslint-config-react": "^0.15.0",
     "@silverhand/essentials": "^1.1.6",
     "@silverhand/ts-config": "^0.15.0",
