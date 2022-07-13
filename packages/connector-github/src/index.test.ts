@@ -1,4 +1,9 @@
-import { ConnectorError, ConnectorErrorCodes, GetConnectorConfig } from '@logto/connector-types';
+import {
+  ConnectorError,
+  ConnectorErrorCodes,
+  GetConnectorConfig,
+  ValidateConfig,
+} from '@logto/connector-types';
 import nock from 'nock';
 import * as qs from 'query-string';
 
@@ -66,18 +71,30 @@ describe('validateConfig', () => {
     jest.clearAllMocks();
   });
 
+  /**
+   * Assertion functions always need explicit annotations.
+   * See https://github.com/microsoft/TypeScript/issues/36931#issuecomment-589753014
+   */
+
   it('should pass on valid config', async () => {
-    expect(
-      githubMethods.validateConfig({ clientId: 'clientId', clientSecret: 'clientSecret' })
-    ).toEqual(true);
+    const validator: ValidateConfig = githubMethods.validateConfig;
+    expect(() => {
+      validator({ clientId: 'clientId', clientSecret: 'clientSecret' });
+    }).not.toThrow();
   });
 
   it('should fail on empty config', async () => {
-    expect(githubMethods.validateConfig({})).toEqual(false);
+    const validator: ValidateConfig = githubMethods.validateConfig;
+    expect(() => {
+      validator({});
+    }).toThrow();
   });
 
   it('should fail when missing clientSecret', async () => {
-    expect(githubMethods.validateConfig({ clientId: 'clientId' })).toEqual(false);
+    const validator: ValidateConfig = githubMethods.validateConfig;
+    expect(() => {
+      validator({ clientId: 'clientId' });
+    }).toThrow();
   });
 });
 

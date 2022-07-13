@@ -1,4 +1,9 @@
-import { ConnectorError, ConnectorErrorCodes, GetConnectorConfig } from '@logto/connector-types';
+import {
+  ConnectorError,
+  ConnectorErrorCodes,
+  GetConnectorConfig,
+  ValidateConfig,
+} from '@logto/connector-types';
 import nock from 'nock';
 
 import AlipayNativeConnector from '.';
@@ -14,16 +19,30 @@ describe('validateConfig', () => {
     jest.clearAllMocks();
   });
 
+  /**
+   * Assertion functions always need explicit annotations.
+   * See https://github.com/microsoft/TypeScript/issues/36931#issuecomment-589753014
+   */
+
   it('should pass on valid config', async () => {
-    expect(alipayNativeMethods.validateConfig(mockedAlipayNativeConfig)).toEqual(true);
+    const validator: ValidateConfig = alipayNativeMethods.validateConfig;
+    expect(() => {
+      validator(mockedAlipayNativeConfig);
+    }).not.toThrow();
   });
 
   it('should fail on empty config', async () => {
-    expect(alipayNativeMethods.validateConfig({})).toEqual(false);
+    const validator: ValidateConfig = alipayNativeMethods.validateConfig;
+    expect(() => {
+      validator({});
+    }).toThrow();
   });
 
   it('should fail when missing required properties', async () => {
-    expect(alipayNativeMethods.validateConfig({ appId: 'appId' })).toEqual(false);
+    const validator: ValidateConfig = alipayNativeMethods.validateConfig;
+    expect(() => {
+      validator({ appId: 'appId' });
+    }).toThrow();
   });
 });
 

@@ -1,4 +1,9 @@
-import { ConnectorError, ConnectorErrorCodes, GetConnectorConfig } from '@logto/connector-types';
+import {
+  ConnectorError,
+  ConnectorErrorCodes,
+  GetConnectorConfig,
+  ValidateConfig,
+} from '@logto/connector-types';
 import nock from 'nock';
 
 import FacebookConnector from '.';
@@ -19,14 +24,29 @@ describe('facebook connector', () => {
       jest.clearAllMocks();
     });
 
+    /**
+     * Assertion functions always need explicit annotations.
+     * See https://github.com/microsoft/TypeScript/issues/36931#issuecomment-589753014
+     */
+
     it('should pass on valid config', async () => {
-      expect(facebookMethods.validateConfig({ clientId, clientSecret })).toEqual(true);
+      const validator: ValidateConfig = facebookMethods.validateConfig;
+      expect(() => {
+        validator({ clientId, clientSecret });
+      }).not.toThrow();
     });
 
     it('should fail on invalid config', async () => {
-      expect(facebookMethods.validateConfig({})).toEqual(false);
-      expect(facebookMethods.validateConfig({ clientId })).toEqual(false);
-      expect(facebookMethods.validateConfig({ clientSecret })).toEqual(false);
+      const validator: ValidateConfig = facebookMethods.validateConfig;
+      expect(() => {
+        validator({});
+      }).toThrow();
+      expect(() => {
+        validator({ clientId });
+      }).toThrow();
+      expect(() => {
+        validator({ clientSecret });
+      }).toThrow();
     });
   });
 

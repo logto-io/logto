@@ -1,4 +1,9 @@
-import { ConnectorError, ConnectorErrorCodes, GetConnectorConfig } from '@logto/connector-types';
+import {
+  ConnectorError,
+  ConnectorErrorCodes,
+  GetConnectorConfig,
+  ValidateConfig,
+} from '@logto/connector-types';
 import nock from 'nock';
 
 import GoogleConnector from '.';
@@ -19,16 +24,29 @@ describe('google connector', () => {
       jest.clearAllMocks();
     });
 
+    /**
+     * Assertion functions always need explicit annotations.
+     * See https://github.com/microsoft/TypeScript/issues/36931#issuecomment-589753014
+     */
+
     it('should pass on valid config', async () => {
-      expect(
-        googleMethods.validateConfig({ clientId: 'clientId', clientSecret: 'clientSecret' })
-      ).toEqual(true);
+      const validator: ValidateConfig = googleMethods.validateConfig;
+      expect(() => {
+        validator({ clientId: 'clientId', clientSecret: 'clientSecret' });
+      }).not.toThrow();
     });
 
     it('should fail on invalid config', async () => {
-      expect(googleMethods.validateConfig({})).toEqual(false);
-      expect(googleMethods.validateConfig({ clientId: 'clientId' })).toEqual(false);
-      expect(googleMethods.validateConfig({ clientSecret: 'clientSecret' })).toEqual(false);
+      const validator: ValidateConfig = googleMethods.validateConfig;
+      expect(() => {
+        validator({});
+      }).toThrow();
+      expect(() => {
+        validator({ clientId: 'clientId' });
+      }).toThrow();
+      expect(() => {
+        validator({ clientSecret: 'clientSecret' });
+      }).toThrow();
     });
   });
 

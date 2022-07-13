@@ -1,4 +1,4 @@
-import { GetConnectorConfig } from '@logto/connector-types';
+import { GetConnectorConfig, ValidateConfig } from '@logto/connector-types';
 
 import SmtpConnector from '.';
 
@@ -11,9 +11,15 @@ describe('validateConfig()', () => {
     jest.clearAllMocks();
   });
 
+  /**
+   * Assertion functions always need explicit annotations.
+   * See https://github.com/microsoft/TypeScript/issues/36931#issuecomment-589753014
+   */
+
   it('should pass on valid config', async () => {
-    expect(
-      smtpMethods.validateConfig({
+    const validator: ValidateConfig = smtpMethods.validateConfig;
+    expect(() => {
+      validator({
         host: 'smtp.testing.com',
         port: 80,
         password: 'password',
@@ -45,11 +51,14 @@ describe('validateConfig()', () => {
             usageType: 'ForgotPassword',
           },
         ],
-      })
-    ).toEqual(true);
+      });
+    }).not.toThrow();
   });
 
   it('should be false if config is invalid', async () => {
-    expect(smtpMethods.validateConfig({})).toEqual(false);
+    const validator: ValidateConfig = smtpMethods.validateConfig;
+    expect(() => {
+      validator({});
+    }).toThrow();
   });
 });

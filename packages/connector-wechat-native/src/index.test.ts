@@ -1,4 +1,9 @@
-import { ConnectorError, ConnectorErrorCodes, GetConnectorConfig } from '@logto/connector-types';
+import {
+  ConnectorError,
+  ConnectorErrorCodes,
+  GetConnectorConfig,
+  ValidateConfig,
+} from '@logto/connector-types';
 import nock from 'nock';
 
 import WechatNativeConnector from '.';
@@ -91,16 +96,30 @@ describe('getAccessToken', () => {
 });
 
 describe('validateConfig', () => {
+  /**
+   * Assertion functions always need explicit annotations.
+   * See https://github.com/microsoft/TypeScript/issues/36931#issuecomment-589753014
+   */
+
   it('should pass on valid config', async () => {
-    expect(wechatNativeMethods.validateConfig({ appId: 'appId', appSecret: 'appSecret' })).toEqual(
-      true
-    );
+    const validator: ValidateConfig = wechatNativeMethods.validateConfig;
+    expect(() => {
+      validator({ appId: 'appId', appSecret: 'appSecret' });
+    }).not.toThrow();
   });
+
   it('should fail on empty config', async () => {
-    expect(wechatNativeMethods.validateConfig({})).toEqual(false);
+    const validator: ValidateConfig = wechatNativeMethods.validateConfig;
+    expect(() => {
+      validator({});
+    }).toThrow();
   });
+
   it('should fail when missing appSecret', async () => {
-    expect(wechatNativeMethods.validateConfig({ appId: 'appId' })).toEqual(false);
+    const validator: ValidateConfig = wechatNativeMethods.validateConfig;
+    expect(() => {
+      validator({ appId: 'appId' });
+    }).toThrow();
   });
 });
 
