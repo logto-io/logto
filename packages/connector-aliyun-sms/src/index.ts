@@ -3,8 +3,10 @@ import {
   ConnectorErrorCodes,
   ConnectorMetadata,
   SmsSendMessageFunction,
+  SmsSendTestMessageFunction,
   SmsConnector,
   GetConnectorConfig,
+  SmsMessageTypes,
 } from '@logto/connector-types';
 import { assert } from '@silverhand/essentials';
 import { HTTPError } from 'got';
@@ -25,12 +27,27 @@ export default class AliyunSmsConnector implements SmsConnector<AliyunSmsConfig>
     }
   }
 
-  public sendMessage: SmsSendMessageFunction = async (phone, type, { code }, config) => {
-    const smsConfig = config ?? (await this.getConfig(this.metadata.id));
+  public sendMessage: SmsSendMessageFunction = async (phone, type, data) => {
+    const smsConfig = await this.getConfig(this.metadata.id);
 
     this.validateConfig(smsConfig);
 
-    const { accessKeyId, accessKeySecret, signName, templates } = smsConfig;
+    return this.sendMessageBy(phone, type, data, smsConfig);
+  };
+
+  public sendTestMessage: SmsSendTestMessageFunction = async (config, phone, type, data) => {
+    this.validateConfig(config);
+
+    return this.sendMessageBy(phone, type, data, config);
+  };
+
+  private readonly sendMessageBy = async (
+    phone: string,
+    type: keyof SmsMessageTypes,
+    data: SmsMessageTypes[typeof type],
+    config: AliyunSmsConfig
+  ) => {
+    const { accessKeyId, accessKeySecret, signName, templates } = config;
     const template = templates.find(({ usageType }) => usageType === type);
 
     assert(
@@ -45,7 +62,7 @@ export default class AliyunSmsConnector implements SmsConnector<AliyunSmsConfig>
           PhoneNumbers: phone,
           SignName: signName,
           TemplateCode: template.templateCode,
-          TemplateParam: JSON.stringify({ code }),
+          TemplateParam: JSON.stringify(data),
         },
         accessKeySecret
       );

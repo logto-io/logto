@@ -3,8 +3,10 @@ import {
   ConnectorErrorCodes,
   ConnectorMetadata,
   EmailSendMessageFunction,
+  EmailSendTestMessageFunction,
   EmailConnector,
   GetConnectorConfig,
+  EmailMessageTypes,
 } from '@logto/connector-types';
 import { assert } from '@silverhand/essentials';
 import got, { HTTPError } from 'got';
@@ -36,6 +38,21 @@ export default class SendGridMailConnector implements EmailConnector<SendGridMai
 
     this.validateConfig(config);
 
+    return this.sendMessageBy(address, type, data, config);
+  };
+
+  public sendTestMessage: EmailSendTestMessageFunction = async (config, address, type, data) => {
+    this.validateConfig(config);
+
+    return this.sendMessageBy(address, type, data, config);
+  };
+
+  private readonly sendMessageBy = async (
+    address: string,
+    type: keyof EmailMessageTypes,
+    data: EmailMessageTypes[typeof type],
+    config: SendGridMailConfig
+  ) => {
     const { apiKey, fromEmail, fromName, templates } = config;
     const template = templates.find((template) => template.usageType === type);
 

@@ -173,7 +173,7 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
       body: object({
         phone: string().regex(phoneRegEx).optional(),
         email: string().regex(emailRegEx).optional(),
-        config: arbitraryObjectGuard.optional(),
+        config: arbitraryObjectGuard,
       }),
     }),
     async (ctx, next) => {
@@ -205,14 +205,19 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
         })
       );
 
-      await connector.sendMessage(
-        subject,
-        'Test',
-        {
-          code: phone ? '123456' : 'email-test',
-        },
-        config
+      const { sendTestMessage } = connector;
+      assertThat(
+        sendTestMessage,
+        new RequestError({
+          code: 'connector.not_implemented',
+          method: 'sendTestMessage',
+          status: 501,
+        })
       );
+
+      await sendTestMessage(config, subject, 'Test', {
+        code: phone ? '123456' : 'email-test',
+      });
 
       ctx.status = 204;
 
