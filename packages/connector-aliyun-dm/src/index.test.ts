@@ -29,18 +29,18 @@ describe('validateConfig()', () => {
   });
 
   it('should pass on valid config', async () => {
-    await expect(
+    expect(
       aliyunDmMethods.validateConfig({
         accessKeyId: 'accessKeyId',
         accessKeySecret: 'accessKeySecret',
         accountName: 'accountName',
         templates: [],
       })
-    ).resolves.not.toThrow();
+    ).toEqual(true);
   });
 
-  it('throws if config is invalid', async () => {
-    await expect(aliyunDmMethods.validateConfig({})).rejects.toThrow();
+  it('should fail if config is invalid', async () => {
+    expect(aliyunDmMethods.validateConfig({})).toEqual(false);
   });
 });
 

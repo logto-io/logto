@@ -39,12 +39,12 @@ describe('validateConfig', () => {
     jest.clearAllMocks();
   });
 
-  it('should pass on valid config', async () => {
-    await expect(appleMethods.validateConfig({ clientId: 'clientId' })).resolves.not.toThrow();
+  it('should be true on valid config', async () => {
+    expect(appleMethods.validateConfig({ clientId: 'clientId' })).toEqual(true);
   });
 
-  it('should throw on empty config', async () => {
-    await expect(appleMethods.validateConfig({})).rejects.toThrowError();
+  it('should be false on empty config', async () => {
+    expect(appleMethods.validateConfig({})).toEqual(false);
   });
 });
 

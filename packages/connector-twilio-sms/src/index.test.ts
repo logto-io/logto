@@ -13,10 +13,10 @@ describe('validateConfig()', () => {
   });
 
   it('should pass on valid config', async () => {
-    await expect(twilioSmsMethods.validateConfig(mockedConfig)).resolves.not.toThrow();
+    expect(twilioSmsMethods.validateConfig(mockedConfig)).toEqual(true);
   });
 
   it('throws if config is invalid', async () => {
-    await expect(twilioSmsMethods.validateConfig({})).rejects.toThrow();
+    expect(twilioSmsMethods.validateConfig({})).toEqual(false);
   });
 });

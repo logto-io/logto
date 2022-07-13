@@ -25,13 +25,11 @@ describe('validateConfig()', () => {
   });
 
   it('should pass on valid config', async () => {
-    await expect(
-      aliyunSmsMethods.validateConfig(mockedValidConnectorConfig)
-    ).resolves.not.toThrow();
+    expect(aliyunSmsMethods.validateConfig(mockedValidConnectorConfig)).toEqual(true);
   });
 
-  it('throws if config is invalid', async () => {
-    await expect(aliyunSmsMethods.validateConfig({})).rejects.toThrow();
+  it('should fail if config is invalid', async () => {
+    expect(aliyunSmsMethods.validateConfig({})).toEqual(false);
   });
 });
 

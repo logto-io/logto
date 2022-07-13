@@ -92,15 +92,15 @@ describe('getAccessToken', () => {
 
 describe('validateConfig', () => {
   it('should pass on valid config', async () => {
-    await expect(
-      wechatNativeMethods.validateConfig({ appId: 'appId', appSecret: 'appSecret' })
-    ).resolves.not.toThrow();
+    expect(wechatNativeMethods.validateConfig({ appId: 'appId', appSecret: 'appSecret' })).toEqual(
+      true
+    );
   });
-  it('should throw on empty config', async () => {
-    await expect(wechatNativeMethods.validateConfig({})).rejects.toThrowError();
+  it('should fail on empty config', async () => {
+    expect(wechatNativeMethods.validateConfig({})).toEqual(false);
   });
-  it('should throw when missing appSecret', async () => {
-    await expect(wechatNativeMethods.validateConfig({ appId: 'appId' })).rejects.toThrowError();
+  it('should fail when missing appSecret', async () => {
+    expect(wechatNativeMethods.validateConfig({ appId: 'appId' })).toEqual(false);
   });
 });
 

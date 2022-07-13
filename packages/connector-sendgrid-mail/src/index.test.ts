@@ -20,7 +20,7 @@ describe('validateConfig()', () => {
   });
 
   it('should pass on valid config', async () => {
-    await expect(
+    expect(
       sendGridMailMethods.validateConfig({
         apiKey: 'apiKey',
         fromEmail: 'noreply@logto.test.io',
@@ -34,10 +34,10 @@ describe('validateConfig()', () => {
           },
         ],
       })
-    ).resolves.not.toThrow();
+    ).toEqual(true);
   });
 
-  it('throws if config is invalid', async () => {
-    await expect(sendGridMailMethods.validateConfig({})).rejects.toThrow();
+  it('should be false if config is invalid', async () => {
+    expect(sendGridMailMethods.validateConfig({})).toEqual(false);
   });
 });

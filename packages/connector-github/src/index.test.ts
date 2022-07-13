@@ -67,17 +67,17 @@ describe('validateConfig', () => {
   });
 
   it('should pass on valid config', async () => {
-    await expect(
+    expect(
       githubMethods.validateConfig({ clientId: 'clientId', clientSecret: 'clientSecret' })
-    ).resolves.not.toThrow();
+    ).toEqual(true);
   });
 
-  it('should throw on empty config', async () => {
-    await expect(githubMethods.validateConfig({})).rejects.toThrowError();
+  it('should fail on empty config', async () => {
+    expect(githubMethods.validateConfig({})).toEqual(false);
   });
 
-  it('should throw when missing clientSecret', async () => {
-    await expect(githubMethods.validateConfig({ clientId: 'clientId' })).rejects.toThrowError();
+  it('should fail when missing clientSecret', async () => {
+    expect(githubMethods.validateConfig({ clientId: 'clientId' })).toEqual(false);
   });
 });
 

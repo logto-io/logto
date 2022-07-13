@@ -20,17 +20,15 @@ describe('google connector', () => {
     });
 
     it('should pass on valid config', async () => {
-      await expect(
+      expect(
         googleMethods.validateConfig({ clientId: 'clientId', clientSecret: 'clientSecret' })
-      ).resolves.not.toThrow();
+      ).toEqual(true);
     });
 
-    it('should throw on invalid config', async () => {
-      await expect(googleMethods.validateConfig({})).rejects.toThrow();
-      await expect(googleMethods.validateConfig({ clientId: 'clientId' })).rejects.toThrow();
-      await expect(
-        googleMethods.validateConfig({ clientSecret: 'clientSecret' })
-      ).rejects.toThrow();
+    it('should fail on invalid config', async () => {
+      expect(googleMethods.validateConfig({})).toEqual(false);
+      expect(googleMethods.validateConfig({ clientId: 'clientId' })).toEqual(false);
+      expect(googleMethods.validateConfig({ clientSecret: 'clientSecret' })).toEqual(false);
     });
   });
 

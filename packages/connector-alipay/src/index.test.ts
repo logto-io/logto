@@ -15,21 +15,21 @@ describe('validateConfig', () => {
   });
 
   it('should pass on valid config', async () => {
-    await expect(
+    expect(
       alipayMethods.validateConfig({
         appId: 'appId',
         privateKey: 'privateKey',
         signType: 'RSA',
       })
-    ).resolves.not.toThrow();
+    ).toEqual(true);
   });
 
-  it('should throw on empty config', async () => {
-    await expect(alipayMethods.validateConfig({})).rejects.toThrowError();
+  it('should fail on empty config', async () => {
+    expect(alipayMethods.validateConfig({})).toEqual(false);
   });
 
-  it('should throw when missing required properties', async () => {
-    await expect(alipayMethods.validateConfig({ appId: 'appId' })).rejects.toThrowError();
+  it('should fail when missing required properties', async () => {
+    expect(alipayMethods.validateConfig({ appId: 'appId' })).toEqual(false);
   });
 });
 

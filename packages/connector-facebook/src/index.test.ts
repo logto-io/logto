@@ -20,15 +20,13 @@ describe('facebook connector', () => {
     });
 
     it('should pass on valid config', async () => {
-      await expect(
-        facebookMethods.validateConfig({ clientId, clientSecret })
-      ).resolves.not.toThrow();
+      expect(facebookMethods.validateConfig({ clientId, clientSecret })).toEqual(true);
     });
 
-    it('should throw on invalid config', async () => {
-      await expect(facebookMethods.validateConfig({})).rejects.toThrow();
-      await expect(facebookMethods.validateConfig({ clientId })).rejects.toThrow();
-      await expect(facebookMethods.validateConfig({ clientSecret })).rejects.toThrow();
+    it('should fail on invalid config', async () => {
+      expect(facebookMethods.validateConfig({})).toEqual(false);
+      expect(facebookMethods.validateConfig({ clientId })).toEqual(false);
+      expect(facebookMethods.validateConfig({ clientSecret })).toEqual(false);
     });
   });
 

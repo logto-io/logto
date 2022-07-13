@@ -15,17 +15,15 @@ describe('validateConfig', () => {
   });
 
   it('should pass on valid config', async () => {
-    await expect(
-      alipayNativeMethods.validateConfig(mockedAlipayNativeConfig)
-    ).resolves.not.toThrow();
+    expect(alipayNativeMethods.validateConfig(mockedAlipayNativeConfig)).toEqual(true);
   });
 
-  it('should throw on empty config', async () => {
-    await expect(alipayNativeMethods.validateConfig({})).rejects.toThrowError();
+  it('should fail on empty config', async () => {
+    expect(alipayNativeMethods.validateConfig({})).toEqual(false);
   });
 
-  it('should throw when missing required properties', async () => {
-    await expect(alipayNativeMethods.validateConfig({ appId: 'appId' })).rejects.toThrowError();
+  it('should fail when missing required properties', async () => {
+    expect(alipayNativeMethods.validateConfig({ appId: 'appId' })).toEqual(false);
   });
 });
 
