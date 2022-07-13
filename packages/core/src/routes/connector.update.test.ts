@@ -38,7 +38,7 @@ const getConnectorInstanceByIdPlaceHolder = jest.fn(async (connectorId: string) 
     sendMessage: sendMessagePlaceHolder,
   };
 });
-const validateConfigPlaceHolder = jest.fn();
+const validateConfigPlaceHolder = jest.fn() as jest.MockedFunction<ValidateConfig>;
 const sendMessagePlaceHolder = jest.fn();
 
 jest.mock('@/queries/connector', () => ({
@@ -98,7 +98,7 @@ describe('connector PATCH routes', () => {
     });
 
     it('enables one of the social connectors (with invalid config)', async () => {
-      validateConfigPlaceHolder.mockImplementationOnce(async () => {
+      validateConfigPlaceHolder.mockImplementationOnce(() => {
         throw new ConnectorError(ConnectorErrorCodes.InvalidConfig);
       });
       getConnectorInstancesPlaceHolder.mockResolvedValueOnce([
@@ -187,7 +187,7 @@ describe('connector PATCH routes', () => {
     });
 
     it('enables one of the email/sms connectors (with invalid config)', async () => {
-      validateConfigPlaceHolder.mockImplementationOnce(async () => {
+      validateConfigPlaceHolder.mockImplementationOnce(() => {
         throw new ConnectorError(ConnectorErrorCodes.InvalidConfig);
       });
       getConnectorInstancesPlaceHolder.mockResolvedValueOnce([
@@ -247,7 +247,7 @@ describe('connector PATCH routes', () => {
     });
 
     it('config validation fails', async () => {
-      validateConfigPlaceHolder.mockImplementationOnce(async () => {
+      validateConfigPlaceHolder.mockImplementationOnce(() => {
         throw new ConnectorError(ConnectorErrorCodes.InvalidConfig);
       });
       getConnectorInstancesPlaceHolder.mockResolvedValueOnce([
