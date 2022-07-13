@@ -37,7 +37,6 @@
   },
   "eslintConfig": {
     "extends": "@silverhand",
-    "ignorePatterns": ["src/db-entries/*"],
     "rules": {
       "@typescript-eslint/ban-types": "off"
     }
