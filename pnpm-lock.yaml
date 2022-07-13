@@ -680,7 +680,7 @@ importers:
       '@silverhand/eslint-config-react': ^0.15.0
       '@silverhand/essentials': ^1.1.6
       '@silverhand/ts-config': ^0.15.0
-      '@silverhand/ts-config-react': ^0.14.0
+      '@silverhand/ts-config-react': ^0.15.0
       '@tsconfig/docusaurus': ^1.0.5
       '@types/color': ^3.0.3
       '@types/lodash.kebabcase': ^4.1.6
@@ -743,7 +743,7 @@ importers:
       '@silverhand/eslint-config-react': 0.15.0_ktbw553wmk4wfp4kioqxveutu4
       '@silverhand/essentials': 1.1.6
       '@silverhand/ts-config': 0.15.0_typescript@4.6.2
-      '@silverhand/ts-config-react': 0.14.0_typescript@4.6.2
+      '@silverhand/ts-config-react': 0.15.0_typescript@4.6.2
       '@tsconfig/docusaurus': 1.0.5
       '@types/color': 3.0.3
       '@types/lodash.kebabcase': 4.1.6
@@ -976,7 +976,7 @@ importers:
       '@silverhand/eslint-config': ^0.15.0
       '@silverhand/eslint-config-react': ^0.15.0
       '@silverhand/ts-config': ^0.15.0
-      '@silverhand/ts-config-react': ^0.14.0
+      '@silverhand/ts-config-react': ^0.15.0
       '@types/react': ^17.0.14
       '@types/react-dom': ^17.0.9
       cross-env: ^7.0.3
@@ -1002,7 +1002,7 @@ importers:
       '@silverhand/eslint-config': 0.15.0_j52666lpucfyl6yew5a5mxpfce
       '@silverhand/eslint-config-react': 0.15.0_glepmh344oqc6ifhztlmt7bvw4
       '@silverhand/ts-config': 0.15.0_typescript@4.7.2
-      '@silverhand/ts-config-react': 0.14.0_typescript@4.7.2
+      '@silverhand/ts-config-react': 0.15.0_typescript@4.7.2
       '@types/react': 17.0.37
       '@types/react-dom': 17.0.11
       cross-env: 7.0.3
@@ -1148,7 +1148,7 @@ importers:
       '@silverhand/eslint-config-react': ^0.15.0
       '@silverhand/essentials': ^1.1.6
       '@silverhand/ts-config': ^0.15.0
-      '@silverhand/ts-config-react': ^0.14.0
+      '@silverhand/ts-config-react': ^0.15.0
       '@types/color': ^3.0.3
       '@types/node': ^16.3.1
       color: ^4.2.3
@@ -1165,7 +1165,7 @@ importers:
       '@silverhand/eslint-config-react': 0.15.0_wfs3lj7jctdcr2gsfi4lvs3yoa
       '@silverhand/essentials': 1.1.7
       '@silverhand/ts-config': 0.15.0_typescript@4.6.3
-      '@silverhand/ts-config-react': 0.14.0_typescript@4.6.3
+      '@silverhand/ts-config-react': 0.15.0_typescript@4.6.3
       '@types/color': 3.0.3
       '@types/node': 16.11.12
       eslint: 8.10.0
@@ -1190,7 +1190,7 @@ importers:
       '@silverhand/essentials': ^1.1.7
       '@silverhand/jest-config': ^0.14.0
       '@silverhand/ts-config': ^0.15.0
-      '@silverhand/ts-config-react': ^0.14.0
+      '@silverhand/ts-config-react': ^0.15.0
       '@testing-library/react': ^12.0.0
       '@types/color': ^3.0.3
       '@types/jest': ^27.4.1
@@ -1242,7 +1242,7 @@ importers:
       '@silverhand/essentials': 1.1.7
       '@silverhand/jest-config': 0.14.0_makj2rl6gt73u7koqro542qsmm
       '@silverhand/ts-config': 0.15.0_typescript@4.6.2
-      '@silverhand/ts-config-react': 0.14.0_typescript@4.6.2
+      '@silverhand/ts-config-react': 0.15.0_typescript@4.6.2
       '@testing-library/react': 12.1.5_sfoxds7t5ydpegc3knd667wn6m
       '@types/color': 3.0.3
       '@types/jest': 27.4.1
@@ -4548,60 +4548,33 @@ packages:
       - esbuild
       - typescript
 
-  /@silverhand/ts-config-react/0.14.0_typescript@4.6.2:
-    resolution: {integrity: sha512-5LMSGFOagoYGUJ6GyawZYraUfET2hOm8qE6d4J6m/pr2C0JsamuW0lO9eTNQ6lUZSGRotvJwMgMT3gC+Ylgysw==}
+  /@silverhand/ts-config-react/0.15.0_typescript@4.6.2:
+    resolution: {integrity: sha512-HJhZQjDGxdQhpRqdsKAyLO+AaO5ndVn7Cy82BRpKxARZQr3geqkawbo4ov5WjD4Ren1uerqjGBvboIS9ucJfag==}
     engines: {node: '>=14.15.0'}
     peerDependencies:
       typescript: ^4.3.5
     dependencies:
-      '@silverhand/ts-config': 0.14.0_typescript@4.6.2
+      '@silverhand/ts-config': 0.15.0_typescript@4.6.2
       typescript: 4.6.2
     dev: true
 
-  /@silverhand/ts-config-react/0.14.0_typescript@4.6.3:
-    resolution: {integrity: sha512-5LMSGFOagoYGUJ6GyawZYraUfET2hOm8qE6d4J6m/pr2C0JsamuW0lO9eTNQ6lUZSGRotvJwMgMT3gC+Ylgysw==}
+  /@silverhand/ts-config-react/0.15.0_typescript@4.6.3:
+    resolution: {integrity: sha512-HJhZQjDGxdQhpRqdsKAyLO+AaO5ndVn7Cy82BRpKxARZQr3geqkawbo4ov5WjD4Ren1uerqjGBvboIS9ucJfag==}
     engines: {node: '>=14.15.0'}
     peerDependencies:
       typescript: ^4.3.5
     dependencies:
-      '@silverhand/ts-config': 0.14.0_typescript@4.6.3
+      '@silverhand/ts-config': 0.15.0_typescript@4.6.3
       typescript: 4.6.3
     dev: true
 
-  /@silverhand/ts-config-react/0.14.0_typescript@4.7.2:
-    resolution: {integrity: sha512-5LMSGFOagoYGUJ6GyawZYraUfET2hOm8qE6d4J6m/pr2C0JsamuW0lO9eTNQ6lUZSGRotvJwMgMT3gC+Ylgysw==}
+  /@silverhand/ts-config-react/0.15.0_typescript@4.7.2:
+    resolution: {integrity: sha512-HJhZQjDGxdQhpRqdsKAyLO+AaO5ndVn7Cy82BRpKxARZQr3geqkawbo4ov5WjD4Ren1uerqjGBvboIS9ucJfag==}
     engines: {node: '>=14.15.0'}
     peerDependencies:
       typescript: ^4.3.5
     dependencies:
-      '@silverhand/ts-config': 0.14.0_typescript@4.7.2
-      typescript: 4.7.2
-    dev: true
-
-  /@silverhand/ts-config/0.14.0_typescript@4.6.2:
-    resolution: {integrity: sha512-ktL4EvhTejlU7KD4tlq/NcVNRiQoH/NmguaqfcFu2GbswDfHEEBTaPkbi9c6UDzpQtjLhC27dYpzgpH6KkT6LA==}
-    engines: {node: '>=14.15.0'}
-    peerDependencies:
-      typescript: ^4.3.5
-    dependencies:
-      typescript: 4.6.2
-    dev: true
-
-  /@silverhand/ts-config/0.14.0_typescript@4.6.3:
-    resolution: {integrity: sha512-ktL4EvhTejlU7KD4tlq/NcVNRiQoH/NmguaqfcFu2GbswDfHEEBTaPkbi9c6UDzpQtjLhC27dYpzgpH6KkT6LA==}
-    engines: {node: '>=14.15.0'}
-    peerDependencies:
-      typescript: ^4.3.5
-    dependencies:
-      typescript: 4.6.3
-    dev: true
-
-  /@silverhand/ts-config/0.14.0_typescript@4.7.2:
-    resolution: {integrity: sha512-ktL4EvhTejlU7KD4tlq/NcVNRiQoH/NmguaqfcFu2GbswDfHEEBTaPkbi9c6UDzpQtjLhC27dYpzgpH6KkT6LA==}
-    engines: {node: '>=14.15.0'}
-    peerDependencies:
-      typescript: ^4.3.5
-    dependencies:
+      '@silverhand/ts-config': 0.15.0_typescript@4.7.2
       typescript: 4.7.2
     dev: true
 
