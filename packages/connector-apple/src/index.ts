@@ -9,6 +9,7 @@ import {
   GetConnectorConfig,
 } from '@logto/connector-types';
 import { createRemoteJWKSet, jwtVerify } from 'jose';
+import { ZodError } from 'zod';
 
 import { scope, defaultMetadata, jwksUri, issuer, authorizationEndpoint } from './constant';
 import { appleConfigGuard, AppleConfig, dataGuard } from './types';
@@ -16,22 +17,34 @@ import { appleConfigGuard, AppleConfig, dataGuard } from './types';
 // TO-DO: support nonce validation
 export default class AppleConnector implements SocialConnector {
   public metadata: ConnectorMetadata = defaultMetadata;
+  private _configZodError: ZodError = new ZodError([]);
+
+  private get configZodError() {
+    return this._configZodError;
+  }
+
+  private set configZodError(zodError: ZodError) {
+    this._configZodError = zodError;
+  }
 
   constructor(public readonly getConfig: GetConnectorConfig) {}
 
-  public validateConfig: ValidateConfig<AppleConfig> = async (config: unknown) => {
+  public validateConfig: ValidateConfig<AppleConfig> = (config: unknown): config is AppleConfig => {
     const result = appleConfigGuard.safeParse(config);
 
     if (!result.success) {
-      throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, result.error);
+      this.configZodError = result.error;
     }
 
-    return result.data;
+    return result.success;
   };
 
   public getAuthorizationUri: GetAuthorizationUri = async ({ state, redirectUri }) => {
-    const rawConfig = await this.getConfig(this.metadata.id);
-    const config = await this.validateConfig(rawConfig);
+    const config = await this.getConfig(this.metadata.id);
+
+    if (!this.validateConfig(config)) {
+      throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, this.configZodError);
+    }
 
     const queryParameters = new URLSearchParams({
       client_id: config.clientId,
@@ -53,8 +66,13 @@ export default class AppleConnector implements SocialConnector {
       throw new ConnectorError(ConnectorErrorCodes.SocialIdTokenInvalid);
     }
 
-    const rawConfig = await this.getConfig(this.metadata.id);
-    const { clientId } = await this.validateConfig(rawConfig);
+    const config = await this.getConfig(this.metadata.id);
+
+    if (!this.validateConfig(config)) {
+      throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, this.configZodError);
+    }
+
+    const { clientId } = config;
 
     try {
       const { payload } = await jwtVerify(idToken, createRemoteJWKSet(new URL(jwksUri)), {

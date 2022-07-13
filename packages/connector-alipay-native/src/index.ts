@@ -20,7 +20,7 @@ import {
 import { assert } from '@silverhand/essentials';
 import dayjs from 'dayjs';
 import got from 'got';
-import { z } from 'zod';
+import { z, ZodError } from 'zod';
 
 import {
   alipayEndpoint,
@@ -48,22 +48,38 @@ export default class AlipayNativeConnector implements SocialConnector {
   public metadata: ConnectorMetadata = defaultMetadata;
 
   private readonly signingParameters = signingParameters;
+  private _configZodError: ZodError = new ZodError([]);
+
+  private get configZodError() {
+    return this._configZodError;
+  }
+
+  private set configZodError(zodError: ZodError) {
+    this._configZodError = zodError;
+  }
 
   constructor(public readonly getConfig: GetConnectorConfig) {}
 
-  public validateConfig: ValidateConfig<AlipayNativeConfig> = async (config: unknown) => {
+  public validateConfig: ValidateConfig<AlipayNativeConfig> = (
+    config: unknown
+  ): config is AlipayNativeConfig => {
     const result = alipayNativeConfigGuard.safeParse(config);
 
     if (!result.success) {
-      throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, result.error);
+      this.configZodError = result.error;
     }
 
-    return result.data;
+    return result.success;
   };
 
   public getAuthorizationUri: GetAuthorizationUri = async ({ state }) => {
-    const rawConfig = await this.getConfig(this.metadata.id);
-    const { appId } = await this.validateConfig(rawConfig);
+    const config = await this.getConfig(this.metadata.id);
+
+    if (!this.validateConfig(config)) {
+      throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, this.configZodError);
+    }
+
+    const { appId } = config;
 
     const queryParameters = new URLSearchParams({ app_id: appId, state });
 
@@ -110,8 +126,12 @@ export default class AlipayNativeConnector implements SocialConnector {
 
   public getUserInfo: GetUserInfo = async (data) => {
     const { auth_code } = await this.authorizationCallbackHandler(data);
-    const rawConfig = await this.getConfig(this.metadata.id);
-    const config = await this.validateConfig(rawConfig);
+    const config = await this.getConfig(this.metadata.id);
+
+    if (!this.validateConfig(config)) {
+      throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, this.configZodError);
+    }
+
     const { accessToken } = await this.getAccessToken(auth_code, config);
 
     assert(

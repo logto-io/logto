@@ -16,6 +16,7 @@ import {
 } from '@logto/connector-types';
 import { assert } from '@silverhand/essentials';
 import got, { HTTPError } from 'got';
+import { ZodError } from 'zod';
 
 import {
   accessTokenEndpoint,
@@ -35,22 +36,36 @@ import {
 
 export default class FacebookConnector implements SocialConnector {
   public metadata: ConnectorMetadata = defaultMetadata;
+  private _configZodError: ZodError = new ZodError([]);
+
+  private get configZodError() {
+    return this._configZodError;
+  }
+
+  private set configZodError(zodError: ZodError) {
+    this._configZodError = zodError;
+  }
 
   constructor(public readonly getConfig: GetConnectorConfig) {}
 
-  public validateConfig: ValidateConfig<FacebookConfig> = async (config: unknown) => {
+  public validateConfig: ValidateConfig<FacebookConfig> = (
+    config: unknown
+  ): config is FacebookConfig => {
     const result = facebookConfigGuard.safeParse(config);
 
     if (!result.success) {
-      throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, result.error);
+      this.configZodError = result.error;
     }
 
-    return result.data;
+    return result.success;
   };
 
   public getAuthorizationUri: GetAuthorizationUri = async ({ state, redirectUri }) => {
-    const rawConfig = await this.getConfig(this.metadata.id);
-    const config = await this.validateConfig(rawConfig);
+    const config = await this.getConfig(this.metadata.id);
+
+    if (!this.validateConfig(config)) {
+      throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, this.configZodError);
+    }
 
     const queryParameters = new URLSearchParams({
       client_id: config.clientId,
@@ -64,10 +79,13 @@ export default class FacebookConnector implements SocialConnector {
   };
 
   public getAccessToken = async (code: string, redirectUri: string) => {
-    const rawConfig = await this.getConfig(this.metadata.id);
-    const { clientId: client_id, clientSecret: client_secret } = await this.validateConfig(
-      rawConfig
-    );
+    const config = await this.getConfig(this.metadata.id);
+
+    if (!this.validateConfig(config)) {
+      throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, this.configZodError);
+    }
+
+    const { clientId: client_id, clientSecret: client_secret } = config;
 
     const httpResponse = await got.get(accessTokenEndpoint, {
       searchParams: {

@@ -16,6 +16,7 @@ import {
 } from '@logto/connector-types';
 import { assert } from '@silverhand/essentials';
 import got, { HTTPError } from 'got';
+import { ZodError } from 'zod';
 
 import {
   authorizationEndpoint,
@@ -38,22 +39,38 @@ import {
 
 export default class WechatConnector implements SocialConnector {
   public metadata: ConnectorMetadata = defaultMetadata;
+  private _configZodError: ZodError = new ZodError([]);
+
+  private get configZodError() {
+    return this._configZodError;
+  }
+
+  private set configZodError(zodError: ZodError) {
+    this._configZodError = zodError;
+  }
 
   constructor(public readonly getConfig: GetConnectorConfig) {}
 
-  public validateConfig: ValidateConfig<WechatConfig> = async (config: unknown) => {
+  public validateConfig: ValidateConfig<WechatConfig> = (
+    config: unknown
+  ): config is WechatConfig => {
     const result = wechatConfigGuard.safeParse(config);
 
     if (!result.success) {
-      throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, result.error);
+      this.configZodError = result.error;
     }
 
-    return result.data;
+    return result.success;
   };
 
   public getAuthorizationUri: GetAuthorizationUri = async ({ state, redirectUri }) => {
-    const rawConfig = await this.getConfig(this.metadata.id);
-    const { appId } = await this.validateConfig(rawConfig);
+    const config = await this.getConfig(this.metadata.id);
+
+    if (!this.validateConfig(config)) {
+      throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, this.configZodError);
+    }
+
+    const { appId } = config;
 
     const queryParameters = new URLSearchParams({
       appid: appId,
@@ -69,8 +86,13 @@ export default class WechatConnector implements SocialConnector {
   public getAccessToken = async (
     code: string
   ): Promise<{ accessToken: string; openid: string }> => {
-    const rawConfig = await this.getConfig(this.metadata.id);
-    const { appId: appid, appSecret: secret } = await this.validateConfig(rawConfig);
+    const config = await this.getConfig(this.metadata.id);
+
+    if (!this.validateConfig(config)) {
+      throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, this.configZodError);
+    }
+
+    const { appId: appid, appSecret: secret } = config;
 
     const httpResponse = await got.get(accessTokenEndpoint, {
       searchParams: { appid, secret, code, grant_type: 'authorization_code' },

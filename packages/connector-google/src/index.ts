@@ -15,6 +15,7 @@ import {
 } from '@logto/connector-types';
 import { conditional, assert } from '@silverhand/essentials';
 import got, { HTTPError } from 'got';
+import { ZodError } from 'zod';
 
 import {
   accessTokenEndpoint,
@@ -33,22 +34,36 @@ import {
 
 export default class GoogleConnector implements SocialConnector {
   public metadata: ConnectorMetadata = defaultMetadata;
+  private _configZodError: ZodError = new ZodError([]);
+
+  private get configZodError() {
+    return this._configZodError;
+  }
+
+  private set configZodError(zodError: ZodError) {
+    this._configZodError = zodError;
+  }
 
   constructor(public readonly getConfig: GetConnectorConfig) {}
 
-  public validateConfig: ValidateConfig<GoogleConfig> = async (config: unknown) => {
+  public validateConfig: ValidateConfig<GoogleConfig> = (
+    config: unknown
+  ): config is GoogleConfig => {
     const result = googleConfigGuard.safeParse(config);
 
     if (!result.success) {
-      throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, result.error);
+      this.configZodError = result.error;
     }
 
-    return result.data;
+    return result.success;
   };
 
   public getAuthorizationUri: GetAuthorizationUri = async ({ state, redirectUri }) => {
-    const rawConfig = await this.getConfig(this.metadata.id);
-    const config = await this.validateConfig(rawConfig);
+    const config = await this.getConfig(this.metadata.id);
+
+    if (!this.validateConfig(config)) {
+      throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, this.configZodError);
+    }
 
     const queryParameters = new URLSearchParams({
       client_id: config.clientId,
@@ -62,8 +77,13 @@ export default class GoogleConnector implements SocialConnector {
   };
 
   public getAccessToken = async (code: string, redirectUri: string) => {
-    const rawConfig = await this.getConfig(this.metadata.id);
-    const { clientId, clientSecret } = await this.validateConfig(rawConfig);
+    const config = await this.getConfig(this.metadata.id);
+
+    if (!this.validateConfig(config)) {
+      throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, this.configZodError);
+    }
+
+    const { clientId, clientSecret } = config;
 
     // Note：Need to decodeURIComponent on code
     // https://stackoverflow.com/questions/51058256/google-api-node-js-invalid-grant-malformed-auth-code

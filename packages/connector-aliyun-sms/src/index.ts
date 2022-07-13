@@ -9,6 +9,7 @@ import {
 } from '@logto/connector-types';
 import { assert } from '@silverhand/essentials';
 import { HTTPError } from 'got';
+import { ZodError } from 'zod';
 
 import { defaultMetadata } from './constant';
 import { sendSms } from './single-send-text';
@@ -16,22 +17,38 @@ import { aliyunSmsConfigGuard, AliyunSmsConfig, sendSmsResponseGuard } from './t
 
 export default class AliyunSmsConnector implements SmsConnector {
   public metadata: ConnectorMetadata = defaultMetadata;
+  private _configZodError: ZodError = new ZodError([]);
+
+  private get configZodError() {
+    return this._configZodError;
+  }
+
+  private set configZodError(zodError: ZodError) {
+    this._configZodError = zodError;
+  }
 
   constructor(public readonly getConfig: GetConnectorConfig) {}
 
-  public validateConfig: ValidateConfig<AliyunSmsConfig> = async (config: unknown) => {
+  public validateConfig: ValidateConfig<AliyunSmsConfig> = (
+    config: unknown
+  ): config is AliyunSmsConfig => {
     const result = aliyunSmsConfigGuard.safeParse(config);
 
     if (!result.success) {
-      throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, result.error);
+      this.configZodError = result.error;
     }
 
-    return result.data;
+    return result.success;
   };
 
+  // eslint-disable-next-line complexity
   public sendMessage: SmsSendMessageFunction = async (phone, type, { code }, config) => {
-    const smsRawConfig = config ?? (await this.getConfig(this.metadata.id));
-    const smsConfig = await this.validateConfig(smsRawConfig);
+    const smsConfig = config ?? (await this.getConfig(this.metadata.id));
+
+    if (!this.validateConfig(smsConfig)) {
+      throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, this.configZodError);
+    }
+
     const { accessKeyId, accessKeySecret, signName, templates } = smsConfig;
     const template = templates.find(({ usageType }) => usageType === type);
 

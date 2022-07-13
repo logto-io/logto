@@ -99,7 +99,7 @@ export interface SocialConnector extends BaseConnector {
   getUserInfo: GetUserInfo;
 }
 
-export type ValidateConfig<T = unknown> = (config: unknown) => Promise<T>;
+export type ValidateConfig<T = unknown> = (config: unknown) => config is T;
 
 export type GetAuthorizationUri = (payload: {
   state: string;

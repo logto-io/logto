@@ -12,6 +12,7 @@ import {
 import { assert, conditional } from '@silverhand/essentials';
 import got, { HTTPError } from 'got';
 import * as qs from 'query-string';
+import { ZodError } from 'zod';
 
 import {
   authorizationEndpoint,
@@ -31,22 +32,36 @@ import {
 
 export default class GithubConnector implements SocialConnector {
   public metadata: ConnectorMetadata = defaultMetadata;
+  private _configZodError: ZodError = new ZodError([]);
+
+  private get configZodError() {
+    return this._configZodError;
+  }
+
+  private set configZodError(zodError: ZodError) {
+    this._configZodError = zodError;
+  }
 
   constructor(public readonly getConfig: GetConnectorConfig) {}
 
-  public validateConfig: ValidateConfig<GithubConfig> = async (config: unknown) => {
+  public validateConfig: ValidateConfig<GithubConfig> = (
+    config: unknown
+  ): config is GithubConfig => {
     const result = githubConfigGuard.safeParse(config);
 
     if (!result.success) {
-      throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, result.error);
+      this.configZodError = result.error;
     }
 
-    return result.data;
+    return result.success;
   };
 
   public getAuthorizationUri: GetAuthorizationUri = async ({ state, redirectUri }) => {
-    const rawConfig = await this.getConfig(this.metadata.id);
-    const config = await this.validateConfig(rawConfig);
+    const config = await this.getConfig(this.metadata.id);
+
+    if (!this.validateConfig(config)) {
+      throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, this.configZodError);
+    }
 
     const queryParameters = new URLSearchParams({
       client_id: config.clientId,
@@ -59,10 +74,13 @@ export default class GithubConnector implements SocialConnector {
   };
 
   public getAccessToken = async (code: string) => {
-    const rawConfig = await this.getConfig(this.metadata.id);
-    const { clientId: client_id, clientSecret: client_secret } = await this.validateConfig(
-      rawConfig
-    );
+    const config = await this.getConfig(this.metadata.id);
+
+    if (!this.validateConfig(config)) {
+      throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, this.configZodError);
+    }
+
+    const { clientId: client_id, clientSecret: client_secret } = config;
 
     const httpResponse = await got.post({
       url: accessTokenEndpoint,
