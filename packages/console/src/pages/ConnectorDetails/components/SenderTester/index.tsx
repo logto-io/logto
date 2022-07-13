@@ -17,7 +17,7 @@ import * as styles from './index.module.scss';
 type Props = {
   connectorId: string;
   connectorType: Exclude<ConnectorType, ConnectorType.Social>;
-  config?: string;
+  config: string;
   className?: string;
 };
 
@@ -58,7 +58,7 @@ const SenderTester = ({ connectorId, connectorType, config, className }: Props) 
     const { sendTo } = formData;
 
     try {
-      const configJson = config ? (JSON.parse(config) as JSON) : undefined;
+      const configJson = JSON.parse(config) as JSON;
       const data = { config: configJson, ...(isSms ? { phone: sendTo } : { email: sendTo }) };
 
       await api

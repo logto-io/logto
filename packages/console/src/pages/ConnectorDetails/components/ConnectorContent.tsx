@@ -21,7 +21,7 @@ type Props = {
 
 const ConnectorContent = ({ isDeleted, connectorData, onConnectorUpdated }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const [config, setConfig] = useState<string>();
+  const [config, setConfig] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const api = useApi();
 
