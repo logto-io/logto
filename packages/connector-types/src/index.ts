@@ -82,8 +82,8 @@ export type SmsSendMessageFunction<T = unknown> = (
 
 export interface BaseConnector<T = unknown> {
   metadata: ConnectorMetadata;
-  validateConfig: ValidateConfig<T>;
   getConfig: GetConnectorConfig;
+  validateConfig: ValidateConfig<T>;
 }
 
 export interface SmsConnector<T = unknown> extends BaseConnector<T> {
