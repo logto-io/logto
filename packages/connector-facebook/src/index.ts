@@ -9,7 +9,6 @@ import {
   ConnectorMetadata,
   GetAuthorizationUri,
   GetUserInfo,
-  ValidateConfig,
   SocialConnector,
   GetConnectorConfig,
   codeWithRedirectDataGuard,
@@ -33,21 +32,23 @@ import {
   userInfoResponseGuard,
 } from './types';
 
-export default class FacebookConnector implements SocialConnector {
+export default class FacebookConnector implements SocialConnector<FacebookConfig> {
   public metadata: ConnectorMetadata = defaultMetadata;
 
-  constructor(public readonly getConfig: GetConnectorConfig<FacebookConfig>) {}
+  constructor(public readonly getConfig: GetConnectorConfig) {}
 
-  public validateConfig: ValidateConfig = async (config: unknown) => {
+  public validateConfig(config: unknown): asserts config is FacebookConfig {
     const result = facebookConfigGuard.safeParse(config);
 
     if (!result.success) {
       throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, result.error);
     }
-  };
+  }
 
   public getAuthorizationUri: GetAuthorizationUri = async ({ state, redirectUri }) => {
     const config = await this.getConfig(this.metadata.id);
+
+    this.validateConfig(config);
 
     const queryParameters = new URLSearchParams({
       client_id: config.clientId,
@@ -61,9 +62,11 @@ export default class FacebookConnector implements SocialConnector {
   };
 
   public getAccessToken = async (code: string, redirectUri: string) => {
-    const { clientId: client_id, clientSecret: client_secret } = await this.getConfig(
-      this.metadata.id
-    );
+    const config = await this.getConfig(this.metadata.id);
+
+    this.validateConfig(config);
+
+    const { clientId: client_id, clientSecret: client_secret } = config;
 
     const httpResponse = await got.get(accessTokenEndpoint, {
       searchParams: {

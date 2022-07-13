@@ -3,7 +3,6 @@ import {
   ConnectorErrorCodes,
   ConnectorMetadata,
   EmailSendMessageFunction,
-  ValidateConfig,
   EmailConnector,
   GetConnectorConfig,
 } from '@logto/connector-types';
@@ -20,22 +19,23 @@ import {
   PublicParameters,
 } from './types';
 
-export default class SendGridMailConnector implements EmailConnector {
+export default class SendGridMailConnector implements EmailConnector<SendGridMailConfig> {
   public metadata: ConnectorMetadata = defaultMetadata;
+  constructor(public readonly getConfig: GetConnectorConfig) {}
 
-  constructor(public readonly getConfig: GetConnectorConfig<SendGridMailConfig>) {}
-
-  public validateConfig: ValidateConfig = async (config: unknown) => {
+  public validateConfig(config: unknown): asserts config is SendGridMailConfig {
     const result = sendGridMailConfigGuard.safeParse(config);
 
     if (!result.success) {
       throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, result.error);
     }
-  };
+  }
 
   public sendMessage: EmailSendMessageFunction = async (address, type, data) => {
     const config = await this.getConfig(this.metadata.id);
-    await this.validateConfig(config);
+
+    this.validateConfig(config);
+
     const { apiKey, fromEmail, fromName, templates } = config;
     const template = templates.find((template) => template.usageType === type);
 

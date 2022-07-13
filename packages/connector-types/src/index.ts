@@ -80,26 +80,26 @@ export type SmsSendMessageFunction<T = unknown> = (
   config?: Record<string, unknown>
 ) => Promise<T>;
 
-export interface BaseConnector {
+export interface BaseConnector<T = unknown> {
   metadata: ConnectorMetadata;
-  validateConfig: ValidateConfig;
   getConfig: GetConnectorConfig;
+  validateConfig: ValidateConfig<T>;
 }
 
-export interface SmsConnector extends BaseConnector {
+export interface SmsConnector<T = unknown> extends BaseConnector<T> {
   sendMessage: SmsSendMessageFunction;
 }
 
-export interface EmailConnector extends BaseConnector {
+export interface EmailConnector<T = unknown> extends BaseConnector<T> {
   sendMessage: EmailSendMessageFunction;
 }
 
-export interface SocialConnector extends BaseConnector {
+export interface SocialConnector<T = unknown> extends BaseConnector<T> {
   getAuthorizationUri: GetAuthorizationUri;
   getUserInfo: GetUserInfo;
 }
 
-export type ValidateConfig<T = Record<string, unknown>> = (config: T) => Promise<void>;
+export type ValidateConfig<T = unknown> = (config: unknown) => asserts config is T;
 
 export type GetAuthorizationUri = (payload: {
   state: string;
@@ -110,7 +110,7 @@ export type GetUserInfo = (
   data: unknown
 ) => Promise<{ id: string } & Record<string, string | undefined>>;
 
-export type GetConnectorConfig<T = Record<string, unknown>> = (id: string) => Promise<T>;
+export type GetConnectorConfig = (id: string) => Promise<unknown>;
 
 export const codeDataGuard = z.object({
   code: z.string(),

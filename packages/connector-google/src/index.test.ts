@@ -1,12 +1,16 @@
-import { ConnectorError, ConnectorErrorCodes, GetConnectorConfig } from '@logto/connector-types';
+import {
+  ConnectorError,
+  ConnectorErrorCodes,
+  GetConnectorConfig,
+  ValidateConfig,
+} from '@logto/connector-types';
 import nock from 'nock';
 
 import GoogleConnector from '.';
 import { accessTokenEndpoint, authorizationEndpoint, userInfoEndpoint } from './constant';
 import { mockedConfig } from './mock';
-import { GoogleConfig } from './types';
 
-const getConnectorConfig = jest.fn() as GetConnectorConfig<GoogleConfig>;
+const getConnectorConfig = jest.fn() as GetConnectorConfig;
 
 const googleMethods = new GoogleConnector(getConnectorConfig);
 
@@ -20,18 +24,29 @@ describe('google connector', () => {
       jest.clearAllMocks();
     });
 
+    /**
+     * Assertion functions always need explicit annotations.
+     * See https://github.com/microsoft/TypeScript/issues/36931#issuecomment-589753014
+     */
+
     it('should pass on valid config', async () => {
-      await expect(
-        googleMethods.validateConfig({ clientId: 'clientId', clientSecret: 'clientSecret' })
-      ).resolves.not.toThrow();
+      const validator: ValidateConfig = googleMethods.validateConfig;
+      expect(() => {
+        validator({ clientId: 'clientId', clientSecret: 'clientSecret' });
+      }).not.toThrow();
     });
 
-    it('should throw on invalid config', async () => {
-      await expect(googleMethods.validateConfig({})).rejects.toThrow();
-      await expect(googleMethods.validateConfig({ clientId: 'clientId' })).rejects.toThrow();
-      await expect(
-        googleMethods.validateConfig({ clientSecret: 'clientSecret' })
-      ).rejects.toThrow();
+    it('should fail on invalid config', async () => {
+      const validator: ValidateConfig = googleMethods.validateConfig;
+      expect(() => {
+        validator({});
+      }).toThrow();
+      expect(() => {
+        validator({ clientId: 'clientId' });
+      }).toThrow();
+      expect(() => {
+        validator({ clientSecret: 'clientSecret' });
+      }).toThrow();
     });
   });
 

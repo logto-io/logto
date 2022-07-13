@@ -1,10 +1,10 @@
-import { GetConnectorConfig } from '@logto/connector-types';
+import { GetConnectorConfig, ValidateConfig } from '@logto/connector-types';
 
 import SendGridMailConnector from '.';
 import { mockedConfig } from './mock';
-import { ContextType, SendGridMailConfig } from './types';
+import { ContextType } from './types';
 
-const getConnectorConfig = jest.fn() as GetConnectorConfig<SendGridMailConfig>;
+const getConnectorConfig = jest.fn() as GetConnectorConfig;
 
 const sendGridMailMethods = new SendGridMailConnector(getConnectorConfig);
 
@@ -19,9 +19,15 @@ describe('validateConfig()', () => {
     jest.clearAllMocks();
   });
 
+  /**
+   * Assertion functions always need explicit annotations.
+   * See https://github.com/microsoft/TypeScript/issues/36931#issuecomment-589753014
+   */
+
   it('should pass on valid config', async () => {
-    await expect(
-      sendGridMailMethods.validateConfig({
+    const validator: ValidateConfig = sendGridMailMethods.validateConfig;
+    expect(() => {
+      validator({
         apiKey: 'apiKey',
         fromEmail: 'noreply@logto.test.io',
         fromName: 'Logto Test',
@@ -33,11 +39,14 @@ describe('validateConfig()', () => {
             content: 'This is for testing purposes only. Your passcode is {{code}}.',
           },
         ],
-      })
-    ).resolves.not.toThrow();
+      });
+    }).not.toThrow();
   });
 
-  it('throws if config is invalid', async () => {
-    await expect(sendGridMailMethods.validateConfig({})).rejects.toThrow();
+  it('should be false if config is invalid', async () => {
+    const validator: ValidateConfig = sendGridMailMethods.validateConfig;
+    expect(() => {
+      validator({});
+    }).toThrow();
   });
 });

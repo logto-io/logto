@@ -3,7 +3,6 @@ import {
   ConnectorErrorCodes,
   ConnectorMetadata,
   SmsSendMessageFunction,
-  ValidateConfig,
   SmsConnector,
   GetConnectorConfig,
 } from '@logto/connector-types';
@@ -14,23 +13,23 @@ import { defaultMetadata } from './constant';
 import { sendSms } from './single-send-text';
 import { aliyunSmsConfigGuard, AliyunSmsConfig, sendSmsResponseGuard } from './types';
 
-export default class AliyunSmsConnector implements SmsConnector {
+export default class AliyunSmsConnector implements SmsConnector<AliyunSmsConfig> {
   public metadata: ConnectorMetadata = defaultMetadata;
+  constructor(public readonly getConfig: GetConnectorConfig) {}
 
-  constructor(public readonly getConfig: GetConnectorConfig<AliyunSmsConfig>) {}
-
-  public validateConfig: ValidateConfig = async (config: unknown) => {
+  public validateConfig(config: unknown): asserts config is AliyunSmsConfig {
     const result = aliyunSmsConfigGuard.safeParse(config);
 
     if (!result.success) {
       throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, result.error);
     }
-  };
+  }
 
   public sendMessage: SmsSendMessageFunction = async (phone, type, { code }, config) => {
-    const smsConfig =
-      (config as AliyunSmsConfig | undefined) ?? (await this.getConfig(this.metadata.id));
-    await this.validateConfig(smsConfig);
+    const smsConfig = config ?? (await this.getConfig(this.metadata.id));
+
+    this.validateConfig(smsConfig);
+
     const { accessKeyId, accessKeySecret, signName, templates } = smsConfig;
     const template = templates.find(({ usageType }) => usageType === type);
 

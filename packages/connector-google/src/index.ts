@@ -8,7 +8,6 @@ import {
   GetAuthorizationUri,
   GetUserInfo,
   ConnectorMetadata,
-  ValidateConfig,
   SocialConnector,
   GetConnectorConfig,
   codeWithRedirectDataGuard,
@@ -31,21 +30,23 @@ import {
   userInfoResponseGuard,
 } from './types';
 
-export default class GoogleConnector implements SocialConnector {
+export default class GoogleConnector implements SocialConnector<GoogleConfig> {
   public metadata: ConnectorMetadata = defaultMetadata;
 
-  constructor(public readonly getConfig: GetConnectorConfig<GoogleConfig>) {}
+  constructor(public readonly getConfig: GetConnectorConfig) {}
 
-  public validateConfig: ValidateConfig = async (config: unknown) => {
+  public validateConfig(config: unknown): asserts config is GoogleConfig {
     const result = googleConfigGuard.safeParse(config);
 
     if (!result.success) {
       throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, result.error);
     }
-  };
+  }
 
   public getAuthorizationUri: GetAuthorizationUri = async ({ state, redirectUri }) => {
     const config = await this.getConfig(this.metadata.id);
+
+    this.validateConfig(config);
 
     const queryParameters = new URLSearchParams({
       client_id: config.clientId,
@@ -59,7 +60,11 @@ export default class GoogleConnector implements SocialConnector {
   };
 
   public getAccessToken = async (code: string, redirectUri: string) => {
-    const { clientId, clientSecret } = await this.getConfig(this.metadata.id);
+    const config = await this.getConfig(this.metadata.id);
+
+    this.validateConfig(config);
+
+    const { clientId, clientSecret } = config;
 
     // Note：Need to decodeURIComponent on code
     // https://stackoverflow.com/questions/51058256/google-api-node-js-invalid-grant-malformed-auth-code

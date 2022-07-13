@@ -3,7 +3,6 @@ import {
   ConnectorErrorCodes,
   ConnectorMetadata,
   EmailSendMessageFunction,
-  ValidateConfig,
   EmailConnector,
   GetConnectorConfig,
 } from '@logto/connector-types';
@@ -19,24 +18,24 @@ import {
   sendMailErrorResponseGuard,
 } from './types';
 
-export default class AliyunDmConnector implements EmailConnector {
+export default class AliyunDmConnector implements EmailConnector<AliyunDmConfig> {
   public metadata: ConnectorMetadata = defaultMetadata;
+  constructor(public readonly getConfig: GetConnectorConfig) {}
 
-  constructor(public readonly getConfig: GetConnectorConfig<AliyunDmConfig>) {}
-
-  public validateConfig: ValidateConfig = async (config: unknown) => {
+  public validateConfig(config: unknown): asserts config is AliyunDmConfig {
     const result = aliyunDmConfigGuard.safeParse(config);
 
     if (!result.success) {
       throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, result.error);
     }
-  };
+  }
 
   // eslint-disable-next-line complexity
   public sendMessage: EmailSendMessageFunction = async (address, type, data, config) => {
-    const emailConfig =
-      (config as AliyunDmConfig | undefined) ?? (await this.getConfig(this.metadata.id));
-    await this.validateConfig(emailConfig);
+    const emailConfig = config ?? (await this.getConfig(this.metadata.id));
+
+    this.validateConfig(emailConfig);
+
     const { accessKeyId, accessKeySecret, accountName, fromAlias, templates } = emailConfig;
     const template = templates.find((template) => template.usageType === type);
 

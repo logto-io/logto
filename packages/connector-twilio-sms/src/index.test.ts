@@ -1,10 +1,9 @@
-import { GetConnectorConfig } from '@logto/connector-types';
+import { GetConnectorConfig, ValidateConfig } from '@logto/connector-types';
 
 import TwilioSmsConnector from '.';
 import { mockedConfig } from './mock';
-import { TwilioSmsConfig } from './types';
 
-const getConnectorConfig = jest.fn() as GetConnectorConfig<TwilioSmsConfig>;
+const getConnectorConfig = jest.fn() as GetConnectorConfig;
 
 const twilioSmsMethods = new TwilioSmsConnector(getConnectorConfig);
 
@@ -13,11 +12,22 @@ describe('validateConfig()', () => {
     jest.clearAllMocks();
   });
 
+  /**
+   * Assertion functions always need explicit annotations.
+   * See https://github.com/microsoft/TypeScript/issues/36931#issuecomment-589753014
+   */
+
   it('should pass on valid config', async () => {
-    await expect(twilioSmsMethods.validateConfig(mockedConfig)).resolves.not.toThrow();
+    const validator: ValidateConfig = twilioSmsMethods.validateConfig;
+    expect(() => {
+      validator(mockedConfig);
+    }).not.toThrow();
   });
 
   it('throws if config is invalid', async () => {
-    await expect(twilioSmsMethods.validateConfig({})).rejects.toThrow();
+    const validator: ValidateConfig = twilioSmsMethods.validateConfig;
+    expect(() => {
+      validator({});
+    }).toThrow();
   });
 });

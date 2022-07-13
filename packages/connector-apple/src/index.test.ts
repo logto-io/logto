@@ -1,12 +1,16 @@
-import { ConnectorError, ConnectorErrorCodes, GetConnectorConfig } from '@logto/connector-types';
+import {
+  ConnectorError,
+  ConnectorErrorCodes,
+  GetConnectorConfig,
+  ValidateConfig,
+} from '@logto/connector-types';
 import { jwtVerify } from 'jose';
 
 import AppleConnector from '.';
 import { authorizationEndpoint } from './constant';
 import { mockedConfig } from './mock';
-import { AppleConfig } from './types';
 
-const getConnectorConfig = jest.fn() as GetConnectorConfig<AppleConfig>;
+const getConnectorConfig = jest.fn() as GetConnectorConfig;
 
 const appleMethods = new AppleConnector(getConnectorConfig);
 
@@ -40,12 +44,23 @@ describe('validateConfig', () => {
     jest.clearAllMocks();
   });
 
-  it('should pass on valid config', async () => {
-    await expect(appleMethods.validateConfig({ clientId: 'clientId' })).resolves.not.toThrow();
+  /**
+   * Assertion functions always need explicit annotations.
+   * See https://github.com/microsoft/TypeScript/issues/36931#issuecomment-589753014
+   */
+
+  it('should be true on valid config', async () => {
+    const validator: ValidateConfig = appleMethods.validateConfig;
+    expect(() => {
+      validator({ clientId: 'clientId' });
+    }).not.toThrow();
   });
 
-  it('should throw on empty config', async () => {
-    await expect(appleMethods.validateConfig({})).rejects.toThrowError();
+  it('should be false on empty config', async () => {
+    const validator: ValidateConfig = appleMethods.validateConfig;
+    expect(() => {
+      validator({});
+    }).toThrow();
   });
 });
 

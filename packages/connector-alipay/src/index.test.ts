@@ -1,12 +1,16 @@
-import { ConnectorError, ConnectorErrorCodes, GetConnectorConfig } from '@logto/connector-types';
+import {
+  ConnectorError,
+  ConnectorErrorCodes,
+  GetConnectorConfig,
+  ValidateConfig,
+} from '@logto/connector-types';
 import nock from 'nock';
 
 import AlipayConnector from '.';
 import { alipayEndpoint, authorizationEndpoint } from './constant';
 import { mockedAlipayConfig, mockedAlipayConfigWithValidPrivateKey } from './mock';
-import { AlipayConfig } from './types';
 
-const getConnectorConfig = jest.fn() as GetConnectorConfig<AlipayConfig>;
+const getConnectorConfig = jest.fn() as GetConnectorConfig;
 
 const alipayMethods = new AlipayConnector(getConnectorConfig);
 
@@ -15,22 +19,34 @@ describe('validateConfig', () => {
     jest.clearAllMocks();
   });
 
+  /**
+   * Assertion functions always need explicit annotations.
+   * See https://github.com/microsoft/TypeScript/issues/36931#issuecomment-589753014
+   */
+
   it('should pass on valid config', async () => {
-    await expect(
-      alipayMethods.validateConfig({
+    const validator: ValidateConfig = alipayMethods.validateConfig;
+    expect(() => {
+      validator({
         appId: 'appId',
         privateKey: 'privateKey',
         signType: 'RSA',
-      })
-    ).resolves.not.toThrow();
+      });
+    }).not.toThrow();
   });
 
-  it('should throw on empty config', async () => {
-    await expect(alipayMethods.validateConfig({})).rejects.toThrowError();
+  it('should fail on empty config', async () => {
+    const validator: ValidateConfig = alipayMethods.validateConfig;
+    expect(() => {
+      validator({});
+    }).toThrow();
   });
 
-  it('should throw when missing required properties', async () => {
-    await expect(alipayMethods.validateConfig({ appId: 'appId' })).rejects.toThrowError();
+  it('should fail when missing required properties', async () => {
+    const validator: ValidateConfig = alipayMethods.validateConfig;
+    expect(() => {
+      validator({ appId: 'appId' });
+    }).toThrow();
   });
 });
 

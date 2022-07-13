@@ -13,7 +13,6 @@ import {
   ConnectorMetadata,
   GetAuthorizationUri,
   GetUserInfo,
-  ValidateConfig,
   SocialConnector,
   GetConnectorConfig,
 } from '@logto/connector-types';
@@ -44,23 +43,27 @@ import { signingParameters } from './utils';
 
 export type { AlipayNativeConfig } from './types';
 
-export default class AlipayNativeConnector implements SocialConnector {
+export default class AlipayNativeConnector implements SocialConnector<AlipayNativeConfig> {
   public metadata: ConnectorMetadata = defaultMetadata;
 
   private readonly signingParameters = signingParameters;
 
-  constructor(public readonly getConfig: GetConnectorConfig<AlipayNativeConfig>) {}
+  constructor(public readonly getConfig: GetConnectorConfig) {}
 
-  public validateConfig: ValidateConfig = async (config: unknown) => {
+  public validateConfig(config: unknown): asserts config is AlipayNativeConfig {
     const result = alipayNativeConfigGuard.safeParse(config);
 
     if (!result.success) {
       throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, result.error);
     }
-  };
+  }
 
   public getAuthorizationUri: GetAuthorizationUri = async ({ state }) => {
-    const { appId } = await this.getConfig(this.metadata.id);
+    const config = await this.getConfig(this.metadata.id);
+
+    this.validateConfig(config);
+
+    const { appId } = config;
 
     const queryParameters = new URLSearchParams({ app_id: appId, state });
 
@@ -108,6 +111,9 @@ export default class AlipayNativeConnector implements SocialConnector {
   public getUserInfo: GetUserInfo = async (data) => {
     const { auth_code } = await this.authorizationCallbackHandler(data);
     const config = await this.getConfig(this.metadata.id);
+
+    this.validateConfig(config);
+
     const { accessToken } = await this.getAccessToken(auth_code, config);
 
     assert(

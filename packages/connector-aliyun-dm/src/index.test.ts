@@ -1,11 +1,10 @@
-import { GetConnectorConfig } from '@logto/connector-types';
+import { GetConnectorConfig, ValidateConfig } from '@logto/connector-types';
 
 import AliyunDmConnector from '.';
 import { mockedConfig } from './mock';
 import { singleSendMail } from './single-send-mail';
-import { AliyunDmConfig } from './types';
 
-const getConnectorConfig = jest.fn() as GetConnectorConfig<AliyunDmConfig>;
+const getConnectorConfig = jest.fn() as GetConnectorConfig;
 
 const aliyunDmMethods = new AliyunDmConnector(getConnectorConfig);
 
@@ -29,19 +28,28 @@ describe('validateConfig()', () => {
     jest.clearAllMocks();
   });
 
+  /**
+   * Assertion functions always need explicit annotations.
+   * See https://github.com/microsoft/TypeScript/issues/36931#issuecomment-589753014
+   */
+
   it('should pass on valid config', async () => {
-    await expect(
-      aliyunDmMethods.validateConfig({
+    const validator: ValidateConfig = aliyunDmMethods.validateConfig;
+    expect(() => {
+      validator({
         accessKeyId: 'accessKeyId',
         accessKeySecret: 'accessKeySecret',
         accountName: 'accountName',
         templates: [],
-      })
-    ).resolves.not.toThrow();
+      });
+    }).not.toThrow();
   });
 
-  it('throws if config is invalid', async () => {
-    await expect(aliyunDmMethods.validateConfig({})).rejects.toThrow();
+  it('should fail if config is invalid', async () => {
+    const validator: ValidateConfig = aliyunDmMethods.validateConfig;
+    expect(() => {
+      validator({});
+    }).toThrow();
   });
 });
 

@@ -6,7 +6,6 @@
 import {
   ConnectorMetadata,
   GetAuthorizationUri,
-  ValidateConfig,
   GetUserInfo,
   ConnectorError,
   ConnectorErrorCodes,
@@ -36,21 +35,25 @@ import {
   WechatConfig,
 } from './types';
 
-export default class WechatConnector implements SocialConnector {
+export default class WechatConnector implements SocialConnector<WechatConfig> {
   public metadata: ConnectorMetadata = defaultMetadata;
 
-  constructor(public readonly getConfig: GetConnectorConfig<WechatConfig>) {}
+  constructor(public readonly getConfig: GetConnectorConfig) {}
 
-  public validateConfig: ValidateConfig = async (config: unknown) => {
+  public validateConfig(config: unknown): asserts config is WechatConfig {
     const result = wechatConfigGuard.safeParse(config);
 
     if (!result.success) {
       throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, result.error);
     }
-  };
+  }
 
   public getAuthorizationUri: GetAuthorizationUri = async ({ state, redirectUri }) => {
-    const { appId } = await this.getConfig(this.metadata.id);
+    const config = await this.getConfig(this.metadata.id);
+
+    this.validateConfig(config);
+
+    const { appId } = config;
 
     const queryParameters = new URLSearchParams({
       appid: appId,
@@ -66,7 +69,11 @@ export default class WechatConnector implements SocialConnector {
   public getAccessToken = async (
     code: string
   ): Promise<{ accessToken: string; openid: string }> => {
-    const { appId: appid, appSecret: secret } = await this.getConfig(this.metadata.id);
+    const config = await this.getConfig(this.metadata.id);
+
+    this.validateConfig(config);
+
+    const { appId: appid, appSecret: secret } = config;
 
     const httpResponse = await got.get(accessTokenEndpoint, {
       searchParams: { appid, secret, code, grant_type: 'authorization_code' },

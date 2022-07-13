@@ -1,3 +1,4 @@
+import { ValidateConfig } from '@logto/connector-types';
 import { arbitraryObjectGuard, ConnectorDto, Connectors, ConnectorType } from '@logto/schemas';
 import { emailRegEx, phoneRegEx } from '@logto/shared';
 import { object, string } from 'zod';
@@ -84,14 +85,22 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
         params: { id },
         body: { enabled },
       } = ctx.guard;
+
+      const connectorInstance = await getConnectorInstanceById(id);
       const {
         connector: { config },
         metadata,
-        validateConfig,
-      } = await getConnectorInstanceById(id);
+      } = connectorInstance;
+
+      /**
+       * Assertion functions always need explicit annotations.
+       * See https://github.com/microsoft/TypeScript/issues/36931#issuecomment-589753014
+       */
+      // eslint-disable-next-line unicorn/consistent-destructuring
+      const validator: ValidateConfig = connectorInstance.validateConfig;
 
       if (enabled) {
-        await validateConfig(config);
+        validator(config);
       }
 
       // Only allow one enabled connector for SMS and Email.
@@ -135,10 +144,19 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
         params: { id },
         body,
       } = ctx.guard;
-      const { metadata, validateConfig } = await getConnectorInstanceById(id);
+
+      const connectorInstance = await getConnectorInstanceById(id);
+      const { metadata } = connectorInstance;
+
+      /**
+       * Assertion functions always need explicit annotations.
+       * See https://github.com/microsoft/TypeScript/issues/36931#issuecomment-589753014
+       */
+      // eslint-disable-next-line unicorn/consistent-destructuring
+      const validator: ValidateConfig = connectorInstance.validateConfig;
 
       if (body.config) {
-        await validateConfig(body.config);
+        validator(body.config);
       }
 
       const connector = await updateConnector({ set: body, where: { id }, jsonbMode: 'replace' });
@@ -186,10 +204,6 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
           type: phone ? ConnectorType.SMS : ConnectorType.Email,
         })
       );
-
-      if (config) {
-        await connector.validateConfig(config);
-      }
 
       await connector.sendMessage(
         subject,

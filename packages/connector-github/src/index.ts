@@ -1,7 +1,6 @@
 import {
   ConnectorMetadata,
   GetAuthorizationUri,
-  ValidateConfig,
   GetUserInfo,
   ConnectorError,
   ConnectorErrorCodes,
@@ -29,21 +28,23 @@ import {
   userInfoResponseGuard,
 } from './types';
 
-export default class GithubConnector implements SocialConnector {
+export default class GithubConnector implements SocialConnector<GithubConfig> {
   public metadata: ConnectorMetadata = defaultMetadata;
 
-  constructor(public readonly getConfig: GetConnectorConfig<GithubConfig>) {}
+  constructor(public readonly getConfig: GetConnectorConfig) {}
 
-  public validateConfig: ValidateConfig = async (config: unknown) => {
+  public validateConfig(config: unknown): asserts config is GithubConfig {
     const result = githubConfigGuard.safeParse(config);
 
     if (!result.success) {
       throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, result.error);
     }
-  };
+  }
 
   public getAuthorizationUri: GetAuthorizationUri = async ({ state, redirectUri }) => {
     const config = await this.getConfig(this.metadata.id);
+
+    this.validateConfig(config);
 
     const queryParameters = new URLSearchParams({
       client_id: config.clientId,
@@ -56,9 +57,11 @@ export default class GithubConnector implements SocialConnector {
   };
 
   public getAccessToken = async (code: string) => {
-    const { clientId: client_id, clientSecret: client_secret } = await this.getConfig(
-      this.metadata.id
-    );
+    const config = await this.getConfig(this.metadata.id);
+
+    this.validateConfig(config);
+
+    const { clientId: client_id, clientSecret: client_secret } = config;
 
     const httpResponse = await got.post({
       url: accessTokenEndpoint,

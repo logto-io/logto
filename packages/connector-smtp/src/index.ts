@@ -3,7 +3,6 @@ import {
   ConnectorErrorCodes,
   ConnectorMetadata,
   EmailSendMessageFunction,
-  ValidateConfig,
   EmailConnector,
   GetConnectorConfig,
 } from '@logto/connector-types';
@@ -14,22 +13,24 @@ import SMTPTransport from 'nodemailer/lib/smtp-transport';
 import { defaultMetadata } from './constant';
 import { ContextType, smtpConfigGuard, SmtpConfig } from './types';
 
-export default class SmtpConnector implements EmailConnector {
+export default class SmtpConnector implements EmailConnector<SmtpConfig> {
   public metadata: ConnectorMetadata = defaultMetadata;
 
-  constructor(public readonly getConfig: GetConnectorConfig<SmtpConfig>) {}
+  constructor(public readonly getConfig: GetConnectorConfig) {}
 
-  public validateConfig: ValidateConfig = async (config: unknown) => {
+  public validateConfig(config: unknown): asserts config is SmtpConfig {
     const result = smtpConfigGuard.safeParse(config);
 
     if (!result.success) {
       throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, result.error);
     }
-  };
+  }
 
   public sendMessage: EmailSendMessageFunction = async (address, type, data) => {
     const config = await this.getConfig(this.metadata.id);
-    await this.validateConfig(config);
+
+    this.validateConfig(config);
+
     const { host, port, username, password, fromEmail, replyTo, templates } = config;
     const template = templates.find((template) => template.usageType === type);
 

@@ -1,12 +1,16 @@
-import { ConnectorError, ConnectorErrorCodes, GetConnectorConfig } from '@logto/connector-types';
+import {
+  ConnectorError,
+  ConnectorErrorCodes,
+  GetConnectorConfig,
+  ValidateConfig,
+} from '@logto/connector-types';
 import nock from 'nock';
 
 import AlipayNativeConnector from '.';
 import { alipayEndpoint } from './constant';
 import { mockedAlipayNativeConfig, mockedAlipayNativeConfigWithValidPrivateKey } from './mock';
-import { AlipayNativeConfig } from './types';
 
-const getConnectorConfig = jest.fn() as GetConnectorConfig<AlipayNativeConfig>;
+const getConnectorConfig = jest.fn() as GetConnectorConfig;
 
 const alipayNativeMethods = new AlipayNativeConnector(getConnectorConfig);
 
@@ -15,18 +19,30 @@ describe('validateConfig', () => {
     jest.clearAllMocks();
   });
 
+  /**
+   * Assertion functions always need explicit annotations.
+   * See https://github.com/microsoft/TypeScript/issues/36931#issuecomment-589753014
+   */
+
   it('should pass on valid config', async () => {
-    await expect(
-      alipayNativeMethods.validateConfig(mockedAlipayNativeConfig)
-    ).resolves.not.toThrow();
+    const validator: ValidateConfig = alipayNativeMethods.validateConfig;
+    expect(() => {
+      validator(mockedAlipayNativeConfig);
+    }).not.toThrow();
   });
 
-  it('should throw on empty config', async () => {
-    await expect(alipayNativeMethods.validateConfig({})).rejects.toThrowError();
+  it('should fail on empty config', async () => {
+    const validator: ValidateConfig = alipayNativeMethods.validateConfig;
+    expect(() => {
+      validator({});
+    }).toThrow();
   });
 
-  it('should throw when missing required properties', async () => {
-    await expect(alipayNativeMethods.validateConfig({ appId: 'appId' })).rejects.toThrowError();
+  it('should fail when missing required properties', async () => {
+    const validator: ValidateConfig = alipayNativeMethods.validateConfig;
+    expect(() => {
+      validator({ appId: 'appId' });
+    }).toThrow();
   });
 });
 

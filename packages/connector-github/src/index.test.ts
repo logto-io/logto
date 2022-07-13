@@ -1,13 +1,17 @@
-import { ConnectorError, ConnectorErrorCodes, GetConnectorConfig } from '@logto/connector-types';
+import {
+  ConnectorError,
+  ConnectorErrorCodes,
+  GetConnectorConfig,
+  ValidateConfig,
+} from '@logto/connector-types';
 import nock from 'nock';
 import * as qs from 'query-string';
 
 import GithubConnector from '.';
 import { accessTokenEndpoint, authorizationEndpoint, userInfoEndpoint } from './constant';
 import { mockedConfig } from './mock';
-import { GithubConfig } from './types';
 
-const getConnectorConfig = jest.fn() as GetConnectorConfig<GithubConfig>;
+const getConnectorConfig = jest.fn() as GetConnectorConfig;
 
 const githubMethods = new GithubConnector(getConnectorConfig);
 
@@ -67,18 +71,30 @@ describe('validateConfig', () => {
     jest.clearAllMocks();
   });
 
+  /**
+   * Assertion functions always need explicit annotations.
+   * See https://github.com/microsoft/TypeScript/issues/36931#issuecomment-589753014
+   */
+
   it('should pass on valid config', async () => {
-    await expect(
-      githubMethods.validateConfig({ clientId: 'clientId', clientSecret: 'clientSecret' })
-    ).resolves.not.toThrow();
+    const validator: ValidateConfig = githubMethods.validateConfig;
+    expect(() => {
+      validator({ clientId: 'clientId', clientSecret: 'clientSecret' });
+    }).not.toThrow();
   });
 
-  it('should throw on empty config', async () => {
-    await expect(githubMethods.validateConfig({})).rejects.toThrowError();
+  it('should fail on empty config', async () => {
+    const validator: ValidateConfig = githubMethods.validateConfig;
+    expect(() => {
+      validator({});
+    }).toThrow();
   });
 
-  it('should throw when missing clientSecret', async () => {
-    await expect(githubMethods.validateConfig({ clientId: 'clientId' })).rejects.toThrowError();
+  it('should fail when missing clientSecret', async () => {
+    const validator: ValidateConfig = githubMethods.validateConfig;
+    expect(() => {
+      validator({ clientId: 'clientId' });
+    }).toThrow();
   });
 });
 

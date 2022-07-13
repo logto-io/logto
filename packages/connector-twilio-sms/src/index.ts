@@ -3,7 +3,6 @@ import {
   ConnectorErrorCodes,
   ConnectorMetadata,
   EmailSendMessageFunction,
-  ValidateConfig,
   SmsConnector,
   GetConnectorConfig,
 } from '@logto/connector-types';
@@ -13,22 +12,24 @@ import got, { HTTPError } from 'got';
 import { defaultMetadata, endpoint } from './constant';
 import { twilioSmsConfigGuard, TwilioSmsConfig, PublicParameters } from './types';
 
-export default class TwilioSmsConnector implements SmsConnector {
+export default class TwilioSmsConnector implements SmsConnector<TwilioSmsConfig> {
   public metadata: ConnectorMetadata = defaultMetadata;
 
-  constructor(public readonly getConfig: GetConnectorConfig<TwilioSmsConfig>) {}
+  constructor(public readonly getConfig: GetConnectorConfig) {}
 
-  public validateConfig: ValidateConfig = async (config: unknown) => {
+  public validateConfig(config: unknown): asserts config is TwilioSmsConfig {
     const result = twilioSmsConfigGuard.safeParse(config);
 
     if (!result.success) {
       throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, result.error);
     }
-  };
+  }
 
   public sendMessage: EmailSendMessageFunction = async (address, type, data) => {
     const config = await this.getConfig(this.metadata.id);
-    await this.validateConfig(config);
+
+    this.validateConfig(config);
+
     const { accountSID, authToken, fromMessagingServiceSID, templates } = config;
     const template = templates.find((template) => template.usageType === type);
 

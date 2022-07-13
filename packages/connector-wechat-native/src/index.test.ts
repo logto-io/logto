@@ -1,12 +1,16 @@
-import { ConnectorError, ConnectorErrorCodes, GetConnectorConfig } from '@logto/connector-types';
+import {
+  ConnectorError,
+  ConnectorErrorCodes,
+  GetConnectorConfig,
+  ValidateConfig,
+} from '@logto/connector-types';
 import nock from 'nock';
 
 import WechatNativeConnector from '.';
 import { accessTokenEndpoint, authorizationEndpoint, userInfoEndpoint } from './constant';
 import { mockedConfig } from './mock';
-import { WechatNativeConfig } from './types';
 
-const getConnectorConfig = jest.fn() as GetConnectorConfig<WechatNativeConfig>;
+const getConnectorConfig = jest.fn() as GetConnectorConfig;
 
 const wechatNativeMethods = new WechatNativeConnector(getConnectorConfig);
 
@@ -92,16 +96,30 @@ describe('getAccessToken', () => {
 });
 
 describe('validateConfig', () => {
+  /**
+   * Assertion functions always need explicit annotations.
+   * See https://github.com/microsoft/TypeScript/issues/36931#issuecomment-589753014
+   */
+
   it('should pass on valid config', async () => {
-    await expect(
-      wechatNativeMethods.validateConfig({ appId: 'appId', appSecret: 'appSecret' })
-    ).resolves.not.toThrow();
+    const validator: ValidateConfig = wechatNativeMethods.validateConfig;
+    expect(() => {
+      validator({ appId: 'appId', appSecret: 'appSecret' });
+    }).not.toThrow();
   });
-  it('should throw on empty config', async () => {
-    await expect(wechatNativeMethods.validateConfig({})).rejects.toThrowError();
+
+  it('should fail on empty config', async () => {
+    const validator: ValidateConfig = wechatNativeMethods.validateConfig;
+    expect(() => {
+      validator({});
+    }).toThrow();
   });
-  it('should throw when missing appSecret', async () => {
-    await expect(wechatNativeMethods.validateConfig({ appId: 'appId' })).rejects.toThrowError();
+
+  it('should fail when missing appSecret', async () => {
+    const validator: ValidateConfig = wechatNativeMethods.validateConfig;
+    expect(() => {
+      validator({ appId: 'appId' });
+    }).toThrow();
   });
 });
 
