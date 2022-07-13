@@ -28,7 +28,7 @@ import {
   userInfoResponseGuard,
 } from './types';
 
-export default class GithubConnector<T = GithubConfig> implements SocialConnector<T> {
+export default class GithubConnector implements SocialConnector<GithubConfig> {
   public metadata: ConnectorMetadata = defaultMetadata;
 
   constructor(public readonly getConfig: GetConnectorConfig) {}

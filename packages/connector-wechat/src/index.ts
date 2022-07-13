@@ -35,7 +35,7 @@ import {
   WechatConfig,
 } from './types';
 
-export default class WechatConnector<T = WechatConfig> implements SocialConnector<T> {
+export default class WechatConnector implements SocialConnector<WechatConfig> {
   public metadata: ConnectorMetadata = defaultMetadata;
 
   constructor(public readonly getConfig: GetConnectorConfig) {}

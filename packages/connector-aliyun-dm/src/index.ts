@@ -18,7 +18,7 @@ import {
   sendMailErrorResponseGuard,
 } from './types';
 
-export default class AliyunDmConnector<T = AliyunDmConfig> implements EmailConnector<T> {
+export default class AliyunDmConnector implements EmailConnector<AliyunDmConfig> {
   public metadata: ConnectorMetadata = defaultMetadata;
   constructor(public readonly getConfig: GetConnectorConfig) {}
 

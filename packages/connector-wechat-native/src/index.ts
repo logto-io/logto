@@ -12,7 +12,6 @@ import {
   SocialConnector,
   GetConnectorConfig,
   codeDataGuard,
-  ValidateConfig,
 } from '@logto/connector-types';
 import { assert } from '@silverhand/essentials';
 import got, { HTTPError } from 'got';
@@ -35,7 +34,7 @@ import {
   WechatNativeConfig,
 } from './types';
 
-export default class WechatNativeConnector<T = WechatNativeConfig> implements SocialConnector<T> {
+export default class WechatNativeConnector implements SocialConnector<WechatNativeConfig> {
   public metadata: ConnectorMetadata = defaultMetadata;
 
   constructor(public readonly getConfig: GetConnectorConfig) {}

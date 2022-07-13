@@ -13,7 +13,7 @@ import { scope, defaultMetadata, jwksUri, issuer, authorizationEndpoint } from '
 import { appleConfigGuard, AppleConfig, dataGuard } from './types';
 
 // TO-DO: support nonce validation
-export default class AppleConnector<T = AppleConfig> implements SocialConnector<T> {
+export default class AppleConnector implements SocialConnector<AppleConfig> {
   public metadata: ConnectorMetadata = defaultMetadata;
 
   constructor(public readonly getConfig: GetConnectorConfig) {}

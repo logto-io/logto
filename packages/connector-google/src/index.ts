@@ -30,7 +30,7 @@ import {
   userInfoResponseGuard,
 } from './types';
 
-export default class GoogleConnector<T = GoogleConfig> implements SocialConnector<T> {
+export default class GoogleConnector implements SocialConnector<GoogleConfig> {
   public metadata: ConnectorMetadata = defaultMetadata;
 
   constructor(public readonly getConfig: GetConnectorConfig) {}

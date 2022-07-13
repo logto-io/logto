@@ -15,7 +15,10 @@ import assertThat from '@/utils/assert-that';
 
 import { AuthedRouter } from './types';
 
-const transpileConnectorInstance = ({ connector, metadata }: ConnectorInstance): ConnectorDto => ({
+const transpileConnectorInstance = <T = unknown>({
+  connector,
+  metadata,
+}: ConnectorInstance<T>): ConnectorDto => ({
   ...connector,
   ...metadata,
 });

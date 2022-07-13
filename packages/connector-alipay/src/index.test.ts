@@ -1,5 +1,6 @@
 import { ConnectorError, ConnectorErrorCodes, GetConnectorConfig } from '@logto/connector-types';
 import nock from 'nock';
+import { z } from 'zod';
 
 import AlipayConnector from '.';
 import { alipayEndpoint, authorizationEndpoint } from './constant';
@@ -15,13 +16,13 @@ describe('validateConfig', () => {
   });
 
   it('should pass on valid config', async () => {
-    expect(
-      alipayMethods.validateConfig({
-        appId: 'appId',
-        privateKey: 'privateKey',
-        signType: 'RSA',
-      })
-    ).toEqual(true);
+    const spyOnSafeParse = jest.spyOn(z, 'safeParse');
+    alipayMethods.validateConfig({
+      appId: 'appId',
+      privateKey: 'privateKey',
+      signType: 'RSA',
+    });
+    expect().toEqual(true);
   });
 
   it('should fail on empty config', async () => {

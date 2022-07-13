@@ -13,7 +13,7 @@ import { defaultMetadata } from './constant';
 import { sendSms } from './single-send-text';
 import { aliyunSmsConfigGuard, AliyunSmsConfig, sendSmsResponseGuard } from './types';
 
-export default class AliyunSmsConnector<T = AliyunSmsConfig> implements SmsConnector<T> {
+export default class AliyunSmsConnector implements SmsConnector<AliyunSmsConfig> {
   public metadata: ConnectorMetadata = defaultMetadata;
   constructor(public readonly getConfig: GetConnectorConfig) {}
 

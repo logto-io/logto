@@ -43,7 +43,7 @@ import { signingParameters } from './utils';
 
 export type { AlipayConfig } from './types';
 
-export default class AlipayConnector<T = AlipayConfig> implements SocialConnector<T> {
+export default class AlipayConnector implements SocialConnector<AlipayConfig> {
   public metadata: ConnectorMetadata = defaultMetadata;
 
   private readonly signingParameters = signingParameters;

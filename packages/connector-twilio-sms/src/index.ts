@@ -12,7 +12,7 @@ import got, { HTTPError } from 'got';
 import { defaultMetadata, endpoint } from './constant';
 import { twilioSmsConfigGuard, TwilioSmsConfig, PublicParameters } from './types';
 
-export default class TwilioSmsConnector<T = TwilioSmsConfig> implements SmsConnector<T> {
+export default class TwilioSmsConnector implements SmsConnector<TwilioSmsConfig> {
   public metadata: ConnectorMetadata = defaultMetadata;
 
   constructor(public readonly getConfig: GetConnectorConfig) {}

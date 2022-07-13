@@ -6,17 +6,17 @@ export { ConnectorType } from '@logto/schemas';
 export type { ConnectorMetadata } from '@logto/schemas';
 
 // The name `Connector` is used for database, use `ConnectorInstance` to avoid confusing.
-export type IConnector<T = unknown> = SmsConnector<T> | EmailConnector<T> | SocialConnector<T>;
+export type IConnector = SmsConnector | EmailConnector | SocialConnector;
 export type ConnectorInstance =
   | SmsConnectorInstance
   | EmailConnectorInstance
   | SocialConnectorInstance;
 
-export type SmsConnectorInstance<T = unknown> = SmsConnector<T> & { connector: Connector };
+export type SmsConnectorInstance = SmsConnector & { connector: Connector };
 
-export type EmailConnectorInstance<T = unknown> = EmailConnector<T> & { connector: Connector };
+export type EmailConnectorInstance = EmailConnector & { connector: Connector };
 
-export type SocialConnectorInstance<T = unknown> = SocialConnector<T> & { connector: Connector };
+export type SocialConnectorInstance = SocialConnector & { connector: Connector };
 
 export type TemplateType = PasscodeType | 'Test';
 
