@@ -26,15 +26,15 @@ Logto[^info] helps you build the sign-in experience and user identity within min
 **Highlights**
 
 - A frontend-to-backend identity solution.
-  - A customizable sign-in experience for end-users and an OIDC-based identity service.
+  - A delightful sign-in experience for end-users and an OIDC-based identity service.
   - Multi-platform SDKs that can integrate your apps with Logto quickly.
 - Out-of-box technology and UI support for many things you needed to code before.
-  - Customize the end-user experience with only a few clicks. You can even LIVE PREVIEW the result.
+  - A centralized place to customize the user interface and then LIVE PREVIEW the changes you make.
   - Social sign-in for multiple platforms (GitHub, Google, WeChat, Alipay, etc.).
   - Dynamic passcode sign-in (via SMS or email).
 - Fully open-sourced, while no identity knowledge is required to use.
   - Super easy setup (less than 1 min via GitPod, not joking), step-by-step tutorials and decent docs.
-  - A full-function web admin console to manage the users, identities, and all other things you need.
+  - A full-function web admin console to manage the users, identities, and other things you need within a few clicks.
 
 Boringly, we call it "[customer identity access management](https://en.wikipedia.org/wiki/Customer_identity_access_management)" (CIAM) or "customer identity solution."
 
