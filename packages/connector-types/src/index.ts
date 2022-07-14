@@ -4,7 +4,7 @@ import { z } from 'zod';
 
 /**
  * Connector is auto-generated in @logto/schemas according to sql file.
- * As @logto/schemas depends on this repo (@logto/schemas), we manually define Connector type again as a temporary solution.
+ * As @logto/schemas depends on this repo (@logto/connector-types), we manually define Connector type again as a temporary solution.
  */
 
 export const arbitraryObjectGuard = z.union([z.object({}).catchall(z.unknown()), z.object({})]);
