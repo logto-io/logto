@@ -2,9 +2,10 @@ import {
   ConnectorError,
   ConnectorErrorCodes,
   ConnectorMetadata,
+  Connector,
   SmsSendMessageFunction,
   SmsSendTestMessageFunction,
-  SmsConnector,
+  SmsConnectorInstance,
   GetConnectorConfig,
   SmsMessageTypes,
 } from '@logto/connector-types';
@@ -14,8 +15,21 @@ import got, { HTTPError } from 'got';
 import { defaultMetadata, endpoint } from './constant';
 import { twilioSmsConfigGuard, TwilioSmsConfig, PublicParameters } from './types';
 
-export default class TwilioSmsConnector implements SmsConnector<TwilioSmsConfig> {
+export default class TwilioSmsConnector implements SmsConnectorInstance<TwilioSmsConfig> {
   public metadata: ConnectorMetadata = defaultMetadata;
+  private _connector?: Connector;
+
+  public get connector() {
+    if (!this._connector) {
+      throw new ConnectorError(ConnectorErrorCodes.General);
+    }
+
+    return this._connector;
+  }
+
+  public set connector(input: Connector) {
+    this._connector = input;
+  }
 
   constructor(public readonly getConfig: GetConnectorConfig) {}
 

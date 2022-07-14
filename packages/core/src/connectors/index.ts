@@ -1,17 +1,18 @@
 import { existsSync, readFileSync } from 'fs';
 import path from 'path';
 
+import { ConnectorInstance, SocialConnectorInstance } from '@logto/connector-types';
 import resolvePackagePath from 'resolve-package-path';
 
 import RequestError from '@/errors/RequestError';
 import { findAllConnectors, insertConnector } from '@/queries/connector';
 
 import { connectorPackages } from './consts';
-import { ConnectorInstance, ConnectorType, IConnector, SocialConnectorInstance } from './types';
+import { ConnectorType } from './types';
 import { getConnectorConfig } from './utilities';
 
 // eslint-disable-next-line @silverhand/fp/no-let
-let cachedConnectors: IConnector[] | undefined;
+let cachedConnectors: ConnectorInstance[] | undefined;
 
 const loadConnectors = async () => {
   if (cachedConnectors) {
@@ -23,8 +24,8 @@ const loadConnectors = async () => {
     connectorPackages.map(async (packageName) => {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       const { default: Builder } = await import(packageName);
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-      const instance = new Builder(getConnectorConfig) as IConnector;
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment
+      const instance: ConnectorInstance = new Builder(getConnectorConfig);
       // eslint-disable-next-line unicorn/prefer-module
       const packagePath = resolvePackagePath(packageName, __dirname);
 
@@ -95,7 +96,10 @@ export const getConnectorInstances = async (): Promise<ConnectorInstance[]> => {
       throw new RequestError({ code: 'entity.not_found', id, status: 404 });
     }
 
-    return { connector, ...element };
+    // eslint-disable-next-line @silverhand/fp/no-mutation
+    element.connector = connector;
+
+    return element;
   });
 };
 

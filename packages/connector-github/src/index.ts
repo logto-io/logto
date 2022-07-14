@@ -4,7 +4,8 @@ import {
   GetUserInfo,
   ConnectorError,
   ConnectorErrorCodes,
-  SocialConnector,
+  Connector,
+  SocialConnectorInstance,
   GetConnectorConfig,
   codeDataGuard,
 } from '@logto/connector-types';
@@ -28,8 +29,21 @@ import {
   userInfoResponseGuard,
 } from './types';
 
-export default class GithubConnector implements SocialConnector<GithubConfig> {
+export default class GithubConnector implements SocialConnectorInstance<GithubConfig> {
   public metadata: ConnectorMetadata = defaultMetadata;
+  private _connector?: Connector;
+
+  public get connector() {
+    if (!this._connector) {
+      throw new ConnectorError(ConnectorErrorCodes.General);
+    }
+
+    return this._connector;
+  }
+
+  public set connector(input: Connector) {
+    this._connector = input;
+  }
 
   constructor(public readonly getConfig: GetConnectorConfig) {}
 

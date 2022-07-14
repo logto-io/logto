@@ -4,7 +4,8 @@ import {
   GetUserInfo,
   ConnectorError,
   ConnectorErrorCodes,
-  SocialConnector,
+  Connector,
+  SocialConnectorInstance,
   GetConnectorConfig,
 } from '@logto/connector-types';
 import { createRemoteJWKSet, jwtVerify } from 'jose';
@@ -13,8 +14,21 @@ import { scope, defaultMetadata, jwksUri, issuer, authorizationEndpoint } from '
 import { appleConfigGuard, AppleConfig, dataGuard } from './types';
 
 // TO-DO: support nonce validation
-export default class AppleConnector implements SocialConnector<AppleConfig> {
+export default class AppleConnector implements SocialConnectorInstance<AppleConfig> {
   public metadata: ConnectorMetadata = defaultMetadata;
+  private _connector?: Connector;
+
+  public get connector() {
+    if (!this._connector) {
+      throw new ConnectorError(ConnectorErrorCodes.General);
+    }
+
+    return this._connector;
+  }
+
+  public set connector(input: Connector) {
+    this._connector = input;
+  }
 
   constructor(public readonly getConfig: GetConnectorConfig) {}
 

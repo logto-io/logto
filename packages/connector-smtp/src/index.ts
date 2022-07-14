@@ -2,9 +2,10 @@ import {
   ConnectorError,
   ConnectorErrorCodes,
   ConnectorMetadata,
+  Connector,
   EmailSendMessageFunction,
   EmailSendTestMessageFunction,
-  EmailConnector,
+  EmailConnectorInstance,
   GetConnectorConfig,
   EmailMessageTypes,
 } from '@logto/connector-types';
@@ -15,8 +16,21 @@ import SMTPTransport from 'nodemailer/lib/smtp-transport';
 import { defaultMetadata } from './constant';
 import { ContextType, smtpConfigGuard, SmtpConfig } from './types';
 
-export default class SmtpConnector implements EmailConnector<SmtpConfig> {
+export default class SmtpConnector implements EmailConnectorInstance<SmtpConfig> {
   public metadata: ConnectorMetadata = defaultMetadata;
+  private _connector?: Connector;
+
+  public get connector() {
+    if (!this._connector) {
+      throw new ConnectorError(ConnectorErrorCodes.General);
+    }
+
+    return this._connector;
+  }
+
+  public set connector(input: Connector) {
+    this._connector = input;
+  }
 
   constructor(public readonly getConfig: GetConnectorConfig) {}
 
