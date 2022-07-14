@@ -34,7 +34,7 @@ export const useContacts = (): ContactItem[] => {
       icon: isLightMode ? Github : GithubDark,
       description: 'contact.github.description',
       label: 'contact.github.button',
-      link: 'https://github.com/logto-io/logto',
+      link: 'https://github.com/logto-io/logto/issues',
     },
     {
       title: 'contact.email.title',

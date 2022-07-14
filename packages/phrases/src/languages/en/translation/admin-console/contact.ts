@@ -10,7 +10,7 @@ const contact = {
   github: {
     title: 'GitHub',
     description: 'Create an issue and submit at GitHub',
-    button: 'Contact',
+    button: 'Open',
   },
   email: {
     title: 'Send email',
