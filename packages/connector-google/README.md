@@ -16,7 +16,7 @@ Google 连接器为你的应用程序提供了一种接入 Google OAuth 2.0 身�
   - [Obtain OAuth 2.0 credentials](#obtain-oauth-20-credentials)
     - [Config types](#config-types)
   - [References](#references)
-- [Google 链接器](#google-链接器)
+- [Google 连接器](#google-连接器)
   - [在 Google API 控制台中创建一个项目](#在-google-api-控制台中创建一个项目)
   - [配置 OAuth 同意屏幕](#配置-oauth-同意屏幕)
     - [注册和配置应用](#注册和配置应用)
@@ -83,7 +83,7 @@ Now you should have the Google OAuth 2.0 consent screen configured.
 ## References
 * [Google Identity: Setting up OAuth 2.0](https://developers.google.com/identity/protocols/oauth2/openid-connect#appsetup)
 
-# Google 链接器
+# Google 连接器
 
 ## 在 Google API 控制台中创建一个项目
 
@@ -115,7 +115,7 @@ Now you should have the Google OAuth 2.0 consent screen configured.
 
 #### 添加「测试用户」（仅「User Type」设置为「外部」时需要）
 
-- 点击 「+ ADD USERS」添加测试用户，以遍这些用户能在应用的发布状态为”测试时“能访问该应用。
+- 点击 「+ ADD USERS」添加测试用户，以便这些用户能在应用的发布状态为”测试时“能访问该应用。
 - 点按「保存并继续」以进行后续操作。
 
 现在你已经配置好了 Google 的「OAuth 同意屏幕」。
@@ -127,7 +127,7 @@ Now you should have the Google OAuth 2.0 consent screen configured.
 - 在「创建 OAuth 客户端 ID」页面内，将「应用类型」设置为「Web 应用」。
 - 填写相关的应用基本信息。
 - 在「已获授权的 JavaScript 来源」中，点击「+ 添加URI」，该 URI 值为你所部署的 Logto 服务的地址。此处这个值应为 `${your_logto_origin}`。例如：`https://logto.dev`。
-- 在「已获授权的重定向 URI」中，点击「+ 添加URI」以添加「已获授权的重定向 URI」。「已获授权的重定向 URI」将在用户成功使用 Google 帐号成功登录 Logto 后将用户重定向回你的应用。此处这个值应为 `${your_logto_origin}/callback/google-universal`。例如：`https://logto.dev/callback/google-universal`.
+- 在「已获授权的重定向 URI」中，点击「+ 添加URI」以添加「已获授权的重定向 URI」。「已获授权的重定向 URI」将在用户使用 Google 帐号成功登录 Logto 后将用户重定向回你的应用。此处这个值应为 `${your_logto_origin}/callback/google-universal`。例如：`https://logto.dev/callback/google-universal`。
 - 点击「创建」后，你将获得「客户端 ID」（Client ID）和「客户端密钥」（Client Secret）。
 
 ### 配置类型
