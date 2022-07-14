@@ -33,7 +33,7 @@ const usePreview = (context: Context): [boolean, PreviewConfig?] => {
     }
 
     // Init i18n
-    void initI18n();
+    void initI18n(undefined, isPreview);
 
     // Block pointer event
     document.body.classList.add(conditionalString(styles.preview));
