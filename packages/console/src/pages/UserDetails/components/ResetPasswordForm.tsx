@@ -18,7 +18,7 @@ const ResetPasswordForm = ({ onClose, userId }: Props) => {
   const api = useApi();
 
   const onSubmit = async () => {
-    const password = nanoid();
+    const password = nanoid(8);
     await api.patch(`/api/users/${userId}/password`, { json: { password } }).json<User>();
     onClose?.(btoa(password));
   };
