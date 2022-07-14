@@ -8,12 +8,14 @@ const application_details = {
   description_placeholder: '请输入应用描述',
   authorization_endpoint: 'Authorization Endpoint',
   authorization_endpoint_tip: '进行鉴权与授权的端点 endpoint。用于 OpenID Connect 中的鉴权流程。',
-  redirect_uri: 'Redirect URIs',
+  redirect_uri: 'Redirect URI',
+  redirect_uris: 'Redirect URIs',
   redirect_uri_placeholder: 'https://your.website.com/app',
   redirect_uri_placeholder_native: 'io.logto://callback',
   redirect_uri_tip:
     '在用户登录完成（不论成功与否）后重定向的目标 URI。参见 OpenID Connect AuthRequest 以了解更多。',
-  post_sign_out_redirect_uri: 'Post sign out redirect URIs',
+  post_sign_out_redirect_uri: 'Post Sign-out Redirect URI',
+  post_sign_out_redirect_uris: 'Post sign out redirect URIs',
   post_sign_out_redirect_uri_placeholder: 'https://your.website.com/home',
   post_sign_out_redirect_uri_tip:
     '在用户登出后重定向的目标 URI（可选）。在某些应用类型中可能无实质作用。',
