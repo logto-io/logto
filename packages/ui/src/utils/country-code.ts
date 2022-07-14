@@ -4,7 +4,7 @@ import {
   CountryCode,
   CountryCallingCode,
   getCountryCallingCode,
-} from 'libphonenumber-js';
+} from 'libphonenumber-js/mobile';
 
 export const fallbackCountryCode = 'US';
 
