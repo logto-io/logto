@@ -2,7 +2,7 @@
 
 The Google connector provides a succinct way for your application to use Google’s OAuth 2.0 authentication system.
 
-Google 连接器为您的应用程序提供了一种接入 Google OAuth 2.0 身份验证系统的简单方式。
+Google 连接器为你的应用程序提供了一种接入 Google OAuth 2.0 身份验证系统的简单方式。
 
 **Table of contents**
 - [Google connector](#google-connector)
