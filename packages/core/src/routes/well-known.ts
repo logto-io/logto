@@ -65,16 +65,25 @@ export default function wellKnownRoutes<T extends AnonymousRouter>(router: T, pr
         ];
       }, []);
 
-      const {
-        languageInfo: { autoDetect, fixedLanguage },
-      } = signInExperience;
+      // Insert Demo App Notification
+      if (interaction?.params.client_id === demoAppApplicationId) {
+        const {
+          languageInfo: { autoDetect, fixedLanguage },
+        } = signInExperience;
 
-      const notification =
-        interaction?.params.client_id === demoAppApplicationId
-          ? i18next.t('demo_app.notification', autoDetect ? undefined : { lng: fixedLanguage })
-          : undefined;
+        ctx.body = {
+          ...signInExperience,
+          socialConnectors,
+          notification: i18next.t(
+            'demo_app.notification',
+            autoDetect ? undefined : { lng: fixedLanguage }
+          ),
+        };
 
-      ctx.body = { ...signInExperience, socialConnectors, notification };
+        return next();
+      }
+
+      ctx.body = { ...signInExperience, socialConnectors };
 
       return next();
     },
