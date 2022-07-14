@@ -8,8 +8,8 @@ const contact = {
   },
   github: {
     title: 'GitHub',
-    description: '通过 GitHub，给我们提一个 issue',
-    button: '马上联系',
+    description: '通过 GitHub 给我们提一个 issue',
+    button: '前往页面',
   },
   email: {
     title: '邮件联系',

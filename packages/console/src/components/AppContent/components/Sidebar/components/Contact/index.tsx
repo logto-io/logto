@@ -27,7 +27,7 @@ const Contact = ({ isOpen, onCancel }: Props) => {
       <ModalLayout title="contact.title" subtitle="contact.description" onClose={onCancel}>
         <div className={styles.main}>
           {contacts.map(({ title, icon: ContactIcon, description, label, link }) => (
-            <div key={title} className={styles.row} onClick={() => window.open(link)}>
+            <div key={title} className={styles.row}>
               <div className={styles.icon}>
                 <ContactIcon />
               </div>
@@ -36,7 +36,12 @@ const Contact = ({ isOpen, onCancel }: Props) => {
                 <div className={styles.description}>{t(description)}</div>
               </div>
               <div>
-                <Button type="outline" title={label} className={styles.button} />
+                <Button
+                  type="outline"
+                  title={label}
+                  className={styles.button}
+                  onClick={() => window.open(link)}
+                />
               </div>
             </div>
           ))}
