@@ -46,12 +46,19 @@ export type { AlipayNativeConfig } from './types';
 
 export default class AlipayNativeConnector implements SocialConnectorInstance<AlipayNativeConfig> {
   public metadata: ConnectorMetadata = defaultMetadata;
-  public connector: Connector = {
-    id: defaultMetadata.id,
-    enabled: false,
-    config: {},
-    createdAt: 0,
-  };
+  private _connector?: Connector;
+
+  public get connector() {
+    if (!this._connector) {
+      throw new ConnectorError(ConnectorErrorCodes.General);
+    }
+
+    return this._connector;
+  }
+
+  public set connector(input: Connector) {
+    this._connector = input;
+  }
 
   private readonly signingParameters = signingParameters;
 
