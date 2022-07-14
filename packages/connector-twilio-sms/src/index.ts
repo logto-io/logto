@@ -2,9 +2,11 @@ import {
   ConnectorError,
   ConnectorErrorCodes,
   ConnectorMetadata,
-  EmailSendMessageFunction,
+  SmsSendMessageFunction,
+  SmsSendTestMessageFunction,
   SmsConnector,
   GetConnectorConfig,
+  SmsMessageTypes,
 } from '@logto/connector-types';
 import { assert } from '@silverhand/essentials';
 import got, { HTTPError } from 'got';
@@ -25,11 +27,26 @@ export default class TwilioSmsConnector implements SmsConnector<TwilioSmsConfig>
     }
   }
 
-  public sendMessage: EmailSendMessageFunction = async (address, type, data) => {
+  public sendMessage: SmsSendMessageFunction = async (phone, type, data) => {
     const config = await this.getConfig(this.metadata.id);
 
     this.validateConfig(config);
 
+    return this.sendMessageBy(phone, type, data, config);
+  };
+
+  public sendTestMessage: SmsSendTestMessageFunction = async (config, phone, type, data) => {
+    this.validateConfig(config);
+
+    return this.sendMessageBy(phone, type, data, config);
+  };
+
+  private readonly sendMessageBy = async (
+    phone: string,
+    type: keyof SmsMessageTypes,
+    data: SmsMessageTypes[typeof type],
+    config: TwilioSmsConfig
+  ) => {
     const { accountSID, authToken, fromMessagingServiceSID, templates } = config;
     const template = templates.find((template) => template.usageType === type);
 
@@ -42,7 +59,7 @@ export default class TwilioSmsConnector implements SmsConnector<TwilioSmsConfig>
     );
 
     const parameters: PublicParameters = {
-      To: address,
+      To: phone,
       MessagingServiceSid: fromMessagingServiceSID,
       Body:
         typeof data.code === 'string'

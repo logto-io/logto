@@ -3,8 +3,10 @@ import {
   ConnectorErrorCodes,
   ConnectorMetadata,
   EmailSendMessageFunction,
+  EmailSendTestMessageFunction,
   EmailConnector,
   GetConnectorConfig,
+  EmailMessageTypes,
 } from '@logto/connector-types';
 import { assert } from '@silverhand/essentials';
 import nodemailer from 'nodemailer';
@@ -31,6 +33,21 @@ export default class SmtpConnector implements EmailConnector<SmtpConfig> {
 
     this.validateConfig(config);
 
+    return this.sendMessageBy(address, type, data, config);
+  };
+
+  public sendTestMessage: EmailSendTestMessageFunction = async (config, address, type, data) => {
+    this.validateConfig(config);
+
+    return this.sendMessageBy(address, type, data, config);
+  };
+
+  private readonly sendMessageBy = async (
+    address: string,
+    type: keyof EmailMessageTypes,
+    data: EmailMessageTypes[typeof type],
+    config: SmtpConfig
+  ) => {
     const { host, port, username, password, fromEmail, replyTo, templates } = config;
     const template = templates.find((template) => template.usageType === type);
 

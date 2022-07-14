@@ -3,8 +3,10 @@ import {
   ConnectorErrorCodes,
   ConnectorMetadata,
   EmailSendMessageFunction,
+  EmailSendTestMessageFunction,
   EmailConnector,
   GetConnectorConfig,
+  EmailMessageTypes,
 } from '@logto/connector-types';
 import { assert } from '@silverhand/essentials';
 import { HTTPError } from 'got';
@@ -30,13 +32,27 @@ export default class AliyunDmConnector implements EmailConnector<AliyunDmConfig>
     }
   }
 
-  // eslint-disable-next-line complexity
-  public sendMessage: EmailSendMessageFunction = async (address, type, data, config) => {
-    const emailConfig = config ?? (await this.getConfig(this.metadata.id));
+  public sendMessage: EmailSendMessageFunction = async (address, type, data) => {
+    const emailConfig = await this.getConfig(this.metadata.id);
 
     this.validateConfig(emailConfig);
 
-    const { accessKeyId, accessKeySecret, accountName, fromAlias, templates } = emailConfig;
+    return this.sendMessageBy(address, type, data, emailConfig);
+  };
+
+  public sendTestMessage: EmailSendTestMessageFunction = async (config, address, type, data) => {
+    this.validateConfig(config);
+
+    return this.sendMessageBy(address, type, data, config);
+  };
+
+  private readonly sendMessageBy = async (
+    address: string,
+    type: keyof EmailMessageTypes,
+    data: EmailMessageTypes[typeof type],
+    config: AliyunDmConfig
+  ) => {
+    const { accessKeyId, accessKeySecret, accountName, fromAlias, templates } = config;
     const template = templates.find((template) => template.usageType === type);
 
     assert(

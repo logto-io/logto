@@ -63,6 +63,7 @@ const errors = {
     invalid_config: '连接器配置错误',
     invalid_response: '连接器错误响应',
     template_not_found: '无法从连接器配置中找到对应的模板',
+    not_implemented: '方法 {{method}} 尚未实现',
     invalid_access_token: '当前连接器的 access_token 无效',
     invalid_auth_code: '当前连接器的授权码无效',
     invalid_id_token: '当前连接器的 id_token 无效',

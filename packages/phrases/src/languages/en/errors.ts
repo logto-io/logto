@@ -63,6 +63,7 @@ const errors = {
     invalid_config: "The connector's config is invalid.",
     invalid_response: "The connector's response is invalid.",
     template_not_found: 'Unable to find correct template in connector config.',
+    not_implemented: '{{method}}: has not been implemented yet.',
     invalid_access_token: "The connector's access token is invalid.",
     invalid_auth_code: "The connector's auth code is invalid.",
     invalid_id_token: "The connector's id token is invalid.",
