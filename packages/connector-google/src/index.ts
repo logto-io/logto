@@ -8,7 +8,8 @@ import {
   GetAuthorizationUri,
   GetUserInfo,
   ConnectorMetadata,
-  SocialConnector,
+  Connector,
+  SocialConnectorInstance,
   GetConnectorConfig,
   codeWithRedirectDataGuard,
 } from '@logto/connector-types';
@@ -30,8 +31,22 @@ import {
   userInfoResponseGuard,
 } from './types';
 
-export default class GoogleConnector implements SocialConnector<GoogleConfig> {
+export default class GoogleConnector implements SocialConnectorInstance<GoogleConfig> {
   public metadata: ConnectorMetadata = defaultMetadata;
+  public connector: Connector = {
+    id: defaultMetadata.id,
+    enabled: false,
+    config: {},
+    createdAt: 0,
+  };
+
+  public get Connector() {
+    return this.connector;
+  }
+
+  public set Connector(input: Connector) {
+    this.connector = input;
+  }
 
   constructor(public readonly getConfig: GetConnectorConfig) {}
 

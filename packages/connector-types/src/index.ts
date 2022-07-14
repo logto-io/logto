@@ -2,6 +2,22 @@ import { Language } from '@logto/phrases';
 import { Nullable } from '@silverhand/essentials';
 import { z } from 'zod';
 
+/**
+ * Connector is auto-generated in @logto/schemas according to sql file.
+ * As @logto/schemas depends on this repo (@logto/schemas), we manually define Connector type again as a temporary solution.
+ */
+
+export const arbitraryObjectGuard = z.union([z.object({}).catchall(z.unknown()), z.object({})]);
+
+export type ArbitraryObject = z.infer<typeof arbitraryObjectGuard>;
+
+export type Connector = {
+  id: string;
+  enabled: boolean;
+  config: ArbitraryObject;
+  createdAt: number;
+};
+
 export enum ConnectorType {
   Email = 'Email',
   SMS = 'SMS',
@@ -104,15 +120,32 @@ export interface SmsConnector<T = unknown> extends BaseConnector<T> {
   sendTestMessage?: SmsSendTestMessageFunction;
 }
 
+export interface SmsConnectorInstance<T = unknown> extends SmsConnector<T> {
+  connector: Connector;
+}
+
 export interface EmailConnector<T = unknown> extends BaseConnector<T> {
   sendMessage: EmailSendMessageFunction;
   sendTestMessage?: EmailSendTestMessageFunction;
+}
+
+export interface EmailConnectorInstance<T = unknown> extends EmailConnector<T> {
+  connector: Connector;
 }
 
 export interface SocialConnector<T = unknown> extends BaseConnector<T> {
   getAuthorizationUri: GetAuthorizationUri;
   getUserInfo: GetUserInfo;
 }
+
+export interface SocialConnectorInstance<T = unknown> extends SocialConnector<T> {
+  connector: Connector;
+}
+
+export type ConnectorInstance =
+  | SmsConnectorInstance
+  | EmailConnectorInstance
+  | SocialConnectorInstance;
 
 export type ValidateConfig<T = unknown> = (config: unknown) => asserts config is T;
 

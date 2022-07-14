@@ -2,9 +2,10 @@ import {
   ConnectorError,
   ConnectorErrorCodes,
   ConnectorMetadata,
+  Connector,
   SmsSendMessageFunction,
   SmsSendTestMessageFunction,
-  SmsConnector,
+  SmsConnectorInstance,
   GetConnectorConfig,
   SmsMessageTypes,
 } from '@logto/connector-types';
@@ -15,8 +16,23 @@ import { defaultMetadata } from './constant';
 import { sendSms } from './single-send-text';
 import { aliyunSmsConfigGuard, AliyunSmsConfig, sendSmsResponseGuard } from './types';
 
-export default class AliyunSmsConnector implements SmsConnector<AliyunSmsConfig> {
+export default class AliyunSmsConnector implements SmsConnectorInstance<AliyunSmsConfig> {
   public metadata: ConnectorMetadata = defaultMetadata;
+  public connector: Connector = {
+    id: defaultMetadata.id,
+    enabled: false,
+    config: {},
+    createdAt: 0,
+  };
+
+  public get Connector() {
+    return this.connector;
+  }
+
+  public set Connector(input: Connector) {
+    this.connector = input;
+  }
+
   constructor(public readonly getConfig: GetConnectorConfig) {}
 
   public validateConfig(config: unknown): asserts config is AliyunSmsConfig {

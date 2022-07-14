@@ -9,9 +9,10 @@ import {
   ConnectorError,
   ConnectorErrorCodes,
   ConnectorMetadata,
+  Connector,
   GetAuthorizationUri,
   GetUserInfo,
-  SocialConnector,
+  SocialConnectorInstance,
   GetConnectorConfig,
 } from '@logto/connector-types';
 import { assert } from '@silverhand/essentials';
@@ -43,8 +44,22 @@ import { signingParameters } from './utils';
 
 export type { AlipayConfig } from './types';
 
-export default class AlipayConnector implements SocialConnector<AlipayConfig> {
+export default class AlipayConnector implements SocialConnectorInstance<AlipayConfig> {
   public metadata: ConnectorMetadata = defaultMetadata;
+  public connector: Connector = {
+    id: defaultMetadata.id,
+    enabled: false,
+    config: {},
+    createdAt: 0,
+  };
+
+  public get Connector() {
+    return this.connector;
+  }
+
+  public set Connector(input: Connector) {
+    this.connector = input;
+  }
 
   private readonly signingParameters = signingParameters;
 

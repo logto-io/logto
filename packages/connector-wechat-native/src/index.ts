@@ -9,7 +9,8 @@ import {
   GetUserInfo,
   ConnectorError,
   ConnectorErrorCodes,
-  SocialConnector,
+  Connector,
+  SocialConnectorInstance,
   GetConnectorConfig,
   codeDataGuard,
 } from '@logto/connector-types';
@@ -34,8 +35,22 @@ import {
   WechatNativeConfig,
 } from './types';
 
-export default class WechatNativeConnector implements SocialConnector<WechatNativeConfig> {
+export default class WechatNativeConnector implements SocialConnectorInstance<WechatNativeConfig> {
   public metadata: ConnectorMetadata = defaultMetadata;
+  public connector: Connector = {
+    id: defaultMetadata.id,
+    enabled: false,
+    config: {},
+    createdAt: 0,
+  };
+
+  public get Connector() {
+    return this.connector;
+  }
+
+  public set Connector(input: Connector) {
+    this.connector = input;
+  }
 
   constructor(public readonly getConfig: GetConnectorConfig) {}
 
