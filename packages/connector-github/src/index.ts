@@ -38,14 +38,6 @@ export default class GithubConnector implements SocialConnectorInstance<GithubCo
     createdAt: 0,
   };
 
-  public get Connector() {
-    return this.connector;
-  }
-
-  public set Connector(input: Connector) {
-    this.connector = input;
-  }
-
   constructor(public readonly getConfig: GetConnectorConfig) {}
 
   public validateConfig(config: unknown): asserts config is GithubConfig {

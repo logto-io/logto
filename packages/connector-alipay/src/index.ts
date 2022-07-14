@@ -53,14 +53,6 @@ export default class AlipayConnector implements SocialConnectorInstance<AlipayCo
     createdAt: 0,
   };
 
-  public get Connector() {
-    return this.connector;
-  }
-
-  public set Connector(input: Connector) {
-    this.connector = input;
-  }
-
   private readonly signingParameters = signingParameters;
 
   constructor(public readonly getConfig: GetConnectorConfig) {}
