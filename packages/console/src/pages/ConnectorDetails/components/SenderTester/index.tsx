@@ -115,6 +115,7 @@ const SenderTester = ({ connectorId, connectorType, config, className }: Props) 
         {showTooltip && (
           <Tooltip
             isKeepOpen
+            horizontalAlign="center"
             className={styles.successfulTooltip}
             anchorRef={buttonPosReference}
             content={t('connector_details.test_message_sent')}
