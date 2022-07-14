@@ -14,7 +14,7 @@ import { useState } from 'react';
 
 import { getDefaultCountryCallingCode, getCountryList } from '@/utils/country-code';
 
-export type { CountryCallingCode } from 'libphonenumber-js';
+export type { CountryCallingCode } from 'libphonenumber-js/mobile';
 
 export type CountryMetaData = {
   countryCode: CountryCode;
