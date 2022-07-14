@@ -4,25 +4,30 @@ import i18next, { InitOptions } from 'i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
 import { initReactI18next } from 'react-i18next';
 
-const initI18n = async (languageSettings?: LanguageInfo) => {
-  const baseOptions: InitOptions = {
+const storageKey = 'i18nextLogtoUiLng';
+
+const initI18n = async (languageSettings?: LanguageInfo, isPreview = false) => {
+  const options: InitOptions = {
     resources,
     fallbackLng: languageSettings?.fallbackLanguage ?? 'en',
+    lng: languageSettings?.autoDetect === false ? languageSettings.fixedLanguage : undefined,
     interpolation: {
       escapeValue: false,
     },
     detection: {
-      lookupLocalStorage: 'i18nextLogtoUiLng',
-      lookupSessionStorage: 'i18nextLogtoUiLng',
+      lookupLocalStorage: storageKey,
+      lookupSessionStorage: storageKey,
     },
   };
 
-  const options: InitOptions =
-    languageSettings?.autoDetect === false
-      ? { ...baseOptions, lng: languageSettings.fixedLanguage }
-      : baseOptions;
+  i18next.use(initReactI18next);
 
-  const i18n = i18next.use(initReactI18next).use(LanguageDetector).init(options);
+  // Should not apply auto detect if is preview or fix
+  if (!isPreview && !(languageSettings?.autoDetect === false)) {
+    i18next.use(LanguageDetector);
+  }
+
+  const i18n = i18next.init(options);
 
   // @ts-expect-error - i18next doesn't have a type definition for this. called after i18next is initialized
   i18next.services.formatter.add('zhOrSpaces', (value: string, lng) => {
