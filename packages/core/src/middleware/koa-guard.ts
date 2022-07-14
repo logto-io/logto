@@ -5,35 +5,40 @@ import { IMiddleware, IRouterParamContext } from 'koa-router';
 import { ZodType } from 'zod';
 
 import RequestError from '@/errors/RequestError';
+import ServerError from '@/errors/ServerError';
+import assertThat from '@/utils/assert-that';
 
-export type GuardConfig<QueryT, BodyT, ParametersT> = {
+export type GuardConfig<QueryT, BodyT, ParametersT, ResponseT> = {
   query?: ZodType<QueryT>;
   body?: ZodType<BodyT>;
   params?: ZodType<ParametersT>;
+  response?: ZodType<ResponseT>;
+  status?: number | number[];
 };
 
-export type Guarded<QueryT, BodyT, ParametersT> = {
+export type GuardedRequest<QueryT, BodyT, ParametersT> = {
   query: QueryT;
   body: BodyT;
   params: ParametersT;
 };
 
-export type WithGuardedContext<
+export type WithGuardedRequestContext<
   ContextT extends IRouterParamContext,
   GuardQueryT,
   GuardBodyT,
   GuardParametersT
 > = ContextT & {
-  guard: Guarded<GuardQueryT, GuardBodyT, GuardParametersT>;
+  guard: GuardedRequest<GuardQueryT, GuardBodyT, GuardParametersT>;
 };
 
 export type WithGuardConfig<
   Type,
   GuardQueryT = unknown,
   GuardBodyT = unknown,
-  GuardParametersT = unknown
+  GuardParametersT = unknown,
+  GuardResponseT = unknown
 > = Type & {
-  config: GuardConfig<GuardQueryT, GuardBodyT, GuardParametersT>;
+  config: GuardConfig<GuardQueryT, GuardBodyT, GuardParametersT, GuardResponseT>;
 };
 
 export const isGuardMiddleware = <Type extends IMiddleware>(
@@ -56,30 +61,32 @@ const tryParse = <Output, Definition, Input>(
 export default function koaGuard<
   StateT,
   ContextT extends IRouterParamContext,
-  ResponseBodyT,
   GuardQueryT = undefined,
   GuardBodyT = undefined,
-  GuardParametersT = undefined
+  GuardParametersT = undefined,
+  GuardResponseT = unknown
 >({
   query,
   body,
   params,
-}: GuardConfig<GuardQueryT, GuardBodyT, GuardParametersT>): MiddlewareType<
+  response,
+  status,
+}: GuardConfig<GuardQueryT, GuardBodyT, GuardParametersT, GuardResponseT>): MiddlewareType<
   StateT,
-  WithGuardedContext<ContextT, GuardQueryT, GuardBodyT, GuardParametersT>,
-  ResponseBodyT
+  WithGuardedRequestContext<ContextT, GuardQueryT, GuardBodyT, GuardParametersT>,
+  GuardResponseT
 > {
   const guard: MiddlewareType<
     StateT,
-    WithGuardedContext<ContextT, GuardQueryT, GuardBodyT, GuardParametersT>,
-    ResponseBodyT
+    WithGuardedRequestContext<ContextT, GuardQueryT, GuardBodyT, GuardParametersT>,
+    GuardResponseT
   > = async (ctx, next) => {
     // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
     ctx.guard = {
       query: tryParse('query', query, ctx.request.query),
       body: tryParse('body', body, ctx.request.body),
       params: tryParse('params', params, ctx.params),
-    } as Guarded<GuardQueryT, GuardBodyT, GuardParametersT>; // Have to do this since it's too complicated for TS
+    } as GuardedRequest<GuardQueryT, GuardBodyT, GuardParametersT>; // Have to do this since it's too complicated for TS
 
     return next();
   };
@@ -87,15 +94,28 @@ export default function koaGuard<
   const guardMiddleware: WithGuardConfig<
     MiddlewareType<
       StateT,
-      WithGuardedContext<ContextT, GuardQueryT, GuardBodyT, GuardParametersT>,
-      ResponseBodyT
+      WithGuardedRequestContext<ContextT, GuardQueryT, GuardBodyT, GuardParametersT>,
+      GuardResponseT
     >
   > = async function (ctx, next) {
     if (body) {
       return koaBody<StateT, ContextT>()(ctx, async () => guard(ctx, next));
     }
 
-    return guard(ctx, next);
+    await guard(ctx, next);
+
+    if (status !== undefined) {
+      assertThat(
+        Array.isArray(status)
+          ? status.includes(ctx.response.status)
+          : status === ctx.response.status,
+        new ServerError()
+      );
+    }
+
+    if (response !== undefined) {
+      assertThat(response.safeParse(ctx.body).success, new ServerError());
+    }
   };
 
   // Intended

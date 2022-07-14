@@ -6,7 +6,7 @@ import RequestError from '@/errors/RequestError';
 export default function koaErrorHandler<StateT, ContextT, BodyT>(): Middleware<
   StateT,
   ContextT,
-  BodyT | RequestErrorBody
+  BodyT | RequestErrorBody | { message: string }
 > {
   return async (ctx, next) => {
     try {
@@ -19,7 +19,8 @@ export default function koaErrorHandler<StateT, ContextT, BodyT>(): Middleware<
         return;
       }
 
-      throw error;
+      ctx.status = 500;
+      ctx.body = { message: 'Internal server error.' };
     }
   };
 }

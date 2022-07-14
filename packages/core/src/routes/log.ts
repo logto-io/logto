@@ -1,3 +1,4 @@
+import { Logs } from '@logto/schemas';
 import { object, string } from 'zod';
 
 import koaGuard from '@/middleware/koa-guard';
@@ -38,7 +39,7 @@ export default function logRoutes<T extends AuthedRouter>(router: T) {
 
   router.get(
     '/logs/:id',
-    koaGuard({ params: object({ id: string().min(1) }) }),
+    koaGuard({ params: object({ id: string().min(1) }), response: Logs.guard }),
     async (ctx, next) => {
       const {
         params: { id },
