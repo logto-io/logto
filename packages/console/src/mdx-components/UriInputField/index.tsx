@@ -94,7 +94,6 @@ const UriInputField = ({ appId, name, title, isSingle = false }: Props) => {
                   {isSingle && (
                     <TextInput
                       className={styles.field}
-                      title={title}
                       value={value[0]}
                       errorMessage={errorObject?.required ?? errorObject?.inputs?.[0]}
                       onChange={({ currentTarget: { value } }) => {

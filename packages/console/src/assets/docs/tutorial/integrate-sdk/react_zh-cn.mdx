@@ -81,7 +81,7 @@ const App = () => (
 
 首先，我们来添加 Redirect URI，如：`http://localhost:1234/callback`。
 
-<UriInputField appId={props.appId} isSingle={!props.isCompact} name="redirectUris" title="Redirect URI" />
+<UriInputField appId={props.appId} isSingle={!props.isCompact} name="redirectUris" title="application_details.redirect_uri" />
 
 ### 实现登录按钮
 
@@ -151,7 +151,7 @@ const Callback = () => {
 
 在退出登录后，让你的用户重新回到你的网站是个不错的选择。让我们将 `http://localhost:1234` 添加至下面的输入框，并将其作为调用 `.signOut()` 的参数。
 
-<UriInputField appId={props.appId} isSingle={!props.isCompact} name="postLogoutRedirectUris" title="Post Sign-out Redirect URI" />
+<UriInputField appId={props.appId} isSingle={!props.isCompact} name="postLogoutRedirectUris" title="application_details.post_sign_out_redirect_uri" />
 
 ### 实现退出登录按钮
 

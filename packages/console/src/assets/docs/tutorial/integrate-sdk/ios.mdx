@@ -85,7 +85,7 @@ let config = try? LogtoConfig(
 
 First, let’s configure your redirect URI scheme. E.g. `io.logto://callback`
 
-<UriInputField appId={props.appId} isSingle={!props.isCompact} name="redirectUris" title="Redirect URI" />
+<UriInputField appId={props.appId} isSingle={!props.isCompact} name="redirectUris" title="application_details.redirect_uri" />
 
 <Alert>
   The Redirect URI in iOS SDK is only for internal use. There's <em>NO NEED</em> to add a <a href="https://developer.apple.com/documentation/xcode/defining-a-custom-url-scheme-for-your-app">Custom URL Scheme</a> until a connector asks.

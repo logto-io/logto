@@ -9,12 +9,14 @@ const application_details = {
   authorization_endpoint: 'Authorization endpoint',
   authorization_endpoint_tip:
     "The endpoint to perform authentication and authorization. It's used for OpenID Connect Authentication.",
-  redirect_uri: 'Redirect URIs',
+  redirect_uri: 'Redirect URI',
+  redirect_uris: 'Redirect URIs',
   redirect_uri_placeholder: 'https://your.website.com/app',
   redirect_uri_placeholder_native: 'io.logto://callback',
   redirect_uri_tip:
     'The URI redirects after a user sign-in (whether successful or not). See OpenID Connect AuthRequest for more info.',
-  post_sign_out_redirect_uri: 'Post Sign-out Redirect URIs',
+  post_sign_out_redirect_uri: 'Post Sign-out Redirect URI',
+  post_sign_out_redirect_uris: 'Post Sign-out Redirect URIs',
   post_sign_out_redirect_uri_placeholder: 'https://your.website.com/home',
   post_sign_out_redirect_uri_tip:
     'The URI redirects after a user sign-out (optional). It may have no practical effect in some app types.',
