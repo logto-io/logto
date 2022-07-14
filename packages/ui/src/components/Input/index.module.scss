@@ -12,32 +12,20 @@
   transition-property: outline, border;
   transition-timing-function: ease-in-out;
   transition-duration: 0.2s;
-  padding: 0 _.unit(4);
 
   .actionButton {
+    position: absolute;
+    right: _.unit(4);
+    top: 50%;
+    transform: translateY(-50%);
     display: none;
     color: var(--color-icon);
     width: 24px;
     height: 24px;
   }
 
-  > *:not(:first-child) {
-    margin-left: _.unit(1);
-  }
-
-  &:focus-within {
-    border: _.border(var(--color-primary));
-
-    .actionButton {
-      display: block;
-    }
-  }
-
-  &.error {
-    border: _.border(var(--color-error));
-  }
-
   input {
+    padding: 0 _.unit(4);
     flex: 1;
     background: none;
     caret-color: var(--color-primary);
@@ -53,7 +41,24 @@
     &:-webkit-autofill {
       box-shadow: 0 0 0 30px var(--color-layer) inset;
       -webkit-text-fill-color: var(--color-text);
+      transition: none;
     }
+  }
+
+  &:focus-within {
+    border: _.border(var(--color-primary));
+
+    .actionButton {
+      display: block;
+    }
+
+    input {
+      padding-right: calc(24px + _.unit(4));
+    }
+  }
+
+  &.error {
+    border: _.border(var(--color-error));
   }
 }
 
