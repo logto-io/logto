@@ -1,0 +1,4 @@
+# LOG-3729 Consider remove this
+paths-ignore:
+  - '**/*.test.ts'
+  - '**/*.test.tsx'
