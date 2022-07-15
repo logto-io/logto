@@ -13,7 +13,7 @@ Facebook 社交登录 Logto 官方连接器 [中文文档](#facebook-社交连�
   - [Compose the connector JSON](#compose-the-connector-json)
   - [Test sign-in with Facebook's test users](#test-sign-in-with-facebooks-test-users)
   - [Publish Facebook sign-in settings](#publish-facebook-sign-in-settings)
-    - [Config types](#config-types)
+  - [Config types](#config-types)
   - [References](#references)
 - [Facebook 社交连接器](#facebook-社交连接器)
   - [开始上手](#开始上手)
@@ -22,7 +22,7 @@ Facebook 社交登录 Logto 官方连接器 [中文文档](#facebook-社交连�
   - [编写连接器的 JSON](#编写连接器的-json)
   - [用 Facebook 的测试用户来测试登录](#用-facebook-的测试用户来测试登录)
   - [发布 Facebook 应用](#发布-facebook-应用)
-    - [配置类型](#配置类型)
+  - [配置类型](#配置类型)
   - [参考](#参考)
 
 ## Get started
@@ -76,7 +76,7 @@ E.g., the pure _business type_ app doesn't have the "live" switch button, but it
 3. Click the "Save changes" button at the bottom right corner.
 4. Click the "Live" switch button on the app top bar.
 
-### Config types
+## Config types
 
 | Name         | Type   |
 |--------------|--------|
@@ -142,7 +142,7 @@ Facebook 连接器为你提供了通过 Facebook 的 OAuth 2.0 授权系统注�
 3. 点按右下角「保存更改」按钮。
 4. 点按应用顶栏的「Live」按钮。
 
-### 配置类型
+## 配置类型
 
 | 名称         | 类型   |
 |--------------|--------|
