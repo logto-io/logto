@@ -5,6 +5,7 @@ import {
   getDefaultCountryCode,
   getDefaultCountryCallingCode,
   getCountryList,
+  formatPhoneNumberWithCountryCallingCode,
 } from './country-code';
 
 describe('country-code', () => {
@@ -75,5 +76,10 @@ describe('country-code', () => {
       1
     );
     expect(countryList[0]?.countryCallingCode).toEqual('86');
+  });
+
+  it('formatPhoneNumberWithCountryCallingCode', async () => {
+    expect(formatPhoneNumberWithCountryCallingCode('18888888888')).toBe('+1 8888888888');
+    expect(formatPhoneNumberWithCountryCallingCode('8618888888888')).toBe('+86 18888888888');
   });
 });
