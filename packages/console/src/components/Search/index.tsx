@@ -1,4 +1,4 @@
-import React, { FormEventHandler, KeyboardEventHandler, useState } from 'react';
+import { FormEventHandler, KeyboardEventHandler, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import SearchIcon from '@/icons/Search';

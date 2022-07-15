@@ -1,5 +1,3 @@
-import React from 'react';
-
 import IllustrationDark from '@/assets/images/loading-illustration-dark.svg';
 import Illustration from '@/assets/images/loading-illustration.svg';
 import { Daisy as Spinner } from '@/components/Spinner';

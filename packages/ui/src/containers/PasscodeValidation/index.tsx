@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import React, { useState, useEffect, useContext, useCallback, useMemo } from 'react';
+import { useState, useEffect, useContext, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import reactStringReplace from 'react-string-replace';
 import { useTimer } from 'react-timer-hook';

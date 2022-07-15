@@ -1,6 +1,6 @@
 import { AdminConsoleKey } from '@logto/phrases';
 import classNames from 'classnames';
-import React, { KeyboardEventHandler, ReactNode, useCallback } from 'react';
+import { KeyboardEventHandler, ReactNode, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import * as styles from './index.module.scss';

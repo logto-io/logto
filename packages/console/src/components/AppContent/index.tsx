@@ -1,6 +1,6 @@
 import { LogtoClientError, LogtoError, useLogto } from '@logto/react';
 import { conditional } from '@silverhand/essentials';
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Outlet, useHref, useLocation, useNavigate } from 'react-router-dom';
 

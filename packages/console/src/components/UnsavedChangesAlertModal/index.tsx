@@ -1,5 +1,5 @@
 import type { Blocker, Transition } from 'history';
-import React, { useCallback, useContext, useLayoutEffect, useState } from 'react';
+import { useCallback, useContext, useLayoutEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { UNSAFE_NavigationContext, Navigator } from 'react-router-dom';
 

@@ -1,5 +1,3 @@
-import React from 'react';
-
 import Spacer from '@/components/Spacer';
 
 import * as styles from './index.module.scss';

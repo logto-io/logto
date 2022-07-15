@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import React, { MouseEvent } from 'react';
+import { MouseEvent } from 'react';
 
 import * as styles from './DropdownItem.module.scss';
 

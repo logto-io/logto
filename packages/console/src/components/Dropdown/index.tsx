@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import React, { ReactNode, RefObject, useRef } from 'react';
+import { ReactNode, RefObject, useRef } from 'react';
 import ReactModal from 'react-modal';
 
 import usePosition, { HorizontalAlignment } from '@/hooks/use-position';

@@ -1,5 +1,5 @@
 import { conditionalString } from '@silverhand/essentials';
-import React, { ReactNode, useEffect, useCallback, useContext } from 'react';
+import { ReactNode, useEffect, useCallback, useContext } from 'react';
 
 import Toast from '@/components/Toast';
 import useColorTheme from '@/hooks/use-color-theme';

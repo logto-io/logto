@@ -1,5 +1,5 @@
 import { Application, ApplicationType, SnakeCaseOidcConfig } from '@logto/schemas';
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 

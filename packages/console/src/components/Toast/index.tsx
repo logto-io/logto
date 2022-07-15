@@ -1,5 +1,4 @@
 import classNames from 'classnames';
-import React from 'react';
 import { Toaster, resolveValue } from 'react-hot-toast';
 
 import Error from '@/assets/images/toast-error.svg';

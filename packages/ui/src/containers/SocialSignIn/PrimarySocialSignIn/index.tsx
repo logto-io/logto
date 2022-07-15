@@ -1,5 +1,3 @@
-import React from 'react';
-
 import useNativeMessageListener from '@/hooks/use-native-message-listener';
 import useSocial from '@/hooks/use-social';
 

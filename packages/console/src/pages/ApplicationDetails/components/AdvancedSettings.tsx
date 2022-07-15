@@ -1,5 +1,5 @@
 import { Application, SnakeCaseOidcConfig } from '@logto/schemas';
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useFormContext } from 'react-hook-form';
 
 import CopyToClipboard from '@/components/CopyToClipboard';

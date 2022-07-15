@@ -1,12 +1,5 @@
 import classNames from 'classnames';
-import React, {
-  Children,
-  cloneElement,
-  forwardRef,
-  isValidElement,
-  LegacyRef,
-  ReactNode,
-} from 'react';
+import { Children, cloneElement, forwardRef, isValidElement, LegacyRef, ReactNode } from 'react';
 
 import Radio, { Props as RadioProps } from './Radio';
 import * as styles from './index.module.scss';

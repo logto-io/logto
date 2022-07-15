@@ -1,5 +1,5 @@
 import { AppearanceMode } from '@logto/schemas';
-import React, { ReactNode, useEffect } from 'react';
+import { ReactNode, useEffect } from 'react';
 
 import useUserPreferences from '@/hooks/use-user-preferences';
 import initI18n from '@/i18n/init';

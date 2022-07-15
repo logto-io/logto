@@ -1,5 +1,5 @@
 import { Language } from '@logto/phrases-ui';
-import React, { useState, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import Dropdown, { DropdownItem } from '@/components/Dropdown';

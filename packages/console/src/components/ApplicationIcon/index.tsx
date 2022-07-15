@@ -1,5 +1,4 @@
 import { AppearanceMode, ApplicationType } from '@logto/schemas';
-import React from 'react';
 
 import { darkModeApplicationIconMap, lightModeApplicationIconMap } from '@/consts';
 import { useTheme } from '@/hooks/use-theme';

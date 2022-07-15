@@ -1,4 +1,4 @@
-import React, { ReactNode, useRef, useState } from 'react';
+import { ReactNode, useRef, useState } from 'react';
 
 import { Props as ButtonProps } from '../Button';
 import Dropdown from '../Dropdown';

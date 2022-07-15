@@ -1,6 +1,6 @@
 import { useLogto, IdTokenClaims } from '@logto/react';
 import classNames from 'classnames';
-import React, { useEffect, useRef, useState, MouseEvent } from 'react';
+import { useEffect, useRef, useState, MouseEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import Dropdown, { DropdownItem } from '@/components/Dropdown';

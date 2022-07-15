@@ -1,6 +1,6 @@
 import { AppearanceMode, ConnectorType } from '@logto/schemas';
 import classNames from 'classnames';
-import React, { useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
 

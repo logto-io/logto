@@ -1,4 +1,4 @@
-import React, { useCallback, useContext } from 'react';
+import { useCallback, useContext } from 'react';
 
 import Notification from '@/components/Notification';
 import { PageContext } from '@/hooks/use-page-context';

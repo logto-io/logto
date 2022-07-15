@@ -1,7 +1,7 @@
 import { AdminConsoleKey } from '@logto/phrases';
 import { conditionalString } from '@silverhand/essentials';
 import classNames from 'classnames';
-import React, { useRef } from 'react';
+import { useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import Card from '@/components/Card';

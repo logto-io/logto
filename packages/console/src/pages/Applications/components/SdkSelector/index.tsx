@@ -1,6 +1,6 @@
 import { AppearanceMode } from '@logto/schemas';
 import classNames from 'classnames';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import CongratsDark from '@/assets/images/congrats-dark.svg';

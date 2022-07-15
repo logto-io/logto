@@ -1,6 +1,5 @@
 import { Nullable } from '@silverhand/essentials';
 import dayjs from 'dayjs';
-import React from 'react';
 
 type Props = {
   children: Nullable<string | number>;

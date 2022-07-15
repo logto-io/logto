@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import React, { useContext } from 'react';
+import { useContext } from 'react';
 
 import { LoadingIcon } from '@/components/LoadingLayer';
 import { PageContext } from '@/hooks/use-page-context';

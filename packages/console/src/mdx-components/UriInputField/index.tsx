@@ -1,6 +1,6 @@
 import { AdminConsoleKey } from '@logto/phrases';
 import { Application } from '@logto/schemas';
-import React, { useRef, KeyboardEvent } from 'react';
+import { useRef, KeyboardEvent } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';

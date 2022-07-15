@@ -1,6 +1,6 @@
 import { AdminConsoleKey } from '@logto/phrases';
 import classNames from 'classnames';
-import React, { ReactNode } from 'react';
+import { ReactNode } from 'react';
 import ReactModal from 'react-modal';
 
 import Button, { ButtonType } from '@/components/Button';

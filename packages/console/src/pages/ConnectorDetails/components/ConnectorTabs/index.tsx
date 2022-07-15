@@ -1,6 +1,6 @@
 import { ConnectorDto, ConnectorPlatform } from '@logto/schemas';
 import classNames from 'classnames';
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import useSWR from 'swr';

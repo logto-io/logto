@@ -1,5 +1,4 @@
 import { LogtoError, OidcError, useHandleSignInCallback } from '@logto/react';
-import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import AppError from '@/components/AppError';

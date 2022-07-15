@@ -1,5 +1,4 @@
 import { useHandleSignInCallback } from '@logto/react';
-import React from 'react';
 
 const Callback = () => {
   const { error } = useHandleSignInCallback(() => {

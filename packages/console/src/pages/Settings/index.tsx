@@ -1,7 +1,6 @@
 import { Language } from '@logto/phrases';
 import { AppearanceMode } from '@logto/schemas';
 import classNames from 'classnames';
-import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';

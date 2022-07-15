@@ -1,5 +1,4 @@
 import classNames from 'classnames';
-import React from 'react';
 import { Link } from 'react-router-dom';
 
 import { logEventTitle } from '@/consts/logs';

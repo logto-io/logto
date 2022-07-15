@@ -1,5 +1,3 @@
-import React from 'react';
-
 import LoadingIcon from './LoadingIcon';
 import * as styles from './index.module.scss';
 

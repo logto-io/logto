@@ -1,5 +1,5 @@
 import { conditionalString, Optional } from '@silverhand/essentials';
-import React, { FC, ReactNode } from 'react';
+import { FC, ReactNode } from 'react';
 import { TFuncKey, useTranslation } from 'react-i18next';
 
 import useUserPreferences from '@/hooks/use-user-preferences';

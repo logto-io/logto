@@ -1,5 +1,4 @@
 import classNames from 'classnames';
-import React from 'react';
 import ReactModal, { Props as ModalProps } from 'react-modal';
 
 import * as styles from './index.module.scss';

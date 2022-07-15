@@ -1,5 +1,5 @@
 import { Nullable } from '@silverhand/essentials';
-import React, { useContext, useEffect } from 'react';
+import { useContext, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams, useLocation } from 'react-router-dom';
 

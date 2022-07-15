@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import React, { useEffect, useCallback, useMemo } from 'react';
+import { useEffect, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { register } from '@/apis/register';

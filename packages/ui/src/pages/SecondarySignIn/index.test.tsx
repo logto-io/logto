@@ -1,5 +1,4 @@
 import { render } from '@testing-library/react';
-import React from 'react';
 import { Routes, Route, MemoryRouter } from 'react-router-dom';
 
 import SecondarySignIn from '@/pages/SecondarySignIn';

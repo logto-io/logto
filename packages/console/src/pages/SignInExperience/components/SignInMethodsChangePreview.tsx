@@ -1,5 +1,4 @@
 import { SignInExperience } from '@logto/schemas';
-import React from 'react';
 import { useTranslation } from 'react-i18next';
 
 import * as styles from './SignInMethodsChangePreview.module.scss';

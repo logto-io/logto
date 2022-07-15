@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import React, { ReactEventHandler, ReactNode, useRef, useState } from 'react';
+import { ReactEventHandler, ReactNode, useRef, useState } from 'react';
 
 import { KeyboardArrowDown, KeyboardArrowUp } from '@/icons/Arrow';
 import Close from '@/icons/Close';

@@ -1,6 +1,6 @@
 import { AdminConsoleKey } from '@logto/phrases';
 import classNames from 'classnames';
-import React, { KeyboardEvent, useMemo, useState } from 'react';
+import { KeyboardEvent, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import * as textButtonStyles from '@/components/TextButton/index.module.scss';

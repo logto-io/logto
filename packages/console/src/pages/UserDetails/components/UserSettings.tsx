@@ -1,6 +1,6 @@
 import { User } from '@logto/schemas';
 import { Nullable } from '@silverhand/essentials';
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useForm, useController } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';

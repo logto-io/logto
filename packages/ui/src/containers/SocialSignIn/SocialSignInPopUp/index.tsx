@@ -1,5 +1,3 @@
-import React from 'react';
-
 import Drawer from '@/components/Drawer';
 import { ConnectorData } from '@/types';
 

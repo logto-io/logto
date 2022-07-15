@@ -1,5 +1,5 @@
 import { nanoid } from 'nanoid';
-import React, { ChangeEventHandler, useState } from 'react';
+import { ChangeEventHandler, useState } from 'react';
 
 import * as styles from './index.module.scss';
 

@@ -1,5 +1,4 @@
 import { AdminConsoleKey } from '@logto/phrases';
-import React from 'react';
 import ReactModal from 'react-modal';
 
 import Close from '@/icons/Close';

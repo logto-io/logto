@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import React, { ChangeEventHandler, useState } from 'react';
+import { ChangeEventHandler, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   Area,

@@ -1,6 +1,6 @@
 import { LogtoClientError, useLogto } from '@logto/react';
 import classNames from 'classnames';
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useHref } from 'react-router-dom';
 

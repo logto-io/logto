@@ -1,5 +1,4 @@
 import classNames from 'classnames';
-import React from 'react';
 
 import MoreSocialIcon from '@/assets/icons/more-social-icon.svg';
 import IconButton from '@/components/Button/IconButton';

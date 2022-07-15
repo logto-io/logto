@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import React, { ReactNode, useState } from 'react';
+import { ReactNode, useState } from 'react';
 import AnimateHeight, { Height } from 'react-animate-height';
 
 import ArrowRight from '@/assets/images/triangle-right.svg';

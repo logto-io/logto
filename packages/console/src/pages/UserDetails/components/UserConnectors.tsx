@@ -1,7 +1,7 @@
 import { Language } from '@logto/phrases';
 import { Identities } from '@logto/schemas';
 import { Optional } from '@silverhand/essentials';
-import React, { useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 
 import Button from '@/components/Button';

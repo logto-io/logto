@@ -1,4 +1,4 @@
-import React, { SVGProps } from 'react';
+import { SVGProps } from 'react';
 
 export const KeyboardArrowDown = (props: SVGProps<SVGSVGElement>) => (
   <svg

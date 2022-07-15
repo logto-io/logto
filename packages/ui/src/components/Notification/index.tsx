@@ -1,5 +1,4 @@
 import classNames from 'classnames';
-import React from 'react';
 import { useTranslation } from 'react-i18next';
 
 import InfoIcon from '@/assets/icons/info-icon.svg';

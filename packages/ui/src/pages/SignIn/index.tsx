@@ -1,6 +1,6 @@
 import { BrandingStyle, SignInMode } from '@logto/schemas';
 import classNames from 'classnames';
-import React, { useContext } from 'react';
+import { useContext } from 'react';
 
 import BrandingHeader from '@/components/BrandingHeader';
 import AppNotification from '@/containers/AppNotification';

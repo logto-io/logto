@@ -1,4 +1,4 @@
-import React, { ReactNode, useContext } from 'react';
+import { ReactNode, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import { create } from 'react-modal-promise';
 import reactStringReplace from 'react-string-replace';

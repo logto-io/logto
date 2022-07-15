@@ -1,7 +1,6 @@
 import { LogtoProvider } from '@logto/react';
 import { adminConsoleApplicationId, managementResource } from '@logto/schemas/lib/seeds';
 import { getBasename } from '@logto/shared';
-import React from 'react';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { SWRConfig } from 'swr';
 

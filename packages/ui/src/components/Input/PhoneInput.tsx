@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import React, { useState, useMemo, useRef } from 'react';
+import { useState, useMemo, useRef } from 'react';
 
 import DownArrowIcon from '@/assets/icons/arrow-down.svg';
 import ClearIcon from '@/assets/icons/clear-icon.svg';

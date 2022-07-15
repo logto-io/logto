@@ -1,6 +1,6 @@
 import { LogtoProvider, useLogto, IdTokenClaims, Prompt } from '@logto/react';
 import { demoAppApplicationId } from '@logto/schemas/lib/seeds';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import '@/scss/normalized.scss';

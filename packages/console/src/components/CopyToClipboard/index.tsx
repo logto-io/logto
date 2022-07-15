@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import React, { MouseEventHandler, useEffect, useRef, useState } from 'react';
+import { MouseEventHandler, useEffect, useRef, useState } from 'react';
 import { TFuncKey, useTranslation } from 'react-i18next';
 
 import Copy from '@/icons/Copy';
