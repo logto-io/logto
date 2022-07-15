@@ -23,10 +23,10 @@
   },
   "devDependencies": {
     "@silverhand/eslint-config": "^0.16.2",
-    "@silverhand/eslint-config-react": "^0.16.2",
+    "@silverhand/eslint-config-react": "^0.16.3",
     "@silverhand/essentials": "^1.1.6",
     "@silverhand/ts-config": "^0.16.2",
-    "@silverhand/ts-config-react": "^0.16.2",
+    "@silverhand/ts-config-react": "^0.16.3",
     "@types/color": "^3.0.3",
     "@types/node": "^16.3.1",
     "eslint": "^8.19.0",

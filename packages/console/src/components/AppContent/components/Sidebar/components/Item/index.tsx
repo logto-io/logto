@@ -50,7 +50,6 @@ const Item = ({ icon, titleKey, modal, externalLink, isActive = false }: Props) 
 
   if (externalLink) {
     return (
-      // eslint-disable-next-line react/jsx-no-target-blank
       <a href={externalLink} target="_blank" className={styles.row} rel="noopener">
         {content}
       </a>
