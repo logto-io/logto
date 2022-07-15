@@ -3,7 +3,9 @@ import {
   getCountries,
   CountryCode,
   CountryCallingCode,
+  E164Number,
   getCountryCallingCode,
+  parsePhoneNumberWithError,
 } from 'libphonenumber-js/mobile';
 
 export const fallbackCountryCode = 'US';
@@ -77,4 +79,22 @@ export const getCountryList = (): CountryMetaData[] => {
     },
     ...countryList,
   ];
+};
+
+export const parseE164Number = (value: string): E164Number | '' => {
+  if (!value || value.startsWith('+')) {
+    return value;
+  }
+
+  return `+${value}`;
+};
+
+export const formatPhoneNumberWithCountryCallingCode = (number: string) => {
+  try {
+    const phoneNumber = parsePhoneNumberWithError(parseE164Number(number));
+
+    return `+${phoneNumber.countryCallingCode} ${phoneNumber.nationalNumber}`;
+  } catch {
+    return number;
+  }
 };

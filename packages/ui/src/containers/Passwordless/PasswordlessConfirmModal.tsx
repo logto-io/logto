@@ -7,6 +7,7 @@ import { WebModal, MobileModal } from '@/components/ConfirmModal';
 import useApi from '@/hooks/use-api';
 import usePlatform from '@/hooks/use-platform';
 import { UserFlow } from '@/types';
+import { formatPhoneNumberWithCountryCallingCode } from '@/utils/country-code';
 
 type Props = {
   className?: string;
@@ -56,7 +57,7 @@ const PasswordlessConfirmModal = ({ className, isOpen, type, method, value, onCl
           : 'description.sign_in_id_does_not_exists',
         {
           type: t(`description.${method === 'email' ? 'email' : 'phone_number'}`),
-          value: `${method === 'sms' ? '+' : ''}${value}`,
+          value: method === 'sms' ? formatPhoneNumberWithCountryCallingCode(value) : value,
         }
       )}
     </ConfirmModal>

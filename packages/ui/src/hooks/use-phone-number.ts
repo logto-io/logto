@@ -6,13 +6,16 @@
 import {
   parsePhoneNumberWithError,
   CountryCallingCode,
-  E164Number,
   ParseError,
   CountryCode,
 } from 'libphonenumber-js/mobile';
 import { useState } from 'react';
 
-import { getDefaultCountryCallingCode, getCountryList } from '@/utils/country-code';
+import {
+  getDefaultCountryCallingCode,
+  getCountryList,
+  parseE164Number,
+} from '@/utils/country-code';
 
 export type { CountryCallingCode } from 'libphonenumber-js/mobile';
 
@@ -24,14 +27,6 @@ export type CountryMetaData = {
 type PhoneNumberData = {
   countryCallingCode: string;
   nationalNumber: string;
-};
-
-const parseE164Number = (value: string): E164Number | '' => {
-  if (!value || value.startsWith('+')) {
-    return value;
-  }
-
-  return `+${value}`;
 };
 
 const isValidPhoneNumber = (value: string): boolean => {
