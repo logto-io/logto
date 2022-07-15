@@ -1,18 +1,15 @@
-import { Optional } from '@silverhand/essentials';
 import { useCallback, useEffect, useContext, useMemo } from 'react';
 import { useLocation } from 'react-router-dom';
+import { is } from 'superstruct';
 
 import { registerWithSocial, bindSocialRelatedUser } from '@/apis/social';
 import useApi from '@/hooks/use-api';
 import { PageContext } from '@/hooks/use-page-context';
 import { LocalSignInMethod } from '@/types';
-
-type LocationState = {
-  relatedUser?: string;
-};
+import { bindSocialStateGuard } from '@/types/guard';
 
 const useBindSocial = () => {
-  const state = useLocation().state as Optional<LocationState>;
+  const { state } = useLocation();
   const { experienceSettings } = useContext(PageContext);
   const { result: registerResult, run: asyncRegisterWithSocial } = useApi(registerWithSocial);
   const { result: bindUserResult, run: asyncBindSocialRelatedUser } = useApi(bindSocialRelatedUser);
@@ -54,7 +51,7 @@ const useBindSocial = () => {
 
   return {
     localSignInMethods,
-    relatedUser: state?.relatedUser,
+    relatedUser: is(state, bindSocialStateGuard) ? state.relatedUser : undefined,
     registerWithSocial: createAccountHandler,
     bindSocialRelatedUser: bindRelatedUserHandler,
   };

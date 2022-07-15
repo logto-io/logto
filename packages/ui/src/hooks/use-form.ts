@@ -24,6 +24,7 @@ const useForm = <T>(initialState: T) => {
       fieldValidationsRef.current[key]?.(value),
     ]);
 
+    // eslint-disable-next-line no-restricted-syntax
     setFieldErrors(Object.fromEntries(errors) as ErrorState);
 
     return errors.every(([, error]) => error === undefined);
@@ -37,8 +38,8 @@ const useForm = <T>(initialState: T) => {
       return {
         value: fieldValue[field],
         error: fieldErrors[field],
-        onChange: ({ target }: FormEvent<HTMLInputElement>) => {
-          const { value } = target as HTMLInputElement;
+        onChange: ({ currentTarget }: FormEvent<HTMLInputElement>) => {
+          const { value } = currentTarget;
           setFieldValue((previous) => ({ ...previous, [field]: value }));
         },
       };
@@ -55,6 +56,7 @@ const useForm = <T>(initialState: T) => {
         previous[key] && fieldValidationsRef.current[key]?.(value),
       ]);
 
+      // eslint-disable-next-line no-restricted-syntax
       return Object.fromEntries(errors) as ErrorState;
     });
   }, [fieldValue, fieldValidationsRef]);

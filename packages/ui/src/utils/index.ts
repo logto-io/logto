@@ -26,16 +26,16 @@ export const getSearchParameters = (parameters: string | URLSearchParams, key: s
   return searchParameters.get(key) ?? undefined;
 };
 
-type Entries<T> = Array<
+export type Entries<T> = Array<
   {
     [K in keyof T]: [K, T[K]];
   }[keyof T]
 >;
 
+// eslint-disable-next-line no-restricted-syntax
 export const entries = <T>(object: T): Entries<T> => Object.entries(object) as Entries<T>;
 
-// eslint-disable-next-line @typescript-eslint/ban-types
-export const inOperator = <K extends string, T extends object>(
-  key: K,
+export const isKeyOf = <T extends Record<string, unknown>>(
+  key: string | number | symbol,
   object: T
-): object is T & Record<K, unknown> => key in object;
+): key is keyof T => key in object;

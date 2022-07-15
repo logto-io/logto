@@ -21,9 +21,7 @@ const useSocialSignInListener = () => {
         if (parameters.connector) {
           navigate(`/social/register/${parameters.connector}`, {
             replace: true,
-            state: {
-              ...(error.data as Record<string, unknown> | undefined),
-            },
+            state: error.data,
           });
         }
       },

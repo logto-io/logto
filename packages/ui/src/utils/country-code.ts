@@ -18,6 +18,7 @@ export const countryCallingCodeMap: Record<string, CountryCode> = {
 export const isValidCountryCode = (countryCode: string): countryCode is CountryCode => {
   try {
     // Use getCountryCallingCode method to guard the input's value is in CountryCode union type, if type not match exceptions are expected
+    // eslint-disable-next-line no-restricted-syntax
     getCountryCallingCode(countryCode as CountryCode);
 
     return true;
