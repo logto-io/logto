@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useRef } from 'react';
+import { useMemo, useState, useRef } from 'react';
 
 import useNativeMessageListener from '@/hooks/use-native-message-listener';
 import usePlatform from '@/hooks/use-platform';

@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import { useContext } from 'react';
 import { create } from 'react-modal-promise';
 
 import { IframeModal } from '@/components/ConfirmModal';

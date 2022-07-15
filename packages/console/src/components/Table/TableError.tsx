@@ -1,5 +1,4 @@
 import { AppearanceMode } from '@logto/schemas';
-import React from 'react';
 import { useTranslation } from 'react-i18next';
 
 import ErrorDark from '@/assets/images/error-dark.svg';

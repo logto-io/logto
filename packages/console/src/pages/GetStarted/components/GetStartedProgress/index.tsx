@@ -1,6 +1,6 @@
 import { AppearanceMode } from '@logto/schemas';
 import classNames from 'classnames';
-import React, { useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import TadaDark from '@/assets/images/tada-dark.svg';

@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import React, { useState, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 
 import ExpandIcon from '@/assets/icons/expand-icon.svg';
 import IconButton from '@/components/Button/IconButton';

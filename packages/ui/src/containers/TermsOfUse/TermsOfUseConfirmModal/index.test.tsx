@@ -1,5 +1,3 @@
-import React from 'react';
-
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 
 import TermsOfUseModal from '.';

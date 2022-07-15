@@ -1,4 +1,4 @@
-import React, { useEffect, useContext } from 'react';
+import { useEffect, useContext } from 'react';
 
 import { consent } from '@/apis/consent';
 import { LoadingIcon } from '@/components/LoadingLayer';

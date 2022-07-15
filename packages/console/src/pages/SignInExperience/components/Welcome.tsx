@@ -1,5 +1,5 @@
 import { AppearanceMode } from '@logto/schemas';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import WelcomeImageDark from '@/assets/images/sign-in-experience-welcome-dark.svg';

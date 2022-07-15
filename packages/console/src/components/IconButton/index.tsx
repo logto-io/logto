@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import React, { HTMLProps } from 'react';
+import { HTMLProps } from 'react';
 
 import * as styles from './index.module.scss';
 

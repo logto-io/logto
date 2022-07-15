@@ -1,4 +1,3 @@
-import React from 'react';
 import { Routes, Route, MemoryRouter } from 'react-router-dom';
 
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';

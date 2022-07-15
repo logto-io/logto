@@ -1,5 +1,4 @@
 import { render, fireEvent } from '@testing-library/react';
-import React from 'react';
 
 import { mockSocialConnectorData } from '@/__mocks__/logto';
 

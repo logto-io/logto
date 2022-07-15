@@ -1,4 +1,4 @@
-import React, { ReactNode, useState } from 'react';
+import { ReactNode, useState } from 'react';
 
 import ConfirmModal from '@/components/ConfirmModal';
 import TextInput from '@/components/TextInput';

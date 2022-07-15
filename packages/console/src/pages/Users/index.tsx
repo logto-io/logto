@@ -1,7 +1,7 @@
 import { User } from '@logto/schemas';
 import { conditional, conditionalString } from '@silverhand/essentials';
 import classNames from 'classnames';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Modal from 'react-modal';
 import { useNavigate, useSearchParams } from 'react-router-dom';

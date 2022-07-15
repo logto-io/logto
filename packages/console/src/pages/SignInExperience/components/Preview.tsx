@@ -3,7 +3,7 @@ import { AppearanceMode, ConnectorDto, ConnectorMetadata, SignInExperience } fro
 import { conditional } from '@silverhand/essentials';
 import classNames from 'classnames';
 import dayjs from 'dayjs';
-import React, { useEffect, useMemo, useState, useRef, useCallback } from 'react';
+import { useEffect, useMemo, useState, useRef, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import useSWR from 'swr';
 

@@ -1,5 +1,3 @@
-import React from 'react';
-
 import * as styles from './TableLoading.module.scss';
 
 type Props = {

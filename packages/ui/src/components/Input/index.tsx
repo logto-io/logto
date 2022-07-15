@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import React, { HTMLProps } from 'react';
+import { HTMLProps } from 'react';
 
 import ClearIcon from '@/assets/icons/clear-icon.svg';
 import ErrorMessage, { ErrorType } from '@/components/ErrorMessage';

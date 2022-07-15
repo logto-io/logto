@@ -1,6 +1,6 @@
 import { AdminConsoleKey } from '@logto/phrases';
 import classNames from 'classnames';
-import React, { ReactElement, ReactNode } from 'react';
+import { ReactElement, ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 

@@ -1,5 +1,5 @@
 import { nanoid } from 'nanoid';
-import React, { ReactNode, useState } from 'react';
+import { ReactNode, useState } from 'react';
 
 import Icon from './Icon';
 import * as styles from './index.module.scss';

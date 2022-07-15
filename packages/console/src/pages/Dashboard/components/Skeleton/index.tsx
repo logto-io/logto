@@ -1,5 +1,3 @@
-import React from 'react';
-
 import Card from '@/components/Card';
 
 import * as styles from './index.module.scss';

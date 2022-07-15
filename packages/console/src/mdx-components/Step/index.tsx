@@ -1,6 +1,6 @@
 import { AdminConsoleKey } from '@logto/phrases';
 import classNames from 'classnames';
-import React, { PropsWithChildren, useEffect, useRef, useState } from 'react';
+import { PropsWithChildren, useEffect, useRef, useState } from 'react';
 
 import Button from '@/components/Button';
 import Card from '@/components/Card';

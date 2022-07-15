@@ -1,6 +1,6 @@
 import { AdminConsoleKey } from '@logto/phrases';
 import classNames from 'classnames';
-import React, { HTMLProps, ReactElement, ReactNode, useEffect, useRef, useState } from 'react';
+import { HTMLProps, ReactElement, ReactNode, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { Ring as Spinner } from '@/components/Spinner';

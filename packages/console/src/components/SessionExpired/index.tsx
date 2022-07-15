@@ -1,5 +1,4 @@
 import { useLogto } from '@logto/react';
-import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHref } from 'react-router-dom';
 

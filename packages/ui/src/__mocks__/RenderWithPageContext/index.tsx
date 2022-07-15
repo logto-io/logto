@@ -1,5 +1,5 @@
 import { render, Queries, queries, RenderOptions } from '@testing-library/react';
-import React, { ReactElement } from 'react';
+import { ReactElement } from 'react';
 
 import ContextProvider from './ContextProvider';
 

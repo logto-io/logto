@@ -1,5 +1,5 @@
 import { ConnectorType } from '@logto/schemas';
-import React, { useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import Modal from 'react-modal';
 
 import Button from '@/components/Button';

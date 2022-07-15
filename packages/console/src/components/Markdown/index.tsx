@@ -1,6 +1,6 @@
 import { conditionalString, Optional } from '@silverhand/essentials';
 import classNames from 'classnames';
-import React, { memo } from 'react';
+import { memo, useRef } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
@@ -14,7 +14,7 @@ type Props = {
 };
 
 const Markdown = ({ className, children }: Props) => {
-  const tocIdSet = React.useRef<Set<string>>(new Set());
+  const tocIdSet = useRef<Set<string>>(new Set());
 
   const generateTocId = (text: string): Optional<string> => {
     const resolveIdCollision = (kebabCaseString: string, index = 0): string => {

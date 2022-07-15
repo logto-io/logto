@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import React, { ReactNode, AnchorHTMLAttributes } from 'react';
+import { ReactNode, AnchorHTMLAttributes } from 'react';
 import { TFuncKey, useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 

@@ -2,7 +2,7 @@ import { Application } from '@logto/schemas';
 import { MDXProvider } from '@mdx-js/react';
 import i18next from 'i18next';
 import { MDXProps } from 'mdx/types';
-import React, { cloneElement, lazy, LazyExoticComponent, Suspense, useState } from 'react';
+import { cloneElement, lazy, LazyExoticComponent, Suspense, useState } from 'react';
 
 import CodeEditor from '@/components/CodeEditor';
 import DetailsSummary from '@/mdx-components/DetailsSummary';

@@ -1,5 +1,4 @@
 import { AppearanceMode } from '@logto/schemas';
-import React from 'react';
 
 import { useTheme } from '@/hooks/use-theme';
 import CheckBoxSelected from '@/icons/CheckBoxSelected';

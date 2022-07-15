@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { formatNumberWithComma } from '@/utilities/number';
 
 import * as styles from './index.module.scss';

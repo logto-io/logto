@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import React, { useMemo, ReactNode } from 'react';
+import { useMemo, ReactNode } from 'react';
 import { TFuncKey, useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import reactStringReplace from 'react-string-replace';

@@ -6,7 +6,7 @@
  */
 
 import { Nullable } from '@silverhand/essentials';
-import React, { useState, isValidElement, type ReactElement, cloneElement, useRef } from 'react';
+import { useState, isValidElement, type ReactElement, cloneElement, useRef, Children } from 'react';
 
 import type { Props as TabItemProps } from '../TabItem';
 import * as styles from './index.module.scss';
@@ -23,7 +23,7 @@ function isTabItem(comp: ReactElement): comp is ReactElement<TabItemProps> {
 }
 
 const Tabs = ({ className, children }: Props): JSX.Element => {
-  const verifiedChildren = React.Children.map(children, (child) => {
+  const verifiedChildren = Children.map(children, (child) => {
     if (isValidElement(child) && isTabItem(child)) {
       return child;
     }

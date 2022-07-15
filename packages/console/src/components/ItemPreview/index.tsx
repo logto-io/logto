@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import React, { ReactNode } from 'react';
+import { ReactNode } from 'react';
 import { Link, To } from 'react-router-dom';
 
 import * as styles from './index.module.scss';

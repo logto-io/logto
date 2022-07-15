@@ -1,6 +1,6 @@
 import { SignInExperience as SignInExperienceType } from '@logto/schemas';
 import classNames from 'classnames';
-import React, { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';

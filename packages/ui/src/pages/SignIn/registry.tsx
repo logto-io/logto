@@ -1,5 +1,4 @@
 import { SignInMode } from '@logto/schemas';
-import React from 'react';
 
 import Divider from '@/components/Divider';
 import TextLink from '@/components/TextLink';

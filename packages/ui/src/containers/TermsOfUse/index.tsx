@@ -1,4 +1,3 @@
-import React from 'react';
 import ModalContainer from 'react-modal-promise';
 
 import TermsOfUseComponent from '@/components/TermsOfUse';

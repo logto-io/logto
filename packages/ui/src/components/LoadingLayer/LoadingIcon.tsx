@@ -1,5 +1,4 @@
 import classNames from 'classnames';
-import React from 'react';
 
 import LoadingSvg from '@/assets/icons/loading-icon.svg';
 

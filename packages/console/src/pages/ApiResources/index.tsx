@@ -1,6 +1,6 @@
 import { AppearanceMode, Resource } from '@logto/schemas';
 import classNames from 'classnames';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import Modal from 'react-modal';

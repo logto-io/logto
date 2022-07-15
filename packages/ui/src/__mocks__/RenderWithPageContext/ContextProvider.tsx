@@ -1,5 +1,3 @@
-import React from 'react';
-
 import usePageContext from '@/hooks/use-page-context';
 
 const ContextProvider = ({ children }: { children: React.ReactNode }) => {

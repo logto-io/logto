@@ -1,5 +1,4 @@
 import { fireEvent, waitFor } from '@testing-library/react';
-import React from 'react';
 
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider';

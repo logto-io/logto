@@ -1,4 +1,3 @@
-import React from 'react';
 import { InstanceProps } from 'react-modal-promise';
 
 import { TermsOfUseModalMessage } from '@/types';

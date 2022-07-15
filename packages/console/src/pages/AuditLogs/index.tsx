@@ -1,5 +1,3 @@
-import React from 'react';
-
 import AuditLogTable from '@/components/AuditLogTable';
 import Card from '@/components/Card';
 import CardTitle from '@/components/CardTitle';

@@ -1,5 +1,4 @@
 import { ConnectorType } from '@logto/schemas';
-import React from 'react';
 import { useTranslation } from 'react-i18next';
 
 import * as styles from './index.module.scss';

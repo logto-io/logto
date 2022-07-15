@@ -1,7 +1,7 @@
 import { ConnectorType } from '@logto/schemas';
 import { phoneRegEx, emailRegEx } from '@logto/shared';
 import classNames from 'classnames';
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';

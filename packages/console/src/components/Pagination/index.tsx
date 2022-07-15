@@ -1,5 +1,4 @@
 import classNames from 'classnames';
-import React from 'react';
 import ReactPaginate from 'react-paginate';
 
 import Button from '../Button';

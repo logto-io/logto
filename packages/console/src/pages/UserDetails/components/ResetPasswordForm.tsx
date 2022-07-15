@@ -1,6 +1,5 @@
 import { User } from '@logto/schemas';
 import { nanoid } from 'nanoid';
-import React from 'react';
 import { useTranslation } from 'react-i18next';
 
 import ConfirmModal from '@/components/ConfirmModal';

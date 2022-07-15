@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import React, { useState, useRef, HTMLProps } from 'react';
+import { useState, useRef, HTMLProps } from 'react';
 
 import PasswordHideIcon from '@/assets/icons/password-hide-icon.svg';
 import PasswordShowIcon from '@/assets/icons/password-show-icon.svg';

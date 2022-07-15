@@ -1,5 +1,3 @@
-import React from 'react';
-
 import AuditLogTable from '@/components/AuditLogTable';
 
 import * as styles from '../index.module.scss';

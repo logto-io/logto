@@ -1,7 +1,6 @@
 import { LogDto, User } from '@logto/schemas';
 import classNames from 'classnames';
 import dayjs from 'dayjs';
-import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useParams } from 'react-router-dom';
 import useSWR from 'swr';
