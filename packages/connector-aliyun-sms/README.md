@@ -42,19 +42,20 @@ Go to the [Aliyun website](https://cn.aliyun.com/) and register your Aliyun acco
 
 1. Sign-in with your Aliyun account at the [Aliyun website](https://cn.aliyun.com/) and go to the [SMS service console page](https://www.aliyun.com/product/sms).
 2. Click the "Open for free" (免费开通) button on the top left of the SMS service page and begin the configuration process.
-3. Read and agree to the "SMS service activation Agreement" (短信服务开通条款) and click "Subscribe to a service" (订阅服务) to move on.
+3. Read and agree to the "SMS service activation Agreement" (短信服务开通条款) and click "Subscribe to a service" (开通服务) to move on.
 4. You are now on the [SMS service console page](https://dysms.console.aliyun.com/overview), go to either "Mainland China" (国内消息) or "Outside Mainland China" (国际/港澳台消息) button on the sidebar per your use case.
 5. Add signature and template following the guidelines, and provide the materials or information required for review.
     - Remember to select "Verification Code Message" (验证码) as "Scenario" (适用场景) when filling out the signature application and also "Verification Code Message" (验证码) for "Type" (模板类型) when applying for a template review because we are using these signatures and templates to send passcode. Currently, we do not support sending SMS messages other than verification-code-related text messages.
     - Also, use `{{code}}` as a placeholder where you want to place your digital passcode in template contents.
 6. After submitting your SMS signature and template application, you need to wait for it to take effect. At this point, we can go back to the [SMS service console page](https://dysms.console.aliyun.com/overview) and send a test SMS. If your signatures and templates are ready for use, you can try them directly; if they are not taking effect yet, Aliyun also provides test templates.
     - You may need to recharge a small amount of money before sending test messages.
-    - You may also be asked to bind a test phone number before sending test messages. For more details, go to "Quick start" (快速学习) tab from the sidebar of the [SMS service console page](https://dysms.console.aliyun.com/overview).
+    - You may also be asked to bind a test phone number before sending test messages. For more details, go to "Quick Start" (快速学习) tab from the sidebar of the [SMS service console page](https://dysms.console.aliyun.com/overview).
 
 ## Compose the connector JSON
 
 1. From the [SMS service console page](https://dysms.console.aliyun.com/overview), hover on your avatar in the top right corner and go to "AccessKey Management" (AccessKey 管理), and click "Create AccessKey" (创建 AccessKey). You will get an "AccessKey ID" and "AccessKey Secret" pair after finishing security verification. Please keep them properly.
-2. Go to the " Mainland China" (国内消息) or "Outside Mainland China" (国际/港澳台消息) tab you just visited, you can find "Signature" (签名名称) and "Template Code" (模板 CODE) easily.
+2. Go to the "Mainland China" (国内消息) or "Outside Mainland China" (国际/港澳台消息) tab you just visited, you can find "Signature" (签名名称) and "Template Code" (模板 CODE) easily.
+   - If you want to use the test-only signature and template, go to the "Quick Start" (快速学习) tab instead, and you will find them below "Signature & Templates (For Test Only)".
 3. Fill out the Aliyun SMS Connector settings:
     - Fill out the `accessKeyId` and `accessKeySecret` fields with access key pairs you've got from step 1.
     - Fill out the `signName` field with "Signature" (签名名称) which is mentioned in step 2. All templates will share this signature name.
@@ -131,7 +132,7 @@ That's it. Don't forget to [Enable connector in sign-in experience](https://docs
 
 1. 用刚刚在 [阿里云](https://cn.aliyun.com/) 注册额账号登录并前往 [短信服务控制台](https://www.aliyun.com/product/sms)。
 2. 点按短信服务页面左上角的「免费开通」按钮并开始配置的流程。
-3. 阅读并同意「短信服务开通条款」和「订阅服务」以继续。
+3. 阅读并同意「短信服务开通条款」和「开通服务」以继续。
 4. 你现在处于「[短信服务控制台概览](https://dysms.console.aliyun.com/overview)」，根据你的用户场景，点击侧边栏中的「国内消息」或者「国际/港澳台消息」。
 5. 跟随指引添加签名和模板，并提供相应的材料和信息以便审核：
     - 注意：添加 **签名** 时要在「适用场景」栏选择「验证码」，添加 **模板** 时「模板类型」也要选择「验证码」，因为我们的使用这些签名和模板就是用来发送验证码的。目前我们暂不支持除了发送验证码之外别的类型的文字短信。
@@ -144,6 +145,7 @@ That's it. Don't forget to [Enable connector in sign-in experience](https://docs
 
 1. 前往 [短信服务控制台概览](https://dysms.console.aliyun.com/overview)，将鼠标悬停在页面右上角的头像处，进入「AccessKey 管理」并点按「创建 AccessKey」。完成了安全验证之后，你会得到一对「AccessKey ID」和「AccessKey Secret」，请妥善保管他们。
 2. 前往你之前访问过的「国内消息」或「国际/港澳台消息」标签页，可以很快找到「签名名称」和「模板 CODE」。
+    - 如果你想使用测试专用的签名模板, 则前往「快速开始」标签页，你就能在「测试专用签名模版」下方找到它们。
 3. 完成阿里云短信服务连接器的设置：
     - 用你在步骤 1 中拿到的一对「AccessKey ID」和「AccessKey Secret」来分别填入 `accessKeyId` 和 `accessKeySecret`。
     - 用你在步骤 2 中拿到的「签名名称」填入 `signName` 栏。所有的模板都会共用这个签名。
