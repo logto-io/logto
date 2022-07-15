@@ -101,7 +101,7 @@ Facebook 连接器为你提供了通过 Facebook 的 OAuth 2.0 授权系统注�
 
 ### 创建并设置一个 Facebook 应用
 
-1. 访问 [Apps](https://developers.facebook.com/apps) 页面。
+1. 访问 [应用](https://developers.facebook.com/apps)。
 2. 点按你已存在的应用或者按需 [创建应用](https://developers.facebook.com/docs/development/create-an-app)。
    - 由你来选择合适的 [应用类型](https://developers.facebook.com/docs/development/create-an-app/app-dashboard/app-types)，但需要包含 _Facebook 登录_ 产品。
 3. 在应用「控制面板」，在侧边栏找到「添加产品」部分，然后点按「Facebook 登录」卡片上的「设置」按钮。
@@ -135,7 +135,7 @@ Facebook 连接器为你提供了通过 Facebook 的 OAuth 2.0 授权系统注�
 通常，只有测试帐号、开发者帐或者管理员帐号才可以在 [开发者模式](https://developers.facebook.com/docs/development/build-and-test/app-modes#development-mode) 下登录相应的应用。
 
 为了让一般 Facebook 用户可以登录到生产环境，你可能需要将你的 Facebook 应用发布。但这又会随着你的应用类型而有所不同。
-例如，_Business_ 类型的应用没有「live」开关按钮。
+例如，_Business_ 类型的应用没有「Live」开关按钮。
 
 1. 在 Facebook 应用「控制面板」，从侧边栏 ->「设置」->「基本」。
 2. 按需填写 _隐私权政策网址_ 和 _用户数据删除_ 栏。
