@@ -16,7 +16,7 @@ import * as styles from './index.module.scss';
 type Props = {
   isOpen: boolean;
   type?: ConnectorType;
-  onClose?: () => void;
+  onClose?: (connectorId?: string) => void;
 };
 
 const CreateForm = ({ onClose, isOpen: isFormOpen, type }: Props) => {
@@ -73,7 +73,7 @@ const CreateForm = ({ onClose, isOpen: isFormOpen, type }: Props) => {
 
   const closeModal = () => {
     setIsGetStartedModalOpen(false);
-    onClose?.();
+    onClose?.(activeConnectorId);
   };
 
   return (

@@ -156,8 +156,9 @@ const ConnectorDetails = () => {
             <CreateForm
               isOpen={isSetupOpen}
               type={data.type}
-              onClose={() => {
+              onClose={(connectorId?: string) => {
                 setIsSetupOpen(false);
+                navigate(`/connectors/${connectorId ?? ''}`);
               }}
             />
           </div>
