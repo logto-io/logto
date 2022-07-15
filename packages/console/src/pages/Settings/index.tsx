@@ -41,6 +41,10 @@ const Settings = () => {
     toast.success(t('general.saved'));
   });
 
+  const defaultLanguage = Object.values<string>(Language).includes(language)
+    ? language
+    : Language.English;
+
   return (
     <Card className={classNames(detailsStyles.container, styles.container)}>
       <CardTitle title="settings.title" subtitle="settings.description" />
@@ -58,7 +62,7 @@ const Settings = () => {
                 control={control}
                 render={({ field: { value, onChange } }) => (
                   <Select
-                    value={value ?? language}
+                    value={value ?? defaultLanguage}
                     options={[
                       {
                         value: Language.English,
