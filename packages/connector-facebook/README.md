@@ -122,7 +122,7 @@ Facebook 连接器为你提供了通过 Facebook 的 OAuth 2.0 授权系统注�
 
 ## 用 Facebook 的测试用户来测试登录
 
-你可以用测试帐号、开发者帐或者管理员帐号在开发环境或者真实环境下测试相关应用的登录流程。了解 [应用模式](https://developers.facebook.com/docs/development/build-and-test/app-modes)。
+你可以用测试帐号、开发者帐号或者管理员帐号在开发环境或者真实环境下测试相关应用的登录流程。了解 [应用模式](https://developers.facebook.com/docs/development/build-and-test/app-modes)。
 
 你可以把应用发布从而让所有 Facebook 用户都能登录应用。
 
