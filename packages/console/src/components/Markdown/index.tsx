@@ -57,6 +57,15 @@ const Markdown = ({ className, children }: Props) => {
         img: ({ src, alt }) => {
           return <GithubRawImage src={src} alt={alt} />;
         },
+        a: ({ href, children }) => {
+          const isExternalLink = href?.startsWith('http');
+
+          return (
+            <a href={href} target={isExternalLink ? '_blank' : '_self'} rel="noopener">
+              {children}
+            </a>
+          );
+        },
         h1: ({ children }) => <h1 id={generateTocId(String(children))}>{children}</h1>,
         h2: ({ children }) => <h2 id={generateTocId(String(children))}>{children}</h2>,
         h3: ({ children }) => <h3 id={generateTocId(String(children))}>{children}</h3>,
