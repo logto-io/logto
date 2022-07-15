@@ -75,9 +75,9 @@ Now you should have the Google OAuth 2.0 consent screen configured.
 
 ### Config types
 
-|     Name     |  Type  |
-|:------------:|:------:|
-|   clientId   | string |
+| Name         | Type   |
+|--------------|--------|
+| clientId     | string |
 | clientSecret | string |
 
 ## References
@@ -132,10 +132,9 @@ Now you should have the Google OAuth 2.0 consent screen configured.
 
 ### 配置类型
 
-|     名称     |  类型  |
-|:------------:|:------:|
-|   clientId   | string |
+| 名称         | 类型   |
+|--------------|--------|
+| clientId     | string |
 | clientSecret | string |
-
 ## 参考
 * [Google Identity: 设置 OAuth 2.0](https://developers.google.com/identity/protocols/oauth2/openid-connect#appsetup)
