@@ -14,7 +14,7 @@ const escaper = (string_: string) =>
     .replace(/"/g, '%22')
     .replace(/\(/g, '%28')
     .replace(/\)/g, '%29')
-    .replace(/\+/, '%2B');
+    .replace(/\+/g, '%2B');
 
 export const getSignature = (
   parameters: Record<string, string>,
