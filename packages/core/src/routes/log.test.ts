@@ -2,8 +2,9 @@ import { LogCondition } from '@/queries/log';
 import logRoutes from '@/routes/log';
 import { createRequester } from '@/utils/test-utils';
 
-const mockLog = { id: 1 };
-const mockLogs = [mockLog, { id: 2 }];
+const mockBody = { type: 'a', payload: {}, createdAt: 123 };
+const mockLog = { id: '1', ...mockBody };
+const mockLogs = [mockLog, { id: '2', ...mockBody }];
 
 /* eslint-disable @typescript-eslint/no-unused-vars */
 const countLogs = jest.fn(async (condition: LogCondition) => ({

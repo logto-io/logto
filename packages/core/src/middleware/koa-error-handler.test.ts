@@ -38,8 +38,9 @@ describe('koaErrorHandler middleware', () => {
     expect(ctx.body).toEqual(mockBody);
   });
 
-  it('expect to throw if error type is not RequestError', async () => {
+  it('expect status 500 if error type is not RequestError', async () => {
     next.mockRejectedValueOnce(new Error('err'));
-    await expect(koaErrorHandler()(ctx, next)).rejects.toThrow();
+    await koaErrorHandler()(ctx, next);
+    expect(ctx.status).toEqual(500);
   });
 });

@@ -4,8 +4,12 @@ type ParseOptional<K> = undefined extends K
   ? ZodOptional<ZodType<Exclude<K, undefined>>>
   : ZodType<K>;
 
-export type Guard<T extends Record<string, unknown>> = ZodObject<{
+export type CreateGuard<T extends Record<string, unknown>> = ZodObject<{
   [key in keyof T]-?: ParseOptional<T[key]>;
+}>;
+
+export type Guard<T extends Record<string, unknown>> = ZodObject<{
+  [key in keyof T]: ZodType<T[key]>;
 }>;
 
 export type SchemaValuePrimitive = string | number | boolean | undefined;
@@ -22,6 +26,7 @@ export type GeneratedSchema<Schema extends SchemaLike> = keyof Schema extends st
         [key in keyof Schema]: string;
       };
       fieldKeys: ReadonlyArray<keyof Schema>;
-      createGuard: Guard<Schema>;
+      createGuard: CreateGuard<Schema>;
+      guard: Guard<Schema>;
     }>
   : never;

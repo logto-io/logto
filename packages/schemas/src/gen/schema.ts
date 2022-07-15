@@ -32,20 +32,35 @@ export const generateSchema = ({ name, fields }: TableWithType) => {
     ),
     '};',
     '',
-    `const createGuard: Guard<${databaseEntryType}> = z.object({`,
+    `const createGuard: CreateGuard<${databaseEntryType}> = z.object({`,
     // eslint-disable-next-line complexity
     ...fields.map(({ name, type, isArray, isEnum, nullable, hasDefaultValue, tsType }) => {
       if (tsType) {
         return `  ${camelcase(name)}: ${camelcase(tsType)}Guard${conditionalString(
-          nullable && !hasDefaultValue && '.nullable()'
+          nullable && '.nullable()'
         )}${conditionalString((nullable || hasDefaultValue) && '.optional()')},`;
       }
 
       return `  ${camelcase(name)}: z.${
         isEnum ? `nativeEnum(${type})` : `${type}()`
       }${conditionalString(isArray && '.array()')}${conditionalString(
-        nullable && !hasDefaultValue && '.nullable()'
+        nullable && '.nullable()'
       )}${conditionalString((nullable || hasDefaultValue) && '.optional()')},`;
+    }),
+    '  });',
+    '',
+    `const guard: Guard<${modelName}> = z.object({`,
+    // eslint-disable-next-line complexity
+    ...fields.map(({ name, type, isArray, isEnum, nullable, tsType }) => {
+      if (tsType) {
+        return `  ${camelcase(name)}: ${camelcase(tsType)}Guard${conditionalString(
+          nullable && '.nullable()'
+        )},`;
+      }
+
+      return `  ${camelcase(name)}: z.${
+        isEnum ? `nativeEnum(${type})` : `${type}()`
+      }${conditionalString(isArray && '.array()')}${conditionalString(nullable && '.nullable()')},`;
     }),
     '  });',
     '',
@@ -59,8 +74,9 @@ export const generateSchema = ({ name, fields }: TableWithType) => {
     '  },',
     '  fieldKeys: [',
     ...fields.map(({ name }) => `    '${camelcase(name)}',`),
-    '  ],',
+    '  ] as const,',
     '  createGuard,',
+    '  guard,',
     '});',
   ].join('\n');
 };
