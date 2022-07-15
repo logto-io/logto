@@ -18,65 +18,6 @@ importers:
       lerna: 5.0.0
       typescript: 4.6.2
 
-  packages/connector-alipay:
-    specifiers:
-      '@jest/types': ^27.5.1
-      '@logto/connector-types': ^1.0.0-beta.0
-      '@logto/shared': ^1.0.0-beta.0
-      '@shopify/jest-koa-mocks': ^5.0.0
-      '@silverhand/eslint-config': ^0.16.2
-      '@silverhand/essentials': ^1.1.0
-      '@silverhand/jest-config': ^0.16.2
-      '@silverhand/ts-config': ^0.16.2
-      '@types/jest': ^27.4.1
-      '@types/lodash.pick': ^4.4.6
-      '@types/node': ^16.3.1
-      '@types/supertest': ^2.0.11
-      dayjs: ^1.10.5
-      eslint: ^8.19.0
-      got: ^11.8.2
-      iconv-lite: 0.6.3
-      jest: ^27.5.1
-      jest-matcher-specific-error: ^1.0.0
-      lint-staged: ^13.0.0
-      nock: ^13.2.2
-      prettier: ^2.3.2
-      snakecase-keys: ^5.1.0
-      supertest: ^6.2.2
-      ts-jest: ^27.1.1
-      tsc-watch: ^5.0.0
-      typescript: ^4.6.2
-      zod: ^3.14.3
-    dependencies:
-      '@logto/connector-types': link:../connector-types
-      '@logto/shared': link:../shared
-      '@silverhand/essentials': 1.1.7
-      '@silverhand/jest-config': 0.16.2_tgc6da2oqazvrn56dzwolsqo5i
-      dayjs: 1.10.7
-      got: 11.8.3
-      iconv-lite: 0.6.3
-      snakecase-keys: 5.1.2
-      zod: 3.14.3
-    devDependencies:
-      '@jest/types': 27.5.1
-      '@shopify/jest-koa-mocks': 5.0.0
-      '@silverhand/eslint-config': 0.16.2_udveqfgjtporakzcjlry75cuqi
-      '@silverhand/ts-config': 0.16.2_typescript@4.6.3
-      '@types/jest': 27.4.1
-      '@types/lodash.pick': 4.4.6
-      '@types/node': 16.11.12
-      '@types/supertest': 2.0.11
-      eslint: 8.19.0
-      jest: 27.5.1
-      jest-matcher-specific-error: 1.0.0
-      lint-staged: 13.0.0
-      nock: 13.2.2
-      prettier: 2.5.1
-      supertest: 6.2.2
-      ts-jest: 27.1.1_tgc6da2oqazvrn56dzwolsqo5i
-      tsc-watch: 5.0.3_typescript@4.6.3
-      typescript: 4.6.3
-
   packages/connector-alipay-native:
     specifiers:
       '@jest/types': ^27.5.1
@@ -135,6 +76,65 @@ importers:
       ts-jest: 27.1.1_53ggqi2i4rbcfjtktmjua6zili
       tsc-watch: 5.0.3_typescript@4.6.4
       typescript: 4.6.4
+
+  packages/connector-alipay-web:
+    specifiers:
+      '@jest/types': ^27.5.1
+      '@logto/connector-types': ^1.0.0-beta.0
+      '@logto/shared': ^1.0.0-beta.0
+      '@shopify/jest-koa-mocks': ^5.0.0
+      '@silverhand/eslint-config': ^0.16.2
+      '@silverhand/essentials': ^1.1.0
+      '@silverhand/jest-config': ^0.16.2
+      '@silverhand/ts-config': ^0.16.2
+      '@types/jest': ^27.4.1
+      '@types/lodash.pick': ^4.4.6
+      '@types/node': ^16.3.1
+      '@types/supertest': ^2.0.11
+      dayjs: ^1.10.5
+      eslint: ^8.19.0
+      got: ^11.8.2
+      iconv-lite: 0.6.3
+      jest: ^27.5.1
+      jest-matcher-specific-error: ^1.0.0
+      lint-staged: ^13.0.0
+      nock: ^13.2.2
+      prettier: ^2.3.2
+      snakecase-keys: ^5.1.0
+      supertest: ^6.2.2
+      ts-jest: ^27.1.1
+      tsc-watch: ^5.0.0
+      typescript: ^4.6.2
+      zod: ^3.14.3
+    dependencies:
+      '@logto/connector-types': link:../connector-types
+      '@logto/shared': link:../shared
+      '@silverhand/essentials': 1.1.7
+      '@silverhand/jest-config': 0.16.2_u4suh3umvg724wu2nufptihvny
+      dayjs: 1.10.7
+      got: 11.8.3
+      iconv-lite: 0.6.3
+      snakecase-keys: 5.1.2
+      zod: 3.14.3
+    devDependencies:
+      '@jest/types': 27.5.1
+      '@shopify/jest-koa-mocks': 5.0.0
+      '@silverhand/eslint-config': 0.16.2_zheml67kdyttrjblcc5k6h6tmu
+      '@silverhand/ts-config': 0.16.2_typescript@4.7.2
+      '@types/jest': 27.4.1
+      '@types/lodash.pick': 4.4.6
+      '@types/node': 16.11.12
+      '@types/supertest': 2.0.11
+      eslint: 8.19.0
+      jest: 27.5.1
+      jest-matcher-specific-error: 1.0.0
+      lint-staged: 13.0.0
+      nock: 13.2.2
+      prettier: 2.5.1
+      supertest: 6.2.2
+      ts-jest: 27.1.1_u4suh3umvg724wu2nufptihvny
+      tsc-watch: 5.0.3_typescript@4.7.2
+      typescript: 4.7.2
 
   packages/connector-aliyun-dm:
     specifiers:
@@ -570,53 +570,6 @@ importers:
       ts-jest: 27.1.1_tgc6da2oqazvrn56dzwolsqo5i
       typescript: 4.6.3
 
-  packages/connector-wechat:
-    specifiers:
-      '@jest/types': ^27.5.1
-      '@logto/connector-types': ^1.0.0-beta.0
-      '@logto/schemas': ^1.0.0-beta.0
-      '@logto/shared': ^1.0.0-beta.0
-      '@silverhand/eslint-config': ^0.16.2
-      '@silverhand/essentials': ^1.1.0
-      '@silverhand/jest-config': ^0.16.2
-      '@silverhand/ts-config': ^0.16.2
-      '@types/jest': ^27.4.1
-      '@types/node': ^16.3.1
-      eslint: ^8.19.0
-      got: ^11.8.2
-      jest: ^27.5.1
-      jest-matcher-specific-error: ^1.0.0
-      lint-staged: ^13.0.0
-      nock: ^13.2.2
-      prettier: ^2.3.2
-      ts-jest: ^27.1.1
-      tsc-watch: ^5.0.0
-      typescript: ^4.6.2
-      zod: ^3.14.3
-    dependencies:
-      '@logto/connector-types': link:../connector-types
-      '@logto/schemas': link:../schemas
-      '@logto/shared': link:../shared
-      '@silverhand/essentials': 1.1.7
-      '@silverhand/jest-config': 0.16.2_tgc6da2oqazvrn56dzwolsqo5i
-      got: 11.8.3
-      zod: 3.14.3
-    devDependencies:
-      '@jest/types': 27.5.1
-      '@silverhand/eslint-config': 0.16.2_udveqfgjtporakzcjlry75cuqi
-      '@silverhand/ts-config': 0.16.2_typescript@4.6.3
-      '@types/jest': 27.4.1
-      '@types/node': 16.11.12
-      eslint: 8.19.0
-      jest: 27.5.1
-      jest-matcher-specific-error: 1.0.0
-      lint-staged: 13.0.0
-      nock: 13.2.2
-      prettier: 2.5.1
-      ts-jest: 27.1.1_tgc6da2oqazvrn56dzwolsqo5i
-      tsc-watch: 5.0.3_typescript@4.6.3
-      typescript: 4.6.3
-
   packages/connector-wechat-native:
     specifiers:
       '@jest/types': ^27.5.1
@@ -663,6 +616,53 @@ importers:
       ts-jest: 27.1.1_tgc6da2oqazvrn56dzwolsqo5i
       tsc-watch: 5.0.3_typescript@4.6.3
       typescript: 4.6.3
+
+  packages/connector-wechat-web:
+    specifiers:
+      '@jest/types': ^27.5.1
+      '@logto/connector-types': ^1.0.0-beta.0
+      '@logto/schemas': ^1.0.0-beta.0
+      '@logto/shared': ^1.0.0-beta.0
+      '@silverhand/eslint-config': ^0.16.2
+      '@silverhand/essentials': ^1.1.0
+      '@silverhand/jest-config': ^0.16.2
+      '@silverhand/ts-config': ^0.16.2
+      '@types/jest': ^27.4.1
+      '@types/node': ^16.3.1
+      eslint: ^8.19.0
+      got: ^11.8.2
+      jest: ^27.5.1
+      jest-matcher-specific-error: ^1.0.0
+      lint-staged: ^13.0.0
+      nock: ^13.2.2
+      prettier: ^2.3.2
+      ts-jest: ^27.1.1
+      tsc-watch: ^5.0.0
+      typescript: ^4.6.2
+      zod: ^3.14.3
+    dependencies:
+      '@logto/connector-types': link:../connector-types
+      '@logto/schemas': link:../schemas
+      '@logto/shared': link:../shared
+      '@silverhand/essentials': 1.1.7
+      '@silverhand/jest-config': 0.16.2_u4suh3umvg724wu2nufptihvny
+      got: 11.8.3
+      zod: 3.14.3
+    devDependencies:
+      '@jest/types': 27.5.1
+      '@silverhand/eslint-config': 0.16.2_zheml67kdyttrjblcc5k6h6tmu
+      '@silverhand/ts-config': 0.16.2_typescript@4.7.2
+      '@types/jest': 27.4.1
+      '@types/node': 16.11.12
+      eslint: 8.19.0
+      jest: 27.5.1
+      jest-matcher-specific-error: 1.0.0
+      lint-staged: 13.0.0
+      nock: 13.2.2
+      prettier: 2.5.1
+      ts-jest: 27.1.1_u4suh3umvg724wu2nufptihvny
+      tsc-watch: 5.0.3_typescript@4.7.2
+      typescript: 4.7.2
 
   packages/console:
     specifiers:
@@ -794,8 +794,8 @@ importers:
 
   packages/core:
     specifiers:
-      '@logto/connector-alipay': ^1.0.0-beta.0
       '@logto/connector-alipay-native': ^1.0.0-beta.0
+      '@logto/connector-alipay-web': ^1.0.0-beta.0
       '@logto/connector-aliyun-dm': ^1.0.0-beta.0
       '@logto/connector-aliyun-sms': ^1.0.0-beta.0
       '@logto/connector-apple': ^1.0.0-beta.0
@@ -806,8 +806,8 @@ importers:
       '@logto/connector-smtp': ^1.0.0-beta.0
       '@logto/connector-twilio-sms': ^1.0.0-beta.0
       '@logto/connector-types': ^1.0.0-beta.0
-      '@logto/connector-wechat': ^1.0.0-beta.0
       '@logto/connector-wechat-native': ^1.0.0-beta.0
+      '@logto/connector-wechat-web': ^1.0.0-beta.0
       '@logto/phrases': ^1.0.0-beta.0
       '@logto/schemas': ^1.0.0-beta.0
       '@logto/shared': ^1.0.0-beta.0
@@ -879,8 +879,8 @@ importers:
       typescript: ^4.6.2
       zod: ^3.14.3
     dependencies:
-      '@logto/connector-alipay': link:../connector-alipay
       '@logto/connector-alipay-native': link:../connector-alipay-native
+      '@logto/connector-alipay-web': link:../connector-alipay-web
       '@logto/connector-aliyun-dm': link:../connector-aliyun-dm
       '@logto/connector-aliyun-sms': link:../connector-aliyun-sms
       '@logto/connector-apple': link:../connector-apple
@@ -891,8 +891,8 @@ importers:
       '@logto/connector-smtp': link:../connector-smtp
       '@logto/connector-twilio-sms': link:../connector-twilio-sms
       '@logto/connector-types': link:../connector-types
-      '@logto/connector-wechat': link:../connector-wechat
       '@logto/connector-wechat-native': link:../connector-wechat-native
+      '@logto/connector-wechat-web': link:../connector-wechat-web
       '@logto/phrases': link:../phrases
       '@logto/schemas': link:../schemas
       '@logto/shared': link:../shared

@@ -1,7 +1,7 @@
 import { getEnv } from '@silverhand/essentials';
 
 const defaultPackages = [
-  '@logto/connector-alipay',
+  '@logto/connector-alipay-web',
   '@logto/connector-alipay-native',
   '@logto/connector-aliyun-dm',
   '@logto/connector-aliyun-sms',
@@ -12,7 +12,7 @@ const defaultPackages = [
   '@logto/connector-sendgrid-email',
   '@logto/connector-smtp',
   '@logto/connector-twilio-sms',
-  '@logto/connector-wechat',
+  '@logto/connector-wechat-web',
   '@logto/connector-wechat-native',
 ];
 
