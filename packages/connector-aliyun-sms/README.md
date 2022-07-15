@@ -145,7 +145,7 @@ That's it. Don't forget to [Enable connector in sign-in experience](https://docs
 
 1. 前往 [短信服务控制台概览](https://dysms.console.aliyun.com/overview)，将鼠标悬停在页面右上角的头像处，进入「AccessKey 管理」并点按「创建 AccessKey」。完成了安全验证之后，你会得到一对「AccessKey ID」和「AccessKey Secret」，请妥善保管他们。
 2. 前往你之前访问过的「国内消息」或「国际/港澳台消息」标签页，可以很快找到「签名名称」和「模板 CODE」。
-    - 如果你想使用测试专用的签名模板, 则前往「Quick Start」标签页，你就能在「测试专用签名模版」下方找到它们。
+    - 如果你想使用测试专用的签名模板, 则前往「快速开始」标签页，你就能在「测试专用签名模版」下方找到它们。
 3. 完成阿里云短信服务连接器的设置：
     - 用你在步骤 1 中拿到的一对「AccessKey ID」和「AccessKey Secret」来分别填入 `accessKeyId` 和 `accessKeySecret`。
     - 用你在步骤 2 中拿到的「签名名称」填入 `signName` 栏。所有的模板都会共用这个签名。
