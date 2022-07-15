@@ -19,7 +19,7 @@
     "test:report": "codecov -F core"
   },
   "dependencies": {
-    "@logto/connector-alipay": "^1.0.0-beta.0",
+    "@logto/connector-alipay-web": "^1.0.0-beta.0",
     "@logto/connector-alipay-native": "^1.0.0-beta.0",
     "@logto/connector-aliyun-dm": "^1.0.0-beta.0",
     "@logto/connector-aliyun-sms": "^1.0.0-beta.0",
@@ -31,7 +31,7 @@
     "@logto/connector-smtp": "^1.0.0-beta.0",
     "@logto/connector-twilio-sms": "^1.0.0-beta.0",
     "@logto/connector-types": "^1.0.0-beta.0",
-    "@logto/connector-wechat": "^1.0.0-beta.0",
+    "@logto/connector-wechat-web": "^1.0.0-beta.0",
     "@logto/connector-wechat-native": "^1.0.0-beta.0",
     "@logto/phrases": "^1.0.0-beta.0",
     "@logto/schemas": "^1.0.0-beta.0",
