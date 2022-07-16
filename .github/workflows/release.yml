@@ -54,22 +54,6 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
-      - name: Build and export to Docker
-        uses: docker/build-push-action@v3
-        with:
-          context: .
-          load: true
-          tags: ${{ env.IMAGE }}:test
-      
-      - name: Compose up
-        run: TAG=test docker compose up -d
-
-      - name: Sleep for 30 seconds
-        run: sleep 30s
-      
-      - name: Health check
-        run: curl http://localhost:3001/api/status -If
-
   create-github-release:
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags/')
