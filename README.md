@@ -51,6 +51,15 @@ Boringly, we call it "[customer identity access management](https://en.wikipedia
 
 [Click here](https://gitpod.io/#https://github.com/logto-io/logto) to launch Logto in GitPod. Once you see the message like `App is running at https://3001-...gitpod.io` in the terminal, press Cmd (or Ctrl) and click the URL to continue your Logto journey.
 
+### Docker Compose
+
+Docker Compose CLI usually comes with [Docker Desktop](https://www.docker.com/products/docker-desktop).
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/logto-io/logto/HEAD/docker-compose.yml | \
+TAG=prerelease docker compose -p logto -f - up
+```
+
 ## Bug Report, Feature Request, Feedback
 
 - Our team takes security seriously, especially when it relates to identity. If you find any existing or potential security issues, please do not hesitate to email 🔒 [security@logto.io](mailto:security@logto.io).
