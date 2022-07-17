@@ -25,7 +25,7 @@
 
 # Logto
 
-Logto[^info] helps you build the sign-in experience and user identity within minutes.
+Logto[^info] helps you build the sign-in, auth, and user identity within minutes.
 
 **Highlights**
 
@@ -42,16 +42,18 @@ Logto[^info] helps you build the sign-in experience and user identity within min
 
 Boringly, we call it "[customer identity access management](https://en.wikipedia.org/wiki/Customer_identity_access_management)" (CIAM) or "customer identity solution."
 
-## Get Started
+## Get started
 
 - Visit our 🎨 [website](https://logto.io) for a brief introduction if you are new to Logto.
 - A step-by-step guide is available on 📖 [docs.logto.io](https://docs.logto.io) (also in [简体中文](https://docs.logto.io/zh-cn)).
 
-### Try It Online (GitPod)
+### Launch Logto
 
-[Click here](https://gitpod.io/#https://github.com/logto-io/logto) to launch Logto in GitPod. Once you see the message like `App is running at https://3001-...gitpod.io` in the terminal, press Cmd (or Ctrl) and click the URL to continue your Logto journey.
+#### Online demo (GitPod)
 
-### Docker Compose
+[Click here](https://gitpod.io/#https://github.com/logto-io/logto) to launch Logto via GitPod. Once you see the message like `App is running at https://3001-...gitpod.io` in the terminal, press Cmd (or Ctrl) and click the URL to continue your Logto journey.
+
+#### Docker Compose
 
 Docker Compose CLI usually comes with [Docker Desktop](https://www.docker.com/products/docker-desktop).
 
@@ -60,21 +62,18 @@ curl -fsSL https://raw.githubusercontent.com/logto-io/logto/HEAD/docker-compose.
 TAG=prerelease docker compose -p logto -f - up
 ```
 
-### One-liner Script
+#### One-liner script
 
-**Prerequisites**
-
-- [Node.js](https://nodejs.org/) `^16.13.0`
-- [PostgreSQL](https://postgresql.org/) `^14.0`
+Requires [Node.js](https://nodejs.org/) `^16.13.0` + [PostgreSQL](https://postgresql.org/) `^14.0`.
 
 ```bash
 node -e "$(printf "%s" "$(curl -fsSL https://raw.githubusercontent.com/logto-io/logto/HEAD/install.js)")"
 ```
 
-## Bug Report, Feature Request, Feedback
+## Bug report, feature request, feedback
 
 - Our team takes security seriously, especially when it relates to identity. If you find any existing or potential security issues, please do not hesitate to email 🔒 [security@logto.io](mailto:security@logto.io).
-- About other bug reports, feature requests, and feedback, you can directly 🙋 [open an issue](https://github.com/logto-io/logto/issues/new) on GitHub or 💬 [join our Discord channel](https://discord.gg/UEPaF3j5e6) to have a live chat.
+- About other bug reports, feature requests, and feedback, you can directly 🙋 [open an issue](https://github.com/logto-io/logto/issues/new) on GitHub or 💬 [join our Discord server](https://discord.gg/UEPaF3j5e6) to have a live chat. We also have a 🗓️ [public roadmap](https://github.com/orgs/logto-io/projects/5) available.
 
 <br/>
 
