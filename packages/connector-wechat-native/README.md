@@ -103,7 +103,7 @@ Fill out _Application Signing Signature_ (应用签名) and _Application Package
 
 > ℹ️ **Note**
 > 
-> You need to sign your app to get a signature. Refer to the [Sign your app](https://developer.android.com/studio/publish/app-signing) for more info. 
+> You need to sign your app to get a signature. Refer to the [Sign your app](https://developer.android.com/studio/publish/app-signing) for more info.
 
 After finish signing, you can execute the `signingReport` task to get the signing signature.
 
