@@ -3,7 +3,7 @@ import { useState, useCallback, useEffect, useRef, FormEvent } from 'react';
 import { ErrorType } from '@/components/ErrorMessage';
 import { entries, fromEntries, Entries } from '@/utils';
 
-const useForm = <T>(initialState: T) => {
+const useForm = <T extends Record<string, unknown>>(initialState: T) => {
   type ErrorState = {
     [key in keyof T]?: ErrorType;
   };
