@@ -1,4 +1,4 @@
-import { ConnectorDto, ConnectorType } from '@logto/schemas';
+import { ConnectorDto, ConnectorType, arbitraryObjectGuard } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import i18next from 'i18next';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
@@ -49,31 +49,28 @@ const Guide = ({ connector, onClose }: Props) => {
       return;
     }
 
-    try {
-      const config = JSON.parse(connectorConfigJson) as JSON;
-      await api
-        .patch(`/api/connectors/${connectorId}`, {
-          json: { config },
-        })
-        .json<ConnectorDto>();
-      await api
-        .patch(`/api/connectors/${connectorId}/enabled`, {
-          json: { enabled: true },
-        })
-        .json<ConnectorDto>();
+    const result = arbitraryObjectGuard.safeParse(connectorConfigJson);
 
-      await updateSettings({
-        ...conditional(!isSocialConnector && { passwordlessConfigured: true }),
-        ...conditional(isSocialConnector && { socialSignInConfigured: true }),
-      });
+    if (!result.success) {
+      toast.error(t('connector_details.save_error_json_parse_error'));
 
-      onClose();
-      toast.success(t('general.saved'));
-    } catch (error: unknown) {
-      if (error instanceof SyntaxError) {
-        toast.error(t('connector_details.save_error_json_parse_error'));
-      }
+      return;
     }
+
+    await api
+      .patch(`/api/connectors/${connectorId}`, { json: { config: result.data } })
+      .json<ConnectorDto>();
+    await api
+      .patch(`/api/connectors/${connectorId}/enabled`, { json: { enabled: true } })
+      .json<ConnectorDto>();
+
+    await updateSettings({
+      ...conditional(!isSocialConnector && { passwordlessConfigured: true }),
+      ...conditional(isSocialConnector && { socialSignInConfigured: true }),
+    });
+
+    onClose();
+    toast.success(t('general.saved'));
   });
 
   return (

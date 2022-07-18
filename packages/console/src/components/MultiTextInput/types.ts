@@ -1,7 +1,11 @@
-export type MultiTextInputError = {
-  required?: string;
-  inputs?: Record<number, string | undefined>;
-};
+import { z } from 'zod';
+
+export const multiTextInputErrorGuard = z.object({
+  required: z.string().optional(),
+  inputs: z.record(z.number(), z.string().optional()).optional(),
+});
+
+export type MultiTextInputError = z.infer<typeof multiTextInputErrorGuard>;
 
 export type MultiTextInputRule = {
   required?: string;

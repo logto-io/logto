@@ -1,4 +1,6 @@
-import { MultiTextInputError, MultiTextInputRule } from './types';
+import { t } from 'i18next';
+
+import { MultiTextInputError, multiTextInputErrorGuard, MultiTextInputRule } from './types';
 
 export const validate = (
   value?: string[],
@@ -55,5 +57,11 @@ export const convertRhfErrorMessage = (errorMessage?: string): MultiTextInputErr
     return;
   }
 
-  return JSON.parse(errorMessage) as MultiTextInputError;
+  const result = multiTextInputErrorGuard.safeParse(errorMessage);
+
+  if (!result.success) {
+    throw new Error(t('admin_console.errors.invalid_error_message_format'));
+  }
+
+  return result.data;
 };

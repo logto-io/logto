@@ -5,9 +5,16 @@ import { UNSAFE_NavigationContext, Navigator } from 'react-router-dom';
 
 import ConfirmModal from '../ConfirmModal';
 
+/**
+ * The `usePrompt` and `useBlock` hooks are removed from react-router v6, as the developers think
+ * they are not ready to be shipped in v6. Reference: https://github.com/remix-run/react-router/issues/8139
+ * Therefore we have to implement our own workaround to provide the same functionality, through `UNSAFE_NavigationContext`.
+ */
+type BlockFunction = (blocker: Blocker) => () => void;
+
 type BlockerNavigator = Navigator & {
   location: Location;
-  block(blocker: Blocker): () => void;
+  block: BlockFunction;
 };
 
 type Props = {
@@ -27,10 +34,13 @@ const UnsavedChangesAlertModal = ({ hasUnsavedChanges }: Props) => {
       return;
     }
 
-    const {
-      block,
-      location: { pathname },
-    } = navigator as BlockerNavigator;
+    /**
+     * Props `block` and `location` are removed from `Navigator` type in react-router, for the same reason as above.
+     * So we have to define our own type `BlockerNavigator` to acquire these props that actually exist in `navigator` object.
+     */
+    // eslint-disable-next-line no-restricted-syntax
+    const { block, location } = navigator as BlockerNavigator;
+    const { pathname } = location;
 
     const unblock = block((transition) => {
       const {
