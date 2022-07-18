@@ -1,3 +1,4 @@
+import { conditional } from '@silverhand/essentials';
 import { useCallback, useEffect, useContext, useMemo } from 'react';
 import { useLocation } from 'react-router-dom';
 import { is } from 'superstruct';
@@ -51,7 +52,7 @@ const useBindSocial = () => {
 
   return {
     localSignInMethods,
-    relatedUser: is(state, bindSocialStateGuard) ? state.relatedUser : undefined,
+    relatedUser: conditional(is(state, bindSocialStateGuard) && state.relatedUser),
     registerWithSocial: createAccountHandler,
     bindSocialRelatedUser: bindRelatedUserHandler,
   };

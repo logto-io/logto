@@ -35,6 +35,7 @@ const usePreview = (context: Context): [boolean, PreviewConfig?] => {
       }
 
       if (event.data.sender === 'ac_preview') {
+        // #event.data should be guarded at the provider's side
         // eslint-disable-next-line no-restricted-syntax
         setPreviewConfig(event.data.config as PreviewConfig);
       }

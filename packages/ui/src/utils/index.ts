@@ -35,6 +35,10 @@ export type Entries<T> = Array<
 // eslint-disable-next-line no-restricted-syntax
 export const entries = <T>(object: T): Entries<T> => Object.entries(object) as Entries<T>;
 
+// @ts-expect-error Object.fromEntries does not return a indexable keyof T types, it always return string key type. Force to return the given generic object type.
+// eslint-disable-next-line no-restricted-syntax
+export const fromEntries = <T>(entries: Entries<T>) => Object.fromEntries(entries) as T;
+
 export const isKeyOf = <T extends Record<string, unknown>>(
   key: string | number | symbol,
   object: T
