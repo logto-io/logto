@@ -1,7 +1,9 @@
+import { Language } from '@logto/phrases';
 import { conditionalString, Optional } from '@silverhand/essentials';
 import { FC, ReactNode } from 'react';
-import { TFuncKey, useTranslation } from 'react-i18next';
+import { TFuncKey } from 'react-i18next';
 
+import useLanguage from '@/hooks/use-language';
 import useUserPreferences from '@/hooks/use-user-preferences';
 
 import Contact from './components/Contact';
@@ -46,9 +48,7 @@ export const useSidebarMenuItems = (): {
   const {
     data: { getStartedHidden },
   } = useUserPreferences();
-  const {
-    i18n: { language },
-  } = useTranslation();
+  const language = useLanguage();
 
   const sections: SidebarSection[] = [
     {
@@ -111,7 +111,7 @@ export const useSidebarMenuItems = (): {
           Icon: Document,
           title: 'docs',
           externalLink: `https://docs.logto.io/${conditionalString(
-            language !== 'en' && language.toLowerCase()
+            language !== Language.English && language.toLowerCase()
           )}`,
         },
       ],

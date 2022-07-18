@@ -1,9 +1,8 @@
-import { AdminConsoleKey } from '@logto/phrases';
+import { AdminConsoleKey, Language } from '@logto/phrases';
 import { AppearanceMode, Application } from '@logto/schemas';
 import { demoAppApplicationId } from '@logto/schemas/lib/seeds';
 import { conditionalString } from '@silverhand/essentials';
 import { useMemo } from 'react';
-import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import useSWR from 'swr';
 
@@ -20,6 +19,7 @@ import OneClick from '@/assets/images/one-click.svg';
 import PasswordlessDark from '@/assets/images/passwordless-dark.svg';
 import Passwordless from '@/assets/images/passwordless.svg';
 import { RequestError } from '@/hooks/use-api';
+import useLanguage from '@/hooks/use-language';
 import useSettings from '@/hooks/use-settings';
 import { useTheme } from '@/hooks/use-theme';
 
@@ -35,9 +35,7 @@ type GetStartedMetadata = {
 };
 
 const useGetStartedMetadata = () => {
-  const {
-    i18n: { language },
-  } = useTranslation();
+  const language = useLanguage();
   const { settings, updateSettings } = useSettings();
   const theme = useTheme();
   const isLightMode = theme === AppearanceMode.LightMode;
@@ -127,7 +125,7 @@ const useGetStartedMetadata = () => {
           void updateSettings({ furtherReadingsChecked: true });
           window.open(
             `https://docs.logto.io/${conditionalString(
-              language !== 'en' && language.toLowerCase()
+              language !== Language.English && language.toLowerCase()
             )}/docs/tutorials/get-started/further-readings`,
             '_blank'
           );
