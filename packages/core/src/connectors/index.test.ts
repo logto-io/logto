@@ -4,7 +4,6 @@ import { Connector } from '@logto/schemas';
 import {
   getConnectorInstanceById,
   getConnectorInstances,
-  getEnabledSocialConnectorIds,
   getSocialConnectorInstanceById,
   initConnectors,
 } from '@/connectors/index';
@@ -185,17 +184,6 @@ describe('getSocialConnectorInstanceById', () => {
         status: 404,
       })
     );
-  });
-});
-
-describe('getEnabledSocialConnectorIds', () => {
-  test('should return the enabled social connectors existing in DB', async () => {
-    const enabledSocialConnectorIds = await getEnabledSocialConnectorIds();
-    expect(enabledSocialConnectorIds).toEqual([
-      'alipay-web',
-      'facebook-universal',
-      'github-universal',
-    ]);
   });
 });
 
