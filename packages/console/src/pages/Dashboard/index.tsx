@@ -29,6 +29,11 @@ const tickStyle = {
   fontFamily: 'var(--font-family)',
 };
 
+const tickFormatter = new Intl.NumberFormat('en-US', {
+  maximumFractionDigits: 1,
+  notation: 'compact',
+});
+
 const Dashboard = () => {
   const [date, setDate] = useState<string>(dayjs().format('YYYY-MM-DD'));
   const { data: totalData, error: totalError } = useSWR<TotalUsersResponse, RequestError>(
@@ -111,11 +116,11 @@ const Dashboard = () => {
                   />
                   <XAxis dataKey="date" tickLine={false} tick={tickStyle} />
                   <YAxis
-                    orientation="right"
-                    width={30}
+                    width={35}
                     axisLine={false}
                     tickLine={false}
                     tick={tickStyle}
+                    tickFormatter={(tick) => tickFormatter.format(tick).toLowerCase()}
                   />
                   <Tooltip content={<ChartTooltip />} cursor={{ stroke: 'var(--color-primary' }} />
                 </AreaChart>
