@@ -27,7 +27,7 @@ GitHub 社交登录 Logto 官方连接器 [中文文档](#github-连接器)
 
 ## Get started
 
-The GitHub connector enables end-users to have access to your application using their own GitHub accounts via GitHub OAuth 2.0 authentication protocol.
+The GitHub connector enables end-users to sign in to your application using their own GitHub accounts via GitHub OAuth 2.0 authentication protocol.
 
 ## Sign in with GitHub account
 
@@ -81,7 +81,7 @@ That's it. The GitHub connector should be available now. Don't forget to [Enable
 
 ## 开始上手
 
-GitHub 连接器让终端用户可以用 GitHub 账号，通过 GitHub OAuth 2.0 授权协议来访问你的应用。
+GitHub 连接器让终端用户可以用 GitHub 账号，通过 GitHub OAuth 2.0 授权协议来登录你的应用。
 
 ## 登录 GitHub 账号
 
@@ -112,8 +112,8 @@ GitHub 连接器让终端用户可以用 GitHub 账号，通过 GitHub OAuth 2.0
 
 ```json
 {
-    "clientID": "<your-client-id>",
-    "clientSecret": "<your-client-secret>"
+  "clientID": "<your-client-id>",
+  "clientSecret": "<your-client-secret>"
 }
 ```
 
