@@ -17,7 +17,7 @@ export const defaultMetadata: ConnectorMetadata = {
   logo: './logo.svg',
   logoDark: './logo-dark.svg',
   description: {
-    en: 'GitHub is an Internet host for software development and version control.',
+    en: 'GitHub is an online community for software development and version control.',
     'zh-CN': 'GitHub 是全球最大的代码托管仓库。',
   },
   readme: './README.md',
