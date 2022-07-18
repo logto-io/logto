@@ -140,19 +140,6 @@ export const getSocialConnectorInstanceById = async (
   return connector;
 };
 
-export const getEnabledSocialConnectorIds = async <T extends ConnectorInstance>(): Promise<
-  string[]
-> => {
-  const connectorInstances = await getConnectorInstances();
-
-  return connectorInstances
-    .filter<T>(
-      (instance): instance is T =>
-        instance.connector.enabled && instance.metadata.type === ConnectorType.Social
-    )
-    .map((instance) => instance.connector.id);
-};
-
 export const initConnectors = async () => {
   const connectors = await findAllConnectors();
   const existingConnectors = new Map(connectors.map((connector) => [connector.id, connector]));

@@ -32,7 +32,6 @@ const getConnectorInstances = jest.fn(async () => connectorInstances);
 jest.mock('@/connectors', () => {
   return {
     ...jest.requireActual('@/connectors'),
-    getEnabledSocialConnectorIds: jest.fn(async () => ['facebook', 'github', 'wechat']),
     getConnectorInstances: jest.fn(async () => getConnectorInstances()),
   };
 });
