@@ -116,7 +116,7 @@ const Dashboard = () => {
                   />
                   <XAxis dataKey="date" tickLine={false} tick={tickStyle} />
                   <YAxis
-                    width={30}
+                    width={35}
                     axisLine={false}
                     tickLine={false}
                     tick={tickStyle}
