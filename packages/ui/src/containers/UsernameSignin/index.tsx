@@ -115,6 +115,8 @@ const UsernameSignin = ({ className, autoFocus }: Props) => {
       <TermsOfUse className={styles.terms} />
 
       <Button onClick={async () => onSubmitHandler()}>{t('action.sign_in')}</Button>
+
+      <input hidden type="submit" />
     </form>
   );
 };
