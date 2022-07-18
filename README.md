@@ -53,6 +53,10 @@ Boringly, we call it "[customer identity access management](https://en.wikipedia
 
 [Click here](https://gitpod.io/#https://github.com/logto-io/logto) to launch Logto via GitPod. Once you see the message like `App is running at https://3001-...gitpod.io` in the terminal, press Cmd (or Ctrl) and click the URL to continue your Logto journey.
 
+#### One click deploy
+
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/logto-io/logto)
+
 #### Docker Compose
 
 Docker Compose CLI usually comes with [Docker Desktop](https://www.docker.com/products/docker-desktop).
