@@ -55,8 +55,8 @@ Here is an example of GitHub connector config JSON.
 
 ```json
 {
-    "clientID": "<your-client-id>",
-    "clientSecret": "<your-client-secret>"
+  "clientID": "<your-client-id>",
+  "clientSecret": "<your-client-secret>"
 }
 ```
 
