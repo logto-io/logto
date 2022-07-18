@@ -120,6 +120,8 @@ const EmailPasswordless = ({ type, autoFocus, className }: Props) => {
         <TermsOfUse className={styles.terms} />
 
         <Button onClick={async () => onSubmitHandler()}>{t('action.continue')}</Button>
+
+        <input hidden type="submit" />
       </form>
       <PasswordlessConfirmModal
         isOpen={showPasswordlessConfirmModal}

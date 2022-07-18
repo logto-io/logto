@@ -123,6 +123,8 @@ const CreateAccount = ({ className, autoFocus }: Props) => {
       <TermsOfUse className={styles.terms} />
 
       <Button onClick={async () => onSubmitHandler()}>{t('action.create')}</Button>
+
+      <input hidden type="submit" />
     </form>
   );
 };
