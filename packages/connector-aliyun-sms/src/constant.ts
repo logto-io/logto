@@ -37,7 +37,7 @@ export const defaultMetadata: ConnectorMetadata = {
   logo: './logo.svg',
   logoDark: null,
   description: {
-    en: "Aliyun provides cloud computing services to online businesses and Alibaba's e-commerce ecosystem.",
+    en: 'Aliyun provides cloud computing services to online businesses.',
     'zh-CN': '阿里云是全球性的云服务提供商。',
   },
   readme: './README.md',

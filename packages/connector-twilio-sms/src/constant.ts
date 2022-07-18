@@ -14,7 +14,7 @@ export const defaultMetadata: ConnectorMetadata = {
   logo: './logo.svg',
   logoDark: null,
   description: {
-    en: 'Twilio provides programmable communication tools for phone calls and text messages using its web service APIs.',
+    en: 'Twilio provides programmable communication tools for phone calls and messages.',
     'zh-CN': 'Twilio 是一个提供面向消费者的可编程通讯服务的平台。',
   },
   readme: './README.md',
