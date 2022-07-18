@@ -1225,6 +1225,7 @@ importers:
       react-string-replace: ^1.0.0
       react-timer-hook: ^3.0.5
       stylelint: ^14.8.2
+      superstruct: ^0.16.0
       typescript: ^4.6.2
       use-debounced-loader: ^0.1.1
     dependencies:
@@ -1277,6 +1278,7 @@ importers:
       react-string-replace: 1.0.0
       react-timer-hook: 3.0.5_sfoxds7t5ydpegc3knd667wn6m
       stylelint: 14.8.2
+      superstruct: 0.16.0
       typescript: 4.6.2
       use-debounced-loader: 0.1.1_react@17.0.2
 

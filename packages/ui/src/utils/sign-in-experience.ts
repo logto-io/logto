@@ -9,10 +9,12 @@ import { getSignInExperience } from '@/apis/settings';
 import { SignInMethod, SignInExperienceSettingsResponse, SignInExperienceSettings } from '@/types';
 import { filterSocialConnectors } from '@/utils/social-connectors';
 
+import { entries } from '.';
+
 export const getPrimarySignInMethod = (signInMethods: SignInMethods) => {
-  for (const [key, value] of Object.entries(signInMethods)) {
+  for (const [key, value] of entries(signInMethods)) {
     if (value === 'primary') {
-      return key as keyof SignInMethods;
+      return key;
     }
   }
 
@@ -20,9 +22,9 @@ export const getPrimarySignInMethod = (signInMethods: SignInMethods) => {
 };
 
 export const getSecondarySignInMethods = (signInMethods: SignInMethods) =>
-  Object.entries(signInMethods).reduce<SignInMethod[]>((methods, [key, value]) => {
+  entries(signInMethods).reduce<SignInMethod[]>((methods, [key, value]) => {
     if (value === 'secondary') {
-      return [...methods, key as SignInMethod];
+      return [...methods, key];
     }
 
     return methods;

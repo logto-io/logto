@@ -1,13 +1,12 @@
-import { Nullable } from '@silverhand/essentials';
-import { useContext, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams, useLocation } from 'react-router-dom';
+import { is } from 'superstruct';
 
 import NavBar from '@/components/NavBar';
 import PasscodeValidation from '@/containers/PasscodeValidation';
-import { PageContext } from '@/hooks/use-page-context';
 import ErrorPage from '@/pages/ErrorPage';
 import { UserFlow } from '@/types';
+import { passcodeStateGuard, passcodeMethodGuard } from '@/types/guard';
 
 import * as styles from './index.module.scss';
 
@@ -16,30 +15,23 @@ type Parameters = {
   method: string;
 };
 
-type StateType = Nullable<Record<string, string>>;
-
 const Passcode = () => {
   const { t } = useTranslation();
   const { method, type } = useParams<Parameters>();
-  const state = useLocation().state as StateType;
+  const { state } = useLocation();
   const invalidType = type !== 'sign-in' && type !== 'register';
-  const invalidMethod = method !== 'email' && method !== 'sms';
-  const { setToast } = useContext(PageContext);
 
-  useEffect(() => {
-    if (method && !state?.[method]) {
-      setToast(t(method === 'email' ? 'error.invalid_email' : 'error.invalid_phone'));
-    }
-  }, [method, setToast, state, t]);
+  const invalidMethod = !is(method, passcodeMethodGuard);
+  const invalidState = !is(state, passcodeStateGuard);
 
   if (invalidType || invalidMethod) {
     return <ErrorPage />;
   }
 
-  const target = state?.[method];
+  const target = !invalidState && state[method];
 
   if (!target) {
-    return <ErrorPage />;
+    return <ErrorPage title={method === 'email' ? 'error.invalid_email' : 'error.invalid_phone'} />;
   }
 
   return (

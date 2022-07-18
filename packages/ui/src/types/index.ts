@@ -1,4 +1,5 @@
-import { SignInExperience, ConnectorMetadata } from '@logto/schemas';
+import { Language } from '@logto/phrases-ui';
+import { SignInExperience, ConnectorMetadata, AppearanceMode } from '@logto/schemas';
 
 export type UserFlow = 'sign-in' | 'register';
 export type SignInMethod = 'username' | 'email' | 'sms' | 'social';
@@ -34,3 +35,11 @@ export type SignInExperienceSettings = Omit<
 export enum TermsOfUseModalMessage {
   SHOW_DETAIL_MODAL = 'SHOW_DETAIL_MODAL',
 }
+
+export type PreviewConfig = {
+  signInExperience: SignInExperienceSettingsResponse;
+  language: Language;
+  mode: AppearanceMode.LightMode | AppearanceMode.DarkMode;
+  platform: Platform;
+  isNative: boolean;
+};

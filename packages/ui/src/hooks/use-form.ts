@@ -1,9 +1,9 @@
 import { useState, useCallback, useEffect, useRef, FormEvent } from 'react';
 
 import { ErrorType } from '@/components/ErrorMessage';
-import { entries } from '@/utils';
+import { entries, fromEntries, Entries } from '@/utils';
 
-const useForm = <T>(initialState: T) => {
+const useForm = <T extends Record<string, unknown>>(initialState: T) => {
   type ErrorState = {
     [key in keyof T]?: ErrorType;
   };
@@ -19,12 +19,12 @@ const useForm = <T>(initialState: T) => {
   const fieldValidationsRef = useRef<FieldValidations>({});
 
   const validateForm = useCallback(() => {
-    const errors = entries(fieldValue).map<[keyof T, ErrorType | undefined]>(([key, value]) => [
+    const errors: Entries<ErrorState> = entries(fieldValue).map(([key, value]) => [
       key,
       fieldValidationsRef.current[key]?.(value),
     ]);
 
-    setFieldErrors(Object.fromEntries(errors) as ErrorState);
+    setFieldErrors(fromEntries(errors));
 
     return errors.every(([, error]) => error === undefined);
   }, [fieldValidationsRef, fieldValue]);
@@ -37,8 +37,7 @@ const useForm = <T>(initialState: T) => {
       return {
         value: fieldValue[field],
         error: fieldErrors[field],
-        onChange: ({ target }: FormEvent<HTMLInputElement>) => {
-          const { value } = target as HTMLInputElement;
+        onChange: ({ currentTarget: { value } }: FormEvent<HTMLInputElement>) => {
           setFieldValue((previous) => ({ ...previous, [field]: value }));
         },
       };
@@ -49,13 +48,13 @@ const useForm = <T>(initialState: T) => {
   // Revalidate on Input change
   useEffect(() => {
     setFieldErrors((previous) => {
-      const errors = entries(fieldValue).map<[keyof T, ErrorType | undefined]>(([key, value]) => [
+      const errors: Entries<ErrorState> = entries(fieldValue).map(([key, value]) => [
         key,
         // Only validate field with existing errors
         previous[key] && fieldValidationsRef.current[key]?.(value),
       ]);
 
-      return Object.fromEntries(errors) as ErrorState;
+      return fromEntries(errors);
     });
   }, [fieldValue, fieldValidationsRef]);
 

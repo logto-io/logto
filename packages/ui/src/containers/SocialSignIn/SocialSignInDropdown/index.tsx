@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import Dropdown, { DropdownItem } from '@/components/Dropdown';
 import useSocial from '@/hooks/use-social';
 import { ConnectorData } from '@/types';
+import { isKeyOf } from '@/utils';
 
 import * as styles from './index.module.scss';
 
@@ -47,8 +48,7 @@ const SocialSignInDropdown = ({ isOpen, onClose, connectors, anchorRef }: Props)
     >
       {connectors.map((connector) => {
         const { id, name, logo, logoDark } = connector;
-        const languageKey = Object.keys(name).find((key) => key === language) ?? 'en';
-        const localName = name[languageKey as Language];
+        const localName = isKeyOf(language, name) ? name[language] : name[Language.English];
 
         return (
           <DropdownItem

@@ -1,5 +1,4 @@
-import { Language } from '@logto/phrases-ui';
-import { AppearanceMode, ConnectorPlatform } from '@logto/schemas';
+import { ConnectorPlatform } from '@logto/schemas';
 import { conditionalString } from '@silverhand/essentials';
 import i18next from 'i18next';
 import { useEffect, useState } from 'react';
@@ -7,18 +6,10 @@ import { useEffect, useState } from 'react';
 import * as styles from '@/App.module.scss';
 import { Context } from '@/hooks/use-page-context';
 import initI18n from '@/i18n/init';
-import { SignInExperienceSettingsResponse, SignInExperienceSettings, Platform } from '@/types';
+import { SignInExperienceSettings, PreviewConfig } from '@/types';
 import { parseQueryParameters } from '@/utils';
 import { getPrimarySignInMethod, getSecondarySignInMethods } from '@/utils/sign-in-experience';
 import { filterPreviewSocialConnectors } from '@/utils/social-connectors';
-
-type PreviewConfig = {
-  signInExperience: SignInExperienceSettingsResponse;
-  language: Language;
-  mode: AppearanceMode.LightMode | AppearanceMode.DarkMode;
-  platform: Platform;
-  isNative: boolean;
-};
 
 const usePreview = (context: Context): [boolean, PreviewConfig?] => {
   const [previewConfig, setPreviewConfig] = useState<PreviewConfig>();
@@ -44,6 +35,8 @@ const usePreview = (context: Context): [boolean, PreviewConfig?] => {
       }
 
       if (event.data.sender === 'ac_preview') {
+        // #event.data should be guarded at the provider's side
+        // eslint-disable-next-line no-restricted-syntax
         setPreviewConfig(event.data.config as PreviewConfig);
       }
     };
