@@ -19,7 +19,7 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Setup Node and pnpm
-        uses: silverhand-io/actions-node-pnpm-run-steps@v1.2.2
+        uses: silverhand-io/actions-node-pnpm-run-steps@v1.2.3
 
       - name: Package
         run: ./package.sh
@@ -42,16 +42,22 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          path: /tmp/tests
+          path: tests
+
+      - name: Copy lockfile
+        run: |
+          cp tests/pnpm-lock.yaml ./
+          cp tests/package.json ./
 
       - name: Setup Node and pnpm
-        uses: silverhand-io/actions-node-pnpm-run-steps@v1.2.2
+        uses: silverhand-io/actions-node-pnpm-run-steps@v1.2.3
         with:
           run-install: false
 
       # Setup integration test
       - name: Install dependencies
         run: |
+          mv tests /tmp/tests
           cd /tmp/tests
           pnpm i
 
