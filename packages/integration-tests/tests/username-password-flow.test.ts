@@ -5,11 +5,12 @@ import {
   generateSignInUri,
   verifyAndParseCodeFromCallbackUri,
 } from '@logto/js';
+import { adminConsoleApplicationId } from '@logto/schemas/lib/seeds';
 import got from 'got/dist/source';
 
 import api from '@/api';
 
-import { adminConsoleApplicationId, discoveryUrl, logtoUrl, redirectUri } from '../src/constants';
+import { discoveryUrl, logtoUrl, redirectUri } from '../src/constants';
 import { LogtoContext } from '../src/logto-context';
 import { extractCookie } from '../src/utils';
 
