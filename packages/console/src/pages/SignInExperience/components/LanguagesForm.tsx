@@ -1,5 +1,4 @@
-import { Language } from '@logto/phrases';
-import { useMemo } from 'react';
+import { languageOptions } from '@logto/phrases';
 import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
@@ -14,20 +13,6 @@ const LanguagesForm = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { watch, control } = useFormContext<SignInExperienceForm>();
   const mode = watch('languageInfo.mode');
-
-  const languageOptions = useMemo(
-    () => [
-      {
-        value: Language.English,
-        title: t('sign_in_exp.others.languages.languages.english'),
-      },
-      {
-        value: Language.Chinese,
-        title: t('sign_in_exp.others.languages.languages.chinese'),
-      },
-    ],
-    [t]
-  );
 
   return (
     <>

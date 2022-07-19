@@ -6,8 +6,6 @@ const settings = {
   },
   custom_domain: 'Custom domain',
   language: 'Language',
-  language_english: 'English',
-  language_chinese: 'Chinese',
   appearance: 'Appearance',
   appearance_system: 'Sync with system',
   appearance_light: 'Light mode',
