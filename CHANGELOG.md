@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.0-beta.1](https://github.com/logto-io/logto/compare/v1.0.0-beta.0...v1.0.0-beta.1) (2022-07-19)
+
+
+### Features
+
+* **console:** add a declaration file for `react-i18next` ([#1556](https://github.com/logto-io/logto/issues/1556)) ([6ae5e7d](https://github.com/logto-io/logto/commit/6ae5e7d9277e5dd77306fa790b95fb61110b7f44))
+* **console:** update dashboard chart y-axis tick format ([#1590](https://github.com/logto-io/logto/issues/1590)) ([951c6fa](https://github.com/logto-io/logto/commit/951c6fa9a5499d554141abe55e57f2a9e1943736))
+* **core:** add response guard ([#1542](https://github.com/logto-io/logto/issues/1542)) ([6c39790](https://github.com/logto-io/logto/commit/6c397901805b01613df71eecaa06d3d84d0b606a))
+* **ui:** add submit input to all the sign-in & register forms ([#1587](https://github.com/logto-io/logto/issues/1587)) ([0c0c83c](https://github.com/logto-io/logto/commit/0c0c83cc8f78f611f5a8527ecedd6ce21d1dad80))
+
+
+### Bug Fixes
+
+* **console:** docs link doesn't work for en-US locale ([#1594](https://github.com/logto-io/logto/issues/1594)) ([78fcb03](https://github.com/logto-io/logto/commit/78fcb038ed9b4c356774eacc2d23dfd6d71e63ca))
+* **console:** external links in readme should be opened in new tab ([23ff0bf](https://github.com/logto-io/logto/commit/23ff0bf21d7ae77b9856d1f2c3e2ad3f2f4baa23))
+* **console:** language select box initial value should not be empty ([26f47d8](https://github.com/logto-io/logto/commit/26f47d873ddd259451fd54f9c3bff5dd7cf849d1))
+* **console:** navigate to new connector details page after switching connector ([1615e36](https://github.com/logto-io/logto/commit/1615e36f37496acd9c1976aa2f8a3b022cea8fde))
+* **ui:** fix no-restrict-syntax in ui ([#1559](https://github.com/logto-io/logto/issues/1559)) ([816ce9f](https://github.com/logto-io/logto/commit/816ce9f903fc939b676165c5ad7e17c72f4c1c86))
+* **ui:** format phone number with country calling code ([#1551](https://github.com/logto-io/logto/issues/1551)) ([c6384be](https://github.com/logto-io/logto/commit/c6384bed84340909aaa41f10abaea26b5195e6a5))
+
+
+
 ## [1.0.0-beta.0](https://github.com/logto-io/logto/compare/v1.0.0-alpha.4...v1.0.0-beta.0) (2022-07-14)
 
 

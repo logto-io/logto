@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.0-beta.1](https://github.com/logto-io/logto/compare/v1.0.0-beta.0...v1.0.0-beta.1) (2022-07-19)
+
+
+### Features
+
+* **console:** add a declaration file for `react-i18next` ([#1556](https://github.com/logto-io/logto/issues/1556)) ([6ae5e7d](https://github.com/logto-io/logto/commit/6ae5e7d9277e5dd77306fa790b95fb61110b7f44))
+
+
+
 ## [1.0.0-beta.0](https://github.com/logto-io/logto/compare/v1.0.0-alpha.4...v1.0.0-beta.0) (2022-07-14)
 
 

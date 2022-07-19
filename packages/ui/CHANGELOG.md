@@ -3,6 +3,21 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.0-beta.1](https://github.com/logto-io/logto/compare/v1.0.0-beta.0...v1.0.0-beta.1) (2022-07-19)
+
+
+### Features
+
+* **ui:** add submit input to all the sign-in & register forms ([#1587](https://github.com/logto-io/logto/issues/1587)) ([0c0c83c](https://github.com/logto-io/logto/commit/0c0c83cc8f78f611f5a8527ecedd6ce21d1dad80))
+
+
+### Bug Fixes
+
+* **ui:** fix no-restrict-syntax in ui ([#1559](https://github.com/logto-io/logto/issues/1559)) ([816ce9f](https://github.com/logto-io/logto/commit/816ce9f903fc939b676165c5ad7e17c72f4c1c86))
+* **ui:** format phone number with country calling code ([#1551](https://github.com/logto-io/logto/issues/1551)) ([c6384be](https://github.com/logto-io/logto/commit/c6384bed84340909aaa41f10abaea26b5195e6a5))
+
+
+
 ## [1.0.0-beta.0](https://github.com/logto-io/logto/compare/v1.0.0-alpha.4...v1.0.0-beta.0) (2022-07-14)
 
 
