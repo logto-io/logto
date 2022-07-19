@@ -29,11 +29,10 @@ interface GrantBody {
 }
 
 const getLogType = (grantType: unknown) => {
-  if (
-    !grantType ||
-    ![GrantType.AuthorizationCode, GrantType.RefreshToken].includes(grantType as GrantType)
-  ) {
-    // Only log token exchange by authorization code or refresh token.
+  const allowedGrantType = new Set<unknown>([GrantType.AuthorizationCode, GrantType.RefreshToken]);
+
+  // Only log token exchange by authorization code or refresh token.
+  if (!grantType || !allowedGrantType.has(grantType)) {
     return;
   }
 

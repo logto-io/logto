@@ -39,12 +39,16 @@ export default function koaSlonikErrorHandler<StateT, ContextT>(): Middleware<St
         case InsertionError:
           throw new RequestError({
             code: 'entity.create_failed',
+            // Error constructor does not assert the instance type
+            // eslint-disable-next-line no-restricted-syntax
             name: (error as InsertionError<SchemaLike>).schema.tableSingular,
           });
         case UpdateError:
           throw new RequestError({
             code: 'entity.not_exists',
-            name: (error as InsertionError<SchemaLike>).schema.tableSingular,
+            // Error constructor does not assert the instance type
+            // eslint-disable-next-line no-restricted-syntax
+            name: (error as UpdateError<SchemaLike>).schema.tableSingular,
           });
         case DeletionError:
         case NotFoundError:

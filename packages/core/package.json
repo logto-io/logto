@@ -115,8 +115,7 @@
   "eslintConfig": {
     "extends": "@silverhand",
     "rules": {
-      "complexity": "off",
-      "no-restricted-syntax": "off"
+      "complexity": "off"
     }
   },
   "prettier": "@silverhand/eslint-config/.prettierrc"

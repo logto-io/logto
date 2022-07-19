@@ -1,7 +1,7 @@
 import { SchemaValuePrimitive, SchemaValue } from '@logto/schemas';
 import { Falsy, notFalsy } from '@silverhand/essentials';
 import dayjs from 'dayjs';
-import { sql, SqlSqlToken, SqlToken, QueryResult } from 'slonik';
+import { sql, SqlSqlToken, SqlToken, QueryResult, IdentifierSqlToken } from 'slonik';
 
 import { FieldIdentifiers, Table } from './types';
 
@@ -15,6 +15,8 @@ export const excludeAutoSetFields = <T extends string>(fields: readonly T[]) =>
   Object.freeze(
     fields.filter(
       (field): field is ExcludeAutoSetFields<T> =>
+        // Read only string arrays
+        // eslint-disable-next-line no-restricted-syntax
         !(autoSetFields as readonly string[]).includes(field)
     )
   );
@@ -52,20 +54,18 @@ export const convertToPrimitiveOrSql = (
   throw new Error(`Cannot convert ${key} to primitive`);
 };
 
-export const convertToIdentifiers = <T extends Table>(
-  { table, fields }: T,
-  withPrefix = false
-) => ({
-  table: sql.identifier([table]),
-  fields: Object.entries<string>(fields).reduce(
-    (previous, [key, value]) => ({
-      ...previous,
-      [key]: sql.identifier(withPrefix ? [table, value] : [value]),
-    }),
-    // eslint-disable-next-line @typescript-eslint/prefer-reduce-type-parameter
-    {} as FieldIdentifiers<keyof T['fields']>
-  ),
-});
+export const convertToIdentifiers = <T extends Table>({ table, fields }: T, withPrefix = false) => {
+  const fieldsIdentifiers = Object.entries<string>(fields).map<
+    [keyof T['fields'], IdentifierSqlToken]
+  >(([key, value]) => [key, sql.identifier(withPrefix ? [table, value] : [value])]);
+
+  return {
+    table: sql.identifier([table]),
+    // Key value inferred from the original fields directly
+    // eslint-disable-next-line no-restricted-syntax
+    fields: Object.fromEntries(fieldsIdentifiers) as FieldIdentifiers<keyof T['fields']>,
+  };
+};
 
 export const convertToTimestamp = (time = dayjs()) => sql`to_timestamp(${time.valueOf() / 1000})`;
 

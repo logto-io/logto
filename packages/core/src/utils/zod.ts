@@ -12,7 +12,6 @@ import {
   ZodOptional,
   ZodString,
   ZodStringDef,
-  ZodType,
   ZodUnion,
   ZodUnknown,
 } from 'zod';
@@ -129,7 +128,9 @@ export const zodTypeToSwagger = (config: unknown): OpenAPIV3.SchemaObject => {
 
   if (config instanceof ZodUnion) {
     return {
-      oneOf: (config.options as ZodType[]).map((option) => zodTypeToSwagger(option)),
+      // ZodUnion.options type is any
+      // eslint-disable-next-line no-restricted-syntax
+      oneOf: (config.options as unknown[]).map((option) => zodTypeToSwagger(option)),
     };
   }
 

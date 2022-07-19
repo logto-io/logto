@@ -47,14 +47,16 @@ const mockedIncreasePasscodeTryCount = increasePasscodeTryCount as jest.MockedFu
 
 beforeAll(() => {
   mockedFindUnconsumedPasscodesByJtiAndType.mockResolvedValue([]);
-  mockedInsertPasscode.mockImplementation(async (data) => ({
-    ...data,
-    createdAt: Date.now(),
-    phone: data.phone ?? null,
-    email: data.email ?? null,
-    consumed: data.consumed ?? false,
-    tryCount: data.tryCount ?? 0,
-  }));
+  mockedInsertPasscode.mockImplementation(async (data): Promise<Passcode> => {
+    return {
+      phone: null,
+      email: null,
+      consumed: false,
+      tryCount: 0,
+      ...data,
+      createdAt: Date.now(),
+    };
+  });
 });
 
 afterEach(() => {

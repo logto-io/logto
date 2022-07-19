@@ -128,6 +128,8 @@ export function createRequester({
       if (provider) {
         route(anonymousRouter, provider);
       } else {
+        // For test use only
+        // eslint-disable-next-line no-restricted-syntax
         (route as RouteLauncher<AnonymousRouter>)(anonymousRouter);
       }
     }
