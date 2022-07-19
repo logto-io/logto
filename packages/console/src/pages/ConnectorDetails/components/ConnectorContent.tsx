@@ -1,4 +1,10 @@
-import { Connector, ConnectorDto, ConnectorMetadata, ConnectorType } from '@logto/schemas';
+import {
+  arbitraryObjectGuard,
+  Connector,
+  ConnectorDto,
+  ConnectorMetadata,
+  ConnectorType,
+} from '@logto/schemas';
 import { useEffect, useMemo, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
@@ -60,27 +66,22 @@ const ConnectorContent = ({ isDeleted, connectorData, onConnectorUpdated }: Prop
       return;
     }
 
-    try {
-      const configJson = JSON.parse(config) as JSON;
-      setIsSubmitting(true);
-      const { metadata, ...reset } = await api
-        .patch(`/api/connectors/${connectorData.id}`, {
-          json: { config: configJson },
-        })
-        .json<
-          Connector & {
-            metadata: ConnectorMetadata;
-          }
-        >();
-      onConnectorUpdated({ ...reset, ...metadata });
-      toast.success(t('general.saved'));
-    } catch (error: unknown) {
-      if (error instanceof SyntaxError) {
-        toast.error(t('connector_details.save_error_json_parse_error'));
-      } else {
-        toast.error(t('errors.unexpected_error'));
-      }
+    const configJson = arbitraryObjectGuard.safeParse(config);
+
+    if (!configJson.success) {
+      toast.error(t('connector_details.save_error_json_parse_error'));
+
+      return;
     }
+
+    setIsSubmitting(true);
+
+    const { metadata, ...reset } = await api
+      .patch(`/api/connectors/${connectorData.id}`, { json: { config: configJson.data } })
+      .json<Connector & { metadata: ConnectorMetadata }>();
+
+    onConnectorUpdated({ ...reset, ...metadata });
+    toast.success(t('general.saved'));
 
     setIsSubmitting(false);
   };

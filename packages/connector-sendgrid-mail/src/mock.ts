@@ -1,4 +1,3 @@
-/* eslint-disable no-restricted-syntax */
 import {
   Content,
   ContextType,
@@ -10,11 +9,14 @@ import {
 
 const receivers: EmailData[] = [{ email: 'foo@logto.io' }];
 const sender: EmailData = { email: 'noreply@logto.test.io', name: 'Logto Test' };
+const personalizations: Personalization[] = [{ to: receivers }];
+const content: Content[] = [{ type: ContextType.Text, value: 'This is a test template.' }];
+
 export const mockedParameters: PublicParameters = {
-  personalizations: [{ to: receivers }] as Personalization[],
+  personalizations,
   from: sender,
   subject: 'Test SendGrid Mail',
-  content: [{ type: 'text/plain', value: 'This is a test template.' }] as Content[],
+  content,
 };
 
 export const mockedApiKey = 'apikey';
@@ -31,4 +33,3 @@ export const mockedConfig: SendGridMailConfig = {
     },
   ],
 };
-/* eslint-enable no-restricted-syntax */

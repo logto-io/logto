@@ -1,4 +1,4 @@
-import { ConnectorType } from '@logto/schemas';
+import { ConnectorType, arbitraryObjectGuard } from '@logto/schemas';
 import { phoneRegEx, emailRegEx } from '@logto/shared';
 import classNames from 'classnames';
 import { useEffect, useRef, useState } from 'react';
@@ -56,25 +56,19 @@ const SenderTester = ({ connectorId, connectorType, config, className }: Props) 
 
   const onSubmit = handleSubmit(async (formData) => {
     const { sendTo } = formData;
+    const result = arbitraryObjectGuard.safeParse(config);
 
-    try {
-      const configJson = JSON.parse(config) as JSON;
-      const data = { config: configJson, ...(isSms ? { phone: sendTo } : { email: sendTo }) };
+    if (!result.success) {
+      toast.error(t('connector_details.save_error_json_parse_error'));
 
-      await api
-        .post(`/api/connectors/${connectorId}/test`, {
-          json: data,
-        })
-        .json();
-
-      setShowTooltip(true);
-    } catch (error: unknown) {
-      if (error instanceof SyntaxError) {
-        toast.error(t('connector_details.save_error_json_parse_error'));
-      } else {
-        toast.error(t('errors.unexpected_error'));
-      }
+      return;
     }
+
+    const data = { config: result.data, ...(isSms ? { phone: sendTo } : { email: sendTo }) };
+
+    await api.post(`/api/connectors/${connectorId}/test`, { json: data }).json();
+
+    setShowTooltip(true);
   });
 
   return (
