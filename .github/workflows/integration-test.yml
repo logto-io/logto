@@ -42,22 +42,18 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          path: tmp/
+          path: /tmp/tests
 
-      - uses: actions/setup-node@v3
+      - name: Setup Node and pnpm
+        uses: silverhand-io/actions-node-pnpm-run-steps@v1.2.2
         with:
-          node-version: 16
+          run-install: false
 
-      # Setup integration test package
-      - name: Extract integration test package
-        run: |
-          mv tmp/packages/integration-tests /tmp
-          rm -rf tmp
-      
+      # Setup integration test
       - name: Install dependencies
         run: |
-          cd /tmp/integration-tests
-          npm i
+          cd /tmp/tests
+          pnpm i
 
       # Setup environment
       - name: Start Postgres (Linux)
@@ -96,8 +92,8 @@ jobs:
       # Test
       - name: Run tests
         run: |
-          cd /tmp/integration-tests
-          npm start
+          cd /tmp/tests/packages/integration-tests
+          pnpm start
         env:
           NODE_ENV: integration-test
           LOGTO_URL: http://localhost:3001
