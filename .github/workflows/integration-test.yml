@@ -99,5 +99,5 @@ jobs:
           cd /tmp/integration-tests
           npm start
         env:
-          NODE_ENV: staging
+          NODE_ENV: integration-test
           LOGTO_URL: http://localhost:3001
