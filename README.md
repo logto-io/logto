@@ -4,7 +4,7 @@
 
 <p align="center">
   <a href="https://logto.io" target="_blank" align="center" alt="Logto Logo">
-    <img src="./logo.png" width="100">
+    <img src="./logo.png" height="100">
   </a>
 </p>
 
