@@ -8,17 +8,11 @@
   </a>
 </p>
 
-<p align="center">
-
-  [![release](https://img.shields.io/github/v/release/logto-io/logto?color=7958FF)](https://github.com/logto-io/logto/releases)
-  [![core coverage](https://img.shields.io/codecov/c/github/logto-io/logto?label=core%20coverage)](https://app.codecov.io/gh/logto-io/logto)
-  [![checks](https://img.shields.io/github/checks-status/logto-io/logto/master)](https://github.com/logto-io/logto/actions?query=branch%3Amaster)
-  [![gitpod](https://img.shields.io/badge/gitpod-available-f09439)](https://gitpod.io/#https://github.com/logto-io/logto)
-  [![render](https://img.shields.io/badge/render-deploy-5364e9)](https://render.com/deploy?repo=https://github.com/logto-io/logto)
-
-</p>
-
-# Logto
+[![release](https://img.shields.io/github/v/release/logto-io/logto?color=7958FF)](https://github.com/logto-io/logto/releases)
+[![core coverage](https://img.shields.io/codecov/c/github/logto-io/logto?label=core%20coverage)](https://app.codecov.io/gh/logto-io/logto)
+[![checks](https://img.shields.io/github/checks-status/logto-io/logto/master)](https://github.com/logto-io/logto/actions?query=branch%3Amaster)
+[![gitpod](https://img.shields.io/badge/gitpod-available-f09439)](https://gitpod.io/#https://github.com/logto-io/logto)
+[![render](https://img.shields.io/badge/render-deploy-5364e9)](https://render.com/deploy?repo=https://github.com/logto-io/logto)
 
 Logto[^info] helps you build the sign-in, auth, and user identity within minutes.
 
