@@ -9,18 +9,13 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/logto-io/logto/releases">
-    <img src="https://img.shields.io/github/v/release/logto-io/logto?color=7958FF" alt="release" />
-  </a>
-  <a href="https://gitpod.io/#https://github.com/logto-io/logto">
-    <img src="https://img.shields.io/badge/gitpod-available-blue" alt="gitpod">
-  </a>
-  <a href="https://app.codecov.io/gh/logto-io/logto">
-    <img src="https://img.shields.io/codecov/c/github/logto-io/logto?label=core%20coverage" alt="core coverage" />
-  </a>
-  <a href="https://github.com/logto-io/logto/actions?query=branch%3Amaster">
-    <img src="https://img.shields.io/github/checks-status/logto-io/logto/master" alt="checks">
-  </a>
+
+  [![release](https://img.shields.io/github/v/release/logto-io/logto?color=7958FF)](https://github.com/logto-io/logto/releases)
+  [![core coverage](https://img.shields.io/codecov/c/github/logto-io/logto?label=core%20coverage)](https://app.codecov.io/gh/logto-io/logto)
+  [![checks](https://img.shields.io/github/checks-status/logto-io/logto/master)](https://github.com/logto-io/logto/actions?query=branch%3Amaster)
+  [![gitpod](https://img.shields.io/badge/gitpod-available-f09439)](https://gitpod.io/#https://github.com/logto-io/logto)
+  [![render](https://img.shields.io/badge/render-deploy-5364e9)](https://render.com/deploy?repo=https://github.com/logto-io/logto)
+
 </p>
 
 # Logto
@@ -52,10 +47,6 @@ Boringly, we call it "[customer identity access management](https://en.wikipedia
 #### Online demo (GitPod)
 
 [Click here](https://gitpod.io/#https://github.com/logto-io/logto) to launch Logto via GitPod. Once you see the message like `App is running at https://3001-...gitpod.io` in the terminal, press Cmd (or Ctrl) and click the URL to continue your Logto journey.
-
-#### One click deploy
-
-[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/logto-io/logto)
 
 #### Docker Compose
 
