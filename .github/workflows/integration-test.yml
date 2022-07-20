@@ -55,11 +55,11 @@ jobs:
           run-install: false
 
       # Setup integration test
-      - name: Install dependencies and build
+      - name: Install dependencies
         run: |
           mv tests /tmp/tests
           cd /tmp/tests
-          pnpm i && pnpm ci:build
+          pnpm i
 
       # Setup environment
       - name: Start Postgres (Linux)
@@ -89,7 +89,7 @@ jobs:
         run: node . --from-root --all-yes &
         working-directory: logto/packages/core
         env:
-          # NODE_ENV: integration-test
+          NODE_ENV: integration-test
           DB_URL_DEFAULT: postgres://postgres:postgres@localhost:5432
 
       - name: Sleep for 5 seconds
