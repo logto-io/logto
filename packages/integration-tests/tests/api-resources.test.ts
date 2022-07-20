@@ -70,6 +70,8 @@ describe('admin console api resources', () => {
 
     const createdResource = await createResource(resourceName, resourceIndicator);
 
+    expect(createdResource).toBeTruthy();
+
     await authedAdminApi.delete(`resources/${createdResource.id}`);
 
     const resources = await authedAdminApi.get('resources').json<Resource[]>();
