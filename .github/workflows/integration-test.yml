@@ -60,6 +60,7 @@ jobs:
           mv tests /tmp/tests
           cd /tmp/tests
           pnpm i
+          pnpm prepack
 
       # Setup environment
       - name: Start Postgres (Linux)
