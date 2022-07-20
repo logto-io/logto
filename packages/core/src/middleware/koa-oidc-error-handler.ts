@@ -45,6 +45,8 @@ export default function koaOIDCErrorHandler<StateT, ContextT>(): Middleware<Stat
         case errors.InvalidGrant:
           throw new RequestError(
             {
+              // Manually mapped all OIDC error name to the LogtoErrorCode
+              // eslint-disable-next-line no-restricted-syntax
               code: `oidc.${decamelize(name)}` as LogtoErrorCode,
               status,
               expose,

@@ -81,7 +81,7 @@ export default function koaGuard<
     WithGuardedRequestContext<ContextT, GuardQueryT, GuardBodyT, GuardParametersT>,
     GuardResponseT
   > = async (ctx, next) => {
-    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions, no-restricted-syntax
     ctx.guard = {
       query: tryParse('query', query, ctx.request.query),
       body: tryParse('body', body, ctx.request.body),

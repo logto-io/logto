@@ -35,26 +35,32 @@ export default function koaSlonikErrorHandler<StateT, ContextT>(): Middleware<St
         throw error;
       }
 
-      switch (error.constructor) {
-        case InsertionError:
-          throw new RequestError({
-            code: 'entity.create_failed',
-            name: (error as InsertionError<SchemaLike>).schema.tableSingular,
-          });
-        case UpdateError:
-          throw new RequestError({
-            code: 'entity.not_exists',
-            name: (error as InsertionError<SchemaLike>).schema.tableSingular,
-          });
-        case DeletionError:
-        case NotFoundError:
-          throw new RequestError({
-            code: 'entity.not_found',
-            status: 404,
-          });
-        default:
-          throw error;
+      if (error instanceof InsertionError) {
+        throw new RequestError({
+          code: 'entity.create_failed',
+          // Assert generic type of the Class instance
+          // eslint-disable-next-line no-restricted-syntax
+          name: (error as InsertionError<SchemaLike>).schema.tableSingular,
+        });
       }
+
+      if (error instanceof UpdateError) {
+        throw new RequestError({
+          code: 'entity.not_exists',
+          // Assert generic type of the Class instance
+          // eslint-disable-next-line no-restricted-syntax
+          name: (error as UpdateError<SchemaLike>).schema.tableSingular,
+        });
+      }
+
+      if (error instanceof DeletionError || error instanceof NotFoundError) {
+        throw new RequestError({
+          code: 'entity.not_found',
+          status: 404,
+        });
+      }
+
+      throw error;
     }
   };
 }
