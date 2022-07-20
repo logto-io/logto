@@ -2,7 +2,6 @@ const connector_details = {
   back_to_connectors: '返回连接器',
   check_readme: '查看 README',
   save_error_empty_config: '请输入配置内容',
-  save_error_json_parse_error: '请输入符合 JSON 格式的配置',
   send: '发送',
   send_error_invalid_format: '无效输入',
   edit_config_label: '请在此输入你的 JSON 配置',

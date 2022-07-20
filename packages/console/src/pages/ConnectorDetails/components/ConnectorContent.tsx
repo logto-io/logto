@@ -1,10 +1,4 @@
-import {
-  arbitraryObjectGuard,
-  Connector,
-  ConnectorDto,
-  ConnectorMetadata,
-  ConnectorType,
-} from '@logto/schemas';
+import { Connector, ConnectorDto, ConnectorMetadata, ConnectorType } from '@logto/schemas';
 import { useEffect, useMemo, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
@@ -15,6 +9,7 @@ import FormField from '@/components/FormField';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import useApi from '@/hooks/use-api';
 import * as detailsStyles from '@/scss/details.module.scss';
+import { safeParseJson } from '@/utilities/json';
 
 import * as styles from '../index.module.scss';
 import SenderTester from './SenderTester';
@@ -66,10 +61,10 @@ const ConnectorContent = ({ isDeleted, connectorData, onConnectorUpdated }: Prop
       return;
     }
 
-    const configJson = arbitraryObjectGuard.safeParse(config);
+    const result = safeParseJson(config);
 
-    if (!configJson.success) {
-      toast.error(t('connector_details.save_error_json_parse_error'));
+    if (!result.success) {
+      toast.error(result.error);
 
       return;
     }
@@ -77,7 +72,7 @@ const ConnectorContent = ({ isDeleted, connectorData, onConnectorUpdated }: Prop
     setIsSubmitting(true);
 
     const { metadata, ...reset } = await api
-      .patch(`/api/connectors/${connectorData.id}`, { json: { config: configJson.data } })
+      .patch(`/api/connectors/${connectorData.id}`, { json: { config: result.data } })
       .json<Connector & { metadata: ConnectorMetadata }>();
 
     onConnectorUpdated({ ...reset, ...metadata });

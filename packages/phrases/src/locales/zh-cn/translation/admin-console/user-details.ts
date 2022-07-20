@@ -24,7 +24,7 @@ const user_details = {
   field_custom_data: '自定义数据',
   field_custom_data_tip: '预定义属性之外的用户信息，例如用户偏好的颜色和语言。',
   field_connectors: '社交帐号',
-  custom_data_invalid: '自定义数据必须是有效的 JSON',
+  custom_data_invalid: '自定义数据必须是有效的 JSON 对象',
   connectors: {
     connectors: '连接器',
     user_id: '用户ID',

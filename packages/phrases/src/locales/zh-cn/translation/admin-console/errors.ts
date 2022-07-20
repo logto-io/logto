@@ -6,6 +6,7 @@ const errors = {
   missing_total_number: '无法从返回的头部信息中找到 Total-Number',
   invalid_uri_format: '无效的 URI 格式',
   invalid_origin_format: '无效的 URI origin 格式',
+  invalid_json_format: '无效的 JSON 格式',
   invalid_error_message_format: '非法的错误信息格式',
   required_field_missing: '请输入{{field}}',
   required_field_missing_plural: '至少需要输入一个{{field}}',

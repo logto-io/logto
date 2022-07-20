@@ -12,6 +12,7 @@ import TextInput from '@/components/TextInput';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 import useApi from '@/hooks/use-api';
 import * as detailsStyles from '@/scss/details.module.scss';
+import { safeParseJson } from '@/utilities/json';
 import { uriValidator } from '@/utilities/validator';
 
 import * as styles from '../index.module.scss';
@@ -63,9 +64,17 @@ const UserSettings = ({ userData, userFormData, isDeleted, onUserUpdated }: Prop
 
     const { customData: inputCustomData, name, avatar, roleNames } = formData;
 
-    const result = arbitraryObjectGuard.safeParse(inputCustomData);
+    const parseResult = safeParseJson(inputCustomData);
 
-    if (!result.success) {
+    if (!parseResult.success) {
+      toast.error(parseResult.error);
+
+      return;
+    }
+
+    const guardResult = arbitraryObjectGuard.safeParse(parseResult.data);
+
+    if (!guardResult.success) {
       toast.error(t('user_details.custom_data_invalid'));
 
       return;
@@ -75,7 +84,7 @@ const UserSettings = ({ userData, userFormData, isDeleted, onUserUpdated }: Prop
       name,
       avatar,
       roleNames,
-      customData: result.data,
+      customData: guardResult.data,
     };
 
     const updatedUser = await api

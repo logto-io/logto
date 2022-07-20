@@ -1,4 +1,4 @@
-import { ConnectorDto, ConnectorType, arbitraryObjectGuard } from '@logto/schemas';
+import { ConnectorDto, ConnectorType } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import i18next from 'i18next';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
@@ -16,6 +16,7 @@ import Close from '@/icons/Close';
 import Step from '@/mdx-components/Step';
 import SenderTester from '@/pages/ConnectorDetails/components/SenderTester';
 import { GuideForm } from '@/types/guide';
+import { safeParseJson } from '@/utilities/json';
 
 import * as styles from './index.module.scss';
 
@@ -49,10 +50,10 @@ const Guide = ({ connector, onClose }: Props) => {
       return;
     }
 
-    const result = arbitraryObjectGuard.safeParse(connectorConfigJson);
+    const result = safeParseJson(connectorConfigJson);
 
     if (!result.success) {
-      toast.error(t('connector_details.save_error_json_parse_error'));
+      toast.error(result.error);
 
       return;
     }
