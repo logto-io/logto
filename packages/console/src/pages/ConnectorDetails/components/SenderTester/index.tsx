@@ -1,4 +1,4 @@
-import { ConnectorType, arbitraryObjectGuard } from '@logto/schemas';
+import { ConnectorType } from '@logto/schemas';
 import { phoneRegEx, emailRegEx } from '@logto/shared';
 import classNames from 'classnames';
 import { useEffect, useRef, useState } from 'react';
@@ -11,6 +11,7 @@ import FormField from '@/components/FormField';
 import TextInput from '@/components/TextInput';
 import Tooltip from '@/components/Tooltip';
 import useApi from '@/hooks/use-api';
+import { safeParseJson } from '@/utilities/json';
 
 import * as styles from './index.module.scss';
 
@@ -56,10 +57,10 @@ const SenderTester = ({ connectorId, connectorType, config, className }: Props) 
 
   const onSubmit = handleSubmit(async (formData) => {
     const { sendTo } = formData;
-    const result = arbitraryObjectGuard.safeParse(config);
+    const result = safeParseJson(config);
 
     if (!result.success) {
-      toast.error(t('connector_details.save_error_json_parse_error'));
+      toast.error(result.error);
 
       return;
     }

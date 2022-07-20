@@ -25,7 +25,7 @@ const user_details = {
   field_custom_data_tip:
     'Additional user info not listed in the pre-defined user properties, such as user-preferred color and language.',
   field_connectors: 'Social connections',
-  custom_data_invalid: 'Custom data must be a valid JSON',
+  custom_data_invalid: 'Custom data must be a valid JSON object',
   connectors: {
     connectors: 'Connectors',
     user_id: 'User ID',

@@ -2,7 +2,6 @@ const connector_details = {
   back_to_connectors: 'Back to Connectors',
   check_readme: 'Check README',
   save_error_empty_config: 'Please enter config',
-  save_error_json_parse_error: 'Please enter valid JSON',
   send: 'Send',
   send_error_invalid_format: 'Invalid input',
   edit_config_label: 'Enter your json here',
