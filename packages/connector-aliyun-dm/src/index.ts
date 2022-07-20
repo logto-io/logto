@@ -52,20 +52,20 @@ export default class AliyunDmConnector implements EmailConnectorInstance<AliyunD
 
     this.validateConfig(emailConfig);
 
-    return this.sendMessageBy(address, type, data, emailConfig);
+    return this.sendMessageBy(emailConfig, address, type, data);
   };
 
   public sendTestMessage: EmailSendTestMessageFunction = async (config, address, type, data) => {
     this.validateConfig(config);
 
-    return this.sendMessageBy(address, type, data, config);
+    return this.sendMessageBy(config, address, type, data);
   };
 
   private readonly sendMessageBy = async (
+    config: AliyunDmConfig,
     address: string,
     type: keyof EmailMessageTypes,
-    data: EmailMessageTypes[typeof type],
-    config: AliyunDmConfig
+    data: EmailMessageTypes[typeof type]
   ) => {
     const { accessKeyId, accessKeySecret, accountName, fromAlias, templates } = config;
     const template = templates.find((template) => template.usageType === type);

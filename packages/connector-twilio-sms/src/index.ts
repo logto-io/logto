@@ -46,20 +46,20 @@ export default class TwilioSmsConnector implements SmsConnectorInstance<TwilioSm
 
     this.validateConfig(config);
 
-    return this.sendMessageBy(phone, type, data, config);
+    return this.sendMessageBy(config, phone, type, data);
   };
 
   public sendTestMessage: SmsSendTestMessageFunction = async (config, phone, type, data) => {
     this.validateConfig(config);
 
-    return this.sendMessageBy(phone, type, data, config);
+    return this.sendMessageBy(config, phone, type, data);
   };
 
   private readonly sendMessageBy = async (
+    config: TwilioSmsConfig,
     phone: string,
     type: keyof SmsMessageTypes,
-    data: SmsMessageTypes[typeof type],
-    config: TwilioSmsConfig
+    data: SmsMessageTypes[typeof type]
   ) => {
     const { accountSID, authToken, fromMessagingServiceSID, templates } = config;
     const template = templates.find((template) => template.usageType === type);
