@@ -112,7 +112,7 @@ const loadOidcValues = async (issuer: string) => {
   const cookieKeys = await readCookieKeys();
   const privateKey = crypto.createPrivateKey(await readPrivateKey());
   const publicKey = crypto.createPublicKey(privateKey);
-  /*
+  /**
    * This interval helps to avoid concurrency issues when exchanging the rotating refresh token multiple times within a given timeframe.
    * During the leeway window (in seconds), the consumed refresh token will be considered as valid.
    * This is useful for distributed apps and serverless apps like Next.js, in which there is no shared memory.
