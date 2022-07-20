@@ -14,12 +14,6 @@
     color: var(--color-text);
     caret-color: var(--color-primary);
 
-    &::-webkit-outer-spin-button,
-    &::-webkit-inner-spin-button {
-      -webkit-appearance: none;
-      margin: 0;
-    }
-
     &:focus {
       border: _.border(var(--color-primary));
     }

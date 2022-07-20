@@ -20,6 +20,10 @@
     width: 100%;
     height: 100%;
     font-size: 0;
+
+    option {
+      font: var(--font-body);
+    }
   }
 
   + input {
