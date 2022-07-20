@@ -3,11 +3,15 @@ import { managementResource } from '@logto/schemas/lib/seeds';
 
 import { authedAdminApi } from '@/api';
 
-const testApiResource = {
-  id: '',
-  name: 'gallery',
-  indicator: 'https://gallery.logto.io',
-};
+const createResource = (name: string, indicator: string) =>
+  authedAdminApi
+    .post('resources', {
+      json: {
+        name,
+        indicator,
+      },
+    })
+    .json<Resource>();
 
 describe('admin console api resources', () => {
   it('should get management api resource details successfully', async () => {
@@ -15,26 +19,17 @@ describe('admin console api resources', () => {
       .get(`resources/${managementResource.id}`)
       .json<Resource>();
 
-    expect(fetchedManagementApiResource.id).toBe(managementResource.id);
-    expect(fetchedManagementApiResource.name).toBe(managementResource.name);
-    expect(fetchedManagementApiResource.indicator).toBe(managementResource.indicator);
+    expect(fetchedManagementApiResource).toMatchObject(managementResource);
   });
 
   it('should create api resource successfully', async () => {
-    const createdResource = await authedAdminApi
-      .post('resources', {
-        json: {
-          name: testApiResource.name,
-          indicator: testApiResource.indicator,
-        },
-      })
-      .json<Resource>();
+    const resourceName = 'gallery';
+    const resourceIndicator = 'https://gallery.logto.io';
 
-    expect(createdResource.name).toBe(testApiResource.name);
-    expect(createdResource.indicator).toBe(testApiResource.indicator);
+    const createdResource = await createResource(resourceName, resourceIndicator);
 
-    // eslint-disable-next-line @silverhand/fp/no-mutation
-    testApiResource.id = createdResource.id;
+    expect(createdResource.name).toBe(resourceName);
+    expect(createdResource.indicator).toBe(resourceIndicator);
 
     const resources = await authedAdminApi.get('resources').json<Resource[]>();
 
@@ -42,37 +37,44 @@ describe('admin console api resources', () => {
   });
 
   it('should update api resource details successfully', async () => {
-    expect(testApiResource.id).toBeTruthy();
+    const resourceName = 'foo';
+    const resourceIndicator = 'https://foo.logto.io';
 
-    const resource = await authedAdminApi.get(`resources/${testApiResource.id}`).json<Resource>();
+    const resource = await createResource(resourceName, resourceIndicator);
 
-    const newResourceName = 'library';
+    expect(resource).toBeTruthy();
+
+    const newResourceName = 'foo1';
     expect(resource.name).not.toBe(newResourceName);
 
-    const accessTokenTtl = 100;
-    expect(resource.accessTokenTtl).not.toBe(accessTokenTtl);
+    const newAccessTokenTtl = 100;
+    expect(resource.accessTokenTtl).not.toBe(newAccessTokenTtl);
 
-    const updatedApiResource = await authedAdminApi
+    const updatedResource = await authedAdminApi
       .patch(`resources/${resource.id}`, {
         json: {
           name: newResourceName,
-          accessTokenTtl,
+          accessTokenTtl: newAccessTokenTtl,
         },
       })
       .json<Resource>();
 
-    expect(updatedApiResource.name).toBe(newResourceName);
-    expect(updatedApiResource.accessTokenTtl).toBe(accessTokenTtl);
+    expect(updatedResource.id).toBe(resource.id);
+    expect(updatedResource.name).toBe(newResourceName);
+    expect(updatedResource.accessTokenTtl).toBe(newAccessTokenTtl);
   });
 
   it('should delete api resource successfully', async () => {
-    expect(testApiResource.id).toBeTruthy();
+    const resourceName = 'bar';
+    const resourceIndicator = 'https://bar.logto.io';
 
-    await authedAdminApi.delete(`resources/${testApiResource.id}`);
+    const createdResource = await createResource(resourceName, resourceIndicator);
 
-    const resources = await authedAdminApi.get('applications').json<Resource[]>();
+    await authedAdminApi.delete(`resources/${createdResource.id}`);
 
-    const hasTestApplication = resources.some((app) => app.id === testApiResource.id);
-    expect(hasTestApplication).toBeFalsy();
+    const resources = await authedAdminApi.get('resources').json<Resource[]>();
+
+    const hasCreatedResource = resources.some((resource) => resource.id === createdResource.id);
+    expect(hasCreatedResource).toBeFalsy();
   });
 });
