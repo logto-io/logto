@@ -1,6 +1,6 @@
 import { readFile } from 'fs/promises';
 
-import { toTitle, has } from '@silverhand/essentials';
+import { toTitle } from '@silverhand/essentials';
 import { load } from 'js-yaml';
 import Router, { IMiddleware } from 'koa-router';
 import { OpenAPIV3 } from 'openapi-types';
@@ -133,10 +133,7 @@ export default function swaggerRoutes<T extends AnonymousRouter, R extends Route
         methods
           .map((method) => method.toLowerCase())
           // There is no need to show the HEAD method.
-          .filter(
-            (method): method is OpenAPIV3.HttpMethods =>
-              method !== 'head' && has(OpenAPIV3.HttpMethods, method.toUpperCase())
-          )
+          .filter((method): method is OpenAPIV3.HttpMethods => method !== 'head')
           .map((httpMethod) => {
             const path = `/api${routerPath}`;
 
