@@ -90,7 +90,7 @@ jobs:
         run: node . --from-root --all-yes &
         working-directory: logto/packages/core
         env:
-          NODE_ENV: integration-test
+          NODE_ENV: production
           DB_URL_DEFAULT: postgres://postgres:postgres@localhost:5432
 
       - name: Sleep for 5 seconds
