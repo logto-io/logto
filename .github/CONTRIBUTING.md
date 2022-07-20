@@ -1,4 +1,4 @@
-# (Draft) Contribute to Logto
+# (Draft) Contribute to Logto monorepo
 
 Thanks for your interest in contributing to Logto. We respect the time of community contributors, so it'll be great if we can go through this guide which provides the necessary contribution information before starting your work.
 
