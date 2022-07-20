@@ -1,7 +1,6 @@
-import { ReactNode, useContext } from 'react';
-import { useTranslation } from 'react-i18next';
+import { useContext } from 'react';
+import { useTranslation, Trans } from 'react-i18next';
 import { create } from 'react-modal-promise';
-import reactStringReplace from 'react-string-replace';
 
 import { WebModal, MobileModal } from '@/components/ConfirmModal';
 import TextLink from '@/components/TextLink';
@@ -30,7 +29,6 @@ const TermsOfUseConfirmModal = ({ isOpen = false, onConfirm, onClose }: Props) =
   const ConfirmModal = isMobile ? MobileModal : WebModal;
 
   const terms = t('description.terms_of_use');
-  const content = t('description.agree_with_terms_modal', { terms });
 
   const linkProps = isMobile
     ? {
@@ -43,10 +41,6 @@ const TermsOfUseConfirmModal = ({ isOpen = false, onConfirm, onClose }: Props) =
         target: '_blank',
       };
 
-  const modalContent: ReactNode = reactStringReplace(content, terms, () => (
-    <TextLink key={terms} text="description.terms_of_use" {...linkProps} />
-  ));
-
   return (
     <ConfirmModal
       isOpen={isOpen}
@@ -57,7 +51,13 @@ const TermsOfUseConfirmModal = ({ isOpen = false, onConfirm, onClose }: Props) =
       }}
       onClose={onClose}
     >
-      {modalContent}
+      <Trans
+        components={{
+          link: <TextLink key={terms} text="description.terms_of_use" {...linkProps} />,
+        }}
+      >
+        {t('description.agree_with_terms_modal')}
+      </Trans>
     </ConfirmModal>
   );
 };

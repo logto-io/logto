@@ -23,6 +23,7 @@ global.crypto = new Crypto();
 const translation = (key: string) => key;
 
 jest.mock('react-i18next', () => ({
+  ...jest.requireActual('react-i18next'),
   useTranslation: () => ({
     t: translation,
     i18n: {
