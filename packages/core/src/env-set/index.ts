@@ -18,7 +18,7 @@ export enum MountedApps {
 const loadEnvValues = async () => {
   const isProduction = getEnv('NODE_ENV') === 'production';
   const isTest = getEnv('NODE_ENV') === 'test';
-  const isIntegrationTest = getEnv('INTEGRATION_TEST', 'false') === 'true';
+  const isIntegrationTest = isTrue(getEnv('INTEGRATION_TEST'));
   const isHttpsEnabled = Boolean(process.env.HTTPS_CERT_PATH && process.env.HTTPS_KEY_PATH);
   const port = Number(getEnv('PORT', '3001'));
   const localhostUrl = `${isHttpsEnabled ? 'https' : 'http'}://localhost:${port}`;
