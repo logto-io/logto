@@ -40,10 +40,10 @@ type UserInfo = {
 };
 
 const getUserInfoFromRequest = async (request: Request): Promise<UserInfo> => {
-  const { isProduction, developmentUserId, oidc } = envSet.values;
+  const { isProduction, isIntegrationTest, developmentUserId, oidc } = envSet.values;
   const userId = developmentUserId || request.headers['development-user-id']?.toString();
 
-  if (!isProduction && userId) {
+  if ((!isProduction || isIntegrationTest) && userId) {
     return { sub: userId, roleNames: [UserRole.Admin] };
   }
 
