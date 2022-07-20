@@ -4,7 +4,8 @@ import {
   OidcModelInstancePayload,
   OidcModelInstances,
 } from '@logto/schemas';
-import { conditional } from '@silverhand/essentials';
+import { conditional, Nullable } from '@silverhand/essentials';
+import dayjs from 'dayjs';
 import { sql, ValueExpression } from 'slonik';
 
 import { buildInsertInto } from '@/database/insert-into';
@@ -16,15 +17,32 @@ export type QueryResult = Pick<OidcModelInstance, 'payload' | 'consumedAt'>;
 
 const { table, fields } = convertToIdentifiers(OidcModelInstances);
 
-// eslint-disable-next-line @typescript-eslint/ban-types
-const withConsumed = <T>(data: T, consumedAt?: number | null): WithConsumed<T> => ({
+const isConsumed = (modelName: string, consumedAt: Nullable<number>): boolean => {
+  if (!consumedAt) {
+    return false;
+  }
+
+  const { refreshTokenReuseInterval } = envSet.values.oidc;
+
+  if (modelName !== 'RefreshToken' || !refreshTokenReuseInterval) {
+    return Boolean(consumedAt);
+  }
+
+  return dayjs(consumedAt).add(refreshTokenReuseInterval, 'seconds').isBefore(dayjs());
+};
+
+const withConsumed = <T>(
+  data: T,
+  modelName: string,
+  consumedAt: Nullable<number>
+): WithConsumed<T> => ({
   ...data,
-  ...(consumedAt ? { consumed: true } : undefined),
+  ...(isConsumed(modelName, consumedAt) ? { consumed: true } : undefined),
 });
 
 // eslint-disable-next-line @typescript-eslint/ban-types
-const convertResult = (result: QueryResult | null) =>
-  conditional(result && withConsumed(result.payload, result.consumedAt));
+const convertResult = (result: QueryResult | null, modelName: string) =>
+  conditional(result && withConsumed(result.payload, modelName, result.consumedAt));
 
 export const upsertInstance = buildInsertInto<CreateOidcModelInstance>(OidcModelInstances, {
   onConflict: {
@@ -45,7 +63,7 @@ export const findPayloadById = async (modelName: string, id: string) => {
     and ${fields.id}=${id}
   `);
 
-  return convertResult(result);
+  return convertResult(result, modelName);
 };
 
 export const findPayloadByPayloadField = async <
@@ -61,7 +79,7 @@ export const findPayloadByPayloadField = async <
     and ${fields.payload}->>${field}=${value}
   `);
 
-  return convertResult(result);
+  return convertResult(result, modelName);
 };
 
 export const consumeInstanceById = async (modelName: string, id: string) => {
