@@ -11,6 +11,11 @@ concurrency:
 jobs:
   update-metadata:
     runs-on: ubuntu-latest
+
+    permissions:
+      issues: write
+      pull-requests: write
+
     steps:
       - name: Add labels
         uses: silverhand-io/actions-add-labels-run-steps@v1.1.2
@@ -27,6 +32,11 @@ jobs:
 
   pr-size-diff:
     runs-on: ubuntu-latest
+
+    permissions:
+      issues: write
+      pull-requests: write
+
     steps:
       - uses: actions/checkout@v3
         with:
