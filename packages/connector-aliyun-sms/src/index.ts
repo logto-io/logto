@@ -47,20 +47,20 @@ export default class AliyunSmsConnector implements SmsConnectorInstance<AliyunSm
 
     this.validateConfig(smsConfig);
 
-    return this.sendMessageBy(phone, type, data, smsConfig);
+    return this.sendMessageBy(smsConfig, phone, type, data);
   };
 
   public sendTestMessage: SmsSendTestMessageFunction = async (config, phone, type, data) => {
     this.validateConfig(config);
 
-    return this.sendMessageBy(phone, type, data, config);
+    return this.sendMessageBy(config, phone, type, data);
   };
 
   private readonly sendMessageBy = async (
+    config: AliyunSmsConfig,
     phone: string,
     type: keyof SmsMessageTypes,
-    data: SmsMessageTypes[typeof type],
-    config: AliyunSmsConfig
+    data: SmsMessageTypes[typeof type]
   ) => {
     const { accessKeyId, accessKeySecret, signName, templates } = config;
     const template = templates.find(({ usageType }) => usageType === type);

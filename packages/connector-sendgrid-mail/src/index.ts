@@ -53,20 +53,20 @@ export default class SendGridMailConnector implements EmailConnectorInstance<Sen
 
     this.validateConfig(config);
 
-    return this.sendMessageBy(address, type, data, config);
+    return this.sendMessageBy(config, address, type, data);
   };
 
   public sendTestMessage: EmailSendTestMessageFunction = async (config, address, type, data) => {
     this.validateConfig(config);
 
-    return this.sendMessageBy(address, type, data, config);
+    return this.sendMessageBy(config, address, type, data);
   };
 
   private readonly sendMessageBy = async (
+    config: SendGridMailConfig,
     address: string,
     type: keyof EmailMessageTypes,
-    data: EmailMessageTypes[typeof type],
-    config: SendGridMailConfig
+    data: EmailMessageTypes[typeof type]
   ) => {
     const { apiKey, fromEmail, fromName, templates } = config;
     const template = templates.find((template) => template.usageType === type);
