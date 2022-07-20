@@ -1,12 +1,13 @@
 # Alipay Native
 
-Alipay Native connector works closely with Logto SDK on mobile platforms. It takes advantage of Alipay's OAuth 2.0 authentication workflow and enables Alipay users to sign in to other Apps using public Alipay user profiles without going through a troublesome register process.
+The official Logto connector for Alipay social sign-in in mobile-device native apps.
 
-支付宝原生连接器与 Logto 所提供的原生平台上的 SDK 紧密搭配使用。 它利用支付宝所提供的 OAuth 2.0 身份认证服务，使支付宝用户无需繁琐的注册流程，即可直接用其在支付宝上公开的身份信息登录其他应用。
+支付宝原生应用社交登录官方 Logto 连接器 [中文文档](#支付宝原生连接器)
 
 **Table of contents**
 
 - [Alipay Native](#alipay-native)
+  - [Get started](#get-started)
   - [Register Alipay developer account](#register-alipay-developer-account)
   - [Create and configure Alipay app](#create-and-configure-alipay-app)
   - [Set up the Logto Alipay Native connector settings](#set-up-the-logto-alipay-native-connector-settings)
@@ -17,6 +18,7 @@ Alipay Native connector works closely with Logto SDK on mobile platforms. It tak
     - [Test Alipay native connector](#test-alipay-native-connector)
   - [References](#references)
 - [支付宝原生连接器](#支付宝原生连接器)
+  - [开始上手](#开始上手)
   - [注册支付宝开发者账号](#注册支付宝开发者账号)
   - [在支付宝开放平台上创建并且配置应用](#在支付宝开放平台上创建并且配置应用)
   - [设置支付宝原生连接器](#设置支付宝原生连接器)
@@ -27,6 +29,10 @@ Alipay Native connector works closely with Logto SDK on mobile platforms. It tak
   - [测试支付宝原生连接器](#测试支付宝原生连接器)
   - [参考](#参考)
 
+## Get started
+
+Alipay Native connector works closely with Logto SDK on mobile platforms. It takes advantage of Alipay's OAuth 2.0 authentication workflow and enables Alipay users to sign in to other Apps using public Alipay user profiles without going through a troublesome register process.
+
 ## Register Alipay developer account
 
 [Register an Alipay developer account](https://certifyweb.alipay.com/certify/reg/guide#/) if you don't have one.
@@ -34,31 +40,43 @@ Alipay Native connector works closely with Logto SDK on mobile platforms. It tak
 ## Create and configure Alipay app
 
 1. Sign in to the [Alipay console](https://open.alipay.com/) with the account you have just registered.
-2. Go to **Web & Mobile Apps** (网页&移动应用) tab in **My Application** (我的应用) panel.
-3. Click **Create an App** (立即创建) button to start configuring your application.
-4. Name your application in **Application Name** (应用名称) following the naming conventions and upload your **Application Icon** (应用图标), make sure you choose **mobile application** (移动应用) as **App type** (应用类型). For building iOS App, a unique **Bundle ID** is required. Also, **application signature** (应用签名) and **application package name** (应用包名) are required for Android apps.
-5. After finishing creating the application, we come to the Overview page, where we should click **add ability** (添加能力) to add **Third-party application authorization** (第三方应用授权), **Get member information** (获取会员信息) and **App Alipay login** (App 支付宝登录) before enabling Alipay sign-in.
-6. Go to [Alipay Customer Center](https://b.alipay.com/index2.htm), and sign in with the Alipay developer account. Click **Account Center** (账号中心) on the top bar and go to **APPID binding** (APPID 绑定), whose entrance can be found at the bottom of the sidebar. **Add binding** (添加绑定) by type in the APPID of the mobile application you just created in step 4. After finishing this step, you are expected to find abilities you have just added in step 5 kicks in.
-7. Come back to Alipay open platform console page, and you can find **Interface signing method** (接口加签方式（密钥/证书）) in **development information** (开发信息) section. Click **set up** (设置) button, and you can find yourself on a page setting signing method. **Public Key** (公钥) is the preferred signing mode, and fill in contents from the public key file you have generated in the text input box.
-8. Set up **Authorization Redirect URI** (授权回调地址) by clicking **set up** (设置) button on the bottom of the Alipay console page. `${your_logto_origin}/callback/alipay-native` is the default redirect URI used in Logto core.
-9. After finishing all these steps, go back to the top right corner of Alipay console page, and click **Submit for review** (提交审核). Once the review is approved, you are good to go with a smooth Alipay sign-in flow.
+2. Go to "Web & Mobile Apps" (网页&移动应用) tab in "My Application" (我的应用) panel.
+3. Click "Create an App" (立即创建) button to start configuring your application.
+4. Name your application in "Application Name" (应用名称) following the naming conventions and upload your "Application Icon" (应用图标), make sure you choose "mobile application" (移动应用) as "App type" (应用类型). For building iOS App, a unique "Bundle ID" is required. Also, "application signature" (应用签名) and "application package name" (应用包名) are required for Android apps.
+5. After finishing creating the application, we come to the Overview page, where we should click "add ability" (添加能力) to add "Third-party application authorization" (第三方应用授权), "Get member information" (获取会员信息) and "App Alipay login" (App 支付宝登录) before enabling Alipay sign-in.
+6. Go to [Alipay Customer Center](https://b.alipay.com/index2.htm), and sign in with the Alipay developer account. Click "Account Center" (账号中心) on the topbar and go to "APPID binding" (APPID 绑定), whose entrance can be found at the bottom of the sidebar. "Add binding" (添加绑定) by type in the APPID of the mobile application you just created in step 4.
+7. Click on "Sign" button of "App Alipay login", and finish signing process following the guide. After finishing this step, you are expected to find abilities you have just added in step 5 kicks in.
+8. Come back to Alipay open platform console page, and you can find "Interface signing method" (接口加签方式（密钥/证书）) in "development information" (开发信息) section. Click "set up" (设置) button, and you can find yourself on a page setting signing method. "Public Key" (公钥) is the preferred signing mode, and fill in contents from the public key file you have generated in the text input box.
+9. Set up "Authorization Redirect URI" (授权回调地址) by clicking "set up" (设置) button on the bottom of the Alipay console page. `${your_logto_origin}/callback/alipay-native` is the default redirect URI used in Logto core.
+10. After finishing all these steps, go back to the top right corner of Alipay console page, and click "Submit for review" (提交审核). Once the review is approved, you are good to go with a smooth Alipay sign-in flow.
+
+> ℹ️ **Note**
+> 
+> You can use _openssl_ to generate key pairs on your local machine by executing following code snippet in terminal.
+> 
+> ```bash
+> openssl genrsa -out private.pem 2048
+> openssl rsa -in private.pem -outform PEM -pubout -out public.pem
+> ```
+> 
+> When filling in the public key on the Alipay app setup website, you need to remove the header and footer of `public.pem`, delete all newline characters, and paste the rest of the contents into the text input box for "public key".
 
 ## Set up the Logto Alipay Native connector settings
 
-1. In [the Alipay console workspace](https://open.alipay.com/dev/workspace) go to **My application** (我的应用) panel and click **Web & Mobile Apps** (网页&移动应用) tab, you can find APPID of all applications.
+1. In [the Alipay console workspace](https://open.alipay.com/dev/workspace) go to "My application" (我的应用) panel and click "Web & Mobile Apps" (网页&移动应用) tab, you can find APPID of all applications.
 2. In step 7 of the previous part, you have already generated a key pair including a private key and a public key.
 3. Fill out the Logto connector settings:
     - Fill out the `appId` field with APPID you've got from step 1.
-    - Fill out the `privateKey` field with contents from the private key file mentioned in step 2. Remember to use '\n' to replace all newlines.
-    - Fill out the `signType` filed with 'RSA2' due to the `Public key` signing mode we chose in step 7 of **Create And Configure Alipay Apps**.
+    - Fill out the `privateKey` field with contents from the private key file mentioned in step 2. Please MAKE SURE to use '\n' to replace all newline characters. You don't need to remove header and footer in private key file.
+    - Fill out the `signType` filed with 'RSA2' due to the `Public key` signing mode we chose in step 7 of "Create And Configure Alipay Apps".
 
 ### Config types
 
-|    Name    |     Type    |   Enum values   |
-|:----------:|:-----------:|:---------------:|
-|    appId   |    string   |       N/A       |
-| privateKey |    string   |       N/A       |
-|  signType  | enum string | 'RSA' \| 'RSA2' |
+| Name       | Type        | Enum values     |
+|------------|-------------|-----------------|
+| appId      | string      | N/A             |
+| privateKey | string      | N/A             |
+| signType   | enum string | 'RSA' \| 'RSA2' |
 
 ## Enable Alipay native sign-in in your app
 
@@ -131,6 +149,10 @@ Once Alipay native connector is enabled, you can build and run your app to see i
 
 # 支付宝原生连接器
 
+## 开始上手
+
+支付宝原生连接器与 Logto 所提供的原生平台上的 SDK 紧密搭配使用。它利用支付宝所提供的 OAuth 2.0 身份认证服务，使支付宝用户无需繁琐的注册流程，即可直接用其在支付宝上公开的身份信息登录其他应用。
+
 ## 注册支付宝开发者账号
 
 如果你还没有支付宝开发者账号，参考链接：[注册一个支付宝开发者账号](https://certifyweb.alipay.com/certify/reg/guide#/)
@@ -142,10 +164,22 @@ Once Alipay native connector is enabled, you can build and run your app to see i
 3. 点击「立即创建」开始创建并且配置你的应用
 4. 根据平台的命名规则通过「应用名称」字段给你的应用命名；在「应用图标」中上传应用图标；将「应用类型」设定为「移动应用」。当要创建一个 iOS 应用时, 需要提供「Bundle ID」。当创建的是 Android 应用时，则需要提供「应用签名」和「应用名」。
 5. 当应用创建成功后，我们进入到了「概览」页面，接下来我们在「能力列表」中点击「+ 添加能力」，将「App 支付宝登录」、「获取会员信息」、「第三方应用授权」添加到能力列表中。
-6. 使用开发者账号登录[支付宝商家中心](https://b.alipay.com/index2.htm)后，从顶栏菜单的进入「账号中心」，然后选择从左侧的菜单栏底部进入「APPID 绑定」页面。点击「+ 添加绑定」，之后输入你在步骤 4 中所创建的应用的 APPID。 当此步骤完成后，步骤 5 中所添加的各种「能力」即可生效。
-7. 回到「支付宝开放平台控制台」中第 5 步所创建的应用的「概览」页面, 在该页面的「开发信息」中点击「接口加签方式（密钥/证书）」的「设置」链接，将「选择加签模式」设定为「公钥」,然后将你生成的公钥填入下方「填写公钥字符」的文本编辑框中。
-8. 点击「授权回调地址」的「设置链接」，选择你所需要的「回调地址类型」，将 Logto Core 默认使用的 `${your_logto_origin}/callback/alipay-native` 设置为「回调地址」。
-9. 当设置完以上的所有步骤，点击「概览」页面上方的「提交审核」，当审核通过后，你将可以顺利地使用支付宝登录自己的应用。
+6. 使用开发者账号登录[支付宝商家中心](https://b.alipay.com/index2.htm)后，从顶栏菜单的进入「账号中心」，然后选择从左侧的菜单栏底部进入「APPID 绑定」页面。点击「+ 添加绑定」，之后输入你在步骤 4 中所创建的应用的 APPID。
+7. 点按「App 支付宝登录」旁边「签约」按钮，并按照提示完成签约。当此步骤完成后，步骤 5 中所添加的各种「能力」即可生效。
+8. 回到「支付宝开放平台控制台」中第 5 步所创建的应用的「概览」页面, 在该页面的「开发信息」中点击「接口加签方式（密钥/证书）」的「设置」链接，将「选择加签模式」设定为「公钥」,然后将你生成的公钥填入下方「填写公钥字符」的文本编辑框中。
+9. 点击「授权回调地址」的「设置链接」，选择你所需要的「回调地址类型」，将 Logto Core 默认使用的 `${your_logto_origin}/callback/alipay-native` 设置为「回调地址」。
+10. 当设置完以上的所有步骤，点击「概览」页面上方的「提交审核」，当审核通过后，你将可以顺利地使用支付宝登录自己的应用。
+
+> ℹ️ **注意**
+> 
+> 你可以用 _openssl_ 来在本地机器上，用下面这一段代码在终端里生成一个密钥对。
+> 
+> ```bash
+> openssl genrsa -out private.pem 2048
+> openssl rsa -in private.pem -outform PEM -pubout -out public.pem
+> ```
+> 
+> 在支付宝应用设置网页上填写公钥时，需要把生成的 `public.pem` 文件中内容的文件头和文件尾去掉，同时删除所有的换行符，再把剩下的内容粘贴到填写公钥的文本框中。
 
 ## 设置支付宝原生连接器
 
@@ -153,16 +187,16 @@ Once Alipay native connector is enabled, you can build and run your app to see i
 2. 获取你在上一部分的第 7 个步骤中生成的密钥对。
 3. 配置你的应用的支付宝原生连接器:
     - 将你在第 1 步中获取的 APPID 填入 `appId` 字段。
-    - 将你在第 2 步中获得的密钥对的私钥填入 `privateKey` 字段，使用 '\n' 换行。
+    - 将你在第 2 步中获得的密钥对的私钥填入 `privateKey` 字段。请保留私钥文件内容中的文件头和文件尾，并 **确保** 使用 '\n' 替换了所有换行符。
     - 将你在第 2 步中所获得的密钥的签名模式 'RSA2' 填入 `signType` 字段。
 
 ### 配置类型
 
-|    名称     |     类型    |   枚举值         |
-|:----------:|:-----------:|:---------------:|
-|    appId   |    string   |       N/A       |
-| privateKey |    string   |       N/A       |
-|  signType  | enum string | 'RSA' \| 'RSA2' |
+| 名称       | 类型         | 枚举值           |
+|------------|-------------|-----------------|
+| appId      | string      | N/A             |
+| privateKey | string      | N/A             |
+| signType   | enum string | 'RSA' \| 'RSA2' |
 
 ## 在你的应用中启用支付宝原生登录
 
