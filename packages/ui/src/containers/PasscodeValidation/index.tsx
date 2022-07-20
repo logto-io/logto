@@ -1,7 +1,6 @@
 import classNames from 'classnames';
 import { useState, useEffect, useContext, useCallback, useMemo } from 'react';
-import { useTranslation } from 'react-i18next';
-import reactStringReplace from 'react-string-replace';
+import { useTranslation, Trans } from 'react-i18next';
 import { useTimer } from 'react-timer-hook';
 
 import { getSendPasscodeApi, getVerifyPasscodeApi } from '@/apis/utils';
@@ -87,18 +86,6 @@ const PasscodeValidation = ({ type, method, className, target }: Props) => {
     }
   }, [verifyPasscodeResult]);
 
-  const renderCountDownMessage = useMemo(() => {
-    const contents = t('description.resend_after_seconds', { seconds });
-
-    return (
-      <div className={styles.message}>
-        {reactStringReplace(contents, `${seconds}`, (match) => (
-          <span key="counter">{match}</span>
-        ))}
-      </div>
-    );
-  }, [seconds, t]);
-
   return (
     <form className={classNames(styles.form, className)}>
       <Passcode
@@ -109,7 +96,11 @@ const PasscodeValidation = ({ type, method, className, target }: Props) => {
         onChange={setCode}
       />
       {isRunning ? (
-        renderCountDownMessage
+        <div className={styles.message}>
+          <Trans components={{ span: <span key="counter" /> }}>
+            {t('description.resend_after_seconds', { seconds })}
+          </Trans>
+        </div>
       ) : (
         <TextLink
           className={styles.link}
