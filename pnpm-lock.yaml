@@ -720,7 +720,7 @@ importers:
       react-markdown: ^8.0.0
       react-modal: ^3.14.4
       react-paginate: ^8.1.2
-      react-router-dom: 6.2.2
+      react-router-dom: 6.3.0
       react-syntax-highlighter: ^15.5.0
       recharts: ^2.1.10
       remark-gfm: ^3.0.1
@@ -783,7 +783,7 @@ importers:
       react-markdown: 8.0.0_z7w6vgz62d5pbxpnoxayoqdmly
       react-modal: 3.14.4_sfoxds7t5ydpegc3knd667wn6m
       react-paginate: 8.1.2_react@17.0.2
-      react-router-dom: 6.2.2_sfoxds7t5ydpegc3knd667wn6m
+      react-router-dom: 6.3.0_sfoxds7t5ydpegc3knd667wn6m
       react-syntax-highlighter: 15.5.0_react@17.0.2
       recharts: 2.1.10_oxfzelaz5ynxsop2v2nu2h2m64
       remark-gfm: 3.0.1
@@ -2201,6 +2201,7 @@ packages:
       pacote: 13.4.1
       semver: 7.3.7
     transitivePeerDependencies:
+      - bluebird
       - supports-color
     dev: true
 
@@ -2231,6 +2232,7 @@ packages:
       p-waterfall: 2.1.1
       semver: 7.3.7
     transitivePeerDependencies:
+      - bluebird
       - supports-color
     dev: true
 
@@ -2371,6 +2373,7 @@ packages:
       whatwg-url: 8.7.0
       yargs-parser: 20.2.4
     transitivePeerDependencies:
+      - bluebird
       - supports-color
     dev: true
 
@@ -2568,6 +2571,7 @@ packages:
       npm-registry-fetch: 9.0.0
       npmlog: 4.1.2
     transitivePeerDependencies:
+      - bluebird
       - supports-color
     dev: true
 
@@ -2597,6 +2601,7 @@ packages:
       pify: 5.0.0
       read-package-json: 3.0.1
     transitivePeerDependencies:
+      - bluebird
       - supports-color
     dev: true
 
@@ -2635,6 +2640,7 @@ packages:
       npmlog: 4.1.2
       tar: 6.1.11
     transitivePeerDependencies:
+      - bluebird
       - supports-color
     dev: true
 
@@ -2733,6 +2739,7 @@ packages:
       pacote: 13.4.1
       semver: 7.3.7
     transitivePeerDependencies:
+      - bluebird
       - encoding
       - supports-color
     dev: true
@@ -2778,6 +2785,7 @@ packages:
       '@npmcli/run-script': 3.0.2
       npmlog: 4.1.2
     transitivePeerDependencies:
+      - bluebird
       - supports-color
     dev: true
 
@@ -2879,6 +2887,7 @@ packages:
       slash: 3.0.0
       write-json-file: 4.3.0
     transitivePeerDependencies:
+      - bluebird
       - encoding
       - supports-color
     dev: true
@@ -3118,6 +3127,7 @@ packages:
       treeverse: 2.0.0
       walk-up-path: 1.0.0
     transitivePeerDependencies:
+      - bluebird
       - supports-color
     dev: true
 
@@ -3153,6 +3163,8 @@ packages:
       promise-retry: 2.0.1
       semver: 7.3.7
       which: 2.0.2
+    transitivePeerDependencies:
+      - bluebird
     dev: true
 
   /@npmcli/installed-package-contents/1.0.7:
@@ -3183,6 +3195,7 @@ packages:
       pacote: 13.4.1
       semver: 7.3.7
     transitivePeerDependencies:
+      - bluebird
       - supports-color
     dev: true
 
@@ -3234,6 +3247,7 @@ packages:
       node-gyp: 9.0.0
       read-package-json-fast: 2.0.3
     transitivePeerDependencies:
+      - bluebird
       - supports-color
     dev: true
 
@@ -6338,6 +6352,8 @@ packages:
       ssri: 8.0.1
       tar: 6.1.11
       unique-filename: 1.1.1
+    transitivePeerDependencies:
+      - bluebird
     dev: true
 
   /cacache/16.1.0:
@@ -6362,6 +6378,8 @@ packages:
       ssri: 9.0.1
       tar: 6.1.11
       unique-filename: 1.1.1
+    transitivePeerDependencies:
+      - bluebird
     dev: true
 
   /cache-content-type/1.0.1:
@@ -10487,6 +10505,7 @@ packages:
       import-local: 3.1.0
       npmlog: 4.1.2
     transitivePeerDependencies:
+      - bluebird
       - encoding
       - supports-color
     dev: true
@@ -10519,6 +10538,7 @@ packages:
       npm-package-arg: 8.1.5
       npm-registry-fetch: 11.0.0
     transitivePeerDependencies:
+      - bluebird
       - supports-color
     dev: true
 
@@ -10532,6 +10552,7 @@ packages:
       semver: 7.3.7
       ssri: 8.0.1
     transitivePeerDependencies:
+      - bluebird
       - supports-color
     dev: true
 
@@ -10838,6 +10859,7 @@ packages:
       socks-proxy-agent: 6.1.1
       ssri: 9.0.1
     transitivePeerDependencies:
+      - bluebird
       - supports-color
     dev: true
 
@@ -10861,6 +10883,7 @@ packages:
       socks-proxy-agent: 5.0.1
       ssri: 8.0.1
     transitivePeerDependencies:
+      - bluebird
       - supports-color
     dev: true
 
@@ -10885,6 +10908,7 @@ packages:
       socks-proxy-agent: 6.1.1
       ssri: 8.0.1
     transitivePeerDependencies:
+      - bluebird
       - supports-color
     dev: true
 
@@ -11704,6 +11728,7 @@ packages:
       tar: 6.1.11
       which: 2.0.2
     transitivePeerDependencies:
+      - bluebird
       - supports-color
     dev: true
 
@@ -11867,6 +11892,7 @@ packages:
       minizlib: 2.1.2
       npm-package-arg: 8.1.5
     transitivePeerDependencies:
+      - bluebird
       - supports-color
     dev: true
 
@@ -11882,6 +11908,7 @@ packages:
       npm-package-arg: 9.0.2
       proc-log: 2.0.1
     transitivePeerDependencies:
+      - bluebird
       - supports-color
     dev: true
 
@@ -11898,6 +11925,7 @@ packages:
       minizlib: 2.1.2
       npm-package-arg: 8.1.5
     transitivePeerDependencies:
+      - bluebird
       - supports-color
     dev: true
 
@@ -12291,6 +12319,7 @@ packages:
       ssri: 9.0.1
       tar: 6.1.11
     transitivePeerDependencies:
+      - bluebird
       - supports-color
     dev: true
 
@@ -12970,6 +12999,11 @@ packages:
 
   /promise-inflight/1.0.1:
     resolution: {integrity: sha1-mEcocL8igTL8vdhoEputEsPAKeM=}
+    peerDependencies:
+      bluebird: '*'
+    peerDependenciesMeta:
+      bluebird:
+        optional: true
     dev: true
 
   /promise-retry/2.0.1:
@@ -13350,8 +13384,29 @@ packages:
       react-router: 6.2.2_react@17.0.2
     dev: true
 
+  /react-router-dom/6.3.0_sfoxds7t5ydpegc3knd667wn6m:
+    resolution: {integrity: sha512-uaJj7LKytRxZNQV8+RbzJWnJ8K2nPsOOEuX7aQstlMZKQT0164C+X2w6bnkqU3sjtLvpd5ojrezAyfZ1+0sStw==}
+    peerDependencies:
+      react: '>=16.8'
+      react-dom: '>=16.8'
+    dependencies:
+      history: 5.3.0
+      react: 17.0.2
+      react-dom: 17.0.2_react@17.0.2
+      react-router: 6.3.0_react@17.0.2
+    dev: true
+
   /react-router/6.2.2_react@17.0.2:
     resolution: {integrity: sha512-/MbxyLzd7Q7amp4gDOGaYvXwhEojkJD5BtExkuKmj39VEE0m3l/zipf6h2WIB2jyAO0lI6NGETh4RDcktRm4AQ==}
+    peerDependencies:
+      react: '>=16.8'
+    dependencies:
+      history: 5.3.0
+      react: 17.0.2
+    dev: true
+
+  /react-router/6.3.0_react@17.0.2:
+    resolution: {integrity: sha512-7Wh1DzVQ+tlFjkeo+ujvjSqSJmkt1+8JO+T5xklPlgrh70y7ogx75ODRW0ThWhY7S+6yEDks8TYrtQe/aoboBQ==}
     peerDependencies:
       react: '>=16.8'
     dependencies:
