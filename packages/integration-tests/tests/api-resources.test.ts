@@ -2,13 +2,14 @@ import { Resource } from '@logto/schemas';
 import { managementResource } from '@logto/schemas/lib/seeds';
 
 import { authedAdminApi } from '@/api';
+import { generateResourceIndicator, generateResourceName } from '@/utils';
 
-const createResource = (name: string, indicator: string) =>
+const createResource = (name?: string, indicator?: string) =>
   authedAdminApi
     .post('resources', {
       json: {
-        name,
-        indicator,
+        name: name ?? generateResourceName(),
+        indicator: indicator ?? generateResourceIndicator(),
       },
     })
     .json<Resource>();
@@ -37,14 +38,11 @@ describe('admin console api resources', () => {
   });
 
   it('should update api resource details successfully', async () => {
-    const resourceName = 'foo';
-    const resourceIndicator = 'https://foo.logto.io';
-
-    const resource = await createResource(resourceName, resourceIndicator);
+    const resource = await createResource();
 
     expect(resource).toBeTruthy();
 
-    const newResourceName = 'foo1';
+    const newResourceName = 'foo';
     expect(resource.name).not.toBe(newResourceName);
 
     const newAccessTokenTtl = 100;
@@ -65,10 +63,7 @@ describe('admin console api resources', () => {
   });
 
   it('should delete api resource successfully', async () => {
-    const resourceName = 'bar';
-    const resourceIndicator = 'https://bar.logto.io';
-
-    const createdResource = await createResource(resourceName, resourceIndicator);
+    const createdResource = await createResource();
 
     expect(createdResource).toBeTruthy();
 
