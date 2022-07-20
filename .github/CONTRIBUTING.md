@@ -115,3 +115,9 @@ By default, Logto runs in `http://localhost:3001`, which will redirect you to th
 For now, `pnpm dev` only watches four packages: `core`, `ui`, `console`, and `demo-app`. If you changed other packages like connectors or schemas, you must stop the dev command and run again.
 
 Sorry for the inconvenience. We're working on a better dev command which watches all related packages.
+
+## Commit and create pull request
+
+We require every commit to [be signed](https://docs.github.com/en/authentication/managing-commit-signature-verification/signing-commits), and the both the commit message and pull request title follow [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/#summary).
+
+If the pull request remains empty content, it'll be DIRECTLY CLOSED until it matches our contributing guideline.
