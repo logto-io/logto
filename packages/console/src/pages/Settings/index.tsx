@@ -1,4 +1,4 @@
-import { Language } from '@logto/phrases';
+import { languageOptions } from '@logto/phrases';
 import { AppearanceMode } from '@logto/schemas';
 import classNames from 'classnames';
 import { Controller, useForm } from 'react-hook-form';
@@ -58,16 +58,7 @@ const Settings = () => {
                 render={({ field: { value, onChange } }) => (
                   <Select
                     value={value ?? defaultLanguage}
-                    options={[
-                      {
-                        value: Language.English,
-                        title: t('settings.language_english'),
-                      },
-                      {
-                        value: Language.Chinese,
-                        title: t('settings.language_chinese'),
-                      },
-                    ]}
+                    options={languageOptions}
                     onChange={onChange}
                   />
                 )}

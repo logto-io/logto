@@ -74,10 +74,6 @@ const sign_in_exp = {
       fallback_language: '备用语言',
       fallback_language_tip: '如果 Logto 找不到合适的语言包，将回退至哪种语言。',
       fixed_language: '固定语言',
-      languages: {
-        english: '英文',
-        chinese: '中文',
-      },
     },
   },
   setup_warning: {

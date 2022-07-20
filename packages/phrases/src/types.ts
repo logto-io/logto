@@ -14,4 +14,9 @@ export enum Language {
   Chinese = 'zh-CN',
 }
 
+export const languageOptions = [
+  { value: Language.English, title: 'English' },
+  { value: Language.Chinese, title: '中文' },
+];
+
 /* eslint-enable @typescript-eslint/consistent-indexed-object-style */

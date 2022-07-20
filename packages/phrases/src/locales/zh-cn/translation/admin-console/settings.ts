@@ -6,8 +6,6 @@ const settings = {
   },
   custom_domain: '自定义域名',
   language: '语言',
-  language_english: '英语',
-  language_chinese: '中文',
   appearance: '外观',
   appearance_system: '跟随系统',
   appearance_light: '浅色模式',

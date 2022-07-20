@@ -78,10 +78,6 @@ const sign_in_exp = {
       fallback_language_tip:
         'Which language to fall back if Logto finds no proper language phrase-set.',
       fixed_language: 'Fixed language',
-      languages: {
-        english: 'English',
-        chinese: 'Chinese',
-      },
     },
   },
   setup_warning: {
