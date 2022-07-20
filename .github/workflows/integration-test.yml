@@ -90,6 +90,7 @@ jobs:
         run: node . --from-root --all-yes &
         working-directory: logto/packages/core
         env:
+          INTEGRATION_TEST: true
           NODE_ENV: production
           DB_URL_DEFAULT: postgres://postgres:postgres@localhost:5432
 
