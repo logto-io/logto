@@ -44,7 +44,7 @@ describe('koaAuth middleware', () => {
     jest.resetModules();
   });
 
-  it('should read DEVELOPMENT_USER_ID from env variable first if not production', async () => {
+  it('should read DEVELOPMENT_USER_ID from env variable first if not production and not integration test', async () => {
     const spy = jest
       .spyOn(envSet, 'values', 'get')
       .mockReturnValue({ ...envSet.values, developmentUserId: 'foo' });
@@ -55,7 +55,7 @@ describe('koaAuth middleware', () => {
     spy.mockRestore();
   });
 
-  it('should read `development-user-id` from headers if not production', async () => {
+  it('should read `development-user-id` from headers if not production and not integration test', async () => {
     const mockCtx = {
       ...ctx,
       request: {
@@ -66,6 +66,41 @@ describe('koaAuth middleware', () => {
 
     await koaAuth()(mockCtx, next);
     expect(mockCtx.auth).toEqual('foo');
+  });
+
+  it('should read DEVELOPMENT_USER_ID from env variable first if is in production and integration test', async () => {
+    const spy = jest.spyOn(envSet, 'values', 'get').mockReturnValue({
+      ...envSet.values,
+      developmentUserId: 'foo',
+      isProduction: true,
+      isIntegrationTest: true,
+    });
+
+    await koaAuth()(ctx, next);
+    expect(ctx.auth).toEqual('foo');
+
+    spy.mockRestore();
+  });
+
+  it('should read `development-user-id` from headers if is in production and integration test', async () => {
+    const spy = jest.spyOn(envSet, 'values', 'get').mockReturnValue({
+      ...envSet.values,
+      isProduction: true,
+      isIntegrationTest: true,
+    });
+
+    const mockCtx = {
+      ...ctx,
+      request: {
+        ...ctx.request,
+        headers: { ...ctx.request.headers, 'development-user-id': 'foo' },
+      },
+    };
+
+    await koaAuth()(mockCtx, next);
+    expect(mockCtx.auth).toEqual('foo');
+
+    spy.mockRestore();
   });
 
   it('should set user auth with given sub returned from accessToken', async () => {
