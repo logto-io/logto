@@ -2,7 +2,7 @@ name: Pen Tests
 
 on:
   # Be careful when using the workflow_run trigger
-  # https://github.community/t/workflow-run-completed-event-triggered-by-failed-workflow/128001/7?u=gao-sun
+  # https://github.community/t/workflow-run-completed-event-triggered-by-failed-workflow/128001/7
   workflow_run:
     workflows: [ "Release" ]
     branches:
@@ -15,7 +15,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  zap_scan:
+  zap-scan:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
 
@@ -29,7 +29,7 @@ jobs:
         run: sleep 30s
 
       - name: ZAP Scan
-        uses: zaproxy/action-baseline@v0.7.0
+        uses: zaproxy/action-full-scan@v0.4.0
         with:
           target: http://localhost:3001
           cmd_options: '-a'
