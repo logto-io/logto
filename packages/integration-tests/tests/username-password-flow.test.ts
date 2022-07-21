@@ -10,7 +10,7 @@ import got from 'got/dist/source';
 
 import api from '@/api';
 
-import { discoveryUrl, logtoUrl, redirectUri } from '../src/constants';
+import { discoveryUrl, logtoUrl, demoAppRedirectUri } from '../src/constants';
 import { LogtoContext } from '../src/logto-context';
 import { extractCookie } from '../src/utils';
 
@@ -35,7 +35,7 @@ describe('username and password flow', () => {
     const signInUri = generateSignInUri({
       authorizationEndpoint: logtoContext.authorizationEndpoint,
       clientId: demoAppApplicationId,
-      redirectUri,
+      redirectUri: demoAppRedirectUri,
       codeChallenge: logtoContext.codeChallenge,
       state: logtoContext.state,
     });
@@ -154,7 +154,7 @@ describe('username and password flow', () => {
 
     const authorizationCode = verifyAndParseCodeFromCallbackUri(
       callbackUri,
-      redirectUri,
+      demoAppRedirectUri,
       logtoContext.state
     );
     expect(authorizationCode).toBeTruthy();
@@ -167,7 +167,7 @@ describe('username and password flow', () => {
       {
         clientId: demoAppApplicationId,
         tokenEndpoint: logtoContext.tokenEndpoint,
-        redirectUri,
+        redirectUri: demoAppRedirectUri,
         codeVerifier: logtoContext.codeVerifier,
         code: logtoContext.authorizationCode,
       },
