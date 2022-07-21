@@ -1,4 +1,4 @@
-import { Resource } from '@logto/schemas';
+import type { Resource } from '@logto/schemas';
 import { managementResource } from '@logto/schemas/lib/seeds';
 
 import { authedAdminApi } from '@/api';
