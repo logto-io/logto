@@ -68,3 +68,10 @@ jobs:
         with:
           flags: ui
           directory: ./packages/ui
+
+  main-deps:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/dependency-review-action@v2
