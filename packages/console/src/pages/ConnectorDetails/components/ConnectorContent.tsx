@@ -1,5 +1,6 @@
 import { Connector, ConnectorDto, ConnectorMetadata, ConnectorType } from '@logto/schemas';
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo } from 'react';
+import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 
@@ -22,9 +23,14 @@ type Props = {
 
 const ConnectorContent = ({ isDeleted, connectorData, onConnectorUpdated }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const [config, setConfig] = useState('');
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const api = useApi();
+  const methods = useForm<{ configJson: string }>({ reValidateMode: 'onBlur' });
+  const {
+    control,
+    formState: { isSubmitting, isDirty },
+    handleSubmit,
+    watch,
+  } = methods;
 
   const defaultConfig = useMemo(() => {
     const hasData = Object.keys(connectorData.config).length > 0;
@@ -32,36 +38,14 @@ const ConnectorContent = ({ isDeleted, connectorData, onConnectorUpdated }: Prop
     return hasData ? JSON.stringify(connectorData.config, null, 2) : connectorData.configTemplate;
   }, [connectorData]);
 
-  useEffect(() => {
-    setConfig(defaultConfig);
-
-    return () => {
-      setConfig(defaultConfig);
-    };
-  }, [defaultConfig]);
-
-  const hasUnsavedChanges = useMemo(() => {
-    if (!config) {
-      return false;
-    }
-
-    try {
-      const parsedConfig = JSON.stringify(JSON.parse(config), null, 2);
-
-      return parsedConfig !== defaultConfig;
-    } catch {
-      return true;
-    }
-  }, [config, defaultConfig]);
-
-  const handleSave = async () => {
-    if (!config) {
+  const onSubmit = handleSubmit(async ({ configJson }) => {
+    if (!configJson) {
       toast.error(t('connector_details.save_error_empty_config'));
 
       return;
     }
 
-    const result = safeParseJson(config);
+    const result = safeParseJson(configJson);
 
     if (!result.success) {
       toast.error(result.error);
@@ -69,36 +53,39 @@ const ConnectorContent = ({ isDeleted, connectorData, onConnectorUpdated }: Prop
       return;
     }
 
-    setIsSubmitting(true);
-
     const { metadata, ...reset } = await api
       .patch(`/api/connectors/${connectorData.id}`, { json: { config: result.data } })
       .json<Connector & { metadata: ConnectorMetadata }>();
 
     onConnectorUpdated({ ...reset, ...metadata });
     toast.success(t('general.saved'));
-
-    setIsSubmitting(false);
-  };
+  });
 
   return (
     <>
       <div className={styles.main}>
-        <FormField title="connector_details.edit_config_label">
-          <CodeEditor
-            className={styles.codeEditor}
-            language="json"
-            value={config}
-            onChange={(value) => {
-              setConfig(value);
-            }}
+        <form {...methods}>
+          <Controller
+            name="configJson"
+            control={control}
+            defaultValue={defaultConfig}
+            render={({ field: { onChange, value } }) => (
+              <FormField title="connector_details.edit_config_label">
+                <CodeEditor
+                  className={styles.codeEditor}
+                  language="json"
+                  value={value}
+                  onChange={onChange}
+                />
+              </FormField>
+            )}
           />
-        </FormField>
+        </form>
         {connectorData.type !== ConnectorType.Social && (
           <SenderTester
             connectorId={connectorData.id}
             connectorType={connectorData.type}
-            config={config}
+            config={watch('configJson')}
           />
         )}
       </div>
@@ -109,11 +96,11 @@ const ConnectorContent = ({ isDeleted, connectorData, onConnectorUpdated }: Prop
             size="large"
             title="general.save_changes"
             isLoading={isSubmitting}
-            onClick={handleSave}
+            onClick={onSubmit}
           />
         </div>
       </div>
-      <UnsavedChangesAlertModal hasUnsavedChanges={!isDeleted && hasUnsavedChanges} />
+      <UnsavedChangesAlertModal hasUnsavedChanges={!isDeleted && isDirty} />
     </>
   );
 };
