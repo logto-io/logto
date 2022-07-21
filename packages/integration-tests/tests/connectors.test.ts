@@ -55,6 +55,58 @@ const twilioSmsConnectorConfig = {
   fromMessagingServiceSID: 'from-messaging-service-sid-value',
 };
 
+const aliyunEmailConnectorId = 'aliyun-direct-mail';
+const aliyunEmailConnectorConfig = {
+  accessKeyId: 'your-access-key-id-value',
+  accessKeySecret: 'your-access-key-secret-value',
+  accountName: 'noreply@logto.io',
+  fromAlias: 'from-alias-value',
+  templates: [
+    {
+      subject: 'register-template-subject-value',
+      content: 'Logto: Your passcode is {{code}}. (regitser template)',
+      usageType: 'Register',
+    },
+    {
+      subject: 'sign-in-template-subject-value',
+      content: 'Logto: Your passcode is {{code}}. (sign-in template)',
+      usageType: 'SignIn',
+    },
+    {
+      subject: 'test-template-subject-value',
+      content: 'Logto: Your passcode is {{code}}. (test template)',
+      usageType: 'Test',
+    },
+  ],
+};
+
+const sendgridEmailConnectorId = 'sendgrid-email-service';
+const sendgridEmailConnectorConfig = {
+  apiKey: 'api-key-value',
+  fromEmail: 'noreply@logto.test.io',
+  fromName: 'from-name-value',
+  templates: [
+    {
+      usageType: 'SignIn',
+      type: 'text/plain',
+      subject: 'Logto SignIn Template',
+      content: 'This is for sign-in purposes only. Your passcode is {{code}}.',
+    },
+    {
+      usageType: 'Register',
+      type: 'text/plain',
+      subject: 'Logto Register Template',
+      content: 'This is for registering purposes only. Your passcode is {{code}}.',
+    },
+    {
+      usageType: 'Test',
+      type: 'text/plain',
+      subject: 'Logto Test Template',
+      content: 'This is for testing purposes only. Your passcode is {{code}}.',
+    },
+  ],
+};
+
 test('connector flow', async () => {
   /*
    * List connectors after initializing a new Logto instance
@@ -112,9 +164,47 @@ test('connector flow', async () => {
   expect(enabledSmsConnectors.length).toEqual(1);
   expect(enabledSmsConnectors[0]?.id).toEqual(twilioSmsConnectorId);
 
+  /*
+   * Set up an email connector
+   */
+  const updatedAliyunEmailConnector = await updateConnectorConfig(
+    aliyunEmailConnectorId,
+    aliyunEmailConnectorConfig
+  );
+  expect(updatedAliyunEmailConnector.config).toEqual(aliyunEmailConnectorConfig);
+  const enabledAliyunEmailConnector = await enableConnector(aliyunEmailConnectorId);
+  expect(enabledAliyunEmailConnector.enabled).toBeTruthy();
+
+  /*
+   * Change to another email connector
+   */
+  const updatedSendgridEmailConnector = await updateConnectorConfig(
+    sendgridEmailConnectorId,
+    sendgridEmailConnectorConfig
+  );
+  expect(updatedSendgridEmailConnector.config).toEqual(sendgridEmailConnectorConfig);
+  const enabledSendgridEmailConnector = await enableConnector(sendgridEmailConnectorId);
+  expect(enabledSendgridEmailConnector.enabled).toBeTruthy();
+
+  // There should be exactly one enabled email connector after changing to another email connector.
+  const connectorsAfterChangingEmailConnector = await listConnectors();
+  expect(
+    connectorsAfterChangingEmailConnector.find(
+      (connector) => connector.id === sendgridEmailConnectorId && connector.enabled
+    )
+  ).toBeTruthy();
+  expect(
+    connectorsAfterChangingEmailConnector.find(
+      (connector) =>
+        connector.type === ConnectorType.Email &&
+        connector.id !== sendgridEmailConnectorId &&
+        connector.enabled
+    )
+  ).toBeFalsy();
+
   // Next up:
-  // - set up an email connector and then change to another email connector
   // - validate wrong connector config
+  // - delete (i.e. disable) connector
   // - send sms/email test message
   // - list all connectors after manually setting up connectors
 });
