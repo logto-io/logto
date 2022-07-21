@@ -196,8 +196,6 @@ test('connector flow', async () => {
   expect(enabledEmailConnector[0]?.id).toEqual(sendgridEmailConnectorId);
 
   /*
-   * Validate the connector config before updating it.
-   *
    * It should update the connector config successfully when it is valid; otherwise, it should fail.
    * We will test updating to the invalid connector config, that is the case not covered above.
    */
