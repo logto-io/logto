@@ -1,7 +1,7 @@
 import { ConnectorDto, ConnectorType } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import i18next from 'i18next';
-import { Controller, FormProvider, useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 
@@ -90,41 +90,39 @@ const Guide = ({ connector, onClose }: Props) => {
       <div className={styles.content}>
         <Markdown className={styles.readme}>{readme}</Markdown>
         <div className={styles.setup}>
-          <FormProvider {...methods}>
-            <form onSubmit={onSubmit}>
-              <Step
-                title={t('connector_details.edit_config_label')}
-                index={0}
-                activeIndex={0}
-                buttonText="connectors.save_and_done"
-                buttonHtmlType="submit"
-                buttonType="primary"
-                isLoading={isSubmitting}
-              >
-                <Controller
-                  name="connectorConfigJson"
-                  control={control}
-                  defaultValue={configTemplate}
-                  render={({ field: { onChange, value } }) => (
-                    <CodeEditor
-                      className={styles.editor}
-                      language="json"
-                      value={value}
-                      onChange={onChange}
-                    />
-                  )}
-                />
-                {!isSocialConnector && (
-                  <SenderTester
-                    className={styles.tester}
-                    connectorId={connectorId}
-                    connectorType={connectorType}
-                    config={watch('connectorConfigJson')}
+          <Step
+            title={t('connector_details.edit_config_label')}
+            index={0}
+            activeIndex={0}
+            buttonText="connectors.save_and_done"
+            buttonType="primary"
+            isLoading={isSubmitting}
+            onButtonClick={onSubmit}
+          >
+            <form {...methods}>
+              <Controller
+                name="connectorConfigJson"
+                control={control}
+                defaultValue={configTemplate}
+                render={({ field: { onChange, value } }) => (
+                  <CodeEditor
+                    className={styles.editor}
+                    language="json"
+                    value={value}
+                    onChange={onChange}
                   />
                 )}
-              </Step>
+              />
             </form>
-          </FormProvider>
+            {!isSocialConnector && (
+              <SenderTester
+                className={styles.tester}
+                connectorId={connectorId}
+                connectorType={connectorType}
+                config={watch('connectorConfigJson')}
+              />
+            )}
+          </Step>
         </div>
       </div>
     </div>
