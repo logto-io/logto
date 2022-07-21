@@ -1,4 +1,5 @@
 import { ConnectorType } from '@logto/schemas';
+import { HTTPError } from 'got';
 
 import {
   enableConnector,
@@ -194,8 +195,19 @@ test('connector flow', async () => {
   expect(enabledEmailConnector.length).toEqual(1);
   expect(enabledEmailConnector[0]?.id).toEqual(sendgridEmailConnectorId);
 
+  /*
+   * It should update the connector config successfully when it is valid; otherwise, it should fail.
+   * We will test updating to the invalid connector config, that is the case not covered above.
+   */
+  await expect(
+    updateConnectorConfig(aliyunEmailConnectorId, sendgridEmailConnectorConfig)
+  ).rejects.toThrow(HTTPError);
+  // To confirm the failed updating request above did not modify the original config,
+  // we check: the Aliyun email connector config should stay the same.
+  const aliyunEmailConnector = await getConnector(aliyunEmailConnectorId);
+  expect(aliyunEmailConnector.config).toEqual(aliyunEmailConnectorConfig);
+
   // Next up:
-  // - validate wrong connector config
   // - delete (i.e. disable) connector
   // - send sms/email test message
   // - list all connectors after manually setting up connectors
