@@ -16,9 +16,15 @@ export const updateConnectorConfig = async (connectorId: string, config: Record<
     .json<ConnectorDto>();
 
 export const enableConnector = async (connectorId: string) =>
+  updateConnectorEnabledProperty(connectorId, true);
+
+export const disableConnector = async (connectorId: string) =>
+  updateConnectorEnabledProperty(connectorId, false);
+
+const updateConnectorEnabledProperty = (connectorId: string, enabled: boolean) =>
   authedAdminApi
     .patch({
       url: `connectors/${connectorId}/enabled`,
-      json: { enabled: true },
+      json: { enabled },
     })
     .json<ConnectorDto>();
