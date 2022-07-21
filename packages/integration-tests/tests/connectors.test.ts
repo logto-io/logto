@@ -188,19 +188,11 @@ test('connector flow', async () => {
 
   // There should be exactly one enabled email connector after changing to another email connector.
   const connectorsAfterChangingEmailConnector = await listConnectors();
-  expect(
-    connectorsAfterChangingEmailConnector.find(
-      (connector) => connector.id === sendgridEmailConnectorId && connector.enabled
-    )
-  ).toBeTruthy();
-  expect(
-    connectorsAfterChangingEmailConnector.find(
-      (connector) =>
-        connector.type === ConnectorType.Email &&
-        connector.id !== sendgridEmailConnectorId &&
-        connector.enabled
-    )
-  ).toBeFalsy();
+  const enabledEmailConnector = connectorsAfterChangingEmailConnector.filter(
+    (connector) => connector.type === ConnectorType.Email && connector.enabled
+  );
+  expect(enabledEmailConnector.length).toEqual(1);
+  expect(enabledEmailConnector[0]?.id).toEqual(sendgridEmailConnectorId);
 
   // Next up:
   // - validate wrong connector config
