@@ -106,19 +106,11 @@ test('connector flow', async () => {
 
   // There should be exactly one enabled SMS connector after changing to another SMS connector.
   const connectorsAfterChangingSmsConnector = await listConnectors();
-  expect(
-    connectorsAfterChangingSmsConnector.find(
-      (connector) => connector.id === twilioSmsConnectorId && connector.enabled
-    )
-  ).toBeTruthy();
-  expect(
-    connectorsAfterChangingSmsConnector.find(
-      (connector) =>
-        connector.type === ConnectorType.SMS &&
-        connector.id !== twilioSmsConnectorId &&
-        connector.enabled
-    )
-  ).toBeFalsy();
+  const enabledSmsConnectors = connectorsAfterChangingSmsConnector.filter(
+    (connector) => connector.type === ConnectorType.SMS && connector.enabled
+  );
+  expect(enabledSmsConnectors.length).toEqual(1);
+  expect(enabledSmsConnectors[0]?.id).toEqual(twilioSmsConnectorId);
 
   // Next up:
   // - set up an email connector and then change to another email connector
