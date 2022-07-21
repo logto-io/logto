@@ -5,7 +5,7 @@ import {
   generateSignInUri,
   verifyAndParseCodeFromCallbackUri,
 } from '@logto/js';
-import { adminConsoleApplicationId } from '@logto/schemas/lib/seeds';
+import { demoAppApplicationId } from '@logto/schemas/lib/seeds';
 import got from 'got/dist/source';
 
 import api from '@/api';
@@ -34,7 +34,7 @@ describe('username and password flow', () => {
   it('should visit authorization endpoint and get interaction cookie', async () => {
     const signInUri = generateSignInUri({
       authorizationEndpoint: logtoContext.authorizationEndpoint,
-      clientId: adminConsoleApplicationId,
+      clientId: demoAppApplicationId,
       redirectUri,
       codeChallenge: logtoContext.codeChallenge,
       state: logtoContext.state,
@@ -165,7 +165,7 @@ describe('username and password flow', () => {
   it('should fetch token by authorization code', async () => {
     const token = await fetchTokenByAuthorizationCode(
       {
-        clientId: adminConsoleApplicationId,
+        clientId: demoAppApplicationId,
         tokenEndpoint: logtoContext.tokenEndpoint,
         redirectUri,
         codeVerifier: logtoContext.codeVerifier,
