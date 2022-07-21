@@ -24,8 +24,8 @@ describe('admin console api resources', () => {
   });
 
   it('should create api resource successfully', async () => {
-    const resourceName = 'gallery';
-    const resourceIndicator = 'https://gallery.logto.io';
+    const resourceName = generateResourceName();
+    const resourceIndicator = generateResourceIndicator();
 
     const createdResource = await createResource(resourceName, resourceIndicator);
 
