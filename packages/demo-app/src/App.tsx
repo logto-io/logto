@@ -65,10 +65,12 @@ const Main = () => {
         <div className={styles.title}>{t('title')}</div>
         <div className={styles.text}>{t('subtitle')}</div>
         <div className={styles.infoCard}>
-          <div>
-            {t('username')}
-            <span>{user.username}</span>
-          </div>
+          {user.username && (
+            <div>
+              {t('username')}
+              <span>{user.username}</span>
+            </div>
+          )}
           <div>
             {t('user_id')}
             <span>{user.sub}</span>
