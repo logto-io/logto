@@ -3,8 +3,8 @@ import { demoAppApplicationId } from '@logto/schemas/lib/seeds';
 
 import { authedAdminApi } from '@/api';
 
-const createApplication = (name: string, type: ApplicationType) => {
-  return authedAdminApi
+const createApplication = (name: string, type: ApplicationType) =>
+  authedAdminApi
     .post('applications', {
       json: {
         name,
@@ -12,7 +12,6 @@ const createApplication = (name: string, type: ApplicationType) => {
       },
     })
     .json<Application>();
-};
 
 describe('admin console application', () => {
   it('should get demo app details successfully', async () => {
