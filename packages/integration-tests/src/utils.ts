@@ -6,10 +6,8 @@ export const extractCookie = (response: Response) => {
   return headers['set-cookie']?.join('; ') ?? '';
 };
 
-const randomString = (length = 6) => crypto.randomUUID().slice(0, Math.max(0, length));
+export const generateUsername = () => `usr_${crypto.randomUUID().replaceAll('-', '_')}`;
+export const generatePassword = () => `pwd_${crypto.randomUUID()}`;
 
-export const generateUsername = () => `usr_${randomString().replaceAll('-', '_')}`;
-export const generatePassword = () => `pwd_${randomString()}`;
-
-export const generateResourceName = () => `res_${randomString()}`;
-export const generateResourceIndicator = () => `https://${randomString()}.logto.io`;
+export const generateResourceName = () => `res_${crypto.randomUUID()}`;
+export const generateResourceIndicator = () => `https://${crypto.randomUUID()}.logto.io`;

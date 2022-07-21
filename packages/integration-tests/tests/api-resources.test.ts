@@ -32,9 +32,11 @@ describe('admin console api resources', () => {
     expect(createdResource.name).toBe(resourceName);
     expect(createdResource.indicator).toBe(resourceIndicator);
 
-    const resources = await authedAdminApi.get('resources').json<Resource[]>();
+    const fetchedCreatedResource = await authedAdminApi
+      .get(`resources/${createdResource.id}`)
+      .json<Resource>();
 
-    expect(resources.some((resource) => resource.id === createdResource.id)).toBeTruthy();
+    expect(fetchedCreatedResource).toBeTruthy();
   });
 
   it('should update api resource details successfully', async () => {
@@ -69,9 +71,10 @@ describe('admin console api resources', () => {
 
     await authedAdminApi.delete(`resources/${createdResource.id}`);
 
-    const resources = await authedAdminApi.get('resources').json<Resource[]>();
+    const fetchResponseAfterDeletion = await authedAdminApi.get(`resources/${createdResource.id}`, {
+      throwHttpErrors: false,
+    });
 
-    const hasCreatedResource = resources.some((resource) => resource.id === createdResource.id);
-    expect(hasCreatedResource).toBeFalsy();
+    expect(fetchResponseAfterDeletion.statusCode).toBe(404);
   });
 });
