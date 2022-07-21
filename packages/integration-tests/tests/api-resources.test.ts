@@ -44,11 +44,8 @@ describe('admin console api resources', () => {
 
     expect(resource).toBeTruthy();
 
-    const newResourceName = 'foo';
-    expect(resource.name).not.toBe(newResourceName);
-
-    const newAccessTokenTtl = 100;
-    expect(resource.accessTokenTtl).not.toBe(newAccessTokenTtl);
+    const newResourceName = `new_${resource.name}`;
+    const newAccessTokenTtl = resource.accessTokenTtl + 100;
 
     const updatedResource = await authedAdminApi
       .patch(`resources/${resource.id}`, {
