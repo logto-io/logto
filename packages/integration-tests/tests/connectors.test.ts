@@ -2,6 +2,7 @@ import { ConnectorType } from '@logto/schemas';
 import { HTTPError } from 'got';
 
 import {
+  disableConnector,
   enableConnector,
   getConnector,
   listConnectors,
@@ -207,8 +208,18 @@ test('connector flow', async () => {
   const aliyunEmailConnector = await getConnector(aliyunEmailConnectorId);
   expect(aliyunEmailConnector.config).toEqual(aliyunEmailConnectorConfig);
 
+  /*
+   * Delete (i.e. disable) a connector
+   *
+   * We have not provided the API to delete a connector for now.
+   * Deleting a connector using Admin Console means disabling a connector using Management API.
+   */
+  const disabledSendgridEmailConnector = await disableConnector(sendgridEmailConnectorId);
+  expect(disabledSendgridEmailConnector.enabled).toBeFalsy();
+  const sendgridEmailConnector = await getConnector(sendgridEmailConnectorId);
+  expect(sendgridEmailConnector.enabled).toBeFalsy();
+
   // Next up:
-  // - delete (i.e. disable) connector
   // - send sms/email test message
   // - list all connectors after manually setting up connectors
 });
