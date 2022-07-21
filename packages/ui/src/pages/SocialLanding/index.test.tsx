@@ -13,7 +13,7 @@ describe(`SocialLanding Page`, () => {
   const replace = jest.fn();
   it('Should set session storage and redirect', async () => {
     const callbackLink = 'logto:logto.android.com';
-    const redirectUri = 'www.github.com';
+    const redirectUri = 'http://www.github.com';
 
     /* eslint-disable @silverhand/fp/no-mutating-methods */
     Object.defineProperty(window, 'location', {
@@ -40,7 +40,7 @@ describe(`SocialLanding Page`, () => {
     );
 
     await waitFor(() => {
-      expect(replace).toBeCalledWith(redirectUri);
+      expect(replace).toBeCalledWith(new URL(redirectUri));
     });
 
     expect(getCallbackLinkFromStorage('github')).toBe(callbackLink);

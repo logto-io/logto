@@ -30,7 +30,7 @@ const useSocialLandingHandler = () => {
         storeCallbackLink(connectorId, nativeCallbackLink);
       }
 
-      window.location.replace(redirectUri);
+      window.location.replace(new URL(redirectUri));
     },
     [search, setToast, t]
   );
