@@ -24,6 +24,8 @@ describe('api `/me`', () => {
       .get(`me`, { headers: { 'development-user-id': user.id } })
       .json<UserInfo>();
 
+    expect(userInfo.id).toBe(user.id);
+
     for (const field of userInfoSelectFields) {
       expect(userInfo).toHaveProperty(field);
     }
