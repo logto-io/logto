@@ -25,7 +25,9 @@ jobs:
         run: pnpm ci:build
 
   main-lint:
-    runs-on: ubuntu-latest
+    # avoid out of memory issue since macOS has bigger memory
+    # https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners#supported-runners-and-hardware-resources
+    runs-on: macos-latest
 
     steps:
       - uses: actions/checkout@v3
