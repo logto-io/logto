@@ -1,6 +1,6 @@
 import { generateCodeVerifier, generateState, generateCodeChallenge } from '@logto/js';
 
-import { generatePassword, generateUsername } from './utils';
+import { generatePassword, generateUsername } from '../utils';
 
 type Account = {
   username: string;
@@ -14,9 +14,9 @@ type ContextData = {
   state: string;
   authorizationEndpoint: string;
   tokenEndpoint: string;
-  authorizationCode: string;
   interactionCookie: string;
-  nextRedirectTo: string;
+  invokeAuthBeforeConsentUri: string;
+  signInCallbackUri: string;
 };
 
 type ContextDataKey = keyof ContextData;
@@ -33,10 +33,10 @@ const createContextStore = (): ContextStore => {
     codeChallenge: '',
     state: '',
     interactionCookie: '',
-    authorizationCode: '',
     authorizationEndpoint: '',
     tokenEndpoint: '',
-    nextRedirectTo: '',
+    invokeAuthBeforeConsentUri: '',
+    signInCallbackUri: '',
   };
 
   return {
@@ -48,7 +48,7 @@ const createContextStore = (): ContextStore => {
   };
 };
 
-export class LogtoContext {
+export class UserSignInContext {
   private readonly contextData: ContextStore = createContextStore();
 
   public async init() {
@@ -65,47 +65,11 @@ export class LogtoContext {
     this.setData('state', generateState());
   }
 
-  public get account(): Account {
-    return this.getData('account');
-  }
-
-  public get codeVerifier(): string {
-    return this.getData('codeVerifier');
-  }
-
-  public get codeChallenge(): string {
-    return this.getData('codeChallenge');
-  }
-
-  public get state(): string {
-    return this.getData('state');
-  }
-
-  public get authorizationCode(): string {
-    return this.getData('authorizationCode');
-  }
-
-  public get interactionCookie(): string {
-    return this.getData('interactionCookie');
-  }
-
-  public get authorizationEndpoint(): string {
-    return this.getData('authorizationEndpoint');
-  }
-
-  public get tokenEndpoint(): string {
-    return this.getData('tokenEndpoint');
-  }
-
-  public get nextRedirectTo(): string {
-    return this.getData('nextRedirectTo');
-  }
-
   public setData<T extends ContextDataKey>(key: T, value: ContextData[T]): void {
     this.contextData.setData(key, value);
   }
 
-  private getData<T extends ContextDataKey>(key: T): ContextData[T] {
+  public getData<T extends ContextDataKey>(key: T): ContextData[T] {
     return this.contextData.getData(key);
   }
 }
