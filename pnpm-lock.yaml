@@ -1033,7 +1033,6 @@ importers:
       '@types/node': ^16.0.0
       eslint: ^8.19.0
       got: ^11.8.2
-      got-fetch: ^5.1.2
       jest: ^27.5.1
       js-base64: ^3.7.2
       node-fetch: ^2.6.7
@@ -1056,7 +1055,6 @@ importers:
       '@types/node': 16.11.12
       eslint: 8.19.0
       got: 11.8.3
-      got-fetch: 5.1.2_got@11.8.3
       jest: 27.5.1_ts-node@10.9.1
       js-base64: 3.7.2
       node-fetch: 2.6.7
@@ -8668,15 +8666,6 @@ packages:
       csstype: ^3.0.10
     dependencies:
       csstype: 3.0.11
-    dev: true
-
-  /got-fetch/5.1.2_got@11.8.3:
-    resolution: {integrity: sha512-MDVHrQlFMERVzMzzrn+0KV9ffPaakEt4IS/vPSmyH3k5vPJntXbNGEYQL4C9B6TRv0jeGADpYvgyTjTV+u+EwA==}
-    engines: {node: '>=14.0.0'}
-    peerDependencies:
-      got: ^12.0.0
-    dependencies:
-      got: 11.8.3
     dev: true
 
   /got/11.8.3:
