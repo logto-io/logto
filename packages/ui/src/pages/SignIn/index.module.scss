@@ -59,6 +59,10 @@
     margin-bottom: _.unit(6);
   }
 
+  .wrapper {
+    transition: height 10s ease-in;
+  }
+
   .primarySocial {
     margin-bottom: _.unit(12);
   }

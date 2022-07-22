@@ -36,6 +36,7 @@ body {
 .content {
   @include _.flex_column;
   background-color: var(--color-surface);
+  position: relative;
 }
 
 .placeHolder {

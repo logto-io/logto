@@ -1,5 +1,13 @@
 import { conditionalString } from '@silverhand/essentials';
-import { ReactNode, useEffect, useCallback, useContext } from 'react';
+import {
+  ReactNode,
+  useEffect,
+  useState,
+  useCallback,
+  useContext,
+  useLayoutEffect,
+  useRef,
+} from 'react';
 
 import Toast from '@/components/Toast';
 import useColorTheme from '@/hooks/use-color-theme';
@@ -15,6 +23,17 @@ export type Props = {
 const AppContent = ({ children }: Props) => {
   const theme = useTheme();
   const { toast, platform, setToast, experienceSettings } = useContext(PageContext);
+  const [topSpace, setTopSpace] = useState(0);
+  const topPlaceHolderRef = useRef<HTMLDivElement>(null);
+
+  useLayoutEffect(() => {
+    setTimeout(() => {
+      if (!topPlaceHolderRef.current) {
+        return;
+      }
+      setTopSpace(topPlaceHolderRef.current.offsetHeight);
+    });
+  }, [topPlaceHolderRef]);
 
   // Prevent internal eventListener rebind
   const hideToast = useCallback(() => {
@@ -38,7 +57,13 @@ const AppContent = ({ children }: Props) => {
 
   return (
     <div className={styles.container}>
-      {platform === 'web' && <div className={styles.placeHolder} />}
+      {platform === 'web' && (
+        <div
+          ref={topPlaceHolderRef}
+          className={styles.placeHolder}
+          style={{ height: `${topSpace}px`, flex: `${topSpace === 0 ? 1 : 'none'}` }}
+        />
+      )}
       <main className={styles.content}>{children}</main>
       {platform === 'web' && <div className={styles.placeHolder} />}
       <Toast message={toast} isVisible={Boolean(toast)} callback={hideToast} />
