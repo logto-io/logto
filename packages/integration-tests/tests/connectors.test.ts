@@ -223,41 +223,34 @@ test('connector flow', async () => {
    * List connectors after manually setting up connectors.
    * The result of listing connectors should be same as the result of updating connectors above.
    */
-  const allConnectorsAfterSettingUp = await listConnectors();
-
-  const facebookConnectorFromList = allConnectorsAfterSettingUp.find(
-    (connector) => connector.id === facebookConnectorId
-  );
-  expect(facebookConnectorFromList).toMatchObject(
-    expect.objectContaining({ enabled: true, config: facebookConnectorConfig })
-  );
-
-  const aliyunSmsConnectorFromList = allConnectorsAfterSettingUp.find(
-    (connector) => connector.id === aliyunSmsConnectorId
-  );
-  expect(aliyunSmsConnectorFromList).toMatchObject(
-    expect.objectContaining({ enabled: false, config: aliyunSmsConnectorConfig })
-  );
-
-  const twilioSmsConnectorFromList = allConnectorsAfterSettingUp.find(
-    (connector) => connector.id === twilioSmsConnectorId
-  );
-  expect(twilioSmsConnectorFromList).toMatchObject(
-    expect.objectContaining({ enabled: true, config: twilioSmsConnectorConfig })
-  );
-
-  const aliyunEmailConnectorFromList = allConnectorsAfterSettingUp.find(
-    (connector) => connector.id === aliyunEmailConnectorId
-  );
-  expect(aliyunEmailConnectorFromList).toMatchObject(
-    expect.objectContaining({ enabled: false, config: aliyunEmailConnectorConfig })
-  );
-
-  const sendgridEmailConnectorFromList = allConnectorsAfterSettingUp.find(
-    (connector) => connector.id === sendgridEmailConnectorId
-  );
-  expect(sendgridEmailConnectorFromList).toMatchObject(
-    expect.objectContaining({ enabled: false, config: sendgridEmailConnectorConfig })
+  expect(await listConnectors()).toEqual(
+    expect.arrayContaining([
+      expect.objectContaining({
+        id: facebookConnectorId,
+        config: facebookConnectorConfig,
+        enabled: true,
+      }),
+      expect.objectContaining({
+        id: aliyunSmsConnectorId,
+        config: aliyunSmsConnectorConfig,
+        enabled: false,
+      }),
+      expect.objectContaining({
+        id: twilioSmsConnectorId,
+        config: twilioSmsConnectorConfig,
+        enabled: true,
+      }),
+      expect.objectContaining({
+        id: aliyunEmailConnectorId,
+        config: aliyunEmailConnectorConfig,
+        enabled: false,
+      }),
+      expect.objectContaining({
+        id: sendgridEmailConnectorId,
+        config: sendgridEmailConnectorConfig,
+        enabled: false,
+      }),
+    ])
   );
 
   // Next up
