@@ -44,10 +44,10 @@ describe('GET /swagger.json', () => {
     expect(response.body).toMatchObject({
       /* eslint-disable @typescript-eslint/no-unsafe-assignment */
       openapi: expect.any(String),
-      info: expect.objectContaining({
+      info: {
         title: expect.any(String),
         version: expect.any(String),
-      }),
+      },
       paths: expect.any(Object),
       /* eslint-enable @typescript-eslint/no-unsafe-assignment */
     });
@@ -79,18 +79,14 @@ describe('GET /swagger.json', () => {
     const swaggerRequest = createSwaggerRequest([testTagRouter]);
 
     const response = await swaggerRequest.get('/swagger.json');
-    expect(response.body.paths).toMatchObject(
-      expect.objectContaining({
-        /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-        '/api/mock': expect.objectContaining({
-          get: expect.objectContaining({ tags: ['Mock'] }),
-        }),
-        '/api/.well-known': expect.objectContaining({
-          put: expect.objectContaining({ tags: ['.well-known'] }),
-        }),
-        /* eslint-enable @typescript-eslint/no-unsafe-assignment */
-      })
-    );
+    expect(response.body.paths).toMatchObject({
+      '/api/mock': {
+        get: { tags: ['Mock'] },
+      },
+      '/api/.well-known': {
+        put: { tags: ['.well-known'] },
+      },
+    });
   });
 
   it('should parse the path parameters', async () => {
@@ -108,30 +104,26 @@ describe('GET /swagger.json', () => {
     const swaggerRequest = createSwaggerRequest([queryParametersRouter]);
 
     const response = await swaggerRequest.get('/swagger.json');
-    expect(response.body.paths).toMatchObject(
-      expect.objectContaining({
-        /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-        '/api/mock/:id/:field': {
-          get: expect.objectContaining({
-            parameters: [
-              {
-                name: 'id',
-                in: 'path',
-                required: true,
-                schema: { type: 'number' },
-              },
-              {
-                name: 'field',
-                in: 'path',
-                required: true,
-                schema: { type: 'string' },
-              },
-            ],
-          }),
+    expect(response.body.paths).toMatchObject({
+      '/api/mock/:id/:field': {
+        get: {
+          parameters: [
+            {
+              name: 'id',
+              in: 'path',
+              required: true,
+              schema: { type: 'number' },
+            },
+            {
+              name: 'field',
+              in: 'path',
+              required: true,
+              schema: { type: 'string' },
+            },
+          ],
         },
-        /* eslint-enable @typescript-eslint/no-unsafe-assignment */
-      })
-    );
+      },
+    });
   });
 
   describe('parse query parameters', () => {
@@ -149,34 +141,30 @@ describe('GET /swagger.json', () => {
       );
       const swaggerRequest = createSwaggerRequest([queryParametersRouter]);
       const response = await swaggerRequest.get('/swagger.json');
-      expect(response.body.paths).toMatchObject(
-        expect.objectContaining({
-          /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-          '/api/mock': {
-            get: expect.objectContaining({
-              parameters: [
-                {
-                  name: 'id',
-                  in: 'query',
-                  required: true,
-                  schema: {
-                    type: 'number',
-                  },
+      expect(response.body.paths).toMatchObject({
+        '/api/mock': {
+          get: {
+            parameters: [
+              {
+                name: 'id',
+                in: 'query',
+                required: true,
+                schema: {
+                  type: 'number',
                 },
-                {
-                  name: 'name',
-                  in: 'query',
-                  required: false,
-                  schema: {
-                    type: 'string',
-                  },
+              },
+              {
+                name: 'name',
+                in: 'query',
+                required: false,
+                schema: {
+                  type: 'string',
                 },
-              ],
-            }),
+              },
+            ],
           },
-          /* eslint-enable @typescript-eslint/no-unsafe-assignment */
-        })
-      );
+        },
+      });
     });
 
     it('should append page and page_size to the query parameters when the route uses pagination', async () => {
@@ -184,17 +172,13 @@ describe('GET /swagger.json', () => {
       queryParametersRouter.get('/mock', koaPagination(), () => ({}));
       const swaggerRequest = createSwaggerRequest([queryParametersRouter]);
       const response = await swaggerRequest.get('/swagger.json');
-      expect(response.body.paths).toMatchObject(
-        expect.objectContaining({
-          /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-          '/api/mock': {
-            get: expect.objectContaining({
-              parameters: paginationParameters,
-            }),
+      expect(response.body.paths).toMatchObject({
+        '/api/mock': {
+          get: {
+            parameters: paginationParameters,
           },
-          /* eslint-enable @typescript-eslint/no-unsafe-assignment */
-        })
-      );
+        },
+      });
     });
   });
 
@@ -211,32 +195,28 @@ describe('GET /swagger.json', () => {
     );
     const swaggerRequest = createSwaggerRequest([queryParametersRouter]);
     const response = await swaggerRequest.get('/swagger.json');
-    expect(response.body.paths).toMatchObject(
-      expect.objectContaining({
-        /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-        '/api/mock': {
-          post: expect.objectContaining({
-            requestBody: {
-              required: true,
-              content: {
-                'application/json': {
-                  schema: {
-                    type: 'object',
-                    required: ['name'],
-                    properties: {
-                      name: {
-                        type: 'string',
-                      },
+    expect(response.body.paths).toMatchObject({
+      '/api/mock': {
+        post: {
+          requestBody: {
+            required: true,
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  required: ['name'],
+                  properties: {
+                    name: {
+                      type: 'string',
                     },
                   },
                 },
               },
             },
-          }),
+          },
         },
-        /* eslint-enable @typescript-eslint/no-unsafe-assignment */
-      })
-    );
+      },
+    });
   });
 
   describe('should use correct responses', () => {
@@ -248,11 +228,9 @@ describe('GET /swagger.json', () => {
       const swaggerRequest = createSwaggerRequest([mockRouter]);
       const response = await swaggerRequest.get('/swagger.json');
       expect(response.body.paths).toMatchObject({
-        /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-        '/api/mock': expect.objectContaining({
-          delete: expect.objectContaining({ responses: defaultResponses }),
-        }),
-        /* eslint-enable @typescript-eslint/no-unsafe-assignment */
+        '/api/mock': {
+          delete: { responses: defaultResponses },
+        },
       });
     });
 
@@ -277,20 +255,18 @@ describe('GET /swagger.json', () => {
       const swaggerRequest = createSwaggerRequest([mockRouter]);
       const response = await swaggerRequest.get('/swagger.json');
       expect(response.body.paths).toMatchObject({
-        /* eslint-disable @typescript-eslint/no-unsafe-assignment */
         '/api/mock': {
-          get: expect.objectContaining({
+          get: {
             responses: {
               '204': { description: 'No Content' },
             },
-          }),
-          patch: expect.objectContaining({
+          },
+          patch: {
             responses: {
               '202': { description: 'Accepted' },
             },
-          }),
+          },
         },
-        /* eslint-enable @typescript-eslint/no-unsafe-assignment */
       });
     });
   });
