@@ -45,16 +45,16 @@ describe('api `/me`', () => {
   it('should update user custom data successfully', async () => {
     const user = await createUser();
 
-    const developmentUserHeaders = {
+    const headers = Object.freeze({
       'development-user-id': user.id,
-    };
+    });
 
     const newCustomData = {
       foo: 'bar',
     };
 
     await api.patch('me/custom-data', {
-      headers: { ...developmentUserHeaders },
+      headers,
       json: {
         customData: newCustomData,
       },
@@ -62,7 +62,7 @@ describe('api `/me`', () => {
 
     const customData = await api
       .get('me/custom-data', {
-        headers: { ...developmentUserHeaders },
+        headers,
       })
       .json<ArbitraryObject>();
 
