@@ -1,4 +1,4 @@
-import { Storage, StorageKey } from '@logto/client';
+import { Storage, StorageKey } from '@logto/node';
 import { Nullable } from '@silverhand/essentials';
 
 export class DummyStorage implements Storage {

@@ -1,4 +1,4 @@
-import { LogtoConfig } from '@logto/client';
+import { LogtoConfig } from '@logto/node';
 import { demoAppApplicationId } from '@logto/schemas/lib/seeds';
 
 import LogtoClient from '@/client/logto-client';
