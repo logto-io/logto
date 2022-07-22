@@ -17,6 +17,8 @@ const facebookConnectorConfig = {
 
 const aliyunSmsConnectorId = 'aliyun-short-message-service';
 const aliyunSmsConnectorConfig = {
+  accessKeyId: 'access-key-id-value',
+  accessKeySecret: 'access-key-secret-value',
   signName: 'sign-name-value',
   templates: [
     {
@@ -32,13 +34,13 @@ const aliyunSmsConnectorConfig = {
       templateCode: 'template-code-value',
     },
   ],
-  accessKeyId: 'access-key-id-value',
-  accessKeySecret: 'access-key-secret-value',
 };
 
 const twilioSmsConnectorId = 'twilio-short-message-service';
 const twilioSmsConnectorConfig = {
+  accountSID: 'account-sid-value',
   authToken: 'auth-token-value',
+  fromMessagingServiceSID: 'from-messaging-service-sid-value',
   templates: [
     {
       content: 'This is for sign-in purposes only. Your passcode is {{code}}.',
@@ -53,8 +55,6 @@ const twilioSmsConnectorConfig = {
       usageType: 'Test',
     },
   ],
-  accountSID: 'account-sid-value',
-  fromMessagingServiceSID: 'from-messaging-service-sid-value',
 };
 
 const aliyunEmailConnectorId = 'aliyun-direct-mail';
@@ -219,7 +219,49 @@ test('connector flow', async () => {
   const sendgridEmailConnector = await getConnector(sendgridEmailConnectorId);
   expect(sendgridEmailConnector.enabled).toBeFalsy();
 
-  // Next up:
-  // - send sms/email test message
-  // - list all connectors after manually setting up connectors
+  /**
+   * List connectors after manually setting up connectors.
+   * The result of listing connectors should be same as the result of updating connectors above.
+   */
+  const allConnectorsAfterSettingUp = await listConnectors();
+
+  const facebookConnectorFromList = allConnectorsAfterSettingUp.find(
+    (connector) => connector.id === facebookConnectorId
+  );
+  expect(facebookConnectorFromList).toMatchObject(
+    expect.objectContaining({ enabled: true, config: facebookConnectorConfig })
+  );
+
+  const aliyunSmsConnectorFromList = allConnectorsAfterSettingUp.find(
+    (connector) => connector.id === aliyunSmsConnectorId
+  );
+  expect(aliyunSmsConnectorFromList).toMatchObject(
+    expect.objectContaining({ enabled: false, config: aliyunSmsConnectorConfig })
+  );
+
+  const twilioSmsConnectorFromList = allConnectorsAfterSettingUp.find(
+    (connector) => connector.id === twilioSmsConnectorId
+  );
+  expect(twilioSmsConnectorFromList).toMatchObject(
+    expect.objectContaining({ enabled: true, config: twilioSmsConnectorConfig })
+  );
+
+  const aliyunEmailConnectorFromList = allConnectorsAfterSettingUp.find(
+    (connector) => connector.id === aliyunEmailConnectorId
+  );
+  expect(aliyunEmailConnectorFromList).toMatchObject(
+    expect.objectContaining({ enabled: false, config: aliyunEmailConnectorConfig })
+  );
+
+  const sendgridEmailConnectorFromList = allConnectorsAfterSettingUp.find(
+    (connector) => connector.id === sendgridEmailConnectorId
+  );
+  expect(sendgridEmailConnectorFromList).toMatchObject(
+    expect.objectContaining({ enabled: false, config: sendgridEmailConnectorConfig })
+  );
+
+  // Next up
+  // - validate `config` parameter before sending
+  // - send sms test message
+  // - send email test message
 });
