@@ -1,42 +1,57 @@
-import {
-  doConsentAndCompleteAuth,
-  doFetchOidcConfig,
-  doHandleCallbackUriAndFetchToken,
-  doRegisterWithUsernamePassword,
-  doSignInWithUsernamePassword,
-  doVisitAuthorizationEndpointAndGetCookie,
-} from '@/user-sign-in/actions';
+import { LogtoConfig } from '@logto/client';
+import { demoAppApplicationId } from '@logto/schemas/lib/seeds';
 
-import { UserSignInContext } from '../src/user-sign-in';
+import LogtoClient from '@/client/logto-client';
+import { demoAppRedirectUri, logtoUrl } from '@/constants';
+import {
+  consentUserAndGetSignInCallbackUri,
+  registerUserWithUsernameAndPassword,
+  signInWithUsernameAndPassword,
+  visitSignInUri,
+} from '@/ui-actions';
+import { generatePassword, generateUsername } from '@/utils';
 
 describe('username and password flow', () => {
-  const userSignInContext = new UserSignInContext();
+  const logtoConfig: LogtoConfig = {
+    endpoint: logtoUrl,
+    appId: demoAppApplicationId,
+    persistAccessToken: false,
+  };
 
-  beforeAll(async () => {
-    await userSignInContext.init();
-  });
-
-  it('should fetch OIDC configuration successfully', async () => {
-    await doFetchOidcConfig(userSignInContext);
-  });
-
-  it('should visit authorization endpoint successfully', async () => {
-    await doVisitAuthorizationEndpointAndGetCookie(userSignInContext);
-  });
+  const username = generateUsername();
+  const password = generatePassword();
 
   it('should register with username and password successfully', async () => {
-    await doRegisterWithUsernamePassword(userSignInContext);
+    const logtoClient = new LogtoClient(logtoConfig);
+    await logtoClient.signIn(demoAppRedirectUri);
+
+    expect(logtoClient.navigateUrl).toBeTruthy();
+
+    const interactionCookie = await visitSignInUri(logtoClient.navigateUrl);
+
+    await registerUserWithUsernameAndPassword(username, password, interactionCookie);
   });
 
   it('should sign in with username and password successfully', async () => {
-    await doSignInWithUsernamePassword(userSignInContext);
-  });
+    const logtoClient = new LogtoClient(logtoConfig);
+    await logtoClient.signIn(demoAppRedirectUri);
 
-  it('should consent and complete the auth process successfully', async () => {
-    await doConsentAndCompleteAuth(userSignInContext);
-  });
+    expect(logtoClient.navigateUrl).toBeTruthy();
 
-  it('should handle callback uri and fetch token successfully', async () => {
-    await doHandleCallbackUriAndFetchToken(userSignInContext);
+    const interactionCookie = await visitSignInUri(logtoClient.navigateUrl);
+
+    const interactionCookieWithSession = await signInWithUsernameAndPassword(
+      username,
+      password,
+      interactionCookie
+    );
+
+    const signInCallbackUri = await consentUserAndGetSignInCallbackUri(
+      interactionCookieWithSession
+    );
+
+    await logtoClient.handleSignInCallback(signInCallbackUri);
+
+    expect(logtoClient.isAuthenticated).toBeTruthy();
   });
 });
