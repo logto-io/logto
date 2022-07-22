@@ -1,4 +1,4 @@
-import { ArbitraryObject, User } from '@logto/schemas';
+import { ArbitraryObject, User, UserInfo, userInfoSelectFields } from '@logto/schemas';
 
 import api, { authedAdminApi } from '@/api';
 import { generatePassword, generateUsername } from '@/utils';
@@ -18,7 +18,18 @@ const createUser = async () => {
 };
 
 describe('api `/me`', () => {
-  it('should get user custom data', async () => {
+  it('should get user info successfully', async () => {
+    const user = await createUser();
+    const userInfo = await api
+      .get(`me`, { headers: { 'development-user-id': user.id } })
+      .json<UserInfo>();
+
+    for (const field of userInfoSelectFields) {
+      expect(userInfo).toHaveProperty(field);
+    }
+  });
+
+  it('should get user custom data successfully', async () => {
     const user = await createUser();
     const customData = await api
       .get('me/custom-data', {
@@ -31,7 +42,7 @@ describe('api `/me`', () => {
     expect(customData).toEqual({});
   });
 
-  it('should update user custom data', async () => {
+  it('should update user custom data successfully', async () => {
     const user = await createUser();
 
     const developmentUserHeaders = {
@@ -58,7 +69,7 @@ describe('api `/me`', () => {
     expect(customData).toEqual(newCustomData);
   });
 
-  it('should change user password', async () => {
+  it('should change user password successfully', async () => {
     const user = await createUser();
     const password = generatePassword();
     const changePasswordResponse = await api.patch('me/password', {
