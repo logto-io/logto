@@ -1,21 +1,8 @@
-import { ArbitraryObject, User, UserInfo, userInfoSelectFields } from '@logto/schemas';
+import { ArbitraryObject, UserInfo, userInfoSelectFields } from '@logto/schemas';
 
-import api, { authedAdminApi } from '@/api';
-import { generatePassword, generateUsername } from '@/utils';
-
-const createUser = async () => {
-  const username = generateUsername();
-
-  return authedAdminApi
-    .post('users', {
-      json: {
-        username,
-        password: generatePassword(),
-        name: username,
-      },
-    })
-    .json<User>();
-};
+import api from '@/api';
+import { createUser } from '@/helper';
+import { generatePassword } from '@/utils';
 
 describe('api `/me`', () => {
   it('should get user info successfully', async () => {
