@@ -88,29 +88,27 @@ describe('GET /.well-known/sign-in-exp', () => {
     const response = await sessionRequest.get('/.well-known/sign-in-exp');
     expect(signInExperienceQuerySpyOn).toHaveBeenCalledTimes(1);
     expect(response.status).toEqual(200);
-    expect(response.body).toMatchObject(
-      expect.objectContaining({
-        ...mockSignInExperience,
-        socialConnectors: [
-          {
-            ...mockGithubConnectorInstance.metadata,
-            id: mockGithubConnectorInstance.connector.id,
-          },
-          {
-            ...mockFacebookConnectorInstance.metadata,
-            id: mockFacebookConnectorInstance.connector.id,
-          },
-          {
-            ...mockWechatConnectorInstance.metadata,
-            id: mockWechatConnectorInstance.connector.id,
-          },
-          {
-            ...mockWechatNativeConnectorInstance.metadata,
-            id: mockWechatNativeConnectorInstance.connector.id,
-          },
-        ],
-      })
-    );
+    expect(response.body).toMatchObject({
+      ...mockSignInExperience,
+      socialConnectors: [
+        {
+          ...mockGithubConnectorInstance.metadata,
+          id: mockGithubConnectorInstance.connector.id,
+        },
+        {
+          ...mockFacebookConnectorInstance.metadata,
+          id: mockFacebookConnectorInstance.connector.id,
+        },
+        {
+          ...mockWechatConnectorInstance.metadata,
+          id: mockWechatConnectorInstance.connector.id,
+        },
+        {
+          ...mockWechatNativeConnectorInstance.metadata,
+          id: mockWechatNativeConnectorInstance.connector.id,
+        },
+      ],
+    });
   });
 
   it('should return admin console settings', async () => {
@@ -119,16 +117,14 @@ describe('GET /.well-known/sign-in-exp', () => {
     expect(signInExperienceQuerySpyOn).not.toBeCalled();
     expect(response.status).toEqual(200);
 
-    expect(response.body).toMatchObject(
-      expect.objectContaining({
-        ...adminConsoleSignInExperience,
-        branding: {
-          ...adminConsoleSignInExperience.branding,
-          slogan: 'admin_console.welcome.title',
-        },
-        socialConnectors: [],
-        signInMode: SignInMode.SignIn,
-      })
-    );
+    expect(response.body).toMatchObject({
+      ...adminConsoleSignInExperience,
+      branding: {
+        ...adminConsoleSignInExperience.branding,
+        slogan: 'admin_console.welcome.title',
+      },
+      socialConnectors: [],
+      signInMode: SignInMode.SignIn,
+    });
   });
 });
