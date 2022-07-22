@@ -141,12 +141,16 @@ const Passcode = ({ name, className, value, length = defaultLength, error, onCha
         case 'Backspace':
           event.preventDefault();
 
-          if (!value) {
-            previousTarget?.focus();
+          if (value) {
+            onChange(Object.assign([], codes, { [targetId]: '' }));
             break;
           }
 
-          onChange(Object.assign([], codes, { [targetId]: '' }));
+          if (previousTarget) {
+            previousTarget.focus();
+            onChange(Object.assign([], codes, { [targetId - 1]: '' }));
+          }
+
           break;
         case 'ArrowLeft':
           event.preventDefault();
