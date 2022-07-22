@@ -1,31 +1,16 @@
 import { User } from '@logto/schemas';
 
 import { authedAdminApi } from '@/api';
-import { generatePassword, generateUsername } from '@/utils';
-
-const createUser = async (username?: string) => {
-  const useUsername = username ?? generateUsername();
-
-  return authedAdminApi
-    .post('users', {
-      json: {
-        username: useUsername,
-        password: generatePassword(),
-        name: useUsername,
-      },
-    })
-    .json<User>();
-};
+import { createUser } from '@/helper';
 
 describe('admin console user management', () => {
   it('should create user successfully', async () => {
-    const username = generateUsername();
-    const user = await createUser(username);
+    const user = await createUser();
 
     const userDetails = await authedAdminApi.get(`users/${user.id}`).json<User>();
 
     expect(userDetails).toBeTruthy();
-    expect(userDetails.username).toBe(username);
+    expect(userDetails.id).toBe(user.id);
   });
 
   it('should get user list successfully', async () => {
