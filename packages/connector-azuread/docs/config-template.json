@@ -1,0 +1,6 @@
+{
+  "clientId": "<client-id>",
+  "clientSecret": "<client-secret>",
+  "tennantId": "<tennant-id>",
+  "cloudInstance": "https://login.microsoftonline.com/"
+}

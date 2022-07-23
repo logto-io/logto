@@ -945,6 +945,7 @@ importers:
       '@logto/connector-facebook': link:../connector-facebook
       '@logto/connector-github': link:../connector-github
       '@logto/connector-google': link:../connector-google
+      '@logto/connector-azuread': link:../connector-azuread
       '@logto/connector-sendgrid-email': link:../connector-sendgrid-mail
       '@logto/connector-smtp': link:../connector-smtp
       '@logto/connector-twilio-sms': link:../connector-twilio-sms

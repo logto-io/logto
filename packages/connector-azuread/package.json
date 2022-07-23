@@ -1,0 +1,60 @@
+{
+  "name": "@logto/connector-azuread",
+  "version": "1.0.0-beta.1",
+  "description": "Azure AD connector implementation.",
+  "main": "./lib/index.js",
+  "exports": "./lib/index.js",
+  "author": "Mobilist Inc. <info@mobilist.com.tr>",
+  "license": "MPL-2.0",
+  "private": true,
+  "files": [
+    "lib",
+    "docs",
+    "logo.svg",
+    "README.md"
+  ],
+  "scripts": {
+    "precommit": "lint-staged",
+    "build": "rm -rf lib/ && tsc -p tsconfig.build.json",
+    "lint": "eslint --ext .ts src",
+    "lint:report": "pnpm lint --format json --output-file report.json",
+    "dev": "rm -rf lib/ && tsc-watch -p tsconfig.build.json --preserveWatchOutput --onSuccess \"node ./lib/index.js\"",
+    "test": "jest",
+    "test:coverage": "jest --coverage --silent",
+    "prepack": "pnpm build"
+  },
+  "dependencies": {
+    "@azure/msal-node": "^1.12.0",
+    "@logto/connector-types": "^1.0.0-beta.1",
+    "@logto/schemas": "^1.0.0-beta.1",
+    "@logto/shared": "^1.0.0-beta.1",
+    "@silverhand/essentials": "^1.1.0",
+    "@silverhand/jest-config": "^0.17.0",
+    "axios": "^0.27.2",
+    "got": "^11.8.2",
+    "zod": "^3.14.3"
+  },
+  "devDependencies": {
+    "@jest/types": "^27.5.1",
+    "@silverhand/eslint-config": "^0.17.0",
+    "@silverhand/ts-config": "^0.17.0",
+    "@types/jest": "^27.4.1",
+    "@types/node": "^16.3.1",
+    "eslint": "^8.19.0",
+    "jest": "^27.5.1",
+    "jest-matcher-specific-error": "^1.0.0",
+    "lint-staged": "^13.0.0",
+    "nock": "^13.2.2",
+    "prettier": "^2.3.2",
+    "ts-jest": "^27.1.1",
+    "tsc-watch": "^5.0.0",
+    "typescript": "^4.6.2"
+  },
+  "engines": {
+    "node": "^16.0.0"
+  },
+  "eslintConfig": {
+    "extends": "@silverhand"
+  },
+  "prettier": "@silverhand/eslint-config/.prettierrc"
+}

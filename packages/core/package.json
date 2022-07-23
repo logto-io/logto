@@ -24,6 +24,7 @@
     "@logto/connector-aliyun-dm": "^1.0.0-beta.2",
     "@logto/connector-aliyun-sms": "^1.0.0-beta.2",
     "@logto/connector-apple": "^1.0.0-beta.2",
+    "@logto/connector-azuread": "^1.0.0-beta.2",
     "@logto/connector-facebook": "^1.0.0-beta.2",
     "@logto/connector-github": "^1.0.0-beta.2",
     "@logto/connector-google": "^1.0.0-beta.2",
