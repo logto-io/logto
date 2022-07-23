@@ -9,7 +9,7 @@ const scopeComplete = execSync('git status --porcelain || true')
   .find((r) => ~r.indexOf('M  packages'))
   ?.replace(/(\/)/g, '%%')
   ?.match(/packages%%((\w|-)*)/)?.[1]
-  ?.replace(/^connector(\w|-)*/g, 'connector')
+  ?.replace(/^connector(\w|-)*/g, 'connector');
 
 /** @type {import('cz-git').UserConfig} */
 module.exports = {
