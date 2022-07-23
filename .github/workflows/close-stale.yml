@@ -27,6 +27,6 @@ jobs:
         days-before-stale: 30
         days-before-pr-stale: 10
         days-before-close: 5
-        exempt-issue-labels: '🤖️ bot, feature request, enhancement, bug'
-        exempt-pr-labels: '🤖️ bot'
+        exempt-issue-labels: bot, feature-request, enhancement, bug
+        exempt-pr-labels: bot
         exempt-assignees: renovate
