@@ -4,7 +4,7 @@ import en from './locales/en';
 import zhCN from './locales/zh-cn';
 import { Resource, Language } from './types';
 
-export { Language, languageOptions } from './types';
+export { Language, languageOptions, languageEnumGuard } from './types';
 export type Translation = typeof en.translation;
 export type Errors = typeof en.errors;
 export type LogtoErrorCode = NormalizeKeyPaths<Errors>;

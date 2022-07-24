@@ -1,3 +1,4 @@
+import { languageEnumGuard } from '@logto/phrases';
 import { ConnectorDto, ConnectorType } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import i18next from 'i18next';
@@ -31,10 +32,10 @@ const Guide = ({ connector, onClose }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { id: connectorId, type: connectorType, name, configTemplate, readme } = connector;
 
-  const locale = i18next.language;
+  const localeRaw = i18next.language;
+  const locale = languageEnumGuard.parse(localeRaw);
+  const connectorName = name[locale];
 
-  const foundName = Object.entries(name).find(([lang]) => lang === locale);
-  const connectorName = foundName ? foundName[1] : name.en;
   const isSocialConnector =
     connectorType !== ConnectorType.SMS && connectorType !== ConnectorType.Email;
   const methods = useForm<GuideForm>({ reValidateMode: 'onBlur' });

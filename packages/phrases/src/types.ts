@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/consistent-indexed-object-style */
+import { z } from 'zod';
 
 /* Copied from i18next/index.d.ts */
 export type Resource = Record<Language, ResourceLanguage>;
@@ -13,6 +14,8 @@ export enum Language {
   English = 'en',
   Chinese = 'zh-CN',
 }
+
+export const languageEnumGuard = z.nativeEnum(Language);
 
 export const languageOptions = [
   { value: Language.English, title: 'English' },
