@@ -1,4 +1,4 @@
-import { GetConnectorConfig, ValidateConfig } from '@logto/connector-types';
+import { GetConnectorConfig } from '@logto/connector-types';
 
 import SmtpConnector from '.';
 
@@ -17,7 +17,7 @@ describe('validateConfig()', () => {
    */
 
   it('should pass on valid config', async () => {
-    const validator: ValidateConfig = smtpMethods.validateConfig;
+    const validator: typeof smtpMethods.validateConfig = smtpMethods.validateConfig;
     expect(() => {
       validator({
         host: 'smtp.testing.com',
@@ -56,7 +56,7 @@ describe('validateConfig()', () => {
   });
 
   it('should be false if config is invalid', async () => {
-    const validator: ValidateConfig = smtpMethods.validateConfig;
+    const validator: typeof smtpMethods.validateConfig = smtpMethods.validateConfig;
     expect(() => {
       validator({});
     }).toThrow();

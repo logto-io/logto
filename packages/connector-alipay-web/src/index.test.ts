@@ -1,9 +1,4 @@
-import {
-  ConnectorError,
-  ConnectorErrorCodes,
-  GetConnectorConfig,
-  ValidateConfig,
-} from '@logto/connector-types';
+import { ConnectorError, ConnectorErrorCodes, GetConnectorConfig } from '@logto/connector-types';
 import nock from 'nock';
 
 import AlipayConnector from '.';
@@ -25,7 +20,7 @@ describe('validateConfig', () => {
    */
 
   it('should pass on valid config', async () => {
-    const validator: ValidateConfig = alipayMethods.validateConfig;
+    const validator: typeof alipayMethods.validateConfig = alipayMethods.validateConfig;
     expect(() => {
       validator({
         appId: 'appId',
@@ -36,14 +31,14 @@ describe('validateConfig', () => {
   });
 
   it('should fail on empty config', async () => {
-    const validator: ValidateConfig = alipayMethods.validateConfig;
+    const validator: typeof alipayMethods.validateConfig = alipayMethods.validateConfig;
     expect(() => {
       validator({});
     }).toThrow();
   });
 
   it('should fail when missing required properties', async () => {
-    const validator: ValidateConfig = alipayMethods.validateConfig;
+    const validator: typeof alipayMethods.validateConfig = alipayMethods.validateConfig;
     expect(() => {
       validator({ appId: 'appId' });
     }).toThrow();

@@ -1,9 +1,4 @@
-import {
-  ConnectorError,
-  ConnectorErrorCodes,
-  GetConnectorConfig,
-  ValidateConfig,
-} from '@logto/connector-types';
+import { ConnectorError, ConnectorErrorCodes, GetConnectorConfig } from '@logto/connector-types';
 import nock from 'nock';
 
 import WechatConnector from '.';
@@ -102,21 +97,21 @@ describe('validateConfig', () => {
    */
 
   it('should pass on valid config', async () => {
-    const validator: ValidateConfig = wechatMethods.validateConfig;
+    const validator: typeof wechatMethods.validateConfig = wechatMethods.validateConfig;
     expect(() => {
       validator({ appId: 'appId', appSecret: 'appSecret' });
     }).not.toThrow();
   });
 
   it('should fail on empty config', async () => {
-    const validator: ValidateConfig = wechatMethods.validateConfig;
+    const validator: typeof wechatMethods.validateConfig = wechatMethods.validateConfig;
     expect(() => {
       validator({});
     }).toThrow();
   });
 
   it('should fail when missing appSecret', async () => {
-    const validator: ValidateConfig = wechatMethods.validateConfig;
+    const validator: typeof wechatMethods.validateConfig = wechatMethods.validateConfig;
     expect(() => {
       validator({ appId: 'appId' });
     }).toThrow();

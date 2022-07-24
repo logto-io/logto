@@ -1,4 +1,4 @@
-import { GetConnectorConfig, ValidateConfig } from '@logto/connector-types';
+import { GetConnectorConfig } from '@logto/connector-types';
 
 import TwilioSmsConnector from '.';
 import { mockedConfig } from './mock';
@@ -18,14 +18,14 @@ describe('validateConfig()', () => {
    */
 
   it('should pass on valid config', async () => {
-    const validator: ValidateConfig = twilioSmsMethods.validateConfig;
+    const validator: typeof twilioSmsMethods.validateConfig = twilioSmsMethods.validateConfig;
     expect(() => {
       validator(mockedConfig);
     }).not.toThrow();
   });
 
   it('throws if config is invalid', async () => {
-    const validator: ValidateConfig = twilioSmsMethods.validateConfig;
+    const validator: typeof twilioSmsMethods.validateConfig = twilioSmsMethods.validateConfig;
     expect(() => {
       validator({});
     }).toThrow();

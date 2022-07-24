@@ -1,9 +1,4 @@
-import {
-  ConnectorError,
-  ConnectorErrorCodes,
-  GetConnectorConfig,
-  ValidateConfig,
-} from '@logto/connector-types';
+import { ConnectorError, ConnectorErrorCodes, GetConnectorConfig } from '@logto/connector-types';
 import nock from 'nock';
 import * as qs from 'query-string';
 
@@ -77,21 +72,21 @@ describe('validateConfig', () => {
    */
 
   it('should pass on valid config', async () => {
-    const validator: ValidateConfig = githubMethods.validateConfig;
+    const validator: typeof githubMethods.validateConfig = githubMethods.validateConfig;
     expect(() => {
       validator({ clientId: 'clientId', clientSecret: 'clientSecret' });
     }).not.toThrow();
   });
 
   it('should fail on empty config', async () => {
-    const validator: ValidateConfig = githubMethods.validateConfig;
+    const validator: typeof githubMethods.validateConfig = githubMethods.validateConfig;
     expect(() => {
       validator({});
     }).toThrow();
   });
 
   it('should fail when missing clientSecret', async () => {
-    const validator: ValidateConfig = githubMethods.validateConfig;
+    const validator: typeof githubMethods.validateConfig = githubMethods.validateConfig;
     expect(() => {
       validator({ clientId: 'clientId' });
     }).toThrow();

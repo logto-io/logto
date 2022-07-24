@@ -1,4 +1,4 @@
-import { GetConnectorConfig, ValidateConfig } from '@logto/connector-types';
+import { GetConnectorConfig } from '@logto/connector-types';
 
 import SendGridMailConnector from '.';
 import { mockedConfig } from './mock';
@@ -25,7 +25,7 @@ describe('validateConfig()', () => {
    */
 
   it('should pass on valid config', async () => {
-    const validator: ValidateConfig = sendGridMailMethods.validateConfig;
+    const validator: typeof sendGridMailMethods.validateConfig = sendGridMailMethods.validateConfig;
     expect(() => {
       validator({
         apiKey: 'apiKey',
@@ -44,7 +44,7 @@ describe('validateConfig()', () => {
   });
 
   it('should be false if config is invalid', async () => {
-    const validator: ValidateConfig = sendGridMailMethods.validateConfig;
+    const validator: typeof sendGridMailMethods.validateConfig = sendGridMailMethods.validateConfig;
     expect(() => {
       validator({});
     }).toThrow();

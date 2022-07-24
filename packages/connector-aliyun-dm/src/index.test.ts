@@ -1,4 +1,4 @@
-import { GetConnectorConfig, ValidateConfig } from '@logto/connector-types';
+import { GetConnectorConfig } from '@logto/connector-types';
 
 import AliyunDmConnector from '.';
 import { mockedConfig } from './mock';
@@ -34,7 +34,7 @@ describe('validateConfig()', () => {
    */
 
   it('should pass on valid config', async () => {
-    const validator: ValidateConfig = aliyunDmMethods.validateConfig;
+    const validator: typeof aliyunDmMethods.validateConfig = aliyunDmMethods.validateConfig;
     expect(() => {
       validator({
         accessKeyId: 'accessKeyId',
@@ -46,7 +46,7 @@ describe('validateConfig()', () => {
   });
 
   it('should fail if config is invalid', async () => {
-    const validator: ValidateConfig = aliyunDmMethods.validateConfig;
+    const validator: typeof aliyunDmMethods.validateConfig = aliyunDmMethods.validateConfig;
     expect(() => {
       validator({});
     }).toThrow();

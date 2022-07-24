@@ -1,4 +1,4 @@
-import { GetConnectorConfig, ValidateConfig } from '@logto/connector-types';
+import { GetConnectorConfig } from '@logto/connector-types';
 
 import AliyunSmsConnector from '.';
 import { mockedConnectorConfig, mockedValidConnectorConfig, phoneTest, codeTest } from './mock';
@@ -30,14 +30,14 @@ describe('validateConfig()', () => {
    */
 
   it('should pass on valid config', async () => {
-    const validator: ValidateConfig = aliyunSmsMethods.validateConfig;
+    const validator: typeof aliyunSmsMethods.validateConfig = aliyunSmsMethods.validateConfig;
     expect(() => {
       validator(mockedValidConnectorConfig);
     }).not.toThrow();
   });
 
   it('should fail if config is invalid', async () => {
-    const validator: ValidateConfig = aliyunSmsMethods.validateConfig;
+    const validator: typeof aliyunSmsMethods.validateConfig = aliyunSmsMethods.validateConfig;
     expect(() => {
       validator({});
     }).toThrow();

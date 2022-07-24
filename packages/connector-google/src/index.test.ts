@@ -1,9 +1,4 @@
-import {
-  ConnectorError,
-  ConnectorErrorCodes,
-  GetConnectorConfig,
-  ValidateConfig,
-} from '@logto/connector-types';
+import { ConnectorError, ConnectorErrorCodes, GetConnectorConfig } from '@logto/connector-types';
 import nock from 'nock';
 
 import GoogleConnector from '.';
@@ -30,14 +25,14 @@ describe('google connector', () => {
      */
 
     it('should pass on valid config', async () => {
-      const validator: ValidateConfig = googleMethods.validateConfig;
+      const validator: typeof googleMethods.validateConfig = googleMethods.validateConfig;
       expect(() => {
         validator({ clientId: 'clientId', clientSecret: 'clientSecret' });
       }).not.toThrow();
     });
 
     it('should fail on invalid config', async () => {
-      const validator: ValidateConfig = googleMethods.validateConfig;
+      const validator: typeof googleMethods.validateConfig = googleMethods.validateConfig;
       expect(() => {
         validator({});
       }).toThrow();

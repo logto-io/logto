@@ -1,9 +1,4 @@
-import {
-  ConnectorError,
-  ConnectorErrorCodes,
-  GetConnectorConfig,
-  ValidateConfig,
-} from '@logto/connector-types';
+import { ConnectorError, ConnectorErrorCodes, GetConnectorConfig } from '@logto/connector-types';
 import { jwtVerify } from 'jose';
 
 import AppleConnector from '.';
@@ -50,14 +45,14 @@ describe('validateConfig', () => {
    */
 
   it('should be true on valid config', async () => {
-    const validator: ValidateConfig = appleMethods.validateConfig;
+    const validator: typeof appleMethods.validateConfig = appleMethods.validateConfig;
     expect(() => {
       validator({ clientId: 'clientId' });
     }).not.toThrow();
   });
 
   it('should be false on empty config', async () => {
-    const validator: ValidateConfig = appleMethods.validateConfig;
+    const validator: typeof appleMethods.validateConfig = appleMethods.validateConfig;
     expect(() => {
       validator({});
     }).toThrow();

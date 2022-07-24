@@ -1,9 +1,4 @@
-import {
-  ConnectorError,
-  ConnectorErrorCodes,
-  GetConnectorConfig,
-  ValidateConfig,
-} from '@logto/connector-types';
+import { ConnectorError, ConnectorErrorCodes, GetConnectorConfig } from '@logto/connector-types';
 import nock from 'nock';
 
 import FacebookConnector from '.';
@@ -30,14 +25,14 @@ describe('facebook connector', () => {
      */
 
     it('should pass on valid config', async () => {
-      const validator: ValidateConfig = facebookMethods.validateConfig;
+      const validator: typeof facebookMethods.validateConfig = facebookMethods.validateConfig;
       expect(() => {
         validator({ clientId, clientSecret });
       }).not.toThrow();
     });
 
     it('should fail on invalid config', async () => {
-      const validator: ValidateConfig = facebookMethods.validateConfig;
+      const validator: typeof facebookMethods.validateConfig = facebookMethods.validateConfig;
       expect(() => {
         validator({});
       }).toThrow();
