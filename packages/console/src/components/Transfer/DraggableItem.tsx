@@ -52,7 +52,7 @@ const DraggableItem = ({ id, children, sortIndex, moveItem }: Props) => {
       const clientOffset = monitor.getClientOffset();
 
       // Get pixels to the top
-      const hoverClientY = clientOffset?.y ?? 0 - hoverBoundingRect.top;
+      const hoverClientY = (clientOffset?.y ?? 0) - hoverBoundingRect.top;
 
       // Only perform the move when the mouse has crossed half of the items height
       // When dragging downwards, only move when the cursor is below 50%
