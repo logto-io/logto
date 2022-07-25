@@ -4,6 +4,7 @@ echo Building packages
 pnpm -- lerna run build --stream
 
 cd packages/core
+# Link the mock connectors only used for integration tests.
 pnpm link @logto/connector-mock-sms
 pnpm link @logto/connector-mock-email
 cd -
