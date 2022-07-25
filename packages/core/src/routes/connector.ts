@@ -150,7 +150,6 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
        * Assertion functions always need explicit annotations.
        * See https://github.com/microsoft/TypeScript/issues/36931#issuecomment-589753014
        */
-
       const validator: typeof validateConfig = validateConfig;
 
       if (body.config) {
