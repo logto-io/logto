@@ -13,7 +13,7 @@ echo Prune dependencies
 rm -rf node_modules packages/*/node_modules
 
 echo Install production dependencies
-# Also install the mock connectors for integration tests.
+# Use `--no-frozen-lockfile` to install the mock connectors.
 NODE_ENV=production pnpm i --no-frozen-lockfile
 
 echo Prune files
