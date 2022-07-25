@@ -87,8 +87,7 @@ jobs:
         working-directory: logto/packages/core/node_modules/argon2
 
       - name: Run Logto
-        run: |
-          node . --from-root --all-yes &
+        run: node . --from-root --all-yes &
         working-directory: logto/packages/core
         env:
           INTEGRATION_TEST: true
