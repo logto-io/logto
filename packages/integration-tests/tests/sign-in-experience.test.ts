@@ -1,6 +1,16 @@
-import { BrandingStyle, SignInExperience } from '@logto/schemas';
+import { BrandingStyle, SignInExperience, SignInMethods, SignInMethodState } from '@logto/schemas';
 
 import { authedAdminApi } from '@/api';
+import { updateConnectorConfig, enableConnector } from '@/connector-api';
+import {
+  facebookConnectorId,
+  facebookConnectorConfig,
+  twilioSmsConnectorConfig,
+  twilioSmsConnectorId,
+  sendgridEmailConnectorConfig,
+  sendgridEmailConnectorId,
+  facebookConnectorTarget,
+} from '@/connectors-mock';
 
 describe('admin console sign-in experience', () => {
   it('should get sign-in experience successfully', async () => {
@@ -35,5 +45,38 @@ describe('admin console sign-in experience', () => {
       .json<SignInExperience>();
 
     expect(updatedSignInExperience).toMatchObject(newSignInExperience);
+  });
+
+  it('should be able to setup sign in methods after connectors are enabled', async () => {
+    // Setup a social connector
+    await updateConnectorConfig(facebookConnectorId, facebookConnectorConfig);
+    await enableConnector(facebookConnectorId);
+
+    // Setup a SMS connector
+    await updateConnectorConfig(twilioSmsConnectorId, twilioSmsConnectorConfig);
+    await enableConnector(twilioSmsConnectorId);
+
+    // Setup an email connector
+    await updateConnectorConfig(sendgridEmailConnectorId, sendgridEmailConnectorConfig);
+    await enableConnector(sendgridEmailConnectorId);
+
+    // Set up sign-in methods
+    const newSignInMethods: Partial<SignInMethods> = {
+      username: SignInMethodState.Primary,
+      sms: SignInMethodState.Secondary,
+      email: SignInMethodState.Secondary,
+      social: SignInMethodState.Secondary,
+    };
+
+    const updatedSignInExperience = await authedAdminApi
+      .patch('sign-in-exp', {
+        json: {
+          socialSignInConnectorTargets: [facebookConnectorTarget],
+          signInMethods: newSignInMethods,
+        },
+      })
+      .json<SignInExperience>();
+
+    expect(updatedSignInExperience.signInMethods).toMatchObject(newSignInMethods);
   });
 });
