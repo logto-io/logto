@@ -1,6 +1,6 @@
 {
   "name": "@logto/connector-smtp",
-  "version": "1.0.0-beta.1",
+  "version": "1.0.0-beta.2",
   "description": "SMTP connector implementation.",
   "main": "./lib/index.js",
   "exports": "./lib/index.js",
@@ -24,7 +24,7 @@
     "prepack": "pnpm build"
   },
   "dependencies": {
-    "@logto/connector-types": "^1.0.0-beta.1",
+    "@logto/connector-types": "^1.0.0-beta.2",
     "@logto/shared": "^1.0.0-beta.1",
     "@silverhand/essentials": "^1.1.6",
     "@silverhand/jest-config": "^0.17.0",

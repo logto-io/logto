@@ -1,6 +1,6 @@
 {
   "name": "@logto/connector-types",
-  "version": "1.0.0-beta.1",
+  "version": "1.0.0-beta.2",
   "main": "lib/index.js",
   "author": "Silverhand Inc. <contact@silverhand.io>",
   "license": "MPL-2.0",
@@ -19,7 +19,7 @@
     "node": "^16.0.0"
   },
   "dependencies": {
-    "@logto/phrases": "^1.0.0-beta.1",
+    "@logto/phrases": "^1.0.0-beta.2",
     "zod": "^3.14.3"
   },
   "devDependencies": {

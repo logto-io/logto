@@ -1,6 +1,6 @@
 {
   "name": "@logto/ui",
-  "version": "1.0.0-beta.1",
+  "version": "1.0.0-beta.2",
   "license": "MPL-2.0",
   "private": true,
   "scripts": {
@@ -16,9 +16,9 @@
     "test": "jest"
   },
   "devDependencies": {
-    "@logto/phrases": "^1.0.0-beta.1",
-    "@logto/phrases-ui": "^1.0.0-beta.1",
-    "@logto/schemas": "^1.0.0-beta.1",
+    "@logto/phrases": "^1.0.0-beta.2",
+    "@logto/phrases-ui": "^1.0.0-beta.2",
+    "@logto/schemas": "^1.0.0-beta.2",
     "@parcel/core": "2.6.2",
     "@parcel/transformer-sass": "2.6.2",
     "@parcel/transformer-svg-react": "2.6.2",

@@ -1,6 +1,6 @@
 {
   "name": "@logto/schemas",
-  "version": "1.0.0-beta.1",
+  "version": "1.0.0-beta.2",
   "main": "lib/index.js",
   "author": "Silverhand Inc. <contact@silverhand.io>",
   "license": "MPL-2.0",
@@ -43,9 +43,9 @@
   },
   "prettier": "@silverhand/eslint-config/.prettierrc",
   "dependencies": {
-    "@logto/connector-types": "^1.0.0-beta.1",
-    "@logto/phrases": "^1.0.0-beta.1",
-    "@logto/phrases-ui": "^1.0.0-beta.1",
+    "@logto/connector-types": "^1.0.0-beta.2",
+    "@logto/phrases": "^1.0.0-beta.2",
+    "@logto/phrases-ui": "^1.0.0-beta.2",
     "@logto/shared": "^1.0.0-beta.1",
     "zod": "^3.14.3"
   }

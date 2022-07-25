@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.0-beta.2](https://github.com/logto-io/logto/compare/v1.0.0-beta.1...v1.0.0-beta.2) (2022-07-25)
+
+
+### Bug Fixes
+
+* **demo-app:** hide username if not exists ([#1644](https://github.com/logto-io/logto/issues/1644)) ([8b30f97](https://github.com/logto-io/logto/commit/8b30f974bfa4fa9c1aa43d2bcc22779a454905db))
+
+
+
 ## [1.0.0-beta.1](https://github.com/logto-io/logto/compare/v1.0.0-beta.0...v1.0.0-beta.1) (2022-07-19)
 
 **Note:** Version bump only for package @logto/demo-app

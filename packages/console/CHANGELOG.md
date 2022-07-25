@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.0-beta.2](https://github.com/logto-io/logto/compare/v1.0.0-beta.1...v1.0.0-beta.2) (2022-07-25)
+
+
+### Bug Fixes
+
+* **console:** code editor content should be editable on firefox ([56ded3e](https://github.com/logto-io/logto/commit/56ded3e0a970bf5d05b675dc7306be22a7e6316c))
+* **console:** connector can be dragged upwards to reorder ([038bba4](https://github.com/logto-io/logto/commit/038bba45e198536a00af0e010abd437151c26497))
+* **console:** remove annoying horizontal scrollbar from code editor ([7dba908](https://github.com/logto-io/logto/commit/7dba9088492676e9ad257a280d5b615571f36167))
+* **console:** should parse to json before using zod safeParse ([ec674ec](https://github.com/logto-io/logto/commit/ec674ecd7745beb3df2b651bfa98d5e8d4a62dfd))
+
+
+
 ## [1.0.0-beta.1](https://github.com/logto-io/logto/compare/v1.0.0-beta.0...v1.0.0-beta.1) (2022-07-19)
 
 
