@@ -1,5 +1,4 @@
 import {
-  ValidateConfig,
   ConnectorInstance,
   EmailConnectorInstance,
   SmsConnectorInstance,
@@ -89,6 +88,7 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
       const connectorInstance = await getConnectorInstanceById(id);
       const {
         connector: { config },
+        validateConfig,
         metadata,
       } = connectorInstance;
 
@@ -96,8 +96,7 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
        * Assertion functions always need explicit annotations.
        * See https://github.com/microsoft/TypeScript/issues/36931#issuecomment-589753014
        */
-      // eslint-disable-next-line unicorn/consistent-destructuring
-      const validator: ValidateConfig = connectorInstance.validateConfig;
+      const validator: typeof validateConfig = validateConfig;
 
       if (enabled) {
         validator(config);
@@ -145,15 +144,13 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
         body,
       } = ctx.guard;
 
-      const connectorInstance = await getConnectorInstanceById(id);
-      const { metadata } = connectorInstance;
+      const { metadata, validateConfig } = await getConnectorInstanceById(id);
 
       /**
        * Assertion functions always need explicit annotations.
        * See https://github.com/microsoft/TypeScript/issues/36931#issuecomment-589753014
        */
-      // eslint-disable-next-line unicorn/consistent-destructuring
-      const validator: ValidateConfig = connectorInstance.validateConfig;
+      const validator: typeof validateConfig = validateConfig;
 
       if (body.config) {
         validator(body.config);

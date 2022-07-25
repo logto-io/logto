@@ -9,6 +9,7 @@ import nock from 'nock';
 import FacebookConnector from '.';
 import { accessTokenEndpoint, authorizationEndpoint, userInfoEndpoint } from './constant';
 import { clientId, clientSecret, code, dummyRedirectUri, fields, mockedConfig } from './mock';
+import { FacebookConfig } from './types';
 
 const getConnectorConfig = jest.fn() as GetConnectorConfig;
 
@@ -30,14 +31,14 @@ describe('facebook connector', () => {
      */
 
     it('should pass on valid config', async () => {
-      const validator: ValidateConfig = facebookMethods.validateConfig;
+      const validator: ValidateConfig<FacebookConfig> = facebookMethods.validateConfig;
       expect(() => {
         validator({ clientId, clientSecret });
       }).not.toThrow();
     });
 
     it('should fail on invalid config', async () => {
-      const validator: ValidateConfig = facebookMethods.validateConfig;
+      const validator: ValidateConfig<FacebookConfig> = facebookMethods.validateConfig;
       expect(() => {
         validator({});
       }).toThrow();

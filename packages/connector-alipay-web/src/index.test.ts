@@ -9,6 +9,7 @@ import nock from 'nock';
 import AlipayConnector from '.';
 import { alipayEndpoint, authorizationEndpoint } from './constant';
 import { mockedAlipayConfig, mockedAlipayConfigWithValidPrivateKey } from './mock';
+import { AlipayConfig } from './types';
 
 const getConnectorConfig = jest.fn() as GetConnectorConfig;
 
@@ -25,7 +26,7 @@ describe('validateConfig', () => {
    */
 
   it('should pass on valid config', async () => {
-    const validator: ValidateConfig = alipayMethods.validateConfig;
+    const validator: ValidateConfig<AlipayConfig> = alipayMethods.validateConfig;
     expect(() => {
       validator({
         appId: 'appId',
@@ -36,14 +37,14 @@ describe('validateConfig', () => {
   });
 
   it('should fail on empty config', async () => {
-    const validator: ValidateConfig = alipayMethods.validateConfig;
+    const validator: ValidateConfig<AlipayConfig> = alipayMethods.validateConfig;
     expect(() => {
       validator({});
     }).toThrow();
   });
 
   it('should fail when missing required properties', async () => {
-    const validator: ValidateConfig = alipayMethods.validateConfig;
+    const validator: ValidateConfig<AlipayConfig> = alipayMethods.validateConfig;
     expect(() => {
       validator({ appId: 'appId' });
     }).toThrow();

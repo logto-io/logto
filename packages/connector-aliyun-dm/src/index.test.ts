@@ -3,6 +3,7 @@ import { GetConnectorConfig, ValidateConfig } from '@logto/connector-types';
 import AliyunDmConnector from '.';
 import { mockedConfig } from './mock';
 import { singleSendMail } from './single-send-mail';
+import { AliyunDmConfig } from './types';
 
 const getConnectorConfig = jest.fn() as GetConnectorConfig;
 
@@ -34,7 +35,7 @@ describe('validateConfig()', () => {
    */
 
   it('should pass on valid config', async () => {
-    const validator: ValidateConfig = aliyunDmMethods.validateConfig;
+    const validator: ValidateConfig<AliyunDmConfig> = aliyunDmMethods.validateConfig;
     expect(() => {
       validator({
         accessKeyId: 'accessKeyId',
@@ -46,7 +47,7 @@ describe('validateConfig()', () => {
   });
 
   it('should fail if config is invalid', async () => {
-    const validator: ValidateConfig = aliyunDmMethods.validateConfig;
+    const validator: ValidateConfig<AliyunDmConfig> = aliyunDmMethods.validateConfig;
     expect(() => {
       validator({});
     }).toThrow();

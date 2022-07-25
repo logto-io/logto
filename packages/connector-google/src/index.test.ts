@@ -9,6 +9,7 @@ import nock from 'nock';
 import GoogleConnector from '.';
 import { accessTokenEndpoint, authorizationEndpoint, userInfoEndpoint } from './constant';
 import { mockedConfig } from './mock';
+import { GoogleConfig } from './types';
 
 const getConnectorConfig = jest.fn() as GetConnectorConfig;
 
@@ -30,14 +31,14 @@ describe('google connector', () => {
      */
 
     it('should pass on valid config', async () => {
-      const validator: ValidateConfig = googleMethods.validateConfig;
+      const validator: ValidateConfig<GoogleConfig> = googleMethods.validateConfig;
       expect(() => {
         validator({ clientId: 'clientId', clientSecret: 'clientSecret' });
       }).not.toThrow();
     });
 
     it('should fail on invalid config', async () => {
-      const validator: ValidateConfig = googleMethods.validateConfig;
+      const validator: ValidateConfig<GoogleConfig> = googleMethods.validateConfig;
       expect(() => {
         validator({});
       }).toThrow();

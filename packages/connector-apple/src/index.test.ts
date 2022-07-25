@@ -9,6 +9,7 @@ import { jwtVerify } from 'jose';
 import AppleConnector from '.';
 import { authorizationEndpoint } from './constant';
 import { mockedConfig } from './mock';
+import { AppleConfig } from './types';
 
 const getConnectorConfig = jest.fn() as GetConnectorConfig;
 
@@ -50,14 +51,14 @@ describe('validateConfig', () => {
    */
 
   it('should be true on valid config', async () => {
-    const validator: ValidateConfig = appleMethods.validateConfig;
+    const validator: ValidateConfig<AppleConfig> = appleMethods.validateConfig;
     expect(() => {
       validator({ clientId: 'clientId' });
     }).not.toThrow();
   });
 
   it('should be false on empty config', async () => {
-    const validator: ValidateConfig = appleMethods.validateConfig;
+    const validator: ValidateConfig<AppleConfig> = appleMethods.validateConfig;
     expect(() => {
       validator({});
     }).toThrow();
