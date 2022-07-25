@@ -33,8 +33,8 @@ const Guide = ({ connector, onClose }: Props) => {
   const { id: connectorId, type: connectorType, name, configTemplate, readme } = connector;
 
   const localeRaw = i18next.language;
-  const locale = languageEnumGuard.parse(localeRaw);
-  const connectorName = name[locale];
+  const result = languageEnumGuard.safeParse(localeRaw);
+  const connectorName = result.success ? name[result.data] : name.en;
 
   const isSocialConnector =
     connectorType !== ConnectorType.SMS && connectorType !== ConnectorType.Email;
