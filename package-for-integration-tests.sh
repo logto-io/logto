@@ -12,7 +12,7 @@ echo Prune dependencies
 rm -rf node_modules packages/*/node_modules
 
 echo Install production dependencies
-NODE_ENV=production pnpm i
+NODE_ENV=production pnpm i --no-frozen-lockfile
 
 echo Prune files
 rm -rf \
