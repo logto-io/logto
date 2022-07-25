@@ -22,7 +22,7 @@ jobs:
         uses: silverhand-io/actions-node-pnpm-run-steps@v1.2.3
 
       - name: Package
-        run: ./package.sh
+        run: ./package-for-integration-tests.sh
 
       - uses: actions/upload-artifact@v3
         with:
@@ -88,8 +88,6 @@ jobs:
 
       - name: Run Logto
         run: |
-          pnpm link @logto/connector-mock-sms
-          pnpm link @logto/connector-mock-email
           node . --from-root --all-yes &
         working-directory: logto/packages/core
         env:
