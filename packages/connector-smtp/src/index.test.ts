@@ -1,6 +1,7 @@
-import { GetConnectorConfig } from '@logto/connector-types';
+import { GetConnectorConfig, ValidateConfig } from '@logto/connector-types';
 
 import SmtpConnector from '.';
+import { SmtpConfig } from './types';
 
 const getConnectorConfig = jest.fn() as GetConnectorConfig;
 
@@ -17,7 +18,7 @@ describe('validateConfig()', () => {
    */
 
   it('should pass on valid config', async () => {
-    const validator: typeof smtpMethods.validateConfig = smtpMethods.validateConfig;
+    const validator: ValidateConfig<SmtpConfig> = smtpMethods.validateConfig;
     expect(() => {
       validator({
         host: 'smtp.testing.com',
@@ -56,7 +57,7 @@ describe('validateConfig()', () => {
   });
 
   it('should be false if config is invalid', async () => {
-    const validator: typeof smtpMethods.validateConfig = smtpMethods.validateConfig;
+    const validator: ValidateConfig<SmtpConfig> = smtpMethods.validateConfig;
     expect(() => {
       validator({});
     }).toThrow();

@@ -1,10 +1,16 @@
-import { ConnectorError, ConnectorErrorCodes, GetConnectorConfig } from '@logto/connector-types';
+import {
+  ConnectorError,
+  ConnectorErrorCodes,
+  GetConnectorConfig,
+  ValidateConfig,
+} from '@logto/connector-types';
 import nock from 'nock';
 import * as qs from 'query-string';
 
 import GithubConnector from '.';
 import { accessTokenEndpoint, authorizationEndpoint, userInfoEndpoint } from './constant';
 import { mockedConfig } from './mock';
+import { GithubConfig } from './types';
 
 const getConnectorConfig = jest.fn() as GetConnectorConfig;
 
@@ -72,21 +78,21 @@ describe('validateConfig', () => {
    */
 
   it('should pass on valid config', async () => {
-    const validator: typeof githubMethods.validateConfig = githubMethods.validateConfig;
+    const validator: ValidateConfig<GithubConfig> = githubMethods.validateConfig;
     expect(() => {
       validator({ clientId: 'clientId', clientSecret: 'clientSecret' });
     }).not.toThrow();
   });
 
   it('should fail on empty config', async () => {
-    const validator: typeof githubMethods.validateConfig = githubMethods.validateConfig;
+    const validator: ValidateConfig<GithubConfig> = githubMethods.validateConfig;
     expect(() => {
       validator({});
     }).toThrow();
   });
 
   it('should fail when missing clientSecret', async () => {
-    const validator: typeof githubMethods.validateConfig = githubMethods.validateConfig;
+    const validator: ValidateConfig<GithubConfig> = githubMethods.validateConfig;
     expect(() => {
       validator({ clientId: 'clientId' });
     }).toThrow();

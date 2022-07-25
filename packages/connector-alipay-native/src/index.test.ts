@@ -1,9 +1,15 @@
-import { ConnectorError, ConnectorErrorCodes, GetConnectorConfig } from '@logto/connector-types';
+import {
+  ConnectorError,
+  ConnectorErrorCodes,
+  GetConnectorConfig,
+  ValidateConfig,
+} from '@logto/connector-types';
 import nock from 'nock';
 
 import AlipayNativeConnector from '.';
 import { alipayEndpoint } from './constant';
 import { mockedAlipayNativeConfig, mockedAlipayNativeConfigWithValidPrivateKey } from './mock';
+import { AlipayNativeConfig } from './types';
 
 const getConnectorConfig = jest.fn() as GetConnectorConfig;
 
@@ -20,21 +26,21 @@ describe('validateConfig', () => {
    */
 
   it('should pass on valid config', async () => {
-    const validator: typeof alipayNativeMethods.validateConfig = alipayNativeMethods.validateConfig;
+    const validator: ValidateConfig<AlipayNativeConfig> = alipayNativeMethods.validateConfig;
     expect(() => {
       validator(mockedAlipayNativeConfig);
     }).not.toThrow();
   });
 
   it('should fail on empty config', async () => {
-    const validator: typeof alipayNativeMethods.validateConfig = alipayNativeMethods.validateConfig;
+    const validator: ValidateConfig<AlipayNativeConfig> = alipayNativeMethods.validateConfig;
     expect(() => {
       validator({});
     }).toThrow();
   });
 
   it('should fail when missing required properties', async () => {
-    const validator: typeof alipayNativeMethods.validateConfig = alipayNativeMethods.validateConfig;
+    const validator: ValidateConfig<AlipayNativeConfig> = alipayNativeMethods.validateConfig;
     expect(() => {
       validator({ appId: 'appId' });
     }).toThrow();

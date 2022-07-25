@@ -1,9 +1,15 @@
-import { ConnectorError, ConnectorErrorCodes, GetConnectorConfig } from '@logto/connector-types';
+import {
+  ConnectorError,
+  ConnectorErrorCodes,
+  GetConnectorConfig,
+  ValidateConfig,
+} from '@logto/connector-types';
 import nock from 'nock';
 
 import GoogleConnector from '.';
 import { accessTokenEndpoint, authorizationEndpoint, userInfoEndpoint } from './constant';
 import { mockedConfig } from './mock';
+import { GoogleConfig } from './types';
 
 const getConnectorConfig = jest.fn() as GetConnectorConfig;
 
@@ -25,14 +31,14 @@ describe('google connector', () => {
      */
 
     it('should pass on valid config', async () => {
-      const validator: typeof googleMethods.validateConfig = googleMethods.validateConfig;
+      const validator: ValidateConfig<GoogleConfig> = googleMethods.validateConfig;
       expect(() => {
         validator({ clientId: 'clientId', clientSecret: 'clientSecret' });
       }).not.toThrow();
     });
 
     it('should fail on invalid config', async () => {
-      const validator: typeof googleMethods.validateConfig = googleMethods.validateConfig;
+      const validator: ValidateConfig<GoogleConfig> = googleMethods.validateConfig;
       expect(() => {
         validator({});
       }).toThrow();

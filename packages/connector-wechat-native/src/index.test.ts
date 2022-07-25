@@ -1,9 +1,15 @@
-import { ConnectorError, ConnectorErrorCodes, GetConnectorConfig } from '@logto/connector-types';
+import {
+  ConnectorError,
+  ConnectorErrorCodes,
+  GetConnectorConfig,
+  ValidateConfig,
+} from '@logto/connector-types';
 import nock from 'nock';
 
 import WechatNativeConnector from '.';
 import { accessTokenEndpoint, authorizationEndpoint, userInfoEndpoint } from './constant';
 import { mockedConfig } from './mock';
+import { WechatNativeConfig } from './types';
 
 const getConnectorConfig = jest.fn() as GetConnectorConfig;
 
@@ -97,21 +103,21 @@ describe('validateConfig', () => {
    */
 
   it('should pass on valid config', async () => {
-    const validator: typeof wechatNativeMethods.validateConfig = wechatNativeMethods.validateConfig;
+    const validator: ValidateConfig<WechatNativeConfig> = wechatNativeMethods.validateConfig;
     expect(() => {
       validator({ appId: 'appId', appSecret: 'appSecret' });
     }).not.toThrow();
   });
 
   it('should fail on empty config', async () => {
-    const validator: typeof wechatNativeMethods.validateConfig = wechatNativeMethods.validateConfig;
+    const validator: ValidateConfig<WechatNativeConfig> = wechatNativeMethods.validateConfig;
     expect(() => {
       validator({});
     }).toThrow();
   });
 
   it('should fail when missing appSecret', async () => {
-    const validator: typeof wechatNativeMethods.validateConfig = wechatNativeMethods.validateConfig;
+    const validator: ValidateConfig<WechatNativeConfig> = wechatNativeMethods.validateConfig;
     expect(() => {
       validator({ appId: 'appId' });
     }).toThrow();

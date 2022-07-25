@@ -1,7 +1,8 @@
-import { GetConnectorConfig } from '@logto/connector-types';
+import { GetConnectorConfig, ValidateConfig } from '@logto/connector-types';
 
 import TwilioSmsConnector from '.';
 import { mockedConfig } from './mock';
+import { TwilioSmsConfig } from './types';
 
 const getConnectorConfig = jest.fn() as GetConnectorConfig;
 
@@ -18,14 +19,14 @@ describe('validateConfig()', () => {
    */
 
   it('should pass on valid config', async () => {
-    const validator: typeof twilioSmsMethods.validateConfig = twilioSmsMethods.validateConfig;
+    const validator: ValidateConfig<TwilioSmsConfig> = twilioSmsMethods.validateConfig;
     expect(() => {
       validator(mockedConfig);
     }).not.toThrow();
   });
 
   it('throws if config is invalid', async () => {
-    const validator: typeof twilioSmsMethods.validateConfig = twilioSmsMethods.validateConfig;
+    const validator: ValidateConfig<TwilioSmsConfig> = twilioSmsMethods.validateConfig;
     expect(() => {
       validator({});
     }).toThrow();

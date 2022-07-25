@@ -1,8 +1,9 @@
-import { GetConnectorConfig } from '@logto/connector-types';
+import { GetConnectorConfig, ValidateConfig } from '@logto/connector-types';
 
 import AliyunSmsConnector from '.';
 import { mockedConnectorConfig, mockedValidConnectorConfig, phoneTest, codeTest } from './mock';
 import { sendSms } from './single-send-text';
+import { AliyunSmsConfig } from './types';
 
 const getConnectorConfig = jest.fn() as GetConnectorConfig;
 
@@ -30,14 +31,14 @@ describe('validateConfig()', () => {
    */
 
   it('should pass on valid config', async () => {
-    const validator: typeof aliyunSmsMethods.validateConfig = aliyunSmsMethods.validateConfig;
+    const validator: ValidateConfig<AliyunSmsConfig> = aliyunSmsMethods.validateConfig;
     expect(() => {
       validator(mockedValidConnectorConfig);
     }).not.toThrow();
   });
 
   it('should fail if config is invalid', async () => {
-    const validator: typeof aliyunSmsMethods.validateConfig = aliyunSmsMethods.validateConfig;
+    const validator: ValidateConfig<AliyunSmsConfig> = aliyunSmsMethods.validateConfig;
     expect(() => {
       validator({});
     }).toThrow();
