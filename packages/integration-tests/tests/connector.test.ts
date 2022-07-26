@@ -18,6 +18,8 @@ import {
   enableConnector,
   getConnector,
   listConnectors,
+  sendEmailTestMessage,
+  sendSmsTestMessage,
   updateConnectorConfig,
 } from '@/api/connector';
 
@@ -164,9 +166,26 @@ test('connector flow', async () => {
       }),
     ])
   );
-
-  // Next up
-  // - validate `config` parameter before sending
-  // - send sms test message
-  // - send email test message
 });
+
+describe('send SMS/email test message', () => {
+  it('should send the test message successfully when the config is valid', async () => {
+    await expect(
+      sendSmsTestMessage(mockSmsConnectorId, '8612345678901', mockSmsConnectorConfig)
+    ).resolves.not.toThrow();
+    await expect(
+      sendEmailTestMessage(mockEmailConnectorId, 'test@example.com', mockEmailConnectorConfig)
+    ).resolves.not.toThrow();
+  });
+
+  it('should fail to send the test message when the config is invalid', async () => {
+    await expect(
+      sendSmsTestMessage(mockSmsConnectorId, '8612345678901', mockEmailConnectorConfig)
+    ).rejects.toThrow(HTTPError);
+    await expect(
+      sendEmailTestMessage(mockEmailConnectorId, 'test@example.com', mockSmsConnectorConfig)
+    ).rejects.toThrow(HTTPError);
+  });
+});
+
+// Next up: refactor connectors.test.ts
