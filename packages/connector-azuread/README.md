@@ -3,7 +3,7 @@
 The Azure AD connector provides a succinct way for your application to use Azure’s OAuth 2.0 authentication system.
 
 **Table of contents**
-- [Azure AD connector](#azureAD-connector)
+- [Azure AD connector](#azure-ad-connector)
   - [Set up Azure AD in the Azure Portal](#set-up-azure-ad-in-the-azure-portal)
   - [Configure your client secret](#configure-your-client-secret)
   - [Compose the connector JSON](#compose-the-connector-json)
@@ -29,11 +29,11 @@ The Azure AD connector provides a succinct way for your application to use Azure
 - Add your Microsoft **Login Url** into logto json. This defaults to "https://login.microsoftonline.com/" for many applications, but you can set your custom domain if you have one. (Don't forget the trailing slash)
 
 
-```json
+```jsonc
 {
   "clientId": "<client-id>",
   "clientSecret": "<client-secret>",
-  "tenantId": "<tenant-id>",
+  "tenantId": "<tenant-id>", // use "common" if you did't select **Single Tenant**
   "cloudInstance": "https://login.microsoftonline.com/"
 }
 ```
@@ -41,12 +41,12 @@ The Azure AD connector provides a succinct way for your application to use Azure
 
 ### Config types
 
-| Name         | Type   |
-|--------------|--------|
-| clientId     | string |
-| clientSecret | string |
+| Name          | Type   |
+| ------------- | ------ |
+| clientId      | string |
+| clientSecret  | string |
+| tenantId      | string |
 | cloudInstance | string |
-| tenantId | string |
 
 ## References
 * [Web app that signs in users](https://docs.microsoft.com/en-us/azure/active-directory/develop/scenario-web-app-sign-user-overview?tabs=nodejs)

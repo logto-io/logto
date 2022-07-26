@@ -1,3 +1,5 @@
+import path from 'path';
+
 import {
   ConfidentialClientApplication,
   AuthorizationCodeRequest,
@@ -75,7 +77,7 @@ export default class AzureADConnector implements SocialConnectorInstance<AzureAD
       auth: {
         clientId,
         clientSecret,
-        authority: cloudInstance + tenantId,
+        authority: new URL(path.join(cloudInstance, tenantId)).toString(),
       },
     });
 
@@ -92,7 +94,7 @@ export default class AzureADConnector implements SocialConnectorInstance<AzureAD
     const codeRequest = {
       ...this.authCodeRequest,
       redirectUri,
-      scopes: [],
+      scopes: ['User.Read'],
       code,
     };
 
