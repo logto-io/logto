@@ -64,6 +64,7 @@ const UserConnectors = ({ userId, connectors, onDelete }: Props) => {
           name: {
             'zh-CN': '未知连接器',
             en: 'Unknown Connector',
+            'tr-TR': 'Bilinmeyen connector.',
           },
           target: key,
           userId: connectors[key]?.userId,

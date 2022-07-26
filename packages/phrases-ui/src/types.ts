@@ -8,4 +8,5 @@ export type ResourceKey = string | Record<string, unknown>;
 export enum Language {
   English = 'en',
   Chinese = 'zh-CN',
+  Turkish = 'tr-TR',
 }

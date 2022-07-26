@@ -53,6 +53,7 @@ const Preview = ({ signInExperience, className }: Props) => {
     const options = [
       { value: Language.English, title: t('sign_in_exp.preview.languages.english') },
       { value: Language.Chinese, title: t('sign_in_exp.preview.languages.chinese') },
+      { value: Language.Turkish, title: t('sign_in_exp.preview.languages.turkish') },
     ];
 
     if (signInExperience && !signInExperience.languageInfo.autoDetect) {
