@@ -106,7 +106,6 @@ export default class GoogleConnector implements SocialConnectorInstance<GoogleCo
     return { accessToken };
   };
 
-  // eslint-disable-next-line complexity
   public getUserInfo: GetUserInfo = async (data) => {
     const { code, redirectUri } = await this.authorizationCallbackHandler(data);
     const { accessToken } = await this.getAccessToken(code, redirectUri);
@@ -134,17 +133,7 @@ export default class GoogleConnector implements SocialConnectorInstance<GoogleCo
         name,
       };
     } catch (error: unknown) {
-      if (error instanceof HTTPError) {
-        const { statusCode, body: rawBody } = error.response;
-
-        if (statusCode === 401) {
-          throw new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid);
-        }
-
-        throw new ConnectorError(ConnectorErrorCodes.General, JSON.stringify(rawBody));
-      }
-
-      throw error;
+      return this.getUserInfoErrorHandler(error);
     }
   };
 
@@ -156,5 +145,19 @@ export default class GoogleConnector implements SocialConnectorInstance<GoogleCo
     }
 
     return result.data;
+  };
+
+  private readonly getUserInfoErrorHandler = (error: unknown) => {
+    if (error instanceof HTTPError) {
+      const { statusCode, body: rawBody } = error.response;
+
+      if (statusCode === 401) {
+        throw new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid);
+      }
+
+      throw new ConnectorError(ConnectorErrorCodes.General, JSON.stringify(rawBody));
+    }
+
+    throw error;
   };
 }

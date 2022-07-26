@@ -32,4 +32,4 @@ export const userInfoResponseGuard = z.object({
 
 export type UserInfoResponse = z.infer<typeof userInfoResponseGuard>;
 
-export type GetUserInfoErrorHandler = (UserInfo: Partial<UserInfoResponse>) => void;
+export type UserInfoResponseMessageParser = (userInfo: Partial<UserInfoResponse>) => void;
