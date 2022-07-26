@@ -8,7 +8,7 @@ rm -rf node_modules packages/*/node_modules
 
 echo Install production dependencies
 if [[ $INTEGRATION_TEST =~ ^(true|1)$ ]]; then
-  echo Also install the mock connectors for integration tests only.
+  echo Install the mock connectors for integration tests only
   cd packages/core
   pnpm link @logto/connector-mock-sms
   pnpm link @logto/connector-mock-email
