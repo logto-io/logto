@@ -15,7 +15,7 @@ import {
   GetConnectorConfig,
   codeWithRedirectDataGuard,
 } from '@logto/connector-types';
-import { assert } from '@silverhand/essentials';
+import { assert, conditional } from '@silverhand/essentials';
 import got, { HTTPError } from 'got';
 
 import { scopes, defaultMetadata, defaultTimeout, graphAPIEndpoint } from './constant';
@@ -31,8 +31,6 @@ export default class AzureADConnector implements SocialConnectorInstance<AzureAD
 
   public clientApplication!: ConfidentialClientApplication;
   public authCodeUrlParams!: AuthorizationUrlRequest;
-  public verifier!: string;
-  public challenge!: string;
 
   cryptoProvider = new CryptoProvider();
   private readonly authCodeRequest!: AuthorizationCodeRequest;
@@ -81,14 +79,8 @@ export default class AzureADConnector implements SocialConnectorInstance<AzureAD
       },
     });
 
-    const { challenge, verifier } = await this.cryptoProvider.generatePkceCodes();
-    this.challenge = challenge;
-    this.verifier = verifier;
-
     const authCodeUrlParameters = {
       ...this.authCodeUrlParams,
-      codeChallenge: this.challenge,
-      codeChallengeMethod: 'S256',
     };
 
     const authCodeUrl = await this.clientApplication.getAuthCodeUrl(authCodeUrlParameters);
@@ -102,7 +94,6 @@ export default class AzureADConnector implements SocialConnectorInstance<AzureAD
       redirectUri,
       scopes: [],
       code,
-      codeVerifier: this.verifier,
     };
 
     const authResult = await this.clientApplication.acquireTokenByCode(codeRequest);
