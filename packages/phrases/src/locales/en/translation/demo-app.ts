@@ -1,6 +1,6 @@
 const demo_app = {
   notification:
-    "You will need an admin console account to sign in to the demo app. If you don't already have an account, create one for free.",
+    'Use your default admin account or create a new account to sign in to the demo app.',
   title: "You've successfully signed in the demo app!",
   subtitle: 'Here is your log in information:',
   username: 'Username: ',
