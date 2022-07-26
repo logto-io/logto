@@ -22,6 +22,7 @@
     "@silverhand/ts-config": "^0.17.0",
     "@types/jest": "^27.4.1",
     "@types/node": "^16.0.0",
+    "dotenv": "^16.0.0",
     "eslint": "^8.19.0",
     "got": "^11.8.2",
     "jest": "^27.5.1",
