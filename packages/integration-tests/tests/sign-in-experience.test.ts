@@ -1,7 +1,7 @@
 import { BrandingStyle, SignInExperience, SignInMethods, SignInMethodState } from '@logto/schemas';
 
 import { authedAdminApi } from '@/api';
-import { updateConnectorConfig, enableConnector } from '@/connector-api';
+import { updateConnectorConfig, enableConnector, disableConnector } from '@/connector-api';
 import {
   facebookConnectorId,
   facebookConnectorConfig,
@@ -48,17 +48,18 @@ describe('admin console sign-in experience', () => {
   });
 
   it('should be able to setup sign in methods after connectors are enabled', async () => {
-    // Setup a social connector
-    await updateConnectorConfig(facebookConnectorId, facebookConnectorConfig);
-    await enableConnector(facebookConnectorId);
+    // Setup connectors for tests
+    await Promise.all([
+      updateConnectorConfig(facebookConnectorId, facebookConnectorConfig),
+      updateConnectorConfig(twilioSmsConnectorId, twilioSmsConnectorConfig),
+      updateConnectorConfig(sendgridEmailConnectorId, sendgridEmailConnectorConfig),
+    ]);
 
-    // Setup a SMS connector
-    await updateConnectorConfig(twilioSmsConnectorId, twilioSmsConnectorConfig);
-    await enableConnector(twilioSmsConnectorId);
-
-    // Setup an email connector
-    await updateConnectorConfig(sendgridEmailConnectorId, sendgridEmailConnectorConfig);
-    await enableConnector(sendgridEmailConnectorId);
+    await Promise.all([
+      enableConnector(facebookConnectorId),
+      enableConnector(twilioSmsConnectorId),
+      enableConnector(sendgridEmailConnectorId),
+    ]);
 
     // Set up sign-in methods
     const newSignInMethods: Partial<SignInMethods> = {
@@ -78,5 +79,12 @@ describe('admin console sign-in experience', () => {
       .json<SignInExperience>();
 
     expect(updatedSignInExperience.signInMethods).toMatchObject(newSignInMethods);
+
+    // Reset connectors
+    await Promise.all([
+      disableConnector(facebookConnectorId),
+      disableConnector(twilioSmsConnectorId),
+      disableConnector(sendgridEmailConnectorId),
+    ]);
   });
 });
