@@ -412,6 +412,64 @@ importers:
       tsc-watch: 5.0.3_typescript@4.6.3
       typescript: 4.6.3
 
+  packages/connector-mock-mail:
+    specifiers:
+      '@logto/connector-types': ^1.0.0-beta.1
+      '@logto/shared': ^1.0.0-beta.1
+      '@silverhand/eslint-config': ^0.17.0
+      '@silverhand/essentials': ^1.1.6
+      '@silverhand/ts-config': ^0.17.0
+      '@types/node': ^16.3.1
+      eslint: ^8.19.0
+      lint-staged: ^13.0.0
+      prettier: ^2.3.2
+      tsc-watch: ^5.0.0
+      typescript: ^4.6.2
+      zod: ^3.14.3
+    dependencies:
+      '@logto/connector-types': link:../connector-types
+      '@logto/shared': link:../shared
+      '@silverhand/essentials': 1.1.7
+      zod: 3.14.3
+    devDependencies:
+      '@silverhand/eslint-config': 0.17.0_zheml67kdyttrjblcc5k6h6tmu
+      '@silverhand/ts-config': 0.17.0_typescript@4.7.2
+      '@types/node': 16.11.12
+      eslint: 8.19.0
+      lint-staged: 13.0.0
+      prettier: 2.5.1
+      tsc-watch: 5.0.3_typescript@4.7.2
+      typescript: 4.7.2
+
+  packages/connector-mock-sms:
+    specifiers:
+      '@logto/connector-types': ^1.0.0-beta.1
+      '@logto/shared': ^1.0.0-beta.1
+      '@silverhand/eslint-config': ^0.17.0
+      '@silverhand/essentials': ^1.1.6
+      '@silverhand/ts-config': ^0.17.0
+      '@types/node': ^16.3.1
+      eslint: ^8.19.0
+      lint-staged: ^13.0.0
+      prettier: ^2.3.2
+      tsc-watch: ^5.0.0
+      typescript: ^4.6.2
+      zod: ^3.14.3
+    dependencies:
+      '@logto/connector-types': link:../connector-types
+      '@logto/shared': link:../shared
+      '@silverhand/essentials': 1.1.7
+      zod: 3.14.3
+    devDependencies:
+      '@silverhand/eslint-config': 0.17.0_zheml67kdyttrjblcc5k6h6tmu
+      '@silverhand/ts-config': 0.17.0_typescript@4.7.2
+      '@types/node': 16.11.12
+      eslint: 8.19.0
+      lint-staged: 13.0.0
+      prettier: 2.5.1
+      tsc-watch: 5.0.3_typescript@4.7.2
+      typescript: 4.7.2
+
   packages/connector-sendgrid-mail:
     specifiers:
       '@jest/types': ^27.5.1

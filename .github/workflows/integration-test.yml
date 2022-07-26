@@ -7,7 +7,7 @@ on:
       - 'push-action/**'
   pull_request:
 
-concurrency: 
+concurrency:
   group: integration-test-${{ github.head_ref || github.run_id }}
   cancel-in-progress: true
 
@@ -23,20 +23,22 @@ jobs:
 
       - name: Package
         run: ./package.sh
+        env:
+          INTEGRATION_TEST: true
 
       - uses: actions/upload-artifact@v3
         with:
           name: integration-test-${{ github.sha }}
           path: /tmp/logto.tar.gz
           retention-days: 3
-  
+
   run-logto:
     needs: package
 
     strategy:
       matrix:
         os: [ubuntu-latest, macos-12]
-    
+
     runs-on: ${{ matrix.os }}
 
     steps:
@@ -93,6 +95,7 @@ jobs:
           INTEGRATION_TEST: true
           NODE_ENV: production
           DB_URL_DEFAULT: postgres://postgres:postgres@localhost:5432
+          ADDITIONAL_CONNECTOR_PACKAGES: '@logto/connector-mock-sms,@logto/connector-mock-email'
 
       - name: Sleep for 5 seconds
         run: sleep 5

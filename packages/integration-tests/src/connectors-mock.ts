@@ -98,3 +98,51 @@ export const sendgridEmailConnectorConfig = {
     },
   ],
 };
+
+export const mockSmsConnectorId = 'mock-short-message-service';
+export const mockSmsConnectorConfig = {
+  accountSID: 'account-sid-value',
+  authToken: 'auth-token-value',
+  fromMessagingServiceSID: 'from-messaging-service-sid-value',
+  templates: [
+    {
+      content: 'This is for sign-in purposes only. Your passcode is {{code}}.',
+      usageType: 'SignIn',
+    },
+    {
+      content: 'This is for registering purposes only. Your passcode is {{code}}.',
+      usageType: 'Register',
+    },
+    {
+      content: 'This is for testing purposes only. Your passcode is {{code}}.',
+      usageType: 'Test',
+    },
+  ],
+};
+
+export const mockEmailConnectorId = 'mock-email-service';
+export const mockEmailConnectorConfig = {
+  apiKey: 'api-key-value',
+  fromEmail: 'noreply@logto.test.io',
+  fromName: 'from-name-value',
+  templates: [
+    {
+      usageType: 'SignIn',
+      type: 'text/plain',
+      subject: 'Logto SignIn Template',
+      content: 'This is for sign-in purposes only. Your passcode is {{code}}.',
+    },
+    {
+      usageType: 'Register',
+      type: 'text/plain',
+      subject: 'Logto Register Template',
+      content: 'This is for registering purposes only. Your passcode is {{code}}.',
+    },
+    {
+      usageType: 'Test',
+      type: 'text/plain',
+      subject: 'Logto Test Template',
+      content: 'This is for testing purposes only. Your passcode is {{code}}.',
+    },
+  ],
+};

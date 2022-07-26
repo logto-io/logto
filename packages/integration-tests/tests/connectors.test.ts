@@ -13,12 +13,12 @@ import {
   facebookConnectorConfig,
   aliyunSmsConnectorId,
   aliyunSmsConnectorConfig,
-  twilioSmsConnectorId,
-  twilioSmsConnectorConfig,
   aliyunEmailConnectorId,
   aliyunEmailConnectorConfig,
-  sendgridEmailConnectorId,
-  sendgridEmailConnectorConfig,
+  mockSmsConnectorId,
+  mockSmsConnectorConfig,
+  mockEmailConnectorId,
+  mockEmailConnectorConfig,
 } from '@/connectors-mock';
 
 test('connector flow', async () => {
@@ -62,13 +62,13 @@ test('connector flow', async () => {
   /*
    * Change to another SMS connector
    */
-  const updatedTwilioSmsConnector = await updateConnectorConfig(
-    twilioSmsConnectorId,
-    twilioSmsConnectorConfig
+  const updatedMockSmsConnector = await updateConnectorConfig(
+    mockSmsConnectorId,
+    mockSmsConnectorConfig
   );
-  expect(updatedTwilioSmsConnector.config).toEqual(twilioSmsConnectorConfig);
-  const enabledTwilioSmsConnector = await enableConnector(twilioSmsConnectorId);
-  expect(enabledTwilioSmsConnector.enabled).toBeTruthy();
+  expect(updatedMockSmsConnector.config).toEqual(mockSmsConnectorConfig);
+  const enabledMockSmsConnector = await enableConnector(mockSmsConnectorId);
+  expect(enabledMockSmsConnector.enabled).toBeTruthy();
 
   // There should be exactly one enabled SMS connector after changing to another SMS connector.
   const connectorsAfterChangingSmsConnector = await listConnectors();
@@ -76,7 +76,7 @@ test('connector flow', async () => {
     (connector) => connector.type === ConnectorType.SMS && connector.enabled
   );
   expect(enabledSmsConnectors.length).toEqual(1);
-  expect(enabledSmsConnectors[0]?.id).toEqual(twilioSmsConnectorId);
+  expect(enabledSmsConnectors[0]?.id).toEqual(mockSmsConnectorId);
 
   /*
    * Set up an email connector
@@ -92,13 +92,13 @@ test('connector flow', async () => {
   /*
    * Change to another email connector
    */
-  const updatedSendgridEmailConnector = await updateConnectorConfig(
-    sendgridEmailConnectorId,
-    sendgridEmailConnectorConfig
+  const updatedMockEmailConnector = await updateConnectorConfig(
+    mockEmailConnectorId,
+    mockEmailConnectorConfig
   );
-  expect(updatedSendgridEmailConnector.config).toEqual(sendgridEmailConnectorConfig);
-  const enabledSendgridEmailConnector = await enableConnector(sendgridEmailConnectorId);
-  expect(enabledSendgridEmailConnector.enabled).toBeTruthy();
+  expect(updatedMockEmailConnector.config).toEqual(mockEmailConnectorConfig);
+  const enabledMockEmailConnector = await enableConnector(mockEmailConnectorId);
+  expect(enabledMockEmailConnector.enabled).toBeTruthy();
 
   // There should be exactly one enabled email connector after changing to another email connector.
   const connectorsAfterChangingEmailConnector = await listConnectors();
@@ -106,14 +106,14 @@ test('connector flow', async () => {
     (connector) => connector.type === ConnectorType.Email && connector.enabled
   );
   expect(enabledEmailConnector.length).toEqual(1);
-  expect(enabledEmailConnector[0]?.id).toEqual(sendgridEmailConnectorId);
+  expect(enabledEmailConnector[0]?.id).toEqual(mockEmailConnectorId);
 
   /*
    * It should update the connector config successfully when it is valid; otherwise, it should fail.
    * We will test updating to the invalid connector config, that is the case not covered above.
    */
   await expect(
-    updateConnectorConfig(aliyunEmailConnectorId, sendgridEmailConnectorConfig)
+    updateConnectorConfig(aliyunEmailConnectorId, mockEmailConnectorConfig)
   ).rejects.toThrow(HTTPError);
   // To confirm the failed updating request above did not modify the original config,
   // we check: the Aliyun email connector config should stay the same.
@@ -126,10 +126,10 @@ test('connector flow', async () => {
    * We have not provided the API to delete a connector for now.
    * Deleting a connector using Admin Console means disabling a connector using Management API.
    */
-  const disabledSendgridEmailConnector = await disableConnector(sendgridEmailConnectorId);
-  expect(disabledSendgridEmailConnector.enabled).toBeFalsy();
-  const sendgridEmailConnector = await getConnector(sendgridEmailConnectorId);
-  expect(sendgridEmailConnector.enabled).toBeFalsy();
+  const disabledMockEmailConnector = await disableConnector(mockEmailConnectorId);
+  expect(disabledMockEmailConnector.enabled).toBeFalsy();
+  const mockEmailConnector = await getConnector(mockEmailConnectorId);
+  expect(mockEmailConnector.enabled).toBeFalsy();
 
   /**
    * List connectors after manually setting up connectors.
@@ -148,8 +148,8 @@ test('connector flow', async () => {
         enabled: false,
       }),
       expect.objectContaining({
-        id: twilioSmsConnectorId,
-        config: twilioSmsConnectorConfig,
+        id: mockSmsConnectorId,
+        config: mockSmsConnectorConfig,
         enabled: true,
       }),
       expect.objectContaining({
@@ -158,8 +158,8 @@ test('connector flow', async () => {
         enabled: false,
       }),
       expect.objectContaining({
-        id: sendgridEmailConnectorId,
-        config: sendgridEmailConnectorConfig,
+        id: mockEmailConnectorId,
+        config: mockEmailConnectorConfig,
         enabled: false,
       }),
     ])
