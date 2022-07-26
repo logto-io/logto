@@ -1,28 +1,39 @@
 import { authedAdminApi } from '@/api';
 import { registerUserAndSignIn } from '@/helper';
 
+type StatisticsData = {
+  count: number;
+  delta: number;
+};
+
 describe('admin console dashboard', () => {
   it('should get total user count successfully', async () => {
+    type TotalUserCountData = {
+      totalUserCount: number;
+    };
+
+    const { totalUserCount: originTotalUserCount } = await authedAdminApi
+      .get('dashboard/users/total')
+      .json<TotalUserCountData>();
+
     await registerUserAndSignIn();
 
     const { totalUserCount } = await authedAdminApi
       .get('dashboard/users/total')
-      .json<{ totalUserCount: number }>();
+      .json<TotalUserCountData>();
 
-    expect(totalUserCount).toBeGreaterThan(0);
+    expect(totalUserCount - 1).toBe(originTotalUserCount);
   });
 
   it('should get new user statistics successfully', async () => {
     type NewUserStatistics = {
-      today: {
-        count: number;
-        delta: number;
-      };
-      last7Days: {
-        count: number;
-        delta: number;
-      };
+      today: StatisticsData;
+      last7Days: StatisticsData;
     };
+
+    const originUserStatistics = await authedAdminApi
+      .get('dashboard/users/new')
+      .json<NewUserStatistics>();
 
     await registerUserAndSignIn();
 
@@ -30,32 +41,27 @@ describe('admin console dashboard', () => {
       .get('dashboard/users/new')
       .json<NewUserStatistics>();
 
-    expect(newUserStatistics.today.count).toBeGreaterThan(0);
-    expect(newUserStatistics.today.delta).toBeGreaterThan(0);
+    const keyToCompare: Array<keyof StatisticsData> = ['count', 'delta'];
 
-    expect(newUserStatistics.last7Days.count).toBeGreaterThan(0);
-    expect(newUserStatistics.last7Days.delta).toBeGreaterThan(0);
+    for (const key of keyToCompare) {
+      expect(newUserStatistics.today[key]).toBe(originUserStatistics.today[key] + 1);
+      expect(newUserStatistics.last7Days[key]).toBeGreaterThan(
+        originUserStatistics.last7Days[key] + 1
+      );
+    }
   });
 
   it('should get active user statistics successfully', async () => {
     type ActiveUserStatistics = {
-      dauCurve: Array<{
-        date: string;
-        count: number;
-      }>;
-      dau: {
-        count: number;
-        delta: number;
-      };
-      wau: {
-        count: number;
-        delta: number;
-      };
-      mau: {
-        count: number;
-        delta: number;
-      };
+      dauCurve: StatisticsData[];
+      dau: StatisticsData;
+      wau: StatisticsData;
+      mau: StatisticsData;
     };
+
+    const originActiveUserStatistics = await authedAdminApi
+      .get('dashboard/users/active')
+      .json<ActiveUserStatistics>();
 
     await registerUserAndSignIn();
 
@@ -64,11 +70,13 @@ describe('admin console dashboard', () => {
       .json<ActiveUserStatistics>();
 
     expect(activeUserStatistics.dauCurve.length).toBeGreaterThan(0);
-    expect(activeUserStatistics.dau.count).toBeGreaterThan(0);
-    expect(activeUserStatistics.dau.delta).toBeGreaterThan(0);
-    expect(activeUserStatistics.wau.count).toBeGreaterThan(0);
-    expect(activeUserStatistics.wau.delta).toBeGreaterThan(0);
-    expect(activeUserStatistics.mau.count).toBeGreaterThan(0);
-    expect(activeUserStatistics.mau.delta).toBeGreaterThan(0);
+
+    const keyToCompare: Array<keyof StatisticsData> = ['count', 'delta'];
+
+    for (const key of keyToCompare) {
+      expect(activeUserStatistics.dau[key]).toBe(originActiveUserStatistics.dau[key] + 1);
+      expect(activeUserStatistics.wau[key]).toBe(originActiveUserStatistics.wau[key] + 1);
+      expect(activeUserStatistics.mau[key]).toBe(originActiveUserStatistics.mau[key] + 1);
+    }
   });
 });
