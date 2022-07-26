@@ -1,7 +1,7 @@
 import { Storage, StorageKey } from '@logto/node';
 import { Nullable } from '@silverhand/essentials';
 
-export class DummyStorage implements Storage {
+export class MemoryStorage implements Storage {
   private storage: { [key in StorageKey]: Nullable<string> } = {
     idToken: null,
     refreshToken: null,

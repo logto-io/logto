@@ -1,24 +1,12 @@
-import type { Resource } from '@logto/schemas';
 import { managementResource } from '@logto/schemas/lib/seeds';
+import { HTTPError } from 'got';
 
-import { authedAdminApi } from '@/api';
+import { createResource, getResource, updateResource, deleteResource } from '@/api';
 import { generateResourceIndicator, generateResourceName } from '@/utils';
-
-const createResource = (name?: string, indicator?: string) =>
-  authedAdminApi
-    .post('resources', {
-      json: {
-        name: name ?? generateResourceName(),
-        indicator: indicator ?? generateResourceIndicator(),
-      },
-    })
-    .json<Resource>();
 
 describe('admin console api resources', () => {
   it('should get management api resource details successfully', async () => {
-    const fetchedManagementApiResource = await authedAdminApi
-      .get(`resources/${managementResource.id}`)
-      .json<Resource>();
+    const fetchedManagementApiResource = await getResource(managementResource.id);
 
     expect(fetchedManagementApiResource).toMatchObject(managementResource);
   });
@@ -32,9 +20,7 @@ describe('admin console api resources', () => {
     expect(createdResource.name).toBe(resourceName);
     expect(createdResource.indicator).toBe(resourceIndicator);
 
-    const fetchedCreatedResource = await authedAdminApi
-      .get(`resources/${createdResource.id}`)
-      .json<Resource>();
+    const fetchedCreatedResource = await getResource(createdResource.id);
 
     expect(fetchedCreatedResource).toBeTruthy();
   });
@@ -47,14 +33,10 @@ describe('admin console api resources', () => {
     const newResourceName = `new_${resource.name}`;
     const newAccessTokenTtl = resource.accessTokenTtl + 100;
 
-    const updatedResource = await authedAdminApi
-      .patch(`resources/${resource.id}`, {
-        json: {
-          name: newResourceName,
-          accessTokenTtl: newAccessTokenTtl,
-        },
-      })
-      .json<Resource>();
+    const updatedResource = await updateResource(resource.id, {
+      name: newResourceName,
+      accessTokenTtl: newAccessTokenTtl,
+    });
 
     expect(updatedResource.id).toBe(resource.id);
     expect(updatedResource.name).toBe(newResourceName);
@@ -66,12 +48,9 @@ describe('admin console api resources', () => {
 
     expect(createdResource).toBeTruthy();
 
-    await authedAdminApi.delete(`resources/${createdResource.id}`);
+    await deleteResource(createdResource.id);
 
-    const fetchResponseAfterDeletion = await authedAdminApi.get(`resources/${createdResource.id}`, {
-      throwHttpErrors: false,
-    });
-
-    expect(fetchResponseAfterDeletion.statusCode).toBe(404);
+    const response = await getResource(createdResource.id).catch((error: unknown) => error);
+    expect(response instanceof HTTPError && response.response.statusCode === 404).toBe(true);
   });
 });

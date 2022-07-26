@@ -2,13 +2,6 @@ import { ConnectorType } from '@logto/schemas';
 import { HTTPError } from 'got';
 
 import {
-  disableConnector,
-  enableConnector,
-  getConnector,
-  listConnectors,
-  updateConnectorConfig,
-} from '@/connector-api';
-import {
   facebookConnectorId,
   facebookConnectorConfig,
   aliyunSmsConnectorId,
@@ -19,7 +12,14 @@ import {
   mockSmsConnectorConfig,
   mockEmailConnectorId,
   mockEmailConnectorConfig,
-} from '@/connectors-mock';
+} from '@/__mocks__/connectors-mock';
+import {
+  disableConnector,
+  enableConnector,
+  getConnector,
+  listConnectors,
+  updateConnectorConfig,
+} from '@/api/connector';
 
 test('connector flow', async () => {
   /*

@@ -1,4 +1,4 @@
-import api from '@/api';
+import { api } from '@/api';
 
 describe('Health check', () => {
   it('should have a health state', async () => {

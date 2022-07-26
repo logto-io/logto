@@ -1,6 +1,6 @@
 import { ConnectorDto } from '@logto/schemas';
 
-import { authedAdminApi } from '@/api';
+import { authedAdminApi } from '@/api/api';
 
 export const listConnectors = async () => authedAdminApi.get('connectors').json<ConnectorDto[]>();
 

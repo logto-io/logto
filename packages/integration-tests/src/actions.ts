@@ -1,7 +1,7 @@
 import { assert } from '@silverhand/essentials';
-import got from 'got/dist/source';
+import got from 'got';
 
-import api from './api';
+import { api } from './api';
 import { logtoUrl } from './constants';
 import { extractCookie } from './utils';
 

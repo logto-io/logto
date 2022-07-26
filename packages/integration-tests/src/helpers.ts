@@ -2,29 +2,26 @@ import { User } from '@logto/schemas';
 import { demoAppApplicationId } from '@logto/schemas/lib/seeds';
 import { assert } from '@silverhand/essentials';
 
-import { authedAdminApi } from './api';
-import LogtoClient from './client/logto-client';
-import { demoAppRedirectUri, logtoUrl } from './constants';
 import {
   visitSignInUri,
   registerUserWithUsernameAndPassword,
   consentUserAndGetSignInCallbackUri,
   signInWithUsernameAndPassword,
-} from './ui-actions';
+} from './actions';
+import { createUser as createUserApi } from './api';
+import LogtoClient from './client/logto-client';
+import { demoAppRedirectUri, logtoUrl } from './constants';
 import { generateUsername, generatePassword } from './utils';
 
 export const createUser = () => {
   const username = generateUsername();
+  const password = generatePassword();
 
-  return authedAdminApi
-    .post('users', {
-      json: {
-        username,
-        password: generatePassword(),
-        name: username,
-      },
-    })
-    .json<User>();
+  return createUserApi({
+    username,
+    password,
+    name: username,
+  }).json<User>();
 };
 
 export const registerUserAndSignIn = async () => {

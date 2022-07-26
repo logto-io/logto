@@ -1,23 +1,12 @@
-import { Application, ApplicationType } from '@logto/schemas';
+import { ApplicationType } from '@logto/schemas';
 import { demoAppApplicationId } from '@logto/schemas/lib/seeds';
+import { HTTPError } from 'got';
 
-import { authedAdminApi } from '@/api';
-
-const createApplication = (name: string, type: ApplicationType) =>
-  authedAdminApi
-    .post('applications', {
-      json: {
-        name,
-        type,
-      },
-    })
-    .json<Application>();
+import { createApplication, getApplication, updateApplication, deleteApplication } from '@/api';
 
 describe('admin console application', () => {
   it('should get demo app details successfully', async () => {
-    const demoApp = await authedAdminApi
-      .get(`applications/${demoAppApplicationId}`)
-      .json<Application>();
+    const demoApp = await getApplication(demoAppApplicationId);
 
     expect(demoApp.id).toBe(demoAppApplicationId);
   });
@@ -31,11 +20,9 @@ describe('admin console application', () => {
     expect(application.name).toBe(applicationName);
     expect(application.type).toBe(applicationType);
 
-    const fetchedApplication = await authedAdminApi
-      .get(`applications/${application.id}`)
-      .json<Application[]>();
+    const fetchedApplication = await getApplication(application.id);
 
-    expect(fetchedApplication).toBeTruthy();
+    expect(fetchedApplication.name).toBe(applicationName);
   });
 
   it('should update application details successfully', async () => {
@@ -47,20 +34,14 @@ describe('admin console application', () => {
       'https://logto.dev/callback',
     ]);
 
-    await authedAdminApi
-      .patch(`applications/${application.id}`, {
-        json: {
-          description: newApplicationDescription,
-          oidcClientMetadata: {
-            redirectUris: newRedirectUris,
-          },
-        },
-      })
-      .json<Application>();
+    await updateApplication(application.id, {
+      description: newApplicationDescription,
+      oidcClientMetadata: {
+        redirectUris: newRedirectUris,
+      },
+    });
 
-    const updatedApplication = await authedAdminApi
-      .get(`applications/${application.id}`)
-      .json<Application>();
+    const updatedApplication = await getApplication(application.id);
 
     expect(updatedApplication.description).toBe(newApplicationDescription);
     expect(updatedApplication.oidcClientMetadata.redirectUris).toEqual(newRedirectUris);
@@ -69,12 +50,9 @@ describe('admin console application', () => {
   it('should delete application successfully', async () => {
     const application = await createApplication('test-delete-app', ApplicationType.SPA);
 
-    await authedAdminApi.delete(`applications/${application.id}`);
+    await deleteApplication(application.id);
 
-    const fetchResponseAfterDeletion = await authedAdminApi.get(`applications/${application.id}`, {
-      throwHttpErrors: false,
-    });
-
-    expect(fetchResponseAfterDeletion.statusCode).toBe(404);
+    const response = await getApplication(application.id).catch((error: unknown) => error);
+    expect(response instanceof HTTPError && response.response.statusCode === 404).toBe(true);
   });
 });
