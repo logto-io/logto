@@ -32,7 +32,7 @@ import {
   accessTokenResponseGuard,
   GetAccessTokenErrorHandler,
   userInfoResponseGuard,
-  GetUserInfoErrorHandler,
+  UserInfoResponseMessageParser,
   WechatConfig,
 } from './types';
 
@@ -109,7 +109,6 @@ export default class WechatConnector implements SocialConnectorInstance<WechatCo
     return { accessToken, openid };
   };
 
-  // eslint-disable-next-line complexity
   public getUserInfo: GetUserInfo = async (data) => {
     const { code } = await this.authorizationCallbackHandler(data);
     const { accessToken, openid } = await this.getAccessToken(code);
@@ -131,21 +130,11 @@ export default class WechatConnector implements SocialConnectorInstance<WechatCo
       // Response properties of user info can be separated into two groups: (1) {unionid, headimgurl, nickname}, (2) {errcode, errmsg}.
       // These two groups are mutually exclusive: if group (1) is not empty, group (2) should be empty and vice versa.
       // 'errmsg' and 'errcode' turn to non-empty values or empty values at the same time. Hence, if 'errmsg' is non-empty then 'errcode' should be non-empty.
-      this.getUserInfoErrorHandler(result.data);
+      this.userInfoResponseMessageParser(result.data);
 
       return { id: unionid ?? openid, avatar: headimgurl, name: nickname };
     } catch (error: unknown) {
-      if (error instanceof HTTPError) {
-        const { statusCode, body: rawBody } = error.response;
-
-        if (statusCode === 401) {
-          throw new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid);
-        }
-
-        throw new ConnectorError(ConnectorErrorCodes.General, JSON.stringify(rawBody));
-      }
-
-      throw error;
+      return this.getUserInfoErrorHandler(error);
     }
   };
 
@@ -163,7 +152,7 @@ export default class WechatConnector implements SocialConnectorInstance<WechatCo
     }
   };
 
-  private readonly getUserInfoErrorHandler: GetUserInfoErrorHandler = (userInfo) => {
+  private readonly userInfoResponseMessageParser: UserInfoResponseMessageParser = (userInfo) => {
     const { errcode, errmsg } = userInfo;
 
     if (errcode) {
@@ -174,6 +163,20 @@ export default class WechatConnector implements SocialConnectorInstance<WechatCo
 
       throw new ConnectorError(ConnectorErrorCodes.General, { errorDescription: errmsg, errcode });
     }
+  };
+
+  private readonly getUserInfoErrorHandler = (error: unknown) => {
+    if (error instanceof HTTPError) {
+      const { statusCode, body: rawBody } = error.response;
+
+      if (statusCode === 401) {
+        throw new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid);
+      }
+
+      throw new ConnectorError(ConnectorErrorCodes.General, JSON.stringify(rawBody));
+    }
+
+    throw error;
   };
 
   private readonly authorizationCallbackHandler = async (parameterObject: unknown) => {
