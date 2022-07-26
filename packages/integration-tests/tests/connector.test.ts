@@ -23,7 +23,44 @@ import {
   updateConnectorConfig,
 } from '@/api/connector';
 
-test('connector flow', async () => {
+const updateConfigAndEnableConnector = async (id: string, config: Record<string, unknown>) => {
+  const updatedConnector = await updateConnectorConfig(id, config);
+  expect(updatedConnector.config).toEqual(config);
+  const enabledConnector = await enableConnector(id);
+  expect(enabledConnector.enabled).toBeTruthy();
+};
+
+const setUpConnector = async (id: string, config: Record<string, unknown>) => {
+  await updateConfigAndEnableConnector(id, config);
+
+  // The result of getting a connector should be same as the result of updating a connector above.
+  const connector = await getConnector(id);
+  expect(connector.enabled).toBeTruthy();
+  expect(connector.config).toEqual(config);
+};
+
+const changeToAnotherConnector = async (
+  id: string,
+  config: Record<string, unknown>,
+  connectorType: ConnectorType.SMS | ConnectorType.Email
+) => {
+  await updateConfigAndEnableConnector(id, config);
+
+  // There should be exactly one enabled SMS/email connector after changing to another SMS/email connector.
+  const connectorsAfterChanging = await listConnectors();
+  const enabledConnectors = connectorsAfterChanging.filter(
+    (connector) => connector.type === connectorType && connector.enabled
+  );
+  expect(enabledConnectors.length).toEqual(1);
+  expect(enabledConnectors[0]?.id).toEqual(id);
+};
+
+/*
+ * We'd better only use mock connectors in integration tests.
+ * Since we will refactor connectors soon, keep using some real connectors
+ * for testing updating configs and enabling/disabling for now.
+ */
+test('connector set-up flow', async () => {
   /*
    * List connectors after initializing a new Logto instance
    */
@@ -35,92 +72,39 @@ test('connector flow', async () => {
   }
 
   /*
-   * Set up a social connector
+   * Set up social/SMS/email connectors
    */
-  const updatedFacebookConnector = await updateConnectorConfig(
-    facebookConnectorId,
-    facebookConnectorConfig
-  );
-  expect(updatedFacebookConnector.config).toEqual(facebookConnectorConfig);
-  const enabledFacebookConnector = await enableConnector(facebookConnectorId);
-  expect(enabledFacebookConnector.enabled).toBeTruthy();
-
-  // The result of getting a connector should be same as the result of updating a connector above.
-  const facebookConnector = await getConnector(facebookConnectorId);
-  expect(facebookConnector.enabled).toBeTruthy();
-  expect(facebookConnector.config).toEqual(facebookConnectorConfig);
-
-  /*
-   * Set up an SMS connector
-   */
-  const updatedAliyunSmsConnector = await updateConnectorConfig(
-    aliyunSmsConnectorId,
-    aliyunSmsConnectorConfig
-  );
-  expect(updatedAliyunSmsConnector.config).toEqual(aliyunSmsConnectorConfig);
-  const enabledAliyunSmsConnector = await enableConnector(aliyunSmsConnectorId);
-  expect(enabledAliyunSmsConnector.enabled).toBeTruthy();
-
-  /*
-   * Change to another SMS connector
-   */
-  const updatedMockSmsConnector = await updateConnectorConfig(
-    mockSmsConnectorId,
-    mockSmsConnectorConfig
-  );
-  expect(updatedMockSmsConnector.config).toEqual(mockSmsConnectorConfig);
-  const enabledMockSmsConnector = await enableConnector(mockSmsConnectorId);
-  expect(enabledMockSmsConnector.enabled).toBeTruthy();
-
-  // There should be exactly one enabled SMS connector after changing to another SMS connector.
-  const connectorsAfterChangingSmsConnector = await listConnectors();
-  const enabledSmsConnectors = connectorsAfterChangingSmsConnector.filter(
-    (connector) => connector.type === ConnectorType.SMS && connector.enabled
-  );
-  expect(enabledSmsConnectors.length).toEqual(1);
-  expect(enabledSmsConnectors[0]?.id).toEqual(mockSmsConnectorId);
-
-  /*
-   * Set up an email connector
-   */
-  const updatedAliyunEmailConnector = await updateConnectorConfig(
-    aliyunEmailConnectorId,
-    aliyunEmailConnectorConfig
-  );
-  expect(updatedAliyunEmailConnector.config).toEqual(aliyunEmailConnectorConfig);
-  const enabledAliyunEmailConnector = await enableConnector(aliyunEmailConnectorId);
-  expect(enabledAliyunEmailConnector.enabled).toBeTruthy();
-
-  /*
-   * Change to another email connector
-   */
-  const updatedMockEmailConnector = await updateConnectorConfig(
-    mockEmailConnectorId,
-    mockEmailConnectorConfig
-  );
-  expect(updatedMockEmailConnector.config).toEqual(mockEmailConnectorConfig);
-  const enabledMockEmailConnector = await enableConnector(mockEmailConnectorId);
-  expect(enabledMockEmailConnector.enabled).toBeTruthy();
-
-  // There should be exactly one enabled email connector after changing to another email connector.
-  const connectorsAfterChangingEmailConnector = await listConnectors();
-  const enabledEmailConnector = connectorsAfterChangingEmailConnector.filter(
-    (connector) => connector.type === ConnectorType.Email && connector.enabled
-  );
-  expect(enabledEmailConnector.length).toEqual(1);
-  expect(enabledEmailConnector[0]?.id).toEqual(mockEmailConnectorId);
+  await expect(
+    Promise.all(
+      [
+        { id: facebookConnectorId, config: facebookConnectorConfig },
+        { id: aliyunSmsConnectorId, config: aliyunSmsConnectorConfig },
+        { id: aliyunEmailConnectorId, config: aliyunEmailConnectorConfig },
+      ].map(async ({ id, config }) => setUpConnector(id, config))
+    )
+  ).resolves.not.toThrow();
 
   /*
    * It should update the connector config successfully when it is valid; otherwise, it should fail.
    * We will test updating to the invalid connector config, that is the case not covered above.
    */
   await expect(
-    updateConnectorConfig(aliyunEmailConnectorId, mockEmailConnectorConfig)
+    updateConnectorConfig(facebookConnectorId, aliyunSmsConnectorConfig)
   ).rejects.toThrow(HTTPError);
   // To confirm the failed updating request above did not modify the original config,
-  // we check: the Aliyun email connector config should stay the same.
-  const aliyunEmailConnector = await getConnector(aliyunEmailConnectorId);
-  expect(aliyunEmailConnector.config).toEqual(aliyunEmailConnectorConfig);
+  // we check: the Facebook connector config should stay the same.
+  const aliyunEmailConnector = await getConnector(facebookConnectorId);
+  expect(aliyunEmailConnector.config).toEqual(facebookConnectorConfig);
+
+  /*
+   * Change to another SMS/Email connector
+   */
+  await expect(
+    Promise.all([
+      changeToAnotherConnector(mockSmsConnectorId, mockSmsConnectorConfig, ConnectorType.SMS),
+      changeToAnotherConnector(mockEmailConnectorId, mockEmailConnectorConfig, ConnectorType.Email),
+    ])
+  ).resolves.not.toThrow();
 
   /*
    * Delete (i.e. disable) a connector
@@ -186,5 +170,3 @@ describe('send SMS/email test message', () => {
     await expect(sendEmailTestMessage(mockEmailConnectorId, email, {})).rejects.toThrow(HTTPError);
   });
 });
-
-// Next up: refactor connectors.test.ts
