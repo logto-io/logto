@@ -22,7 +22,7 @@ describe('admin console dashboard', () => {
       .get('dashboard/users/total')
       .json<TotalUserCountData>();
 
-    expect(totalUserCount).toBe(originTotalUserCount + 1);
+    expect(totalUserCount).toBeGreaterThan(originTotalUserCount);
   });
 
   it('should get new user statistics successfully', async () => {
@@ -44,8 +44,8 @@ describe('admin console dashboard', () => {
     const keyToCompare: Array<keyof StatisticsData> = ['count', 'delta'];
 
     for (const key of keyToCompare) {
-      expect(newUserStatistics.today[key]).toBe(originUserStatistics.today[key] + 1);
-      expect(newUserStatistics.last7Days[key]).toBe(originUserStatistics.last7Days[key] + 1);
+      expect(newUserStatistics.today[key]).toBeGreaterThan(originUserStatistics.today[key]);
+      expect(newUserStatistics.last7Days[key]).toBeGreaterThan(originUserStatistics.last7Days[key]);
     }
   });
 
@@ -72,9 +72,9 @@ describe('admin console dashboard', () => {
     const keyToCompare: Array<keyof StatisticsData> = ['count', 'delta'];
 
     for (const key of keyToCompare) {
-      expect(activeUserStatistics.dau[key]).toBe(originActiveUserStatistics.dau[key] + 1);
-      expect(activeUserStatistics.wau[key]).toBe(originActiveUserStatistics.wau[key] + 1);
-      expect(activeUserStatistics.mau[key]).toBe(originActiveUserStatistics.mau[key] + 1);
+      expect(activeUserStatistics.dau[key]).toBeGreaterThan(originActiveUserStatistics.dau[key]);
+      expect(activeUserStatistics.wau[key]).toBeGreaterThan(originActiveUserStatistics.wau[key]);
+      expect(activeUserStatistics.mau[key]).toBeGreaterThan(originActiveUserStatistics.mau[key]);
     }
   });
 });
