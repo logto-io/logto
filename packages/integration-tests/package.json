@@ -9,7 +9,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint --ext .ts src tests",
     "lint:report": "pnpm lint --format json --output-file report.json",
-    "start": "jest"
+    "start": "jest -i"
   },
   "devDependencies": {
     "@jest/types": "^27.5.1",
