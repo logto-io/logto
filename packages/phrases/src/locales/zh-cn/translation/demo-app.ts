@@ -1,5 +1,6 @@
 const demo_app = {
-  notification: '使用管理控制台帐号登录示例应用',
+  notification:
+    '管理控制台的用户名和密码是 demo app 的默认登录方式。点击下方创建账号或用现有账号登录。',
   title: '恭喜！你已成功登录到示例应用！',
   subtitle: '以下是本次登录的用户信息：',
   username: '用户名：',
