@@ -4,7 +4,7 @@ export const azureADConfigGuard = z.object({
   clientId: z.string(),
   clientSecret: z.string(),
   cloudInstance: z.string(),
-  tennantId: z.string(),
+  tenantId: z.string(),
 });
 
 export type AzureADConfig = z.infer<typeof azureADConfigGuard>;

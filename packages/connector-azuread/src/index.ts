@@ -63,7 +63,7 @@ export default class AzureADConnector implements SocialConnectorInstance<AzureAD
     const config = await this.getConfig(this.metadata.id);
 
     this.validateConfig(config);
-    const { clientId, clientSecret, cloudInstance, tennantId } = config;
+    const { clientId, clientSecret, cloudInstance, tenantId } = config;
 
     this.authCodeUrlParams = {
       scopes,
@@ -75,7 +75,7 @@ export default class AzureADConnector implements SocialConnectorInstance<AzureAD
       auth: {
         clientId,
         clientSecret,
-        authority: cloudInstance + tennantId,
+        authority: cloudInstance + tenantId,
       },
     });
 
