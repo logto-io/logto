@@ -22,7 +22,9 @@ jobs:
         uses: silverhand-io/actions-node-pnpm-run-steps@v1.2.3
 
       - name: Package
-        run: ./package-for-integration-tests.sh
+        run: ./package.sh
+        env:
+          INTEGRATION_TEST: true
 
       - uses: actions/upload-artifact@v3
         with:
