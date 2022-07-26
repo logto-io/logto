@@ -13,12 +13,12 @@ import {
   facebookConnectorConfig,
   aliyunSmsConnectorId,
   aliyunSmsConnectorConfig,
-  twilioSmsConnectorId,
-  twilioSmsConnectorConfig,
   aliyunEmailConnectorId,
   aliyunEmailConnectorConfig,
-  sendgridEmailConnectorId,
-  sendgridEmailConnectorConfig,
+  mockSmsConnectorId,
+  mockSmsConnectorConfig,
+  mockEmailConnectorId,
+  mockEmailConnectorConfig,
 } from '@/connectors-mock';
 
 test('connector flow', async () => {
