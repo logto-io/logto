@@ -64,6 +64,10 @@ node -e "$(printf "%s" "$(curl -fsSL https://raw.githubusercontent.com/logto-io/
 - Our team takes security seriously, especially when it relates to identity. If you find any existing or potential security issues, please do not hesitate to email 🔒 [security@logto.io](mailto:security@logto.io).
 - About other bug reports, feature requests, and feedback, you can directly 🙋 [open an issue](https://github.com/logto-io/logto/issues/new) on GitHub or 💬 [join our Discord server](https://discord.gg/UEPaF3j5e6) to have a live chat. We also have a 🗓️ [public roadmap](https://github.com/orgs/logto-io/projects/5) available.
 
+## Contributing
+
+We have a [contributing guideline](https://github.com/logto-io/logto/blob/master/.github/CONTRIBUTING.md) available. Feel free to contact us before coding.
+
 <br/>
 
 [^info]: Licensed with MPL-2.0. Designed by Silverhand Inc.
