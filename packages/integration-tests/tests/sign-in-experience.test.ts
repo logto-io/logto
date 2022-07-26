@@ -1,6 +1,16 @@
-import { BrandingStyle, SignInExperience } from '@logto/schemas';
+import { BrandingStyle, SignInExperience, SignInMethods, SignInMethodState } from '@logto/schemas';
 
 import { authedAdminApi } from '@/api';
+import { updateConnectorConfig, enableConnector, disableConnector } from '@/connector-api';
+import {
+  facebookConnectorId,
+  facebookConnectorConfig,
+  twilioSmsConnectorConfig,
+  twilioSmsConnectorId,
+  sendgridEmailConnectorConfig,
+  sendgridEmailConnectorId,
+  facebookConnectorTarget,
+} from '@/connectors-mock';
 
 describe('admin console sign-in experience', () => {
   it('should get sign-in experience successfully', async () => {
@@ -35,5 +45,46 @@ describe('admin console sign-in experience', () => {
       .json<SignInExperience>();
 
     expect(updatedSignInExperience).toMatchObject(newSignInExperience);
+  });
+
+  it('should be able to setup sign in methods after connectors are enabled', async () => {
+    // Setup connectors for tests
+    await Promise.all([
+      updateConnectorConfig(facebookConnectorId, facebookConnectorConfig),
+      updateConnectorConfig(twilioSmsConnectorId, twilioSmsConnectorConfig),
+      updateConnectorConfig(sendgridEmailConnectorId, sendgridEmailConnectorConfig),
+    ]);
+
+    await Promise.all([
+      enableConnector(facebookConnectorId),
+      enableConnector(twilioSmsConnectorId),
+      enableConnector(sendgridEmailConnectorId),
+    ]);
+
+    // Set up sign-in methods
+    const newSignInMethods: Partial<SignInMethods> = {
+      username: SignInMethodState.Primary,
+      sms: SignInMethodState.Secondary,
+      email: SignInMethodState.Secondary,
+      social: SignInMethodState.Secondary,
+    };
+
+    const updatedSignInExperience = await authedAdminApi
+      .patch('sign-in-exp', {
+        json: {
+          socialSignInConnectorTargets: [facebookConnectorTarget],
+          signInMethods: newSignInMethods,
+        },
+      })
+      .json<SignInExperience>();
+
+    expect(updatedSignInExperience.signInMethods).toMatchObject(newSignInMethods);
+
+    // Reset connectors
+    await Promise.all([
+      disableConnector(facebookConnectorId),
+      disableConnector(twilioSmsConnectorId),
+      disableConnector(sendgridEmailConnectorId),
+    ]);
   });
 });
