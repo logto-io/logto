@@ -12,13 +12,17 @@ describe('admin console dashboard', () => {
       totalUserCount: number;
     };
 
+    const { totalUserCount: originTotalUserCount } = await authedAdminApi
+      .get('dashboard/users/total')
+      .json<TotalUserCountData>();
+
     await registerUserAndSignIn();
 
     const { totalUserCount } = await authedAdminApi
       .get('dashboard/users/total')
       .json<TotalUserCountData>();
 
-    expect(totalUserCount - 1).toBeGreaterThan(0);
+    expect(totalUserCount).toBe(originTotalUserCount + 1);
   });
 
   it('should get new user statistics successfully', async () => {
