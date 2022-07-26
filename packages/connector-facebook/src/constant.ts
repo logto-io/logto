@@ -22,12 +22,14 @@ export const defaultMetadata: ConnectorMetadata = {
   name: {
     en: 'Facebook',
     'zh-CN': 'Facebook',
+    'ko-KR': 'Facebook',
   },
   logo: './logo.svg',
   logoDark: null,
   description: {
     en: 'Facebook is a worldwide social media platform with the most active users.',
     'zh-CN': 'Facebook 是世界使用人数最多的社交平台。',
+    'ko-KR': '페이스북은 가장 활동적인 사용자를 가진 세계적인 소셜 미디어 플랫폼입니다.',
   },
   readme: './README.md',
   configTemplate: './docs/config-template.json',

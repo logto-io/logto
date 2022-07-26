@@ -23,12 +23,14 @@ export const defaultMetadata: ConnectorMetadata = {
   name: {
     en: 'Alipay',
     'zh-CN': '支付宝',
+    'ko-KR': 'Alipay',
   },
   logo: './logo.svg',
   logoDark: null,
   description: {
     en: 'Alipay is a third-party mobile and online payment platform.',
     'zh-CN': '支付宝是一个第三方支付平台。',
+    'ko-KR': 'Alipay는 서드파티 모바일 및 온라인 결제 플랫폼 입니다.',
   },
   readme: './README.md',
   configTemplate: './docs/config-template.json',

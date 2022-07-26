@@ -17,12 +17,14 @@ export const defaultMetadata: ConnectorMetadata = {
   name: {
     en: 'Apple',
     'zh-CN': 'Apple',
+    'ko-KR': 'Apple',
   },
   logo: './logo.svg',
   logoDark: './logo-dark.svg',
   description: {
     en: 'Apple is a multinational high-end provider of hardware and software.',
     'zh-CN': 'Apple 是全球领先的高端消费者软硬件提供商。',
+    'ko-KR': 'Apple은 하드웨어와 소프트웨어의 다국적 공급자 입니다.',
   },
   readme: './README.md',
   configTemplate: './docs/config-template.json',

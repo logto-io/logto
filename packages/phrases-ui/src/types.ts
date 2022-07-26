@@ -8,9 +8,11 @@ export type ResourceKey = string | Record<string, unknown>;
 export enum Language {
   English = 'en',
   Chinese = 'zh-CN',
+  Korean = 'ko-KR',
 }
 
 export const languageOptions = [
   { value: Language.English, title: 'English' },
   { value: Language.Chinese, title: '中文' },
+  { value: Language.Korean, title: '한국어' },
 ];

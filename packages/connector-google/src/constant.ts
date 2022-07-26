@@ -13,12 +13,14 @@ export const defaultMetadata: ConnectorMetadata = {
   name: {
     en: 'Google',
     'zh-CN': 'Google',
+    'ko-KR': 'Google',
   },
   logo: './logo.svg',
   logoDark: null,
   description: {
     en: 'Google is the biggest search engine technology and email service provider.',
     'zh-CN': 'Google 是全球最大的搜索引擎和邮件服务提供商。',
+    'ko-KR': 'Google은 가장 큰 검색 엔진 기술과 이메일 서비스 제공자입니다.',
   },
   readme: './README.md',
   configTemplate: './docs/config-template.json',

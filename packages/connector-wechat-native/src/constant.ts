@@ -18,12 +18,14 @@ export const defaultMetadata: ConnectorMetadata = {
   name: {
     en: 'WeChat',
     'zh-CN': '微信',
+    'ko-KR': 'WeChat',
   },
   logo: './logo.svg',
   logoDark: null,
   description: {
     en: 'WeChat is a cross-platform instant messaging app.',
     'zh-CN': '微信是一款跨平台的即时通讯软件。',
+    'ko-KR': 'WeChat은 크로스 플랫폼 메시징 앱입니다.',
   },
   readme: './README.md',
   configTemplate: './docs/config-template.json',

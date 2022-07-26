@@ -33,12 +33,14 @@ export const defaultMetadata: ConnectorMetadata = {
   name: {
     en: 'Aliyun Short Message Service',
     'zh-CN': '阿里云短信服务',
+    'ko-KR': 'Aliyun Short 메세지 서비스',
   },
   logo: './logo.svg',
   logoDark: null,
   description: {
     en: 'Aliyun provides cloud computing services to online businesses.',
     'zh-CN': '阿里云是全球性的云服务提供商。',
+    'ko-KR': 'Aliyun는 온라인 비지니스를 위해 클라우딩 컴퓨팅 서비스를 제공합니다.',
   },
   readme: './README.md',
   configTemplate: './docs/config-template.json',

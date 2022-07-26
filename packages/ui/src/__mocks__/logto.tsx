@@ -23,10 +23,12 @@ export const socialConnectors = [
     name: {
       en: 'Sign in with GitHub',
       'zh-CN': '使用 GitHub 登录',
+      'ko-KR': 'Github 로그인',
     },
     description: {
       en: 'Sign in with GitHub',
       'zh-CN': '使用 GitHub 登录',
+      'ko-KR': 'Github 로그인',
     },
     readme: '',
     configTemplate: '',
@@ -41,10 +43,12 @@ export const socialConnectors = [
     name: {
       en: 'Sign in with Alipay',
       'zh-CN': '使用 Alipay 登录',
+      'ko-KR': 'Alipay 로그인',
     },
     description: {
       en: 'Sign in with Alipay',
       'zh-CN': '使用 Alipay 登录',
+      'ko-KR': 'Alipay 로그인',
     },
     readme: '',
     configTemplate: '',
@@ -59,10 +63,12 @@ export const socialConnectors = [
     name: {
       en: 'Sign in with WeChat',
       'zh-CN': '使用 WeChat 登录',
+      'ko-KR': 'WeChat 로그인',
     },
     description: {
       en: 'Sign in with WeChat',
       'zh-CN': '使用 WeChat 登录',
+      'ko-KR': 'WeChat 로그인',
     },
     readme: '',
     configTemplate: '',
@@ -77,8 +83,13 @@ export const socialConnectors = [
     name: {
       en: 'Sign in with Google',
       'zh-CN': '使用 Google 登录',
+      'ko-KR': 'Google 로그인',
     },
-    description: { en: 'Sign in with Google', 'zh-CN': '使用 Google 登录' },
+    description: {
+      en: 'Sign in with Google',
+      'zh-CN': '使用 Google 登录',
+      'ko-KR': 'Google 로그인',
+    },
     readme: '',
     configTemplate: '',
   },
@@ -92,10 +103,12 @@ export const socialConnectors = [
     name: {
       en: 'Sign in with Meta',
       'zh-CN': '使用 Meta 登录',
+      'ko-KR': 'Meta 로그인',
     },
     description: {
       en: 'Sign in with Meta',
       'zh-CN': '使用 Meta 登录',
+      'ko-KR': 'Meta 로그인',
     },
     readme: '',
     configTemplate: '',
@@ -112,10 +125,12 @@ export const mockSocialConnectorData = {
   name: {
     en: 'Sign in with Xxx',
     'zh-CN': '使用 Xxx 登录',
+    'ko-KR': 'Xxx 로그인',
   },
   description: {
     en: 'Sign in with Xxx',
     'zh-CN': '使用 Xxx 登录',
+    'ko-KR': 'Xxx 로그인',
   },
   readme: '',
   configTemplate: '',

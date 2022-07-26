@@ -11,12 +11,14 @@ export const defaultMetadata: ConnectorMetadata = {
   name: {
     en: 'Azure Active Directory',
     'zh-CN': 'Azure Active Directory',
+    'ko-KR': 'Azure Active Directory',
   },
   logo: './logo.svg',
   logoDark: null,
   description: {
     en: 'Azure Active Directory is the biggest AD provider.',
     'zh-CN': 'Azure Active Directory is the biggest AD provider.',
+    'ko-KR': 'Azure Active Directory is the biggest AD provider.',
   },
   readme: './README.md',
   configTemplate: './docs/config-template.json',
