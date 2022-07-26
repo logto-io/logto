@@ -57,6 +57,12 @@ const googleConnector = {
   config: {},
   createdAt: 1_646_382_233_000,
 };
+const azureADConnector = {
+  id: 'azuread-universal',
+  enabled: false,
+  config: {},
+  createdAt: 1_646_382_233_000,
+};
 const sendGridMailConnector = {
   id: 'sendgrid-email-service',
   enabled: false,
@@ -97,6 +103,7 @@ const connectors = [
   facebookConnector,
   githubConnector,
   googleConnector,
+  azureADConnector,
   sendGridMailConnector,
   smtpConnector,
   twilioSmsConnector,

@@ -9,6 +9,7 @@ const defaultPackages = [
   '@logto/connector-facebook',
   '@logto/connector-github',
   '@logto/connector-google',
+  '@logto/connector-azuread',
   '@logto/connector-sendgrid-email',
   '@logto/connector-smtp',
   '@logto/connector-twilio-sms',
