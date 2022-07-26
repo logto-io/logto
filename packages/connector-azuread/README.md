@@ -15,8 +15,7 @@ The Azure AD connector provides a succinct way for your application to use Azure
 - Visit the [Azure Portal](https://portal.azure.com/#home) and sign in with your Azure account. You need to have an active subscription to access Azure AD.
 - Click the **Azure Active Directory** from the services they offer, and click the **App Registrations** from the left menu.
 - Click **New Registration** at the top and enter a description, select your **access type** and add your **Redirect URI**, which redirect the user to the application after logging in. In our case, this will be `${your_logto_origin}/callback/azuread-universal`. e.g. `https://logto.dev/callback/azuread-universal`.
-- If you select **Single Tennant** for access type than you need to enter **TennantID**, else you need to enter `common` as tennantID
-
+- If you select **Single Tennant** for access type then you need to enter **TennantID**, else you need to enter `common` as Tennant ID.
 
 ## Configure your client secret
 - In your newly created project, click the **Certificates & Secrets** to get a client secret, and click the **New client secret** from the top.

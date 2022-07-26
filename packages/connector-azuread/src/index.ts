@@ -146,9 +146,8 @@ export default class AzureADConnector implements SocialConnectorInstance<AzureAD
 
       return {
         id,
-        avatar: undefined,
-        email: mail,
-        name: displayName,
+        email: conditional(mail),
+        name: conditional(displayName),
       };
     } catch (error: unknown) {
       if (error instanceof HTTPError) {

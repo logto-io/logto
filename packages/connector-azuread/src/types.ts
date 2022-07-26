@@ -19,16 +19,16 @@ export type AccessTokenResponse = z.infer<typeof accessTokenResponseGuard>;
 
 export const userInfoResponseGuard = z.object({
   id: z.string(),
-  displayName: z.string(),
-  given_name: z.string().optional().nullable(),
-  surname: z.string().optional().nullable(),
-  userPrincipalName: z.string().optional(),
-  JobTitle: z.string().optional().nullable(),
-  mail: z.string(),
-  MobilePhone: z.string().optional().nullable(),
-  officeLocation: z.boolean().optional().nullable(),
-  preferredLanguage: z.string().optional().nullable(),
-  businessPhones: z.array(z.string()).optional().nullable(),
+  displayName: z.string().nullish(),
+  givenName: z.string().nullish(),
+  surname: z.string().nullish(),
+  userPrincipalName: z.string().nullish(),
+  jobTitle: z.string().nullish(),
+  mail: z.string().nullish(),
+  mobilePhone: z.string().nullish(),
+  officeLocation: z.boolean().nullish(),
+  preferredLanguage: z.string().nullish(),
+  businessPhones: z.array(z.string()).nullish(),
 });
 
 export type UserInfoResponse = z.infer<typeof userInfoResponseGuard>;
