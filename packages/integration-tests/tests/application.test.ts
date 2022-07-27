@@ -23,6 +23,7 @@ describe('admin console application', () => {
     const fetchedApplication = await getApplication(application.id);
 
     expect(fetchedApplication.name).toBe(applicationName);
+    expect(fetchedApplication.id).toBe(application.id);
   });
 
   it('should update application details successfully', async () => {
