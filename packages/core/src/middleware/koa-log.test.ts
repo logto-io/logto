@@ -44,9 +44,11 @@ describe('koaLog middleware', () => {
       log,
     };
     ctx.request.ip = ip;
+    const additionalMockPayload: LogPayload = { foo: 'bar' };
 
     const next = async () => {
       ctx.log(type, mockPayload);
+      ctx.log(type, additionalMockPayload);
     };
     await koaLog()(ctx, next);
 
@@ -55,11 +57,27 @@ describe('koaLog middleware', () => {
       type,
       payload: {
         ...mockPayload,
+        ...additionalMockPayload,
         result: LogResult.Success,
         ip,
         userAgent,
       },
     });
+  });
+
+  it('should not insert a log when there is no log type', async () => {
+    const ctx: WithLogContext<ReturnType<typeof createContextWithRouteParameters>> = {
+      ...createContextWithRouteParameters({ headers: { 'user-agent': userAgent } }),
+      // Bypass middleware context type assert
+      addLogContext,
+      log,
+    };
+    ctx.request.ip = ip;
+
+    // eslint-disable-next-line unicorn/consistent-function-scoping
+    const next = async () => Promise.resolve();
+    await koaLog()(ctx, next);
+    expect(insertLogMock).not.toBeCalled();
   });
 
   describe('should insert an error log with the error message when next() throws an error', () => {
