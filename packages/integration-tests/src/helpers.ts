@@ -7,7 +7,7 @@ import {
   registerUserWithUsernameAndPassword,
   signInWithUsernameAndPassword,
 } from '@/api';
-import LogtoClient from '@/client';
+import Client from '@/client';
 import { demoAppRedirectUri, logtoUrl } from '@/constants';
 import { generateUsername, generatePassword } from '@/utils';
 
@@ -23,27 +23,27 @@ export const createUser = () => {
 };
 
 export const registerUserAndSignIn = async () => {
-  const logtoClient = new LogtoClient({
+  const client = new Client({
     endpoint: logtoUrl,
     appId: demoAppApplicationId,
     persistAccessToken: false,
   });
 
-  await logtoClient.initSession(demoAppRedirectUri);
-  assert(logtoClient.interactionCookie, new Error('Session not found'));
+  await client.initSession(demoAppRedirectUri);
+  assert(client.interactionCookie, new Error('Session not found'));
 
   const username = generateUsername();
   const password = generatePassword();
 
-  await registerUserWithUsernameAndPassword(username, password, logtoClient.interactionCookie);
+  await registerUserWithUsernameAndPassword(username, password, client.interactionCookie);
 
   const { redirectTo } = await signInWithUsernameAndPassword(
     username,
     password,
-    logtoClient.interactionCookie
+    client.interactionCookie
   );
 
-  await logtoClient.handleSignInCallback(redirectTo);
+  await client.handleSignInCallback(redirectTo);
 
-  assert(logtoClient.isAuthenticated, new Error('Sign in failed'));
+  assert(client.isAuthenticated, new Error('Sign in failed'));
 };

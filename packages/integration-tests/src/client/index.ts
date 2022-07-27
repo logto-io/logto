@@ -1,4 +1,4 @@
-import BaseClient, { LogtoConfig } from '@logto/node';
+import LogtoClient, { LogtoConfig } from '@logto/node';
 import { demoAppApplicationId } from '@logto/schemas/lib/seeds';
 import { assert } from '@silverhand/essentials';
 import got from 'got';
@@ -15,17 +15,17 @@ const defaultConfig = {
   persistAccessToken: false,
 };
 
-export default class LogtoClient {
+export default class Client {
   public interactionCookie?: string;
   private navigateUrl?: string;
 
   private readonly storage: MemoryStorage;
-  private readonly logto: BaseClient;
+  private readonly logto: LogtoClient;
 
   constructor(config?: LogtoConfig) {
     this.storage = new MemoryStorage();
 
-    this.logto = new BaseClient(
+    this.logto = new LogtoClient(
       { ...defaultConfig, ...config },
       {
         navigate: (url: string) => {
