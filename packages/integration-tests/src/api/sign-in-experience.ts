@@ -1,6 +1,6 @@
 import { SignInExperience } from '@logto/schemas';
 
-import { authedAdminApi } from '@/api/api';
+import { authedAdminApi } from './api';
 
 export const getSignInExperience = () => authedAdminApi.get('sign-in-exp').json<SignInExperience>();
 
