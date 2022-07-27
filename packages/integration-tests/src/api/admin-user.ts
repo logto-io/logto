@@ -1,6 +1,6 @@
 import { User } from '@logto/schemas';
 
-import { authedAdminApi } from '@/api/api';
+import { authedAdminApi } from './api';
 
 type CreateUserPayload = {
   username: string;
