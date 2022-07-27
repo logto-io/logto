@@ -59,7 +59,7 @@ const ConnectorContent = ({ isDeleted, connectorData, onConnectorUpdated }: Prop
       .json<Connector & { metadata: ConnectorMetadata }>();
 
     onConnectorUpdated({ ...rest, ...metadata });
-    reset(rest.config);
+    reset({ configJson: JSON.stringify(result.data, null, 2) });
     toast.success(t('general.saved'));
   });
 
