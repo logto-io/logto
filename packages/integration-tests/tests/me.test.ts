@@ -1,7 +1,7 @@
 import { ArbitraryObject, UserInfo, userInfoSelectFields } from '@logto/schemas';
 
+import { createUser } from '@/actions';
 import { api } from '@/api';
-import { createUser } from '@/helpers';
 import { generatePassword } from '@/utils';
 
 describe('api `/me`', () => {

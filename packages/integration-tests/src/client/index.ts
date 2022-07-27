@@ -15,7 +15,7 @@ const defaultConfig = {
   persistAccessToken: false,
 };
 
-export default class Client {
+export default class MockClient {
   public interactionCookie?: string;
   private navigateUrl?: string;
 
@@ -61,7 +61,7 @@ export default class Client {
     assert(this.interactionCookie, new Error('Get cookie from authorization endpoint failed'));
   }
 
-  public async handleSignInCallback(redirectTo: string) {
+  public async processSession(redirectTo: string) {
     // Note: should redirect to OIDC auth endpoint
     assert(redirectTo.startsWith(`${logtoUrl}/oidc/auth`), new Error('SignIn or Register failed'));
 

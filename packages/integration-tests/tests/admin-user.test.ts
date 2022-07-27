@@ -1,7 +1,7 @@
 import { HTTPError } from 'got';
 
+import { createUser } from '@/actions';
 import { getUser, getUsers, updateUser, deleteUser, updateUserPassword } from '@/api';
-import { createUser } from '@/helpers';
 
 describe('admin console user management', () => {
   it('should create user successfully', async () => {

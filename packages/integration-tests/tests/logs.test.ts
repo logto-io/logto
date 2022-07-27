@@ -1,8 +1,8 @@
 import { LogDto } from '@logto/schemas';
 import { assert } from '@silverhand/essentials';
 
+import { registerUserAndSignIn } from '@/actions';
 import { authedAdminApi } from '@/api';
-import { registerUserAndSignIn } from '@/helpers';
 
 describe('admin console logs', () => {
   it('should get logs and visit log details successfully', async () => {
