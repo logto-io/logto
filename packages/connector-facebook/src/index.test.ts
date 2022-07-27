@@ -19,7 +19,7 @@ beforeAll(() => {
   jest.spyOn(facebookMethods, 'getConfig').mockResolvedValue(mockedConfig);
 });
 
-describe('facebook connector', () => {
+describe('Facebook connector', () => {
   describe('validateConfig', () => {
     afterEach(() => {
       jest.clearAllMocks();
