@@ -19,6 +19,7 @@
   "devDependencies": {
     "@fontsource/roboto-mono": "^4.5.7",
     "@logto/phrases": "^1.0.0-beta.2",
+    "@logto/phrases-ui": "^1.0.0-beta.2",
     "@logto/react": "^1.0.0-alpha.2",
     "@logto/schemas": "^1.0.0-beta.2",
     "@logto/shared": "^1.0.0-beta.1",

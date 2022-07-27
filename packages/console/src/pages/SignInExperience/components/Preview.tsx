@@ -1,4 +1,4 @@
-import { Language } from '@logto/phrases';
+import { Language, languageOptions } from '@logto/phrases-ui';
 import { AppearanceMode, ConnectorDto, ConnectorMetadata, SignInExperience } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import classNames from 'classnames';
@@ -49,28 +49,25 @@ const Preview = ({ signInExperience, className }: Props) => {
     }
   }, [modeOptions, mode]);
 
-  const languageOptions = useMemo(() => {
-    const options = [
-      { value: Language.English, title: t('sign_in_exp.preview.languages.english') },
-      { value: Language.Chinese, title: t('sign_in_exp.preview.languages.chinese') },
-    ];
-
+  const availableLanguageOptions = useMemo(() => {
     if (signInExperience && !signInExperience.languageInfo.autoDetect) {
-      return options.filter(({ value }) => value === signInExperience.languageInfo.fixedLanguage);
+      return languageOptions.filter(
+        ({ value }) => value === signInExperience.languageInfo.fixedLanguage
+      );
     }
 
-    return options;
-  }, [signInExperience, t]);
+    return languageOptions;
+  }, [signInExperience]);
 
   useEffect(() => {
-    if (!languageOptions[0]) {
+    if (!availableLanguageOptions[0]) {
       return;
     }
 
-    if (!languageOptions.some(({ value }) => value === language)) {
-      setLanguage(languageOptions[0].value);
+    if (!availableLanguageOptions.some(({ value }) => value === language)) {
+      setLanguage(availableLanguageOptions[0].value);
     }
-  }, [language, languageOptions]);
+  }, [language, availableLanguageOptions]);
 
   const config = useMemo(() => {
     if (!allConnectors || !signInExperience) {
@@ -130,7 +127,7 @@ const Preview = ({ signInExperience, className }: Props) => {
           <Select
             size="small"
             value={language}
-            options={languageOptions}
+            options={availableLanguageOptions}
             onChange={(value) => {
               if (value) {
                 setLanguage(value);
