@@ -169,22 +169,21 @@ test('connector flow', async () => {
 });
 
 describe('send SMS/email test message', () => {
+  const phone = '8612345678901';
+  const email = 'test@example.com';
+
   it('should send the test message successfully when the config is valid', async () => {
     await expect(
-      sendSmsTestMessage(mockSmsConnectorId, '8612345678901', mockSmsConnectorConfig)
+      sendSmsTestMessage(mockSmsConnectorId, phone, mockSmsConnectorConfig)
     ).resolves.not.toThrow();
     await expect(
-      sendEmailTestMessage(mockEmailConnectorId, 'test@example.com', mockEmailConnectorConfig)
+      sendEmailTestMessage(mockEmailConnectorId, email, mockEmailConnectorConfig)
     ).resolves.not.toThrow();
   });
 
   it('should fail to send the test message when the config is invalid', async () => {
-    await expect(
-      sendSmsTestMessage(mockSmsConnectorId, '8612345678901', mockEmailConnectorConfig)
-    ).rejects.toThrow(HTTPError);
-    await expect(
-      sendEmailTestMessage(mockEmailConnectorId, 'test@example.com', mockSmsConnectorConfig)
-    ).rejects.toThrow(HTTPError);
+    await expect(sendSmsTestMessage(mockSmsConnectorId, phone, {})).rejects.toThrow(HTTPError);
+    await expect(sendEmailTestMessage(mockEmailConnectorId, email, {})).rejects.toThrow(HTTPError);
   });
 });
 
