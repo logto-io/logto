@@ -3,7 +3,7 @@ import { demoAppApplicationId } from '@logto/schemas/lib/seeds';
 import { assert } from '@silverhand/essentials';
 
 import {
-  createUser as createUserApi,
+  createUser,
   registerUserWithUsernameAndPassword,
   signInWithUsernameAndPassword,
 } from '@/api';
@@ -11,11 +11,11 @@ import MockClient from '@/client';
 import { demoAppRedirectUri, logtoUrl } from '@/constants';
 import { generateUsername, generatePassword } from '@/utils';
 
-export const createUser = (_username?: string, _password?: string) => {
+export const createUserByAdmin = (_username?: string, _password?: string) => {
   const username = _username ?? generateUsername();
   const password = _password ?? generatePassword();
 
-  return createUserApi({
+  return createUser({
     username,
     password,
     name: username,

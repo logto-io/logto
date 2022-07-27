@@ -1,5 +1,5 @@
-import { registerUserAndSignIn } from '@/actions';
 import { authedAdminApi } from '@/api';
+import { registerUserAndSignIn } from '@/helpers';
 
 type StatisticsData = {
   count: number;
