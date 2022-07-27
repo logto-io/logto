@@ -93,8 +93,8 @@ test('connector set-up flow', async () => {
   ).rejects.toThrow(HTTPError);
   // To confirm the failed updating request above did not modify the original config,
   // we check: the Facebook connector config should stay the same.
-  const aliyunEmailConnector = await getConnector(facebookConnectorId);
-  expect(aliyunEmailConnector.config).toEqual(facebookConnectorConfig);
+  const facebookConnector = await getConnector(facebookConnectorId);
+  expect(facebookConnector.config).toEqual(facebookConnectorConfig);
 
   /*
    * Change to another SMS/Email connector
