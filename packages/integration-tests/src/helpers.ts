@@ -3,15 +3,13 @@ import { demoAppApplicationId } from '@logto/schemas/lib/seeds';
 import { assert } from '@silverhand/essentials';
 
 import {
-  visitSignInUri,
+  createUser as createUserApi,
   registerUserWithUsernameAndPassword,
-  consentUserAndGetSignInCallbackUri,
   signInWithUsernameAndPassword,
-} from './actions';
-import { createUser as createUserApi } from './api';
-import LogtoClient from './client/logto-client';
-import { demoAppRedirectUri, logtoUrl } from './constants';
-import { generateUsername, generatePassword } from './utils';
+} from '@/api';
+import LogtoClient from '@/client';
+import { demoAppRedirectUri, logtoUrl } from '@/constants';
+import { generateUsername, generatePassword } from '@/utils';
 
 export const createUser = () => {
   const username = generateUsername();
@@ -31,26 +29,21 @@ export const registerUserAndSignIn = async () => {
     persistAccessToken: false,
   });
 
-  await logtoClient.signIn(demoAppRedirectUri);
-
-  assert(logtoClient.navigateUrl, new Error('Unable to navigate to sign in uri'));
-
-  const interactionCookie = await visitSignInUri(logtoClient.navigateUrl);
+  await logtoClient.initSession(demoAppRedirectUri);
+  assert(logtoClient.interactionCookie, new Error('Session not found'));
 
   const username = generateUsername();
   const password = generatePassword();
 
-  await registerUserWithUsernameAndPassword(username, password, interactionCookie);
+  await registerUserWithUsernameAndPassword(username, password, logtoClient.interactionCookie);
 
-  const interactionCookieWithSession = await signInWithUsernameAndPassword(
+  const { redirectTo } = await signInWithUsernameAndPassword(
     username,
     password,
-    interactionCookie
+    logtoClient.interactionCookie
   );
 
-  const signInCallbackUri = await consentUserAndGetSignInCallbackUri(interactionCookieWithSession);
-
-  await logtoClient.handleSignInCallback(signInCallbackUri);
+  await logtoClient.handleSignInCallback(redirectTo);
 
   assert(logtoClient.isAuthenticated, new Error('Sign in failed'));
 };
