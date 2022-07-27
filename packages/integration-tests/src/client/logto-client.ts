@@ -1,6 +1,6 @@
 import BaseClient, { LogtoConfig } from '@logto/node';
 
-import { DummyStorage } from './dummy-storage';
+import { MemoryStorage } from './storage';
 
 export default class LogtoClient extends BaseClient {
   public navigateUrl = '';
@@ -13,7 +13,7 @@ export default class LogtoClient extends BaseClient {
         navigate: (url: string) => {
           this.navigateUrl = url;
         },
-        storage: new DummyStorage(),
+        storage: new MemoryStorage(),
       }
     );
   }

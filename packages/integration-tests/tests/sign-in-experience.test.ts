@@ -1,7 +1,5 @@
-import { BrandingStyle, SignInExperience, SignInMethods, SignInMethodState } from '@logto/schemas';
+import { BrandingStyle, SignInMethodState } from '@logto/schemas';
 
-import { authedAdminApi } from '@/api';
-import { updateConnectorConfig, enableConnector, disableConnector } from '@/connector-api';
 import {
   facebookConnectorId,
   facebookConnectorConfig,
@@ -10,17 +8,19 @@ import {
   sendgridEmailConnectorConfig,
   sendgridEmailConnectorId,
   facebookConnectorTarget,
-} from '@/connectors-mock';
+} from '@/__mocks__/connectors-mock';
+import { getSignInExperience, updateSignInExperience } from '@/api';
+import { updateConnectorConfig, enableConnector, disableConnector } from '@/api/connector';
 
 describe('admin console sign-in experience', () => {
   it('should get sign-in experience successfully', async () => {
-    const signInExperience = await authedAdminApi.get('sign-in-exp').json<SignInExperience>();
+    const signInExperience = await getSignInExperience();
 
     expect(signInExperience).toBeTruthy();
   });
 
   it('should update sign-in experience successfully', async () => {
-    const newSignInExperience: Partial<SignInExperience> = {
+    const newSignInExperience = {
       color: {
         primaryColor: '#ffffff',
         darkPrimaryColor: '#000000',
@@ -38,45 +38,36 @@ describe('admin console sign-in experience', () => {
       },
     };
 
-    const updatedSignInExperience = await authedAdminApi
-      .patch('sign-in-exp', {
-        json: newSignInExperience,
-      })
-      .json<SignInExperience>();
-
+    const updatedSignInExperience = await updateSignInExperience(newSignInExperience);
     expect(updatedSignInExperience).toMatchObject(newSignInExperience);
   });
 
   it('should be able to setup sign in methods after connectors are enabled', async () => {
     // Setup connectors for tests
     await Promise.all([
-      updateConnectorConfig(facebookConnectorId, facebookConnectorConfig),
-      updateConnectorConfig(twilioSmsConnectorId, twilioSmsConnectorConfig),
-      updateConnectorConfig(sendgridEmailConnectorId, sendgridEmailConnectorConfig),
-    ]);
-
-    await Promise.all([
-      enableConnector(facebookConnectorId),
-      enableConnector(twilioSmsConnectorId),
-      enableConnector(sendgridEmailConnectorId),
+      updateConnectorConfig(facebookConnectorId, facebookConnectorConfig).then(async () =>
+        enableConnector(facebookConnectorId)
+      ),
+      updateConnectorConfig(twilioSmsConnectorId, twilioSmsConnectorConfig).then(async () =>
+        enableConnector(twilioSmsConnectorId)
+      ),
+      updateConnectorConfig(sendgridEmailConnectorId, sendgridEmailConnectorConfig).then(async () =>
+        enableConnector(sendgridEmailConnectorId)
+      ),
     ]);
 
     // Set up sign-in methods
-    const newSignInMethods: Partial<SignInMethods> = {
+    const newSignInMethods = {
       username: SignInMethodState.Primary,
       sms: SignInMethodState.Secondary,
       email: SignInMethodState.Secondary,
       social: SignInMethodState.Secondary,
     };
 
-    const updatedSignInExperience = await authedAdminApi
-      .patch('sign-in-exp', {
-        json: {
-          socialSignInConnectorTargets: [facebookConnectorTarget],
-          signInMethods: newSignInMethods,
-        },
-      })
-      .json<SignInExperience>();
+    const updatedSignInExperience = await updateSignInExperience({
+      socialSignInConnectorTargets: [facebookConnectorTarget],
+      signInMethods: newSignInMethods,
+    });
 
     expect(updatedSignInExperience.signInMethods).toMatchObject(newSignInMethods);
 

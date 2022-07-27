@@ -1,4 +1,4 @@
-import { Response } from 'got/dist/source';
+import { Response } from 'got';
 
 export const extractCookie = (response: Response) => {
   const { headers } = response;
