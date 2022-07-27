@@ -1142,6 +1142,7 @@ importers:
       '@silverhand/ts-config': ^0.17.0
       '@types/jest': ^27.4.1
       '@types/node': ^16.0.0
+      dotenv: ^16.0.0
       eslint: ^8.19.0
       got: ^11.8.2
       jest: ^27.5.1
@@ -1163,6 +1164,7 @@ importers:
       '@silverhand/ts-config': 0.17.0_typescript@4.6.4
       '@types/jest': 27.4.1
       '@types/node': 16.11.12
+      dotenv: 16.0.0
       eslint: 8.19.0
       got: 11.8.3
       jest: 27.5.1_ts-node@10.9.1
@@ -7594,7 +7596,6 @@ packages:
   /dotenv/16.0.0:
     resolution: {integrity: sha512-qD9WU0MPM4SWLPJy/r2Be+2WgQj8plChsyrCNQzW/0WjvcJQiKQJ9mH3ZgB3fxbUUxgc/11ZJ0Fi5KiimWGz2Q==}
     engines: {node: '>=12'}
-    dev: false
 
   /dotenv/7.0.0:
     resolution: {integrity: sha512-M3NhsLbV1i6HuGzBUH8vXrtxOk+tWmzWKDMbAVSUp3Zsjm7ywFeuwrUXhmhQyRK1q5B5GGy7hcXPbj3bnfZg2g==}
