@@ -15,6 +15,7 @@ import {
   verifyRegisterUserWithSmsPasscode,
   sendSignInUserWithSmsPasscode,
   verifySignInUserWithSmsPasscode,
+  disableConnector,
 } from '@/api';
 import MockClient from '@/client';
 import { registerNewUser, signIn, setUpConnector, readPasscode } from '@/helpers';
@@ -100,6 +101,10 @@ describe('email passwordless flow', () => {
 
     expect(client.isAuthenticated).toBeTruthy();
   });
+
+  afterAll(async () => {
+    void disableConnector(mockEmailConnectorId);
+  });
 });
 
 describe('sms passwordless flow', () => {
@@ -168,5 +173,9 @@ describe('sms passwordless flow', () => {
     await client.processSession(redirectTo);
 
     expect(client.isAuthenticated).toBeTruthy();
+  });
+
+  afterAll(async () => {
+    void disableConnector(mockSmsConnectorId);
   });
 });
