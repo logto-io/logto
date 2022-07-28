@@ -62,16 +62,6 @@ const changeToAnotherConnector = async (
  */
 test('connector set-up flow', async () => {
   /*
-   * List connectors after initializing a new Logto instance
-   */
-  const allConnectors = await listConnectors();
-
-  // There should be no connectors, or all connectors should be disabled.
-  for (const connectorDto of allConnectors) {
-    expect(connectorDto.enabled).toBeFalsy();
-  }
-
-  /*
    * Set up social/SMS/email connectors
    */
   await expect(
