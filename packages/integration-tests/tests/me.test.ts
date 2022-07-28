@@ -4,7 +4,7 @@ import { assert } from '@silverhand/essentials';
 import {
   getCurrentUserInfo,
   getCurrentUserCustomData,
-  updateCurrentUserCustomDate,
+  updateCurrentUserCustomData,
   changeCurrentUserPassword,
 } from '@/api';
 import { createUserByAdmin, signIn } from '@/helpers';
@@ -34,7 +34,7 @@ describe('api `/me`', () => {
 
     const foo = 'bar';
 
-    await updateCurrentUserCustomDate(user.id, { foo });
+    await updateCurrentUserCustomData(user.id, { foo });
 
     const customData = await getCurrentUserCustomData(user.id);
 

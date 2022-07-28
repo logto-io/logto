@@ -3,12 +3,11 @@ import { createUserByAdmin, registerNewUser, signIn } from '@/helpers';
 import { generateUsername, generatePassword } from '@/utils';
 
 describe('admin console dashboard', () => {
-  const password = generatePassword();
-  const username = generateUsername();
-
   it('should get total user count successfully', async () => {
     const { totalUserCount: originTotalUserCount } = await getTotalUsersCount();
 
+    const password = generatePassword();
+    const username = generateUsername();
     await createUserByAdmin(username, password);
 
     const { totalUserCount } = await getTotalUsersCount();
@@ -33,6 +32,10 @@ describe('admin console dashboard', () => {
 
   it('should get active user statistics successfully', async () => {
     const originActiveUserStatistics = await getActiveUsersData();
+
+    const password = generatePassword();
+    const username = generateUsername();
+    await createUserByAdmin(username, password);
 
     await signIn(username, password);
 

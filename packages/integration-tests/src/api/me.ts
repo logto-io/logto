@@ -14,7 +14,7 @@ export const getCurrentUserCustomData = (userId: string) =>
     })
     .json<ArbitraryObject>();
 
-export const updateCurrentUserCustomDate = (userId: string, payload: Record<string, unknown>) =>
+export const updateCurrentUserCustomData = (userId: string, payload: Record<string, unknown>) =>
   api.patch('me/custom-data', {
     headers: {
       'development-user-id': userId,
