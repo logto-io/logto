@@ -22,7 +22,7 @@ export default class MockClient {
   private readonly storage: MemoryStorage;
   private readonly logto: LogtoClient;
 
-  constructor(config?: LogtoConfig) {
+  constructor(config?: Partial<LogtoConfig>) {
     this.storage = new MemoryStorage();
 
     this.logto = new LogtoClient(
