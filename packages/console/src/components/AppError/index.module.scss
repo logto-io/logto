@@ -18,6 +18,7 @@
     height: 256px;
     width: 256px;
     margin-top: _.unit(30);
+    flex-shrink: 0;
   }
 
   label {
