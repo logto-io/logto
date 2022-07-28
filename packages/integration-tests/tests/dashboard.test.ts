@@ -1,45 +1,26 @@
-import { authedAdminApi } from '@/api';
-import { registerUserAndSignIn } from '@/helpers';
-
-type StatisticsData = {
-  count: number;
-  delta: number;
-};
+import { getTotalUsersCount, getNewUsersData, getActiveUsersData, StatisticsData } from '@/api';
+import { createUserByAdmin, registerNewUser, signIn } from '@/helpers';
+import { generateUsername, generatePassword } from '@/utils';
 
 describe('admin console dashboard', () => {
   it('should get total user count successfully', async () => {
-    type TotalUserCountData = {
-      totalUserCount: number;
-    };
+    const { totalUserCount: originTotalUserCount } = await getTotalUsersCount();
 
-    const { totalUserCount: originTotalUserCount } = await authedAdminApi
-      .get('dashboard/users/total')
-      .json<TotalUserCountData>();
+    const password = generatePassword();
+    const username = generateUsername();
+    await createUserByAdmin(username, password);
 
-    await registerUserAndSignIn();
-
-    const { totalUserCount } = await authedAdminApi
-      .get('dashboard/users/total')
-      .json<TotalUserCountData>();
+    const { totalUserCount } = await getTotalUsersCount();
 
     expect(totalUserCount).toBe(originTotalUserCount + 1);
   });
 
   it('should get new user statistics successfully', async () => {
-    type NewUserStatistics = {
-      today: StatisticsData;
-      last7Days: StatisticsData;
-    };
+    const originUserStatistics = await getNewUsersData();
 
-    const originUserStatistics = await authedAdminApi
-      .get('dashboard/users/new')
-      .json<NewUserStatistics>();
+    await registerNewUser(generateUsername(), generatePassword());
 
-    await registerUserAndSignIn();
-
-    const newUserStatistics = await authedAdminApi
-      .get('dashboard/users/new')
-      .json<NewUserStatistics>();
+    const newUserStatistics = await getNewUsersData();
 
     const keyToCompare: Array<keyof StatisticsData> = ['count', 'delta'];
 
@@ -50,31 +31,24 @@ describe('admin console dashboard', () => {
   });
 
   it('should get active user statistics successfully', async () => {
-    type ActiveUserStatistics = {
-      dauCurve: StatisticsData[];
-      dau: StatisticsData;
-      wau: StatisticsData;
-      mau: StatisticsData;
-    };
+    const originActiveUserStatistics = await getActiveUsersData();
 
-    const originActiveUserStatistics = await authedAdminApi
-      .get('dashboard/users/active')
-      .json<ActiveUserStatistics>();
+    const password = generatePassword();
+    const username = generateUsername();
+    await createUserByAdmin(username, password);
 
-    await registerUserAndSignIn();
+    await signIn(username, password);
 
-    const activeUserStatistics = await authedAdminApi
-      .get('dashboard/users/active')
-      .json<ActiveUserStatistics>();
+    const newActiveUserStatistics = await getActiveUsersData();
 
-    expect(activeUserStatistics.dauCurve.length).toBeGreaterThan(0);
+    expect(newActiveUserStatistics.dauCurve.length).toBeGreaterThan(0);
 
     const keyToCompare: Array<keyof StatisticsData> = ['count', 'delta'];
 
     for (const key of keyToCompare) {
-      expect(activeUserStatistics.dau[key]).toBe(originActiveUserStatistics.dau[key] + 1);
-      expect(activeUserStatistics.wau[key]).toBe(originActiveUserStatistics.wau[key] + 1);
-      expect(activeUserStatistics.mau[key]).toBe(originActiveUserStatistics.mau[key] + 1);
+      expect(newActiveUserStatistics.dau[key]).toBe(originActiveUserStatistics.dau[key] + 1);
+      expect(newActiveUserStatistics.wau[key]).toBe(originActiveUserStatistics.wau[key] + 1);
+      expect(newActiveUserStatistics.mau[key]).toBe(originActiveUserStatistics.mau[key] + 1);
     }
   });
 });
