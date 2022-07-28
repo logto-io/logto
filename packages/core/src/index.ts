@@ -10,6 +10,7 @@ configDotEnv();
 /* eslint-disable import/first */
 import initApp from './app/init';
 import { initConnectors } from './connectors';
+import { deployMigration } from './database/migration';
 import envSet from './env-set';
 import initI18n from './i18n/init';
 /* eslint-enable import/first */
@@ -17,6 +18,13 @@ import initI18n from './i18n/init';
 (async () => {
   try {
     await envSet.load();
+
+    if (envSet.isDeployMigration) {
+      await deployMigration(envSet.pool);
+
+      return;
+    }
+
     const app = new Koa({
       proxy: envSet.values.trustProxyHeader,
     });

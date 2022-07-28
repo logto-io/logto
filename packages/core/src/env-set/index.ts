@@ -5,7 +5,7 @@ import { appendPath } from '@/utils/url';
 
 import createPoolByEnv from './create-pool-by-env';
 import loadOidcValues from './oidc';
-import { isTrue } from './parameters';
+import { isTrue, deployMigration } from './parameters';
 
 export enum MountedApps {
   Api = 'api',
@@ -66,6 +66,9 @@ function createEnvSet() {
       }
 
       return pool;
+    },
+    get isDeployMigration() {
+      return deployMigration;
     },
 
     load: async () => {
