@@ -3,54 +3,89 @@ import { demoAppApplicationId } from '@logto/schemas/lib/seeds';
 import { assert } from '@silverhand/essentials';
 
 import {
-  visitSignInUri,
+  createUser,
   registerUserWithUsernameAndPassword,
-  consentUserAndGetSignInCallbackUri,
   signInWithUsernameAndPassword,
-} from './actions';
-import { createUser as createUserApi } from './api';
-import LogtoClient from './client/logto-client';
-import { demoAppRedirectUri, logtoUrl } from './constants';
-import { generateUsername, generatePassword } from './utils';
+} from '@/api';
+import MockClient from '@/client';
+import { demoAppRedirectUri, logtoUrl } from '@/constants';
+import { generateUsername, generatePassword } from '@/utils';
 
-export const createUser = () => {
-  const username = generateUsername();
-  const password = generatePassword();
+export const createUserByAdmin = (_username?: string, _password?: string) => {
+  const username = _username ?? generateUsername();
+  const password = _password ?? generatePassword();
 
-  return createUserApi({
+  return createUser({
     username,
     password,
     name: username,
   }).json<User>();
 };
 
+export const registerNewUser = async (username: string, password: string) => {
+  const client = new MockClient();
+  await client.initSession();
+
+  assert(client.interactionCookie, new Error('Session not found'));
+
+  if (!client.interactionCookie) {
+    return;
+  }
+
+  const { redirectTo } = await registerUserWithUsernameAndPassword(
+    username,
+    password,
+    client.interactionCookie
+  );
+
+  await client.processSession(redirectTo);
+
+  assert(client.isAuthenticated, new Error('Sign in failed'));
+};
+
+export const signIn = async (username: string, password: string) => {
+  const client = new MockClient();
+  await client.initSession();
+
+  assert(client.interactionCookie, new Error('Session not found'));
+
+  if (!client.interactionCookie) {
+    return;
+  }
+
+  const { redirectTo } = await signInWithUsernameAndPassword(
+    username,
+    password,
+    client.interactionCookie
+  );
+
+  await client.processSession(redirectTo);
+
+  assert(client.isAuthenticated, new Error('Sign in failed'));
+};
+
 export const registerUserAndSignIn = async () => {
-  const logtoClient = new LogtoClient({
+  const client = new MockClient({
     endpoint: logtoUrl,
     appId: demoAppApplicationId,
     persistAccessToken: false,
   });
 
-  await logtoClient.signIn(demoAppRedirectUri);
-
-  assert(logtoClient.navigateUrl, new Error('Unable to navigate to sign in uri'));
-
-  const interactionCookie = await visitSignInUri(logtoClient.navigateUrl);
+  await client.initSession(demoAppRedirectUri);
+  assert(client.interactionCookie, new Error('Session not found'));
 
   const username = generateUsername();
   const password = generatePassword();
 
-  await registerUserWithUsernameAndPassword(username, password, interactionCookie);
+  await registerUserWithUsernameAndPassword(username, password, client.interactionCookie);
 
-  const interactionCookieWithSession = await signInWithUsernameAndPassword(
+  const { redirectTo } = await signInWithUsernameAndPassword(
     username,
     password,
-    interactionCookie
+    client.interactionCookie
   );
 
-  const signInCallbackUri = await consentUserAndGetSignInCallbackUri(interactionCookieWithSession);
+  await client.processSession(redirectTo);
 
-  await logtoClient.handleSignInCallback(signInCallbackUri);
-
-  assert(logtoClient.isAuthenticated, new Error('Sign in failed'));
+  assert(client.isAuthenticated, new Error('Sign in failed'));
 };
