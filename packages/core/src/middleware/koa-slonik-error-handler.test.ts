@@ -1,4 +1,5 @@
 import { Users } from '@logto/schemas';
+import { DatabaseError } from 'pg';
 import { NotFoundError, SlonikError } from 'slonik';
 
 import RequestError from '@/errors/RequestError';
@@ -92,6 +93,17 @@ describe('koaSlonikErrorHandler middleware', () => {
         code: 'entity.not_found',
         status: 404,
       })
+    );
+  });
+
+  it('DatabaseError from PostgreSQL (not Slonik)', async () => {
+    const message = 'Database error';
+    next.mockImplementationOnce(() => {
+      throw new DatabaseError(message, 99, 'error');
+    });
+
+    await expect(koaSlonikErrorHandler()(ctx, next)).rejects.toMatchError(
+      new RequestError('entity.database_manipulation_failed', message)
     );
   });
 });
