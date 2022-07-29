@@ -31,10 +31,6 @@ export const registerNewUser = async (username: string, password: string) => {
 
   assert(client.interactionCookie, new Error('Session not found'));
 
-  if (!client.interactionCookie) {
-    return;
-  }
-
   const { redirectTo } = await registerUserWithUsernameAndPassword(
     username,
     password,
@@ -51,10 +47,6 @@ export const signIn = async (username: string, password: string) => {
   await client.initSession();
 
   assert(client.interactionCookie, new Error('Session not found'));
-
-  if (!client.interactionCookie) {
-    return;
-  }
 
   const { redirectTo } = await signInWithUsernameAndPassword(
     username,

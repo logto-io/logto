@@ -83,6 +83,10 @@ export default class MockClient {
     await this.consent();
   }
 
+  public async getAccessToken(resource?: string) {
+    return this.logto.getAccessToken(resource);
+  }
+
   public get isAuthenticated() {
     return this.logto.isAuthenticated;
   }
