@@ -87,6 +87,10 @@ export default class MockClient {
     return this.logto.getAccessToken(resource);
   }
 
+  public async signOut(postSignOutRedirectUri?: string) {
+    return this.logto.signOut(postSignOutRedirectUri);
+  }
+
   public get isAuthenticated() {
     return this.logto.isAuthenticated;
   }

@@ -16,9 +16,16 @@ import {
   sendSignInUserWithSmsPasscode,
   verifySignInUserWithSmsPasscode,
   disableConnector,
+  signInWithUsernameAndPassword,
 } from '@/api';
 import MockClient from '@/client';
-import { registerNewUser, signIn, setUpConnector, readPasscode } from '@/helpers';
+import {
+  registerNewUser,
+  signIn,
+  setUpConnector,
+  readPasscode,
+  createUserByAdmin,
+} from '@/helpers';
 import { generateUsername, generatePassword, generateEmail, generatePhone } from '@/utils';
 
 describe('username and password flow', () => {
@@ -177,5 +184,35 @@ describe('sms passwordless flow', () => {
 
   afterAll(async () => {
     void disableConnector(mockSmsConnectorId);
+  });
+});
+
+describe('sign-in and sign-out', () => {
+  const username = generateUsername();
+  const password = generatePassword();
+
+  beforeAll(async () => {
+    await createUserByAdmin(username, password);
+  });
+
+  it('verify sign-in and then sign-out', async () => {
+    const client = new MockClient();
+    await client.initSession();
+
+    assert(client.interactionCookie, new Error('Session not found'));
+
+    const { redirectTo } = await signInWithUsernameAndPassword(
+      username,
+      password,
+      client.interactionCookie
+    );
+
+    await client.processSession(redirectTo);
+
+    expect(client.isAuthenticated).toBe(true);
+
+    await client.signOut();
+
+    expect(client.isAuthenticated).toBe(false);
   });
 });
