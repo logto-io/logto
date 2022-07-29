@@ -34,6 +34,8 @@ const getSampleProjectUrl = (sdk: SupportedSdk) => {
       return `${githubUrlPrefix}/js/tree/master/packages/vue-sample`;
     case SupportedSdk.Vanilla:
       return `${githubUrlPrefix}/js/tree/master/packages/browser-sample`;
+    case SupportedSdk.Next:
+      return `${githubUrlPrefix}/js/tree/master/packages/next-sample`;
     case SupportedSdk.Express:
       return `${githubUrlPrefix}/express-example`;
     default:
