@@ -42,25 +42,23 @@ test('connector set-up flow', async () => {
   /*
    * Set up social/SMS/email connectors
    */
-  await expect(
-    Promise.all(
-      [
-        { id: facebookConnectorId, config: facebookConnectorConfig },
-        { id: aliyunSmsConnectorId, config: aliyunSmsConnectorConfig },
-        { id: aliyunEmailConnectorId, config: aliyunEmailConnectorConfig },
-      ].map(async ({ id, config }) => {
-        const updatedConnector = await updateConnectorConfig(id, config);
-        expect(updatedConnector.config).toEqual(config);
-        const enabledConnector = await enableConnector(id);
-        expect(enabledConnector.enabled).toBeTruthy();
+  await Promise.all(
+    [
+      { id: facebookConnectorId, config: facebookConnectorConfig },
+      { id: aliyunSmsConnectorId, config: aliyunSmsConnectorConfig },
+      { id: aliyunEmailConnectorId, config: aliyunEmailConnectorConfig },
+    ].map(async ({ id, config }) => {
+      const updatedConnector = await updateConnectorConfig(id, config);
+      expect(updatedConnector.config).toEqual(config);
+      const enabledConnector = await enableConnector(id);
+      expect(enabledConnector.enabled).toBeTruthy();
 
-        // The result of getting a connector should be same as the result of updating a connector above.
-        const connector = await getConnector(id);
-        expect(connector.enabled).toBeTruthy();
-        expect(connector.config).toEqual(config);
-      })
-    )
-  ).resolves.not.toThrow();
+      // The result of getting a connector should be same as the result of updating a connector above.
+      const connector = await getConnector(id);
+      expect(connector.enabled).toBeTruthy();
+      expect(connector.config).toEqual(config);
+    })
+  );
 
   /*
    * It should update the connector config successfully when it is valid; otherwise, it should fail.
@@ -77,27 +75,25 @@ test('connector set-up flow', async () => {
   /*
    * Change to another SMS/Email connector
    */
-  await expect(
-    Promise.all(
-      [
-        { id: mockSmsConnectorId, config: mockSmsConnectorConfig, type: ConnectorType.SMS },
-        { id: mockEmailConnectorId, config: mockEmailConnectorConfig, type: ConnectorType.Email },
-      ].map(async ({ id, config, type }) => {
-        const updatedConnector = await updateConnectorConfig(id, config);
-        expect(updatedConnector.config).toEqual(config);
-        const enabledConnector = await enableConnector(id);
-        expect(enabledConnector.enabled).toBeTruthy();
+  await Promise.all(
+    [
+      { id: mockSmsConnectorId, config: mockSmsConnectorConfig, type: ConnectorType.SMS },
+      { id: mockEmailConnectorId, config: mockEmailConnectorConfig, type: ConnectorType.Email },
+    ].map(async ({ id, config, type }) => {
+      const updatedConnector = await updateConnectorConfig(id, config);
+      expect(updatedConnector.config).toEqual(config);
+      const enabledConnector = await enableConnector(id);
+      expect(enabledConnector.enabled).toBeTruthy();
 
-        // There should be exactly one enabled SMS/email connector after changing to another SMS/email connector.
-        const connectorsAfterChanging = await listConnectors();
-        const enabledConnectors = connectorsAfterChanging.filter(
-          (connector) => connector.type === type && connector.enabled
-        );
-        expect(enabledConnectors.length).toEqual(1);
-        expect(enabledConnectors[0]?.id).toEqual(id);
-      })
-    )
-  ).resolves.not.toThrow();
+      // There should be exactly one enabled SMS/email connector after changing to another SMS/email connector.
+      const connectorsAfterChanging = await listConnectors();
+      const enabledConnectors = connectorsAfterChanging.filter(
+        (connector) => connector.type === type && connector.enabled
+      );
+      expect(enabledConnectors.length).toEqual(1);
+      expect(enabledConnectors[0]?.id).toEqual(id);
+    })
+  );
 
   /*
    * Delete (i.e. disable) a connector
