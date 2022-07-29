@@ -16,7 +16,7 @@ const general = {
   added: 'Eklendi',
   cancel: 'İptal Et',
   confirm: 'Onayla',
-  check_out: 'Teslim al',
+  check_out: 'Göz At',
   create: 'Oluştur',
   set_up: 'Kur',
   customize: 'Özelleştir',
