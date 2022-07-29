@@ -17,7 +17,8 @@ export const defaultMetadata: ConnectorMetadata = {
   description: {
     en: 'Twilio provides programmable communication tools for phone calls and messages.',
     'zh-CN': 'Twilio 是一个提供面向消费者的可编程通讯服务的平台。',
-    'tr-TR': 'Twilio provides programmable communication tools for phone calls and messages.',
+    'tr-TR':
+      'Twilio, telefon görüşmeleri ve mesajlar için programlanabilir iletişim araçları sağlar.',
   },
   readme: './README.md',
   configTemplate: './docs/config-template.json',

@@ -1,43 +1,44 @@
 const applications = {
-  title: 'Applications',
+  title: 'Uygulamalar',
   subtitle:
-    'Set up a mobile, single page or traditional application to use Logto for authentication',
-  create: 'Create Application',
-  application_name: 'Application name',
-  application_name_placeholder: 'My App',
-  application_description: 'Application description',
-  application_description_placeholder: 'Enter your application description',
-  select_application_type: 'Select an application type',
-  no_application_type_selected: 'You haven’t selected any application type yet',
+    'Kimlik doğrulaması için Logtoyu kullanmak üzere mobil, tek sayfa veya geleneksel bir uygulama ayarlayınız',
+  create: 'Uygulama oluştur',
+  application_name: 'Uygulama adı',
+  application_name_placeholder: 'Uygulamam',
+  application_description: 'Uygulama açıklaması',
+  application_description_placeholder: 'Uygulama açıklaması giriniz',
+  select_application_type: 'Uygulama tipi seçiniz',
+  no_application_type_selected: 'Henüz bir uygulama tipi seçmediniz',
   application_created:
-    'The application {{name}} has been successfully created! \nNow finish your application settings.',
-  app_id: 'App ID',
+    '{{name}} Uygulaması başarıyla oluşturuldu! \nŞimdi uygulama ayarlarını tamamlayın.',
+  app_id: 'Uygulama IDsi',
   type: {
     native: {
-      title: 'Native App',
-      subtitle: 'An app that runs in a native environment',
-      description: 'E.g., iOS app, Android app',
+      title: 'Native Uygulama',
+      subtitle: 'Nativede çalışan bir uygulama ',
+      description: 'Örneğin, iOS uygulaması, Android uygulaması',
     },
     spa: {
-      title: 'Single Page App',
-      subtitle: 'An app that runs in a web browser and dynamically updates data in place',
-      description: 'E.g., React DOM app, Vue app',
+      title: 'Tek sayfalı uygulama',
+      subtitle:
+        'Bir web tarayıcısında çalışan ve verileri yerinde dinamik olarak güncelleyen bir uygulama',
+      description: 'Örneğin, React DOM uygulaması, Vue uygulaması',
     },
     traditional: {
       title: 'Traditional Web',
-      subtitle: 'An app that renders and updates pages by the web server alone',
-      description: 'E.g., JSP, PHP',
+      subtitle: 'Sayfaları yalnızca web sunucusu tarafından işleyen ve güncelleyen bir uygulama',
+      description: 'Örneğin, JSP, PHP',
     },
   },
   guide: {
-    get_sample_file: 'Get Sample',
+    get_sample_file: 'Örnek Gör',
     header_description:
-      'Follow a step by step guide to integrate your application or click the right button to get our sample project',
-    title: 'The application has been successfully created',
+      'Uygulamanızı entegre etmek için adım adım kılavuzu izleyin veya örnek projemizi almak için sağ düğmeye tıklayınız',
+    title: 'Uygulama başarıyla oluşturuldu',
     subtitle:
-      'Now follow the steps below to finish your app settings. Please select the SDK type to continue.',
+      'Şimdi uygulama ayarlarınızı tamamlamak için aşağıdaki adımları izleyiniz. Lütfen devam etmek için SDK türünü seçiniz.',
     description_by_sdk:
-      'This quick start guide demonstrates how to integrate Logto into {{sdk}} app',
+      'Bu hızlı başlangıç kılavuzu, Logtoyu {{sdk}} uygulamasına nasıl entegre edeceğinizi gösterir',
   },
 };
 

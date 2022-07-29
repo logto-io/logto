@@ -1,15 +1,15 @@
 const tabs = {
-  get_started: 'Get Started',
-  dashboard: 'Dashboard',
-  applications: 'Applications',
-  api_resources: 'API Resources',
-  sign_in_experience: 'Sign-in Experience',
+  get_started: 'Başla',
+  dashboard: 'Gösterge Paneli',
+  applications: 'Uygulamalar',
+  api_resources: 'API Kaynakları',
+  sign_in_experience: 'Oturum Açma Deneyimi',
   connectors: 'Connectors',
-  users: 'User Management',
-  audit_logs: 'Audit Logs',
-  docs: 'Docs',
-  contact_us: 'Contact Us',
-  settings: 'Settings',
+  users: 'Kullanıcı Yönetimi',
+  audit_logs: 'Denetim Kayıtları',
+  docs: 'Dökümanlar',
+  contact_us: 'Bize Ulaşın',
+  settings: 'Ayarlar',
 };
 
 export default tabs;

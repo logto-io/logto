@@ -1,8 +1,8 @@
 const welcome = {
-  title: 'Welcome to Admin Console',
+  title: 'Yönetici Paneline Hoş Geldiniz',
   description:
-    'Admin console is a web app to manage Logto without coding requirements. Let’s first create an account. With this account, you can manage Logto by yourself or on behalf of your company.',
-  create_account: 'Create Account',
+    'Yönetici paneli, kodlama bilgisi olmadan Logtoyu yönetmek için bir web uygulamasıdır. Önce, bir hesap oluşturalım. Bu hesapla Logtoyu kendiniz veya şirketiniz adına yönetebilirsiniz.',
+  create_account: 'Hesap Oluştur',
 };
 
 export default welcome;

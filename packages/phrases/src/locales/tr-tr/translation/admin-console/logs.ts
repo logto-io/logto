@@ -1,11 +1,12 @@
 const logs = {
-  title: 'Audit Logs',
-  subtitle: 'View log data of authentication events made by your admin and users',
-  event: 'Event',
-  user: 'User',
-  application: 'Application',
-  time: 'Time',
-  filter_by: 'Filter by',
+  title: 'Denetim Kayıtları',
+  subtitle:
+    'Yöneticiniz ve kullanıcılarınız tarafından yapılan kimlik doğrulama olaylarının kayıt verilerini görüntüleyin',
+  event: 'Durum',
+  user: 'Kullanıcı',
+  application: 'Uygulama',
+  time: 'Süre',
+  filter_by: 'Göre filtrele',
 };
 
 export default logs;

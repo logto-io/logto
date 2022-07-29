@@ -40,7 +40,7 @@ export const defaultMetadata: ConnectorMetadata = {
   description: {
     en: 'Aliyun provides cloud computing services to online businesses.',
     'zh-CN': '阿里云是全球性的云服务提供商。',
-    'tr-TR': 'Aliyun provides cloud computing services to online businesses.',
+    'tr-TR': 'Aliyun, çevrimiçi işletmelere bulut bilişim hizmetleri sunmaktadır.',
   },
   readme: './README.md',
   configTemplate: './docs/config-template.json',

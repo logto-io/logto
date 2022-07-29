@@ -1,20 +1,21 @@
 const dashboard = {
-  title: 'Dashboard',
-  description: 'Get an overview about your app performance',
-  total_users: 'Total users',
-  total_users_tip: 'Total users',
-  new_users_today: 'New users today',
-  new_users_today_tip: 'The number of new users registered on your apps today',
-  new_users_7_days: 'New users past 7 days',
-  new_users_7_days_tip: 'The number of new users registered on your apps in the past 7 days',
-  daily_active_users: 'Daily active users',
-  daily_active_users_tip: 'The number of unique users exchanged tokens on your apps today',
-  weekly_active_users: 'Weekly active users',
+  title: 'Gösterge Paneli',
+  description: 'Uygulamanızın performansı hakkında genel bir bakış elde edin',
+  total_users: 'Tüm Kullanıcılar',
+  total_users_tip: 'Tüm kullanıcılar',
+  new_users_today: 'Bugün katılan kullanıcılar',
+  new_users_today_tip: 'Uygulamamıza bugün katılan yeni kullanıcı sayısı',
+  new_users_7_days: 'Son 7 günde katılan kullanıcılar',
+  new_users_7_days_tip: 'Uygulamamıza son 7 günde katılan kullanıcı sayısı',
+  daily_active_users: 'Günlük aktif kullanıcılar',
+  daily_active_users_tip:
+    'Bugün uygulamalarınızda token değişiminde bulunan özgün kullanıcı sayısı',
+  weekly_active_users: 'Haftalık aktif kullanıcılar',
   weekly_active_users_tip:
-    'The number of unique users exchanged tokens on your apps in the past 7 days',
-  monthly_active_users: 'Monthly active users',
+    'Son 7 günde uygulamalarınızda token değişiminde bulunan özgün kullanıcı sayısı',
+  monthly_active_users: 'Aylık aktif kullanıcılar',
   monthly_active_users_tip:
-    'The number of unique users exchanged tokens on your apps in the past 30 days',
+    'Son 30 günde uygulamalarınızda token değişiminde bulunan özgün kullanıcı sayısı',
 };
 
 export default dashboard;

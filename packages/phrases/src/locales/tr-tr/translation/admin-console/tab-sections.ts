@@ -1,8 +1,8 @@
 const tab_sections = {
-  overview: 'Overview',
-  resource_management: 'Resource Management',
-  user_management: 'User Management',
-  help_and_support: 'Help and Support',
+  overview: 'Genel Bakış',
+  resource_management: 'Kaynak Yönetimi',
+  user_management: 'Kullanıcı Yönetimi',
+  help_and_support: 'Yardım ve Destek',
 };
 
 export default tab_sections;

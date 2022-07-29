@@ -20,7 +20,7 @@ export const defaultMetadata: ConnectorMetadata = {
   description: {
     en: 'GitHub is an online community for software development and version control.',
     'zh-CN': 'GitHub 是全球最大的代码托管仓库。',
-    'tr-TR': 'GitHub is an online community for software development and version control.',
+    'tr-TR': 'GitHub, yazılım geliştirme ve sürüm kontrolü için çevrimiçi bir topluluktur.',
   },
   readme: './README.md',
   configTemplate: './docs/config-template.json',

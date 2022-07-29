@@ -20,7 +20,7 @@ export const defaultMetadata: ConnectorMetadata = {
   description: {
     en: 'Google is the biggest search engine technology and email service provider.',
     'zh-CN': 'Google 是全球最大的搜索引擎和邮件服务提供商。',
-    'tr-TR': 'Google is the biggest search engine technology and email service provider.',
+    'tr-TR': 'Google, en büyük arama motoru teknolojisi ve e-posta servis sağlayıcısıdır.',
   },
   readme: './README.md',
   configTemplate: './docs/config-template.json',

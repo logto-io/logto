@@ -1,25 +1,27 @@
 const get_started = {
-  progress: 'Get started guide: {{completed}}/{{total}}',
-  progress_dropdown_title: 'A few things you can do...',
-  title: 'How do you want to get started with Logto?',
-  subtitle_part1: 'A few things you can do to quickly get value of Logto',
-  subtitle_part2: 'I’m done with this set up. ',
-  hide_this: 'Hide this',
-  confirm_message: 'Are you sure you want to hide this page? This action cannot be undone.',
-  card1_title: 'Check out the demo',
-  card1_subtitle: 'Try Logto sign-in experience now to see how it works',
-  card2_title: 'Create and integrate the first application',
+  progress: 'Başlangıç Kılavuzu: {{completed}}/{{total}}',
+  progress_dropdown_title: 'Yapabileceğiniz bazı şeyler...',
+  title: 'Logtoyla nasıl başlamak istersiniz?',
+  subtitle_part1: 'Logto değerini hızlı bir şekilde elde etmek için yapabileceğiniz birkaç şey',
+  subtitle_part2: 'Bu kurulumla işim bitti. ',
+  hide_this: 'Bunu gizle',
+  confirm_message: 'Bu sayfayı gizlemek istediğinizden emin misiniz? Bu işlem geri alınamaz.',
+  card1_title: 'Demoya göz atın',
+  card1_subtitle: 'Nasıl çalıştığını görmek için şimdi Logto oturum açma deneyimini deneyiniz',
+  card2_title: 'İlk uygulamayı oluşturun ve entegre edin',
   card2_subtitle:
-    'Set up a mobile, single page or traditional application to use Logto for authentication',
-  card3_title: 'Customize sign-in experience',
-  card3_subtitle: 'Customize the sign in UI to match your brand and view in real time',
-  card4_title: 'Set up SMS and email connector',
+    'Kimlik doğrulaması için Logtoyu kullanmak üzere mobil, tek sayfa veya geleneksel bir uygulama ayarlayın',
+  card3_title: 'Oturum açma deneyimini özelleştirin',
+  card3_subtitle:
+    'Oturum açma kullanıcı arayüzünü markanıza uyacak şekilde özelleştiriniz ve gerçek zamanlı olarak görüntüleyiniz',
+  card4_title: 'SMS ve e-posta connectorunu ayarlayınız',
   card4_subtitle:
-    'Try passwordless sign in with phone number or email to enable a secure and frictionless customer experience',
-  card5_title: 'Add a social connector',
-  card5_subtitle: 'Let your customers sign in to your app with the social identities in one click',
-  card6_title: 'Further readings',
-  card6_subtitle: 'Check out our step-by-step, scenario-based docs without tedious concepts',
+    'Güvenli ve sorunsuz bir müşteri deneyimi sağlamak için telefon numarası veya e-posta ile şifresiz oturum açmayı deneyiniz',
+  card5_title: 'Bir social connector ekle',
+  card5_subtitle:
+    'Müşterilerinizin tek tıklamayla sosyal kimliklerle uygulamanızda oturum açmasına izin verin',
+  card6_title: 'Daha fazla okuma',
+  card6_subtitle: 'Sıkıcı kavramlar olmadan adım adım senaryo tabanlı belgelerimize göz atın',
 };
 
 export default get_started;

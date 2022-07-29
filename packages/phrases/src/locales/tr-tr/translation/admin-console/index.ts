@@ -21,11 +21,11 @@ import users from './users';
 import welcome from './welcome';
 
 const admin_console = {
-  title: 'Admin Console',
-  sign_out: 'Sign Out',
-  profile: 'Profile',
-  admin_user: 'Admin',
-  system_app: 'System',
+  title: 'Yönetici Paneli',
+  sign_out: 'Çıkış Yap',
+  profile: 'Profil',
+  admin_user: 'Yönetici',
+  system_app: 'Sistem',
   general,
   errors,
   tab_sections,

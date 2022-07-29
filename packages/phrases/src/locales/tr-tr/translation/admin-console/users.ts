@@ -1,15 +1,15 @@
 const users = {
-  title: 'User Management',
+  title: 'Kullanıcı Yönetimi',
   subtitle:
-    'Manage user identities including creating users, editing user information, viewing user logs, password resets and deleting users',
-  create: 'Add User',
-  user_name: 'User',
-  application_name: 'From application',
-  latest_sign_in: 'Latest sign in',
-  create_form_username: 'Username',
-  create_form_password: 'Password',
-  create_form_name: 'Full name',
-  unnamed: 'Unnamed',
+    'Kullanıcı oluşturma, kullanıcı bilgilerini düzenleme, kullanıcı kayıtlarını görüntüleme, parola sıfırlama ve kullanıcıları silme dahil olmak üzere kullanıcı kimliklerini yönetin',
+  create: 'Kullanıcı ekle',
+  user_name: 'Kullanıcı',
+  application_name: 'Uygulamadan',
+  latest_sign_in: 'En son oturum açma',
+  create_form_username: 'Kullanıcı Adı',
+  create_form_password: 'Şifre',
+  create_form_name: 'Ad Soyad',
+  unnamed: 'İsimsiz',
 };
 
 export default users;

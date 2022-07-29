@@ -1,21 +1,21 @@
 const contact = {
-  title: 'Contact Us',
+  title: 'Bizimle iletişime geçin',
   description:
-    'Join in our community to provide feedback, ask for help and share your thoughts with other developers',
+    'Geri bildirim sağlamak, yardım istemek ve düşüncelerinizi diğer geliştiricilerle paylaşmak için topluluğumuza katılın',
   discord: {
-    title: 'Discord channel',
-    description: 'Join our public channel to chat with other developers',
-    button: 'Join',
+    title: 'Discord kanalı',
+    description: 'Diğer geliştiricilerle sohbet etmek için herkese açık kanalımıza katılın',
+    button: 'Katıl',
   },
   github: {
     title: 'GitHub',
-    description: 'Create an issue and submit at GitHub',
-    button: 'Open',
+    description: "Bir issue oluşturun ve GitHub'da gönderin",
+    button: 'Aç',
   },
   email: {
-    title: 'Send email',
-    description: 'Send us an email for further information and help',
-    button: 'Send',
+    title: 'Eposta Gönder',
+    description: 'Daha fazla bilgi ve yardım için bize bir e-posta gönderin',
+    button: 'Gönder',
   },
 };
 

@@ -25,7 +25,7 @@ export const defaultMetadata: ConnectorMetadata = {
   description: {
     en: 'WeChat is a cross-platform instant messaging app.',
     'zh-CN': '微信是一款跨平台的即时通讯软件。',
-    'tr-TR': 'WeChat is a cross-platform instant messaging app.',
+    'tr-TR': 'WeChat, çoklu platformda kullanılabilen bir anlık mesajlaşma uygulamasıdır.',
   },
   readme: './README.md',
   configTemplate: './docs/config-template.json',

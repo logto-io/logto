@@ -24,7 +24,7 @@ export const defaultMetadata: ConnectorMetadata = {
   description: {
     en: 'Apple is a multinational high-end provider of hardware and software.',
     'zh-CN': 'Apple 是全球领先的高端消费者软硬件提供商。',
-    'tr-TR': 'Apple is a multinational high-end provider of hardware and software.',
+    'tr-TR': 'Apple, çok uluslu bir üst düzey donanım ve yazılım sağlayıcısıdır.',
   },
   readme: './README.md',
   configTemplate: './docs/config-template.json',

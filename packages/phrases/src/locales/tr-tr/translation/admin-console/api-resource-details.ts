@@ -1,11 +1,11 @@
 const api_resource_details = {
-  back_to_api_resources: 'Back to API resources',
-  token_expiration_time_in_seconds: 'Token expiration time (in seconds)',
-  token_expiration_time_in_seconds_placeholder: 'Enter your token expiration time',
+  back_to_api_resources: 'API Kaynaklarına geri dön',
+  token_expiration_time_in_seconds: 'Token sona erme süresi (saniye)',
+  token_expiration_time_in_seconds_placeholder: 'Token zaman aşım süresini giriniz',
   delete_description:
-    'This action cannot be undone. It will permanently delete the API resource. Please enter the api resource name <span>{{name}}</span> to confirm.',
-  enter_your_api_resource_name: 'Enter your API resource name',
-  api_resource_deleted: 'The API Resource {{name}} has been successfully deleted',
+    'Bu eylem geri alınamaz. API kaynakları kalıcı olarak silinecektir. Lütfen onaylamak için API kaynak adını <span>{{name}}</span> giriniz.',
+  enter_your_api_resource_name: 'API kaynak adını giriniz.',
+  api_resource_deleted: '{{name}} API kaynağı başarıyla silindi',
 };
 
 export default api_resource_details;

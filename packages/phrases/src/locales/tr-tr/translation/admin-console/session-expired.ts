@@ -1,8 +1,8 @@
 const session_expired = {
-  title: 'Session Expired',
+  title: 'Oturum Süresi Doldu',
   subtitle:
-    'Your session might have expired and you have been disconnected. Click the button below to sign in to admin console again.',
-  button: 'Sign In Again',
+    'Oturumunuzun süresi dolmuş ve bağlantınız kesilmiş olabilir. Yönetici konsolunda tekrar oturum açmak için aşağıdaki butona tıklayınız.',
+  button: 'Yeniden Giriş Yap',
 };
 
 export default session_expired;
