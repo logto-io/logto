@@ -21,6 +21,7 @@
 
 import { SchemaLike } from '@logto/schemas';
 import { Middleware } from 'koa';
+import { DatabaseError } from 'pg';
 import { SlonikError, NotFoundError } from 'slonik';
 
 import RequestError from '@/errors/RequestError';
@@ -31,6 +32,10 @@ export default function koaSlonikErrorHandler<StateT, ContextT>(): Middleware<St
     try {
       await next();
     } catch (error: unknown) {
+      if (error instanceof DatabaseError) {
+        throw new RequestError('entity.database_manipulation_failed', error.message);
+      }
+
       if (!(error instanceof SlonikError)) {
         throw error;
       }
