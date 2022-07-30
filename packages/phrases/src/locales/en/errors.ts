@@ -104,7 +104,7 @@ const errors = {
     not_exists: 'The {{name}} does not exist.',
     not_exists_with_id: 'The {{name}} with ID `{{id}}` does not exist.',
     not_found: 'The resource does not exist.',
-    database_manipulation_failed: 'The database manipulation failed.',
+    manipulation_failed: 'Failed to manipulate the resource in the database.',
   },
 };
 
