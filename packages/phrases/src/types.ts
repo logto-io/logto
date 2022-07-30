@@ -14,6 +14,7 @@ export enum Language {
   English = 'en',
   Chinese = 'zh-CN',
   Turkish = 'tr-TR',
+  Korean = 'ko-KR',
 }
 
 export const languageEnumGuard = z.nativeEnum(Language);
@@ -22,6 +23,7 @@ export const languageOptions = [
   { value: Language.English, title: 'English' },
   { value: Language.Chinese, title: '中文' },
   { value: Language.Turkish, title: 'Türkçe' },
+  { value: Language.Korean, title: '한국어' },
 ];
 
 /* eslint-enable @typescript-eslint/consistent-indexed-object-style */
