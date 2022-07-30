@@ -103,7 +103,7 @@ describe('koaSlonikErrorHandler middleware', () => {
     });
 
     await expect(koaSlonikErrorHandler()(ctx, next)).rejects.toMatchError(
-      new RequestError('entity.database_manipulation_failed', message)
+      new RequestError('entity.manipulation_failed', message)
     );
   });
 });

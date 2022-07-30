@@ -33,7 +33,7 @@ export default function koaSlonikErrorHandler<StateT, ContextT>(): Middleware<St
       await next();
     } catch (error: unknown) {
       if (error instanceof DatabaseError) {
-        throw new RequestError('entity.database_manipulation_failed', error.message);
+        throw new RequestError('entity.manipulation_failed', error.message);
       }
 
       if (!(error instanceof SlonikError)) {
