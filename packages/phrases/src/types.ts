@@ -18,7 +18,7 @@ export const languageEnumGuard = z.nativeEnum(Language);
 
 export const languageOptions = [
   { value: Language.English, title: 'English' },
-  { value: Language.Chinese, title: '中文' },
+  { value: Language.Chinese, title: '简体中文' },
   { value: Language.Turkish, title: 'Türkçe' },
   { value: Language.Korean, title: '한국어' },
 ];
