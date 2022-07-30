@@ -19,11 +19,15 @@ export enum Language {
 
 export const languageEnumGuard = z.nativeEnum(Language);
 
-export const languageOptions = [
-  { value: Language.English, title: 'English' },
-  { value: Language.Chinese, title: '中文' },
-  { value: Language.Turkish, title: 'Türkçe' },
-  { value: Language.Korean, title: '한국어' },
-];
+const languageCodeAndDisplayNameMappings: Record<Language, string> = {
+  [Language.English]: 'English',
+  [Language.Chinese]: '中文',
+  [Language.Turkish]: 'Türkçe',
+  [Language.Korean]: '한국어',
+};
+
+export const languageOptions = Object.entries(languageCodeAndDisplayNameMappings).map(
+  ([key, value]) => ({ value: key, title: value })
+);
 
 /* eslint-enable @typescript-eslint/consistent-indexed-object-style */
