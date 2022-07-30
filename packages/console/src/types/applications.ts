@@ -13,10 +13,11 @@ export enum SupportedSdk {
   Vue = 'Vue',
   Vanilla = 'Vanilla',
   Express = 'Express',
+  Next = 'Next',
 }
 
 export const applicationTypeAndSdkTypeMappings = Object.freeze({
   [ApplicationType.Native]: [SupportedSdk.iOS, SupportedSdk.Android],
   [ApplicationType.SPA]: [SupportedSdk.React, SupportedSdk.Vue, SupportedSdk.Vanilla],
-  [ApplicationType.Traditional]: [SupportedSdk.Express],
+  [ApplicationType.Traditional]: [SupportedSdk.Next, SupportedSdk.Express],
 } as const);

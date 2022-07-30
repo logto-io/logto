@@ -1,0 +1,222 @@
+import UriInputField from '@mdx/components/UriInputField';
+import Step from '@mdx/components/Step';
+import Tabs from '@mdx/components/Tabs';
+import TabItem from '@mdx/components/TabItem';
+import Alert from '@/components/Alert';
+import { generateRandomString } from '@logto/shared';
+
+<Step
+  title="将 Logto SDK 添加至依赖"
+  subtitle="选择你熟悉的包管理工具"
+  index={0}
+  activeIndex={props.activeStepIndex}
+  onButtonClick={() => props.onNext(1)}
+>
+<Tabs>
+<TabItem value="npm" label="npm">
+
+```bash
+npm i @logto/next
+```
+
+</TabItem>
+<TabItem value="yarn" label="Yarn">
+
+```bash
+yarn add @logto/next
+```
+
+</TabItem>
+<TabItem value="pnpm" label="pnpm">
+
+```bash
+pnpm add @logto/next
+```
+
+</TabItem>
+</Tabs>
+</Step>
+
+<Step
+  title="初始化 LogtoClient"
+  subtitle="共 1 步"
+  index={1}
+  activeIndex={props.activeStepIndex}
+  onButtonClick={() => props.onNext(2)}
+>
+
+<Alert>
+  在如下代码示例中, 我们均先假设你的 React 应用运行在 <code>http://localhost:3000</code> 上。
+</Alert>
+
+引入并实例化 LogtoClient：
+
+<pre>
+<code className="language-ts">
+{`// libraries/logto.js
+import { LogtoProvider, LogtoConfig } from '@logto/next';
+
+export const logtoClient = new LogtoClient({
+  endpoint: '${props.endpoint}',
+  appId: '${props.appId}',
+  baseUrl: 'http://localhost:3000', // 你可以修改为自己真实的 URL
+  cookieSecret: '${generateRandomString(32)}', // Logto 自动帮你生成的 32 位密钥
+  cookieSecure: process.env.NODE_ENV === 'production',
+});`}
+</code>
+</pre>
+
+</Step>
+
+<Step
+  title="登录"
+  subtitle="共 3 步"
+  index={2}
+  activeIndex={props.activeStepIndex}
+  onButtonClick={() => props.onNext(3)}
+>
+
+### 配置 Redirect URI
+
+首先，我们来添加 Redirect URI，如：`http://localhost:3000/api/logto/sign-in-callback`.
+
+<UriInputField appId={props.appId} isSingle={!props.isCompact} name="redirectUris" title="application_details.redirect_uri" />
+
+### 准备 API 路由
+
+实现与 Logto 后台交互的 [API 路由](https://nextjs.org/docs/api-routes/introduction)。
+
+返回你的 IDE 或编辑器，首先让我们使用如下代码来实现一组 API 路由：
+
+<pre>
+<code className="language-ts">
+{`// pages/api/logto/[action].ts
+import { logtoClient } from '../../../libraries/logto';
+
+export default logtoClient.handleAuthRoutes();`}
+</code>
+</pre>
+
+这将为你自动创建好 4 个路由，分别是：
+
+1. `/api/logto/sign-in`：登录
+2. `/api/logto/sign-in-callback`：处理登录重定向
+3. `/api/logto/sign-out`：登出
+4. `/api/logto/user`：检查用户是否以登录到 Logto。如果是，则返回用户信息。
+
+### 实现登录按钮
+
+马上就要大功告成！在这最后一步，我们将用如下代码实现一个登录按钮：
+
+```tsx
+import { useRouter } from 'next/router';
+
+const { push } = useRouter();
+
+<button onClick={() => push('/api/logto/sign-in')}>
+  登录
+</button>
+```
+
+现在你可以尝试点击登录按钮了，点击之后页面会跳转到 Logto 的登录界面。
+
+</Step>
+
+<Step
+  title="获取用户信息"
+  subtitle="两种方式"
+  index={3}
+  activeIndex={props.activeStepIndex}
+  onButtonClick={() => props.onNext(4)}
+>
+
+### 通过前端发送 API 请求获取
+
+你可以调用 `/api/logto/user` 接口来获取用户信息，如：
+
+```tsx
+import { LogtoUser } from '@logto/next';
+import useSWR from 'swr';
+
+const Home = () => {
+  const { data } = useSWR<LogtoUser>('/api/logto/user');
+
+  return <div>用户 ID：{data?.claims?.sub}</div>;
+};
+
+export default Profile;
+```
+
+你可以查看 [这篇教程](https://swr.vercel.app/docs/getting-started) 来了解有关 `useSWR` 的更多信息。
+
+### 通过后端的 `getServerSideProps` 方法获取
+
+```tsx
+import { LogtoUser } from '@logto/next';
+import { logtoClient } from '../libraries/logto';
+
+type Props = {
+  user: LogtoUser;
+};
+
+const Profile = ({ user }: Props) => {
+  return <div>用户 ID：{user.claims?.sub}</div>;
+};
+
+export default Profile;
+
+export const getServerSideProps = logtoClient.withLogtoSsr(({ request }) => {
+  const { user } = request;
+
+  return {
+    props: { user },
+  };
+});
+```
+
+查看 [Next.js 官方文档](https://nextjs.org/docs/basic-features/data-fetching/get-server-side-props) 来了解有关 `getServerSideProps` 的更多信息。
+
+</Step>
+
+<Step
+  title="退出登录"
+  subtitle="共 1 步"
+  index={4}
+  activeIndex={props.activeStepIndex}
+  onButtonClick={() => props.onNext(5)}
+>
+
+调用 `.signOut()` 将清理内存与 cookies 中的所有 Logto 数据（如果有）。
+
+在退出登录后，让你的用户重新回到你的网站是个不错的选择。在调用 `api/logto/sign-out` 发起退出登录操作之前，让我们先将 `http://localhost:3000` 添加至下面的输入框。
+
+<UriInputField appId={props.appId} isSingle={!props.isCompact} name="postLogoutRedirectUris" title="application_details.post_sign_out_redirect_uri" />
+
+### 实现退出登录按钮
+
+<pre>
+<code className="language-tsx">
+{`<button onClick={() => push('/api/logto/sign-out')}>
+  退出登录
+</button>`}
+</code>
+</pre>
+
+</Step>
+
+<Step
+  title="延展阅读"
+  subtitle="共 4 篇"
+  index={5}
+  activeIndex={props.activeStepIndex}
+  buttonText="general.done"
+  buttonType="primary"
+  onButtonClick={props.onComplete}
+>
+
+- [自定义登录体验](https://docs.logto.io/zh-cn/docs/recipes/customize-sie)
+- [启用短信或邮件验证码登录](https://docs.logto.io/zh-cn/docs/tutorials/get-started/enable-passcode-sign-in)
+- [启用社交登录](https://docs.logto.io/zh-cn/docs/tutorials/get-started/enable-social-sign-in)
+- [保护你的 API](https://docs.logto.io/zh-cn/docs/recipes/protect-your-api)
+
+</Step>

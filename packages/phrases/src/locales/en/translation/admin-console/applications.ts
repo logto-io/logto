@@ -26,7 +26,7 @@ const applications = {
     traditional: {
       title: 'Traditional Web',
       subtitle: 'An app that renders and updates pages by the web server alone',
-      description: 'E.g., JSP, PHP',
+      description: 'E.g., Next.js, PHP',
     },
   },
   guide: {
