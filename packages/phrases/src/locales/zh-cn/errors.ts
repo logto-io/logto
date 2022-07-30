@@ -99,6 +99,7 @@ const errors = {
     not_exists: '该 {{name}} 不存在',
     not_exists_with_id: 'ID 为 `{{id}}` 的 {{name}} 不存在',
     not_found: '该资源不存在',
+    manipulation_failed: '在数据库中操作资源失败',
   },
 };
 
