@@ -102,6 +102,7 @@ const sign_in_exp = {
     languages: {
       english: 'English',
       chinese: 'Chinese',
+      turkish: 'Turkish',
     },
     dark: 'Dark',
     light: 'Light',

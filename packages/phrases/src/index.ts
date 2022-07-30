@@ -1,6 +1,7 @@
 import { NormalizeKeyPaths } from '@silverhand/essentials';
 
 import en from './locales/en';
+import trTR from './locales/tr-tr';
 import zhCN from './locales/zh-cn';
 import { Resource, Language } from './types';
 
@@ -15,6 +16,7 @@ export type AdminConsoleKey = NormalizeKeyPaths<typeof en.translation.admin_cons
 const resource: Resource = {
   [Language.English]: en,
   [Language.Chinese]: zhCN,
+  [Language.Turkish]: trTR,
 };
 
 export default resource;

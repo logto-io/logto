@@ -9,12 +9,14 @@ export const mockMetadata: ConnectorMetadata = {
   name: {
     en: 'Connector',
     'zh-CN': '连接器',
+    'tr-TR': 'Connector',
   },
   logo: './logo.png',
   logoDark: './logo-dark.png',
   description: {
     en: 'Connector',
     'zh-CN': '连接器',
+    'tr-TR': 'Connector',
   },
   readme: 'README.md',
   configTemplate: 'config-template.json',

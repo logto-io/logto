@@ -26,12 +26,14 @@ export const defaultMetadata: ConnectorMetadata = {
   name: {
     en: 'Alipay',
     'zh-CN': '支付宝',
+    'tr-TR': 'Alipay',
   },
   logo: './logo.svg',
   logoDark: null,
   description: {
     en: 'Alipay is a third-party mobile and online payment platform.',
     'zh-CN': '支付宝是一个第三方支付平台。',
+    'tr-TR': 'Alipay, üçüncü şahıslara ait bir mobil ve çevrimiçi ödeme platformudur.',
   },
   readme: './README.md',
   configTemplate: './docs/config-template.json',

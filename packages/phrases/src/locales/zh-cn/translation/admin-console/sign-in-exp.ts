@@ -93,6 +93,7 @@ const sign_in_exp = {
     languages: {
       english: '英文',
       chinese: '中文',
+      turkish: 'Turkish',
     },
     dark: '深色',
     light: '浅色',
