@@ -15,6 +15,6 @@ export enum Language {
 export const languageOptions = [
   { value: Language.English, title: 'English' },
   { value: Language.Chinese, title: '中文' },
-  { value: Language.Turkish, title: 'Turkish' },
+  { value: Language.Turkish, title: 'Türkçe' },
   { value: Language.Korean, title: '한국어' },
 ];

@@ -1,14 +1,11 @@
-/* eslint-disable @typescript-eslint/consistent-indexed-object-style */
 import { z } from 'zod';
 
 /* Copied from i18next/index.d.ts */
 export type Resource = Record<Language, ResourceLanguage>;
 
-export interface ResourceLanguage {
-  [namespace: string]: ResourceKey;
-}
+export type ResourceLanguage = Record<string, ResourceKey>;
 
-export type ResourceKey = string | { [key: string]: unknown };
+export type ResourceKey = string | Record<string, unknown>;
 
 export enum Language {
   English = 'en',
@@ -25,5 +22,3 @@ export const languageOptions = [
   { value: Language.Turkish, title: 'Türkçe' },
   { value: Language.Korean, title: '한국어' },
 ];
-
-/* eslint-enable @typescript-eslint/consistent-indexed-object-style */
