@@ -1,3 +1,6 @@
+import fs from 'fs/promises';
+import path from 'path';
+
 import {
   ConnectorError,
   ConnectorErrorCodes,
@@ -69,6 +72,11 @@ export default class MockMailConnector implements EmailConnectorInstance<MockMai
         ConnectorErrorCodes.TemplateNotFound,
         `Template not found for type: ${type}`
       )
+    );
+
+    await fs.writeFile(
+      path.join('/tmp', 'logto_mock_passcode_record.txt'),
+      JSON.stringify({ address, code: data.code, type }) + '\n'
     );
 
     return { address, data };
