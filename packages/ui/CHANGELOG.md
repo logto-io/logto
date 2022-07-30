@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.0-beta.2](https://github.com/logto-io/logto/compare/v1.0.0-beta.1...v1.0.0-beta.2) (2022-07-25)
+
+
+### Bug Fixes
+
+* **ui:** fix some firefox standout bug ([#1615](https://github.com/logto-io/logto/issues/1615)) ([4ce6bd8](https://github.com/logto-io/logto/commit/4ce6bd8cf5c5953d9f62878ab2ea6ede74f6ca48))
+* **ui:** protect window.location xss ([#1639](https://github.com/logto-io/logto/issues/1639)) ([34b465c](https://github.com/logto-io/logto/commit/34b465c7d83999e2215ef83555b64e38778b8b49))
+* **ui:** should clear prev passcode input when click on backspace ([#1660](https://github.com/logto-io/logto/issues/1660)) ([7dfbc30](https://github.com/logto-io/logto/commit/7dfbc300b09cc3dac2a06176bf2cbc9f338d857e))
+
+
+
 ## [1.0.0-beta.1](https://github.com/logto-io/logto/compare/v1.0.0-beta.0...v1.0.0-beta.1) (2022-07-19)
 
 

@@ -1,4 +1,4 @@
-import { languageOptions } from '@logto/phrases';
+import { languageOptions } from '@logto/phrases-ui';
 import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 

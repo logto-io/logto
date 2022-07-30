@@ -10,3 +10,9 @@ export enum Language {
   Chinese = 'zh-CN',
   Turkish = 'tr-TR',
 }
+
+export const languageOptions = [
+  { value: Language.English, title: 'English' },
+  { value: Language.Chinese, title: '中文' },
+  { value: Language.Turkish, title: 'Turkish' },
+];

@@ -30,6 +30,7 @@ const ConnectorContent = ({ isDeleted, connectorData, onConnectorUpdated }: Prop
     formState: { isSubmitting, isDirty },
     handleSubmit,
     watch,
+    reset,
   } = methods;
 
   const defaultConfig = useMemo(() => {
@@ -53,11 +54,12 @@ const ConnectorContent = ({ isDeleted, connectorData, onConnectorUpdated }: Prop
       return;
     }
 
-    const { metadata, ...reset } = await api
+    const { metadata, ...rest } = await api
       .patch(`/api/connectors/${connectorData.id}`, { json: { config: result.data } })
       .json<Connector & { metadata: ConnectorMetadata }>();
 
-    onConnectorUpdated({ ...reset, ...metadata });
+    onConnectorUpdated({ ...rest, ...metadata });
+    reset({ configJson: JSON.stringify(result.data, null, 2) });
     toast.success(t('general.saved'));
   });
 

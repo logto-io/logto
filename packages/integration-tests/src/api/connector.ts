@@ -1,6 +1,6 @@
 import { ConnectorDto } from '@logto/schemas';
 
-import { authedAdminApi } from '@/api';
+import { authedAdminApi } from './api';
 
 export const listConnectors = async () => authedAdminApi.get('connectors').json<ConnectorDto[]>();
 
@@ -28,3 +28,26 @@ const updateConnectorEnabledProperty = (connectorId: string, enabled: boolean) =
       json: { enabled },
     })
     .json<ConnectorDto>();
+
+export const sendSmsTestMessage = async (
+  connectorId: string,
+  phone: string,
+  config: Record<string, unknown>
+) => sendTestMessage(connectorId, 'phone', phone, config);
+
+export const sendEmailTestMessage = async (
+  connectorId: string,
+  email: string,
+  config: Record<string, unknown>
+) => sendTestMessage(connectorId, 'email', email, config);
+
+const sendTestMessage = async (
+  connectorId: string,
+  receiverType: 'phone' | 'email',
+  receiver: string,
+  config: Record<string, unknown>
+) =>
+  authedAdminApi.post({
+    url: `connectors/${connectorId}/test`,
+    json: { [receiverType]: receiver, config },
+  });

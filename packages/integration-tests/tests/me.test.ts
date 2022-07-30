@@ -1,15 +1,20 @@
-import { ArbitraryObject, UserInfo, userInfoSelectFields } from '@logto/schemas';
+import { userInfoSelectFields } from '@logto/schemas';
+import { assert } from '@silverhand/essentials';
 
-import api from '@/api';
-import { createUser } from '@/helper';
+import {
+  getCurrentUserInfo,
+  getCurrentUserCustomData,
+  updateCurrentUserCustomData,
+  changeCurrentUserPassword,
+} from '@/api';
+import { createUserByAdmin, signIn } from '@/helpers';
 import { generatePassword } from '@/utils';
 
 describe('api `/me`', () => {
   it('should get user info successfully', async () => {
-    const user = await createUser();
-    const userInfo = await api
-      .get(`me`, { headers: { 'development-user-id': user.id } })
-      .json<UserInfo>();
+    const user = await createUserByAdmin();
+
+    const userInfo = await getCurrentUserInfo(user.id);
 
     expect(userInfo.id).toBe(user.id);
 
@@ -19,57 +24,31 @@ describe('api `/me`', () => {
   });
 
   it('should get user custom data successfully', async () => {
-    const user = await createUser();
-    const customData = await api
-      .get('me/custom-data', {
-        headers: {
-          'development-user-id': user.id,
-        },
-      })
-      .json<ArbitraryObject>();
-
+    const user = await createUserByAdmin();
+    const customData = await getCurrentUserCustomData(user.id);
     expect(customData).toEqual({});
   });
 
   it('should update user custom data successfully', async () => {
-    const user = await createUser();
+    const user = await createUserByAdmin();
 
-    const headers = Object.freeze({
-      'development-user-id': user.id,
-    });
+    const foo = 'bar';
 
-    const newCustomData = {
-      foo: 'bar',
-    };
+    await updateCurrentUserCustomData(user.id, { foo });
 
-    await api.patch('me/custom-data', {
-      headers,
-      json: {
-        customData: newCustomData,
-      },
-    });
+    const customData = await getCurrentUserCustomData(user.id);
 
-    const customData = await api
-      .get('me/custom-data', {
-        headers,
-      })
-      .json<ArbitraryObject>();
-
-    expect(customData).toEqual(newCustomData);
+    expect(customData).toEqual({ foo });
   });
 
   it('should change user password successfully', async () => {
-    const user = await createUser();
+    const user = await createUserByAdmin();
     const password = generatePassword();
-    const changePasswordResponse = await api.patch('me/password', {
-      headers: {
-        'development-user-id': user.id,
-      },
-      json: {
-        password,
-      },
-    });
 
-    expect(changePasswordResponse.statusCode).toBe(204);
+    await changeCurrentUserPassword(user.id, password);
+
+    assert(user.username, new Error('empty username'));
+
+    void expect(signIn(user.username, password)).resolves.not.toThrow();
   });
 });
