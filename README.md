@@ -59,6 +59,12 @@ Requires [Node.js](https://nodejs.org/) `^16.13.0` + [PostgreSQL](https://postgr
 node -e "$(printf "%s" "$(curl -fsSL https://raw.githubusercontent.com/logto-io/logto/HEAD/install.js)")"
 ```
 
+## Language support
+
+```ts
+const languages = ['English', '简体中文', '한국어', 'Türkçe'];
+```
+
 ## Bug report, feature request, feedback
 
 - Our team takes security seriously, especially when it relates to identity. If you find any existing or potential security issues, please do not hesitate to email 🔒 [security@logto.io](mailto:security@logto.io).
