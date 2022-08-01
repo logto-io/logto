@@ -1,4 +1,4 @@
-import { Identities, ConnectorDto } from '@logto/schemas';
+import type { Identities, ConnectorDto } from '@logto/schemas';
 import { Optional } from '@silverhand/essentials';
 import { useMemo, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
