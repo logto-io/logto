@@ -1,6 +1,7 @@
 {
   "extends": "./tsconfig",
   "compilerOptions": {
-    "isolatedModules": false
+    "isolatedModules": false,
+    "allowJs": true
   }
 }
