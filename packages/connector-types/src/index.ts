@@ -1,4 +1,4 @@
-import { Language } from '@logto/phrases';
+import type { Language } from '@logto/phrases';
 import { Nullable } from '@silverhand/essentials';
 import { z } from 'zod';
 
@@ -30,15 +30,19 @@ export enum ConnectorPlatform {
   Web = 'Web',
 }
 
+type i18nPhrases = { [Language.English]: string } & {
+  [key in Exclude<Language, Language.English>]?: string;
+};
+
 export interface ConnectorMetadata {
   id: string;
   target: string;
   type: ConnectorType;
   platform: Nullable<ConnectorPlatform>;
-  name: Record<Language, string>;
+  name: i18nPhrases;
   logo: string;
   logoDark: Nullable<string>;
-  description: Record<Language, string>;
+  description: i18nPhrases;
   readme: string;
   configTemplate: string;
 }
