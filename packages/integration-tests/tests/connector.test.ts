@@ -6,12 +6,12 @@ import {
   aliyunEmailConnectorId,
   aliyunSmsConnectorConfig,
   aliyunSmsConnectorId,
-  facebookConnectorConfig,
-  facebookConnectorId,
   mockEmailConnectorConfig,
   mockEmailConnectorId,
   mockSmsConnectorConfig,
   mockSmsConnectorId,
+  mockSocialConnectorConfig,
+  mockSocialConnectorId,
 } from '@/__mocks__/connectors-mock';
 import {
   disableConnector,
@@ -34,9 +34,9 @@ test('connector set-up flow', async () => {
    */
   await Promise.all(
     [
-      { id: facebookConnectorId, config: facebookConnectorConfig },
       { id: aliyunSmsConnectorId, config: aliyunSmsConnectorConfig },
       { id: aliyunEmailConnectorId, config: aliyunEmailConnectorConfig },
+      { id: mockSocialConnectorId, config: mockSocialConnectorConfig },
     ].map(async ({ id, config }) => {
       const updatedConnector = await updateConnectorConfig(id, config);
       expect(updatedConnector.config).toEqual(config);
@@ -55,12 +55,12 @@ test('connector set-up flow', async () => {
    * We will test updating to the invalid connector config, that is the case not covered above.
    */
   await expect(
-    updateConnectorConfig(facebookConnectorId, aliyunSmsConnectorConfig)
+    updateConnectorConfig(mockSocialConnectorId, aliyunSmsConnectorConfig)
   ).rejects.toThrow(HTTPError);
   // To confirm the failed updating request above did not modify the original config,
-  // we check: the Facebook connector config should stay the same.
-  const facebookConnector = await getConnector(facebookConnectorId);
-  expect(facebookConnector.config).toEqual(facebookConnectorConfig);
+  // we check: the mock connector config should stay the same.
+  const mockSocialConnector = await getConnector(mockSocialConnectorId);
+  expect(mockSocialConnector.config).toEqual(mockSocialConnectorConfig);
 
   /*
    * Change to another SMS/Email connector
@@ -103,8 +103,8 @@ test('connector set-up flow', async () => {
   expect(await listConnectors()).toEqual(
     expect.arrayContaining([
       expect.objectContaining({
-        id: facebookConnectorId,
-        config: facebookConnectorConfig,
+        id: mockSocialConnectorId,
+        config: mockSocialConnectorConfig,
         enabled: true,
       }),
       expect.objectContaining({

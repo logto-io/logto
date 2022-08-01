@@ -146,3 +146,9 @@ export const mockEmailConnectorConfig = {
     },
   ],
 };
+
+export const mockSocialConnectorId = 'mock-social-connector';
+export const mockSocialConnectorConfig = {
+  clientId: 'client_id_value',
+  clientSecret: 'client_secret_value',
+};
