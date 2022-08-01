@@ -41,7 +41,7 @@ export default class MockSocialConnector implements SocialConnectorInstance<Mock
   }
 
   public getAuthorizationUri: GetAuthorizationUri = async ({ state, redirectUri }) => {
-    return `http://mock.social.com?state=${state}&redirect_uri=${redirectUri}`;
+    return `http://mock.social.com/?state=${state}&redirect_uri=${redirectUri}`;
   };
 
   public getAccessToken = async () => randomUUID();

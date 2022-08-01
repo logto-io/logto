@@ -22,5 +22,3 @@ export const defaultMetadata: ConnectorMetadata = {
   readme: './README.md',
   configTemplate: './docs/config-template.json',
 };
-
-export const defaultTimeout = 5000;
