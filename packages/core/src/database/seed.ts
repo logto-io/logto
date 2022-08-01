@@ -8,6 +8,8 @@ import { createPool, parseDsn, sql, stringifyDsn } from 'slonik';
 import { createInterceptors } from 'slonik-interceptor-preset';
 import { raw } from 'slonik-sql-tag-raw';
 
+import { buildApplicationSecret } from '@/utils/id';
+
 import { convertToPrimitiveOrSql } from './utils';
 
 const {
@@ -84,7 +86,7 @@ export const createDatabaseCli = (dsn: string) => {
       pool.query(insertInto(managementResource, 'resources')),
       pool.query(insertInto(createDefaultSetting(), 'settings')),
       pool.query(insertInto(defaultSignInExperience, 'sign_in_experiences')),
-      pool.query(insertInto(createDemoAppApplication(), 'applications')),
+      pool.query(insertInto(createDemoAppApplication(buildApplicationSecret()), 'applications')),
       pool.query(insertInto(defaultRole, 'roles')),
     ]);
     console.log(`${chalk.blue('[seed-tables]')} Seed tables succeeded.`);

@@ -32,6 +32,7 @@ jest.mock('@/queries/application', () => ({
 jest.mock('@/utils/id', () => ({
   // eslint-disable-next-line unicorn/consistent-function-scoping
   buildIdGenerator: jest.fn(() => () => 'randomId'),
+  buildApplicationSecret: jest.fn(() => 'randomId'),
 }));
 
 const customClientMetadata = {
@@ -62,6 +63,7 @@ describe('application route', () => {
     expect(response.body).toEqual({
       ...mockApplication,
       id: 'randomId',
+      secret: 'randomId',
       name,
       description,
       type,

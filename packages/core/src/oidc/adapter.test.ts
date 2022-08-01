@@ -27,6 +27,11 @@ jest.mock('@/queries/oidc-model-instance', () => ({
   revokeInstanceByGrantId: jest.fn(),
 }));
 
+jest.mock('@/utils/id', () => ({
+  // eslint-disable-next-line unicorn/consistent-function-scoping
+  buildIdGenerator: jest.fn(() => () => 'randomId'),
+}));
+
 const now = Date.now();
 
 jest.mock(
@@ -54,6 +59,7 @@ describe('postgres Adapter', () => {
     const {
       id: client_id,
       name: client_name,
+      secret: client_secret,
       type,
       oidcClientMetadata,
       customClientMetadata,
@@ -62,6 +68,7 @@ describe('postgres Adapter', () => {
     expect(application).toEqual({
       client_id,
       client_name,
+      client_secret,
       application_type: getApplicationTypeString(type),
       grant_types: ['authorization_code', 'refresh_token'],
       token_endpoint_auth_method: 'none',

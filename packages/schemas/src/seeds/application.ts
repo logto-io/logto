@@ -9,8 +9,9 @@ export const adminConsoleApplicationId = 'admin-console';
 
 export const demoAppApplicationId = 'demo-app';
 
-export const createDemoAppApplication = (): Readonly<CreateApplication> => ({
+export const createDemoAppApplication = (secret: string): Readonly<CreateApplication> => ({
   id: demoAppApplicationId,
+  secret,
   name: 'Demo App',
   description: 'Logto demo app.',
   type: ApplicationType.SPA,
