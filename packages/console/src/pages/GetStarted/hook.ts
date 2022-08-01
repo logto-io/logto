@@ -1,7 +1,6 @@
-import { AdminConsoleKey, Language } from '@logto/phrases';
+import { AdminConsoleKey } from '@logto/phrases';
 import { AppearanceMode, Application } from '@logto/schemas';
 import { demoAppApplicationId } from '@logto/schemas/lib/seeds';
-import { conditionalString } from '@silverhand/essentials';
 import { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useSWR from 'swr';
@@ -19,7 +18,7 @@ import OneClick from '@/assets/images/one-click.svg';
 import PasswordlessDark from '@/assets/images/passwordless-dark.svg';
 import Passwordless from '@/assets/images/passwordless.svg';
 import { RequestError } from '@/hooks/use-api';
-import useLanguage from '@/hooks/use-language';
+import useDocumentationUrl from '@/hooks/use-documentation-url';
 import useSettings from '@/hooks/use-settings';
 import { useTheme } from '@/hooks/use-theme';
 
@@ -35,7 +34,7 @@ type GetStartedMetadata = {
 };
 
 const useGetStartedMetadata = () => {
-  const language = useLanguage();
+  const documentationUrl = useDocumentationUrl();
   const { settings, updateSettings } = useSettings();
   const theme = useTheme();
   const isLightMode = theme === AppearanceMode.LightMode;
@@ -123,21 +122,16 @@ const useGetStartedMetadata = () => {
         isComplete: settings?.furtherReadingsChecked,
         onClick: () => {
           void updateSettings({ furtherReadingsChecked: true });
-          window.open(
-            `https://docs.logto.io/${conditionalString(
-              language !== Language.English && language.toLowerCase()
-            )}/docs/tutorials/get-started/further-readings`,
-            '_blank'
-          );
+          window.open(`${documentationUrl}/docs/tutorials/get-started/further-readings/`, '_blank');
         },
       },
     ];
 
     return metadataItems.filter(({ isHidden }) => !isHidden);
   }, [
+    documentationUrl,
     hideDemo,
     isLightMode,
-    language,
     navigate,
     settings?.applicationCreated,
     settings?.demoChecked,

@@ -1,4 +1,4 @@
-import { languageOptions } from '@logto/phrases';
+import { Language, languageOptions } from '@logto/phrases';
 import { AppearanceMode } from '@logto/schemas';
 import classNames from 'classnames';
 import { Controller, useForm } from 'react-hook-form';
@@ -12,7 +12,6 @@ import FormField from '@/components/FormField';
 import Select from '@/components/Select';
 import TabNav, { TabNavItem } from '@/components/TabNav';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
-import useLanguage from '@/hooks/use-language';
 import useUserPreferences, { UserPreferences } from '@/hooks/use-user-preferences';
 import * as detailsStyles from '@/scss/details.module.scss';
 
@@ -20,8 +19,15 @@ import ChangePassword from './components/ChangePassword';
 import * as styles from './index.module.scss';
 
 const Settings = () => {
-  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const defaultLanguage = useLanguage();
+  const {
+    t,
+    i18n: { language },
+  } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+
+  const defaultLanguage = Object.values<string>(Language).includes(language)
+    ? language
+    : Language.English;
+
   const { data, error, update, isLoading, isLoaded } = useUserPreferences();
   const {
     handleSubmit,
