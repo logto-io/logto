@@ -35,10 +35,10 @@ export interface ConnectorMetadata {
   target: string;
   type: ConnectorType;
   platform: Nullable<ConnectorPlatform>;
-  name: Record<Language, string>;
+  name: { [Language.English]: string } & { [key in Language]?: string };
   logo: string;
   logoDark: Nullable<string>;
-  description: Record<Language, string>;
+  description: { [Language.English]: string } & { [key in Language]?: string };
   readme: string;
   configTemplate: string;
 }
