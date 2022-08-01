@@ -12,6 +12,7 @@ if [[ $INTEGRATION_TEST =~ ^(true|1)$ ]]; then
   cd packages/core
   pnpm link @logto/connector-mock-sms
   pnpm link @logto/connector-mock-email
+  pnpm link @logto/connector-mock-social
   cd -
   NODE_ENV=production pnpm i --no-frozen-lockfile
 else

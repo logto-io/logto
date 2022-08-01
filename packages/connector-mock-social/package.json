@@ -1,0 +1,48 @@
+{
+  "name": "@logto/connector-mock-social",
+  "version": "1.0.0-beta.2",
+  "description": "Social mock connector implementation.",
+  "main": "./lib/index.js",
+  "exports": "./lib/index.js",
+  "author": "Silverhand Inc. <contact@silverhand.io>",
+  "license": "MPL-2.0",
+  "private": true,
+  "files": [
+    "lib",
+    "docs",
+    "logo.svg",
+    "README.md"
+  ],
+  "scripts": {
+    "precommit": "lint-staged",
+    "build": "rm -rf lib/ && tsc -p tsconfig.build.json",
+    "lint": "eslint --ext .ts src",
+    "lint:report": "pnpm lint --format json --output-file report.json",
+    "dev": "rm -rf lib/ && tsc-watch -p tsconfig.build.json --preserveWatchOutput --onSuccess \"node ./lib/index.js\"",
+    "prepack": "pnpm build"
+  },
+  "dependencies": {
+    "@logto/connector-types": "^1.0.0-beta.2",
+    "@logto/schemas": "^1.0.0-beta.2",
+    "@logto/shared": "^1.0.0-beta.1",
+    "@silverhand/essentials": "^1.1.0",
+    "zod": "^3.14.3"
+  },
+  "devDependencies": {
+    "@silverhand/eslint-config": "^0.17.0",
+    "@silverhand/ts-config": "^0.17.0",
+    "@types/node": "^16.3.1",
+    "eslint": "^8.19.0",
+    "lint-staged": "^13.0.0",
+    "prettier": "^2.3.2",
+    "tsc-watch": "^5.0.0",
+    "typescript": "^4.6.2"
+  },
+  "engines": {
+    "node": "^16.0.0"
+  },
+  "eslintConfig": {
+    "extends": "@silverhand"
+  },
+  "prettier": "@silverhand/eslint-config/.prettierrc"
+}
