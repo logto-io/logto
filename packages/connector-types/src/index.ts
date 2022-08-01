@@ -30,15 +30,19 @@ export enum ConnectorPlatform {
   Web = 'Web',
 }
 
+type i18nPhrases = { [Language.English]: string } & {
+  [key in Exclude<Language, Language.English>]?: string;
+};
+
 export interface ConnectorMetadata {
   id: string;
   target: string;
   type: ConnectorType;
   platform: Nullable<ConnectorPlatform>;
-  name: { [Language.English]: string } & { [key in Language]?: string };
+  name: i18nPhrases;
   logo: string;
   logoDark: Nullable<string>;
-  description: { [Language.English]: string } & { [key in Language]?: string };
+  description: i18nPhrases;
   readme: string;
   configTemplate: string;
 }
