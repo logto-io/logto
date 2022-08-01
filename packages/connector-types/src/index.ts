@@ -1,4 +1,4 @@
-import { Language } from '@logto/phrases';
+import type { Language } from '@logto/phrases';
 import { Nullable } from '@silverhand/essentials';
 import { z } from 'zod';
 
