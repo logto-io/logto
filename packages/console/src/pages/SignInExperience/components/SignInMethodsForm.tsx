@@ -67,7 +67,7 @@ const SignInMethodsForm = () => {
                 <Checkbox
                   label={label}
                   disabled={primaryMethod === method}
-                  value={value || primaryMethod === method}
+                  value={value}
                   onChange={onChange}
                 />
               )}
