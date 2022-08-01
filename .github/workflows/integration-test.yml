@@ -95,7 +95,7 @@ jobs:
           INTEGRATION_TEST: true
           NODE_ENV: production
           DB_URL_DEFAULT: postgres://postgres:postgres@localhost:5432
-          ADDITIONAL_CONNECTOR_PACKAGES: '@logto/connector-mock-sms,@logto/connector-mock-email'
+          ADDITIONAL_CONNECTOR_PACKAGES: '@logto/connector-mock-sms,@logto/connector-mock-email,@logto/connector-mock-social'
 
       - name: Sleep for 5 seconds
         run: sleep 5
