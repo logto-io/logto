@@ -1,0 +1,222 @@
+import UriInputField from '@mdx/components/UriInputField';
+import Step from '@mdx/components/Step';
+import Tabs from '@mdx/components/Tabs';
+import TabItem from '@mdx/components/TabItem';
+import Alert from '@/components/Alert';
+import { generateRandomString } from '@logto/shared';
+
+<Step
+  title="Add Logto SDK as a dependency"
+  subtitle="Please select your favorite package manager"
+  index={0}
+  activeIndex={props.activeStepIndex}
+  onButtonClick={() => props.onNext(1)}
+>
+<Tabs>
+<TabItem value="npm" label="npm">
+
+```bash
+npm i @logto/next
+```
+
+</TabItem>
+<TabItem value="yarn" label="Yarn">
+
+```bash
+yarn add @logto/next
+```
+
+</TabItem>
+<TabItem value="pnpm" label="pnpm">
+
+```bash
+pnpm add @logto/next
+```
+
+</TabItem>
+</Tabs>
+</Step>
+
+<Step
+  title="Init LogtoClient"
+  subtitle="1 step"
+  index={1}
+  activeIndex={props.activeStepIndex}
+  onButtonClick={() => props.onNext(2)}
+>
+
+<Alert>
+  In the following steps, we assume your app is running on <code>http://localhost:3000</code>.
+</Alert>
+
+Import and initialize LogtoClient:
+
+<pre>
+<code className="language-ts">
+{`// libraries/logto.js
+import { LogtoProvider, LogtoConfig } from '@logto/next';
+
+export const logtoClient = new LogtoClient({
+  endpoint: '${props.endpoint}',
+  appId: '${props.appId}',
+  baseUrl: 'http://localhost:3000', // Change to your own base URL
+  cookieSecret: '${generateRandomString(32)}', // Auto-generated 32 digit secret
+  cookieSecure: process.env.NODE_ENV === 'production',
+});`}
+</code>
+</pre>
+
+</Step>
+
+<Step
+  title="Sign In"
+  subtitle="3 steps"
+  index={2}
+  activeIndex={props.activeStepIndex}
+  onButtonClick={() => props.onNext(3)}
+>
+
+### Configure Redirect URI
+
+First, let’s enter your redirect URI. E.g. `http://localhost:3000/api/logto/sign-in-callback`.
+
+<UriInputField appId={props.appId} isSingle={!props.isCompact} name="redirectUris" title="application_details.redirect_uri" />
+
+### Prepare API routes
+
+Prepare [API routes](https://nextjs.org/docs/api-routes/introduction) to connect with Logto.
+
+Go back to your IDE/editor, use the following code to implement the API routes first:
+
+<pre>
+<code className="language-ts">
+{`// pages/api/logto/[action].ts
+import { logtoClient } from '../../../libraries/logto';
+
+export default logtoClient.handleAuthRoutes();`}
+</code>
+</pre>
+
+This will create 4 routes automatically:
+
+1. `/api/logto/sign-in`: Sign in with Logto.
+2. `/api/logto/sign-in-callback`: Handle sign-in callback.
+3. `/api/logto/sign-out`: Sign out with Logto.
+4. `/api/logto/user`: Check if user is authenticated with Logto, if yes, return user info.
+
+### Implement sign-in button
+
+We're almost there! In the last step, we will create a sign-in button:
+
+```tsx
+import { useRouter } from 'next/router';
+
+const { push } = useRouter();
+
+<button onClick={() => push('/api/logto/sign-in')}>
+  Sign In
+</button>
+```
+
+Now you will be navigated to Logto sign-in page when you click the button.
+
+</Step>
+
+<Step
+  title="Get user profile"
+  subtitle="2 ways"
+  index={3}
+  activeIndex={props.activeStepIndex}
+  onButtonClick={() => props.onNext(4)}
+>
+
+### Through API request in the frontend
+
+You can fetch user info by calling `/api/logto/user`.
+
+```tsx
+import { LogtoUser } from '@logto/next';
+import useSWR from 'swr';
+
+const Home = () => {
+  const { data } = useSWR<LogtoUser>('/api/logto/user');
+
+  return <div>User ID: {data?.claims?.sub}</div>;
+};
+
+export default Profile;
+```
+
+Check [this guide](https://swr.vercel.app/docs/getting-started) to learn more about `useSWR`.
+
+### Through `getServerSideProps` in the backend
+
+```tsx
+import { LogtoUser } from '@logto/next';
+import { logtoClient } from '../libraries/logto';
+
+type Props = {
+  user: LogtoUser;
+};
+
+const Profile = ({ user }: Props) => {
+  return <div>User ID: {user.claims?.sub}</div>;
+};
+
+export default Profile;
+
+export const getServerSideProps = logtoClient.withLogtoSsr(({ request }) => {
+  const { user } = request;
+
+  return {
+    props: { user },
+  };
+});
+```
+
+Check [Next.js documentation](https://nextjs.org/docs/basic-features/data-fetching/get-server-side-props) for more details on `getServerSideProps`.
+
+</Step>
+
+<Step
+  title="Sign Out"
+  subtitle="1 step"
+  index={4}
+  activeIndex={props.activeStepIndex}
+  onButtonClick={() => props.onNext(5)}
+>
+
+Calling `.signOut()` will clear all the Logto data in memory and cookies if they exist.
+
+After signing out, it'll be great to redirect user back to your website. Let's add `http://localhost:3000` as the Post Sign-out URI below before calling `api/logto/sign-out`.
+
+<UriInputField appId={props.appId} isSingle={!props.isCompact} name="postLogoutRedirectUris" title="application_details.post_sign_out_redirect_uri" />
+
+### Implement a sign-out button
+
+<pre>
+<code className="language-tsx">
+{`<button onClick={() => push('/api/logto/sign-out')}>
+  Sign Out
+</button>`}
+</code>
+</pre>
+
+</Step>
+
+<Step
+  title="Further readings"
+  subtitle="4 articles"
+  index={5}
+  activeIndex={props.activeStepIndex}
+  buttonText="general.done"
+  buttonType="primary"
+  onButtonClick={props.onComplete}
+>
+
+- [Customize sign-in experience](https://docs.logto.io/docs/recipes/customize-sie)
+- [Enable SMS or email passcode sign-in](https://docs.logto.io/docs/tutorials/get-started/enable-passcode-sign-in)
+- [Enable social sign-in](https://docs.logto.io/docs/tutorials/get-started/enable-social-sign-in)
+- [Protect your API](https://docs.logto.io/docs/recipes/protect-your-api)
+
+</Step>

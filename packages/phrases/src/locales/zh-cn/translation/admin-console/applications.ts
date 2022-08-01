@@ -24,7 +24,7 @@ const applications = {
     traditional: {
       title: '传统网页应用',
       subtitle: '仅由 Web 服务器渲染和更新的应用程序',
-      description: '例如 JSP, PHP',
+      description: '例如 Next.js, PHP',
     },
   },
   guide: {
