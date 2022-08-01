@@ -1,6 +1,6 @@
 {
   "name": "@logto/connector-sendgrid-email",
-  "version": "1.0.0-beta.2",
+  "version": "1.0.0-beta.3",
   "description": "SendGrid Email Service connector implementation.",
   "main": "./lib/index.js",
   "exports": "./lib/index.js",
@@ -24,8 +24,8 @@
     "prepack": "pnpm build"
   },
   "dependencies": {
-    "@logto/connector-types": "^1.0.0-beta.2",
-    "@logto/shared": "^1.0.0-beta.1",
+    "@logto/connector-types": "^1.0.0-beta.3",
+    "@logto/shared": "^1.0.0-beta.3",
     "@silverhand/essentials": "^1.1.6",
     "@silverhand/jest-config": "^0.17.0",
     "got": "^11.8.2",
