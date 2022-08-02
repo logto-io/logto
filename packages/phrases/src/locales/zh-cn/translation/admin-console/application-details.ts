@@ -8,6 +8,7 @@ const application_details = {
   description_placeholder: '请输入应用描述',
   authorization_endpoint: 'Authorization Endpoint',
   authorization_endpoint_tip: '进行鉴权与授权的端点 endpoint。用于 OpenID Connect 中的鉴权流程。',
+  application_secret: 'App Secret',
   redirect_uri: 'Redirect URI',
   redirect_uris: 'Redirect URIs',
   redirect_uri_placeholder: 'https://your.website.com/app',
