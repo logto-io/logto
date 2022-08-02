@@ -1,13 +1,13 @@
 import { BrandingStyle, SignInMethodState } from '@logto/schemas';
 
 import {
-  facebookConnectorId,
-  facebookConnectorConfig,
+  mockSocialConnectorConfig,
+  mockSocialConnectorId,
+  mockSocialConnectorTarget,
   twilioSmsConnectorConfig,
   twilioSmsConnectorId,
   sendgridEmailConnectorConfig,
   sendgridEmailConnectorId,
-  facebookConnectorTarget,
 } from '@/__mocks__/connectors-mock';
 import { getSignInExperience, updateSignInExperience } from '@/api';
 import { updateConnectorConfig, enableConnector, disableConnector } from '@/api/connector';
@@ -45,8 +45,8 @@ describe('admin console sign-in experience', () => {
   it('should be able to setup sign in methods after connectors are enabled', async () => {
     // Setup connectors for tests
     await Promise.all([
-      updateConnectorConfig(facebookConnectorId, facebookConnectorConfig).then(async () =>
-        enableConnector(facebookConnectorId)
+      updateConnectorConfig(mockSocialConnectorId, mockSocialConnectorConfig).then(async () =>
+        enableConnector(mockSocialConnectorId)
       ),
       updateConnectorConfig(twilioSmsConnectorId, twilioSmsConnectorConfig).then(async () =>
         enableConnector(twilioSmsConnectorId)
@@ -65,7 +65,7 @@ describe('admin console sign-in experience', () => {
     };
 
     const updatedSignInExperience = await updateSignInExperience({
-      socialSignInConnectorTargets: [facebookConnectorTarget],
+      socialSignInConnectorTargets: [mockSocialConnectorTarget],
       signInMethods: newSignInMethods,
     });
 
@@ -73,7 +73,7 @@ describe('admin console sign-in experience', () => {
 
     // Reset connectors
     await Promise.all([
-      disableConnector(facebookConnectorId),
+      disableConnector(mockSocialConnectorId),
       disableConnector(twilioSmsConnectorId),
       disableConnector(sendgridEmailConnectorId),
     ]);

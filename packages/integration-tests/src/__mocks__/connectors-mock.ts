@@ -1,10 +1,3 @@
-export const facebookConnectorId = 'facebook-universal';
-export const facebookConnectorTarget = 'facebook';
-export const facebookConnectorConfig = {
-  clientId: 'application_foo',
-  clientSecret: 'secret_bar',
-};
-
 export const aliyunSmsConnectorId = 'aliyun-short-message-service';
 export const aliyunSmsConnectorConfig = {
   accessKeyId: 'access-key-id-value',
@@ -145,4 +138,11 @@ export const mockEmailConnectorConfig = {
       content: 'This is for testing purposes only. Your passcode is {{code}}.',
     },
   ],
+};
+
+export const mockSocialConnectorId = 'mock-social-connector';
+export const mockSocialConnectorTarget = 'mock-social';
+export const mockSocialConnectorConfig = {
+  clientId: 'client_id_value',
+  clientSecret: 'client_secret_value',
 };
