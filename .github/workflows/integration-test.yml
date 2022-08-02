@@ -25,8 +25,6 @@ jobs:
         run: |
           ./link-mock-connectors.sh
           ./package.sh
-        env:
-          INTEGRATION_TEST: true
 
       - uses: actions/upload-artifact@v3
         with:
