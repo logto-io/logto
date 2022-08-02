@@ -90,11 +90,6 @@ const sign_in_exp = {
   },
   preview: {
     title: '登录预览',
-    languages: {
-      english: '英文',
-      chinese: '中文',
-      turkish: 'Turkish',
-    },
     dark: '深色',
     light: '浅色',
     native: '移动原生',

@@ -99,11 +99,6 @@ const sign_in_exp = {
   },
   preview: {
     title: 'Sign-in Preview',
-    languages: {
-      english: 'English',
-      chinese: 'Chinese',
-      turkish: 'Turkish',
-    },
     dark: 'Dark',
     light: 'Light',
     native: 'Native',
