@@ -77,12 +77,12 @@ app.mount("#app");`}
 >
 
 <Alert>
-  在如下代码示例中, 我们均先假设你的 Vue 应用运行在 <code>http://localhost:1234</code> 上。
+  在如下代码示例中, 我们均先假设你的 Vue 应用运行在 <code>http://localhost:3000</code> 上。
 </Alert>
 
 ### 配置 Redirect URI
 
-首先，我们来添加 Redirect URI，如：`http://localhost:1234/callback`。
+首先，我们来添加 Redirect URI，如：`http://localhost:3000/callback`。
 
 <UriInputField appId={props.appId} isSingle={!props.isCompact} name="redirectUris" title="application_details.redirect_uri" />
 
@@ -98,7 +98,7 @@ app.mount("#app");`}
   import { useLogto } from "@logto/vue";
 
   const { signIn, isAuthenticated } = useLogto();
-  const onClickSignIn = () => signIn('${props.redirectUris[0] ?? 'http://localhost:1234/callback'}');
+  const onClickSignIn = () => signIn('${props.redirectUris[0] ?? 'http://localhost:3000/callback'}');
 </script>`}
 </code>
 </pre>
@@ -116,7 +116,7 @@ app.mount("#app");`}
 
 ### 处理重定向
 
-马上就要大功告成！在上一步，我们将 `http://localhost:1234/callback` 用作 Redirect URI，现在我们需要对其妥善处理。
+马上就要大功告成！在上一步，我们将 `http://localhost:3000/callback` 用作 Redirect URI，现在我们需要对其妥善处理。
 
 首先，让我们来创建一个 Callback 组件：
 
@@ -164,7 +164,7 @@ const router = createRouter({
 
 调用 `.signOut()` 将清理内存与 localStorage 中的所有 Logto 数据（如果有）。
 
-在退出登录后，让你的用户重新回到你的网站是个不错的选择。让我们将 `http://localhost:1234` 添加至下面的输入框，并将其作为调用 `.signOut()` 的参数。
+在退出登录后，让你的用户重新回到你的网站是个不错的选择。让我们将 `http://localhost:3000` 添加至下面的输入框，并将其作为调用 `.signOut()` 的参数。
 
 <UriInputField appId={props.appId} isSingle={!props.isCompact} name="postLogoutRedirectUris" title="application_details.post_sign_out_redirect_uri" />
 
@@ -176,7 +176,7 @@ const router = createRouter({
   import { useLogto } from "@logto/vue";
 
   const { signOut } = useLogto();
-  const onClickSignOut = () => signOut('${props.postLogoutRedirectUris[0] ?? 'http://localhost:1234'}');
+  const onClickSignOut = () => signOut('${props.postLogoutRedirectUris[0] ?? 'http://localhost:3000'}');
 </script>`}
 </code>
 </pre>

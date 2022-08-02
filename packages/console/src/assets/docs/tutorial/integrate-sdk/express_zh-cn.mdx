@@ -116,7 +116,7 @@ const { fromUint8Array } = require('js-base64');
 const config = {
   endpoint: '${props.endpoint}',
   appId: '${props.appId}',
-  redirectUri: '${props.redirectUris[0] ?? 'http://localhost:1234/callback'}', // 上一步配置过的 Redirect URI
+  redirectUri: '${props.redirectUris[0] ?? 'http://localhost:3000/callback'}', // 上一步配置过的 Redirect URI
   scopes: withReservedScopes().split(' '),
 };
 
