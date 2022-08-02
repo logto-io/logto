@@ -12,7 +12,7 @@ import {
   updateApplicationById,
   findTotalNumberOfApplications,
 } from '@/queries/application';
-import { buildIdGenerator } from '@/utils/id';
+import { buildApplicationSecret, buildIdGenerator } from '@/utils/id';
 
 import { AuthedRouter } from './types';
 
@@ -47,6 +47,7 @@ export default function applicationRoutes<T extends AuthedRouter>(router: T) {
 
       ctx.body = await insertApplication({
         id: applicationId(),
+        secret: buildApplicationSecret(),
         oidcClientMetadata: buildOidcClientMetadata(oidcClientMetadata),
         ...rest,
       });

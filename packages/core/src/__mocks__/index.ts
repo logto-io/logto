@@ -14,6 +14,7 @@ export * from './user';
 
 export const mockApplication: Application = {
   id: 'foo',
+  secret: 'randomId',
   name: 'foo',
   type: ApplicationType.SPA,
   description: null,
