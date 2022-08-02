@@ -95,10 +95,6 @@ const sign_in_exp = {
   },
   preview: {
     title: '로그인 화면 미리보기',
-    languages: {
-      english: '영어',
-      chinese: '중국어',
-    },
     dark: '다크',
     light: '라이트',
     native: 'Native',

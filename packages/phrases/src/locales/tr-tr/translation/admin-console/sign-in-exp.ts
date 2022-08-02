@@ -100,11 +100,6 @@ const sign_in_exp = {
   },
   preview: {
     title: 'Oturum Açma Önizlemesi',
-    languages: {
-      english: 'İngilizce',
-      chinese: 'Çince',
-      turkish: 'Türkçe',
-    },
     dark: 'Koyu',
     light: 'Açık',
     native: 'Doğal',
