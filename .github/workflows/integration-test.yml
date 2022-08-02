@@ -22,7 +22,15 @@ jobs:
         uses: silverhand-io/actions-node-pnpm-run-steps@v1.2.3
 
       - name: Package
-        run: ./package.sh
+        run: |
+          echo Link the mock connectors for integration tests only
+          cd packages/core
+          pnpm link @logto/connector-mock-sms
+          pnpm link @logto/connector-mock-email
+          pnpm link @logto/connector-mock-social
+          cd -
+          pnpm i --no-frozen-lockfile --lockfile-only
+          ./package.sh
         env:
           INTEGRATION_TEST: true
 
