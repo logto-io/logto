@@ -68,7 +68,7 @@
     "query-string": "^7.0.1",
     "resolve-package-path": "^4.0.3",
     "roarr": "^7.11.0",
-    "slonik": "^28.0.0",
+    "slonik": "^29.0.0",
     "slonik-interceptor-preset": "^1.2.10",
     "slonik-sql-tag-raw": "^1.1.4",
     "snakecase-keys": "^5.1.0",
