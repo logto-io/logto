@@ -1,3 +1,4 @@
+import { Language } from '@logto/phrases-ui';
 import classNames from 'classnames';
 import { useTranslation } from 'react-i18next';
 
@@ -19,7 +20,7 @@ const SocialLinkButton = ({ isDisabled, className, target, name, logo, onClick }
     i18n: { language },
   } = useTranslation();
 
-  const localName = name[language] ?? target;
+  const localName = name[language] ?? name[Language.English];
 
   return (
     <button
