@@ -10,6 +10,7 @@ import {
   SocialConnectorInstance,
   GetConnectorConfig,
 } from '@logto/connector-types';
+import { z } from 'zod';
 
 import { defaultMetadata } from './constant';
 import { mockSocialConfigGuard, MockSocialConfig } from './types';
@@ -46,7 +47,17 @@ export default class MockSocialConnector implements SocialConnectorInstance<Mock
 
   public getAccessToken = async () => randomUUID();
 
-  public getUserInfo: GetUserInfo = async () => ({
-    id: `mock-social-sub-${randomUUID()}`,
-  });
+  public getUserInfo: GetUserInfo = async (data) => {
+    const dataGuard = z.object({ code: z.string(), userId: z.optional(z.string()) });
+    const result = dataGuard.safeParse(data);
+
+    if (!result.success) {
+      throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, JSON.stringify(data));
+    }
+
+    // For mock use only. Use to track the created user entity
+    return {
+      id: result.data.userId ?? `mock-social-sub-${randomUUID()}`,
+    };
+  };
 }
