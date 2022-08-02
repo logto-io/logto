@@ -15,7 +15,7 @@ import { generateUsername, generatePassword } from '@/utils';
 
 const state = 'foo_state';
 const redirectUri = 'http://foo.dev/callback';
-const code = 'authCode_foo';
+const code = 'auth_code_foo';
 
 describe('social sign-in and register', () => {
   const userId = crypto.randomUUID();
