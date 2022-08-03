@@ -29,14 +29,14 @@
     "zod": "^3.14.3"
   },
   "devDependencies": {
-    "@silverhand/eslint-config": "^0.17.0",
-    "@silverhand/ts-config": "^0.17.0",
+    "@silverhand/eslint-config": "1.0.0-rc.0",
+    "@silverhand/ts-config": "1.0.0-rc.0",
     "@types/node": "^16.3.1",
-    "eslint": "^8.19.0",
+    "eslint": "^8.21.0",
     "lint-staged": "^13.0.0",
-    "prettier": "^2.3.2",
+    "prettier": "^2.7.1",
     "tsc-watch": "^5.0.0",
-    "typescript": "^4.6.2"
+    "typescript": "^4.7.4"
   },
   "engines": {
     "node": "^16.0.0"
