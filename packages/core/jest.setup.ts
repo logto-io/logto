@@ -9,7 +9,7 @@ import { privateKeyPath } from './jest.global-setup';
 (async () => {
   process.env = {
     ...process.env,
-    OIDC_PRIVATE_KEY_PATH: privateKeyPath,
+    OIDC_PRIVATE_KEY_PATHS: `["${privateKeyPath}"]`,
     OIDC_COOKIE_KEYS: '["LOGTOSEKRIT1"]',
   };
   await envSet.load();

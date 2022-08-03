@@ -47,10 +47,10 @@ const getUserInfoFromRequest = async (request: Request): Promise<UserInfo> => {
     return { sub: userId, roleNames: [UserRole.Admin] };
   }
 
-  const { publicKey, issuer } = oidc;
+  const { localJWKSet, issuer } = oidc;
   const {
     payload: { sub, role_names: roleNames },
-  } = await jwtVerify(extractBearerTokenFromHeaders(request.headers), publicKey, {
+  } = await jwtVerify(extractBearerTokenFromHeaders(request.headers), localJWKSet, {
     issuer,
     audience: managementResource.indicator,
   });
