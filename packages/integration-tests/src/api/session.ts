@@ -157,3 +157,42 @@ export const verifySignInUserWithSmsPasscode = (
       },
     })
     .json<RedirectResponse>();
+
+export const signInWithSocial = (
+  payload: {
+    connectorId: string;
+    state: string;
+    redirectUri: string;
+  },
+  interactionCookie: string
+) =>
+  api
+    .post('session/sign-in/social', { headers: { cookie: interactionCookie }, json: payload })
+    .json<RedirectResponse>();
+
+export const getAuthWithSocial = (
+  payload: { connectorId: string; data: unknown },
+  interactionCookie: string
+) =>
+  api
+    .post('session/sign-in/social/auth', {
+      headers: { cookie: interactionCookie },
+      json: payload,
+    })
+    .json<RedirectResponse>();
+
+export const registerWithSocial = (connectorId: string, interactionCookie: string) =>
+  api
+    .post('session/register/social', {
+      headers: { cookie: interactionCookie },
+      json: { connectorId },
+    })
+    .json<RedirectResponse>();
+
+export const bindWithSocial = (connectorId: string, interactionCookie: string) =>
+  api
+    .post('session/bind-social', {
+      headers: { cookie: interactionCookie },
+      json: { connectorId },
+    })
+    .json<RedirectResponse>();

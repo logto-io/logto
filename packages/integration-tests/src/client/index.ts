@@ -95,6 +95,10 @@ export default class MockClient {
     return this.logto.isAuthenticated;
   }
 
+  public getIdTokenClaims() {
+    return this.logto.getIdTokenClaims();
+  }
+
   private readonly consent = async () => {
     // Note: If sign in action completed successfully, we will get `_session.sig` in the cookie.
     assert(this.interactionCookie, new Error('Session not found'));
