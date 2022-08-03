@@ -109,7 +109,7 @@ export const registerNewUserBySocial = async () => {
   const response = await getAuthWithSocial(
     { connectorId: mockSocialConnectorId, data: { state, redirectUri, code } },
     client.interactionCookie
-  );
+  ).catch((error: unknown) => error);
 
   // User with social does not exist
   assert(
