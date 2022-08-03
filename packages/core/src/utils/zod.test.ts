@@ -17,7 +17,7 @@ describe('zodTypeToSwagger', () => {
     const notStartingWithDigitRegex = /^\D/;
 
     it('nonempty check', () => {
-      expect(zodTypeToSwagger(string().nonempty())).toEqual({
+      expect(zodTypeToSwagger(string().min(1))).toEqual({
         type: 'string',
         minLength: 1,
       });
