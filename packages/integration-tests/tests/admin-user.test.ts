@@ -1,7 +1,15 @@
 import { HTTPError } from 'got';
 
-import { getUser, getUsers, updateUser, deleteUser, updateUserPassword } from '@/api';
-import { createUserByAdmin } from '@/helpers';
+import { mockSocialConnectorTarget } from '@/__mocks__/connectors-mock';
+import {
+  getUser,
+  getUsers,
+  updateUser,
+  deleteUser,
+  updateUserPassword,
+  deleteUserIdentity,
+} from '@/api';
+import { createUserByAdmin, registerNewUserBySocial } from '@/helpers';
 
 describe('admin console user management', () => {
   it('should create user successfully', async () => {
@@ -51,5 +59,18 @@ describe('admin console user management', () => {
     const user = await createUserByAdmin();
     const userEntity = await updateUserPassword(user.id, 'new_password');
     expect(userEntity).toMatchObject(user);
+  });
+
+  it('should delete user identities successfully', async () => {
+    const userId = await registerNewUserBySocial();
+
+    const userInfo = await getUser(userId);
+    expect(userInfo.identities).toHaveProperty(mockSocialConnectorTarget);
+
+    await deleteUserIdentity(userId, mockSocialConnectorTarget);
+
+    const updatedUser = await getUser(userId);
+
+    expect(updatedUser.identities).not.toHaveProperty(mockSocialConnectorTarget);
   });
 });

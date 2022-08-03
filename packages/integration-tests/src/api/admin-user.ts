@@ -36,3 +36,6 @@ export const updateUserPassword = (userId: string, password: string) =>
       },
     })
     .json<User>();
+
+export const deleteUserIdentity = (userId: string, connectorTarget: string) =>
+  authedAdminApi.delete(`users/${userId}/identities/${connectorTarget}`);

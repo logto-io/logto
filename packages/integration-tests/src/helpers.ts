@@ -3,6 +3,7 @@ import path from 'path';
 
 import { User } from '@logto/schemas';
 import { assert } from '@silverhand/essentials';
+import { HTTPError } from 'got';
 
 import {
   createUser,
@@ -10,9 +11,14 @@ import {
   signInWithUsernameAndPassword,
   updateConnectorConfig,
   enableConnector,
+  bindWithSocial,
+  getAuthWithSocial,
+  signInWithSocial,
 } from '@/api';
 import MockClient from '@/client';
 import { generateUsername, generatePassword } from '@/utils';
+
+import { mockSocialConnectorId } from './__mocks__/connectors-mock';
 
 export const createUserByAdmin = (_username?: string, _password?: string) => {
   const username = _username ?? generateUsername();
@@ -79,4 +85,49 @@ export const readPasscode = async (): Promise<PasscodeRecord> => {
   // For test use only
   // eslint-disable-next-line no-restricted-syntax
   return JSON.parse(content) as PasscodeRecord;
+};
+
+export const registerNewUserBySocial = async () => {
+  const username = generateUsername();
+  const password = generatePassword();
+
+  const state = 'mock_state';
+  const redirectUri = 'http://mock.com/callback';
+  const code = 'mock_code';
+
+  const client = new MockClient();
+
+  await client.initSession();
+
+  assert(client.interactionCookie, new Error('Session not found'));
+
+  await signInWithSocial(
+    { state, connectorId: mockSocialConnectorId, redirectUri },
+    client.interactionCookie
+  ).catch((error: unknown) => error);
+
+  const response = await getAuthWithSocial(
+    { connectorId: mockSocialConnectorId, data: { state, redirectUri, code } },
+    client.interactionCookie
+  );
+
+  // User with social does not exist
+  assert(
+    response instanceof HTTPError && response.response.statusCode === 422,
+    new Error('Auth with social failed')
+  );
+
+  const { redirectTo } = await signInWithUsernameAndPassword(
+    username,
+    password,
+    client.interactionCookie
+  );
+
+  await bindWithSocial(mockSocialConnectorId, client.interactionCookie);
+
+  await client.processSession(redirectTo);
+
+  const { sub } = client.getIdTokenClaims();
+
+  return sub;
 };
