@@ -77,12 +77,12 @@ app.mount("#app");`}
 >
 
 <Alert>
-  In the following steps, we assume your app is running on <code>http://localhost:1234</code>.
+  In the following steps, we assume your app is running on <code>http://localhost:3000</code>.
 </Alert>
 
 ### Configure Redirect URI
 
-First, let’s enter your redirect URI. E.g. `http://localhost:1234/callback`.
+First, let’s enter your redirect URI. E.g. `http://localhost:3000/callback`.
 
 <UriInputField appId={props.appId} isSingle={!props.isCompact} name="redirectUris" title="application_details.redirect_uri" />
 
@@ -98,7 +98,7 @@ Go back to your IDE/editor, use the following code to implement the sign-in butt
   import { useLogto } from "@logto/vue";
 
   const { signIn, isAuthenticated } = useLogto();
-  const onClickSignIn = () => signIn('${props.redirectUris[0] ?? 'http://localhost:1234/callback'}');
+  const onClickSignIn = () => signIn('${props.redirectUris[0] ?? 'http://localhost:3000/callback'}');
 </script>`}
 </code>
 </pre>
@@ -116,7 +116,7 @@ Go back to your IDE/editor, use the following code to implement the sign-in butt
 
 ### Handle redirect
 
-We're almost there! In the last step, we use `http://localhost:1234/callback` as the Redirect URI, and now we need to handle it properly.
+We're almost there! In the last step, we use `http://localhost:3000/callback` as the Redirect URI, and now we need to handle it properly.
 
 First let's create a callback component:
 
@@ -164,7 +164,7 @@ const router = createRouter({
 
 Calling `.signOut()` will clear all the Logto data in memory and localStorage if they exist.
 
-After signing out, it'll be great to redirect user back to your website. Let's add `http://localhost:1234` as the Post Sign-out URI below, and use it as the parameter when calling `.signOut()`.
+After signing out, it'll be great to redirect user back to your website. Let's add `http://localhost:3000` as the Post Sign-out URI below, and use it as the parameter when calling `.signOut()`.
 
 <UriInputField appId={props.appId} isSingle={!props.isCompact} name="postLogoutRedirectUris" title="application_details.post_sign_out_redirect_uri" />
 
@@ -176,7 +176,7 @@ After signing out, it'll be great to redirect user back to your website. Let's a
   import { useLogto } from "@logto/vue";
 
   const { signOut } = useLogto();
-  const onClickSignOut = () => signOut('${props.postLogoutRedirectUris[0] ?? 'http://localhost:1234'}');
+  const onClickSignOut = () => signOut('${props.postLogoutRedirectUris[0] ?? 'http://localhost:3000'}');
 </script>`}
 </code>
 </pre>

@@ -80,12 +80,12 @@ app.use(
 >
 
 <Alert>
-  In the following steps, we assume your app is running on <code>http://localhost:1234</code>.
+  In the following steps, we assume your app is running on <code>http://localhost:3000</code>.
 </Alert>
 
 ### Configure Redirect URI
 
-First, let’s enter your redirect URI. E.g. `http://localhost:1234/callback`.
+First, let’s enter your redirect URI. E.g. `http://localhost:3000/callback`.
 
 <UriInputField appId={props.appId} isSingle={!props.isCompact} name="redirectUris" title="application_details.redirect_uri" />
 
@@ -118,7 +118,7 @@ const { fromUint8Array } = require('js-base64');
 const config = {
   endpoint: '${props.endpoint}',
   appId: '${props.appId}',
-  redirectUri: '${props.redirectUris[0] ?? 'http://localhost:1234/callback'}', // Configured in the previous step
+  redirectUri: '${props.redirectUris[0] ?? 'http://localhost:3000/callback'}', // Configured in the previous step
   scopes: withReservedScopes().split(' '),
 };
 
