@@ -87,9 +87,11 @@ export const readPasscode = async (): Promise<PasscodeRecord> => {
   return JSON.parse(content) as PasscodeRecord;
 };
 
-export const registerNewUserBySocial = async () => {
+export const bindSocialToNewCreatedUser = async () => {
   const username = generateUsername();
   const password = generatePassword();
+
+  await createUserByAdmin(username, password);
 
   const state = 'mock_state';
   const redirectUri = 'http://mock.com/callback';
@@ -98,13 +100,12 @@ export const registerNewUserBySocial = async () => {
   const client = new MockClient();
 
   await client.initSession();
-
   assert(client.interactionCookie, new Error('Session not found'));
 
   await signInWithSocial(
     { state, connectorId: mockSocialConnectorId, redirectUri },
     client.interactionCookie
-  ).catch((error: unknown) => error);
+  );
 
   const response = await getAuthWithSocial(
     { connectorId: mockSocialConnectorId, data: { state, redirectUri, code } },
