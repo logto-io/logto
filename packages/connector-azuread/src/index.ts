@@ -11,16 +11,15 @@ import {
   ConnectorErrorCodes,
   GetAuthorizationUri,
   GetUserInfo,
-  ConnectorMetadata,
-  Connector,
   SocialConnectorInstance,
-  GetConnectorConfig,
   codeWithRedirectDataGuard,
+  CodeWithRedirectData,
+  GetConnectorConfig,
 } from '@logto/connector-types';
 import { assert, conditional } from '@silverhand/essentials';
 import got, { HTTPError } from 'got';
 
-import { scopes, defaultMetadata, defaultTimeout, graphAPIEndpoint } from './constant';
+import { scopes, defaultTimeout, graphAPIEndpoint, defaultMetadata } from './constant';
 import {
   azureADConfigGuard,
   AzureADConfig,
@@ -28,30 +27,18 @@ import {
   userInfoResponseGuard,
 } from './types';
 
-export default class AzureADConnector implements SocialConnectorInstance<AzureADConfig> {
-  public metadata: ConnectorMetadata = defaultMetadata;
-
+export default class AzureADConnector<T> extends SocialConnectorInstance<AzureADConfig, T> {
   public clientApplication!: ConfidentialClientApplication;
   public authCodeUrlParams!: AuthorizationUrlRequest;
 
   cryptoProvider = new CryptoProvider();
   private readonly authCodeRequest!: AuthorizationCodeRequest;
 
-  private _connector?: Connector;
-
-  public get connector() {
-    if (!this._connector) {
-      throw new ConnectorError(ConnectorErrorCodes.General);
-    }
-
-    return this._connector;
+  constructor(getConnectorConfig: GetConnectorConfig) {
+    super(getConnectorConfig);
+    this.metadata = defaultMetadata;
+    this.metadataParser();
   }
-
-  public set connector(input: Connector) {
-    this._connector = input;
-  }
-
-  constructor(public readonly getConfig: GetConnectorConfig) {}
 
   public validateConfig(config: unknown): asserts config is AzureADConfig {
     const result = azureADConfigGuard.safeParse(config);
@@ -114,7 +101,7 @@ export default class AzureADConnector implements SocialConnectorInstance<AzureAD
   };
 
   public getUserInfo: GetUserInfo = async (data) => {
-    const { code, redirectUri } = await this.authorizationCallbackHandler(data);
+    const { code, redirectUri } = await this.authResponseParser(data);
     const { accessToken } = await this.getAccessToken(code, redirectUri);
 
     const config = await this.getConfig(this.metadata.id);
@@ -157,7 +144,7 @@ export default class AzureADConnector implements SocialConnectorInstance<AzureAD
     }
   };
 
-  private readonly authorizationCallbackHandler = async (parameterObject: unknown) => {
+  public authResponseParser = async (parameterObject: unknown): Promise<CodeWithRedirectData> => {
     const result = codeWithRedirectDataGuard.safeParse(parameterObject);
 
     if (!result.success) {

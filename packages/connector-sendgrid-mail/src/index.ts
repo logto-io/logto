@@ -1,13 +1,9 @@
 import {
   ConnectorError,
   ConnectorErrorCodes,
-  ConnectorMetadata,
-  Connector,
-  EmailSendMessageFunction,
-  EmailSendTestMessageFunction,
+  EmailSendMessageByFunction,
   EmailConnectorInstance,
   GetConnectorConfig,
-  EmailMessageTypes,
 } from '@logto/connector-types';
 import { assert } from '@silverhand/essentials';
 import got, { HTTPError } from 'got';
@@ -22,23 +18,15 @@ import {
   PublicParameters,
 } from './types';
 
-export default class SendGridMailConnector implements EmailConnectorInstance<SendGridMailConfig> {
-  public metadata: ConnectorMetadata = defaultMetadata;
-  private _connector?: Connector;
-
-  public get connector() {
-    if (!this._connector) {
-      throw new ConnectorError(ConnectorErrorCodes.General);
-    }
-
-    return this._connector;
+export default class SendGridMailConnector<T> extends EmailConnectorInstance<
+  SendGridMailConfig,
+  T
+> {
+  constructor(getConnectorConfig: GetConnectorConfig) {
+    super(getConnectorConfig);
+    this.metadata = defaultMetadata;
+    this.metadataParser();
   }
-
-  public set connector(input: Connector) {
-    this._connector = input;
-  }
-
-  constructor(public readonly getConfig: GetConnectorConfig) {}
 
   public validateConfig(config: unknown): asserts config is SendGridMailConfig {
     const result = sendGridMailConfigGuard.safeParse(config);
@@ -48,25 +36,11 @@ export default class SendGridMailConnector implements EmailConnectorInstance<Sen
     }
   }
 
-  public sendMessage: EmailSendMessageFunction = async (address, type, data) => {
-    const config = await this.getConfig(this.metadata.id);
-
-    this.validateConfig(config);
-
-    return this.sendMessageBy(config, address, type, data);
-  };
-
-  public sendTestMessage: EmailSendTestMessageFunction = async (config, address, type, data) => {
-    this.validateConfig(config);
-
-    return this.sendMessageBy(config, address, type, data);
-  };
-
-  private readonly sendMessageBy = async (
-    config: SendGridMailConfig,
-    address: string,
-    type: keyof EmailMessageTypes,
-    data: EmailMessageTypes[typeof type]
+  public readonly sendMessageBy: EmailSendMessageByFunction<SendGridMailConfig> = async (
+    config,
+    address,
+    type,
+    data
   ) => {
     const { apiKey, fromEmail, fromName, templates } = config;
     const template = templates.find((template) => template.usageType === type);

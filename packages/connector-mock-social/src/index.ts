@@ -5,8 +5,6 @@ import {
   ConnectorErrorCodes,
   GetAuthorizationUri,
   GetUserInfo,
-  ConnectorMetadata,
-  Connector,
   SocialConnectorInstance,
   GetConnectorConfig,
 } from '@logto/connector-types';
@@ -15,23 +13,12 @@ import { z } from 'zod';
 import { defaultMetadata } from './constant';
 import { mockSocialConfigGuard, MockSocialConfig } from './types';
 
-export default class MockSocialConnector implements SocialConnectorInstance<MockSocialConfig> {
-  public metadata: ConnectorMetadata = defaultMetadata;
-  private _connector?: Connector;
-
-  public get connector() {
-    if (!this._connector) {
-      throw new ConnectorError(ConnectorErrorCodes.General);
-    }
-
-    return this._connector;
+export default class MockSocialConnector<T> extends SocialConnectorInstance<MockSocialConfig, T> {
+  constructor(getConnectorConfig: GetConnectorConfig) {
+    super(getConnectorConfig);
+    this.metadata = defaultMetadata;
+    this.metadataParser();
   }
-
-  public set connector(input: Connector) {
-    this._connector = input;
-  }
-
-  constructor(public readonly getConfig: GetConnectorConfig) {}
 
   public validateConfig(config: unknown): asserts config is MockSocialConfig {
     const result = mockSocialConfigGuard.safeParse(config);

@@ -3,15 +3,15 @@
  * https://developers.google.com/identity/protocols/oauth2/openid-connect
  */
 import {
+  AuthResponseParser,
   ConnectorError,
   ConnectorErrorCodes,
   GetAuthorizationUri,
   GetUserInfo,
-  ConnectorMetadata,
-  Connector,
   SocialConnectorInstance,
   GetConnectorConfig,
   codeWithRedirectDataGuard,
+  CodeWithRedirectData,
 } from '@logto/connector-types';
 import { conditional, assert } from '@silverhand/essentials';
 import got, { HTTPError } from 'got';
@@ -31,23 +31,12 @@ import {
   userInfoResponseGuard,
 } from './types';
 
-export default class GoogleConnector implements SocialConnectorInstance<GoogleConfig> {
-  public metadata: ConnectorMetadata = defaultMetadata;
-  private _connector?: Connector;
-
-  public get connector() {
-    if (!this._connector) {
-      throw new ConnectorError(ConnectorErrorCodes.General);
-    }
-
-    return this._connector;
+export default class GoogleConnector<T> extends SocialConnectorInstance<GoogleConfig, T> {
+  constructor(getConnectorConfig: GetConnectorConfig) {
+    super(getConnectorConfig);
+    this.metadata = defaultMetadata;
+    this.metadataParser();
   }
-
-  public set connector(input: Connector) {
-    this._connector = input;
-  }
-
-  constructor(public readonly getConfig: GetConnectorConfig) {}
 
   public validateConfig(config: unknown): asserts config is GoogleConfig {
     const result = googleConfigGuard.safeParse(config);
@@ -107,7 +96,7 @@ export default class GoogleConnector implements SocialConnectorInstance<GoogleCo
   };
 
   public getUserInfo: GetUserInfo = async (data) => {
-    const { code, redirectUri } = await this.authorizationCallbackHandler(data);
+    const { code, redirectUri } = await this.authResponseParser(data);
     const { accessToken } = await this.getAccessToken(code, redirectUri);
 
     try {
@@ -137,7 +126,9 @@ export default class GoogleConnector implements SocialConnectorInstance<GoogleCo
     }
   };
 
-  private readonly authorizationCallbackHandler = async (parameterObject: unknown) => {
+  public readonly authResponseParser: AuthResponseParser<CodeWithRedirectData> = async (
+    parameterObject: unknown
+  ) => {
     const result = codeWithRedirectDataGuard.safeParse(parameterObject);
 
     if (!result.success) {

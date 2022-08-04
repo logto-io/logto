@@ -1,13 +1,9 @@
 import {
   ConnectorError,
   ConnectorErrorCodes,
-  ConnectorMetadata,
-  Connector,
-  EmailSendMessageFunction,
-  EmailSendTestMessageFunction,
+  EmailSendMessageByFunction,
   EmailConnectorInstance,
   GetConnectorConfig,
-  EmailMessageTypes,
 } from '@logto/connector-types';
 import { assert } from '@silverhand/essentials';
 import { HTTPError } from 'got';
@@ -21,23 +17,12 @@ import {
   sendMailErrorResponseGuard,
 } from './types';
 
-export default class AliyunDmConnector implements EmailConnectorInstance<AliyunDmConfig> {
-  public metadata: ConnectorMetadata = defaultMetadata;
-  private _connector?: Connector;
-
-  public get connector() {
-    if (!this._connector) {
-      throw new ConnectorError(ConnectorErrorCodes.General);
-    }
-
-    return this._connector;
+export default class AliyunDmConnector<T> extends EmailConnectorInstance<AliyunDmConfig, T> {
+  constructor(getConnectorConfig: GetConnectorConfig) {
+    super(getConnectorConfig);
+    this.metadata = defaultMetadata;
+    this.metadataParser();
   }
-
-  public set connector(input: Connector) {
-    this._connector = input;
-  }
-
-  constructor(public readonly getConfig: GetConnectorConfig) {}
 
   public validateConfig(config: unknown): asserts config is AliyunDmConfig {
     const result = aliyunDmConfigGuard.safeParse(config);
@@ -47,25 +32,11 @@ export default class AliyunDmConnector implements EmailConnectorInstance<AliyunD
     }
   }
 
-  public sendMessage: EmailSendMessageFunction = async (address, type, data) => {
-    const emailConfig = await this.getConfig(this.metadata.id);
-
-    this.validateConfig(emailConfig);
-
-    return this.sendMessageBy(emailConfig, address, type, data);
-  };
-
-  public sendTestMessage: EmailSendTestMessageFunction = async (config, address, type, data) => {
-    this.validateConfig(config);
-
-    return this.sendMessageBy(config, address, type, data);
-  };
-
-  private readonly sendMessageBy = async (
-    config: AliyunDmConfig,
-    address: string,
-    type: keyof EmailMessageTypes,
-    data: EmailMessageTypes[typeof type]
+  public readonly sendMessageBy: EmailSendMessageByFunction<AliyunDmConfig> = async (
+    config,
+    address,
+    type,
+    data
   ) => {
     const { accessKeyId, accessKeySecret, accountName, fromAlias, templates } = config;
     const template = templates.find((template) => template.usageType === type);

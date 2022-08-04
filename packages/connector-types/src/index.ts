@@ -1,25 +1,8 @@
 // FIXME: @Darcy
-/* eslint-disable @typescript-eslint/consistent-type-definitions */
 
 import type { Language } from '@logto/phrases';
 import { Nullable } from '@silverhand/essentials';
 import { z } from 'zod';
-
-/**
- * Connector is auto-generated in @logto/schemas according to sql file.
- * As @logto/schemas depends on this repo (@logto/connector-types), we manually define Connector type again as a temporary solution.
- */
-
-export const arbitraryObjectGuard = z.union([z.object({}).catchall(z.unknown()), z.object({})]);
-
-export type ArbitraryObject = z.infer<typeof arbitraryObjectGuard>;
-
-export type Connector = {
-  id: string;
-  enabled: boolean;
-  config: ArbitraryObject;
-  createdAt: number;
-};
 
 export enum ConnectorType {
   Email = 'Email',
@@ -103,6 +86,13 @@ export type EmailSendTestMessageFunction<T = unknown> = (
   payload: EmailMessageTypes[typeof type]
 ) => Promise<T>;
 
+export type EmailSendMessageByFunction<T> = (
+  config: T,
+  address: string,
+  type: keyof EmailMessageTypes,
+  payload: EmailMessageTypes[typeof type]
+) => Promise<unknown>;
+
 export type SmsSendMessageFunction<T = unknown> = (
   phone: string,
   type: keyof SmsMessageTypes,
@@ -116,45 +106,14 @@ export type SmsSendTestMessageFunction<T = unknown> = (
   payload: SmsMessageTypes[typeof type]
 ) => Promise<T>;
 
-export interface BaseConnector<T = unknown> {
-  metadata: ConnectorMetadata;
-  getConfig: GetConnectorConfig;
-  validateConfig: ValidateConfig<T>;
-}
+export type SmsSendMessageByFunction<T> = (
+  config: T,
+  phone: string,
+  type: keyof SmsMessageTypes,
+  payload: SmsMessageTypes[typeof type]
+) => Promise<unknown>;
 
-export interface SmsConnector<T = unknown> extends BaseConnector<T> {
-  sendMessage: SmsSendMessageFunction;
-  sendTestMessage?: SmsSendTestMessageFunction;
-}
-
-export interface SmsConnectorInstance<T = unknown> extends SmsConnector<T> {
-  connector: Connector;
-}
-
-export interface EmailConnector<T = unknown> extends BaseConnector<T> {
-  sendMessage: EmailSendMessageFunction;
-  sendTestMessage?: EmailSendTestMessageFunction;
-}
-
-export interface EmailConnectorInstance<T = unknown> extends EmailConnector<T> {
-  connector: Connector;
-}
-
-export interface SocialConnector<T = unknown> extends BaseConnector<T> {
-  getAuthorizationUri: GetAuthorizationUri;
-  getUserInfo: GetUserInfo;
-}
-
-export interface SocialConnectorInstance<T = unknown> extends SocialConnector<T> {
-  connector: Connector;
-}
-
-export type ConnectorInstance =
-  | SmsConnectorInstance
-  | EmailConnectorInstance
-  | SocialConnectorInstance;
-
-export type ValidateConfig<T = unknown> = (config: unknown) => asserts config is T;
+export type ValidateConfig<T> = (config: unknown) => asserts config is T;
 
 export type GetAuthorizationUri = (payload: {
   state: string;
@@ -166,6 +125,8 @@ export type GetUserInfo = (
 ) => Promise<{ id: string } & Record<string, string | undefined>>;
 
 export type GetConnectorConfig = (id: string) => Promise<unknown>;
+
+export type AuthResponseParser<T = Record<string, unknown>> = (response: unknown) => Promise<T>;
 
 export const codeDataGuard = z.object({
   code: z.string(),

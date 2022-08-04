@@ -660,10 +660,18 @@ importers:
       '@shopify/jest-koa-mocks': ^5.0.0
       '@silverhand/eslint-config': 1.0.0-rc.2
       '@silverhand/essentials': ^1.1.6
+<<<<<<< HEAD
       '@silverhand/ts-config': 1.0.0-rc.2
       '@types/jest': ^28.1.6
       eslint: ^8.21.0
       jest: ^28.1.3
+=======
+      '@silverhand/ts-config': ^0.17.0
+      '@types/jest': ^27.4.1
+      '@types/node': ^16.3.1
+      eslint: ^8.19.0
+      jest: ^27.5.1
+>>>>>>> f04cfcf3 (refactor(connector): refactor connector)
       lint-staged: ^13.0.0
       prettier: ^2.7.1
       typescript: ^4.7.4
@@ -676,10 +684,18 @@ importers:
       '@shopify/jest-koa-mocks': 5.0.0
       '@silverhand/eslint-config': 1.0.0-rc.2_swk2g7ygmfleszo5c33j4vooni
       '@silverhand/essentials': 1.1.7
+<<<<<<< HEAD
       '@silverhand/ts-config': 1.0.0-rc.2_typescript@4.7.4
       '@types/jest': 28.1.6
       eslint: 8.21.0
       jest: 28.1.3
+=======
+      '@silverhand/ts-config': 0.17.0_typescript@4.6.3
+      '@types/jest': 27.4.1
+      '@types/node': 16.11.12
+      eslint: 8.19.0
+      jest: 27.5.1
+>>>>>>> f04cfcf3 (refactor(connector): refactor connector)
       lint-staged: 13.0.0
       prettier: 2.7.1
       typescript: 4.7.4
@@ -2065,8 +2081,13 @@ packages:
     resolution: {integrity: sha512-QPAkP5EwKdK/bxIr6C1I4Vs0rm2nHiANzj/Z5X2JQkrZo6IqvC4ldZ9K95tF0HdidhA8Bo6egxSzUFPYKcEXLw==}
     engines: {node: ^12.13.0 || ^14.15.0 || ^16.10.0 || >=17.0.0}
     dependencies:
+<<<<<<< HEAD
       '@jest/types': 28.1.3
       '@types/node': 17.0.23
+=======
+      '@jest/types': 27.5.1
+      '@types/node': 18.6.3
+>>>>>>> f04cfcf3 (refactor(connector): refactor connector)
       chalk: 4.1.2
       jest-message-util: 28.1.3
       jest-util: 28.1.3
@@ -2081,12 +2102,21 @@ packages:
       node-notifier:
         optional: true
     dependencies:
+<<<<<<< HEAD
       '@jest/console': 28.1.3
       '@jest/reporters': 28.1.3
       '@jest/test-result': 28.1.3
       '@jest/transform': 28.1.3
       '@jest/types': 28.1.3
       '@types/node': 17.0.23
+=======
+      '@jest/console': 27.5.1
+      '@jest/reporters': 27.5.1
+      '@jest/test-result': 27.5.1
+      '@jest/transform': 27.5.1
+      '@jest/types': 27.5.1
+      '@types/node': 18.6.3
+>>>>>>> f04cfcf3 (refactor(connector): refactor connector)
       ansi-escapes: 4.3.2
       chalk: 4.1.2
       ci-info: 3.3.2
@@ -2123,12 +2153,21 @@ packages:
       node-notifier:
         optional: true
     dependencies:
+<<<<<<< HEAD
       '@jest/console': 28.1.3
       '@jest/reporters': 28.1.3
       '@jest/test-result': 28.1.3
       '@jest/transform': 28.1.3
       '@jest/types': 28.1.3
       '@types/node': 17.0.23
+=======
+      '@jest/console': 27.5.1
+      '@jest/reporters': 27.5.1
+      '@jest/test-result': 27.5.1
+      '@jest/transform': 27.5.1
+      '@jest/types': 27.5.1
+      '@types/node': 18.6.3
+>>>>>>> f04cfcf3 (refactor(connector): refactor connector)
       ansi-escapes: 4.3.2
       chalk: 4.1.2
       ci-info: 3.3.2
@@ -2161,10 +2200,18 @@ packages:
     resolution: {integrity: sha512-1bf40cMFTEkKyEf585R9Iz1WayDjHoHqvts0XFYEqyKM3cFWDpeMoqKKTAF9LSYQModPUlh8FKptoM2YcMWAXA==}
     engines: {node: ^12.13.0 || ^14.15.0 || ^16.10.0 || >=17.0.0}
     dependencies:
+<<<<<<< HEAD
       '@jest/fake-timers': 28.1.3
       '@jest/types': 28.1.3
       '@types/node': 17.0.23
       jest-mock: 28.1.3
+=======
+      '@jest/fake-timers': 27.5.1
+      '@jest/types': 27.5.1
+      '@types/node': 18.6.3
+      jest-mock: 27.5.1
+    dev: true
+>>>>>>> f04cfcf3 (refactor(connector): refactor connector)
 
   /@jest/expect-utils/28.1.3:
     resolution: {integrity: sha512-wvbi9LUrHJLn3NlDW6wF2hvIMtd4JUl2QNVrjq+IBSHirgfrR3o9RnVtxzdEGO2n9JyIWwHnLfby5KzqBGg2YA==}
@@ -2185,12 +2232,22 @@ packages:
     resolution: {integrity: sha512-D/wOkL2POHv52h+ok5Oj/1gOG9HSywdoPtFsRCUmlCILXNn5eIWmcnd3DIiWlJnpGvQtmajqBP95Ei0EimxfLw==}
     engines: {node: ^12.13.0 || ^14.15.0 || ^16.10.0 || >=17.0.0}
     dependencies:
+<<<<<<< HEAD
       '@jest/types': 28.1.3
       '@sinonjs/fake-timers': 9.1.2
       '@types/node': 17.0.23
       jest-message-util: 28.1.3
       jest-mock: 28.1.3
       jest-util: 28.1.3
+=======
+      '@jest/types': 27.5.1
+      '@sinonjs/fake-timers': 8.1.0
+      '@types/node': 18.6.3
+      jest-message-util: 27.5.1
+      jest-mock: 27.5.1
+      jest-util: 27.5.1
+    dev: true
+>>>>>>> f04cfcf3 (refactor(connector): refactor connector)
 
   /@jest/globals/28.1.3:
     resolution: {integrity: sha512-XFU4P4phyryCXu1pbcqMO0GSQcYe1IsalYCDzRNyhetyeyxMcIxa11qPNDpVNLeretItNqEmYYQn1UYz/5x1NA==}
@@ -2212,12 +2269,20 @@ packages:
         optional: true
     dependencies:
       '@bcoe/v8-coverage': 0.2.3
+<<<<<<< HEAD
       '@jest/console': 28.1.3
       '@jest/test-result': 28.1.3
       '@jest/transform': 28.1.3
       '@jest/types': 28.1.3
       '@jridgewell/trace-mapping': 0.3.14
       '@types/node': 17.0.23
+=======
+      '@jest/console': 27.5.1
+      '@jest/test-result': 27.5.1
+      '@jest/transform': 27.5.1
+      '@jest/types': 27.5.1
+      '@types/node': 18.6.3
+>>>>>>> f04cfcf3 (refactor(connector): refactor connector)
       chalk: 4.1.2
       collect-v8-coverage: 1.0.1
       exit: 0.1.2
@@ -2300,8 +2365,13 @@ packages:
       '@jest/schemas': 28.1.3
       '@types/istanbul-lib-coverage': 2.0.3
       '@types/istanbul-reports': 3.0.1
+<<<<<<< HEAD
       '@types/node': 17.0.23
       '@types/yargs': 17.0.10
+=======
+      '@types/node': 18.6.3
+      '@types/yargs': 16.0.4
+>>>>>>> f04cfcf3 (refactor(connector): refactor connector)
       chalk: 4.1.2
 
   /@jridgewell/resolve-uri/3.0.5:
@@ -4941,7 +5011,12 @@ packages:
   /@types/graceful-fs/4.1.5:
     resolution: {integrity: sha512-anKkLmZZ+xm4p8JWBf4hElkM4XR+EZeA2M9BAkkTldmcyDY4mbdIJnRghDJH3Ov5ooY7/UAoENtmdMSkaAd7Cw==}
     dependencies:
+<<<<<<< HEAD
       '@types/node': 17.0.23
+=======
+      '@types/node': 18.6.3
+    dev: true
+>>>>>>> f04cfcf3 (refactor(connector): refactor connector)
 
   /@types/hast/2.3.4:
     resolution: {integrity: sha512-wLEm0QvaoawEDoTRwzTXp4b4jpwiJDvR5KMnFnVodm3scufTlBOWRD6N1OBf9TZMhjlNsSfcO5V+7AF4+Vy+9g==}
@@ -5124,6 +5199,9 @@ packages:
 
   /@types/node/17.0.23:
     resolution: {integrity: sha512-UxDxWn7dl97rKVeVS61vErvw086aCYhDLyvRQZ5Rk65rZKepaFdm53GeqXaKBuOhED4e9uWq34IC3TdSdJJ2Gw==}
+
+  /@types/node/18.6.3:
+    resolution: {integrity: sha512-6qKpDtoaYLM+5+AFChLhHermMQxc3TOEFIDzrZLPRGHPrLEwqFkkT5Kx3ju05g6X7uDPazz3jHbKPX0KzCjntg==}
 
   /@types/nodemailer/6.4.4:
     resolution: {integrity: sha512-Ksw4t7iliXeYGvIQcSIgWQ5BLuC/mljIEbjf615svhZL10PE9t+ei8O9gDaD3FPCasUJn9KTLwz2JFJyiiyuqw==}
@@ -9363,11 +9441,18 @@ packages:
     resolution: {integrity: sha512-cZ+eS5zc79MBwt+IhQhiEp0OeBddpc1n8MBo1nMB8A7oPMKEO+Sre+wHaLJexQUj9Ya/8NOBY0RESUgYjB6fow==}
     engines: {node: ^12.13.0 || ^14.15.0 || ^16.10.0 || >=17.0.0}
     dependencies:
+<<<<<<< HEAD
       '@jest/environment': 28.1.3
       '@jest/expect': 28.1.3
       '@jest/test-result': 28.1.3
       '@jest/types': 28.1.3
       '@types/node': 17.0.23
+=======
+      '@jest/environment': 27.5.1
+      '@jest/test-result': 27.5.1
+      '@jest/types': 27.5.1
+      '@types/node': 18.6.3
+>>>>>>> f04cfcf3 (refactor(connector): refactor connector)
       chalk: 4.1.2
       co: 4.6.0
       dedent: 0.7.0
@@ -9666,6 +9751,7 @@ packages:
     resolution: {integrity: sha512-8RqP1B/OXzjjTWkqMX67iqgwBVJRgCyKD3L9nq+6ZqJMdvjE8RgHktqZ6jNrkdMT+dJuYNI3rhQpxaz7drJHfw==}
     engines: {node: ^12.13.0 || ^14.15.0 || ^16.10.0 || >=17.0.0}
     dependencies:
+<<<<<<< HEAD
       chalk: 4.1.2
       diff-sequences: 28.1.1
       jest-get-type: 28.0.2
@@ -9699,6 +9785,15 @@ packages:
       jest-mock: 28.1.3
       jest-util: 28.1.3
       jsdom: 19.0.0
+=======
+      '@jest/environment': 27.5.1
+      '@jest/fake-timers': 27.5.1
+      '@jest/types': 27.5.1
+      '@types/node': 18.6.3
+      jest-mock: 27.5.1
+      jest-util: 27.5.1
+      jsdom: 16.7.0
+>>>>>>> f04cfcf3 (refactor(connector): refactor connector)
     transitivePeerDependencies:
       - bufferutil
       - canvas
@@ -9710,12 +9805,22 @@ packages:
     resolution: {integrity: sha512-ugP6XOhEpjAEhGYvp5Xj989ns5cB1K6ZdjBYuS30umT4CQEETaxSiPcZ/E1kFktX4GkrcM4qu07IIlDYX1gp+A==}
     engines: {node: ^12.13.0 || ^14.15.0 || ^16.10.0 || >=17.0.0}
     dependencies:
+<<<<<<< HEAD
       '@jest/environment': 28.1.3
       '@jest/fake-timers': 28.1.3
       '@jest/types': 28.1.3
       '@types/node': 17.0.23
       jest-mock: 28.1.3
       jest-util: 28.1.3
+=======
+      '@jest/environment': 27.5.1
+      '@jest/fake-timers': 27.5.1
+      '@jest/types': 27.5.1
+      '@types/node': 18.6.3
+      jest-mock: 27.5.1
+      jest-util: 27.5.1
+    dev: true
+>>>>>>> f04cfcf3 (refactor(connector): refactor connector)
 
   /jest-get-type/28.0.2:
     resolution: {integrity: sha512-ioj2w9/DxSYHfOm5lJKCdcAmPJzQXmbM/Url3rhlghrPvT3tt+7a/+oXc9azkKmLvoiXjtV83bEWqi+vs5nlPA==}
@@ -9727,7 +9832,7 @@ packages:
     dependencies:
       '@jest/types': 28.1.3
       '@types/graceful-fs': 4.1.5
-      '@types/node': 17.0.23
+      '@types/node': 18.6.3
       anymatch: 3.1.2
       fb-watchman: 2.0.1
       graceful-fs: 4.2.9
@@ -9738,6 +9843,35 @@ packages:
       walker: 1.0.8
     optionalDependencies:
       fsevents: 2.3.2
+<<<<<<< HEAD
+=======
+    dev: true
+
+  /jest-jasmine2/27.5.1:
+    resolution: {integrity: sha512-jtq7VVyG8SqAorDpApwiJJImd0V2wv1xzdheGHRGyuT7gZm6gG47QEskOlzsN1PG/6WNaCo5pmwMHDf3AkG2pQ==}
+    engines: {node: ^10.13.0 || ^12.13.0 || ^14.15.0 || >=15.0.0}
+    dependencies:
+      '@jest/environment': 27.5.1
+      '@jest/source-map': 27.5.1
+      '@jest/test-result': 27.5.1
+      '@jest/types': 27.5.1
+      '@types/node': 18.6.3
+      chalk: 4.1.2
+      co: 4.6.0
+      expect: 27.5.1
+      is-generator-fn: 2.1.0
+      jest-each: 27.5.1
+      jest-matcher-utils: 27.5.1
+      jest-message-util: 27.5.1
+      jest-runtime: 27.5.1
+      jest-snapshot: 27.5.1
+      jest-util: 27.5.1
+      pretty-format: 27.5.1
+      throat: 6.0.1
+    transitivePeerDependencies:
+      - supports-color
+    dev: true
+>>>>>>> f04cfcf3 (refactor(connector): refactor connector)
 
   /jest-leak-detector/28.1.3:
     resolution: {integrity: sha512-WFVJhnQsiKtDEo5lG2mM0v40QWnBM+zMdHHyJs8AWZ7J0QZJS59MsyKeJHWhpBZBH32S48FOVvGyOFT1h0DlqA==}
@@ -9776,8 +9910,14 @@ packages:
     resolution: {integrity: sha512-o3J2jr6dMMWYVH4Lh/NKmDXdosrsJgi4AviS8oXLujcjpCMBb1FMsblDnOXKZKfSiHLxYub1eS0IHuRXsio9eA==}
     engines: {node: ^12.13.0 || ^14.15.0 || ^16.10.0 || >=17.0.0}
     dependencies:
+<<<<<<< HEAD
       '@jest/types': 28.1.3
       '@types/node': 17.0.23
+=======
+      '@jest/types': 27.5.1
+      '@types/node': 18.6.3
+    dev: true
+>>>>>>> f04cfcf3 (refactor(connector): refactor connector)
 
   /jest-pnp-resolver/1.2.2_jest-resolve@28.1.3:
     resolution: {integrity: sha512-olV41bKSMm8BdnuMsewT4jqlZ8+3TCARAXjZGT9jcoSnrfUnRCqnMoF9XEeoWjbzObpqF9dRhHQj0Xb9QdF6/w==}
@@ -9821,12 +9961,21 @@ packages:
     resolution: {integrity: sha512-GkMw4D/0USd62OVO0oEgjn23TM+YJa2U2Wu5zz9xsQB1MxWKDOlrnykPxnMsN0tnJllfLPinHTka61u0QhaxBA==}
     engines: {node: ^12.13.0 || ^14.15.0 || ^16.10.0 || >=17.0.0}
     dependencies:
+<<<<<<< HEAD
       '@jest/console': 28.1.3
       '@jest/environment': 28.1.3
       '@jest/test-result': 28.1.3
       '@jest/transform': 28.1.3
       '@jest/types': 28.1.3
       '@types/node': 17.0.23
+=======
+      '@jest/console': 27.5.1
+      '@jest/environment': 27.5.1
+      '@jest/test-result': 27.5.1
+      '@jest/transform': 27.5.1
+      '@jest/types': 27.5.1
+      '@types/node': 18.6.3
+>>>>>>> f04cfcf3 (refactor(connector): refactor connector)
       chalk: 4.1.2
       emittery: 0.10.2
       graceful-fs: 4.2.9
@@ -9873,6 +10022,18 @@ packages:
       strip-bom: 4.0.0
     transitivePeerDependencies:
       - supports-color
+<<<<<<< HEAD
+=======
+    dev: true
+
+  /jest-serializer/27.5.1:
+    resolution: {integrity: sha512-jZCyo6iIxO1aqUxpuBlwTDMkzOAJS4a3eYz3YzgxxVQFwLeSA7Jfq5cbqCY+JLvTDrWirgusI/0KwxKMgrdf7w==}
+    engines: {node: ^10.13.0 || ^12.13.0 || ^14.15.0 || >=15.0.0}
+    dependencies:
+      '@types/node': 18.6.3
+      graceful-fs: 4.2.9
+    dev: true
+>>>>>>> f04cfcf3 (refactor(connector): refactor connector)
 
   /jest-snapshot/28.1.3:
     resolution: {integrity: sha512-4lzMgtiNlc3DU/8lZfmqxN3AYD6GGLbl+72rdBpXvcV+whX7mDrREzkPdp2RnmfIiWBg1YbuFSkXduF2JcafJg==}
@@ -9921,8 +10082,13 @@ packages:
     resolution: {integrity: sha512-XdqfpHwpcSRko/C35uLYFM2emRAltIIKZiJ9eAmhjsj0CqZMa0p1ib0R5fWIqGhn1a103DebTbpqIaP1qCQ6tQ==}
     engines: {node: ^12.13.0 || ^14.15.0 || ^16.10.0 || >=17.0.0}
     dependencies:
+<<<<<<< HEAD
       '@jest/types': 28.1.3
       '@types/node': 17.0.23
+=======
+      '@jest/types': 27.5.1
+      '@types/node': 18.6.3
+>>>>>>> f04cfcf3 (refactor(connector): refactor connector)
       chalk: 4.1.2
       ci-info: 3.3.2
       graceful-fs: 4.2.9
@@ -9943,9 +10109,15 @@ packages:
     resolution: {integrity: sha512-t4qcqj9hze+jviFPUN3YAtAEeFnr/azITXQEMARf5cMwKY2SMBRnCQTXLixTl20OR6mLh9KLMrgVJgJISym+1g==}
     engines: {node: ^12.13.0 || ^14.15.0 || ^16.10.0 || >=17.0.0}
     dependencies:
+<<<<<<< HEAD
       '@jest/test-result': 28.1.3
       '@jest/types': 28.1.3
       '@types/node': 17.0.23
+=======
+      '@jest/test-result': 27.5.1
+      '@jest/types': 27.5.1
+      '@types/node': 18.6.3
+>>>>>>> f04cfcf3 (refactor(connector): refactor connector)
       ansi-escapes: 4.3.2
       chalk: 4.1.2
       emittery: 0.10.2
@@ -9956,7 +10128,7 @@ packages:
     resolution: {integrity: sha512-CqRA220YV/6jCo8VWvAt1KKx6eek1VIHMPeLEbpcfSfkEeWyBNppynM/o6q+Wmw+sOhos2ml34wZbSX3G13//g==}
     engines: {node: ^12.13.0 || ^14.15.0 || ^16.10.0 || >=17.0.0}
     dependencies:
-      '@types/node': 17.0.23
+      '@types/node': 18.6.3
       merge-stream: 2.0.0
       supports-color: 8.1.1
 

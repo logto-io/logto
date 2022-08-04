@@ -4,15 +4,15 @@
  */
 
 import {
+  AuthResponseParser,
   ConnectorError,
   ConnectorErrorCodes,
-  ConnectorMetadata,
-  Connector,
   GetAuthorizationUri,
   GetUserInfo,
   SocialConnectorInstance,
   GetConnectorConfig,
   codeWithRedirectDataGuard,
+  CodeWithRedirectData,
 } from '@logto/connector-types';
 import { assert } from '@silverhand/essentials';
 import got, { HTTPError } from 'got';
@@ -33,23 +33,12 @@ import {
   userInfoResponseGuard,
 } from './types';
 
-export default class FacebookConnector implements SocialConnectorInstance<FacebookConfig> {
-  public metadata: ConnectorMetadata = defaultMetadata;
-  private _connector?: Connector;
-
-  public get connector() {
-    if (!this._connector) {
-      throw new ConnectorError(ConnectorErrorCodes.General);
-    }
-
-    return this._connector;
+export default class FacebookConnector<T> extends SocialConnectorInstance<FacebookConfig, T> {
+  constructor(getConnectorConfig: GetConnectorConfig) {
+    super(getConnectorConfig);
+    this.metadata = defaultMetadata;
+    this.metadataParser();
   }
-
-  public set connector(input: Connector) {
-    this._connector = input;
-  }
-
-  constructor(public readonly getConfig: GetConnectorConfig) {}
 
   public validateConfig(config: unknown): asserts config is FacebookConfig {
     const result = facebookConfigGuard.safeParse(config);
@@ -106,7 +95,7 @@ export default class FacebookConnector implements SocialConnectorInstance<Facebo
   };
 
   public getUserInfo: GetUserInfo = async (data) => {
-    const { code, redirectUri } = await this.authorizationCallbackHandler(data);
+    const { code, redirectUri } = await this.authResponseParser(data);
     const { accessToken } = await this.getAccessToken(code, redirectUri);
 
     try {
@@ -149,7 +138,9 @@ export default class FacebookConnector implements SocialConnectorInstance<Facebo
     }
   };
 
-  private readonly authorizationCallbackHandler = async (parameterObject: unknown) => {
+  public readonly authResponseParser: AuthResponseParser<CodeWithRedirectData> = async (
+    parameterObject: unknown
+  ) => {
     const result = codeWithRedirectDataGuard.safeParse(parameterObject);
 
     if (result.success) {

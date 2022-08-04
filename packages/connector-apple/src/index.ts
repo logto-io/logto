@@ -1,36 +1,24 @@
 import {
-  ConnectorMetadata,
+  AuthResponseParser,
   GetAuthorizationUri,
   GetUserInfo,
   ConnectorError,
   ConnectorErrorCodes,
-  Connector,
   SocialConnectorInstance,
   GetConnectorConfig,
 } from '@logto/connector-types';
 import { createRemoteJWKSet, jwtVerify } from 'jose';
 
 import { scope, defaultMetadata, jwksUri, issuer, authorizationEndpoint } from './constant';
-import { appleConfigGuard, AppleConfig, dataGuard } from './types';
+import { appleConfigGuard, authResponseGuard, AppleConfig, AuthResponse } from './types';
 
 // TO-DO: support nonce validation
-export default class AppleConnector implements SocialConnectorInstance<AppleConfig> {
-  public metadata: ConnectorMetadata = defaultMetadata;
-  private _connector?: Connector;
-
-  public get connector() {
-    if (!this._connector) {
-      throw new ConnectorError(ConnectorErrorCodes.General);
-    }
-
-    return this._connector;
+export default class AppleConnector<T> extends SocialConnectorInstance<AppleConfig, T> {
+  constructor(getConnectorConfig: GetConnectorConfig) {
+    super(getConnectorConfig);
+    this.metadata = defaultMetadata;
+    this.metadataParser();
   }
-
-  public set connector(input: Connector) {
-    this._connector = input;
-  }
-
-  constructor(public readonly getConfig: GetConnectorConfig) {}
 
   public validateConfig(config: unknown): asserts config is AppleConfig {
     const result = appleConfigGuard.safeParse(config);
@@ -59,7 +47,7 @@ export default class AppleConnector implements SocialConnectorInstance<AppleConf
   };
 
   public getUserInfo: GetUserInfo = async (data) => {
-    const { id_token: idToken } = await this.authorizationCallbackHandler(data);
+    const { id_token: idToken } = await this.authResponseParser(data);
 
     if (!idToken) {
       throw new ConnectorError(ConnectorErrorCodes.SocialIdTokenInvalid);
@@ -89,8 +77,10 @@ export default class AppleConnector implements SocialConnectorInstance<AppleConf
     }
   };
 
-  private readonly authorizationCallbackHandler = async (parameterObject: unknown) => {
-    const result = dataGuard.safeParse(parameterObject);
+  protected readonly authResponseParser: AuthResponseParser<AuthResponse> = async (
+    parameterObject: unknown
+  ) => {
+    const result = authResponseGuard.safeParse(parameterObject);
 
     if (!result.success) {
       throw new ConnectorError(ConnectorErrorCodes.General, JSON.stringify(parameterObject));

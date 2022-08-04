@@ -10,10 +10,9 @@
  */
 
 import {
+  AuthResponseParser,
   ConnectorError,
   ConnectorErrorCodes,
-  ConnectorMetadata,
-  Connector,
   GetAuthorizationUri,
   GetUserInfo,
   SocialConnectorInstance,
@@ -22,7 +21,6 @@ import {
 import { assert } from '@silverhand/essentials';
 import dayjs from 'dayjs';
 import got from 'got';
-import { z } from 'zod';
 
 import {
   alipayEndpoint,
@@ -37,7 +35,9 @@ import {
 } from './constant';
 import {
   alipayNativeConfigGuard,
+  authResponseGuard,
   AlipayNativeConfig,
+  AuthResponse,
   accessTokenResponseGuard,
   userInfoResponseGuard,
   ErrorHandler,
@@ -46,25 +46,17 @@ import { signingParameters } from './utils';
 
 export type { AlipayNativeConfig } from './types';
 
-export default class AlipayNativeConnector implements SocialConnectorInstance<AlipayNativeConfig> {
-  public metadata: ConnectorMetadata = defaultMetadata;
-  private _connector?: Connector;
-
-  public get connector() {
-    if (!this._connector) {
-      throw new ConnectorError(ConnectorErrorCodes.General);
-    }
-
-    return this._connector;
-  }
-
-  public set connector(input: Connector) {
-    this._connector = input;
-  }
-
+export default class AlipayNativeConnector<T> extends SocialConnectorInstance<
+  AlipayNativeConfig,
+  T
+> {
   private readonly signingParameters = signingParameters;
 
-  constructor(public readonly getConfig: GetConnectorConfig) {}
+  constructor(getConnectorConfig: GetConnectorConfig) {
+    super(getConnectorConfig);
+    this.metadata = defaultMetadata;
+    this.metadataParser();
+  }
 
   public validateConfig(config: unknown): asserts config is AlipayNativeConfig {
     const result = alipayNativeConfigGuard.safeParse(config);
@@ -125,7 +117,7 @@ export default class AlipayNativeConnector implements SocialConnectorInstance<Al
   };
 
   public getUserInfo: GetUserInfo = async (data) => {
-    const { auth_code } = await this.authorizationCallbackHandler(data);
+    const { auth_code } = await this.authResponseParser(data);
     const config = await this.getConfig(this.metadata.id);
 
     this.validateConfig(config);
@@ -174,6 +166,18 @@ export default class AlipayNativeConnector implements SocialConnectorInstance<Al
     return { id, avatar, name };
   };
 
+  protected readonly authResponseParser: AuthResponseParser<AuthResponse> = async (
+    parameterObject: unknown
+  ) => {
+    const result = authResponseGuard.safeParse(parameterObject);
+
+    if (!result.success) {
+      throw new ConnectorError(ConnectorErrorCodes.General, JSON.stringify(parameterObject));
+    }
+
+    return result.data;
+  };
+
   private readonly errorHandler: ErrorHandler = ({ code, msg, sub_code, sub_msg }) => {
     if (invalidAccessTokenCode.includes(code)) {
       throw new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid, msg);
@@ -192,18 +196,6 @@ export default class AlipayNativeConnector implements SocialConnectorInstance<Al
         sub_msg,
       });
     }
-  };
-
-  private readonly authorizationCallbackHandler = async (parameterObject: unknown) => {
-    const dataGuard = z.object({ auth_code: z.string() });
-
-    const result = dataGuard.safeParse(parameterObject);
-
-    if (!result.success) {
-      throw new ConnectorError(ConnectorErrorCodes.General, JSON.stringify(parameterObject));
-    }
-
-    return result.data;
   };
 }
 /* eslint-enable unicorn/text-encoding-identifier-case */

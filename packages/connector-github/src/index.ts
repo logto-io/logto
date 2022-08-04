@@ -1,13 +1,13 @@
 import {
-  ConnectorMetadata,
+  AuthResponseParser,
   GetAuthorizationUri,
   GetUserInfo,
   ConnectorError,
   ConnectorErrorCodes,
-  Connector,
   SocialConnectorInstance,
   GetConnectorConfig,
   codeDataGuard,
+  CodeData,
 } from '@logto/connector-types';
 import { assert, conditional } from '@silverhand/essentials';
 import got, { HTTPError } from 'got';
@@ -29,23 +29,12 @@ import {
   userInfoResponseGuard,
 } from './types';
 
-export default class GithubConnector implements SocialConnectorInstance<GithubConfig> {
-  public metadata: ConnectorMetadata = defaultMetadata;
-  private _connector?: Connector;
-
-  public get connector() {
-    if (!this._connector) {
-      throw new ConnectorError(ConnectorErrorCodes.General);
-    }
-
-    return this._connector;
+export default class GithubConnector<T> extends SocialConnectorInstance<GithubConfig, T> {
+  constructor(getConnectorConfig: GetConnectorConfig) {
+    super(getConnectorConfig);
+    this.metadata = defaultMetadata;
+    this.metadataParser();
   }
-
-  public set connector(input: Connector) {
-    this._connector = input;
-  }
-
-  constructor(public readonly getConfig: GetConnectorConfig) {}
 
   public validateConfig(config: unknown): asserts config is GithubConfig {
     const result = githubConfigGuard.safeParse(config);
@@ -101,7 +90,7 @@ export default class GithubConnector implements SocialConnectorInstance<GithubCo
   };
 
   public getUserInfo: GetUserInfo = async (data) => {
-    const { code } = await this.authorizationCallbackHandler(data);
+    const { code } = await this.authResponseParser(data);
     const { accessToken } = await this.getAccessToken(code);
 
     try {
@@ -141,7 +130,9 @@ export default class GithubConnector implements SocialConnectorInstance<GithubCo
     }
   };
 
-  private readonly authorizationCallbackHandler = async (parameterObject: unknown) => {
+  public readonly authResponseParser: AuthResponseParser<CodeData> = async (
+    parameterObject: unknown
+  ) => {
     const result = codeDataGuard.safeParse(parameterObject);
 
     if (result.success) {

@@ -1,8 +1,5 @@
-import { existsSync, readFileSync } from 'fs';
-import path from 'path';
-
 import { ConnectorInstance, SocialConnectorInstance } from '@logto/connector-types';
-import resolvePackagePath from 'resolve-package-path';
+import { Connector } from '@logto/schemas';
 
 import envSet from '@/env-set';
 import RequestError from '@/errors/RequestError';
@@ -32,55 +29,7 @@ const loadConnectors = async () => {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       const { default: Builder } = await import(packageName);
       // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment
-      const instance: ConnectorInstance = new Builder(getConnectorConfig);
-      // eslint-disable-next-line unicorn/prefer-module
-      const packagePath = resolvePackagePath(packageName, __dirname);
-
-      // For relative path logo url, try to read local asset.
-      if (
-        packagePath &&
-        !instance.metadata.logo.startsWith('http') &&
-        existsSync(path.join(packagePath, '..', instance.metadata.logo))
-      ) {
-        const data = readFileSync(path.join(packagePath, '..', instance.metadata.logo));
-        // eslint-disable-next-line @silverhand/fp/no-mutation
-        instance.metadata.logo = `data:image/svg+xml;base64,${data.toString('base64')}`;
-      }
-
-      if (
-        packagePath &&
-        instance.metadata.logoDark &&
-        !instance.metadata.logoDark.startsWith('http') &&
-        existsSync(path.join(packagePath, '..', instance.metadata.logoDark))
-      ) {
-        const data = readFileSync(path.join(packagePath, '..', instance.metadata.logoDark));
-        // eslint-disable-next-line @silverhand/fp/no-mutation
-        instance.metadata.logoDark = `data:image/svg+xml;base64,${data.toString('base64')}`;
-      }
-
-      if (
-        packagePath &&
-        instance.metadata.readme &&
-        existsSync(path.join(packagePath, '..', instance.metadata.readme))
-      ) {
-        // eslint-disable-next-line @silverhand/fp/no-mutation
-        instance.metadata.readme = readFileSync(
-          path.join(packagePath, '..', instance.metadata.readme),
-          'utf8'
-        );
-      }
-
-      if (
-        packagePath &&
-        instance.metadata.configTemplate &&
-        existsSync(path.join(packagePath, '..', instance.metadata.configTemplate))
-      ) {
-        // eslint-disable-next-line @silverhand/fp/no-mutation
-        instance.metadata.configTemplate = readFileSync(
-          path.join(packagePath, '..', instance.metadata.configTemplate),
-          'utf8'
-        );
-      }
+      const instance: ConnectorInstance = new Builder<Connector>(getConnectorConfig);
 
       return instance;
     })
@@ -127,13 +76,13 @@ export const getConnectorInstanceById = async (id: string): Promise<ConnectorIns
 
 const isSocialConnectorInstance = (
   connector: ConnectorInstance
-): connector is SocialConnectorInstance => {
+): connector is InstanceType<typeof SocialConnectorInstance> => {
   return connector.metadata.type === ConnectorType.Social;
 };
 
 export const getSocialConnectorInstanceById = async (
   id: string
-): Promise<SocialConnectorInstance> => {
+): Promise<InstanceType<typeof SocialConnectorInstance>> => {
   const connector = await getConnectorInstanceById(id);
 
   if (!isSocialConnectorInstance(connector)) {
