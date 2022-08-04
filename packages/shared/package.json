@@ -26,11 +26,11 @@
     "nanoid": "^3.1.23"
   },
   "devDependencies": {
-    "@silverhand/eslint-config": "1.0.0-rc.0",
-    "@silverhand/eslint-config-react": "1.0.0-rc.0",
+    "@silverhand/eslint-config": "1.0.0-rc.2",
+    "@silverhand/eslint-config-react": "1.0.0-rc.2",
     "@silverhand/essentials": "^1.1.6",
-    "@silverhand/ts-config": "1.0.0-rc.0",
-    "@silverhand/ts-config-react": "1.0.0-rc.0",
+    "@silverhand/ts-config": "1.0.0-rc.2",
+    "@silverhand/ts-config-react": "1.0.0-rc.2",
     "@types/color": "^3.0.3",
     "@types/node": "^16.3.1",
     "eslint": "^8.21.0",

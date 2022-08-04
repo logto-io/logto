@@ -31,8 +31,8 @@
     "@silverhand/essentials": "^1.1.4"
   },
   "devDependencies": {
-    "@silverhand/eslint-config": "1.0.0-rc.0",
-    "@silverhand/ts-config": "1.0.0-rc.0",
+    "@silverhand/eslint-config": "1.0.0-rc.2",
+    "@silverhand/ts-config": "1.0.0-rc.2",
     "eslint": "^8.21.0",
     "lint-staged": "^13.0.0",
     "prettier": "^2.7.1",

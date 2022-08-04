@@ -24,10 +24,10 @@ importers:
       '@logto/connector-types': ^1.0.0-beta.3
       '@logto/shared': ^1.0.0-beta.3
       '@shopify/jest-koa-mocks': ^5.0.0
-      '@silverhand/eslint-config': 1.0.0-rc.0
+      '@silverhand/eslint-config': 1.0.0-rc.2
       '@silverhand/essentials': ^1.1.0
-      '@silverhand/jest-config': 1.0.0-rc.1
-      '@silverhand/ts-config': 1.0.0-rc.0
+      '@silverhand/jest-config': 1.0.0-rc.2
+      '@silverhand/ts-config': 1.0.0-rc.2
       '@types/jest': ^28.1.6
       '@types/lodash.pick': ^4.4.6
       '@types/node': ^16.3.1
@@ -50,7 +50,7 @@ importers:
       '@logto/connector-types': link:../connector-types
       '@logto/shared': link:../shared
       '@silverhand/essentials': 1.1.7
-      '@silverhand/jest-config': 1.0.0-rc.1_bi2kohzqnxavgozw3csgny5hju
+      '@silverhand/jest-config': 1.0.0-rc.2_bi2kohzqnxavgozw3csgny5hju
       dayjs: 1.10.7
       got: 11.8.3
       iconv-lite: 0.6.3
@@ -59,8 +59,8 @@ importers:
     devDependencies:
       '@jest/types': 28.1.3
       '@shopify/jest-koa-mocks': 5.0.0
-      '@silverhand/eslint-config': 1.0.0-rc.0_swk2g7ygmfleszo5c33j4vooni
-      '@silverhand/ts-config': 1.0.0-rc.0_typescript@4.7.4
+      '@silverhand/eslint-config': 1.0.0-rc.2_swk2g7ygmfleszo5c33j4vooni
+      '@silverhand/ts-config': 1.0.0-rc.2_typescript@4.7.4
       '@types/jest': 28.1.6
       '@types/lodash.pick': 4.4.6
       '@types/node': 16.11.12
@@ -81,10 +81,10 @@ importers:
       '@logto/connector-types': ^1.0.0-beta.3
       '@logto/shared': ^1.0.0-beta.3
       '@shopify/jest-koa-mocks': ^5.0.0
-      '@silverhand/eslint-config': 1.0.0-rc.0
+      '@silverhand/eslint-config': 1.0.0-rc.2
       '@silverhand/essentials': ^1.1.0
-      '@silverhand/jest-config': 1.0.0-rc.1
-      '@silverhand/ts-config': 1.0.0-rc.0
+      '@silverhand/jest-config': 1.0.0-rc.2
+      '@silverhand/ts-config': 1.0.0-rc.2
       '@types/jest': ^28.1.6
       '@types/lodash.pick': ^4.4.6
       '@types/node': ^16.3.1
@@ -107,7 +107,7 @@ importers:
       '@logto/connector-types': link:../connector-types
       '@logto/shared': link:../shared
       '@silverhand/essentials': 1.1.7
-      '@silverhand/jest-config': 1.0.0-rc.1_bi2kohzqnxavgozw3csgny5hju
+      '@silverhand/jest-config': 1.0.0-rc.2_bi2kohzqnxavgozw3csgny5hju
       dayjs: 1.10.7
       got: 11.8.3
       iconv-lite: 0.6.3
@@ -116,8 +116,8 @@ importers:
     devDependencies:
       '@jest/types': 28.1.3
       '@shopify/jest-koa-mocks': 5.0.0
-      '@silverhand/eslint-config': 1.0.0-rc.0_swk2g7ygmfleszo5c33j4vooni
-      '@silverhand/ts-config': 1.0.0-rc.0_typescript@4.7.4
+      '@silverhand/eslint-config': 1.0.0-rc.2_swk2g7ygmfleszo5c33j4vooni
+      '@silverhand/ts-config': 1.0.0-rc.2_typescript@4.7.4
       '@types/jest': 28.1.6
       '@types/lodash.pick': 4.4.6
       '@types/node': 16.11.12
@@ -137,10 +137,10 @@ importers:
       '@jest/types': ^28.1.3
       '@logto/connector-types': ^1.0.0-beta.3
       '@logto/shared': ^1.0.0-beta.3
-      '@silverhand/eslint-config': 1.0.0-rc.0
+      '@silverhand/eslint-config': 1.0.0-rc.2
       '@silverhand/essentials': ^1.1.0
-      '@silverhand/jest-config': 1.0.0-rc.1
-      '@silverhand/ts-config': 1.0.0-rc.0
+      '@silverhand/jest-config': 1.0.0-rc.2
+      '@silverhand/ts-config': 1.0.0-rc.2
       '@types/jest': ^28.1.6
       '@types/node': ^16.3.1
       eslint: ^8.21.0
@@ -155,13 +155,13 @@ importers:
       '@logto/connector-types': link:../connector-types
       '@logto/shared': link:../shared
       '@silverhand/essentials': 1.1.7
-      '@silverhand/jest-config': 1.0.0-rc.1_bi2kohzqnxavgozw3csgny5hju
+      '@silverhand/jest-config': 1.0.0-rc.2_bi2kohzqnxavgozw3csgny5hju
       got: 11.8.3
       zod: 3.14.3
     devDependencies:
       '@jest/types': 28.1.3
-      '@silverhand/eslint-config': 1.0.0-rc.0_swk2g7ygmfleszo5c33j4vooni
-      '@silverhand/ts-config': 1.0.0-rc.0_typescript@4.7.4
+      '@silverhand/eslint-config': 1.0.0-rc.2_swk2g7ygmfleszo5c33j4vooni
+      '@silverhand/ts-config': 1.0.0-rc.2_typescript@4.7.4
       '@types/jest': 28.1.6
       '@types/node': 16.11.12
       eslint: 8.21.0
@@ -177,10 +177,10 @@ importers:
       '@logto/connector-types': ^1.0.0-beta.3
       '@logto/schemas': ^1.0.0-beta.3
       '@logto/shared': ^1.0.0-beta.3
-      '@silverhand/eslint-config': 1.0.0-rc.0
+      '@silverhand/eslint-config': 1.0.0-rc.2
       '@silverhand/essentials': ^1.1.0
-      '@silverhand/jest-config': 1.0.0-rc.1
-      '@silverhand/ts-config': 1.0.0-rc.0
+      '@silverhand/jest-config': 1.0.0-rc.2
+      '@silverhand/ts-config': 1.0.0-rc.2
       '@types/jest': ^28.1.6
       '@types/node': ^16.3.1
       eslint: ^8.21.0
@@ -196,13 +196,13 @@ importers:
       '@logto/schemas': link:../schemas
       '@logto/shared': link:../shared
       '@silverhand/essentials': 1.1.7
-      '@silverhand/jest-config': 1.0.0-rc.1_bi2kohzqnxavgozw3csgny5hju
+      '@silverhand/jest-config': 1.0.0-rc.2_bi2kohzqnxavgozw3csgny5hju
       got: 11.8.3
       zod: 3.14.3
     devDependencies:
       '@jest/types': 28.1.3
-      '@silverhand/eslint-config': 1.0.0-rc.0_swk2g7ygmfleszo5c33j4vooni
-      '@silverhand/ts-config': 1.0.0-rc.0_typescript@4.7.4
+      '@silverhand/eslint-config': 1.0.0-rc.2_swk2g7ygmfleszo5c33j4vooni
+      '@silverhand/ts-config': 1.0.0-rc.2_typescript@4.7.4
       '@types/jest': 28.1.6
       '@types/node': 16.11.12
       eslint: 8.21.0
@@ -218,10 +218,10 @@ importers:
       '@logto/connector-types': ^1.0.0-beta.3
       '@logto/schemas': ^1.0.0-beta.3
       '@logto/shared': ^1.0.0-beta.3
-      '@silverhand/eslint-config': 1.0.0-rc.0
+      '@silverhand/eslint-config': 1.0.0-rc.2
       '@silverhand/essentials': ^1.1.0
-      '@silverhand/jest-config': 1.0.0-rc.1
-      '@silverhand/ts-config': 1.0.0-rc.0
+      '@silverhand/jest-config': 1.0.0-rc.2
+      '@silverhand/ts-config': 1.0.0-rc.2
       '@types/jest': ^28.1.6
       '@types/node': ^16.3.1
       eslint: ^8.21.0
@@ -240,14 +240,14 @@ importers:
       '@logto/schemas': link:../schemas
       '@logto/shared': link:../shared
       '@silverhand/essentials': 1.1.7
-      '@silverhand/jest-config': 1.0.0-rc.1_bi2kohzqnxavgozw3csgny5hju
+      '@silverhand/jest-config': 1.0.0-rc.2_bi2kohzqnxavgozw3csgny5hju
       got: 11.8.3
       jose: 4.6.0
       zod: 3.14.3
     devDependencies:
       '@jest/types': 28.1.3
-      '@silverhand/eslint-config': 1.0.0-rc.0_swk2g7ygmfleszo5c33j4vooni
-      '@silverhand/ts-config': 1.0.0-rc.0_typescript@4.7.4
+      '@silverhand/eslint-config': 1.0.0-rc.2_swk2g7ygmfleszo5c33j4vooni
+      '@silverhand/ts-config': 1.0.0-rc.2_typescript@4.7.4
       '@types/jest': 28.1.6
       '@types/node': 16.11.12
       eslint: 8.21.0
@@ -266,10 +266,10 @@ importers:
       '@logto/connector-types': ^1.0.0-beta.3
       '@logto/schemas': ^1.0.0-beta.3
       '@logto/shared': ^1.0.0-beta.3
-      '@silverhand/eslint-config': 1.0.0-rc.0
+      '@silverhand/eslint-config': 1.0.0-rc.2
       '@silverhand/essentials': ^1.1.0
-      '@silverhand/jest-config': 1.0.0-rc.1
-      '@silverhand/ts-config': 1.0.0-rc.0
+      '@silverhand/jest-config': 1.0.0-rc.2
+      '@silverhand/ts-config': 1.0.0-rc.2
       '@types/jest': ^28.1.6
       '@types/node': ^16.3.1
       axios: ^0.27.2
@@ -289,14 +289,14 @@ importers:
       '@logto/schemas': link:../schemas
       '@logto/shared': link:../shared
       '@silverhand/essentials': 1.1.7
-      '@silverhand/jest-config': 1.0.0-rc.1_bi2kohzqnxavgozw3csgny5hju
+      '@silverhand/jest-config': 1.0.0-rc.2_bi2kohzqnxavgozw3csgny5hju
       axios: 0.27.2
       got: 11.8.3
       zod: 3.14.3
     devDependencies:
       '@jest/types': 28.1.3
-      '@silverhand/eslint-config': 1.0.0-rc.0_swk2g7ygmfleszo5c33j4vooni
-      '@silverhand/ts-config': 1.0.0-rc.0_typescript@4.7.4
+      '@silverhand/eslint-config': 1.0.0-rc.2_swk2g7ygmfleszo5c33j4vooni
+      '@silverhand/ts-config': 1.0.0-rc.2_typescript@4.7.4
       '@types/jest': 28.1.6
       '@types/node': 16.11.12
       eslint: 8.21.0
@@ -314,10 +314,10 @@ importers:
       '@logto/connector-types': ^1.0.0-beta.3
       '@logto/schemas': ^1.0.0-beta.3
       '@logto/shared': ^1.0.0-beta.3
-      '@silverhand/eslint-config': 1.0.0-rc.0
+      '@silverhand/eslint-config': 1.0.0-rc.2
       '@silverhand/essentials': ^1.1.0
-      '@silverhand/jest-config': 1.0.0-rc.1
-      '@silverhand/ts-config': 1.0.0-rc.0
+      '@silverhand/jest-config': 1.0.0-rc.2
+      '@silverhand/ts-config': 1.0.0-rc.2
       '@types/jest': ^28.1.6
       '@types/node': ^16.3.1
       eslint: ^8.21.0
@@ -335,13 +335,13 @@ importers:
       '@logto/schemas': link:../schemas
       '@logto/shared': link:../shared
       '@silverhand/essentials': 1.1.7
-      '@silverhand/jest-config': 1.0.0-rc.1_bi2kohzqnxavgozw3csgny5hju
+      '@silverhand/jest-config': 1.0.0-rc.2_bi2kohzqnxavgozw3csgny5hju
       got: 11.8.3
       zod: 3.14.3
     devDependencies:
       '@jest/types': 28.1.3
-      '@silverhand/eslint-config': 1.0.0-rc.0_swk2g7ygmfleszo5c33j4vooni
-      '@silverhand/ts-config': 1.0.0-rc.0_typescript@4.7.4
+      '@silverhand/eslint-config': 1.0.0-rc.2_swk2g7ygmfleszo5c33j4vooni
+      '@silverhand/ts-config': 1.0.0-rc.2_typescript@4.7.4
       '@types/jest': 28.1.6
       '@types/node': 16.11.12
       eslint: 8.21.0
@@ -359,10 +359,10 @@ importers:
       '@logto/connector-types': ^1.0.0-beta.3
       '@logto/schemas': ^1.0.0-beta.3
       '@logto/shared': ^1.0.0-beta.3
-      '@silverhand/eslint-config': 1.0.0-rc.0
+      '@silverhand/eslint-config': 1.0.0-rc.2
       '@silverhand/essentials': ^1.1.0
-      '@silverhand/jest-config': 1.0.0-rc.1
-      '@silverhand/ts-config': 1.0.0-rc.0
+      '@silverhand/jest-config': 1.0.0-rc.2
+      '@silverhand/ts-config': 1.0.0-rc.2
       '@types/jest': ^28.1.6
       '@types/node': ^16.3.1
       eslint: ^8.21.0
@@ -381,14 +381,14 @@ importers:
       '@logto/schemas': link:../schemas
       '@logto/shared': link:../shared
       '@silverhand/essentials': 1.1.7
-      '@silverhand/jest-config': 1.0.0-rc.1_bi2kohzqnxavgozw3csgny5hju
+      '@silverhand/jest-config': 1.0.0-rc.2_bi2kohzqnxavgozw3csgny5hju
       got: 11.8.3
       query-string: 7.0.1
       zod: 3.14.3
     devDependencies:
       '@jest/types': 28.1.3
-      '@silverhand/eslint-config': 1.0.0-rc.0_swk2g7ygmfleszo5c33j4vooni
-      '@silverhand/ts-config': 1.0.0-rc.0_typescript@4.7.4
+      '@silverhand/eslint-config': 1.0.0-rc.2_swk2g7ygmfleszo5c33j4vooni
+      '@silverhand/ts-config': 1.0.0-rc.2_typescript@4.7.4
       '@types/jest': 28.1.6
       '@types/node': 16.11.12
       eslint: 8.21.0
@@ -406,10 +406,10 @@ importers:
       '@logto/connector-types': ^1.0.0-beta.3
       '@logto/schemas': ^1.0.0-beta.3
       '@logto/shared': ^1.0.0-beta.3
-      '@silverhand/eslint-config': 1.0.0-rc.0
+      '@silverhand/eslint-config': 1.0.0-rc.2
       '@silverhand/essentials': ^1.1.0
-      '@silverhand/jest-config': 1.0.0-rc.1
-      '@silverhand/ts-config': 1.0.0-rc.0
+      '@silverhand/jest-config': 1.0.0-rc.2
+      '@silverhand/ts-config': 1.0.0-rc.2
       '@types/jest': ^28.1.6
       '@types/node': ^16.3.1
       eslint: ^8.21.0
@@ -427,13 +427,13 @@ importers:
       '@logto/schemas': link:../schemas
       '@logto/shared': link:../shared
       '@silverhand/essentials': 1.1.7
-      '@silverhand/jest-config': 1.0.0-rc.1_bi2kohzqnxavgozw3csgny5hju
+      '@silverhand/jest-config': 1.0.0-rc.2_bi2kohzqnxavgozw3csgny5hju
       got: 11.8.3
       zod: 3.14.3
     devDependencies:
       '@jest/types': 28.1.3
-      '@silverhand/eslint-config': 1.0.0-rc.0_swk2g7ygmfleszo5c33j4vooni
-      '@silverhand/ts-config': 1.0.0-rc.0_typescript@4.7.4
+      '@silverhand/eslint-config': 1.0.0-rc.2_swk2g7ygmfleszo5c33j4vooni
+      '@silverhand/ts-config': 1.0.0-rc.2_typescript@4.7.4
       '@types/jest': 28.1.6
       '@types/node': 16.11.12
       eslint: 8.21.0
@@ -449,9 +449,9 @@ importers:
     specifiers:
       '@logto/connector-types': ^1.0.0-beta.3
       '@logto/shared': ^1.0.0-beta.3
-      '@silverhand/eslint-config': 1.0.0-rc.0
+      '@silverhand/eslint-config': 1.0.0-rc.2
       '@silverhand/essentials': ^1.1.6
-      '@silverhand/ts-config': 1.0.0-rc.0
+      '@silverhand/ts-config': 1.0.0-rc.2
       '@types/node': ^16.3.1
       eslint: ^8.21.0
       lint-staged: ^13.0.0
@@ -465,8 +465,8 @@ importers:
       '@silverhand/essentials': 1.1.7
       zod: 3.14.3
     devDependencies:
-      '@silverhand/eslint-config': 1.0.0-rc.0_swk2g7ygmfleszo5c33j4vooni
-      '@silverhand/ts-config': 1.0.0-rc.0_typescript@4.7.4
+      '@silverhand/eslint-config': 1.0.0-rc.2_swk2g7ygmfleszo5c33j4vooni
+      '@silverhand/ts-config': 1.0.0-rc.2_typescript@4.7.4
       '@types/node': 16.11.12
       eslint: 8.21.0
       lint-staged: 13.0.0
@@ -478,9 +478,9 @@ importers:
     specifiers:
       '@logto/connector-types': ^1.0.0-beta.3
       '@logto/shared': ^1.0.0-beta.3
-      '@silverhand/eslint-config': 1.0.0-rc.0
+      '@silverhand/eslint-config': 1.0.0-rc.2
       '@silverhand/essentials': ^1.1.6
-      '@silverhand/ts-config': 1.0.0-rc.0
+      '@silverhand/ts-config': 1.0.0-rc.2
       '@types/node': ^16.3.1
       eslint: ^8.21.0
       lint-staged: ^13.0.0
@@ -494,8 +494,8 @@ importers:
       '@silverhand/essentials': 1.1.7
       zod: 3.14.3
     devDependencies:
-      '@silverhand/eslint-config': 1.0.0-rc.0_swk2g7ygmfleszo5c33j4vooni
-      '@silverhand/ts-config': 1.0.0-rc.0_typescript@4.7.4
+      '@silverhand/eslint-config': 1.0.0-rc.2_swk2g7ygmfleszo5c33j4vooni
+      '@silverhand/ts-config': 1.0.0-rc.2_typescript@4.7.4
       '@types/node': 16.11.12
       eslint: 8.21.0
       lint-staged: 13.0.0
@@ -508,9 +508,9 @@ importers:
       '@logto/connector-types': ^1.0.0-beta.3
       '@logto/schemas': ^1.0.0-beta.3
       '@logto/shared': ^1.0.0-beta.3
-      '@silverhand/eslint-config': 1.0.0-rc.0
+      '@silverhand/eslint-config': 1.0.0-rc.2
       '@silverhand/essentials': ^1.1.0
-      '@silverhand/ts-config': 1.0.0-rc.0
+      '@silverhand/ts-config': 1.0.0-rc.2
       '@types/node': ^16.3.1
       eslint: ^8.21.0
       lint-staged: ^13.0.0
@@ -525,8 +525,8 @@ importers:
       '@silverhand/essentials': 1.1.7
       zod: 3.14.3
     devDependencies:
-      '@silverhand/eslint-config': 1.0.0-rc.0_swk2g7ygmfleszo5c33j4vooni
-      '@silverhand/ts-config': 1.0.0-rc.0_typescript@4.7.4
+      '@silverhand/eslint-config': 1.0.0-rc.2_swk2g7ygmfleszo5c33j4vooni
+      '@silverhand/ts-config': 1.0.0-rc.2_typescript@4.7.4
       '@types/node': 16.11.12
       eslint: 8.21.0
       lint-staged: 13.0.0
@@ -539,10 +539,10 @@ importers:
       '@jest/types': ^28.1.3
       '@logto/connector-types': ^1.0.0-beta.3
       '@logto/shared': ^1.0.0-beta.3
-      '@silverhand/eslint-config': 1.0.0-rc.0
+      '@silverhand/eslint-config': 1.0.0-rc.2
       '@silverhand/essentials': ^1.1.6
-      '@silverhand/jest-config': 1.0.0-rc.1
-      '@silverhand/ts-config': 1.0.0-rc.0
+      '@silverhand/jest-config': 1.0.0-rc.2
+      '@silverhand/ts-config': 1.0.0-rc.2
       '@types/jest': ^28.1.6
       '@types/node': ^16.3.1
       eslint: ^8.21.0
@@ -557,13 +557,13 @@ importers:
       '@logto/connector-types': link:../connector-types
       '@logto/shared': link:../shared
       '@silverhand/essentials': 1.1.7
-      '@silverhand/jest-config': 1.0.0-rc.1_bi2kohzqnxavgozw3csgny5hju
+      '@silverhand/jest-config': 1.0.0-rc.2_bi2kohzqnxavgozw3csgny5hju
       got: 11.8.3
       zod: 3.14.3
     devDependencies:
       '@jest/types': 28.1.3
-      '@silverhand/eslint-config': 1.0.0-rc.0_swk2g7ygmfleszo5c33j4vooni
-      '@silverhand/ts-config': 1.0.0-rc.0_typescript@4.7.4
+      '@silverhand/eslint-config': 1.0.0-rc.2_swk2g7ygmfleszo5c33j4vooni
+      '@silverhand/ts-config': 1.0.0-rc.2_typescript@4.7.4
       '@types/jest': 28.1.6
       '@types/node': 16.11.12
       eslint: 8.21.0
@@ -578,10 +578,10 @@ importers:
       '@jest/types': ^28.1.3
       '@logto/connector-types': ^1.0.0-beta.3
       '@logto/shared': ^1.0.0-beta.3
-      '@silverhand/eslint-config': 1.0.0-rc.0
+      '@silverhand/eslint-config': 1.0.0-rc.2
       '@silverhand/essentials': ^1.1.6
-      '@silverhand/jest-config': 1.0.0-rc.1
-      '@silverhand/ts-config': 1.0.0-rc.0
+      '@silverhand/jest-config': 1.0.0-rc.2
+      '@silverhand/ts-config': 1.0.0-rc.2
       '@types/jest': ^28.1.6
       '@types/node': ^16.3.1
       '@types/nodemailer': ^6.4.4
@@ -597,13 +597,13 @@ importers:
       '@logto/connector-types': link:../connector-types
       '@logto/shared': link:../shared
       '@silverhand/essentials': 1.1.7
-      '@silverhand/jest-config': 1.0.0-rc.1_bi2kohzqnxavgozw3csgny5hju
+      '@silverhand/jest-config': 1.0.0-rc.2_bi2kohzqnxavgozw3csgny5hju
       nodemailer: 6.7.5
       zod: 3.14.3
     devDependencies:
       '@jest/types': 28.1.3
-      '@silverhand/eslint-config': 1.0.0-rc.0_swk2g7ygmfleszo5c33j4vooni
-      '@silverhand/ts-config': 1.0.0-rc.0_typescript@4.7.4
+      '@silverhand/eslint-config': 1.0.0-rc.2_swk2g7ygmfleszo5c33j4vooni
+      '@silverhand/ts-config': 1.0.0-rc.2_typescript@4.7.4
       '@types/jest': 28.1.6
       '@types/node': 16.11.12
       '@types/nodemailer': 6.4.4
@@ -619,10 +619,10 @@ importers:
       '@jest/types': ^28.1.3
       '@logto/connector-types': ^1.0.0-beta.3
       '@logto/shared': ^1.0.0-beta.3
-      '@silverhand/eslint-config': 1.0.0-rc.0
+      '@silverhand/eslint-config': 1.0.0-rc.2
       '@silverhand/essentials': ^1.1.6
-      '@silverhand/jest-config': 1.0.0-rc.1
-      '@silverhand/ts-config': 1.0.0-rc.0
+      '@silverhand/jest-config': 1.0.0-rc.2
+      '@silverhand/ts-config': 1.0.0-rc.2
       '@types/jest': ^28.1.6
       '@types/node': ^16.3.1
       eslint: ^8.21.0
@@ -637,13 +637,13 @@ importers:
       '@logto/connector-types': link:../connector-types
       '@logto/shared': link:../shared
       '@silverhand/essentials': 1.1.7
-      '@silverhand/jest-config': 1.0.0-rc.1_bi2kohzqnxavgozw3csgny5hju
+      '@silverhand/jest-config': 1.0.0-rc.2_bi2kohzqnxavgozw3csgny5hju
       got: 11.8.3
       zod: 3.14.3
     devDependencies:
       '@jest/types': 28.1.3
-      '@silverhand/eslint-config': 1.0.0-rc.0_swk2g7ygmfleszo5c33j4vooni
-      '@silverhand/ts-config': 1.0.0-rc.0_typescript@4.7.4
+      '@silverhand/eslint-config': 1.0.0-rc.2_swk2g7ygmfleszo5c33j4vooni
+      '@silverhand/ts-config': 1.0.0-rc.2_typescript@4.7.4
       '@types/jest': 28.1.6
       '@types/node': 16.11.12
       eslint: 8.21.0
@@ -658,9 +658,9 @@ importers:
       '@jest/types': ^28.1.3
       '@logto/phrases': ^1.0.0-beta.3
       '@shopify/jest-koa-mocks': ^5.0.0
-      '@silverhand/eslint-config': 1.0.0-rc.0
+      '@silverhand/eslint-config': 1.0.0-rc.2
       '@silverhand/essentials': ^1.1.6
-      '@silverhand/ts-config': 1.0.0-rc.0
+      '@silverhand/ts-config': 1.0.0-rc.2
       '@types/jest': ^28.1.6
       eslint: ^8.21.0
       jest: ^28.1.3
@@ -674,9 +674,9 @@ importers:
     devDependencies:
       '@jest/types': 28.1.3
       '@shopify/jest-koa-mocks': 5.0.0
-      '@silverhand/eslint-config': 1.0.0-rc.0_swk2g7ygmfleszo5c33j4vooni
+      '@silverhand/eslint-config': 1.0.0-rc.2_swk2g7ygmfleszo5c33j4vooni
       '@silverhand/essentials': 1.1.7
-      '@silverhand/ts-config': 1.0.0-rc.0_typescript@4.7.4
+      '@silverhand/ts-config': 1.0.0-rc.2_typescript@4.7.4
       '@types/jest': 28.1.6
       eslint: 8.21.0
       jest: 28.1.3
@@ -690,10 +690,10 @@ importers:
       '@logto/connector-types': ^1.0.0-beta.3
       '@logto/schemas': ^1.0.0-beta.3
       '@logto/shared': ^1.0.0-beta.3
-      '@silverhand/eslint-config': 1.0.0-rc.0
+      '@silverhand/eslint-config': 1.0.0-rc.2
       '@silverhand/essentials': ^1.1.0
-      '@silverhand/jest-config': 1.0.0-rc.1
-      '@silverhand/ts-config': 1.0.0-rc.0
+      '@silverhand/jest-config': 1.0.0-rc.2
+      '@silverhand/ts-config': 1.0.0-rc.2
       '@types/jest': ^28.1.6
       '@types/node': ^16.3.1
       eslint: ^8.21.0
@@ -711,13 +711,13 @@ importers:
       '@logto/schemas': link:../schemas
       '@logto/shared': link:../shared
       '@silverhand/essentials': 1.1.7
-      '@silverhand/jest-config': 1.0.0-rc.1_bi2kohzqnxavgozw3csgny5hju
+      '@silverhand/jest-config': 1.0.0-rc.2_bi2kohzqnxavgozw3csgny5hju
       got: 11.8.3
       zod: 3.14.3
     devDependencies:
       '@jest/types': 28.1.3
-      '@silverhand/eslint-config': 1.0.0-rc.0_swk2g7ygmfleszo5c33j4vooni
-      '@silverhand/ts-config': 1.0.0-rc.0_typescript@4.7.4
+      '@silverhand/eslint-config': 1.0.0-rc.2_swk2g7ygmfleszo5c33j4vooni
+      '@silverhand/ts-config': 1.0.0-rc.2_typescript@4.7.4
       '@types/jest': 28.1.6
       '@types/node': 16.11.12
       eslint: 8.21.0
@@ -735,10 +735,10 @@ importers:
       '@logto/connector-types': ^1.0.0-beta.3
       '@logto/schemas': ^1.0.0-beta.3
       '@logto/shared': ^1.0.0-beta.3
-      '@silverhand/eslint-config': 1.0.0-rc.0
+      '@silverhand/eslint-config': 1.0.0-rc.2
       '@silverhand/essentials': ^1.1.0
-      '@silverhand/jest-config': 1.0.0-rc.1
-      '@silverhand/ts-config': 1.0.0-rc.0
+      '@silverhand/jest-config': 1.0.0-rc.2
+      '@silverhand/ts-config': 1.0.0-rc.2
       '@types/jest': ^28.1.6
       '@types/node': ^16.3.1
       eslint: ^8.21.0
@@ -756,13 +756,13 @@ importers:
       '@logto/schemas': link:../schemas
       '@logto/shared': link:../shared
       '@silverhand/essentials': 1.1.7
-      '@silverhand/jest-config': 1.0.0-rc.1_bi2kohzqnxavgozw3csgny5hju
+      '@silverhand/jest-config': 1.0.0-rc.2_bi2kohzqnxavgozw3csgny5hju
       got: 11.8.3
       zod: 3.14.3
     devDependencies:
       '@jest/types': 28.1.3
-      '@silverhand/eslint-config': 1.0.0-rc.0_swk2g7ygmfleszo5c33j4vooni
-      '@silverhand/ts-config': 1.0.0-rc.0_typescript@4.7.4
+      '@silverhand/eslint-config': 1.0.0-rc.2_swk2g7ygmfleszo5c33j4vooni
+      '@silverhand/ts-config': 1.0.0-rc.2_typescript@4.7.4
       '@types/jest': 28.1.6
       '@types/node': 16.11.12
       eslint: 8.21.0
@@ -787,11 +787,11 @@ importers:
       '@parcel/transformer-mdx': 2.6.2
       '@parcel/transformer-sass': 2.6.2
       '@parcel/transformer-svg-react': 2.6.2
-      '@silverhand/eslint-config': 1.0.0-rc.0
-      '@silverhand/eslint-config-react': 1.0.0-rc.0
+      '@silverhand/eslint-config': 1.0.0-rc.2
+      '@silverhand/eslint-config-react': 1.0.0-rc.2
       '@silverhand/essentials': ^1.1.6
-      '@silverhand/ts-config': 1.0.0-rc.0
-      '@silverhand/ts-config-react': 1.0.0-rc.0
+      '@silverhand/ts-config': 1.0.0-rc.2
+      '@silverhand/ts-config-react': 1.0.0-rc.2
       '@tsconfig/docusaurus': ^1.0.5
       '@types/color': ^3.0.3
       '@types/lodash.kebabcase': ^4.1.6
@@ -851,11 +851,11 @@ importers:
       '@parcel/transformer-mdx': 2.6.2_vink6i55tfbj7e5e3upc7yifsu
       '@parcel/transformer-sass': 2.6.2_@parcel+core@2.6.2
       '@parcel/transformer-svg-react': 2.6.2_@parcel+core@2.6.2
-      '@silverhand/eslint-config': 1.0.0-rc.0_swk2g7ygmfleszo5c33j4vooni
-      '@silverhand/eslint-config-react': 1.0.0-rc.0_3jdvf2aalbcoibv3m53iflhmym
+      '@silverhand/eslint-config': 1.0.0-rc.2_swk2g7ygmfleszo5c33j4vooni
+      '@silverhand/eslint-config-react': 1.0.0-rc.2_3jdvf2aalbcoibv3m53iflhmym
       '@silverhand/essentials': 1.1.6
-      '@silverhand/ts-config': 1.0.0-rc.0_typescript@4.7.4
-      '@silverhand/ts-config-react': 1.0.0-rc.0_typescript@4.7.4
+      '@silverhand/ts-config': 1.0.0-rc.2_typescript@4.7.4
+      '@silverhand/ts-config-react': 1.0.0-rc.2_typescript@4.7.4
       '@tsconfig/docusaurus': 1.0.5
       '@types/color': 3.0.3
       '@types/lodash.kebabcase': 4.1.6
@@ -925,10 +925,10 @@ importers:
       '@logto/schemas': ^1.0.0-beta.3
       '@logto/shared': ^1.0.0-beta.3
       '@shopify/jest-koa-mocks': ^5.0.0
-      '@silverhand/eslint-config': 1.0.0-rc.0
+      '@silverhand/eslint-config': 1.0.0-rc.2
       '@silverhand/essentials': ^1.1.6
-      '@silverhand/jest-config': 1.0.0-rc.1
-      '@silverhand/ts-config': 1.0.0-rc.0
+      '@silverhand/jest-config': 1.0.0-rc.2
+      '@silverhand/ts-config': 1.0.0-rc.2
       '@types/debug': ^4.1.7
       '@types/etag': ^1.8.1
       '@types/inquirer': ^8.2.1
@@ -1047,9 +1047,9 @@ importers:
       zod: 3.14.3
     devDependencies:
       '@shopify/jest-koa-mocks': 5.0.0
-      '@silverhand/eslint-config': 1.0.0-rc.0_swk2g7ygmfleszo5c33j4vooni
-      '@silverhand/jest-config': 1.0.0-rc.1_bi2kohzqnxavgozw3csgny5hju
-      '@silverhand/ts-config': 1.0.0-rc.0_typescript@4.7.4
+      '@silverhand/eslint-config': 1.0.0-rc.2_swk2g7ygmfleszo5c33j4vooni
+      '@silverhand/jest-config': 1.0.0-rc.2_bi2kohzqnxavgozw3csgny5hju
+      '@silverhand/ts-config': 1.0.0-rc.2_typescript@4.7.4
       '@types/debug': 4.1.7
       '@types/etag': 1.8.1
       '@types/inquirer': 8.2.1
@@ -1085,10 +1085,10 @@ importers:
       '@logto/shared': ^1.0.0-beta.3
       '@parcel/core': 2.6.2
       '@parcel/transformer-sass': 2.6.2
-      '@silverhand/eslint-config': 1.0.0-rc.0
-      '@silverhand/eslint-config-react': 1.0.0-rc.0
-      '@silverhand/ts-config': 1.0.0-rc.0
-      '@silverhand/ts-config-react': 1.0.0-rc.0
+      '@silverhand/eslint-config': 1.0.0-rc.2
+      '@silverhand/eslint-config-react': 1.0.0-rc.2
+      '@silverhand/ts-config': 1.0.0-rc.2
+      '@silverhand/ts-config-react': 1.0.0-rc.2
       '@types/react': ^17.0.14
       '@types/react-dom': ^17.0.9
       cross-env: ^7.0.3
@@ -1111,10 +1111,10 @@ importers:
       '@logto/shared': link:../shared
       '@parcel/core': 2.6.2
       '@parcel/transformer-sass': 2.6.2_@parcel+core@2.6.2
-      '@silverhand/eslint-config': 1.0.0-rc.0_swk2g7ygmfleszo5c33j4vooni
-      '@silverhand/eslint-config-react': 1.0.0-rc.0_qoomm4vc6ijs52fnjlal4yoenm
-      '@silverhand/ts-config': 1.0.0-rc.0_typescript@4.7.4
-      '@silverhand/ts-config-react': 1.0.0-rc.0_typescript@4.7.4
+      '@silverhand/eslint-config': 1.0.0-rc.2_swk2g7ygmfleszo5c33j4vooni
+      '@silverhand/eslint-config-react': 1.0.0-rc.2_qoomm4vc6ijs52fnjlal4yoenm
+      '@silverhand/ts-config': 1.0.0-rc.2_typescript@4.7.4
+      '@silverhand/ts-config-react': 1.0.0-rc.2_typescript@4.7.4
       '@types/react': 17.0.37
       '@types/react-dom': 17.0.11
       cross-env: 7.0.3
@@ -1137,10 +1137,10 @@ importers:
       '@logto/node': 1.0.0-beta.0
       '@logto/schemas': ^1.0.0-beta.3
       '@peculiar/webcrypto': ^1.3.3
-      '@silverhand/eslint-config': 1.0.0-rc.0
+      '@silverhand/eslint-config': 1.0.0-rc.2
       '@silverhand/essentials': ^1.1.7
-      '@silverhand/jest-config': 1.0.0-rc.1
-      '@silverhand/ts-config': 1.0.0-rc.0
+      '@silverhand/jest-config': 1.0.0-rc.2
+      '@silverhand/ts-config': 1.0.0-rc.2
       '@types/jest': ^28.1.6
       '@types/node': ^16.0.0
       dotenv: ^16.0.0
@@ -1159,10 +1159,10 @@ importers:
       '@logto/node': 1.0.0-beta.0
       '@logto/schemas': link:../schemas
       '@peculiar/webcrypto': 1.3.3
-      '@silverhand/eslint-config': 1.0.0-rc.0_swk2g7ygmfleszo5c33j4vooni
+      '@silverhand/eslint-config': 1.0.0-rc.2_swk2g7ygmfleszo5c33j4vooni
       '@silverhand/essentials': 1.1.7
-      '@silverhand/jest-config': 1.0.0-rc.1_bi2kohzqnxavgozw3csgny5hju
-      '@silverhand/ts-config': 1.0.0-rc.0_typescript@4.7.4
+      '@silverhand/jest-config': 1.0.0-rc.2_bi2kohzqnxavgozw3csgny5hju
+      '@silverhand/ts-config': 1.0.0-rc.2_typescript@4.7.4
       '@types/jest': 28.1.6
       '@types/node': 16.11.12
       dotenv: 16.0.0
@@ -1179,9 +1179,9 @@ importers:
 
   packages/phrases:
     specifiers:
-      '@silverhand/eslint-config': 1.0.0-rc.0
+      '@silverhand/eslint-config': 1.0.0-rc.2
       '@silverhand/essentials': ^1.1.4
-      '@silverhand/ts-config': 1.0.0-rc.0
+      '@silverhand/ts-config': 1.0.0-rc.2
       eslint: ^8.21.0
       lint-staged: ^13.0.0
       prettier: ^2.7.1
@@ -1191,8 +1191,8 @@ importers:
       '@silverhand/essentials': 1.1.4
       zod: 3.14.3
     devDependencies:
-      '@silverhand/eslint-config': 1.0.0-rc.0_swk2g7ygmfleszo5c33j4vooni
-      '@silverhand/ts-config': 1.0.0-rc.0_typescript@4.7.4
+      '@silverhand/eslint-config': 1.0.0-rc.2_swk2g7ygmfleszo5c33j4vooni
+      '@silverhand/ts-config': 1.0.0-rc.2_typescript@4.7.4
       eslint: 8.21.0
       lint-staged: 13.0.0
       prettier: 2.7.1
@@ -1200,9 +1200,9 @@ importers:
 
   packages/phrases-ui:
     specifiers:
-      '@silverhand/eslint-config': 1.0.0-rc.0
+      '@silverhand/eslint-config': 1.0.0-rc.2
       '@silverhand/essentials': ^1.1.4
-      '@silverhand/ts-config': 1.0.0-rc.0
+      '@silverhand/ts-config': 1.0.0-rc.2
       eslint: ^8.21.0
       lint-staged: ^13.0.0
       prettier: ^2.7.1
@@ -1210,8 +1210,8 @@ importers:
     dependencies:
       '@silverhand/essentials': 1.1.7
     devDependencies:
-      '@silverhand/eslint-config': 1.0.0-rc.0_swk2g7ygmfleszo5c33j4vooni
-      '@silverhand/ts-config': 1.0.0-rc.0_typescript@4.7.4
+      '@silverhand/eslint-config': 1.0.0-rc.2_swk2g7ygmfleszo5c33j4vooni
+      '@silverhand/ts-config': 1.0.0-rc.2_typescript@4.7.4
       eslint: 8.21.0
       lint-staged: 13.0.0
       prettier: 2.7.1
@@ -1223,9 +1223,9 @@ importers:
       '@logto/phrases': ^1.0.0-beta.3
       '@logto/phrases-ui': ^1.0.0-beta.3
       '@logto/shared': ^1.0.0-beta.3
-      '@silverhand/eslint-config': 1.0.0-rc.0
+      '@silverhand/eslint-config': 1.0.0-rc.2
       '@silverhand/essentials': ^1.1.6
-      '@silverhand/ts-config': 1.0.0-rc.0
+      '@silverhand/ts-config': 1.0.0-rc.2
       '@types/lodash.uniq': ^4.5.6
       '@types/node': '16'
       '@types/pluralize': ^0.0.29
@@ -1245,9 +1245,9 @@ importers:
       '@logto/shared': link:../shared
       zod: 3.14.3
     devDependencies:
-      '@silverhand/eslint-config': 1.0.0-rc.0_swk2g7ygmfleszo5c33j4vooni
+      '@silverhand/eslint-config': 1.0.0-rc.2_swk2g7ygmfleszo5c33j4vooni
       '@silverhand/essentials': 1.1.7
-      '@silverhand/ts-config': 1.0.0-rc.0_typescript@4.7.4
+      '@silverhand/ts-config': 1.0.0-rc.2_typescript@4.7.4
       '@types/lodash.uniq': 4.5.6
       '@types/node': 16.11.12
       '@types/pluralize': 0.0.29
@@ -1262,11 +1262,11 @@ importers:
 
   packages/shared:
     specifiers:
-      '@silverhand/eslint-config': 1.0.0-rc.0
-      '@silverhand/eslint-config-react': 1.0.0-rc.0
+      '@silverhand/eslint-config': 1.0.0-rc.2
+      '@silverhand/eslint-config-react': 1.0.0-rc.2
       '@silverhand/essentials': ^1.1.6
-      '@silverhand/ts-config': 1.0.0-rc.0
-      '@silverhand/ts-config-react': 1.0.0-rc.0
+      '@silverhand/ts-config': 1.0.0-rc.2
+      '@silverhand/ts-config-react': 1.0.0-rc.2
       '@types/color': ^3.0.3
       '@types/node': ^16.3.1
       color: ^4.2.3
@@ -1281,11 +1281,11 @@ importers:
       color: 4.2.3
       nanoid: 3.3.4
     devDependencies:
-      '@silverhand/eslint-config': 1.0.0-rc.0_swk2g7ygmfleszo5c33j4vooni
-      '@silverhand/eslint-config-react': 1.0.0-rc.0_qoomm4vc6ijs52fnjlal4yoenm
+      '@silverhand/eslint-config': 1.0.0-rc.2_swk2g7ygmfleszo5c33j4vooni
+      '@silverhand/eslint-config-react': 1.0.0-rc.2_qoomm4vc6ijs52fnjlal4yoenm
       '@silverhand/essentials': 1.1.7
-      '@silverhand/ts-config': 1.0.0-rc.0_typescript@4.7.4
-      '@silverhand/ts-config-react': 1.0.0-rc.0_typescript@4.7.4
+      '@silverhand/ts-config': 1.0.0-rc.2_typescript@4.7.4
+      '@silverhand/ts-config-react': 1.0.0-rc.2_typescript@4.7.4
       '@types/color': 3.0.3
       '@types/node': 16.11.12
       eslint: 8.21.0
@@ -1305,12 +1305,12 @@ importers:
       '@parcel/transformer-sass': 2.6.2
       '@parcel/transformer-svg-react': 2.6.2
       '@peculiar/webcrypto': ^1.3.3
-      '@silverhand/eslint-config': 1.0.0-rc.0
-      '@silverhand/eslint-config-react': 1.0.0-rc.0
+      '@silverhand/eslint-config': 1.0.0-rc.2
+      '@silverhand/eslint-config-react': 1.0.0-rc.2
       '@silverhand/essentials': ^1.1.7
-      '@silverhand/jest-config': 1.0.0-rc.1
-      '@silverhand/ts-config': 1.0.0-rc.0
-      '@silverhand/ts-config-react': 1.0.0-rc.0
+      '@silverhand/jest-config': 1.0.0-rc.2
+      '@silverhand/ts-config': 1.0.0-rc.2
+      '@silverhand/ts-config-react': 1.0.0-rc.2
       '@testing-library/react': ^12.0.0
       '@types/color': ^3.0.3
       '@types/jest': ^28.1.6
@@ -1359,12 +1359,12 @@ importers:
       '@parcel/transformer-sass': 2.6.2_@parcel+core@2.6.2
       '@parcel/transformer-svg-react': 2.6.2_@parcel+core@2.6.2
       '@peculiar/webcrypto': 1.3.3
-      '@silverhand/eslint-config': 1.0.0-rc.0_swk2g7ygmfleszo5c33j4vooni
-      '@silverhand/eslint-config-react': 1.0.0-rc.0_3jdvf2aalbcoibv3m53iflhmym
+      '@silverhand/eslint-config': 1.0.0-rc.2_swk2g7ygmfleszo5c33j4vooni
+      '@silverhand/eslint-config-react': 1.0.0-rc.2_3jdvf2aalbcoibv3m53iflhmym
       '@silverhand/essentials': 1.1.7
-      '@silverhand/jest-config': 1.0.0-rc.1_bi2kohzqnxavgozw3csgny5hju
-      '@silverhand/ts-config': 1.0.0-rc.0_typescript@4.7.4
-      '@silverhand/ts-config-react': 1.0.0-rc.0_typescript@4.7.4
+      '@silverhand/jest-config': 1.0.0-rc.2_bi2kohzqnxavgozw3csgny5hju
+      '@silverhand/ts-config': 1.0.0-rc.2_typescript@4.7.4
+      '@silverhand/ts-config-react': 1.0.0-rc.2_typescript@4.7.4
       '@testing-library/react': 12.1.5_sfoxds7t5ydpegc3knd667wn6m
       '@types/color': 3.0.3
       '@types/jest': 28.1.6
@@ -4463,13 +4463,13 @@ packages:
       - supports-color
     dev: true
 
-  /@silverhand/eslint-config-react/1.0.0-rc.0_3jdvf2aalbcoibv3m53iflhmym:
-    resolution: {integrity: sha512-lbuvB7bUlxTicWuG4csarHtZNiGDIiES4amsC4VlMDl5ZCGsnDkPajIFmei+yprUfn1Z+DLRP56fjUgfiWhc/w==}
+  /@silverhand/eslint-config-react/1.0.0-rc.2_3jdvf2aalbcoibv3m53iflhmym:
+    resolution: {integrity: sha512-tuBi+YKNm96CGfvCiKSrkUGqfs+jOZ9YKuf3xQd1GcfVnSYc6EtwEcF6AyV/hdNmY419+9M3CixgPMuv07jT5Q==}
     engines: {node: ^16.0.0 || ^18.0.0}
     peerDependencies:
       stylelint: ^14.9.1
     dependencies:
-      '@silverhand/eslint-config': 1.0.0-rc.0_swk2g7ygmfleszo5c33j4vooni
+      '@silverhand/eslint-config': 1.0.0-rc.2_swk2g7ygmfleszo5c33j4vooni
       eslint-config-xo-react: 0.27.0_5dhhqh7zhie7fohiouyxntxzve
       eslint-plugin-react: 7.29.3_eslint@8.21.0
       eslint-plugin-react-hooks: 4.3.0_eslint@8.21.0
@@ -4484,13 +4484,13 @@ packages:
       - typescript
     dev: true
 
-  /@silverhand/eslint-config-react/1.0.0-rc.0_qoomm4vc6ijs52fnjlal4yoenm:
-    resolution: {integrity: sha512-lbuvB7bUlxTicWuG4csarHtZNiGDIiES4amsC4VlMDl5ZCGsnDkPajIFmei+yprUfn1Z+DLRP56fjUgfiWhc/w==}
+  /@silverhand/eslint-config-react/1.0.0-rc.2_qoomm4vc6ijs52fnjlal4yoenm:
+    resolution: {integrity: sha512-tuBi+YKNm96CGfvCiKSrkUGqfs+jOZ9YKuf3xQd1GcfVnSYc6EtwEcF6AyV/hdNmY419+9M3CixgPMuv07jT5Q==}
     engines: {node: ^16.0.0 || ^18.0.0}
     peerDependencies:
       stylelint: ^14.9.1
     dependencies:
-      '@silverhand/eslint-config': 1.0.0-rc.0_swk2g7ygmfleszo5c33j4vooni
+      '@silverhand/eslint-config': 1.0.0-rc.2_swk2g7ygmfleszo5c33j4vooni
       eslint-config-xo-react: 0.27.0_5dhhqh7zhie7fohiouyxntxzve
       eslint-plugin-react: 7.29.3_eslint@8.21.0
       eslint-plugin-react-hooks: 4.3.0_eslint@8.21.0
@@ -4505,8 +4505,8 @@ packages:
       - typescript
     dev: true
 
-  /@silverhand/eslint-config/1.0.0-rc.0_swk2g7ygmfleszo5c33j4vooni:
-    resolution: {integrity: sha512-9UHU1TNyHx84dDqQZEMK1lF2W2H69MruxSnFRRiQbrQXDRZZB/oKOxhNGP28kAlaP6BcTACTCw4vq/orZHKoRg==}
+  /@silverhand/eslint-config/1.0.0-rc.2_swk2g7ygmfleszo5c33j4vooni:
+    resolution: {integrity: sha512-bU9ABatH5ETBnSuDaTaeEuGo7I1HWV6TiTnx9dnVg+DP6IbdP9OFvlSY8+BcDhx13ciVVnGX+LZD+fJdLUeSUA==}
     engines: {node: ^16.0.0 || ^18.0.0}
     peerDependencies:
       eslint: ^8.21.0
@@ -4572,8 +4572,8 @@ packages:
       lodash.orderby: 4.6.0
       lodash.pick: 4.4.0
 
-  /@silverhand/jest-config/1.0.0-rc.1_bi2kohzqnxavgozw3csgny5hju:
-    resolution: {integrity: sha512-6LZfFOUUQf8c7NL727JNE1qCPaLMvEDah+nvkFdP8knALlEk9G/+hNsaigbT7p7fIwkQ/Hd5AfoEjlT2RJCTJg==}
+  /@silverhand/jest-config/1.0.0-rc.2_bi2kohzqnxavgozw3csgny5hju:
+    resolution: {integrity: sha512-niko5qAZx3r8+/qLJLfAacu365CwJ2xk3AobLNXJvPDmvhBlEfALdfbsK9f+U6sboGKKU8VAlKT03R+bFXPVyg==}
     engines: {node: ^16.0.0 || ^18.0.0}
     peerDependencies:
       jest: ^28.1.3
@@ -4581,7 +4581,7 @@ packages:
       '@jest/types': 28.1.3
       deepmerge: 4.2.2
       identity-obj-proxy: 3.0.0
-      jest: 28.1.3
+      jest: 28.1.3_@types+node@16.11.12
       jest-matcher-specific-error: 1.0.0
       jest-transform-stub: 2.0.0
       ts-jest: 28.0.7_lhw3xkmzugq5tscs3x2ndm4sby
@@ -4591,18 +4591,18 @@ packages:
       - esbuild
       - typescript
 
-  /@silverhand/ts-config-react/1.0.0-rc.0_typescript@4.7.4:
-    resolution: {integrity: sha512-wjIAKUEXrH55jdsbZDqFexpCoozrXv0tnY0l2/1NRYmlBcC4fVQ+YQ/D2Xfpo3faBvhmIAJiVwvCgM1O2Rc33Q==}
+  /@silverhand/ts-config-react/1.0.0-rc.2_typescript@4.7.4:
+    resolution: {integrity: sha512-o6lmkSqCTAsafpF6IK7ddpy7JjvFgl8zYx7QOjLbUhUwU45jrkMcJBWCeWKJP4gQTTDrMG5rnuZzAO3Yb9vugQ==}
     engines: {node: ^16.0.0 || ^18.0.0}
     peerDependencies:
       typescript: ^4.7.4
     dependencies:
-      '@silverhand/ts-config': 1.0.0-rc.0_typescript@4.7.4
+      '@silverhand/ts-config': 1.0.0-rc.2_typescript@4.7.4
       typescript: 4.7.4
     dev: true
 
-  /@silverhand/ts-config/1.0.0-rc.0_typescript@4.7.4:
-    resolution: {integrity: sha512-gCiEqlp05oYK7SkEMYpzoFh6+Wfxxys54fExnu5Aw4hEErjQKUOjkjF02HZCcBBBGrMWUozBAbxAY48H5caMtA==}
+  /@silverhand/ts-config/1.0.0-rc.2_typescript@4.7.4:
+    resolution: {integrity: sha512-23TgnXzcwpzxK8E8jD+JYu02UYTgO1uej8A60fNnB+Z8/uCdf5muKUlgu7mzrtKl5thQ7FMdevn238HTnKAS7g==}
     engines: {node: ^16.0.0 || ^18.0.0}
     peerDependencies:
       typescript: ^4.7.4
@@ -5147,7 +5147,6 @@ packages:
 
   /@types/node/16.11.12:
     resolution: {integrity: sha512-+2Iggwg7PxoO5Kyhvsq9VarmPbIelXP070HMImEpbtGCoyWNINQj4wzjbQCXzdHTRXnqufutJb5KAURZANNBAw==}
-    dev: true
 
   /@types/node/17.0.23:
     resolution: {integrity: sha512-UxDxWn7dl97rKVeVS61vErvw086aCYhDLyvRQZ5Rk65rZKepaFdm53GeqXaKBuOhED4e9uWq34IC3TdSdJJ2Gw==}
@@ -9439,6 +9438,7 @@ packages:
       - '@types/node'
       - supports-color
       - ts-node
+    dev: true
 
   /jest-cli/28.1.3_@types+node@16.11.12:
     resolution: {integrity: sha512-roY3kvrv57Azn1yPgdTebPAXvdR2xfezaKKYzVxZ6It/5NCxzJym6tUI5P1zkdWhfUYkxEI9uZWcQdaFLo8mJQ==}
@@ -9466,7 +9466,6 @@ packages:
       - '@types/node'
       - supports-color
       - ts-node
-    dev: true
 
   /jest-cli/28.1.3_k5ytkvaprncdyzidqqws5bqksq:
     resolution: {integrity: sha512-roY3kvrv57Azn1yPgdTebPAXvdR2xfezaKKYzVxZ6It/5NCxzJym6tUI5P1zkdWhfUYkxEI9uZWcQdaFLo8mJQ==}
@@ -9532,6 +9531,7 @@ packages:
       strip-json-comments: 3.1.1
     transitivePeerDependencies:
       - supports-color
+    dev: true
 
   /jest-config/28.1.3_@types+node@16.11.12:
     resolution: {integrity: sha512-MG3INjByJ0J4AsNBm7T3hsuxKQqFIiRo/AUqb1q9LRKI5UU6Aar9JHbr9Ivn1TVwfUD9KirRoM/T6u8XlcQPHQ==}
@@ -9570,7 +9570,6 @@ packages:
       strip-json-comments: 3.1.1
     transitivePeerDependencies:
       - supports-color
-    dev: true
 
   /jest-config/28.1.3_@types+node@17.0.23:
     resolution: {integrity: sha512-MG3INjByJ0J4AsNBm7T3hsuxKQqFIiRo/AUqb1q9LRKI5UU6Aar9JHbr9Ivn1TVwfUD9KirRoM/T6u8XlcQPHQ==}
@@ -10006,6 +10005,7 @@ packages:
       - '@types/node'
       - supports-color
       - ts-node
+    dev: true
 
   /jest/28.1.3_@types+node@16.11.12:
     resolution: {integrity: sha512-N4GT5on8UkZgH0O5LUavMRV1EDEhNTL0KEfRmDIeZHSV7p2XgLoY9t9VDUgL6o+yfdgYHVxuz81G8oB9VG5uyA==}
@@ -10025,7 +10025,6 @@ packages:
       - '@types/node'
       - supports-color
       - ts-node
-    dev: true
 
   /jest/28.1.3_k5ytkvaprncdyzidqqws5bqksq:
     resolution: {integrity: sha512-N4GT5on8UkZgH0O5LUavMRV1EDEhNTL0KEfRmDIeZHSV7p2XgLoY9t9VDUgL6o+yfdgYHVxuz81G8oB9VG5uyA==}
@@ -10602,7 +10601,7 @@ packages:
     dev: true
 
   /lodash.memoize/4.1.2:
-    resolution: {integrity: sha1-vMbEmkKihA7Zl/Mj6tpezRguC/4=}
+    resolution: {integrity: sha512-t7j+NzmgnQzTAYXcsHYLgimltOV1MXHtlOWf6GjL9Kj8GK5FInw5JotxvbOs+IvV1/Dzo04/fCGfLVs7aXb4Ag==}
 
   /lodash.merge/4.6.2:
     resolution: {integrity: sha512-0KpjqXRVvrYyCsX1swR/XTK0va6VQkQM6MNo7PqW77ByjAhoARA8EfrP1N4+KlKj8YS0ZUCtRT/YUuhyYDujIQ==}
@@ -14994,7 +14993,7 @@ packages:
       '@jest/types': 28.1.3
       bs-logger: 0.2.6
       fast-json-stable-stringify: 2.1.0
-      jest: 28.1.3
+      jest: 28.1.3_@types+node@16.11.12
       jest-util: 28.1.3
       json5: 2.2.1
       lodash.memoize: 4.1.2

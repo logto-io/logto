@@ -20,9 +20,9 @@
     "node": "^16.0.0"
   },
   "devDependencies": {
-    "@silverhand/eslint-config": "1.0.0-rc.0",
+    "@silverhand/eslint-config": "1.0.0-rc.2",
     "@silverhand/essentials": "^1.1.6",
-    "@silverhand/ts-config": "1.0.0-rc.0",
+    "@silverhand/ts-config": "1.0.0-rc.2",
     "@types/lodash.uniq": "^4.5.6",
     "@types/node": "16",
     "@types/pluralize": "^0.0.29",
