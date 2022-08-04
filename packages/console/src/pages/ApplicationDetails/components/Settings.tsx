@@ -64,6 +64,16 @@ const Settings = ({ applicationType, oidcConfig, defaultData, isDeleted }: Props
           placeholder={t('application_details.description_placeholder')}
         />
       </FormField>
+      {applicationType === ApplicationType.Traditional && (
+        <FormField title="application_details.application_secret" className={styles.textField}>
+          <CopyToClipboard
+            hasVisibilityToggle
+            className={styles.textField}
+            value={defaultData.secret}
+            variant="border"
+          />
+        </FormField>
+      )}
       <FormField
         title="application_details.authorization_endpoint"
         className={styles.textField}

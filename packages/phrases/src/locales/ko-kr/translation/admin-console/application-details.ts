@@ -9,6 +9,7 @@ const application_details = {
   authorization_endpoint: '인증 End-Point',
   authorization_endpoint_tip:
     '인증 및 권한 부여를 진행할 End-Point예요. OpenID Connect 인증에서 사용되던 값 이에요.',
+  application_secret: 'App Secret',
   redirect_uri: 'Redirect URI',
   redirect_uris: 'Redirect URIs',
   redirect_uri_placeholder: 'https://your.website.com/app',

@@ -25,6 +25,12 @@
     justify-content: space-between;
     cursor: text;
 
+    .content {
+      flex: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
     .copyIcon {
       margin-left: _.unit(3);
     }
