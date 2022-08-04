@@ -14,10 +14,12 @@ import { generateSchema } from './schema';
 import { FileData, Table, Field, Type, GeneratedType, TableWithType } from './types';
 import {
   findFirstParentheses,
+  getStringMaxLength,
   getType,
   normalizeWhitespaces,
   removeParentheses,
   removeUnrecognizedComments,
+  splitAtCommasOutsideParentheses,
 } from './utils';
 
 const directory = 'tables';
@@ -44,8 +46,7 @@ const generate = async () => {
             const name = normalizeWhitespaces(prefix).split(' ')[2];
             assert(name, 'Missing table name: ' + prefix);
 
-            const fields = removeParentheses(body)
-              .split(',')
+            const fields = splitAtCommasOutsideParentheses(body)
               .map((value) => normalizeWhitespaces(value))
               .filter((value) =>
                 [
@@ -71,7 +72,8 @@ const generate = async () => {
                 const isArray = Boolean(/\[.*]/.test(type)) || restLowercased.includes('array');
                 const hasDefaultValue = restLowercased.includes('default');
                 const nullable = !restLowercased.includes('not null');
-                const primitiveType = getType(type);
+                const primitiveType = getType(removeParentheses(type));
+                const stringMaxLength = getStringMaxLength(type);
                 const tsType = /\/\* @use (.*) \*\//.exec(restJoined)?.[1];
                 assert(
                   !(!primitiveType && tsType),
@@ -83,6 +85,7 @@ const generate = async () => {
                 return {
                   name,
                   type: primitiveType,
+                  stringMaxLength,
                   customType: conditional(!primitiveType && type),
                   tsType,
                   isArray,
@@ -152,7 +155,6 @@ const generate = async () => {
   // Generate DB entry types
   await Promise.all(
     generated.map(async ([file, { tables }]) => {
-      // LOG-88 Need refactor, disable mutation rules for now.
       /* eslint-disable @silverhand/fp/no-mutating-methods */
       const tsTypes: string[] = [];
       const customTypes: string[] = [];

@@ -5,6 +5,7 @@
     "declaration": true
   },
   "include": [
-    "src"
+    "src",
+    "jest.config.ts",
   ]
 }

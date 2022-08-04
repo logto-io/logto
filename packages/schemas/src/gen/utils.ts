@@ -78,6 +78,29 @@ export const findFirstParentheses = (value: string): Optional<ParenthesesMatch> 
   return matched ? rest : undefined;
 };
 
+// Split at each comma that is not in parentheses
+export const splitAtCommasOutsideParentheses = (value: string) =>
+  Object.values(value).reduce<{ result: string[]; count: number }>(
+    (previous, current) => {
+      const { result } = previous;
+      const count = previous.count + getCountDelta(current);
+
+      if (count === 0 && current === ',') {
+        // eslint-disable-next-line @silverhand/fp/no-mutating-methods
+        result.push('');
+      } else {
+        // eslint-disable-next-line @silverhand/fp/no-mutation
+        result[result.length - 1] += current;
+      }
+
+      return { result, count };
+    },
+    {
+      result: [''],
+      count: 0,
+    }
+  ).result;
+
 const getRawType = (value: string): string => {
   const bracketIndex = value.indexOf('[');
 
@@ -90,7 +113,7 @@ export const getType = (
   value: string
 ): 'string' | 'number' | 'boolean' | 'Record<string, unknown>' | undefined => {
   switch (getRawType(value)) {
-    case 'bpchar':
+    case 'bpchar': // https://www.postgresql.org/docs/current/typeconv-query.html
     case 'char':
     case 'varchar':
     case 'text':
@@ -121,6 +144,22 @@ export const getType = (
     case 'json':
     case 'jsonb':
       return 'Record<string, unknown>';
+    default:
+  }
+};
+
+export const getStringMaxLength = (value: string) => {
+  const parenthesesMatch = findFirstParentheses(value);
+
+  if (!parenthesesMatch) {
+    return;
+  }
+
+  switch (parenthesesMatch.prefix) {
+    case 'bpchar':
+    case 'char':
+    case 'varchar':
+      return Number(parenthesesMatch.body);
     default:
   }
 };
