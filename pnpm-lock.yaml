@@ -809,7 +809,7 @@ importers:
       '@fontsource/roboto-mono': ^4.5.7
       '@logto/phrases': ^1.0.0-beta.3
       '@logto/phrases-ui': ^1.0.0-beta.3
-      '@logto/react': ^1.0.0-alpha.2
+      '@logto/react': ^1.0.0-beta.0
       '@logto/schemas': ^1.0.0-beta.3
       '@logto/shared': ^1.0.0-beta.3
       '@mdx-js/react': ^1.6.22
@@ -873,7 +873,7 @@ importers:
       '@fontsource/roboto-mono': 4.5.7
       '@logto/phrases': link:../phrases
       '@logto/phrases-ui': link:../phrases-ui
-      '@logto/react': 1.0.0-alpha.2_react@17.0.2
+      '@logto/react': 1.0.0-beta.0_react@17.0.2
       '@logto/schemas': link:../schemas
       '@logto/shared': link:../shared
       '@mdx-js/react': 1.6.22_react@17.0.2
@@ -1112,7 +1112,7 @@ importers:
   packages/demo-app:
     specifiers:
       '@logto/phrases': ^1.0.0-beta.3
-      '@logto/react': ^1.0.0-alpha.2
+      '@logto/react': ^1.0.0-beta.0
       '@logto/schemas': ^1.0.0-beta.3
       '@logto/shared': ^1.0.0-beta.3
       '@parcel/core': 2.6.2
@@ -1138,7 +1138,7 @@ importers:
       typescript: ^4.7.2
     devDependencies:
       '@logto/phrases': link:../phrases
-      '@logto/react': 1.0.0-alpha.2_react@17.0.2
+      '@logto/react': 1.0.0-beta.0_react@17.0.2
       '@logto/schemas': link:../schemas
       '@logto/shared': link:../shared
       '@parcel/core': 2.6.2
@@ -3163,15 +3163,12 @@ packages:
     dev: true
     optional: true
 
-  /@logto/browser/1.0.0-alpha.2:
-    resolution: {integrity: sha512-rjIrtEr53zyYKumAytRJEvOFZwzdP2/IGZtJEbgqYTaFPw1FvmYa0WNXtslWLqcj/QSMNjt7UQr1eeDHdTNDFA==}
+  /@logto/browser/1.0.0-beta.0:
+    resolution: {integrity: sha512-0UWm3xiUgKpoZEOzOe83TSunC+gnVK0nOwPLHx/gzuIgIlKOfzvEFNf3X77c+//aT2iq9RehWziK6bk/9gQl1Q==}
     dependencies:
-      '@logto/js': 1.0.0-alpha.2
+      '@logto/client': 1.0.0-beta.0
       '@silverhand/essentials': 1.1.7
-      jose: 4.6.0
-      lodash.get: 4.4.2
-      lodash.once: 4.1.1
-      superstruct: 0.16.0
+      js-base64: 3.7.2
     dev: true
 
   /@logto/client/1.0.0-beta.0:
@@ -3183,17 +3180,6 @@ packages:
       jose: 4.6.0
       lodash.get: 4.4.2
       lodash.once: 4.1.1
-      superstruct: 0.16.0
-    dev: true
-
-  /@logto/js/1.0.0-alpha.2:
-    resolution: {integrity: sha512-bO3VaIevxf0hwfg2lzykR9+n/ZaLuLvk0h43Pt2Yo/hfWoul6Nkm9GGv0O67QlZ50ZZoVMZM1Vi53MIWa0lrpQ==}
-    dependencies:
-      '@silverhand/essentials': 1.1.7
-      camelcase-keys: 7.0.2
-      jose: 4.6.0
-      js-base64: 3.7.2
-      lodash.get: 4.4.2
       superstruct: 0.16.0
     dev: true
 
@@ -3218,12 +3204,12 @@ packages:
       - encoding
     dev: true
 
-  /@logto/react/1.0.0-alpha.2_react@17.0.2:
-    resolution: {integrity: sha512-52nFUrOrMuGJFY9eJG0BIawJ3pn72HvhEg4Of3/Jtrr3d1THYSIg1wEdKfNjfbuABJ85qxdi/H2HD2rn5Q6TdQ==}
+  /@logto/react/1.0.0-beta.0_react@17.0.2:
+    resolution: {integrity: sha512-K6tg8iYl0XEdvr06+mATSkg2VlFbtwlH63317w4VuDNMDPZVGnr/vGBkFjS97sflz13IAZNYfk7mKWEiJsP8BA==}
     peerDependencies:
       react: '>=16.8.0'
     dependencies:
-      '@logto/browser': 1.0.0-alpha.2
+      '@logto/browser': 1.0.0-beta.0
       '@silverhand/essentials': 1.1.7
       react: 17.0.2
     dev: true
