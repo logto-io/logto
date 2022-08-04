@@ -35,7 +35,7 @@ type InsertIntoConfig = {
   onConflict?: OnConflict;
 };
 
-interface BuildInsertInto {
+type BuildInsertInto = {
   <Schema extends SchemaLike, ReturnType extends SchemaLike>(
     { fieldKeys, ...rest }: GeneratedSchema<Schema>,
     config: InsertIntoConfigReturning
@@ -44,7 +44,7 @@ interface BuildInsertInto {
     { fieldKeys, ...rest }: GeneratedSchema<Schema>,
     config?: InsertIntoConfig
   ): (data: OmitAutoSetFields<Schema>) => Promise<void>;
-}
+};
 
 export const buildInsertInto: BuildInsertInto = <
   Schema extends SchemaLike,

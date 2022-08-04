@@ -8,6 +8,7 @@ import SocialCreateAccount from '.';
 
 const mockNavigate = jest.fn();
 
+// eslint-disable-next-line @typescript-eslint/no-unsafe-return
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
   useNavigate: () => mockNavigate,
@@ -15,8 +16,8 @@ jest.mock('react-router-dom', () => ({
 }));
 
 jest.mock('@/apis/social', () => ({
-  registerWithSocial: jest.fn(async () => Promise.resolve()),
-  bindSocialRelatedUser: jest.fn(async () => Promise.resolve()),
+  registerWithSocial: jest.fn(async () => 0),
+  bindSocialRelatedUser: jest.fn(async () => 0),
 }));
 
 describe('SocialCreateAccount', () => {

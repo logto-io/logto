@@ -11,7 +11,7 @@ describe('koaUserInfo middleware', () => {
   const next = jest.fn();
 
   it('should set userInfo to the context', async () => {
-    findUserByIdSpy.mockImplementationOnce(async () => Promise.resolve(mockUser));
+    findUserByIdSpy.mockImplementationOnce(async () => mockUser);
 
     const ctx = {
       ...createContextWithRouteParameters(),

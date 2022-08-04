@@ -90,20 +90,28 @@
     "rules": {
       "complexity": "off",
       "@typescript-eslint/prefer-nullish-coalescing": "off"
-    }
+    },
+    "overrides": [
+      {
+        "files": [
+          "*.test.ts"
+        ],
+        "rules": {
+          "@typescript-eslint/no-unsafe-return": "off"
+        }
+      },
+      {
+        "files": [
+          "*.d.ts"
+        ],
+        "rules": {
+          "@typescript-eslint/consistent-type-definitions": "off"
+        }
+      }
+    ]
   },
   "stylelint": {
-    "extends": "@silverhand/eslint-config-react/.stylelintrc",
-    "rules": {
-      "scss/function-no-unknown": [
-        true,
-        {
-          "ignoreFunctions": [
-            "/^_./"
-          ]
-        }
-      ]
-    }
+    "extends": "@silverhand/eslint-config-react/.stylelintrc"
   },
   "prettier": "@silverhand/eslint-config/.prettierrc"
 }

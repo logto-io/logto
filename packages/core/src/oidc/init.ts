@@ -20,7 +20,7 @@ import { addOidcEventListeners } from '@/utils/oidc-provider-event-listener';
 export default async function initOidc(app: Koa): Promise<Provider> {
   const { issuer, cookieKeys, privateKey, defaultIdTokenTtl, defaultRefreshTokenTtl } =
     envSet.values.oidc;
-  const logoutSource = readFileSync('static/html/logout.html', 'utf-8');
+  const logoutSource = readFileSync('static/html/logout.html', 'utf8');
 
   const keys = [await exportJWK(privateKey)];
   const cookieConfig = Object.freeze({

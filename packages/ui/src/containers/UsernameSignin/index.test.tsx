@@ -9,7 +9,7 @@ import { TermsOfUseModalMessage } from '@/types';
 
 import UsernameSignin from '.';
 
-jest.mock('@/apis/sign-in', () => ({ signInBasic: jest.fn(async () => Promise.resolve()) }));
+jest.mock('@/apis/sign-in', () => ({ signInBasic: jest.fn(async () => 0) }));
 jest.mock('@/containers/TermsOfUse/TermsOfUseConfirmModal', () => ({
   termsOfUseConfirmModalPromise: jest.fn().mockResolvedValue(true),
 }));

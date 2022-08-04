@@ -7,7 +7,7 @@ import { register } from '@/apis/register';
 import CreateAccount from '.';
 
 jest.mock('@/apis/register', () => ({
-  register: jest.fn(async () => Promise.resolve({ redirectTo: '/' })),
+  register: jest.fn(async () => ({ redirectTo: '/' })),
 }));
 
 describe('<CreateAccount/>', () => {

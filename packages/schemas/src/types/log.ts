@@ -1,3 +1,5 @@
+// FIXME: @IceHe
+/* eslint-disable @typescript-eslint/consistent-type-definitions */
 import { Log } from '../db-entries';
 
 export enum LogResult {
@@ -149,3 +151,4 @@ export type LogDto = Omit<Log, 'payload'> & {
     ip?: string;
   };
 };
+/* eslint-enable @typescript-eslint/consistent-type-definitions */

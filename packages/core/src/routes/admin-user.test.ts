@@ -138,7 +138,7 @@ describe('adminUserRoutes', () => {
 
   it('POST /users should throw if username exist', async () => {
     const mockHasUser = hasUser as jest.Mock;
-    mockHasUser.mockImplementationOnce(async () => Promise.resolve(true));
+    mockHasUser.mockImplementationOnce(async () => true);
 
     const username = 'MJAtLogto';
     const password = 'PASSWORD';

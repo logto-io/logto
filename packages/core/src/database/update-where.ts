@@ -10,7 +10,7 @@ import { isKeyOf } from '@/utils/schema';
 import { UpdateWhereData } from './types';
 import { conditionalSql, convertToIdentifiers, convertToPrimitiveOrSql } from './utils';
 
-interface BuildUpdateWhere {
+type BuildUpdateWhere = {
   <Schema extends SchemaLike, ReturnType extends SchemaLike>(
     schema: GeneratedSchema<Schema>,
     returning: true
@@ -18,7 +18,7 @@ interface BuildUpdateWhere {
   <Schema extends SchemaLike>(schema: GeneratedSchema<Schema>, returning?: false): (
     data: UpdateWhereData<Schema>
   ) => Promise<void>;
-}
+};
 
 export const buildUpdateWhere: BuildUpdateWhere = <
   Schema extends SchemaLike,

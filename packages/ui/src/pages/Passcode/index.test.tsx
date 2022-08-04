@@ -4,6 +4,7 @@ import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 
 import Passcode from '.';
 
+// eslint-disable-next-line @typescript-eslint/no-unsafe-return
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
   useLocation: () => ({

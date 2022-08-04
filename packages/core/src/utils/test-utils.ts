@@ -16,12 +16,12 @@ export const expectSqlAssert = (sql: string, expectSql: string) => {
     sql
       .split('\n')
       .map((row) => row.trim())
-      .filter((row) => row)
+      .filter(Boolean)
   ).toEqual(
     expectSql
       .split('\n')
       .map((row) => row.trim())
-      .filter((row) => row)
+      .filter(Boolean)
   );
 };
 

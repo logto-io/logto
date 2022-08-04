@@ -30,9 +30,12 @@ const Transfer = ({ title, datasource, value = [], footer, onChange }: Props) =>
   });
 
   const selectedItems = useMemo(() => {
-    return value
-      .map((target) => datasource.find((item) => item.value === target))
-      .filter((item): item is TransferItem => Boolean(item));
+    return (
+      value
+        .map((target) => datasource.find((item) => item.value === target))
+        // eslint-disable-next-line unicorn/prefer-native-coercion-functions
+        .filter((item): item is TransferItem => Boolean(item))
+    );
   }, [datasource, value]);
 
   const unselectedItems = useMemo(() => {

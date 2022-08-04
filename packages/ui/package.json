@@ -44,6 +44,7 @@
     "i18next": "^21.6.12",
     "i18next-browser-languagedetector": "^6.1.3",
     "jest": "^28.1.3",
+    "jest-environment-jsdom": "^28.1.3",
     "jest-transformer-svg": "^2.0.0",
     "js-base64": "^3.7.2",
     "ky": "^0.31.0",
@@ -77,25 +78,7 @@
     }
   },
   "stylelint": {
-    "extends": "@silverhand/eslint-config-react/.stylelintrc",
-    "rules": {
-      "selector-pseudo-class-no-unknown": [
-        true,
-        {
-          "ignorePseudoClasses": [
-            "global"
-          ]
-        }
-      ],
-      "scss/function-no-unknown": [
-        true,
-        {
-          "ignoreFunctions": [
-            "/^_./"
-          ]
-        }
-      ]
-    }
+    "extends": "@silverhand/eslint-config-react/.stylelintrc"
   },
   "prettier": "@silverhand/eslint-config/.prettierrc",
   "dependencies": {

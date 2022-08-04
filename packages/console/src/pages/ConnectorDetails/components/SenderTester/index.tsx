@@ -118,7 +118,7 @@ const SenderTester = ({ connectorId, connectorType, config, className }: Props) 
         )}
       </div>
       <div className={classNames(inputError?.message ? styles.error : styles.description)}>
-        {inputError?.message ? inputError.message : t('connector_details.test_sender_description')}
+        {inputError?.message ?? t('connector_details.test_sender_description')}
       </div>
     </form>
   );

@@ -3,7 +3,7 @@ import { Routes, Route, MemoryRouter } from 'react-router-dom';
 
 import SecondarySignIn from '@/pages/SecondarySignIn';
 
-jest.mock('@/apis/register', () => ({ register: jest.fn(async () => Promise.resolve()) }));
+jest.mock('@/apis/register', () => ({ register: jest.fn(async () => 0) }));
 jest.mock('i18next', () => ({
   language: 'en',
 }));

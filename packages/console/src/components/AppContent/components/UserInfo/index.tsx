@@ -17,7 +17,7 @@ const UserInfo = () => {
   const api = useApi();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const anchorRef = useRef<HTMLDivElement>(null);
-  const [showDropDown, setShowDropdown] = useState(false);
+  const [showDropdown, setShowDropdown] = useState(false);
   const [user, setUser] = useState<Pick<IdTokenClaims, 'sub' | 'username' | 'avatar'>>();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -40,7 +40,7 @@ const UserInfo = () => {
     <>
       <div
         ref={anchorRef}
-        className={classNames(styles.container, showDropDown && styles.active)}
+        className={classNames(styles.container, showDropdown && styles.active)}
         onClick={() => {
           setShowDropdown(true);
         }}
@@ -53,7 +53,7 @@ const UserInfo = () => {
       <Dropdown
         anchorRef={anchorRef}
         className={styles.dropdown}
-        isOpen={showDropDown}
+        isOpen={showDropdown}
         horizontalAlign="end"
         onClose={() => {
           setShowDropdown(false);

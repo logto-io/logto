@@ -30,7 +30,7 @@ const generate = async () => {
     files
       .filter((file) => file.endsWith('.sql'))
       .map<Promise<[string, FileData]>>(async (file) => {
-        const paragraph = await fs.readFile(path.join(directory, file), { encoding: 'utf-8' });
+        const paragraph = await fs.readFile(path.join(directory, file), { encoding: 'utf8' });
         const statements = paragraph
           .split(';')
           .map((value) => normalizeWhitespaces(value))
@@ -38,6 +38,7 @@ const generate = async () => {
         const tables = statements
           .filter((value) => value.toLowerCase().startsWith('create table'))
           .map((value) => findFirstParentheses(value))
+          // eslint-disable-next-line unicorn/prefer-native-coercion-functions
           .filter((value): value is NonNullable<typeof value> => Boolean(value))
           .map<Table>(({ prefix, body }) => {
             const name = normalizeWhitespaces(prefix).split(' ')[2];

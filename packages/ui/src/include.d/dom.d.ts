@@ -73,7 +73,8 @@ type AutoCompleteType =
   | 'tel-country-code'
   | 'tel-national';
 
-// TO-DO: remove me
+// TODO: @simeng remove me
+// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 interface Body {
   json<T>(): Promise<T>;
 }

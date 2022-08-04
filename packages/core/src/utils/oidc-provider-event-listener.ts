@@ -21,6 +21,8 @@ export const addOidcEventListeners = (provider: Provider) => {
  * - https://github.com/panva/node-oidc-provider/blob/564b1095ee869c89381d63dfdb5875c99f870f5f/lib/actions/grants/refresh_token.js#L225
  * - ……
  */
+// FIXME: @IceHe
+// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 interface GrantBody {
   access_token?: string;
   refresh_token?: string;

@@ -10,10 +10,10 @@ import { getDefaultCountryCallingCode } from '@/utils/country-code';
 import PhonePasswordless from './PhonePasswordless';
 
 jest.mock('@/apis/sign-in', () => ({
-  sendSignInSmsPasscode: jest.fn(async () => Promise.resolve()),
+  sendSignInSmsPasscode: jest.fn(async () => 0),
 }));
 jest.mock('@/apis/register', () => ({
-  sendRegisterSmsPasscode: jest.fn(async () => Promise.resolve()),
+  sendRegisterSmsPasscode: jest.fn(async () => 0),
 }));
 jest.mock('i18next', () => ({
   language: 'en',

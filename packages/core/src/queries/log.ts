@@ -10,6 +10,8 @@ const { table, fields } = convertToIdentifiers(Logs);
 
 export const insertLog = buildInsertInto<CreateLog>(Logs);
 
+// FIXME: @IceHe
+// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 export interface LogCondition {
   logType?: string;
   applicationId?: string;

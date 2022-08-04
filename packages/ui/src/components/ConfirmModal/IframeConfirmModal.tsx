@@ -1,3 +1,5 @@
+// FIXME: @simeng
+/* eslint-disable react/iframe-missing-sandbox */
 import classNames from 'classnames';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -63,3 +65,4 @@ const IframeConfirmModal = ({
 };
 
 export default IframeConfirmModal;
+/* eslint-enable react/iframe-missing-sandbox */

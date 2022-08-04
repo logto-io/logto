@@ -20,6 +20,8 @@ export const mockedAlipayNativePublicParameters = {
   grantType: 'authorization_code',
   timestamp: mockedTimestamp,
   version: '1.0',
+  // FIXME: @Darcy
+  // eslint-disable-next-line unicorn/text-encoding-identifier-case
   charset: 'UTF8',
   method: '<method-placeholder>',
 };
