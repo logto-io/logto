@@ -21,14 +21,12 @@ export const addOidcEventListeners = (provider: Provider) => {
  * - https://github.com/panva/node-oidc-provider/blob/564b1095ee869c89381d63dfdb5875c99f870f5f/lib/actions/grants/refresh_token.js#L225
  * - ……
  */
-// FIXME: @IceHe
-// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
-interface GrantBody {
+type GrantBody = {
   access_token?: string;
   refresh_token?: string;
   id_token?: string;
   scope?: string; // AccessToken.scope
-}
+};
 
 const getLogType = (grantType: unknown) => {
   const allowedGrantType = new Set<unknown>([GrantType.AuthorizationCode, GrantType.RefreshToken]);

@@ -1,5 +1,3 @@
-// FIXME: @IceHe
-/* eslint-disable @typescript-eslint/consistent-type-definitions */
 import { Log } from '../db-entries';
 
 export enum LogResult {
@@ -7,96 +5,96 @@ export enum LogResult {
   Error = 'Error',
 }
 
-export interface BaseLogPayload {
+export type BaseLogPayload = {
   result?: LogResult;
   error?: Record<string, unknown>;
   ip?: string;
   userAgent?: string;
   applicationId?: string;
   sessionId?: string;
-}
+};
 
 type ArbitraryLogPayload = Record<string, unknown>;
 
-interface RegisterUsernamePasswordLogPayload extends ArbitraryLogPayload {
+type RegisterUsernamePasswordLogPayload = ArbitraryLogPayload & {
   userId?: string;
   username?: string;
-}
+};
 
-interface RegisterEmailSendPasscodeLogPayload extends ArbitraryLogPayload {
+type RegisterEmailSendPasscodeLogPayload = ArbitraryLogPayload & {
   email?: string;
   connectorId?: string;
-}
+};
 
-interface RegisterEmailLogPayload extends ArbitraryLogPayload {
+type RegisterEmailLogPayload = ArbitraryLogPayload & {
   email?: string;
   code?: string;
   userId?: string;
-}
+};
 
-interface RegisterSmsSendPasscodeLogPayload extends ArbitraryLogPayload {
+type RegisterSmsSendPasscodeLogPayload = {
   phone?: string;
   connectorId?: string;
-}
+} & ArbitraryLogPayload;
 
-interface RegisterSmsLogPayload extends ArbitraryLogPayload {
+type RegisterSmsLogPayload = ArbitraryLogPayload & {
   phone?: string;
   code?: string;
   userId?: string;
-}
+};
 
-interface RegisterSocialBindLogPayload extends ArbitraryLogPayload {
+type RegisterSocialBindLogPayload = ArbitraryLogPayload & {
   connectorId?: string;
   userInfo?: object;
   userId?: string;
-}
+};
 
-interface RegisterSocialLogPayload extends RegisterSocialBindLogPayload {
+type RegisterSocialLogPayload = RegisterSocialBindLogPayload & {
   code?: string;
   state?: string;
   redirectUri?: string;
   redirectTo?: string;
-}
+};
 
-interface SignInUsernamePasswordLogPayload extends ArbitraryLogPayload {
+type SignInUsernamePasswordLogPayload = ArbitraryLogPayload & {
   userId?: string;
   username?: string;
-}
+};
 
-interface SignInEmailSendPasscodeLogPayload extends ArbitraryLogPayload {
+type SignInEmailSendPasscodeLogPayload = ArbitraryLogPayload & {
   email?: string;
   connectorId?: string;
-}
+};
 
-interface SignInEmailLogPayload extends ArbitraryLogPayload {
+type SignInEmailLogPayload = ArbitraryLogPayload & {
   email?: string;
   code?: string;
   userId?: string;
-}
+};
 
-interface SignInSmsSendPasscodeLogPayload extends ArbitraryLogPayload {
+type SignInSmsSendPasscodeLogPayload = ArbitraryLogPayload & {
   phone?: string;
   connectorId?: string;
-}
+};
 
-interface SignInSmsLogPayload extends ArbitraryLogPayload {
+type SignInSmsLogPayload = ArbitraryLogPayload & {
   phone?: string;
   code?: string;
   userId?: string;
-}
+};
 
-interface SignInSocialBindLogPayload extends ArbitraryLogPayload {
+type SignInSocialBindLogPayload = ArbitraryLogPayload & {
   connectorId?: string;
   userInfo?: object;
   userId?: string;
-}
+};
 
-interface SignInSocialLogPayload extends SignInSocialBindLogPayload {
+type SignInSocialLogPayload = SignInSocialBindLogPayload & {
   code?: string;
   state?: string;
   redirectUri?: string;
   redirectTo?: string;
-}
+};
 
 export enum TokenType {
   AccessToken = 'AccessToken',
@@ -104,19 +102,19 @@ export enum TokenType {
   IdToken = 'IdToken',
 }
 
-interface ExchangeTokenLogPayload extends ArbitraryLogPayload {
+type ExchangeTokenLogPayload = ArbitraryLogPayload & {
   userId?: string;
   params?: Record<string, unknown>;
   issued?: TokenType[];
   scope?: string;
-}
+};
 
-interface RevokeTokenLogPayload extends ArbitraryLogPayload {
+type RevokeTokenLogPayload = ArbitraryLogPayload & {
   userId?: string;
   params?: Record<string, unknown>;
   grantId?: string;
   tokenType?: TokenType;
-}
+};
 
 export type LogPayloads = {
   RegisterUsernamePassword: RegisterUsernamePasswordLogPayload;
@@ -151,4 +149,3 @@ export type LogDto = Omit<Log, 'payload'> & {
     ip?: string;
   };
 };
-/* eslint-enable @typescript-eslint/consistent-type-definitions */
