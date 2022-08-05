@@ -15,10 +15,10 @@ export default function koaSpaProxy<StateT, ContextT extends IRouterParamContext
 ): MiddlewareType<StateT, ContextT, ResponseBodyT> {
   type Middleware = MiddlewareType<StateT, ContextT, ResponseBodyT>;
 
-  const distPath = path.join('..', packagePath, 'dist');
+  const distributionPath = path.join('..', packagePath, 'dist');
 
   const spaProxy: Middleware = envSet.values.isProduction
-    ? serveStatic(distPath)
+    ? serveStatic(distributionPath)
     : proxy('*', {
         target: `http://localhost:${port}`,
         changeOrigin: true,
@@ -49,9 +49,9 @@ export default function koaSpaProxy<StateT, ContextT extends IRouterParamContext
       return spaProxy(ctx, next);
     }
 
-    const spaDistFiles = await fs.readdir(distPath);
+    const spaDistributionFiles = await fs.readdir(distributionPath);
 
-    if (!spaDistFiles.some((file) => requestPath.startsWith('/' + file))) {
+    if (!spaDistributionFiles.some((file) => requestPath.startsWith('/' + file))) {
       ctx.request.path = '/';
     }
 

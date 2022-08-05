@@ -54,7 +54,9 @@ const buildDemoAppUris = (
 
 export default function postgresAdapter(modelName: string): ReturnType<AdapterFactory> {
   if (modelName === 'Client') {
-    const reject = async () => Promise.reject(new Error('Not implemented'));
+    const reject = async () => {
+      throw new Error('Not implemented');
+    };
     const transpileClient = ({
       id: client_id,
       secret: client_secret,

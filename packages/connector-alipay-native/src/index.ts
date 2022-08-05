@@ -1,3 +1,5 @@
+// FIXME: @Darcy
+/* eslint-disable unicorn/text-encoding-identifier-case */
 /**
  * The Implementation of OpenID Connect of Alipay Web Open Platform.
  * https://opendocs.alipay.com/open/218/105325
@@ -204,3 +206,4 @@ export default class AlipayNativeConnector implements SocialConnectorInstance<Al
     return result.data;
   };
 }
+/* eslint-enable unicorn/text-encoding-identifier-case */

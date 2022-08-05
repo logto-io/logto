@@ -38,7 +38,7 @@ export const signingParameters: SigningParameters = (
 
       return '';
     })
-    .filter((keyValueString) => keyValueString)
+    .filter(Boolean)
     .sort()
     .join('&');
 

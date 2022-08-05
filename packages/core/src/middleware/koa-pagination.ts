@@ -1,3 +1,5 @@
+// FIXME: @sijie
+/* eslint-disable @typescript-eslint/consistent-type-definitions */
 import { MiddlewareType } from 'koa';
 import { IMiddleware } from 'koa-router';
 import { number } from 'zod';
@@ -82,3 +84,4 @@ export default function koaPagination<StateT, ContextT, ResponseBodyT>({
 
   return paginationMiddleware;
 }
+/* eslint-enable @typescript-eslint/consistent-type-definitions */

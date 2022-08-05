@@ -9,7 +9,7 @@ type Props = {
 };
 
 const ColorPicker = ({ onChange, value = '#000000' }: Props) => {
-  const [id] = useState(nanoid());
+  const [id, setId] = useState(nanoid());
 
   const handleChange: ChangeEventHandler<HTMLInputElement> = (event) => {
     onChange?.(event.target.value);

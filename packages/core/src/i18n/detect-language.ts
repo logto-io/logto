@@ -32,6 +32,7 @@ const detectLanguageFromHeaders = (headers: IncomingHttpHeaders): string[] =>
   headers['accept-language']
     ?.split(',')
     .map((string) => resolveLanguage(string))
+    // eslint-disable-next-line unicorn/prefer-native-coercion-functions
     .filter((value): value is NonNullable<typeof value> => Boolean(value))
     .slice()
     .sort((lng1, lng2) => lng2[1] - lng1[1])

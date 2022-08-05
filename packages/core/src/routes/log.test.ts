@@ -6,7 +6,6 @@ const mockBody = { type: 'a', payload: {}, createdAt: 123 };
 const mockLog = { id: '1', ...mockBody };
 const mockLogs = [mockLog, { id: '2', ...mockBody }];
 
-/* eslint-disable @typescript-eslint/no-unused-vars */
 const countLogs = jest.fn(async (condition: LogCondition) => ({
   count: mockLogs.length,
 }));
@@ -14,7 +13,6 @@ const findLogs = jest.fn(
   async (limit: number, offset: number, condition: LogCondition) => mockLogs
 );
 const findLogById = jest.fn(async (id: string) => mockLog);
-/* eslint-enable @typescript-eslint/no-unused-vars */
 
 jest.mock('@/queries/log', () => ({
   countLogs: async (condition: LogCondition) => countLogs(condition),

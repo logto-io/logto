@@ -1,3 +1,5 @@
+// FIXME: @Darcy
+/* eslint-disable unicorn/text-encoding-identifier-case */
 import * as crypto from 'crypto';
 
 import * as iconv from 'iconv-lite';
@@ -38,7 +40,7 @@ export const signingParameters: SigningParameters = (
 
       return '';
     })
-    .filter((keyValueString) => keyValueString)
+    .filter(Boolean)
     .sort()
     .join('&');
 
@@ -49,3 +51,4 @@ export const signingParameters: SigningParameters = (
 
   return { ...decamelizeParameters, sign };
 };
+/* eslint-enable unicorn/text-encoding-identifier-case */

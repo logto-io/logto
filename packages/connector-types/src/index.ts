@@ -1,3 +1,6 @@
+// FIXME: @Darcy
+/* eslint-disable @typescript-eslint/consistent-type-definitions */
+
 import type { Language } from '@logto/phrases';
 import { Nullable } from '@silverhand/essentials';
 import { z } from 'zod';
@@ -176,3 +179,5 @@ export const codeWithRedirectDataGuard = z.object({
 });
 
 export type CodeWithRedirectData = z.infer<typeof codeWithRedirectDataGuard>;
+
+/* eslint-enable @typescript-eslint/consistent-type-definitions */

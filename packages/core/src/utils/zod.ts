@@ -47,7 +47,7 @@ const zodStringToSwagger = (zodString: ZodString): OpenAPIV3.SchemaObject => {
 
   const formats = checks
     .map((zodStringCheck) => zodStringCheckToSwaggerFormat(zodStringCheck))
-    .filter((format) => format);
+    .filter(Boolean);
   const minLength = checks.find(
     (check): check is { kind: 'min'; value: number } => check.kind === 'min'
   )?.value;

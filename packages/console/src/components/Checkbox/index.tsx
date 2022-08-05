@@ -14,7 +14,7 @@ type Props = {
 };
 
 const Checkbox = ({ value, onChange, label, disabled }: Props) => {
-  const [id] = useState(nanoid());
+  const [id, setId] = useState(nanoid());
 
   return (
     <div className={styles.checkbox}>

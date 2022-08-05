@@ -69,7 +69,7 @@ export const createDatabaseCli = (dsn: string) => {
     const queries = await Promise.all(
       tableFiles.map<Promise<[string, string]>>(async (file) => [
         file,
-        await readFile(path.join(tableDirectory, file), 'utf-8'),
+        await readFile(path.join(tableDirectory, file), 'utf8'),
       ])
     );
 

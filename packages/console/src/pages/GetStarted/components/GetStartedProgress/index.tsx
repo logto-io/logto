@@ -21,7 +21,7 @@ const GetStartedProgress = () => {
   const theme = useTheme();
   const Icon = theme === AppearanceMode.LightMode ? Tada : TadaDark;
   const anchorRef = useRef<HTMLDivElement>(null);
-  const [showDropDown, setShowDropdown] = useState(false);
+  const [showDropdown, setShowDropdown] = useState(false);
   const { data, completedCount, totalCount } = useGetStartedMetadata();
 
   if (getStartedHidden) {
@@ -32,7 +32,7 @@ const GetStartedProgress = () => {
     <>
       <div
         ref={anchorRef}
-        className={classNames(styles.container, showDropDown && styles.active)}
+        className={classNames(styles.container, showDropdown && styles.active)}
         onClick={() => {
           setShowDropdown(true);
         }}
@@ -48,7 +48,7 @@ const GetStartedProgress = () => {
       <Dropdown
         anchorRef={anchorRef}
         className={styles.dropdown}
-        isOpen={showDropDown}
+        isOpen={showDropdown}
         horizontalAlign="end"
         title={t('get_started.progress_dropdown_title')}
         titleClassName={styles.dropdownTitle}

@@ -14,6 +14,8 @@ import {
 } from '@/queries/user';
 import assertThat from '@/utils/assert-that';
 
+// FIXME: @Darcy
+// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 export interface SocialUserInfoSession {
   connectorId: string;
   userInfo: SocialUserInfo;

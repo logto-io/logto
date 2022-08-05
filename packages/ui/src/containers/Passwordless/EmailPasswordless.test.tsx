@@ -9,10 +9,10 @@ import { sendSignInEmailPasscode } from '@/apis/sign-in';
 import EmailPasswordless from './EmailPasswordless';
 
 jest.mock('@/apis/sign-in', () => ({
-  sendSignInEmailPasscode: jest.fn(async () => Promise.resolve()),
+  sendSignInEmailPasscode: jest.fn(async () => 0),
 }));
 jest.mock('@/apis/register', () => ({
-  sendRegisterEmailPasscode: jest.fn(async () => Promise.resolve()),
+  sendRegisterEmailPasscode: jest.fn(async () => 0),
 }));
 
 describe('<EmailPasswordless/>', () => {

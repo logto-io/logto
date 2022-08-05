@@ -103,7 +103,7 @@ describe('convertToTimestamp()', () => {
   const fakeTime = new Date();
 
   beforeAll(() => {
-    jest.useFakeTimers('modern');
+    jest.useFakeTimers();
     jest.setSystemTime(fakeTime);
   });
 

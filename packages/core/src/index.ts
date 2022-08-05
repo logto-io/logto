@@ -14,6 +14,8 @@ import envSet from './env-set';
 import initI18n from './i18n/init';
 /* eslint-enable import/first */
 
+// Update after we migrate to ESM
+// eslint-disable-next-line unicorn/prefer-top-level-await
 (async () => {
   try {
     await envSet.load();

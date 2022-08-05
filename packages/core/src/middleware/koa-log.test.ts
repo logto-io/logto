@@ -13,7 +13,7 @@ const addLogContext = jest.fn();
 const log = jest.fn();
 
 jest.mock('@/queries/log', () => ({
-  insertLog: jest.fn(async () => Promise.resolve()),
+  insertLog: jest.fn(async () => 0),
 }));
 
 jest.mock('nanoid', () => ({
@@ -74,8 +74,8 @@ describe('koaLog middleware', () => {
     };
     ctx.request.ip = ip;
 
-    // eslint-disable-next-line unicorn/consistent-function-scoping
-    const next = async () => Promise.resolve();
+    // eslint-disable-next-line unicorn/consistent-function-scoping, @typescript-eslint/no-empty-function
+    const next = async () => {};
     await koaLog()(ctx, next);
     expect(insertLogMock).not.toBeCalled();
   });

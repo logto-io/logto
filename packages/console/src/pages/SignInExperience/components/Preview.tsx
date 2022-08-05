@@ -1,3 +1,5 @@
+// FIXME: @sijie
+/* eslint-disable react/iframe-missing-sandbox */
 import { Language, languageOptions } from '@logto/phrases-ui';
 import { AppearanceMode, ConnectorDto, ConnectorMetadata, SignInExperience } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
@@ -198,3 +200,4 @@ const Preview = ({ signInExperience, className }: Props) => {
 };
 
 export default Preview;
+/* eslint-enable react/iframe-missing-sandbox */

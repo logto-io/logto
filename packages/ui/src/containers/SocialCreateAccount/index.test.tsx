@@ -15,8 +15,8 @@ jest.mock('react-router-dom', () => ({
 }));
 
 jest.mock('@/apis/social', () => ({
-  registerWithSocial: jest.fn(async () => Promise.resolve()),
-  bindSocialRelatedUser: jest.fn(async () => Promise.resolve()),
+  registerWithSocial: jest.fn(async () => 0),
+  bindSocialRelatedUser: jest.fn(async () => 0),
 }));
 
 describe('SocialCreateAccount', () => {

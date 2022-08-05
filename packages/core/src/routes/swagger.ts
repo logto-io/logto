@@ -125,7 +125,7 @@ export default function swaggerRoutes<T extends AnonymousRouter, R extends Route
     // Use `as` here since we'll check typing with integration tests
     // eslint-disable-next-line no-restricted-syntax
     const additionalSwagger = load(
-      await readFile('static/yaml/additional-swagger.yaml', { encoding: 'utf-8' })
+      await readFile('static/yaml/additional-swagger.yaml', { encoding: 'utf8' })
     ) as OpenAPIV3.Document;
 
     const routes = allRouters.flatMap<RouteObject>((router) =>

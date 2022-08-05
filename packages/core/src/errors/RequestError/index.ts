@@ -7,9 +7,7 @@ import { ZodError } from 'zod';
 
 const formatZodError = ({ issues }: ZodError): string[] =>
   issues.map((issue) => {
-    const base = `Error in key path "${issue.path.map((node) => String(node)).join('.')}": (${
-      issue.code
-    }) `;
+    const base = `Error in key path "${issue.path.map(String).join('.')}": (${issue.code}) `;
 
     if (issue.code === 'invalid_type') {
       return base + `Expected ${issue.expected} but received ${issue.received}.`;

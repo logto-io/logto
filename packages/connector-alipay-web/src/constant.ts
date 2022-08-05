@@ -1,3 +1,5 @@
+// FIXME: @Darcy
+/* eslint-disable unicorn/text-encoding-identifier-case */
 import { ConnectorType, ConnectorMetadata, ConnectorPlatform } from '@logto/connector-types';
 
 export const authorizationEndpoint = 'https://openauth.alipay.com/oauth2/publicAppAuthorize.htm';
@@ -44,3 +46,4 @@ export const defaultMetadata: ConnectorMetadata = {
 export const defaultTimeout = 5000;
 
 export const timestampFormat = 'YYYY-MM-DD HH:mm:ss';
+/* eslint-enable unicorn/text-encoding-identifier-case */

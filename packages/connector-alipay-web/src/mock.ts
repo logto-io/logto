@@ -1,3 +1,5 @@
+// FIXME: @Darcy
+/* eslint-disable unicorn/text-encoding-identifier-case */
 import { AlipayConfig } from './types';
 
 export const mockedTimestamp = '2022-02-22 22:22:22';
@@ -24,3 +26,4 @@ export const mockedAlipayPublicParameters = {
   version: '1.0',
   method: '<method-placeholder>',
 };
+/* eslint-enable unicorn/text-encoding-identifier-case */

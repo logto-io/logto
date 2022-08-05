@@ -4,10 +4,10 @@ import { IRouterParamContext } from 'koa-router';
 
 import detectLanguage from '@/i18n/detect-language';
 
-interface LanguageUtils {
+type LanguageUtils = {
   formatLanguageCode(code: string): string;
   isSupportedCode(code: string): boolean;
-}
+};
 
 export type WithI18nContext<ContextT extends IRouterParamContext = IRouterParamContext> =
   ContextT & {

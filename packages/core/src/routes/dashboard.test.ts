@@ -32,7 +32,6 @@ const mockDailyActiveUserCounts = [
 
 const mockActiveUserCount = 1000;
 
-/* eslint-disable @typescript-eslint/no-unused-vars */
 const getDailyNewUserCountsByTimeInterval = jest.fn(
   async (startTimeExclusive: number, endTimeInclusive: number) => mockDailyNewUserCounts
 );
@@ -42,7 +41,6 @@ const getDailyActiveUserCountsByTimeInterval = jest.fn(
 const countActiveUsersByTimeInterval = jest.fn(
   async (startTimeExclusive: number, endTimeInclusive: number) => ({ count: mockActiveUserCount })
 );
-/* eslint-enable @typescript-eslint/no-unused-vars */
 
 jest.mock('@/queries/log', () => ({
   getDailyNewUserCountsByTimeInterval: async (

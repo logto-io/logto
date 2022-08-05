@@ -73,7 +73,7 @@ type AutoCompleteType =
   | 'tel-country-code'
   | 'tel-national';
 
-// TO-DO: remove me
+// TODO: @simeng remove me
 interface Body {
   json<T>(): Promise<T>;
 }
