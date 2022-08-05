@@ -808,8 +808,8 @@ importers:
       dnd-core: ^16.0.0
       eslint: ^8.21.0
       history: ^5.3.0
-      i18next: ^21.6.12
-      i18next-browser-languagedetector: ^6.1.3
+      i18next: ^21.8.16
+      i18next-browser-languagedetector: ^6.1.4
       ky: ^0.31.0
       lint-staged: ^13.0.0
       lodash.kebabcase: ^4.1.1
@@ -827,7 +827,7 @@ importers:
       react-dom: ^18.0.0
       react-hook-form: ^7.34.0
       react-hot-toast: ^2.2.0
-      react-i18next: ^11.15.4
+      react-i18next: ^11.18.3
       react-markdown: ^8.0.0
       react-modal: ^3.15.1
       react-paginate: ^8.1.3
@@ -872,8 +872,8 @@ importers:
       dnd-core: 16.0.0
       eslint: 8.21.0
       history: 5.3.0
-      i18next: 21.6.12
-      i18next-browser-languagedetector: 6.1.3
+      i18next: 21.8.16
+      i18next-browser-languagedetector: 6.1.4
       ky: 0.31.0
       lint-staged: 13.0.0
       lodash.kebabcase: 4.1.1
@@ -891,7 +891,7 @@ importers:
       react-dom: 18.2.0_react@18.2.0
       react-hook-form: 7.34.0_react@18.2.0
       react-hot-toast: 2.2.0_npw22p3c4ehm7n7vxn2gqac44u
-      react-i18next: 11.15.4_kvoptto33xnltl2qzdobgq4hai
+      react-i18next: 11.18.3_shxxmfhtk2bc4pbx5cyq3uoph4
       react-markdown: 8.0.0_3hx2ussxxho4jajbwrd6gq34qe
       react-modal: 3.15.1_biqbaboplfbrettd7655fr4n2y
       react-paginate: 8.1.3_react@18.2.0
@@ -954,7 +954,7 @@ importers:
       eslint: ^8.21.0
       etag: ^1.8.1
       got: ^11.8.2
-      i18next: ^21.0.0
+      i18next: ^21.8.16
       iconv-lite: 0.6.3
       inquirer: ^8.2.2
       jest: ^28.1.3
@@ -1019,7 +1019,7 @@ importers:
       dotenv: 16.0.0
       etag: 1.8.1
       got: 11.8.3
-      i18next: 21.6.12
+      i18next: 21.8.16
       iconv-lite: 0.6.3
       inquirer: 8.2.2
       jose: 4.6.0
@@ -1093,15 +1093,15 @@ importers:
       '@types/react-dom': ^18.0.0
       cross-env: ^7.0.3
       eslint: ^8.21.0
-      i18next: ^21.6.12
-      i18next-browser-languagedetector: ^6.1.3
+      i18next: ^21.8.16
+      i18next-browser-languagedetector: ^6.1.4
       lint-staged: ^13.0.0
       parcel: 2.6.2
       postcss: ^8.4.6
       prettier: ^2.7.1
       react: ^18.0.0
       react-dom: ^18.0.0
-      react-i18next: ^11.15.4
+      react-i18next: ^11.18.3
       stylelint: ^14.9.1
       typescript: ^4.7.4
     devDependencies:
@@ -1119,15 +1119,15 @@ importers:
       '@types/react-dom': 18.0.6
       cross-env: 7.0.3
       eslint: 8.21.0
-      i18next: 21.6.12
-      i18next-browser-languagedetector: 6.1.3
+      i18next: 21.8.16
+      i18next-browser-languagedetector: 6.1.4
       lint-staged: 13.0.0
       parcel: 2.6.2_postcss@8.4.14
       postcss: 8.4.14
       prettier: 2.7.1
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
-      react-i18next: 11.15.4_kvoptto33xnltl2qzdobgq4hai
+      react-i18next: 11.18.3_shxxmfhtk2bc4pbx5cyq3uoph4
       stylelint: 14.9.1
       typescript: 4.7.4
 
@@ -1323,8 +1323,8 @@ importers:
       color: ^4.2.3
       cross-env: ^7.0.3
       eslint: ^8.21.0
-      i18next: ^21.6.12
-      i18next-browser-languagedetector: ^6.1.3
+      i18next: ^21.8.16
+      i18next-browser-languagedetector: ^6.1.4
       jest: ^28.1.3
       jest-environment-jsdom: ^28.1.3
       jest-transformer-svg: ^2.0.0
@@ -1339,7 +1339,7 @@ importers:
       react: ^18.0.0
       react-device-detect: ^2.2.2
       react-dom: ^18.0.0
-      react-i18next: ^11.15.4
+      react-i18next: ^11.18.3
       react-modal: ^3.15.1
       react-modal-promise: ^1.0.2
       react-router-dom: ^6.2.2
@@ -1377,8 +1377,8 @@ importers:
       color: 4.2.3
       cross-env: 7.0.3
       eslint: 8.21.0
-      i18next: 21.6.12
-      i18next-browser-languagedetector: 6.1.3
+      i18next: 21.8.16
+      i18next-browser-languagedetector: 6.1.4
       jest: 28.1.3
       jest-environment-jsdom: 28.1.3
       jest-transformer-svg: 2.0.0_jest@28.1.3+react@18.2.0
@@ -1393,7 +1393,7 @@ importers:
       react: 18.2.0
       react-device-detect: 2.2.2_biqbaboplfbrettd7655fr4n2y
       react-dom: 18.2.0_react@18.2.0
-      react-i18next: 11.15.4_kvoptto33xnltl2qzdobgq4hai
+      react-i18next: 11.18.3_shxxmfhtk2bc4pbx5cyq3uoph4
       react-modal: 3.15.1_biqbaboplfbrettd7655fr4n2y
       react-modal-promise: 1.0.2_biqbaboplfbrettd7655fr4n2y
       react-router-dom: 6.2.2_biqbaboplfbrettd7655fr4n2y
@@ -1745,13 +1745,6 @@ packages:
       '@babel/helper-plugin-utils': 7.17.12
     dev: true
 
-  /@babel/runtime/7.16.3:
-    resolution: {integrity: sha512-WBwekcqacdY2e9AF/Q7WLFUWmdJGJTkbjqTjoMDgXkVZ3ZRUvOPsLb5KdwISoQVsbP+DQzVZW4Zhci0DvpbNTQ==}
-    engines: {node: '>=6.9.0'}
-    dependencies:
-      regenerator-runtime: 0.13.9
-    dev: true
-
   /@babel/runtime/7.17.9:
     resolution: {integrity: sha512-lSiBBvodq29uShpWGNbgFdKYNiFDo5/HIYsaCEY9ff4sb10x9jizo2+pRrSyF4jKZCXqgzuqBOQKbUm90gQwJg==}
     engines: {node: '>=6.9.0'}
@@ -1763,7 +1756,6 @@ packages:
     engines: {node: '>=6.9.0'}
     dependencies:
       regenerator-runtime: 0.13.9
-    dev: true
 
   /@babel/template/7.16.7:
     resolution: {integrity: sha512-I8j/x8kHUrbYRTUxXrrMbfCa7jxkE7tZre39x3kjr9hvI82cK1FfqLygotcWN5kdPGWcLdWMHpSBavse5tWw3w==}
@@ -8763,16 +8755,16 @@ packages:
       uuid-parse: 1.1.0
     dev: false
 
-  /i18next-browser-languagedetector/6.1.3:
-    resolution: {integrity: sha512-T+oGXHXtrur14CGnZZ7qQ07X38XJQEI00b/4ILrtO6xPbwTlQ1wtMZC2H+tBULixHuVUXv8LKbxfjyITJkezUg==}
+  /i18next-browser-languagedetector/6.1.4:
+    resolution: {integrity: sha512-wukWnFeU7rKIWT66VU5i8I+3Zc4wReGcuDK2+kuFhtoxBRGWGdvYI9UQmqNL/yQH1KogWwh+xGEaIPH8V/i2Zg==}
     dependencies:
-      '@babel/runtime': 7.16.3
+      '@babel/runtime': 7.18.3
     dev: true
 
-  /i18next/21.6.12:
-    resolution: {integrity: sha512-xlGTPdu2g5PZEUIE6TA1mQ9EIAAv9nMFONzgwAIrKL/KTmYYWufQNGgOmp5Og1PvgUji+6i1whz0rMdsz1qaKw==}
+  /i18next/21.8.16:
+    resolution: {integrity: sha512-acJLCk38YMfEPjBR/1vS13SFY7rBQLs9E5m1tSRnWc9UW3f+SZszgH+NP1fZRA1+O+CdG2eLGGmuUMJW52EwzQ==}
     dependencies:
-      '@babel/runtime': 7.17.9
+      '@babel/runtime': 7.18.3
 
   /iconv-lite/0.4.24:
     resolution: {integrity: sha512-v3MXnZAcvnywkTUEZomIActle7RXXeedOR31wwl7VlyoXO4Qi9arvSenNQWne1TcRwhCL1HwLI21bEqdpj8/rA==}
@@ -13080,7 +13072,7 @@ packages:
   /react-device-detect/2.2.2_biqbaboplfbrettd7655fr4n2y:
     resolution: {integrity: sha512-zSN1gIAztUekp5qUT/ybHwQ9fmOqVT1psxpSlTn1pe0CO+fnJHKRLOWWac5nKxOxvOpD/w84hk1I+EydrJp7SA==}
     peerDependencies:
-      react: '>= 0.14.0'
+      react: '>= 0.14.0 || ^18.0.0'
       react-dom: '>= 0.14.0'
     dependencies:
       react: 18.2.0
@@ -13155,8 +13147,8 @@ packages:
       - csstype
     dev: true
 
-  /react-i18next/11.15.4_kvoptto33xnltl2qzdobgq4hai:
-    resolution: {integrity: sha512-jKJNAcVcbPGK+yrTcXhLblgPY16n6NbpZZL3Mk8nswj1v3ayIiUBVDU09SgqnT+DluyQBS97hwSvPU5yVFG0yg==}
+  /react-i18next/11.18.3_shxxmfhtk2bc4pbx5cyq3uoph4:
+    resolution: {integrity: sha512-EttTX31HbqzZymUM3SIrMPuvamfSXFZVsDHm/ZAqoDfTLjhzlwyxqfbDNxcKNAGOi2mjZaXfR7hSNMlvLNpB/g==}
     peerDependencies:
       i18next: '>= 19.0.0'
       react: '>= 16.8.0 || ^18.0.0'
@@ -13168,10 +13160,9 @@ packages:
       react-native:
         optional: true
     dependencies:
-      '@babel/runtime': 7.16.3
-      html-escaper: 2.0.2
+      '@babel/runtime': 7.18.3
       html-parse-stringify: 3.0.1
-      i18next: 21.6.12
+      i18next: 21.8.16
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
     dev: true
@@ -13220,7 +13211,7 @@ packages:
   /react-modal-promise/1.0.2_biqbaboplfbrettd7655fr4n2y:
     resolution: {integrity: sha512-dqT618ROhG8qh1+O6EZkia5ELw3zaZWGpMX2YfEH4bgwYENPuFonqKw1W70LFx3K/SCZvVBcD6UYEI12yzYXzg==}
     peerDependencies:
-      react: '>=16.8.0'
+      react: '>=16.8.0 || ^18.0.0'
       react-dom: '>=16.8.0'
     dependencies:
       react: 18.2.0
@@ -13270,7 +13261,7 @@ packages:
   /react-router-dom/6.2.2_biqbaboplfbrettd7655fr4n2y:
     resolution: {integrity: sha512-AtYEsAST7bDD4dLSQHDnk/qxWLJdad5t1HFa1qJyUrCeGgEuCSw0VB/27ARbF9Fi/W5598ujvJOm3ujUCVzuYQ==}
     peerDependencies:
-      react: '>=16.8'
+      react: '>=16.8 || ^18.0.0'
       react-dom: '>=16.8'
     dependencies:
       history: 5.3.0
@@ -13294,7 +13285,7 @@ packages:
   /react-router/6.2.2_react@18.2.0:
     resolution: {integrity: sha512-/MbxyLzd7Q7amp4gDOGaYvXwhEojkJD5BtExkuKmj39VEE0m3l/zipf6h2WIB2jyAO0lI6NGETh4RDcktRm4AQ==}
     peerDependencies:
-      react: '>=16.8'
+      react: '>=16.8 || ^18.0.0'
     dependencies:
       history: 5.3.0
       react: 18.2.0
@@ -13344,7 +13335,7 @@ packages:
   /react-timer-hook/3.0.5_biqbaboplfbrettd7655fr4n2y:
     resolution: {integrity: sha512-n+98SdmYvui2ne3KyWb3Ldu4k0NYQa3g/VzW6VEIfZJ8GAk/jJsIY700M8Nd2vNSTj05c7wKyQfJBqZ0x7zfiA==}
     peerDependencies:
-      react: '>=16.8.0'
+      react: '>=16.8.0 || ^18.0.0'
       react-dom: '>=16.8.0'
     dependencies:
       react: 18.2.0
@@ -15371,7 +15362,7 @@ packages:
     resolution: {integrity: sha512-FbY/ynor7wZV55v1EvvAvu8CvSoEKT1azS2zFb/aLlL0vySbqTM7x9fIcaOJN++E52mVINNDe2VmWWd+Q00S+A==}
     engines: {node: '>=10'}
     peerDependencies:
-      react: '>=16'
+      react: '>=16 || ^18.0.0'
     dependencies:
       react: 18.2.0
     dev: true
