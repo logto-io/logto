@@ -54,7 +54,7 @@ pnpm add @logto/next
 <pre>
 <code className="language-ts">
 {`// libraries/logto.js
-import { LogtoProvider, LogtoConfig } from '@logto/next';
+import LogtoClient from '@logto/next';
 
 export const logtoClient = new LogtoClient({
   endpoint: '${props.endpoint}',
@@ -89,21 +89,19 @@ export const logtoClient = new LogtoClient({
 
 返回你的 IDE 或编辑器，首先让我们使用如下代码来实现一组 API 路由：
 
-<pre>
-<code className="language-ts">
-{`// pages/api/logto/[action].ts
+```ts
+// pages/api/logto/[action].ts
 import { logtoClient } from '../../../libraries/logto';
 
-export default logtoClient.handleAuthRoutes();`}
-</code>
-</pre>
+export default logtoClient.handleAuthRoutes();
+```
 
 这将为你自动创建好 4 个路由，分别是：
 
 1. `/api/logto/sign-in`：登录
 2. `/api/logto/sign-in-callback`：处理登录重定向
 3. `/api/logto/sign-out`：登出
-4. `/api/logto/user`：检查用户是否以登录到 Logto。如果是，则返回用户信息。
+4. `/api/logto/user`：检查用户是否已通过 Logto 获得授权。如果是，则返回用户信息。
 
 ### 实现登录按钮
 
@@ -180,35 +178,84 @@ export const getServerSideProps = logtoClient.withLogtoSsr(({ request }) => {
 </Step>
 
 <Step
-  title="退出登录"
-  subtitle="共 1 步"
+  title="保护 API 和页面资源"
+  subtitle="共 2 步"
   index={4}
   activeIndex={props.activeStepIndex}
   onButtonClick={() => props.onNext(5)}
 >
 
-调用 `.signOut()` 将清理内存与 cookies 中的所有 Logto 数据（如果有）。
+### 保护 API 路由
 
-在退出登录后，让你的用户重新回到你的网站是个不错的选择。在调用 `api/logto/sign-out` 发起退出登录操作之前，让我们先将 `http://localhost:3000` 添加至下面的输入框。
+使用 `logtoClient.withLogtoApiRoute` 来包裹 API 逻辑：
+
+```ts
+// pages/api/protected-resource.ts
+import { logtoClient } from '../../libraries/logto';
+
+export default logtoClient.withLogtoApiRoute((request, response) => {
+  if (!request.user.isAuthenticated) {
+    response.status(401).json({ message: '未授权' });
+
+    return;
+  }
+
+  response.json({
+    data: '这是受保护的 API 资源',
+  });
+});
+```
+
+### 保护页面
+
+如果你不想匿名用户访问你的某个页面，你可以使用 `logtoClient.withLogtoSsr` 来获取登录认证状态，如未登录则自动跳转到登录页面。
+
+```ts
+export const getServerSideProps = logtoClient.withLogtoSsr(async function ({ request, response }) {
+  const { user } = request;
+
+  if (!user.isAuthenticated) {
+    response.setHeader('location', '/api/logto/sign-in');
+    response.statusCode = 302;
+    response.end();
+  }
+
+  return {
+    props: { user },
+  };
+});
+```
+
+</Step>
+
+<Step
+  title="退出登录"
+  subtitle="共 1 步"
+  index={5}
+  activeIndex={props.activeStepIndex}
+  onButtonClick={() => props.onNext(6)}
+>
+
+调用 `/api/logto/sign-out` 将清理内存与 cookies 中的所有 Logto 数据（如果有）。
+
+在退出登录后，让你的用户重新回到你的网站是个不错的选择。在调用 `/api/logto/sign-out` 发起退出登录操作之前，让我们先将 `http://localhost:3000` 添加至下面的输入框。
 
 <UriInputField appId={props.appId} isSingle={!props.isCompact} name="postLogoutRedirectUris" title="application_details.post_sign_out_redirect_uri" />
 
 ### 实现退出登录按钮
 
-<pre>
-<code className="language-tsx">
-{`<button onClick={() => push('/api/logto/sign-out')}>
+```tsx
+<button onClick={() => push('/api/logto/sign-out')}>
   退出登录
-</button>`}
-</code>
-</pre>
+</button>
+```
 
 </Step>
 
 <Step
   title="延展阅读"
   subtitle="共 4 篇"
-  index={5}
+  index={6}
   activeIndex={props.activeStepIndex}
   buttonText="general.done"
   buttonType="primary"

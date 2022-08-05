@@ -54,7 +54,7 @@ Import and initialize LogtoClient:
 <pre>
 <code className="language-ts">
 {`// libraries/logto.js
-import { LogtoProvider, LogtoConfig } from '@logto/next';
+import LogtoClient from '@logto/next';
 
 export const logtoClient = new LogtoClient({
   endpoint: '${props.endpoint}',
@@ -89,14 +89,12 @@ Prepare [API routes](https://nextjs.org/docs/api-routes/introduction) to connect
 
 Go back to your IDE/editor, use the following code to implement the API routes first:
 
-<pre>
-<code className="language-ts">
-{`// pages/api/logto/[action].ts
+```ts
+// pages/api/logto/[action].ts
 import { logtoClient } from '../../../libraries/logto';
 
-export default logtoClient.handleAuthRoutes();`}
-</code>
-</pre>
+export default logtoClient.handleAuthRoutes();
+```
 
 This will create 4 routes automatically:
 
@@ -180,35 +178,84 @@ Check [Next.js documentation](https://nextjs.org/docs/basic-features/data-fetchi
 </Step>
 
 <Step
-  title="Sign Out"
-  subtitle="1 step"
+  title="Protect API and pages"
+  subtitle="2 steps"
   index={4}
   activeIndex={props.activeStepIndex}
   onButtonClick={() => props.onNext(5)}
 >
 
-Calling `.signOut()` will clear all the Logto data in memory and cookies if they exist.
+### Protect API routes
 
-After signing out, it'll be great to redirect user back to your website. Let's add `http://localhost:3000` as the Post Sign-out URI below before calling `api/logto/sign-out`.
+Wrap your handler with `logtoClient.withLogtoApiRoute`.
+
+```ts
+// pages/api/protected-resource.ts
+import { logtoClient } from '../../libraries/logto';
+
+export default logtoClient.withLogtoApiRoute((request, response) => {
+  if (!request.user.isAuthenticated) {
+    response.status(401).json({ message: 'Unauthorized' });
+
+    return;
+  }
+
+  response.json({
+    data: 'this_is_protected_resource',
+  });
+});
+```
+
+### Protect pages
+
+If you don't want anonymous users to access a page, use `logtoClient.withLogtoSsr` to get auth state, and redirect to sign-in route if not authenticated.
+
+```ts
+export const getServerSideProps = logtoClient.withLogtoSsr(async function ({ req, res }) {
+  const { user } = req;
+
+  if (!user.isAuthenticated) {
+    res.setHeader('location', '/api/logto/sign-in');
+    res.statusCode = 302;
+    res.end();
+  }
+
+  return {
+    props: { user },
+  };
+});
+```
+
+</Step>
+
+<Step
+  title="Sign Out"
+  subtitle="1 step"
+  index={5}
+  activeIndex={props.activeStepIndex}
+  onButtonClick={() => props.onNext(6)}
+>
+
+Calling `/api/logto/sign-out` will clear all the Logto data in memory and cookies if they exist.
+
+After signing out, it'll be great to redirect user back to your website. Let's add `http://localhost:3000` as the Post Sign-out URI below before calling `/api/logto/sign-out`.
 
 <UriInputField appId={props.appId} isSingle={!props.isCompact} name="postLogoutRedirectUris" title="application_details.post_sign_out_redirect_uri" />
 
 ### Implement a sign-out button
 
-<pre>
-<code className="language-tsx">
-{`<button onClick={() => push('/api/logto/sign-out')}>
+```tsx
+<button onClick={() => push('/api/logto/sign-out')}>
   Sign Out
-</button>`}
-</code>
-</pre>
+</button>
+```
 
 </Step>
 
 <Step
   title="Further readings"
   subtitle="4 articles"
-  index={5}
+  index={6}
   activeIndex={props.activeStepIndex}
   buttonText="general.done"
   buttonType="primary"
