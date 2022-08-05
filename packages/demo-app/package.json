@@ -27,7 +27,7 @@
     "@silverhand/eslint-config-react": "1.0.0-rc.2",
     "@silverhand/ts-config": "1.0.0-rc.2",
     "@silverhand/ts-config-react": "1.0.0-rc.2",
-    "@types/react": "^17.0.14",
+    "@types/react": "^18.0.0",
     "@types/react-dom": "^17.0.9",
     "cross-env": "^7.0.3",
     "eslint": "^8.21.0",
