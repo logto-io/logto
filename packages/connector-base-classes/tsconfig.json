@@ -1,6 +1,7 @@
 {
   "extends": "@silverhand/ts-config/tsconfig.base",
   "compilerOptions": {
+    "types": ["node"],
     "outDir": "lib",
     "baseUrl": ".",
     "paths": {

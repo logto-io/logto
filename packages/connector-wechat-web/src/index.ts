@@ -3,13 +3,13 @@
  * https://developers.weixin.qq.com/doc/oplatform/Website_App/WeChat_Login/Wechat_Login.html
  */
 
+import { SocialConnectorInstance } from '@logto/connector-base-classes';
 import {
   AuthResponseParser,
   GetAuthorizationUri,
   GetUserInfo,
   ConnectorError,
   ConnectorErrorCodes,
-  SocialConnectorInstance,
   GetConnectorConfig,
   codeDataGuard,
   CodeData,

@@ -3,13 +3,13 @@
  * https://developers.facebook.com/docs/facebook-login/manually-build-a-login-flow
  */
 
+import { SocialConnectorInstance } from '@logto/connector-base-classes';
 import {
   AuthResponseParser,
   ConnectorError,
   ConnectorErrorCodes,
   GetAuthorizationUri,
   GetUserInfo,
-  SocialConnectorInstance,
   GetConnectorConfig,
   codeWithRedirectDataGuard,
   CodeWithRedirectData,

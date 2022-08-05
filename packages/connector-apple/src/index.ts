@@ -1,10 +1,10 @@
+import { SocialConnectorInstance } from '@logto/connector-base-classes';
 import {
   AuthResponseParser,
   GetAuthorizationUri,
   GetUserInfo,
   ConnectorError,
   ConnectorErrorCodes,
-  SocialConnectorInstance,
   GetConnectorConfig,
 } from '@logto/connector-types';
 import { createRemoteJWKSet, jwtVerify } from 'jose';

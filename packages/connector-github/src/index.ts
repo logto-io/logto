@@ -1,10 +1,10 @@
+import { SocialConnectorInstance } from '@logto/connector-base-classes';
 import {
   AuthResponseParser,
   GetAuthorizationUri,
   GetUserInfo,
   ConnectorError,
   ConnectorErrorCodes,
-  SocialConnectorInstance,
   GetConnectorConfig,
   codeDataGuard,
   CodeData,

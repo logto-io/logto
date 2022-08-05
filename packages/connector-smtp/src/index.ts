@@ -1,8 +1,8 @@
+import { EmailConnectorInstance } from '@logto/connector-base-classes';
 import {
   ConnectorError,
   ConnectorErrorCodes,
   EmailSendMessageByFunction,
-  EmailConnectorInstance,
   GetConnectorConfig,
 } from '@logto/connector-types';
 import { assert } from '@silverhand/essentials';

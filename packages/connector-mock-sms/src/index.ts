@@ -1,11 +1,11 @@
 import fs from 'fs/promises';
 import path from 'path';
 
+import { SmsConnectorInstance } from '@logto/connector-base-classes';
 import {
   ConnectorError,
   ConnectorErrorCodes,
   SmsSendMessageByFunction,
-  SmsConnectorInstance,
   GetConnectorConfig,
 } from '@logto/connector-types';
 import { assert } from '@silverhand/essentials';

@@ -1,4 +1,4 @@
-import { ConnectorInstance } from '@logto/connector-types';
+import { ConnectorInstance } from '@logto/connector-base-classes';
 import {
   Branding,
   BrandingStyle,

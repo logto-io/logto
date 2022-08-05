@@ -2,7 +2,7 @@ import {
   ConnectorInstance,
   EmailConnectorInstance,
   SmsConnectorInstance,
-} from '@logto/connector-types';
+} from '@logto/connector-base-classes';
 import { arbitraryObjectGuard, ConnectorDto, Connectors, ConnectorType } from '@logto/schemas';
 import { emailRegEx, phoneRegEx } from '@logto/shared';
 import { object, string } from 'zod';
@@ -184,13 +184,16 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
       const subject = phone ?? email;
       assertThat(subject, new RequestError({ code: 'guard.invalid_input' }));
 
-      const connector: SmsConnectorInstance | EmailConnectorInstance | undefined = phone
+      const connector:
+        | InstanceType<typeof SmsConnectorInstance>
+        | InstanceType<typeof EmailConnectorInstance>
+        | undefined = phone
         ? connectorInstances.find(
-            (connector): connector is SmsConnectorInstance =>
+            (connector): connector is InstanceType<typeof SmsConnectorInstance> =>
               connector.metadata.id === id && connector.metadata.type === ConnectorType.SMS
           )
         : connectorInstances.find(
-            (connector): connector is EmailConnectorInstance =>
+            (connector): connector is InstanceType<typeof EmailConnectorInstance> =>
               connector.metadata.id === id && connector.metadata.type === ConnectorType.Email
           );
 

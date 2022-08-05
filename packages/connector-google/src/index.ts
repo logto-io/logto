@@ -2,13 +2,13 @@
  * The Implementation of OpenID Connect of Google Identity Platform.
  * https://developers.google.com/identity/protocols/oauth2/openid-connect
  */
+import { SocialConnectorInstance } from '@logto/connector-base-classes';
 import {
   AuthResponseParser,
   ConnectorError,
   ConnectorErrorCodes,
   GetAuthorizationUri,
   GetUserInfo,
-  SocialConnectorInstance,
   GetConnectorConfig,
   codeWithRedirectDataGuard,
   CodeWithRedirectData,

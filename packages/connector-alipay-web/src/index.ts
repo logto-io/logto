@@ -4,14 +4,13 @@
  * https://opendocs.alipay.com/open/263/105808
  * https://opendocs.alipay.com/open/01emu5
  */
-
+import { SocialConnectorInstance } from '@logto/connector-base-classes';
 import {
   AuthResponseParser,
   ConnectorError,
   ConnectorErrorCodes,
   GetAuthorizationUri,
   GetUserInfo,
-  SocialConnectorInstance,
   GetConnectorConfig,
 } from '@logto/connector-types';
 import { assert } from '@silverhand/essentials';

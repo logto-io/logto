@@ -1,11 +1,11 @@
 import { randomUUID } from 'crypto';
 
+import { SocialConnectorInstance } from '@logto/connector-base-classes';
 import {
   ConnectorError,
   ConnectorErrorCodes,
   GetAuthorizationUri,
   GetUserInfo,
-  SocialConnectorInstance,
   GetConnectorConfig,
 } from '@logto/connector-types';
 import { z } from 'zod';

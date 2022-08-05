@@ -6,12 +6,12 @@ import {
   AuthorizationUrlRequest,
   CryptoProvider,
 } from '@azure/msal-node';
+import { SocialConnectorInstance } from '@logto/connector-base-classes';
 import {
   ConnectorError,
   ConnectorErrorCodes,
   GetAuthorizationUri,
   GetUserInfo,
-  SocialConnectorInstance,
   codeWithRedirectDataGuard,
   CodeWithRedirectData,
   GetConnectorConfig,

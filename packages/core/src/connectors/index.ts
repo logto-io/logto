@@ -1,4 +1,4 @@
-import { ConnectorInstance, SocialConnectorInstance } from '@logto/connector-types';
+import { ConnectorInstance, SocialConnectorInstance } from '@logto/connector-base-classes';
 import { Connector } from '@logto/schemas';
 
 import envSet from '@/env-set';
