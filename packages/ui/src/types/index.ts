@@ -15,11 +15,7 @@ export type Platform = 'web' | 'mobile';
 
 export type Theme = 'dark' | 'light';
 
-// FIXME: @Darcy
-// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
-export interface ConnectorData extends ConnectorMetadata {
-  id: string;
-}
+export type ConnectorData = ConnectorMetadata & { id: string };
 
 export type SignInExperienceSettingsResponse = SignInExperience & {
   socialConnectors: ConnectorData[];

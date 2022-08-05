@@ -10,13 +10,11 @@ const { table, fields } = convertToIdentifiers(Logs);
 
 export const insertLog = buildInsertInto<CreateLog>(Logs);
 
-// FIXME: @IceHe
-// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
-export interface LogCondition {
+export type LogCondition = {
   logType?: string;
   applicationId?: string;
   userId?: string;
-}
+};
 
 const buildLogConditionSql = (logCondition: LogCondition) =>
   conditionalSql(logCondition, ({ logType, applicationId, userId }) => {

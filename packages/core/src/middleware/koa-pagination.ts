@@ -1,5 +1,3 @@
-// FIXME: @sijie
-/* eslint-disable @typescript-eslint/consistent-type-definitions */
 import { MiddlewareType } from 'koa';
 import { IMiddleware } from 'koa-router';
 import { number } from 'zod';
@@ -7,20 +5,20 @@ import { number } from 'zod';
 import RequestError from '@/errors/RequestError';
 import { buildLink } from '@/utils/pagination';
 
-export interface Pagination {
+export type Pagination = {
   offset: number;
   limit: number;
   totalCount?: number;
-}
+};
 
 export type WithPaginationContext<ContextT> = ContextT & {
   pagination: Pagination;
 };
 
-export interface PaginationConfig {
+export type PaginationConfig = {
   defaultPageSize?: number;
   maxPageSize?: number;
-}
+};
 
 export const isPaginationMiddleware = <Type extends IMiddleware>(
   function_: Type
@@ -84,4 +82,3 @@ export default function koaPagination<StateT, ContextT, ResponseBodyT>({
 
   return paginationMiddleware;
 }
-/* eslint-enable @typescript-eslint/consistent-type-definitions */
