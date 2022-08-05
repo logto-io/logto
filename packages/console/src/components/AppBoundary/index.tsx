@@ -7,7 +7,7 @@ import initI18n from '@/i18n/init';
 import * as styles from './index.module.scss';
 
 type Props = {
-  children?: ReactNode;
+  children: ReactNode;
 };
 
 const AppBoundary = ({ children }: Props) => {

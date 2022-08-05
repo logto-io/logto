@@ -14,7 +14,7 @@ const Divider = ({ className, label }: Props) => {
   return (
     <div className={classNames(styles.divider, className)}>
       <i className={styles.line} />
-      {label && t(label)}
+      {label && String(t(label))}
       <i className={styles.line} />
     </div>
   );

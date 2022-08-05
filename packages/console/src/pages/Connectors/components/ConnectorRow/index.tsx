@@ -36,7 +36,7 @@ const ConnectorRow = ({ type, connectors, onClickSetup }: Props) => {
       <td>
         <ConnectorName type={type} connectors={connectors} onClickSetup={onClickSetup} />
       </td>
-      <td>{t(connectorTitlePlaceHolder[type])}</td>
+      <td>{String(t(connectorTitlePlaceHolder[type]))}</td>
       <td>
         {inUse !== undefined && (
           <Status status={inUse ? 'enabled' : 'disabled'}>

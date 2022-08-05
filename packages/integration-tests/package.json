@@ -37,12 +37,5 @@
   "eslintConfig": {
     "extends": "@silverhand"
   },
-  "prettier": "@silverhand/eslint-config/.prettierrc",
-  "pnpm": {
-    "peerDependencyRules": {
-      "allowedVersions": {
-        "@mdx-js/react": "2.1.2"
-      }
-    }
-  }
+  "prettier": "@silverhand/eslint-config/.prettierrc"
 }

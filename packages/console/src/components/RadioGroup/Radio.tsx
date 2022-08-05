@@ -76,9 +76,9 @@ const Radio = ({
       {type === 'card' && <Check />}
       {children}
       {type === 'plain' && <div className={styles.indicator} />}
-      {title && t(title)}
+      {title && String(t(title))}
       {isDisabled && disabledLabel && (
-        <div className={styles.disabledLabel}>{t(disabledLabel)}</div>
+        <div className={styles.disabledLabel}>{String(t(disabledLabel))}</div>
       )}
     </div>
   );

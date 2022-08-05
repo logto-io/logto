@@ -31,8 +31,8 @@ const Contact = ({ isOpen, onCancel }: Props) => {
                 <ContactIcon />
               </div>
               <div className={styles.text}>
-                <div className={styles.title}>{t(title)}</div>
-                <div className={styles.description}>{t(description)}</div>
+                <div className={styles.title}>{String(t(title))}</div>
+                <div className={styles.description}>{String(t(description))}</div>
               </div>
               <div>
                 <Button

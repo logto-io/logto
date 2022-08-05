@@ -20,7 +20,7 @@ const LinkButton = ({ to, title, icon, className }: Props) => {
   return (
     <Link to={to} className={classNames(styles.linkButton, className)}>
       {icon}
-      {typeof title === 'string' ? <span>{t(title)}</span> : title}
+      {typeof title === 'string' ? <span>{String(t(title))}</span> : title}
     </Link>
   );
 };

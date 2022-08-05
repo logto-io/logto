@@ -53,8 +53,8 @@ const GetStarted = () => {
             {!isComplete && <CardIcon className={styles.icon} />}
             {isComplete && <CompleteIndicator className={styles.icon} />}
             <div className={styles.wrapper}>
-              <div className={styles.title}>{t(title)}</div>
-              <div className={styles.subtitle}>{t(subtitle)}</div>
+              <div className={styles.title}>{Boolean(t(title))}</div>
+              <div className={styles.subtitle}>{Boolean(t(subtitle))}</div>
             </div>
             <Button
               className={styles.button}

@@ -99,7 +99,7 @@ const CreateForm = ({ onClose, isOpen: isFormOpen, type }: Props) => {
         onClose={onClose}
       >
         {isLoading && 'Loading...'}
-        {error && error}
+        {error?.message}
         {groups && (
           <RadioGroup name="group" value={activeGroupId} type="card" onChange={handleGroupChange}>
             {groups.map(({ id, name, logo, description, connectors }) => (

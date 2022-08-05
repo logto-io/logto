@@ -1,13 +1,13 @@
 import classNames from 'classnames';
-import { MouseEvent } from 'react';
+import React, { MouseEvent, ReactNode } from 'react';
 
 import * as styles from './DropdownItem.module.scss';
 
 type Props = {
   onClick?: (event: MouseEvent<HTMLLIElement>) => void;
   className?: string;
-  children: React.ReactNode;
-  icon?: React.ReactNode;
+  children: ReactNode | Record<string, unknown>;
+  icon?: ReactNode;
   iconClassName?: string;
   type?: 'default' | 'danger';
 };
@@ -22,7 +22,7 @@ const DropdownItem = ({
 }: Props) => (
   <li className={classNames(styles.item, styles[type], className)} onClick={onClick}>
     {icon && <span className={classNames(styles.icon, iconClassName)}>{icon}</span>}
-    {children}
+    {React.isValidElement(children) ? children : String(children)}
   </li>
 );
 

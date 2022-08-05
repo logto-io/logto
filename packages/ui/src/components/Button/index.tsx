@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import { ReactNode } from 'react';
+import React, { ReactNode } from 'react';
 
 import * as styles from './index.module.scss';
 
@@ -7,7 +7,7 @@ export type Props = {
   htmlType?: 'button' | 'submit' | 'reset';
   isDisabled?: boolean;
   className?: string;
-  children: ReactNode;
+  children: ReactNode | Record<string, unknown>;
   type?: 'primary' | 'secondary' | 'outline';
   size?: 'small' | 'large';
   onClick?: React.MouseEventHandler;
@@ -34,7 +34,7 @@ const Button = ({
     type={htmlType}
     onClick={onClick}
   >
-    {children}
+    {React.isValidElement(children) ? children : String(children)}
   </button>
 );
 

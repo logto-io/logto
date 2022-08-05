@@ -23,7 +23,7 @@ const useBindSocial = () => {
   );
 
   const bindRelatedUserHandler = useCallback(
-    (connectorId) => {
+    (connectorId: string) => {
       void asyncBindSocialRelatedUser(connectorId);
     },
     [asyncBindSocialRelatedUser]

@@ -62,17 +62,17 @@ const Main = () => {
     <div className={styles.app}>
       <div className={styles.card}>
         {congratsIcon && <img src={congratsIcon} alt="Congrats" />}
-        <div className={styles.title}>{t('title')}</div>
-        <div className={styles.text}>{t('subtitle')}</div>
+        <div className={styles.title}>{String(t('title'))}</div>
+        <div className={styles.text}>{String(t('subtitle'))}</div>
         <div className={styles.infoCard}>
           {user.username && (
             <div>
-              {t('username')}
+              {String(t('username'))}
               <span>{user.username}</span>
             </div>
           )}
           <div>
-            {t('user_id')}
+            {String(t('user_id'))}
             <span>{user.sub}</span>
           </div>
         </div>
@@ -80,7 +80,7 @@ const Main = () => {
           className={styles.button}
           onClick={async () => signOut(`${window.location.origin}/demo-app`)}
         >
-          {t('sign_out')}
+          {String(t('sign_out'))}
         </div>
       </div>
     </div>

@@ -7,11 +7,11 @@ import ArrowRight from '@/assets/images/triangle-right.svg';
 import * as styles from './index.module.scss';
 
 type Props = {
-  children: ReactNode[];
+  children?: ReactNode[] | ReactNode;
 };
 
 const DetailsSummary = ({ children }: Props) => {
-  const [summary, details] = children;
+  const [summary, details] = Array.isArray(children) ? children : [children];
   const [isExpanded, setIsExpanded] = useState(false);
   const [height, setHeight] = useState<Height>(0);
 
