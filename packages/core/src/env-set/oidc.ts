@@ -84,7 +84,7 @@ const readPrivateKeys = async (): Promise<string[]> => {
   }
 
   try {
-    return privateKeyPaths.map((path): string => readFileSync(path, 'utf-8'));
+    return privateKeyPaths.map((path): string => readFileSync(path, 'utf8'));
   } catch {
     const privateKeyPathsRawValue = JSON.stringify(privateKeyPaths);
 
