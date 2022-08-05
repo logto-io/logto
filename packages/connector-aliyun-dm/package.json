@@ -27,7 +27,7 @@
     "@logto/connector-types": "^1.0.0-beta.3",
     "@logto/shared": "^1.0.0-beta.3",
     "@silverhand/essentials": "^1.1.0",
-    "@silverhand/jest-config": "1.0.0-rc.2",
+    "@silverhand/jest-config": "1.0.0-rc.3",
     "got": "^11.8.2",
     "zod": "^3.14.3"
   },

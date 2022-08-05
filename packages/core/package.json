@@ -77,7 +77,7 @@
   "devDependencies": {
     "@shopify/jest-koa-mocks": "^5.0.0",
     "@silverhand/eslint-config": "1.0.0-rc.2",
-    "@silverhand/jest-config": "1.0.0-rc.2",
+    "@silverhand/jest-config": "1.0.0-rc.3",
     "@silverhand/ts-config": "1.0.0-rc.2",
     "@types/debug": "^4.1.7",
     "@types/etag": "^1.8.1",

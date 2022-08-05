@@ -26,7 +26,7 @@
     "@silverhand/eslint-config": "1.0.0-rc.2",
     "@silverhand/eslint-config-react": "1.0.0-rc.2",
     "@silverhand/essentials": "^1.1.7",
-    "@silverhand/jest-config": "1.0.0-rc.2",
+    "@silverhand/jest-config": "1.0.0-rc.3",
     "@silverhand/ts-config": "1.0.0-rc.2",
     "@silverhand/ts-config-react": "1.0.0-rc.2",
     "@testing-library/react": "^12.0.0",

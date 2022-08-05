@@ -26,7 +26,7 @@ importers:
       '@shopify/jest-koa-mocks': ^5.0.0
       '@silverhand/eslint-config': 1.0.0-rc.2
       '@silverhand/essentials': ^1.1.0
-      '@silverhand/jest-config': 1.0.0-rc.2
+      '@silverhand/jest-config': 1.0.0-rc.3
       '@silverhand/ts-config': 1.0.0-rc.2
       '@types/jest': ^28.1.6
       '@types/lodash.pick': ^4.4.6
@@ -50,7 +50,7 @@ importers:
       '@logto/connector-types': link:../connector-types
       '@logto/shared': link:../shared
       '@silverhand/essentials': 1.1.7
-      '@silverhand/jest-config': 1.0.0-rc.2_bi2kohzqnxavgozw3csgny5hju
+      '@silverhand/jest-config': 1.0.0-rc.3_bi2kohzqnxavgozw3csgny5hju
       dayjs: 1.10.7
       got: 11.8.3
       iconv-lite: 0.6.3
@@ -83,7 +83,7 @@ importers:
       '@shopify/jest-koa-mocks': ^5.0.0
       '@silverhand/eslint-config': 1.0.0-rc.2
       '@silverhand/essentials': ^1.1.0
-      '@silverhand/jest-config': 1.0.0-rc.2
+      '@silverhand/jest-config': 1.0.0-rc.3
       '@silverhand/ts-config': 1.0.0-rc.2
       '@types/jest': ^28.1.6
       '@types/lodash.pick': ^4.4.6
@@ -107,7 +107,7 @@ importers:
       '@logto/connector-types': link:../connector-types
       '@logto/shared': link:../shared
       '@silverhand/essentials': 1.1.7
-      '@silverhand/jest-config': 1.0.0-rc.2_bi2kohzqnxavgozw3csgny5hju
+      '@silverhand/jest-config': 1.0.0-rc.3_bi2kohzqnxavgozw3csgny5hju
       dayjs: 1.10.7
       got: 11.8.3
       iconv-lite: 0.6.3
@@ -139,7 +139,7 @@ importers:
       '@logto/shared': ^1.0.0-beta.3
       '@silverhand/eslint-config': 1.0.0-rc.2
       '@silverhand/essentials': ^1.1.0
-      '@silverhand/jest-config': 1.0.0-rc.2
+      '@silverhand/jest-config': 1.0.0-rc.3
       '@silverhand/ts-config': 1.0.0-rc.2
       '@types/jest': ^28.1.6
       '@types/node': ^16.3.1
@@ -155,7 +155,7 @@ importers:
       '@logto/connector-types': link:../connector-types
       '@logto/shared': link:../shared
       '@silverhand/essentials': 1.1.7
-      '@silverhand/jest-config': 1.0.0-rc.2_bi2kohzqnxavgozw3csgny5hju
+      '@silverhand/jest-config': 1.0.0-rc.3_bi2kohzqnxavgozw3csgny5hju
       got: 11.8.3
       zod: 3.14.3
     devDependencies:
@@ -179,7 +179,7 @@ importers:
       '@logto/shared': ^1.0.0-beta.3
       '@silverhand/eslint-config': 1.0.0-rc.2
       '@silverhand/essentials': ^1.1.0
-      '@silverhand/jest-config': 1.0.0-rc.2
+      '@silverhand/jest-config': 1.0.0-rc.3
       '@silverhand/ts-config': 1.0.0-rc.2
       '@types/jest': ^28.1.6
       '@types/node': ^16.3.1
@@ -196,7 +196,7 @@ importers:
       '@logto/schemas': link:../schemas
       '@logto/shared': link:../shared
       '@silverhand/essentials': 1.1.7
-      '@silverhand/jest-config': 1.0.0-rc.2_bi2kohzqnxavgozw3csgny5hju
+      '@silverhand/jest-config': 1.0.0-rc.3_bi2kohzqnxavgozw3csgny5hju
       got: 11.8.3
       zod: 3.14.3
     devDependencies:
@@ -220,7 +220,7 @@ importers:
       '@logto/shared': ^1.0.0-beta.3
       '@silverhand/eslint-config': 1.0.0-rc.2
       '@silverhand/essentials': ^1.1.0
-      '@silverhand/jest-config': 1.0.0-rc.2
+      '@silverhand/jest-config': 1.0.0-rc.3
       '@silverhand/ts-config': 1.0.0-rc.2
       '@types/jest': ^28.1.6
       '@types/node': ^16.3.1
@@ -240,7 +240,7 @@ importers:
       '@logto/schemas': link:../schemas
       '@logto/shared': link:../shared
       '@silverhand/essentials': 1.1.7
-      '@silverhand/jest-config': 1.0.0-rc.2_bi2kohzqnxavgozw3csgny5hju
+      '@silverhand/jest-config': 1.0.0-rc.3_bi2kohzqnxavgozw3csgny5hju
       got: 11.8.3
       jose: 4.6.0
       zod: 3.14.3
@@ -268,7 +268,7 @@ importers:
       '@logto/shared': ^1.0.0-beta.3
       '@silverhand/eslint-config': 1.0.0-rc.2
       '@silverhand/essentials': ^1.1.0
-      '@silverhand/jest-config': 1.0.0-rc.2
+      '@silverhand/jest-config': 1.0.0-rc.3
       '@silverhand/ts-config': 1.0.0-rc.2
       '@types/jest': ^28.1.6
       '@types/node': ^16.3.1
@@ -289,7 +289,7 @@ importers:
       '@logto/schemas': link:../schemas
       '@logto/shared': link:../shared
       '@silverhand/essentials': 1.1.7
-      '@silverhand/jest-config': 1.0.0-rc.2_bi2kohzqnxavgozw3csgny5hju
+      '@silverhand/jest-config': 1.0.0-rc.3_bi2kohzqnxavgozw3csgny5hju
       axios: 0.27.2
       got: 11.8.3
       zod: 3.14.3
@@ -316,7 +316,7 @@ importers:
       '@logto/shared': ^1.0.0-beta.3
       '@silverhand/eslint-config': 1.0.0-rc.2
       '@silverhand/essentials': ^1.1.0
-      '@silverhand/jest-config': 1.0.0-rc.2
+      '@silverhand/jest-config': 1.0.0-rc.3
       '@silverhand/ts-config': 1.0.0-rc.2
       '@types/jest': ^28.1.6
       '@types/node': ^16.3.1
@@ -335,7 +335,7 @@ importers:
       '@logto/schemas': link:../schemas
       '@logto/shared': link:../shared
       '@silverhand/essentials': 1.1.7
-      '@silverhand/jest-config': 1.0.0-rc.2_bi2kohzqnxavgozw3csgny5hju
+      '@silverhand/jest-config': 1.0.0-rc.3_bi2kohzqnxavgozw3csgny5hju
       got: 11.8.3
       zod: 3.14.3
     devDependencies:
@@ -361,7 +361,7 @@ importers:
       '@logto/shared': ^1.0.0-beta.3
       '@silverhand/eslint-config': 1.0.0-rc.2
       '@silverhand/essentials': ^1.1.0
-      '@silverhand/jest-config': 1.0.0-rc.2
+      '@silverhand/jest-config': 1.0.0-rc.3
       '@silverhand/ts-config': 1.0.0-rc.2
       '@types/jest': ^28.1.6
       '@types/node': ^16.3.1
@@ -381,7 +381,7 @@ importers:
       '@logto/schemas': link:../schemas
       '@logto/shared': link:../shared
       '@silverhand/essentials': 1.1.7
-      '@silverhand/jest-config': 1.0.0-rc.2_bi2kohzqnxavgozw3csgny5hju
+      '@silverhand/jest-config': 1.0.0-rc.3_bi2kohzqnxavgozw3csgny5hju
       got: 11.8.3
       query-string: 7.0.1
       zod: 3.14.3
@@ -408,7 +408,7 @@ importers:
       '@logto/shared': ^1.0.0-beta.3
       '@silverhand/eslint-config': 1.0.0-rc.2
       '@silverhand/essentials': ^1.1.0
-      '@silverhand/jest-config': 1.0.0-rc.2
+      '@silverhand/jest-config': 1.0.0-rc.3
       '@silverhand/ts-config': 1.0.0-rc.2
       '@types/jest': ^28.1.6
       '@types/node': ^16.3.1
@@ -427,7 +427,7 @@ importers:
       '@logto/schemas': link:../schemas
       '@logto/shared': link:../shared
       '@silverhand/essentials': 1.1.7
-      '@silverhand/jest-config': 1.0.0-rc.2_bi2kohzqnxavgozw3csgny5hju
+      '@silverhand/jest-config': 1.0.0-rc.3_bi2kohzqnxavgozw3csgny5hju
       got: 11.8.3
       zod: 3.14.3
     devDependencies:
@@ -541,7 +541,7 @@ importers:
       '@logto/shared': ^1.0.0-beta.3
       '@silverhand/eslint-config': 1.0.0-rc.2
       '@silverhand/essentials': ^1.1.6
-      '@silverhand/jest-config': 1.0.0-rc.2
+      '@silverhand/jest-config': 1.0.0-rc.3
       '@silverhand/ts-config': 1.0.0-rc.2
       '@types/jest': ^28.1.6
       '@types/node': ^16.3.1
@@ -557,7 +557,7 @@ importers:
       '@logto/connector-types': link:../connector-types
       '@logto/shared': link:../shared
       '@silverhand/essentials': 1.1.7
-      '@silverhand/jest-config': 1.0.0-rc.2_bi2kohzqnxavgozw3csgny5hju
+      '@silverhand/jest-config': 1.0.0-rc.3_bi2kohzqnxavgozw3csgny5hju
       got: 11.8.3
       zod: 3.14.3
     devDependencies:
@@ -580,7 +580,7 @@ importers:
       '@logto/shared': ^1.0.0-beta.3
       '@silverhand/eslint-config': 1.0.0-rc.2
       '@silverhand/essentials': ^1.1.6
-      '@silverhand/jest-config': 1.0.0-rc.2
+      '@silverhand/jest-config': 1.0.0-rc.3
       '@silverhand/ts-config': 1.0.0-rc.2
       '@types/jest': ^28.1.6
       '@types/node': ^16.3.1
@@ -597,7 +597,7 @@ importers:
       '@logto/connector-types': link:../connector-types
       '@logto/shared': link:../shared
       '@silverhand/essentials': 1.1.7
-      '@silverhand/jest-config': 1.0.0-rc.2_bi2kohzqnxavgozw3csgny5hju
+      '@silverhand/jest-config': 1.0.0-rc.3_bi2kohzqnxavgozw3csgny5hju
       nodemailer: 6.7.5
       zod: 3.14.3
     devDependencies:
@@ -621,7 +621,7 @@ importers:
       '@logto/shared': ^1.0.0-beta.3
       '@silverhand/eslint-config': 1.0.0-rc.2
       '@silverhand/essentials': ^1.1.6
-      '@silverhand/jest-config': 1.0.0-rc.2
+      '@silverhand/jest-config': 1.0.0-rc.3
       '@silverhand/ts-config': 1.0.0-rc.2
       '@types/jest': ^28.1.6
       '@types/node': ^16.3.1
@@ -637,7 +637,7 @@ importers:
       '@logto/connector-types': link:../connector-types
       '@logto/shared': link:../shared
       '@silverhand/essentials': 1.1.7
-      '@silverhand/jest-config': 1.0.0-rc.2_bi2kohzqnxavgozw3csgny5hju
+      '@silverhand/jest-config': 1.0.0-rc.3_bi2kohzqnxavgozw3csgny5hju
       got: 11.8.3
       zod: 3.14.3
     devDependencies:
@@ -692,7 +692,7 @@ importers:
       '@logto/shared': ^1.0.0-beta.3
       '@silverhand/eslint-config': 1.0.0-rc.2
       '@silverhand/essentials': ^1.1.0
-      '@silverhand/jest-config': 1.0.0-rc.2
+      '@silverhand/jest-config': 1.0.0-rc.3
       '@silverhand/ts-config': 1.0.0-rc.2
       '@types/jest': ^28.1.6
       '@types/node': ^16.3.1
@@ -711,7 +711,7 @@ importers:
       '@logto/schemas': link:../schemas
       '@logto/shared': link:../shared
       '@silverhand/essentials': 1.1.7
-      '@silverhand/jest-config': 1.0.0-rc.2_bi2kohzqnxavgozw3csgny5hju
+      '@silverhand/jest-config': 1.0.0-rc.3_bi2kohzqnxavgozw3csgny5hju
       got: 11.8.3
       zod: 3.14.3
     devDependencies:
@@ -737,7 +737,7 @@ importers:
       '@logto/shared': ^1.0.0-beta.3
       '@silverhand/eslint-config': 1.0.0-rc.2
       '@silverhand/essentials': ^1.1.0
-      '@silverhand/jest-config': 1.0.0-rc.2
+      '@silverhand/jest-config': 1.0.0-rc.3
       '@silverhand/ts-config': 1.0.0-rc.2
       '@types/jest': ^28.1.6
       '@types/node': ^16.3.1
@@ -756,7 +756,7 @@ importers:
       '@logto/schemas': link:../schemas
       '@logto/shared': link:../shared
       '@silverhand/essentials': 1.1.7
-      '@silverhand/jest-config': 1.0.0-rc.2_bi2kohzqnxavgozw3csgny5hju
+      '@silverhand/jest-config': 1.0.0-rc.3_bi2kohzqnxavgozw3csgny5hju
       got: 11.8.3
       zod: 3.14.3
     devDependencies:
@@ -927,7 +927,7 @@ importers:
       '@shopify/jest-koa-mocks': ^5.0.0
       '@silverhand/eslint-config': 1.0.0-rc.2
       '@silverhand/essentials': ^1.1.6
-      '@silverhand/jest-config': 1.0.0-rc.2
+      '@silverhand/jest-config': 1.0.0-rc.3
       '@silverhand/ts-config': 1.0.0-rc.2
       '@types/debug': ^4.1.7
       '@types/etag': ^1.8.1
@@ -1048,7 +1048,7 @@ importers:
     devDependencies:
       '@shopify/jest-koa-mocks': 5.0.0
       '@silverhand/eslint-config': 1.0.0-rc.2_swk2g7ygmfleszo5c33j4vooni
-      '@silverhand/jest-config': 1.0.0-rc.2_bi2kohzqnxavgozw3csgny5hju
+      '@silverhand/jest-config': 1.0.0-rc.3_bi2kohzqnxavgozw3csgny5hju
       '@silverhand/ts-config': 1.0.0-rc.2_typescript@4.7.4
       '@types/debug': 4.1.7
       '@types/etag': 1.8.1
@@ -1139,7 +1139,7 @@ importers:
       '@peculiar/webcrypto': ^1.3.3
       '@silverhand/eslint-config': 1.0.0-rc.2
       '@silverhand/essentials': ^1.1.7
-      '@silverhand/jest-config': 1.0.0-rc.2
+      '@silverhand/jest-config': 1.0.0-rc.3
       '@silverhand/ts-config': 1.0.0-rc.2
       '@types/jest': ^28.1.6
       '@types/node': ^16.0.0
@@ -1161,7 +1161,7 @@ importers:
       '@peculiar/webcrypto': 1.3.3
       '@silverhand/eslint-config': 1.0.0-rc.2_swk2g7ygmfleszo5c33j4vooni
       '@silverhand/essentials': 1.1.7
-      '@silverhand/jest-config': 1.0.0-rc.2_bi2kohzqnxavgozw3csgny5hju
+      '@silverhand/jest-config': 1.0.0-rc.3_bi2kohzqnxavgozw3csgny5hju
       '@silverhand/ts-config': 1.0.0-rc.2_typescript@4.7.4
       '@types/jest': 28.1.6
       '@types/node': 16.11.12
@@ -1308,7 +1308,7 @@ importers:
       '@silverhand/eslint-config': 1.0.0-rc.2
       '@silverhand/eslint-config-react': 1.0.0-rc.2
       '@silverhand/essentials': ^1.1.7
-      '@silverhand/jest-config': 1.0.0-rc.2
+      '@silverhand/jest-config': 1.0.0-rc.3
       '@silverhand/ts-config': 1.0.0-rc.2
       '@silverhand/ts-config-react': 1.0.0-rc.2
       '@testing-library/react': ^12.0.0
@@ -1362,7 +1362,7 @@ importers:
       '@silverhand/eslint-config': 1.0.0-rc.2_swk2g7ygmfleszo5c33j4vooni
       '@silverhand/eslint-config-react': 1.0.0-rc.2_3jdvf2aalbcoibv3m53iflhmym
       '@silverhand/essentials': 1.1.7
-      '@silverhand/jest-config': 1.0.0-rc.2_bi2kohzqnxavgozw3csgny5hju
+      '@silverhand/jest-config': 1.0.0-rc.3_bi2kohzqnxavgozw3csgny5hju
       '@silverhand/ts-config': 1.0.0-rc.2_typescript@4.7.4
       '@silverhand/ts-config-react': 1.0.0-rc.2_typescript@4.7.4
       '@testing-library/react': 12.1.5_sfoxds7t5ydpegc3knd667wn6m
@@ -1482,20 +1482,6 @@ packages:
     transitivePeerDependencies:
       - supports-color
 
-  /@babel/eslint-parser/7.17.0_hcg5wxyxr5gbio2lsjbzz2cpcq:
-    resolution: {integrity: sha512-PUEJ7ZBXbRkbq3qqM/jZ2nIuakUBqCYc7Qf52Lj7dlZ6zERnqisdHioL0l4wwQZnmskMeasqUNzLBFKs3nylXA==}
-    engines: {node: ^10.13.0 || ^12.13.0 || >=14.0.0}
-    peerDependencies:
-      '@babel/core': '>=7.11.0'
-      eslint: ^7.5.0 || ^8.0.0
-    dependencies:
-      '@babel/core': 7.17.9
-      eslint: 8.19.0
-      eslint-scope: 5.1.1
-      eslint-visitor-keys: 2.1.0
-      semver: 6.3.0
-    dev: true
-
   /@babel/generator/7.17.9:
     resolution: {integrity: sha512-rAdDousTwxbIxbz5I7GEQ3lUip+xVCXooZNbsydCWs3xA7ZsYOv+CFRdzGxRX78BmQHu9B1Eso59AOZQOJDEdQ==}
     engines: {node: '>=6.9.0'}
@@ -1560,10 +1546,6 @@ packages:
     resolution: {integrity: sha512-O4KCvQA6lLiMU9l2eawBPMf1xPP8xPfB3iEQw150hOVTqj/rfXz0ThTb4HEzqQfs2Bmo5Ay8BzxfzVtBrr9dVg==}
     dev: true
 
-  /@babel/helper-plugin-utils/7.16.7:
-    resolution: {integrity: sha512-Qg3Nk7ZxpgMrsox6HreY1ZNKdBq7K72tDSliA6dCl5f007jR4ne8iD5UzuNnCJH2xBf2BEEVGr+/OL6Gdp7RxA==}
-    engines: {node: '>=6.9.0'}
-
   /@babel/helper-plugin-utils/7.17.12:
     resolution: {integrity: sha512-JDkf04mqtN3y4iAbO1hv9U2ARpPyPL1zqyWs/2WG1pgSq9llHFjStX5jdxb84himgJm+8Ng+x0oiWF/nw/XQKA==}
     engines: {node: '>=6.9.0'}
@@ -1610,13 +1592,6 @@ packages:
       '@babel/helper-validator-identifier': 7.16.7
       chalk: 2.4.2
       js-tokens: 4.0.0
-
-  /@babel/parser/7.17.9:
-    resolution: {integrity: sha512-vqUSBLP8dQHFPdPi9bc5GK9vRkYHJ49fsZdtoJ8EQ8ibpwk5rPKfvNIwChB0KVXcIjcepEBBd2VHC5r9Gy8ueg==}
-    engines: {node: '>=6.0.0'}
-    hasBin: true
-    dependencies:
-      '@babel/types': 7.17.0
 
   /@babel/parser/7.18.3:
     resolution: {integrity: sha512-rL50YcEuHbbauAFAysNsJA4/f89fGTOBRNs9P81sniKnKAr4xULe5AecolcsKbi88xu0ByWYDj/S1AJ3FSFuSQ==}
@@ -4572,8 +4547,8 @@ packages:
       lodash.orderby: 4.6.0
       lodash.pick: 4.4.0
 
-  /@silverhand/jest-config/1.0.0-rc.2_bi2kohzqnxavgozw3csgny5hju:
-    resolution: {integrity: sha512-niko5qAZx3r8+/qLJLfAacu365CwJ2xk3AobLNXJvPDmvhBlEfALdfbsK9f+U6sboGKKU8VAlKT03R+bFXPVyg==}
+  /@silverhand/jest-config/1.0.0-rc.3_bi2kohzqnxavgozw3csgny5hju:
+    resolution: {integrity: sha512-s8apB6KcIPPtdC3j8W9nd8apICnlZDa3vMLs0Jd6MjduI36Ekjt4b0STIGU9NyO4GcAb6EWNTTK3LdKgXOOIhQ==}
     engines: {node: ^16.0.0 || ^18.0.0}
     peerDependencies:
       jest: ^28.1.3
@@ -4805,6 +4780,7 @@ packages:
   /@tootallnate/once/1.1.2:
     resolution: {integrity: sha512-RbzJvlNzmRq5c3O09UipeuXno4tA1FE6ikOjxZK0tuxVv3412l64l5t1W5pj4+rJq9vpkm/kwiR07aZXnsKPxw==}
     engines: {node: '>= 6'}
+    dev: true
 
   /@tootallnate/once/2.0.0:
     resolution: {integrity: sha512-XCuKFP5PS55gnMVu3dty8KPatLqUoy/ZYzDzAGCQ8JNFCkLXzmI7vNHCR+XpbZaMWQK/vQubr7PkYq8g470J/A==}
@@ -5495,6 +5471,7 @@ packages:
     resolution: {integrity: sha512-V/LGr1APy+PXIwKebEWrkZPwoeoF+w1jiOBUmuxuiUIaOHtob8Qc9BTrYo7VuI5fR8tqsy+buA2WFooR5olqvQ==}
     engines: {node: '>=0.4.0'}
     hasBin: true
+    dev: true
 
   /acorn/8.7.1:
     resolution: {integrity: sha512-Xx54uLJQZ19lKygFXOWsscKUbsBZW0CPykPhVQdhIeIwrbPmJzqeASDInc8nKBnp/JT6igTs82qPXz069H8I/A==}
@@ -6865,6 +6842,7 @@ packages:
         optional: true
     dependencies:
       ms: 2.1.2
+    dev: true
 
   /debug/4.3.4:
     resolution: {integrity: sha512-PRWFHuSU3eDtQJPvnNY7Jcket1j0t5OuOsFzPPzsekD52Zl8qUfFIPEiswXqIvHWGVHOgX+7G/vCNNhehwxfkQ==}
@@ -6931,6 +6909,7 @@ packages:
 
   /deep-is/0.1.4:
     resolution: {integrity: sha512-oIPzksmTg4/MriiaYGO+okXDT7ztn/w3Eptv/+gSIdMdKsJo0u4CfYNFJPy+4SKMuCqGw2wxnA+URMg3t8a/bQ==}
+    dev: true
 
   /deepmerge/4.2.2:
     resolution: {integrity: sha512-FJ3UgI4gIl+PHZm53knsuSFpE+nESMr7M4v9QcgB7S63Kj/6WqMiFQJpBBYz1Pt+66bZpP3Q7Lye0Oo9MPKEdg==}
@@ -7749,10 +7728,12 @@ packages:
   /estraverse/5.3.0:
     resolution: {integrity: sha512-MMdARuVEQziNTeJD8DgMqmhwR11BRQ/cBP+pLtYdSTnf3MIO8fFeiINEbX36ZdNlfU/7A9f3gUw49B3oQsvwBA==}
     engines: {node: '>=4.0'}
+    dev: true
 
   /esutils/2.0.3:
     resolution: {integrity: sha512-kVscqXk4OCp68SZ0dkgEKVi6/8ij300KBWTJq32P/dYeWTSwK41WyTxalN1eRmA5Z9UU/LX9D7FWSmV9SAYx6g==}
     engines: {node: '>=0.10.0'}
+    dev: true
 
   /etag/1.8.1:
     resolution: {integrity: sha512-aIL5Fx7mawVa300al2BnEE4iNvo1qETxLrPI/o05L7z6go7fCw1J6EQmbK4FmJ2AS7kgVF/KEZWufBfdClMcPg==}
@@ -8711,6 +8692,7 @@ packages:
       debug: 4.3.4
     transitivePeerDependencies:
       - supports-color
+    dev: true
 
   /http-proxy-agent/5.0.0:
     resolution: {integrity: sha512-n2hY8YdoRE1i7r6M0w9DIw5GgZN0G25P8zLCRQ8rjXtTU3vsNFBI/vWK/UIeE6g5MUUz6avwAPXmL6Fy9D/90w==}
@@ -9282,6 +9264,7 @@ packages:
 
   /is-typedarray/1.0.0:
     resolution: {integrity: sha1-5HnICFjfDBsR3dppQPlgEfzaSpo=}
+    dev: true
 
   /is-unicode-supported/0.1.0:
     resolution: {integrity: sha512-knxG2q4UC3u8stRGyAVJCOdxFmv5DZiRcdlIaAQXAbSfJya+OhopNotLQrstBhququ4ZpuKbDc/8S6mgXgPFPw==}
@@ -12357,6 +12340,7 @@ packages:
 
   /parse5/6.0.1:
     resolution: {integrity: sha512-Ofn/CTFzRGTTxwpNEs9PP93gXShHcTq255nzRYSKe8AkVpZY7e1fpmTfOyoIvjP5HG7Z2ZM7VS9PPhQGW2pOpw==}
+    dev: true
 
   /parseurl/1.3.3:
     resolution: {integrity: sha512-CiyeOxFT/JZyN5m0z9PfXw4SCBJ6Sygz1Dpl0wqjlhDEGGBP1GnsUVEL0p63hoG1fcj3fHynXi9NYO4nWOL+qQ==}
@@ -12865,6 +12849,7 @@ packages:
       ansi-regex: 5.0.1
       ansi-styles: 5.2.0
       react-is: 17.0.2
+    dev: true
 
   /pretty-format/28.1.3:
     resolution: {integrity: sha512-8gFb/To0OmxHR9+ZTb14Df2vNxdGCX8g1xWGUTqUw5TiZvcQf5sHKObd5UcPyLLyowNwDAMTF3XWOG1B6mxl1Q==}
@@ -13209,6 +13194,7 @@ packages:
 
   /react-is/17.0.2:
     resolution: {integrity: sha512-w2GsyukL62IJnlaff/nRegPQR94C/XXamvMWmSHRJ4y7Ts/4ocGRmTHvOs8PSE6pB3dWOrD/nueuU5sduBsQ4w==}
+    dev: true
 
   /react-is/18.2.0:
     resolution: {integrity: sha512-xWGDIW6x921xtzPkhiULtthJHoJvBbF3q26fzloPCK0hsvxtPVelvftw3zjbHWSkR2km9Z+4uxbDDK/6Zw9B8w==}
@@ -14237,6 +14223,7 @@ packages:
     dependencies:
       buffer-from: 1.1.2
       source-map: 0.6.1
+    dev: true
 
   /source-map/0.5.7:
     resolution: {integrity: sha512-LbrmJOMUSdEVxIKvdcJzQC+nQhe8FUZQTXQy6+I75skNgn3OoQ0DZA8YnFa7gp8tqtL3KPf1kmo0R5DoApeSGQ==}
@@ -14249,6 +14236,7 @@ packages:
   /source-map/0.7.3:
     resolution: {integrity: sha512-CkCj6giN3S+n9qrYiBTX5gystlENnRW5jZeNLHpe6aue+SrHcG5VYwujhW9s4dY31mEGsxBDrHR6oI69fTXsaQ==}
     engines: {node: '>= 8'}
+    dev: true
 
   /source-map/0.8.0-beta.0:
     resolution: {integrity: sha512-2ymg6oRBpebeZi9UUNsgQ89bhx01TcTkmNTGnNO88imTmbSgy4nfujrgVEFKWpMTEGA11EDkTt7mqObTPdigIA==}
@@ -14935,6 +14923,7 @@ packages:
     engines: {node: '>=8'}
     dependencies:
       punycode: 2.1.1
+    dev: true
 
   /tr46/3.0.0:
     resolution: {integrity: sha512-l7FvfAHlcmulp8kr+flpQZmVwtu7nfRV7NZujtN0OqES8EL4O4e0qqzL0DC5gAvx/ZC/9lk6rhcUwYvkBnBnYA==}
@@ -15184,6 +15173,7 @@ packages:
     resolution: {integrity: sha512-zdu8XMNEDepKKR+XYOXAVPtWui0ly0NtohUscw+UmaHiAWT8hrV1rr//H6V+0DvJ3OQ19S979M0laLfX8rm82Q==}
     dependencies:
       is-typedarray: 1.0.0
+    dev: true
 
   /typedarray/0.0.6:
     resolution: {integrity: sha1-hnrHTjhkGHsdPUfZlqeOxciDB3c=}
@@ -15576,6 +15566,7 @@ packages:
   /webidl-conversions/6.1.0:
     resolution: {integrity: sha512-qBIvFLGiBpLjfwmYAaHPXsn+ho5xZnGvyGvsarywGNc8VyQJUMHJ8OBKGGrPER0okBeMDaan4mNBlgBROxuI8w==}
     engines: {node: '>=10.4'}
+    dev: true
 
   /webidl-conversions/7.0.0:
     resolution: {integrity: sha512-VwddBukDzu71offAQR975unBIGqfKZpM+8ZX6ySk8nYhVoo5CYaZyzt3YBvYtRtO+aoGlqxPg/B87NGVZ/fu6g==}
@@ -15631,6 +15622,7 @@ packages:
       lodash: 4.17.21
       tr46: 2.1.0
       webidl-conversions: 6.1.0
+    dev: true
 
   /which-boxed-primitive/1.0.2:
     resolution: {integrity: sha512-bwZdv0AKLpplFY2KZRX6TvyuN7ojjr7lwkg6ml0roIy9YeuSr7JS372qlNW18UQYzgYK9ziGcerWqZOmEn9VNg==}
@@ -15664,6 +15656,7 @@ packages:
   /word-wrap/1.2.3:
     resolution: {integrity: sha512-Hz/mrNwitNRh/HUAtM/VT/5VH+ygD6DV7mYKZAtHOrbs8U7lvPS6xf7EJKMF0uW1KJCl0H701g3ZGus+muE5vQ==}
     engines: {node: '>=0.10.0'}
+    dev: true
 
   /wordwrap/1.0.0:
     resolution: {integrity: sha1-J1hIEIkUVqQXHI0CJkQa3pDLyus=}
@@ -15703,6 +15696,7 @@ packages:
       is-typedarray: 1.0.0
       signal-exit: 3.0.7
       typedarray-to-buffer: 3.1.5
+    dev: true
 
   /write-file-atomic/4.0.1:
     resolution: {integrity: sha512-nSKUxgAbyioruk6hU87QzVbY279oYT6uiwgDoujth2ju4mJ+TZau7SQBhtbTmUyuNYTuXnSyRn66FV0+eCgcrQ==}
@@ -15815,6 +15809,7 @@ packages:
       string-width: 4.2.3
       y18n: 5.0.8
       yargs-parser: 20.2.9
+    dev: true
 
   /yargs/17.4.1:
     resolution: {integrity: sha512-WSZD9jgobAg3ZKuCQZSa3g9QOJeCCqLoLAykiWgmXnDo9EPnn4RPf5qVTtzgOx66o6/oqhcA5tHtJXpG8pMt3g==}
