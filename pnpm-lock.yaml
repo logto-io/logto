@@ -798,7 +798,7 @@ importers:
       '@types/mdx': ^2.0.1
       '@types/mdx-js__react': ^1.5.5
       '@types/react': ^17.0.14
-      '@types/react-dom': ^17.0.9
+      '@types/react-dom': ^18.0.0
       '@types/react-modal': ^3.13.1
       '@types/react-syntax-highlighter': ^15.5.1
       classnames: ^2.3.1
@@ -862,7 +862,7 @@ importers:
       '@types/mdx': 2.0.1
       '@types/mdx-js__react': 1.5.5
       '@types/react': 17.0.37
-      '@types/react-dom': 17.0.11
+      '@types/react-dom': 18.0.6
       '@types/react-modal': 3.13.1
       '@types/react-syntax-highlighter': 15.5.1
       classnames: 2.3.1
@@ -1090,7 +1090,7 @@ importers:
       '@silverhand/ts-config': 1.0.0-rc.2
       '@silverhand/ts-config-react': 1.0.0-rc.2
       '@types/react': ^17.0.14
-      '@types/react-dom': ^17.0.9
+      '@types/react-dom': ^18.0.0
       cross-env: ^7.0.3
       eslint: ^8.21.0
       i18next: ^21.6.12
@@ -1116,7 +1116,7 @@ importers:
       '@silverhand/ts-config': 1.0.0-rc.2_typescript@4.7.4
       '@silverhand/ts-config-react': 1.0.0-rc.2_typescript@4.7.4
       '@types/react': 17.0.37
-      '@types/react-dom': 17.0.11
+      '@types/react-dom': 18.0.6
       cross-env: 7.0.3
       eslint: 8.21.0
       i18next: 21.6.12
@@ -1315,7 +1315,7 @@ importers:
       '@types/color': ^3.0.3
       '@types/jest': ^28.1.6
       '@types/react': ^17.0.14
-      '@types/react-dom': ^17.0.9
+      '@types/react-dom': ^18.0.0
       '@types/react-modal': ^3.13.1
       '@types/react-router-dom': ^5.3.2
       camelcase-keys: ^7.0.2
@@ -1369,7 +1369,7 @@ importers:
       '@types/color': 3.0.3
       '@types/jest': 28.1.6
       '@types/react': 17.0.37
-      '@types/react-dom': 17.0.11
+      '@types/react-dom': 18.0.6
       '@types/react-modal': 3.13.1
       '@types/react-router-dom': 5.3.2
       camelcase-keys: 7.0.2
@@ -5175,6 +5175,12 @@ packages:
 
   /@types/react-dom/17.0.11:
     resolution: {integrity: sha512-f96K3k+24RaLGVu/Y2Ng3e1EbZ8/cVJvypZWd7cy0ofCBaf2lcM46xNhycMZ2xGwbBjRql7hOlZ+e2WlJ5MH3Q==}
+    dependencies:
+      '@types/react': 17.0.37
+    dev: true
+
+  /@types/react-dom/18.0.6:
+    resolution: {integrity: sha512-/5OFZgfIPSwy+YuIBP/FgJnQnsxhZhjjrnxudMddeblOouIodEQ75X14Rr4wGSG/bknL+Omy9iWlLo1u/9GzAA==}
     dependencies:
       '@types/react': 17.0.37
     dev: true
