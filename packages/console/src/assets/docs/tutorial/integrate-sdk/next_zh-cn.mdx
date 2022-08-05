@@ -59,6 +59,7 @@ import { LogtoProvider, LogtoConfig } from '@logto/next';
 export const logtoClient = new LogtoClient({
   endpoint: '${props.endpoint}',
   appId: '${props.appId}',
+  appSecret: '${props.appSecret}',
   baseUrl: 'http://localhost:3000', // 你可以修改为自己真实的 URL
   cookieSecret: '${generateRandomString(32)}', // Logto 自动帮你生成的 32 位密钥
   cookieSecure: process.env.NODE_ENV === 'production',

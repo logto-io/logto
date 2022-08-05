@@ -118,6 +118,7 @@ const { fromUint8Array } = require('js-base64');
 const config = {
   endpoint: '${props.endpoint}',
   appId: '${props.appId}',
+  appSecret: '${props.appSecret}',
   redirectUri: '${props.redirectUris[0] ?? 'http://localhost:3000/callback'}', // Configured in the previous step
   scopes: withReservedScopes().split(' '),
 };

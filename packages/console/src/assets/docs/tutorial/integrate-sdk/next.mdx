@@ -59,6 +59,7 @@ import { LogtoProvider, LogtoConfig } from '@logto/next';
 export const logtoClient = new LogtoClient({
   endpoint: '${props.endpoint}',
   appId: '${props.appId}',
+  appSecret: '${props.appSecret}',
   baseUrl: 'http://localhost:3000', // Change to your own base URL
   cookieSecret: '${generateRandomString(32)}', // Auto-generated 32 digit secret
   cookieSecure: process.env.NODE_ENV === 'production',
