@@ -81,9 +81,8 @@ export const findFirstParentheses = (value: string): Optional<ParenthesesMatch> 
 // Split at each comma that is not in parentheses
 export const splitAtCommasOutsideParentheses = (value: string) =>
   Object.values(value).reduce<{ result: string[]; count: number }>(
-    (previous, current) => {
-      const { result } = previous;
-      const count = previous.count + getCountDelta(current);
+    ({ result, count: previousCount }, current) => {
+      const count = previousCount + getCountDelta(current);
 
       if (count === 0 && current === ',') {
         // eslint-disable-next-line @silverhand/fp/no-mutating-methods
