@@ -12,6 +12,8 @@ import { appendDotEnv } from './dot-env';
 import { allYes, noInquiry } from './parameters';
 import { getEnvAsStringArray } from './utils';
 
+const defaultLogtoOidcPrivateKey = './oidc-private-key.pem';
+
 /**
  * Try to read private keys with the following order:
  *
@@ -30,44 +32,40 @@ const readPrivateKeys = async (): Promise<string[]> => {
     return privateKeys;
   }
 
-  // Downward compatibility for `OIDC_PRIVATE_KEY` and `OIDC_PRIVATE_KEY_PATH`
+  // Downward compatibility for `OIDC_PRIVATE_KEY`
   const compatPrivateKey = getEnv('OIDC_PRIVATE_KEY');
 
   if (compatPrivateKey) {
     return [compatPrivateKey];
   }
 
+  // Downward compatibility for `OIDC_PRIVATE_KEY_PATH`
   const originPrivateKeyPath = getEnv('OIDC_PRIVATE_KEY_PATH');
+  const privateKeyPaths = getEnvAsStringArray(
+    'OIDC_PRIVATE_KEY_PATHS',
+    originPrivateKeyPath ? [originPrivateKeyPath] : []
+  );
 
-  const privateKeyPaths = getEnvAsStringArray('OIDC_PRIVATE_KEY_PATHS', [
-    originPrivateKeyPath || './oidc-private-key.pem',
-  ]);
-
-  const notExistPrivateKeys = privateKeyPaths.filter((path): boolean => !existsSync(path));
-
-  if (notExistPrivateKeys.length > 0) {
-    const notExistPrivateKeysRawValue = JSON.stringify(notExistPrivateKeys);
-    const notExistError = new Error(
-      `Private keys ${notExistPrivateKeysRawValue} configured in env \`OIDC_PRIVATE_KEY_PATHS\` not found.`
-    );
-
-    if (noInquiry) {
-      throw notExistError;
-    }
-
-    if (!allYes) {
-      const answer = await inquirer.prompt({
-        type: 'confirm',
-        name: 'confirm',
-        message: `No private keys found in env \`OIDC_PRIVATE_KEYS\` and private keys (${notExistPrivateKeysRawValue}) configured in \`OIDC_PRIVATE_KEY_PATHS\` are not exist, would you like to generate them?`,
-      });
-
-      if (!answer.confirm) {
-        throw notExistError;
+  if (privateKeyPaths.length === 0) {
+    try {
+      return [readFileSync(defaultLogtoOidcPrivateKey, 'utf8')];
+    } catch (error: unknown) {
+      if (noInquiry) {
+        throw error;
       }
-    }
 
-    for (const notExistPrivateKey of notExistPrivateKeys) {
+      if (!allYes) {
+        const answer = await inquirer.prompt({
+          type: 'confirm',
+          name: 'confirm',
+          message: `No private key found in env \`OIDC_PRIVATE_KEYS\` nor \`${defaultLogtoOidcPrivateKey}\`, would you like to generate a new one?`,
+        });
+
+        if (!answer.confirm) {
+          throw error;
+        }
+      }
+
       const { privateKey } = generateKeyPairSync('rsa', {
         modulusLength: 4096,
         publicKeyEncoding: {
@@ -79,15 +77,25 @@ const readPrivateKeys = async (): Promise<string[]> => {
           format: 'pem',
         },
       });
-      writeFileSync(notExistPrivateKey, privateKey);
+      writeFileSync(defaultLogtoOidcPrivateKey, privateKey);
+
+      return [privateKey];
     }
+  }
+
+  const notExistPrivateKeys = privateKeyPaths.filter((path): boolean => !existsSync(path));
+
+  if (notExistPrivateKeys.length > 0) {
+    const notExistPrivateKeysRawValue = JSON.stringify(notExistPrivateKeys);
+    throw new Error(
+      `Private keys ${notExistPrivateKeysRawValue} configured in env \`OIDC_PRIVATE_KEY_PATHS\` not found.`
+    );
   }
 
   try {
     return privateKeyPaths.map((path): string => readFileSync(path, 'utf8'));
   } catch {
     const privateKeyPathsRawValue = JSON.stringify(privateKeyPaths);
-
     throw new Error(
       `Failed to read private keys from ${privateKeyPathsRawValue} in env \`OIDC_PRIVATE_KEY_PATHS\`.`
     );
