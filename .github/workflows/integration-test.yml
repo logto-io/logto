@@ -23,7 +23,10 @@ jobs:
 
       - name: Package
         run: |
-          ./link-mock-connectors.sh
+          echo Add the mock connectors to core for integration tests only
+          pnpm -- lerna add @logto/connector-mock-sms --scope=@logto/core 
+          pnpm -- lerna add @logto/connector-mock-email --scope=@logto/core 
+          pnpm -- lerna add @logto/connector-mock-social --scope=@logto/core 
           ./package.sh
 
       - uses: actions/upload-artifact@v3
