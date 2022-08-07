@@ -23,10 +23,12 @@ jobs:
 
       - name: Package
         run: |
-          echo Add the mock connectors to core for integration tests only
-          pnpm -- lerna add @logto/connector-mock-sms --scope=@logto/core 
-          pnpm -- lerna add @logto/connector-mock-email --scope=@logto/core 
-          pnpm -- lerna add @logto/connector-mock-social --scope=@logto/core 
+          echo Link the mock connectors for integration tests only
+          cd packages/core
+          pnpm link @logto/connector-mock-sms @logto/connector-mock-email @logto/connector-mock-social
+          cd -
+          echo Update pnpm-lock.yaml
+          pnpm i --no-frozen-lockfile --lockfile-only
           ./package.sh
 
       - uses: actions/upload-artifact@v3
