@@ -23,7 +23,7 @@ jobs:
         
       - name: Install mock connectors
         run: |
-          pnpm lerna add --scope=@logto/core @logto/connector-mock-mail
+          pnpm lerna add --scope=@logto/core @logto/connector-mock-email
           pnpm lerna add --scope=@logto/core @logto/connector-mock-sms
           pnpm lerna add --scope=@logto/core @logto/connector-mock-social
         env:
