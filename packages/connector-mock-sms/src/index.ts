@@ -28,7 +28,7 @@ export default class MockSmsConnector extends SmsConnector<MockSmsConfig> {
     }
   }
 
-  public readonly sendMessageBy: SmsSendMessageByFunction<MockSmsConfig> = async (
+  protected readonly sendMessageBy: SmsSendMessageByFunction<MockSmsConfig> = async (
     config,
     phone,
     type,
