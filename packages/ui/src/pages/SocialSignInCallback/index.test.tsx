@@ -1,4 +1,4 @@
-import { waitFor } from '@testing-library/react';
+import { waitFor, act } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
@@ -41,8 +41,10 @@ describe('SocialCallbackPage with code', () => {
       </SettingsProvider>
     );
 
-    await waitFor(() => {
-      expect(signInWithSocialSpy).toBeCalled();
+    await act(async () => {
+      await waitFor(() => {
+        expect(signInWithSocialSpy).toBeCalled();
+      });
     });
   });
 });

@@ -23,7 +23,6 @@ const Drawer = ({ className, isOpen = false, children, onClose }: Props) => {
       isOpen={isOpen}
       className={classNames(styles.drawer, className)}
       overlayClassName={modalStyles.overlay}
-      appElement={document.querySelector('main') ?? undefined}
       closeTimeoutMS={300}
       onRequestClose={onClose}
     >
