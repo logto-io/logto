@@ -3,7 +3,6 @@
 import { readFileSync } from 'fs';
 
 import { CustomClientMetadataKey } from '@logto/schemas';
-import { exportJWK } from 'jose';
 import Koa from 'koa';
 import mount from 'koa-mount';
 import { Provider, errors } from 'oidc-provider';
@@ -18,11 +17,10 @@ import { routes } from '@/routes/consts';
 import { addOidcEventListeners } from '@/utils/oidc-provider-event-listener';
 
 export default async function initOidc(app: Koa): Promise<Provider> {
-  const { issuer, cookieKeys, privateKey, defaultIdTokenTtl, defaultRefreshTokenTtl } =
+  const { issuer, cookieKeys, privateJwks, defaultIdTokenTtl, defaultRefreshTokenTtl } =
     envSet.values.oidc;
   const logoutSource = readFileSync('static/html/logout.html', 'utf8');
 
-  const keys = [await exportJWK(privateKey)];
   const cookieConfig = Object.freeze({
     sameSite: 'lax',
     path: '/',
@@ -40,7 +38,7 @@ export default async function initOidc(app: Koa): Promise<Provider> {
       short: cookieConfig,
     },
     jwks: {
-      keys,
+      keys: privateJwks,
     },
     features: {
       userinfo: { enabled: false },
