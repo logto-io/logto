@@ -1,4 +1,4 @@
-import { Optional } from '@silverhand/essentials';
+import { conditionalString, Optional } from '@silverhand/essentials';
 
 export const normalizeWhitespaces = (string: string): string => string.replace(/\s+/g, ' ').trim();
 
@@ -78,9 +78,9 @@ export const findFirstParentheses = (value: string): Optional<ParenthesesMatch> 
   return matched ? rest : undefined;
 };
 
-export const splitColumnDefinitions = (value: string) =>
+export const splitColumnDefinitions = (value: string) => {
   // Split at each comma that is not in parentheses
-  Object.values(value).reduce<{ result: string[]; count: number }>(
+  return Object.values(value).reduce<{ result: string[]; count: number }>(
     ({ result, count: previousCount }, current) => {
       const count = previousCount + getCountDelta(current);
 
@@ -91,11 +91,11 @@ export const splitColumnDefinitions = (value: string) =>
         };
       }
 
-      // eslint-disable-next-line @silverhand/fp/no-mutation
-      result[result.length - 1] += current;
-
       return {
-        result,
+        result: [
+          ...result.slice(0, -1),
+          `${conditionalString(result[result.length - 1])}${current}`,
+        ],
         count,
       };
     },
@@ -104,6 +104,7 @@ export const splitColumnDefinitions = (value: string) =>
       count: 0,
     }
   ).result;
+};
 
 const getRawType = (value: string): string => {
   const bracketIndex = value.indexOf('[');
