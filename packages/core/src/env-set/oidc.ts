@@ -25,7 +25,7 @@ const defaultLogtoOidcPrivateKey = './oidc-private-key.pem';
  * @returns The private keys for OIDC provider.
  * @throws An error when failed to read a private key.
  */
-const readPrivateKeys = async (): Promise<string[]> => {
+export const readPrivateKeys = async (): Promise<string[]> => {
   const privateKeys = getEnvAsStringArray('OIDC_PRIVATE_KEYS');
 
   if (privateKeys.length > 0) {
