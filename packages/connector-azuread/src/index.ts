@@ -6,7 +6,7 @@ import {
   AuthorizationUrlRequest,
   CryptoProvider,
 } from '@azure/msal-node';
-import { SocialConnectorInstance } from '@logto/connector-base-classes';
+import { SocialConnector } from '@logto/connector-base-classes';
 import {
   ConnectorError,
   ConnectorErrorCodes,
@@ -27,7 +27,7 @@ import {
   userInfoResponseGuard,
 } from './types';
 
-export default class AzureADConnector<T> extends SocialConnectorInstance<AzureADConfig, T> {
+export default class AzureADConnector extends SocialConnector<AzureADConfig> {
   public clientApplication!: ConfidentialClientApplication;
   public authCodeUrlParams!: AuthorizationUrlRequest;
 

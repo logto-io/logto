@@ -1,4 +1,4 @@
-import { SocialConnectorInstance } from '@logto/connector-base-classes';
+import { SocialConnector } from '@logto/connector-base-classes';
 import {
   AuthResponseParser,
   GetAuthorizationUri,
@@ -29,7 +29,7 @@ import {
   userInfoResponseGuard,
 } from './types';
 
-export default class GithubConnector<T> extends SocialConnectorInstance<GithubConfig, T> {
+export default class GithubConnector extends SocialConnector<GithubConfig> {
   constructor(getConnectorConfig: GetConnectorConfig) {
     super(getConnectorConfig);
     this.metadata = defaultMetadata;

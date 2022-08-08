@@ -1,4 +1,4 @@
-import { EmailConnectorInstance } from '@logto/connector-base-classes';
+import { EmailConnector } from '@logto/connector-base-classes';
 import {
   ConnectorError,
   ConnectorErrorCodes,
@@ -18,10 +18,7 @@ import {
   PublicParameters,
 } from './types';
 
-export default class SendGridMailConnector<T> extends EmailConnectorInstance<
-  SendGridMailConfig,
-  T
-> {
+export default class SendGridMailConnector extends EmailConnector<SendGridMailConfig> {
   constructor(getConnectorConfig: GetConnectorConfig) {
     super(getConnectorConfig);
     this.metadata = defaultMetadata;
@@ -36,7 +33,7 @@ export default class SendGridMailConnector<T> extends EmailConnectorInstance<
     }
   }
 
-  public readonly sendMessageBy: EmailSendMessageByFunction<SendGridMailConfig> = async (
+  protected readonly sendMessageBy: EmailSendMessageByFunction<SendGridMailConfig> = async (
     config,
     address,
     type,

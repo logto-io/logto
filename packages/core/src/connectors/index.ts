@@ -1,16 +1,12 @@
-import { ConnectorInstance, SocialConnectorInstance } from '@logto/connector-base-classes';
-import { Connector } from '@logto/schemas';
-
-import envSet from '@/env-set';
 import RequestError from '@/errors/RequestError';
 import { findAllConnectors, insertConnector } from '@/queries/connector';
 
 import { defaultConnectorPackages } from './consts';
-import { ConnectorType } from './types';
+import { ConnectorType, ConnectorInstance, Instance, SocialConnectorInstance } from './types';
 import { getConnectorConfig } from './utilities';
 
 // eslint-disable-next-line @silverhand/fp/no-let
-let cachedConnectors: ConnectorInstance[] | undefined;
+let cachedConnectors: Instance[] | undefined;
 
 const loadConnectors = async () => {
   if (cachedConnectors) {
@@ -28,8 +24,8 @@ const loadConnectors = async () => {
     connectorPackages.map(async (packageName) => {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       const { default: Builder } = await import(packageName);
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment
-      const instance: ConnectorInstance = new Builder<Connector>(getConnectorConfig);
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
+      const instance: Instance = new Builder(getConnectorConfig);
 
       return instance;
     })
@@ -42,20 +38,17 @@ export const getConnectorInstances = async (): Promise<ConnectorInstance[]> => {
   const connectors = await findAllConnectors();
   const connectorMap = new Map(connectors.map((connector) => [connector.id, connector]));
 
-  const allConnectors = await loadConnectors();
+  const allInstances = await loadConnectors();
 
-  return allConnectors.map((element) => {
-    const { id } = element.metadata;
+  return allInstances.map((instance) => {
+    const { id } = instance.metadata;
     const connector = connectorMap.get(id);
 
     if (!connector) {
       throw new RequestError({ code: 'entity.not_found', id, status: 404 });
     }
 
-    // eslint-disable-next-line @silverhand/fp/no-mutation
-    element.connector = connector;
-
-    return element;
+    return { instance, connector };
   });
 };
 
@@ -76,13 +69,13 @@ export const getConnectorInstanceById = async (id: string): Promise<ConnectorIns
 
 const isSocialConnectorInstance = (
   connector: ConnectorInstance
-): connector is InstanceType<typeof SocialConnectorInstance> => {
-  return connector.metadata.type === ConnectorType.Social;
+): connector is SocialConnectorInstance => {
+  return connector.instance.metadata.type === ConnectorType.Social;
 };
 
 export const getSocialConnectorInstanceById = async (
   id: string
-): Promise<InstanceType<typeof SocialConnectorInstance>> => {
+): Promise<SocialConnectorInstance> => {
   const connector = await getConnectorInstanceById(id);
 
   if (!isSocialConnectorInstance(connector)) {

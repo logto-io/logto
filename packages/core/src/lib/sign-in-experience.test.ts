@@ -1,4 +1,3 @@
-import { ConnectorInstance } from '@logto/connector-types';
 import { BrandingStyle, SignInMethodState, ConnectorType } from '@logto/schemas';
 
 import {
@@ -8,6 +7,7 @@ import {
   mockBranding,
   mockSignInMethods,
 } from '@/__mocks__';
+import { ConnectorInstance } from '@/connectors/types';
 import RequestError from '@/errors/RequestError';
 import {
   isEnabled,

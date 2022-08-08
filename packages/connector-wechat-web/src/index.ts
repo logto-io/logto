@@ -3,7 +3,7 @@
  * https://developers.weixin.qq.com/doc/oplatform/Website_App/WeChat_Login/Wechat_Login.html
  */
 
-import { SocialConnectorInstance } from '@logto/connector-base-classes';
+import { SocialConnector } from '@logto/connector-base-classes';
 import {
   AuthResponseParser,
   GetAuthorizationUri,
@@ -36,7 +36,7 @@ import {
   WechatConfig,
 } from './types';
 
-export default class WechatConnector<T> extends SocialConnectorInstance<WechatConfig, T> {
+export default class WechatConnector extends SocialConnector<WechatConfig> {
   constructor(getConnectorConfig: GetConnectorConfig) {
     super(getConnectorConfig);
     this.metadata = defaultMetadata;

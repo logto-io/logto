@@ -1,6 +1,6 @@
 import { randomUUID } from 'crypto';
 
-import { SocialConnectorInstance } from '@logto/connector-base-classes';
+import { SocialConnector } from '@logto/connector-base-classes';
 import {
   ConnectorError,
   ConnectorErrorCodes,
@@ -13,7 +13,7 @@ import { z } from 'zod';
 import { defaultMetadata } from './constant';
 import { mockSocialConfigGuard, MockSocialConfig } from './types';
 
-export default class MockSocialConnector<T> extends SocialConnectorInstance<MockSocialConfig, T> {
+export default class MockSocialConnector extends SocialConnector<MockSocialConfig> {
   constructor(getConnectorConfig: GetConnectorConfig) {
     super(getConnectorConfig);
     this.metadata = defaultMetadata;

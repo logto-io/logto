@@ -1,4 +1,4 @@
-import { SocialConnectorInstance } from '@logto/connector-base-classes';
+import { SocialConnector } from '@logto/connector-base-classes';
 import {
   AuthResponseParser,
   GetAuthorizationUri,
@@ -13,7 +13,7 @@ import { scope, defaultMetadata, jwksUri, issuer, authorizationEndpoint } from '
 import { appleConfigGuard, authResponseGuard, AppleConfig, AuthResponse } from './types';
 
 // TO-DO: support nonce validation
-export default class AppleConnector<T> extends SocialConnectorInstance<AppleConfig, T> {
+export default class AppleConnector extends SocialConnector<AppleConfig> {
   constructor(getConnectorConfig: GetConnectorConfig) {
     super(getConnectorConfig);
     this.metadata = defaultMetadata;

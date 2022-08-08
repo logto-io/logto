@@ -32,7 +32,7 @@ jest.mock('@/connectors', () => ({
   getSocialConnectorInstanceById: async (connectorId: string) => {
     const connectorInstance = await getConnectorInstanceById(connectorId);
 
-    if (connectorInstance.metadata.type !== ConnectorType.Social) {
+    if (connectorInstance.instance.metadata.type !== ConnectorType.Social) {
       throw new RequestError({
         code: 'entity.not_found',
         status: 404,
@@ -92,19 +92,19 @@ describe('GET /.well-known/sign-in-exp', () => {
       ...mockSignInExperience,
       socialConnectors: [
         {
-          ...mockGithubConnectorInstance.metadata,
+          ...mockGithubConnectorInstance.instance.metadata,
           id: mockGithubConnectorInstance.connector.id,
         },
         {
-          ...mockFacebookConnectorInstance.metadata,
+          ...mockFacebookConnectorInstance.instance.metadata,
           id: mockFacebookConnectorInstance.connector.id,
         },
         {
-          ...mockWechatConnectorInstance.metadata,
+          ...mockWechatConnectorInstance.instance.metadata,
           id: mockWechatConnectorInstance.connector.id,
         },
         {
-          ...mockWechatNativeConnectorInstance.metadata,
+          ...mockWechatNativeConnectorInstance.instance.metadata,
           id: mockWechatNativeConnectorInstance.connector.id,
         },
       ],

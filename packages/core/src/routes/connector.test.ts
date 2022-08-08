@@ -1,8 +1,4 @@
-import {
-  ValidateConfig,
-  EmailConnectorInstance,
-  SmsConnectorInstance,
-} from '@logto/connector-types';
+import { GetConnectorConfig, ValidateConfig } from '@logto/connector-types';
 import { Connector, ConnectorType } from '@logto/schemas';
 
 import { mockConnectorInstanceList, mockMetadata, mockConnector } from '@/__mocks__';
@@ -15,9 +11,13 @@ import connectorRoutes from './connector';
 
 type ConnectorInstance = {
   connector: Connector;
-  metadata: ConnectorMetadata;
-  validateConfig?: ValidateConfig;
-  sendMessage?: unknown;
+  instance: {
+    metadata: ConnectorMetadata;
+    validateConfig?: ValidateConfig<unknown>;
+    getConfig?: GetConnectorConfig;
+    sendMessage?: unknown;
+    sendTestMessage?: unknown;
+  };
 };
 
 const getConnectorInstancesPlaceHolder = jest.fn() as jest.MockedFunction<
@@ -59,7 +59,7 @@ describe('connector route', () => {
     it('throws if more than one SMS connector is enabled', async () => {
       getConnectorInstancesPlaceHolder.mockResolvedValueOnce(
         mockConnectorInstanceList.filter(
-          (connectorInstance) => connectorInstance.metadata.type !== ConnectorType.Email
+          (connectorInstance) => connectorInstance.instance.metadata.type !== ConnectorType.Email
         )
       );
       const response = await connectorRequest.get('/connectors').send({});
@@ -69,7 +69,7 @@ describe('connector route', () => {
     it('shows all connectors', async () => {
       getConnectorInstancesPlaceHolder.mockResolvedValueOnce(
         mockConnectorInstanceList.filter(
-          (connectorInstance) => connectorInstance.metadata.type === ConnectorType.Social
+          (connectorInstance) => connectorInstance.instance.metadata.type === ConnectorType.Social
         )
       );
       const response = await connectorRequest.get('/connectors').send({});
@@ -107,46 +107,50 @@ describe('connector route', () => {
     });
 
     it('should get SMS connector and send test message', async () => {
+      const mockSendTestMessage = jest.fn();
       const mockedMetadata = {
         ...mockMetadata,
         type: ConnectorType.SMS,
       };
-      const mockedSmsConnectorInstance: SmsConnectorInstance = {
+      const mockedSmsConnectorInstance: ConnectorInstance = {
         connector: mockConnector,
-        metadata: mockedMetadata,
-        validateConfig: jest.fn(),
-        getConfig: jest.fn(),
-        sendMessage: jest.fn(),
-        sendTestMessage: jest.fn(),
+        instance: {
+          metadata: mockedMetadata,
+          validateConfig: jest.fn(),
+          getConfig: jest.fn(),
+          sendMessage: jest.fn(),
+          sendTestMessage: mockSendTestMessage,
+        },
       };
       getConnectorInstancesPlaceHolder.mockResolvedValueOnce([mockedSmsConnectorInstance]);
-      const sendMessageSpy = jest.spyOn(mockedSmsConnectorInstance, 'sendTestMessage');
       const response = await connectorRequest
         .post('/connectors/id/test')
         .send({ phone: '12345678901', config: { test: 123 } });
-      expect(sendMessageSpy).toHaveBeenCalledTimes(1);
-      expect(sendMessageSpy).toHaveBeenCalledWith({ test: 123 }, '12345678901', 'Test', {
+      expect(mockSendTestMessage).toHaveBeenCalledTimes(1);
+      expect(mockSendTestMessage).toHaveBeenCalledWith({ test: 123 }, '12345678901', 'Test', {
         code: '123456',
       });
       expect(response).toHaveProperty('statusCode', 204);
     });
 
     it('should get email connector and send test message', async () => {
-      const mockedEmailConnector: EmailConnectorInstance = {
+      const sendTestMessage = jest.fn();
+      const mockedEmailConnector: ConnectorInstance = {
         connector: mockConnector,
-        metadata: mockMetadata,
-        validateConfig: jest.fn(),
-        getConfig: jest.fn(),
-        sendMessage: jest.fn(),
-        sendTestMessage: jest.fn(),
+        instance: {
+          metadata: mockMetadata,
+          validateConfig: jest.fn(),
+          getConfig: jest.fn(),
+          sendMessage: jest.fn(),
+          sendTestMessage,
+        },
       };
       getConnectorInstancesPlaceHolder.mockResolvedValueOnce([mockedEmailConnector]);
-      const sendMessageSpy = jest.spyOn(mockedEmailConnector, 'sendTestMessage');
       const response = await connectorRequest
         .post('/connectors/id/test')
         .send({ email: 'test@email.com', config: { test: 123 } });
-      expect(sendMessageSpy).toHaveBeenCalledTimes(1);
-      expect(sendMessageSpy).toHaveBeenCalledWith({ test: 123 }, 'test@email.com', 'Test', {
+      expect(sendTestMessage).toHaveBeenCalledTimes(1);
+      expect(sendTestMessage).toHaveBeenCalledWith({ test: 123 }, 'test@email.com', 'Test', {
         code: 'email-test',
       });
       expect(response).toHaveProperty('statusCode', 204);

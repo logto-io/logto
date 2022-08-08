@@ -12,9 +12,11 @@ import connectorRoutes from './connector';
 
 type ConnectorInstance = {
   connector: Connector;
-  metadata: ConnectorMetadata;
-  validateConfig?: ValidateConfig;
-  sendMessage?: unknown;
+  instance: {
+    metadata: ConnectorMetadata;
+    validateConfig?: ValidateConfig<unknown>;
+    sendMessage?: unknown;
+  };
 };
 
 const getConnectorInstancesPlaceHolder = jest.fn() as jest.MockedFunction<
@@ -22,9 +24,11 @@ const getConnectorInstancesPlaceHolder = jest.fn() as jest.MockedFunction<
 >;
 const getConnectorInstanceByIdPlaceHolder = jest.fn(async (connectorId: string) => {
   const connectorInstances = await getConnectorInstancesPlaceHolder();
-  const connector = connectorInstances.find(({ connector }) => connector.id === connectorId);
+  const connectorInstance = connectorInstances.find(
+    ({ connector }) => connector.id === connectorId
+  );
   assertThat(
-    connector,
+    connectorInstance,
     new RequestError({
       code: 'entity.not_found',
       connectorId,
@@ -32,13 +36,18 @@ const getConnectorInstanceByIdPlaceHolder = jest.fn(async (connectorId: string) 
     })
   );
 
+  const { instance, connector } = connectorInstance;
+
   return {
-    ...connector,
-    validateConfig: validateConfigPlaceHolder,
-    sendMessage: sendMessagePlaceHolder,
+    connector,
+    instance: {
+      ...instance,
+      validateConfig: validateConfigPlaceHolder,
+      sendMessage: sendMessagePlaceHolder,
+    },
   };
 });
-const validateConfigPlaceHolder = jest.fn() as jest.MockedFunction<ValidateConfig>;
+const validateConfigPlaceHolder = jest.fn() as jest.MockedFunction<ValidateConfig<unknown>>;
 const sendMessagePlaceHolder = jest.fn();
 
 jest.mock('@/queries/connector', () => ({
@@ -78,7 +87,7 @@ describe('connector PATCH routes', () => {
       getConnectorInstancesPlaceHolder.mockResolvedValueOnce([
         {
           connector: mockConnector,
-          metadata: { ...mockMetadata, type: ConnectorType.Social },
+          instance: { metadata: { ...mockMetadata, type: ConnectorType.Social } },
         },
       ]);
       const response = await connectorRequest
@@ -104,7 +113,7 @@ describe('connector PATCH routes', () => {
       getConnectorInstancesPlaceHolder.mockResolvedValueOnce([
         {
           connector: mockConnector,
-          metadata: mockMetadata,
+          instance: { metadata: mockMetadata },
         },
       ]);
       const response = await connectorRequest
@@ -117,7 +126,7 @@ describe('connector PATCH routes', () => {
       getConnectorInstancesPlaceHolder.mockResolvedValueOnce([
         {
           connector: mockConnector,
-          metadata: mockMetadata,
+          instance: { metadata: mockMetadata },
         },
       ]);
       const response = await connectorRequest
@@ -149,9 +158,7 @@ describe('connector PATCH routes', () => {
       };
       getConnectorInstanceByIdPlaceHolder.mockResolvedValueOnce({
         connector: mockedConnector,
-        metadata: mockedMetadata,
-        validateConfig: jest.fn(),
-        sendMessage: jest.fn(),
+        instance: { metadata: mockedMetadata, validateConfig: jest.fn(), sendMessage: jest.fn() },
       });
       const response = await connectorRequest
         .patch('/connectors/id1/enabled')
@@ -193,9 +200,11 @@ describe('connector PATCH routes', () => {
       getConnectorInstancesPlaceHolder.mockResolvedValueOnce([
         {
           connector: mockConnector,
-          metadata: {
-            ...mockMetadata,
-            type: ConnectorType.SMS,
+          instance: {
+            metadata: {
+              ...mockMetadata,
+              type: ConnectorType.SMS,
+            },
           },
         },
       ]);
@@ -209,7 +218,7 @@ describe('connector PATCH routes', () => {
       getConnectorInstancesPlaceHolder.mockResolvedValueOnce([
         {
           connector: mockConnector,
-          metadata: mockMetadata,
+          instance: { metadata: mockMetadata },
         },
       ]);
       const response = await connectorRequest
@@ -253,7 +262,7 @@ describe('connector PATCH routes', () => {
       getConnectorInstancesPlaceHolder.mockResolvedValueOnce([
         {
           connector: mockConnector,
-          metadata: mockMetadata,
+          instance: { metadata: mockMetadata },
         },
       ]);
       const response = await connectorRequest
@@ -266,7 +275,7 @@ describe('connector PATCH routes', () => {
       getConnectorInstancesPlaceHolder.mockResolvedValueOnce([
         {
           connector: mockConnector,
-          metadata: mockMetadata,
+          instance: { metadata: mockMetadata },
         },
       ]);
       const response = await connectorRequest

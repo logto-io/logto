@@ -61,13 +61,13 @@ const getConnectorInstanceByIdHelper = jest.fn(async (connectorId: string) => {
     type: connectorId.startsWith('social') ? ConnectorType.Social : ConnectorType.SMS,
   };
 
-  return { connector, metadata, getAuthorizationUri: jest.fn(async () => '') };
+  return { connector, instance: { metadata, getAuthorizationUri: jest.fn(async () => '') } };
 });
 jest.mock('@/connectors', () => ({
   getSocialConnectorInstanceById: async (connectorId: string) => {
     const connectorInstance = await getConnectorInstanceByIdHelper(connectorId);
 
-    if (connectorInstance.metadata.type !== ConnectorType.Social) {
+    if (connectorInstance.instance.metadata.type !== ConnectorType.Social) {
       throw new RequestError({
         code: 'entity.not_found',
         status: 404,
@@ -170,7 +170,7 @@ describe('sessionSocialRoutes', () => {
 
     it('throw error when auth code is wrong', async () => {
       (getConnectorInstanceById as jest.Mock).mockResolvedValueOnce({
-        metadata: { target: connectorTarget },
+        instance: { metadata: { target: connectorTarget } },
       });
       const response = await sessionRequest.post('/session/sign-in/social/auth').send({
         connectorId: 'connectorId',
@@ -183,7 +183,7 @@ describe('sessionSocialRoutes', () => {
 
     it('throw error when code is provided but connector can not be found', async () => {
       (getConnectorInstanceById as jest.Mock).mockResolvedValueOnce({
-        metadata: { target: connectorTarget },
+        instance: { metadata: { target: connectorTarget } },
       });
       const response = await sessionRequest.post('/session/sign-in/social/auth').send({
         connectorId: '_connectorId',
@@ -196,7 +196,7 @@ describe('sessionSocialRoutes', () => {
 
     it('get and add user info with auth code, as well as assign result and redirect', async () => {
       (getConnectorInstanceById as jest.Mock).mockResolvedValueOnce({
-        metadata: { target: connectorTarget },
+        instance: { metadata: { target: connectorTarget } },
       });
       const response = await sessionRequest.post('/session/sign-in/social/auth').send({
         connectorId: 'connectorId',
@@ -224,7 +224,7 @@ describe('sessionSocialRoutes', () => {
     it('throw error when identity exists', async () => {
       const wrongConnectorTarget = 'wrongConnectorTarget';
       (getConnectorInstanceById as jest.Mock).mockResolvedValueOnce({
-        metadata: { target: wrongConnectorTarget },
+        instance: { metadata: { target: wrongConnectorTarget } },
       });
       const response = await sessionRequest.post('/session/sign-in/social/auth').send({
         connectorId: '_connectorId_',
@@ -250,7 +250,7 @@ describe('sessionSocialRoutes', () => {
     beforeEach(() => {
       const mockGetConnectorInstanceById = getConnectorInstanceById as jest.Mock;
       mockGetConnectorInstanceById.mockResolvedValueOnce({
-        metadata: { target: 'connectorTarget' },
+        instance: { metadata: { target: 'connectorTarget' } },
       });
     });
     afterEach(() => {
@@ -312,7 +312,7 @@ describe('sessionSocialRoutes', () => {
     beforeEach(() => {
       const mockGetConnectorInstanceById = getConnectorInstanceById as jest.Mock;
       mockGetConnectorInstanceById.mockResolvedValueOnce({
-        metadata: { target: 'connectorTarget' },
+        instance: { metadata: { target: 'connectorTarget' } },
       });
     });
     afterEach(() => {
@@ -378,7 +378,7 @@ describe('sessionSocialRoutes', () => {
     beforeEach(() => {
       const mockGetConnectorInstanceById = getConnectorInstanceById as jest.Mock;
       mockGetConnectorInstanceById.mockResolvedValueOnce({
-        metadata: { target: 'connectorTarget' },
+        instance: { metadata: { target: 'connectorTarget' } },
       });
     });
     afterEach(() => {

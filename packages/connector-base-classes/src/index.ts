@@ -4,8 +4,6 @@ import path from 'path';
 import {
   ConnectorMetadata,
   GetConnectorConfig,
-  ConnectorError,
-  ConnectorErrorCodes,
   EmailSendMessageFunction,
   EmailSendTestMessageFunction,
   EmailSendMessageByFunction,
@@ -17,23 +15,9 @@ import {
   AuthResponseParser,
 } from '@logto/connector-types';
 
-export class BaseConnectorInstance<T, U> {
+export class BaseConnector<T> {
   public metadata!: ConnectorMetadata;
   public getConfig: GetConnectorConfig;
-
-  private _connector?: U;
-
-  public get connector() {
-    if (!this._connector) {
-      throw new ConnectorError(ConnectorErrorCodes.General);
-    }
-
-    return this._connector;
-  }
-
-  public set connector(input: U) {
-    this._connector = input;
-  }
 
   constructor(getConnectorConfig: GetConnectorConfig) {
     this.getConfig = getConnectorConfig;
@@ -43,7 +27,7 @@ export class BaseConnectorInstance<T, U> {
   public validateConfig(config: unknown): asserts config is T {}
 
   // eslint-disable-next-line complexity
-  public metadataParser = () => {
+  protected metadataParser = () => {
     // eslint-disable-next-line unicorn/prefer-module
     const currentPath = __dirname;
 
@@ -83,8 +67,8 @@ export class BaseConnectorInstance<T, U> {
   };
 }
 
-export class SmsConnectorInstance<T, U> extends BaseConnectorInstance<T, U> {
-  public readonly sendMessageBy!: EmailSendMessageByFunction<T>;
+export class SmsConnector<T> extends BaseConnector<T> {
+  protected readonly sendMessageBy!: EmailSendMessageByFunction<T>;
 
   public sendMessage: EmailSendMessageFunction = async (address, type, data) => {
     const config = await this.getConfig(this.metadata.id);
@@ -93,15 +77,15 @@ export class SmsConnectorInstance<T, U> extends BaseConnectorInstance<T, U> {
     return this.sendMessageBy(config, address, type, data);
   };
 
-  public sendTestMessage: EmailSendTestMessageFunction = async (config, address, type, data) => {
+  public sendTestMessage?: EmailSendTestMessageFunction = async (config, address, type, data) => {
     this.validateConfig(config);
 
     return this.sendMessageBy(config, address, type, data);
   };
 }
 
-export class EmailConnectorInstance<T, U> extends BaseConnectorInstance<T, U> {
-  public readonly sendMessageBy!: SmsSendMessageByFunction<T>;
+export class EmailConnector<T> extends BaseConnector<T> {
+  protected readonly sendMessageBy!: SmsSendMessageByFunction<T>;
 
   public sendMessage: SmsSendMessageFunction = async (address, type, data) => {
     const config = await this.getConfig(this.metadata.id);
@@ -110,22 +94,17 @@ export class EmailConnectorInstance<T, U> extends BaseConnectorInstance<T, U> {
     return this.sendMessageBy(config, address, type, data);
   };
 
-  public sendTestMessage: SmsSendTestMessageFunction = async (config, address, type, data) => {
+  public sendTestMessage?: SmsSendTestMessageFunction = async (config, address, type, data) => {
     this.validateConfig(config);
 
     return this.sendMessageBy(config, address, type, data);
   };
 }
 
-export class SocialConnectorInstance<T, U> extends BaseConnectorInstance<T, U> {
+export class SocialConnector<T> extends BaseConnector<T> {
   public getAuthorizationUri!: GetAuthorizationUri;
 
   public getUserInfo!: GetUserInfo;
 
   protected authResponseParser!: AuthResponseParser;
 }
-
-export type ConnectorInstance =
-  | InstanceType<typeof SmsConnectorInstance>
-  | InstanceType<typeof EmailConnectorInstance>
-  | InstanceType<typeof SocialConnectorInstance>;

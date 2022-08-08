@@ -1,7 +1,7 @@
 import fs from 'fs/promises';
 import path from 'path';
 
-import { SmsConnectorInstance } from '@logto/connector-base-classes';
+import { SmsConnector } from '@logto/connector-base-classes';
 import {
   ConnectorError,
   ConnectorErrorCodes,
@@ -13,7 +13,7 @@ import { assert } from '@silverhand/essentials';
 import { defaultMetadata } from './constant';
 import { mockSmsConfigGuard, MockSmsConfig } from './types';
 
-export default class MockSmsConnector<T> extends SmsConnectorInstance<MockSmsConfig, T> {
+export default class MockSmsConnector extends SmsConnector<MockSmsConfig> {
   constructor(getConnectorConfig: GetConnectorConfig) {
     super(getConnectorConfig);
     this.metadata = defaultMetadata;

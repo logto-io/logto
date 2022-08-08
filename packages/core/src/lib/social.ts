@@ -41,7 +41,7 @@ export const getUserInfoByAuthCode = async (
 ): Promise<SocialUserInfo> => {
   const connector = await getConnector(connectorId);
 
-  return connector.getUserInfo(data);
+  return connector.instance.getUserInfo(data);
 };
 
 export const getUserInfoFromInteractionResult = async (

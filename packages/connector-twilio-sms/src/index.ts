@@ -1,4 +1,4 @@
-import { SmsConnectorInstance } from '@logto/connector-base-classes';
+import { SmsConnector } from '@logto/connector-base-classes';
 import {
   ConnectorError,
   ConnectorErrorCodes,
@@ -11,7 +11,7 @@ import got, { HTTPError } from 'got';
 import { defaultMetadata, endpoint } from './constant';
 import { twilioSmsConfigGuard, TwilioSmsConfig, PublicParameters } from './types';
 
-export default class TwilioSmsConnector<T> extends SmsConnectorInstance<TwilioSmsConfig, T> {
+export default class TwilioSmsConnector extends SmsConnector<TwilioSmsConfig> {
   constructor(getConnectorConfig: GetConnectorConfig) {
     super(getConnectorConfig);
     this.metadata = defaultMetadata;
@@ -26,7 +26,7 @@ export default class TwilioSmsConnector<T> extends SmsConnectorInstance<TwilioSm
     }
   }
 
-  public readonly sendMessageBy: SmsSendMessageByFunction<TwilioSmsConfig> = async (
+  protected readonly sendMessageBy: SmsSendMessageByFunction<TwilioSmsConfig> = async (
     config,
     phone,
     type,

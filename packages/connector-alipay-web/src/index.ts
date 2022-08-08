@@ -4,7 +4,7 @@
  * https://opendocs.alipay.com/open/263/105808
  * https://opendocs.alipay.com/open/01emu5
  */
-import { SocialConnectorInstance } from '@logto/connector-base-classes';
+import { SocialConnector } from '@logto/connector-base-classes';
 import {
   AuthResponseParser,
   ConnectorError,
@@ -43,7 +43,7 @@ import { signingParameters } from './utils';
 
 export type { AlipayConfig } from './types';
 
-export default class AlipayConnector<T> extends SocialConnectorInstance<AlipayConfig, T> {
+export default class AlipayConnector extends SocialConnector<AlipayConfig> {
   private readonly signingParameters = signingParameters;
 
   constructor(getConnectorConfig: GetConnectorConfig) {

@@ -1,7 +1,7 @@
 import fs from 'fs/promises';
 import path from 'path';
 
-import { EmailConnectorInstance } from '@logto/connector-base-classes';
+import { EmailConnector } from '@logto/connector-base-classes';
 import {
   ConnectorError,
   ConnectorErrorCodes,
@@ -13,7 +13,7 @@ import { assert } from '@silverhand/essentials';
 import { defaultMetadata } from './constant';
 import { mockMailConfigGuard, MockMailConfig } from './types';
 
-export default class MockMailConnector<T> extends EmailConnectorInstance<MockMailConfig, T> {
+export default class MockMailConnector extends EmailConnector<MockMailConfig> {
   constructor(getConnectorConfig: GetConnectorConfig) {
     super(getConnectorConfig);
     this.metadata = defaultMetadata;
@@ -28,7 +28,7 @@ export default class MockMailConnector<T> extends EmailConnectorInstance<MockMai
     }
   }
 
-  public readonly sendMessageBy: EmailSendMessageByFunction<MockMailConfig> = async (
+  protected readonly sendMessageBy: EmailSendMessageByFunction<MockMailConfig> = async (
     config,
     address,
     type,

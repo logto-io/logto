@@ -3,7 +3,7 @@
  * https://developers.facebook.com/docs/facebook-login/manually-build-a-login-flow
  */
 
-import { SocialConnectorInstance } from '@logto/connector-base-classes';
+import { SocialConnector } from '@logto/connector-base-classes';
 import {
   AuthResponseParser,
   ConnectorError,
@@ -33,7 +33,7 @@ import {
   userInfoResponseGuard,
 } from './types';
 
-export default class FacebookConnector<T> extends SocialConnectorInstance<FacebookConfig, T> {
+export default class FacebookConnector extends SocialConnector<FacebookConfig> {
   constructor(getConnectorConfig: GetConnectorConfig) {
     super(getConnectorConfig);
     this.metadata = defaultMetadata;

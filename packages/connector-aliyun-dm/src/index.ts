@@ -1,4 +1,4 @@
-import { EmailConnectorInstance } from '@logto/connector-base-classes';
+import { EmailConnector } from '@logto/connector-base-classes';
 import {
   ConnectorError,
   ConnectorErrorCodes,
@@ -17,7 +17,7 @@ import {
   sendMailErrorResponseGuard,
 } from './types';
 
-export default class AliyunDmConnector<T> extends EmailConnectorInstance<AliyunDmConfig, T> {
+export default class AliyunDmConnector extends EmailConnector<AliyunDmConfig> {
   constructor(getConnectorConfig: GetConnectorConfig) {
     super(getConnectorConfig);
     this.metadata = defaultMetadata;
@@ -32,7 +32,7 @@ export default class AliyunDmConnector<T> extends EmailConnectorInstance<AliyunD
     }
   }
 
-  public readonly sendMessageBy: EmailSendMessageByFunction<AliyunDmConfig> = async (
+  protected readonly sendMessageBy: EmailSendMessageByFunction<AliyunDmConfig> = async (
     config,
     address,
     type,

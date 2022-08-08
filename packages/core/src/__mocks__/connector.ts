@@ -148,35 +148,35 @@ export const mockConnectorList: Connector[] = [
 
 export const mockConnectorInstanceList: Array<{
   connector: Connector;
-  metadata: ConnectorMetadata;
+  instance: { metadata: ConnectorMetadata };
 }> = [
   {
     connector: mockConnector0,
-    metadata: { ...mockMetadata0, type: ConnectorType.Social },
+    instance: { metadata: { ...mockMetadata0, type: ConnectorType.Social } },
   },
   {
     connector: mockConnector1,
-    metadata: mockMetadata1,
+    instance: { metadata: mockMetadata1 },
   },
   {
     connector: mockConnector2,
-    metadata: mockMetadata2,
+    instance: { metadata: mockMetadata2 },
   },
   {
     connector: mockConnector3,
-    metadata: mockMetadata3,
+    instance: { metadata: mockMetadata3 },
   },
   {
     connector: mockConnector4,
-    metadata: { ...mockMetadata4, type: ConnectorType.Email, platform: null },
+    instance: { metadata: { ...mockMetadata4, type: ConnectorType.Email, platform: null } },
   },
   {
     connector: mockConnector5,
-    metadata: { ...mockMetadata5, type: ConnectorType.SMS, platform: null },
+    instance: { metadata: { ...mockMetadata5, type: ConnectorType.SMS, platform: null } },
   },
   {
     connector: mockConnector6,
-    metadata: { ...mockMetadata6, type: ConnectorType.Email, platform: null },
+    instance: { metadata: { ...mockMetadata6, type: ConnectorType.Email, platform: null } },
   },
 ];
 
@@ -185,12 +185,14 @@ export const mockAliyunDmConnectorInstance = {
     ...mockConnector,
     id: 'aliyun-dm',
   },
-  metadata: {
-    ...mockMetadata,
-    id: 'aliyun-dm',
-    target: 'aliyun-dm',
-    type: ConnectorType.Email,
-    platform: null,
+  instance: {
+    metadata: {
+      ...mockMetadata,
+      id: 'aliyun-dm',
+      target: 'aliyun-dm',
+      type: ConnectorType.Email,
+      platform: null,
+    },
   },
 };
 
@@ -199,12 +201,14 @@ export const mockAliyunSmsConnectorInstance = {
     ...mockConnector,
     id: 'aliyun-sms',
   },
-  metadata: {
-    ...mockMetadata,
-    id: 'aliyun-sms',
-    target: 'aliyun-sms',
-    type: ConnectorType.SMS,
-    platform: null,
+  instance: {
+    metadata: {
+      ...mockMetadata,
+      id: 'aliyun-sms',
+      target: 'aliyun-sms',
+      type: ConnectorType.SMS,
+      platform: null,
+    },
   },
 };
 
@@ -213,12 +217,14 @@ export const mockFacebookConnectorInstance = {
     ...mockConnector,
     id: 'facebook',
   },
-  metadata: {
-    ...mockMetadata,
-    id: 'facebook',
-    target: 'facebook',
-    type: ConnectorType.Social,
-    platform: ConnectorPlatform.Web,
+  instance: {
+    metadata: {
+      ...mockMetadata,
+      id: 'facebook',
+      target: 'facebook',
+      type: ConnectorType.Social,
+      platform: ConnectorPlatform.Web,
+    },
   },
 };
 
@@ -227,12 +233,14 @@ export const mockGithubConnectorInstance = {
     ...mockConnector,
     id: 'github',
   },
-  metadata: {
-    ...mockMetadata,
-    id: 'github',
-    target: 'github',
-    type: ConnectorType.Social,
-    platform: ConnectorPlatform.Web,
+  instance: {
+    metadata: {
+      ...mockMetadata,
+      id: 'github',
+      target: 'github',
+      type: ConnectorType.Social,
+      platform: ConnectorPlatform.Web,
+    },
   },
 };
 
@@ -241,12 +249,14 @@ export const mockWechatConnectorInstance = {
     ...mockConnector,
     id: 'wechat-web',
   },
-  metadata: {
-    ...mockMetadata,
-    id: 'wechat-web',
-    target: 'wechat',
-    type: ConnectorType.Social,
-    platform: ConnectorPlatform.Web,
+  instance: {
+    metadata: {
+      ...mockMetadata,
+      id: 'wechat-web',
+      target: 'wechat',
+      type: ConnectorType.Social,
+      platform: ConnectorPlatform.Web,
+    },
   },
 };
 
@@ -255,12 +265,14 @@ export const mockWechatNativeConnectorInstance = {
     ...mockConnector,
     id: 'wechat-native',
   },
-  metadata: {
-    ...mockMetadata,
-    id: 'wechat-native',
-    target: 'wechat',
-    type: ConnectorType.Social,
-    platform: ConnectorPlatform.Native,
+  instance: {
+    metadata: {
+      ...mockMetadata,
+      id: 'wechat-native',
+      target: 'wechat',
+      type: ConnectorType.Social,
+      platform: ConnectorPlatform.Native,
+    },
   },
 };
 
@@ -270,12 +282,14 @@ export const mockGoogleConnectorInstance = {
     id: 'google',
     enabled: false,
   },
-  metadata: {
-    ...mockMetadata,
-    id: 'google',
-    target: 'google',
-    type: ConnectorType.Social,
-    platform: ConnectorPlatform.Web,
+  instance: {
+    metadata: {
+      ...mockMetadata,
+      id: 'google',
+      target: 'google',
+      type: ConnectorType.Social,
+      platform: ConnectorPlatform.Web,
+    },
   },
 };
 

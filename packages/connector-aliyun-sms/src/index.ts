@@ -1,4 +1,4 @@
-import { SmsConnectorInstance } from '@logto/connector-base-classes';
+import { SmsConnector } from '@logto/connector-base-classes';
 import {
   ConnectorError,
   ConnectorErrorCodes,
@@ -12,7 +12,7 @@ import { defaultMetadata } from './constant';
 import { sendSms } from './single-send-text';
 import { aliyunSmsConfigGuard, AliyunSmsConfig, sendSmsResponseGuard } from './types';
 
-export default class AliyunSmsConnector<T> extends SmsConnectorInstance<AliyunSmsConfig, T> {
+export default class AliyunSmsConnector extends SmsConnector<AliyunSmsConfig> {
   constructor(getConnectorConfig: GetConnectorConfig) {
     super(getConnectorConfig);
     this.metadata = defaultMetadata;
@@ -27,7 +27,7 @@ export default class AliyunSmsConnector<T> extends SmsConnectorInstance<AliyunSm
     }
   }
 
-  public readonly sendMessageBy: SmsSendMessageByFunction<AliyunSmsConfig> = async (
+  protected readonly sendMessageBy: SmsSendMessageByFunction<AliyunSmsConfig> = async (
     config,
     phone,
     type,
