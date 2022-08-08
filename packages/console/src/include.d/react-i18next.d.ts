@@ -1,11 +1,14 @@
 // https://react.i18next.com/latest/typescript#create-a-declaration-file
 
-// eslint-disable-next-line import/no-unassigned-import
-import 'react-i18next';
-import en from '@logto/phrases/lib/locales/en.js';
+import { Translation, Errors } from '@logto/phrases';
+import { CustomTypeOptions } from 'react-i18next';
 
 declare module 'react-i18next' {
   interface CustomTypeOptions {
-    resources: typeof en;
+    allowObjectInHTMLChildren: true;
+    resources: {
+      translation: Translation;
+      errors: Errors;
+    };
   }
 }

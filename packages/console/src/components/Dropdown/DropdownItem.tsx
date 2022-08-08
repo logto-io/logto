@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import React, { MouseEvent, ReactNode } from 'react';
+import { MouseEvent, ReactNode } from 'react';
 
 import * as styles from './DropdownItem.module.scss';
 
@@ -22,7 +22,7 @@ const DropdownItem = ({
 }: Props) => (
   <li className={classNames(styles.item, styles[type], className)} onClick={onClick}>
     {icon && <span className={classNames(styles.icon, iconClassName)}>{icon}</span>}
-    {React.isValidElement(children) ? children : String(children)}
+    {children}
   </li>
 );
 

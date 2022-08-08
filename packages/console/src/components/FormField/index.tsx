@@ -25,7 +25,7 @@ const FormField = ({ title, children, isRequired, className, tooltip }: Props) =
   return (
     <div className={classNames(styles.field, className)}>
       <div className={styles.headline}>
-        <div className={styles.title}>{typeof title === 'string' ? String(t(title)) : title}</div>
+        <div className={styles.title}>{typeof title === 'string' ? t(title) : title}</div>
         {tooltip && (
           <div ref={tipRef} className={styles.icon}>
             <Tip />

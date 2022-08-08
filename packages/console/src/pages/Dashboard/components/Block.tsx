@@ -29,7 +29,7 @@ const Block = ({ variant = 'default', count, delta, title, tooltip }: Props) => 
   return (
     <Card className={classNames(styles.block, styles[variant])}>
       <div className={styles.title}>
-        {String(t(title))}
+        {t(title)}
         {tooltip && (
           <div ref={tipRef} className={styles.icon}>
             <Tip />

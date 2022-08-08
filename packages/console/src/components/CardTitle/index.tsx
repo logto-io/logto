@@ -20,10 +20,10 @@ const CardTitle = ({ title, subtitle, size = 'large' }: Props) => {
 
   return (
     <div className={classNames(styles.container, styles[size])}>
-      <div className={styles.title}>{typeof title === 'string' ? String(t(title)) : title}</div>
+      <div className={styles.title}>{typeof title === 'string' ? t(title) : title}</div>
       {subtitle && (
         <div className={styles.subtitle}>
-          {typeof subtitle === 'string' ? String(t(subtitle)) : subtitle}
+          {typeof subtitle === 'string' ? t(subtitle) : subtitle}
         </div>
       )}
     </div>

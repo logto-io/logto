@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import React, { ReactNode, RefObject, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { ReactNode, RefObject, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 
 import usePosition, { HorizontalAlignment } from '@/hooks/use-position';
@@ -131,9 +131,7 @@ const Tooltip = ({
       )}
       style={{ ...position }}
     >
-      <div className={styles.content}>
-        {React.isValidElement(content) ? content : String(content)}
-      </div>
+      <div className={styles.content}>{content}</div>
     </div>,
     tooltipDom
   );

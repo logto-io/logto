@@ -48,7 +48,7 @@ const ConnectorTabs = ({ target, connectorId }: Props) => {
               <ConnectorPlatformIcon platform={connector.platform} />
             </div>
           )}
-          {connector.platform && String(t(connectorPlatformLabel[connector.platform]))}
+          {connector.platform && t(connectorPlatformLabel[connector.platform])}
         </Link>
       ))}
     </div>

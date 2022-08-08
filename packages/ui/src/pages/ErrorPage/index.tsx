@@ -24,7 +24,7 @@ const ErrorPage = ({ title = 'description.not_found', message, rawMessage }: Pro
       <NavBar />
       <div className={styles.container}>
         <ErrorImage />
-        <div className={styles.title}>{String(t(title))}</div>
+        <div className={styles.title}>{t(title)}</div>
         {errorMessage && <div className={styles.message}>{String(errorMessage)}</div>}
       </div>
       <Button

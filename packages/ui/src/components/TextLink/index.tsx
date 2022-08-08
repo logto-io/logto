@@ -19,14 +19,14 @@ const TextLink = ({ className, children, text, type = 'primary', to, ...rest }: 
   if (to) {
     return (
       <Link className={classNames(styles.link, styles[type], className)} to={to}>
-        {children ?? (text ? String(t(text)) : '')}
+        {children ?? (text ? t(text) : '')}
       </Link>
     );
   }
 
   return (
     <a className={classNames(styles.link, styles[type], className)} {...rest} rel="noreferrer">
-      {children ?? (text ? String(t(text)) : '')}
+      {children ?? (text ? t(text) : '')}
     </a>
   );
 };

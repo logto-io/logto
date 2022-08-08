@@ -82,7 +82,7 @@ const Button = ({
     >
       {showSpinner && <Spinner className={styles.spinner} />}
       {icon && <span className={styles.icon}>{icon}</span>}
-      {title && (typeof title === 'string' ? <span>{String(t(title))}</span> : title)}
+      {title && (typeof title === 'string' ? <span>{t(title)}</span> : title)}
     </button>
   );
 };

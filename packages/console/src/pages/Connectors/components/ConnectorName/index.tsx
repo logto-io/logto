@@ -34,7 +34,7 @@ const ConnectorName = ({ type, connectors, onClickSetup }: Props) => {
       <ItemPreview
         title={
           <div className={styles.previewTitle}>
-            <div>{String(t(connectorTitlePlaceHolder[type]))}</div>
+            <div>{t(connectorTitlePlaceHolder[type])}</div>
             {type !== ConnectorType.Social && (
               <Button title="general.set_up" onClick={onClickSetup} />
             )}
@@ -63,7 +63,7 @@ const ConnectorName = ({ type, connectors, onClickSetup }: Props) => {
                     platform && (
                       <div key={id} className={styles.platform}>
                         <ConnectorPlatformIcon platform={platform} />
-                        {String(t(`${connectorPlatformLabel[platform]}`))}
+                        {t(`${connectorPlatformLabel[platform]}`)}
                       </div>
                     )
                 )}
