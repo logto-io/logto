@@ -46,6 +46,7 @@ const readPrivateKeys = async (): Promise<string[]> => {
     originPrivateKeyPath ? [originPrivateKeyPath] : []
   );
 
+  // If no private key path is found, ask the user to generate a new one.
   if (privateKeyPaths.length === 0) {
     try {
       return [readFileSync(defaultLogtoOidcPrivateKey, 'utf8')];
