@@ -1,8 +1,8 @@
-import { getStringMaxLength, splitAtCommasOutsideParentheses } from './utils';
+import { getStringMaxLength, splitColumnDefinitions } from './utils';
 
-test('splitAtCommasOutsideParentheses should split at each comma that is not in the parentheses', () => {
+test('splitColumnDefinitions should split at each comma that is not in the parentheses', () => {
   const segments = ['a', 'b(1)', 'c(2,3)', 'd(4,(5,6))'];
-  expect(splitAtCommasOutsideParentheses(segments.join(','))).toEqual(segments);
+  expect(splitColumnDefinitions(segments.join(','))).toEqual(segments);
 });
 
 describe('getStringMaxLength', () => {

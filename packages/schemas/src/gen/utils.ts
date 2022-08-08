@@ -78,8 +78,8 @@ export const findFirstParentheses = (value: string): Optional<ParenthesesMatch> 
   return matched ? rest : undefined;
 };
 
-// Split at each comma that is not in parentheses
-export const splitAtCommasOutsideParentheses = (value: string) =>
+export const splitColumnDefinitions = (value: string) =>
+  // Split at each comma that is not in parentheses
   Object.values(value).reduce<{ result: string[]; count: number }>(
     ({ result, count: previousCount }, current) => {
       const count = previousCount + getCountDelta(current);
