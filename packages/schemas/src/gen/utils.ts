@@ -85,14 +85,19 @@ export const splitColumnDefinitions = (value: string) =>
       const count = previousCount + getCountDelta(current);
 
       if (count === 0 && current === ',') {
-        // eslint-disable-next-line @silverhand/fp/no-mutating-methods
-        result.push('');
-      } else {
-        // eslint-disable-next-line @silverhand/fp/no-mutation
-        result[result.length - 1] += current;
+        return {
+          result: [...result, ''],
+          count,
+        };
       }
 
-      return { result, count };
+      // eslint-disable-next-line @silverhand/fp/no-mutation
+      result[result.length - 1] += current;
+
+      return {
+        result,
+        count,
+      };
     },
     {
       result: [''],
