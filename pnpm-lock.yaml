@@ -929,6 +929,7 @@ importers:
 
   packages/core:
     specifiers:
+<<<<<<< HEAD
       '@logto/connector-alipay-native': ^1.0.0-beta.4
       '@logto/connector-alipay-web': ^1.0.0-beta.4
       '@logto/connector-aliyun-dm': ^1.0.0-beta.4
@@ -947,6 +948,30 @@ importers:
       '@logto/phrases': ^1.0.0-beta.4
       '@logto/schemas': ^1.0.0-beta.4
       '@logto/shared': ^1.0.0-beta.4
+=======
+      '@logto/connector-alipay-native': ^1.0.0-beta.3
+      '@logto/connector-alipay-web': ^1.0.0-beta.3
+      '@logto/connector-aliyun-dm': ^1.0.0-beta.3
+      '@logto/connector-aliyun-sms': ^1.0.0-beta.3
+      '@logto/connector-apple': ^1.0.0-beta.3
+      '@logto/connector-azuread': ^1.0.0-beta.3
+      '@logto/connector-base-classes': ^1.0.0-beta.3
+      '@logto/connector-facebook': ^1.0.0-beta.3
+      '@logto/connector-github': ^1.0.0-beta.3
+      '@logto/connector-google': ^1.0.0-beta.3
+      '@logto/connector-mock-email': ^1.0.0-beta.3
+      '@logto/connector-mock-sms': ^1.0.0-beta.3
+      '@logto/connector-mock-social': ^1.0.0-beta.3
+      '@logto/connector-sendgrid-email': ^1.0.0-beta.3
+      '@logto/connector-smtp': ^1.0.0-beta.3
+      '@logto/connector-twilio-sms': ^1.0.0-beta.3
+      '@logto/connector-types': ^1.0.0-beta.3
+      '@logto/connector-wechat-native': ^1.0.0-beta.3
+      '@logto/connector-wechat-web': ^1.0.0-beta.3
+      '@logto/phrases': ^1.0.0-beta.3
+      '@logto/schemas': ^1.0.0-beta.3
+      '@logto/shared': ^1.0.0-beta.3
+>>>>>>> afc6cc98 (refactor(connector): add mock connectors to core for IT)
       '@shopify/jest-koa-mocks': ^5.0.0
       '@silverhand/eslint-config': 1.0.0-rc.2
       '@silverhand/essentials': ^1.1.6
@@ -1023,6 +1048,9 @@ importers:
       '@logto/connector-facebook': link:../connector-facebook
       '@logto/connector-github': link:../connector-github
       '@logto/connector-google': link:../connector-google
+      '@logto/connector-mock-email': link:../connector-mock-mail
+      '@logto/connector-mock-sms': link:../connector-mock-sms
+      '@logto/connector-mock-social': link:../connector-mock-social
       '@logto/connector-sendgrid-email': link:../connector-sendgrid-mail
       '@logto/connector-smtp': link:../connector-smtp
       '@logto/connector-twilio-sms': link:../connector-twilio-sms
