@@ -5,11 +5,6 @@ import inquirer from 'inquirer';
 
 import { readPrivateKeys } from './oidc';
 
-jest.mock('./parameters.ts', () => ({
-  allYes: true,
-  noInquiry: false,
-}));
-
 describe('oidc env-set', () => {
   const envBackup = process.env;
 
