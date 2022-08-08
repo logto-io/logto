@@ -14,9 +14,8 @@ import { generateSchema } from './schema';
 import { FileData, Table, Field, Type, GeneratedType, TableWithType } from './types';
 import {
   findFirstParentheses,
-  getStringMaxLength,
-  getType,
   normalizeWhitespaces,
+  parseType,
   removeParentheses,
   removeUnrecognizedComments,
   splitColumnDefinitions,
@@ -72,8 +71,7 @@ const generate = async () => {
                 const isArray = Boolean(/\[.*]/.test(type)) || restLowercased.includes('array');
                 const hasDefaultValue = restLowercased.includes('default');
                 const nullable = !restLowercased.includes('not null');
-                const primitiveType = getType(removeParentheses(type));
-                const stringMaxLength = getStringMaxLength(type);
+                const { type: primitiveType, isString, maxLength } = parseType(type);
                 const tsType = /\/\* @use (.*) \*\//.exec(restJoined)?.[1];
                 assert(
                   !(!primitiveType && tsType),
@@ -85,7 +83,8 @@ const generate = async () => {
                 return {
                   name,
                   type: primitiveType,
-                  stringMaxLength,
+                  isString,
+                  maxLength,
                   customType: conditional(!primitiveType && type),
                   tsType,
                   isArray,

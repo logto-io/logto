@@ -1,4 +1,4 @@
-import { conditionalString, Optional } from '@silverhand/essentials';
+import { conditional, conditionalString, Optional } from '@silverhand/essentials';
 
 export const normalizeWhitespaces = (string: string): string => string.replace(/\s+/g, ' ').trim();
 
@@ -78,9 +78,9 @@ export const findFirstParentheses = (value: string): Optional<ParenthesesMatch> 
   return matched ? rest : undefined;
 };
 
-export const splitColumnDefinitions = (value: string) => {
+export const splitColumnDefinitions = (value: string) =>
   // Split at each comma that is not in parentheses
-  return Object.values(value).reduce<{ result: string[]; count: number }>(
+  Object.values(value).reduce<{ result: string[]; count: number }>(
     ({ result, count: previousCount }, current) => {
       const count = previousCount + getCountDelta(current);
 
@@ -104,7 +104,6 @@ export const splitColumnDefinitions = (value: string) => {
       count: 0,
     }
   ).result;
-};
 
 const getRawType = (value: string): string => {
   const bracketIndex = value.indexOf('[');
@@ -114,7 +113,7 @@ const getRawType = (value: string): string => {
 
 // Reference: https://github.com/SweetIQ/schemats/blob/7c3d3e16b5d507b4d9bd246794e7463b05d20e75/src/schemaPostgres.ts
 // eslint-disable-next-line complexity
-export const getType = (
+const getType = (
   value: string
 ): 'string' | 'number' | 'boolean' | 'Record<string, unknown>' | undefined => {
   switch (getRawType(value)) {
@@ -153,18 +152,22 @@ export const getType = (
   }
 };
 
-export const getStringMaxLength = (value: string) => {
+export const parseType = (value: string) => {
+  const typeName = removeParentheses(value);
+  const type = getType(typeName);
+
+  const isString = type === 'string';
   const parenthesesMatch = findFirstParentheses(value);
+  const maxLength = conditional(
+    isString &&
+      parenthesesMatch &&
+      ['bpchar', 'char', 'varchar'].includes(parenthesesMatch.prefix) &&
+      Number(parenthesesMatch.body)
+  );
 
-  if (!parenthesesMatch) {
-    return;
-  }
-
-  switch (parenthesesMatch.prefix) {
-    case 'bpchar':
-    case 'char':
-    case 'varchar':
-      return Number(parenthesesMatch.body);
-    default:
-  }
+  return {
+    type,
+    isString,
+    maxLength,
+  };
 };
