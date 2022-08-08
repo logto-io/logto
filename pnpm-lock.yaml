@@ -311,20 +311,20 @@ importers:
   packages/connector-base-classes:
     specifiers:
       '@logto/connector-types': ^1.0.0-beta.3
-      '@silverhand/eslint-config': ^0.17.0
+      '@silverhand/eslint-config': 1.0.0-rc.2
       '@silverhand/essentials': ^1.1.6
-      '@silverhand/ts-config': ^0.17.0
+      '@silverhand/ts-config': 1.0.0-rc.2
       '@types/node': ^16.3.1
-      eslint: ^8.19.0
+      eslint: ^8.21.0
       lint-staged: ^13.0.0
-      prettier: ^2.3.2
-      typescript: ^4.6.2
+      prettier: ^2.7.1
+      typescript: ^4.7.4
     dependencies:
       '@logto/connector-types': link:../connector-types
     devDependencies:
-      '@silverhand/eslint-config': 0.17.0_swk2g7ygmfleszo5c33j4vooni
+      '@silverhand/eslint-config': 1.0.0-rc.2_swk2g7ygmfleszo5c33j4vooni
       '@silverhand/essentials': 1.1.7
-      '@silverhand/ts-config': 0.17.0_typescript@4.7.4
+      '@silverhand/ts-config': 1.0.0-rc.2_typescript@4.7.4
       '@types/node': 16.11.12
       eslint: 8.21.0
       lint-staged: 13.0.0
@@ -929,7 +929,6 @@ importers:
 
   packages/core:
     specifiers:
-<<<<<<< HEAD
       '@logto/connector-alipay-native': ^1.0.0-beta.4
       '@logto/connector-alipay-web': ^1.0.0-beta.4
       '@logto/connector-aliyun-dm': ^1.0.0-beta.4
@@ -948,30 +947,6 @@ importers:
       '@logto/phrases': ^1.0.0-beta.4
       '@logto/schemas': ^1.0.0-beta.4
       '@logto/shared': ^1.0.0-beta.4
-=======
-      '@logto/connector-alipay-native': ^1.0.0-beta.3
-      '@logto/connector-alipay-web': ^1.0.0-beta.3
-      '@logto/connector-aliyun-dm': ^1.0.0-beta.3
-      '@logto/connector-aliyun-sms': ^1.0.0-beta.3
-      '@logto/connector-apple': ^1.0.0-beta.3
-      '@logto/connector-azuread': ^1.0.0-beta.3
-      '@logto/connector-base-classes': ^1.0.0-beta.3
-      '@logto/connector-facebook': ^1.0.0-beta.3
-      '@logto/connector-github': ^1.0.0-beta.3
-      '@logto/connector-google': ^1.0.0-beta.3
-      '@logto/connector-mock-email': ^1.0.0-beta.3
-      '@logto/connector-mock-sms': ^1.0.0-beta.3
-      '@logto/connector-mock-social': ^1.0.0-beta.3
-      '@logto/connector-sendgrid-email': ^1.0.0-beta.3
-      '@logto/connector-smtp': ^1.0.0-beta.3
-      '@logto/connector-twilio-sms': ^1.0.0-beta.3
-      '@logto/connector-types': ^1.0.0-beta.3
-      '@logto/connector-wechat-native': ^1.0.0-beta.3
-      '@logto/connector-wechat-web': ^1.0.0-beta.3
-      '@logto/phrases': ^1.0.0-beta.3
-      '@logto/schemas': ^1.0.0-beta.3
-      '@logto/shared': ^1.0.0-beta.3
->>>>>>> afc6cc98 (refactor(connector): add mock connectors to core for IT)
       '@shopify/jest-koa-mocks': ^5.0.0
       '@silverhand/eslint-config': 1.0.0-rc.2
       '@silverhand/essentials': ^1.1.6
@@ -1048,9 +1023,6 @@ importers:
       '@logto/connector-facebook': link:../connector-facebook
       '@logto/connector-github': link:../connector-github
       '@logto/connector-google': link:../connector-google
-      '@logto/connector-mock-email': link:../connector-mock-mail
-      '@logto/connector-mock-sms': link:../connector-mock-sms
-      '@logto/connector-mock-social': link:../connector-mock-social
       '@logto/connector-sendgrid-email': link:../connector-sendgrid-mail
       '@logto/connector-smtp': link:../connector-smtp
       '@logto/connector-twilio-sms': link:../connector-twilio-sms
@@ -1540,20 +1512,6 @@ packages:
       semver: 6.3.0
     transitivePeerDependencies:
       - supports-color
-    dev: true
-
-  /@babel/eslint-parser/7.18.9_2xs3vlfheb6c3defjjga24w4bm:
-    resolution: {integrity: sha512-KzSGpMBggz4fKbRbWLNyPVTuQr6cmCcBhOyXTw/fieOVaw5oYAwcAj4a7UKcDYCPxQq+CG1NCDZH9e2JTXquiQ==}
-    engines: {node: ^10.13.0 || ^12.13.0 || >=14.0.0}
-    peerDependencies:
-      '@babel/core': '>=7.11.0'
-      eslint: ^7.5.0 || ^8.0.0
-    dependencies:
-      '@babel/core': 7.17.9
-      eslint: 8.21.0
-      eslint-scope: 5.1.1
-      eslint-visitor-keys: 2.1.0
-      semver: 6.3.0
     dev: true
 
   /@babel/generator/7.17.9:
@@ -4579,37 +4537,6 @@ packages:
       - typescript
     dev: true
 
-  /@silverhand/eslint-config/0.17.0_swk2g7ygmfleszo5c33j4vooni:
-    resolution: {integrity: sha512-kn4Ddc2y+O3JdBg1KpxJ0vUjJ7PRDGmRtTBEpKy03pvk2hchiN5a1adyZ7totcJFq2wiH1yJQculVBSPfR4xJQ==}
-    engines: {node: '>=14.15.0'}
-    peerDependencies:
-      eslint: ^8.1.0
-      prettier: ^2.3.2
-    dependencies:
-      '@silverhand/eslint-plugin-fp': 2.5.0_eslint@8.21.0
-      '@typescript-eslint/eslint-plugin': 5.32.0_iosr3hrei2tubxveewluhu5lhy
-      '@typescript-eslint/parser': 5.32.0_qugx7qdu5zevzvxaiqyxfiwquq
-      eslint: 8.21.0
-      eslint-config-prettier: 8.5.0_eslint@8.21.0
-      eslint-config-xo: 0.40.0_eslint@8.21.0
-      eslint-config-xo-typescript: 0.50.0_bqjo633dpfdihlvg5bmomzewvm
-      eslint-import-resolver-typescript: 2.7.1_jatgrcxl4x7ywe7ak6cnjca2ae
-      eslint-plugin-consistent-default-export-name: 0.0.7
-      eslint-plugin-eslint-comments: 3.2.0_eslint@8.21.0
-      eslint-plugin-import: 2.26.0_eslint@8.21.0
-      eslint-plugin-no-use-extend-native: 0.5.0
-      eslint-plugin-node: 11.1.0_eslint@8.21.0
-      eslint-plugin-prettier: 4.2.1_h62lvancfh4b7r6zn2dgodrh5e
-      eslint-plugin-promise: 6.0.0_eslint@8.21.0
-      eslint-plugin-sql: 2.1.0_eslint@8.21.0
-      eslint-plugin-unicorn: 39.0.0_eslint@8.21.0
-      pkg-dir: 4.2.0
-      prettier: 2.7.1
-    transitivePeerDependencies:
-      - supports-color
-      - typescript
-    dev: true
-
   /@silverhand/eslint-config/1.0.0-rc.2_swk2g7ygmfleszo5c33j4vooni:
     resolution: {integrity: sha512-bU9ABatH5ETBnSuDaTaeEuGo7I1HWV6TiTnx9dnVg+DP6IbdP9OFvlSY8+BcDhx13ciVVnGX+LZD+fJdLUeSUA==}
     engines: {node: ^16.0.0 || ^18.0.0}
@@ -4702,15 +4629,6 @@ packages:
       typescript: ^4.7.4
     dependencies:
       '@silverhand/ts-config': 1.0.0-rc.2_typescript@4.7.4
-      typescript: 4.7.4
-    dev: true
-
-  /@silverhand/ts-config/0.17.0_typescript@4.7.4:
-    resolution: {integrity: sha512-hF/O0txmPHDIGKnBJ4avFJYvqKSGg3Y1jX0GAsPcC9+dVKB3QWGsUBentKcU1X9RiQWpma9dxynSUGwhlbrYSA==}
-    engines: {node: '>=14.15.0'}
-    peerDependencies:
-      typescript: ^4.3.5
-    dependencies:
       typescript: 4.7.4
     dev: true
 
@@ -7492,19 +7410,6 @@ packages:
       eslint-plugin-react-hooks: 4.3.0_eslint@8.21.0
     dev: true
 
-  /eslint-config-xo-typescript/0.50.0_bqjo633dpfdihlvg5bmomzewvm:
-    resolution: {integrity: sha512-Ru2tXB8y2w9fFHLm4v2AVfY6P81UbfEuDZuxEpeXlfV65Ezlk0xO4nBaT899ojIFkWfr60rP9Ye4CdVUUT1UYg==}
-    engines: {node: '>=12'}
-    peerDependencies:
-      '@typescript-eslint/eslint-plugin': '>=5.8.0'
-      eslint: '>=8.0.0'
-      typescript: '>=4.4'
-    dependencies:
-      '@typescript-eslint/eslint-plugin': 5.32.0_iosr3hrei2tubxveewluhu5lhy
-      eslint: 8.21.0
-      typescript: 4.7.4
-    dev: true
-
   /eslint-config-xo-typescript/0.52.0_g4r4dhab5gymrpkor33kwg53y4:
     resolution: {integrity: sha512-8HMY/ArRT1Jv8dD5Fkjb+5wex+egwuniNcKNHnPZR0YAEy99/SiCcBrS72hlSiWdhrK/dmv3nZM3uIgvhJI0gQ==}
     engines: {node: '>=12'}
@@ -7518,16 +7423,6 @@ packages:
       '@typescript-eslint/parser': 5.32.0_qugx7qdu5zevzvxaiqyxfiwquq
       eslint: 8.21.0
       typescript: 4.7.4
-    dev: true
-
-  /eslint-config-xo/0.40.0_eslint@8.21.0:
-    resolution: {integrity: sha512-msI1O0JGxeK2bbExg3U6EGaWKcjhOFzEjwzObywG/DC5GSNZTOyJT+b2l9MZGBeZsVdxfIGwdXTNeWXl8cN9iw==}
-    engines: {node: '>=12'}
-    peerDependencies:
-      eslint: '>=8.6.0'
-    dependencies:
-      confusing-browser-globals: 1.0.11
-      eslint: 8.21.0
     dev: true
 
   /eslint-config-xo/0.41.0_eslint@8.21.0:
@@ -7545,24 +7440,6 @@ packages:
     dependencies:
       debug: 3.2.7
       resolve: 1.22.0
-    dev: true
-
-  /eslint-import-resolver-typescript/2.7.1_jatgrcxl4x7ywe7ak6cnjca2ae:
-    resolution: {integrity: sha512-00UbgGwV8bSgUv34igBDbTOtKhqoRMy9bFjNehT40bXg6585PNIct8HhXZ0SybqB9rWtXj9crcku8ndDn/gIqQ==}
-    engines: {node: '>=4'}
-    peerDependencies:
-      eslint: '*'
-      eslint-plugin-import: '*'
-    dependencies:
-      debug: 4.3.4
-      eslint: 8.21.0
-      eslint-plugin-import: 2.26.0_eslint@8.21.0
-      glob: 7.2.0
-      is-glob: 4.0.3
-      resolve: 1.22.0
-      tsconfig-paths: 3.14.1
-    transitivePeerDependencies:
-      - supports-color
     dev: true
 
   /eslint-import-resolver-typescript/3.4.0_jatgrcxl4x7ywe7ak6cnjca2ae:
@@ -7599,16 +7476,6 @@ packages:
     dependencies:
       lodash: 4.17.21
       pkg-dir: 5.0.0
-    dev: true
-
-  /eslint-plugin-consistent-default-export-name/0.0.7:
-    resolution: {integrity: sha512-5gQqnXniMBCzB4TTai/XX28CLgfSk2/bb9GYD5DiuIKlEUSklLdB068nq9zwG3808pjPFlYTm0dLyRk/qDolaQ==}
-    engines: {node: '>=0.10.0'}
-    dependencies:
-      lodash.camelcase: 4.3.0
-      lodash.kebabcase: 4.1.1
-      lodash.snakecase: 4.1.1
-      lodash.upperfirst: 4.3.1
     dev: true
 
   /eslint-plugin-es/3.0.1_eslint@8.21.0:
@@ -7754,32 +7621,6 @@ packages:
       - supports-color
     dev: true
 
-  /eslint-plugin-unicorn/39.0.0_eslint@8.21.0:
-    resolution: {integrity: sha512-fd5RK2FtYjGcIx3wra7csIE/wkkmBo22T1gZtRTsLr1Mb+KsFKJ+JOdSqhHXQUrI/JTs/Mon64cEYzTgSCbltw==}
-    engines: {node: '>=12'}
-    peerDependencies:
-      eslint: '>=7.32.0'
-    dependencies:
-      '@babel/helper-validator-identifier': 7.18.6
-      ci-info: 3.3.2
-      clean-regexp: 1.0.0
-      eslint: 8.21.0
-      eslint-template-visitor: 2.3.2_eslint@8.21.0
-      eslint-utils: 3.0.0_eslint@8.21.0
-      esquery: 1.4.0
-      indent-string: 4.0.0
-      is-builtin-module: 3.1.0
-      lodash: 4.17.21
-      pluralize: 8.0.0
-      read-pkg-up: 7.0.1
-      regexp-tree: 0.1.24
-      safe-regex: 2.1.1
-      semver: 7.3.7
-      strip-indent: 3.0.0
-    transitivePeerDependencies:
-      - supports-color
-    dev: true
-
   /eslint-plugin-unicorn/43.0.2_eslint@8.21.0:
     resolution: {integrity: sha512-DtqZ5mf/GMlfWoz1abIjq5jZfaFuHzGBZYIeuJfEoKKGWRHr2JiJR+ea+BF7Wx2N1PPRoT/2fwgiK1NnmNE3Hg==}
     engines: {node: '>=14.18'}
@@ -7817,21 +7658,6 @@ packages:
     dependencies:
       esrecurse: 4.3.0
       estraverse: 5.3.0
-    dev: true
-
-  /eslint-template-visitor/2.3.2_eslint@8.21.0:
-    resolution: {integrity: sha512-3ydhqFpuV7x1M9EK52BPNj6V0Kwu0KKkcIAfpUhwHbR8ocRln/oUHgfxQupY8O1h4Qv/POHDumb/BwwNfxbtnA==}
-    peerDependencies:
-      eslint: '>=7.0.0'
-    dependencies:
-      '@babel/core': 7.17.9
-      '@babel/eslint-parser': 7.18.9_2xs3vlfheb6c3defjjga24w4bm
-      eslint: 8.21.0
-      eslint-visitor-keys: 2.1.0
-      esquery: 1.4.0
-      multimap: 1.1.0
-    transitivePeerDependencies:
-      - supports-color
     dev: true
 
   /eslint-utils/2.1.0:
@@ -10871,10 +10697,6 @@ packages:
     resolution: {integrity: sha1-2HV7HagH3eJIFrDWqEvqGnYjCyM=}
     dev: true
 
-  /lodash.snakecase/4.1.1:
-    resolution: {integrity: sha512-QZ1d4xoBHYUeuouhEq3lk3Uq7ldgyFXGBhg04+oRLnIz8o9T65Eh+8YdroUwn846zchkA9yDsDl5CVVaV2nqYw==}
-    dev: true
-
   /lodash.sortby/4.7.0:
     resolution: {integrity: sha512-HDWXG8isMntAyRF5vZ7xKuEvOhT4AhlRt/3czTSjvGUxjYCBVRQY48ViDHyfYz9VIoBkW4TMGQNapx+l3RUwdA==}
     dev: false
@@ -10898,10 +10720,6 @@ packages:
 
   /lodash.uniq/4.5.0:
     resolution: {integrity: sha1-0CJTc662Uq3BvILklFM5qEJ1R3M=}
-    dev: true
-
-  /lodash.upperfirst/4.3.1:
-    resolution: {integrity: sha512-sReKOYJIJf74dhJONhU4e0/shzi1trVbSWDOhKYE5XV2O+H7Sb2Dihwuc7xWxVl+DgFPyTqIN3zMfT9cq5iWDg==}
     dev: true
 
   /lodash.zip/4.2.0:
@@ -11764,10 +11582,6 @@ packages:
   /multi-fork/0.0.2:
     resolution: {integrity: sha1-gFiuxGFBJMftqhWBm4juiJ0+tOA=}
     dev: false
-
-  /multimap/1.1.0:
-    resolution: {integrity: sha512-0ZIR9PasPxGXmRsEF8jsDzndzHDj7tIav+JUmvIFB/WHswliFnquxECT/De7GR4yg99ky/NlRKJT82G1y271bw==}
-    dev: true
 
   /multimatch/5.0.0:
     resolution: {integrity: sha512-ypMKuglUrZUD99Tk2bUQ+xNQj43lPEfAeX2o9cTteAmShXy2VHDJpuwu1o0xqoKCt9jLVAvwyFKdLTPXKAfJyA==}
