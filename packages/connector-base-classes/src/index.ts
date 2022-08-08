@@ -27,10 +27,7 @@ export class BaseConnector<T> {
   public validateConfig(config: unknown): asserts config is T {}
 
   // eslint-disable-next-line complexity
-  protected metadataParser = () => {
-    // eslint-disable-next-line unicorn/prefer-module
-    const currentPath = __dirname;
-
+  protected metadataParser = (currentPath: string) => {
     if (
       !this.metadata.logo.startsWith('http') &&
       existsSync(path.join(currentPath, '..', this.metadata.logo))

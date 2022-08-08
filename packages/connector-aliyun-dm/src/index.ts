@@ -21,7 +21,8 @@ export default class AliyunDmConnector extends EmailConnector<AliyunDmConfig> {
   constructor(getConnectorConfig: GetConnectorConfig) {
     super(getConnectorConfig);
     this.metadata = defaultMetadata;
-    this.metadataParser();
+    // eslint-disable-next-line unicorn/prefer-module
+    this.metadataParser(__dirname);
   }
 
   public validateConfig(config: unknown): asserts config is AliyunDmConfig {

@@ -40,7 +40,8 @@ export default class WechatConnector extends SocialConnector<WechatConfig> {
   constructor(getConnectorConfig: GetConnectorConfig) {
     super(getConnectorConfig);
     this.metadata = defaultMetadata;
-    this.metadataParser();
+    // eslint-disable-next-line unicorn/prefer-module
+    this.metadataParser(__dirname);
   }
 
   public validateConfig(config: unknown): asserts config is WechatConfig {
