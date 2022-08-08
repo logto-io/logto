@@ -27,7 +27,8 @@ jobs:
           pnpm lerna add --scope=@logto/core @logto/connector-mock-sms
           pnpm lerna add --scope=@logto/core @logto/connector-mock-social
         env:
-          CI: false
+          CI: ''
+          GITHUB_ACTIONS: ''
 
       - name: Package
         run: |
