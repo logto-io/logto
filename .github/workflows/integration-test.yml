@@ -20,10 +20,17 @@ jobs:
 
       - name: Setup Node and pnpm
         uses: silverhand-io/actions-node-pnpm-run-steps@v1.2.3
+        
+      - name: Install mock connectors
+        run: |
+          pnpm lerna add --scope=@logto/core @logto/connector-mock-mail
+          pnpm lerna add --scope=@logto/core @logto/connector-mock-sms
+          pnpm lerna add --scope=@logto/core @logto/connector-mock-social
+        env:
+          CI: false
 
       - name: Package
         run: |
-          ./link-mock-connectors.sh
           ./package.sh
 
       - uses: actions/upload-artifact@v3
