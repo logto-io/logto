@@ -7,7 +7,7 @@ export type Props = {
   htmlType?: 'button' | 'submit' | 'reset';
   isDisabled?: boolean;
   className?: string;
-  children: ReactNode;
+  children: ReactNode | Record<string, unknown>;
   type?: 'primary' | 'secondary' | 'outline';
   size?: 'small' | 'large';
   onClick?: React.MouseEventHandler;

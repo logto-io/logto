@@ -22,14 +22,14 @@ describe('<PasscodeValidation />', () => {
   });
 
   it('render counter', () => {
-    const { queryByText } = renderWithPageContext(
+    const { queryByText, debug } = renderWithPageContext(
       <PasscodeValidation type="sign-in" method="email" target={email} />
     );
 
     expect(queryByText('description.resend_after_seconds')).not.toBeNull();
 
     act(() => {
-      jest.runAllTimers();
+      jest.advanceTimersByTime(1e3 * 60);
     });
 
     expect(queryByText('description.resend_passcode')).not.toBeNull();
@@ -40,7 +40,7 @@ describe('<PasscodeValidation />', () => {
       <PasscodeValidation type="sign-in" method="email" target={email} />
     );
     act(() => {
-      jest.runAllTimers();
+      jest.advanceTimersByTime(1e3 * 60);
     });
     const resendButton = getByText('description.resend_passcode');
 

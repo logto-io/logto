@@ -6,6 +6,7 @@ import en from '@logto/phrases-ui/lib/locales/en.js';
 
 declare module 'react-i18next' {
   interface CustomTypeOptions {
+    allowObjectInHTMLChildren: true;
     resources: typeof en;
   }
 }

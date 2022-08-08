@@ -70,7 +70,7 @@ const useUserPreferences = () => {
 
   return {
     isLoading: !data && !error,
-    isLoaded: data && !error,
+    isLoaded: Boolean(data && !error),
     data: userPreferences,
     update,
     error,

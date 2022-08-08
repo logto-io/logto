@@ -40,5 +40,12 @@
     "html-parse-stringify": "html-parse-stringify/dist/html-parse-stringify.module.js",
     "react-hook-form": "react-hook-form/dist/index.esm.mjs",
     "superstruct": "superstruct/lib/index.es.js"
+  },
+  "pnpm": {
+    "peerDependencyRules": {
+      "allowedVersions": {
+        "react": "^18.0.0"
+      }
+    }
   }
 }

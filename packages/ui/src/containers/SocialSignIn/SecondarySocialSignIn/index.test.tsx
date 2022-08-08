@@ -1,4 +1,4 @@
-import { fireEvent, waitFor } from '@testing-library/react';
+import { fireEvent, waitFor, act } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
@@ -112,12 +112,14 @@ describe('SecondarySocialSignIn', () => {
     const socialButton = container.querySelector('button');
 
     if (socialButton) {
-      await waitFor(() => {
+      act(() => {
         fireEvent.click(socialButton);
       });
 
-      expect(invokeSocialSignInSpy).toBeCalled();
-      expect(logtoNativeSdk?.getPostMessage).toBeCalled();
+      void waitFor(() => {
+        expect(invokeSocialSignInSpy).toBeCalled();
+        expect(logtoNativeSdk?.getPostMessage).toBeCalled();
+      });
     }
   });
 });

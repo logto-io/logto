@@ -7,7 +7,7 @@ import usePosition, { HorizontalAlignment } from '@/hooks/use-position';
 import * as styles from './index.module.scss';
 
 type Props = {
-  content: ReactNode;
+  content: ReactNode | Record<string, unknown>;
   anchorRef: RefObject<Element>;
   className?: string;
   isKeepOpen?: boolean;
