@@ -18,7 +18,7 @@ const getCountDelta = (value: string): number => {
   return 0;
 };
 
-export const removeParentheses = (value: string) =>
+const removeParentheses = (value: string) =>
   Object.values(value).reduce<{ result: string; count: number }>(
     (previous, current) => {
       const count = previous.count + getCountDelta(current);
@@ -158,7 +158,7 @@ export const parseType = (value: string) => {
 
   const isString = type === 'string';
   const parenthesesMatch = findFirstParentheses(value);
-  const maxLength = conditional(
+  const stringMaxLength = conditional(
     isString &&
       parenthesesMatch &&
       ['bpchar', 'char', 'varchar'].includes(parenthesesMatch.prefix) &&
@@ -168,6 +168,6 @@ export const parseType = (value: string) => {
   return {
     type,
     isString,
-    maxLength,
+    maxLength: stringMaxLength,
   };
 };

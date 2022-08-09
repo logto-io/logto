@@ -36,7 +36,17 @@ export const generateSchema = ({ name, fields }: TableWithType) => {
 
     ...fields.map(
       // eslint-disable-next-line complexity
-      ({ name, type, isArray, isEnum, nullable, hasDefaultValue, tsType, isString, maxLength }) => {
+      ({
+        name,
+        type,
+        isArray,
+        isEnum,
+        nullable,
+        hasDefaultValue,
+        tsType,
+        isString,
+        stringMaxLength,
+      }) => {
         if (tsType) {
           return `  ${camelcase(name)}: ${camelcase(tsType)}Guard${conditionalString(
             nullable && '.nullable()'
@@ -45,31 +55,35 @@ export const generateSchema = ({ name, fields }: TableWithType) => {
 
         return `  ${camelcase(name)}: z.${
           isEnum ? `nativeEnum(${type})` : `${type}()`
-        }${conditionalString(isString && maxLength && `.max(${maxLength})`)}${conditionalString(
-          isArray && '.array()'
-        )}${conditionalString(nullable && '.nullable()')}${conditionalString(
-          (nullable || hasDefaultValue) && '.optional()'
-        )},`;
+        }${conditionalString(
+          isString && stringMaxLength && `.max(${stringMaxLength})`
+        )}${conditionalString(isArray && '.array()')}${conditionalString(
+          nullable && '.nullable()'
+        )}${conditionalString((nullable || hasDefaultValue) && '.optional()')},`;
       }
     ),
     '  });',
     '',
     `const guard: Guard<${modelName}> = z.object({`,
 
-    // eslint-disable-next-line complexity
-    ...fields.map(({ name, type, isArray, isEnum, nullable, tsType, isString, maxLength }) => {
-      if (tsType) {
-        return `  ${camelcase(name)}: ${camelcase(tsType)}Guard${conditionalString(
+    ...fields.map(
+      // eslint-disable-next-line complexity
+      ({ name, type, isArray, isEnum, nullable, tsType, isString, stringMaxLength }) => {
+        if (tsType) {
+          return `  ${camelcase(name)}: ${camelcase(tsType)}Guard${conditionalString(
+            nullable && '.nullable()'
+          )},`;
+        }
+
+        return `  ${camelcase(name)}: z.${
+          isEnum ? `nativeEnum(${type})` : `${type}()`
+        }${conditionalString(
+          isString && stringMaxLength && `.max(${stringMaxLength})`
+        )}${conditionalString(isArray && '.array()')}${conditionalString(
           nullable && '.nullable()'
         )},`;
       }
-
-      return `  ${camelcase(name)}: z.${
-        isEnum ? `nativeEnum(${type})` : `${type}()`
-      }${conditionalString(isString && maxLength && `.max(${maxLength})`)}${conditionalString(
-        isArray && '.array()'
-      )}${conditionalString(nullable && '.nullable()')},`;
-    }),
+    ),
     '  });',
     '',
     `export const ${camelcase(name, {

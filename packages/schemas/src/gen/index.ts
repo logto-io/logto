@@ -16,7 +16,6 @@ import {
   findFirstParentheses,
   normalizeWhitespaces,
   parseType,
-  removeParentheses,
   removeUnrecognizedComments,
   splitColumnDefinitions,
 } from './utils';
