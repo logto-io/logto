@@ -445,7 +445,7 @@ importers:
       tsc-watch: 5.0.3_typescript@4.7.4
       typescript: 4.7.4
 
-  packages/connector-mock-mail:
+  packages/connector-mock-email:
     specifiers:
       '@logto/connector-types': ^1.0.0-beta.3
       '@logto/shared': ^1.0.0-beta.3
