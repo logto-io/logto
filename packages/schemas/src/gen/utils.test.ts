@@ -1,8 +1,10 @@
-import { parseType, splitColumnDefinitions } from './utils';
+import { parseType, splitTableFieldDefinitions } from './utils';
 
-test('splitColumnDefinitions should split at each comma that is not in the parentheses', () => {
+test('splitTableFieldDefinitions should split at each comma that is not in the parentheses', () => {
   const segments = ['a', 'b(1)', 'c(2,3)', 'd(4,(5,6))'];
-  expect(splitColumnDefinitions(segments.join(','))).toEqual(segments);
+  expect(splitTableFieldDefinitions(segments.join(','))).toEqual(segments);
+  const oneSegment = 'id bigint';
+  expect(splitTableFieldDefinitions(oneSegment)).toEqual([oneSegment]);
 });
 
 describe('parseType', () => {

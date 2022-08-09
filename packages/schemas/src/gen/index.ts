@@ -17,7 +17,7 @@ import {
   normalizeWhitespaces,
   parseType,
   removeUnrecognizedComments,
-  splitColumnDefinitions,
+  splitTableFieldDefinitions,
 } from './utils';
 
 const directory = 'tables';
@@ -44,7 +44,7 @@ const generate = async () => {
             const name = normalizeWhitespaces(prefix).split(' ')[2];
             assert(name, 'Missing table name: ' + prefix);
 
-            const fields = splitColumnDefinitions(body)
+            const fields = splitTableFieldDefinitions(body)
               .map((value) => normalizeWhitespaces(value))
               .filter((value) =>
                 [
