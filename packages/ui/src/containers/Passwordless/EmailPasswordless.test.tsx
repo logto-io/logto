@@ -1,4 +1,4 @@
-import { fireEvent, waitFor } from '@testing-library/react';
+import { fireEvent, waitFor, act } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
@@ -78,11 +78,13 @@ describe('<EmailPasswordless/>', () => {
 
     const submitButton = getByText('action.continue');
 
-    await waitFor(() => {
+    act(() => {
       fireEvent.click(submitButton);
     });
 
-    expect(sendSignInEmailPasscode).toBeCalledWith('foo@logto.io');
+    await waitFor(() => {
+      expect(sendSignInEmailPasscode).toBeCalledWith('foo@logto.io');
+    });
   });
 
   test('should call register method properly', async () => {
@@ -103,10 +105,12 @@ describe('<EmailPasswordless/>', () => {
 
     const submitButton = getByText('action.continue');
 
-    await waitFor(() => {
+    act(() => {
       fireEvent.click(submitButton);
     });
 
-    expect(sendRegisterEmailPasscode).toBeCalledWith('foo@logto.io');
+    await waitFor(() => {
+      expect(sendRegisterEmailPasscode).toBeCalledWith('foo@logto.io');
+    });
   });
 });

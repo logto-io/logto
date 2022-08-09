@@ -25,7 +25,6 @@ const MobileModal = ({
       isOpen={isOpen}
       className={classNames(styles.modal, className)}
       overlayClassName={classNames(modalStyles.overlay, styles.overlay)}
-      appElement={document.querySelector('main') ?? undefined}
     >
       <div className={styles.container}>
         <div className={styles.content}>{children}</div>

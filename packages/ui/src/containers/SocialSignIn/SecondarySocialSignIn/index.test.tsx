@@ -81,11 +81,13 @@ describe('SecondarySocialSignIn', () => {
     const socialButton = container.querySelector('button');
 
     if (socialButton) {
-      await waitFor(() => {
+      act(() => {
         fireEvent.click(socialButton);
       });
 
-      expect(invokeSocialSignInSpy).toBeCalled();
+      void waitFor(() => {
+        expect(invokeSocialSignInSpy).toBeCalled();
+      });
     }
   });
 

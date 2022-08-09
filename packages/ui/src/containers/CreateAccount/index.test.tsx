@@ -1,4 +1,4 @@
-import { fireEvent, waitFor } from '@testing-library/react';
+import { fireEvent, waitFor, act } from '@testing-library/react';
 
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider';
@@ -218,10 +218,12 @@ describe('<CreateAccount/>', () => {
     const termsButton = getByText('description.agree_with_terms');
     fireEvent.click(termsButton);
 
-    await waitFor(() => {
+    act(() => {
       fireEvent.click(submitButton);
     });
 
-    expect(register).toBeCalledWith('username', '123456');
+    await waitFor(() => {
+      expect(register).toBeCalledWith('username', '123456');
+    });
   });
 });

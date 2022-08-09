@@ -1,4 +1,4 @@
-import { fireEvent, waitFor } from '@testing-library/react';
+import { fireEvent, waitFor, act } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
@@ -85,11 +85,13 @@ describe('<PhonePasswordless/>', () => {
 
     const submitButton = getByText('action.continue');
 
-    await waitFor(() => {
+    act(() => {
       fireEvent.click(submitButton);
     });
 
-    expect(sendSignInSmsPasscode).toBeCalledWith(`${defaultCountryCallingCode}${phoneNumber}`);
+    await waitFor(() => {
+      expect(sendSignInSmsPasscode).toBeCalledWith(`${defaultCountryCallingCode}${phoneNumber}`);
+    });
   });
 
   test('should call register method properly', async () => {
@@ -110,10 +112,12 @@ describe('<PhonePasswordless/>', () => {
 
     const submitButton = getByText('action.continue');
 
-    await waitFor(() => {
+    act(() => {
       fireEvent.click(submitButton);
     });
 
-    expect(sendRegisterSmsPasscode).toBeCalledWith(`${defaultCountryCallingCode}${phoneNumber}`);
+    await waitFor(() => {
+      expect(sendRegisterSmsPasscode).toBeCalledWith(`${defaultCountryCallingCode}${phoneNumber}`);
+    });
   });
 });
