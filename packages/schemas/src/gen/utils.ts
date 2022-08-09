@@ -1,4 +1,6 @@
-import { conditional, Optional } from '@silverhand/essentials';
+import { conditional, Optional, assert } from '@silverhand/essentials';
+
+import { Field } from './types';
 
 export const normalizeWhitespaces = (string: string): string => string.replace(/\s+/g, ' ').trim();
 
@@ -17,21 +19,6 @@ const getCountDelta = (value: string): number => {
 
   return 0;
 };
-
-const removeParentheses = (value: string) =>
-  Object.values(value).reduce<{ result: string; count: number }>(
-    (previous, current) => {
-      const count = previous.count + getCountDelta(current);
-
-      return count === 0 && current !== ')'
-        ? { result: previous.result + current, count }
-        : { result: previous.result, count };
-    },
-    {
-      result: '',
-      count: 0,
-    }
-  ).result;
 
 export type ParenthesesMatch = { body: string; prefix: string };
 
@@ -106,14 +93,19 @@ export const splitTableFieldDefinitions = (value: string) =>
   ).result;
 
 const getRawType = (value: string): string => {
-  const bracketIndex = value.indexOf('[');
+  const squareBracketIndex = value.indexOf('[');
+  const parenthesesIndex = value.indexOf('(');
 
-  return bracketIndex === -1 ? value : value.slice(0, bracketIndex);
+  if (parenthesesIndex !== -1) {
+    return value.slice(0, parenthesesIndex);
+  }
+
+  return squareBracketIndex === -1 ? value : value.slice(0, squareBracketIndex);
 };
 
 // Reference: https://github.com/SweetIQ/schemats/blob/7c3d3e16b5d507b4d9bd246794e7463b05d20e75/src/schemaPostgres.ts
 // eslint-disable-next-line complexity
-const getType = (
+export const getType = (
   value: string
 ): 'string' | 'number' | 'boolean' | 'Record<string, unknown>' | undefined => {
   switch (getRawType(value)) {
@@ -152,22 +144,58 @@ const getType = (
   }
 };
 
-export const parseType = (value: string) => {
-  const typeName = removeParentheses(value);
-  const type = getType(typeName);
+const parseStringMaxLength = (rawType: string) => {
+  const squareBracketIndex = rawType.indexOf('[');
 
-  const isString = type === 'string';
-  const parenthesesMatch = findFirstParentheses(value);
-  const stringMaxLength = conditional(
-    isString &&
-      parenthesesMatch &&
+  const parenthesesMatch = findFirstParentheses(
+    squareBracketIndex === -1 ? rawType : rawType.slice(0, squareBracketIndex)
+  );
+
+  return conditional(
+    parenthesesMatch &&
       ['bpchar', 'char', 'varchar'].includes(parenthesesMatch.prefix) &&
       Number(parenthesesMatch.body)
   );
+};
+
+// eslint-disable-next-line complexity
+export const parseType = (columnStatement: string): Field => {
+  const [nameRaw, typeRaw, ...rest] = columnStatement.split(' ');
+
+  assert(nameRaw && typeRaw, new Error('Missing column name or type: ' + columnStatement));
+
+  const name = nameRaw.toLowerCase();
+  const type = typeRaw.toLowerCase();
+
+  const restJoined = rest.join(' ');
+  const restLowercased = restJoined.toLowerCase();
+
+  const primitiveType = getType(type);
+
+  const isString = primitiveType === 'string';
+  // CAUTION: Only works for single dimension arrays
+  const isArray = Boolean(/\[.*]/.test(type)) || restLowercased.includes('array');
+
+  const hasDefaultValue = restLowercased.includes('default');
+  const nullable = !restLowercased.includes('not null');
+  const tsType = /\/\* @use (.*) \*\//.exec(restJoined)?.[1];
+
+  assert(
+    !(!primitiveType && tsType),
+    new Error(
+      `TS type can only be applied on primitive types, found ${tsType ?? 'N/A'} over ${type}`
+    )
+  );
 
   return {
-    type,
+    name,
+    type: primitiveType,
     isString,
-    maxLength: stringMaxLength,
+    isArray,
+    stringMaxLength: conditional(isString && parseStringMaxLength(type)),
+    customType: conditional(!primitiveType && type),
+    tsType,
+    hasDefaultValue,
+    nullable,
   };
 };

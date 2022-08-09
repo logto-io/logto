@@ -57,40 +57,7 @@ const generate = async () => {
                   'references',
                 ].every((constraint) => !value.toLowerCase().startsWith(constraint + ' '))
               )
-              // eslint-disable-next-line complexity
-              .map<Field>((value) => {
-                const [nameRaw, typeRaw, ...rest] = value.split(' ');
-                assert(nameRaw && typeRaw, 'Missing column name or type: ' + value);
-
-                const name = nameRaw.toLowerCase();
-                const type = typeRaw.toLowerCase();
-                const restJoined = rest.join(' ');
-                const restLowercased = restJoined.toLowerCase();
-                // CAUTION: Only works for single dimension arrays
-                const isArray = Boolean(/\[.*]/.test(type)) || restLowercased.includes('array');
-                const hasDefaultValue = restLowercased.includes('default');
-                const nullable = !restLowercased.includes('not null');
-                const { type: primitiveType, isString, maxLength } = parseType(type);
-                const tsType = /\/\* @use (.*) \*\//.exec(restJoined)?.[1];
-                assert(
-                  !(!primitiveType && tsType),
-                  `TS type can only be applied on primitive types, found ${
-                    tsType ?? 'N/A'
-                  } over ${type}`
-                );
-
-                return {
-                  name,
-                  type: primitiveType,
-                  isString,
-                  maxLength,
-                  customType: conditional(!primitiveType && type),
-                  tsType,
-                  isArray,
-                  hasDefaultValue,
-                  nullable,
-                };
-              });
+              .map<Field>((value) => parseType(value));
 
             return { name, fields };
           });
