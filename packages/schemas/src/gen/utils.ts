@@ -1,4 +1,4 @@
-import { conditional, conditionalString, Optional } from '@silverhand/essentials';
+import { conditional, Optional } from '@silverhand/essentials';
 
 export const normalizeWhitespaces = (string: string): string => string.replace(/\s+/g, ' ').trim();
 
@@ -91,11 +91,11 @@ export const splitColumnDefinitions = (value: string) =>
         };
       }
 
+      const rest = result.slice(0, -1);
+      const last = result.at(-1) ?? '';
+
       return {
-        result: [
-          ...result.slice(0, -1),
-          `${conditionalString(result[result.length - 1])}${current}`,
-        ],
+        result: [...rest, `${last}${current}`],
         count,
       };
     },
