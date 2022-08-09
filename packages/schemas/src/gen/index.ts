@@ -21,20 +21,34 @@ import {
 } from './utils';
 
 const directory = 'tables';
+const constrainKeyWords = [
+  'primary',
+  'foreign',
+  'unique',
+  'exclude',
+  'check',
+  'constraint',
+  'references',
+];
 
 const getOutputFileName = (file: string) => pluralize(file.slice(0, -4).replace(/_/g, '-'), 1);
 
 const generate = async () => {
   const files = await fs.readdir(directory);
+
   const generated = await Promise.all(
     files
       .filter((file) => file.endsWith('.sql'))
       .map<Promise<[string, FileData]>>(async (file) => {
         const paragraph = await fs.readFile(path.join(directory, file), { encoding: 'utf8' });
+
+        // Get statements
         const statements = paragraph
           .split(';')
           .map((value) => normalizeWhitespaces(value))
           .map((value) => removeUnrecognizedComments(value));
+
+        // Parse Table statements
         const tables = statements
           .filter((value) => value.toLowerCase().startsWith('create table'))
           .map((value) => findFirstParentheses(value))
@@ -47,20 +61,16 @@ const generate = async () => {
             const fields = splitTableFieldDefinitions(body)
               .map((value) => normalizeWhitespaces(value))
               .filter((value) =>
-                [
-                  'primary',
-                  'foreign',
-                  'unique',
-                  'exclude',
-                  'check',
-                  'constraint',
-                  'references',
-                ].every((constraint) => !value.toLowerCase().startsWith(constraint + ' '))
+                constrainKeyWords.every(
+                  (constraint) => !value.toLowerCase().startsWith(constraint + ' ')
+                )
               )
               .map<Field>((value) => parseType(value));
 
             return { name, fields };
           });
+
+        // Parse enum statements
         const types = statements
           .filter((value) => value.toLowerCase().startsWith('create type'))
           .map<Type>((value) => {
@@ -182,6 +192,7 @@ const generate = async () => {
       await fs.writeFile(path.join(generatedDirectory, getOutputFileName(file) + '.ts'), content);
     })
   );
+
   await fs.writeFile(
     path.join(generatedDirectory, 'index.ts'),
     header +
