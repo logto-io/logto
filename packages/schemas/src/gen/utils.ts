@@ -159,10 +159,10 @@ const parseStringMaxLength = (rawType: string) => {
 };
 
 // eslint-disable-next-line complexity
-export const parseType = (columnStatement: string): Field => {
-  const [nameRaw, typeRaw, ...rest] = columnStatement.split(' ');
+export const parseType = (tableFieldDefinition: string): Field => {
+  const [nameRaw, typeRaw, ...rest] = tableFieldDefinition.split(' ');
 
-  assert(nameRaw && typeRaw, new Error('Missing column name or type: ' + columnStatement));
+  assert(nameRaw && typeRaw, new Error('Missing field name or type: ' + tableFieldDefinition));
 
   const name = nameRaw.toLowerCase();
   const type = typeRaw.toLowerCase();
