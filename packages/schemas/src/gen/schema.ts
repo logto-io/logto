@@ -33,35 +33,45 @@ export const generateSchema = ({ name, fields }: TableWithType) => {
     '};',
     '',
     `const createGuard: CreateGuard<${databaseEntryType}> = z.object({`,
-    // eslint-disable-next-line complexity
-    ...fields.map(({ name, type, isArray, isEnum, nullable, hasDefaultValue, tsType }) => {
-      if (tsType) {
-        return `  ${camelcase(name)}: ${camelcase(tsType)}Guard${conditionalString(
-          nullable && '.nullable()'
-        )}${conditionalString((nullable || hasDefaultValue) && '.optional()')},`;
-      }
 
-      return `  ${camelcase(name)}: z.${
-        isEnum ? `nativeEnum(${type})` : `${type}()`
-      }${conditionalString(isArray && '.array()')}${conditionalString(
-        nullable && '.nullable()'
-      )}${conditionalString((nullable || hasDefaultValue) && '.optional()')},`;
-    }),
+    ...fields.map(
+      // eslint-disable-next-line complexity
+      ({ name, type, isArray, isEnum, nullable, hasDefaultValue, tsType, isString, maxLength }) => {
+        if (tsType) {
+          return `  ${camelcase(name)}: ${camelcase(tsType)}Guard${conditionalString(
+            nullable && '.nullable()'
+          )}${conditionalString((nullable || hasDefaultValue) && '.optional()')},`;
+        }
+
+        return `  ${camelcase(name)}: z.${
+          isEnum ? `nativeEnum(${type})` : `${type}()`
+        }${conditionalString(isString && maxLength && `.max(${maxLength})`)}${conditionalString(
+          isArray && '.array()'
+        )}${conditionalString(nullable && '.nullable()')}${conditionalString(
+          (nullable || hasDefaultValue) && '.optional()'
+        )},`;
+      }
+    ),
     '  });',
     '',
     `const guard: Guard<${modelName}> = z.object({`,
-    // eslint-disable-next-line complexity
-    ...fields.map(({ name, type, isArray, isEnum, nullable, tsType }) => {
-      if (tsType) {
-        return `  ${camelcase(name)}: ${camelcase(tsType)}Guard${conditionalString(
-          nullable && '.nullable()'
-        )},`;
-      }
 
-      return `  ${camelcase(name)}: z.${
-        isEnum ? `nativeEnum(${type})` : `${type}()`
-      }${conditionalString(isArray && '.array()')}${conditionalString(nullable && '.nullable()')},`;
-    }),
+    ...fields.map(
+      // eslint-disable-next-line complexity
+      ({ name, type, isArray, isEnum, nullable, tsType, isString, maxLength }) => {
+        if (tsType) {
+          return `  ${camelcase(name)}: ${camelcase(tsType)}Guard${conditionalString(
+            nullable && '.nullable()'
+          )},`;
+        }
+
+        return `  ${camelcase(name)}: z.${
+          isEnum ? `nativeEnum(${type})` : `${type}()`
+        }${conditionalString(isString && maxLength && `.max(${maxLength})`)}${conditionalString(
+          isArray && '.array()'
+        )}${conditionalString(nullable && '.nullable()')},`;
+      }
+    ),
     '  });',
     '',
     `export const ${camelcase(name, {

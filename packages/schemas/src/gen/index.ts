@@ -14,27 +14,41 @@ import { generateSchema } from './schema';
 import { FileData, Table, Field, Type, GeneratedType, TableWithType } from './types';
 import {
   findFirstParentheses,
-  getType,
   normalizeWhitespaces,
-  removeParentheses,
+  parseType,
   removeUnrecognizedComments,
+  splitTableFieldDefinitions,
 } from './utils';
 
 const directory = 'tables';
+const constrainedKeywords = [
+  'primary',
+  'foreign',
+  'unique',
+  'exclude',
+  'check',
+  'constraint',
+  'references',
+];
 
 const getOutputFileName = (file: string) => pluralize(file.slice(0, -4).replace(/_/g, '-'), 1);
 
 const generate = async () => {
   const files = await fs.readdir(directory);
+
   const generated = await Promise.all(
     files
       .filter((file) => file.endsWith('.sql'))
       .map<Promise<[string, FileData]>>(async (file) => {
         const paragraph = await fs.readFile(path.join(directory, file), { encoding: 'utf8' });
+
+        // Get statements
         const statements = paragraph
           .split(';')
           .map((value) => normalizeWhitespaces(value))
           .map((value) => removeUnrecognizedComments(value));
+
+        // Parse Table statements
         const tables = statements
           .filter((value) => value.toLowerCase().startsWith('create table'))
           .map((value) => findFirstParentheses(value))
@@ -44,55 +58,19 @@ const generate = async () => {
             const name = normalizeWhitespaces(prefix).split(' ')[2];
             assert(name, 'Missing table name: ' + prefix);
 
-            const fields = removeParentheses(body)
-              .split(',')
+            const fields = splitTableFieldDefinitions(body)
               .map((value) => normalizeWhitespaces(value))
               .filter((value) =>
-                [
-                  'primary',
-                  'foreign',
-                  'unique',
-                  'exclude',
-                  'check',
-                  'constraint',
-                  'references',
-                ].every((constraint) => !value.toLowerCase().startsWith(constraint + ' '))
+                constrainedKeywords.every(
+                  (constraint) => !value.toLowerCase().startsWith(constraint + ' ')
+                )
               )
-              // eslint-disable-next-line complexity
-              .map<Field>((value) => {
-                const [nameRaw, typeRaw, ...rest] = value.split(' ');
-                assert(nameRaw && typeRaw, 'Missing column name or type: ' + value);
-
-                const name = nameRaw.toLowerCase();
-                const type = typeRaw.toLowerCase();
-                const restJoined = rest.join(' ');
-                const restLowercased = restJoined.toLowerCase();
-                // CAUTION: Only works for single dimension arrays
-                const isArray = Boolean(/\[.*]/.test(type)) || restLowercased.includes('array');
-                const hasDefaultValue = restLowercased.includes('default');
-                const nullable = !restLowercased.includes('not null');
-                const primitiveType = getType(type);
-                const tsType = /\/\* @use (.*) \*\//.exec(restJoined)?.[1];
-                assert(
-                  !(!primitiveType && tsType),
-                  `TS type can only be applied on primitive types, found ${
-                    tsType ?? 'N/A'
-                  } over ${type}`
-                );
-
-                return {
-                  name,
-                  type: primitiveType,
-                  customType: conditional(!primitiveType && type),
-                  tsType,
-                  isArray,
-                  hasDefaultValue,
-                  nullable,
-                };
-              });
+              .map<Field>((value) => parseType(value));
 
             return { name, fields };
           });
+
+        // Parse enum statements
         const types = statements
           .filter((value) => value.toLowerCase().startsWith('create type'))
           .map<Type>((value) => {
@@ -152,7 +130,6 @@ const generate = async () => {
   // Generate DB entry types
   await Promise.all(
     generated.map(async ([file, { tables }]) => {
-      // LOG-88 Need refactor, disable mutation rules for now.
       /* eslint-disable @silverhand/fp/no-mutating-methods */
       const tsTypes: string[] = [];
       const customTypes: string[] = [];
@@ -215,6 +192,7 @@ const generate = async () => {
       await fs.writeFile(path.join(generatedDirectory, getOutputFileName(file) + '.ts'), content);
     })
   );
+
   await fs.writeFile(
     path.join(generatedDirectory, 'index.ts'),
     header +

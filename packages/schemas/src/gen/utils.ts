@@ -1,4 +1,6 @@
-import { Optional } from '@silverhand/essentials';
+import { conditional, Optional, assert } from '@silverhand/essentials';
+
+import { Field } from './types';
 
 export const normalizeWhitespaces = (string: string): string => string.replace(/\s+/g, ' ').trim();
 
@@ -17,21 +19,6 @@ const getCountDelta = (value: string): number => {
 
   return 0;
 };
-
-export const removeParentheses = (value: string) =>
-  Object.values(value).reduce<{ result: string; count: number }>(
-    (previous, current) => {
-      const count = previous.count + getCountDelta(current);
-
-      return count === 0 && current !== ')'
-        ? { result: previous.result + current, count }
-        : { result: previous.result, count };
-    },
-    {
-      result: '',
-      count: 0,
-    }
-  ).result;
 
 export type ParenthesesMatch = { body: string; prefix: string };
 
@@ -78,10 +65,42 @@ export const findFirstParentheses = (value: string): Optional<ParenthesesMatch> 
   return matched ? rest : undefined;
 };
 
-const getRawType = (value: string): string => {
-  const bracketIndex = value.indexOf('[');
+export const splitTableFieldDefinitions = (value: string) =>
+  // Split at each comma that is not in parentheses
+  Object.values(value).reduce<{ result: string[]; count: number }>(
+    ({ result, count: previousCount }, current) => {
+      const count = previousCount + getCountDelta(current);
 
-  return bracketIndex === -1 ? value : value.slice(0, bracketIndex);
+      if (count === 0 && current === ',') {
+        return {
+          result: [...result, ''],
+          count,
+        };
+      }
+
+      const rest = result.slice(0, -1);
+      const last = result.at(-1) ?? '';
+
+      return {
+        result: [...rest, `${last}${current}`],
+        count,
+      };
+    },
+    {
+      result: [''],
+      count: 0,
+    }
+  ).result;
+
+const getRawType = (value: string): string => {
+  const squareBracketIndex = value.indexOf('[');
+  const parenthesesIndex = value.indexOf('(');
+
+  if (parenthesesIndex !== -1) {
+    return value.slice(0, parenthesesIndex);
+  }
+
+  return squareBracketIndex === -1 ? value : value.slice(0, squareBracketIndex);
 };
 
 // Reference: https://github.com/SweetIQ/schemats/blob/7c3d3e16b5d507b4d9bd246794e7463b05d20e75/src/schemaPostgres.ts
@@ -90,7 +109,7 @@ export const getType = (
   value: string
 ): 'string' | 'number' | 'boolean' | 'Record<string, unknown>' | undefined => {
   switch (getRawType(value)) {
-    case 'bpchar':
+    case 'bpchar': // https://www.postgresql.org/docs/current/typeconv-query.html
     case 'char':
     case 'varchar':
     case 'text':
@@ -123,4 +142,60 @@ export const getType = (
       return 'Record<string, unknown>';
     default:
   }
+};
+
+const parseStringMaxLength = (rawType: string) => {
+  const squareBracketIndex = rawType.indexOf('[');
+
+  const parenthesesMatch = findFirstParentheses(
+    squareBracketIndex === -1 ? rawType : rawType.slice(0, squareBracketIndex)
+  );
+
+  return conditional(
+    parenthesesMatch &&
+      ['bpchar', 'char', 'varchar'].includes(parenthesesMatch.prefix) &&
+      Number(parenthesesMatch.body)
+  );
+};
+
+// eslint-disable-next-line complexity
+export const parseType = (tableFieldDefinition: string): Field => {
+  const [nameRaw, typeRaw, ...rest] = tableFieldDefinition.split(' ');
+
+  assert(nameRaw && typeRaw, new Error('Missing field name or type: ' + tableFieldDefinition));
+
+  const name = nameRaw.toLowerCase();
+  const type = typeRaw.toLowerCase();
+
+  const restJoined = rest.join(' ');
+  const restLowercased = restJoined.toLowerCase();
+
+  const primitiveType = getType(type);
+
+  const isString = primitiveType === 'string';
+  // CAUTION: Only works for single dimension arrays
+  const isArray = Boolean(/\[.*]/.test(type)) || restLowercased.includes('array');
+
+  const hasDefaultValue = restLowercased.includes('default');
+  const nullable = !restLowercased.includes('not null');
+  const tsType = /\/\* @use (.*) \*\//.exec(restJoined)?.[1];
+
+  assert(
+    !(!primitiveType && tsType),
+    new Error(
+      `TS type can only be applied on primitive types, found ${tsType ?? 'N/A'} over ${type}`
+    )
+  );
+
+  return {
+    name,
+    type: primitiveType,
+    isString,
+    isArray,
+    maxLength: conditional(isString && parseStringMaxLength(type)),
+    customType: conditional(!primitiveType && type),
+    tsType,
+    hasDefaultValue,
+    nullable,
+  };
 };
