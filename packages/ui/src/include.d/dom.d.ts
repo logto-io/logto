@@ -73,7 +73,7 @@ type AutoCompleteType =
   | 'tel-country-code'
   | 'tel-national';
 
-// TODO: @simeng remove me
+// LOG-2893 should remove this once we have API response guard
 interface Body {
   json<T>(): Promise<T>;
 }
