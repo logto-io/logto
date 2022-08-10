@@ -21,7 +21,7 @@ import {
 } from './utils';
 
 const directory = 'tables';
-const constrainKeyWords = [
+const constrainKeywords = [
   'primary',
   'foreign',
   'unique',
@@ -61,7 +61,7 @@ const generate = async () => {
             const fields = splitTableFieldDefinitions(body)
               .map((value) => normalizeWhitespaces(value))
               .filter((value) =>
-                constrainKeyWords.every(
+                constrainedKeywords.every(
                   (constraint) => !value.toLowerCase().startsWith(constraint + ' ')
                 )
               )
