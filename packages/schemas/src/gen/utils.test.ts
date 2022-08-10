@@ -34,7 +34,7 @@ describe('parseType', () => {
         type: 'string',
         isArray: false,
         isString: true,
-        stringMaxLength: length,
+        maxLength: length,
         hasDefaultValue: false,
         nullable: true,
         tsType: undefined,
@@ -55,7 +55,7 @@ describe('parseType', () => {
         name: 'foo',
         type,
         isArray: false,
-        stringMaxLength: undefined,
+        maxLength: undefined,
         hasDefaultValue: false,
         nullable: true,
         tsType: undefined,
@@ -68,14 +68,14 @@ describe('parseType', () => {
     expect(parseType(`foo varchar(${length})[]`)).toMatchObject({
       name: 'foo',
       type: 'string',
-      stringMaxLength: length,
+      maxLength: length,
       isArray: true,
     });
 
     expect(parseType(`foo varchar(${length}) array`)).toMatchObject({
       name: 'foo',
       type: 'string',
-      stringMaxLength: length,
+      maxLength: length,
       isArray: true,
     });
   });

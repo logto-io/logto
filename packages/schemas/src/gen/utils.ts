@@ -192,7 +192,7 @@ export const parseType = (tableFieldDefinition: string): Field => {
     type: primitiveType,
     isString,
     isArray,
-    stringMaxLength: conditional(isString && parseStringMaxLength(type)),
+    maxLength: conditional(isString && parseStringMaxLength(type)),
     customType: conditional(!primitiveType && type),
     tsType,
     hasDefaultValue,
