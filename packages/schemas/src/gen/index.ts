@@ -21,7 +21,7 @@ import {
 } from './utils';
 
 const directory = 'tables';
-const constrainKeywords = [
+const constrainedKeywords = [
   'primary',
   'foreign',
   'unique',
