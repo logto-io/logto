@@ -70,7 +70,7 @@ export const getConnectorInstances = async (): Promise<ConnectorInstance[]> => {
         throw new RequestError({ code: 'entity.not_found', id: metadata.id, status: 404 });
       }
 
-      // TODO: can address type of Builder when dynamic import, temporarily use `as` to unblock
+      // TODO (LOG-3921): can address type of Builder when dynamic import, temporarily use `as` to unblock
       // eslint-disable-next-line no-restricted-syntax
       const instance = new InstanceBuilder(
         getConnectorConfig,
