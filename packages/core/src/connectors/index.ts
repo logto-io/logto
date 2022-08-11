@@ -4,10 +4,11 @@ import path from 'path';
 import { ConnectorInstance, SocialConnectorInstance } from '@logto/connector-types';
 import resolvePackagePath from 'resolve-package-path';
 
+import envSet from '@/env-set';
 import RequestError from '@/errors/RequestError';
 import { findAllConnectors, insertConnector } from '@/queries/connector';
 
-import { connectorPackages } from './consts';
+import { defaultConnectorPackages } from './consts';
 import { ConnectorType } from './types';
 import { getConnectorConfig } from './utilities';
 
@@ -18,6 +19,12 @@ const loadConnectors = async () => {
   if (cachedConnectors) {
     return cachedConnectors;
   }
+
+  const {
+    values: { additionalConnectorPackages },
+  } = envSet;
+
+  const connectorPackages = [...defaultConnectorPackages, ...additionalConnectorPackages];
 
   // eslint-disable-next-line @silverhand/fp/no-mutation
   cachedConnectors = await Promise.all(

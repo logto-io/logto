@@ -1,6 +1,4 @@
-import { getEnv } from '@silverhand/essentials';
-
-const defaultPackages = [
+export const defaultConnectorPackages = [
   '@logto/connector-alipay-web',
   '@logto/connector-alipay-native',
   '@logto/connector-aliyun-dm',
@@ -16,9 +14,3 @@ const defaultPackages = [
   '@logto/connector-wechat-web',
   '@logto/connector-wechat-native',
 ];
-
-const additionalConnectorPackages = getEnv('ADDITIONAL_CONNECTOR_PACKAGES', '')
-  .split(',')
-  .filter(Boolean);
-
-export const connectorPackages = [...defaultPackages, ...additionalConnectorPackages];
