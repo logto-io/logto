@@ -41,7 +41,7 @@ export const validateSignInMethods = (
 
   if (isEnabled(signInMethods.email)) {
     assertThat(
-      enabledConnectorInstances.some((item) => item.instance.metadata.type === ConnectorType.Email),
+      enabledConnectorInstances.some((item) => item.metadata.type === ConnectorType.Email),
       new RequestError({
         code: 'sign_in_experiences.enabled_connector_not_found',
         type: ConnectorType.Email,
@@ -51,7 +51,7 @@ export const validateSignInMethods = (
 
   if (isEnabled(signInMethods.sms)) {
     assertThat(
-      enabledConnectorInstances.some((item) => item.instance.metadata.type === ConnectorType.SMS),
+      enabledConnectorInstances.some((item) => item.metadata.type === ConnectorType.SMS),
       new RequestError({
         code: 'sign_in_experiences.enabled_connector_not_found',
         type: ConnectorType.SMS,
@@ -61,9 +61,7 @@ export const validateSignInMethods = (
 
   if (isEnabled(signInMethods.social)) {
     assertThat(
-      enabledConnectorInstances.some(
-        (item) => item.instance.metadata.type === ConnectorType.Social
-      ),
+      enabledConnectorInstances.some((item) => item.metadata.type === ConnectorType.Social),
       new RequestError({
         code: 'sign_in_experiences.enabled_connector_not_found',
         type: ConnectorType.Social,

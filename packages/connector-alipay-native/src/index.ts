@@ -9,15 +9,15 @@
  * https://opendocs.alipay.com/open/204/105296/
  */
 
-import { SocialConnector } from '@logto/connector-base-classes';
 import {
+  SocialConnector,
   AuthResponseParser,
   ConnectorError,
   ConnectorErrorCodes,
   GetAuthorizationUri,
   GetUserInfo,
   GetConnectorConfig,
-} from '@logto/connector-types';
+} from '@logto/connector-schemas';
 import { assert } from '@silverhand/essentials';
 import dayjs from 'dayjs';
 import got from 'got';
@@ -45,6 +45,7 @@ import {
 import { signingParameters } from './utils';
 
 export type { AlipayNativeConfig } from './types';
+export { defaultMetadata } from './constant';
 
 export default class AlipayNativeConnector extends SocialConnector<AlipayNativeConfig> {
   private readonly signingParameters = signingParameters;
@@ -52,8 +53,6 @@ export default class AlipayNativeConnector extends SocialConnector<AlipayNativeC
   constructor(getConnectorConfig: GetConnectorConfig) {
     super(getConnectorConfig);
     this.metadata = defaultMetadata;
-    // eslint-disable-next-line unicorn/prefer-module
-    this.metadataParser(__dirname);
   }
 
   public validateConfig(config: unknown): asserts config is AlipayNativeConfig {

@@ -1,22 +1,22 @@
-import { SmsConnector } from '@logto/connector-base-classes';
 import {
+  SmsConnector,
   ConnectorError,
   ConnectorErrorCodes,
   SmsSendMessageByFunction,
   GetConnectorConfig,
-} from '@logto/connector-types';
+} from '@logto/connector-schemas';
 import { assert } from '@silverhand/essentials';
 import got, { HTTPError } from 'got';
 
 import { defaultMetadata, endpoint } from './constant';
 import { twilioSmsConfigGuard, TwilioSmsConfig, PublicParameters } from './types';
 
+export { defaultMetadata } from './constant';
+
 export default class TwilioSmsConnector extends SmsConnector<TwilioSmsConfig> {
   constructor(getConnectorConfig: GetConnectorConfig) {
     super(getConnectorConfig);
     this.metadata = defaultMetadata;
-    // eslint-disable-next-line unicorn/prefer-module
-    this.metadataParser(__dirname);
   }
 
   public validateConfig(config: unknown): asserts config is TwilioSmsConfig {

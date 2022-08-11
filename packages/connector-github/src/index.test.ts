@@ -3,7 +3,7 @@ import {
   ConnectorErrorCodes,
   GetConnectorConfig,
   ValidateConfig,
-} from '@logto/connector-types';
+} from '@logto/connector-schemas';
 import nock from 'nock';
 import * as qs from 'query-string';
 

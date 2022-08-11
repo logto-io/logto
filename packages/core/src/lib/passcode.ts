@@ -2,7 +2,7 @@ import { Passcode, PasscodeType } from '@logto/schemas';
 import { customAlphabet, nanoid } from 'nanoid';
 
 import { getConnectorInstances } from '@/connectors';
-import { ConnectorType, EmailConnectorInstance, SmsConnectorInstance } from '@/connectors/types';
+import { EmailConnectorInstance, SmsConnectorInstance, ConnectorType } from '@/connectors/types';
 import RequestError from '@/errors/RequestError';
 import {
   consumePasscode,
@@ -49,11 +49,11 @@ export const sendPasscode = async (passcode: Passcode) => {
 
   const emailConnectorInstance = connectorInstances.find(
     (connector): connector is EmailConnectorInstance =>
-      connector.connector.enabled && connector.instance.metadata.type === ConnectorType.Email
+      connector.connector.enabled && connector.metadata.type === ConnectorType.Email
   );
   const smsConnectorInstance = connectorInstances.find(
     (connector): connector is SmsConnectorInstance =>
-      connector.connector.enabled && connector.instance.metadata.type === ConnectorType.SMS
+      connector.connector.enabled && connector.metadata.type === ConnectorType.SMS
   );
 
   const connectorInstance = passcode.email ? emailConnectorInstance : smsConnectorInstance;
@@ -66,10 +66,7 @@ export const sendPasscode = async (passcode: Passcode) => {
     })
   );
 
-  const {
-    connector,
-    instance: { metadata, sendMessage },
-  } = connectorInstance;
+  const { connector, metadata, sendMessage } = connectorInstance;
 
   const response = await sendMessage(emailOrPhone, passcode.type, {
     code: passcode.code,

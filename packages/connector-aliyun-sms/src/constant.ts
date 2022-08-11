@@ -1,4 +1,4 @@
-import { ConnectorMetadata, ConnectorType } from '@logto/connector-types';
+import { ConnectorMetadata, ConnectorType } from '@logto/connector-schemas';
 
 export const endpoint = 'https://dysmsapi.aliyuncs.com/';
 

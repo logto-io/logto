@@ -45,7 +45,7 @@ export default function sessionSocialRoutes<T extends AnonymousRouter>(
       assertThat(state && redirectUri, 'session.insufficient_info');
       const connector = await getSocialConnectorInstanceById(connectorId);
       assertThat(connector.connector.enabled, 'connector.not_enabled');
-      const redirectTo = await connector.instance.getAuthorizationUri({ state, redirectUri });
+      const redirectTo = await connector.getAuthorizationUri({ state, redirectUri });
       ctx.body = { redirectTo };
 
       return next();
@@ -67,9 +67,7 @@ export default function sessionSocialRoutes<T extends AnonymousRouter>(
       const type = 'SignInSocial';
       ctx.log(type, { connectorId, data });
       const {
-        instance: {
-          metadata: { target },
-        },
+        metadata: { target },
       } = await getConnectorInstanceById(connectorId);
 
       const userInfo = await getUserInfoByAuthCode(connectorId, data);
@@ -120,9 +118,7 @@ export default function sessionSocialRoutes<T extends AnonymousRouter>(
       const type = 'SignInSocialBind';
       ctx.log(type, { connectorId });
       const {
-        instance: {
-          metadata: { target },
-        },
+        metadata: { target },
       } = await getConnectorInstanceById(connectorId);
 
       const userInfo = await getUserInfoFromInteractionResult(connectorId, result);
@@ -162,9 +158,7 @@ export default function sessionSocialRoutes<T extends AnonymousRouter>(
       const type = 'RegisterSocial';
       ctx.log(type, { connectorId });
       const {
-        instance: {
-          metadata: { target },
-        },
+        metadata: { target },
       } = await getConnectorInstanceById(connectorId);
 
       const userInfo = await getUserInfoFromInteractionResult(connectorId, result);
@@ -209,9 +203,7 @@ export default function sessionSocialRoutes<T extends AnonymousRouter>(
       const type = 'RegisterSocialBind';
       ctx.log(type, { connectorId, userId });
       const {
-        instance: {
-          metadata: { target },
-        },
+        metadata: { target },
       } = await getConnectorInstanceById(connectorId);
 
       const userInfo = await getUserInfoFromInteractionResult(connectorId, result);

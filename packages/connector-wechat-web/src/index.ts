@@ -3,8 +3,8 @@
  * https://developers.weixin.qq.com/doc/oplatform/Website_App/WeChat_Login/Wechat_Login.html
  */
 
-import { SocialConnector } from '@logto/connector-base-classes';
 import {
+  SocialConnector,
   AuthResponseParser,
   GetAuthorizationUri,
   GetUserInfo,
@@ -13,7 +13,7 @@ import {
   GetConnectorConfig,
   codeDataGuard,
   CodeData,
-} from '@logto/connector-types';
+} from '@logto/connector-schemas';
 import { assert } from '@silverhand/essentials';
 import got, { HTTPError } from 'got';
 
@@ -36,12 +36,12 @@ import {
   WechatConfig,
 } from './types';
 
+export { defaultMetadata } from './constant';
+
 export default class WechatConnector extends SocialConnector<WechatConfig> {
   constructor(getConnectorConfig: GetConnectorConfig) {
     super(getConnectorConfig);
     this.metadata = defaultMetadata;
-    // eslint-disable-next-line unicorn/prefer-module
-    this.metadataParser(__dirname);
   }
 
   public validateConfig(config: unknown): asserts config is WechatConfig {

@@ -1,4 +1,4 @@
-import { ConnectorType, ConnectorMetadata } from '@logto/connector-types';
+import { ConnectorType, ConnectorMetadata } from '@logto/connector-schemas';
 
 export const endpoint = 'https://api.twilio.com/2010-04-01/Accounts/{{accountSID}}/Messages.json';
 

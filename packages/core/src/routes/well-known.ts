@@ -1,4 +1,4 @@
-import { ConnectorMetadata } from '@logto/connector-types';
+import { ConnectorMetadata } from '@logto/connector-schemas';
 import { SignInMode } from '@logto/schemas';
 import {
   adminConsoleApplicationId,
@@ -55,17 +55,13 @@ export default function wellKnownRoutes<T extends AnonymousRouter>(router: T, pr
         Array<ConnectorMetadata & { id: string }>
       >((previous, connectorTarget) => {
         const connectors = connectorInstances.filter(
-          ({
-            instance: {
-              metadata: { target },
-            },
-            connector: { enabled },
-          }) => target === connectorTarget && enabled
+          ({ metadata: { target }, connector: { enabled } }) =>
+            target === connectorTarget && enabled
         );
 
         return [
           ...previous,
-          ...connectors.map(({ instance: { metadata }, connector: { id } }) => ({
+          ...connectors.map(({ metadata, connector: { id } }) => ({
             ...metadata,
             id,
           })),

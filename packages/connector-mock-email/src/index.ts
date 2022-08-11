@@ -1,24 +1,24 @@
 import fs from 'fs/promises';
 import path from 'path';
 
-import { EmailConnector } from '@logto/connector-base-classes';
 import {
+  EmailConnector,
   ConnectorError,
   ConnectorErrorCodes,
   EmailSendMessageByFunction,
   GetConnectorConfig,
-} from '@logto/connector-types';
+} from '@logto/connector-schemas';
 import { assert } from '@silverhand/essentials';
 
 import { defaultMetadata } from './constant';
 import { mockMailConfigGuard, MockMailConfig } from './types';
 
+export { defaultMetadata } from './constant';
+
 export default class MockMailConnector extends EmailConnector<MockMailConfig> {
   constructor(getConnectorConfig: GetConnectorConfig) {
     super(getConnectorConfig);
     this.metadata = defaultMetadata;
-    // eslint-disable-next-line unicorn/prefer-module
-    this.metadataParser(__dirname);
   }
 
   public validateConfig(config: unknown): asserts config is MockMailConfig {

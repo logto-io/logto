@@ -1,5 +1,5 @@
 {
-  "name": "@logto/connector-types",
+  "name": "@logto/connector-schemas",
   "version": "1.0.0-beta.4",
   "main": "lib/index.js",
   "author": "Silverhand Inc. <contact@silverhand.io>",
@@ -29,6 +29,7 @@
     "@silverhand/essentials": "^1.1.6",
     "@silverhand/ts-config": "1.0.0-rc.2",
     "@types/jest": "^28.1.6",
+    "@types/node": "^16.3.1",
     "eslint": "^8.21.0",
     "jest": "^28.1.3",
     "lint-staged": "^13.0.0",

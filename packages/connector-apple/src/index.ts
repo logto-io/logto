@@ -1,24 +1,24 @@
-import { SocialConnector } from '@logto/connector-base-classes';
 import {
+  SocialConnector,
   AuthResponseParser,
   GetAuthorizationUri,
   GetUserInfo,
   ConnectorError,
   ConnectorErrorCodes,
   GetConnectorConfig,
-} from '@logto/connector-types';
+} from '@logto/connector-schemas';
 import { createRemoteJWKSet, jwtVerify } from 'jose';
 
 import { scope, defaultMetadata, jwksUri, issuer, authorizationEndpoint } from './constant';
 import { appleConfigGuard, authResponseGuard, AppleConfig, AuthResponse } from './types';
+
+export { defaultMetadata } from './constant';
 
 // TO-DO: support nonce validation
 export default class AppleConnector extends SocialConnector<AppleConfig> {
   constructor(getConnectorConfig: GetConnectorConfig) {
     super(getConnectorConfig);
     this.metadata = defaultMetadata;
-    // eslint-disable-next-line unicorn/prefer-module
-    this.metadataParser(__dirname);
   }
 
   public validateConfig(config: unknown): asserts config is AppleConfig {

@@ -1,4 +1,4 @@
-import { ConnectorType, ValidateConfig, GetConnectorConfig } from '@logto/connector-types';
+import { ConnectorType, ValidateConfig, GetConnectorConfig } from '@logto/connector-schemas';
 import { Passcode, PasscodeType, Connector } from '@logto/schemas';
 
 import { mockConnector, mockMetadata } from '@/__mocks__';
@@ -27,13 +27,11 @@ jest.mock('@/connectors');
 
 type ConnectorInstance = {
   connector: Connector;
-  instance: {
-    metadata: ConnectorMetadata;
-    validateConfig?: ValidateConfig<unknown>;
-    getConfig?: GetConnectorConfig;
-    sendMessage?: unknown;
-    sendTestMessage?: unknown;
-  };
+  metadata: ConnectorMetadata;
+  validateConfig?: ValidateConfig<unknown>;
+  getConfig?: GetConnectorConfig;
+  sendMessage?: unknown;
+  sendTestMessage?: unknown;
 };
 
 const mockedFindUnconsumedPasscodesByJtiAndType =
@@ -149,16 +147,14 @@ describe('sendPasscode', () => {
           ...mockConnector,
           id: 'id1',
         },
-        instance: {
-          metadata: {
-            ...mockMetadata,
-            type: ConnectorType.Email,
-            platform: null,
-          },
-          sendMessage,
-          validateConfig,
-          getConfig,
+        metadata: {
+          ...mockMetadata,
+          type: ConnectorType.Email,
+          platform: null,
         },
+        sendMessage,
+        validateConfig,
+        getConfig,
       },
     ];
     getConnectorInstancesPlaceHolder.mockResolvedValueOnce(mockConnectorInstances);
@@ -191,31 +187,27 @@ describe('sendPasscode', () => {
           ...mockConnector,
           id: 'id0',
         },
-        instance: {
-          metadata: {
-            ...mockMetadata,
-            type: ConnectorType.SMS,
-            platform: null,
-          },
-          sendMessage,
-          validateConfig,
-          getConfig,
+        metadata: {
+          ...mockMetadata,
+          type: ConnectorType.SMS,
+          platform: null,
         },
+        sendMessage,
+        validateConfig,
+        getConfig,
       },
       {
         connector: {
           ...mockConnector,
           id: 'id1',
         },
-        instance: {
-          metadata: {
-            ...mockMetadata,
-            type: ConnectorType.Email,
-            platform: null,
-          },
-          validateConfig,
-          getConfig,
+        metadata: {
+          ...mockMetadata,
+          type: ConnectorType.Email,
+          platform: null,
         },
+        validateConfig,
+        getConfig,
       },
     ];
     getConnectorInstancesPlaceHolder.mockResolvedValueOnce(mockConnectorInstances);

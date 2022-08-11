@@ -1,10 +1,10 @@
-import { EmailConnector } from '@logto/connector-base-classes';
 import {
+  EmailConnector,
   ConnectorError,
   ConnectorErrorCodes,
   EmailSendMessageByFunction,
   GetConnectorConfig,
-} from '@logto/connector-types';
+} from '@logto/connector-schemas';
 import { assert } from '@silverhand/essentials';
 import { HTTPError } from 'got';
 
@@ -17,12 +17,12 @@ import {
   sendMailErrorResponseGuard,
 } from './types';
 
+export { defaultMetadata } from './constant';
+
 export default class AliyunDmConnector extends EmailConnector<AliyunDmConfig> {
   constructor(getConnectorConfig: GetConnectorConfig) {
     super(getConnectorConfig);
     this.metadata = defaultMetadata;
-    // eslint-disable-next-line unicorn/prefer-module
-    this.metadataParser(__dirname);
   }
 
   public validateConfig(config: unknown): asserts config is AliyunDmConfig {

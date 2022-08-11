@@ -1,4 +1,4 @@
-import { GetConnectorConfig, ValidateConfig } from '@logto/connector-types';
+import { GetConnectorConfig, ValidateConfig } from '@logto/connector-schemas';
 import { Connector, ConnectorType } from '@logto/schemas';
 
 import { mockConnectorInstanceList, mockMetadata, mockConnector } from '@/__mocks__';
@@ -11,13 +11,11 @@ import connectorRoutes from './connector';
 
 type ConnectorInstance = {
   connector: Connector;
-  instance: {
-    metadata: ConnectorMetadata;
-    validateConfig?: ValidateConfig<unknown>;
-    getConfig?: GetConnectorConfig;
-    sendMessage?: unknown;
-    sendTestMessage?: unknown;
-  };
+  metadata: ConnectorMetadata;
+  validateConfig?: ValidateConfig<unknown>;
+  getConfig?: GetConnectorConfig;
+  sendMessage?: unknown;
+  sendTestMessage?: unknown;
 };
 
 const getConnectorInstancesPlaceHolder = jest.fn() as jest.MockedFunction<
@@ -59,7 +57,7 @@ describe('connector route', () => {
     it('throws if more than one SMS connector is enabled', async () => {
       getConnectorInstancesPlaceHolder.mockResolvedValueOnce(
         mockConnectorInstanceList.filter(
-          (connectorInstance) => connectorInstance.instance.metadata.type !== ConnectorType.Email
+          (connectorInstance) => connectorInstance.metadata.type !== ConnectorType.Email
         )
       );
       const response = await connectorRequest.get('/connectors').send({});
@@ -69,7 +67,7 @@ describe('connector route', () => {
     it('shows all connectors', async () => {
       getConnectorInstancesPlaceHolder.mockResolvedValueOnce(
         mockConnectorInstanceList.filter(
-          (connectorInstance) => connectorInstance.instance.metadata.type === ConnectorType.Social
+          (connectorInstance) => connectorInstance.metadata.type === ConnectorType.Social
         )
       );
       const response = await connectorRequest.get('/connectors').send({});
@@ -114,13 +112,11 @@ describe('connector route', () => {
       };
       const mockedSmsConnectorInstance: ConnectorInstance = {
         connector: mockConnector,
-        instance: {
-          metadata: mockedMetadata,
-          validateConfig: jest.fn(),
-          getConfig: jest.fn(),
-          sendMessage: jest.fn(),
-          sendTestMessage: mockSendTestMessage,
-        },
+        metadata: mockedMetadata,
+        validateConfig: jest.fn(),
+        getConfig: jest.fn(),
+        sendMessage: jest.fn(),
+        sendTestMessage: mockSendTestMessage,
       };
       getConnectorInstancesPlaceHolder.mockResolvedValueOnce([mockedSmsConnectorInstance]);
       const response = await connectorRequest
@@ -137,13 +133,11 @@ describe('connector route', () => {
       const sendTestMessage = jest.fn();
       const mockedEmailConnector: ConnectorInstance = {
         connector: mockConnector,
-        instance: {
-          metadata: mockMetadata,
-          validateConfig: jest.fn(),
-          getConfig: jest.fn(),
-          sendMessage: jest.fn(),
-          sendTestMessage,
-        },
+        metadata: mockMetadata,
+        validateConfig: jest.fn(),
+        getConfig: jest.fn(),
+        sendMessage: jest.fn(),
+        sendTestMessage,
       };
       getConnectorInstancesPlaceHolder.mockResolvedValueOnce([mockedEmailConnector]);
       const response = await connectorRequest

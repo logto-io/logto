@@ -1,10 +1,10 @@
-import { SmsConnector } from '@logto/connector-base-classes';
 import {
+  SmsConnector,
   ConnectorError,
   ConnectorErrorCodes,
   SmsSendMessageByFunction,
   GetConnectorConfig,
-} from '@logto/connector-types';
+} from '@logto/connector-schemas';
 import { assert } from '@silverhand/essentials';
 import { HTTPError } from 'got';
 
@@ -12,12 +12,12 @@ import { defaultMetadata } from './constant';
 import { sendSms } from './single-send-text';
 import { aliyunSmsConfigGuard, AliyunSmsConfig, sendSmsResponseGuard } from './types';
 
+export { defaultMetadata } from './constant';
+
 export default class AliyunSmsConnector extends SmsConnector<AliyunSmsConfig> {
   constructor(getConnectorConfig: GetConnectorConfig) {
     super(getConnectorConfig);
     this.metadata = defaultMetadata;
-    // eslint-disable-next-line unicorn/prefer-module
-    this.metadataParser(__dirname);
   }
 
   public validateConfig(config: unknown): asserts config is AliyunSmsConfig {

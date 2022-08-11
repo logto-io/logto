@@ -2,8 +2,8 @@
  * The Implementation of OpenID Connect of Google Identity Platform.
  * https://developers.google.com/identity/protocols/oauth2/openid-connect
  */
-import { SocialConnector } from '@logto/connector-base-classes';
 import {
+  SocialConnector,
   AuthResponseParser,
   ConnectorError,
   ConnectorErrorCodes,
@@ -12,7 +12,7 @@ import {
   GetConnectorConfig,
   codeWithRedirectDataGuard,
   CodeWithRedirectData,
-} from '@logto/connector-types';
+} from '@logto/connector-schemas';
 import { conditional, assert } from '@silverhand/essentials';
 import got, { HTTPError } from 'got';
 
@@ -31,12 +31,12 @@ import {
   userInfoResponseGuard,
 } from './types';
 
+export { defaultMetadata } from './constant';
+
 export default class GoogleConnector extends SocialConnector<GoogleConfig> {
   constructor(getConnectorConfig: GetConnectorConfig) {
     super(getConnectorConfig);
     this.metadata = defaultMetadata;
-    // eslint-disable-next-line unicorn/prefer-module
-    this.metadataParser(__dirname);
   }
 
   public validateConfig(config: unknown): asserts config is GoogleConfig {

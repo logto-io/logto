@@ -1,4 +1,4 @@
-import { GetConnectorConfig, ValidateConfig } from '@logto/connector-types';
+import { GetConnectorConfig, ValidateConfig } from '@logto/connector-schemas';
 
 import AliyunSmsConnector from '.';
 import { mockedConnectorConfig, mockedValidConnectorConfig, phoneTest, codeTest } from './mock';

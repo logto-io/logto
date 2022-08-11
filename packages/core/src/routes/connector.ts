@@ -15,10 +15,7 @@ import assertThat from '@/utils/assert-that';
 
 import { AuthedRouter } from './types';
 
-const transpileConnectorInstance = ({
-  connector,
-  instance: { metadata },
-}: ConnectorInstance): ConnectorDto => ({
+const transpileConnectorInstance = ({ connector, metadata }: ConnectorInstance): ConnectorDto => ({
   ...connector,
   ...metadata,
 });
@@ -38,26 +35,20 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
       assertThat(
         connectorInstances.filter(
           (connector) =>
-            connector.connector.enabled && connector.instance.metadata.type === ConnectorType.Email
+            connector.connector.enabled && connector.metadata.type === ConnectorType.Email
         ).length <= 1,
         'connector.more_than_one_email'
       );
       assertThat(
         connectorInstances.filter(
           (connector) =>
-            connector.connector.enabled && connector.instance.metadata.type === ConnectorType.SMS
+            connector.connector.enabled && connector.metadata.type === ConnectorType.SMS
         ).length <= 1,
         'connector.more_than_one_sms'
       );
 
       const filteredInstances = filterTarget
-        ? connectorInstances.filter(
-            ({
-              instance: {
-                metadata: { target },
-              },
-            }) => target === filterTarget
-          )
+        ? connectorInstances.filter(({ metadata: { target } }) => target === filterTarget)
         : connectorInstances;
 
       ctx.body = filteredInstances.map((connectorInstance) =>
@@ -97,7 +88,8 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
       const connectorInstance = await getConnectorInstanceById(id);
       const {
         connector: { config },
-        instance: { validateConfig, metadata },
+        validateConfig,
+        metadata,
       } = connectorInstance;
 
       /**
@@ -121,7 +113,7 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
           connectors
             .filter(
               (connector) =>
-                connector.instance.metadata.type === metadata.type && connector.connector.enabled
+                connector.metadata.type === metadata.type && connector.connector.enabled
             )
             .map(async ({ connector: { id } }) =>
               updateConnector({ set: { enabled: false }, where: { id }, jsonbMode: 'merge' })
@@ -152,9 +144,7 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
         body,
       } = ctx.guard;
 
-      const {
-        instance: { metadata, validateConfig },
-      } = await getConnectorInstanceById(id);
+      const { metadata, validateConfig } = await getConnectorInstanceById(id);
 
       /**
        * Assertion functions always need explicit annotations.
@@ -197,13 +187,11 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
       const connector: SmsConnectorInstance | EmailConnectorInstance | undefined = phone
         ? connectorInstances.find(
             (connector): connector is SmsConnectorInstance =>
-              connector.instance.metadata.id === id &&
-              connector.instance.metadata.type === ConnectorType.SMS
+              connector.metadata.id === id && connector.metadata.type === ConnectorType.SMS
           )
         : connectorInstances.find(
             (connector): connector is EmailConnectorInstance =>
-              connector.instance.metadata.id === id &&
-              connector.instance.metadata.type === ConnectorType.Email
+              connector.metadata.id === id && connector.metadata.type === ConnectorType.Email
           );
 
       assertThat(
@@ -214,9 +202,7 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
         })
       );
 
-      const {
-        instance: { sendTestMessage },
-      } = connector;
+      const { sendTestMessage } = connector;
       assertThat(
         sendTestMessage,
         new RequestError({

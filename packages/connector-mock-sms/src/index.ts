@@ -1,24 +1,24 @@
 import fs from 'fs/promises';
 import path from 'path';
 
-import { SmsConnector } from '@logto/connector-base-classes';
 import {
+  SmsConnector,
   ConnectorError,
   ConnectorErrorCodes,
   SmsSendMessageByFunction,
   GetConnectorConfig,
-} from '@logto/connector-types';
+} from '@logto/connector-schemas';
 import { assert } from '@silverhand/essentials';
 
 import { defaultMetadata } from './constant';
 import { mockSmsConfigGuard, MockSmsConfig } from './types';
 
+export { defaultMetadata } from './constant';
+
 export default class MockSmsConnector extends SmsConnector<MockSmsConfig> {
   constructor(getConnectorConfig: GetConnectorConfig) {
     super(getConnectorConfig);
     this.metadata = defaultMetadata;
-    // eslint-disable-next-line unicorn/prefer-module
-    this.metadataParser(__dirname);
   }
 
   public validateConfig(config: unknown): asserts config is MockSmsConfig {

@@ -1,24 +1,24 @@
 import { randomUUID } from 'crypto';
 
-import { SocialConnector } from '@logto/connector-base-classes';
 import {
+  SocialConnector,
   ConnectorError,
   ConnectorErrorCodes,
   GetAuthorizationUri,
   GetUserInfo,
   GetConnectorConfig,
-} from '@logto/connector-types';
+} from '@logto/connector-schemas';
 import { z } from 'zod';
 
 import { defaultMetadata } from './constant';
 import { mockSocialConfigGuard, MockSocialConfig } from './types';
 
+export { defaultMetadata } from './constant';
+
 export default class MockSocialConnector extends SocialConnector<MockSocialConfig> {
   constructor(getConnectorConfig: GetConnectorConfig) {
     super(getConnectorConfig);
     this.metadata = defaultMetadata;
-    // eslint-disable-next-line unicorn/prefer-module
-    this.metadataParser(__dirname);
   }
 
   public validateConfig(config: unknown): asserts config is MockSocialConfig {

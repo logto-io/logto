@@ -1,10 +1,10 @@
-import { EmailConnector } from '@logto/connector-base-classes';
 import {
+  EmailConnector,
   ConnectorError,
   ConnectorErrorCodes,
   EmailSendMessageByFunction,
   GetConnectorConfig,
-} from '@logto/connector-types';
+} from '@logto/connector-schemas';
 import { assert } from '@silverhand/essentials';
 import nodemailer from 'nodemailer';
 import SMTPTransport from 'nodemailer/lib/smtp-transport';
@@ -12,12 +12,12 @@ import SMTPTransport from 'nodemailer/lib/smtp-transport';
 import { defaultMetadata } from './constant';
 import { ContextType, smtpConfigGuard, SmtpConfig } from './types';
 
+export { defaultMetadata } from './constant';
+
 export default class SmtpConnector extends EmailConnector<SmtpConfig> {
   constructor(getConnectorConfig: GetConnectorConfig) {
     super(getConnectorConfig);
     this.metadata = defaultMetadata;
-    // eslint-disable-next-line unicorn/prefer-module
-    this.metadataParser(__dirname);
   }
 
   public validateConfig(config: unknown): asserts config is SmtpConfig {

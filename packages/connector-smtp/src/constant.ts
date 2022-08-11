@@ -1,4 +1,4 @@
-import { ConnectorType, ConnectorMetadata } from '@logto/connector-types';
+import { ConnectorType, ConnectorMetadata } from '@logto/connector-schemas';
 
 export const defaultMetadata: ConnectorMetadata = {
   id: 'simple-mail-transfer-protocol',
