@@ -10,7 +10,7 @@ import { exportJWK } from '@/utils/jwks';
 
 import { appendDotEnv } from './dot-env';
 import { allYes, noInquiry } from './parameters';
-import { checkDeprecatedEnv, getEnvAsStringArray } from './utils';
+import { getEnvAsStringArray } from './utils';
 
 const defaultLogtoOidcPrivateKey = './oidc-private-key.pem';
 
@@ -26,18 +26,6 @@ const defaultLogtoOidcPrivateKey = './oidc-private-key.pem';
  * @throws An error when failed to read a private key.
  */
 export const readPrivateKeys = async (): Promise<string[]> => {
-  checkDeprecatedEnv(
-    'OIDC_PRIVATE_KEY',
-    'OIDC_PRIVATE_KEYS',
-    'OIDC_PRIVATE_KEYS=key or OIDC_PRIVATE_KEYS=key1,key2'
-  );
-
-  checkDeprecatedEnv(
-    'OIDC_PRIVATE_KEY_PATH',
-    'OIDC_PRIVATE_KEY_PATHS',
-    'OIDC_PRIVATE_KEY_PATHS=path or OIDC_PRIVATE_KEY_PATHS=path1,path2'
-  );
-
   const privateKeys = getEnvAsStringArray('OIDC_PRIVATE_KEYS');
 
   if (privateKeys.length > 0) {

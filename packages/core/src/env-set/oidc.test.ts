@@ -76,29 +76,6 @@ describe('oidc env-set', () => {
     writeFileSyncSpy.mockRestore();
   });
 
-  it('should throw if the deprecated `OIDC_PRIVATE_KEY` is provided', async () => {
-    process.env.OIDC_PRIVATE_KEY = 'foo';
-
-    await expect(readPrivateKeys()).rejects.toMatchError(
-      new Error(
-        `The env \`OIDC_PRIVATE_KEY\` is deprecated, please use \`OIDC_PRIVATE_KEYS\` instead.\nE.g.OIDC_PRIVATE_KEYS=key or OIDC_PRIVATE_KEYS=key1,key2`
-      )
-    );
-  });
-
-  it('should throw if the deprecated `OIDC_PRIVATE_KEY_PATH` is provided', async () => {
-    // Unset the `OIDC_PRIVATE_KEY_PATHS` environment variable config by jest.setup.ts.
-    process.env.OIDC_PRIVATE_KEY_PATHS = '';
-
-    process.env.OIDC_PRIVATE_KEY_PATH = 'foo.pem';
-
-    await expect(readPrivateKeys()).rejects.toMatchError(
-      new Error(
-        `The env \`OIDC_PRIVATE_KEY_PATH\` is deprecated, please use \`OIDC_PRIVATE_KEY_PATHS\` instead.\nE.g.OIDC_PRIVATE_KEY_PATHS=path or OIDC_PRIVATE_KEY_PATHS=path1,path2`
-      )
-    );
-  });
-
   it('should throw if private keys configured in `OIDC_PRIVATE_KEY_PATHS` are not found', async () => {
     process.env.OIDC_PRIVATE_KEY_PATHS = 'foo.pem, bar.pem';
     const existsSyncSpy = jest.spyOn(fs, 'existsSync').mockReturnValue(false);
