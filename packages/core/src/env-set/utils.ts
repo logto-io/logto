@@ -9,8 +9,8 @@ export const getEnvAsStringArray = (envKey: string, fallback: string[] = []): st
 
   return rawValue
     .split(',')
-    .filter(Boolean)
-    .map((value) => value.trim());
+    .map((value) => value.trim())
+    .filter(Boolean);
 };
 
 export const checkDeprecatedEnv = (deprecatedEnv: string, newEnv: string, example: string) => {
