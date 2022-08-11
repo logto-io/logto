@@ -6,7 +6,6 @@ on:
       - master
     tags:
       - v*.*.*
-  pull_request:
 
 concurrency:
   group: dockerize-${{ github.ref }}
@@ -34,7 +33,6 @@ jobs:
             type=semver,pattern={{major}}
             type=raw,enable=${{ startsWith(github.ref, 'refs/tags/v') }},value=prerelease
             type=edge
-            dev
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
