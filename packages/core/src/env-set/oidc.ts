@@ -109,7 +109,7 @@ export const readCookieKeys = async (): Promise<string[]> => {
   }
 
   const cookieKeysMissingError = new Error(
-    `The OIDC cookie keys are not found, Please check the value of env \`${envKey}\`.`
+    `The OIDC cookie keys are not found. Please check the value of env \`${envKey}\`.`
   );
 
   if (noInquiry) {
