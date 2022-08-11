@@ -84,15 +84,7 @@ export const readPrivateKeys = async (): Promise<string[]> => {
     );
   }
 
-  try {
-    return privateKeyPaths.map((path): string => readFileSync(path, 'utf8'));
-  } catch {
-    throw new Error(
-      `Failed to read private keys ${listFormatter.format(
-        privateKeyPaths
-      )} from env \`OIDC_PRIVATE_KEY_PATHS\`.`
-    );
-  }
+  return privateKeyPaths.map((path): string => readFileSync(path, 'utf8'));
 };
 
 /**
