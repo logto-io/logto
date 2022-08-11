@@ -917,6 +917,9 @@ importers:
       '@logto/connector-facebook': ^1.0.0-beta.4
       '@logto/connector-github': ^1.0.0-beta.4
       '@logto/connector-google': ^1.0.0-beta.4
+      '@logto/connector-mock-email': ^1.0.0-beta.4
+      '@logto/connector-mock-sms': ^1.0.0-beta.4
+      '@logto/connector-mock-social': ^1.0.0-beta.4
       '@logto/connector-schemas': ^1.0.0-beta.4
       '@logto/connector-sendgrid-email': ^1.0.0-beta.4
       '@logto/connector-smtp': ^1.0.0-beta.4
@@ -1002,6 +1005,9 @@ importers:
       '@logto/connector-facebook': link:../connector-facebook
       '@logto/connector-github': link:../connector-github
       '@logto/connector-google': link:../connector-google
+      '@logto/connector-mock-email': link:../connector-mock-email
+      '@logto/connector-mock-sms': link:../connector-mock-sms
+      '@logto/connector-mock-social': link:../connector-mock-social
       '@logto/connector-schemas': link:../connector-schemas
       '@logto/connector-sendgrid-email': link:../connector-sendgrid-mail
       '@logto/connector-smtp': link:../connector-smtp

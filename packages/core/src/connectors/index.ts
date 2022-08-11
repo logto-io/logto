@@ -6,10 +6,11 @@ import { Connector } from '@logto/schemas';
 import resolvePackagePath from 'resolve-package-path';
 
 import { ConnectorInstance, SocialConnectorInstance } from '@/connectors/types';
+import envSet from '@/env-set';
 import RequestError from '@/errors/RequestError';
 import { findAllConnectors, insertConnector } from '@/queries/connector';
 
-import { connectorPackages } from './consts';
+import { defaultConnectorPackages } from './consts';
 import { getConnectorConfig } from './utilities';
 
 // eslint-disable-next-line @silverhand/fp/no-let
