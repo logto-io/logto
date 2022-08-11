@@ -14,6 +14,8 @@ import { getEnvAsStringArray } from './utils';
 
 const defaultLogtoOidcPrivateKey = './oidc-private-key.pem';
 
+const listFormatter = new Intl.ListFormat('en', { style: 'long', type: 'conjunction' });
+
 /**
  * Try to read private keys with the following order:
  *
@@ -76,8 +78,8 @@ export const readPrivateKeys = async (): Promise<string[]> => {
 
   if (notExistPrivateKeys.length > 0) {
     throw new Error(
-      `Private keys ${notExistPrivateKeys.join(
-        ' and '
+      `Private keys ${listFormatter.format(
+        notExistPrivateKeys
       )} configured in env \`OIDC_PRIVATE_KEY_PATHS\` not found.`
     );
   }
@@ -86,7 +88,7 @@ export const readPrivateKeys = async (): Promise<string[]> => {
     return privateKeyPaths.map((path): string => readFileSync(path, 'utf8'));
   } catch {
     throw new Error(
-      `Failed to read private keys ${privateKeyPaths.join(
+      `Failed to read private keys ${listFormatter.format(
         ' and '
       )} from env \`OIDC_PRIVATE_KEY_PATHS\`.`
     );

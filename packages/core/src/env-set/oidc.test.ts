@@ -4,7 +4,6 @@ import fs, { PathOrFileDescriptor } from 'fs';
 import inquirer from 'inquirer';
 
 import { readCookieKeys, readPrivateKeys } from './oidc';
-import { getEnvAsStringArray } from './utils';
 
 describe('oidc env-set', () => {
   const envBackup = process.env;
@@ -77,15 +76,12 @@ describe('oidc env-set', () => {
   });
 
   it('should throw if private keys configured in `OIDC_PRIVATE_KEY_PATHS` are not found', async () => {
-    process.env.OIDC_PRIVATE_KEY_PATHS = 'foo.pem, bar.pem';
+    process.env.OIDC_PRIVATE_KEY_PATHS = 'foo.pem, bar.pem, baz.pem';
     const existsSyncSpy = jest.spyOn(fs, 'existsSync').mockReturnValue(false);
-    const privateKeyPaths = getEnvAsStringArray('OIDC_PRIVATE_KEY_PATHS');
 
     await expect(readPrivateKeys()).rejects.toMatchError(
       new Error(
-        `Private keys ${privateKeyPaths.join(
-          ' and '
-        )} configured in env \`OIDC_PRIVATE_KEY_PATHS\` not found.`
+        `Private keys foo.pem, bar.pem, and baz.pem configured in env \`OIDC_PRIVATE_KEY_PATHS\` not found.`
       )
     );
 
