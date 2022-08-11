@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.0-beta.4](https://github.com/logto-io/logto/compare/v1.0.0-beta.3...v1.0.0-beta.4) (2022-08-11)
+
+
+### Bug Fixes
+
+* build and types ([8b51543](https://github.com/logto-io/logto/commit/8b515435cdb0644d0ca19e2c26ba3e744355bb0b))
+* **ui,console,demo-app:** update react render method ([#1750](https://github.com/logto-io/logto/issues/1750)) ([4b972f2](https://github.com/logto-io/logto/commit/4b972f2e23e2d4609d9955c4d1d42972f368f5b9))
+* **ui:** add sandbox props to iframe ([#1757](https://github.com/logto-io/logto/issues/1757)) ([62d2afe](https://github.com/logto-io/logto/commit/62d2afe9579334547b7ff5b803299b89933a5bd8))
+* **ui:** connector name  should fallback to en ([#1718](https://github.com/logto-io/logto/issues/1718)) ([3af5b1b](https://github.com/logto-io/logto/commit/3af5b1b4250d6de6883b4c8a8b9f7cf4f9b12dab))
+* **ui:** extract ReactModal elementApp and fix act warning in ut ([#1756](https://github.com/logto-io/logto/issues/1756)) ([0270bf1](https://github.com/logto-io/logto/commit/0270bf1be3a51d9b9f8ed84a0327c58ed8a1bd4d))
+* **ui:** fix ui test ([e4629f2](https://github.com/logto-io/logto/commit/e4629f2a5fd26a1d8eaefd04042eaeb5563ec30c))
+
+
+
 ## [1.0.0-beta.3](https://github.com/logto-io/logto/compare/v1.0.0-beta.2...v1.0.0-beta.3) (2022-08-01)
 
 

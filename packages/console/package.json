@@ -1,6 +1,6 @@
 {
   "name": "@logto/console",
-  "version": "1.0.0-beta.3",
+  "version": "1.0.0-beta.4",
   "description": "> TODO: description",
   "author": "Silverhand Inc. <contact@silverhand.io>",
   "homepage": "https://github.com/logto-io/logto#readme",
@@ -18,11 +18,11 @@
   },
   "devDependencies": {
     "@fontsource/roboto-mono": "^4.5.7",
-    "@logto/phrases": "^1.0.0-beta.3",
-    "@logto/phrases-ui": "^1.0.0-beta.3",
+    "@logto/phrases": "^1.0.0-beta.4",
+    "@logto/phrases-ui": "^1.0.0-beta.4",
     "@logto/react": "^1.0.0-beta.2",
-    "@logto/schemas": "^1.0.0-beta.3",
-    "@logto/shared": "^1.0.0-beta.3",
+    "@logto/schemas": "^1.0.0-beta.4",
+    "@logto/shared": "^1.0.0-beta.4",
     "@mdx-js/react": "^1.6.22",
     "@parcel/core": "2.6.2",
     "@parcel/transformer-mdx": "2.6.2",

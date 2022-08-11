@@ -1,6 +1,6 @@
 {
   "name": "@logto/connector-types",
-  "version": "1.0.0-beta.3",
+  "version": "1.0.0-beta.4",
   "main": "lib/index.js",
   "author": "Silverhand Inc. <contact@silverhand.io>",
   "license": "MPL-2.0",
@@ -19,7 +19,7 @@
     "node": "^16.0.0"
   },
   "dependencies": {
-    "@logto/phrases": "^1.0.0-beta.3",
+    "@logto/phrases": "^1.0.0-beta.4",
     "zod": "^3.14.3"
   },
   "devDependencies": {
@@ -33,7 +33,7 @@
     "jest": "^28.1.3",
     "lint-staged": "^13.0.0",
     "prettier": "^2.7.1",
-        "typescript": "^4.7.4"
+    "typescript": "^4.7.4"
   },
   "eslintConfig": {
     "extends": "@silverhand"
