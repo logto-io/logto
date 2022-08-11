@@ -3,7 +3,7 @@ import fs, { PathOrFileDescriptor } from 'fs';
 
 import inquirer from 'inquirer';
 
-import { readPrivateKeys } from './oidc';
+import { readCookieKeys, readPrivateKeys } from './oidc';
 
 describe('oidc env-set', () => {
   const envBackup = process.env;
@@ -17,24 +17,24 @@ describe('oidc env-set', () => {
     jest.resetModules();
   });
 
-  it('should read private keys if `OIDC_PRIVATE_KEYS` is provided', async () => {
-    process.env.OIDC_PRIVATE_KEYS = '["foo","bar"]';
+  it('should read OIDC private keys if `OIDC_PRIVATE_KEYS` is provided', async () => {
+    process.env.OIDC_PRIVATE_KEYS = 'foo, bar';
 
     const privateKeys = await readPrivateKeys();
 
     expect(privateKeys).toEqual(['foo', 'bar']);
   });
 
-  it('should read private keys if `OIDC_PRIVATE_KEY` is provided - [compatibility]', async () => {
-    process.env.OIDC_PRIVATE_KEY = 'foo';
+  it('should read OIDC private keys if provided `OIDC_PRIVATE_KEYS` contain newline characters', async () => {
+    process.env.OIDC_PRIVATE_KEYS = 'foo\nbar, bob\noop';
 
     const privateKeys = await readPrivateKeys();
 
-    expect(privateKeys).toEqual(['foo']);
+    expect(privateKeys).toEqual(['foo\nbar', 'bob\noop']);
   });
 
-  it('should read private keys if `OIDC_PRIVATE_KEY_PATHS` is provided', async () => {
-    process.env.OIDC_PRIVATE_KEY_PATHS = '["foo.pem", "bar.pem"]';
+  it('should read OIDC private keys if `OIDC_PRIVATE_KEY_PATHS` is provided', async () => {
+    process.env.OIDC_PRIVATE_KEY_PATHS = 'foo.pem, bar.pem';
     const existsSyncSpy = jest.spyOn(fs, 'existsSync').mockReturnValue(true);
     const readFileSyncSpy = jest
       .spyOn(fs, 'readFileSync')
@@ -48,45 +48,12 @@ describe('oidc env-set', () => {
     readFileSyncSpy.mockRestore();
   });
 
-  it('should read private keys if `OIDC_PRIVATE_KEY_PATH` is provided - [compatibility]', async () => {
-    // Unset the `OIDC_PRIVATE_KEY_PATHS` environment variable config by jest.setup.ts.
-    process.env.OIDC_PRIVATE_KEY_PATHS = '';
-
-    process.env.OIDC_PRIVATE_KEY_PATH = 'foo.pem';
-
-    const existsSyncSpy = jest.spyOn(fs, 'existsSync').mockReturnValue(true);
-
-    const readFileSyncSpy = jest
-      .spyOn(fs, 'readFileSync')
-      .mockImplementation((path: PathOrFileDescriptor) => path.toString());
-
-    const privateKeys = await readPrivateKeys();
-
-    expect(privateKeys).toEqual(['foo.pem']);
-
-    existsSyncSpy.mockRestore();
-    readFileSyncSpy.mockRestore();
-  });
-
-  it('should throw if private keys configured in `OIDC_PRIVATE_KEY_PATHS` are not found', async () => {
-    process.env.OIDC_PRIVATE_KEY_PATHS = '["foo.pem","bar.pem"]';
-    const existsSyncSpy = jest.spyOn(fs, 'existsSync').mockReturnValue(false);
-
-    await expect(readPrivateKeys).rejects.toMatchError(
-      new Error(
-        `Private keys ${process.env.OIDC_PRIVATE_KEY_PATHS} configured in env \`OIDC_PRIVATE_KEY_PATHS\` not found.`
-      )
-    );
-
-    existsSyncSpy.mockRestore();
-  });
-
-  it('should generate a default private key if `OIDC_PRIVATE_KEY_PATHS` and `OIDC_PRIVATE_KEYS` are not provided', async () => {
+  it('should generate a default OIDC private key if neither `OIDC_PRIVATE_KEY_PATHS` nor `OIDC_PRIVATE_KEYS` is provided', async () => {
     process.env.OIDC_PRIVATE_KEYS = '';
     process.env.OIDC_PRIVATE_KEY_PATHS = '';
 
     const readFileSyncSpy = jest.spyOn(fs, 'readFileSync').mockImplementation(() => {
-      throw new Error('Intent read file error');
+      throw new Error('Dummy read file error');
     });
 
     // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -106,5 +73,43 @@ describe('oidc env-set', () => {
     promptMock.mockRestore();
     generateKeyPairSyncSpy.mockRestore();
     writeFileSyncSpy.mockRestore();
+  });
+
+  it('should throw if private keys configured in `OIDC_PRIVATE_KEY_PATHS` are not found', async () => {
+    process.env.OIDC_PRIVATE_KEY_PATHS = 'foo.pem, bar.pem, baz.pem';
+    const existsSyncSpy = jest.spyOn(fs, 'existsSync').mockReturnValue(false);
+
+    await expect(readPrivateKeys()).rejects.toMatchError(
+      new Error(
+        `Private keys foo.pem, bar.pem, and baz.pem configured in env \`OIDC_PRIVATE_KEY_PATHS\` not found.`
+      )
+    );
+
+    existsSyncSpy.mockRestore();
+  });
+
+  it('should read OIDC cookie keys if `OIDC_COOKIE_KEYS` is provided', async () => {
+    process.env.OIDC_COOKIE_KEYS = 'foo, bar';
+
+    const cookieKeys = await readCookieKeys();
+
+    expect(cookieKeys).toEqual(['foo', 'bar']);
+  });
+
+  it('should generate a default OIDC cookie key if `OIDC_COOKIE_KEYS` is not provided', async () => {
+    process.env.OIDC_COOKIE_KEYS = '';
+
+    const promptMock = jest.spyOn(inquirer, 'prompt').mockResolvedValue({ confirm: true });
+
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    const appendFileSyncSpy = jest.spyOn(fs, 'appendFileSync').mockImplementation(() => {});
+
+    const cookieKeys = await readCookieKeys();
+
+    expect(cookieKeys.length).toBe(1);
+    expect(appendFileSyncSpy).toHaveBeenCalled();
+
+    promptMock.mockRestore();
+    appendFileSyncSpy.mockRestore();
   });
 });

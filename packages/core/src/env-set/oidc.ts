@@ -14,6 +14,8 @@ import { getEnvAsStringArray } from './utils';
 
 const defaultLogtoOidcPrivateKey = './oidc-private-key.pem';
 
+const listFormatter = new Intl.ListFormat('en', { style: 'long', type: 'conjunction' });
+
 /**
  * Try to read private keys with the following order:
  *
@@ -32,19 +34,7 @@ export const readPrivateKeys = async (): Promise<string[]> => {
     return privateKeys;
   }
 
-  // Downward compatibility for `OIDC_PRIVATE_KEY`
-  const compatPrivateKey = getEnv('OIDC_PRIVATE_KEY');
-
-  if (compatPrivateKey) {
-    return [compatPrivateKey];
-  }
-
-  // Downward compatibility for `OIDC_PRIVATE_KEY_PATH`
-  const originPrivateKeyPath = getEnv('OIDC_PRIVATE_KEY_PATH');
-  const privateKeyPaths = getEnvAsStringArray(
-    'OIDC_PRIVATE_KEY_PATHS',
-    originPrivateKeyPath ? [originPrivateKeyPath] : []
-  );
+  const privateKeyPaths = getEnvAsStringArray('OIDC_PRIVATE_KEY_PATHS');
 
   // If no private key path is found, ask the user to generate a new one.
   if (privateKeyPaths.length === 0) {
@@ -87,18 +77,20 @@ export const readPrivateKeys = async (): Promise<string[]> => {
   const notExistPrivateKeys = privateKeyPaths.filter((path): boolean => !existsSync(path));
 
   if (notExistPrivateKeys.length > 0) {
-    const notExistPrivateKeysRawValue = JSON.stringify(notExistPrivateKeys);
     throw new Error(
-      `Private keys ${notExistPrivateKeysRawValue} configured in env \`OIDC_PRIVATE_KEY_PATHS\` not found.`
+      `Private keys ${listFormatter.format(
+        notExistPrivateKeys
+      )} configured in env \`OIDC_PRIVATE_KEY_PATHS\` not found.`
     );
   }
 
   try {
     return privateKeyPaths.map((path): string => readFileSync(path, 'utf8'));
   } catch {
-    const privateKeyPathsRawValue = JSON.stringify(privateKeyPaths);
     throw new Error(
-      `Failed to read private keys from ${privateKeyPathsRawValue} in env \`OIDC_PRIVATE_KEY_PATHS\`.`
+      `Failed to read private keys ${listFormatter.format(
+        privateKeyPaths
+      )} from env \`OIDC_PRIVATE_KEY_PATHS\`.`
     );
   }
 };
@@ -110,7 +102,7 @@ export const readPrivateKeys = async (): Promise<string[]> => {
  *
  * @returns The cookie keys in array.
  */
-const readCookieKeys = async (): Promise<string[]> => {
+export const readCookieKeys = async (): Promise<string[]> => {
   const envKey = 'OIDC_COOKIE_KEYS';
   const keys = getEnvAsStringArray(envKey);
 
@@ -119,7 +111,7 @@ const readCookieKeys = async (): Promise<string[]> => {
   }
 
   const cookieKeysMissingError = new Error(
-    `The OIDC cookie keys array is missing, Please check the value of env \`${envKey}\`.`
+    `The OIDC cookie keys are not found. Please check the value of env \`${envKey}\`.`
   );
 
   if (noInquiry) {
@@ -138,10 +130,10 @@ const readCookieKeys = async (): Promise<string[]> => {
     }
   }
 
-  const generated = [nanoid()];
-  appendDotEnv(envKey, JSON.stringify(generated));
+  const generated = nanoid();
+  appendDotEnv(envKey, generated);
 
-  return generated;
+  return [generated];
 };
 
 const loadOidcValues = async (issuer: string) => {
