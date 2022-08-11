@@ -48,7 +48,7 @@ describe('oidc env-set', () => {
     readFileSyncSpy.mockRestore();
   });
 
-  it('should generate a default OIDC private key if `OIDC_PRIVATE_KEY_PATHS` and `OIDC_PRIVATE_KEYS` are not provided', async () => {
+  it('should generate a default OIDC private key if neither `OIDC_PRIVATE_KEY_PATHS` nor `OIDC_PRIVATE_KEYS` is provided', async () => {
     process.env.OIDC_PRIVATE_KEYS = '';
     process.env.OIDC_PRIVATE_KEY_PATHS = '';
 

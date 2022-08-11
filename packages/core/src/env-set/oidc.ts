@@ -89,7 +89,7 @@ export const readPrivateKeys = async (): Promise<string[]> => {
   } catch {
     throw new Error(
       `Failed to read private keys ${listFormatter.format(
-        ' and '
+        privateKeyPaths
       )} from env \`OIDC_PRIVATE_KEY_PATHS\`.`
     );
   }
