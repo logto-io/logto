@@ -53,7 +53,7 @@ describe('oidc env-set', () => {
     process.env.OIDC_PRIVATE_KEY_PATHS = '';
 
     const readFileSyncSpy = jest.spyOn(fs, 'readFileSync').mockImplementation(() => {
-      throw new Error('Intent read file error');
+      throw new Error('Dummy read file error');
     });
 
     // eslint-disable-next-line @typescript-eslint/no-empty-function
