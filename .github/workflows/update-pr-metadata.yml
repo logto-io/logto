@@ -1,8 +1,6 @@
 name: Update Metadata
 
 on:
-  pull_request:
-    types: [opened, edited, synchronize, reopened]
   # CAREFUL! https://securitylab.github.com/research/github-actions-preventing-pwn-requests/
   pull_request_target:
     types: [opened, edited, synchronize, reopened]
@@ -14,10 +12,6 @@ concurrency:
 jobs:
   update-metadata:
     runs-on: ubuntu-latest
-    # dedup workflow runs
-    if: |
-      github.event.pull_request.head.repo.full_name != github.repository || 
-      github.event_name == 'pull_request_target'
 
     steps:
       - name: Add labels
@@ -38,10 +32,6 @@ jobs:
 
   pr-size-diff:
     runs-on: ubuntu-latest
-    # dedup workflow runs
-    if: |
-      github.event.pull_request.head.repo.full_name != github.repository || 
-      github.event_name == 'pull_request_target'
 
     steps:
       - uses: actions/checkout@v3
