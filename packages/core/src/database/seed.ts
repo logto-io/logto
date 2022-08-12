@@ -29,7 +29,7 @@ export const replaceDsnDatabase = (dsn: string, databaseName: string): string =>
  * @returns DSN with the created database name.
  */
 export const createDatabase = async (dsn: string, databaseName: string): Promise<string> => {
-  const pool = createPool(replaceDsnDatabase(dsn, 'postgres'));
+  const pool = await createPool(replaceDsnDatabase(dsn, 'postgres'));
 
   await pool.query(sql`
     create database ${sql.identifier([databaseName])}
@@ -60,8 +60,8 @@ export const insertInto = <T extends SchemaLike>(object: T, table: string) => {
   `;
 };
 
-export const createDatabaseCli = (dsn: string) => {
-  const pool = createPool(dsn, { interceptors: createInterceptors() });
+export const createDatabaseCli = async (dsn: string) => {
+  const pool = await createPool(dsn, { interceptors: createInterceptors() });
 
   const createTables = async () => {
     const directory = await readdir(tableDirectory);
