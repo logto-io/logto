@@ -90,7 +90,7 @@ const createPoolByEnv = async (isTest: boolean) => {
   try {
     const databaseDsn = assertEnv(key);
 
-    return createPool(databaseDsn, { interceptors });
+    return await createPool(databaseDsn, { interceptors });
   } catch (error: unknown) {
     if (noInquiry) {
       throw error;
@@ -102,7 +102,7 @@ const createPoolByEnv = async (isTest: boolean) => {
       throw error;
     }
 
-    const cli = createDatabaseCli(dsn);
+    const cli = await createDatabaseCli(dsn);
 
     if (needsSeed) {
       await cli.createTables();
