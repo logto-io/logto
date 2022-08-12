@@ -20,7 +20,7 @@ Logto[^info] helps you build the sign-in, auth, and user identity within minutes
 
 - A frontend-to-backend identity solution.
   - A delightful sign-in experience for end-users and an OIDC-based identity service.
-  - Multi-platform SDKs that can integrate your apps with Logto quickly.
+  - Web and native SDKs that can integrate your apps with Logto quickly.
 - Out-of-box technology and UI support for many things you needed to code before.
   - A centralized place to customize the user interface and then LIVE PREVIEW the changes you make.
   - Social sign-in for multiple platforms (GitHub, Google, WeChat, Alipay, etc.).
