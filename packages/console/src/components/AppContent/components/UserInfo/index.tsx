@@ -6,7 +6,6 @@ import { useTranslation } from 'react-i18next';
 import Dropdown, { DropdownItem } from '@/components/Dropdown';
 import { Ring as Spinner } from '@/components/Spinner';
 import { generateAvatarPlaceHolderById } from '@/consts/avatars';
-import useApi from '@/hooks/use-api';
 import SignOut from '@/icons/SignOut';
 
 import UserInfoSkeleton from '../UserInfoSkeleton';
@@ -14,7 +13,6 @@ import * as styles from './index.module.scss';
 
 const UserInfo = () => {
   const { isAuthenticated, getIdTokenClaims, signOut } = useLogto();
-  const api = useApi();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const anchorRef = useRef<HTMLDivElement>(null);
   const [showDropdown, setShowDropdown] = useState(false);
@@ -28,7 +26,7 @@ const UserInfo = () => {
         setUser(userInfo ?? { sub: '', username: 'N/A' }); // Provide a fallback to avoid infinite loading state
       }
     })();
-  }, [api, isAuthenticated, getIdTokenClaims]);
+  }, [isAuthenticated, getIdTokenClaims]);
 
   if (!user) {
     return <UserInfoSkeleton />;
