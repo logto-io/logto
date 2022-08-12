@@ -14,6 +14,10 @@ concurrency:
 jobs:
   update-metadata:
     runs-on: ubuntu-latest
+    # dedup workflow runs
+    if: |
+      github.event.pull_request.head.repo.full_name != github.repository || 
+      github.event_name == 'pull_request_target'
 
     steps:
       - name: Add labels
@@ -34,10 +38,16 @@ jobs:
 
   pr-size-diff:
     runs-on: ubuntu-latest
+    # dedup workflow runs
+    if: |
+      github.event.pull_request.head.repo.full_name != github.repository || 
+      github.event_name == 'pull_request_target'
 
     steps:
       - uses: actions/checkout@v3
         with:
+          # https://github.com/actions/checkout/issues/518#issuecomment-890401887
+          ref: refs/pull/${{ github.event.number }}/merge
           fetch-depth: 0
           persist-credentials: false
 
