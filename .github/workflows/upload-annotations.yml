@@ -15,9 +15,8 @@ jobs:
     # avoid out of memory issue since macOS has bigger memory
     # https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners#supported-runners-and-hardware-resources
     runs-on: macos-latest
-
-    permissions:
-      checks: write
+    # fork repos need to opt out
+    if: github.event.pull_request.head.repo.full_name == github.repository
 
     steps:
       - uses: actions/checkout@v3

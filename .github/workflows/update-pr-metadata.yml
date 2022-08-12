@@ -3,6 +3,9 @@ name: Update Metadata
 on:
   pull_request:
     types: [opened, edited, synchronize, reopened]
+  # CAREFUL! https://securitylab.github.com/research/github-actions-preventing-pwn-requests/
+  pull_request_target:
+    types: [opened, edited, synchronize, reopened]
 
 concurrency: 
   group: update-metadata-${{ github.ref }}
@@ -11,10 +14,6 @@ concurrency:
 jobs:
   update-metadata:
     runs-on: ubuntu-latest
-
-    permissions:
-      issues: write
-      pull-requests: write
 
     steps:
       - name: Add labels
@@ -36,14 +35,11 @@ jobs:
   pr-size-diff:
     runs-on: ubuntu-latest
 
-    permissions:
-      issues: write
-      pull-requests: write
-
     steps:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
+          persist-credentials: false
 
       - name: Prepare
         run: |
