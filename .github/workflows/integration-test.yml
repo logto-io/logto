@@ -112,4 +112,4 @@ jobs:
           cd /tmp/tests/packages/integration-tests
           pnpm start
         env:
-          LOGTO_URL: http://localhost:3001
+          INTEGRATION_TESTS_LOGTO_URL: http://localhost:3001
