@@ -1,6 +1,7 @@
 const sign_in_exp = {
   title: 'Expérience de connexion',
-  description: "Personnalisez l'interface utilisateur pour qu'elle corresponde à votre marque et consultez-la en temps réel.",
+  description:
+    "Personnalisez l'interface utilisateur pour qu'elle corresponde à votre marque et consultez-la en temps réel.",
   tabs: {
     branding: 'Image de marque',
     methods: 'Méthodes de connexion',
@@ -21,7 +22,8 @@ const sign_in_exp = {
     dark_mode: 'Activer le mode sombre',
     dark_mode_description:
       "Votre application aura un thème en mode sombre généré automatiquement en fonction de la couleur de votre marque et de l'algorithme de Logto. Vous êtes libre de le personnaliser.",
-    dark_mode_reset_tip: 'Recalculer la couleur du mode sombre en fonction de la couleur de la marque.',
+    dark_mode_reset_tip:
+      'Recalculer la couleur du mode sombre en fonction de la couleur de la marque.',
     reset: 'Recalculer',
   },
   branding: {
@@ -89,7 +91,7 @@ const sign_in_exp = {
     no_connector_social:
       "Vous n'avez pas encore configuré de connecteurs sociaux. Votre expérience de connexion ne sera pas disponible tant que vous n'aurez pas terminé les paramètres. ",
     no_added_social_connector:
-      "Vous avez maintenant configuré quelques connecteurs sociaux. Assurez-vous d'en ajouter quelques-uns à votre expérience de connexion."
+      "Vous avez maintenant configuré quelques connecteurs sociaux. Assurez-vous d'en ajouter quelques-uns à votre expérience de connexion.",
   },
   save_alert: {
     description:

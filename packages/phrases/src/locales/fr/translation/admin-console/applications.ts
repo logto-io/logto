@@ -6,7 +6,7 @@ const applications = {
   application_name: "Nom de l'application",
   application_name_placeholder: 'Mon app',
   application_description: "Description de l'application",
-  application_description_placeholder: "Entrer la description de votre application",
+  application_description_placeholder: 'Entrer la description de votre application',
   select_application_type: "Sélectionner un type d'application",
   no_application_type_selected: "Vous n'avez pas encore sélectionné de type d'application",
   application_created:
@@ -20,7 +20,8 @@ const applications = {
     },
     spa: {
       title: 'Single Page App',
-      subtitle: "Une application qui s'exécute dans un navigateur web et met dynamiquement à jour les données sur place.",
+      subtitle:
+        "Une application qui s'exécute dans un navigateur web et met dynamiquement à jour les données sur place.",
       description: 'Exemple: React app, Vue app',
     },
     traditional: {

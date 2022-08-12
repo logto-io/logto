@@ -1,6 +1,7 @@
 const connectors = {
   title: 'Connecteurs',
-  subtitle: 'Configurez des connecteurs pour permettre une expérience de connexion sans mot de passe et sociale.',
+  subtitle:
+    'Configurez des connecteurs pour permettre une expérience de connexion sans mot de passe et sociale.',
   create: 'Ajouter un connecteur social',
   tab_email_sms: 'Connecteurs Email et SMS',
   tab_social: 'Connecteurs sociaux',

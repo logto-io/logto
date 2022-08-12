@@ -5,7 +5,7 @@ const connector_details = {
   send: 'Envoyer',
   send_error_invalid_format: 'Entrée non valide',
   edit_config_label: 'Entrez votre json ici',
-  test_email_sender: "Testez votre connecteur Email",
+  test_email_sender: 'Testez votre connecteur Email',
   test_sms_sender: 'Testez votre connecteur SMS',
   test_email_placeholder: 'Entrez une adresse email de test',
   test_sms_placeholder: 'Entrez un numéro de téléphone de test',

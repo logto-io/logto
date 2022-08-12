@@ -2,9 +2,10 @@ const errors = {
   auth: {
     authorization_header_missing: "L'en-tête d'autorisation est manquant.",
     authorization_token_type_not_supported: "Le type d'autorisation n'est pas pris en charge.",
-    unauthorized: "Non autorisé. Veuillez vérifier les informations d'identification et son champ d'application.",
+    unauthorized:
+      "Non autorisé. Veuillez vérifier les informations d'identification et son champ d'application.",
     forbidden: "Interdit. Veuillez vérifier vos rôles et autorisations d'utilisateur.",
-    jwt_sub_missing: "`sub` manquant dans JWT.",
+    jwt_sub_missing: '`sub` manquant dans JWT.',
   },
   guard: {
     invalid_input: "La requête {{type}} n'est pas valide.",
@@ -20,7 +21,7 @@ const errors = {
     invalid_request: 'La requête est invalide.',
     invalid_grant: 'Grant request is invalid.',
     invalid_redirect_uri:
-      "`redirect_uri` ne correspondait à aucun des `redirect_uris` enregistrés par le client.",
+      '`redirect_uri` ne correspondait à aucun des `redirect_uris` enregistrés par le client.',
     access_denied: 'Accès refusé.',
     invalid_target: 'Indicateur de ressource invalide.',
     unsupported_grant_type: "Le `grant_type` demandé n'est pas supporté.",
@@ -31,7 +32,7 @@ const errors = {
   user: {
     username_exists_register: "Le nom d'utilisateur a été enregistré.",
     email_exists_register: "L'adresse email a été enregistrée.",
-    phone_exists_register: "Le numéro de téléphone a été enregistré",
+    phone_exists_register: 'Le numéro de téléphone a été enregistré',
     invalid_email: 'Addresse email incorrecte.',
     invalid_phone: 'Numéro de téléphone incorrect.',
     email_not_exists: "L'adresse e-mail n'a pas encore été enregistrée.",
@@ -42,16 +43,20 @@ const errors = {
   },
   password: {
     unsupported_encryption_method: "La méthode de cryptage {{name}} n'est pas prise en charge.",
-    pepper_not_found: 'Mot de passe pepper non trouvé. Veuillez vérifier votre environnement de base.',
+    pepper_not_found:
+      'Mot de passe pepper non trouvé. Veuillez vérifier votre environnement de base.',
   },
   session: {
     not_found: 'Session non trouvée. Veuillez revenir en arrière et vous connecter à nouveau.',
-    invalid_credentials: "Informations d'identification non valides. Veuillez vérifier votre saisie.",
+    invalid_credentials:
+      "Informations d'identification non valides. Veuillez vérifier votre saisie.",
     invalid_sign_in_method: "La méthode de connexion actuelle n'est pas disponible.",
-    invalid_connector_id: "Impossible de trouver un connecteur disponible avec l'id {{connectorId}}.",
+    invalid_connector_id:
+      "Impossible de trouver un connecteur disponible avec l'id {{connectorId}}.",
     insufficient_info: "Informations d'identification insuffisantes",
     connector_id_mismatch: "Le connectorId ne correspond pas à l'enregistrement de la session.",
-    connector_session_not_found: "La session du connecteur n'a pas été trouvée. Veuillez revenir en arrière et vous connecter à nouveau.",
+    connector_session_not_found:
+      "La session du connecteur n'a pas été trouvée. Veuillez revenir en arrière et vous connecter à nouveau.",
     unauthorized: "Veuillez vous enregistrer d'abord.",
     unsupported_prompt_name: "Nom d'invite non supporté.",
   },
@@ -59,7 +64,7 @@ const errors = {
     general: "Une erreur inattendue s'est produite dans le connecteur. {{errorDescription}}",
     not_found: 'Impossible de trouver un connecteur disponible pour le type : {{type}}.',
     not_enabled: "Le connecteur n'est pas activé.",
-    insufficient_request_parameters: "Certains paramètres peuvent manquer dans la requête.",
+    insufficient_request_parameters: 'Certains paramètres peuvent manquer dans la requête.',
     invalid_config: "La configuration du connecteur n'est pas valide.",
     invalid_response: "La réponse du connecteur n'est pas valide.",
     template_not_found: 'Impossible de trouver le bon modèle dans la configuration du connecteur.',
@@ -68,10 +73,12 @@ const errors = {
     invalid_auth_code: "Le code d'authentification du connecteur n'est pas valide.",
     invalid_id_token: "Le jeton d'identification du connecteur n'est pas valide.",
     authorization_failed: "Le processus d'autorisation de l'utilisateur n'a pas abouti.",
-    oauth_code_invalid: "Impossible d'obtenir le jeton d'accès, veuillez vérifier le code d'autorisation.",
+    oauth_code_invalid:
+      "Impossible d'obtenir le jeton d'accès, veuillez vérifier le code d'autorisation.",
     more_than_one_sms: 'Le nombre de connecteurs SMS est supérieur à 1.',
     more_than_one_email: 'Le nombre de connecteurs Email est supérieur à 1.',
-    db_connector_type_mismatch: 'Il y a un connecteur dans la base de donnée qui ne correspond pas au type.',
+    db_connector_type_mismatch:
+      'Il y a un connecteur dans la base de donnée qui ne correspond pas au type.',
   },
   passcode: {
     phone_email_empty: "Le téléphone et l'email sont vides.",
@@ -80,11 +87,12 @@ const errors = {
     email_mismatch: "Erreur d'email. Veuillez demander un nouveau code d'accès.",
     code_mismatch: "Code d'accès invalide.",
     expired: "Le code d'accès a expiré. Veuillez demander un nouveau code d'accès.",
-    exceed_max_try: "La limite de vérification du code d'accès est dépassée. Veuillez demander un nouveau code d'accès.",
+    exceed_max_try:
+      "La limite de vérification du code d'accès est dépassée. Veuillez demander un nouveau code d'accès.",
   },
   sign_in_experiences: {
     empty_content_url_of_terms_of_use:
-      "URL de contenu \"Conditions d'utilisation\" vide. Veuillez ajouter l'URL du contenu si les \"Conditions d'utilisation\" sont activées.",
+      'URL de contenu "Conditions d\'utilisation" vide. Veuillez ajouter l\'URL du contenu si les "Conditions d\'utilisation" sont activées.',
     empty_logo: "Veuillez entrer l'URL de votre logo",
     empty_slogan:
       "Un slogan vide. Veuillez ajouter un slogan si un style d'interface utilisateur contenant le slogan est sélectionné.",

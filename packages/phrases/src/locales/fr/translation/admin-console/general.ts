@@ -32,7 +32,8 @@ const general = {
   add_another: '+ Ajouter un autre',
   deletion_confirmation: 'Êtes-vous sûr de vouloir supprimer ce {{title}} ?',
   settings_nav: 'Paramètres',
-  unsaved_changes_warning: 'Vous avez effectué des changements. Êtes-vous sûr de vouloir quitter cette page ?',
+  unsaved_changes_warning:
+    'Vous avez effectué des changements. Êtes-vous sûr de vouloir quitter cette page ?',
   leave_page: 'Quittez la page',
   stay_on_page: 'Rester sur la page',
 };

@@ -5,12 +5,14 @@ const user_details = {
   created_username: "Nom d'utilisateur :",
   created_password: 'Mot de passe :',
   menu_delete: 'Supprimer',
-  delete_description: "Cette action ne peut être annulée. Elle supprimera définitivement l'utilisateur.",
+  delete_description:
+    "Cette action ne peut être annulée. Elle supprimera définitivement l'utilisateur.",
   deleted: "L'utilisateur a été supprimé avec succès",
   reset_password: {
     reset_password: 'Réinitialiser le mot de passe',
     title: 'Êtes-vous sûr de vouloir réinitialiser le mot de passe ?',
-    content: "Cette action ne peut être annulée. Cette action réinitialisera les informations de connexion de l'utilisateur.",
+    content:
+      "Cette action ne peut être annulée. Cette action réinitialisera les informations de connexion de l'utilisateur.",
     congratulations: 'Cet utilisateur a été réinitialisé',
     new_password: 'Nouveau mot de passe :',
   },
