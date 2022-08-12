@@ -9,7 +9,7 @@ const translation = {
   secondary: {
     sign_in_with: 'Se connecter avec {{methods, list(type: disjunction;)}}',
     social_bind_with:
-      'Vous avez déjà un compte ? Connectez-vous pour lier {{methods, list(type: disjunction;)}} avec votre identité sociale.'
+      'Vous avez déjà un compte ? Connectez-vous pour lier {{methods, list(type: disjunction;)}} avec votre identité sociale.',
   },
   action: {
     sign_in: 'Connexion',
@@ -48,16 +48,20 @@ const translation = {
       "Le compte avec {{type}} {{value}} n'existe pas, voulez-vous créer un nouveau compte ?",
     bind_account_title: 'Lier le compte',
     social_create_account: 'Pas de compte ? Vous pouvez créer un nouveau compte et un lien.',
-    social_bind_account: 'Vous avez déjà un compte ? Connectez-vous pour le relier à votre identité sociale.',
-    social_bind_with_existing: 'Nous trouvons un compte connexe, vous pouvez le relier directement.',
+    social_bind_account:
+      'Vous avez déjà un compte ? Connectez-vous pour le relier à votre identité sociale.',
+    social_bind_with_existing:
+      'Nous trouvons un compte connexe, vous pouvez le relier directement.',
   },
   error: {
     username_password_mismatch: "Le nom d'utilisateur et le mot de passe ne correspondent pas",
     username_required: "Le nom d'utilisateur est requis",
     password_required: 'Le mot de passe est requis',
     username_exists: "Ce Nom d'utilisateur existe déjà",
-    username_should_not_start_with_number: "Le nom d'utilisateur ne doit pas commencer par un chiffre",
-    username_valid_charset: "Le nom d'utilisateur ne doit contenir que des lettres, des chiffres ou des caractères de soulignement.",
+    username_should_not_start_with_number:
+      "Le nom d'utilisateur ne doit pas commencer par un chiffre",
+    username_valid_charset:
+      "Le nom d'utilisateur ne doit contenir que des lettres, des chiffres ou des caractères de soulignement.",
     invalid_email: "L'email n'est pas valide",
     invalid_phone: "Le numéro de téléphone n'est pas valide",
     password_min_length: 'Le mot de passe doit comporter un minimum de {{min}} caractères.',
@@ -66,7 +70,8 @@ const translation = {
     invalid_connector_auth: "L'autorisation n'est pas valide",
     invalid_connector_request: 'Les données du connecteur ne sont pas valides',
     unknown: 'Erreur inconnue. Veuillez réessayer plus tard.',
-    invalid_session: 'Session non trouvée. Veuillez revenir en arrière et vous connecter à nouveau.',
+    invalid_session:
+      'Session non trouvée. Veuillez revenir en arrière et vous connecter à nouveau.',
   },
 };
 
