@@ -1,0 +1,37 @@
+{
+  "name": "@logto/connector-schemas",
+  "version": "1.0.0-beta.4",
+  "main": "lib/index.js",
+  "author": "Silverhand Inc. <contact@silverhand.io>",
+  "license": "MPL-2.0",
+  "private": true,
+  "files": [
+    "lib"
+  ],
+  "scripts": {
+    "precommit": "lint-staged",
+    "build": "rm -rf lib/ && tsc --p tsconfig.build.json",
+    "lint": "eslint --ext .ts src",
+    "lint:report": "pnpm lint --format json --output-file report.json",
+    "prepack": "pnpm build"
+  },
+  "engines": {
+    "node": "^16.0.0"
+  },
+  "dependencies": {
+    "@logto/phrases": "^1.0.0-beta.4"
+  },
+  "devDependencies": {
+    "@silverhand/eslint-config": "1.0.0-rc.2",
+    "@silverhand/essentials": "^1.1.6",
+    "@silverhand/ts-config": "1.0.0-rc.2",
+    "eslint": "^8.21.0",
+    "lint-staged": "^13.0.0",
+    "prettier": "^2.7.1",
+    "typescript": "^4.7.4"
+  },
+  "eslintConfig": {
+    "extends": "@silverhand"
+  },
+  "prettier": "@silverhand/eslint-config/.prettierrc"
+}

@@ -534,6 +534,27 @@ importers:
       tsc-watch: 5.0.3_typescript@4.7.4
       typescript: 4.7.4
 
+  packages/connector-schemas:
+    specifiers:
+      '@logto/phrases': ^1.0.0-beta.4
+      '@silverhand/eslint-config': 1.0.0-rc.2
+      '@silverhand/essentials': ^1.1.6
+      '@silverhand/ts-config': 1.0.0-rc.2
+      eslint: ^8.21.0
+      lint-staged: ^13.0.0
+      prettier: ^2.7.1
+      typescript: ^4.7.4
+    dependencies:
+      '@logto/phrases': link:../phrases
+    devDependencies:
+      '@silverhand/eslint-config': 1.0.0-rc.2_swk2g7ygmfleszo5c33j4vooni
+      '@silverhand/essentials': 1.1.7
+      '@silverhand/ts-config': 1.0.0-rc.2_typescript@4.7.4
+      eslint: 8.21.0
+      lint-staged: 13.0.0
+      prettier: 2.7.1
+      typescript: 4.7.4
+
   packages/connector-sendgrid-mail:
     specifiers:
       '@jest/types': ^28.1.3
