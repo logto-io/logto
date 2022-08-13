@@ -1,0 +1,63 @@
+{
+    "name": "@logto/connector-gitlab",
+    "version": "1.0.0-beta.4",
+    "description": "GitLab web connector implementation.",
+    "main": "./lib/index.js",
+    "exports": "./lib/index.js",
+    "authors": [
+        "Silverhand Inc. <contact@silverhand.io>",
+        "Andrei Jiroh Halili <ajhalili2006@gmail.com>"
+    ],
+    "license": "MPL-2.0",
+    "private": true,
+    "files": [
+      "lib",
+      "docs",
+      "logo.svg",
+      "README.md",
+      "logo-dark.svg"
+    ],
+    "scripts": {
+      "precommit": "lint-staged",
+      "build": "rm -rf lib/ && tsc -p tsconfig.build.json",
+      "lint": "eslint --ext .ts src",
+      "lint:report": "pnpm lint --format json --output-file report.json",
+      "dev": "rm -rf lib/ && tsc-watch -p tsconfig.build.json --preserveWatchOutput --onSuccess \"node ./lib/index.js\"",
+      "test": "jest",
+      "test:coverage": "jest --coverage --silent",
+      "prepack": "pnpm build"
+    },
+    "dependencies": {
+      "@logto/connector-types": "^1.0.0-beta.4",
+      "@logto/schemas": "^1.0.0-beta.4",
+      "@logto/shared": "^1.0.0-beta.4",
+      "@silverhand/essentials": "^1.1.0",
+      "@silverhand/jest-config": "1.0.0-rc.3",
+      "got": "^11.8.2",
+      "query-string": "^7.0.1",
+      "zod": "^3.14.3"
+    },
+    "devDependencies": {
+      "@jest/types": "^28.1.3",
+      "@silverhand/eslint-config": "1.0.0-rc.2",
+      "@silverhand/ts-config": "1.0.0-rc.2",
+      "@types/jest": "^28.1.6",
+      "@types/node": "^16.3.1",
+      "eslint": "^8.21.0",
+      "jest": "^28.1.3",
+      "jest-matcher-specific-error": "^1.0.0",
+      "lint-staged": "^13.0.0",
+      "nock": "^13.2.2",
+      "prettier": "^2.7.1",
+      "tsc-watch": "^5.0.0",
+      "typescript": "^4.7.4"
+    },
+    "engines": {
+      "node": "^16.0.0"
+    },
+    "eslintConfig": {
+      "extends": "@silverhand"
+    },
+    "prettier": "@silverhand/eslint-config/.prettierrc"
+  }
+  
