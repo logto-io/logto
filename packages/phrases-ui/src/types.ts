@@ -7,6 +7,7 @@ export type ResourceKey = string | Record<string, unknown>;
 
 export enum Language {
   English = 'en',
+  French = 'fr',
   Chinese = 'zh-CN',
   Turkish = 'tr-TR',
   Korean = 'ko-KR',
@@ -14,6 +15,7 @@ export enum Language {
 
 const languageCodeAndDisplayNameMappings: Record<Language, string> = {
   [Language.English]: 'English',
+  [Language.French]: 'Français',
   [Language.Chinese]: '简体中文',
   [Language.Turkish]: 'Türkçe',
   [Language.Korean]: '한국어',
