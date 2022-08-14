@@ -2,10 +2,12 @@
 
 import { readFileSync } from 'fs';
 
-import { CustomClientMetadataKey } from '@logto/schemas';
+import { CustomClientMetadataKey, userInfoSelectFields } from '@logto/schemas';
 import Koa from 'koa';
 import mount from 'koa-mount';
+import pick from 'lodash.pick';
 import { Provider, errors } from 'oidc-provider';
+import { snakeCase } from 'snake-case';
 import snakecaseKeys from 'snakecase-keys';
 
 import envSet from '@/env-set';
@@ -40,8 +42,9 @@ export default async function initOidc(app: Koa): Promise<Provider> {
     jwks: {
       keys: privateJwks,
     },
+    conformIdTokenClaims: false,
     features: {
-      userinfo: { enabled: false },
+      userinfo: { enabled: true },
       revocation: { enabled: true },
       devInteractions: { enabled: false },
       rpInitiatedLogout: {
@@ -97,22 +100,27 @@ export default async function initOidc(app: Koa): Promise<Provider> {
       isOriginAllowed(origin, client.metadata(), client.redirectUris),
     // https://github.com/panva/node-oidc-provider/blob/main/recipes/claim_configuration.md
     claims: {
-      profile: ['username', 'name', 'avatar', 'role_names'],
+      profile: userInfoSelectFields.map((value) => snakeCase(value)),
     },
     // https://github.com/panva/node-oidc-provider/tree/main/docs#findaccount
     findAccount: async (_ctx, sub) => {
-      const { username, name, avatar, roleNames } = await findUserById(sub);
+      const user = await findUserById(sub);
+      const { username, name, avatar, roleNames } = user;
 
       return {
         accountId: sub,
-        claims: async () => {
-          return snakecaseKeys({
-            sub,
-            username,
-            name,
-            avatar,
-            roleNames,
-          });
+        claims: async (use) => {
+          return snakecaseKeys(
+            {
+              sub,
+              username,
+              name,
+              avatar,
+              roleNames,
+              ...(use === 'userinfo' && pick(user, ...userInfoSelectFields)),
+            },
+            { deep: false }
+          );
         },
       };
     },
