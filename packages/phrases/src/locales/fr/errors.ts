@@ -40,6 +40,7 @@ const errors = {
     identity_not_exists: "Le compte social n'a pas encore été enregistré.",
     identity_exists: 'Le compte social a été enregistré.',
     invalid_role_names: 'les noms de rôles ({{roleNames}}) ne sont pas valides',
+    cannot_delete_self: 'You cannot delete yourself.',
   },
   password: {
     unsupported_encryption_method: "La méthode de cryptage {{name}} n'est pas prise en charge.",
