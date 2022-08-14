@@ -11,11 +11,6 @@ paths:
       responses:
         '204':
           description: No Content
-  /api/me/password:
-    patch:
-      responses:
-        '204':
-          description: No Content
   /api/resources/:id:
     delete:
       responses:

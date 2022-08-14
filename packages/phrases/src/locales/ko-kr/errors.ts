@@ -38,6 +38,7 @@ const errors = {
     identity_not_exists: '소셜 계정이 아직 등록되지 않았어요.',
     identity_exists: '소셜 계정이 이미 등록되있어요.',
     invalid_role_names: '직책 명({{roleNames}})이 유효하지 않아요.',
+    cannot_delete_self: 'You cannot delete yourself.',
   },
   password: {
     unsupported_encryption_method: '{{name}} 암호화 방법을 지원하지 않아요.',

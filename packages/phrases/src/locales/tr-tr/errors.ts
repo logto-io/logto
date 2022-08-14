@@ -39,6 +39,7 @@ const errors = {
     identity_not_exists: 'Sosyal platform hesabı henüz kaydedilmedi.',
     identity_exists: 'Sosyal platform hesabı kaydedildi.',
     invalid_role_names: '({{roleNames}}) rol adları geçerli değil.',
+    cannot_delete_self: 'You cannot delete yourself.',
   },
   password: {
     unsupported_encryption_method: '{{name}} şifreleme metodu desteklenmiyor.',

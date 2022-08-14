@@ -6,10 +6,13 @@ import { Provider } from 'oidc-provider';
 
 import koaAuth from '@/middleware/koa-auth';
 import koaLogSession from '@/middleware/koa-log-session';
+import adminUserRoutes from '@/routes/admin-user';
 import applicationRoutes from '@/routes/application';
 import connectorRoutes from '@/routes/connector';
 import dashboardRoutes from '@/routes/dashboard';
+import logRoutes from '@/routes/log';
 import resourceRoutes from '@/routes/resource';
+import roleRoutes from '@/routes/role';
 import sessionPasswordlessRoutes from '@/routes/session/passwordless';
 import sessionRoutes from '@/routes/session/session';
 import sessionSocialRoutes from '@/routes/session/social';
@@ -19,10 +22,6 @@ import statusRoutes from '@/routes/status';
 import swaggerRoutes from '@/routes/swagger';
 import wellKnownRoutes from '@/routes/well-known';
 
-import adminUserRoutes from './admin-user';
-import logRoutes from './log';
-import meRoutes from './me';
-import roleRoutes from './role';
 import { AnonymousRouter, AuthedRouter } from './types';
 
 const createRouters = (provider: Provider) => {
@@ -44,17 +43,13 @@ const createRouters = (provider: Provider) => {
   roleRoutes(managementRouter);
   dashboardRoutes(managementRouter);
 
-  const meRouter: AuthedRouter = new Router();
-  meRouter.use(koaAuth());
-  meRoutes(meRouter);
-
   const anonymousRouter: AnonymousRouter = new Router();
   wellKnownRoutes(anonymousRouter, provider);
   statusRoutes(anonymousRouter);
   // The swagger.json should contain all API routers.
-  swaggerRoutes(anonymousRouter, [sessionRouter, managementRouter, meRouter, anonymousRouter]);
+  swaggerRoutes(anonymousRouter, [sessionRouter, managementRouter, anonymousRouter]);
 
-  return [sessionRouter, managementRouter, meRouter, anonymousRouter];
+  return [sessionRouter, managementRouter, anonymousRouter];
 };
 
 export default function initRouter(app: Koa, provider: Provider) {
