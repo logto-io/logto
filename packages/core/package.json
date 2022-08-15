@@ -71,6 +71,7 @@
     "slonik": "^30.0.0",
     "slonik-interceptor-preset": "^1.2.10",
     "slonik-sql-tag-raw": "^1.1.4",
+    "snake-case": "^3.0.4",
     "snakecase-keys": "^5.1.0",
     "zod": "^3.14.3"
   },
@@ -101,7 +102,6 @@
     "nock": "^13.2.2",
     "openapi-types": "^12.0.0",
     "prettier": "^2.7.1",
-    "snake-case": "^3.0.4",
     "supertest": "^6.2.2",
     "tsc-watch": "^5.0.0",
     "typescript": "^4.7.4"
