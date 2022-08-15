@@ -39,6 +39,7 @@ const errors = {
     identity_not_exists: '该社交帐号尚未注册',
     identity_exists: '该社交帐号已被注册',
     invalid_role_names: '角色名称（{{roleNames}}）无效',
+    cannot_delete_self: '你无法删除自己',
   },
   password: {
     unsupported_encryption_method: '不支持的加密方法 {{name}}',

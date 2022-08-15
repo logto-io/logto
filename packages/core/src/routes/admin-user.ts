@@ -23,6 +23,8 @@ import assertThat from '@/utils/assert-that';
 
 import { AuthedRouter } from './types';
 
+const getComputedUserId = (userId: string, auth: string) => (userId === 'me' ? auth : userId);
+
 export default function adminUserRoutes<T extends AuthedRouter>(router: T) {
   router.get(
     '/users',
@@ -59,9 +61,53 @@ export default function adminUserRoutes<T extends AuthedRouter>(router: T) {
         params: { userId },
       } = ctx.guard;
 
-      const user = await findUserById(userId);
+      const user = await findUserById(getComputedUserId(userId, ctx.auth));
 
       ctx.body = pick(user, ...userInfoSelectFields);
+
+      return next();
+    }
+  );
+
+  router.get(
+    '/users/:userId/custom-data',
+    koaGuard({
+      params: object({ userId: string() }),
+      response: arbitraryObjectGuard,
+    }),
+    async (ctx, next) => {
+      const {
+        params: { userId },
+      } = ctx.guard;
+
+      const { customData } = await findUserById(getComputedUserId(userId, ctx.auth));
+      ctx.body = customData;
+
+      return next();
+    }
+  );
+
+  router.patch(
+    '/users/:userId/custom-data',
+    koaGuard({
+      params: object({ userId: string() }),
+      body: object({ customData: arbitraryObjectGuard }),
+      response: arbitraryObjectGuard,
+    }),
+    async (ctx, next) => {
+      const {
+        params: { userId: userIdParameter },
+        body: { customData },
+      } = ctx.guard;
+      const userId = getComputedUserId(userIdParameter, ctx.auth);
+
+      await findUserById(userId);
+
+      const user = await updateUserById(userId, {
+        customData,
+      });
+
+      ctx.body = user.customData;
 
       return next();
     }
@@ -117,9 +163,10 @@ export default function adminUserRoutes<T extends AuthedRouter>(router: T) {
     }),
     async (ctx, next) => {
       const {
-        params: { userId },
+        params: { userId: userIdParameter },
         body,
       } = ctx.guard;
+      const userId = getComputedUserId(userIdParameter, ctx.auth);
 
       await findUserById(userId);
 
@@ -164,9 +211,10 @@ export default function adminUserRoutes<T extends AuthedRouter>(router: T) {
     }),
     async (ctx, next) => {
       const {
-        params: { userId },
+        params: { userId: userIdParameter },
         body: { password },
       } = ctx.guard;
+      const userId = getComputedUserId(userIdParameter, ctx.auth);
 
       await findUserById(userId);
 
@@ -193,6 +241,10 @@ export default function adminUserRoutes<T extends AuthedRouter>(router: T) {
         params: { userId },
       } = ctx.guard;
 
+      if (userId === ctx.auth) {
+        throw new RequestError('user.cannot_delete_self');
+      }
+
       await findUserById(userId);
 
       await deleteUserById(userId);
@@ -208,8 +260,9 @@ export default function adminUserRoutes<T extends AuthedRouter>(router: T) {
     koaGuard({ params: object({ userId: string(), target: string() }) }),
     async (ctx, next) => {
       const {
-        params: { userId, target },
+        params: { userId: userIdParameter, target },
       } = ctx.guard;
+      const userId = getComputedUserId(userIdParameter, ctx.auth);
 
       const { identities } = await findUserById(userId);
 

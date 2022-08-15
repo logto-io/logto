@@ -30,7 +30,7 @@ const ChangePassword = () => {
 
   const onSubmit = async () => {
     setIsLoading(true);
-    await api.patch(`/api/me/password`, { json: { password } }).json();
+    await api.patch(`/api/users/me/password`, { json: { password } }).json();
     setIsLoading(false);
     setIsOpen(false);
     toast.success(t('settings.password_changed'));
