@@ -22,7 +22,6 @@ jobs:
 
       - name: Add assignees
         if: |
-          github.event_name == 'pull_request' &&
           contains(fromJson('["opened", "reopened"]'), github.event.action) &&
           !endsWith(github.event.pull_request.user.login, '[bot]')
         uses: actions-ecosystem/action-add-assignees@v1
