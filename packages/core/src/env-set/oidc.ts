@@ -1,7 +1,7 @@
 import crypto, { generateKeyPairSync } from 'crypto';
 import { existsSync, readFileSync, writeFileSync } from 'fs';
 
-import { getEnv } from '@silverhand/essentials';
+import { getEnv, getEnvAsStringArray } from '@silverhand/essentials';
 import inquirer from 'inquirer';
 import { createLocalJWKSet } from 'jose';
 import { nanoid } from 'nanoid';
@@ -10,7 +10,6 @@ import { exportJWK } from '@/utils/jwks';
 
 import { appendDotEnv } from './dot-env';
 import { allYes, noInquiry } from './parameters';
-import { getEnvAsStringArray } from './utils';
 
 const defaultLogtoOidcPrivateKeyPath = './oidc-private-key.pem';
 

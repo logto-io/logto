@@ -926,7 +926,7 @@ importers:
       '@logto/shared': ^1.0.0-beta.4
       '@shopify/jest-koa-mocks': ^5.0.0
       '@silverhand/eslint-config': 1.0.0-rc.2
-      '@silverhand/essentials': ^1.1.6
+      '@silverhand/essentials': ^1.2.0
       '@silverhand/jest-config': 1.0.0-rc.3
       '@silverhand/ts-config': 1.0.0-rc.2
       '@types/debug': ^4.1.7
@@ -1009,7 +1009,7 @@ importers:
       '@logto/phrases': link:../phrases
       '@logto/schemas': link:../schemas
       '@logto/shared': link:../shared
-      '@silverhand/essentials': 1.1.7
+      '@silverhand/essentials': 1.2.0
       argon2: 0.28.5
       chalk: 4.1.2
       dayjs: 1.10.7
@@ -4607,6 +4607,14 @@ packages:
     dependencies:
       lodash.orderby: 4.6.0
       lodash.pick: 4.4.0
+
+  /@silverhand/essentials/1.2.0:
+    resolution: {integrity: sha512-AEkWX0667febPV4wTjGbM8wIKWCnJqlXSLXUTaVRdQJmuc87WGbjP7WTPn6tJ8o9cb5i4LpYTIE3ptz90nRvCg==}
+    engines: {node: '>=14.15.0', pnpm: '>=6'}
+    dependencies:
+      lodash.orderby: 4.6.0
+      lodash.pick: 4.4.0
+    dev: false
 
   /@silverhand/jest-config/1.0.0-rc.3_bi2kohzqnxavgozw3csgny5hju:
     resolution: {integrity: sha512-s8apB6KcIPPtdC3j8W9nd8apICnlZDa3vMLs0Jd6MjduI36Ekjt4b0STIGU9NyO4GcAb6EWNTTK3LdKgXOOIhQ==}
