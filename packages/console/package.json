@@ -57,7 +57,7 @@
     "nanoid": "^3.1.23",
     "parcel": "2.7.0",
     "postcss": "^8.4.6",
-    "postcss-modules": "^4.3.0",
+    "postcss-modules": "^5.0.0",
     "prettier": "^2.7.1",
     "process": "^0.11.10",
     "prop-types": "^15.8.1",
