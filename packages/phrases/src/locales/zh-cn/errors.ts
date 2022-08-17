@@ -3,7 +3,8 @@ const errors = {
     authorization_header_missing: '缺少权限标题',
     authorization_token_type_not_supported: '权限类型不支持',
     unauthorized: '未经授权。请检查凭据及其范围。',
-    forbidden: '禁止访问。请检查用户权限。',
+    forbidden: '禁止访问。请检查用户 role 与权限。',
+    expected_role_not_found: '未找到期望的 role。请检查用户 role 与权限。',
     jwt_sub_missing: 'JWT 缺失 `sub`',
   },
   guard: {

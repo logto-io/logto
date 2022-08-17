@@ -8,6 +8,7 @@ import koaAuth from '@/middleware/koa-auth';
 import koaLogSession from '@/middleware/koa-log-session';
 import adminUserRoutes from '@/routes/admin-user';
 import applicationRoutes from '@/routes/application';
+import authnRoutes from '@/routes/authn';
 import connectorRoutes from '@/routes/connector';
 import dashboardRoutes from '@/routes/dashboard';
 import logRoutes from '@/routes/log';
@@ -46,6 +47,7 @@ const createRouters = (provider: Provider) => {
   const anonymousRouter: AnonymousRouter = new Router();
   wellKnownRoutes(anonymousRouter, provider);
   statusRoutes(anonymousRouter);
+  authnRoutes(anonymousRouter);
   // The swagger.json should contain all API routers.
   swaggerRoutes(anonymousRouter, [sessionRouter, managementRouter, anonymousRouter]);
 

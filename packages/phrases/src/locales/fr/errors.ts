@@ -5,6 +5,8 @@ const errors = {
     unauthorized:
       "Non autorisé. Veuillez vérifier les informations d'identification et son champ d'application.",
     forbidden: "Interdit. Veuillez vérifier vos rôles et autorisations d'utilisateur.",
+    expected_role_not_found:
+      'Expected role not found. Please check your user roles and permissions.',
     jwt_sub_missing: '`sub` manquant dans JWT.',
   },
   guard: {
