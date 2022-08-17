@@ -1,58 +1,21 @@
+import { Optional } from '@silverhand/essentials';
+
 import { ConnectorMetadata } from './types';
 
-export type EmailMessageTypes = {
-  SignIn: {
-    code: string;
-  };
-  Register: {
-    code: string;
-  };
-  ForgotPassword: {
-    code: string;
-  };
-  Test: Record<string, unknown>;
-};
+// We will have message type 'ForgotPassword' available in the near future.
+type MessageTypes = 'SignIn' | 'Register' | 'Test';
 
-export type SmsMessageTypes = EmailMessageTypes;
-
-export type EmailSendMessageFunction<T = unknown> = (
-  address: string,
-  type: keyof EmailMessageTypes,
-  payload: EmailMessageTypes[typeof type]
-) => Promise<T>;
-
-export type EmailSendTestMessageFunction<T = unknown> = (
-  config: Record<string, unknown>,
-  address: string,
-  type: keyof EmailMessageTypes,
-  payload: EmailMessageTypes[typeof type]
-) => Promise<T>;
-
-export type EmailSendMessageByFunction<T> = (
-  config: T,
-  address: string,
-  type: keyof EmailMessageTypes,
-  payload: EmailMessageTypes[typeof type]
+type SendMessageFunction = (
+  to: string,
+  type: MessageTypes,
+  payload: { code: string }
 ) => Promise<unknown>;
 
-export type SmsSendMessageFunction<T = unknown> = (
-  phone: string,
-  type: keyof SmsMessageTypes,
-  payload: SmsMessageTypes[typeof type]
-) => Promise<T>;
-
-export type SmsSendTestMessageFunction<T = unknown> = (
-  config: Record<string, unknown>,
-  phone: string,
-  type: keyof SmsMessageTypes,
-  payload: SmsMessageTypes[typeof type]
-) => Promise<T>;
-
-export type SmsSendMessageByFunction<T> = (
+type SendMessageByFunction<T = Record<string, unknown>> = (
   config: T,
-  phone: string,
-  type: keyof SmsMessageTypes,
-  payload: SmsMessageTypes[typeof type]
+  to: string,
+  type: MessageTypes,
+  payload: { code: string }
 ) => Promise<unknown>;
 
 export type ValidateConfig<T> = (config: unknown) => asserts config is T;
@@ -64,7 +27,7 @@ export type GetAuthorizationUri = (payload: {
 
 export type GetUserInfo = (
   data: unknown
-) => Promise<{ id: string } & Record<string, string | undefined>>;
+) => Promise<{ id: string } & Record<string, Optional<string>>>;
 
 export type GetConnectorConfig = (id: string) => Promise<unknown>;
 
@@ -73,52 +36,37 @@ export type AuthResponseParser<T = Record<string, unknown>> = (response: unknown
 abstract class BaseConnector<T> {
   public getConfig: GetConnectorConfig;
   public metadata!: ConnectorMetadata;
+  public abstract validateConfig: ValidateConfig<T>;
 
   constructor(getConnectorConfig: GetConnectorConfig) {
     this.getConfig = getConnectorConfig;
   }
-
-  public abstract validateConfig(config: unknown): asserts config is T;
 }
 
-export abstract class SmsConnector<T> extends BaseConnector<T> {
-  protected abstract readonly sendMessageBy: EmailSendMessageByFunction<T>;
+abstract class PasswordlessConnector<T> extends BaseConnector<T> {
+  protected abstract readonly sendMessageBy: SendMessageByFunction<T>;
 
-  public sendMessage: EmailSendMessageFunction = async (address, type, data) => {
+  public sendMessage: SendMessageFunction = async (address, type, data) => {
     const config = await this.getConfig(this.metadata.id);
     this.validateConfig(config);
 
     return this.sendMessageBy(config, address, type, data);
   };
 
-  public sendTestMessage?: EmailSendTestMessageFunction = async (config, address, type, data) => {
+  public sendTestMessage?: SendMessageByFunction = async (config, address, type, data) => {
     this.validateConfig(config);
 
     return this.sendMessageBy(config, address, type, data);
   };
 }
 
-export abstract class EmailConnector<T> extends BaseConnector<T> {
-  protected abstract readonly sendMessageBy: SmsSendMessageByFunction<T>;
+export abstract class SmsConnector<T> extends PasswordlessConnector<T> {}
 
-  public sendMessage: SmsSendMessageFunction = async (address, type, data) => {
-    const config = await this.getConfig(this.metadata.id);
-    this.validateConfig(config);
-
-    return this.sendMessageBy(config, address, type, data);
-  };
-
-  public sendTestMessage?: SmsSendTestMessageFunction = async (config, address, type, data) => {
-    this.validateConfig(config);
-
-    return this.sendMessageBy(config, address, type, data);
-  };
-}
+export abstract class EmailConnector<T> extends PasswordlessConnector<T> {}
 
 export abstract class SocialConnector<T> extends BaseConnector<T> {
   public abstract getAuthorizationUri: GetAuthorizationUri;
-
   public abstract getUserInfo: GetUserInfo;
 
-  protected authResponseParser?: AuthResponseParser;
+  protected abstract authResponseParser?: AuthResponseParser;
 }
