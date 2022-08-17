@@ -70,7 +70,7 @@ Now you should have the Google OAuth 2.0 consent screen configured.
 - On the **Create OAuth client ID** page, select **Web application** as the application type.
 - Fill out the basic information for your application.
 - Click **+ Add URI** to add an authorized domain to the **Authorized JavaScript origins** section. This is the domain that your logto authorization page will be served from. In our case, this will be `${your_logto_origin}`. e.g.`https://logto.dev`.
-- Click **+ Add URI** in the ****Authorized redirect URIs**** section to set up the ****Authorized redirect URIs****, which redirect the user to the application after logging in. In our case, this will be `${your_logto_origin}/callback/google-universal`. e.g. `https://logto.dev/callback/google-universal`.
+- Click **+ Add URI** in the ****Authorized redirect URIs**** section to set up the ****Authorized redirect URIs****, which redirect the user to the application after logging in. In our case, this will be `${your_logto_endpoint}/callback/google-universal`. e.g. `https://logto.dev/callback/google-universal`.
 - Click **Create** to finish and then you will get the **Client ID** and **Client Secret**.
 
 ### Config types
@@ -127,7 +127,7 @@ Now you should have the Google OAuth 2.0 consent screen configured.
 - 在「创建 OAuth 客户端 ID」页面内，将「应用类型」设置为「Web 应用」。
 - 填写相关的应用基本信息。
 - 在「已获授权的 JavaScript 来源」中，点击「+ 添加URI」，该 URI 值为你所部署的 Logto 服务的地址。此处这个值应为 `${your_logto_origin}`。例如：`https://logto.dev`。
-- 在「已获授权的重定向 URI」中，点击「+ 添加URI」以添加「已获授权的重定向 URI」。「已获授权的重定向 URI」将在用户使用 Google 帐号成功登录 Logto 后将用户重定向回你的应用。此处这个值应为 `${your_logto_origin}/callback/google-universal`。例如：`https://logto.dev/callback/google-universal`。
+- 在「已获授权的重定向 URI」中，点击「+ 添加URI」以添加「已获授权的重定向 URI」。「已获授权的重定向 URI」将在用户使用 Google 帐号成功登录 Logto 后将用户重定向回你的应用。此处这个值应为 `${your_logto_endpoint}/callback/google-universal`。例如：`https://logto.dev/callback/google-universal`。
 - 点击「创建」后，你将获得「客户端 ID」（Client ID）和「客户端密钥」（Client Secret）。
 
 ### 配置类型
