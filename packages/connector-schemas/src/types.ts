@@ -111,5 +111,5 @@ export abstract class SocialConnector<T> extends BaseConnector<T> {
   public abstract getAuthorizationUri: GetAuthorizationUri;
   public abstract getUserInfo: GetUserInfo;
 
-  protected abstract authResponseParser?: AuthResponseParser;
+  protected authResponseParser?: AuthResponseParser;
 }
