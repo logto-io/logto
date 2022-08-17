@@ -52,7 +52,7 @@ type SendMessageFunction = (
   payload: { code: string }
 ) => Promise<unknown>;
 
-type SendMessageByFunction<T = Record<string, unknown>> = (
+export type SendMessageByFunction<T = Record<string, unknown>> = (
   config: T,
   to: string,
   type: MessageTypes,
