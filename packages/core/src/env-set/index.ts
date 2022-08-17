@@ -1,4 +1,4 @@
-import { getEnv, Optional } from '@silverhand/essentials';
+import { getEnv, getEnvAsStringArray, Optional } from '@silverhand/essentials';
 import { DatabasePool } from 'slonik';
 
 import { appendPath } from '@/utils/url';
@@ -6,7 +6,6 @@ import { appendPath } from '@/utils/url';
 import createPoolByEnv from './create-pool-by-env';
 import loadOidcValues from './oidc';
 import { isTrue } from './parameters';
-import { getEnvAsStringArray } from './utils';
 
 export enum MountedApps {
   Api = 'api',

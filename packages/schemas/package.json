@@ -22,7 +22,7 @@
   },
   "devDependencies": {
     "@silverhand/eslint-config": "1.0.0-rc.2",
-    "@silverhand/essentials": "^1.1.6",
+    "@silverhand/essentials": "^1.2.0",
     "@silverhand/jest-config": "1.0.0-rc.3",
     "@silverhand/ts-config": "1.0.0-rc.2",
     "@types/jest": "^28.0.0",

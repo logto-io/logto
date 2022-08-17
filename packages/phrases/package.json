@@ -28,7 +28,7 @@
     "url": "https://github.com/logto-io/logto/issues"
   },
   "dependencies": {
-    "@silverhand/essentials": "^1.1.4",
+    "@silverhand/essentials": "^1.2.0",
     "zod": "^3.14.3"
   },
   "devDependencies": {
