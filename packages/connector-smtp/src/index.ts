@@ -1,14 +1,11 @@
 import {
   ConnectorError,
   ConnectorErrorCodes,
-  ConnectorMetadata,
-  Connector,
-  EmailSendMessageFunction,
-  EmailSendTestMessageFunction,
-  EmailConnectorInstance,
+  SendMessageByFunction,
+  EmailConnector,
   GetConnectorConfig,
-  EmailMessageTypes,
-} from '@logto/connector-types';
+  ValidateConfig,
+} from '@logto/connector-schemas';
 import { assert } from '@silverhand/essentials';
 import nodemailer from 'nodemailer';
 import SMTPTransport from 'nodemailer/lib/smtp-transport';
@@ -16,51 +13,25 @@ import SMTPTransport from 'nodemailer/lib/smtp-transport';
 import { defaultMetadata } from './constant';
 import { ContextType, smtpConfigGuard, SmtpConfig } from './types';
 
-export default class SmtpConnector implements EmailConnectorInstance<SmtpConfig> {
-  public metadata: ConnectorMetadata = defaultMetadata;
-  private _connector?: Connector;
-
-  public get connector() {
-    if (!this._connector) {
-      throw new ConnectorError(ConnectorErrorCodes.General);
-    }
-
-    return this._connector;
+export default class SmtpConnector extends EmailConnector<SmtpConfig> {
+  constructor(getConnectorConfig: GetConnectorConfig) {
+    super(getConnectorConfig);
+    this.metadata = defaultMetadata;
   }
 
-  public set connector(input: Connector) {
-    this._connector = input;
-  }
-
-  constructor(public readonly getConfig: GetConnectorConfig) {}
-
-  public validateConfig(config: unknown): asserts config is SmtpConfig {
+  public validateConfig: ValidateConfig<SmtpConfig> = (config: unknown) => {
     const result = smtpConfigGuard.safeParse(config);
 
     if (!result.success) {
       throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, result.error);
     }
-  }
-
-  public sendMessage: EmailSendMessageFunction = async (address, type, data) => {
-    const config = await this.getConfig(this.metadata.id);
-
-    this.validateConfig(config);
-
-    return this.sendMessageBy(config, address, type, data);
   };
 
-  public sendTestMessage: EmailSendTestMessageFunction = async (config, address, type, data) => {
-    this.validateConfig(config);
-
-    return this.sendMessageBy(config, address, type, data);
-  };
-
-  private readonly sendMessageBy = async (
-    config: SmtpConfig,
-    address: string,
-    type: keyof EmailMessageTypes,
-    data: EmailMessageTypes[typeof type]
+  protected readonly sendMessageBy: SendMessageByFunction<SmtpConfig> = async (
+    config,
+    address,
+    type,
+    data
   ) => {
     const { host, port, username, password, fromEmail, replyTo, templates } = config;
     const template = templates.find((template) => template.usageType === type);

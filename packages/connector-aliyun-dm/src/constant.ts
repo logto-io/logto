@@ -1,4 +1,4 @@
-import { ConnectorType, ConnectorMetadata } from '@logto/connector-types';
+import { ConnectorType, ConnectorMetadata } from '@logto/connector-schemas';
 
 export const endpoint = 'https://dm.aliyuncs.com/';
 

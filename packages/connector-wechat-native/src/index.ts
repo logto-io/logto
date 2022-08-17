@@ -4,16 +4,15 @@
  */
 
 import {
-  ConnectorMetadata,
+  AuthResponseParser,
   GetAuthorizationUri,
   GetUserInfo,
   ConnectorError,
   ConnectorErrorCodes,
-  Connector,
-  SocialConnectorInstance,
+  SocialConnector,
   GetConnectorConfig,
-  codeDataGuard,
-} from '@logto/connector-types';
+  ValidateConfig,
+} from '@logto/connector-schemas';
 import { assert } from '@silverhand/essentials';
 import got, { HTTPError } from 'got';
 
@@ -33,33 +32,23 @@ import {
   userInfoResponseGuard,
   UserInfoResponseMessageParser,
   WechatNativeConfig,
+  authResponseGuard,
+  AuthResponse,
 } from './types';
 
-export default class WechatNativeConnector implements SocialConnectorInstance<WechatNativeConfig> {
-  public metadata: ConnectorMetadata = defaultMetadata;
-  private _connector?: Connector;
-
-  public get connector() {
-    if (!this._connector) {
-      throw new ConnectorError(ConnectorErrorCodes.General);
-    }
-
-    return this._connector;
+export default class WechatNativeConnector extends SocialConnector<WechatNativeConfig> {
+  constructor(getConnectorConfig: GetConnectorConfig) {
+    super(getConnectorConfig);
+    this.metadata = defaultMetadata;
   }
 
-  public set connector(input: Connector) {
-    this._connector = input;
-  }
-
-  constructor(public readonly getConfig: GetConnectorConfig) {}
-
-  public validateConfig(config: unknown): asserts config is WechatNativeConfig {
+  public validateConfig: ValidateConfig<WechatNativeConfig> = (config: unknown) => {
     const result = wechatNativeConfigGuard.safeParse(config);
 
     if (!result.success) {
       throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, result.error);
     }
-  }
+  };
 
   public getAuthorizationUri: GetAuthorizationUri = async ({ state }) => {
     const config = await this.getConfig(this.metadata.id);
@@ -108,7 +97,7 @@ export default class WechatNativeConnector implements SocialConnectorInstance<We
   };
 
   public getUserInfo: GetUserInfo = async (data) => {
-    const { code } = await this.authorizationCallbackHandler(data);
+    const { code } = await this.authResponseParser(data);
     const { accessToken, openid } = await this.getAccessToken(code);
 
     try {
@@ -134,6 +123,18 @@ export default class WechatNativeConnector implements SocialConnectorInstance<We
     } catch (error: unknown) {
       return this.getUserInfoErrorHandler(error);
     }
+  };
+
+  protected readonly authResponseParser: AuthResponseParser<AuthResponse> = async (
+    parameterObject: unknown
+  ) => {
+    const result = authResponseGuard.safeParse(parameterObject);
+
+    if (!result.success) {
+      throw new ConnectorError(ConnectorErrorCodes.General, JSON.stringify(parameterObject));
+    }
+
+    return result.data;
   };
 
   // See https://developers.weixin.qq.com/doc/oplatform/Return_codes/Return_code_descriptions_new.html
@@ -175,15 +176,5 @@ export default class WechatNativeConnector implements SocialConnectorInstance<We
     }
 
     throw error;
-  };
-
-  private readonly authorizationCallbackHandler = async (parameterObject: unknown) => {
-    const result = codeDataGuard.safeParse(parameterObject);
-
-    if (!result.success) {
-      throw new ConnectorError(ConnectorErrorCodes.General, JSON.stringify(parameterObject));
-    }
-
-    return result.data;
   };
 }

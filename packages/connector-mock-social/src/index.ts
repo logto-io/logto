@@ -5,41 +5,28 @@ import {
   ConnectorErrorCodes,
   GetAuthorizationUri,
   GetUserInfo,
-  ConnectorMetadata,
-  Connector,
-  SocialConnectorInstance,
   GetConnectorConfig,
-} from '@logto/connector-types';
+  SocialConnector,
+  ValidateConfig,
+} from '@logto/connector-schemas';
 import { z } from 'zod';
 
 import { defaultMetadata } from './constant';
 import { mockSocialConfigGuard, MockSocialConfig } from './types';
 
-export default class MockSocialConnector implements SocialConnectorInstance<MockSocialConfig> {
-  public metadata: ConnectorMetadata = defaultMetadata;
-  private _connector?: Connector;
-
-  public get connector() {
-    if (!this._connector) {
-      throw new ConnectorError(ConnectorErrorCodes.General);
-    }
-
-    return this._connector;
+export default class MockSocialConnector extends SocialConnector<MockSocialConfig> {
+  constructor(getConnectorConfig: GetConnectorConfig) {
+    super(getConnectorConfig);
+    this.metadata = defaultMetadata;
   }
 
-  public set connector(input: Connector) {
-    this._connector = input;
-  }
-
-  constructor(public readonly getConfig: GetConnectorConfig) {}
-
-  public validateConfig(config: unknown): asserts config is MockSocialConfig {
+  public validateConfig: ValidateConfig<MockSocialConfig> = (config: unknown) => {
     const result = mockSocialConfigGuard.safeParse(config);
 
     if (!result.success) {
       throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, result.error);
     }
-  }
+  };
 
   public getAuthorizationUri: GetAuthorizationUri = async ({ state, redirectUri }) => {
     return `http://mock.social.com/?state=${state}&redirect_uri=${redirectUri}`;

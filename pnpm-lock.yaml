@@ -21,7 +21,7 @@ importers:
   packages/connector-alipay-native:
     specifiers:
       '@jest/types': ^28.1.3
-      '@logto/connector-types': ^1.0.0-beta.5
+      '@logto/connector-schemas': ^1.0.0-beta.5
       '@logto/shared': ^1.0.0-beta.5
       '@shopify/jest-koa-mocks': ^5.0.0
       '@silverhand/eslint-config': 1.0.0-rc.2
@@ -47,7 +47,7 @@ importers:
       typescript: ^4.7.4
       zod: ^3.14.3
     dependencies:
-      '@logto/connector-types': link:../connector-types
+      '@logto/connector-schemas': link:../connector-schemas
       '@logto/shared': link:../shared
       '@silverhand/essentials': 1.2.0
       '@silverhand/jest-config': 1.0.0-rc.3_bi2kohzqnxavgozw3csgny5hju
@@ -78,7 +78,7 @@ importers:
   packages/connector-alipay-web:
     specifiers:
       '@jest/types': ^28.1.3
-      '@logto/connector-types': ^1.0.0-beta.5
+      '@logto/connector-schemas': ^1.0.0-beta.5
       '@logto/shared': ^1.0.0-beta.5
       '@shopify/jest-koa-mocks': ^5.0.0
       '@silverhand/eslint-config': 1.0.0-rc.2
@@ -104,7 +104,7 @@ importers:
       typescript: ^4.7.4
       zod: ^3.14.3
     dependencies:
-      '@logto/connector-types': link:../connector-types
+      '@logto/connector-schemas': link:../connector-schemas
       '@logto/shared': link:../shared
       '@silverhand/essentials': 1.2.0
       '@silverhand/jest-config': 1.0.0-rc.3_bi2kohzqnxavgozw3csgny5hju
@@ -135,7 +135,7 @@ importers:
   packages/connector-aliyun-dm:
     specifiers:
       '@jest/types': ^28.1.3
-      '@logto/connector-types': ^1.0.0-beta.5
+      '@logto/connector-schemas': ^1.0.0-beta.5
       '@logto/shared': ^1.0.0-beta.5
       '@silverhand/eslint-config': 1.0.0-rc.2
       '@silverhand/essentials': ^1.2.0
@@ -152,7 +152,7 @@ importers:
       typescript: ^4.7.4
       zod: ^3.14.3
     dependencies:
-      '@logto/connector-types': link:../connector-types
+      '@logto/connector-schemas': link:../connector-schemas
       '@logto/shared': link:../shared
       '@silverhand/essentials': 1.2.0
       '@silverhand/jest-config': 1.0.0-rc.3_bi2kohzqnxavgozw3csgny5hju
@@ -174,7 +174,7 @@ importers:
   packages/connector-aliyun-sms:
     specifiers:
       '@jest/types': ^28.1.3
-      '@logto/connector-types': ^1.0.0-beta.5
+      '@logto/connector-schemas': ^1.0.0-beta.5
       '@logto/schemas': ^1.0.0-beta.5
       '@logto/shared': ^1.0.0-beta.5
       '@silverhand/eslint-config': 1.0.0-rc.2
@@ -192,7 +192,7 @@ importers:
       typescript: ^4.7.4
       zod: ^3.14.3
     dependencies:
-      '@logto/connector-types': link:../connector-types
+      '@logto/connector-schemas': link:../connector-schemas
       '@logto/schemas': link:../schemas
       '@logto/shared': link:../shared
       '@silverhand/essentials': 1.2.0
@@ -215,7 +215,7 @@ importers:
   packages/connector-apple:
     specifiers:
       '@jest/types': ^28.1.3
-      '@logto/connector-types': ^1.0.0-beta.5
+      '@logto/connector-schemas': ^1.0.0-beta.5
       '@logto/schemas': ^1.0.0-beta.5
       '@logto/shared': ^1.0.0-beta.5
       '@silverhand/eslint-config': 1.0.0-rc.2
@@ -236,7 +236,7 @@ importers:
       typescript: ^4.7.4
       zod: ^3.14.3
     dependencies:
-      '@logto/connector-types': link:../connector-types
+      '@logto/connector-schemas': link:../connector-schemas
       '@logto/schemas': link:../schemas
       '@logto/shared': link:../shared
       '@silverhand/essentials': 1.2.0
@@ -263,7 +263,7 @@ importers:
     specifiers:
       '@azure/msal-node': ^1.12.0
       '@jest/types': ^28.1.3
-      '@logto/connector-types': ^1.0.0-beta.5
+      '@logto/connector-schemas': ^1.0.0-beta.5
       '@logto/schemas': ^1.0.0-beta.5
       '@logto/shared': ^1.0.0-beta.5
       '@silverhand/eslint-config': 1.0.0-rc.2
@@ -285,7 +285,7 @@ importers:
       zod: ^3.14.3
     dependencies:
       '@azure/msal-node': 1.12.0
-      '@logto/connector-types': link:../connector-types
+      '@logto/connector-schemas': link:../connector-schemas
       '@logto/schemas': link:../schemas
       '@logto/shared': link:../shared
       '@silverhand/essentials': 1.2.0
@@ -311,7 +311,7 @@ importers:
   packages/connector-facebook:
     specifiers:
       '@jest/types': ^28.1.3
-      '@logto/connector-types': ^1.0.0-beta.5
+      '@logto/connector-schemas': ^1.0.0-beta.5
       '@logto/schemas': ^1.0.0-beta.5
       '@logto/shared': ^1.0.0-beta.5
       '@silverhand/eslint-config': 1.0.0-rc.2
@@ -331,7 +331,7 @@ importers:
       typescript: ^4.7.4
       zod: ^3.14.3
     dependencies:
-      '@logto/connector-types': link:../connector-types
+      '@logto/connector-schemas': link:../connector-schemas
       '@logto/schemas': link:../schemas
       '@logto/shared': link:../shared
       '@silverhand/essentials': 1.2.0
@@ -356,7 +356,7 @@ importers:
   packages/connector-github:
     specifiers:
       '@jest/types': ^28.1.3
-      '@logto/connector-types': ^1.0.0-beta.5
+      '@logto/connector-schemas': ^1.0.0-beta.5
       '@logto/schemas': ^1.0.0-beta.5
       '@logto/shared': ^1.0.0-beta.5
       '@silverhand/eslint-config': 1.0.0-rc.2
@@ -377,7 +377,7 @@ importers:
       typescript: ^4.7.4
       zod: ^3.14.3
     dependencies:
-      '@logto/connector-types': link:../connector-types
+      '@logto/connector-schemas': link:../connector-schemas
       '@logto/schemas': link:../schemas
       '@logto/shared': link:../shared
       '@silverhand/essentials': 1.2.0
@@ -403,7 +403,7 @@ importers:
   packages/connector-google:
     specifiers:
       '@jest/types': ^28.1.3
-      '@logto/connector-types': ^1.0.0-beta.5
+      '@logto/connector-schemas': ^1.0.0-beta.5
       '@logto/schemas': ^1.0.0-beta.5
       '@logto/shared': ^1.0.0-beta.5
       '@silverhand/eslint-config': 1.0.0-rc.2
@@ -423,7 +423,7 @@ importers:
       typescript: ^4.7.4
       zod: ^3.14.3
     dependencies:
-      '@logto/connector-types': link:../connector-types
+      '@logto/connector-schemas': link:../connector-schemas
       '@logto/schemas': link:../schemas
       '@logto/shared': link:../shared
       '@silverhand/essentials': 1.2.0
@@ -447,7 +447,7 @@ importers:
 
   packages/connector-mock-email:
     specifiers:
-      '@logto/connector-types': ^1.0.0-beta.5
+      '@logto/connector-schemas': ^1.0.0-beta.5
       '@logto/shared': ^1.0.0-beta.5
       '@silverhand/eslint-config': 1.0.0-rc.2
       '@silverhand/essentials': ^1.2.0
@@ -460,7 +460,7 @@ importers:
       typescript: ^4.7.4
       zod: ^3.14.3
     dependencies:
-      '@logto/connector-types': link:../connector-types
+      '@logto/connector-schemas': link:../connector-schemas
       '@logto/shared': link:../shared
       '@silverhand/essentials': 1.2.0
       zod: 3.14.3
@@ -476,7 +476,7 @@ importers:
 
   packages/connector-mock-sms:
     specifiers:
-      '@logto/connector-types': ^1.0.0-beta.5
+      '@logto/connector-schemas': ^1.0.0-beta.5
       '@logto/shared': ^1.0.0-beta.5
       '@silverhand/eslint-config': 1.0.0-rc.2
       '@silverhand/essentials': ^1.2.0
@@ -489,7 +489,7 @@ importers:
       typescript: ^4.7.4
       zod: ^3.14.3
     dependencies:
-      '@logto/connector-types': link:../connector-types
+      '@logto/connector-schemas': link:../connector-schemas
       '@logto/shared': link:../shared
       '@silverhand/essentials': 1.2.0
       zod: 3.14.3
@@ -505,7 +505,7 @@ importers:
 
   packages/connector-mock-social:
     specifiers:
-      '@logto/connector-types': ^1.0.0-beta.5
+      '@logto/connector-schemas': ^1.0.0-beta.5
       '@logto/schemas': ^1.0.0-beta.5
       '@logto/shared': ^1.0.0-beta.5
       '@silverhand/eslint-config': 1.0.0-rc.2
@@ -519,7 +519,7 @@ importers:
       typescript: ^4.7.4
       zod: ^3.14.3
     dependencies:
-      '@logto/connector-types': link:../connector-types
+      '@logto/connector-schemas': link:../connector-schemas
       '@logto/schemas': link:../schemas
       '@logto/shared': link:../shared
       '@silverhand/essentials': 1.2.0
@@ -558,7 +558,7 @@ importers:
   packages/connector-sendgrid-mail:
     specifiers:
       '@jest/types': ^28.1.3
-      '@logto/connector-types': ^1.0.0-beta.5
+      '@logto/connector-schemas': ^1.0.0-beta.5
       '@logto/shared': ^1.0.0-beta.5
       '@silverhand/eslint-config': 1.0.0-rc.2
       '@silverhand/essentials': ^1.2.0
@@ -575,7 +575,7 @@ importers:
       typescript: ^4.7.4
       zod: ^3.14.3
     dependencies:
-      '@logto/connector-types': link:../connector-types
+      '@logto/connector-schemas': link:../connector-schemas
       '@logto/shared': link:../shared
       '@silverhand/essentials': 1.2.0
       '@silverhand/jest-config': 1.0.0-rc.3_bi2kohzqnxavgozw3csgny5hju
@@ -597,7 +597,7 @@ importers:
   packages/connector-smtp:
     specifiers:
       '@jest/types': ^28.1.3
-      '@logto/connector-types': ^1.0.0-beta.5
+      '@logto/connector-schemas': ^1.0.0-beta.5
       '@logto/shared': ^1.0.0-beta.5
       '@silverhand/eslint-config': 1.0.0-rc.2
       '@silverhand/essentials': ^1.2.0
@@ -615,7 +615,7 @@ importers:
       typescript: ^4.7.4
       zod: ^3.14.3
     dependencies:
-      '@logto/connector-types': link:../connector-types
+      '@logto/connector-schemas': link:../connector-schemas
       '@logto/shared': link:../shared
       '@silverhand/essentials': 1.2.0
       '@silverhand/jest-config': 1.0.0-rc.3_bi2kohzqnxavgozw3csgny5hju
@@ -638,7 +638,7 @@ importers:
   packages/connector-twilio-sms:
     specifiers:
       '@jest/types': ^28.1.3
-      '@logto/connector-types': ^1.0.0-beta.5
+      '@logto/connector-schemas': ^1.0.0-beta.5
       '@logto/shared': ^1.0.0-beta.5
       '@silverhand/eslint-config': 1.0.0-rc.2
       '@silverhand/essentials': ^1.2.0
@@ -655,7 +655,7 @@ importers:
       typescript: ^4.7.4
       zod: ^3.14.3
     dependencies:
-      '@logto/connector-types': link:../connector-types
+      '@logto/connector-schemas': link:../connector-schemas
       '@logto/shared': link:../shared
       '@silverhand/essentials': 1.2.0
       '@silverhand/jest-config': 1.0.0-rc.3_bi2kohzqnxavgozw3csgny5hju
@@ -708,7 +708,7 @@ importers:
   packages/connector-wechat-native:
     specifiers:
       '@jest/types': ^28.1.3
-      '@logto/connector-types': ^1.0.0-beta.5
+      '@logto/connector-schemas': ^1.0.0-beta.5
       '@logto/schemas': ^1.0.0-beta.5
       '@logto/shared': ^1.0.0-beta.5
       '@silverhand/eslint-config': 1.0.0-rc.2
@@ -728,7 +728,7 @@ importers:
       typescript: ^4.7.4
       zod: ^3.14.3
     dependencies:
-      '@logto/connector-types': link:../connector-types
+      '@logto/connector-schemas': link:../connector-schemas
       '@logto/schemas': link:../schemas
       '@logto/shared': link:../shared
       '@silverhand/essentials': 1.2.0
@@ -753,7 +753,7 @@ importers:
   packages/connector-wechat-web:
     specifiers:
       '@jest/types': ^28.1.3
-      '@logto/connector-types': ^1.0.0-beta.5
+      '@logto/connector-schemas': ^1.0.0-beta.5
       '@logto/schemas': ^1.0.0-beta.5
       '@logto/shared': ^1.0.0-beta.5
       '@silverhand/eslint-config': 1.0.0-rc.2
@@ -773,7 +773,7 @@ importers:
       typescript: ^4.7.4
       zod: ^3.14.3
     dependencies:
-      '@logto/connector-types': link:../connector-types
+      '@logto/connector-schemas': link:../connector-schemas
       '@logto/schemas': link:../schemas
       '@logto/shared': link:../shared
       '@silverhand/essentials': 1.2.0

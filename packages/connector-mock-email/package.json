@@ -22,7 +22,7 @@
     "prepack": "pnpm build"
   },
   "dependencies": {
-    "@logto/connector-types": "^1.0.0-beta.5",
+    "@logto/connector-schemas": "^1.0.0-beta.5",
     "@logto/shared": "^1.0.0-beta.5",
     "@silverhand/essentials": "^1.2.0",
     "zod": "^3.14.3"

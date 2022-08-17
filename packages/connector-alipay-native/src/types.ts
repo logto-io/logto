@@ -57,3 +57,7 @@ export const userInfoResponseGuard = z.object({
 export type UserInfoResponse = z.infer<typeof userInfoResponseGuard>;
 
 export type ErrorHandler = (response: AlipayUserInfoShareResponseGuard) => void;
+
+export const authResponseGuard = z.object({ auth_code: z.string() });
+
+export type AuthResponse = z.infer<typeof authResponseGuard>;

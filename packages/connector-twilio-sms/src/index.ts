@@ -1,65 +1,36 @@
 import {
   ConnectorError,
   ConnectorErrorCodes,
-  ConnectorMetadata,
-  Connector,
-  SmsSendMessageFunction,
-  SmsSendTestMessageFunction,
-  SmsConnectorInstance,
+  SendMessageByFunction,
+  SmsConnector,
   GetConnectorConfig,
-  SmsMessageTypes,
-} from '@logto/connector-types';
+  ValidateConfig,
+} from '@logto/connector-schemas';
 import { assert } from '@silverhand/essentials';
 import got, { HTTPError } from 'got';
 
 import { defaultMetadata, endpoint } from './constant';
 import { twilioSmsConfigGuard, TwilioSmsConfig, PublicParameters } from './types';
 
-export default class TwilioSmsConnector implements SmsConnectorInstance<TwilioSmsConfig> {
-  public metadata: ConnectorMetadata = defaultMetadata;
-  private _connector?: Connector;
-
-  public get connector() {
-    if (!this._connector) {
-      throw new ConnectorError(ConnectorErrorCodes.General);
-    }
-
-    return this._connector;
+export default class TwilioSmsConnector extends SmsConnector<TwilioSmsConfig> {
+  constructor(getConnectorConfig: GetConnectorConfig) {
+    super(getConnectorConfig);
+    this.metadata = defaultMetadata;
   }
 
-  public set connector(input: Connector) {
-    this._connector = input;
-  }
-
-  constructor(public readonly getConfig: GetConnectorConfig) {}
-
-  public validateConfig(config: unknown): asserts config is TwilioSmsConfig {
+  public validateConfig: ValidateConfig<TwilioSmsConfig> = (config: unknown) => {
     const result = twilioSmsConfigGuard.safeParse(config);
 
     if (!result.success) {
       throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, result.error);
     }
-  }
-
-  public sendMessage: SmsSendMessageFunction = async (phone, type, data) => {
-    const config = await this.getConfig(this.metadata.id);
-
-    this.validateConfig(config);
-
-    return this.sendMessageBy(config, phone, type, data);
   };
 
-  public sendTestMessage: SmsSendTestMessageFunction = async (config, phone, type, data) => {
-    this.validateConfig(config);
-
-    return this.sendMessageBy(config, phone, type, data);
-  };
-
-  private readonly sendMessageBy = async (
-    config: TwilioSmsConfig,
-    phone: string,
-    type: keyof SmsMessageTypes,
-    data: SmsMessageTypes[typeof type]
+  protected readonly sendMessageBy: SendMessageByFunction<TwilioSmsConfig> = async (
+    config,
+    phone,
+    type,
+    data
   ) => {
     const { accountSID, authToken, fromMessagingServiceSID, templates } = config;
     const template = templates.find((template) => template.usageType === type);

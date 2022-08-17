@@ -3,16 +3,15 @@
  * https://developers.google.com/identity/protocols/oauth2/openid-connect
  */
 import {
+  AuthResponseParser,
   ConnectorError,
   ConnectorErrorCodes,
   GetAuthorizationUri,
-  GetUserInfo,
-  ConnectorMetadata,
-  Connector,
-  SocialConnectorInstance,
   GetConnectorConfig,
-  codeWithRedirectDataGuard,
-} from '@logto/connector-types';
+  GetUserInfo,
+  SocialConnector,
+  ValidateConfig,
+} from '@logto/connector-schemas';
 import { conditional, assert } from '@silverhand/essentials';
 import got, { HTTPError } from 'got';
 
@@ -29,33 +28,25 @@ import {
   GoogleConfig,
   accessTokenResponseGuard,
   userInfoResponseGuard,
+  authResponseGuard,
+  AuthResponse,
 } from './types';
 
-export default class GoogleConnector implements SocialConnectorInstance<GoogleConfig> {
-  public metadata: ConnectorMetadata = defaultMetadata;
-  private _connector?: Connector;
+export { defaultMetadata } from './constant';
 
-  public get connector() {
-    if (!this._connector) {
-      throw new ConnectorError(ConnectorErrorCodes.General);
-    }
-
-    return this._connector;
+export default class GoogleConnector extends SocialConnector<GoogleConfig> {
+  constructor(getConnectorConfig: GetConnectorConfig) {
+    super(getConnectorConfig);
+    this.metadata = defaultMetadata;
   }
 
-  public set connector(input: Connector) {
-    this._connector = input;
-  }
-
-  constructor(public readonly getConfig: GetConnectorConfig) {}
-
-  public validateConfig(config: unknown): asserts config is GoogleConfig {
+  public validateConfig: ValidateConfig<GoogleConfig> = (config: unknown) => {
     const result = googleConfigGuard.safeParse(config);
 
     if (!result.success) {
       throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, result.error);
     }
-  }
+  };
 
   public getAuthorizationUri: GetAuthorizationUri = async ({ state, redirectUri }) => {
     const config = await this.getConfig(this.metadata.id);
@@ -107,7 +98,7 @@ export default class GoogleConnector implements SocialConnectorInstance<GoogleCo
   };
 
   public getUserInfo: GetUserInfo = async (data) => {
-    const { code, redirectUri } = await this.authorizationCallbackHandler(data);
+    const { code, redirectUri } = await this.authResponseParser(data);
     const { accessToken } = await this.getAccessToken(code, redirectUri);
 
     try {
@@ -137,8 +128,10 @@ export default class GoogleConnector implements SocialConnectorInstance<GoogleCo
     }
   };
 
-  private readonly authorizationCallbackHandler = async (parameterObject: unknown) => {
-    const result = codeWithRedirectDataGuard.safeParse(parameterObject);
+  protected readonly authResponseParser: AuthResponseParser<AuthResponse> = async (
+    parameterObject: unknown
+  ) => {
+    const result = authResponseGuard.safeParse(parameterObject);
 
     if (!result.success) {
       throw new ConnectorError(ConnectorErrorCodes.General, JSON.stringify(parameterObject));

@@ -1,44 +1,34 @@
 import {
-  ConnectorMetadata,
-  GetAuthorizationUri,
-  GetUserInfo,
+  AuthResponseParser,
   ConnectorError,
   ConnectorErrorCodes,
-  Connector,
-  SocialConnectorInstance,
+  GetAuthorizationUri,
   GetConnectorConfig,
-} from '@logto/connector-types';
+  GetUserInfo,
+  SocialConnector,
+  ValidateConfig,
+} from '@logto/connector-schemas';
 import { createRemoteJWKSet, jwtVerify } from 'jose';
 
 import { scope, defaultMetadata, jwksUri, issuer, authorizationEndpoint } from './constant';
-import { appleConfigGuard, AppleConfig, dataGuard } from './types';
+import { appleConfigGuard, AppleConfig, authResponseGuard, AuthResponse } from './types';
+
+export { defaultMetadata } from './constant';
 
 // TO-DO: support nonce validation
-export default class AppleConnector implements SocialConnectorInstance<AppleConfig> {
-  public metadata: ConnectorMetadata = defaultMetadata;
-  private _connector?: Connector;
-
-  public get connector() {
-    if (!this._connector) {
-      throw new ConnectorError(ConnectorErrorCodes.General);
-    }
-
-    return this._connector;
+export default class AppleConnector extends SocialConnector<AppleConfig> {
+  constructor(getConnectorConfig: GetConnectorConfig) {
+    super(getConnectorConfig);
+    this.metadata = defaultMetadata;
   }
 
-  public set connector(input: Connector) {
-    this._connector = input;
-  }
-
-  constructor(public readonly getConfig: GetConnectorConfig) {}
-
-  public validateConfig(config: unknown): asserts config is AppleConfig {
+  public validateConfig: ValidateConfig<AppleConfig> = (config: unknown) => {
     const result = appleConfigGuard.safeParse(config);
 
     if (!result.success) {
       throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, result.error);
     }
-  }
+  };
 
   public getAuthorizationUri: GetAuthorizationUri = async ({ state, redirectUri }) => {
     const config = await this.getConfig(this.metadata.id);
@@ -59,7 +49,7 @@ export default class AppleConnector implements SocialConnectorInstance<AppleConf
   };
 
   public getUserInfo: GetUserInfo = async (data) => {
-    const { id_token: idToken } = await this.authorizationCallbackHandler(data);
+    const { id_token: idToken } = await this.authResponseParser(data);
 
     if (!idToken) {
       throw new ConnectorError(ConnectorErrorCodes.SocialIdTokenInvalid);
@@ -89,8 +79,10 @@ export default class AppleConnector implements SocialConnectorInstance<AppleConf
     }
   };
 
-  private readonly authorizationCallbackHandler = async (parameterObject: unknown) => {
-    const result = dataGuard.safeParse(parameterObject);
+  protected readonly authResponseParser: AuthResponseParser<AuthResponse> = async (
+    parameterObject: unknown
+  ) => {
+    const result = authResponseGuard.safeParse(parameterObject);
 
     if (!result.success) {
       throw new ConnectorError(ConnectorErrorCodes.General, JSON.stringify(parameterObject));

@@ -32,3 +32,10 @@ export const userInfoResponseGuard = z.object({
 });
 
 export type UserInfoResponse = z.infer<typeof userInfoResponseGuard>;
+
+export const authResponseGuard = z.object({
+  code: z.string(),
+  redirectUri: z.string(),
+});
+
+export type AuthResponse = z.infer<typeof authResponseGuard>;

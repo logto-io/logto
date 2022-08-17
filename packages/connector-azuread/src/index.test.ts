@@ -1,4 +1,4 @@
-import { GetConnectorConfig } from '@logto/connector-types';
+import { GetConnectorConfig } from '@logto/connector-schemas';
 
 import AzureADConnector from '.';
 

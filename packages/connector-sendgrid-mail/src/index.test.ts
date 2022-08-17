@@ -1,4 +1,4 @@
-import { GetConnectorConfig, ValidateConfig } from '@logto/connector-types';
+import { GetConnectorConfig, ValidateConfig } from '@logto/connector-schemas';
 
 import SendGridMailConnector from '.';
 import { mockedConfig } from './mock';
