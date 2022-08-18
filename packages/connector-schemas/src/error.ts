@@ -1,4 +1,15 @@
-import { ConnectorErrorCodes } from './types';
+export enum ConnectorErrorCodes {
+  General,
+  InsufficientRequestParameters,
+  InvalidConfig,
+  InvalidResponse,
+  TemplateNotFound,
+  NotImplemented,
+  SocialAuthCodeInvalid,
+  SocialAccessTokenInvalid,
+  SocialIdTokenInvalid,
+  AuthorizationFailed,
+}
 
 export class ConnectorError extends Error {
   public code: ConnectorErrorCodes;

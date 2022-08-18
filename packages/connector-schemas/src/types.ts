@@ -13,19 +13,6 @@ export enum ConnectorPlatform {
   Web = 'Web',
 }
 
-export enum ConnectorErrorCodes {
-  General,
-  InsufficientRequestParameters,
-  InvalidConfig,
-  InvalidResponse,
-  TemplateNotFound,
-  NotImplemented,
-  SocialAuthCodeInvalid,
-  SocialAccessTokenInvalid,
-  SocialIdTokenInvalid,
-  AuthorizationFailed,
-}
-
 type i18nPhrases = { [Language.English]: string } & {
   [key in Exclude<Language, Language.English>]?: string;
 };
@@ -65,17 +52,18 @@ export type GetConnectorConfig = (id: string) => Promise<unknown>;
 
 export type AuthResponseParser<T = Record<string, unknown>> = (response: unknown) => Promise<T>;
 
-class BaseConnector<T> {
+export class LogtoConnector<T> {
   public getConfig!: GetConnectorConfig;
   public metadata!: ConnectorMetadata;
-
-  public sendMessage?: SendMessageFunction;
-  public sendTestMessage?: SendMessageFunction;
 
   public getAuthorizationUri?: GetAuthorizationUri;
   public getUserInfo?: GetUserInfo;
 
+  public sendMessage?: SendMessageFunction;
+  public sendTestMessage?: SendMessageFunction;
+
   protected authResponseParser?: AuthResponseParser;
+  protected readonly sendMessageBy?: SendMessageFunction<T>;
 
   constructor(getConnectorConfig: GetConnectorConfig) {
     this.getConfig = getConnectorConfig;
@@ -83,35 +71,4 @@ class BaseConnector<T> {
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   public validateConfig: ValidateConfig<T> = async () => {};
-
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  protected readonly sendMessageBy?: SendMessageFunction<T> = async () => {};
-}
-
-class PasswordlessConnector<T> extends BaseConnector<T> {
-  protected readonly sendMessageBy!: SendMessageFunction<T>;
-
-  public sendMessage: SendMessageFunction = async ({ to, type, payload }) => {
-    const config = await this.getConfig(this.metadata.id);
-    this.validateConfig(config);
-
-    return this.sendMessageBy({ to, type, payload }, config);
-  };
-
-  public sendTestMessage?: SendMessageFunction = async ({ to, type, payload }, config) => {
-    this.validateConfig(config);
-
-    return this.sendMessageBy({ to, type, payload }, config);
-  };
-}
-
-export class SmsConnector<T> extends PasswordlessConnector<T> {}
-
-export class EmailConnector<T> extends PasswordlessConnector<T> {}
-
-export class SocialConnector<T> extends BaseConnector<T> {
-  public getAuthorizationUri!: GetAuthorizationUri;
-  public getUserInfo!: GetUserInfo;
-
-  protected authResponseParser?: AuthResponseParser;
 }
