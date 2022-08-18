@@ -9,7 +9,7 @@ import {
   GetUserInfo,
   ConnectorError,
   ConnectorErrorCodes,
-  SocialConnector,
+  LogtoConnector,
   GetConnectorConfig,
   ValidateConfig,
 } from '@logto/connector-schemas';
@@ -39,7 +39,7 @@ import {
 
 export { defaultMetadata } from './constant';
 
-export default class WechatConnector extends SocialConnector<WechatConfig> {
+export default class WechatConnector extends LogtoConnector<WechatConfig> {
   constructor(getConnectorConfig: GetConnectorConfig) {
     super(getConnectorConfig);
     this.metadata = defaultMetadata;

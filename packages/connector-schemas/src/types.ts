@@ -1,5 +1,7 @@
 import type { Language } from '@logto/phrases';
-import { Nullable, Optional } from '@silverhand/essentials';
+import { assert, Nullable, Optional } from '@silverhand/essentials';
+
+import { ConnectorError, ConnectorErrorCodes } from './error';
 
 import { ConnectorError, ConnectorErrorCodes } from './error';
 

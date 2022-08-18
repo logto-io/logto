@@ -4,7 +4,7 @@ import path from 'path';
 import {
   ConnectorError,
   ConnectorErrorCodes,
-  EmailConnector,
+  LogtoConnector,
   GetConnectorConfig,
   SendMessageFunction,
   ValidateConfig,
@@ -16,7 +16,7 @@ import { mockMailConfigGuard, MockMailConfig } from './types';
 
 export { defaultMetadata } from './constant';
 
-export default class MockMailConnector extends EmailConnector<MockMailConfig> {
+export default class MockMailConnector extends LogtoConnector<MockMailConfig> {
   constructor(getConnectorConfig: GetConnectorConfig) {
     super(getConnectorConfig);
     this.metadata = defaultMetadata;
@@ -28,6 +28,23 @@ export default class MockMailConnector extends EmailConnector<MockMailConfig> {
     if (!result.success) {
       throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, result.error);
     }
+  };
+
+  public sendMessage: SendMessageFunction = async ({ to, type, payload }) => {
+    const config = await this.getConfig(this.metadata.id);
+    this.validateConfig(config);
+
+    assert(this.sendMessageBy, new ConnectorError(ConnectorErrorCodes.NotImplemented));
+
+    return this.sendMessageBy({ to, type, payload }, config);
+  };
+
+  public sendTestMessage: SendMessageFunction = async ({ to, type, payload }, config) => {
+    this.validateConfig(config);
+
+    assert(this.sendMessageBy, new ConnectorError(ConnectorErrorCodes.NotImplemented));
+
+    return this.sendMessageBy({ to, type, payload }, config);
   };
 
   protected readonly sendMessageBy: SendMessageFunction<MockMailConfig> = async (

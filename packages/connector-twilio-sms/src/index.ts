@@ -2,7 +2,7 @@ import {
   ConnectorError,
   ConnectorErrorCodes,
   SendMessageFunction,
-  SmsConnector,
+  LogtoConnector,
   GetConnectorConfig,
   ValidateConfig,
 } from '@logto/connector-schemas';
@@ -14,7 +14,7 @@ import { twilioSmsConfigGuard, TwilioSmsConfig, PublicParameters } from './types
 
 export { defaultMetadata } from './constant';
 
-export default class TwilioSmsConnector extends SmsConnector<TwilioSmsConfig> {
+export default class TwilioSmsConnector extends LogtoConnector<TwilioSmsConfig> {
   constructor(getConnectorConfig: GetConnectorConfig) {
     super(getConnectorConfig);
     this.metadata = defaultMetadata;
@@ -26,6 +26,23 @@ export default class TwilioSmsConnector extends SmsConnector<TwilioSmsConfig> {
     if (!result.success) {
       throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, result.error);
     }
+  };
+
+  public sendMessage: SendMessageFunction = async ({ to, type, payload }) => {
+    const config = await this.getConfig(this.metadata.id);
+    this.validateConfig(config);
+
+    assert(this.sendMessageBy, new ConnectorError(ConnectorErrorCodes.NotImplemented));
+
+    return this.sendMessageBy({ to, type, payload }, config);
+  };
+
+  public sendTestMessage: SendMessageFunction = async ({ to, type, payload }, config) => {
+    this.validateConfig(config);
+
+    assert(this.sendMessageBy, new ConnectorError(ConnectorErrorCodes.NotImplemented));
+
+    return this.sendMessageBy({ to, type, payload }, config);
   };
 
   protected readonly sendMessageBy: SendMessageFunction<TwilioSmsConfig> = async (

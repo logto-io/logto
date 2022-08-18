@@ -2,7 +2,7 @@ import {
   ConnectorError,
   ConnectorErrorCodes,
   GetConnectorConfig,
-  SmsConnector,
+  LogtoConnector,
   SendMessageFunction,
   ValidateConfig,
 } from '@logto/connector-schemas';
@@ -14,7 +14,8 @@ import { sendSms } from './single-send-text';
 import { aliyunSmsConfigGuard, AliyunSmsConfig, sendSmsResponseGuard } from './types';
 
 export { defaultMetadata } from './constant';
-export default class AliyunSmsConnector extends SmsConnector<AliyunSmsConfig> {
+
+export default class AliyunSmsConnector extends LogtoConnector<AliyunSmsConfig> {
   constructor(getConnectorConfig: GetConnectorConfig) {
     super(getConnectorConfig);
     this.metadata = defaultMetadata;
@@ -26,6 +27,23 @@ export default class AliyunSmsConnector extends SmsConnector<AliyunSmsConfig> {
     if (!result.success) {
       throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, result.error);
     }
+  };
+
+  public sendMessage: SendMessageFunction = async ({ to, type, payload }) => {
+    const config = await this.getConfig(this.metadata.id);
+    this.validateConfig(config);
+
+    assert(this.sendMessageBy, new ConnectorError(ConnectorErrorCodes.NotImplemented));
+
+    return this.sendMessageBy({ to, type, payload }, config);
+  };
+
+  public sendTestMessage: SendMessageFunction = async ({ to, type, payload }, config) => {
+    this.validateConfig(config);
+
+    assert(this.sendMessageBy, new ConnectorError(ConnectorErrorCodes.NotImplemented));
+
+    return this.sendMessageBy({ to, type, payload }, config);
   };
 
   protected readonly sendMessageBy: SendMessageFunction<AliyunSmsConfig> = async (

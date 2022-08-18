@@ -2,7 +2,7 @@ import {
   ConnectorError,
   ConnectorErrorCodes,
   SendMessageFunction,
-  EmailConnector,
+  LogtoConnector,
   GetConnectorConfig,
   ValidateConfig,
 } from '@logto/connector-schemas';
@@ -21,7 +21,7 @@ import {
 
 export { defaultMetadata } from './constant';
 
-export default class SendGridMailConnector extends EmailConnector<SendGridMailConfig> {
+export default class SendGridMailConnector extends LogtoConnector<SendGridMailConfig> {
   constructor(getConnectorConfig: GetConnectorConfig) {
     super(getConnectorConfig);
     this.metadata = defaultMetadata;
@@ -33,6 +33,23 @@ export default class SendGridMailConnector extends EmailConnector<SendGridMailCo
     if (!result.success) {
       throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, result.error);
     }
+  };
+
+  public sendMessage: SendMessageFunction = async ({ to, type, payload }) => {
+    const config = await this.getConfig(this.metadata.id);
+    this.validateConfig(config);
+
+    assert(this.sendMessageBy, new ConnectorError(ConnectorErrorCodes.NotImplemented));
+
+    return this.sendMessageBy({ to, type, payload }, config);
+  };
+
+  public sendTestMessage: SendMessageFunction = async ({ to, type, payload }, config) => {
+    this.validateConfig(config);
+
+    assert(this.sendMessageBy, new ConnectorError(ConnectorErrorCodes.NotImplemented));
+
+    return this.sendMessageBy({ to, type, payload }, config);
   };
 
   protected readonly sendMessageBy: SendMessageFunction<SendGridMailConfig> = async (

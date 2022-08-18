@@ -1,11 +1,12 @@
 import {
-  BaseConnector,
-  SmsConnector,
-  EmailConnector,
-  SocialConnector,
+  LogtoConnector,
   ConnectorType,
   ConnectorError,
   ConnectorErrorCodes,
+  SendMessageFunction,
+  AuthResponseParser,
+  GetAuthorizationUri,
+  GetUserInfo,
 } from '@logto/connector-schemas';
 import { Connector, PasscodeType } from '@logto/schemas';
 import { z } from 'zod';
@@ -25,20 +26,30 @@ export const socialUserInfoGuard = z.object({
 
 export type SocialUserInfo = z.infer<typeof socialUserInfoGuard>;
 
-export class SmsConnectorInstance<T = unknown> extends SmsConnector<T> {
+export class ConnectorInstance<T = unknown> extends LogtoConnector<T> {
   public connector!: Connector;
 }
 
-export class EmailConnectorInstance<T = unknown> extends EmailConnector<T> {
+export class SmsConnectorInstance<T = unknown> extends LogtoConnector<T> {
   public connector!: Connector;
+  public sendMessage!: SendMessageFunction;
+  public sendTestMessage?: SendMessageFunction;
+  protected readonly sendMessageBy!: SendMessageFunction<T>;
 }
 
-export class SocialConnectorInstance<T = unknown> extends SocialConnector<T> {
+export class EmailConnectorInstance<T = unknown> extends LogtoConnector<T> {
   public connector!: Connector;
+  public sendMessage!: SendMessageFunction;
+  public sendTestMessage?: SendMessageFunction;
+  protected readonly sendMessageBy!: SendMessageFunction<T>;
 }
 
-export class ConnectorInstance<T = unknown> extends BaseConnector<T> {
+export class SocialConnectorInstance<T = unknown> extends LogtoConnector<T> {
   public connector!: Connector;
+  public getAuthorizationUri!: GetAuthorizationUri;
+  public getUserInfo!: GetUserInfo;
+
+  protected authResponseParser?: AuthResponseParser;
 }
 
 export const isSmsConnectorInstance = (

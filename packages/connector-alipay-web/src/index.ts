@@ -12,7 +12,7 @@ import {
   GetAuthorizationUri,
   GetConnectorConfig,
   GetUserInfo,
-  SocialConnector,
+  LogtoConnector,
   ValidateConfig,
 } from '@logto/connector-schemas';
 import { assert } from '@silverhand/essentials';
@@ -46,7 +46,7 @@ import { signingParameters } from './utils';
 export type { AlipayConfig } from './types';
 export { defaultMetadata } from './constant';
 
-export default class AlipayConnector extends SocialConnector<AlipayConfig> {
+export default class AlipayConnector extends LogtoConnector<AlipayConfig> {
   private readonly signingParameters = signingParameters;
 
   constructor(getConnectorConfig: GetConnectorConfig) {

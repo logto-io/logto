@@ -4,7 +4,7 @@ import {
   GetUserInfo,
   ConnectorError,
   ConnectorErrorCodes,
-  SocialConnector,
+  LogtoConnector,
   GetConnectorConfig,
   ValidateConfig,
 } from '@logto/connector-schemas';
@@ -32,7 +32,7 @@ import {
 
 export { defaultMetadata } from './constant';
 
-export default class GithubConnector extends SocialConnector<GithubConfig> {
+export default class GithubConnector extends LogtoConnector<GithubConfig> {
   constructor(getConnectorConfig: GetConnectorConfig) {
     super(getConnectorConfig);
     this.metadata = defaultMetadata;

@@ -12,7 +12,7 @@ import {
   ConnectorErrorCodes,
   GetAuthorizationUri,
   GetUserInfo,
-  SocialConnector,
+  LogtoConnector,
   GetConnectorConfig,
   ValidateConfig,
 } from '@logto/connector-schemas';
@@ -31,7 +31,7 @@ import {
 
 export { defaultMetadata } from './constant';
 
-export default class AzureADConnector extends SocialConnector<AzureADConfig> {
+export default class AzureADConnector extends LogtoConnector<AzureADConfig> {
   public clientApplication!: ConfidentialClientApplication;
   public authCodeUrlParams!: AuthorizationUrlRequest;
 

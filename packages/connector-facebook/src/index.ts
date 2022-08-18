@@ -10,7 +10,7 @@ import {
   GetAuthorizationUri,
   GetUserInfo,
   GetConnectorConfig,
-  SocialConnector,
+  LogtoConnector,
   ValidateConfig,
 } from '@logto/connector-schemas';
 import { assert } from '@silverhand/essentials';
@@ -36,7 +36,7 @@ import {
 
 export { defaultMetadata } from './constant';
 
-export default class FacebookConnector extends SocialConnector<FacebookConfig> {
+export default class FacebookConnector extends LogtoConnector<FacebookConfig> {
   constructor(getConnectorConfig: GetConnectorConfig) {
     super(getConnectorConfig);
     this.metadata = defaultMetadata;

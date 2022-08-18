@@ -5,7 +5,7 @@ import {
   GetAuthorizationUri,
   GetConnectorConfig,
   GetUserInfo,
-  SocialConnector,
+  LogtoConnector,
   ValidateConfig,
 } from '@logto/connector-schemas';
 import { createRemoteJWKSet, jwtVerify } from 'jose';
@@ -16,7 +16,7 @@ import { appleConfigGuard, AppleConfig, authResponseGuard, AuthResponse } from '
 export { defaultMetadata } from './constant';
 
 // TO-DO: support nonce validation
-export default class AppleConnector extends SocialConnector<AppleConfig> {
+export default class AppleConnector extends LogtoConnector<AppleConfig> {
   constructor(getConnectorConfig: GetConnectorConfig) {
     super(getConnectorConfig);
     this.metadata = defaultMetadata;

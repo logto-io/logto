@@ -6,7 +6,7 @@ import {
   GetAuthorizationUri,
   GetUserInfo,
   GetConnectorConfig,
-  SocialConnector,
+  LogtoConnector,
   ValidateConfig,
 } from '@logto/connector-schemas';
 import { z } from 'zod';
@@ -16,7 +16,7 @@ import { mockSocialConfigGuard, MockSocialConfig } from './types';
 
 export { defaultMetadata } from './constant';
 
-export default class MockSocialConnector extends SocialConnector<MockSocialConfig> {
+export default class MockLogtoConnector extends LogtoConnector<MockSocialConfig> {
   constructor(getConnectorConfig: GetConnectorConfig) {
     super(getConnectorConfig);
     this.metadata = defaultMetadata;

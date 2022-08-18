@@ -9,7 +9,7 @@ import {
   GetAuthorizationUri,
   GetConnectorConfig,
   GetUserInfo,
-  SocialConnector,
+  LogtoConnector,
   ValidateConfig,
 } from '@logto/connector-schemas';
 import { conditional, assert } from '@silverhand/essentials';
@@ -34,7 +34,7 @@ import {
 
 export { defaultMetadata } from './constant';
 
-export default class GoogleConnector extends SocialConnector<GoogleConfig> {
+export default class GoogleConnector extends LogtoConnector<GoogleConfig> {
   constructor(getConnectorConfig: GetConnectorConfig) {
     super(getConnectorConfig);
     this.metadata = defaultMetadata;
