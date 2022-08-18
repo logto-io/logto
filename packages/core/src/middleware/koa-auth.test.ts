@@ -185,6 +185,8 @@ describe('koaAuth middleware', () => {
       },
     };
 
-    await expect(koaAuth()(ctx, next)).rejects.toMatchError(unauthorizedError);
+    await expect(koaAuth()(ctx, next)).rejects.toMatchError(
+      new RequestError({ code: 'auth.unauthorized', status: 401 }, new Error('unknown error'))
+    );
   });
 });
