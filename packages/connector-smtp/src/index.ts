@@ -13,6 +13,8 @@ import SMTPTransport from 'nodemailer/lib/smtp-transport';
 import { defaultMetadata } from './constant';
 import { ContextType, smtpConfigGuard, SmtpConfig } from './types';
 
+export { defaultMetadata } from './constant';
+
 export default class SmtpConnector extends EmailConnector<SmtpConfig> {
   constructor(getConnectorConfig: GetConnectorConfig) {
     super(getConnectorConfig);

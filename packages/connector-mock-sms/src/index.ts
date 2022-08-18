@@ -14,6 +14,8 @@ import { assert } from '@silverhand/essentials';
 import { defaultMetadata } from './constant';
 import { mockSmsConfigGuard, MockSmsConfig } from './types';
 
+export { defaultMetadata } from './constant';
+
 export default class MockSmsConnector extends SmsConnector<MockSmsConfig> {
   constructor(getConnectorConfig: GetConnectorConfig) {
     super(getConnectorConfig);

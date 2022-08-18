@@ -12,6 +12,8 @@ import got, { HTTPError } from 'got';
 import { defaultMetadata, endpoint } from './constant';
 import { twilioSmsConfigGuard, TwilioSmsConfig, PublicParameters } from './types';
 
+export { defaultMetadata } from './constant';
+
 export default class TwilioSmsConnector extends SmsConnector<TwilioSmsConfig> {
   constructor(getConnectorConfig: GetConnectorConfig) {
     super(getConnectorConfig);

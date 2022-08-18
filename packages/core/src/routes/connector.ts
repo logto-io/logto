@@ -1,13 +1,13 @@
-import {
-  ConnectorInstance,
-  EmailConnectorInstance,
-  SmsConnectorInstance,
-} from '@logto/connector-types';
 import { arbitraryObjectGuard, ConnectorDto, Connectors, ConnectorType } from '@logto/schemas';
 import { emailRegEx, phoneRegEx } from '@logto/shared';
 import { object, string } from 'zod';
 
 import { getConnectorInstances, getConnectorInstanceById } from '@/connectors';
+import {
+  ConnectorInstance,
+  EmailConnectorInstance,
+  SmsConnectorInstance,
+} from '@/connectors/types';
 import RequestError from '@/errors/RequestError';
 import koaGuard from '@/middleware/koa-guard';
 import { updateConnector } from '@/queries/connector';

@@ -14,6 +14,8 @@ import { assert } from '@silverhand/essentials';
 import { defaultMetadata } from './constant';
 import { mockMailConfigGuard, MockMailConfig } from './types';
 
+export { defaultMetadata } from './constant';
+
 export default class MockMailConnector extends EmailConnector<MockMailConfig> {
   constructor(getConnectorConfig: GetConnectorConfig) {
     super(getConnectorConfig);

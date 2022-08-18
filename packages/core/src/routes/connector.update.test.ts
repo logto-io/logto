@@ -1,4 +1,4 @@
-import { ConnectorError, ConnectorErrorCodes, ValidateConfig } from '@logto/connector-types';
+import { ConnectorError, ConnectorErrorCodes, ValidateConfig } from '@logto/connector-schemas';
 import { Connector, ConnectorType } from '@logto/schemas';
 
 import { mockConnectorInstanceList, mockMetadata, mockConnector } from '@/__mocks__';
@@ -13,7 +13,7 @@ import connectorRoutes from './connector';
 type ConnectorInstance = {
   connector: Connector;
   metadata: ConnectorMetadata;
-  validateConfig?: ValidateConfig;
+  validateConfig?: ValidateConfig<unknown>;
   sendMessage?: unknown;
 };
 
@@ -38,7 +38,7 @@ const getConnectorInstanceByIdPlaceHolder = jest.fn(async (connectorId: string) 
     sendMessage: sendMessagePlaceHolder,
   };
 });
-const validateConfigPlaceHolder = jest.fn() as jest.MockedFunction<ValidateConfig>;
+const validateConfigPlaceHolder = jest.fn() as jest.MockedFunction<ValidateConfig<unknown>>;
 const sendMessagePlaceHolder = jest.fn();
 
 jest.mock('@/queries/connector', () => ({

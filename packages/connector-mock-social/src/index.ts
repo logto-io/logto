@@ -14,6 +14,8 @@ import { z } from 'zod';
 import { defaultMetadata } from './constant';
 import { mockSocialConfigGuard, MockSocialConfig } from './types';
 
+export { defaultMetadata } from './constant';
+
 export default class MockSocialConnector extends SocialConnector<MockSocialConfig> {
   constructor(getConnectorConfig: GetConnectorConfig) {
     super(getConnectorConfig);

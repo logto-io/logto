@@ -1,4 +1,4 @@
-import { ConnectorPlatform } from '@logto/connector-types';
+import { ConnectorPlatform } from '@logto/connector-schemas';
 import { Connector } from '@logto/schemas';
 
 import {

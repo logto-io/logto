@@ -1,7 +1,8 @@
 import { existsSync, readFileSync } from 'fs';
 import path from 'path';
 
-import { ConnectorInstance, SocialConnectorInstance } from '@logto/connector-types';
+import { GetConnectorConfig } from '@logto/connector-schemas';
+import { Connector } from '@logto/schemas/lib/db-entries';
 import resolvePackagePath from 'resolve-package-path';
 
 import envSet from '@/env-set';
@@ -9,17 +10,30 @@ import RequestError from '@/errors/RequestError';
 import { findAllConnectors, insertConnector } from '@/queries/connector';
 
 import { defaultConnectorPackages } from './consts';
-import { ConnectorType } from './types';
+import { ConnectorInstance, SocialConnectorInstance, ConnectorType } from './types';
 import { getConnectorConfig } from './utilities';
 
 // eslint-disable-next-line @silverhand/fp/no-let
-let cachedConnectors: ConnectorInstance[] | undefined;
+let cachedConnectorInstances: ConnectorInstance[] | undefined;
 
-const loadConnectors = async () => {
-  if (cachedConnectors) {
-    return cachedConnectors;
+export const getConnectorInstances = async (): Promise<ConnectorInstance[]> => {
+  const connectors = await findAllConnectors();
+  const connectorMap = new Map(connectors.map((connector) => [connector.id, connector]));
+
+  if (cachedConnectorInstances) {
+    return cachedConnectorInstances.map((connectorInstance) => {
+      const { id } = connectorInstance.metadata;
+      const connector = connectorMap.get(id);
+
+      if (!connector) {
+        throw new RequestError({ code: 'entity.not_found', id, status: 404 });
+      }
+      // eslint-disable-next-line @silverhand/fp/no-mutation
+      connectorInstance.connector = connector;
+
+      return connectorInstance;
+    });
   }
-
   const {
     values: { additionalConnectorPackages },
   } = envSet;
@@ -27,12 +41,30 @@ const loadConnectors = async () => {
   const connectorPackages = [...defaultConnectorPackages, ...additionalConnectorPackages];
 
   // eslint-disable-next-line @silverhand/fp/no-mutation
-  cachedConnectors = await Promise.all(
+  cachedConnectorInstances = await Promise.all(
     connectorPackages.map(async (packageName) => {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      const { default: Builder } = await import(packageName);
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment
-      const instance: ConnectorInstance = new Builder(getConnectorConfig);
+      const { default: Builder, defaultMetadata: metadata } = await import(packageName);
+      class InstanceBuilder extends Builder {
+        public connector: Connector;
+
+        constructor(getConnectorConfig: GetConnectorConfig, connector: Connector) {
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+          super(getConnectorConfig);
+          this.connector = connector;
+        }
+      }
+      const connector = connectorMap.get(metadata.id);
+
+      if (!connector) {
+        throw new RequestError({ code: 'entity.not_found', id: metadata.id, status: 404 });
+      }
+
+      // eslint-disable-next-line no-restricted-syntax
+      const instance: ConnectorInstance = new InstanceBuilder(
+        getConnectorConfig,
+        connector
+      ) as ConnectorInstance;
       // eslint-disable-next-line unicorn/prefer-module
       const packagePath = resolvePackagePath(packageName, __dirname);
 
@@ -86,29 +118,29 @@ const loadConnectors = async () => {
     })
   );
 
-  return cachedConnectors;
+  return cachedConnectorInstances;
 };
 
-export const getConnectorInstances = async (): Promise<ConnectorInstance[]> => {
-  const connectors = await findAllConnectors();
-  const connectorMap = new Map(connectors.map((connector) => [connector.id, connector]));
+// Export const getConnectorInstances = async (): Promise<ConnectorInstance[]> => {
+//   const connectors = await findAllConnectors();
+//   const connectorMap = new Map(connectors.map((connector) => [connector.id, connector]));
 
-  const allConnectors = await loadConnectors();
+//   const allConnectors = await loadConnectors();
 
-  return allConnectors.map((element) => {
-    const { id } = element.metadata;
-    const connector = connectorMap.get(id);
+//   return allConnectors.map((element) => {
+//     const { id } = element.metadata;
+//     const connector = connectorMap.get(id);
 
-    if (!connector) {
-      throw new RequestError({ code: 'entity.not_found', id, status: 404 });
-    }
+//     if (!connector) {
+//       throw new RequestError({ code: 'entity.not_found', id, status: 404 });
+//     }
 
-    // eslint-disable-next-line @silverhand/fp/no-mutation
-    element.connector = connector;
+//     // eslint-disable-next-line @silverhand/fp/no-mutation
+//     element.connector = connector;
 
-    return element;
-  });
-};
+//     return element;
+//   });
+// };
 
 export const getConnectorInstanceById = async (id: string): Promise<ConnectorInstance> => {
   const connectorInstances = await getConnectorInstances();
@@ -150,8 +182,8 @@ export const getSocialConnectorInstanceById = async (
 export const initConnectors = async () => {
   const connectors = await findAllConnectors();
   const existingConnectors = new Map(connectors.map((connector) => [connector.id, connector]));
-  const allConnectors = await loadConnectors();
-  const newConnectors = allConnectors.filter(({ metadata: { id } }) => {
+  const allConnectorInstances = await getConnectorInstances();
+  const newConnectors = allConnectorInstances.filter(({ metadata: { id } }) => {
     const connector = existingConnectors.get(id);
 
     if (!connector) {

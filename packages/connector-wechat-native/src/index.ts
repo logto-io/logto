@@ -36,6 +36,8 @@ import {
   AuthResponse,
 } from './types';
 
+export { defaultMetadata } from './constant';
+
 export default class WechatNativeConnector extends SocialConnector<WechatNativeConfig> {
   constructor(getConnectorConfig: GetConnectorConfig) {
     super(getConnectorConfig);

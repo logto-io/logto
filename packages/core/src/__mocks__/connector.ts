@@ -1,4 +1,4 @@
-import { ConnectorPlatform } from '@logto/connector-types';
+import { ConnectorPlatform } from '@logto/connector-schemas';
 import { Connector, ConnectorMetadata, ConnectorType } from '@logto/schemas';
 
 export const mockMetadata: ConnectorMetadata = {

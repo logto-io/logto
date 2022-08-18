@@ -1,8 +1,4 @@
-import {
-  ValidateConfig,
-  EmailConnectorInstance,
-  SmsConnectorInstance,
-} from '@logto/connector-types';
+import { ValidateConfig } from '@logto/connector-schemas';
 import { Connector, ConnectorType } from '@logto/schemas';
 
 import { mockConnectorInstanceList, mockMetadata, mockConnector } from '@/__mocks__';
@@ -16,7 +12,7 @@ import connectorRoutes from './connector';
 type ConnectorInstance = {
   connector: Connector;
   metadata: ConnectorMetadata;
-  validateConfig?: ValidateConfig;
+  validateConfig?: ValidateConfig<unknown>;
   sendMessage?: unknown;
 };
 
@@ -111,12 +107,13 @@ describe('connector route', () => {
         ...mockMetadata,
         type: ConnectorType.SMS,
       };
-      const mockedSmsConnectorInstance: SmsConnectorInstance = {
+      const mockedSmsConnectorInstance = {
         connector: mockConnector,
         metadata: mockedMetadata,
         validateConfig: jest.fn(),
         getConfig: jest.fn(),
         sendMessage: jest.fn(),
+        sendMessageBy: jest.fn(),
         sendTestMessage: jest.fn(),
       };
       getConnectorInstancesPlaceHolder.mockResolvedValueOnce([mockedSmsConnectorInstance]);
@@ -132,12 +129,13 @@ describe('connector route', () => {
     });
 
     it('should get email connector and send test message', async () => {
-      const mockedEmailConnector: EmailConnectorInstance = {
+      const mockedEmailConnector = {
         connector: mockConnector,
         metadata: mockMetadata,
         validateConfig: jest.fn(),
         getConfig: jest.fn(),
         sendMessage: jest.fn(),
+        sendMessageBy: jest.fn(),
         sendTestMessage: jest.fn(),
       };
       getConnectorInstancesPlaceHolder.mockResolvedValueOnce([mockedEmailConnector]);

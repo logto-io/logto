@@ -19,6 +19,8 @@ import {
   PublicParameters,
 } from './types';
 
+export { defaultMetadata } from './constant';
+
 export default class SendGridMailConnector extends EmailConnector<SendGridMailConfig> {
   constructor(getConnectorConfig: GetConnectorConfig) {
     super(getConnectorConfig);
