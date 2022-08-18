@@ -15,9 +15,10 @@ import {
   generateUserId,
   findUserByUsernameAndPassword,
   updateLastSignInAt,
+  insertUser,
 } from '@/lib/user';
 import koaGuard from '@/middleware/koa-guard';
-import { hasUser, insertUser, hasActiveUsers } from '@/queries/user';
+import { hasUser, hasActiveUsers } from '@/queries/user';
 import assertThat from '@/utils/assert-that';
 
 import { AnonymousRouter } from '../types';

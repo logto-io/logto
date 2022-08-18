@@ -18,3 +18,12 @@ export const findRolesByRoleNames = async (roleNames: string[]) =>
     from ${table}
     where ${fields.name} in (${sql.join(roleNames, sql`, `)})
   `);
+
+export const insertRoles = async (roles: Role[]) =>
+  envSet.pool.query(sql`
+    insert into ${table} (${fields.name}, ${fields.description}) values
+    ${sql.join(
+      roles.map(({ name, description }) => sql`(${name}, ${description})`),
+      sql`, `
+    )}
+  `);

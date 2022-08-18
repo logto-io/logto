@@ -23,7 +23,6 @@ const loadEnvValues = async () => {
   const port = Number(getEnv('PORT', '3001'));
   const localhostUrl = `${isHttpsEnabled ? 'https' : 'http'}://localhost:${port}`;
   const endpoint = getEnv('ENDPOINT', localhostUrl);
-  const additionalConnectorPackages = getEnvAsStringArray('ADDITIONAL_CONNECTOR_PACKAGES', []);
 
   return Object.freeze({
     isTest,
@@ -35,7 +34,8 @@ const loadEnvValues = async () => {
     port,
     localhostUrl,
     endpoint,
-    additionalConnectorPackages,
+    additionalConnectorPackages: getEnvAsStringArray('ADDITIONAL_CONNECTOR_PACKAGES'),
+    userDefaultRoleNames: getEnvAsStringArray('USER_DEFAULT_ROLE_NAMES'),
     developmentUserId: getEnv('DEVELOPMENT_USER_ID'),
     trustProxyHeader: isTrue(getEnv('TRUST_PROXY_HEADER')),
     oidc: await loadOidcValues(appendPath(endpoint, '/oidc').toString()),

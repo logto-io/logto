@@ -1,7 +1,17 @@
-import { User, UsersPasswordEncryptionMethod } from '@logto/schemas';
+import {
+  User,
+  UsersPasswordEncryptionMethod,
+  CreateUser,
+  User,
+  Users,
+  UsersPasswordEncryptionMethod,
+} from '@logto/schemas';
 import { argon2Verify } from 'hash-wasm';
 import pRetry from 'p-retry';
 
+import { buildInsertInto } from '@/database/insert-into';
+import envSet from '@/env-set';
+import { findRolesByRoleNames, insertRoles } from '@/queries/roles';
 import { findUserByUsername, hasUserWithId, updateUserById } from '@/queries/user';
 import assertThat from '@/utils/assert-that';
 import { buildIdGenerator } from '@/utils/id';
@@ -58,3 +68,28 @@ export const findUserByUsernameAndPassword = async (
 
 export const updateLastSignInAt = async (userId: string) =>
   updateUserById(userId, { lastSignInAt: Date.now() });
+
+const insertUserQuery = buildInsertInto<CreateUser, User>(Users, {
+  returning: true,
+});
+
+export const insertUser: typeof insertUserQuery = async ({ roleNames, ...rest }) => {
+  const computedRoleNames = [
+    ...new Set((roleNames ?? []).concat(envSet.values.userDefaultRoleNames)),
+  ];
+
+  if (computedRoleNames.length > 0) {
+    const existingRoles = await findRolesByRoleNames(computedRoleNames);
+    const missingRoleNames = computedRoleNames.filter(
+      (roleName) => !existingRoles.some(({ name }) => roleName === name)
+    );
+
+    if (missingRoleNames.length > 0) {
+      await insertRoles(
+        missingRoleNames.map((name) => ({ name, description: 'User default role.' }))
+      );
+    }
+  }
+
+  return insertUserQuery({ roleNames: computedRoleNames, ...rest });
+};
