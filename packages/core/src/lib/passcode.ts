@@ -68,8 +68,12 @@ export const sendPasscode = async (passcode: Passcode) => {
 
   const { connector, metadata, sendMessage } = connectorInstance;
 
-  const response = await sendMessage(emailOrPhone, passcode.type, {
-    code: passcode.code,
+  const response = await sendMessage({
+    to: emailOrPhone,
+    type: passcode.type,
+    payload: {
+      code: passcode.code,
+    },
   });
 
   return { connector, metadata, response };

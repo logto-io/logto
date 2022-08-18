@@ -60,7 +60,11 @@ describe('sendMessage()', () => {
   });
 
   it('should call singleSendMail() and replace code in content', async () => {
-    await aliyunDmMethods.sendMessage('to@email.com', 'SignIn', { code: '1234' });
+    await aliyunDmMethods.sendMessage({
+      to: 'to@email.com',
+      type: 'SignIn',
+      payload: { code: '1234' },
+    });
     expect(singleSendMail).toHaveBeenCalledWith(
       expect.objectContaining({
         HtmlBody: 'Your code is 1234, 1234 is your code',
@@ -71,7 +75,11 @@ describe('sendMessage()', () => {
 
   it('throws if template is missing', async () => {
     await expect(
-      aliyunDmMethods.sendMessage('to@email.com', 'Register', { code: '1234' })
+      aliyunDmMethods.sendMessage({
+        to: 'to@email.com',
+        type: 'Register',
+        payload: { code: '1234' },
+      })
     ).rejects.toThrow();
   });
 });

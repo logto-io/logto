@@ -6,7 +6,7 @@ import {
   ConnectorErrorCodes,
   EmailConnector,
   GetConnectorConfig,
-  SendMessageByFunction,
+  SendMessageFunction,
   ValidateConfig,
 } from '@logto/connector-schemas';
 import { assert } from '@silverhand/essentials';
@@ -30,12 +30,11 @@ export default class MockMailConnector extends EmailConnector<MockMailConfig> {
     }
   };
 
-  protected readonly sendMessageBy: SendMessageByFunction<MockMailConfig> = async (
-    config,
-    address,
-    type,
-    data
+  protected readonly sendMessageBy: SendMessageFunction<MockMailConfig> = async (
+    { to, type, payload },
+    config
   ) => {
+    assert(config, new ConnectorError(ConnectorErrorCodes.InvalidConfig));
     const { templates } = config;
     const template = templates.find((template) => template.usageType === type);
 
@@ -49,9 +48,9 @@ export default class MockMailConnector extends EmailConnector<MockMailConfig> {
 
     await fs.writeFile(
       path.join('/tmp', 'logto_mock_passcode_record.txt'),
-      JSON.stringify({ address, code: data.code, type }) + '\n'
+      JSON.stringify({ to, code: payload.code, type }) + '\n'
     );
 
-    return { address, data };
+    return { to, payload };
   };
 }

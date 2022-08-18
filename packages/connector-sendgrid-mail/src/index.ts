@@ -1,7 +1,7 @@
 import {
   ConnectorError,
   ConnectorErrorCodes,
-  SendMessageByFunction,
+  SendMessageFunction,
   EmailConnector,
   GetConnectorConfig,
   ValidateConfig,
@@ -35,12 +35,11 @@ export default class SendGridMailConnector extends EmailConnector<SendGridMailCo
     }
   };
 
-  protected readonly sendMessageBy: SendMessageByFunction<SendGridMailConfig> = async (
-    config,
-    address,
-    type,
-    data
+  protected readonly sendMessageBy: SendMessageFunction<SendGridMailConfig> = async (
+    { to, type, payload },
+    config
   ) => {
+    assert(config, new ConnectorError(ConnectorErrorCodes.InvalidConfig));
     const { apiKey, fromEmail, fromName, templates } = config;
     const template = templates.find((template) => template.usageType === type);
 
@@ -52,7 +51,7 @@ export default class SendGridMailConnector extends EmailConnector<SendGridMailCo
       )
     );
 
-    const toEmailData: EmailData[] = [{ email: address }];
+    const toEmailData: EmailData[] = [{ email: to }];
     const fromEmailData: EmailData = fromName
       ? { email: fromEmail, name: fromName }
       : { email: fromEmail };
@@ -60,8 +59,8 @@ export default class SendGridMailConnector extends EmailConnector<SendGridMailCo
     const content: Content = {
       type: template.type,
       value:
-        typeof data.code === 'string'
-          ? template.content.replace(/{{code}}/g, data.code)
+        typeof payload.code === 'string'
+          ? template.content.replace(/{{code}}/g, payload.code)
           : template.content,
     };
     const { subject } = template;

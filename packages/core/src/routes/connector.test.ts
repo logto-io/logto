@@ -122,9 +122,16 @@ describe('connector route', () => {
         .post('/connectors/id/test')
         .send({ phone: '12345678901', config: { test: 123 } });
       expect(sendMessageSpy).toHaveBeenCalledTimes(1);
-      expect(sendMessageSpy).toHaveBeenCalledWith({ test: 123 }, '12345678901', 'Test', {
-        code: '123456',
-      });
+      expect(sendMessageSpy).toHaveBeenCalledWith(
+        {
+          to: '12345678901',
+          type: 'Test',
+          payload: {
+            code: '123456',
+          },
+        },
+        { test: 123 }
+      );
       expect(response).toHaveProperty('statusCode', 204);
     });
 
@@ -144,9 +151,16 @@ describe('connector route', () => {
         .post('/connectors/id/test')
         .send({ email: 'test@email.com', config: { test: 123 } });
       expect(sendMessageSpy).toHaveBeenCalledTimes(1);
-      expect(sendMessageSpy).toHaveBeenCalledWith({ test: 123 }, 'test@email.com', 'Test', {
-        code: 'email-test',
-      });
+      expect(sendMessageSpy).toHaveBeenCalledWith(
+        {
+          to: 'test@email.com',
+          type: 'Test',
+          payload: {
+            code: 'email-test',
+          },
+        },
+        { test: 123 }
+      );
       expect(response).toHaveProperty('statusCode', 204);
     });
 

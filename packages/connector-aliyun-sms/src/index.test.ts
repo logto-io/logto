@@ -55,7 +55,11 @@ describe('sendMessage()', () => {
   });
 
   it('should call singleSendMail() and replace code in content', async () => {
-    await aliyunSmsMethods.sendMessage(phoneTest, 'SignIn', { code: codeTest });
+    await aliyunSmsMethods.sendMessage({
+      to: phoneTest,
+      type: 'SignIn',
+      payload: { code: codeTest },
+    });
     expect(sendSms).toHaveBeenCalledWith(
       expect.objectContaining({
         AccessKeyId: mockedConnectorConfig.accessKeyId,
@@ -70,7 +74,7 @@ describe('sendMessage()', () => {
 
   it('throws if template is missing', async () => {
     await expect(
-      aliyunSmsMethods.sendMessage(phoneTest, 'Register', { code: codeTest })
+      aliyunSmsMethods.sendMessage({ to: phoneTest, type: 'Register', payload: { code: codeTest } })
     ).rejects.toThrow();
   });
 });

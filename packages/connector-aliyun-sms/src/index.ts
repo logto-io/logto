@@ -3,7 +3,7 @@ import {
   ConnectorErrorCodes,
   GetConnectorConfig,
   SmsConnector,
-  SendMessageByFunction,
+  SendMessageFunction,
   ValidateConfig,
 } from '@logto/connector-schemas';
 import { assert } from '@silverhand/essentials';
@@ -28,12 +28,11 @@ export default class AliyunSmsConnector extends SmsConnector<AliyunSmsConfig> {
     }
   };
 
-  protected readonly sendMessageBy: SendMessageByFunction<AliyunSmsConfig> = async (
-    config,
-    phone,
-    type,
-    data
+  protected readonly sendMessageBy: SendMessageFunction<AliyunSmsConfig> = async (
+    { to, type, payload },
+    config
   ) => {
+    assert(config, new ConnectorError(ConnectorErrorCodes.InvalidConfig));
     const { accessKeyId, accessKeySecret, signName, templates } = config;
     const template = templates.find(({ usageType }) => usageType === type);
 
@@ -46,10 +45,10 @@ export default class AliyunSmsConnector extends SmsConnector<AliyunSmsConfig> {
       const httpResponse = await sendSms(
         {
           AccessKeyId: accessKeyId,
-          PhoneNumbers: phone,
+          PhoneNumbers: to,
           SignName: signName,
           TemplateCode: template.templateCode,
-          TemplateParam: JSON.stringify(data),
+          TemplateParam: JSON.stringify(payload),
         },
         accessKeySecret
       );

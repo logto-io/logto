@@ -1,7 +1,7 @@
 import {
   ConnectorError,
   ConnectorErrorCodes,
-  SendMessageByFunction,
+  SendMessageFunction,
   EmailConnector,
   GetConnectorConfig,
   ValidateConfig,
@@ -29,12 +29,11 @@ export default class SmtpConnector extends EmailConnector<SmtpConfig> {
     }
   };
 
-  protected readonly sendMessageBy: SendMessageByFunction<SmtpConfig> = async (
-    config,
-    address,
-    type,
-    data
+  protected readonly sendMessageBy: SendMessageFunction<SmtpConfig> = async (
+    { to, type, payload },
+    config
   ) => {
+    assert(config, new ConnectorError(ConnectorErrorCodes.InvalidConfig));
     const { host, port, username, password, fromEmail, replyTo, templates } = config;
     const template = templates.find((template) => template.usageType === type);
 
@@ -63,14 +62,14 @@ export default class SmtpConnector extends EmailConnector<SmtpConfig> {
     const transporter = nodemailer.createTransport(configOptions);
 
     const contentsObject = this.parseContents(
-      typeof data.code === 'string'
-        ? template.content.replace(/{{code}}/g, data.code)
+      typeof payload.code === 'string'
+        ? template.content.replace(/{{code}}/g, payload.code)
         : template.content,
       template.contentType
     );
 
     const mailOptions = {
-      to: address,
+      to,
       from: fromEmail,
       replyTo,
       subject: template.subject,

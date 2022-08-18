@@ -1,7 +1,7 @@
 import {
   ConnectorError,
   ConnectorErrorCodes,
-  SendMessageByFunction,
+  SendMessageFunction,
   SmsConnector,
   GetConnectorConfig,
   ValidateConfig,
@@ -28,12 +28,11 @@ export default class TwilioSmsConnector extends SmsConnector<TwilioSmsConfig> {
     }
   };
 
-  protected readonly sendMessageBy: SendMessageByFunction<TwilioSmsConfig> = async (
-    config,
-    phone,
-    type,
-    data
+  protected readonly sendMessageBy: SendMessageFunction<TwilioSmsConfig> = async (
+    { to, type, payload },
+    config
   ) => {
+    assert(config, new ConnectorError(ConnectorErrorCodes.InvalidConfig));
     const { accountSID, authToken, fromMessagingServiceSID, templates } = config;
     const template = templates.find((template) => template.usageType === type);
 
@@ -46,11 +45,11 @@ export default class TwilioSmsConnector extends SmsConnector<TwilioSmsConfig> {
     );
 
     const parameters: PublicParameters = {
-      To: phone,
+      To: to,
       MessagingServiceSid: fromMessagingServiceSID,
       Body:
-        typeof data.code === 'string'
-          ? template.content.replace(/{{code}}/g, data.code)
+        typeof payload.code === 'string'
+          ? template.content.replace(/{{code}}/g, payload.code)
           : template.content,
     };
 

@@ -3,7 +3,7 @@ import {
   ConnectorErrorCodes,
   EmailConnector,
   GetConnectorConfig,
-  SendMessageByFunction,
+  SendMessageFunction,
   ValidateConfig,
 } from '@logto/connector-schemas';
 import { assert } from '@silverhand/essentials';
@@ -34,12 +34,11 @@ export default class AliyunDmConnector extends EmailConnector<AliyunDmConfig> {
     }
   };
 
-  protected readonly sendMessageBy: SendMessageByFunction<AliyunDmConfig> = async (
-    config,
-    address,
-    type,
-    data
+  protected readonly sendMessageBy: SendMessageFunction<AliyunDmConfig> = async (
+    { to, type, payload },
+    config
   ) => {
+    assert(config, new ConnectorError(ConnectorErrorCodes.InvalidConfig));
     const { accessKeyId, accessKeySecret, accountName, fromAlias, templates } = config;
     const template = templates.find((template) => template.usageType === type);
 
@@ -58,12 +57,12 @@ export default class AliyunDmConnector extends EmailConnector<AliyunDmConfig> {
           AccountName: accountName,
           ReplyToAddress: 'false',
           AddressType: '1',
-          ToAddress: address,
+          ToAddress: to,
           FromAlias: fromAlias,
           Subject: template.subject,
           HtmlBody:
-            typeof data.code === 'string'
-              ? template.content.replace(/{{code}}/g, data.code)
+            typeof payload.code === 'string'
+              ? template.content.replace(/{{code}}/g, payload.code)
               : template.content,
         },
         accessKeySecret

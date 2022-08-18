@@ -217,8 +217,12 @@ describe('sendPasscode', () => {
       createdAt: Date.now(),
     };
     await sendPasscode(passcode);
-    expect(sendMessage).toHaveBeenCalledWith(passcode.phone, passcode.type, {
-      code: passcode.code,
+    expect(sendMessage).toHaveBeenCalledWith({
+      to: passcode.phone,
+      type: passcode.type,
+      payload: {
+        code: passcode.code,
+      },
     });
   });
 });

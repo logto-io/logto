@@ -212,9 +212,16 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
         })
       );
 
-      await sendTestMessage(config, subject, 'Test', {
-        code: phone ? '123456' : 'email-test',
-      });
+      await sendTestMessage(
+        {
+          to: subject,
+          type: 'Test',
+          payload: {
+            code: phone ? '123456' : 'email-test',
+          },
+        },
+        config
+      );
 
       ctx.status = 204;
 

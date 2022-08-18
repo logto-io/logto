@@ -4,7 +4,7 @@ import path from 'path';
 import {
   ConnectorError,
   ConnectorErrorCodes,
-  SendMessageByFunction,
+  SendMessageFunction,
   SmsConnector,
   GetConnectorConfig,
   ValidateConfig,
@@ -30,12 +30,11 @@ export default class MockSmsConnector extends SmsConnector<MockSmsConfig> {
     }
   };
 
-  protected readonly sendMessageBy: SendMessageByFunction<MockSmsConfig> = async (
-    config,
-    phone,
-    type,
-    data
+  protected readonly sendMessageBy: SendMessageFunction<MockSmsConfig> = async (
+    { to, type, payload },
+    config
   ) => {
+    assert(config, new ConnectorError(ConnectorErrorCodes.InvalidConfig));
     const { templates } = config;
     const template = templates.find((template) => template.usageType === type);
 
@@ -49,9 +48,9 @@ export default class MockSmsConnector extends SmsConnector<MockSmsConfig> {
 
     await fs.writeFile(
       path.join('/tmp', 'logto_mock_passcode_record.txt'),
-      JSON.stringify({ phone, code: data.code, type }) + '\n'
+      JSON.stringify({ to, code: payload.code, type }) + '\n'
     );
 
-    return { phone, data };
+    return { to, payload };
   };
 }
