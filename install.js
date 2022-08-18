@@ -61,13 +61,6 @@ const postgresMajorVersion = 14;
     { stdio: 'inherit' },
   );
 
-  // Rebuild Argon2
-  spawnSync(
-    'sh',
-    ['-c', 'npx node-pre-gyp rebuild -C .'],
-    { stdio: 'inherit', cwd: './logto/packages/core/node_modules/argon2' },
-  );
-
   const startCommand = `cd ${directory} && npm start`;
   const answer = await confirm('Would you like to start Logto now?');
 

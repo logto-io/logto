@@ -1,5 +1,5 @@
 import { User, UsersPasswordEncryptionMethod } from '@logto/schemas';
-import argon2 from 'argon2';
+import { argon2Verify } from 'hash-wasm';
 import pRetry from 'p-retry';
 
 import { findUserByUsername, hasUserWithId, updateUserById } from '@/queries/user';
@@ -49,7 +49,7 @@ export const findUserByUsernameAndPassword = async (
 
   assertThat(passwordEncrypted && passwordEncryptionMethod, 'session.invalid_sign_in_method');
 
-  const result = await argon2.verify(passwordEncrypted, password);
+  const result = await argon2Verify({ password, hash: passwordEncrypted });
 
   assertThat(result, 'session.invalid_credentials');
 

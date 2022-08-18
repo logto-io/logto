@@ -90,10 +90,6 @@ jobs:
       - name: Extract
         run: tar -xzf logto.tar.gz
 
-      - name: Rebuild Argon2
-        run: npx node-pre-gyp rebuild -C .
-        working-directory: logto/packages/core/node_modules/argon2
-
       - name: Run Logto
         run: node . --from-root --all-yes &
         working-directory: logto/packages/core
