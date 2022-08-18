@@ -34,12 +34,15 @@ const extractBearerTokenFromHeaders = ({ authorization }: IncomingHttpHeaders) =
   return authorization.slice(bearerTokenIdentifier.length + 1);
 };
 
-type UserInfo = {
+type TokenInfo = {
   sub: string;
   roleNames?: string[];
 };
 
-const getUserInfoFromRequest = async (request: Request): Promise<UserInfo> => {
+export const verifyBearerTokenFromRequest = async (
+  request: Request,
+  resourceIndicator = managementResource.indicator
+): Promise<TokenInfo> => {
   const { isProduction, isIntegrationTest, developmentUserId, oidc } = envSet.values;
   const userId = request.headers['development-user-id']?.toString() ?? developmentUserId;
 
@@ -47,40 +50,41 @@ const getUserInfoFromRequest = async (request: Request): Promise<UserInfo> => {
     return { sub: userId, roleNames: [UserRole.Admin] };
   }
 
-  const { localJWKSet, issuer } = oidc;
-  const {
-    payload: { sub, role_names: roleNames },
-  } = await jwtVerify(extractBearerTokenFromHeaders(request.headers), localJWKSet, {
-    issuer,
-    audience: managementResource.indicator,
-  });
+  try {
+    const { localJWKSet, issuer } = oidc;
+    const {
+      payload: { sub, role_names: roleNames },
+    } = await jwtVerify(extractBearerTokenFromHeaders(request.headers), localJWKSet, {
+      issuer,
+      audience: resourceIndicator,
+    });
 
-  assertThat(sub, new RequestError({ code: 'auth.jwt_sub_missing', status: 401 }));
+    assertThat(sub, new RequestError({ code: 'auth.jwt_sub_missing', status: 401 }));
 
-  return { sub, roleNames: conditional(Array.isArray(roleNames) && roleNames) };
+    return { sub, roleNames: conditional(Array.isArray(roleNames) && roleNames) };
+  } catch (error: unknown) {
+    if (error instanceof RequestError) {
+      throw error;
+    }
+
+    throw new RequestError({ code: 'auth.unauthorized', status: 401 }, error);
+  }
 };
 
 export default function koaAuth<StateT, ContextT extends IRouterParamContext, ResponseBodyT>(
   forRole?: UserRole
 ): MiddlewareType<StateT, WithAuthContext<ContextT>, ResponseBodyT> {
   return async (ctx, next) => {
-    try {
-      const { sub, roleNames } = await getUserInfoFromRequest(ctx.request);
+    const { sub, roleNames } = await verifyBearerTokenFromRequest(ctx.request);
 
-      if (forRole) {
-        assertThat(
-          roleNames?.includes(forRole),
-          new RequestError({ code: 'auth.forbidden', status: 403 })
-        );
-      }
-
-      ctx.auth = sub;
-    } catch (error: unknown) {
-      if (error instanceof RequestError) {
-        throw error;
-      }
-      throw new RequestError({ code: 'auth.unauthorized', status: 401 });
+    if (forRole) {
+      assertThat(
+        roleNames?.includes(forRole),
+        new RequestError({ code: 'auth.forbidden', status: 403 })
+      );
     }
+
+    ctx.auth = sub;
 
     return next();
   };
