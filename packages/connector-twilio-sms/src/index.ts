@@ -32,15 +32,11 @@ export default class TwilioSmsConnector extends LogtoConnector<TwilioSmsConfig> 
     const config = await this.getConfig(this.metadata.id);
     this.validateConfig(config);
 
-    assert(this.sendMessageBy, new ConnectorError(ConnectorErrorCodes.NotImplemented));
-
     return this.sendMessageBy({ to, type, payload }, config);
   };
 
   public sendTestMessage: SendMessageFunction = async ({ to, type, payload }, config) => {
     this.validateConfig(config);
-
-    assert(this.sendMessageBy, new ConnectorError(ConnectorErrorCodes.NotImplemented));
 
     return this.sendMessageBy({ to, type, payload }, config);
   };
