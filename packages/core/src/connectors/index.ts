@@ -121,27 +121,6 @@ export const getConnectorInstances = async (): Promise<ConnectorInstance[]> => {
   return cachedConnectorInstances;
 };
 
-// Export const getConnectorInstances = async (): Promise<ConnectorInstance[]> => {
-//   const connectors = await findAllConnectors();
-//   const connectorMap = new Map(connectors.map((connector) => [connector.id, connector]));
-
-//   const allConnectors = await loadConnectors();
-
-//   return allConnectors.map((element) => {
-//     const { id } = element.metadata;
-//     const connector = connectorMap.get(id);
-
-//     if (!connector) {
-//       throw new RequestError({ code: 'entity.not_found', id, status: 404 });
-//     }
-
-//     // eslint-disable-next-line @silverhand/fp/no-mutation
-//     element.connector = connector;
-
-//     return element;
-//   });
-// };
-
 export const getConnectorInstanceById = async (id: string): Promise<ConnectorInstance> => {
   const connectorInstances = await getConnectorInstances();
   const pickedConnectorInstance = connectorInstances.find(({ connector }) => connector.id === id);
