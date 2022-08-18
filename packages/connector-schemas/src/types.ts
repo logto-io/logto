@@ -43,20 +43,11 @@ export type ConnectorMetadata = {
   configTemplate: string;
 };
 
-// We will have message type 'ForgotPassword' available in the near future.
-type MessageTypes = 'SignIn' | 'Register' | 'Test';
+type MessageTypes = 'SignIn' | 'Register' | 'ForgotPassword' | 'Test';
 
-type SendMessageFunction = (
-  to: string,
-  type: MessageTypes,
-  payload: { code: string }
-) => Promise<unknown>;
-
-export type SendMessageByFunction<T = Record<string, unknown>> = (
-  config: T,
-  to: string,
-  type: MessageTypes,
-  payload: { code: string }
+export type SendMessageFunction<T = Record<string, unknown>> = (
+  data: { to: string; type: MessageTypes; payload: { code: string } },
+  config?: T
 ) => Promise<unknown>;
 
 export type ValidateConfig<T> = (config: unknown) => asserts config is T;
@@ -74,9 +65,17 @@ export type GetConnectorConfig = (id: string) => Promise<unknown>;
 
 export type AuthResponseParser<T = Record<string, unknown>> = (response: unknown) => Promise<T>;
 
-abstract class BaseConnector<T> {
-  public getConfig: GetConnectorConfig;
+class BaseConnector<T> {
+  public getConfig!: GetConnectorConfig;
   public metadata!: ConnectorMetadata;
+
+  public sendMessage?: SendMessageFunction;
+  public sendTestMessage?: SendMessageFunction;
+
+  public getAuthorizationUri?: GetAuthorizationUri;
+  public getUserInfo?: GetUserInfo;
+
+  protected authResponseParser?: AuthResponseParser;
 
   constructor(getConnectorConfig: GetConnectorConfig) {
     this.getConfig = getConnectorConfig;
@@ -84,32 +83,35 @@ abstract class BaseConnector<T> {
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   public validateConfig: ValidateConfig<T> = async () => {};
+
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  protected readonly sendMessageBy?: SendMessageFunction<T> = async () => {};
 }
 
-abstract class PasswordlessConnector<T> extends BaseConnector<T> {
-  protected abstract readonly sendMessageBy: SendMessageByFunction<T>;
+class PasswordlessConnector<T> extends BaseConnector<T> {
+  protected readonly sendMessageBy!: SendMessageFunction<T>;
 
-  public sendMessage: SendMessageFunction = async (address, type, data) => {
+  public sendMessage: SendMessageFunction = async ({ to, type, payload }) => {
     const config = await this.getConfig(this.metadata.id);
     this.validateConfig(config);
 
-    return this.sendMessageBy(config, address, type, data);
+    return this.sendMessageBy({ to, type, payload }, config);
   };
 
-  public sendTestMessage?: SendMessageByFunction = async (config, address, type, data) => {
+  public sendTestMessage?: SendMessageFunction = async ({ to, type, payload }, config) => {
     this.validateConfig(config);
 
-    return this.sendMessageBy(config, address, type, data);
+    return this.sendMessageBy({ to, type, payload }, config);
   };
 }
 
-export abstract class SmsConnector<T> extends PasswordlessConnector<T> {}
+export class SmsConnector<T> extends PasswordlessConnector<T> {}
 
-export abstract class EmailConnector<T> extends PasswordlessConnector<T> {}
+export class EmailConnector<T> extends PasswordlessConnector<T> {}
 
-export abstract class SocialConnector<T> extends BaseConnector<T> {
-  public abstract getAuthorizationUri: GetAuthorizationUri;
-  public abstract getUserInfo: GetUserInfo;
+export class SocialConnector<T> extends BaseConnector<T> {
+  public getAuthorizationUri!: GetAuthorizationUri;
+  public getUserInfo!: GetUserInfo;
 
   protected authResponseParser?: AuthResponseParser;
 }
