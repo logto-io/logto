@@ -56,7 +56,7 @@ const ConnectorName = ({ type, connectors, onClickSetup }: Props) => {
         subtitle={
           <>
             {type !== ConnectorType.Social && connector.id}
-            {type === ConnectorType.Social && enabledConnectors.length > 1 && (
+            {type === ConnectorType.Social && connectors.length > 1 && (
               <div className={styles.platforms}>
                 {enabledConnectors.map(
                   ({ id, platform }) =>
