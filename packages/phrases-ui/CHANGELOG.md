@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.0-beta.5](https://github.com/logto-io/logto/compare/v1.0.0-beta.4...v1.0.0-beta.5) (2022-08-19)
+
+
+### Features
+
+* **phrases:** add french language ([#1767](https://github.com/logto-io/logto/issues/1767)) ([0503b30](https://github.com/logto-io/logto/commit/0503b30121b724040b0b052a031c680b8853b25c))
+
+
+
 ## [1.0.0-beta.4](https://github.com/logto-io/logto/compare/v1.0.0-beta.3...v1.0.0-beta.4) (2022-08-11)
 
 **Note:** Version bump only for package @logto/phrases-ui

@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.0-beta.5](https://github.com/logto-io/logto/compare/v1.0.0-beta.4...v1.0.0-beta.5) (2022-08-19)
+
+
+### ⚠ BREAKING CHANGES
+
+* **core,console:** remove `/me` apis (#1781)
+
+### Bug Fixes
+
+* **console:** show platform icons in connector table ([#1792](https://github.com/logto-io/logto/issues/1792)) ([31f2439](https://github.com/logto-io/logto/commit/31f243957c83004dbc8578ab8931a2bc10c537b4))
+
+
+### Code Refactoring
+
+* **core,console:** remove `/me` apis ([#1781](https://github.com/logto-io/logto/issues/1781)) ([2c6171c](https://github.com/logto-io/logto/commit/2c6171c2f97b5122c13dd959f507399b9a9d6aa4))
+
+
+
 ## [1.0.0-beta.4](https://github.com/logto-io/logto/compare/v1.0.0-beta.3...v1.0.0-beta.4) (2022-08-11)
 
 

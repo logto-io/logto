@@ -3,6 +3,34 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.0-beta.5](https://github.com/logto-io/logto/compare/v1.0.0-beta.4...v1.0.0-beta.5) (2022-08-19)
+
+
+### ⚠ BREAKING CHANGES
+
+* **core,console:** remove `/me` apis (#1781)
+
+### Features
+
+* **core:** enable userinfo endpoint ([#1783](https://github.com/logto-io/logto/issues/1783)) ([a6bb2f7](https://github.com/logto-io/logto/commit/a6bb2f7ec239cf036c740fbee79c20c73cf6d694))
+* **core:** hasura authn ([#1790](https://github.com/logto-io/logto/issues/1790)) ([87d3a53](https://github.com/logto-io/logto/commit/87d3a53b65ad18be337fffd78aaecd3483c8f33b))
+* **core:** set user default roles from env ([#1793](https://github.com/logto-io/logto/issues/1793)) ([4afdf3c](https://github.com/logto-io/logto/commit/4afdf3cb4c868cc85ba1d6b155165515a431d771))
+* **phrases:** add french language ([#1767](https://github.com/logto-io/logto/issues/1767)) ([0503b30](https://github.com/logto-io/logto/commit/0503b30121b724040b0b052a031c680b8853b25c))
+
+
+### Bug Fixes
+
+* **console:** show platform icons in connector table ([#1792](https://github.com/logto-io/logto/issues/1792)) ([31f2439](https://github.com/logto-io/logto/commit/31f243957c83004dbc8578ab8931a2bc10c537b4))
+* **core:** fix ac & ui proxy under subpath deployment ([#1761](https://github.com/logto-io/logto/issues/1761)) ([163c23b](https://github.com/logto-io/logto/commit/163c23b9bd3019e1187de9dec1a2fdd2201630f7))
+* **deps:** update dependency slonik to v30 ([#1744](https://github.com/logto-io/logto/issues/1744)) ([a9f99db](https://github.com/logto-io/logto/commit/a9f99db54e8b6e8c951832d800a1eedc311234c2))
+
+
+### Code Refactoring
+
+* **core,console:** remove `/me` apis ([#1781](https://github.com/logto-io/logto/issues/1781)) ([2c6171c](https://github.com/logto-io/logto/commit/2c6171c2f97b5122c13dd959f507399b9a9d6aa4))
+
+
+
 ## [1.0.0-beta.4](https://github.com/logto-io/logto/compare/v1.0.0-beta.3...v1.0.0-beta.4) (2022-08-11)
 
 

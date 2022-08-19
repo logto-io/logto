@@ -1,6 +1,6 @@
 {
   "name": "@logto/integration-tests",
-  "version": "1.0.0-beta.4",
+  "version": "1.0.0-beta.5",
   "description": "Integration tests for Logto.",
   "author": "Silverhand Inc. <contact@silverhand.io>",
   "license": "MPL-2.0",
@@ -16,7 +16,7 @@
   "devDependencies": {
     "@jest/types": "^28.1.3",
     "@logto/node": "1.0.0-beta.2",
-    "@logto/schemas": "^1.0.0-beta.4",
+    "@logto/schemas": "^1.0.0-beta.5",
     "@peculiar/webcrypto": "^1.3.3",
     "@silverhand/eslint-config": "1.0.0-rc.2",
     "@silverhand/essentials": "^1.2.0",

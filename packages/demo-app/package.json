@@ -1,6 +1,6 @@
 {
   "name": "@logto/demo-app",
-  "version": "1.0.0-beta.4",
+  "version": "1.0.0-beta.5",
   "description": "Logto demo app.",
   "author": "Silverhand Inc. <contact@silverhand.io>",
   "license": "MPL-2.0",
@@ -17,10 +17,10 @@
     "stylelint": "stylelint \"src/**/*.scss\""
   },
   "devDependencies": {
-    "@logto/phrases": "^1.0.0-beta.4",
+    "@logto/phrases": "^1.0.0-beta.5",
     "@logto/react": "^1.0.0-beta.2",
-    "@logto/schemas": "^1.0.0-beta.4",
-    "@logto/shared": "^1.0.0-beta.4",
+    "@logto/schemas": "^1.0.0-beta.5",
+    "@logto/shared": "^1.0.0-beta.5",
     "@parcel/core": "2.7.0",
     "@parcel/transformer-sass": "2.7.0",
     "@silverhand/eslint-config": "1.0.0-rc.2",
