@@ -11,7 +11,8 @@
   "scripts": {
     "precommit": "lint-staged",
     "generate": "rm -rf src/db-entries && ts-node src/gen/index.ts && eslint \"src/db-entries/**\" --fix",
-    "build": "pnpm generate && rm -rf lib/ && tsc --p tsconfig.build.json",
+    "build": "pnpm generate && rm -rf lib/ && tsc -p tsconfig.build.json",
+    "dev": "tsc -p tsconfig.build.json --watch --preserveWatchOutput --incremental",
     "lint": "eslint --ext .ts src",
     "lint:report": "pnpm lint --format json --output-file report.json",
     "prepack": "pnpm build",

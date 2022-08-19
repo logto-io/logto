@@ -9,7 +9,7 @@
     "bootstrap": "lerna bootstrap",
     "prepare": "if test \"$NODE_ENV\" != \"production\" && test \"$CI\" != \"true\" ; then husky install ; fi",
     "prepack": "lerna run --stream prepack",
-    "dev": "lerna run --stream prepack && lerna --scope=@logto/{core,ui,console,demo-app} exec -- pnpm dev",
+    "dev": "lerna run --stream prepack -- --incremental && lerna --ignore=@logto/integration-test run --parallel dev",
     "start": "cd packages/core && NODE_ENV=production node . --from-root",
     "ci:build": "lerna run --stream build",
     "ci:lint": "lerna run --parallel lint",
