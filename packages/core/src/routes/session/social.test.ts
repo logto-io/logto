@@ -9,10 +9,6 @@ import { createRequester } from '@/utils/test-utils';
 
 import sessionSocialRoutes from './social';
 
-jest.mock('@/lib/user', () => ({
-  generateUserId: () => 'user1',
-  updateLastSignInAt: async (...args: unknown[]) => updateUserById(...args),
-}));
 jest.mock('@/lib/social', () => ({
   ...jest.requireActual('@/lib/social'),
   async findSocialRelatedUser() {
@@ -39,14 +35,21 @@ jest.mock('@/lib/social', () => ({
 const insertUser = jest.fn(async (..._args: unknown[]) => ({ id: 'id' }));
 const findUserById = jest.fn(async (): Promise<User> => mockUser);
 const updateUserById = jest.fn(async (..._args: unknown[]) => ({ id: 'id' }));
+
 jest.mock('@/queries/user', () => ({
   findUserById: async () => findUserById(),
   findUserByIdentity: async () => ({ id: 'id', identities: {} }),
-  insertUser: async (...args: unknown[]) => insertUser(...args),
   updateUserById: async (...args: unknown[]) => updateUserById(...args),
   hasUserWithIdentity: async (target: string, userId: string) =>
     target === 'connectorTarget' && userId === 'id',
 }));
+
+jest.mock('@/lib/user', () => ({
+  generateUserId: () => 'user1',
+  updateLastSignInAt: async (...args: unknown[]) => updateUserById(...args),
+  insertUser: async (...args: unknown[]) => insertUser(...args),
+}));
+
 const getConnectorInstanceByIdHelper = jest.fn(async (connectorId: string) => {
   const connector = {
     enabled: connectorId === 'social_enabled',

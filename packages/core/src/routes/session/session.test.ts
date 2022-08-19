@@ -8,6 +8,25 @@ import { createRequester } from '@/utils/test-utils';
 
 import sessionRoutes from './session';
 
+const insertUser = jest.fn(async (..._args: unknown[]) => ({ id: 'id' }));
+const findUserById = jest.fn(async (): Promise<User> => mockUser);
+const updateUserById = jest.fn(async (..._args: unknown[]) => ({ id: 'id' }));
+const hasActiveUsers = jest.fn(async () => true);
+
+jest.mock('@/queries/user', () => ({
+  findUserById: async () => findUserById(),
+  findUserByIdentity: async () => ({ id: 'id', identities: {} }),
+  findUserByPhone: async () => ({ id: 'id' }),
+  findUserByEmail: async () => ({ id: 'id' }),
+  updateUserById: async (...args: unknown[]) => updateUserById(...args),
+  hasUser: async (username: string) => username === 'username1',
+  hasUserWithIdentity: async (connectorId: string, userId: string) =>
+    connectorId === 'connectorId' && userId === 'id',
+  hasUserWithPhone: async (phone: string) => phone === '13000000000',
+  hasUserWithEmail: async (email: string) => email === 'a@a.com',
+  hasActiveUsers: async () => hasActiveUsers(),
+}));
+
 jest.mock('@/lib/user', () => ({
   async findUserByUsernameAndPassword(username: string, password: string) {
     if (username !== 'username' && username !== 'admin') {
@@ -28,25 +47,7 @@ jest.mock('@/lib/user', () => ({
     passwordEncryptionMethod: 'Argon2i',
   }),
   updateLastSignInAt: async (...args: unknown[]) => updateUserById(...args),
-}));
-const insertUser = jest.fn(async (..._args: unknown[]) => ({ id: 'id' }));
-const findUserById = jest.fn(async (): Promise<User> => mockUser);
-const updateUserById = jest.fn(async (..._args: unknown[]) => ({ id: 'id' }));
-const hasActiveUsers = jest.fn(async () => true);
-
-jest.mock('@/queries/user', () => ({
-  findUserById: async () => findUserById(),
-  findUserByIdentity: async () => ({ id: 'id', identities: {} }),
-  findUserByPhone: async () => ({ id: 'id' }),
-  findUserByEmail: async () => ({ id: 'id' }),
   insertUser: async (...args: unknown[]) => insertUser(...args),
-  updateUserById: async (...args: unknown[]) => updateUserById(...args),
-  hasUser: async (username: string) => username === 'username1',
-  hasUserWithIdentity: async (connectorId: string, userId: string) =>
-    connectorId === 'connectorId' && userId === 'id',
-  hasUserWithPhone: async (phone: string) => phone === '13000000000',
-  hasUserWithEmail: async (email: string) => email === 'a@a.com',
-  hasActiveUsers: async () => hasActiveUsers(),
 }));
 
 const grantSave = jest.fn(async () => 'finalGrantId');
