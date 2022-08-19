@@ -6,12 +6,11 @@ import { object, string } from 'zod';
 import RequestError from '@/errors/RequestError';
 import { createPasscode, sendPasscode, verifyPasscode } from '@/lib/passcode';
 import { assignInteractionResults } from '@/lib/session';
-import { generateUserId, updateLastSignInAt } from '@/lib/user';
+import { generateUserId, insertUser, updateLastSignInAt } from '@/lib/user';
 import koaGuard from '@/middleware/koa-guard';
 import {
   hasUserWithEmail,
   hasUserWithPhone,
-  insertUser,
   findUserByEmail,
   findUserByPhone,
 } from '@/queries/user';

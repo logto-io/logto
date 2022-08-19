@@ -83,10 +83,6 @@ export const hasUserWithIdentity = async (target: string, userId: string) =>
     `
   );
 
-export const insertUser = buildInsertInto<CreateUser, User>(Users, {
-  returning: true,
-});
-
 const buildUserSearchConditionSql = (search: string) => {
   const searchFields = [fields.primaryEmail, fields.primaryPhone, fields.username, fields.name];
   const conditions = searchFields.map((filedName) => sql`${filedName} like ${'%' + search + '%'}`);

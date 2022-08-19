@@ -5,7 +5,7 @@ import pick from 'lodash.pick';
 import { literal, object, string } from 'zod';
 
 import RequestError from '@/errors/RequestError';
-import { encryptUserPassword, generateUserId } from '@/lib/user';
+import { encryptUserPassword, generateUserId, insertUser } from '@/lib/user';
 import koaGuard from '@/middleware/koa-guard';
 import koaPagination from '@/middleware/koa-pagination';
 import { findRolesByRoleNames } from '@/queries/roles';
@@ -16,7 +16,6 @@ import {
   countUsers,
   findUserById,
   hasUser,
-  insertUser,
   updateUserById,
 } from '@/queries/user';
 import assertThat from '@/utils/assert-that';

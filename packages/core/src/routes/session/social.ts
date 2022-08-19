@@ -12,11 +12,10 @@ import {
   getUserInfoByAuthCode,
   getUserInfoFromInteractionResult,
 } from '@/lib/social';
-import { generateUserId, updateLastSignInAt } from '@/lib/user';
+import { generateUserId, insertUser, updateLastSignInAt } from '@/lib/user';
 import koaGuard from '@/middleware/koa-guard';
 import {
   hasUserWithIdentity,
-  insertUser,
   findUserById,
   updateUserById,
   findUserByIdentity,

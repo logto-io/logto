@@ -39,12 +39,6 @@ jest.mock('@/queries/user', () => ({
     })
   ),
   deleteUserById: jest.fn(),
-  insertUser: jest.fn(
-    async (user: CreateUser): Promise<User> => ({
-      ...mockUser,
-      ...user,
-    })
-  ),
   deleteUserIdentity: jest.fn(),
 }));
 
@@ -54,6 +48,12 @@ jest.mock('@/lib/user', () => ({
     passwordEncrypted: 'password',
     passwordEncryptionMethod: 'Argon2i',
   })),
+  insertUser: jest.fn(
+    async (user: CreateUser): Promise<User> => ({
+      ...mockUser,
+      ...user,
+    })
+  ),
 }));
 
 jest.mock('@/queries/roles', () => ({

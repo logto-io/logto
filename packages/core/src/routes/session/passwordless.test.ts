@@ -7,23 +7,26 @@ import { createRequester } from '@/utils/test-utils';
 
 import sessionPasswordlessRoutes from './passwordless';
 
-jest.mock('@/lib/user', () => ({
-  generateUserId: () => 'user1',
-  updateLastSignInAt: async (...args: unknown[]) => updateUserById(...args),
-}));
 const insertUser = jest.fn(async (..._args: unknown[]) => ({ id: 'id' }));
 const findUserById = jest.fn(async (): Promise<User> => mockUser);
 const updateUserById = jest.fn(async (..._args: unknown[]) => ({ id: 'id' }));
+
+jest.mock('@/lib/user', () => ({
+  generateUserId: () => 'user1',
+  updateLastSignInAt: async (...args: unknown[]) => updateUserById(...args),
+  insertUser: async (...args: unknown[]) => insertUser(...args),
+}));
+
 jest.mock('@/queries/user', () => ({
   findUserById: async () => findUserById(),
   findUserByPhone: async () => ({ id: 'id' }),
   findUserByEmail: async () => ({ id: 'id' }),
-  insertUser: async (...args: unknown[]) => insertUser(...args),
   updateUserById: async (...args: unknown[]) => updateUserById(...args),
   hasUser: async (username: string) => username === 'username1',
   hasUserWithPhone: async (phone: string) => phone === '13000000000',
   hasUserWithEmail: async (email: string) => email === 'a@a.com',
 }));
+
 const sendPasscode = jest.fn(async () => ({ connector: { id: 'connectorIdValue' } }));
 jest.mock('@/lib/passcode', () => ({
   createPasscode: async () => ({ id: 'id' }),
