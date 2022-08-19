@@ -62,7 +62,7 @@ describe('email passwordless flow', () => {
     const passcodeRecord = await readPasscode();
 
     expect(passcodeRecord).toMatchObject({
-      address: email,
+      to: email,
       type: 'Register',
     });
 
@@ -92,7 +92,7 @@ describe('email passwordless flow', () => {
     const passcodeRecord = await readPasscode();
 
     expect(passcodeRecord).toMatchObject({
-      address: email,
+      to: email,
       type: 'SignIn',
     });
 
@@ -135,7 +135,7 @@ describe('sms passwordless flow', () => {
     const passcodeRecord = await readPasscode();
 
     expect(passcodeRecord).toMatchObject({
-      phone,
+      to: phone,
       type: 'Register',
     });
 
@@ -165,7 +165,7 @@ describe('sms passwordless flow', () => {
     const passcodeRecord = await readPasscode();
 
     expect(passcodeRecord).toMatchObject({
-      phone,
+      to: phone,
       type: 'SignIn',
     });
 
