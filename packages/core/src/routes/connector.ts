@@ -3,11 +3,7 @@ import { emailRegEx, phoneRegEx } from '@logto/shared';
 import { object, string } from 'zod';
 
 import { getConnectorInstances, getConnectorInstanceById } from '@/connectors';
-import {
-  ConnectorInstance,
-  EmailConnectorInstance,
-  SmsConnectorInstance,
-} from '@/connectors/types';
+import { ConnectorInstance } from '@/connectors/types';
 import RequestError from '@/errors/RequestError';
 import koaGuard from '@/middleware/koa-guard';
 import { updateConnector } from '@/queries/connector';
@@ -184,13 +180,13 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
       const subject = phone ?? email;
       assertThat(subject, new RequestError({ code: 'guard.invalid_input' }));
 
-      const connector: SmsConnectorInstance | EmailConnectorInstance | undefined = phone
+      const connector: ConnectorInstance | undefined = phone
         ? connectorInstances.find(
-            (connector): connector is SmsConnectorInstance =>
+            (connector) =>
               connector.metadata.id === id && connector.metadata.type === ConnectorType.SMS
           )
         : connectorInstances.find(
-            (connector): connector is EmailConnectorInstance =>
+            (connector) =>
               connector.metadata.id === id && connector.metadata.type === ConnectorType.Email
           );
 
@@ -202,9 +198,9 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
         })
       );
 
-      const { sendTestMessage } = connector;
+      const { sendMessage } = connector;
       assertThat(
-        sendTestMessage,
+        sendMessage,
         new RequestError({
           code: 'connector.not_implemented',
           method: 'sendTestMessage',
@@ -212,7 +208,7 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
         })
       );
 
-      await sendTestMessage(
+      await sendMessage(
         {
           to: subject,
           type: 'Test',

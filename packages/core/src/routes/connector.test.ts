@@ -112,11 +112,9 @@ describe('connector route', () => {
         validateConfig: jest.fn(),
         getConfig: jest.fn(),
         sendMessage: jest.fn(),
-        sendMessageBy: jest.fn(),
-        sendTestMessage: jest.fn(),
       };
       getConnectorInstancesPlaceHolder.mockResolvedValueOnce([mockedSmsConnectorInstance]);
-      const sendMessageSpy = jest.spyOn(mockedSmsConnectorInstance, 'sendTestMessage');
+      const sendMessageSpy = jest.spyOn(mockedSmsConnectorInstance, 'sendMessage');
       const response = await connectorRequest
         .post('/connectors/id/test')
         .send({ phone: '12345678901', config: { test: 123 } });
@@ -141,11 +139,9 @@ describe('connector route', () => {
         validateConfig: jest.fn(),
         getConfig: jest.fn(),
         sendMessage: jest.fn(),
-        sendMessageBy: jest.fn(),
-        sendTestMessage: jest.fn(),
       };
       getConnectorInstancesPlaceHolder.mockResolvedValueOnce([mockedEmailConnector]);
-      const sendMessageSpy = jest.spyOn(mockedEmailConnector, 'sendTestMessage');
+      const sendMessageSpy = jest.spyOn(mockedEmailConnector, 'sendMessage');
       const response = await connectorRequest
         .post('/connectors/id/test')
         .send({ email: 'test@email.com', config: { test: 123 } });

@@ -10,7 +10,7 @@ import RequestError from '@/errors/RequestError';
 import { findAllConnectors, insertConnector } from '@/queries/connector';
 
 import { defaultConnectorPackages } from './consts';
-import { ConnectorInstance, SocialConnectorInstance } from './types';
+import { ConnectorInstance } from './types';
 import { getConnectorConfig } from './utilities';
 
 // eslint-disable-next-line @silverhand/fp/no-let
@@ -133,18 +133,10 @@ export const getConnectorInstanceById = async (id: string): Promise<ConnectorIns
   return pickedConnectorInstance;
 };
 
-export const isSocialConnectorInstance = (
-  instance: ConnectorInstance
-): instance is SocialConnectorInstance => {
-  return instance.metadata.type === ConnectorType.Social;
-};
-
-export const getSocialConnectorInstanceById = async (
-  id: string
-): Promise<SocialConnectorInstance> => {
+export const getSocialConnectorInstanceById = async (id: string): Promise<ConnectorInstance> => {
   const connector = await getConnectorInstanceById(id);
 
-  if (!isSocialConnectorInstance(connector)) {
+  if (connector.metadata.type !== ConnectorType.Social) {
     throw new RequestError({
       code: 'entity.not_found',
       id,

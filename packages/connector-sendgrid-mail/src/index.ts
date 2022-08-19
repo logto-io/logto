@@ -35,24 +35,13 @@ export default class SendGridMailConnector extends LogtoConnector<SendGridMailCo
     }
   };
 
-  public sendMessage: SendMessageFunction = async ({ to, type, payload }) => {
-    const config = await this.getConfig(this.metadata.id);
-    this.validateConfig(config);
-
-    return this.sendMessageBy({ to, type, payload }, config);
-  };
-
-  public sendTestMessage: SendMessageFunction = async ({ to, type, payload }, config) => {
-    this.validateConfig(config);
-
-    return this.sendMessageBy({ to, type, payload }, config);
-  };
-
-  protected readonly sendMessageBy: SendMessageFunction<SendGridMailConfig> = async (
-    { to, type, payload },
-    config
-  ) => {
+  // eslint-disable-next-line complexity
+  public sendMessage: SendMessageFunction = async ({ to, type, payload }, inputConfig) => {
+    const config = inputConfig ?? (await this.getConfig(this.metadata.id));
     assert(config, new ConnectorError(ConnectorErrorCodes.InvalidConfig));
+
+    this.validateConfig(config);
+
     const { apiKey, fromEmail, fromName, templates } = config;
     const template = templates.find((template) => template.usageType === type);
 
