@@ -1,6 +1,8 @@
 import type { Language } from '@logto/phrases';
 import { Nullable, Optional } from '@silverhand/essentials';
 
+import { ConnectorError, ConnectorErrorCodes } from './error';
+
 export enum ConnectorType {
   Email = 'Email',
   SMS = 'SMS',
@@ -32,9 +34,9 @@ export type ConnectorMetadata = {
 
 type MessageTypes = 'SignIn' | 'Register' | 'ForgotPassword' | 'Test';
 
-export type SendMessageFunction<T = Record<string, unknown>> = (
+export type SendMessageFunction = (
   data: { to: string; type: MessageTypes; payload: { code: string } },
-  config?: T
+  config?: unknown
 ) => Promise<unknown>;
 
 export type ValidateConfig<T> = (config: unknown) => asserts config is T;
@@ -56,19 +58,27 @@ export class LogtoConnector<T> {
   public getConfig!: GetConnectorConfig;
   public metadata!: ConnectorMetadata;
 
-  public getAuthorizationUri?: GetAuthorizationUri;
-  public getUserInfo?: GetUserInfo;
-
-  public sendMessage?: SendMessageFunction;
-  public sendTestMessage?: SendMessageFunction;
-
-  protected authResponseParser?: AuthResponseParser;
-  protected readonly sendMessageBy?: SendMessageFunction<T>;
-
   constructor(getConnectorConfig: GetConnectorConfig) {
     this.getConfig = getConnectorConfig;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  public validateConfig: ValidateConfig<T> = async () => {};
+  public validateConfig: ValidateConfig<T> = () => {
+    throw new ConnectorError(ConnectorErrorCodes.NotImplemented);
+  };
+
+  public getAuthorizationUri: GetAuthorizationUri = async () => {
+    throw new ConnectorError(ConnectorErrorCodes.NotImplemented);
+  };
+
+  public getUserInfo: GetUserInfo = async () => {
+    throw new ConnectorError(ConnectorErrorCodes.NotImplemented);
+  };
+
+  public sendMessage: SendMessageFunction = async () => {
+    throw new ConnectorError(ConnectorErrorCodes.NotImplemented);
+  };
+
+  protected authResponseParser: AuthResponseParser = async () => {
+    throw new ConnectorError(ConnectorErrorCodes.NotImplemented);
+  };
 }
