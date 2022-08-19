@@ -1,5 +1,7 @@
+import crypto from 'crypto';
+
 import { UsersPasswordEncryptionMethod } from '@logto/schemas';
-import argon2 from 'argon2';
+import { argon2i } from 'hash-wasm';
 
 import RequestError from '@/errors/RequestError';
 import assertThat from '@/utils/assert-that';
@@ -14,5 +16,13 @@ export const encryptPassword = async (
     new RequestError({ code: 'password.unsupported_encryption_method', method })
   );
 
-  return argon2.hash(password, { timeCost: 10 });
+  return argon2i({
+    password,
+    salt: crypto.randomBytes(16),
+    iterations: 256,
+    parallelism: 1,
+    memorySize: 4096,
+    hashLength: 32,
+    outputType: 'encoded',
+  });
 };
