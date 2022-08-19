@@ -1,8 +1,12 @@
-import { ConnectorError, ConnectorErrorCodes, ValidateConfig } from '@logto/connector-schemas';
+import {
+  ConnectorError,
+  ConnectorErrorCodes,
+  ConnectorMetadata,
+  ValidateConfig,
+} from '@logto/connector-schemas';
 import { Connector, ConnectorType } from '@logto/schemas';
 
 import { mockConnectorInstanceList, mockMetadata, mockConnector } from '@/__mocks__';
-import { ConnectorMetadata } from '@/connectors/types';
 import RequestError from '@/errors/RequestError';
 import { updateConnector } from '@/queries/connector';
 import assertThat from '@/utils/assert-that';

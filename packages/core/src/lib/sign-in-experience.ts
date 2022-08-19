@@ -1,3 +1,4 @@
+import { ConnectorType } from '@logto/connector-schemas';
 import {
   Branding,
   BrandingStyle,
@@ -7,7 +8,7 @@ import {
 } from '@logto/schemas';
 import { Optional } from '@silverhand/essentials';
 
-import { ConnectorInstance, ConnectorType } from '@/connectors/types';
+import { ConnectorInstance } from '@/connectors/types';
 import RequestError from '@/errors/RequestError';
 import assertThat from '@/utils/assert-that';
 

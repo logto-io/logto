@@ -1,9 +1,9 @@
+import { ConnectorType } from '@logto/connector-schemas';
 import { User } from '@logto/schemas';
 import { Provider } from 'oidc-provider';
 
 import { mockUser, mockConnectorInstances } from '@/__mocks__';
 import { getConnectorInstanceById } from '@/connectors';
-import { ConnectorType } from '@/connectors/types';
 import RequestError from '@/errors/RequestError';
 import { createRequester } from '@/utils/test-utils';
 

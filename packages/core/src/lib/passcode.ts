@@ -1,8 +1,9 @@
+import { ConnectorType } from '@logto/connector-schemas';
 import { Passcode, PasscodeType } from '@logto/schemas';
 import { customAlphabet, nanoid } from 'nanoid';
 
 import { getConnectorInstances } from '@/connectors';
-import { ConnectorType, EmailConnectorInstance, SmsConnectorInstance } from '@/connectors/types';
+import { EmailConnectorInstance, SmsConnectorInstance } from '@/connectors/types';
 import RequestError from '@/errors/RequestError';
 import {
   consumePasscode,

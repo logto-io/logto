@@ -1,8 +1,7 @@
-import { ValidateConfig } from '@logto/connector-schemas';
+import { ConnectorMetadata, ValidateConfig } from '@logto/connector-schemas';
 import { Connector, ConnectorType } from '@logto/schemas';
 
 import { mockConnectorInstanceList, mockMetadata, mockConnector } from '@/__mocks__';
-import { ConnectorMetadata } from '@/connectors/types';
 import RequestError from '@/errors/RequestError';
 import assertThat from '@/utils/assert-that';
 import { createRequester } from '@/utils/test-utils';

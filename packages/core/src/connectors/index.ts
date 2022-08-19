@@ -1,7 +1,7 @@
 import { existsSync, readFileSync } from 'fs';
 import path from 'path';
 
-import { GetConnectorConfig } from '@logto/connector-schemas';
+import { ConnectorType, GetConnectorConfig } from '@logto/connector-schemas';
 import { Connector } from '@logto/schemas/lib/db-entries';
 import resolvePackagePath from 'resolve-package-path';
 
@@ -10,7 +10,7 @@ import RequestError from '@/errors/RequestError';
 import { findAllConnectors, insertConnector } from '@/queries/connector';
 
 import { defaultConnectorPackages } from './consts';
-import { ConnectorInstance, SocialConnectorInstance, ConnectorType } from './types';
+import { ConnectorInstance, SocialConnectorInstance } from './types';
 import { getConnectorConfig } from './utilities';
 
 // eslint-disable-next-line @silverhand/fp/no-let
@@ -61,10 +61,7 @@ export const getConnectorInstances = async (): Promise<ConnectorInstance[]> => {
       }
 
       // eslint-disable-next-line no-restricted-syntax
-      const instance: ConnectorInstance = new InstanceBuilder(
-        getConnectorConfig,
-        connector
-      ) as ConnectorInstance;
+      const instance = new InstanceBuilder(getConnectorConfig, connector) as ConnectorInstance;
       // eslint-disable-next-line unicorn/prefer-module
       const packagePath = resolvePackagePath(packageName, __dirname);
 
@@ -136,10 +133,10 @@ export const getConnectorInstanceById = async (id: string): Promise<ConnectorIns
   return pickedConnectorInstance;
 };
 
-const isSocialConnectorInstance = (
-  connector: ConnectorInstance
-): connector is SocialConnectorInstance => {
-  return connector.metadata.type === ConnectorType.Social;
+export const isSocialConnectorInstance = (
+  instance: ConnectorInstance
+): instance is SocialConnectorInstance => {
+  return instance.metadata.type === ConnectorType.Social;
 };
 
 export const getSocialConnectorInstanceById = async (
