@@ -536,7 +536,7 @@ importers:
 
   packages/connector-schemas:
     specifiers:
-      '@logto/phrases': ^1.0.0-beta.4
+      '@logto/phrases': ^1.0.0-beta.5
       '@silverhand/eslint-config': 1.0.0-rc.2
       '@silverhand/essentials': ^1.2.0
       '@silverhand/ts-config': 1.0.0-rc.2
