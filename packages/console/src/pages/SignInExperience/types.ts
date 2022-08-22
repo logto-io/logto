@@ -20,4 +20,5 @@ export type SignInExperienceForm = Omit<SignInExperience, 'signInMethods' | 'lan
     fixedLanguage: Language;
     fallbackLanguage: Language;
   };
+  createAccountEnabled: boolean;
 };

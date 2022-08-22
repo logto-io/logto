@@ -3,6 +3,7 @@ import {
   SignInMethodKey,
   SignInMethods,
   SignInMethodState,
+  SignInMode,
 } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 
@@ -41,6 +42,7 @@ export const signInExperienceParser = {
 
     const {
       languageInfo: { autoDetect, fallbackLanguage, fixedLanguage },
+      signInMode,
     } = signInExperience;
 
     return {
@@ -58,12 +60,14 @@ export const signInExperienceParser = {
         fallbackLanguage,
         fixedLanguage,
       },
+      createAccountEnabled: signInMode !== SignInMode.SignIn,
     };
   },
   toRemoteModel: (setup: SignInExperienceForm): SignInExperience => {
     const {
       branding,
       languageInfo: { mode, fallbackLanguage, fixedLanguage },
+      createAccountEnabled,
     } = setup;
 
     return {
@@ -85,6 +89,7 @@ export const signInExperienceParser = {
         fallbackLanguage,
         fixedLanguage,
       },
+      signInMode: createAccountEnabled ? SignInMode.SignInAndRegister : SignInMode.SignIn,
     };
   },
 };

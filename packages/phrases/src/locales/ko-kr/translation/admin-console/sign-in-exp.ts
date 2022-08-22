@@ -75,6 +75,12 @@ const sign_in_exp = {
       fallback_language_tip: '적절한 언어를 찾을 수 없을 때 백업 언어를 사용해요.',
       fixed_language: '언어 고정',
     },
+    authentication: {
+      title: 'AUTHENTICATION',
+      enable_create_account: 'Enable create account',
+      enable_create_account_description:
+        'Enable or disable create account (sign-up). Once disabled, your customers can’t create accounts through the sign-in UI, but you can still add users in Admin Console.',
+    },
   },
   setup_warning: {
     no_connector: '',

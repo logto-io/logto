@@ -3,6 +3,7 @@ import { useFormContext } from 'react-hook-form';
 
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 
+import AuthenticationForm from '../components/AuthenticationForm';
 import LanguagesForm from '../components/LanguagesForm';
 import TermsForm from '../components/TermsForm';
 import { SignInExperienceForm } from '../types';
@@ -25,6 +26,7 @@ const OthersTab = ({ defaultData, isDataDirty }: Props) => {
     <>
       <TermsForm />
       <LanguagesForm />
+      <AuthenticationForm />
       <UnsavedChangesAlertModal hasUnsavedChanges={isDataDirty} />
     </>
   );
