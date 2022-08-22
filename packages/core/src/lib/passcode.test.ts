@@ -1,8 +1,10 @@
-import { ConnectorType } from '@logto/connector-types';
+import { ConnectorType } from '@logto/connector-core';
 import { Passcode, PasscodeType } from '@logto/schemas';
+import { any } from 'zod';
 
 import { mockConnector, mockMetadata } from '@/__mocks__';
-import { getConnectorInstances } from '@/connectors';
+import { getLogtoConnectors } from '@/connectors';
+import { defaultConnectorMethods } from '@/connectors/consts';
 import RequestError from '@/errors/RequestError';
 import {
   consumePasscode,
@@ -37,8 +39,8 @@ const mockedDeletePasscodesByIds = deletePasscodesByIds as jest.MockedFunction<
   typeof deletePasscodesByIds
 >;
 const mockedInsertPasscode = insertPasscode as jest.MockedFunction<typeof insertPasscode>;
-const mockedGetConnectorInstances = getConnectorInstances as jest.MockedFunction<
-  typeof getConnectorInstances
+const mockedGetLogtoConnectors = getLogtoConnectors as jest.MockedFunction<
+  typeof getLogtoConnectors
 >;
 const mockedConsumePasscode = consumePasscode as jest.MockedFunction<typeof consumePasscode>;
 const mockedIncreasePasscodeTryCount = increasePasscodeTryCount as jest.MockedFunction<
@@ -124,12 +126,10 @@ describe('sendPasscode', () => {
   });
 
   it('should throw error when email or sms connector can not be found', async () => {
-    const sendMessage = jest.fn();
-    const validateConfig = jest.fn();
-    const getConfig = jest.fn();
-    mockedGetConnectorInstances.mockResolvedValueOnce([
+    mockedGetLogtoConnectors.mockResolvedValueOnce([
       {
-        connector: {
+        ...defaultConnectorMethods,
+        db: {
           ...mockConnector,
           id: 'id1',
         },
@@ -138,9 +138,7 @@ describe('sendPasscode', () => {
           type: ConnectorType.Email,
           platform: null,
         },
-        sendMessage,
-        validateConfig,
-        getConfig,
+        configGuard: any(),
       },
     ]);
     const passcode: Passcode = {
@@ -164,11 +162,11 @@ describe('sendPasscode', () => {
 
   it('should call sendPasscode with params matching', async () => {
     const sendMessage = jest.fn();
-    const validateConfig = jest.fn();
-    const getConfig = jest.fn();
-    mockedGetConnectorInstances.mockResolvedValueOnce([
+    mockedGetLogtoConnectors.mockResolvedValueOnce([
       {
-        connector: {
+        ...defaultConnectorMethods,
+        configGuard: any(),
+        db: {
           ...mockConnector,
           id: 'id0',
         },
@@ -178,11 +176,11 @@ describe('sendPasscode', () => {
           platform: null,
         },
         sendMessage,
-        validateConfig,
-        getConfig,
       },
       {
-        connector: {
+        ...defaultConnectorMethods,
+        configGuard: any(),
+        db: {
           ...mockConnector,
           id: 'id1',
         },
@@ -192,8 +190,6 @@ describe('sendPasscode', () => {
           platform: null,
         },
         sendMessage,
-        validateConfig,
-        getConfig,
       },
     ]);
     const passcode: Passcode = {

@@ -1,4 +1,4 @@
-import { ConnectorError, ConnectorErrorCodes } from '@logto/connector-types';
+import { ConnectorError, ConnectorErrorCodes } from '@logto/connector-core';
 
 import RequestError from '@/errors/RequestError';
 import { createContextWithRouteParameters } from '@/utils/test-utils';

@@ -1,8 +1,7 @@
-import { EmailConnectorInstance, SmsConnectorInstance } from '@logto/connector-types';
 import { Passcode, PasscodeType } from '@logto/schemas';
 import { customAlphabet, nanoid } from 'nanoid';
 
-import { getConnectorInstances } from '@/connectors';
+import { getLogtoConnectors } from '@/connectors';
 import { ConnectorType } from '@/connectors/types';
 import RequestError from '@/errors/RequestError';
 import {
@@ -46,34 +45,32 @@ export const sendPasscode = async (passcode: Passcode) => {
     throw new RequestError('passcode.phone_email_empty');
   }
 
-  const connectorInstances = await getConnectorInstances();
+  const connectors = await getLogtoConnectors();
 
-  const emailConnectorInstance = connectorInstances.find(
-    (connector): connector is EmailConnectorInstance =>
-      connector.connector.enabled && connector.metadata.type === ConnectorType.Email
+  const emailConnector = connectors.find(
+    (connector) => connector.db.enabled && connector.metadata.type === ConnectorType.Email
   );
-  const smsConnectorInstance = connectorInstances.find(
-    (connector): connector is SmsConnectorInstance =>
-      connector.connector.enabled && connector.metadata.type === ConnectorType.SMS
+  const smsConnector = connectors.find(
+    (connector) => connector.db.enabled && connector.metadata.type === ConnectorType.SMS
   );
 
-  const connectorInstance = passcode.email ? emailConnectorInstance : smsConnectorInstance;
+  const connector = passcode.email ? emailConnector : smsConnector;
 
   assertThat(
-    connectorInstance,
+    connector,
     new RequestError({
       code: 'connector.not_found',
       type: passcode.email ? ConnectorType.Email : ConnectorType.SMS,
     })
   );
 
-  const { connector, metadata, sendMessage } = connectorInstance;
+  const { db, metadata, sendMessage } = connector;
 
   const response = await sendMessage(emailOrPhone, passcode.type, {
     code: passcode.code,
   });
 
-  return { connector, metadata, response };
+  return { db, metadata, response };
 };
 
 export const passcodeExpiration = 10 * 60 * 1000; // 10 minutes.

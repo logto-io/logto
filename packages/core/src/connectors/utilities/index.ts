@@ -1,3 +1,5 @@
+import { ConnectorError, ConnectorErrorCodes, GeneralConnector } from '@logto/connector-core';
+
 import RequestError from '@/errors/RequestError';
 import { findAllConnectors } from '@/queries/connector';
 import assertThat from '@/utils/assert-that';
@@ -10,3 +12,15 @@ export const getConnectorConfig = async (id: string): Promise<unknown> => {
 
   return connector.config;
 };
+
+export function validateConnectorModule(
+  connector: Partial<GeneralConnector>
+): asserts connector is GeneralConnector {
+  if (!connector.metadata) {
+    throw new ConnectorError(ConnectorErrorCodes.InvalidMetadata);
+  }
+
+  if (!connector.configGuard) {
+    throw new ConnectorError(ConnectorErrorCodes.InvalidConfigGuard);
+  }
+}
