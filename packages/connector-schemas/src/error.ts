@@ -19,6 +19,6 @@ export class ConnectorError extends Error {
     const { message, data } = payload ?? {};
     super(message ?? 'Connector error occurred.');
     this.code = code;
-    this.data = data;
+    this.data = payload ?? {};
   }
 }
