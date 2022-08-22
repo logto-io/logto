@@ -72,11 +72,19 @@ const languages = ['English', 'Français', '简体中文', 'Türkçe', '한국�
 ## Bug report, feature request, feedback
 
 - Our team takes security seriously, especially when it relates to identity. If you find any existing or potential security issues, please do not hesitate to email 🔒 [security@logto.io](mailto:security@logto.io).
-- About other bug reports, feature requests, and feedback, you can directly 🙋 [open an issue](https://github.com/logto-io/logto/issues/new) on GitHub or 💬 [join our Discord server](https://discord.gg/vRvwuwgpVX) to have a live chat. We also have a 🗓️ [public roadmap](https://github.com/orgs/logto-io/projects/5) available.
+- About other bug reports, feature requests, and feedback, you can:
+  - Directly 🙋 [open an issue](https://github.com/logto-io/logto/issues/new) on GitHub;
+  - 💬 [join our Discord server](https://discord.gg/vRvwuwgpVX) to have a live chat;
+  - Engage in our 🗓️ [public roadmap](https://github.com/orgs/logto-io/projects/5).
 
 ## Contributing
 
 We have a [contributing guideline](https://github.com/logto-io/logto/blob/master/.github/CONTRIBUTING.md) available. Feel free to contact us before coding.
+
+## Resources
+
+- [📖 Logto docs](https://docs.logto.io)
+- [✍️ Silverhand blog](https://silverhand.notion.site/Silverhand-Blog-68e122832cfb413ca8786e08152d00ac)
 
 <br/>
 
