@@ -81,7 +81,7 @@ const languages = ['English', 'Français', '简体中文', 'Türkçe', '한국�
 
 We have a [contributing guideline](https://github.com/logto-io/logto/blob/master/.github/CONTRIBUTING.md) available. Feel free to contact us before coding.
 
-## Resource
+## Resources
 
 - [📖 Logto docs](https://docs.logto.io)
 - [✍️ Silverhand blog](https://silverhand.notion.site/Silverhand-Blog-68e122832cfb413ca8786e08152d00ac)
