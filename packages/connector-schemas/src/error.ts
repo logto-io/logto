@@ -15,10 +15,10 @@ export class ConnectorError extends Error {
   public code: ConnectorErrorCodes;
   public data: unknown;
 
-  constructor(code: ConnectorErrorCodes, data?: unknown) {
-    const message = typeof data === 'string' ? data : 'Connector error occurred.';
-    super(message);
+  constructor(code: ConnectorErrorCodes, payload?: { message?: string; data?: unknown }) {
+    const { message, data } = payload ?? {};
+    super(message ?? 'Connector error occurred.');
     this.code = code;
-    this.data = typeof data === 'string' ? { message: data } : data;
+    this.data = data;
   }
 }

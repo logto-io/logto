@@ -15,7 +15,7 @@ export enum ConnectorPlatform {
   Web = 'Web',
 }
 
-type i18nPhrases = { [Language.English]: string } & {
+type I18nPhrases = { [Language.English]: string } & {
   [key in Exclude<Language, Language.English>]?: string;
 };
 
@@ -24,15 +24,20 @@ export type ConnectorMetadata = {
   target: string;
   type: ConnectorType;
   platform: Nullable<ConnectorPlatform>;
-  name: i18nPhrases;
+  name: I18nPhrases;
   logo: string;
   logoDark: Nullable<string>;
-  description: i18nPhrases;
+  description: I18nPhrases;
   readme: string;
   configTemplate: string;
 };
 
-type MessageTypes = 'SignIn' | 'Register' | 'ForgotPassword' | 'Test';
+export enum MessageTypes {
+  SignIn = 'SignIn',
+  Register = 'Register',
+  ForgotPassword = 'ForgotPassword',
+  Test = 'Test',
+}
 
 export type SendMessageFunction = (
   data: { to: string; type: MessageTypes; payload: { code: string } },
@@ -63,22 +68,6 @@ export class LogtoConnector<T> {
   }
 
   public validateConfig: ValidateConfig<T> = () => {
-    throw new ConnectorError(ConnectorErrorCodes.NotImplemented);
-  };
-
-  public getAuthorizationUri: GetAuthorizationUri = async () => {
-    throw new ConnectorError(ConnectorErrorCodes.NotImplemented);
-  };
-
-  public getUserInfo: GetUserInfo = async () => {
-    throw new ConnectorError(ConnectorErrorCodes.NotImplemented);
-  };
-
-  public sendMessage: SendMessageFunction = async () => {
-    throw new ConnectorError(ConnectorErrorCodes.NotImplemented);
-  };
-
-  protected authResponseParser: AuthResponseParser = async () => {
     throw new ConnectorError(ConnectorErrorCodes.NotImplemented);
   };
 }
