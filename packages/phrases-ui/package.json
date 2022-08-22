@@ -20,6 +20,7 @@
   "scripts": {
     "precommit": "lint-staged",
     "build": "rm -rf lib/ && tsc",
+    "dev": "tsc --watch --preserveWatchOutput --incremental",
     "lint": "eslint --ext .ts src",
     "lint:report": "pnpm lint --format json --output-file report.json",
     "prepack": "pnpm build"

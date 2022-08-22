@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 import RequestError from '@/errors/RequestError';
-import koaAuth, { verifyBearerTokenFromRequest } from '@/middleware/koa-auth';
+import { verifyBearerTokenFromRequest } from '@/middleware/koa-auth';
 import koaGuard from '@/middleware/koa-guard';
 import assertThat from '@/utils/assert-that';
 
