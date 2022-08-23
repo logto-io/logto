@@ -7,7 +7,7 @@ import { ConnectorType } from '@/connectors/types';
 import RequestError from '@/errors/RequestError';
 import { createRequester } from '@/utils/test-utils';
 
-import sessionSocialRoutes from './social';
+import socialRoutes from './social';
 
 jest.mock('@/lib/social', () => ({
   ...jest.requireActual('@/lib/social'),
@@ -97,9 +97,9 @@ afterEach(() => {
   interactionResult.mockClear();
 });
 
-describe('sessionSocialRoutes', () => {
+describe('session -> socialRoutes', () => {
   const sessionRequest = createRequester({
-    anonymousRoutes: sessionSocialRoutes,
+    anonymousRoutes: socialRoutes,
     provider: new Provider(''),
     middlewares: [
       async (ctx, next) => {

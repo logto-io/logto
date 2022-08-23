@@ -14,9 +14,7 @@ import dashboardRoutes from '@/routes/dashboard';
 import logRoutes from '@/routes/log';
 import resourceRoutes from '@/routes/resource';
 import roleRoutes from '@/routes/role';
-import sessionPasswordlessRoutes from '@/routes/session/passwordless';
-import sessionRoutes from '@/routes/session/session';
-import sessionSocialRoutes from '@/routes/session/social';
+import sessionRoutes from '@/routes/session';
 import settingRoutes from '@/routes/setting';
 import signInExperiencesRoutes from '@/routes/sign-in-experience';
 import statusRoutes from '@/routes/status';
@@ -29,8 +27,6 @@ const createRouters = (provider: Provider) => {
   const sessionRouter: AnonymousRouter = new Router();
   sessionRouter.use(koaLogSession(provider));
   sessionRoutes(sessionRouter, provider);
-  sessionPasswordlessRoutes(sessionRouter, provider);
-  sessionSocialRoutes(sessionRouter, provider);
 
   const managementRouter: AuthedRouter = new Router();
   managementRouter.use(koaAuth(UserRole.Admin));
