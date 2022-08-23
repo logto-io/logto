@@ -24,10 +24,14 @@ import assertThat from '@/utils/assert-that';
 import { maskUserInfo } from '@/utils/format';
 
 import { AnonymousRouter } from '../types';
+import { getRoutePrefix } from './utils';
+
+export const registerRoute = getRoutePrefix('register', 'social');
+export const signInRoute = getRoutePrefix('sign-in', 'social');
 
 export default function socialRoutes<T extends AnonymousRouter>(router: T, provider: Provider) {
   router.post(
-    '/session/sign-in/social',
+    `${signInRoute}`,
     koaGuard({
       body: object({
         connectorId: string(),
@@ -49,7 +53,7 @@ export default function socialRoutes<T extends AnonymousRouter>(router: T, provi
   );
 
   router.post(
-    '/session/sign-in/social/auth',
+    `${signInRoute}/auth`,
     koaGuard({
       body: object({
         connectorId: string(),
@@ -137,7 +141,7 @@ export default function socialRoutes<T extends AnonymousRouter>(router: T, provi
   );
 
   router.post(
-    '/session/register/social',
+    registerRoute,
     koaGuard({
       body: object({
         connectorId: string(),
