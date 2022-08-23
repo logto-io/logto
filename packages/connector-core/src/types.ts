@@ -1,6 +1,6 @@
 import type { Language } from '@logto/phrases';
 import { Nullable } from '@silverhand/essentials';
-import { z, ZodAny, ZodType } from 'zod';
+import { z, ZodType } from 'zod';
 
 export enum ConnectorType {
   Email = 'Email',
@@ -14,7 +14,7 @@ export enum ConnectorPlatform {
   Web = 'Web',
 }
 
-type i18nPhrases = { [Language.English]: string } & {
+type I18nPhrases = { [Language.English]: string } & {
   [key in Exclude<Language, Language.English>]?: string;
 };
 
@@ -23,10 +23,10 @@ export type ConnectorMetadata = {
   target: string;
   type: ConnectorType;
   platform: Nullable<ConnectorPlatform>;
-  name: i18nPhrases;
+  name: I18nPhrases;
   logo: string;
   logoDark: Nullable<string>;
-  description: i18nPhrases;
+  description: I18nPhrases;
   readme: string;
   configTemplate: string;
 };
@@ -99,6 +99,10 @@ export type SocialConnector = {
 
 export type GeneralConnector = BaseConnector &
   Partial<SocialConnector & EmailConnector & SmsConnector>;
+
+export type CreateConnector<
+  T extends SocialConnector | EmailConnector | SmsConnector | GeneralConnector
+> = (options: { getConfig: GetConnectorConfig }) => Promise<T>;
 
 export type GetAuthorizationUri = (payload: {
   state: string;

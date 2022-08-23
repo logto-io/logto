@@ -1,7 +1,7 @@
 import { existsSync, readFileSync } from 'fs';
 import path from 'path';
 
-import { GeneralConnector, implementGetConfig, validateConfig } from '@logto/connector-core';
+import { CreateConnector, GeneralConnector, validateConfig } from '@logto/connector-core';
 import resolvePackagePath from 'resolve-package-path';
 
 import envSet from '@/env-set';
@@ -11,8 +11,6 @@ import { findAllConnectors, insertConnector } from '@/queries/connector';
 import { defaultConnectorMethods, defaultConnectorPackages } from './consts';
 import { LogtoConnector } from './types';
 import { getConnectorConfig, validateConnectorModule } from './utilities';
-
-implementGetConfig(getConnectorConfig);
 
 // eslint-disable-next-line @silverhand/fp/no-let
 let cachedConnectors: Array<Omit<LogtoConnector, 'db'>> | undefined;
@@ -32,9 +30,10 @@ const loadConnectors = async () => {
   cachedConnectors = await Promise.all(
     connectorPackages.map(async (packageName) => {
       // eslint-disable-next-line no-restricted-syntax
-      const { default: rawConnector } = (await import(packageName)) as {
-        default: Partial<GeneralConnector>;
+      const { default: createConnector } = (await import(packageName)) as {
+        default: CreateConnector<GeneralConnector>;
       };
+      const rawConnector = await createConnector({ getConfig: getConnectorConfig });
 
       validateConnectorModule(rawConnector);
 
@@ -105,9 +104,9 @@ export const getLogtoConnectors = async (): Promise<LogtoConnector[]> => {
   const connectors = await findAllConnectors();
   const connectorMap = new Map(connectors.map((connector) => [connector.id, connector]));
 
-  const allConnectors = await loadConnectors();
+  const logtoConnectors = await loadConnectors();
 
-  return allConnectors.map((element) => {
+  return logtoConnectors.map((element) => {
     const { id } = element.metadata;
     const connector = connectorMap.get(id);
 
