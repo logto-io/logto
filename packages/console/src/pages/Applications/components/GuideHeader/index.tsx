@@ -37,7 +37,7 @@ const getSampleProjectUrl = (sdk: SupportedSdk) => {
     case SupportedSdk.Next:
       return `${githubUrlPrefix}/js/tree/master/packages/next-sample`;
     case SupportedSdk.Express:
-      return `${githubUrlPrefix}/express-example`;
+      return `${githubUrlPrefix}/js/tree/master/packages/express-sample`;
     default:
       return '';
   }
