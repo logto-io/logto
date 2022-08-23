@@ -34,6 +34,7 @@ const getAuthorizationUri =
   async ({ state, redirectUri }) => {
     const config = await getConfig(defaultMetadata.id);
     validateConfig<GithubConfig>(config, githubConfigGuard);
+
     const queryParameters = new URLSearchParams({
       client_id: config.clientId,
       redirect_uri: redirectUri,
