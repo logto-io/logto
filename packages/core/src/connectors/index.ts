@@ -1,19 +1,19 @@
 import { existsSync, readFileSync } from 'fs';
 import path from 'path';
 
-import { ConnectorInstance, SocialConnectorInstance } from '@logto/connector-types';
+import { CreateConnector, GeneralConnector, validateConfig } from '@logto/connector-core';
 import resolvePackagePath from 'resolve-package-path';
 
 import envSet from '@/env-set';
 import RequestError from '@/errors/RequestError';
 import { findAllConnectors, insertConnector } from '@/queries/connector';
 
-import { defaultConnectorPackages } from './consts';
-import { ConnectorType } from './types';
-import { getConnectorConfig } from './utilities';
+import { defaultConnectorMethods, defaultConnectorPackages } from './consts';
+import { LogtoConnector } from './types';
+import { getConnectorConfig, validateConnectorModule } from './utilities';
 
 // eslint-disable-next-line @silverhand/fp/no-let
-let cachedConnectors: ConnectorInstance[] | undefined;
+let cachedConnectors: Array<Omit<LogtoConnector, 'db'>> | undefined;
 
 const loadConnectors = async () => {
   if (cachedConnectors) {
@@ -29,73 +29,84 @@ const loadConnectors = async () => {
   // eslint-disable-next-line @silverhand/fp/no-mutation
   cachedConnectors = await Promise.all(
     connectorPackages.map(async (packageName) => {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      const { default: Builder } = await import(packageName);
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment
-      const instance: ConnectorInstance = new Builder(getConnectorConfig);
+      // eslint-disable-next-line no-restricted-syntax
+      const { default: createConnector } = (await import(packageName)) as {
+        default: CreateConnector<GeneralConnector>;
+      };
+      const rawConnector = await createConnector({ getConfig: getConnectorConfig });
+
+      validateConnectorModule(rawConnector);
+
+      const connector: Omit<LogtoConnector, 'db'> = {
+        ...defaultConnectorMethods,
+        ...rawConnector,
+        validateConfig: (config: unknown) => {
+          validateConfig(config, rawConnector.configGuard);
+        },
+      };
       // eslint-disable-next-line unicorn/prefer-module
       const packagePath = resolvePackagePath(packageName, __dirname);
 
       // For relative path logo url, try to read local asset.
       if (
         packagePath &&
-        !instance.metadata.logo.startsWith('http') &&
-        existsSync(path.join(packagePath, '..', instance.metadata.logo))
+        !connector.metadata.logo.startsWith('http') &&
+        existsSync(path.join(packagePath, '..', connector.metadata.logo))
       ) {
-        const data = readFileSync(path.join(packagePath, '..', instance.metadata.logo));
+        const data = readFileSync(path.join(packagePath, '..', connector.metadata.logo));
         // eslint-disable-next-line @silverhand/fp/no-mutation
-        instance.metadata.logo = `data:image/svg+xml;base64,${data.toString('base64')}`;
+        connector.metadata.logo = `data:image/svg+xml;base64,${data.toString('base64')}`;
       }
 
       if (
         packagePath &&
-        instance.metadata.logoDark &&
-        !instance.metadata.logoDark.startsWith('http') &&
-        existsSync(path.join(packagePath, '..', instance.metadata.logoDark))
+        connector.metadata.logoDark &&
+        !connector.metadata.logoDark.startsWith('http') &&
+        existsSync(path.join(packagePath, '..', connector.metadata.logoDark))
       ) {
-        const data = readFileSync(path.join(packagePath, '..', instance.metadata.logoDark));
+        const data = readFileSync(path.join(packagePath, '..', connector.metadata.logoDark));
         // eslint-disable-next-line @silverhand/fp/no-mutation
-        instance.metadata.logoDark = `data:image/svg+xml;base64,${data.toString('base64')}`;
+        connector.metadata.logoDark = `data:image/svg+xml;base64,${data.toString('base64')}`;
       }
 
       if (
         packagePath &&
-        instance.metadata.readme &&
-        existsSync(path.join(packagePath, '..', instance.metadata.readme))
+        connector.metadata.readme &&
+        existsSync(path.join(packagePath, '..', connector.metadata.readme))
       ) {
         // eslint-disable-next-line @silverhand/fp/no-mutation
-        instance.metadata.readme = readFileSync(
-          path.join(packagePath, '..', instance.metadata.readme),
+        connector.metadata.readme = readFileSync(
+          path.join(packagePath, '..', connector.metadata.readme),
           'utf8'
         );
       }
 
       if (
         packagePath &&
-        instance.metadata.configTemplate &&
-        existsSync(path.join(packagePath, '..', instance.metadata.configTemplate))
+        connector.metadata.configTemplate &&
+        existsSync(path.join(packagePath, '..', connector.metadata.configTemplate))
       ) {
         // eslint-disable-next-line @silverhand/fp/no-mutation
-        instance.metadata.configTemplate = readFileSync(
-          path.join(packagePath, '..', instance.metadata.configTemplate),
+        connector.metadata.configTemplate = readFileSync(
+          path.join(packagePath, '..', connector.metadata.configTemplate),
           'utf8'
         );
       }
 
-      return instance;
+      return connector;
     })
   );
 
   return cachedConnectors;
 };
 
-export const getConnectorInstances = async (): Promise<ConnectorInstance[]> => {
+export const getLogtoConnectors = async (): Promise<LogtoConnector[]> => {
   const connectors = await findAllConnectors();
   const connectorMap = new Map(connectors.map((connector) => [connector.id, connector]));
 
-  const allConnectors = await loadConnectors();
+  const logtoConnectors = await loadConnectors();
 
-  return allConnectors.map((element) => {
+  return logtoConnectors.map((element) => {
     const { id } = element.metadata;
     const connector = connectorMap.get(id);
 
@@ -103,18 +114,18 @@ export const getConnectorInstances = async (): Promise<ConnectorInstance[]> => {
       throw new RequestError({ code: 'entity.not_found', id, status: 404 });
     }
 
-    // eslint-disable-next-line @silverhand/fp/no-mutation
-    element.connector = connector;
-
-    return element;
+    return {
+      ...element,
+      db: connector,
+    };
   });
 };
 
-export const getConnectorInstanceById = async (id: string): Promise<ConnectorInstance> => {
-  const connectorInstances = await getConnectorInstances();
-  const pickedConnectorInstance = connectorInstances.find(({ connector }) => connector.id === id);
+export const getLogtoConnectorById = async (id: string): Promise<LogtoConnector> => {
+  const connectors = await getLogtoConnectors();
+  const pickedConnector = connectors.find(({ db }) => db.id === id);
 
-  if (!pickedConnectorInstance) {
+  if (!pickedConnector) {
     throw new RequestError({
       code: 'entity.not_found',
       id,
@@ -122,29 +133,7 @@ export const getConnectorInstanceById = async (id: string): Promise<ConnectorIns
     });
   }
 
-  return pickedConnectorInstance;
-};
-
-const isSocialConnectorInstance = (
-  connector: ConnectorInstance
-): connector is SocialConnectorInstance => {
-  return connector.metadata.type === ConnectorType.Social;
-};
-
-export const getSocialConnectorInstanceById = async (
-  id: string
-): Promise<SocialConnectorInstance> => {
-  const connector = await getConnectorInstanceById(id);
-
-  if (!isSocialConnectorInstance(connector)) {
-    throw new RequestError({
-      code: 'entity.not_found',
-      id,
-      status: 404,
-    });
-  }
-
-  return connector;
+  return pickedConnector;
 };
 
 export const initConnectors = async () => {

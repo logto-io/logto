@@ -1,4 +1,4 @@
-import { ConnectorMetadata, ConnectorType, ConnectorPlatform } from '@logto/connector-types';
+import { ConnectorMetadata, ConnectorType, ConnectorPlatform } from '@logto/connector-core';
 
 export const authorizationEndpoint = 'https://github.com/login/oauth/authorize';
 export const scope = 'read:user';

@@ -1,24 +1,12 @@
-import {
-  ConnectorError,
-  ConnectorErrorCodes,
-  GetConnectorConfig,
-  ValidateConfig,
-} from '@logto/connector-types';
+import { ConnectorError, ConnectorErrorCodes } from '@logto/connector-core';
 import nock from 'nock';
 import * as qs from 'query-string';
 
-import GithubConnector from '.';
+import createConnector, { getAccessToken } from '.';
 import { accessTokenEndpoint, authorizationEndpoint, userInfoEndpoint } from './constant';
 import { mockedConfig } from './mock';
-import { GithubConfig } from './types';
 
-const getConnectorConfig = jest.fn() as GetConnectorConfig;
-
-const githubMethods = new GithubConnector(getConnectorConfig);
-
-beforeAll(() => {
-  jest.spyOn(githubMethods, 'getConfig').mockResolvedValue(mockedConfig);
-});
+const getConfig = jest.fn().mockResolvedValue(mockedConfig);
 
 describe('getAuthorizationUri', () => {
   afterEach(() => {
@@ -26,7 +14,8 @@ describe('getAuthorizationUri', () => {
   });
 
   it('should get a valid uri by redirectUri and state', async () => {
-    const authorizationUri = await githubMethods.getAuthorizationUri({
+    const connector = await createConnector({ getConfig });
+    const authorizationUri = await connector.getAuthorizationUri({
       state: 'some_state',
       redirectUri: 'http://localhost:3000/callback',
     });
@@ -53,7 +42,7 @@ describe('getAccessToken', () => {
           token_type: 'token_type',
         })
       );
-    const { accessToken } = await githubMethods.getAccessToken('code');
+    const { accessToken } = await getAccessToken(mockedConfig, 'code');
     expect(accessToken).toEqual('access_token');
   });
 
@@ -61,41 +50,9 @@ describe('getAccessToken', () => {
     nock(accessTokenEndpoint)
       .post('')
       .reply(200, qs.stringify({ access_token: '', scope: 'scope', token_type: 'token_type' }));
-    await expect(githubMethods.getAccessToken('code')).rejects.toMatchError(
+    await expect(getAccessToken(mockedConfig, 'code')).rejects.toMatchError(
       new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid)
     );
-  });
-});
-
-describe('validateConfig', () => {
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
-
-  /**
-   * Assertion functions always need explicit annotations.
-   * See https://github.com/microsoft/TypeScript/issues/36931#issuecomment-589753014
-   */
-
-  it('should pass on valid config', async () => {
-    const validator: ValidateConfig<GithubConfig> = githubMethods.validateConfig;
-    expect(() => {
-      validator({ clientId: 'clientId', clientSecret: 'clientSecret' });
-    }).not.toThrow();
-  });
-
-  it('should fail on empty config', async () => {
-    const validator: ValidateConfig<GithubConfig> = githubMethods.validateConfig;
-    expect(() => {
-      validator({});
-    }).toThrow();
-  });
-
-  it('should fail when missing clientSecret', async () => {
-    const validator: ValidateConfig<GithubConfig> = githubMethods.validateConfig;
-    expect(() => {
-      validator({ clientId: 'clientId' });
-    }).toThrow();
   });
 });
 
@@ -125,7 +82,8 @@ describe('getUserInfo', () => {
       name: 'monalisa octocat',
       email: 'octocat@github.com',
     });
-    const socialUserInfo = await githubMethods.getUserInfo({ code: 'code' });
+    const connector = await createConnector({ getConfig });
+    const socialUserInfo = await connector.getUserInfo({ code: 'code' });
     expect(socialUserInfo).toMatchObject({
       id: '1',
       avatar: 'https://github.com/images/error/octocat_happy.gif',
@@ -141,7 +99,8 @@ describe('getUserInfo', () => {
       name: null,
       email: null,
     });
-    const socialUserInfo = await githubMethods.getUserInfo({ code: 'code' });
+    const connector = await createConnector({ getConfig });
+    const socialUserInfo = await connector.getUserInfo({ code: 'code' });
     expect(socialUserInfo).toMatchObject({
       id: '1',
     });
@@ -149,7 +108,8 @@ describe('getUserInfo', () => {
 
   it('throws SocialAccessTokenInvalid error if remote response code is 401', async () => {
     nock(userInfoEndpoint).get('').reply(401);
-    await expect(githubMethods.getUserInfo({ code: 'code' })).rejects.toMatchError(
+    const connector = await createConnector({ getConfig });
+    await expect(connector.getUserInfo({ code: 'code' })).rejects.toMatchError(
       new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid)
     );
   });
@@ -161,8 +121,9 @@ describe('getUserInfo', () => {
       name: 'monalisa octocat',
       email: 'octocat@github.com',
     });
+    const connector = await createConnector({ getConfig });
     await expect(
-      githubMethods.getUserInfo({
+      connector.getUserInfo({
         error: 'access_denied',
         error_description: 'The user has denied your application access.',
         error_uri:
@@ -183,8 +144,9 @@ describe('getUserInfo', () => {
       name: 'monalisa octocat',
       email: 'octocat@github.com',
     });
+    const connector = await createConnector({ getConfig });
     await expect(
-      githubMethods.getUserInfo({
+      connector.getUserInfo({
         error: 'general_error',
         error_description: 'General error encountered.',
       })
@@ -198,6 +160,7 @@ describe('getUserInfo', () => {
 
   it('throws unrecognized error', async () => {
     nock(userInfoEndpoint).get('').reply(500);
-    await expect(githubMethods.getUserInfo({ code: 'code' })).rejects.toThrow();
+    const connector = await createConnector({ getConfig });
+    await expect(connector.getUserInfo({ code: 'code' })).rejects.toThrow();
   });
 });

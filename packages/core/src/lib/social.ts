@@ -3,7 +3,7 @@ import { Nullable } from '@silverhand/essentials';
 import { InteractionResults } from 'oidc-provider';
 import { z } from 'zod';
 
-import { getSocialConnectorInstanceById } from '@/connectors';
+import { getLogtoConnectorById } from '@/connectors';
 import { SocialUserInfo, socialUserInfoGuard } from '@/connectors/types';
 import RequestError from '@/errors/RequestError';
 import {
@@ -21,7 +21,7 @@ export type SocialUserInfoSession = {
 
 const getConnector = async (connectorId: string) => {
   try {
-    return await getSocialConnectorInstanceById(connectorId);
+    return await getLogtoConnectorById(connectorId);
   } catch (error: unknown) {
     // Throw a new error with status 422 when connector not found.
     if (error instanceof RequestError && error.code === 'entity.not_found') {

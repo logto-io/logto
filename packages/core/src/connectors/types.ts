@@ -1,8 +1,8 @@
-import { PasscodeType } from '@logto/schemas';
+import { GeneralConnector } from '@logto/connector-core';
+import { Connector, PasscodeType } from '@logto/schemas';
 import { z } from 'zod';
 
 export { ConnectorType } from '@logto/schemas';
-export type { ConnectorMetadata } from '@logto/schemas';
 
 export type TemplateType = PasscodeType | 'Test';
 
@@ -15,3 +15,8 @@ export const socialUserInfoGuard = z.object({
 });
 
 export type SocialUserInfo = z.infer<typeof socialUserInfoGuard>;
+
+export type LogtoConnector = Required<GeneralConnector> & {
+  db: Connector;
+  validateConfig: (config: unknown) => void;
+};

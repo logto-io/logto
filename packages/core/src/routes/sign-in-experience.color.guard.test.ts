@@ -15,7 +15,7 @@ jest.mock('@/queries/sign-in-experience', () => ({
 }));
 
 jest.mock('@/connectors', () => ({
-  getConnectorInstances: jest.fn(async () => []),
+  getLogtoConnectors: jest.fn(async () => []),
 }));
 
 const signInExperienceRequester = createRequester({ authedRoutes: signInExperiencesRoutes });
