@@ -5,7 +5,7 @@ import { mockUser } from '@/__mocks__';
 import RequestError from '@/errors/RequestError';
 import { createRequester } from '@/utils/test-utils';
 
-import sessionPasswordlessRoutes from './passwordless';
+import passwordlessRoutes from './passwordless';
 
 const insertUser = jest.fn(async (..._args: unknown[]) => ({ id: 'id' }));
 const findUserById = jest.fn(async (): Promise<User> => mockUser);
@@ -52,9 +52,9 @@ afterEach(() => {
   interactionResult.mockClear();
 });
 
-describe('sessionPasswordlessRoutes', () => {
+describe('session -> passwordlessRoutes', () => {
   const sessionRequest = createRequester({
-    anonymousRoutes: sessionPasswordlessRoutes,
+    anonymousRoutes: passwordlessRoutes,
     provider: new Provider(''),
     middlewares: [
       async (ctx, next) => {

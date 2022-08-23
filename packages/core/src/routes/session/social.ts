@@ -25,10 +25,7 @@ import { maskUserInfo } from '@/utils/format';
 
 import { AnonymousRouter } from '../types';
 
-export default function sessionSocialRoutes<T extends AnonymousRouter>(
-  router: T,
-  provider: Provider
-) {
+export default function socialRoutes<T extends AnonymousRouter>(router: T, provider: Provider) {
   router.post(
     '/session/sign-in/social',
     koaGuard({

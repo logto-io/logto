@@ -18,7 +18,7 @@ import assertThat from '@/utils/assert-that';
 
 import { AnonymousRouter } from '../types';
 
-export default function sessionPasswordlessRoutes<T extends AnonymousRouter>(
+export default function passwordlessRoutes<T extends AnonymousRouter>(
   router: T,
   provider: Provider
 ) {
