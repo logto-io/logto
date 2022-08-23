@@ -75,6 +75,12 @@ const sign_in_exp = {
       fallback_language_tip: '如果 Logto 找不到合适的语言包，将回退至哪种语言。',
       fixed_language: '固定语言',
     },
+    authentication: {
+      title: '身份验证',
+      enable_create_account: '启用创建帐号',
+      enable_create_account_description:
+        '启用或禁用创建帐号（注册）。一旦禁用，你的用户将无法通过登录 UI 来创建帐户，但你仍可以通过「管理面板」添加用户。',
+    },
   },
   setup_warning: {
     no_connector: '',

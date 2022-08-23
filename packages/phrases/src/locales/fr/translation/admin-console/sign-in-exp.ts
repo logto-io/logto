@@ -81,6 +81,12 @@ const sign_in_exp = {
         'La langue de repli si Logto ne trouve pas de jeu de phrases dans la langue appropriée.',
       fixed_language: 'Langue fixe',
     },
+    authentication: {
+      title: 'AUTHENTICATION',
+      enable_create_account: 'Enable create account',
+      enable_create_account_description:
+        'Enable or disable create account (sign-up). Once disabled, your customers can’t create accounts through the sign-in UI, but you can still add users in Admin Console.',
+    },
   },
   setup_warning: {
     no_connector: '',
