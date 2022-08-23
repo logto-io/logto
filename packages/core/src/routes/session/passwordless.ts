@@ -37,8 +37,8 @@ export default function sessionPasswordlessRoutes<T extends AnonymousRouter>(
       );
 
       const passcode = await createPasscode(jti, PasscodeType.SignIn, { phone });
-      const { connector } = await sendPasscode(passcode);
-      ctx.log(type, { connectorId: connector.id });
+      const { db } = await sendPasscode(passcode);
+      ctx.log(type, { connectorId: db.id });
       ctx.status = 204;
 
       return next();
@@ -85,8 +85,8 @@ export default function sessionPasswordlessRoutes<T extends AnonymousRouter>(
       );
 
       const passcode = await createPasscode(jti, PasscodeType.SignIn, { email });
-      const { connector } = await sendPasscode(passcode);
-      ctx.log(type, { connectorId: connector.id });
+      const { db } = await sendPasscode(passcode);
+      ctx.log(type, { connectorId: db.id });
       ctx.status = 204;
 
       return next();
@@ -133,8 +133,8 @@ export default function sessionPasswordlessRoutes<T extends AnonymousRouter>(
       );
 
       const passcode = await createPasscode(jti, PasscodeType.Register, { phone });
-      const { connector } = await sendPasscode(passcode);
-      ctx.log(type, { connectorId: connector.id });
+      const { db } = await sendPasscode(passcode);
+      ctx.log(type, { connectorId: db.id });
       ctx.status = 204;
 
       return next();
@@ -182,8 +182,8 @@ export default function sessionPasswordlessRoutes<T extends AnonymousRouter>(
       );
 
       const passcode = await createPasscode(jti, PasscodeType.Register, { email });
-      const { connector } = await sendPasscode(passcode);
-      ctx.log(type, { connectorId: connector.id });
+      const { db } = await sendPasscode(passcode);
+      ctx.log(type, { connectorId: db.id });
       ctx.status = 204;
 
       return next();

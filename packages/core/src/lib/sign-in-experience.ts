@@ -1,4 +1,3 @@
-import { ConnectorInstance } from '@logto/connector-types';
 import {
   Branding,
   BrandingStyle,
@@ -8,7 +7,7 @@ import {
 } from '@logto/schemas';
 import { Optional } from '@silverhand/essentials';
 
-import { ConnectorType } from '@/connectors/types';
+import { ConnectorType, LogtoConnector } from '@/connectors/types';
 import RequestError from '@/errors/RequestError';
 import assertThat from '@/utils/assert-that';
 
@@ -32,7 +31,7 @@ export const isEnabled = (state: SignInMethodState) => state !== SignInMethodSta
 export const validateSignInMethods = (
   signInMethods: SignInMethods,
   socialSignInConnectorTargets: Optional<string[]>,
-  enabledConnectorInstances: ConnectorInstance[]
+  enabledConnectors: LogtoConnector[]
 ) => {
   const signInMethodStates = Object.values(signInMethods);
   assertThat(
@@ -42,7 +41,7 @@ export const validateSignInMethods = (
 
   if (isEnabled(signInMethods.email)) {
     assertThat(
-      enabledConnectorInstances.some((item) => item.metadata.type === ConnectorType.Email),
+      enabledConnectors.some((item) => item.metadata.type === ConnectorType.Email),
       new RequestError({
         code: 'sign_in_experiences.enabled_connector_not_found',
         type: ConnectorType.Email,
@@ -52,7 +51,7 @@ export const validateSignInMethods = (
 
   if (isEnabled(signInMethods.sms)) {
     assertThat(
-      enabledConnectorInstances.some((item) => item.metadata.type === ConnectorType.SMS),
+      enabledConnectors.some((item) => item.metadata.type === ConnectorType.SMS),
       new RequestError({
         code: 'sign_in_experiences.enabled_connector_not_found',
         type: ConnectorType.SMS,
@@ -62,7 +61,7 @@ export const validateSignInMethods = (
 
   if (isEnabled(signInMethods.social)) {
     assertThat(
-      enabledConnectorInstances.some((item) => item.metadata.type === ConnectorType.Social),
+      enabledConnectors.some((item) => item.metadata.type === ConnectorType.Social),
       new RequestError({
         code: 'sign_in_experiences.enabled_connector_not_found',
         type: ConnectorType.Social,

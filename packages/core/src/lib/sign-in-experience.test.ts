@@ -1,10 +1,9 @@
-import { ConnectorInstance } from '@logto/connector-types';
 import { BrandingStyle, SignInMethodState, ConnectorType } from '@logto/schemas';
 
 import {
-  mockAliyunDmConnectorInstance,
-  mockFacebookConnectorInstance,
-  mockGithubConnectorInstance,
+  mockAliyunDmConnector,
+  mockFacebookConnector,
+  mockGithubConnector,
   mockBranding,
   mockSignInMethods,
 } from '@/__mocks__';
@@ -16,7 +15,7 @@ import {
   validateTermsOfUse,
 } from '@/lib/sign-in-experience';
 
-const enabledConnectorInstances = [mockFacebookConnectorInstance, mockGithubConnectorInstance];
+const enabledConnectors = [mockFacebookConnector, mockGithubConnector];
 
 describe('validate branding', () => {
   test('should throw when the UI style contains the slogan and slogan is empty', () => {
@@ -113,7 +112,7 @@ describe('validate sign-in methods', () => {
         validateSignInMethods(
           { ...mockSignInMethods, email: SignInMethodState.Secondary },
           [],
-          enabledConnectorInstances as ConnectorInstance[]
+          enabledConnectors
         );
       }).toMatchError(
         new RequestError({
@@ -128,7 +127,7 @@ describe('validate sign-in methods', () => {
         validateSignInMethods(
           { ...mockSignInMethods, sms: SignInMethodState.Secondary },
           [],
-          enabledConnectorInstances as ConnectorInstance[]
+          enabledConnectors
         );
       }).toMatchError(
         new RequestError({
@@ -140,9 +139,11 @@ describe('validate sign-in methods', () => {
 
     test('should throw when there is no enabled social connector and social sign-in method is enabled', () => {
       expect(() => {
-        validateSignInMethods({ ...mockSignInMethods, social: SignInMethodState.Secondary }, [], [
-          mockAliyunDmConnectorInstance,
-        ] as ConnectorInstance[]);
+        validateSignInMethods(
+          { ...mockSignInMethods, social: SignInMethodState.Secondary },
+          [],
+          [mockAliyunDmConnector]
+        );
       }).toMatchError(
         new RequestError({
           code: 'sign_in_experiences.enabled_connector_not_found',
@@ -157,7 +158,7 @@ describe('validate sign-in methods', () => {
       validateSignInMethods(
         { ...mockSignInMethods, social: SignInMethodState.Secondary },
         [],
-        enabledConnectorInstances as ConnectorInstance[]
+        enabledConnectors
       );
     }).toMatchError(new RequestError('sign_in_experiences.empty_social_connectors'));
   });

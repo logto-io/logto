@@ -1,6 +1,6 @@
 import { ConnectorType, SignInExperiences } from '@logto/schemas';
 
-import { getConnectorInstances } from '@/connectors';
+import { getLogtoConnectors } from '@/connectors';
 import {
   validateBranding,
   validateTermsOfUse,
@@ -43,14 +43,12 @@ export default function signInExperiencesRoutes<T extends AuthedRouter>(router: 
         validateTermsOfUse(termsOfUse);
       }
 
-      const connectorInstances = await getConnectorInstances();
-      const enabledConnectorInstances = connectorInstances.filter(
-        (instance) => instance.connector.enabled
-      );
+      const connectors = await getLogtoConnectors();
+      const enabledConnectors = connectors.filter(({ db: { enabled } }) => enabled);
 
       // Remove unavailable connectors
       const filteredSocialSignInConnectorTargets = socialSignInConnectorTargets?.filter((target) =>
-        enabledConnectorInstances.some(
+        enabledConnectors.some(
           (connector) =>
             connector.metadata.target === target && connector.metadata.type === ConnectorType.Social
         )
@@ -60,7 +58,7 @@ export default function signInExperiencesRoutes<T extends AuthedRouter>(router: 
         validateSignInMethods(
           signInMethods,
           filteredSocialSignInConnectorTargets,
-          enabledConnectorInstances
+          enabledConnectors
         );
       }
 

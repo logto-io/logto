@@ -4,7 +4,7 @@ import pick from 'lodash.pick';
 import { Provider } from 'oidc-provider';
 import { object, string, unknown } from 'zod';
 
-import { getConnectorInstanceById, getSocialConnectorInstanceById } from '@/connectors';
+import { getLogtoConnectorById } from '@/connectors';
 import RequestError from '@/errors/RequestError';
 import { assignInteractionResults } from '@/lib/session';
 import {
@@ -42,8 +42,8 @@ export default function sessionSocialRoutes<T extends AnonymousRouter>(
       await provider.interactionDetails(ctx.req, ctx.res);
       const { connectorId, state, redirectUri } = ctx.guard.body;
       assertThat(state && redirectUri, 'session.insufficient_info');
-      const connector = await getSocialConnectorInstanceById(connectorId);
-      assertThat(connector.connector.enabled, 'connector.not_enabled');
+      const connector = await getLogtoConnectorById(connectorId);
+      assertThat(connector.db.enabled, 'connector.not_enabled');
       const redirectTo = await connector.getAuthorizationUri({ state, redirectUri });
       ctx.body = { redirectTo };
 
@@ -67,7 +67,7 @@ export default function sessionSocialRoutes<T extends AnonymousRouter>(
       ctx.log(type, { connectorId, data });
       const {
         metadata: { target },
-      } = await getConnectorInstanceById(connectorId);
+      } = await getLogtoConnectorById(connectorId);
 
       const userInfo = await getUserInfoByAuthCode(connectorId, data);
       ctx.log(type, { userInfo });
@@ -118,7 +118,7 @@ export default function sessionSocialRoutes<T extends AnonymousRouter>(
       ctx.log(type, { connectorId });
       const {
         metadata: { target },
-      } = await getConnectorInstanceById(connectorId);
+      } = await getLogtoConnectorById(connectorId);
 
       const userInfo = await getUserInfoFromInteractionResult(connectorId, result);
       ctx.log(type, { userInfo });
@@ -158,7 +158,7 @@ export default function sessionSocialRoutes<T extends AnonymousRouter>(
       ctx.log(type, { connectorId });
       const {
         metadata: { target },
-      } = await getConnectorInstanceById(connectorId);
+      } = await getLogtoConnectorById(connectorId);
 
       const userInfo = await getUserInfoFromInteractionResult(connectorId, result);
       ctx.log(type, { userInfo });
@@ -203,7 +203,7 @@ export default function sessionSocialRoutes<T extends AnonymousRouter>(
       ctx.log(type, { connectorId, userId });
       const {
         metadata: { target },
-      } = await getConnectorInstanceById(connectorId);
+      } = await getLogtoConnectorById(connectorId);
 
       const userInfo = await getUserInfoFromInteractionResult(connectorId, result);
       ctx.log(type, { userInfo });

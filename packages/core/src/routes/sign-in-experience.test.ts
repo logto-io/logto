@@ -6,13 +6,13 @@ import {
 } from '@logto/schemas';
 
 import {
-  mockFacebookConnectorInstance,
-  mockGithubConnectorInstance,
-  mockGoogleConnectorInstance,
+  mockFacebookConnector,
+  mockGithubConnector,
+  mockGoogleConnector,
   mockBranding,
   mockSignInExperience,
   mockSignInMethods,
-  mockWechatConnectorInstance,
+  mockWechatConnector,
   mockColor,
 } from '@/__mocks__';
 import * as signInExpLib from '@/lib/sign-in-experience';
@@ -20,19 +20,19 @@ import { createRequester } from '@/utils/test-utils';
 
 import signInExperiencesRoutes from './sign-in-experience';
 
-const connectorInstances = [
-  mockFacebookConnectorInstance,
-  mockGithubConnectorInstance,
-  mockGoogleConnectorInstance,
-  mockWechatConnectorInstance,
+const logtoConnectors = [
+  mockFacebookConnector,
+  mockGithubConnector,
+  mockGoogleConnector,
+  mockWechatConnector,
 ];
 
-const getConnectorInstances = jest.fn(async () => connectorInstances);
+const getLogtoConnectors = jest.fn(async () => logtoConnectors);
 
 jest.mock('@/connectors', () => {
   return {
     ...jest.requireActual('@/connectors'),
-    getConnectorInstances: jest.fn(async () => getConnectorInstances()),
+    getLogtoConnectors: jest.fn(async () => getLogtoConnectors()),
   };
 });
 
@@ -154,7 +154,7 @@ describe('PATCH /sign-in-exp', () => {
     expect(validateSignInMethods).toHaveBeenCalledWith(
       mockSignInMethods,
       socialSignInConnectorTargets,
-      [mockFacebookConnectorInstance, mockGithubConnectorInstance, mockWechatConnectorInstance]
+      [mockFacebookConnector, mockGithubConnector, mockWechatConnector]
     );
 
     expect(response).toMatchObject({

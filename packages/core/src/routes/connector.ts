@@ -1,13 +1,9 @@
-import {
-  ConnectorInstance,
-  EmailConnectorInstance,
-  SmsConnectorInstance,
-} from '@logto/connector-types';
 import { arbitraryObjectGuard, ConnectorDto, Connectors, ConnectorType } from '@logto/schemas';
 import { emailRegEx, phoneRegEx } from '@logto/shared';
 import { object, string } from 'zod';
 
-import { getConnectorInstances, getConnectorInstanceById } from '@/connectors';
+import { getLogtoConnectorById, getLogtoConnectors } from '@/connectors';
+import { LogtoConnector } from '@/connectors/types';
 import RequestError from '@/errors/RequestError';
 import koaGuard from '@/middleware/koa-guard';
 import { updateConnector } from '@/queries/connector';
@@ -15,8 +11,8 @@ import assertThat from '@/utils/assert-that';
 
 import { AuthedRouter } from './types';
 
-const transpileConnectorInstance = ({ connector, metadata }: ConnectorInstance): ConnectorDto => ({
-  ...connector,
+const transpileLogtoConnector = ({ db, metadata }: LogtoConnector): ConnectorDto => ({
+  ...db,
   ...metadata,
 });
 
@@ -30,30 +26,26 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
     }),
     async (ctx, next) => {
       const { target: filterTarget } = ctx.query;
-      const connectorInstances = await getConnectorInstances();
+      const connectors = await getLogtoConnectors();
 
       assertThat(
-        connectorInstances.filter(
-          (connector) =>
-            connector.connector.enabled && connector.metadata.type === ConnectorType.Email
+        connectors.filter(
+          (connector) => connector.db.enabled && connector.metadata.type === ConnectorType.Email
         ).length <= 1,
         'connector.more_than_one_email'
       );
       assertThat(
-        connectorInstances.filter(
-          (connector) =>
-            connector.connector.enabled && connector.metadata.type === ConnectorType.SMS
+        connectors.filter(
+          (connector) => connector.db.enabled && connector.metadata.type === ConnectorType.SMS
         ).length <= 1,
         'connector.more_than_one_sms'
       );
 
-      const filteredInstances = filterTarget
-        ? connectorInstances.filter(({ metadata: { target } }) => target === filterTarget)
-        : connectorInstances;
+      const filteredConnectors = filterTarget
+        ? connectors.filter(({ metadata: { target } }) => target === filterTarget)
+        : connectors;
 
-      ctx.body = filteredInstances.map((connectorInstance) =>
-        transpileConnectorInstance(connectorInstance)
-      );
+      ctx.body = filteredConnectors.map((connector) => transpileLogtoConnector(connector));
 
       return next();
     }
@@ -66,8 +58,8 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
       const {
         params: { id },
       } = ctx.guard;
-      const connectorInstance = await getConnectorInstanceById(id);
-      ctx.body = transpileConnectorInstance(connectorInstance);
+      const connector = await getLogtoConnectorById(id);
+      ctx.body = transpileLogtoConnector(connector);
 
       return next();
     }
@@ -85,21 +77,10 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
         body: { enabled },
       } = ctx.guard;
 
-      const connectorInstance = await getConnectorInstanceById(id);
-      const {
-        connector: { config },
-        validateConfig,
-        metadata,
-      } = connectorInstance;
-
-      /**
-       * Assertion functions always need explicit annotations.
-       * See https://github.com/microsoft/TypeScript/issues/36931#issuecomment-589753014
-       */
-      const validator: typeof validateConfig = validateConfig;
+      const { db: config, metadata, validateConfig } = await getLogtoConnectorById(id);
 
       if (enabled) {
-        validator(config);
+        validateConfig(config);
       }
 
       // Only allow one enabled connector for SMS and Email.
@@ -108,14 +89,11 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
         enabled &&
         (metadata.type === ConnectorType.SMS || metadata.type === ConnectorType.Email)
       ) {
-        const connectors = await getConnectorInstances();
+        const connectors = await getLogtoConnectors();
         await Promise.all(
           connectors
-            .filter(
-              (connector) =>
-                connector.metadata.type === metadata.type && connector.connector.enabled
-            )
-            .map(async ({ connector: { id } }) =>
+            .filter(({ db: { enabled }, metadata: { type } }) => type === metadata.type && enabled)
+            .map(async ({ db: { id } }) =>
               updateConnector({ set: { enabled: false }, where: { id }, jsonbMode: 'merge' })
             )
         );
@@ -144,16 +122,10 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
         body,
       } = ctx.guard;
 
-      const { metadata, validateConfig } = await getConnectorInstanceById(id);
-
-      /**
-       * Assertion functions always need explicit annotations.
-       * See https://github.com/microsoft/TypeScript/issues/36931#issuecomment-589753014
-       */
-      const validator: typeof validateConfig = validateConfig;
+      const { metadata, validateConfig } = await getLogtoConnectorById(id);
 
       if (body.config) {
-        validator(body.config);
+        validateConfig(body.config);
       }
 
       const connector = await updateConnector({ set: body, where: { id }, jsonbMode: 'replace' });
@@ -180,18 +152,16 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
       } = ctx.guard;
       const { phone, email, config } = body;
 
-      const connectorInstances = await getConnectorInstances();
+      const logtoConnectors = await getLogtoConnectors();
       const subject = phone ?? email;
       assertThat(subject, new RequestError({ code: 'guard.invalid_input' }));
 
-      const connector: SmsConnectorInstance | EmailConnectorInstance | undefined = phone
-        ? connectorInstances.find(
-            (connector): connector is SmsConnectorInstance =>
-              connector.metadata.id === id && connector.metadata.type === ConnectorType.SMS
+      const connector = phone
+        ? logtoConnectors.find(
+            ({ metadata: { id: id_, type } }) => id_ === id && type === ConnectorType.SMS
           )
-        : connectorInstances.find(
-            (connector): connector is EmailConnectorInstance =>
-              connector.metadata.id === id && connector.metadata.type === ConnectorType.Email
+        : logtoConnectors.find(
+            ({ metadata: { id: id_, type } }) => id_ === id && type === ConnectorType.Email
           );
 
       assertThat(
@@ -203,14 +173,6 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
       );
 
       const { sendTestMessage } = connector;
-      assertThat(
-        sendTestMessage,
-        new RequestError({
-          code: 'connector.not_implemented',
-          method: 'sendTestMessage',
-          status: 501,
-        })
-      );
 
       await sendTestMessage(config, subject, 'Test', {
         code: phone ? '123456' : 'email-test',
