@@ -9,7 +9,7 @@
   cursor: default;
 
   &.contained {
-    padding: _.unit(1) _.unit(2);
+    padding: _.unit(1) _.unit(1) _.unit(1) _.unit(3);
     background: var(--color-layer-2);
   }
 
