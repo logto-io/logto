@@ -14,10 +14,11 @@ import koaGuardSessionAction from './middleware/koa-guard-session-action';
 import passwordlessRoutes from './passwordless';
 import socialRoutes from './social';
 import usernamePasswordRoutes from './username-password';
+import { getRoutePrefix } from './utils';
 
 export default function sessionRoutes<T extends AnonymousRouter>(router: T, provider: Provider) {
-  router.use('/session/sign-in', koaGuardSessionAction(provider, 'sign-in'));
-  router.use('/session/register', koaGuardSessionAction(provider, 'register'));
+  router.use(getRoutePrefix('sign-in'), koaGuardSessionAction(provider, 'sign-in'));
+  router.use(getRoutePrefix('register'), koaGuardSessionAction(provider, 'register'));
 
   router.post('/session', async (ctx, next) => {
     const {

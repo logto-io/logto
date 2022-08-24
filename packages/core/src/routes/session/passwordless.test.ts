@@ -5,7 +5,7 @@ import { mockUser } from '@/__mocks__';
 import RequestError from '@/errors/RequestError';
 import { createRequester } from '@/utils/test-utils';
 
-import passwordlessRoutes from './passwordless';
+import passwordlessRoutes, { registerRoute, signInRoute } from './passwordless';
 
 const insertUser = jest.fn(async (..._args: unknown[]) => ({ id: 'id' }));
 const findUserById = jest.fn(async (): Promise<User> => mockUser);
@@ -74,14 +74,14 @@ describe('session -> passwordlessRoutes', () => {
     });
     it('should call sendPasscode', async () => {
       const response = await sessionRequest
-        .post('/session/sign-in/passwordless/sms/send-passcode')
+        .post(`${signInRoute}/sms/send-passcode`)
         .send({ phone: '13000000000' });
       expect(response.statusCode).toEqual(204);
       expect(sendPasscode).toHaveBeenCalled();
     });
     it('throw error if phone does not exist', async () => {
       const response = await sessionRequest
-        .post('/session/sign-in/passwordless/sms/send-passcode')
+        .post(`${signInRoute}/sms/send-passcode`)
         .send({ phone: '13000000001' });
       expect(response.statusCode).toEqual(422);
     });
@@ -90,7 +90,7 @@ describe('session -> passwordlessRoutes', () => {
   describe('POST /session/sign-in/passwordless/sms/verify-passcode', () => {
     it('assign result and redirect', async () => {
       const response = await sessionRequest
-        .post('/session/sign-in/passwordless/sms/verify-passcode')
+        .post(`${signInRoute}/sms/verify-passcode`)
         .send({ phone: '13000000000', code: '1234' });
       expect(response.statusCode).toEqual(200);
       expect(response.body).toHaveProperty('redirectTo');
@@ -103,13 +103,13 @@ describe('session -> passwordlessRoutes', () => {
     });
     it('throw error if phone does not exist', async () => {
       const response = await sessionRequest
-        .post('/session/sign-in/passwordless/sms/verify-passcode')
+        .post(`${signInRoute}/sms/verify-passcode`)
         .send({ phone: '13000000001', code: '1234' });
       expect(response.statusCode).toEqual(422);
     });
     it('throw error if verifyPasscode failed', async () => {
       const response = await sessionRequest
-        .post('/session/sign-in/passwordless/sms/verify-passcode')
+        .post(`${signInRoute}/sms/verify-passcode`)
         .send({ phone: '13000000000', code: '1231' });
       expect(response.statusCode).toEqual(400);
     });
@@ -123,14 +123,14 @@ describe('session -> passwordlessRoutes', () => {
     });
     it('should call sendPasscode', async () => {
       const response = await sessionRequest
-        .post('/session/sign-in/passwordless/email/send-passcode')
+        .post(`${signInRoute}/email/send-passcode`)
         .send({ email: 'a@a.com' });
       expect(response.statusCode).toEqual(204);
       expect(sendPasscode).toHaveBeenCalled();
     });
     it('throw error if email does not exist', async () => {
       const response = await sessionRequest
-        .post('/session/sign-in/passwordless/email/send-passcode')
+        .post(`${signInRoute}/email/send-passcode`)
         .send({ email: 'b@a.com' });
       expect(response.statusCode).toEqual(422);
     });
@@ -139,7 +139,7 @@ describe('session -> passwordlessRoutes', () => {
   describe('POST /session/sign-in/passwordless/email/verify-passcode', () => {
     it('assign result and redirect', async () => {
       const response = await sessionRequest
-        .post('/session/sign-in/passwordless/email/verify-passcode')
+        .post(`${signInRoute}/email/verify-passcode`)
         .send({ email: 'a@a.com', code: '1234' });
       expect(response.statusCode).toEqual(200);
       expect(response.body).toHaveProperty('redirectTo');
@@ -152,13 +152,13 @@ describe('session -> passwordlessRoutes', () => {
     });
     it('throw error if email does not exist', async () => {
       const response = await sessionRequest
-        .post('/session/sign-in/passwordless/email/send-passcode')
+        .post(`${signInRoute}/email/send-passcode`)
         .send({ email: 'b@a.com' });
       expect(response.statusCode).toEqual(422);
     });
     it('throw error if verifyPasscode failed', async () => {
       const response = await sessionRequest
-        .post('/session/sign-in/passwordless/email/verify-passcode')
+        .post(`${signInRoute}/email/verify-passcode`)
         .send({ email: 'a@a.com', code: '1231' });
       expect(response.statusCode).toEqual(400);
     });
@@ -173,7 +173,7 @@ describe('session -> passwordlessRoutes', () => {
 
     it('should call sendPasscode', async () => {
       const response = await sessionRequest
-        .post('/session/register/passwordless/sms/send-passcode')
+        .post(`${registerRoute}/sms/send-passcode`)
         .send({ phone: '13000000001' });
       expect(response.statusCode).toEqual(204);
       expect(sendPasscode).toHaveBeenCalled();
@@ -181,21 +181,21 @@ describe('session -> passwordlessRoutes', () => {
 
     it('throw error if phone not valid (charactors other than digits)', async () => {
       const response = await sessionRequest
-        .post('/session/register/passwordless/sms/send-passcode')
+        .post(`${registerRoute}/sms/send-passcode`)
         .send({ phone: '1300000000a' });
       expect(response.statusCode).toEqual(400);
     });
 
     it('throw error if phone not valid (without digits)', async () => {
       const response = await sessionRequest
-        .post('/session/register/passwordless/sms/send-passcode')
+        .post(`${registerRoute}/sms/send-passcode`)
         .send({ phone: 'abcdefg' });
       expect(response.statusCode).toEqual(400);
     });
 
     it('throw error if phone exists', async () => {
       const response = await sessionRequest
-        .post('/session/register/passwordless/sms/send-passcode')
+        .post(`${registerRoute}/sms/send-passcode`)
         .send({ phone: '13000000000' });
       expect(response.statusCode).toEqual(422);
     });
@@ -204,7 +204,7 @@ describe('session -> passwordlessRoutes', () => {
   describe('POST /session/register/passwordless/sms/verify-passcode', () => {
     it('assign result and redirect', async () => {
       const response = await sessionRequest
-        .post('/session/register/passwordless/sms/verify-passcode')
+        .post(`${registerRoute}/sms/verify-passcode`)
         .send({ phone: '13000000001', code: '1234' });
       expect(response.statusCode).toEqual(200);
       expect(response.body).toHaveProperty('redirectTo');
@@ -221,28 +221,28 @@ describe('session -> passwordlessRoutes', () => {
 
     it('throw error if phone is invalid (characters other than digits)', async () => {
       const response = await sessionRequest
-        .post('/session/register/passwordless/sms/verify-passcode')
+        .post(`${registerRoute}/sms/verify-passcode`)
         .send({ phone: '1300000000a', code: '1234' });
       expect(response.statusCode).toEqual(400);
     });
 
     it('throw error if phone not valid (without digits)', async () => {
       const response = await sessionRequest
-        .post('/session/register/passwordless/sms/verify-passcode')
+        .post(`${registerRoute}/sms/verify-passcode`)
         .send({ phone: 'abcdefg', code: '1234' });
       expect(response.statusCode).toEqual(400);
     });
 
     it('throw error if phone exists', async () => {
       const response = await sessionRequest
-        .post('/session/register/passwordless/sms/verify-passcode')
+        .post(`${registerRoute}/sms/verify-passcode`)
         .send({ phone: '13000000000', code: '1234' });
       expect(response.statusCode).toEqual(422);
     });
 
     it('throw error if verifyPasscode failed', async () => {
       const response = await sessionRequest
-        .post('/session/register/passwordless/sms/verify-passcode')
+        .post(`${registerRoute}/sms/verify-passcode`)
         .send({ phone: '13000000001', code: '1231' });
       expect(response.statusCode).toEqual(400);
     });
@@ -257,7 +257,7 @@ describe('session -> passwordlessRoutes', () => {
 
     it('should call sendPasscode', async () => {
       const response = await sessionRequest
-        .post('/session/register/passwordless/email/send-passcode')
+        .post(`${registerRoute}/email/send-passcode`)
         .send({ email: 'b@a.com' });
       expect(response.statusCode).toEqual(204);
       expect(sendPasscode).toHaveBeenCalled();
@@ -265,14 +265,14 @@ describe('session -> passwordlessRoutes', () => {
 
     it('throw error if email not valid', async () => {
       const response = await sessionRequest
-        .post('/session/register/passwordless/email/send-passcode')
+        .post(`${registerRoute}/email/send-passcode`)
         .send({ email: 'aaa.com' });
       expect(response.statusCode).toEqual(400);
     });
 
     it('throw error if email exists', async () => {
       const response = await sessionRequest
-        .post('/session/register/passwordless/email/send-passcode')
+        .post(`${registerRoute}/email/send-passcode`)
         .send({ email: 'a@a.com' });
       expect(response.statusCode).toEqual(422);
     });
@@ -281,7 +281,7 @@ describe('session -> passwordlessRoutes', () => {
   describe('POST /session/register/passwordless/email/verify-passcode', () => {
     it('assign result and redirect', async () => {
       const response = await sessionRequest
-        .post('/session/register/passwordless/email/verify-passcode')
+        .post(`${registerRoute}/email/verify-passcode`)
         .send({ email: 'b@a.com', code: '1234' });
       expect(response.statusCode).toEqual(200);
       expect(response.body).toHaveProperty('redirectTo');
@@ -298,21 +298,21 @@ describe('session -> passwordlessRoutes', () => {
 
     it('throw error if email not valid', async () => {
       const response = await sessionRequest
-        .post('/session/sign-in/passwordless/email/send-passcode')
+        .post(`${signInRoute}/email/send-passcode`)
         .send({ email: 'aaa.com' });
       expect(response.statusCode).toEqual(400);
     });
 
     it('throw error if email exist', async () => {
       const response = await sessionRequest
-        .post('/session/sign-in/passwordless/email/send-passcode')
+        .post(`${signInRoute}/email/send-passcode`)
         .send({ email: 'b@a.com' });
       expect(response.statusCode).toEqual(422);
     });
 
     it('throw error if verifyPasscode failed', async () => {
       const response = await sessionRequest
-        .post('/session/sign-in/passwordless/email/verify-passcode')
+        .post(`${signInRoute}/email/verify-passcode`)
         .send({ email: 'a@a.com', code: '1231' });
       expect(response.statusCode).toEqual(400);
     });

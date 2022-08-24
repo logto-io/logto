@@ -18,13 +18,17 @@ import { hasUser, hasActiveUsers } from '@/queries/user';
 import assertThat from '@/utils/assert-that';
 
 import { AnonymousRouter } from '../types';
+import { getRoutePrefix } from './utils';
+
+export const registerRoute = getRoutePrefix('register', 'username-password');
+export const signInRoute = getRoutePrefix('sign-in', 'username-password');
 
 export default function usernamePasswordRoutes<T extends AnonymousRouter>(
   router: T,
   provider: Provider
 ) {
   router.post(
-    '/session/sign-in/username-password',
+    signInRoute,
     koaGuard({
       body: object({
         username: string().min(1),
@@ -58,7 +62,7 @@ export default function usernamePasswordRoutes<T extends AnonymousRouter>(
   );
 
   router.post(
-    '/session/register/username-password',
+    registerRoute,
     koaGuard({
       body: object({
         username: string().regex(usernameRegEx),

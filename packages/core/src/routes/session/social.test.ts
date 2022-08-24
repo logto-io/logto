@@ -7,7 +7,7 @@ import { ConnectorType } from '@/connectors/types';
 import RequestError from '@/errors/RequestError';
 import { createRequester } from '@/utils/test-utils';
 
-import socialRoutes from './social';
+import socialRoutes, { registerRoute, signInRoute } from './social';
 
 jest.mock('@/lib/social', () => ({
   ...jest.requireActual('@/lib/social'),
@@ -113,7 +113,7 @@ describe('session -> socialRoutes', () => {
 
   describe('POST /session/sign-in/social', () => {
     it('should throw when redirectURI is invalid', async () => {
-      const response = await sessionRequest.post('/session/sign-in/social').send({
+      const response = await sessionRequest.post(`${signInRoute}`).send({
         connectorId: 'social_enabled',
         state: 'state',
         redirectUri: 'logto.dev',
@@ -122,7 +122,7 @@ describe('session -> socialRoutes', () => {
     });
 
     it('sign-in with social and redirect', async () => {
-      const response = await sessionRequest.post('/session/sign-in/social').send({
+      const response = await sessionRequest.post(`${signInRoute}`).send({
         connectorId: 'social_enabled',
         state: 'state',
         redirectUri: 'https://logto.dev',
@@ -131,7 +131,7 @@ describe('session -> socialRoutes', () => {
     });
 
     it('throw error when sign-in with social but miss state', async () => {
-      const response = await sessionRequest.post('/session/sign-in/social').send({
+      const response = await sessionRequest.post(`${signInRoute}`).send({
         connectorId: 'social_enabled',
         redirectUri: 'https://logto.dev',
       });
@@ -139,7 +139,7 @@ describe('session -> socialRoutes', () => {
     });
 
     it('throw error when sign-in with social but miss redirectUri', async () => {
-      const response = await sessionRequest.post('/session/sign-in/social').send({
+      const response = await sessionRequest.post(`${signInRoute}`).send({
         connectorId: 'social_enabled',
         state: 'state',
       });
@@ -147,7 +147,7 @@ describe('session -> socialRoutes', () => {
     });
 
     it('throw error when connector is disabled', async () => {
-      const response = await sessionRequest.post('/session/sign-in/social').send({
+      const response = await sessionRequest.post(`${signInRoute}`).send({
         connectorId: 'social_disabled',
         state: 'state',
         redirectUri: 'https://logto.dev',
@@ -156,7 +156,7 @@ describe('session -> socialRoutes', () => {
     });
 
     it('throw error when no social connector is found', async () => {
-      const response = await sessionRequest.post('/session/sign-in/social').send({
+      const response = await sessionRequest.post(`${signInRoute}`).send({
         connectorId: 'others',
         state: 'state',
         redirectUri: 'https://logto.dev',
@@ -175,7 +175,7 @@ describe('session -> socialRoutes', () => {
       (getConnectorInstanceById as jest.Mock).mockResolvedValueOnce({
         metadata: { target: connectorTarget },
       });
-      const response = await sessionRequest.post('/session/sign-in/social/auth').send({
+      const response = await sessionRequest.post(`${signInRoute}/auth`).send({
         connectorId: 'connectorId',
         state: 'state',
         redirectUri: 'https://logto.dev',
@@ -188,7 +188,7 @@ describe('session -> socialRoutes', () => {
       (getConnectorInstanceById as jest.Mock).mockResolvedValueOnce({
         metadata: { target: connectorTarget },
       });
-      const response = await sessionRequest.post('/session/sign-in/social/auth').send({
+      const response = await sessionRequest.post(`${signInRoute}/auth`).send({
         connectorId: '_connectorId',
         state: 'state',
         redirectUri: 'https://logto.dev',
@@ -201,7 +201,7 @@ describe('session -> socialRoutes', () => {
       (getConnectorInstanceById as jest.Mock).mockResolvedValueOnce({
         metadata: { target: connectorTarget },
       });
-      const response = await sessionRequest.post('/session/sign-in/social/auth').send({
+      const response = await sessionRequest.post(`${signInRoute}/auth`).send({
         connectorId: 'connectorId',
         data: {
           state: 'state',
@@ -229,7 +229,7 @@ describe('session -> socialRoutes', () => {
       (getConnectorInstanceById as jest.Mock).mockResolvedValueOnce({
         metadata: { target: wrongConnectorTarget },
       });
-      const response = await sessionRequest.post('/session/sign-in/social/auth').send({
+      const response = await sessionRequest.post(`${signInRoute}/auth`).send({
         connectorId: '_connectorId_',
         data: {
           state: 'state',
@@ -330,7 +330,7 @@ describe('session -> socialRoutes', () => {
         },
       });
       const response = await sessionRequest
-        .post('/session/register/social')
+        .post(`${registerRoute}`)
         .send({ connectorId: 'connectorId' });
       expect(insertUser).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -350,7 +350,7 @@ describe('session -> socialRoutes', () => {
     it('throw error if no result can be found in interactionResults', async () => {
       interactionDetails.mockResolvedValueOnce({});
       const response = await sessionRequest
-        .post('/session/register/social')
+        .post(`${registerRoute}`)
         .send({ connectorId: 'connectorId' });
       expect(response.statusCode).toEqual(400);
     });
@@ -358,7 +358,7 @@ describe('session -> socialRoutes', () => {
     it('throw error if result parsing fails', async () => {
       interactionDetails.mockResolvedValueOnce({ result: { login: { accountId: 'id' } } });
       const response = await sessionRequest
-        .post('/session/register/social')
+        .post(`${registerRoute}`)
         .send({ connectorId: 'connectorId' });
       expect(response.statusCode).toEqual(400);
     });
@@ -371,7 +371,7 @@ describe('session -> socialRoutes', () => {
         },
       });
       const response = await sessionRequest
-        .post('/session/register/social')
+        .post(`${registerRoute}`)
         .send({ connectorId: 'connectorId' });
       expect(response.statusCode).toEqual(400);
     });

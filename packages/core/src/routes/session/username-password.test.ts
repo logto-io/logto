@@ -6,7 +6,7 @@ import { mockUser } from '@/__mocks__';
 import RequestError from '@/errors/RequestError';
 import { createRequester } from '@/utils/test-utils';
 
-import sessionRoutes from './username-password';
+import usernamePasswordRoutes, { registerRoute, signInRoute } from './username-password';
 
 const insertUser = jest.fn(async (..._args: unknown[]) => ({ id: 'id' }));
 const findUserById = jest.fn(async (): Promise<User> => mockUser);
@@ -87,7 +87,7 @@ afterEach(() => {
 
 describe('sessionRoutes', () => {
   const sessionRequest = createRequester({
-    anonymousRoutes: sessionRoutes,
+    anonymousRoutes: usernamePasswordRoutes,
     provider: new Provider(''),
     middlewares: [
       async (ctx, next) => {
@@ -102,7 +102,7 @@ describe('sessionRoutes', () => {
   describe('POST /session/sign-in/username-password', () => {
     it('assign result and redirect', async () => {
       interactionDetails.mockResolvedValueOnce({ params: {} });
-      const response = await sessionRequest.post('/session/sign-in/username-password').send({
+      const response = await sessionRequest.post(signInRoute).send({
         username: 'username',
         password: 'password',
       });
@@ -118,7 +118,7 @@ describe('sessionRoutes', () => {
 
     it('throw if user not found', async () => {
       interactionDetails.mockResolvedValueOnce({ params: {} });
-      const response = await sessionRequest.post('/session/sign-in/username-password').send({
+      const response = await sessionRequest.post(signInRoute).send({
         username: 'notexistuser',
         password: 'password',
       });
@@ -127,7 +127,7 @@ describe('sessionRoutes', () => {
 
     it('throw if user found but wrong password', async () => {
       interactionDetails.mockResolvedValueOnce({ params: {} });
-      const response = await sessionRequest.post('/session/sign-in/username-password').send({
+      const response = await sessionRequest.post(signInRoute).send({
         username: 'username',
         password: '_password',
       });
@@ -138,7 +138,7 @@ describe('sessionRoutes', () => {
       interactionDetails.mockResolvedValueOnce({
         params: { client_id: adminConsoleApplicationId },
       });
-      const response = await sessionRequest.post('/session/sign-in/username-password').send({
+      const response = await sessionRequest.post(signInRoute).send({
         username: 'username',
         password: 'password',
       });
@@ -151,7 +151,7 @@ describe('sessionRoutes', () => {
       interactionDetails.mockResolvedValueOnce({
         params: { client_id: adminConsoleApplicationId },
       });
-      const response = await sessionRequest.post('/session/sign-in/username-password').send({
+      const response = await sessionRequest.post(signInRoute).send({
         username: 'admin',
         password: 'password',
       });
@@ -165,7 +165,7 @@ describe('sessionRoutes', () => {
       interactionDetails.mockResolvedValueOnce({ params: {} });
 
       const response = await sessionRequest
-        .post('/session/register/username-password')
+        .post(registerRoute)
         .send({ username: 'username', password: 'password' });
       expect(insertUser).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -192,9 +192,7 @@ describe('sessionRoutes', () => {
 
       hasActiveUsers.mockResolvedValueOnce(false);
 
-      await sessionRequest
-        .post('/session/register/username-password')
-        .send({ username: 'username', password: 'password' });
+      await sessionRequest.post(registerRoute).send({ username: 'username', password: 'password' });
 
       expect(insertUser).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -208,9 +206,7 @@ describe('sessionRoutes', () => {
         params: { client_id: adminConsoleApplicationId },
       });
 
-      await sessionRequest
-        .post('/session/register/username-password')
-        .send({ username: 'username', password: 'password' });
+      await sessionRequest.post(registerRoute).send({ username: 'username', password: 'password' });
 
       expect(insertUser).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -222,14 +218,14 @@ describe('sessionRoutes', () => {
     it('throw error if username not valid', async () => {
       const usernameStartedWithNumber = '1username';
       const response = await sessionRequest
-        .post('/session/register/username-password')
+        .post(registerRoute)
         .send({ username: usernameStartedWithNumber, password: 'password' });
       expect(response.statusCode).toEqual(400);
     });
 
     it('throw error if username exists', async () => {
       const response = await sessionRequest
-        .post('/session/register/username-password')
+        .post(registerRoute)
         .send({ username: 'username1', password: 'password' });
       expect(response.statusCode).toEqual(422);
     });
