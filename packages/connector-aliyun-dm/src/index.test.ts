@@ -1,13 +1,15 @@
-import { GetConnectorConfig, ValidateConfig } from '@logto/connector-types';
+import { MessageTypes, validateConfig } from '@logto/connector-core';
 
-import AliyunDmConnector from '.';
+import createConnector from '.';
 import { mockedConfig } from './mock';
 import { singleSendMail } from './single-send-mail';
-import { AliyunDmConfig } from './types';
+import { AliyunDmConfig, aliyunDmConfigGuard } from './types';
 
-const getConnectorConfig = jest.fn() as GetConnectorConfig;
+const getConfig = jest.fn().mockResolvedValue(mockedConfig);
 
-const aliyunDmMethods = new AliyunDmConnector(getConnectorConfig);
+function validator(config: unknown): asserts config is AliyunDmConfig {
+  validateConfig<AliyunDmConfig>(config, aliyunDmConfigGuard);
+}
 
 jest.mock('./single-send-mail', () => {
   return {
@@ -20,22 +22,12 @@ jest.mock('./single-send-mail', () => {
   };
 });
 
-beforeAll(() => {
-  jest.spyOn(aliyunDmMethods, 'getConfig').mockResolvedValue(mockedConfig);
-});
-
 describe('validateConfig()', () => {
   afterEach(() => {
     jest.clearAllMocks();
   });
 
-  /**
-   * Assertion functions always need explicit annotations.
-   * See https://github.com/microsoft/TypeScript/issues/36931#issuecomment-589753014
-   */
-
   it('should pass on valid config', async () => {
-    const validator: ValidateConfig<AliyunDmConfig> = aliyunDmMethods.validateConfig;
     expect(() => {
       validator({
         accessKeyId: 'accessKeyId',
@@ -47,7 +39,6 @@ describe('validateConfig()', () => {
   });
 
   it('should fail if config is invalid', async () => {
-    const validator: ValidateConfig<AliyunDmConfig> = aliyunDmMethods.validateConfig;
     expect(() => {
       validator({});
     }).toThrow();
@@ -60,7 +51,12 @@ describe('sendMessage()', () => {
   });
 
   it('should call singleSendMail() and replace code in content', async () => {
-    await aliyunDmMethods.sendMessage('to@email.com', 'SignIn', { code: '1234' });
+    const connector = await createConnector({ getConfig });
+    await connector.sendMessage({
+      to: 'to@email.com',
+      type: MessageTypes.SignIn,
+      payload: { code: '1234' },
+    });
     expect(singleSendMail).toHaveBeenCalledWith(
       expect.objectContaining({
         HtmlBody: 'Your code is 1234, 1234 is your code',
@@ -70,8 +66,13 @@ describe('sendMessage()', () => {
   });
 
   it('throws if template is missing', async () => {
+    const connector = await createConnector({ getConfig });
     await expect(
-      aliyunDmMethods.sendMessage('to@email.com', 'Register', { code: '1234' })
+      connector.sendMessage({
+        to: 'to@email.com',
+        type: MessageTypes.Register,
+        payload: { code: '1234' },
+      })
     ).rejects.toThrow();
   });
 });

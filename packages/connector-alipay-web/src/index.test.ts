@@ -1,19 +1,16 @@
-import {
-  ConnectorError,
-  ConnectorErrorCodes,
-  GetConnectorConfig,
-  ValidateConfig,
-} from '@logto/connector-types';
+import { ConnectorError, ConnectorErrorCodes, validateConfig } from '@logto/connector-core';
 import nock from 'nock';
 
-import AlipayConnector from '.';
+import createConnector, { getAccessToken } from '.';
 import { alipayEndpoint, authorizationEndpoint } from './constant';
-import { mockedAlipayConfig, mockedAlipayConfigWithValidPrivateKey } from './mock';
-import { AlipayConfig } from './types';
+import { mockedAlipayConfigWithValidPrivateKey } from './mock';
+import { AlipayConfig, alipayConfigGuard } from './types';
 
-const getConnectorConfig = jest.fn() as GetConnectorConfig;
+const getConfig = jest.fn().mockResolvedValue(mockedAlipayConfigWithValidPrivateKey);
 
-const alipayMethods = new AlipayConnector(getConnectorConfig);
+function validator(config: unknown): asserts config is AlipayConfig {
+  validateConfig<AlipayConfig>(config, alipayConfigGuard);
+}
 
 describe('validateConfig', () => {
   afterEach(() => {
@@ -26,7 +23,6 @@ describe('validateConfig', () => {
    */
 
   it('should pass on valid config', async () => {
-    const validator: ValidateConfig<AlipayConfig> = alipayMethods.validateConfig;
     expect(() => {
       validator({
         appId: 'appId',
@@ -37,14 +33,12 @@ describe('validateConfig', () => {
   });
 
   it('should fail on empty config', async () => {
-    const validator: ValidateConfig<AlipayConfig> = alipayMethods.validateConfig;
     expect(() => {
       validator({});
     }).toThrow();
   });
 
   it('should fail when missing required properties', async () => {
-    const validator: ValidateConfig<AlipayConfig> = alipayMethods.validateConfig;
     expect(() => {
       validator({ appId: 'appId' });
     }).toThrow();
@@ -57,8 +51,8 @@ describe('getAuthorizationUri', () => {
   });
 
   it('should get a valid uri by redirectUri and state', async () => {
-    jest.spyOn(alipayMethods, 'getConfig').mockResolvedValueOnce(mockedAlipayConfig);
-    const authorizationUri = await alipayMethods.getAuthorizationUri({
+    const connector = await createConnector({ getConfig });
+    const authorizationUri = await connector.getAuthorizationUri({
       state: 'some_state',
       redirectUri: 'http://localhost:3001/callback',
     });
@@ -90,11 +84,7 @@ describe('getAccessToken', () => {
         },
         sign: '<signature>',
       });
-
-    const response = await alipayMethods.getAccessToken(
-      'code',
-      mockedAlipayConfigWithValidPrivateKey
-    );
+    const response = await getAccessToken('code', mockedAlipayConfigWithValidPrivateKey);
     const { accessToken } = response;
     expect(accessToken).toEqual('access_token');
   });
@@ -115,7 +105,7 @@ describe('getAccessToken', () => {
       });
 
     await expect(
-      alipayMethods.getAccessToken('code', mockedAlipayConfigWithValidPrivateKey)
+      getAccessToken('code', mockedAlipayConfigWithValidPrivateKey)
     ).rejects.toMatchError(new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid));
   });
 
@@ -133,7 +123,7 @@ describe('getAccessToken', () => {
       });
 
     await expect(
-      alipayMethods.getAccessToken('wrong_code', mockedAlipayConfigWithValidPrivateKey)
+      getAccessToken('wrong_code', mockedAlipayConfigWithValidPrivateKey)
     ).rejects.toMatchError(
       new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid, 'Invalid code')
     );
@@ -141,14 +131,26 @@ describe('getAccessToken', () => {
 });
 
 describe('getUserInfo', () => {
-  beforeEach(() => {
-    jest.spyOn(alipayMethods, 'getConfig').mockResolvedValue(mockedAlipayConfigWithValidPrivateKey);
-    jest.spyOn(alipayMethods, 'getAccessToken').mockResolvedValue({ accessToken: 'access_token' });
-  });
-
   afterEach(() => {
     nock.cleanAll();
     jest.clearAllMocks();
+  });
+
+  beforeEach(() => {
+    nock(alipayEndpointUrl.origin)
+      .post(alipayEndpointUrl.pathname)
+      .query(true)
+      .once()
+      .reply(200, {
+        alipay_system_oauth_token_response: {
+          user_id: '2088000000000000',
+          access_token: 'access_token',
+          expires_in: 3600,
+          refresh_token: 'refresh_token',
+          re_expires_in: 7200, // Expiration timeout of refresh token, in seconds
+        },
+        sign: '<signature>',
+      });
   });
 
   const alipayEndpointUrl = new URL(alipayEndpoint);
@@ -167,15 +169,16 @@ describe('getUserInfo', () => {
         },
         sign: '<signature>',
       });
-
-    const { id, name, avatar } = await alipayMethods.getUserInfo({ auth_code: 'code' });
+    const connector = await createConnector({ getConfig });
+    const { id, name, avatar } = await connector.getUserInfo({ auth_code: 'code' });
     expect(id).toEqual('2088000000000000');
     expect(name).toEqual('PlayboyEric');
     expect(avatar).toEqual('https://www.alipay.com/xxx.jpg');
   });
 
   it('throw General error if auth_code not provided in input', async () => {
-    await expect(alipayMethods.getUserInfo({})).rejects.toMatchError(
+    const connector = await createConnector({ getConfig });
+    await expect(connector.getUserInfo({})).rejects.toMatchError(
       new ConnectorError(ConnectorErrorCodes.InvalidResponse, '{}')
     );
   });
@@ -193,8 +196,8 @@ describe('getUserInfo', () => {
         },
         sign: '<signature>',
       });
-
-    await expect(alipayMethods.getUserInfo({ auth_code: 'wrong_code' })).rejects.toMatchError(
+    const connector = await createConnector({ getConfig });
+    await expect(connector.getUserInfo({ auth_code: 'wrong_code' })).rejects.toMatchError(
       new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid, 'Invalid auth token')
     );
   });
@@ -212,8 +215,8 @@ describe('getUserInfo', () => {
         },
         sign: '<signature>',
       });
-
-    await expect(alipayMethods.getUserInfo({ auth_code: 'wrong_code' })).rejects.toMatchError(
+    const connector = await createConnector({ getConfig });
+    await expect(connector.getUserInfo({ auth_code: 'wrong_code' })).rejects.toMatchError(
       new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid, 'Invalid auth code')
     );
   });
@@ -231,8 +234,8 @@ describe('getUserInfo', () => {
         },
         sign: '<signature>',
       });
-
-    await expect(alipayMethods.getUserInfo({ auth_code: 'wrong_code' })).rejects.toMatchError(
+    const connector = await createConnector({ getConfig });
+    await expect(connector.getUserInfo({ auth_code: 'wrong_code' })).rejects.toMatchError(
       new ConnectorError(ConnectorErrorCodes.General, {
         errorDescription: 'Invalid parameter',
         code: '40002',
@@ -256,15 +259,15 @@ describe('getUserInfo', () => {
         },
         sign: '<signature>',
       });
-
-    await expect(alipayMethods.getUserInfo({ auth_code: 'code' })).rejects.toMatchError(
+    const connector = await createConnector({ getConfig });
+    await expect(connector.getUserInfo({ auth_code: 'code' })).rejects.toMatchError(
       new ConnectorError(ConnectorErrorCodes.InvalidResponse)
     );
   });
 
   it('should throw with other request errors', async () => {
     nock(alipayEndpointUrl.origin).post(alipayEndpointUrl.pathname).query(true).reply(500);
-
-    await expect(alipayMethods.getUserInfo({ auth_code: 'code' })).rejects.toThrow();
+    const connector = await createConnector({ getConfig });
+    await expect(connector.getUserInfo({ auth_code: 'code' })).rejects.toThrow();
   });
 });

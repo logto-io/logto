@@ -38,7 +38,6 @@ export const mockLogtoConnector: Omit<LogtoConnector, 'metadata' | 'db'> = {
   getAuthorizationUri: jest.fn(),
   getUserInfo: jest.fn(),
   sendMessage: jest.fn(),
-  sendTestMessage: jest.fn(),
   validateConfig: jest.fn(),
   configGuard: any(),
 };

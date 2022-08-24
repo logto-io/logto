@@ -1,18 +1,12 @@
-import { GetConnectorConfig, ValidateConfig } from '@logto/connector-types';
+import { validateConfig } from '@logto/connector-core';
 
-import SendGridMailConnector from '.';
-import { mockedConfig } from './mock';
-import { ContextType, SendGridMailConfig } from './types';
+import { ContextType, SendGridMailConfig, sendGridMailConfigGuard } from './types';
 
-const getConnectorConfig = jest.fn() as GetConnectorConfig;
-
-const sendGridMailMethods = new SendGridMailConnector(getConnectorConfig);
+function validator(config: unknown): asserts config is SendGridMailConfig {
+  validateConfig<SendGridMailConfig>(config, sendGridMailConfigGuard);
+}
 
 jest.mock('got');
-
-beforeAll(() => {
-  jest.spyOn(sendGridMailMethods, 'getConfig').mockResolvedValue(mockedConfig);
-});
 
 describe('validateConfig()', () => {
   afterEach(() => {
@@ -25,7 +19,6 @@ describe('validateConfig()', () => {
    */
 
   it('should pass on valid config', async () => {
-    const validator: ValidateConfig<SendGridMailConfig> = sendGridMailMethods.validateConfig;
     expect(() => {
       validator({
         apiKey: 'apiKey',
@@ -44,7 +37,6 @@ describe('validateConfig()', () => {
   });
 
   it('should be false if config is invalid', async () => {
-    const validator: ValidateConfig<SendGridMailConfig> = sendGridMailMethods.validateConfig;
     expect(() => {
       validator({});
     }).toThrow();

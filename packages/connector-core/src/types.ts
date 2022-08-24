@@ -58,18 +58,14 @@ export class ConnectorError extends Error {
   }
 }
 
-export type MessageTypes = {
-  SignIn: {
-    code: string;
-  };
-  Register: {
-    code: string;
-  };
-  ForgotPassword: {
-    code: string;
-  };
-  Test: Record<string, unknown>;
-};
+export enum MessageTypes {
+  SignIn = 'SignIn',
+  Register = 'Register',
+  ForgotPassword = 'ForgotPassword',
+  Test = 'Test',
+}
+
+export const messageTypesGuard = z.nativeEnum(MessageTypes);
 
 export type BaseConnector = {
   metadata: ConnectorMetadata;
@@ -77,17 +73,7 @@ export type BaseConnector = {
 };
 
 export type SmsConnector = {
-  sendMessage: <T>(
-    phone: string,
-    type: keyof MessageTypes,
-    payload: MessageTypes[typeof type]
-  ) => Promise<T>;
-  sendTestMessage?: <T>(
-    config: Record<string, unknown>,
-    phone: string,
-    type: keyof MessageTypes,
-    payload: MessageTypes[typeof type]
-  ) => Promise<T>;
+  sendMessage: SendMessageFunction;
 } & BaseConnector;
 
 export type EmailConnector = SmsConnector;
@@ -103,6 +89,11 @@ export type GeneralConnector = BaseConnector &
 export type CreateConnector<
   T extends SocialConnector | EmailConnector | SmsConnector | GeneralConnector
 > = (options: { getConfig: GetConnectorConfig }) => Promise<T>;
+
+export type SendMessageFunction = (
+  data: { to: string; type: MessageTypes; payload: { code: string } },
+  config?: unknown
+) => Promise<unknown>;
 
 export type GetAuthorizationUri = (payload: {
   state: string;

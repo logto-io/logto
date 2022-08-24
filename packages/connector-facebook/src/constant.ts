@@ -1,4 +1,4 @@
-import { ConnectorMetadata, ConnectorType, ConnectorPlatform } from '@logto/connector-types';
+import { ConnectorMetadata, ConnectorType, ConnectorPlatform } from '@logto/connector-core';
 
 /**
  * Note: If you do not include a version number we will default to the oldest available version, so it's recommended to include the version number in your requests.

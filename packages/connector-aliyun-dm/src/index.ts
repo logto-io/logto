@@ -1,14 +1,12 @@
 import {
   ConnectorError,
   ConnectorErrorCodes,
-  ConnectorMetadata,
-  Connector,
-  EmailSendMessageFunction,
-  EmailSendTestMessageFunction,
-  EmailConnectorInstance,
+  CreateConnector,
+  EmailConnector,
   GetConnectorConfig,
-  EmailMessageTypes,
-} from '@logto/connector-types';
+  SendMessageFunction,
+  validateConfig,
+} from '@logto/connector-core';
 import { assert } from '@silverhand/essentials';
 import { HTTPError } from 'got';
 
@@ -21,52 +19,13 @@ import {
   sendMailErrorResponseGuard,
 } from './types';
 
-export default class AliyunDmConnector implements EmailConnectorInstance<AliyunDmConfig> {
-  public metadata: ConnectorMetadata = defaultMetadata;
-  private _connector?: Connector;
-
-  public get connector() {
-    if (!this._connector) {
-      throw new ConnectorError(ConnectorErrorCodes.General);
-    }
-
-    return this._connector;
-  }
-
-  public set connector(input: Connector) {
-    this._connector = input;
-  }
-
-  constructor(public readonly getConfig: GetConnectorConfig) {}
-
-  public validateConfig(config: unknown): asserts config is AliyunDmConfig {
-    const result = aliyunDmConfigGuard.safeParse(config);
-
-    if (!result.success) {
-      throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, result.error);
-    }
-  }
-
-  public sendMessage: EmailSendMessageFunction = async (address, type, data) => {
-    const emailConfig = await this.getConfig(this.metadata.id);
-
-    this.validateConfig(emailConfig);
-
-    return this.sendMessageBy(emailConfig, address, type, data);
-  };
-
-  public sendTestMessage: EmailSendTestMessageFunction = async (config, address, type, data) => {
-    this.validateConfig(config);
-
-    return this.sendMessageBy(config, address, type, data);
-  };
-
-  private readonly sendMessageBy = async (
-    config: AliyunDmConfig,
-    address: string,
-    type: keyof EmailMessageTypes,
-    data: EmailMessageTypes[typeof type]
-  ) => {
+const sendMessage =
+  (getConfig: GetConnectorConfig): SendMessageFunction =>
+  // eslint-disable-next-line complexity
+  async (data, inputConfig) => {
+    const { to, type, payload } = data;
+    const config = inputConfig ?? (await getConfig(defaultMetadata.id));
+    validateConfig<AliyunDmConfig>(config, aliyunDmConfigGuard);
     const { accessKeyId, accessKeySecret, accountName, fromAlias, templates } = config;
     const template = templates.find((template) => template.usageType === type);
 
@@ -85,12 +44,12 @@ export default class AliyunDmConnector implements EmailConnectorInstance<AliyunD
           AccountName: accountName,
           ReplyToAddress: 'false',
           AddressType: '1',
-          ToAddress: address,
+          ToAddress: to,
           FromAlias: fromAlias,
           Subject: template.subject,
           HtmlBody:
-            typeof data.code === 'string'
-              ? template.content.replace(/{{code}}/g, data.code)
+            typeof payload.code === 'string'
+              ? template.content.replace(/{{code}}/g, payload.code)
               : template.content,
         },
         accessKeySecret
@@ -114,22 +73,31 @@ export default class AliyunDmConnector implements EmailConnectorInstance<AliyunD
           new ConnectorError(ConnectorErrorCodes.InvalidResponse)
         );
 
-        this.errorHandler(rawBody);
+        errorHandler(rawBody);
       }
 
       throw error;
     }
   };
 
-  private readonly errorHandler = (errorResponseBody: string) => {
-    const result = sendMailErrorResponseGuard.safeParse(JSON.parse(errorResponseBody));
+const errorHandler = (errorResponseBody: string) => {
+  const result = sendMailErrorResponseGuard.safeParse(JSON.parse(errorResponseBody));
 
-    if (!result.success) {
-      throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, result.error.message);
-    }
+  if (!result.success) {
+    throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, result.error.message);
+  }
 
-    const { Message: errorDescription, ...rest } = result.data;
+  const { Message: errorDescription, ...rest } = result.data;
 
-    throw new ConnectorError(ConnectorErrorCodes.General, { errorDescription, ...rest });
+  throw new ConnectorError(ConnectorErrorCodes.General, { errorDescription, ...rest });
+};
+
+const createAliyunDmConnector: CreateConnector<EmailConnector> = async ({ getConfig }) => {
+  return {
+    metadata: defaultMetadata,
+    configGuard: aliyunDmConfigGuard,
+    sendMessage: sendMessage(getConfig),
   };
-}
+};
+
+export default createAliyunDmConnector;

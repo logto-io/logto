@@ -29,11 +29,12 @@ const loadConnectors = async () => {
   // eslint-disable-next-line @silverhand/fp/no-mutation
   cachedConnectors = await Promise.all(
     connectorPackages.map(async (packageName) => {
-      // eslint-disable-next-line no-restricted-syntax
-      const { default: createConnector } = (await import(packageName)) as {
-        default: CreateConnector<GeneralConnector>;
-      };
-      const rawConnector = await createConnector({ getConfig: getConnectorConfig });
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      const { default: createConnector } = await import(packageName);
+      // eslint-disable-next-line no-restricted-syntax, @typescript-eslint/no-unsafe-call
+      const rawConnector = (await createConnector({
+        getConfig: getConnectorConfig,
+      })) as GeneralConnector;
 
       validateConnectorModule(rawConnector);
 

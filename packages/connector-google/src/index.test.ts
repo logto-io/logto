@@ -1,23 +1,16 @@
-import {
-  ConnectorError,
-  ConnectorErrorCodes,
-  GetConnectorConfig,
-  ValidateConfig,
-} from '@logto/connector-types';
+import { ConnectorError, ConnectorErrorCodes, validateConfig } from '@logto/connector-core';
 import nock from 'nock';
 
-import GoogleConnector from '.';
+import createConnector, { getAccessToken } from '.';
 import { accessTokenEndpoint, authorizationEndpoint, userInfoEndpoint } from './constant';
 import { mockedConfig } from './mock';
-import { GoogleConfig } from './types';
+import { GoogleConfig, googleConfigGuard } from './types';
 
-const getConnectorConfig = jest.fn() as GetConnectorConfig;
+const getConfig = jest.fn().mockResolvedValue(mockedConfig);
 
-const googleMethods = new GoogleConnector(getConnectorConfig);
-
-beforeAll(() => {
-  jest.spyOn(googleMethods, 'getConfig').mockResolvedValue(mockedConfig);
-});
+function validator(config: unknown): asserts config is GoogleConfig {
+  validateConfig<GoogleConfig>(config, googleConfigGuard);
+}
 
 describe('google connector', () => {
   describe('validateConfig', () => {
@@ -25,20 +18,13 @@ describe('google connector', () => {
       jest.clearAllMocks();
     });
 
-    /**
-     * Assertion functions always need explicit annotations.
-     * See https://github.com/microsoft/TypeScript/issues/36931#issuecomment-589753014
-     */
-
     it('should pass on valid config', async () => {
-      const validator: ValidateConfig<GoogleConfig> = googleMethods.validateConfig;
       expect(() => {
         validator({ clientId: 'clientId', clientSecret: 'clientSecret' });
       }).not.toThrow();
     });
 
     it('should fail on invalid config', async () => {
-      const validator: ValidateConfig<GoogleConfig> = googleMethods.validateConfig;
       expect(() => {
         validator({});
       }).toThrow();
@@ -57,7 +43,8 @@ describe('google connector', () => {
     });
 
     it('should get a valid authorizationUri with redirectUri and state', async () => {
-      const authorizationUri = await googleMethods.getAuthorizationUri({
+      const connector = await createConnector({ getConfig });
+      const authorizationUri = await connector.getAuthorizationUri({
         state: 'some_state',
         redirectUri: 'http://localhost:3000/callback',
       });
@@ -79,7 +66,10 @@ describe('google connector', () => {
         scope: 'scope',
         token_type: 'token_type',
       });
-      const { accessToken } = await googleMethods.getAccessToken('code', 'dummyRedirectUri');
+      const { accessToken } = await getAccessToken(mockedConfig, {
+        code: 'code',
+        redirectUri: 'dummyRedirectUri',
+      });
       expect(accessToken).toEqual('access_token');
     });
 
@@ -87,9 +77,9 @@ describe('google connector', () => {
       nock(accessTokenEndpoint)
         .post('')
         .reply(200, { access_token: '', scope: 'scope', token_type: 'token_type' });
-      await expect(googleMethods.getAccessToken('code', 'dummyRedirectUri')).rejects.toMatchError(
-        new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid)
-      );
+      await expect(
+        getAccessToken(mockedConfig, { code: 'code', redirectUri: 'dummyRedirectUri' })
+      ).rejects.toMatchError(new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid));
     });
   });
 
@@ -118,7 +108,11 @@ describe('google connector', () => {
         email_verified: true,
         locale: 'en',
       });
-      const socialUserInfo = await googleMethods.getUserInfo({ code: 'code', redirectUri: '' });
+      const connector = await createConnector({ getConfig });
+      const socialUserInfo = await connector.getUserInfo({
+        code: 'code',
+        redirectUri: 'redirectUri',
+      });
       expect(socialUserInfo).toMatchObject({
         id: '1234567890',
         avatar: 'https://github.com/images/error/octocat_happy.gif',
@@ -129,9 +123,10 @@ describe('google connector', () => {
 
     it('throws SocialAccessTokenInvalid error if remote response code is 401', async () => {
       nock(userInfoEndpoint).post('').reply(401);
-      await expect(
-        googleMethods.getUserInfo({ code: 'code', redirectUri: '' })
-      ).rejects.toMatchError(new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid));
+      const connector = await createConnector({ getConfig });
+      await expect(connector.getUserInfo({ code: 'code', redirectUri: '' })).rejects.toMatchError(
+        new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid)
+      );
     });
 
     it('throws General error', async () => {
@@ -145,8 +140,9 @@ describe('google connector', () => {
         email_verified: true,
         locale: 'en',
       });
+      const connector = await createConnector({ getConfig });
       await expect(
-        googleMethods.getUserInfo({
+        connector.getUserInfo({
           error: 'general_error',
           error_description: 'General error encountered.',
         })
@@ -160,7 +156,8 @@ describe('google connector', () => {
 
     it('throws unrecognized error', async () => {
       nock(userInfoEndpoint).post('').reply(500);
-      await expect(googleMethods.getUserInfo({ code: 'code', redirectUri: '' })).rejects.toThrow();
+      const connector = await createConnector({ getConfig });
+      await expect(connector.getUserInfo({ code: 'code', redirectUri: '' })).rejects.toThrow();
     });
   });
 });

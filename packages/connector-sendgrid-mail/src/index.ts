@@ -1,14 +1,12 @@
 import {
   ConnectorError,
   ConnectorErrorCodes,
-  ConnectorMetadata,
-  Connector,
-  EmailSendMessageFunction,
-  EmailSendTestMessageFunction,
-  EmailConnectorInstance,
   GetConnectorConfig,
-  EmailMessageTypes,
-} from '@logto/connector-types';
+  SendMessageFunction,
+  validateConfig,
+  CreateConnector,
+  EmailConnector,
+} from '@logto/connector-core';
 import { assert } from '@silverhand/essentials';
 import got, { HTTPError } from 'got';
 
@@ -22,52 +20,13 @@ import {
   PublicParameters,
 } from './types';
 
-export default class SendGridMailConnector implements EmailConnectorInstance<SendGridMailConfig> {
-  public metadata: ConnectorMetadata = defaultMetadata;
-  private _connector?: Connector;
-
-  public get connector() {
-    if (!this._connector) {
-      throw new ConnectorError(ConnectorErrorCodes.General);
-    }
-
-    return this._connector;
-  }
-
-  public set connector(input: Connector) {
-    this._connector = input;
-  }
-
-  constructor(public readonly getConfig: GetConnectorConfig) {}
-
-  public validateConfig(config: unknown): asserts config is SendGridMailConfig {
-    const result = sendGridMailConfigGuard.safeParse(config);
-
-    if (!result.success) {
-      throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, result.error);
-    }
-  }
-
-  public sendMessage: EmailSendMessageFunction = async (address, type, data) => {
-    const config = await this.getConfig(this.metadata.id);
-
-    this.validateConfig(config);
-
-    return this.sendMessageBy(config, address, type, data);
-  };
-
-  public sendTestMessage: EmailSendTestMessageFunction = async (config, address, type, data) => {
-    this.validateConfig(config);
-
-    return this.sendMessageBy(config, address, type, data);
-  };
-
-  private readonly sendMessageBy = async (
-    config: SendGridMailConfig,
-    address: string,
-    type: keyof EmailMessageTypes,
-    data: EmailMessageTypes[typeof type]
-  ) => {
+const sendMessage =
+  (getConfig: GetConnectorConfig): SendMessageFunction =>
+  // eslint-disable-next-line complexity
+  async (data, inputConfig) => {
+    const { to, type, payload } = data;
+    const config = inputConfig ?? (await getConfig(defaultMetadata.id));
+    validateConfig<SendGridMailConfig>(config, sendGridMailConfigGuard);
     const { apiKey, fromEmail, fromName, templates } = config;
     const template = templates.find((template) => template.usageType === type);
 
@@ -79,7 +38,7 @@ export default class SendGridMailConnector implements EmailConnectorInstance<Sen
       )
     );
 
-    const toEmailData: EmailData[] = [{ email: address }];
+    const toEmailData: EmailData[] = [{ email: to }];
     const fromEmailData: EmailData = fromName
       ? { email: fromEmail, name: fromName }
       : { email: fromEmail };
@@ -87,8 +46,8 @@ export default class SendGridMailConnector implements EmailConnectorInstance<Sen
     const content: Content = {
       type: template.type,
       value:
-        typeof data.code === 'string'
-          ? template.content.replace(/{{code}}/g, data.code)
+        typeof payload.code === 'string'
+          ? template.content.replace(/{{code}}/g, payload.code)
           : template.content,
     };
     const { subject } = template;
@@ -124,4 +83,13 @@ export default class SendGridMailConnector implements EmailConnectorInstance<Sen
       throw error;
     }
   };
-}
+
+const createSendGridMailConnector: CreateConnector<EmailConnector> = async ({ getConfig }) => {
+  return {
+    metadata: defaultMetadata,
+    configGuard: sendGridMailConfigGuard,
+    sendMessage: sendMessage(getConfig),
+  };
+};
+
+export default createSendGridMailConnector;
