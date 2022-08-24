@@ -1,8 +1,11 @@
-import { conditionalString } from '@silverhand/essentials';
+import { Truthy } from '@silverhand/essentials';
 
 export const getRoutePrefix = (
   type: 'sign-in' | 'register',
   method?: 'passwordless' | 'username-password' | 'social'
 ) => {
-  return `${type}${conditionalString(method)}`;
+  return ['session', type, method]
+    .filter((value): value is Truthy<typeof value> => value !== undefined)
+    .map((value) => '/' + value)
+    .join('');
 };
