@@ -3,41 +3,35 @@ import Step from '@mdx/components/Step';
 import Tabs from '@mdx/components/Tabs';
 import TabItem from '@mdx/components/TabItem';
 import Alert from '@/components/Alert';
+import { generateRandomString } from '@logto/shared';
 
 <Step
-  title="将 Logto SDK 添加至依赖"
+  title="添加依赖"
   subtitle="选择你熟悉的包管理工具"
   index={0}
   activeIndex={props.activeStepIndex}
   onButtonClick={() => props.onNext(1)}
 >
 
-本演示项目需要安装 4 个依赖包：
-
-1. **@logto/js**: Logto 核心 JavaScript SDK。
-2. **node-fetch**: 最小代码在 Node.js 运行环境中实现 `window.fetch` 兼容。
-3. **express-session**: session 中间件, 用于存储用户 token。
-4. **js-base64**: Base64 转换工具。
-
 <Tabs>
 <TabItem value="npm" label="npm">
 
 ```bash
-npm i @logto/js node-fetch@v2 express-session js-base64
+npm i @logto/express cookie-parser express-session
 ```
 
 </TabItem>
 <TabItem value="yarn" label="Yarn">
 
 ```bash
-yarn add @logto/js node-fetch@v2 express-session js-base64
+yarn add @logto/express cookie-parser express-session
 ```
 
 </TabItem>
 <TabItem value="pnpm" label="pnpm">
 
 ```bash
-pnpm add @logto/js node-fetch@v2 express-session js-base64
+pnpm add @logto/express cookie-parser express-session
 ```
 
 </TabItem>
@@ -45,155 +39,51 @@ pnpm add @logto/js node-fetch@v2 express-session js-base64
 </Step>
 
 <Step
-  title="使用 session"
+  title="初始化 LogtoClient"
   subtitle="共 1 步"
   index={1}
   activeIndex={props.activeStepIndex}
   onButtonClick={() => props.onNext(2)}
 >
 
-用户完成登录后，将会得到一系列的 token（Access Token, ID Token, Refresh Token）和交互数据，我们将这些数据保存到 session 中。
+<Alert>
+  在如下代码示例中, 我们均先假设你的 React 应用运行在 <code>http://localhost:3000</code> 上。
+</Alert>
 
-在上一个步骤中已经安装了 [express-session](https://github.com/expressjs/session)，在 `app.js` 中完成初始化：
+引入并实例化 LogtoClient：
 
-```js
-const session = require('express-session');
+<pre>
+<code className="language-ts">
+{`import LogtoClient from '@logto/express';
 
-app.use(
-  session({
-    secret: 'keyboard cat', // 改为你自己的密钥
-    cookie: { maxAge: 86400 },
-  })
-);
-```
+export const logtoClient = new LogtoClient({
+  endpoint: '${props.endpoint}',
+  appId: '${props.appId}',
+  appSecret: '${props.appSecret}',
+  baseUrl: 'http://localhost:3000', // 你可以修改为自己真实的 URL
+});`}
+</code>
+</pre>
 
 </Step>
 
 <Step
-  title="实现用于用户认证的相关函数"
-  subtitle="共 2 步"
+  title="准备前置中间件"
+  subtitle="共 1 步"
   index={2}
   activeIndex={props.activeStepIndex}
   onButtonClick={() => props.onNext(3)}
 >
 
-<Alert>
-  在如下代码示例中, 我们均先假设你的 React 应用运行在 <code>http://localhost:3000</code> 上。
-</Alert>
-
-### 配置 Redirect URI
-
-首先，我们来添加 Redirect URI，如：`http://localhost:3000/callback`。
-
-<UriInputField appId={props.appId} isSingle={!props.isCompact} name="redirectUris" title="application_details.redirect_uri" />
-
-返回你的 IDE 或编辑器，我们将会实现如下几个用户认证所需函数。
-
-### 实现用户认证的函数
-
-1. `getSignInUrl`: 构建并返回完整的用于 Logto 认证服务的 URL，用户将被重定向到这个 URL 以完成登录。
-2. `handleSignIn`: 解析回调 URL， 从 query 参数中获取 code， 并用它获取其他 token (an access token, the refresh token, and an ID token)，完成整个登录流程。
-3. `refreshTokens`: 使用 refresh token 获取新的 access token。
+本 SDK 要求预先安装并配置好 [express-session](https://www.npmjs.com/package/express-session)。
 
 <pre>
-<code className={"language-js"}>
-{`// logto.js
+<code className="language-ts">
+{`import cookieParser from 'cookie-parser';
+import session from 'express-session';
 
-const {
-  withReservedScopes,
-  fetchOidcConfig,
-  discoveryPath,
-  createRequester,
-  generateSignInUri,
-  verifyAndParseCodeFromCallbackUri,
-  fetchTokenByAuthorizationCode,
-  fetchTokenByRefreshToken,
-} = require('@logto/js');
-const fetch = require('node-fetch');
-const { randomFillSync, createHash } = require('crypto');
-const { fromUint8Array } = require('js-base64');
-
-const config = {
-  endpoint: '${props.endpoint}',
-  appId: '${props.appId}',
-  appSecret: '${props.appSecret}',
-  redirectUri: '${props.redirectUris[0] ?? 'http://localhost:3000/callback'}', // 上一步配置过的 Redirect URI
-  scopes: withReservedScopes().split(' '),
-};
-
-const requester = createRequester(fetch);
-
-const generateRandomString = (length = 64) => {
-  return fromUint8Array(randomFillSync(new Uint8Array(length)), true);
-};
-
-const generateCodeChallenge = async (codeVerifier) => {
-  const encodedCodeVerifier = new TextEncoder().encode(codeVerifier);
-  const hash = createHash('sha256');
-  hash.update(encodedCodeVerifier);
-  const codeChallenge = hash.digest();
-  return fromUint8Array(codeChallenge, true);
-};
-
-const getOidcConfig = async () => {
-  return fetchOidcConfig(new URL(discoveryPath, config.endpoint).toString(), requester);
-};
-
-exports.getSignInUrl = async () => {
-  const { authorizationEndpoint } = await getOidcConfig();
-  const codeVerifier = generateRandomString();
-  const codeChallenge = await generateCodeChallenge(codeVerifier);
-  const state = generateRandomString();
-
-  const { redirectUri, scopes, appId: clientId } = config;
-
-  const signInUri = generateSignInUri({
-    authorizationEndpoint,
-    clientId,
-    redirectUri: redirectUri,
-    codeChallenge,
-    state,
-    scopes,
-  });
-
-  return { redirectUri, codeVerifier, state, signInUri };
-};
-
-exports.handleSignIn = async (signInSession, callbackUri) => {
-  const { redirectUri, state, codeVerifier } = signInSession;
-  const code = verifyAndParseCodeFromCallbackUri(callbackUri, redirectUri, state);
-
-  const { appId: clientId } = config;
-  const { tokenEndpoint } = await getOidcConfig();
-  const codeTokenResponse = await fetchTokenByAuthorizationCode(
-    {
-      clientId,
-      tokenEndpoint,
-      redirectUri,
-      codeVerifier,
-      code,
-    },
-    requester
-  );
-
-  return codeTokenResponse;
-};
-
-exports.refreshTokens = async (refreshToken) => {
-  const { appId: clientId, scopes } = config;
-  const { tokenEndpoint } = await getOidcConfig();
-  const tokenResponse = await fetchTokenByRefreshToken(
-    {
-      clientId,
-      tokenEndpoint,
-      refreshToken,
-      scopes,
-    },
-    requester
-  );
-
-  return tokenResponse;
-};`}
+app.use(cookieParser());
+app.use(session({ secret: '${generateRandomString(32)}', cookie: { maxAge: 14 * 24 * 60 * 60 } }));`}
 </code>
 </pre>
 
@@ -201,45 +91,100 @@ exports.refreshTokens = async (refreshToken) => {
 
 <Step
   title="登录"
-  subtitle="共 2 步"
+  subtitle="共 3 步"
   index={3}
   activeIndex={props.activeStepIndex}
   onButtonClick={() => props.onNext(4)}
 >
 
-### 在 Express 里创建一个用于登录的路由：
+### 配置 Redirect URI
 
-```js
-const { getSignInUrl } = require('./logto');
+首先，我们来添加 Redirect URI，如：`http://localhost:3000/api/logto/sign-in-callback`.
 
-app.get('/sign-in', async (req, res) => {
-  const { redirectUri, codeVerifier, state, signInUri } = await getSignInUrl();
-  req.session.signIn = { codeVerifier, state, redirectUri };
-  res.redirect(signInUri);
+<UriInputField appId={props.appId} isSingle={!props.isCompact} name="redirectUris" title="application_details.redirect_uri" />
+
+### 准备 Logto 路由
+
+准备与 Logto 后台交互的路由。
+
+返回你的 IDE 或编辑器，首先让我们使用如下代码来实现一组 API 路由：
+
+```ts
+import { handleAuthRoutes } from '@logto/express';
+
+app.use(handleAuthRoutes(config));
+```
+
+这将为你自动创建好 3 个路由，分别是：
+
+1. `/logto/sign-in`: 登录
+2. `/logto/sign-in-callback`: 处理登录重定向
+3. `/logto/sign-out`: 登出
+
+### 实现登录
+
+马上就要大功告成！创建一个登录按钮，点击后将会跳转到登录路由。
+
+```ts
+app.get('/', (req, res) => {
+  res.setHeader('content-type', 'text/html');
+  res.end(`<div><a href="/logto/sign-in">Sign In</a></div>`);
 });
 ```
 
-### 创建用于处理登录回调的路由:
+</Step>
 
-```js
-app.get('/callback', async (req, res) => {
-  if (!req.session.signIn) {
-    res.send('Bad request.');
-    return;
+<Step
+  title="获取用户信息"
+  subtitle="共 2 步"
+  index={4}
+  activeIndex={props.activeStepIndex}
+  onButtonClick={() => props.onNext(5)}
+>
+
+需要集成 `withLogto` 中间件来获取用户信息:
+
+```ts
+import { withLogto } from '@logto/express';
+
+app.use(withLogto(config));
+```
+
+之后用户信息将会被注入到 `req`, 用法举例:
+
+```ts
+app.get('/user', (req, res) => {
+  res.json(req.user);
+});
+```
+
+</Step>
+
+<Step
+  title="保护路由"
+  subtitle="共 2 步"
+  index={5}
+  activeIndex={props.activeStepIndex}
+  onButtonClick={() => props.onNext(6)}
+>
+
+根据前面的步骤配置好 `withLogto` 后, 我们可以创建一个简单的中间件来保护路由:
+
+```ts
+const requireAuth = async (req: Request, res: Response, next: NextFunction) => {
+  if (!req.user.isAuthenticated) {
+    res.redirect('/logto/sign-in');
   }
 
-  const response = await handleSignIn(
-    req.session.signIn,
-    `${req.protocol}://${req.get('host')}${req.originalUrl}`
-  );
-  req.session.tokens = {
-    ...response,
-    expiresAt: response.expiresIn + Date.now(),
-    idToken: decodeIdToken(response.idToken),
-  };
-  req.session.signIn = null;
+  next();
+};
+```
 
-  res.redirect('/');
+然后：
+
+```ts
+app.get('/protected', requireAuth, (req, res) => {
+  res.end('protected resource');
 });
 ```
 
@@ -248,118 +193,14 @@ app.get('/callback', async (req, res) => {
 <Step
   title="退出登录"
   subtitle="共 1 步"
-  index={4}
+  index={6}
   activeIndex={props.activeStepIndex}
-  onButtonClick={() => props.onNext(5)}
+  onButtonClick={() => props.onNext(7)}
 >
 
-清空 session 里的 token 信息即可实现退出当前 App。
+调用 `/logto/sign-out` 将清理内存与 cookies 中的所有 Logto 数据（如果有）。
 
-```js
-app.get('/sign-out', (req, res) => {
-  req.session.tokens = null;
-  res.send('成功退出登录');
-});
-```
-
-</Step>
-
-<Step
-  title="访问受保护资源"
-  subtitle="共 3 步"
-  index={5}
-  activeIndex={props.activeStepIndex}
-  onButtonClick={() => props.onNext(6)}
->
-
-### 中间件
-
-创建中间件 `withAuth`，用于验证用户是否登录，并在 `req` 里添加 `auth`。
-
-```js
-// auth.js
-
-const { decodeIdToken } = require('@logto/js');
-const { refreshTokens } = require('./logto');
-
-const withAuth =
-  ({ requireAuth } = { requireAuth: true }) =>
-  async (req, res, next) => {
-    if (requireAuth && !req.session.tokens) {
-      res.redirect('/sign-in');
-      return;
-    }
-
-    if (req.session.tokens) {
-      if (req.session.tokens.expiresAt >= Date.now()) {
-        // Access token 已过期, 刷新 token
-        try {
-          const response = await refreshTokens(req.session.tokens.refreshToken);
-          req.session.tokens = {
-            ...response,
-            expiresAt: response.expiresIn + Date.now(),
-            idToken: decodeIdToken(response.idToken),
-          };
-        } catch {
-          // 发生错误，重定向到登录页面
-          res.redirect('/sign-in');
-          return;
-        }
-      }
-
-      req.auth = req.session.tokens.idToken.sub;
-    }
-
-    next();
-  };
-
-module.exports = withAuth;
-```
-
-### 实现 index 页面
-
-在这个页面中，我们将为游客展示一个登录链接, 为已登录用户展示查看用户信息的链接：
-
-```js
-// routes/index.js
-
-router.get('/', withAuth({ requireAuth: false }), function (req, res, next) {
-  res.render('index', { auth: Boolean(req.auth) });
-});
-```
-
-```pug
-// views/index.jade
-
-extends layout
-
-block content
-  h1 Hello logto
-  if auth
-    p: a(href="/user") 查看用户信息
-  else
-    p: a(href="/sign-in") 点击此处登录
-```
-
-### 实现用户信息页面
-
-在用户信息页面, 我们将获取受保护的资源 `userId` (`subject`):
-
-```js
-app.get('/user', withAuth(), (req, res, next) => {
-  res.render('user', { userId: req.auth });
-});
-```
-
-```pug
-// views/user.jade
-
-extends layout
-
-block content
-  h1 Hello logto
-  p userId: #{userId}
-```
+在退出登录后，让你的用户重新回到你的网站是个不错的选择。让我们将 `http://localhost:3000` 添加至「管理控制台」里的 Post Sign-out URIs 中（位于 Redirect URIs 下方）。
 
 </Step>
 

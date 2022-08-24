@@ -3,41 +3,35 @@ import Step from '@mdx/components/Step';
 import Tabs from '@mdx/components/Tabs';
 import TabItem from '@mdx/components/TabItem';
 import Alert from '@/components/Alert';
+import { generateRandomString } from '@logto/shared';
 
 <Step
-  title="Add Logto SDK as a dependency"
+  title="Add dependencies"
   subtitle="Please select your favorite package manager"
   index={0}
   activeIndex={props.activeStepIndex}
   onButtonClick={() => props.onNext(1)}
 >
 
-The express demo app will need 4 dependencies:
-
-1. **@logto/js**: Logto's core SDK for JavaScript.
-2. **node-fetch**: Minimal code for a `window.fetch` compatible API on Node.js runtime.
-3. **express-session**: A session middleware, we'll use the session to store user tokens.
-4. **js-base64**: Yet another Base64 transcoder.
-
 <Tabs>
 <TabItem value="npm" label="npm">
 
 ```bash
-npm i @logto/js node-fetch@v2 express-session js-base64
+npm i @logto/express cookie-parser express-session
 ```
 
 </TabItem>
 <TabItem value="yarn" label="Yarn">
 
 ```bash
-yarn add @logto/js node-fetch@v2 express-session js-base64
+yarn add @logto/express cookie-parser express-session
 ```
 
 </TabItem>
 <TabItem value="pnpm" label="pnpm">
 
 ```bash
-pnpm add @logto/js node-fetch@v2 express-session js-base64
+pnpm add @logto/express cookie-parser express-session
 ```
 
 </TabItem>
@@ -45,157 +39,51 @@ pnpm add @logto/js node-fetch@v2 express-session js-base64
 </Step>
 
 <Step
-  title="Use session"
+  title="Init LogtoClient"
   subtitle="1 step"
   index={1}
   activeIndex={props.activeStepIndex}
   onButtonClick={() => props.onNext(2)}
 >
 
-When users are signed in, they will get a set of tokens (Access Token, ID Token, Refresh Token) and interaction data, and the session is an excellent place to store them.
+<Alert>
+  In the following steps, we assume your app is running on <code>http://localhost:3000</code>.
+</Alert>
 
-We have installed [express-session](https://github.com/expressjs/session) in the previous step, so now let's simply add the following code to set it up:
+Import and initialize LogtoClient:
 
-```js
-// app.js
+<pre>
+<code className="language-ts">
+{`import LogtoClient from '@logto/express';
 
-const session = require('express-session');
-
-app.use(
-  session({
-    secret: 'keyboard cat', // Change to your own secret key
-    cookie: { maxAge: 86400 },
-  })
-);
-```
+export const logtoClient = new LogtoClient({
+  endpoint: '${props.endpoint}',
+  appId: '${props.appId}',
+  appSecret: '${props.appSecret}',
+  baseUrl: 'http://localhost:3000', // Change to your own base URL
+});`}
+</code>
+</pre>
 
 </Step>
 
 <Step
-  title="Prepare for authentication"
-  subtitle="2 steps"
+  title="Prepare required middlewares"
+  subtitle="1 step"
   index={2}
   activeIndex={props.activeStepIndex}
   onButtonClick={() => props.onNext(3)}
 >
 
-<Alert>
-  In the following steps, we assume your app is running on <code>http://localhost:3000</code>.
-</Alert>
-
-### Configure Redirect URI
-
-First, let’s enter your redirect URI. E.g. `http://localhost:3000/callback`.
-
-<UriInputField appId={props.appId} isSingle={!props.isCompact} name="redirectUris" title="application_details.redirect_uri" />
-
-Go back to your IDE/editor, we need to implement the following authenticate functions.
-
-### Implement authenticate functions
-
-1. `getSignInUrl`: builds and returns a complete URL of the Logto Authorization Server to which users will be redirected.
-2. `handleSignIn`: parses the callback URL after the authentication process completes, gets the code query parameter, and then fetches tokens (an access token, the refresh token, and an ID token) to complete the sign in process.
-3. `refreshTokens`: exchanges a new access token using the refresh token.
+The SDK requires [express-session](https://www.npmjs.com/package/express-session) to be configured in prior.
 
 <pre>
-<code className={"language-js"}>
-{`// logto.js
+<code className="language-ts">
+{`import cookieParser from 'cookie-parser';
+import session from 'express-session';
 
-const {
-  withReservedScopes,
-  fetchOidcConfig,
-  discoveryPath,
-  createRequester,
-  generateSignInUri,
-  verifyAndParseCodeFromCallbackUri,
-  fetchTokenByAuthorizationCode,
-  fetchTokenByRefreshToken,
-} = require('@logto/js');
-const fetch = require('node-fetch');
-const { randomFillSync, createHash } = require('crypto');
-const { fromUint8Array } = require('js-base64');
-
-const config = {
-  endpoint: '${props.endpoint}',
-  appId: '${props.appId}',
-  appSecret: '${props.appSecret}',
-  redirectUri: '${props.redirectUris[0] ?? 'http://localhost:3000/callback'}', // Configured in the previous step
-  scopes: withReservedScopes().split(' '),
-};
-
-const requester = createRequester(fetch);
-
-const generateRandomString = (length = 64) => {
-  return fromUint8Array(randomFillSync(new Uint8Array(length)), true);
-};
-
-const generateCodeChallenge = async (codeVerifier) => {
-  const encodedCodeVerifier = new TextEncoder().encode(codeVerifier);
-  const hash = createHash('sha256');
-  hash.update(encodedCodeVerifier);
-  const codeChallenge = hash.digest();
-  return fromUint8Array(codeChallenge, true);
-};
-
-const getOidcConfig = async () => {
-  return fetchOidcConfig(new URL(discoveryPath, config.endpoint).toString(), requester);
-};
-
-exports.getSignInUrl = async () => {
-  const { authorizationEndpoint } = await getOidcConfig();
-  const codeVerifier = generateRandomString();
-  const codeChallenge = await generateCodeChallenge(codeVerifier);
-  const state = generateRandomString();
-
-  const { redirectUri, scopes, appId: clientId } = config;
-
-  const signInUri = generateSignInUri({
-    authorizationEndpoint,
-    clientId,
-    redirectUri: redirectUri,
-    codeChallenge,
-    state,
-    scopes,
-  });
-
-  return { redirectUri, codeVerifier, state, signInUri };
-};
-
-exports.handleSignIn = async (signInSession, callbackUri) => {
-  const { redirectUri, state, codeVerifier } = signInSession;
-  const code = verifyAndParseCodeFromCallbackUri(callbackUri, redirectUri, state);
-
-  const { appId: clientId } = config;
-  const { tokenEndpoint } = await getOidcConfig();
-  const codeTokenResponse = await fetchTokenByAuthorizationCode(
-    {
-      clientId,
-      tokenEndpoint,
-      redirectUri,
-      codeVerifier,
-      code,
-    },
-    requester
-  );
-
-  return codeTokenResponse;
-};
-
-exports.refreshTokens = async (refreshToken) => {
-  const { appId: clientId, scopes } = config;
-  const { tokenEndpoint } = await getOidcConfig();
-  const tokenResponse = await fetchTokenByRefreshToken(
-    {
-      clientId,
-      tokenEndpoint,
-      refreshToken,
-      scopes,
-    },
-    requester
-  );
-
-  return tokenResponse;
-};`}
+app.use(cookieParser());
+app.use(session({ secret: '${generateRandomString(32)}', cookie: { maxAge: 14 * 24 * 60 * 60 } }));`}
 </code>
 </pre>
 
@@ -203,45 +91,100 @@ exports.refreshTokens = async (refreshToken) => {
 
 <Step
   title="Sign in"
-  subtitle="2 steps"
+  subtitle="3 steps"
   index={3}
   activeIndex={props.activeStepIndex}
   onButtonClick={() => props.onNext(4)}
 >
 
-### Create a route in Express to sign in:
+### Configure Redirect URI
 
-```js
-const { getSignInUrl } = require('./logto');
+First, let’s enter your redirect URI. E.g. `http://localhost:3000/api/logto/sign-in-callback`.
 
-app.get('/sign-in', async (req, res) => {
-  const { redirectUri, codeVerifier, state, signInUri } = await getSignInUrl();
-  req.session.signIn = { codeVerifier, state, redirectUri };
-  res.redirect(signInUri);
+<UriInputField appId={props.appId} isSingle={!props.isCompact} name="redirectUris" title="application_details.redirect_uri" />
+
+### Prepare Logto routes
+
+Prepare routes to connect with Logto.
+
+Go back to your IDE/editor, use the following code to implement the API routes first:
+
+```ts
+import { handleAuthRoutes } from '@logto/express';
+
+app.use(handleAuthRoutes(config));
+```
+
+This will create 3 routes automatically:
+
+1. `/logto/sign-in`: Sign in with Logto.
+2. `/logto/sign-in-callback`: Handle sign-in callback.
+3. `/logto/sign-out`: Sign out with Logto.
+
+### Implement sign-in
+
+We're almost there! Now, create a sign-in button to redirect to the sign-in route on user click.
+
+```ts
+app.get('/', (req, res) => {
+  res.setHeader('content-type', 'text/html');
+  res.end(`<div><a href="/logto/sign-in">Sign In</a></div>`);
 });
 ```
 
-### Create a route to handle callback:
+</Step>
 
-```js
-app.get('/callback', async (req, res) => {
-  if (!req.session.signIn) {
-    res.send('Bad request.');
-    return;
+<Step
+  title="Get user profile"
+  subtitle="2 steps"
+  index={4}
+  activeIndex={props.activeStepIndex}
+  onButtonClick={() => props.onNext(5)}
+>
+
+In order to get user profile, we need to use the `withLogto` middleware:
+
+```ts
+import { withLogto } from '@logto/express';
+
+app.use(withLogto(config));
+```
+
+Then the user profile will be attached to `req`, example usage:
+
+```ts
+app.get('/user', (req, res) => {
+  res.json(req.user);
+});
+```
+
+</Step>
+
+<Step
+  title="Protect routes"
+  subtitle="2 steps"
+  index={5}
+  activeIndex={props.activeStepIndex}
+  onButtonClick={() => props.onNext(6)}
+>
+
+After setting up `withLogto` in the previous step, we can protect routes by creating a simple middleware:
+
+```ts
+const requireAuth = async (req: Request, res: Response, next: NextFunction) => {
+  if (!req.user.isAuthenticated) {
+    res.redirect('/logto/sign-in');
   }
 
-  const response = await handleSignIn(
-    req.session.signIn,
-    `${req.protocol}://${req.get('host')}${req.originalUrl}`
-  );
-  req.session.tokens = {
-    ...response,
-    expiresAt: response.expiresIn + Date.now(),
-    idToken: decodeIdToken(response.idToken),
-  };
-  req.session.signIn = null;
+  next();
+};
+```
 
-  res.redirect('/');
+And then:
+
+```ts
+app.get('/protected', requireAuth, (req, res) => {
+  res.end('protected resource');
 });
 ```
 
@@ -250,127 +193,21 @@ app.get('/callback', async (req, res) => {
 <Step
   title="Sign out"
   subtitle="1 step"
-  index={4}
+  index={6}
   activeIndex={props.activeStepIndex}
-  onButtonClick={() => props.onNext(5)}
+  onButtonClick={() => props.onNext(7)}
 >
 
-You can clear tokens in session to sign out a user from this application.
+Calling `/logto/sign-out` will clear all the Logto data in memory and cookies if they exist.
 
-```js
-app.get('/sign-out', (req, res) => {
-  req.session.tokens = null;
-  res.send('Sign out successfully');
-});
-```
-
-</Step>
-
-<Step
-  title="Access protected resource"
-  subtitle="3 steps"
-  index={5}
-  activeIndex={props.activeStepIndex}
-  onButtonClick={() => props.onNext(6)}
->
-
-### Middleware
-
-Create a middleware named `withAuth` to attach an `auth` object to `req`, and verify if a user is signed in.
-
-```js
-// auth.js
-
-const { decodeIdToken } = require('@logto/js');
-const { refreshTokens } = require('./logto');
-
-const withAuth =
-  ({ requireAuth } = { requireAuth: true }) =>
-  async (req, res, next) => {
-    if (requireAuth && !req.session.tokens) {
-      res.redirect('/sign-in');
-      return;
-    }
-
-    if (req.session.tokens) {
-      if (req.session.tokens.expiresAt >= Date.now()) {
-        // Access token expired, refresh for new tokens
-        try {
-          const response = await refreshTokens(req.session.tokens.refreshToken);
-          req.session.tokens = {
-            ...response,
-            expiresAt: response.expiresIn + Date.now(),
-            idToken: decodeIdToken(response.idToken),
-          };
-        } catch {
-          // Exchange failed, redirect to sign in
-          res.redirect('/sign-in');
-          return;
-        }
-      }
-
-      req.auth = req.session.tokens.idToken.sub;
-    }
-
-    next();
-  };
-
-module.exports = withAuth;
-```
-
-### Implement index page
-
-In this page, we will show a sign-in link for guests, and a go-to-profile link for users that already signed in:
-
-```js
-// routes/index.js
-
-router.get('/', withAuth({ requireAuth: false }), function (req, res, next) {
-  res.render('index', { auth: Boolean(req.auth) });
-});
-```
-
-```pug
-// views/index.jade
-
-extends layout
-
-block content
-  h1 Hello logto
-  if auth
-    p: a(href="/user") Go to profile
-  else
-    p: a(href="/sign-in") Click here to sign in
-```
-
-### Implement user page
-
-In the user page, we will fetch the protected resource `userId` (`subject`):
-
-```js
-// routes/user.js
-
-app.get('/user', withAuth(), (req, res, next) => {
-  res.render('user', { userId: req.auth });
-});
-```
-
-```pug
-// views/index.jade
-
-extends layout
-
-block content
-  h1 Hello logto
-  p userId: #{userId}
-```
+After signing out, it'll be great to redirect your user back to your website. Let's add `http://localhost:3000` as one of the Post Sign-out URIs in Admin Console (shows under Redirect URIs).
 
 </Step>
 
 <Step
   title="Further readings"
   subtitle="4 articles"
-  index={6}
+  index={7}
   activeIndex={props.activeStepIndex}
   buttonText="general.done"
   buttonType="primary"
