@@ -1,3 +1,4 @@
+import { messageTypesGuard, ConnectorError, ConnectorErrorCodes } from '@logto/connector-core';
 import { Passcode, PasscodeType } from '@logto/schemas';
 import { customAlphabet, nanoid } from 'nanoid';
 
@@ -66,8 +67,18 @@ export const sendPasscode = async (passcode: Passcode) => {
 
   const { db, metadata, sendMessage } = connector;
 
-  const response = await sendMessage(emailOrPhone, passcode.type, {
-    code: passcode.code,
+  const messageTypeResult = messageTypesGuard.safeParse(passcode.type);
+
+  if (!messageTypeResult.success) {
+    throw new ConnectorError(ConnectorErrorCodes.InvalidConfig);
+  }
+
+  const response = await sendMessage({
+    to: emailOrPhone,
+    type: messageTypeResult.data,
+    payload: {
+      code: passcode.code,
+    },
   });
 
   return { db, metadata, response };

@@ -1,4 +1,4 @@
-import { ConnectorMetadata, ConnectorType, ConnectorPlatform } from '@logto/connector-types';
+import { ConnectorMetadata, ConnectorType, ConnectorPlatform } from '@logto/connector-core';
 
 // https://appleid.apple.com/.well-known/openid-configuration
 export const issuer = 'https://appleid.apple.com';

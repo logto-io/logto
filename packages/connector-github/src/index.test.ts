@@ -42,7 +42,7 @@ describe('getAccessToken', () => {
           token_type: 'token_type',
         })
       );
-    const { accessToken } = await getAccessToken(mockedConfig, 'code');
+    const { accessToken } = await getAccessToken(mockedConfig, { code: 'code' });
     expect(accessToken).toEqual('access_token');
   });
 
@@ -50,7 +50,7 @@ describe('getAccessToken', () => {
     nock(accessTokenEndpoint)
       .post('')
       .reply(200, qs.stringify({ access_token: '', scope: 'scope', token_type: 'token_type' }));
-    await expect(getAccessToken(mockedConfig, 'code')).rejects.toMatchError(
+    await expect(getAccessToken(mockedConfig, { code: 'code' })).rejects.toMatchError(
       new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid)
     );
   });

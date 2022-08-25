@@ -6,14 +6,13 @@
 import {
   ConnectorError,
   ConnectorErrorCodes,
-  ConnectorMetadata,
-  Connector,
+  CreateConnector,
+  SocialConnector,
   GetAuthorizationUri,
   GetUserInfo,
-  SocialConnectorInstance,
   GetConnectorConfig,
-  codeWithRedirectDataGuard,
-} from '@logto/connector-types';
+  validateConfig,
+} from '@logto/connector-core';
 import { assert } from '@silverhand/essentials';
 import got, { HTTPError } from 'got';
 
@@ -31,38 +30,14 @@ import {
   accessTokenResponseGuard,
   FacebookConfig,
   userInfoResponseGuard,
+  authResponseGuard,
 } from './types';
 
-export default class FacebookConnector implements SocialConnectorInstance<FacebookConfig> {
-  public metadata: ConnectorMetadata = defaultMetadata;
-  private _connector?: Connector;
-
-  public get connector() {
-    if (!this._connector) {
-      throw new ConnectorError(ConnectorErrorCodes.General);
-    }
-
-    return this._connector;
-  }
-
-  public set connector(input: Connector) {
-    this._connector = input;
-  }
-
-  constructor(public readonly getConfig: GetConnectorConfig) {}
-
-  public validateConfig(config: unknown): asserts config is FacebookConfig {
-    const result = facebookConfigGuard.safeParse(config);
-
-    if (!result.success) {
-      throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, result.error);
-    }
-  }
-
-  public getAuthorizationUri: GetAuthorizationUri = async ({ state, redirectUri }) => {
-    const config = await this.getConfig(this.metadata.id);
-
-    this.validateConfig(config);
+const getAuthorizationUri =
+  (getConfig: GetConnectorConfig): GetAuthorizationUri =>
+  async ({ state, redirectUri }) => {
+    const config = await getConfig(defaultMetadata.id);
+    validateConfig<FacebookConfig>(config, facebookConfigGuard);
 
     const queryParameters = new URLSearchParams({
       client_id: config.clientId,
@@ -75,39 +50,45 @@ export default class FacebookConnector implements SocialConnectorInstance<Facebo
     return `${authorizationEndpoint}?${queryParameters.toString()}`;
   };
 
-  public getAccessToken = async (code: string, redirectUri: string) => {
-    const config = await this.getConfig(this.metadata.id);
+export const getAccessToken = async (
+  config: FacebookConfig,
+  codeObject: { code: string; redirectUri: string }
+) => {
+  const { code, redirectUri } = codeObject;
+  validateConfig<FacebookConfig>(config, facebookConfigGuard);
 
-    this.validateConfig(config);
+  const { clientId: client_id, clientSecret: client_secret } = config;
 
-    const { clientId: client_id, clientSecret: client_secret } = config;
+  const httpResponse = await got.get(accessTokenEndpoint, {
+    searchParams: {
+      code,
+      client_id,
+      client_secret,
+      redirect_uri: redirectUri,
+    },
+    timeout: defaultTimeout,
+  });
 
-    const httpResponse = await got.get(accessTokenEndpoint, {
-      searchParams: {
-        code,
-        client_id,
-        client_secret,
-        redirect_uri: redirectUri,
-      },
-      timeout: defaultTimeout,
-    });
+  const result = accessTokenResponseGuard.safeParse(JSON.parse(httpResponse.body));
 
-    const result = accessTokenResponseGuard.safeParse(JSON.parse(httpResponse.body));
+  if (!result.success) {
+    throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, result.error.message);
+  }
 
-    if (!result.success) {
-      throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, result.error.message);
-    }
+  const { access_token: accessToken } = result.data;
 
-    const { access_token: accessToken } = result.data;
+  assert(accessToken, new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid));
 
-    assert(accessToken, new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid));
+  return { accessToken };
+};
 
-    return { accessToken };
-  };
-
-  public getUserInfo: GetUserInfo = async (data) => {
-    const { code, redirectUri } = await this.authorizationCallbackHandler(data);
-    const { accessToken } = await this.getAccessToken(code, redirectUri);
+const getUserInfo =
+  (getConfig: GetConnectorConfig): GetUserInfo =>
+  async (data) => {
+    const { code, redirectUri } = await authorizationCallbackHandler(data);
+    const config = await getConfig(defaultMetadata.id);
+    validateConfig<FacebookConfig>(config, facebookConfigGuard);
+    const { accessToken } = await getAccessToken(config, { code, redirectUri });
 
     try {
       const httpResponse = await got.get(userInfoEndpoint, {
@@ -149,33 +130,40 @@ export default class FacebookConnector implements SocialConnectorInstance<Facebo
     }
   };
 
-  private readonly authorizationCallbackHandler = async (parameterObject: unknown) => {
-    const result = codeWithRedirectDataGuard.safeParse(parameterObject);
+const authorizationCallbackHandler = async (parameterObject: unknown) => {
+  const result = authResponseGuard.safeParse(parameterObject);
 
-    if (result.success) {
-      return result.data;
-    }
+  if (result.success) {
+    return result.data;
+  }
 
-    const parsedError = authorizationCallbackErrorGuard.safeParse(parameterObject);
+  const parsedError = authorizationCallbackErrorGuard.safeParse(parameterObject);
 
-    if (!parsedError.success) {
-      throw new ConnectorError(
-        ConnectorErrorCodes.InvalidResponse,
-        JSON.stringify(parameterObject)
-      );
-    }
+  if (!parsedError.success) {
+    throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, JSON.stringify(parameterObject));
+  }
 
-    const { error, error_code, error_description, error_reason } = parsedError.data;
+  const { error, error_code, error_description, error_reason } = parsedError.data;
 
-    if (error === 'access_denied') {
-      throw new ConnectorError(ConnectorErrorCodes.AuthorizationFailed, error_description);
-    }
+  if (error === 'access_denied') {
+    throw new ConnectorError(ConnectorErrorCodes.AuthorizationFailed, error_description);
+  }
 
-    throw new ConnectorError(ConnectorErrorCodes.General, {
-      error,
-      error_code,
-      errorDescription: error_description,
-      error_reason,
-    });
+  throw new ConnectorError(ConnectorErrorCodes.General, {
+    error,
+    error_code,
+    errorDescription: error_description,
+    error_reason,
+  });
+};
+
+const createFacebookConnector: CreateConnector<SocialConnector> = async ({ getConfig }) => {
+  return {
+    metadata: defaultMetadata,
+    configGuard: facebookConfigGuard,
+    getAuthorizationUri: getAuthorizationUri(getConfig),
+    getUserInfo: getUserInfo(getConfig),
   };
-}
+};
+
+export default createFacebookConnector;

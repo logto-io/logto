@@ -1,4 +1,4 @@
-import { ConnectorType, ConnectorMetadata, ConnectorPlatform } from '@logto/connector-types';
+import { ConnectorType, ConnectorMetadata, ConnectorPlatform } from '@logto/connector-core';
 
 export const authorizationEndpoint = 'alipay://'; // This is used to arouse the native Alipay App
 export const alipayEndpoint = 'https://openapi.alipay.com/gateway.do';

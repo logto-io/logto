@@ -34,7 +34,6 @@ const loadConnectors = async () => {
         default: CreateConnector<GeneralConnector>;
       };
       const rawConnector = await createConnector({ getConfig: getConnectorConfig });
-
       validateConnectorModule(rawConnector);
 
       const connector: Omit<LogtoConnector, 'db'> = {

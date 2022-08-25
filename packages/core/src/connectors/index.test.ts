@@ -89,8 +89,22 @@ const wechatNativeConnector = {
   createdAt: 1_646_382_233_000,
 };
 
-// TODO: add all other connectors
-const connectors = [githubConnector];
+const connectors = [
+  alipayConnector,
+  alipayNativeConnector,
+  aliyunDmConnector,
+  aliyunSmsConnector,
+  appleConnector,
+  facebookConnector,
+  githubConnector,
+  googleConnector,
+  azureADConnector,
+  sendGridMailConnector,
+  smtpConnector,
+  twilioSmsConnector,
+  wechatConnector,
+  wechatNativeConnector,
+];
 
 const findAllConnectors = jest.fn(async () => connectors);
 const insertConnector = jest.fn(async (connector: Connector) => connector);

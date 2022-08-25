@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { object, z } from 'zod';
 
 export const googleConfigGuard = z.object({
   clientId: z.string(),
@@ -27,3 +27,8 @@ export const userInfoResponseGuard = z.object({
 });
 
 export type UserInfoResponse = z.infer<typeof userInfoResponseGuard>;
+
+export const authResponseGuard = z.object({
+  code: z.string(),
+  redirectUri: z.string(),
+});

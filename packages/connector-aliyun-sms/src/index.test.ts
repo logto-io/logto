@@ -1,13 +1,10 @@
-import { GetConnectorConfig, ValidateConfig } from '@logto/connector-types';
+import { MessageTypes } from '@logto/connector-core';
 
-import AliyunSmsConnector from '.';
+import createConnector from '.';
 import { mockedConnectorConfig, mockedValidConnectorConfig, phoneTest, codeTest } from './mock';
 import { sendSms } from './single-send-text';
-import { AliyunSmsConfig } from './types';
 
-const getConnectorConfig = jest.fn() as GetConnectorConfig;
-
-const aliyunSmsMethods = new AliyunSmsConnector(getConnectorConfig);
+const getConfig = jest.fn().mockResolvedValue(mockedConnectorConfig);
 
 jest.mock('./single-send-text', () => {
   return {
@@ -20,42 +17,18 @@ jest.mock('./single-send-text', () => {
   };
 });
 
-describe('validateConfig()', () => {
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
-
-  /**
-   * Assertion functions always need explicit annotations.
-   * See https://github.com/microsoft/TypeScript/issues/36931#issuecomment-589753014
-   */
-
-  it('should pass on valid config', async () => {
-    const validator: ValidateConfig<AliyunSmsConfig> = aliyunSmsMethods.validateConfig;
-    expect(() => {
-      validator(mockedValidConnectorConfig);
-    }).not.toThrow();
-  });
-
-  it('should fail if config is invalid', async () => {
-    const validator: ValidateConfig<AliyunSmsConfig> = aliyunSmsMethods.validateConfig;
-    expect(() => {
-      validator({});
-    }).toThrow();
-  });
-});
-
 describe('sendMessage()', () => {
-  beforeEach(() => {
-    jest.spyOn(aliyunSmsMethods, 'getConfig').mockResolvedValueOnce(mockedConnectorConfig);
-  });
-
   afterEach(() => {
     jest.clearAllMocks();
   });
 
   it('should call singleSendMail() and replace code in content', async () => {
-    await aliyunSmsMethods.sendMessage(phoneTest, 'SignIn', { code: codeTest });
+    const connector = await createConnector({ getConfig });
+    await connector.sendMessage({
+      to: phoneTest,
+      type: MessageTypes.SignIn,
+      payload: { code: codeTest },
+    });
     expect(sendSms).toHaveBeenCalledWith(
       expect.objectContaining({
         AccessKeyId: mockedConnectorConfig.accessKeyId,
@@ -69,8 +42,13 @@ describe('sendMessage()', () => {
   });
 
   it('throws if template is missing', async () => {
+    const connector = await createConnector({ getConfig });
     await expect(
-      aliyunSmsMethods.sendMessage(phoneTest, 'Register', { code: codeTest })
+      connector.sendMessage({
+        to: phoneTest,
+        type: MessageTypes.Register,
+        payload: { code: codeTest },
+      })
     ).rejects.toThrow();
   });
 });
