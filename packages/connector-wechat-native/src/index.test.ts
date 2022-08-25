@@ -1,16 +1,11 @@
-import { ConnectorError, ConnectorErrorCodes, validateConfig } from '@logto/connector-core';
+import { ConnectorError, ConnectorErrorCodes } from '@logto/connector-core';
 import nock from 'nock';
 
 import createConnector, { getAccessToken } from '.';
 import { accessTokenEndpoint, authorizationEndpoint, userInfoEndpoint } from './constant';
 import { mockedConfig } from './mock';
-import { WechatNativeConfig, wechatNativeConfigGuard } from './types';
 
 const getConfig = jest.fn().mockResolvedValue(mockedConfig);
-
-function validator(config: unknown): asserts config is WechatNativeConfig {
-  validateConfig<WechatNativeConfig>(config, wechatNativeConfigGuard);
-}
 
 describe('getAuthorizationUri', () => {
   afterEach(() => {
@@ -87,31 +82,6 @@ describe('getAccessToken', () => {
         errcode: -1,
       })
     );
-  });
-});
-
-describe('validateConfig', () => {
-  /**
-   * Assertion functions always need explicit annotations.
-   * See https://github.com/microsoft/TypeScript/issues/36931#issuecomment-589753014
-   */
-
-  it('should pass on valid config', async () => {
-    expect(() => {
-      validator({ appId: 'appId', appSecret: 'appSecret' });
-    }).not.toThrow();
-  });
-
-  it('should fail on empty config', async () => {
-    expect(() => {
-      validator({});
-    }).toThrow();
-  });
-
-  it('should fail when missing appSecret', async () => {
-    expect(() => {
-      validator({ appId: 'appId' });
-    }).toThrow();
   });
 });
 

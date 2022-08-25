@@ -1,15 +1,10 @@
-import { MessageTypes, validateConfig } from '@logto/connector-core';
+import { MessageTypes } from '@logto/connector-core';
 
 import createConnector from '.';
 import { mockedConnectorConfig, mockedValidConnectorConfig, phoneTest, codeTest } from './mock';
 import { sendSms } from './single-send-text';
-import { AliyunSmsConfig, aliyunSmsConfigGuard } from './types';
 
 const getConfig = jest.fn().mockResolvedValue(mockedConnectorConfig);
-
-function validator(config: unknown): asserts config is AliyunSmsConfig {
-  validateConfig<AliyunSmsConfig>(config, aliyunSmsConfigGuard);
-}
 
 jest.mock('./single-send-text', () => {
   return {
@@ -20,24 +15,6 @@ jest.mock('./single-send-text', () => {
       };
     }),
   };
-});
-
-describe('validateConfig()', () => {
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
-
-  it('should pass on valid config', async () => {
-    expect(() => {
-      validator(mockedValidConnectorConfig);
-    }).not.toThrow();
-  });
-
-  it('should fail if config is invalid', async () => {
-    expect(() => {
-      validator({});
-    }).toThrow();
-  });
 });
 
 describe('sendMessage()', () => {

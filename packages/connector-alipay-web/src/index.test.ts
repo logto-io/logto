@@ -1,49 +1,11 @@
-import { ConnectorError, ConnectorErrorCodes, validateConfig } from '@logto/connector-core';
+import { ConnectorError, ConnectorErrorCodes } from '@logto/connector-core';
 import nock from 'nock';
 
 import createConnector, { getAccessToken } from '.';
 import { alipayEndpoint, authorizationEndpoint } from './constant';
 import { mockedAlipayConfigWithValidPrivateKey } from './mock';
-import { AlipayConfig, alipayConfigGuard } from './types';
 
 const getConfig = jest.fn().mockResolvedValue(mockedAlipayConfigWithValidPrivateKey);
-
-function validator(config: unknown): asserts config is AlipayConfig {
-  validateConfig<AlipayConfig>(config, alipayConfigGuard);
-}
-
-describe('validateConfig', () => {
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
-
-  /**
-   * Assertion functions always need explicit annotations.
-   * See https://github.com/microsoft/TypeScript/issues/36931#issuecomment-589753014
-   */
-
-  it('should pass on valid config', async () => {
-    expect(() => {
-      validator({
-        appId: 'appId',
-        privateKey: 'privateKey',
-        signType: 'RSA',
-      });
-    }).not.toThrow();
-  });
-
-  it('should fail on empty config', async () => {
-    expect(() => {
-      validator({});
-    }).toThrow();
-  });
-
-  it('should fail when missing required properties', async () => {
-    expect(() => {
-      validator({ appId: 'appId' });
-    }).toThrow();
-  });
-});
 
 describe('getAuthorizationUri', () => {
   afterEach(() => {

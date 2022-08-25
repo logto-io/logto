@@ -1,42 +1,13 @@
-import { ConnectorError, ConnectorErrorCodes, validateConfig } from '@logto/connector-core';
+import { ConnectorError, ConnectorErrorCodes } from '@logto/connector-core';
 import nock from 'nock';
 
 import createConnector, { getAccessToken } from '.';
 import { accessTokenEndpoint, authorizationEndpoint, userInfoEndpoint } from './constant';
 import { mockedConfig } from './mock';
-import { GoogleConfig, googleConfigGuard } from './types';
 
 const getConfig = jest.fn().mockResolvedValue(mockedConfig);
 
-function validator(config: unknown): asserts config is GoogleConfig {
-  validateConfig<GoogleConfig>(config, googleConfigGuard);
-}
-
 describe('google connector', () => {
-  describe('validateConfig', () => {
-    afterEach(() => {
-      jest.clearAllMocks();
-    });
-
-    it('should pass on valid config', async () => {
-      expect(() => {
-        validator({ clientId: 'clientId', clientSecret: 'clientSecret' });
-      }).not.toThrow();
-    });
-
-    it('should fail on invalid config', async () => {
-      expect(() => {
-        validator({});
-      }).toThrow();
-      expect(() => {
-        validator({ clientId: 'clientId' });
-      }).toThrow();
-      expect(() => {
-        validator({ clientSecret: 'clientSecret' });
-      }).toThrow();
-    });
-  });
-
   describe('getAuthorizationUri', () => {
     afterEach(() => {
       jest.clearAllMocks();

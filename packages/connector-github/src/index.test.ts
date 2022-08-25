@@ -1,41 +1,12 @@
-import { ConnectorError, ConnectorErrorCodes, validateConfig } from '@logto/connector-core';
+import { ConnectorError, ConnectorErrorCodes } from '@logto/connector-core';
 import nock from 'nock';
 import * as qs from 'query-string';
 
 import createConnector, { getAccessToken } from '.';
 import { accessTokenEndpoint, authorizationEndpoint, userInfoEndpoint } from './constant';
 import { mockedConfig } from './mock';
-import { GithubConfig, githubConfigGuard } from './types';
 
 const getConfig = jest.fn().mockResolvedValue(mockedConfig);
-
-function validator(config: unknown): asserts config is GithubConfig {
-  validateConfig<GithubConfig>(config, githubConfigGuard);
-}
-
-describe('validateConfig', () => {
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
-
-  it('should pass on valid config', async () => {
-    expect(() => {
-      validator({ clientId: 'clientId', clientSecret: 'clientSecret' });
-    }).not.toThrow();
-  });
-
-  it('should fail on empty config', async () => {
-    expect(() => {
-      validator({});
-    }).toThrow();
-  });
-
-  it('should fail when missing clientSecret', async () => {
-    expect(() => {
-      validator({ clientId: 'clientId' });
-    }).toThrow();
-  });
-});
 
 describe('getAuthorizationUri', () => {
   afterEach(() => {

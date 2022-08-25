@@ -1,47 +1,13 @@
-import { ConnectorError, ConnectorErrorCodes, validateConfig } from '@logto/connector-core';
+import { ConnectorError, ConnectorErrorCodes } from '@logto/connector-core';
 import nock from 'nock';
 
 import createConnector, { getAccessToken } from '.';
 import { accessTokenEndpoint, authorizationEndpoint, userInfoEndpoint } from './constant';
 import { clientId, clientSecret, code, dummyRedirectUri, fields, mockedConfig } from './mock';
-import { FacebookConfig, facebookConfigGuard } from './types';
 
 const getConfig = jest.fn().mockResolvedValue(mockedConfig);
 
-function validator(config: unknown): asserts config is FacebookConfig {
-  validateConfig<FacebookConfig>(config, facebookConfigGuard);
-}
-
 describe('Facebook connector', () => {
-  describe('validateConfig', () => {
-    afterEach(() => {
-      jest.clearAllMocks();
-    });
-
-    /**
-     * Assertion functions always need explicit annotations.
-     * See https://github.com/microsoft/TypeScript/issues/36931#issuecomment-589753014
-     */
-
-    it('should pass on valid config', async () => {
-      expect(() => {
-        validator({ clientId, clientSecret });
-      }).not.toThrow();
-    });
-
-    it('should fail on invalid config', async () => {
-      expect(() => {
-        validator({});
-      }).toThrow();
-      expect(() => {
-        validator({ clientId });
-      }).toThrow();
-      expect(() => {
-        validator({ clientSecret });
-      }).toThrow();
-    });
-  });
-
   describe('getAuthorizationUri', () => {
     afterEach(() => {
       jest.clearAllMocks();

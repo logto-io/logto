@@ -1,16 +1,11 @@
-import { ConnectorError, ConnectorErrorCodes, validateConfig } from '@logto/connector-core';
+import { ConnectorError, ConnectorErrorCodes } from '@logto/connector-core';
 import { jwtVerify } from 'jose';
 
 import createConnector from '.';
 import { authorizationEndpoint } from './constant';
 import { mockedConfig } from './mock';
-import { AppleConfig, appleConfigGuard } from './types';
 
 const getConfig = jest.fn().mockResolvedValue(mockedConfig);
-
-function validator(config: unknown): asserts config is AppleConfig {
-  validateConfig<AppleConfig>(config, appleConfigGuard);
-}
 
 jest.mock('jose', () => ({
   jwtVerify: jest.fn(),
@@ -31,29 +26,6 @@ describe('getAuthorizationUri', () => {
     expect(authorizationUri).toEqual(
       `${authorizationEndpoint}?client_id=%3Cclient-id%3E&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fcallback&scope=&state=some_state&response_type=code+id_token&response_mode=fragment`
     );
-  });
-});
-
-describe('validateConfig', () => {
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
-
-  /**
-   * Assertion functions always need explicit annotations.
-   * See https://github.com/microsoft/TypeScript/issues/36931#issuecomment-589753014
-   */
-
-  it('should be true on valid config', async () => {
-    expect(() => {
-      validator({ clientId: 'clientId' });
-    }).not.toThrow();
-  });
-
-  it('should be false on empty config', async () => {
-    expect(() => {
-      validator({});
-    }).toThrow();
   });
 });
 

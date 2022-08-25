@@ -1,15 +1,10 @@
-import { MessageTypes, validateConfig } from '@logto/connector-core';
+import { MessageTypes } from '@logto/connector-core';
 
 import createConnector from '.';
 import { mockedConfig } from './mock';
 import { singleSendMail } from './single-send-mail';
-import { AliyunDmConfig, aliyunDmConfigGuard } from './types';
 
 const getConfig = jest.fn().mockResolvedValue(mockedConfig);
-
-function validator(config: unknown): asserts config is AliyunDmConfig {
-  validateConfig<AliyunDmConfig>(config, aliyunDmConfigGuard);
-}
 
 jest.mock('./single-send-mail', () => {
   return {
@@ -20,29 +15,6 @@ jest.mock('./single-send-mail', () => {
       };
     }),
   };
-});
-
-describe('validateConfig()', () => {
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
-
-  it('should pass on valid config', async () => {
-    expect(() => {
-      validator({
-        accessKeyId: 'accessKeyId',
-        accessKeySecret: 'accessKeySecret',
-        accountName: 'accountName',
-        templates: [],
-      });
-    }).not.toThrow();
-  });
-
-  it('should fail if config is invalid', async () => {
-    expect(() => {
-      validator({});
-    }).toThrow();
-  });
 });
 
 describe('sendMessage()', () => {
