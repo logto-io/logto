@@ -1,3 +1,4 @@
+import { MessageTypes } from '@logto/connector-core';
 import { arbitraryObjectGuard, ConnectorDto, Connectors, ConnectorType } from '@logto/schemas';
 import { emailRegEx, phoneRegEx } from '@logto/shared';
 import { object, string } from 'zod';
@@ -172,11 +173,18 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
         })
       );
 
-      const { sendTestMessage } = connector;
+      const { sendMessage } = connector;
 
-      await sendTestMessage(config, subject, 'Test', {
-        code: phone ? '123456' : 'email-test',
-      });
+      await sendMessage(
+        {
+          to: subject,
+          type: MessageTypes.Test,
+          payload: {
+            code: phone ? '123456' : 'email-test',
+          },
+        },
+        config
+      );
 
       ctx.status = 204;
 

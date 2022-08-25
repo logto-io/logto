@@ -1,3 +1,4 @@
+import { MessageTypes } from '@logto/connector-core';
 import { Connector, ConnectorType } from '@logto/schemas';
 import { any } from 'zod';
 
@@ -101,42 +102,56 @@ describe('connector route', () => {
         ...mockMetadata,
         type: ConnectorType.SMS,
       };
-      const sendTestMessage = jest.fn();
+      const sendMessage = jest.fn();
       const mockedSmsConnector: LogtoConnector = {
         db: mockConnector,
         metadata: mockedMetadata,
         configGuard: any(),
         ...defaultConnectorMethods,
-        sendTestMessage,
+        sendMessage,
       };
       getLogtoConnectorsPlaceHolder.mockResolvedValueOnce([mockedSmsConnector]);
       const response = await connectorRequest
         .post('/connectors/id/test')
         .send({ phone: '12345678901', config: { test: 123 } });
-      expect(sendTestMessage).toHaveBeenCalledTimes(1);
-      expect(sendTestMessage).toHaveBeenCalledWith({ test: 123 }, '12345678901', 'Test', {
-        code: '123456',
-      });
+      expect(sendMessage).toHaveBeenCalledTimes(1);
+      expect(sendMessage).toHaveBeenCalledWith(
+        {
+          to: '12345678901',
+          type: MessageTypes.Test,
+          payload: {
+            code: '123456',
+          },
+        },
+        { test: 123 }
+      );
       expect(response).toHaveProperty('statusCode', 204);
     });
 
     it('should get email connector and send test message', async () => {
-      const sendTestMessage = jest.fn();
+      const sendMessage = jest.fn();
       const mockedEmailConnector: LogtoConnector = {
         db: mockConnector,
         metadata: mockMetadata,
         configGuard: any(),
         ...defaultConnectorMethods,
-        sendTestMessage,
+        sendMessage,
       };
       getLogtoConnectorsPlaceHolder.mockResolvedValueOnce([mockedEmailConnector]);
       const response = await connectorRequest
         .post('/connectors/id/test')
         .send({ email: 'test@email.com', config: { test: 123 } });
-      expect(sendTestMessage).toHaveBeenCalledTimes(1);
-      expect(sendTestMessage).toHaveBeenCalledWith({ test: 123 }, 'test@email.com', 'Test', {
-        code: 'email-test',
-      });
+      expect(sendMessage).toHaveBeenCalledTimes(1);
+      expect(sendMessage).toHaveBeenCalledWith(
+        {
+          to: 'test@email.com',
+          type: MessageTypes.Test,
+          payload: {
+            code: 'email-test',
+          },
+        },
+        { test: 123 }
+      );
       expect(response).toHaveProperty('statusCode', 204);
     });
 

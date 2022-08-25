@@ -12,13 +12,13 @@
 import {
   ConnectorError,
   ConnectorErrorCodes,
-  ConnectorMetadata,
-  Connector,
   GetAuthorizationUri,
   GetUserInfo,
-  SocialConnectorInstance,
   GetConnectorConfig,
-} from '@logto/connector-types';
+  CreateConnector,
+  SocialConnector,
+  validateConfig,
+} from '@logto/connector-core';
 import { assert } from '@silverhand/essentials';
 import dayjs from 'dayjs';
 import got from 'got';
@@ -46,38 +46,11 @@ import { signingParameters } from './utils';
 
 export type { AlipayNativeConfig } from './types';
 
-export default class AlipayNativeConnector implements SocialConnectorInstance<AlipayNativeConfig> {
-  public metadata: ConnectorMetadata = defaultMetadata;
-  private _connector?: Connector;
-
-  public get connector() {
-    if (!this._connector) {
-      throw new ConnectorError(ConnectorErrorCodes.General);
-    }
-
-    return this._connector;
-  }
-
-  public set connector(input: Connector) {
-    this._connector = input;
-  }
-
-  private readonly signingParameters = signingParameters;
-
-  constructor(public readonly getConfig: GetConnectorConfig) {}
-
-  public validateConfig(config: unknown): asserts config is AlipayNativeConfig {
-    const result = alipayNativeConfigGuard.safeParse(config);
-
-    if (!result.success) {
-      throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, result.error);
-    }
-  }
-
-  public getAuthorizationUri: GetAuthorizationUri = async ({ state }) => {
-    const config = await this.getConfig(this.metadata.id);
-
-    this.validateConfig(config);
+const getAuthorizationUri =
+  (getConfig: GetConnectorConfig): GetAuthorizationUri =>
+  async ({ state }) => {
+    const config = await getConfig(defaultMetadata.id);
+    validateConfig<AlipayNativeConfig>(config, alipayNativeConfigGuard);
 
     const { appId } = config;
 
@@ -86,51 +59,53 @@ export default class AlipayNativeConnector implements SocialConnectorInstance<Al
     return `${authorizationEndpoint}?${queryParameters.toString()}`;
   };
 
-  public getAccessToken = async (code: string, config: AlipayNativeConfig) => {
-    const initSearchParameters = {
-      method: methodForAccessToken,
-      format: 'JSON',
-      timestamp: dayjs().format(timestampFormat),
-      version: '1.0',
-      grant_type: 'authorization_code',
-      code,
-      charset: 'UTF8',
-      ...config,
-    };
-    const signedSearchParameters = this.signingParameters(initSearchParameters);
-
-    const httpResponse = await got.post(alipayEndpoint, {
-      searchParams: signedSearchParameters,
-      timeout: defaultTimeout,
-    });
-
-    const result = accessTokenResponseGuard.safeParse(JSON.parse(httpResponse.body));
-
-    if (!result.success) {
-      throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, result.error.message);
-    }
-
-    const { error_response, alipay_system_oauth_token_response } = result.data;
-
-    const { msg, sub_msg } = error_response ?? {};
-
-    assert(
-      alipay_system_oauth_token_response,
-      new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid, msg ?? sub_msg)
-    );
-    const { access_token: accessToken } = alipay_system_oauth_token_response;
-    assert(accessToken, new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid));
-
-    return { accessToken };
+export const getAccessToken = async (code: string, config: AlipayNativeConfig) => {
+  const initSearchParameters = {
+    method: methodForAccessToken,
+    format: 'JSON',
+    timestamp: dayjs().format(timestampFormat),
+    version: '1.0',
+    grant_type: 'authorization_code',
+    code,
+    charset: 'UTF8',
+    ...config,
   };
+  const signedSearchParameters = signingParameters(initSearchParameters);
 
-  public getUserInfo: GetUserInfo = async (data) => {
-    const { auth_code } = await this.authorizationCallbackHandler(data);
-    const config = await this.getConfig(this.metadata.id);
+  const httpResponse = await got.post(alipayEndpoint, {
+    searchParams: signedSearchParameters,
+    timeout: defaultTimeout,
+  });
 
-    this.validateConfig(config);
+  const result = accessTokenResponseGuard.safeParse(JSON.parse(httpResponse.body));
 
-    const { accessToken } = await this.getAccessToken(auth_code, config);
+  if (!result.success) {
+    throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, result.error.message);
+  }
+
+  const { error_response, alipay_system_oauth_token_response } = result.data;
+
+  const { msg, sub_msg } = error_response ?? {};
+
+  assert(
+    alipay_system_oauth_token_response,
+    new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid, msg ?? sub_msg)
+  );
+  const { access_token: accessToken } = alipay_system_oauth_token_response;
+  assert(accessToken, new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid));
+
+  return { accessToken };
+};
+
+const getUserInfo =
+  (getConfig: GetConnectorConfig): GetUserInfo =>
+  async (data) => {
+    const { auth_code } = await authorizationCallbackHandler(data);
+    const config = await getConfig(defaultMetadata.id);
+
+    validateConfig<AlipayNativeConfig>(config, alipayNativeConfigGuard);
+
+    const { accessToken } = await getAccessToken(auth_code, config);
 
     assert(
       accessToken && config,
@@ -148,7 +123,7 @@ export default class AlipayNativeConnector implements SocialConnectorInstance<Al
       charset: 'UTF8',
       ...config,
     };
-    const signedSearchParameters = this.signingParameters(initSearchParameters);
+    const signedSearchParameters = signingParameters(initSearchParameters);
 
     const httpResponse = await got.post(alipayEndpoint, {
       searchParams: signedSearchParameters,
@@ -163,7 +138,7 @@ export default class AlipayNativeConnector implements SocialConnectorInstance<Al
 
     const { alipay_user_info_share_response } = result.data;
 
-    this.errorHandler(alipay_user_info_share_response);
+    errorHandler(alipay_user_info_share_response);
 
     const { user_id: id, avatar, nick_name: name } = alipay_user_info_share_response;
 
@@ -174,36 +149,46 @@ export default class AlipayNativeConnector implements SocialConnectorInstance<Al
     return { id, avatar, name };
   };
 
-  private readonly errorHandler: ErrorHandler = ({ code, msg, sub_code, sub_msg }) => {
-    if (invalidAccessTokenCode.includes(code)) {
-      throw new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid, msg);
-    }
+const errorHandler: ErrorHandler = ({ code, msg, sub_code, sub_msg }) => {
+  if (invalidAccessTokenCode.includes(code)) {
+    throw new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid, msg);
+  }
 
-    if (sub_code) {
-      assert(
-        !invalidAccessTokenSubCode.includes(sub_code),
-        new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid, msg)
-      );
+  if (sub_code) {
+    assert(
+      !invalidAccessTokenSubCode.includes(sub_code),
+      new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid, msg)
+    );
 
-      throw new ConnectorError(ConnectorErrorCodes.General, {
-        errorDescription: msg,
-        code,
-        sub_code,
-        sub_msg,
-      });
-    }
+    throw new ConnectorError(ConnectorErrorCodes.General, {
+      errorDescription: msg,
+      code,
+      sub_code,
+      sub_msg,
+    });
+  }
+};
+
+const authorizationCallbackHandler = async (parameterObject: unknown) => {
+  const dataGuard = z.object({ auth_code: z.string() });
+
+  const result = dataGuard.safeParse(parameterObject);
+
+  if (!result.success) {
+    throw new ConnectorError(ConnectorErrorCodes.General, JSON.stringify(parameterObject));
+  }
+
+  return result.data;
+};
+
+const createAlipayNativeConnector: CreateConnector<SocialConnector> = async ({ getConfig }) => {
+  return {
+    metadata: defaultMetadata,
+    configGuard: alipayNativeConfigGuard,
+    getAuthorizationUri: getAuthorizationUri(getConfig),
+    getUserInfo: getUserInfo(getConfig),
   };
+};
 
-  private readonly authorizationCallbackHandler = async (parameterObject: unknown) => {
-    const dataGuard = z.object({ auth_code: z.string() });
-
-    const result = dataGuard.safeParse(parameterObject);
-
-    if (!result.success) {
-      throw new ConnectorError(ConnectorErrorCodes.General, JSON.stringify(parameterObject));
-    }
-
-    return result.data;
-  };
-}
+export default createAlipayNativeConnector;
 /* eslint-enable unicorn/text-encoding-identifier-case */

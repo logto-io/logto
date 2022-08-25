@@ -1,28 +1,16 @@
-import {
-  ConnectorError,
-  ConnectorErrorCodes,
-  GetConnectorConfig,
-  ValidateConfig,
-} from '@logto/connector-types';
+import { ConnectorError, ConnectorErrorCodes } from '@logto/connector-core';
 import { jwtVerify } from 'jose';
 
-import AppleConnector from '.';
+import createConnector from '.';
 import { authorizationEndpoint } from './constant';
 import { mockedConfig } from './mock';
-import { AppleConfig } from './types';
 
-const getConnectorConfig = jest.fn() as GetConnectorConfig;
-
-const appleMethods = new AppleConnector(getConnectorConfig);
+const getConfig = jest.fn().mockResolvedValue(mockedConfig);
 
 jest.mock('jose', () => ({
   jwtVerify: jest.fn(),
   createRemoteJWKSet: jest.fn(),
 }));
-
-beforeAll(() => {
-  jest.spyOn(appleMethods, 'getConfig').mockResolvedValue(mockedConfig);
-});
 
 describe('getAuthorizationUri', () => {
   afterEach(() => {
@@ -30,38 +18,14 @@ describe('getAuthorizationUri', () => {
   });
 
   it('should get a valid uri by redirectUri and state', async () => {
-    const authorizationUri = await appleMethods.getAuthorizationUri({
+    const connector = await createConnector({ getConfig });
+    const authorizationUri = await connector.getAuthorizationUri({
       state: 'some_state',
       redirectUri: 'http://localhost:3000/callback',
     });
     expect(authorizationUri).toEqual(
       `${authorizationEndpoint}?client_id=%3Cclient-id%3E&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fcallback&scope=&state=some_state&response_type=code+id_token&response_mode=fragment`
     );
-  });
-});
-
-describe('validateConfig', () => {
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
-
-  /**
-   * Assertion functions always need explicit annotations.
-   * See https://github.com/microsoft/TypeScript/issues/36931#issuecomment-589753014
-   */
-
-  it('should be true on valid config', async () => {
-    const validator: ValidateConfig<AppleConfig> = appleMethods.validateConfig;
-    expect(() => {
-      validator({ clientId: 'clientId' });
-    }).not.toThrow();
-  });
-
-  it('should be false on empty config', async () => {
-    const validator: ValidateConfig<AppleConfig> = appleMethods.validateConfig;
-    expect(() => {
-      validator({});
-    }).toThrow();
   });
 });
 
@@ -74,12 +38,14 @@ describe('getUserInfo', () => {
     const userId = 'userId';
     const mockJwtVerify = jwtVerify as jest.Mock;
     mockJwtVerify.mockImplementationOnce(() => ({ payload: { sub: userId } }));
-    const userInfo = await appleMethods.getUserInfo({ id_token: 'idToken' });
+    const connector = await createConnector({ getConfig });
+    const userInfo = await connector.getUserInfo({ id_token: 'idToken' });
     expect(userInfo).toEqual({ id: userId });
   });
 
   it('should throw if id token is missing', async () => {
-    await expect(appleMethods.getUserInfo({})).rejects.toMatchError(
+    const connector = await createConnector({ getConfig });
+    await expect(connector.getUserInfo({})).rejects.toMatchError(
       new ConnectorError(ConnectorErrorCodes.General, '{}')
     );
   });
@@ -89,7 +55,8 @@ describe('getUserInfo', () => {
     mockJwtVerify.mockImplementationOnce(() => {
       throw new Error('jwtVerify failed');
     });
-    await expect(appleMethods.getUserInfo({ id_token: 'id_token' })).rejects.toMatchError(
+    const connector = await createConnector({ getConfig });
+    await expect(connector.getUserInfo({ id_token: 'id_token' })).rejects.toMatchError(
       new ConnectorError(ConnectorErrorCodes.SocialIdTokenInvalid)
     );
   });
@@ -99,7 +66,8 @@ describe('getUserInfo', () => {
     mockJwtVerify.mockImplementationOnce(() => ({
       payload: { iat: 123_456 },
     }));
-    await expect(appleMethods.getUserInfo({ id_token: 'id_token' })).rejects.toMatchError(
+    const connector = await createConnector({ getConfig });
+    await expect(connector.getUserInfo({ id_token: 'id_token' })).rejects.toMatchError(
       new ConnectorError(ConnectorErrorCodes.SocialIdTokenInvalid)
     );
   });

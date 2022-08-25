@@ -29,3 +29,5 @@ export const userInfoResponseGuard = z.object({
 export type UserInfoResponse = z.infer<typeof userInfoResponseGuard>;
 
 export type UserInfoResponseMessageParser = (userInfo: Partial<UserInfoResponse>) => void;
+
+export const authResponseGuard = z.object({ code: z.string() });

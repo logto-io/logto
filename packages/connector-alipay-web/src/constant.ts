@@ -1,6 +1,6 @@
 // FIXME: @Darcy
 /* eslint-disable unicorn/text-encoding-identifier-case */
-import { ConnectorType, ConnectorMetadata, ConnectorPlatform } from '@logto/connector-types';
+import { ConnectorType, ConnectorMetadata, ConnectorPlatform } from '@logto/connector-core';
 
 export const authorizationEndpoint = 'https://openauth.alipay.com/oauth2/publicAppAuthorize.htm';
 export const alipayEndpoint = 'https://openapi.alipay.com/gateway.do';
