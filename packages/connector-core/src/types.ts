@@ -105,16 +105,3 @@ export type GetUserInfo = (
 ) => Promise<{ id: string } & Record<string, string | undefined>>;
 
 export type GetConnectorConfig = (id: string) => Promise<unknown>;
-
-export const codeDataGuard = z.object({
-  code: z.string(),
-});
-
-export type CodeData = z.infer<typeof codeDataGuard>;
-
-export const codeWithRedirectDataGuard = z.object({
-  code: z.string(),
-  redirectUri: z.string(),
-});
-
-export type CodeWithRedirectData = z.infer<typeof codeWithRedirectDataGuard>;
