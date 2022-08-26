@@ -152,7 +152,7 @@ describe('sms passwordless flow', () => {
     expect(client.isAuthenticated).toBeTruthy();
   });
 
-  it('sign-in with email', async () => {
+  it('sign-in with sms', async () => {
     const client = new MockClient();
 
     await client.initSession();

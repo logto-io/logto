@@ -78,7 +78,11 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
         body: { enabled },
       } = ctx.guard;
 
-      const { db: config, metadata, validateConfig } = await getLogtoConnectorById(id);
+      const {
+        db: { config },
+        metadata,
+        validateConfig,
+      } = await getLogtoConnectorById(id);
 
       if (enabled) {
         validateConfig(config);
