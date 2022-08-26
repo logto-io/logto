@@ -35,14 +35,6 @@ const sign_in_exp = {
     slogan: '슬로건',
     slogan_placeholder: 'Unleash your creativity',
   },
-  terms_of_use: {
-    title: '이용 약관',
-    enable: '이용 약관 활성화',
-    description: '서비스 사용을 위한 이용 약관을 추가해보세요.',
-    terms_of_use: '이용 약관',
-    terms_of_use_placeholder: 'https://your.terms.of.use/',
-    terms_of_use_tip: '이용 약관 URL',
-  },
   sign_in_methods: {
     title: '로그인 방법',
     primary: '메인 로그인 방법',
@@ -66,6 +58,14 @@ const sign_in_exp = {
     },
   },
   others: {
+    terms_of_use: {
+      title: '이용 약관',
+      enable: '이용 약관 활성화',
+      description: '서비스 사용을 위한 이용 약관을 추가해보세요.',
+      terms_of_use: '이용 약관',
+      terms_of_use_placeholder: 'https://your.terms.of.use/',
+      terms_of_use_tip: '이용 약관 URL',
+    },
     languages: {
       title: '언어',
       mode: '언어 모드',

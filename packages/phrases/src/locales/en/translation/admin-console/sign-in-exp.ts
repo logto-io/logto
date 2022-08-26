@@ -38,14 +38,6 @@ const sign_in_exp = {
     slogan: 'Slogan',
     slogan_placeholder: 'Unleash your creativity',
   },
-  terms_of_use: {
-    title: 'TERMS OF USE',
-    enable: 'Enable terms of use',
-    description: 'Add the legal agreements for the use of your product',
-    terms_of_use: 'Terms of use',
-    terms_of_use_placeholder: 'https://your.terms.of.use/',
-    terms_of_use_tip: 'Terms of use URL',
-  },
   sign_in_methods: {
     title: 'SIGN-IN METHODS',
     primary: 'Primary sign-in method',
@@ -69,6 +61,14 @@ const sign_in_exp = {
     },
   },
   others: {
+    terms_of_use: {
+      title: 'TERMS OF USE',
+      enable: 'Enable terms of use',
+      description: 'Add the legal agreements for the use of your product',
+      terms_of_use: 'Terms of use',
+      terms_of_use_placeholder: 'https://your.terms.of.use/',
+      terms_of_use_tip: 'Terms of use URL',
+    },
     languages: {
       title: 'LANGUAGES',
       mode: 'Language mode',
