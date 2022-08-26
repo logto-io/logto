@@ -49,10 +49,10 @@ export const sendPasscode = async (passcode: Passcode) => {
   const connectors = await getLogtoConnectors();
 
   const emailConnector = connectors.find(
-    (connector) => connector.db.enabled && connector.metadata.type === ConnectorType.Email
+    (connector) => connector.dbEntry.enabled && connector.metadata.type === ConnectorType.Email
   );
   const smsConnector = connectors.find(
-    (connector) => connector.db.enabled && connector.metadata.type === ConnectorType.SMS
+    (connector) => connector.dbEntry.enabled && connector.metadata.type === ConnectorType.SMS
   );
 
   const connector = passcode.email ? emailConnector : smsConnector;
@@ -65,7 +65,7 @@ export const sendPasscode = async (passcode: Passcode) => {
     })
   );
 
-  const { db, metadata, sendMessage } = connector;
+  const { dbEntry, metadata, sendMessage } = connector;
 
   const messageTypeResult = messageTypesGuard.safeParse(passcode.type);
 
@@ -81,7 +81,7 @@ export const sendPasscode = async (passcode: Passcode) => {
     },
   });
 
-  return { db, metadata, response };
+  return { dbEntry, metadata, response };
 };
 
 export const passcodeExpiration = 10 * 60 * 1000; // 10 minutes.

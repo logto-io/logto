@@ -44,7 +44,7 @@ export default function signInExperiencesRoutes<T extends AuthedRouter>(router: 
       }
 
       const connectors = await getLogtoConnectors();
-      const enabledConnectors = connectors.filter(({ db: { enabled } }) => enabled);
+      const enabledConnectors = connectors.filter(({ dbEntry: { enabled } }) => enabled);
 
       // Remove unavailable connectors
       const filteredSocialSignInConnectorTargets = socialSignInConnectorTargets?.filter((target) =>

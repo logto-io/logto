@@ -81,19 +81,19 @@ describe('GET /.well-known/sign-in-exp', () => {
       socialConnectors: [
         {
           ...mockGithubConnector.metadata,
-          id: mockGithubConnector.db.id,
+          id: mockGithubConnector.dbEntry.id,
         },
         {
           ...mockFacebookConnector.metadata,
-          id: mockFacebookConnector.db.id,
+          id: mockFacebookConnector.dbEntry.id,
         },
         {
           ...mockWechatConnector.metadata,
-          id: mockWechatConnector.db.id,
+          id: mockWechatConnector.dbEntry.id,
         },
         {
           ...mockWechatNativeConnector.metadata,
-          id: mockWechatNativeConnector.db.id,
+          id: mockWechatNativeConnector.dbEntry.id,
         },
       ],
     });

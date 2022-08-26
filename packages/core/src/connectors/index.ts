@@ -13,7 +13,7 @@ import { LogtoConnector } from './types';
 import { getConnectorConfig, validateConnectorModule } from './utilities';
 
 // eslint-disable-next-line @silverhand/fp/no-let
-let cachedConnectors: Array<Omit<LogtoConnector, 'db'>> | undefined;
+let cachedConnectors: Array<Omit<LogtoConnector, 'dbEntry'>> | undefined;
 
 const loadConnectors = async () => {
   if (cachedConnectors) {
@@ -36,7 +36,7 @@ const loadConnectors = async () => {
       const rawConnector = await createConnector({ getConfig: getConnectorConfig });
       validateConnectorModule(rawConnector);
 
-      const connector: Omit<LogtoConnector, 'db'> = {
+      const connector: Omit<LogtoConnector, 'dbEntry'> = {
         ...defaultConnectorMethods,
         ...rawConnector,
         validateConfig: (config: unknown) => {
@@ -115,14 +115,14 @@ export const getLogtoConnectors = async (): Promise<LogtoConnector[]> => {
 
     return {
       ...element,
-      db: connector,
+      dbEntry: connector,
     };
   });
 };
 
 export const getLogtoConnectorById = async (id: string): Promise<LogtoConnector> => {
   const connectors = await getLogtoConnectors();
-  const pickedConnector = connectors.find(({ db }) => db.id === id);
+  const pickedConnector = connectors.find(({ dbEntry }) => dbEntry.id === id);
 
   if (!pickedConnector) {
     throw new RequestError({

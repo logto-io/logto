@@ -19,7 +19,7 @@ jest.mock('@/connectors', () => ({
   getLogtoConnectors: async () => getLogtoConnectorsPlaceHolder(),
   getLogtoConnectorById: async (connectorId: string) => {
     const connectors = await getLogtoConnectorsPlaceHolder();
-    const connector = connectors.find(({ db }) => db.id === connectorId);
+    const connector = connectors.find(({ dbEntry }) => dbEntry.id === connectorId);
     assertThat(
       connector,
       new RequestError({
@@ -104,7 +104,7 @@ describe('connector route', () => {
       };
       const sendMessage = jest.fn();
       const mockedSmsConnector: LogtoConnector = {
-        db: mockConnector,
+        dbEntry: mockConnector,
         metadata: mockedMetadata,
         configGuard: any(),
         ...defaultConnectorMethods,
@@ -131,7 +131,7 @@ describe('connector route', () => {
     it('should get email connector and send test message', async () => {
       const sendMessage = jest.fn();
       const mockedEmailConnector: LogtoConnector = {
-        db: mockConnector,
+        dbEntry: mockConnector,
         metadata: mockMetadata,
         configGuard: any(),
         ...defaultConnectorMethods,

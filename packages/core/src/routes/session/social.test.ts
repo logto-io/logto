@@ -64,7 +64,7 @@ const getLogtoConnectorByIdHelper = jest.fn(async (connectorId: string) => {
     type: connectorId.startsWith('social') ? ConnectorType.Social : ConnectorType.SMS,
   };
 
-  return { db: database, metadata, getAuthorizationUri: jest.fn(async () => '') };
+  return { dbEntry: database, metadata, getAuthorizationUri: jest.fn(async () => '') };
 });
 
 jest.mock('@/connectors', () => ({
