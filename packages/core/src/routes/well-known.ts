@@ -55,12 +55,12 @@ export default function wellKnownRoutes<T extends AnonymousRouter>(router: T, pr
         Array<ConnectorMetadata & { id: string }>
       >((previous, connectorTarget) => {
         const connectors = logtoConnectors.filter(
-          ({ metadata: { target }, db: { enabled } }) => target === connectorTarget && enabled
+          ({ metadata: { target }, dbEntry: { enabled } }) => target === connectorTarget && enabled
         );
 
         return [
           ...previous,
-          ...connectors.map(({ metadata, db: { id } }) => ({ ...metadata, id })),
+          ...connectors.map(({ metadata, dbEntry: { id } }) => ({ ...metadata, id })),
         ];
       }, []);
 

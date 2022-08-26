@@ -17,6 +17,6 @@ export const socialUserInfoGuard = z.object({
 export type SocialUserInfo = z.infer<typeof socialUserInfoGuard>;
 
 export type LogtoConnector = Required<GeneralConnector> & {
-  db: Connector;
+  dbEntry: Connector;
   validateConfig: (config: unknown) => void;
 };

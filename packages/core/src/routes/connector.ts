@@ -12,8 +12,8 @@ import assertThat from '@/utils/assert-that';
 
 import { AuthedRouter } from './types';
 
-const transpileLogtoConnector = ({ db, metadata }: LogtoConnector): ConnectorDto => ({
-  ...db,
+const transpileLogtoConnector = ({ dbEntry, metadata }: LogtoConnector): ConnectorDto => ({
+  ...dbEntry,
   ...metadata,
 });
 
@@ -31,13 +31,14 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
 
       assertThat(
         connectors.filter(
-          (connector) => connector.db.enabled && connector.metadata.type === ConnectorType.Email
+          (connector) =>
+            connector.dbEntry.enabled && connector.metadata.type === ConnectorType.Email
         ).length <= 1,
         'connector.more_than_one_email'
       );
       assertThat(
         connectors.filter(
-          (connector) => connector.db.enabled && connector.metadata.type === ConnectorType.SMS
+          (connector) => connector.dbEntry.enabled && connector.metadata.type === ConnectorType.SMS
         ).length <= 1,
         'connector.more_than_one_sms'
       );
@@ -79,7 +80,7 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
       } = ctx.guard;
 
       const {
-        db: { config },
+        dbEntry: { config },
         metadata,
         validateConfig,
       } = await getLogtoConnectorById(id);
@@ -97,8 +98,10 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
         const connectors = await getLogtoConnectors();
         await Promise.all(
           connectors
-            .filter(({ db: { enabled }, metadata: { type } }) => type === metadata.type && enabled)
-            .map(async ({ db: { id } }) =>
+            .filter(
+              ({ dbEntry: { enabled }, metadata: { type } }) => type === metadata.type && enabled
+            )
+            .map(async ({ dbEntry: { id } }) =>
               updateConnector({ set: { enabled: false }, where: { id }, jsonbMode: 'merge' })
             )
         );

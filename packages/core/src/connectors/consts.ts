@@ -23,9 +23,10 @@ const notImplemented = () => {
   throw new ConnectorError(ConnectorErrorCodes.NotImplemented);
 };
 
-export const defaultConnectorMethods: Omit<LogtoConnector, 'metadata' | 'configGuard' | 'db'> = {
-  getAuthorizationUri: notImplemented,
-  getUserInfo: notImplemented,
-  sendMessage: notImplemented,
-  validateConfig: notImplemented,
-};
+export const defaultConnectorMethods: Omit<LogtoConnector, 'metadata' | 'configGuard' | 'dbEntry'> =
+  {
+    getAuthorizationUri: notImplemented,
+    getUserInfo: notImplemented,
+    sendMessage: notImplemented,
+    validateConfig: notImplemented,
+  };

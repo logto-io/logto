@@ -121,7 +121,7 @@ describe('getLogtoConnectors', () => {
     expect(logtoConnectors).toHaveLength(connectors.length);
 
     for (const [index, connector] of connectors.entries()) {
-      expect(logtoConnectors[index]).toHaveProperty('db', connector);
+      expect(logtoConnectors[index]).toHaveProperty('dbEntry', connector);
     }
   });
 
@@ -150,7 +150,7 @@ describe('getLogtoConnectorBy', () => {
 
   test('should return the connector existing in DB', async () => {
     const connector = await getLogtoConnectorById('github-universal');
-    expect(connector).toHaveProperty('db', githubConnector);
+    expect(connector).toHaveProperty('dbEntry', githubConnector);
   });
 
   test('should throw on invalid id (on DB query)', async () => {

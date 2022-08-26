@@ -20,7 +20,7 @@ const getLogtoConnectorsPlaceholder = jest.fn() as jest.MockedFunction<
 >;
 const getLogtoConnectorByIdPlaceholder = jest.fn(async (connectorId: string) => {
   const connectors = await getLogtoConnectorsPlaceholder();
-  const connector = connectors.find(({ db }) => db.id === connectorId);
+  const connector = connectors.find(({ dbEntry }) => dbEntry.id === connectorId);
 
   assertThat(
     connector,
@@ -74,7 +74,7 @@ describe('connector PATCH routes', () => {
     it('enables one of the social connectors (with valid config)', async () => {
       getLogtoConnectorsPlaceholder.mockResolvedValueOnce([
         {
-          db: mockConnector,
+          dbEntry: mockConnector,
           metadata: { ...mockMetadata, type: ConnectorType.Social },
           ...mockLogtoConnector,
         },
@@ -98,7 +98,7 @@ describe('connector PATCH routes', () => {
     it('enables one of the social connectors (with invalid config)', async () => {
       getLogtoConnectorsPlaceholder.mockResolvedValueOnce([
         {
-          db: mockConnector,
+          dbEntry: mockConnector,
           metadata: mockMetadata,
           ...mockLogtoConnector,
           validateConfig: () => {
@@ -115,7 +115,7 @@ describe('connector PATCH routes', () => {
     it('disables one of the social connectors', async () => {
       getLogtoConnectorsPlaceholder.mockResolvedValueOnce([
         {
-          db: mockConnector,
+          dbEntry: mockConnector,
           metadata: mockMetadata,
           ...mockLogtoConnector,
         },
@@ -148,7 +148,7 @@ describe('connector PATCH routes', () => {
         id: 'id1',
       };
       getLogtoConnectorByIdPlaceholder.mockResolvedValueOnce({
-        db: mockedConnector,
+        dbEntry: mockedConnector,
         metadata: mockedMetadata,
         ...mockLogtoConnector,
       });
@@ -188,7 +188,7 @@ describe('connector PATCH routes', () => {
     it('enables one of the email/sms connectors (with invalid config)', async () => {
       getLogtoConnectorsPlaceholder.mockResolvedValueOnce([
         {
-          db: mockConnector,
+          dbEntry: mockConnector,
           metadata: {
             ...mockMetadata,
             type: ConnectorType.SMS,
@@ -208,7 +208,7 @@ describe('connector PATCH routes', () => {
     it('disables one of the email/sms connectors', async () => {
       getLogtoConnectorsPlaceholder.mockResolvedValueOnce([
         {
-          db: mockConnector,
+          dbEntry: mockConnector,
           metadata: mockMetadata,
           ...mockLogtoConnector,
         },
@@ -250,7 +250,7 @@ describe('connector PATCH routes', () => {
     it('config validation fails', async () => {
       getLogtoConnectorsPlaceholder.mockResolvedValueOnce([
         {
-          db: mockConnector,
+          dbEntry: mockConnector,
           metadata: mockMetadata,
           ...mockLogtoConnector,
           validateConfig: () => {
@@ -267,7 +267,7 @@ describe('connector PATCH routes', () => {
     it('successfully updates connector configs', async () => {
       getLogtoConnectorsPlaceholder.mockResolvedValueOnce([
         {
-          db: mockConnector,
+          dbEntry: mockConnector,
           metadata: mockMetadata,
           ...mockLogtoConnector,
         },

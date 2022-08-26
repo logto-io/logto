@@ -129,7 +129,7 @@ describe('sendPasscode', () => {
     mockedGetLogtoConnectors.mockResolvedValueOnce([
       {
         ...defaultConnectorMethods,
-        db: {
+        dbEntry: {
           ...mockConnector,
           id: 'id1',
         },
@@ -166,7 +166,7 @@ describe('sendPasscode', () => {
       {
         ...defaultConnectorMethods,
         configGuard: any(),
-        db: {
+        dbEntry: {
           ...mockConnector,
           id: 'id0',
         },
@@ -180,7 +180,7 @@ describe('sendPasscode', () => {
       {
         ...defaultConnectorMethods,
         configGuard: any(),
-        db: {
+        dbEntry: {
           ...mockConnector,
           id: 'id1',
         },
