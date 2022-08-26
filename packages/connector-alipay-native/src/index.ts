@@ -1,5 +1,3 @@
-// FIXME: @Darcy
-/* eslint-disable unicorn/text-encoding-identifier-case */
 /**
  * The Implementation of OpenID Connect of Alipay Web Open Platform.
  * https://opendocs.alipay.com/open/218/105325
@@ -67,7 +65,7 @@ export const getAccessToken = async (code: string, config: AlipayNativeConfig) =
     version: '1.0',
     grant_type: 'authorization_code',
     code,
-    charset: 'UTF8',
+    charset: 'utf8',
     ...config,
   };
   const signedSearchParameters = signingParameters(initSearchParameters);
@@ -120,7 +118,7 @@ const getUserInfo =
       grant_type: 'authorization_code',
       auth_token: accessToken,
       biz_content: JSON.stringify({}),
-      charset: 'UTF8',
+      charset: 'utf8',
       ...config,
     };
     const signedSearchParameters = signingParameters(initSearchParameters);
@@ -191,4 +189,3 @@ const createAlipayNativeConnector: CreateConnector<SocialConnector> = async ({ g
 };
 
 export default createAlipayNativeConnector;
-/* eslint-enable unicorn/text-encoding-identifier-case */

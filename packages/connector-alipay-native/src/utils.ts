@@ -1,5 +1,3 @@
-// FIXME: @Darcy
-/* eslint-disable unicorn/text-encoding-identifier-case */
 import * as crypto from 'crypto';
 
 import * as iconv from 'iconv-lite';
@@ -35,7 +33,7 @@ export const signingParameters: SigningParameters = (
 
       if (value) {
         // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-        return `${key}=${iconv.encode(value, rest.charset ?? 'UTF8')}`;
+        return `${key}=${iconv.encode(value, rest.charset ?? 'utf8')}`;
       }
 
       return '';
@@ -51,4 +49,3 @@ export const signingParameters: SigningParameters = (
 
   return { ...decamelizeParameters, sign };
 };
-/* eslint-enable unicorn/text-encoding-identifier-case */
