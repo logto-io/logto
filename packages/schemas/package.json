@@ -47,7 +47,7 @@
   },
   "prettier": "@silverhand/eslint-config/.prettierrc",
   "dependencies": {
-    "@logto/connector-types": "^1.0.0-beta.5",
+    "@logto/connector-core": "^1.0.0-beta.5",
     "@logto/phrases": "^1.0.0-beta.5",
     "@logto/phrases-ui": "^1.0.0-beta.5",
     "@logto/shared": "^1.0.0-beta.5",
