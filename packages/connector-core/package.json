@@ -1,40 +1,38 @@
 {
-  "name": "@logto/connector-types",
+  "name": "@logto/connector-core",
   "version": "1.0.0-beta.5",
-  "main": "lib/index.js",
+  "main": "./lib/index.js",
+  "exports": "./lib/index.js",
+  "typings": "./lib/index.d.ts",
   "author": "Silverhand Inc. <contact@silverhand.io>",
   "license": "MPL-2.0",
-  "private": true,
   "files": [
     "lib"
   ],
   "scripts": {
     "precommit": "lint-staged",
-    "build": "rm -rf lib/ && tsc --p tsconfig.build.json",
-    "dev": "tsc -p tsconfig.build.json --watch --preserveWatchOutput --incremental",
+    "dev": "tsc --watch --preserveWatchOutput --incremental",
+    "build": "rm -rf lib/ && tsc",
     "lint": "eslint --ext .ts src",
     "lint:report": "pnpm lint --format json --output-file report.json",
     "prepack": "pnpm build"
   },
-  "engines": {
-    "node": "^16.0.0"
-  },
   "dependencies": {
     "@logto/phrases": "^1.0.0-beta.5",
+    "@silverhand/essentials": "^1.2.0",
     "zod": "^3.14.3"
   },
   "devDependencies": {
-    "@jest/types": "^28.1.3",
-    "@shopify/jest-koa-mocks": "^5.0.0",
     "@silverhand/eslint-config": "1.0.0-rc.2",
-    "@silverhand/essentials": "^1.2.0",
     "@silverhand/ts-config": "1.0.0-rc.2",
-    "@types/jest": "^28.1.6",
+    "@types/node": "^16.3.1",
     "eslint": "^8.21.0",
-    "jest": "^28.1.3",
     "lint-staged": "^13.0.0",
     "prettier": "^2.7.1",
     "typescript": "^4.7.4"
+  },
+  "engines": {
+    "node": "^16.0.0"
   },
   "eslintConfig": {
     "extends": "@silverhand"

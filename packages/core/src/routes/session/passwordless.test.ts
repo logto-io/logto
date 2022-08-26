@@ -27,7 +27,7 @@ jest.mock('@/queries/user', () => ({
   hasUserWithEmail: async (email: string) => email === 'a@a.com',
 }));
 
-const sendPasscode = jest.fn(async () => ({ connector: { id: 'connectorIdValue' } }));
+const sendPasscode = jest.fn(async () => ({ dbEntry: { id: 'connectorIdValue' } }));
 jest.mock('@/lib/passcode', () => ({
   createPasscode: async () => ({ id: 'id' }),
   sendPasscode: async () => sendPasscode(),

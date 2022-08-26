@@ -25,8 +25,7 @@
   },
   "dependencies": {
     "@azure/msal-node": "^1.12.0",
-    "@logto/connector-types": "^1.0.0-beta.5",
-    "@logto/schemas": "^1.0.0-beta.5",
+    "@logto/connector-core": "^1.0.0-beta.5",
     "@logto/shared": "^1.0.0-beta.5",
     "@silverhand/essentials": "^1.2.0",
     "@silverhand/jest-config": "1.0.0-rc.3",

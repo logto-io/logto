@@ -3,45 +3,33 @@ import { adminConsoleApplicationId, adminConsoleSignInExperience } from '@logto/
 import { Provider } from 'oidc-provider';
 
 import {
-  mockAliyunDmConnectorInstance,
-  mockAliyunSmsConnectorInstance,
-  mockFacebookConnectorInstance,
-  mockGithubConnectorInstance,
-  mockGoogleConnectorInstance,
+  mockAliyunDmConnector,
+  mockAliyunSmsConnector,
+  mockFacebookConnector,
+  mockGithubConnector,
+  mockGoogleConnector,
   mockSignInExperience,
-  mockWechatConnectorInstance,
-  mockWechatNativeConnectorInstance,
+  mockWechatConnector,
+  mockWechatNativeConnector,
 } from '@/__mocks__';
-import { getConnectorInstanceById } from '@/connectors';
+import { getLogtoConnectorById } from '@/connectors';
 import RequestError from '@/errors/RequestError';
 import * as signInExperienceQueries from '@/queries/sign-in-experience';
 import wellKnownRoutes from '@/routes/well-known';
 import { createRequester } from '@/utils/test-utils';
 
-const getConnectorInstances = jest.fn(async () => [
-  mockAliyunDmConnectorInstance,
-  mockAliyunSmsConnectorInstance,
-  mockFacebookConnectorInstance,
-  mockGithubConnectorInstance,
-  mockGoogleConnectorInstance,
-  mockWechatConnectorInstance,
-  mockWechatNativeConnectorInstance,
+const getLogtoConnectors = jest.fn(async () => [
+  mockAliyunDmConnector,
+  mockAliyunSmsConnector,
+  mockFacebookConnector,
+  mockGithubConnector,
+  mockGoogleConnector,
+  mockWechatConnector,
+  mockWechatNativeConnector,
 ]);
 
 jest.mock('@/connectors', () => ({
-  getSocialConnectorInstanceById: async (connectorId: string) => {
-    const connectorInstance = await getConnectorInstanceById(connectorId);
-
-    if (connectorInstance.metadata.type !== ConnectorType.Social) {
-      throw new RequestError({
-        code: 'entity.not_found',
-        status: 404,
-      });
-    }
-
-    return connectorInstance;
-  },
-  getConnectorInstances: async () => getConnectorInstances(),
+  getLogtoConnectors: async () => getLogtoConnectors(),
 }));
 
 jest.mock('@/queries/user', () => ({
@@ -92,20 +80,20 @@ describe('GET /.well-known/sign-in-exp', () => {
       ...mockSignInExperience,
       socialConnectors: [
         {
-          ...mockGithubConnectorInstance.metadata,
-          id: mockGithubConnectorInstance.connector.id,
+          ...mockGithubConnector.metadata,
+          id: mockGithubConnector.dbEntry.id,
         },
         {
-          ...mockFacebookConnectorInstance.metadata,
-          id: mockFacebookConnectorInstance.connector.id,
+          ...mockFacebookConnector.metadata,
+          id: mockFacebookConnector.dbEntry.id,
         },
         {
-          ...mockWechatConnectorInstance.metadata,
-          id: mockWechatConnectorInstance.connector.id,
+          ...mockWechatConnector.metadata,
+          id: mockWechatConnector.dbEntry.id,
         },
         {
-          ...mockWechatNativeConnectorInstance.metadata,
-          id: mockWechatNativeConnectorInstance.connector.id,
+          ...mockWechatNativeConnector.metadata,
+          id: mockWechatNativeConnector.dbEntry.id,
         },
       ],
     });

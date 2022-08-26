@@ -5,59 +5,41 @@ import {
   ConnectorErrorCodes,
   GetAuthorizationUri,
   GetUserInfo,
-  ConnectorMetadata,
-  Connector,
-  SocialConnectorInstance,
-  GetConnectorConfig,
-} from '@logto/connector-types';
+  CreateConnector,
+  SocialConnector,
+} from '@logto/connector-core';
 import { z } from 'zod';
 
 import { defaultMetadata } from './constant';
-import { mockSocialConfigGuard, MockSocialConfig } from './types';
+import { mockSocialConfigGuard } from './types';
 
-export default class MockSocialConnector implements SocialConnectorInstance<MockSocialConfig> {
-  public metadata: ConnectorMetadata = defaultMetadata;
-  private _connector?: Connector;
+const getAuthorizationUri: GetAuthorizationUri = async ({ state, redirectUri }) => {
+  return `http://mock.social.com/?state=${state}&redirect_uri=${redirectUri}`;
+};
 
-  public get connector() {
-    if (!this._connector) {
-      throw new ConnectorError(ConnectorErrorCodes.General);
-    }
+const getAccessToken = async () => randomUUID();
 
-    return this._connector;
+const getUserInfo: GetUserInfo = async (data) => {
+  const dataGuard = z.object({ code: z.string(), userId: z.optional(z.string()) });
+  const result = dataGuard.safeParse(data);
+
+  if (!result.success) {
+    throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, JSON.stringify(data));
   }
 
-  public set connector(input: Connector) {
-    this._connector = input;
-  }
-
-  constructor(public readonly getConfig: GetConnectorConfig) {}
-
-  public validateConfig(config: unknown): asserts config is MockSocialConfig {
-    const result = mockSocialConfigGuard.safeParse(config);
-
-    if (!result.success) {
-      throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, result.error);
-    }
-  }
-
-  public getAuthorizationUri: GetAuthorizationUri = async ({ state, redirectUri }) => {
-    return `http://mock.social.com/?state=${state}&redirect_uri=${redirectUri}`;
+  // For mock use only. Use to track the created user entity
+  return {
+    id: result.data.userId ?? `mock-social-sub-${randomUUID()}`,
   };
+};
 
-  public getAccessToken = async () => randomUUID();
-
-  public getUserInfo: GetUserInfo = async (data) => {
-    const dataGuard = z.object({ code: z.string(), userId: z.optional(z.string()) });
-    const result = dataGuard.safeParse(data);
-
-    if (!result.success) {
-      throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, JSON.stringify(data));
-    }
-
-    // For mock use only. Use to track the created user entity
-    return {
-      id: result.data.userId ?? `mock-social-sub-${randomUUID()}`,
-    };
+const createMockSocialConnector: CreateConnector<SocialConnector> = async ({ getConfig }) => {
+  return {
+    metadata: defaultMetadata,
+    configGuard: mockSocialConfigGuard,
+    getAuthorizationUri,
+    getUserInfo,
   };
-}
+};
+
+export default createMockSocialConnector;

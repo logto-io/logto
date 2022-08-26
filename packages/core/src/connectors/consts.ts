@@ -1,3 +1,7 @@
+import { ConnectorError, ConnectorErrorCodes, GeneralConnector } from '@logto/connector-core';
+
+import { LogtoConnector } from './types';
+
 export const defaultConnectorPackages = [
   '@logto/connector-alipay-web',
   '@logto/connector-alipay-native',
@@ -14,3 +18,15 @@ export const defaultConnectorPackages = [
   '@logto/connector-wechat-web',
   '@logto/connector-wechat-native',
 ];
+
+const notImplemented = () => {
+  throw new ConnectorError(ConnectorErrorCodes.NotImplemented);
+};
+
+export const defaultConnectorMethods: Omit<LogtoConnector, 'metadata' | 'configGuard' | 'dbEntry'> =
+  {
+    getAuthorizationUri: notImplemented,
+    getUserInfo: notImplemented,
+    sendMessage: notImplemented,
+    validateConfig: notImplemented,
+  };

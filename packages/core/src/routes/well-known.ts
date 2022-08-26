@@ -1,4 +1,4 @@
-import { ConnectorMetadata } from '@logto/connector-types';
+import { ConnectorMetadata } from '@logto/connector-core';
 import { SignInMode } from '@logto/schemas';
 import {
   adminConsoleApplicationId,
@@ -9,7 +9,7 @@ import etag from 'etag';
 import i18next from 'i18next';
 import { Provider, errors } from 'oidc-provider';
 
-import { getConnectorInstances } from '@/connectors';
+import { getLogtoConnectors } from '@/connectors';
 import { findDefaultSignInExperience } from '@/queries/sign-in-experience';
 import { hasActiveUsers } from '@/queries/user';
 
@@ -46,22 +46,21 @@ export default function wellKnownRoutes<T extends AnonymousRouter>(router: T, pr
       }
 
       // Custom Applications
-      const [signInExperience, connectorInstances] = await Promise.all([
+      const [signInExperience, logtoConnectors] = await Promise.all([
         findDefaultSignInExperience(),
-        getConnectorInstances(),
+        getLogtoConnectors(),
       ]);
 
       const socialConnectors = signInExperience.socialSignInConnectorTargets.reduce<
         Array<ConnectorMetadata & { id: string }>
       >((previous, connectorTarget) => {
-        const connectors = connectorInstances.filter(
-          ({ metadata: { target }, connector: { enabled } }) =>
-            target === connectorTarget && enabled
+        const connectors = logtoConnectors.filter(
+          ({ metadata: { target }, dbEntry: { enabled } }) => target === connectorTarget && enabled
         );
 
         return [
           ...previous,
-          ...connectors.map(({ metadata, connector: { id } }) => ({ ...metadata, id })),
+          ...connectors.map(({ metadata, dbEntry: { id } }) => ({ ...metadata, id })),
         ];
       }, []);
 

@@ -11,12 +11,11 @@ import {
   ConnectorErrorCodes,
   GetAuthorizationUri,
   GetUserInfo,
-  ConnectorMetadata,
-  Connector,
-  SocialConnectorInstance,
   GetConnectorConfig,
-  codeWithRedirectDataGuard,
-} from '@logto/connector-types';
+  validateConfig,
+  CreateConnector,
+  SocialConnector,
+} from '@logto/connector-core';
 import { assert, conditional } from '@silverhand/essentials';
 import got, { HTTPError } from 'got';
 
@@ -26,54 +25,34 @@ import {
   AzureADConfig,
   accessTokenResponseGuard,
   userInfoResponseGuard,
+  authResponseGuard,
 } from './types';
 
-export default class AzureADConnector implements SocialConnectorInstance<AzureADConfig> {
-  public metadata: ConnectorMetadata = defaultMetadata;
+// eslint-disable-next-line @silverhand/fp/no-let
+let clientApplication: ConfidentialClientApplication;
+// eslint-disable-next-line @silverhand/fp/no-let
+let authCodeRequest: AuthorizationCodeRequest;
 
-  public clientApplication!: ConfidentialClientApplication;
-  public authCodeUrlParams!: AuthorizationUrlRequest;
+// This `cryptoProvider` seems not used.
+// Temporarily keep this as this is a refactor, which should not change the logics.
+const cryptoProvider = new CryptoProvider();
 
-  cryptoProvider = new CryptoProvider();
-  private readonly authCodeRequest!: AuthorizationCodeRequest;
+const getAuthorizationUri =
+  (getConfig: GetConnectorConfig): GetAuthorizationUri =>
+  async ({ state, redirectUri }) => {
+    const config = await getConfig(defaultMetadata.id);
 
-  private _connector?: Connector;
-
-  public get connector() {
-    if (!this._connector) {
-      throw new ConnectorError(ConnectorErrorCodes.General);
-    }
-
-    return this._connector;
-  }
-
-  public set connector(input: Connector) {
-    this._connector = input;
-  }
-
-  constructor(public readonly getConfig: GetConnectorConfig) {}
-
-  public validateConfig(config: unknown): asserts config is AzureADConfig {
-    const result = azureADConfigGuard.safeParse(config);
-
-    if (!result.success) {
-      throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, result.error);
-    }
-  }
-
-  public getAuthorizationUri: GetAuthorizationUri = async ({ state, redirectUri }) => {
-    const config = await this.getConfig(this.metadata.id);
-
-    this.validateConfig(config);
+    validateConfig<AzureADConfig>(config, azureADConfigGuard);
     const { clientId, clientSecret, cloudInstance, tenantId } = config;
 
-    this.authCodeUrlParams = {
+    const defaultAuthCodeUrlParameters: AuthorizationUrlRequest = {
       scopes,
       state,
       redirectUri,
     };
 
-    this.clientApplication = new ConfidentialClientApplication({
+    // eslint-disable-next-line @silverhand/fp/no-mutation
+    clientApplication = new ConfidentialClientApplication({
       auth: {
         clientId,
         clientSecret,
@@ -82,44 +61,47 @@ export default class AzureADConnector implements SocialConnectorInstance<AzureAD
     });
 
     const authCodeUrlParameters = {
-      ...this.authCodeUrlParams,
+      ...defaultAuthCodeUrlParameters,
     };
 
-    const authCodeUrl = await this.clientApplication.getAuthCodeUrl(authCodeUrlParameters);
+    const authCodeUrl = await clientApplication.getAuthCodeUrl(authCodeUrlParameters);
 
     return authCodeUrl;
   };
 
-  public getAccessToken = async (code: string, redirectUri: string) => {
-    const codeRequest = {
-      ...this.authCodeRequest,
-      redirectUri,
-      scopes: ['User.Read'],
-      code,
-    };
-
-    const authResult = await this.clientApplication.acquireTokenByCode(codeRequest);
-
-    const result = accessTokenResponseGuard.safeParse(authResult);
-
-    if (!result.success) {
-      throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, result.error.message);
-    }
-
-    const { accessToken } = result.data;
-
-    assert(accessToken, new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid));
-
-    return { accessToken };
+const getAccessToken = async (code: string, redirectUri: string) => {
+  const codeRequest: AuthorizationCodeRequest = {
+    ...authCodeRequest,
+    redirectUri,
+    scopes: ['User.Read'],
+    code,
   };
 
-  public getUserInfo: GetUserInfo = async (data) => {
-    const { code, redirectUri } = await this.authorizationCallbackHandler(data);
-    const { accessToken } = await this.getAccessToken(code, redirectUri);
+  const authResult = await clientApplication.acquireTokenByCode(codeRequest);
 
-    const config = await this.getConfig(this.metadata.id);
+  const result = accessTokenResponseGuard.safeParse(authResult);
 
-    this.validateConfig(config);
+  if (!result.success) {
+    throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, result.error.message);
+  }
+
+  const { accessToken } = result.data;
+
+  assert(accessToken, new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid));
+
+  return { accessToken };
+};
+
+const getUserInfo =
+  (getConfig: GetConnectorConfig): GetUserInfo =>
+  async (data) => {
+    const { code, redirectUri } = await authorizationCallbackHandler(data);
+    const { accessToken } = await getAccessToken(code, redirectUri);
+
+    // This `config` seems not used. `config` are used to initialize `clientApplication`.
+    // Temporarily keep this as this is a refactor, which should not change the logics.
+    const config = await getConfig(defaultMetadata.id);
+    validateConfig<AzureADConfig>(config, azureADConfigGuard);
 
     try {
       const httpResponse = await got.get(graphAPIEndpoint, {
@@ -157,13 +139,23 @@ export default class AzureADConnector implements SocialConnectorInstance<AzureAD
     }
   };
 
-  private readonly authorizationCallbackHandler = async (parameterObject: unknown) => {
-    const result = codeWithRedirectDataGuard.safeParse(parameterObject);
+const authorizationCallbackHandler = async (parameterObject: unknown) => {
+  const result = authResponseGuard.safeParse(parameterObject);
 
-    if (!result.success) {
-      throw new ConnectorError(ConnectorErrorCodes.General, JSON.stringify(parameterObject));
-    }
+  if (!result.success) {
+    throw new ConnectorError(ConnectorErrorCodes.General, JSON.stringify(parameterObject));
+  }
 
-    return result.data;
+  return result.data;
+};
+
+const createAzureAdConnector: CreateConnector<SocialConnector> = async ({ getConfig }) => {
+  return {
+    metadata: defaultMetadata,
+    configGuard: azureADConfigGuard,
+    getAuthorizationUri: getAuthorizationUri(getConfig),
+    getUserInfo: getUserInfo(getConfig),
   };
-}
+};
+
+export default createAzureAdConnector;

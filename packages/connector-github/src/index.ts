@@ -1,14 +1,13 @@
 import {
-  ConnectorMetadata,
   GetAuthorizationUri,
   GetUserInfo,
   ConnectorError,
   ConnectorErrorCodes,
-  Connector,
-  SocialConnectorInstance,
+  SocialConnector,
+  CreateConnector,
   GetConnectorConfig,
-  codeDataGuard,
-} from '@logto/connector-types';
+  validateConfig,
+} from '@logto/connector-core';
 import { assert, conditional } from '@silverhand/essentials';
 import got, { HTTPError } from 'got';
 import * as qs from 'query-string';
@@ -27,39 +26,14 @@ import {
   accessTokenResponseGuard,
   GithubConfig,
   userInfoResponseGuard,
+  authResponseGuard,
 } from './types';
 
-export default class GithubConnector implements SocialConnectorInstance<GithubConfig> {
-  public metadata: ConnectorMetadata = defaultMetadata;
-  private _connector?: Connector;
-
-  public get connector() {
-    if (!this._connector) {
-      throw new ConnectorError(ConnectorErrorCodes.General);
-    }
-
-    return this._connector;
-  }
-
-  public set connector(input: Connector) {
-    this._connector = input;
-  }
-
-  constructor(public readonly getConfig: GetConnectorConfig) {}
-
-  public validateConfig(config: unknown): asserts config is GithubConfig {
-    const result = githubConfigGuard.safeParse(config);
-
-    if (!result.success) {
-      throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, result.error);
-    }
-  }
-
-  public getAuthorizationUri: GetAuthorizationUri = async ({ state, redirectUri }) => {
-    const config = await this.getConfig(this.metadata.id);
-
-    this.validateConfig(config);
-
+const getAuthorizationUri =
+  (getConfig: GetConnectorConfig): GetAuthorizationUri =>
+  async ({ state, redirectUri }) => {
+    const config = await getConfig(defaultMetadata.id);
+    validateConfig<GithubConfig>(config, githubConfigGuard);
     const queryParameters = new URLSearchParams({
       client_id: config.clientId,
       redirect_uri: redirectUri,
@@ -70,39 +44,66 @@ export default class GithubConnector implements SocialConnectorInstance<GithubCo
     return `${authorizationEndpoint}?${queryParameters.toString()}`;
   };
 
-  public getAccessToken = async (code: string) => {
-    const config = await this.getConfig(this.metadata.id);
+const authorizationCallbackHandler = async (parameterObject: unknown) => {
+  const result = authResponseGuard.safeParse(parameterObject);
 
-    this.validateConfig(config);
+  if (result.success) {
+    return result.data;
+  }
 
-    const { clientId: client_id, clientSecret: client_secret } = config;
+  const parsedError = authorizationCallbackErrorGuard.safeParse(parameterObject);
 
-    const httpResponse = await got.post({
-      url: accessTokenEndpoint,
-      json: {
-        client_id,
-        client_secret,
-        code,
-      },
-      timeout: defaultTimeout,
-    });
+  if (!parsedError.success) {
+    throw new ConnectorError(ConnectorErrorCodes.General, JSON.stringify(parameterObject));
+  }
 
-    const result = accessTokenResponseGuard.safeParse(qs.parse(httpResponse.body));
+  const { error, error_description, error_uri } = parsedError.data;
 
-    if (!result.success) {
-      throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, result.error.message);
-    }
+  if (error === 'access_denied') {
+    throw new ConnectorError(ConnectorErrorCodes.AuthorizationFailed, error_description);
+  }
 
-    const { access_token: accessToken } = result.data;
+  throw new ConnectorError(ConnectorErrorCodes.General, {
+    error,
+    errorDescription: error_description,
+    error_uri,
+  });
+};
 
-    assert(accessToken, new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid));
+export const getAccessToken = async (config: GithubConfig, codeObject: { code: string }) => {
+  const { code } = codeObject;
+  const { clientId: client_id, clientSecret: client_secret } = config;
 
-    return { accessToken };
-  };
+  const httpResponse = await got.post({
+    url: accessTokenEndpoint,
+    json: {
+      client_id,
+      client_secret,
+      code,
+    },
+    timeout: defaultTimeout,
+  });
 
-  public getUserInfo: GetUserInfo = async (data) => {
-    const { code } = await this.authorizationCallbackHandler(data);
-    const { accessToken } = await this.getAccessToken(code);
+  const result = accessTokenResponseGuard.safeParse(qs.parse(httpResponse.body));
+
+  if (!result.success) {
+    throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, result.error.message);
+  }
+
+  const { access_token: accessToken } = result.data;
+
+  assert(accessToken, new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid));
+
+  return { accessToken };
+};
+
+const getUserInfo =
+  (getConfig: GetConnectorConfig): GetUserInfo =>
+  async (data) => {
+    const { code } = await authorizationCallbackHandler(data);
+    const config = await getConfig(defaultMetadata.id);
+    validateConfig<GithubConfig>(config, githubConfigGuard);
+    const { accessToken } = await getAccessToken(config, { code });
 
     try {
       const httpResponse = await got.get(userInfoEndpoint, {
@@ -141,29 +142,13 @@ export default class GithubConnector implements SocialConnectorInstance<GithubCo
     }
   };
 
-  private readonly authorizationCallbackHandler = async (parameterObject: unknown) => {
-    const result = codeDataGuard.safeParse(parameterObject);
-
-    if (result.success) {
-      return result.data;
-    }
-
-    const parsedError = authorizationCallbackErrorGuard.safeParse(parameterObject);
-
-    if (!parsedError.success) {
-      throw new ConnectorError(ConnectorErrorCodes.General, JSON.stringify(parameterObject));
-    }
-
-    const { error, error_description, error_uri } = parsedError.data;
-
-    if (error === 'access_denied') {
-      throw new ConnectorError(ConnectorErrorCodes.AuthorizationFailed, error_description);
-    }
-
-    throw new ConnectorError(ConnectorErrorCodes.General, {
-      error,
-      errorDescription: error_description,
-      error_uri,
-    });
+const createGithubConnector: CreateConnector<SocialConnector> = async ({ getConfig }) => {
+  return {
+    metadata: defaultMetadata,
+    configGuard: githubConfigGuard,
+    getAuthorizationUri: getAuthorizationUri(getConfig),
+    getUserInfo: getUserInfo(getConfig),
   };
-}
+};
+
+export default createGithubConnector;

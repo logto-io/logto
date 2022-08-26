@@ -1,12 +1,7 @@
-import { ConnectorPlatform } from '@logto/connector-types';
+import { ConnectorPlatform } from '@logto/connector-core';
 import { Connector } from '@logto/schemas';
 
-import {
-  getConnectorInstanceById,
-  getConnectorInstances,
-  getSocialConnectorInstanceById,
-  initConnectors,
-} from '@/connectors/index';
+import { getLogtoConnectorById, getLogtoConnectors, initConnectors } from '@/connectors';
 import RequestError from '@/errors/RequestError';
 
 const alipayConnector = {
@@ -120,26 +115,26 @@ jest.mock('@/queries/connector', () => ({
   insertConnector: async (connector: Connector) => insertConnector(connector),
 }));
 
-describe('getConnectorInstances', () => {
+describe('getLogtoConnectors', () => {
   test('should return the connectors existing in DB', async () => {
-    const connectorInstances = await getConnectorInstances();
-    expect(connectorInstances).toHaveLength(connectors.length);
+    const logtoConnectors = await getLogtoConnectors();
+    expect(logtoConnectors).toHaveLength(connectors.length);
 
     for (const [index, connector] of connectors.entries()) {
-      expect(connectorInstances[index]).toHaveProperty('connector', connector);
+      expect(logtoConnectors[index]).toHaveProperty('dbEntry', connector);
     }
   });
 
   test('should throw if any required connector does not exist in DB', async () => {
     const id = 'aliyun-dm';
     findAllConnectors.mockImplementationOnce(async () => []);
-    await expect(getConnectorInstances()).rejects.toMatchError(
+    await expect(getLogtoConnectors()).rejects.toMatchError(
       new RequestError({ code: 'entity.not_found', id, status: 404 })
     );
   });
 
   test('should access DB only once and should not throw', async () => {
-    await expect(getConnectorInstances()).resolves.not.toThrow();
+    await expect(getLogtoConnectors()).resolves.not.toThrow();
     expect(findAllConnectors).toHaveBeenCalled();
   });
 
@@ -148,46 +143,28 @@ describe('getConnectorInstances', () => {
   });
 });
 
-describe('getConnectorInstanceById', () => {
+describe('getLogtoConnectorBy', () => {
   afterEach(() => {
     jest.clearAllMocks();
   });
 
   test('should return the connector existing in DB', async () => {
-    const connectorInstance = await getConnectorInstanceById('aliyun-direct-mail');
-    expect(connectorInstance).toHaveProperty('connector', aliyunDmConnector);
+    const connector = await getLogtoConnectorById('github-universal');
+    expect(connector).toHaveProperty('dbEntry', githubConnector);
   });
 
   test('should throw on invalid id (on DB query)', async () => {
     const id = 'invalid_id';
-    await expect(getConnectorInstanceById(id)).rejects.toThrow();
+    await expect(getLogtoConnectorById(id)).rejects.toThrow();
   });
 
   test('should throw on invalid id (on finding metadata)', async () => {
     const id = 'invalid_id';
-    await expect(getConnectorInstanceById(id)).rejects.toMatchError(
+    await expect(getLogtoConnectorById(id)).rejects.toMatchError(
       new RequestError({
         code: 'entity.not_found',
         target: 'invalid_target',
         platfrom: ConnectorPlatform.Web,
-        status: 404,
-      })
-    );
-  });
-});
-
-describe('getSocialConnectorInstanceById', () => {
-  test('should return the connector existing in DB', async () => {
-    const socialConnectorInstance = await getSocialConnectorInstanceById('google-universal');
-    expect(socialConnectorInstance).toHaveProperty('connector', googleConnector);
-  });
-
-  test('should throw on non-social connector', async () => {
-    const id = 'aliyun-direct-mail';
-    await expect(getSocialConnectorInstanceById(id)).rejects.toMatchError(
-      new RequestError({
-        code: 'entity.not_found',
-        id,
         status: 404,
       })
     );

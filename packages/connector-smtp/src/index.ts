@@ -1,14 +1,12 @@
 import {
   ConnectorError,
   ConnectorErrorCodes,
-  ConnectorMetadata,
-  Connector,
-  EmailSendMessageFunction,
-  EmailSendTestMessageFunction,
-  EmailConnectorInstance,
   GetConnectorConfig,
-  EmailMessageTypes,
-} from '@logto/connector-types';
+  CreateConnector,
+  EmailConnector,
+  SendMessageFunction,
+  validateConfig,
+} from '@logto/connector-core';
 import { assert } from '@silverhand/essentials';
 import nodemailer from 'nodemailer';
 import SMTPTransport from 'nodemailer/lib/smtp-transport';
@@ -16,52 +14,12 @@ import SMTPTransport from 'nodemailer/lib/smtp-transport';
 import { defaultMetadata } from './constant';
 import { ContextType, smtpConfigGuard, SmtpConfig } from './types';
 
-export default class SmtpConnector implements EmailConnectorInstance<SmtpConfig> {
-  public metadata: ConnectorMetadata = defaultMetadata;
-  private _connector?: Connector;
-
-  public get connector() {
-    if (!this._connector) {
-      throw new ConnectorError(ConnectorErrorCodes.General);
-    }
-
-    return this._connector;
-  }
-
-  public set connector(input: Connector) {
-    this._connector = input;
-  }
-
-  constructor(public readonly getConfig: GetConnectorConfig) {}
-
-  public validateConfig(config: unknown): asserts config is SmtpConfig {
-    const result = smtpConfigGuard.safeParse(config);
-
-    if (!result.success) {
-      throw new ConnectorError(ConnectorErrorCodes.InvalidConfig, result.error);
-    }
-  }
-
-  public sendMessage: EmailSendMessageFunction = async (address, type, data) => {
-    const config = await this.getConfig(this.metadata.id);
-
-    this.validateConfig(config);
-
-    return this.sendMessageBy(config, address, type, data);
-  };
-
-  public sendTestMessage: EmailSendTestMessageFunction = async (config, address, type, data) => {
-    this.validateConfig(config);
-
-    return this.sendMessageBy(config, address, type, data);
-  };
-
-  private readonly sendMessageBy = async (
-    config: SmtpConfig,
-    address: string,
-    type: keyof EmailMessageTypes,
-    data: EmailMessageTypes[typeof type]
-  ) => {
+const sendMessage =
+  (getConfig: GetConnectorConfig): SendMessageFunction =>
+  async (data, inputConfig) => {
+    const { to, type, payload } = data;
+    const config = inputConfig ?? (await getConfig(defaultMetadata.id));
+    validateConfig<SmtpConfig>(config, smtpConfigGuard);
     const { host, port, username, password, fromEmail, replyTo, templates } = config;
     const template = templates.find((template) => template.usageType === type);
 
@@ -89,15 +47,15 @@ export default class SmtpConnector implements EmailConnectorInstance<SmtpConfig>
 
     const transporter = nodemailer.createTransport(configOptions);
 
-    const contentsObject = this.parseContents(
-      typeof data.code === 'string'
-        ? template.content.replace(/{{code}}/g, data.code)
+    const contentsObject = parseContents(
+      typeof payload.code === 'string'
+        ? template.content.replace(/{{code}}/g, payload.code)
         : template.content,
       template.contentType
     );
 
     const mailOptions = {
-      to: address,
+      to,
       from: fromEmail,
       replyTo,
       subject: template.subject,
@@ -114,17 +72,26 @@ export default class SmtpConnector implements EmailConnectorInstance<SmtpConfig>
     }
   };
 
-  private readonly parseContents = (contents: string, contentType: ContextType) => {
-    switch (contentType) {
-      case ContextType.Text:
-        return { text: contents };
-      case ContextType.Html:
-        return { html: contents };
-      default:
-        throw new ConnectorError(
-          ConnectorErrorCodes.InvalidConfig,
-          '`contentType` should be ContextType.'
-        );
-    }
+const parseContents = (contents: string, contentType: ContextType) => {
+  switch (contentType) {
+    case ContextType.Text:
+      return { text: contents };
+    case ContextType.Html:
+      return { html: contents };
+    default:
+      throw new ConnectorError(
+        ConnectorErrorCodes.InvalidConfig,
+        '`contentType` should be ContextType.'
+      );
+  }
+};
+
+const createSmtpConnector: CreateConnector<EmailConnector> = async ({ getConfig }) => {
+  return {
+    metadata: defaultMetadata,
+    configGuard: smtpConfigGuard,
+    sendMessage: sendMessage(getConfig),
   };
-}
+};
+
+export default createSmtpConnector;

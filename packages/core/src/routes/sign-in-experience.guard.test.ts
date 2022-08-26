@@ -2,11 +2,11 @@ import { Language } from '@logto/phrases';
 import { CreateSignInExperience, SignInExperience, SignInMethodState } from '@logto/schemas';
 
 import {
-  mockAliyunDmConnectorInstance,
-  mockAliyunSmsConnectorInstance,
-  mockFacebookConnectorInstance,
-  mockGithubConnectorInstance,
-  mockGoogleConnectorInstance,
+  mockAliyunDmConnector,
+  mockAliyunSmsConnector,
+  mockFacebookConnector,
+  mockGithubConnector,
+  mockGoogleConnector,
   mockLanguageInfo,
   mockSignInExperience,
   mockSignInMethods,
@@ -17,12 +17,12 @@ import { createRequester } from '@/utils/test-utils';
 import signInExperiencesRoutes from './sign-in-experience';
 
 jest.mock('@/connectors', () => ({
-  getConnectorInstances: jest.fn(async () => [
-    mockAliyunDmConnectorInstance,
-    mockAliyunSmsConnectorInstance,
-    mockFacebookConnectorInstance,
-    mockGithubConnectorInstance,
-    mockGoogleConnectorInstance,
+  getLogtoConnectors: jest.fn(async () => [
+    mockAliyunDmConnector,
+    mockAliyunSmsConnector,
+    mockFacebookConnector,
+    mockGithubConnector,
+    mockGoogleConnector,
   ]),
 }));
 

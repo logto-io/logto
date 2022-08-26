@@ -1,56 +1,13 @@
-import {
-  ConnectorError,
-  ConnectorErrorCodes,
-  GetConnectorConfig,
-  ValidateConfig,
-} from '@logto/connector-types';
+import { ConnectorError, ConnectorErrorCodes } from '@logto/connector-core';
 import nock from 'nock';
 
-import FacebookConnector from '.';
+import createConnector, { getAccessToken } from '.';
 import { accessTokenEndpoint, authorizationEndpoint, userInfoEndpoint } from './constant';
 import { clientId, clientSecret, code, dummyRedirectUri, fields, mockedConfig } from './mock';
-import { FacebookConfig } from './types';
 
-const getConnectorConfig = jest.fn() as GetConnectorConfig;
-
-const facebookMethods = new FacebookConnector(getConnectorConfig);
-
-beforeAll(() => {
-  jest.spyOn(facebookMethods, 'getConfig').mockResolvedValue(mockedConfig);
-});
+const getConfig = jest.fn().mockResolvedValue(mockedConfig);
 
 describe('Facebook connector', () => {
-  describe('validateConfig', () => {
-    afterEach(() => {
-      jest.clearAllMocks();
-    });
-
-    /**
-     * Assertion functions always need explicit annotations.
-     * See https://github.com/microsoft/TypeScript/issues/36931#issuecomment-589753014
-     */
-
-    it('should pass on valid config', async () => {
-      const validator: ValidateConfig<FacebookConfig> = facebookMethods.validateConfig;
-      expect(() => {
-        validator({ clientId, clientSecret });
-      }).not.toThrow();
-    });
-
-    it('should fail on invalid config', async () => {
-      const validator: ValidateConfig<FacebookConfig> = facebookMethods.validateConfig;
-      expect(() => {
-        validator({});
-      }).toThrow();
-      expect(() => {
-        validator({ clientId });
-      }).toThrow();
-      expect(() => {
-        validator({ clientSecret });
-      }).toThrow();
-    });
-  });
-
   describe('getAuthorizationUri', () => {
     afterEach(() => {
       jest.clearAllMocks();
@@ -59,7 +16,8 @@ describe('Facebook connector', () => {
     it('should get a valid authorizationUri with redirectUri and state', async () => {
       const redirectUri = 'http://localhost:3000/callback';
       const state = 'some_state';
-      const authorizationUri = await facebookMethods.getAuthorizationUri({ state, redirectUri });
+      const connector = await createConnector({ getConfig });
+      const authorizationUri = await connector.getAuthorizationUri({ state, redirectUri });
 
       const encodedRedirectUri = encodeURIComponent(redirectUri);
       expect(authorizationUri).toEqual(
@@ -90,7 +48,10 @@ describe('Facebook connector', () => {
           expires_in: 3600,
         });
 
-      const { accessToken } = await facebookMethods.getAccessToken(code, dummyRedirectUri);
+      const { accessToken } = await getAccessToken(mockedConfig, {
+        code,
+        redirectUri: dummyRedirectUri,
+      });
       expect(accessToken).toEqual('access_token');
     });
 
@@ -110,9 +71,9 @@ describe('Facebook connector', () => {
           expires_in: 3600,
         });
 
-      await expect(facebookMethods.getAccessToken(code, dummyRedirectUri)).rejects.toMatchError(
-        new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid)
-      );
+      await expect(
+        getAccessToken(mockedConfig, { code, redirectUri: dummyRedirectUri })
+      ).rejects.toMatchError(new ConnectorError(ConnectorErrorCodes.SocialAuthCodeInvalid));
     });
   });
 
@@ -150,8 +111,8 @@ describe('Facebook connector', () => {
           email: 'octocat@facebook.com',
           picture: { data: { url: avatar } },
         });
-
-      const socialUserInfo = await facebookMethods.getUserInfo({
+      const connector = await createConnector({ getConfig });
+      const socialUserInfo = await connector.getUserInfo({
         code,
         redirectUri: dummyRedirectUri,
       });
@@ -165,8 +126,9 @@ describe('Facebook connector', () => {
 
     it('throws SocialAccessTokenInvalid error if remote response code is 401', async () => {
       nock(userInfoEndpoint).get('').query({ fields }).reply(400);
+      const connector = await createConnector({ getConfig });
       await expect(
-        facebookMethods.getUserInfo({ code, redirectUri: dummyRedirectUri })
+        connector.getUserInfo({ code, redirectUri: dummyRedirectUri })
       ).rejects.toMatchError(new ConnectorError(ConnectorErrorCodes.SocialAccessTokenInvalid));
     });
 
@@ -181,8 +143,9 @@ describe('Facebook connector', () => {
           email: 'octocat@facebook.com',
           picture: { data: { url: avatar } },
         });
+      const connector = await createConnector({ getConfig });
       await expect(
-        facebookMethods.getUserInfo({
+        connector.getUserInfo({
           error: 'access_denied',
           error_code: 200,
           error_description: 'Permissions error.',
@@ -204,8 +167,9 @@ describe('Facebook connector', () => {
           email: 'octocat@facebook.com',
           picture: { data: { url: avatar } },
         });
+      const connector = await createConnector({ getConfig });
       await expect(
-        facebookMethods.getUserInfo({
+        connector.getUserInfo({
           error: 'general_error',
           error_code: 200,
           error_description: 'General error encountered.',
@@ -223,8 +187,9 @@ describe('Facebook connector', () => {
 
     it('throws unrecognized error', async () => {
       nock(userInfoEndpoint).get('').reply(500);
+      const connector = await createConnector({ getConfig });
       await expect(
-        facebookMethods.getUserInfo({ code, redirectUri: dummyRedirectUri })
+        connector.getUserInfo({ code, redirectUri: dummyRedirectUri })
       ).rejects.toThrow();
     });
   });
