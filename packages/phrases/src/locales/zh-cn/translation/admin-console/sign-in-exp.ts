@@ -36,14 +36,6 @@ const sign_in_exp = {
     slogan: '标语',
     slogan_placeholder: '释放你的创意',
   },
-  terms_of_use: {
-    title: '使用条款',
-    enable: '开启使用条款',
-    description: '添加使用产品的法律协议。',
-    terms_of_use: '使用条款',
-    terms_of_use_placeholder: 'https://your.terms.of.use/',
-    terms_of_use_tip: '使用条款 URL',
-  },
   sign_in_methods: {
     title: '登录方式',
     primary: '主要登录方式',
@@ -66,6 +58,14 @@ const sign_in_exp = {
     },
   },
   others: {
+    terms_of_use: {
+      title: '使用条款',
+      enable: '开启使用条款',
+      description: '添加使用产品的法律协议。',
+      terms_of_use: '使用条款',
+      terms_of_use_placeholder: 'https://your.terms.of.use/',
+      terms_of_use_tip: '使用条款 URL',
+    },
     languages: {
       title: '语言',
       mode: '语言模式',

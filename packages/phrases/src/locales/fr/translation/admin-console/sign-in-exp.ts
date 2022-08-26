@@ -40,14 +40,6 @@ const sign_in_exp = {
     slogan: 'Slogan',
     slogan_placeholder: 'Libérez votre créativité',
   },
-  terms_of_use: {
-    title: "CONDITIONS D'UTILISATION",
-    enable: "Activer les conditions d'utilisation",
-    description: "Ajouter les accords juridiques pour l'utilisation de votre produit",
-    terms_of_use: "Conditions d'utilisation",
-    terms_of_use_placeholder: 'https://vos.conditions.utilisation/',
-    terms_of_use_tip: "Conditions d'utilisation URL",
-  },
   sign_in_methods: {
     title: 'METHODES DE CONNEXION',
     primary: 'Méthode de connexion principale',
@@ -71,6 +63,14 @@ const sign_in_exp = {
     },
   },
   others: {
+    terms_of_use: {
+      title: "CONDITIONS D'UTILISATION",
+      enable: "Activer les conditions d'utilisation",
+      description: "Ajouter les accords juridiques pour l'utilisation de votre produit",
+      terms_of_use: "Conditions d'utilisation",
+      terms_of_use_placeholder: 'https://vos.conditions.utilisation/',
+      terms_of_use_tip: "Conditions d'utilisation URL",
+    },
     languages: {
       title: 'LANGAGES',
       mode: 'Mode langue',

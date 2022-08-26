@@ -20,18 +20,18 @@ const TermsForm = () => {
 
   return (
     <>
-      <div className={styles.title}>{t('sign_in_exp.terms_of_use.title')}</div>
-      <FormField title="sign_in_exp.terms_of_use.enable">
+      <div className={styles.title}>{t('sign_in_exp.others.terms_of_use.title')}</div>
+      <FormField title="sign_in_exp.others.terms_of_use.enable">
         <Switch
           {...register('termsOfUse.enabled')}
-          label={t('sign_in_exp.terms_of_use.description')}
+          label={t('sign_in_exp.others.terms_of_use.description')}
         />
       </FormField>
       {enabled && (
         <FormField
           isRequired
-          title="sign_in_exp.terms_of_use.terms_of_use"
-          tooltip="sign_in_exp.terms_of_use.terms_of_use_tip"
+          title="sign_in_exp.others.terms_of_use.terms_of_use"
+          tooltip="sign_in_exp.others.terms_of_use.terms_of_use_tip"
         >
           <TextInput
             {...register('termsOfUse.contentUrl', {
@@ -40,7 +40,7 @@ const TermsForm = () => {
             })}
             hasError={Boolean(errors.termsOfUse)}
             errorMessage={errors.termsOfUse?.contentUrl?.message}
-            placeholder={t('sign_in_exp.terms_of_use.terms_of_use_placeholder')}
+            placeholder={t('sign_in_exp.others.terms_of_use.terms_of_use_placeholder')}
           />
         </FormField>
       )}

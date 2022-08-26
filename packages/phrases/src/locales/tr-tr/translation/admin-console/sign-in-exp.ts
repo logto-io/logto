@@ -39,14 +39,6 @@ const sign_in_exp = {
     slogan: 'Slogan',
     slogan_placeholder: 'Yaratıcılığınızı açığa çıkarın',
   },
-  terms_of_use: {
-    title: 'KULLANIM KOŞULLARI',
-    enable: 'Kullanım koşullarını etkinleştir',
-    description: 'Ürününüzün kullanımına ilişkin yasal anlaşmaları ekleyin',
-    terms_of_use: 'Kullanım koşulları',
-    terms_of_use_placeholder: 'https://your.terms.of.use/',
-    terms_of_use_tip: 'Kullanım koşulları URLi',
-  },
   sign_in_methods: {
     title: 'OTURUM AÇMA YÖNTEMLERİ',
     primary: 'Birincil oturum açma yöntemi',
@@ -70,6 +62,14 @@ const sign_in_exp = {
     },
   },
   others: {
+    terms_of_use: {
+      title: 'KULLANIM KOŞULLARI',
+      enable: 'Kullanım koşullarını etkinleştir',
+      description: 'Ürününüzün kullanımına ilişkin yasal anlaşmaları ekleyin',
+      terms_of_use: 'Kullanım koşulları',
+      terms_of_use_placeholder: 'https://your.terms.of.use/',
+      terms_of_use_tip: 'Kullanım koşulları URLi',
+    },
     languages: {
       title: 'DİLLER',
       mode: 'Dil modu',
