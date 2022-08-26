@@ -1,5 +1,3 @@
-// FIXME: @Darcy
-/* eslint-disable unicorn/text-encoding-identifier-case */
 import { ConnectorType, ConnectorMetadata, ConnectorPlatform } from '@logto/connector-core';
 
 export const authorizationEndpoint = 'https://openauth.alipay.com/oauth2/publicAppAuthorize.htm';
@@ -13,8 +11,8 @@ export const alipaySigningAlgorithmMapping = {
   RSA2: 'RSA-SHA256',
 } as const;
 export const alipaySigningAlgorithms = ['RSA', 'RSA2'] as const;
-export const charsetEnum = ['GBK', 'UTF8'] as const;
-export const fallbackCharset = 'UTF8';
+export const charsetEnum = ['GBK', 'utf8'] as const;
+export const fallbackCharset = 'utf8';
 
 export const invalidAccessTokenCode = ['20001'];
 
@@ -46,4 +44,3 @@ export const defaultMetadata: ConnectorMetadata = {
 export const defaultTimeout = 5000;
 
 export const timestampFormat = 'YYYY-MM-DD HH:mm:ss';
-/* eslint-enable unicorn/text-encoding-identifier-case */
