@@ -103,7 +103,11 @@ const getUserInfo =
       }
 
       const { id, kakao_account } = result.data;
-      const { is_email_valid, email, profile } = kakao_account;
+      const { is_email_valid, email, profile } = kakao_account ?? {
+        is_email_valid: null,
+        profile: null,
+        email: null,
+      };
 
       return {
         id: id.toString(),

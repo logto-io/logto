@@ -869,6 +869,7 @@ importers:
       '@logto/connector-facebook': ^1.0.0-beta.6
       '@logto/connector-github': ^1.0.0-beta.6
       '@logto/connector-google': ^1.0.0-beta.6
+      '@logto/connector-kakao': ^1.0.0-beta.6
       '@logto/connector-sendgrid-email': ^1.0.0-beta.6
       '@logto/connector-smtp': ^1.0.0-beta.6
       '@logto/connector-twilio-sms': ^1.0.0-beta.6
@@ -954,6 +955,7 @@ importers:
       '@logto/connector-facebook': link:../connector-facebook
       '@logto/connector-github': link:../connector-github
       '@logto/connector-google': link:../connector-google
+      '@logto/connector-kakao': link:../connector-kakao
       '@logto/connector-sendgrid-email': link:../connector-sendgrid-mail
       '@logto/connector-smtp': link:../connector-smtp
       '@logto/connector-twilio-sms': link:../connector-twilio-sms

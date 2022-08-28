@@ -1,6 +1,6 @@
 {
   "name": "@logto/connector-kakao",
-  "version": "1.0.0-beta.5",
+  "version": "1.0.0-beta.6",
   "description": "Kakao connector implementation.",
   "main": "./lib/index.js",
   "exports": "./lib/index.js",

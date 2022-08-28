@@ -17,17 +17,19 @@ export type AccessTokenResponse = z.infer<typeof accessTokenResponseGuard>;
 
 export const userInfoResponseGuard = z.object({
   id: z.number(),
-  kakao_account: z.object({
-    is_email_valid: z.boolean().optional(),
-    email: z.string().optional(),
-    profile: z
-      .object({
-        nickname: z.string().optional(),
-        profile_image_url: z.string().optional(),
-        is_default_image: z.boolean().optional(),
-      })
-      .optional(),
-  }),
+  kakao_account: z
+    .object({
+      is_email_valid: z.boolean().optional(),
+      email: z.string().optional(),
+      profile: z
+        .object({
+          nickname: z.string().optional(),
+          profile_image_url: z.string().optional(),
+          is_default_image: z.boolean().optional(),
+        })
+        .optional(),
+    })
+    .optional(),
 });
 
 export type UserInfoResponse = z.infer<typeof userInfoResponseGuard>;
