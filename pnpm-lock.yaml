@@ -422,6 +422,47 @@ importers:
       prettier: 2.7.1
       typescript: 4.7.4
 
+  packages/connector-kakao:
+    specifiers:
+      '@jest/types': ^28.1.3
+      '@logto/connector-core': ^1.0.0-beta.5
+      '@logto/shared': ^1.0.0-beta.5
+      '@silverhand/eslint-config': 1.0.0-rc.2
+      '@silverhand/essentials': ^1.2.0
+      '@silverhand/jest-config': 1.0.0-rc.3
+      '@silverhand/ts-config': 1.0.0-rc.2
+      '@types/jest': ^28.1.6
+      '@types/node': ^16.3.1
+      eslint: ^8.21.0
+      got: ^11.8.2
+      jest: ^28.1.3
+      jest-matcher-specific-error: ^1.0.0
+      lint-staged: ^13.0.0
+      nock: ^13.2.2
+      prettier: ^2.7.1
+      typescript: ^4.7.4
+      zod: ^3.14.3
+    dependencies:
+      '@logto/connector-core': link:../connector-core
+      '@logto/shared': link:../shared
+      '@silverhand/essentials': 1.2.0
+      '@silverhand/jest-config': 1.0.0-rc.3_bi2kohzqnxavgozw3csgny5hju
+      got: 11.8.3
+      zod: 3.14.3
+    devDependencies:
+      '@jest/types': 28.1.3
+      '@silverhand/eslint-config': 1.0.0-rc.2_swk2g7ygmfleszo5c33j4vooni
+      '@silverhand/ts-config': 1.0.0-rc.2_typescript@4.7.4
+      '@types/jest': 28.1.6
+      '@types/node': 16.11.12
+      eslint: 8.21.0
+      jest: 28.1.3_@types+node@16.11.12
+      jest-matcher-specific-error: 1.0.0
+      lint-staged: 13.0.0
+      nock: 13.2.2
+      prettier: 2.7.1
+      typescript: 4.7.4
+
   packages/connector-mock-email:
     specifiers:
       '@logto/connector-core': ^1.0.0-beta.6
@@ -2317,6 +2358,7 @@ packages:
       pacote: 13.4.1
       semver: 7.3.7
     transitivePeerDependencies:
+      - bluebird
       - supports-color
     dev: true
 
@@ -2347,6 +2389,7 @@ packages:
       p-waterfall: 2.1.1
       semver: 7.3.7
     transitivePeerDependencies:
+      - bluebird
       - supports-color
     dev: true
 
@@ -2487,6 +2530,7 @@ packages:
       whatwg-url: 8.7.0
       yargs-parser: 20.2.4
     transitivePeerDependencies:
+      - bluebird
       - supports-color
     dev: true
 
@@ -2684,6 +2728,7 @@ packages:
       npm-registry-fetch: 9.0.0
       npmlog: 4.1.2
     transitivePeerDependencies:
+      - bluebird
       - supports-color
     dev: true
 
@@ -2713,6 +2758,7 @@ packages:
       pify: 5.0.0
       read-package-json: 3.0.1
     transitivePeerDependencies:
+      - bluebird
       - supports-color
     dev: true
 
@@ -2751,6 +2797,7 @@ packages:
       npmlog: 4.1.2
       tar: 6.1.11
     transitivePeerDependencies:
+      - bluebird
       - supports-color
     dev: true
 
@@ -2849,6 +2896,7 @@ packages:
       pacote: 13.4.1
       semver: 7.3.7
     transitivePeerDependencies:
+      - bluebird
       - encoding
       - supports-color
     dev: true
@@ -2894,6 +2942,7 @@ packages:
       '@npmcli/run-script': 3.0.2
       npmlog: 4.1.2
     transitivePeerDependencies:
+      - bluebird
       - supports-color
     dev: true
 
@@ -2995,6 +3044,7 @@ packages:
       slash: 3.0.0
       write-json-file: 4.3.0
     transitivePeerDependencies:
+      - bluebird
       - encoding
       - supports-color
     dev: true
@@ -3224,6 +3274,7 @@ packages:
       treeverse: 2.0.0
       walk-up-path: 1.0.0
     transitivePeerDependencies:
+      - bluebird
       - supports-color
     dev: true
 
@@ -3259,6 +3310,8 @@ packages:
       promise-retry: 2.0.1
       semver: 7.3.7
       which: 2.0.2
+    transitivePeerDependencies:
+      - bluebird
     dev: true
 
   /@npmcli/installed-package-contents/1.0.7:
@@ -3289,6 +3342,7 @@ packages:
       pacote: 13.4.1
       semver: 7.3.7
     transitivePeerDependencies:
+      - bluebird
       - supports-color
     dev: true
 
@@ -3340,6 +3394,7 @@ packages:
       node-gyp: 9.0.0
       read-package-json-fast: 2.0.3
     transitivePeerDependencies:
+      - bluebird
       - supports-color
     dev: true
 
@@ -5981,6 +6036,8 @@ packages:
       ssri: 8.0.1
       tar: 6.1.11
       unique-filename: 1.1.1
+    transitivePeerDependencies:
+      - bluebird
     dev: true
 
   /cacache/16.1.0:
@@ -6005,6 +6062,8 @@ packages:
       ssri: 9.0.1
       tar: 6.1.11
       unique-filename: 1.1.1
+    transitivePeerDependencies:
+      - bluebird
     dev: true
 
   /cache-content-type/1.0.1:
@@ -10594,6 +10653,7 @@ packages:
       import-local: 3.1.0
       npmlog: 4.1.2
     transitivePeerDependencies:
+      - bluebird
       - encoding
       - supports-color
     dev: true
@@ -10627,6 +10687,7 @@ packages:
       npm-package-arg: 8.1.5
       npm-registry-fetch: 11.0.0
     transitivePeerDependencies:
+      - bluebird
       - supports-color
     dev: true
 
@@ -10640,6 +10701,7 @@ packages:
       semver: 7.3.7
       ssri: 8.0.1
     transitivePeerDependencies:
+      - bluebird
       - supports-color
     dev: true
 
@@ -10962,6 +11024,7 @@ packages:
       socks-proxy-agent: 6.1.1
       ssri: 9.0.1
     transitivePeerDependencies:
+      - bluebird
       - supports-color
     dev: true
 
@@ -10985,6 +11048,7 @@ packages:
       socks-proxy-agent: 5.0.1
       ssri: 8.0.1
     transitivePeerDependencies:
+      - bluebird
       - supports-color
     dev: true
 
@@ -11009,6 +11073,7 @@ packages:
       socks-proxy-agent: 6.1.1
       ssri: 8.0.1
     transitivePeerDependencies:
+      - bluebird
       - supports-color
     dev: true
 
@@ -11901,6 +11966,7 @@ packages:
       tar: 6.1.11
       which: 2.0.2
     transitivePeerDependencies:
+      - bluebird
       - supports-color
     dev: true
 
@@ -12086,6 +12152,7 @@ packages:
       minizlib: 2.1.2
       npm-package-arg: 8.1.5
     transitivePeerDependencies:
+      - bluebird
       - supports-color
     dev: true
 
@@ -12101,6 +12168,7 @@ packages:
       npm-package-arg: 9.0.2
       proc-log: 2.0.1
     transitivePeerDependencies:
+      - bluebird
       - supports-color
     dev: true
 
@@ -12117,6 +12185,7 @@ packages:
       minizlib: 2.1.2
       npm-package-arg: 8.1.5
     transitivePeerDependencies:
+      - bluebird
       - supports-color
     dev: true
 
@@ -12517,6 +12586,7 @@ packages:
       ssri: 9.0.1
       tar: 6.1.11
     transitivePeerDependencies:
+      - bluebird
       - supports-color
     dev: true
 
@@ -13246,6 +13316,11 @@ packages:
 
   /promise-inflight/1.0.1:
     resolution: {integrity: sha1-mEcocL8igTL8vdhoEputEsPAKeM=}
+    peerDependencies:
+      bluebird: '*'
+    peerDependenciesMeta:
+      bluebird:
+        optional: true
     dev: true
 
   /promise-retry/2.0.1:
