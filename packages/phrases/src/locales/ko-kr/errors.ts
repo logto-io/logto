@@ -61,6 +61,8 @@ const errors = {
     general: '연동 중에 알 수 없는 오류가 발생했어요. {{errorDescription}}',
     not_found: '{{type}} 값을 가진 연동 종류를 찾을 수 없어요.',
     not_enabled: '연동이 활성화 되지 않았어요.',
+    invalid_metadata: "The connector's metadata is invalid.", // TODO: need to check KO_KR translation
+    invalid_config_guard: "The connector's config guard is invalid.",
     insufficient_request_parameters: '요청 데이터에서 일부 정보가 없어요.',
     invalid_config: '연동 설정이 유효하지 않아요.',
     invalid_response: '연동 응답이 유효하지 않아요.',

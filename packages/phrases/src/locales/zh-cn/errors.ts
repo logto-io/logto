@@ -61,6 +61,8 @@ const errors = {
     general: '连接器发生未知错误{{errorDescription}}',
     not_found: '找不到可用的 {{type}} 类型的连接器',
     not_enabled: '连接器尚未启用',
+    invalid_metadata: '连接器 metadata 参数错误',
+    invalid_config_guard: '连接器配置 guard 错误',
     insufficient_request_parameters: '请求参数缺失',
     invalid_config: '连接器配置错误',
     invalid_response: '连接器错误响应',

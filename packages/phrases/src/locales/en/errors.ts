@@ -62,6 +62,8 @@ const errors = {
     general: 'An unexpected error occurred in connector.{{errorDescription}}',
     not_found: 'Cannot find any available connector for type: {{type}}.',
     not_enabled: 'The connector is not enabled.',
+    invalid_metadata: "The connector's metadata is invalid.",
+    invalid_config_guard: "The connector's config guard is invalid.",
     insufficient_request_parameters: 'The request might miss some input parameters.',
     invalid_config: "The connector's config is invalid.",
     invalid_response: "The connector's response is invalid.",

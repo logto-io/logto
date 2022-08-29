@@ -67,6 +67,8 @@ const errors = {
     general: "Une erreur inattendue s'est produite dans le connecteur. {{errorDescription}}",
     not_found: 'Impossible de trouver un connecteur disponible pour le type : {{type}}.',
     not_enabled: "Le connecteur n'est pas activé.",
+    invalid_metadata: "The connector's metadata is invalid.", // TODO: need to check FR translation
+    invalid_config_guard: "The connector's config guard is invalid.",
     insufficient_request_parameters: 'Certains paramètres peuvent manquer dans la requête.',
     invalid_config: "La configuration du connecteur n'est pas valide.",
     invalid_response: "La réponse du connecteur n'est pas valide.",
