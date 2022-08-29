@@ -25,7 +25,6 @@
   },
   "dependencies": {
     "@logto/connector-core": "^1.0.0-beta.5",
-    "@logto/shared": "^1.0.0-beta.5",
     "@silverhand/essentials": "^1.2.0",
     "@silverhand/jest-config": "1.0.0-rc.3",
     "dayjs": "^1.10.5",
