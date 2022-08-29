@@ -1,0 +1,75 @@
+@use '@/scss/underscore' as _;
+
+.transfer {
+  .main {
+    border: 1px solid var(--color-border);
+    border-radius: 6px;
+    display: flex;
+
+    .box {
+      width: 50%;
+
+      &:not(:last-child) {
+        border-right: 1px solid var(--color-border);
+      }
+
+      .title {
+        font: var(--font-subhead-2);
+        padding: _.unit(3) _.unit(4);
+        border-bottom: 1px solid var(--color-border);
+      }
+
+      .items {
+        height: 200px;
+        overflow-y: auto;
+
+        .item {
+          padding: _.unit(2) _.unit(4);
+          display: flex;
+          align-items: center;
+          font: var(--font-body-medium);
+
+          &.draggable {
+            cursor: move;
+
+            .draggableIcon {
+              color: var(--color-icon);
+            }
+          }
+
+          > svg {
+            margin-right: _.unit(2);
+            margin-left: -5px; // use to align svg content with text
+          }
+
+          &:hover {
+            background: var(--color-hover);
+          }
+
+          .itemTitle {
+            flex: 1;
+          }
+        }
+
+        .dragging {
+          .item {
+            &:hover {
+              background: initial;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .footer {
+    font: var(--font-body-medium);
+    color: var(--color-caption);
+    margin-top: _.unit(2);
+
+    a {
+      color: var(--color-text-link);
+      text-decoration: none;
+    }
+  }
+}

@@ -1,0 +1,68 @@
+@use '@/scss/underscore' as _;
+
+.button {
+  border: none;
+  outline: none;
+  background: none;
+  border-color: none;
+  color: var(--color-primary);
+  border-radius: 6px;
+  font: var(--font-button);
+  transition: background 0.2s ease-in-out;
+  padding: _.unit(1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  > svg {
+    color: var(--color-caption);
+  }
+
+  &:disabled {
+    > svg {
+      color: var(--color-neutral-80);
+    }
+  }
+
+  &:active {
+    background: var(--color-pressed);
+  }
+
+  &:not(:disabled) {
+    cursor: pointer;
+  }
+
+  &:not(:disabled):hover {
+    background: var(--color-hover);
+  }
+
+  &.small {
+    height: 24px;
+    width: 24px;
+
+    > svg {
+      height: 16px;
+      width: 16px;
+    }
+  }
+
+  &.medium {
+    height: 28px;
+    width: 28px;
+
+    > svg {
+      height: 20px;
+      width: 20px;
+    }
+  }
+
+  &.large {
+    height: 32px;
+    width: 32px;
+
+    > svg {
+      height: 24px;
+      width: 24px;
+    }
+  }
+}

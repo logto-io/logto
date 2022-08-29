@@ -1,0 +1,17 @@
+@use '@/scss/underscore' as _;
+
+.wrapper {
+  display: flex;
+  align-items: flex-start;
+  position: relative;
+
+  .saveButton {
+    position: absolute;
+    left: calc(556px + _.unit(3));
+    top: 0;
+  }
+}
+
+.field {
+  width: 556px;
+}

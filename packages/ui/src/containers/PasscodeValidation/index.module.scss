@@ -1,0 +1,41 @@
+@use '@/scss/underscore' as _;
+
+.form {
+  @include _.flex-column;
+
+  > * {
+    width: 100%;
+  }
+
+  .inputField {
+    margin-bottom: _.unit(8);
+
+    &.withError {
+      margin-bottom: _.unit(2);
+    }
+  }
+
+  .link {
+    font: var(--font-caption);
+  }
+
+  .message {
+    font: var(--font-caption);
+
+    > span {
+      color: var(--color-primary);
+    }
+  }
+}
+
+:global(body.mobile) {
+  .message {
+    color: var(--color-text);
+  }
+}
+
+:global(body.desktop) {
+  .message {
+    color: var(--color-caption);
+  }
+}

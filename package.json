@@ -1,0 +1,51 @@
+{
+  "name": "@logto/root",
+  "private": true,
+  "license": "MPL-2.0",
+  "scripts": {
+    "preinstall": "npx only-allow pnpm",
+    "version": "pnpm i --frozen-lockfile=false && git add pnpm-lock.yaml",
+    "lerna": "lerna",
+    "bootstrap": "lerna bootstrap",
+    "prepare": "if test \"$NODE_ENV\" != \"production\" && test \"$CI\" != \"true\" ; then husky install ; fi",
+    "prepack": "lerna run --stream prepack",
+    "dev": "lerna run --stream prepack && lerna --ignore=@logto/integration-test run --parallel dev",
+    "start": "cd packages/core && NODE_ENV=production node . --from-root",
+    "ci:build": "lerna run --stream build",
+    "ci:lint": "lerna run --parallel lint",
+    "ci:stylelint": "lerna run --parallel stylelint",
+    "ci:test": "lerna run --parallel test:coverage"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^17.0.0",
+    "@commitlint/config-conventional": "^17.0.0",
+    "@commitlint/types": "^17.0.0",
+    "husky": "^8.0.0",
+    "lerna": "^5.0.0",
+    "typescript": "^4.7.4"
+  },
+  "workspaces": {
+    "packages": [
+      "packages/*"
+    ],
+    "nohoist": [
+      "**/module-alias"
+    ]
+  },
+  "engines": {
+    "node": ">=14.15.0",
+    "pnpm": ">=6"
+  },
+  "alias": {
+    "html-parse-stringify": "html-parse-stringify/dist/html-parse-stringify.module.js",
+    "react-hook-form": "react-hook-form/dist/index.esm.mjs",
+    "superstruct": "superstruct/lib/index.es.js"
+  },
+  "pnpm": {
+    "peerDependencyRules": {
+      "allowedVersions": {
+        "react": "^18.0.0"
+      }
+    }
+  }
+}

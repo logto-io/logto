@@ -1,0 +1,38 @@
+@use '@/scss/underscore' as _;
+
+.toastContainer {
+  position: fixed;
+  top: 50%;
+  left: 0;
+  right: 0;
+  transform: translateY(-50%);
+  @include _.flex-column;
+  pointer-events: none;
+  z-index: 300;
+}
+
+.toast {
+  margin: 0 auto;
+  padding: _.unit(2) _.unit(4);
+  max-width: 295px;
+  font: var(--font-body);
+  color: var(--color-primary-button-text);
+  border-radius: var(--radius);
+  background: var(--color-toast);
+  box-shadow: var(--shadow-2);
+  text-align: center;
+  opacity: 0%;
+  transition: opacity 0.3s ease-in-out;
+  word-break: break-word;
+
+  &[data-visible='true'] {
+    opacity: 100%;
+  }
+}
+
+:global(body.desktop) {
+  .toast {
+    border: _.border(var(--color-toast-border));
+    padding: _.unit(3) _.unit(4);
+  }
+}

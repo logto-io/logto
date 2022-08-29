@@ -1,0 +1,222 @@
+import UriInputField from '@mdx/components/UriInputField';
+import Step from '@mdx/components/Step';
+import Tabs from '@mdx/components/Tabs';
+import TabItem from '@mdx/components/TabItem';
+import Alert from '@/components/Alert';
+import { generateRandomString } from '@logto/shared';
+
+<Step
+  title="Add dependencies"
+  subtitle="Please select your favorite package manager"
+  index={0}
+  activeIndex={props.activeStepIndex}
+  onButtonClick={() => props.onNext(1)}
+>
+
+<Tabs>
+<TabItem value="npm" label="npm">
+
+```bash
+npm i @logto/express cookie-parser express-session
+```
+
+</TabItem>
+<TabItem value="yarn" label="Yarn">
+
+```bash
+yarn add @logto/express cookie-parser express-session
+```
+
+</TabItem>
+<TabItem value="pnpm" label="pnpm">
+
+```bash
+pnpm add @logto/express cookie-parser express-session
+```
+
+</TabItem>
+</Tabs>
+</Step>
+
+<Step
+  title="Init LogtoClient"
+  subtitle="1 step"
+  index={1}
+  activeIndex={props.activeStepIndex}
+  onButtonClick={() => props.onNext(2)}
+>
+
+<Alert>
+  In the following steps, we assume your app is running on <code>http://localhost:3000</code>.
+</Alert>
+
+Import and initialize LogtoClient:
+
+<pre>
+<code className="language-ts">
+{`import LogtoClient from '@logto/express';
+
+export const logtoClient = new LogtoClient({
+  endpoint: '${props.endpoint}',
+  appId: '${props.appId}',
+  appSecret: '${props.appSecret}',
+  baseUrl: 'http://localhost:3000', // Change to your own base URL
+});`}
+</code>
+</pre>
+
+</Step>
+
+<Step
+  title="Prepare required middlewares"
+  subtitle="1 step"
+  index={2}
+  activeIndex={props.activeStepIndex}
+  onButtonClick={() => props.onNext(3)}
+>
+
+The SDK requires [express-session](https://www.npmjs.com/package/express-session) to be configured in prior.
+
+<pre>
+<code className="language-ts">
+{`import cookieParser from 'cookie-parser';
+import session from 'express-session';
+
+app.use(cookieParser());
+app.use(session({ secret: '${generateRandomString(32)}', cookie: { maxAge: 14 * 24 * 60 * 60 } }));`}
+</code>
+</pre>
+
+</Step>
+
+<Step
+  title="Sign in"
+  subtitle="3 steps"
+  index={3}
+  activeIndex={props.activeStepIndex}
+  onButtonClick={() => props.onNext(4)}
+>
+
+### Configure Redirect URI
+
+First, let’s enter your redirect URI. E.g. `http://localhost:3000/api/logto/sign-in-callback`.
+
+<UriInputField appId={props.appId} isSingle={!props.isCompact} name="redirectUris" title="application_details.redirect_uri" />
+
+### Prepare Logto routes
+
+Prepare routes to connect with Logto.
+
+Go back to your IDE/editor, use the following code to implement the API routes first:
+
+```ts
+import { handleAuthRoutes } from '@logto/express';
+
+app.use(handleAuthRoutes(config));
+```
+
+This will create 3 routes automatically:
+
+1. `/logto/sign-in`: Sign in with Logto.
+2. `/logto/sign-in-callback`: Handle sign-in callback.
+3. `/logto/sign-out`: Sign out with Logto.
+
+### Implement sign-in
+
+We're almost there! Now, create a sign-in button to redirect to the sign-in route on user click.
+
+```ts
+app.get('/', (req, res) => {
+  res.setHeader('content-type', 'text/html');
+  res.end(`<div><a href="/logto/sign-in">Sign In</a></div>`);
+});
+```
+
+</Step>
+
+<Step
+  title="Get user profile"
+  subtitle="2 steps"
+  index={4}
+  activeIndex={props.activeStepIndex}
+  onButtonClick={() => props.onNext(5)}
+>
+
+In order to get user profile, we need to use the `withLogto` middleware:
+
+```ts
+import { withLogto } from '@logto/express';
+
+app.use(withLogto(config));
+```
+
+Then the user profile will be attached to `req`, example usage:
+
+```ts
+app.get('/user', (req, res) => {
+  res.json(req.user);
+});
+```
+
+</Step>
+
+<Step
+  title="Protect routes"
+  subtitle="2 steps"
+  index={5}
+  activeIndex={props.activeStepIndex}
+  onButtonClick={() => props.onNext(6)}
+>
+
+After setting up `withLogto` in the previous step, we can protect routes by creating a simple middleware:
+
+```ts
+const requireAuth = async (req: Request, res: Response, next: NextFunction) => {
+  if (!req.user.isAuthenticated) {
+    res.redirect('/logto/sign-in');
+  }
+
+  next();
+};
+```
+
+And then:
+
+```ts
+app.get('/protected', requireAuth, (req, res) => {
+  res.end('protected resource');
+});
+```
+
+</Step>
+
+<Step
+  title="Sign out"
+  subtitle="1 step"
+  index={6}
+  activeIndex={props.activeStepIndex}
+  onButtonClick={() => props.onNext(7)}
+>
+
+Calling `/logto/sign-out` will clear all the Logto data in memory and cookies if they exist.
+
+After signing out, it'll be great to redirect your user back to your website. Let's add `http://localhost:3000` as one of the Post Sign-out URIs in Admin Console (shows under Redirect URIs).
+
+</Step>
+
+<Step
+  title="Further readings"
+  subtitle="4 articles"
+  index={7}
+  activeIndex={props.activeStepIndex}
+  buttonText="general.done"
+  buttonType="primary"
+  onButtonClick={props.onComplete}
+>
+
+- [Customize sign-in experience](https://docs.logto.io/docs/recipes/customize-sie)
+- [Enable SMS or email passcode sign-in](https://docs.logto.io/docs/tutorials/get-started/enable-passcode-sign-in)
+- [Enable social sign-in](https://docs.logto.io/docs/tutorials/get-started/enable-social-sign-in)
+- [Protect your API](https://docs.logto.io/docs/recipes/protect-your-api)
+
+</Step>

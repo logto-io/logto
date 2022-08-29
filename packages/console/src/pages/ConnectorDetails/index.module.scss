@@ -1,0 +1,102 @@
+@use '@/scss/underscore' as _;
+
+.backLink {
+  margin: _.unit(1) 0 0 _.unit(1);
+}
+
+.header {
+  padding: _.unit(6);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  > *:not(:first-child) {
+    margin-left: _.unit(6);
+  }
+
+  .logoContainer {
+    margin-left: _.unit(2);
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+    background-color: var(--color-hover);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .logo {
+    width: 42px;
+    height: 42px;
+  }
+
+  .operations {
+    display: flex;
+    align-items: center;
+
+    .moreIcon {
+      color: var(--color-icon);
+    }
+
+    > *:not(:first-child) {
+      margin-left: _.unit(2);
+    }
+  }
+
+  .metadata {
+    flex: 1;
+
+    > div {
+      display: flex;
+      align-items: center;
+
+      &:not(:first-child) {
+        margin-top: _.unit(2);
+      }
+
+      > *:not(:first-child) {
+        margin-left: _.unit(2);
+      }
+    }
+
+    .name {
+      font: var(--font-title-large);
+      color: var(--color-text);
+    }
+
+    .text {
+      font: var(--font-subhead-2);
+      color: var(--color-caption);
+    }
+
+    .verticalBar {
+      @include _.vertical-bar;
+      height: 12px;
+    }
+  }
+}
+
+.body {
+  > :not(:first-child) {
+    margin-top: _.unit(4);
+  }
+
+  .main {
+    flex: 1;
+
+    .codeEditor {
+      margin-bottom: _.unit(6);
+    }
+  }
+}
+
+.resetIcon {
+  color: var(--color-icon);
+}
+
+.readme {
+  padding: 0 _.unit(6);
+  margin: _.unit(6);
+  background-color: var(--color-layer-1);
+  border-radius: 16px;
+}

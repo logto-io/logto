@@ -1,0 +1,68 @@
+name: Publish
+
+on:
+  workflow_dispatch:
+    inputs:
+      semver:
+        description: Semver bump type
+        required: true
+      preid:
+        description: Pre ID
+        required: true
+        default: alpha
+      append:
+        description: Additional options
+
+jobs:
+  publish:
+    environment: release
+    runs-on: ubuntu-latest
+    env:
+      NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTOMATION_TOKEN }}
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: master
+          fetch-depth: 0
+          token: ${{ secrets.BOT_PAT }}
+          
+      - name: Import GPG key
+        uses: crazy-max/ghaction-import-gpg@v5
+        with:
+          gpg_private_key: ${{ secrets.BOT_GPG_KEY }}
+          passphrase: ${{ secrets.BOT_GPG_PASSPHRASE }}
+          git_user_signingkey: true
+          git_commit_gpgsign: true
+
+      - name: Setup Node and pnpm
+        uses: silverhand-io/actions-node-pnpm-run-steps@v1.2.3
+
+      - name: Configure Git user
+        run: |
+          git config --global user.email bot@silverhand.io
+          git config --global user.name silverhand-bot
+
+      - name: Publish to GitHub
+        # add `no-verify-access` due to https://github.com/lerna/lerna/issues/2788
+        run: |
+          pnpm lerna publish \
+            -m "release: %s" \
+            --conventional-commits \
+            --preid=${{ github.event.inputs.preid }} \
+            --no-verify-access \
+            --sign-git-commit \
+            --sign-git-tag \
+            --no-push \
+            --yes \
+            ${{ github.event.inputs.semver }} ${{ github.event.inputs.append }}
+        env:
+          GH_TOKEN: ${{ secrets.BOT_PAT }}
+
+      - name: Push to protected branch
+        uses: CasperWA/push-protected@v2
+        with:
+          token: ${{ secrets.BOT_PAT }}
+          branch: master
+          tags: true
+          timeout: 20

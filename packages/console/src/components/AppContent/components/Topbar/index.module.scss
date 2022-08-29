@@ -1,0 +1,26 @@
+@use '@/scss/underscore' as _;
+
+.topbar {
+  flex: 0 0 64px;
+  width: 100%;
+  padding: 0 _.unit(6);
+  display: flex;
+  align-items: center;
+
+  .logo {
+    width: 94px;
+    height: 30px;
+    color: var(--color-text);
+  }
+
+  .line {
+    @include _.vertical-bar;
+    height: 20px;
+    margin: 0 _.unit(5);
+  }
+
+  .text {
+    font: var(--font-title-medium);
+    color: var(--color-text);
+  }
+}

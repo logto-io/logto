@@ -1,0 +1,152 @@
+import UriInputField from '@mdx/components/UriInputField';
+import Step from '@mdx/components/Step';
+import Tabs from '@mdx/components/Tabs';
+import TabItem from '@mdx/components/TabItem';
+import Alert from '@/components/Alert';
+
+<Step
+  title="Add Logto SDK as a dependency"
+  subtitle="Please select your favorite package manager"
+  index={0}
+  activeIndex={props.activeStepIndex}
+  onButtonClick={() => props.onNext(1)}
+>
+<Tabs>
+<TabItem value="npm" label="npm">
+
+```bash
+npm i @logto/browser
+```
+
+</TabItem>
+<TabItem value="yarn" label="Yarn">
+
+```bash
+yarn add @logto/browser
+```
+
+</TabItem>
+<TabItem value="pnpm" label="pnpm">
+
+```bash
+pnpm add @logto/browser
+```
+
+</TabItem>
+</Tabs>
+</Step>
+
+<Step
+  title="Init LogtoClient"
+  subtitle="1 step"
+  index={1}
+  activeIndex={props.activeStepIndex}
+  onButtonClick={() => props.onNext(2)}
+>
+
+Import and init `LogtoClient` by passing config:
+
+<pre>
+<code className="language-ts">
+{`import LogtoClient from '@logto/browser';
+
+const logtoClient = new LogtoClient({
+  endpoint: '${props.endpoint}',
+  appId: '${props.appId}',
+});`}
+</code>
+</pre>
+
+</Step>
+
+<Step
+  title="Sign in"
+  subtitle="3 steps"
+  index={2}
+  activeIndex={props.activeStepIndex}
+  onButtonClick={() => props.onNext(3)}
+>
+
+<Alert>
+  In the following steps, we assume your app is running on <code>http://localhost:3000</code>.
+</Alert>
+
+### Configure Redirect URI
+
+First, let’s enter your redirect URI. E.g. `http://localhost:3000/callback`.
+
+<UriInputField appId={props.appId} isSingle={!props.isCompact} name="redirectUris" title="application_details.redirect_uri" />
+
+### Implement a sign-in button
+
+Go back to your IDE/editor, use the following code to implement the sign-in button:
+
+<pre>
+<code className="language-html">
+{`<button onclick="logtoClient.signIn('${props.redirectUris[0] ?? 'http://localhost:3000/callback'}')">
+  Sign In
+</button>`}
+</code>
+</pre>
+
+### Handle redirect
+
+We're almost there! In the last step, we use `http://localhost:3000/callback` as the Redirect URI, and now we need to handle it properly.
+
+Insert the code below in your `/callback` route:
+
+```ts
+try {
+  await logtoClient.handleSignInCallback(window.location.href);
+  console.log(logtoClient.isAuthenticated); // true
+} catch {
+  // Handle error
+}
+```
+
+Now you can test the sign-in flow.
+
+</Step>
+
+<Step
+  title="Sign out"
+  subtitle="1 step"
+  index={3}
+  activeIndex={props.activeStepIndex}
+  onButtonClick={() => props.onNext(4)}
+>
+
+Calling `.signOut()` will clear all the Logto data in memory and localStorage if they exist.
+
+After signing out, it'll be great to redirect user back to your website. Let's add `http://localhost:3000` as the Post Sign-out URI below, and use it as the parameter when calling `.signOut()`.
+
+<UriInputField appId={props.appId} isSingle={!props.isCompact} name="postLogoutRedirectUris" title="application_details.post_sign_out_redirect_uri" />
+
+### Implement a sign-out button
+
+<pre>
+<code className="language-html">
+{`<button onclick="logtoClient.signOut('${props.postLogoutRedirectUris[0] ?? 'http://localhost:3000'}')">
+  Sign Out
+</button>`}
+</code>
+</pre>
+
+</Step>
+
+<Step
+  title="Further readings"
+  subtitle="4 articles"
+  index={4}
+  activeIndex={props.activeStepIndex}
+  buttonText="general.done"
+  buttonType="primary"
+  onButtonClick={props.onComplete}
+>
+
+- [Customize sign-in experience](https://docs.logto.io/docs/recipes/customize-sie)
+- [Enable SMS or email passcode sign-in](https://docs.logto.io/docs/tutorials/get-started/enable-passcode-sign-in)
+- [Enable social sign-in](https://docs.logto.io/docs/tutorials/get-started/enable-social-sign-in)
+- [Protect your API](https://docs.logto.io/docs/recipes/protect-your-api)
+
+</Step>

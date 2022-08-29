@@ -1,0 +1,70 @@
+@use '@/scss/underscore' as _;
+
+.container {
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.header {
+  margin-bottom: _.unit(6);
+
+  .title {
+    font: var(--font-title-large);
+    color: var(--color-text);
+  }
+
+  .subtitle {
+    display: flex;
+    align-items: center;
+    margin-top: _.unit(1);
+    padding-right: _.unit(6);
+    font: var(--font-body-medium);
+    color: var(--color-caption);
+
+    .hideButton {
+      color: var(--color-text-link);
+      cursor: pointer;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+}
+
+.card {
+  display: flex;
+  padding: _.unit(6) _.unit(8);
+  position: relative;
+
+  .icon {
+    width: 48px;
+    height: 48px;
+    margin-right: _.unit(6);
+  }
+
+  .wrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+
+    .title {
+      font: var(--font-title-medium);
+      color: var(--color-text);
+    }
+
+    .subtitle {
+      font: var(--font-body-medium);
+      color: var(--color-caption);
+    }
+  }
+
+  .button {
+    min-width: 120px;
+  }
+}
+
+.card + .card {
+  margin-top: _.unit(4);
+}

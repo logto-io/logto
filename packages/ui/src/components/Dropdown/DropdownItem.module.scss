@@ -1,0 +1,16 @@
+@use '@/scss/underscore' as _;
+
+.item {
+  padding: _.unit(1.5) _.unit(2);
+  border-radius: var(--radius);
+  list-style: none;
+  font: var(--font-body);
+  color: var(--color-text);
+  cursor: pointer;
+  @include _.flex-row;
+  overflow: hidden;
+
+  &:hover {
+    background: var(--color-hover);
+  }
+}

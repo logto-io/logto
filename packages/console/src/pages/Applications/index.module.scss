@@ -1,0 +1,28 @@
+@use '@/scss/underscore' as _;
+
+.card {
+  @include _.flex-column;
+}
+
+.headline {
+  display: flex;
+  justify-content: space-between;
+}
+
+.table {
+  margin-top: _.unit(4);
+  flex: 1;
+}
+
+.icon {
+  flex-shrink: 0;
+}
+
+.pagination {
+  margin-top: _.unit(4);
+  min-height: 32px;
+}
+
+.applicationName {
+  width: 360px;
+}

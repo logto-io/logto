@@ -1,0 +1,76 @@
+@use '@/scss/underscore' as _;
+
+.number {
+  font: var(--font-headline-small);
+}
+
+.delta {
+  font: var(--font-title-medium);
+  color: var(--color-success-50);
+  display: flex;
+  align-items: center;
+
+  &.down {
+    color: var(--color-error-50);
+  }
+}
+
+.block {
+  flex: 1;
+
+  &:not(:last-child) {
+    margin-right: _.unit(4);
+  }
+
+  &.bordered {
+    border: 1px solid var(--color-divider);
+    width: 360px;
+    flex: unset;
+  }
+
+  .title {
+    font: var(--font-title-medium);
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+
+    .icon {
+      margin-left: _.unit(1);
+      width: 16px;
+      height: 16px;
+      color: var(--color-caption);
+
+      > svg {
+        display: block;
+      }
+    }
+  }
+
+  .content {
+    display: flex;
+    align-items: baseline;
+
+    .number {
+      flex: 1;
+    }
+  }
+
+  &.plain {
+    padding: 0;
+
+    .title {
+      font: var(--font-title-medium);
+      margin-bottom: _.unit(6);
+    }
+
+    .content {
+      display: flex;
+      align-items: center;
+
+      .number {
+        margin-right: _.unit(2);
+        flex: 0;
+      }
+    }
+  }
+}

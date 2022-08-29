@@ -1,0 +1,108 @@
+@use '@/scss/underscore' as _;
+
+.button {
+  @include _.flex-row;
+  justify-content: center;
+  height: 44px;
+  padding: 0 _.unit(4);
+  border-radius: var(--radius);
+  font: var(--font-body-bold);
+  cursor: pointer;
+  -webkit-appearance: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: background 0.2s ease-in-out;
+  white-space: nowrap;
+  user-select: none;
+}
+
+.large {
+  width: 100%;
+}
+
+.small {
+  min-width: 50px;
+}
+
+.primary {
+  border: none;
+  background: var(--color-primary);
+  color: var(--color-primary-button-text);
+}
+
+.secondary {
+  border: _.border(var(--color-outline));
+  background: transparent;
+  color: var(--color-text);
+
+  &.disabled {
+    border-color: var(--color-border);
+    color: var(--color-text-disabled);
+  }
+}
+
+.outline {
+  border: _.border(var(--color-primary));
+  background: transparent;
+  color: var(--color-primary);
+
+  &.disabled {
+    border-color: var(--color-border);
+    color: var(--color-text-disabled);
+  }
+
+  &:focus-visible {
+    outline: 3px solid var(--color-focused-variant);
+  }
+
+  &:active {
+    background: var(--color-pressed-variant);
+  }
+
+  &:not(:disabled):not(:active):hover {
+    background: var(--color-hover-variant);
+  }
+}
+
+:global(body.mobile) {
+  .primary {
+    &.disabled {
+      background: var(--color-layer);
+      color: var(--color-text-disabled);
+    }
+  }
+}
+
+:global(body.desktop) {
+  .primary {
+    &.disabled {
+      background: var(--color-inverse-on-surface);
+      color: var(--color-text-disabled);
+    }
+
+    &:focus-visible {
+      outline: 3px solid var(--color-focused-variant);
+    }
+
+    &:active {
+      background: var(--color-primary-pressed);
+    }
+
+    &:not(:disabled):not(:active):hover {
+      background: var(--color-primary-hover);
+    }
+  }
+
+  .secondary {
+    &:focus-visible {
+      outline: 3px solid var(--color-focused);
+    }
+
+    &:active {
+      background: var(--color-pressed);
+    }
+
+    &:not(:disabled):not(:active):hover {
+      background: var(--color-hover);
+    }
+  }
+}

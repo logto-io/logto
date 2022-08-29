@@ -1,0 +1,42 @@
+name: Upload Annotations
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+concurrency: 
+  group: upload-annotations-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
+jobs:
+  upload-annotations:
+    # avoid out of memory issue since macOS has bigger memory
+    # https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners#supported-runners-and-hardware-resources
+    runs-on: macos-latest
+    # fork repos need to opt out
+    if: github.event.pull_request.head.repo.full_name == github.repository
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Node and pnpm
+        uses: silverhand-io/actions-node-pnpm-run-steps@v1.2.3
+
+      - name: Prepack
+        run: pnpm prepack
+
+      - name: Lint with Report
+        run: pnpm -- lerna run --parallel lint:report && node merge-eslint-reports.js
+
+      - name: Annotate Code Linting Results
+        uses: ataylorme/eslint-annotate-action@1.2.0
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload ESLint report
+        uses: actions/upload-artifact@v3
+        with:
+          name: eslint_report.json
+          path: eslint_report.json

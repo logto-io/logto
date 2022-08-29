@@ -1,0 +1,71 @@
+@use '@/scss/underscore' as _;
+
+.card {
+  padding: _.unit(5) _.unit(6);
+  display: block;
+  flex-direction: column;
+  scroll-margin: _.unit(5);
+
+  .congrats {
+    display: block;
+    width: 160px;
+    height: 160px;
+    margin: _.unit(1) auto _.unit(8);
+  }
+
+  .congratsText {
+    width: 100%;
+  }
+
+  .title {
+    font: var(--font-title-large);
+  }
+
+  .subtitle {
+    font: var(--font-body-medium);
+    color: var(--color-text);
+    margin-top: _.unit(3);
+  }
+
+  .radioGroup {
+    width: 100%;
+    margin-top: _.unit(6);
+    margin-right: 0;
+  }
+
+  .radio {
+    border-radius: _.unit(2);
+    width: 240px;
+    max-width: unset;
+    font: var(--font-subhead-2);
+  }
+
+  .select {
+    background: var(--color-guide-dropdown-background);
+    border-color: var(--color-guide-dropdown-border);
+  }
+
+  &.folded {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    flex: 0 0 56px;
+    height: 56px;
+    background: var(--color-neutral-variant-90);
+    border-radius: _.unit(2);
+    padding: 0 _.unit(4);
+    font: var(--font-body-medium);
+    color: var(--color-text);
+
+    .tada {
+      margin: 0 _.unit(4) 0 0;
+    }
+  }
+
+  .buttonWrapper {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    margin-top: _.unit(6);
+  }
+}

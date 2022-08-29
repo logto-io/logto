@@ -1,0 +1,6 @@
+@use '@/scss/underscore' as _;
+
+.retryButton {
+  flex-shrink: 0;
+  margin-top: _.unit(6);
+}

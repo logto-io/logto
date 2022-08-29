@@ -1,0 +1,88 @@
+@use '@/scss/underscore' as _;
+@use '@/scss/mobile' as mobile;
+@use '@/scss/desktop' as desktop;
+
+:root {
+  --light-primary-color: #5d34f2;
+  --light-focused-variant: rgba(93, 52, 242, 16%);
+  --light-hover-variant: rgba(93, 52, 242, 8%);
+  --light-pressed-variant: rgba(93, 52, 242, 12%);
+  --light-hover: #7350f4;
+  --light-pressed: #4718f0;
+  --dark-primary-color: #7958ff;
+  --dark-focused-variant: rgba(121, 88, 255, 16%);
+  --dark-hover-variant: rgba(121, 88, 255, 8%);
+  --dark-pressed-variant: rgba(121, 88, 255, 12%);
+  --dark-hover: #957aff;
+  --dark-pressed: #5d36ff;
+}
+
+body {
+  background-color: var(--color-base);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: auto;
+}
+
+.container {
+  position: absolute;
+  inset: 0;
+  background: var(--color-base);
+  color: var(--color-text);
+  font: var(--font-body);
+  overflow: auto;
+  @include _.flex_column(center, normal);
+}
+
+.content {
+  @include _.flex_column;
+  background-color: var(--color-surface);
+}
+
+.placeHolder {
+  flex: 1;
+}
+
+/* Foundation */
+:global(body.mobile) {
+  &.light {
+    @include mobile.colors-light-theme;
+  }
+
+  &.dark {
+    @include mobile.colors-dark-theme;
+  }
+
+  @include mobile.colors-universal;
+  @include mobile.fonts;
+  @include mobile.layout;
+
+  .content {
+    flex: 1;
+    align-self: stretch;
+    padding: _.unit(4) _.unit(5);
+    position: relative;
+  }
+}
+
+:global(body.desktop) {
+  &.light {
+    @include desktop.colors-light-theme;
+  }
+
+  &.dark {
+    @include desktop.colors-dark-theme;
+  }
+
+  @include desktop.colors-universal;
+  @include desktop.fonts;
+  @include desktop.layout;
+
+  .content {
+    width: 640px;
+    min-height: 640px;
+    position: relative;
+    padding: _.unit(6);
+    border-radius: 16px;
+    box-shadow: var(--shadow-1);
+  }
+}

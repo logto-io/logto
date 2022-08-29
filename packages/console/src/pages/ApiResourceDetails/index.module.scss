@@ -1,0 +1,80 @@
+@use '@/scss/underscore' as _;
+
+.backLink {
+  margin: _.unit(1) 0 0 _.unit(1);
+}
+
+.deleteConfirm {
+  > :not(:first-child) {
+    margin-top: _.unit(6);
+  }
+
+  .description {
+    font: var(--font-body-medium);
+  }
+
+  .highlight {
+    color: var(--color-primary-50);
+  }
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .info {
+    display: flex;
+
+    .icon {
+      margin-left: _.unit(2);
+      width: 60px;
+      height: 60px;
+      object-fit: cover;
+    }
+
+    .meta {
+      margin-left: _.unit(6);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+
+      .name {
+        font: var(--font-title-large);
+        color: var(--color-text);
+      }
+    }
+  }
+
+  .operations {
+    display: flex;
+    align-items: center;
+
+    .moreIcon {
+      color: var(--color-icon);
+    }
+
+    > *:not(:first-child) {
+      margin-left: _.unit(3);
+    }
+  }
+}
+
+.body {
+  > :first-child {
+    margin-top: 0;
+  }
+
+  .form {
+    margin-top: _.unit(8);
+  }
+
+  .fields {
+    padding-bottom: _.unit(10);
+    flex: 1;
+  }
+
+  .textField {
+    @include _.form-text-field;
+  }
+}

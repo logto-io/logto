@@ -1,0 +1,17 @@
+@use '@/scss/underscore' as _;
+
+.userName {
+  font: var(--body-medium);
+  color: var(--color-text);
+
+  .userId {
+    font: var(--body-small);
+    color: var(--color-caption);
+    margin-left: _.unit(1);
+  }
+
+  .link {
+    text-decoration: none;
+    color: var(--color-text-link);
+  }
+}

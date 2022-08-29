@@ -1,0 +1,30 @@
+name: Commitlint
+
+on:
+  push:
+    branches:
+      - 'push-action/**'
+  pull_request:
+    types: [opened, edited, synchronize, reopened]
+
+concurrency: 
+  group: commitlint-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint-commits:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node and pnpm
+        uses: silverhand-io/actions-node-pnpm-run-steps@v1.2.3
+
+      - name: Commitlint
+        run: npx commitlint --from HEAD~${{ github.event.pull_request.commits }} --to HEAD
+
+      - name: Commitlint on PR title
+        run: echo '${{ github.event.pull_request.title }}' | npx commitlint

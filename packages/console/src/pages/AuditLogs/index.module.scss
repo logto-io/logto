@@ -1,0 +1,10 @@
+@use '@/scss/underscore' as _;
+
+.card {
+  @include _.flex-column;
+}
+
+.headline {
+  display: flex;
+  justify-content: space-between;
+}

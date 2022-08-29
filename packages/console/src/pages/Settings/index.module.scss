@@ -1,0 +1,13 @@
+@use '@/scss/underscore' as _;
+
+.container {
+  padding-bottom: 0;
+
+  .fields {
+    flex: 1;
+  }
+
+  .textField {
+    @include _.form-text-field;
+  }
+}

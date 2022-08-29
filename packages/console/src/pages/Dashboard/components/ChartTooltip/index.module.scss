@@ -1,0 +1,20 @@
+@use '@/scss/underscore' as _;
+
+.chartTooltip {
+  background: var(--color-float);
+  border: 1px solid var(--color-divider);
+  box-shadow: var(--shadow-2);
+  border-radius: 4px;
+  padding: _.unit(2) _.unit(3);
+  text-align: center;
+
+  .value {
+    font: var(--font-subhead-2);
+    color: var(--color-text);
+  }
+
+  .label {
+    font: var(--font-body-small);
+    color: var(--color-icon);
+  }
+}

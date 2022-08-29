@@ -1,0 +1,56 @@
+@use '@/scss/underscore' as _;
+
+.backLink {
+  margin: _.unit(1) 0 0 _.unit(1);
+}
+
+.header {
+  padding: _.unit(6);
+  display: flex;
+
+  > *:not(:first-child) {
+    margin-left: _.unit(6);
+  }
+
+  .content {
+    flex: 1;
+
+    .eventName {
+      color: var(--color-text);
+      font: var(--font-title-large);
+    }
+
+    .basicInfo {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      padding-top: _.unit(4);
+
+      > * {
+        width: 270px;
+        margin: 0 _.unit(4) _.unit(4) 0;
+      }
+    }
+
+    .infoItem {
+      color: var(--color-text);
+      font: var(--font-body-medium);
+
+      .label {
+        color: var(--color-caption);
+        font: var(--font-subhead-2);
+        margin-bottom: _.unit(2);
+      }
+    }
+  }
+}
+
+.body {
+  > :not(:first-child) {
+    margin-top: _.unit(4);
+  }
+
+  .main {
+    padding-bottom: _.unit(4);
+  }
+}

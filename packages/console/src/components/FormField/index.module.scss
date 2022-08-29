@@ -1,0 +1,30 @@
+@use '@/scss/underscore' as _;
+
+.field {
+  &:not(:first-child) {
+    margin-top: _.unit(6);
+  }
+}
+
+.headline {
+  display: flex;
+  align-items: center;
+  margin-bottom: _.unit(1);
+
+  .title {
+    font: var(--font-subhead-2);
+    color: var(--color-text);
+  }
+
+  .icon {
+    margin-left: _.unit(1);
+    width: 16px;
+    height: 16px;
+    color: var(--color-caption);
+  }
+
+  .required {
+    font: var(--font-body-medium);
+    color: var(--color-caption);
+  }
+}

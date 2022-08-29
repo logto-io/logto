@@ -1,0 +1,52 @@
+@use '@/scss/underscore' as _;
+
+.passcode {
+  @include _.flex-row;
+  justify-content: space-between;
+
+  input {
+    width: 44px;
+    height: 44px;
+    border-radius: _.unit(2);
+    border: _.border();
+    text-align: center;
+    font: var(--font-body);
+    color: var(--color-text);
+    caret-color: var(--color-primary);
+
+    &:focus {
+      border: _.border(var(--color-primary));
+    }
+
+    &::placeholder {
+      color: var(--color-caption);
+    }
+  }
+}
+
+.passcode + .errorMessage {
+  margin-top: _.unit(2);
+}
+
+:global(body.mobile) {
+  .passcode {
+    input {
+      background: var(--color-layer);
+    }
+  }
+}
+
+:global(body.desktop) {
+  .passcode {
+    input {
+      border: _.border(var(--color-border));
+      outline: 3px solid transparent;
+      background: transparent;
+
+      &:focus {
+        border: _.border(var(--color-primary));
+        outline-color: var(--color-focused-variant);
+      }
+    }
+  }
+}

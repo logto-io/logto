@@ -1,0 +1,76 @@
+@use '@/scss/underscore' as _;
+@use '@logto/shared/scss/fonts';
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+  background: var(--color-base);
+  color: var(--color-text);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: auto;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+input {
+  border: none;
+  outline: none;
+}
+
+table {
+  border: 1px solid var(--color-neutral-90);
+  border-radius: _.unit(2);
+  border-spacing: 0;
+  width: 100%;
+  table-layout: fixed;
+
+  thead {
+    th {
+      font: var(--font-subhead-2);
+      color: var(--color-caption);
+      padding: _.unit(2);
+      border-bottom: 1px solid var(--color-neutral-90);
+      text-align: left;
+
+      &:first-child,
+      &:last-child {
+        padding: _.unit(2) _.unit(8);
+      }
+    }
+  }
+
+  tbody {
+    td {
+      font: var(--font-body-medium);
+      border-bottom: 1px solid var(--color-neutral-90);
+      padding: _.unit(3) _.unit(2);
+
+      &:first-child,
+      &:last-child {
+        padding: _.unit(3) _.unit(8);
+      }
+    }
+  }
+}
+
+::-webkit-scrollbar {
+  width: 16px;
+}
+
+::-webkit-scrollbar:horizontal {
+  height: 16px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-neutral-variant-80);
+  background-clip: content-box;
+  border: 4px solid transparent;
+  border-radius: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}

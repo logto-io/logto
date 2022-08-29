@@ -1,0 +1,25 @@
+services:
+  - type: web
+    name: logto
+    env: docker
+    repo: https://github.com/logto-io/logto.git
+    region: oregon
+    branch: master
+    envVars:
+      - key: ENDPOINT
+        value: true
+      - key: TRUST_PROXY_HEADER
+        value: true
+      - key: NO_INQUIRY
+        value: 0
+      - key: ALL_YES
+        value: 1
+      - key: DB_URL_DEFAULT
+        fromDatabase:
+          name: logto-database
+          property: connectionString
+
+databases:
+  - name: logto-database
+    databaseName: logto
+    ipAllowList: [] # only allow internal connections

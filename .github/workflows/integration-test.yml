@@ -1,0 +1,103 @@
+name: Integration Test
+
+on:
+  push:
+    branches:
+      - master
+      - "push-action/**"
+  pull_request:
+
+concurrency:
+  group: integration-test-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Node and pnpm
+        uses: silverhand-io/actions-node-pnpm-run-steps@v1.2.3
+
+      - name: Build
+        run: pnpm -- lerna run build --stream
+
+      - name: Add the mock connectors for integration tests only
+        run: |
+          pnpm add-connector @logto/connector-mock-sms
+          pnpm add-connector @logto/connector-mock-email
+          pnpm add-connector @logto/connector-mock-social
+        working-directory: packages/core
+
+      - name: Package
+        run: ./package.sh
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: integration-test-${{ github.sha }}
+          path: /tmp/logto.tar.gz
+          retention-days: 3
+
+  run-logto:
+    needs: package
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-12]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          path: tests
+
+      - name: Copy lockfile
+        run: |
+          cp tests/pnpm-lock.yaml ./
+          cp tests/package.json ./
+
+      - name: Setup Node and pnpm
+        uses: silverhand-io/actions-node-pnpm-run-steps@v1.2.3
+        with:
+          run-install: false
+
+      # Setup integration test
+      - name: Install dependencies
+        run: |
+          mv tests /tmp/tests
+          cd /tmp/tests
+          pnpm i
+          pnpm prepack
+
+      # Setup environment
+      - name: Setup Postgres
+        uses: ikalnytskyi/action-setup-postgres@v3
+
+      - uses: actions/download-artifact@v3
+        with:
+          name: integration-test-${{ github.sha }}
+
+      - name: Extract
+        run: tar -xzf logto.tar.gz
+
+      - name: Run Logto
+        run: node . --from-root --all-yes &
+        working-directory: logto/packages/core
+        env:
+          INTEGRATION_TEST: true
+          NODE_ENV: production
+          DB_URL_DEFAULT: postgres://postgres:postgres@localhost:5432
+
+      - name: Sleep for 5 seconds
+        run: sleep 5
+
+      # Test
+      - name: Run tests
+        run: |
+          cd /tmp/tests/packages/integration-tests
+          pnpm start
+        env:
+          INTEGRATION_TESTS_LOGTO_URL: http://localhost:3001

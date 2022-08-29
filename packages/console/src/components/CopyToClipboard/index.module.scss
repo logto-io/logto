@@ -1,0 +1,42 @@
+@use '@/scss/underscore' as _;
+
+.container {
+  display: inline-block;
+  border-radius: 6px;
+  color: var(--color-text);
+  font: var(--font-body-medium);
+  font-family: 'Roboto Mono', monospace;
+  cursor: default;
+
+  &.contained {
+    padding: _.unit(1) _.unit(1) _.unit(1) _.unit(3);
+    background: var(--color-layer-2);
+  }
+
+  &.border {
+    padding: _.unit(1) _.unit(3);
+    background: var(--color-layer-2);
+    border: 1px solid var(--color-border);
+  }
+
+  .row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: text;
+
+    .content {
+      flex: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .copyIcon {
+      margin-left: _.unit(3);
+    }
+  }
+}
+
+.successfulTooltip {
+  background-color: var(--color-success-60);
+}

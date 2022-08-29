@@ -1,0 +1,71 @@
+@use '@/scss/underscore' as _;
+
+.empty {
+  color: var(--color-caption);
+  font: var(--font-body-medium);
+}
+
+.table {
+  thead {
+    th {
+      padding: _.unit(2);
+    }
+
+    th:first-child {
+      padding-left: _.unit(4);
+    }
+  }
+
+  tbody {
+    tr {
+      td {
+        padding: _.unit(3) _.unit(2);
+        font: var(--font-body-medium);
+
+        &:first-child {
+          padding-left: _.unit(4);
+        }
+
+        &:last-child {
+          padding-left: _.unit(4);
+        }
+      }
+
+      &:last-child {
+        td {
+          border-bottom: none;
+        }
+      }
+    }
+  }
+
+  .connectorName {
+    display: flex;
+    align-items: center;
+
+    img {
+      width: 32px;
+      height: 32px;
+      border-radius: _.unit(2);
+    }
+
+    .name {
+      margin-left: _.unit(3);
+    }
+  }
+
+  .connectorId {
+    display: flex;
+    align-items: center;
+    font: var(--font-body-medium);
+    font-family: 'Roboto Mono', monospace;
+    line-height: 32px;
+
+    span {
+      max-width: 220px;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+  }
+}

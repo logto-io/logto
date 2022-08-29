@@ -1,0 +1,34 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+node_modules
+/.pnp
+.pnp.js
+
+# testing
+/packages/*/coverage
+
+# report
+/report.json
+/packages/*/report.json
+
+# production
+/packages/*/build
+/packages/*/lib
+/packages/*/dist
+
+# logs
+logs
+*.log*
+
+# misc
+cache
+.*cache
+.DS_Store
+*.env
+.idea/
+*.pem
+.history
+
+# connectors
+/packages/core/connectors

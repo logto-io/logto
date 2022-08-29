@@ -1,0 +1,13 @@
+@use '@/scss/underscore' as _;
+
+.wrapper {
+  @include _.full-page;
+  @include _.flex-column;
+
+  img {
+    width: 96px;
+    height: 96px;
+    @include _.image-align-center;
+    margin-bottom: _.unit(4);
+  }
+}

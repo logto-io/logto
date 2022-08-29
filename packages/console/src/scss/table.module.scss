@@ -1,0 +1,37 @@
+@use '@/scss/underscore' as _;
+
+.base {
+  box-shadow: var(--shadow-1);
+}
+
+tr.clickable {
+  cursor: pointer;
+
+  &:hover {
+    background: var(--color-hover);
+  }
+}
+
+.scrollable {
+  overflow-y: auto;
+  border: 1px solid var(--color-neutral-90);
+  border-radius: _.unit(2);
+
+  table {
+    border: none;
+    box-shadow: none;
+
+    thead tr {
+      position: sticky;
+      top: 0;
+
+      th {
+        background: var(--color-layer-1);
+      }
+    }
+  }
+}
+
+.empty {
+  height: 100%;
+}

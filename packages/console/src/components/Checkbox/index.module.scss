@@ -1,0 +1,44 @@
+@use '@/scss/underscore' as _;
+
+.checkbox {
+  position: relative;
+  display: flex;
+  align-items: center;
+
+  .icon {
+    width: 20px;
+    height: 20px;
+    margin-right: _.unit(2);
+
+    > svg {
+      display: none;
+      color: var(--color-neutral-60);
+
+      &:first-child {
+        color: var(--color-primary);
+      }
+    }
+  }
+
+  input {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    left: 0;
+    top: 0;
+    margin: 0;
+    opacity: 0%;
+  }
+
+  input:checked:not(:disabled) ~ .icon > svg:nth-child(1),
+  input:not(:checked):not(:disabled) ~ .icon > svg:nth-child(2),
+  input:checked:disabled ~ .icon > svg:nth-child(3),
+  input:not(:checked):disabled ~ .icon > svg:nth-child(4) {
+    display: block;
+  }
+
+  label {
+    font: var(--font-body-medium);
+    color: var(--color-text);
+  }
+}

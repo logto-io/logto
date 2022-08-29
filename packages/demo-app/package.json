@@ -1,0 +1,59 @@
+{
+  "name": "@logto/demo-app",
+  "version": "1.0.0-beta.8",
+  "description": "Logto demo app.",
+  "author": "Silverhand Inc. <contact@silverhand.io>",
+  "license": "MPL-2.0",
+  "private": true,
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "precommit": "lint-staged",
+    "start": "parcel src/index.html",
+    "dev": "cross-env PORT=5003 parcel src/index.html --public-url /demo-app --no-cache --hmr-port 6003",
+    "check": "tsc --noEmit",
+    "build": "pnpm check && rm -rf dist && parcel build src/index.html --no-autoinstall --no-cache --public-url /demo-app",
+    "lint": "eslint --ext .ts --ext .tsx src",
+    "lint:report": "pnpm lint --format json --output-file report.json",
+    "stylelint": "stylelint \"src/**/*.scss\""
+  },
+  "devDependencies": {
+    "@logto/phrases": "^1.0.0-beta.8",
+    "@logto/react": "^1.0.0-beta.2",
+    "@logto/schemas": "^1.0.0-beta.8",
+    "@logto/shared": "^1.0.0-beta.8",
+    "@parcel/core": "2.7.0",
+    "@parcel/transformer-sass": "2.7.0",
+    "@silverhand/eslint-config": "1.0.0",
+    "@silverhand/eslint-config-react": "1.0.0",
+    "@silverhand/ts-config": "1.0.0",
+    "@silverhand/ts-config-react": "1.0.0",
+    "@types/react": "^18.0.0",
+    "@types/react-dom": "^18.0.0",
+    "cross-env": "^7.0.3",
+    "eslint": "^8.21.0",
+    "i18next": "^21.8.16",
+    "i18next-browser-languagedetector": "^6.1.4",
+    "lint-staged": "^13.0.0",
+    "parcel": "2.7.0",
+    "postcss": "^8.4.6",
+    "prettier": "^2.7.1",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "react-i18next": "^11.18.3",
+    "stylelint": "^14.9.1",
+    "typescript": "^4.7.4"
+  },
+  "alias": {
+    "@/*": "./src/$1"
+  },
+  "eslintConfig": {
+    "extends": "@silverhand/react",
+    "rules": {
+      "complexity": "off"
+    }
+  },
+  "stylelint": {
+    "extends": "@silverhand/eslint-config-react/.stylelintrc"
+  },
+  "prettier": "@silverhand/eslint-config/.prettierrc"
+}

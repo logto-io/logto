@@ -1,0 +1,32 @@
+$font-family:
+  -apple-system,
+  system-ui,
+  'BlinkMacSystemFont',
+  'Segoe UI',
+  'Roboto',
+  'Helvetica Neue',
+  'Helvetica',
+  'Arial',
+  sans-serif,
+  'Apple Color Emoji';
+
+:root {
+  --font-family: #{$font-family};
+  --font-headline-large: 600 32px/40px #{$font-family};
+  --font-headline-medium: 600 28px/36px #{$font-family};
+  --font-headline-small: 600 24px/32px #{$font-family};
+  --font-title-large: 600 20px/28px #{$font-family};
+  --font-title-medium: 600 16px/24px #{$font-family};
+  --font-title-small: 600 14px/20px #{$font-family};
+  --font-label-large: 500 14px/20px #{$font-family};
+  --font-label-medium: 500 12px/16px #{$font-family};
+  --font-label-small: 500 11px/16px #{$font-family};
+  --font-body-large: 400 16px/24px #{$font-family};
+  --font-body-medium: 400 14px/20px #{$font-family};
+  --font-body-small: 400 12px/16px #{$font-family};
+  --font-subhead-1: 500 16px/24px #{$font-family};
+  --font-subhead-2: 500 14px/20px #{$font-family};
+  --font-subhead-cap: 700 12px/16px #{$font-family};
+  --font-subhead-cap-small: 700 10px/16px #{$font-family};
+  --font-button: 500 14px/20px #{$font-family};
+}

@@ -1,0 +1,6 @@
+@use '@/scss/underscore' as _;
+
+.error {
+  font: var(--font-caption);
+  color: var(--color-error);
+}

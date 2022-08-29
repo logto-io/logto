@@ -1,0 +1,18 @@
+.success {
+  color: var(--color-success-60);
+}
+
+.fail {
+  color: var(--color-error-40);
+}
+
+.icon {
+  width: 60px;
+  height: 60px;
+}
+
+.label {
+  color: var(--color-icon);
+  font: var(--font-body-medium);
+  text-align: center;
+}

@@ -1,0 +1,44 @@
+@use '@/scss/underscore' as _;
+
+.card {
+  display: flex;
+  padding: _.unit(6) _.unit(8);
+  background-color: var(--color-layer-1);
+  border-radius: 16px;
+
+  .icon {
+    @include _.shimmering-animation;
+    width: 48px;
+    height: 48px;
+    margin-right: _.unit(6);
+  }
+
+  .wrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+
+    .title {
+      @include _.shimmering-animation;
+      width: 113px;
+      height: 20px;
+    }
+
+    .subtitle {
+      @include _.shimmering-animation;
+      width: 453px;
+      height: 20px;
+      margin-top: _.unit(1);
+    }
+  }
+
+  .button {
+    @include _.shimmering-animation;
+    width: 129px;
+    height: 44px;
+  }
+}
+
+.card + .card {
+  margin-top: _.unit(4);
+}

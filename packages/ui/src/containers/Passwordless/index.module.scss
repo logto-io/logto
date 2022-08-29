@@ -1,0 +1,17 @@
+@use '@/scss/underscore' as _;
+
+.form {
+  @include _.flex-column;
+
+  > * {
+    width: 100%;
+  }
+
+  .inputField {
+    margin-bottom: _.unit(12);
+  }
+
+  .terms {
+    margin-bottom: _.unit(4);
+  }
+}

@@ -1,0 +1,32 @@
+@use '@/scss/underscore' as _;
+
+.multilineInput {
+  > :not(:first-child) {
+    margin-top: _.unit(2);
+  }
+
+  .deletableInput {
+    display: flex;
+    align-items: center;
+
+    > :first-child {
+      @include _.form-text-field;
+      margin-right: _.unit(2);
+      flex-shrink: 0;
+    }
+  }
+
+  .minusIcon {
+    color: var(--color-icon);
+  }
+
+  .addAnother {
+    margin-top: _.unit(1);
+  }
+
+  .error {
+    font: var(--font-body-medium);
+    color: var(--color-error);
+    margin-top: _.unit(1);
+  }
+}

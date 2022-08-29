@@ -1,0 +1,37 @@
+{
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "[scss]": {
+    "editor.codeActionsOnSave": {
+      "source.fixAll.stylelint": true
+    }
+  },
+  "stylelint.validate": ["css", "scss"],
+  "eslint.workingDirectories": [
+    {
+      "pattern": "./packages/*"
+    }
+  ],
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact",
+  ],
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true,
+  },
+  "cSpell.words": [
+    "Alipay",
+    "CIAM",
+    "codecov",
+    "Logto",
+    "oidc",
+    "passcode",
+    "Passwordless",
+    "pnpm",
+    "silverhand",
+    "slonik",
+    "stylelint",
+    "topbar"
+  ]
+}

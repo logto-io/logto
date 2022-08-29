@@ -1,0 +1,207 @@
+import UriInputField from '@mdx/components/UriInputField';
+import Step from '@mdx/components/Step';
+import Tabs from '@mdx/components/Tabs';
+import TabItem from '@mdx/components/TabItem';
+import Alert from '@/components/Alert';
+
+<Step
+  title="将 Logto SDK 添加至依赖"
+  subtitle="选择你熟悉的包管理工具"
+  index={0}
+  activeIndex={props.activeStepIndex}
+  onButtonClick={() => props.onNext(1)}
+>
+<Tabs>
+<TabItem value="npm" label="npm">
+
+```bash
+npm i @logto/vue
+```
+
+</TabItem>
+<TabItem value="yarn" label="Yarn">
+
+```bash
+yarn add @logto/vue
+```
+
+</TabItem>
+<TabItem value="pnpm" label="pnpm">
+
+```bash
+pnpm add @logto/vue
+```
+
+</TabItem>
+</Tabs>
+</Step>
+
+<Step
+  title="初始化 LogtoClient"
+  subtitle="共 1 步"
+  index={1}
+  activeIndex={props.activeStepIndex}
+  onButtonClick={() => props.onNext(2)}
+>
+
+<Alert>
+  目前仅支持 Vue 3 的 组合式（Composition）API，我们会在后续版本中陆续添加对选项式（Options）API 和 Vue 2 的支持。
+</Alert>
+
+Import 并使用 `createLogto` 以插件的形式安装 Logto:
+
+<pre>
+<code className="language-ts">
+{`import { createLogto, LogtoConfig } from '@logto/vue';
+
+const config: LogtoConfig = {
+  endpoint: '${props.endpoint}',
+  appId: '${props.appId}',
+};
+
+const app = createApp(App);
+
+app.use(createLogto, config);
+app.mount("#app");`}
+</code>
+</pre>
+
+</Step>
+
+<Step
+  title="登录"
+  subtitle="共 3 步"
+  index={2}
+  activeIndex={props.activeStepIndex}
+  onButtonClick={() => props.onNext(3)}
+>
+
+<Alert>
+  在如下代码示例中, 我们均先假设你的 Vue 应用运行在 <code>http://localhost:3000</code> 上。
+</Alert>
+
+### 配置 Redirect URI
+
+首先，我们来添加 Redirect URI，如：`http://localhost:3000/callback`。
+
+<UriInputField appId={props.appId} isSingle={!props.isCompact} name="redirectUris" title="application_details.redirect_uri" />
+
+### 实现登录按钮
+
+我们提供了两个组合式 API `useHandleSignInCallback()` 和 `useLogto()`，它们可以帮助你轻松完成登录认证流程。
+
+返回你的 IDE 或编辑器，使用如下代码来实现一个登录按钮：
+
+<pre>
+<code className="language-html">
+{`<script setup lang="ts">
+  import { useLogto } from "@logto/vue";
+
+  const { signIn, isAuthenticated } = useLogto();
+  const onClickSignIn = () => signIn('${props.redirectUris[0] ?? 'http://localhost:3000/callback'}');
+</script>`}
+</code>
+</pre>
+
+```html
+<template>
+  <div v-if="isAuthenticated">
+    <div>已登录</div>
+  </div>
+  <div v-else>
+    <button @click="onClickSignIn">登录</button>
+  </div>
+</template>
+```
+
+### 处理重定向
+
+马上就要大功告成！在上一步，我们将 `http://localhost:3000/callback` 用作 Redirect URI，现在我们需要对其妥善处理。
+
+首先，让我们来创建一个 Callback 组件：
+
+```html
+<!-- CallbackView.vue -->
+<script setup lang="ts">
+  import { useHandleSignInCallback } from '@logto/vue';
+  const { isLoading } = useHandleSignInCallback(() => {
+    // 完成时跳转至根路由
+  });
+</script>
+```
+
+```html
+<template>
+  <!-- 当登录认证尚未完成时 -->
+  <p v-if="isLoading">正在重定向...</p>
+</template>
+```
+
+最后我们插入如下代码来实现一个 _无需_ 登录的 `/callback` 路由：
+
+```ts
+// 假设用 vue-router
+const router = createRouter({
+  routes: [
+    {
+      path: '/callback',
+      name: 'callback',
+      component: CallbackView,
+    },
+  ],
+});
+```
+
+</Step>
+
+<Step
+  title="退出登录"
+  subtitle="共 1 步"
+  index={3}
+  activeIndex={props.activeStepIndex}
+  onButtonClick={() => props.onNext(4)}
+>
+
+调用 `.signOut()` 将清理内存与 localStorage 中的所有 Logto 数据（如果有）。
+
+在退出登录后，让你的用户重新回到你的网站是个不错的选择。让我们将 `http://localhost:3000` 添加至下面的输入框，并将其作为调用 `.signOut()` 的参数。
+
+<UriInputField appId={props.appId} isSingle={!props.isCompact} name="postLogoutRedirectUris" title="application_details.post_sign_out_redirect_uri" />
+
+### 实现退出登录按钮
+
+<pre>
+<code className="language-html">
+{`<script setup lang="ts">
+  import { useLogto } from "@logto/vue";
+
+  const { signOut } = useLogto();
+  const onClickSignOut = () => signOut('${props.postLogoutRedirectUris[0] ?? 'http://localhost:3000'}');
+</script>`}
+</code>
+</pre>
+
+```html
+<template>
+  <button @click="onClickSignOut">退出登录</button>
+</template>
+```
+
+</Step>
+
+<Step
+  title="延展阅读"
+  subtitle="共 4 篇"
+  index={4}
+  activeIndex={props.activeStepIndex}
+  buttonText="general.done"
+  buttonType="primary"
+  onButtonClick={props.onComplete}
+>
+
+- [自定义登录体验](https://docs.logto.io/zh-cn/docs/recipes/customize-sie)
+- [启用短信或邮件验证码登录](https://docs.logto.io/zh-cn/docs/tutorials/get-started/enable-passcode-sign-in)
+- [启用社交登录](https://docs.logto.io/zh-cn/docs/tutorials/get-started/enable-social-sign-in)
+- [保护你的 API](https://docs.logto.io/zh-cn/docs/recipes/protect-your-api)
+
+</Step>

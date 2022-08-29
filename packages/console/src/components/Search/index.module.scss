@@ -1,0 +1,18 @@
+@use '@/scss/underscore' as _;
+
+.search {
+  display: flex;
+  align-items: center;
+
+  :not(:first-child) {
+    margin-left: _.unit(2);
+  }
+
+  .searchInput {
+    width: 286px;
+  }
+
+  .searchIcon {
+    color: var(--color-icon);
+  }
+}

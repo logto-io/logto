@@ -1,0 +1,37 @@
+@use '@/scss/underscore' as _;
+
+.link {
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+
+
+  &.primary {
+    color: var(--color-primary);
+    font: var(--font-body-bold);
+    text-decoration: none;
+  }
+
+  &.secondary {
+    color: var(--color-caption);
+    font: var(--font-body);
+    text-decoration: underline;
+  }
+}
+
+:global(body.desktop) {
+  .link {
+    &.primary {
+      font: var(--font-body);
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+
+    &.secondary {
+      &:hover {
+        color: var(--color-primary);
+      }
+    }
+  }
+}

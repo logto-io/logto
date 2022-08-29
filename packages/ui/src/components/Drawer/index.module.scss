@@ -1,0 +1,59 @@
+@use '@/scss/underscore' as _;
+
+.drawer {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  outline: none;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.container {
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+  padding: _.unit(5) _.unit(5) 0;
+  background: var(--color-dialogue);
+  max-height: 411px;
+  @include _.flex-column(stretch, normal);
+}
+
+.header {
+  @include _.flex-row;
+  justify-content: flex-end;
+  align-items: center;
+  margin-bottom: _.unit(4);
+
+  svg {
+    color: var(--color-icon);
+    width: 20px;
+    height: 20px;
+  }
+}
+
+.content {
+  flex: 1;
+  overflow-y: auto;
+  padding-bottom: _.unit(5);
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* stylelint-disable selector-class-pattern */
+:global {
+  .ReactModal__Content[role='popup'] {
+    transform: translateY(100%);
+    transition: transform 0.3s ease-in-out;
+  }
+
+  .ReactModal__Content--after-open[role='popup'] {
+    transform: translateY(0);
+  }
+
+  .ReactModal__Content--before-close[role='popup'] {
+    transform: translateY(100%);
+  }
+}
+/* stylelint-enable selector-class-pattern */

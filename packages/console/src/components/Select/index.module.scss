@@ -1,0 +1,80 @@
+@use '@/scss/underscore' as _;
+
+.select {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 _.unit(3);
+  background: var(--color-layer-1);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  outline: 3px solid transparent;
+  transition-property: outline, border;
+  transition-timing-function: ease-in-out;
+  transition-duration: 0.2s;
+  font: var(--font-body-medium);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  &.open {
+    border-color: var(--color-primary);
+    outline-color: var(--color-focused-variant);
+  }
+
+  &.readOnly {
+    background: var(--color-inverse-on-surface);
+    color: var(--color-text);
+    border-color: var(--color-border);
+    cursor: default;
+  }
+
+  &.error {
+    border-color: var(--color-error);
+
+    &.open {
+      outline-color: var(--color-danger-focused);
+    }
+  }
+
+  .icon {
+    display: flex;
+    margin-left: _.unit(3);
+    color: var(--color-icon);
+  }
+
+  .clear {
+    display: none;
+  }
+
+  .arrow {
+    svg {
+      width: 20px;
+      height: 20px;
+    }
+  }
+
+  &.clearable:hover {
+    .clear {
+      display: block;
+    }
+
+    .arrow {
+      display: none;
+    }
+  }
+
+  &.small {
+    height: 30px;
+  }
+
+  &.medium {
+    height: 32px;
+  }
+
+  &.large {
+    height: 36px;
+  }
+}

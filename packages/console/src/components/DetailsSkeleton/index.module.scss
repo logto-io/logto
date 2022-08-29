@@ -1,0 +1,87 @@
+@use '@/scss/underscore' as _;
+
+.container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+
+  .header {
+    display: flex;
+    align-items: center;
+    padding: _.unit(6);
+    border-radius: 16px;
+    background-color: var(--color-layer-1);
+
+    .icon {
+      @include _.shimmering-animation;
+      width: 60px;
+      height: 60px;
+      border-radius: 12px;
+      margin-right: _.unit(6);
+    }
+
+    .wrapper {
+      display: flex;
+      flex-direction: column;
+
+      .title {
+        @include _.shimmering-animation;
+        width: 113px;
+        height: 28px;
+      }
+
+      .tags {
+        @include _.shimmering-animation;
+        width: 453px;
+        height: 20px;
+        margin-top: _.unit(3);
+      }
+    }
+
+    .button {
+      @include _.shimmering-animation;
+      width: 158px;
+      height: 44px;
+    }
+  }
+
+  .content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: _.unit(6);
+    margin-top: _.unit(6);
+    border-radius: 16px;
+    background-color: var(--color-layer-1);
+
+    .tabBar {
+      @include _.shimmering-animation;
+      width: 100%;
+      height: 25px;
+      margin-bottom: _.unit(13.5);
+    }
+
+    .field {
+      @include _.shimmering-animation;
+      width: 566px;
+      height: 44px;
+    }
+
+    .field + .field {
+      margin-top: _.unit(6);
+    }
+
+    .footer {
+      display: flex;
+      justify-content: end;
+
+      .button {
+        @include _.shimmering-animation;
+        width: 194px;
+        height: 44px;
+      }
+    }
+  }
+}

@@ -1,0 +1,4 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+FORCE_COLOR=1 pnpm -- lerna run --concurrency 1 --stream precommit --since HEAD --exclude-dependents

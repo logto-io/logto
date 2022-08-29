@@ -1,0 +1,132 @@
+@use '@/scss/underscore' as _;
+
+.radioGroup {
+  input[type='radio'] {
+    appearance: none;
+    position: absolute;
+    margin: 0;
+    width: 0;
+    height: 0;
+  }
+}
+
+.card {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 _.unit(-8) _.unit(-8) 0;
+
+  > .radio {
+    position: relative;
+    flex: 1;
+    min-width: 180px;
+    max-width: 230px;
+    padding: _.unit(5);
+    display: flex;
+    flex-direction: column;
+    border-radius: _.unit(4);
+    border: 1px solid transparent;
+    outline: 1px solid var(--color-neutral-90);
+    user-select: none;
+    cursor: pointer;
+    margin: 0 _.unit(8) _.unit(8) 0;
+
+    &.disabled {
+      cursor: not-allowed;
+      background-color: var(--color-layer-2);
+      border-color: var(--color-layer-2);
+      outline: unset;
+    }
+
+    &:not(.disabled):focus {
+      outline: 1px solid var(--color-primary);
+      box-shadow: var(--shadow-2);
+    }
+
+    &:not(.disabled):hover {
+      box-shadow: var(--shadow-2);
+    }
+
+    svg {
+      opacity: 0%;
+      position: absolute;
+      right: _.unit(5);
+      top: _.unit(5);
+    }
+
+    .disabledLabel {
+      position: absolute;
+      right: _.unit(5);
+      top: _.unit(5);
+      background: var(--color-neutral-90);
+      padding: _.unit(0.5) _.unit(2);
+      border-radius: 10px;
+      font: var(--font-label-medium);
+      color: var(--color-text);
+    }
+
+    &.checked {
+      border-color: var(--color-primary);
+      outline: 1px solid var(--color-primary);
+
+      svg {
+        opacity: 100%;
+      }
+    }
+  }
+}
+
+.plain {
+  font: var(--font-body-medium);
+
+  /* stylelint-disable-next-line no-descending-specificity */
+  > .radio {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+
+    /* stylelint-disable-next-line no-descending-specificity */
+    &:not(:last-child) {
+      margin-bottom: _.unit(2);
+    }
+
+    .indicator {
+      border-radius: 50%;
+      border: 2px solid var(--color-neutral-60);
+      display: inline-block;
+      margin-right: _.unit(2);
+
+      &::before {
+        content: '';
+        background: var(--color-layer-1);
+        width: 10px;
+        height: 10px;
+        display: block;
+        border-radius: 50%;
+        border: 2px solid var(--color-layer-1);
+      }
+    }
+
+    &.checked {
+      .indicator {
+        border-color: var(--color-primary);
+
+        &::before {
+          background: var(--color-primary);
+        }
+      }
+    }
+
+    &.disabled {
+      cursor: not-allowed;
+      color: var(--color-disabled);
+
+      .indicator {
+        border-color: var(--color-disabled);
+
+        &::before {
+          background: var(--color-layer-1);
+        }
+      }
+    }
+  }
+}

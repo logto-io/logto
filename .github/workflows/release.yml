@@ -1,0 +1,93 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - master
+    tags:
+      - v*.*.*
+
+concurrency:
+  group: dockerize-${{ github.ref }}
+
+jobs:
+  dockerize:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: |
+            ghcr.io/logto-io/logto
+            svhd/logto
+          # https://github.com/docker/metadata-action#typesemver
+          tags: |
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=semver,pattern={{major}}
+            type=raw,enable=${{ startsWith(github.ref, 'refs/tags/v') }},value=prerelease
+            type=edge
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: silverhand-bot
+          password: ${{ secrets.BOT_PAT }}
+
+      - name: Build and push
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+
+  create-github-release:
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/')
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node and pnpm
+        uses: silverhand-io/actions-node-pnpm-run-steps@v1.2.3
+
+      - name: Extract changelog
+        run: |
+          git diff HEAD~1 HEAD --exit-code -- CHANGELOG.md | \
+          tail -n +5 | \
+          grep -E "^\+" | \
+          sed -E 's/^\+//' | \
+          cat -s \
+          > /tmp/changelog.txt
+
+      - name: Build
+        run: pnpm -- lerna run build --stream
+
+      - name: Package
+        run: ./package.sh
+
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          token: ${{ secrets.BOT_PAT }}
+          body_path: /tmp/changelog.txt
+          files: /tmp/logto.tar.gz

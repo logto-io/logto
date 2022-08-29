@@ -1,0 +1,35 @@
+@use '@/scss/underscore' as _;
+
+.header {
+  display: flex;
+  align-items: center;
+  background-color: var(--color-layer-1);
+  height: 64px;
+  padding: 0 _.unit(6);
+
+  .separator {
+    @include _.vertical-bar;
+    height: 20px;
+    margin: 0 _.unit(5) 0 _.unit(4);
+  }
+
+  .closeIcon {
+    color: var(--color-icon);
+  }
+
+  .githubIcon {
+    margin-right: _.unit(4);
+
+    div {
+      display: flex;
+    }
+
+    svg {
+      color: var(--color-text);
+    }
+  }
+
+  .getSampleButton {
+    margin: 0 _.unit(15) 0 _.unit(6);
+  }
+}

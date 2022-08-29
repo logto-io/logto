@@ -1,0 +1,140 @@
+import UriInputField from '@mdx/components/UriInputField';
+import Step from '@mdx/components/Step';
+import Tabs from '@mdx/components/Tabs';
+import TabItem from '@mdx/components/TabItem';
+import Alert from '@/components/Alert';
+
+<Step
+  title="Integrate Logto Swift SDK"
+  subtitle="Add Logto SDK as a dependency"
+  index={0}
+  activeIndex={props.activeStepIndex}
+  onButtonClick={() => props.onNext(1)}
+>
+
+Use the following URL to add Logto SDK as a dependency in Swift Package Manager.
+
+```bash
+https://github.com/logto-io/swift.git
+```
+
+Since Xcode 11, you can [directly import a swift package](https://developer.apple.com/documentation/swift_packages/adding_package_dependencies_to_your_app) w/o any additional tool.
+
+We do not support **Carthage** and **CocoaPods** at the time due to some technical issues.
+
+<details>
+  <summary>Carthage</summary>
+
+Carthage [needs a `xcodeproj` file to build](https://github.com/Carthage/Carthage/issues/1226#issuecomment-290931385), but `swift package generate-xcodeproj` will report a failure since we are using binary targets
+for native social plugins. We will try to find a workaround later.
+
+</details>
+
+<details>
+  <summary>CocoaPods</summary>
+
+CocoaPods [does not support local dependency](https://github.com/CocoaPods/CocoaPods/issues/3276) and monorepo, thus it's hard to create a `.podspec` for this repo.
+
+</details>
+
+</Step>
+
+<Step
+  title="Init LogtoClient"
+  subtitle="1 step"
+  index={1}
+  activeIndex={props.activeStepIndex}
+  onButtonClick={() => props.onNext(2)}
+>
+
+<pre>
+<code className="language-swift">
+{`import Logto
+import LogtoClient
+
+let config = try? LogtoConfig(
+  endpoint: "${props.endpoint}",
+  appId: "${props.appId}"
+)
+let logtoClient = LogtoClient(useConfig: config)`}
+</code>
+</pre>
+
+By default, we store credentials like ID Token and Refresh Token in Keychain. Thus the user doesn't need to sign in again when he returns.
+
+To turn off this behavior, set `usingPersistStorage` to `false`:
+
+```swift
+let config = try? LogtoConfig(
+  // ...
+  usingPersistStorage: false
+)
+```
+
+</Step>
+
+<Step
+  title="Sign in"
+  subtitle="2 steps"
+  index={2}
+  activeIndex={props.activeStepIndex}
+  onButtonClick={() => props.onNext(3)}
+>
+
+### Configure Redirect URI
+
+First, let’s configure your redirect URI scheme. E.g. `io.logto://callback`
+
+<UriInputField appId={props.appId} isSingle={!props.isCompact} name="redirectUris" title="application_details.redirect_uri" />
+
+<Alert>
+  The Redirect URI in iOS SDK is only for internal use. There's <em>NO NEED</em> to add a <a href="https://developer.apple.com/documentation/xcode/defining-a-custom-url-scheme-for-your-app">Custom URL Scheme</a> until a connector asks.
+</Alert>
+
+Go back to Xcode, use the following code to implement sign-in:
+
+<pre>
+<code className="language-swift">
+{`do {
+  try await client.signInWithBrowser(redirectUri: "${props.redirectUris[0] ?? 'io.logto://callback'}")
+  print(client.isAuthenticated) // true
+} catch let error as LogtoClientErrors.SignIn {
+  // error occured during sign in
+}`}
+</code>
+</pre>
+
+</Step>
+
+<Step
+  title="Sign out"
+  subtitle="1 step"
+  index={3}
+  activeIndex={props.activeStepIndex}
+  onButtonClick={() => props.onNext(4)}
+>
+
+Calling `.signOut()` will clean all the Logto data in Keychain, if they exist.
+
+```swift
+await client.signOut()
+```
+
+</Step>
+
+<Step
+  title="Further readings"
+  subtitle="4 articles"
+  index={4}
+  activeIndex={props.activeStepIndex}
+  buttonText="general.done"
+  buttonType="primary"
+  onButtonClick={props.onComplete}
+>
+
+- [Customize sign-in experience](https://docs.logto.io/docs/recipes/customize-sie)
+- [Enable SMS or email passcode sign-in](https://docs.logto.io/docs/tutorials/get-started/enable-passcode-sign-in)
+- [Enable social sign-in](https://docs.logto.io/docs/tutorials/get-started/enable-social-sign-in)
+- [Protect your API](https://docs.logto.io/docs/recipes/protect-your-api)
+
+</Step>

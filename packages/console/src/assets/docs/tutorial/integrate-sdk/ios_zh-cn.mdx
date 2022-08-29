@@ -1,0 +1,139 @@
+import UriInputField from '@mdx/components/UriInputField';
+import Step from '@mdx/components/Step';
+import Tabs from '@mdx/components/Tabs';
+import TabItem from '@mdx/components/TabItem';
+import Alert from '@/components/Alert';
+
+<Step
+  title="集成 Logto Swift SDK"
+  subtitle="将 Logto SDK 添加至依赖"
+  index={0}
+  activeIndex={props.activeStepIndex}
+  onButtonClick={() => props.onNext(1)}
+>
+
+使用如下的 URL 将 Logto SDK 添加至 Swift Package Manager 的依赖中。
+
+```bash
+https://github.com/logto-io/swift.git
+```
+
+从 Xcode 11 开始，无需任何额外工具你就可以 [引入一个 Swift package](https://developer.apple.com/documentation/swift_packages/adding_package_dependencies_to_your_app)。
+
+因为一些技术原因，我们暂时不支持 **Carthage** 和 **CocoaPods**。
+
+<details>
+  <summary>Carthage</summary>
+
+Carthage [需要创建一个 `xcodeproj` 文件才能编译](https://github.com/Carthage/Carthage/issues/1226#issuecomment-290931385)，但由于我们内置了一些社交插件所用到的二进制目标文件，导致使用 `swift package generate-xcodeproj` 命令时报错。我们会继续努力寻求解决方案。
+
+</details>
+
+<details>
+  <summary>CocoaPods</summary>
+
+CocoaPods [不支持本地依赖](https://github.com/CocoaPods/CocoaPods/issues/3276) 和 monorepo，所以要在此工程创建 `.podspec` 文件使用 Cocoapods 的话将非常困难。
+
+</details>
+
+</Step>
+
+<Step
+  title="初始化 LogtoClient"
+  subtitle="共 1 步"
+  index={1}
+  activeIndex={props.activeStepIndex}
+  onButtonClick={() => props.onNext(2)}
+>
+
+<pre>
+<code className="language-swift">
+{`import Logto
+import LogtoClient
+
+let config = try? LogtoConfig(
+  endpoint: "${props.endpoint}",
+  appId: "${props.appId}"
+)
+let logtoClient = LogtoClient(useConfig: config)`}
+</code>
+</pre>
+
+我们默认会把例如 ID Token 和 Refresh Token 这样的凭据存储在 Keychain 中，如此一来用户在重新打开应用的时候无需再次登录。
+
+如果需要禁用这个行为，可将 `usingPersistStorage` 设置成 `false`：
+
+```swift
+let config = try? LogtoConfig(
+  // ...
+  usingPersistStorage: false
+)
+```
+
+</Step>
+
+<Step
+  title="登录"
+  subtitle="共 2 步"
+  index={2}
+  activeIndex={props.activeStepIndex}
+  onButtonClick={() => props.onNext(3)}
+>
+
+### 配置 Redirect URI
+
+首先，我们来配置你的 redirect URI scheme。例如 `io.logto://callback`
+
+<UriInputField appId={props.appId} isSingle={!props.isCompact} name="redirectUris" title="application_details.redirect_uri" />
+
+<Alert>
+  iOS SDK 中的 Redirect URI 仅用于内部。除非连接器有要求，否则 <em>无需</em> 在项目中添加 <a href="https://developer.apple.com/documentation/xcode/defining-a-custom-url-scheme-for-your-app">Custom URL Scheme</a>。
+</Alert>
+
+回到 Xcode，使用如下代码实现登录：
+
+<pre>
+<code className="language-swift">
+{`do {
+  try await client.signInWithBrowser(redirectUri: "${props.redirectUris[0] ?? 'io.logto://callback'}")
+  print(client.isAuthenticated) // true
+} catch let error as LogtoClientErrors.SignIn {
+  // 登录过程中有错误发生
+}`}
+</code>
+</pre>
+
+</Step>
+
+<Step
+  title="退出登录"
+  subtitle="共 1 步"
+  index={3}
+  activeIndex={props.activeStepIndex}
+  onButtonClick={() => props.onNext(4)}
+>
+
+调用 `.signOut()` 将清除 Keychain 中所有 Logto 的数据（如果有）。
+
+```swift
+await client.signOut()
+```
+
+</Step>
+
+<Step
+  title="延展阅读"
+  subtitle="共 4 篇"
+  index={4}
+  activeIndex={props.activeStepIndex}
+  buttonText="general.done"
+  buttonType="primary"
+  onButtonClick={props.onComplete}
+>
+
+- [自定义登录体验](https://docs.logto.io/zh-cn/docs/recipes/customize-sie)
+- [启用短信或邮件验证码登录](https://docs.logto.io/zh-cn/docs/tutorials/get-started/enable-passcode-sign-in)
+- [启用社交登录](https://docs.logto.io/zh-cn/docs/tutorials/get-started/enable-social-sign-in)
+- [保护你的 API](https://docs.logto.io/zh-cn/docs/recipes/protect-your-api)
+
+</Step>

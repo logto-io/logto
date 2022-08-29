@@ -1,0 +1,19 @@
+{
+  "accessKeyId": "<access-key-id>",
+  "accessKeySecret": "<access-key-secret>",
+  "signName": "<sign-name>",
+  "templates": [
+    {
+      "usageType": "SignIn",
+      "templateCode": "<template-code>"
+    },
+    {
+      "usageType": "Register",
+      "templateCode": "<template-code>"
+    },
+    {
+      "usageType": "Test",
+      "templateCode": "<template-code>"
+    }
+  ]
+}

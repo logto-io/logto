@@ -1,0 +1,26 @@
+@use '@/scss/underscore' as _;
+
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  color: var(--color-text-link);
+  background: var(--color-focused-variant);
+  font: var(--font-title-medium);
+
+  &.active {
+    color: var(--color-on-primary);
+    background: var(--color-primary);
+  }
+
+  &.completed {
+    background: var(--color-primary);
+
+    > svg {
+      color: var(--color-on-primary);
+    }
+  }
+}

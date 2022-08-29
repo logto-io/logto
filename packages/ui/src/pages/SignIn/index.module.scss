@@ -1,0 +1,73 @@
+@use '@/scss/underscore' as _;
+
+.wrapper {
+  @include _.full-page;
+  @include _.flex-column(normal, normal);
+  @include _.full-width;
+
+  .terms {
+    margin-bottom: _.unit(4);
+  }
+
+  .primarySignIn {
+    margin-bottom: _.unit(5);
+  }
+
+  .otherMethodsLink {
+    margin-bottom: _.unit(6);
+  }
+
+  .createAccount {
+    margin-top: _.unit(6);
+    text-align: center;
+  }
+
+  .placeHolder {
+    flex: 1;
+  }
+}
+
+.placeholderTop {
+  flex: 3;
+}
+
+.placeholderBottom {
+  flex: 5;
+}
+
+:global(body.mobile) {
+  .header {
+    margin-top: _.unit(3);
+    margin-bottom: _.unit(12);
+  }
+
+  .primarySocial {
+    margin-bottom: _.unit(8);
+  }
+
+  .divider {
+    margin-bottom: _.unit(5);
+  }
+
+  .createAccount {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
+
+:global(body.desktop) {
+  .header {
+    margin-bottom: _.unit(6);
+  }
+
+  .primarySocial {
+    margin-bottom: _.unit(12);
+  }
+
+  .placeHolder {
+    flex: 0;
+  }
+
+  .divider {
+    margin-bottom: _.unit(4);
+  }
+}

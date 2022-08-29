@@ -1,0 +1,87 @@
+{
+  "name": "@logto/ui",
+  "version": "1.0.0-beta.8",
+  "license": "MPL-2.0",
+  "private": true,
+  "scripts": {
+    "precommit": "lint-staged",
+    "start": "parcel src/index.html",
+    "dev": "cross-env PORT=5001 parcel src/index.html --no-cache --hmr-port 6001",
+    "check": "tsc --noEmit",
+    "build": "pnpm check && rm -rf dist && parcel build src/index.html --no-autoinstall --no-cache --detailed-report",
+    "lint": "eslint --ext .ts --ext .tsx src",
+    "lint:report": "pnpm lint --format json --output-file report.json",
+    "stylelint": "stylelint \"src/**/*.scss\"",
+    "test:coverage": "jest --coverage --silent",
+    "test": "jest"
+  },
+  "devDependencies": {
+    "@logto/phrases": "^1.0.0-beta.8",
+    "@logto/phrases-ui": "^1.0.0-beta.8",
+    "@logto/schemas": "^1.0.0-beta.8",
+    "@parcel/core": "2.7.0",
+    "@parcel/transformer-sass": "2.7.0",
+    "@parcel/transformer-svg-react": "2.7.0",
+    "@peculiar/webcrypto": "^1.3.3",
+    "@silverhand/eslint-config": "1.0.0",
+    "@silverhand/eslint-config-react": "1.0.0",
+    "@silverhand/essentials": "^1.2.0",
+    "@silverhand/jest-config": "1.0.0",
+    "@silverhand/ts-config": "1.0.0",
+    "@silverhand/ts-config-react": "1.0.0",
+    "@testing-library/react": "^13.3.0",
+    "@types/color": "^3.0.3",
+    "@types/jest": "^28.1.6",
+    "@types/react": "^18.0.0",
+    "@types/react-dom": "^18.0.0",
+    "@types/react-modal": "^3.13.1",
+    "@types/react-router-dom": "^5.3.2",
+    "camelcase-keys": "^7.0.2",
+    "classnames": "^2.3.1",
+    "color": "^4.2.3",
+    "cross-env": "^7.0.3",
+    "eslint": "^8.21.0",
+    "i18next": "^21.8.16",
+    "i18next-browser-languagedetector": "^6.1.4",
+    "jest": "^28.1.3",
+    "jest-environment-jsdom": "^28.1.3",
+    "jest-transformer-svg": "^2.0.0",
+    "js-base64": "^3.7.2",
+    "ky": "^0.31.0",
+    "libphonenumber-js": "^1.9.49",
+    "lint-staged": "^13.0.0",
+    "parcel": "2.7.0",
+    "postcss": "^8.4.6",
+    "postcss-modules": "^4.3.0",
+    "prettier": "^2.7.1",
+    "react": "^18.0.0",
+    "react-device-detect": "^2.2.2",
+    "react-dom": "^18.0.0",
+    "react-i18next": "^11.18.3",
+    "react-modal": "^3.15.1",
+    "react-modal-promise": "^1.0.2",
+    "react-router-dom": "^6.2.2",
+    "react-string-replace": "^1.0.0",
+    "react-timer-hook": "^3.0.5",
+    "stylelint": "^14.9.1",
+    "superstruct": "^0.16.0",
+    "typescript": "^4.7.4",
+    "use-debounced-loader": "^0.1.1"
+  },
+  "alias": {
+    "@/*": "./src/$1"
+  },
+  "eslintConfig": {
+    "extends": "@silverhand/react",
+    "rules": {
+      "complexity": "off"
+    }
+  },
+  "stylelint": {
+    "extends": "@silverhand/eslint-config-react/.stylelintrc"
+  },
+  "prettier": "@silverhand/eslint-config/.prettierrc",
+  "dependencies": {
+    "@logto/shared": "^1.0.0-beta.8"
+  }
+}

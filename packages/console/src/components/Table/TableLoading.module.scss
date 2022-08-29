@@ -1,0 +1,37 @@
+@use '@/scss/underscore' as _;
+
+.loading {
+  .itemPreview {
+    display: flex;
+    align-items: center;
+
+    .avatar {
+      @include _.shimmering-animation;
+      width: 40px;
+      height: 40px;
+      margin-right: _.unit(4);
+      border-radius: 12px;
+    }
+
+    .content {
+      width: 135px;
+
+      .title {
+        @include _.shimmering-animation;
+        height: 12px;
+      }
+
+      .subTitle {
+        @include _.shimmering-animation;
+        height: 8px;
+        margin-top: _.unit(2);
+      }
+    }
+  }
+
+  .rect {
+    @include _.shimmering-animation;
+    height: 32px;
+    max-width: 344px;
+  }
+}

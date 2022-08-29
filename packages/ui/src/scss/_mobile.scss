@@ -1,0 +1,68 @@
+/* Foundation */
+$font-family: -apple-system, system-ui, 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue',
+  'Helvetica', 'Arial', sans-serif;
+
+@mixin colors-light-theme {
+  --color-base: #fff;
+  --color-surface: #fff;
+  --color-surface-variant: #e5e1ec;
+  --color-text: #191c1d;
+  --color-icon: #747778;
+  --color-caption: #747778;
+  --color-outline: #78767f;
+  --color-divider: #e0e3e3;
+  --color-text-disabled: #c4c7c7;
+  --color-border: #c4c7c7;
+  --color-primary: var(--light-primary-color);
+  --color-layer: #eff1f1;
+  --color-error: #ba1b1b;
+  --color-dialogue: #fff;
+  --color-loading-icon: #191c1d;
+
+  --color-inverse-social-bg: #000;
+}
+
+@mixin colors-dark-theme {
+  --color-base: #191c1d;
+  --color-surface: #191c1d;
+  --color-surface-variant: #47464e;
+  --color-text: #f7f8f8;
+  --color-icon: #a9acac;
+  --color-caption: #a9acac;
+  --color-outline: #928f9a;
+  --color-divider: #444748;
+  --color-text-disabled: #5c5f60;
+  --color-border: #5c5f60;
+  --color-primary: var(--dark-primary-color);
+  --color-layer: #2a2c32;
+  --color-error: #dd3730;
+  --color-dialogue:
+    linear-gradient(0deg, rgba(202, 190, 255, 8%), rgba(202, 190, 255, 8%)),
+    linear-gradient(0deg, rgba(196, 199, 199, 2%), rgba(196, 199, 199, 2%)),
+    #191c1d;
+  --color-loading-icon: #f7f8f8;
+
+  --color-inverse-social-bg: #fff;
+}
+
+@mixin colors-universal {
+  --color-primary-button-text: #fff;
+  --color-toast: #34353f;
+  --color-toast-border: #444748;
+  --color-overlay: rgba(0, 0, 0, 30%);
+  --color-loading-icon-light: #f7f8f8;
+  // shadows
+  --shadow-2: 0 4px 12px rgba(0, 0, 0, 12%);
+}
+
+@mixin fonts {
+  --font-title: 600 32px/40px #{$font-family};
+  --font-body-bold: 500 16px/20px #{$font-family};
+  --font-body: 400 16px/20px #{$font-family};
+  --font-caption: 400 14px/18px #{$font-family};
+}
+
+@mixin layout {
+  --radius: 8px;
+  --max-width: 360px;
+}

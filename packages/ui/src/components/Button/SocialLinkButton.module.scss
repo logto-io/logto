@@ -1,0 +1,33 @@
+@use '@/scss/underscore' as _;
+
+.socialButton {
+  justify-content: normal;
+  padding: 0 _.unit(4);
+}
+
+.icon {
+  width: _.unit(6);
+  height: _.unit(6);
+  @include _.image-align-center;
+  overflow: hidden;
+}
+
+.name {
+  flex: 1;
+  overflow: hidden;
+  margin-left: _.unit(-6);
+  @include _.flex-row;
+
+  span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .placeHolder {
+    flex: 1;
+
+    &:first-child {
+      min-width: _.unit(10);
+    }
+  }
+}

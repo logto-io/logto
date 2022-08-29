@@ -1,0 +1,55 @@
+# The structure of `paths` SHOULD follow OpenAPI 3.0 Specification.
+# See https://swagger.io/docs/specification/paths-and-operations/
+paths:
+  /api/applications/:id:
+    delete:
+      responses:
+        '204':
+          description: No Content
+  /api/connectors/:id/test:
+    delete:
+      responses:
+        '204':
+          description: No Content
+  /api/resources/:id:
+    delete:
+      responses:
+        '204':
+          description: No Content
+  /api/session/sign-in/passwordless/sms/send-passcode:
+    post:
+      responses:
+        '204':
+          description: No Content
+  /api/session/sign-in/passwordless/email/send-passcode:
+    post:
+      responses:
+        '204':
+          description: No Content
+  /api/session/register/passwordless/sms/send-passcode:
+    post:
+      responses:
+        '204':
+          description: No Content
+  /api/session/register/passwordless/email/send-passcode:
+    post:
+      responses:
+        '204':
+          description: No Content
+  /api/status:
+    get:
+      responses:
+        '204':
+          description: No Content
+  /api/users/:userId:
+    delete:
+      responses:
+        '204':
+          description: No Content
+  /api/.well-known/sign-in-exp:
+    get:
+      responses:
+        '200':
+          description: OK
+        '304':
+          description: No Modified

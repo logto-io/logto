@@ -1,0 +1,73 @@
+@use '@/scss/underscore' as _;
+
+.container {
+  background-color: var(--color-surface-1);
+  display: flex;
+  height: 100vh;
+  flex-direction: column;
+  min-width: 1280px;
+  min-height: 806px;
+  background-position: right bottom;
+  background-size: contain;
+  background-repeat: no-repeat;
+
+  &.light {
+    background-image: url('../../assets/icons/welcome.svg');
+  }
+
+  &.dark {
+    background-image: url('../../assets/icons/welcome-dark.svg');
+  }
+}
+
+.header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: _.unit(12);
+}
+
+.logo {
+  height: 32px;
+  width: auto;
+  color: var(--color-text);
+}
+
+main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.placeholderTop {
+  flex: 1;
+}
+
+.placeholderBottom {
+  flex: 2;
+}
+
+.content {
+  margin-left: 98px;
+  width: 585px;
+}
+
+.title {
+  font-weight: 600;
+  font-size: 57px;
+  line-height: 64px;
+  letter-spacing: -0.25px;
+  color: var(--color-text);
+  margin: _.unit(2) 0 _.unit(3);
+}
+
+.description {
+  font: var(--font-body-large);
+  color: var(--color-caption);
+  margin-bottom: _.unit(8);
+}
+
+.button {
+  width: 400px;
+}

@@ -1,0 +1,28 @@
+@use '@/scss/underscore' as _;
+
+.description {
+  font: var(--font-body-medium);
+}
+
+.content {
+  margin-top: _.unit(6);
+  border-radius: 8px;
+  padding: _.unit(5);
+  background: var(--color-layer-2);
+  font: var(--font-body-medium);
+
+  .section {
+    &:not(:first-child) {
+      margin-top: _.unit(3);
+    }
+
+    .title {
+      font: var(--font-subhead-2);
+      margin: _.unit(1) 0;
+    }
+
+    .connector {
+      margin-left: _.unit(1);
+    }
+  }
+}

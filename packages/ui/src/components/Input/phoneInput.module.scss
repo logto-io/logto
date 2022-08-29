@@ -1,0 +1,54 @@
+@use '@/scss/underscore' as _;
+
+.countryCodeSelector {
+  color: var(--color-text);
+  font: var(--font-body);
+  border: none;
+  background: none;
+  width: auto;
+  @include _.flex-row;
+  position: relative;
+  margin-right: _.unit(1);
+  margin-left: _.unit(4);
+
+  > select {
+    appearance: none;
+    border: none;
+    outline: none;
+    background: none;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    font-size: 0;
+
+    option {
+      font: var(--font-body);
+    }
+  }
+
+  + input {
+    padding-left: _.unit(1);
+  }
+}
+
+:global(body.mobile) {
+  .countryCodeSelector {
+    > svg {
+      color: var(--color-primary);
+      margin-left: _.unit(1);
+      width: 16px;
+      height: 16px;
+    }
+  }
+}
+
+:global(body.desktop) {
+  .countryCodeSelector {
+    > svg {
+      color: var(--color-icon);
+      margin-left: _.unit(2);
+      width: 20px;
+      height: 20px;
+    }
+  }
+}

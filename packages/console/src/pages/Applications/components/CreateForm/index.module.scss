@@ -1,0 +1,11 @@
+@use '@/scss/underscore' as _;
+
+.radioGroup {
+  margin-top: _.unit(2);
+}
+
+.error {
+  font: var(--font-body-medium);
+  color: var(--color-error);
+  margin-top: _.unit(2);
+}

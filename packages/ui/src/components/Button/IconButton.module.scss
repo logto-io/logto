@@ -1,0 +1,29 @@
+@use '@/scss/underscore' as _;
+
+.iconButton {
+  border: none;
+  outline: none;
+  background: none;
+  border-color: none;
+  border-radius: 6px;
+  padding: _.unit(1);
+  @include _.flex-column;
+  cursor: pointer;
+
+  > svg {
+    color: var(--color-icon);
+  }
+}
+
+
+:global(body.desktop) {
+  .iconButton {
+    &:active {
+      background: var(--color-pressed);
+    }
+
+    &:hover:not(:active) {
+      background: var(--color-hover);
+    }
+  }
+}

@@ -1,0 +1,217 @@
+@use '@/scss/underscore' as _;
+
+.button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  outline: none;
+  border-radius: _.unit(2);
+  font: var(--font-button);
+  transition: background-color 0.2s ease-in-out;
+  white-space: nowrap;
+  user-select: none;
+  position: relative;
+
+  &.withIcon {
+    display: inline-flex;
+  }
+
+  &.loading {
+    pointer-events: none;
+    opacity: 60%;
+
+    .spinner {
+      position: absolute;
+    }
+
+    .spinner ~ span {
+      visibility: hidden;
+    }
+  }
+
+  &:not(:disabled) {
+    cursor: pointer;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+
+  .icon {
+    display: block;
+    width: 20px;
+    height: 20px;
+
+    &:not(:last-child) {
+      margin-right: _.unit(2);
+    }
+  }
+
+  &.small {
+    height: 30px;
+    padding: 0 _.unit(3);
+
+    &.plain {
+      height: 24px;
+      padding: 0;
+    }
+  }
+
+  &.medium {
+    height: 36px;
+    padding: 0 _.unit(4);
+
+    &.plain {
+      height: 28px;
+      padding: 0;
+    }
+  }
+
+  &.large {
+    height: 44px;
+    padding: 0 _.unit(6);
+
+    &.plain {
+      height: 28px; // same as medium
+      padding: 0;
+    }
+  }
+
+  &.default {
+    background: var(--color-layer-1);
+    color: var(--color-text);
+    border-color: var(--color-outline);
+    border-width: 1px;
+    border-style: solid;
+
+    &:disabled {
+      background: var(--color-neutral-70);
+      border-color: var(--color-neutral-70);
+    }
+
+    &:focus-visible {
+      outline: 3px solid var(--color-focused);
+    }
+
+    &:active {
+      background: var(--color-pressed);
+    }
+
+    &:not(:disabled):not(:active):hover {
+      background: var(--color-hover);
+    }
+  }
+
+  &.branding {
+    background: linear-gradient(90deg, #5d34f2 32%, #bd31ff 102%);
+    color: var(--color-on-primary);
+
+    &:focus-visible {
+      background:
+        linear-gradient(0deg, rgba(0, 0, 0, 20%), rgba(0, 0, 0, 20%)),
+        linear-gradient(90deg, #5d34f2 32%, #bd31ff 102%);
+    }
+
+    &:active {
+      background:
+        linear-gradient(0deg, rgba(0, 0, 0, 20%), rgba(0, 0, 0, 20%)),
+        linear-gradient(90deg, #5d34f2 32%, #bd31ff 102%);
+    }
+
+    &:not(:disabled):not(:active):hover {
+      background:
+        linear-gradient(0deg, rgba(255, 255, 255, 20%), rgba(255, 255, 255, 20%)),
+        linear-gradient(90deg, #5d34f2 32%, #bd31ff 102%);
+    }
+  }
+
+  &.primary {
+    background: var(--color-primary);
+    color: var(--color-on-primary);
+
+    &:disabled {
+      background: var(--color-inverse-on-surface);
+      color: var(--color-neutral-70);
+    }
+
+    &:focus-visible {
+      outline: 3px solid var(--color-focused-variant);
+    }
+
+    &:active {
+      background: var(--color-primary-pressed);
+    }
+
+    &:not(:disabled):not(:active):hover {
+      background: var(--color-primary-hover);
+    }
+  }
+
+  &.danger {
+    background: var(--color-error);
+    color: var(--color-on-primary);
+
+    &:disabled {
+      background: var(--color-inverse-on-surface);
+      color: var(--color-neutral-70);
+    }
+
+    &:focus-visible {
+      outline: 3px solid var(--color-danger-focused);
+    }
+
+    &:active {
+      background: var(--color-danger-pressed);
+    }
+
+    &:not(:disabled):not(:active):hover {
+      background: var(--color-danger-hover);
+    }
+  }
+
+  &.outline {
+    background: var(--color-layer-1);
+    border-color: var(--color-text-link);
+    border-width: 1px;
+    border-style: solid;
+    color: var(--color-text-link);
+
+    &:disabled {
+      border-color: var(--color-neutral-70);
+      color: var(--color-neutral-70);
+    }
+
+    &:focus-visible {
+      outline: 3px solid var(--color-focused-variant);
+    }
+
+    &:active {
+      background: var(--color-pressed-variant);
+    }
+
+    &:not(:disabled):not(:active):hover {
+      background: var(--color-hover-variant);
+    }
+  }
+
+  &.plain {
+    background: none;
+    border-color: none;
+    font: var(--font-body-medium);
+    color: var(--color-text-link);
+
+    &:disabled {
+      color: var(--color-disabled);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--color-focused-variant);
+    }
+
+    &:not(:disabled):hover {
+      text-decoration: underline;
+    }
+  }
+}

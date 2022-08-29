@@ -1,0 +1,46 @@
+@use '@/scss/underscore' as _;
+
+.container {
+  overflow: hidden;
+
+  .title {
+    color: var(--color-text);
+    @include _.text-ellipsis;
+  }
+
+  .subtitle {
+    margin-top: _.unit(1);
+    color: var(--color-caption);
+  }
+
+  &.large {
+    .title {
+      font: var(--font-title-large);
+    }
+
+    .subtitle {
+      font: var(--font-body-medium);
+    }
+  }
+
+  &.medium {
+    .title {
+      font: var(--font-title-medium);
+    }
+
+    .subtitle {
+      font: var(--font-body-medium);
+    }
+  }
+
+  &.small {
+    .title {
+      font: var(--font-title-medium);
+    }
+
+    .subtitle {
+      font: var(--font-body-small);
+      margin-top: 0;
+    }
+  }
+}

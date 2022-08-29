@@ -1,0 +1,100 @@
+@use '@/scss/underscore' as _;
+
+.wrapper {
+  position: relative;
+  @include _.flex-row;
+  border: _.border();
+  border-radius: var(--radius);
+  background: var(--color-layer);
+  // fix in safari input field line-height issue
+  height: 44px;
+  overflow: hidden;
+  transition-property: outline, border;
+  transition-timing-function: ease-in-out;
+  transition-duration: 0.2s;
+
+  .actionButton {
+    position: absolute;
+    right: _.unit(4);
+    top: 50%;
+    transform: translateY(-50%);
+    display: none;
+    color: var(--color-icon);
+    width: 24px;
+    height: 24px;
+  }
+
+  input {
+    padding: 0 _.unit(4);
+    flex: 1;
+    background: none;
+    caret-color: var(--color-primary);
+    font: var(--font-body-bold);
+    color: var(--color-text);
+    align-self: stretch;
+
+    &::placeholder {
+      color: var(--color-caption);
+    }
+
+    // Overwrite webkit auto-fill style
+    &:-webkit-autofill {
+      box-shadow: 0 0 0 30px var(--color-layer) inset;
+      -webkit-text-fill-color: var(--color-text);
+      transition: none;
+    }
+  }
+
+  &:focus-within {
+    border: _.border(var(--color-primary));
+
+    .actionButton {
+      display: block;
+    }
+
+    input {
+      padding-right: calc(24px + _.unit(4));
+    }
+  }
+
+  &.error {
+    border: _.border(var(--color-error));
+  }
+}
+
+.errorMessage {
+  margin-top: _.unit(2);
+}
+
+:global(body.desktop) {
+  .wrapper {
+    border: _.border(var(--color-border));
+    border-radius: 6px;
+    outline: 3px solid transparent;
+    background: var(--color-surface);
+
+    input {
+      font: var(--font-body);
+
+      // Overwrite webkit auto-fill style
+      &:-webkit-autofill {
+        box-shadow: 0 0 0 30px var(--color-surface) inset;
+        -webkit-text-fill-color: var(--color-text);
+      }
+    }
+
+    .actionButton {
+      width: 22px;
+      height: 22px;
+    }
+
+    &.error {
+      border: _.border(var(--color-error));
+    }
+
+    &:focus-within {
+      border-color: var(--color-primary);
+      outline-color: var(--color-focused-variant);
+    }
+  }
+}

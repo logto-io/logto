@@ -1,0 +1,76 @@
+const translation = {
+  input: {
+    username: 'Kullanıcı Adı',
+    password: 'Şifre',
+    email: 'E-posta Adresi',
+    phone_number: 'Telefon Numarası',
+    confirm_password: 'Şifreyi Doğrula',
+  },
+  secondary: {
+    sign_in_with: '{{methods, list(type: disjunction;)}} ile giriş yapınız',
+    social_bind_with:
+      'Hesabınız zaten var mı? {{methods, list(type: disjunction;)}} bağlantısına tıklayarak giriş yapabilirsiniz',
+  },
+  action: {
+    sign_in: 'Giriş Yap',
+    continue: 'İlerle',
+    create_account: 'Hesap Oluştur',
+    create: 'Oluştur',
+    enter_passcode: 'Kodu Gir',
+    confirm: 'Onayla',
+    cancel: 'İptal Et',
+    bind: '{{address}} ile birleştir',
+    back: 'Geri Dön',
+    nav_back: 'Geri',
+    agree: 'Kabul Et',
+    got_it: 'Anladım',
+    sign_in_with: '{{name}} ile giriş yap',
+  },
+  description: {
+    email: 'e-posta adresi',
+    phone_number: 'telefon numarası',
+    reminder: 'Hatırlatıcı',
+    not_found: '404 Bulunamadı',
+    agree_with_terms: 'Okudum ve anladım',
+    agree_with_terms_modal: 'Devam etmek için lütfen <link></link>i kabul edin.',
+    terms_of_use: 'Kullanım Koşulları',
+    create_account: 'Hesap Oluştur',
+    forgot_password: 'Şifremi Unuttum?',
+    or: 'veya',
+    enter_passcode: 'Kod {{address}}inize gönderildi.',
+    passcode_sent: 'Kodunuz yeniden gönderildi.',
+    resend_after_seconds: '<span>{{seconds}}</span> saniye sonra tekrar gönder',
+    resend_passcode: 'Kodu Yeniden Gönder',
+    continue_with: 'İle devam et',
+    create_account_id_exists: '{{type}} {{value}} ile hesap mevcut, giriş yapmak ister misiniz?',
+    sign_in_id_does_not_exists:
+      '{{type}} {{value}} ile hesap mevcut değil, yeni bir hesap oluşturmak ister misiniz?',
+    bind_account_title: 'Hesap bağla',
+    social_create_account: 'Hesabınız yok mu? Yeni bir hesap ve bağlantı oluşturabilirsiniz.',
+    social_bind_account: 'Hesabınız zaten var mı? Hesabınıza bağlanmak için giriş yapınız.',
+    social_bind_with_existing: 'İlgili bir hesap bulduk, hemen bağlayabilirsiniz.',
+  },
+  error: {
+    username_password_mismatch: 'Kullanıcı adı ve şifre eşleşmiyor.',
+    username_required: 'Kullanıcı adı gerekli.',
+    password_required: 'Şifre gerekli.',
+    username_exists: 'Kullanıcı adı mevcut.',
+    username_should_not_start_with_number: 'Kullanıcı adı sayı ile başlayamaz.',
+    username_valid_charset: 'Kullanıcı adı yalnızca harf,sayı veya alt çizgi içermeli.',
+    invalid_email: 'E-posta adresi geçersiz',
+    invalid_phone: 'Telefon numarası geçersiz',
+    password_min_length: 'Şifre en az {{min}} karakterden oluşmalıdır',
+    passwords_do_not_match: 'Şifreler eşleşmiyor',
+    invalid_passcode: 'Kod geçersiz',
+    invalid_connector_auth: 'Yetki geçersiz',
+    invalid_connector_request: 'Bağlayıcı veri geçersiz',
+    unknown: 'Bilinmeyen hata. Lütfen daha sonra tekrar deneyiniz.',
+    invalid_session: 'Oturum bulunamadı. Lütfen geri dönüp tekrar giriş yapınız.',
+  },
+};
+
+const en = Object.freeze({
+  translation,
+});
+
+export default en;

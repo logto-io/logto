@@ -1,0 +1,39 @@
+@use '@/scss/underscore' as _;
+
+.content {
+  box-shadow: var(--shadow-2);
+  position: absolute;
+  border-radius: 8px;
+
+  &.onTop {
+    box-shadow: var(--shadow-2-reversed);
+  }
+
+  &:focus {
+    outline: none;
+  }
+}
+
+.dropdownContainer {
+  background: var(--color-float);
+  border: 1px solid var(--color-divider);
+  border-radius: 8px;
+}
+
+.title {
+  @include _.subhead-cap;
+  padding: _.unit(3);
+}
+
+.overlay {
+  background: transparent;
+  position: fixed;
+  inset: 0;
+}
+
+.list {
+  margin: 0;
+  padding: _.unit(1);
+  max-height: 288px;
+  overflow-y: auto;
+}

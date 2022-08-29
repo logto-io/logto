@@ -1,0 +1,24 @@
+@use '@/scss/underscore' as _;
+
+.terms {
+  @include _.flex-row;
+  width: 100%;
+  user-select: none;
+}
+
+.checkBox {
+  margin-right: _.unit(2);
+  fill: var(--color-icon);
+}
+
+.content {
+  @include _.text-hint;
+
+  .link {
+    @include _.text-hint;
+  }
+}
+
+.errorMessage {
+  margin-top: _.unit(2);
+}

@@ -1,0 +1,44 @@
+@use '@/scss/underscore' as _;
+
+.pagination {
+  display: flex;
+  justify-content: right;
+  margin: 0;
+
+  li {
+    list-style: none;
+
+    &:not(:first-child) {
+      margin-left: _.unit(2);
+    }
+
+    .button {
+      border-radius: 6px;
+      min-width: 28px;
+      padding: 0 6px;
+      height: 28px;
+      text-overflow: unset;
+      border: 1px solid var(--color-border);
+
+      > span {
+        margin: 0 auto;
+      }
+
+      &.active {
+        border-color: var(--color-text-link);
+        color: var(--color-text-link);
+      }
+    }
+
+    &.disabled {
+      .button {
+        cursor: not-allowed;
+        background: var(--color-neutral-95);
+
+        &:hover {
+          background: var(--color-neutral-95);
+        }
+      }
+    }
+  }
+}

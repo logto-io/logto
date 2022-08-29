@@ -1,0 +1,9 @@
+@use '@/scss/underscore' as _;
+
+.ring {
+  @include _.rotating-animation;
+}
+
+.daisy {
+  animation: rotating 1s steps(12, end) infinite;
+}

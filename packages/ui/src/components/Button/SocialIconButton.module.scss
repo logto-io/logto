@@ -1,0 +1,44 @@
+@use '@/scss/underscore' as _;
+
+.socialButton {
+  border-radius: 50%;
+  @include _.flex-column;
+  background: var(--color-layer);
+  border: none;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+}
+
+.inverse {
+  background: var(--color-inverse-social-bg);
+}
+
+.icon {
+  @include _.image-align-center;
+  width: 24px;
+  height: 24px;
+  overflow: hidden;
+}
+
+:global(body.desktop) {
+  .socialButton {
+    &:not(.inverse):active {
+      background: var(--color-pressed);
+    }
+
+    &:not(.inverse):hover:not(:active) {
+      background: var(--color-hover);
+    }
+  }
+
+  .inverse {
+    &:active {
+      background: var(--color-inverse-social-pressed);
+    }
+
+    &:hover:not(:active) {
+      background: var(--color-inverse-social-hover);
+    }
+  }
+}

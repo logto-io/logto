@@ -1,0 +1,91 @@
+@use '@/scss/underscore' as _;
+
+.backLink {
+  margin: _.unit(1) 0 0 _.unit(1);
+}
+
+.header {
+  padding: _.unit(6);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  > *:not(:first-child) {
+    margin-left: _.unit(6);
+  }
+
+  .avatar {
+    margin-left: _.unit(2);
+    border-radius: 8px;
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+  }
+
+  .metadata {
+    flex: 1;
+
+    > div {
+      display: flex;
+      align-items: center;
+
+      > *:not(:last-child) {
+        margin-right: _.unit(2);
+      }
+    }
+
+    .name {
+      font: var(--font-title-large);
+      color: var(--color-text);
+    }
+
+    .username {
+      color: var(--color-caption);
+      font: var(--font-subhead-2);
+    }
+
+    .text {
+      font: var(--font-subhead-2);
+      color: var(--color-caption);
+    }
+
+    .verticalBar {
+      @include _.vertical-bar;
+      height: 12px;
+    }
+  }
+
+  .moreIcon {
+    color: var(--color-icon);
+  }
+}
+
+.body {
+  > :first-child {
+    margin-top: 0;
+  }
+
+  .form {
+    margin-top: _.unit(8);
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .fields {
+    padding-bottom: _.unit(10);
+    flex: 1;
+  }
+
+  .textField {
+    @include _.form-text-field;
+  }
+
+  .logs {
+    padding: _.unit(6) 0;
+  }
+}
+
+.resetIcon {
+  color: var(--color-icon);
+}

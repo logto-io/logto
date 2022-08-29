@@ -1,0 +1,27 @@
+# This compose file is for demonstration only, do not use in prod.
+version: "3.9"
+services:
+  app:
+    depends_on:
+      postgres:
+        condition: service_healthy
+    image: ghcr.io/logto-io/logto:${TAG-latest}
+    ports:
+      - 3001:3001
+    environment:
+      - ALL_YES=1
+      - NO_INQUIRY=0
+      - TRUST_PROXY_HEADER=1
+      - DB_URL_DEFAULT=postgres://postgres:p0stgr3s@postgres:5432
+      - ENDPOINT
+  postgres:
+    image: postgres:14-alpine
+    user: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: p0stgr3s
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready"]
+      interval: 10s
+      timeout: 5s
+      retries: 5

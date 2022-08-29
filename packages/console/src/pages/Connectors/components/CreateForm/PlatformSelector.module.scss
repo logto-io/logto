@@ -1,0 +1,10 @@
+@use '@/scss/underscore' as _;
+
+.platforms {
+  margin-top: _.unit(6);
+
+  .title {
+    font: var(--font-subhead-2);
+    margin-bottom: _.unit(3);
+  }
+}

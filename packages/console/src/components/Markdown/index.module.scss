@@ -1,0 +1,69 @@
+@use '@/scss/underscore' as _;
+
+.markdown {
+  li {
+    font: var(--font-body-medium);
+
+    ul,
+    ol {
+      padding-inline-start: 1ch;
+    }
+  }
+
+  ul {
+    padding-inline-start: 4ch;
+
+    > li {
+      margin-block-start: _.unit(2);
+      margin-block-end: _.unit(2);
+      padding-inline-start: _.unit(1);
+    }
+  }
+
+  ol {
+    padding-inline-start: 2ch;
+
+    > li {
+      margin-block-start: _.unit(3);
+      margin-block-end: _.unit(3);
+      padding-inline-start: _.unit(1);
+    }
+  }
+
+  a {
+    font: var(--font-body-medium);
+    color: var(--color-text-link);
+    text-decoration: none;
+
+    &:hover {
+      border-bottom: 1px solid var(--color-text-link);
+    }
+  }
+
+  h1 {
+    font: var(--font-title-large);
+    margin: _.unit(6) 0;
+  }
+
+  h2 {
+    font: var(--font-title-medium);
+    color: var(--color-caption);
+    margin: _.unit(6) 0 _.unit(3);
+  }
+
+  p {
+    font: var(--font-body-medium);
+    margin: _.unit(3) 0;
+  }
+
+  table + table {
+    margin-top: _.unit(3);
+  }
+}
+
+.inlineCode {
+  background: var(--color-layer-2);
+  font: var(--font-body-medium);
+  padding: _.unit(1) _.unit(1);
+  border-radius: 4px;
+}

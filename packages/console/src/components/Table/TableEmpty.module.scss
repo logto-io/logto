@@ -1,0 +1,23 @@
+@use '@/scss/underscore' as _;
+
+.tableEmptyTableData {
+  border-bottom: unset;
+}
+
+.tableEmpty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: _.unit(4) 0;
+
+  .title {
+    font: var(--font-subhead-2);
+    margin-bottom: _.unit(2);
+  }
+
+  .content {
+    font: var(--font-body-medium);
+    color: var(--color-neutral-50);
+    margin-bottom: _.unit(2);
+  }
+}

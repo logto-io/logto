@@ -1,0 +1,222 @@
+import UriInputField from '@mdx/components/UriInputField';
+import Step from '@mdx/components/Step';
+import Tabs from '@mdx/components/Tabs';
+import TabItem from '@mdx/components/TabItem';
+import Alert from '@/components/Alert';
+import { generateRandomString } from '@logto/shared';
+
+<Step
+  title="添加依赖"
+  subtitle="选择你熟悉的包管理工具"
+  index={0}
+  activeIndex={props.activeStepIndex}
+  onButtonClick={() => props.onNext(1)}
+>
+
+<Tabs>
+<TabItem value="npm" label="npm">
+
+```bash
+npm i @logto/express cookie-parser express-session
+```
+
+</TabItem>
+<TabItem value="yarn" label="Yarn">
+
+```bash
+yarn add @logto/express cookie-parser express-session
+```
+
+</TabItem>
+<TabItem value="pnpm" label="pnpm">
+
+```bash
+pnpm add @logto/express cookie-parser express-session
+```
+
+</TabItem>
+</Tabs>
+</Step>
+
+<Step
+  title="初始化 LogtoClient"
+  subtitle="共 1 步"
+  index={1}
+  activeIndex={props.activeStepIndex}
+  onButtonClick={() => props.onNext(2)}
+>
+
+<Alert>
+  在如下代码示例中, 我们均先假设你的 React 应用运行在 <code>http://localhost:3000</code> 上。
+</Alert>
+
+引入并实例化 LogtoClient：
+
+<pre>
+<code className="language-ts">
+{`import LogtoClient from '@logto/express';
+
+export const logtoClient = new LogtoClient({
+  endpoint: '${props.endpoint}',
+  appId: '${props.appId}',
+  appSecret: '${props.appSecret}',
+  baseUrl: 'http://localhost:3000', // 你可以修改为自己真实的 URL
+});`}
+</code>
+</pre>
+
+</Step>
+
+<Step
+  title="准备前置中间件"
+  subtitle="共 1 步"
+  index={2}
+  activeIndex={props.activeStepIndex}
+  onButtonClick={() => props.onNext(3)}
+>
+
+本 SDK 要求预先安装并配置好 [express-session](https://www.npmjs.com/package/express-session)。
+
+<pre>
+<code className="language-ts">
+{`import cookieParser from 'cookie-parser';
+import session from 'express-session';
+
+app.use(cookieParser());
+app.use(session({ secret: '${generateRandomString(32)}', cookie: { maxAge: 14 * 24 * 60 * 60 } }));`}
+</code>
+</pre>
+
+</Step>
+
+<Step
+  title="登录"
+  subtitle="共 3 步"
+  index={3}
+  activeIndex={props.activeStepIndex}
+  onButtonClick={() => props.onNext(4)}
+>
+
+### 配置 Redirect URI
+
+首先，我们来添加 Redirect URI，如：`http://localhost:3000/api/logto/sign-in-callback`.
+
+<UriInputField appId={props.appId} isSingle={!props.isCompact} name="redirectUris" title="application_details.redirect_uri" />
+
+### 准备 Logto 路由
+
+准备与 Logto 后台交互的路由。
+
+返回你的 IDE 或编辑器，首先让我们使用如下代码来实现一组 API 路由：
+
+```ts
+import { handleAuthRoutes } from '@logto/express';
+
+app.use(handleAuthRoutes(config));
+```
+
+这将为你自动创建好 3 个路由，分别是：
+
+1. `/logto/sign-in`: 登录
+2. `/logto/sign-in-callback`: 处理登录重定向
+3. `/logto/sign-out`: 登出
+
+### 实现登录
+
+马上就要大功告成！创建一个登录按钮，点击后将会跳转到登录路由。
+
+```ts
+app.get('/', (req, res) => {
+  res.setHeader('content-type', 'text/html');
+  res.end(`<div><a href="/logto/sign-in">Sign In</a></div>`);
+});
+```
+
+</Step>
+
+<Step
+  title="获取用户信息"
+  subtitle="共 2 步"
+  index={4}
+  activeIndex={props.activeStepIndex}
+  onButtonClick={() => props.onNext(5)}
+>
+
+需要集成 `withLogto` 中间件来获取用户信息:
+
+```ts
+import { withLogto } from '@logto/express';
+
+app.use(withLogto(config));
+```
+
+之后用户信息将会被注入到 `req`, 用法举例:
+
+```ts
+app.get('/user', (req, res) => {
+  res.json(req.user);
+});
+```
+
+</Step>
+
+<Step
+  title="保护路由"
+  subtitle="共 2 步"
+  index={5}
+  activeIndex={props.activeStepIndex}
+  onButtonClick={() => props.onNext(6)}
+>
+
+根据前面的步骤配置好 `withLogto` 后, 我们可以创建一个简单的中间件来保护路由:
+
+```ts
+const requireAuth = async (req: Request, res: Response, next: NextFunction) => {
+  if (!req.user.isAuthenticated) {
+    res.redirect('/logto/sign-in');
+  }
+
+  next();
+};
+```
+
+然后：
+
+```ts
+app.get('/protected', requireAuth, (req, res) => {
+  res.end('protected resource');
+});
+```
+
+</Step>
+
+<Step
+  title="退出登录"
+  subtitle="共 1 步"
+  index={6}
+  activeIndex={props.activeStepIndex}
+  onButtonClick={() => props.onNext(7)}
+>
+
+调用 `/logto/sign-out` 将清理内存与 cookies 中的所有 Logto 数据（如果有）。
+
+在退出登录后，让你的用户重新回到你的网站是个不错的选择。让我们将 `http://localhost:3000` 添加至「管理控制台」里的 Post Sign-out URIs 中（位于 Redirect URIs 下方）。
+
+</Step>
+
+<Step
+  title="延展阅读"
+  subtitle="共 4 篇"
+  index={6}
+  activeIndex={props.activeStepIndex}
+  buttonText="general.done"
+  buttonType="primary"
+  onButtonClick={props.onComplete}
+>
+
+- [自定义登录体验](https://docs.logto.io/zh-cn/docs/recipes/customize-sie)
+- [启用短信或邮件验证码登录](https://docs.logto.io/zh-cn/docs/tutorials/get-started/enable-passcode-sign-in)
+- [启用社交登录](https://docs.logto.io/zh-cn/docs/tutorials/get-started/enable-social-sign-in)
+- [保护你的 API](https://docs.logto.io/zh-cn/docs/recipes/protect-your-api)
+
+</Step>

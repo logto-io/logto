@@ -1,0 +1,72 @@
+name: Main
+
+on:
+  push:
+    branches:
+      - master
+      - 'push-action/**'
+  pull_request:
+
+concurrency:
+  group: main-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
+jobs:
+  main-build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Node and pnpm
+        uses: silverhand-io/actions-node-pnpm-run-steps@v1.2.3
+
+      - name: Build
+        run: pnpm ci:build
+
+  main-lint:
+    # avoid out of memory issue since macOS has bigger memory
+    # https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners#supported-runners-and-hardware-resources
+    runs-on: macos-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Node and pnpm
+        uses: silverhand-io/actions-node-pnpm-run-steps@v1.2.3
+
+      - name: Prepack
+        run: pnpm prepack
+
+      - name: Lint
+        run: pnpm ci:lint
+
+      - name: Stylelint
+        run: pnpm ci:stylelint
+
+  main-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Node and pnpm
+        uses: silverhand-io/actions-node-pnpm-run-steps@v1.2.3
+
+      - name: Prepack
+        run: pnpm prepack
+
+      - name: Test
+        run: pnpm ci:test
+
+      - name: Codecov core
+        uses: codecov/codecov-action@v3
+        with:
+          flags: core
+          directory: ./packages/core
+
+      - name: Codecov ui
+        uses: codecov/codecov-action@v3
+        with:
+          flags: ui
+          directory: ./packages/ui

@@ -1,0 +1,60 @@
+@use '@/scss/underscore' as _;
+
+.content {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 50%;
+  max-width: 900px;
+  min-width: 770px;
+  outline: none;
+  background: var(--color-base);
+
+  .wrapper {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+
+    .header {
+      display: flex;
+      align-items: center;
+      flex-shrink: 0;
+      background-color: var(--color-layer-1);
+      height: 64px;
+      padding: 0 _.unit(6);
+    }
+
+    .body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+    }
+  }
+}
+
+.overlay {
+  position: fixed;
+  background: var(--color-drawer-overlay);
+  inset: 0;
+}
+
+/* stylelint-disable selector-class-pattern */
+/* stylelint-disable-next-line selector-pseudo-class-no-unknown */
+:global {
+  .ReactModal__Content[role='drawer'] {
+    transform: translateX(100%);
+    transition: transform 0.3s ease-in-out;
+  }
+
+  .ReactModal__Content--after-open[role='drawer'] {
+    transform: translateX(0);
+  }
+
+  .ReactModal__Content--before-close[role='drawer'] {
+    transform: translateX(100%);
+  }
+}
+
+/* stylelint-enable selector-class-pattern */

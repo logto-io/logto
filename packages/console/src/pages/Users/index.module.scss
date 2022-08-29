@@ -1,0 +1,47 @@
+@use '@/scss/underscore' as _;
+
+.card {
+  @include _.flex-column;
+}
+
+.headline {
+  display: flex;
+  justify-content: space-between;
+}
+
+.filter {
+  margin: _.unit(4) 0;
+}
+
+.tableContainer {
+  flex: 1;
+
+  >table {
+    >tbody {
+      >tr {
+        >td {
+          padding-top: 10px;
+          padding-bottom: 10px;
+        }
+      }
+    }
+  }
+}
+
+.pagination {
+  margin-top: _.unit(4);
+  min-height: 32px;
+}
+
+.avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.userName {
+  width: 360px;
+  font: var(--font-body-medium);
+}

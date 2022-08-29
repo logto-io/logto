@@ -1,0 +1,26 @@
+@use '@/scss/underscore' as _;
+
+.socialIconList {
+  @include _.flex-row;
+  justify-content: center;
+}
+
+.socialButton {
+  margin-right: _.unit(8);
+
+  &:last-child {
+    margin-right: 0;
+  }
+}
+
+.moreButton {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--color-layer);
+
+  > svg {
+    width: 24px;
+    height: 24px;
+  }
+}

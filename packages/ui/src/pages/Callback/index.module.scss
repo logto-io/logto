@@ -1,0 +1,12 @@
+@use '@/scss/underscore' as _;
+
+
+.wrapper {
+  @include _.full-page;
+  @include _.flex-column;
+}
+
+
+.connectorContainer {
+  flex: 1;
+}

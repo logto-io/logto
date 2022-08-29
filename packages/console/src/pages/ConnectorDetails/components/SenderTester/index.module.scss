@@ -1,0 +1,30 @@
+@use '@/scss/underscore' as _;
+
+.fields {
+  display: flex;
+  align-items: flex-end;
+  margin-bottom: _.unit(1);
+
+  .textField {
+    @include _.form-text-field;
+  }
+
+  .send {
+    margin-left: _.unit(1.5);
+    margin-bottom: 1px;
+  }
+}
+
+.error {
+  font: var(--font-body-medium);
+  color: var(--color-error);
+}
+
+.description {
+  font: var(--font-body-medium);
+  color: var(--color-caption);
+}
+
+.successfulTooltip {
+  background-color: var(--color-success-60);
+}

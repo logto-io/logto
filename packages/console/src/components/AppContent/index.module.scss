@@ -1,0 +1,30 @@
+@use '@/scss/underscore' as _;
+@use '@logto/shared/scss/console-themes' as themes;
+
+.app {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.topbarShadow {
+  box-shadow: var(--shadow-2);
+}
+
+.content {
+  flex-grow: 1;
+  display: flex;
+  margin-bottom: _.unit(6);
+  overflow: hidden;
+}
+
+.main {
+  flex-grow: 1;
+  padding-right: _.unit(6);
+  overflow-y: scroll;
+
+  > * {
+    @include _.main-content-width;
+  }
+}

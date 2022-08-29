@@ -1,0 +1,32 @@
+@use '@/scss/underscore' as _;
+
+.status {
+  display: flex;
+  align-items: center;
+  font: var(--font-body-medium);
+
+  .icon {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-right: _.unit(2);
+    background: var(--color-success-70);
+  }
+
+  &.disabled {
+    .icon {
+      background: var(--color-neutral-70);
+    }
+  }
+
+  &.outlined {
+    padding: _.unit(0.5) _.unit(2);
+    border-radius: 10px;
+    background: var(--color-success-99);
+    font: var(--font-label-medium);
+
+    &.disabled {
+      background: var(--color-neutral-variant-95);
+    }
+  }
+}

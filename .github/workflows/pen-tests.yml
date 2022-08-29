@@ -1,0 +1,36 @@
+name: Pen Tests
+
+on:
+  # Be careful when using the workflow_run trigger
+  # https://github.community/t/workflow-run-completed-event-triggered-by-failed-workflow/128001/7
+  workflow_run:
+    workflows: [ "Release" ]
+    branches:
+      - master
+    types: 
+      - completed
+
+concurrency:
+  group: main-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
+jobs:
+  zap-scan:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Docker Compose up
+        run: |
+          curl -fsSL https://raw.githubusercontent.com/logto-io/logto/HEAD/docker-compose.yml |\
+          TAG=edge docker compose -p logto -f - up -d
+
+      - name: Sleep for 30 seconds
+        run: sleep 30s
+
+      - name: ZAP Scan
+        uses: zaproxy/action-full-scan@v0.4.0
+        with:
+          target: http://localhost:3001
+          cmd_options: '-a'
+          fail_action: true

@@ -1,0 +1,222 @@
+import UriInputField from '@mdx/components/UriInputField';
+import Step from '@mdx/components/Step';
+import Tabs from '@mdx/components/Tabs';
+import TabItem from '@mdx/components/TabItem';
+import Alert from '@/components/Alert';
+
+<Step
+  title="集成 Logto Android SDK"
+  subtitle="将 Logto SDK 添加至依赖"
+  index={0}
+  activeIndex={props.activeStepIndex}
+  onButtonClick={() => props.onNext(1)}
+>
+
+<Alert>
+  Logto Andorid SDK 支持的最小 Android API 级别为 24
+</Alert>
+
+将 `mavenCentral()` 添加到构建脚本中：
+
+```kotlin
+repositories {
+    mavenCentral()
+}
+```
+
+添加 Logto Android SDK 依赖：
+
+<Tabs>
+
+<TabItem value="kotlin" label="Kotlin">
+
+```kotlin
+dependencies {
+    implementation("io.logto.sdk:android:1.0.0")
+}
+```
+
+</TabItem>
+
+<TabItem value="groovy" label="Groovy">
+
+```groovy
+dependencies {
+    implementation 'io.logto.sdk:android:1.0.0'
+}
+```
+
+</TabItem>
+
+</Tabs>
+
+</Step>
+
+<Step
+  title="初始化 LogtoClient"
+  subtitle="共 1 步"
+  index={1}
+  activeIndex={props.activeStepIndex}
+  onButtonClick={() => props.onNext(2)}
+>
+
+<Tabs>
+
+<TabItem value="kotlin" label="Kotlin">
+
+<pre>
+<code className="language-kotlin">
+{`import io.logto.sdk.android.LogtoClient
+import io.logto.sdk.android.type.LogtoConfig
+
+class MainActivity : AppCompatActivity() {
+    val logtoConfig = LogtoConfig(
+        endpoint = "${props.endpoint}",
+        appId = "${props.appId}",
+        scopes = null,
+        resources = null,
+        usingPersistStorage = true,
+    )
+
+    val logtoClient = LogtoClient(logtoConfig, application)
+}`}
+</code>
+</pre>
+
+</TabItem>
+
+<TabItem value="java" label="Java">
+
+<pre>
+<code className="language-java">
+{`import io.logto.sdk.android.LogtoClient;
+import io.logto.sdk.android.type.LogtoConfig;
+
+public class MainActivity extends AppCompatActivity {
+    private LogtoClient logtoClient;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        LogtoConfig logtoConfig = new LogtoConfig(
+            "${props.endpoint}",
+            "${props.appId}",
+            null,
+            null,
+            true
+        );
+
+        logtoClient = new LogtoClient(logtoConfig, getApplication());
+    }
+}`}
+</code>
+</pre>
+
+</TabItem>
+
+</Tabs>
+
+</Step>
+
+<Step
+  title="登录"
+  subtitle="共 2 步"
+  index={2}
+  activeIndex={props.activeStepIndex}
+  onButtonClick={() => props.onNext(3)}
+>
+
+### 配置 Redirect URI
+
+首先，我们来添加 Redirect URI。例如 `io.logto.android://io.logto.sample/callback`
+
+<UriInputField appId={props.appId} isSingle={!props.isCompact} name="redirectUris" title="application_details.redirect_uri" />
+
+返回你的 IDE 或编辑器，使用如下代码实现登录：
+
+<Tabs>
+
+<TabItem value="kotlin" label="Kotlin">
+
+<pre>
+<code className="language-kotlin">
+{`logtoClient.signIn(this, "${props.redirectUris[0] ?? '<your-redirect-uri>'}") { logtoException: LogtoException? ->
+    // 当 \`logtoException\` 为 null 时，则登录成功。
+}`}
+</code>
+</pre>
+
+</TabItem>
+
+<TabItem value="java" label="Java">
+
+<pre>
+<code className="language-java">
+{`logtoClient.signIn(this, "${props.redirectUris[0] ?? '<your-redirect-uri>'}", logtoException -> {
+    // 当 \`logtoException\` 为 null 时，则登录成功。
+});`}
+</code>
+</pre>
+
+</TabItem>
+
+</Tabs>
+
+当成功登录后，`logtoClient.isAuthenticated` 的值将为 `true`。
+
+</Step>
+
+<Step
+  title="退出登录"
+  subtitle="共 1 步"
+  index={3}
+  activeIndex={props.activeStepIndex}
+  onButtonClick={() => props.onNext(4)}
+>
+
+调用 `.signOut(completion)` 操作会清除本地存储的用户相关凭据，即使在退出登录过程中发生了异常。
+
+<Tabs>
+
+<TabItem value="kotlin" label="Kotlin">
+
+```kotlin
+logtoClient.signOut { logtoException: LogtoException? ->
+    // 无论是否存在 `logtoException`，本地存储的用户相关凭据都已清除。
+}
+```
+
+</TabItem>
+
+<TabItem value="java" label="Java">
+
+```java
+logtoClient.signOut(logtoException -> {
+    // 无论是否存在 `logtoException`，本地存储的用户相关凭据都已清除。
+});
+```
+
+</TabItem>
+
+</Tabs>
+
+</Step>
+
+<Step
+  title="延展阅读"
+  subtitle="共 4 篇"
+  index={4}
+  activeIndex={props.activeStepIndex}
+  buttonText="general.done"
+  buttonType="primary"
+  onButtonClick={props.onComplete}
+>
+
+- [自定义登录体验](https://docs.logto.io/zh-cn/docs/recipes/customize-sie)
+- [启用短信或邮件验证码登录](https://docs.logto.io/zh-cn/docs/tutorials/get-started/enable-passcode-sign-in)
+- [启用社交登录](https://docs.logto.io/zh-cn/docs/tutorials/get-started/enable-social-sign-in)
+- [保护你的 API](https://docs.logto.io/zh-cn/docs/recipes/protect-your-api)
+
+</Step>

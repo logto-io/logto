@@ -1,0 +1,103 @@
+name: Update Metadata
+
+on:
+  # CAREFUL! https://securitylab.github.com/research/github-actions-preventing-pwn-requests/
+  pull_request_target:
+    types: [opened, edited, synchronize, reopened]
+
+concurrency: 
+  group: update-metadata-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  update-metadata:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Add labels
+        uses: silverhand-io/actions-add-labels-run-steps@v1.2.0
+        with:
+          title: ${{ github.event.pull_request.title || github.event.issue.title }}
+          github-token: ${{ github.token }}
+
+      - name: Add assignees
+        if: |
+          contains(fromJson('["opened", "reopened"]'), github.event.action) &&
+          !endsWith(github.event.pull_request.user.login, '[bot]')
+        uses: actions-ecosystem/action-add-assignees@v1
+        with:
+          github_token: ${{ github.token }}
+          assignees: ${{ github.event.pull_request.user.login }}
+
+  pr-size-diff:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          # https://github.com/actions/checkout/issues/518#issuecomment-890401887
+          ref: refs/pull/${{ github.event.number }}/merge
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Prepare
+        run: |
+          git checkout master
+          git checkout -
+          curl -fsSLO https://gist.githubusercontent.com/gao-sun/88dac6c38e86f4ae12c8a7c3e777040a/raw/07276574142455b3dfeace5d7f4a370447a112b3/git-file-size-diff.sh
+          chmod +x git-file-size-diff.sh
+
+      - uses: actions/github-script@v6
+        id: message
+        with:
+          result-encoding: string
+          script: |
+            const child_process = require('child_process');
+            const result = child_process
+              .execSync('./git-file-size-diff.sh --cached master', { encoding: 'utf-8' })
+              .split('\n');
+            const diff = Number(result.pop());
+
+            // https://stackoverflow.com/a/18650828/12514940
+            function formatBytes(bytes, decimals = 2) {
+              if (bytes === 0) return '0 Bytes';
+
+              const k = 1024;
+              const dm = decimals < 0 ? 0 : decimals;
+              const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+
+              const i = Math.floor(Math.log(bytes) / Math.log(k));
+
+              return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+            }
+
+            function getPrefix(bytes) {
+              if (bytes === 0) {
+                return '';
+              }
+
+              return diff > 0 ? ':chart_with_upwards_trend: +' : ':chart_with_downwards_trend: -';
+            }
+
+            function format(bytes) {
+              return `${
+                bytes > 1024 * 10 ? ':warning: ' : ''
+              }${
+                getPrefix(bytes)
+              }${formatBytes(Math.abs(bytes))}`;
+            }
+
+            const filesHeader = `|Name|Diff|\n|---|---|\n`;
+            const filesData = result.map((row) => {
+              const [diff, filename] = row.split('\t');
+              return `|${filename}|${format(Number(diff))}|`;
+            }).join('\n');
+
+            return `#### COMPARE TO \`master\`\n**Total Size Diff** ${format(diff)}\n${
+              result.length ? `\n<details>\n<summary><b>Diff by File</b></summary>\n\n${filesHeader}${filesData}</details>\n` : ''
+            }`;
+      
+      - uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          message: |
+            ${{ steps.message.outputs.result }}

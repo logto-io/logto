@@ -1,0 +1,22 @@
+@use '@/scss/underscore' as _;
+
+
+.divider {
+  @include _.flex-row;
+  font: var(--font-body);
+  color: var(--color-caption);
+
+  .line {
+    flex: 1;
+    height: 1px;
+    background: var(--color-divider);
+
+    &:first-child {
+      margin-right: _.unit(4);
+    }
+
+    &:last-child {
+      margin-left: _.unit(4);
+    }
+  }
+}

@@ -1,0 +1,39 @@
+@use '@/scss/underscore' as _;
+
+.overlay {
+  z-index: 100;
+}
+
+.modal {
+  position: absolute;
+  left: 20px;
+  right: 20px;
+  top: 50%;
+  transform: translate(0, -50%);
+  outline: none;
+}
+
+.container {
+  padding: _.unit(5);
+  background: var(--color-dialogue);
+  border-radius: var(--radius);
+}
+
+.content {
+  text-align: center;
+  font: var(--font-body);
+  color: var(--color-text);
+}
+
+.footer {
+  @include _.flex_row;
+  margin-top: _.unit(6);
+
+  > * {
+    flex: 1;
+  }
+
+  > button:first-child {
+    margin-right: _.unit(2);
+  }
+}

@@ -1,0 +1,34 @@
+@use '@/scss/underscore' as _;
+
+.content {
+  font: var(--font-body-medium);
+
+  .info {
+    margin-top: _.unit(6);
+    background: var(--color-neutral-variant-90);
+    padding: _.unit(5);
+    border-radius: _.unit(2);
+
+    .infoLine {
+      display: flex;
+      align-items: center;
+
+      &:not(:last-child) {
+        margin-bottom: _.unit(2);
+      }
+
+      .infoContent {
+        font-weight: bold;
+        padding-left: _.unit(1);
+      }
+
+      .operation {
+        padding-left: _.unit(1);
+      }
+
+      .eyeIcon {
+        color: var(--color-icon);
+      }
+    }
+  }
+}

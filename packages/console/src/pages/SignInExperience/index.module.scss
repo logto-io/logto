@@ -1,0 +1,38 @@
+@use '@/scss/underscore' as _;
+
+.wrapper {
+  display: flex;
+  align-items: stretch;
+  min-width: 950px;
+  height: 100%;
+
+  .setup {
+    flex: 1;
+    margin-right: _.unit(3);
+    height: 100%;
+    overflow-y: scroll;
+
+    .tabs {
+      padding-top: _.unit(2);
+      margin-top: _.unit(4);
+    }
+
+    .card {
+      padding-bottom: 0;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .formWrapper {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .form {
+      padding-bottom: _.unit(8);
+      flex: 1;
+    }
+  }
+}

@@ -1,0 +1,45 @@
+@use '@/scss/underscore' as _;
+
+.navBar {
+  width: 100%;
+  min-height: 44px;
+  @include _.flex-row;
+  justify-content: center;
+  padding: _.unit(3) _.unit(10);
+  position: relative;
+
+  > svg {
+    fill: current-color;
+  }
+
+  .title {
+    font: var(--font-body-bold);
+  }
+}
+
+.backButton {
+  position: absolute;
+  left: _.unit(-2);
+  top: 50%;
+  transform: translateY(-50%);
+  color: --color-text;
+  font: var(--font-body-bold);
+  @include _.flex-row;
+  cursor: pointer;
+}
+
+:global(body.mobile) {
+  .backButton > span {
+    display: none;
+  }
+}
+
+:global(body.desktop) {
+  .backButton {
+    color: var(--color-primary);
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}

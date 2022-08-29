@@ -1,0 +1,93 @@
+@use '@/scss/underscore' as _;
+
+.container {
+  border-radius: 6px;
+  border: 1px solid var(--color-border);
+  outline: 3px solid transparent;
+  transition-property: outline, border;
+  transition-timing-function: ease-in-out;
+  transition-duration: 0.2s;
+  padding: _.unit(2) _.unit(3);
+  background: var(--color-layer-1);
+  font: var(--font-body-medium);
+
+  &.withIcon {
+    display: flex;
+    align-items: center;
+
+    .icon {
+      width: 20px;
+      height: 20px;
+      margin-right: _.unit(2);
+    }
+  }
+
+  &:focus-within {
+    border-color: var(--color-primary);
+    outline-color: var(--color-focused-variant);
+  }
+
+  input {
+    width: 100%;
+    appearance: none;
+    color: var(--color-text);
+    font: var(--font-body-medium);
+    background: transparent;
+    padding: 0;
+
+    &::placeholder {
+      color: var(--color-caption);
+    }
+
+    // Overwrite webkit auto-fill style
+    &:-webkit-autofill {
+      box-shadow: 0 0 0 30px var(--color-layer-1) inset;
+      -webkit-text-fill-color: var(--color-text);
+      caret-color: var(--color-text);
+    }
+
+    &[type='date'] {
+      height: 20px;
+
+      &::-webkit-calendar-picker-indicator {
+        background-image: none;
+        background-color: var(--color-icon);
+        mask-image: url('../../assets/images/calendar.png');
+        mask-size: 20px 20px;
+        width: 16px;
+        height: 18px;
+      }
+    }
+  }
+
+  &.disabled {
+    background: var(--color-inverse-on-surface);
+    color: var(--color-caption);
+    border-color: var(--color-border);
+  }
+
+  &.readOnly {
+    background: var(--color-layer-2);
+    color: var(--color-text);
+    border-color: var(--color-border);
+
+    &:focus-within {
+      border-color: var(--color-border);
+      outline-color: transparent;
+    }
+  }
+
+  &.error {
+    border-color: var(--color-error);
+
+    &:focus-within {
+      outline-color: var(--color-danger-focused);
+    }
+  }
+}
+
+.errorMessage {
+  font: var(--font-body-medium);
+  color: var(--color-error);
+  margin-top: _.unit(1);
+}

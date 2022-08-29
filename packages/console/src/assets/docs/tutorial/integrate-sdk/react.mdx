@@ -1,0 +1,189 @@
+import UriInputField from '@mdx/components/UriInputField';
+import Step from '@mdx/components/Step';
+import Tabs from '@mdx/components/Tabs';
+import TabItem from '@mdx/components/TabItem';
+import Alert from '@/components/Alert';
+
+<Step
+  title="Add Logto SDK as a dependency"
+  subtitle="Please select your favorite package manager"
+  index={0}
+  activeIndex={props.activeStepIndex}
+  onButtonClick={() => props.onNext(1)}
+>
+<Tabs>
+<TabItem value="npm" label="npm">
+
+```bash
+npm i @logto/react
+```
+
+</TabItem>
+<TabItem value="yarn" label="Yarn">
+
+```bash
+yarn add @logto/react
+```
+
+</TabItem>
+<TabItem value="pnpm" label="pnpm">
+
+```bash
+pnpm add @logto/react
+```
+
+</TabItem>
+</Tabs>
+</Step>
+
+<Step
+  title="Init LogtoClient"
+  subtitle="1 step"
+  index={1}
+  activeIndex={props.activeStepIndex}
+  onButtonClick={() => props.onNext(2)}
+>
+
+Import and use `LogtoProvider` to provide a Logto context:
+
+<pre>
+<code className="language-tsx">
+{`import { LogtoProvider, LogtoConfig } from '@logto/react';
+
+const config: LogtoConfig = {
+  endpoint: '${props.endpoint}',
+  appId: '${props.appId}',
+};
+
+const App = () => (
+  <LogtoProvider config={config}>
+    <YourAppContent />
+  </LogtoProvider>
+);`}
+</code>
+</pre>
+
+</Step>
+
+<Step
+  title="Sign in"
+  subtitle="3 steps"
+  index={2}
+  activeIndex={props.activeStepIndex}
+  onButtonClick={() => props.onNext(3)}
+>
+
+<Alert>
+  In the following steps, we assume your app is running on <code>http://localhost:3000</code>.
+</Alert>
+
+### Configure Redirect URI
+
+First, let’s enter your redirect URI. E.g. `http://localhost:3000/callback`.
+
+<UriInputField appId={props.appId} isSingle={!props.isCompact} name="redirectUris" title="application_details.redirect_uri" />
+
+### Implement a sign-in button
+
+We provide two hooks `useHandleSignInCallback()` and `useLogto()` which can help you easily manage the authentication flow.
+
+Go back to your IDE/editor, use the following code to implement the sign-in button:
+
+<pre>
+<code className="language-tsx">
+{`import { useLogto } from '@logto/react';
+
+const SignIn = () => {
+  const { signIn, isAuthenticated } = useLogto();
+
+  if (isAuthenticated) {
+    return <div>Signed in</div>;
+  }
+
+  return (
+    <button onClick={() => signIn('${props.redirectUris[0] ?? 'http://localhost:3000/callback'}')}>
+      Sign In
+    </button>
+  );
+};`}
+</code>
+</pre>
+
+### Handle redirect
+
+We're almost there! In the last step, we use `http://localhost:3000/callback` as the Redirect URI, and now we need to handle it properly.
+
+First let's create a callback component:
+
+```tsx
+import { useHandleSignInCallback } from '@logto/react';
+
+const Callback = () => {
+  const { isLoading } = useHandleSignInCallback(() => {
+    // Navigate to root path when finished
+  });
+
+  // When it's working in progress
+  if (isLoading) {
+    return <div>Redirecting...</div>;
+  }
+};
+```
+
+Finally insert the code below to create a `/callback` route which does NOT require authentication:
+
+```tsx
+// Assuming react-router
+<Route path="/callback" element={<Callback />} />
+```
+
+</Step>
+
+<Step
+  title="Sign out"
+  subtitle="1 step"
+  index={3}
+  activeIndex={props.activeStepIndex}
+  onButtonClick={() => props.onNext(4)}
+>
+
+Calling `.signOut()` will clear all the Logto data in memory and localStorage if they exist.
+
+After signing out, it'll be great to redirect user back to your website. Let's add `http://localhost:3000` as the Post Sign-out URI below, and use it as the parameter when calling `.signOut()`.
+
+<UriInputField appId={props.appId} isSingle={!props.isCompact} name="postLogoutRedirectUris" title="application_details.post_sign_out_redirect_uri" />
+
+### Implement a sign-out button
+
+<pre>
+<code className="language-tsx">
+{`const SignOut = () => {
+  const { signOut } = useLogto();
+
+  return (
+    <button onClick={() => signOut('${props.postLogoutRedirectUris[0] ?? 'http://localhost:3000'}')}>
+      Sign out
+    </button>
+  );
+};`}
+</code>
+</pre>
+
+</Step>
+
+<Step
+  title="Further readings"
+  subtitle="4 articles"
+  index={4}
+  activeIndex={props.activeStepIndex}
+  buttonText="general.done"
+  buttonType="primary"
+  onButtonClick={props.onComplete}
+>
+
+- [Customize sign-in experience](https://docs.logto.io/docs/recipes/customize-sie)
+- [Enable SMS or email passcode sign-in](https://docs.logto.io/docs/tutorials/get-started/enable-passcode-sign-in)
+- [Enable social sign-in](https://docs.logto.io/docs/tutorials/get-started/enable-social-sign-in)
+- [Protect your API](https://docs.logto.io/docs/recipes/protect-your-api)
+
+</Step>

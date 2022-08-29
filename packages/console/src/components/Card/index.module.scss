@@ -1,0 +1,7 @@
+@use '@/scss/underscore' as _;
+
+.card {
+  background: var(--color-layer-1);
+  border-radius: _.unit(4);
+  padding: _.unit(6);
+}
