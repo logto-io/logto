@@ -7,7 +7,7 @@ import RequestError from '@/errors/RequestError';
 import { findDefaultSignInExperience } from '@/queries/sign-in-experience';
 import assertThat from '@/utils/assert-that';
 
-export default function KoaGuardSessionAction<StateT, ContextT, ResponseBodyT>(
+export default function koaGuardSessionAction<StateT, ContextT, ResponseBodyT>(
   provider: Provider,
   forType: 'sign-in' | 'register'
 ): MiddlewareType<StateT, ContextT, ResponseBodyT> {
