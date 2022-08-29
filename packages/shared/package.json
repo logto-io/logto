@@ -3,13 +3,12 @@
   "version": "1.0.0-beta.5",
   "main": "lib/index.js",
   "author": "Silverhand Inc. <contact@silverhand.io>",
-  "license": "MPL-2.0",
+  "license": "MIT",
   "files": [
     "declaration",
     "lib",
     "scss"
   ],
-  "private": true,
   "scripts": {
     "precommit": "lint-staged",
     "build": "rm -rf lib/ && tsc -p tsconfig.build.json",
@@ -47,5 +46,8 @@
   "stylelint": {
     "extends": "@silverhand/eslint-config-react/.stylelintrc"
   },
-  "prettier": "@silverhand/eslint-config/.prettierrc"
+  "prettier": "@silverhand/eslint-config/.prettierrc",
+  "publishConfig": {
+    "access": "public"
+  }
 }
