@@ -1,8 +1,5 @@
 set -eo pipefail
 
-echo Building packages
-pnpm -- lerna run build --stream
-
 echo Prune dependencies
 rm -rf node_modules packages/*/node_modules
 

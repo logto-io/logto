@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - master
-      - 'push-action/**'
+      - "push-action/**"
   pull_request:
 
 concurrency:
@@ -21,13 +21,15 @@ jobs:
       - name: Setup Node and pnpm
         uses: silverhand-io/actions-node-pnpm-run-steps@v1.2.3
 
+      - name: Build
+        run: pnpm -- lerna run build --stream
+
       - name: Add the mock connectors for integration tests only
         run: |
-          unset CI
-          unset GITHUB_ACTIONS
-          lerna add @logto/connector-mock-sms --scope=@logto/core
-          lerna add @logto/connector-mock-email --scope=@logto/core
-          lerna add @logto/connector-mock-social --scope=@logto/core
+          pnpm add-connector @logto/connector-mock-sms
+          pnpm add-connector @logto/connector-mock-email
+          pnpm add-connector @logto/connector-mock-social
+        working-directory: packages/core
 
       - name: Package
         run: ./package.sh
@@ -88,7 +90,6 @@ jobs:
           INTEGRATION_TEST: true
           NODE_ENV: production
           DB_URL_DEFAULT: postgres://postgres:postgres@localhost:5432
-          ADDITIONAL_CONNECTOR_PACKAGES: '@logto/connector-mock-sms,@logto/connector-mock-email,@logto/connector-mock-social'
 
       - name: Sleep for 5 seconds
         run: sleep 5

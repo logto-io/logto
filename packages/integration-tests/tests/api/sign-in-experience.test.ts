@@ -1,13 +1,13 @@
 import { BrandingStyle, SignInMethodState } from '@logto/schemas';
 
 import {
+  mockEmailConnectorConfig,
+  mockEmailConnectorId,
+  mockSmsConnectorConfig,
+  mockSmsConnectorId,
   mockSocialConnectorConfig,
   mockSocialConnectorId,
   mockSocialConnectorTarget,
-  twilioSmsConnectorConfig,
-  twilioSmsConnectorId,
-  sendgridEmailConnectorConfig,
-  sendgridEmailConnectorId,
 } from '@/__mocks__/connectors-mock';
 import { getSignInExperience, updateSignInExperience } from '@/api';
 import { updateConnectorConfig, enableConnector, disableConnector } from '@/api/connector';
@@ -48,11 +48,11 @@ describe('admin console sign-in experience', () => {
       updateConnectorConfig(mockSocialConnectorId, mockSocialConnectorConfig).then(async () =>
         enableConnector(mockSocialConnectorId)
       ),
-      updateConnectorConfig(twilioSmsConnectorId, twilioSmsConnectorConfig).then(async () =>
-        enableConnector(twilioSmsConnectorId)
+      updateConnectorConfig(mockSmsConnectorId, mockSmsConnectorConfig).then(async () =>
+        enableConnector(mockSmsConnectorId)
       ),
-      updateConnectorConfig(sendgridEmailConnectorId, sendgridEmailConnectorConfig).then(async () =>
-        enableConnector(sendgridEmailConnectorId)
+      updateConnectorConfig(mockEmailConnectorId, mockEmailConnectorConfig).then(async () =>
+        enableConnector(mockEmailConnectorId)
       ),
     ]);
 
@@ -74,8 +74,8 @@ describe('admin console sign-in experience', () => {
     // Reset connectors
     await Promise.all([
       disableConnector(mockSocialConnectorId),
-      disableConnector(twilioSmsConnectorId),
-      disableConnector(sendgridEmailConnectorId),
+      disableConnector(mockSmsConnectorId),
+      disableConnector(mockEmailConnectorId),
     ]);
   });
 });

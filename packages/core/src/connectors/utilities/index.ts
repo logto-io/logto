@@ -1,3 +1,7 @@
+import { existsSync } from 'fs';
+import { readFile } from 'fs/promises';
+import path from 'path';
+
 import {
   BaseConnector,
   ConnectorError,
@@ -33,3 +37,29 @@ export function validateConnectorModule(
     throw new ConnectorError(ConnectorErrorCodes.UnexpectedType);
   }
 }
+
+export const readUrl = async (
+  url: string,
+  baseUrl: string,
+  type: 'text' | 'svg'
+): Promise<string> => {
+  if (!url) {
+    return url;
+  }
+
+  if (type !== 'text' && url.startsWith('http')) {
+    return url;
+  }
+
+  if (!existsSync(path.join(baseUrl, url))) {
+    return url;
+  }
+
+  if (type === 'svg') {
+    const data = await readFile(path.join(baseUrl, url));
+
+    return `data:image/svg+xml;base64,${data.toString('base64')}`;
+  }
+
+  return readFile(path.join(baseUrl, url), 'utf8');
+};
