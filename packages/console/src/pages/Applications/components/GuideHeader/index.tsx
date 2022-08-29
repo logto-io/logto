@@ -38,6 +38,8 @@ const getSampleProjectUrl = (sdk: SupportedSdk) => {
       return `${githubUrlPrefix}/js/tree/master/packages/next-sample`;
     case SupportedSdk.Express:
       return `${githubUrlPrefix}/js/tree/master/packages/express-sample`;
+    case SupportedSdk.GoWeb:
+      return `${githubUrlPrefix}/go/tree/master/gin-sample`;
     default:
       return '';
   }
