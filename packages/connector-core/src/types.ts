@@ -40,9 +40,9 @@ export enum ConnectorErrorCodes {
   InvalidResponse = 'invalid_response',
   TemplateNotFound = 'template_not_found',
   NotImplemented = 'not_implemented',
-  SocialAuthCodeInvalid = 'oauth_code_invalid',
-  SocialAccessTokenInvalid = 'invalid_access_token',
-  SocialIdTokenInvalid = 'invalid_id_token',
+  SocialAuthCodeInvalid = 'social_auth_code_invalid',
+  SocialAccessTokenInvalid = 'social_invalid_access_token',
+  SocialIdTokenInvalid = 'social_invalid_id_token',
   AuthorizationFailed = 'authorization_failed',
 }
 

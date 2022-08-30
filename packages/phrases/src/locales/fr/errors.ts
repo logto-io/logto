@@ -67,18 +67,18 @@ const errors = {
     general: "Une erreur inattendue s'est produite dans le connecteur. {{errorDescription}}",
     not_found: 'Impossible de trouver un connecteur disponible pour le type : {{type}}.',
     not_enabled: "Le connecteur n'est pas activé.",
-    invalid_metadata: "The connector's metadata is invalid.", // TODO: need to check FR translation
+    invalid_metadata: "The connector's metadata is invalid.", // UNTRANSLATED: need to check FR translation
     invalid_config_guard: "The connector's config guard is invalid.",
     insufficient_request_parameters: 'Certains paramètres peuvent manquer dans la requête.',
     invalid_config: "La configuration du connecteur n'est pas valide.",
     invalid_response: "La réponse du connecteur n'est pas valide.",
     template_not_found: 'Impossible de trouver le bon modèle dans la configuration du connecteur.',
     not_implemented: "{{method}} : n'a pas encore été mis en œuvre.",
-    invalid_access_token: "Le jeton d'accès du connecteur n'est pas valide.",
+    social_invalid_access_token: "Le jeton d'accès du connecteur n'est pas valide.",
     invalid_auth_code: "Le code d'authentification du connecteur n'est pas valide.",
-    invalid_id_token: "Le jeton d'identification du connecteur n'est pas valide.",
+    social_invalid_id_token: "Le jeton d'identification du connecteur n'est pas valide.",
     authorization_failed: "Le processus d'autorisation de l'utilisateur n'a pas abouti.",
-    oauth_code_invalid:
+    social_auth_code_invalid:
       "Impossible d'obtenir le jeton d'accès, veuillez vérifier le code d'autorisation.",
     more_than_one_sms: 'Le nombre de connecteurs SMS est supérieur à 1.',
     more_than_one_email: 'Le nombre de connecteurs Email est supérieur à 1.',
