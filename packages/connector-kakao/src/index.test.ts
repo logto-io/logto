@@ -69,16 +69,20 @@ describe('kakao connector', () => {
     });
 
     it('should get valid SocialUserInfo', async () => {
-      nock(userInfoEndpoint).post('').reply(200, {
-        sub: '1234567890',
-        name: 'monalisa octocat',
-        given_name: 'monalisa',
-        family_name: 'octocat',
-        picture: 'https://github.com/images/error/octocat_happy.gif',
-        email: 'octocat@google.com',
-        email_verified: true,
-        locale: 'en',
-      });
+      nock(userInfoEndpoint)
+        .post('')
+        .reply(200, {
+          id: 1_234_567_890,
+          kakao_account: {
+            is_email_valid: true,
+            email: 'ruddbs5302@gmail.com',
+            profile: {
+              nickname: 'pemassi',
+              profile_image_url: 'https://github.com/images/error/octocat_happy.gif',
+              is_default_image: false,
+            },
+          },
+        });
       const connector = await createConnector({ getConfig });
       const socialUserInfo = await connector.getUserInfo({
         code: 'code',
@@ -87,8 +91,8 @@ describe('kakao connector', () => {
       expect(socialUserInfo).toMatchObject({
         id: '1234567890',
         avatar: 'https://github.com/images/error/octocat_happy.gif',
-        name: 'monalisa octocat',
-        email: 'octocat@google.com',
+        name: 'pemassi',
+        email: 'ruddbs5302@gmail.com',
       });
     });
 
