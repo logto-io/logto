@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.0-beta.6](https://github.com/logto-io/logto/compare/v1.0.0-beta.5...v1.0.0-beta.6) (2022-08-30)
+
+
+### Features
+
+* **core:** guard session with sign-in mode ([a8a3de3](https://github.com/logto-io/logto/commit/a8a3de35443cec485a435d51b452af0f9a56ed28))
+
+
+
 ## [1.0.0-beta.5](https://github.com/logto-io/logto/compare/v1.0.0-beta.4...v1.0.0-beta.5) (2022-08-19)
 
 

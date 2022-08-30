@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.0-beta.6](https://github.com/logto-io/logto/compare/v1.0.0-beta.5...v1.0.0-beta.6) (2022-08-30)
+
+
+### Features
+
+* **console:** allow to disable create account ([#1806](https://github.com/logto-io/logto/issues/1806)) ([67305ec](https://github.com/logto-io/logto/commit/67305ec407d8a5ea1956e37df6dae2bdff012c06))
+
+
+
 ## [1.0.0-beta.5](https://github.com/logto-io/logto/compare/v1.0.0-beta.4...v1.0.0-beta.5) (2022-08-19)
 
 

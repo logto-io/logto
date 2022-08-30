@@ -1,6 +1,6 @@
 {
   "name": "@logto/connector-mock-social",
-  "version": "1.0.0-beta.5",
+  "version": "1.0.0-beta.6",
   "description": "Social mock connector implementation.",
   "main": "./lib/index.js",
   "exports": "./lib/index.js",
@@ -22,8 +22,8 @@
     "prepack": "pnpm build"
   },
   "dependencies": {
-    "@logto/connector-core": "^1.0.0-beta.5",
-    "@logto/schemas": "^1.0.0-beta.5",
+    "@logto/connector-core": "^1.0.0-beta.6",
+    "@logto/schemas": "^1.0.0-beta.6",
     "@silverhand/essentials": "^1.2.0",
     "zod": "^3.14.3"
   },
