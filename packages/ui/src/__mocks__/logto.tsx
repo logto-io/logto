@@ -1,4 +1,3 @@
-import { Language } from '@logto/phrases-ui';
 import {
   BrandingStyle,
   ConnectorPlatform,
@@ -166,8 +165,8 @@ export const mockSignInExperience: SignInExperience = {
   },
   languageInfo: {
     autoDetect: true,
-    fallbackLanguage: Language.English,
-    fixedLanguage: Language.Chinese,
+    fallbackLanguage: 'en',
+    fixedLanguage: 'zh-CN',
   },
   signInMethods: {
     username: SignInMethodState.Primary,

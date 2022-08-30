@@ -1,5 +1,5 @@
-import { Language } from '@logto/phrases-ui';
 import { SignInExperience, ConnectorMetadata, AppearanceMode } from '@logto/schemas';
+import type { LanguageKey } from '@logto/shared';
 
 export type UserFlow = 'sign-in' | 'register';
 export type SignInMethod = 'username' | 'email' | 'sms' | 'social';
@@ -36,7 +36,7 @@ export enum TermsOfUseModalMessage {
 
 export type PreviewConfig = {
   signInExperience: SignInExperienceSettingsResponse;
-  language: Language;
+  language: LanguageKey;
   mode: AppearanceMode.LightMode | AppearanceMode.DarkMode;
   platform: Platform;
   isNative: boolean;

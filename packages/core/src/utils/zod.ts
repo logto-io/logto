@@ -4,6 +4,7 @@ import { OpenAPIV3 } from 'openapi-types';
 import {
   ZodArray,
   ZodBoolean,
+  ZodEnum,
   ZodLiteral,
   ZodNativeEnum,
   ZodNullable,
@@ -111,7 +112,7 @@ export const zodTypeToSwagger = (config: unknown): OpenAPIV3.SchemaObject => {
     };
   }
 
-  if (config instanceof ZodNativeEnum) {
+  if (config instanceof ZodNativeEnum || config instanceof ZodEnum) {
     return {
       type: 'string',
       enum: Object.values(config.enum),

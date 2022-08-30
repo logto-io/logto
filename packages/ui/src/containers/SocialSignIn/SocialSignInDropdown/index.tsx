@@ -1,4 +1,4 @@
-import { Language } from '@logto/phrases-ui';
+import { languageKeyGuard } from '@logto/shared';
 import { useState, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -48,7 +48,7 @@ const SocialSignInDropdown = ({ isOpen, onClose, connectors, anchorRef }: Props)
     >
       {connectors.map((connector) => {
         const { id, name, logo, logoDark } = connector;
-        const localName = isKeyOf(language, name) ? name[language] : name[Language.English];
+        const localName = name[languageKeyGuard.default('en').parse(language)];
 
         return (
           <DropdownItem

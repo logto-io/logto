@@ -1,5 +1,4 @@
-import { Language } from '@logto/phrases-ui';
-import { hexColorRegEx } from '@logto/shared';
+import { hexColorRegEx, languageKeys } from '@logto/shared';
 import { z } from 'zod';
 
 /**
@@ -103,8 +102,8 @@ export type TermsOfUse = z.infer<typeof termsOfUseGuard>;
 
 export const languageInfoGuard = z.object({
   autoDetect: z.boolean(),
-  fallbackLanguage: z.nativeEnum(Language),
-  fixedLanguage: z.nativeEnum(Language),
+  fallbackLanguage: z.enum(languageKeys),
+  fixedLanguage: z.enum(languageKeys),
 });
 
 export type LanguageInfo = z.infer<typeof languageInfoGuard>;

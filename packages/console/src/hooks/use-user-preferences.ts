@@ -1,6 +1,6 @@
-import { Language } from '@logto/phrases';
 import { useLogto } from '@logto/react';
 import { AppearanceMode } from '@logto/schemas';
+import { languageKeys } from '@logto/shared';
 import { Nullable, Optional } from '@silverhand/essentials';
 import { useCallback, useEffect, useMemo } from 'react';
 import useSWR from 'swr';
@@ -11,7 +11,7 @@ import { themeStorageKey } from '@/consts';
 import useApi, { RequestError } from './use-api';
 
 const userPreferencesGuard = z.object({
-  language: z.nativeEnum(Language).optional(),
+  language: z.enum(languageKeys).optional(),
   appearanceMode: z.nativeEnum(AppearanceMode),
   experienceNoticeConfirmed: z.boolean().optional(),
   getStartedHidden: z.boolean().optional(),
