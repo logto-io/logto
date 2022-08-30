@@ -1,5 +1,5 @@
-import { Language } from '@logto/phrases';
 import { SignInExperience, SignInMethodKey } from '@logto/schemas';
+import type { LanguageKey } from '@logto/shared';
 
 export enum LanguageMode {
   Auto = 'Auto',
@@ -17,8 +17,8 @@ export type SignInExperienceForm = Omit<SignInExperience, 'signInMethods' | 'lan
   };
   languageInfo: {
     mode: LanguageMode;
-    fixedLanguage: Language;
-    fallbackLanguage: Language;
+    fixedLanguage: LanguageKey;
+    fallbackLanguage: LanguageKey;
   };
   createAccountEnabled: boolean;
 };

@@ -1,5 +1,5 @@
-import { Language } from '@logto/phrases';
 import { CreateSignInExperience, SignInExperience, SignInMethodState } from '@logto/schemas';
+import { languageKeys } from '@logto/shared';
 
 import {
   mockAliyunDmConnector,
@@ -104,7 +104,7 @@ describe('languageInfo', () => {
     });
   });
 
-  const validLanguages = Object.values(Language);
+  const validLanguages = languageKeys;
   const invalidLanguages = [undefined, null, '', ' \t\n\r', 'abc'];
 
   describe('fallbackLanguage', () => {

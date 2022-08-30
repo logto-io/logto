@@ -29,8 +29,8 @@
     "url": "https://github.com/logto-io/logto/issues"
   },
   "dependencies": {
-    "@silverhand/essentials": "^1.2.0",
-    "zod": "^3.14.3"
+    "@logto/shared": "^1.0.0-beta.6",
+    "@silverhand/essentials": "^1.2.0"
   },
   "devDependencies": {
     "@silverhand/eslint-config": "1.0.0-rc.2",

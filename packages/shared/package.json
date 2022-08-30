@@ -23,7 +23,8 @@
   },
   "dependencies": {
     "color": "^4.2.3",
-    "nanoid": "^3.1.23"
+    "nanoid": "^3.1.23",
+    "zod": "^3.18.0"
   },
   "devDependencies": {
     "@silverhand/eslint-config": "1.0.0-rc.2",

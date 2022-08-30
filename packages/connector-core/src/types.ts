@@ -1,4 +1,4 @@
-import type { Language } from '@logto/phrases';
+import type { LanguageKey } from '@logto/shared';
 import { Nullable } from '@silverhand/essentials';
 import { z, ZodType } from 'zod';
 
@@ -14,8 +14,8 @@ export enum ConnectorPlatform {
   Web = 'Web',
 }
 
-type I18nPhrases = { [Language.English]: string } & {
-  [key in Exclude<Language, Language.English>]?: string;
+type I18nPhrases = { en: string } & {
+  [K in Exclude<LanguageKey, 'en'>]?: string;
 };
 
 export type ConnectorMetadata = {

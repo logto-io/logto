@@ -1,4 +1,3 @@
-import { Language } from '@logto/phrases';
 import {
   Branding,
   BrandingStyle,
@@ -28,8 +27,8 @@ export const mockSignInExperience: SignInExperience = {
   },
   languageInfo: {
     autoDetect: true,
-    fallbackLanguage: Language.English,
-    fixedLanguage: Language.Chinese,
+    fallbackLanguage: 'en',
+    fixedLanguage: 'zh-CN',
   },
   signInMethods: {
     username: SignInMethodState.Primary,
@@ -60,8 +59,8 @@ export const mockTermsOfUse: TermsOfUse = {
 
 export const mockLanguageInfo: LanguageInfo = {
   autoDetect: true,
-  fallbackLanguage: Language.English,
-  fixedLanguage: Language.Chinese,
+  fallbackLanguage: 'en',
+  fixedLanguage: 'zh-CN',
 };
 
 export const mockSignInMethods: SignInMethods = {

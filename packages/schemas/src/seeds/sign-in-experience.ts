@@ -1,4 +1,3 @@
-import { Language } from '@logto/phrases-ui';
 import { generateDarkColor } from '@logto/shared';
 
 import { CreateSignInExperience, SignInMode } from '../db-entries';
@@ -20,8 +19,8 @@ export const defaultSignInExperience: Readonly<CreateSignInExperience> = {
   },
   languageInfo: {
     autoDetect: true,
-    fallbackLanguage: Language.English,
-    fixedLanguage: Language.English,
+    fallbackLanguage: 'en',
+    fixedLanguage: 'en',
   },
   termsOfUse: {
     enabled: false,
