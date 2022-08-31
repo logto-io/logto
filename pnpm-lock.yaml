@@ -426,7 +426,6 @@ importers:
     specifiers:
       '@jest/types': ^28.1.3
       '@logto/connector-core': ^1.0.0-beta.5
-      '@logto/shared': ^1.0.0-beta.5
       '@silverhand/eslint-config': 1.0.0-rc.2
       '@silverhand/essentials': ^1.2.0
       '@silverhand/jest-config': 1.0.0-rc.3
@@ -444,7 +443,6 @@ importers:
       zod: ^3.14.3
     dependencies:
       '@logto/connector-core': link:../connector-core
-      '@logto/shared': link:../shared
       '@silverhand/essentials': 1.2.0
       '@silverhand/jest-config': 1.0.0-rc.3_bi2kohzqnxavgozw3csgny5hju
       got: 11.8.3
