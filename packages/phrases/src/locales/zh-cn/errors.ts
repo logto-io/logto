@@ -65,6 +65,7 @@ const errors = {
     invalid_config_guard: '连接器配置 guard 错误',
     unexpected_type: '连接器类型错误',
     insufficient_request_parameters: '请求参数缺失',
+    invalid_request_parameters: '请求参数错误',
     invalid_config: '连接器配置错误',
     invalid_response: '连接器错误响应',
     template_not_found: '无法从连接器配置中找到对应的模板',

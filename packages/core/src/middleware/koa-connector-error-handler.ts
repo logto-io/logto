@@ -23,6 +23,7 @@ export default function koaConnectorErrorHandler<StateT, ContextT>(): Middleware
       switch (code) {
         case ConnectorErrorCodes.InvalidMetadata:
         case ConnectorErrorCodes.InvalidConfigGuard:
+        case ConnectorErrorCodes.InvalidRequestParameters:
         case ConnectorErrorCodes.InsufficientRequestParameters:
         case ConnectorErrorCodes.InvalidConfig:
         case ConnectorErrorCodes.InvalidResponse:
