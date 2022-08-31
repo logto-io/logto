@@ -1,4 +1,4 @@
-import { ConnectorMetadata, ConnectorPlatform, ConnectorType } from '@logto/connector-core';
+import { ConnectorMetadata, ConnectorPlatform } from '@logto/connector-core';
 
 export const authorizationEndpoint = 'https://kauth.kakao.com/oauth/authorize';
 export const accessTokenEndpoint = 'https://kauth.kakao.com/oauth/token';
@@ -7,7 +7,6 @@ export const userInfoEndpoint = 'https://kapi.kakao.com/v2/user/me';
 export const defaultMetadata: ConnectorMetadata = {
   id: 'kakao-universal',
   target: 'kakao',
-  type: ConnectorType.Social,
   platform: ConnectorPlatform.Universal,
   name: {
     en: 'Kakao',

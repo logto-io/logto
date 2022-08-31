@@ -5,6 +5,7 @@
 import {
   ConnectorError,
   ConnectorErrorCodes,
+  ConnectorType,
   CreateConnector,
   GetAuthorizationUri,
   GetConnectorConfig,
@@ -147,6 +148,7 @@ const getUserInfoErrorHandler = (error: unknown) => {
 const createKakaoConnector: CreateConnector<SocialConnector> = async ({ getConfig }) => {
   return {
     metadata: defaultMetadata,
+    type: ConnectorType.Social,
     configGuard: kakaoConfigGuard,
     getAuthorizationUri: getAuthorizationUri(getConfig),
     getUserInfo: getUserInfo(getConfig),
