@@ -64,7 +64,7 @@ export const sendPasscode = async (passcode: Passcode) => {
     connector,
     new RequestError({
       code: 'connector.not_found',
-      type: passcode.email ? ConnectorType.Email : ConnectorType.Sms,
+      type: expectType,
     })
   );
 

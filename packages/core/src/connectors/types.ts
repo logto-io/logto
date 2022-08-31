@@ -16,10 +16,16 @@ export const socialUserInfoGuard = z.object({
 
 export type SocialUserInfo = z.infer<typeof socialUserInfoGuard>;
 
+/**
+ * Dynamic loaded connector type.
+ */
 export type LoadConnector<T extends AllConnector = AllConnector> = T & {
   validateConfig: (config: unknown) => void;
 };
 
+/**
+ * The connector type with full context.
+ */
 export type LogtoConnector<T extends AllConnector = AllConnector> = LoadConnector<T> & {
   dbEntry: Connector;
 };
