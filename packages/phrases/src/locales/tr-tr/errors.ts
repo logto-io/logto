@@ -63,8 +63,8 @@ const errors = {
     general: 'Bağlayıcıda beklenmeyen bir hata oldu.{{errorDescription}}',
     not_found: '{{type}} tipi icin uygun bağlayıcı bulunamadı.',
     not_enabled: 'Bağlayıcı etkin değil.',
-    invalid_metadata: "The connector's metadata is invalid.", // UNTRANSLATED: need to check TR_TR translation
-    invalid_config_guard: "The connector's config guard is invalid.",
+    invalid_metadata: "The connector's metadata is invalid.", // UNTRANSLATED
+    invalid_config_guard: "The connector's config guard is invalid.", // UNTRANSLATED
     insufficient_request_parameters: 'İstek, bazı input parametrelerini atlayabilir.',
     invalid_config: 'Bağlayıcının ayarları geçersiz.',
     invalid_response: 'Bağlayıcının yanıtı geçersiz.',
