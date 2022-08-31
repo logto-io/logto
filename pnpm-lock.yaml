@@ -31,6 +31,7 @@ importers:
       '@types/lodash.pick': ^4.4.6
       '@types/node': ^16.3.1
       '@types/supertest': ^2.0.11
+      '@vercel/ncc': ^0.34.0
       dayjs: ^1.10.5
       eslint: ^8.21.0
       got: ^11.8.2
@@ -62,6 +63,7 @@ importers:
       '@types/lodash.pick': 4.4.6
       '@types/node': 16.11.12
       '@types/supertest': 2.0.11
+      '@vercel/ncc': 0.34.0
       eslint: 8.21.0
       jest: 28.1.3_@types+node@16.11.12
       jest-matcher-specific-error: 1.0.0
@@ -84,6 +86,7 @@ importers:
       '@types/lodash.pick': ^4.4.6
       '@types/node': ^16.3.1
       '@types/supertest': ^2.0.11
+      '@vercel/ncc': ^0.34.0
       dayjs: ^1.10.5
       eslint: ^8.21.0
       got: ^11.8.2
@@ -115,6 +118,7 @@ importers:
       '@types/lodash.pick': 4.4.6
       '@types/node': 16.11.12
       '@types/supertest': 2.0.11
+      '@vercel/ncc': 0.34.0
       eslint: 8.21.0
       jest: 28.1.3_@types+node@16.11.12
       jest-matcher-specific-error: 1.0.0
@@ -134,6 +138,7 @@ importers:
       '@silverhand/ts-config': 1.0.0-rc.2
       '@types/jest': ^28.1.6
       '@types/node': ^16.3.1
+      '@vercel/ncc': ^0.34.0
       eslint: ^8.21.0
       got: ^11.8.2
       jest: ^28.1.3
@@ -153,6 +158,7 @@ importers:
       '@silverhand/ts-config': 1.0.0-rc.2_typescript@4.7.4
       '@types/jest': 28.1.6
       '@types/node': 16.11.12
+      '@vercel/ncc': 0.34.0
       eslint: 8.21.0
       jest: 28.1.3_@types+node@16.11.12
       lint-staged: 13.0.0
@@ -169,6 +175,7 @@ importers:
       '@silverhand/ts-config': 1.0.0-rc.2
       '@types/jest': ^28.1.6
       '@types/node': ^16.3.1
+      '@vercel/ncc': ^0.34.0
       eslint: ^8.21.0
       got: ^11.8.2
       jest: ^28.1.3
@@ -188,6 +195,7 @@ importers:
       '@silverhand/ts-config': 1.0.0-rc.2_typescript@4.7.4
       '@types/jest': 28.1.6
       '@types/node': 16.11.12
+      '@vercel/ncc': 0.34.0
       eslint: 8.21.0
       jest: 28.1.3_@types+node@16.11.12
       lint-staged: 13.0.0
@@ -204,6 +212,7 @@ importers:
       '@silverhand/ts-config': 1.0.0-rc.2
       '@types/jest': ^28.1.6
       '@types/node': ^16.3.1
+      '@vercel/ncc': ^0.34.0
       eslint: ^8.21.0
       got: ^11.8.2
       jest: ^28.1.3
@@ -227,6 +236,7 @@ importers:
       '@silverhand/ts-config': 1.0.0-rc.2_typescript@4.7.4
       '@types/jest': 28.1.6
       '@types/node': 16.11.12
+      '@vercel/ncc': 0.34.0
       eslint: 8.21.0
       jest: 28.1.3_@types+node@16.11.12
       jest-matcher-specific-error: 1.0.0
@@ -246,6 +256,7 @@ importers:
       '@silverhand/ts-config': 1.0.0-rc.2
       '@types/jest': ^28.1.6
       '@types/node': ^16.3.1
+      '@vercel/ncc': ^0.34.0
       axios: ^0.27.2
       eslint: ^8.21.0
       got: ^11.8.2
@@ -270,6 +281,7 @@ importers:
       '@silverhand/ts-config': 1.0.0-rc.2_typescript@4.7.4
       '@types/jest': 28.1.6
       '@types/node': 16.11.12
+      '@vercel/ncc': 0.34.0
       eslint: 8.21.0
       jest: 28.1.3_@types+node@16.11.12
       jest-matcher-specific-error: 1.0.0
@@ -313,6 +325,7 @@ importers:
       '@silverhand/ts-config': 1.0.0-rc.2
       '@types/jest': ^28.1.6
       '@types/node': ^16.3.1
+      '@vercel/ncc': ^0.34.0
       eslint: ^8.21.0
       got: ^11.8.2
       jest: ^28.1.3
@@ -334,6 +347,7 @@ importers:
       '@silverhand/ts-config': 1.0.0-rc.2_typescript@4.7.4
       '@types/jest': 28.1.6
       '@types/node': 16.11.12
+      '@vercel/ncc': 0.34.0
       eslint: 8.21.0
       jest: 28.1.3_@types+node@16.11.12
       jest-matcher-specific-error: 1.0.0
@@ -352,6 +366,7 @@ importers:
       '@silverhand/ts-config': 1.0.0-rc.2
       '@types/jest': ^28.1.6
       '@types/node': ^16.3.1
+      '@vercel/ncc': ^0.34.0
       eslint: ^8.21.0
       got: ^11.8.2
       jest: ^28.1.3
@@ -375,6 +390,7 @@ importers:
       '@silverhand/ts-config': 1.0.0-rc.2_typescript@4.7.4
       '@types/jest': 28.1.6
       '@types/node': 16.11.12
+      '@vercel/ncc': 0.34.0
       eslint: 8.21.0
       jest: 28.1.3_@types+node@16.11.12
       jest-matcher-specific-error: 1.0.0
@@ -393,6 +409,7 @@ importers:
       '@silverhand/ts-config': 1.0.0-rc.2
       '@types/jest': ^28.1.6
       '@types/node': ^16.3.1
+      '@vercel/ncc': ^0.34.0
       eslint: ^8.21.0
       got: ^11.8.2
       jest: ^28.1.3
@@ -414,6 +431,7 @@ importers:
       '@silverhand/ts-config': 1.0.0-rc.2_typescript@4.7.4
       '@types/jest': 28.1.6
       '@types/node': 16.11.12
+      '@vercel/ncc': 0.34.0
       eslint: 8.21.0
       jest: 28.1.3_@types+node@16.11.12
       jest-matcher-specific-error: 1.0.0
@@ -432,6 +450,7 @@ importers:
       '@silverhand/ts-config': 1.0.0-rc.2
       '@types/jest': ^28.1.6
       '@types/node': ^16.3.1
+      '@vercel/ncc': ^0.34.0
       eslint: ^8.21.0
       got: ^11.8.2
       jest: ^28.1.3
@@ -453,6 +472,7 @@ importers:
       '@silverhand/ts-config': 1.0.0-rc.2_typescript@4.7.4
       '@types/jest': 28.1.6
       '@types/node': 16.11.12
+      '@vercel/ncc': 0.34.0
       eslint: 8.21.0
       jest: 28.1.3_@types+node@16.11.12
       jest-matcher-specific-error: 1.0.0
@@ -468,6 +488,7 @@ importers:
       '@silverhand/essentials': ^1.2.0
       '@silverhand/ts-config': 1.0.0-rc.2
       '@types/node': ^16.3.1
+      '@vercel/ncc': ^0.34.0
       eslint: ^8.21.0
       lint-staged: ^13.0.0
       prettier: ^2.7.1
@@ -481,6 +502,7 @@ importers:
       '@silverhand/eslint-config': 1.0.0-rc.2_swk2g7ygmfleszo5c33j4vooni
       '@silverhand/ts-config': 1.0.0-rc.2_typescript@4.7.4
       '@types/node': 16.11.12
+      '@vercel/ncc': 0.34.0
       eslint: 8.21.0
       lint-staged: 13.0.0
       prettier: 2.7.1
@@ -493,6 +515,7 @@ importers:
       '@silverhand/essentials': ^1.2.0
       '@silverhand/ts-config': 1.0.0-rc.2
       '@types/node': ^16.3.1
+      '@vercel/ncc': ^0.34.0
       eslint: ^8.21.0
       lint-staged: ^13.0.0
       prettier: ^2.7.1
@@ -506,6 +529,7 @@ importers:
       '@silverhand/eslint-config': 1.0.0-rc.2_swk2g7ygmfleszo5c33j4vooni
       '@silverhand/ts-config': 1.0.0-rc.2_typescript@4.7.4
       '@types/node': 16.11.12
+      '@vercel/ncc': 0.34.0
       eslint: 8.21.0
       lint-staged: 13.0.0
       prettier: 2.7.1
@@ -519,6 +543,7 @@ importers:
       '@silverhand/essentials': ^1.2.0
       '@silverhand/ts-config': 1.0.0-rc.2
       '@types/node': ^16.3.1
+      '@vercel/ncc': ^0.34.0
       eslint: ^8.21.0
       lint-staged: ^13.0.0
       prettier: ^2.7.1
@@ -533,6 +558,7 @@ importers:
       '@silverhand/eslint-config': 1.0.0-rc.2_swk2g7ygmfleszo5c33j4vooni
       '@silverhand/ts-config': 1.0.0-rc.2_typescript@4.7.4
       '@types/node': 16.11.12
+      '@vercel/ncc': 0.34.0
       eslint: 8.21.0
       lint-staged: 13.0.0
       prettier: 2.7.1
@@ -548,6 +574,7 @@ importers:
       '@silverhand/ts-config': 1.0.0-rc.2
       '@types/jest': ^28.1.6
       '@types/node': ^16.3.1
+      '@vercel/ncc': ^0.34.0
       eslint: ^8.21.0
       got: ^11.8.2
       jest: ^28.1.3
@@ -567,6 +594,7 @@ importers:
       '@silverhand/ts-config': 1.0.0-rc.2_typescript@4.7.4
       '@types/jest': 28.1.6
       '@types/node': 16.11.12
+      '@vercel/ncc': 0.34.0
       eslint: 8.21.0
       jest: 28.1.3_@types+node@16.11.12
       lint-staged: 13.0.0
@@ -585,6 +613,7 @@ importers:
       '@types/jest': ^28.1.6
       '@types/node': ^16.3.1
       '@types/nodemailer': ^6.4.4
+      '@vercel/ncc': ^0.34.0
       eslint: ^8.21.0
       jest: ^28.1.3
       lint-staged: ^13.0.0
@@ -606,6 +635,7 @@ importers:
       '@types/jest': 28.1.6
       '@types/node': 16.11.12
       '@types/nodemailer': 6.4.4
+      '@vercel/ncc': 0.34.0
       eslint: 8.21.0
       jest: 28.1.3_@types+node@16.11.12
       lint-staged: 13.0.0
@@ -622,6 +652,7 @@ importers:
       '@silverhand/ts-config': 1.0.0-rc.2
       '@types/jest': ^28.1.6
       '@types/node': ^16.3.1
+      '@vercel/ncc': ^0.34.0
       eslint: ^8.21.0
       got: ^11.8.2
       jest: ^28.1.3
@@ -641,6 +672,7 @@ importers:
       '@silverhand/ts-config': 1.0.0-rc.2_typescript@4.7.4
       '@types/jest': 28.1.6
       '@types/node': 16.11.12
+      '@vercel/ncc': 0.34.0
       eslint: 8.21.0
       jest: 28.1.3_@types+node@16.11.12
       lint-staged: 13.0.0
@@ -657,6 +689,7 @@ importers:
       '@silverhand/ts-config': 1.0.0-rc.2
       '@types/jest': ^28.1.6
       '@types/node': ^16.3.1
+      '@vercel/ncc': ^0.34.0
       eslint: ^8.21.0
       got: ^11.8.2
       jest: ^28.1.3
@@ -678,6 +711,7 @@ importers:
       '@silverhand/ts-config': 1.0.0-rc.2_typescript@4.7.4
       '@types/jest': 28.1.6
       '@types/node': 16.11.12
+      '@vercel/ncc': 0.34.0
       eslint: 8.21.0
       jest: 28.1.3_@types+node@16.11.12
       jest-matcher-specific-error: 1.0.0
@@ -696,6 +730,7 @@ importers:
       '@silverhand/ts-config': 1.0.0-rc.2
       '@types/jest': ^28.1.6
       '@types/node': ^16.3.1
+      '@vercel/ncc': ^0.34.0
       eslint: ^8.21.0
       got: ^11.8.2
       jest: ^28.1.3
@@ -717,6 +752,7 @@ importers:
       '@silverhand/ts-config': 1.0.0-rc.2_typescript@4.7.4
       '@types/jest': 28.1.6
       '@types/node': 16.11.12
+      '@vercel/ncc': 0.34.0
       eslint: 8.21.0
       jest: 28.1.3_@types+node@16.11.12
       jest-matcher-specific-error: 1.0.0
@@ -5409,6 +5445,11 @@ packages:
     dependencies:
       '@typescript-eslint/types': 5.32.0
       eslint-visitor-keys: 3.3.0
+    dev: true
+
+  /@vercel/ncc/0.34.0:
+    resolution: {integrity: sha512-G9h5ZLBJ/V57Ou9vz5hI8pda/YQX5HQszCs3AmIus3XzsmRn/0Ptic5otD3xVST8QLKk7AMk7AqpsyQGN7MZ9A==}
+    hasBin: true
     dev: true
 
   /JSONStream/1.3.5:
