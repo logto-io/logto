@@ -88,6 +88,12 @@ const wechatNativeConnector = {
   config: {},
   createdAt: 1_646_382_233_000,
 };
+const kakaoConnector = {
+  id: 'kakao-universal',
+  enabled: false,
+  config: {},
+  createdAt: 1_646_382_233_000,
+};
 
 const connectors = [
   alipayConnector,
@@ -104,6 +110,7 @@ const connectors = [
   twilioSmsConnector,
   wechatConnector,
   wechatNativeConnector,
+  kakaoConnector,
 ];
 
 const findAllConnectors = jest.fn(async () => connectors);

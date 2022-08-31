@@ -17,6 +17,7 @@ export const defaultConnectorPackages = [
   '@logto/connector-twilio-sms',
   '@logto/connector-wechat-web',
   '@logto/connector-wechat-native',
+  '@logto/connector-kakao',
 ];
 
 const notImplemented = () => {
