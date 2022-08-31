@@ -22,7 +22,7 @@ type I18nPhrases = { en: string } & {
 export enum ConnectorErrorCodes {
   General = 'general',
   InvalidMetadata = 'invalid_metadata',
-  InvalidType = 'invalid_type',
+  UnexpectedType = 'unexpected_type',
   InvalidConfigGuard = 'invalid_config_guard',
   InsufficientRequestParameters = 'insufficient_request_parameters',
   InvalidConfig = 'invalid_config',

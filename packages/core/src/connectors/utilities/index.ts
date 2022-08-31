@@ -29,7 +29,7 @@ export function validateConnectorModule(
     throw new ConnectorError(ConnectorErrorCodes.InvalidConfigGuard);
   }
 
-  if (!connector.type || Object.values(ConnectorType).includes(connector.type)) {
-    throw new ConnectorError(ConnectorErrorCodes.InvalidType);
+  if (!connector.type || !Object.values(ConnectorType).includes(connector.type)) {
+    throw new ConnectorError(ConnectorErrorCodes.UnexpectedType);
   }
 }
