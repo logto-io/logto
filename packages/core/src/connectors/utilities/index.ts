@@ -1,4 +1,9 @@
-import { ConnectorError, ConnectorErrorCodes, GeneralConnector } from '@logto/connector-core';
+import {
+  BaseConnector,
+  ConnectorError,
+  ConnectorErrorCodes,
+  ConnectorType,
+} from '@logto/connector-core';
 
 import RequestError from '@/errors/RequestError';
 import { findAllConnectors } from '@/queries/connector';
@@ -14,13 +19,17 @@ export const getConnectorConfig = async (id: string): Promise<unknown> => {
 };
 
 export function validateConnectorModule(
-  connector: Partial<GeneralConnector>
-): asserts connector is GeneralConnector {
+  connector: Partial<BaseConnector<ConnectorType>>
+): asserts connector is BaseConnector<ConnectorType> {
   if (!connector.metadata) {
     throw new ConnectorError(ConnectorErrorCodes.InvalidMetadata);
   }
 
   if (!connector.configGuard) {
     throw new ConnectorError(ConnectorErrorCodes.InvalidConfigGuard);
+  }
+
+  if (!connector.type || Object.values(ConnectorType).includes(connector.type)) {
+    throw new ConnectorError(ConnectorErrorCodes.InvalidType);
   }
 }

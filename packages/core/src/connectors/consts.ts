@@ -1,6 +1,4 @@
-import { ConnectorError, ConnectorErrorCodes, GeneralConnector } from '@logto/connector-core';
-
-import { LogtoConnector } from './types';
+import { ConnectorError, ConnectorErrorCodes } from '@logto/connector-core';
 
 export const defaultConnectorPackages = [
   '@logto/connector-alipay-web',

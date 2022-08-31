@@ -16,15 +16,6 @@ export const socialUserInfoGuard = z.object({
 
 export type SocialUserInfo = z.infer<typeof socialUserInfoGuard>;
 
-export type GeneralConnector =
-  | BaseConnector<ConnectorType.Email>
-  | BaseConnector<ConnectorType.Sms>
-  | BaseConnector<ConnectorType.Social>;
-
-type ExtractConnectorType<T extends GeneralConnector> = T extends BaseConnector<infer R>
-  ? R
-  : never;
-
 export type LoadConnector<T extends AllConnector = AllConnector> = T & {
   validateConfig: (config: unknown) => void;
 };

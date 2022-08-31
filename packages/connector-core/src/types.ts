@@ -22,6 +22,7 @@ type I18nPhrases = { en: string } & {
 export enum ConnectorErrorCodes {
   General = 'general',
   InvalidMetadata = 'invalid_metadata',
+  InvalidType = 'invalid_type',
   InvalidConfigGuard = 'invalid_config_guard',
   InsufficientRequestParameters = 'insufficient_request_parameters',
   InvalidConfig = 'invalid_config',
@@ -109,8 +110,3 @@ export type GetAuthorizationUri = (payload: {
 export type GetUserInfo = (
   data: unknown
 ) => Promise<{ id: string } & Record<string, string | undefined>>;
-
-export type GeneralConnector =
-  | BaseConnector<ConnectorType.Email>
-  | BaseConnector<ConnectorType.Sms>
-  | BaseConnector<ConnectorType.Social>;
