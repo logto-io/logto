@@ -21,77 +21,32 @@ export default function koaConnectorErrorHandler<StateT, ContextT>(): Middleware
       const errorMessage = conditional(result.success && '\n' + result.data.errorDescription);
 
       switch (code) {
+        case ConnectorErrorCodes.InvalidMetadata:
+        case ConnectorErrorCodes.InvalidConfigGuard:
         case ConnectorErrorCodes.InsufficientRequestParameters:
-          throw new RequestError(
-            {
-              code: 'connector.insufficient_request_parameters',
-              status: 400,
-            },
-            data
-          );
         case ConnectorErrorCodes.InvalidConfig:
-          throw new RequestError(
-            {
-              code: 'connector.invalid_config',
-              status: 400,
-            },
-            data
-          );
         case ConnectorErrorCodes.InvalidResponse:
-          throw new RequestError(
-            {
-              code: 'connector.invalid_response',
-              status: 400,
-            },
-            data
-          );
+          throw new RequestError({ code: `connector.${code}`, status: 400 }, data);
+        case ConnectorErrorCodes.SocialAuthCodeInvalid:
+        case ConnectorErrorCodes.SocialAccessTokenInvalid:
+        case ConnectorErrorCodes.SocialIdTokenInvalid:
+        case ConnectorErrorCodes.AuthorizationFailed:
+          throw new RequestError({ code: `connector.${code}`, status: 401 }, data);
         case ConnectorErrorCodes.TemplateNotFound:
           throw new RequestError(
             {
-              code: 'connector.template_not_found',
+              code: `connector.${code}`,
               status: 500,
             },
             data
           );
         case ConnectorErrorCodes.NotImplemented:
-          throw new RequestError({ code: 'connector.not_implemented', status: 501 }, data);
-        case ConnectorErrorCodes.SocialAuthCodeInvalid:
-          throw new RequestError(
-            {
-              code: 'connector.oauth_code_invalid',
-              status: 401,
-            },
-            data
-          );
-        case ConnectorErrorCodes.SocialAccessTokenInvalid:
-          throw new RequestError(
-            {
-              code: 'connector.invalid_access_token',
-              status: 401,
-            },
-            data
-          );
-        case ConnectorErrorCodes.SocialIdTokenInvalid:
-          throw new RequestError(
-            {
-              code: 'connector.invalid_id_token',
-              status: 401,
-            },
-            data
-          );
-        case ConnectorErrorCodes.AuthorizationFailed:
-          throw new RequestError(
-            {
-              code: 'connector.authorization_failed',
-              status: 401,
-            },
-            data
-          );
+          throw new RequestError({ code: `connector.${code}`, status: 501 }, data);
 
         default:
           throw new RequestError(
             {
-              code: 'connector.general',
+              code: `connector.${code}`,
               status: 500,
               errorDescription: errorMessage,
             },

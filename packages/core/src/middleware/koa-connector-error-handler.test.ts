@@ -105,7 +105,7 @@ describe('koaConnectorErrorHandler middleware', () => {
     await expect(koaConnectorErrorHandler()(ctx, next)).rejects.toMatchError(
       new RequestError(
         {
-          code: 'connector.oauth_code_invalid',
+          code: 'connector.social_auth_code_invalid',
           status: 401,
         },
         { message }
@@ -123,7 +123,7 @@ describe('koaConnectorErrorHandler middleware', () => {
     await expect(koaConnectorErrorHandler()(ctx, next)).rejects.toMatchError(
       new RequestError(
         {
-          code: 'connector.invalid_access_token',
+          code: 'connector.social_invalid_access_token',
           status: 401,
         },
         { message }
@@ -141,7 +141,7 @@ describe('koaConnectorErrorHandler middleware', () => {
     await expect(koaConnectorErrorHandler()(ctx, next)).rejects.toMatchError(
       new RequestError(
         {
-          code: 'connector.invalid_id_token',
+          code: 'connector.social_invalid_id_token',
           status: 401,
         },
         { message }

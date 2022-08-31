@@ -32,18 +32,18 @@ export type ConnectorMetadata = {
 };
 
 export enum ConnectorErrorCodes {
-  General = 'General',
-  InvalidMetadata = 'InvalidMetadata',
-  InvalidConfigGuard = 'InvalidConfigGuard',
-  InsufficientRequestParameters = 'InsufficientRequestParameters',
-  InvalidConfig = 'InvalidConfig',
-  InvalidResponse = 'InvalidResponse',
-  TemplateNotFound = 'TemplateNotFound',
-  NotImplemented = 'NotImplemented',
-  SocialAuthCodeInvalid = 'SocialAuthCodeInvalid',
-  SocialAccessTokenInvalid = 'SocialAccessTokenInvalid',
-  SocialIdTokenInvalid = 'SocialIdTokenInvalid',
-  AuthorizationFailed = 'AuthorizationFailed',
+  General = 'general',
+  InvalidMetadata = 'invalid_metadata',
+  InvalidConfigGuard = 'invalid_config_guard',
+  InsufficientRequestParameters = 'insufficient_request_parameters',
+  InvalidConfig = 'invalid_config',
+  InvalidResponse = 'invalid_response',
+  TemplateNotFound = 'template_not_found',
+  NotImplemented = 'not_implemented',
+  SocialAuthCodeInvalid = 'social_auth_code_invalid',
+  SocialAccessTokenInvalid = 'social_invalid_access_token',
+  SocialIdTokenInvalid = 'social_invalid_id_token',
+  AuthorizationFailed = 'authorization_failed',
 }
 
 export class ConnectorError extends Error {
