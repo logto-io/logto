@@ -9,6 +9,7 @@ import {
   CreateConnector,
   EmailConnector,
   validateConfig,
+  ConnectorType,
 } from '@logto/connector-core';
 import { assert } from '@silverhand/essentials';
 
@@ -43,6 +44,7 @@ const sendMessage =
 const createMockEmailConnector: CreateConnector<EmailConnector> = async ({ getConfig }) => {
   return {
     metadata: defaultMetadata,
+    type: ConnectorType.Email,
     configGuard: mockMailConfigGuard,
     sendMessage: sendMessage(getConfig),
   };

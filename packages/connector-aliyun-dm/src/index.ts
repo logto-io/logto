@@ -1,6 +1,7 @@
 import {
   ConnectorError,
   ConnectorErrorCodes,
+  ConnectorType,
   CreateConnector,
   EmailConnector,
   GetConnectorConfig,
@@ -95,6 +96,7 @@ const errorHandler = (errorResponseBody: string) => {
 const createAliyunDmConnector: CreateConnector<EmailConnector> = async ({ getConfig }) => {
   return {
     metadata: defaultMetadata,
+    type: ConnectorType.Email,
     configGuard: aliyunDmConfigGuard,
     sendMessage: sendMessage(getConfig),
   };

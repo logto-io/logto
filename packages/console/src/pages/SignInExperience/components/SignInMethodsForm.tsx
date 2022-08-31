@@ -55,7 +55,7 @@ const SignInMethodsForm = () => {
 
         const enabled =
           (method === SignInMethodKey.Email && email) ||
-          (method === SignInMethodKey.SMS && sms) ||
+          (method === SignInMethodKey.Sms && sms) ||
           (method === SignInMethodKey.Social && social);
 
         return (

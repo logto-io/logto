@@ -13,7 +13,7 @@ const ConnectorTypeName = ({ type }: Props) => {
   return (
     <div className={styles.connectorType}>
       {type === ConnectorType.Email && t('connector_details.type_email')}
-      {type === ConnectorType.SMS && t('connector_details.type_sms')}
+      {type === ConnectorType.Sms && t('connector_details.type_sms')}
       {type === ConnectorType.Social && t('connector_details.type_social')}
     </div>
   );

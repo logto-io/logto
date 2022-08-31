@@ -42,7 +42,7 @@ const Connectors = () => {
 
   const smsConnector = useMemo(() => {
     const smsConnectorGroup = data?.find(
-      ({ enabled, type }) => enabled && type === ConnectorType.SMS
+      ({ enabled, type }) => enabled && type === ConnectorType.Sms
     );
 
     return smsConnectorGroup?.connectors[0];
@@ -119,9 +119,9 @@ const Connectors = () => {
               {!isLoading && !isSocial && (
                 <ConnectorRow
                   connectors={smsConnector ? [smsConnector] : []}
-                  type={ConnectorType.SMS}
+                  type={ConnectorType.Sms}
                   onClickSetup={() => {
-                    setCreateType(ConnectorType.SMS);
+                    setCreateType(ConnectorType.Sms);
                   }}
                 />
               )}

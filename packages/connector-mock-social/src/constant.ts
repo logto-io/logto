@@ -3,7 +3,6 @@ import { ConnectorMetadata, ConnectorType, ConnectorPlatform } from '@logto/conn
 export const defaultMetadata: ConnectorMetadata = {
   id: 'mock-social-connector',
   target: 'mock-social',
-  type: ConnectorType.Social,
   platform: ConnectorPlatform.Universal,
   name: {
     en: 'Mock Social',

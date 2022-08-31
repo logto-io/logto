@@ -6,6 +6,7 @@ import {
   EmailConnector,
   SendMessageFunction,
   validateConfig,
+  ConnectorType,
 } from '@logto/connector-core';
 import { assert } from '@silverhand/essentials';
 import nodemailer from 'nodemailer';
@@ -89,6 +90,7 @@ const parseContents = (contents: string, contentType: ContextType) => {
 const createSmtpConnector: CreateConnector<EmailConnector> = async ({ getConfig }) => {
   return {
     metadata: defaultMetadata,
+    type: ConnectorType.Email,
     configGuard: smtpConfigGuard,
     sendMessage: sendMessage(getConfig),
   };

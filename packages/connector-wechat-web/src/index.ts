@@ -12,6 +12,7 @@ import {
   validateConfig,
   CreateConnector,
   SocialConnector,
+  ConnectorType,
 } from '@logto/connector-core';
 import { assert } from '@silverhand/essentials';
 import got, { HTTPError } from 'got';
@@ -168,6 +169,7 @@ const authorizationCallbackHandler = async (parameterObject: unknown) => {
 const createWechatConnector: CreateConnector<SocialConnector> = async ({ getConfig }) => {
   return {
     metadata: defaultMetadata,
+    type: ConnectorType.Social,
     configGuard: wechatConfigGuard,
     getAuthorizationUri: getAuthorizationUri(getConfig),
     getUserInfo: getUserInfo(getConfig),

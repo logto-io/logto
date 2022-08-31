@@ -17,7 +17,6 @@ export const scope = 'email,public_profile';
 export const defaultMetadata: ConnectorMetadata = {
   id: 'facebook-universal',
   target: 'facebook',
-  type: ConnectorType.Social,
   platform: ConnectorPlatform.Universal,
   name: {
     en: 'Facebook',

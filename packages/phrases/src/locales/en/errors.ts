@@ -64,6 +64,7 @@ const errors = {
     not_enabled: 'The connector is not enabled.',
     invalid_metadata: "The connector's metadata is invalid.",
     invalid_config_guard: "The connector's config guard is invalid.",
+    unexpected_type: "The connector's type is unexpected.",
     insufficient_request_parameters: 'The request might miss some input parameters.',
     invalid_config: "The connector's config is invalid.",
     invalid_response: "The connector's response is invalid.",

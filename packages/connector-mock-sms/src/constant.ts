@@ -3,7 +3,6 @@ import { ConnectorType, ConnectorMetadata } from '@logto/connector-core';
 export const defaultMetadata: ConnectorMetadata = {
   id: 'mock-short-message-service',
   target: 'mock-sms',
-  type: ConnectorType.SMS,
   platform: null,
   name: {
     en: 'Mock SMS Service',

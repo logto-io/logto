@@ -6,6 +6,7 @@ import {
   validateConfig,
   CreateConnector,
   EmailConnector,
+  ConnectorType,
 } from '@logto/connector-core';
 import { assert } from '@silverhand/essentials';
 import got, { HTTPError } from 'got';
@@ -87,6 +88,7 @@ const sendMessage =
 const createSendGridMailConnector: CreateConnector<EmailConnector> = async ({ getConfig }) => {
   return {
     metadata: defaultMetadata,
+    type: ConnectorType.Email,
     configGuard: sendGridMailConfigGuard,
     sendMessage: sendMessage(getConfig),
   };

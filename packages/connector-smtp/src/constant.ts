@@ -3,7 +3,6 @@ import { ConnectorType, ConnectorMetadata } from '@logto/connector-core';
 export const defaultMetadata: ConnectorMetadata = {
   id: 'simple-mail-transfer-protocol',
   target: 'smtp',
-  type: ConnectorType.Email,
   platform: null,
   name: {
     en: 'SMTP',

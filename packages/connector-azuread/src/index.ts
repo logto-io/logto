@@ -15,6 +15,7 @@ import {
   validateConfig,
   CreateConnector,
   SocialConnector,
+  ConnectorType,
 } from '@logto/connector-core';
 import { assert, conditional } from '@silverhand/essentials';
 import got, { HTTPError } from 'got';
@@ -152,6 +153,7 @@ const authorizationCallbackHandler = async (parameterObject: unknown) => {
 const createAzureAdConnector: CreateConnector<SocialConnector> = async ({ getConfig }) => {
   return {
     metadata: defaultMetadata,
+    type: ConnectorType.Social,
     configGuard: azureADConfigGuard,
     getAuthorizationUri: getAuthorizationUri(getConfig),
     getUserInfo: getUserInfo(getConfig),

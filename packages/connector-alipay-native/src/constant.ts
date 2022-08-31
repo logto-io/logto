@@ -18,7 +18,6 @@ export const invalidAccessTokenSubCode = ['isv.code-invalid'];
 export const defaultMetadata: ConnectorMetadata = {
   id: 'alipay-native',
   target: 'alipay',
-  type: ConnectorType.Social,
   platform: ConnectorPlatform.Native,
   name: {
     en: 'Alipay',

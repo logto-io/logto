@@ -12,7 +12,6 @@ export const scope = ''; // Note: `openid` is required when adding more scope(s)
 export const defaultMetadata: ConnectorMetadata = {
   id: 'apple-universal',
   target: 'apple',
-  type: ConnectorType.Social,
   platform: ConnectorPlatform.Universal,
   name: {
     en: 'Apple',

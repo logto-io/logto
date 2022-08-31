@@ -6,6 +6,7 @@ import {
   validateConfig,
   CreateConnector,
   SmsConnector,
+  ConnectorType,
 } from '@logto/connector-core';
 import { assert } from '@silverhand/essentials';
 import got, { HTTPError } from 'got';
@@ -68,6 +69,7 @@ const sendMessage =
 const createTwilioSmsConnector: CreateConnector<SmsConnector> = async ({ getConfig }) => {
   return {
     metadata: defaultMetadata,
+    type: ConnectorType.Sms,
     configGuard: twilioSmsConfigGuard,
     sendMessage: sendMessage(getConfig),
   };

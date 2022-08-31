@@ -39,7 +39,7 @@ const SenderTester = ({ connectorId, connectorType, config, className }: Props) 
   } = useForm<FormData>();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const api = useApi();
-  const isSms = connectorType === ConnectorType.SMS;
+  const isSms = connectorType === ConnectorType.Sms;
 
   useEffect(() => {
     if (!showTooltip) {

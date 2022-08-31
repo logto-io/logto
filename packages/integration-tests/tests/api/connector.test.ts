@@ -67,7 +67,7 @@ test('connector set-up flow', async () => {
    */
   await Promise.all(
     [
-      { id: mockSmsConnectorId, config: mockSmsConnectorConfig, type: ConnectorType.SMS },
+      { id: mockSmsConnectorId, config: mockSmsConnectorConfig, type: ConnectorType.Sms },
       { id: mockEmailConnectorId, config: mockEmailConnectorConfig, type: ConnectorType.Email },
     ].map(async ({ id, config, type }) => {
       const updatedConnector = await updateConnectorConfig(id, config);

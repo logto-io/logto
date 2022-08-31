@@ -7,7 +7,6 @@ import { LogtoConnector } from '@/connectors/types';
 export const mockMetadata: ConnectorMetadata = {
   id: 'id',
   target: 'connector',
-  type: ConnectorType.Email,
   platform: null,
   name: {
     en: 'Connector',
@@ -34,7 +33,7 @@ export const mockConnector: Connector = {
   createdAt: 1_234_567_890_123,
 };
 
-export const mockLogtoConnector: Omit<LogtoConnector, 'metadata' | 'dbEntry'> = {
+export const mockLogtoConnector = {
   getAuthorizationUri: jest.fn(),
   getUserInfo: jest.fn(),
   sendMessage: jest.fn(),
@@ -46,7 +45,6 @@ const mockMetadata0: ConnectorMetadata = {
   ...mockMetadata,
   id: 'id0',
   target: 'connector_0',
-  type: ConnectorType.Email,
   platform: ConnectorPlatform.Universal,
 };
 
@@ -54,7 +52,6 @@ const mockMetadata1: ConnectorMetadata = {
   ...mockMetadata,
   id: 'id1',
   target: 'connector_1',
-  type: ConnectorType.SMS,
   platform: ConnectorPlatform.Universal,
 };
 
@@ -62,7 +59,6 @@ const mockMetadata2: ConnectorMetadata = {
   ...mockMetadata,
   id: 'id2',
   target: 'connector_2',
-  type: ConnectorType.Social,
   platform: ConnectorPlatform.Universal,
 };
 
@@ -70,7 +66,6 @@ const mockMetadata3: ConnectorMetadata = {
   ...mockMetadata,
   id: 'id3',
   target: 'connector_3',
-  type: ConnectorType.Social,
   platform: ConnectorPlatform.Universal,
 };
 
@@ -78,7 +73,6 @@ const mockMetadata4: ConnectorMetadata = {
   ...mockMetadata,
   id: 'id4',
   target: 'connector_4',
-  type: ConnectorType.Social,
   platform: ConnectorPlatform.Universal,
 };
 
@@ -86,7 +80,6 @@ const mockMetadata5: ConnectorMetadata = {
   ...mockMetadata,
   id: 'id5',
   target: 'connector_5',
-  type: ConnectorType.Social,
   platform: ConnectorPlatform.Universal,
 };
 
@@ -94,7 +87,6 @@ const mockMetadata6: ConnectorMetadata = {
   ...mockMetadata,
   id: 'id6',
   target: 'connector_6',
-  type: ConnectorType.Social,
   platform: ConnectorPlatform.Universal,
 };
 
@@ -160,37 +152,44 @@ export const mockConnectorList: Connector[] = [
 export const mockLogtoConnectorList: LogtoConnector[] = [
   {
     dbEntry: mockConnector0,
-    metadata: { ...mockMetadata0, type: ConnectorType.Social },
+    metadata: { ...mockMetadata0 },
+    type: ConnectorType.Social,
     ...mockLogtoConnector,
   },
   {
     dbEntry: mockConnector1,
     metadata: mockMetadata1,
+    type: ConnectorType.Sms,
     ...mockLogtoConnector,
   },
   {
     dbEntry: mockConnector2,
     metadata: mockMetadata2,
+    type: ConnectorType.Social,
     ...mockLogtoConnector,
   },
   {
     dbEntry: mockConnector3,
     metadata: mockMetadata3,
+    type: ConnectorType.Social,
     ...mockLogtoConnector,
   },
   {
     dbEntry: mockConnector4,
-    metadata: { ...mockMetadata4, type: ConnectorType.Email, platform: null },
+    metadata: { ...mockMetadata4, platform: null },
+    type: ConnectorType.Email,
     ...mockLogtoConnector,
   },
   {
     dbEntry: mockConnector5,
-    metadata: { ...mockMetadata5, type: ConnectorType.SMS, platform: null },
+    metadata: { ...mockMetadata5, platform: null },
+    type: ConnectorType.Sms,
     ...mockLogtoConnector,
   },
   {
     dbEntry: mockConnector6,
-    metadata: { ...mockMetadata6, type: ConnectorType.Email, platform: null },
+    metadata: { ...mockMetadata6, platform: null },
+    type: ConnectorType.Email,
     ...mockLogtoConnector,
   },
 ];
@@ -204,9 +203,9 @@ export const mockAliyunDmConnector: LogtoConnector = {
     ...mockMetadata,
     id: 'aliyun-dm',
     target: 'aliyun-dm',
-    type: ConnectorType.Email,
     platform: null,
   },
+  type: ConnectorType.Email,
   ...mockLogtoConnector,
 };
 
@@ -219,9 +218,9 @@ export const mockAliyunSmsConnector: LogtoConnector = {
     ...mockMetadata,
     id: 'aliyun-sms',
     target: 'aliyun-sms',
-    type: ConnectorType.SMS,
     platform: null,
   },
+  type: ConnectorType.Sms,
   ...mockLogtoConnector,
 };
 
@@ -234,9 +233,9 @@ export const mockFacebookConnector: LogtoConnector = {
     ...mockMetadata,
     id: 'facebook',
     target: 'facebook',
-    type: ConnectorType.Social,
     platform: ConnectorPlatform.Web,
   },
+  type: ConnectorType.Social,
   ...mockLogtoConnector,
 };
 
@@ -249,9 +248,9 @@ export const mockGithubConnector: LogtoConnector = {
     ...mockMetadata,
     id: 'github',
     target: 'github',
-    type: ConnectorType.Social,
     platform: ConnectorPlatform.Web,
   },
+  type: ConnectorType.Social,
   ...mockLogtoConnector,
 };
 
@@ -264,9 +263,9 @@ export const mockWechatConnector: LogtoConnector = {
     ...mockMetadata,
     id: 'wechat-web',
     target: 'wechat',
-    type: ConnectorType.Social,
     platform: ConnectorPlatform.Web,
   },
+  type: ConnectorType.Social,
   ...mockLogtoConnector,
 };
 
@@ -279,9 +278,9 @@ export const mockWechatNativeConnector: LogtoConnector = {
     ...mockMetadata,
     id: 'wechat-native',
     target: 'wechat',
-    type: ConnectorType.Social,
     platform: ConnectorPlatform.Native,
   },
+  type: ConnectorType.Social,
   ...mockLogtoConnector,
 };
 
@@ -295,9 +294,9 @@ export const mockGoogleConnector: LogtoConnector = {
     ...mockMetadata,
     id: 'google',
     target: 'google',
-    type: ConnectorType.Social,
     platform: ConnectorPlatform.Web,
   },
+  type: ConnectorType.Social,
   ...mockLogtoConnector,
 };
 

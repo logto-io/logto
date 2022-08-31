@@ -1,4 +1,4 @@
-import { userInfoSelectFields } from '@logto/schemas';
+import { ConnectorType, userInfoSelectFields } from '@logto/schemas';
 import { redirectUriRegEx } from '@logto/shared';
 import pick from 'lodash.pick';
 import { Provider } from 'oidc-provider';
@@ -45,6 +45,7 @@ export default function socialRoutes<T extends AnonymousRouter>(router: T, provi
       assertThat(state && redirectUri, 'session.insufficient_info');
       const connector = await getLogtoConnectorById(connectorId);
       assertThat(connector.dbEntry.enabled, 'connector.not_enabled');
+      assertThat(connector.type === ConnectorType.Social, 'connector.unexpected_type');
       const redirectTo = await connector.getAuthorizationUri({ state, redirectUri });
       ctx.body = { redirectTo };
 

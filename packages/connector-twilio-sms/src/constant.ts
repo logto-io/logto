@@ -5,7 +5,6 @@ export const endpoint = 'https://api.twilio.com/2010-04-01/Accounts/{{accountSID
 export const defaultMetadata: ConnectorMetadata = {
   id: 'twilio-short-message-service',
   target: 'twilio-sms',
-  type: ConnectorType.SMS,
   platform: null,
   name: {
     en: 'Twilio SMS Service',

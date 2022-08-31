@@ -11,13 +11,6 @@ export const mockedConnectorConfig = {
   ],
 };
 
-export const mockedValidConnectorConfig = {
-  accessKeyId: 'accessKeyId',
-  accessKeySecret: 'accessKeySecret',
-  signName: 'signName',
-  templates: [],
-};
-
 export const phoneTest = '13012345678';
 export const codeTest = '1234';
 

@@ -61,10 +61,14 @@ const getLogtoConnectorByIdHelper = jest.fn(async (connectorId: string) => {
         : connectorId === 'social_disabled'
         ? 'social_disabled'
         : 'others',
-    type: connectorId.startsWith('social') ? ConnectorType.Social : ConnectorType.SMS,
   };
 
-  return { dbEntry: database, metadata, getAuthorizationUri: jest.fn(async () => '') };
+  return {
+    dbEntry: database,
+    metadata,
+    type: connectorId.startsWith('social') ? ConnectorType.Social : ConnectorType.Sms,
+    getAuthorizationUri: jest.fn(async () => ''),
+  };
 });
 
 jest.mock('@/connectors', () => ({
@@ -72,7 +76,7 @@ jest.mock('@/connectors', () => ({
   getLogtoConnectorById: jest.fn(async (connectorId: string) => {
     const connector = await getLogtoConnectorByIdHelper(connectorId);
 
-    if (connector.metadata.type !== ConnectorType.Social) {
+    if (connector.type !== ConnectorType.Social) {
       throw new RequestError({
         code: 'entity.not_found',
         status: 404,

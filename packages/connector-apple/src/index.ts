@@ -7,6 +7,7 @@ import {
   validateConfig,
   CreateConnector,
   SocialConnector,
+  ConnectorType,
 } from '@logto/connector-core';
 import { createRemoteJWKSet, jwtVerify } from 'jose';
 
@@ -80,6 +81,7 @@ const authorizationCallbackHandler = async (parameterObject: unknown) => {
 const createAppleConnector: CreateConnector<SocialConnector> = async ({ getConfig }) => {
   return {
     metadata: defaultMetadata,
+    type: ConnectorType.Social,
     configGuard: appleConfigGuard,
     getAuthorizationUri: getAuthorizationUri(getConfig),
     getUserInfo: getUserInfo(getConfig),

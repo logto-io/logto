@@ -37,7 +37,7 @@ const Guide = ({ connector, onClose }: Props) => {
   const connectorName = result.success ? name[result.data] : name.en;
 
   const isSocialConnector =
-    connectorType !== ConnectorType.SMS && connectorType !== ConnectorType.Email;
+    connectorType !== ConnectorType.Sms && connectorType !== ConnectorType.Email;
   const methods = useForm<GuideForm>({ reValidateMode: 'onBlur' });
   const {
     control,

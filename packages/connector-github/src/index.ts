@@ -7,6 +7,7 @@ import {
   CreateConnector,
   GetConnectorConfig,
   validateConfig,
+  ConnectorType,
 } from '@logto/connector-core';
 import { assert, conditional } from '@silverhand/essentials';
 import got, { HTTPError } from 'got';
@@ -145,6 +146,7 @@ const getUserInfo =
 const createGithubConnector: CreateConnector<SocialConnector> = async ({ getConfig }) => {
   return {
     metadata: defaultMetadata,
+    type: ConnectorType.Social,
     configGuard: githubConfigGuard,
     getAuthorizationUri: getAuthorizationUri(getConfig),
     getUserInfo: getUserInfo(getConfig),

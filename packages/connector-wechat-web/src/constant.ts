@@ -13,7 +13,6 @@ export const invalidAccessTokenErrcode = [40_001, 40_014];
 export const defaultMetadata: ConnectorMetadata = {
   id: 'wechat-web',
   target: 'wechat',
-  type: ConnectorType.Social,
   platform: ConnectorPlatform.Web,
   name: {
     en: 'WeChat',

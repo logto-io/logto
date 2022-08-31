@@ -14,7 +14,7 @@ const useConnectorInUse = (type?: ConnectorType, target?: string): boolean | und
     return data.signInMethods.email !== SignInMethodState.Disabled;
   }
 
-  if (type === ConnectorType.SMS) {
+  if (type === ConnectorType.Sms) {
     return data.signInMethods.sms !== SignInMethodState.Disabled;
   }
 

@@ -56,7 +56,7 @@ const ConnectorContent = ({ isDeleted, connectorData, onConnectorUpdated }: Prop
 
     const { metadata, ...rest } = await api
       .patch(`/api/connectors/${connectorData.id}`, { json: { config: result.data } })
-      .json<Connector & { metadata: ConnectorMetadata }>();
+      .json<Connector & { metadata: ConnectorMetadata; type: ConnectorType }>();
 
     onConnectorUpdated({ ...rest, ...metadata });
     reset({ configJson: JSON.stringify(result.data, null, 2) });
