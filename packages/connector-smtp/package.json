@@ -6,7 +6,6 @@
   "exports": "./lib/index.js",
   "author": "Silverhand Inc. <contact@silverhand.io>",
   "license": "MPL-2.0",
-  "private": true,
   "files": [
     "lib",
     "docs",
@@ -15,7 +14,7 @@
   ],
   "scripts": {
     "precommit": "lint-staged",
-    "build": "rm -rf lib/ && tsc -p tsconfig.build.json",
+    "build": "rm -rf lib/ && ncc build src/index.ts -o lib",
     "dev": "tsc -p tsconfig.build.json --watch --preserveWatchOutput --incremental",
     "lint": "eslint --ext .ts src",
     "lint:report": "pnpm lint --format json --output-file report.json",
@@ -37,6 +36,7 @@
     "@silverhand/ts-config": "1.0.0-rc.2",
     "@types/jest": "^28.1.6",
     "@types/node": "^16.3.1",
+    "@vercel/ncc": "^0.34.0",
     "@types/nodemailer": "^6.4.4",
     "eslint": "^8.21.0",
     "jest": "^28.1.3",
