@@ -1,4 +1,4 @@
-import { ConnectorMetadata, ConnectorType } from '@logto/connector-core';
+import { ConnectorMetadata } from '@logto/connector-core';
 import { SignInMode } from '@logto/schemas';
 import {
   adminConsoleApplicationId,

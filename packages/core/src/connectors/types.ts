@@ -1,4 +1,4 @@
-import { AllConnector, BaseConnector, ConnectorType, EmailConnector } from '@logto/connector-core';
+import { AllConnector } from '@logto/connector-core';
 import { Connector, PasscodeType } from '@logto/schemas';
 import { z } from 'zod';
 
