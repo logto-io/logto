@@ -71,17 +71,8 @@ jobs:
           pnpm prepack
 
       # Setup environment
-      - name: Start Postgres (Linux)
-        if: runner.os == 'Linux'
-        run: |
-          sudo service postgresql start
-          sudo -u postgres psql -c "ALTER USER postgres PASSWORD 'postgres';"
-
-      - name: Start Postgres (macOS)
-        if: runner.os == 'macOS'
-        run: |
-          pg_ctl -D /usr/local/var/postgres start
-          psql postgres -c "CREATE USER postgres WITH SUPERUSER PASSWORD 'postgres';"
+      - name: Setup Postgres
+        uses: ikalnytskyi/action-setup-postgres@v3
 
       - uses: actions/download-artifact@v3
         with:
