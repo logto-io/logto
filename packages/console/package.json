@@ -28,7 +28,7 @@
     "@parcel/transformer-mdx": "2.7.0",
     "@parcel/transformer-sass": "2.7.0",
     "@parcel/transformer-svg-react": "2.7.0",
-    "@silverhand/eslint-config": "1.0.0-rc.2",
+    "@silverhand/eslint-config": "1.0.0",
     "@silverhand/eslint-config-react": "1.0.0-rc.2",
     "@silverhand/essentials": "^1.2.0",
     "@silverhand/ts-config": "1.0.0-rc.2",
