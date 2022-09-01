@@ -15,7 +15,7 @@
   ],
   "scripts": {
     "precommit": "lint-staged",
-    "build": "rm -rf lib/ && ncc build src/index.ts -o lib",
+    "build": "rm -rf lib/ && ncc build src/index.ts -o lib --no-cache",
     "dev": "tsc -p tsconfig.build.json --watch --preserveWatchOutput --incremental",
     "lint": "eslint --ext .ts src",
     "lint:report": "pnpm lint --format json --output-file report.json",
