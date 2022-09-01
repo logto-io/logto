@@ -69,6 +69,7 @@ const errors = {
     not_enabled: "Le connecteur n'est pas activé.",
     invalid_metadata: "The connector's metadata is invalid.", // UNTRANSLATED
     invalid_config_guard: "The connector's config guard is invalid.", // UNTRANSLATED
+    unexpected_type: "The connector's type is unexpected.", // UNTRANSLATED
     insufficient_request_parameters: 'Certains paramètres peuvent manquer dans la requête.',
     invalid_config: "La configuration du connecteur n'est pas valide.",
     invalid_response: "La réponse du connecteur n'est pas valide.",

@@ -12,7 +12,6 @@ export const staticConfigs = {
 export const defaultMetadata: ConnectorMetadata = {
   id: 'aliyun-direct-mail',
   target: 'aliyun-dm',
-  type: ConnectorType.Email,
   platform: null,
   name: {
     en: 'Aliyun Direct Mail',

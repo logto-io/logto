@@ -3,7 +3,6 @@ import { ConnectorType, ConnectorMetadata } from '@logto/connector-core';
 export const defaultMetadata: ConnectorMetadata = {
   id: 'mock-email-service',
   target: 'mock-mail',
-  type: ConnectorType.Email,
   platform: null,
   name: {
     en: 'Mock Mail Service',

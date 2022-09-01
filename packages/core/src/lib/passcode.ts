@@ -1,9 +1,15 @@
-import { messageTypesGuard, ConnectorError, ConnectorErrorCodes } from '@logto/connector-core';
+import {
+  messageTypesGuard,
+  ConnectorError,
+  ConnectorErrorCodes,
+  EmailConnector,
+  SmsConnector,
+} from '@logto/connector-core';
 import { Passcode, PasscodeType } from '@logto/schemas';
 import { customAlphabet, nanoid } from 'nanoid';
 
 import { getLogtoConnectors } from '@/connectors';
-import { ConnectorType } from '@/connectors/types';
+import { ConnectorType, LogtoConnector } from '@/connectors/types';
 import RequestError from '@/errors/RequestError';
 import {
   consumePasscode,
@@ -46,22 +52,19 @@ export const sendPasscode = async (passcode: Passcode) => {
     throw new RequestError('passcode.phone_email_empty');
   }
 
+  const expectType = passcode.phone ? ConnectorType.Sms : ConnectorType.Email;
   const connectors = await getLogtoConnectors();
 
-  const emailConnector = connectors.find(
-    (connector) => connector.dbEntry.enabled && connector.metadata.type === ConnectorType.Email
+  const connector = connectors.find(
+    (connector): connector is LogtoConnector<SmsConnector | EmailConnector> =>
+      connector.dbEntry.enabled && connector.type === expectType
   );
-  const smsConnector = connectors.find(
-    (connector) => connector.dbEntry.enabled && connector.metadata.type === ConnectorType.SMS
-  );
-
-  const connector = passcode.email ? emailConnector : smsConnector;
 
   assertThat(
     connector,
     new RequestError({
       code: 'connector.not_found',
-      type: passcode.email ? ConnectorType.Email : ConnectorType.SMS,
+      type: expectType,
     })
   );
 

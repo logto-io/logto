@@ -1,6 +1,4 @@
-import { ConnectorError, ConnectorErrorCodes, GeneralConnector } from '@logto/connector-core';
-
-import { LogtoConnector } from './types';
+import { ConnectorError, ConnectorErrorCodes } from '@logto/connector-core';
 
 export const defaultConnectorPackages = [
   '@logto/connector-alipay-web',
@@ -24,10 +22,9 @@ const notImplemented = () => {
   throw new ConnectorError(ConnectorErrorCodes.NotImplemented);
 };
 
-export const defaultConnectorMethods: Omit<LogtoConnector, 'metadata' | 'configGuard' | 'dbEntry'> =
-  {
-    getAuthorizationUri: notImplemented,
-    getUserInfo: notImplemented,
-    sendMessage: notImplemented,
-    validateConfig: notImplemented,
-  };
+export const defaultConnectorMethods = {
+  getAuthorizationUri: notImplemented,
+  getUserInfo: notImplemented,
+  sendMessage: notImplemented,
+  validateConfig: notImplemented,
+};

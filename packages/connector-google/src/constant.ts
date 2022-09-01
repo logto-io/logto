@@ -8,7 +8,6 @@ export const scope = 'openid profile email';
 export const defaultMetadata: ConnectorMetadata = {
   id: 'google-universal',
   target: 'google',
-  type: ConnectorType.Social,
   platform: ConnectorPlatform.Universal,
   name: {
     en: 'Google',

@@ -19,8 +19,8 @@ const ConnectorSetupWarning = ({ method }: Props) => {
       return;
     }
 
-    if (method === SignInMethodKey.SMS) {
-      return ConnectorType.SMS;
+    if (method === SignInMethodKey.Sms) {
+      return ConnectorType.Sms;
     }
 
     if (method === SignInMethodKey.Email) {

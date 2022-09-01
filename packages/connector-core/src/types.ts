@@ -2,9 +2,10 @@ import type { LanguageKey } from '@logto/shared';
 import { Nullable } from '@silverhand/essentials';
 import { z, ZodType } from 'zod';
 
+// MARK: Foundation
 export enum ConnectorType {
   Email = 'Email',
-  SMS = 'SMS',
+  Sms = 'Sms',
   Social = 'Social',
 }
 
@@ -18,22 +19,10 @@ type I18nPhrases = { en: string } & {
   [K in Exclude<LanguageKey, 'en'>]?: string;
 };
 
-export type ConnectorMetadata = {
-  id: string;
-  target: string;
-  type: ConnectorType;
-  platform: Nullable<ConnectorPlatform>;
-  name: I18nPhrases;
-  logo: string;
-  logoDark: Nullable<string>;
-  description: I18nPhrases;
-  readme: string;
-  configTemplate: string;
-};
-
 export enum ConnectorErrorCodes {
   General = 'general',
   InvalidMetadata = 'invalid_metadata',
+  UnexpectedType = 'unexpected_type',
   InvalidConfigGuard = 'invalid_config_guard',
   InsufficientRequestParameters = 'insufficient_request_parameters',
   InvalidConfig = 'invalid_config',
@@ -67,33 +56,51 @@ export enum MessageTypes {
 
 export const messageTypesGuard = z.nativeEnum(MessageTypes);
 
-export type BaseConnector = {
+export type ConnectorMetadata = {
+  id: string;
+  target: string;
+  platform: Nullable<ConnectorPlatform>;
+  name: I18nPhrases;
+  logo: string;
+  logoDark: Nullable<string>;
+  description: I18nPhrases;
+  readme: string;
+  configTemplate: string;
+};
+
+export type BaseConnector<Type extends ConnectorType> = {
+  type: Type;
   metadata: ConnectorMetadata;
   configGuard: ZodType;
 };
 
-export type SmsConnector = {
+export type CreateConnector<T extends BaseConnector<ConnectorType>> = (options: {
+  getConfig: GetConnectorConfig;
+}) => Promise<T>;
+
+export type GetConnectorConfig = (id: string) => Promise<unknown>;
+
+export type AllConnector = SmsConnector | EmailConnector | SocialConnector;
+
+// MARK: SMS + Email connector
+export type SmsConnector = BaseConnector<ConnectorType.Sms> & {
   sendMessage: SendMessageFunction;
-} & BaseConnector;
+};
 
-export type EmailConnector = SmsConnector;
-
-export type SocialConnector = {
-  getAuthorizationUri: GetAuthorizationUri;
-  getUserInfo: GetUserInfo;
-} & BaseConnector;
-
-export type GeneralConnector = BaseConnector &
-  Partial<SocialConnector & EmailConnector & SmsConnector>;
-
-export type CreateConnector<
-  T extends SocialConnector | EmailConnector | SmsConnector | GeneralConnector
-> = (options: { getConfig: GetConnectorConfig }) => Promise<T>;
+export type EmailConnector = BaseConnector<ConnectorType.Email> & {
+  sendMessage: SendMessageFunction;
+};
 
 export type SendMessageFunction = (
   data: { to: string; type: MessageTypes; payload: { code: string } },
   config?: unknown
 ) => Promise<unknown>;
+
+// MARK: Social connector
+export type SocialConnector = BaseConnector<ConnectorType.Social> & {
+  getAuthorizationUri: GetAuthorizationUri;
+  getUserInfo: GetUserInfo;
+};
 
 export type GetAuthorizationUri = (payload: {
   state: string;
@@ -103,5 +110,3 @@ export type GetAuthorizationUri = (payload: {
 export type GetUserInfo = (
   data: unknown
 ) => Promise<{ id: string } & Record<string, string | undefined>>;
-
-export type GetConnectorConfig = (id: string) => Promise<unknown>;

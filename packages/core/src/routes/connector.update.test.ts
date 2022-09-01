@@ -75,7 +75,8 @@ describe('connector PATCH routes', () => {
       getLogtoConnectorsPlaceholder.mockResolvedValueOnce([
         {
           dbEntry: mockConnector,
-          metadata: { ...mockMetadata, type: ConnectorType.Social },
+          metadata: mockMetadata,
+          type: ConnectorType.Social,
           ...mockLogtoConnector,
         },
       ]);
@@ -90,7 +91,8 @@ describe('connector PATCH routes', () => {
         })
       );
       expect(response.body).toMatchObject({
-        metadata: { ...mockMetadata, type: ConnectorType.Social },
+        metadata: mockMetadata,
+        type: ConnectorType.Social,
       });
       expect(response).toHaveProperty('statusCode', 200);
     });
@@ -100,6 +102,7 @@ describe('connector PATCH routes', () => {
         {
           dbEntry: mockConnector,
           metadata: mockMetadata,
+          type: ConnectorType.Social,
           ...mockLogtoConnector,
           validateConfig: () => {
             throw new ConnectorError(ConnectorErrorCodes.InvalidConfig);
@@ -117,6 +120,7 @@ describe('connector PATCH routes', () => {
         {
           dbEntry: mockConnector,
           metadata: mockMetadata,
+          type: ConnectorType.Social,
           ...mockLogtoConnector,
         },
       ]);
@@ -141,7 +145,6 @@ describe('connector PATCH routes', () => {
       const mockedMetadata = {
         ...mockMetadata,
         id: 'id1',
-        type: ConnectorType.SMS,
       };
       const mockedConnector = {
         ...mockConnector,
@@ -150,6 +153,7 @@ describe('connector PATCH routes', () => {
       getLogtoConnectorByIdPlaceholder.mockResolvedValueOnce({
         dbEntry: mockedConnector,
         metadata: mockedMetadata,
+        type: ConnectorType.Sms,
         ...mockLogtoConnector,
       });
       const response = await connectorRequest
@@ -189,10 +193,8 @@ describe('connector PATCH routes', () => {
       getLogtoConnectorsPlaceholder.mockResolvedValueOnce([
         {
           dbEntry: mockConnector,
-          metadata: {
-            ...mockMetadata,
-            type: ConnectorType.SMS,
-          },
+          metadata: mockMetadata,
+          type: ConnectorType.Sms,
           ...mockLogtoConnector,
           validateConfig: () => {
             throw new ConnectorError(ConnectorErrorCodes.InvalidConfig);
@@ -210,6 +212,7 @@ describe('connector PATCH routes', () => {
         {
           dbEntry: mockConnector,
           metadata: mockMetadata,
+          type: ConnectorType.Sms,
           ...mockLogtoConnector,
         },
       ]);
@@ -252,6 +255,7 @@ describe('connector PATCH routes', () => {
         {
           dbEntry: mockConnector,
           metadata: mockMetadata,
+          type: ConnectorType.Sms,
           ...mockLogtoConnector,
           validateConfig: () => {
             throw new ConnectorError(ConnectorErrorCodes.InvalidConfig);
@@ -269,6 +273,7 @@ describe('connector PATCH routes', () => {
         {
           dbEntry: mockConnector,
           metadata: mockMetadata,
+          type: ConnectorType.Sms,
           ...mockLogtoConnector,
         },
       ]);

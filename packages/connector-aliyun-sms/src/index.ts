@@ -6,6 +6,7 @@ import {
   SmsConnector,
   CreateConnector,
   validateConfig,
+  ConnectorType,
 } from '@logto/connector-core';
 import { assert } from '@silverhand/essentials';
 import { HTTPError } from 'got';
@@ -87,6 +88,7 @@ const parseResponseString = (response: string) => {
 const createAliyunSmsConnector: CreateConnector<SmsConnector> = async ({ getConfig }) => {
   return {
     metadata: defaultMetadata,
+    type: ConnectorType.Sms,
     configGuard: aliyunSmsConfigGuard,
     sendMessage: sendMessage(getConfig),
   };

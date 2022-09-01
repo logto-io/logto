@@ -132,7 +132,7 @@ describe('validate sign-in methods', () => {
       }).toMatchError(
         new RequestError({
           code: 'sign_in_experiences.enabled_connector_not_found',
-          type: ConnectorType.SMS,
+          type: ConnectorType.Sms,
         })
       );
     });

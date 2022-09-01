@@ -6,7 +6,6 @@ export const scopes = ['User.Read'];
 export const defaultMetadata: ConnectorMetadata = {
   id: 'azuread-universal',
   target: 'azuread',
-  type: ConnectorType.Social,
   platform: ConnectorPlatform.Universal,
   name: {
     en: 'Azure Active Directory',

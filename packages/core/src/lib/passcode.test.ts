@@ -135,9 +135,10 @@ describe('sendPasscode', () => {
         },
         metadata: {
           ...mockMetadata,
-          type: ConnectorType.Email,
           platform: null,
         },
+        type: ConnectorType.Email,
+        sendMessage: jest.fn(),
         configGuard: any(),
       },
     ]);
@@ -155,7 +156,7 @@ describe('sendPasscode', () => {
     await expect(sendPasscode(passcode)).rejects.toThrowError(
       new RequestError({
         code: 'connector.not_found',
-        type: ConnectorType.SMS,
+        type: ConnectorType.Sms,
       })
     );
   });
@@ -172,9 +173,9 @@ describe('sendPasscode', () => {
         },
         metadata: {
           ...mockMetadata,
-          type: ConnectorType.SMS,
           platform: null,
         },
+        type: ConnectorType.Sms,
         sendMessage,
       },
       {
@@ -186,9 +187,9 @@ describe('sendPasscode', () => {
         },
         metadata: {
           ...mockMetadata,
-          type: ConnectorType.Email,
           platform: null,
         },
+        type: ConnectorType.Email,
         sendMessage,
       },
     ]);

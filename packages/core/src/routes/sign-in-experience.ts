@@ -50,7 +50,7 @@ export default function signInExperiencesRoutes<T extends AuthedRouter>(router: 
       const filteredSocialSignInConnectorTargets = socialSignInConnectorTargets?.filter((target) =>
         enabledConnectors.some(
           (connector) =>
-            connector.metadata.target === target && connector.metadata.type === ConnectorType.Social
+            connector.metadata.target === target && connector.type === ConnectorType.Social
         )
       );
 

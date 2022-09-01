@@ -9,6 +9,7 @@ import {
   validateConfig,
   CreateConnector,
   SmsConnector,
+  ConnectorType,
 } from '@logto/connector-core';
 import { assert } from '@silverhand/essentials';
 
@@ -43,6 +44,7 @@ const sendMessage =
 const createMockSmsConnector: CreateConnector<SmsConnector> = async ({ getConfig }) => {
   return {
     metadata: defaultMetadata,
+    type: ConnectorType.Sms,
     configGuard: mockSmsConfigGuard,
     sendMessage: sendMessage(getConfig),
   };

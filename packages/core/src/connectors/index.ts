@@ -1,7 +1,7 @@
 import { existsSync, readFileSync } from 'fs';
 import path from 'path';
 
-import { CreateConnector, GeneralConnector, validateConfig } from '@logto/connector-core';
+import { AllConnector, CreateConnector, validateConfig } from '@logto/connector-core';
 import resolvePackagePath from 'resolve-package-path';
 
 import envSet from '@/env-set';
@@ -9,11 +9,11 @@ import RequestError from '@/errors/RequestError';
 import { findAllConnectors, insertConnector } from '@/queries/connector';
 
 import { defaultConnectorMethods, defaultConnectorPackages } from './consts';
-import { LogtoConnector } from './types';
+import { LoadConnector, LogtoConnector } from './types';
 import { getConnectorConfig, validateConnectorModule } from './utilities';
 
 // eslint-disable-next-line @silverhand/fp/no-let
-let cachedConnectors: Array<Omit<LogtoConnector, 'dbEntry'>> | undefined;
+let cachedConnectors: LoadConnector[] | undefined;
 
 const loadConnectors = async () => {
   if (cachedConnectors) {
@@ -31,12 +31,12 @@ const loadConnectors = async () => {
     connectorPackages.map(async (packageName) => {
       // eslint-disable-next-line no-restricted-syntax
       const { default: createConnector } = (await import(packageName)) as {
-        default: CreateConnector<GeneralConnector>;
+        default: CreateConnector<AllConnector>;
       };
       const rawConnector = await createConnector({ getConfig: getConnectorConfig });
       validateConnectorModule(rawConnector);
 
-      const connector: Omit<LogtoConnector, 'dbEntry'> = {
+      const connector: LoadConnector = {
         ...defaultConnectorMethods,
         ...rawConnector,
         validateConfig: (config: unknown) => {

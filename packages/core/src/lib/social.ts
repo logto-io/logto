@@ -1,4 +1,4 @@
-import { User } from '@logto/schemas';
+import { ConnectorType, User } from '@logto/schemas';
 import { Nullable } from '@silverhand/essentials';
 import { InteractionResults } from 'oidc-provider';
 import { z } from 'zod';
@@ -40,6 +40,15 @@ export const getUserInfoByAuthCode = async (
   data: unknown
 ): Promise<SocialUserInfo> => {
   const connector = await getConnector(connectorId);
+
+  assertThat(
+    connector.type === ConnectorType.Social,
+    new RequestError({
+      code: 'session.invalid_connector_id',
+      status: 422,
+      connectorId,
+    })
+  );
 
   return connector.getUserInfo(data);
 };

@@ -1,7 +1,7 @@
 import { MessageTypes } from '@logto/connector-core';
 
 import createConnector from '.';
-import { mockedConnectorConfig, mockedValidConnectorConfig, phoneTest, codeTest } from './mock';
+import { mockedConnectorConfig, phoneTest, codeTest } from './mock';
 import { sendSms } from './single-send-text';
 
 const getConfig = jest.fn().mockResolvedValue(mockedConnectorConfig);

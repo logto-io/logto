@@ -1,4 +1,4 @@
-import { GeneralConnector } from '@logto/connector-core';
+import { AllConnector } from '@logto/connector-core';
 import { Connector, PasscodeType } from '@logto/schemas';
 import { z } from 'zod';
 
@@ -16,7 +16,16 @@ export const socialUserInfoGuard = z.object({
 
 export type SocialUserInfo = z.infer<typeof socialUserInfoGuard>;
 
-export type LogtoConnector = Required<GeneralConnector> & {
-  dbEntry: Connector;
+/**
+ * Dynamic loaded connector type.
+ */
+export type LoadConnector<T extends AllConnector = AllConnector> = T & {
   validateConfig: (config: unknown) => void;
+};
+
+/**
+ * The connector type with full context.
+ */
+export type LogtoConnector<T extends AllConnector = AllConnector> = LoadConnector<T> & {
+  dbEntry: Connector;
 };

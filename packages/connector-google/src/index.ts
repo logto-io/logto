@@ -11,6 +11,7 @@ import {
   validateConfig,
   CreateConnector,
   SocialConnector,
+  ConnectorType,
 } from '@logto/connector-core';
 import { conditional, assert } from '@silverhand/essentials';
 import got, { HTTPError } from 'got';
@@ -143,6 +144,7 @@ const getUserInfoErrorHandler = (error: unknown) => {
 const createGoogleConnector: CreateConnector<SocialConnector> = async ({ getConfig }) => {
   return {
     metadata: defaultMetadata,
+    type: ConnectorType.Social,
     configGuard: googleConfigGuard,
     getAuthorizationUri: getAuthorizationUri(getConfig),
     getUserInfo: getUserInfo(getConfig),

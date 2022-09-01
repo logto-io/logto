@@ -111,7 +111,7 @@ export type LanguageInfo = z.infer<typeof languageInfoGuard>;
 export enum SignInMethodKey {
   Username = 'username',
   Email = 'email',
-  SMS = 'sms',
+  Sms = 'sms',
   Social = 'social',
 }
 
@@ -124,7 +124,7 @@ export enum SignInMethodState {
 export const signInMethodsGuard = z.object({
   [SignInMethodKey.Username]: z.nativeEnum(SignInMethodState),
   [SignInMethodKey.Email]: z.nativeEnum(SignInMethodState),
-  [SignInMethodKey.SMS]: z.nativeEnum(SignInMethodState),
+  [SignInMethodKey.Sms]: z.nativeEnum(SignInMethodState),
   [SignInMethodKey.Social]: z.nativeEnum(SignInMethodState),
 });
 

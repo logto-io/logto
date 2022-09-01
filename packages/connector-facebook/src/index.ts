@@ -12,6 +12,7 @@ import {
   GetUserInfo,
   GetConnectorConfig,
   validateConfig,
+  ConnectorType,
 } from '@logto/connector-core';
 import { assert } from '@silverhand/essentials';
 import got, { HTTPError } from 'got';
@@ -160,6 +161,7 @@ const authorizationCallbackHandler = async (parameterObject: unknown) => {
 const createFacebookConnector: CreateConnector<SocialConnector> = async ({ getConfig }) => {
   return {
     metadata: defaultMetadata,
+    type: ConnectorType.Social,
     configGuard: facebookConfigGuard,
     getAuthorizationUri: getAuthorizationUri(getConfig),
     getUserInfo: getUserInfo(getConfig),

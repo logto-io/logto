@@ -143,7 +143,7 @@ const ConnectorDetails = () => {
                   }}
                 >
                   {t(
-                    data.type === ConnectorType.SMS
+                    data.type === ConnectorType.Sms
                       ? 'connector_details.options_change_sms'
                       : 'connector_details.options_change_email'
                   )}

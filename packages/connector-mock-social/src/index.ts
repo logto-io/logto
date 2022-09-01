@@ -7,6 +7,7 @@ import {
   GetUserInfo,
   CreateConnector,
   SocialConnector,
+  ConnectorType,
 } from '@logto/connector-core';
 import { z } from 'zod';
 
@@ -36,6 +37,7 @@ const getUserInfo: GetUserInfo = async (data) => {
 const createMockSocialConnector: CreateConnector<SocialConnector> = async ({ getConfig }) => {
   return {
     metadata: defaultMetadata,
+    type: ConnectorType.Social,
     configGuard: mockSocialConfigGuard,
     getAuthorizationUri,
     getUserInfo,

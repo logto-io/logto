@@ -1,4 +1,4 @@
-import { MessageTypes } from '@logto/connector-core';
+import { EmailConnector, MessageTypes, SmsConnector } from '@logto/connector-core';
 import { Connector, ConnectorType } from '@logto/schemas';
 import { any } from 'zod';
 
@@ -49,9 +49,7 @@ describe('connector route', () => {
 
     it('throws if more than one SMS connector is enabled', async () => {
       getLogtoConnectorsPlaceHolder.mockResolvedValueOnce(
-        mockLogtoConnectorList.filter(
-          (connector) => connector.metadata.type !== ConnectorType.Email
-        )
+        mockLogtoConnectorList.filter((connector) => connector.type !== ConnectorType.Email)
       );
       const response = await connectorRequest.get('/connectors').send({});
       expect(response).toHaveProperty('statusCode', 400);
@@ -59,9 +57,7 @@ describe('connector route', () => {
 
     it('shows all connectors', async () => {
       getLogtoConnectorsPlaceHolder.mockResolvedValueOnce(
-        mockLogtoConnectorList.filter(
-          (connector) => connector.metadata.type === ConnectorType.Social
-        )
+        mockLogtoConnectorList.filter((connector) => connector.type === ConnectorType.Social)
       );
       const response = await connectorRequest.get('/connectors').send({});
       expect(response).toHaveProperty('statusCode', 200);
@@ -100,12 +96,12 @@ describe('connector route', () => {
     it('should get SMS connector and send test message', async () => {
       const mockedMetadata = {
         ...mockMetadata,
-        type: ConnectorType.SMS,
       };
       const sendMessage = jest.fn();
-      const mockedSmsConnector: LogtoConnector = {
+      const mockedSmsConnector: LogtoConnector<SmsConnector> = {
         dbEntry: mockConnector,
         metadata: mockedMetadata,
+        type: ConnectorType.Sms,
         configGuard: any(),
         ...defaultConnectorMethods,
         sendMessage,
@@ -130,9 +126,10 @@ describe('connector route', () => {
 
     it('should get email connector and send test message', async () => {
       const sendMessage = jest.fn();
-      const mockedEmailConnector: LogtoConnector = {
+      const mockedEmailConnector: LogtoConnector<EmailConnector> = {
         dbEntry: mockConnector,
         metadata: mockMetadata,
+        type: ConnectorType.Email,
         configGuard: any(),
         ...defaultConnectorMethods,
         sendMessage,

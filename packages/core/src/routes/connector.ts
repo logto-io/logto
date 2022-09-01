@@ -12,9 +12,10 @@ import assertThat from '@/utils/assert-that';
 
 import { AuthedRouter } from './types';
 
-const transpileLogtoConnector = ({ dbEntry, metadata }: LogtoConnector): ConnectorDto => ({
-  ...dbEntry,
+const transpileLogtoConnector = ({ dbEntry, metadata, type }: LogtoConnector): ConnectorDto => ({
+  type,
   ...metadata,
+  ...dbEntry,
 });
 
 export default function connectorRoutes<T extends AuthedRouter>(router: T) {
@@ -31,14 +32,13 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
 
       assertThat(
         connectors.filter(
-          (connector) =>
-            connector.dbEntry.enabled && connector.metadata.type === ConnectorType.Email
+          (connector) => connector.dbEntry.enabled && connector.type === ConnectorType.Email
         ).length <= 1,
         'connector.more_than_one_email'
       );
       assertThat(
         connectors.filter(
-          (connector) => connector.dbEntry.enabled && connector.metadata.type === ConnectorType.SMS
+          (connector) => connector.dbEntry.enabled && connector.type === ConnectorType.Sms
         ).length <= 1,
         'connector.more_than_one_sms'
       );
@@ -80,6 +80,7 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
       } = ctx.guard;
 
       const {
+        type,
         dbEntry: { config },
         metadata,
         validateConfig,
@@ -91,15 +92,12 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
 
       // Only allow one enabled connector for SMS and Email.
       // disable other connectors before enable this one.
-      if (
-        enabled &&
-        (metadata.type === ConnectorType.SMS || metadata.type === ConnectorType.Email)
-      ) {
+      if (enabled && (type === ConnectorType.Sms || type === ConnectorType.Email)) {
         const connectors = await getLogtoConnectors();
         await Promise.all(
           connectors
             .filter(
-              ({ dbEntry: { enabled }, metadata: { type } }) => type === metadata.type && enabled
+              ({ dbEntry: { enabled }, type: currentType }) => type === currentType && enabled
             )
             .map(async ({ dbEntry: { id } }) =>
               updateConnector({ set: { enabled: false }, where: { id }, jsonbMode: 'merge' })
@@ -112,7 +110,7 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
         where: { id },
         jsonbMode: 'merge',
       });
-      ctx.body = { ...connector, metadata };
+      ctx.body = { ...connector, metadata, type };
 
       return next();
     }
@@ -130,14 +128,14 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
         body,
       } = ctx.guard;
 
-      const { metadata, validateConfig } = await getLogtoConnectorById(id);
+      const { metadata, type, validateConfig } = await getLogtoConnectorById(id);
 
       if (body.config) {
         validateConfig(body.config);
       }
 
       const connector = await updateConnector({ set: body, where: { id }, jsonbMode: 'replace' });
-      ctx.body = { ...connector, metadata };
+      ctx.body = { ...connector, metadata, type };
 
       return next();
     }
@@ -164,21 +162,17 @@ export default function connectorRoutes<T extends AuthedRouter>(router: T) {
       const subject = phone ?? email;
       assertThat(subject, new RequestError({ code: 'guard.invalid_input' }));
 
-      const connector = phone
-        ? logtoConnectors.find(
-            ({ metadata: { id: id_, type } }) => id_ === id && type === ConnectorType.SMS
-          )
-        : logtoConnectors.find(
-            ({ metadata: { id: id_, type } }) => id_ === id && type === ConnectorType.Email
-          );
+      const connector = logtoConnectors.find(({ metadata: { id: currentId } }) => currentId === id);
+      const expectType = phone ? ConnectorType.Sms : ConnectorType.Email;
 
       assertThat(
         connector,
         new RequestError({
           code: 'connector.not_found',
-          type: phone ? ConnectorType.SMS : ConnectorType.Email,
+          type: expectType,
         })
       );
+      assertThat(connector.type === expectType, 'connector.unexpected_type');
 
       const { sendMessage } = connector;
 

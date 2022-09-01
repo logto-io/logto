@@ -46,7 +46,7 @@ const CreateForm = ({ onClose, isOpen: isFormOpen, type }: Props) => {
       return 'connectors.setup_title.email';
     }
 
-    if (type === ConnectorType.SMS) {
+    if (type === ConnectorType.Sms) {
       return 'connectors.setup_title.sms';
     }
 

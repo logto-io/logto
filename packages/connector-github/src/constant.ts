@@ -8,7 +8,6 @@ export const userInfoEndpoint = 'https://api.github.com/user';
 export const defaultMetadata: ConnectorMetadata = {
   id: 'github-universal',
   target: 'github',
-  type: ConnectorType.Social,
   platform: ConnectorPlatform.Universal,
   name: {
     en: 'GitHub',

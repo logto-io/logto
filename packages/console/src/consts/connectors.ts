@@ -9,7 +9,7 @@ type TitlePlaceHolder = {
 };
 
 export const connectorTitlePlaceHolder: TitlePlaceHolder = Object.freeze({
-  [ConnectorType.SMS]: 'connectors.type.sms',
+  [ConnectorType.Sms]: 'connectors.type.sms',
   [ConnectorType.Email]: 'connectors.type.email',
   [ConnectorType.Social]: 'connectors.type.social',
 });
@@ -29,6 +29,6 @@ type ConnectorPlaceholderIcon = {
 };
 
 export const connectorPlaceholderIcon: ConnectorPlaceholderIcon = Object.freeze({
-  [ConnectorType.SMS]: SmsConnectorIcon,
+  [ConnectorType.Sms]: SmsConnectorIcon,
   [ConnectorType.Email]: EmailConnector,
 } as const);

@@ -14,6 +14,7 @@ import {
   CreateConnector,
   SocialConnector,
   validateConfig,
+  ConnectorType,
 } from '@logto/connector-core';
 import { assert } from '@silverhand/essentials';
 import dayjs from 'dayjs';
@@ -192,6 +193,7 @@ const authorizationCallbackHandler = async (parameterObject: unknown) => {
 const createAlipayConnector: CreateConnector<SocialConnector> = async ({ getConfig }) => {
   return {
     metadata: defaultMetadata,
+    type: ConnectorType.Social,
     configGuard: alipayConfigGuard,
     getAuthorizationUri: getAuthorizationUri(getConfig),
     getUserInfo: getUserInfo(getConfig),

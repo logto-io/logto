@@ -51,7 +51,7 @@ export const signInExperienceParser = {
         primary: primaryMethod,
         enableSecondary: secondaryMethods.length > 0,
         username: secondaryMethods.includes(SignInMethodKey.Username),
-        sms: secondaryMethods.includes(SignInMethodKey.SMS),
+        sms: secondaryMethods.includes(SignInMethodKey.Sms),
         email: secondaryMethods.includes(SignInMethodKey.Email),
         social: secondaryMethods.includes(SignInMethodKey.Social),
       },
