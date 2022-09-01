@@ -26,15 +26,15 @@
   "dependencies": {
     "@logto/connector-core": "^1.0.0-beta.8",
     "@silverhand/essentials": "^1.2.0",
-    "@silverhand/jest-config": "1.0.0-rc.3",
+    "@silverhand/jest-config": "1.0.0",
     "got": "^11.8.2",
     "query-string": "^7.0.1",
     "zod": "^3.14.3"
   },
   "devDependencies": {
     "@jest/types": "^28.1.3",
-    "@silverhand/eslint-config": "1.0.0-rc.2",
-    "@silverhand/ts-config": "1.0.0-rc.2",
+    "@silverhand/eslint-config": "1.0.0",
+    "@silverhand/ts-config": "1.0.0",
     "@types/jest": "^28.1.6",
     "@types/node": "^16.3.1",
     "@vercel/ncc": "^0.34.0",

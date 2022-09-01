@@ -22,10 +22,10 @@
     "node": "^16.0.0"
   },
   "devDependencies": {
-    "@silverhand/eslint-config": "1.0.0-rc.2",
+    "@silverhand/eslint-config": "1.0.0",
     "@silverhand/essentials": "^1.2.0",
-    "@silverhand/jest-config": "1.0.0-rc.3",
-    "@silverhand/ts-config": "1.0.0-rc.2",
+    "@silverhand/jest-config": "1.0.0",
+    "@silverhand/ts-config": "1.0.0",
     "@types/jest": "^28.0.0",
     "@types/lodash.uniq": "^4.5.6",
     "@types/node": "16",

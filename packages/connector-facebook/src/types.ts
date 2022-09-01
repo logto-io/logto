@@ -1,4 +1,4 @@
-import { object, z } from 'zod';
+import { z } from 'zod';
 
 export const facebookConfigGuard = z.object({
   clientId: z.string(),

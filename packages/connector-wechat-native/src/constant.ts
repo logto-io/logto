@@ -1,4 +1,4 @@
-import { ConnectorMetadata, ConnectorType, ConnectorPlatform } from '@logto/connector-core';
+import { ConnectorMetadata, ConnectorPlatform } from '@logto/connector-core';
 
 export const authorizationEndpoint = 'wechat://'; // This is used to arouse the native WeChat App
 export const accessTokenEndpoint = 'https://api.weixin.qq.com/sns/oauth2/access_token';

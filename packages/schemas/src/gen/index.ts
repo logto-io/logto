@@ -5,7 +5,7 @@ import assert from 'assert';
 import fs from 'fs/promises';
 import path from 'path';
 
-import { conditional, conditionalString } from '@silverhand/essentials';
+import { conditionalString } from '@silverhand/essentials';
 import camelcase from 'camelcase';
 import uniq from 'lodash.uniq';
 import pluralize from 'pluralize';

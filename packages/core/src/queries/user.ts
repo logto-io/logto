@@ -1,7 +1,6 @@
 import { User, CreateUser, Users, UserRole } from '@logto/schemas';
 import { sql } from 'slonik';
 
-import { buildInsertInto } from '@/database/insert-into';
 import { buildUpdateWhere } from '@/database/update-where';
 import { conditionalSql, convertToIdentifiers, OmitAutoSetFields } from '@/database/utils';
 import envSet from '@/env-set';

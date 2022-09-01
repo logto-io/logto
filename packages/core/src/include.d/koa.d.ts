@@ -1,4 +1,4 @@
-import { DefaultState, DefaultContext, ParameterizedContext, Next, BaseRequest } from 'koa';
+import { DefaultState, DefaultContext, ParameterizedContext, BaseRequest } from 'koa';
 
 declare module 'koa' {
   // Have to do this patch since `compose.Middleware` returns `any`.
