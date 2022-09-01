@@ -1,5 +1,5 @@
 import { EmailConnector, MessageTypes, SmsConnector } from '@logto/connector-core';
-import { Connector, ConnectorType } from '@logto/schemas';
+import { ConnectorType } from '@logto/schemas';
 import { any } from 'zod';
 
 import { mockMetadata, mockConnector, mockLogtoConnectorList } from '@/__mocks__';

@@ -1,4 +1,4 @@
-import { ConnectorType, ConnectorMetadata } from '@logto/connector-core';
+import { ConnectorMetadata } from '@logto/connector-core';
 
 export const defaultMetadata: ConnectorMetadata = {
   id: 'mock-email-service',

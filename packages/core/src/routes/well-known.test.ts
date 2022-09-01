@@ -1,4 +1,4 @@
-import { ConnectorType, SignInMode } from '@logto/schemas';
+import { SignInMode } from '@logto/schemas';
 import { adminConsoleApplicationId, adminConsoleSignInExperience } from '@logto/schemas/lib/seeds';
 import { Provider } from 'oidc-provider';
 
@@ -12,8 +12,6 @@ import {
   mockWechatConnector,
   mockWechatNativeConnector,
 } from '@/__mocks__';
-import { getLogtoConnectorById } from '@/connectors';
-import RequestError from '@/errors/RequestError';
 import * as signInExperienceQueries from '@/queries/sign-in-experience';
 import wellKnownRoutes from '@/routes/well-known';
 import { createRequester } from '@/utils/test-utils';

@@ -5,7 +5,6 @@ import { useTranslation } from 'react-i18next';
 import Dropdown, { DropdownItem } from '@/components/Dropdown';
 import useSocial from '@/hooks/use-social';
 import { ConnectorData } from '@/types';
-import { isKeyOf } from '@/utils';
 
 import * as styles from './index.module.scss';
 

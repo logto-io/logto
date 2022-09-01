@@ -1,6 +1,6 @@
 import { languageOptions } from '@logto/phrases';
 import { AppearanceMode } from '@logto/schemas';
-import { languageKeyGuard, languageKeys } from '@logto/shared';
+import { languageKeyGuard } from '@logto/shared';
 import classNames from 'classnames';
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
