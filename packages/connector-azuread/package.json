@@ -26,7 +26,7 @@
     "@azure/msal-node": "^1.12.0",
     "@logto/connector-core": "^1.0.0-beta.8",
     "@silverhand/essentials": "^1.2.0",
-    "@silverhand/jest-config": "1.0.0-rc.3",
+    "@silverhand/jest-config": "1.0.0",
     "axios": "^0.27.2",
     "got": "^11.8.2",
     "zod": "^3.14.3"

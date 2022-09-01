@@ -26,7 +26,7 @@
   "dependencies": {
     "@logto/connector-core": "^1.0.0-beta.8",
     "@silverhand/essentials": "^1.2.0",
-    "@silverhand/jest-config": "1.0.0-rc.3",
+    "@silverhand/jest-config": "1.0.0",
     "got": "^11.8.2",
     "jose": "^4.3.8",
     "zod": "^3.14.3"
