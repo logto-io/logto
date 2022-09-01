@@ -16,7 +16,7 @@ const jsonSafeParseParameters = (jsonString: string) => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return JSON.parse(jsonString);
   } catch {
-    throw new ConnectorError(ConnectorErrorCodes.General);
+    throw new ConnectorError(ConnectorErrorCodes.InvalidRequestParameters, jsonString);
   }
 };
 
