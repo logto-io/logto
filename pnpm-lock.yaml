@@ -21,7 +21,7 @@ importers:
   packages/connector-alipay-native:
     specifiers:
       '@jest/types': ^28.1.3
-      '@logto/connector-core': ^1.0.0-beta.6
+      '@logto/connector-core': ^1.0.0-beta.8
       '@shopify/jest-koa-mocks': ^5.0.0
       '@silverhand/eslint-config': 1.0.0-rc.2
       '@silverhand/essentials': ^1.2.0
@@ -76,7 +76,7 @@ importers:
   packages/connector-alipay-web:
     specifiers:
       '@jest/types': ^28.1.3
-      '@logto/connector-core': ^1.0.0-beta.6
+      '@logto/connector-core': ^1.0.0-beta.8
       '@shopify/jest-koa-mocks': ^5.0.0
       '@silverhand/eslint-config': 1.0.0-rc.2
       '@silverhand/essentials': ^1.2.0
@@ -131,7 +131,7 @@ importers:
   packages/connector-aliyun-dm:
     specifiers:
       '@jest/types': ^28.1.3
-      '@logto/connector-core': ^1.0.0-beta.6
+      '@logto/connector-core': ^1.0.0-beta.8
       '@silverhand/eslint-config': 1.0.0-rc.2
       '@silverhand/essentials': ^1.2.0
       '@silverhand/jest-config': 1.0.0-rc.3
@@ -168,7 +168,7 @@ importers:
   packages/connector-aliyun-sms:
     specifiers:
       '@jest/types': ^28.1.3
-      '@logto/connector-core': ^1.0.0-beta.6
+      '@logto/connector-core': ^1.0.0-beta.8
       '@silverhand/eslint-config': 1.0.0-rc.2
       '@silverhand/essentials': ^1.2.0
       '@silverhand/jest-config': 1.0.0-rc.3
@@ -205,7 +205,7 @@ importers:
   packages/connector-apple:
     specifiers:
       '@jest/types': ^28.1.3
-      '@logto/connector-core': ^1.0.0-beta.6
+      '@logto/connector-core': ^1.0.0-beta.8
       '@silverhand/eslint-config': 1.0.0-rc.2
       '@silverhand/essentials': ^1.2.0
       '@silverhand/jest-config': 1.0.0-rc.3
@@ -249,7 +249,7 @@ importers:
     specifiers:
       '@azure/msal-node': ^1.12.0
       '@jest/types': ^28.1.3
-      '@logto/connector-core': ^1.0.0-beta.6
+      '@logto/connector-core': ^1.0.0-beta.8
       '@silverhand/eslint-config': 1.0.0-rc.2
       '@silverhand/essentials': ^1.2.0
       '@silverhand/jest-config': 1.0.0-rc.3
@@ -292,7 +292,7 @@ importers:
 
   packages/connector-core:
     specifiers:
-      '@logto/shared': ^1.0.0-beta.6
+      '@logto/shared': ^1.0.0-beta.8
       '@silverhand/eslint-config': 1.0.0-rc.2
       '@silverhand/essentials': ^1.2.0
       '@silverhand/ts-config': 1.0.0-rc.2
@@ -318,7 +318,7 @@ importers:
   packages/connector-facebook:
     specifiers:
       '@jest/types': ^28.1.3
-      '@logto/connector-core': ^1.0.0-beta.6
+      '@logto/connector-core': ^1.0.0-beta.8
       '@silverhand/eslint-config': 1.0.0-rc.2
       '@silverhand/essentials': ^1.2.0
       '@silverhand/jest-config': 1.0.0-rc.3
@@ -359,7 +359,7 @@ importers:
   packages/connector-github:
     specifiers:
       '@jest/types': ^28.1.3
-      '@logto/connector-core': ^1.0.0-beta.6
+      '@logto/connector-core': ^1.0.0-beta.8
       '@silverhand/eslint-config': 1.0.0-rc.2
       '@silverhand/essentials': ^1.2.0
       '@silverhand/jest-config': 1.0.0-rc.3
@@ -402,7 +402,7 @@ importers:
   packages/connector-google:
     specifiers:
       '@jest/types': ^28.1.3
-      '@logto/connector-core': ^1.0.0-beta.6
+      '@logto/connector-core': ^1.0.0-beta.8
       '@silverhand/eslint-config': 1.0.0-rc.2
       '@silverhand/essentials': ^1.2.0
       '@silverhand/jest-config': 1.0.0-rc.3
@@ -443,7 +443,7 @@ importers:
   packages/connector-kakao:
     specifiers:
       '@jest/types': ^28.1.3
-      '@logto/connector-core': ^1.0.0-beta.5
+      '@logto/connector-core': ^1.0.0-beta.8
       '@silverhand/eslint-config': 1.0.0-rc.2
       '@silverhand/essentials': ^1.2.0
       '@silverhand/jest-config': 1.0.0-rc.3
@@ -483,7 +483,7 @@ importers:
 
   packages/connector-mock-email:
     specifiers:
-      '@logto/connector-core': ^1.0.0-beta.6
+      '@logto/connector-core': ^1.0.0-beta.8
       '@silverhand/eslint-config': 1.0.0-rc.2
       '@silverhand/essentials': ^1.2.0
       '@silverhand/ts-config': 1.0.0-rc.2
@@ -510,7 +510,7 @@ importers:
 
   packages/connector-mock-sms:
     specifiers:
-      '@logto/connector-core': ^1.0.0-beta.6
+      '@logto/connector-core': ^1.0.0-beta.8
       '@silverhand/eslint-config': 1.0.0-rc.2
       '@silverhand/essentials': ^1.2.0
       '@silverhand/ts-config': 1.0.0-rc.2
@@ -537,8 +537,8 @@ importers:
 
   packages/connector-mock-social:
     specifiers:
-      '@logto/connector-core': ^1.0.0-beta.6
-      '@logto/schemas': ^1.0.0-beta.6
+      '@logto/connector-core': ^1.0.0-beta.8
+      '@logto/schemas': ^1.0.0-beta.8
       '@silverhand/eslint-config': 1.0.0-rc.2
       '@silverhand/essentials': ^1.2.0
       '@silverhand/ts-config': 1.0.0-rc.2
@@ -567,7 +567,7 @@ importers:
   packages/connector-sendgrid-mail:
     specifiers:
       '@jest/types': ^28.1.3
-      '@logto/connector-core': ^1.0.0-beta.6
+      '@logto/connector-core': ^1.0.0-beta.8
       '@silverhand/eslint-config': 1.0.0-rc.2
       '@silverhand/essentials': ^1.2.0
       '@silverhand/jest-config': 1.0.0-rc.3
@@ -604,8 +604,8 @@ importers:
   packages/connector-smtp:
     specifiers:
       '@jest/types': ^28.1.3
-      '@logto/connector-core': ^1.0.0-beta.6
-      '@logto/shared': ^1.0.0-beta.6
+      '@logto/connector-core': ^1.0.0-beta.8
+      '@logto/shared': ^1.0.0-beta.8
       '@silverhand/eslint-config': 1.0.0-rc.2
       '@silverhand/essentials': ^1.2.0
       '@silverhand/jest-config': 1.0.0-rc.3
@@ -645,7 +645,7 @@ importers:
   packages/connector-twilio-sms:
     specifiers:
       '@jest/types': ^28.1.3
-      '@logto/connector-core': ^1.0.0-beta.6
+      '@logto/connector-core': ^1.0.0-beta.8
       '@silverhand/eslint-config': 1.0.0-rc.2
       '@silverhand/essentials': ^1.2.0
       '@silverhand/jest-config': 1.0.0-rc.3
@@ -682,7 +682,7 @@ importers:
   packages/connector-wechat-native:
     specifiers:
       '@jest/types': ^28.1.3
-      '@logto/connector-core': ^1.0.0-beta.6
+      '@logto/connector-core': ^1.0.0-beta.8
       '@silverhand/eslint-config': 1.0.0-rc.2
       '@silverhand/essentials': ^1.2.0
       '@silverhand/jest-config': 1.0.0-rc.3
@@ -723,7 +723,7 @@ importers:
   packages/connector-wechat-web:
     specifiers:
       '@jest/types': ^28.1.3
-      '@logto/connector-core': ^1.0.0-beta.6
+      '@logto/connector-core': ^1.0.0-beta.8
       '@silverhand/eslint-config': 1.0.0-rc.2
       '@silverhand/essentials': ^1.2.0
       '@silverhand/jest-config': 1.0.0-rc.3
@@ -764,11 +764,11 @@ importers:
   packages/console:
     specifiers:
       '@fontsource/roboto-mono': ^4.5.7
-      '@logto/phrases': ^1.0.0-beta.6
-      '@logto/phrases-ui': ^1.0.0-beta.6
+      '@logto/phrases': ^1.0.0-beta.8
+      '@logto/phrases-ui': ^1.0.0-beta.8
       '@logto/react': ^1.0.0-beta.2
-      '@logto/schemas': ^1.0.0-beta.6
-      '@logto/shared': ^1.0.0-beta.6
+      '@logto/schemas': ^1.0.0-beta.8
+      '@logto/shared': ^1.0.0-beta.8
       '@mdx-js/react': ^1.6.22
       '@parcel/core': 2.7.0
       '@parcel/transformer-mdx': 2.7.0
@@ -893,25 +893,25 @@ importers:
 
   packages/core:
     specifiers:
-      '@logto/connector-alipay-native': ^1.0.0-beta.6
-      '@logto/connector-alipay-web': ^1.0.0-beta.6
-      '@logto/connector-aliyun-dm': ^1.0.0-beta.6
-      '@logto/connector-aliyun-sms': ^1.0.0-beta.6
-      '@logto/connector-apple': ^1.0.0-beta.6
-      '@logto/connector-azuread': ^1.0.0-beta.6
-      '@logto/connector-core': ^1.0.0-beta.6
-      '@logto/connector-facebook': ^1.0.0-beta.6
-      '@logto/connector-github': ^1.0.0-beta.6
-      '@logto/connector-google': ^1.0.0-beta.6
-      '@logto/connector-kakao': ^1.0.0-beta.6
-      '@logto/connector-sendgrid-email': ^1.0.0-beta.6
-      '@logto/connector-smtp': ^1.0.0-beta.6
-      '@logto/connector-twilio-sms': ^1.0.0-beta.6
-      '@logto/connector-wechat-native': ^1.0.0-beta.6
-      '@logto/connector-wechat-web': ^1.0.0-beta.6
-      '@logto/phrases': ^1.0.0-beta.6
-      '@logto/schemas': ^1.0.0-beta.6
-      '@logto/shared': ^1.0.0-beta.6
+      '@logto/connector-alipay-native': ^1.0.0-beta.8
+      '@logto/connector-alipay-web': ^1.0.0-beta.8
+      '@logto/connector-aliyun-dm': ^1.0.0-beta.8
+      '@logto/connector-aliyun-sms': ^1.0.0-beta.8
+      '@logto/connector-apple': ^1.0.0-beta.8
+      '@logto/connector-azuread': ^1.0.0-beta.8
+      '@logto/connector-core': ^1.0.0-beta.8
+      '@logto/connector-facebook': ^1.0.0-beta.8
+      '@logto/connector-github': ^1.0.0-beta.8
+      '@logto/connector-google': ^1.0.0-beta.8
+      '@logto/connector-kakao': ^1.0.0-beta.8
+      '@logto/connector-sendgrid-email': ^1.0.0-beta.8
+      '@logto/connector-smtp': ^1.0.0-beta.8
+      '@logto/connector-twilio-sms': ^1.0.0-beta.8
+      '@logto/connector-wechat-native': ^1.0.0-beta.8
+      '@logto/connector-wechat-web': ^1.0.0-beta.8
+      '@logto/phrases': ^1.0.0-beta.8
+      '@logto/schemas': ^1.0.0-beta.8
+      '@logto/shared': ^1.0.0-beta.8
       '@shopify/jest-koa-mocks': ^5.0.0
       '@silverhand/eslint-config': 1.0.0-rc.2
       '@silverhand/essentials': ^1.2.0
@@ -1068,10 +1068,10 @@ importers:
 
   packages/demo-app:
     specifiers:
-      '@logto/phrases': ^1.0.0-beta.6
+      '@logto/phrases': ^1.0.0-beta.8
       '@logto/react': ^1.0.0-beta.2
-      '@logto/schemas': ^1.0.0-beta.6
-      '@logto/shared': ^1.0.0-beta.6
+      '@logto/schemas': ^1.0.0-beta.8
+      '@logto/shared': ^1.0.0-beta.8
       '@parcel/core': 2.7.0
       '@parcel/transformer-sass': 2.7.0
       '@silverhand/eslint-config': 1.0.0-rc.2
@@ -1124,7 +1124,7 @@ importers:
     specifiers:
       '@jest/types': ^28.1.3
       '@logto/node': 1.0.0-beta.2
-      '@logto/schemas': ^1.0.0-beta.6
+      '@logto/schemas': ^1.0.0-beta.8
       '@peculiar/webcrypto': ^1.3.3
       '@silverhand/eslint-config': 1.0.0-rc.2
       '@silverhand/essentials': ^1.2.0
@@ -1174,7 +1174,7 @@ importers:
 
   packages/phrases:
     specifiers:
-      '@logto/shared': ^1.0.0-beta.6
+      '@logto/shared': ^1.0.0-beta.8
       '@silverhand/eslint-config': 1.0.0-rc.2
       '@silverhand/essentials': ^1.2.0
       '@silverhand/ts-config': 1.0.0-rc.2
@@ -1195,7 +1195,7 @@ importers:
 
   packages/phrases-ui:
     specifiers:
-      '@logto/shared': ^1.0.0-beta.6
+      '@logto/shared': ^1.0.0-beta.8
       '@silverhand/eslint-config': 1.0.0-rc.2
       '@silverhand/essentials': ^1.2.0
       '@silverhand/ts-config': 1.0.0-rc.2
@@ -1216,10 +1216,10 @@ importers:
 
   packages/schemas:
     specifiers:
-      '@logto/connector-core': ^1.0.0-beta.6
-      '@logto/phrases': ^1.0.0-beta.6
-      '@logto/phrases-ui': ^1.0.0-beta.6
-      '@logto/shared': ^1.0.0-beta.6
+      '@logto/connector-core': ^1.0.0-beta.8
+      '@logto/phrases': ^1.0.0-beta.8
+      '@logto/phrases-ui': ^1.0.0-beta.8
+      '@logto/shared': ^1.0.0-beta.8
       '@silverhand/eslint-config': 1.0.0-rc.2
       '@silverhand/essentials': ^1.2.0
       '@silverhand/jest-config': 1.0.0-rc.3
@@ -1302,10 +1302,10 @@ importers:
 
   packages/ui:
     specifiers:
-      '@logto/phrases': ^1.0.0-beta.6
-      '@logto/phrases-ui': ^1.0.0-beta.6
-      '@logto/schemas': ^1.0.0-beta.6
-      '@logto/shared': ^1.0.0-beta.6
+      '@logto/phrases': ^1.0.0-beta.8
+      '@logto/phrases-ui': ^1.0.0-beta.8
+      '@logto/schemas': ^1.0.0-beta.8
+      '@logto/shared': ^1.0.0-beta.8
       '@parcel/core': 2.7.0
       '@parcel/transformer-sass': 2.7.0
       '@parcel/transformer-svg-react': 2.7.0
@@ -2446,7 +2446,6 @@ packages:
       pacote: 13.4.1
       semver: 7.3.7
     transitivePeerDependencies:
-      - bluebird
       - supports-color
     dev: true
 
@@ -2477,7 +2476,6 @@ packages:
       p-waterfall: 2.1.1
       semver: 7.3.7
     transitivePeerDependencies:
-      - bluebird
       - supports-color
     dev: true
 
@@ -2618,7 +2616,6 @@ packages:
       whatwg-url: 8.7.0
       yargs-parser: 20.2.4
     transitivePeerDependencies:
-      - bluebird
       - supports-color
     dev: true
 
@@ -2816,7 +2813,6 @@ packages:
       npm-registry-fetch: 9.0.0
       npmlog: 4.1.2
     transitivePeerDependencies:
-      - bluebird
       - supports-color
     dev: true
 
@@ -2846,7 +2842,6 @@ packages:
       pify: 5.0.0
       read-package-json: 3.0.1
     transitivePeerDependencies:
-      - bluebird
       - supports-color
     dev: true
 
@@ -2885,7 +2880,6 @@ packages:
       npmlog: 4.1.2
       tar: 6.1.11
     transitivePeerDependencies:
-      - bluebird
       - supports-color
     dev: true
 
@@ -2984,7 +2978,6 @@ packages:
       pacote: 13.4.1
       semver: 7.3.7
     transitivePeerDependencies:
-      - bluebird
       - encoding
       - supports-color
     dev: true
@@ -3030,7 +3023,6 @@ packages:
       '@npmcli/run-script': 3.0.2
       npmlog: 4.1.2
     transitivePeerDependencies:
-      - bluebird
       - supports-color
     dev: true
 
@@ -3132,7 +3124,6 @@ packages:
       slash: 3.0.0
       write-json-file: 4.3.0
     transitivePeerDependencies:
-      - bluebird
       - encoding
       - supports-color
     dev: true
@@ -3362,7 +3353,6 @@ packages:
       treeverse: 2.0.0
       walk-up-path: 1.0.0
     transitivePeerDependencies:
-      - bluebird
       - supports-color
     dev: true
 
@@ -3398,8 +3388,6 @@ packages:
       promise-retry: 2.0.1
       semver: 7.3.7
       which: 2.0.2
-    transitivePeerDependencies:
-      - bluebird
     dev: true
 
   /@npmcli/installed-package-contents/1.0.7:
@@ -3430,7 +3418,6 @@ packages:
       pacote: 13.4.1
       semver: 7.3.7
     transitivePeerDependencies:
-      - bluebird
       - supports-color
     dev: true
 
@@ -3482,7 +3469,6 @@ packages:
       node-gyp: 9.0.0
       read-package-json-fast: 2.0.3
     transitivePeerDependencies:
-      - bluebird
       - supports-color
     dev: true
 
@@ -6147,8 +6133,6 @@ packages:
       ssri: 8.0.1
       tar: 6.1.11
       unique-filename: 1.1.1
-    transitivePeerDependencies:
-      - bluebird
     dev: true
 
   /cacache/16.1.0:
@@ -6173,8 +6157,6 @@ packages:
       ssri: 9.0.1
       tar: 6.1.11
       unique-filename: 1.1.1
-    transitivePeerDependencies:
-      - bluebird
     dev: true
 
   /cache-content-type/1.0.1:
@@ -6686,8 +6668,8 @@ packages:
     engines: {node: '>=10'}
     hasBin: true
     dependencies:
-      JSONStream: 1.3.5
       is-text-path: 1.0.1
+      JSONStream: 1.3.5
       lodash: 4.17.21
       meow: 8.1.2
       split2: 3.2.2
@@ -6983,11 +6965,6 @@ packages:
 
   /debug/3.2.7:
     resolution: {integrity: sha512-CFjzYYAi4ThfiQvizrFQevTTXHtnCqWfe7x1AhgEscTz6ZbLbfoLRLPugTQyBth6f8ZERVUSyWHFD/7Wu4t1XQ==}
-    peerDependencies:
-      supports-color: '*'
-    peerDependenciesMeta:
-      supports-color:
-        optional: true
     dependencies:
       ms: 2.1.3
     dev: true
@@ -7528,8 +7505,6 @@ packages:
     dependencies:
       debug: 3.2.7
       resolve: 1.22.0
-    transitivePeerDependencies:
-      - supports-color
     dev: true
 
   /eslint-import-resolver-typescript/3.4.0_jatgrcxl4x7ywe7ak6cnjca2ae:
@@ -7561,8 +7536,6 @@ packages:
       eslint-import-resolver-node: 0.3.6
       eslint-import-resolver-typescript: 3.4.0_jatgrcxl4x7ywe7ak6cnjca2ae
       find-up: 2.1.0
-    transitivePeerDependencies:
-      - supports-color
     dev: true
 
   /eslint-plugin-consistent-default-export-name/0.0.15:
@@ -10794,7 +10767,6 @@ packages:
       import-local: 3.1.0
       npmlog: 4.1.2
     transitivePeerDependencies:
-      - bluebird
       - encoding
       - supports-color
     dev: true
@@ -10829,7 +10801,6 @@ packages:
       npm-package-arg: 8.1.5
       npm-registry-fetch: 11.0.0
     transitivePeerDependencies:
-      - bluebird
       - supports-color
     dev: true
 
@@ -10843,7 +10814,6 @@ packages:
       semver: 7.3.7
       ssri: 8.0.1
     transitivePeerDependencies:
-      - bluebird
       - supports-color
     dev: true
 
@@ -11168,7 +11138,6 @@ packages:
       socks-proxy-agent: 6.1.1
       ssri: 9.0.1
     transitivePeerDependencies:
-      - bluebird
       - supports-color
     dev: true
 
@@ -11192,7 +11161,6 @@ packages:
       socks-proxy-agent: 5.0.1
       ssri: 8.0.1
     transitivePeerDependencies:
-      - bluebird
       - supports-color
     dev: true
 
@@ -11217,7 +11185,6 @@ packages:
       socks-proxy-agent: 6.1.1
       ssri: 8.0.1
     transitivePeerDependencies:
-      - bluebird
       - supports-color
     dev: true
 
@@ -12114,7 +12081,6 @@ packages:
       tar: 6.1.11
       which: 2.0.2
     transitivePeerDependencies:
-      - bluebird
       - supports-color
     dev: true
 
@@ -12303,7 +12269,6 @@ packages:
       minizlib: 2.1.2
       npm-package-arg: 8.1.5
     transitivePeerDependencies:
-      - bluebird
       - supports-color
     dev: true
 
@@ -12319,7 +12284,6 @@ packages:
       npm-package-arg: 9.0.2
       proc-log: 2.0.1
     transitivePeerDependencies:
-      - bluebird
       - supports-color
     dev: true
 
@@ -12336,7 +12300,6 @@ packages:
       minizlib: 2.1.2
       npm-package-arg: 8.1.5
     transitivePeerDependencies:
-      - bluebird
       - supports-color
     dev: true
 
@@ -12742,7 +12705,6 @@ packages:
       ssri: 9.0.1
       tar: 6.1.11
     transitivePeerDependencies:
-      - bluebird
       - supports-color
     dev: true
 
@@ -13478,11 +13440,6 @@ packages:
 
   /promise-inflight/1.0.1:
     resolution: {integrity: sha1-mEcocL8igTL8vdhoEputEsPAKeM=}
-    peerDependencies:
-      bluebird: '*'
-    peerDependenciesMeta:
-      bluebird:
-        optional: true
     dev: true
 
   /promise-retry/2.0.1:

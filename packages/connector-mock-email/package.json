@@ -1,6 +1,6 @@
 {
   "name": "@logto/connector-mock-email",
-  "version": "1.0.0-beta.6",
+  "version": "1.0.0-beta.8",
   "description": "Mock Email Service connector implementation for integration tests only.",
   "main": "./lib/index.js",
   "exports": "./lib/index.js",
@@ -21,7 +21,7 @@
     "prepack": "pnpm build"
   },
   "dependencies": {
-    "@logto/connector-core": "^1.0.0-beta.6",
+    "@logto/connector-core": "^1.0.0-beta.8",
     "@silverhand/essentials": "^1.2.0",
     "zod": "^3.14.3"
   },

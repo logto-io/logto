@@ -1,6 +1,6 @@
 {
   "name": "@logto/ui",
-  "version": "1.0.0-beta.6",
+  "version": "1.0.0-beta.8",
   "license": "MPL-2.0",
   "private": true,
   "scripts": {
@@ -16,9 +16,9 @@
     "test": "jest"
   },
   "devDependencies": {
-    "@logto/phrases": "^1.0.0-beta.6",
-    "@logto/phrases-ui": "^1.0.0-beta.6",
-    "@logto/schemas": "^1.0.0-beta.6",
+    "@logto/phrases": "^1.0.0-beta.8",
+    "@logto/phrases-ui": "^1.0.0-beta.8",
+    "@logto/schemas": "^1.0.0-beta.8",
     "@parcel/core": "2.7.0",
     "@parcel/transformer-sass": "2.7.0",
     "@parcel/transformer-svg-react": "2.7.0",
@@ -82,6 +82,6 @@
   },
   "prettier": "@silverhand/eslint-config/.prettierrc",
   "dependencies": {
-    "@logto/shared": "^1.0.0-beta.6"
+    "@logto/shared": "^1.0.0-beta.8"
   }
 }
