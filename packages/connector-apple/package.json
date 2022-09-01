@@ -52,5 +52,8 @@
   "eslintConfig": {
     "extends": "@silverhand"
   },
-  "prettier": "@silverhand/eslint-config/.prettierrc"
+  "prettier": "@silverhand/eslint-config/.prettierrc",
+  "publishConfig": {
+    "access": "public"
+  }
 }
