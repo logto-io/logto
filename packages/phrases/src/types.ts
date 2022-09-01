@@ -10,6 +10,7 @@ export type ResourceKey = string | Record<string, unknown>;
 const languageCodeAndDisplayNameMappings: Record<LanguageKey, string> = {
   en: 'English',
   fr: 'Français',
+  'pt-PT': 'Português',
   'zh-CN': '简体中文',
   'tr-TR': 'Türkçe',
   'ko-KR': '한국어',
