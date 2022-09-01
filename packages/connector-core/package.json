@@ -24,7 +24,7 @@
   },
   "devDependencies": {
     "@silverhand/eslint-config": "1.0.0-rc.2",
-    "@silverhand/ts-config": "1.0.0-rc.2",
+    "@silverhand/ts-config": "1.0.0",
     "@types/node": "^16.3.1",
     "eslint": "^8.21.0",
     "lint-staged": "^13.0.0",

@@ -25,7 +25,7 @@
     "@parcel/transformer-sass": "2.7.0",
     "@silverhand/eslint-config": "1.0.0-rc.2",
     "@silverhand/eslint-config-react": "1.0.0-rc.2",
-    "@silverhand/ts-config": "1.0.0-rc.2",
+    "@silverhand/ts-config": "1.0.0",
     "@silverhand/ts-config-react": "1.0.0-rc.2",
     "@types/react": "^18.0.0",
     "@types/react-dom": "^18.0.0",
