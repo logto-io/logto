@@ -12,11 +12,15 @@ export function validateConfig<T>(config: unknown, guard: ZodType): asserts conf
   }
 }
 
-export const jsonSafeParse = (jsonString: string) => {
+export const jsonSafeParse = (
+  jsonString: string,
+  errorCode: ConnectorErrorCodes = ConnectorErrorCodes.InvalidResponse,
+  payload?: unknown
+) => {
   try {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return JSON.parse(jsonString);
   } catch {
-    throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, jsonString);
+    throw new ConnectorError(errorCode, payload ?? jsonString);
   }
 };
