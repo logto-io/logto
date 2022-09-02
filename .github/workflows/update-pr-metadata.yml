@@ -15,7 +15,7 @@ jobs:
 
     steps:
       - name: Add labels
-        uses: silverhand-io/actions-add-labels-run-steps@v1.2.0
+        uses: silverhand-io/actions-add-labels-run-steps@v1.2.1
         with:
           title: ${{ github.event.pull_request.title || github.event.issue.title }}
           github-token: ${{ github.token }}
