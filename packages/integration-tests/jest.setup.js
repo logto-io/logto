@@ -15,3 +15,5 @@ global.fetch = fetch;
 global.TextDecoder = TextDecoder;
 global.TextEncoder = TextEncoder;
 /* eslint-enable @silverhand/fp/no-mutation */
+
+jest.setTimeout(10_000);
