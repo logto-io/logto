@@ -29,7 +29,6 @@ const loadEnvValues = async () => {
   const port = Number(getEnv('PORT', '3001'));
   const localhostUrl = `${isHttpsEnabled ? 'https' : 'http'}://localhost:${port}`;
   const endpoint = getEnv('ENDPOINT', localhostUrl);
-  const connectorDirectory = getEnv('CONNECTOR_DIRECTORY', defaultConnectorDirectory);
 
   return Object.freeze({
     isTest,
