@@ -40,7 +40,7 @@ const Settings = ({ applicationType, oidcConfig, defaultData, isDeleted }: Props
 
   const uriPatternRules: MultiTextInputRule = {
     pattern: {
-      verify: (value) => !value || uriValidator(value),
+      verify: (value) => !value || uriValidator(value, applicationType),
       message: t('errors.invalid_uri_format'),
     },
   };

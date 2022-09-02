@@ -151,7 +151,7 @@ describe('application route', () => {
     ).resolves.toHaveProperty('status', 400);
   });
 
-  it('PATHC /applications/:applicationId should save the formatted URIs as per RFC', async () => {
+  it('PATCH /applications/:applicationId should save the formatted URIs as per RFC', async () => {
     await expect(
       applicationRequest.patch('/applications/doo').send({
         oidcClientMetadata: {
@@ -167,7 +167,7 @@ describe('application route', () => {
     ).resolves.toHaveProperty('status', 200);
   });
 
-  it('PATCH /application/:applicationId expect to thorw with invalid redirectURI', async () => {
+  it('PATCH /application/:applicationId expect to throw with invalid redirectURI', async () => {
     await expect(
       applicationRequest.patch('/applications/doo').send({
         oidcClientMetadata: {

@@ -29,10 +29,15 @@ export const oidcModelInstancePayloadGuard = z
 
 export type OidcModelInstancePayload = z.infer<typeof oidcModelInstancePayloadGuard>;
 
-const redirectUriRegEx = /^https?:\/\/.*|^[a-z][\d_a-z]*(\.[\d_a-z]+)+[\d_a-z]:\/\/[a-z]*$/;
+export const redirectUriRegEx = /^https?:\/\/.*/;
+export const redirectNativeRegEx = /^[a-z][\d_a-z]*(\.[\d_a-z]+)+[\d_a-z]:\/\/[a-z]*$/;
 
 export const oidcClientMetadataGuard = z.object({
-  redirectUris: z.string().regex(redirectUriRegEx).array(),
+  redirectUris: z
+    .string()
+    .regex(redirectUriRegEx)
+    .array()
+    .or(z.string().regex(redirectNativeRegEx).array()),
   postLogoutRedirectUris: z.string().url().array(),
   logoUri: z.string().optional(),
 });

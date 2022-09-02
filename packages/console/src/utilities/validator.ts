@@ -1,13 +1,12 @@
-import { redirectUriRegEx } from '@logto/shared';
+import { ApplicationType } from '@logto/schemas';
+import { redirectUriRegEx, redirectNativeRegEx } from '@logto/shared';
 
-export const uriValidator = (value: string) => {
-  try {
-    redirectUriRegEx.test(value);
-  } catch {
-    return false;
+export const uriValidator = (value: string, applicationType?: ApplicationType) => {
+  if (applicationType === ApplicationType.Native) {
+    return redirectUriRegEx.test(value);
   }
 
-  return true;
+  return redirectNativeRegEx.test(value);
 };
 
 export const uriOriginValidator = (value: string) => {
