@@ -1,7 +1,8 @@
+import { redirectUriRegEx } from '@logto/shared';
+
 export const uriValidator = (value: string) => {
   try {
-    // eslint-disable-next-line no-new
-    new URL(value);
+    redirectUriRegEx.test(value);
   } catch {
     return false;
   }

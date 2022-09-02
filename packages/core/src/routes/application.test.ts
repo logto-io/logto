@@ -41,6 +41,11 @@ const customClientMetadata = {
   refreshTokenTtl: 100_000_000,
 };
 
+const customOidcClientMetadata = {
+  redirectUris: [],
+  postLogoutRedirectUris: [],
+};
+
 describe('application route', () => {
   const applicationRequest = createRequester({ authedRoutes: applicationRoutes });
 
@@ -141,6 +146,33 @@ describe('application route', () => {
         customClientMetadata: {
           ...customClientMetadata,
           corsAllowedOrigins: [''],
+        },
+      })
+    ).resolves.toHaveProperty('status', 400);
+  });
+
+  it('PATHC /applications/:applicationId should save the formatted URIs as per RFC', async () => {
+    await expect(
+      applicationRequest.patch('/applications/doo').send({
+        oidcClientMetadata: {
+          ...customClientMetadata,
+          redirectUris: [
+            'com.google.com://callback',
+            'https://example.com/callback?auth=true',
+            'http://example.com',
+            'http://localhost:3002',
+          ],
+        },
+      })
+    ).resolves.toHaveProperty('status', 200);
+  });
+
+  it('PATCH /application/:applicationId expect to thorw with invalid redirectURI', async () => {
+    await expect(
+      applicationRequest.patch('/applications/doo').send({
+        oidcClientMetadata: {
+          ...customOidcClientMetadata,
+          redirectUris: ['com.google.com'],
         },
       })
     ).resolves.toHaveProperty('status', 400);
