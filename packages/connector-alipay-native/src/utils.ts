@@ -1,6 +1,5 @@
 import * as crypto from 'crypto';
 
-import { ConnectorError, ConnectorErrorCodes } from '@logto/connector-core';
 import * as iconv from 'iconv-lite';
 import snakeCaseKeys from 'snakecase-keys';
 
@@ -11,15 +10,6 @@ export type SigningParameters = (
   parameters: AlipayNativeConfig & Record<string, string | undefined>
 ) => Record<string, string>;
 
-const jsonSafeParseParameters = (jsonString: string) => {
-  try {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-    return JSON.parse(jsonString);
-  } catch {
-    throw new ConnectorError(ConnectorErrorCodes.InvalidRequestParameters, jsonString);
-  }
-};
-
 // Reference: https://github.com/alipay/alipay-sdk-nodejs-all/blob/10d78e0adc7f310d5b07567ce7e4c13a3f6c768f/lib/util.ts
 export const signingParameters: SigningParameters = (
   parameters: AlipayNativeConfig & Record<string, string | undefined>
@@ -29,7 +19,7 @@ export const signingParameters: SigningParameters = (
     biz_content
       ? {
           ...rest,
-          bizContent: JSON.stringify(snakeCaseKeys(jsonSafeParseParameters(biz_content))),
+          bizContent: JSON.stringify(snakeCaseKeys(JSON.parse(biz_content))),
         }
       : rest
   );

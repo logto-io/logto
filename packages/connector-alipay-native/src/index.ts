@@ -17,7 +17,6 @@ import {
   SocialConnector,
   validateConfig,
   ConnectorType,
-  jsonSafeParse,
 } from '@logto/connector-core';
 import { assert } from '@silverhand/essentials';
 import dayjs from 'dayjs';
@@ -77,7 +76,7 @@ export const getAccessToken = async (code: string, config: AlipayNativeConfig) =
     timeout: defaultTimeout,
   });
 
-  const result = accessTokenResponseGuard.safeParse(jsonSafeParse(httpResponse.body));
+  const result = accessTokenResponseGuard.safeParse(JSON.parse(httpResponse.body));
 
   if (!result.success) {
     throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, result.error.message);
@@ -130,7 +129,7 @@ const getUserInfo =
       timeout: defaultTimeout,
     });
 
-    const result = userInfoResponseGuard.safeParse(jsonSafeParse(httpResponse.body));
+    const result = userInfoResponseGuard.safeParse(JSON.parse(httpResponse.body));
 
     if (!result.success) {
       throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, result.error.message);

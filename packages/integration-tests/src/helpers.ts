@@ -83,12 +83,8 @@ export const readPasscode = async (): Promise<PasscodeRecord> => {
   const content = buffer.toString();
 
   // For test use only
-  try {
-    // eslint-disable-next-line no-restricted-syntax
-    return JSON.parse(content) as PasscodeRecord;
-  } catch {
-    throw new Error('Failed to parse response!');
-  }
+  // eslint-disable-next-line no-restricted-syntax
+  return JSON.parse(content) as PasscodeRecord;
 };
 
 export const bindSocialToNewCreatedUser = async () => {

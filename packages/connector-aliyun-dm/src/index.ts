@@ -7,7 +7,6 @@ import {
   GetConnectorConfig,
   SendMessageFunction,
   validateConfig,
-  jsonSafeParse,
 } from '@logto/connector-core';
 import { assert } from '@silverhand/essentials';
 import { HTTPError } from 'got';
@@ -57,7 +56,7 @@ const sendMessage =
         accessKeySecret
       );
 
-      const result = sendEmailResponseGuard.safeParse(jsonSafeParse(httpResponse.body));
+      const result = sendEmailResponseGuard.safeParse(JSON.parse(httpResponse.body));
 
       if (!result.success) {
         throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, result.error.message);
@@ -83,7 +82,7 @@ const sendMessage =
   };
 
 const errorHandler = (errorResponseBody: string) => {
-  const result = sendMailErrorResponseGuard.safeParse(jsonSafeParse(errorResponseBody));
+  const result = sendMailErrorResponseGuard.safeParse(JSON.parse(errorResponseBody));
 
   if (!result.success) {
     throw new ConnectorError(ConnectorErrorCodes.InvalidResponse, result.error.message);
