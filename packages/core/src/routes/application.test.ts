@@ -153,7 +153,7 @@ describe('application route', () => {
 
   it('PATCH /applications/:applicationId should save the formatted URIs as per RFC', async () => {
     await expect(
-      applicationRequest.patch('/applications/doo').send({
+      applicationRequest.patch('/applications/foo').send({
         oidcClientMetadata: {
           ...customClientMetadata,
           redirectUris: [
@@ -169,7 +169,7 @@ describe('application route', () => {
 
   it('PATCH /application/:applicationId expect to throw with invalid redirectURI', async () => {
     await expect(
-      applicationRequest.patch('/applications/doo').send({
+      applicationRequest.patch('/applications/foo').send({
         oidcClientMetadata: {
           ...customOidcClientMetadata,
           redirectUris: ['com.google.com'],

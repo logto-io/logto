@@ -36,8 +36,8 @@ export const oidcClientMetadataGuard = z.object({
   redirectUris: z
     .string()
     .regex(redirectUriRegEx)
-    .array()
-    .or(z.string().regex(redirectNativeRegEx).array()),
+    .or(z.string().regex(redirectNativeRegEx))
+    .array(),
   postLogoutRedirectUris: z.string().url().array(),
   logoUri: z.string().optional(),
 });
