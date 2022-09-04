@@ -1,14 +1,37 @@
 tasks:
-  - name: Start Logto
+  - name: DB Server
+    init: docker pull postgres:14-alpine
+    command: docker run -p 5432:5432 -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=p0stgr3s postgres:14-alpine
+  - name: Logto Dev Mode
     init: |
-      docker-compose pull
+      pnpm i
+      pnpm prepack
     command: |
-      ENDPOINT=$(gp url 3001) docker compose -p logto up
+      ENDPOINT=$(gp url 3001) pnpm dev
     env:
-      TAG: prerelease
+      ALL_YES: 1
+      NO_INQUIRY: 0
+      TRUST_PROXY_HEADER: 1
+      DB_URL_DEFAULT: postgres://postgres:p0stgr3s@127.0.0.1:5432
 
 ports:
   - name: Logto
     description: The Logto core service
     port: 3001
     visibility: public
+  - name: Postgres
+    port: 5432
+    visibility: public
+    onOpen: ignore
+  - port: 5001
+    onOpen: ignore
+  - port: 5002
+    onOpen: ignore
+  - port: 5003
+    onOpen: ignore
+  - port: 6001
+    onOpen: ignore
+  - port: 6002
+    onOpen: ignore
+  - port: 6003
+    onOpen: ignore
