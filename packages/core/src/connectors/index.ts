@@ -1,16 +1,17 @@
-import { existsSync, readFileSync } from 'fs';
+import { existsSync } from 'fs';
+import { readdir } from 'fs/promises';
 import path from 'path';
 
 import { AllConnector, CreateConnector, validateConfig } from '@logto/connector-core';
-import resolvePackagePath from 'resolve-package-path';
+import chalk from 'chalk';
 
 import envSet from '@/env-set';
 import RequestError from '@/errors/RequestError';
 import { findAllConnectors, insertConnector } from '@/queries/connector';
 
-import { defaultConnectorMethods, defaultConnectorPackages } from './consts';
+import { defaultConnectorMethods } from './consts';
 import { LoadConnector, LogtoConnector } from './types';
-import { getConnectorConfig, validateConnectorModule } from './utilities';
+import { getConnectorConfig, readUrl, validateConnectorModule } from './utilities';
 
 // eslint-disable-next-line @silverhand/fp/no-let
 let cachedConnectors: LoadConnector[] | undefined;
@@ -21,79 +22,67 @@ const loadConnectors = async () => {
   }
 
   const {
-    values: { additionalConnectorPackages },
+    values: { connectorDirectory },
   } = envSet;
 
-  const connectorPackages = [...defaultConnectorPackages, ...additionalConnectorPackages];
+  if (!existsSync(connectorDirectory)) {
+    return [];
+  }
+
+  const connectorFolders = await readdir(connectorDirectory);
+
+  const connectors = await Promise.all(
+    connectorFolders.map(async (folder) => {
+      try {
+        const packagePath = path.join(connectorDirectory, folder);
+        // eslint-disable-next-line no-restricted-syntax
+        const { default: createConnector } = (await import(packagePath)) as {
+          default: CreateConnector<AllConnector>;
+        };
+        const rawConnector = await createConnector({ getConfig: getConnectorConfig });
+        validateConnectorModule(rawConnector);
+
+        const connector: LoadConnector = {
+          ...defaultConnectorMethods,
+          ...rawConnector,
+          metadata: {
+            ...rawConnector.metadata,
+            logo: await readUrl(rawConnector.metadata.logo, packagePath, 'svg'),
+            logoDark:
+              rawConnector.metadata.logoDark &&
+              (await readUrl(rawConnector.metadata.logoDark, packagePath, 'svg')),
+            readme: await readUrl(rawConnector.metadata.readme, packagePath, 'text'),
+            configTemplate: await readUrl(
+              rawConnector.metadata.configTemplate,
+              packagePath,
+              'text'
+            ),
+          },
+          validateConfig: (config: unknown) => {
+            validateConfig(config, rawConnector.configGuard);
+          },
+        };
+
+        return connector;
+      } catch (error: unknown) {
+        if (error instanceof Error) {
+          console.log(
+            `${chalk.red(
+              `[load-connector] skip ${chalk.bold(folder)} due to error: ${error.message}`
+            )}`
+          );
+
+          return;
+        }
+
+        throw error;
+      }
+    })
+  );
 
   // eslint-disable-next-line @silverhand/fp/no-mutation
-  cachedConnectors = await Promise.all(
-    connectorPackages.map(async (packageName) => {
-      // eslint-disable-next-line no-restricted-syntax
-      const { default: createConnector } = (await import(packageName)) as {
-        default: CreateConnector<AllConnector>;
-      };
-      const rawConnector = await createConnector({ getConfig: getConnectorConfig });
-      validateConnectorModule(rawConnector);
-
-      const connector: LoadConnector = {
-        ...defaultConnectorMethods,
-        ...rawConnector,
-        validateConfig: (config: unknown) => {
-          validateConfig(config, rawConnector.configGuard);
-        },
-      };
-      // eslint-disable-next-line unicorn/prefer-module
-      const packagePath = resolvePackagePath(packageName, __dirname);
-
-      // For relative path logo url, try to read local asset.
-      if (
-        packagePath &&
-        !connector.metadata.logo.startsWith('http') &&
-        existsSync(path.join(packagePath, '..', connector.metadata.logo))
-      ) {
-        const data = readFileSync(path.join(packagePath, '..', connector.metadata.logo));
-        // eslint-disable-next-line @silverhand/fp/no-mutation
-        connector.metadata.logo = `data:image/svg+xml;base64,${data.toString('base64')}`;
-      }
-
-      if (
-        packagePath &&
-        connector.metadata.logoDark &&
-        !connector.metadata.logoDark.startsWith('http') &&
-        existsSync(path.join(packagePath, '..', connector.metadata.logoDark))
-      ) {
-        const data = readFileSync(path.join(packagePath, '..', connector.metadata.logoDark));
-        // eslint-disable-next-line @silverhand/fp/no-mutation
-        connector.metadata.logoDark = `data:image/svg+xml;base64,${data.toString('base64')}`;
-      }
-
-      if (
-        packagePath &&
-        connector.metadata.readme &&
-        existsSync(path.join(packagePath, '..', connector.metadata.readme))
-      ) {
-        // eslint-disable-next-line @silverhand/fp/no-mutation
-        connector.metadata.readme = readFileSync(
-          path.join(packagePath, '..', connector.metadata.readme),
-          'utf8'
-        );
-      }
-
-      if (
-        packagePath &&
-        connector.metadata.configTemplate &&
-        existsSync(path.join(packagePath, '..', connector.metadata.configTemplate))
-      ) {
-        // eslint-disable-next-line @silverhand/fp/no-mutation
-        connector.metadata.configTemplate = readFileSync(
-          path.join(packagePath, '..', connector.metadata.configTemplate),
-          'utf8'
-        );
-      }
-
-      return connector;
-    })
+  cachedConnectors = connectors.filter(
+    (connector): connector is LoadConnector => connector !== undefined
   );
 
   return cachedConnectors;

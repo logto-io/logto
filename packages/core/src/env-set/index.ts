@@ -1,8 +1,11 @@
+import path from 'path';
+
 import { getEnv, getEnvAsStringArray, Optional } from '@silverhand/essentials';
 import { DatabasePool } from 'slonik';
 
 import { appendPath } from '@/utils/url';
 
+import { addConnectors } from './add-connectors';
 import createPoolByEnv from './create-pool-by-env';
 import loadOidcValues from './oidc';
 import { isTrue } from './parameters';
@@ -14,6 +17,9 @@ export enum MountedApps {
   DemoApp = 'demo-app',
   Welcome = 'welcome',
 }
+
+// eslint-disable-next-line unicorn/prefer-module
+export const defaultConnectorDirectory = path.join(__dirname, '../../connectors');
 
 const loadEnvValues = async () => {
   const isProduction = getEnv('NODE_ENV') === 'production';
@@ -34,12 +40,12 @@ const loadEnvValues = async () => {
     port,
     localhostUrl,
     endpoint,
-    additionalConnectorPackages: getEnvAsStringArray('ADDITIONAL_CONNECTOR_PACKAGES'),
     userDefaultRoleNames: getEnvAsStringArray('USER_DEFAULT_ROLE_NAMES'),
     developmentUserId: getEnv('DEVELOPMENT_USER_ID'),
     trustProxyHeader: isTrue(getEnv('TRUST_PROXY_HEADER')),
     oidc: await loadOidcValues(appendPath(endpoint, '/oidc').toString()),
     adminConsoleUrl: appendPath(endpoint, '/console'),
+    connectorDirectory: getEnv('CONNECTOR_DIRECTORY', defaultConnectorDirectory),
   });
 };
 
@@ -73,6 +79,7 @@ function createEnvSet() {
     load: async () => {
       values = await loadEnvValues();
       pool = await createPoolByEnv(values.isTest);
+      await addConnectors(values.connectorDirectory);
     },
   };
 }
