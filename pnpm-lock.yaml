@@ -381,7 +381,7 @@ importers:
   packages/integration-tests:
     specifiers:
       '@jest/types': ^28.1.3
-      '@logto/node': 1.0.0-beta.2
+      '@logto/node': 1.0.0-beta.3
       '@logto/schemas': ^1.0.0-beta.8
       '@peculiar/webcrypto': ^1.3.3
       '@silverhand/eslint-config': 1.0.0
@@ -406,7 +406,7 @@ importers:
       typescript: ^4.7.4
     devDependencies:
       '@jest/types': 28.1.3
-      '@logto/node': 1.0.0-beta.2
+      '@logto/node': 1.0.0-beta.3
       '@logto/schemas': link:../schemas
       '@peculiar/webcrypto': 1.3.3
       '@silverhand/eslint-config': 1.0.0_swk2g7ygmfleszo5c33j4vooni
@@ -2452,13 +2452,13 @@ packages:
   /@logto/browser/1.0.0-beta.2:
     resolution: {integrity: sha512-CdXNfauE4Nf2AkRwZO4IH0Dlyx7PDQAFvtzpqEaszRKuFY0yuMi8H9QvtCoNxhuhxDnP3pwHKks6HFTBPT6EGw==}
     dependencies:
-      '@logto/client': 1.0.0-beta.2
+      '@logto/client': 1.0.0-beta.3
       '@silverhand/essentials': 1.2.0
       js-base64: 3.7.2
     dev: true
 
-  /@logto/client/1.0.0-beta.2:
-    resolution: {integrity: sha512-YUOxmd+C5hdd13KvmxHUVQfb/x70e2Oem5RSfSi58yzu+er97jSv6egsugmgab9EYf68BHB+tTJCKcJSJEirwA==}
+  /@logto/client/1.0.0-beta.3:
+    resolution: {integrity: sha512-Qf22vvl/DqcfFz3y7WgyoPNehKT4Z8BJ8yIwHGrBDdrBhIB4Zd5n+4D3hoVELtKXPWsSKmsbNcL1Q3UA2hRZ2g==}
     dependencies:
       '@logto/js': 1.0.0-beta.2
       '@silverhand/essentials': 1.2.0
@@ -2479,10 +2479,10 @@ packages:
       superstruct: 0.16.0
     dev: true
 
-  /@logto/node/1.0.0-beta.2:
-    resolution: {integrity: sha512-O8iSEaJ8ErS43t2SgYutx1ZYDDpSN87EpJu+9z5TtPFR61Xq5HygASPWo5ka5vGTjwh1Yojf+fpN/QwP4flQ7w==}
+  /@logto/node/1.0.0-beta.3:
+    resolution: {integrity: sha512-ajboUnMWSINfgYaEQtUfBF0t3AI/l8Cg6Dk0iPYfErnTYf7W4EuosBDAnXiU9VdHSUSmysHwJRFIoY9WwpKQ1A==}
     dependencies:
-      '@logto/client': 1.0.0-beta.2
+      '@logto/client': 1.0.0-beta.3
       '@silverhand/essentials': 1.2.0
       js-base64: 3.7.2
       node-fetch: 2.6.7
