@@ -29,3 +29,6 @@ cache
 .idea/
 *.pem
 .history
+
+# connectors
+/packages/core/connectors

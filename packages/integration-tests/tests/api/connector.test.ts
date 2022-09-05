@@ -2,10 +2,6 @@ import { ConnectorType } from '@logto/schemas';
 import { HTTPError } from 'got';
 
 import {
-  aliyunEmailConnectorConfig,
-  aliyunEmailConnectorId,
-  aliyunSmsConnectorConfig,
-  aliyunSmsConnectorId,
   mockEmailConnectorConfig,
   mockEmailConnectorId,
   mockSmsConnectorConfig,
@@ -34,8 +30,8 @@ test('connector set-up flow', async () => {
    */
   await Promise.all(
     [
-      { id: aliyunSmsConnectorId, config: aliyunSmsConnectorConfig },
-      { id: aliyunEmailConnectorId, config: aliyunEmailConnectorConfig },
+      { id: mockSmsConnectorId, config: mockSmsConnectorConfig },
+      { id: mockEmailConnectorId, config: mockEmailConnectorConfig },
       { id: mockSocialConnectorId, config: mockSocialConnectorConfig },
     ].map(async ({ id, config }) => {
       const updatedConnector = await updateConnectorConfig(id, config);
@@ -55,7 +51,7 @@ test('connector set-up flow', async () => {
    * We will test updating to the invalid connector config, that is the case not covered above.
    */
   await expect(
-    updateConnectorConfig(mockSocialConnectorId, aliyunSmsConnectorConfig)
+    updateConnectorConfig(mockSocialConnectorId, mockSmsConnectorConfig)
   ).rejects.toThrow(HTTPError);
   // To confirm the failed updating request above did not modify the original config,
   // we check: the mock connector config should stay the same.
@@ -103,13 +99,8 @@ test('connector set-up flow', async () => {
   expect(await listConnectors()).toEqual(
     expect.arrayContaining([
       expect.objectContaining({
-        id: mockSocialConnectorId,
-        config: mockSocialConnectorConfig,
-        enabled: true,
-      }),
-      expect.objectContaining({
-        id: aliyunSmsConnectorId,
-        config: aliyunSmsConnectorConfig,
+        id: mockEmailConnectorId,
+        config: mockEmailConnectorConfig,
         enabled: false,
       }),
       expect.objectContaining({
@@ -118,14 +109,9 @@ test('connector set-up flow', async () => {
         enabled: true,
       }),
       expect.objectContaining({
-        id: aliyunEmailConnectorId,
-        config: aliyunEmailConnectorConfig,
-        enabled: false,
-      }),
-      expect.objectContaining({
-        id: mockEmailConnectorId,
-        config: mockEmailConnectorConfig,
-        enabled: false,
+        id: mockSocialConnectorId,
+        config: mockSocialConnectorConfig,
+        enabled: true,
       }),
     ])
   );
