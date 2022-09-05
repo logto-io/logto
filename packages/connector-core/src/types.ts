@@ -24,6 +24,7 @@ export enum ConnectorErrorCodes {
   InvalidMetadata = 'invalid_metadata',
   UnexpectedType = 'unexpected_type',
   InvalidConfigGuard = 'invalid_config_guard',
+  InvalidRequestParameters = 'invalid_request_parameters',
   InsufficientRequestParameters = 'insufficient_request_parameters',
   InvalidConfig = 'invalid_config',
   InvalidResponse = 'invalid_response',

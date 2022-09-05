@@ -23,6 +23,24 @@ describe('koaConnectorErrorHandler middleware', () => {
     await expect(koaConnectorErrorHandler()(ctx, next)).rejects.toMatchError(error);
   });
 
+  it('Invalid Request Parameters', async () => {
+    const message = 'Mock Invalid Request Parameters';
+    const error = new ConnectorError(ConnectorErrorCodes.InvalidRequestParameters, message);
+    next.mockImplementationOnce(() => {
+      throw error;
+    });
+
+    await expect(koaConnectorErrorHandler()(ctx, next)).rejects.toMatchError(
+      new RequestError(
+        {
+          code: 'connector.invalid_request_parameters',
+          status: 400,
+        },
+        { message }
+      )
+    );
+  });
+
   it('Insufficient Request Parameters', async () => {
     const message = 'Mock Insufficient Request Parameters';
     const error = new ConnectorError(ConnectorErrorCodes.InsufficientRequestParameters, message);
