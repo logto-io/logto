@@ -13,6 +13,11 @@ RUN apk add --no-cache python3 make g++
 RUN pnpm i
 RUN pnpm -- lerna run build --stream
 
+# Add official connectors
+WORKDIR /etc/logto/packages/core
+RUN pnpm add-official-connectors
+WORKDIR /etc/logto
+
 # Prune dependencies for production
 RUN rm -rf node_modules packages/*/node_modules
 RUN NODE_ENV=production pnpm i
