@@ -6,8 +6,13 @@ tasks:
     init: |
       pnpm i
       pnpm prepack
+      cd packages/core
+      pnpm build
+      pnpm add-official-connectors
+      cd -
     command: |
-      ENDPOINT=$(gp url 3001) pnpm dev
+      export ENDPOINT=$(gp url 3001)
+      pnpm lerna --ignore=@logto/integration-test run --parallel dev
     env:
       ALL_YES: 1
       NO_INQUIRY: 0
