@@ -20,6 +20,10 @@ jobs:
       - name: Build
         run: pnpm -- lerna run build --stream
 
+      - name: Add official connectors
+        run: pnpm add-official-connectors
+        working-directory: packages/core
+
       # See warning in https://pnpm.io/cli/prune
       - name: Prune
         run: rm -rf node_modules packages/*/node_modules && pnpm i
