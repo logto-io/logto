@@ -12,7 +12,7 @@ export function validateConfig<T>(config: unknown, guard: ZodType): asserts conf
   }
 }
 
-export const jsonSafeParse = (
+export const parseJson = (
   jsonString: string,
   errorCode: ConnectorErrorCodes = ConnectorErrorCodes.InvalidResponse,
   errorPayload?: unknown
