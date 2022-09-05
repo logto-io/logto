@@ -21,12 +21,14 @@ export const socialConnectors = [
     logoDark: null,
     name: {
       en: 'Sign in with GitHub',
+      'pt-PT': 'Entrar com GitHub',
       'zh-CN': '使用 GitHub 登录',
       'tr-TR': 'Github ile giriş yap',
       'ko-KR': 'Github 로그인',
     },
     description: {
       en: 'Sign in with GitHub',
+      'pt-PT': 'Entrar com GitHub',
       'zh-CN': '使用 GitHub 登录',
       'tr-TR': 'Github ile giriş yap',
       'ko-KR': 'Github 로그인',
@@ -43,12 +45,14 @@ export const socialConnectors = [
     logoDark: null,
     name: {
       en: 'Sign in with Alipay',
+      'pt-PT': 'Entrar com Alipay',
       'zh-CN': '使用 Alipay 登录',
       'tr-TR': 'Alipay ile giriş yap',
       'ko-KR': 'Alipay 로그인',
     },
     description: {
       en: 'Sign in with Alipay',
+      'pt-PT': 'Entrar com Alipay',
       'zh-CN': '使用 Alipay 登录',
       'tr-TR': 'Alipay ile giriş yap',
       'ko-KR': 'Alipay 로그인',
@@ -65,12 +69,14 @@ export const socialConnectors = [
     logoDark: null,
     name: {
       en: 'Sign in with WeChat',
+      'pt-PT': 'Entrar com WeChat',
       'zh-CN': '使用 WeChat 登录',
       'tr-TR': 'WeChat ile giriş yap',
       'ko-KR': 'WeChat 로그인',
     },
     description: {
       en: 'Sign in with WeChat',
+      'pt-PT': 'Entrar com WeChat',
       'zh-CN': '使用 WeChat 登录',
       'tr-TR': 'WeChat ile giriş yap',
       'ko-KR': 'WeChat 로그인',
@@ -87,12 +93,14 @@ export const socialConnectors = [
     logoDark: null,
     name: {
       en: 'Sign in with Google',
+      'pt-PT': 'Entrar com Google',
       'zh-CN': '使用 Google 登录',
       'tr-TR': 'Google ile giriş yap',
       'ko-KR': 'Google 로그인',
     },
     description: {
       en: 'Sign in with Google',
+      'pt-PT': 'Entrar com Google',
       'zh-CN': '使用 Google 登录',
       'tr-TR': 'Google ile giriş yap',
       'ko-KR': 'Google 로그인',
@@ -109,12 +117,14 @@ export const socialConnectors = [
     logoDark: null,
     name: {
       en: 'Sign in with Meta',
+      'pt-PT': 'Entrar com Facebook',
       'zh-CN': '使用 Meta 登录',
       'tr-TR': 'Meta ile giriş yap',
       'ko-KR': 'Meta 로그인',
     },
     description: {
       en: 'Sign in with Meta',
+      'pt-PT': 'Entrar com Facebook',
       'zh-CN': '使用 Meta 登录',
       'tr-TR': 'Meta ile giriş yap',
       'ko-KR': 'Meta 로그인',
@@ -133,12 +143,14 @@ export const mockSocialConnectorData = {
   logoDark: null,
   name: {
     en: 'Sign in with Xxx',
+    'pt-PT': 'Entrar com Xxx',
     'zh-CN': '使用 Xxx 登录',
     'tr-TR': 'Xxx ile giriş yap',
     'ko-KR': 'Xxx 로그인',
   },
   description: {
     en: 'Sign in with Xxx',
+    'pt-PT': 'Entrar com Xxx',
     'zh-CN': '使用 Xxx 登录',
     'tr-TR': 'Xxx ile giriş yap',
     'ko-KR': 'Xxx 로그인',

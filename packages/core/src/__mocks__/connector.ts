@@ -10,6 +10,7 @@ export const mockMetadata: ConnectorMetadata = {
   platform: null,
   name: {
     en: 'Connector',
+    'pt-PT': 'Conector',
     'zh-CN': '连接器',
     'tr-TR': 'Connector',
     'ko-KR': 'Connector',
@@ -18,6 +19,7 @@ export const mockMetadata: ConnectorMetadata = {
   logoDark: './logo-dark.png',
   description: {
     en: 'Connector',
+    'pt-PT': 'Conector',
     'zh-CN': '连接器',
     'tr-TR': 'Connector',
     'ko-KR': 'Connector',
