@@ -66,6 +66,7 @@ const errors = {
     invalid_metadata: 'Os metadados do conector são inválidos.',
     invalid_config_guard: 'A configuração de proteção do conector é inválida.',
     unexpected_type: 'O tipo do conector é inesperado.',
+    invalid_request_parameters: 'The request is with wrong input parameter(s).', // UNTRANSLATED
     insufficient_request_parameters: 'A solicitação pode perder alguns parâmetros de entrada.',
     invalid_config: 'A configuração do conector é inválida.',
     invalid_response: 'A resposta do conector é inválida.',
