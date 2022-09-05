@@ -16,20 +16,10 @@ const execPromise = promisify(exec);
 const fetchOfficialConnectorList = async () => {
   // Will change to "logto-io/connectors" once the new repo is ready.
   const directories = await got
-    .get('https://api.github.com/repos/logto-io/logto/contents/packages')
+    .get('https://api.github.com/repos/logto-io/connectors/contents/packages')
     .json<Array<{ name: string }>>();
 
-  return (
-    directories
-      // Will be removed once the new repo is ready.
-      .filter(
-        ({ name }) =>
-          name.startsWith('connector-') &&
-          name !== 'connector-core' &&
-          name !== 'connector-sendgrid-mail'
-      )
-      .map(({ name }) => `@logto/${name}`)
-  );
+  return directories.map(({ name }) => `@logto/${name}`);
 };
 
 export const addConnector = async (packageName: string, cwd: string) => {
