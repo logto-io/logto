@@ -14,12 +14,13 @@ import { npmPackResultGuard } from './types';
 const execPromise = promisify(exec);
 
 const fetchOfficialConnectorList = async () => {
-  // Will change to "logto-io/connectors" once the new repo is ready.
   const directories = await got
     .get('https://api.github.com/repos/logto-io/connectors/contents/packages')
     .json<Array<{ name: string }>>();
 
-  return directories.map(({ name }) => `@logto/${name}`);
+  return directories
+    .filter(({ name }) => !name.includes('mock-'))
+    .map(({ name }) => `@logto/${name}`);
 };
 
 export const addConnector = async (packageName: string, cwd: string) => {
