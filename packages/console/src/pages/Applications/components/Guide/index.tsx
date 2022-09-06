@@ -27,7 +27,7 @@ const Guides: Record<string, LazyExoticComponent<(props: MDXProps) => JSX.Elemen
   vanilla: lazy(async () => import('@/assets/docs/tutorial/integrate-sdk/vanilla.mdx')),
   express: lazy(async () => import('@/assets/docs/tutorial/integrate-sdk/express.mdx')),
   next: lazy(async () => import('@/assets/docs/tutorial/integrate-sdk/next.mdx')),
-  goWeb: lazy(async () => import('@/assets/docs/tutorial/integrate-sdk/go-web.mdx')),
+  'go web': lazy(async () => import('@/assets/docs/tutorial/integrate-sdk/go-web.mdx')),
   'ios_zh-cn': lazy(async () => import('@/assets/docs/tutorial/integrate-sdk/ios_zh-cn.mdx')),
   'android_zh-cn': lazy(
     async () => import('@/assets/docs/tutorial/integrate-sdk/android_zh-cn.mdx')
