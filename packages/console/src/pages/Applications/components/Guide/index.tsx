@@ -41,7 +41,7 @@ const Guides: Record<string, LazyExoticComponent<(props: MDXProps) => JSX.Elemen
     async () => import('@/assets/docs/tutorial/integrate-sdk/express_zh-cn.mdx')
   ),
   'next_zh-cn': lazy(async () => import('@/assets/docs/tutorial/integrate-sdk/next_zh-cn.mdx')),
-  'go-web_zh-cn': lazy(async () => import('@/assets/docs/tutorial/integrate-sdk/go-web_zh-cn.mdx')),
+  'go web_zh-cn': lazy(async () => import('@/assets/docs/tutorial/integrate-sdk/go-web_zh-cn.mdx')),
 };
 
 const Guide = ({ app, isCompact, onClose }: Props) => {
