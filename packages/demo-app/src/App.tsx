@@ -27,7 +27,7 @@ const Main = () => {
 
     if (isAuthenticated) {
       (async () => {
-        const userInfo = getIdTokenClaims();
+        const userInfo = await getIdTokenClaims();
         setUser(userInfo ?? { sub: 'N/A', username: 'N/A' });
       })();
     } else {
