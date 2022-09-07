@@ -1,5 +1,7 @@
 import { t } from 'i18next';
 
+import { safeParseJson } from '@/utilities/json';
+
 import { MultiTextInputError, multiTextInputErrorGuard, MultiTextInputRule } from './types';
 
 export const validate = (
@@ -57,7 +59,13 @@ export const convertRhfErrorMessage = (errorMessage?: string): MultiTextInputErr
     return;
   }
 
-  const result = multiTextInputErrorGuard.safeParse(errorMessage);
+  const jsonParseResult = safeParseJson(errorMessage);
+
+  if (!jsonParseResult.success) {
+    throw new Error(t('admin_console.errors.invalid_error_message_format'));
+  }
+
+  const result = multiTextInputErrorGuard.safeParse(jsonParseResult.data);
 
   if (!result.success) {
     throw new Error(t('admin_console.errors.invalid_error_message_format'));
