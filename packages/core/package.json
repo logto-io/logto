@@ -1,6 +1,6 @@
 {
   "name": "@logto/core",
-  "version": "1.0.0-beta.8",
+  "version": "1.0.0-beta.9",
   "description": "The open source identity solution.",
   "main": "build/index.js",
   "author": "Silverhand Inc. <contact@silverhand.io>",
@@ -21,10 +21,10 @@
     "test:report": "codecov -F core"
   },
   "dependencies": {
-    "@logto/connector-core": "^1.0.0-beta.8",
-    "@logto/phrases": "^1.0.0-beta.8",
-    "@logto/schemas": "^1.0.0-beta.8",
-    "@logto/shared": "^1.0.0-beta.8",
+    "@logto/connector-core": "^1.0.0-beta.9",
+    "@logto/phrases": "^1.0.0-beta.9",
+    "@logto/schemas": "^1.0.0-beta.9",
+    "@logto/shared": "^1.0.0-beta.9",
     "@silverhand/essentials": "^1.2.0",
     "chalk": "^4",
     "dayjs": "^1.10.5",

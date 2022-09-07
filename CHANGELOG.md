@@ -3,6 +3,30 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.0-beta.9](https://github.com/logto-io/logto/compare/v1.0.0-beta.8...v1.0.0-beta.9) (2022-09-07)
+
+
+### ⚠ BREAKING CHANGES
+
+* **core:** load connectors by folder (#1879)
+
+### Features
+
+* add Portuguese translation ([f268ecb](https://github.com/logto-io/logto/commit/f268ecb1a8d57d1e33225bec8852f3bc377dd478))
+* **console:** press tab to insert 2 spaces in code editor ([#1871](https://github.com/logto-io/logto/issues/1871)) ([c57228c](https://github.com/logto-io/logto/commit/c57228c2ecc5f538f3f4761efd8cbd57e2d49eb7))
+* **core:** load connectors by folder ([#1879](https://github.com/logto-io/logto/issues/1879)) ([52b9dd8](https://github.com/logto-io/logto/commit/52b9dd8569017ad7fda97a847c95ca1e391aabae))
+
+
+### Bug Fixes
+
+* **console,ui:** fix locale guard issue in settings page ([e200578](https://github.com/logto-io/logto/commit/e2005780a39fa7b5f5c5e406f37805913b684c18))
+* **console:** input invalid format content in multitextinput will not crash the app ([035be48](https://github.com/logto-io/logto/commit/035be481cc743d22105cecaf1d746456cd2d9956))
+* downgrade to sdk 1.0.0-beta.2 ([#1896](https://github.com/logto-io/logto/issues/1896)) ([91d1bf8](https://github.com/logto-io/logto/commit/91d1bf8004165e3ab42dfd705046ef7f3bd612d9))
+* fetch connectors list from npm ([#1894](https://github.com/logto-io/logto/issues/1894)) ([c6764f9](https://github.com/logto-io/logto/commit/c6764f95f78ce30148e5439cd08ff87b1608b9b5))
+* remove --incremental to temporarily fix pnpm dev ([4c2308e](https://github.com/logto-io/logto/commit/4c2308e7057ae4f5c85b6849763fadbad3945062))
+
+
+
 ## [1.0.0-beta.8](https://github.com/logto-io/logto/compare/v1.0.0-beta.6...v1.0.0-beta.8) (2022-09-01)
 
 

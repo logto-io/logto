@@ -1,6 +1,6 @@
 {
   "name": "@logto/phrases",
-  "version": "1.0.0-beta.8",
+  "version": "1.0.0-beta.9",
   "description": "Logto shared phrases (l10n).",
   "author": "Silverhand Inc. <contact@silverhand.io>",
   "homepage": "https://github.com/logto-io/logto#readme",
@@ -29,7 +29,7 @@
     "url": "https://github.com/logto-io/logto/issues"
   },
   "dependencies": {
-    "@logto/shared": "^1.0.0-beta.8",
+    "@logto/shared": "^1.0.0-beta.9",
     "@silverhand/essentials": "^1.2.0"
   },
   "devDependencies": {
