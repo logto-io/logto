@@ -112,9 +112,7 @@ By default, Logto runs in `http://localhost:3001`, which will redirect you to th
 
 **I updated some code, but it doesn't work.**
 
-For now, `pnpm dev` only watches four packages: `core`, `ui`, `console`, and `demo-app`. If you changed other packages like connectors or schemas, you must stop the dev command and run again.
-
-Sorry for the inconvenience. We're working on a better dev command which watches all related packages.
+Please [report a bug](https://github.com/logto-io/logto/issues/new/choose) in issues.
 
 ## Commit and create pull request
 
