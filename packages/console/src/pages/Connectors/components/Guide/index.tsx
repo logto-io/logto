@@ -1,5 +1,5 @@
 import { ConnectorDto, ConnectorType } from '@logto/schemas';
-import { languageKeyGuard } from '@logto/shared';
+import { getDefaultLanguage } from '@logto/shared';
 import { conditional } from '@silverhand/essentials';
 import i18next from 'i18next';
 import { Controller, useForm } from 'react-hook-form';
@@ -31,11 +31,7 @@ const Guide = ({ connector, onClose }: Props) => {
   const { updateSettings } = useSettings();
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { id: connectorId, type: connectorType, name, configTemplate, readme } = connector;
-
-  const localeRaw = i18next.language;
-  const result = languageKeyGuard.safeParse(localeRaw);
-  const connectorName = result.success ? name[result.data] : name.en;
-
+  const connectorName = name[getDefaultLanguage(i18next.language)];
   const isSocialConnector =
     connectorType !== ConnectorType.Sms && connectorType !== ConnectorType.Email;
   const methods = useForm<GuideForm>({ reValidateMode: 'onBlur' });

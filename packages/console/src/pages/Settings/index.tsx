@@ -1,6 +1,6 @@
 import { languageOptions } from '@logto/phrases';
 import { AppearanceMode } from '@logto/schemas';
-import { languageKeyGuard } from '@logto/shared';
+import { getDefaultLanguage } from '@logto/shared';
 import classNames from 'classnames';
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
@@ -25,7 +25,7 @@ const Settings = () => {
     i18n: { language },
   } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
-  const defaultLanguage = languageKeyGuard.default('en').parse(language);
+  const defaultLanguage = getDefaultLanguage(language);
 
   const { data, error, update, isLoading, isLoaded } = useUserPreferences();
   const {
