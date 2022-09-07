@@ -1,11 +1,12 @@
-import { ConnectorDto } from '@logto/schemas';
+import { ConnectorResponse } from '@logto/schemas';
 
 import { authedAdminApi } from './api';
 
-export const listConnectors = async () => authedAdminApi.get('connectors').json<ConnectorDto[]>();
+export const listConnectors = async () =>
+  authedAdminApi.get('connectors').json<ConnectorResponse[]>();
 
 export const getConnector = async (connectorId: string) =>
-  authedAdminApi.get(`connectors/${connectorId}`).json<ConnectorDto>();
+  authedAdminApi.get(`connectors/${connectorId}`).json<ConnectorResponse>();
 
 export const updateConnectorConfig = async (connectorId: string, config: Record<string, unknown>) =>
   authedAdminApi
@@ -13,7 +14,7 @@ export const updateConnectorConfig = async (connectorId: string, config: Record<
       url: `connectors/${connectorId}`,
       json: { config },
     })
-    .json<ConnectorDto>();
+    .json<ConnectorResponse>();
 
 export const enableConnector = async (connectorId: string) =>
   updateConnectorEnabledProperty(connectorId, true);
@@ -27,7 +28,7 @@ const updateConnectorEnabledProperty = (connectorId: string, enabled: boolean) =
       url: `connectors/${connectorId}/enabled`,
       json: { enabled },
     })
-    .json<ConnectorDto>();
+    .json<ConnectorResponse>();
 
 export const sendSmsTestMessage = async (
   connectorId: string,

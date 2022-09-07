@@ -5,6 +5,6 @@ import { Connector } from '../db-entries';
 export type { ConnectorMetadata } from '@logto/connector-core';
 export { ConnectorType, ConnectorPlatform } from '@logto/connector-core';
 
-export type ConnectorDto = Connector &
+export type ConnectorResponse = Connector &
   Omit<BaseConnector<ConnectorType>, 'configGuard' | 'metadata'> &
   ConnectorMetadata;

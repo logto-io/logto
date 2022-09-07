@@ -1,4 +1,4 @@
-import { ConnectorDto, ConnectorType } from '@logto/schemas';
+import { ConnectorResponse, ConnectorType } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
@@ -12,7 +12,7 @@ import ConnectorName from '../ConnectorName';
 
 type Props = {
   type: ConnectorType;
-  connectors: ConnectorDto[];
+  connectors: ConnectorResponse[];
   onClickSetup?: () => void;
 };
 

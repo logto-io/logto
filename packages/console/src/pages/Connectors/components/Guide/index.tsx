@@ -1,4 +1,4 @@
-import { ConnectorDto, ConnectorType } from '@logto/schemas';
+import { ConnectorResponse, ConnectorType } from '@logto/schemas';
 import { getDefaultLanguage } from '@logto/shared';
 import { conditional } from '@silverhand/essentials';
 import i18next from 'i18next';
@@ -22,7 +22,7 @@ import { safeParseJson } from '@/utilities/json';
 import * as styles from './index.module.scss';
 
 type Props = {
-  connector: ConnectorDto;
+  connector: ConnectorResponse;
   onClose: () => void;
 };
 
@@ -57,10 +57,10 @@ const Guide = ({ connector, onClose }: Props) => {
 
     await api
       .patch(`/api/connectors/${connectorId}`, { json: { config: result.data } })
-      .json<ConnectorDto>();
+      .json<ConnectorResponse>();
     await api
       .patch(`/api/connectors/${connectorId}/enabled`, { json: { enabled: true } })
-      .json<ConnectorDto>();
+      .json<ConnectorResponse>();
 
     await updateSettings({
       ...conditional(!isSocialConnector && { passwordlessConfigured: true }),

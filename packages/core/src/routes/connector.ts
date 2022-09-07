@@ -1,5 +1,5 @@
 import { MessageTypes } from '@logto/connector-core';
-import { arbitraryObjectGuard, ConnectorDto, Connectors, ConnectorType } from '@logto/schemas';
+import { arbitraryObjectGuard, ConnectorResponse, Connectors, ConnectorType } from '@logto/schemas';
 import { emailRegEx, phoneRegEx } from '@logto/shared';
 import { object, string } from 'zod';
 
@@ -12,7 +12,11 @@ import assertThat from '@/utils/assert-that';
 
 import { AuthedRouter } from './types';
 
-const transpileLogtoConnector = ({ dbEntry, metadata, type }: LogtoConnector): ConnectorDto => ({
+const transpileLogtoConnector = ({
+  dbEntry,
+  metadata,
+  type,
+}: LogtoConnector): ConnectorResponse => ({
   type,
   ...metadata,
   ...dbEntry,
