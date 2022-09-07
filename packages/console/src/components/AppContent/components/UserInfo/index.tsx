@@ -22,7 +22,7 @@ const UserInfo = () => {
   useEffect(() => {
     (async () => {
       if (isAuthenticated) {
-        const userInfo = await getIdTokenClaims();
+        const userInfo = getIdTokenClaims();
         setUser(userInfo ?? { sub: '', username: 'N/A' }); // Provide a fallback to avoid infinite loading state
       }
     })();

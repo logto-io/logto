@@ -128,7 +128,7 @@ export const bindSocialToNewCreatedUser = async () => {
 
   await client.processSession(redirectTo);
 
-  const { sub } = await client.getIdTokenClaims();
+  const { sub } = client.getIdTokenClaims();
 
   return sub;
 };

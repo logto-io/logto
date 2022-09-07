@@ -9,15 +9,15 @@ export class MemoryStorage implements Storage {
     signInSession: null,
   };
 
-  async getItem(key: StorageKey): Promise<Nullable<string>> {
+  getItem(key: StorageKey): Nullable<string> {
     return this.storage[key];
   }
 
-  async setItem(key: StorageKey, value: string): Promise<void> {
+  setItem(key: StorageKey, value: string): void {
     this.storage[key] = value;
   }
 
-  async removeItem(key: StorageKey): Promise<void> {
+  removeItem(key: StorageKey): void {
     this.storage[key] = null;
   }
 }
