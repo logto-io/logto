@@ -1,4 +1,4 @@
-import type { Identities, ConnectorDto } from '@logto/schemas';
+import type { Identities, ConnectorResponse } from '@logto/schemas';
 import { Optional } from '@silverhand/essentials';
 import { useMemo, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
@@ -19,7 +19,7 @@ type Props = {
   onDelete?: (connectorId: string) => void;
 };
 
-type DisplayConnector = Pick<ConnectorDto, 'target' | 'logo' | 'name'> & { userId?: string };
+type DisplayConnector = Pick<ConnectorResponse, 'target' | 'logo' | 'name'> & { userId?: string };
 
 const UserConnectors = ({ userId, connectors, onDelete }: Props) => {
   const api = useApi();

@@ -1,4 +1,4 @@
-import { Connector, ConnectorDto, ConnectorMetadata, ConnectorType } from '@logto/schemas';
+import { Connector, ConnectorResponse, ConnectorMetadata, ConnectorType } from '@logto/schemas';
 import { useMemo } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
@@ -17,8 +17,8 @@ import SenderTester from './SenderTester';
 
 type Props = {
   isDeleted: boolean;
-  connectorData: ConnectorDto;
-  onConnectorUpdated: (connector: ConnectorDto) => void;
+  connectorData: ConnectorResponse;
+  onConnectorUpdated: (connector: ConnectorResponse) => void;
 };
 
 const ConnectorContent = ({ isDeleted, connectorData, onConnectorUpdated }: Props) => {

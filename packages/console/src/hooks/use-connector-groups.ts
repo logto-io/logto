@@ -1,4 +1,4 @@
-import { ConnectorDto, ConnectorType } from '@logto/schemas';
+import { ConnectorResponse, ConnectorType } from '@logto/schemas';
 import { useMemo } from 'react';
 import useSWR from 'swr';
 
@@ -7,7 +7,7 @@ import { ConnectorGroup } from '@/types/connector';
 
 // Group connectors by target
 const useConnectorGroups = () => {
-  const { data, ...rest } = useSWR<ConnectorDto[], RequestError>('/api/connectors');
+  const { data, ...rest } = useSWR<ConnectorResponse[], RequestError>('/api/connectors');
 
   const groups = useMemo(() => {
     if (!data) {

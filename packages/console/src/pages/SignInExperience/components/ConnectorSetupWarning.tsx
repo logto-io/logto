@@ -1,4 +1,4 @@
-import { ConnectorDto, ConnectorType, SignInMethodKey } from '@logto/schemas';
+import { ConnectorResponse, ConnectorType, SignInMethodKey } from '@logto/schemas';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import useSWR from 'swr';
@@ -11,7 +11,7 @@ type Props = {
 };
 
 const ConnectorSetupWarning = ({ method }: Props) => {
-  const { data: connectors } = useSWR<ConnectorDto[], RequestError>('/api/connectors');
+  const { data: connectors } = useSWR<ConnectorResponse[], RequestError>('/api/connectors');
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   const type = useMemo(() => {
