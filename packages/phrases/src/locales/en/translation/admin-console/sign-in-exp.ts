@@ -1,5 +1,5 @@
 const sign_in_exp = {
-  title: 'Sign-in Experience',
+  title: 'Sign-in experience',
   description: 'Customize the sign in UI to match your brand and view in real time',
   tabs: {
     branding: 'Branding',
@@ -104,7 +104,7 @@ const sign_in_exp = {
     after: 'After',
   },
   preview: {
-    title: 'Sign-in Preview',
+    title: 'Sign-in preview',
     dark: 'Dark',
     light: 'Light',
     native: 'Native',
