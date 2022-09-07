@@ -45,7 +45,7 @@ jobs:
 
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-12]
+        os: [ubuntu-20.04, ubuntu-22.04]
 
     runs-on: ${{ matrix.os }}
 
