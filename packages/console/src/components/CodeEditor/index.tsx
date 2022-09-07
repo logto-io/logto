@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import { ChangeEvent } from 'react';
+import { ChangeEvent, KeyboardEvent, useRef } from 'react';
 import { PrismAsyncLight as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { a11yDark as theme } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
@@ -12,11 +12,39 @@ type Props = {
   isReadonly?: boolean;
   value?: string;
   onChange?: (value: string) => void;
+  tabSize?: number;
 };
 
-const CodeEditor = ({ className, language, isReadonly = false, value = '', onChange }: Props) => {
+const CodeEditor = ({
+  className,
+  language,
+  isReadonly = false,
+  value = '',
+  onChange,
+  tabSize = 2,
+}: Props) => {
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
   const handleChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
-    onChange?.(event.currentTarget.value);
+    const { value } = event.currentTarget;
+    onChange?.(value);
+  };
+
+  const handleKeydown = (event: KeyboardEvent<HTMLTextAreaElement>) => {
+    if (event.key === 'Tab') {
+      const { value, selectionStart } = event.currentTarget;
+
+      event.preventDefault();
+      const newText =
+        value.slice(0, selectionStart) + ' '.repeat(tabSize) + value.slice(selectionStart);
+
+      // Need to update value to set selection without useEffect
+      // eslint-disable-next-line @silverhand/fp/no-mutation
+      event.currentTarget.value = newText;
+      event.currentTarget.setSelectionRange(selectionStart + tabSize, selectionStart + tabSize);
+
+      onChange?.(newText);
+    }
   };
 
   return (
@@ -26,6 +54,7 @@ const CodeEditor = ({ className, language, isReadonly = false, value = '', onCha
         {/* SyntaxHighlighter is a readonly component, so a transparent <textarea> layer is needed
         in order to support user interactions, such as code editing, copy-pasting, etc. */}
         <textarea
+          ref={textareaRef}
           autoCapitalize="off"
           autoComplete="off"
           autoCorrect="off"
@@ -34,6 +63,7 @@ const CodeEditor = ({ className, language, isReadonly = false, value = '', onCha
           spellCheck="false"
           value={value}
           onChange={handleChange}
+          onKeyDown={handleKeydown}
         />
         {/* SyntaxHighlighter will generate a <pre> tag and a inner <code> tag. Both have
         inline-styles by default. Therefore, We can only use inline styles to customize them.
