@@ -18,7 +18,7 @@
   },
   "devDependencies": {
     "@logto/phrases": "^1.0.0-beta.8",
-    "@logto/react": "^1.0.0-beta.3",
+    "@logto/react": "1.0.0-beta.2",
     "@logto/schemas": "^1.0.0-beta.8",
     "@logto/shared": "^1.0.0-beta.8",
     "@parcel/core": "2.7.0",

@@ -91,11 +91,11 @@ export default class MockClient {
     return this.logto.signOut(postSignOutRedirectUri);
   }
 
-  public async isAuthenticated() {
-    return this.logto.isAuthenticated();
+  public get isAuthenticated() {
+    return this.logto.isAuthenticated;
   }
 
-  public async getIdTokenClaims() {
+  public getIdTokenClaims() {
     return this.logto.getIdTokenClaims();
   }
 

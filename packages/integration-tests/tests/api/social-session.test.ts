@@ -61,7 +61,7 @@ describe('social sign-in and register', () => {
 
     await client.processSession(redirectTo);
 
-    await expect(client.isAuthenticated()).resolves.toBe(true);
+    expect(client.isAuthenticated).toBeTruthy();
   });
 
   /*
@@ -91,7 +91,7 @@ describe('social sign-in and register', () => {
 
     await client.processSession(redirectTo);
 
-    await expect(client.isAuthenticated()).resolves.toBe(true);
+    expect(client.isAuthenticated).toBeTruthy();
   });
 });
 
@@ -137,7 +137,7 @@ describe('social bind account', () => {
     await client.processSession(redirectTo);
 
     // User should bind with social identities
-    const { sub } = await client.getIdTokenClaims();
+    const { sub } = client.getIdTokenClaims();
     const user = await getUser(sub);
 
     expect(user.identities).toHaveProperty(mockSocialConnectorTarget);
