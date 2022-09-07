@@ -5,21 +5,20 @@ import path from 'path';
 import { promisify } from 'util';
 
 import chalk from 'chalk';
-import got from 'got';
 import rimraf from 'rimraf';
 import tar from 'tar';
+import { z } from 'zod';
 
 import { npmPackResultGuard } from './types';
 
 const execPromise = promisify(exec);
+const npmConnectorFilter = '@logto/connector-';
 
 const fetchOfficialConnectorList = async () => {
-  // Will change to "logto-io/connectors" once the new repo is ready.
-  const directories = await got
-    .get('https://api.github.com/repos/logto-io/connectors/contents/packages')
-    .json<Array<{ name: string }>>();
+  const { stdout } = await execPromise(`npm search ${npmConnectorFilter} --json`);
+  const packages = z.object({ name: z.string() }).array().parse(JSON.parse(stdout));
 
-  return directories.map(({ name }) => `@logto/${name}`);
+  return packages.filter(({ name }) => !name.includes('mock') && !name.includes('core'));
 };
 
 export const addConnector = async (packageName: string, cwd: string) => {
@@ -50,13 +49,13 @@ export const addOfficialConnectors = async (directory: string) => {
   const packages = await fetchOfficialConnectorList();
 
   // The await inside the loop is intended for better debugging experience and rate limitation.
-  for (const [index, packageName] of packages.entries()) {
+  for (const [index, { name }] of packages.entries()) {
     console.log(
       `${chalk.blue('[add-connectors]')} ${index + 1}/${
         packages.length
-      } Adding connector package: ${packageName}`
+      } Adding connector package: ${name}`
     );
     // eslint-disable-next-line no-await-in-loop
-    await addConnector(packageName, directory);
+    await addConnector(name, directory);
   }
 };
