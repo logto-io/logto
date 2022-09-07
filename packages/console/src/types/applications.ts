@@ -14,10 +14,11 @@ export enum SupportedSdk {
   Vanilla = 'Vanilla',
   Express = 'Express',
   Next = 'Next',
+  GoWeb = 'Go Web',
 }
 
 export const applicationTypeAndSdkTypeMappings = Object.freeze({
   [ApplicationType.Native]: [SupportedSdk.iOS, SupportedSdk.Android],
   [ApplicationType.SPA]: [SupportedSdk.React, SupportedSdk.Vue, SupportedSdk.Vanilla],
-  [ApplicationType.Traditional]: [SupportedSdk.Next, SupportedSdk.Express],
+  [ApplicationType.Traditional]: [SupportedSdk.Next, SupportedSdk.Express, SupportedSdk.GoWeb],
 } as const);

@@ -1,0 +1,374 @@
+import UriInputField from '@mdx/components/UriInputField';
+import Step from '@mdx/components/Step';
+import Alert from '@/components/Alert';
+
+<Step
+  title="为项目安装 Logto SDK 依赖"
+  index={0}
+  activeIndex={props.activeStepIndex}
+  onButtonClick={() => props.onNext(1)}
+>
+<Alert>
+  在本指南中，我们基于 <a href="https://gin-gonic.com">Gin Web 框架</a> 示范 SDK 的集成过程。你也可以采取同样的步骤轻松地将 Logto 集成到其他的 Web 框架中。
+  在示例代码中，我们假定你的应用运行在 <code>http://localhost:8080</code> 上。
+</Alert>
+
+在项目目录下执行：
+
+```bash
+go get github.com/logto-io/go
+```
+
+将 `github.com/logto-io/go/client` 包依赖添加到到代码中：
+
+```go
+// main.go
+package main
+
+import (
+	"github.com/gin-gonic/gin"
+	// 添加依赖
+	"github.com/logto-io/go/client"
+)
+
+func main() {
+	router := gin.Default()
+	router.GET("/", func(c *gin.Context) {
+		c.String(200, "Hello Logto!")
+	})
+	router.Run(":8080")
+}
+```
+</Step>
+
+<Step
+  title="使用 session 存储用户认证信息"
+  subtitle="共 2 步"
+  index={1}
+  activeIndex={props.activeStepIndex}
+  onButtonClick={() => props.onNext(2)}
+>
+
+在传统网页应用中，用户的认证信息将会被存储在用户的 session 中。
+
+Logto SDK 提供了一个 `Storage` 接口，你可以结合自己所使用的网络框架实现一个 `Storage` 的适配器，使 Logto SDK 能将用户认证信息存储到 session 中。
+
+<Alert>
+  我们推荐使用非 cookie 的 session，因为 Logto 所存储的信息可能会超过 cookie 的大小限制。在示例中我们使用基于内存 session，在实际项目中，你可以根据需要使用 Redis、 MongoDB 等技术来存储 session。
+</Alert>
+
+Logto SDK 中的 `Storage` 类型如下：
+
+```go
+// github.com/logto-io/client/storage.go
+pacakge client
+
+type Storage interface {
+	GetItem(key string) string
+	SetItem(key, value string)
+}
+```
+
+我们将以 [github.com/gin-contrib/sessions](https://github.com/gin-contrib/sessions) 为例，示范这个过程。
+
+### 在应用中使用 Session 中间件
+
+在应用中使用 [github.com/gin-contrib/sessions](https://github.com/gin-contrib/sessions) 中间件，这样在请求的路由处理方法中就可以根据用户请求的上下文获取用户的 session：
+
+```go
+package main
+
+import (
+	"github.com/gin-contrib/sessions"
+	"github.com/gin-contrib/sessions/memstore"
+	"github.com/gin-gonic/gin"
+	"github.com/logto-io/go/client"
+)
+
+func main() {
+	router := gin.Default()
+
+	// 示例中使用基于内存的 session
+	store := memstore.NewStore([]byte("your session secret"))
+	router.Use(sessions.Sessions("logto-session", store))
+
+	router.GET("/", func(ctx *gin.Context) {
+		// 获取用户的 session
+		session := sessions.Default(ctx)
+		// ...
+		ctx.String(200, "Hello Logto!")
+	})
+	router.Run(":8080")
+}
+```
+
+### 创建 session storage 供 Logto 存储用户认证信息
+
+创建一个 `session_storage.go` 文件，定义一个 `SessionStorage` 并实现 Logto SDK 定义的 `Storage` 的接口：
+
+```go
+// session_storage.go
+package main
+
+import (
+	"github.com/gin-contrib/sessions"
+)
+
+type SessionStorage struct {
+	session sessions.Session
+}
+
+func (storage *SessionStorage) GetItem(key string) string {
+	value := storage.session.Get(key)
+	if value == nil {
+		return ""
+	}
+	return value.(string)
+}
+
+func (storage *SessionStorage) SetItem(key, value string) {
+	storage.session.Set(key, value)
+	storage.session.Save()
+}
+```
+
+至此，你就可以在请求的路由处理方法中通过以下方式创建一个 session storage 给 Logto 使用了：
+
+```go
+session := sessions.Default(ctx)
+sessionStorage := &SessionStorage{session: session}
+```
+
+</Step>
+
+<Step
+  title="初始化 LogtoClient"
+  subtitle="共 2 步"
+  index={2}
+  activeIndex={props.activeStepIndex}
+  onButtonClick={() => props.onNext(3)}
+>
+
+### 创建 Logto 配置
+
+<pre>
+<code className="language-go">
+{`// main.go
+func main() {
+	// ...
+
+	logtoConfig := &client.LogtoConfig{
+		Endpoint:           "${props.endpoint}",
+		AppId:              "${props.appId}",
+		AppSecret:          "${props.appSecret}",
+		PersistAccessToken: true,
+	}
+
+	// ...
+}`}
+</code>
+</pre>
+
+其中 PersistAccessToken 表示是否需要把 access token 存储到 session 中。
+
+### 为每个请求初始化 LogtoClient
+
+```go
+// main.go
+func main() {
+	// ...
+
+	router.GET("/", func(ctx *gin.Context) {
+		// 初始化 LogtoClient
+		session := sessions.Default(ctx)
+		logtoClient := client.NewLogtoClient(
+			logtoConfig,
+			&SessionStorage{session: session},
+		)
+
+		// 使用 Logto 来控制首页的显示内容
+		authState := "You are not logged in to this website. :("
+
+		if logtoClient.IsAuthenticated() {
+			authState = "You are logged in to this website! :)"
+		}
+
+		homePage := `<h1>Hello Logto</h1>` +
+			"<div>" + authState + "</div>"
+
+		ctx.Data(http.StatusOK, "text/html; charset=utf-8", []byte(homePage))
+	})
+
+	// ...
+}
+```
+
+</Step>
+
+<Step
+  title="登录"
+  subtitle="共 3 步"
+  index={3}
+  activeIndex={props.activeStepIndex}
+  onButtonClick={() => props.onNext(4)}
+>
+
+### 配置 Redirect URI
+
+将 `http://localhost:8080/sign-in-callback` 添加到 Redirect URI，使用户登录 Logto 后能重定向到应用处理登录回调的 `/sign-in-callback` 路由：
+
+<UriInputField appId={props.appId} isSingle={!props.isCompact} name="redirectUris" title="application_details.redirect_uri" />
+
+### 添加处理登录请求路由
+
+```go
+//main.go
+func main() {
+	// ...
+
+	// 在 Home 页面添加登录请求的入口
+	router.GET("/", func(ctx *gin.Context) {
+		// ...
+		homePage := `<h1>Hello Logto</h1>` +
+			"<div>" + authState + "</div>" +
+			// 添加登录请求的入口
+			`<div><a href="/sign-in">Sign In</a></div>`
+
+		ctx.Data(http.StatusOK, "text/html; charset=utf-8", []byte(homePage))
+	})
+
+	// 添加处理登录请求的路由
+	router.GET("/sign-in", func(ctx *gin.Context) {
+		session := sessions.Default(ctx)
+		logtoClient := client.NewLogtoClient(
+			logtoConfig,
+			&SessionStorage{session: session},
+		)
+
+		// 由 Logto 处理登录请求，指定登录成功后重定向到 Redirect URI
+		signInUri, err := logtoClient.SignIn("http://localhost:8080/sign-in-callback")
+		if err != nil {
+			ctx.String(http.StatusInternalServerError, err.Error())
+			return
+		}
+
+		// 将页面重定向到 Logto 登录页
+		ctx.Redirect(http.StatusTemporaryRedirect, signInUri)
+	})
+
+	// ...
+}
+```
+
+### 添加处理登录回调路由
+
+当我们在 Logto 登录页登录成功后，Logto 会将用户重定向 Redirect URI。
+因 Redirect URI 是 `http://localhost:8080/sign-in-callback`，所以我们添加 `/sign-in-callback` 路由来处理登录后的回调。
+
+```go
+// main.go
+func main() {
+	// ...
+
+	// 添加处理登录回调的路由
+	router.GET("/sign-in-callback", func(ctx *gin.Context) {
+		session := sessions.Default(ctx)
+		logtoClient := client.NewLogtoClient(
+			logtoConfig,
+			&SessionStorage{session: session},
+		)
+
+		// 由 Logto 处理登录回调
+		err := logtoClient.HandleSignInCallback(ctx.Request)
+		if err != nil {
+			ctx.String(http.StatusInternalServerError, err.Error())
+			return
+		}
+
+		// 根据需求在登录成功后跳转到某个页面。（该示例中使用户回到首页）
+		ctx.Redirect(http.StatusTemporaryRedirect, "/")
+	})
+
+	// ...
+}
+```
+
+</Step>
+
+<Step
+  title="退出登录"
+  subtitle="共 2 步"
+  index={4}
+  activeIndex={props.activeStepIndex}
+  onButtonClick={() => props.onNext(5)}
+>
+
+### 配置 Post Sign-out Redirect URI
+
+为应用添加 Post Sign-out Redirect URI，使用户退出登录 Logto 之后将用户重定向回我们的应用。
+将 `http://localhost:8080` 添加到 Post Sign-out Redirect URI，使用户退出登录后回到应用首页：
+
+<UriInputField appId={props.appId} isSingle={!props.isCompact} name="postLogoutUris" title="application_details.post_sign_out_redirect_uri" />
+
+### 添加退出登录请求路由
+
+```go
+//main.go
+func main() {
+	// ...
+
+	// 在 Home 页面添加退出登录请求的入口
+	router.GET("/", func(ctx *gin.Context) {
+		// ...
+		homePage := `<h1>Hello Logto</h1>` +
+			"<div>" + authState + "</div>" +
+			`<div><a href="/sign-in">Sign In</a></div>` +
+			// 添加退出登录请求的入口
+			`<div><a href="/sign-out">Sign Out</a></div>`
+
+		ctx.Data(http.StatusOK, "text/html; charset=utf-8", []byte(homePage))
+	})
+
+	// 添加处理退出登录请求的路由
+	router.GET("/sign-out", func(ctx *gin.Context) {
+		session := sessions.Default(ctx)
+		logtoClient := client.NewLogtoClient(
+			logtoConfig,
+			&SessionStorage{session: session},
+		)
+
+		// 由 Logto 处理退出登录请求，指定用户退出登录后重定向回 Post Sign-out Redirect URI
+		signOutUri, signOutErr := logtoClient.SignOut("http://localhost:8080")
+
+		if signOutErr != nil {
+			ctx.String(http.StatusOK, signOutErr.Error())
+			return
+		}
+
+		ctx.Redirect(http.StatusTemporaryRedirect, signOutUri)
+	})
+
+	// ...
+}
+```
+
+当用户发起退出登录后，Logto 会清除 session 中所有用户相关的认证信息。
+
+</Step>
+
+<Step
+  title="延展阅读"
+  subtitle="共 4 篇"
+  index={5}
+  activeIndex={props.activeStepIndex}
+  buttonText="general.done"
+  buttonType="primary"
+  onButtonClick={props.onComplete}
+>
+
+- [自定义登录体验](https://docs.logto.io/zh-cn/docs/recipes/customize-sie)
+- [启用短信或邮件验证码登录](https://docs.logto.io/zh-cn/docs/tutorials/get-started/enable-passcode-sign-in)
+- [启用社交登录](https://docs.logto.io/zh-cn/docs/tutorials/get-started/enable-social-sign-in)
+- [保护你的 API](https://docs.logto.io/zh-cn/docs/recipes/protect-your-api)
+
+</Step>

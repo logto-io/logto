@@ -1,0 +1,384 @@
+import UriInputField from '@mdx/components/UriInputField';
+import Step from '@mdx/components/Step';
+import Alert from '@/components/Alert';
+
+<Step
+  title="Add Logto SDK as a dependency"
+  index={0}
+  activeIndex={props.activeStepIndex}
+  onButtonClick={() => props.onNext(1)}
+>
+<Alert>
+  The following demonstration is built upon the <a href="https://gin-gonic.com">Gin Web Framework</a>.  
+  You may also integrate Logto into other frameworks by taking the same steps.  
+  In the following code snippets, we assume your app is running on <code>http://localhost:8080</code>.
+</Alert>
+
+Run in the project root directory:
+
+```bash
+go get github.com/logto-io/go
+```
+
+Add the `github.com/logto-io/go/client` package to your application code:
+
+```go
+// main.go
+package main
+
+import (
+	"github.com/gin-gonic/gin"
+	// Add dependency
+	"github.com/logto-io/go/client"
+)
+
+func main() {
+	router := gin.Default()
+	router.GET("/", func(c *gin.Context) {
+		c.String(200, "Hello Logto!")
+	})
+	router.Run(":8080")
+}
+```
+
+</Step>
+
+<Step
+  title="Use sessions to store user authentication information"
+  subtitle="2 steps"
+  index={1}
+  activeIndex={props.activeStepIndex}
+  onButtonClick={() => props.onNext(2)}
+>
+
+In traditional web applications, the user authentication information will be stored in the user session.
+
+Logto SDK provides a `Storage` interface, you can implement a `Storage` adapter based on your web framework so that the Logto SDK can store user authentication information in the session.
+
+<Alert>
+  We do NOT recommend using cookie-based sessions, as user authentication information stored by Logto may exceed the cookie size limit.
+  In this example, we use memory-based sessions. You can use Redis, MongoDB, and other technologies in production to store sessions as needed.
+</Alert>
+
+The `Storage` type in the Logto SDK is as follows:
+
+```go
+// github.com/logto-io/client/storage.go
+package client
+
+type Storage interface {
+	GetItem(key string) string
+	SetItem(key, value string)
+}
+```
+
+We will use [github.com/gin-contrib/sessions](https://github.com/gin-contrib/sessions) as an example to demonstrate this process.
+
+### Apply session middleware
+
+Apply the [github.com/gin-contrib/sessions](https://github.com/gin-contrib/sessions) middleware to the application, so that we can get the user session by the user request context in the route handler:
+
+
+```go
+package main
+
+import (
+	"github.com/gin-contrib/sessions"
+	"github.com/gin-contrib/sessions/memstore"
+	"github.com/gin-gonic/gin"
+	"github.com/logto-io/go/client"
+)
+
+func main() {
+	router := gin.Default()
+
+	// We use memory-based session in this example
+	store := memstore.NewStore([]byte("your session secret"))
+	router.Use(sessions.Sessions("logto-session", store))
+
+	router.GET("/", func(ctx *gin.Context) {
+		// Get user session
+		session := sessions.Default(ctx)
+		// ...
+		ctx.String(200, "Hello Logto!")
+	})
+	router.Run(":8080")
+}
+```
+
+### Create session storage for Logto to store user authentication information
+
+Create a `session_storage.go` file, define a `SessionStorage` and implement the Logto SDK's `Storage` interfaces:
+
+```go
+// session_storage.go
+package main
+
+import (
+	"github.com/gin-contrib/sessions"
+)
+
+type SessionStorage struct {
+	session sessions.Session
+}
+
+func (storage *SessionStorage) GetItem(key string) string {
+	value := storage.session.Get(key)
+	if value == nil {
+		return ""
+	}
+	return value.(string)
+}
+
+func (storage *SessionStorage) SetItem(key, value string) {
+	storage.session.Set(key, value)
+	storage.session.Save()
+}
+```
+
+Now, in the route handler, you can create a session storage for Logto as follows:
+
+```go
+session := sessions.Default(ctx)
+sessionStorage := &SessionStorage{session: session}
+```
+
+</Step>
+
+<Step
+  title="Init LogtoClient"
+  subtitle="2 steps"
+  index={2}
+  activeIndex={props.activeStepIndex}
+  onButtonClick={() => props.onNext(3)}
+>
+
+### Create LogtConfig
+
+<pre>
+<code className="language-go">
+{`// main.go
+func main() {
+	// ...
+
+	logtoConfig := &client.LogtoConfig{
+		Endpoint:           "${props.endpoint}",
+		AppId:              "${props.appId}",
+		AppSecret:          "${props.appSecret}",
+		PersistAccessToken: true,
+	}
+
+	// ...
+}`}
+</code>
+</pre>
+
+The `PersistAccessToken` config indicates whether the access token needs to be stored in the session.
+
+### Init LogtoClient for each user request
+
+```go
+// main.go
+func main() {
+	// ...
+
+	router.GET("/", func(ctx *gin.Context) {
+		// Init LogtoClient
+		session := sessions.Default(ctx)
+		logtoClient := client.NewLogtoClient(
+			logtoConfig,
+			&SessionStorage{session: session},
+		)
+
+		// Use Logto to control the content of the home page
+		authState := "You are not logged in to this website. :("
+
+		if logtoClient.IsAuthenticated() {
+			authState = "You are logged in to this website! :)"
+		}
+
+		homePage := `<h1>Hello Logto</h1>` +
+			"<div>" + authState + "</div>"
+
+		ctx.Data(http.StatusOK, "text/html; charset=utf-8", []byte(homePage))
+	})
+
+	// ...
+}
+```
+
+</Step>
+
+<Step
+  title="Sign in"
+  subtitle="3 steps"
+  index={3}
+  activeIndex={props.activeStepIndex}
+  onButtonClick={() => props.onNext(4)}
+>
+
+### Configure Redirect URI
+
+Add `http://localhost:8080/sign-in-callback` to the Redirect URI field.  
+This allows Logto to redirect the user to the `/sign-in-callback` route of your application after signing in.
+
+<UriInputField appId={props.appId} isSingle={!props.isCompact} name="redirectUris" title="application_details.redirect_uri" />
+
+### Add a route for handling sign-in requests
+
+```go
+//main.go
+func main() {
+	// ...
+
+	// Add a link to perform a sign-in request on the home page
+	router.GET("/", func(ctx *gin.Context) {
+		// ...
+		homePage := `<h1>Hello Logto</h1>` +
+			"<div>" + authState + "</div>" +
+			// Add link
+			`<div><a href="/sign-in">Sign In</a></div>`
+
+		ctx.Data(http.StatusOK, "text/html; charset=utf-8", []byte(homePage))
+	})
+
+	// Add a route for handling sign-in requests
+	router.GET("/sign-in", func(ctx *gin.Context) {
+		session := sessions.Default(ctx)
+		logtoClient := client.NewLogtoClient(
+			logtoConfig,
+			&SessionStorage{session: session},
+		)
+
+		// The sign-in request is handled by Logto.
+		// The user will be redirected to the Redirect URI on signed in.
+		signInUri, err := logtoClient.SignIn("http://localhost:8080/sign-in-callback")
+		if err != nil {
+			ctx.String(http.StatusInternalServerError, err.Error())
+			return
+		}
+
+		// Redirect the user to the Logto sign-in page.
+		ctx.Redirect(http.StatusTemporaryRedirect, signInUri)
+	})
+
+	// ...
+}
+```
+
+### Add a route for handling sign-in callback requests
+
+When the user signs in successfully on the Logto sign-in page, Logto will redirect the user to the Redirect URI.
+
+Since the Redirect URI is `http://localhost:8080/sign-in-callback`, we add the `/sign-in-callback` route to handle the callback after signing in.
+
+```go
+// main.go
+func main() {
+	// ...
+
+	// Add a route for handling sign-in callback requests
+	router.GET("/sign-in-callback", func(ctx *gin.Context) {
+		session := sessions.Default(ctx)
+		logtoClient := client.NewLogtoClient(
+			logtoConfig,
+			&SessionStorage{session: session},
+		)
+
+		// The sign-in callback request is handled by Logto
+		err := logtoClient.HandleSignInCallback(ctx.Request)
+		if err != nil {
+			ctx.String(http.StatusInternalServerError, err.Error())
+			return
+		}
+
+		// Jump to the page specified by the developer.
+		// This example takes the user back to the home page.
+		ctx.Redirect(http.StatusTemporaryRedirect, "/")
+	})
+
+	// ...
+}
+```
+
+</Step>
+
+<Step
+  title="Sign out"
+  subtitle="2 steps"
+  index={4}
+  activeIndex={props.activeStepIndex}
+  onButtonClick={() => props.onNext(5)}
+>
+
+### Configure Post Sign-out Redirect URI
+
+Add `http://localhost:8080` to the Post Sign-out Redirect URI filed:
+
+<UriInputField appId={props.appId} isSingle={!props.isCompact} name="postLogoutUris" title="application_details.post_sign_out_redirect_uri" />
+
+This configuration enables the user to return to the home page after signing out.
+
+### Add a route for handling signing out requests
+
+```go
+//main.go
+func main() {
+	// ...
+
+	// Add a link to perform a sign-out request on the home page
+	router.GET("/", func(ctx *gin.Context) {
+		// ...
+		homePage := `<h1>Hello Logto</h1>` +
+			"<div>" + authState + "</div>" +
+			`<div><a href="/sign-in">Sign In</a></div>` +
+			// Add link
+			`<div><a href="/sign-out">Sign Out</a></div>`
+
+		ctx.Data(http.StatusOK, "text/html; charset=utf-8", []byte(homePage))
+	})
+
+	// Add a route for handling signing out requests
+	router.GET("/sign-out", func(ctx *gin.Context) {
+		session := sessions.Default(ctx)
+		logtoClient := client.NewLogtoClient(
+			logtoConfig,
+			&SessionStorage{session: session},
+		)
+
+		// The sign-out request is handled by Logto.
+		// The user will be redirected to the Post Sign-out Redirect URI on signed out.
+		signOutUri, signOutErr := logtoClient.SignOut("http://localhost:8080")
+
+		if signOutErr != nil {
+			ctx.String(http.StatusOK, signOutErr.Error())
+			return
+		}
+
+		ctx.Redirect(http.StatusTemporaryRedirect, signOutUri)
+	})
+
+	// ...
+}
+```
+
+After the user makes a signing-out request, Logto will clear all user authentication information in the session.
+
+</Step>
+
+<Step
+  title="Further readings"
+  subtitle="4 articles"
+  index={5}
+  activeIndex={props.activeStepIndex}
+  buttonText="general.done"
+  buttonType="primary"
+  onButtonClick={props.onComplete}
+>
+
+- [Customize sign-in experience](https://docs.logto.io/docs/recipes/customize-sie)
+- [Enable SMS or email passcode sign-in](https://docs.logto.io/docs/tutorials/get-started/enable-passcode-sign-in)
+- [Enable social sign-in](https://docs.logto.io/docs/tutorials/get-started/enable-social-sign-in)
+- [Protect your API](https://docs.logto.io/docs/recipes/protect-your-api)
+
+</Step>
