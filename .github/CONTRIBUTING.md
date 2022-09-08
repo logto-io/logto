@@ -38,6 +38,10 @@ Usually, we'll confirm the details in the issue thread, and you can work on the 
 
 Connector is the standard way in Logto to connect third-party services like SMS, email, and social identity providers. See [Connectors](https://docs.logto.io/docs/references/connectors/) if you don't know the concept yet.
 
+> **Note**
+>
+> We've moved our connectors to an [independent repo](https://github.com/logto-io/connectors).
+
 Before starting the work, join our [Discord channel](https://discord.gg/cyWnux4cH6) or [email us](mailto:contact@logto.io) to double-check if there's an ongoing project for your desired connector. We'll confirm with you your need and the status quo.
 
 Since a new connector means a new Node.js package, we encourage you to separate your work into two Pull Requests:
@@ -112,9 +116,7 @@ By default, Logto runs in `http://localhost:3001`, which will redirect you to th
 
 **I updated some code, but it doesn't work.**
 
-For now, `pnpm dev` only watches four packages: `core`, `ui`, `console`, and `demo-app`. If you changed other packages like connectors or schemas, you must stop the dev command and run again.
-
-Sorry for the inconvenience. We're working on a better dev command which watches all related packages.
+Please [report a bug](https://github.com/logto-io/logto/issues/new/choose) in issues.
 
 ## Commit and create pull request
 
