@@ -47,7 +47,15 @@ export const convertToPrimitiveOrSql = (
     return sql`to_timestamp(${value}::double precision / 1000)`;
   }
 
-  if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') {
+  if (typeof value === 'number' || typeof value === 'boolean') {
+    return value;
+  }
+
+  if (typeof value === 'string') {
+    if (value === '') {
+      return null;
+    }
+
     return value;
   }
 

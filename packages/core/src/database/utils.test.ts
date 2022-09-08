@@ -53,6 +53,10 @@ describe('convertToPrimitiveOrSql()', () => {
     expect(convertToPrimitiveOrSql(normalKey, ['bar'])).toEqual('["bar"]');
   });
 
+  it('converts empty string to null value', () => {
+    expect(convertToPrimitiveOrSql(normalKey, '')).toEqual(null);
+  });
+
   it('converts value to sql when key ends with special set and value is number', () => {
     for (const value of timestampKeyEndings) {
       expect(convertToPrimitiveOrSql(`${normalKey}${value}`, 12_341_234)).toEqual({
