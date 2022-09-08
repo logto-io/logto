@@ -17,20 +17,28 @@ describe('oidc env-set', () => {
     jest.resetModules();
   });
 
-  it('should read OIDC private keys if `OIDC_PRIVATE_KEYS` is provided', async () => {
-    process.env.OIDC_PRIVATE_KEYS = 'foo, bar';
+  it('should read OIDC private keys if raw `OIDC_PRIVATE_KEYS` is provided', async () => {
+    const rawKeys = [
+      '-----BEGIN PRIVATE KEY-----\nFoo\n-----END PRIVATE KEY-----',
+      '-----BEGIN PRIVATE KEY-----\nBAR\n-----END PRIVATE KEY-----',
+    ];
+    process.env.OIDC_PRIVATE_KEYS = rawKeys.join(',');
+
+    const privateKeys = await readPrivateKeys();
+
+    expect(privateKeys).toEqual([
+      '-----BEGIN PRIVATE KEY-----\nFoo\n-----END PRIVATE KEY-----',
+      '-----BEGIN PRIVATE KEY-----\nBAR\n-----END PRIVATE KEY-----',
+    ]);
+  });
+
+  it('should read OIDC private keys if base64-formatted `OIDC_PRIVATE_KEYS` is provided', async () => {
+    const base64Keys = ['foo', 'bar'].map((key) => Buffer.from(key, 'utf8').toString('base64'));
+    process.env.OIDC_PRIVATE_KEYS = base64Keys.join(',');
 
     const privateKeys = await readPrivateKeys();
 
     expect(privateKeys).toEqual(['foo', 'bar']);
-  });
-
-  it('should read OIDC private keys if provided `OIDC_PRIVATE_KEYS` contain newline characters', async () => {
-    process.env.OIDC_PRIVATE_KEYS = 'foo\nbar, bob\noop';
-
-    const privateKeys = await readPrivateKeys();
-
-    expect(privateKeys).toEqual(['foo\nbar', 'bob\noop']);
   });
 
   it('should read OIDC private keys if `OIDC_PRIVATE_KEY_PATHS` is provided', async () => {
