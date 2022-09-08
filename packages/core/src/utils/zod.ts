@@ -1,4 +1,4 @@
-import { arbitraryObjectGuard } from '@logto/schemas';
+import { arbitraryObjectGuard, translationGuard } from '@logto/schemas';
 import { conditional, ValuesOf } from '@silverhand/essentials';
 import { OpenAPIV3 } from 'openapi-types';
 import {
@@ -18,6 +18,37 @@ import {
 } from 'zod';
 
 import RequestError from '@/errors/RequestError';
+
+export const translationSchemas: Record<string, OpenAPIV3.SchemaObject> = {
+  TranslationObject: {
+    type: 'object',
+    properties: {
+      '[translationKey]': {
+        $ref: '#/components/schemas/Translation',
+      },
+    },
+    example: {
+      input: {
+        username: 'Username',
+        password: 'Password',
+      },
+      action: {
+        sign_in: 'Sign In',
+        continue: 'Continue',
+      },
+    },
+  },
+  Translation: {
+    oneOf: [
+      {
+        type: 'string',
+      },
+      {
+        $ref: '#/components/schemas/Translation',
+      },
+    ],
+  },
+};
 
 export type ZodStringCheck = ValuesOf<ZodStringDef['checks']>;
 
@@ -93,11 +124,19 @@ const zodLiteralToSwagger = (zodLiteral: ZodLiteral<unknown>): OpenAPIV3.SchemaO
   }
 };
 
-export const zodTypeToSwagger = (config: unknown): OpenAPIV3.SchemaObject => {
+export const zodTypeToSwagger = (
+  config: unknown
+): OpenAPIV3.SchemaObject | OpenAPIV3.ReferenceObject => {
   if (config === arbitraryObjectGuard) {
     return {
       type: 'object',
       description: 'arbitrary',
+    };
+  }
+
+  if (config === translationGuard) {
+    return {
+      $ref: '#/components/schemas/TranslationObject',
     };
   }
 

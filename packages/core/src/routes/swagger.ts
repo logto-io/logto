@@ -9,7 +9,7 @@ import { ZodObject, ZodOptional } from 'zod';
 import { isGuardMiddleware, WithGuardConfig } from '@/middleware/koa-guard';
 import { fallbackDefaultPageSize, isPaginationMiddleware } from '@/middleware/koa-pagination';
 import assertThat from '@/utils/assert-that';
-import { zodTypeToSwagger } from '@/utils/zod';
+import { translationSchemas, zodTypeToSwagger } from '@/utils/zod';
 
 import { AnonymousRouter } from './types';
 
@@ -163,6 +163,7 @@ export default function swaggerRoutes<T extends AnonymousRouter, R extends Route
         version: '0.1.0',
       },
       paths: Object.fromEntries(pathMap),
+      components: { schemas: translationSchemas },
     };
 
     ctx.body = document;

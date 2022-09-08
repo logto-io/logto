@@ -37,9 +37,12 @@ const findCustomPhraseByLanguageKey = jest.fn(async (languageKey: string) => {
   return mockCustomPhrase;
 });
 
+const upsertCustomPhrase = jest.fn(async (customPhrase: CustomPhrase) => customPhrase);
+
 jest.mock('@/queries/custom-phrase', () => ({
   deleteCustomPhraseByLanguageKey: async (key: string) => deleteCustomPhraseByLanguageKey(key),
   findCustomPhraseByLanguageKey: async (key: string) => findCustomPhraseByLanguageKey(key),
+  upsertCustomPhrase: async (customPhrase: CustomPhrase) => upsertCustomPhrase(customPhrase),
 }));
 
 describe('customPhraseRoutes', () => {
@@ -64,6 +67,23 @@ describe('customPhraseRoutes', () => {
     it('should return 404 status code when there is no specified custom phrase in the database', async () => {
       const response = await customPhraseRequest.get('/custom-phrases/en-UK');
       expect(response.status).toEqual(404);
+    });
+  });
+
+  describe('PUT /custom-phrases/:languageKey', () => {
+    it('should call upsertCustomPhrase with specified language key', async () => {
+      await customPhraseRequest
+        .put(`/custom-phrases/${mockLanguageKey}`)
+        .send(mockCustomPhrases[mockLanguageKey]?.translation);
+      expect(upsertCustomPhrase).toBeCalledWith(mockCustomPhrases[mockLanguageKey]);
+    });
+
+    it('should return the custom phrase after upserting', async () => {
+      const response = await customPhraseRequest
+        .put(`/custom-phrases/${mockLanguageKey}`)
+        .send(mockCustomPhrases[mockLanguageKey]?.translation);
+      expect(response.status).toEqual(200);
+      expect(response.body).toEqual(mockCustomPhrases[mockLanguageKey]);
     });
   });
 

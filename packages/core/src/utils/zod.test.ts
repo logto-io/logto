@@ -1,4 +1,4 @@
-import { ApplicationType, arbitraryObjectGuard } from '@logto/schemas';
+import { ApplicationType, arbitraryObjectGuard, translationGuard } from '@logto/schemas';
 import { string, boolean, number, object, nativeEnum, unknown, literal, union } from 'zod';
 
 import RequestError from '@/errors/RequestError';
@@ -10,6 +10,12 @@ describe('zodTypeToSwagger', () => {
     expect(zodTypeToSwagger(arbitraryObjectGuard)).toEqual({
       type: 'object',
       description: 'arbitrary',
+    });
+  });
+
+  it('translation object guard', () => {
+    expect(zodTypeToSwagger(translationGuard)).toEqual({
+      $ref: '#/components/schemas/TranslationObject',
     });
   });
 

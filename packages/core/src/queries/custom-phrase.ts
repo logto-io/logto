@@ -1,6 +1,7 @@
-import { CustomPhrase, CustomPhrases } from '@logto/schemas';
+import { CreateCustomPhrase, CustomPhrase, CustomPhrases } from '@logto/schemas';
 import { sql } from 'slonik';
 
+import { buildInsertInto } from '@/database/insert-into';
 import { convertToIdentifiers } from '@/database/utils';
 import envSet from '@/env-set';
 import { DeletionError } from '@/errors/SlonikError';
@@ -13,6 +14,14 @@ export const findCustomPhraseByLanguageKey = async (languageKey: string): Promis
     from ${table}
     where ${fields.languageKey} = ${languageKey}
   `);
+
+export const upsertCustomPhrase = buildInsertInto<CreateCustomPhrase, CustomPhrase>(CustomPhrases, {
+  returning: true,
+  onConflict: {
+    fields: [fields.languageKey],
+    setExcludedFields: [fields.translation],
+  },
+});
 
 export const deleteCustomPhraseByLanguageKey = async (languageKey: string) => {
   const { rowCount } = await envSet.pool.query(sql`
