@@ -32,7 +32,7 @@ describe('oidc env-set', () => {
     ]);
   });
 
-  it('should read OIDC private keys if base64-formatted `OIDC_PRIVATE_KEYS` is provided', async () => {
+  it('should transpile and read OIDC private keys if base64-formatted `OIDC_PRIVATE_KEYS` is provided', async () => {
     const base64Keys = ['foo', 'bar'].map((key) => Buffer.from(key, 'utf8').toString('base64'));
     process.env.OIDC_PRIVATE_KEYS = base64Keys.join(',');
 
