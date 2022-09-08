@@ -66,7 +66,7 @@ node -e "$(printf "%s" "$(curl -fsSL https://raw.githubusercontent.com/logto-io/
 ## Language support
 
 ```ts
-const languages = ['English', 'Français', '简体中文', 'Türkçe', '한국어'];
+const languages = ['English', 'Français', 'Português', '简体中文', 'Türkçe', '한국어'];
 ```
 
 ## Bug report, feature request, feedback
