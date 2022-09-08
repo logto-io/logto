@@ -15,6 +15,8 @@ const defaultLogtoOidcPrivateKeyPath = './oidc-private-key.pem';
 
 const listFormatter = new Intl.ListFormat('en', { style: 'long', type: 'conjunction' });
 
+const isBase64FormatPrivateKey = (key: string) => !key.includes('-');
+
 /**
  * Try to read private keys with the following order:
  *
@@ -30,7 +32,13 @@ export const readPrivateKeys = async (): Promise<string[]> => {
   const privateKeys = getEnvAsStringArray('OIDC_PRIVATE_KEYS');
 
   if (privateKeys.length > 0) {
-    return privateKeys;
+    return privateKeys.map((key) => {
+      if (isBase64FormatPrivateKey(key)) {
+        return Buffer.from(key, 'base64').toString('utf8');
+      }
+
+      return key;
+    });
   }
 
   const privateKeyPaths = getEnvAsStringArray('OIDC_PRIVATE_KEY_PATHS');
