@@ -19,7 +19,7 @@ describe('oidc env-set', () => {
 
   it('should read OIDC private keys if raw `OIDC_PRIVATE_KEYS` is provided', async () => {
     const rawKeys = [
-      '-----BEGIN PRIVATE KEY-----\nFoo\n-----END PRIVATE KEY-----',
+      '-----BEGIN PRIVATE KEY-----\nFOO\n-----END PRIVATE KEY-----',
       '-----BEGIN PRIVATE KEY-----\nBAR\n-----END PRIVATE KEY-----',
     ];
     process.env.OIDC_PRIVATE_KEYS = rawKeys.join(',');
@@ -27,7 +27,7 @@ describe('oidc env-set', () => {
     const privateKeys = await readPrivateKeys();
 
     expect(privateKeys).toEqual([
-      '-----BEGIN PRIVATE KEY-----\nFoo\n-----END PRIVATE KEY-----',
+      '-----BEGIN PRIVATE KEY-----\nFOO\n-----END PRIVATE KEY-----',
       '-----BEGIN PRIVATE KEY-----\nBAR\n-----END PRIVATE KEY-----',
     ]);
   });
