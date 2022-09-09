@@ -76,7 +76,7 @@ describe('email passwordless flow', () => {
 
     await client.processSession(redirectTo);
 
-    expect(client.isAuthenticated).toBeTruthy();
+    await expect(client.isAuthenticated()).resolves.toBe(true);
   });
 
   it('sign-in with email', async () => {
@@ -106,7 +106,7 @@ describe('email passwordless flow', () => {
 
     await client.processSession(redirectTo);
 
-    expect(client.isAuthenticated).toBeTruthy();
+    await expect(client.isAuthenticated()).resolves.toBe(true);
   });
 
   afterAll(async () => {
@@ -149,7 +149,7 @@ describe('sms passwordless flow', () => {
 
     await client.processSession(redirectTo);
 
-    expect(client.isAuthenticated).toBeTruthy();
+    await expect(client.isAuthenticated()).resolves.toBe(true);
   });
 
   it('sign-in with sms', async () => {
@@ -179,7 +179,7 @@ describe('sms passwordless flow', () => {
 
     await client.processSession(redirectTo);
 
-    expect(client.isAuthenticated).toBeTruthy();
+    await expect(client.isAuthenticated()).resolves.toBe(true);
   });
 
   afterAll(async () => {
@@ -209,10 +209,10 @@ describe('sign-in and sign-out', () => {
 
     await client.processSession(redirectTo);
 
-    expect(client.isAuthenticated).toBe(true);
+    await expect(client.isAuthenticated()).resolves.toBe(true);
 
     await client.signOut();
 
-    expect(client.isAuthenticated).toBe(false);
+    await expect(client.isAuthenticated()).resolves.toBe(false);
   });
 });

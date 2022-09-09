@@ -17,11 +17,11 @@ import Topbar from './components/Topbar';
 import * as styles from './index.module.scss';
 
 const AppContent = () => {
-  const { isAuthenticated, error, signIn } = useLogto();
+  const { isAuthenticated, isLoading: isLogtoLoading, error, signIn } = useLogto();
   const href = useHref('/callback');
   const { isLoading: isPreferencesLoading } = useUserPreferences();
   const { isLoading: isSettingsLoading } = useSettings();
-  const isLoading = isPreferencesLoading || isSettingsLoading;
+  const isLoading = isLogtoLoading || isPreferencesLoading || isSettingsLoading;
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -31,10 +31,10 @@ const AppContent = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   useEffect(() => {
-    if (!isAuthenticated) {
+    if (!isAuthenticated && !isLogtoLoading) {
       void signIn(new URL(href, window.location.origin).toString());
     }
-  }, [href, isAuthenticated, signIn]);
+  }, [href, isAuthenticated, isLogtoLoading, signIn]);
 
   useEffect(() => {
     // Navigate to the first menu item after configs are loaded.
