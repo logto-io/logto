@@ -13,7 +13,7 @@ import initI18n from './i18n/init';
 void initI18n();
 
 const Main = () => {
-  const { isAuthenticated, getIdTokenClaims, signIn, signOut } = useLogto();
+  const { isAuthenticated, isLoading, getIdTokenClaims, signIn, signOut } = useLogto();
   const [user, setUser] = useState<Pick<IdTokenClaims, 'sub' | 'username'>>();
   const { t } = useTranslation(undefined, { keyPrefix: 'demo_app' });
   const isInCallback = Boolean(new URL(window.location.href).searchParams.get('code'));
@@ -27,13 +27,13 @@ const Main = () => {
 
     if (isAuthenticated) {
       (async () => {
-        const userInfo = getIdTokenClaims();
+        const userInfo = await getIdTokenClaims();
         setUser(userInfo ?? { sub: 'N/A', username: 'N/A' });
       })();
-    } else {
+    } else if (!isLoading) {
       void signIn(window.location.href);
     }
-  }, [getIdTokenClaims, isAuthenticated, isInCallback, signIn, t]);
+  }, [getIdTokenClaims, isAuthenticated, isLoading, isInCallback, signIn, t]);
 
   useEffect(() => {
     const onThemeChange = (event: MediaQueryListEvent) => {
