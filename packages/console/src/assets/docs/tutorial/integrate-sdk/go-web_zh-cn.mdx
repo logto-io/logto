@@ -161,15 +161,12 @@ func main() {
 		Endpoint:           "${props.endpoint}",
 		AppId:              "${props.appId}",
 		AppSecret:          "${props.appSecret}",
-		PersistAccessToken: true,
 	}
 
 	// ...
 }`}
 </code>
 </pre>
-
-其中 PersistAccessToken 表示是否需要把 access token 存储到 session 中。
 
 ### 为每个请求初始化 LogtoClient
 
