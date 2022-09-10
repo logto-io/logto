@@ -21,7 +21,7 @@ const AppContent = () => {
   const href = useHref('/callback');
   const { isLoading: isPreferencesLoading } = useUserPreferences();
   const { isLoading: isSettingsLoading } = useSettings();
-  const isLoading = isLogtoLoading || isPreferencesLoading || isSettingsLoading;
+  const isLoading = isPreferencesLoading || isSettingsLoading;
 
   const location = useLocation();
   const navigate = useNavigate();
