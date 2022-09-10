@@ -15,7 +15,7 @@ const execPromise = promisify(exec);
 const npmConnectorFilter = '@logto/connector-';
 
 const fetchOfficialConnectorList = async () => {
-  const { stdout } = await execPromise(`npm search ${npmConnectorFilter} --json`);
+  const { stdout } = await execPromise(`npm search ${npmConnectorFilter} --json --registry=https://registry.npmjs.org`);
   const packages = z.object({ name: z.string() }).array().parse(JSON.parse(stdout));
 
   return packages.filter(({ name }) => !name.includes('mock') && !name.includes('core'));
