@@ -19,7 +19,7 @@ const question = async (query) => new Promise((resolve) => {
 
 const confirm = async (query) => {
   const answer = await question(`${query} (Y/n) `);
-  return answer === '' || ['y', 'yes', 'yep', 'yeah'].includes(answer);
+  return answer === '' || ['y', 'yes', 'yep', 'yeah'].includes(answer.toLowerCase());
 };
 
 const safeExecSync = (command) => {
