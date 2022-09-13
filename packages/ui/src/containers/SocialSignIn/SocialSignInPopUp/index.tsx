@@ -1,10 +1,11 @@
+import { ConnectorMetadata } from '@logto/schemas';
+
 import Drawer from '@/components/Drawer';
-import { ConnectorData } from '@/types';
 
 import SocialSignInList from '../SocialSignInList';
 
 type Props = {
-  connectors?: ConnectorData[];
+  connectors?: ConnectorMetadata[];
   className?: string;
   isOpen?: boolean;
   onClose: () => void;

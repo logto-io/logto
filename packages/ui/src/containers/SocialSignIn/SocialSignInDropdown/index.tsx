@@ -1,10 +1,10 @@
+import { ConnectorMetadata } from '@logto/schemas';
 import { getDefaultLanguage } from '@logto/shared';
 import { useState, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import Dropdown, { DropdownItem } from '@/components/Dropdown';
 import useSocial from '@/hooks/use-social';
-import { ConnectorData } from '@/types';
 
 import * as styles from './index.module.scss';
 
@@ -12,7 +12,7 @@ type Props = {
   anchorRef?: React.RefObject<HTMLElement>;
   isOpen: boolean;
   onClose: () => void;
-  connectors: ConnectorData[];
+  connectors: ConnectorMetadata[];
 };
 
 const SocialSignInDropdown = ({ isOpen, onClose, connectors, anchorRef }: Props) => {

@@ -1,17 +1,17 @@
+import { ConnectorMetadata } from '@logto/schemas';
 import classNames from 'classnames';
 
 import MoreSocialIcon from '@/assets/icons/more-social-icon.svg';
 import IconButton from '@/components/Button/IconButton';
 import SocialIconButton from '@/components/Button/SocialIconButton';
 import useSocial from '@/hooks/use-social';
-import { ConnectorData } from '@/types';
 import { isAppleConnector } from '@/utils/social-connectors';
 
 import * as styles from './index.module.scss';
 
 type Props = {
   className?: string;
-  connectors?: ConnectorData[];
+  connectors?: ConnectorMetadata[];
   hasMore?: boolean;
   moreButtonRef: React.RefObject<HTMLButtonElement>;
   onMoreButtonClick?: () => void;

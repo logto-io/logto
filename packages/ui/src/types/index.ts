@@ -15,10 +15,8 @@ export type Platform = 'web' | 'mobile';
 
 export type Theme = 'dark' | 'light';
 
-export type ConnectorData = ConnectorMetadata & { id: string };
-
 export type SignInExperienceSettingsResponse = SignInExperience & {
-  socialConnectors: ConnectorData[];
+  socialConnectors: ConnectorMetadata[];
   notification?: string;
 };
 

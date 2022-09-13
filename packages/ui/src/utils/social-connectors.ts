@@ -1,6 +1,6 @@
-import { ConnectorPlatform } from '@logto/schemas';
+import { ConnectorMetadata, ConnectorPlatform } from '@logto/schemas';
 
-import { ConnectorData, SearchParameters } from '@/types';
+import { SearchParameters } from '@/types';
 import { generateRandomString } from '@/utils';
 import { getLogtoNativeSdk, isNativeWebview } from '@/utils/native-sdk';
 
@@ -56,12 +56,12 @@ export const getCallbackLinkFromStorage = (connectorId: string) => {
 /**
  * Social Connectors Filter Utility Methods
  */
-export const filterSocialConnectors = (socialConnectors?: ConnectorData[]) => {
+export const filterSocialConnectors = (socialConnectors?: ConnectorMetadata[]) => {
   if (!socialConnectors) {
     return [];
   }
 
-  const connectorMap = new Map<string, ConnectorData>();
+  const connectorMap = new Map<string, ConnectorMetadata>();
 
   /**
    * Browser Environment
@@ -142,13 +142,13 @@ export const filterSocialConnectors = (socialConnectors?: ConnectorData[]) => {
  */
 export const filterPreviewSocialConnectors = (
   platform: ConnectorPlatform.Native | ConnectorPlatform.Web,
-  socialConnectors?: ConnectorData[]
+  socialConnectors?: ConnectorMetadata[]
 ) => {
   if (!socialConnectors) {
     return [];
   }
 
-  const connectorMap = new Map<string, ConnectorData>();
+  const connectorMap = new Map<string, ConnectorMetadata>();
 
   /**
    * Browser Environment
