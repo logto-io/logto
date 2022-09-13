@@ -10,6 +10,7 @@ import adminUserRoutes from '@/routes/admin-user';
 import applicationRoutes from '@/routes/application';
 import authnRoutes from '@/routes/authn';
 import connectorRoutes from '@/routes/connector';
+import customPhraseRoutes from '@/routes/custom-phrase';
 import dashboardRoutes from '@/routes/dashboard';
 import logRoutes from '@/routes/log';
 import resourceRoutes from '@/routes/resource';
@@ -39,6 +40,7 @@ const createRouters = (provider: Provider) => {
   logRoutes(managementRouter);
   roleRoutes(managementRouter);
   dashboardRoutes(managementRouter);
+  customPhraseRoutes(managementRouter);
 
   const anonymousRouter: AnonymousRouter = new Router();
   wellKnownRoutes(anonymousRouter, provider);
