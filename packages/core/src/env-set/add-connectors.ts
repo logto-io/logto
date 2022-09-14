@@ -1,4 +1,5 @@
 import { existsSync } from 'fs';
+import { mkdir } from 'fs/promises';
 
 import inquirer from 'inquirer';
 
@@ -19,6 +20,8 @@ export const addConnectors = async (directory: string) => {
     });
 
     if (!add.value) {
+      await mkdir(directory);
+
       return;
     }
   }
