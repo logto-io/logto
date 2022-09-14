@@ -6,11 +6,13 @@ import koKR from './locales/ko-kr';
 import ptPT from './locales/pt-pt';
 import trTR from './locales/tr-tr';
 import zhCN from './locales/zh-cn';
-import { Resource, Translation } from './types';
+import { Resource } from './types';
 
-export * from './types';
+export { languageCodeAndDisplayNameMappings, languageOptions } from './types';
 
-export type I18nKey = NormalizeKeyPaths<Translation>;
+export type { LocalePhrase } from './types';
+
+export type I18nKey = NormalizeKeyPaths<typeof en.translation>;
 
 const resource: Resource = {
   en,

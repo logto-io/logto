@@ -1,25 +1,15 @@
-import { CustomPhrase } from '@logto/schemas';
+import { CustomPhrase, SignInExperience } from '@logto/schemas';
 
 import { mockSignInExperience } from '@/__mocks__';
+import { mockZhCnCustomPhrase, trTrKey, zhCnKey } from '@/__mocks__/custom-phrase';
 import RequestError from '@/errors/RequestError';
 import customPhraseRoutes from '@/routes/custom-phrase';
 import { createRequester } from '@/utils/test-utils';
 
-const mockLanguageKey = 'en-US';
-
+const mockLanguageKey = zhCnKey;
+const mockPhrase = mockZhCnCustomPhrase;
 const mockCustomPhrases: Record<string, CustomPhrase> = {
-  [mockLanguageKey]: {
-    languageKey: mockLanguageKey,
-    translation: {
-      input: {
-        username: 'Username',
-        password: 'Password',
-        email: 'Email',
-        phone_number: 'Phone number',
-        confirm_password: 'Confirm password',
-      },
-    },
-  },
+  [mockLanguageKey]: mockPhrase,
 };
 
 const deleteCustomPhraseByLanguageKey = jest.fn(async (languageKey: string) => {
@@ -40,7 +30,7 @@ const findCustomPhraseByLanguageKey = jest.fn(async (languageKey: string) => {
 
 const findAllCustomPhrases = jest.fn(async (): Promise<CustomPhrase[]> => []);
 
-const upsertCustomPhrase = jest.fn(async (customPhrase: CustomPhrase) => customPhrase);
+const upsertCustomPhrase = jest.fn(async (customPhrase: CustomPhrase) => mockPhrase);
 
 jest.mock('@/queries/custom-phrase', () => ({
   deleteCustomPhraseByLanguageKey: async (key: string) => deleteCustomPhraseByLanguageKey(key),
@@ -49,7 +39,18 @@ jest.mock('@/queries/custom-phrase', () => ({
   upsertCustomPhrase: async (customPhrase: CustomPhrase) => upsertCustomPhrase(customPhrase),
 }));
 
-const findDefaultSignInExperience = jest.fn(async () => mockSignInExperience);
+const mockFallbackLanguage = trTrKey;
+
+const findDefaultSignInExperience = jest.fn(
+  async (): Promise<SignInExperience> => ({
+    ...mockSignInExperience,
+    languageInfo: {
+      autoDetect: true,
+      fallbackLanguage: mockFallbackLanguage,
+      fixedLanguage: mockFallbackLanguage,
+    },
+  })
+);
 
 jest.mock('@/queries/sign-in-experience', () => ({
   findDefaultSignInExperience: async () => findDefaultSignInExperience(),
@@ -108,7 +109,7 @@ describe('customPhraseRoutes', () => {
       expect(upsertCustomPhrase).toBeCalledWith(mockCustomPhrases[mockLanguageKey]);
     });
 
-    it('should return the custom phrase after upserting', async () => {
+    it('should return custom phrase after upserting', async () => {
       const response = await customPhraseRequest
         .put(`/custom-phrases/${mockLanguageKey}`)
         .send(mockCustomPhrases[mockLanguageKey]?.translation);
@@ -118,23 +119,23 @@ describe('customPhraseRoutes', () => {
   });
 
   describe('DELETE /custom-phrases/:languageKey', () => {
-    it('should call deleteCustomPhraseByLanguageKey', async () => {
+    it('should call deleteCustomPhraseByLanguageKey when custom phrase exists and is not fallback language in sign-in experience', async () => {
       await customPhraseRequest.delete(`/custom-phrases/${mockLanguageKey}`);
       expect(deleteCustomPhraseByLanguageKey).toBeCalledWith(mockLanguageKey);
     });
 
-    it('should return 204 status code after deleting the specified custom phrase', async () => {
+    it('should return 204 status code after deleting specified custom phrase', async () => {
       const response = await customPhraseRequest.delete(`/custom-phrases/${mockLanguageKey}`);
       expect(response.status).toEqual(204);
     });
 
-    it('should return 404 status code when the specified custom phrase does not exist before deleting', async () => {
-      const response = await customPhraseRequest.delete('/custom-phrases/en-UK');
+    it('should return 404 status code when specified custom phrase does not exist before deleting', async () => {
+      const response = await customPhraseRequest.delete('/custom-phrases/en-GB');
       expect(response.status).toEqual(404);
     });
 
-    it('should return 400 status code when the specified custom phrase is used as default language in sign-in experience', async () => {
-      const response = await customPhraseRequest.delete('/custom-phrases/en');
+    it('should return 400 status code when specified custom phrase is used as fallback language in sign-in experience', async () => {
+      const response = await customPhraseRequest.delete(`/custom-phrases/${mockFallbackLanguage}`);
       expect(response.status).toEqual(400);
     });
   });

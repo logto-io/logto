@@ -155,6 +155,7 @@ importers:
       '@logto/connector-kit': ^1.0.0-beta.13
       '@logto/core-kit': ^1.0.0-beta.13
       '@logto/phrases': ^1.0.0-beta.9
+      '@logto/phrases-ui': ^1.0.0-beta.9
       '@logto/schemas': ^1.0.0-beta.9
       '@shopify/jest-koa-mocks': ^5.0.0
       '@silverhand/eslint-config': 1.0.0
@@ -179,6 +180,7 @@ importers:
       '@types/supertest': ^2.0.11
       '@types/tar': ^6.1.2
       chalk: ^4
+      clean-deep: ^3.4.0
       copyfiles: ^2.4.1
       dayjs: ^1.10.5
       debug: ^4.3.4
@@ -231,9 +233,11 @@ importers:
       '@logto/connector-kit': 1.0.0-beta.13
       '@logto/core-kit': 1.0.0-beta.13
       '@logto/phrases': link:../phrases
+      '@logto/phrases-ui': link:../phrases-ui
       '@logto/schemas': link:../schemas
       '@silverhand/essentials': 1.2.1
       chalk: 4.1.2
+      clean-deep: 3.4.0
       dayjs: 1.10.7
       debug: 4.3.4
       decamelize: 5.0.1
@@ -5579,7 +5583,6 @@ packages:
       lodash.isempty: 4.4.0
       lodash.isplainobject: 4.0.6
       lodash.transform: 4.6.0
-    dev: true
 
   /clean-regexp/1.0.0:
     resolution: {integrity: sha512-GfisEZEJvzKrmGWkvfhgzcz/BllN1USeqD2V6tg14OAOgaCD2Z/PUEuxnAZ/nPvmaHRG7a8y77p1T/IRQ4D1Hw==}
@@ -10225,7 +10228,6 @@ packages:
 
   /lodash.isempty/4.4.0:
     resolution: {integrity: sha512-oKMuF3xEeqDltrGMfDxAPGIVMSSRv8tbRSODbrs4KGsRRLEhrW8N8Rd4DRgB2+621hY8A8XwwrTVhXWpxFvMzg==}
-    dev: true
 
   /lodash.ismatch/4.4.0:
     resolution: {integrity: sha1-dWy1FQyjum8RCFp4hJZF8Yj4Xzc=}
@@ -10233,7 +10235,6 @@ packages:
 
   /lodash.isplainobject/4.0.6:
     resolution: {integrity: sha512-oSXzaWypCMHkPC3NvBEaPHf0KsA5mvPrOPgQWDsbg8n7orZ290M0BmC/jgRZ4vcJ6DTAhjrsSYgdsW/F+MFOBA==}
-    dev: true
 
   /lodash.kebabcase/4.1.1:
     resolution: {integrity: sha1-hImxyw0p/4gZXM7KRI/21swpXDY=}
@@ -10279,7 +10280,6 @@ packages:
 
   /lodash.transform/4.6.0:
     resolution: {integrity: sha512-LO37ZnhmBVx0GvOU/caQuipEh4GN82TcWv3yHlebGDgOxbxiwwzW5Pcx2AcvpIv2WmvmSMoC492yQFNhy/l/UQ==}
-    dev: true
 
   /lodash.truncate/4.4.2:
     resolution: {integrity: sha512-jttmRe7bRse52OsWIMDLaXxWqRAmtIUccAQ3garviCqJjafXOfNMO0yMfNpdD6zbGaTU0P5Nz7e7gAT6cKmJRw==}
