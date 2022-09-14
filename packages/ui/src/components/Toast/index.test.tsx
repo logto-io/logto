@@ -7,20 +7,20 @@ jest.useFakeTimers();
 describe('Toast Component', () => {
   it('showToast', () => {
     const message = 'mock toast message';
-    const { queryByText } = render(<Toast isVisible message={message} />);
+    const { queryByText } = render(<Toast message={message} />);
     expect(queryByText(message)).not.toBeNull();
   });
 
   it('should not render empty toast', () => {
     const message = 'mock toast message';
-    const { queryByText } = render(<Toast message={message} />);
+    const { queryByText } = render(<Toast message="" />);
     expect(queryByText(message)).toBeNull();
   });
 
   it('should run callback method when transition end', () => {
     const callback = jest.fn();
     const message = 'mock toast message';
-    const { container } = render(<Toast isVisible message={message} callback={callback} />);
+    const { container } = render(<Toast message={message} callback={callback} />);
     const toast = container.querySelector('[data-visible=true]');
 
     act(() => {

@@ -41,7 +41,7 @@ const AppContent = ({ children }: Props) => {
       {platform === 'web' && <div className={styles.placeHolder} />}
       <main className={styles.content}>{children}</main>
       {platform === 'web' && <div className={styles.placeHolder} />}
-      <Toast message={toast} isVisible={Boolean(toast)} callback={hideToast} />
+      <Toast message={toast} callback={hideToast} />
     </div>
   );
 };

@@ -21,14 +21,26 @@
   background: var(--color-toast);
   box-shadow: var(--shadow-2);
   text-align: center;
-  opacity: 0%;
-  transition: opacity 0.3s ease-in-out;
   word-break: break-word;
+  pointer-events: auto;
+}
 
-  &[data-visible='true'] {
+/* stylelint-disable selector-class-pattern */
+:global {
+  .ReactModal__Content[role='toast'] {
+    opacity: 0%;
+    transition: opacity 0.3s ease-in-out;
+  }
+
+  .ReactModal__Content--after-open[role='toast'] {
     opacity: 100%;
   }
+
+  .ReactModal__Content--before-close[role='toast'] {
+    opacity: 0%;
+  }
 }
+/* stylelint-enable selector-class-pattern */
 
 :global(body.desktop) {
   .toast {
