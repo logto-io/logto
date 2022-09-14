@@ -24,3 +24,13 @@ export const deleteCustomPhraseByLanguageKey = async (languageKey: string) => {
     throw new DeletionError(CustomPhrases.table, languageKey);
   }
 };
+
+export const getCustomLanguageKeys = async (): Promise<string[]> => {
+  const rows = await envSet.pool.many<{ languageKey: string }>(sql`
+    select ${fields.languageKey} 
+    from ${table}
+    order by ${fields.languageKey}
+  `);
+
+  return rows.map((row) => row.languageKey);
+};
