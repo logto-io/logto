@@ -37,10 +37,13 @@ const findCustomPhraseByLanguageKey = jest.fn(async (languageKey: string) => {
   return mockCustomPhrase;
 });
 
+const findAllCustomPhrases = jest.fn(async (): Promise<CustomPhrase[]> => []);
+
 const upsertCustomPhrase = jest.fn(async (customPhrase: CustomPhrase) => customPhrase);
 
 jest.mock('@/queries/custom-phrase', () => ({
   deleteCustomPhraseByLanguageKey: async (key: string) => deleteCustomPhraseByLanguageKey(key),
+  findAllCustomPhrases: async () => findAllCustomPhrases(),
   findCustomPhraseByLanguageKey: async (key: string) => findCustomPhraseByLanguageKey(key),
   upsertCustomPhrase: async (customPhrase: CustomPhrase) => upsertCustomPhrase(customPhrase),
 }));
@@ -50,6 +53,26 @@ describe('customPhraseRoutes', () => {
 
   afterEach(() => {
     jest.clearAllMocks();
+  });
+
+  describe('GET /custom-phrases', () => {
+    it('should call findAllCustomPhrases', async () => {
+      await customPhraseRequest.get('/custom-phrases');
+      expect(findAllCustomPhrases).toBeCalledTimes(1);
+    });
+
+    it('should return all custom phrases', async () => {
+      const mockCustomPhrase = {
+        languageKey: 'zh-HK',
+        translation: {
+          input: { username: '用戶名', password: '密碼' },
+        },
+      };
+      findAllCustomPhrases.mockImplementationOnce(async () => [mockCustomPhrase]);
+      const response = await customPhraseRequest.get('/custom-phrases');
+      expect(response.status).toEqual(200);
+      expect(response.body).toEqual([mockCustomPhrase]);
+    });
   });
 
   describe('GET /custom-phrases/:languageKey', () => {
