@@ -1,11 +1,14 @@
 import { CustomPhrases } from '@logto/schemas';
 
 import koaGuard from '@/middleware/koa-guard';
-import { findCustomPhraseByLanguageKey } from '@/queries/custom-phrase';
+import {
+  deleteCustomPhraseByLanguageKey,
+  findCustomPhraseByLanguageKey,
+} from '@/queries/custom-phrase';
 
 import { AuthedRouter } from './types';
 
-export default function phraseRoutes<T extends AuthedRouter>(router: T) {
+export default function customPhraseRoutes<T extends AuthedRouter>(router: T) {
   router.get(
     '/custom-phrases/:languageKey',
     koaGuard({
@@ -19,6 +22,23 @@ export default function phraseRoutes<T extends AuthedRouter>(router: T) {
       } = ctx.guard;
 
       ctx.body = await findCustomPhraseByLanguageKey(languageKey);
+
+      return next();
+    }
+  );
+
+  router.delete(
+    '/custom-phrases/:languageKey',
+    koaGuard({
+      params: CustomPhrases.createGuard.pick({ languageKey: true }),
+    }),
+    async (ctx, next) => {
+      const {
+        params: { languageKey },
+      } = ctx.guard;
+
+      await deleteCustomPhraseByLanguageKey(languageKey);
+      ctx.status = 204;
 
       return next();
     }
