@@ -15,7 +15,7 @@ import SecondarySignIn from './pages/SecondarySignIn';
 import SignIn from './pages/SignIn';
 import SocialLanding from './pages/SocialLanding';
 import SocialRegister from './pages/SocialRegister';
-import SocialSignInCallback from './pages/SocialSignInCallback';
+import SocialSignIn from './pages/SocialSignInCallback';
 import getSignInExperienceSettings from './utils/sign-in-experience';
 
 import './scss/normalized.scss';
@@ -58,15 +58,13 @@ const App = () => {
 
             <Route element={<LoadingLayerProvider />}>
               <Route path="/sign-in" element={<SignIn />} />
+              <Route path="/sign-in/social/:connector" element={<SocialSignIn />} />
               <Route path="/sign-in/:method" element={<SecondarySignIn />} />
               <Route path="/register" element={<Register />} />
               <Route path="/register/:method" element={<Register />} />
 
               {/* social sign-in pages */}
-              <Route
-                path="/social/sign-in-callback/:connector"
-                element={<SocialSignInCallback />}
-              />
+
               <Route path="/callback/:connector" element={<Callback />} />
               <Route path="/social/register/:connector" element={<SocialRegister />} />
               <Route path="/social/landing/:connector" element={<SocialLanding />} />

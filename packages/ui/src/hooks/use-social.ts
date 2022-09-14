@@ -24,7 +24,7 @@ const useSocial = () => {
         : redirectTo;
 
     getLogtoNativeSdk()?.getPostMessage()({
-      callbackUri: `${window.location.origin}/social/sign-in-callback/${connectorId}`,
+      callbackUri: `${window.location.origin}/sign-in/social/${connectorId}`,
       redirectTo: redirectUri,
     });
   }, []);
