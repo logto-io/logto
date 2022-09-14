@@ -97,7 +97,8 @@ describe('session -> passwordlessRoutes', () => {
       expect(interactionResult).toHaveBeenCalledWith(
         expect.anything(),
         expect.anything(),
-        expect.objectContaining({ login: { accountId: 'id' } }),
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        expect.objectContaining({ login: expect.objectContaining({ accountId: 'id' }) }),
         expect.anything()
       );
     });
@@ -146,7 +147,8 @@ describe('session -> passwordlessRoutes', () => {
       expect(interactionResult).toHaveBeenCalledWith(
         expect.anything(),
         expect.anything(),
-        expect.objectContaining({ login: { accountId: 'id' } }),
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        expect.objectContaining({ login: expect.objectContaining({ accountId: 'id' }) }),
         expect.anything()
       );
     });
@@ -214,7 +216,8 @@ describe('session -> passwordlessRoutes', () => {
       expect(interactionResult).toHaveBeenCalledWith(
         expect.anything(),
         expect.anything(),
-        expect.objectContaining({ login: { accountId: 'user1' } }),
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        expect.objectContaining({ login: expect.objectContaining({ accountId: 'user1' }) }),
         expect.anything()
       );
     });
@@ -291,7 +294,8 @@ describe('session -> passwordlessRoutes', () => {
       expect(interactionResult).toHaveBeenCalledWith(
         expect.anything(),
         expect.anything(),
-        expect.objectContaining({ login: { accountId: 'user1' } }),
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        expect.objectContaining({ login: expect.objectContaining({ accountId: 'user1' }) }),
         expect.anything()
       );
     });
