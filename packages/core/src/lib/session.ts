@@ -7,6 +7,8 @@ import RequestError from '@/errors/RequestError';
 import { findUserById, updateUserById } from '@/queries/user';
 import { maskUserInfo } from '@/utils/format';
 
+import { updateLastSignInAt } from './user';
+
 export const assignInteractionResults = async (
   ctx: Context,
   provider: Provider,
@@ -71,6 +73,32 @@ export const checkProtectedAccess = async (
       ),
     });
   }
+};
+
+export const reAuthenticateSession = async (ctx: Context, provider: Provider) => {
+  const { result } = await provider.interactionDetails(ctx.req, ctx.res);
+
+  if (!result?.login?.accountId) {
+    throw new RequestError('auth.unauthorized');
+  }
+
+  await updateLastSignInAt(result.login.accountId);
+
+  const ts = dayjs().unix();
+  await provider.interactionResult(
+    ctx.req,
+    ctx.res,
+    {
+      ...result,
+      login: {
+        ...result.login,
+        ts,
+      },
+    },
+    { mergeWithLastSubmission: true }
+  );
+
+  return { ts };
 };
 
 export const saveUserFirstConsentedAppId = async (userId: string, applicationId: string) => {

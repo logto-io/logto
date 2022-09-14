@@ -1,7 +1,7 @@
 import { Truthy } from '@silverhand/essentials';
 
 export const getRoutePrefix = (
-  type: 'sign-in' | 'register',
+  type: 'sign-in' | 'register' | 're-auth',
   method?: 'passwordless' | 'username-password' | 'social'
 ) => {
   return ['session', type, method]

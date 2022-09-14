@@ -96,6 +96,11 @@ type SignInSocialLogPayload = SignInSocialBindLogPayload & {
   redirectTo?: string;
 };
 
+type ReAuthUsernamePasswordLogPayload = ArbitraryLogPayload & {
+  userId?: string;
+  username?: string;
+};
+
 export enum TokenType {
   AccessToken = 'AccessToken',
   RefreshToken = 'RefreshToken',
@@ -131,6 +136,7 @@ export type LogPayloads = {
   SignInSms: SignInSmsLogPayload;
   SignInSocialBind: SignInSocialBindLogPayload;
   SignInSocial: SignInSocialLogPayload;
+  ReAuthUsernamePassword: ReAuthUsernamePasswordLogPayload;
   CodeExchangeToken: ExchangeTokenLogPayload;
   RefreshTokenExchangeToken: ExchangeTokenLogPayload;
   RevokeToken: RevokeTokenLogPayload;

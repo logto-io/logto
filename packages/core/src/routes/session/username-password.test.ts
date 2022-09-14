@@ -6,7 +6,11 @@ import { mockUser } from '@/__mocks__';
 import RequestError from '@/errors/RequestError';
 import { createRequester } from '@/utils/test-utils';
 
-import usernamePasswordRoutes, { registerRoute, signInRoute } from './username-password';
+import usernamePasswordRoutes, {
+  registerRoute,
+  signInRoute,
+  reAuthRoute,
+} from './username-password';
 
 const insertUser = jest.fn(async (..._args: unknown[]) => ({ id: 'id' }));
 const findUserById = jest.fn(async (): Promise<User> => mockUser);
@@ -29,7 +33,7 @@ jest.mock('@/queries/user', () => ({
 
 jest.mock('@/lib/user', () => ({
   async findUserByUsernameAndPassword(username: string, password: string) {
-    if (username !== 'username' && username !== 'admin') {
+    if (username !== 'foo' && username !== 'admin') {
       throw new RequestError('session.invalid_credentials');
     }
 
@@ -103,7 +107,7 @@ describe('sessionRoutes', () => {
     it('assign result and redirect', async () => {
       interactionDetails.mockResolvedValueOnce({ params: {} });
       const response = await sessionRequest.post(signInRoute).send({
-        username: 'username',
+        username: 'foo',
         password: 'password',
       });
       expect(response.statusCode).toEqual(200);
@@ -129,7 +133,7 @@ describe('sessionRoutes', () => {
     it('throw if user found but wrong password', async () => {
       interactionDetails.mockResolvedValueOnce({ params: {} });
       const response = await sessionRequest.post(signInRoute).send({
-        username: 'username',
+        username: 'foo',
         password: '_password',
       });
       expect(response.statusCode).toEqual(400);
@@ -140,7 +144,7 @@ describe('sessionRoutes', () => {
         params: { client_id: adminConsoleApplicationId },
       });
       const response = await sessionRequest.post(signInRoute).send({
-        username: 'username',
+        username: 'foo',
         password: 'password',
       });
 
@@ -167,11 +171,11 @@ describe('sessionRoutes', () => {
 
       const response = await sessionRequest
         .post(registerRoute)
-        .send({ username: 'username', password: 'password' });
+        .send({ username: 'foo', password: 'password' });
       expect(insertUser).toHaveBeenCalledWith(
         expect.objectContaining({
           id: 'user1',
-          username: 'username',
+          username: 'foo',
           passwordEncrypted: 'password_user1',
           passwordEncryptionMethod: 'Argon2i',
           roleNames: [],
@@ -194,7 +198,7 @@ describe('sessionRoutes', () => {
 
       hasActiveUsers.mockResolvedValueOnce(false);
 
-      await sessionRequest.post(registerRoute).send({ username: 'username', password: 'password' });
+      await sessionRequest.post(registerRoute).send({ username: 'foo', password: 'password' });
 
       expect(insertUser).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -208,7 +212,7 @@ describe('sessionRoutes', () => {
         params: { client_id: adminConsoleApplicationId },
       });
 
-      await sessionRequest.post(registerRoute).send({ username: 'username', password: 'password' });
+      await sessionRequest.post(registerRoute).send({ username: 'foo', password: 'password' });
 
       expect(insertUser).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -230,6 +234,47 @@ describe('sessionRoutes', () => {
         .post(registerRoute)
         .send({ username: 'username1', password: 'password' });
       expect(response.statusCode).toEqual(422);
+    });
+  });
+
+  describe('POST /session/re-auth/username-password', () => {
+    it('should update login.ts', async () => {
+      interactionDetails.mockResolvedValue({
+        params: {},
+        result: { login: { accountId: 'foo', ts: 0 } },
+      });
+      const response = await sessionRequest.post(reAuthRoute).send({
+        password: 'password',
+      });
+      expect(response.statusCode).toEqual(200);
+      expect(response.body).toHaveProperty('ts');
+      expect(response.body.ts).toBeGreaterThan(0);
+      expect(interactionResult).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.anything(),
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        expect.objectContaining({ login: expect.objectContaining({ ts: expect.anything() }) }),
+        expect.anything()
+      );
+    });
+
+    it('should throw if the password is wrong', async () => {
+      interactionDetails.mockResolvedValue({
+        params: {},
+        result: { login: { accountId: 'foo', ts: 0 } },
+      });
+      const response = await sessionRequest.post(reAuthRoute).send({
+        password: '_password',
+      });
+      expect(response.statusCode).toEqual(400);
+    });
+
+    it('should throw if current session is not authenticated before', async () => {
+      interactionDetails.mockResolvedValue({ params: {} });
+      const response = await sessionRequest.post(reAuthRoute).send({
+        password: 'password',
+      });
+      expect(response.statusCode).toEqual(401);
     });
   });
 });

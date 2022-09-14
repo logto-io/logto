@@ -5,7 +5,7 @@ import { Provider } from 'oidc-provider';
 import { object, string } from 'zod';
 
 import RequestError from '@/errors/RequestError';
-import { assignInteractionResults } from '@/lib/session';
+import { assignInteractionResults, reAuthenticateSession } from '@/lib/session';
 import {
   encryptUserPassword,
   generateUserId,
@@ -14,7 +14,7 @@ import {
   insertUser,
 } from '@/lib/user';
 import koaGuard from '@/middleware/koa-guard';
-import { hasUser, hasActiveUsers } from '@/queries/user';
+import { hasUser, hasActiveUsers, findUserById } from '@/queries/user';
 import assertThat from '@/utils/assert-that';
 
 import { AnonymousRouter } from '../types';
@@ -22,6 +22,7 @@ import { getRoutePrefix } from './utils';
 
 export const registerRoute = getRoutePrefix('register', 'username-password');
 export const signInRoute = getRoutePrefix('sign-in', 'username-password');
+export const reAuthRoute = getRoutePrefix('re-auth', 'username-password');
 
 export default function usernamePasswordRoutes<T extends AnonymousRouter>(
   router: T,
@@ -105,6 +106,37 @@ export default function usernamePasswordRoutes<T extends AnonymousRouter>(
       });
       await updateLastSignInAt(id);
       await assignInteractionResults(ctx, provider, { login: { accountId: id } });
+
+      return next();
+    }
+  );
+
+  router.post(
+    reAuthRoute,
+    koaGuard({
+      body: object({
+        password: string().min(1),
+      }),
+    }),
+    async (ctx, next) => {
+      const { result } = await provider.interactionDetails(ctx.req, ctx.res);
+      assertThat(
+        result?.login?.accountId,
+        new RequestError({
+          code: 'auth.unauthorized',
+          status: 401,
+        })
+      );
+
+      const user = await findUserById(result.login.accountId);
+      assertThat(user.username, 'session.invalid_sign_in_method');
+
+      const { password } = ctx.guard.body;
+      const type = 'ReAuthUsernamePassword';
+      ctx.log(type, { username: user.username, userId: user.id });
+
+      await findUserByUsernameAndPassword(user.username, password);
+      ctx.body = await reAuthenticateSession(ctx, provider);
 
       return next();
     }
