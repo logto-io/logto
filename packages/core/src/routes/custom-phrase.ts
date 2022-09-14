@@ -1,9 +1,11 @@
 import { CustomPhrases } from '@logto/schemas';
+import { z } from 'zod';
 
 import koaGuard from '@/middleware/koa-guard';
 import {
   deleteCustomPhraseByLanguageKey,
   findCustomPhraseByLanguageKey,
+  getCustomLanguageKeys,
 } from '@/queries/custom-phrase';
 
 import { AuthedRouter } from './types';
@@ -39,6 +41,18 @@ export default function customPhraseRoutes<T extends AuthedRouter>(router: T) {
 
       await deleteCustomPhraseByLanguageKey(languageKey);
       ctx.status = 204;
+
+      return next();
+    }
+  );
+
+  router.get(
+    '/custom-language-keys',
+    koaGuard({
+      response: z.string().array(),
+    }),
+    async (ctx, next) => {
+      ctx.body = await getCustomLanguageKeys();
 
       return next();
     }

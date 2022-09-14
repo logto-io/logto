@@ -37,9 +37,12 @@ const findCustomPhraseByLanguageKey = jest.fn(async (languageKey: string) => {
   return mockCustomPhrase;
 });
 
+const getCustomLanguageKeys = jest.fn(async () => [mockLanguageKey]);
+
 jest.mock('@/queries/custom-phrase', () => ({
   deleteCustomPhraseByLanguageKey: async (key: string) => deleteCustomPhraseByLanguageKey(key),
   findCustomPhraseByLanguageKey: async (key: string) => findCustomPhraseByLanguageKey(key),
+  getCustomLanguageKeys: async () => getCustomLanguageKeys(),
 }));
 
 describe('customPhraseRoutes', () => {
@@ -81,6 +84,21 @@ describe('customPhraseRoutes', () => {
     it('should return 404 status code when the specified custom phrase does not exist before deleting', async () => {
       const response = await customPhraseRequest.delete(`/custom-phrases/en-UK`);
       expect(response.status).toEqual(404);
+    });
+  });
+
+  describe('GET /custom-language-keys', () => {
+    it('should call getCustomLanguageKeys', async () => {
+      await customPhraseRequest.get('/custom-language-keys');
+      expect(getCustomLanguageKeys).toBeCalledTimes(1);
+    });
+
+    it('should return the language keys of the existing custom phrases', async () => {
+      const mockCustomLanguageKeys = ['en-UK', mockLanguageKey];
+      getCustomLanguageKeys.mockImplementationOnce(async () => mockCustomLanguageKeys);
+      const response = await customPhraseRequest.get('/custom-language-keys');
+      expect(response.status).toEqual(200);
+      expect(response.body).toEqual(mockCustomLanguageKeys);
     });
   });
 });
