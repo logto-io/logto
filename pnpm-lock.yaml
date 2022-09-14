@@ -177,6 +177,7 @@ importers:
     specifiers:
       '@logto/connector-core': ^1.0.0-beta.9
       '@logto/phrases': ^1.0.0-beta.9
+      '@logto/phrases-ui': ^1.0.0-beta.9
       '@logto/schemas': ^1.0.0-beta.9
       '@logto/shared': ^1.0.0-beta.9
       '@shopify/jest-koa-mocks': ^5.0.0
@@ -253,6 +254,7 @@ importers:
     dependencies:
       '@logto/connector-core': link:../connector-core
       '@logto/phrases': link:../phrases
+      '@logto/phrases-ui': link:../phrases-ui
       '@logto/schemas': link:../schemas
       '@logto/shared': link:../shared
       '@silverhand/essentials': 1.2.0
