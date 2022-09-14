@@ -9,10 +9,10 @@ export const claimToUserKey: Readonly<Record<UserClaim, keyof User>> = Object.fr
   username: 'username',
   role_names: 'roleNames',
   email: 'primaryEmail',
-  // TODO: Change to proper key/function once profile fulfilling implemented
+  // LOG-4165: Change to proper key/function once profile fulfilling implemented
   email_verified: 'primaryEmail',
   phone_number: 'primaryPhone',
-  // TODO: Change to proper key/function once profile fulfilling implemented
+  // LOG-4165: Change to proper key/function once profile fulfilling implemented
   phone_number_verified: 'primaryPhone',
   custom_data: 'customData',
   identities: 'identities',

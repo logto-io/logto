@@ -24,6 +24,7 @@ export default function koaErrorHandler<StateT, ContextT, BodyT>(): Middleware<
         return;
       }
 
+      // Koa will handle `HttpError` with a built-in manner.
       if (error instanceof HttpError) {
         return;
       }
