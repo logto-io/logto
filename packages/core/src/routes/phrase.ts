@@ -1,8 +1,8 @@
+import { LanguageKey, languageKeyGuard } from '@logto/core-kit';
 import resource from '@logto/phrases-ui';
 import en from '@logto/phrases-ui/lib/locales/en';
 import { CustomPhrases, Translation } from '@logto/schemas';
 import { adminConsoleApplicationId, adminConsoleSignInExperience } from '@logto/schemas/lib/seeds';
-import { LanguageKey, languageKeyGuard } from '@logto/shared';
 import { notFalsy } from '@silverhand/essentials';
 import deepmerge from 'deepmerge';
 import { ResourceLanguage } from 'i18next';
