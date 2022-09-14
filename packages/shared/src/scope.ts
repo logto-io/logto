@@ -74,7 +74,7 @@ export const userinfoClaims: Readonly<Record<UserScope, UserClaim[]>> = Object.f
 });
 
 export const userClaims: Readonly<Record<UserScope, UserClaim[]>> = Object.freeze(
-  // Hard to infer type directly, us `as` for a workaround.
+  // Hard to infer type directly, use `as` for a workaround.
   // eslint-disable-next-line no-restricted-syntax
   Object.fromEntries(
     Object.values(UserScope).map((current) => [
