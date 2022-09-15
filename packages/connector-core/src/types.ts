@@ -110,4 +110,4 @@ export type GetAuthorizationUri = (payload: {
 
 export type GetUserInfo = (
   data: unknown
-) => Promise<{ id: string } & Record<string, string | undefined>>;
+) => Promise<{ id: string } & Record<string, string | boolean | number | undefined>>;
