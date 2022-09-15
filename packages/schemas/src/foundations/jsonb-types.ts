@@ -103,7 +103,7 @@ export type TermsOfUse = z.infer<typeof termsOfUseGuard>;
 export const languageInfoGuard = z.object({
   autoDetect: z.boolean(),
   fallbackLanguage: z.enum(languageKeys),
-  fixedLanguage: z.enum(languageKeys),
+  fixedLanguage: z.enum(languageKeys), // DEPRECATED
 });
 
 export type LanguageInfo = z.infer<typeof languageInfoGuard>;
