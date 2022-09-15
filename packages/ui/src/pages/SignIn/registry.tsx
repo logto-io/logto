@@ -1,4 +1,4 @@
-import { SignInMode } from '@logto/schemas';
+import { SignInMode, ConnectorMetadata } from '@logto/schemas';
 
 import Divider from '@/components/Divider';
 import TextLink from '@/components/TextLink';
@@ -8,7 +8,7 @@ import SignInMethodsLink from '@/containers/SignInMethodsLink';
 import { PrimarySocialSignIn, SecondarySocialSignIn } from '@/containers/SocialSignIn';
 import TermsOfUse from '@/containers/TermsOfUse';
 import UsernameSignin from '@/containers/UsernameSignin';
-import { SignInMethod, LocalSignInMethod, ConnectorData } from '@/types';
+import { SignInMethod, LocalSignInMethod } from '@/types';
 
 import * as styles from './index.module.scss';
 
@@ -18,7 +18,7 @@ export const PrimarySection = ({
   signInMode,
 }: {
   signInMethod?: SignInMethod;
-  socialConnectors?: ConnectorData[];
+  socialConnectors?: ConnectorMetadata[];
   signInMode?: SignInMode;
 }) => {
   switch (signInMethod) {
@@ -61,7 +61,7 @@ export const SecondarySection = ({
 }: {
   primarySignInMethod?: SignInMethod;
   secondarySignInMethods?: SignInMethod[];
-  socialConnectors?: ConnectorData[];
+  socialConnectors?: ConnectorMetadata[];
 }) => {
   if (!primarySignInMethod || !secondarySignInMethods?.length) {
     return null;

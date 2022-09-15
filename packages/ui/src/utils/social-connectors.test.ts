@@ -1,6 +1,6 @@
-import { ConnectorPlatform } from '@logto/schemas';
+import { ConnectorPlatform, ConnectorMetadata } from '@logto/schemas';
 
-import { ConnectorData, SearchParameters } from '@/types';
+import { SearchParameters } from '@/types';
 import { getLogtoNativeSdk, isNativeWebview } from '@/utils/native-sdk';
 
 import {
@@ -16,7 +16,7 @@ const mockConnectors = [
   { platform: 'Universal', target: 'wechat' },
   { platform: 'Native', target: 'wechat' },
   { platform: 'Native', target: 'alipay' },
-] as ConnectorData[];
+] as ConnectorMetadata[];
 
 jest.mock('@/utils/native-sdk', () => ({
   isNativeWebview: jest.fn(),

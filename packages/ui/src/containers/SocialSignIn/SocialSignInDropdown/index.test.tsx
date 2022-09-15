@@ -1,10 +1,10 @@
+import { ConnectorMetadata } from '@logto/schemas';
 import { fireEvent } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider';
 import { socialConnectors } from '@/__mocks__/logto';
-import { ConnectorData } from '@/types';
 
 import SocialSignInDropdown from '.';
 
@@ -12,7 +12,7 @@ const mockInvokeSocialSignIn = jest.fn();
 
 // eslint-disable-next-line unicorn/consistent-function-scoping
 jest.mock('@/hooks/use-social', () => () => ({
-  invokeSocialSignIn: (connector: ConnectorData) => {
+  invokeSocialSignIn: (connector: ConnectorMetadata) => {
     mockInvokeSocialSignIn(connector);
   },
 }));

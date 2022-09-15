@@ -1,3 +1,4 @@
+import { ConnectorMetadata } from '@logto/schemas';
 import classNames from 'classnames';
 import { useState, useMemo } from 'react';
 
@@ -5,7 +6,6 @@ import ExpandIcon from '@/assets/icons/expand-icon.svg';
 import IconButton from '@/components/Button/IconButton';
 import SocialLinkButton from '@/components/Button/SocialLinkButton';
 import useSocial from '@/hooks/use-social';
-import { ConnectorData } from '@/types';
 
 import * as styles from './index.module.scss';
 
@@ -13,7 +13,7 @@ export const defaultSize = 4;
 
 type Props = {
   className?: string;
-  socialConnectors?: ConnectorData[];
+  socialConnectors?: ConnectorMetadata[];
   isCollapseEnabled?: boolean;
   onSocialSignInCallback?: () => void;
 };
