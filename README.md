@@ -75,7 +75,7 @@ const languages = ['English', 'Français', 'Português', '简体中文', 'Türk�
 - About other bug reports, feature requests, and feedback, you can:
   - Directly 🙋 [open an issue](https://github.com/logto-io/logto/issues/new) on GitHub;
   - 💬 [join our Discord server](https://discord.gg/vRvwuwgpVX) to have a live chat;
-  - Engage in our 🗓️ [public roadmap](https://github.com/orgs/logto-io/projects/5).
+  - Engage in our 🗓️ [public roadmap](https://silverhand.notion.site/Logto-Public-Roadmap-d6a1ad19039946b7b1139811aed82dcc).
 
 ## Contributing
 
