@@ -1,20 +1,10 @@
-export const maskUserInfo = ({
-  type,
-  value,
-}: {
-  type: 'email' | 'phone' | 'username';
-  value: string;
-}) => {
+export const maskUserInfo = ({ type, value }: { type: 'email' | 'phone'; value: string }) => {
   if (!value) {
     return value;
   }
 
   if (type === 'phone') {
     return `****${value.slice(-4)}`;
-  }
-
-  if (type === 'username') {
-    return `****${value.slice(-2)}`;
   }
 
   const [name = '', domain = ''] = value.split('@');
