@@ -27,6 +27,7 @@ const translation = {
     agree: 'Aceito',
     got_it: 'Entendi',
     sign_in_with: 'Entrar com {{name}}',
+    forgot_password: 'Esqueceu a password?',
   },
   description: {
     email: 'email',
@@ -37,7 +38,6 @@ const translation = {
     agree_with_terms_modal: 'Para prosseguir, por favor, concorde com o <link></link>.',
     terms_of_use: 'Termos de uso',
     create_account: 'Criar uma conta',
-    forgot_password: 'Esqueceu a password?',
     or: 'ou',
     enter_passcode: 'A senha foi enviada para o seu {{address}}',
     passcode_sent: 'A senha foi reenviada',
@@ -50,6 +50,11 @@ const translation = {
     social_create_account: 'Sem conta? Pode criar uma nova e agregar.',
     social_bind_account: 'Já tem uma conta? Faça login para agregar a sua identidade social.',
     social_bind_with_existing: 'Encontramos uma conta relacionada, pode agrega-la diretamente.',
+    reset_password: 'Redefinir Password',
+    reset_password_description_email:
+      'Digite o endereço de email associado à sua conta e enviaremos um email com o código de verificação para redefinir sua senha.',
+    reset_password_description_sms:
+      'Digite o número de telefone associado à sua conta e enviaremos uma mensagem de texto com o código de verificação para redefinir sua senha.',
   },
   error: {
     username_password_mismatch: 'O Utilizador e a password não correspondem',

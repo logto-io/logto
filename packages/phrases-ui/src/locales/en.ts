@@ -25,6 +25,7 @@ const translation = {
     agree: 'Agree',
     got_it: 'Got it',
     sign_in_with: 'Sign in with {{name}}',
+    forgot_password: 'Forgot Password?',
   },
   description: {
     email: 'email',
@@ -35,7 +36,6 @@ const translation = {
     agree_with_terms_modal: 'To proceed, please agree to the <link></link>.',
     terms_of_use: 'Terms of Use',
     create_account: 'Create Account',
-    forgot_password: 'Forgot Password?',
     or: 'or',
     enter_passcode: 'The passcode has been sent to your {{address}}',
     passcode_sent: 'The passcode has been resent',
@@ -50,6 +50,11 @@ const translation = {
     social_create_account: 'No account? You can create a new account and link.',
     social_bind_account: 'Already have an account? Sign in to link it with your social identity.',
     social_bind_with_existing: 'We find a related account, you can link it directly.',
+    reset_password: 'Reset Password',
+    reset_password_description_email:
+      'Enter the email address associated with your account, and we’ll email you the verification code to reset your password.',
+    reset_password_description_sms:
+      'Enter the phone number associated with your account, and we’ll text you the verification code to reset your password.',
   },
   error: {
     username_password_mismatch: 'Username and password do not match',

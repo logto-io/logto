@@ -27,6 +27,7 @@ const translation = {
     agree: 'Kabul Et',
     got_it: 'Anladım',
     sign_in_with: '{{name}} ile giriş yap',
+    forgot_password: 'Şifremi Unuttum?',
   },
   description: {
     email: 'e-posta adresi',
@@ -37,7 +38,6 @@ const translation = {
     agree_with_terms_modal: 'Devam etmek için lütfen <link></link>i kabul edin.',
     terms_of_use: 'Kullanım Koşulları',
     create_account: 'Hesap Oluştur',
-    forgot_password: 'Şifremi Unuttum?',
     or: 'veya',
     enter_passcode: 'Kod {{address}}inize gönderildi.',
     passcode_sent: 'Kodunuz yeniden gönderildi.',
@@ -51,6 +51,11 @@ const translation = {
     social_create_account: 'Hesabınız yok mu? Yeni bir hesap ve bağlantı oluşturabilirsiniz.',
     social_bind_account: 'Hesabınız zaten var mı? Hesabınıza bağlanmak için giriş yapınız.',
     social_bind_with_existing: 'İlgili bir hesap bulduk, hemen bağlayabilirsiniz.',
+    reset_password: 'Şifre yenile',
+    reset_password_description_email:
+      'Hesabınızla ilişkili e-posta adresini girin, şifrenizi sıfırlamak için size doğrulama kodunu e-posta ile gönderelim.',
+    reset_password_description_sms:
+      'Hesabınızla ilişkili telefon numarasını girin, şifrenizi sıfırlamak için size doğrulama kodunu kısa mesajla gönderelim.',
   },
   error: {
     username_password_mismatch: 'Kullanıcı adı ve şifre eşleşmiyor.',

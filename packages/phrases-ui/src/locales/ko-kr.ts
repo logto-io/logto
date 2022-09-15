@@ -27,6 +27,7 @@ const translation = {
     agree: '동의',
     got_it: '알겠습니다',
     sign_in_with: '{{name}} 로그인',
+    forgot_password: '비밀번호를 잊어버리셨나요?',
   },
   description: {
     email: '이메일',
@@ -37,7 +38,6 @@ const translation = {
     agree_with_terms_modal: '진행하기 위해서는, 다음을 동의해주세요 <link></link>.',
     terms_of_use: '이용약관',
     create_account: '계정 생성',
-    forgot_password: '비밀번호를 잊어버리셨나요?',
     or: '또는',
     enter_passcode: '{{address}} 으로 비밀번호가 전송되었어요.',
     passcode_sent: '비밀번호가 재전송 되었습니다.',
@@ -50,6 +50,11 @@ const translation = {
     social_create_account: '계정이 없으신가요? 새로운 계정을 만들고 연동해보세요.',
     social_bind_account: '계정이 이미 있으신가요? 로그인하여 다른 계정과 연동해보세요.',
     social_bind_with_existing: '관련된 계정을 찾았어요. 해당 계정과 연동할 수 있습니다.',
+    reset_password: '암호를 재설정',
+    reset_password_description_email:
+      '계정과 연결된 이메일 주소를 입력하면 비밀번호 재설정을 위한 인증 코드를 이메일로 보내드립니다.',
+    reset_password_description_sms:
+      '계정과 연결된 전화번호를 입력하면 비밀번호 재설정을 위한 인증 코드를 문자로 보내드립니다.',
   },
   error: {
     username_password_mismatch: '사용자 이름 또는 비밀번호가 일치하지 않아요.',

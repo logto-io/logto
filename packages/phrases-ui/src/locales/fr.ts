@@ -27,6 +27,7 @@ const translation = {
     agree: 'Accepter',
     got_it: 'Compris',
     sign_in_with: 'Connexion avec {{name}}',
+    forgot_password: 'Mot de passe oublié ?',
   },
   description: {
     email: 'email',
@@ -37,7 +38,6 @@ const translation = {
     agree_with_terms_modal: 'Pour continuer, veuillez accepter le <link></link>.',
     terms_of_use: "Conditions d'utilisation",
     create_account: 'Créer un compte',
-    forgot_password: 'Mot de passe oublié ?',
     or: 'ou',
     enter_passcode: 'Le code a été envoyé à {{address}}',
     passcode_sent: 'Le code a été renvoyé',
@@ -54,6 +54,11 @@ const translation = {
       'Vous avez déjà un compte ? Connectez-vous pour le relier à votre identité sociale.',
     social_bind_with_existing:
       'Nous trouvons un compte connexe, vous pouvez le relier directement.',
+    reset_password: 'Réinitialiser le mot de passe',
+    reset_password_description_email:
+      "Entrez l'adresse e-mail associée à votre compte et nous vous enverrons par e-mail le code de vérification pour réinitialiser votre mot de passe.",
+    reset_password_description_sms:
+      'Entrez le numéro de téléphone associé à votre compte et nous vous enverrons le code de vérification par SMS pour réinitialiser votre mot de passe.',
   },
   error: {
     username_password_mismatch: "Le nom d'utilisateur et le mot de passe ne correspondent pas",

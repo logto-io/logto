@@ -9,6 +9,7 @@ import initI18n from './i18n/init';
 import Callback from './pages/Callback';
 import Consent from './pages/Consent';
 import ErrorPage from './pages/ErrorPage';
+import ForgetPassword from './pages/ForgetPassword';
 import Passcode from './pages/Passcode';
 import Register from './pages/Register';
 import SecondarySignIn from './pages/SecondarySignIn';
@@ -57,11 +58,17 @@ const App = () => {
             />
 
             <Route element={<LoadingLayerProvider />}>
+              {/* sign-in */}
               <Route path="/sign-in" element={<SignIn />} />
               <Route path="/sign-in/social/:connector" element={<SocialSignIn />} />
               <Route path="/sign-in/:method" element={<SecondarySignIn />} />
+
+              {/* register */}
               <Route path="/register" element={<Register />} />
               <Route path="/register/:method" element={<Register />} />
+
+              {/* forget password */}
+              <Route path="/forget-password/:method" element={<ForgetPassword />} />
 
               {/* social sign-in pages */}
 
