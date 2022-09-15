@@ -1,4 +1,4 @@
-import { SchemaLike, GeneratedSchema } from '@logto/schemas';
+import { GeneratedSchema, SchemaLike } from '@logto/schemas';
 import { has } from '@silverhand/essentials';
 import { IdentifierSqlToken, sql } from 'slonik';
 
@@ -72,7 +72,6 @@ export const buildInsertInto: BuildInsertInto = <
         insertingKeys.map((key) => convertToPrimitiveOrSql(key, data[key] ?? null)),
         sql`, `
       )})
-      ${conditionalSql(returning, () => sql`returning *`)}
       ${conditionalSql(
         onConflict,
         ({ fields, setExcludedFields }) => sql`
@@ -80,6 +79,7 @@ export const buildInsertInto: BuildInsertInto = <
           set ${setExcluded(...setExcludedFields)}
         `
       )}
+      ${conditionalSql(returning, () => sql`returning *`)}
     `);
 
     assertThat(!returning || entry, new InsertionError(schema, data));
