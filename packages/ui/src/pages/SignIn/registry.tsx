@@ -7,7 +7,7 @@ import { EmailPasswordless, PhonePasswordless } from '@/containers/Passwordless'
 import SignInMethodsLink from '@/containers/SignInMethodsLink';
 import { PrimarySocialSignIn, SecondarySocialSignIn } from '@/containers/SocialSignIn';
 import TermsOfUse from '@/containers/TermsOfUse';
-import UsernameSignin from '@/containers/UsernameSignin';
+import UsernameSignIn from '@/containers/UsernameSignIn';
 import { SignInMethod, LocalSignInMethod } from '@/types';
 
 import * as styles from './index.module.scss';
@@ -40,7 +40,7 @@ export const PrimarySection = ({
       return signInMode === SignInMode.Register ? (
         <CreateAccount />
       ) : (
-        <UsernameSignin className={styles.primarySignIn} />
+        <UsernameSignIn className={styles.primarySignIn} />
       );
     case 'social':
       return socialConnectors.length > 0 ? (

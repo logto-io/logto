@@ -32,7 +32,7 @@ const defaultState: FieldState = {
   password: '',
 };
 
-const UsernameSignin = ({ className, autoFocus }: Props) => {
+const UsernameSignIn = ({ className, autoFocus }: Props) => {
   const { t } = useTranslation();
   const { termsValidation } = useTerms();
   const {
@@ -121,4 +121,4 @@ const UsernameSignin = ({ className, autoFocus }: Props) => {
   );
 };
 
-export default UsernameSignin;
+export default UsernameSignIn;

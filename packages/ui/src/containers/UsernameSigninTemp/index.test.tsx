@@ -8,7 +8,7 @@ import { termsOfUseConfirmModalPromise } from '@/containers/TermsOfUse/TermsOfUs
 import { termsOfUseIframeModalPromise } from '@/containers/TermsOfUse/TermsOfUseIframeModal';
 import { TermsOfUseModalMessage } from '@/types';
 
-import UsernameSignin from '.';
+import UsernameSignIn from '.';
 
 jest.mock('@/apis/sign-in', () => ({ signInBasic: jest.fn(async () => 0) }));
 jest.mock('@/containers/TermsOfUse/TermsOfUseConfirmModal', () => ({
@@ -21,14 +21,14 @@ jest.mock('@/containers/TermsOfUse/TermsOfUseIframeModal', () => ({
 const termsOfUseConfirmModalPromiseMock = termsOfUseConfirmModalPromise as jest.Mock;
 const termsOfUseIframeModalPromiseMock = termsOfUseIframeModalPromise as jest.Mock;
 
-describe('<UsernameSignin>', () => {
+describe('<UsernameSignIn>', () => {
   afterEach(() => {
     jest.clearAllMocks();
     jest.resetAllMocks();
   });
 
   test('render', () => {
-    const { queryByText, container } = renderWithPageContext(<UsernameSignin />);
+    const { queryByText, container } = renderWithPageContext(<UsernameSignIn />);
     expect(container.querySelector('input[name="username"]')).not.toBeNull();
     expect(container.querySelector('input[name="password"]')).not.toBeNull();
     expect(queryByText('action.sign_in')).not.toBeNull();
@@ -37,14 +37,14 @@ describe('<UsernameSignin>', () => {
   test('render with terms settings enabled', () => {
     const { queryByText } = renderWithPageContext(
       <SettingsProvider>
-        <UsernameSignin />
+        <UsernameSignIn />
       </SettingsProvider>
     );
     expect(queryByText('description.agree_with_terms')).not.toBeNull();
   });
 
   test('required inputs with error message', () => {
-    const { queryByText, getByText, container } = renderWithPageContext(<UsernameSignin />);
+    const { queryByText, getByText, container } = renderWithPageContext(<UsernameSignIn />);
     const submitButton = getByText('action.sign_in');
 
     fireEvent.click(submitButton);
@@ -72,7 +72,7 @@ describe('<UsernameSignin>', () => {
   test('should show terms confirm modal', async () => {
     const { getByText, container } = renderWithPageContext(
       <SettingsProvider>
-        <UsernameSignin />
+        <UsernameSignIn />
       </SettingsProvider>
     );
     const submitButton = getByText('action.sign_in');
@@ -102,7 +102,7 @@ describe('<UsernameSignin>', () => {
 
     const { getByText, container } = renderWithPageContext(
       <SettingsProvider>
-        <UsernameSignin />
+        <UsernameSignIn />
       </SettingsProvider>
     );
     const submitButton = getByText('action.sign_in');
@@ -132,7 +132,7 @@ describe('<UsernameSignin>', () => {
   test('submit form', async () => {
     const { getByText, container } = renderWithPageContext(
       <SettingsProvider>
-        <UsernameSignin />
+        <UsernameSignIn />
       </SettingsProvider>
     );
     const submitButton = getByText('action.sign_in');
