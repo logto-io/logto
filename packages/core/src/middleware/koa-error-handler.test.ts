@@ -1,4 +1,5 @@
 import { createMockContext } from '@shopify/jest-koa-mocks';
+import createHttpError from 'http-errors';
 
 import RequestError from '@/errors/RequestError';
 
@@ -30,6 +31,13 @@ describe('koaErrorHandler middleware', () => {
     await koaErrorHandler()(ctx, next);
     expect(ctx.status).toEqual(error.status);
     expect(ctx.body).toEqual(error.body);
+  });
+
+  // Koa will handle `HttpError` with a built-in manner. Hence it needs to return 200 here.
+  it('expect to return 200 if error type is HttpError', async () => {
+    next.mockRejectedValueOnce(createHttpError(404, 'not good'));
+    await koaErrorHandler()(ctx, next);
+    expect(ctx.status).toEqual(200);
   });
 
   it('expect to return orginal body if not error found', async () => {

@@ -1,5 +1,5 @@
 import { RequestErrorBody } from '@logto/schemas';
-import { Middleware } from 'koa';
+import { HttpError, Middleware } from 'koa';
 
 import envSet from '@/env-set';
 import RequestError from '@/errors/RequestError';
@@ -21,6 +21,11 @@ export default function koaErrorHandler<StateT, ContextT, BodyT>(): Middleware<
         ctx.status = error.status;
         ctx.body = error.body;
 
+        return;
+      }
+
+      // Koa will handle `HttpError` with a built-in manner.
+      if (error instanceof HttpError) {
         return;
       }
 

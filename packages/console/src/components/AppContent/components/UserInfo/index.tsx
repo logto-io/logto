@@ -16,14 +16,19 @@ const UserInfo = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const anchorRef = useRef<HTMLDivElement>(null);
   const [showDropdown, setShowDropdown] = useState(false);
-  const [user, setUser] = useState<Pick<IdTokenClaims, 'sub' | 'username' | 'avatar'>>();
+  const [user, setUser] =
+    useState<Pick<Record<string, unknown> & IdTokenClaims, 'sub' | 'username' | 'picture'>>();
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     (async () => {
       if (isAuthenticated) {
         const userInfo = await getIdTokenClaims();
-        setUser(userInfo ?? { sub: '', username: 'N/A' }); // Provide a fallback to avoid infinite loading state
+        // TODO: revert after SDK updated
+        setUser({
+          picture: undefined,
+          ...(userInfo ?? { sub: '', username: 'N/A' }),
+        }); // Provide a fallback to avoid infinite loading state
       }
     })();
   }, [isAuthenticated, getIdTokenClaims]);
@@ -32,7 +37,7 @@ const UserInfo = () => {
     return <UserInfoSkeleton />;
   }
 
-  const { sub: id, username, avatar } = user;
+  const { sub: id, username, picture } = user;
 
   return (
     <>
@@ -43,7 +48,8 @@ const UserInfo = () => {
           setShowDropdown(true);
         }}
       >
-        <img src={avatar || generateAvatarPlaceHolderById(id)} />
+        {/* TODO: revert after SDK updated */}
+        <img src={picture ? String(picture) : generateAvatarPlaceHolderById(id)} />
         <div className={styles.wrapper}>
           <div className={styles.name}>{username}</div>
         </div>

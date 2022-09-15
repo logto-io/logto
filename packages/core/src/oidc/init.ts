@@ -2,12 +2,11 @@
 
 import { readFileSync } from 'fs';
 
-import { CustomClientMetadataKey, userInfoSelectFields } from '@logto/schemas';
+import { CustomClientMetadataKey } from '@logto/schemas';
+import { userClaims } from '@logto/shared';
 import Koa from 'koa';
 import mount from 'koa-mount';
-import pick from 'lodash.pick';
 import { Provider, errors } from 'oidc-provider';
-import { snakeCase } from 'snake-case';
 import snakecaseKeys from 'snakecase-keys';
 
 import envSet from '@/env-set';
@@ -17,6 +16,8 @@ import { findResourceByIndicator } from '@/queries/resource';
 import { findUserById } from '@/queries/user';
 import { routes } from '@/routes/consts';
 import { addOidcEventListeners } from '@/utils/oidc-provider-event-listener';
+
+import { claimToUserKey, getUserClaims } from './scope';
 
 export default async function initOidc(app: Koa): Promise<Provider> {
   const { issuer, cookieKeys, privateJwks, defaultIdTokenTtl, defaultRefreshTokenTtl } =
@@ -99,27 +100,33 @@ export default async function initOidc(app: Koa): Promise<Provider> {
       ctx.request.origin === origin ||
       isOriginAllowed(origin, client.metadata(), client.redirectUris),
     // https://github.com/panva/node-oidc-provider/blob/main/recipes/claim_configuration.md
-    claims: {
-      profile: userInfoSelectFields.map((value) => snakeCase(value)),
-    },
+    // Note node-provider will append `claims` here to the default claims instead of overriding
+    claims: userClaims,
     // https://github.com/panva/node-oidc-provider/tree/main/docs#findaccount
     findAccount: async (_ctx, sub) => {
       const user = await findUserById(sub);
-      const { username, name, avatar, roleNames } = user;
 
       return {
         accountId: sub,
-        claims: async (use) => {
+        claims: async (use, scope, claims, rejected) => {
           return snakecaseKeys(
             {
+              /**
+               * This line is required because:
+               * 1. TypeScript will complain since `Object.fromEntries()` has a fixed key type `string`
+               * 2. Scope `openid` is removed from `UserScope` enum
+               */
               sub,
-              username,
-              name,
-              avatar,
-              roleNames,
-              ...(use === 'userinfo' && pick(user, ...userInfoSelectFields)),
+              ...Object.fromEntries(
+                getUserClaims(use, scope, claims, rejected).map((claim) => [
+                  claim,
+                  user[claimToUserKey[claim]],
+                ])
+              ),
             },
-            { deep: false }
+            {
+              deep: false,
+            }
           );
         },
       };

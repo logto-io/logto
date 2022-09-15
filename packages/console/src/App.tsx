@@ -1,6 +1,6 @@
 import { LogtoProvider } from '@logto/react';
 import { adminConsoleApplicationId, managementResource } from '@logto/schemas/lib/seeds';
-import { getBasename } from '@logto/shared';
+import { getBasename, UserScope } from '@logto/shared';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { SWRConfig } from 'swr';
 
@@ -96,6 +96,7 @@ const App = () => (
         endpoint: window.location.origin,
         appId: adminConsoleApplicationId,
         resources: [managementResource.indicator],
+        scopes: [UserScope.Identities, UserScope.CustomData],
       }}
     >
       <Main />
