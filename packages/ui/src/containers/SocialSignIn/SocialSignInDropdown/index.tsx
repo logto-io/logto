@@ -1,5 +1,5 @@
+import { getDefaultLanguage } from '@logto/core-kit';
 import { ConnectorMetadata } from '@logto/schemas';
-import { getDefaultLanguage } from '@logto/shared';
 import { useState, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 

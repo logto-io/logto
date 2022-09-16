@@ -21,10 +21,10 @@
     "test:report": "codecov -F core"
   },
   "dependencies": {
-    "@logto/connector-core": "^1.0.0-beta.9",
+    "@logto/connector-kit": "^1.0.0-beta.11",
     "@logto/phrases": "^1.0.0-beta.9",
     "@logto/schemas": "^1.0.0-beta.9",
-    "@logto/shared": "^1.0.0-beta.9",
+    "@logto/core-kit": "^1.0.0-beta.11",
     "@silverhand/essentials": "^1.2.0",
     "chalk": "^4",
     "dayjs": "^1.10.5",
@@ -62,7 +62,7 @@
     "snake-case": "^3.0.4",
     "snakecase-keys": "^5.1.0",
     "tar": "^6.1.11",
-    "zod": "^3.14.3"
+    "zod": "^3.18.0"
   },
   "devDependencies": {
     "@shopify/jest-koa-mocks": "^5.0.0",

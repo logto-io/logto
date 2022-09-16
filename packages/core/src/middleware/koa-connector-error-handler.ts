@@ -1,4 +1,4 @@
-import { ConnectorError, ConnectorErrorCodes } from '@logto/connector-core';
+import { ConnectorError, ConnectorErrorCodes } from '@logto/connector-kit';
 import { conditional } from '@silverhand/essentials';
 import { Middleware } from 'koa';
 import { z } from 'zod';

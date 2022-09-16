@@ -1,5 +1,5 @@
+import { languageKeys } from '@logto/core-kit';
 import { CreateSignInExperience, SignInExperience, SignInMethodState } from '@logto/schemas';
-import { languageKeys } from '@logto/shared';
 
 import {
   mockAliyunDmConnector,

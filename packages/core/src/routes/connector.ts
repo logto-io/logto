@@ -1,6 +1,6 @@
-import { MessageTypes } from '@logto/connector-core';
+import { MessageTypes } from '@logto/connector-kit';
+import { emailRegEx, phoneRegEx } from '@logto/core-kit';
 import { arbitraryObjectGuard, ConnectorResponse, Connectors, ConnectorType } from '@logto/schemas';
-import { emailRegEx, phoneRegEx } from '@logto/shared';
 import { object, string } from 'zod';
 
 import { getLogtoConnectorById, getLogtoConnectors } from '@/connectors';

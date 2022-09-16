@@ -1,5 +1,5 @@
+import { redirectUriRegEx } from '@logto/core-kit';
 import { ConnectorType, userInfoSelectFields } from '@logto/schemas';
-import { redirectUriRegEx } from '@logto/shared';
 import pick from 'lodash.pick';
 import { Provider } from 'oidc-provider';
 import { object, string, unknown } from 'zod';

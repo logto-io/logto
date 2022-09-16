@@ -1,4 +1,4 @@
-import { ConnectorType } from '@logto/connector-core';
+import { ConnectorType } from '@logto/connector-kit';
 import { User } from '@logto/schemas';
 import { Provider } from 'oidc-provider';
 

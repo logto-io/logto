@@ -1,4 +1,4 @@
-import { hexColorRegEx, languageKeys } from '@logto/shared';
+import { hexColorRegEx, languageKeys } from '@logto/core-kit';
 import { z } from 'zod';
 
 /**

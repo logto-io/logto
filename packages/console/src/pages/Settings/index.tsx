@@ -1,6 +1,6 @@
+import { getDefaultLanguage } from '@logto/core-kit';
 import { languageOptions } from '@logto/phrases';
 import { AppearanceMode } from '@logto/schemas';
-import { getDefaultLanguage } from '@logto/shared';
 import classNames from 'classnames';
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';

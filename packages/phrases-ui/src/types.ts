@@ -1,4 +1,4 @@
-import { LanguageKey, languageKeyGuard } from '@logto/shared';
+import { LanguageKey, languageKeyGuard } from '@logto/core-kit';
 
 /* Copied from i18next/index.d.ts */
 export type Resource = Record<LanguageKey, ResourceLanguage>;

@@ -1,4 +1,4 @@
-import { EmailConnector, MessageTypes, SmsConnector } from '@logto/connector-core';
+import { EmailConnector, MessageTypes, SmsConnector } from '@logto/connector-kit';
 import { ConnectorType } from '@logto/schemas';
 import { any } from 'zod';
 

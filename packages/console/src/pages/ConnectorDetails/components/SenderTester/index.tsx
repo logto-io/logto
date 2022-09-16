@@ -1,5 +1,5 @@
+import { phoneRegEx, emailRegEx } from '@logto/core-kit';
 import { ConnectorType } from '@logto/schemas';
-import { phoneRegEx, emailRegEx } from '@logto/shared';
 import classNames from 'classnames';
 import { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';

@@ -1,4 +1,4 @@
-import { ConnectorPlatform } from '@logto/connector-core';
+import { ConnectorPlatform } from '@logto/connector-kit';
 import { Connector, ConnectorMetadata, ConnectorType } from '@logto/schemas';
 import { any } from 'zod';
 

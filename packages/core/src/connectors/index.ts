@@ -2,7 +2,7 @@ import { existsSync } from 'fs';
 import { readdir } from 'fs/promises';
 import path from 'path';
 
-import { AllConnector, CreateConnector, validateConfig } from '@logto/connector-core';
+import { AllConnector, CreateConnector, validateConfig } from '@logto/connector-kit';
 import chalk from 'chalk';
 
 import envSet from '@/env-set';
