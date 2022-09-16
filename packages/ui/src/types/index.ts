@@ -1,5 +1,5 @@
+import type { LanguageKey } from '@logto/core-kit';
 import { SignInExperience, ConnectorMetadata, AppearanceMode } from '@logto/schemas';
-import type { LanguageKey } from '@logto/shared';
 
 export type UserFlow = 'sign-in' | 'register';
 export type SignInMethod = 'username' | 'email' | 'sms' | 'social';

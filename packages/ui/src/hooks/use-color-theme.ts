@@ -1,4 +1,4 @@
-import { absoluteDarken, absoluteLighten } from '@logto/shared';
+import { absoluteDarken, absoluteLighten } from '@logto/core-kit';
 import color from 'color';
 import { useEffect } from 'react';
 

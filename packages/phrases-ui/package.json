@@ -29,7 +29,7 @@
     "url": "https://github.com/logto-io/logto/issues"
   },
   "dependencies": {
-    "@logto/shared": "^1.0.0-beta.9",
+    "@logto/core-kit": "^1.0.0-beta.11",
     "@silverhand/essentials": "^1.2.0"
   },
   "devDependencies": {

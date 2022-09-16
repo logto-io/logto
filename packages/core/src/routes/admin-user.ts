@@ -1,5 +1,5 @@
+import { passwordRegEx, usernameRegEx } from '@logto/core-kit';
 import { arbitraryObjectGuard, userInfoSelectFields } from '@logto/schemas';
-import { passwordRegEx, usernameRegEx } from '@logto/shared';
 import { has } from '@silverhand/essentials';
 import pick from 'lodash.pick';
 import { literal, object, string } from 'zod';

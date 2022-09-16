@@ -1,4 +1,4 @@
-import { generateDarkColor } from '@logto/shared';
+import { generateDarkColor } from '@logto/core-kit';
 
 import { CreateSignInExperience, SignInMode } from '../db-entries';
 import { BrandingStyle, SignInMethodState } from '../foundations';

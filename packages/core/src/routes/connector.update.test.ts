@@ -1,4 +1,4 @@
-import { ConnectorError, ConnectorErrorCodes } from '@logto/connector-core';
+import { ConnectorError, ConnectorErrorCodes } from '@logto/connector-kit';
 import { ConnectorType } from '@logto/schemas';
 
 import {

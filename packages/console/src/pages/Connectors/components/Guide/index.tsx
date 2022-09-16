@@ -1,5 +1,5 @@
+import { getDefaultLanguage } from '@logto/core-kit';
 import { ConnectorResponse, ConnectorType } from '@logto/schemas';
-import { getDefaultLanguage } from '@logto/shared';
 import { conditional } from '@silverhand/essentials';
 import i18next from 'i18next';
 import { Controller, useForm } from 'react-hook-form';

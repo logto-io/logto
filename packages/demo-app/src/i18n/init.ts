@@ -1,5 +1,5 @@
+import type { LanguageKey } from '@logto/core-kit';
 import resources from '@logto/phrases';
-import type { LanguageKey } from '@logto/shared';
 import i18next from 'i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
 import { initReactI18next } from 'react-i18next';
