@@ -1,14 +1,14 @@
 import { render } from '@testing-library/react';
 import { Routes, Route, MemoryRouter } from 'react-router-dom';
 
-import ForgetPassword from '.';
+import ForgotPassword from '.';
 
-describe('ForgetPassword', () => {
-  it('render email forget password properly', () => {
+describe('ForgotPassword', () => {
+  it('render email forgot password properly', () => {
     const { queryByText } = render(
-      <MemoryRouter initialEntries={['/forget-password/email']}>
+      <MemoryRouter initialEntries={['/forgot-password/email']}>
         <Routes>
-          <Route path="/forget-password/:method" element={<ForgetPassword />} />
+          <Route path="/forgot-password/:method" element={<ForgotPassword />} />
         </Routes>
       </MemoryRouter>
     );
@@ -17,11 +17,11 @@ describe('ForgetPassword', () => {
     expect(queryByText('description.reset_password_description_email')).not.toBeNull();
   });
 
-  it('render sms forget password properly', () => {
+  it('render sms forgot password properly', () => {
     const { queryByText } = render(
-      <MemoryRouter initialEntries={['/forget-password/sms']}>
+      <MemoryRouter initialEntries={['/forgot-password/sms']}>
         <Routes>
-          <Route path="/forget-password/:method" element={<ForgetPassword />} />
+          <Route path="/forgot-password/:method" element={<ForgotPassword />} />
         </Routes>
       </MemoryRouter>
     );

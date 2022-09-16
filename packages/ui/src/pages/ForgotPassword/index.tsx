@@ -11,12 +11,12 @@ type Props = {
   method?: string;
 };
 
-const ForgetPassword = () => {
+const ForgotPassword = () => {
   const { t } = useTranslation();
 
   const { method = '' } = useParams<Props>();
 
-  const forgetPasswordForm = useMemo(() => {
+  const forgotPasswordForm = useMemo(() => {
     if (method === 'sms') {
       return <div>Phone Number form</div>;
     }
@@ -38,10 +38,10 @@ const ForgetPassword = () => {
         <div className={styles.description}>
           {t(`description.reset_password_description_${method === 'email' ? 'email' : 'sms'}`)}
         </div>
-        {forgetPasswordForm}
+        {forgotPasswordForm}
       </div>
     </div>
   );
 };
 
-export default ForgetPassword;
+export default ForgotPassword;
