@@ -9,7 +9,6 @@ import initI18n from './i18n/init';
 import Callback from './pages/Callback';
 import Consent from './pages/Consent';
 import ErrorPage from './pages/ErrorPage';
-import ForgotPassword from './pages/ForgotPassword';
 import Passcode from './pages/Passcode';
 import Register from './pages/Register';
 import SecondarySignIn from './pages/SecondarySignIn';
@@ -68,7 +67,10 @@ const App = () => {
               <Route path="/register/:method" element={<Register />} />
 
               {/* forgot password */}
-              <Route path="/forgot-password/:method" element={<ForgotPassword />} />
+              {/**
+               * WIP
+               * <Route path="/forgot-password/:method" element={<ForgotPassword />} />
+               */}
 
               {/* social sign-in pages */}
 
