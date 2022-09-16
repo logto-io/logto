@@ -7,7 +7,6 @@ const errors = {
     expected_role_not_found:
       'Expected role not found. Please check your user roles and permissions.',
     jwt_sub_missing: 'JWT에서 `sub`를 찾을 수 없어요.',
-    require_re_authentication: 'Re-authentication is required to perform a protected action.', // UNTRANSLATED
   },
   guard: {
     invalid_input: '{{type}} 요청 타입은 유효하지 않아요.',
