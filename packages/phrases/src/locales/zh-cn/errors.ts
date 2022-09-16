@@ -96,6 +96,10 @@ const errors = {
     enabled_connector_not_found: '未找到已启用的 {{type}} 连接器',
     not_one_and_only_one_primary_sign_in_method: '主要的登录方式必须有且仅有一个，请检查你的输入。',
   },
+  localization: {
+    not_allowed_to_delete:
+      '因为 {{languageKey}} 在登录体验中正在作为默认语言使用，你不能删除该语言。',
+  },
   swagger: {
     invalid_zod_type: '无效的 Zod 类型，请检查路由 guard 配置。',
     not_supported_zod_type_for_params: '请求参数不支持的 Zod 类型，请检查路由 guard 配置。',

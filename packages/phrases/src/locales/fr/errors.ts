@@ -109,6 +109,10 @@ const errors = {
     not_one_and_only_one_primary_sign_in_method:
       'Il doit y avoir une et une seule méthode de connexion primaire. Veuillez vérifier votre saisie.',
   },
+  localization: {
+    not_allowed_to_delete:
+      'You are not allowed to delete the language {{languageKey}} since it is used as default language of the sign-in experience.', // UNTRANSLATED
+  },
   swagger: {
     invalid_zod_type: 'Type Zod non valide. Veuillez vérifier la configuration du garde-route.',
     not_supported_zod_type_for_params:

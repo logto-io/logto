@@ -101,6 +101,10 @@ const errors = {
     not_one_and_only_one_primary_sign_in_method:
       'There must be one and only one primary sign-in method. Please check your input.',
   },
+  localization: {
+    not_allowed_to_delete:
+      'You are not allowed to delete the {{languageKey}} language since it is used as default language of the sign-in experience.',
+  },
   swagger: {
     invalid_zod_type: 'Invalid Zod type. Please check route guard config.',
     not_supported_zod_type_for_params:

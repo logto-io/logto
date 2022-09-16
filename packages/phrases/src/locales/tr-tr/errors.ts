@@ -102,6 +102,10 @@ const errors = {
     not_one_and_only_one_primary_sign_in_method:
       'Yalnızca bir tane birincil oturum açma yöntemi olmalıdır. Lütfen inputu kontrol ediniz.',
   },
+  localization: {
+    not_allowed_to_delete:
+      'You are not allowed to delete the language {{languageKey}} since it is used as default language of the sign-in experience.', // UNTRANSLATED
+  },
   swagger: {
     invalid_zod_type:
       'Geçersiz Zod tipi. Lütfen yönlendirici koruma yapılandırmasını kontrol ediniz.',

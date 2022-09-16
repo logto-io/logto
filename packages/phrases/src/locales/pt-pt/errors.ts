@@ -104,6 +104,10 @@ const errors = {
     not_one_and_only_one_primary_sign_in_method:
       'Deve haver um e apenas um método de login principal. Por favor, verifique sua entrada.',
   },
+  localization: {
+    not_allowed_to_delete:
+      'You are not allowed to delete the language {{languageKey}} since it is used as default language of the sign-in experience.', // UNTRANSLATED
+  },
   swagger: {
     invalid_zod_type: 'Tipo de Zod inválido. Verifique a configuração do protetor de rota.',
     not_supported_zod_type_for_params:
