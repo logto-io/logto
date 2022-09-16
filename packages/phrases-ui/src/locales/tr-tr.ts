@@ -1,3 +1,5 @@
+import en from './en';
+
 const translation = {
   input: {
     username: 'Kullanıcı Adı',
@@ -69,8 +71,8 @@ const translation = {
   },
 };
 
-const en = Object.freeze({
+const trTR: typeof en = Object.freeze({
   translation,
 });
 
-export default en;
+export default trTR;

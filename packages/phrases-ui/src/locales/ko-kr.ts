@@ -1,3 +1,5 @@
+import en from './en';
+
 const translation = {
   input: {
     username: '사용자 이름',
@@ -68,7 +70,7 @@ const translation = {
   },
 };
 
-const koKR = Object.freeze({
+const koKR: typeof en = Object.freeze({
   translation,
 });
 
