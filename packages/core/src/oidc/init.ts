@@ -2,8 +2,8 @@
 
 import { readFileSync } from 'fs';
 
-import { CustomClientMetadataKey } from '@logto/schemas';
 import { userClaims } from '@logto/core-kit';
+import { CustomClientMetadataKey } from '@logto/schemas';
 import Koa from 'koa';
 import mount from 'koa-mount';
 import { Provider, errors } from 'oidc-provider';

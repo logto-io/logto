@@ -1,6 +1,6 @@
 import { createRoot } from 'react-dom/client';
 // eslint-disable-next-line import/no-unassigned-import
-import '@logto/shared/declaration';
+import '@logto/core-kit/declaration';
 
 import App from './App';
 
