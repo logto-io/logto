@@ -7,7 +7,7 @@ import {
   ConnectorError,
   ConnectorErrorCodes,
   ConnectorType,
-} from '@logto/connector-core';
+} from '@logto/connector-kit';
 
 import RequestError from '@/errors/RequestError';
 import { findAllConnectors } from '@/queries/connector';

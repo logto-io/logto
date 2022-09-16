@@ -1,6 +1,6 @@
 import { useLogto } from '@logto/react';
 import { AppearanceMode } from '@logto/schemas';
-import { languageKeys } from '@logto/shared';
+import { languageKeys } from '@logto/core-kit';
 import { Nullable, Optional } from '@silverhand/essentials';
 import { useCallback, useEffect, useMemo } from 'react';
 import useSWR from 'swr';

@@ -5,7 +5,7 @@ import {
   ConnectorMetadata,
   SignInExperience,
 } from '@logto/schemas';
-import type { LanguageKey } from '@logto/shared';
+import type { LanguageKey } from '@logto/core-kit';
 import { conditional } from '@silverhand/essentials';
 import classNames from 'classnames';
 import dayjs from 'dayjs';

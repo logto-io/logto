@@ -1,4 +1,4 @@
-import { dateRegex } from '@logto/shared';
+import { dateRegex } from '@logto/core-kit';
 import dayjs, { Dayjs } from 'dayjs';
 import { object, string } from 'zod';
 

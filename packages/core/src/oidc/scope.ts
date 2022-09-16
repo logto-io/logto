@@ -1,5 +1,5 @@
 import { User } from '@logto/schemas';
-import { idTokenClaims, UserClaim, userinfoClaims, UserScope } from '@logto/shared';
+import { idTokenClaims, UserClaim, userinfoClaims, UserScope } from '@logto/core-kit';
 import { Nullable } from '@silverhand/essentials';
 import { ClaimsParameterMember } from 'oidc-provider';
 

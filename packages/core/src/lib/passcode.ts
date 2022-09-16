@@ -4,7 +4,7 @@ import {
   ConnectorErrorCodes,
   EmailConnector,
   SmsConnector,
-} from '@logto/connector-core';
+} from '@logto/connector-kit';
 import { Passcode, PasscodeType } from '@logto/schemas';
 import { customAlphabet, nanoid } from 'nanoid';
 

@@ -1,6 +1,6 @@
+import { getBasename, UserScope } from '@logto/core-kit';
 import { LogtoProvider } from '@logto/react';
 import { adminConsoleApplicationId, managementResource } from '@logto/schemas/lib/seeds';
-import { getBasename, UserScope } from '@logto/shared';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { SWRConfig } from 'swr';
 

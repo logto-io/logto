@@ -1,5 +1,5 @@
 import { PasscodeType } from '@logto/schemas';
-import { emailRegEx, phoneRegEx } from '@logto/shared';
+import { emailRegEx, phoneRegEx } from '@logto/core-kit';
 import { Provider } from 'oidc-provider';
 import { object, string } from 'zod';
 
