@@ -1,4 +1,4 @@
-import { getBasename, UserScope } from '@logto/core-kit';
+import { UserScope } from '@logto/core-kit';
 import { LogtoProvider } from '@logto/react';
 import { adminConsoleApplicationId, managementResource } from '@logto/schemas/lib/seeds';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
@@ -30,6 +30,8 @@ import SignInExperience from '@/pages/SignInExperience';
 import UserDetails from '@/pages/UserDetails';
 import Users from '@/pages/Users';
 import Welcome from '@/pages/Welcome';
+
+import { getBasename } from './utilities/router';
 
 void initI18n();
 
