@@ -15,11 +15,11 @@
   },
   "devDependencies": {
     "@jest/types": "^28.1.3",
-    "@logto/node": "1.0.0-beta.5",
+    "@logto/node": "1.0.0-beta.6",
     "@logto/schemas": "^1.0.0-beta.9",
     "@peculiar/webcrypto": "^1.3.3",
     "@silverhand/eslint-config": "1.0.0",
-    "@silverhand/essentials": "^1.2.0",
+    "@silverhand/essentials": "^1.2.1",
     "@silverhand/jest-config": "1.0.0",
     "@silverhand/ts-config": "1.0.0",
     "@types/jest": "^28.1.6",
