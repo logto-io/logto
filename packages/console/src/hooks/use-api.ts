@@ -7,6 +7,8 @@ import { useMemo } from 'react';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 
+import { requestTimeout } from '@/consts';
+
 export class RequestError extends Error {
   status: number;
   body?: RequestErrorBody;
@@ -38,6 +40,7 @@ const useApi = ({ hideErrorToast }: Props = {}) => {
   const api = useMemo(
     () =>
       ky.create({
+        timeout: requestTimeout,
         hooks: {
           beforeError: hideErrorToast
             ? []
