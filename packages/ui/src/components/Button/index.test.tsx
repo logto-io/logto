@@ -3,25 +3,12 @@ import { render, fireEvent } from '@testing-library/react';
 import { mockSocialConnectorData } from '@/__mocks__/logto';
 
 import SocialLinkButton from './SocialLinkButton';
-import Button from './index';
 
 describe('Button Component', () => {
   const onClick = jest.fn();
 
   beforeEach(() => {
     onClick.mockClear();
-  });
-
-  it('render Button', () => {
-    const { queryByText, container } = render(<Button onClick={onClick}>foo</Button>);
-    expect(queryByText('foo')).not.toBeNull();
-
-    const button = container.querySelector('button');
-
-    if (button) {
-      fireEvent.click(button);
-      expect(onClick).toBeCalled();
-    }
   });
 
   it('render SocialLinkButton', () => {

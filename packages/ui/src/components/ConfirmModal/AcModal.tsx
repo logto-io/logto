@@ -37,12 +37,8 @@ const AcModal = ({
         </div>
         <div className={styles.content}>{children}</div>
         <div className={styles.footer}>
-          <Button type="outline" size="small" onClick={onClose}>
-            {t(cancelText)}
-          </Button>
-          <Button size="small" onClick={onConfirm ?? onClose}>
-            {t(confirmText)}
-          </Button>
+          <Button title={cancelText} type="outline" size="small" onClick={onClose} />
+          <Button title={confirmText} size="small" onClick={onConfirm ?? onClose} />
         </div>
       </div>
     </ReactModal>

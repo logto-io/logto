@@ -52,10 +52,8 @@ const IframeConfirmModal = ({
           />
         </div>
         <div className={styles.footer}>
-          <Button type="secondary" onClick={onClose}>
-            {t(cancelText)}
-          </Button>
-          <Button onClick={onConfirm ?? onClose}>{t(confirmText)}</Button>
+          <Button title={cancelText} type="secondary" onClick={onClose} />
+          <Button title={confirmText} onClick={onConfirm ?? onClose} />
         </div>
       </div>
     </ReactModal>
