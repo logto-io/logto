@@ -60,7 +60,7 @@ const Button = ({
   useEffect(() => {
     // Delay showing the spinner after 'loadingDelay' milliseconds
     if (isLoading) {
-      // To avoid typescript error
+      // DOC: To avoid typescript error
       // eslint-disable-next-line @silverhand/fp/no-mutation
       timerRef.current = window.setTimeout(() => {
         setShowSpinner(true);
