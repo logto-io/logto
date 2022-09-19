@@ -6,11 +6,9 @@ import { useNavigate } from 'react-router-dom';
 import { getSendPasscodeApi } from '@/apis/utils';
 import Button from '@/components/Button';
 import Input from '@/components/Input';
-import TermsOfUse from '@/containers/TermsOfUse';
 import useApi, { ErrorHandlers } from '@/hooks/use-api';
 import useForm from '@/hooks/use-form';
 import { PageContext } from '@/hooks/use-page-context';
-import useTerms from '@/hooks/use-terms';
 import { UserFlow, SearchParameters } from '@/types';
 import { getSearchParameters } from '@/utils';
 import { emailValidation } from '@/utils/field-validations';
@@ -23,6 +21,8 @@ type Props = {
   className?: string;
   // eslint-disable-next-line react/boolean-prop-naming
   autoFocus?: boolean;
+  onSubmitValidation?: () => Promise<boolean>;
+  children?: React.ReactNode;
 };
 
 type FieldState = {
@@ -31,14 +31,14 @@ type FieldState = {
 
 const defaultState: FieldState = { email: '' };
 
-const EmailPasswordless = ({ type, autoFocus, className }: Props) => {
+const EmailPasswordless = ({ type, autoFocus, onSubmitValidation, children, className }: Props) => {
   const { setToast } = useContext(PageContext);
-  const [showPasswordlessConfirmModal, setShowPasswordlessConfirmModal] = useState(false);
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { termsValidation } = useTerms();
   const { fieldValue, setFieldValue, setFieldErrors, register, validateForm } =
     useForm(defaultState);
+
+  const [showPasswordlessConfirmModal, setShowPasswordlessConfirmModal] = useState(false);
 
   const errorHandlers: ErrorHandlers = useMemo(
     () => ({
@@ -75,13 +75,13 @@ const EmailPasswordless = ({ type, autoFocus, className }: Props) => {
         return;
       }
 
-      if (!(await termsValidation())) {
+      if (onSubmitValidation && !(await onSubmitValidation())) {
         return;
       }
 
       void asyncSendPasscode(fieldValue.email);
     },
-    [validateForm, termsValidation, asyncSendPasscode, fieldValue.email]
+    [validateForm, onSubmitValidation, asyncSendPasscode, fieldValue.email]
   );
 
   const onModalCloseHandler = useCallback(() => {
@@ -117,7 +117,7 @@ const EmailPasswordless = ({ type, autoFocus, className }: Props) => {
           }}
         />
 
-        <TermsOfUse className={styles.terms} />
+        {children && <div className={styles.childWrapper}>{children}</div>}
 
         <Button onClick={async () => onSubmitHandler()}>{t('action.continue')}</Button>
 

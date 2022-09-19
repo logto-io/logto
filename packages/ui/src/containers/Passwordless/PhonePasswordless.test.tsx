@@ -5,6 +5,7 @@ import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider';
 import { sendRegisterSmsPasscode } from '@/apis/register';
 import { sendSignInSmsPasscode } from '@/apis/sign-in';
+import TermsOfUse from '@/containers/TermsOfUse';
 import { getDefaultCountryCallingCode } from '@/utils/country-code';
 
 import PhonePasswordless from './PhonePasswordless';
@@ -33,11 +34,13 @@ describe('<PhonePasswordless/>', () => {
     expect(queryByText('action.continue')).not.toBeNull();
   });
 
-  test('render with terms settings enabled', () => {
+  test('render with terms settings', () => {
     const { queryByText } = renderWithPageContext(
       <MemoryRouter>
         <SettingsProvider>
-          <PhonePasswordless type="sign-in" />
+          <PhonePasswordless type="sign-in">
+            <TermsOfUse />
+          </PhonePasswordless>
         </SettingsProvider>
       </MemoryRouter>
     );
@@ -67,6 +70,30 @@ describe('<PhonePasswordless/>', () => {
     }
   });
 
+  test('should block if extra validation failed', async () => {
+    const { container, getByText } = renderWithPageContext(
+      <MemoryRouter>
+        <SettingsProvider>
+          <PhonePasswordless type="sign-in" onSubmitValidation={async () => false} />
+        </SettingsProvider>
+      </MemoryRouter>
+    );
+    const phoneInput = container.querySelector('input[name="phone"]');
+
+    if (phoneInput) {
+      fireEvent.change(phoneInput, { target: { value: phoneNumber } });
+    }
+    const submitButton = getByText('action.continue');
+
+    act(() => {
+      fireEvent.click(submitButton);
+    });
+
+    await waitFor(() => {
+      expect(sendSignInSmsPasscode).not.toBeCalled();
+    });
+  });
+
   test('should call sign-in method properly', async () => {
     const { container, getByText } = renderWithPageContext(
       <MemoryRouter>
@@ -80,9 +107,6 @@ describe('<PhonePasswordless/>', () => {
     if (phoneInput) {
       fireEvent.change(phoneInput, { target: { value: phoneNumber } });
     }
-    const termsButton = getByText('description.agree_with_terms');
-    fireEvent.click(termsButton);
-
     const submitButton = getByText('action.continue');
 
     act(() => {
@@ -107,8 +131,6 @@ describe('<PhonePasswordless/>', () => {
     if (phoneInput) {
       fireEvent.change(phoneInput, { target: { value: phoneNumber } });
     }
-    const termsButton = getByText('description.agree_with_terms');
-    fireEvent.click(termsButton);
 
     const submitButton = getByText('action.continue');
 

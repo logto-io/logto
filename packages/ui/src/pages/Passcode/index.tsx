@@ -6,7 +6,7 @@ import NavBar from '@/components/NavBar';
 import PasscodeValidation from '@/containers/PasscodeValidation';
 import ErrorPage from '@/pages/ErrorPage';
 import { UserFlow } from '@/types';
-import { passcodeStateGuard, passcodeMethodGuard } from '@/types/guard';
+import { passcodeStateGuard, passcodeMethodGuard, userFlowGuard } from '@/types/guard';
 
 import * as styles from './index.module.scss';
 
@@ -17,10 +17,9 @@ type Parameters = {
 
 const Passcode = () => {
   const { t } = useTranslation();
-  const { method, type } = useParams<Parameters>();
+  const { method, type = '' } = useParams<Parameters>();
   const { state } = useLocation();
-  const invalidType = type !== 'sign-in' && type !== 'register';
-
+  const invalidType = !is(type, userFlowGuard);
   const invalidMethod = !is(method, passcodeMethodGuard);
   const invalidState = !is(state, passcodeStateGuard);
 
