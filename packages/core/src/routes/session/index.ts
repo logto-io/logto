@@ -20,6 +20,7 @@ import { getRoutePrefix } from './utils';
 export default function sessionRoutes<T extends AnonymousRouter>(router: T, provider: Provider) {
   router.use(getRoutePrefix('sign-in'), koaGuardSessionAction(provider, 'sign-in'));
   router.use(getRoutePrefix('register'), koaGuardSessionAction(provider, 'register'));
+  router.use(getRoutePrefix('forgot-password'), koaGuardSessionAction(provider));
 
   router.post('/session', async (ctx, next) => {
     const {
