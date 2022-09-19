@@ -1,10 +1,20 @@
 import { emailRegEx, phoneRegEx } from '@logto/core-kit';
 import { PasscodeType } from '@logto/schemas';
+import dayjs from 'dayjs';
 import { Provider } from 'oidc-provider';
 import { z } from 'zod';
 
-import { createPasscode, sendPasscode } from '@/lib/passcode';
+import RequestError from '@/errors/RequestError';
+import { createPasscode, sendPasscode, verifyPasscode } from '@/lib/passcode';
+import { assignInteractionResults } from '@/lib/session';
 import koaGuard from '@/middleware/koa-guard';
+import {
+  findUserByEmail,
+  findUserByPhone,
+  hasUserWithEmail,
+  hasUserWithPhone,
+} from '@/queries/user';
+import assertThat from '@/utils/assert-that';
 
 import { AnonymousRouter } from '../types';
 import { getRoutePrefix } from './utils';
@@ -34,6 +44,32 @@ export default function forgotPasswordRoutes<T extends AnonymousRouter>(
   );
 
   router.post(
+    `${forgotPasswordRoute}/sms/verify-passcode`,
+    koaGuard({ body: z.object({ phone: z.string().regex(phoneRegEx), code: z.string() }) }),
+    async (ctx, next) => {
+      const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
+      const { phone, code } = ctx.guard.body;
+      const type = 'ForgotPasswordSms';
+      ctx.log(type, { phone, code });
+
+      assertThat(
+        await hasUserWithPhone(phone),
+        new RequestError({ code: 'user.phone_not_exists', status: 422 })
+      );
+
+      await verifyPasscode(jti, PasscodeType.ForgotPassword, code, { phone });
+      const { id } = await findUserByPhone(phone);
+      ctx.log(type, { userId: id });
+
+      await assignInteractionResults(ctx, provider, {
+        login: { accountId: id, ts: dayjs().millisecond() },
+      });
+
+      return next();
+    }
+  );
+
+  router.post(
     `${forgotPasswordRoute}/email/send-passcode`,
     koaGuard({ body: z.object({ email: z.string().regex(emailRegEx) }) }),
     async (ctx, next) => {
@@ -46,6 +82,30 @@ export default function forgotPasswordRoutes<T extends AnonymousRouter>(
       const { dbEntry } = await sendPasscode(passcode);
       ctx.log(type, { connectorId: dbEntry.id });
       ctx.status = 204;
+
+      return next();
+    }
+  );
+
+  router.post(
+    `${forgotPasswordRoute}/email/verify-passcode`,
+    koaGuard({ body: z.object({ email: z.string().regex(emailRegEx), code: z.string() }) }),
+    async (ctx, next) => {
+      const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
+      const { email, code } = ctx.guard.body;
+      const type = 'ForgotPasswordEmail';
+      ctx.log(type, { email, code });
+
+      assertThat(
+        await hasUserWithEmail(email),
+        new RequestError({ code: 'user.email_not_exists', status: 422 })
+      );
+
+      await verifyPasscode(jti, PasscodeType.ForgotPassword, code, { email });
+      const { id } = await findUserByEmail(email);
+      await assignInteractionResults(ctx, provider, {
+        login: { accountId: id, ts: dayjs().millisecond() },
+      });
 
       return next();
     }

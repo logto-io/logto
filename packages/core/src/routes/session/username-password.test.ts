@@ -147,7 +147,7 @@ describe('sessionRoutes', () => {
       console.log(response);
     });
 
-    it('should throw if admin user sign in to AC', async () => {
+    it('should not throw if admin user sign in to AC', async () => {
       interactionDetails.mockResolvedValueOnce({
         params: { client_id: adminConsoleApplicationId },
       });
