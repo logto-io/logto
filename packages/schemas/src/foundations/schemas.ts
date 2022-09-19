@@ -23,7 +23,7 @@ export type GeneratedSchema<Schema extends SchemaLike> = keyof Schema extends st
       table: string;
       tableSingular: string;
       fields: {
-        [key in keyof Schema]: string;
+        [key in keyof Required<Schema>]: string;
       };
       fieldKeys: ReadonlyArray<keyof Schema>;
       createGuard: CreateGuard<Schema>;
