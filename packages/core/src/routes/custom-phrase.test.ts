@@ -1,5 +1,6 @@
 import { CustomPhrase } from '@logto/schemas';
 
+import { mockSignInExperience } from '@/__mocks__';
 import RequestError from '@/errors/RequestError';
 import customPhraseRoutes from '@/routes/custom-phrase';
 import { createRequester } from '@/utils/test-utils';
@@ -46,6 +47,12 @@ jest.mock('@/queries/custom-phrase', () => ({
   findAllCustomPhrases: async () => findAllCustomPhrases(),
   findCustomPhraseByLanguageKey: async (key: string) => findCustomPhraseByLanguageKey(key),
   upsertCustomPhrase: async (customPhrase: CustomPhrase) => upsertCustomPhrase(customPhrase),
+}));
+
+const findDefaultSignInExperience = jest.fn(async () => mockSignInExperience);
+
+jest.mock('@/queries/sign-in-experience', () => ({
+  findDefaultSignInExperience: async () => findDefaultSignInExperience(),
 }));
 
 describe('customPhraseRoutes', () => {
@@ -122,8 +129,13 @@ describe('customPhraseRoutes', () => {
     });
 
     it('should return 404 status code when the specified custom phrase does not exist before deleting', async () => {
-      const response = await customPhraseRequest.delete(`/custom-phrases/en-UK`);
+      const response = await customPhraseRequest.delete('/custom-phrases/en-UK');
       expect(response.status).toEqual(404);
+    });
+
+    it('should return 400 status code when the specified custom phrase is used as default language in sign-in experience', async () => {
+      const response = await customPhraseRequest.delete('/custom-phrases/en');
+      expect(response.status).toEqual(400);
     });
   });
 });

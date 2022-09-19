@@ -1,5 +1,6 @@
 import { CustomPhrases, translationGuard } from '@logto/schemas';
 
+import RequestError from '@/errors/RequestError';
 import koaGuard from '@/middleware/koa-guard';
 import {
   deleteCustomPhraseByLanguageKey,
@@ -7,6 +8,7 @@ import {
   findCustomPhraseByLanguageKey,
   upsertCustomPhrase,
 } from '@/queries/custom-phrase';
+import { findDefaultSignInExperience } from '@/queries/sign-in-experience';
 
 import { AuthedRouter } from './types';
 
@@ -69,6 +71,17 @@ export default function customPhraseRoutes<T extends AuthedRouter>(router: T) {
       const {
         params: { languageKey },
       } = ctx.guard;
+
+      const {
+        languageInfo: { fallbackLanguage },
+      } = await findDefaultSignInExperience();
+
+      if (fallbackLanguage === languageKey) {
+        throw new RequestError({
+          code: 'localization.cannot_delete_default_language',
+          languageKey,
+        });
+      }
 
       await deleteCustomPhraseByLanguageKey(languageKey);
       ctx.status = 204;
