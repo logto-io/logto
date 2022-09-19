@@ -1,5 +1,4 @@
 import { Log } from '../db-entries';
-import { ArbitraryObject } from '../foundations';
 
 export enum LogResult {
   Success = 'Success',
@@ -102,7 +101,7 @@ type ForgotPasswordSmsSendPasscodeLogPayload = ArbitraryLogPayload & {
   connectorId?: string;
 };
 
-type ForgotPasswordSmsLogPayload = ArbitraryObject & {
+type ForgotPasswordSmsLogPayload = ArbitraryLogPayload & {
   phone?: string;
   code?: string;
   userId?: string;
