@@ -1,7 +1,7 @@
 import type { LanguageKey } from '@logto/core-kit';
 import { SignInExperience, ConnectorMetadata, AppearanceMode } from '@logto/schemas';
 
-export type UserFlow = 'sign-in' | 'register';
+export type UserFlow = 'sign-in' | 'register' | 'reset-password';
 export type SignInMethod = 'username' | 'email' | 'sms' | 'social';
 export type LocalSignInMethod = Exclude<SignInMethod, 'social'>;
 

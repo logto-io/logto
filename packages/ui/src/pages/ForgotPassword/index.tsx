@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 
 import NavBar from '@/components/NavBar';
+import { EmailPasswordless, PhonePasswordless } from '@/containers/Passwordless';
 import ErrorPage from '@/pages/ErrorPage';
 
 import * as styles from './index.module.scss';
@@ -18,11 +19,11 @@ const ForgotPassword = () => {
 
   const forgotPasswordForm = useMemo(() => {
     if (method === 'sms') {
-      return <div>Phone Number form</div>;
+      return <PhonePasswordless autoFocus type="reset-password" />;
     }
 
     if (method === 'email') {
-      return <div>Email Form</div>;
+      return <EmailPasswordless autoFocus type="reset-password" />;
     }
   }, [method]);
 

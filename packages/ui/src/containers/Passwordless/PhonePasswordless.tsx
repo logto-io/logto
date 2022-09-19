@@ -6,12 +6,10 @@ import { useNavigate } from 'react-router-dom';
 import { getSendPasscodeApi } from '@/apis/utils';
 import Button from '@/components/Button';
 import { PhoneInput } from '@/components/Input';
-import TermsOfUse from '@/containers/TermsOfUse';
 import useApi, { ErrorHandlers } from '@/hooks/use-api';
 import useForm from '@/hooks/use-form';
 import { PageContext } from '@/hooks/use-page-context';
 import usePhoneNumber from '@/hooks/use-phone-number';
-import useTerms from '@/hooks/use-terms';
 import { UserFlow, SearchParameters } from '@/types';
 import { getSearchParameters } from '@/utils';
 
@@ -20,9 +18,11 @@ import * as styles from './index.module.scss';
 
 type Props = {
   type: UserFlow;
+  className?: string;
   // eslint-disable-next-line react/boolean-prop-naming
   autoFocus?: boolean;
-  className?: string;
+  onSubmitValidation?: () => Promise<boolean>;
+  children?: React.ReactNode;
 };
 
 type FieldState = {
@@ -31,15 +31,15 @@ type FieldState = {
 
 const defaultState: FieldState = { phone: '' };
 
-const PhonePasswordless = ({ type, autoFocus, className }: Props) => {
+const PhonePasswordless = ({ type, autoFocus, onSubmitValidation, children, className }: Props) => {
   const { setToast } = useContext(PageContext);
-  const [showPasswordlessConfirmModal, setShowPasswordlessConfirmModal] = useState(false);
   const { t } = useTranslation();
   const { countryList, phoneNumber, setPhoneNumber, isValidPhoneNumber } = usePhoneNumber();
   const navigate = useNavigate();
-  const { termsValidation } = useTerms();
   const { fieldValue, setFieldValue, setFieldErrors, validateForm, register } =
     useForm(defaultState);
+
+  const [showPasswordlessConfirmModal, setShowPasswordlessConfirmModal] = useState(false);
 
   const errorHandlers: ErrorHandlers = useMemo(
     () => ({
@@ -85,13 +85,13 @@ const PhonePasswordless = ({ type, autoFocus, className }: Props) => {
         return;
       }
 
-      if (!(await termsValidation())) {
+      if (onSubmitValidation && !(await onSubmitValidation())) {
         return;
       }
 
       void asyncSendPasscode(fieldValue.phone);
     },
-    [validateForm, termsValidation, asyncSendPasscode, fieldValue.phone]
+    [validateForm, onSubmitValidation, asyncSendPasscode, fieldValue.phone]
   );
 
   const onModalCloseHandler = useCallback(() => {
@@ -131,7 +131,7 @@ const PhonePasswordless = ({ type, autoFocus, className }: Props) => {
             setPhoneNumber((previous) => ({ ...previous, ...data }));
           }}
         />
-        <TermsOfUse className={styles.terms} />
+        {children && <div className={styles.childWrapper}>{children}</div>}
 
         <Button onClick={async () => onSubmitHandler()}>{t('action.continue')}</Button>
 
