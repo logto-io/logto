@@ -7,6 +7,12 @@ import {
   sendRegisterSmsPasscode,
 } from './register';
 import {
+  sendResetPasswordEmailPasscode,
+  sendResetPasswordSmsPasscode,
+  verifyResetPasswordEmailPasscode,
+  verifyResetPasswordSmsPasscode,
+} from './reset-password';
+import {
   verifySignInEmailPasscode,
   verifySignInSmsPasscode,
   sendSignInEmailPasscode,
@@ -20,13 +26,11 @@ export const getSendPasscodeApi = (
   method: PasscodeChannel
 ): ((_address: string) => Promise<{ success: boolean }>) => {
   if (type === 'reset-password' && method === 'email') {
-    // TODO: update using reset-password verification api
-    return async () => ({ success: true });
+    return sendResetPasswordEmailPasscode;
   }
 
   if (type === 'reset-password' && method === 'sms') {
-    // TODO: update using reset-password verification api
-    return async () => ({ success: true });
+    return sendResetPasswordSmsPasscode;
   }
 
   if (type === 'sign-in' && method === 'email') {
@@ -49,13 +53,11 @@ export const getVerifyPasscodeApi = (
   method: PasscodeChannel
 ): ((_address: string, code: string, socialToBind?: string) => Promise<{ redirectTo: string }>) => {
   if (type === 'reset-password' && method === 'email') {
-    // TODO: update using reset-password verification api
-    return async () => ({ redirectTo: '' });
+    return verifyResetPasswordEmailPasscode;
   }
 
   if (type === 'reset-password' && method === 'sms') {
-    // TODO: update using reset-password verification api
-    return async () => ({ redirectTo: '' });
+    return verifyResetPasswordSmsPasscode;
   }
 
   if (type === 'sign-in' && method === 'email') {

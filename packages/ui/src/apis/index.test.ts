@@ -9,6 +9,12 @@ import {
   verifyRegisterSmsPasscode,
 } from './register';
 import {
+  verifyResetPasswordEmailPasscode,
+  verifyResetPasswordSmsPasscode,
+  sendResetPasswordEmailPasscode,
+  sendResetPasswordSmsPasscode,
+} from './reset-password';
+import {
   signInBasic,
   sendSignInSmsPasscode,
   sendSignInEmailPasscode,
@@ -172,6 +178,44 @@ describe('api', () => {
   it('verifyRegisterEmailPasscode', async () => {
     await verifyRegisterEmailPasscode(email, code);
     expect(ky.post).toBeCalledWith('/api/session/register/passwordless/email/verify-passcode', {
+      json: {
+        email,
+        code,
+      },
+    });
+  });
+
+  it('sendResetPasswordSmsPasscode', async () => {
+    await sendResetPasswordSmsPasscode(phone);
+    expect(ky.post).toBeCalledWith('/api/session/reset-password/sms/send-passcode', {
+      json: {
+        phone,
+      },
+    });
+  });
+
+  it('verifyResetPasswordSmsPasscode', async () => {
+    await verifyResetPasswordSmsPasscode(phone, code);
+    expect(ky.post).toBeCalledWith('/api/session/reset-password/sms/verify-passcode', {
+      json: {
+        phone,
+        code,
+      },
+    });
+  });
+
+  it('sendResetPasswordEmailPasscode', async () => {
+    await sendResetPasswordEmailPasscode(email);
+    expect(ky.post).toBeCalledWith('/api/session/reset-password/email/send-passcode', {
+      json: {
+        email,
+      },
+    });
+  });
+
+  it('verifyResetPasswordEmailPasscode', async () => {
+    await verifyResetPasswordEmailPasscode(email, code);
+    expect(ky.post).toBeCalledWith('/api/session/reset-password/email/verify-passcode', {
       json: {
         email,
         code,
