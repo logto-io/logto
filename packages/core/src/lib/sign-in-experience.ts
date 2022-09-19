@@ -1,6 +1,8 @@
+import { builtInLanguages } from '@logto/phrases-ui';
 import {
   Branding,
   BrandingStyle,
+  LanguageInfo,
   SignInMethods,
   SignInMethodState,
   TermsOfUse,
@@ -9,6 +11,7 @@ import { Optional } from '@silverhand/essentials';
 
 import { ConnectorType, LogtoConnector } from '@/connectors/types';
 import RequestError from '@/errors/RequestError';
+import { findAllCustomLanguageKeys } from '@/queries/custom-phrase';
 import assertThat from '@/utils/assert-that';
 
 export const validateBranding = (branding: Branding) => {
@@ -17,6 +20,18 @@ export const validateBranding = (branding: Branding) => {
   }
 
   assertThat(branding.logoUrl.trim(), 'sign_in_experiences.empty_logo');
+};
+
+export const validateLanguageInfo = async (languageInfo: LanguageInfo) => {
+  const supportedLanguages = [...builtInLanguages, ...(await findAllCustomLanguageKeys())];
+
+  assertThat(
+    supportedLanguages.includes(languageInfo.fallbackLanguage),
+    new RequestError({
+      code: 'sign_in_experiences.unsupported_default_language',
+      language: languageInfo.fallbackLanguage,
+    })
+  );
 };
 
 export const validateTermsOfUse = (termsOfUse: TermsOfUse) => {

@@ -155,8 +155,8 @@ importers:
   packages/core:
     specifiers:
       '@logto/connector-kit': ^1.0.0-beta.13
-      '@logto/core-kit': 1.0.0-beta.16
-      '@logto/language-kit': 1.0.0-beta.16
+      '@logto/core-kit': ^1.0.0-beta.16
+      '@logto/language-kit': ^1.0.0-beta.16
       '@logto/phrases': ^1.0.0-beta.9
       '@logto/phrases-ui': ^1.0.0-beta.9
       '@logto/schemas': ^1.0.0-beta.9
@@ -471,6 +471,7 @@ importers:
     specifiers:
       '@logto/connector-kit': ^1.0.0-beta.13
       '@logto/core-kit': ^1.0.0-beta.13
+      '@logto/language-kit': ^1.0.0-beta.16
       '@logto/phrases': ^1.0.0-beta.9
       '@logto/phrases-ui': ^1.0.0-beta.9
       '@silverhand/eslint-config': 1.0.0
@@ -495,6 +496,7 @@ importers:
     dependencies:
       '@logto/connector-kit': 1.0.0-beta.13
       '@logto/core-kit': 1.0.0-beta.13
+      '@logto/language-kit': 1.0.0-beta.16
       '@logto/phrases': link:../phrases
       '@logto/phrases-ui': link:../phrases-ui
       zod: 3.18.0

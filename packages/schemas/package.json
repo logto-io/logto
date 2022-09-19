@@ -53,6 +53,7 @@
   "dependencies": {
     "@logto/connector-kit": "^1.0.0-beta.13",
     "@logto/core-kit": "^1.0.0-beta.13",
+    "@logto/language-kit": "^1.0.0-beta.16",
     "@logto/phrases": "^1.0.0-beta.9",
     "@logto/phrases-ui": "^1.0.0-beta.9",
     "zod": "^3.18.0"

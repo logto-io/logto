@@ -113,6 +113,7 @@ const errors = {
     enabled_connector_not_found: 'Le connecteur {{type}} activé est introuvable.',
     not_one_and_only_one_primary_sign_in_method:
       'Il doit y avoir une et une seule méthode de connexion primaire. Veuillez vérifier votre saisie.',
+    unsupported_default_language: 'Default language {{language}} is unsupported.', // UNTRANSLATED
   },
   localization: {
     cannot_delete_default_language:
