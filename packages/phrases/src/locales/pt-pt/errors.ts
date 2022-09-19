@@ -105,8 +105,8 @@ const errors = {
       'Deve haver um e apenas um método de login principal. Por favor, verifique sua entrada.',
   },
   localization: {
-    not_allowed_to_delete:
-      'You are not allowed to delete the language {{languageKey}} since it is used as default language of the sign-in experience.', // UNTRANSLATED
+    cannot_delete:
+      'You can not delete the {{languageKey}} language since it is used as default language in the sign-in experience.', // UNTRANSLATED
   },
   swagger: {
     invalid_zod_type: 'Tipo de Zod inválido. Verifique a configuração do protetor de rota.',

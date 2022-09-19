@@ -103,7 +103,7 @@ const errors = {
       'Yalnızca bir tane birincil oturum açma yöntemi olmalıdır. Lütfen inputu kontrol ediniz.',
   },
   localization: {
-    not_allowed_to_delete:
+    cannot_delete:
       'You are not allowed to delete the language {{languageKey}} since it is used as default language of the sign-in experience.', // UNTRANSLATED
   },
   swagger: {

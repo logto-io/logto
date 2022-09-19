@@ -99,8 +99,8 @@ const errors = {
       '반드시 하나의 메인 로그인 방법이 설정되어야 해요. 입력된 값을 확인해주세요.',
   },
   localization: {
-    not_allowed_to_delete:
-      'You are not allowed to delete the language {{languageKey}} since it is used as default language of the sign-in experience.', // UNTRANSLATED
+    cannot_delete:
+      'You can not delete the {{languageKey}} language since it is used as default language in the sign-in experience.', // UNTRANSLATED
   },
   swagger: {
     invalid_zod_type: '유요하지 않은 Zod 종류에요. Route Guard 설정을 확인해주세요.',
