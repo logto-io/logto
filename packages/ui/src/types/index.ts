@@ -3,7 +3,7 @@ import { SignInExperience, ConnectorMetadata, AppearanceMode } from '@logto/sche
 
 export type UserFlow = 'sign-in' | 'register';
 export type SignInMethod = 'username' | 'email' | 'sms' | 'social';
-export type LocalSignInMethod = 'username' | 'email' | 'sms';
+export type LocalSignInMethod = Exclude<SignInMethod, 'social'>;
 
 export enum SearchParameters {
   bindWithSocial = 'bind_with',

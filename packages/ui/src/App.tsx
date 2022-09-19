@@ -57,11 +57,20 @@ const App = () => {
             />
 
             <Route element={<LoadingLayerProvider />}>
+              {/* sign-in */}
               <Route path="/sign-in" element={<SignIn />} />
               <Route path="/sign-in/social/:connector" element={<SocialSignIn />} />
               <Route path="/sign-in/:method" element={<SecondarySignIn />} />
+
+              {/* register */}
               <Route path="/register" element={<Register />} />
               <Route path="/register/:method" element={<Register />} />
+
+              {/* forgot password */}
+              {/**
+               * WIP
+               * <Route path="/forgot-password/:method" element={<ForgotPassword />} />
+               */}
 
               {/* social sign-in pages */}
 

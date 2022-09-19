@@ -27,6 +27,7 @@ const translation = {
     agree: '同意',
     got_it: '知道了',
     sign_in_with: '通过 {{name}} 登录',
+    forgot_password: '忘记密码？',
   },
   description: {
     email: '邮箱',
@@ -37,7 +38,6 @@ const translation = {
     agree_with_terms_modal: '请先同意 <link></link> 以继续',
     terms_of_use: '使用条款',
     create_account: '创建帐号',
-    forgot_password: '忘记密码？',
     or: '或',
     enter_passcode: '验证码已经发送至你的{{ address }}',
     passcode_sent: '验证码已经发送',
@@ -50,6 +50,11 @@ const translation = {
     social_create_account: '没有帐号？你可以创建一个帐号并绑定。',
     social_bind_account: '已有帐号？登录以绑定社交身份。',
     social_bind_with_existing: '找到了一个匹配的帐号，你可以直接绑定。',
+    reset_password: '重置密码',
+    reset_password_description_email:
+      '输入与你的帐户关联的电子邮箱地址，我们将通过电子邮件向您发送验证码以重置你的密码。',
+    reset_password_description_sms:
+      '输入与你的帐户关联的电话号码，我们将向您发送验证码以重置你的密码。',
   },
   error: {
     username_password_mismatch: '用户名和密码不匹配',
