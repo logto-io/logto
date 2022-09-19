@@ -58,7 +58,7 @@ const Preview = ({ signInExperience, className }: Props) => {
   const availableLanguageOptions = useMemo(() => {
     if (signInExperience && !signInExperience.languageInfo.autoDetect) {
       return languageOptions.filter(
-        ({ value }) => value === signInExperience.languageInfo.fixedLanguage
+        ({ value }) => value === signInExperience.languageInfo.fallbackLanguage
       );
     }
 
