@@ -56,12 +56,6 @@ describe('session -> forgotPasswordRoutes', () => {
       expect(response.statusCode).toEqual(204);
       expect(sendPasscode).toHaveBeenCalled();
     });
-    it('throw error if phone does not exist', async () => {
-      const response = await sessionRequest
-        .post(`${forgotPasswordRoute}/sms/send-passcode`)
-        .send({ phone: '13000000001' });
-      expect(response.statusCode).toEqual(422);
-    });
   });
 
   describe('POST /session/forgot-password/email/send-passcode', () => {
@@ -76,12 +70,6 @@ describe('session -> forgotPasswordRoutes', () => {
         .send({ email: 'a@a.com' });
       expect(response.statusCode).toEqual(204);
       expect(sendPasscode).toHaveBeenCalled();
-    });
-    it('throw error if email does not exist', async () => {
-      const response = await sessionRequest
-        .post(`${forgotPasswordRoute}/email/send-passcode`)
-        .send({ email: 'b@a.com' });
-      expect(response.statusCode).toEqual(422);
     });
   });
 });

@@ -3,11 +3,8 @@ import { PasscodeType } from '@logto/schemas';
 import { Provider } from 'oidc-provider';
 import { z } from 'zod';
 
-import RequestError from '@/errors/RequestError';
 import { createPasscode, sendPasscode } from '@/lib/passcode';
 import koaGuard from '@/middleware/koa-guard';
-import { hasUserWithEmail, hasUserWithPhone } from '@/queries/user';
-import assertThat from '@/utils/assert-that';
 
 import { AnonymousRouter } from '../types';
 import { getRoutePrefix } from './utils';
@@ -27,11 +24,6 @@ export default function forgotPasswordRoutes<T extends AnonymousRouter>(
       const type = 'ForgotPasswordSmsSendPasscode';
       ctx.log(type, { phone });
 
-      assertThat(
-        await hasUserWithPhone(phone),
-        new RequestError({ code: 'user.phone_not_exists', status: 422 })
-      );
-
       const passcode = await createPasscode(jti, PasscodeType.ForgotPassword, { phone });
       const { dbEntry } = await sendPasscode(passcode);
       ctx.log(type, { connectorId: dbEntry.id });
@@ -49,11 +41,6 @@ export default function forgotPasswordRoutes<T extends AnonymousRouter>(
       const { email } = ctx.guard.body;
       const type = 'ForgotPasswordEmailSendPasscode';
       ctx.log(type, { email });
-
-      assertThat(
-        await hasUserWithEmail(email),
-        new RequestError({ code: 'user.email_not_exists', status: 422 })
-      );
 
       const passcode = await createPasscode(jti, PasscodeType.ForgotPassword, { email });
       const { dbEntry } = await sendPasscode(passcode);
