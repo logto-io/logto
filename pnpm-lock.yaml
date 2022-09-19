@@ -21,7 +21,7 @@ importers:
   packages/console:
     specifiers:
       '@fontsource/roboto-mono': ^4.5.7
-      '@logto/core-kit': ^1.0.0-beta.11
+      '@logto/core-kit': ^1.0.0-beta.13
       '@logto/phrases': ^1.0.0-beta.9
       '@logto/phrases-ui': ^1.0.0-beta.9
       '@logto/react': 1.0.0-beta.6
@@ -85,7 +85,7 @@ importers:
       zod: ^3.18.0
     devDependencies:
       '@fontsource/roboto-mono': 4.5.7
-      '@logto/core-kit': 1.0.0-beta.11
+      '@logto/core-kit': 1.0.0-beta.13
       '@logto/phrases': link:../phrases
       '@logto/phrases-ui': link:../phrases-ui
       '@logto/react': 1.0.0-beta.6_react@18.2.0
@@ -150,8 +150,8 @@ importers:
 
   packages/core:
     specifiers:
-      '@logto/connector-kit': ^1.0.0-beta.11
-      '@logto/core-kit': ^1.0.0-beta.11
+      '@logto/connector-kit': ^1.0.0-beta.13
+      '@logto/core-kit': ^1.0.0-beta.13
       '@logto/phrases': ^1.0.0-beta.9
       '@logto/schemas': ^1.0.0-beta.9
       '@shopify/jest-koa-mocks': ^5.0.0
@@ -226,8 +226,8 @@ importers:
       typescript: ^4.7.4
       zod: ^3.18.0
     dependencies:
-      '@logto/connector-kit': 1.0.0-beta.11
-      '@logto/core-kit': 1.0.0-beta.11
+      '@logto/connector-kit': 1.0.0-beta.13
+      '@logto/core-kit': 1.0.0-beta.13
       '@logto/phrases': link:../phrases
       '@logto/schemas': link:../schemas
       '@silverhand/essentials': 1.2.1
@@ -305,7 +305,7 @@ importers:
 
   packages/demo-app:
     specifiers:
-      '@logto/core-kit': ^1.0.0-beta.11
+      '@logto/core-kit': ^1.0.0-beta.13
       '@logto/phrases': ^1.0.0-beta.9
       '@logto/react': 1.0.0-beta.6
       '@logto/schemas': ^1.0.0-beta.9
@@ -331,7 +331,7 @@ importers:
       stylelint: ^14.9.1
       typescript: ^4.7.4
     devDependencies:
-      '@logto/core-kit': 1.0.0-beta.11
+      '@logto/core-kit': 1.0.0-beta.13
       '@logto/phrases': link:../phrases
       '@logto/react': 1.0.0-beta.6_react@18.2.0
       '@logto/schemas': link:../schemas
@@ -411,7 +411,7 @@ importers:
 
   packages/phrases:
     specifiers:
-      '@logto/core-kit': ^1.0.0-beta.11
+      '@logto/core-kit': ^1.0.0-beta.13
       '@silverhand/eslint-config': 1.0.0
       '@silverhand/essentials': ^1.2.1
       '@silverhand/ts-config': 1.0.0
@@ -420,7 +420,7 @@ importers:
       prettier: ^2.7.1
       typescript: ^4.7.4
     dependencies:
-      '@logto/core-kit': 1.0.0-beta.11
+      '@logto/core-kit': 1.0.0-beta.13
       '@silverhand/essentials': 1.2.1
     devDependencies:
       '@silverhand/eslint-config': 1.0.0_swk2g7ygmfleszo5c33j4vooni
@@ -432,7 +432,7 @@ importers:
 
   packages/phrases-ui:
     specifiers:
-      '@logto/core-kit': ^1.0.0-beta.11
+      '@logto/core-kit': ^1.0.0-beta.13
       '@silverhand/eslint-config': 1.0.0
       '@silverhand/essentials': ^1.2.1
       '@silverhand/ts-config': 1.0.0
@@ -441,7 +441,7 @@ importers:
       prettier: ^2.7.1
       typescript: ^4.7.4
     dependencies:
-      '@logto/core-kit': 1.0.0-beta.11
+      '@logto/core-kit': 1.0.0-beta.13
       '@silverhand/essentials': 1.2.1
     devDependencies:
       '@silverhand/eslint-config': 1.0.0_swk2g7ygmfleszo5c33j4vooni
@@ -453,8 +453,8 @@ importers:
 
   packages/schemas:
     specifiers:
-      '@logto/connector-kit': ^1.0.0-beta.11
-      '@logto/core-kit': ^1.0.0-beta.11
+      '@logto/connector-kit': ^1.0.0-beta.13
+      '@logto/core-kit': ^1.0.0-beta.13
       '@logto/phrases': ^1.0.0-beta.9
       '@logto/phrases-ui': ^1.0.0-beta.9
       '@silverhand/eslint-config': 1.0.0
@@ -476,8 +476,8 @@ importers:
       typescript: ^4.7.4
       zod: ^3.18.0
     dependencies:
-      '@logto/connector-kit': 1.0.0-beta.11
-      '@logto/core-kit': 1.0.0-beta.11
+      '@logto/connector-kit': 1.0.0-beta.13
+      '@logto/core-kit': 1.0.0-beta.13
       '@logto/phrases': link:../phrases
       '@logto/phrases-ui': link:../phrases-ui
       zod: 3.18.0
@@ -502,7 +502,7 @@ importers:
 
   packages/ui:
     specifiers:
-      '@logto/core-kit': ^1.0.0-beta.11
+      '@logto/core-kit': ^1.0.0-beta.13
       '@logto/phrases': ^1.0.0-beta.9
       '@logto/phrases-ui': ^1.0.0-beta.9
       '@logto/schemas': ^1.0.0-beta.9
@@ -555,7 +555,7 @@ importers:
       typescript: ^4.7.4
       use-debounced-loader: ^0.1.1
     dependencies:
-      '@logto/core-kit': 1.0.0-beta.11
+      '@logto/core-kit': 1.0.0-beta.13
     devDependencies:
       '@logto/phrases': link:../phrases
       '@logto/phrases-ui': link:../phrases-ui
@@ -2402,17 +2402,17 @@ packages:
       superstruct: 0.16.0
     dev: true
 
-  /@logto/connector-kit/1.0.0-beta.11:
-    resolution: {integrity: sha512-XEOLfgeF+ltBnDyVpTHGjkH3phXmty9xJj0ezA/VeCRDuR4hhCq68ijQdCDa6dunrHKZTK3Oh3jk/QK7lrTFdQ==}
+  /@logto/connector-kit/1.0.0-beta.13:
+    resolution: {integrity: sha512-bUgAaba1RkYIjHMPrcefLTJAf0d1uVhr864Gh/4JO7/du3xmbFbAWzDyfOhwzt1YZoG4NaMmjVXicfSh/zF/YQ==}
     engines: {node: ^16.0.0}
     dependencies:
-      '@logto/core-kit': 1.0.0-beta.11
+      '@logto/core-kit': 1.0.0-beta.13
       '@silverhand/essentials': 1.2.1
       zod: 3.18.0
     dev: false
 
-  /@logto/core-kit/1.0.0-beta.11:
-    resolution: {integrity: sha512-QbU6RfvkUqkRBysfJDtcs+zVqrOhVEQfA1GvaAryypZfXXXY/GwxTgWxjmDNvpj0NkdbCHHd/HlDv4pMAPPnWQ==}
+  /@logto/core-kit/1.0.0-beta.13:
+    resolution: {integrity: sha512-3Ugvpu2VHfBziEOZ07v+JpwQSoU71pO60dIeN2w3SHVgr0G6TV0FC/0NxJqEOGEEh6rEvcikVocwZJBJ+P6CoA==}
     engines: {node: ^16.0.0}
     dependencies:
       color: 4.2.3
