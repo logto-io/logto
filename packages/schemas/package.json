@@ -48,10 +48,10 @@
   },
   "prettier": "@silverhand/eslint-config/.prettierrc",
   "dependencies": {
-    "@logto/connector-kit": "^1.0.0-beta.11",
+    "@logto/connector-kit": "^1.0.0-beta.13",
     "@logto/phrases": "^1.0.0-beta.9",
     "@logto/phrases-ui": "^1.0.0-beta.9",
-    "@logto/core-kit": "^1.0.0-beta.11",
+    "@logto/core-kit": "^1.0.0-beta.13",
     "zod": "^3.18.0"
   }
 }
