@@ -77,7 +77,10 @@ export default function customPhraseRoutes<T extends AuthedRouter>(router: T) {
       } = await findDefaultSignInExperience();
 
       if (fallbackLanguage === languageKey) {
-        throw new RequestError({ code: 'localization.not_allowed_to_delete', languageKey });
+        throw new RequestError({
+          code: 'localization.cannot_delete_default_language',
+          languageKey,
+        });
       }
 
       await deleteCustomPhraseByLanguageKey(languageKey);

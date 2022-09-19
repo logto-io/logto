@@ -97,7 +97,7 @@ const errors = {
     not_one_and_only_one_primary_sign_in_method: '主要的登录方式必须有且仅有一个，请检查你的输入。',
   },
   localization: {
-    cannot_delete: '不能删除登录体验正在使用的默认语言 {{languageKey}}。',
+    cannot_delete_default_language: '不能删除登录体验正在使用的默认语言 {{languageKey}}。',
   },
   swagger: {
     invalid_zod_type: '无效的 Zod 类型，请检查路由 guard 配置。',
