@@ -4,11 +4,6 @@ import { createRequester } from '@/utils/test-utils';
 
 import forgotPasswordRoutes, { forgotPasswordRoute } from './forgot-password';
 
-jest.mock('@/queries/user', () => ({
-  hasUserWithPhone: async (phone: string) => phone === '13000000000',
-  hasUserWithEmail: async (email: string) => email === 'a@a.com',
-}));
-
 const sendPasscode = jest.fn(async () => ({ dbEntry: { id: 'connectorIdValue' } }));
 jest.mock('@/lib/passcode', () => ({
   createPasscode: async () => ({ id: 'id' }),
