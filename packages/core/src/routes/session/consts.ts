@@ -1,1 +1,1 @@
-export const forgotPasswordReAuthenticationTimeout = 10 * 60; // 10 mins.
+export const forgotPasswordVerificationTimeout = 10 * 60; // 10 mins.
