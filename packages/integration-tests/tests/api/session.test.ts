@@ -247,6 +247,6 @@ describe('sign-in to demo app and revisit Admin Console', () => {
 
     acClient.assignCookie(interactionCookie);
 
-    await expect(client.initSession()).rejects.toThrow();
+    await expect(acClient.initSession()).rejects.toThrow();
   });
 });
