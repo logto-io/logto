@@ -9,7 +9,7 @@ import assertThat from '@/utils/assert-that';
 
 export default function koaGuardSessionAction<StateT, ContextT, ResponseBodyT>(
   provider: Provider,
-  forType?: 'sign-in' | 'register'
+  forType: 'sign-in' | 'register'
 ): MiddlewareType<StateT, ContextT, ResponseBodyT> {
   const forbiddenError = new RequestError({ code: 'auth.forbidden', status: 403 });
 
