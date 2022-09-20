@@ -1,4 +1,5 @@
 import { User } from '@logto/schemas';
+import { adminConsoleApplicationId } from '@logto/schemas/lib/seeds';
 import { Provider } from 'oidc-provider';
 
 import { mockUser } from '@/__mocks__';
@@ -128,6 +129,7 @@ describe('sessionRoutes', () => {
           expect.anything()
         );
       });
+
       it('should save application id when the user first consented', async () => {
         interactionDetails.mockResolvedValueOnce({
           session: { accountId: mockUser.id },
@@ -139,11 +141,15 @@ describe('sessionRoutes', () => {
           },
           grantId: 'grantId',
         });
+
         findUserById.mockImplementationOnce(async () => ({ ...mockUser, applicationId: null }));
+
         const response = await sessionRequest.post('/session/consent');
+
         expect(updateUserById).toHaveBeenCalledWith(mockUser.id, { applicationId: 'clientId' });
         expect(response.statusCode).toEqual(200);
       });
+
       it('missingOIDCScope and missingResourceScopes', async () => {
         interactionDetails.mockResolvedValueOnce({
           session: { accountId: 'accountId' },
@@ -173,6 +179,30 @@ describe('sessionRoutes', () => {
         );
       });
     });
+
+    it('should throw is non-admin user request for AC consent', async () => {
+      interactionDetails.mockResolvedValueOnce({
+        session: { accountId: mockUser.id },
+        params: { client_id: adminConsoleApplicationId },
+        prompt: {
+          name: 'consent',
+          details: {},
+          reasons: ['consent_prompt', 'native_client_prompt'],
+        },
+        grantId: 'grantId',
+      });
+
+      findUserById.mockImplementationOnce(async () => ({
+        ...mockUser,
+        roleNames: [],
+        applicationId: null,
+      }));
+
+      const response = await sessionRequest.post('/session/consent');
+
+      expect(response.statusCode).toEqual(401);
+    });
+
     it('throws if session is missing', async () => {
       interactionDetails.mockResolvedValueOnce({ params: { client_id: 'clientId' } });
       await expect(sessionRequest.post('/session/consent')).resolves.toHaveProperty(

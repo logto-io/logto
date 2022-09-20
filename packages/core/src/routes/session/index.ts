@@ -51,12 +51,13 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
     const { accountId } = session;
 
     // Temp solution before migrating to RBAC.  Block non-admin user from consent to admin console
-    const { roleNames } = await findUserById(accountId);
 
     if (String(client_id) === adminConsoleApplicationId) {
+      const { roleNames } = await findUserById(accountId);
+
       assertThat(
         roleNames.includes(UserRole.Admin),
-        new RequestError({ code: 'auth.forbidden', status: 403 })
+        new RequestError({ code: 'auth.forbidden', status: 401 })
       );
     }
 
