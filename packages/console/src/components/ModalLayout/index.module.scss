@@ -41,4 +41,8 @@
   &.large {
     max-width: dim.$modal-layout-width-large;
   }
+
+  &.xlarge {
+    max-width: dim.$modal-layout-width-xlarge;
+  }
 }
