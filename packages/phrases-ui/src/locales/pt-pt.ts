@@ -55,6 +55,7 @@ const translation = {
       'Digite o endereço de email associado à sua conta e enviaremos um email com o código de verificação para redefinir sua senha.',
     reset_password_description_sms:
       'Digite o número de telefone associado à sua conta e enviaremos uma mensagem de texto com o código de verificação para redefinir sua senha.',
+    new_password: 'Nova Senha',
   },
   error: {
     username_password_mismatch: 'O Utilizador e a password não correspondem',

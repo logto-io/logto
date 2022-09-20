@@ -12,6 +12,7 @@ import ErrorPage from './pages/ErrorPage';
 import ForgotPassword from './pages/ForgotPassword';
 import Passcode from './pages/Passcode';
 import Register from './pages/Register';
+import ResetPassword from './pages/ResetPassword';
 import SecondarySignIn from './pages/SecondarySignIn';
 import SignIn from './pages/SignIn';
 import SocialLanding from './pages/SocialLanding';
@@ -69,6 +70,7 @@ const App = () => {
 
               {/* forgot password */}
               <Route path="/forgot-password/:method" element={<ForgotPassword />} />
+              <Route path="/reset-password" element={<ResetPassword />} />
 
               {/* social sign-in pages */}
 

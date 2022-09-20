@@ -55,6 +55,7 @@ const translation = {
       '输入与你的帐户关联的电子邮箱地址，我们将通过电子邮件向您发送验证码以重置你的密码。',
     reset_password_description_sms:
       '输入与你的帐户关联的电话号码，我们将向您发送验证码以重置你的密码。',
+    new_password: '新密码',
   },
   error: {
     username_password_mismatch: '用户名和密码不匹配',

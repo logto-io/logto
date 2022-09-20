@@ -55,6 +55,7 @@ const translation = {
       'Enter the email address associated with your account, and we’ll email you the verification code to reset your password.',
     reset_password_description_sms:
       'Enter the phone number associated with your account, and we’ll text you the verification code to reset your password.',
+    new_password: 'New password',
   },
   error: {
     username_password_mismatch: 'Username and password do not match',
