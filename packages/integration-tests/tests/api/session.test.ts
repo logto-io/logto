@@ -1,3 +1,4 @@
+import { adminConsoleApplicationId } from '@logto/schemas/lib/seeds';
 import { assert } from '@silverhand/essentials';
 
 import {
@@ -214,5 +215,38 @@ describe('sign-in and sign-out', () => {
     await client.signOut();
 
     await expect(client.isAuthenticated()).resolves.toBe(false);
+  });
+});
+
+describe('sign-in to demo app and revisit Admin Console', () => {
+  const username = generateUsername();
+  const password = generatePassword();
+
+  beforeAll(async () => {
+    await createUserByAdmin(username, password);
+  });
+
+  it('should throw in Admin Console consent step if a logged in user does not have admin role', async () => {
+    const client = new MockClient();
+    await client.initSession();
+
+    assert(client.interactionCookie, new Error('Session not found'));
+
+    const { redirectTo } = await signInWithUsernameAndPassword(
+      username,
+      password,
+      client.interactionCookie
+    );
+
+    await client.processSession(redirectTo);
+
+    await expect(client.isAuthenticated()).resolves.toBe(true);
+
+    const { interactionCookie } = client;
+    const acClient = new MockClient({ appId: adminConsoleApplicationId });
+
+    acClient.assignCookie(interactionCookie);
+
+    await expect(client.initSession()).rejects.toThrow();
   });
 });
