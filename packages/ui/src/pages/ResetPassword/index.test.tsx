@@ -4,7 +4,7 @@ import { MemoryRouter, Routes, Route } from 'react-router-dom';
 import ResetPassword from '.';
 
 describe('ForgotPassword', () => {
-  it('render email forgot password properly', () => {
+  it('render reset-password page properly', () => {
     const { queryByText } = render(
       <MemoryRouter initialEntries={['/reset-password']}>
         <Routes>
