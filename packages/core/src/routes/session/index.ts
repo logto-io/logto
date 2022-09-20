@@ -10,6 +10,7 @@ import { assignInteractionResults, saveUserFirstConsentedAppId } from '@/lib/ses
 import assertThat from '@/utils/assert-that';
 
 import { AnonymousRouter } from '../types';
+import forgotPasswordRoutes from './forgot-password';
 import koaGuardSessionAction from './middleware/koa-guard-session-action';
 import passwordlessRoutes from './passwordless';
 import socialRoutes from './social';
@@ -87,4 +88,6 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
   usernamePasswordRoutes(router, provider);
   passwordlessRoutes(router, provider);
   socialRoutes(router, provider);
+
+  forgotPasswordRoutes(router, provider);
 }

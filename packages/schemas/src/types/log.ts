@@ -96,6 +96,16 @@ type SignInSocialLogPayload = SignInSocialBindLogPayload & {
   redirectTo?: string;
 };
 
+type ForgotPasswordSmsSendPasscodeLogPayload = ArbitraryLogPayload & {
+  phone?: string;
+  connectorId?: string;
+};
+
+type ForgotPasswordEmailSendPasscodeLogPayload = ArbitraryLogPayload & {
+  email?: string;
+  connectorId?: string;
+};
+
 export enum TokenType {
   AccessToken = 'AccessToken',
   RefreshToken = 'RefreshToken',
@@ -131,6 +141,8 @@ export type LogPayloads = {
   SignInSms: SignInSmsLogPayload;
   SignInSocialBind: SignInSocialBindLogPayload;
   SignInSocial: SignInSocialLogPayload;
+  ForgotPasswordSmsSendPasscode: ForgotPasswordSmsSendPasscodeLogPayload;
+  ForgotPasswordEmailSendPasscode: ForgotPasswordEmailSendPasscodeLogPayload;
   CodeExchangeToken: ExchangeTokenLogPayload;
   RefreshTokenExchangeToken: ExchangeTokenLogPayload;
   RevokeToken: RevokeTokenLogPayload;
