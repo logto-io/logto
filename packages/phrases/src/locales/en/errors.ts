@@ -42,6 +42,7 @@ const errors = {
     identity_exists: 'The social account has been registered.',
     invalid_role_names: 'role names ({{roleNames}}) are not valid',
     cannot_delete_self: 'You cannot delete yourself.',
+    same_password: 'Your new password can not be the same as current password.',
   },
   password: {
     unsupported_encryption_method: 'The encryption method {{name}} is not supported.',
@@ -55,6 +56,10 @@ const errors = {
     insufficient_info: 'Insufficient sign-in info.',
     connector_id_mismatch: 'The connectorId is mismatched with session record.',
     connector_session_not_found: 'Connector session not found. Please go back and sign in again.',
+    forgot_password_session_not_found:
+      'Forgot password session not found. Please go back and verify.',
+    forgot_password_verification_expired:
+      'Forgot password verification has expired. Please go back and verify again.',
     unauthorized: 'Please sign in first.',
     unsupported_prompt_name: 'Unsupported prompt name.',
   },

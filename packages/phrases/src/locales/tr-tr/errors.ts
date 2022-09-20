@@ -41,7 +41,8 @@ const errors = {
     identity_not_exists: 'Sosyal platform hesabı henüz kaydedilmedi.',
     identity_exists: 'Sosyal platform hesabı kaydedildi.',
     invalid_role_names: '({{roleNames}}) rol adları geçerli değil.',
-    cannot_delete_self: 'You cannot delete yourself.',
+    cannot_delete_self: 'You cannot delete yourself.', // UNTRANSLATED
+    same_password: 'Your new password can not be the same as current password.', // UNTRANSLATED
   },
   password: {
     unsupported_encryption_method: '{{name}} şifreleme metodu desteklenmiyor.',
@@ -56,6 +57,10 @@ const errors = {
     connector_id_mismatch: 'connectorId, oturum kaydı ile eşleşmiyor.',
     connector_session_not_found:
       'Bağlayıcı oturum bulunamadı. Lütfen geri dönüp tekrardan giriş yapınız.',
+    forgot_password_session_not_found:
+      'Forgot password session not found. Please go back and verify.', // UNTRANSLATED
+    forgot_password_verification_expired:
+      'Forgot password verification has expired. Please go back and verify again.', // UNTRANSLATED
     unauthorized: 'Lütfen önce oturum açın.',
     unsupported_prompt_name: 'Desteklenmeyen prompt adı.',
   },
