@@ -4,7 +4,6 @@ import { Provider } from 'oidc-provider';
 import RequestError from '@/errors/RequestError';
 import { createRequester } from '@/utils/test-utils';
 
-import { ReAuthenticationTypeEnum } from './consts';
 import forgotPasswordRoutes, { forgotPasswordRoute } from './forgot-password';
 
 jest.mock('@/queries/user', () => ({
@@ -80,10 +79,9 @@ describe('session -> forgotPasswordRoutes', () => {
         expect.anything(),
         expect.objectContaining({
           login: { accountId: 'id' },
-          reAuthentication: {
+          forgotPassword: {
             // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-            expiration_ts: expect.any(dayjs),
-            type: ReAuthenticationTypeEnum.ForgotPassword,
+            expiresAt: expect.any(dayjs),
           },
         }),
         expect.anything()
@@ -130,10 +128,9 @@ describe('session -> forgotPasswordRoutes', () => {
         expect.anything(),
         expect.objectContaining({
           login: { accountId: 'id' },
-          reAuthentication: {
+          forgotPassword: {
             // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-            expiration_ts: expect.any(dayjs),
-            type: ReAuthenticationTypeEnum.ForgotPassword,
+            expiresAt: expect.any(dayjs),
           },
         }),
         expect.anything()

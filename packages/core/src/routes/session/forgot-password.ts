@@ -17,7 +17,7 @@ import {
 import assertThat from '@/utils/assert-that';
 
 import { AnonymousRouter } from '../types';
-import { forgotPasswordReAuthenticationTimeout, ReAuthenticationTypeEnum } from './consts';
+import { forgotPasswordReAuthenticationTimeout } from './consts';
 import { getRoutePrefix } from './utils';
 
 export const forgotPasswordRoute = getRoutePrefix('forgot-password');
@@ -64,9 +64,8 @@ export default function forgotPasswordRoutes<T extends AnonymousRouter>(
 
       await assignInteractionResults(ctx, provider, {
         login: { accountId: id },
-        reAuthentication: {
-          expiration_ts: dayjs().add(forgotPasswordReAuthenticationTimeout, 'second'),
-          type: ReAuthenticationTypeEnum.ForgotPassword,
+        forgotPassword: {
+          expiresAt: dayjs().add(forgotPasswordReAuthenticationTimeout, 'second'),
         },
       });
 
@@ -110,9 +109,8 @@ export default function forgotPasswordRoutes<T extends AnonymousRouter>(
       const { id } = await findUserByEmail(email);
       await assignInteractionResults(ctx, provider, {
         login: { accountId: id },
-        reAuthentication: {
-          expiration_ts: dayjs().add(forgotPasswordReAuthenticationTimeout, 'second'),
-          type: ReAuthenticationTypeEnum.ForgotPassword,
+        forgotPassword: {
+          expiresAt: dayjs().add(forgotPasswordReAuthenticationTimeout, 'second'),
         },
       });
 
