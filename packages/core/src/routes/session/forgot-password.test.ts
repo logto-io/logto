@@ -43,6 +43,11 @@ jest.mock('@/lib/passcode', () => ({
   },
 }));
 
+const mockArgon2Verify = jest.fn(async (password: string) => password === mockPasswordEncrypted);
+jest.mock('hash-wasm', () => ({
+  argon2Verify: async (password: string) => mockArgon2Verify(password),
+}));
+
 const interactionResult = jest.fn(async () => 'redirectTo');
 const interactionDetails: jest.MockedFunction<() => Promise<unknown>> = jest.fn(async () => ({}));
 
@@ -257,16 +262,43 @@ describe('session -> forgotPasswordRoutes', () => {
           forgotPassword: { expiresAt: dayjs().add(1, 'day').toISOString() },
         },
       });
-      const mockEncryptUserPassword = encryptUserPassword as jest.Mock;
-      mockEncryptUserPassword.mockResolvedValueOnce({
-        passwordEncrypted: mockPasswordEncrypted,
-        passwordEncryptionMethod: 'Argon2i',
-      });
+      mockArgon2Verify.mockResolvedValueOnce(true);
       const response = await sessionRequest
         .post(`${forgotPasswordRoute}/reset`)
         .send({ password: mockPasswordEncrypted });
       expect(response).toHaveProperty('status', 400);
       expect(updateUserById).toBeCalledTimes(0);
+    });
+    it('should redirect when there was no old password', async () => {
+      interactionDetails.mockResolvedValueOnce({
+        result: {
+          login: { accountId: 'id' },
+          forgotPassword: { expiresAt: dayjs().add(1, 'day').toISOString() },
+        },
+      });
+      findUserById.mockResolvedValueOnce({
+        ...mockUserWithPassword,
+        passwordEncrypted: null,
+        passwordEncryptionMethod: null,
+      });
+      const response = await sessionRequest
+        .post(`${forgotPasswordRoute}/reset`)
+        .send({ password: mockPasswordEncrypted });
+      expect(response.statusCode).toEqual(200);
+      expect(updateUserById).toBeCalledWith(
+        'id',
+        expect.objectContaining({
+          passwordEncrypted: 'a1b2c3_user1',
+          passwordEncryptionMethod: 'Argon2i',
+        })
+      );
+      expect(updateLastSignInAt).toBeCalledWith('id');
+      expect(interactionResult).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.anything(),
+        expect.objectContaining({ login: { accountId: 'id' } }),
+        expect.anything()
+      );
     });
   });
 });
