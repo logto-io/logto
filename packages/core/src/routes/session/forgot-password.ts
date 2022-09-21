@@ -1,6 +1,7 @@
 import { emailRegEx, passwordRegEx, phoneRegEx } from '@logto/core-kit';
 import { PasscodeType } from '@logto/schemas';
 import dayjs from 'dayjs';
+import { argon2Verify } from 'hash-wasm';
 import { Provider } from 'oidc-provider';
 import { z } from 'zod';
 
@@ -151,12 +152,14 @@ export default function forgotPasswordRoutes<T extends AnonymousRouter>(
       );
 
       const { passwordEncrypted: oldPasswordEncrypted } = await findUserById(id);
-      const { passwordEncrypted, passwordEncryptionMethod } = await encryptUserPassword(password);
 
       assertThat(
-        passwordEncrypted !== oldPasswordEncrypted,
+        !oldPasswordEncrypted ||
+          (oldPasswordEncrypted && !(await argon2Verify({ password, hash: oldPasswordEncrypted }))),
         new RequestError({ code: 'user.same_password', status: 400 })
       );
+
+      const { passwordEncrypted, passwordEncryptionMethod } = await encryptUserPassword(password);
 
       const type = 'ForgotPasswordReset';
       ctx.log(type, { userId: id });
