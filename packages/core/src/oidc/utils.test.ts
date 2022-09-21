@@ -1,19 +1,37 @@
-import { ApplicationType, CustomClientMetadataKey } from '@logto/schemas';
+import { ApplicationType, CustomClientMetadataKey, GrantType } from '@logto/schemas';
 
 import {
   isOriginAllowed,
   buildOidcClientMetadata,
-  getApplicationTypeString,
+  getConstantClientMetadata,
   validateCustomClientMetadata,
 } from './utils';
 
-it('getApplicationTypeString', () => {
-  expect(getApplicationTypeString(ApplicationType.SPA)).toEqual('web');
-  expect(getApplicationTypeString(ApplicationType.Native)).toEqual('native');
-  expect(getApplicationTypeString(ApplicationType.Traditional)).toEqual('web');
+describe('getConstantClientMetadata()', () => {
+  expect(getConstantClientMetadata(ApplicationType.SPA)).toEqual({
+    application_type: 'web',
+    grant_types: [GrantType.AuthorizationCode, GrantType.RefreshToken],
+    token_endpoint_auth_method: 'none',
+  });
+  expect(getConstantClientMetadata(ApplicationType.Native)).toEqual({
+    application_type: 'native',
+    grant_types: [GrantType.AuthorizationCode, GrantType.RefreshToken],
+    token_endpoint_auth_method: 'none',
+  });
+  expect(getConstantClientMetadata(ApplicationType.Traditional)).toEqual({
+    application_type: 'web',
+    grant_types: [GrantType.AuthorizationCode, GrantType.RefreshToken],
+    token_endpoint_auth_method: 'client_secret_basic',
+  });
+  expect(getConstantClientMetadata(ApplicationType.MachineToMachine)).toEqual({
+    application_type: 'web',
+    grant_types: [GrantType.ClientCredentials],
+    token_endpoint_auth_method: 'client_secret_basic',
+    response_types: [],
+  });
 });
 
-it('buildOidcClientMetadata', () => {
+describe('buildOidcClientMetadata()', () => {
   const metadata = {
     redirectUris: ['logto.dev'],
     postLogoutRedirectUris: ['logto.dev'],

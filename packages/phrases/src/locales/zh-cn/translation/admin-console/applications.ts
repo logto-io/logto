@@ -26,6 +26,12 @@ const applications = {
       subtitle: '仅由 Web 服务器渲染和更新的应用程序',
       description: '例如 Next.js, PHP',
     },
+    // UNTRANSLATED
+    machine_to_machine: {
+      title: 'Machine to Machine',
+      subtitle: 'An app (usually a service) that directly talks to resources',
+      description: 'E.g., Backend service',
+    },
   },
   guide: {
     get_sample_file: '获取示例',

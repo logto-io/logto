@@ -9,6 +9,7 @@ const application_details = {
   authorization_endpoint: 'Authorization endpoint',
   authorization_endpoint_tip:
     "Le point de terminaison pour effectuer l'authentification et l'autorisation. Il est utilisé pour l'authentification OpenID Connect.",
+  application_id: 'App ID',
   application_secret: 'App Secret',
   redirect_uri: 'Redirect URI',
   redirect_uris: 'Redirect URIs',
@@ -28,7 +29,7 @@ const application_details = {
   add_another: 'Ajouter un autre',
   id_token_expiration: "Expiration du jeton d'identification",
   refresh_token_expiration: "Rafraîchir l'expiration du jeton",
-  token_endpoint: 'Token endpoint',
+  token_endpoint: 'Token Endpoint',
   user_info_endpoint: 'Userinfo endpoint',
   delete_description:
     "Cette action ne peut être annulée. Elle supprimera définitivement l'application. Veuillez entrer le nom de l'application <span>{{nom}}</span> pour confirmer.",

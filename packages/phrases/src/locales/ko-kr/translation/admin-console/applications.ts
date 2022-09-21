@@ -27,6 +27,12 @@ const applications = {
       subtitle: '서버를 통하여 웹 페이지가 업데이트 되는 앱',
       description: '예) JSP, PHP',
     },
+    // UNTRANSLATED
+    machine_to_machine: {
+      title: 'Machine to Machine',
+      subtitle: 'An app (usually a service) that directly talks to resources',
+      description: 'E.g., Backend service',
+    },
   },
   guide: {
     get_sample_file: '예제 찾기',

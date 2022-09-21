@@ -9,6 +9,7 @@ const application_details = {
   authorization_endpoint: 'Yetkilendirme bitiş noktası',
   authorization_endpoint_tip:
     'Kimlik doğrulama ve yetkilendirme gerçekleştirmek için bitiş noktası. OpenID Connect Authentication için kullanılır.',
+  application_id: 'Uygulama IDsi',
   application_secret: 'Uygulama Sırrı',
   redirect_uri: 'Yönlendirme URIı',
   redirect_uris: 'Yönlendirme URIları',

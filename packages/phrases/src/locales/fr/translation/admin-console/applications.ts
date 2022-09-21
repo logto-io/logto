@@ -29,6 +29,12 @@ const applications = {
       subtitle: 'Une application qui met à jour les pages par le seul serveur web.',
       description: 'Exemple: Next.js, PHP',
     },
+    // UNTRANSLATED
+    machine_to_machine: {
+      title: 'Machine to Machine',
+      subtitle: 'An app (usually a service) that directly talks to resources',
+      description: 'E.g., Backend service',
+    },
   },
   guide: {
     get_sample_file: 'Obtenir un exemple',
