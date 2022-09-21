@@ -81,7 +81,7 @@ const ResetPassword = ({ className, autoFocus }: Props) => {
         }}
       />
 
-      <Button onClick={async () => onSubmitHandler()}>{t('action.confirm')}</Button>
+      <Button title="action.confirm" onClick={async () => onSubmitHandler()} />
 
       <input hidden type="submit" />
     </form>

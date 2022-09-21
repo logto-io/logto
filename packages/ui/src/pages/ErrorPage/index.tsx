@@ -29,12 +29,11 @@ const ErrorPage = ({ title = 'description.not_found', message, rawMessage }: Pro
       </div>
       <Button
         className={styles.backButton}
+        title="action.back"
         onClick={() => {
           navigate(-1);
         }}
-      >
-        {t('action.back')}
-      </Button>
+      />
     </div>
   );
 };

@@ -1,41 +1,56 @@
+import { I18nKey } from '@logto/phrases-ui';
 import classNames from 'classnames';
-import { ReactNode } from 'react';
+import { HTMLProps } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import * as styles from './index.module.scss';
 
-export type Props = {
+export type ButtonType = 'primary' | 'secondary' | 'outline';
+
+type BaseProps = Omit<HTMLProps<HTMLButtonElement>, 'type' | 'size' | 'title'> & {
   htmlType?: 'button' | 'submit' | 'reset';
+  type?: ButtonType;
+  size?: 'small' | 'large';
   isDisabled?: boolean;
   className?: string;
-  children: ReactNode | Record<string, unknown>;
-  type?: 'primary' | 'secondary' | 'outline';
-  size?: 'small' | 'large';
   onClick?: React.MouseEventHandler;
+};
+
+type Props = BaseProps & {
+  title: I18nKey;
+  i18nProps?: Record<string, string>;
 };
 
 const Button = ({
   htmlType = 'button',
   type = 'primary',
   size = 'large',
-  isDisabled,
+  title,
+  i18nProps,
   className,
-  children,
+  isDisabled = false,
   onClick,
-}: Props) => (
-  <button
-    disabled={isDisabled}
-    className={classNames(
-      styles.button,
-      styles[type],
-      styles[size],
-      isDisabled && styles.disabled,
-      className
-    )}
-    type={htmlType}
-    onClick={onClick}
-  >
-    {children}
-  </button>
-);
+  ...rest
+}: Props) => {
+  const { t } = useTranslation();
+
+  return (
+    <button
+      disabled={isDisabled}
+      className={classNames(
+        styles.button,
+        styles[type],
+        styles[size],
+        isDisabled && styles.isDisabled,
+        className
+      )}
+      type={htmlType}
+      onClick={onClick}
+      {...rest}
+    >
+      {t(title, { ...i18nProps })}
+    </button>
+  );
+};
 
 export default Button;

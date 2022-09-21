@@ -119,7 +119,7 @@ const EmailPasswordless = ({ type, autoFocus, onSubmitValidation, children, clas
 
         {children && <div className={styles.childWrapper}>{children}</div>}
 
-        <Button onClick={async () => onSubmitHandler()}>{t('action.continue')}</Button>
+        <Button title="action.continue" onClick={async () => onSubmitHandler()} />
 
         <input hidden type="submit" />
       </form>
