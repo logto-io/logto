@@ -118,6 +118,12 @@ type ForgotPasswordEmailLogPayload = ArbitraryLogPayload & {
   userId?: string;
 };
 
+type ForgotPasswordResetLogPayload = ArbitraryLogPayload & {
+  userId?: string;
+  autoSignIn?: boolean;
+  autoSignInAt?: string;
+};
+
 export enum TokenType {
   AccessToken = 'AccessToken',
   RefreshToken = 'RefreshToken',
@@ -157,6 +163,7 @@ export type LogPayloads = {
   ForgotPasswordSms: ForgotPasswordSmsLogPayload;
   ForgotPasswordEmailSendPasscode: ForgotPasswordEmailSendPasscodeLogPayload;
   ForgotPasswordEmail: ForgotPasswordEmailLogPayload;
+  ForgotPasswordReset: ForgotPasswordResetLogPayload;
   CodeExchangeToken: ExchangeTokenLogPayload;
   RefreshTokenExchangeToken: ExchangeTokenLogPayload;
   RevokeToken: RevokeTokenLogPayload;

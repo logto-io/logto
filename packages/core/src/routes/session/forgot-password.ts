@@ -137,12 +137,16 @@ export default function forgotPasswordRoutes<T extends AnonymousRouter>(
         result?.login?.accountId && forgotPasswordVerificationResult.success,
         new RequestError({ code: 'session.forgot_password_session_not_found', status: 404 })
       );
+
       const {
         login: { accountId: id },
       } = result;
+      const {
+        forgotPassword: { expiresAt },
+      } = forgotPasswordVerificationResult.data;
 
       assertThat(
-        dayjs(forgotPasswordVerificationResult.data.forgotPassword.expiresAt).isAfter(dayjs()),
+        dayjs(expiresAt).isValid() && dayjs(expiresAt).isAfter(dayjs()),
         new RequestError({ code: 'session.forgot_password_verification_expired', status: 401 })
       );
 
@@ -154,8 +158,15 @@ export default function forgotPasswordRoutes<T extends AnonymousRouter>(
         new RequestError({ code: 'user.same_password', status: 400 })
       );
 
+      const type = 'ForgotPasswordReset';
+      ctx.log(type, { userId: id });
+
       await updateUserById(id, { passwordEncrypted, passwordEncryptionMethod });
+
+      // Auto sign-in after resetting password.
+      // This logic should be updated since enabling auto sign-in after updating password could be customized in AC.
       await updateLastSignInAt(id);
+      ctx.log(type, { autoSignIn: true, autoSignInAt: dayjs().toISOString() });
       await assignInteractionResults(ctx, provider, { login: { accountId: id } });
 
       return next();

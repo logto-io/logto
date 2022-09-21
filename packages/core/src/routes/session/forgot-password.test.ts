@@ -224,6 +224,19 @@ describe('session -> forgotPasswordRoutes', () => {
       expect(response).toHaveProperty('status', 404);
       expect(updateUserById).toBeCalledTimes(0);
     });
+    it('should throw when `expiresAt` is not a valid date string', async () => {
+      interactionDetails.mockResolvedValueOnce({
+        result: {
+          login: { accountId: 'id' },
+          forgotPassword: { expiresAt: 'invalid date string' },
+        },
+      });
+      const response = await sessionRequest
+        .post(`${forgotPasswordRoute}/reset`)
+        .send({ password: mockPasswordEncrypted });
+      expect(response).toHaveProperty('status', 401);
+      expect(updateUserById).toBeCalledTimes(0);
+    });
     it('should throw when verification expires', async () => {
       interactionDetails.mockResolvedValueOnce({
         result: {
