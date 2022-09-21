@@ -133,31 +133,6 @@ describe('sessionRoutes', () => {
       });
       expect(response.statusCode).toEqual(400);
     });
-
-    it('throw if non-admin user sign in to AC', async () => {
-      interactionDetails.mockResolvedValueOnce({
-        params: { client_id: adminConsoleApplicationId },
-      });
-      const response = await sessionRequest.post(signInRoute).send({
-        username: 'username',
-        password: 'password',
-      });
-
-      expect(response.statusCode).toEqual(403);
-      console.log(response);
-    });
-
-    it('should not throw if admin user sign in to AC', async () => {
-      interactionDetails.mockResolvedValueOnce({
-        params: { client_id: adminConsoleApplicationId },
-      });
-      const response = await sessionRequest.post(signInRoute).send({
-        username: 'admin',
-        password: 'password',
-      });
-
-      expect(response.statusCode).toEqual(200);
-    });
   });
 
   describe('POST /session/register/username-password', () => {

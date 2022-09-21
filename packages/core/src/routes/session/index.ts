@@ -1,12 +1,15 @@
 import path from 'path';
 
 import { LogtoErrorCode } from '@logto/phrases';
+import { UserRole } from '@logto/schemas';
+import { adminConsoleApplicationId } from '@logto/schemas/lib/seeds';
 import { conditional } from '@silverhand/essentials';
 import { Provider } from 'oidc-provider';
 import { object, string } from 'zod';
 
 import RequestError from '@/errors/RequestError';
 import { assignInteractionResults, saveUserFirstConsentedAppId } from '@/lib/session';
+import { findUserById } from '@/queries/user';
 import assertThat from '@/utils/assert-that';
 
 import { AnonymousRouter } from '../types';
@@ -46,6 +49,18 @@ export default function sessionRoutes<T extends AnonymousRouter>(router: T, prov
     assertThat(session, 'session.not_found');
 
     const { accountId } = session;
+
+    // Temp solution before migrating to RBAC.  Block non-admin user from consent to admin console
+
+    if (String(client_id) === adminConsoleApplicationId) {
+      const { roleNames } = await findUserById(accountId);
+
+      assertThat(
+        roleNames.includes(UserRole.Admin),
+        new RequestError({ code: 'auth.forbidden', status: 401 })
+      );
+    }
+
     const grant =
       conditional(grantId && (await provider.Grant.find(grantId))) ??
       new provider.Grant({ accountId, clientId: String(client_id) });
