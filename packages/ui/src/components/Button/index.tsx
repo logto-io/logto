@@ -18,7 +18,7 @@ type BaseProps = Omit<HTMLProps<HTMLButtonElement>, 'type' | 'size' | 'title'> &
 
 type Props = BaseProps & {
   title: I18nKey;
-  properties?: Record<string, string>;
+  i18nProps?: Record<string, string>;
 };
 
 const Button = ({
@@ -26,7 +26,7 @@ const Button = ({
   type = 'primary',
   size = 'large',
   title,
-  properties,
+  i18nProps,
   className,
   isDisabled = false,
   onClick,
@@ -48,7 +48,7 @@ const Button = ({
       onClick={onClick}
       {...rest}
     >
-      {t(title, { ...properties })}
+      {t(title, { ...i18nProps })}
     </button>
   );
 };

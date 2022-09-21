@@ -2,6 +2,7 @@ import { render, fireEvent } from '@testing-library/react';
 
 import { mockSocialConnectorData } from '@/__mocks__/logto';
 
+import Button from '.';
 import SocialLinkButton from './SocialLinkButton';
 
 describe('Button Component', () => {
@@ -9,6 +10,13 @@ describe('Button Component', () => {
 
   beforeEach(() => {
     onClick.mockClear();
+  });
+
+  it('render Default Button', () => {
+    const { queryByText, getByText } = render(<Button title="action.confirm" onClick={onClick} />);
+    expect(queryByText('action.confirm')).not.toBeNull();
+    fireEvent.click(getByText('action.confirm'));
+    expect(onClick).toBeCalled();
   });
 
   it('render SocialLinkButton', () => {
