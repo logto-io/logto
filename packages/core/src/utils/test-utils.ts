@@ -140,6 +140,12 @@ export function createRequester({
   if (authedRoutes) {
     const authRouter: AuthedRouter = new Router();
 
+    authRouter.use(async (ctx, next) => {
+      ctx.auth = { type: 'user', id: 'foo' };
+
+      return next();
+    });
+
     for (const route of Array.isArray(authedRoutes) ? authedRoutes : [authedRoutes]) {
       route(authRouter);
     }

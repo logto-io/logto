@@ -280,9 +280,16 @@ describe('adminUserRoutes', () => {
   });
 
   it('DELETE /users/:userId', async () => {
-    const userId = 'foo';
+    const userId = 'fooUser';
     const response = await userRequest.delete(`/users/${userId}`);
     expect(response.status).toEqual(204);
+  });
+
+  it('DELETE /users/:userId should throw if user is deleting self', async () => {
+    const userId = 'foo';
+    const response = await userRequest.delete(`/users/${userId}`);
+    expect(response.status).toEqual(400);
+    expect(deleteUserIdentity).not.toHaveBeenCalled();
   });
 
   it('DELETE /users/:userId should throw if user not found', async () => {
