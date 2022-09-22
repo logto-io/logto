@@ -6,6 +6,7 @@ import { mockPasswordEncrypted, mockUserWithPassword } from '@/__mocks__';
 import RequestError from '@/errors/RequestError';
 import { createRequester } from '@/utils/test-utils';
 
+import { forgotPasswordVerificationTimeout } from './consts';
 import forgotPasswordRoutes, { forgotPasswordRoute } from './forgot-password';
 
 const encryptUserPassword = jest.fn(async (password: string) => ({
@@ -91,6 +92,8 @@ describe('session -> forgotPasswordRoutes', () => {
 
   describe('POST /session/forgot-password/sms/verify-passcode', () => {
     it('assign result and redirect', async () => {
+      const fakeTime = new Date();
+      jest.useFakeTimers().setSystemTime(fakeTime);
       const response = await sessionRequest
         .post(`${forgotPasswordRoute}/sms/verify-passcode`)
         .send({ phone: '13000000000', code: '1234' });
@@ -102,12 +105,14 @@ describe('session -> forgotPasswordRoutes', () => {
         expect.objectContaining({
           login: { accountId: 'id' },
           forgotPassword: {
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-            expiresAt: expect.any(String),
+            expiresAt: dayjs(fakeTime)
+              .add(forgotPasswordVerificationTimeout, 'second')
+              .toISOString(),
           },
         }),
         expect.anything()
       );
+      jest.useRealTimers();
     });
     it('throw error if phone number does not exist', async () => {
       const response = await sessionRequest
@@ -140,6 +145,8 @@ describe('session -> forgotPasswordRoutes', () => {
 
   describe('POST /session/forgot-password/email/verify-passcode', () => {
     it('assign result and redirect', async () => {
+      const fakeTime = new Date();
+      jest.useFakeTimers().setSystemTime(fakeTime);
       const response = await sessionRequest
         .post(`${forgotPasswordRoute}/email/verify-passcode`)
         .send({ email: 'a@a.com', code: '1234' });
@@ -151,12 +158,14 @@ describe('session -> forgotPasswordRoutes', () => {
         expect.objectContaining({
           login: { accountId: 'id' },
           forgotPassword: {
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-            expiresAt: expect.any(String),
+            expiresAt: dayjs(fakeTime)
+              .add(forgotPasswordVerificationTimeout, 'second')
+              .toISOString(),
           },
         }),
         expect.anything()
       );
+      jest.useRealTimers();
     });
     it('throw error if email does not exist', async () => {
       const response = await sessionRequest
