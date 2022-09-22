@@ -102,12 +102,13 @@ export const getUndeployedMigrations = async (pool: DatabasePool) => {
 };
 
 const importMigration = async (file: string): Promise<MigrationScript> => {
-  // eslint-disable-next-line no-restricted-syntax
-  const module = (await import(
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  const module = await import(
     path.join(migrationFilesDirectory, file).replace('node_modules/', '')
-  )) as MigrationScript;
+  );
 
-  return module;
+  // eslint-disable-next-line no-restricted-syntax
+  return module.default as MigrationScript;
 };
 
 const runMigration = async (pool: DatabasePool, file: string) => {
