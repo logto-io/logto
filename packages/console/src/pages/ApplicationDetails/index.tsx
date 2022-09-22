@@ -1,4 +1,4 @@
-import { Application, SnakeCaseOidcConfig } from '@logto/schemas';
+import { Application, ApplicationType, SnakeCaseOidcConfig } from '@logto/schemas';
 import classNames from 'classnames';
 import { useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
@@ -144,13 +144,16 @@ const ApplicationDetails = () => {
               </div>
             </div>
             <div className={styles.operations}>
-              <Button
-                title="application_details.check_guide"
-                size="large"
-                onClick={() => {
-                  setIsReadmeOpen(true);
-                }}
-              />
+              {/* TODO: @Charles figure out a better way to check guide availability */}
+              {data.type !== ApplicationType.MachineToMachine && (
+                <Button
+                  title="application_details.check_guide"
+                  size="large"
+                  onClick={() => {
+                    setIsReadmeOpen(true);
+                  }}
+                />
+              )}
               <Drawer isOpen={isReadmeOpen} onClose={onCloseDrawer}>
                 <Guide isCompact app={data} onClose={onCloseDrawer} />
               </Drawer>

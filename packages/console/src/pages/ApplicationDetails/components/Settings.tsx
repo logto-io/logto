@@ -64,7 +64,12 @@ const Settings = ({ applicationType, oidcConfig, defaultData, isDeleted }: Props
           placeholder={t('application_details.description_placeholder')}
         />
       </FormField>
-      {applicationType === ApplicationType.Traditional && (
+      <FormField title="application_details.application_id" className={styles.textField}>
+        <CopyToClipboard className={styles.textField} value={defaultData.id} variant="border" />
+      </FormField>
+      {[ApplicationType.Traditional, ApplicationType.MachineToMachine].includes(
+        applicationType
+      ) && (
         <FormField title="application_details.application_secret" className={styles.textField}>
           <CopyToClipboard
             hasVisibilityToggle
@@ -74,99 +79,94 @@ const Settings = ({ applicationType, oidcConfig, defaultData, isDeleted }: Props
           />
         </FormField>
       )}
-      <FormField
-        title="application_details.authorization_endpoint"
-        className={styles.textField}
-        tooltip="application_details.authorization_endpoint_tip"
-      >
-        <CopyToClipboard
+      {applicationType !== ApplicationType.MachineToMachine && (
+        <FormField
+          isRequired
+          title="application_details.redirect_uris"
           className={styles.textField}
-          value={oidcConfig.authorization_endpoint}
-          variant="border"
-        />
-      </FormField>
-      <FormField
-        isRequired
-        title="application_details.redirect_uris"
-        className={styles.textField}
-        tooltip="application_details.redirect_uri_tip"
-      >
-        <Controller
-          name="oidcClientMetadata.redirectUris"
-          control={control}
-          defaultValue={[]}
-          rules={{
-            validate: createValidatorForRhf({
-              ...uriPatternRules,
-              required: t('application_details.redirect_uri_required'),
-            }),
-          }}
-          render={({ field: { onChange, value }, fieldState: { error } }) => (
-            <MultiTextInput
-              title="application_details.redirect_uris"
-              value={value}
-              error={convertRhfErrorMessage(error?.message)}
-              placeholder={
-                applicationType === ApplicationType.Native
-                  ? t('application_details.redirect_uri_placeholder_native')
-                  : t('application_details.redirect_uri_placeholder')
-              }
-              onChange={onChange}
-            />
-          )}
-        />
-      </FormField>
-      <FormField
-        title="application_details.post_sign_out_redirect_uris"
-        className={styles.textField}
-        tooltip="application_details.post_sign_out_redirect_uri_tip"
-      >
-        <Controller
-          name="oidcClientMetadata.postLogoutRedirectUris"
-          control={control}
-          defaultValue={[]}
-          rules={{
-            validate: createValidatorForRhf(uriPatternRules),
-          }}
-          render={({ field: { onChange, value }, fieldState: { error } }) => (
-            <MultiTextInput
-              title="application_details.post_sign_out_redirect_uris"
-              value={value}
-              error={convertRhfErrorMessage(error?.message)}
-              placeholder={t('application_details.post_sign_out_redirect_uri_placeholder')}
-              onChange={onChange}
-            />
-          )}
-        />
-      </FormField>
-      <FormField
-        title="application_details.cors_allowed_origins"
-        className={styles.textField}
-        tooltip="application_details.cors_allowed_origins_tip"
-      >
-        <Controller
-          name="customClientMetadata.corsAllowedOrigins"
-          control={control}
-          defaultValue={[]}
-          rules={{
-            validate: createValidatorForRhf({
-              pattern: {
-                verify: (value) => !value || uriOriginValidator(value),
-                message: t('errors.invalid_origin_format'),
-              },
-            }),
-          }}
-          render={({ field: { onChange, value }, fieldState: { error } }) => (
-            <MultiTextInput
-              title="application_details.cors_allowed_origins"
-              value={value}
-              error={convertRhfErrorMessage(error?.message)}
-              placeholder={t('application_details.cors_allowed_origins_placeholder')}
-              onChange={onChange}
-            />
-          )}
-        />
-      </FormField>
+          tooltip="application_details.redirect_uri_tip"
+        >
+          <Controller
+            name="oidcClientMetadata.redirectUris"
+            control={control}
+            defaultValue={[]}
+            rules={{
+              validate: createValidatorForRhf({
+                ...uriPatternRules,
+                required: t('application_details.redirect_uri_required'),
+              }),
+            }}
+            render={({ field: { onChange, value }, fieldState: { error } }) => (
+              <MultiTextInput
+                title="application_details.redirect_uris"
+                value={value}
+                error={convertRhfErrorMessage(error?.message)}
+                placeholder={
+                  applicationType === ApplicationType.Native
+                    ? t('application_details.redirect_uri_placeholder_native')
+                    : t('application_details.redirect_uri_placeholder')
+                }
+                onChange={onChange}
+              />
+            )}
+          />
+        </FormField>
+      )}
+      {applicationType !== ApplicationType.MachineToMachine && (
+        <FormField
+          title="application_details.post_sign_out_redirect_uris"
+          className={styles.textField}
+          tooltip="application_details.post_sign_out_redirect_uri_tip"
+        >
+          <Controller
+            name="oidcClientMetadata.postLogoutRedirectUris"
+            control={control}
+            defaultValue={[]}
+            rules={{
+              validate: createValidatorForRhf(uriPatternRules),
+            }}
+            render={({ field: { onChange, value }, fieldState: { error } }) => (
+              <MultiTextInput
+                title="application_details.post_sign_out_redirect_uris"
+                value={value}
+                error={convertRhfErrorMessage(error?.message)}
+                placeholder={t('application_details.post_sign_out_redirect_uri_placeholder')}
+                onChange={onChange}
+              />
+            )}
+          />
+        </FormField>
+      )}
+      {applicationType !== ApplicationType.MachineToMachine && (
+        <FormField
+          title="application_details.cors_allowed_origins"
+          className={styles.textField}
+          tooltip="application_details.cors_allowed_origins_tip"
+        >
+          <Controller
+            name="customClientMetadata.corsAllowedOrigins"
+            control={control}
+            defaultValue={[]}
+            rules={{
+              validate: createValidatorForRhf({
+                pattern: {
+                  verify: (value) => !value || uriOriginValidator(value),
+                  message: t('errors.invalid_origin_format'),
+                },
+              }),
+            }}
+            render={({ field: { onChange, value }, fieldState: { error } }) => (
+              <MultiTextInput
+                title="application_details.cors_allowed_origins"
+                value={value}
+                error={convertRhfErrorMessage(error?.message)}
+                placeholder={t('application_details.cors_allowed_origins_placeholder')}
+                onChange={onChange}
+              />
+            )}
+          />
+        </FormField>
+      )}
       <UnsavedChangesAlertModal hasUnsavedChanges={!isDeleted && isDirty} />
     </>
   );

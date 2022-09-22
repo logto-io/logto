@@ -12,9 +12,11 @@ import snakecaseKeys from 'snakecase-keys';
 import envSet from '@/env-set';
 import postgresAdapter from '@/oidc/adapter';
 import { isOriginAllowed, validateCustomClientMetadata } from '@/oidc/utils';
+import { findApplicationById } from '@/queries/application';
 import { findResourceByIndicator } from '@/queries/resource';
 import { findUserById } from '@/queries/user';
 import { routes } from '@/routes/consts';
+import assertThat from '@/utils/assert-that';
 import { addOidcEventListeners } from '@/utils/oidc-provider-event-listener';
 
 import { claimToUserKey, getUserClaims } from './scope';
@@ -48,6 +50,7 @@ export default async function initOidc(app: Koa): Promise<Provider> {
       userinfo: { enabled: true },
       revocation: { enabled: true },
       devInteractions: { enabled: false },
+      clientCredentials: { enabled: true },
       rpInitiatedLogout: {
         logoutSource: (ctx, form) => {
           // eslint-disable-next-line no-template-curly-in-string
@@ -157,17 +160,21 @@ export default async function initOidc(app: Koa): Promise<Provider> {
       Grant: 1_209_600 /* 14 days in seconds */,
     },
     extraTokenClaims: async (_ctx, token) => {
-      // AccessToken type is not exported by default, need to asset token is AccessToken
       if (token.kind === 'AccessToken') {
         const { accountId } = token;
         const { roleNames } = await findUserById(accountId);
 
-        // Add User Roles to the AccessToken claims. Should be removed once we have RBAC implemented.
-        // User Roles should be hidden and  determined by the AccessToken scope only.
         return snakecaseKeys({
           roleNames,
         });
       }
+
+      // `token.kind === 'ClientCredentials'`
+      const { clientId } = token;
+      assertThat(clientId, 'oidc.invalid_grant');
+      const { roleNames } = await findApplicationById(clientId);
+
+      return snakecaseKeys({ roleNames });
     },
   });
 

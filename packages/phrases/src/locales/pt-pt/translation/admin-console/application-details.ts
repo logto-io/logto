@@ -9,6 +9,7 @@ const application_details = {
   authorization_endpoint: 'Endpoint de autorização',
   authorization_endpoint_tip:
     'O endpoint para realizar autenticação e autorização. É usado para autenticação OpenID Connect.',
+  application_id: 'ID da aplicação',
   application_secret: 'Segredo da aplicação',
   redirect_uri: 'URI de redirecionamento',
   redirect_uris: 'URIs de redirecionamento',

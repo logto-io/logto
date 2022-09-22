@@ -30,6 +30,17 @@ const AdvancedSettings = ({ oidcConfig, defaultData, isDeleted }: Props) => {
 
   return (
     <>
+      <FormField
+        title="application_details.authorization_endpoint"
+        className={styles.textField}
+        tooltip="application_details.authorization_endpoint_tip"
+      >
+        <CopyToClipboard
+          className={styles.textField}
+          value={oidcConfig.authorization_endpoint}
+          variant="border"
+        />
+      </FormField>
       <FormField title="application_details.token_endpoint">
         <CopyToClipboard
           className={styles.textField}

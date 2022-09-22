@@ -1,8 +1,9 @@
 import { Application } from '@logto/schemas';
 import { MDXProvider } from '@mdx-js/react';
+import { Optional } from '@silverhand/essentials';
 import i18next from 'i18next';
 import { MDXProps } from 'mdx/types';
-import { cloneElement, lazy, LazyExoticComponent, Suspense, useState } from 'react';
+import { cloneElement, lazy, LazyExoticComponent, Suspense, useEffect, useState } from 'react';
 
 import CodeEditor from '@/components/CodeEditor';
 import DetailsSummary from '@/mdx-components/DetailsSummary';
@@ -47,8 +48,19 @@ const Guides: Record<string, LazyExoticComponent<(props: MDXProps) => JSX.Elemen
 const Guide = ({ app, isCompact, onClose }: Props) => {
   const { id: appId, secret: appSecret, name: appName, type: appType, oidcClientMetadata } = app;
   const sdks = applicationTypeAndSdkTypeMappings[appType];
-  const [selectedSdk, setSelectedSdk] = useState<SupportedSdk>(sdks[0]);
+  const [selectedSdk, setSelectedSdk] = useState<Optional<SupportedSdk>>(sdks[0]);
   const [activeStepIndex, setActiveStepIndex] = useState(-1);
+
+  // Directly close guide if no SDK available
+  useEffect(() => {
+    if (!selectedSdk) {
+      onClose();
+    }
+  }, [onClose, selectedSdk]);
+
+  if (!selectedSdk) {
+    return null;
+  }
 
   const locale = i18next.language;
   const guideI18nKey = `${selectedSdk}_${locale}`.toLowerCase();

@@ -28,6 +28,11 @@ const applications = {
       subtitle: 'An app that renders and updates pages by the web server alone',
       description: 'E.g., Next.js, PHP',
     },
+    machine_to_machine: {
+      title: 'Machine to Machine',
+      subtitle: 'An app (usually a service) that directly talks to resources',
+      description: 'E.g., Backend service',
+    },
   },
   guide: {
     get_sample_file: 'Get Sample',

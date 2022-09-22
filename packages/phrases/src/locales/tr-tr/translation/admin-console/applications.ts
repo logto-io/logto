@@ -29,6 +29,12 @@ const applications = {
       subtitle: 'Sayfaları yalnızca web sunucusu tarafından işleyen ve güncelleyen bir uygulama',
       description: 'Örneğin, JSP, PHP',
     },
+    // UNTRANSLATED
+    machine_to_machine: {
+      title: 'Machine to Machine',
+      subtitle: 'An app (usually a service) that directly talks to resources',
+      description: 'E.g., Backend service',
+    },
   },
   guide: {
     get_sample_file: 'Örnek Gör',

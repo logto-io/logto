@@ -1,4 +1,4 @@
-import { ApplicationType, CreateApplication, GrantType, OidcClientMetadata } from '@logto/schemas';
+import { ApplicationType, CreateApplication, OidcClientMetadata } from '@logto/schemas';
 import { adminConsoleApplicationId, demoAppApplicationId } from '@logto/schemas/lib/seeds';
 import dayjs from 'dayjs';
 import { AdapterFactory, AllClientMetadata } from 'oidc-provider';
@@ -16,7 +16,7 @@ import {
 } from '@/queries/oidc-model-instance';
 import { appendPath } from '@/utils/url';
 
-import { getApplicationTypeString } from './utils';
+import { getConstantClientMetadata } from './utils';
 
 const buildAdminConsoleClientMetadata = (): AllClientMetadata => {
   const { localhostUrl, adminConsoleUrl } = envSet.values;
@@ -25,11 +25,9 @@ const buildAdminConsoleClientMetadata = (): AllClientMetadata => {
   ];
 
   return {
+    ...getConstantClientMetadata(ApplicationType.SPA),
     client_id: adminConsoleApplicationId,
     client_name: 'Admin Console',
-    application_type: getApplicationTypeString(ApplicationType.SPA),
-    grant_types: Object.values(GrantType),
-    token_endpoint_auth_method: 'none',
     redirect_uris: urls.map((url) => appendPath(url, '/callback').toString()),
     post_logout_redirect_uris: urls,
   };
@@ -68,10 +66,7 @@ export default function postgresAdapter(modelName: string): ReturnType<AdapterFa
       client_id,
       client_secret,
       client_name,
-      application_type: getApplicationTypeString(type),
-      grant_types: Object.values(GrantType),
-      token_endpoint_auth_method:
-        type === ApplicationType.Traditional ? 'client_secret_basic' : 'none',
+      ...getConstantClientMetadata(type),
       ...snakecaseKeys(oidcClientMetadata),
       ...(client_id === demoAppApplicationId &&
         snakecaseKeys(buildDemoAppUris(oidcClientMetadata))),

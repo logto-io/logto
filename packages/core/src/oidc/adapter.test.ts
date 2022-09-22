@@ -12,7 +12,7 @@ import {
 } from '@/queries/oidc-model-instance';
 
 import postgresAdapter from './adapter';
-import { getApplicationTypeString } from './utils';
+import { getConstantClientMetadata } from './utils';
 
 jest.mock('@/queries/application', () => ({
   findApplicationById: jest.fn(async (): Promise<Application> => mockApplication),
@@ -69,9 +69,7 @@ describe('postgres Adapter', () => {
       client_id,
       client_name,
       client_secret,
-      application_type: getApplicationTypeString(type),
-      grant_types: ['authorization_code', 'refresh_token'],
-      token_endpoint_auth_method: 'none',
+      ...getConstantClientMetadata(type),
       ...snakecaseKeys(oidcClientMetadata),
       ...customClientMetadata,
     });

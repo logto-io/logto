@@ -9,6 +9,7 @@ const application_details = {
   authorization_endpoint: 'Authorization endpoint',
   authorization_endpoint_tip:
     "The endpoint to perform authentication and authorization. It's used for OpenID Connect Authentication.",
+  application_id: 'App ID',
   application_secret: 'App Secret',
   redirect_uri: 'Redirect URI',
   redirect_uris: 'Redirect URIs',
@@ -28,7 +29,7 @@ const application_details = {
   add_another: 'Add Another',
   id_token_expiration: 'ID Token expiration',
   refresh_token_expiration: 'Refresh Token expiration',
-  token_endpoint: 'Token endpoint',
+  token_endpoint: 'Token Endpoint',
   user_info_endpoint: 'Userinfo endpoint',
   delete_description:
     'This action cannot be undone. It will permanently delete the application. Please enter the application name <span>{{name}}</span> to confirm.',
