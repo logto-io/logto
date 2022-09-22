@@ -18,10 +18,12 @@ describe('koaAuth middleware', () => {
 
   const ctx: WithAuthContext<Context & IRouterParamContext> = {
     ...baseCtx,
-    auth: '',
+    auth: {
+      type: 'user',
+      id: '',
+    },
   };
 
-  const unauthorizedError = new RequestError({ code: 'auth.unauthorized', status: 401 });
   const jwtSubMissingError = new RequestError({ code: 'auth.jwt_sub_missing', status: 401 });
   const authHeaderMissingError = new RequestError({
     code: 'auth.authorization_header_missing',
@@ -39,7 +41,10 @@ describe('koaAuth middleware', () => {
   const next = jest.fn();
 
   beforeEach(() => {
-    ctx.auth = '';
+    ctx.auth = {
+      type: 'user',
+      id: '',
+    };
     ctx.request = baseCtx.request;
     jest.resetModules();
   });
@@ -50,7 +55,7 @@ describe('koaAuth middleware', () => {
       .mockReturnValue({ ...envSet.values, developmentUserId: 'foo' });
 
     await koaAuth()(ctx, next);
-    expect(ctx.auth).toEqual('foo');
+    expect(ctx.auth).toEqual({ type: 'user', id: 'foo' });
 
     spy.mockRestore();
   });
@@ -65,7 +70,7 @@ describe('koaAuth middleware', () => {
     };
 
     await koaAuth()(mockCtx, next);
-    expect(mockCtx.auth).toEqual('foo');
+    expect(mockCtx.auth).toEqual({ type: 'user', id: 'foo' });
   });
 
   it('should read DEVELOPMENT_USER_ID from env variable first if is in production and integration test', async () => {
@@ -77,7 +82,7 @@ describe('koaAuth middleware', () => {
     });
 
     await koaAuth()(ctx, next);
-    expect(ctx.auth).toEqual('foo');
+    expect(ctx.auth).toEqual({ type: 'user', id: 'foo' });
 
     spy.mockRestore();
   });
@@ -98,7 +103,7 @@ describe('koaAuth middleware', () => {
     };
 
     await koaAuth()(mockCtx, next);
-    expect(mockCtx.auth).toEqual('foo');
+    expect(mockCtx.auth).toEqual({ type: 'user', id: 'foo' });
 
     spy.mockRestore();
   });
@@ -111,7 +116,7 @@ describe('koaAuth middleware', () => {
       },
     };
     await koaAuth()(ctx, next);
-    expect(ctx.auth).toEqual('fooUser');
+    expect(ctx.auth).toEqual({ type: 'user', id: 'fooUser' });
   });
 
   it('expect to throw if authorization header is missing', async () => {
@@ -141,6 +146,21 @@ describe('koaAuth middleware', () => {
     };
 
     await expect(koaAuth()(ctx, next)).rejects.toMatchError(jwtSubMissingError);
+  });
+
+  it('expect to have `client` type per jwt verify result', async () => {
+    const mockJwtVerify = jwtVerify as jest.Mock;
+    mockJwtVerify.mockImplementationOnce(() => ({ payload: { sub: 'bar', client_id: 'bar' } }));
+
+    ctx.request = {
+      ...ctx.request,
+      headers: {
+        authorization: 'Bearer access_token',
+      },
+    };
+
+    await koaAuth()(ctx, next);
+    expect(ctx.auth).toEqual({ type: 'app', id: 'bar' });
   });
 
   it('expect to throw if jwt role_names is missing', async () => {

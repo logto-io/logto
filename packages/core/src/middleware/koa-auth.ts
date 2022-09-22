@@ -11,9 +11,14 @@ import envSet from '@/env-set';
 import RequestError from '@/errors/RequestError';
 import assertThat from '@/utils/assert-that';
 
+export type Auth = {
+  type: 'user' | 'app';
+  id: string;
+};
+
 export type WithAuthContext<ContextT extends IRouterParamContext = IRouterParamContext> =
   ContextT & {
-    auth: string;
+    auth: Auth;
   };
 
 const bearerTokenIdentifier = 'Bearer';
@@ -36,6 +41,7 @@ const extractBearerTokenFromHeaders = ({ authorization }: IncomingHttpHeaders) =
 
 type TokenInfo = {
   sub: string;
+  clientId: unknown;
   roleNames?: string[];
 };
 
@@ -47,13 +53,13 @@ export const verifyBearerTokenFromRequest = async (
   const userId = request.headers['development-user-id']?.toString() ?? developmentUserId;
 
   if ((!isProduction || isIntegrationTest) && userId) {
-    return { sub: userId, roleNames: [UserRole.Admin] };
+    return { sub: userId, clientId: undefined, roleNames: [UserRole.Admin] };
   }
 
   try {
     const { localJWKSet, issuer } = oidc;
     const {
-      payload: { sub, role_names: roleNames },
+      payload: { sub, client_id: clientId, role_names: roleNames },
     } = await jwtVerify(extractBearerTokenFromHeaders(request.headers), localJWKSet, {
       issuer,
       audience: resourceIndicator,
@@ -61,7 +67,7 @@ export const verifyBearerTokenFromRequest = async (
 
     assertThat(sub, new RequestError({ code: 'auth.jwt_sub_missing', status: 401 }));
 
-    return { sub, roleNames: conditional(Array.isArray(roleNames) && roleNames) };
+    return { sub, clientId, roleNames: conditional(Array.isArray(roleNames) && roleNames) };
   } catch (error: unknown) {
     if (error instanceof RequestError) {
       throw error;
@@ -75,7 +81,7 @@ export default function koaAuth<StateT, ContextT extends IRouterParamContext, Re
   forRole?: UserRole
 ): MiddlewareType<StateT, WithAuthContext<ContextT>, ResponseBodyT> {
   return async (ctx, next) => {
-    const { sub, roleNames } = await verifyBearerTokenFromRequest(ctx.request);
+    const { sub, clientId, roleNames } = await verifyBearerTokenFromRequest(ctx.request);
 
     if (forRole) {
       assertThat(
@@ -84,7 +90,10 @@ export default function koaAuth<StateT, ContextT extends IRouterParamContext, Re
       );
     }
 
-    ctx.auth = sub;
+    ctx.auth = {
+      type: sub === clientId ? 'app' : 'user',
+      id: sub,
+    };
 
     return next();
   };
