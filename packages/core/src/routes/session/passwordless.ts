@@ -163,8 +163,7 @@ export default function passwordlessRoutes<T extends AnonymousRouter>(
       const id = await generateUserId();
       ctx.log(type, { userId: id });
 
-      await insertUser({ id, primaryPhone: phone });
-      await updateLastSignInAt(id);
+      await insertUser({ id, primaryPhone: phone, lastSignInAt: Date.now() });
       await assignInteractionResults(ctx, provider, { login: { accountId: id } });
 
       return next();
@@ -212,8 +211,7 @@ export default function passwordlessRoutes<T extends AnonymousRouter>(
       const id = await generateUserId();
       ctx.log(type, { userId: id });
 
-      await insertUser({ id, primaryEmail: email });
-      await updateLastSignInAt(id);
+      await insertUser({ id, primaryEmail: email, lastSignInAt: Date.now() });
       await assignInteractionResults(ctx, provider, { login: { accountId: id } });
 
       return next();

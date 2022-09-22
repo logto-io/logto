@@ -94,8 +94,8 @@ export default function usernamePasswordRoutes<T extends AnonymousRouter>(
         passwordEncrypted,
         passwordEncryptionMethod,
         roleNames,
+        lastSignInAt: Date.now(),
       });
-      await updateLastSignInAt(id);
       await assignInteractionResults(ctx, provider, { login: { accountId: id } });
 
       return next();
