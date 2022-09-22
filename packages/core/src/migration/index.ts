@@ -109,7 +109,9 @@ const runMigration = async (pool: DatabasePool, file: string) => {
   const { up } = await importMigration(file);
 
   try {
-    await up(pool);
+    await pool.transaction(async (connect) => {
+      await up(connect);
+    });
   } catch (error: unknown) {
     if (error instanceof Error) {
       console.log(`${chalk.red('[migration]')} run ${file} failed: ${error.message}.`);

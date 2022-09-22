@@ -1,4 +1,4 @@
-import { DatabasePool } from 'slonik';
+import { DatabaseTransactionConnection } from 'slonik';
 import { z } from 'zod';
 
 export const databaseVersionGuard = z.object({
@@ -9,6 +9,6 @@ export const databaseVersionGuard = z.object({
 export type DatabaseVersion = z.infer<typeof databaseVersionGuard>;
 
 export type MigrationScript = {
-  up: (pool: DatabasePool) => Promise<void>;
-  down: (pool: DatabasePool) => Promise<void>;
+  up: (connection: DatabaseTransactionConnection) => Promise<void>;
+  down: (connection: DatabaseTransactionConnection) => Promise<void>;
 };
