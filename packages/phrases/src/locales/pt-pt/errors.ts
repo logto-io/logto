@@ -41,6 +41,7 @@ const errors = {
     identity_exists: 'A conta social foi registada.',
     invalid_role_names: '({{roleNames}}) não são válidos',
     cannot_delete_self: 'Não se pode remover a si mesmo.',
+    same_password: 'Your new password can not be the same as current password.', // UNTRANSLATED
   },
   password: {
     unsupported_encryption_method: 'O método de enncriptação {{name}} não é suportado.',
@@ -56,6 +57,10 @@ const errors = {
     connector_id_mismatch: 'O connectorId não corresponde ao registado na sessão.',
     connector_session_not_found:
       'Sessão do conector não encontrada. Por favor, volte e faça login novamente.',
+    forgot_password_session_not_found:
+      'Forgot password session not found. Please go back and verify.', // UNTRANSLATED
+    forgot_password_verification_expired:
+      'Forgot password verification has expired. Please go back and verify again.', // UNTRANSLATED
     unauthorized: 'Faça login primeiro.',
     unsupported_prompt_name: 'Nome de prompt não suportado.',
   },

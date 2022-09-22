@@ -41,6 +41,7 @@ const errors = {
     identity_exists: '该社交帐号已被注册',
     invalid_role_names: '角色名称（{{roleNames}}）无效',
     cannot_delete_self: '你无法删除自己',
+    same_password: '新设置的密码不可与当前密码相同',
   },
   password: {
     unsupported_encryption_method: '不支持的加密方法 {{name}}',
@@ -54,6 +55,8 @@ const errors = {
     insufficient_info: '登录信息缺失，请检查你的输入。',
     connector_id_mismatch: '传入的连接器 ID 与 session 中保存的记录不一致',
     connector_session_not_found: '无法找到连接器登录信息，请尝试重新登录。',
+    forgot_password_session_not_found: '无法找到忘记密码验证信息，请尝试重新验证。',
+    forgot_password_verification_expired: '忘记密码验证已过期，请尝试重新验证。',
     unauthorized: '请先登录',
     unsupported_prompt_name: '不支持的 prompt name',
   },

@@ -1,18 +1,22 @@
-import { emailRegEx, phoneRegEx } from '@logto/core-kit';
+import { emailRegEx, passwordRegEx, phoneRegEx } from '@logto/core-kit';
 import { PasscodeType } from '@logto/schemas';
 import dayjs from 'dayjs';
+import { argon2Verify } from 'hash-wasm';
 import { Provider } from 'oidc-provider';
 import { z } from 'zod';
 
 import RequestError from '@/errors/RequestError';
 import { createPasscode, sendPasscode, verifyPasscode } from '@/lib/passcode';
 import { assignInteractionResults } from '@/lib/session';
+import { encryptUserPassword } from '@/lib/user';
 import koaGuard from '@/middleware/koa-guard';
 import {
   findUserByEmail,
+  findUserById,
   findUserByPhone,
   hasUserWithEmail,
   hasUserWithPhone,
+  updateUserById,
 } from '@/queries/user';
 import assertThat from '@/utils/assert-that';
 
@@ -21,6 +25,10 @@ import { forgotPasswordVerificationTimeout } from './consts';
 import { getRoutePrefix } from './utils';
 
 export const forgotPasswordRoute = getRoutePrefix('forgot-password');
+
+const forgotPasswordVerificationGuard = z.object({
+  forgotPassword: z.object({ expiresAt: z.string() }),
+});
 
 export default function forgotPasswordRoutes<T extends AnonymousRouter>(
   router: T,
@@ -65,7 +73,7 @@ export default function forgotPasswordRoutes<T extends AnonymousRouter>(
       await assignInteractionResults(ctx, provider, {
         login: { accountId: id },
         forgotPassword: {
-          expiresAt: dayjs().add(forgotPasswordVerificationTimeout, 'second'),
+          expiresAt: dayjs().add(forgotPasswordVerificationTimeout, 'second').toISOString(),
         },
       });
 
@@ -110,9 +118,54 @@ export default function forgotPasswordRoutes<T extends AnonymousRouter>(
       await assignInteractionResults(ctx, provider, {
         login: { accountId: id },
         forgotPassword: {
-          expiresAt: dayjs().add(forgotPasswordVerificationTimeout, 'second'),
+          expiresAt: dayjs().add(forgotPasswordVerificationTimeout, 'second').toISOString(),
         },
       });
+
+      return next();
+    }
+  );
+
+  router.post(
+    `${forgotPasswordRoute}/reset`,
+    koaGuard({ body: z.object({ password: z.string().regex(passwordRegEx) }) }),
+    async (ctx, next) => {
+      const { result } = await provider.interactionDetails(ctx.req, ctx.res);
+      const { password } = ctx.guard.body;
+      const forgotPasswordVerificationResult = forgotPasswordVerificationGuard.safeParse(result);
+
+      assertThat(
+        result?.login?.accountId && forgotPasswordVerificationResult.success,
+        new RequestError({ code: 'session.forgot_password_session_not_found', status: 404 })
+      );
+
+      const {
+        login: { accountId: id },
+      } = result;
+      const {
+        forgotPassword: { expiresAt },
+      } = forgotPasswordVerificationResult.data;
+
+      assertThat(
+        dayjs(expiresAt).isValid() && dayjs(expiresAt).isAfter(dayjs()),
+        new RequestError({ code: 'session.forgot_password_verification_expired', status: 401 })
+      );
+
+      const { passwordEncrypted: oldPasswordEncrypted } = await findUserById(id);
+
+      assertThat(
+        !oldPasswordEncrypted ||
+          (oldPasswordEncrypted && !(await argon2Verify({ password, hash: oldPasswordEncrypted }))),
+        new RequestError({ code: 'user.same_password', status: 400 })
+      );
+
+      const { passwordEncrypted, passwordEncryptionMethod } = await encryptUserPassword(password);
+
+      const type = 'ForgotPasswordReset';
+      ctx.log(type, { userId: id });
+
+      await updateUserById(id, { passwordEncrypted, passwordEncryptionMethod });
+      ctx.status = 204;
 
       return next();
     }

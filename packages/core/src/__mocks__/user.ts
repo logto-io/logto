@@ -1,4 +1,4 @@
-import { User, userInfoSelectFields } from '@logto/schemas';
+import { userInfoSelectFields, User, UsersPasswordEncryptionMethod } from '@logto/schemas';
 import pick from 'lodash.pick';
 
 export const mockUser: User = {
@@ -20,6 +20,25 @@ export const mockUser: User = {
 };
 
 export const mockUserResponse = pick(mockUser, ...userInfoSelectFields);
+
+export const mockPasswordEncrypted = 'a1b2c3';
+export const mockUserWithPassword: User = {
+  id: 'id',
+  username: 'username',
+  primaryEmail: 'foo@logto.io',
+  primaryPhone: '111111',
+  roleNames: ['admin'],
+  passwordEncrypted: mockPasswordEncrypted,
+  passwordEncryptionMethod: UsersPasswordEncryptionMethod.Argon2i,
+  name: null,
+  avatar: null,
+  identities: {
+    connector1: { userId: 'connector1', details: {} },
+  },
+  customData: {},
+  applicationId: 'bar',
+  lastSignInAt: 1_650_969_465_789,
+};
 
 export const mockUserList: User[] = [
   {
