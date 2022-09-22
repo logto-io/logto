@@ -28,6 +28,7 @@ const translation = {
     got_it: '知道了',
     sign_in_with: '通过 {{name}} 登录',
     forgot_password: '忘记密码？',
+    switch_to: '切换到{{method}}',
   },
   description: {
     email: '邮箱',

@@ -28,6 +28,7 @@ const translation = {
     got_it: 'Entendi',
     sign_in_with: 'Entrar com {{name}}',
     forgot_password: 'Esqueceu a password?',
+    switch_to: 'Mudar para {{method}}',
   },
   description: {
     email: 'email',

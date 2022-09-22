@@ -6,14 +6,17 @@ import { useNavigate } from 'react-router-dom';
 import { getSendPasscodeApi } from '@/apis/utils';
 import Button from '@/components/Button';
 import { PhoneInput } from '@/components/Input';
+import TermsOfUse from '@/containers/TermsOfUse';
 import useApi, { ErrorHandlers } from '@/hooks/use-api';
 import useForm from '@/hooks/use-form';
 import { PageContext } from '@/hooks/use-page-context';
 import usePhoneNumber from '@/hooks/use-phone-number';
+import useTerms from '@/hooks/use-terms';
 import { UserFlow, SearchParameters } from '@/types';
 import { getSearchParameters } from '@/utils';
 
 import PasswordlessConfirmModal from './PasswordlessConfirmModal';
+import PasswordlessSwitch from './PasswordlessSwitch';
 import * as styles from './index.module.scss';
 
 type Props = {
@@ -21,8 +24,8 @@ type Props = {
   className?: string;
   // eslint-disable-next-line react/boolean-prop-naming
   autoFocus?: boolean;
-  onSubmitValidation?: () => Promise<boolean>;
-  children?: React.ReactNode;
+  hasTerms?: boolean;
+  hasSwitch?: boolean;
 };
 
 type FieldState = {
@@ -31,9 +34,17 @@ type FieldState = {
 
 const defaultState: FieldState = { phone: '' };
 
-const PhonePasswordless = ({ type, autoFocus, onSubmitValidation, children, className }: Props) => {
+const PhonePasswordless = ({
+  type,
+  autoFocus,
+  hasTerms = true,
+  hasSwitch = false,
+  className,
+}: Props) => {
   const { setToast } = useContext(PageContext);
   const { t } = useTranslation();
+
+  const { termsValidation } = useTerms();
   const { countryList, phoneNumber, setPhoneNumber, isValidPhoneNumber } = usePhoneNumber();
   const navigate = useNavigate();
   const { fieldValue, setFieldValue, setFieldErrors, validateForm, register } =
@@ -85,13 +96,13 @@ const PhonePasswordless = ({ type, autoFocus, onSubmitValidation, children, clas
         return;
       }
 
-      if (onSubmitValidation && !(await onSubmitValidation())) {
+      if (hasTerms && !(await termsValidation())) {
         return;
       }
 
       void asyncSendPasscode(fieldValue.phone);
     },
-    [validateForm, onSubmitValidation, asyncSendPasscode, fieldValue.phone]
+    [validateForm, hasTerms, termsValidation, asyncSendPasscode, fieldValue.phone]
   );
 
   const onModalCloseHandler = useCallback(() => {
@@ -118,20 +129,24 @@ const PhonePasswordless = ({ type, autoFocus, onSubmitValidation, children, clas
   return (
     <>
       <form className={classNames(styles.form, className)} onSubmit={onSubmitHandler}>
-        <PhoneInput
-          name="phone"
-          placeholder={t('input.phone_number')}
-          className={styles.inputField}
-          countryCallingCode={phoneNumber.countryCallingCode}
-          nationalNumber={phoneNumber.nationalNumber}
-          autoFocus={autoFocus}
-          countryList={countryList}
-          {...register('phone', phoneNumberValidation)}
-          onChange={(data) => {
-            setPhoneNumber((previous) => ({ ...previous, ...data }));
-          }}
-        />
-        {children && <div className={styles.childWrapper}>{children}</div>}
+        <div className={styles.formFields}>
+          <PhoneInput
+            name="phone"
+            placeholder={t('input.phone_number')}
+            className={styles.inputField}
+            countryCallingCode={phoneNumber.countryCallingCode}
+            nationalNumber={phoneNumber.nationalNumber}
+            autoFocus={autoFocus}
+            countryList={countryList}
+            {...register('phone', phoneNumberValidation)}
+            onChange={(data) => {
+              setPhoneNumber((previous) => ({ ...previous, ...data }));
+            }}
+          />
+          {hasSwitch && <PasswordlessSwitch target="email" className={styles.switch} />}
+        </div>
+
+        {hasTerms && <TermsOfUse className={styles.terms} />}
 
         <Button title="action.continue" onClick={async () => onSubmitHandler()} />
 

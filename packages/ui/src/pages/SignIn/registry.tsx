@@ -6,7 +6,6 @@ import CreateAccount from '@/containers/CreateAccount';
 import { EmailPasswordless, PhonePasswordless } from '@/containers/Passwordless';
 import SignInMethodsLink from '@/containers/SignInMethodsLink';
 import { PrimarySocialSignIn, SecondarySocialSignIn } from '@/containers/SocialSignIn';
-import TermsOfUse from '@/containers/TermsOfUse';
 import UsernameSignIn from '@/containers/UsernameSignIn';
 import { SignInMethod, LocalSignInMethod } from '@/types';
 
@@ -44,10 +43,7 @@ export const PrimarySection = ({
       );
     case 'social':
       return socialConnectors.length > 0 ? (
-        <>
-          <TermsOfUse className={styles.terms} />
-          <PrimarySocialSignIn className={styles.primarySocial} />
-        </>
+        <PrimarySocialSignIn className={styles.primarySocial} />
       ) : null;
     default:
       return null;
