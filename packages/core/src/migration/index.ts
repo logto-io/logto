@@ -2,7 +2,13 @@ import { existsSync } from 'fs';
 import { readdir, readFile } from 'fs/promises';
 import path from 'path';
 
-import { LogtoConfig, LogtoConfigs } from '@logto/schemas';
+import {
+  LogtoConfig,
+  LogtoConfigs,
+  DatabaseVersion,
+  databaseVersionGuard,
+  MigrationScript,
+} from '@logto/schemas';
 import { conditionalString } from '@silverhand/essentials';
 import chalk from 'chalk';
 import { DatabasePool, sql } from 'slonik';
@@ -15,7 +21,6 @@ import {
   logtoConfigsTableFilePath,
   migrationFilesDirectory,
 } from './constants';
-import { DatabaseVersion, databaseVersionGuard, MigrationScript } from './types';
 import { compareVersion, getVersionFromFileName, migrationFileNameRegex } from './utils';
 
 const { table, fields } = convertToIdentifiers(LogtoConfigs);
