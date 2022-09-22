@@ -193,7 +193,7 @@ describe('session -> forgotPasswordRoutes', () => {
           passwordEncryptionMethod: 'Argon2i',
         })
       );
-      expect(response.statusCode).toEqual(200);
+      expect(response.statusCode).toEqual(204);
     });
     it('should throw when `accountId` is missing', async () => {
       interactionDetails.mockResolvedValueOnce({
@@ -282,7 +282,7 @@ describe('session -> forgotPasswordRoutes', () => {
           passwordEncryptionMethod: 'Argon2i',
         })
       );
-      expect(response.statusCode).toEqual(200);
+      expect(response.statusCode).toEqual(204);
     });
   });
 });

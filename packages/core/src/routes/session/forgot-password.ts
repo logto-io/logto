@@ -165,7 +165,7 @@ export default function forgotPasswordRoutes<T extends AnonymousRouter>(
       ctx.log(type, { userId: id });
 
       await updateUserById(id, { passwordEncrypted, passwordEncryptionMethod });
-      ctx.status = 200;
+      ctx.status = 204;
 
       return next();
     }
