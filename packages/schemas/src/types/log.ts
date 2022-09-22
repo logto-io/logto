@@ -120,8 +120,6 @@ type ForgotPasswordEmailLogPayload = ArbitraryLogPayload & {
 
 type ForgotPasswordResetLogPayload = ArbitraryLogPayload & {
   userId?: string;
-  autoSignIn?: boolean;
-  autoSignInAt?: string;
 };
 
 export enum TokenType {

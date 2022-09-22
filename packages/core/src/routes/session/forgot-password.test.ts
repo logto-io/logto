@@ -14,11 +14,9 @@ const encryptUserPassword = jest.fn(async (password: string) => ({
 }));
 const findUserById = jest.fn(async (): Promise<User> => mockUserWithPassword);
 const updateUserById = jest.fn(async (..._args: unknown[]) => ({ id: 'id' }));
-const updateLastSignInAt = jest.fn(async (..._args: unknown[]) => ({}));
 
 jest.mock('@/lib/user', () => ({
   ...jest.requireActual('@/lib/user'),
-  updateLastSignInAt: async (...args: unknown[]) => updateLastSignInAt(...args),
   encryptUserPassword: async (password: string) => encryptUserPassword(password),
 }));
 
@@ -188,7 +186,6 @@ describe('session -> forgotPasswordRoutes', () => {
       const response = await sessionRequest
         .post(`${forgotPasswordRoute}/reset`)
         .send({ password: mockPasswordEncrypted });
-      expect(response.statusCode).toEqual(200);
       expect(updateUserById).toBeCalledWith(
         'id',
         expect.objectContaining({
@@ -196,13 +193,7 @@ describe('session -> forgotPasswordRoutes', () => {
           passwordEncryptionMethod: 'Argon2i',
         })
       );
-      expect(updateLastSignInAt).toBeCalledWith('id');
-      expect(interactionResult).toHaveBeenCalledWith(
-        expect.anything(),
-        expect.anything(),
-        expect.objectContaining({ login: { accountId: 'id' } }),
-        expect.anything()
-      );
+      expect(response.statusCode).toEqual(204);
     });
     it('should throw when `accountId` is missing', async () => {
       interactionDetails.mockResolvedValueOnce({
@@ -284,7 +275,6 @@ describe('session -> forgotPasswordRoutes', () => {
       const response = await sessionRequest
         .post(`${forgotPasswordRoute}/reset`)
         .send({ password: mockPasswordEncrypted });
-      expect(response.statusCode).toEqual(200);
       expect(updateUserById).toBeCalledWith(
         'id',
         expect.objectContaining({
@@ -292,13 +282,7 @@ describe('session -> forgotPasswordRoutes', () => {
           passwordEncryptionMethod: 'Argon2i',
         })
       );
-      expect(updateLastSignInAt).toBeCalledWith('id');
-      expect(interactionResult).toHaveBeenCalledWith(
-        expect.anything(),
-        expect.anything(),
-        expect.objectContaining({ login: { accountId: 'id' } }),
-        expect.anything()
-      );
+      expect(response.statusCode).toEqual(204);
     });
   });
 });

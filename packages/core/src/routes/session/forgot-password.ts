@@ -8,7 +8,7 @@ import { z } from 'zod';
 import RequestError from '@/errors/RequestError';
 import { createPasscode, sendPasscode, verifyPasscode } from '@/lib/passcode';
 import { assignInteractionResults } from '@/lib/session';
-import { encryptUserPassword, updateLastSignInAt } from '@/lib/user';
+import { encryptUserPassword } from '@/lib/user';
 import koaGuard from '@/middleware/koa-guard';
 import {
   findUserByEmail,
@@ -165,12 +165,7 @@ export default function forgotPasswordRoutes<T extends AnonymousRouter>(
       ctx.log(type, { userId: id });
 
       await updateUserById(id, { passwordEncrypted, passwordEncryptionMethod });
-
-      // Auto sign-in after resetting password.
-      // This logic should be updated since enabling auto sign-in after updating password could be customized in AC.
-      await updateLastSignInAt(id);
-      ctx.log(type, { autoSignIn: true, autoSignInAt: dayjs().toISOString() });
-      await assignInteractionResults(ctx, provider, { login: { accountId: id } });
+      ctx.status = 204;
 
       return next();
     }
