@@ -174,6 +174,7 @@ importers:
       '@types/node': ^16.3.1
       '@types/oidc-provider': ^7.11.1
       '@types/rimraf': ^3.0.2
+      '@types/semver': ^7.3.12
       '@types/supertest': ^2.0.11
       '@types/tar': ^6.1.2
       chalk: ^4
@@ -216,6 +217,7 @@ importers:
       query-string: ^7.0.1
       rimraf: ^3.0.2
       roarr: ^7.11.0
+      semver: ^7.3.7
       slonik: ^30.0.0
       slonik-interceptor-preset: ^1.2.10
       slonik-sql-tag-raw: ^1.1.4
@@ -261,6 +263,7 @@ importers:
       query-string: 7.0.1
       rimraf: 3.0.2
       roarr: 7.11.0
+      semver: 7.3.7
       slonik: 30.1.2
       slonik-interceptor-preset: 1.2.10
       slonik-sql-tag-raw: 1.1.4_roarr@7.11.0+slonik@30.1.2
@@ -288,6 +291,7 @@ importers:
       '@types/node': 16.11.12
       '@types/oidc-provider': 7.11.1
       '@types/rimraf': 3.0.2
+      '@types/semver': 7.3.12
       '@types/supertest': 2.0.11
       '@types/tar': 6.1.2
       copyfiles: 2.4.1
@@ -472,6 +476,7 @@ importers:
       lodash.uniq: ^4.5.0
       pluralize: ^8.0.0
       prettier: ^2.7.1
+      slonik: ^30.0.0
       ts-node: ^10.9.1
       typescript: ^4.7.4
       zod: ^3.18.0
@@ -480,6 +485,7 @@ importers:
       '@logto/core-kit': 1.0.0-beta.13
       '@logto/phrases': link:../phrases
       '@logto/phrases-ui': link:../phrases-ui
+      slonik: 30.1.2
       zod: 3.18.0
     devDependencies:
       '@silverhand/eslint-config': 1.0.0_swk2g7ygmfleszo5c33j4vooni
@@ -4540,6 +4546,10 @@ packages:
 
   /@types/scheduler/0.16.2:
     resolution: {integrity: sha512-hppQEBDmlwhFAXKJX2KnWLYu5yMfi91yazPb2l+lbJiwW+wdo1gNeRA+3RgNSO39WYX2euey41KEwnqesU2Jew==}
+    dev: true
+
+  /@types/semver/7.3.12:
+    resolution: {integrity: sha512-WwA1MW0++RfXmCr12xeYOOC5baSC9mSb0ZqCquFzKhcoF4TvHu5MKOuXsncgZcpVFhB1pXd5hZmM0ryAoCp12A==}
     dev: true
 
   /@types/serve-static/1.13.10:
@@ -10341,7 +10351,6 @@ packages:
     engines: {node: '>=10'}
     dependencies:
       yallist: 4.0.0
-    dev: true
 
   /lru-cache/7.10.1:
     resolution: {integrity: sha512-BQuhQxPuRl79J5zSXRP+uNzPOyZw2oFI9JLRQ80XswSvg21KMKNtQza9eF42rfI/3Z40RvzBdXgziEkudzjo8A==}
@@ -13687,7 +13696,7 @@ packages:
     dev: true
 
   /semver-compare/1.0.0:
-    resolution: {integrity: sha1-De4hahyUGrN+nvsXiPavxf9VN/w=}
+    resolution: {integrity: sha512-YM3/ITh2MJ5MtzaM429anh+x2jiLVjqILF4m4oyQB18W7Ggea7BfqdH/wGMK7dDiMghv/6WG7znWMwUDzJiXow==}
     dev: false
 
   /semver/5.7.1:
@@ -13705,21 +13714,12 @@ packages:
     hasBin: true
     dev: true
 
-  /semver/7.3.5:
-    resolution: {integrity: sha512-PoeGJYh8HK4BTO/a9Tf6ZG3veo/A7ZVsYrSA6J8ny9nb3B1VrpkuN+z9OE5wfE5p6H4LchYZsegiQgbJD94ZFQ==}
-    engines: {node: '>=10'}
-    hasBin: true
-    dependencies:
-      lru-cache: 6.0.0
-    dev: true
-
   /semver/7.3.7:
     resolution: {integrity: sha512-QlYTucUYOews+WeEujDoEGziz4K6c47V/Bd+LjSSYcA94p+DmINdf7ncaUinThfvZyu13lN9OY1XDxt8C0Tw0g==}
     engines: {node: '>=10'}
     hasBin: true
     dependencies:
       lru-cache: 6.0.0
-    dev: true
 
   /serialize-error/7.0.1:
     resolution: {integrity: sha512-8I8TjW5KMOKsZQTvoxjuSIa7foAwPWGOts+6o7sgjz41/qMD9VQHEDxi6PBvK2l0MXUmqZyNpUK+T2tQaaElvw==}
@@ -14502,7 +14502,7 @@ packages:
       mime: 2.6.0
       qs: 6.10.2
       readable-stream: 3.6.0
-      semver: 7.3.5
+      semver: 7.3.7
     transitivePeerDependencies:
       - supports-color
     dev: true

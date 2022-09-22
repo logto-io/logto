@@ -3,8 +3,7 @@ import { getEnv } from '@silverhand/essentials';
 
 import { addOfficialConnectors } from '@/connectors/add-connectors';
 import { defaultConnectorDirectory } from '@/env-set';
-
-import { configDotEnv } from '../env-set/dot-env';
+import { configDotEnv } from '@/env-set/dot-env';
 
 configDotEnv();
 
