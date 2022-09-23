@@ -5,15 +5,14 @@ import { convertToIdentifiers } from '@/database/utils';
 import { QueryType, expectSqlAssert } from '@/utils/test-utils';
 
 import * as functions from '.';
-import { databaseVersionKey } from './constants';
+import { migrationStateKey } from './constants';
 
 const mockQuery: jest.MockedFunction<QueryType> = jest.fn();
 const {
   createLogtoConfigsTable,
-  getCurrentDatabaseVersion,
   isLogtoConfigsTableExists,
-  updateDatabaseVersion,
-  getMigrationFiles,
+  updateDatabaseTimestamp,
+  getCurrentDatabaseTimestamp,
   getUndeployedMigrations,
 } = functions;
 const pool = createMockPool({
@@ -22,6 +21,7 @@ const pool = createMockPool({
   },
 });
 const { table, fields } = convertToIdentifiers(LogtoConfigs);
+const timestamp = 1_663_923_776;
 
 describe('isLogtoConfigsTableExists()', () => {
   it('generates "select exists" sql and query for result', async () => {
@@ -45,11 +45,11 @@ describe('isLogtoConfigsTableExists()', () => {
   });
 });
 
-describe('getCurrentDatabaseVersion()', () => {
+describe('getCurrentDatabaseTimestamp()', () => {
   it('returns null if query failed (table not found)', async () => {
     mockQuery.mockRejectedValueOnce(new Error('table not found'));
 
-    await expect(getCurrentDatabaseVersion(pool)).resolves.toBeNull();
+    await expect(getCurrentDatabaseTimestamp(pool)).resolves.toBeNull();
   });
 
   it('returns null if the row is not found', async () => {
@@ -59,12 +59,12 @@ describe('getCurrentDatabaseVersion()', () => {
 
     mockQuery.mockImplementationOnce(async (sql, values) => {
       expectSqlAssert(sql, expectSql.sql);
-      expect(values).toEqual([databaseVersionKey]);
+      expect(values).toEqual([migrationStateKey]);
 
       return createMockQueryResult([]);
     });
 
-    await expect(getCurrentDatabaseVersion(pool)).resolves.toBeNull();
+    await expect(getCurrentDatabaseTimestamp(pool)).resolves.toBeNull();
   });
 
   it('returns null if the value is in bad format', async () => {
@@ -74,29 +74,28 @@ describe('getCurrentDatabaseVersion()', () => {
 
     mockQuery.mockImplementationOnce(async (sql, values) => {
       expectSqlAssert(sql, expectSql.sql);
-      expect(values).toEqual([databaseVersionKey]);
+      expect(values).toEqual([migrationStateKey]);
 
-      return createMockQueryResult([{ value: 'some_version' }]);
+      return createMockQueryResult([{ value: 'some_value' }]);
     });
 
-    await expect(getCurrentDatabaseVersion(pool)).resolves.toBeNull();
+    await expect(getCurrentDatabaseTimestamp(pool)).resolves.toBeNull();
   });
 
-  it('returns the version from database', async () => {
+  it('returns the timestamp from database', async () => {
     const expectSql = sql`
       select * from ${table} where ${fields.key}=$1
     `;
-    const version = 'version';
 
     mockQuery.mockImplementationOnce(async (sql, values) => {
       expectSqlAssert(sql, expectSql.sql);
-      expect(values).toEqual([databaseVersionKey]);
+      expect(values).toEqual([migrationStateKey]);
 
       // @ts-expect-error createMockQueryResult doesn't support jsonb
-      return createMockQueryResult([{ value: { version, updatedAt: 'now' } }]);
+      return createMockQueryResult([{ value: { timestamp, updatedAt: 'now' } }]);
     });
 
-    await expect(getCurrentDatabaseVersion(pool)).resolves.toEqual(version);
+    await expect(getCurrentDatabaseTimestamp(pool)).resolves.toEqual(timestamp);
   });
 });
 
@@ -113,13 +112,12 @@ describe('createLogtoConfigsTable()', () => {
   });
 });
 
-describe('updateDatabaseVersion()', () => {
+describe('updateDatabaseTimestamp()', () => {
   const expectSql = sql`
     insert into ${table} (${fields.key}, ${fields.value}) 
       values ($1, $2)
       on conflict (${fields.key}) do update set ${fields.value}=excluded.${fields.value}
   `;
-  const version = 'version';
   const updatedAt = '2022-09-21T06:32:46.583Z';
 
   beforeAll(() => {
@@ -143,20 +141,20 @@ describe('updateDatabaseVersion()', () => {
       .mockImplementationOnce(jest.fn());
     jest.spyOn(functions, 'isLogtoConfigsTableExists').mockResolvedValueOnce(false);
 
-    await updateDatabaseVersion(pool, version);
+    await updateDatabaseTimestamp(pool, timestamp);
     expect(mockCreateLogtoConfigsTable).toHaveBeenCalled();
   });
 
-  it('sends upsert sql with version and updatedAt', async () => {
+  it('sends upsert sql with timestamp and updatedAt', async () => {
     mockQuery.mockImplementationOnce(async (sql, values) => {
       expectSqlAssert(sql, expectSql.sql);
-      expect(values).toEqual([databaseVersionKey, JSON.stringify({ version, updatedAt })]);
+      expect(values).toEqual([migrationStateKey, JSON.stringify({ timestamp, updatedAt })]);
 
       return createMockQueryResult([]);
     });
     jest.spyOn(functions, 'isLogtoConfigsTableExists').mockResolvedValueOnce(true);
 
-    await updateDatabaseVersion(pool, version);
+    await updateDatabaseTimestamp(pool, timestamp);
   });
 });
 
@@ -164,22 +162,29 @@ describe('getUndeployedMigrations()', () => {
   beforeEach(() => {
     jest
       .spyOn(functions, 'getMigrationFiles')
-      .mockResolvedValueOnce(['1.0.0.js', '1.0.2.js', '1.0.1.js']);
+      .mockResolvedValueOnce([
+        '1.0.0-1663923770-a.js',
+        '1.0.0-1663923772-c.js',
+        '1.0.0-1663923771-b.js',
+      ]);
   });
 
-  it('returns all files with right order if database version is null', async () => {
-    jest.spyOn(functions, 'getCurrentDatabaseVersion').mockResolvedValueOnce(null);
+  it('returns all files with right order if database migration timestamp is null', async () => {
+    jest.spyOn(functions, 'getCurrentDatabaseTimestamp').mockResolvedValueOnce(null);
 
     await expect(getUndeployedMigrations(pool)).resolves.toEqual([
-      '1.0.0.js',
-      '1.0.1.js',
-      '1.0.2.js',
+      '1.0.0-1663923770-a.js',
+      '1.0.0-1663923771-b.js',
+      '1.0.0-1663923772-c.js',
     ]);
   });
 
-  it('returns files whose version is greater then database version', async () => {
-    jest.spyOn(functions, 'getCurrentDatabaseVersion').mockResolvedValueOnce('1.0.0');
+  it('returns files whose timestamp is greater then database timstamp', async () => {
+    jest.spyOn(functions, 'getCurrentDatabaseTimestamp').mockResolvedValueOnce(1_663_923_770);
 
-    await expect(getUndeployedMigrations(pool)).resolves.toEqual(['1.0.1.js', '1.0.2.js']);
+    await expect(getUndeployedMigrations(pool)).resolves.toEqual([
+      '1.0.0-1663923771-b.js',
+      '1.0.0-1663923772-c.js',
+    ]);
   });
 });
