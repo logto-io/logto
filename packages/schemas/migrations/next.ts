@@ -1,6 +1,9 @@
-import { sql } from 'slonik';
+import { DatabasePool, sql } from 'slonik';
 
-import { MigrationScript } from '../types';
+export type MigrationScript = {
+  up: (pool: DatabasePool) => Promise<void>;
+  down: (pool: DatabasePool) => Promise<void>;
+};
 
 const migration: MigrationScript = {
   up: async (pool) => {

@@ -2,13 +2,12 @@ import { existsSync } from 'fs';
 import { readdir, readFile } from 'fs/promises';
 import path from 'path';
 
+import { LogtoConfig, LogtoConfigs } from '@logto/schemas';
 import {
-  LogtoConfig,
-  LogtoConfigs,
   DatabaseVersion,
   databaseVersionGuard,
   MigrationScript,
-} from '@logto/schemas';
+} from '@logto/schemas/migrations/types';
 import { conditionalString } from '@silverhand/essentials';
 import chalk from 'chalk';
 import { DatabasePool, sql } from 'slonik';
