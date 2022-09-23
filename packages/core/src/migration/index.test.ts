@@ -22,17 +22,6 @@ const pool = createMockPool({
   },
 });
 const { table, fields } = convertToIdentifiers(LogtoConfigs);
-const existsSync = jest.fn();
-const readdir = jest.fn();
-
-jest.mock('fs', () => ({
-  existsSync: () => existsSync(),
-}));
-
-jest.mock('fs/promises', () => ({
-  ...jest.requireActual('fs/promises'),
-  readdir: async () => readdir(),
-}));
 
 describe('isLogtoConfigsTableExists()', () => {
   it('generates "select exists" sql and query for result', async () => {
@@ -168,20 +157,6 @@ describe('updateDatabaseVersion()', () => {
     jest.spyOn(functions, 'isLogtoConfigsTableExists').mockResolvedValueOnce(true);
 
     await updateDatabaseVersion(pool, version);
-  });
-});
-
-describe('getMigrationFiles()', () => {
-  it('returns [] if directory does not exist', async () => {
-    existsSync.mockReturnValueOnce(false);
-    await expect(getMigrationFiles()).resolves.toEqual([]);
-  });
-
-  it('returns files without "next"', async () => {
-    existsSync.mockReturnValueOnce(true);
-    readdir.mockResolvedValueOnce(['next.js', '1.0.0.js', '1.0.2.js', '1.0.1.js']);
-
-    await expect(getMigrationFiles()).resolves.toEqual(['1.0.0.js', '1.0.2.js', '1.0.1.js']);
   });
 });
 
