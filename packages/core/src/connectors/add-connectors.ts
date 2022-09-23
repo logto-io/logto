@@ -13,12 +13,18 @@ import { npmPackResultGuard } from './types';
 
 const execPromise = promisify(exec);
 const npmConnectorFilter = '@logto/connector-';
+const excludedPackages = new Set([
+  '@logto/connector-kit',
+  '@logto/connector-mock-sms',
+  '@logto/connector-mock-social',
+  '@logto/connector-mock-email',
+]);
 
 const fetchOfficialConnectorList = async () => {
   const { stdout } = await execPromise(`npm search ${npmConnectorFilter} --json`);
   const packages = z.object({ name: z.string() }).array().parse(JSON.parse(stdout));
 
-  return packages.filter(({ name }) => !name.includes('mock') && !name.includes('core'));
+  return packages.filter(({ name }) => !excludedPackages.has(name));
 };
 
 export const addConnector = async (packageName: string, cwd: string) => {
