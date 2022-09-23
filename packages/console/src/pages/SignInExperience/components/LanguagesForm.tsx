@@ -13,7 +13,11 @@ import { SignInExperienceForm } from '../types';
 import ManageLanguageModal from './ManageLanguageModal';
 import * as styles from './index.module.scss';
 
-const LanguagesForm = () => {
+type Props = {
+  isManageLanguageVisible?: boolean;
+};
+
+const LanguagesForm = ({ isManageLanguageVisible = false }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const { watch, control, register } = useFormContext<SignInExperienceForm>();
   const isAutoDetect = watch('languageInfo.autoDetect');
@@ -28,14 +32,16 @@ const LanguagesForm = () => {
           label={t('sign_in_exp.others.languages.description')}
         />
       </FormField>
-      <div
-        className={classNames(textButtonStyles.button, styles.manageLanguage)}
-        onClick={() => {
-          setIsManageLanguageFormOpen(true);
-        }}
-      >
-        {t('sign_in_exp.others.languages.manage_language')}
-      </div>
+      {isManageLanguageVisible && (
+        <div
+          className={classNames(textButtonStyles.button, styles.manageLanguage)}
+          onClick={() => {
+            setIsManageLanguageFormOpen(true);
+          }}
+        >
+          {t('sign_in_exp.others.languages.manage_language')}
+        </div>
+      )}
       <FormField title="sign_in_exp.others.languages.default_language">
         <Controller
           name="languageInfo.fallbackLanguage"
