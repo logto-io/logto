@@ -1,0 +1,31 @@
+@use '@/scss/underscore' as _;
+
+.languageItem {
+  padding: _.unit(1.5) _.unit(3);
+  margin-bottom: _.unit(1);
+  cursor: pointer;
+  border-radius: 8px;
+
+  .languageName {
+    font: var(--font-title-medium);
+    color: var(--color-text);
+  }
+
+  .languageKey {
+    font: var(--font-label-large);
+    color: var(--color-caption);
+  }
+
+  &:hover {
+    background-color: var(--color-hover-variant);
+  }
+
+  &.selected {
+    background-color: var(--color-focused-variant);
+
+    .languageName,
+    .languageKey {
+      color: var(--color-text-link);
+    }
+  }
+}
