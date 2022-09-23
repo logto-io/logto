@@ -28,6 +28,7 @@ const translation = {
     got_it: 'Anladım',
     sign_in_with: '{{name}} ile giriş yap',
     forgot_password: 'Şifremi Unuttum?',
+    switch_to: 'Switch to {{method}}', // TODO: not translated
   },
   description: {
     email: 'e-posta adresi',

@@ -85,41 +85,44 @@ const CreateAccount = ({ className, autoFocus }: Props) => {
 
   return (
     <form className={classNames(styles.form, className)} onSubmit={onSubmitHandler}>
-      <Input
-        autoFocus={autoFocus}
-        className={styles.inputField}
-        name="new-username"
-        placeholder={t('input.username')}
-        {...fieldRegister('username', usernameValidation)}
-        onClear={() => {
-          setFieldValue((state) => ({ ...state, username: '' }));
-        }}
-      />
-      <Input
-        className={styles.inputField}
-        name="new-password"
-        type="password"
-        autoComplete="new-password"
-        placeholder={t('input.password')}
-        {...fieldRegister('password', passwordValidation)}
-        onClear={() => {
-          setFieldValue((state) => ({ ...state, password: '' }));
-        }}
-      />
-      <Input
-        className={styles.inputField}
-        name="confirm-new-password"
-        type="password"
-        autoComplete="new-password"
-        placeholder={t('input.confirm_password')}
-        {...fieldRegister('confirmPassword', (confirmPassword) =>
-          confirmPasswordValidation(fieldValue.password, confirmPassword)
-        )}
-        errorStyling={false}
-        onClear={() => {
-          setFieldValue((state) => ({ ...state, confirmPassword: '' }));
-        }}
-      />
+      <div className={styles.formFields}>
+        <Input
+          autoFocus={autoFocus}
+          className={styles.inputField}
+          name="new-username"
+          placeholder={t('input.username')}
+          {...fieldRegister('username', usernameValidation)}
+          onClear={() => {
+            setFieldValue((state) => ({ ...state, username: '' }));
+          }}
+        />
+        <Input
+          className={styles.inputField}
+          name="new-password"
+          type="password"
+          autoComplete="new-password"
+          placeholder={t('input.password')}
+          {...fieldRegister('password', passwordValidation)}
+          onClear={() => {
+            setFieldValue((state) => ({ ...state, password: '' }));
+          }}
+        />
+        <Input
+          className={styles.inputField}
+          name="confirm-new-password"
+          type="password"
+          autoComplete="new-password"
+          placeholder={t('input.confirm_password')}
+          {...fieldRegister('confirmPassword', (confirmPassword) =>
+            confirmPasswordValidation(fieldValue.password, confirmPassword)
+          )}
+          errorStyling={false}
+          onClear={() => {
+            setFieldValue((state) => ({ ...state, confirmPassword: '' }));
+          }}
+        />
+      </div>
+
       <TermsOfUse className={styles.terms} />
 
       <Button title="action.create" onClick={async () => onSubmitHandler()} />

@@ -91,27 +91,30 @@ const UsernameSignIn = ({ className, autoFocus }: Props) => {
 
   return (
     <form className={classNames(styles.form, className)} onSubmit={onSubmitHandler}>
-      <Input
-        autoFocus={autoFocus}
-        className={styles.inputField}
-        name="username"
-        autoComplete="username"
-        placeholder={t('input.username')}
-        {...register('username', (value) => requiredValidation('username', value))}
-        onClear={() => {
-          setFieldValue((state) => ({ ...state, username: '' }));
-        }}
-      />
-      <PasswordInput
-        className={styles.inputField}
-        name="password"
-        autoComplete="current-password"
-        placeholder={t('input.password')}
-        {...register('password', (value) => requiredValidation('password', value))}
-      />
-      {formErrorMessage && (
-        <ErrorMessage className={styles.formErrors}>{formErrorMessage}</ErrorMessage>
-      )}
+      <div className={styles.formFields}>
+        <Input
+          autoFocus={autoFocus}
+          className={styles.inputField}
+          name="username"
+          autoComplete="username"
+          placeholder={t('input.username')}
+          {...register('username', (value) => requiredValidation('username', value))}
+          onClear={() => {
+            setFieldValue((state) => ({ ...state, username: '' }));
+          }}
+        />
+        <PasswordInput
+          className={styles.inputField}
+          name="password"
+          autoComplete="current-password"
+          placeholder={t('input.password')}
+          {...register('password', (value) => requiredValidation('password', value))}
+        />
+        {formErrorMessage && (
+          <ErrorMessage className={styles.formErrors}>{formErrorMessage}</ErrorMessage>
+        )}
+      </div>
+
       <TermsOfUse className={styles.terms} />
 
       <Button title="action.sign_in" onClick={async () => onSubmitHandler()} />

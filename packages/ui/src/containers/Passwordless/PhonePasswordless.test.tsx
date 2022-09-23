@@ -5,7 +5,6 @@ import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider';
 import { sendRegisterSmsPasscode } from '@/apis/register';
 import { sendSignInSmsPasscode } from '@/apis/sign-in';
-import TermsOfUse from '@/containers/TermsOfUse';
 import { getDefaultCountryCallingCode } from '@/utils/country-code';
 
 import PhonePasswordless from './PhonePasswordless';
@@ -38,13 +37,22 @@ describe('<PhonePasswordless/>', () => {
     const { queryByText } = renderWithPageContext(
       <MemoryRouter>
         <SettingsProvider>
-          <PhonePasswordless type="sign-in">
-            <TermsOfUse />
-          </PhonePasswordless>
+          <PhonePasswordless type="sign-in" />
         </SettingsProvider>
       </MemoryRouter>
     );
     expect(queryByText('description.terms_of_use')).not.toBeNull();
+  });
+
+  test('render with terms settings but hasTerms param set to false', () => {
+    const { queryByText } = renderWithPageContext(
+      <MemoryRouter>
+        <SettingsProvider>
+          <PhonePasswordless type="sign-in" hasTerms={false} />
+        </SettingsProvider>
+      </MemoryRouter>
+    );
+    expect(queryByText('description.terms_of_use')).toBeNull();
   });
 
   test('required phone with error message', () => {
@@ -70,31 +78,7 @@ describe('<PhonePasswordless/>', () => {
     }
   });
 
-  test('should block if extra validation failed', async () => {
-    const { container, getByText } = renderWithPageContext(
-      <MemoryRouter>
-        <SettingsProvider>
-          <PhonePasswordless type="sign-in" onSubmitValidation={async () => false} />
-        </SettingsProvider>
-      </MemoryRouter>
-    );
-    const phoneInput = container.querySelector('input[name="phone"]');
-
-    if (phoneInput) {
-      fireEvent.change(phoneInput, { target: { value: phoneNumber } });
-    }
-    const submitButton = getByText('action.continue');
-
-    act(() => {
-      fireEvent.click(submitButton);
-    });
-
-    await waitFor(() => {
-      expect(sendSignInSmsPasscode).not.toBeCalled();
-    });
-  });
-
-  test('should call sign-in method properly', async () => {
+  test('should blocked by terms validation with terms settings enabled', async () => {
     const { container, getByText } = renderWithPageContext(
       <MemoryRouter>
         <SettingsProvider>
@@ -107,6 +91,32 @@ describe('<PhonePasswordless/>', () => {
     if (phoneInput) {
       fireEvent.change(phoneInput, { target: { value: phoneNumber } });
     }
+
+    const submitButton = getByText('action.continue');
+
+    act(() => {
+      fireEvent.click(submitButton);
+    });
+
+    await waitFor(() => {
+      expect(sendSignInSmsPasscode).not.toBeCalled();
+    });
+  });
+
+  test('should call sign-in method properly with terms settings enabled but hasTerms param set to false', async () => {
+    const { container, getByText } = renderWithPageContext(
+      <MemoryRouter>
+        <SettingsProvider>
+          <PhonePasswordless type="sign-in" hasTerms={false} />
+        </SettingsProvider>
+      </MemoryRouter>
+    );
+    const phoneInput = container.querySelector('input[name="phone"]');
+
+    if (phoneInput) {
+      fireEvent.change(phoneInput, { target: { value: phoneNumber } });
+    }
+
     const submitButton = getByText('action.continue');
 
     act(() => {
@@ -118,7 +128,35 @@ describe('<PhonePasswordless/>', () => {
     });
   });
 
-  test('should call register method properly', async () => {
+  test('should call sign-in method properly with terms settings enabled and checked', async () => {
+    const { container, getByText } = renderWithPageContext(
+      <MemoryRouter>
+        <SettingsProvider>
+          <PhonePasswordless type="sign-in" />
+        </SettingsProvider>
+      </MemoryRouter>
+    );
+    const phoneInput = container.querySelector('input[name="phone"]');
+
+    if (phoneInput) {
+      fireEvent.change(phoneInput, { target: { value: phoneNumber } });
+    }
+
+    const termsButton = getByText('description.agree_with_terms');
+    fireEvent.click(termsButton);
+
+    const submitButton = getByText('action.continue');
+
+    act(() => {
+      fireEvent.click(submitButton);
+    });
+
+    await waitFor(() => {
+      expect(sendSignInSmsPasscode).toBeCalledWith(`${defaultCountryCallingCode}${phoneNumber}`);
+    });
+  });
+
+  test('should call register method properly if type is register', async () => {
     const { container, getByText } = renderWithPageContext(
       <MemoryRouter>
         <SettingsProvider>
@@ -131,6 +169,9 @@ describe('<PhonePasswordless/>', () => {
     if (phoneInput) {
       fireEvent.change(phoneInput, { target: { value: phoneNumber } });
     }
+
+    const termsButton = getByText('description.agree_with_terms');
+    fireEvent.click(termsButton);
 
     const submitButton = getByText('action.continue');
 

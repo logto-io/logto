@@ -26,6 +26,7 @@ const translation = {
     got_it: 'Got it',
     sign_in_with: 'Sign in with {{name}}',
     forgot_password: 'Forgot Password?',
+    switch_to: 'Switch to {{method}}',
   },
   description: {
     email: 'email',

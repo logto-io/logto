@@ -5,7 +5,6 @@ import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
 import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider';
 import { sendRegisterEmailPasscode } from '@/apis/register';
 import { sendSignInEmailPasscode } from '@/apis/sign-in';
-import TermsOfUse from '@/containers/TermsOfUse';
 
 import EmailPasswordless from './EmailPasswordless';
 
@@ -31,13 +30,22 @@ describe('<EmailPasswordless/>', () => {
     const { queryByText } = renderWithPageContext(
       <MemoryRouter>
         <SettingsProvider>
-          <EmailPasswordless type="sign-in">
-            <TermsOfUse />
-          </EmailPasswordless>
+          <EmailPasswordless type="sign-in" />
         </SettingsProvider>
       </MemoryRouter>
     );
     expect(queryByText('description.terms_of_use')).not.toBeNull();
+  });
+
+  test('ender with terms settings but hasTerms param set to false', () => {
+    const { queryByText } = renderWithPageContext(
+      <MemoryRouter>
+        <SettingsProvider>
+          <EmailPasswordless type="sign-in" hasTerms={false} />
+        </SettingsProvider>
+      </MemoryRouter>
+    );
+    expect(queryByText('description.terms_of_use')).toBeNull();
   });
 
   test('required email with error message', () => {
@@ -63,14 +71,15 @@ describe('<EmailPasswordless/>', () => {
     }
   });
 
-  test('should block in extra validation failed', async () => {
+  test('should blocked by terms validation with terms settings enabled', async () => {
     const { container, getByText } = renderWithPageContext(
       <MemoryRouter>
         <SettingsProvider>
-          <EmailPasswordless type="sign-in" onSubmitValidation={async () => false} />
+          <EmailPasswordless type="sign-in" />
         </SettingsProvider>
       </MemoryRouter>
     );
+
     const emailInput = container.querySelector('input[name="email"]');
 
     if (emailInput) {
@@ -88,14 +97,15 @@ describe('<EmailPasswordless/>', () => {
     });
   });
 
-  test('should call sign-in method properly', async () => {
+  test('should call sign-in method properly with terms settings enabled but hasTerms param set to false', async () => {
     const { container, getByText } = renderWithPageContext(
       <MemoryRouter>
         <SettingsProvider>
-          <EmailPasswordless type="sign-in" />
+          <EmailPasswordless type="sign-in" hasTerms={false} />
         </SettingsProvider>
       </MemoryRouter>
     );
+
     const emailInput = container.querySelector('input[name="email"]');
 
     if (emailInput) {
@@ -113,7 +123,35 @@ describe('<EmailPasswordless/>', () => {
     });
   });
 
-  test('should call register method properly', async () => {
+  test('should call sign-in method properly with terms settings enabled and checked', async () => {
+    const { container, getByText } = renderWithPageContext(
+      <MemoryRouter>
+        <SettingsProvider>
+          <EmailPasswordless type="sign-in" />
+        </SettingsProvider>
+      </MemoryRouter>
+    );
+    const emailInput = container.querySelector('input[name="email"]');
+
+    if (emailInput) {
+      fireEvent.change(emailInput, { target: { value: 'foo@logto.io' } });
+    }
+
+    const termsButton = getByText('description.agree_with_terms');
+    fireEvent.click(termsButton);
+
+    const submitButton = getByText('action.continue');
+
+    act(() => {
+      fireEvent.click(submitButton);
+    });
+
+    await waitFor(() => {
+      expect(sendSignInEmailPasscode).toBeCalledWith('foo@logto.io');
+    });
+  });
+
+  test('should call register method properly if type is register', async () => {
     const { container, getByText } = renderWithPageContext(
       <MemoryRouter>
         <SettingsProvider>
@@ -126,6 +164,10 @@ describe('<EmailPasswordless/>', () => {
     if (emailInput) {
       fireEvent.change(emailInput, { target: { value: 'foo@logto.io' } });
     }
+
+    const termsButton = getByText('description.agree_with_terms');
+    fireEvent.click(termsButton);
+
     const submitButton = getByText('action.continue');
 
     act(() => {

@@ -11,16 +11,22 @@
     margin-bottom: _.unit(4);
   }
 
+  .formFields {
+    margin-bottom: _.unit(8);
+  }
+
   .terms {
-    margin: _.unit(8) 0 _.unit(4);
+    margin-bottom: _.unit(4);
   }
 
   .formErrors {
     margin-top: _.unit(-2);
     margin-bottom: _.unit(4);
+  }
+}
 
-    + .terms {
-      margin-top: _.unit(4);
-    }
+:global(body.desktop) {
+  .formFields {
+    margin-bottom: _.unit(2);
   }
 }

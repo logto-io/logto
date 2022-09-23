@@ -5,10 +5,6 @@
   @include _.flex-column(normal, normal);
   @include _.full-width;
 
-  .terms {
-    margin-bottom: _.unit(4);
-  }
-
   .primarySignIn {
     margin-bottom: _.unit(5);
   }

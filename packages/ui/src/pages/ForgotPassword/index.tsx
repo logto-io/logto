@@ -14,16 +14,15 @@ type Props = {
 
 const ForgotPassword = () => {
   const { t } = useTranslation();
-
   const { method = '' } = useParams<Props>();
 
   const forgotPasswordForm = useMemo(() => {
     if (method === 'sms') {
-      return <PhonePasswordless autoFocus type="reset-password" />;
+      return <PhonePasswordless autoFocus hasSwitch type="reset-password" hasTerms={false} />;
     }
 
     if (method === 'email') {
-      return <EmailPasswordless autoFocus type="reset-password" />;
+      return <EmailPasswordless autoFocus hasSwitch type="reset-password" hasTerms={false} />;
     }
   }, [method]);
 

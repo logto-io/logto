@@ -7,7 +7,13 @@ import { appendPath } from '@/utils/url';
 
 // Need To Align With UI
 export const sessionNotFoundPath = '/unknown-session';
-export const guardedPath = ['/sign-in', '/register', '/social-register'];
+export const guardedPath = [
+  '/sign-in',
+  '/register',
+  '/social/register',
+  '/reset-password',
+  '/forgot-password',
+];
 
 export default function koaSpaSessionGuard<
   StateT,
