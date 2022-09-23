@@ -91,6 +91,7 @@ const sign_in_exp = {
       logto_source_language: 'Logto source language',
       custom_values: 'Custom values',
       clear_all: 'Clear all',
+      unsaved_description: 'Changes won’t be saved if you leave this page without saving.',
     },
     authentication: {
       title: 'AUTHENTICATION',
