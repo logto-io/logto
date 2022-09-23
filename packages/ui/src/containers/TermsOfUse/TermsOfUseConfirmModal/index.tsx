@@ -2,13 +2,11 @@ import { useContext } from 'react';
 import { useTranslation, Trans } from 'react-i18next';
 import { create } from 'react-modal-promise';
 
-import { WebModal, MobileModal } from '@/components/ConfirmModal';
+import { WebModal, MobileModal, modalPromisify } from '@/components/ConfirmModal';
 import TextLink from '@/components/TextLink';
 import { PageContext } from '@/hooks/use-page-context';
 import usePlatform from '@/hooks/use-platform';
-import { TermsOfUseModalMessage } from '@/types';
-
-import { modalPromisify } from '../termsOfUseModalPromisify';
+import { ConfirmModalMessage } from '@/types';
 
 /**
  * For web use only confirm modal, does not contain Terms iframe
@@ -17,7 +15,7 @@ import { modalPromisify } from '../termsOfUseModalPromisify';
 type Props = {
   isOpen?: boolean;
   onConfirm: () => void;
-  onClose: (message?: TermsOfUseModalMessage) => void;
+  onClose: (message?: ConfirmModalMessage) => void;
 };
 
 const TermsOfUseConfirmModal = ({ isOpen = false, onConfirm, onClose }: Props) => {
@@ -33,7 +31,7 @@ const TermsOfUseConfirmModal = ({ isOpen = false, onConfirm, onClose }: Props) =
   const linkProps = isMobile
     ? {
         onClick: () => {
-          onClose(TermsOfUseModalMessage.SHOW_DETAIL_MODAL);
+          onClose(ConfirmModalMessage.SHOW_TERMS_DETAIL_MODAL);
         },
       }
     : {
