@@ -13,6 +13,7 @@ import {
   verifyResetPasswordSmsPasscode,
   sendResetPasswordEmailPasscode,
   sendResetPasswordSmsPasscode,
+  resetPassword,
 } from './reset-password';
 import {
   signInBasic,
@@ -187,7 +188,7 @@ describe('api', () => {
 
   it('sendResetPasswordSmsPasscode', async () => {
     await sendResetPasswordSmsPasscode(phone);
-    expect(ky.post).toBeCalledWith('/api/session/reset-password/sms/send-passcode', {
+    expect(ky.post).toBeCalledWith('/api/session/forgot-password/sms/send-passcode', {
       json: {
         phone,
       },
@@ -196,7 +197,7 @@ describe('api', () => {
 
   it('verifyResetPasswordSmsPasscode', async () => {
     await verifyResetPasswordSmsPasscode(phone, code);
-    expect(ky.post).toBeCalledWith('/api/session/reset-password/sms/verify-passcode', {
+    expect(ky.post).toBeCalledWith('/api/session/forgot-password/sms/verify-passcode', {
       json: {
         phone,
         code,
@@ -206,7 +207,7 @@ describe('api', () => {
 
   it('sendResetPasswordEmailPasscode', async () => {
     await sendResetPasswordEmailPasscode(email);
-    expect(ky.post).toBeCalledWith('/api/session/reset-password/email/send-passcode', {
+    expect(ky.post).toBeCalledWith('/api/session/forgot-password/email/send-passcode', {
       json: {
         email,
       },
@@ -215,7 +216,7 @@ describe('api', () => {
 
   it('verifyResetPasswordEmailPasscode', async () => {
     await verifyResetPasswordEmailPasscode(email, code);
-    expect(ky.post).toBeCalledWith('/api/session/reset-password/email/verify-passcode', {
+    expect(ky.post).toBeCalledWith('/api/session/forgot-password/email/verify-passcode', {
       json: {
         email,
         code,
@@ -271,6 +272,15 @@ describe('api', () => {
     expect(ky.post).toBeCalledWith('/api/session/register/social', {
       json: {
         connectorId: 'connectorId',
+      },
+    });
+  });
+
+  it('resetPassword', async () => {
+    await resetPassword('password');
+    expect(ky.post).toBeCalledWith('/api/session/forgot-password/reset', {
+      json: {
+        password: 'password',
       },
     });
   });

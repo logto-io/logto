@@ -6,7 +6,7 @@ type Response = {
 
 export const sendResetPasswordSmsPasscode = async (phone: string) => {
   await api
-    .post('/api/session/reset-password/sms/send-passcode', {
+    .post('/api/session/forgot-password/sms/send-passcode', {
       json: {
         phone,
       },
@@ -18,7 +18,7 @@ export const sendResetPasswordSmsPasscode = async (phone: string) => {
 
 export const verifyResetPasswordSmsPasscode = async (phone: string, code: string) =>
   api
-    .post('/api/session/reset-password/sms/verify-passcode', {
+    .post('/api/session/forgot-password/sms/verify-passcode', {
       json: {
         phone,
         code,
@@ -28,7 +28,7 @@ export const verifyResetPasswordSmsPasscode = async (phone: string, code: string
 
 export const sendResetPasswordEmailPasscode = async (email: string) => {
   await api
-    .post('/api/session/reset-password/email/send-passcode', {
+    .post('/api/session/forgot-password/email/send-passcode', {
       json: {
         email,
       },
@@ -40,7 +40,7 @@ export const sendResetPasswordEmailPasscode = async (email: string) => {
 
 export const verifyResetPasswordEmailPasscode = async (email: string, code: string) =>
   api
-    .post('/api/session/reset-password/email/verify-passcode', {
+    .post('/api/session/forgot-password/email/verify-passcode', {
       json: {
         email,
         code,
@@ -50,7 +50,7 @@ export const verifyResetPasswordEmailPasscode = async (email: string, code: stri
 
 export const resetPassword = async (password: string) =>
   api
-    .post('/api/session/reset-password', {
+    .post('/api/session/forgot-password/reset', {
       json: { password },
     })
     .json<Response>();
