@@ -29,6 +29,10 @@
   color: var(--color-caption);
 }
 
+.manageLanguage {
+  margin-top: _.unit(2);
+}
+
 .defaultLanguageDescription {
   padding-top: _.unit(2);
   font: var(--font-body-medium);

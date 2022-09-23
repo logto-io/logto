@@ -83,6 +83,17 @@ const sign_in_exp = {
       default_language_description_fixed:
         'When auto detect is off, the default language is the only language your software will show. Turn on auto detect for language customization.', // UNTRANSLATED
     },
+    manage_language: {
+      title: 'Manage language', // UNTRANSLATED
+      subtitle:
+        'Localize the product experience by adding languages and translations. Your contribution can be set as the default language.', // UNTRANSLATED
+      add_language: 'Add Language', // UNTRANSLATED
+      logto_provided: 'Logto provided', // UNTRANSLATED
+      key: 'Key', // UNTRANSLATED
+      logto_source_language: 'Logto source language', // UNTRANSLATED
+      custom_values: 'Custom values', // UNTRANSLATED
+      clear_all: 'Clear all', // UNTRANSLATED
+    },
     authentication: {
       title: 'AUTHENTICATION',
       enable_create_account: 'Enable create account',

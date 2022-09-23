@@ -16,7 +16,7 @@ type Props = {
   footer?: ReactNode;
   onClose?: () => void;
   className?: string;
-  size?: 'medium' | 'large';
+  size?: 'medium' | 'large' | 'xlarge';
 };
 
 const ModalLayout = ({

@@ -1,3 +1,5 @@
+import type { Translation as UiTranslation } from '@logto/phrases-ui';
+import en from '@logto/phrases-ui/lib/locales/en';
 import {
   SignInExperience,
   SignInMethodKey,
@@ -97,4 +99,49 @@ export const compareSignInMethods = (
   const { signInMethods: afterMethods } = after;
 
   return Object.values(SignInMethodKey).every((key) => beforeMethods[key] === afterMethods[key]);
+};
+
+// TODO: LOG-4235 move this method into @silverhand/essentials
+const isObject = (data: unknown): data is Record<string, unknown> =>
+  typeof data === 'object' && !Array.isArray(data);
+
+export const flattenObject = (
+  object: Record<string, unknown>,
+  keyPrefix = ''
+): Record<string, unknown> => {
+  return Object.keys(object).reduce((result, key) => {
+    const prefix = keyPrefix ? `${keyPrefix}.` : keyPrefix;
+    const dataKey = `${prefix}${key}`;
+    const data = object[key];
+
+    return {
+      ...result,
+      ...(isObject(data) ? flattenObject(data, dataKey) : { [dataKey]: data }),
+    };
+  }, {});
+};
+
+const emptyTranslation = (translation: Record<string, unknown>): Record<string, unknown> => {
+  return Object.entries(translation).reduce<Record<string, unknown>>((result, [key, value]) => {
+    if (isObject(value)) {
+      return {
+        ...result,
+        [key]: emptyTranslation(value),
+      };
+    }
+
+    if (typeof value === 'string') {
+      return {
+        ...result,
+        [key]: '',
+      };
+    }
+
+    return { ...result, [key]: value };
+  }, {});
+};
+
+export const createEmptyUiTranslation = () => {
+  // eslint-disable-next-line no-restricted-syntax
+  return emptyTranslation(en.translation) as UiTranslation;
 };
