@@ -2,13 +2,16 @@ import { languageKeys } from '@logto/core-kit';
 import { useLogto } from '@logto/react';
 import { AppearanceMode } from '@logto/schemas';
 import { Nullable, Optional } from '@silverhand/essentials';
+import { t } from 'i18next';
 import { useCallback, useEffect, useMemo } from 'react';
+import { toast } from 'react-hot-toast';
 import useSWR from 'swr';
 import { z } from 'zod';
 
 import { themeStorageKey } from '@/consts';
 
 import useApi, { RequestError } from './use-api';
+import useLogtoUserId from './use-logto-user-id';
 
 const userPreferencesGuard = z.object({
   language: z.enum(languageKeys).optional(),
@@ -28,9 +31,10 @@ const getEnumFromArray = <T extends string>(
 
 const useUserPreferences = () => {
   const { isAuthenticated, error: authError } = useLogto();
-  const shouldFetch = isAuthenticated && !authError;
+  const userId = useLogtoUserId();
+  const shouldFetch = isAuthenticated && !authError && userId;
   const { data, mutate, error } = useSWR<unknown, RequestError>(
-    shouldFetch && '/api/users/me/custom-data'
+    shouldFetch && `/api/users/${userId}/custom-data`
   );
   const api = useApi();
 
@@ -49,8 +53,14 @@ const useUserPreferences = () => {
   const userPreferences = useMemo(() => parseData(), [parseData]);
 
   const update = async (data: Partial<UserPreferences>) => {
+    if (!userId) {
+      toast.error(t('errors.unexpected_error'));
+
+      return;
+    }
+
     const updated = await api
-      .patch('/api/users/me/custom-data', {
+      .patch(`/api/users/${userId}/custom-data`, {
         json: {
           customData: {
             [key]: {

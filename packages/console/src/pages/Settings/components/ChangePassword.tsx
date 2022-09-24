@@ -9,6 +9,7 @@ import FormField from '@/components/FormField';
 import ModalLayout from '@/components/ModalLayout';
 import TextInput from '@/components/TextInput';
 import useApi from '@/hooks/use-api';
+import useLogtoUserId from '@/hooks/use-logto-user-id';
 import * as modalStyles from '@/scss/modal.module.scss';
 
 import * as styles from './ChangePassword.module.scss';
@@ -23,12 +24,19 @@ const ChangePassword = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { watch, register, reset } = useForm<FormFields>();
   const [isLoading, setIsLoading] = useState(false);
+  const userId = useLogtoUserId();
   const api = useApi();
   const password = watch('password');
   const confirmPassword = watch('confirmPassword');
   const isDisabled = !password || password !== confirmPassword;
 
   const onSubmit = async () => {
+    if (!userId) {
+      toast.error(t('errors.unexpected_error'));
+
+      return;
+    }
+
     setIsLoading(true);
     await api.patch(`/api/users/me/password`, { json: { password } }).json();
     setIsLoading(false);
