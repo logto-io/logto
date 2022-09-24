@@ -1,5 +1,7 @@
 import { ApplicationType } from '@logto/schemas';
 
+import MachineToMachineDark from '@/assets/images/machine-to-machine-dark.svg';
+import MachineToMachine from '@/assets/images/machine-to-machine.svg';
 import NativeAppDark from '@/assets/images/native-app-dark.svg';
 import NativeApp from '@/assets/images/native-app.svg';
 import SinglePageAppDark from '@/assets/images/single-page-app-dark.svg';
@@ -15,12 +17,12 @@ export const lightModeApplicationIconMap: ApplicationIconMap = Object.freeze({
   [ApplicationType.Native]: NativeApp,
   [ApplicationType.SPA]: SinglePageApp,
   [ApplicationType.Traditional]: TraditionalWebApp,
-  [ApplicationType.MachineToMachine]: TraditionalWebApp,
+  [ApplicationType.MachineToMachine]: MachineToMachine,
 } as const);
 
 export const darkModeApplicationIconMap: ApplicationIconMap = Object.freeze({
   [ApplicationType.Native]: NativeAppDark,
   [ApplicationType.SPA]: SinglePageAppDark,
   [ApplicationType.Traditional]: TraditionalWebAppDark,
-  [ApplicationType.MachineToMachine]: TraditionalWebAppDark,
+  [ApplicationType.MachineToMachine]: MachineToMachineDark,
 } as const);

@@ -1,9 +1,11 @@
-import { Application, SnakeCaseOidcConfig } from '@logto/schemas';
+import { Application, SnakeCaseOidcConfig, UserRole } from '@logto/schemas';
 import { useEffect } from 'react';
-import { useFormContext } from 'react-hook-form';
+import { Controller, useFormContext } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 
 import CopyToClipboard from '@/components/CopyToClipboard';
 import FormField from '@/components/FormField';
+import Switch from '@/components/Switch';
 import UnsavedChangesAlertModal from '@/components/UnsavedChangesAlertModal';
 
 import * as styles from '../index.module.scss';
@@ -16,9 +18,11 @@ type Props = {
 
 const AdvancedSettings = ({ oidcConfig, defaultData, isDeleted }: Props) => {
   const {
+    control,
     reset,
     formState: { isDirty },
   } = useFormContext<Application>();
+  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   useEffect(() => {
     reset(defaultData);
@@ -46,6 +50,26 @@ const AdvancedSettings = ({ oidcConfig, defaultData, isDeleted }: Props) => {
           className={styles.textField}
           value={oidcConfig.token_endpoint}
           variant="border"
+        />
+      </FormField>
+      <FormField title="application_details.enable_admin_access">
+        <Controller
+          name="roleNames"
+          control={control}
+          defaultValue={[]}
+          render={({ field: { onChange, value } }) => (
+            <Switch
+              label={t('application_details.enable_admin_access_label')}
+              checked={value.includes(UserRole.Admin)}
+              onChange={({ currentTarget: { checked } }) => {
+                if (checked) {
+                  onChange([...new Set(value.concat(UserRole.Admin))]);
+                } else {
+                  onChange(value.filter((value) => value !== UserRole.Admin));
+                }
+              }}
+            />
+          )}
         />
       </FormField>
       <UnsavedChangesAlertModal hasUnsavedChanges={!isDeleted && isDirty} />

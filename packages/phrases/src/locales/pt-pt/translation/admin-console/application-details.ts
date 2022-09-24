@@ -31,6 +31,9 @@ const application_details = {
   refresh_token_expiration: 'Expiração do token de atualização',
   token_endpoint: 'Endpoint Token',
   user_info_endpoint: 'Enpoint Userinfo',
+  enable_admin_access: 'Enable admin access', // UNTRANSLATED
+  enable_admin_access_label:
+    'Enable or disable the access to Management API. Once enabled, you can use access tokens to call Management API on behalf on this application.', // UNTRANSLATED
   delete_description:
     'Esta ação não pode ser desfeita. Isso ira eliminar permanentemente a app. Insira o nome da aplicação <span>{{name}}</span> para confirmar.',
   enter_your_application_name: 'Digite o nome da aplicação',

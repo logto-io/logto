@@ -31,6 +31,9 @@ const application_details = {
   refresh_token_expiration: 'Refresh 토큰 만료',
   token_endpoint: '토큰 End-Point',
   user_info_endpoint: '사용자 정보 End-Point',
+  enable_admin_access: 'Enable admin access', // UNTRANSLATED
+  enable_admin_access_label:
+    'Enable or disable the access to Management API. Once enabled, you can use access tokens to call Management API on behalf on this application.', // UNTRANSLATED
   delete_description:
     '이 행동은 취소될 수 없어요. 어플리케이션을 영원히 삭제할 거에요. 삭제를 진행하기 위해 <span>{{name}}</span> 를 입력해주세요.',
   enter_your_application_name: '어플리케이션 이름을 입력해주세요.',
