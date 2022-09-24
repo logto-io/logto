@@ -16,6 +16,7 @@
 
     &:focus {
       border: _.border(var(--color-primary));
+      outline: none;
     }
 
     &::placeholder {
