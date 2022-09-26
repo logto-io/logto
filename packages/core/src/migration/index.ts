@@ -4,9 +4,9 @@ import path from 'path';
 
 import { LogtoConfig, LogtoConfigs } from '@logto/schemas';
 import {
-  DatabaseVersion,
-  databaseVersionGuard,
   MigrationScript,
+  MigrationState,
+  migrationStateGuard,
 } from '@logto/schemas/migrations/types';
 import { conditionalString } from '@silverhand/essentials';
 import chalk from 'chalk';
@@ -15,12 +15,8 @@ import { raw } from 'slonik-sql-tag-raw';
 
 import { convertToIdentifiers } from '@/database/utils';
 
-import {
-  databaseVersionKey,
-  logtoConfigsTableFilePath,
-  migrationFilesDirectory,
-} from './constants';
-import { compareVersion, getVersionFromFileName, migrationFileNameRegex } from './utils';
+import { logtoConfigsTableFilePath, migrationFilesDirectory, migrationStateKey } from './constants';
+import { getTimestampFromFileName, migrationFileNameRegex } from './utils';
 
 const { table, fields } = convertToIdentifiers(LogtoConfigs);
 
@@ -37,14 +33,14 @@ export const isLogtoConfigsTableExists = async (pool: DatabasePool) => {
   return exists;
 };
 
-export const getCurrentDatabaseVersion = async (pool: DatabasePool) => {
+export const getCurrentDatabaseTimestamp = async (pool: DatabasePool) => {
   try {
     const query = await pool.maybeOne<LogtoConfig>(
-      sql`select * from ${table} where ${fields.key}=${databaseVersionKey}`
+      sql`select * from ${table} where ${fields.key}=${migrationStateKey}`
     );
-    const databaseVersion = databaseVersionGuard.parse(query?.value);
+    const { timestamp } = migrationStateGuard.parse(query?.value);
 
-    return databaseVersion.version;
+    return timestamp;
   } catch {
     return null;
   }
@@ -55,20 +51,20 @@ export const createLogtoConfigsTable = async (pool: DatabasePool) => {
   await pool.query(sql`${raw(tableQuery)}`);
 };
 
-export const updateDatabaseVersion = async (pool: DatabasePool, version: string) => {
+export const updateDatabaseTimestamp = async (pool: DatabasePool, timestamp: number) => {
   if (!(await isLogtoConfigsTableExists(pool))) {
     await createLogtoConfigsTable(pool);
   }
 
-  const value: DatabaseVersion = {
-    version,
+  const value: MigrationState = {
+    timestamp,
     updatedAt: new Date().toISOString(),
   };
 
   await pool.query(
     sql`
       insert into ${table} (${fields.key}, ${fields.value}) 
-        values (${databaseVersionKey}, ${JSON.stringify(value)})
+        values (${migrationStateKey}, ${JSON.stringify(value)})
         on conflict (${fields.key}) do update set ${fields.value}=excluded.${fields.value}
     `
   );
@@ -86,18 +82,13 @@ export const getMigrationFiles = async () => {
 };
 
 export const getUndeployedMigrations = async (pool: DatabasePool) => {
-  const databaseVersion = await getCurrentDatabaseVersion(pool);
+  const databaseTimestamp = await getCurrentDatabaseTimestamp(pool);
   const files = await getMigrationFiles();
 
   return files
-    .filter(
-      (file) =>
-        !databaseVersion || compareVersion(getVersionFromFileName(file), databaseVersion) > 0
-    )
+    .filter((file) => !databaseTimestamp || getTimestampFromFileName(file) > databaseTimestamp)
     .slice()
-    .sort((file1, file2) =>
-      compareVersion(getVersionFromFileName(file1), getVersionFromFileName(file2))
-    );
+    .sort((file1, file2) => getTimestampFromFileName(file1) - getTimestampFromFileName(file2));
 };
 
 const importMigration = async (file: string): Promise<MigrationScript> => {
@@ -127,7 +118,7 @@ const runMigration = async (pool: DatabasePool, file: string) => {
     throw error;
   }
 
-  await updateDatabaseVersion(pool, getVersionFromFileName(file));
+  await updateDatabaseTimestamp(pool, getTimestampFromFileName(file));
   console.log(`${chalk.blue('[migration]')} run ${file} succeeded.`);
 };
 

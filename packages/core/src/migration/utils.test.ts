@@ -1,25 +1,15 @@
-import { compareVersion, getVersionFromFileName } from './utils';
+import { getTimestampFromFileName } from './utils';
 
-describe('compareVersion', () => {
-  it('should return 1 for 1.0.0 and 1.0.0-beta.9', () => {
-    expect(compareVersion('1.0.0', '1.0.0-beta.9')).toBe(1);
+describe('getTimestampFromFileName()', () => {
+  it('should get for 1.0.0-1663923211.js', () => {
+    expect(getTimestampFromFileName('1.0.0-1663923211.js')).toEqual(1_663_923_211);
   });
 
-  it('should return 1 for 1.0.0-beta.10 and 1.0.0-beta.9', () => {
-    expect(compareVersion('1.0.0-beta.10', '1.0.0-beta.9')).toBe(1);
+  it('should get for 1.0.0-1663923211-user-table.js', () => {
+    expect(getTimestampFromFileName('1.0.0-1663923211-user-table.js')).toEqual(1_663_923_211);
   });
 
-  it('should return 1 for 1.0.0 and 0.0.8', () => {
-    expect(compareVersion('1.0.0', '0.0.8')).toBe(1);
-  });
-});
-
-describe('getVersionFromFileName', () => {
-  it('should get version for 1.0.2.js', () => {
-    expect(getVersionFromFileName('1.0.2.js')).toEqual('1.0.2');
-  });
-
-  it('should throw for next.js', () => {
-    expect(() => getVersionFromFileName('next.js')).toThrowError();
+  it('should throw for 166392321.js', () => {
+    expect(() => getTimestampFromFileName('166392321.js')).toThrowError();
   });
 });

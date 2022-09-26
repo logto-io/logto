@@ -82,7 +82,8 @@ function createEnvSet() {
       pool = await createPoolByEnv(values.isTest);
       await addConnectors(values.connectorDirectory);
 
-      if (pool) {
+      // FIXME: @sijie temparaly disable migration for integration test
+      if (pool && !values.isIntegrationTest) {
         await checkMigrationState(pool);
       }
     },
