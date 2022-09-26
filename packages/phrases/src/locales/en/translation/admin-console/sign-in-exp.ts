@@ -71,13 +71,15 @@ const sign_in_exp = {
     },
     languages: {
       title: 'LANGUAGES',
-      mode: 'Language mode',
-      auto: 'Auto',
-      fixed: 'Fixed',
-      fallback_language: 'Fallback language',
-      fallback_language_tip:
-        'Which language to fall back if Logto finds no proper language phrase-set.',
-      fixed_language: 'Fixed language',
+      enable_auto_detect: 'Enable auto detect',
+      description:
+        "Your software detects the user's location and switches to the local language. You can add new locales by translating UI from English to another language.",
+      manage_language: 'Manage language',
+      default_language: 'Default language',
+      default_language_description_auto:
+        'The default language will be used when a text segment is missing translation.',
+      default_language_description_fixed:
+        'When auto detect is off, the default language is the only language your software will show. Turn on auto detect for language customization.',
     },
     authentication: {
       title: 'AUTHENTICATION',
