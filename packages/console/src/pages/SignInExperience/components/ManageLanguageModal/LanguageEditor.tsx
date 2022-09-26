@@ -20,12 +20,12 @@ import { CustomPhraseResponse } from './types';
 
 type LanguageEditorProps = {
   selectedLanguageKey: LanguageKey;
-  onEdit: (isDirty: boolean) => void;
+  onFormStateChange: (isDirty: boolean) => void;
 };
 
 const emptyUiTranslation = createEmptyUiTranslation();
 
-const LanguageEditor = ({ selectedLanguageKey, onEdit }: LanguageEditorProps) => {
+const LanguageEditor = ({ selectedLanguageKey, onFormStateChange }: LanguageEditorProps) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   const isBuiltInLanguage = Object.keys(resource).includes(selectedLanguageKey);
@@ -58,8 +58,8 @@ const LanguageEditor = ({ selectedLanguageKey, onEdit }: LanguageEditorProps) =>
   } = formMethods;
 
   useEffect(() => {
-    onEdit(isDirty);
-  }, [isDirty, onEdit]);
+    onFormStateChange(isDirty);
+  }, [isDirty, onFormStateChange]);
 
   const onSubmit = handleSubmit(async (formData: UiTranslation) => {
     const updatedCustomPhrase = await api

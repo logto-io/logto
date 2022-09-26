@@ -84,7 +84,7 @@ const ManageLanguageModal = ({ isOpen, onClose }: ManageLanguageModalProps) => {
           />
           <LanguageEditor
             selectedLanguageKey={selectedLanguageKey}
-            onEdit={setIsLanguageEditorDirty}
+            onFormStateChange={setIsLanguageEditorDirty}
           />
         </div>
       </ModalLayout>
