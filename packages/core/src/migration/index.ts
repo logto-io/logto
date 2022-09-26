@@ -51,13 +51,13 @@ export const createLogtoConfigsTable = async (pool: DatabasePool) => {
   await pool.query(sql`${raw(tableQuery)}`);
 };
 
-export const updateDatabaseTimestamp = async (pool: DatabasePool, timestamp: number) => {
+export const updateDatabaseTimestamp = async (pool: DatabasePool, timestamp?: number) => {
   if (!(await isLogtoConfigsTableExists(pool))) {
     await createLogtoConfigsTable(pool);
   }
 
   const value: MigrationState = {
-    timestamp,
+    timestamp: timestamp ?? (await getLatestMigrationTiemstamp()),
     updatedAt: new Date().toISOString(),
   };
 
@@ -70,6 +70,18 @@ export const updateDatabaseTimestamp = async (pool: DatabasePool, timestamp: num
   );
 };
 
+export const getLatestMigrationTiemstamp = async () => {
+  const files = await getMigrationFiles();
+
+  const latestFile = files[files.length - 1];
+
+  if (!latestFile) {
+    throw new Error('No migration files found.');
+  }
+
+  return getTimestampFromFileName(latestFile);
+};
+
 export const getMigrationFiles = async () => {
   if (!existsSync(migrationFilesDirectory)) {
     return [];
@@ -78,7 +90,9 @@ export const getMigrationFiles = async () => {
   const directory = await readdir(migrationFilesDirectory);
   const files = directory.filter((file) => migrationFileNameRegex.test(file));
 
-  return files;
+  return files
+    .slice()
+    .sort((file1, file2) => getTimestampFromFileName(file1) - getTimestampFromFileName(file2));
 };
 
 export const getUndeployedMigrations = async (pool: DatabasePool) => {
