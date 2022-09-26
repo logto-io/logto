@@ -1,4 +1,4 @@
 /src/db-entries
-/migrations/*.d.ts
-/migrations/*.js
-/migrations/*.tsbuildinfo
+/alterations/*.d.ts
+/alterations/*.js
+/alterations/*.tsbuildinfo

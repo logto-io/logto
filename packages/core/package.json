@@ -16,8 +16,8 @@
     "start": "NODE_ENV=production node build/index.js",
     "add-connector": "node build/cli/add-connector.js",
     "add-official-connectors": "node build/cli/add-official-connectors.js",
-    "migration-deploy": "node build/cli/migration-deploy.js",
-    "test": "jest --testPathIgnorePatterns=/core/connectors/",
+    "alteration": "node build/cli/alteration.js",
+    "test": "jest",
     "test:coverage": "jest --coverage --silent",
     "test:report": "codecov -F core"
   },

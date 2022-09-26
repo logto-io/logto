@@ -1,11 +1,11 @@
 import { DatabasePool, sql } from 'slonik';
 
-export type MigrationScript = {
+export type AlterationScript = {
   up: (pool: DatabasePool) => Promise<void>;
   down: (pool: DatabasePool) => Promise<void>;
 };
 
-const migration: MigrationScript = {
+const alteration: AlterationScript = {
   up: async (pool) => {
     // [Pull] feat(core): machine to machine apps #1973
     await pool.query(sql`
@@ -31,4 +31,4 @@ const migration: MigrationScript = {
   },
 };
 
-export default migration;
+export default alteration;

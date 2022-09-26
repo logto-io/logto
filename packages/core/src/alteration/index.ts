@@ -4,10 +4,10 @@ import path from 'path';
 
 import { LogtoConfig, LogtoConfigs } from '@logto/schemas';
 import {
-  MigrationScript,
-  MigrationState,
-  migrationStateGuard,
-} from '@logto/schemas/migrations/types';
+  AlterationScript,
+  AlterationState,
+  alterationStateGuard,
+} from '@logto/schemas/alterations/types';
 import { conditionalString } from '@silverhand/essentials';
 import chalk from 'chalk';
 import { DatabasePool, sql } from 'slonik';
@@ -15,8 +15,12 @@ import { raw } from 'slonik-sql-tag-raw';
 
 import { convertToIdentifiers } from '@/database/utils';
 
-import { logtoConfigsTableFilePath, migrationFilesDirectory, migrationStateKey } from './constants';
-import { getTimestampFromFileName, migrationFileNameRegex } from './utils';
+import {
+  logtoConfigsTableFilePath,
+  alterationStateKey,
+  alterationFilesDirectory,
+} from './constants';
+import { getTimestampFromFileName, alterationFileNameRegex } from './utils';
 
 const { table, fields } = convertToIdentifiers(LogtoConfigs);
 
@@ -36,9 +40,9 @@ export const isLogtoConfigsTableExists = async (pool: DatabasePool) => {
 export const getCurrentDatabaseTimestamp = async (pool: DatabasePool) => {
   try {
     const query = await pool.maybeOne<LogtoConfig>(
-      sql`select * from ${table} where ${fields.key}=${migrationStateKey}`
+      sql`select * from ${table} where ${fields.key}=${alterationStateKey}`
     );
-    const { timestamp } = migrationStateGuard.parse(query?.value);
+    const { timestamp } = alterationStateGuard.parse(query?.value);
 
     return timestamp;
   } catch {
@@ -56,48 +60,48 @@ export const updateDatabaseTimestamp = async (pool: DatabasePool, timestamp?: nu
     await createLogtoConfigsTable(pool);
   }
 
-  const value: MigrationState = {
-    timestamp: timestamp ?? (await getLatestMigrationTiemstamp()),
+  const value: AlterationState = {
+    timestamp: timestamp ?? (await getLatestAlterationTimestamp()),
     updatedAt: new Date().toISOString(),
   };
 
   await pool.query(
     sql`
       insert into ${table} (${fields.key}, ${fields.value}) 
-        values (${migrationStateKey}, ${JSON.stringify(value)})
+        values (${alterationStateKey}, ${JSON.stringify(value)})
         on conflict (${fields.key}) do update set ${fields.value}=excluded.${fields.value}
     `
   );
 };
 
-export const getLatestMigrationTiemstamp = async () => {
-  const files = await getMigrationFiles();
+export const getLatestAlterationTimestamp = async () => {
+  const files = await getAlterationFiles();
 
   const latestFile = files[files.length - 1];
 
   if (!latestFile) {
-    throw new Error('No migration files found.');
+    throw new Error('No alteration files found.');
   }
 
   return getTimestampFromFileName(latestFile);
 };
 
-export const getMigrationFiles = async () => {
-  if (!existsSync(migrationFilesDirectory)) {
+export const getAlterationFiles = async () => {
+  if (!existsSync(alterationFilesDirectory)) {
     return [];
   }
 
-  const directory = await readdir(migrationFilesDirectory);
-  const files = directory.filter((file) => migrationFileNameRegex.test(file));
+  const directory = await readdir(alterationFilesDirectory);
+  const files = directory.filter((file) => alterationFileNameRegex.test(file));
 
   return files
     .slice()
     .sort((file1, file2) => getTimestampFromFileName(file1) - getTimestampFromFileName(file2));
 };
 
-export const getUndeployedMigrations = async (pool: DatabasePool) => {
+export const getUndeployedAlterations = async (pool: DatabasePool) => {
   const databaseTimestamp = await getCurrentDatabaseTimestamp(pool);
-  const files = await getMigrationFiles();
+  const files = await getAlterationFiles();
 
   return files
     .filter((file) => !databaseTimestamp || getTimestampFromFileName(file) > databaseTimestamp)
@@ -105,18 +109,18 @@ export const getUndeployedMigrations = async (pool: DatabasePool) => {
     .sort((file1, file2) => getTimestampFromFileName(file1) - getTimestampFromFileName(file2));
 };
 
-const importMigration = async (file: string): Promise<MigrationScript> => {
+const importAlteration = async (file: string): Promise<AlterationScript> => {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const module = await import(
-    path.join(migrationFilesDirectory, file).replace('node_modules/', '')
+    path.join(alterationFilesDirectory, file).replace('node_modules/', '')
   );
 
   // eslint-disable-next-line no-restricted-syntax
-  return module.default as MigrationScript;
+  return module.default as AlterationScript;
 };
 
-const runMigration = async (pool: DatabasePool, file: string) => {
-  const { up } = await importMigration(file);
+const deployAlteration = async (pool: DatabasePool, file: string) => {
+  const { up } = await importAlteration(file);
 
   try {
     await pool.transaction(async (connect) => {
@@ -124,7 +128,7 @@ const runMigration = async (pool: DatabasePool, file: string) => {
     });
   } catch (error: unknown) {
     if (error instanceof Error) {
-      console.log(`${chalk.red('[migration]')} run ${file} failed: ${error.message}.`);
+      console.log(`${chalk.red('[alteration]')} run ${file} failed: ${error.message}.`);
 
       return;
     }
@@ -133,21 +137,21 @@ const runMigration = async (pool: DatabasePool, file: string) => {
   }
 
   await updateDatabaseTimestamp(pool, getTimestampFromFileName(file));
-  console.log(`${chalk.blue('[migration]')} run ${file} succeeded.`);
+  console.log(`${chalk.blue('[alteration]')} run ${file} succeeded.`);
 };
 
-export const runMigrations = async (pool: DatabasePool) => {
-  const migrations = await getUndeployedMigrations(pool);
+export const deployAlterations = async (pool: DatabasePool) => {
+  const alterations = await getUndeployedAlterations(pool);
 
   console.log(
-    `${chalk.blue('[migration]')} found ${migrations.length} migration${conditionalString(
-      migrations.length > 1 && 's'
+    `${chalk.blue('[alteration]')} found ${alterations.length} alteration${conditionalString(
+      alterations.length > 1 && 's'
     )}`
   );
 
-  // The await inside the loop is intended, migrations should run in order
-  for (const migration of migrations) {
+  // The await inside the loop is intended, alterations should run in order
+  for (const alteration of alterations) {
     // eslint-disable-next-line no-await-in-loop
-    await runMigration(pool, migration);
+    await deployAlteration(pool, alteration);
   }
 };

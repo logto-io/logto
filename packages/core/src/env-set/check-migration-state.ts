@@ -1,19 +1,19 @@
 import inquirer from 'inquirer';
 import { DatabasePool } from 'slonik';
 
-import { getUndeployedMigrations, runMigrations } from '@/migration';
+import { getUndeployedAlterations, deployAlterations } from '@/alteration';
 
 import { allYes } from './parameters';
 
-export const checkMigrationState = async (pool: DatabasePool) => {
-  const migrations = await getUndeployedMigrations(pool);
+export const checkAlterationState = async (pool: DatabasePool) => {
+  const alterations = await getUndeployedAlterations(pool);
 
-  if (migrations.length === 0) {
+  if (alterations.length === 0) {
     return;
   }
 
   const error = new Error(
-    `Found undeployed migrations, you must deploy them first by "pnpm migration-deploy" command, reference: https://docs.logto.io/docs/recipes/deployment/#migration`
+    `Found undeployed database alterations, you must deploy them first by "pnpm alteration deploy" command, reference: https://docs.logto.io/docs/recipes/deployment/#database-alteration`
   );
 
   if (allYes) {
@@ -23,12 +23,12 @@ export const checkMigrationState = async (pool: DatabasePool) => {
   const deploy = await inquirer.prompt({
     type: 'confirm',
     name: 'value',
-    message: `Found undeployed migrations, would you like to deploy now?`,
+    message: `Found undeployed alterations, would you like to deploy now?`,
   });
 
   if (!deploy.value) {
     throw error;
   }
 
-  await runMigrations(pool);
+  await deployAlterations(pool);
 };

@@ -6,14 +6,14 @@
   "license": "MPL-2.0",
   "files": [
     "lib",
-    "migrations"
+    "alterations"
   ],
   "private": true,
   "scripts": {
     "precommit": "lint-staged",
     "generate": "rm -rf src/db-entries && ts-node src/gen/index.ts && eslint \"src/db-entries/**\" --fix",
-    "build:migrations": "rm -rf migrations/*.d.ts migrations/*.js && tsc -p tsconfig.build.migrations.json",
-    "build": "pnpm generate && rm -rf lib/ && tsc -p tsconfig.build.json && pnpm build:migrations",
+    "build:alterations": "rm -rf alterations/*.d.ts alterations/*.js && tsc -p tsconfig.build.alterations.json",
+    "build": "pnpm generate && rm -rf lib/ && tsc -p tsconfig.build.json && pnpm build:alterations",
     "dev": "tsc -p tsconfig.build.json --watch --preserveWatchOutput --incremental",
     "lint": "eslint --ext .ts src",
     "lint:report": "pnpm lint --format json --output-file report.json",

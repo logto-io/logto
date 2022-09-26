@@ -6,7 +6,7 @@
   },
   "include": [
     "src",
-    "migrations",
-    "jest.config.ts", "migrations",
+    "alterations",
+    "jest.config.ts", "alterations",
   ]
 }

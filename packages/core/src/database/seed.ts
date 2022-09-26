@@ -8,7 +8,7 @@ import { createPool, parseDsn, sql, stringifyDsn } from 'slonik';
 import { createInterceptors } from 'slonik-interceptor-preset';
 import { raw } from 'slonik-sql-tag-raw';
 
-import { updateDatabaseTimestamp } from '@/migration';
+import { updateDatabaseTimestamp } from '@/alteration';
 import { buildApplicationSecret } from '@/utils/id';
 
 import { convertToPrimitiveOrSql } from './utils';
@@ -82,7 +82,7 @@ export const createDatabaseCli = async (dsn: string) => {
     }
 
     await updateDatabaseTimestamp(pool);
-    console.log(`${chalk.blue('[create-tables]')} Update migration state succeeded.`);
+    console.log(`${chalk.blue('[create-tables]')} Update alteration state succeeded.`);
   };
 
   const seedTables = async () => {

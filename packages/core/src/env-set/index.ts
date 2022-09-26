@@ -6,7 +6,7 @@ import { DatabasePool } from 'slonik';
 import { appendPath } from '@/utils/url';
 
 import { addConnectors } from './add-connectors';
-import { checkMigrationState } from './check-migration-state';
+import { checkAlterationState } from './check-migration-state';
 import createPoolByEnv from './create-pool-by-env';
 import loadOidcValues from './oidc';
 import { isTrue } from './parameters';
@@ -83,7 +83,7 @@ function createEnvSet() {
       await addConnectors(values.connectorDirectory);
 
       if (pool) {
-        await checkMigrationState(pool);
+        await checkAlterationState(pool);
       }
     },
   };
