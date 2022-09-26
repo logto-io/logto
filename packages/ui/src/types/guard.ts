@@ -14,5 +14,5 @@ export const passcodeMethodGuard = s.union([s.literal('email'), s.literal('sms')
 export const userFlowGuard = s.union([
   s.literal('sign-in'),
   s.literal('register'),
-  s.literal('reset-password'),
+  s.literal('forgot-password'),
 ]);

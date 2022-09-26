@@ -2,7 +2,7 @@ import classNames from 'classnames';
 import { useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { resetPassword } from '@/apis/reset-password';
+import { resetPassword } from '@/apis/forgot-password';
 import Button from '@/components/Button';
 import Input from '@/components/Input';
 import useApi from '@/hooks/use-api';

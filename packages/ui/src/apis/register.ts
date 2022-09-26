@@ -1,12 +1,14 @@
 import api from './api';
 
+const registerApiPrefix = '/api/session/register';
+
 export const register = async (username: string, password: string) => {
   type Response = {
     redirectTo: string;
   };
 
   return api
-    .post('/api/session/register/username-password', {
+    .post(`${registerApiPrefix}/username-password`, {
       json: {
         username,
         password,
@@ -17,7 +19,7 @@ export const register = async (username: string, password: string) => {
 
 export const sendRegisterSmsPasscode = async (phone: string) => {
   await api
-    .post('/api/session/register/passwordless/sms/send-passcode', {
+    .post(`${registerApiPrefix}/passwordless/sms/send-passcode`, {
       json: {
         phone,
       },
@@ -33,7 +35,7 @@ export const verifyRegisterSmsPasscode = async (phone: string, code: string) => 
   };
 
   return api
-    .post('/api/session/register/passwordless/sms/verify-passcode', {
+    .post(`${registerApiPrefix}/passwordless/sms/verify-passcode`, {
       json: {
         phone,
         code,
@@ -44,7 +46,7 @@ export const verifyRegisterSmsPasscode = async (phone: string, code: string) => 
 
 export const sendRegisterEmailPasscode = async (email: string) => {
   await api
-    .post('/api/session/register/passwordless/email/send-passcode', {
+    .post(`${registerApiPrefix}/passwordless/email/send-passcode`, {
       json: {
         email,
       },
@@ -60,7 +62,7 @@ export const verifyRegisterEmailPasscode = async (email: string, code: string) =
   };
 
   return api
-    .post('/api/session/register/passwordless/email/verify-passcode', {
+    .post(`${registerApiPrefix}/passwordless/email/verify-passcode`, {
       json: {
         email,
         code,

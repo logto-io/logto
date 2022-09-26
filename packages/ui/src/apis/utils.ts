@@ -1,17 +1,17 @@
 import { UserFlow } from '@/types';
 
 import {
+  sendForgotPasswordEmailPasscode,
+  sendForgotPasswordSmsPasscode,
+  verifyForgotPasswordEmailPasscode,
+  verifyForgotPasswordSmsPasscode,
+} from './forgot-password';
+import {
   verifyRegisterEmailPasscode,
   verifyRegisterSmsPasscode,
   sendRegisterEmailPasscode,
   sendRegisterSmsPasscode,
 } from './register';
-import {
-  sendResetPasswordEmailPasscode,
-  sendResetPasswordSmsPasscode,
-  verifyResetPasswordEmailPasscode,
-  verifyResetPasswordSmsPasscode,
-} from './reset-password';
 import {
   verifySignInEmailPasscode,
   verifySignInSmsPasscode,
@@ -25,12 +25,12 @@ export const getSendPasscodeApi = (
   type: UserFlow,
   method: PasscodeChannel
 ): ((_address: string) => Promise<{ success: boolean }>) => {
-  if (type === 'reset-password' && method === 'email') {
-    return sendResetPasswordEmailPasscode;
+  if (type === 'forgot-password' && method === 'email') {
+    return sendForgotPasswordEmailPasscode;
   }
 
-  if (type === 'reset-password' && method === 'sms') {
-    return sendResetPasswordSmsPasscode;
+  if (type === 'forgot-password' && method === 'sms') {
+    return sendForgotPasswordSmsPasscode;
   }
 
   if (type === 'sign-in' && method === 'email') {
@@ -52,12 +52,12 @@ export const getVerifyPasscodeApi = (
   type: UserFlow,
   method: PasscodeChannel
 ): ((_address: string, code: string, socialToBind?: string) => Promise<{ redirectTo: string }>) => {
-  if (type === 'reset-password' && method === 'email') {
-    return verifyResetPasswordEmailPasscode;
+  if (type === 'forgot-password' && method === 'email') {
+    return verifyForgotPasswordEmailPasscode;
   }
 
-  if (type === 'reset-password' && method === 'sms') {
-    return verifyResetPasswordSmsPasscode;
+  if (type === 'forgot-password' && method === 'sms') {
+    return verifyForgotPasswordSmsPasscode;
   }
 
   if (type === 'sign-in' && method === 'email') {
