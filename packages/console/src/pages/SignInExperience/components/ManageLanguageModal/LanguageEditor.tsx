@@ -3,6 +3,7 @@ import resource, {
   languageCodeAndDisplayNameMappings,
   Translation as UiTranslation,
 } from '@logto/phrases-ui';
+import cleanDeep from 'clean-deep';
 import { useEffect, useMemo } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
@@ -65,7 +66,7 @@ const LanguageEditor = ({ selectedLanguageKey, onFormStateChange }: LanguageEdit
     const updatedCustomPhrase = await api
       .put(`/api/custom-phrases/${selectedLanguageKey}`, {
         json: {
-          ...formData,
+          ...cleanDeep(formData),
         },
       })
       .json<CustomPhraseResponse>();
