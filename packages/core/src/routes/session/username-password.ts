@@ -10,11 +10,10 @@ import {
   encryptUserPassword,
   generateUserId,
   findUserByUsernameAndPassword,
-  updateLastSignInAt,
   insertUser,
 } from '@/lib/user';
 import koaGuard from '@/middleware/koa-guard';
-import { hasUser, hasActiveUsers } from '@/queries/user';
+import { hasUser, hasActiveUsers, updateUserById } from '@/queries/user';
 import assertThat from '@/utils/assert-that';
 
 import { AnonymousRouter } from '../types';
@@ -46,7 +45,7 @@ export default function usernamePasswordRoutes<T extends AnonymousRouter>(
       const { id } = await findUserByUsernameAndPassword(username, password);
 
       ctx.log(type, { userId: id });
-      await updateLastSignInAt(id);
+      await updateUserById(id, { lastSignInAt: Date.now() });
       await assignInteractionResults(ctx, provider, { login: { accountId: id } }, true);
 
       return next();
@@ -94,8 +93,8 @@ export default function usernamePasswordRoutes<T extends AnonymousRouter>(
         passwordEncrypted,
         passwordEncryptionMethod,
         roleNames,
+        lastSignInAt: Date.now(),
       });
-      await updateLastSignInAt(id);
       await assignInteractionResults(ctx, provider, { login: { accountId: id } });
 
       return next();

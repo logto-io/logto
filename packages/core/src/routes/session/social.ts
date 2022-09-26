@@ -12,7 +12,7 @@ import {
   getUserInfoByAuthCode,
   getUserInfoFromInteractionResult,
 } from '@/lib/social';
-import { generateUserId, insertUser, updateLastSignInAt } from '@/lib/user';
+import { generateUserId, insertUser } from '@/lib/user';
 import koaGuard from '@/middleware/koa-guard';
 import {
   hasUserWithIdentity,
@@ -98,8 +98,8 @@ export default function socialRoutes<T extends AnonymousRouter>(router: T, provi
       // Update social connector's user info
       await updateUserById(id, {
         identities: { ...identities, [target]: { userId: userInfo.id, details: userInfo } },
+        lastSignInAt: Date.now(),
       });
-      await updateLastSignInAt(id);
       await assignInteractionResults(ctx, provider, { login: { accountId: id } });
 
       return next();
@@ -133,8 +133,8 @@ export default function socialRoutes<T extends AnonymousRouter>(router: T, provi
 
       await updateUserById(id, {
         identities: { ...identities, [target]: { userId: userInfo.id, details: userInfo } },
+        lastSignInAt: Date.now(),
       });
-      await updateLastSignInAt(id);
       await assignInteractionResults(ctx, provider, { login: { accountId: id } });
 
       return next();
@@ -177,10 +177,10 @@ export default function socialRoutes<T extends AnonymousRouter>(router: T, provi
             details: userInfo,
           },
         },
+        lastSignInAt: Date.now(),
       });
       ctx.log(type, { userId: id });
 
-      await updateLastSignInAt(id);
       await assignInteractionResults(ctx, provider, { login: { accountId: id } });
 
       return next();

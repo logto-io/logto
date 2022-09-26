@@ -13,7 +13,6 @@ const updateUserById = jest.fn(async (..._args: unknown[]) => ({ id: 'id' }));
 
 jest.mock('@/lib/user', () => ({
   generateUserId: () => 'user1',
-  updateLastSignInAt: async (...args: unknown[]) => updateUserById(...args),
   insertUser: async (...args: unknown[]) => insertUser(...args),
 }));
 

@@ -46,7 +46,6 @@ jest.mock('@/queries/user', () => ({
 
 jest.mock('@/lib/user', () => ({
   generateUserId: () => 'user1',
-  updateLastSignInAt: async (...args: unknown[]) => updateUserById(...args),
   insertUser: async (...args: unknown[]) => insertUser(...args),
 }));
 

@@ -5,7 +5,7 @@ import pRetry from 'p-retry';
 import { buildInsertInto } from '@/database/insert-into';
 import envSet from '@/env-set';
 import { findRolesByRoleNames, insertRoles } from '@/queries/roles';
-import { findUserByUsername, hasUserWithId, updateUserById } from '@/queries/user';
+import { findUserByUsername, hasUserWithId } from '@/queries/user';
 import assertThat from '@/utils/assert-that';
 import { buildIdGenerator } from '@/utils/id';
 import { encryptPassword } from '@/utils/password';
@@ -58,9 +58,6 @@ export const findUserByUsernameAndPassword = async (
 
   return user;
 };
-
-export const updateLastSignInAt = async (userId: string) =>
-  updateUserById(userId, { lastSignInAt: Date.now() });
 
 const insertUserQuery = buildInsertInto<CreateUser, User>(Users, {
   returning: true,

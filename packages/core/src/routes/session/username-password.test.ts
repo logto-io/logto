@@ -139,6 +139,9 @@ describe('sessionRoutes', () => {
     it('assign result and redirect', async () => {
       interactionDetails.mockResolvedValueOnce({ params: {} });
 
+      const fakeTime = Date.now();
+      jest.useFakeTimers().setSystemTime(fakeTime);
+
       const response = await sessionRequest
         .post(registerRoute)
         .send({ username: 'username', password: 'password' });
@@ -149,6 +152,7 @@ describe('sessionRoutes', () => {
           passwordEncrypted: 'password_user1',
           passwordEncryptionMethod: 'Argon2i',
           roleNames: [],
+          lastSignInAt: fakeTime,
         })
       );
       expect(response.body).toHaveProperty('redirectTo');
@@ -158,6 +162,7 @@ describe('sessionRoutes', () => {
         expect.objectContaining({ login: { accountId: 'user1' } }),
         expect.anything()
       );
+      jest.useRealTimers();
     });
 
     it('register user with admin role for admin console if no active user found', async () => {
