@@ -31,6 +31,9 @@ const application_details = {
   refresh_token_expiration: 'Refresh Token expiration',
   token_endpoint: 'Token Endpoint',
   user_info_endpoint: 'Userinfo endpoint',
+  enable_admin_access: 'Enable admin access',
+  enable_admin_access_label:
+    'Enable or disable the access to Management API. Once enabled, you can use access tokens to call Management API on behalf on this application.',
   delete_description:
     'This action cannot be undone. It will permanently delete the application. Please enter the application name <span>{{name}}</span> to confirm.',
   enter_your_application_name: 'Enter your application name',

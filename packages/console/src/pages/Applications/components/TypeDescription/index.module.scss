@@ -3,6 +3,7 @@
 .title {
   font: var(--font-subhead-2);
   color: var(--color-text);
+  padding-right: _.unit(6); /* For check mark */
 }
 
 .subtitle,

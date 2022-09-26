@@ -30,7 +30,10 @@ const application_details = {
   id_token_expiration: "Expiration du jeton d'identification",
   refresh_token_expiration: "Rafraîchir l'expiration du jeton",
   token_endpoint: 'Token Endpoint',
-  user_info_endpoint: 'Userinfo endpoint',
+  user_info_endpoint: 'Userinfo Endpoint',
+  enable_admin_access: 'Enable admin access', // UNTRANSLATED
+  enable_admin_access_label:
+    'Enable or disable the access to Management API. Once enabled, you can use access tokens to call Management API on behalf on this application.', // UNTRANSLATED
   delete_description:
     "Cette action ne peut être annulée. Elle supprimera définitivement l'application. Veuillez entrer le nom de l'application <span>{{nom}}</span> pour confirmer.",
   enter_your_application_name: "Saisissez votre nom d'application",
