@@ -1,11 +1,11 @@
 import { InstanceProps } from 'react-modal-promise';
 
-import { TermsOfUseModalMessage } from '@/types';
+import { ConfirmModalMessage } from '@/types';
 
 type Props = {
   isOpen?: boolean;
   onConfirm: () => void;
-  onClose: (message?: TermsOfUseModalMessage) => void;
+  onClose: (message?: ConfirmModalMessage) => void;
 };
 
 export const modalPromisify =
@@ -14,14 +14,14 @@ export const modalPromisify =
     isOpen,
     onResolve,
     onReject,
-  }: Omit<InstanceProps<boolean | TermsOfUseModalMessage>, 'open' | 'close'>) => {
+  }: Omit<InstanceProps<boolean | ConfirmModalMessage>, 'open' | 'close'>) => {
     return (
       <ConfirmModal
         isOpen={isOpen}
         onConfirm={() => {
           onResolve(true);
         }}
-        onClose={(message?: TermsOfUseModalMessage) => {
+        onClose={(message?: ConfirmModalMessage) => {
           onReject(message ?? false);
         }}
       />

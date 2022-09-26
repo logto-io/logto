@@ -1,10 +1,8 @@
 import { useContext } from 'react';
 import { create } from 'react-modal-promise';
 
-import { IframeModal } from '@/components/ConfirmModal';
+import { IframeModal, modalPromisify } from '@/components/ConfirmModal';
 import { PageContext } from '@/hooks/use-page-context';
-
-import { modalPromisify } from '../termsOfUseModalPromisify';
 
 /**
  * For mobile use only, includes embedded Terms iframe

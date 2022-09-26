@@ -28,8 +28,8 @@ export type SignInExperienceSettings = Omit<
   secondarySignInMethods: SignInMethod[];
 };
 
-export enum TermsOfUseModalMessage {
-  SHOW_DETAIL_MODAL = 'SHOW_DETAIL_MODAL',
+export enum ConfirmModalMessage {
+  SHOW_TERMS_DETAIL_MODAL = 'SHOW_TERMS_DETAIL_MODAL',
 }
 
 export type PreviewConfig = {

@@ -6,7 +6,7 @@ import SettingsProvider from '@/__mocks__/RenderWithPageContext/SettingsProvider
 import { signInBasic } from '@/apis/sign-in';
 import { termsOfUseConfirmModalPromise } from '@/containers/TermsOfUse/TermsOfUseConfirmModal';
 import { termsOfUseIframeModalPromise } from '@/containers/TermsOfUse/TermsOfUseIframeModal';
-import { TermsOfUseModalMessage } from '@/types';
+import { ConfirmModalMessage } from '@/types';
 
 import UsernameSignIn from '.';
 
@@ -98,7 +98,9 @@ describe('<UsernameSignIn>', () => {
   });
 
   test('should show terms detail modal', async () => {
-    termsOfUseConfirmModalPromiseMock.mockRejectedValue(TermsOfUseModalMessage.SHOW_DETAIL_MODAL);
+    termsOfUseConfirmModalPromiseMock.mockRejectedValue(
+      ConfirmModalMessage.SHOW_TERMS_DETAIL_MODAL
+    );
 
     const { getByText, container } = renderWithPageContext(
       <SettingsProvider>

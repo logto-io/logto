@@ -1,15 +1,15 @@
 import { fireEvent } from '@testing-library/react';
 
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
+import TermsOfUseConfirmModal from '@/containers/TermsOfUse/TermsOfUseConfirmModal';
 
 import { modalPromisify } from '.';
-import TermsOfUseConfirmModal from '../TermsOfUseConfirmModal';
 
 describe('modalPromisify', () => {
   const onResolve = jest.fn();
   const onReject = jest.fn();
 
-  it('render properly', () => {
+  it('resolve properly', () => {
     const PromisifyModal = modalPromisify(TermsOfUseConfirmModal);
 
     const { getByText } = renderWithPageContext(
@@ -22,7 +22,7 @@ describe('modalPromisify', () => {
     expect(onResolve).toBeCalled();
   });
 
-  it('reject with message', () => {
+  it('reject', () => {
     const PromisifyModal = modalPromisify(TermsOfUseConfirmModal);
 
     const { getByText } = renderWithPageContext(

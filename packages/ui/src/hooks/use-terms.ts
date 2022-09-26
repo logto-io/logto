@@ -2,7 +2,8 @@ import { useContext, useCallback } from 'react';
 
 import { termsOfUseConfirmModalPromise } from '@/containers/TermsOfUse/TermsOfUseConfirmModal';
 import { termsOfUseIframeModalPromise } from '@/containers/TermsOfUse/TermsOfUseIframeModal';
-import { TermsOfUseModalMessage } from '@/types';
+import { ConfirmModalMessage } from '@/types';
+import { flattenPromiseResult } from '@/utils/promisify';
 
 import { PageContext } from './use-page-context';
 
@@ -12,29 +13,21 @@ const useTerms = () => {
   const { termsOfUse } = experienceSettings ?? {};
 
   const termsOfUseIframeModalHandler = useCallback(async () => {
-    try {
-      await termsOfUseIframeModalPromise();
+    const [result] = await flattenPromiseResult<boolean>(termsOfUseIframeModalPromise());
 
-      return true;
-    } catch {
-      return false;
-    }
+    return Boolean(result);
   }, []);
 
   const termsOfUseConfirmModalHandler = useCallback(async () => {
-    try {
-      await termsOfUseConfirmModalPromise();
+    const [result, error] = await flattenPromiseResult<boolean>(termsOfUseConfirmModalPromise());
 
-      return true;
-    } catch (error: unknown) {
-      if (error === TermsOfUseModalMessage.SHOW_DETAIL_MODAL) {
-        const result = await termsOfUseIframeModalHandler();
+    if (error === ConfirmModalMessage.SHOW_TERMS_DETAIL_MODAL) {
+      const result = await termsOfUseIframeModalHandler();
 
-        return result;
-      }
-
-      return false;
+      return result;
     }
+
+    return Boolean(result);
   }, [termsOfUseIframeModalHandler]);
 
   const termsValidation = useCallback(async () => {
