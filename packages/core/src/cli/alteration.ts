@@ -2,16 +2,22 @@ import 'module-alias/register';
 import { assertEnv } from '@silverhand/essentials';
 import { createPool } from 'slonik';
 
+import { deployAlterations } from '@/alteration';
 import { configDotEnv } from '@/env-set/dot-env';
-import { runMigrations } from '@/migration';
 
 configDotEnv();
 
 const deploy = async () => {
   const databaseUrl = assertEnv('DB_URL');
   const pool = await createPool(databaseUrl);
-  await runMigrations(pool);
+  await deployAlterations(pool);
   await pool.end();
 };
+
+const command = process.argv[2];
+
+if (command !== 'deploy') {
+  throw new Error('Unsupported command.');
+}
 
 void deploy();

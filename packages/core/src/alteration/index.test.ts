@@ -5,7 +5,7 @@ import { convertToIdentifiers } from '@/database/utils';
 import { QueryType, expectSqlAssert } from '@/utils/test-utils';
 
 import * as functions from '.';
-import { migrationStateKey } from './constants';
+import { alterationStateKey } from './constants';
 
 const mockQuery: jest.MockedFunction<QueryType> = jest.fn();
 const {
@@ -13,7 +13,7 @@ const {
   isLogtoConfigsTableExists,
   updateDatabaseTimestamp,
   getCurrentDatabaseTimestamp,
-  getUndeployedMigrations,
+  getUndeployedAlterations,
 } = functions;
 const pool = createMockPool({
   query: async (sql, values) => {
@@ -59,7 +59,7 @@ describe('getCurrentDatabaseTimestamp()', () => {
 
     mockQuery.mockImplementationOnce(async (sql, values) => {
       expectSqlAssert(sql, expectSql.sql);
-      expect(values).toEqual([migrationStateKey]);
+      expect(values).toEqual([alterationStateKey]);
 
       return createMockQueryResult([]);
     });
@@ -74,7 +74,7 @@ describe('getCurrentDatabaseTimestamp()', () => {
 
     mockQuery.mockImplementationOnce(async (sql, values) => {
       expectSqlAssert(sql, expectSql.sql);
-      expect(values).toEqual([migrationStateKey]);
+      expect(values).toEqual([alterationStateKey]);
 
       return createMockQueryResult([{ value: 'some_value' }]);
     });
@@ -89,7 +89,7 @@ describe('getCurrentDatabaseTimestamp()', () => {
 
     mockQuery.mockImplementationOnce(async (sql, values) => {
       expectSqlAssert(sql, expectSql.sql);
-      expect(values).toEqual([migrationStateKey]);
+      expect(values).toEqual([alterationStateKey]);
 
       // @ts-expect-error createMockQueryResult doesn't support jsonb
       return createMockQueryResult([{ value: { timestamp, updatedAt: 'now' } }]);
@@ -148,7 +148,7 @@ describe('updateDatabaseTimestamp()', () => {
   it('sends upsert sql with timestamp and updatedAt', async () => {
     mockQuery.mockImplementationOnce(async (sql, values) => {
       expectSqlAssert(sql, expectSql.sql);
-      expect(values).toEqual([migrationStateKey, JSON.stringify({ timestamp, updatedAt })]);
+      expect(values).toEqual([alterationStateKey, JSON.stringify({ timestamp, updatedAt })]);
 
       return createMockQueryResult([]);
     });
@@ -158,10 +158,10 @@ describe('updateDatabaseTimestamp()', () => {
   });
 });
 
-describe('getUndeployedMigrations()', () => {
+describe('getUndeployedAlterations()', () => {
   beforeEach(() => {
     jest
-      .spyOn(functions, 'getMigrationFiles')
+      .spyOn(functions, 'getAlterationFiles')
       .mockResolvedValueOnce([
         '1.0.0-1663923770-a.js',
         '1.0.0-1663923772-c.js',
@@ -169,10 +169,10 @@ describe('getUndeployedMigrations()', () => {
       ]);
   });
 
-  it('returns all files with right order if database migration timestamp is null', async () => {
+  it('returns all files with right order if database timestamp is null', async () => {
     jest.spyOn(functions, 'getCurrentDatabaseTimestamp').mockResolvedValueOnce(null);
 
-    await expect(getUndeployedMigrations(pool)).resolves.toEqual([
+    await expect(getUndeployedAlterations(pool)).resolves.toEqual([
       '1.0.0-1663923770-a.js',
       '1.0.0-1663923771-b.js',
       '1.0.0-1663923772-c.js',
@@ -182,7 +182,7 @@ describe('getUndeployedMigrations()', () => {
   it('returns files whose timestamp is greater then database timstamp', async () => {
     jest.spyOn(functions, 'getCurrentDatabaseTimestamp').mockResolvedValueOnce(1_663_923_770);
 
-    await expect(getUndeployedMigrations(pool)).resolves.toEqual([
+    await expect(getUndeployedAlterations(pool)).resolves.toEqual([
       '1.0.0-1663923771-b.js',
       '1.0.0-1663923772-c.js',
     ]);

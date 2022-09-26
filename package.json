@@ -11,7 +11,7 @@
     "prepack": "lerna run --stream prepack",
     "dev": "lerna run --stream prepack -- --incremental && lerna --ignore=@logto/integration-test run --parallel dev",
     "start": "cd packages/core && NODE_ENV=production node . --from-root",
-    "migration-deploy": "cd packages/core && pnpm migration-deploy",
+    "alteration": "cd packages/core && pnpm alteration",
     "ci:build": "lerna run --stream build",
     "ci:lint": "lerna run --parallel lint",
     "ci:stylelint": "lerna run --parallel stylelint",

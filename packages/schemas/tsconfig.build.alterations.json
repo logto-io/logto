@@ -1,8 +1,8 @@
 {
   "extends": "./tsconfig",
   "compilerOptions": {
-    "outDir": "migrations",
+    "outDir": "alterations",
   },
-  "include": ["migrations"],
+  "include": ["alterations"],
   "exclude": []
 }
