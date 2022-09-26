@@ -1,4 +1,4 @@
-import { DatabaseTransactionConnection } from 'slonik';
+import type { DatabaseTransactionConnection } from 'slonik';
 import { z } from 'zod';
 
 export const alterationStateGuard = z.object({
