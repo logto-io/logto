@@ -5,9 +5,16 @@ import { createRequester } from '@/utils/test-utils';
 
 const totalUserCount = 1000;
 const countUsers = jest.fn(async () => ({ count: totalUserCount }));
+const getDailyNewUserCountsByTimeInterval = jest.fn(
+  async (startTimeExclusive: number, endTimeInclusive: number) => mockDailyNewUserCounts
+);
 
 jest.mock('@/queries/user', () => ({
   countUsers: async () => countUsers(),
+  getDailyNewUserCountsByTimeInterval: async (
+    startTimeExclusive: number,
+    endTimeInclusive: number
+  ) => getDailyNewUserCountsByTimeInterval(startTimeExclusive, endTimeInclusive),
 }));
 
 const mockDailyNewUserCounts = [
@@ -32,9 +39,6 @@ const mockDailyActiveUserCounts = [
 
 const mockActiveUserCount = 1000;
 
-const getDailyNewUserCountsByTimeInterval = jest.fn(
-  async (startTimeExclusive: number, endTimeInclusive: number) => mockDailyNewUserCounts
-);
 const getDailyActiveUserCountsByTimeInterval = jest.fn(
   async (startTimeExclusive: number, endTimeInclusive: number) => mockDailyActiveUserCounts
 );
@@ -43,10 +47,6 @@ const countActiveUsersByTimeInterval = jest.fn(
 );
 
 jest.mock('@/queries/log', () => ({
-  getDailyNewUserCountsByTimeInterval: async (
-    startTimeExclusive: number,
-    endTimeInclusive: number
-  ) => getDailyNewUserCountsByTimeInterval(startTimeExclusive, endTimeInclusive),
   getDailyActiveUserCountsByTimeInterval: async (
     startTimeExclusive: number,
     endTimeInclusive: number

@@ -49,27 +49,6 @@ export const findLogs = async (limit: number, offset: number, logCondition: LogC
 
 export const findLogById = buildFindEntityById<CreateLog, Log>(Logs);
 
-const registerLogTypes: LogType[] = [
-  'RegisterUsernamePassword',
-  'RegisterEmail',
-  'RegisterSms',
-  'RegisterSocial',
-];
-
-export const getDailyNewUserCountsByTimeInterval = async (
-  startTimeExclusive: number,
-  endTimeInclusive: number
-) =>
-  envSet.pool.any<{ date: string; count: number }>(sql`
-    select date(${fields.createdAt}), count(*)
-    from ${table}
-    where ${fields.createdAt} > to_timestamp(${startTimeExclusive}::double precision / 1000)
-    and ${fields.createdAt} <= to_timestamp(${endTimeInclusive}::double precision / 1000)
-    and ${fields.type} in (${sql.join(registerLogTypes, sql`, `)})
-    and ${fields.payload}->>'result' = 'Success'
-    group by date(${fields.createdAt})
-  `);
-
 // The active user should exchange the tokens by the authorization code (i.e. sign-in)
 // or exchange the access token, which will expire in 2 hours, by the refresh token.
 const activeUserLogTypes: LogType[] = ['CodeExchangeToken', 'RefreshTokenExchangeToken'];
