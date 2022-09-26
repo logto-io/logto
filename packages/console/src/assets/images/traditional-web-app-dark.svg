@@ -1,15 +1,15 @@
 <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-<rect width="40" height="40" rx="8" fill="#F3EFFA"/>
-<path d="M29.3509 22C29.6075 21.5556 30.249 21.5556 30.5056 22L36.2791 32C36.5357 32.4444 36.2149 33 35.7017 33H24.1547C23.6415 33 23.3208 32.4444 23.5774 32L29.3509 22Z" fill="#FAABFF"/>
-<rect opacity="0.8" x="7" y="11" width="25" height="19" rx="2" fill="url(#paint0_linear_4247_16216)"/>
-<path d="M7 15.0715H32V13.0001C32 11.8955 31.1046 11.0001 30 11.0001H9C7.89543 11.0001 7 11.8955 7 13.0001V15.0715Z" fill="#5D34F2"/>
-<rect x="9.77734" y="17.7856" width="8.33333" height="1.35714" rx="0.678572" fill="#F5EEFF"/>
-<rect x="9.77734" y="21.8571" width="16.6667" height="1.35714" rx="0.678572" fill="#F5EEFF"/>
+<rect width="40" height="40" rx="8" fill="#3A3B59"/>
+<rect opacity="0.8" x="7.5" y="11" width="25" height="19" rx="2" fill="url(#paint0_linear_1091_20258)"/>
+<path d="M7.5 15.0715H32.5V13.0001C32.5 11.8955 31.6046 11.0001 30.5 11.0001H9.5C8.39543 11.0001 7.5 11.8955 7.5 13.0001V15.0715Z" fill="#5D34F2"/>
+<rect x="10.2773" y="17.7856" width="8.33333" height="1.35714" rx="0.678572" fill="#D3BCF3"/>
+<rect x="10.2773" y="21.8571" width="16.6667" height="1.35714" rx="0.678572" fill="#D3BCF3"/>
+<path opacity="0.6" d="M29.3509 25C29.6075 24.5556 30.249 24.5556 30.5056 25L36.2791 35C36.5357 35.4444 36.2149 36 35.7017 36H24.1547C23.6415 36 23.3208 35.4444 23.5774 35L29.3509 25Z" fill="#F4E560"/>
 <g style="mix-blend-mode:multiply">
-<circle cx="9" cy="11" r="6" fill="#CABEFF"/>
+<circle cx="10" cy="10" r="6" fill="#F07EFF"/>
 </g>
 <defs>
-<linearGradient id="paint0_linear_4247_16216" x1="4.94643" y1="21.8854" x2="29.5122" y2="9.95067" gradientUnits="userSpaceOnUse">
+<linearGradient id="paint0_linear_1091_20258" x1="5.44643" y1="21.8854" x2="30.0122" y2="9.95067" gradientUnits="userSpaceOnUse">
 <stop stop-color="#492EF3"/>
 <stop offset="1" stop-color="#CF69FF"/>
 </linearGradient>
