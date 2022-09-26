@@ -2,18 +2,19 @@ import ky from 'ky';
 
 import { consent } from './consent';
 import {
+  verifyForgotPasswordEmailPasscode,
+  verifyForgotPasswordSmsPasscode,
+  sendForgotPasswordEmailPasscode,
+  sendForgotPasswordSmsPasscode,
+  resetPassword,
+} from './forgot-password';
+import {
   register,
   sendRegisterEmailPasscode,
   sendRegisterSmsPasscode,
   verifyRegisterEmailPasscode,
   verifyRegisterSmsPasscode,
 } from './register';
-import {
-  verifyResetPasswordEmailPasscode,
-  verifyResetPasswordSmsPasscode,
-  sendResetPasswordEmailPasscode,
-  sendResetPasswordSmsPasscode,
-} from './reset-password';
 import {
   signInBasic,
   sendSignInSmsPasscode,
@@ -185,18 +186,18 @@ describe('api', () => {
     });
   });
 
-  it('sendResetPasswordSmsPasscode', async () => {
-    await sendResetPasswordSmsPasscode(phone);
-    expect(ky.post).toBeCalledWith('/api/session/reset-password/sms/send-passcode', {
+  it('sendForgotPasswordSmsPasscode', async () => {
+    await sendForgotPasswordSmsPasscode(phone);
+    expect(ky.post).toBeCalledWith('/api/session/forgot-password/sms/send-passcode', {
       json: {
         phone,
       },
     });
   });
 
-  it('verifyResetPasswordSmsPasscode', async () => {
-    await verifyResetPasswordSmsPasscode(phone, code);
-    expect(ky.post).toBeCalledWith('/api/session/reset-password/sms/verify-passcode', {
+  it('verifyForgotPasswordSmsPasscode', async () => {
+    await verifyForgotPasswordSmsPasscode(phone, code);
+    expect(ky.post).toBeCalledWith('/api/session/forgot-password/sms/verify-passcode', {
       json: {
         phone,
         code,
@@ -204,18 +205,18 @@ describe('api', () => {
     });
   });
 
-  it('sendResetPasswordEmailPasscode', async () => {
-    await sendResetPasswordEmailPasscode(email);
-    expect(ky.post).toBeCalledWith('/api/session/reset-password/email/send-passcode', {
+  it('sendForgotPasswordEmailPasscode', async () => {
+    await sendForgotPasswordEmailPasscode(email);
+    expect(ky.post).toBeCalledWith('/api/session/forgot-password/email/send-passcode', {
       json: {
         email,
       },
     });
   });
 
-  it('verifyResetPasswordEmailPasscode', async () => {
-    await verifyResetPasswordEmailPasscode(email, code);
-    expect(ky.post).toBeCalledWith('/api/session/reset-password/email/verify-passcode', {
+  it('verifyForgotPasswordEmailPasscode', async () => {
+    await verifyForgotPasswordEmailPasscode(email, code);
+    expect(ky.post).toBeCalledWith('/api/session/forgot-password/email/verify-passcode', {
       json: {
         email,
         code,
@@ -271,6 +272,15 @@ describe('api', () => {
     expect(ky.post).toBeCalledWith('/api/session/register/social', {
       json: {
         connectorId: 'connectorId',
+      },
+    });
+  });
+
+  it('resetPassword', async () => {
+    await resetPassword('password');
+    expect(ky.post).toBeCalledWith('/api/session/forgot-password/reset', {
+      json: {
+        password: 'password',
       },
     });
   });

@@ -1,11 +1,11 @@
 import { fireEvent, act, waitFor } from '@testing-library/react';
 
 import renderWithPageContext from '@/__mocks__/RenderWithPageContext';
-import { resetPassword } from '@/apis/reset-password';
+import { resetPassword } from '@/apis/forgot-password';
 
 import ResetPassword from '.';
 
-jest.mock('@/apis/reset-password', () => ({
+jest.mock('@/apis/forgot-password', () => ({
   resetPassword: jest.fn(async () => ({ redirectTo: '/' })),
 }));
 

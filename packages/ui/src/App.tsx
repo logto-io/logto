@@ -69,8 +69,8 @@ const App = () => {
               <Route path="/register/:method" element={<Register />} />
 
               {/* forgot password */}
+              <Route path="/forgot-password/reset" element={<ResetPassword />} />
               <Route path="/forgot-password/:method" element={<ForgotPassword />} />
-              <Route path="/reset-password" element={<ResetPassword />} />
 
               {/* social sign-in pages */}
 
