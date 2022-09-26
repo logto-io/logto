@@ -29,7 +29,10 @@ const application_details = {
   id_token_expiration: 'ID Token 过期时间',
   refresh_token_expiration: 'Refresh Token 过期时间',
   token_endpoint: 'Token Endpoint',
-  user_info_endpoint: 'UserInfo endpoint',
+  user_info_endpoint: 'UserInfo Endpoint',
+  enable_admin_access: 'Enable admin access', // UNTRANSLATED
+  enable_admin_access_label:
+    'Enable or disable the access to Management API. Once enabled, you can use access tokens to call Management API on behalf on this application.', // UNTRANSLATED
   delete_description: '本操作会永久性地删除该应用，且不可撤销。输入 <span>{{name}}</span> 确认。',
   enter_your_application_name: '输入你的应用名称',
   application_deleted: '应用 {{name}} 成功删除.',

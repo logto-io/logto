@@ -204,6 +204,7 @@ const ApplicationDetails = () => {
                 <div className={styles.fields}>
                   {isAdvancedSettings && (
                     <AdvancedSettings
+                      applicationType={data.type}
                       oidcConfig={oidcConfig}
                       defaultData={data}
                       isDeleted={isDeleted}

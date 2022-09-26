@@ -31,6 +31,9 @@ const application_details = {
   refresh_token_expiration: 'Refresh Token sona erme süresi',
   token_endpoint: 'Token bitiş noktası',
   user_info_endpoint: 'Userinfo bitiş noktası',
+  enable_admin_access: 'Enable admin access', // UNTRANSLATED
+  enable_admin_access_label:
+    'Enable or disable the access to Management API. Once enabled, you can use access tokens to call Management API on behalf on this application.', // UNTRANSLATED
   delete_description:
     'Bu eylem geri alınamaz. Uygulama kalıcı olarak silinecektir. Lütfen onaylamak için uygulama adı <span>{{name}}</span> girin.',
   enter_your_application_name: 'Uygulama adı giriniz',
