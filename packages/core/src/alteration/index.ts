@@ -7,7 +7,7 @@ import {
   AlterationScript,
   AlterationState,
   alterationStateGuard,
-} from '@logto/schemas/alterations/types';
+} from '@logto/schemas/lib/types/alteration';
 import { conditionalString } from '@silverhand/essentials';
 import chalk from 'chalk';
 import { DatabasePool, sql } from 'slonik';
