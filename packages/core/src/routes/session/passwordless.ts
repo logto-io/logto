@@ -6,9 +6,10 @@ import { object, string } from 'zod';
 import RequestError from '@/errors/RequestError';
 import { createPasscode, sendPasscode, verifyPasscode } from '@/lib/passcode';
 import { assignInteractionResults } from '@/lib/session';
-import { generateUserId, insertUser, updateLastSignInAt } from '@/lib/user';
+import { generateUserId, insertUser } from '@/lib/user';
 import koaGuard from '@/middleware/koa-guard';
 import {
+  updateUserById,
   hasUserWithEmail,
   hasUserWithPhone,
   findUserByEmail,
@@ -67,7 +68,7 @@ export default function passwordlessRoutes<T extends AnonymousRouter>(
       const { id } = await findUserByPhone(phone);
       ctx.log(type, { userId: id });
 
-      await updateLastSignInAt(id);
+      await updateUserById(id, { lastSignInAt: Date.now() });
       await assignInteractionResults(ctx, provider, { login: { accountId: id } }, true);
 
       return next();
@@ -115,7 +116,7 @@ export default function passwordlessRoutes<T extends AnonymousRouter>(
       const { id } = await findUserByEmail(email);
       ctx.log(type, { userId: id });
 
-      await updateLastSignInAt(id);
+      await updateUserById(id, { lastSignInAt: Date.now() });
       await assignInteractionResults(ctx, provider, { login: { accountId: id } }, true);
 
       return next();
