@@ -68,15 +68,12 @@ const sign_in_exp = {
     },
     languages: {
       title: '语言',
-      enable_auto_detect: 'Enable auto detect', // UNTRANSLATED
-      description:
-        "Your software detects the user's location and switches to the local language. You can add new locales by translating UI from English to another language.", // UNTRANSLATED
-      manage_language: 'Manage language', // UNTRANSLATED
-      default_language: 'Default language', // UNTRANSLATED
-      default_language_description_auto:
-        'The default language will be used when a text segment is missing translation.', // UNTRANSLATED
-      default_language_description_fixed:
-        'When auto detect is off, the default language is the only language your software will show. Turn on auto detect for language customization.', // UNTRANSLATED
+      mode: '语言模式',
+      auto: '自动',
+      fixed: '固定',
+      fallback_language: '备用语言',
+      fallback_language_tip: '如果 Logto 找不到合适的语言包，将回退至哪种语言。',
+      fixed_language: '固定语言',
     },
     authentication: {
       title: '身份验证',

@@ -72,15 +72,13 @@ const sign_in_exp = {
     },
     languages: {
       title: 'DİLLER',
-      enable_auto_detect: 'Enable auto detect', // UNTRANSLATED
-      description:
-        "Your software detects the user's location and switches to the local language. You can add new locales by translating UI from English to another language.", // UNTRANSLATED
-      manage_language: 'Manage language', // UNTRANSLATED
-      default_language: 'Default language', // UNTRANSLATED
-      default_language_description_auto:
-        'The default language will be used when a text segment is missing translation.', // UNTRANSLATED
-      default_language_description_fixed:
-        'When auto detect is off, the default language is the only language your software will show. Turn on auto detect for language customization.', // UNTRANSLATED
+      mode: 'Dil modu',
+      auto: 'Otomatik',
+      fixed: 'Sabit',
+      fallback_language: 'Yedek dil',
+      fallback_language_tip:
+        'Logto uygun bir dil ifade kümesi bulamazsa hangi dilden vazgeçilecek?',
+      fixed_language: 'Sabitlenmiş dil',
     },
     authentication: {
       title: 'AUTHENTICATION',

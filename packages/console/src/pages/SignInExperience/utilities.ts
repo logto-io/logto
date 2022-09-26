@@ -7,7 +7,7 @@ import {
 } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 
-import { SignInExperienceForm } from './types';
+import { LanguageMode, SignInExperienceForm } from './types';
 
 const findMethodState = (
   setup: SignInExperienceForm,
@@ -40,7 +40,10 @@ export const signInExperienceParser = {
       (key) => signInExperience.signInMethods[key] === SignInMethodState.Secondary
     );
 
-    const { signInMode } = signInExperience;
+    const {
+      languageInfo: { autoDetect, fallbackLanguage, fixedLanguage },
+      signInMode,
+    } = signInExperience;
 
     return {
       ...signInExperience,
@@ -52,11 +55,20 @@ export const signInExperienceParser = {
         email: secondaryMethods.includes(SignInMethodKey.Email),
         social: secondaryMethods.includes(SignInMethodKey.Social),
       },
+      languageInfo: {
+        mode: autoDetect ? LanguageMode.Auto : LanguageMode.Fixed,
+        fallbackLanguage,
+        fixedLanguage,
+      },
       createAccountEnabled: signInMode !== SignInMode.SignIn,
     };
   },
   toRemoteModel: (setup: SignInExperienceForm): SignInExperience => {
-    const { branding, createAccountEnabled } = setup;
+    const {
+      branding,
+      languageInfo: { mode, fallbackLanguage, fixedLanguage },
+      createAccountEnabled,
+    } = setup;
 
     return {
       ...setup,
@@ -71,6 +83,11 @@ export const signInExperienceParser = {
         sms: findMethodState(setup, 'sms'),
         email: findMethodState(setup, 'email'),
         social: findMethodState(setup, 'social'),
+      },
+      languageInfo: {
+        autoDetect: mode === LanguageMode.Auto,
+        fallbackLanguage,
+        fixedLanguage,
       },
       signInMode: createAccountEnabled ? SignInMode.SignInAndRegister : SignInMode.SignIn,
     };

@@ -68,15 +68,12 @@ const sign_in_exp = {
     },
     languages: {
       title: '언어',
-      enable_auto_detect: 'Enable auto detect', // UNTRANSLATED
-      description:
-        "Your software detects the user's location and switches to the local language. You can add new locales by translating UI from English to another language.", // UNTRANSLATED
-      manage_language: 'Manage language', // UNTRANSLATED
-      default_language: 'Default language', // UNTRANSLATED
-      default_language_description_auto:
-        'The default language will be used when a text segment is missing translation.', // UNTRANSLATED
-      default_language_description_fixed:
-        'When auto detect is off, the default language is the only language your software will show. Turn on auto detect for language customization.', // UNTRANSLATED
+      mode: '언어 모드',
+      auto: '자동',
+      fixed: '고정',
+      fallback_language: '백업 언어',
+      fallback_language_tip: '적절한 언어를 찾을 수 없을 때 백업 언어를 사용해요.',
+      fixed_language: '언어 고정',
     },
     authentication: {
       title: 'AUTHENTICATION',
