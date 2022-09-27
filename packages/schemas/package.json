@@ -48,7 +48,17 @@
     "extends": "@silverhand",
     "rules": {
       "@typescript-eslint/ban-types": "off"
-    }
+    },
+    "overrides": [
+      {
+        "files": [
+          "alterations/*.ts"
+        ],
+        "rules": {
+          "unicorn/filename-case": "off"
+        }
+      }
+    ]
   },
   "prettier": "@silverhand/eslint-config/.prettierrc",
   "dependencies": {
