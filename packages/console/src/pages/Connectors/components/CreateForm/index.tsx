@@ -95,30 +95,43 @@ const CreateForm = ({ onClose, isOpen: isFormOpen, type }: Props) => {
           />
         }
         className={styles.body}
-        size="large"
+        size="xlarge"
         onClose={onClose}
       >
         {isLoading && 'Loading...'}
         {error?.message}
         {groups && (
-          <RadioGroup name="group" value={activeGroupId} type="card" onChange={handleGroupChange}>
+          <RadioGroup
+            name="group"
+            value={activeGroupId}
+            type="card"
+            className={styles.connectorGroup}
+            onChange={handleGroupChange}
+          >
             {groups.map(({ id, name, logo, description, connectors }) => (
               <Radio
                 key={id}
                 value={id}
+                className={styles.connectorRadio}
                 isDisabled={connectors.every(({ enabled }) => enabled)}
-                className={styles.connector}
                 disabledLabel="general.added"
+                size="small"
               >
-                <div className={styles.logo}>
-                  <img src={logo} />
-                </div>
-                <div className={styles.name}>
-                  <UnnamedTrans resource={name} />
-                </div>
-                {type !== ConnectorType.Social && <div className={styles.connectorId}>{id}</div>}
-                <div className={styles.description}>
-                  <UnnamedTrans resource={description} />
+                <div className={styles.connector}>
+                  <div className={styles.logo}>
+                    <img src={logo} />
+                  </div>
+                  <div className={styles.content}>
+                    <div className={styles.name}>
+                      <UnnamedTrans resource={name} />
+                    </div>
+                    {type !== ConnectorType.Social && (
+                      <div className={styles.connectorId}>{id}</div>
+                    )}
+                    <div className={styles.description}>
+                      <UnnamedTrans resource={description} />
+                    </div>
+                  </div>
                 </div>
               </Radio>
             ))}

@@ -29,6 +29,7 @@ export type Props = {
   type?: 'card' | 'plain';
   isDisabled?: boolean;
   disabledLabel?: AdminConsoleKey;
+  size?: 'normal' | 'small';
 };
 
 const Radio = ({
@@ -43,6 +44,7 @@ const Radio = ({
   type,
   isDisabled,
   disabledLabel,
+  size = 'normal',
 }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
@@ -64,9 +66,10 @@ const Radio = ({
     <div
       className={classNames(
         styles.radio,
-        className,
         isChecked && styles.checked,
-        isDisabled && styles.disabled
+        isDisabled && styles.disabled,
+        styles[size],
+        className
       )}
       tabIndex={tabIndex}
       onClick={isDisabled ? undefined : onClick}
