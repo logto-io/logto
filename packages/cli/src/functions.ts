@@ -1,12 +1,13 @@
 import { execSync } from 'child_process';
 import { createWriteStream } from 'fs';
 
-import axios from 'axios';
+import got from 'got';
 
 export const isVersionGreaterThan = (version: string, targetMajor: number) =>
   Number(version.split('.')[0]) >= targetMajor;
 
-export const trimV = (version: string) => (version.startsWith('v') ? version.slice(1) : version);
+export const trimVersion = (version: string) =>
+  version.startsWith('v') ? version.slice(1) : version;
 
 export const safeExecSync = (command: string) => {
   try {
@@ -16,8 +17,7 @@ export const safeExecSync = (command: string) => {
 
 export const downloadFile = async (url: string, destination: string) => {
   const file = createWriteStream(destination);
-  const response = await axios.get(url, { responseType: 'stream' });
-  response.data.pipe(file);
+  got.stream(url).pipe(file);
 
   return new Promise((resolve, reject) => {
     file.on('error', (error) => {

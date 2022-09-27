@@ -2,7 +2,9 @@
   "extends": "@silverhand/ts-config/tsconfig.base",
   "compilerOptions": {
     "outDir": "lib",
-    "declaration": true
+    "declaration": true,
+    "module": "node16",
+    "target": "es2022"
   },
   "include": [
     "src"
