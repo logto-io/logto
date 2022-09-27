@@ -1,0 +1,51 @@
+{
+  "name": "create-logto",
+  "version": "1.0.0",
+  "description": "Logto creation to getting started.",
+  "author": "Silverhand Inc. <contact@silverhand.io>",
+  "homepage": "https://github.com/logto-io/logto#readme",
+  "license": "MPL-2.0",
+  "files": [
+    "lib"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/logto-io/logto.git"
+  },
+  "bin": "./lib/index.js",
+  "scripts": {
+    "precommit": "lint-staged",
+    "build": "rimraf lib && tsc",
+    "dev": "tsc --watch --preserveWatchOutput --incremental",
+    "lint": "eslint --ext .ts src",
+    "lint:report": "pnpm lint --format json --output-file report.json",
+    "prepack": "pnpm build"
+  },
+  "engines": {
+    "node": "^16.0.0"
+  },
+  "bugs": {
+    "url": "https://github.com/logto-io/logto/issues"
+  },
+  "dependencies": {
+    "axios": "^0.27.2",
+    "decompress": "^4.2.1",
+    "prompts": "^2.4.2"
+  },
+  "devDependencies": {
+    "@silverhand/eslint-config": "1.0.0",
+    "@silverhand/ts-config": "1.0.0",
+    "@types/axios": "^0.14.0",
+    "@types/decompress": "^4.2.4",
+    "@types/prompts": "^2.0.14",
+    "eslint": "^8.21.0",
+    "lint-staged": "^13.0.0",
+    "prettier": "^2.7.1",
+    "rimraf": "^3.0.2",
+    "typescript": "^4.7.4"
+  },
+  "eslintConfig": {
+    "extends": "@silverhand"
+  },
+  "prettier": "@silverhand/eslint-config/.prettierrc"
+}
