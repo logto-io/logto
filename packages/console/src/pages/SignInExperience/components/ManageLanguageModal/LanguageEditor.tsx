@@ -1,8 +1,6 @@
 import type { LanguageKey } from '@logto/core-kit';
-import resource, {
-  languageCodeAndDisplayNameMappings,
-  Translation as UiTranslation,
-} from '@logto/phrases-ui';
+import resource, { languageCodeAndDisplayNameMappings } from '@logto/phrases-ui';
+import { Translation } from '@logto/schemas';
 import cleanDeep from 'clean-deep';
 import { useEffect, useMemo } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
@@ -14,7 +12,7 @@ import Button from '@/components/Button';
 import useApi, { RequestError } from '@/hooks/use-api';
 import Delete from '@/icons/Delete';
 
-import { createEmptyUiTranslation, flattenObject } from '../../utilities';
+import { createEmptyUiTranslation, flattenTranslation } from '../../utilities';
 import EditSection from './EditSection';
 import * as style from './LanguageEditor.module.scss';
 import { CustomPhraseResponse } from './types';
@@ -50,7 +48,7 @@ const LanguageEditor = ({ selectedLanguageKey, onFormStateChange }: LanguageEdit
     }
   );
 
-  const formMethods = useForm<UiTranslation>();
+  const formMethods = useForm<Translation>();
 
   const {
     handleSubmit,
@@ -62,7 +60,7 @@ const LanguageEditor = ({ selectedLanguageKey, onFormStateChange }: LanguageEdit
     onFormStateChange(isDirty);
   }, [isDirty, onFormStateChange]);
 
-  const onSubmit = handleSubmit(async (formData: UiTranslation) => {
+  const onSubmit = handleSubmit(async (formData: Translation) => {
     const updatedCustomPhrase = await api
       .put(`/api/custom-phrases/${selectedLanguageKey}`, {
         json: {
@@ -123,7 +121,7 @@ const LanguageEditor = ({ selectedLanguageKey, onFormStateChange }: LanguageEdit
             <tbody>
               <FormProvider {...formMethods}>
                 {translationEntries.map(([key, value]) => (
-                  <EditSection key={key} dataKey={key} data={flattenObject(value)} />
+                  <EditSection key={key} dataKey={key} data={flattenTranslation(value)} />
                 ))}
               </FormProvider>
             </tbody>

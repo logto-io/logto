@@ -1,5 +1,5 @@
-import type { Translation as UiTranslation } from '@logto/phrases-ui';
-import { FieldPath, useFormContext } from 'react-hook-form';
+import { Translation } from '@logto/schemas';
+import { useFormContext } from 'react-hook-form';
 
 import TextInput from '@/components/TextInput';
 
@@ -7,11 +7,11 @@ import * as style from './EditSection.module.scss';
 
 type EditSectionProps = {
   dataKey: string;
-  data: Record<string, unknown>;
+  data: Record<string, string>;
 };
 
 const EditSection = ({ dataKey, data }: EditSectionProps) => {
-  const { register } = useFormContext<UiTranslation>();
+  const { register } = useFormContext<Translation>();
 
   return (
     <>
@@ -21,10 +21,6 @@ const EditSection = ({ dataKey, data }: EditSectionProps) => {
         </td>
       </tr>
       {Object.entries(data).map(([field, value]) => {
-        if (typeof value !== 'string') {
-          return null;
-        }
-
         const fieldKey = `${dataKey}.${field}`;
 
         return (
@@ -34,10 +30,7 @@ const EditSection = ({ dataKey, data }: EditSectionProps) => {
               <TextInput readOnly value={value} className={style.sectionBuiltInText} />
             </td>
             <td>
-              {
-                // eslint-disable-next-line no-restricted-syntax
-                <TextInput {...register(fieldKey as FieldPath<UiTranslation>)} />
-              }
+              <TextInput {...register(fieldKey)} />
             </td>
           </tr>
         );
