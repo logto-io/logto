@@ -211,7 +211,7 @@ importers:
       nodemon: ^2.0.19
       oidc-provider: ^7.11.3
       openapi-types: ^12.0.0
-      p-retry: ^4.6.1
+      p-retry: ^5.0.0
       prettier: ^2.7.1
       query-string: ^7.0.1
       rimraf: ^3.0.2
@@ -257,7 +257,7 @@ importers:
       module-alias: 2.2.2
       nanoid: 3.1.30
       oidc-provider: 7.11.3
-      p-retry: 4.6.1
+      p-retry: 5.1.1
       query-string: 7.0.1
       rimraf: 3.0.2
       roarr: 7.11.0
@@ -5909,8 +5909,8 @@ packages:
     engines: {node: '>=10'}
     hasBin: true
     dependencies:
-      is-text-path: 1.0.1
       JSONStream: 1.3.5
+      is-text-path: 1.0.1
       lodash: 4.17.21
       meow: 8.1.2
       split2: 3.2.2
@@ -11888,9 +11888,9 @@ packages:
     engines: {node: '>=8'}
     dev: true
 
-  /p-retry/4.6.1:
-    resolution: {integrity: sha512-e2xXGNhZOZ0lfgR9kL34iGlU8N/KO0xZnQxVEwdeOvpqNDQfdnxIYizvWtK8RglUa3bGqI8g0R/BdfzLMxRkiA==}
-    engines: {node: '>=8'}
+  /p-retry/5.1.1:
+    resolution: {integrity: sha512-i69WkEU5ZAL8mrmdmVviWwU+DN+IUF8f4sSJThoJ3z5A7Nn5iuO5ROX3Boye0u+uYQLOSfgFl7SuFZCjlAVbQA==}
+    engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
     dependencies:
       '@types/retry': 0.12.1
       retry: 0.13.1
@@ -13533,7 +13533,7 @@ packages:
       signal-exit: 3.0.7
 
   /retry/0.12.0:
-    resolution: {integrity: sha1-G0KmJmoh8HQh0bC1S33BZ7AcATs=}
+    resolution: {integrity: sha512-9LkiTwjUh6rT555DtE9rTX+BKByPfrMzEAtnlEtdEwr3Nkffwiihqe2bWADg+OQRjt9gl6ICdmB/ZFDCGAtSow==}
     engines: {node: '>= 4'}
     dev: true
 
