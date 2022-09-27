@@ -13,7 +13,7 @@ export const checkAlterationState = async (pool: DatabasePool) => {
   }
 
   const error = new Error(
-    `Found undeployed database alterations, you must deploy them first by "pnpm alteration deploy" command, reference: https://docs.logto.io/docs/recipes/deployment/#database-alteration`
+    `Found undeployed database alterations, you must deploy them first by "npm alteration deploy" command, reference: https://docs.logto.io/docs/recipes/deployment/#database-alteration`
   );
 
   if (allYes) {
