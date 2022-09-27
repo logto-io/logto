@@ -2,10 +2,7 @@ import { LanguageKey, languageKeyGuard } from '@logto/core-kit';
 
 import en from './locales/en';
 
-export type Translation = typeof en.translation;
-export type LocalePhrase = { translation: Translation };
-
-/* Copied from i18next/index.d.ts */
+export type LocalePhrase = typeof en;
 export type Resource = Record<LanguageKey, LocalePhrase>;
 
 export const languageCodeAndDisplayNameMappings: Record<LanguageKey, string> = {

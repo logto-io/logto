@@ -13,6 +13,7 @@ import connectorRoutes from '@/routes/connector';
 import customPhraseRoutes from '@/routes/custom-phrase';
 import dashboardRoutes from '@/routes/dashboard';
 import logRoutes from '@/routes/log';
+import phraseRoutes from '@/routes/phrase';
 import resourceRoutes from '@/routes/resource';
 import roleRoutes from '@/routes/role';
 import sessionRoutes from '@/routes/session';
@@ -43,6 +44,7 @@ const createRouters = (provider: Provider) => {
   customPhraseRoutes(managementRouter);
 
   const anonymousRouter: AnonymousRouter = new Router();
+  phraseRoutes(anonymousRouter, provider);
   wellKnownRoutes(anonymousRouter, provider);
   statusRoutes(anonymousRouter);
   authnRoutes(anonymousRouter);
