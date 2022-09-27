@@ -48,8 +48,8 @@ jobs:
         env:
           DEV_SERVER_IP: ${{ secrets.DEV_SERVER_IP }}
 
-      - name: Sleep for 5 seconds
-        run: sleep 5s
+      - name: Sleep for 10 seconds
+        run: sleep 10s
 
       - name: Health check
         run: curl $DEV_SERVER_URL/api/status -If
