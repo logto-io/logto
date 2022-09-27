@@ -11,6 +11,7 @@
   "private": true,
   "scripts": {
     "precommit": "lint-staged",
+    "version": "./update-next.sh && git add alterations/",
     "generate": "rm -rf src/db-entries && ts-node src/gen/index.ts && eslint \"src/db-entries/**\" --fix",
     "build:alterations": "rm -rf alterations/*.d.ts alterations/*.js && tsc -p tsconfig.build.alterations.json",
     "build": "pnpm generate && rm -rf lib/ && tsc -p tsconfig.build.json && pnpm build:alterations",
@@ -47,7 +48,17 @@
     "extends": "@silverhand",
     "rules": {
       "@typescript-eslint/ban-types": "off"
-    }
+    },
+    "overrides": [
+      {
+        "files": [
+          "alterations/*.ts"
+        ],
+        "rules": {
+          "unicorn/filename-case": "off"
+        }
+      }
+    ]
   },
   "prettier": "@silverhand/eslint-config/.prettierrc",
   "dependencies": {

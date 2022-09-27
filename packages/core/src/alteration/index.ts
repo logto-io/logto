@@ -154,4 +154,6 @@ export const deployAlterations = async (pool: DatabasePool) => {
     // eslint-disable-next-line no-await-in-loop
     await deployAlteration(pool, alteration);
   }
+
+  console.log(`${chalk.blue('[alteration]')} ✓ done`);
 };
