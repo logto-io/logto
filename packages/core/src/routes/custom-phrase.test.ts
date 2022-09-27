@@ -1,4 +1,5 @@
-import { CustomPhrase, SignInExperience } from '@logto/schemas';
+import en from '@logto/phrases-ui/lib/locales/en';
+import { CustomPhrase, SignInExperience, Translation } from '@logto/schemas';
 
 import { mockSignInExperience } from '@/__mocks__';
 import { mockZhCnCustomPhrase, trTrKey, zhCnKey } from '@/__mocks__/custom-phrase';
@@ -37,6 +38,15 @@ jest.mock('@/queries/custom-phrase', () => ({
   findAllCustomPhrases: async () => findAllCustomPhrases(),
   findCustomPhraseByLanguageKey: async (key: string) => findCustomPhraseByLanguageKey(key),
   upsertCustomPhrase: async (customPhrase: CustomPhrase) => upsertCustomPhrase(customPhrase),
+}));
+
+const isValidStructure = jest.fn(
+  (fullTranslation: Translation, partialTranslation: Partial<Translation>) => true
+);
+
+jest.mock('@/utils/translation', () => ({
+  isValidStructure: (fullTranslation: Translation, partialTranslation: Translation) =>
+    isValidStructure(fullTranslation, partialTranslation),
 }));
 
 const mockFallbackLanguage = trTrKey;
@@ -102,17 +112,41 @@ describe('customPhraseRoutes', () => {
   });
 
   describe('PUT /custom-phrases/:languageKey', () => {
-    it('should call upsertCustomPhrase with specified language key', async () => {
-      await customPhraseRequest
+    const translation = mockCustomPhrases[mockLanguageKey]?.translation;
+
+    it('should remove empty strings', async () => {
+      const inputTranslation = { username: '用户名 1' };
+      await customPhraseRequest.put(`/custom-phrases/${mockLanguageKey}`).send({
+        input: { ...inputTranslation, password: '' },
+      });
+      expect(upsertCustomPhrase).toBeCalledWith({
+        languageKey: mockLanguageKey,
+        translation: { input: inputTranslation },
+      });
+    });
+
+    it('should call isValidStructure', async () => {
+      await customPhraseRequest.put(`/custom-phrases/${mockLanguageKey}`).send(translation);
+      expect(isValidStructure).toBeCalledWith(en.translation, translation);
+    });
+
+    it('should fail when the input translation structure is invalid', async () => {
+      isValidStructure.mockReturnValueOnce(false);
+      const response = await customPhraseRequest
         .put(`/custom-phrases/${mockLanguageKey}`)
-        .send(mockCustomPhrases[mockLanguageKey]?.translation);
+        .send(translation);
+      expect(response.status).toEqual(400);
+    });
+
+    it('should call upsertCustomPhrase with specified language key', async () => {
+      await customPhraseRequest.put(`/custom-phrases/${mockLanguageKey}`).send(translation);
       expect(upsertCustomPhrase).toBeCalledWith(mockCustomPhrases[mockLanguageKey]);
     });
 
     it('should return custom phrase after upserting', async () => {
       const response = await customPhraseRequest
         .put(`/custom-phrases/${mockLanguageKey}`)
-        .send(mockCustomPhrases[mockLanguageKey]?.translation);
+        .send(translation);
       expect(response.status).toEqual(200);
       expect(response.body).toEqual(mockCustomPhrases[mockLanguageKey]);
     });

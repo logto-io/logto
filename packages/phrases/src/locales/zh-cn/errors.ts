@@ -101,6 +101,7 @@ const errors = {
   },
   localization: {
     cannot_delete_default_language: '不能删除「登录体验」正在使用的默认语言 {{languageKey}}。', // UNTRANSLATED
+    invalid_translation_structure: '无效的 translation 结构。请检查输入的 translation。', // UNTRANSLATED
   },
   swagger: {
     invalid_zod_type: '无效的 Zod 类型，请检查路由 guard 配置。',
