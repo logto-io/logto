@@ -13,6 +13,7 @@ import { ModalProps } from './type';
 const AcModal = ({
   className,
   isOpen = false,
+  type = 'confirm',
   children,
   cancelText = 'action.cancel',
   confirmText = 'action.confirm',
@@ -37,8 +38,23 @@ const AcModal = ({
         </div>
         <div className={styles.content}>{children}</div>
         <div className={styles.footer}>
-          <Button title={cancelText} type="outline" size="small" onClick={onClose} />
-          <Button title={confirmText} size="small" onClick={onConfirm ?? onClose} />
+          <Button
+            title={cancelText}
+            type="outline"
+            size="small"
+            onClick={() => {
+              onClose();
+            }}
+          />
+          {type === 'confirm' && (
+            <Button
+              title={confirmText}
+              size="small"
+              onClick={() => {
+                (onConfirm ?? onClose)();
+              }}
+            />
+          )}
         </div>
       </div>
     </ReactModal>

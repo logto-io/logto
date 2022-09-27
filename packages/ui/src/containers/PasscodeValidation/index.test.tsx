@@ -9,6 +9,13 @@ jest.useFakeTimers();
 const sendPasscodeApi = jest.fn();
 const verifyPasscodeApi = jest.fn();
 
+const mockedNavigate = jest.fn();
+
+jest.mock('react-router-dom', () => ({
+  ...jest.requireActual('react-router-dom'),
+  useNavigate: () => mockedNavigate,
+}));
+
 jest.mock('@/apis/utils', () => ({
   getSendPasscodeApi: () => sendPasscodeApi,
   getVerifyPasscodeApi: () => verifyPasscodeApi,
