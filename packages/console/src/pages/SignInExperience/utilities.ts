@@ -104,8 +104,8 @@ export const compareSignInMethods = (
 export const flattenTranslation = (
   translation: Translation,
   keyPrefix = ''
-): Record<string, string> => {
-  return Object.keys(translation).reduce((result, key) => {
+): Record<string, string> =>
+  Object.keys(translation).reduce((result, key) => {
     const prefix = keyPrefix ? `${keyPrefix}.` : keyPrefix;
     const unwrappedKey = `${prefix}${key}`;
     const unwrapped = translation[key];
@@ -119,10 +119,9 @@ export const flattenTranslation = (
         }
       : result;
   }, {});
-};
 
-const emptyTranslation = (translation: Translation): Translation => {
-  return Object.entries(translation).reduce((result, [key, value]) => {
+const emptyTranslation = (translation: Translation): Translation =>
+  Object.entries(translation).reduce((result, [key, value]) => {
     return typeof value === 'string'
       ? { ...result, [key]: '' }
       : {
@@ -130,8 +129,5 @@ const emptyTranslation = (translation: Translation): Translation => {
           [key]: emptyTranslation(value),
         };
   }, {});
-};
 
-export const createEmptyUiTranslation = () => {
-  return emptyTranslation(en.translation);
-};
+export const createEmptyUiTranslation = () => emptyTranslation(en.translation);
