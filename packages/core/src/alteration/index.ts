@@ -10,6 +10,7 @@ import {
 } from '@logto/schemas/lib/types/alteration';
 import { conditionalString } from '@silverhand/essentials';
 import chalk from 'chalk';
+import { copy, remove } from 'fs-extra';
 import { DatabasePool, sql } from 'slonik';
 import { raw } from 'slonik-sql-tag-raw';
 
@@ -19,6 +20,7 @@ import {
   logtoConfigsTableFilePath,
   alterationStateKey,
   alterationFilesDirectory,
+  alterationFilesDirectorySource,
 } from './constants';
 import { getTimestampFromFileName, alterationFileNameRegex } from './utils';
 
@@ -87,9 +89,12 @@ export const getLatestAlterationTimestamp = async () => {
 };
 
 export const getAlterationFiles = async () => {
-  if (!existsSync(alterationFilesDirectory)) {
+  if (!existsSync(alterationFilesDirectorySource)) {
     return [];
   }
+
+  await remove(alterationFilesDirectory);
+  await copy(alterationFilesDirectorySource, alterationFilesDirectory);
 
   const directory = await readdir(alterationFilesDirectory);
   const files = directory.filter((file) => alterationFileNameRegex.test(file));
@@ -111,9 +116,7 @@ export const getUndeployedAlterations = async (pool: DatabasePool) => {
 
 const importAlteration = async (file: string): Promise<AlterationScript> => {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  const module = await import(
-    path.join(alterationFilesDirectory, file).replace('node_modules/', '')
-  );
+  const module = await import(path.join(process.cwd(), alterationFilesDirectory, file));
 
   // eslint-disable-next-line no-restricted-syntax
   return module.default as AlterationScript;
