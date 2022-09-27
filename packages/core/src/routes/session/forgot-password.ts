@@ -7,7 +7,6 @@ import { z } from 'zod';
 
 import RequestError from '@/errors/RequestError';
 import { createPasscode, sendPasscode, verifyPasscode } from '@/lib/passcode';
-import { assignInteractionResults } from '@/lib/session';
 import { encryptUserPassword } from '@/lib/user';
 import koaGuard from '@/middleware/koa-guard';
 import {
@@ -70,12 +69,13 @@ export default function forgotPasswordRoutes<T extends AnonymousRouter>(
       const { id } = await findUserByPhone(phone);
       ctx.log(type, { userId: id });
 
-      await assignInteractionResults(ctx, provider, {
+      await provider.interactionResult(ctx.req, ctx.res, {
         forgotPassword: {
           userId: id,
           expiresAt: dayjs().add(forgotPasswordVerificationTimeout, 'second').toISOString(),
         },
       });
+      ctx.status = 204;
 
       return next();
     }
@@ -115,12 +115,13 @@ export default function forgotPasswordRoutes<T extends AnonymousRouter>(
 
       await verifyPasscode(jti, PasscodeType.ForgotPassword, code, { email });
       const { id } = await findUserByEmail(email);
-      await assignInteractionResults(ctx, provider, {
+      await provider.interactionResult(ctx.req, ctx.res, {
         forgotPassword: {
           userId: id,
           expiresAt: dayjs().add(forgotPasswordVerificationTimeout, 'second').toISOString(),
         },
       });
+      ctx.status = 204;
 
       return next();
     }

@@ -97,8 +97,7 @@ describe('session -> forgotPasswordRoutes', () => {
       const response = await sessionRequest
         .post(`${forgotPasswordRoute}/sms/verify-passcode`)
         .send({ phone: '13000000000', code: '1234' });
-      expect(response.statusCode).toEqual(200);
-      expect(response.body).toHaveProperty('redirectTo');
+      expect(response.statusCode).toEqual(204);
       expect(interactionResult).toHaveBeenCalledWith(
         expect.anything(),
         expect.anything(),
@@ -109,8 +108,7 @@ describe('session -> forgotPasswordRoutes', () => {
               .add(forgotPasswordVerificationTimeout, 'second')
               .toISOString(),
           },
-        }),
-        expect.anything()
+        })
       );
       jest.useRealTimers();
     });
@@ -150,8 +148,7 @@ describe('session -> forgotPasswordRoutes', () => {
       const response = await sessionRequest
         .post(`${forgotPasswordRoute}/email/verify-passcode`)
         .send({ email: 'a@a.com', code: '1234' });
-      expect(response.statusCode).toEqual(200);
-      expect(response.body).toHaveProperty('redirectTo');
+      expect(response.statusCode).toEqual(204);
       expect(interactionResult).toHaveBeenCalledWith(
         expect.anything(),
         expect.anything(),
@@ -162,8 +159,7 @@ describe('session -> forgotPasswordRoutes', () => {
               .add(forgotPasswordVerificationTimeout, 'second')
               .toISOString(),
           },
-        }),
-        expect.anything()
+        })
       );
       jest.useRealTimers();
     });
