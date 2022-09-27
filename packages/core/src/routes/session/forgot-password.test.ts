@@ -103,8 +103,8 @@ describe('session -> forgotPasswordRoutes', () => {
         expect.anything(),
         expect.anything(),
         expect.objectContaining({
-          login: { accountId: 'id' },
           forgotPassword: {
+            userId: 'id',
             expiresAt: dayjs(fakeTime)
               .add(forgotPasswordVerificationTimeout, 'second')
               .toISOString(),
@@ -156,8 +156,8 @@ describe('session -> forgotPasswordRoutes', () => {
         expect.anything(),
         expect.anything(),
         expect.objectContaining({
-          login: { accountId: 'id' },
           forgotPassword: {
+            userId: 'id',
             expiresAt: dayjs(fakeTime)
               .add(forgotPasswordVerificationTimeout, 'second')
               .toISOString(),
@@ -188,8 +188,7 @@ describe('session -> forgotPasswordRoutes', () => {
     it('assign result and redirect', async () => {
       interactionDetails.mockResolvedValueOnce({
         result: {
-          login: { accountId: 'id' },
-          forgotPassword: { expiresAt: dayjs().add(1, 'day').toISOString() },
+          forgotPassword: { userId: 'id', expiresAt: dayjs().add(1, 'day').toISOString() },
         },
       });
       const response = await sessionRequest
@@ -219,8 +218,7 @@ describe('session -> forgotPasswordRoutes', () => {
     it('should throw when `forgotPassword.expiresAt` is not string', async () => {
       interactionDetails.mockResolvedValueOnce({
         result: {
-          login: { accountId: 'id' },
-          forgotPassword: { expiresAt: 0 },
+          forgotPassword: { userId: 'id', expiresAt: 0 },
         },
       });
       const response = await sessionRequest
@@ -232,8 +230,7 @@ describe('session -> forgotPasswordRoutes', () => {
     it('should throw when `expiresAt` is not a valid date string', async () => {
       interactionDetails.mockResolvedValueOnce({
         result: {
-          login: { accountId: 'id' },
-          forgotPassword: { expiresAt: 'invalid date string' },
+          forgotPassword: { userId: 'id', expiresAt: 'invalid date string' },
         },
       });
       const response = await sessionRequest
@@ -245,8 +242,7 @@ describe('session -> forgotPasswordRoutes', () => {
     it('should throw when verification expires', async () => {
       interactionDetails.mockResolvedValueOnce({
         result: {
-          login: { accountId: 'id' },
-          forgotPassword: { expiresAt: dayjs().subtract(1, 'day').toISOString() },
+          forgotPassword: { userId: 'id', expiresAt: dayjs().subtract(1, 'day').toISOString() },
         },
       });
       const response = await sessionRequest
@@ -258,8 +254,7 @@ describe('session -> forgotPasswordRoutes', () => {
     it('should throw when new password is the same as old one', async () => {
       interactionDetails.mockResolvedValueOnce({
         result: {
-          login: { accountId: 'id' },
-          forgotPassword: { expiresAt: dayjs().add(1, 'day').toISOString() },
+          forgotPassword: { userId: 'id', expiresAt: dayjs().add(1, 'day').toISOString() },
         },
       });
       mockArgon2Verify.mockResolvedValueOnce(true);
@@ -272,8 +267,7 @@ describe('session -> forgotPasswordRoutes', () => {
     it('should redirect when there was no old password', async () => {
       interactionDetails.mockResolvedValueOnce({
         result: {
-          login: { accountId: 'id' },
-          forgotPassword: { expiresAt: dayjs().add(1, 'day').toISOString() },
+          forgotPassword: { userId: 'id', expiresAt: dayjs().add(1, 'day').toISOString() },
         },
       });
       findUserById.mockResolvedValueOnce({
