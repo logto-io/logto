@@ -1,10 +1,12 @@
 {
-  "name": "create-logto",
-  "version": "1.0.0",
-  "description": "Logto creation to getting started.",
+  "name": "cli",
+  "version": "1.0.0-beta.9",
+  "description": "Logto CLI.",
   "author": "Silverhand Inc. <contact@silverhand.io>",
   "homepage": "https://github.com/logto-io/logto#readme",
   "license": "MPL-2.0",
+  "//": "Temporarily set to private until the package is ready.",
+  "private": true,
   "files": [
     "lib"
   ],
@@ -28,14 +30,13 @@
     "url": "https://github.com/logto-io/logto/issues"
   },
   "dependencies": {
-    "axios": "^0.27.2",
     "decompress": "^4.2.1",
+    "got": "^11.8.2",
     "prompts": "^2.4.2"
   },
   "devDependencies": {
     "@silverhand/eslint-config": "1.0.0",
     "@silverhand/ts-config": "1.0.0",
-    "@types/axios": "^0.14.0",
     "@types/decompress": "^4.2.4",
     "@types/prompts": "^2.0.14",
     "eslint": "^8.21.0",
