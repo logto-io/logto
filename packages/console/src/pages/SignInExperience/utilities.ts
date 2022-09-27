@@ -1,4 +1,3 @@
-import type { Translation as UiTranslation } from '@logto/phrases-ui';
 import en from '@logto/phrases-ui/lib/locales/en';
 import {
   SignInExperience,
@@ -6,6 +5,7 @@ import {
   SignInMethods,
   SignInMethodState,
   SignInMode,
+  Translation,
 } from '@logto/schemas';
 import { conditional } from '@silverhand/essentials';
 
@@ -101,47 +101,37 @@ export const compareSignInMethods = (
   return Object.values(SignInMethodKey).every((key) => beforeMethods[key] === afterMethods[key]);
 };
 
-// TODO: LOG-4235 move this method into @silverhand/essentials
-const isObject = (data: unknown): data is Record<string, unknown> =>
-  typeof data === 'object' && !Array.isArray(data);
-
-export const flattenObject = (
-  object: Record<string, unknown>,
+export const flattenTranslation = (
+  translation: Translation,
   keyPrefix = ''
-): Record<string, unknown> => {
-  return Object.keys(object).reduce((result, key) => {
+): Record<string, string> => {
+  return Object.keys(translation).reduce((result, key) => {
     const prefix = keyPrefix ? `${keyPrefix}.` : keyPrefix;
-    const dataKey = `${prefix}${key}`;
-    const data = object[key];
+    const unwrappedKey = `${prefix}${key}`;
+    const unwrapped = translation[key];
 
-    return {
-      ...result,
-      ...(isObject(data) ? flattenObject(data, dataKey) : { [dataKey]: data }),
-    };
+    return unwrapped
+      ? {
+          ...result,
+          ...(typeof unwrapped === 'string'
+            ? { [unwrappedKey]: unwrapped }
+            : flattenTranslation(unwrapped, unwrappedKey)),
+        }
+      : result;
   }, {});
 };
 
-const emptyTranslation = (translation: Record<string, unknown>): Record<string, unknown> => {
-  return Object.entries(translation).reduce<Record<string, unknown>>((result, [key, value]) => {
-    if (isObject(value)) {
-      return {
-        ...result,
-        [key]: emptyTranslation(value),
-      };
-    }
-
-    if (typeof value === 'string') {
-      return {
-        ...result,
-        [key]: '',
-      };
-    }
-
-    return { ...result, [key]: value };
+const emptyTranslation = (translation: Translation): Translation => {
+  return Object.entries(translation).reduce((result, [key, value]) => {
+    return typeof value === 'string'
+      ? { ...result, [key]: '' }
+      : {
+          ...result,
+          [key]: emptyTranslation(value),
+        };
   }, {});
 };
 
 export const createEmptyUiTranslation = () => {
-  // eslint-disable-next-line no-restricted-syntax
-  return emptyTranslation(en.translation) as UiTranslation;
+  return emptyTranslation(en.translation);
 };
