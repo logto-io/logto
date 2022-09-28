@@ -23,7 +23,7 @@
     "@logto/phrases-ui": "^1.0.0-beta.10",
     "@logto/react": "1.0.0-beta.8",
     "@logto/schemas": "^1.0.0-beta.10",
-    "@mdx-js/react": "^1.6.22",
+    "@mdx-js/react": "^2.0.0",
     "@parcel/core": "2.7.0",
     "@parcel/transformer-mdx": "2.7.0",
     "@parcel/transformer-sass": "2.7.0",
