@@ -9,11 +9,11 @@ type Props = {
   onClick: () => void;
 };
 
-const LanguageItem = ({ languageTag: languageKey, isSelected, onClick }: Props) => {
+const LanguageItem = ({ languageTag, isSelected, onClick }: Props) => {
   return (
     <div className={classNames(style.languageItem, isSelected && style.selected)} onClick={onClick}>
-      <div className={style.languageName}>{languages[languageKey]}</div>
-      <div className={style.languageKey}>{languageKey}</div>
+      <div className={style.languageName}>{languages[languageTag]}</div>
+      <div className={style.languageKey}>{languageTag}</div>
     </div>
   );
 };
