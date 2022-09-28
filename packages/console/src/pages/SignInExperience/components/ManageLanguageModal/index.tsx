@@ -1,5 +1,5 @@
-import { getDefaultLanguage, LanguageKey } from '@logto/core-kit';
-import { languageOptions as uiLanguageOptions } from '@logto/phrases-ui';
+import { LanguageTag } from '@logto/language-kit';
+import { builtInLanguages as builtInUiLanguages } from '@logto/phrases-ui';
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Modal from 'react-modal';
@@ -26,31 +26,33 @@ const ManageLanguageModal = ({ isOpen, onClose }: ManageLanguageModalProps) => {
     '/api/custom-phrases'
   );
 
-  const allLanguageKeys = useMemo(() => {
-    const uiBuiltInLanguageKeys = uiLanguageOptions.map((option) => option.value);
-    const customUiLanguageKeys = customPhraseResponses?.map(({ languageKey }) => languageKey);
+  const allLanguageTags = useMemo(
+    () =>
+      [
+        ...new Set([
+          ...builtInUiLanguages,
+          ...(customPhraseResponses?.map(({ languageKey }) => languageKey) ?? []),
+        ]),
+      ]
+        .slice()
+        .sort(),
+    [customPhraseResponses]
+  );
 
-    const allKeys = customUiLanguageKeys?.length
-      ? [...new Set([...uiBuiltInLanguageKeys, ...customUiLanguageKeys])]
-      : uiBuiltInLanguageKeys;
+  const defaultLanguageTag = allLanguageTags[0] ?? 'en';
 
-    return allKeys.slice().sort();
-  }, [customPhraseResponses]);
-
-  const defaultLanguageKey = getDefaultLanguage(allLanguageKeys[0] ?? '');
-
-  const [selectedLanguageKey, setSelectedLanguageKey] = useState<LanguageKey>(defaultLanguageKey);
+  const [selectedLanguageTag, setSelectedLanguageTag] = useState<LanguageTag>(defaultLanguageTag);
 
   const [isLanguageEditorDirty, setIsLanguageEditorDirty] = useState(false);
 
   const [isUnsavedAlertOpen, setIsUnsavedAlertOpen] = useState(false);
-  const [preselectedLanguageKey, setPreselectedLanguageKey] = useState<LanguageKey>();
+  const [preselectedLanguageTag, setPreselectedLanguageTag] = useState<LanguageTag>();
 
   useEffect(() => {
     if (!isOpen) {
-      setSelectedLanguageKey(defaultLanguageKey);
+      setSelectedLanguageTag(defaultLanguageTag);
     }
-  }, [allLanguageKeys, setSelectedLanguageKey, isOpen, defaultLanguageKey]);
+  }, [allLanguageTags, setSelectedLanguageTag, isOpen, defaultLanguageTag]);
 
   return (
     <Modal isOpen={isOpen} className={modalStyles.content} overlayClassName={modalStyles.overlay}>
@@ -60,7 +62,7 @@ const ManageLanguageModal = ({ isOpen, onClose }: ManageLanguageModalProps) => {
         size="xlarge"
         onClose={() => {
           if (isLanguageEditorDirty) {
-            setPreselectedLanguageKey(undefined);
+            setPreselectedLanguageTag(undefined);
             setIsUnsavedAlertOpen(true);
 
             return;
@@ -70,20 +72,20 @@ const ManageLanguageModal = ({ isOpen, onClose }: ManageLanguageModalProps) => {
       >
         <div className={style.container}>
           <LanguageNav
-            languageKeys={allLanguageKeys}
-            selectedLanguage={selectedLanguageKey}
-            onSelect={(languageKey) => {
+            languageTags={allLanguageTags}
+            selectedLanguageTag={selectedLanguageTag}
+            onSelect={(languageTag) => {
               if (isLanguageEditorDirty) {
-                setPreselectedLanguageKey(languageKey);
+                setPreselectedLanguageTag(languageTag);
                 setIsUnsavedAlertOpen(true);
 
                 return;
               }
-              setSelectedLanguageKey(languageKey);
+              setSelectedLanguageTag(languageTag);
             }}
           />
           <LanguageEditor
-            selectedLanguageKey={selectedLanguageKey}
+            selectedLanguageTag={selectedLanguageTag}
             onFormStateChange={setIsLanguageEditorDirty}
           />
         </div>
@@ -97,9 +99,9 @@ const ManageLanguageModal = ({ isOpen, onClose }: ManageLanguageModalProps) => {
         onConfirm={() => {
           setIsUnsavedAlertOpen(false);
 
-          if (preselectedLanguageKey) {
-            setSelectedLanguageKey(preselectedLanguageKey);
-            setPreselectedLanguageKey(undefined);
+          if (preselectedLanguageTag) {
+            setSelectedLanguageTag(preselectedLanguageTag);
+            setPreselectedLanguageTag(undefined);
 
             return;
           }

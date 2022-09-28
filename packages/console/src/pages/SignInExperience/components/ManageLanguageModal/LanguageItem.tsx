@@ -1,20 +1,19 @@
-import { LanguageKey } from '@logto/core-kit';
-import { languageCodeAndDisplayNameMappings } from '@logto/phrases-ui';
+import { languages, LanguageTag } from '@logto/language-kit';
 import classNames from 'classnames';
 
 import * as style from './LanguageItem.module.scss';
 
 type Props = {
-  languageKey: LanguageKey;
+  languageTag: LanguageTag;
   isSelected: boolean;
   onClick: () => void;
 };
 
-const LanguageItem = ({ languageKey, isSelected, onClick }: Props) => {
+const LanguageItem = ({ languageTag, isSelected, onClick }: Props) => {
   return (
     <div className={classNames(style.languageItem, isSelected && style.selected)} onClick={onClick}>
-      <div className={style.languageName}>{languageCodeAndDisplayNameMappings[languageKey]}</div>
-      <div className={style.languageKey}>{languageKey}</div>
+      <div className={style.languageName}>{languages[languageTag]}</div>
+      <div className={style.languageTag}>{languageTag}</div>
     </div>
   );
 };

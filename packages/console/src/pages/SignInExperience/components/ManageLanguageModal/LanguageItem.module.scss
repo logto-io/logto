@@ -11,7 +11,7 @@
     color: var(--color-text);
   }
 
-  .languageKey {
+  .languageTag {
     font: var(--font-label-large);
     color: var(--color-caption);
   }
@@ -24,7 +24,7 @@
     background-color: var(--color-focused-variant);
 
     .languageName,
-    .languageKey {
+    .languageTag {
       color: var(--color-text-link);
     }
   }

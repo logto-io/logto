@@ -1,4 +1,4 @@
-import { languageOptions } from '@logto/phrases-ui';
+import { builtInLanguageOptions } from '@logto/phrases-ui';
 import classNames from 'classnames';
 import { useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
@@ -47,7 +47,7 @@ const LanguagesForm = ({ isManageLanguageVisible = false }: Props) => {
           name="languageInfo.fallbackLanguage"
           control={control}
           render={({ field: { value, onChange } }) => (
-            <Select value={value} options={languageOptions} onChange={onChange} />
+            <Select value={value} options={builtInLanguageOptions} onChange={onChange} />
           )}
         />
         <div className={styles.defaultLanguageDescription}>
