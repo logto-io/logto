@@ -1,5 +1,5 @@
 import { LanguageTag } from '@logto/language-kit';
-import { builtInLanguages as builtInUiLanguages, getDefaultLanguageTag } from '@logto/phrases-ui';
+import { builtInLanguages as builtInUiLanguages } from '@logto/phrases-ui';
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Modal from 'react-modal';
@@ -26,17 +26,20 @@ const ManageLanguageModal = ({ isOpen, onClose }: ManageLanguageModalProps) => {
     '/api/custom-phrases'
   );
 
-  const allLanguageTags = useMemo(() => {
-    const customUiLanguageTags = customPhraseResponses?.map(({ languageKey }) => languageKey);
+  const allLanguageTags = useMemo(
+    () =>
+      [
+        ...new Set([
+          ...builtInUiLanguages,
+          ...(customPhraseResponses?.map(({ languageKey }) => languageKey) ?? []),
+        ]),
+      ]
+        .slice()
+        .sort(),
+    [customPhraseResponses]
+  );
 
-    const allTags = customUiLanguageTags?.length
-      ? [...new Set([...builtInUiLanguages, ...customUiLanguageTags])]
-      : builtInUiLanguages;
-
-    return allTags.slice().sort();
-  }, [customPhraseResponses]);
-
-  const defaultLanguageTag = getDefaultLanguageTag(allLanguageTags[0] ?? '');
+  const defaultLanguageTag = allLanguageTags[0] ?? 'en';
 
   const [selectedLanguageTag, setSelectedLanguageTag] = useState<LanguageTag>(defaultLanguageTag);
 
