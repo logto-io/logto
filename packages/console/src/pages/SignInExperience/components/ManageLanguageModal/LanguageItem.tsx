@@ -13,7 +13,7 @@ const LanguageItem = ({ languageTag, isSelected, onClick }: Props) => {
   return (
     <div className={classNames(style.languageItem, isSelected && style.selected)} onClick={onClick}>
       <div className={style.languageName}>{languages[languageTag]}</div>
-      <div className={style.languageKey}>{languageTag}</div>
+      <div className={style.languageTag}>{languageTag}</div>
     </div>
   );
 };

@@ -71,14 +71,14 @@ const ManageLanguageModal = ({ isOpen, onClose }: ManageLanguageModalProps) => {
           <LanguageNav
             languageTags={allLanguageTags}
             selectedLanguageTag={selectedLanguageTag}
-            onSelect={(languageKey) => {
+            onSelect={(languageTag) => {
               if (isLanguageEditorDirty) {
-                setPreselectedLanguageTag(languageKey);
+                setPreselectedLanguageTag(languageTag);
                 setIsUnsavedAlertOpen(true);
 
                 return;
               }
-              setSelectedLanguageTag(languageKey);
+              setSelectedLanguageTag(languageTag);
             }}
           />
           <LanguageEditor
