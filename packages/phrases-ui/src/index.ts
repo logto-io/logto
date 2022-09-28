@@ -22,9 +22,9 @@ export const builtInLanguageOptions = builtInLanguages.map((languageTag) => ({
   title: languages[languageTag],
 }));
 
-export const builtInLanguageGuard = z.enum(builtInLanguages);
+export const builtInLanguageTagGuard = z.enum(builtInLanguages);
 
-export type BuiltInLanguageTag = z.infer<typeof builtInLanguageGuard>;
+export type BuiltInLanguageTag = z.infer<typeof builtInLanguageTagGuard>;
 
 export type Resource = Record<BuiltInLanguageTag, LocalePhrase>;
 
@@ -38,9 +38,9 @@ const resource: Resource = {
 };
 
 export const getDefaultLanguageTag = (language: string): LanguageTag =>
-  builtInLanguageGuard.or(fallback<LanguageTag>('en')).parse(language);
+  builtInLanguageTagGuard.or(fallback<LanguageTag>('en')).parse(language);
 
 export const isBuiltInLanguageTag = (language: string): language is BuiltInLanguageTag =>
-  builtInLanguageGuard.safeParse(language).success;
+  builtInLanguageTagGuard.safeParse(language).success;
 
 export default resource;
