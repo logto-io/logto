@@ -1,0 +1,22 @@
+import { z } from 'zod';
+
+export const flowTypeGuard = z.enum(['sign-in', 'register', 'forgot-password']);
+
+export type FlowType = z.infer<typeof flowTypeGuard>;
+
+export const viaGuard = z.enum(['email', 'sms']);
+
+export type Via = z.infer<typeof viaGuard>;
+
+export type PasscodePayload = { email: string } | { phone: string };
+
+export const passwordlessVerificationGuard = z.object({
+  passwordlessVerification: z.object({
+    email: z.string().optional(),
+    phone: z.string().optional(),
+    flow: flowTypeGuard,
+    expiresAt: z.string(),
+  }),
+});
+
+export type PasswordlessVerification = z.infer<typeof passwordlessVerificationGuard>;
