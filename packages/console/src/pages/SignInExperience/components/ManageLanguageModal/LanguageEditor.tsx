@@ -1,6 +1,6 @@
 import { languages, LanguageTag } from '@logto/language-kit';
 import resource, { isBuiltInLanguageTag } from '@logto/phrases-ui';
-import en from '@logto/phrases/lib/locales/en';
+import en from '@logto/phrases-ui/lib/locales/en';
 import { Translation } from '@logto/schemas';
 import cleanDeep from 'clean-deep';
 import { useEffect, useMemo } from 'react';
