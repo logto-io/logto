@@ -57,6 +57,9 @@ const errors = {
     connector_session_not_found: '无法找到连接器登录信息，请尝试重新登录。',
     forgot_password_session_not_found: '无法找到忘记密码验证信息，请尝试重新验证。',
     forgot_password_verification_expired: '忘记密码验证已过期，请尝试重新验证。',
+    passwordless_verification_session_not_found: '无法找到无密码流程验证信息，请尝试重新验证。',
+    passwordless_not_verified: '无密码验证 {{flow}} 流程没找到。请返回并验证。',
+    passwordless_verification_expired: '无密码验证已过期。请返回重新验证。',
     unauthorized: '请先登录',
     unsupported_prompt_name: '不支持的 prompt name',
   },
@@ -111,6 +114,9 @@ const errors = {
     not_exists: '该 {{name}} 不存在',
     not_exists_with_id: 'ID 为 `{{id}}` 的 {{name}} 不存在',
     not_found: '该资源不存在',
+  },
+  log: {
+    invalid_type: 'The log type is invalid.', // UNTRANSLATED
   },
 };
 

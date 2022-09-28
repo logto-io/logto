@@ -65,6 +65,12 @@ const errors = {
       'Forgot password session not found. Please go back and verify.', // UNTRANSLATED
     forgot_password_verification_expired:
       'Forgot password verification has expired. Please go back and verify again.', // UNTRANSLATED
+    passwordless_verification_session_not_found:
+      'Passwordless verification session not found. Please go back and retry.', // UNTRANSLATED
+    passwordless_not_verified:
+      'Passwordless of {{flow}} flow is not verified. Please go back and verify.', // UNTRANSLATED
+    passwordless_verification_expired:
+      'Passwordless verification has expired. Please go back and verify again.', // UNTRANSLATED
     unauthorized: "Veuillez vous enregistrer d'abord.",
     unsupported_prompt_name: "Nom d'invite non supporté.",
   },
@@ -128,6 +134,9 @@ const errors = {
     not_exists: "Le {{name}} n'existe pas.",
     not_exists_with_id: "Le {{name}} avec l'ID `{{id}}` n'existe pas.",
     not_found: "La ressource n'existe pas.",
+  },
+  log: {
+    invalid_type: 'The log type is invalid.', // UNTRANSLATED
   },
 };
 
