@@ -12,7 +12,7 @@ import assertThat from '@/utils/assert-that';
 
 type MiddlewareReturnType = ReturnType<typeof koaLog>;
 
-export default function koaRegisterAction<StateT, ContextT, ResponseBodyT>(
+export default function koaPasswordlessRegisterAction<StateT, ContextT, ResponseBodyT>(
   provider: Provider,
   via: Via
 ): MiddlewareReturnType {

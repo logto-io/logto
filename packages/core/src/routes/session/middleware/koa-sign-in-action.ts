@@ -18,7 +18,7 @@ import assertThat from '@/utils/assert-that';
 
 type MiddlewareReturnType = ReturnType<typeof koaLog>;
 
-export default function koaSignInAction<StateT, ContextT, ResponseBodyT>(
+export default function koaPasswordlessSignInAction<StateT, ContextT, ResponseBodyT>(
   provider: Provider,
   via: Via
 ): MiddlewareReturnType {

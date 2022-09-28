@@ -22,8 +22,8 @@ import { AnonymousRouter } from '../types';
 import { passwordlessVerificationTimeout } from './consts';
 import { flowTypeGuard, viaGuard, PasscodePayload } from './types';
 import { getRoutePrefix, getPasscodeType, getPasswordlessRelatedLogType } from './utils';
-// Import koaSignInAction from './middleware/koa-sign-in-action';
-// import koaRegisterAction from './middleware/koa-register-action';
+// Import koaPasswordlessSignInAction from './middleware/koa-sign-in-action';
+// import koaPasswordlessRegisterAction from './middleware/koa-register-action';
 
 export const registerRoute = getRoutePrefix('register', 'passwordless');
 export const signInRoute = getRoutePrefix('sign-in', 'passwordless');
@@ -32,10 +32,10 @@ export default function passwordlessRoutes<T extends AnonymousRouter>(
   router: T,
   provider: Provider
 ) {
-  // Router.use(`${signInRoute}/sms`, koaSignInAction(provider, 'sms'));
-  // router.use(`${signInRoute}/email`, koaSignInAction(provider, 'email'));
-  // router.use(`${registerRoute}/sms`, koaRegisterAction(provider, 'sms'));
-  // router.use(`${registerRoute}/email`, koaRegisterAction(provider, 'email'));
+  // Router.use(`${signInRoute}/sms`, koaPasswordlessSignInAction(provider, 'sms'));
+  // router.use(`${signInRoute}/email`, koaPasswordlessSignInAction(provider, 'email'));
+  // router.use(`${registerRoute}/sms`, koaPasswordlessRegisterAction(provider, 'sms'));
+  // router.use(`${registerRoute}/email`, koaPasswordlessRegisterAction(provider, 'email'));
 
   router.post(
     `/passwordless/:via/send`,
