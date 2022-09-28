@@ -7,7 +7,7 @@ import { mockUser } from '@/__mocks__';
 import RequestError from '@/errors/RequestError';
 import { createRequester } from '@/utils/test-utils';
 
-import { passwordlessVerificationTimeout } from './consts';
+import { verificationTimeout } from './consts';
 import passwordlessRoutes, { registerRoute, signInRoute } from './passwordless';
 
 const insertUser = jest.fn(async (..._args: unknown[]) => ({ id: 'id' }));
@@ -179,10 +179,10 @@ describe('session -> passwordlessRoutes', () => {
         expect.anything(),
         expect.anything(),
         expect.objectContaining({
-          passwordlessVerification: {
+          verification: {
             flow: 'sign-in',
             phone: '13000000000',
-            expiresAt: dayjs(fakeTime).add(passwordlessVerificationTimeout, 'second').toISOString(),
+            expiresAt: dayjs(fakeTime).add(verificationTimeout, 'second').toISOString(),
           },
         })
       );
@@ -198,10 +198,10 @@ describe('session -> passwordlessRoutes', () => {
         expect.anything(),
         expect.anything(),
         expect.objectContaining({
-          passwordlessVerification: {
+          verification: {
             flow: 'register',
             phone: '13000000000',
-            expiresAt: dayjs(fakeTime).add(passwordlessVerificationTimeout, 'second').toISOString(),
+            expiresAt: dayjs(fakeTime).add(verificationTimeout, 'second').toISOString(),
           },
         })
       );
@@ -248,10 +248,10 @@ describe('session -> passwordlessRoutes', () => {
         expect.anything(),
         expect.anything(),
         expect.objectContaining({
-          passwordlessVerification: {
+          verification: {
             flow: 'sign-in',
             email: 'a@a.com',
-            expiresAt: dayjs(fakeTime).add(passwordlessVerificationTimeout, 'second').toISOString(),
+            expiresAt: dayjs(fakeTime).add(verificationTimeout, 'second').toISOString(),
           },
         })
       );
@@ -267,10 +267,10 @@ describe('session -> passwordlessRoutes', () => {
         expect.anything(),
         expect.anything(),
         expect.objectContaining({
-          passwordlessVerification: {
+          verification: {
             flow: 'register',
             email: 'a@a.com',
-            expiresAt: dayjs(fakeTime).add(passwordlessVerificationTimeout, 'second').toISOString(),
+            expiresAt: dayjs(fakeTime).add(verificationTimeout, 'second').toISOString(),
           },
         })
       );
@@ -302,7 +302,7 @@ describe('session -> passwordlessRoutes', () => {
     it('should call interactionResult', async () => {
       interactionDetails.mockResolvedValueOnce({
         result: {
-          passwordlessVerification: {
+          verification: {
             phone: '13000000000',
             flow: 'sign-in',
             expiresAt: dayjs().add(1, 'day').toISOString(),
@@ -323,7 +323,7 @@ describe('session -> passwordlessRoutes', () => {
     it('throw when verification session invalid', async () => {
       interactionDetails.mockResolvedValueOnce({
         result: {
-          passwordlessVerification: {
+          verification: {
             phone: '13000000000',
             expiresAt: dayjs().add(1, 'day').toISOString(),
           },
@@ -335,7 +335,7 @@ describe('session -> passwordlessRoutes', () => {
     it('throw when flow is not `sign-in`', async () => {
       interactionDetails.mockResolvedValueOnce({
         result: {
-          passwordlessVerification: {
+          verification: {
             phone: '13000000000',
             flow: 'register',
             expiresAt: dayjs().add(1, 'day').toISOString(),
@@ -348,7 +348,7 @@ describe('session -> passwordlessRoutes', () => {
     it('throw when expiresAt is not valid ISO date string', async () => {
       interactionDetails.mockResolvedValueOnce({
         result: {
-          passwordlessVerification: {
+          verification: {
             phone: '13000000000',
             flow: 'sign-in',
             expiresAt: 'invalid date string',
@@ -361,7 +361,7 @@ describe('session -> passwordlessRoutes', () => {
     it('throw when validation expired', async () => {
       interactionDetails.mockResolvedValueOnce({
         result: {
-          passwordlessVerification: {
+          verification: {
             phone: '13000000000',
             flow: 'sign-in',
             expiresAt: dayjs().subtract(1, 'day').toISOString(),
@@ -374,7 +374,7 @@ describe('session -> passwordlessRoutes', () => {
     it('throw when phone not exist', async () => {
       interactionDetails.mockResolvedValueOnce({
         result: {
-          passwordlessVerification: {
+          verification: {
             flow: 'sign-in',
             expiresAt: dayjs().add(1, 'day').toISOString(),
           },
@@ -386,7 +386,7 @@ describe('session -> passwordlessRoutes', () => {
     it("throw when phone not exist as user's primaryPhone", async () => {
       interactionDetails.mockResolvedValueOnce({
         result: {
-          passwordlessVerification: {
+          verification: {
             phone: '13000000001',
             flow: 'sign-in',
             expiresAt: dayjs().add(1, 'day').toISOString(),
@@ -405,7 +405,7 @@ describe('session -> passwordlessRoutes', () => {
     it('should call interactionResult', async () => {
       interactionDetails.mockResolvedValueOnce({
         result: {
-          passwordlessVerification: {
+          verification: {
             email: 'a@a.com',
             flow: 'sign-in',
             expiresAt: dayjs().add(1, 'day').toISOString(),
@@ -426,7 +426,7 @@ describe('session -> passwordlessRoutes', () => {
     it('throw when verification session invalid', async () => {
       interactionDetails.mockResolvedValueOnce({
         result: {
-          passwordlessVerification: {
+          verification: {
             email: 'a@a.com',
             expiresAt: dayjs().add(1, 'day').toISOString(),
           },
@@ -438,7 +438,7 @@ describe('session -> passwordlessRoutes', () => {
     it('throw when flow is not `sign-in`', async () => {
       interactionDetails.mockResolvedValueOnce({
         result: {
-          passwordlessVerification: {
+          verification: {
             email: 'a@a.com',
             flow: 'register',
             expiresAt: dayjs().add(1, 'day').toISOString(),
@@ -451,7 +451,7 @@ describe('session -> passwordlessRoutes', () => {
     it('throw when email not exist', async () => {
       interactionDetails.mockResolvedValueOnce({
         result: {
-          passwordlessVerification: {
+          verification: {
             flow: 'sign-in',
             expiresAt: dayjs().add(1, 'day').toISOString(),
           },
@@ -463,7 +463,7 @@ describe('session -> passwordlessRoutes', () => {
     it("throw when email not exist as user's primaryEmail", async () => {
       interactionDetails.mockResolvedValueOnce({
         result: {
-          passwordlessVerification: {
+          verification: {
             email: 'b@a.com',
             flow: 'sign-in',
             expiresAt: dayjs().add(1, 'day').toISOString(),
@@ -482,7 +482,7 @@ describe('session -> passwordlessRoutes', () => {
     it('should call interactionResult', async () => {
       interactionDetails.mockResolvedValueOnce({
         result: {
-          passwordlessVerification: {
+          verification: {
             phone: '13000000001',
             flow: 'register',
             expiresAt: dayjs().add(1, 'day').toISOString(),
@@ -503,7 +503,7 @@ describe('session -> passwordlessRoutes', () => {
     it('throw when verification session invalid', async () => {
       interactionDetails.mockResolvedValueOnce({
         result: {
-          passwordlessVerification: {
+          verification: {
             phone: '13000000001',
             expiresAt: dayjs().add(1, 'day').toISOString(),
           },
@@ -515,7 +515,7 @@ describe('session -> passwordlessRoutes', () => {
     it('throw when flow is not `register`', async () => {
       interactionDetails.mockResolvedValueOnce({
         result: {
-          passwordlessVerification: {
+          verification: {
             phone: '13000000001',
             flow: 'sign-in',
             expiresAt: dayjs().add(1, 'day').toISOString(),
@@ -528,7 +528,7 @@ describe('session -> passwordlessRoutes', () => {
     it('throw when phone not exist', async () => {
       interactionDetails.mockResolvedValueOnce({
         result: {
-          passwordlessVerification: {
+          verification: {
             flow: 'register',
             expiresAt: dayjs().add(1, 'day').toISOString(),
           },
@@ -540,7 +540,7 @@ describe('session -> passwordlessRoutes', () => {
     it("throw when phone already exist as user's primaryPhone", async () => {
       interactionDetails.mockResolvedValueOnce({
         result: {
-          passwordlessVerification: {
+          verification: {
             phone: '13000000000',
             flow: 'register',
             expiresAt: dayjs().add(1, 'day').toISOString(),
@@ -559,7 +559,7 @@ describe('session -> passwordlessRoutes', () => {
     it('should call interactionResult', async () => {
       interactionDetails.mockResolvedValueOnce({
         result: {
-          passwordlessVerification: {
+          verification: {
             email: 'b@a.com',
             flow: 'register',
             expiresAt: dayjs().add(1, 'day').toISOString(),
@@ -580,7 +580,7 @@ describe('session -> passwordlessRoutes', () => {
     it('throw when verification session invalid', async () => {
       interactionDetails.mockResolvedValueOnce({
         result: {
-          passwordlessVerification: {
+          verification: {
             email: 'b@a.com',
             expiresAt: dayjs().add(1, 'day').toISOString(),
           },
@@ -592,7 +592,7 @@ describe('session -> passwordlessRoutes', () => {
     it('throw when flow is not `register`', async () => {
       interactionDetails.mockResolvedValueOnce({
         result: {
-          passwordlessVerification: {
+          verification: {
             email: 'b@a.com',
             flow: 'sign-in',
             expiresAt: dayjs().add(1, 'day').toISOString(),
@@ -605,7 +605,7 @@ describe('session -> passwordlessRoutes', () => {
     it('throw when email not exist', async () => {
       interactionDetails.mockResolvedValueOnce({
         result: {
-          passwordlessVerification: {
+          verification: {
             flow: 'register',
             expiresAt: dayjs().add(1, 'day').toISOString(),
           },
@@ -617,7 +617,7 @@ describe('session -> passwordlessRoutes', () => {
     it("throw when email already exist as user's primaryEmail", async () => {
       interactionDetails.mockResolvedValueOnce({
         result: {
-          passwordlessVerification: {
+          verification: {
             email: 'a@a.com',
             flow: 'register',
             expiresAt: dayjs().add(1, 'day').toISOString(),

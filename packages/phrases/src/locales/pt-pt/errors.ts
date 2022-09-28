@@ -61,12 +61,11 @@ const errors = {
       'Forgot password session not found. Please go back and verify.', // UNTRANSLATED
     forgot_password_verification_expired:
       'Forgot password verification has expired. Please go back and verify again.', // UNTRANSLATED
-    passwordless_verification_session_not_found:
+    verification_session_not_found:
       'Passwordless verification session not found. Please go back and retry.', // UNTRANSLATED
     passwordless_not_verified:
       'Passwordless of {{flow}} flow is not verified. Please go back and verify.', // UNTRANSLATED
-    passwordless_verification_expired:
-      'Passwordless verification has expired. Please go back and verify again.', // UNTRANSLATED
+    verification_expired: 'Passwordless verification has expired. Please go back and verify again.', // UNTRANSLATED
     unauthorized: 'Faça login primeiro.',
     unsupported_prompt_name: 'Nome de prompt não suportado.',
   },

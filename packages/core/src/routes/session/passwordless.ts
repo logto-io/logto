@@ -16,7 +16,7 @@ import {
   hasUserWithPhone,
 } from '@/queries/user';
 import {
-  passwordlessVerificationGuard,
+  verificationGuard,
   flowTypeGuard,
   viaGuard,
   PasscodePayload,
@@ -24,7 +24,7 @@ import {
 import assertThat from '@/utils/assert-that';
 
 import { AnonymousRouter } from '../types';
-import { passwordlessVerificationTimeout } from './consts';
+import { verificationTimeout } from './consts';
 import { getRoutePrefix, getPasscodeType, getPasswordlessRelatedLogType } from './utils';
 
 export const registerRoute = getRoutePrefix('register', 'passwordless');
@@ -115,9 +115,9 @@ export default function passwordlessRoutes<T extends AnonymousRouter>(
       await verifyPasscode(jti, passcodeType, code, payload);
 
       await provider.interactionResult(ctx.req, ctx.res, {
-        passwordlessVerification: {
+        verification: {
           flow,
-          expiresAt: dayjs().add(passwordlessVerificationTimeout, 'second').toISOString(),
+          expiresAt: dayjs().add(verificationTimeout, 'second').toISOString(),
           ...payload,
         },
       });
@@ -131,17 +131,17 @@ export default function passwordlessRoutes<T extends AnonymousRouter>(
     const { result } = await provider.interactionDetails(ctx.req, ctx.res);
 
     console.log(result);
-    const passwordlessVerificationResult = passwordlessVerificationGuard.safeParse(result);
+    const passwordlessVerificationResult = verificationGuard.safeParse(result);
     assertThat(
       passwordlessVerificationResult.success,
       new RequestError({
-        code: 'session.passwordless_verification_session_not_found',
+        code: 'session.verification_session_not_found',
         status: 404,
       })
     );
 
     const {
-      passwordlessVerification: { phone, flow, expiresAt },
+      verification: { phone, flow, expiresAt },
     } = passwordlessVerificationResult.data;
 
     const type = getPasswordlessRelatedLogType('sign-in', 'sms');
@@ -154,7 +154,7 @@ export default function passwordlessRoutes<T extends AnonymousRouter>(
 
     assertThat(
       dayjs(expiresAt).isValid() && dayjs(expiresAt).isAfter(dayjs()),
-      new RequestError({ code: 'session.passwordless_verification_expired', status: 401 })
+      new RequestError({ code: 'session.verification_expired', status: 401 })
     );
 
     assertThat(
@@ -173,17 +173,17 @@ export default function passwordlessRoutes<T extends AnonymousRouter>(
   router.post(`${signInRoute}/email`, async (ctx, next) => {
     const { result } = await provider.interactionDetails(ctx.req, ctx.res);
 
-    const passwordlessVerificationResult = passwordlessVerificationGuard.safeParse(result);
+    const passwordlessVerificationResult = verificationGuard.safeParse(result);
     assertThat(
       passwordlessVerificationResult.success,
       new RequestError({
-        code: 'session.passwordless_verification_session_not_found',
+        code: 'session.verification_session_not_found',
         status: 404,
       })
     );
 
     const {
-      passwordlessVerification: { email, flow, expiresAt },
+      verification: { email, flow, expiresAt },
     } = passwordlessVerificationResult.data;
 
     const type = getPasswordlessRelatedLogType('sign-in', 'email');
@@ -196,7 +196,7 @@ export default function passwordlessRoutes<T extends AnonymousRouter>(
 
     assertThat(
       dayjs(expiresAt).isValid() && dayjs(expiresAt).isAfter(dayjs()),
-      new RequestError({ code: 'session.passwordless_verification_expired', status: 401 })
+      new RequestError({ code: 'session.verification_expired', status: 401 })
     );
 
     assertThat(
@@ -216,17 +216,17 @@ export default function passwordlessRoutes<T extends AnonymousRouter>(
   router.post(`${registerRoute}/sms`, async (ctx, next) => {
     const { result } = await provider.interactionDetails(ctx.req, ctx.res);
 
-    const passwordlessVerificationResult = passwordlessVerificationGuard.safeParse(result);
+    const passwordlessVerificationResult = verificationGuard.safeParse(result);
     assertThat(
       passwordlessVerificationResult.success,
       new RequestError({
-        code: 'session.passwordless_verification_session_not_found',
+        code: 'session.verification_session_not_found',
         status: 404,
       })
     );
 
     const {
-      passwordlessVerification: { email, phone, flow, expiresAt },
+      verification: { email, phone, flow, expiresAt },
     } = passwordlessVerificationResult.data;
 
     const type = getPasswordlessRelatedLogType('register', 'sms');
@@ -239,7 +239,7 @@ export default function passwordlessRoutes<T extends AnonymousRouter>(
 
     assertThat(
       dayjs(expiresAt).isValid() && dayjs(expiresAt).isAfter(dayjs()),
-      new RequestError({ code: 'session.passwordless_verification_expired', status: 401 })
+      new RequestError({ code: 'session.verification_expired', status: 401 })
     );
 
     assertThat(
@@ -259,17 +259,17 @@ export default function passwordlessRoutes<T extends AnonymousRouter>(
   router.post(`${registerRoute}/email`, async (ctx, next) => {
     const { result } = await provider.interactionDetails(ctx.req, ctx.res);
 
-    const passwordlessVerificationResult = passwordlessVerificationGuard.safeParse(result);
+    const passwordlessVerificationResult = verificationGuard.safeParse(result);
     assertThat(
       passwordlessVerificationResult.success,
       new RequestError({
-        code: 'session.passwordless_verification_session_not_found',
+        code: 'session.verification_session_not_found',
         status: 404,
       })
     );
 
     const {
-      passwordlessVerification: { email, flow, expiresAt },
+      verification: { email, flow, expiresAt },
     } = passwordlessVerificationResult.data;
 
     const type = getPasswordlessRelatedLogType('register', 'email');
@@ -282,7 +282,7 @@ export default function passwordlessRoutes<T extends AnonymousRouter>(
 
     assertThat(
       dayjs(expiresAt).isValid() && dayjs(expiresAt).isAfter(dayjs()),
-      new RequestError({ code: 'session.passwordless_verification_expired', status: 401 })
+      new RequestError({ code: 'session.verification_expired', status: 401 })
     );
 
     assertThat(

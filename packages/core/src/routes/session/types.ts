@@ -14,8 +14,8 @@ export type Operation = z.infer<typeof operationGuard>;
 
 export type PasscodePayload = { email: string } | { phone: string };
 
-export const passwordlessVerificationGuard = z.object({
-  passwordlessVerification: z.object({
+export const verificationGuard = z.object({
+  verification: z.object({
     email: z.string().optional(),
     phone: z.string().optional(),
     flow: flowTypeGuard,
@@ -23,4 +23,4 @@ export const passwordlessVerificationGuard = z.object({
   }),
 });
 
-export type PasswordlessVerification = z.infer<typeof passwordlessVerificationGuard>;
+export type Verification = z.infer<typeof verificationGuard>;
