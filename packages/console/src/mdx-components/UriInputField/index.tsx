@@ -81,8 +81,7 @@ const UriInputField = ({ appId, name, title, isSingle = false }: Props) => {
                   { field: title }
                 ),
                 pattern: {
-                  verify: (value) =>
-                    !value || uriValidator(value, name === 'redirectUris' ? data?.type : undefined),
+                  verify: (value) => !value || uriValidator(value),
                   message: t('errors.invalid_uri_format'),
                 },
               }),

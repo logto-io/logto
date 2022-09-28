@@ -29,14 +29,27 @@ export const oidcModelInstancePayloadGuard = z
 
 export type OidcModelInstancePayload = z.infer<typeof oidcModelInstancePayloadGuard>;
 
-export const redirectUriRegEx = /^https?:\/\/.*/;
-export const redirectNativeRegEx = /^[a-z][\d_a-z]*(\.[\d_a-z]+)+[\d_a-z]:\/\/[a-z]*$/;
+// Import from @logto/core-kit later, pending for new version publish
+export const webRedirectUriProtocolRegEx = /^https?:$/;
+export const mobileUriSchemeProtocolRegEx = /^[a-z][\d_a-z]*(\.[\d_a-z]+)+:$/;
+
+export const validateRedirectUrl = (urlString: string, type: 'web' | 'mobile') => {
+  try {
+    const { protocol } = new URL(urlString);
+    const protocolRegEx =
+      type === 'mobile' ? mobileUriSchemeProtocolRegEx : webRedirectUriProtocolRegEx;
+
+    return protocolRegEx.test(protocol);
+  } catch {
+    return false;
+  }
+};
 
 export const oidcClientMetadataGuard = z.object({
   redirectUris: z
     .string()
-    .regex(redirectUriRegEx)
-    .or(z.string().regex(redirectNativeRegEx))
+    .refine((url) => validateRedirectUrl(url, 'web'))
+    .or(z.string().refine((url) => validateRedirectUrl(url, 'mobile')))
     .array(),
   postLogoutRedirectUris: z.string().url().array(),
   logoUri: z.string().optional(),

@@ -4,6 +4,7 @@ import { OpenAPIV3 } from 'openapi-types';
 import {
   ZodArray,
   ZodBoolean,
+  ZodEffects,
   ZodEnum,
   ZodLiteral,
   ZodNativeEnum,
@@ -207,6 +208,14 @@ export const zodTypeToSwagger = (
   if (config instanceof ZodBoolean) {
     return {
       type: 'boolean',
+    };
+  }
+
+  // TO-DO: Improve swagger output for zod schema with refinement (validate through JS functions)
+  if (config instanceof ZodEffects && config._def.effect.type === 'refinement') {
+    return {
+      type: 'object',
+      description: 'Validator function',
     };
   }
 

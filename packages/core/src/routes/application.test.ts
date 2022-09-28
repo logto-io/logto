@@ -155,11 +155,10 @@ describe('application route', () => {
     await expect(
       applicationRequest.patch('/applications/foo').send({
         oidcClientMetadata: {
-          ...customClientMetadata,
           redirectUris: [
-            'com.google.com://callback',
             'https://example.com/callback?auth=true',
-            'http://example.com',
+            'https://Example.com',
+            'http://127.0.0.1',
             'http://localhost:3002',
           ],
         },
@@ -171,8 +170,33 @@ describe('application route', () => {
     await expect(
       applicationRequest.patch('/applications/foo').send({
         oidcClientMetadata: {
-          ...customOidcClientMetadata,
-          redirectUris: ['com.google.com'],
+          redirectUris: ['www.example.com', 'com.example://callback'],
+        },
+      })
+    ).resolves.toHaveProperty('status', 400);
+  });
+
+  it('PATCH /application/:applicationId should save the formatted custom scheme URIs for native apps', async () => {
+    await expect(
+      applicationRequest.patch('/applications/foo').send({
+        type: ApplicationType.Native,
+        oidcClientMetadata: {
+          redirectUris: [
+            'com.example://demo-app/callback',
+            'com.example://callback',
+            'io.logto://Abc123',
+          ],
+        },
+      })
+    ).resolves.toHaveProperty('status', 200);
+  });
+
+  it('PATCH /application/:applicationId expect to throw with invalid custom scheme for native apps', async () => {
+    await expect(
+      applicationRequest.patch('/applications/foo').send({
+        type: ApplicationType.Native,
+        oidcClientMetadata: {
+          redirectUris: ['https://www.example.com', 'com.example/callback'],
         },
       })
     ).resolves.toHaveProperty('status', 400);
