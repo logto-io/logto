@@ -1,13 +1,12 @@
 import en from '@logto/phrases-ui/lib/locales/en';
 
-export const enKey = 'en';
-export const koKrKey = 'ko-KR';
-export const trTrKey = 'tr-TR';
-export const zhCnKey = 'zh-CN';
-export const zhHkKey = 'zh-HK';
+export const enTag = 'en';
+export const trTrTag = 'tr-TR';
+export const zhCnTag = 'zh-CN';
+export const zhHkTag = 'zh-HK';
 
 export const mockEnCustomPhrase = {
-  languageKey: enKey,
+  languageTag: enTag,
   translation: {
     input: {
       username: 'Username 1',
@@ -20,7 +19,7 @@ export const mockEnCustomPhrase = {
 };
 
 export const mockEnPhrase = {
-  languageKey: enKey,
+  languageTag: enTag,
   translation: {
     ...en.translation,
     ...mockEnCustomPhrase.translation,
@@ -28,7 +27,7 @@ export const mockEnPhrase = {
 };
 
 export const mockTrTrCustomPhrase = {
-  languageKey: trTrKey,
+  languageTag: trTrTag,
   translation: {
     input: {
       username: 'Kullanıcı Adı 1',
@@ -41,7 +40,7 @@ export const mockTrTrCustomPhrase = {
 };
 
 export const mockZhCnCustomPhrase = {
-  languageKey: zhCnKey,
+  languageTag: zhCnTag,
   translation: {
     input: {
       username: '用户名 1',
@@ -54,7 +53,7 @@ export const mockZhCnCustomPhrase = {
 };
 
 export const mockZhHkCustomPhrase = {
-  languageKey: zhHkKey,
+  languageTag: zhHkTag,
   translation: {
     input: {
       email: '郵箱 1',

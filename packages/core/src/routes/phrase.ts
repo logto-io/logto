@@ -4,7 +4,7 @@ import { Provider } from 'oidc-provider';
 
 import detectLanguage from '@/i18n/detect-language';
 import { getPhrase } from '@/lib/phrase';
-import { findAllCustomLanguageKeys } from '@/queries/custom-phrase';
+import { findAllCustomLanguageTags } from '@/queries/custom-phrase';
 import { findDefaultSignInExperience } from '@/queries/sign-in-experience';
 
 import { AnonymousRouter } from './types';
@@ -31,10 +31,10 @@ export default function phraseRoutes<T extends AnonymousRouter>(router: T, provi
 
     const detectedLanguages = autoDetect ? detectLanguage(ctx) : [];
     const acceptableLanguages = [...detectedLanguages, fallbackLanguage];
-    const customLanguages = await findAllCustomLanguageKeys();
+    const customLanguages = await findAllCustomLanguageTags();
     const language =
       acceptableLanguages.find(
-        (key) => isBuiltInLanguageTag(key) || customLanguages.includes(key)
+        (tag) => isBuiltInLanguageTag(tag) || customLanguages.includes(tag)
       ) ?? 'en';
 
     ctx.set('Content-Language', language);

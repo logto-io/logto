@@ -11,7 +11,7 @@ import { Optional } from '@silverhand/essentials';
 
 import { ConnectorType, LogtoConnector } from '@/connectors/types';
 import RequestError from '@/errors/RequestError';
-import { findAllCustomLanguageKeys } from '@/queries/custom-phrase';
+import { findAllCustomLanguageTags } from '@/queries/custom-phrase';
 import assertThat from '@/utils/assert-that';
 
 export const validateBranding = (branding: Branding) => {
@@ -23,7 +23,7 @@ export const validateBranding = (branding: Branding) => {
 };
 
 export const validateLanguageInfo = async (languageInfo: LanguageInfo) => {
-  const supportedLanguages = [...builtInLanguages, ...(await findAllCustomLanguageKeys())];
+  const supportedLanguages = [...builtInLanguages, ...(await findAllCustomLanguageTags())];
 
   assertThat(
     supportedLanguages.includes(languageInfo.fallbackLanguage),

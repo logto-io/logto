@@ -1,13 +1,15 @@
+import { languageTagGuard } from '@logto/language-kit';
 import resource from '@logto/phrases-ui';
 import { CustomPhrases, Translation, translationGuard } from '@logto/schemas';
 import cleanDeep from 'clean-deep';
+import { object } from 'zod';
 
 import RequestError from '@/errors/RequestError';
 import koaGuard from '@/middleware/koa-guard';
 import {
-  deleteCustomPhraseByLanguageKey,
+  deleteCustomPhraseByLanguageTag,
   findAllCustomPhrases,
-  findCustomPhraseByLanguageKey,
+  findCustomPhraseByLanguageTag,
   upsertCustomPhrase,
 } from '@/queries/custom-phrase';
 import { findDefaultSignInExperience } from '@/queries/sign-in-experience';
@@ -35,33 +37,32 @@ export default function customPhraseRoutes<T extends AuthedRouter>(router: T) {
   );
 
   router.get(
-    '/custom-phrases/:languageKey',
+    '/custom-phrases/:languageTag',
     koaGuard({
-      // Next up: guard languageKey by enum LanguageKey (that will be provided by @sijie later.)
-      params: CustomPhrases.createGuard.pick({ languageKey: true }),
+      params: object({ languageTag: languageTagGuard }),
       response: CustomPhrases.guard,
     }),
     async (ctx, next) => {
       const {
-        params: { languageKey },
+        params: { languageTag },
       } = ctx.guard;
 
-      ctx.body = await findCustomPhraseByLanguageKey(languageKey);
+      ctx.body = await findCustomPhraseByLanguageTag(languageTag);
 
       return next();
     }
   );
 
   router.put(
-    '/custom-phrases/:languageKey',
+    '/custom-phrases/:languageTag',
     koaGuard({
-      params: CustomPhrases.createGuard.pick({ languageKey: true }),
+      params: object({ languageTag: languageTagGuard }),
       body: translationGuard,
       response: CustomPhrases.guard,
     }),
     async (ctx, next) => {
       const {
-        params: { languageKey },
+        params: { languageTag },
         body,
       } = ctx.guard;
 
@@ -72,34 +73,34 @@ export default function customPhraseRoutes<T extends AuthedRouter>(router: T) {
         new RequestError('localization.invalid_translation_structure')
       );
 
-      ctx.body = await upsertCustomPhrase({ languageKey, translation });
+      ctx.body = await upsertCustomPhrase({ languageTag, translation });
 
       return next();
     }
   );
 
   router.delete(
-    '/custom-phrases/:languageKey',
+    '/custom-phrases/:languageTag',
     koaGuard({
-      params: CustomPhrases.createGuard.pick({ languageKey: true }),
+      params: object({ languageTag: languageTagGuard }),
     }),
     async (ctx, next) => {
       const {
-        params: { languageKey },
+        params: { languageTag },
       } = ctx.guard;
 
       const {
         languageInfo: { fallbackLanguage },
       } = await findDefaultSignInExperience();
 
-      if (fallbackLanguage === languageKey) {
+      if (fallbackLanguage === languageTag) {
         throw new RequestError({
           code: 'localization.cannot_delete_default_language',
-          languageKey,
+          languageTag,
         });
       }
 
-      await deleteCustomPhraseByLanguageKey(languageKey);
+      await deleteCustomPhraseByLanguageTag(languageTag);
       ctx.status = 204;
 
       return next();

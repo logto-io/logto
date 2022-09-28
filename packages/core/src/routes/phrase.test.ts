@@ -4,7 +4,7 @@ import { adminConsoleApplicationId, adminConsoleSignInExperience } from '@logto/
 import { Provider } from 'oidc-provider';
 
 import { mockSignInExperience } from '@/__mocks__';
-import { zhCnKey } from '@/__mocks__/custom-phrase';
+import { zhCnTag } from '@/__mocks__/custom-phrase';
 import * as detectLanguage from '@/i18n/detect-language';
 import phraseRoutes from '@/routes/phrase';
 import { createRequester } from '@/utils/test-utils';
@@ -21,7 +21,7 @@ jest.mock('oidc-provider', () => ({
   })),
 }));
 
-const customizedLanguage = zhCnKey;
+const customizedLanguage = zhCnTag;
 
 const findDefaultSignInExperience = jest.fn(
   async (): Promise<SignInExperience> => ({
@@ -40,12 +40,12 @@ jest.mock('@/queries/sign-in-experience', () => ({
 
 const detectLanguageSpy = jest.spyOn(detectLanguage, 'default');
 
-const findAllCustomLanguageKeys = jest.fn(async () => [customizedLanguage]);
-const findCustomPhraseByLanguageKey = jest.fn(async (key: string) => ({}));
+const findAllCustomLanguageTags = jest.fn(async () => [customizedLanguage]);
+const findCustomPhraseByLanguageTag = jest.fn(async (tag: string) => ({}));
 
 jest.mock('@/queries/custom-phrase', () => ({
-  findAllCustomLanguageKeys: async () => findAllCustomLanguageKeys(),
-  findCustomPhraseByLanguageKey: async (key: string) => findCustomPhraseByLanguageKey(key),
+  findAllCustomLanguageTags: async () => findAllCustomLanguageTags(),
+  findCustomPhraseByLanguageTag: async (tag: string) => findCustomPhraseByLanguageTag(tag),
 }));
 
 const getPhrase = jest.fn(async (language: string, customLanguages: string[]) => zhCN);
@@ -87,9 +87,9 @@ describe('when the application is admin-console', () => {
     expect(detectLanguageSpy).toBeCalledTimes(1);
   });
 
-  it('should call findAllCustomLanguageKeys', async () => {
+  it('should call findAllCustomLanguageTags', async () => {
     await expect(phraseRequest.get('/phrase')).resolves.toHaveProperty('status', 200);
-    expect(findAllCustomLanguageKeys).toBeCalledTimes(1);
+    expect(findAllCustomLanguageTags).toBeCalledTimes(1);
   });
 
   it('should call getPhrase with fallback language from Admin Console sign-in experience', async () => {
@@ -136,9 +136,9 @@ describe('when the application is not admin-console', () => {
     expect(detectLanguageSpy).not.toBeCalled();
   });
 
-  it('should call findAllCustomLanguageKeys', async () => {
+  it('should call findAllCustomLanguageTags', async () => {
     await expect(phraseRequest.get('/phrase')).resolves.toHaveProperty('status', 200);
-    expect(findAllCustomLanguageKeys).toBeCalledTimes(1);
+    expect(findAllCustomLanguageTags).toBeCalledTimes(1);
   });
 
   it('should call getPhrase with fallback language from default sign-in experience', async () => {

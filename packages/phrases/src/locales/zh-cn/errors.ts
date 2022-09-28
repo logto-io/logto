@@ -101,7 +101,7 @@ const errors = {
     unsupported_default_language: '不支持默认语言 {{language}}。', // UNTRANSLATED
   },
   localization: {
-    cannot_delete_default_language: '不能删除「登录体验」正在使用的默认语言 {{languageKey}}。', // UNTRANSLATED
+    cannot_delete_default_language: '不能删除「登录体验」正在使用的默认语言 {{languageTag}}。', // UNTRANSLATED
     invalid_translation_structure: '无效的 translation 结构。请检查输入的 translation。', // UNTRANSLATED
   },
   swagger: {

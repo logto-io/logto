@@ -31,7 +31,7 @@ const ManageLanguageModal = ({ isOpen, onClose }: ManageLanguageModalProps) => {
       [
         ...new Set([
           ...builtInUiLanguages,
-          ...(customPhraseResponses?.map(({ languageKey }) => languageKey) ?? []),
+          ...(customPhraseResponses?.map(({ languageTag }) => languageTag) ?? []),
         ]),
       ]
         .slice()

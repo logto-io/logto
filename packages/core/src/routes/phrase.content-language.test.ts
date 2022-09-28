@@ -2,7 +2,7 @@ import en from '@logto/phrases-ui/lib/locales/en';
 import { Provider } from 'oidc-provider';
 
 import { mockSignInExperience } from '@/__mocks__';
-import { trTrKey, zhCnKey, zhHkKey } from '@/__mocks__/custom-phrase';
+import { trTrTag, zhCnTag, zhHkTag } from '@/__mocks__/custom-phrase';
 import phraseRoutes from '@/routes/phrase';
 import { createRequester } from '@/utils/test-utils';
 
@@ -18,7 +18,7 @@ jest.mock('oidc-provider', () => ({
   })),
 }));
 
-const fallbackLanguage = trTrKey;
+const fallbackLanguage = trTrTag;
 const unsupportedLanguageX = 'xx-XX';
 const unsupportedLanguageY = 'yy-YY';
 
@@ -36,7 +36,7 @@ jest.mock('@/queries/sign-in-experience', () => ({
 }));
 
 jest.mock('@/queries/custom-phrase', () => ({
-  findAllCustomLanguageKeys: async () => [trTrKey, zhCnKey],
+  findAllCustomLanguageTags: async () => [trTrTag, zhCnTag],
 }));
 
 jest.mock('@/lib/phrase', () => ({
@@ -65,7 +65,7 @@ describe('when auto-detect is not enabled', () => {
     });
     const response = await phraseRequest
       .get('/phrase')
-      .set('Accept-Language', `${zhCnKey},${zhHkKey}`);
+      .set('Accept-Language', `${zhCnTag},${zhHkTag}`);
     expect(response.headers['content-language']).toEqual('en');
   });
 
@@ -89,7 +89,7 @@ describe('when auto-detect is not enabled', () => {
     it('when there are detected languages', async () => {
       const response = await phraseRequest
         .get('/phrase')
-        .set('Accept-Language', `${zhCnKey},${zhHkKey}`);
+        .set('Accept-Language', `${zhCnTag},${zhHkTag}`);
       expect(response.headers['content-language']).toEqual(fallbackLanguage);
     });
   });
@@ -141,10 +141,10 @@ describe('when auto-detect is enabled', () => {
 
     describe('when there are detected languages but some of them is unsupported', () => {
       it('should be first supported detected language', async () => {
-        const firstSupportedLanguage = zhCnKey;
+        const firstSupportedLanguage = zhCnTag;
         const response = await phraseRequest
           .get('/phrase')
-          .set('Accept-Language', `${unsupportedLanguageX},${firstSupportedLanguage},${zhHkKey}`);
+          .set('Accept-Language', `${unsupportedLanguageX},${firstSupportedLanguage},${zhHkTag}`);
         expect(response.headers['content-language']).toEqual(firstSupportedLanguage);
       });
     });
