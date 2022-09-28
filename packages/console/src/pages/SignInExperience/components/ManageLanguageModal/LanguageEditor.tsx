@@ -1,5 +1,6 @@
-import type { LanguageKey } from '@logto/core-kit';
-import resource, { languageCodeAndDisplayNameMappings } from '@logto/phrases-ui';
+import { languages, LanguageTag } from '@logto/language-kit';
+import resource, { isBuiltInLanguageTag } from '@logto/phrases-ui';
+import en from '@logto/phrases/lib/locales/en';
 import { Translation } from '@logto/schemas';
 import cleanDeep from 'clean-deep';
 import { useEffect, useMemo } from 'react';
@@ -18,25 +19,26 @@ import * as style from './LanguageEditor.module.scss';
 import { CustomPhraseResponse } from './types';
 
 type LanguageEditorProps = {
-  selectedLanguageKey: LanguageKey;
+  selectedLanguageTag: LanguageTag;
   onFormStateChange: (isDirty: boolean) => void;
 };
 
 const emptyUiTranslation = createEmptyUiTranslation();
 
-const LanguageEditor = ({ selectedLanguageKey, onFormStateChange }: LanguageEditorProps) => {
+const LanguageEditor = ({ selectedLanguageTag, onFormStateChange }: LanguageEditorProps) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
-  const isBuiltInLanguage = Object.keys(resource).includes(selectedLanguageKey);
+  const isBuiltIn = isBuiltInLanguageTag(selectedLanguageTag);
+
   const translationEntries = useMemo(
-    () => Object.entries(resource[selectedLanguageKey].translation),
-    [selectedLanguageKey]
+    () => Object.entries((isBuiltIn ? resource[selectedLanguageTag] : en).translation),
+    [isBuiltIn, selectedLanguageTag]
   );
 
   const api = useApi();
 
   const { data: customPhrase, mutate } = useSWR<CustomPhraseResponse, RequestError>(
-    `/api/custom-phrases/${selectedLanguageKey}`,
+    `/api/custom-phrases/${selectedLanguageTag}`,
     {
       shouldRetryOnError: (error: unknown) => {
         if (error instanceof RequestError) {
@@ -62,7 +64,7 @@ const LanguageEditor = ({ selectedLanguageKey, onFormStateChange }: LanguageEdit
 
   const onSubmit = handleSubmit(async (formData: Translation) => {
     const updatedCustomPhrase = await api
-      .put(`/api/custom-phrases/${selectedLanguageKey}`, {
+      .put(`/api/custom-phrases/${selectedLanguageTag}`, {
         json: {
           ...cleanDeep(formData),
         },
@@ -80,9 +82,9 @@ const LanguageEditor = ({ selectedLanguageKey, onFormStateChange }: LanguageEdit
   return (
     <div className={style.languageEditor}>
       <div className={style.title}>
-        {languageCodeAndDisplayNameMappings[selectedLanguageKey]}
-        <span>{selectedLanguageKey}</span>
-        {isBuiltInLanguage && (
+        {languages[selectedLanguageTag]}
+        <span>{selectedLanguageTag}</span>
+        {isBuiltIn && (
           <span className={style.builtInFlag}>
             {t('sign_in_exp.others.manage_language.logto_provided')}
           </span>

@@ -1,4 +1,4 @@
-import { LanguageKey } from '@logto/core-kit';
+import { LanguageTag } from '@logto/language-kit';
 
 import Button from '@/components/Button';
 import Plus from '@/icons/Plus';
@@ -7,12 +7,12 @@ import LanguageItem from './LanguageItem';
 import * as style from './LanguageNav.module.scss';
 
 type Props = {
-  languageKeys: LanguageKey[];
-  selectedLanguage: LanguageKey;
-  onSelect: (languageKey: LanguageKey) => void;
+  languageTags: LanguageTag[];
+  selectedLanguageTag: LanguageTag;
+  onSelect: (languageTag: LanguageTag) => void;
 };
 
-const LanguageNav = ({ languageKeys, selectedLanguage, onSelect }: Props) => {
+const LanguageNav = ({ languageTags, selectedLanguageTag, onSelect }: Props) => {
   // TODO: LOG-4146 Add Custom Language
   return (
     <div className={style.languageNav}>
@@ -24,13 +24,13 @@ const LanguageNav = ({ languageKeys, selectedLanguage, onSelect }: Props) => {
         size="medium"
       />
       <div>
-        {languageKeys.map((key) => (
+        {languageTags.map((languageTag) => (
           <LanguageItem
-            key={key}
-            languageKey={key}
-            isSelected={selectedLanguage === key}
+            key={languageTag}
+            languageTag={languageTag}
+            isSelected={selectedLanguageTag === languageTag}
             onClick={() => {
-              onSelect(key);
+              onSelect(languageTag);
             }}
           />
         ))}

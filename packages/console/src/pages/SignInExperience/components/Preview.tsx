@@ -1,5 +1,5 @@
-import type { LanguageKey } from '@logto/core-kit';
-import { languageOptions } from '@logto/phrases-ui';
+import { LanguageTag } from '@logto/language-kit';
+import { builtInLanguageOptions } from '@logto/phrases-ui';
 import {
   AppearanceMode,
   ConnectorResponse,
@@ -28,7 +28,7 @@ type Props = {
 
 const Preview = ({ signInExperience, className }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const [language, setLanguage] = useState<LanguageKey>('en');
+  const [language, setLanguage] = useState<LanguageTag>('en');
   const [mode, setMode] = useState<AppearanceMode>(AppearanceMode.LightMode);
   const [platform, setPlatform] = useState<'desktopWeb' | 'mobile' | 'mobileWeb'>('desktopWeb');
   const { data: allConnectors } = useSWR<ConnectorResponse[], RequestError>('/api/connectors');
@@ -57,12 +57,12 @@ const Preview = ({ signInExperience, className }: Props) => {
 
   const availableLanguageOptions = useMemo(() => {
     if (signInExperience && !signInExperience.languageInfo.autoDetect) {
-      return languageOptions.filter(
+      return builtInLanguageOptions.filter(
         ({ value }) => value === signInExperience.languageInfo.fallbackLanguage
       );
     }
 
-    return languageOptions;
+    return builtInLanguageOptions;
   }, [signInExperience]);
 
   useEffect(() => {

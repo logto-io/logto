@@ -21,7 +21,8 @@ importers:
   packages/console:
     specifiers:
       '@fontsource/roboto-mono': ^4.5.7
-      '@logto/core-kit': ^1.0.0-beta.13
+      '@logto/core-kit': 1.0.0-beta.16
+      '@logto/language-kit': 1.0.0-beta.16
       '@logto/phrases': ^1.0.0-beta.9
       '@logto/phrases-ui': ^1.0.0-beta.9
       '@logto/react': 1.0.0-beta.8
@@ -86,7 +87,8 @@ importers:
       zod: ^3.18.0
     devDependencies:
       '@fontsource/roboto-mono': 4.5.7
-      '@logto/core-kit': 1.0.0-beta.13
+      '@logto/core-kit': 1.0.0-beta.16
+      '@logto/language-kit': 1.0.0-beta.16
       '@logto/phrases': link:../phrases
       '@logto/phrases-ui': link:../phrases-ui
       '@logto/react': 1.0.0-beta.8_react@18.2.0
@@ -153,7 +155,8 @@ importers:
   packages/core:
     specifiers:
       '@logto/connector-kit': ^1.0.0-beta.13
-      '@logto/core-kit': ^1.0.0-beta.13
+      '@logto/core-kit': 1.0.0-beta.16
+      '@logto/language-kit': 1.0.0-beta.16
       '@logto/phrases': ^1.0.0-beta.9
       '@logto/phrases-ui': ^1.0.0-beta.9
       '@logto/schemas': ^1.0.0-beta.9
@@ -231,7 +234,8 @@ importers:
       zod: ^3.18.0
     dependencies:
       '@logto/connector-kit': 1.0.0-beta.13
-      '@logto/core-kit': 1.0.0-beta.13
+      '@logto/core-kit': 1.0.0-beta.16
+      '@logto/language-kit': 1.0.0-beta.16
       '@logto/phrases': link:../phrases
       '@logto/phrases-ui': link:../phrases-ui
       '@logto/schemas': link:../schemas
@@ -418,6 +422,7 @@ importers:
   packages/phrases:
     specifiers:
       '@logto/core-kit': ^1.0.0-beta.13
+      '@logto/language-kit': 1.0.0-beta.15
       '@silverhand/eslint-config': 1.0.0
       '@silverhand/essentials': ^1.2.1
       '@silverhand/ts-config': 1.0.0
@@ -427,6 +432,7 @@ importers:
       typescript: ^4.7.4
     dependencies:
       '@logto/core-kit': 1.0.0-beta.13
+      '@logto/language-kit': 1.0.0-beta.15
       '@silverhand/essentials': 1.2.1
     devDependencies:
       '@silverhand/eslint-config': 1.0.0_swk2g7ygmfleszo5c33j4vooni
@@ -438,7 +444,8 @@ importers:
 
   packages/phrases-ui:
     specifiers:
-      '@logto/core-kit': ^1.0.0-beta.13
+      '@logto/core-kit': 1.0.0-beta.16
+      '@logto/language-kit': 1.0.0-beta.16
       '@silverhand/eslint-config': 1.0.0
       '@silverhand/essentials': ^1.2.1
       '@silverhand/ts-config': 1.0.0
@@ -446,9 +453,12 @@ importers:
       lint-staged: ^13.0.0
       prettier: ^2.7.1
       typescript: ^4.7.4
+      zod: ^3.18.0
     dependencies:
-      '@logto/core-kit': 1.0.0-beta.13
+      '@logto/core-kit': 1.0.0-beta.16
+      '@logto/language-kit': 1.0.0-beta.16
       '@silverhand/essentials': 1.2.1
+      zod: 3.18.0
     devDependencies:
       '@silverhand/eslint-config': 1.0.0_swk2g7ygmfleszo5c33j4vooni
       '@silverhand/ts-config': 1.0.0_typescript@4.7.4
@@ -2423,7 +2433,7 @@ packages:
     resolution: {integrity: sha512-bUgAaba1RkYIjHMPrcefLTJAf0d1uVhr864Gh/4JO7/du3xmbFbAWzDyfOhwzt1YZoG4NaMmjVXicfSh/zF/YQ==}
     engines: {node: ^16.0.0}
     dependencies:
-      '@logto/core-kit': 1.0.0-beta.13
+      '@logto/core-kit': 1.0.0-beta.16
       '@silverhand/essentials': 1.2.1
       zod: 3.18.0
     dev: false
@@ -2445,6 +2455,15 @@ packages:
       zod: 3.18.0
     dev: true
 
+  /@logto/core-kit/1.0.0-beta.16:
+    resolution: {integrity: sha512-6f03W+FczXOusWPB9PiMz8mIMIaylYEyPSmICmN8YmIUJgD7jN1tHRJSZjnuo/8h2L6szm/8oNGqcxgIpBjeWg==}
+    engines: {node: ^16.0.0}
+    dependencies:
+      '@logto/language-kit': 1.0.0-beta.16
+      color: 4.2.3
+      nanoid: 3.1.30
+      zod: 3.18.0
+
   /@logto/js/1.0.0-beta.8:
     resolution: {integrity: sha512-Xo63sYZHnoFV+UTCtxRvGk+RuC3yJ3aDEpVDqShSZyfqY0xwGU5naIWHQXOd4koqkAQtp613AdL0qsEshrSl7Q==}
     dependencies:
@@ -2454,6 +2473,19 @@ packages:
       jose: 4.6.0
       lodash.get: 4.4.2
     dev: true
+
+  /@logto/language-kit/1.0.0-beta.15:
+    resolution: {integrity: sha512-gRwE1E1+pItO/LsczC+hj02/wcIVjPJFB4qFBz580gTaa3rhWVYoZZ0DIGqZMQ0fMZ9Qwq7ncG47lS06gKBPmA==}
+    engines: {node: ^16.0.0}
+    dependencies:
+      zod: 3.18.0
+    dev: false
+
+  /@logto/language-kit/1.0.0-beta.16:
+    resolution: {integrity: sha512-1F7o6DlBrmK9QgZNOzf5RmWjN+36Pak2qfiu7NbMRRAlmNLmADqA0Is6v+cfRb6PMCPmRgbn9Iad5Q7NZctDVg==}
+    engines: {node: ^16.0.0}
+    dependencies:
+      zod: 3.18.0
 
   /@logto/node/1.0.0-beta.8:
     resolution: {integrity: sha512-IsQeFGhycUyX1R3/DiODK/nL2tsZaoeITKgqeJP68jiJnO51wPT9ewlFnJ656l/4bCA791oH71WTeeSvKJ8L2w==}
@@ -3846,7 +3878,7 @@ packages:
       '@jest/types': 28.1.3
       deepmerge: 4.2.2
       identity-obj-proxy: 3.0.0
-      jest: 28.1.3_k5ytkvaprncdyzidqqws5bqksq
+      jest: 28.1.3_@types+node@16.11.12
       jest-matcher-specific-error: 1.0.0
       jest-transform-stub: 2.0.0
       ts-jest: 28.0.7_lhw3xkmzugq5tscs3x2ndm4sby
@@ -5923,8 +5955,8 @@ packages:
     engines: {node: '>=10'}
     hasBin: true
     dependencies:
-      is-text-path: 1.0.1
       JSONStream: 1.3.5
+      is-text-path: 1.0.1
       lodash: 4.17.21
       meow: 8.1.2
       split2: 3.2.2
@@ -11252,7 +11284,6 @@ packages:
     resolution: {integrity: sha512-zJpuPDwOv8D2zq2WRoMe1HsfZthVewpel9CAvTfc/2mBD1uUT/agc5f7GHGWXlYkFvi1mVxe4IjvP2HNrop7nQ==}
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
     hasBin: true
-    dev: false
 
   /nanoid/3.3.1:
     resolution: {integrity: sha512-n6Vs/3KGyxPQd6uO0eH4Bv0ojGSUvuLlIHtC3Y0kEO23YRge8H9x1GCzLn28YX0H66pMkxuaeESFq4tKISKwdw==}
@@ -11715,7 +11746,7 @@ packages:
       quick-lru: 5.1.1
       raw-body: 2.4.3
     optionalDependencies:
-      paseto3: /paseto/3.1.0
+      paseto3: /paseto/3.1.1
     transitivePeerDependencies:
       - supports-color
     dev: false
@@ -12125,8 +12156,8 @@ packages:
     engines: {node: ^12.19.0 || >=14.15.0}
     dev: false
 
-  /paseto/3.1.0:
-    resolution: {integrity: sha512-oVSKoCH89M0WU3I+13NoCP9wGRel0BlQumwxsDZPk1yJtqS76PWKRM7vM9D4bz4PcScT0aIiAipC7lW6hSgkBQ==}
+  /paseto/3.1.1:
+    resolution: {integrity: sha512-pZmPoGPsR9dBdaKhyKeRLNdvdDbpFA/1Ku/3LuQaY/ssPE4fzSRuNz2+qoSRaIB/mDcbWyzZKjV8ook6AzlsSg==}
     engines: {node: '>=16.0.0'}
     requiresBuild: true
     dev: false
@@ -14824,7 +14855,7 @@ packages:
       '@jest/types': 28.1.3
       bs-logger: 0.2.6
       fast-json-stable-stringify: 2.1.0
-      jest: 28.1.3_k5ytkvaprncdyzidqqws5bqksq
+      jest: 28.1.3_@types+node@16.11.12
       jest-util: 28.1.3
       json5: 2.2.1
       lodash.memoize: 4.1.2

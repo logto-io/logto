@@ -1,8 +1,9 @@
+import { isBuiltInLanguageTag } from '@logto/phrases-ui';
 import { adminConsoleApplicationId, adminConsoleSignInExperience } from '@logto/schemas/lib/seeds';
 import { Provider } from 'oidc-provider';
 
 import detectLanguage from '@/i18n/detect-language';
-import { isBuiltInLanguage, getPhrase } from '@/lib/phrase';
+import { getPhrase } from '@/lib/phrase';
 import { findAllCustomLanguageKeys } from '@/queries/custom-phrase';
 import { findDefaultSignInExperience } from '@/queries/sign-in-experience';
 
@@ -32,8 +33,9 @@ export default function phraseRoutes<T extends AnonymousRouter>(router: T, provi
     const acceptableLanguages = [...detectedLanguages, fallbackLanguage];
     const customLanguages = await findAllCustomLanguageKeys();
     const language =
-      acceptableLanguages.find((key) => isBuiltInLanguage(key) || customLanguages.includes(key)) ??
-      'en';
+      acceptableLanguages.find(
+        (key) => isBuiltInLanguageTag(key) || customLanguages.includes(key)
+      ) ?? 'en';
 
     ctx.set('Content-Language', language);
     ctx.body = await getPhrase(language, customLanguages);
