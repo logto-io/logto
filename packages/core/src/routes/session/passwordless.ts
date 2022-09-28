@@ -35,7 +35,7 @@ export default function passwordlessRoutes<T extends AnonymousRouter>(
   provider: Provider
 ) {
   router.post(
-    '/passwordless/:via/send',
+    '/session/passwordless/:via/send',
     koaGuard({
       body: object({
         phone: string().regex(phoneRegEx).optional(),
@@ -78,7 +78,7 @@ export default function passwordlessRoutes<T extends AnonymousRouter>(
   );
 
   router.post(
-    '/passwordless/:via/verify',
+    '/session/passwordless/:via/verify',
     koaGuard({
       body: object({
         phone: string().regex(phoneRegEx).optional(),
@@ -130,6 +130,7 @@ export default function passwordlessRoutes<T extends AnonymousRouter>(
   router.post(`${signInRoute}/sms`, async (ctx, next) => {
     const { result } = await provider.interactionDetails(ctx.req, ctx.res);
 
+    console.log(result);
     const passwordlessVerificationResult = passwordlessVerificationGuard.safeParse(result);
     assertThat(
       passwordlessVerificationResult.success,
