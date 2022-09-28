@@ -3,6 +3,41 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.0-beta.10](https://github.com/logto-io/logto/compare/v1.0.0-beta.9...v1.0.0-beta.10) (2022-09-28)
+
+
+### ⚠ BREAKING CHANGES
+
+* **core:** update user scopes (#1922)
+
+### Features
+
+* **console:** auto detect language setting ([#1941](https://github.com/logto-io/logto/issues/1941)) ([49b4303](https://github.com/logto-io/logto/commit/49b430394dc961451a6abca26a95ebba8d22f68c))
+* **console:** configure M2M app access ([#1999](https://github.com/logto-io/logto/issues/1999)) ([a75f8fe](https://github.com/logto-io/logto/commit/a75f8fe959b5a0b0f670bcec83b072e4d41c7890))
+* **core:** machine to machine apps ([cd9c697](https://github.com/logto-io/logto/commit/cd9c6978a35d9fc3a571c7bd56c972939c49a9b5))
+
+
+### Bug Fixes
+
+* bump react sdk and essentials toolkit to support CJK characters in idToken ([2f92b43](https://github.com/logto-io/logto/commit/2f92b438644bd330fa4b8cd3698d9129ecbae282))
+* **console:** add sandbox attribute to iframe ([#1926](https://github.com/logto-io/logto/issues/1926)) ([14cb043](https://github.com/logto-io/logto/commit/14cb0439e3b7a346e6d6e1a707cdea2e7d79df52))
+* **console:** get prefixed router basename in local dev env ([ccbe5da](https://github.com/logto-io/logto/commit/ccbe5dab2d60974e9c893925d552b5fc93542490))
+* **console:** old value does not flash back on saving form ([cdbd8d7](https://github.com/logto-io/logto/commit/cdbd8d7344ad22bfc10219f732e718f437cb0668))
+* **console:** use fallback language in preview ([#1960](https://github.com/logto-io/logto/issues/1960)) ([de4c46e](https://github.com/logto-io/logto/commit/de4c46e400bb4c3f3552a984366ec99b7032ed18))
+
+
+### Reverts
+
+* Revert "feat(console): auto detect language setting (#1941)" (#2004) ([ad1d1e3](https://github.com/logto-io/logto/commit/ad1d1e3b592b106b3cea4703d19bab041a9d48db)), closes [#1941](https://github.com/logto-io/logto/issues/1941) [#2004](https://github.com/logto-io/logto/issues/2004)
+* Revert "fix(console): use fallback language in preview (#1960)" (#2003) ([fa98452](https://github.com/logto-io/logto/commit/fa98452fe5c5e77964289df704a578e93cba877b)), closes [#1960](https://github.com/logto-io/logto/issues/1960) [#2003](https://github.com/logto-io/logto/issues/2003)
+
+
+### Code Refactoring
+
+* **core:** update user scopes ([#1922](https://github.com/logto-io/logto/issues/1922)) ([8d22b5c](https://github.com/logto-io/logto/commit/8d22b5c468e5148a3815abf93de14644cdf68e8e))
+
+
+
 ## [1.0.0-beta.9](https://github.com/logto-io/logto/compare/v1.0.0-beta.8...v1.0.0-beta.9) (2022-09-07)
 
 

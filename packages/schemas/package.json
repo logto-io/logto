@@ -1,6 +1,6 @@
 {
   "name": "@logto/schemas",
-  "version": "1.0.0-beta.9",
+  "version": "1.0.0-beta.10",
   "main": "lib/index.js",
   "author": "Silverhand Inc. <contact@silverhand.io>",
   "license": "MPL-2.0",
@@ -64,8 +64,8 @@
   "dependencies": {
     "@logto/connector-kit": "^1.0.0-beta.13",
     "@logto/core-kit": "^1.0.0-beta.13",
-    "@logto/phrases": "^1.0.0-beta.9",
-    "@logto/phrases-ui": "^1.0.0-beta.9",
+    "@logto/phrases": "^1.0.0-beta.10",
+    "@logto/phrases-ui": "^1.0.0-beta.10",
     "zod": "^3.18.0"
   }
 }
