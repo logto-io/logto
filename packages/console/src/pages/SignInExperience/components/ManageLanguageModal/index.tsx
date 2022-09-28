@@ -29,11 +29,11 @@ const ManageLanguageModal = ({ isOpen, onClose }: ManageLanguageModalProps) => {
   const allLanguageTags = useMemo(() => {
     const customUiLanguageTags = customPhraseResponses?.map(({ languageKey }) => languageKey);
 
-    const allKeys = customUiLanguageTags?.length
+    const allTags = customUiLanguageTags?.length
       ? [...new Set([...builtInUiLanguages, ...customUiLanguageTags])]
       : builtInUiLanguages;
 
-    return allKeys.slice().sort();
+    return allTags.slice().sort();
   }, [customPhraseResponses]);
 
   const defaultLanguageTag = getDefaultLanguageTag(allLanguageTags[0] ?? '');
