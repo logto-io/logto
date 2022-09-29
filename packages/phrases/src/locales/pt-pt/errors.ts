@@ -113,6 +113,8 @@ const errors = {
   localization: {
     cannot_delete_default_language:
       'You cannot delete {{languageKey}} language since it is used as default language in sign-in experience.', // UNTRANSLATED
+    invalid_translation_structure:
+      'Invalid translation structure. Please check the input translation.', // UNTRANSLATED
   },
   swagger: {
     invalid_zod_type: 'Tipo de Zod inválido. Verifique a configuração do protetor de rota.',

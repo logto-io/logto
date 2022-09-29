@@ -107,6 +107,8 @@ const errors = {
   localization: {
     cannot_delete_default_language:
       'You cannot delete {{languageKey}} language since it is used as default language in sign-in experience.', // UNTRANSLATED
+    invalid_translation_structure:
+      'Invalid translation structure. Please check the input translation.', // UNTRANSLATED
   },
   swagger: {
     invalid_zod_type: '유요하지 않은 Zod 종류에요. Route Guard 설정을 확인해주세요.',
