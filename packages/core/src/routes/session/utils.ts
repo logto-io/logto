@@ -2,11 +2,15 @@ import { logTypeGuard, LogType, PasscodeType } from '@logto/schemas';
 import { Truthy } from '@silverhand/essentials';
 import camelcase from 'camelcase';
 import dayjs from 'dayjs';
+import { Context } from 'koa';
+import { Provider } from 'oidc-provider';
+import { z } from 'zod';
 
 import RequestError from '@/errors/RequestError';
+import { LogContext } from '@/middleware/koa-log';
 import assertThat from '@/utils/assert-that';
 
-import { FlowType, Operation, VerificationStorage, Via } from './types';
+import { verificationStorageGuard, FlowType, Operation, VerificationStorage, Via } from './types';
 
 export const getRoutePrefix = (
   type: FlowType,
@@ -46,6 +50,24 @@ export const getPasswordlessRelatedLogType = (
   return result.data;
 };
 
+export const verificationStorageParser = (data: unknown): VerificationStorage => {
+  const verificationResult = z
+    .object({
+      verification: verificationStorageGuard,
+    })
+    .safeParse(data);
+
+  assertThat(
+    verificationResult.success,
+    new RequestError({
+      code: 'session.verification_session_not_found',
+      status: 404,
+    })
+  );
+
+  return verificationResult.data.verification;
+};
+
 export const verificationSessionCheckByFlow = (
   currentFlow: FlowType,
   payload: Pick<VerificationStorage, 'flow' | 'expiresAt'>
@@ -61,4 +83,20 @@ export const verificationSessionCheckByFlow = (
     dayjs(expiresAt).isValid() && dayjs(expiresAt).isAfter(dayjs()),
     new RequestError({ code: 'session.verification_expired', status: 401 })
   );
+};
+
+export const getAndCheckVerificationStorage = async (
+  ctx: Context & LogContext,
+  provider: Provider,
+  logType: LogType,
+  flowType: FlowType
+): Promise<Pick<VerificationStorage, 'email' | 'phone'>> => {
+  const { result } = await provider.interactionDetails(ctx.req, ctx.res);
+  const { email, phone, flow, expiresAt } = verificationStorageParser(result);
+
+  ctx.log(logType, { email, phone, flow, expiresAt });
+
+  verificationSessionCheckByFlow(flowType, { flow, expiresAt });
+
+  return { email, phone };
 };

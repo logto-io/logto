@@ -15,16 +15,16 @@ import {
   hasUserWithEmail,
   hasUserWithPhone,
 } from '@/queries/user';
-import { verificationStorageParser, flowTypeGuard } from '@/routes/session/types';
+import { flowTypeGuard } from '@/routes/session/types';
 import assertThat from '@/utils/assert-that';
 
 import { AnonymousRouter } from '../types';
 import { verificationTimeout } from './consts';
 import {
+  getAndCheckVerificationStorage,
   getRoutePrefix,
   getPasscodeType,
   getPasswordlessRelatedLogType,
-  verificationSessionCheckByFlow,
 } from './utils';
 
 export const registerRoute = getRoutePrefix('register', 'passwordless');
@@ -157,14 +157,8 @@ export default function passwordlessRoutes<T extends AnonymousRouter>(
   );
 
   router.post(`${signInRoute}/sms`, async (ctx, next) => {
-    const { result } = await provider.interactionDetails(ctx.req, ctx.res);
-
-    const { phone, flow, expiresAt } = verificationStorageParser(result);
-
     const type = getPasswordlessRelatedLogType('sign-in', 'sms');
-    ctx.log(type, { phone, flow, expiresAt });
-
-    verificationSessionCheckByFlow('sign-in', { flow, expiresAt });
+    const { phone } = await getAndCheckVerificationStorage(ctx, provider, type, 'sign-in');
 
     assertThat(
       phone && (await hasUserWithPhone(phone)),
@@ -181,14 +175,8 @@ export default function passwordlessRoutes<T extends AnonymousRouter>(
   });
 
   router.post(`${signInRoute}/email`, async (ctx, next) => {
-    const { result } = await provider.interactionDetails(ctx.req, ctx.res);
-
-    const { email, flow, expiresAt } = verificationStorageParser(result);
-
     const type = getPasswordlessRelatedLogType('sign-in', 'email');
-    ctx.log(type, { email, flow, expiresAt });
-
-    verificationSessionCheckByFlow('sign-in', { flow, expiresAt });
+    const { email } = await getAndCheckVerificationStorage(ctx, provider, type, 'sign-in');
 
     assertThat(
       email && (await hasUserWithEmail(email)),
@@ -205,14 +193,8 @@ export default function passwordlessRoutes<T extends AnonymousRouter>(
   });
 
   router.post(`${registerRoute}/sms`, async (ctx, next) => {
-    const { result } = await provider.interactionDetails(ctx.req, ctx.res);
-
-    const { phone, flow, expiresAt } = verificationStorageParser(result);
-
     const type = getPasswordlessRelatedLogType('register', 'sms');
-    ctx.log(type, { phone, flow, expiresAt });
-
-    verificationSessionCheckByFlow('register', { flow, expiresAt });
+    const { phone } = await getAndCheckVerificationStorage(ctx, provider, type, 'register');
 
     assertThat(
       phone && !(await hasUserWithPhone(phone)),
@@ -229,14 +211,8 @@ export default function passwordlessRoutes<T extends AnonymousRouter>(
   });
 
   router.post(`${registerRoute}/email`, async (ctx, next) => {
-    const { result } = await provider.interactionDetails(ctx.req, ctx.res);
-
-    const { email, flow, expiresAt } = verificationStorageParser(result);
-
     const type = getPasswordlessRelatedLogType('register', 'email');
-    ctx.log(type, { email, flow, expiresAt });
-
-    verificationSessionCheckByFlow('register', { flow, expiresAt });
+    const { email } = await getAndCheckVerificationStorage(ctx, provider, type, 'register');
 
     assertThat(
       email && !(await hasUserWithEmail(email)),

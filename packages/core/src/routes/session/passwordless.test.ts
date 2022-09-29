@@ -436,8 +436,8 @@ describe('session -> passwordlessRoutes', () => {
   });
 
   describe('POST /session/register/passwordless/sms', () => {
-    afterEach(() => {
-      jest.clearAllMocks();
+    beforeEach(() => {
+      jest.resetAllMocks();
     });
     it('should call interactionResult', async () => {
       interactionDetails.mockResolvedValueOnce({
@@ -513,8 +513,8 @@ describe('session -> passwordlessRoutes', () => {
   });
 
   describe('POST /session/register/passwordless/email', () => {
-    afterEach(() => {
-      jest.clearAllMocks();
+    beforeEach(() => {
+      jest.resetAllMocks();
     });
     it('should call interactionResult', async () => {
       interactionDetails.mockResolvedValueOnce({

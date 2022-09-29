@@ -1,8 +1,5 @@
 import { z } from 'zod';
 
-import RequestError from '@/errors/RequestError';
-import assertThat from '@/utils/assert-that';
-
 export const flowTypeGuard = z.enum(['sign-in', 'register', 'forgot-password']);
 
 export type FlowType = z.infer<typeof flowTypeGuard>;
@@ -25,20 +22,3 @@ export const verificationStorageGuard = z.object({
 });
 
 export type VerificationStorage = z.infer<typeof verificationStorageGuard>;
-
-export const verificationStorageParser = (data: unknown): VerificationStorage => {
-  const verificationResult = z
-    .object({
-      verification: verificationStorageGuard,
-    })
-    .safeParse(data);
-  assertThat(
-    verificationResult.success,
-    new RequestError({
-      code: 'session.verification_session_not_found',
-      status: 404,
-    })
-  );
-
-  return verificationResult.data.verification;
-};
