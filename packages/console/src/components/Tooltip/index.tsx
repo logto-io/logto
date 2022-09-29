@@ -2,7 +2,7 @@ import classNames from 'classnames';
 import { ReactNode, RefObject, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 
-import usePosition, { HorizontalAlignment } from '@/hooks/use-position';
+import usePosition, { VerticalAlignment, HorizontalAlignment } from '@/hooks/use-position';
 
 import * as styles from './index.module.scss';
 
@@ -11,15 +11,17 @@ type Props = {
   anchorRef: RefObject<Element>;
   className?: string;
   isKeepOpen?: boolean;
+  verticalAlign?: VerticalAlignment;
   horizontalAlign?: HorizontalAlignment;
+  flip?: 'right' | 'left' 
 };
 
-const getHorizontalOffset = (alignment: HorizontalAlignment): number => {
+const getHorizontalOffset = (alignment: HorizontalAlignment, flipped: string): number => {
   switch (alignment) {
     case 'start':
-      return -32;
+      return flipped === 'right' ? 32 : -32;
     case 'end':
-      return 32;
+      return flipped === 'left' ? -32 : 32;
     default:
       return 0;
   }
@@ -30,15 +32,17 @@ const Tooltip = ({
   anchorRef,
   className,
   isKeepOpen = false,
+  verticalAlign= 'top',
   horizontalAlign = 'start',
+  flip
 }: Props) => {
   const [tooltipDom, setTooltipDom] = useState<HTMLDivElement>();
   const tooltipRef = useRef<HTMLDivElement>(null);
 
   const { position, positionState, mutate } = usePosition({
-    verticalAlign: 'top',
+    verticalAlign,
     horizontalAlign,
-    offset: { vertical: 16, horizontal: getHorizontalOffset(horizontalAlign) },
+    offset: { vertical: 16, horizontal: getHorizontalOffset(horizontalAlign, flip ?? '') },
     anchorRef,
     overlayRef: tooltipRef,
   });
@@ -119,6 +123,8 @@ const Tooltip = ({
   }
 
   const isArrowUp = positionState.verticalAlign === 'bottom';
+  const isArrowRight = flip === 'left' && positionState.horizontalAlign === 'end';
+  const isArrowLeft = flip === 'right' && positionState.horizontalAlign === 'start';
 
   return createPortal(
     <div
@@ -126,6 +132,8 @@ const Tooltip = ({
       className={classNames(
         styles.tooltip,
         isArrowUp && styles.arrowUp,
+        isArrowRight && styles.arrowRight,
+        isArrowLeft && styles.arrowLeft,
         styles[horizontalAlign],
         className
       )}
