@@ -1,10 +1,12 @@
 import { logTypeGuard, LogType, PasscodeType } from '@logto/schemas';
 import { Truthy } from '@silverhand/essentials';
+import camelcase from 'camelcase';
+import dayjs from 'dayjs';
 
 import RequestError from '@/errors/RequestError';
 import assertThat from '@/utils/assert-that';
 
-import { FlowType, Operation, Via } from './types';
+import { FlowType, Operation, VerificationStorage, Via } from './types';
 
 export const getRoutePrefix = (
   type: FlowType,
@@ -17,11 +19,15 @@ export const getRoutePrefix = (
 };
 
 export const getPasscodeType = (type: FlowType) => {
-  return type === 'sign-in'
-    ? PasscodeType.SignIn
-    : type === 'register'
-    ? PasscodeType.Register
-    : PasscodeType.ForgotPassword;
+  if (type === 'sign-in') {
+    return PasscodeType.SignIn;
+  }
+
+  if (type === 'register') {
+    return PasscodeType.Register;
+  }
+
+  return PasscodeType.ForgotPassword;
 };
 
 export const getPasswordlessRelatedLogType = (
@@ -29,8 +35,7 @@ export const getPasswordlessRelatedLogType = (
   via: Via,
   operation?: Operation
 ): LogType => {
-  const prefix =
-    flow === 'register' ? 'Register' : flow === 'sign-in' ? 'SignIn' : 'ForgotPassword';
+  const prefix = camelcase(flow, { pascalCase: true });
   const body = via === 'email' ? 'Email' : 'Sms';
   const suffix = operation === 'send' ? 'SendPasscode' : '';
 
@@ -38,4 +43,21 @@ export const getPasswordlessRelatedLogType = (
   assertThat(result.success, new RequestError('log.invalid_type'));
 
   return result.data;
+};
+
+export const verificationSessionCheckByFlow = (
+  currentFlow: FlowType,
+  payload: Pick<VerificationStorage, 'flow' | 'expiresAt'>
+) => {
+  const { flow, expiresAt } = payload;
+
+  assertThat(
+    flow === currentFlow,
+    new RequestError({ code: 'session.passwordless_not_verified', status: 401 })
+  );
+
+  assertThat(
+    dayjs(expiresAt).isValid() && dayjs(expiresAt).isAfter(dayjs()),
+    new RequestError({ code: 'session.verification_expired', status: 401 })
+  );
 };

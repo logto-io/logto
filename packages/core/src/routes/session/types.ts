@@ -14,13 +14,17 @@ export type Operation = z.infer<typeof operationGuard>;
 
 export type PasscodePayload = { email: string } | { phone: string };
 
+export const verificationStorageGuard = z.object({
+  email: z.string().optional(),
+  phone: z.string().optional(),
+  flow: flowTypeGuard,
+  expiresAt: z.string(),
+});
+
+export type VerificationStorage = z.infer<typeof verificationStorageGuard>;
+
 export const verificationGuard = z.object({
-  verification: z.object({
-    email: z.string().optional(),
-    phone: z.string().optional(),
-    flow: flowTypeGuard,
-    expiresAt: z.string(),
-  }),
+  verification: verificationStorageGuard,
 });
 
 export type Verification = z.infer<typeof verificationGuard>;

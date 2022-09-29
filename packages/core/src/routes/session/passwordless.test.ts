@@ -8,7 +8,7 @@ import RequestError from '@/errors/RequestError';
 import { createRequester } from '@/utils/test-utils';
 
 import { verificationTimeout } from './consts';
-import passwordlessRoutes, { registerRoute, signInRoute } from './passwordless';
+import passwordlessRoutes, { signInRoute, registerRoute } from './passwordless';
 
 const insertUser = jest.fn(async (..._args: unknown[]) => ({ id: 'id' }));
 const findUserById = jest.fn(async (): Promise<User> => mockUser);
@@ -50,10 +50,6 @@ jest.mock('oidc-provider', () => ({
     interactionResult,
   })),
 }));
-
-afterEach(() => {
-  interactionResult.mockClear();
-});
 
 describe('session -> passwordlessRoutes', () => {
   const sessionRequest = createRequester({
@@ -105,12 +101,6 @@ describe('session -> passwordlessRoutes', () => {
         .send({ flow: 'register' });
       expect(response.statusCode).toEqual(400);
     });
-    it('throw when email given in input params', async () => {
-      const response = await sessionRequest
-        .post('/session/passwordless/sms/send')
-        .send({ email: 'a@a.com', phone: '13000000000', flow: 'register' });
-      expect(response.statusCode).toEqual(400);
-    });
   });
 
   describe('POST /session/passwordless/email/send', () => {
@@ -147,12 +137,6 @@ describe('session -> passwordlessRoutes', () => {
       const response = await sessionRequest
         .post('/session/passwordless/email/send')
         .send({ flow: 'register' });
-      expect(response.statusCode).toEqual(400);
-    });
-    it('throw when phone given in input params', async () => {
-      const response = await sessionRequest
-        .post('/session/passwordless/email/send')
-        .send({ email: 'a@a.com', phone: '13000000000', flow: 'register' });
       expect(response.statusCode).toEqual(400);
     });
   });
@@ -212,18 +196,6 @@ describe('session -> passwordlessRoutes', () => {
         .send({ phone: '13000000000', code: '1231', flow: 'sign-in' });
       expect(response.statusCode).toEqual(400);
     });
-    it('throw when phone not given in input params', async () => {
-      const response = await sessionRequest
-        .post('/session/passwordless/sms/verify')
-        .send({ code: '1234', flow: 'register' });
-      expect(response.statusCode).toEqual(400);
-    });
-    it('throw when email given in input params', async () => {
-      const response = await sessionRequest
-        .post('/session/passwordless/sms/verify')
-        .send({ email: 'a@a.com', phone: '13000000000', code: '1234', flow: 'register' });
-      expect(response.statusCode).toEqual(400);
-    });
   });
 
   describe('POST /session/passwordless/email/verify', () => {
@@ -281,23 +253,11 @@ describe('session -> passwordlessRoutes', () => {
         .send({ email: 'a@a.com', code: '1231', flow: 'sign-in' });
       expect(response.statusCode).toEqual(400);
     });
-    it('throw when phone not given in input params', async () => {
-      const response = await sessionRequest
-        .post('/session/passwordless/email/verify')
-        .send({ code: '1234', flow: 'register' });
-      expect(response.statusCode).toEqual(400);
-    });
-    it('throw when email given in input params', async () => {
-      const response = await sessionRequest
-        .post('/session/passwordless/email/verify')
-        .send({ email: 'a@a.com', phone: '13000000000', code: '1234', flow: 'register' });
-      expect(response.statusCode).toEqual(400);
-    });
   });
 
   describe('POST /session/sign-in/passwordless/sms', () => {
-    afterEach(() => {
-      jest.clearAllMocks();
+    beforeEach(() => {
+      jest.resetAllMocks();
     });
     it('should call interactionResult', async () => {
       interactionDetails.mockResolvedValueOnce({
@@ -399,8 +359,8 @@ describe('session -> passwordlessRoutes', () => {
   });
 
   describe('POST /session/sign-in/passwordless/email', () => {
-    afterEach(() => {
-      jest.clearAllMocks();
+    beforeEach(() => {
+      jest.resetAllMocks();
     });
     it('should call interactionResult', async () => {
       interactionDetails.mockResolvedValueOnce({

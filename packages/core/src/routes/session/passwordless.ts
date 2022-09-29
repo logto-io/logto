@@ -15,17 +15,17 @@ import {
   hasUserWithEmail,
   hasUserWithPhone,
 } from '@/queries/user';
-import {
-  verificationGuard,
-  flowTypeGuard,
-  viaGuard,
-  PasscodePayload,
-} from '@/routes/session/types';
+import { verificationGuard, flowTypeGuard } from '@/routes/session/types';
 import assertThat from '@/utils/assert-that';
 
 import { AnonymousRouter } from '../types';
 import { verificationTimeout } from './consts';
-import { getRoutePrefix, getPasscodeType, getPasswordlessRelatedLogType } from './utils';
+import {
+  getRoutePrefix,
+  getPasscodeType,
+  getPasswordlessRelatedLogType,
+  verificationSessionCheckByFlow,
+} from './utils';
 
 export const registerRoute = getRoutePrefix('register', 'passwordless');
 export const signInRoute = getRoutePrefix('sign-in', 'passwordless');
@@ -35,40 +35,24 @@ export default function passwordlessRoutes<T extends AnonymousRouter>(
   provider: Provider
 ) {
   router.post(
-    '/session/passwordless/:via/send',
+    '/session/passwordless/sms/send',
     koaGuard({
       body: object({
-        phone: string().regex(phoneRegEx).optional(),
-        email: string().regex(emailRegEx).optional(),
+        phone: string().regex(phoneRegEx),
         flow: flowTypeGuard,
       }),
-      params: object({ via: viaGuard }),
     }),
     async (ctx, next) => {
       const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
       const {
-        body: { email, phone, flow },
-        params: { via },
+        body: { phone, flow },
       } = ctx.guard;
 
-      // eslint-disable-next-line @silverhand/fp/no-let
-      let payload: PasscodePayload;
-
-      if (via === 'email') {
-        assertThat(email && !phone, new RequestError({ code: 'guard.invalid_input' }));
-        // eslint-disable-next-line @silverhand/fp/no-mutation
-        payload = { email };
-      } else {
-        assertThat(!email && phone, new RequestError({ code: 'guard.invalid_input' }));
-        // eslint-disable-next-line @silverhand/fp/no-mutation
-        payload = { phone };
-      }
-
-      const type = getPasswordlessRelatedLogType(flow, via, 'send');
-      ctx.log(type, payload);
+      const type = getPasswordlessRelatedLogType(flow, 'sms', 'send');
+      ctx.log(type, { phone });
 
       const passcodeType = getPasscodeType(flow);
-      const passcode = await createPasscode(jti, passcodeType, payload);
+      const passcode = await createPasscode(jti, passcodeType, { phone });
       const { dbEntry } = await sendPasscode(passcode);
       ctx.log(type, { connectorId: dbEntry.id });
       ctx.status = 204;
@@ -78,47 +62,92 @@ export default function passwordlessRoutes<T extends AnonymousRouter>(
   );
 
   router.post(
-    '/session/passwordless/:via/verify',
+    '/session/passwordless/email/send',
     koaGuard({
       body: object({
-        phone: string().regex(phoneRegEx).optional(),
-        email: string().regex(emailRegEx).optional(),
-        code: string(),
+        email: string().regex(emailRegEx),
         flow: flowTypeGuard,
       }),
-      params: object({ via: viaGuard }),
     }),
     async (ctx, next) => {
       const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
       const {
-        body: { email, phone, code, flow },
-        params: { via },
+        body: { email, flow },
       } = ctx.guard;
 
-      // eslint-disable-next-line @silverhand/fp/no-let
-      let payload: PasscodePayload;
-
-      if (via === 'email') {
-        assertThat(email && !phone, new RequestError({ code: 'guard.invalid_input' }));
-        // eslint-disable-next-line @silverhand/fp/no-mutation
-        payload = { email };
-      } else {
-        assertThat(!email && phone, new RequestError({ code: 'guard.invalid_input' }));
-        // eslint-disable-next-line @silverhand/fp/no-mutation
-        payload = { phone };
-      }
-
-      const type = getPasswordlessRelatedLogType(flow, via, 'verify');
-      ctx.log(type, payload);
+      const type = getPasswordlessRelatedLogType(flow, 'email', 'send');
+      ctx.log(type, { email });
 
       const passcodeType = getPasscodeType(flow);
-      await verifyPasscode(jti, passcodeType, code, payload);
+      const passcode = await createPasscode(jti, passcodeType, { email });
+      const { dbEntry } = await sendPasscode(passcode);
+      ctx.log(type, { connectorId: dbEntry.id });
+      ctx.status = 204;
+
+      return next();
+    }
+  );
+
+  router.post(
+    '/session/passwordless/sms/verify',
+    koaGuard({
+      body: object({
+        phone: string().regex(phoneRegEx),
+        code: string(),
+        flow: flowTypeGuard,
+      }),
+    }),
+    async (ctx, next) => {
+      const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
+      const {
+        body: { phone, code, flow },
+      } = ctx.guard;
+
+      const type = getPasswordlessRelatedLogType(flow, 'sms', 'verify');
+      ctx.log(type, { phone });
+
+      const passcodeType = getPasscodeType(flow);
+      await verifyPasscode(jti, passcodeType, code, { phone });
 
       await provider.interactionResult(ctx.req, ctx.res, {
         verification: {
           flow,
           expiresAt: dayjs().add(verificationTimeout, 'second').toISOString(),
-          ...payload,
+          phone,
+        },
+      });
+      ctx.status = 204;
+
+      return next();
+    }
+  );
+
+  router.post(
+    '/session/passwordless/email/verify',
+    koaGuard({
+      body: object({
+        email: string().regex(emailRegEx),
+        code: string(),
+        flow: flowTypeGuard,
+      }),
+    }),
+    async (ctx, next) => {
+      const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
+      const {
+        body: { email, code, flow },
+      } = ctx.guard;
+
+      const type = getPasswordlessRelatedLogType(flow, 'email', 'verify');
+      ctx.log(type, { email });
+
+      const passcodeType = getPasscodeType(flow);
+      await verifyPasscode(jti, passcodeType, code, { email });
+
+      await provider.interactionResult(ctx.req, ctx.res, {
+        verification: {
+          flow,
+          expiresAt: dayjs().add(verificationTimeout, 'second').toISOString(),
+          email,
         },
       });
       ctx.status = 204;
@@ -130,7 +159,6 @@ export default function passwordlessRoutes<T extends AnonymousRouter>(
   router.post(`${signInRoute}/sms`, async (ctx, next) => {
     const { result } = await provider.interactionDetails(ctx.req, ctx.res);
 
-    console.log(result);
     const verificationResult = verificationGuard.safeParse(result);
     assertThat(
       verificationResult.success,
@@ -147,20 +175,13 @@ export default function passwordlessRoutes<T extends AnonymousRouter>(
     const type = getPasswordlessRelatedLogType('sign-in', 'sms');
     ctx.log(type, { phone, flow, expiresAt });
 
-    assertThat(
-      flow === 'sign-in',
-      new RequestError({ code: 'session.passwordless_not_verified', status: 401 })
-    );
-
-    assertThat(
-      dayjs(expiresAt).isValid() && dayjs(expiresAt).isAfter(dayjs()),
-      new RequestError({ code: 'session.verification_expired', status: 401 })
-    );
+    verificationSessionCheckByFlow('sign-in', { flow, expiresAt });
 
     assertThat(
       phone && (await hasUserWithPhone(phone)),
       new RequestError({ code: 'user.phone_not_exists', status: 422 })
     );
+
     const { id } = await findUserByPhone(phone);
     ctx.log(type, { userId: id });
 
@@ -189,15 +210,7 @@ export default function passwordlessRoutes<T extends AnonymousRouter>(
     const type = getPasswordlessRelatedLogType('sign-in', 'email');
     ctx.log(type, { email, flow, expiresAt });
 
-    assertThat(
-      flow === 'sign-in',
-      new RequestError({ code: 'session.passwordless_not_verified', status: 401 })
-    );
-
-    assertThat(
-      dayjs(expiresAt).isValid() && dayjs(expiresAt).isAfter(dayjs()),
-      new RequestError({ code: 'session.verification_expired', status: 401 })
-    );
+    verificationSessionCheckByFlow('sign-in', { flow, expiresAt });
 
     assertThat(
       email && (await hasUserWithEmail(email)),
@@ -232,15 +245,7 @@ export default function passwordlessRoutes<T extends AnonymousRouter>(
     const type = getPasswordlessRelatedLogType('register', 'sms');
     ctx.log(type, { phone, flow, expiresAt });
 
-    assertThat(
-      flow === 'register',
-      new RequestError({ code: 'session.passwordless_not_verified', status: 401 })
-    );
-
-    assertThat(
-      dayjs(expiresAt).isValid() && dayjs(expiresAt).isAfter(dayjs()),
-      new RequestError({ code: 'session.verification_expired', status: 401 })
-    );
+    verificationSessionCheckByFlow('register', { flow, expiresAt });
 
     assertThat(
       phone && !(await hasUserWithPhone(phone)),
@@ -275,15 +280,7 @@ export default function passwordlessRoutes<T extends AnonymousRouter>(
     const type = getPasswordlessRelatedLogType('register', 'email');
     ctx.log(type, { email, flow, expiresAt });
 
-    assertThat(
-      flow === 'register',
-      new RequestError({ code: 'session.passwordless_not_verified', status: 401 })
-    );
-
-    assertThat(
-      dayjs(expiresAt).isValid() && dayjs(expiresAt).isAfter(dayjs()),
-      new RequestError({ code: 'session.verification_expired', status: 401 })
-    );
+    verificationSessionCheckByFlow('register', { flow, expiresAt });
 
     assertThat(
       email && !(await hasUserWithEmail(email)),

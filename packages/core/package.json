@@ -17,7 +17,7 @@
     "add-connector": "node build/cli/add-connector.js",
     "add-official-connectors": "node build/cli/add-official-connectors.js",
     "alteration": "node build/cli/alteration.js",
-    "test": "jest --testPathIgnorePatterns=/core/connectors/",
+    "test": "jest",
     "test:coverage": "jest --coverage --silent",
     "test:report": "codecov -F core"
   },
