@@ -19,15 +19,16 @@ export const getRoutePrefix = (
 };
 
 export const getPasscodeType = (type: FlowType) => {
-  if (type === 'sign-in') {
-    return PasscodeType.SignIn;
+  switch (type) {
+    case 'sign-in':
+      return PasscodeType.SignIn;
+    case 'register':
+      return PasscodeType.Register;
+    case 'forgot-password':
+      return PasscodeType.ForgotPassword;
+    default:
+      throw new RequestError({ code: 'guard.invalid_input' });
   }
-
-  if (type === 'register') {
-    return PasscodeType.Register;
-  }
-
-  return PasscodeType.ForgotPassword;
 };
 
 export const getPasswordlessRelatedLogType = (
