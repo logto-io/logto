@@ -96,7 +96,7 @@ describe('api', () => {
   });
 
   it('verifySignInSmsPasscode', async () => {
-    mockKyPost.mockReturnValueOnce({
+    mockKyPost.mockReturnValueOnce({}).mockReturnValueOnce({
       json: () => ({
         redirectTo: '/',
       }),
@@ -123,7 +123,7 @@ describe('api', () => {
   });
 
   it('verifySignInEmailPasscode', async () => {
-    mockKyPost.mockReturnValueOnce({
+    mockKyPost.mockReturnValueOnce({}).mockReturnValueOnce({
       json: () => ({
         redirectTo: '/',
       }),
