@@ -9,11 +9,14 @@ export type ChildRenderProps = {
   cancel: (data?: unknown) => void;
 };
 
+type ConfirmModalType = 'alert' | 'confirm';
+
 type ConfirmModalState = Omit<ModalProps, 'onClose' | 'onConfirm' | 'children'> & {
   ModalContent: string | ((props: ChildRenderProps) => Nullable<JSX.Element>);
+  type: ConfirmModalType;
 };
 
-type ConfirmModalProps = Omit<ConfirmModalState, 'isOpen'>;
+type ConfirmModalProps = Omit<ConfirmModalState, 'isOpen' | 'type'> & { type?: ConfirmModalType };
 
 type ConfirmModalContextType = {
   show: (props: ConfirmModalProps) => Promise<[boolean, unknown?]>;
@@ -37,6 +40,7 @@ type Props = {
 
 const defaultModalState: ConfirmModalState = {
   isOpen: false,
+  type: 'confirm',
   ModalContent: () => null,
 };
 
@@ -49,11 +53,12 @@ const ConfirmModalProvider = ({ children }: Props) => {
 
   const ConfirmModal = isMobile ? MobileModal : WebModal;
 
-  const handleShow = useCallback(async (props: ConfirmModalProps) => {
+  const handleShow = useCallback(async ({ type = 'confirm', ...props }: ConfirmModalProps) => {
     resolver.current?.([false]);
 
     setModalState({
       isOpen: true,
+      type,
       ...props,
     });
 
@@ -82,12 +87,24 @@ const ConfirmModalProvider = ({ children }: Props) => {
     [handleCancel, handleConfirm, handleShow]
   );
 
-  const { ModalContent, ...restProps } = modalState;
+  const { ModalContent, type, ...restProps } = modalState;
 
   return (
     <ConfirmModalContext.Provider value={contextValue}>
       {children}
-      <ConfirmModal {...restProps} onConfirm={handleConfirm} onClose={handleCancel}>
+      <ConfirmModal
+        {...restProps}
+        onConfirm={
+          type === 'confirm'
+            ? () => {
+                handleConfirm();
+              }
+            : undefined
+        }
+        onClose={() => {
+          handleCancel();
+        }}
+      >
         {typeof ModalContent === 'string' ? (
           ModalContent
         ) : (

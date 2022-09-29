@@ -10,7 +10,6 @@ import { ModalProps } from './type';
 const MobileModal = ({
   className,
   isOpen = false,
-  type = 'confirm',
   children,
   cancelText = 'action.cancel',
   confirmText = 'action.confirm',
@@ -27,21 +26,8 @@ const MobileModal = ({
       <div className={styles.container}>
         <div className={styles.content}>{children}</div>
         <div className={styles.footer}>
-          <Button
-            title={cancelText}
-            type="secondary"
-            onClick={() => {
-              onClose();
-            }}
-          />
-          {type === 'confirm' && (
-            <Button
-              title={confirmText}
-              onClick={() => {
-                (onConfirm ?? onClose)();
-              }}
-            />
-          )}
+          <Button title={cancelText} type="secondary" onClick={onClose} />
+          {onConfirm && <Button title={confirmText} onClick={onConfirm} />}
         </div>
       </div>
     </ReactModal>
