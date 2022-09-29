@@ -3,6 +3,7 @@ import { ConnectorType, SignInExperiences } from '@logto/schemas';
 import { getLogtoConnectors } from '@/connectors';
 import {
   validateBranding,
+  validateLanguageInfo,
   validateTermsOfUse,
   validateSignInMethods,
   isEnabled,
@@ -33,10 +34,14 @@ export default function signInExperiencesRoutes<T extends AuthedRouter>(router: 
     }),
     async (ctx, next) => {
       const { socialSignInConnectorTargets, ...rest } = ctx.guard.body;
-      const { branding, termsOfUse, signInMethods } = rest;
+      const { branding, languageInfo, termsOfUse, signInMethods } = rest;
 
       if (branding) {
         validateBranding(branding);
+      }
+
+      if (languageInfo) {
+        await validateLanguageInfo(languageInfo);
       }
 
       if (termsOfUse) {

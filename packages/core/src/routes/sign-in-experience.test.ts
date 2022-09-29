@@ -14,6 +14,7 @@ import {
   mockSignInMethods,
   mockWechatConnector,
   mockColor,
+  mockLanguageInfo,
 } from '@/__mocks__';
 import * as signInExpLib from '@/lib/sign-in-experience';
 import { createRequester } from '@/utils/test-utils';
@@ -49,6 +50,10 @@ jest.mock('@/queries/sign-in-experience', () => ({
 }));
 
 const signInExperienceRequester = createRequester({ authedRoutes: signInExperiencesRoutes });
+
+jest.mock('@/queries/custom-phrase', () => ({
+  findAllCustomLanguageKeys: async () => [],
+}));
 
 describe('GET /sign-in-exp', () => {
   afterAll(() => {
@@ -138,18 +143,21 @@ describe('PATCH /sign-in-exp', () => {
     const socialSignInConnectorTargets = ['github', 'facebook', 'wechat'];
 
     const validateBranding = jest.spyOn(signInExpLib, 'validateBranding');
+    const validateLanguageInfo = jest.spyOn(signInExpLib, 'validateLanguageInfo');
     const validateTermsOfUse = jest.spyOn(signInExpLib, 'validateTermsOfUse');
     const validateSignInMethods = jest.spyOn(signInExpLib, 'validateSignInMethods');
 
     const response = await signInExperienceRequester.patch('/sign-in-exp').send({
       color: mockColor,
       branding: mockBranding,
+      languageInfo: mockLanguageInfo,
       termsOfUse,
       signInMethods: mockSignInMethods,
       socialSignInConnectorTargets,
     });
 
     expect(validateBranding).toHaveBeenCalledWith(mockBranding);
+    expect(validateLanguageInfo).toHaveBeenCalledWith(mockLanguageInfo);
     expect(validateTermsOfUse).toHaveBeenCalledWith(termsOfUse);
     expect(validateSignInMethods).toHaveBeenCalledWith(
       mockSignInMethods,

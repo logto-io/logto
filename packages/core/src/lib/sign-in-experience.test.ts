@@ -1,3 +1,5 @@
+import { LanguageTag } from '@logto/language-kit';
+import { builtInLanguages } from '@logto/phrases-ui';
 import { BrandingStyle, SignInMethodState, ConnectorType } from '@logto/schemas';
 
 import {
@@ -11,11 +13,23 @@ import RequestError from '@/errors/RequestError';
 import {
   isEnabled,
   validateBranding,
+  validateLanguageInfo,
   validateSignInMethods,
   validateTermsOfUse,
 } from '@/lib/sign-in-experience';
 
 const enabledConnectors = [mockFacebookConnector, mockGithubConnector];
+
+const allCustomLanguageKeys: LanguageTag[] = [];
+const findAllCustomLanguageKeys = jest.fn(async () => allCustomLanguageKeys);
+
+jest.mock('@/queries/custom-phrase', () => ({
+  findAllCustomLanguageKeys: async () => findAllCustomLanguageKeys(),
+}));
+
+beforeEach(() => {
+  jest.clearAllMocks();
+});
 
 describe('validate branding', () => {
   test('should throw when the UI style contains the slogan and slogan is empty', () => {
@@ -56,6 +70,61 @@ describe('validate branding', () => {
         style: BrandingStyle.Logo,
       });
     }).not.toThrow();
+  });
+});
+
+describe('validate language info', () => {
+  it('should call findAllCustomLanguageKeys', async () => {
+    await validateLanguageInfo({
+      autoDetect: true,
+      fallbackLanguage: 'zh-CN',
+      fixedLanguage: 'en',
+    });
+    expect(findAllCustomLanguageKeys).toBeCalledTimes(1);
+  });
+
+  it('should pass when the language is built-in supported', async () => {
+    const builtInSupportedLanguage = 'tr-TR';
+    await expect(
+      validateLanguageInfo({
+        autoDetect: true,
+        fallbackLanguage: builtInSupportedLanguage,
+        fixedLanguage: 'en',
+      })
+    ).resolves.not.toThrow();
+    expect(findAllCustomLanguageKeys).toBeCalledTimes(1);
+  });
+
+  it('should pass when the language is custom supported', async () => {
+    const customOnlySupportedLanguage = 'zh-HK';
+    expect(customOnlySupportedLanguage in builtInLanguages).toBeFalsy();
+    findAllCustomLanguageKeys.mockResolvedValueOnce([customOnlySupportedLanguage]);
+    await expect(
+      validateLanguageInfo({
+        autoDetect: true,
+        fallbackLanguage: customOnlySupportedLanguage,
+        fixedLanguage: 'en',
+      })
+    ).resolves.not.toThrow();
+    expect(findAllCustomLanguageKeys).toBeCalledTimes(1);
+  });
+
+  it('unsupported fallback language should fail', async () => {
+    const unsupportedLanguage = 'zh-MO';
+    expect(unsupportedLanguage in builtInLanguages).toBeFalsy();
+    expect(allCustomLanguageKeys.includes(unsupportedLanguage)).toBeFalsy();
+    await expect(
+      validateLanguageInfo({
+        autoDetect: true,
+        fallbackLanguage: unsupportedLanguage,
+        fixedLanguage: 'en',
+      })
+    ).rejects.toMatchError(
+      new RequestError({
+        code: 'sign_in_experiences.unsupported_default_language',
+        language: unsupportedLanguage,
+      })
+    );
   });
 });
 

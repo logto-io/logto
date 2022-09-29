@@ -102,6 +102,7 @@ const errors = {
     enabled_connector_not_found: '활성된 {{type}} 연동을 찾을 수 없어요.',
     not_one_and_only_one_primary_sign_in_method:
       '반드시 하나의 메인 로그인 방법이 설정되어야 해요. 입력된 값을 확인해주세요.',
+    unsupported_default_language: 'Default language {{language}} is unsupported.', // UNTRANSLATED
   },
   localization: {
     cannot_delete_default_language:

@@ -108,6 +108,7 @@ const errors = {
     enabled_connector_not_found: 'Conector {{type}} ativado não encontrado.',
     not_one_and_only_one_primary_sign_in_method:
       'Deve haver um e apenas um método de login principal. Por favor, verifique sua entrada.',
+    unsupported_default_language: 'Default language {{language}} is unsupported.', // UNTRANSLATED
   },
   localization: {
     cannot_delete_default_language:
