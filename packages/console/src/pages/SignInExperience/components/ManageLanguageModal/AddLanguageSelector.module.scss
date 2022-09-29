@@ -1,0 +1,24 @@
+@use '@/scss/underscore' as _;
+
+.addLanguageButton {
+  width: 100%;
+  border-color: var(--color-outline);
+  color: var(--color-text);
+  background: unset;
+
+  .iconPlus {
+    color: var(--color-outline);
+  }
+}
+
+.dropDownItem {
+  .languageName {
+    font: var(--font-label-large);
+    color: var(--color-text);
+  }
+
+  .languageTag {
+    font: var(--font-body-medium);
+    color: var(--color-caption);
+  }
+}

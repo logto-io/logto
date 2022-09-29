@@ -9,6 +9,7 @@ import Select from '@/components/Select';
 import Switch from '@/components/Switch';
 import * as textButtonStyles from '@/components/TextButton/index.module.scss';
 
+import useCustomPhrasesContext from '../hooks/use-custom-phrases-context';
 import { SignInExperienceForm } from '../types';
 import ManageLanguageModal from './ManageLanguageModal';
 import * as styles from './index.module.scss';
@@ -22,6 +23,9 @@ const LanguagesForm = ({ isManageLanguageVisible = false }: Props) => {
   const { watch, control, register } = useFormContext<SignInExperienceForm>();
   const isAutoDetect = watch('languageInfo.autoDetect');
   const [isManageLanguageFormOpen, setIsManageLanguageFormOpen] = useState(false);
+
+  const { context: customPhrasesContext, Provider: CustomPhrasesContextProvider } =
+    useCustomPhrasesContext();
 
   return (
     <>
@@ -56,12 +60,14 @@ const LanguagesForm = ({ isManageLanguageVisible = false }: Props) => {
             : t('sign_in_exp.others.languages.default_language_description_fixed')}
         </div>
       </FormField>
-      <ManageLanguageModal
-        isOpen={isManageLanguageFormOpen}
-        onClose={() => {
-          setIsManageLanguageFormOpen(false);
-        }}
-      />
+      <CustomPhrasesContextProvider value={customPhrasesContext}>
+        <ManageLanguageModal
+          isOpen={isManageLanguageFormOpen}
+          onClose={() => {
+            setIsManageLanguageFormOpen(false);
+          }}
+        />
+      </CustomPhrasesContextProvider>
     </>
   );
 };

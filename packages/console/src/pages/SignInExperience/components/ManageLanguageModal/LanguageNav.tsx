@@ -1,36 +1,62 @@
-import { LanguageTag } from '@logto/language-kit';
+import { isLanguageTag, languages, LanguageTag } from '@logto/language-kit';
+import { useContext } from 'react';
 
-import Button from '@/components/Button';
-import Plus from '@/icons/Plus';
-
+import { CustomPhrasesContext } from '../../hooks/use-custom-phrases-context';
+import AddLanguageSelector from './AddLanguageSelector';
 import LanguageItem from './LanguageItem';
 import * as style from './LanguageNav.module.scss';
 
-type Props = {
-  languageTags: LanguageTag[];
-  selectedLanguageTag: LanguageTag;
-  onSelect: (languageTag: LanguageTag) => void;
-};
+const LanguageNav = () => {
+  const {
+    displayingLanguages,
+    selectedLanguageTag,
+    isAddingLanguage,
+    isCurrentCustomPhraseDirty,
+    setConfirmationState,
+    setSelectedLanguageTag,
+    setPreSelectedLanguageTag,
+    setPreAddedLanguageTag,
+    startAddingLanguage,
+  } = useContext(CustomPhrasesContext);
 
-const LanguageNav = ({ languageTags, selectedLanguageTag, onSelect }: Props) => {
-  // TODO: LOG-4146 Add Custom Language
+  const languageOptions = Object.keys(languages).filter(
+    (languageTag): languageTag is LanguageTag =>
+      isLanguageTag(languageTag) && !displayingLanguages.includes(languageTag)
+  );
+
+  const onAddLanguage = (languageTag: LanguageTag) => {
+    if (isCurrentCustomPhraseDirty || isAddingLanguage) {
+      setPreAddedLanguageTag(languageTag);
+      setConfirmationState('try-add-language');
+
+      return;
+    }
+
+    startAddingLanguage(languageTag);
+  };
+
+  const onSwitchLanguage = (languageTag: LanguageTag) => {
+    if (isCurrentCustomPhraseDirty || isAddingLanguage) {
+      setPreSelectedLanguageTag(languageTag);
+      setConfirmationState('try-switch-language');
+
+      return;
+    }
+
+    setSelectedLanguageTag(languageTag);
+  };
+
   return (
     <div className={style.languageNav}>
-      <Button
-        className={style.addLanguageButton}
-        icon={<Plus className={style.iconPlus} />}
-        title="sign_in_exp.others.manage_language.add_language"
-        type="outline"
-        size="medium"
-      />
-      <div>
-        {languageTags.map((languageTag) => (
+      <AddLanguageSelector options={languageOptions} onSelect={onAddLanguage} />
+      <div className={style.languageItemList}>
+        {displayingLanguages.map((languageTag) => (
           <LanguageItem
             key={languageTag}
             languageTag={languageTag}
             isSelected={selectedLanguageTag === languageTag}
             onClick={() => {
-              onSelect(languageTag);
+              onSwitchLanguage(languageTag);
             }}
           />
         ))}
