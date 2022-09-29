@@ -1,6 +1,6 @@
 import api from './api';
 
-const registerApiPrefix = '/api/session/register';
+const apiPrefix = '/api/session';
 
 export const register = async (username: string, password: string) => {
   type Response = {
@@ -8,7 +8,7 @@ export const register = async (username: string, password: string) => {
   };
 
   return api
-    .post(`${registerApiPrefix}/username-password`, {
+    .post(`${apiPrefix}/register/username-password`, {
       json: {
         username,
         password,
@@ -19,9 +19,10 @@ export const register = async (username: string, password: string) => {
 
 export const sendRegisterSmsPasscode = async (phone: string) => {
   await api
-    .post(`${registerApiPrefix}/passwordless/sms/send-passcode`, {
+    .post(`${apiPrefix}/passwordless/sms/send`, {
       json: {
         phone,
+        flow: 'register',
       },
     })
     .json();
@@ -34,21 +35,23 @@ export const verifyRegisterSmsPasscode = async (phone: string, code: string) => 
     redirectTo: string;
   };
 
-  return api
-    .post(`${registerApiPrefix}/passwordless/sms/verify-passcode`, {
-      json: {
-        phone,
-        code,
-      },
-    })
-    .json<Response>();
+  await api.post(`${apiPrefix}/passwordless/sms/verify`, {
+    json: {
+      phone,
+      code,
+      flow: 'register',
+    },
+  });
+
+  return api.post(`${apiPrefix}/register/passwordless/sms`).json<Response>();
 };
 
 export const sendRegisterEmailPasscode = async (email: string) => {
   await api
-    .post(`${registerApiPrefix}/passwordless/email/send-passcode`, {
+    .post(`${apiPrefix}/passwordless/email/send`, {
       json: {
         email,
+        flow: 'register',
       },
     })
     .json();
@@ -61,12 +64,13 @@ export const verifyRegisterEmailPasscode = async (email: string, code: string) =
     redirectTo: string;
   };
 
-  return api
-    .post(`${registerApiPrefix}/passwordless/email/verify-passcode`, {
-      json: {
-        email,
-        code,
-      },
-    })
-    .json<Response>();
+  await api.post(`${apiPrefix}/passwordless/email/verify`, {
+    json: {
+      email,
+      code,
+      flow: 'register',
+    },
+  });
+
+  return api.post(`${apiPrefix}/register/passwordless/email`).json<Response>();
 };

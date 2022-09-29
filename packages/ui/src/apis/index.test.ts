@@ -87,9 +87,10 @@ describe('api', () => {
 
   it('sendSignInSmsPasscode', async () => {
     await sendSignInSmsPasscode(phone);
-    expect(ky.post).toBeCalledWith('/api/session/sign-in/passwordless/sms/send-passcode', {
+    expect(ky.post).toBeCalledWith('/api/session/passwordless/sms/send', {
       json: {
         phone,
+        flow: 'sign-in',
       },
     });
   });
@@ -101,19 +102,22 @@ describe('api', () => {
       }),
     });
     await verifySignInSmsPasscode(phone, code);
-    expect(ky.post).toBeCalledWith('/api/session/sign-in/passwordless/sms/verify-passcode', {
+    expect(ky.post).toBeCalledWith('/api/session/passwordless/sms/verify', {
       json: {
         phone,
         code,
+        flow: 'sign-in',
       },
     });
+    expect(ky.post).toBeCalledWith('/api/session/sign-in/passwordless/sms');
   });
 
   it('sendSignInEmailPasscode', async () => {
     await sendSignInEmailPasscode(email);
-    expect(ky.post).toBeCalledWith('/api/session/sign-in/passwordless/email/send-passcode', {
+    expect(ky.post).toBeCalledWith('/api/session/passwordless/email/send', {
       json: {
         email,
+        flow: 'sign-in',
       },
     });
   });
@@ -125,12 +129,14 @@ describe('api', () => {
       }),
     });
     await verifySignInEmailPasscode(email, code);
-    expect(ky.post).toBeCalledWith('/api/session/sign-in/passwordless/email/verify-passcode', {
+    expect(ky.post).toBeCalledWith('/api/session/passwordless/email/verify', {
       json: {
         email,
         code,
+        flow: 'sign-in',
       },
     });
+    expect(ky.post).toBeCalledWith('/api/session/sign-in/passwordless/email');
   });
 
   it('consent', async () => {
@@ -150,40 +156,46 @@ describe('api', () => {
 
   it('sendRegisterSmsPasscode', async () => {
     await sendRegisterSmsPasscode(phone);
-    expect(ky.post).toBeCalledWith('/api/session/register/passwordless/sms/send-passcode', {
+    expect(ky.post).toBeCalledWith('/api/session/passwordless/sms/send', {
       json: {
         phone,
+        flow: 'register',
       },
     });
   });
 
   it('verifyRegisterSmsPasscode', async () => {
     await verifyRegisterSmsPasscode(phone, code);
-    expect(ky.post).toBeCalledWith('/api/session/register/passwordless/sms/verify-passcode', {
+    expect(ky.post).toBeCalledWith('/api/session/passwordless/sms/verify', {
       json: {
         phone,
         code,
+        flow: 'register',
       },
     });
+    expect(ky.post).toBeCalledWith('/api/session/register/passwordless/sms');
   });
 
   it('sendRegisterEmailPasscode', async () => {
     await sendRegisterEmailPasscode(email);
-    expect(ky.post).toBeCalledWith('/api/session/register/passwordless/email/send-passcode', {
+    expect(ky.post).toBeCalledWith('/api/session/passwordless/email/send', {
       json: {
         email,
+        flow: 'register',
       },
     });
   });
 
   it('verifyRegisterEmailPasscode', async () => {
     await verifyRegisterEmailPasscode(email, code);
-    expect(ky.post).toBeCalledWith('/api/session/register/passwordless/email/verify-passcode', {
+    expect(ky.post).toBeCalledWith('/api/session/passwordless/email/verify', {
       json: {
         email,
         code,
+        flow: 'register',
       },
     });
+    expect(ky.post).toBeCalledWith('/api/session/register/passwordless/email');
   });
 
   it('sendForgotPasswordSmsPasscode', async () => {

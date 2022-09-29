@@ -131,9 +131,9 @@ export default function passwordlessRoutes<T extends AnonymousRouter>(
     const { result } = await provider.interactionDetails(ctx.req, ctx.res);
 
     console.log(result);
-    const passwordlessVerificationResult = verificationGuard.safeParse(result);
+    const verificationResult = verificationGuard.safeParse(result);
     assertThat(
-      passwordlessVerificationResult.success,
+      verificationResult.success,
       new RequestError({
         code: 'session.verification_session_not_found',
         status: 404,
@@ -142,7 +142,7 @@ export default function passwordlessRoutes<T extends AnonymousRouter>(
 
     const {
       verification: { phone, flow, expiresAt },
-    } = passwordlessVerificationResult.data;
+    } = verificationResult.data;
 
     const type = getPasswordlessRelatedLogType('sign-in', 'sms');
     ctx.log(type, { phone, flow, expiresAt });
@@ -173,9 +173,9 @@ export default function passwordlessRoutes<T extends AnonymousRouter>(
   router.post(`${signInRoute}/email`, async (ctx, next) => {
     const { result } = await provider.interactionDetails(ctx.req, ctx.res);
 
-    const passwordlessVerificationResult = verificationGuard.safeParse(result);
+    const verificationResult = verificationGuard.safeParse(result);
     assertThat(
-      passwordlessVerificationResult.success,
+      verificationResult.success,
       new RequestError({
         code: 'session.verification_session_not_found',
         status: 404,
@@ -184,7 +184,7 @@ export default function passwordlessRoutes<T extends AnonymousRouter>(
 
     const {
       verification: { email, flow, expiresAt },
-    } = passwordlessVerificationResult.data;
+    } = verificationResult.data;
 
     const type = getPasswordlessRelatedLogType('sign-in', 'email');
     ctx.log(type, { email, flow, expiresAt });
@@ -216,9 +216,9 @@ export default function passwordlessRoutes<T extends AnonymousRouter>(
   router.post(`${registerRoute}/sms`, async (ctx, next) => {
     const { result } = await provider.interactionDetails(ctx.req, ctx.res);
 
-    const passwordlessVerificationResult = verificationGuard.safeParse(result);
+    const verificationResult = verificationGuard.safeParse(result);
     assertThat(
-      passwordlessVerificationResult.success,
+      verificationResult.success,
       new RequestError({
         code: 'session.verification_session_not_found',
         status: 404,
@@ -226,8 +226,8 @@ export default function passwordlessRoutes<T extends AnonymousRouter>(
     );
 
     const {
-      verification: { email, phone, flow, expiresAt },
-    } = passwordlessVerificationResult.data;
+      verification: { phone, flow, expiresAt },
+    } = verificationResult.data;
 
     const type = getPasswordlessRelatedLogType('register', 'sms');
     ctx.log(type, { phone, flow, expiresAt });
@@ -259,9 +259,9 @@ export default function passwordlessRoutes<T extends AnonymousRouter>(
   router.post(`${registerRoute}/email`, async (ctx, next) => {
     const { result } = await provider.interactionDetails(ctx.req, ctx.res);
 
-    const passwordlessVerificationResult = verificationGuard.safeParse(result);
+    const verificationResult = verificationGuard.safeParse(result);
     assertThat(
-      passwordlessVerificationResult.success,
+      verificationResult.success,
       new RequestError({
         code: 'session.verification_session_not_found',
         status: 404,
@@ -270,7 +270,7 @@ export default function passwordlessRoutes<T extends AnonymousRouter>(
 
     const {
       verification: { email, flow, expiresAt },
-    } = passwordlessVerificationResult.data;
+    } = verificationResult.data;
 
     const type = getPasswordlessRelatedLogType('register', 'email');
     ctx.log(type, { email, flow, expiresAt });
