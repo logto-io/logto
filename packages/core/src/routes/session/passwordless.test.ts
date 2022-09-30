@@ -1,10 +1,13 @@
-import { User } from '@logto/schemas';
+/* eslint-disable max-lines */
+import { PasscodeType, User } from '@logto/schemas';
+import dayjs from 'dayjs';
 import { Provider } from 'oidc-provider';
 
 import { mockUser } from '@/__mocks__';
 import RequestError from '@/errors/RequestError';
 import { createRequester } from '@/utils/test-utils';
 
+import { verificationTimeout } from './consts';
 import passwordlessRoutes, { registerRoute, signInRoute } from './passwordless';
 
 const insertUser = jest.fn(async (..._args: unknown[]) => ({ id: 'id' }));
@@ -27,8 +30,9 @@ jest.mock('@/queries/user', () => ({
 }));
 
 const sendPasscode = jest.fn(async () => ({ dbEntry: { id: 'connectorIdValue' } }));
+const createPasscode = jest.fn(async (..._args: unknown[]) => ({ id: 'id' }));
 jest.mock('@/lib/passcode', () => ({
-  createPasscode: async () => ({ id: 'id' }),
+  createPasscode: async (..._args: unknown[]) => createPasscode(..._args),
   sendPasscode: async () => sendPasscode(),
   verifyPasscode: async (_a: unknown, _b: unknown, code: string) => {
     if (code !== '1234') {
@@ -63,6 +67,196 @@ describe('session -> passwordlessRoutes', () => {
         return next();
       },
     ],
+  });
+
+  describe('POST /session/passwordless/sms/send', () => {
+    beforeEach(() => {
+      interactionDetails.mockResolvedValueOnce({
+        jti: 'jti',
+      });
+    });
+    afterEach(() => {
+      jest.clearAllMocks();
+      jest.resetModules();
+    });
+    it('should call sendPasscode (with flow `sign-in`)', async () => {
+      const response = await sessionRequest
+        .post('/session/passwordless/sms/send')
+        .send({ phone: '13000000000', flow: PasscodeType.SignIn });
+      expect(response.statusCode).toEqual(204);
+      expect(createPasscode).toHaveBeenCalledWith('jti', PasscodeType.SignIn, {
+        phone: '13000000000',
+      });
+      expect(sendPasscode).toHaveBeenCalled();
+    });
+    it('should call sendPasscode (with flow `register`)', async () => {
+      const response = await sessionRequest
+        .post('/session/passwordless/sms/send')
+        .send({ phone: '13000000000', flow: PasscodeType.Register });
+      expect(response.statusCode).toEqual(204);
+      expect(createPasscode).toHaveBeenCalledWith('jti', PasscodeType.Register, {
+        phone: '13000000000',
+      });
+      expect(sendPasscode).toHaveBeenCalled();
+    });
+    it('throw when phone not given in input params', async () => {
+      const response = await sessionRequest
+        .post('/session/passwordless/sms/send')
+        .send({ flow: PasscodeType.Register });
+      expect(response.statusCode).toEqual(400);
+    });
+  });
+
+  describe('POST /session/passwordless/email/send', () => {
+    beforeEach(() => {
+      interactionDetails.mockResolvedValueOnce({
+        jti: 'jti',
+      });
+    });
+    afterEach(() => {
+      jest.clearAllMocks();
+      jest.resetModules();
+    });
+    it('should call sendPasscode (with flow `sign-in`)', async () => {
+      const response = await sessionRequest
+        .post('/session/passwordless/email/send')
+        .send({ email: 'a@a.com', flow: PasscodeType.SignIn });
+      expect(response.statusCode).toEqual(204);
+      expect(createPasscode).toHaveBeenCalledWith('jti', PasscodeType.SignIn, {
+        email: 'a@a.com',
+      });
+      expect(sendPasscode).toHaveBeenCalled();
+    });
+    it('should call sendPasscode (with flow `register`)', async () => {
+      const response = await sessionRequest
+        .post('/session/passwordless/email/send')
+        .send({ email: 'a@a.com', flow: PasscodeType.Register });
+      expect(response.statusCode).toEqual(204);
+      expect(createPasscode).toHaveBeenCalledWith('jti', PasscodeType.Register, {
+        email: 'a@a.com',
+      });
+      expect(sendPasscode).toHaveBeenCalled();
+    });
+    it('throw when email not given in input params', async () => {
+      const response = await sessionRequest
+        .post('/session/passwordless/email/send')
+        .send({ flow: PasscodeType.Register });
+      expect(response.statusCode).toEqual(400);
+    });
+  });
+
+  describe('POST /session/passwordless/sms/verify', () => {
+    beforeEach(() => {
+      interactionDetails.mockResolvedValueOnce({
+        jti: 'jti',
+      });
+    });
+    afterEach(() => {
+      jest.useRealTimers();
+      jest.clearAllMocks();
+      jest.resetModules();
+    });
+    it('should call interactionResult (with flow `sign-in`)', async () => {
+      const fakeTime = new Date();
+      jest.useFakeTimers().setSystemTime(fakeTime);
+      const response = await sessionRequest
+        .post('/session/passwordless/sms/verify')
+        .send({ phone: '13000000000', code: '1234', flow: PasscodeType.SignIn });
+      expect(response.statusCode).toEqual(204);
+      expect(interactionResult).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.anything(),
+        expect.objectContaining({
+          verification: {
+            flow: PasscodeType.SignIn,
+            phone: '13000000000',
+            expiresAt: dayjs(fakeTime).add(verificationTimeout, 'second').toISOString(),
+          },
+        })
+      );
+    });
+    it('should call interactionResult (with flow `register`)', async () => {
+      const fakeTime = new Date();
+      jest.useFakeTimers().setSystemTime(fakeTime);
+      const response = await sessionRequest
+        .post('/session/passwordless/sms/verify')
+        .send({ phone: '13000000000', code: '1234', flow: PasscodeType.Register });
+      expect(response.statusCode).toEqual(204);
+      expect(interactionResult).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.anything(),
+        expect.objectContaining({
+          verification: {
+            flow: PasscodeType.Register,
+            phone: '13000000000',
+            expiresAt: dayjs(fakeTime).add(verificationTimeout, 'second').toISOString(),
+          },
+        })
+      );
+    });
+    it('throw when code is wrong', async () => {
+      const response = await sessionRequest
+        .post('/session/passwordless/sms/verify')
+        .send({ phone: '13000000000', code: '1231', flow: PasscodeType.SignIn });
+      expect(response.statusCode).toEqual(400);
+    });
+  });
+
+  describe('POST /session/passwordless/email/verify', () => {
+    beforeEach(() => {
+      interactionDetails.mockResolvedValueOnce({
+        jti: 'jti',
+      });
+    });
+    afterEach(() => {
+      jest.useRealTimers();
+      jest.clearAllMocks();
+      jest.resetModules();
+    });
+    it('should call interactionResult (with flow `sign-in`)', async () => {
+      const fakeTime = new Date();
+      jest.useFakeTimers().setSystemTime(fakeTime);
+      const response = await sessionRequest
+        .post('/session/passwordless/email/verify')
+        .send({ email: 'a@a.com', code: '1234', flow: PasscodeType.SignIn });
+      expect(response.statusCode).toEqual(204);
+      expect(interactionResult).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.anything(),
+        expect.objectContaining({
+          verification: {
+            flow: PasscodeType.SignIn,
+            email: 'a@a.com',
+            expiresAt: dayjs(fakeTime).add(verificationTimeout, 'second').toISOString(),
+          },
+        })
+      );
+    });
+    it('should call interactionResult (with flow `register`)', async () => {
+      const fakeTime = new Date();
+      jest.useFakeTimers().setSystemTime(fakeTime);
+      const response = await sessionRequest
+        .post('/session/passwordless/email/verify')
+        .send({ email: 'a@a.com', code: '1234', flow: PasscodeType.Register });
+      expect(response.statusCode).toEqual(204);
+      expect(interactionResult).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.anything(),
+        expect.objectContaining({
+          verification: {
+            flow: PasscodeType.Register,
+            email: 'a@a.com',
+            expiresAt: dayjs(fakeTime).add(verificationTimeout, 'second').toISOString(),
+          },
+        })
+      );
+    });
+    it('throw when code is wrong', async () => {
+      const response = await sessionRequest
+        .post('/session/passwordless/email/verify')
+        .send({ email: 'a@a.com', code: '1231', flow: 'sign-in' });
+      expect(response.statusCode).toEqual(400);
+    });
   });
 
   describe('POST /session/sign-in/passwordless/sms/send-passcode', () => {
@@ -317,3 +511,4 @@ describe('session -> passwordlessRoutes', () => {
     });
   });
 });
+/* eslint-enable max-lines */
