@@ -169,7 +169,7 @@ export default function passwordlessRoutes<T extends AnonymousRouter>(
     ctx.log(type, { userId: id });
 
     await updateUserById(id, { lastSignInAt: Date.now() });
-    await assignInteractionResults(ctx, provider, { login: { accountId: id } }, true);
+    await assignInteractionResults(ctx, provider, { login: { accountId: id } });
 
     return next();
   });
@@ -187,7 +187,7 @@ export default function passwordlessRoutes<T extends AnonymousRouter>(
     ctx.log(type, { userId: id });
 
     await updateUserById(id, { lastSignInAt: Date.now() });
-    await assignInteractionResults(ctx, provider, { login: { accountId: id } }, true);
+    await assignInteractionResults(ctx, provider, { login: { accountId: id } });
 
     return next();
   });
@@ -205,7 +205,7 @@ export default function passwordlessRoutes<T extends AnonymousRouter>(
     ctx.log(type, { userId: id });
 
     await insertUser({ id, primaryPhone: phone, lastSignInAt: Date.now() });
-    await assignInteractionResults(ctx, provider, { login: { accountId: id } }, true);
+    await assignInteractionResults(ctx, provider, { login: { accountId: id } });
 
     return next();
   });
@@ -223,7 +223,7 @@ export default function passwordlessRoutes<T extends AnonymousRouter>(
     ctx.log(type, { userId: id });
 
     await insertUser({ id, primaryEmail: email, lastSignInAt: Date.now() });
-    await assignInteractionResults(ctx, provider, { login: { accountId: id } }, true);
+    await assignInteractionResults(ctx, provider, { login: { accountId: id } });
 
     return next();
   });

@@ -50,7 +50,7 @@ export const getPasswordlessRelatedLogType = (
   return result.data;
 };
 
-export const verificationStorageParser = (data: unknown): VerificationStorage => {
+export const parseVerificationStorage = (data: unknown): VerificationStorage => {
   const verificationResult = z
     .object({
       verification: verificationStorageGuard,
@@ -92,7 +92,7 @@ export const getAndCheckVerificationStorage = async (
   flowType: FlowType
 ): Promise<Pick<VerificationStorage, 'email' | 'phone'>> => {
   const { result } = await provider.interactionDetails(ctx.req, ctx.res);
-  const { email, phone, flow, expiresAt } = verificationStorageParser(result);
+  const { email, phone, flow, expiresAt } = parseVerificationStorage(result);
 
   ctx.log(logType, { email, phone, flow, expiresAt });
 
