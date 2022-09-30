@@ -17,11 +17,13 @@ type SessionPayload = {
 
 type AddLogContext = (sessionPayload: SessionPayload) => void;
 
-export type WithLogContext<ContextT extends IRouterParamContext = IRouterParamContext> =
-  ContextT & {
-    addLogContext: AddLogContext;
-    log: MergeLog;
-  };
+export type LogContext = {
+  addLogContext: AddLogContext;
+  log: MergeLog;
+};
+
+export type WithLogContext<ContextT extends IRouterParamContext = IRouterParamContext> = ContextT &
+  LogContext;
 
 type Logger = {
   type?: LogType;
