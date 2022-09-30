@@ -61,6 +61,11 @@ const errors = {
       'Forgot password session not found. Please go back and verify.', // UNTRANSLATED
     forgot_password_verification_expired:
       'Forgot password verification has expired. Please go back and verify again.', // UNTRANSLATED
+    verification_session_not_found:
+      'Passwordless verification session not found. Please go back and retry.', // UNTRANSLATED
+    passwordless_not_verified:
+      'Passwordless of {{flow}} flow is not verified. Please go back and verify.', // UNTRANSLATED
+    verification_expired: 'Passwordless verification has expired. Please go back and verify again.', // UNTRANSLATED
     unauthorized: 'Lütfen önce oturum açın.',
     unsupported_prompt_name: 'Desteklenmeyen prompt adı.',
   },
@@ -122,6 +127,9 @@ const errors = {
     not_exists: '{{name}} mevcut değil.',
     not_exists_with_id: ' `{{id}}` id kimliğine sahip {{name}} mevcut değil.',
     not_found: 'Kaynak mevcut değil.',
+  },
+  log: {
+    invalid_type: 'The log type is invalid.', // UNTRANSLATED
   },
 };
 

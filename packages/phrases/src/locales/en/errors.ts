@@ -60,6 +60,11 @@ const errors = {
       'Forgot password session not found. Please go back and verify.',
     forgot_password_verification_expired:
       'Forgot password verification has expired. Please go back and verify again.',
+    verification_session_not_found:
+      'Passwordless verification session not found. Please go back and retry.',
+    passwordless_not_verified:
+      'Passwordless of {{flow}} flow is not verified. Please go back and verify.',
+    verification_expired: 'Passwordless verification has expired. Please go back and verify again.',
     unauthorized: 'Please sign in first.',
     unsupported_prompt_name: 'Unsupported prompt name.',
   },
@@ -120,6 +125,9 @@ const errors = {
     not_exists: 'The {{name}} does not exist.',
     not_exists_with_id: 'The {{name}} with ID `{{id}}` does not exist.',
     not_found: 'The resource does not exist.',
+  },
+  log: {
+    invalid_type: 'The log type is invalid.',
   },
 };
 

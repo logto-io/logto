@@ -89,6 +89,7 @@
     "@types/rimraf": "^3.0.2",
     "@types/supertest": "^2.0.11",
     "@types/tar": "^6.1.2",
+    "camelcase": "^6.2.0",
     "copyfiles": "^2.4.1",
     "eslint": "^8.21.0",
     "http-errors": "^1.6.3",
