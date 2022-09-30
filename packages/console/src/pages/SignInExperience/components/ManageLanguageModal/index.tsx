@@ -1,19 +1,15 @@
-import { LanguageTag } from '@logto/language-kit';
-import { builtInLanguages as builtInUiLanguages } from '@logto/phrases-ui';
-import { useEffect, useMemo, useState } from 'react';
+import { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import Modal from 'react-modal';
-import useSWR from 'swr';
 
 import ConfirmModal from '@/components/ConfirmModal';
 import ModalLayout from '@/components/ModalLayout';
-import { RequestError } from '@/hooks/use-api';
 import * as modalStyles from '@/scss/modal.module.scss';
 
+import { CustomPhrasesContext } from '../../hooks/use-custom-phrases-context';
 import LanguageEditor from './LanguageEditor';
 import LanguageNav from './LanguageNav';
 import * as style from './index.module.scss';
-import { CustomPhraseResponse } from './types';
 
 type ManageLanguageModalProps = {
   isOpen: boolean;
@@ -22,37 +18,50 @@ type ManageLanguageModalProps = {
 
 const ManageLanguageModal = ({ isOpen, onClose }: ManageLanguageModalProps) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { data: customPhraseResponses } = useSWR<CustomPhraseResponse[], RequestError>(
-    '/api/custom-phrases'
-  );
 
-  const allLanguageTags = useMemo(
-    () =>
-      [
-        ...new Set([
-          ...builtInUiLanguages,
-          ...(customPhraseResponses?.map(({ languageTag }) => languageTag) ?? []),
-        ]),
-      ]
-        .slice()
-        .sort(),
-    [customPhraseResponses]
-  );
+  const {
+    preSelectedLanguageTag,
+    preAddedLanguageTag,
+    isAddingLanguage,
+    isCurrentCustomPhraseDirty,
+    confirmationState,
+    setSelectedLanguageTag,
+    setPreSelectedLanguageTag,
+    setConfirmationState,
+    startAddingLanguage,
+    stopAddingLanguage,
+    resetSelectedLanguageTag,
+  } = useContext(CustomPhrasesContext);
 
-  const defaultLanguageTag = allLanguageTags[0] ?? 'en';
+  const onCloseModal = () => {
+    if (isAddingLanguage || isCurrentCustomPhraseDirty) {
+      setConfirmationState('try-close');
 
-  const [selectedLanguageTag, setSelectedLanguageTag] = useState<LanguageTag>(defaultLanguageTag);
-
-  const [isLanguageEditorDirty, setIsLanguageEditorDirty] = useState(false);
-
-  const [isUnsavedAlertOpen, setIsUnsavedAlertOpen] = useState(false);
-  const [preselectedLanguageTag, setPreselectedLanguageTag] = useState<LanguageTag>();
-
-  useEffect(() => {
-    if (!isOpen) {
-      setSelectedLanguageTag(defaultLanguageTag);
+      return;
     }
-  }, [allLanguageTags, setSelectedLanguageTag, isOpen, defaultLanguageTag]);
+
+    onClose();
+    resetSelectedLanguageTag();
+  };
+
+  const onConfirmUnsavedChanges = () => {
+    stopAddingLanguage(true);
+
+    if (confirmationState === 'try-close') {
+      onClose();
+    }
+
+    if (confirmationState === 'try-switch-language' && preSelectedLanguageTag) {
+      setSelectedLanguageTag(preSelectedLanguageTag);
+      setPreSelectedLanguageTag(undefined);
+    }
+
+    if (confirmationState === 'try-add-language' && preAddedLanguageTag) {
+      startAddingLanguage(preAddedLanguageTag);
+    }
+
+    setConfirmationState('none');
+  };
 
   return (
     <Modal isOpen={isOpen} className={modalStyles.content} overlayClassName={modalStyles.overlay}>
@@ -60,54 +69,20 @@ const ManageLanguageModal = ({ isOpen, onClose }: ManageLanguageModalProps) => {
         title="sign_in_exp.others.manage_language.title"
         subtitle="sign_in_exp.others.manage_language.subtitle"
         size="xlarge"
-        onClose={() => {
-          if (isLanguageEditorDirty) {
-            setPreselectedLanguageTag(undefined);
-            setIsUnsavedAlertOpen(true);
-
-            return;
-          }
-          onClose();
-        }}
+        onClose={onCloseModal}
       >
         <div className={style.container}>
-          <LanguageNav
-            languageTags={allLanguageTags}
-            selectedLanguageTag={selectedLanguageTag}
-            onSelect={(languageTag) => {
-              if (isLanguageEditorDirty) {
-                setPreselectedLanguageTag(languageTag);
-                setIsUnsavedAlertOpen(true);
-
-                return;
-              }
-              setSelectedLanguageTag(languageTag);
-            }}
-          />
-          <LanguageEditor
-            selectedLanguageTag={selectedLanguageTag}
-            onFormStateChange={setIsLanguageEditorDirty}
-          />
+          <LanguageNav />
+          <LanguageEditor />
         </div>
       </ModalLayout>
       <ConfirmModal
-        isOpen={isUnsavedAlertOpen}
+        isOpen={confirmationState !== 'none'}
         cancelButtonText="general.stay_on_page"
         onCancel={() => {
-          setIsUnsavedAlertOpen(false);
+          setConfirmationState('none');
         }}
-        onConfirm={() => {
-          setIsUnsavedAlertOpen(false);
-
-          if (preselectedLanguageTag) {
-            setSelectedLanguageTag(preselectedLanguageTag);
-            setPreselectedLanguageTag(undefined);
-
-            return;
-          }
-
-          onClose();
-        }}
+        onConfirm={onConfirmUnsavedChanges}
       >
         {t('sign_in_exp.others.manage_language.unsaved_description')}
       </ConfirmModal>

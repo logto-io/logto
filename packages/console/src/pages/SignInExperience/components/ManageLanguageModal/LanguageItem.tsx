@@ -1,5 +1,6 @@
 import { languages, LanguageTag } from '@logto/language-kit';
 import classNames from 'classnames';
+import { useEffect, useRef } from 'react';
 
 import * as style from './LanguageItem.module.scss';
 
@@ -10,8 +11,20 @@ type Props = {
 };
 
 const LanguageItem = ({ languageTag, isSelected, onClick }: Props) => {
+  const itemRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (isSelected) {
+      itemRef.current?.scrollIntoView(false);
+    }
+  }, [isSelected]);
+
   return (
-    <div className={classNames(style.languageItem, isSelected && style.selected)} onClick={onClick}>
+    <div
+      ref={itemRef}
+      className={classNames(style.languageItem, isSelected && style.selected)}
+      onClick={onClick}
+    >
       <div className={style.languageName}>{languages[languageTag]}</div>
       <div className={style.languageTag}>{languageTag}</div>
     </div>
