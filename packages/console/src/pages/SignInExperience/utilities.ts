@@ -110,14 +110,14 @@ export const flattenTranslation = (
     const unwrappedKey = `${prefix}${key}`;
     const unwrapped = translation[key];
 
-    return unwrapped
-      ? {
+    return unwrapped === undefined
+      ? result
+      : {
           ...result,
           ...(typeof unwrapped === 'string'
             ? { [unwrappedKey]: unwrapped }
             : flattenTranslation(unwrapped, unwrappedKey)),
-        }
-      : result;
+        };
   }, {});
 
 const emptyTranslation = (translation: Translation): Translation =>
