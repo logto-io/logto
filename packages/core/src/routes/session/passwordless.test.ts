@@ -82,7 +82,7 @@ describe('session -> passwordlessRoutes', () => {
     it('should call sendPasscode (with flow `sign-in`)', async () => {
       const response = await sessionRequest
         .post('/session/passwordless/sms/send')
-        .send({ phone: '13000000000', flow: 'sign-in' });
+        .send({ phone: '13000000000', flow: PasscodeType.SignIn });
       expect(response.statusCode).toEqual(204);
       expect(createPasscode).toHaveBeenCalledWith('jti', PasscodeType.SignIn, {
         phone: '13000000000',
@@ -92,7 +92,7 @@ describe('session -> passwordlessRoutes', () => {
     it('should call sendPasscode (with flow `register`)', async () => {
       const response = await sessionRequest
         .post('/session/passwordless/sms/send')
-        .send({ phone: '13000000000', flow: 'register' });
+        .send({ phone: '13000000000', flow: PasscodeType.Register });
       expect(response.statusCode).toEqual(204);
       expect(createPasscode).toHaveBeenCalledWith('jti', PasscodeType.Register, {
         phone: '13000000000',
@@ -102,7 +102,7 @@ describe('session -> passwordlessRoutes', () => {
     it('throw when phone not given in input params', async () => {
       const response = await sessionRequest
         .post('/session/passwordless/sms/send')
-        .send({ flow: 'register' });
+        .send({ flow: PasscodeType.Register });
       expect(response.statusCode).toEqual(400);
     });
   });
@@ -120,7 +120,7 @@ describe('session -> passwordlessRoutes', () => {
     it('should call sendPasscode (with flow `sign-in`)', async () => {
       const response = await sessionRequest
         .post('/session/passwordless/email/send')
-        .send({ email: 'a@a.com', flow: 'sign-in' });
+        .send({ email: 'a@a.com', flow: PasscodeType.SignIn });
       expect(response.statusCode).toEqual(204);
       expect(createPasscode).toHaveBeenCalledWith('jti', PasscodeType.SignIn, {
         email: 'a@a.com',
@@ -130,7 +130,7 @@ describe('session -> passwordlessRoutes', () => {
     it('should call sendPasscode (with flow `register`)', async () => {
       const response = await sessionRequest
         .post('/session/passwordless/email/send')
-        .send({ email: 'a@a.com', flow: 'register' });
+        .send({ email: 'a@a.com', flow: PasscodeType.Register });
       expect(response.statusCode).toEqual(204);
       expect(createPasscode).toHaveBeenCalledWith('jti', PasscodeType.Register, {
         email: 'a@a.com',
@@ -140,7 +140,7 @@ describe('session -> passwordlessRoutes', () => {
     it('throw when email not given in input params', async () => {
       const response = await sessionRequest
         .post('/session/passwordless/email/send')
-        .send({ flow: 'register' });
+        .send({ flow: PasscodeType.Register });
       expect(response.statusCode).toEqual(400);
     });
   });
@@ -161,14 +161,14 @@ describe('session -> passwordlessRoutes', () => {
       jest.useFakeTimers().setSystemTime(fakeTime);
       const response = await sessionRequest
         .post('/session/passwordless/sms/verify')
-        .send({ phone: '13000000000', code: '1234', flow: 'sign-in' });
+        .send({ phone: '13000000000', code: '1234', flow: PasscodeType.SignIn });
       expect(response.statusCode).toEqual(204);
       expect(interactionResult).toHaveBeenCalledWith(
         expect.anything(),
         expect.anything(),
         expect.objectContaining({
           verification: {
-            flow: 'sign-in',
+            flow: PasscodeType.SignIn,
             phone: '13000000000',
             expiresAt: dayjs(fakeTime).add(verificationTimeout, 'second').toISOString(),
           },
@@ -180,14 +180,14 @@ describe('session -> passwordlessRoutes', () => {
       jest.useFakeTimers().setSystemTime(fakeTime);
       const response = await sessionRequest
         .post('/session/passwordless/sms/verify')
-        .send({ phone: '13000000000', code: '1234', flow: 'register' });
+        .send({ phone: '13000000000', code: '1234', flow: PasscodeType.Register });
       expect(response.statusCode).toEqual(204);
       expect(interactionResult).toHaveBeenCalledWith(
         expect.anything(),
         expect.anything(),
         expect.objectContaining({
           verification: {
-            flow: 'register',
+            flow: PasscodeType.Register,
             phone: '13000000000',
             expiresAt: dayjs(fakeTime).add(verificationTimeout, 'second').toISOString(),
           },
@@ -197,7 +197,7 @@ describe('session -> passwordlessRoutes', () => {
     it('throw when code is wrong', async () => {
       const response = await sessionRequest
         .post('/session/passwordless/sms/verify')
-        .send({ phone: '13000000000', code: '1231', flow: 'sign-in' });
+        .send({ phone: '13000000000', code: '1231', flow: PasscodeType.SignIn });
       expect(response.statusCode).toEqual(400);
     });
   });
@@ -218,14 +218,14 @@ describe('session -> passwordlessRoutes', () => {
       jest.useFakeTimers().setSystemTime(fakeTime);
       const response = await sessionRequest
         .post('/session/passwordless/email/verify')
-        .send({ email: 'a@a.com', code: '1234', flow: 'sign-in' });
+        .send({ email: 'a@a.com', code: '1234', flow: PasscodeType.SignIn });
       expect(response.statusCode).toEqual(204);
       expect(interactionResult).toHaveBeenCalledWith(
         expect.anything(),
         expect.anything(),
         expect.objectContaining({
           verification: {
-            flow: 'sign-in',
+            flow: PasscodeType.SignIn,
             email: 'a@a.com',
             expiresAt: dayjs(fakeTime).add(verificationTimeout, 'second').toISOString(),
           },
@@ -237,14 +237,14 @@ describe('session -> passwordlessRoutes', () => {
       jest.useFakeTimers().setSystemTime(fakeTime);
       const response = await sessionRequest
         .post('/session/passwordless/email/verify')
-        .send({ email: 'a@a.com', code: '1234', flow: 'register' });
+        .send({ email: 'a@a.com', code: '1234', flow: PasscodeType.Register });
       expect(response.statusCode).toEqual(204);
       expect(interactionResult).toHaveBeenCalledWith(
         expect.anything(),
         expect.anything(),
         expect.objectContaining({
           verification: {
-            flow: 'register',
+            flow: PasscodeType.Register,
             email: 'a@a.com',
             expiresAt: dayjs(fakeTime).add(verificationTimeout, 'second').toISOString(),
           },

@@ -1,8 +1,7 @@
+import { PasscodeType } from '@logto/schemas';
 import { z } from 'zod';
 
-export const flowTypeGuard = z.enum(['sign-in', 'register', 'forgot-password']);
-
-export type FlowType = z.infer<typeof flowTypeGuard>;
+export const passcodeTypeGuard = z.nativeEnum(PasscodeType);
 
 export const viaGuard = z.enum(['email', 'sms']);
 
@@ -17,7 +16,7 @@ export type PasscodePayload = { email: string } | { phone: string };
 export const verificationStorageGuard = z.object({
   email: z.string().optional(),
   phone: z.string().optional(),
-  flow: flowTypeGuard,
+  flow: passcodeTypeGuard,
   expiresAt: z.string(),
 });
 

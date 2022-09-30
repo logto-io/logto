@@ -1,16 +1,15 @@
 import { logTypeGuard, LogType, PasscodeType } from '@logto/schemas';
 import { Truthy } from '@silverhand/essentials';
-import camelcase from 'camelcase';
 import dayjs from 'dayjs';
 import { z } from 'zod';
 
 import RequestError from '@/errors/RequestError';
 import assertThat from '@/utils/assert-that';
 
-import { verificationStorageGuard, FlowType, Operation, VerificationStorage, Via } from './types';
+import { verificationStorageGuard, Operation, VerificationStorage, Via } from './types';
 
 export const getRoutePrefix = (
-  type: FlowType,
+  type: 'sign-in' | 'register' | 'forgot-password',
   method?: 'passwordless' | 'username-password' | 'social'
 ) => {
   return ['session', type, method]
@@ -19,29 +18,15 @@ export const getRoutePrefix = (
     .join('');
 };
 
-export const getPasscodeType = (type: FlowType) => {
-  switch (type) {
-    case 'sign-in':
-      return PasscodeType.SignIn;
-    case 'register':
-      return PasscodeType.Register;
-    case 'forgot-password':
-      return PasscodeType.ForgotPassword;
-    default:
-      throw new RequestError({ code: 'guard.invalid_input' });
-  }
-};
-
 export const getPasswordlessRelatedLogType = (
-  flow: FlowType,
+  flow: PasscodeType,
   via: Via,
   operation?: Operation
 ): LogType => {
-  const prefix = camelcase(flow, { pascalCase: true });
   const body = via === 'email' ? 'Email' : 'Sms';
   const suffix = operation === 'send' ? 'SendPasscode' : '';
 
-  const result = logTypeGuard.safeParse(prefix + body + suffix);
+  const result = logTypeGuard.safeParse(flow + body + suffix);
   assertThat(result.success, new RequestError('log.invalid_type'));
 
   return result.data;
@@ -66,7 +51,7 @@ export const parseVerificationStorage = (data: unknown): VerificationStorage => 
 };
 
 export const verificationSessionCheckByFlow = (
-  currentFlow: FlowType,
+  currentFlow: PasscodeType,
   payload: Pick<VerificationStorage, 'flow' | 'expiresAt'>
 ) => {
   const { flow, expiresAt } = payload;
