@@ -1,6 +1,5 @@
 import classNames from 'classnames';
 import { useState } from 'react';
-import { useTranslation } from 'react-i18next';
 import ReactModal from 'react-modal';
 
 import Button from '@/components/Button';
@@ -21,7 +20,6 @@ const IframeConfirmModal = ({
   onConfirm,
   onClose,
 }: Props) => {
-  const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState(true);
 
   return (
