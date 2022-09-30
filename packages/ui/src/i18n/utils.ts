@@ -53,7 +53,6 @@ export const detectLanguage = (languageSettings?: LanguageInfo) => {
 // Must be called after i18n's initialization
 export const changeLanguage = async (targetLanguage: string) => {
   const { resources, lng } = await getI18nResource(targetLanguage);
-  console.log(resources, lng);
 
   for (const [namespace, resource] of Object.entries(resources[lng] ?? {})) {
     i18next.addResourceBundle(lng, namespace, resource);
