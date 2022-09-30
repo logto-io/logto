@@ -66,6 +66,7 @@ const LanguageEditor = () => {
   const {
     handleSubmit,
     reset,
+    setValue,
     formState: { isSubmitting, isDirty, dirtyFields },
   } = formMethods;
 
@@ -159,7 +160,11 @@ const LanguageEditor = () => {
                       className={style.clearButton}
                       icon={<Delete />}
                       onClick={() => {
-                        reset(emptyUiTranslation);
+                        for (const [key, value] of Object.entries(
+                          flattenTranslation(emptyUiTranslation)
+                        )) {
+                          setValue(key, value, { shouldDirty: true });
+                        }
                       }}
                     />
                   </span>
