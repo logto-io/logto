@@ -8,16 +8,16 @@ import { DeletionError } from '@/errors/SlonikError';
 
 const { table, fields } = convertToIdentifiers(CustomPhrases);
 
-export const findAllCustomLanguageKeys = async () => {
-  const rows = await manyRows<{ languageKey: string }>(
+export const findAllCustomLanguageTags = async () => {
+  const rows = await manyRows<{ languageTag: string }>(
     envSet.pool.query(sql`
-      select ${fields.languageKey}
+      select ${fields.languageTag}
       from ${table}
-      order by ${fields.languageKey}
+      order by ${fields.languageTag}
     `)
   );
 
-  return rows.map((row) => row.languageKey);
+  return rows.map((row) => row.languageTag);
 };
 
 export const findAllCustomPhrases = async () =>
@@ -25,32 +25,32 @@ export const findAllCustomPhrases = async () =>
     envSet.pool.query<CustomPhrase>(sql`
       select ${sql.join(Object.values(fields), sql`,`)}
       from ${table}
-      order by ${fields.languageKey}
+      order by ${fields.languageTag}
     `)
   );
 
-export const findCustomPhraseByLanguageKey = async (languageKey: string): Promise<CustomPhrase> =>
+export const findCustomPhraseByLanguageTag = async (languageTag: string): Promise<CustomPhrase> =>
   envSet.pool.one<CustomPhrase>(sql`
     select ${sql.join(Object.values(fields), sql`, `)}
     from ${table}
-    where ${fields.languageKey} = ${languageKey}
+    where ${fields.languageTag} = ${languageTag}
   `);
 
 export const upsertCustomPhrase = buildInsertInto<CreateCustomPhrase, CustomPhrase>(CustomPhrases, {
   returning: true,
   onConflict: {
-    fields: [fields.languageKey],
+    fields: [fields.languageTag],
     setExcludedFields: [fields.translation],
   },
 });
 
-export const deleteCustomPhraseByLanguageKey = async (languageKey: string) => {
+export const deleteCustomPhraseByLanguageTag = async (languageTag: string) => {
   const { rowCount } = await envSet.pool.query(sql`
     delete from ${table}
-    where ${fields.languageKey}=${languageKey}
+    where ${fields.languageTag}=${languageTag}
   `);
 
   if (rowCount < 1) {
-    throw new DeletionError(CustomPhrases.table, languageKey);
+    throw new DeletionError(CustomPhrases.table, languageTag);
   }
 };

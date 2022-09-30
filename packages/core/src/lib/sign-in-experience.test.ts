@@ -20,11 +20,11 @@ import {
 
 const enabledConnectors = [mockFacebookConnector, mockGithubConnector];
 
-const allCustomLanguageKeys: LanguageTag[] = [];
-const findAllCustomLanguageKeys = jest.fn(async () => allCustomLanguageKeys);
+const allCustomLanguageTags: LanguageTag[] = [];
+const findAllCustomLanguageTags = jest.fn(async () => allCustomLanguageTags);
 
 jest.mock('@/queries/custom-phrase', () => ({
-  findAllCustomLanguageKeys: async () => findAllCustomLanguageKeys(),
+  findAllCustomLanguageTags: async () => findAllCustomLanguageTags(),
 }));
 
 beforeEach(() => {
@@ -74,13 +74,13 @@ describe('validate branding', () => {
 });
 
 describe('validate language info', () => {
-  it('should call findAllCustomLanguageKeys', async () => {
+  it('should call findAllCustomLanguageTags', async () => {
     await validateLanguageInfo({
       autoDetect: true,
       fallbackLanguage: 'zh-CN',
       fixedLanguage: 'en',
     });
-    expect(findAllCustomLanguageKeys).toBeCalledTimes(1);
+    expect(findAllCustomLanguageTags).toBeCalledTimes(1);
   });
 
   it('should pass when the language is built-in supported', async () => {
@@ -92,13 +92,13 @@ describe('validate language info', () => {
         fixedLanguage: 'en',
       })
     ).resolves.not.toThrow();
-    expect(findAllCustomLanguageKeys).toBeCalledTimes(1);
+    expect(findAllCustomLanguageTags).toBeCalledTimes(1);
   });
 
   it('should pass when the language is custom supported', async () => {
     const customOnlySupportedLanguage = 'zh-HK';
     expect(customOnlySupportedLanguage in builtInLanguages).toBeFalsy();
-    findAllCustomLanguageKeys.mockResolvedValueOnce([customOnlySupportedLanguage]);
+    findAllCustomLanguageTags.mockResolvedValueOnce([customOnlySupportedLanguage]);
     await expect(
       validateLanguageInfo({
         autoDetect: true,
@@ -106,13 +106,13 @@ describe('validate language info', () => {
         fixedLanguage: 'en',
       })
     ).resolves.not.toThrow();
-    expect(findAllCustomLanguageKeys).toBeCalledTimes(1);
+    expect(findAllCustomLanguageTags).toBeCalledTimes(1);
   });
 
   it('unsupported fallback language should fail', async () => {
     const unsupportedLanguage = 'zh-MO';
     expect(unsupportedLanguage in builtInLanguages).toBeFalsy();
-    expect(allCustomLanguageKeys.includes(unsupportedLanguage)).toBeFalsy();
+    expect(allCustomLanguageTags.includes(unsupportedLanguage)).toBeFalsy();
     await expect(
       validateLanguageInfo({
         autoDetect: true,

@@ -52,7 +52,7 @@ jest.mock('@/queries/sign-in-experience', () => ({
 const signInExperienceRequester = createRequester({ authedRoutes: signInExperiencesRoutes });
 
 jest.mock('@/queries/custom-phrase', () => ({
-  findAllCustomLanguageKeys: async () => [],
+  findAllCustomLanguageTags: async () => [],
 }));
 
 describe('GET /sign-in-exp', () => {
