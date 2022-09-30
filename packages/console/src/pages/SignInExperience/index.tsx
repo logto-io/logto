@@ -14,6 +14,7 @@ import ConfirmModal from '@/components/ConfirmModal';
 import TabNav, { TabNavItem } from '@/components/TabNav';
 import useApi, { RequestError } from '@/hooks/use-api';
 import useSettings from '@/hooks/use-settings';
+import useUiLanguages from '@/hooks/use-ui-languages';
 import * as detailsStyles from '@/scss/details.module.scss';
 
 import Preview from './components/Preview';
@@ -33,6 +34,7 @@ const SignInExperience = () => {
   const { tab } = useParams();
   const { data, error, mutate } = useSWR<SignInExperienceType, RequestError>('/api/sign-in-exp');
   const { settings, error: settingsError, updateSettings, mutate: mutateSettings } = useSettings();
+  const { error: languageError, isLoading: isLoadingLanguages } = useUiLanguages();
   const [dataToCompare, setDataToCompare] = useState<SignInExperienceType>();
 
   const methods = useForm<SignInExperienceForm>();
@@ -90,12 +92,16 @@ const SignInExperience = () => {
     await saveData();
   });
 
-  if ((!settings && !settingsError) || (!data && !error)) {
+  if ((!settings && !settingsError) || (!data && !error) || isLoadingLanguages) {
     return <Skeleton />;
   }
 
   if (!settings && settingsError) {
     return <div>{settingsError.body?.message ?? settingsError.message}</div>;
+  }
+
+  if (languageError) {
+    return <div>{languageError.body?.message ?? languageError.message}</div>;
   }
 
   if (!settings?.signInExperienceCustomized) {

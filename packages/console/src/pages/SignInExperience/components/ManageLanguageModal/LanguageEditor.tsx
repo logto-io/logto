@@ -7,14 +7,14 @@ import { useCallback, useContext, useEffect, useMemo } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
-import useSWR from 'swr';
+import useSWR, { useSWRConfig } from 'swr';
 
 import Button from '@/components/Button';
 import useApi, { RequestError } from '@/hooks/use-api';
 import Delete from '@/icons/Delete';
+import { CustomPhraseResponse } from '@/types/custom-phrase';
 
-import { CustomPhrasesContext } from '../../hooks/use-custom-phrases-context';
-import { CustomPhraseResponse } from '../../types';
+import { LanguageEditorContext } from '../../hooks/use-language-editor-context';
 import { createEmptyUiTranslation, flattenTranslation } from '../../utilities';
 import EditSection from './EditSection';
 import * as style from './LanguageEditor.module.scss';
@@ -24,22 +24,17 @@ const emptyUiTranslation = createEmptyUiTranslation();
 const LanguageEditor = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
-  const {
-    selectedLanguageTag,
-    appendToCustomPhraseList,
-    setIsCurrentCustomPhraseDirty,
-    stopAddingLanguage,
-  } = useContext(CustomPhrasesContext);
+  const { selectedLanguage, setIsDirty, stopAddingLanguage } = useContext(LanguageEditorContext);
 
-  const isBuiltIn = isBuiltInLanguageTag(selectedLanguageTag);
+  const isBuiltIn = isBuiltInLanguageTag(selectedLanguage);
 
   const translationEntries = useMemo(
-    () => Object.entries((isBuiltIn ? resource[selectedLanguageTag] : en).translation),
-    [isBuiltIn, selectedLanguageTag]
+    () => Object.entries((isBuiltIn ? resource[selectedLanguage] : en).translation),
+    [isBuiltIn, selectedLanguage]
   );
 
   const { data: customPhrase, mutate } = useSWR<CustomPhraseResponse, RequestError>(
-    `/api/custom-phrases/${selectedLanguageTag}`,
+    `/api/custom-phrases/${selectedLanguage}`,
     {
       shouldRetryOnError: (error: unknown) => {
         if (error instanceof RequestError) {
@@ -76,7 +71,7 @@ const LanguageEditor = () => {
      * for the `isDirty` state does not work correctly when comparing form data with empty / undefined values.
      * Reference: https://github.com/react-hook-form/react-hook-form/issues/4740
      */
-    setIsCurrentCustomPhraseDirty(isDirty && Object.keys(dirtyFields).length > 0);
+    setIsDirty(isDirty && Object.keys(dirtyFields).length > 0);
   }, [
     /**
      * Note: `isDirty` is used to trigger this `useEffect`; for `dirtyFields` object only marks filed dirty at field level.
@@ -84,8 +79,10 @@ const LanguageEditor = () => {
      */
     isDirty,
     dirtyFields,
-    setIsCurrentCustomPhraseDirty,
+    setIsDirty,
   ]);
+
+  const { mutate: globalMutate } = useSWRConfig();
 
   const api = useApi();
 
@@ -99,17 +96,17 @@ const LanguageEditor = () => {
         })
         .json<CustomPhraseResponse>();
 
-      appendToCustomPhraseList(updatedCustomPhrase);
+      void globalMutate('/api/custom-phrases');
 
       stopAddingLanguage();
 
       return updatedCustomPhrase;
     },
-    [api, appendToCustomPhraseList, stopAddingLanguage]
+    [api, globalMutate, stopAddingLanguage]
   );
 
   const onSubmit = handleSubmit(async (formData: Translation) => {
-    const updatedCustomPhrase = await upsertCustomPhrase(selectedLanguageTag, formData);
+    const updatedCustomPhrase = await upsertCustomPhrase(selectedLanguage, formData);
     void mutate(updatedCustomPhrase);
     toast.success(t('general.saved'));
   });
@@ -118,10 +115,10 @@ const LanguageEditor = () => {
     reset(defaultFormValues);
   }, [
     /**
-     * Note: trigger form reset when selectedLanguageTag changed,
+     * Note: trigger form reset when selectedLanguage changed,
      * for the `defaultValues` will not change when switching between languages with unavailable custom phrases.
      */
-    selectedLanguageTag,
+    selectedLanguage,
     defaultFormValues,
     reset,
   ]);
@@ -129,8 +126,8 @@ const LanguageEditor = () => {
   return (
     <div className={style.languageEditor}>
       <div className={style.title}>
-        {languages[selectedLanguageTag]}
-        <span>{selectedLanguageTag}</span>
+        {languages[selectedLanguage]}
+        <span>{selectedLanguage}</span>
         {isBuiltIn && (
           <span className={style.builtInFlag}>
             {t('sign_in_exp.others.manage_language.logto_provided')}

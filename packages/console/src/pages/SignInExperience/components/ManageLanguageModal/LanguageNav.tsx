@@ -1,32 +1,36 @@
-import { isLanguageTag, languages, LanguageTag } from '@logto/language-kit';
+import {
+  isLanguageTag,
+  LanguageTag,
+  languages as uiLanguageNameMapping,
+} from '@logto/language-kit';
 import { useContext } from 'react';
 
-import { CustomPhrasesContext } from '../../hooks/use-custom-phrases-context';
+import { LanguageEditorContext } from '../../hooks/use-language-editor-context';
 import AddLanguageSelector from './AddLanguageSelector';
 import LanguageItem from './LanguageItem';
 import * as style from './LanguageNav.module.scss';
 
 const LanguageNav = () => {
   const {
-    displayingLanguages,
-    selectedLanguageTag,
+    languages,
+    selectedLanguage,
     isAddingLanguage,
-    isCurrentCustomPhraseDirty,
+    isDirty,
     setConfirmationState,
-    setSelectedLanguageTag,
-    setPreSelectedLanguageTag,
-    setPreAddedLanguageTag,
+    setSelectedLanguage,
+    setPreSelectedLanguage,
+    setPreAddedLanguage,
     startAddingLanguage,
-  } = useContext(CustomPhrasesContext);
+  } = useContext(LanguageEditorContext);
 
-  const languageOptions = Object.keys(languages).filter(
+  const languageOptions = Object.keys(uiLanguageNameMapping).filter(
     (languageTag): languageTag is LanguageTag =>
-      isLanguageTag(languageTag) && !displayingLanguages.includes(languageTag)
+      isLanguageTag(languageTag) && !languages.includes(languageTag)
   );
 
   const onAddLanguage = (languageTag: LanguageTag) => {
-    if (isCurrentCustomPhraseDirty || isAddingLanguage) {
-      setPreAddedLanguageTag(languageTag);
+    if (isDirty || isAddingLanguage) {
+      setPreAddedLanguage(languageTag);
       setConfirmationState('try-add-language');
 
       return;
@@ -36,25 +40,25 @@ const LanguageNav = () => {
   };
 
   const onSwitchLanguage = (languageTag: LanguageTag) => {
-    if (isCurrentCustomPhraseDirty || isAddingLanguage) {
-      setPreSelectedLanguageTag(languageTag);
+    if (isDirty || isAddingLanguage) {
+      setPreSelectedLanguage(languageTag);
       setConfirmationState('try-switch-language');
 
       return;
     }
 
-    setSelectedLanguageTag(languageTag);
+    setSelectedLanguage(languageTag);
   };
 
   return (
     <div className={style.languageNav}>
       <AddLanguageSelector options={languageOptions} onSelect={onAddLanguage} />
       <div className={style.languageItemList}>
-        {displayingLanguages.map((languageTag) => (
+        {languages.map((languageTag) => (
           <LanguageItem
             key={languageTag}
             languageTag={languageTag}
-            isSelected={selectedLanguageTag === languageTag}
+            isSelected={selectedLanguage === languageTag}
             onClick={() => {
               onSwitchLanguage(languageTag);
             }}

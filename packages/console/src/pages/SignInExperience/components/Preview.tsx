@@ -1,5 +1,4 @@
-import { LanguageTag } from '@logto/language-kit';
-import { builtInLanguageOptions } from '@logto/phrases-ui';
+import { LanguageTag, languages as uiLanguageNameMapping } from '@logto/language-kit';
 import {
   AppearanceMode,
   ConnectorResponse,
@@ -17,6 +16,7 @@ import Card from '@/components/Card';
 import Select from '@/components/Select';
 import TabNav, { TabNavItem } from '@/components/TabNav';
 import { RequestError } from '@/hooks/use-api';
+import useUiLanguages from '@/hooks/use-ui-languages';
 import PhoneInfo from '@/icons/PhoneInfo';
 
 import * as styles from './Preview.module.scss';
@@ -33,6 +33,8 @@ const Preview = ({ signInExperience, className }: Props) => {
   const [platform, setPlatform] = useState<'desktopWeb' | 'mobile' | 'mobileWeb'>('desktopWeb');
   const { data: allConnectors } = useSWR<ConnectorResponse[], RequestError>('/api/connectors');
   const previewRef = useRef<HTMLIFrameElement>(null);
+
+  const { languages } = useUiLanguages();
 
   const modeOptions = useMemo(() => {
     const light = { value: AppearanceMode.LightMode, title: t('sign_in_exp.preview.light') };
@@ -56,14 +58,18 @@ const Preview = ({ signInExperience, className }: Props) => {
   }, [modeOptions, mode]);
 
   const availableLanguageOptions = useMemo(() => {
-    if (signInExperience && !signInExperience.languageInfo.autoDetect) {
-      return builtInLanguageOptions.filter(
-        ({ value }) => value === signInExperience.languageInfo.fallbackLanguage
-      );
-    }
+    const availableLanguageTags =
+      signInExperience && !signInExperience.languageInfo.autoDetect
+        ? languages.filter(
+            (languageTag) => languageTag === signInExperience.languageInfo.fallbackLanguage
+          )
+        : languages;
 
-    return builtInLanguageOptions;
-  }, [signInExperience]);
+    return availableLanguageTags.map((languageTag) => ({
+      value: languageTag,
+      title: uiLanguageNameMapping[languageTag],
+    }));
+  }, [languages, signInExperience]);
 
   useEffect(() => {
     if (!availableLanguageOptions[0]) {
