@@ -6,8 +6,12 @@
   "homepage": "https://github.com/logto-io/logto#readme",
   "license": "MPL-2.0",
   "main": "lib/index.js",
-  "bin": "lib/index.js",
+  "bin": {
+    "logto": "bin/logto",
+    "lg": "bin/logto"
+  },
   "files": [
+    "bin",
     "lib"
   ],
   "repository": {
