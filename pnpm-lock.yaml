@@ -30,6 +30,7 @@ importers:
       chalk: ^4.1.2
       eslint: ^8.21.0
       got: ^11.8.2
+      hpagent: ^1.0.0
       lint-staged: ^13.0.0
       ora: ^5.0.0
       prettier: ^2.7.1
@@ -42,6 +43,7 @@ importers:
     dependencies:
       chalk: 4.1.2
       got: 11.8.3
+      hpagent: 1.0.0
       ora: 5.4.1
       prompts: 2.4.2
       semver: 7.3.7
@@ -8109,6 +8111,11 @@ packages:
     dependencies:
       lru-cache: 7.10.1
     dev: true
+
+  /hpagent/1.0.0:
+    resolution: {integrity: sha512-SCleE2Uc1bM752ymxg8QXYGW0TWtAV4ZW3TqH1aOnyi6T6YW2xadCcclm5qeVjvMvfQ2RKNtZxO7uVb9CTPt1A==}
+    engines: {node: '>=14'}
+    dev: false
 
   /html-encoding-sniffer/3.0.0:
     resolution: {integrity: sha512-oWv4T4yJ52iKrufjnyZPkrN0CH3QnrUqdB6In1g5Fe1mia8GmF36gnfNySxoZtxD5+NmYw1EElVXiBk93UeskA==}

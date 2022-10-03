@@ -3,6 +3,7 @@ import { createWriteStream } from 'fs';
 
 import chalk from 'chalk';
 import got, { Progress } from 'got';
+import { HttpsProxyAgent } from 'hpagent';
 import ora from 'ora';
 
 export const safeExecSync = (command: string) => {
@@ -32,8 +33,12 @@ export const log: Log = Object.freeze({
 });
 
 export const downloadFile = async (url: string, destination: string) => {
+  const { HTTPS_PROXY, HTTP_PROXY, https_proxy, http_proxy } = process.env;
   const file = createWriteStream(destination);
-  const stream = got.stream(url);
+  const proxy = HTTPS_PROXY ?? https_proxy ?? HTTP_PROXY ?? http_proxy;
+  const stream = got.stream(url, {
+    ...(proxy && { agent: { https: new HttpsProxyAgent({ proxy }) } }),
+  });
   const spinner = ora({
     text: 'Connecting',
     prefixText: chalk.blue('[info]'),

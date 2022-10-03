@@ -1,11 +1,12 @@
 {
   "name": "@logto/cli",
-  "version": "1.0.0-beta.9",
+  "version": "1.0.0-beta.10",
   "description": "Logto CLI.",
   "author": "Silverhand Inc. <contact@silverhand.io>",
   "homepage": "https://github.com/logto-io/logto#readme",
   "license": "MPL-2.0",
   "main": "lib/index.js",
+  "bin": "lib/index.js",
   "files": [
     "lib"
   ],
@@ -13,7 +14,6 @@
     "type": "git",
     "url": "git+https://github.com/logto-io/logto.git"
   },
-  "bin": "lib/index.js",
   "scripts": {
     "precommit": "lint-staged",
     "build": "rimraf lib && tsc",
@@ -32,6 +32,7 @@
   "dependencies": {
     "chalk": "^4.1.2",
     "got": "^11.8.2",
+    "hpagent": "^1.0.0",
     "ora": "^5.0.0",
     "prompts": "^2.4.2",
     "semver": "^7.3.7",
