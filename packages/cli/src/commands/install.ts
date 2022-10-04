@@ -9,6 +9,7 @@ import inquirer from 'inquirer';
 import ora from 'ora';
 import * as semver from 'semver';
 import tar from 'tar';
+import { CommandModule } from 'yargs';
 
 import { downloadFile, log, safeExecSync } from '../utilities';
 
@@ -102,7 +103,7 @@ const decompress = async (toPath: string, tarPath: string) => {
   decompressSpinner.succeed();
 };
 
-const install = async ({ path: pathArgument = defaultPath, silent = false }: InstallArgs) => {
+const installLogto = async ({ path: pathArgument = defaultPath, silent = false }: InstallArgs) => {
   validateNodeVersion();
 
   const instancePath = (!silent && (await getInstancePath())) || pathArgument;
@@ -120,6 +121,27 @@ const install = async ({ path: pathArgument = defaultPath, silent = false }: Ins
   log.info(
     `Use the command below to start Logto. Happy hacking!\n\n  ${chalk.green(startCommand)}`
   );
+};
+
+const install: CommandModule<Record<string, unknown>, { path?: string; silent?: boolean }> = {
+  command: ['init', 'i', 'install'],
+  describe: 'Download and run the latest Logto release',
+  builder: (yargs) =>
+    yargs.options({
+      path: {
+        alias: 'p',
+        describe: 'Path of Logto, must be a non-existing path',
+        type: 'string',
+      },
+      silent: {
+        alias: 's',
+        describe: 'Entering non-interactive mode',
+        type: 'boolean',
+      },
+    }),
+  handler: async ({ path, silent }) => {
+    await installLogto({ path, silent });
+  },
 };
 
 export default install;

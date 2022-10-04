@@ -35,13 +35,15 @@
   },
   "dependencies": {
     "chalk": "^4.1.2",
+    "find-up": "^5.0.0",
     "got": "^11.8.2",
     "hpagent": "^1.0.0",
     "inquirer": "^8.2.2",
     "ora": "^5.0.0",
     "semver": "^7.3.7",
     "tar": "^6.1.11",
-    "yargs": "^17.6.0"
+    "yargs": "^17.6.0",
+    "zod": "^3.18.0"
   },
   "devDependencies": {
     "@silverhand/eslint-config": "1.0.0",
