@@ -1,12 +1,12 @@
 import { CommandModule } from 'yargs';
 
 import { noop } from '../../utilities';
-import { getUrl } from './url';
+import { getUrl, setUrl } from './url';
 
 const database: CommandModule = {
-  command: ['database <command>', 'db'],
+  command: ['database', 'db'],
   describe: 'Commands for Logto database',
-  builder: (yargs) => yargs.command(getUrl),
+  builder: (yargs) => yargs.command(getUrl).command(setUrl).strict(),
   handler: noop,
 };
 

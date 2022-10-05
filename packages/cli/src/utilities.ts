@@ -1,16 +1,10 @@
 import { execSync } from 'child_process';
 import { createWriteStream } from 'fs';
-import { readFile } from 'fs/promises';
-import os from 'os';
-import path from 'path';
 
 import chalk from 'chalk';
-import findUp from 'find-up';
 import got, { Progress } from 'got';
 import { HttpsProxyAgent } from 'hpagent';
 import ora from 'ora';
-// eslint-disable-next-line id-length
-import z from 'zod';
 
 export const safeExecSync = (command: string) => {
   try {
@@ -78,27 +72,3 @@ export const downloadFile = async (url: string, destination: string) => {
 // Intended
 // eslint-disable-next-line @typescript-eslint/no-empty-function
 export const noop = () => {};
-
-// Logto config
-const logtoConfig = '.logto.json';
-
-const getConfigJson = async () => {
-  const configPath = (await findUp(logtoConfig)) ?? path.join(os.homedir(), logtoConfig);
-
-  try {
-    const raw = await readFile(configPath, 'utf8');
-
-    // Prefer `unknown` over the original return type `any`, will guard later
-    // eslint-disable-next-line no-restricted-syntax
-    return JSON.parse(raw) as unknown;
-  } catch {}
-};
-
-export const getConfig = async () => {
-  return z
-    .object({
-      databaseUrl: z.string().optional(),
-    })
-    .default({})
-    .parse(await getConfigJson());
-};
