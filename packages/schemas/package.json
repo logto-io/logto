@@ -19,7 +19,8 @@
     "lint": "eslint --ext .ts src",
     "lint:report": "pnpm lint --format json --output-file report.json",
     "prepack": "pnpm build",
-    "test": "jest"
+    "test": "jest",
+    "test:ci": "jest"
   },
   "engines": {
     "node": "^16.0.0"
