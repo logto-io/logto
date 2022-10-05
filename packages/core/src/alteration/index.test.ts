@@ -115,7 +115,7 @@ describe('createLogtoConfigsTable()', () => {
 describe('updateDatabaseTimestamp()', () => {
   const expectSql = sql`
     insert into ${table} (${fields.key}, ${fields.value}) 
-      values ($1, $2)
+      values ($1, $2::jsonb)
       on conflict (${fields.key}) do update set ${fields.value}=excluded.${fields.value}
   `;
   const updatedAt = '2022-09-21T06:32:46.583Z';

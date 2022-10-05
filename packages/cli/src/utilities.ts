@@ -15,7 +15,7 @@ export const safeExecSync = (command: string) => {
 type Log = Readonly<{
   info: typeof console.log;
   warn: typeof console.log;
-  error: typeof console.log;
+  error: (...args: Parameters<typeof console.log>) => never;
 }>;
 
 export const log: Log = Object.freeze({
@@ -72,3 +72,5 @@ export const downloadFile = async (url: string, destination: string) => {
 // Intended
 // eslint-disable-next-line @typescript-eslint/no-empty-function
 export const noop = () => {};
+
+export const deduplicate = <T>(array: T[]) => [...new Set(array)];

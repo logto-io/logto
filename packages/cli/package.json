@@ -22,7 +22,7 @@
     "precommit": "lint-staged",
     "build": "rimraf lib && tsc",
     "start": "node .",
-    "dev": "ts-node src/index.ts",
+    "dev": "ts-node --files src/index.ts",
     "lint": "eslint --ext .ts src",
     "lint:report": "pnpm lint --format json --output-file report.json",
     "prepack": "pnpm build"
@@ -34,6 +34,7 @@
     "url": "https://github.com/logto-io/logto/issues"
   },
   "dependencies": {
+    "@logto/schemas": "^1.0.0-beta.10",
     "chalk": "^4.1.2",
     "find-up": "^5.0.0",
     "got": "^11.8.2",
@@ -41,6 +42,8 @@
     "inquirer": "^8.2.2",
     "ora": "^5.0.0",
     "semver": "^7.3.7",
+    "slonik": "^30.0.0",
+    "slonik-interceptor-preset": "^1.2.10",
     "tar": "^6.1.11",
     "yargs": "^17.6.0",
     "zod": "^3.18.0"
