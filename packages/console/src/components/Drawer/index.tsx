@@ -1,7 +1,7 @@
 import { AdminConsoleKey } from '@logto/phrases';
 import ReactModal from 'react-modal';
 
-import Close from '@/icons/Close';
+import Close from '@/assets/images/close.svg';
 
 import CardTitle from '../CardTitle';
 import IconButton from '../IconButton';

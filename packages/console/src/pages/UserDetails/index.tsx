@@ -7,6 +7,10 @@ import ReactModal from 'react-modal';
 import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import useSWR from 'swr';
 
+import Back from '@/assets/images/back.svg';
+import Delete from '@/assets/images/delete.svg';
+import More from '@/assets/images/more.svg';
+import Reset from '@/assets/images/reset.svg';
 import ActionMenu, { ActionMenuItem } from '@/components/ActionMenu';
 import Card from '@/components/Card';
 import CopyToClipboard from '@/components/CopyToClipboard';
@@ -16,10 +20,6 @@ import LinkButton from '@/components/LinkButton';
 import TabNav, { TabNavItem } from '@/components/TabNav';
 import { generateAvatarPlaceHolderById } from '@/consts/avatars';
 import useApi, { RequestError } from '@/hooks/use-api';
-import Back from '@/icons/Back';
-import Delete from '@/icons/Delete';
-import More from '@/icons/More';
-import Reset from '@/icons/Reset';
 import * as detailsStyles from '@/scss/details.module.scss';
 import * as modalStyles from '@/scss/modal.module.scss';
 
