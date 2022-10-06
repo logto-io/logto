@@ -36,14 +36,18 @@
   "dependencies": {
     "@logto/schemas": "^1.0.0-beta.10",
     "chalk": "^4.1.2",
+    "decamelize": "^5.0.0",
     "find-up": "^5.0.0",
     "got": "^11.8.2",
     "hpagent": "^1.0.0",
     "inquirer": "^8.2.2",
+    "nanoid": "^3.3.4",
     "ora": "^5.0.0",
+    "roarr": "^7.11.0",
     "semver": "^7.3.7",
     "slonik": "^30.0.0",
     "slonik-interceptor-preset": "^1.2.10",
+    "slonik-sql-tag-raw": "^1.1.4",
     "tar": "^6.1.11",
     "yargs": "^17.6.0",
     "zod": "^3.18.0"
@@ -65,7 +69,13 @@
     "typescript": "^4.7.4"
   },
   "eslintConfig": {
-    "extends": "@silverhand"
+    "extends": "@silverhand",
+    "rules": {
+      "complexity": [
+        "error",
+        7
+      ]
+    }
   },
   "prettier": "@silverhand/eslint-config/.prettierrc"
 }
