@@ -90,6 +90,8 @@ const seedTables = async (connection: DatabaseTransactionConnection) => {
     defaultRole,
   } = seeds;
 
+  // TODO: update database alteration timestamp when migrate alteration process from core
+
   await Promise.all([
     connection.query(insertInto(managementResource, 'resources')),
     connection.query(insertInto(createDefaultSetting(), 'settings')),
