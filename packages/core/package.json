@@ -18,7 +18,7 @@
     "add-official-connectors": "node build/cli/add-official-connectors.js",
     "alteration": "node build/cli/alteration.js",
     "test": "jest",
-    "test:coverage": "jest --coverage --silent",
+    "test:ci": "jest --coverage --silent",
     "test:report": "codecov -F core"
   },
   "dependencies": {

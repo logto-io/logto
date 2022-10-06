@@ -12,7 +12,7 @@
     "lint": "eslint --ext .ts --ext .tsx src",
     "lint:report": "pnpm lint --format json --output-file report.json",
     "stylelint": "stylelint \"src/**/*.scss\"",
-    "test:coverage": "jest --coverage --silent",
+    "test:ci": "jest --coverage --silent",
     "test": "jest"
   },
   "devDependencies": {
