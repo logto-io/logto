@@ -1,11 +1,10 @@
-import { LogtoConfigs } from '@logto/schemas';
+import { LogtoConfigKey, LogtoConfigs } from '@logto/schemas';
 import { createMockPool, createMockQueryResult, sql } from 'slonik';
 
 import { convertToIdentifiers } from '@/database/utils';
 import { QueryType, expectSqlAssert } from '@/utils/test-utils';
 
 import * as functions from '.';
-import { alterationStateKey } from './constants';
 
 const mockQuery: jest.MockedFunction<QueryType> = jest.fn();
 const {
@@ -59,7 +58,7 @@ describe('getCurrentDatabaseTimestamp()', () => {
 
     mockQuery.mockImplementationOnce(async (sql, values) => {
       expectSqlAssert(sql, expectSql.sql);
-      expect(values).toEqual([alterationStateKey]);
+      expect(values).toEqual([LogtoConfigKey.AlterationState]);
 
       return createMockQueryResult([]);
     });
@@ -74,7 +73,7 @@ describe('getCurrentDatabaseTimestamp()', () => {
 
     mockQuery.mockImplementationOnce(async (sql, values) => {
       expectSqlAssert(sql, expectSql.sql);
-      expect(values).toEqual([alterationStateKey]);
+      expect(values).toEqual([LogtoConfigKey.AlterationState]);
 
       return createMockQueryResult([{ value: 'some_value' }]);
     });
@@ -89,7 +88,7 @@ describe('getCurrentDatabaseTimestamp()', () => {
 
     mockQuery.mockImplementationOnce(async (sql, values) => {
       expectSqlAssert(sql, expectSql.sql);
-      expect(values).toEqual([alterationStateKey]);
+      expect(values).toEqual([LogtoConfigKey.AlterationState]);
 
       // @ts-expect-error createMockQueryResult doesn't support jsonb
       return createMockQueryResult([{ value: { timestamp, updatedAt: 'now' } }]);
@@ -148,7 +147,10 @@ describe('updateDatabaseTimestamp()', () => {
   it('sends upsert sql with timestamp and updatedAt', async () => {
     mockQuery.mockImplementationOnce(async (sql, values) => {
       expectSqlAssert(sql, expectSql.sql);
-      expect(values).toEqual([alterationStateKey, JSON.stringify({ timestamp, updatedAt })]);
+      expect(values).toEqual([
+        LogtoConfigKey.AlterationState,
+        JSON.stringify({ timestamp, updatedAt }),
+      ]);
 
       return createMockQueryResult([]);
     });
