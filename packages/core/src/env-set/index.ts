@@ -76,7 +76,9 @@ function createEnvSet() {
 
       return pool;
     },
-
+    get poolSafe() {
+      return pool;
+    },
     load: async () => {
       values = await loadEnvValues();
       pool = await createPoolByEnv(values.isTest);
