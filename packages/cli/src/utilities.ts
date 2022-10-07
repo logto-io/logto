@@ -80,6 +80,29 @@ export const getPathInModule = (moduleName: string, relativePath = '/') =>
     relativePath
   );
 
+export const oraPromise = async <T>(
+  promise: PromiseLike<T>,
+  options?: ora.Options,
+  exitOnError = false
+) => {
+  const spinner = ora(options).start();
+
+  try {
+    const result = await promise;
+    spinner.succeed();
+
+    return result;
+  } catch (error: unknown) {
+    spinner.fail();
+
+    if (exitOnError) {
+      log.error(error);
+    }
+
+    throw error;
+  }
+};
+
 // TODO: Move to `@silverhand/essentials`
 // Intended
 // eslint-disable-next-line @typescript-eslint/no-empty-function

@@ -8,13 +8,12 @@ import { conditional } from '@silverhand/essentials';
 import chalk from 'chalk';
 import { remove, writeFile } from 'fs-extra';
 import inquirer from 'inquirer';
-import ora from 'ora';
 import * as semver from 'semver';
 import tar from 'tar';
 import { CommandModule } from 'yargs';
 
 import { createPoolAndDatabaseIfNeeded, getDatabaseUrlFromConfig } from '../database';
-import { downloadFile, log, safeExecSync } from '../utilities';
+import { downloadFile, log, oraPromise, safeExecSync } from '../utilities';
 import { seedByPool } from './database/seed';
 
 export type InstallArgs = {
@@ -92,20 +91,12 @@ const downloadRelease = async () => {
 };
 
 const decompress = async (toPath: string, tarPath: string) => {
-  const decompressSpinner = ora({
-    text: `Decompress to ${toPath}`,
-    prefixText: chalk.blue('[info]'),
-  }).start();
-
   try {
     await mkdir(toPath);
     await tar.extract({ file: tarPath, cwd: toPath, strip: 1 });
   } catch (error: unknown) {
-    decompressSpinner.fail();
     log.error(error);
   }
-
-  decompressSpinner.succeed();
 };
 
 const installLogto = async ({ path: pathArgument = defaultPath, silent = false }: InstallArgs) => {
@@ -119,7 +110,14 @@ const installLogto = async ({ path: pathArgument = defaultPath, silent = false }
 
   // Download and decompress
   const tarPath = await downloadRelease();
-  await decompress(instancePath, tarPath);
+  await oraPromise(
+    decompress(instancePath, tarPath),
+    {
+      text: `Decompress to ${instancePath}`,
+      prefixText: chalk.blue('[info]'),
+    },
+    true
+  );
 
   try {
     // Seed database
@@ -138,13 +136,11 @@ const installLogto = async ({ path: pathArgument = defaultPath, silent = false }
     });
 
     if (!value) {
-      const spinner = ora({
+      await oraPromise(remove(instancePath), {
         text: 'Clean up',
         prefixText: chalk.blue('[info]'),
-      }).start();
+      });
 
-      await remove(instancePath);
-      spinner.succeed();
       // eslint-disable-next-line unicorn/no-process-exit
       process.exit(1);
     }

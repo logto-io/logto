@@ -3,21 +3,16 @@ import path from 'path';
 
 import { seeds } from '@logto/schemas';
 import chalk from 'chalk';
-import ora from 'ora';
 import { DatabasePool, DatabaseTransactionConnection, sql } from 'slonik';
 import { raw } from 'slonik-sql-tag-raw';
 import { CommandModule } from 'yargs';
 
 import { createPoolAndDatabaseIfNeeded, insertInto } from '../../database';
 import { updateDatabaseTimestamp } from '../../queries/logto-config';
-import { buildApplicationSecret, getPathInModule, log } from '../../utilities';
+import { buildApplicationSecret, getPathInModule, log, oraPromise } from '../../utilities';
 import { getLatestAlterationTimestamp } from './alteration';
 
 const createTables = async (connection: DatabaseTransactionConnection) => {
-  const spinner = ora({
-    text: 'Create tables',
-    prefixText: chalk.blue('[info]'),
-  }).start();
   const tableDirectory = getPathInModule('@logto/schemas', 'tables');
   const directoryFiles = await readdir(tableDirectory);
   const tableFiles = directoryFiles.filter((file) => file.endsWith('.sql'));
@@ -28,17 +23,11 @@ const createTables = async (connection: DatabaseTransactionConnection) => {
     ])
   );
 
-  // Disable for spinner
-  /* eslint-disable @silverhand/fp/no-mutation */
   // Await in loop is intended for better error handling
-  for (const [file, query] of queries) {
+  for (const [, query] of queries) {
     // eslint-disable-next-line no-await-in-loop
     await connection.query(sql`${raw(query)}`);
-    spinner.text = `Run ${file} succeeded`;
   }
-
-  spinner.succeed(`Created ${queries.length} tables`);
-  /* eslint-enable @silverhand/fp/no-mutation */
 };
 
 const seedTables = async (connection: DatabaseTransactionConnection) => {
@@ -50,11 +39,6 @@ const seedTables = async (connection: DatabaseTransactionConnection) => {
     defaultRole,
   } = seeds;
 
-  const spinner = ora({
-    text: 'Seed data',
-    prefixText: chalk.blue('[info]'),
-  }).start();
-
   await Promise.all([
     connection.query(insertInto(managementResource, 'resources')),
     connection.query(insertInto(createDefaultSetting(), 'settings')),
@@ -65,14 +49,18 @@ const seedTables = async (connection: DatabaseTransactionConnection) => {
     connection.query(insertInto(defaultRole, 'roles')),
     updateDatabaseTimestamp(connection, await getLatestAlterationTimestamp()),
   ]);
-
-  spinner.succeed();
 };
 
 export const seedByPool = async (pool: DatabasePool) => {
   await pool.transaction(async (connection) => {
-    await createTables(connection);
-    await seedTables(connection);
+    await oraPromise(createTables(connection), {
+      text: 'Create tables',
+      prefixText: chalk.blue('[info]'),
+    });
+    await oraPromise(seedTables(connection), {
+      text: 'Seed data',
+      prefixText: chalk.blue('[info]'),
+    });
   });
 };
 
