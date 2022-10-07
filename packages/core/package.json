@@ -16,7 +16,7 @@
     "start": "NODE_ENV=production node build/index.js",
     "add-connector": "node build/cli/add-connector.js",
     "add-official-connectors": "node build/cli/add-official-connectors.js",
-    "alteration": "node build/cli/alteration.js",
+    "alteration": "logto db alt",
     "cli": "logto",
     "test": "jest",
     "test:ci": "jest --coverage --silent",

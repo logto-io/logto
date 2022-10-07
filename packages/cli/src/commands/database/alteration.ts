@@ -36,7 +36,7 @@ const importAlterationScript = async (filePath: string): Promise<AlterationScrip
 
 type AlterationFile = { path: string; filename: string };
 
-const getAlterationFiles = async (): Promise<AlterationFile[]> => {
+export const getAlterationFiles = async (): Promise<AlterationFile[]> => {
   const alterationDirectory = getPathInModule('@logto/schemas', 'alterations');
   // Until we migrate to ESM
   // eslint-disable-next-line unicorn/prefer-module
@@ -70,7 +70,7 @@ export const getLatestAlterationTimestamp = async () => {
   return getTimestampFromFileName(lastFile.filename);
 };
 
-const getUndeployedAlterations = async (pool: DatabasePool) => {
+export const getUndeployedAlterations = async (pool: DatabasePool) => {
   const databaseTimestamp = await getCurrentDatabaseAlterationTimestamp(pool);
   const files = await getAlterationFiles();
 
@@ -111,7 +111,11 @@ const alteration: CommandModule<unknown, { action: string }> = {
       type: 'string',
       demandOption: true,
     }),
-  handler: async () => {
+  handler: async ({ action }) => {
+    if (action !== 'deploy') {
+      log.error('Unsupported action');
+    }
+
     const pool = await createPoolFromConfig();
     const alterations = await getUndeployedAlterations(pool);
 
