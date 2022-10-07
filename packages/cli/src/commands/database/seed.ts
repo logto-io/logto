@@ -2,63 +2,22 @@ import { readdir, readFile } from 'fs/promises';
 import path from 'path';
 
 import { seeds } from '@logto/schemas';
-import {
-  createPool,
-  DatabasePool,
-  DatabaseTransactionConnection,
-  parseDsn,
-  sql,
-  stringifyDsn,
-} from 'slonik';
+import chalk from 'chalk';
+import ora from 'ora';
+import { DatabasePool, DatabaseTransactionConnection, sql } from 'slonik';
 import { raw } from 'slonik-sql-tag-raw';
 import { CommandModule } from 'yargs';
-import { z } from 'zod';
 
-import { createPoolFromConfig, getDatabaseUrlFromConfig, insertInto } from '../../database';
+import { createPoolAndDatabaseIfNeeded, insertInto } from '../../database';
 import { updateDatabaseTimestamp } from '../../queries/logto-config';
 import { buildApplicationSecret, getPathInModule, log } from '../../utilities';
 import { getLatestAlterationTimestamp } from './alteration';
 
-/**
- * Create a database pool with the database URL in config.
- * If the given database does not exists, it will try to create a new database by connecting to the maintenance database `postgres`.
- *
- * @returns A new database pool with the database URL in config.
- */
-const createDatabasePool = async () => {
-  try {
-    return await createPoolFromConfig();
-  } catch (error: unknown) {
-    const result = z.object({ code: z.string() }).safeParse(error);
-
-    // Database does not exist, try to create one
-    // https://www.postgresql.org/docs/14/errcodes-appendix.html
-    if (!(result.success && result.data.code === '3D000')) {
-      log.error(error);
-    }
-
-    const databaseUrl = await getDatabaseUrlFromConfig();
-    const dsn = parseDsn(databaseUrl);
-    // It's ok to fall back to '?' since:
-    // - Database name is required to connect in the previous pool
-    // - It will throw error when creating database using '?'
-    const databaseName = dsn.databaseName ?? '?';
-    const maintenancePool = await createPool(stringifyDsn({ ...dsn, databaseName: 'postgres' }));
-    await maintenancePool.query(sql`
-      create database ${sql.identifier([databaseName])}
-        with
-        encoding = 'UTF8'
-        connection_limit = -1;
-    `);
-    await maintenancePool.end();
-
-    log.info(`Database ${databaseName} successfully created.`);
-
-    return createPoolFromConfig();
-  }
-};
-
 const createTables = async (connection: DatabaseTransactionConnection) => {
+  const spinner = ora({
+    text: 'Create tables',
+    prefixText: chalk.blue('[info]'),
+  }).start();
   const tableDirectory = getPathInModule('@logto/schemas', 'tables');
   const directoryFiles = await readdir(tableDirectory);
   const tableFiles = directoryFiles.filter((file) => file.endsWith('.sql'));
@@ -69,12 +28,17 @@ const createTables = async (connection: DatabaseTransactionConnection) => {
     ])
   );
 
+  // Disable for spinner
+  /* eslint-disable @silverhand/fp/no-mutation */
   // Await in loop is intended for better error handling
   for (const [file, query] of queries) {
     // eslint-disable-next-line no-await-in-loop
     await connection.query(sql`${raw(query)}`);
-    log.info(`Run ${file} succeeded.`);
+    spinner.text = `Run ${file} succeeded`;
   }
+
+  spinner.succeed(`Created ${queries.length} tables`);
+  /* eslint-enable @silverhand/fp/no-mutation */
 };
 
 const seedTables = async (connection: DatabaseTransactionConnection) => {
@@ -86,6 +50,11 @@ const seedTables = async (connection: DatabaseTransactionConnection) => {
     defaultRole,
   } = seeds;
 
+  const spinner = ora({
+    text: 'Seed data',
+    prefixText: chalk.blue('[info]'),
+  }).start();
+
   await Promise.all([
     connection.query(insertInto(managementResource, 'resources')),
     connection.query(insertInto(createDefaultSetting(), 'settings')),
@@ -96,7 +65,8 @@ const seedTables = async (connection: DatabaseTransactionConnection) => {
     connection.query(insertInto(defaultRole, 'roles')),
     updateDatabaseTimestamp(connection, await getLatestAlterationTimestamp()),
   ]);
-  log.info('Seed tables succeeded.');
+
+  spinner.succeed();
 };
 
 export const seedByPool = async (pool: DatabasePool) => {
@@ -110,7 +80,7 @@ const seed: CommandModule = {
   command: 'seed',
   describe: 'Create database and seed tables and data',
   handler: async () => {
-    const pool = await createDatabasePool();
+    const pool = await createPoolAndDatabaseIfNeeded();
 
     try {
       await seedByPool(pool);

@@ -41,5 +41,5 @@ export const getConfig = async () => {
 export const patchConfig = async (config: LogtoConfig) => {
   const configPath = await getConfigPath();
   await writeFile(configPath, JSON.stringify({ ...(await getConfig()), ...config }, undefined, 2));
-  log.info(`Updated config in ${chalk.green(configPath)}`);
+  log.info(`Updated config in ${chalk.blue(configPath)}`);
 };

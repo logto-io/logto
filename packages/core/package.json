@@ -17,11 +17,13 @@
     "add-connector": "node build/cli/add-connector.js",
     "add-official-connectors": "node build/cli/add-official-connectors.js",
     "alteration": "node build/cli/alteration.js",
+    "cli": "logto",
     "test": "jest",
     "test:coverage": "jest --coverage --silent",
     "test:report": "codecov -F core"
   },
   "dependencies": {
+    "@logto/cli": "^1.0.0-beta.10",
     "@logto/connector-kit": "^1.0.0-beta.13",
     "@logto/core-kit": "^1.0.0-beta.13",
     "@logto/phrases": "^1.0.0-beta.10",
