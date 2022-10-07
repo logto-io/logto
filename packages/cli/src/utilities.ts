@@ -1,5 +1,6 @@
 import { execSync } from 'child_process';
 import { createWriteStream } from 'fs';
+import path from 'path';
 
 import chalk from 'chalk';
 import got, { Progress } from 'got';
@@ -69,6 +70,15 @@ export const downloadFile = async (url: string, destination: string) => {
     });
   });
 };
+
+export const getPathInModule = (moduleName: string, relativePath = '/') =>
+  // https://stackoverflow.com/a/49455609/12514940
+  path.join(
+    // Until we migrate to ESM
+    // eslint-disable-next-line unicorn/prefer-module
+    path.dirname(require.resolve(`${moduleName}/package.json`)),
+    relativePath
+  );
 
 // TODO: Move to `@silverhand/essentials`
 // Intended

@@ -18,13 +18,14 @@ export const logtoOidcConfigGuard = z.object({
 export type LogtoOidcConfig = z.infer<typeof logtoOidcConfigGuard>;
 
 // Summary
+export enum LogtoConfigKey {
+  AlterationState = 'alterationState',
+  OidcConfig = 'oidcConfig',
+}
+
+export const logtoConfigKeys = Object.values(LogtoConfigKey);
+
 export const logtoConfigGuards = Object.freeze({
-  alterationState: alterationStateGuard,
-  oidcConfig: logtoOidcConfigGuard,
+  [LogtoConfigKey.AlterationState]: alterationStateGuard,
+  [LogtoConfigKey.OidcConfig]: logtoOidcConfigGuard,
 } as const);
-
-export type LogtoConfigKey = keyof typeof logtoConfigGuards;
-
-// `as` is intended since we'd like to keep `logtoConfigGuards` as the SSOT of keys
-// eslint-disable-next-line no-restricted-syntax
-export const logtoConfigKeys = Object.keys(logtoConfigGuards) as LogtoConfigKey[];

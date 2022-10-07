@@ -15,7 +15,9 @@ import { CommandModule } from 'yargs';
 import { z } from 'zod';
 
 import { createPoolFromConfig, getDatabaseUrlFromConfig, insertInto } from '../../database';
-import { buildApplicationSecret, log } from '../../utilities';
+import { updateDatabaseTimestamp } from '../../queries/logto-config';
+import { buildApplicationSecret, getPathInModule, log } from '../../utilities';
+import { getLatestAlterationTimestamp } from './alteration';
 
 /**
  * Create a database pool with the database URL in config.
@@ -57,13 +59,7 @@ const createDatabasePool = async () => {
 };
 
 const createTables = async (connection: DatabaseTransactionConnection) => {
-  // https://stackoverflow.com/a/49455609/12514940
-  const tableDirectory = path.join(
-    // Until we migrate to ESM
-    // eslint-disable-next-line unicorn/prefer-module
-    path.dirname(require.resolve('@logto/schemas/package.json')),
-    'tables'
-  );
+  const tableDirectory = getPathInModule('@logto/schemas', 'tables');
   const directoryFiles = await readdir(tableDirectory);
   const tableFiles = directoryFiles.filter((file) => file.endsWith('.sql'));
   const queries = await Promise.all(
@@ -90,8 +86,6 @@ const seedTables = async (connection: DatabaseTransactionConnection) => {
     defaultRole,
   } = seeds;
 
-  // TODO: update database alteration timestamp when migrate alteration process from core
-
   await Promise.all([
     connection.query(insertInto(managementResource, 'resources')),
     connection.query(insertInto(createDefaultSetting(), 'settings')),
@@ -100,6 +94,7 @@ const seedTables = async (connection: DatabaseTransactionConnection) => {
       insertInto(createDemoAppApplication(buildApplicationSecret()), 'applications')
     ),
     connection.query(insertInto(defaultRole, 'roles')),
+    updateDatabaseTimestamp(connection, await getLatestAlterationTimestamp()),
   ]);
   log.info('Seed tables succeeded.');
 };

@@ -22,8 +22,10 @@ importers:
     specifiers:
       '@logto/schemas': ^1.0.0-beta.10
       '@silverhand/eslint-config': 1.0.0
+      '@silverhand/essentials': ^1.2.1
       '@silverhand/ts-config': 1.0.0
       '@types/decompress': ^4.2.4
+      '@types/fs-extra': ^9.0.13
       '@types/inquirer': ^8.2.1
       '@types/node': ^16.0.0
       '@types/semver': ^7.3.12
@@ -33,6 +35,7 @@ importers:
       decamelize: ^5.0.0
       eslint: ^8.21.0
       find-up: ^5.0.0
+      fs-extra: ^10.1.0
       got: ^11.8.2
       hpagent: ^1.0.0
       inquirer: ^8.2.2
@@ -53,9 +56,11 @@ importers:
       zod: ^3.18.0
     dependencies:
       '@logto/schemas': link:../schemas
+      '@silverhand/essentials': 1.2.1
       chalk: 4.1.2
       decamelize: 5.0.1
       find-up: 5.0.0
+      fs-extra: 10.1.0
       got: 11.8.3
       hpagent: 1.0.0
       inquirer: 8.2.2
@@ -73,6 +78,7 @@ importers:
       '@silverhand/eslint-config': 1.0.0_swk2g7ygmfleszo5c33j4vooni
       '@silverhand/ts-config': 1.0.0_typescript@4.7.4
       '@types/decompress': 4.2.4
+      '@types/fs-extra': 9.0.13
       '@types/inquirer': 8.2.1
       '@types/node': 16.11.12
       '@types/semver': 7.3.12
