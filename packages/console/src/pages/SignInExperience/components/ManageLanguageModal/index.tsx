@@ -1,3 +1,4 @@
+import { LanguageTag } from '@logto/language-kit';
 import { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import Modal from 'react-modal';
@@ -6,42 +7,42 @@ import ConfirmModal from '@/components/ConfirmModal';
 import ModalLayout from '@/components/ModalLayout';
 import * as modalStyles from '@/scss/modal.module.scss';
 
-import { CustomPhrasesContext } from '../../hooks/use-custom-phrases-context';
+import { LanguageEditorContext } from '../../hooks/use-language-editor-context';
 import LanguageEditor from './LanguageEditor';
 import LanguageNav from './LanguageNav';
 import * as style from './index.module.scss';
 
 type ManageLanguageModalProps = {
   isOpen: boolean;
+  languageTags: LanguageTag[];
   onClose: () => void;
 };
 
-const ManageLanguageModal = ({ isOpen, onClose }: ManageLanguageModalProps) => {
+const ManageLanguageModal = ({ isOpen, languageTags, onClose }: ManageLanguageModalProps) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   const {
-    preSelectedLanguageTag,
-    preAddedLanguageTag,
+    preSelectedLanguage,
+    preAddedLanguage,
     isAddingLanguage,
-    isCurrentCustomPhraseDirty,
+    isDirty,
     confirmationState,
-    setSelectedLanguageTag,
-    setPreSelectedLanguageTag,
+    setSelectedLanguage,
+    setPreSelectedLanguage,
     setConfirmationState,
     startAddingLanguage,
     stopAddingLanguage,
-    resetSelectedLanguageTag,
-  } = useContext(CustomPhrasesContext);
+  } = useContext(LanguageEditorContext);
 
   const onCloseModal = () => {
-    if (isAddingLanguage || isCurrentCustomPhraseDirty) {
+    if (isAddingLanguage || isDirty) {
       setConfirmationState('try-close');
 
       return;
     }
 
     onClose();
-    resetSelectedLanguageTag();
+    setSelectedLanguage(languageTags[0] ?? 'en');
   };
 
   const onConfirmUnsavedChanges = () => {
@@ -51,13 +52,13 @@ const ManageLanguageModal = ({ isOpen, onClose }: ManageLanguageModalProps) => {
       onClose();
     }
 
-    if (confirmationState === 'try-switch-language' && preSelectedLanguageTag) {
-      setSelectedLanguageTag(preSelectedLanguageTag);
-      setPreSelectedLanguageTag(undefined);
+    if (confirmationState === 'try-switch-language' && preSelectedLanguage) {
+      setSelectedLanguage(preSelectedLanguage);
+      setPreSelectedLanguage(undefined);
     }
 
-    if (confirmationState === 'try-add-language' && preAddedLanguageTag) {
-      startAddingLanguage(preAddedLanguageTag);
+    if (confirmationState === 'try-add-language' && preAddedLanguage) {
+      startAddingLanguage(preAddedLanguage);
     }
 
     setConfirmationState('none');

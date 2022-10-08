@@ -1,6 +1,6 @@
-import { builtInLanguageOptions } from '@logto/phrases-ui';
+import { languages as uiLanguageNameMapping } from '@logto/language-kit';
 import classNames from 'classnames';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
@@ -8,8 +8,9 @@ import FormField from '@/components/FormField';
 import Select from '@/components/Select';
 import Switch from '@/components/Switch';
 import * as textButtonStyles from '@/components/TextButton/index.module.scss';
+import useUiLanguages from '@/hooks/use-ui-languages';
 
-import useCustomPhrasesContext from '../hooks/use-custom-phrases-context';
+import useLanguageEditorContext from '../hooks/use-language-editor-context';
 import { SignInExperienceForm } from '../types';
 import ManageLanguageModal from './ManageLanguageModal';
 import * as styles from './index.module.scss';
@@ -23,9 +24,17 @@ const LanguagesForm = ({ isManageLanguageVisible = false }: Props) => {
   const { watch, control, register } = useFormContext<SignInExperienceForm>();
   const isAutoDetect = watch('languageInfo.autoDetect');
   const [isManageLanguageFormOpen, setIsManageLanguageFormOpen] = useState(false);
+  const { languages } = useUiLanguages();
 
-  const { context: customPhrasesContext, Provider: CustomPhrasesContextProvider } =
-    useCustomPhrasesContext();
+  const languageOptions = useMemo(() => {
+    return languages.map((languageTag) => ({
+      value: languageTag,
+      title: uiLanguageNameMapping[languageTag],
+    }));
+  }, [languages]);
+
+  const { context: languageEditorContext, Provider: LanguageEditorContextProvider } =
+    useLanguageEditorContext(languages);
 
   return (
     <>
@@ -51,7 +60,7 @@ const LanguagesForm = ({ isManageLanguageVisible = false }: Props) => {
           name="languageInfo.fallbackLanguage"
           control={control}
           render={({ field: { value, onChange } }) => (
-            <Select value={value} options={builtInLanguageOptions} onChange={onChange} />
+            <Select value={value} options={languageOptions} onChange={onChange} />
           )}
         />
         <div className={styles.defaultLanguageDescription}>
@@ -60,14 +69,15 @@ const LanguagesForm = ({ isManageLanguageVisible = false }: Props) => {
             : t('sign_in_exp.others.languages.default_language_description_fixed')}
         </div>
       </FormField>
-      <CustomPhrasesContextProvider value={customPhrasesContext}>
+      <LanguageEditorContextProvider value={languageEditorContext}>
         <ManageLanguageModal
           isOpen={isManageLanguageFormOpen}
+          languageTags={languages}
           onClose={() => {
             setIsManageLanguageFormOpen(false);
           }}
         />
-      </CustomPhrasesContextProvider>
+      </LanguageEditorContextProvider>
     </>
   );
 };
