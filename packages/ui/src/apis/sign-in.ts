@@ -1,3 +1,5 @@
+import { PasscodeType } from '@logto/schemas';
+
 import api from './api';
 import { bindSocialAccount } from './social';
 
@@ -24,9 +26,10 @@ export const signInBasic = async (username: string, password: string, socialToBi
 
 export const sendSignInSmsPasscode = async (phone: string) => {
   await api
-    .post('/api/session/sign-in/passwordless/sms/send-passcode', {
+    .post('/api/session/passwordless/sms/send', {
       json: {
         phone,
+        flow: PasscodeType.SignIn,
       },
     })
     .json();
@@ -43,14 +46,15 @@ export const verifySignInSmsPasscode = async (
     redirectTo: string;
   };
 
-  const result = await api
-    .post('/api/session/sign-in/passwordless/sms/verify-passcode', {
-      json: {
-        phone,
-        code,
-      },
-    })
-    .json<Response>();
+  await api.post('/api/session/passwordless/sms/verify', {
+    json: {
+      phone,
+      code,
+      flow: PasscodeType.SignIn,
+    },
+  });
+
+  const result = await api.post('/api/session/sign-in/passwordless/sms').json<Response>();
 
   if (result.redirectTo && socialToBind) {
     await bindSocialAccount(socialToBind);
@@ -61,9 +65,10 @@ export const verifySignInSmsPasscode = async (
 
 export const sendSignInEmailPasscode = async (email: string) => {
   await api
-    .post('/api/session/sign-in/passwordless/email/send-passcode', {
+    .post('/api/session/passwordless/email/send', {
       json: {
         email,
+        flow: PasscodeType.SignIn,
       },
     })
     .json();
@@ -80,14 +85,15 @@ export const verifySignInEmailPasscode = async (
     redirectTo: string;
   };
 
-  const result = await api
-    .post('/api/session/sign-in/passwordless/email/verify-passcode', {
-      json: {
-        email,
-        code,
-      },
-    })
-    .json<Response>();
+  await api.post('/api/session/passwordless/email/verify', {
+    json: {
+      email,
+      code,
+      flow: PasscodeType.SignIn,
+    },
+  });
+
+  const result = await api.post('/api/session/sign-in/passwordless/email').json<Response>();
 
   if (result.redirectTo && socialToBind) {
     await bindSocialAccount(socialToBind);

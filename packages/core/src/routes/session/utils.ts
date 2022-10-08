@@ -1,9 +1,12 @@
 import { logTypeGuard, LogType, PasscodeType } from '@logto/schemas';
 import { Truthy } from '@silverhand/essentials';
 import dayjs from 'dayjs';
+import { Context } from 'koa';
+import { Provider } from 'oidc-provider';
 import { z } from 'zod';
 
 import RequestError from '@/errors/RequestError';
+import { LogContext } from '@/middleware/koa-log';
 import assertThat from '@/utils/assert-that';
 
 import { verificationStorageGuard, Operation, VerificationStorage, Via } from './types';
@@ -65,4 +68,20 @@ export const verificationSessionCheckByFlow = (
     dayjs(expiresAt).isValid() && dayjs(expiresAt).isAfter(dayjs()),
     new RequestError({ code: 'session.verification_expired', status: 401 })
   );
+};
+
+export const getAndCheckVerificationStorage = async (
+  ctx: Context & LogContext,
+  provider: Provider,
+  logType: LogType,
+  flowType: PasscodeType
+): Promise<Pick<VerificationStorage, 'email' | 'phone'>> => {
+  const { result } = await provider.interactionDetails(ctx.req, ctx.res);
+  const { email, phone, flow, expiresAt } = parseVerificationStorage(result);
+
+  ctx.log(logType, { email, phone, flow, expiresAt });
+
+  verificationSessionCheckByFlow(flowType, { flow, expiresAt });
+
+  return { email, phone };
 };
