@@ -7,20 +7,24 @@
     padding: _.unit(6) _.unit(5);
     font: var(--font-title-large);
     color: var(--color-text);
+    display: flex;
+    justify-content: space-between;
 
-    > span {
-      margin-left: _.unit(2);
-      font: var(--font-body-medium);
-      color: var(--color-caption);
-    }
+    .languageInfo {
+      > span {
+        margin-left: _.unit(2);
+        font: var(--font-body-medium);
+        color: var(--color-caption);
+      }
 
-    .builtInFlag {
-      display: inline-block;
-      font: var(--font-label-medium);
-      color: var(--color-text);
-      background-color: var(--color-surface-variant);
-      padding: _.unit(0.5) _.unit(2);
-      border-radius: 10px;
+      .builtInFlag {
+        display: inline-block;
+        font: var(--font-label-medium);
+        color: var(--color-text);
+        background-color: var(--color-surface-variant);
+        padding: _.unit(0.5) _.unit(2);
+        border-radius: 10px;
+      }
     }
   }
 
