@@ -13,7 +13,10 @@ import { convertToIdentifiers } from '../database';
 
 const { table, fields } = convertToIdentifiers(LogtoConfigs);
 
-export const getRowsByKeys = async (pool: DatabasePool, keys: LogtoConfigKey[]) =>
+export const getRowsByKeys = async (
+  pool: DatabasePool | DatabaseTransactionConnection,
+  keys: LogtoConfigKey[]
+) =>
   pool.query<LogtoConfig>(sql`
     select ${sql.join([fields.key, fields.value], sql`,`)} from ${table}
       where ${fields.key} in (${sql.join(keys, sql`,`)})

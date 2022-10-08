@@ -2,9 +2,11 @@ import { execSync } from 'child_process';
 import { createWriteStream } from 'fs';
 import path from 'path';
 
+import { conditionalString } from '@silverhand/essentials';
 import chalk from 'chalk';
 import got, { Progress } from 'got';
 import { HttpsProxyAgent } from 'hpagent';
+import inquirer from 'inquirer';
 import { customAlphabet } from 'nanoid';
 import ora from 'ora';
 
@@ -16,6 +18,7 @@ export const safeExecSync = (command: string) => {
 
 type Log = Readonly<{
   info: typeof console.log;
+  succeed: typeof console.log;
   warn: typeof console.log;
   error: (...args: Parameters<typeof console.log>) => never;
 }>;
@@ -24,11 +27,14 @@ export const log: Log = Object.freeze({
   info: (...args) => {
     console.log(chalk.blue('[info]'), ...args);
   },
+  succeed: (...args) => {
+    console.log(chalk.green('[succeed] ✔'), ...args);
+  },
   warn: (...args) => {
-    console.log(chalk.yellow('[warn]'), ...args);
+    console.warn(chalk.yellow('[warn]'), ...args);
   },
   error: (...args) => {
-    console.log(chalk.red('[error]'), ...args);
+    console.error(chalk.red('[error]'), ...args);
     // eslint-disable-next-line unicorn/no-process-exit
     process.exit(1);
   },
@@ -101,6 +107,40 @@ export const oraPromise = async <T>(
 
     throw error;
   }
+};
+
+export type GetCliConfig = {
+  key: string;
+  readableKey: string;
+  comments?: string;
+  defaultValue?: string;
+};
+
+export const getCliConfig = async ({ key, readableKey, comments, defaultValue }: GetCliConfig) => {
+  const { [key]: value } = process.env;
+
+  if (!value) {
+    const { input } = await inquirer
+      .prompt<{ input?: string }>({
+        type: 'input',
+        name: 'input',
+        message: `Enter your ${readableKey}${conditionalString(comments && ' ' + comments)}`,
+        default: defaultValue,
+      })
+      .catch(async (error) => {
+        if (error.isTtyError) {
+          log.error(`No ${readableKey} (${chalk.green(key)}) configured in env`);
+        }
+
+        // The type definition does not give us type except `any`, throw it directly will honor the original behavior.
+        // eslint-disable-next-line @typescript-eslint/no-throw-literal
+        throw error;
+      });
+
+    return input;
+  }
+
+  return value;
 };
 
 // TODO: Move to `@silverhand/essentials`
