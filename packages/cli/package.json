@@ -38,7 +38,7 @@
     "@silverhand/essentials": "^1.2.1",
     "chalk": "^4.1.2",
     "decamelize": "^5.0.0",
-    "find-up": "^5.0.0",
+    "find-up": "^6.0.0",
     "fs-extra": "^10.1.0",
     "got": "^11.8.2",
     "hpagent": "^1.0.0",
