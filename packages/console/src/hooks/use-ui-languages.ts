@@ -13,8 +13,6 @@ const useUiLanguages = () => {
     mutate,
   } = useSWR<CustomPhraseResponse[], RequestError>('/api/custom-phrases');
 
-  const isLoading = useMemo(() => !customPhraseList && !error, [customPhraseList, error]);
-
   const languages = useMemo(
     () =>
       [
@@ -31,7 +29,7 @@ const useUiLanguages = () => {
   return {
     languages,
     error,
-    isLoading,
+    isLoading: !customPhraseList && !error,
     mutate,
   };
 };
