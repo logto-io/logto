@@ -20,9 +20,10 @@ export type SignInExperienceSettingsResponse = SignInExperience & {
   notification?: string;
 };
 
+// FIXME @simeng
 export type SignInExperienceSettings = Omit<
   SignInExperienceSettingsResponse,
-  'id' | 'signInMethods' | 'socialSignInConnectorTargets'
+  'id' | 'signInMethods' | 'socialSignInConnectorTargets' | 'signIn' | 'signUp'
 > & {
   primarySignInMethod: SignInMethod;
   secondarySignInMethods: SignInMethod[];
