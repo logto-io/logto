@@ -22,7 +22,7 @@
     "precommit": "lint-staged",
     "build": "rimraf lib && tsc",
     "start": "node .",
-    "dev": "ts-node --files src/index.ts",
+    "start:dev": "ts-node --files src/index.ts",
     "lint": "eslint --ext .ts src",
     "lint:report": "pnpm lint --format json --output-file report.json",
     "prepack": "pnpm build"
