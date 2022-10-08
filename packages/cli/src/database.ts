@@ -1,19 +1,43 @@
 import { SchemaLike, SchemaValue, SchemaValuePrimitive } from '@logto/schemas';
 import chalk from 'chalk';
 import decamelize from 'decamelize';
-import { createPool, IdentifierSqlToken, sql, SqlToken } from 'slonik';
+import inquirer from 'inquirer';
+import { createPool, IdentifierSqlToken, parseDsn, sql, SqlToken, stringifyDsn } from 'slonik';
 import { createInterceptors } from 'slonik-interceptor-preset';
+import { z } from 'zod';
 
-import { getConfig } from './config';
+import { getConfig, patchConfig } from './config';
 import { log } from './utilities';
+
+export const defaultDatabaseUrl = 'postgresql://localhost:5432/logto';
 
 export const getDatabaseUrlFromConfig = async () => {
   const { databaseUrl } = await getConfig();
 
   if (!databaseUrl) {
-    log.error(
-      `No database URL configured. Set it via ${chalk.green('database set-url')} command first.`
-    );
+    const { value } = await inquirer
+      .prompt<{ value: string }>({
+        type: 'input',
+        name: 'value',
+        message: 'Enter your Logto database URL',
+        default: defaultDatabaseUrl,
+      })
+      .catch(async (error) => {
+        if (error.isTtyError) {
+          log.error(
+            `No database URL configured. Set it via ${chalk.green(
+              'database set-url'
+            )} command first.`
+          );
+        }
+
+        // The type definition does not give us type except `any`, throw it directly will honor the original behavior.
+        // eslint-disable-next-line @typescript-eslint/no-throw-literal
+        throw error;
+      });
+    await patchConfig({ databaseUrl: value });
+
+    return value;
   }
 
   return databaseUrl;
@@ -25,6 +49,45 @@ export const createPoolFromConfig = async () => {
   return createPool(databaseUrl, {
     interceptors: createInterceptors(),
   });
+};
+
+/**
+ * Create a database pool with the database URL in config.
+ * If the given database does not exists, it will try to create a new database by connecting to the maintenance database `postgres`.
+ *
+ * @returns A new database pool with the database URL in config.
+ */
+export const createPoolAndDatabaseIfNeeded = async () => {
+  try {
+    return await createPoolFromConfig();
+  } catch (error: unknown) {
+    const result = z.object({ code: z.string() }).safeParse(error);
+
+    // Database does not exist, try to create one
+    // https://www.postgresql.org/docs/14/errcodes-appendix.html
+    if (!(result.success && result.data.code === '3D000')) {
+      log.error(error);
+    }
+
+    const databaseUrl = await getDatabaseUrlFromConfig();
+    const dsn = parseDsn(databaseUrl);
+    // It's ok to fall back to '?' since:
+    // - Database name is required to connect in the previous pool
+    // - It will throw error when creating database using '?'
+    const databaseName = dsn.databaseName ?? '?';
+    const maintenancePool = await createPool(stringifyDsn({ ...dsn, databaseName: 'postgres' }));
+    await maintenancePool.query(sql`
+      create database ${sql.identifier([databaseName])}
+        with
+        encoding = 'UTF8'
+        connection_limit = -1;
+    `);
+    await maintenancePool.end();
+
+    log.info(`${chalk.green('✔')} Created database ${databaseName}`);
+
+    return createPoolFromConfig();
+  }
 };
 
 // TODO: Move database utils to `core-kit`

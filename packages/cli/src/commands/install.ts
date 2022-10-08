@@ -4,14 +4,17 @@ import { mkdir } from 'fs/promises';
 import os from 'os';
 import path from 'path';
 
+import { conditional } from '@silverhand/essentials';
 import chalk from 'chalk';
+import { remove, writeFile } from 'fs-extra';
 import inquirer from 'inquirer';
-import ora from 'ora';
 import * as semver from 'semver';
 import tar from 'tar';
 import { CommandModule } from 'yargs';
 
-import { downloadFile, log, safeExecSync } from '../utilities';
+import { createPoolAndDatabaseIfNeeded, getDatabaseUrlFromConfig } from '../database';
+import { downloadFile, log, oraPromise, safeExecSync } from '../utilities';
+import { seedByPool } from './database/seed';
 
 export type InstallArgs = {
   path?: string;
@@ -36,12 +39,26 @@ const validateNodeVersion = () => {
   }
 };
 
-const validatePath = (value: string) =>
-  existsSync(path.resolve(value))
-    ? `The path ${chalk.green(value)} already exists, please try another.`
-    : true;
+const inquireInstancePath = async (initialPath?: string) => {
+  const { instancePath } = await inquirer.prompt<{ instancePath: string }>(
+    {
+      name: 'instancePath',
+      message: 'Where should we create your Logto instance?',
+      type: 'input',
+      default: defaultPath,
+      filter: (value: string) => value.trim(),
+      validate: (value: string) =>
+        existsSync(path.resolve(value))
+          ? `The path ${chalk.green(value)} already exists, please try another.`
+          : true,
+    },
+    { instancePath: initialPath }
+  );
 
-const getInstancePath = async () => {
+  return instancePath;
+};
+
+const validateDatabase = async () => {
   const { hasPostgresUrl } = await inquirer.prompt<{ hasPostgresUrl?: boolean }>({
     name: 'hasPostgresUrl',
     message: `Logto requires PostgreSQL >=${pgRequired.version} but cannot find in the current environment.\n  Do you have a remote PostgreSQL instance ready?`,
@@ -59,17 +76,6 @@ const getInstancePath = async () => {
   if (hasPostgresUrl === false) {
     log.error('Logto requires a Postgres instance to run.');
   }
-
-  const { instancePath } = await inquirer.prompt<{ instancePath: string }>({
-    name: 'instancePath',
-    message: 'Where should we create your Logto instance?',
-    type: 'input',
-    default: defaultPath,
-    filter: (value: string) => value.trim(),
-    validate: validatePath,
-  });
-
-  return instancePath;
 };
 
 const downloadRelease = async () => {
@@ -85,38 +91,72 @@ const downloadRelease = async () => {
 };
 
 const decompress = async (toPath: string, tarPath: string) => {
-  const decompressSpinner = ora({
-    text: `Decompress to ${toPath}`,
-    prefixText: chalk.blue('[info]'),
-  }).start();
-
   try {
     await mkdir(toPath);
     await tar.extract({ file: tarPath, cwd: toPath, strip: 1 });
   } catch (error: unknown) {
-    decompressSpinner.fail();
     log.error(error);
-
-    return;
   }
-
-  decompressSpinner.succeed();
 };
 
 const installLogto = async ({ path: pathArgument = defaultPath, silent = false }: InstallArgs) => {
   validateNodeVersion();
 
-  const instancePath = (!silent && (await getInstancePath())) || pathArgument;
-  const isValidPath = validatePath(instancePath);
+  // Get instance path
+  const instancePath = await inquireInstancePath(conditional(silent && pathArgument));
 
-  if (isValidPath !== true) {
-    log.error(isValidPath);
+  // Validate database URL
+  await validateDatabase();
+
+  // Download and decompress
+  const tarPath = await downloadRelease();
+  await oraPromise(
+    decompress(instancePath, tarPath),
+    {
+      text: `Decompress to ${instancePath}`,
+      prefixText: chalk.blue('[info]'),
+    },
+    true
+  );
+
+  try {
+    // Seed database
+    const pool = await createPoolAndDatabaseIfNeeded(); // It will ask for database URL and save to config
+    await seedByPool(pool);
+    await pool.end();
+  } catch (error: unknown) {
+    console.error(error);
+
+    const { value } = await inquirer.prompt<{ value: boolean }>({
+      name: 'value',
+      type: 'confirm',
+      message:
+        'Error occurred during seeding your Logto database. Would you like to continue without seed?',
+      default: false,
+    });
+
+    if (!value) {
+      await oraPromise(remove(instancePath), {
+        text: 'Clean up',
+        prefixText: chalk.blue('[info]'),
+      });
+
+      // eslint-disable-next-line unicorn/no-process-exit
+      process.exit(1);
+    }
+
+    log.info(`You can use ${chalk.green('db seed')} command to seed when ready.`);
   }
 
-  const tarPath = await downloadRelease();
+  // Save to dot env
+  const databaseUrl = await getDatabaseUrlFromConfig();
+  const dotEnvPath = path.resolve(instancePath, '.env');
+  await writeFile(dotEnvPath, `DB_URL=${databaseUrl}`, {
+    encoding: 'utf8',
+  });
+  log.info(`Saved database URL to ${chalk.blue(dotEnvPath)}`);
 
-  await decompress(instancePath, tarPath);
-
+  // Finale
   const startCommand = `cd ${instancePath} && npm start`;
   log.info(
     `Use the command below to start Logto. Happy hacking!\n\n  ${chalk.green(startCommand)}`

@@ -83,13 +83,19 @@ jobs:
       - name: Extract
         run: tar -xzf logto.tar.gz
 
-      - name: Run Logto
-        run: node . --from-root --all-yes &
+      - name: Seed database
         working-directory: logto/packages/core
+        run: |
+          npm run cli db set-url postgres://postgres:postgres@localhost:5432
+          npm run cli db seed
+
+      - name: Run Logto
+        working-directory: logto/packages/core
+        run: node . --from-root --all-yes &
         env:
           INTEGRATION_TEST: true
           NODE_ENV: production
-          DB_URL_DEFAULT: postgres://postgres:postgres@localhost:5432
+          DB_URL: postgres://postgres:postgres@localhost:5432
 
       - name: Sleep for 5 seconds
         run: sleep 5
