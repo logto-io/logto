@@ -85,9 +85,9 @@ jobs:
 
       - name: Seed database
         working-directory: logto/packages/core
-        run: |
-          npm run cli db set-url postgres://postgres:postgres@localhost:5432
-          npm run cli db seed
+        run: npm run cli db seed
+        env:
+          DB_URL: postgres://postgres:postgres@localhost:5432
 
       - name: Run Logto
         working-directory: logto/packages/core
