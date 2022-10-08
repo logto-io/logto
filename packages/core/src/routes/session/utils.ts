@@ -2,14 +2,13 @@ import { logTypeGuard, LogType, PasscodeType } from '@logto/schemas';
 import { Truthy } from '@silverhand/essentials';
 import dayjs from 'dayjs';
 import { Context } from 'koa';
-import { Provider } from 'oidc-provider';
+import { InteractionResults, Provider } from 'oidc-provider';
 import { z } from 'zod';
 
 import RequestError from '@/errors/RequestError';
-import { LogContext } from '@/middleware/koa-log';
 import assertThat from '@/utils/assert-that';
 
-import { verificationStorageGuard, Operation, VerificationStorage, Via } from './types';
+import { verificationStorageGuard, Medium, Operation, VerificationStorage } from './types';
 
 export const getRoutePrefix = (
   type: 'sign-in' | 'register' | 'forgot-password',
@@ -23,10 +22,10 @@ export const getRoutePrefix = (
 
 export const getPasswordlessRelatedLogType = (
   flow: PasscodeType,
-  via: Via,
+  medium: Medium,
   operation?: Operation
 ): LogType => {
-  const body = via === 'email' ? 'Email' : 'Sms';
+  const body = medium === 'email' ? 'Email' : 'Sms';
   const suffix = operation === 'send' ? 'SendPasscode' : '';
 
   const result = logTypeGuard.safeParse(flow + body + suffix);
@@ -53,14 +52,15 @@ export const parseVerificationStorage = (data: unknown): VerificationStorage => 
   return verificationResult.data.verification;
 };
 
-export const verificationSessionCheckByFlow = (
+export const verificationSessionCheckByFlowAndMedium = (
   currentFlow: PasscodeType,
-  payload: Pick<VerificationStorage, 'flow' | 'expiresAt'>
+  medium: Medium,
+  payload: VerificationStorage
 ) => {
-  const { flow, expiresAt } = payload;
+  const { flow, expiresAt, email, phone } = payload;
 
   assertThat(
-    flow === currentFlow,
+    flow === currentFlow && ((medium === 'email' && email) || (medium === 'sms' && phone)),
     new RequestError({ code: 'session.passwordless_not_verified', status: 401 })
   );
 
@@ -70,18 +70,10 @@ export const verificationSessionCheckByFlow = (
   );
 };
 
-export const getAndCheckVerificationStorage = async (
-  ctx: Context & LogContext,
+export const assignVerificationStorageResult = async (
+  ctx: Context,
   provider: Provider,
-  logType: LogType,
-  flowType: PasscodeType
-): Promise<Pick<VerificationStorage, 'email' | 'phone'>> => {
-  const { result } = await provider.interactionDetails(ctx.req, ctx.res);
-  const { email, phone, flow, expiresAt } = parseVerificationStorage(result);
-
-  ctx.log(logType, { email, phone, flow, expiresAt });
-
-  verificationSessionCheckByFlow(flowType, { flow, expiresAt });
-
-  return { email, phone };
+  result: InteractionResults & { verification: VerificationStorage }
+) => {
+  await provider.interactionResult(ctx.req, ctx.res, result);
 };

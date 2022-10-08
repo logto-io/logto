@@ -22,9 +22,11 @@ import assertThat from '@/utils/assert-that';
 import { AnonymousRouter } from '../types';
 import { verificationTimeout } from './consts';
 import {
-  getAndCheckVerificationStorage,
+  assignVerificationStorageResult,
   getPasswordlessRelatedLogType,
   getRoutePrefix,
+  parseVerificationStorage,
+  verificationSessionCheckByFlowAndMedium,
 } from './utils';
 
 export const registerRoute = getRoutePrefix('register', 'passwordless');
@@ -106,7 +108,7 @@ export default function passwordlessRoutes<T extends AnonymousRouter>(
 
       await verifyPasscode(jti, flow, code, { phone });
 
-      await provider.interactionResult(ctx.req, ctx.res, {
+      await assignVerificationStorageResult(ctx, provider, {
         verification: {
           flow,
           expiresAt: dayjs().add(verificationTimeout, 'second').toISOString(),
@@ -139,7 +141,7 @@ export default function passwordlessRoutes<T extends AnonymousRouter>(
 
       await verifyPasscode(jti, flow, code, { email });
 
-      await provider.interactionResult(ctx.req, ctx.res, {
+      await assignVerificationStorageResult(ctx, provider, {
         verification: {
           flow,
           expiresAt: dayjs().add(verificationTimeout, 'second').toISOString(),
@@ -153,13 +155,15 @@ export default function passwordlessRoutes<T extends AnonymousRouter>(
   );
 
   router.post(`${signInRoute}/sms`, async (ctx, next) => {
+    const { result } = await provider.interactionDetails(ctx.req, ctx.res);
+    const verificationStorage = parseVerificationStorage(result);
+
     const type = getPasswordlessRelatedLogType(PasscodeType.SignIn, 'sms');
-    const { phone } = await getAndCheckVerificationStorage(
-      ctx,
-      provider,
-      type,
-      PasscodeType.SignIn
-    );
+    ctx.log(type, verificationStorage);
+
+    verificationSessionCheckByFlowAndMedium(PasscodeType.SignIn, 'sms', verificationStorage);
+
+    const { phone } = verificationStorage;
 
     assertThat(
       phone && (await hasUserWithPhone(phone)),
@@ -176,13 +180,15 @@ export default function passwordlessRoutes<T extends AnonymousRouter>(
   });
 
   router.post(`${signInRoute}/email`, async (ctx, next) => {
+    const { result } = await provider.interactionDetails(ctx.req, ctx.res);
+    const verificationStorage = parseVerificationStorage(result);
+
     const type = getPasswordlessRelatedLogType(PasscodeType.SignIn, 'email');
-    const { email } = await getAndCheckVerificationStorage(
-      ctx,
-      provider,
-      type,
-      PasscodeType.SignIn
-    );
+    ctx.log(type, verificationStorage);
+
+    verificationSessionCheckByFlowAndMedium(PasscodeType.SignIn, 'email', verificationStorage);
+
+    const { email } = verificationStorage;
 
     assertThat(
       email && (await hasUserWithEmail(email)),
@@ -199,13 +205,15 @@ export default function passwordlessRoutes<T extends AnonymousRouter>(
   });
 
   router.post(`${registerRoute}/sms`, async (ctx, next) => {
+    const { result } = await provider.interactionDetails(ctx.req, ctx.res);
+    const verificationStorage = parseVerificationStorage(result);
+
     const type = getPasswordlessRelatedLogType(PasscodeType.Register, 'sms');
-    const { phone } = await getAndCheckVerificationStorage(
-      ctx,
-      provider,
-      type,
-      PasscodeType.Register
-    );
+    ctx.log(type, verificationStorage);
+
+    verificationSessionCheckByFlowAndMedium(PasscodeType.Register, 'sms', verificationStorage);
+
+    const { phone } = verificationStorage;
 
     assertThat(
       phone && !(await hasUserWithPhone(phone)),
@@ -222,13 +230,15 @@ export default function passwordlessRoutes<T extends AnonymousRouter>(
   });
 
   router.post(`${registerRoute}/email`, async (ctx, next) => {
+    const { result } = await provider.interactionDetails(ctx.req, ctx.res);
+    const verificationStorage = parseVerificationStorage(result);
+
     const type = getPasswordlessRelatedLogType(PasscodeType.Register, 'email');
-    const { email } = await getAndCheckVerificationStorage(
-      ctx,
-      provider,
-      type,
-      PasscodeType.Register
-    );
+    ctx.log(type, verificationStorage);
+
+    verificationSessionCheckByFlowAndMedium(PasscodeType.Register, 'email', verificationStorage);
+
+    const { email } = verificationStorage;
 
     assertThat(
       email && !(await hasUserWithEmail(email)),

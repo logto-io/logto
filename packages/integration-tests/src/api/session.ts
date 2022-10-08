@@ -63,12 +63,12 @@ export const sendRegisterUserWithEmailPasscode = (email: string, interactionCook
     },
   });
 
-export const verifyRegisterUserWithEmailPasscode = async (
+export const verifyRegisterUserWithEmailPasscode = (
   email: string,
   code: string,
   interactionCookie: string
-) => {
-  await api.post('session/passwordless/email/verify', {
+) =>
+  api.post('session/passwordless/email/verify', {
     headers: {
       cookie: interactionCookie,
     },
@@ -79,14 +79,14 @@ export const verifyRegisterUserWithEmailPasscode = async (
     },
   });
 
-  return api
+export const checkVerificationSessionAndRegisterWithEmail = (interactionCookie: string) =>
+  api
     .post('session/register/passwordless/email', {
       headers: {
         cookie: interactionCookie,
       },
     })
     .json<RedirectResponse>();
-};
 
 export const sendSignInUserWithEmailPasscode = (email: string, interactionCookie: string) =>
   api.post('session/passwordless/email/send', {
@@ -99,12 +99,12 @@ export const sendSignInUserWithEmailPasscode = (email: string, interactionCookie
     },
   });
 
-export const verifySignInUserWithEmailPasscode = async (
+export const verifySignInUserWithEmailPasscode = (
   email: string,
   code: string,
   interactionCookie: string
-) => {
-  await api.post('session/passwordless/email/verify', {
+) =>
+  api.post('session/passwordless/email/verify', {
     headers: {
       cookie: interactionCookie,
     },
@@ -115,14 +115,14 @@ export const verifySignInUserWithEmailPasscode = async (
     },
   });
 
-  return api
+export const checkVerificationSessionAndSignInWithEmail = (interactionCookie: string) =>
+  api
     .post('session/sign-in/passwordless/email', {
       headers: {
         cookie: interactionCookie,
       },
     })
     .json<RedirectResponse>();
-};
 
 export const sendRegisterUserWithSmsPasscode = (phone: string, interactionCookie: string) =>
   api.post('session/passwordless/sms/send', {
@@ -135,12 +135,12 @@ export const sendRegisterUserWithSmsPasscode = (phone: string, interactionCookie
     },
   });
 
-export const verifyRegisterUserWithSmsPasscode = async (
+export const verifyRegisterUserWithSmsPasscode = (
   phone: string,
   code: string,
   interactionCookie: string
-) => {
-  await api.post('session/passwordless/sms/verify', {
+) =>
+  api.post('session/passwordless/sms/verify', {
     headers: {
       cookie: interactionCookie,
     },
@@ -151,14 +151,14 @@ export const verifyRegisterUserWithSmsPasscode = async (
     },
   });
 
-  return api
+export const checkVerificationSessionAndRegisterWithSms = (interactionCookie: string) =>
+  api
     .post('session/register/passwordless/sms', {
       headers: {
         cookie: interactionCookie,
       },
     })
     .json<RedirectResponse>();
-};
 
 export const sendSignInUserWithSmsPasscode = (phone: string, interactionCookie: string) =>
   api.post('session/passwordless/sms/send', {
@@ -171,12 +171,12 @@ export const sendSignInUserWithSmsPasscode = (phone: string, interactionCookie: 
     },
   });
 
-export const verifySignInUserWithSmsPasscode = async (
+export const verifySignInUserWithSmsPasscode = (
   phone: string,
   code: string,
   interactionCookie: string
-) => {
-  await api.post('session/passwordless/sms/verify', {
+) =>
+  api.post('session/passwordless/sms/verify', {
     headers: {
       cookie: interactionCookie,
     },
@@ -187,14 +187,14 @@ export const verifySignInUserWithSmsPasscode = async (
     },
   });
 
-  return api
+export const checkVerificationSessionAndSignInWithSms = (interactionCookie: string) =>
+  api
     .post('session/sign-in/passwordless/sms', {
       headers: {
         cookie: interactionCookie,
       },
     })
     .json<RedirectResponse>();
-};
 
 export const signInWithSocial = (
   payload: {
