@@ -8,5 +8,6 @@
   },
   "include": [
     "src"
-  ]
+  ],
+  "exclude": ["**/alteration-scripts"]
 }

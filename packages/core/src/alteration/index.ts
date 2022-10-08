@@ -2,7 +2,13 @@ import { existsSync } from 'fs';
 import { readdir, readFile } from 'fs/promises';
 import path from 'path';
 
-import { LogtoConfig, LogtoConfigs, AlterationState, alterationStateGuard } from '@logto/schemas';
+import {
+  LogtoConfig,
+  LogtoConfigs,
+  AlterationState,
+  alterationStateGuard,
+  LogtoConfigKey,
+} from '@logto/schemas';
 import { AlterationScript } from '@logto/schemas/lib/types/alteration';
 import { conditionalString } from '@silverhand/essentials';
 import chalk from 'chalk';
@@ -14,7 +20,6 @@ import { convertToIdentifiers } from '@/database/utils';
 
 import {
   logtoConfigsTableFilePath,
-  alterationStateKey,
   alterationFilesDirectory,
   alterationFilesDirectorySource,
 } from './constants';
@@ -38,7 +43,7 @@ export const isLogtoConfigsTableExists = async (pool: DatabasePool) => {
 export const getCurrentDatabaseTimestamp = async (pool: DatabasePool) => {
   try {
     const query = await pool.maybeOne<LogtoConfig>(
-      sql`select * from ${table} where ${fields.key}=${alterationStateKey}`
+      sql`select * from ${table} where ${fields.key}=${LogtoConfigKey.AlterationState}`
     );
     const { timestamp } = alterationStateGuard.parse(query?.value);
 
@@ -66,7 +71,7 @@ export const updateDatabaseTimestamp = async (pool: DatabasePool, timestamp?: nu
   await pool.query(
     sql`
       insert into ${table} (${fields.key}, ${fields.value}) 
-        values (${alterationStateKey}, ${sql.jsonb(value)})
+        values (${LogtoConfigKey.AlterationState}, ${sql.jsonb(value)})
         on conflict (${fields.key}) do update set ${fields.value}=excluded.${fields.value}
     `
   );
