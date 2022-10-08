@@ -2,12 +2,8 @@ import { existsSync } from 'fs';
 import { readdir, readFile } from 'fs/promises';
 import path from 'path';
 
-import { LogtoConfig, LogtoConfigs } from '@logto/schemas';
-import {
-  AlterationScript,
-  AlterationState,
-  alterationStateGuard,
-} from '@logto/schemas/lib/types/alteration';
+import { LogtoConfig, LogtoConfigs, AlterationState, alterationStateGuard } from '@logto/schemas';
+import { AlterationScript } from '@logto/schemas/lib/types/alteration';
 import { conditionalString } from '@silverhand/essentials';
 import chalk from 'chalk';
 import { copy, remove } from 'fs-extra';
@@ -70,7 +66,7 @@ export const updateDatabaseTimestamp = async (pool: DatabasePool, timestamp?: nu
   await pool.query(
     sql`
       insert into ${table} (${fields.key}, ${fields.value}) 
-        values (${alterationStateKey}, ${JSON.stringify(value)})
+        values (${alterationStateKey}, ${sql.jsonb(value)})
         on conflict (${fields.key}) do update set ${fields.value}=excluded.${fields.value}
     `
   );

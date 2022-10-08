@@ -123,7 +123,7 @@ const installLogto = async ({ path: pathArgument = defaultPath, silent = false }
   );
 };
 
-const install: CommandModule<Record<string, unknown>, { path?: string; silent?: boolean }> = {
+const install: CommandModule<unknown, { path?: string; silent?: boolean }> = {
   command: ['init', 'i', 'install'],
   describe: 'Download and run the latest Logto release',
   builder: (yargs) =>

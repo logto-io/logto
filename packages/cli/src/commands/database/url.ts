@@ -11,7 +11,7 @@ export const getUrl: CommandModule = {
   },
 };
 
-export const setUrl: CommandModule<Record<string, unknown>, { url: string }> = {
+export const setUrl: CommandModule<unknown, { url: string }> = {
   command: 'set-url <url>',
   describe: 'Set database URL and save to config file',
   builder: (yargs) =>

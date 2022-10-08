@@ -8,7 +8,7 @@ void yargs(hideBin(process.argv))
   .command(install)
   .command(database)
   .demandCommand(1)
-  .showHelpOnFail(true)
+  .showHelpOnFail(false)
   .strict()
   .parserConfiguration({
     'dot-notation': false,
