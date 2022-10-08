@@ -1,4 +1,4 @@
-import { logTypeGuard, LogType, PasscodeType } from '@logto/schemas';
+import { logTypeGuard, LogType, PasscodeType, User } from '@logto/schemas';
 import { Truthy } from '@silverhand/essentials';
 import dayjs from 'dayjs';
 import { Context } from 'koa';
@@ -84,6 +84,11 @@ export const checkAndGetUserIdFromPayload = async (
 ): Promise<string> => {
   const { email, phone } = payload;
 
+  // eslint-disable-next-line @silverhand/fp/no-let
+  let user: User;
+  // eslint-disable-next-line @silverhand/fp/no-let
+  let id: string;
+
   switch (flow + medium) {
     case PasscodeType.SignIn + 'sms':
       assertThat(
@@ -91,30 +96,44 @@ export const checkAndGetUserIdFromPayload = async (
         new RequestError({ code: 'user.phone_not_exists', status: 422 })
       );
 
-      // eslint-disable-next-line unicorn/no-await-expression-member
-      return (await findUserByPhone(phone)).id;
+      // eslint-disable-next-line @silverhand/fp/no-mutation
+      user = await findUserByPhone(phone);
+      // eslint-disable-next-line @silverhand/fp/no-mutation
+      id = user.id;
+
+      return id;
     case PasscodeType.SignIn + 'email':
       assertThat(
         email && (await hasUserWithEmail(email)),
         new RequestError({ code: 'user.email_not_exists', status: 422 })
       );
 
-      // eslint-disable-next-line unicorn/no-await-expression-member
-      return (await findUserByEmail(email)).id;
+      // eslint-disable-next-line @silverhand/fp/no-mutation
+      user = await findUserByEmail(email);
+      // eslint-disable-next-line @silverhand/fp/no-mutation
+      id = user.id;
+
+      return id;
     case PasscodeType.Register + 'sms':
       assertThat(
         phone && !(await hasUserWithPhone(phone)),
         new RequestError({ code: 'user.phone_exists_register', status: 422 })
       );
 
-      return generateUserId();
+      // eslint-disable-next-line @silverhand/fp/no-mutation
+      id = await generateUserId();
+
+      return id;
     case PasscodeType.Register + 'email':
       assertThat(
         email && !(await hasUserWithEmail(email)),
         new RequestError({ code: 'user.email_exists_register', status: 422 })
       );
 
-      return generateUserId();
+      // eslint-disable-next-line @silverhand/fp/no-mutation
+      id = await generateUserId();
+
+      return id;
     default:
       throw new Error('Not implemented');
   }
