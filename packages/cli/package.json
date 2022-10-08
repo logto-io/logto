@@ -7,8 +7,7 @@
   "license": "MPL-2.0",
   "main": "lib/index.js",
   "bin": {
-    "logto": "bin/logto",
-    "lg": "bin/logto"
+    "logto": "bin/logto"
   },
   "files": [
     "bin",
