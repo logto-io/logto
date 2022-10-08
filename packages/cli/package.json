@@ -1,0 +1,64 @@
+{
+  "name": "@logto/cli",
+  "version": "1.0.0-beta.10",
+  "description": "Logto CLI.",
+  "author": "Silverhand Inc. <contact@silverhand.io>",
+  "homepage": "https://github.com/logto-io/logto#readme",
+  "license": "MPL-2.0",
+  "main": "lib/index.js",
+  "bin": {
+    "logto": "bin/logto",
+    "lg": "bin/logto"
+  },
+  "files": [
+    "bin",
+    "lib"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/logto-io/logto.git"
+  },
+  "scripts": {
+    "precommit": "lint-staged",
+    "build": "rimraf lib && tsc",
+    "start": "node .",
+    "dev": "ts-node src/index.ts",
+    "lint": "eslint --ext .ts src",
+    "lint:report": "pnpm lint --format json --output-file report.json",
+    "prepack": "pnpm build"
+  },
+  "engines": {
+    "node": "^16.0.0"
+  },
+  "bugs": {
+    "url": "https://github.com/logto-io/logto/issues"
+  },
+  "dependencies": {
+    "chalk": "^4.1.2",
+    "got": "^11.8.2",
+    "hpagent": "^1.0.0",
+    "ora": "^5.0.0",
+    "prompts": "^2.4.2",
+    "semver": "^7.3.7",
+    "tar": "^6.1.11"
+  },
+  "devDependencies": {
+    "@silverhand/eslint-config": "1.0.0",
+    "@silverhand/ts-config": "1.0.0",
+    "@types/decompress": "^4.2.4",
+    "@types/node": "^16.0.0",
+    "@types/prompts": "^2.0.14",
+    "@types/semver": "^7.3.12",
+    "@types/tar": "^6.1.2",
+    "eslint": "^8.21.0",
+    "lint-staged": "^13.0.0",
+    "prettier": "^2.7.1",
+    "rimraf": "^3.0.2",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.7.4"
+  },
+  "eslintConfig": {
+    "extends": "@silverhand"
+  },
+  "prettier": "@silverhand/eslint-config/.prettierrc"
+}
