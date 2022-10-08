@@ -2,7 +2,7 @@ import { CommandModule } from 'yargs';
 
 import { noop } from '../../utilities';
 import alteration from './alteration';
-import { getKey, setKey } from './key';
+import { getConfig, setConfig } from './config';
 import seed from './seed';
 import { getUrl, setUrl } from './url';
 
@@ -13,8 +13,8 @@ const database: CommandModule = {
     yargs
       .command(getUrl)
       .command(setUrl)
-      .command(getKey)
-      .command(setKey)
+      .command(getConfig)
+      .command(setConfig)
       .command(seed)
       .command(alteration)
       .demandCommand(1),

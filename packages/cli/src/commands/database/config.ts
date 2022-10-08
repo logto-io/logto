@@ -27,8 +27,8 @@ const validateKeys: ValidateKeysFunction = (keys) => {
   }
 };
 
-export const getKey: CommandModule<unknown, { key: string; keys: string[] }> = {
-  command: 'get-key <key> [keys...]',
+export const getConfig: CommandModule<unknown, { key: string; keys: string[] }> = {
+  command: 'get-config <key> [keys...]',
   describe: 'Get config value(s) of the given key(s) in Logto database',
   builder: (yargs) =>
     yargs
@@ -67,8 +67,8 @@ export const getKey: CommandModule<unknown, { key: string; keys: string[] }> = {
   },
 };
 
-export const setKey: CommandModule<unknown, { key: string; value: string }> = {
-  command: 'set-key <key> <value>',
+export const setConfig: CommandModule<unknown, { key: string; value: string }> = {
+  command: 'set-config <key> <value>',
   describe: 'Set config value of the given key in Logto database',
   builder: (yargs) =>
     yargs
