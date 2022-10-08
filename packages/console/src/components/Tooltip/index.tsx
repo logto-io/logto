@@ -13,7 +13,7 @@ type Props = {
   isKeepOpen?: boolean;
   verticalAlign?: VerticalAlignment;
   horizontalAlign?: HorizontalAlignment;
-  flip?: 'right' | 'left' 
+  flip?: 'right' | 'left';
 };
 
 const getHorizontalOffset = (alignment: HorizontalAlignment, flipped: string): number => {
@@ -32,9 +32,9 @@ const Tooltip = ({
   anchorRef,
   className,
   isKeepOpen = false,
-  verticalAlign= 'top',
+  verticalAlign = 'top',
   horizontalAlign = 'start',
-  flip
+  flip,
 }: Props) => {
   const [tooltipDom, setTooltipDom] = useState<HTMLDivElement>();
   const tooltipRef = useRef<HTMLDivElement>(null);
