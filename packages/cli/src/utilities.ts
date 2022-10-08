@@ -2,7 +2,7 @@ import { execSync } from 'child_process';
 import { createWriteStream } from 'fs';
 import path from 'path';
 
-import { conditionalString } from '@silverhand/essentials';
+import { conditionalString, Optional } from '@silverhand/essentials';
 import chalk from 'chalk';
 import got, { Progress } from 'got';
 import { HttpsProxyAgent } from 'hpagent';
@@ -28,7 +28,7 @@ export const log: Log = Object.freeze({
     console.log(chalk.blue('[info]'), ...args);
   },
   succeed: (...args) => {
-    console.log(chalk.green('[succeed] ✔'), ...args);
+    log.info(chalk.green('✔'), ...args);
   },
   warn: (...args) => {
     console.warn(chalk.yellow('[warn]'), ...args);
@@ -109,6 +109,8 @@ export const oraPromise = async <T>(
   }
 };
 
+const cliConfig = new Map<string, Optional<string>>();
+
 export type GetCliConfig = {
   key: string;
   readableKey: string;
@@ -117,6 +119,10 @@ export type GetCliConfig = {
 };
 
 export const getCliConfig = async ({ key, readableKey, comments, defaultValue }: GetCliConfig) => {
+  if (cliConfig.has(key)) {
+    return cliConfig.get(key);
+  }
+
   const { [key]: value } = process.env;
 
   if (!value) {
@@ -137,8 +143,12 @@ export const getCliConfig = async ({ key, readableKey, comments, defaultValue }:
         throw error;
       });
 
+    cliConfig.set(key, input);
+
     return input;
   }
+
+  cliConfig.set(key, value);
 
   return value;
 };
