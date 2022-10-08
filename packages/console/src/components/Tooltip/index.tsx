@@ -134,7 +134,7 @@ const Tooltip = ({
         isArrowUp && styles.arrowUp,
         isArrowRight && styles.arrowRight,
         isArrowLeft && styles.arrowLeft,
-        styles[horizontalAlign],
+        !flip && styles[horizontalAlign],
         className
       )}
       style={{ ...position }}
