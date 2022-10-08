@@ -56,7 +56,7 @@ export const deletePasscodeById = async (id: string) => {
 export const deletePasscodesByIds = async (ids: string[]) => {
   const { rowCount } = await envSet.pool.query(sql`
     delete from ${table}
-    where ${fields.id} in (${ids.join(',')})
+    where ${fields.id} in (${sql.join(ids, sql`,`)})
   `);
 
   if (rowCount !== ids.length) {
