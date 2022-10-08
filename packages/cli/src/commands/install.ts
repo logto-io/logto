@@ -12,7 +12,7 @@ import * as semver from 'semver';
 import tar from 'tar';
 import { CommandModule } from 'yargs';
 
-import { createPoolAndDatabaseIfNeeded, getDatabaseUrlFromConfig } from '../database';
+import { createPoolAndDatabaseIfNeeded, getDatabaseUrlFromEnv } from '../database';
 import { downloadFile, log, oraPromise, safeExecSync } from '../utilities';
 import { seedByPool } from './database/seed';
 
@@ -149,7 +149,7 @@ const installLogto = async ({ path: pathArgument = defaultPath, silent = false }
   }
 
   // Save to dot env
-  const databaseUrl = await getDatabaseUrlFromConfig();
+  const databaseUrl = await getDatabaseUrlFromEnv();
   const dotEnvPath = path.resolve(instancePath, '.env');
   await writeFile(dotEnvPath, `DB_URL=${databaseUrl}`, {
     encoding: 'utf8',

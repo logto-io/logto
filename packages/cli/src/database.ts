@@ -6,13 +6,12 @@ import { createPool, IdentifierSqlToken, parseDsn, sql, SqlToken, stringifyDsn }
 import { createInterceptors } from 'slonik-interceptor-preset';
 import { z } from 'zod';
 
-import { getConfig, patchConfig } from './config';
 import { log } from './utilities';
 
 export const defaultDatabaseUrl = 'postgresql://localhost:5432/logto';
 
-export const getDatabaseUrlFromConfig = async () => {
-  const { databaseUrl } = await getConfig();
+export const getDatabaseUrlFromEnv = async () => {
+  const { DB_URL: databaseUrl } = process.env;
 
   if (!databaseUrl) {
     const { value } = await inquirer
@@ -24,18 +23,13 @@ export const getDatabaseUrlFromConfig = async () => {
       })
       .catch(async (error) => {
         if (error.isTtyError) {
-          log.error(
-            `No database URL configured. Set it via ${chalk.green(
-              'database set-url'
-            )} command first.`
-          );
+          log.error('No database URL configured in env');
         }
 
         // The type definition does not give us type except `any`, throw it directly will honor the original behavior.
         // eslint-disable-next-line @typescript-eslint/no-throw-literal
         throw error;
       });
-    await patchConfig({ databaseUrl: value });
 
     return value;
   }
@@ -43,8 +37,8 @@ export const getDatabaseUrlFromConfig = async () => {
   return databaseUrl;
 };
 
-export const createPoolFromConfig = async () => {
-  const databaseUrl = await getDatabaseUrlFromConfig();
+export const createPoolFromEnv = async () => {
+  const databaseUrl = await getDatabaseUrlFromEnv();
 
   return createPool(databaseUrl, {
     interceptors: createInterceptors(),
@@ -59,7 +53,7 @@ export const createPoolFromConfig = async () => {
  */
 export const createPoolAndDatabaseIfNeeded = async () => {
   try {
-    return await createPoolFromConfig();
+    return await createPoolFromEnv();
   } catch (error: unknown) {
     const result = z.object({ code: z.string() }).safeParse(error);
 
@@ -69,7 +63,7 @@ export const createPoolAndDatabaseIfNeeded = async () => {
       log.error(error);
     }
 
-    const databaseUrl = await getDatabaseUrlFromConfig();
+    const databaseUrl = await getDatabaseUrlFromEnv();
     const dsn = parseDsn(databaseUrl);
     // It's ok to fall back to '?' since:
     // - Database name is required to connect in the previous pool
@@ -86,7 +80,7 @@ export const createPoolAndDatabaseIfNeeded = async () => {
 
     log.info(`${chalk.green('✔')} Created database ${databaseName}`);
 
-    return createPoolFromConfig();
+    return createPoolFromEnv();
   }
 };
 
