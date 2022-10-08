@@ -11,6 +11,7 @@
     "prepack": "lerna run --stream prepack",
     "dev": "lerna run --stream prepack -- --incremental && lerna --ignore=@logto/integration-tests run --parallel dev",
     "start": "cd packages/core && NODE_ENV=production node . --from-root",
+    "cli": "cd packages/core && logto",
     "alteration": "cd packages/core && pnpm alteration",
     "ci:build": "lerna run --stream build",
     "ci:lint": "lerna run --parallel lint",
