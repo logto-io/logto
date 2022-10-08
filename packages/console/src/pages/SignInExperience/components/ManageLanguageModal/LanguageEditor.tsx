@@ -116,18 +116,23 @@ const LanguageEditor = () => {
   );
 
   const onDelete = useCallback(() => {
-    console.log('fuck');
-    console.log(customPhrase);
-
     if (!customPhrase && !isDefaultLanguage) {
       stopAddingLanguage(true);
-      // TODO reset selected language
-      // resetSelectedLanguageTag();
+      setSelectedLanguage(
+        languages.find((languageTag) => languageTag !== selectedLanguage) ?? 'en'
+      );
 
       return;
     }
     setIsDeletionAlertOpen(true);
-  }, [customPhrase, isDefaultLanguage, stopAddingLanguage]);
+  }, [
+    customPhrase,
+    isDefaultLanguage,
+    languages,
+    selectedLanguage,
+    setSelectedLanguage,
+    stopAddingLanguage,
+  ]);
 
   const onConfirmDeletion = useCallback(async () => {
     setIsDeletionAlertOpen(false);
