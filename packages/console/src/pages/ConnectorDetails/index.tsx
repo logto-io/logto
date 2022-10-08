@@ -88,6 +88,7 @@ const ConnectorDetails = () => {
           <div className={styles.logoContainer}>
             <img
               src={theme === AppearanceMode.DarkMode && data.logoDark ? data.logoDark : data.logo}
+              alt="logo"
               className={styles.logo}
             />
           </div>

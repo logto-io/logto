@@ -58,6 +58,7 @@ const CreateForm = ({ onClose }: Props) => {
       <form>
         <FormField isRequired title="users.create_form_username">
           <TextInput
+            // eslint-disable-next-line jsx-a11y/no-autofocus
             autoFocus
             {...register('username', {
               required: true,

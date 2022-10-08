@@ -199,7 +199,12 @@ const Preview = ({ signInExperience, className }: Props) => {
               // The missing of attribute "sandbox" is intended since the source is trusted
               /* eslint-disable react/iframe-missing-sandbox */
             }
-            <iframe ref={previewRef} src="/sign-in?preview=true" tabIndex={-1} />
+            <iframe
+              ref={previewRef}
+              src="/sign-in?preview=true"
+              tabIndex={-1}
+              title="Sign In Page Preview"
+            />
             {/* eslint-enable react/iframe-missing-sandbox */}
           </div>
         </div>

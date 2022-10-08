@@ -119,7 +119,7 @@ const CreateForm = ({ onClose, isOpen: isFormOpen, type }: Props) => {
               >
                 <div className={styles.connector}>
                   <div className={styles.logo}>
-                    <img src={logo} />
+                    <img src={logo} alt="logo" />
                   </div>
                   <div className={styles.content}>
                     <div className={styles.name}>
