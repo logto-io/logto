@@ -2,22 +2,14 @@ import { emailRegEx, phoneRegEx } from '@logto/core-kit';
 import { PasscodeType } from '@logto/schemas';
 import dayjs from 'dayjs';
 import { Provider } from 'oidc-provider';
-import { object, string } from 'zod';
+import { object, string, z } from 'zod';
 
-import RequestError from '@/errors/RequestError';
 import { createPasscode, sendPasscode, verifyPasscode } from '@/lib/passcode';
 import { assignInteractionResults } from '@/lib/session';
-import { generateUserId, insertUser } from '@/lib/user';
+import { insertUser } from '@/lib/user';
 import koaGuard from '@/middleware/koa-guard';
-import {
-  updateUserById,
-  hasUserWithEmail,
-  hasUserWithPhone,
-  findUserByEmail,
-  findUserByPhone,
-} from '@/queries/user';
-import { passcodeTypeGuard } from '@/routes/session/types';
-import assertThat from '@/utils/assert-that';
+import { updateUserById } from '@/queries/user';
+import { mediumGuard, passcodeTypeGuard } from '@/routes/session/types';
 
 import { AnonymousRouter } from '../types';
 import { verificationTimeout } from './consts';
@@ -26,7 +18,8 @@ import {
   getPasswordlessRelatedLogType,
   getRoutePrefix,
   parseVerificationStorage,
-  verificationSessionCheckByFlowAndMedium,
+  checkAndGetUserIdFromPayload,
+  checkVerificationSessionByFlowAndMedium,
 } from './utils';
 
 export const registerRoute = getRoutePrefix('register', 'passwordless');
@@ -154,103 +147,44 @@ export default function passwordlessRoutes<T extends AnonymousRouter>(
     }
   );
 
-  router.post(`${signInRoute}/sms`, async (ctx, next) => {
-    const { result } = await provider.interactionDetails(ctx.req, ctx.res);
-    const verificationStorage = parseVerificationStorage(result);
+  router.post(
+    '/session/:flow/passwordless/:medium',
+    koaGuard({
+      params: object({
+        flow: z.enum(['sign-in', 'register']),
+        medium: mediumGuard,
+      }),
+    }),
+    async (ctx, next) => {
+      const { result } = await provider.interactionDetails(ctx.req, ctx.res);
+      const verificationStorage = parseVerificationStorage(result);
+      const { flow, medium } = ctx.guard.params;
+      const flowType: PasscodeType =
+        flow === 'sign-in' ? PasscodeType.SignIn : PasscodeType.Register;
 
-    const type = getPasswordlessRelatedLogType(PasscodeType.SignIn, 'sms');
-    ctx.log(type, verificationStorage);
+      const type = getPasswordlessRelatedLogType(flowType, medium);
+      ctx.log(type, verificationStorage);
 
-    verificationSessionCheckByFlowAndMedium(PasscodeType.SignIn, 'sms', verificationStorage);
+      checkVerificationSessionByFlowAndMedium(flowType, medium, verificationStorage);
 
-    const { phone } = verificationStorage;
+      const id = await checkAndGetUserIdFromPayload(flowType, medium, verificationStorage);
+      ctx.log(type, { userId: id });
 
-    assertThat(
-      phone && (await hasUserWithPhone(phone)),
-      new RequestError({ code: 'user.phone_not_exists', status: 422 })
-    );
+      if (flow === 'sign-in') {
+        await updateUserById(id, { lastSignInAt: Date.now() });
+      } else {
+        const { email, phone } = verificationStorage;
+        await insertUser({
+          id,
+          primaryEmail: email,
+          primaryPhone: phone,
+          lastSignInAt: Date.now(),
+        });
+      }
 
-    const { id } = await findUserByPhone(phone);
-    ctx.log(type, { userId: id });
+      await assignInteractionResults(ctx, provider, { login: { accountId: id } });
 
-    await updateUserById(id, { lastSignInAt: Date.now() });
-    await assignInteractionResults(ctx, provider, { login: { accountId: id } });
-
-    return next();
-  });
-
-  router.post(`${signInRoute}/email`, async (ctx, next) => {
-    const { result } = await provider.interactionDetails(ctx.req, ctx.res);
-    const verificationStorage = parseVerificationStorage(result);
-
-    const type = getPasswordlessRelatedLogType(PasscodeType.SignIn, 'email');
-    ctx.log(type, verificationStorage);
-
-    verificationSessionCheckByFlowAndMedium(PasscodeType.SignIn, 'email', verificationStorage);
-
-    const { email } = verificationStorage;
-
-    assertThat(
-      email && (await hasUserWithEmail(email)),
-      new RequestError({ code: 'user.email_not_exists', status: 422 })
-    );
-    const { id } = await findUserByEmail(email);
-
-    ctx.log(type, { userId: id });
-
-    await updateUserById(id, { lastSignInAt: Date.now() });
-    await assignInteractionResults(ctx, provider, { login: { accountId: id } });
-
-    return next();
-  });
-
-  router.post(`${registerRoute}/sms`, async (ctx, next) => {
-    const { result } = await provider.interactionDetails(ctx.req, ctx.res);
-    const verificationStorage = parseVerificationStorage(result);
-
-    const type = getPasswordlessRelatedLogType(PasscodeType.Register, 'sms');
-    ctx.log(type, verificationStorage);
-
-    verificationSessionCheckByFlowAndMedium(PasscodeType.Register, 'sms', verificationStorage);
-
-    const { phone } = verificationStorage;
-
-    assertThat(
-      phone && !(await hasUserWithPhone(phone)),
-      new RequestError({ code: 'user.phone_exists_register', status: 422 })
-    );
-
-    const id = await generateUserId();
-    ctx.log(type, { userId: id });
-
-    await insertUser({ id, primaryPhone: phone, lastSignInAt: Date.now() });
-    await assignInteractionResults(ctx, provider, { login: { accountId: id } });
-
-    return next();
-  });
-
-  router.post(`${registerRoute}/email`, async (ctx, next) => {
-    const { result } = await provider.interactionDetails(ctx.req, ctx.res);
-    const verificationStorage = parseVerificationStorage(result);
-
-    const type = getPasswordlessRelatedLogType(PasscodeType.Register, 'email');
-    ctx.log(type, verificationStorage);
-
-    verificationSessionCheckByFlowAndMedium(PasscodeType.Register, 'email', verificationStorage);
-
-    const { email } = verificationStorage;
-
-    assertThat(
-      email && !(await hasUserWithEmail(email)),
-      new RequestError({ code: 'user.email_exists_register', status: 422 })
-    );
-
-    const id = await generateUserId();
-    ctx.log(type, { userId: id });
-
-    await insertUser({ id, primaryEmail: email, lastSignInAt: Date.now() });
-    await assignInteractionResults(ctx, provider, { login: { accountId: id } });
-
-    return next();
-  });
+      return next();
+    }
+  );
 }

@@ -6,6 +6,13 @@ import { InteractionResults, Provider } from 'oidc-provider';
 import { z } from 'zod';
 
 import RequestError from '@/errors/RequestError';
+import { generateUserId } from '@/lib/user';
+import {
+  findUserByEmail,
+  findUserByPhone,
+  hasUserWithEmail,
+  hasUserWithPhone,
+} from '@/queries/user';
 import assertThat from '@/utils/assert-that';
 
 import { verificationStorageGuard, Medium, Operation, VerificationStorage } from './types';
@@ -52,7 +59,7 @@ export const parseVerificationStorage = (data: unknown): VerificationStorage => 
   return verificationResult.data.verification;
 };
 
-export const verificationSessionCheckByFlowAndMedium = (
+export const checkVerificationSessionByFlowAndMedium = (
   currentFlow: PasscodeType,
   medium: Medium,
   payload: VerificationStorage
@@ -68,6 +75,49 @@ export const verificationSessionCheckByFlowAndMedium = (
     dayjs(expiresAt).isValid() && dayjs(expiresAt).isAfter(dayjs()),
     new RequestError({ code: 'session.verification_expired', status: 401 })
   );
+};
+
+export const checkAndGetUserIdFromPayload = async (
+  flow: PasscodeType,
+  medium: Medium,
+  payload: Pick<VerificationStorage, 'email' | 'phone'>
+): Promise<string> => {
+  const { email, phone } = payload;
+
+  switch (flow + medium) {
+    case PasscodeType.SignIn + 'sms':
+      assertThat(
+        phone && (await hasUserWithPhone(phone)),
+        new RequestError({ code: 'user.phone_not_exists', status: 422 })
+      );
+
+      // eslint-disable-next-line unicorn/no-await-expression-member
+      return (await findUserByPhone(phone)).id;
+    case PasscodeType.SignIn + 'email':
+      assertThat(
+        email && (await hasUserWithEmail(email)),
+        new RequestError({ code: 'user.email_not_exists', status: 422 })
+      );
+
+      // eslint-disable-next-line unicorn/no-await-expression-member
+      return (await findUserByEmail(email)).id;
+    case PasscodeType.Register + 'sms':
+      assertThat(
+        phone && !(await hasUserWithPhone(phone)),
+        new RequestError({ code: 'user.phone_exists_register', status: 422 })
+      );
+
+      return generateUserId();
+    case PasscodeType.Register + 'email':
+      assertThat(
+        email && !(await hasUserWithEmail(email)),
+        new RequestError({ code: 'user.email_exists_register', status: 422 })
+      );
+
+      return generateUserId();
+    default:
+      throw new Error('Not implemented');
+  }
 };
 
 export const assignVerificationStorageResult = async (
