@@ -30,18 +30,22 @@ importers:
       '@types/tar': ^6.1.2
       '@types/yargs': ^17.0.13
       chalk: ^4.1.2
+      decamelize: ^5.0.0
       eslint: ^8.21.0
       find-up: ^5.0.0
       got: ^11.8.2
       hpagent: ^1.0.0
       inquirer: ^8.2.2
       lint-staged: ^13.0.0
+      nanoid: ^3.3.4
       ora: ^5.0.0
       prettier: ^2.7.1
       rimraf: ^3.0.2
+      roarr: ^7.11.0
       semver: ^7.3.7
       slonik: ^30.0.0
       slonik-interceptor-preset: ^1.2.10
+      slonik-sql-tag-raw: ^1.1.4
       tar: ^6.1.11
       ts-node: ^10.9.1
       typescript: ^4.7.4
@@ -50,14 +54,18 @@ importers:
     dependencies:
       '@logto/schemas': link:../schemas
       chalk: 4.1.2
+      decamelize: 5.0.1
       find-up: 5.0.0
       got: 11.8.3
       hpagent: 1.0.0
       inquirer: 8.2.2
+      nanoid: 3.3.4
       ora: 5.4.1
+      roarr: 7.11.0
       semver: 7.3.7
       slonik: 30.1.2
       slonik-interceptor-preset: 1.2.10
+      slonik-sql-tag-raw: 1.1.4_roarr@7.11.0+slonik@30.1.2
       tar: 6.1.11
       yargs: 17.6.0
       zod: 3.18.0
