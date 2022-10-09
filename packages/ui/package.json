@@ -24,7 +24,7 @@
     "@parcel/transformer-svg-react": "2.7.0",
     "@peculiar/webcrypto": "^1.3.3",
     "@silverhand/eslint-config": "1.0.0",
-    "@silverhand/eslint-config-react": "1.0.0",
+    "@silverhand/eslint-config-react": "1.1.0",
     "@silverhand/essentials": "^1.2.1",
     "@silverhand/jest-config": "1.0.0",
     "@silverhand/ts-config": "1.0.0",

@@ -1,5 +1,7 @@
 import classNames from 'classnames';
 
+import { onKeyDownHandler } from '@/utils/a11y';
+
 import * as styles from './DropdownItem.module.scss';
 
 type Props = {
@@ -9,7 +11,13 @@ type Props = {
 };
 
 const DropdownItem = ({ onClick, className, children }: Props) => (
-  <li className={classNames(styles.item, className)} onClick={onClick}>
+  <li
+    role="menuitem"
+    tabIndex={0}
+    className={classNames(styles.item, className)}
+    onKeyDown={onKeyDownHandler(onClick)}
+    onClick={onClick}
+  >
     {children}
   </li>
 );

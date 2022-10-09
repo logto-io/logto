@@ -35,6 +35,8 @@ const IframeConfirmModal = ({
           <iframe
             sandbox={undefined}
             className={isLoading ? styles.hidden : undefined}
+            // For styling use
+            // eslint-disable-next-line jsx-a11y/aria-role
             role="iframe"
             src={url}
             title="terms"
