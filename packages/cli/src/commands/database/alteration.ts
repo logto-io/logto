@@ -1,8 +1,9 @@
 import path from 'path';
 
 import { AlterationScript } from '@logto/schemas/lib/types/alteration';
-import { conditionalString } from '@silverhand/essentials';
+import { conditional, conditionalString } from '@silverhand/essentials';
 import chalk from 'chalk';
+import findUp, { exists } from 'find-up';
 import { copy, existsSync, remove, readdir } from 'fs-extra';
 import { DatabasePool } from 'slonik';
 import { CommandModule } from 'yargs';
@@ -38,9 +39,32 @@ type AlterationFile = { path: string; filename: string };
 
 export const getAlterationFiles = async (): Promise<AlterationFile[]> => {
   const alterationDirectory = getPathInModule('@logto/schemas', 'alterations');
-  // Until we migrate to ESM
-  // eslint-disable-next-line unicorn/prefer-module
-  const localAlterationDirectory = path.resolve(__dirname, './alteration-scripts');
+
+  /**
+   * We copy all alteration scripts to the CLI package root directory,
+   * since they need a proper context that includes required dependencies (such as slonik) in `node_modules/`.
+   * While the original `@logto/schemas` may remove them in production.
+   */
+  const packageDirectory = await findUp(
+    async (directory) => {
+      const hasPackageJson = await exists(path.join(directory, 'package.json'));
+
+      return conditional(hasPackageJson && directory);
+    },
+    {
+      // Until we migrate to ESM
+      // eslint-disable-next-line unicorn/prefer-module
+      cwd: __dirname,
+      type: 'directory',
+    }
+  );
+
+  const localAlterationDirectory = path.resolve(
+    // Until we migrate to ESM
+    // eslint-disable-next-line unicorn/prefer-module
+    packageDirectory ?? __dirname,
+    'alteration-scripts'
+  );
 
   if (!existsSync(alterationDirectory)) {
     return [];
