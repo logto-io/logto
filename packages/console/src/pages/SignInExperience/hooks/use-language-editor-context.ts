@@ -69,11 +69,12 @@ const useLanguageEditorContext = (defaultLanguages: LanguageTag[]) => {
       if (isAddingLanguage) {
         if (isCanceled) {
           setLanguages(defaultLanguages);
+          setSelectedLanguage(languages[0] ?? 'en');
         }
         setIsAddingLanguage(false);
       }
     },
-    [defaultLanguages, isAddingLanguage]
+    [defaultLanguages, isAddingLanguage, languages]
   );
 
   const context = useMemo<Context>(

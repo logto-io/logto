@@ -1,13 +1,16 @@
 import { languages as uiLanguageNameMapping } from '@logto/language-kit';
+import { SignInExperience } from '@logto/schemas';
 import classNames from 'classnames';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+import useSWR from 'swr';
 
 import FormField from '@/components/FormField';
 import Select from '@/components/Select';
 import Switch from '@/components/Switch';
 import * as textButtonStyles from '@/components/TextButton/index.module.scss';
+import { RequestError } from '@/hooks/use-api';
 import useUiLanguages from '@/hooks/use-ui-languages';
 
 import useLanguageEditorContext from '../hooks/use-language-editor-context';
@@ -21,8 +24,10 @@ type Props = {
 
 const LanguagesForm = ({ isManageLanguageVisible = false }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const { watch, control, register } = useFormContext<SignInExperienceForm>();
+  const { data: signInExperience } = useSWR<SignInExperience, RequestError>('/api/sign-in-exp');
+  const { watch, control, register, setValue } = useFormContext<SignInExperienceForm>();
   const isAutoDetect = watch('languageInfo.autoDetect');
+  const selectedDefaultLanguage = watch('languageInfo.fallbackLanguage');
   const [isManageLanguageFormOpen, setIsManageLanguageFormOpen] = useState(false);
   const { languages } = useUiLanguages();
 
@@ -35,6 +40,15 @@ const LanguagesForm = ({ isManageLanguageVisible = false }: Props) => {
 
   const { context: languageEditorContext, Provider: LanguageEditorContextProvider } =
     useLanguageEditorContext(languages);
+
+  useEffect(() => {
+    if (!languages.includes(selectedDefaultLanguage)) {
+      setValue(
+        'languageInfo.fallbackLanguage',
+        signInExperience?.languageInfo.fallbackLanguage ?? 'en'
+      );
+    }
+  }, [languages, selectedDefaultLanguage, setValue, signInExperience]);
 
   return (
     <>

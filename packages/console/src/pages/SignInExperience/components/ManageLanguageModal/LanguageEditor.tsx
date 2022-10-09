@@ -1,15 +1,17 @@
-import { languages, LanguageTag } from '@logto/language-kit';
+import { languages as uiLanguageNameMapping, LanguageTag } from '@logto/language-kit';
 import resource, { isBuiltInLanguageTag } from '@logto/phrases-ui';
 import en from '@logto/phrases-ui/lib/locales/en';
-import { Translation } from '@logto/schemas';
+import { SignInExperience, Translation } from '@logto/schemas';
 import cleanDeep from 'clean-deep';
-import { useCallback, useContext, useEffect, useMemo } from 'react';
+import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import useSWR, { useSWRConfig } from 'swr';
 
 import Button from '@/components/Button';
+import ConfirmModal from '@/components/ConfirmModal';
+import IconButton from '@/components/IconButton';
 import useApi, { RequestError } from '@/hooks/use-api';
 import Delete from '@/icons/Delete';
 import { CustomPhraseResponse } from '@/types/custom-phrase';
@@ -24,9 +26,16 @@ const emptyUiTranslation = createEmptyUiTranslation();
 const LanguageEditor = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
-  const { selectedLanguage, setIsDirty, stopAddingLanguage } = useContext(LanguageEditorContext);
+  const { data: signInExperience } = useSWR<SignInExperience, RequestError>('/api/sign-in-exp');
+
+  const { languages, selectedLanguage, setIsDirty, setSelectedLanguage, stopAddingLanguage } =
+    useContext(LanguageEditorContext);
+
+  const [isDeletionAlertOpen, setIsDeletionAlertOpen] = useState(false);
 
   const isBuiltIn = isBuiltInLanguageTag(selectedLanguage);
+
+  const isDefaultLanguage = signInExperience?.languageInfo.fallbackLanguage === selectedLanguage;
 
   const translationEntries = useMemo(
     () => Object.entries((isBuiltIn ? resource[selectedLanguage] : en).translation),
@@ -105,6 +114,39 @@ const LanguageEditor = () => {
     [api, globalMutate, stopAddingLanguage]
   );
 
+  const onDelete = useCallback(() => {
+    if (!customPhrase && !isDefaultLanguage) {
+      stopAddingLanguage(true);
+      setSelectedLanguage(
+        languages.find((languageTag) => languageTag !== selectedLanguage) ?? 'en'
+      );
+
+      return;
+    }
+    setIsDeletionAlertOpen(true);
+  }, [
+    customPhrase,
+    isDefaultLanguage,
+    languages,
+    selectedLanguage,
+    setSelectedLanguage,
+    stopAddingLanguage,
+  ]);
+
+  const onConfirmDeletion = useCallback(async () => {
+    setIsDeletionAlertOpen(false);
+
+    if (isDefaultLanguage) {
+      return;
+    }
+
+    await api.delete(`/api/custom-phrases/${selectedLanguage}`);
+
+    await globalMutate('/api/custom-phrases');
+
+    setSelectedLanguage(languages.find((languageTag) => languageTag !== selectedLanguage) ?? 'en');
+  }, [api, globalMutate, isDefaultLanguage, languages, selectedLanguage, setSelectedLanguage]);
+
   const onSubmit = handleSubmit(async (formData: Translation) => {
     const updatedCustomPhrase = await upsertCustomPhrase(selectedLanguage, formData);
     void mutate(updatedCustomPhrase);
@@ -126,12 +168,19 @@ const LanguageEditor = () => {
   return (
     <div className={style.languageEditor}>
       <div className={style.title}>
-        {languages[selectedLanguage]}
-        <span>{selectedLanguage}</span>
-        {isBuiltIn && (
-          <span className={style.builtInFlag}>
-            {t('sign_in_exp.others.manage_language.logto_provided')}
-          </span>
+        <div className={style.languageInfo}>
+          {uiLanguageNameMapping[selectedLanguage]}
+          <span>{selectedLanguage}</span>
+          {isBuiltIn && (
+            <span className={style.builtInFlag}>
+              {t('sign_in_exp.others.manage_language.logto_provided')}
+            </span>
+          )}
+        </div>
+        {!isBuiltIn && (
+          <IconButton onClick={onDelete}>
+            <Delete />
+          </IconButton>
         )}
       </div>
       <form
@@ -187,6 +236,28 @@ const LanguageEditor = () => {
           />
         </div>
       </form>
+      <ConfirmModal
+        isOpen={isDeletionAlertOpen}
+        title={
+          isDefaultLanguage
+            ? 'sign_in_exp.others.manage_language.default_language_deletion_title'
+            : 'sign_in_exp.others.manage_language.deletion_title'
+        }
+        confirmButtonText={
+          isDefaultLanguage ? 'sign_in_exp.others.manage_language.got_it' : 'general.delete'
+        }
+        confirmButtonType={isDefaultLanguage ? 'primary' : 'danger'}
+        onCancel={() => {
+          setIsDeletionAlertOpen(false);
+        }}
+        onConfirm={onConfirmDeletion}
+      >
+        {isDefaultLanguage
+          ? t('sign_in_exp.others.manage_language.default_language_deletion_description', {
+              language: uiLanguageNameMapping[selectedLanguage],
+            })
+          : t('sign_in_exp.others.manage_language.deletion_description')}
+      </ConfirmModal>
     </div>
   );
 };

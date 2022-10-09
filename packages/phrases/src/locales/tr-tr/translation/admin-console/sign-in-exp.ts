@@ -99,6 +99,7 @@ const sign_in_exp = {
       default_language_deletion_title: 'Default language can’t be deleted.', // UNTRANSLATED
       default_language_deletion_description:
         '{{language}} is set as your default language and can’t be deleted. ', // UNTRANSLATED
+      got_it: 'Got It', // UNTRANSLATED
     },
     authentication: {
       title: 'AUTHENTICATION',

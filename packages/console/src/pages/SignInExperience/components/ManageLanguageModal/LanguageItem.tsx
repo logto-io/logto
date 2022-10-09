@@ -23,7 +23,12 @@ const LanguageItem = ({ languageTag, isSelected, onClick }: Props) => {
     <div
       ref={itemRef}
       className={classNames(style.languageItem, isSelected && style.selected)}
-      onClick={onClick}
+      onClick={() => {
+        if (isSelected) {
+          return;
+        }
+        onClick();
+      }}
     >
       <div className={style.languageName}>{languages[languageTag]}</div>
       <div className={style.languageTag}>{languageTag}</div>
