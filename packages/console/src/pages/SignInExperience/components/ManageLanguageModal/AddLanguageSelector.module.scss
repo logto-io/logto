@@ -1,24 +1,58 @@
 @use '@/scss/underscore' as _;
 
-.addLanguageButton {
-  width: 100%;
-  border-color: var(--color-outline);
-  color: var(--color-text);
-  background: unset;
+.languageSelector {
+  .input {
+    position: relative;
 
-  .iconPlus {
-    color: var(--color-outline);
+    .addLanguageButton {
+      height: 38px;
+      width: 100%;
+      border-color: var(--color-outline);
+      color: var(--color-text);
+      background: unset;
+    }
+
+    .buttonIcon {
+      color: var(--color-outline);
+    }
+  }
+
+  .dropDown {
+    position: absolute;
+    width: 168px;
+    margin: _.unit(1) 0;
+    padding: _.unit(1);
+    background: var(--color-float);
+    border: 1px solid var(--color-divider);
+    border-radius: 8px;
+    max-height: 288px;
+    overflow-y: auto;
+
+    .dropDownItem {
+      width: 100%;
+      border-radius: _.unit(2);
+      padding: _.unit(2);
+      list-style: none;
+      cursor: pointer;
+
+      &:hover {
+        background: var(--color-hover);
+      }
+
+      .languageName {
+        font: var(--font-label-large);
+        color: var(--color-text);
+      }
+
+      .languageTag {
+        font: var(--font-body-medium);
+        color: var(--color-caption);
+      }
+    }
+  }
+
+  .hidden {
+    display: none;
   }
 }
 
-.dropDownItem {
-  .languageName {
-    font: var(--font-label-large);
-    color: var(--color-text);
-  }
-
-  .languageTag {
-    font: var(--font-body-medium);
-    color: var(--color-caption);
-  }
-}
