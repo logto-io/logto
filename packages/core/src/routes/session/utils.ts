@@ -1,4 +1,4 @@
-import { logTypeGuard, LogType, PasscodeType, User } from '@logto/schemas';
+import { logTypeGuard, LogType, PasscodeType } from '@logto/schemas';
 import { Truthy } from '@silverhand/essentials';
 import dayjs from 'dayjs';
 import { Context } from 'koa';
@@ -6,13 +6,6 @@ import { InteractionResults, Provider } from 'oidc-provider';
 import { z } from 'zod';
 
 import RequestError from '@/errors/RequestError';
-import { generateUserId } from '@/lib/user';
-import {
-  findUserByEmail,
-  findUserByPhone,
-  hasUserWithEmail,
-  hasUserWithPhone,
-} from '@/queries/user';
 import assertThat from '@/utils/assert-that';
 
 import { verificationStorageGuard, Method, Operation, VerificationStorage } from './types';
@@ -74,62 +67,6 @@ export const checkVerificationSessionByFlow = (
     dayjs(expiresAt).isValid() && dayjs(expiresAt).isAfter(dayjs()),
     new RequestError({ code: 'session.verification_expired', status: 401 })
   );
-};
-
-export const checkExistenceAndGetUserIdByMethod = async (
-  method: Method,
-  identity: Pick<VerificationStorage, 'email' | 'phone'>
-) => {
-  const { email, phone } = identity;
-
-  if (method === 'email' && email) {
-    assertThat(
-      await hasUserWithEmail(email),
-      new RequestError({ code: 'user.email_not_exists', status: 422 })
-    );
-    const { id } = await findUserByEmail(email);
-
-    return id;
-  }
-
-  if (method === 'sms' && phone) {
-    assertThat(
-      await hasUserWithPhone(phone),
-      new RequestError({ code: 'user.phone_not_exists', status: 422 })
-    );
-    const { id } = await findUserByPhone(phone);
-
-    return id;
-  }
-
-  throw new RequestError({ code: 'session.passwordless_not_verified', status: 401 });
-};
-
-export const checkAvailabilityByMethodAndGenerateUserId = async (
-  method: Method,
-  identity: Pick<VerificationStorage, 'email' | 'phone'>
-): Promise<Pick<User, 'id' | 'primaryEmail'> | Pick<User, 'id' | 'primaryPhone'>> => {
-  const { email, phone } = identity;
-
-  if (method === 'email' && email) {
-    assertThat(
-      !(await hasUserWithEmail(email)),
-      new RequestError({ code: 'user.email_exists_register', status: 422 })
-    );
-
-    return { id: await generateUserId(), primaryEmail: email };
-  }
-
-  if (method === 'sms' && phone) {
-    assertThat(
-      !(await hasUserWithPhone(phone)),
-      new RequestError({ code: 'user.phone_exists_register', status: 422 })
-    );
-
-    return { id: await generateUserId(), primaryPhone: phone };
-  }
-
-  throw new RequestError({ code: 'session.passwordless_not_verified', status: 401 });
 };
 
 export const assignVerificationResult = async (

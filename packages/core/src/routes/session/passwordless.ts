@@ -2,14 +2,22 @@ import { emailRegEx, phoneRegEx } from '@logto/core-kit';
 import { PasscodeType } from '@logto/schemas';
 import dayjs from 'dayjs';
 import { Provider } from 'oidc-provider';
-import { object, string, z } from 'zod';
+import { object, string } from 'zod';
 
+import RequestError from '@/errors/RequestError';
 import { createPasscode, sendPasscode, verifyPasscode } from '@/lib/passcode';
 import { assignInteractionResults } from '@/lib/session';
-import { insertUser } from '@/lib/user';
+import { generateUserId, insertUser } from '@/lib/user';
 import koaGuard from '@/middleware/koa-guard';
-import { updateUserById } from '@/queries/user';
-import { methodGuard, passcodeTypeGuard } from '@/routes/session/types';
+import {
+  findUserByEmail,
+  findUserByPhone,
+  hasUserWithEmail,
+  hasUserWithPhone,
+  updateUserById,
+} from '@/queries/user';
+import { passcodeTypeGuard } from '@/routes/session/types';
+import assertThat from '@/utils/assert-that';
 
 import { AnonymousRouter } from '../types';
 import { verificationTimeout } from './consts';
@@ -18,8 +26,6 @@ import {
   getPasswordlessRelatedLogType,
   getRoutePrefix,
   parseVerificationStorage,
-  checkAvailabilityByMethodAndGenerateUserId,
-  checkExistenceAndGetUserIdByMethod,
   checkVerificationSessionByFlow,
 } from './utils';
 
@@ -148,48 +154,103 @@ export default function passwordlessRoutes<T extends AnonymousRouter>(
     }
   );
 
-  router.post(
-    '/session/:flow/passwordless/:method',
-    koaGuard({
-      params: object({
-        flow: z.enum(['sign-in', 'register']),
-        method: methodGuard,
-      }),
-    }),
-    async (ctx, next) => {
-      const { result } = await provider.interactionDetails(ctx.req, ctx.res);
-      const verificationStorage = parseVerificationStorage(result);
+  router.post(`${signInRoute}/sms`, async (ctx, next) => {
+    const { result } = await provider.interactionDetails(ctx.req, ctx.res);
+    const verificationStorage = parseVerificationStorage(result);
 
-      const { flow, method } = ctx.guard.params;
-      const flowType: PasscodeType =
-        flow === 'sign-in' ? PasscodeType.SignIn : PasscodeType.Register;
+    const { phone, flow, expiresAt } = verificationStorage;
+    assertThat(phone, new RequestError({ code: 'session.passwordless_not_verified', status: 401 }));
 
-      const type = getPasswordlessRelatedLogType(flowType, method);
-      ctx.log(type, verificationStorage);
+    const type = getPasswordlessRelatedLogType(PasscodeType.SignIn, 'sms');
+    ctx.log(type, { phone, flow, expiresAt });
 
-      checkVerificationSessionByFlow(flowType, verificationStorage);
+    checkVerificationSessionByFlow(PasscodeType.SignIn, verificationStorage);
 
-      if (flow === 'sign-in') {
-        const id = await checkExistenceAndGetUserIdByMethod(method, verificationStorage);
-        ctx.log(type, { userId: id });
+    assertThat(
+      await hasUserWithPhone(phone),
+      new RequestError({ code: 'user.phone_not_exists', status: 422 })
+    );
+    const { id } = await findUserByPhone(phone);
+    ctx.log(type, { userId: id });
 
-        await updateUserById(id, { lastSignInAt: Date.now() });
-        await assignInteractionResults(ctx, provider, { login: { accountId: id } });
-      } else {
-        const userProfile = await checkAvailabilityByMethodAndGenerateUserId(
-          method,
-          verificationStorage
-        );
-        ctx.log(type, { userId: userProfile.id });
+    await updateUserById(id, { lastSignInAt: Date.now() });
+    await assignInteractionResults(ctx, provider, { login: { accountId: id } });
 
-        await insertUser({
-          lastSignInAt: Date.now(),
-          ...userProfile,
-        });
-        await assignInteractionResults(ctx, provider, { login: { accountId: userProfile.id } });
-      }
+    return next();
+  });
 
-      return next();
-    }
-  );
+  router.post(`${signInRoute}/email`, async (ctx, next) => {
+    const { result } = await provider.interactionDetails(ctx.req, ctx.res);
+    const verificationStorage = parseVerificationStorage(result);
+
+    const { email, flow, expiresAt } = verificationStorage;
+    assertThat(email, new RequestError({ code: 'session.passwordless_not_verified', status: 401 }));
+
+    const type = getPasswordlessRelatedLogType(PasscodeType.SignIn, 'email');
+    ctx.log(type, { email, flow, expiresAt });
+
+    checkVerificationSessionByFlow(PasscodeType.SignIn, verificationStorage);
+
+    assertThat(
+      await hasUserWithEmail(email),
+      new RequestError({ code: 'user.email_not_exists', status: 422 })
+    );
+    const { id } = await findUserByEmail(email);
+    ctx.log(type, { userId: id });
+
+    await updateUserById(id, { lastSignInAt: Date.now() });
+    await assignInteractionResults(ctx, provider, { login: { accountId: id } });
+
+    return next();
+  });
+
+  router.post(`${registerRoute}/sms`, async (ctx, next) => {
+    const { result } = await provider.interactionDetails(ctx.req, ctx.res);
+    const verificationStorage = parseVerificationStorage(result);
+
+    const { phone, flow, expiresAt } = verificationStorage;
+    assertThat(phone, new RequestError({ code: 'session.passwordless_not_verified', status: 401 }));
+
+    const type = getPasswordlessRelatedLogType(PasscodeType.Register, 'sms');
+    ctx.log(type, { phone, flow, expiresAt });
+
+    checkVerificationSessionByFlow(PasscodeType.Register, verificationStorage);
+
+    assertThat(
+      !(await hasUserWithPhone(phone)),
+      new RequestError({ code: 'user.phone_exists_register', status: 422 })
+    );
+    const id = await generateUserId();
+    ctx.log(type, { userId: id });
+
+    await insertUser({ id, primaryPhone: phone, lastSignInAt: Date.now() });
+    await assignInteractionResults(ctx, provider, { login: { accountId: id } });
+
+    return next();
+  });
+
+  router.post(`${registerRoute}/email`, async (ctx, next) => {
+    const { result } = await provider.interactionDetails(ctx.req, ctx.res);
+    const verificationStorage = parseVerificationStorage(result);
+
+    const { email, flow, expiresAt } = verificationStorage;
+    assertThat(email, new RequestError({ code: 'session.passwordless_not_verified', status: 401 }));
+
+    const type = getPasswordlessRelatedLogType(PasscodeType.Register, 'email');
+    ctx.log(type, { email, flow, expiresAt });
+
+    checkVerificationSessionByFlow(PasscodeType.Register, verificationStorage);
+
+    assertThat(
+      !(await hasUserWithEmail(email)),
+      new RequestError({ code: 'user.email_exists_register', status: 422 })
+    );
+    const id = await generateUserId();
+    ctx.log(type, { userId: id });
+
+    await insertUser({ id, primaryEmail: email, lastSignInAt: Date.now() });
+    await assignInteractionResults(ctx, provider, { login: { accountId: id } });
+
+    return next();
+  });
 }
