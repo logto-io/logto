@@ -14,7 +14,7 @@ import { methodGuard, passcodeTypeGuard } from '@/routes/session/types';
 import { AnonymousRouter } from '../types';
 import { verificationTimeout } from './consts';
 import {
-  assignVerificationStorageResult,
+  assignVerificationResult,
   getPasswordlessRelatedLogType,
   getRoutePrefix,
   parseVerificationStorage,
@@ -101,7 +101,7 @@ export default function passwordlessRoutes<T extends AnonymousRouter>(
 
       await verifyPasscode(jti, flow, code, { phone });
 
-      await assignVerificationStorageResult(ctx, provider, {
+      await assignVerificationResult(ctx, provider, {
         verification: {
           flow,
           expiresAt: dayjs().add(verificationTimeout, 'second').toISOString(),
@@ -134,7 +134,7 @@ export default function passwordlessRoutes<T extends AnonymousRouter>(
 
       await verifyPasscode(jti, flow, code, { email });
 
-      await assignVerificationStorageResult(ctx, provider, {
+      await assignVerificationResult(ctx, provider, {
         verification: {
           flow,
           expiresAt: dayjs().add(verificationTimeout, 'second').toISOString(),

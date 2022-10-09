@@ -132,7 +132,7 @@ export const checkAndGetUserIdFromPayload = async (
   throw new Error('Not implemented');
 };
 
-export const assignVerificationStorageResult = async (
+export const assignVerificationResult = async (
   ctx: Context,
   provider: Provider,
   result: InteractionResults & { verification: VerificationStorage }
