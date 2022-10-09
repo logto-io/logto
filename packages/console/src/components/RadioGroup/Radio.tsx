@@ -71,6 +71,8 @@ const Radio = ({
         styles[size],
         className
       )}
+      // eslint-disable-next-line jsx-a11y/role-has-required-aria-props
+      role="radio"
       tabIndex={tabIndex}
       onClick={isDisabled ? undefined : onClick}
       onKeyPress={handleKeyPress}
