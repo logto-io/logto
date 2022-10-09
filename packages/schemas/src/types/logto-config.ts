@@ -12,6 +12,11 @@ export type AlterationState = z.infer<typeof alterationStateGuard>;
 export const logtoOidcConfigGuard = z.object({
   privateKeys: z.string().array().optional(),
   cookieKeys: z.string().array().optional(),
+  /**
+   * This interval helps to avoid concurrency issues when exchanging the rotating refresh token multiple times within a given timeframe.
+   * During the leeway window (in seconds), the consumed refresh token will be considered as valid.
+   * This is useful for distributed apps and serverless apps like Next.js, in which there is no shared memory.
+   */
   refreshTokenReuseInterval: z.number().gte(3).optional(),
 });
 

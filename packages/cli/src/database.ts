@@ -1,41 +1,19 @@
 import { SchemaLike, SchemaValue, SchemaValuePrimitive } from '@logto/schemas';
-import chalk from 'chalk';
 import decamelize from 'decamelize';
-import inquirer from 'inquirer';
 import { createPool, IdentifierSqlToken, parseDsn, sql, SqlToken, stringifyDsn } from 'slonik';
 import { createInterceptors } from 'slonik-interceptor-preset';
 import { z } from 'zod';
 
-import { log } from './utilities';
+import { getCliConfig, log } from './utilities';
 
 export const defaultDatabaseUrl = 'postgresql://localhost:5432/logto';
 
-export const getDatabaseUrlFromEnv = async () => {
-  const { DB_URL: databaseUrl } = process.env;
-
-  if (!databaseUrl) {
-    const { value } = await inquirer
-      .prompt<{ value: string }>({
-        type: 'input',
-        name: 'value',
-        message: 'Enter your Logto database URL',
-        default: defaultDatabaseUrl,
-      })
-      .catch(async (error) => {
-        if (error.isTtyError) {
-          log.error('No database URL configured in env');
-        }
-
-        // The type definition does not give us type except `any`, throw it directly will honor the original behavior.
-        // eslint-disable-next-line @typescript-eslint/no-throw-literal
-        throw error;
-      });
-
-    return value;
-  }
-
-  return databaseUrl;
-};
+export const getDatabaseUrlFromEnv = async () =>
+  (await getCliConfig({
+    key: 'DB_URL',
+    readableKey: 'Logto database URL',
+    defaultValue: defaultDatabaseUrl,
+  })) ?? '';
 
 export const createPoolFromEnv = async () => {
   const databaseUrl = await getDatabaseUrlFromEnv();
@@ -78,7 +56,7 @@ export const createPoolAndDatabaseIfNeeded = async () => {
     `);
     await maintenancePool.end();
 
-    log.info(`${chalk.green('✔')} Created database ${databaseName}`);
+    log.succeed(`Created database ${databaseName}`);
 
     return createPoolFromEnv();
   }

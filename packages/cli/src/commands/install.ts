@@ -122,7 +122,7 @@ const installLogto = async ({ path: pathArgument = defaultPath, silent = false }
   try {
     // Seed database
     const pool = await createPoolAndDatabaseIfNeeded(); // It will ask for database URL and save to config
-    await seedByPool(pool);
+    await seedByPool(pool, 'all');
     await pool.end();
   } catch (error: unknown) {
     console.error(error);
@@ -131,7 +131,8 @@ const installLogto = async ({ path: pathArgument = defaultPath, silent = false }
       name: 'value',
       type: 'confirm',
       message:
-        'Error occurred during seeding your Logto database. Would you like to continue without seed?',
+        'Error occurred during seeding your Logto database. Nothing has changed since the seeding process was in a transaction.\n' +
+        '  Would you like to continue without seed?',
       default: false,
     });
 
