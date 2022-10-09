@@ -18,8 +18,9 @@ import {
   getPasswordlessRelatedLogType,
   getRoutePrefix,
   parseVerificationStorage,
-  checkAndGetUserIdFromPayload,
-  checkVerificationSessionByFlowAndMedium,
+  checkAvailabilityByMethodAndGenerateUserId,
+  checkExistenceAndGetUserIdByMethod,
+  checkVerificationSessionByFlow,
 } from './utils';
 
 export const registerRoute = getRoutePrefix('register', 'passwordless');
@@ -158,6 +159,7 @@ export default function passwordlessRoutes<T extends AnonymousRouter>(
     async (ctx, next) => {
       const { result } = await provider.interactionDetails(ctx.req, ctx.res);
       const verificationStorage = parseVerificationStorage(result);
+
       const { flow, method } = ctx.guard.params;
       const flowType: PasscodeType =
         flow === 'sign-in' ? PasscodeType.SignIn : PasscodeType.Register;
@@ -165,24 +167,27 @@ export default function passwordlessRoutes<T extends AnonymousRouter>(
       const type = getPasswordlessRelatedLogType(flowType, method);
       ctx.log(type, verificationStorage);
 
-      checkVerificationSessionByFlowAndMedium(flowType, method, verificationStorage);
-
-      const id = await checkAndGetUserIdFromPayload(flowType, method, verificationStorage);
-      ctx.log(type, { userId: id });
+      checkVerificationSessionByFlow(flowType, verificationStorage);
 
       if (flow === 'sign-in') {
-        await updateUserById(id, { lastSignInAt: Date.now() });
-      } else {
-        const { email, phone } = verificationStorage;
-        await insertUser({
-          id,
-          primaryEmail: email,
-          primaryPhone: phone,
-          lastSignInAt: Date.now(),
-        });
-      }
+        const id = await checkExistenceAndGetUserIdByMethod(method, verificationStorage);
+        ctx.log(type, { userId: id });
 
-      await assignInteractionResults(ctx, provider, { login: { accountId: id } });
+        await updateUserById(id, { lastSignInAt: Date.now() });
+        await assignInteractionResults(ctx, provider, { login: { accountId: id } });
+      } else {
+        const userProfile = await checkAvailabilityByMethodAndGenerateUserId(
+          method,
+          verificationStorage
+        );
+        ctx.log(type, { userId: userProfile.id });
+
+        await insertUser({
+          lastSignInAt: Date.now(),
+          ...userProfile,
+        });
+        await assignInteractionResults(ctx, provider, { login: { accountId: userProfile.id } });
+      }
 
       return next();
     }
