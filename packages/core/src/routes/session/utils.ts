@@ -1,4 +1,4 @@
-import { logTypeGuard, LogType, PasscodeType, User } from '@logto/schemas';
+import { logTypeGuard, LogType, PasscodeType } from '@logto/schemas';
 import { Truthy } from '@silverhand/essentials';
 import dayjs from 'dayjs';
 import { Context } from 'koa';
@@ -15,7 +15,7 @@ import {
 } from '@/queries/user';
 import assertThat from '@/utils/assert-that';
 
-import { verificationStorageGuard, Medium, Operation, VerificationStorage } from './types';
+import { verificationStorageGuard, Method, Operation, VerificationStorage } from './types';
 
 export const getRoutePrefix = (
   type: 'sign-in' | 'register' | 'forgot-password',
@@ -29,10 +29,10 @@ export const getRoutePrefix = (
 
 export const getPasswordlessRelatedLogType = (
   flow: PasscodeType,
-  medium: Medium,
+  method: Method,
   operation?: Operation
 ): LogType => {
-  const body = medium === 'email' ? 'Email' : 'Sms';
+  const body = method === 'email' ? 'Email' : 'Sms';
   const suffix = operation === 'send' ? 'SendPasscode' : '';
 
   const result = logTypeGuard.safeParse(flow + body + suffix);
@@ -61,13 +61,13 @@ export const parseVerificationStorage = (data: unknown): VerificationStorage => 
 
 export const checkVerificationSessionByFlowAndMedium = (
   currentFlow: PasscodeType,
-  medium: Medium,
+  method: Method,
   payload: VerificationStorage
 ) => {
   const { flow, expiresAt, email, phone } = payload;
 
   assertThat(
-    flow === currentFlow && ((medium === 'email' && email) || (medium === 'sms' && phone)),
+    flow === currentFlow && ((method === 'email' && email) || (method === 'sms' && phone)),
     new RequestError({ code: 'session.passwordless_not_verified', status: 401 })
   );
 
@@ -79,64 +79,57 @@ export const checkVerificationSessionByFlowAndMedium = (
 
 export const checkAndGetUserIdFromPayload = async (
   flow: PasscodeType,
-  medium: Medium,
+  method: Method,
   payload: Pick<VerificationStorage, 'email' | 'phone'>
-): Promise<string> => {
+) => {
   const { email, phone } = payload;
 
-  // eslint-disable-next-line @silverhand/fp/no-let
-  let user: User;
-  // eslint-disable-next-line @silverhand/fp/no-let
-  let id: string;
+  if (flow === PasscodeType.SignIn && method === 'sms') {
+    assertThat(
+      phone && (await hasUserWithPhone(phone)),
+      new RequestError({ code: 'user.phone_not_exists', status: 422 })
+    );
 
-  switch (flow + medium) {
-    case PasscodeType.SignIn + 'sms':
-      assertThat(
-        phone && (await hasUserWithPhone(phone)),
-        new RequestError({ code: 'user.phone_not_exists', status: 422 })
-      );
+    const { id } = await findUserByPhone(phone);
 
-      // eslint-disable-next-line @silverhand/fp/no-mutation
-      user = await findUserByPhone(phone);
-      // eslint-disable-next-line @silverhand/fp/no-mutation
-      id = user.id;
-
-      return id;
-    case PasscodeType.SignIn + 'email':
-      assertThat(
-        email && (await hasUserWithEmail(email)),
-        new RequestError({ code: 'user.email_not_exists', status: 422 })
-      );
-
-      // eslint-disable-next-line @silverhand/fp/no-mutation
-      user = await findUserByEmail(email);
-      // eslint-disable-next-line @silverhand/fp/no-mutation
-      id = user.id;
-
-      return id;
-    case PasscodeType.Register + 'sms':
-      assertThat(
-        phone && !(await hasUserWithPhone(phone)),
-        new RequestError({ code: 'user.phone_exists_register', status: 422 })
-      );
-
-      // eslint-disable-next-line @silverhand/fp/no-mutation
-      id = await generateUserId();
-
-      return id;
-    case PasscodeType.Register + 'email':
-      assertThat(
-        email && !(await hasUserWithEmail(email)),
-        new RequestError({ code: 'user.email_exists_register', status: 422 })
-      );
-
-      // eslint-disable-next-line @silverhand/fp/no-mutation
-      id = await generateUserId();
-
-      return id;
-    default:
-      throw new Error('Not implemented');
+    return id;
   }
+
+  if (flow === PasscodeType.SignIn && method === 'email') {
+    assertThat(
+      email && (await hasUserWithEmail(email)),
+      new RequestError({ code: 'user.email_not_exists', status: 422 })
+    );
+
+    const { id } = await findUserByEmail(email);
+
+    return id;
+  }
+
+  if (flow === PasscodeType.Register && method === 'sms') {
+    assertThat(
+      phone && !(await hasUserWithPhone(phone)),
+      new RequestError({ code: 'user.phone_exists_register', status: 422 })
+    );
+
+    const id = await generateUserId();
+
+    return id;
+  }
+
+  if (flow === PasscodeType.Register && method === 'email') {
+    assertThat(
+      email && !(await hasUserWithEmail(email)),
+      new RequestError({ code: 'user.email_exists_register', status: 422 })
+    );
+
+    const id = await generateUserId();
+
+    return id;
+  }
+
+  // TODO: reuse this for use cases whose flow is PasscodeType.ForgotPassword
+  throw new Error('Not implemented');
 };
 
 export const assignVerificationStorageResult = async (

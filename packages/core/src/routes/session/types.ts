@@ -3,9 +3,9 @@ import { z } from 'zod';
 
 export const passcodeTypeGuard = z.nativeEnum(PasscodeType);
 
-export const mediumGuard = z.enum(['email', 'sms']);
+export const methodGuard = z.enum(['email', 'sms']);
 
-export type Medium = z.infer<typeof mediumGuard>;
+export type Method = z.infer<typeof methodGuard>;
 
 export const operationGuard = z.enum(['send', 'verify']);
 

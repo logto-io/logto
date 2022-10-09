@@ -9,7 +9,7 @@ import { assignInteractionResults } from '@/lib/session';
 import { insertUser } from '@/lib/user';
 import koaGuard from '@/middleware/koa-guard';
 import { updateUserById } from '@/queries/user';
-import { mediumGuard, passcodeTypeGuard } from '@/routes/session/types';
+import { methodGuard, passcodeTypeGuard } from '@/routes/session/types';
 
 import { AnonymousRouter } from '../types';
 import { verificationTimeout } from './consts';
@@ -148,26 +148,26 @@ export default function passwordlessRoutes<T extends AnonymousRouter>(
   );
 
   router.post(
-    '/session/:flow/passwordless/:medium',
+    '/session/:flow/passwordless/:method',
     koaGuard({
       params: object({
         flow: z.enum(['sign-in', 'register']),
-        medium: mediumGuard,
+        method: methodGuard,
       }),
     }),
     async (ctx, next) => {
       const { result } = await provider.interactionDetails(ctx.req, ctx.res);
       const verificationStorage = parseVerificationStorage(result);
-      const { flow, medium } = ctx.guard.params;
+      const { flow, method } = ctx.guard.params;
       const flowType: PasscodeType =
         flow === 'sign-in' ? PasscodeType.SignIn : PasscodeType.Register;
 
-      const type = getPasswordlessRelatedLogType(flowType, medium);
+      const type = getPasswordlessRelatedLogType(flowType, method);
       ctx.log(type, verificationStorage);
 
-      checkVerificationSessionByFlowAndMedium(flowType, medium, verificationStorage);
+      checkVerificationSessionByFlowAndMedium(flowType, method, verificationStorage);
 
-      const id = await checkAndGetUserIdFromPayload(flowType, medium, verificationStorage);
+      const id = await checkAndGetUserIdFromPayload(flowType, method, verificationStorage);
       ctx.log(type, { userId: id });
 
       if (flow === 'sign-in') {
