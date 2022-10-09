@@ -1,18 +1,17 @@
 import { GeneratedSchema, SchemaLike } from '@logto/schemas';
+import {
+  OmitAutoSetFields,
+  convertToIdentifiers,
+  excludeAutoSetFields,
+  convertToPrimitiveOrSql,
+  conditionalSql,
+} from '@logto/shared';
 import { has } from '@silverhand/essentials';
 import { IdentifierSqlToken, sql } from 'slonik';
 
 import envSet from '@/env-set';
 import { InsertionError } from '@/errors/SlonikError';
 import assertThat from '@/utils/assert-that';
-
-import {
-  conditionalSql,
-  convertToIdentifiers,
-  convertToPrimitiveOrSql,
-  excludeAutoSetFields,
-  OmitAutoSetFields,
-} from './utils';
 
 const setExcluded = (...fields: IdentifierSqlToken[]) =>
   sql.join(

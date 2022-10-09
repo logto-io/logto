@@ -2,6 +2,7 @@ import { readdir, readFile } from 'fs/promises';
 import path from 'path';
 
 import { logtoConfigGuards, LogtoOidcConfigKey, seeds } from '@logto/schemas';
+import { buildApplicationSecret } from '@logto/shared';
 import chalk from 'chalk';
 import { DatabasePool, DatabaseTransactionConnection, sql } from 'slonik';
 import { raw } from 'slonik-sql-tag-raw';
@@ -14,7 +15,7 @@ import {
   updateDatabaseTimestamp,
   updateValueByKey,
 } from '../../../queries/logto-config';
-import { buildApplicationSecret, getPathInModule, log, oraPromise } from '../../../utilities';
+import { getPathInModule, log, oraPromise } from '../../../utilities';
 import { getLatestAlterationTimestamp } from '../alteration';
 import { oidcConfigReaders } from './oidc-config';
 

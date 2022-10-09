@@ -24,7 +24,7 @@ jest.mock('@/queries/resource', () => ({
   deleteResourceById: jest.fn(),
 }));
 
-jest.mock('@/utils/id', () => ({
+jest.mock('@logto/shared', () => ({
   // eslint-disable-next-line unicorn/consistent-function-scoping
   buildIdGenerator: jest.fn(() => () => 'randomId'),
 }));

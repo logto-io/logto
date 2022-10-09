@@ -7,7 +7,6 @@ import chalk from 'chalk';
 import got, { Progress } from 'got';
 import { HttpsProxyAgent } from 'hpagent';
 import inquirer from 'inquirer';
-import { customAlphabet } from 'nanoid';
 import ora from 'ora';
 
 export const safeExecSync = (command: string) => {
@@ -159,9 +158,3 @@ export const getCliConfig = async ({ key, readableKey, comments, defaultValue }:
 export const noop = () => {};
 
 export const deduplicate = <T>(array: T[]) => [...new Set(array)];
-
-export const alphabet = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
-
-export const buildIdGenerator = (size: number) => customAlphabet(alphabet, size);
-
-export const buildApplicationSecret = buildIdGenerator(21);

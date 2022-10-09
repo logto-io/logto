@@ -29,11 +29,10 @@ export const excludeAutoSetFields = <T extends string>(fields: readonly T[]) =>
  * @param value The value to convert.
  * @returns A primitive that can be saved into database.
  */
+// eslint-disable-next-line complexity
 export const convertToPrimitiveOrSql = (
   key: string,
-  // eslint-disable-next-line @typescript-eslint/ban-types
   value: NonNullable<SchemaValue> | null
-  // eslint-disable-next-line @typescript-eslint/ban-types
 ): NonNullable<SchemaValuePrimitive> | SqlToken | null => {
   if (value === null) {
     return null;

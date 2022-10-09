@@ -4,12 +4,12 @@ import {
   OidcModelInstancePayload,
   OidcModelInstances,
 } from '@logto/schemas';
+import { convertToIdentifiers, convertToTimestamp } from '@logto/shared';
 import { conditional, Nullable } from '@silverhand/essentials';
 import dayjs from 'dayjs';
 import { sql, ValueExpression } from 'slonik';
 
 import { buildInsertInto } from '@/database/insert-into';
-import { convertToIdentifiers, convertToTimestamp } from '@/database/utils';
 import envSet from '@/env-set';
 
 export type WithConsumed<T> = T & { consumed?: boolean };

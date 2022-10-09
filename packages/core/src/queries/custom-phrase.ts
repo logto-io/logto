@@ -1,8 +1,8 @@
 import { CreateCustomPhrase, CustomPhrase, CustomPhrases } from '@logto/schemas';
+import { convertToIdentifiers, manyRows } from '@logto/shared';
 import { sql } from 'slonik';
 
 import { buildInsertInto } from '@/database/insert-into';
-import { convertToIdentifiers, manyRows } from '@/database/utils';
 import envSet from '@/env-set';
 import { DeletionError } from '@/errors/SlonikError';
 
