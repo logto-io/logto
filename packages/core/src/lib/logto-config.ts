@@ -1,10 +1,12 @@
 import { getRowsByKeys } from '@logto/cli/lib/queries/logto-config';
-import { logtoOidcConfigGuard, LogtoOidcConfigKey } from '@logto/schemas';
+import { logtoOidcConfigGuard, LogtoOidcConfigKey, LogtoOidcConfigType } from '@logto/schemas';
 import chalk from 'chalk';
 import { DatabasePool, DatabaseTransactionConnection } from 'slonik';
 import { z, ZodError } from 'zod';
 
-export const getOidcConfigs = async (pool: DatabasePool | DatabaseTransactionConnection) => {
+export const getOidcConfigs = async (
+  pool: DatabasePool | DatabaseTransactionConnection
+): Promise<LogtoOidcConfigType> => {
   try {
     const { rows } = await getRowsByKeys(pool, Object.values(LogtoOidcConfigKey));
 
