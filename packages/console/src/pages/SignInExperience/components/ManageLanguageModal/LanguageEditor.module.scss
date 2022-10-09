@@ -11,6 +11,9 @@
     justify-content: space-between;
 
     .languageInfo {
+      display: flex;
+      align-items: center;
+
       > span {
         margin-left: _.unit(2);
         font: var(--font-body-medium);

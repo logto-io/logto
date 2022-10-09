@@ -35,8 +35,7 @@ const LanguageEditor = () => {
 
   const isBuiltIn = isBuiltInLanguageTag(selectedLanguage);
 
-  const isDefaultLanguage =
-    signInExperience && signInExperience.languageInfo.fallbackLanguage === selectedLanguage;
+  const isDefaultLanguage = signInExperience?.languageInfo.fallbackLanguage === selectedLanguage;
 
   const translationEntries = useMemo(
     () => Object.entries((isBuiltIn ? resource[selectedLanguage] : en).translation),
