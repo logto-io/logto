@@ -1,11 +1,12 @@
 import { readdir, readFile } from 'fs/promises';
 import path from 'path';
 
-import { LogtoConfigKey, LogtoOidcConfig, logtoOidcConfigGuard, seeds } from '@logto/schemas';
+import { logtoConfigGuards, LogtoOidcConfigKey, seeds } from '@logto/schemas';
 import chalk from 'chalk';
 import { DatabasePool, DatabaseTransactionConnection, sql } from 'slonik';
 import { raw } from 'slonik-sql-tag-raw';
 import { CommandModule } from 'yargs';
+import { z } from 'zod';
 
 import { createPoolAndDatabaseIfNeeded, insertInto } from '../../../database';
 import {
@@ -15,7 +16,7 @@ import {
 } from '../../../queries/logto-config';
 import { buildApplicationSecret, getPathInModule, log, oraPromise } from '../../../utilities';
 import { getLatestAlterationTimestamp } from '../alteration';
-import { OidcConfigKey, oidcConfigReaders } from './oidc-config';
+import { oidcConfigReaders } from './oidc-config';
 
 const createTables = async (connection: DatabaseTransactionConnection) => {
   const tableDirectory = getPathInModule('@logto/schemas', 'tables');
@@ -57,15 +58,26 @@ const seedTables = async (connection: DatabaseTransactionConnection) => {
 };
 
 const seedOidcConfigs = async (pool: DatabaseTransactionConnection) => {
-  const { rows } = await getRowsByKeys(pool, [LogtoConfigKey.OidcConfig]);
-  const existingConfig = await logtoOidcConfigGuard
-    .parseAsync(rows[0]?.value)
-    // It's useful!
-    // eslint-disable-next-line unicorn/no-useless-undefined
-    .catch(() => undefined);
-  const existingKeys = existingConfig ? Object.keys(existingConfig) : [];
-  const validOptions = OidcConfigKey.options.filter((key) => {
-    const included = existingKeys.includes(key);
+  const configGuard = z.object({
+    key: z.nativeEnum(LogtoOidcConfigKey),
+    value: z.unknown(),
+  });
+  const { rows } = await getRowsByKeys(pool, Object.values(LogtoOidcConfigKey));
+  // Filter out valid keys that hold a valid value
+  const result = await Promise.all(
+    rows.map<Promise<LogtoOidcConfigKey | undefined>>(async (row) => {
+      try {
+        const { key, value } = await configGuard.parseAsync(row);
+        await logtoConfigGuards[key].parseAsync(value);
+
+        return key;
+      } catch {}
+    })
+  );
+  const existingKeys = new Set(result.filter(Boolean));
+
+  const validOptions = Object.values(LogtoOidcConfigKey).filter((key) => {
+    const included = existingKeys.has(key);
 
     if (included) {
       log.info(`Key ${chalk.green(key)} exists, skipping`);
@@ -74,11 +86,9 @@ const seedOidcConfigs = async (pool: DatabaseTransactionConnection) => {
     return !included;
   });
 
-  const entries: Array<[keyof LogtoOidcConfig, LogtoOidcConfig[keyof LogtoOidcConfig]]> = [];
-
-  // Both await in loop and `.push()` are intended since we'd like to log info in sequence
+  // The awaits in loop is intended since we'd like to log info in sequence
+  /* eslint-disable no-await-in-loop */
   for (const key of validOptions) {
-    // eslint-disable-next-line no-await-in-loop
     const { value, fromEnv } = await oidcConfigReaders[key]();
 
     if (fromEnv) {
@@ -87,14 +97,10 @@ const seedOidcConfigs = async (pool: DatabaseTransactionConnection) => {
       log.info(`Generated config ${chalk.green(key)}`);
     }
 
-    // eslint-disable-next-line @silverhand/fp/no-mutating-methods
-    entries.push([key, value]);
+    await updateValueByKey(pool, key, value);
   }
+  /* eslint-enable no-await-in-loop */
 
-  await updateValueByKey(pool, LogtoConfigKey.OidcConfig, {
-    ...existingConfig,
-    ...Object.fromEntries(entries),
-  });
   log.succeed('Seed OIDC config');
 };
 
