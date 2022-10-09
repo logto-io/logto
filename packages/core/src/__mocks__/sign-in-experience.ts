@@ -8,6 +8,8 @@ import {
   TermsOfUse,
   SignInMode,
   Color,
+  SignUpIdentifier,
+  SignInIdentifier,
 } from '@logto/schemas';
 
 export const mockSignInExperience: SignInExperience = {
@@ -30,6 +32,21 @@ export const mockSignInExperience: SignInExperience = {
     fallbackLanguage: 'en',
     fixedLanguage: 'zh-CN',
   },
+  signUp: {
+    identifier: SignUpIdentifier.Username,
+    password: true,
+    verify: false,
+  },
+  signIn: {
+    methods: [
+      {
+        identifier: SignInIdentifier.Username,
+        password: true,
+        verificationCode: false,
+        isPasswordPrimary: true,
+      },
+    ],
+  },
   signInMethods: {
     username: SignInMethodState.Primary,
     email: SignInMethodState.Disabled,
@@ -38,6 +55,7 @@ export const mockSignInExperience: SignInExperience = {
   },
   socialSignInConnectorTargets: ['github', 'facebook', 'wechat'],
   signInMode: SignInMode.SignInAndRegister,
+  forgotPassword: true,
 };
 
 export const mockColor: Color = {

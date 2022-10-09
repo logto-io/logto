@@ -3,8 +3,10 @@ import {
   ConnectorPlatform,
   ConnectorType,
   SignInExperience,
+  SignInIdentifier,
   SignInMethodState,
   SignInMode,
+  SignUpIdentifier,
 } from '@logto/schemas';
 
 import { SignInExperienceSettings } from '@/types';
@@ -180,6 +182,33 @@ export const mockSignInExperience: SignInExperience = {
     fallbackLanguage: 'en',
     fixedLanguage: 'zh-CN',
   },
+  signUp: {
+    identifier: SignUpIdentifier.Username,
+    password: true,
+    verify: false,
+  },
+  signIn: {
+    methods: [
+      {
+        identifier: SignInIdentifier.Username,
+        password: true,
+        verificationCode: false,
+        isPasswordPrimary: true,
+      },
+      {
+        identifier: SignInIdentifier.Email,
+        password: true,
+        verificationCode: false,
+        isPasswordPrimary: true,
+      },
+      {
+        identifier: SignInIdentifier.Phone,
+        password: true,
+        verificationCode: false,
+        isPasswordPrimary: true,
+      },
+    ],
+  },
   signInMethods: {
     username: SignInMethodState.Primary,
     email: SignInMethodState.Secondary,
@@ -188,6 +217,7 @@ export const mockSignInExperience: SignInExperience = {
   },
   socialSignInConnectorTargets: ['BE8QXN0VsrOH7xdWFDJZ9', 'lcXT4o2GSjbV9kg2shZC7'],
   signInMode: SignInMode.SignInAndRegister,
+  forgotPassword: true,
 };
 
 export const mockSignInExperienceSettings: SignInExperienceSettings = {
@@ -199,4 +229,5 @@ export const mockSignInExperienceSettings: SignInExperienceSettings = {
   secondarySignInMethods: ['email', 'sms', 'social'],
   socialConnectors,
   signInMode: SignInMode.SignInAndRegister,
+  forgotPassword: true,
 };

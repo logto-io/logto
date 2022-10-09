@@ -130,6 +130,41 @@ export const signInMethodsGuard = z.object({
 
 export type SignInMethods = z.infer<typeof signInMethodsGuard>;
 
+export enum SignUpIdentifier {
+  Email = 'email',
+  Phone = 'phone',
+  Username = 'username',
+  EmailOrPhone = 'emailOrPhone',
+  None = 'none',
+}
+
+export const signUpGuard = z.object({
+  identifier: z.nativeEnum(SignUpIdentifier),
+  password: z.boolean(),
+  verify: z.boolean(),
+});
+
+export type SignUp = z.infer<typeof signUpGuard>;
+
+export enum SignInIdentifier {
+  Email = 'email',
+  Phone = 'phone',
+  Username = 'username',
+}
+
+export const signInGuard = z.object({
+  methods: z
+    .object({
+      identifier: z.nativeEnum(SignInIdentifier),
+      password: z.boolean(),
+      verificationCode: z.boolean(),
+      isPasswordPrimary: z.boolean(),
+    })
+    .array(),
+});
+
+export type SignIn = z.infer<typeof signInGuard>;
+
 export const connectorTargetsGuard = z.string().array();
 
 export type ConnectorTargets = z.infer<typeof connectorTargetsGuard>;
