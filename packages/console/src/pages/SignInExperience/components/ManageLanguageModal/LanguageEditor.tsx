@@ -3,6 +3,7 @@ import resource, { isBuiltInLanguageTag } from '@logto/phrases-ui';
 import en from '@logto/phrases-ui/lib/locales/en';
 import { SignInExperience, Translation } from '@logto/schemas';
 import cleanDeep from 'clean-deep';
+import deepmerge from 'deepmerge';
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
@@ -56,10 +57,7 @@ const LanguageEditor = () => {
   );
 
   const defaultFormValues = useMemo(
-    () =>
-      customPhrase && Object.keys(customPhrase.translation).length > 0
-        ? customPhrase.translation
-        : emptyUiTranslation,
+    () => deepmerge(emptyUiTranslation, customPhrase?.translation ?? {}),
     [customPhrase]
   );
 
