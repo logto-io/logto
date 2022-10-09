@@ -3939,7 +3939,7 @@ packages:
       '@jest/types': 28.1.3
       deepmerge: 4.2.2
       identity-obj-proxy: 3.0.0
-      jest: 28.1.3_k5ytkvaprncdyzidqqws5bqksq
+      jest: 28.1.3_@types+node@16.11.12
       jest-matcher-specific-error: 1.0.0
       jest-transform-stub: 2.0.0
       ts-jest: 28.0.7_lhw3xkmzugq5tscs3x2ndm4sby
@@ -14925,7 +14925,7 @@ packages:
       '@jest/types': 28.1.3
       bs-logger: 0.2.6
       fast-json-stable-stringify: 2.1.0
-      jest: 28.1.3_k5ytkvaprncdyzidqqws5bqksq
+      jest: 28.1.3_@types+node@16.11.12
       jest-util: 28.1.3
       json5: 2.2.1
       lodash.memoize: 4.1.2

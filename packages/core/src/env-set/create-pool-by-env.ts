@@ -1,12 +1,12 @@
 import { assertEnv } from '@silverhand/essentials';
 import chalk from 'chalk';
-import { createPool } from 'slonik';
+import { createMockPool, createMockQueryResult, createPool } from 'slonik';
 import { createInterceptors } from 'slonik-interceptor-preset';
 
 const createPoolByEnv = async (isTest: boolean) => {
   // Database connection is disabled in unit test environment
   if (isTest) {
-    return;
+    return createMockPool({ query: async () => createMockQueryResult([]) });
   }
 
   const key = 'DB_URL';

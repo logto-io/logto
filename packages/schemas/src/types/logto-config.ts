@@ -11,7 +11,7 @@ export type AlterationStateType = {
   [AlterationStateKey.AlterationState]: AlterationState;
 };
 
-const alterationStateGuard: Readonly<{
+export const alterationStateGuard: Readonly<{
   [key in AlterationStateKey]: ZodType<AlterationStateType[key]>;
 }> = Object.freeze({
   [AlterationStateKey.AlterationState]: z.object({
@@ -33,7 +33,7 @@ export type LogtoOidcConfigType = {
   [LogtoOidcConfigKey.RefreshTokenReuseInterval]: number;
 };
 
-const logtoOidcConfigGuard: Readonly<{
+export const logtoOidcConfigGuard: Readonly<{
   [key in LogtoOidcConfigKey]: ZodType<LogtoOidcConfigType[key]>;
 }> = Object.freeze({
   [LogtoOidcConfigKey.PrivateKeys]: z.string().array(),
