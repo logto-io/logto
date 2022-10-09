@@ -74,6 +74,8 @@ const CreateForm = ({ onClose, isOpen: isFormOpen, type }: Props) => {
   const closeModal = () => {
     setIsGetStartedModalOpen(false);
     onClose?.(activeConnectorId);
+    setActiveGroupId(undefined);
+    setActiveConnectorId(undefined);
   };
 
   return (
