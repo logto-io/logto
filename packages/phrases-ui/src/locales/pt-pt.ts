@@ -57,6 +57,7 @@ const translation = {
     reset_password_description_sms:
       'Digite o número de telefone associado à sua conta e enviaremos uma mensagem de texto com o código de verificação para redefinir sua senha.',
     new_password: 'Nova Senha',
+    password_changed: 'Password Changed', // UNTRANSLATED
   },
   error: {
     username_password_mismatch: 'O Utilizador e a password não correspondem',

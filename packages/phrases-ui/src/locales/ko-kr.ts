@@ -57,6 +57,7 @@ const translation = {
     reset_password_description_sms:
       '계정과 연결된 전화번호를 입력하면 비밀번호 재설정을 위한 인증 코드를 문자로 보내드립니다.',
     new_password: '새 비밀번호',
+    password_changed: 'Password Changed', // UNTRANSLATED
   },
   error: {
     username_password_mismatch: '사용자 이름 또는 비밀번호가 일치하지 않아요.',

@@ -95,8 +95,14 @@ const PasscodeValidation = ({ type, method, className, target }: Props) => {
   useEffect(() => {
     if (verifyPasscodeResult?.redirectTo) {
       window.location.replace(verifyPasscodeResult.redirectTo);
+
+      return;
     }
-  }, [verifyPasscodeResult]);
+
+    if (verifyPasscodeResult && type === 'forgot-password') {
+      navigate('/forgot-password/reset', { replace: true });
+    }
+  }, [navigate, type, verifyPasscodeResult]);
 
   return (
     <form className={classNames(styles.form, className)}>
