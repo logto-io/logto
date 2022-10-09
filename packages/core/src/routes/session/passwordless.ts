@@ -1,6 +1,5 @@
 import { emailRegEx, phoneRegEx } from '@logto/core-kit';
 import { PasscodeType } from '@logto/schemas';
-import dayjs from 'dayjs';
 import { Provider } from 'oidc-provider';
 import { object, string } from 'zod';
 
@@ -20,13 +19,15 @@ import { passcodeTypeGuard } from '@/routes/session/types';
 import assertThat from '@/utils/assert-that';
 
 import { AnonymousRouter } from '../types';
-import { verificationTimeout } from './consts';
 import {
   assignVerificationResult,
   getPasswordlessRelatedLogType,
   getRoutePrefix,
-  parseVerificationStorage,
-  checkVerificationSessionByFlow,
+  getVerificationStorageFromInteraction,
+  smsSignInSessionGuard,
+  emailSignInSessionGuard,
+  smsRegisterSessionGuard,
+  emailRegisterSessionGuard,
 } from './utils';
 
 export const registerRoute = getRoutePrefix('register', 'passwordless');
@@ -108,13 +109,7 @@ export default function passwordlessRoutes<T extends AnonymousRouter>(
 
       await verifyPasscode(jti, flow, code, { phone });
 
-      await assignVerificationResult(ctx, provider, {
-        verification: {
-          flow,
-          expiresAt: dayjs().add(verificationTimeout, 'second').toISOString(),
-          phone,
-        },
-      });
+      await assignVerificationResult(ctx, provider, flow, { phone });
       ctx.status = 204;
 
       return next();
@@ -141,13 +136,7 @@ export default function passwordlessRoutes<T extends AnonymousRouter>(
 
       await verifyPasscode(jti, flow, code, { email });
 
-      await assignVerificationResult(ctx, provider, {
-        verification: {
-          flow,
-          expiresAt: dayjs().add(verificationTimeout, 'second').toISOString(),
-          email,
-        },
-      });
+      await assignVerificationResult(ctx, provider, flow, { email });
       ctx.status = 204;
 
       return next();
@@ -155,16 +144,12 @@ export default function passwordlessRoutes<T extends AnonymousRouter>(
   );
 
   router.post(`${signInRoute}/sms`, async (ctx, next) => {
-    const { result } = await provider.interactionDetails(ctx.req, ctx.res);
-    const verificationStorage = parseVerificationStorage(result);
-
-    const { phone, flow, expiresAt } = verificationStorage;
-    assertThat(phone, new RequestError({ code: 'session.passwordless_not_verified', status: 401 }));
+    const verificationStorage = await getVerificationStorageFromInteraction(ctx, provider);
 
     const type = getPasswordlessRelatedLogType(PasscodeType.SignIn, 'sms');
-    ctx.log(type, { phone, flow, expiresAt });
+    ctx.log(type, verificationStorage);
 
-    checkVerificationSessionByFlow(PasscodeType.SignIn, verificationStorage);
+    const { phone } = smsSignInSessionGuard(verificationStorage);
 
     assertThat(
       await hasUserWithPhone(phone),
@@ -180,16 +165,12 @@ export default function passwordlessRoutes<T extends AnonymousRouter>(
   });
 
   router.post(`${signInRoute}/email`, async (ctx, next) => {
-    const { result } = await provider.interactionDetails(ctx.req, ctx.res);
-    const verificationStorage = parseVerificationStorage(result);
-
-    const { email, flow, expiresAt } = verificationStorage;
-    assertThat(email, new RequestError({ code: 'session.passwordless_not_verified', status: 401 }));
+    const verificationStorage = await getVerificationStorageFromInteraction(ctx, provider);
 
     const type = getPasswordlessRelatedLogType(PasscodeType.SignIn, 'email');
-    ctx.log(type, { email, flow, expiresAt });
+    ctx.log(type, verificationStorage);
 
-    checkVerificationSessionByFlow(PasscodeType.SignIn, verificationStorage);
+    const { email } = emailSignInSessionGuard(verificationStorage);
 
     assertThat(
       await hasUserWithEmail(email),
@@ -205,16 +186,12 @@ export default function passwordlessRoutes<T extends AnonymousRouter>(
   });
 
   router.post(`${registerRoute}/sms`, async (ctx, next) => {
-    const { result } = await provider.interactionDetails(ctx.req, ctx.res);
-    const verificationStorage = parseVerificationStorage(result);
-
-    const { phone, flow, expiresAt } = verificationStorage;
-    assertThat(phone, new RequestError({ code: 'session.passwordless_not_verified', status: 401 }));
+    const verificationStorage = await getVerificationStorageFromInteraction(ctx, provider);
 
     const type = getPasswordlessRelatedLogType(PasscodeType.Register, 'sms');
-    ctx.log(type, { phone, flow, expiresAt });
+    ctx.log(type, verificationStorage);
 
-    checkVerificationSessionByFlow(PasscodeType.Register, verificationStorage);
+    const { phone } = smsRegisterSessionGuard(verificationStorage);
 
     assertThat(
       !(await hasUserWithPhone(phone)),
@@ -230,16 +207,12 @@ export default function passwordlessRoutes<T extends AnonymousRouter>(
   });
 
   router.post(`${registerRoute}/email`, async (ctx, next) => {
-    const { result } = await provider.interactionDetails(ctx.req, ctx.res);
-    const verificationStorage = parseVerificationStorage(result);
-
-    const { email, flow, expiresAt } = verificationStorage;
-    assertThat(email, new RequestError({ code: 'session.passwordless_not_verified', status: 401 }));
+    const verificationStorage = await getVerificationStorageFromInteraction(ctx, provider);
 
     const type = getPasswordlessRelatedLogType(PasscodeType.Register, 'email');
-    ctx.log(type, { email, flow, expiresAt });
+    ctx.log(type, verificationStorage);
 
-    checkVerificationSessionByFlow(PasscodeType.Register, verificationStorage);
+    const { email } = emailRegisterSessionGuard(verificationStorage);
 
     assertThat(
       !(await hasUserWithEmail(email)),

@@ -2,13 +2,20 @@ import { logTypeGuard, LogType, PasscodeType } from '@logto/schemas';
 import { Truthy } from '@silverhand/essentials';
 import dayjs from 'dayjs';
 import { Context } from 'koa';
-import { InteractionResults, Provider } from 'oidc-provider';
-import { z } from 'zod';
+import { Provider } from 'oidc-provider';
 
 import RequestError from '@/errors/RequestError';
 import assertThat from '@/utils/assert-that';
 
-import { verificationStorageGuard, Method, Operation, VerificationStorage } from './types';
+import { verificationTimeout } from './consts';
+import {
+  verificationResultGuard,
+  Method,
+  Operation,
+  VerificationStorage,
+  VerificationResult,
+  VerifiedIdentity,
+} from './types';
 
 export const getRoutePrefix = (
   type: 'sign-in' | 'register' | 'forgot-password',
@@ -34,22 +41,29 @@ export const getPasswordlessRelatedLogType = (
   return result.data;
 };
 
-export const parseVerificationStorage = (data: unknown): VerificationStorage => {
-  const verificationResult = z
-    .object({
-      verification: verificationStorageGuard,
-    })
-    .safeParse(data);
+const parseVerificationStorage = (data: unknown): VerificationStorage => {
+  const verificationResult = verificationResultGuard.safeParse(data);
 
-  assertThat(
-    verificationResult.success,
-    new RequestError({
-      code: 'session.verification_session_not_found',
-      status: 404,
-    })
-  );
+  if (!verificationResult.success) {
+    throw new RequestError(
+      {
+        code: 'session.verification_session_not_found',
+        status: 404,
+      },
+      verificationResult.error
+    );
+  }
 
   return verificationResult.data.verification;
+};
+
+export const getVerificationStorageFromInteraction = async (
+  ctx: Context,
+  provider: Provider
+): Promise<VerificationStorage> => {
+  const { result } = await provider.interactionDetails(ctx.req, ctx.res);
+
+  return parseVerificationStorage(result);
 };
 
 export const checkVerificationSessionByFlow = (
@@ -69,10 +83,78 @@ export const checkVerificationSessionByFlow = (
   );
 };
 
+export const smsSignInSessionGuard = (payload: VerificationStorage) => {
+  checkVerificationSessionByFlow(PasscodeType.SignIn, payload);
+
+  const { phone } = payload;
+  assertThat(
+    phone,
+    new RequestError(
+      { code: 'session.passwordless_not_verified', status: 401 },
+      { method: 'sms', flow: PasscodeType.SignIn }
+    )
+  );
+
+  return { phone };
+};
+
+export const emailSignInSessionGuard = (payload: VerificationStorage) => {
+  checkVerificationSessionByFlow(PasscodeType.SignIn, payload);
+
+  const { email } = payload;
+  assertThat(
+    email,
+    new RequestError(
+      { code: 'session.passwordless_not_verified', status: 401 },
+      { method: 'email', flow: PasscodeType.SignIn }
+    )
+  );
+
+  return { email };
+};
+
+export const smsRegisterSessionGuard = (payload: VerificationStorage) => {
+  checkVerificationSessionByFlow(PasscodeType.Register, payload);
+
+  const { phone } = payload;
+  assertThat(
+    phone,
+    new RequestError(
+      { code: 'session.passwordless_not_verified', status: 401 },
+      { method: 'sms', flow: PasscodeType.Register }
+    )
+  );
+
+  return { phone };
+};
+
+export const emailRegisterSessionGuard = (payload: VerificationStorage) => {
+  checkVerificationSessionByFlow(PasscodeType.Register, payload);
+
+  const { email } = payload;
+  assertThat(
+    email,
+    new RequestError(
+      { code: 'session.passwordless_not_verified', status: 401 },
+      { method: 'email', flow: PasscodeType.Register }
+    )
+  );
+
+  return { email };
+};
+
 export const assignVerificationResult = async (
   ctx: Context,
   provider: Provider,
-  result: InteractionResults & { verification: VerificationStorage }
+  flow: PasscodeType,
+  identity: VerifiedIdentity
 ) => {
-  await provider.interactionResult(ctx.req, ctx.res, result);
+  const verificationStorage: VerificationResult = {
+    verification: {
+      flow,
+      expiresAt: dayjs().add(verificationTimeout, 'second').toISOString(),
+      ...identity,
+    },
+  };
+  await provider.interactionResult(ctx.req, ctx.res, verificationStorage);
 };

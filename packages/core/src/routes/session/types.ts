@@ -11,7 +11,7 @@ export const operationGuard = z.enum(['send', 'verify']);
 
 export type Operation = z.infer<typeof operationGuard>;
 
-export type PasscodePayload = { email: string } | { phone: string };
+export type VerifiedIdentity = { email: string } | { phone: string };
 
 export const verificationStorageGuard = z.object({
   email: z.string().optional(),
@@ -21,3 +21,7 @@ export const verificationStorageGuard = z.object({
 });
 
 export type VerificationStorage = z.infer<typeof verificationStorageGuard>;
+
+export const verificationResultGuard = z.object({ verification: verificationStorageGuard });
+
+export type VerificationResult = z.infer<typeof verificationResultGuard>;
