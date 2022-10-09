@@ -2,7 +2,7 @@ import { logtoConfigGuards, LogtoConfigKey, logtoConfigKeys } from '@logto/schem
 import chalk from 'chalk';
 import { CommandModule } from 'yargs';
 
-import { createPoolFromConfig } from '../../database';
+import { createPoolFromEnv } from '../../database';
 import { getRowsByKeys, updateValueByKey } from '../../queries/logto-config';
 import { deduplicate, log } from '../../utilities';
 
@@ -47,7 +47,7 @@ export const getConfig: CommandModule<unknown, { key: string; keys: string[] }> 
     const queryKeys = deduplicate([key, ...keys]);
     validateKeys(queryKeys);
 
-    const pool = await createPoolFromConfig();
+    const pool = await createPoolFromEnv();
     const { rows } = await getRowsByKeys(pool, queryKeys);
     await pool.end();
 
@@ -87,7 +87,7 @@ export const setConfig: CommandModule<unknown, { key: string; value: string }> =
 
     const guarded = logtoConfigGuards[key].parse(JSON.parse(value));
 
-    const pool = await createPoolFromConfig();
+    const pool = await createPoolFromEnv();
     await updateValueByKey(pool, key, guarded);
     await pool.end();
 
