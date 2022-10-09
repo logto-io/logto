@@ -1,36 +1,62 @@
-import { z } from 'zod';
+import { z, ZodType } from 'zod';
 
 // Alteration state
-export const alterationStateGuard = z.object({
-  timestamp: z.number(),
-  updatedAt: z.string().optional(),
+export enum AlterationStateKey {
+  AlterationState = 'alterationState',
+}
+
+export type AlterationState = { timestamp: number; updatedAt?: string };
+
+export type AlterationStateType = {
+  [AlterationStateKey.AlterationState]: AlterationState;
+};
+
+const alterationStateGuard: Readonly<{
+  [key in AlterationStateKey]: ZodType<AlterationStateType[key]>;
+}> = Object.freeze({
+  [AlterationStateKey.AlterationState]: z.object({
+    timestamp: z.number(),
+    updatedAt: z.string().optional(),
+  }),
 });
 
-export type AlterationState = z.infer<typeof alterationStateGuard>;
-
 // Logto OIDC config
-export const logtoOidcConfigGuard = z.object({
-  privateKeys: z.string().array().optional(),
-  cookieKeys: z.string().array().optional(),
+export enum LogtoOidcConfigKey {
+  PrivateKeys = 'oidc.privateKeys',
+  CookieKeys = 'oidc.cookieKeys',
+  RefreshTokenReuseInterval = 'oidc.refreshTokenReuseInterval',
+}
+
+export type LogtoOidcConfigType = {
+  [LogtoOidcConfigKey.PrivateKeys]: string[];
+  [LogtoOidcConfigKey.CookieKeys]: string[];
+  [LogtoOidcConfigKey.RefreshTokenReuseInterval]: number;
+};
+
+const logtoOidcConfigGuard: Readonly<{
+  [key in LogtoOidcConfigKey]: ZodType<LogtoOidcConfigType[key]>;
+}> = Object.freeze({
+  [LogtoOidcConfigKey.PrivateKeys]: z.string().array(),
+  [LogtoOidcConfigKey.CookieKeys]: z.string().array(),
   /**
    * This interval helps to avoid concurrency issues when exchanging the rotating refresh token multiple times within a given timeframe.
    * During the leeway window (in seconds), the consumed refresh token will be considered as valid.
    * This is useful for distributed apps and serverless apps like Next.js, in which there is no shared memory.
    */
-  refreshTokenReuseInterval: z.number().gte(3).optional(),
+  [LogtoOidcConfigKey.RefreshTokenReuseInterval]: z.number().gte(3),
 });
 
-export type LogtoOidcConfig = z.infer<typeof logtoOidcConfigGuard>;
-
 // Summary
-export enum LogtoConfigKey {
-  AlterationState = 'alterationState',
-  OidcConfig = 'oidcConfig',
-}
+export type LogtoConfigKey = AlterationStateKey | LogtoOidcConfigKey;
+export type LogtoConfigType = AlterationStateType | LogtoOidcConfigType;
+export type LogtoConfigGuard = typeof alterationStateGuard & typeof logtoOidcConfigGuard;
 
-export const logtoConfigKeys = Object.values(LogtoConfigKey);
+export const logtoConfigKeys: readonly LogtoConfigKey[] = Object.freeze([
+  ...Object.values(AlterationStateKey),
+  ...Object.values(LogtoOidcConfigKey),
+]);
 
-export const logtoConfigGuards = Object.freeze({
-  [LogtoConfigKey.AlterationState]: alterationStateGuard,
-  [LogtoConfigKey.OidcConfig]: logtoOidcConfigGuard,
-} as const);
+export const logtoConfigGuards: LogtoConfigGuard = Object.freeze({
+  ...alterationStateGuard,
+  ...logtoOidcConfigGuard,
+});

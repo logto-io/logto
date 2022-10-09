@@ -1,4 +1,4 @@
-import { LogtoConfigKey, LogtoConfigs } from '@logto/schemas';
+import { AlterationStateKey, LogtoConfigs } from '@logto/schemas';
 import { createMockPool, createMockQueryResult, sql } from 'slonik';
 
 import { convertToIdentifiers } from '../database';
@@ -29,7 +29,7 @@ describe('getCurrentDatabaseAlterationTimestamp()', () => {
 
     mockQuery.mockImplementationOnce(async (sql, values) => {
       expectSqlAssert(sql, expectSql.sql);
-      expect(values).toEqual([LogtoConfigKey.AlterationState]);
+      expect(values).toEqual([AlterationStateKey.AlterationState]);
 
       return createMockQueryResult([]);
     });
@@ -44,7 +44,7 @@ describe('getCurrentDatabaseAlterationTimestamp()', () => {
 
     mockQuery.mockImplementationOnce(async (sql, values) => {
       expectSqlAssert(sql, expectSql.sql);
-      expect(values).toEqual([LogtoConfigKey.AlterationState]);
+      expect(values).toEqual([AlterationStateKey.AlterationState]);
 
       return createMockQueryResult([{ value: 'some_value' }]);
     });
@@ -59,7 +59,7 @@ describe('getCurrentDatabaseAlterationTimestamp()', () => {
 
     mockQuery.mockImplementationOnce(async (sql, values) => {
       expectSqlAssert(sql, expectSql.sql);
-      expect(values).toEqual([LogtoConfigKey.AlterationState]);
+      expect(values).toEqual([AlterationStateKey.AlterationState]);
 
       // @ts-expect-error createMockQueryResult doesn't support jsonb
       return createMockQueryResult([{ value: { timestamp, updatedAt: 'now' } }]);
@@ -90,7 +90,7 @@ describe('updateDatabaseTimestamp()', () => {
     mockQuery.mockImplementationOnce(async (sql, values) => {
       expectSqlAssert(sql, expectSql.sql);
       expect(values).toEqual([
-        LogtoConfigKey.AlterationState,
+        AlterationStateKey.AlterationState,
         JSON.stringify({ timestamp, updatedAt }),
       ]);
 

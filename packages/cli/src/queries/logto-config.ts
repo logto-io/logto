@@ -1,10 +1,10 @@
 import {
   AlterationState,
-  alterationStateGuard,
   LogtoConfig,
   logtoConfigGuards,
   LogtoConfigKey,
   LogtoConfigs,
+  AlterationStateKey,
 } from '@logto/schemas';
 import { DatabasePool, DatabaseTransactionConnection, sql } from 'slonik';
 import { z } from 'zod';
@@ -38,9 +38,9 @@ export const updateValueByKey = async <T extends LogtoConfigKey>(
 export const getCurrentDatabaseAlterationTimestamp = async (pool: DatabasePool) => {
   try {
     const result = await pool.maybeOne<LogtoConfig>(
-      sql`select * from ${table} where ${fields.key}=${LogtoConfigKey.AlterationState}`
+      sql`select * from ${table} where ${fields.key}=${AlterationStateKey.AlterationState}`
     );
-    const parsed = alterationStateGuard.safeParse(result?.value);
+    const parsed = logtoConfigGuards[AlterationStateKey.AlterationState].safeParse(result?.value);
 
     return (parsed.success && parsed.data.timestamp) || 0;
   } catch (error: unknown) {
@@ -65,5 +65,5 @@ export const updateDatabaseTimestamp = async (
     updatedAt: new Date().toISOString(),
   };
 
-  return updateValueByKey(connection, LogtoConfigKey.AlterationState, value);
+  return updateValueByKey(connection, AlterationStateKey.AlterationState, value);
 };
