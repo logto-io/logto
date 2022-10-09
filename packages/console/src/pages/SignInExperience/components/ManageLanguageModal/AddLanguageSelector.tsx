@@ -1,9 +1,12 @@
-import { languages, LanguageTag } from '@logto/language-kit';
-import { useRef, useState } from 'react';
+import { LanguageTag, languages as uiLanguageNameMapping } from '@logto/language-kit';
+import classNames from 'classnames';
+import { ChangeEvent, useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import Button from '@/components/Button';
-import Dropdown, { DropdownItem } from '@/components/Dropdown';
+import TextInput from '@/components/TextInput';
 import Plus from '@/icons/Plus';
+import SearchIcon from '@/icons/Search';
 
 import * as style from './AddLanguageSelector.module.scss';
 
@@ -12,17 +15,51 @@ type Props = {
   onSelect: (languageTag: LanguageTag) => void;
 };
 
-// TODO:(LOG-4147) Support Instant Search In Manage Language Editor Dropdown
 const AddLanguageSelector = ({ options, onSelect }: Props) => {
-  const anchorRef = useRef<HTMLDivElement>(null);
+  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const selectorRef = useRef<HTMLDivElement>(null);
+  const searchInputRef = useRef<HTMLInputElement>(null);
   const [isDropDownOpen, setIsDropDownOpen] = useState(false);
+  const [searchInputValue, setSearchInputValue] = useState('');
+
+  const filteredOptions = searchInputValue
+    ? options.filter(
+        (languageTag) =>
+          languageTag.toLocaleLowerCase().includes(searchInputValue.toLocaleLowerCase()) ||
+          uiLanguageNameMapping[languageTag]
+            .toLocaleLowerCase()
+            .includes(searchInputValue.toLocaleLowerCase())
+      )
+    : options;
+
+  const clickOutsideHandler = ({ target }: MouseEvent) => {
+    if (target instanceof HTMLElement && !selectorRef.current?.contains(target)) {
+      setIsDropDownOpen(false);
+      setSearchInputValue('');
+    }
+  };
+
+  useEffect(() => {
+    if (isDropDownOpen) {
+      searchInputRef.current?.focus();
+      document.addEventListener('mousedown', clickOutsideHandler);
+    } else {
+      document.removeEventListener('mousedown', clickOutsideHandler);
+    }
+
+    return () => {
+      if (isDropDownOpen) {
+        document.removeEventListener('mousedown', clickOutsideHandler);
+      }
+    };
+  }, [isDropDownOpen, searchInputRef]);
 
   return (
-    <div>
-      <div ref={anchorRef}>
+    <div ref={selectorRef} className={style.languageSelector}>
+      <div className={style.input}>
         <Button
-          className={style.addLanguageButton}
-          icon={<Plus className={style.iconPlus} />}
+          className={classNames(style.addLanguageButton, isDropDownOpen && style.hidden)}
+          icon={<Plus className={style.buttonIcon} />}
           title="sign_in_exp.others.manage_language.add_language"
           type="outline"
           size="medium"
@@ -30,29 +67,35 @@ const AddLanguageSelector = ({ options, onSelect }: Props) => {
             setIsDropDownOpen(true);
           }}
         />
+        <TextInput
+          ref={searchInputRef}
+          icon={<SearchIcon className={style.buttonIcon} />}
+          className={classNames(!isDropDownOpen && style.hidden)}
+          placeholder={t('general.type_to_search')}
+          value={searchInputValue}
+          onChange={(event: ChangeEvent<HTMLInputElement>) => {
+            setSearchInputValue(event.target.value);
+          }}
+        />
       </div>
-      <Dropdown
-        isFullWidth
-        anchorRef={anchorRef}
-        isOpen={isDropDownOpen}
-        onClose={() => {
-          setIsDropDownOpen(false);
-        }}
-      >
-        {options.map((languageTag) => (
-          <DropdownItem
-            key={languageTag}
-            onClick={() => {
-              onSelect(languageTag);
-            }}
-          >
-            <div className={style.dropDownItem}>
-              <div className={style.languageName}>{languages[languageTag]}</div>
+      {isDropDownOpen && filteredOptions.length > 0 && (
+        <ul className={style.dropDown}>
+          {filteredOptions.map((languageTag) => (
+            <li
+              key={languageTag}
+              className={style.dropDownItem}
+              onClick={() => {
+                onSelect(languageTag);
+                setIsDropDownOpen(false);
+                setSearchInputValue('');
+              }}
+            >
+              <div className={style.languageName}>{uiLanguageNameMapping[languageTag]}</div>
               <div className={style.languageTag}>{languageTag}</div>
-            </div>
-          </DropdownItem>
-        ))}
-      </Dropdown>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 };
