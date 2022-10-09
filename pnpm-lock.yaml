@@ -318,6 +318,7 @@ importers:
   packages/demo-app:
     specifiers:
       '@logto/core-kit': ^1.0.0-beta.13
+      '@logto/language-kit': 1.0.0-beta.16
       '@logto/phrases': ^1.0.0-beta.9
       '@logto/react': 1.0.0-beta.8
       '@logto/schemas': ^1.0.0-beta.9
@@ -344,6 +345,7 @@ importers:
       typescript: ^4.7.4
     devDependencies:
       '@logto/core-kit': 1.0.0-beta.13
+      '@logto/language-kit': 1.0.0-beta.16
       '@logto/phrases': link:../phrases
       '@logto/react': 1.0.0-beta.8_react@18.2.0
       '@logto/schemas': link:../schemas
@@ -423,7 +425,7 @@ importers:
 
   packages/phrases:
     specifiers:
-      '@logto/core-kit': ^1.0.0-beta.13
+      '@logto/core-kit': 1.0.0-beta.16
       '@logto/language-kit': 1.0.0-beta.15
       '@silverhand/eslint-config': 1.0.0
       '@silverhand/essentials': ^1.2.1
@@ -432,10 +434,12 @@ importers:
       lint-staged: ^13.0.0
       prettier: ^2.7.1
       typescript: ^4.7.4
+      zod: ^3.18.0
     dependencies:
-      '@logto/core-kit': 1.0.0-beta.13
+      '@logto/core-kit': 1.0.0-beta.16
       '@logto/language-kit': 1.0.0-beta.15
       '@silverhand/essentials': 1.2.1
+      zod: 3.18.0
     devDependencies:
       '@silverhand/eslint-config': 1.0.0_swk2g7ygmfleszo5c33j4vooni
       '@silverhand/ts-config': 1.0.0_typescript@4.7.4
@@ -2465,7 +2469,7 @@ packages:
     dependencies:
       '@logto/language-kit': 1.0.0-beta.16
       color: 4.2.3
-      nanoid: 3.1.30
+      nanoid: 3.3.4
       zod: 3.18.0
 
   /@logto/js/1.0.0-beta.8:
@@ -11288,6 +11292,7 @@ packages:
     resolution: {integrity: sha512-zJpuPDwOv8D2zq2WRoMe1HsfZthVewpel9CAvTfc/2mBD1uUT/agc5f7GHGWXlYkFvi1mVxe4IjvP2HNrop7nQ==}
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
     hasBin: true
+    dev: false
 
   /nanoid/3.3.1:
     resolution: {integrity: sha512-n6Vs/3KGyxPQd6uO0eH4Bv0ojGSUvuLlIHtC3Y0kEO23YRge8H9x1GCzLn28YX0H66pMkxuaeESFq4tKISKwdw==}

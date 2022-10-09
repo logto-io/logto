@@ -17,10 +17,11 @@
     "stylelint": "stylelint \"src/**/*.scss\""
   },
   "devDependencies": {
+    "@logto/core-kit": "^1.0.0-beta.13",
+    "@logto/language-kit": "1.0.0-beta.16",
     "@logto/phrases": "^1.0.0-beta.9",
     "@logto/react": "1.0.0-beta.8",
     "@logto/schemas": "^1.0.0-beta.9",
-    "@logto/core-kit": "^1.0.0-beta.13",
     "@parcel/core": "2.7.0",
     "@parcel/transformer-sass": "2.7.0",
     "@silverhand/eslint-config": "1.0.0",
