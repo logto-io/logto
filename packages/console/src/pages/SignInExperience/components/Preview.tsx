@@ -110,7 +110,7 @@ const Preview = ({ signInExperience, className }: Props) => {
   }, [allConnectors, language, mode, platform, signInExperience]);
 
   const postPreviewMessage = useCallback(() => {
-    if (!config) {
+    if (!config || !customPhrases) {
       return;
     }
 
@@ -118,7 +118,7 @@ const Preview = ({ signInExperience, className }: Props) => {
       { sender: 'ac_preview', config },
       window.location.origin
     );
-  }, [config]);
+  }, [config, customPhrases]);
 
   useEffect(() => {
     postPreviewMessage();
@@ -131,10 +131,6 @@ const Preview = ({ signInExperience, className }: Props) => {
       iframe?.removeEventListener('load', postPreviewMessage);
     };
   }, [postPreviewMessage]);
-
-  useEffect(() => {
-    postPreviewMessage();
-  }, [customPhrases, postPreviewMessage]);
 
   return (
     <Card className={classNames(styles.preview, className)}>
