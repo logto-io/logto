@@ -27,8 +27,8 @@ const translation = {
     agree: '同意',
     got_it: '知道了',
     sign_in_with: '通过 {{name}} 登录',
-    forgot_password: '忘记密码？',
-    switch_to: '切换到{{method}}',
+    forgot_password: '找回密码',
+    switch_to: '用{{method}}登录',
   },
   description: {
     email: '邮箱',
@@ -51,11 +51,9 @@ const translation = {
     social_create_account: '没有帐号？你可以创建一个帐号并绑定。',
     social_bind_account: '已有帐号？登录以绑定社交身份。',
     social_bind_with_existing: '找到了一个匹配的帐号，你可以直接绑定。',
-    reset_password: '重置密码',
-    reset_password_description_email:
-      '输入与你的帐户关联的电子邮箱地址，我们将通过电子邮件向您发送验证码以重置你的密码。',
-    reset_password_description_sms:
-      '输入与你的帐户关联的电话号码，我们将向您发送验证码以重置你的密码。',
+    reset_password: '重设密码',
+    reset_password_description_email: '输入邮件地址，领取验证码以重设密码。',
+    reset_password_description_sms: '输入手机号，领取验证码以重设密码。',
     new_password: '新密码',
     password_changed: 'Password Changed', // UNTRANSLATED
   },
