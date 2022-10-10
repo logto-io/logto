@@ -41,6 +41,11 @@ const customClientMetadata = {
   refreshTokenTtl: 100_000_000,
 };
 
+const customOidcClientMetadata = {
+  redirectUris: [],
+  postLogoutRedirectUris: [],
+};
+
 describe('application route', () => {
   const applicationRequest = createRequester({ authedRoutes: applicationRoutes });
 
@@ -141,6 +146,57 @@ describe('application route', () => {
         customClientMetadata: {
           ...customClientMetadata,
           corsAllowedOrigins: [''],
+        },
+      })
+    ).resolves.toHaveProperty('status', 400);
+  });
+
+  it('PATCH /applications/:applicationId should save the formatted URIs as per RFC', async () => {
+    await expect(
+      applicationRequest.patch('/applications/foo').send({
+        oidcClientMetadata: {
+          redirectUris: [
+            'https://example.com/callback?auth=true',
+            'https://Example.com',
+            'http://127.0.0.1',
+            'http://localhost:3002',
+          ],
+        },
+      })
+    ).resolves.toHaveProperty('status', 200);
+  });
+
+  it('PATCH /application/:applicationId expect to throw with invalid redirectURI', async () => {
+    await expect(
+      applicationRequest.patch('/applications/foo').send({
+        oidcClientMetadata: {
+          redirectUris: ['www.example.com', 'com.example://callback'],
+        },
+      })
+    ).resolves.toHaveProperty('status', 400);
+  });
+
+  it('PATCH /application/:applicationId should save the formatted custom scheme URIs for native apps', async () => {
+    await expect(
+      applicationRequest.patch('/applications/foo').send({
+        type: ApplicationType.Native,
+        oidcClientMetadata: {
+          redirectUris: [
+            'com.example://demo-app/callback',
+            'com.example://callback',
+            'io.logto://Abc123',
+          ],
+        },
+      })
+    ).resolves.toHaveProperty('status', 200);
+  });
+
+  it('PATCH /application/:applicationId expect to throw with invalid custom scheme for native apps', async () => {
+    await expect(
+      applicationRequest.patch('/applications/foo').send({
+        type: ApplicationType.Native,
+        oidcClientMetadata: {
+          redirectUris: ['https://www.example.com', 'com.example/callback'],
         },
       })
     ).resolves.toHaveProperty('status', 400);
