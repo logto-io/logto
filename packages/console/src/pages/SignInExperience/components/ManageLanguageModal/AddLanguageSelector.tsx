@@ -81,6 +81,8 @@ const AddLanguageSelector = ({ options, onSelect }: Props) => {
       {isDropDownOpen && filteredOptions.length > 0 && (
         <ul className={style.dropDown}>
           {filteredOptions.map((languageTag) => (
+            // TODO: @yijun
+            // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-noninteractive-element-interactions
             <li
               key={languageTag}
               className={style.dropDownItem}
