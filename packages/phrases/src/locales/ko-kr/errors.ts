@@ -62,6 +62,7 @@ const errors = {
     verification_session_not_found:
       'Passwordless verification session not found. Please go back and retry.', // UNTRANSLATED
     verification_expired: 'Passwordless verification has expired. Please go back and verify again.', // UNTRANSLATED
+    invalid_verification: 'Can not store invalid passwordless verification.', // UNTRANSLATED
     unauthorized: '로그인을 먼저 해주세요.',
     unsupported_prompt_name: '지원하지 않는 Prompt 이름이예요.',
   },

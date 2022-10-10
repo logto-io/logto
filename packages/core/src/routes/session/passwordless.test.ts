@@ -99,6 +99,16 @@ describe('session -> passwordlessRoutes', () => {
       });
       expect(sendPasscode).toHaveBeenCalled();
     });
+    it('should call sendPasscode (with flow `forgot-password`)', async () => {
+      const response = await sessionRequest
+        .post('/session/passwordless/sms/send')
+        .send({ phone: '13000000000', flow: PasscodeType.ForgotPassword });
+      expect(response.statusCode).toEqual(204);
+      expect(createPasscode).toHaveBeenCalledWith('jti', PasscodeType.ForgotPassword, {
+        phone: '13000000000',
+      });
+      expect(sendPasscode).toHaveBeenCalled();
+    });
     it('throw when phone not given in input params', async () => {
       const response = await sessionRequest
         .post('/session/passwordless/sms/send')
@@ -133,6 +143,16 @@ describe('session -> passwordlessRoutes', () => {
         .send({ email: 'a@a.com', flow: PasscodeType.Register });
       expect(response.statusCode).toEqual(204);
       expect(createPasscode).toHaveBeenCalledWith('jti', PasscodeType.Register, {
+        email: 'a@a.com',
+      });
+      expect(sendPasscode).toHaveBeenCalled();
+    });
+    it('should call sendPasscode (with flow `forgot-password`)', async () => {
+      const response = await sessionRequest
+        .post('/session/passwordless/email/send')
+        .send({ email: 'a@a.com', flow: PasscodeType.ForgotPassword });
+      expect(response.statusCode).toEqual(204);
+      expect(createPasscode).toHaveBeenCalledWith('jti', PasscodeType.ForgotPassword, {
         email: 'a@a.com',
       });
       expect(sendPasscode).toHaveBeenCalled();
@@ -194,6 +214,32 @@ describe('session -> passwordlessRoutes', () => {
         })
       );
     });
+    it('should call interactionResult (with flow `forgot-password`)', async () => {
+      const fakeTime = new Date();
+      jest.useFakeTimers().setSystemTime(fakeTime);
+      const response = await sessionRequest
+        .post('/session/passwordless/sms/verify')
+        .send({ phone: '13000000000', code: '1234', flow: PasscodeType.ForgotPassword });
+      expect(response.statusCode).toEqual(204);
+      expect(interactionResult).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.anything(),
+        expect.objectContaining({
+          verification: {
+            id: 'id',
+            expiresAt: dayjs(fakeTime).add(verificationTimeout, 'second').toISOString(),
+            flow: PasscodeType.ForgotPassword,
+          },
+        })
+      );
+    });
+    it('throw 404 (with flow `forgot-password`)', async () => {
+      const response = await sessionRequest
+        .post('/session/passwordless/sms/verify')
+        .send({ phone: '13000000001', code: '1234', flow: PasscodeType.ForgotPassword });
+      expect(response.statusCode).toEqual(404);
+      expect(interactionResult).toHaveBeenCalledTimes(0);
+    });
     it('throw when code is wrong', async () => {
       const response = await sessionRequest
         .post('/session/passwordless/sms/verify')
@@ -250,6 +296,34 @@ describe('session -> passwordlessRoutes', () => {
           },
         })
       );
+    });
+    it('should call interactionResult (with flow `forgot-password`)', async () => {
+      const fakeTime = new Date();
+      jest.useFakeTimers().setSystemTime(fakeTime);
+      const response = await sessionRequest
+        .post('/session/passwordless/email/verify')
+        .send({ email: 'a@a.com', code: '1234', flow: PasscodeType.ForgotPassword });
+      expect(response.statusCode).toEqual(204);
+      expect(interactionResult).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.anything(),
+        expect.objectContaining({
+          verification: {
+            id: 'id',
+            expiresAt: dayjs(fakeTime).add(verificationTimeout, 'second').toISOString(),
+            flow: PasscodeType.ForgotPassword,
+          },
+        })
+      );
+    });
+    it('throw 404 (with flow `forgot-password`)', async () => {
+      const fakeTime = new Date();
+      jest.useFakeTimers().setSystemTime(fakeTime);
+      const response = await sessionRequest
+        .post('/session/passwordless/email/verify')
+        .send({ email: 'b@a.com', code: '1234', flow: PasscodeType.ForgotPassword });
+      expect(response.statusCode).toEqual(404);
+      expect(interactionResult).toHaveBeenCalledTimes(0);
     });
     it('throw when code is wrong', async () => {
       const response = await sessionRequest

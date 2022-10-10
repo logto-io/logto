@@ -9,7 +9,17 @@ import RequestError from '@/errors/RequestError';
 import assertThat from '@/utils/assert-that';
 
 import { verificationTimeout } from './consts';
-import { Method, Operation, VerificationResult, VerifiedIdentity } from './types';
+import {
+  emailRegisterSessionResultGuard,
+  emailSignInSessionResultGuard,
+  forgotPasswordSessionResultGuard,
+  Method,
+  Operation,
+  smsRegisterSessionResultGuard,
+  smsSignInSessionResultGuard,
+  VerificationResult,
+  VerifiedIdentity,
+} from './types';
 
 export const getRoutePrefix = (
   type: 'sign-in' | 'register' | 'forgot-password',
@@ -77,12 +87,22 @@ export const assignVerificationResult = async (
   flow: PasscodeType,
   identity: VerifiedIdentity
 ) => {
-  const verificationStorage: VerificationResult = {
+  const verificationResult = {
     verification: {
       flow,
       expiresAt: dayjs().add(verificationTimeout, 'second').toISOString(),
       ...identity,
     },
   };
-  await provider.interactionResult(ctx.req, ctx.res, verificationStorage);
+
+  assertThat(
+    smsSignInSessionResultGuard.safeParse(verificationResult).success ||
+      emailSignInSessionResultGuard.safeParse(verificationResult).success ||
+      smsRegisterSessionResultGuard.safeParse(verificationResult).success ||
+      emailRegisterSessionResultGuard.safeParse(verificationResult).success ||
+      forgotPasswordSessionResultGuard.safeParse(verificationResult).success,
+    new RequestError({ code: 'session.invalid_verification' })
+  );
+
+  await provider.interactionResult(ctx.req, ctx.res, verificationResult);
 };
