@@ -3,7 +3,7 @@ import { deduplicate } from '@silverhand/essentials';
 import chalk from 'chalk';
 import { CommandModule } from 'yargs';
 
-import { createPoolFromEnv } from '../../database';
+import { createPoolFromConfig } from '../../database';
 import { getRowsByKeys, updateValueByKey } from '../../queries/logto-config';
 import { log } from '../../utilities';
 
@@ -48,7 +48,7 @@ export const getConfig: CommandModule<unknown, { key: string; keys: string[] }> 
     const queryKeys = deduplicate([key, ...keys]);
     validateKeys(queryKeys);
 
-    const pool = await createPoolFromEnv();
+    const pool = await createPoolFromConfig();
     const { rows } = await getRowsByKeys(pool, queryKeys);
     await pool.end();
 
@@ -88,7 +88,7 @@ export const setConfig: CommandModule<unknown, { key: string; value: string }> =
 
     const guarded = logtoConfigGuards[key].parse(JSON.parse(value));
 
-    const pool = await createPoolFromEnv();
+    const pool = await createPoolFromConfig();
     await updateValueByKey(pool, key, guarded);
     await pool.end();
 

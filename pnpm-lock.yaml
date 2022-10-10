@@ -26,7 +26,6 @@ importers:
       '@silverhand/essentials': ^1.3.0
       '@silverhand/jest-config': 1.0.0
       '@silverhand/ts-config': 1.0.0
-      '@types/decompress': ^4.2.4
       '@types/fs-extra': ^9.0.13
       '@types/inquirer': ^8.2.1
       '@types/jest': ^28.1.6
@@ -85,7 +84,6 @@ importers:
       '@silverhand/eslint-config': 1.0.0_swk2g7ygmfleszo5c33j4vooni
       '@silverhand/jest-config': 1.0.0_bi2kohzqnxavgozw3csgny5hju
       '@silverhand/ts-config': 1.0.0_typescript@4.7.4
-      '@types/decompress': 4.2.4
       '@types/fs-extra': 9.0.13
       '@types/inquirer': 8.2.1
       '@types/jest': 28.1.6
@@ -4413,12 +4411,6 @@ packages:
     resolution: {integrity: sha512-9AonUzyTjXXhEOa0DnqpzZi6VHlqKMswga9EXjpXnnqxwLtdvPPtlO8evrI5D9S6asFRCQ6v+wpiUKbw+vKqyg==}
     dependencies:
       '@types/ms': 0.7.31
-    dev: true
-
-  /@types/decompress/4.2.4:
-    resolution: {integrity: sha512-/C8kTMRTNiNuWGl5nEyKbPiMv6HA+0RbEXzFhFBEzASM6+oa4tJro9b8nj7eRlOFfuLdzUU+DS/GPDlvvzMOhA==}
-    dependencies:
-      '@types/node': 17.0.23
     dev: true
 
   /@types/etag/1.8.1:
