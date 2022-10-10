@@ -21,13 +21,10 @@ import assertThat from '@/utils/assert-that';
 import { AnonymousRouter } from '../types';
 import {
   assignVerificationResult,
+  checkVerificationSessionByFlow,
   getPasswordlessRelatedLogType,
   getRoutePrefix,
   getVerificationStorageFromInteraction,
-  smsSignInSessionGuard,
-  emailSignInSessionGuard,
-  smsRegisterSessionGuard,
-  emailRegisterSessionGuard,
 } from './utils';
 
 export const registerRoute = getRoutePrefix('register', 'passwordless');
@@ -149,7 +146,16 @@ export default function passwordlessRoutes<T extends AnonymousRouter>(
     const type = getPasswordlessRelatedLogType(PasscodeType.SignIn, 'sms');
     ctx.log(type, verificationStorage);
 
-    const { phone } = smsSignInSessionGuard(verificationStorage);
+    checkVerificationSessionByFlow(PasscodeType.SignIn, verificationStorage);
+
+    const { phone } = verificationStorage;
+    assertThat(
+      phone,
+      new RequestError(
+        { code: 'session.passwordless_not_verified', status: 401 },
+        { method: 'sms', flow: PasscodeType.SignIn }
+      )
+    );
 
     assertThat(
       await hasUserWithPhone(phone),
@@ -170,7 +176,16 @@ export default function passwordlessRoutes<T extends AnonymousRouter>(
     const type = getPasswordlessRelatedLogType(PasscodeType.SignIn, 'email');
     ctx.log(type, verificationStorage);
 
-    const { email } = emailSignInSessionGuard(verificationStorage);
+    checkVerificationSessionByFlow(PasscodeType.SignIn, verificationStorage);
+
+    const { email } = verificationStorage;
+    assertThat(
+      email,
+      new RequestError(
+        { code: 'session.passwordless_not_verified', status: 401 },
+        { method: 'email', flow: PasscodeType.SignIn }
+      )
+    );
 
     assertThat(
       await hasUserWithEmail(email),
@@ -191,7 +206,16 @@ export default function passwordlessRoutes<T extends AnonymousRouter>(
     const type = getPasswordlessRelatedLogType(PasscodeType.Register, 'sms');
     ctx.log(type, verificationStorage);
 
-    const { phone } = smsRegisterSessionGuard(verificationStorage);
+    checkVerificationSessionByFlow(PasscodeType.Register, verificationStorage);
+
+    const { phone } = verificationStorage;
+    assertThat(
+      phone,
+      new RequestError(
+        { code: 'session.passwordless_not_verified', status: 401 },
+        { method: 'sms', flow: PasscodeType.Register }
+      )
+    );
 
     assertThat(
       !(await hasUserWithPhone(phone)),
@@ -212,7 +236,16 @@ export default function passwordlessRoutes<T extends AnonymousRouter>(
     const type = getPasswordlessRelatedLogType(PasscodeType.Register, 'email');
     ctx.log(type, verificationStorage);
 
-    const { email } = emailRegisterSessionGuard(verificationStorage);
+    checkVerificationSessionByFlow(PasscodeType.Register, verificationStorage);
+
+    const { email } = verificationStorage;
+    assertThat(
+      email,
+      new RequestError(
+        { code: 'session.passwordless_not_verified', status: 401 },
+        { method: 'email', flow: PasscodeType.Register }
+      )
+    );
 
     assertThat(
       !(await hasUserWithEmail(email)),
