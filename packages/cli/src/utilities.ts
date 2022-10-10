@@ -151,10 +151,3 @@ export const getCliConfig = async ({ key, readableKey, comments, defaultValue }:
 
   return value;
 };
-
-// TODO: Move to `@silverhand/essentials`
-// Intended
-// eslint-disable-next-line @typescript-eslint/no-empty-function
-export const noop = () => {};
-
-export const deduplicate = <T>(array: T[]) => [...new Set(array)];

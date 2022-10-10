@@ -1,6 +1,6 @@
+import { noop } from '@silverhand/essentials';
 import { CommandModule } from 'yargs';
 
-import { noop } from '../../utilities';
 import alteration from './alteration';
 import { getConfig, setConfig } from './config';
 import seed from './seed';

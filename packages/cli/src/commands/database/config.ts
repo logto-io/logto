@@ -1,10 +1,11 @@
 import { logtoConfigGuards, LogtoConfigKey, logtoConfigKeys } from '@logto/schemas';
+import { deduplicate } from '@silverhand/essentials';
 import chalk from 'chalk';
 import { CommandModule } from 'yargs';
 
 import { createPoolFromEnv } from '../../database';
 import { getRowsByKeys, updateValueByKey } from '../../queries/logto-config';
-import { deduplicate, log } from '../../utilities';
+import { log } from '../../utilities';
 
 const validKeysDisplay = chalk.green(logtoConfigKeys.join(', '));
 
