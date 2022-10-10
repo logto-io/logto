@@ -21,13 +21,14 @@ const translation = {
     enter_passcode: '输入验证码',
     cancel: '取消',
     confirm: '确认',
+    save_password: '保存密码',
     bind: '绑定到 {{address}}',
     back: '返回',
     nav_back: '返回',
     agree: '同意',
     got_it: '知道了',
     sign_in_with: '通过 {{name}} 登录',
-    forgot_password: '找回密码',
+    forgot_password: '重置密码',
     switch_to: '用{{method}}登录',
   },
   description: {
@@ -55,7 +56,7 @@ const translation = {
     reset_password_description_email: '输入邮件地址，领取验证码以重设密码。',
     reset_password_description_sms: '输入手机号，领取验证码以重设密码。',
     new_password: '新密码',
-    password_changed: 'Password Changed', // UNTRANSLATED
+    password_changed: '已重置密码！',
   },
   error: {
     username_password_mismatch: '用户名和密码不匹配',
@@ -67,7 +68,7 @@ const translation = {
     invalid_email: '无效的邮箱',
     invalid_phone: '无效的手机号',
     password_min_length: '密码最少需要{{min}}个字符',
-    passwords_do_not_match: '密码不匹配',
+    passwords_do_not_match: '你两次输入的密码不一致，请立即确认。',
     invalid_passcode: '无效的验证码',
     invalid_connector_auth: '登录失败',
     invalid_connector_request: '无效的登录请求',

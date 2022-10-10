@@ -21,6 +21,7 @@ const translation = {
     enter_passcode: 'Kodu Gir',
     confirm: 'Onayla',
     cancel: 'İptal Et',
+    save_password: 'Save', // UNTRANSLATED
     bind: '{{address}} ile birleştir',
     back: 'Geri Dön',
     nav_back: 'Geri',
@@ -28,7 +29,7 @@ const translation = {
     got_it: 'Anladım',
     sign_in_with: '{{name}} ile giriş yap',
     forgot_password: 'Şifremi Unuttum?',
-    switch_to: 'Switch to {{method}}', // TODO: not translated
+    switch_to: 'Switch to {{method}}', // UNTRANSLATED
   },
   description: {
     email: 'e-posta adresi',
