@@ -3,6 +3,52 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.0-beta.10](https://github.com/logto-io/logto/compare/v1.0.0-beta.9...v1.0.0-beta.10) (2022-09-28)
+
+
+### ⚠ BREAKING CHANGES
+
+* **core:** update `koaAuth()` to inject detailed auth info (#1977)
+* **core:** update user scopes (#1922)
+
+### Features
+
+* **core,phrases:** add check protected access function ([e405ef7](https://github.com/logto-io/logto/commit/e405ef7bb8fdbf01d52ef83b19350189e32a39b6))
+* **core,schemas:** add phrases schema and GET /custom-phrases/:languageKey route ([#1905](https://github.com/logto-io/logto/issues/1905)) ([7242aa8](https://github.com/logto-io/logto/commit/7242aa8c2bbb70c51e9b00dd5e3aff595c3c2eff))
+* **core,schemas:** migration deploy cli ([#1966](https://github.com/logto-io/logto/issues/1966)) ([7cc2f4d](https://github.com/logto-io/logto/commit/7cc2f4d14219145e562cebef41ebb3963083cc89))
+* **core,schemas:** use timestamp to version migrations ([bb4bfd3](https://github.com/logto-io/logto/commit/bb4bfd3d41fdd415f68e6e13f0d4a7e8a0093933))
+* **core:** add DELETE /custom-phrases/:languageKey route ([#1919](https://github.com/logto-io/logto/issues/1919)) ([c72be69](https://github.com/logto-io/logto/commit/c72be69bea639689721651b20fd559939f6c0ce6))
+* **core:** add GET /custom-phrases route ([#1935](https://github.com/logto-io/logto/issues/1935)) ([5fe0cf4](https://github.com/logto-io/logto/commit/5fe0cf4257a72f96fc439132c7b5b58e07352aa3))
+* **core:** add POST /session/forgot-password/{email,sms}/send-passcode ([#1963](https://github.com/logto-io/logto/issues/1963)) ([af2600d](https://github.com/logto-io/logto/commit/af2600d828bf315ce57de5813168571e7042d8de))
+* **core:** add POST /session/forgot-password/{email,sms}/verify-passcode ([#1968](https://github.com/logto-io/logto/issues/1968)) ([1ea39f3](https://github.com/logto-io/logto/commit/1ea39f346367d9f300be7281a65e689bf198a65c))
+* **core:** add POST /session/forgot-password/reset ([#1972](https://github.com/logto-io/logto/issues/1972)) ([acdc86c](https://github.com/logto-io/logto/commit/acdc86c8560d30a89eccb6b0f6892221ea1bc5e0))
+* **core:** add PUT /custom-phrases/:languageKey route ([#1907](https://github.com/logto-io/logto/issues/1907)) ([0ae13f0](https://github.com/logto-io/logto/commit/0ae13f091b69c717cc17ed4f400f456f1737fc5c))
+* **core:** add ts to interaction result ([#1917](https://github.com/logto-io/logto/issues/1917)) ([e01042c](https://github.com/logto-io/logto/commit/e01042cbcd77c486afa1ee9fc2fa5c1d2df92542))
+* **core:** cannot delete custom phrase used as default language in sign-in exp ([#1951](https://github.com/logto-io/logto/issues/1951)) ([a1aef26](https://github.com/logto-io/logto/commit/a1aef26905f624569ee47e43bb3a9c9cf05b997b))
+* **core:** check migration state before app start ([#1979](https://github.com/logto-io/logto/issues/1979)) ([bf1d281](https://github.com/logto-io/logto/commit/bf1d281905bcf91a09dd8330212b6db838d65344))
+* **core:** deploy migration in transaction mode ([#1980](https://github.com/logto-io/logto/issues/1980)) ([9a89c1a](https://github.com/logto-io/logto/commit/9a89c1a200322c678e2b0246ed324c847e734fc6))
+* **core:** machine to machine apps ([cd9c697](https://github.com/logto-io/logto/commit/cd9c6978a35d9fc3a571c7bd56c972939c49a9b5))
+* **core:** save empty string as null value in DB ([#1901](https://github.com/logto-io/logto/issues/1901)) ([ecdf06e](https://github.com/logto-io/logto/commit/ecdf06ef39a177b207dc75930e96dfcf2ae12cdc))
+* **core:** support base64 format `OIDC_PRIVATE_KEYS` config in `.env` file ([#1903](https://github.com/logto-io/logto/issues/1903)) ([5bdb675](https://github.com/logto-io/logto/commit/5bdb6755d2e1bf5b6a004859561d60f1103aec69))
+* **core:** update migration state after db init ([f904b88](https://github.com/logto-io/logto/commit/f904b88f564110c1ed00b2fa1c7b3c1e168fc106))
+* **ui:** add passwordless switch ([#1976](https://github.com/logto-io/logto/issues/1976)) ([ddb0e47](https://github.com/logto-io/logto/commit/ddb0e47950b3bd7f92af2a8a5e14b201e0a10ed7))
+
+
+### Bug Fixes
+
+* bump react sdk and essentials toolkit to support CJK characters in idToken ([2f92b43](https://github.com/logto-io/logto/commit/2f92b438644bd330fa4b8cd3698d9129ecbae282))
+* **core,schemas:** move alteration types into schemas src ([#2005](https://github.com/logto-io/logto/issues/2005)) ([10c1be6](https://github.com/logto-io/logto/commit/10c1be6eb76e1cb94746aee632a421aea8d4c211))
+* **core:** filter out connector-kit ([#1987](https://github.com/logto-io/logto/issues/1987)) ([f4cf89f](https://github.com/logto-io/logto/commit/f4cf89fb8deee7472d8e9bdbcb7ae7364ced1f74))
+* support capital letter "Y" in command line prompt ([416f4e8](https://github.com/logto-io/logto/commit/416f4e86e390318dbb0bdb262139ca4ec72ce5fe))
+
+
+### Code Refactoring
+
+* **core:** update `koaAuth()` to inject detailed auth info ([#1977](https://github.com/logto-io/logto/issues/1977)) ([d4fc7b3](https://github.com/logto-io/logto/commit/d4fc7b3e5f4979f8419b87393bfd1af02e9a191d))
+* **core:** update user scopes ([#1922](https://github.com/logto-io/logto/issues/1922)) ([8d22b5c](https://github.com/logto-io/logto/commit/8d22b5c468e5148a3815abf93de14644cdf68e8e))
+
+
+
 ## [1.0.0-beta.9](https://github.com/logto-io/logto/compare/v1.0.0-beta.8...v1.0.0-beta.9) (2022-09-07)
 
 

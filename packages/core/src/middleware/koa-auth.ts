@@ -49,7 +49,7 @@ export const verifyBearerTokenFromRequest = async (
   request: Request,
   resourceIndicator = managementResource.indicator
 ): Promise<TokenInfo> => {
-  const { isProduction, isIntegrationTest, developmentUserId, oidc } = envSet.values;
+  const { isProduction, isIntegrationTest, developmentUserId } = envSet.values;
   const userId = request.headers['development-user-id']?.toString() ?? developmentUserId;
 
   if ((!isProduction || isIntegrationTest) && userId) {
@@ -57,7 +57,7 @@ export const verifyBearerTokenFromRequest = async (
   }
 
   try {
-    const { localJWKSet, issuer } = oidc;
+    const { localJWKSet, issuer } = envSet.oidc;
     const {
       payload: { sub, client_id: clientId, role_names: roleNames },
     } = await jwtVerify(extractBearerTokenFromHeaders(request.headers), localJWKSet, {

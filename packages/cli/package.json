@@ -1,0 +1,89 @@
+{
+  "name": "@logto/cli",
+  "version": "1.0.0-beta.10",
+  "description": "Logto CLI.",
+  "author": "Silverhand Inc. <contact@silverhand.io>",
+  "homepage": "https://github.com/logto-io/logto#readme",
+  "license": "MPL-2.0",
+  "main": "lib/index.js",
+  "bin": {
+    "logto": "bin/logto"
+  },
+  "files": [
+    "bin",
+    "lib"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/logto-io/logto.git"
+  },
+  "scripts": {
+    "precommit": "lint-staged",
+    "build": "rimraf lib && tsc -p tsconfig.build.json",
+    "start": "node .",
+    "start:dev": "ts-node --files src/index.ts",
+    "lint": "eslint --ext .ts src",
+    "lint:report": "pnpm lint --format json --output-file report.json",
+    "test": "jest",
+    "test:ci": "jest",
+    "prepack": "pnpm build"
+  },
+  "engines": {
+    "node": "^16.0.0"
+  },
+  "bugs": {
+    "url": "https://github.com/logto-io/logto/issues"
+  },
+  "dependencies": {
+    "@logto/schemas": "^1.0.0-beta.10",
+    "@silverhand/essentials": "^1.2.1",
+    "chalk": "^4.1.2",
+    "decamelize": "^5.0.0",
+    "dotenv": "^16.0.0",
+    "find-up": "^5.0.0",
+    "fs-extra": "^10.1.0",
+    "got": "^11.8.2",
+    "hpagent": "^1.0.0",
+    "inquirer": "^8.2.2",
+    "nanoid": "^3.3.4",
+    "ora": "^5.0.0",
+    "roarr": "^7.11.0",
+    "semver": "^7.3.7",
+    "slonik": "^30.0.0",
+    "slonik-interceptor-preset": "^1.2.10",
+    "slonik-sql-tag-raw": "^1.1.4",
+    "tar": "^6.1.11",
+    "yargs": "^17.6.0",
+    "zod": "^3.18.0"
+  },
+  "devDependencies": {
+    "@silverhand/eslint-config": "1.0.0",
+    "@silverhand/jest-config": "1.0.0",
+    "@silverhand/ts-config": "1.0.0",
+    "@types/decompress": "^4.2.4",
+    "@types/fs-extra": "^9.0.13",
+    "@types/inquirer": "^8.2.1",
+    "@types/jest": "^28.1.6",
+    "@types/node": "^16.0.0",
+    "@types/semver": "^7.3.12",
+    "@types/tar": "^6.1.2",
+    "@types/yargs": "^17.0.13",
+    "eslint": "^8.21.0",
+    "jest": "^28.1.3",
+    "lint-staged": "^13.0.0",
+    "prettier": "^2.7.1",
+    "rimraf": "^3.0.2",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.7.4"
+  },
+  "eslintConfig": {
+    "extends": "@silverhand",
+    "rules": {
+      "complexity": [
+        "error",
+        7
+      ]
+    }
+  },
+  "prettier": "@silverhand/eslint-config/.prettierrc"
+}

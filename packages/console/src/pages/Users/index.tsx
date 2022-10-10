@@ -133,6 +133,7 @@ const Users = () => {
                     subtitle={id}
                     icon={
                       <img
+                        alt="avatar"
                         className={styles.avatar}
                         src={avatar || generateAvatarPlaceHolderById(id)}
                       />

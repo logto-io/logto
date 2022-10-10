@@ -22,7 +22,7 @@ const isConsumed = (modelName: string, consumedAt: Nullable<number>): boolean =>
     return false;
   }
 
-  const { refreshTokenReuseInterval } = envSet.values.oidc;
+  const { refreshTokenReuseInterval } = envSet.oidc;
 
   if (modelName !== 'RefreshToken' || !refreshTokenReuseInterval) {
     return Boolean(consumedAt);

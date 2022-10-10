@@ -1,12 +1,14 @@
 import classNames from 'classnames';
 import { useState, useEffect, useContext, useCallback, useMemo } from 'react';
 import { useTranslation, Trans } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import { useTimer } from 'react-timer-hook';
 
 import { getSendPasscodeApi, getVerifyPasscodeApi } from '@/apis/utils';
 import Passcode, { defaultLength } from '@/components/Passcode';
 import TextLink from '@/components/TextLink';
 import useApi, { ErrorHandlers } from '@/hooks/use-api';
+import { useConfirmModal } from '@/hooks/use-confirm-modal';
 import { PageContext } from '@/hooks/use-page-context';
 import { UserFlow, SearchParameters } from '@/types';
 import { getSearchParameters } from '@/utils';
@@ -34,6 +36,8 @@ const PasscodeValidation = ({ type, method, className, target }: Props) => {
   const [error, setError] = useState<string>();
   const { setToast } = useContext(PageContext);
   const { t } = useTranslation();
+  const { show } = useConfirmModal();
+  const navigate = useNavigate();
 
   const { seconds, isRunning, restart } = useTimer({
     autoStart: true,
@@ -45,6 +49,14 @@ const PasscodeValidation = ({ type, method, className, target }: Props) => {
       'passcode.expired': (error) => {
         setError(error.message);
       },
+      'user.phone_not_exists': async (error) => {
+        await show({ type: 'alert', ModalContent: error.message, cancelText: 'action.got_it' });
+        navigate(-1);
+      },
+      'user.email_not_exists': async (error) => {
+        await show({ type: 'alert', ModalContent: error.message, cancelText: 'action.got_it' });
+        navigate(-1);
+      },
       'passcode.code_mismatch': (error) => {
         setError(error.message);
       },
@@ -52,7 +64,7 @@ const PasscodeValidation = ({ type, method, className, target }: Props) => {
         setCode([]);
       },
     }),
-    []
+    [navigate, show]
   );
 
   const { result: verifyPasscodeResult, run: verifyPassCode } = useApi(
@@ -83,8 +95,14 @@ const PasscodeValidation = ({ type, method, className, target }: Props) => {
   useEffect(() => {
     if (verifyPasscodeResult?.redirectTo) {
       window.location.replace(verifyPasscodeResult.redirectTo);
+
+      return;
     }
-  }, [verifyPasscodeResult]);
+
+    if (verifyPasscodeResult && type === 'forgot-password') {
+      navigate('/forgot-password/reset', { replace: true });
+    }
+  }, [navigate, type, verifyPasscodeResult]);
 
   return (
     <form className={classNames(styles.form, className)}>

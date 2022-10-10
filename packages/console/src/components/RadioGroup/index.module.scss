@@ -52,10 +52,19 @@
       top: _.unit(5);
     }
 
+    &.small {
+      padding: _.unit(3);
+
+      svg {
+        right: _.unit(3);
+        top: _.unit(3);
+      }
+    }
+
     .disabledLabel {
       position: absolute;
-      right: _.unit(5);
-      top: _.unit(5);
+      right: _.unit(3);
+      top: _.unit(3);
       background: var(--color-neutral-90);
       padding: _.unit(0.5) _.unit(2);
       border-radius: 10px;

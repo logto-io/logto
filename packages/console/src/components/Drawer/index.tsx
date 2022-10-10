@@ -20,6 +20,8 @@ const Drawer = ({ title, subtitle, isOpen, children, onClose }: Props) => {
   return (
     <ReactModal
       shouldCloseOnOverlayClick
+      // Styling purpose
+      // eslint-disable-next-line jsx-a11y/aria-role
       role="drawer"
       isOpen={isOpen}
       className={styles.content}
