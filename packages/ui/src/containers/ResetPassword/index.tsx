@@ -1,12 +1,16 @@
 import classNames from 'classnames';
-import { useEffect, useCallback } from 'react';
+import { useEffect, useCallback, useMemo, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 
 import { resetPassword } from '@/apis/forgot-password';
 import Button from '@/components/Button';
+import ErrorMessage from '@/components/ErrorMessage';
 import Input from '@/components/Input';
-import useApi from '@/hooks/use-api';
+import useApi, { ErrorHandlers } from '@/hooks/use-api';
+import { useConfirmModal } from '@/hooks/use-confirm-modal';
 import useForm from '@/hooks/use-form';
+import { PageContext } from '@/hooks/use-page-context';
 import { passwordValidation, confirmPasswordValidation } from '@/utils/field-validations';
 
 import * as styles from './index.module.scss';
@@ -29,14 +33,42 @@ const defaultState: FieldState = {
 
 const ResetPassword = ({ className, autoFocus }: Props) => {
   const { t } = useTranslation();
+  const { setToast } = useContext(PageContext);
+  const {
+    fieldValue,
+    formErrorMessage,
+    setFieldValue,
+    register,
+    validateForm,
+    setFormErrorMessage,
+  } = useForm(defaultState);
+  const { show } = useConfirmModal();
+  const navigate = useNavigate();
 
-  const { fieldValue, setFieldValue, register, validateForm } = useForm(defaultState);
+  const resetPasswordErrorHandlers: ErrorHandlers = useMemo(
+    () => ({
+      'session.forgot_password_session_not_found': async (error) => {
+        await show({ type: 'alert', ModalContent: error.message, cancelText: 'action.got_it' });
+        navigate(-1);
+      },
+      'session.forgot_password_verification_expired': async (error) => {
+        await show({ type: 'alert', ModalContent: error.message, cancelText: 'action.got_it' });
+        navigate(-1);
+      },
+      'user.same_password': (error) => {
+        setFormErrorMessage(error.message);
+      },
+    }),
+    [navigate, setFormErrorMessage, show]
+  );
 
-  const { result, run: asyncRegister } = useApi(resetPassword);
+  const { result, run: asyncRegister } = useApi(resetPassword, resetPasswordErrorHandlers);
 
   const onSubmitHandler = useCallback(
     async (event?: React.FormEvent<HTMLFormElement>) => {
       event?.preventDefault();
+
+      setFormErrorMessage(undefined);
 
       if (!validateForm()) {
         return;
@@ -44,14 +76,15 @@ const ResetPassword = ({ className, autoFocus }: Props) => {
 
       void asyncRegister(fieldValue.password);
     },
-    [validateForm, asyncRegister, fieldValue]
+    [setFormErrorMessage, validateForm, asyncRegister, fieldValue.password]
   );
 
   useEffect(() => {
-    if (result?.redirectTo) {
-      window.location.replace(result.redirectTo);
+    if (result) {
+      setToast(t('description.password_changed'));
+      navigate('/sign-in', { replace: true });
     }
-  }, [result]);
+  }, [navigate, result, setToast, t]);
 
   return (
     <form className={classNames(styles.form, className)} onSubmit={onSubmitHandler}>
@@ -80,6 +113,9 @@ const ResetPassword = ({ className, autoFocus }: Props) => {
           setFieldValue((state) => ({ ...state, confirmPassword: '' }));
         }}
       />
+      {formErrorMessage && (
+        <ErrorMessage className={styles.formErrors}>{formErrorMessage}</ErrorMessage>
+      )}
 
       <Button title="action.confirm" onClick={async () => onSubmitHandler()} />
 
