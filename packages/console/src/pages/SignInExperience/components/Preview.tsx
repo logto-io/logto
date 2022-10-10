@@ -33,6 +33,7 @@ const Preview = ({ signInExperience, className }: Props) => {
   const [platform, setPlatform] = useState<'desktopWeb' | 'mobile' | 'mobileWeb'>('desktopWeb');
   const { data: allConnectors } = useSWR<ConnectorResponse[], RequestError>('/api/connectors');
   const previewRef = useRef<HTMLIFrameElement>(null);
+  const { customPhrases } = useUiLanguages();
 
   const { languages } = useUiLanguages();
 
@@ -109,7 +110,7 @@ const Preview = ({ signInExperience, className }: Props) => {
   }, [allConnectors, language, mode, platform, signInExperience]);
 
   const postPreviewMessage = useCallback(() => {
-    if (!config) {
+    if (!config || !customPhrases) {
       return;
     }
 
@@ -117,7 +118,7 @@ const Preview = ({ signInExperience, className }: Props) => {
       { sender: 'ac_preview', config },
       window.location.origin
     );
-  }, [config]);
+  }, [config, customPhrases]);
 
   useEffect(() => {
     postPreviewMessage();
