@@ -1,27 +1,27 @@
-import { LanguageTag } from '@logto/language-kit';
 import { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import Modal from 'react-modal';
 
 import ConfirmModal from '@/components/ConfirmModal';
 import ModalLayout from '@/components/ModalLayout';
+import useUiLanguages from '@/hooks/use-ui-languages';
 import * as modalStyles from '@/scss/modal.module.scss';
 
-import { LanguageEditorContext } from '../../hooks/use-language-editor-context';
-import LanguageEditor from './LanguageEditor';
+import LanguageDetails from './LanguageDetails';
 import LanguageNav from './LanguageNav';
 import * as style from './index.module.scss';
+import useLanguageEditorContext, { LanguageEditorContext } from './use-language-editor-context';
 
-type ManageLanguageModalProps = {
+type Props = {
   isOpen: boolean;
-  languageTags: LanguageTag[];
   onClose: () => void;
 };
 
-const ManageLanguageModal = ({ isOpen, languageTags, onClose }: ManageLanguageModalProps) => {
+const LanguageEditorModal = ({ isOpen, onClose }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   const {
+    languages,
     preSelectedLanguage,
     preAddedLanguage,
     isAddingLanguage,
@@ -42,7 +42,7 @@ const ManageLanguageModal = ({ isOpen, languageTags, onClose }: ManageLanguageMo
     }
 
     onClose();
-    setSelectedLanguage(languageTags[0] ?? 'en');
+    setSelectedLanguage(languages[0] ?? 'en');
   };
 
   const onConfirmUnsavedChanges = () => {
@@ -74,7 +74,7 @@ const ManageLanguageModal = ({ isOpen, languageTags, onClose }: ManageLanguageMo
       >
         <div className={style.container}>
           <LanguageNav />
-          <LanguageEditor />
+          <LanguageDetails />
         </div>
       </ModalLayout>
       <ConfirmModal
@@ -91,4 +91,16 @@ const ManageLanguageModal = ({ isOpen, languageTags, onClose }: ManageLanguageMo
   );
 };
 
-export default ManageLanguageModal;
+const LanguageEditor = (props: Props) => {
+  const { languages } = useUiLanguages();
+  const { context: languageEditorContext, Provider: LanguageEditorContextProvider } =
+    useLanguageEditorContext(languages);
+
+  return (
+    <LanguageEditorContextProvider value={languageEditorContext}>
+      <LanguageEditorModal {...props} />
+    </LanguageEditorContextProvider>
+  );
+};
+
+export default LanguageEditor;

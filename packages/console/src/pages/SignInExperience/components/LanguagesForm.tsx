@@ -1,7 +1,6 @@
 import { languages as uiLanguageNameMapping } from '@logto/language-kit';
 import { SignInExperience } from '@logto/schemas';
-import classNames from 'classnames';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import useSWR from 'swr';
@@ -9,13 +8,11 @@ import useSWR from 'swr';
 import FormField from '@/components/FormField';
 import Select from '@/components/Select';
 import Switch from '@/components/Switch';
-import * as textButtonStyles from '@/components/TextButton/index.module.scss';
 import { RequestError } from '@/hooks/use-api';
 import useUiLanguages from '@/hooks/use-ui-languages';
 
-import useLanguageEditorContext from '../hooks/use-language-editor-context';
 import { SignInExperienceForm } from '../types';
-import ManageLanguageModal from './ManageLanguageModal';
+import ManageLanguageButton from './ManageLanguage/ManageLanguageButton';
 import * as styles from './index.module.scss';
 
 type Props = {
@@ -28,7 +25,6 @@ const LanguagesForm = ({ isManageLanguageVisible = false }: Props) => {
   const { watch, control, register, setValue } = useFormContext<SignInExperienceForm>();
   const isAutoDetect = watch('languageInfo.autoDetect');
   const selectedDefaultLanguage = watch('languageInfo.fallbackLanguage');
-  const [isManageLanguageFormOpen, setIsManageLanguageFormOpen] = useState(false);
   const { languages } = useUiLanguages();
 
   const languageOptions = useMemo(() => {
@@ -37,9 +33,6 @@ const LanguagesForm = ({ isManageLanguageVisible = false }: Props) => {
       title: uiLanguageNameMapping[languageTag],
     }));
   }, [languages]);
-
-  const { context: languageEditorContext, Provider: LanguageEditorContextProvider } =
-    useLanguageEditorContext(languages);
 
   useEffect(() => {
     if (!languages.includes(selectedDefaultLanguage)) {
@@ -58,19 +51,8 @@ const LanguagesForm = ({ isManageLanguageVisible = false }: Props) => {
           {...register('languageInfo.autoDetect')}
           label={t('sign_in_exp.others.languages.description')}
         />
+        {isManageLanguageVisible && <ManageLanguageButton />}
       </FormField>
-      {isManageLanguageVisible && (
-        // TODO: @yijun
-        // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
-        <div
-          className={classNames(textButtonStyles.button, styles.manageLanguage)}
-          onClick={() => {
-            setIsManageLanguageFormOpen(true);
-          }}
-        >
-          {t('sign_in_exp.others.languages.manage_language')}
-        </div>
-      )}
       <FormField title="sign_in_exp.others.languages.default_language">
         <Controller
           name="languageInfo.fallbackLanguage"
@@ -85,15 +67,6 @@ const LanguagesForm = ({ isManageLanguageVisible = false }: Props) => {
             : t('sign_in_exp.others.languages.default_language_description_fixed')}
         </div>
       </FormField>
-      <LanguageEditorContextProvider value={languageEditorContext}>
-        <ManageLanguageModal
-          isOpen={isManageLanguageFormOpen}
-          languageTags={languages}
-          onClose={() => {
-            setIsManageLanguageFormOpen(false);
-          }}
-        />
-      </LanguageEditorContextProvider>
     </>
   );
 };

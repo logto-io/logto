@@ -17,14 +17,14 @@ import IconButton from '@/components/IconButton';
 import useApi, { RequestError } from '@/hooks/use-api';
 import { CustomPhraseResponse } from '@/types/custom-phrase';
 
-import { LanguageEditorContext } from '../../hooks/use-language-editor-context';
-import { createEmptyUiTranslation, flattenTranslation } from '../../utilities';
+import { createEmptyUiTranslation, flattenTranslation } from '../../../utilities';
 import EditSection from './EditSection';
-import * as style from './LanguageEditor.module.scss';
+import * as style from './LanguageDetails.module.scss';
+import { LanguageEditorContext } from './use-language-editor-context';
 
 const emptyUiTranslation = createEmptyUiTranslation();
 
-const LanguageEditor = () => {
+const LanguageDetails = () => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
   const { data: signInExperience } = useSWR<SignInExperience, RequestError>('/api/sign-in-exp');
@@ -164,7 +164,7 @@ const LanguageEditor = () => {
   ]);
 
   return (
-    <div className={style.languageEditor}>
+    <div className={style.languageDetails}>
       <div className={style.title}>
         <div className={style.languageInfo}>
           {uiLanguageNameMapping[selectedLanguage]}
@@ -260,4 +260,4 @@ const LanguageEditor = () => {
   );
 };
 
-export default LanguageEditor;
+export default LanguageDetails;
