@@ -10,11 +10,11 @@ import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import useSWR, { useSWRConfig } from 'swr';
 
+import Delete from '@/assets/images/delete.svg';
 import Button from '@/components/Button';
 import ConfirmModal from '@/components/ConfirmModal';
 import IconButton from '@/components/IconButton';
 import useApi, { RequestError } from '@/hooks/use-api';
-import Delete from '@/icons/Delete';
 import { CustomPhraseResponse } from '@/types/custom-phrase';
 
 import { LanguageEditorContext } from '../../hooks/use-language-editor-context';
