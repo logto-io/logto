@@ -67,7 +67,7 @@ export default function wellKnownRoutes<T extends AnonymousRouter>(router: T, pr
       // Insert Demo App Notification
       if (interaction?.params.client_id === demoAppApplicationId) {
         const {
-          languageInfo: { autoDetect, fixedLanguage },
+          languageInfo: { autoDetect, fallbackLanguage },
         } = signInExperience;
 
         ctx.body = {
@@ -75,7 +75,7 @@ export default function wellKnownRoutes<T extends AnonymousRouter>(router: T, pr
           socialConnectors,
           notification: i18next.t(
             'demo_app.notification',
-            autoDetect ? undefined : { lng: fixedLanguage }
+            autoDetect ? undefined : { lng: fallbackLanguage }
           ),
         };
 
