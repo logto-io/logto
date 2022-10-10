@@ -1,11 +1,11 @@
 import { ConnectorPlatform } from '@logto/schemas';
 import { conditionalString } from '@silverhand/essentials';
-import i18next from 'i18next';
 import { useEffect, useState } from 'react';
 
 import * as styles from '@/App.module.scss';
 import { Context } from '@/hooks/use-page-context';
 import initI18n from '@/i18n/init';
+import { changeLanguage } from '@/i18n/utils';
 import { SignInExperienceSettings, PreviewConfig } from '@/types';
 import { parseQueryParameters } from '@/utils';
 import { getPrimarySignInMethod, getSecondarySignInMethods } from '@/utils/sign-in-experience';
@@ -24,7 +24,7 @@ const usePreview = (context: Context): [boolean, PreviewConfig?] => {
     }
 
     // Init i18n
-    void initI18n(undefined, isPreview);
+    void initI18n();
 
     // Block pointer event
     document.body.classList.add(conditionalString(styles.preview));
@@ -75,13 +75,15 @@ const usePreview = (context: Context): [boolean, PreviewConfig?] => {
       ),
     };
 
-    void i18next.changeLanguage(language);
+    (async () => {
+      await changeLanguage(language);
 
-    setTheme(mode);
+      setTheme(mode);
 
-    setPlatform(platform);
+      setPlatform(platform);
 
-    setExperienceSettings(experienceSettings);
+      setExperienceSettings(experienceSettings);
+    })();
   }, [isPreview, previewConfig, setExperienceSettings, setPlatform, setTheme]);
 
   return [isPreview, previewConfig];

@@ -1,4 +1,3 @@
-import type { LanguageKey } from '@logto/core-kit';
 import { SignInExperience, ConnectorMetadata, AppearanceMode } from '@logto/schemas';
 
 export type UserFlow = 'sign-in' | 'register' | 'forgot-password';
@@ -34,7 +33,7 @@ export enum ConfirmModalMessage {
 
 export type PreviewConfig = {
   signInExperience: SignInExperienceSettingsResponse;
-  language: LanguageKey;
+  language: string;
   mode: AppearanceMode.LightMode | AppearanceMode.DarkMode;
   platform: Platform;
   isNative: boolean;

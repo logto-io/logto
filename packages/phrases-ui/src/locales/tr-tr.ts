@@ -1,4 +1,4 @@
-import en from './en';
+import { LocalePhrase } from '../types';
 
 const translation = {
   input: {
@@ -79,7 +79,7 @@ const translation = {
   },
 };
 
-const trTR: typeof en = Object.freeze({
+const trTR: LocalePhrase = Object.freeze({
   translation,
 });
 

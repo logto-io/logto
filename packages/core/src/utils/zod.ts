@@ -1,3 +1,4 @@
+import { languages, languageTagGuard } from '@logto/language-kit';
 import { arbitraryObjectGuard, translationGuard } from '@logto/schemas';
 import { conditional, ValuesOf } from '@silverhand/essentials';
 import { OpenAPIV3 } from 'openapi-types';
@@ -137,6 +138,13 @@ export const zodTypeToSwagger = (
   if (config === translationGuard) {
     return {
       $ref: '#/components/schemas/TranslationObject',
+    };
+  }
+
+  if (config === languageTagGuard) {
+    return {
+      type: 'string',
+      enum: Object.keys(languages),
     };
   }
 

@@ -1,4 +1,4 @@
-import en from './en';
+import { LocalePhrase } from '../types';
 
 const translation = {
   input: {
@@ -78,7 +78,7 @@ const translation = {
   },
 };
 
-const koKR: typeof en = Object.freeze({
+const koKR: LocalePhrase = Object.freeze({
   translation,
 });
 

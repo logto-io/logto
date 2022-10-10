@@ -102,7 +102,8 @@ importers:
   packages/console:
     specifiers:
       '@fontsource/roboto-mono': ^4.5.7
-      '@logto/core-kit': ^1.0.0-beta.13
+      '@logto/core-kit': 1.0.0-beta.16
+      '@logto/language-kit': 1.0.0-beta.16
       '@logto/phrases': ^1.0.0-beta.10
       '@logto/phrases-ui': ^1.0.0-beta.10
       '@logto/react': 1.0.0-beta.8
@@ -127,9 +128,11 @@ importers:
       '@types/react-modal': ^3.13.1
       '@types/react-syntax-highlighter': ^15.5.1
       classnames: ^2.3.1
+      clean-deep: ^3.4.0
       cross-env: ^7.0.3
       csstype: ^3.0.11
       dayjs: ^1.10.5
+      deepmerge: ^4.2.2
       dnd-core: ^16.0.0
       eslint: ^8.21.0
       history: ^5.3.0
@@ -166,7 +169,8 @@ importers:
       zod: ^3.18.0
     devDependencies:
       '@fontsource/roboto-mono': 4.5.7
-      '@logto/core-kit': 1.0.0-beta.13
+      '@logto/core-kit': 1.0.0-beta.16
+      '@logto/language-kit': 1.0.0-beta.16
       '@logto/phrases': link:../phrases
       '@logto/phrases-ui': link:../phrases-ui
       '@logto/react': 1.0.0-beta.8_react@18.2.0
@@ -191,9 +195,11 @@ importers:
       '@types/react-modal': 3.13.1
       '@types/react-syntax-highlighter': 15.5.1
       classnames: 2.3.1
+      clean-deep: 3.4.0
       cross-env: 7.0.3
       csstype: 3.0.11
       dayjs: 1.10.7
+      deepmerge: 4.2.2
       dnd-core: 16.0.0
       eslint: 8.21.0
       history: 5.3.0
@@ -233,8 +239,10 @@ importers:
     specifiers:
       '@logto/cli': ^1.0.0-beta.10
       '@logto/connector-kit': ^1.0.0-beta.13
-      '@logto/core-kit': ^1.0.0-beta.13
+      '@logto/core-kit': ^1.0.0-beta.16
+      '@logto/language-kit': ^1.0.0-beta.16
       '@logto/phrases': ^1.0.0-beta.10
+      '@logto/phrases-ui': ^1.0.0-beta.10
       '@logto/schemas': ^1.0.0-beta.10
       '@shopify/jest-koa-mocks': ^5.0.0
       '@silverhand/eslint-config': 1.0.0
@@ -260,6 +268,7 @@ importers:
       '@types/supertest': ^2.0.11
       '@types/tar': ^6.1.2
       chalk: ^4
+      clean-deep: ^3.4.0
       copyfiles: ^2.4.1
       dayjs: ^1.10.5
       debug: ^4.3.4
@@ -312,11 +321,14 @@ importers:
     dependencies:
       '@logto/cli': link:../cli
       '@logto/connector-kit': 1.0.0-beta.13
-      '@logto/core-kit': 1.0.0-beta.13
+      '@logto/core-kit': 1.0.0-beta.16
+      '@logto/language-kit': 1.0.0-beta.16
       '@logto/phrases': link:../phrases
+      '@logto/phrases-ui': link:../phrases-ui
       '@logto/schemas': link:../schemas
       '@silverhand/essentials': 1.2.1
       chalk: 4.1.2
+      clean-deep: 3.4.0
       dayjs: 1.10.7
       debug: 4.3.4
       decamelize: 5.0.1
@@ -393,6 +405,7 @@ importers:
   packages/demo-app:
     specifiers:
       '@logto/core-kit': ^1.0.0-beta.13
+      '@logto/language-kit': 1.0.0-beta.16
       '@logto/phrases': ^1.0.0-beta.10
       '@logto/react': 1.0.0-beta.8
       '@logto/schemas': ^1.0.0-beta.10
@@ -419,6 +432,7 @@ importers:
       typescript: ^4.7.4
     devDependencies:
       '@logto/core-kit': 1.0.0-beta.13
+      '@logto/language-kit': 1.0.0-beta.16
       '@logto/phrases': link:../phrases
       '@logto/react': 1.0.0-beta.8_react@18.2.0
       '@logto/schemas': link:../schemas
@@ -498,7 +512,8 @@ importers:
 
   packages/phrases:
     specifiers:
-      '@logto/core-kit': ^1.0.0-beta.13
+      '@logto/core-kit': 1.0.0-beta.16
+      '@logto/language-kit': 1.0.0-beta.15
       '@silverhand/eslint-config': 1.0.0
       '@silverhand/essentials': ^1.2.1
       '@silverhand/ts-config': 1.0.0
@@ -506,9 +521,12 @@ importers:
       lint-staged: ^13.0.0
       prettier: ^2.7.1
       typescript: ^4.7.4
+      zod: ^3.18.0
     dependencies:
-      '@logto/core-kit': 1.0.0-beta.13
+      '@logto/core-kit': 1.0.0-beta.16
+      '@logto/language-kit': 1.0.0-beta.15
       '@silverhand/essentials': 1.2.1
+      zod: 3.18.0
     devDependencies:
       '@silverhand/eslint-config': 1.0.0_swk2g7ygmfleszo5c33j4vooni
       '@silverhand/ts-config': 1.0.0_typescript@4.7.4
@@ -519,7 +537,8 @@ importers:
 
   packages/phrases-ui:
     specifiers:
-      '@logto/core-kit': ^1.0.0-beta.13
+      '@logto/core-kit': 1.0.0-beta.16
+      '@logto/language-kit': 1.0.0-beta.16
       '@silverhand/eslint-config': 1.0.0
       '@silverhand/essentials': ^1.2.1
       '@silverhand/ts-config': 1.0.0
@@ -527,9 +546,12 @@ importers:
       lint-staged: ^13.0.0
       prettier: ^2.7.1
       typescript: ^4.7.4
+      zod: ^3.18.0
     dependencies:
-      '@logto/core-kit': 1.0.0-beta.13
+      '@logto/core-kit': 1.0.0-beta.16
+      '@logto/language-kit': 1.0.0-beta.16
       '@silverhand/essentials': 1.2.1
+      zod: 3.18.0
     devDependencies:
       '@silverhand/eslint-config': 1.0.0_swk2g7ygmfleszo5c33j4vooni
       '@silverhand/ts-config': 1.0.0_typescript@4.7.4
@@ -542,6 +564,7 @@ importers:
     specifiers:
       '@logto/connector-kit': ^1.0.0-beta.13
       '@logto/core-kit': ^1.0.0-beta.13
+      '@logto/language-kit': ^1.0.0-beta.16
       '@logto/phrases': ^1.0.0-beta.10
       '@logto/phrases-ui': ^1.0.0-beta.10
       '@silverhand/eslint-config': 1.0.0
@@ -566,6 +589,7 @@ importers:
     dependencies:
       '@logto/connector-kit': 1.0.0-beta.13
       '@logto/core-kit': 1.0.0-beta.13
+      '@logto/language-kit': 1.0.0-beta.16
       '@logto/phrases': link:../phrases
       '@logto/phrases-ui': link:../phrases-ui
       zod: 3.18.0
@@ -2533,7 +2557,7 @@ packages:
     resolution: {integrity: sha512-bUgAaba1RkYIjHMPrcefLTJAf0d1uVhr864Gh/4JO7/du3xmbFbAWzDyfOhwzt1YZoG4NaMmjVXicfSh/zF/YQ==}
     engines: {node: ^16.0.0}
     dependencies:
-      '@logto/core-kit': 1.0.0-beta.13
+      '@logto/core-kit': 1.0.0-beta.16
       '@silverhand/essentials': 1.2.1
       zod: 3.18.0
     dev: false
@@ -2555,6 +2579,15 @@ packages:
       zod: 3.18.0
     dev: true
 
+  /@logto/core-kit/1.0.0-beta.16:
+    resolution: {integrity: sha512-6f03W+FczXOusWPB9PiMz8mIMIaylYEyPSmICmN8YmIUJgD7jN1tHRJSZjnuo/8h2L6szm/8oNGqcxgIpBjeWg==}
+    engines: {node: ^16.0.0}
+    dependencies:
+      '@logto/language-kit': 1.0.0-beta.16
+      color: 4.2.3
+      nanoid: 3.3.4
+      zod: 3.18.0
+
   /@logto/js/1.0.0-beta.8:
     resolution: {integrity: sha512-Xo63sYZHnoFV+UTCtxRvGk+RuC3yJ3aDEpVDqShSZyfqY0xwGU5naIWHQXOd4koqkAQtp613AdL0qsEshrSl7Q==}
     dependencies:
@@ -2564,6 +2597,19 @@ packages:
       jose: 4.6.0
       lodash.get: 4.4.2
     dev: true
+
+  /@logto/language-kit/1.0.0-beta.15:
+    resolution: {integrity: sha512-gRwE1E1+pItO/LsczC+hj02/wcIVjPJFB4qFBz580gTaa3rhWVYoZZ0DIGqZMQ0fMZ9Qwq7ncG47lS06gKBPmA==}
+    engines: {node: ^16.0.0}
+    dependencies:
+      zod: 3.18.0
+    dev: false
+
+  /@logto/language-kit/1.0.0-beta.16:
+    resolution: {integrity: sha512-1F7o6DlBrmK9QgZNOzf5RmWjN+36Pak2qfiu7NbMRRAlmNLmADqA0Is6v+cfRb6PMCPmRgbn9Iad5Q7NZctDVg==}
+    engines: {node: ^16.0.0}
+    dependencies:
+      zod: 3.18.0
 
   /@logto/node/1.0.0-beta.8:
     resolution: {integrity: sha512-IsQeFGhycUyX1R3/DiODK/nL2tsZaoeITKgqeJP68jiJnO51wPT9ewlFnJ656l/4bCA791oH71WTeeSvKJ8L2w==}
@@ -3957,7 +4003,7 @@ packages:
       '@jest/types': 28.1.3
       deepmerge: 4.2.2
       identity-obj-proxy: 3.0.0
-      jest: 28.1.3_@types+node@16.11.12
+      jest: 28.1.3_k5ytkvaprncdyzidqqws5bqksq
       jest-matcher-specific-error: 1.0.0
       jest-transform-stub: 2.0.0
       ts-jest: 28.0.7_lhw3xkmzugq5tscs3x2ndm4sby
@@ -5729,6 +5775,14 @@ packages:
     resolution: {integrity: sha512-OlQdbZ7gLfGarSqxesMesDa5uz7KFbID8Kpq/SxIoNGDqY8lSYs0D+hhtBXhcdB3rcbXArFr7vlHheLk1voeNA==}
     dev: true
 
+  /clean-deep/3.4.0:
+    resolution: {integrity: sha512-Lo78NV5ItJL/jl+B5w0BycAisaieJGXK1qYi/9m4SjR8zbqmrUtO7Yhro40wEShGmmxs/aJLI/A+jNhdkXK8mw==}
+    engines: {node: '>=4'}
+    dependencies:
+      lodash.isempty: 4.4.0
+      lodash.isplainobject: 4.0.6
+      lodash.transform: 4.6.0
+
   /clean-regexp/1.0.0:
     resolution: {integrity: sha512-GfisEZEJvzKrmGWkvfhgzcz/BllN1USeqD2V6tg14OAOgaCD2Z/PUEuxnAZ/nPvmaHRG7a8y77p1T/IRQ4D1Hw==}
     engines: {node: '>=4'}
@@ -6077,8 +6131,8 @@ packages:
     engines: {node: '>=10'}
     hasBin: true
     dependencies:
-      is-text-path: 1.0.1
       JSONStream: 1.3.5
+      is-text-path: 1.0.1
       lodash: 4.17.21
       meow: 8.1.2
       split2: 3.2.2
@@ -10511,9 +10565,15 @@ packages:
     resolution: {integrity: sha512-z+Uw/vLuy6gQe8cfaFWD7p0wVv8fJl3mbzXh33RS+0oW2wvUqiRXiQ69gLWSLpgB5/6sU+r6BlQR0MBILadqTQ==}
     dev: true
 
+  /lodash.isempty/4.4.0:
+    resolution: {integrity: sha512-oKMuF3xEeqDltrGMfDxAPGIVMSSRv8tbRSODbrs4KGsRRLEhrW8N8Rd4DRgB2+621hY8A8XwwrTVhXWpxFvMzg==}
+
   /lodash.ismatch/4.4.0:
     resolution: {integrity: sha1-dWy1FQyjum8RCFp4hJZF8Yj4Xzc=}
     dev: true
+
+  /lodash.isplainobject/4.0.6:
+    resolution: {integrity: sha512-oSXzaWypCMHkPC3NvBEaPHf0KsA5mvPrOPgQWDsbg8n7orZ290M0BmC/jgRZ4vcJ6DTAhjrsSYgdsW/F+MFOBA==}
 
   /lodash.kebabcase/4.1.1:
     resolution: {integrity: sha1-hImxyw0p/4gZXM7KRI/21swpXDY=}
@@ -10556,6 +10616,9 @@ packages:
     dependencies:
       lodash._reinterpolate: 3.0.0
     dev: true
+
+  /lodash.transform/4.6.0:
+    resolution: {integrity: sha512-LO37ZnhmBVx0GvOU/caQuipEh4GN82TcWv3yHlebGDgOxbxiwwzW5Pcx2AcvpIv2WmvmSMoC492yQFNhy/l/UQ==}
 
   /lodash.truncate/4.4.2:
     resolution: {integrity: sha512-jttmRe7bRse52OsWIMDLaXxWqRAmtIUccAQ3garviCqJjafXOfNMO0yMfNpdD6zbGaTU0P5Nz7e7gAT6cKmJRw==}
@@ -15126,7 +15189,7 @@ packages:
       '@jest/types': 28.1.3
       bs-logger: 0.2.6
       fast-json-stable-stringify: 2.1.0
-      jest: 28.1.3_@types+node@16.11.12
+      jest: 28.1.3_k5ytkvaprncdyzidqqws5bqksq
       jest-util: 28.1.3
       json5: 2.2.1
       lodash.memoize: 4.1.2

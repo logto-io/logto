@@ -98,9 +98,11 @@ const errors = {
     empty_social_connectors: '你启用了社交登录的方式。请至少选择一个社交连接器。',
     enabled_connector_not_found: '未找到已启用的 {{type}} 连接器',
     not_one_and_only_one_primary_sign_in_method: '主要的登录方式必须有且仅有一个，请检查你的输入。',
+    unsupported_default_language: '不支持默认语言 {{language}}。', // UNTRANSLATED
   },
   localization: {
-    cannot_delete_default_language: '不能删除「登录体验」正在使用的默认语言 {{languageKey}}。', // UNTRANSLATED
+    cannot_delete_default_language: '不能删除「登录体验」正在使用的默认语言 {{languageTag}}。', // UNTRANSLATED
+    invalid_translation_structure: '无效的 translation 结构。请检查输入的 translation。', // UNTRANSLATED
   },
   swagger: {
     invalid_zod_type: '无效的 Zod 类型，请检查路由 guard 配置。',
