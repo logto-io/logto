@@ -7,7 +7,6 @@ import { z } from 'zod';
 
 import RequestError from '@/errors/RequestError';
 import { createPasscode, sendPasscode, verifyPasscode } from '@/lib/passcode';
-import { assignInteractionResults } from '@/lib/session';
 import { encryptUserPassword } from '@/lib/user';
 import koaGuard from '@/middleware/koa-guard';
 import {
@@ -27,7 +26,7 @@ import { getRoutePrefix } from './utils';
 export const forgotPasswordRoute = getRoutePrefix('forgot-password');
 
 const forgotPasswordVerificationGuard = z.object({
-  forgotPassword: z.object({ expiresAt: z.string() }),
+  forgotPassword: z.object({ userId: z.string(), expiresAt: z.string() }),
 });
 
 export default function forgotPasswordRoutes<T extends AnonymousRouter>(
@@ -70,12 +69,13 @@ export default function forgotPasswordRoutes<T extends AnonymousRouter>(
       const { id } = await findUserByPhone(phone);
       ctx.log(type, { userId: id });
 
-      await assignInteractionResults(ctx, provider, {
-        login: { accountId: id },
+      await provider.interactionResult(ctx.req, ctx.res, {
         forgotPassword: {
+          userId: id,
           expiresAt: dayjs().add(forgotPasswordVerificationTimeout, 'second').toISOString(),
         },
       });
+      ctx.status = 204;
 
       return next();
     }
@@ -115,12 +115,13 @@ export default function forgotPasswordRoutes<T extends AnonymousRouter>(
 
       await verifyPasscode(jti, PasscodeType.ForgotPassword, code, { email });
       const { id } = await findUserByEmail(email);
-      await assignInteractionResults(ctx, provider, {
-        login: { accountId: id },
+      await provider.interactionResult(ctx.req, ctx.res, {
         forgotPassword: {
+          userId: id,
           expiresAt: dayjs().add(forgotPasswordVerificationTimeout, 'second').toISOString(),
         },
       });
+      ctx.status = 204;
 
       return next();
     }
@@ -135,15 +136,12 @@ export default function forgotPasswordRoutes<T extends AnonymousRouter>(
       const forgotPasswordVerificationResult = forgotPasswordVerificationGuard.safeParse(result);
 
       assertThat(
-        result?.login?.accountId && forgotPasswordVerificationResult.success,
+        forgotPasswordVerificationResult.success,
         new RequestError({ code: 'session.forgot_password_session_not_found', status: 404 })
       );
 
       const {
-        login: { accountId: id },
-      } = result;
-      const {
-        forgotPassword: { expiresAt },
+        forgotPassword: { userId: id, expiresAt },
       } = forgotPasswordVerificationResult.data;
 
       assertThat(

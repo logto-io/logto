@@ -1,0 +1,14 @@
+{
+  "extends": "@silverhand/ts-config/tsconfig.base",
+  "compilerOptions": {
+    "outDir": "lib",
+    "declaration": true,
+    "module": "node16",
+    "target": "es2022"
+  },
+  "include": [
+    "src",
+    "jest.config.ts"
+  ],
+  "exclude": ["**/alteration-scripts"]
+}

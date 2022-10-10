@@ -1,6 +1,6 @@
 {
   "name": "@logto/ui",
-  "version": "1.0.0-beta.9",
+  "version": "1.0.0-beta.10",
   "license": "MPL-2.0",
   "private": true,
   "scripts": {
@@ -12,19 +12,19 @@
     "lint": "eslint --ext .ts --ext .tsx src",
     "lint:report": "pnpm lint --format json --output-file report.json",
     "stylelint": "stylelint \"src/**/*.scss\"",
-    "test:coverage": "jest --coverage --silent",
+    "test:ci": "jest --coverage --silent",
     "test": "jest"
   },
   "devDependencies": {
-    "@logto/phrases": "^1.0.0-beta.9",
-    "@logto/phrases-ui": "^1.0.0-beta.9",
-    "@logto/schemas": "^1.0.0-beta.9",
+    "@logto/phrases": "^1.0.0-beta.10",
+    "@logto/phrases-ui": "^1.0.0-beta.10",
+    "@logto/schemas": "^1.0.0-beta.10",
     "@parcel/core": "2.7.0",
     "@parcel/transformer-sass": "2.7.0",
     "@parcel/transformer-svg-react": "2.7.0",
     "@peculiar/webcrypto": "^1.3.3",
     "@silverhand/eslint-config": "1.0.0",
-    "@silverhand/eslint-config-react": "1.0.0",
+    "@silverhand/eslint-config-react": "1.1.0",
     "@silverhand/essentials": "^1.2.1",
     "@silverhand/jest-config": "1.0.0",
     "@silverhand/ts-config": "1.0.0",

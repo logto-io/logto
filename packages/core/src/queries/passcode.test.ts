@@ -133,12 +133,12 @@ describe('passcode query', () => {
     const ids = ['foo', 'foo2'];
     const expectSql = sql`
       delete from ${table}
-      where ${fields.id} in (${ids.join(',')})
+      where ${fields.id} in (${sql.join(ids, sql`,`)})
     `;
 
     mockQuery.mockImplementationOnce(async (sql, values) => {
       expectSqlAssert(sql, expectSql.sql);
-      expect(values).toEqual([ids.join(',')]);
+      expect(values).toEqual(ids);
 
       return createMockQueryResult([mockPasscode, mockPasscode]);
     });
@@ -150,12 +150,12 @@ describe('passcode query', () => {
     const ids = ['foo', 'foo2'];
     const expectSql = sql`
       delete from ${table}
-      where ${fields.id} in (${ids.join(',')})
+      where ${fields.id} in (${sql.join(ids, sql`,`)})
     `;
 
     mockQuery.mockImplementationOnce(async (sql, values) => {
       expectSqlAssert(sql, expectSql.sql);
-      expect(values).toEqual([ids.join(',')]);
+      expect(values).toEqual(ids);
 
       return createMockQueryResult([mockPasscode]);
     });

@@ -3,6 +3,7 @@ import { ReactNode, RefObject, useRef } from 'react';
 import ReactModal from 'react-modal';
 
 import usePosition, { HorizontalAlignment } from '@/hooks/use-position';
+import { onKeyDownHandler } from '@/utilities/a11y';
 
 import * as styles from './index.module.scss';
 
@@ -61,7 +62,13 @@ const Dropdown = ({
     >
       <div ref={overlayRef} className={styles.dropdownContainer}>
         {title && <div className={classNames(styles.title, titleClassName)}>{title}</div>}
-        <ul className={classNames(styles.list, className)} onClick={onClose}>
+        <ul
+          className={classNames(styles.list, className)}
+          role="menu"
+          tabIndex={0}
+          onClick={onClose}
+          onKeyDown={onKeyDownHandler({ Enter: onClose, Esc: onClose })}
+        >
           {children}
         </ul>
       </div>

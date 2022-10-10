@@ -3,6 +3,30 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.0-beta.10](https://github.com/logto-io/logto/compare/v1.0.0-beta.9...v1.0.0-beta.10) (2022-09-28)
+
+
+### Features
+
+* **console:** auto detect language setting ([#1941](https://github.com/logto-io/logto/issues/1941)) ([49b4303](https://github.com/logto-io/logto/commit/49b430394dc961451a6abca26a95ebba8d22f68c))
+* **console:** configure M2M app access ([#1999](https://github.com/logto-io/logto/issues/1999)) ([a75f8fe](https://github.com/logto-io/logto/commit/a75f8fe959b5a0b0f670bcec83b072e4d41c7890))
+* **core,phrases:** add check protected access function ([e405ef7](https://github.com/logto-io/logto/commit/e405ef7bb8fdbf01d52ef83b19350189e32a39b6))
+* **core:** add POST /session/forgot-password/reset ([#1972](https://github.com/logto-io/logto/issues/1972)) ([acdc86c](https://github.com/logto-io/logto/commit/acdc86c8560d30a89eccb6b0f6892221ea1bc5e0))
+* **core:** cannot delete custom phrase used as default language in sign-in exp ([#1951](https://github.com/logto-io/logto/issues/1951)) ([a1aef26](https://github.com/logto-io/logto/commit/a1aef26905f624569ee47e43bb3a9c9cf05b997b))
+* **core:** machine to machine apps ([cd9c697](https://github.com/logto-io/logto/commit/cd9c6978a35d9fc3a571c7bd56c972939c49a9b5))
+
+
+### Bug Fixes
+
+* bump react sdk and essentials toolkit to support CJK characters in idToken ([2f92b43](https://github.com/logto-io/logto/commit/2f92b438644bd330fa4b8cd3698d9129ecbae282))
+
+
+### Reverts
+
+* Revert "feat(console): auto detect language setting (#1941)" (#2004) ([ad1d1e3](https://github.com/logto-io/logto/commit/ad1d1e3b592b106b3cea4703d19bab041a9d48db)), closes [#1941](https://github.com/logto-io/logto/issues/1941) [#2004](https://github.com/logto-io/logto/issues/2004)
+
+
+
 ## [1.0.0-beta.9](https://github.com/logto-io/logto/compare/v1.0.0-beta.8...v1.0.0-beta.9) (2022-09-07)
 
 

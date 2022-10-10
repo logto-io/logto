@@ -1,5 +1,4 @@
 import classNames from 'classnames';
-import { useTranslation } from 'react-i18next';
 import ReactModal from 'react-modal';
 
 import Button from '@/components/Button';
@@ -17,8 +16,6 @@ const MobileModal = ({
   onConfirm,
   onClose,
 }: ModalProps) => {
-  const { t } = useTranslation();
-
   return (
     <ReactModal
       role="dialog"
@@ -30,7 +27,7 @@ const MobileModal = ({
         <div className={styles.content}>{children}</div>
         <div className={styles.footer}>
           <Button title={cancelText} type="secondary" onClick={onClose} />
-          <Button title={confirmText} onClick={onConfirm ?? onClose} />
+          {onConfirm && <Button title={confirmText} onClick={onConfirm} />}
         </div>
       </div>
     </ReactModal>

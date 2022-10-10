@@ -79,6 +79,7 @@ const PhoneInput = ({
           type="tel"
           inputMode="tel"
           autoComplete="tel-national"
+          // eslint-disable-next-line jsx-a11y/no-autofocus
           autoFocus={autoFocus}
           name={name}
           placeholder={placeholder}
