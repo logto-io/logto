@@ -406,6 +406,12 @@ importers:
       supertest: 6.2.2
       typescript: 4.7.4
 
+  packages/create:
+    specifiers:
+      '@logto/cli': ^1.0.0-beta.10
+    dependencies:
+      '@logto/cli': link:../cli
+
   packages/demo-app:
     specifiers:
       '@logto/core-kit': ^1.0.0-beta.13

@@ -1,3 +1,4 @@
+import chalk from 'chalk';
 import dotenv from 'dotenv';
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
@@ -17,7 +18,7 @@ void yargs(hideBin(process.argv))
   .command(install)
   .command(database)
   .demandCommand(1)
-  .showHelpOnFail(false)
+  .showHelpOnFail(false, `Specify ${chalk.green('--help')} for available options`)
   .strict()
   .parserConfiguration({
     'dot-notation': false,
