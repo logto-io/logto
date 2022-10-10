@@ -37,7 +37,7 @@ describe('<EmailPasswordless/>', () => {
     expect(queryByText('description.terms_of_use')).not.toBeNull();
   });
 
-  test('ender with terms settings but hasTerms param set to false', () => {
+  test('render with terms settings but hasTerms param set to false', () => {
     const { queryByText } = renderWithPageContext(
       <MemoryRouter>
         <SettingsProvider>

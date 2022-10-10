@@ -17,6 +17,7 @@ export const mockUser: User = {
   customData: {},
   applicationId: 'bar',
   lastSignInAt: 1_650_969_465_789,
+  createdAt: 1_650_969_000_000,
 };
 
 export const mockUserResponse = pick(mockUser, ...userInfoSelectFields);
@@ -38,6 +39,7 @@ export const mockUserWithPassword: User = {
   customData: {},
   applicationId: 'bar',
   lastSignInAt: 1_650_969_465_789,
+  createdAt: 1_650_969_000_000,
 };
 
 export const mockUserList: User[] = [
@@ -55,6 +57,7 @@ export const mockUserList: User[] = [
     customData: {},
     applicationId: 'bar',
     lastSignInAt: 1_650_969_465_000,
+    createdAt: 1_650_969_000_000,
   },
   {
     id: '2',
@@ -70,6 +73,7 @@ export const mockUserList: User[] = [
     customData: {},
     applicationId: 'bar',
     lastSignInAt: 1_650_969_465_000,
+    createdAt: 1_650_969_000_000,
   },
   {
     id: '3',
@@ -85,6 +89,7 @@ export const mockUserList: User[] = [
     customData: {},
     applicationId: 'bar',
     lastSignInAt: 1_650_969_465_000,
+    createdAt: 1_650_969_000_000,
   },
   {
     id: '4',
@@ -100,6 +105,7 @@ export const mockUserList: User[] = [
     customData: {},
     applicationId: 'bar',
     lastSignInAt: 1_650_969_465_000,
+    createdAt: 1_650_969_000_000,
   },
   {
     id: '5',
@@ -115,6 +121,7 @@ export const mockUserList: User[] = [
     customData: {},
     applicationId: 'bar',
     lastSignInAt: 1_650_969_465_000,
+    createdAt: 1_650_969_000_000,
   },
 ];
 

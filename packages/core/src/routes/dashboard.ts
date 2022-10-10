@@ -6,9 +6,8 @@ import koaGuard from '@/middleware/koa-guard';
 import {
   countActiveUsersByTimeInterval,
   getDailyActiveUserCountsByTimeInterval,
-  getDailyNewUserCountsByTimeInterval,
 } from '@/queries/log';
-import { countUsers } from '@/queries/user';
+import { countUsers, getDailyNewUserCountsByTimeInterval } from '@/queries/user';
 
 import { AuthedRouter } from './types';
 

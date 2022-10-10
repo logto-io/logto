@@ -6,6 +6,7 @@ import ErrorDark from '@/assets/images/error-dark.svg';
 import Error from '@/assets/images/error.svg';
 import { useTheme } from '@/hooks/use-theme';
 import { KeyboardArrowDown, KeyboardArrowUp } from '@/icons/Arrow';
+import { onKeyDownHandler } from '@/utilities/a11y';
 
 import * as styles from './index.module.scss';
 
@@ -33,7 +34,12 @@ const AppError = ({ title, errorCode, errorMessage, callStack, children }: Props
           {errorMessage}
           {callStack && (
             <span
+              role="button"
+              tabIndex={0}
               className={styles.expander}
+              onKeyDown={onKeyDownHandler(() => {
+                setIsDetailsOpen(!isDetailsOpen);
+              })}
               onClick={() => {
                 setIsDetailsOpen(!isDetailsOpen);
               }}

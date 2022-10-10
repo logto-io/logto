@@ -2,6 +2,7 @@ import { conditionalString } from '@silverhand/essentials';
 import { ReactNode, useEffect, useCallback, useContext } from 'react';
 
 import Toast from '@/components/Toast';
+import ConfirmModalProvider from '@/containers/ConfirmModalProvider';
 import useColorTheme from '@/hooks/use-color-theme';
 import { PageContext } from '@/hooks/use-page-context';
 import useTheme from '@/hooks/use-theme';
@@ -37,12 +38,14 @@ const AppContent = ({ children }: Props) => {
   }, [platform]);
 
   return (
-    <div className={styles.container}>
-      {platform === 'web' && <div className={styles.placeHolder} />}
-      <main className={styles.content}>{children}</main>
-      {platform === 'web' && <div className={styles.placeHolder} />}
-      <Toast message={toast} callback={hideToast} />
-    </div>
+    <ConfirmModalProvider>
+      <div className={styles.container}>
+        {platform === 'web' && <div className={styles.placeHolder} />}
+        <main className={styles.content}>{children}</main>
+        {platform === 'web' && <div className={styles.placeHolder} />}
+        <Toast message={toast} callback={hideToast} />
+      </div>
+    </ConfirmModalProvider>
   );
 };
 

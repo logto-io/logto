@@ -1,9 +1,6 @@
-import { DatabasePool, sql } from 'slonik';
+import { sql } from 'slonik';
 
-export type AlterationScript = {
-  up: (pool: DatabasePool) => Promise<void>;
-  down: (pool: DatabasePool) => Promise<void>;
-};
+import { AlterationScript } from '../lib/types/alteration';
 
 const alteration: AlterationScript = {
   up: async (pool) => {

@@ -5,6 +5,13 @@ import { resetPassword } from '@/apis/forgot-password';
 
 import ResetPassword from '.';
 
+const mockedNavigate = jest.fn();
+
+jest.mock('react-router-dom', () => ({
+  ...jest.requireActual('react-router-dom'),
+  useNavigate: () => mockedNavigate,
+}));
+
 jest.mock('@/apis/forgot-password', () => ({
   resetPassword: jest.fn(async () => ({ redirectTo: '/' })),
 }));

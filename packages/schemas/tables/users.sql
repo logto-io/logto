@@ -14,5 +14,8 @@ create table users (
   identities jsonb /* @use Identities */ not null default '{}'::jsonb,
   custom_data jsonb /* @use ArbitraryObject */ not null default '{}'::jsonb,
   last_sign_in_at timestamptz,
+  created_at timestamptz not null default (now()),
   primary key (id)
 );
+
+create index users__created_at on users (created_at);

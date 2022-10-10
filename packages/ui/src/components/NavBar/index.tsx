@@ -2,6 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
 import ArrowPrev from '@/assets/icons/arrow-prev.svg';
+import { onKeyDownHandler } from '@/utils/a11y';
 
 import * as styles from './index.module.scss';
 
@@ -16,7 +17,12 @@ const NavBar = ({ title }: Props) => {
   return (
     <div className={styles.navBar}>
       <div
+        role="button"
+        tabIndex={0}
         className={styles.backButton}
+        onKeyDown={onKeyDownHandler(() => {
+          navigate(-1);
+        })}
         onClick={() => {
           navigate(-1);
         }}

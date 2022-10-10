@@ -1,6 +1,5 @@
 import classNames from 'classnames';
 import { useState } from 'react';
-import { useTranslation } from 'react-i18next';
 import ReactModal from 'react-modal';
 
 import Button from '@/components/Button';
@@ -21,7 +20,6 @@ const IframeConfirmModal = ({
   onConfirm,
   onClose,
 }: Props) => {
-  const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState(true);
 
   return (
@@ -37,6 +35,8 @@ const IframeConfirmModal = ({
           <iframe
             sandbox={undefined}
             className={isLoading ? styles.hidden : undefined}
+            // For styling use
+            // eslint-disable-next-line jsx-a11y/aria-role
             role="iframe"
             src={url}
             title="terms"

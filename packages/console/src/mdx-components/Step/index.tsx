@@ -1,6 +1,6 @@
 import { AdminConsoleKey } from '@logto/phrases';
 import classNames from 'classnames';
-import { PropsWithChildren, useEffect, useRef, useState } from 'react';
+import { PropsWithChildren, useEffect, useRef, useState, useCallback } from 'react';
 
 import Button from '@/components/Button';
 import Card from '@/components/Card';
@@ -10,6 +10,7 @@ import IconButton from '@/components/IconButton';
 import Index from '@/components/Index';
 import Spacer from '@/components/Spacer';
 import { KeyboardArrowDown, KeyboardArrowUp } from '@/icons/Arrow';
+import { onKeyDownHandler } from '@/utilities/a11y';
 
 import * as styles from './index.module.scss';
 
@@ -54,13 +55,24 @@ const Step = ({
     }
   }, [isExpanded]);
 
+  const onToggle = useCallback(() => {
+    setIsExpanded((expand) => !expand);
+  }, [setIsExpanded]);
+
   return (
     <Card key={title} ref={ref} className={styles.card}>
       <div
+        role="button"
+        tabIndex={0}
         className={styles.header}
-        onClick={() => {
-          setIsExpanded(!isExpanded);
-        }}
+        onKeyDown={onKeyDownHandler({
+          Esc: () => {
+            setIsExpanded(false);
+          },
+          Enter: onToggle,
+          ' ': onToggle,
+        })}
+        onClick={onToggle}
       >
         <Index
           className={styles.index}

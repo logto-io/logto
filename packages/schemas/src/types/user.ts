@@ -11,6 +11,7 @@ export const userInfoSelectFields = Object.freeze([
   'customData',
   'identities',
   'lastSignInAt',
+  'createdAt',
   'applicationId',
 ] as const);
 
