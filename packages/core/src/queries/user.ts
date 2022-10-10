@@ -158,3 +158,15 @@ export const hasActiveUsers = async () =>
     from ${table}
     limit 1
   `);
+
+export const getDailyNewUserCountsByTimeInterval = async (
+  startTimeExclusive: number,
+  endTimeInclusive: number
+) =>
+  envSet.pool.any<{ date: string; count: number }>(sql`
+    select date(${fields.createdAt}), count(*)
+    from ${table}
+    where ${fields.createdAt} > to_timestamp(${startTimeExclusive}::double precision / 1000)
+    and ${fields.createdAt} <= to_timestamp(${endTimeInclusive}::double precision / 1000)
+    group by date(${fields.createdAt})
+  `);

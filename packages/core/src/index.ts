@@ -27,5 +27,6 @@ import initI18n from './i18n/init';
     await initApp(app);
   } catch (error: unknown) {
     console.log('Error while initializing app', error);
+    await envSet.poolSafe?.end();
   }
 })();

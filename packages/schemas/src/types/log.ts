@@ -1,3 +1,5 @@
+import { z } from 'zod';
+
 import { Log } from '../db-entries';
 
 export enum LogResult {
@@ -5,122 +7,160 @@ export enum LogResult {
   Error = 'Error',
 }
 
-export type BaseLogPayload = {
-  result?: LogResult;
-  error?: Record<string, unknown>;
-  ip?: string;
-  userAgent?: string;
-  applicationId?: string;
-  sessionId?: string;
-};
+export const logResultGuard = z.nativeEnum(LogResult);
 
-type ArbitraryLogPayload = Record<string, unknown>;
+export const baseLogPayloadGuard = z.object({
+  result: logResultGuard.optional(),
+  error: z.record(z.string(), z.unknown()).optional(),
+  ip: z.string().optional(),
+  userAgent: z.string().optional(),
+  applicationId: z.string().optional(),
+  sessionId: z.string().optional(),
+});
 
-type RegisterUsernamePasswordLogPayload = ArbitraryLogPayload & {
-  userId?: string;
-  username?: string;
-};
+export type BaseLogPayload = z.infer<typeof baseLogPayloadGuard>;
 
-type RegisterEmailSendPasscodeLogPayload = ArbitraryLogPayload & {
-  email?: string;
-  connectorId?: string;
-};
+const arbitraryLogPayloadGuard = z.record(z.string(), z.unknown());
 
-type RegisterEmailLogPayload = ArbitraryLogPayload & {
-  email?: string;
-  code?: string;
-  userId?: string;
-};
+export type ArbitraryLogPayload = z.infer<typeof arbitraryLogPayloadGuard>;
 
-type RegisterSmsSendPasscodeLogPayload = {
-  phone?: string;
-  connectorId?: string;
-} & ArbitraryLogPayload;
+const registerUsernamePasswordLogPayloadGuard = arbitraryLogPayloadGuard.and(
+  z.object({ userId: z.string().optional(), username: z.string().optional() })
+);
 
-type RegisterSmsLogPayload = ArbitraryLogPayload & {
-  phone?: string;
-  code?: string;
-  userId?: string;
-};
+const registerEmailSendPasscodeLogPayloadGuard = arbitraryLogPayloadGuard.and(
+  z.object({ email: z.string().optional(), connectorId: z.string().optional() })
+);
 
-type RegisterSocialBindLogPayload = ArbitraryLogPayload & {
-  connectorId?: string;
-  userInfo?: object;
-  userId?: string;
-};
+const registerEmailLogPayloadGuard = arbitraryLogPayloadGuard.and(
+  z.object({
+    email: z.string().optional(),
+    code: z.string().optional(),
+    userId: z.string().optional(),
+  })
+);
 
-type RegisterSocialLogPayload = RegisterSocialBindLogPayload & {
-  code?: string;
-  state?: string;
-  redirectUri?: string;
-  redirectTo?: string;
-};
+const registerSmsSendPasscodeLogPayloadGuard = arbitraryLogPayloadGuard.and(
+  z.object({
+    phone: z.string().optional(),
+    connectorId: z.string().optional(),
+  })
+);
 
-type SignInUsernamePasswordLogPayload = ArbitraryLogPayload & {
-  userId?: string;
-  username?: string;
-};
+const registerSmsLogPayloadGuard = arbitraryLogPayloadGuard.and(
+  z.object({
+    phone: z.string().optional(),
+    code: z.string().optional(),
+    userId: z.string().optional(),
+  })
+);
 
-type SignInEmailSendPasscodeLogPayload = ArbitraryLogPayload & {
-  email?: string;
-  connectorId?: string;
-};
+const registerSocialBindLogPayloadGuard = arbitraryLogPayloadGuard.and(
+  z.object({
+    connectorId: z.string().optional(),
+    userId: z.string().optional(),
+    userInfo: z.unknown().optional(),
+  })
+);
 
-type SignInEmailLogPayload = ArbitraryLogPayload & {
-  email?: string;
-  code?: string;
-  userId?: string;
-};
+const registerSocialLogPayloadGuard = registerSocialBindLogPayloadGuard.and(
+  z.object({
+    code: z.string().optional(),
+    state: z.string().optional(),
+    redirectUri: z.string().optional(),
+    redirectTo: z.string().optional(),
+  })
+);
 
-type SignInSmsSendPasscodeLogPayload = ArbitraryLogPayload & {
-  phone?: string;
-  connectorId?: string;
-};
+const signInUsernamePasswordLogPayloadGuard = arbitraryLogPayloadGuard.and(
+  z.object({
+    userId: z.string().optional(),
+    username: z.string().optional(),
+  })
+);
 
-type SignInSmsLogPayload = ArbitraryLogPayload & {
-  phone?: string;
-  code?: string;
-  userId?: string;
-};
+const signInEmailSendPasscodeLogPayloadGuard = arbitraryLogPayloadGuard.and(
+  z.object({
+    email: z.string().optional(),
+    connectorId: z.string().optional(),
+  })
+);
 
-type SignInSocialBindLogPayload = ArbitraryLogPayload & {
-  connectorId?: string;
-  userInfo?: object;
-  userId?: string;
-};
+const signInEmailLogPayloadGuard = arbitraryLogPayloadGuard.and(
+  z.object({
+    email: z.string().optional(),
+    code: z.string().optional(),
+    userId: z.string().optional(),
+  })
+);
 
-type SignInSocialLogPayload = SignInSocialBindLogPayload & {
-  code?: string;
-  state?: string;
-  redirectUri?: string;
-  redirectTo?: string;
-};
+const signInSmsSendPasscodeLogPayloadGuard = arbitraryLogPayloadGuard.and(
+  z.object({
+    phone: z.string().optional(),
+    connectorId: z.string().optional(),
+  })
+);
 
-type ForgotPasswordSmsSendPasscodeLogPayload = ArbitraryLogPayload & {
-  phone?: string;
-  connectorId?: string;
-};
+const signInSmsLogPayloadGuard = arbitraryLogPayloadGuard.and(
+  z.object({
+    phone: z.string().optional(),
+    code: z.string().optional(),
+    userId: z.string().optional(),
+  })
+);
 
-type ForgotPasswordSmsLogPayload = ArbitraryLogPayload & {
-  phone?: string;
-  code?: string;
-  userId?: string;
-};
+const signInSocialBindLogPayloadGuard = arbitraryLogPayloadGuard.and(
+  z.object({
+    connectorId: z.string().optional(),
+    userId: z.string().optional(),
+    userInfo: z.unknown().optional(),
+  })
+);
 
-type ForgotPasswordEmailSendPasscodeLogPayload = ArbitraryLogPayload & {
-  email?: string;
-  connectorId?: string;
-};
+const signInSocialLogPayloadGuard = signInSocialBindLogPayloadGuard.and(
+  z.object({
+    code: z.string().optional(),
+    state: z.string().optional(),
+    redirectUri: z.string().optional(),
+    redirectTo: z.string().optional(),
+  })
+);
 
-type ForgotPasswordEmailLogPayload = ArbitraryLogPayload & {
-  email?: string;
-  code?: string;
-  userId?: string;
-};
+const forgotPasswordSmsSendPasscodeLogPayloadGuard = arbitraryLogPayloadGuard.and(
+  z.object({
+    phone: z.string().optional(),
+    connectorId: z.string().optional(),
+  })
+);
 
-type ForgotPasswordResetLogPayload = ArbitraryLogPayload & {
-  userId?: string;
-};
+const forgotPasswordSmsLogPayloadGuard = arbitraryLogPayloadGuard.and(
+  z.object({
+    phone: z.string().optional(),
+    code: z.string().optional(),
+    userId: z.string().optional(),
+  })
+);
+
+const forgotPasswordEmailSendPasscodeLogPayloadGuard = arbitraryLogPayloadGuard.and(
+  z.object({
+    email: z.string().optional(),
+    connectorId: z.string().optional(),
+  })
+);
+
+const forgotPasswordEmailLogPayloadGuard = arbitraryLogPayloadGuard.and(
+  z.object({
+    email: z.string().optional(),
+    code: z.string().optional(),
+    userId: z.string().optional(),
+  })
+);
+
+const forgotPasswordResetLogPayloadGuard = arbitraryLogPayloadGuard.and(
+  z.object({
+    userId: z.string().optional(),
+  })
+);
 
 export enum TokenType {
   AccessToken = 'AccessToken',
@@ -128,46 +168,56 @@ export enum TokenType {
   IdToken = 'IdToken',
 }
 
-type ExchangeTokenLogPayload = ArbitraryLogPayload & {
-  userId?: string;
-  params?: Record<string, unknown>;
-  issued?: TokenType[];
-  scope?: string;
-};
+export const tokenTypeGuard = z.nativeEnum(TokenType);
 
-type RevokeTokenLogPayload = ArbitraryLogPayload & {
-  userId?: string;
-  params?: Record<string, unknown>;
-  grantId?: string;
-  tokenType?: TokenType;
-};
+const exchangeTokenLogPayloadGuard = arbitraryLogPayloadGuard.and(
+  z.object({
+    userId: z.string().optional(),
+    params: z.record(z.string(), z.unknown()).optional(),
+    issued: tokenTypeGuard.array().optional(),
+    scope: z.string().optional(),
+  })
+);
 
-export type LogPayloads = {
-  RegisterUsernamePassword: RegisterUsernamePasswordLogPayload;
-  RegisterEmailSendPasscode: RegisterEmailSendPasscodeLogPayload;
-  RegisterEmail: RegisterEmailLogPayload;
-  RegisterSmsSendPasscode: RegisterSmsSendPasscodeLogPayload;
-  RegisterSms: RegisterSmsLogPayload;
-  RegisterSocialBind: RegisterSocialBindLogPayload;
-  RegisterSocial: RegisterSocialLogPayload;
-  SignInUsernamePassword: SignInUsernamePasswordLogPayload;
-  SignInEmailSendPasscode: SignInEmailSendPasscodeLogPayload;
-  SignInEmail: SignInEmailLogPayload;
-  SignInSmsSendPasscode: SignInSmsSendPasscodeLogPayload;
-  SignInSms: SignInSmsLogPayload;
-  SignInSocialBind: SignInSocialBindLogPayload;
-  SignInSocial: SignInSocialLogPayload;
-  ForgotPasswordSmsSendPasscode: ForgotPasswordSmsSendPasscodeLogPayload;
-  ForgotPasswordSms: ForgotPasswordSmsLogPayload;
-  ForgotPasswordEmailSendPasscode: ForgotPasswordEmailSendPasscodeLogPayload;
-  ForgotPasswordEmail: ForgotPasswordEmailLogPayload;
-  ForgotPasswordReset: ForgotPasswordResetLogPayload;
-  CodeExchangeToken: ExchangeTokenLogPayload;
-  RefreshTokenExchangeToken: ExchangeTokenLogPayload;
-  RevokeToken: RevokeTokenLogPayload;
-};
+const revokeTokenLogPayloadGuard = arbitraryLogPayloadGuard.and(
+  z.object({
+    userId: z.string().optional(),
+    params: z.record(z.string(), z.unknown()).optional(),
+    tokenType: tokenTypeGuard.optional(),
+    grantId: z.string().optional(),
+  })
+);
 
-export type LogType = keyof LogPayloads;
+const logPayloadsGuard = z.object({
+  RegisterUsernamePassword: registerUsernamePasswordLogPayloadGuard,
+  RegisterEmailSendPasscode: registerEmailSendPasscodeLogPayloadGuard,
+  RegisterEmail: registerEmailLogPayloadGuard,
+  RegisterSmsSendPasscode: registerSmsSendPasscodeLogPayloadGuard,
+  RegisterSms: registerSmsLogPayloadGuard,
+  RegisterSocialBind: registerSocialBindLogPayloadGuard,
+  RegisterSocial: registerSocialLogPayloadGuard,
+  SignInUsernamePassword: signInUsernamePasswordLogPayloadGuard,
+  SignInEmailSendPasscode: signInEmailSendPasscodeLogPayloadGuard,
+  SignInEmail: signInEmailLogPayloadGuard,
+  SignInSmsSendPasscode: signInSmsSendPasscodeLogPayloadGuard,
+  SignInSms: signInSmsLogPayloadGuard,
+  SignInSocialBind: signInSocialBindLogPayloadGuard,
+  SignInSocial: signInSocialLogPayloadGuard,
+  ForgotPasswordSmsSendPasscode: forgotPasswordSmsSendPasscodeLogPayloadGuard,
+  ForgotPasswordSms: forgotPasswordSmsLogPayloadGuard,
+  ForgotPasswordEmailSendPasscode: forgotPasswordEmailSendPasscodeLogPayloadGuard,
+  ForgotPasswordEmail: forgotPasswordEmailLogPayloadGuard,
+  ForgotPasswordReset: forgotPasswordResetLogPayloadGuard,
+  CodeExchangeToken: exchangeTokenLogPayloadGuard,
+  RefreshTokenExchangeToken: exchangeTokenLogPayloadGuard,
+  RevokeToken: revokeTokenLogPayloadGuard,
+});
+
+export type LogPayloads = z.infer<typeof logPayloadsGuard>;
+
+export const logTypeGuard = logPayloadsGuard.keyof();
+
+export type LogType = z.infer<typeof logTypeGuard>;
 
 export type LogPayload = LogPayloads[LogType];
 

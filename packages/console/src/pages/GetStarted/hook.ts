@@ -13,10 +13,10 @@ import CustomizeDark from '@/assets/images/customize-dark.svg';
 import Customize from '@/assets/images/customize.svg';
 import FurtherReadingsDark from '@/assets/images/further-readings-dark.svg';
 import FurtherReadings from '@/assets/images/further-readings.svg';
-import OneClickDark from '@/assets/images/one-click-dark.svg';
-import OneClick from '@/assets/images/one-click.svg';
 import PasswordlessDark from '@/assets/images/passwordless-dark.svg';
 import Passwordless from '@/assets/images/passwordless.svg';
+import SocialDark from '@/assets/images/social-dark.svg';
+import Social from '@/assets/images/social.svg';
 import { RequestError } from '@/hooks/use-api';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
 import useSettings from '@/hooks/use-settings';
@@ -106,7 +106,7 @@ const useGetStartedMetadata = () => {
         id: 'configureSocialSignIn',
         title: 'get_started.card5_title',
         subtitle: 'get_started.card5_subtitle',
-        icon: isLightMode ? OneClick : OneClickDark,
+        icon: isLightMode ? Social : SocialDark,
         buttonText: 'general.add',
         isComplete: settings?.socialSignInConfigured,
         onClick: () => {

@@ -1,43 +1,54 @@
 @use '@/scss/underscore' as _;
 
 .body {
-  padding-top: _.unit(5);
+  .connectorGroup {
+    gap: _.unit(4);
 
-  .connector {
-    font: var(--font-body-medium);
-    width: 230px;
+    .connectorRadio {
+      // Override radio style
+      min-width: 276px;
+      max-width: 276px;
+      width: 276px;
+      height: 96px;
+    }
 
-    .logo {
-      width: 48px;
-      height: 48px;
-      border-radius: 8px;
-      background-color: var(--color-hover);
+    .connector {
+      font: var(--font-body-medium);
       display: flex;
-      align-items: center;
-      justify-content: center;
 
-      img {
-        width: 34px;
-        height: 34px;
+      .logo {
+        width: 48px;
+        height: 48px;
+        display: flex;
+        align-items: center;
+
+        img {
+          width: 36px;
+          height: 36px;
+        }
       }
-    }
 
-    .name {
-      margin-top: _.unit(2);
-      font: var(--font-subhead-2);
-    }
+      .content {
+        flex: 1;
 
-    .connectorId {
-      margin-top: _.unit(2);
-      font: var(--font-body-medium);
-      color: var(--color-neutral-50);
-    }
+        .name {
+          font: var(--font-subhead-2);
+        }
 
-    .description {
-      font: var(--font-body-medium);
-      margin-top: _.unit(2);
-      height: 60px;
-      overflow: hidden;
+        .connectorId {
+          margin-top: _.unit(1);
+          font: var(--font-body-small);
+          color: var(--color-caption);
+        }
+
+        .description {
+          font: var(--font-body-small);
+          color: var(--color-caption);
+          margin-top: _.unit(1);
+          height: 60px;
+          overflow: hidden;
+        }
+      }
     }
   }
 }
