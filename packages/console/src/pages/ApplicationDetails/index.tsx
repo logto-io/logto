@@ -18,6 +18,7 @@ import Drawer from '@/components/Drawer';
 import LinkButton from '@/components/LinkButton';
 import TabNav, { TabNavItem } from '@/components/TabNav';
 import useApi, { RequestError } from '@/hooks/use-api';
+import useDocumentationUrl from '@/hooks/use-documentation-url';
 import Back from '@/icons/Back';
 import Delete from '@/icons/Delete';
 import More from '@/icons/More';
@@ -54,6 +55,7 @@ const ApplicationDetails = () => {
   const api = useApi();
   const navigate = useNavigate();
   const formMethods = useForm<Application>();
+  const documentationUrl = useDocumentationUrl();
 
   const {
     handleSubmit,
@@ -145,15 +147,21 @@ const ApplicationDetails = () => {
             </div>
             <div className={styles.operations}>
               {/* TODO: @Charles figure out a better way to check guide availability */}
-              {data.type !== ApplicationType.MachineToMachine && (
-                <Button
-                  title="application_details.check_guide"
-                  size="large"
-                  onClick={() => {
-                    setIsReadmeOpen(true);
-                  }}
-                />
-              )}
+              <Button
+                title="application_details.check_guide"
+                size="large"
+                onClick={() => {
+                  if (data.type === ApplicationType.MachineToMachine) {
+                    window.open(
+                      `${documentationUrl}/docs/recipes/integrate-logto/machine-to-machine/`,
+                      '_blank'
+                    );
+
+                    return;
+                  }
+                  setIsReadmeOpen(true);
+                }}
+              />
               <Drawer isOpen={isReadmeOpen} onClose={onCloseDrawer}>
                 <Guide isCompact app={data} onClose={onCloseDrawer} />
               </Drawer>

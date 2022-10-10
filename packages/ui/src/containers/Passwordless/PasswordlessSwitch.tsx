@@ -33,9 +33,12 @@ const PasswordlessSwitch = ({ target, className }: Props) => {
     <TextLink
       className={className}
       onClick={() => {
-        navigate({
-          pathname: targetPathname,
-        });
+        navigate(
+          {
+            pathname: targetPathname,
+          },
+          { replace: true }
+        );
       }}
     >
       {t('action.switch_to', {

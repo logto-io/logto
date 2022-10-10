@@ -19,6 +19,8 @@ const Drawer = ({ className, isOpen = false, children, onClose }: Props) => {
   return (
     <ReactModal
       shouldCloseOnOverlayClick
+      // For styling use
+      // eslint-disable-next-line jsx-a11y/aria-role
       role="popup"
       isOpen={isOpen}
       className={classNames(styles.drawer, className)}

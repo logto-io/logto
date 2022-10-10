@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.0-beta.10](https://github.com/logto-io/logto/compare/v1.0.0-beta.9...v1.0.0-beta.10) (2022-09-28)
+
+
+### Features
+
+* **ui:** add forget password page ([#1943](https://github.com/logto-io/logto/issues/1943)) ([39d80d9](https://github.com/logto-io/logto/commit/39d80d991235c93346c26977541d3c7040379a13))
+* **ui:** add passwordless switch ([#1976](https://github.com/logto-io/logto/issues/1976)) ([ddb0e47](https://github.com/logto-io/logto/commit/ddb0e47950b3bd7f92af2a8a5e14b201e0a10ed7))
+* **ui:** add reset password page ([#1961](https://github.com/logto-io/logto/issues/1961)) ([ff81b0f](https://github.com/logto-io/logto/commit/ff81b0f83e86dd3686341d3612f3f5e8f075cba6))
+
+
+### Bug Fixes
+
+* bump react sdk and essentials toolkit to support CJK characters in idToken ([2f92b43](https://github.com/logto-io/logto/commit/2f92b438644bd330fa4b8cd3698d9129ecbae282))
+* **phrases:** phrases-ui typo and types ([#1948](https://github.com/logto-io/logto/issues/1948)) ([2f373db](https://github.com/logto-io/logto/commit/2f373db8e43bc243973d2171867ee6e2169d280f))
+
+
+
 ## [1.0.0-beta.9](https://github.com/logto-io/logto/compare/v1.0.0-beta.8...v1.0.0-beta.9) (2022-09-07)
 
 

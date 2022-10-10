@@ -13,6 +13,7 @@ const ResetPassword = () => {
       <NavBar />
       <div className={styles.container}>
         <div className={styles.title}>{t('description.new_password')}</div>
+        {/* eslint-disable-next-line jsx-a11y/no-autofocus */}
         <ResetPasswordForm autoFocus />
       </div>
     </div>

@@ -5,6 +5,7 @@ import { TFuncKey, useTranslation } from 'react-i18next';
 import Copy from '@/icons/Copy';
 import Eye from '@/icons/Eye';
 import EyeClosed from '@/icons/EyeClosed';
+import { onKeyDownHandler } from '@/utilities/a11y';
 
 import IconButton from '../IconButton';
 import Tooltip from '../Tooltip';
@@ -57,6 +58,11 @@ const CopyToClipboard = ({
   return (
     <div
       className={classNames(styles.container, styles[variant], className)}
+      role="button"
+      tabIndex={0}
+      onKeyDown={onKeyDownHandler((event) => {
+        event.stopPropagation();
+      })}
       onClick={(event) => {
         event.stopPropagation();
       }}

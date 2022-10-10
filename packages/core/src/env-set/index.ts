@@ -6,7 +6,7 @@ import { DatabasePool } from 'slonik';
 import { appendPath } from '@/utils/url';
 
 import { addConnectors } from './add-connectors';
-import { checkAlterationState } from './check-migration-state';
+import { checkAlterationState } from './check-alteration-state';
 import createPoolByEnv from './create-pool-by-env';
 import loadOidcValues from './oidc';
 import { isTrue } from './parameters';
@@ -76,7 +76,9 @@ function createEnvSet() {
 
       return pool;
     },
-
+    get poolSafe() {
+      return pool;
+    },
     load: async () => {
       values = await loadEnvValues();
       pool = await createPoolByEnv(values.isTest);

@@ -47,7 +47,9 @@ const TermsOfUseConfirmModal = ({ isOpen = false, onConfirm, onClose }: Props) =
         setTermsAgreement(true);
         onConfirm();
       }}
-      onClose={onClose}
+      onClose={() => {
+        onClose();
+      }}
     >
       <Trans
         components={{

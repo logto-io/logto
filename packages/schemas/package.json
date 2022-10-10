@@ -1,6 +1,6 @@
 {
   "name": "@logto/schemas",
-  "version": "1.0.0-beta.9",
+  "version": "1.0.0-beta.10",
   "main": "lib/index.js",
   "author": "Silverhand Inc. <contact@silverhand.io>",
   "license": "MPL-2.0",
@@ -11,6 +11,7 @@
   "private": true,
   "scripts": {
     "precommit": "lint-staged",
+    "version": "./update-next.sh && git add alterations/",
     "generate": "rm -rf src/db-entries && ts-node src/gen/index.ts && eslint \"src/db-entries/**\" --fix",
     "build:alterations": "rm -rf alterations/*.d.ts alterations/*.js && tsc -p tsconfig.build.alterations.json",
     "build": "pnpm generate && rm -rf lib/ && tsc -p tsconfig.build.json && pnpm build:alterations",
@@ -18,7 +19,8 @@
     "lint": "eslint --ext .ts src",
     "lint:report": "pnpm lint --format json --output-file report.json",
     "prepack": "pnpm build",
-    "test": "jest"
+    "test": "jest",
+    "test:ci": "jest"
   },
   "engines": {
     "node": "^16.0.0"
@@ -47,15 +49,25 @@
     "extends": "@silverhand",
     "rules": {
       "@typescript-eslint/ban-types": "off"
-    }
+    },
+    "overrides": [
+      {
+        "files": [
+          "alterations/*.ts"
+        ],
+        "rules": {
+          "unicorn/filename-case": "off"
+        }
+      }
+    ]
   },
   "prettier": "@silverhand/eslint-config/.prettierrc",
   "dependencies": {
     "@logto/connector-kit": "^1.0.0-beta.13",
     "@logto/core-kit": "^1.0.0-beta.13",
     "@logto/language-kit": "^1.0.0-beta.16",
-    "@logto/phrases": "^1.0.0-beta.9",
-    "@logto/phrases-ui": "^1.0.0-beta.9",
+    "@logto/phrases": "^1.0.0-beta.10",
+    "@logto/phrases-ui": "^1.0.0-beta.10",
     "zod": "^3.18.0"
   }
 }

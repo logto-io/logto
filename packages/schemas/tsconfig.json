@@ -7,6 +7,6 @@
   "include": [
     "src",
     "alterations",
-    "jest.config.ts", "alterations",
+    "jest.config.ts"
   ]
 }

@@ -100,6 +100,7 @@ const UserDetails = () => {
               className={styles.avatar}
               src={data.avatar || generateAvatarPlaceHolderById(userId)}
               referrerPolicy="no-referrer"
+              alt="avatar"
             />
             <div className={styles.metadata}>
               <div className={styles.name}>{data.name ?? '-'}</div>
