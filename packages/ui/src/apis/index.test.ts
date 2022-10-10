@@ -1,3 +1,4 @@
+import { PasscodeType } from '@logto/schemas';
 import ky from 'ky';
 
 import { consent } from './consent';
@@ -87,50 +88,56 @@ describe('api', () => {
 
   it('sendSignInSmsPasscode', async () => {
     await sendSignInSmsPasscode(phone);
-    expect(ky.post).toBeCalledWith('/api/session/sign-in/passwordless/sms/send-passcode', {
+    expect(ky.post).toBeCalledWith('/api/session/passwordless/sms/send', {
       json: {
         phone,
+        flow: PasscodeType.SignIn,
       },
     });
   });
 
   it('verifySignInSmsPasscode', async () => {
-    mockKyPost.mockReturnValueOnce({
+    mockKyPost.mockReturnValueOnce({}).mockReturnValueOnce({
       json: () => ({
         redirectTo: '/',
       }),
     });
     await verifySignInSmsPasscode(phone, code);
-    expect(ky.post).toBeCalledWith('/api/session/sign-in/passwordless/sms/verify-passcode', {
+    expect(ky.post).toBeCalledWith('/api/session/passwordless/sms/verify', {
       json: {
         phone,
         code,
+        flow: PasscodeType.SignIn,
       },
     });
+    expect(ky.post).toBeCalledWith('/api/session/sign-in/passwordless/sms');
   });
 
   it('sendSignInEmailPasscode', async () => {
     await sendSignInEmailPasscode(email);
-    expect(ky.post).toBeCalledWith('/api/session/sign-in/passwordless/email/send-passcode', {
+    expect(ky.post).toBeCalledWith('/api/session/passwordless/email/send', {
       json: {
         email,
+        flow: PasscodeType.SignIn,
       },
     });
   });
 
   it('verifySignInEmailPasscode', async () => {
-    mockKyPost.mockReturnValueOnce({
+    mockKyPost.mockReturnValueOnce({}).mockReturnValueOnce({
       json: () => ({
         redirectTo: '/',
       }),
     });
     await verifySignInEmailPasscode(email, code);
-    expect(ky.post).toBeCalledWith('/api/session/sign-in/passwordless/email/verify-passcode', {
+    expect(ky.post).toBeCalledWith('/api/session/passwordless/email/verify', {
       json: {
         email,
         code,
+        flow: PasscodeType.SignIn,
       },
     });
+    expect(ky.post).toBeCalledWith('/api/session/sign-in/passwordless/email');
   });
 
   it('consent', async () => {
@@ -150,40 +157,46 @@ describe('api', () => {
 
   it('sendRegisterSmsPasscode', async () => {
     await sendRegisterSmsPasscode(phone);
-    expect(ky.post).toBeCalledWith('/api/session/register/passwordless/sms/send-passcode', {
+    expect(ky.post).toBeCalledWith('/api/session/passwordless/sms/send', {
       json: {
         phone,
+        flow: PasscodeType.Register,
       },
     });
   });
 
   it('verifyRegisterSmsPasscode', async () => {
     await verifyRegisterSmsPasscode(phone, code);
-    expect(ky.post).toBeCalledWith('/api/session/register/passwordless/sms/verify-passcode', {
+    expect(ky.post).toBeCalledWith('/api/session/passwordless/sms/verify', {
       json: {
         phone,
         code,
+        flow: PasscodeType.Register,
       },
     });
+    expect(ky.post).toBeCalledWith('/api/session/register/passwordless/sms');
   });
 
   it('sendRegisterEmailPasscode', async () => {
     await sendRegisterEmailPasscode(email);
-    expect(ky.post).toBeCalledWith('/api/session/register/passwordless/email/send-passcode', {
+    expect(ky.post).toBeCalledWith('/api/session/passwordless/email/send', {
       json: {
         email,
+        flow: PasscodeType.Register,
       },
     });
   });
 
   it('verifyRegisterEmailPasscode', async () => {
     await verifyRegisterEmailPasscode(email, code);
-    expect(ky.post).toBeCalledWith('/api/session/register/passwordless/email/verify-passcode', {
+    expect(ky.post).toBeCalledWith('/api/session/passwordless/email/verify', {
       json: {
         email,
         code,
+        flow: PasscodeType.Register,
       },
     });
+    expect(ky.post).toBeCalledWith('/api/session/register/passwordless/email');
   });
 
   it('sendForgotPasswordSmsPasscode', async () => {

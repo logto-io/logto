@@ -62,8 +62,6 @@ const errors = {
       'Forgot password verification has expired. Please go back and verify again.',
     verification_session_not_found:
       'Passwordless verification session not found. Please go back and retry.',
-    passwordless_not_verified:
-      'Passwordless of {{flow}} flow is not verified. Please go back and verify.',
     verification_expired: 'Passwordless verification has expired. Please go back and verify again.',
     unauthorized: 'Please sign in first.',
     unsupported_prompt_name: 'Unsupported prompt name.',

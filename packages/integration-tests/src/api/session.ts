@@ -1,3 +1,5 @@
+import { PasscodeType } from '@logto/schemas';
+
 import api from './api';
 
 type RedirectResponse = {
@@ -51,12 +53,13 @@ export const consent = async (interactionCookie: string) =>
     .json<RedirectResponse>();
 
 export const sendRegisterUserWithEmailPasscode = (email: string, interactionCookie: string) =>
-  api.post('session/register/passwordless/email/send-passcode', {
+  api.post('session/passwordless/email/send', {
     headers: {
       cookie: interactionCookie,
     },
     json: {
       email,
+      flow: PasscodeType.Register,
     },
   });
 
@@ -65,25 +68,34 @@ export const verifyRegisterUserWithEmailPasscode = (
   code: string,
   interactionCookie: string
 ) =>
-  api
-    .post('session/register/passwordless/email/verify-passcode', {
-      headers: {
-        cookie: interactionCookie,
-      },
-      json: {
-        email,
-        code,
-      },
-    })
-    .json<RedirectResponse>();
-
-export const sendSignInUserWithEmailPasscode = (email: string, interactionCookie: string) =>
-  api.post('session/sign-in/passwordless/email/send-passcode', {
+  api.post('session/passwordless/email/verify', {
     headers: {
       cookie: interactionCookie,
     },
     json: {
       email,
+      code,
+      flow: PasscodeType.Register,
+    },
+  });
+
+export const checkVerificationSessionAndRegisterWithEmail = (interactionCookie: string) =>
+  api
+    .post('session/register/passwordless/email', {
+      headers: {
+        cookie: interactionCookie,
+      },
+    })
+    .json<RedirectResponse>();
+
+export const sendSignInUserWithEmailPasscode = (email: string, interactionCookie: string) =>
+  api.post('session/passwordless/email/send', {
+    headers: {
+      cookie: interactionCookie,
+    },
+    json: {
+      email,
+      flow: PasscodeType.SignIn,
     },
   });
 
@@ -92,25 +104,34 @@ export const verifySignInUserWithEmailPasscode = (
   code: string,
   interactionCookie: string
 ) =>
+  api.post('session/passwordless/email/verify', {
+    headers: {
+      cookie: interactionCookie,
+    },
+    json: {
+      email,
+      code,
+      flow: PasscodeType.SignIn,
+    },
+  });
+
+export const checkVerificationSessionAndSignInWithEmail = (interactionCookie: string) =>
   api
-    .post('session/sign-in/passwordless/email/verify-passcode', {
+    .post('session/sign-in/passwordless/email', {
       headers: {
         cookie: interactionCookie,
-      },
-      json: {
-        email,
-        code,
       },
     })
     .json<RedirectResponse>();
 
 export const sendRegisterUserWithSmsPasscode = (phone: string, interactionCookie: string) =>
-  api.post('session/register/passwordless/sms/send-passcode', {
+  api.post('session/passwordless/sms/send', {
     headers: {
       cookie: interactionCookie,
     },
     json: {
       phone,
+      flow: PasscodeType.Register,
     },
   });
 
@@ -119,25 +140,34 @@ export const verifyRegisterUserWithSmsPasscode = (
   code: string,
   interactionCookie: string
 ) =>
-  api
-    .post('session/register/passwordless/sms/verify-passcode', {
-      headers: {
-        cookie: interactionCookie,
-      },
-      json: {
-        phone,
-        code,
-      },
-    })
-    .json<RedirectResponse>();
-
-export const sendSignInUserWithSmsPasscode = (phone: string, interactionCookie: string) =>
-  api.post('session/sign-in/passwordless/sms/send-passcode', {
+  api.post('session/passwordless/sms/verify', {
     headers: {
       cookie: interactionCookie,
     },
     json: {
       phone,
+      code,
+      flow: PasscodeType.Register,
+    },
+  });
+
+export const checkVerificationSessionAndRegisterWithSms = (interactionCookie: string) =>
+  api
+    .post('session/register/passwordless/sms', {
+      headers: {
+        cookie: interactionCookie,
+      },
+    })
+    .json<RedirectResponse>();
+
+export const sendSignInUserWithSmsPasscode = (phone: string, interactionCookie: string) =>
+  api.post('session/passwordless/sms/send', {
+    headers: {
+      cookie: interactionCookie,
+    },
+    json: {
+      phone,
+      flow: PasscodeType.SignIn,
     },
   });
 
@@ -146,14 +176,22 @@ export const verifySignInUserWithSmsPasscode = (
   code: string,
   interactionCookie: string
 ) =>
+  api.post('session/passwordless/sms/verify', {
+    headers: {
+      cookie: interactionCookie,
+    },
+    json: {
+      phone,
+      code,
+      flow: PasscodeType.SignIn,
+    },
+  });
+
+export const checkVerificationSessionAndSignInWithSms = (interactionCookie: string) =>
   api
-    .post('session/sign-in/passwordless/sms/verify-passcode', {
+    .post('session/sign-in/passwordless/sms', {
       headers: {
         cookie: interactionCookie,
-      },
-      json: {
-        phone,
-        code,
       },
     })
     .json<RedirectResponse>();

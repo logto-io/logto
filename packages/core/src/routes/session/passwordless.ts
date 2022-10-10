@@ -1,6 +1,5 @@
 import { emailRegEx, phoneRegEx } from '@logto/core-kit';
 import { PasscodeType } from '@logto/schemas';
-import dayjs from 'dayjs';
 import { Provider } from 'oidc-provider';
 import { object, string } from 'zod';
 
@@ -10,18 +9,29 @@ import { assignInteractionResults } from '@/lib/session';
 import { generateUserId, insertUser } from '@/lib/user';
 import koaGuard from '@/middleware/koa-guard';
 import {
-  updateUserById,
-  hasUserWithEmail,
-  hasUserWithPhone,
   findUserByEmail,
   findUserByPhone,
+  hasUserWithEmail,
+  hasUserWithPhone,
+  updateUserById,
 } from '@/queries/user';
-import { passcodeTypeGuard } from '@/routes/session/types';
+import {
+  emailRegisterSessionResultGuard,
+  emailSignInSessionResultGuard,
+  passcodeTypeGuard,
+  smsRegisterSessionResultGuard,
+  smsSignInSessionResultGuard,
+} from '@/routes/session/types';
 import assertThat from '@/utils/assert-that';
 
 import { AnonymousRouter } from '../types';
-import { verificationTimeout } from './consts';
-import { getPasswordlessRelatedLogType, getRoutePrefix } from './utils';
+import {
+  assignVerificationResult,
+  getPasswordlessRelatedLogType,
+  getRoutePrefix,
+  getVerificationStorageFromInteraction,
+  validateAndCheckWhetherVerificationExpires,
+} from './utils';
 
 export const registerRoute = getRoutePrefix('register', 'passwordless');
 export const signInRoute = getRoutePrefix('sign-in', 'passwordless');
@@ -102,13 +112,7 @@ export default function passwordlessRoutes<T extends AnonymousRouter>(
 
       await verifyPasscode(jti, flow, code, { phone });
 
-      await provider.interactionResult(ctx.req, ctx.res, {
-        verification: {
-          flow,
-          expiresAt: dayjs().add(verificationTimeout, 'second').toISOString(),
-          phone,
-        },
-      });
+      await assignVerificationResult(ctx, provider, flow, { phone });
       ctx.status = 204;
 
       return next();
@@ -135,208 +139,118 @@ export default function passwordlessRoutes<T extends AnonymousRouter>(
 
       await verifyPasscode(jti, flow, code, { email });
 
-      await provider.interactionResult(ctx.req, ctx.res, {
-        verification: {
-          flow,
-          expiresAt: dayjs().add(verificationTimeout, 'second').toISOString(),
-          email,
-        },
-      });
+      await assignVerificationResult(ctx, provider, flow, { email });
       ctx.status = 204;
 
       return next();
     }
   );
 
-  router.post(
-    `${signInRoute}/sms/send-passcode`,
-    koaGuard({ body: object({ phone: string().regex(phoneRegEx) }) }),
-    async (ctx, next) => {
-      const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
-      const { phone } = ctx.guard.body;
-      const type = 'SignInSmsSendPasscode';
-      ctx.log(type, { phone });
+  router.post(`${signInRoute}/sms`, async (ctx, next) => {
+    const verificationStorage = await getVerificationStorageFromInteraction(
+      ctx,
+      provider,
+      smsSignInSessionResultGuard
+    );
 
-      assertThat(
-        await hasUserWithPhone(phone),
-        new RequestError({ code: 'user.phone_not_exists', status: 422 })
-      );
+    const type = getPasswordlessRelatedLogType(PasscodeType.SignIn, 'sms');
+    ctx.log(type, verificationStorage);
 
-      const passcode = await createPasscode(jti, PasscodeType.SignIn, { phone });
-      const { dbEntry } = await sendPasscode(passcode);
-      ctx.log(type, { connectorId: dbEntry.id });
-      ctx.status = 204;
+    const { phone, expiresAt } = verificationStorage;
 
-      return next();
-    }
-  );
+    validateAndCheckWhetherVerificationExpires(expiresAt);
 
-  router.post(
-    `${signInRoute}/sms/verify-passcode`,
-    koaGuard({ body: object({ phone: string().regex(phoneRegEx), code: string() }) }),
-    async (ctx, next) => {
-      const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
-      const { phone, code } = ctx.guard.body;
-      const type = 'SignInSms';
-      ctx.log(type, { phone, code });
+    assertThat(
+      await hasUserWithPhone(phone),
+      new RequestError({ code: 'user.phone_not_exists', status: 422 })
+    );
+    const { id } = await findUserByPhone(phone);
+    ctx.log(type, { userId: id });
 
-      assertThat(
-        await hasUserWithPhone(phone),
-        new RequestError({ code: 'user.phone_not_exists', status: 422 })
-      );
+    await updateUserById(id, { lastSignInAt: Date.now() });
+    await assignInteractionResults(ctx, provider, { login: { accountId: id } });
 
-      await verifyPasscode(jti, PasscodeType.SignIn, code, { phone });
-      const { id } = await findUserByPhone(phone);
-      ctx.log(type, { userId: id });
+    return next();
+  });
 
-      await updateUserById(id, { lastSignInAt: Date.now() });
-      await assignInteractionResults(ctx, provider, { login: { accountId: id } }, true);
+  router.post(`${signInRoute}/email`, async (ctx, next) => {
+    const verificationStorage = await getVerificationStorageFromInteraction(
+      ctx,
+      provider,
+      emailSignInSessionResultGuard
+    );
 
-      return next();
-    }
-  );
+    const type = getPasswordlessRelatedLogType(PasscodeType.SignIn, 'email');
+    ctx.log(type, verificationStorage);
 
-  router.post(
-    `${signInRoute}/email/send-passcode`,
-    koaGuard({ body: object({ email: string().regex(emailRegEx) }) }),
-    async (ctx, next) => {
-      const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
-      const { email } = ctx.guard.body;
-      const type = 'SignInEmailSendPasscode';
-      ctx.log(type, { email });
+    const { email, expiresAt } = verificationStorage;
 
-      assertThat(
-        await hasUserWithEmail(email),
-        new RequestError({ code: 'user.email_not_exists', status: 422 })
-      );
+    validateAndCheckWhetherVerificationExpires(expiresAt);
 
-      const passcode = await createPasscode(jti, PasscodeType.SignIn, { email });
-      const { dbEntry } = await sendPasscode(passcode);
-      ctx.log(type, { connectorId: dbEntry.id });
-      ctx.status = 204;
+    assertThat(
+      await hasUserWithEmail(email),
+      new RequestError({ code: 'user.email_not_exists', status: 422 })
+    );
+    const { id } = await findUserByEmail(email);
+    ctx.log(type, { userId: id });
 
-      return next();
-    }
-  );
+    await updateUserById(id, { lastSignInAt: Date.now() });
+    await assignInteractionResults(ctx, provider, { login: { accountId: id } });
 
-  router.post(
-    `${signInRoute}/email/verify-passcode`,
-    koaGuard({ body: object({ email: string().regex(emailRegEx), code: string() }) }),
-    async (ctx, next) => {
-      const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
-      const { email, code } = ctx.guard.body;
-      const type = 'SignInEmail';
-      ctx.log(type, { email, code });
+    return next();
+  });
 
-      assertThat(
-        await hasUserWithEmail(email),
-        new RequestError({ code: 'user.email_not_exists', status: 422 })
-      );
+  router.post(`${registerRoute}/sms`, async (ctx, next) => {
+    const verificationStorage = await getVerificationStorageFromInteraction(
+      ctx,
+      provider,
+      smsRegisterSessionResultGuard
+    );
 
-      await verifyPasscode(jti, PasscodeType.SignIn, code, { email });
-      const { id } = await findUserByEmail(email);
-      ctx.log(type, { userId: id });
+    const type = getPasswordlessRelatedLogType(PasscodeType.Register, 'sms');
+    ctx.log(type, verificationStorage);
 
-      await updateUserById(id, { lastSignInAt: Date.now() });
-      await assignInteractionResults(ctx, provider, { login: { accountId: id } }, true);
+    const { phone, expiresAt } = verificationStorage;
 
-      return next();
-    }
-  );
+    validateAndCheckWhetherVerificationExpires(expiresAt);
 
-  router.post(
-    `${registerRoute}/sms/send-passcode`,
-    koaGuard({ body: object({ phone: string().regex(phoneRegEx) }) }),
-    async (ctx, next) => {
-      const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
-      const { phone } = ctx.guard.body;
-      const type = 'RegisterSmsSendPasscode';
-      ctx.log(type, { phone });
+    assertThat(
+      !(await hasUserWithPhone(phone)),
+      new RequestError({ code: 'user.phone_exists_register', status: 422 })
+    );
+    const id = await generateUserId();
+    ctx.log(type, { userId: id });
 
-      assertThat(
-        !(await hasUserWithPhone(phone)),
-        new RequestError({ code: 'user.phone_exists_register', status: 422 })
-      );
+    await insertUser({ id, primaryPhone: phone, lastSignInAt: Date.now() });
+    await assignInteractionResults(ctx, provider, { login: { accountId: id } });
 
-      const passcode = await createPasscode(jti, PasscodeType.Register, { phone });
-      const { dbEntry } = await sendPasscode(passcode);
-      ctx.log(type, { connectorId: dbEntry.id });
-      ctx.status = 204;
+    return next();
+  });
 
-      return next();
-    }
-  );
+  router.post(`${registerRoute}/email`, async (ctx, next) => {
+    const verificationStorage = await getVerificationStorageFromInteraction(
+      ctx,
+      provider,
+      emailRegisterSessionResultGuard
+    );
 
-  router.post(
-    `${registerRoute}/sms/verify-passcode`,
-    koaGuard({ body: object({ phone: string().regex(phoneRegEx), code: string() }) }),
-    async (ctx, next) => {
-      const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
-      const { phone, code } = ctx.guard.body;
-      const type = 'RegisterSms';
-      ctx.log(type, { phone, code });
+    const type = getPasswordlessRelatedLogType(PasscodeType.Register, 'email');
+    ctx.log(type, verificationStorage);
 
-      assertThat(
-        !(await hasUserWithPhone(phone)),
-        new RequestError({ code: 'user.phone_exists_register', status: 422 })
-      );
+    const { email, expiresAt } = verificationStorage;
 
-      await verifyPasscode(jti, PasscodeType.Register, code, { phone });
-      const id = await generateUserId();
-      ctx.log(type, { userId: id });
+    validateAndCheckWhetherVerificationExpires(expiresAt);
 
-      await insertUser({ id, primaryPhone: phone, lastSignInAt: Date.now() });
-      await assignInteractionResults(ctx, provider, { login: { accountId: id } });
+    assertThat(
+      !(await hasUserWithEmail(email)),
+      new RequestError({ code: 'user.email_exists_register', status: 422 })
+    );
+    const id = await generateUserId();
+    ctx.log(type, { userId: id });
 
-      return next();
-    }
-  );
+    await insertUser({ id, primaryEmail: email, lastSignInAt: Date.now() });
+    await assignInteractionResults(ctx, provider, { login: { accountId: id } });
 
-  router.post(
-    `${registerRoute}/email/send-passcode`,
-    koaGuard({ body: object({ email: string().regex(emailRegEx) }) }),
-    async (ctx, next) => {
-      const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
-      const { email } = ctx.guard.body;
-      const type = 'RegisterEmailSendPasscode';
-      ctx.log(type, { email });
-
-      assertThat(
-        !(await hasUserWithEmail(email)),
-        new RequestError({ code: 'user.email_exists_register', status: 422 })
-      );
-
-      const passcode = await createPasscode(jti, PasscodeType.Register, { email });
-      const { dbEntry } = await sendPasscode(passcode);
-      ctx.log(type, { connectorId: dbEntry.id });
-      ctx.status = 204;
-
-      return next();
-    }
-  );
-
-  router.post(
-    `${registerRoute}/email/verify-passcode`,
-    koaGuard({ body: object({ email: string().regex(emailRegEx), code: string() }) }),
-    async (ctx, next) => {
-      const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
-      const { email, code } = ctx.guard.body;
-      const type = 'RegisterEmail';
-      ctx.log(type, { email, code });
-
-      assertThat(
-        !(await hasUserWithEmail(email)),
-        new RequestError({ code: 'user.email_exists_register', status: 422 })
-      );
-
-      await verifyPasscode(jti, PasscodeType.Register, code, { email });
-      const id = await generateUserId();
-      ctx.log(type, { userId: id });
-
-      await insertUser({ id, primaryEmail: email, lastSignInAt: Date.now() });
-      await assignInteractionResults(ctx, provider, { login: { accountId: id } });
-
-      return next();
-    }
-  );
+    return next();
+  });
 }

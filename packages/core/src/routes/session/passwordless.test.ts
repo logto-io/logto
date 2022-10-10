@@ -254,260 +254,342 @@ describe('session -> passwordlessRoutes', () => {
     it('throw when code is wrong', async () => {
       const response = await sessionRequest
         .post('/session/passwordless/email/verify')
-        .send({ email: 'a@a.com', code: '1231', flow: 'sign-in' });
+        .send({ email: 'a@a.com', code: '1231', flow: PasscodeType.SignIn });
       expect(response.statusCode).toEqual(400);
     });
   });
 
-  describe('POST /session/sign-in/passwordless/sms/send-passcode', () => {
-    beforeAll(() => {
+  describe('POST /session/sign-in/passwordless/sms', () => {
+    beforeEach(() => {
+      jest.resetAllMocks();
+    });
+    it('should call interactionResult', async () => {
       interactionDetails.mockResolvedValueOnce({
-        jti: 'jti',
+        result: {
+          verification: {
+            phone: '13000000000',
+            flow: PasscodeType.SignIn,
+            expiresAt: dayjs().add(1, 'day').toISOString(),
+          },
+        },
       });
-    });
-    it('should call sendPasscode', async () => {
-      const response = await sessionRequest
-        .post(`${signInRoute}/sms/send-passcode`)
-        .send({ phone: '13000000000' });
-      expect(response.statusCode).toEqual(204);
-      expect(sendPasscode).toHaveBeenCalled();
-    });
-    it('throw error if phone does not exist', async () => {
-      const response = await sessionRequest
-        .post(`${signInRoute}/sms/send-passcode`)
-        .send({ phone: '13000000001' });
-      expect(response.statusCode).toEqual(422);
-    });
-  });
-
-  describe('POST /session/sign-in/passwordless/sms/verify-passcode', () => {
-    it('assign result and redirect', async () => {
-      const response = await sessionRequest
-        .post(`${signInRoute}/sms/verify-passcode`)
-        .send({ phone: '13000000000', code: '1234' });
+      const response = await sessionRequest.post(`${signInRoute}/sms`);
       expect(response.statusCode).toEqual(200);
-      expect(response.body).toHaveProperty('redirectTo');
       expect(interactionResult).toHaveBeenCalledWith(
         expect.anything(),
         expect.anything(),
-        expect.objectContaining({ login: { accountId: 'id' } }),
+        expect.objectContaining({
+          login: { accountId: 'id' },
+        }),
         expect.anything()
       );
     });
-    it('throw error if phone does not exist', async () => {
-      const response = await sessionRequest
-        .post(`${signInRoute}/sms/verify-passcode`)
-        .send({ phone: '13000000001', code: '1234' });
-      expect(response.statusCode).toEqual(422);
-    });
-    it('throw error if verifyPasscode failed', async () => {
-      const response = await sessionRequest
-        .post(`${signInRoute}/sms/verify-passcode`)
-        .send({ phone: '13000000000', code: '1231' });
-      expect(response.statusCode).toEqual(400);
-    });
-  });
-
-  describe('POST /session/sign-in/passwordless/email/send-passcode', () => {
-    beforeAll(() => {
-      interactionDetails.mockResolvedValue({
-        jti: 'jti',
-      });
-    });
-    it('should call sendPasscode', async () => {
-      const response = await sessionRequest
-        .post(`${signInRoute}/email/send-passcode`)
-        .send({ email: 'a@a.com' });
-      expect(response.statusCode).toEqual(204);
-      expect(sendPasscode).toHaveBeenCalled();
-    });
-    it('throw error if email does not exist', async () => {
-      const response = await sessionRequest
-        .post(`${signInRoute}/email/send-passcode`)
-        .send({ email: 'b@a.com' });
-      expect(response.statusCode).toEqual(422);
-    });
-  });
-
-  describe('POST /session/sign-in/passwordless/email/verify-passcode', () => {
-    it('assign result and redirect', async () => {
-      const response = await sessionRequest
-        .post(`${signInRoute}/email/verify-passcode`)
-        .send({ email: 'a@a.com', code: '1234' });
-      expect(response.statusCode).toEqual(200);
-      expect(response.body).toHaveProperty('redirectTo');
-      expect(interactionResult).toHaveBeenCalledWith(
-        expect.anything(),
-        expect.anything(),
-        expect.objectContaining({ login: { accountId: 'id' } }),
-        expect.anything()
-      );
-    });
-    it('throw error if email does not exist', async () => {
-      const response = await sessionRequest
-        .post(`${signInRoute}/email/send-passcode`)
-        .send({ email: 'b@a.com' });
-      expect(response.statusCode).toEqual(422);
-    });
-    it('throw error if verifyPasscode failed', async () => {
-      const response = await sessionRequest
-        .post(`${signInRoute}/email/verify-passcode`)
-        .send({ email: 'a@a.com', code: '1231' });
-      expect(response.statusCode).toEqual(400);
-    });
-  });
-
-  describe('POST /session/register/passwordless/sms/send-passcode', () => {
-    beforeAll(() => {
+    it('throw when verification session invalid', async () => {
       interactionDetails.mockResolvedValueOnce({
-        jti: 'jti',
+        result: {
+          verification: {
+            phone: '13000000000',
+            expiresAt: dayjs().add(1, 'day').toISOString(),
+          },
+        },
       });
+      const response = await sessionRequest.post(`${signInRoute}/sms`);
+      expect(response.statusCode).toEqual(404);
     });
-
-    it('should call sendPasscode', async () => {
-      const response = await sessionRequest
-        .post(`${registerRoute}/sms/send-passcode`)
-        .send({ phone: '13000000001' });
-      expect(response.statusCode).toEqual(204);
-      expect(sendPasscode).toHaveBeenCalled();
-    });
-
-    it('throw error if phone not valid (charactors other than digits)', async () => {
-      const response = await sessionRequest
-        .post(`${registerRoute}/sms/send-passcode`)
-        .send({ phone: '1300000000a' });
-      expect(response.statusCode).toEqual(400);
-    });
-
-    it('throw error if phone not valid (without digits)', async () => {
-      const response = await sessionRequest
-        .post(`${registerRoute}/sms/send-passcode`)
-        .send({ phone: 'abcdefg' });
-      expect(response.statusCode).toEqual(400);
-    });
-
-    it('throw error if phone exists', async () => {
-      const response = await sessionRequest
-        .post(`${registerRoute}/sms/send-passcode`)
-        .send({ phone: '13000000000' });
-      expect(response.statusCode).toEqual(422);
-    });
-  });
-
-  describe('POST /session/register/passwordless/sms/verify-passcode', () => {
-    it('assign result and redirect', async () => {
-      const response = await sessionRequest
-        .post(`${registerRoute}/sms/verify-passcode`)
-        .send({ phone: '13000000001', code: '1234' });
-      expect(response.statusCode).toEqual(200);
-      expect(response.body).toHaveProperty('redirectTo');
-      expect(insertUser).toHaveBeenCalledWith(
-        expect.objectContaining({ id: 'user1', primaryPhone: '13000000001' })
-      );
-      expect(interactionResult).toHaveBeenCalledWith(
-        expect.anything(),
-        expect.anything(),
-        expect.objectContaining({ login: { accountId: 'user1' } }),
-        expect.anything()
-      );
-    });
-
-    it('throw error if phone is invalid (characters other than digits)', async () => {
-      const response = await sessionRequest
-        .post(`${registerRoute}/sms/verify-passcode`)
-        .send({ phone: '1300000000a', code: '1234' });
-      expect(response.statusCode).toEqual(400);
-    });
-
-    it('throw error if phone not valid (without digits)', async () => {
-      const response = await sessionRequest
-        .post(`${registerRoute}/sms/verify-passcode`)
-        .send({ phone: 'abcdefg', code: '1234' });
-      expect(response.statusCode).toEqual(400);
-    });
-
-    it('throw error if phone exists', async () => {
-      const response = await sessionRequest
-        .post(`${registerRoute}/sms/verify-passcode`)
-        .send({ phone: '13000000000', code: '1234' });
-      expect(response.statusCode).toEqual(422);
-    });
-
-    it('throw error if verifyPasscode failed', async () => {
-      const response = await sessionRequest
-        .post(`${registerRoute}/sms/verify-passcode`)
-        .send({ phone: '13000000001', code: '1231' });
-      expect(response.statusCode).toEqual(400);
-    });
-  });
-
-  describe('POST /session/register/passwordless/email/send-passcode', () => {
-    beforeAll(() => {
+    it('throw when flow is not `sign-in`', async () => {
       interactionDetails.mockResolvedValueOnce({
-        jti: 'jti',
+        result: {
+          verification: {
+            phone: '13000000000',
+            flow: PasscodeType.Register,
+            expiresAt: dayjs().add(1, 'day').toISOString(),
+          },
+        },
       });
+      const response = await sessionRequest.post(`${signInRoute}/sms`);
+      expect(response.statusCode).toEqual(404);
     });
-
-    it('should call sendPasscode', async () => {
-      const response = await sessionRequest
-        .post(`${registerRoute}/email/send-passcode`)
-        .send({ email: 'b@a.com' });
-      expect(response.statusCode).toEqual(204);
-      expect(sendPasscode).toHaveBeenCalled();
+    it('throw when expiresAt is not valid ISO date string', async () => {
+      interactionDetails.mockResolvedValueOnce({
+        result: {
+          verification: {
+            phone: '13000000000',
+            flow: PasscodeType.SignIn,
+            expiresAt: 'invalid date string',
+          },
+        },
+      });
+      const response = await sessionRequest.post(`${signInRoute}/sms`);
+      expect(response.statusCode).toEqual(401);
     });
-
-    it('throw error if email not valid', async () => {
-      const response = await sessionRequest
-        .post(`${registerRoute}/email/send-passcode`)
-        .send({ email: 'aaa.com' });
-      expect(response.statusCode).toEqual(400);
+    it('throw when validation expired', async () => {
+      interactionDetails.mockResolvedValueOnce({
+        result: {
+          verification: {
+            phone: '13000000000',
+            flow: PasscodeType.SignIn,
+            expiresAt: dayjs().subtract(1, 'day').toISOString(),
+          },
+        },
+      });
+      const response = await sessionRequest.post(`${signInRoute}/sms`);
+      expect(response.statusCode).toEqual(401);
     });
-
-    it('throw error if email exists', async () => {
-      const response = await sessionRequest
-        .post(`${registerRoute}/email/send-passcode`)
-        .send({ email: 'a@a.com' });
+    it('throw when phone not exist', async () => {
+      interactionDetails.mockResolvedValueOnce({
+        result: {
+          verification: {
+            flow: PasscodeType.SignIn,
+            expiresAt: dayjs().add(1, 'day').toISOString(),
+          },
+        },
+      });
+      const response = await sessionRequest.post(`${signInRoute}/sms`);
+      expect(response.statusCode).toEqual(404);
+    });
+    it("throw when phone not exist as user's primaryPhone", async () => {
+      interactionDetails.mockResolvedValueOnce({
+        result: {
+          verification: {
+            phone: '13000000001',
+            flow: PasscodeType.SignIn,
+            expiresAt: dayjs().add(1, 'day').toISOString(),
+          },
+        },
+      });
+      const response = await sessionRequest.post(`${signInRoute}/sms`);
       expect(response.statusCode).toEqual(422);
     });
   });
 
-  describe('POST /session/register/passwordless/email/verify-passcode', () => {
-    it('assign result and redirect', async () => {
-      const response = await sessionRequest
-        .post(`${registerRoute}/email/verify-passcode`)
-        .send({ email: 'b@a.com', code: '1234' });
+  describe('POST /session/sign-in/passwordless/email', () => {
+    beforeEach(() => {
+      jest.resetAllMocks();
+    });
+    it('should call interactionResult', async () => {
+      interactionDetails.mockResolvedValueOnce({
+        result: {
+          verification: {
+            email: 'a@a.com',
+            flow: PasscodeType.SignIn,
+            expiresAt: dayjs().add(1, 'day').toISOString(),
+          },
+        },
+      });
+      const response = await sessionRequest.post(`${signInRoute}/email`);
       expect(response.statusCode).toEqual(200);
-      expect(response.body).toHaveProperty('redirectTo');
-      expect(insertUser).toHaveBeenCalledWith(
-        expect.objectContaining({ id: 'user1', primaryEmail: 'b@a.com' })
-      );
       expect(interactionResult).toHaveBeenCalledWith(
         expect.anything(),
         expect.anything(),
-        expect.objectContaining({ login: { accountId: 'user1' } }),
+        expect.objectContaining({
+          login: { accountId: 'id' },
+        }),
         expect.anything()
       );
     });
-
-    it('throw error if email not valid', async () => {
-      const response = await sessionRequest
-        .post(`${signInRoute}/email/send-passcode`)
-        .send({ email: 'aaa.com' });
-      expect(response.statusCode).toEqual(400);
+    it('throw when verification session invalid', async () => {
+      interactionDetails.mockResolvedValueOnce({
+        result: {
+          verification: {
+            email: 'a@a.com',
+            expiresAt: dayjs().add(1, 'day').toISOString(),
+          },
+        },
+      });
+      const response = await sessionRequest.post(`${signInRoute}/email`);
+      expect(response.statusCode).toEqual(404);
     });
-
-    it('throw error if email exist', async () => {
-      const response = await sessionRequest
-        .post(`${signInRoute}/email/send-passcode`)
-        .send({ email: 'b@a.com' });
+    it('throw when flow is not `sign-in`', async () => {
+      interactionDetails.mockResolvedValueOnce({
+        result: {
+          verification: {
+            email: 'a@a.com',
+            flow: PasscodeType.Register,
+            expiresAt: dayjs().add(1, 'day').toISOString(),
+          },
+        },
+      });
+      const response = await sessionRequest.post(`${signInRoute}/email`);
+      expect(response.statusCode).toEqual(404);
+    });
+    it('throw when email not exist', async () => {
+      interactionDetails.mockResolvedValueOnce({
+        result: {
+          verification: {
+            flow: PasscodeType.SignIn,
+            expiresAt: dayjs().add(1, 'day').toISOString(),
+          },
+        },
+      });
+      const response = await sessionRequest.post(`${signInRoute}/email`);
+      expect(response.statusCode).toEqual(404);
+    });
+    it("throw when email not exist as user's primaryEmail", async () => {
+      interactionDetails.mockResolvedValueOnce({
+        result: {
+          verification: {
+            email: 'b@a.com',
+            flow: PasscodeType.SignIn,
+            expiresAt: dayjs().add(1, 'day').toISOString(),
+          },
+        },
+      });
+      const response = await sessionRequest.post(`${signInRoute}/email`);
       expect(response.statusCode).toEqual(422);
     });
+  });
 
-    it('throw error if verifyPasscode failed', async () => {
-      const response = await sessionRequest
-        .post(`${signInRoute}/email/verify-passcode`)
-        .send({ email: 'a@a.com', code: '1231' });
-      expect(response.statusCode).toEqual(400);
+  describe('POST /session/register/passwordless/sms', () => {
+    beforeEach(() => {
+      jest.resetAllMocks();
+    });
+    it('should call interactionResult', async () => {
+      interactionDetails.mockResolvedValueOnce({
+        result: {
+          verification: {
+            phone: '13000000001',
+            flow: PasscodeType.Register,
+            expiresAt: dayjs().add(1, 'day').toISOString(),
+          },
+        },
+      });
+      const response = await sessionRequest.post(`${registerRoute}/sms`);
+      expect(response.statusCode).toEqual(200);
+      expect(interactionResult).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.anything(),
+        expect.objectContaining({
+          login: { accountId: 'user1' },
+        }),
+        expect.anything()
+      );
+    });
+    it('throw when verification session invalid', async () => {
+      interactionDetails.mockResolvedValueOnce({
+        result: {
+          verification: {
+            phone: '13000000001',
+            expiresAt: dayjs().add(1, 'day').toISOString(),
+          },
+        },
+      });
+      const response = await sessionRequest.post(`${registerRoute}/sms`);
+      expect(response.statusCode).toEqual(404);
+    });
+    it('throw when flow is not `register`', async () => {
+      interactionDetails.mockResolvedValueOnce({
+        result: {
+          verification: {
+            phone: '13000000001',
+            flow: PasscodeType.SignIn,
+            expiresAt: dayjs().add(1, 'day').toISOString(),
+          },
+        },
+      });
+      const response = await sessionRequest.post(`${registerRoute}/sms`);
+      expect(response.statusCode).toEqual(404);
+    });
+    it('throw when phone not exist', async () => {
+      interactionDetails.mockResolvedValueOnce({
+        result: {
+          verification: {
+            flow: PasscodeType.Register,
+            expiresAt: dayjs().add(1, 'day').toISOString(),
+          },
+        },
+      });
+      const response = await sessionRequest.post(`${registerRoute}/sms`);
+      expect(response.statusCode).toEqual(404);
+    });
+    it("throw when phone already exist as user's primaryPhone", async () => {
+      interactionDetails.mockResolvedValueOnce({
+        result: {
+          verification: {
+            phone: '13000000000',
+            flow: PasscodeType.Register,
+            expiresAt: dayjs().add(1, 'day').toISOString(),
+          },
+        },
+      });
+      const response = await sessionRequest.post(`${registerRoute}/sms`);
+      expect(response.statusCode).toEqual(422);
+    });
+  });
+
+  describe('POST /session/register/passwordless/email', () => {
+    beforeEach(() => {
+      jest.resetAllMocks();
+    });
+    it('should call interactionResult', async () => {
+      interactionDetails.mockResolvedValueOnce({
+        result: {
+          verification: {
+            email: 'b@a.com',
+            flow: PasscodeType.Register,
+            expiresAt: dayjs().add(1, 'day').toISOString(),
+          },
+        },
+      });
+      const response = await sessionRequest.post(`${registerRoute}/email`);
+      expect(response.statusCode).toEqual(200);
+      expect(interactionResult).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.anything(),
+        expect.objectContaining({
+          login: { accountId: 'user1' },
+        }),
+        expect.anything()
+      );
+    });
+    it('throw when verification session invalid', async () => {
+      interactionDetails.mockResolvedValueOnce({
+        result: {
+          verification: {
+            email: 'b@a.com',
+            expiresAt: dayjs().add(1, 'day').toISOString(),
+          },
+        },
+      });
+      const response = await sessionRequest.post(`${registerRoute}/email`);
+      expect(response.statusCode).toEqual(404);
+    });
+    it('throw when flow is not `register`', async () => {
+      interactionDetails.mockResolvedValueOnce({
+        result: {
+          verification: {
+            email: 'b@a.com',
+            flow: PasscodeType.SignIn,
+            expiresAt: dayjs().add(1, 'day').toISOString(),
+          },
+        },
+      });
+      const response = await sessionRequest.post(`${registerRoute}/email`);
+      expect(response.statusCode).toEqual(404);
+    });
+    it('throw when email not exist', async () => {
+      interactionDetails.mockResolvedValueOnce({
+        result: {
+          verification: {
+            flow: PasscodeType.Register,
+            expiresAt: dayjs().add(1, 'day').toISOString(),
+          },
+        },
+      });
+      const response = await sessionRequest.post(`${registerRoute}/email`);
+      expect(response.statusCode).toEqual(404);
+    });
+    it("throw when email already exist as user's primaryEmail", async () => {
+      interactionDetails.mockResolvedValueOnce({
+        result: {
+          verification: {
+            email: 'a@a.com',
+            flow: PasscodeType.Register,
+            expiresAt: dayjs().add(1, 'day').toISOString(),
+          },
+        },
+      });
+      const response = await sessionRequest.post(`${registerRoute}/email`);
+      expect(response.statusCode).toEqual(422);
     });
   });
 });
