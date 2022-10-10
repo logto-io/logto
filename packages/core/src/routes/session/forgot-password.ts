@@ -12,6 +12,7 @@ import assertThat from '@/utils/assert-that';
 import { AnonymousRouter } from '../types';
 import { forgotPasswordSessionResultGuard } from './types';
 import {
+  clearVerificationResult,
   getRoutePrefix,
   getVerificationStorageFromInteraction,
   validateAndCheckWhetherVerificationExpires,
@@ -55,6 +56,7 @@ export default function forgotPasswordRoutes<T extends AnonymousRouter>(
       ctx.log(type, { userId: id });
 
       await updateUserById(id, { passwordEncrypted, passwordEncryptionMethod });
+      await clearVerificationResult(ctx, provider);
       ctx.status = 204;
 
       return next();

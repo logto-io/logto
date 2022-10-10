@@ -3,7 +3,7 @@ import { Truthy } from '@silverhand/essentials';
 import dayjs from 'dayjs';
 import { Context } from 'koa';
 import { Provider } from 'oidc-provider';
-import { ZodType, ZodTypeDef } from 'zod';
+import { z, ZodType } from 'zod';
 
 import RequestError from '@/errors/RequestError';
 import assertThat from '@/utils/assert-that';
@@ -47,7 +47,7 @@ export const getPasswordlessRelatedLogType = (
 
 const parseVerificationStorage = <T = unknown>(
   data: unknown,
-  resultGuard: ZodType<VerificationResult<T>, ZodTypeDef, unknown>
+  resultGuard: ZodType<VerificationResult<T>>
 ): T => {
   const verificationResult = resultGuard.safeParse(data);
 
@@ -64,21 +64,21 @@ const parseVerificationStorage = <T = unknown>(
   return verificationResult.data.verification;
 };
 
+export const getVerificationStorageFromInteraction = async <T = unknown>(
+  ctx: Context,
+  provider: Provider,
+  resultGuard: ZodType<VerificationResult<T>>
+): Promise<T> => {
+  const { result } = await provider.interactionDetails(ctx.req, ctx.res);
+
+  return parseVerificationStorage<T>(result, resultGuard);
+};
+
 export const validateAndCheckWhetherVerificationExpires = (expiresAt: string) => {
   assertThat(
     dayjs(expiresAt).isValid() && dayjs(expiresAt).isAfter(dayjs()),
     new RequestError({ code: 'session.verification_expired', status: 401 })
   );
-};
-
-export const getVerificationStorageFromInteraction = async <T = unknown>(
-  ctx: Context,
-  provider: Provider,
-  resultGuard: ZodType<VerificationResult<T>, ZodTypeDef, unknown>
-): Promise<T> => {
-  const { result } = await provider.interactionDetails(ctx.req, ctx.res);
-
-  return parseVerificationStorage<T>(result, resultGuard);
 };
 
 export const assignVerificationResult = async (
@@ -105,4 +105,16 @@ export const assignVerificationResult = async (
   );
 
   await provider.interactionResult(ctx.req, ctx.res, verificationResult);
+};
+
+export const clearVerificationResult = async (ctx: Context, provider: Provider) => {
+  const { result } = await provider.interactionDetails(ctx.req, ctx.res);
+
+  const verificationGuard = z.object({ verification: z.unknown() });
+  const verificationGuardResult = verificationGuard.safeParse(result);
+
+  if (result && verificationGuardResult.success) {
+    const { verification, ...rest } = result;
+    await provider.interactionResult(ctx.req, ctx.res, rest);
+  }
 };
