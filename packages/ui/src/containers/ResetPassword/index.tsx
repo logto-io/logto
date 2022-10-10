@@ -94,6 +94,7 @@ const ResetPassword = ({ className, autoFocus }: Props) => {
         type="password"
         autoComplete="new-password"
         placeholder={t('input.password')}
+        // eslint-disable-next-line jsx-a11y/no-autofocus
         autoFocus={autoFocus}
         {...register('password', passwordValidation)}
         onClear={() => {
