@@ -33,6 +33,7 @@ const Preview = ({ signInExperience, className }: Props) => {
   const [platform, setPlatform] = useState<'desktopWeb' | 'mobile' | 'mobileWeb'>('desktopWeb');
   const { data: allConnectors } = useSWR<ConnectorResponse[], RequestError>('/api/connectors');
   const previewRef = useRef<HTMLIFrameElement>(null);
+  const { customPhrases } = useUiLanguages();
 
   const { languages } = useUiLanguages();
 
@@ -130,6 +131,10 @@ const Preview = ({ signInExperience, className }: Props) => {
       iframe?.removeEventListener('load', postPreviewMessage);
     };
   }, [postPreviewMessage]);
+
+  useEffect(() => {
+    postPreviewMessage();
+  }, [customPhrases, postPreviewMessage]);
 
   return (
     <Card className={classNames(styles.preview, className)}>

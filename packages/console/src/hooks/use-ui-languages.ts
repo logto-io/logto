@@ -27,6 +27,7 @@ const useUiLanguages = () => {
   );
 
   return {
+    customPhrases: customPhraseList,
     languages,
     error,
     isLoading: !customPhraseList && !error,
