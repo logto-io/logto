@@ -307,7 +307,7 @@ describe('session -> passwordlessRoutes', () => {
         },
       });
       const response = await sessionRequest.post(`${signInRoute}/sms`);
-      expect(response.statusCode).toEqual(401);
+      expect(response.statusCode).toEqual(404);
     });
     it('throw when expiresAt is not valid ISO date string', async () => {
       interactionDetails.mockResolvedValueOnce({
@@ -345,7 +345,7 @@ describe('session -> passwordlessRoutes', () => {
         },
       });
       const response = await sessionRequest.post(`${signInRoute}/sms`);
-      expect(response.statusCode).toEqual(401);
+      expect(response.statusCode).toEqual(404);
     });
     it("throw when phone not exist as user's primaryPhone", async () => {
       interactionDetails.mockResolvedValueOnce({
@@ -410,7 +410,7 @@ describe('session -> passwordlessRoutes', () => {
         },
       });
       const response = await sessionRequest.post(`${signInRoute}/email`);
-      expect(response.statusCode).toEqual(401);
+      expect(response.statusCode).toEqual(404);
     });
     it('throw when email not exist', async () => {
       interactionDetails.mockResolvedValueOnce({
@@ -422,7 +422,7 @@ describe('session -> passwordlessRoutes', () => {
         },
       });
       const response = await sessionRequest.post(`${signInRoute}/email`);
-      expect(response.statusCode).toEqual(401);
+      expect(response.statusCode).toEqual(404);
     });
     it("throw when email not exist as user's primaryEmail", async () => {
       interactionDetails.mockResolvedValueOnce({
@@ -487,7 +487,7 @@ describe('session -> passwordlessRoutes', () => {
         },
       });
       const response = await sessionRequest.post(`${registerRoute}/sms`);
-      expect(response.statusCode).toEqual(401);
+      expect(response.statusCode).toEqual(404);
     });
     it('throw when phone not exist', async () => {
       interactionDetails.mockResolvedValueOnce({
@@ -499,7 +499,7 @@ describe('session -> passwordlessRoutes', () => {
         },
       });
       const response = await sessionRequest.post(`${registerRoute}/sms`);
-      expect(response.statusCode).toEqual(401);
+      expect(response.statusCode).toEqual(404);
     });
     it("throw when phone already exist as user's primaryPhone", async () => {
       interactionDetails.mockResolvedValueOnce({
@@ -564,7 +564,7 @@ describe('session -> passwordlessRoutes', () => {
         },
       });
       const response = await sessionRequest.post(`${registerRoute}/email`);
-      expect(response.statusCode).toEqual(401);
+      expect(response.statusCode).toEqual(404);
     });
     it('throw when email not exist', async () => {
       interactionDetails.mockResolvedValueOnce({
@@ -576,7 +576,7 @@ describe('session -> passwordlessRoutes', () => {
         },
       });
       const response = await sessionRequest.post(`${registerRoute}/email`);
-      expect(response.statusCode).toEqual(401);
+      expect(response.statusCode).toEqual(404);
     });
     it("throw when email already exist as user's primaryEmail", async () => {
       interactionDetails.mockResolvedValueOnce({

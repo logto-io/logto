@@ -3,19 +3,13 @@ import { Truthy } from '@silverhand/essentials';
 import dayjs from 'dayjs';
 import { Context } from 'koa';
 import { Provider } from 'oidc-provider';
+import { ZodType, ZodTypeDef } from 'zod';
 
 import RequestError from '@/errors/RequestError';
 import assertThat from '@/utils/assert-that';
 
 import { verificationTimeout } from './consts';
-import {
-  verificationResultGuard,
-  Method,
-  Operation,
-  VerificationStorage,
-  VerificationResult,
-  VerifiedIdentity,
-} from './types';
+import { Method, Operation, VerificationResult, VerifiedIdentity } from './types';
 
 export const getRoutePrefix = (
   type: 'sign-in' | 'register' | 'forgot-password',
@@ -41,8 +35,11 @@ export const getPasswordlessRelatedLogType = (
   return result.data;
 };
 
-const parseVerificationStorage = (data: unknown): VerificationStorage => {
-  const verificationResult = verificationResultGuard.safeParse(data);
+const parseVerificationStorage = <T = unknown>(
+  data: unknown,
+  resultGuard: ZodType<VerificationResult<T>, ZodTypeDef, unknown>
+): T => {
+  const verificationResult = resultGuard.safeParse(data);
 
   if (!verificationResult.success) {
     throw new RequestError(
@@ -57,30 +54,21 @@ const parseVerificationStorage = (data: unknown): VerificationStorage => {
   return verificationResult.data.verification;
 };
 
-export const getVerificationStorageFromInteraction = async (
-  ctx: Context,
-  provider: Provider
-): Promise<VerificationStorage> => {
-  const { result } = await provider.interactionDetails(ctx.req, ctx.res);
-
-  return parseVerificationStorage(result);
-};
-
-export const checkVerificationSessionByFlow = (
-  currentFlow: PasscodeType,
-  payload: VerificationStorage
-) => {
-  const { flow, expiresAt } = payload;
-
-  assertThat(
-    flow === currentFlow,
-    new RequestError({ code: 'session.passwordless_not_verified', status: 401 })
-  );
-
+export const validateAndCheckWhetherVerificationExpires = (expiresAt: string) => {
   assertThat(
     dayjs(expiresAt).isValid() && dayjs(expiresAt).isAfter(dayjs()),
     new RequestError({ code: 'session.verification_expired', status: 401 })
   );
+};
+
+export const getVerificationStorageFromInteraction = async <T = unknown>(
+  ctx: Context,
+  provider: Provider,
+  resultGuard: ZodType<VerificationResult<T>, ZodTypeDef, unknown>
+): Promise<T> => {
+  const { result } = await provider.interactionDetails(ctx.req, ctx.res);
+
+  return parseVerificationStorage<T>(result, resultGuard);
 };
 
 export const assignVerificationResult = async (
