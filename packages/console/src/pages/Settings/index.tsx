@@ -1,5 +1,7 @@
-import { getDefaultLanguage } from '@logto/core-kit';
-import { languageOptions } from '@logto/phrases';
+import {
+  builtInLanguageOptions as consoleBuiltInLanguageOptions,
+  getDefaultLanguageTag,
+} from '@logto/phrases';
 import { AppearanceMode } from '@logto/schemas';
 import classNames from 'classnames';
 import { Controller, useForm } from 'react-hook-form';
@@ -25,7 +27,7 @@ const Settings = () => {
     i18n: { language },
   } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
-  const defaultLanguage = getDefaultLanguage(language);
+  const defaultLanguage = getDefaultLanguageTag(language);
 
   const { data, error, update, isLoading, isLoaded } = useUserPreferences();
   const {
@@ -63,7 +65,7 @@ const Settings = () => {
                 render={({ field: { value, onChange } }) => (
                   <Select
                     value={value ?? defaultLanguage}
-                    options={languageOptions}
+                    options={consoleBuiltInLanguageOptions}
                     onChange={onChange}
                   />
                 )}
