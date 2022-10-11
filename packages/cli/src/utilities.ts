@@ -108,46 +108,47 @@ export const oraPromise = async <T>(
   }
 };
 
-const cliConfig = new Map<string, Optional<string>>();
+export enum ConfigKey {
+  DatabaseUrl = 'DB_URL',
+}
 
-export type GetCliConfig = {
-  key: string;
+export const cliConfig = new Map<ConfigKey, Optional<string>>();
+
+export type GetCliConfigWithPrompt = {
+  key: ConfigKey;
   readableKey: string;
   comments?: string;
   defaultValue?: string;
 };
 
-export const getCliConfig = async ({ key, readableKey, comments, defaultValue }: GetCliConfig) => {
+export const getCliConfigWithPrompt = async ({
+  key,
+  readableKey,
+  comments,
+  defaultValue,
+}: GetCliConfigWithPrompt) => {
   if (cliConfig.has(key)) {
     return cliConfig.get(key);
   }
 
-  const { [key]: value } = process.env;
+  const { input } = await inquirer
+    .prompt<{ input?: string }>({
+      type: 'input',
+      name: 'input',
+      message: `Enter your ${readableKey}${conditionalString(comments && ' ' + comments)}`,
+      default: defaultValue,
+    })
+    .catch(async (error) => {
+      if (error.isTtyError) {
+        log.error(`No ${readableKey} (${chalk.green(key)}) configured in option nor env`);
+      }
 
-  if (!value) {
-    const { input } = await inquirer
-      .prompt<{ input?: string }>({
-        type: 'input',
-        name: 'input',
-        message: `Enter your ${readableKey}${conditionalString(comments && ' ' + comments)}`,
-        default: defaultValue,
-      })
-      .catch(async (error) => {
-        if (error.isTtyError) {
-          log.error(`No ${readableKey} (${chalk.green(key)}) configured in env`);
-        }
+      // The type definition does not give us type except `any`, throw it directly will honor the original behavior.
+      // eslint-disable-next-line @typescript-eslint/no-throw-literal
+      throw error;
+    });
 
-        // The type definition does not give us type except `any`, throw it directly will honor the original behavior.
-        // eslint-disable-next-line @typescript-eslint/no-throw-literal
-        throw error;
-      });
+  cliConfig.set(key, input);
 
-    cliConfig.set(key, input);
-
-    return input;
-  }
-
-  cliConfig.set(key, value);
-
-  return value;
+  return input;
 };

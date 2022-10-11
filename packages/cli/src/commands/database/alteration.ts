@@ -8,7 +8,7 @@ import { copy, existsSync, remove, readdir } from 'fs-extra';
 import { DatabasePool } from 'slonik';
 import { CommandModule } from 'yargs';
 
-import { createPoolFromEnv } from '../../database';
+import { createPoolFromConfig } from '../../database';
 import {
   getCurrentDatabaseAlterationTimestamp,
   updateDatabaseTimestamp,
@@ -140,7 +140,7 @@ const alteration: CommandModule<unknown, { action: string }> = {
       log.error('Unsupported action');
     }
 
-    const pool = await createPoolFromEnv();
+    const pool = await createPoolFromConfig();
     const alterations = await getUndeployedAlterations(pool);
 
     log.info(

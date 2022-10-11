@@ -5,19 +5,19 @@ import { createPool, parseDsn, sql, stringifyDsn } from 'slonik';
 import { createInterceptors } from 'slonik-interceptor-preset';
 import { z } from 'zod';
 
-import { getCliConfig, log } from './utilities';
+import { ConfigKey, getCliConfigWithPrompt, log } from './utilities';
 
 export const defaultDatabaseUrl = 'postgresql://localhost:5432/logto';
 
-export const getDatabaseUrlFromEnv = async () =>
-  (await getCliConfig({
-    key: 'DB_URL',
+export const getDatabaseUrlFromConfig = async () =>
+  (await getCliConfigWithPrompt({
+    key: ConfigKey.DatabaseUrl,
     readableKey: 'Logto database URL',
     defaultValue: defaultDatabaseUrl,
   })) ?? '';
 
-export const createPoolFromEnv = async () => {
-  const databaseUrl = await getDatabaseUrlFromEnv();
+export const createPoolFromConfig = async () => {
+  const databaseUrl = await getDatabaseUrlFromConfig();
 
   return createPool(databaseUrl, {
     interceptors: createInterceptors(),
@@ -25,14 +25,14 @@ export const createPoolFromEnv = async () => {
 };
 
 /**
- * Create a database pool with the database URL in config.
+ * Create a database pool with the URL in CLI config; if no URL found, prompt to input.
  * If the given database does not exists, it will try to create a new database by connecting to the maintenance database `postgres`.
  *
  * @returns A new database pool with the database URL in config.
  */
 export const createPoolAndDatabaseIfNeeded = async () => {
   try {
-    return await createPoolFromEnv();
+    return await createPoolFromConfig();
   } catch (error: unknown) {
     const result = z.object({ code: z.string() }).safeParse(error);
 
@@ -42,7 +42,7 @@ export const createPoolAndDatabaseIfNeeded = async () => {
       log.error(error);
     }
 
-    const databaseUrl = await getDatabaseUrlFromEnv();
+    const databaseUrl = await getDatabaseUrlFromConfig();
     const dsn = parseDsn(databaseUrl);
     // It's ok to fall back to '?' since:
     // - Database name is required to connect in the previous pool
@@ -59,7 +59,7 @@ export const createPoolAndDatabaseIfNeeded = async () => {
 
     log.succeed(`Created database ${databaseName}`);
 
-    return createPoolFromEnv();
+    return createPoolFromConfig();
   }
 };
 
