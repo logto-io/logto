@@ -11,16 +11,14 @@ export const operationGuard = z.enum(['send', 'verify']);
 
 export type Operation = z.infer<typeof operationGuard>;
 
-export type VerifiedIdentity = { email: string } | { phone: string };
+export type VerifiedIdentity = { email: string } | { phone: string } | { id: string };
 
-export const verificationStorageGuard = z.object({
-  email: z.string().optional(),
-  phone: z.string().optional(),
-  flow: passcodeTypeGuard,
-  expiresAt: z.string(),
-});
-
-export type VerificationStorage = z.infer<typeof verificationStorageGuard>;
+export type VerificationStorage =
+  | SmsSignInSessionStorage
+  | EmailSignInSessionStorage
+  | SmsRegisterSessionStorage
+  | EmailRegisterSessionStorage
+  | ForgotPasswordSessionStorage;
 
 export type VerificationResult<T = VerificationStorage> = { verification: T };
 
@@ -68,4 +66,16 @@ export type EmailRegisterSessionStorage = z.infer<typeof emailRegisterSessionSto
 
 export const emailRegisterSessionResultGuard = z.object({
   verification: emailRegisterSessionStorageGuard,
+});
+
+const forgotPasswordSessionStorageGuard = z.object({
+  flow: z.literal(PasscodeType.ForgotPassword),
+  expiresAt: z.string(),
+  id: z.string(),
+});
+
+export type ForgotPasswordSessionStorage = z.infer<typeof forgotPasswordSessionStorageGuard>;
+
+export const forgotPasswordSessionResultGuard = z.object({
+  verification: forgotPasswordSessionStorageGuard,
 });

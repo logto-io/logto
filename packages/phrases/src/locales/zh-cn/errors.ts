@@ -59,6 +59,7 @@ const errors = {
     forgot_password_verification_expired: '忘记密码验证已过期，请尝试重新验证。',
     verification_session_not_found: '无法找到无密码流程验证信息，请尝试重新验证。',
     verification_expired: '无密码验证已过期。请返回重新验证。',
+    invalid_verification: '不要保存无效的无密码验证信息。',
     unauthorized: '请先登录',
     unsupported_prompt_name: '不支持的 prompt name',
   },

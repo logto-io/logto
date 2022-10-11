@@ -30,7 +30,7 @@ import {
   getPasswordlessRelatedLogType,
   getRoutePrefix,
   getVerificationStorageFromInteraction,
-  validateAndCheckWhetherVerificationExpires,
+  checkValidateExpiration,
 } from './utils';
 
 export const registerRoute = getRoutePrefix('register', 'passwordless');
@@ -112,6 +112,20 @@ export default function passwordlessRoutes<T extends AnonymousRouter>(
 
       await verifyPasscode(jti, flow, code, { phone });
 
+      if (flow === PasscodeType.ForgotPassword) {
+        assertThat(
+          await hasUserWithPhone(phone),
+          new RequestError({ code: 'user.phone_not_exists', status: 404 })
+        );
+
+        const { id } = await findUserByPhone(phone);
+
+        await assignVerificationResult(ctx, provider, flow, { id });
+        ctx.status = 204;
+
+        return next();
+      }
+
       await assignVerificationResult(ctx, provider, flow, { phone });
       ctx.status = 204;
 
@@ -139,6 +153,20 @@ export default function passwordlessRoutes<T extends AnonymousRouter>(
 
       await verifyPasscode(jti, flow, code, { email });
 
+      if (flow === PasscodeType.ForgotPassword) {
+        assertThat(
+          await hasUserWithEmail(email),
+          new RequestError({ code: 'user.email_not_exists', status: 404 })
+        );
+
+        const { id } = await findUserByEmail(email);
+
+        await assignVerificationResult(ctx, provider, flow, { id });
+        ctx.status = 204;
+
+        return next();
+      }
+
       await assignVerificationResult(ctx, provider, flow, { email });
       ctx.status = 204;
 
@@ -158,7 +186,7 @@ export default function passwordlessRoutes<T extends AnonymousRouter>(
 
     const { phone, expiresAt } = verificationStorage;
 
-    validateAndCheckWhetherVerificationExpires(expiresAt);
+    checkValidateExpiration(expiresAt);
 
     assertThat(
       await hasUserWithPhone(phone),
@@ -185,7 +213,7 @@ export default function passwordlessRoutes<T extends AnonymousRouter>(
 
     const { email, expiresAt } = verificationStorage;
 
-    validateAndCheckWhetherVerificationExpires(expiresAt);
+    checkValidateExpiration(expiresAt);
 
     assertThat(
       await hasUserWithEmail(email),
@@ -212,7 +240,7 @@ export default function passwordlessRoutes<T extends AnonymousRouter>(
 
     const { phone, expiresAt } = verificationStorage;
 
-    validateAndCheckWhetherVerificationExpires(expiresAt);
+    checkValidateExpiration(expiresAt);
 
     assertThat(
       !(await hasUserWithPhone(phone)),
@@ -239,7 +267,7 @@ export default function passwordlessRoutes<T extends AnonymousRouter>(
 
     const { email, expiresAt } = verificationStorage;
 
-    validateAndCheckWhetherVerificationExpires(expiresAt);
+    checkValidateExpiration(expiresAt);
 
     assertThat(
       !(await hasUserWithEmail(email)),

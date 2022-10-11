@@ -63,6 +63,7 @@ const errors = {
     verification_session_not_found:
       'Passwordless verification session not found. Please go back and retry.',
     verification_expired: 'Passwordless verification has expired. Please go back and verify again.',
+    invalid_verification: 'Can not store invalid passwordless verification.',
     unauthorized: 'Please sign in first.',
     unsupported_prompt_name: 'Unsupported prompt name.',
   },

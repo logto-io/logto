@@ -201,38 +201,42 @@ describe('api', () => {
 
   it('sendForgotPasswordSmsPasscode', async () => {
     await sendForgotPasswordSmsPasscode(phone);
-    expect(ky.post).toBeCalledWith('/api/session/forgot-password/sms/send-passcode', {
+    expect(ky.post).toBeCalledWith('/api/session/passwordless/sms/send', {
       json: {
         phone,
+        flow: PasscodeType.ForgotPassword,
       },
     });
   });
 
   it('verifyForgotPasswordSmsPasscode', async () => {
     await verifyForgotPasswordSmsPasscode(phone, code);
-    expect(ky.post).toBeCalledWith('/api/session/forgot-password/sms/verify-passcode', {
+    expect(ky.post).toBeCalledWith('/api/session/passwordless/sms/verify', {
       json: {
         phone,
         code,
+        flow: PasscodeType.ForgotPassword,
       },
     });
   });
 
   it('sendForgotPasswordEmailPasscode', async () => {
     await sendForgotPasswordEmailPasscode(email);
-    expect(ky.post).toBeCalledWith('/api/session/forgot-password/email/send-passcode', {
+    expect(ky.post).toBeCalledWith('/api/session/passwordless/email/send', {
       json: {
         email,
+        flow: PasscodeType.ForgotPassword,
       },
     });
   });
 
   it('verifyForgotPasswordEmailPasscode', async () => {
     await verifyForgotPasswordEmailPasscode(email, code);
-    expect(ky.post).toBeCalledWith('/api/session/forgot-password/email/verify-passcode', {
+    expect(ky.post).toBeCalledWith('/api/session/passwordless/email/verify', {
       json: {
         email,
         code,
+        flow: PasscodeType.ForgotPassword,
       },
     });
   });

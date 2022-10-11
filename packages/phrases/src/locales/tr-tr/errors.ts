@@ -64,6 +64,7 @@ const errors = {
     verification_session_not_found:
       'Passwordless verification session not found. Please go back and retry.', // UNTRANSLATED
     verification_expired: 'Passwordless verification has expired. Please go back and verify again.', // UNTRANSLATED
+    invalid_verification: 'Can not store invalid passwordless verification.', // UNTRANSLATED
     unauthorized: 'Lütfen önce oturum açın.',
     unsupported_prompt_name: 'Desteklenmeyen prompt adı.',
   },
