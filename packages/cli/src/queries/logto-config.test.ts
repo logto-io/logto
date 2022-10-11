@@ -1,7 +1,7 @@
 import { AlterationStateKey, LogtoConfigs } from '@logto/schemas';
+import { convertToIdentifiers } from '@logto/shared';
 import { createMockPool, createMockQueryResult, sql } from 'slonik';
 
-import { convertToIdentifiers } from '../database';
 import { expectSqlAssert, QueryType } from '../test-utilities';
 import { updateDatabaseTimestamp, getCurrentDatabaseAlterationTimestamp } from './logto-config';
 

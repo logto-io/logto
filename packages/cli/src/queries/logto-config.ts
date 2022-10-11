@@ -6,10 +6,9 @@ import {
   LogtoConfigs,
   AlterationStateKey,
 } from '@logto/schemas';
+import { convertToIdentifiers } from '@logto/shared';
 import { DatabasePool, DatabaseTransactionConnection, sql } from 'slonik';
 import { z } from 'zod';
-
-import { convertToIdentifiers } from '../database';
 
 const { table, fields } = convertToIdentifiers(LogtoConfigs);
 

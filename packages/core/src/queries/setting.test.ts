@@ -1,8 +1,8 @@
 import { Settings } from '@logto/schemas';
+import { convertToIdentifiers } from '@logto/shared';
 import { createMockPool, createMockQueryResult, sql } from 'slonik';
 
 import { mockSetting } from '@/__mocks__';
-import { convertToIdentifiers } from '@/database/utils';
 import envSet from '@/env-set';
 import { expectSqlAssert, QueryType } from '@/utils/test-utils';
 
