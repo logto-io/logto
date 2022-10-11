@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
 
+import connector from './commands/connector';
 import database from './commands/database';
 import install from './commands/install';
 import { cliConfig, ConfigKey } from './utilities';
@@ -29,6 +30,7 @@ void yargs(hideBin(process.argv))
   })
   .command(install)
   .command(database)
+  .command(connector)
   .demandCommand(1)
   .showHelpOnFail(false, `Specify ${chalk.green('--help')} for available options`)
   .strict()

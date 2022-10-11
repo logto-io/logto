@@ -46,6 +46,7 @@ importers:
       lint-staged: ^13.0.0
       nanoid: ^3.3.4
       ora: ^5.0.0
+      p-retry: ^4.6.1
       prettier: ^2.7.1
       rimraf: ^3.0.2
       roarr: ^7.11.0
@@ -72,6 +73,7 @@ importers:
       inquirer: 8.2.2
       nanoid: 3.3.4
       ora: 5.4.1
+      p-retry: 4.6.1
       roarr: 7.11.0
       semver: 7.3.7
       slonik: 30.1.2
