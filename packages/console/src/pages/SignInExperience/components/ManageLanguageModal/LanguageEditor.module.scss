@@ -32,7 +32,7 @@
   }
 
   .content {
-    border-top: 1px solid var(--color-border);
+    border-top: 1px solid var(--color-divider);
     height: 481px;
     overflow-y: auto;
 
@@ -91,7 +91,7 @@
   }
 
   .footer {
-    border-top: 1px solid var(--color-border);
+    border-top: 1px solid var(--color-divider);
     display: flex;
     flex-direction: row-reverse;
     padding: _.unit(5);

@@ -61,7 +61,7 @@ const AddLanguageSelector = ({ options, onSelect }: Props) => {
           className={classNames(style.addLanguageButton, isDropDownOpen && style.hidden)}
           icon={<Plus className={style.buttonIcon} />}
           title="sign_in_exp.others.manage_language.add_language"
-          type="outline"
+          type="default"
           size="medium"
           onClick={() => {
             setIsDropDownOpen(true);

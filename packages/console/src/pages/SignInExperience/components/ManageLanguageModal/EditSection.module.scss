@@ -1,8 +1,10 @@
 @use '@/scss/underscore' as _;
 
 .sectionTitle {
-  @include _.subhead-cap;
+  @include _.subhead-cap-small;
+  color: var(--color-neutral-variant-60);
   background-color: var(--color-layer-light);
+  padding: _.unit(1) 0;
 }
 
 .sectionDataKey {
