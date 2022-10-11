@@ -14,10 +14,8 @@ export type Operation = z.infer<typeof operationGuard>;
 export type VerifiedIdentity = { email: string } | { phone: string } | { id: string };
 
 export type VerificationStorage =
-  | SmsSignInSessionStorage
-  | EmailSignInSessionStorage
-  | SmsRegisterSessionStorage
-  | EmailRegisterSessionStorage
+  | SmsSessionStorage
+  | EmailSessionStorage
   | ForgotPasswordSessionStorage;
 
 export type VerificationResult<T = VerificationStorage> = { verification: T };
