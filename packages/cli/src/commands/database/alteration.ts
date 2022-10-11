@@ -1,9 +1,9 @@
 import path from 'path';
 
 import { AlterationScript } from '@logto/schemas/lib/types/alteration';
-import { conditional, conditionalString } from '@silverhand/essentials';
+import { findPackage } from '@logto/shared';
+import { conditionalString } from '@silverhand/essentials';
 import chalk from 'chalk';
-import findUp, { exists } from 'find-up';
 import { copy, existsSync, remove, readdir } from 'fs-extra';
 import { DatabasePool } from 'slonik';
 import { CommandModule } from 'yargs';
@@ -45,18 +45,10 @@ export const getAlterationFiles = async (): Promise<AlterationFile[]> => {
    * since they need a proper context that includes required dependencies (such as slonik) in `node_modules/`.
    * While the original `@logto/schemas` may remove them in production.
    */
-  const packageDirectory = await findUp(
-    async (directory) => {
-      const hasPackageJson = await exists(path.join(directory, 'package.json'));
-
-      return conditional(hasPackageJson && directory);
-    },
-    {
-      // Until we migrate to ESM
-      // eslint-disable-next-line unicorn/prefer-module
-      cwd: __dirname,
-      type: 'directory',
-    }
+  const packageDirectory = await findPackage(
+    // Until we migrate to ESM
+    // eslint-disable-next-line unicorn/prefer-module
+    __dirname
   );
 
   const localAlterationDirectory = path.resolve(
