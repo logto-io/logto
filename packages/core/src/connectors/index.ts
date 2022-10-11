@@ -2,10 +2,10 @@ import { existsSync } from 'fs';
 import { readdir } from 'fs/promises';
 import path from 'path';
 
+import { connectorDirectory } from '@logto/cli/lib/constants';
 import { AllConnector, CreateConnector, validateConfig } from '@logto/connector-kit';
 import chalk from 'chalk';
 
-import envSet from '@/env-set';
 import RequestError from '@/errors/RequestError';
 import { findAllConnectors, insertConnector } from '@/queries/connector';
 
@@ -20,10 +20,6 @@ const loadConnectors = async () => {
   if (cachedConnectors) {
     return cachedConnectors;
   }
-
-  const {
-    values: { connectorDirectory },
-  } = envSet;
 
   if (!existsSync(connectorDirectory)) {
     return [];
