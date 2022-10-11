@@ -5,10 +5,10 @@ import {
 } from '@logto/language-kit';
 import { useContext } from 'react';
 
-import { LanguageEditorContext } from '../../hooks/use-language-editor-context';
 import AddLanguageSelector from './AddLanguageSelector';
 import LanguageItem from './LanguageItem';
 import * as style from './LanguageNav.module.scss';
+import { LanguageEditorContext } from './use-language-editor-context';
 
 const LanguageNav = () => {
   const {
