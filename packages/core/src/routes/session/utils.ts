@@ -10,14 +10,13 @@ import assertThat from '@/utils/assert-that';
 
 import { verificationTimeout } from './consts';
 import {
-  emailRegisterSessionResultGuard,
-  emailSignInSessionResultGuard,
+  emailSessionResultGuard,
+  smsSessionResultGuard,
   forgotPasswordSessionResultGuard,
   Method,
   Operation,
-  smsRegisterSessionResultGuard,
-  smsSignInSessionResultGuard,
   VerificationResult,
+  VerificationStorage,
   VerifiedIdentity,
 } from './types';
 
@@ -45,7 +44,7 @@ export const getPasswordlessRelatedLogType = (
   return result.data;
 };
 
-const parseVerificationStorage = <T = unknown>(
+const parseVerificationStorage = <T = VerificationStorage>(
   data: unknown,
   resultGuard: ZodType<VerificationResult<T>>
 ): T => {
@@ -64,7 +63,7 @@ const parseVerificationStorage = <T = unknown>(
   return verificationResult.data.verification;
 };
 
-export const getVerificationStorageFromInteraction = async <T = unknown>(
+export const getVerificationStorageFromInteraction = async <T = VerificationStorage>(
   ctx: Context,
   provider: Provider,
   resultGuard: ZodType<VerificationResult<T>>
@@ -96,10 +95,8 @@ export const assignVerificationResult = async (
   };
 
   assertThat(
-    smsSignInSessionResultGuard.safeParse(verificationResult).success ||
-      emailSignInSessionResultGuard.safeParse(verificationResult).success ||
-      smsRegisterSessionResultGuard.safeParse(verificationResult).success ||
-      emailRegisterSessionResultGuard.safeParse(verificationResult).success ||
+    emailSessionResultGuard.safeParse(verificationResult).success ||
+      smsSessionResultGuard.safeParse(verificationResult).success ||
       forgotPasswordSessionResultGuard.safeParse(verificationResult).success,
     new RequestError({ code: 'session.invalid_verification' })
   );
