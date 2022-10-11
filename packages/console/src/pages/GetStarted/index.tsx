@@ -8,6 +8,7 @@ import Card from '@/components/Card';
 import ConfirmModal from '@/components/ConfirmModal';
 import Spacer from '@/components/Spacer';
 import useUserPreferences from '@/hooks/use-user-preferences';
+import { onKeyDownHandler } from '@/utilities/a11y';
 
 import Skeleton from './components/Skeleton';
 import useGetStartedMetadata from './hook';
@@ -26,6 +27,14 @@ const GetStarted = () => {
     navigate('/dashboard');
   };
 
+  const showConfirmModalHandler = () => {
+    setShowConfirmModal(true);
+  };
+
+  const hideConfirmModalHandler = () => {
+    setShowConfirmModal(false);
+  };
+
   return (
     <div className={styles.container}>
       <div className={styles.header}>
@@ -36,10 +45,15 @@ const GetStarted = () => {
           <span>
             {t('get_started.subtitle_part2')}
             <span
+              role="button"
+              tabIndex={0}
               className={styles.hideButton}
-              onClick={() => {
-                setShowConfirmModal(true);
-              }}
+              onClick={showConfirmModalHandler}
+              onKeyDown={onKeyDownHandler({
+                Enter: showConfirmModalHandler,
+                ' ': showConfirmModalHandler,
+                Esc: hideConfirmModalHandler,
+              })}
             >
               {t('get_started.hide_this')}
             </span>
@@ -70,9 +84,7 @@ const GetStarted = () => {
         confirmButtonType="primary"
         confirmButtonText="get_started.hide_this"
         onConfirm={hideGetStarted}
-        onCancel={() => {
-          setShowConfirmModal(false);
-        }}
+        onCancel={hideConfirmModalHandler}
       >
         {t('get_started.confirm_message')}
       </ConfirmModal>

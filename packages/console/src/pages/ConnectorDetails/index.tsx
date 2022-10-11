@@ -6,6 +6,10 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 import useSWR, { useSWRConfig } from 'swr';
 
+import Back from '@/assets/images/back.svg';
+import Delete from '@/assets/images/delete.svg';
+import More from '@/assets/images/more.svg';
+import Reset from '@/assets/images/reset.svg';
 import ActionMenu, { ActionMenuItem } from '@/components/ActionMenu';
 import Button from '@/components/Button';
 import Card from '@/components/Card';
@@ -20,10 +24,6 @@ import UnnamedTrans from '@/components/UnnamedTrans';
 import useApi, { RequestError } from '@/hooks/use-api';
 import useConnectorInUse from '@/hooks/use-connector-in-use';
 import { useTheme } from '@/hooks/use-theme';
-import Back from '@/icons/Back';
-import Delete from '@/icons/Delete';
-import More from '@/icons/More';
-import Reset from '@/icons/Reset';
 import * as detailsStyles from '@/scss/details.module.scss';
 
 import CreateForm from '../Connectors/components/CreateForm';
@@ -88,6 +88,7 @@ const ConnectorDetails = () => {
           <div className={styles.logoContainer}>
             <img
               src={theme === AppearanceMode.DarkMode && data.logoDark ? data.logoDark : data.logo}
+              alt="logo"
               className={styles.logo}
             />
           </div>

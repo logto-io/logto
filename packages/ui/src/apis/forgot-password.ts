@@ -56,9 +56,12 @@ export const verifyForgotPasswordEmailPasscode = async (email: string, code: str
     })
     .json<Response>();
 
-export const resetPassword = async (password: string) =>
-  api
+export const resetPassword = async (password: string) => {
+  await api
     .post(`${forgotPasswordApiPrefix}/reset`, {
       json: { password },
     })
     .json<Response>();
+
+  return { success: true };
+};

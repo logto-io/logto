@@ -1,0 +1,15 @@
+@use '@/scss/underscore' as _;
+
+.languageNav {
+  width: 185px;
+  padding: _.unit(3) _.unit(2);
+  flex-shrink: 0;
+  background-color: var(--color-layer-light);
+  border-right: 1px solid var(--color-border);
+
+  .languageItemList {
+    margin-top: _.unit(3);
+    height: 569px;
+    overflow-y: auto;
+  }
+}

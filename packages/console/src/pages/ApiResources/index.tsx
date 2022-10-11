@@ -9,6 +9,7 @@ import useSWR from 'swr';
 
 import ApiResourceDark from '@/assets/images/api-resource-dark.svg';
 import ApiResource from '@/assets/images/api-resource.svg';
+import Plus from '@/assets/images/plus.svg';
 import Button from '@/components/Button';
 import Card from '@/components/Card';
 import CardTitle from '@/components/CardTitle';
@@ -20,7 +21,6 @@ import TableError from '@/components/Table/TableError';
 import TableLoading from '@/components/Table/TableLoading';
 import { RequestError } from '@/hooks/use-api';
 import { useTheme } from '@/hooks/use-theme';
-import Plus from '@/icons/Plus';
 import * as modalStyles from '@/scss/modal.module.scss';
 import * as tableStyles from '@/scss/table.module.scss';
 

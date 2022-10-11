@@ -1,9 +1,11 @@
+import { languages, languageTagGuard } from '@logto/language-kit';
 import { arbitraryObjectGuard, translationGuard } from '@logto/schemas';
 import { conditional, ValuesOf } from '@silverhand/essentials';
 import { OpenAPIV3 } from 'openapi-types';
 import {
   ZodArray,
   ZodBoolean,
+  ZodEffects,
   ZodEnum,
   ZodLiteral,
   ZodNativeEnum,
@@ -140,6 +142,13 @@ export const zodTypeToSwagger = (
     };
   }
 
+  if (config === languageTagGuard) {
+    return {
+      type: 'string',
+      enum: Object.keys(languages),
+    };
+  }
+
   if (config instanceof ZodOptional) {
     return zodTypeToSwagger(config._def.innerType);
   }
@@ -207,6 +216,14 @@ export const zodTypeToSwagger = (
   if (config instanceof ZodBoolean) {
     return {
       type: 'boolean',
+    };
+  }
+
+  // TO-DO: Improve swagger output for zod schema with refinement (validate through JS functions)
+  if (config instanceof ZodEffects && config._def.effect.type === 'refinement') {
+    return {
+      type: 'object',
+      description: 'Validator function',
     };
   }
 

@@ -7,6 +7,7 @@ import Modal from 'react-modal';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import useSWR from 'swr';
 
+import Plus from '@/assets/images/plus.svg';
 import ApplicationName from '@/components/ApplicationName';
 import Button from '@/components/Button';
 import Card from '@/components/Card';
@@ -20,7 +21,6 @@ import TableError from '@/components/Table/TableError';
 import TableLoading from '@/components/Table/TableLoading';
 import { generateAvatarPlaceHolderById } from '@/consts/avatars';
 import { RequestError } from '@/hooks/use-api';
-import Plus from '@/icons/Plus';
 import * as modalStyles from '@/scss/modal.module.scss';
 import * as tableStyles from '@/scss/table.module.scss';
 
@@ -133,6 +133,7 @@ const Users = () => {
                     subtitle={id}
                     icon={
                       <img
+                        alt="avatar"
                         className={styles.avatar}
                         src={avatar || generateAvatarPlaceHolderById(id)}
                       />
