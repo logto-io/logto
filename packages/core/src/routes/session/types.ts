@@ -23,7 +23,7 @@ export type VerificationStorage =
 export type VerificationResult<T = VerificationStorage> = { verification: T };
 
 const smsSignInSessionStorageGuard = z.object({
-  flow: z.literal(PasscodeType.SignIn),
+  flow: z.literal(PasscodeType.SignIn).or(z.literal(PasscodeType.Register)),
   expiresAt: z.string(),
   phone: z.string(),
 });
@@ -33,7 +33,7 @@ export type SmsSignInSessionStorage = z.infer<typeof smsSignInSessionStorageGuar
 export const smsSignInSessionResultGuard = z.object({ verification: smsSignInSessionStorageGuard });
 
 const emailSignInSessionStorageGuard = z.object({
-  flow: z.literal(PasscodeType.SignIn),
+  flow: z.literal(PasscodeType.SignIn).or(z.literal(PasscodeType.Register)),
   expiresAt: z.string(),
   email: z.string(),
 });
@@ -45,7 +45,7 @@ export const emailSignInSessionResultGuard = z.object({
 });
 
 const smsRegisterSessionStorageGuard = z.object({
-  flow: z.literal(PasscodeType.Register),
+  flow: z.literal(PasscodeType.SignIn).or(z.literal(PasscodeType.Register)),
   expiresAt: z.string(),
   phone: z.string(),
 });
@@ -57,7 +57,7 @@ export const smsRegisterSessionResultGuard = z.object({
 });
 
 const emailRegisterSessionStorageGuard = z.object({
-  flow: z.literal(PasscodeType.Register),
+  flow: z.literal(PasscodeType.SignIn).or(z.literal(PasscodeType.Register)),
   expiresAt: z.string(),
   email: z.string(),
 });
