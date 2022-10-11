@@ -18,6 +18,7 @@ import Search from '@/components/Search';
 import TableEmpty from '@/components/Table/TableEmpty';
 import TableError from '@/components/Table/TableError';
 import TableLoading from '@/components/Table/TableLoading';
+import { generatedPasswordStorageKey } from '@/consts';
 import { generateAvatarPlaceHolderById } from '@/consts/avatars';
 import { RequestError } from '@/hooks/use-api';
 import Plus from '@/icons/Plus';
@@ -67,7 +68,8 @@ const Users = () => {
               setIsCreateFormOpen(false);
 
               if (createdUser && password) {
-                navigate(`/users/${createdUser.id}?password=${password}`);
+                sessionStorage.setItem(generatedPasswordStorageKey, password);
+                navigate(`/users/${createdUser.id}`);
               }
             }}
           />
