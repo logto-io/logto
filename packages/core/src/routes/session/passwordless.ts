@@ -16,11 +16,9 @@ import {
   updateUserById,
 } from '@/queries/user';
 import {
-  emailRegisterSessionResultGuard,
-  emailSignInSessionResultGuard,
+  emailSessionResultGuard,
   passcodeTypeGuard,
-  smsRegisterSessionResultGuard,
-  smsSignInSessionResultGuard,
+  smsSessionResultGuard,
 } from '@/routes/session/types';
 import assertThat from '@/utils/assert-that';
 
@@ -178,7 +176,7 @@ export default function passwordlessRoutes<T extends AnonymousRouter>(
     const verificationStorage = await getVerificationStorageFromInteraction(
       ctx,
       provider,
-      smsSignInSessionResultGuard
+      smsSessionResultGuard
     );
 
     const type = getPasswordlessRelatedLogType(PasscodeType.SignIn, 'sms');
@@ -205,7 +203,7 @@ export default function passwordlessRoutes<T extends AnonymousRouter>(
     const verificationStorage = await getVerificationStorageFromInteraction(
       ctx,
       provider,
-      emailSignInSessionResultGuard
+      emailSessionResultGuard
     );
 
     const type = getPasswordlessRelatedLogType(PasscodeType.SignIn, 'email');
@@ -232,7 +230,7 @@ export default function passwordlessRoutes<T extends AnonymousRouter>(
     const verificationStorage = await getVerificationStorageFromInteraction(
       ctx,
       provider,
-      smsRegisterSessionResultGuard
+      smsSessionResultGuard
     );
 
     const type = getPasswordlessRelatedLogType(PasscodeType.Register, 'sms');
@@ -259,7 +257,7 @@ export default function passwordlessRoutes<T extends AnonymousRouter>(
     const verificationStorage = await getVerificationStorageFromInteraction(
       ctx,
       provider,
-      emailRegisterSessionResultGuard
+      emailSessionResultGuard
     );
 
     const type = getPasswordlessRelatedLogType(PasscodeType.Register, 'email');

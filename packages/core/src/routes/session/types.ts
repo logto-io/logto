@@ -22,50 +22,26 @@ export type VerificationStorage =
 
 export type VerificationResult<T = VerificationStorage> = { verification: T };
 
-const smsSignInSessionStorageGuard = z.object({
+const smsSessionStorageGuard = z.object({
   flow: z.literal(PasscodeType.SignIn).or(z.literal(PasscodeType.Register)),
   expiresAt: z.string(),
   phone: z.string(),
 });
 
-export type SmsSignInSessionStorage = z.infer<typeof smsSignInSessionStorageGuard>;
+export type SmsSessionStorage = z.infer<typeof smsSessionStorageGuard>;
 
-export const smsSignInSessionResultGuard = z.object({ verification: smsSignInSessionStorageGuard });
+export const smsSessionResultGuard = z.object({ verification: smsSessionStorageGuard });
 
-const emailSignInSessionStorageGuard = z.object({
+const emailSessionStorageGuard = z.object({
   flow: z.literal(PasscodeType.SignIn).or(z.literal(PasscodeType.Register)),
   expiresAt: z.string(),
   email: z.string(),
 });
 
-export type EmailSignInSessionStorage = z.infer<typeof emailSignInSessionStorageGuard>;
+export type EmailSessionStorage = z.infer<typeof emailSessionStorageGuard>;
 
-export const emailSignInSessionResultGuard = z.object({
-  verification: emailSignInSessionStorageGuard,
-});
-
-const smsRegisterSessionStorageGuard = z.object({
-  flow: z.literal(PasscodeType.SignIn).or(z.literal(PasscodeType.Register)),
-  expiresAt: z.string(),
-  phone: z.string(),
-});
-
-export type SmsRegisterSessionStorage = z.infer<typeof smsRegisterSessionStorageGuard>;
-
-export const smsRegisterSessionResultGuard = z.object({
-  verification: smsRegisterSessionStorageGuard,
-});
-
-const emailRegisterSessionStorageGuard = z.object({
-  flow: z.literal(PasscodeType.SignIn).or(z.literal(PasscodeType.Register)),
-  expiresAt: z.string(),
-  email: z.string(),
-});
-
-export type EmailRegisterSessionStorage = z.infer<typeof emailRegisterSessionStorageGuard>;
-
-export const emailRegisterSessionResultGuard = z.object({
-  verification: emailRegisterSessionStorageGuard,
+export const emailSessionResultGuard = z.object({
+  verification: emailSessionStorageGuard,
 });
 
 const forgotPasswordSessionStorageGuard = z.object({
