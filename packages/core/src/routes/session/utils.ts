@@ -74,7 +74,7 @@ export const getVerificationStorageFromInteraction = async <T = unknown>(
   return parseVerificationStorage<T>(result, resultGuard);
 };
 
-export const validateAndCheckWhetherVerificationExpires = (expiresAt: string) => {
+export const checkValidateExpiration = (expiresAt: string) => {
   assertThat(
     dayjs(expiresAt).isValid() && dayjs(expiresAt).isAfter(dayjs()),
     new RequestError({ code: 'session.verification_expired', status: 401 })

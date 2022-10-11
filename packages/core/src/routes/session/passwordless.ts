@@ -30,7 +30,7 @@ import {
   getPasswordlessRelatedLogType,
   getRoutePrefix,
   getVerificationStorageFromInteraction,
-  validateAndCheckWhetherVerificationExpires,
+  checkValidateExpiration,
 } from './utils';
 
 export const registerRoute = getRoutePrefix('register', 'passwordless');
@@ -186,7 +186,7 @@ export default function passwordlessRoutes<T extends AnonymousRouter>(
 
     const { phone, expiresAt } = verificationStorage;
 
-    validateAndCheckWhetherVerificationExpires(expiresAt);
+    checkValidateExpiration(expiresAt);
 
     assertThat(
       await hasUserWithPhone(phone),
@@ -213,7 +213,7 @@ export default function passwordlessRoutes<T extends AnonymousRouter>(
 
     const { email, expiresAt } = verificationStorage;
 
-    validateAndCheckWhetherVerificationExpires(expiresAt);
+    checkValidateExpiration(expiresAt);
 
     assertThat(
       await hasUserWithEmail(email),
@@ -240,7 +240,7 @@ export default function passwordlessRoutes<T extends AnonymousRouter>(
 
     const { phone, expiresAt } = verificationStorage;
 
-    validateAndCheckWhetherVerificationExpires(expiresAt);
+    checkValidateExpiration(expiresAt);
 
     assertThat(
       !(await hasUserWithPhone(phone)),
@@ -267,7 +267,7 @@ export default function passwordlessRoutes<T extends AnonymousRouter>(
 
     const { email, expiresAt } = verificationStorage;
 
-    validateAndCheckWhetherVerificationExpires(expiresAt);
+    checkValidateExpiration(expiresAt);
 
     assertThat(
       !(await hasUserWithEmail(email)),

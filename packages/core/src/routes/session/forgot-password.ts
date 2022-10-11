@@ -15,7 +15,7 @@ import {
   clearVerificationResult,
   getRoutePrefix,
   getVerificationStorageFromInteraction,
-  validateAndCheckWhetherVerificationExpires,
+  checkValidateExpiration,
 } from './utils';
 
 export const forgotPasswordRoute = getRoutePrefix('forgot-password');
@@ -41,7 +41,7 @@ export default function forgotPasswordRoutes<T extends AnonymousRouter>(
 
       const { id, expiresAt } = verificationStorage;
 
-      validateAndCheckWhetherVerificationExpires(expiresAt);
+      checkValidateExpiration(expiresAt);
 
       const { passwordEncrypted: oldPasswordEncrypted } = await findUserById(id);
 
