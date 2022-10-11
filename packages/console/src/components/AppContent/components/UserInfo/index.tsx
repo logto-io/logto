@@ -3,10 +3,10 @@ import classNames from 'classnames';
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import SignOut from '@/assets/images/sign-out.svg';
 import Dropdown, { DropdownItem } from '@/components/Dropdown';
 import { Ring as Spinner } from '@/components/Spinner';
 import { generateAvatarPlaceHolderById } from '@/consts/avatars';
-import SignOut from '@/icons/SignOut';
 import { onKeyDownHandler } from '@/utilities/a11y';
 
 import UserInfoSkeleton from '../UserInfoSkeleton';

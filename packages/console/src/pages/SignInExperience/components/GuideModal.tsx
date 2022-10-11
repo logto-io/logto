@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import Modal from 'react-modal';
 import useSWR from 'swr';
 
+import Close from '@/assets/images/close.svg';
 import Alert from '@/components/Alert';
 import Button from '@/components/Button';
 import CardTitle from '@/components/CardTitle';
@@ -13,7 +14,6 @@ import Spacer from '@/components/Spacer';
 import useApi from '@/hooks/use-api';
 import useSettings from '@/hooks/use-settings';
 import useUserPreferences from '@/hooks/use-user-preferences';
-import Close from '@/icons/Close';
 import * as modalStyles from '@/scss/modal.module.scss';
 
 import usePreviewConfigs from '../hooks';

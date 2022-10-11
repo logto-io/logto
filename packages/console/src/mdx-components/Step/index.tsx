@@ -2,6 +2,8 @@ import { AdminConsoleKey } from '@logto/phrases';
 import classNames from 'classnames';
 import { PropsWithChildren, useEffect, useRef, useState, useCallback } from 'react';
 
+import KeyboardArrowDown from '@/assets/images/keyboard-arrow-down.svg';
+import KeyboardArrowUp from '@/assets/images/keyboard-arrow-up.svg';
 import Button from '@/components/Button';
 import Card from '@/components/Card';
 import CardTitle from '@/components/CardTitle';
@@ -9,7 +11,6 @@ import DangerousRaw from '@/components/DangerousRaw';
 import IconButton from '@/components/IconButton';
 import Index from '@/components/Index';
 import Spacer from '@/components/Spacer';
-import { KeyboardArrowDown, KeyboardArrowUp } from '@/icons/Arrow';
 import { onKeyDownHandler } from '@/utilities/a11y';
 
 import * as styles from './index.module.scss';

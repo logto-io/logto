@@ -3,10 +3,10 @@ import classNames from 'classnames';
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import Plus from '@/assets/images/plus.svg';
+import SearchIcon from '@/assets/images/search.svg';
 import Button from '@/components/Button';
 import TextInput from '@/components/TextInput';
-import Plus from '@/icons/Plus';
-import SearchIcon from '@/icons/Search';
 
 import * as style from './AddLanguageSelector.module.scss';
 

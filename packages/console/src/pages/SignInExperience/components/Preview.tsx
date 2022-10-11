@@ -12,12 +12,12 @@ import { useEffect, useMemo, useState, useRef, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import useSWR from 'swr';
 
+import PhoneInfo from '@/assets/images/phone-info.svg';
 import Card from '@/components/Card';
 import Select from '@/components/Select';
 import TabNav, { TabNavItem } from '@/components/TabNav';
 import { RequestError } from '@/hooks/use-api';
 import useUiLanguages from '@/hooks/use-ui-languages';
-import PhoneInfo from '@/icons/PhoneInfo';
 
 import * as styles from './Preview.module.scss';
 

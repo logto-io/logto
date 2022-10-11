@@ -2,9 +2,9 @@ import classNames from 'classnames';
 import { MouseEventHandler, useEffect, useMemo, useRef, useState } from 'react';
 import { TFuncKey, useTranslation } from 'react-i18next';
 
-import Copy from '@/icons/Copy';
-import Eye from '@/icons/Eye';
-import EyeClosed from '@/icons/EyeClosed';
+import Copy from '@/assets/images/copy.svg';
+import EyeClosed from '@/assets/images/eye-closed.svg';
+import Eye from '@/assets/images/eye.svg';
 import { onKeyDownHandler } from '@/utilities/a11y';
 
 import IconButton from '../IconButton';

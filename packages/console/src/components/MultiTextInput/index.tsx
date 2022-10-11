@@ -3,8 +3,8 @@ import classNames from 'classnames';
 import { KeyboardEvent, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import Minus from '@/assets/images/minus.svg';
 import * as textButtonStyles from '@/components/TextButton/index.module.scss';
-import Minus from '@/icons/Minus';
 import { onKeyDownHandler } from '@/utilities/a11y';
 
 import ConfirmModal from '../ConfirmModal';

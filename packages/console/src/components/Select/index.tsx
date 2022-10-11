@@ -1,8 +1,9 @@
 import classNames from 'classnames';
 import { ReactEventHandler, ReactNode, useRef, useState } from 'react';
 
-import { KeyboardArrowDown, KeyboardArrowUp } from '@/icons/Arrow';
-import Close from '@/icons/Close';
+import Close from '@/assets/images/close.svg';
+import KeyboardArrowDown from '@/assets/images/keyboard-arrow-down.svg';
+import KeyboardArrowUp from '@/assets/images/keyboard-arrow-up.svg';
 import { onKeyDownHandler } from '@/utilities/a11y';
 
 import Dropdown, { DropdownItem } from '../Dropdown';
