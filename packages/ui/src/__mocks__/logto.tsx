@@ -178,7 +178,6 @@ export const mockSignInExperience: SignInExperience = {
   languageInfo: {
     autoDetect: true,
     fallbackLanguage: 'en',
-    fixedLanguage: 'zh-CN',
   },
   signInMethods: {
     username: SignInMethodState.Primary,
