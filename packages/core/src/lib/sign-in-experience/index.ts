@@ -4,6 +4,7 @@ import assertThat from '@/utils/assert-that';
 
 export * from './sign-in-methods';
 export * from './sign-up';
+export * from './sign-in';
 
 export const validateBranding = (branding: Branding) => {
   if (branding.style === BrandingStyle.Logo_Slogan) {

@@ -11,6 +11,7 @@ import {
   SignUpIdentifier,
   SignInIdentifier,
   SignUp,
+  SignIn,
 } from '@logto/schemas';
 
 export const mockSignInExperience: SignInExperience = {
@@ -93,4 +94,11 @@ export const mockSignUp: SignUp = {
   identifier: SignUpIdentifier.Username,
   password: true,
   verify: false,
+};
+
+export const mockSignInMethod: SignIn['methods'][0] = {
+  identifier: SignInIdentifier.Username,
+  password: true,
+  verificationCode: false,
+  isPasswordPrimary: true,
 };

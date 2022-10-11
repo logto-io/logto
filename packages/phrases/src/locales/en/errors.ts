@@ -107,6 +107,11 @@ const errors = {
       'There must be one and only one primary sign-in method. Please check your input.',
     username_requires_password: 'Must enable set a password for username sign up identifier.',
     passwordless_requires_verify: 'Must enable verify for email/phone sign up identifier.',
+    miss_sign_up_identifier_in_sign_in: 'Sign in methods must contain the sign up identifier.',
+    password_sign_in_must_be_enabled:
+      'Password sign in must be enabled when set a password is required in sign up.',
+    code_sign_in_must_be_enabled:
+      'Verification code sign in must be enabled when set a password is not required in sign up.',
   },
   localization: {
     cannot_delete_default_language:

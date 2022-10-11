@@ -104,6 +104,11 @@ const errors = {
       '반드시 하나의 메인 로그인 방법이 설정되어야 해요. 입력된 값을 확인해주세요.',
     username_requires_password: 'Must enable set a password for username sign up identifier.', // UNTRANSLATED
     passwordless_requires_verify: 'Must enable verify for email/phone sign up identifier.', // UNTRANSLATED
+    miss_sign_up_identifier_in_sign_in: 'Sign in methods must contain the sign up identifier.', // UNTRANSLATED
+    password_sign_in_must_be_enabled:
+      'Password sign in must be enabled when set a password is required in sign up.', // UNTRANSLATED
+    code_sign_in_must_be_enabled:
+      'Verification code sign in must be enabled when set a password is not required in sign up.', // UNTRANSLATED
   },
   localization: {
     cannot_delete_default_language:
