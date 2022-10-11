@@ -117,7 +117,7 @@ importers:
       '@silverhand/eslint-config-react': 1.1.0
       '@silverhand/essentials': ^1.3.0
       '@silverhand/ts-config': 1.0.0
-      '@silverhand/ts-config-react': 1.0.0
+      '@silverhand/ts-config-react': 1.1.0
       '@tsconfig/docusaurus': ^1.0.5
       '@types/color': ^3.0.3
       '@types/lodash.kebabcase': ^4.1.6
@@ -184,7 +184,7 @@ importers:
       '@silverhand/eslint-config-react': 1.1.0_3jdvf2aalbcoibv3m53iflhmym
       '@silverhand/essentials': 1.3.0
       '@silverhand/ts-config': 1.0.0_typescript@4.7.4
-      '@silverhand/ts-config-react': 1.0.0_typescript@4.7.4
+      '@silverhand/ts-config-react': 1.1.0_typescript@4.7.4
       '@tsconfig/docusaurus': 1.0.5
       '@types/color': 3.0.3
       '@types/lodash.kebabcase': 4.1.6
@@ -669,7 +669,7 @@ importers:
       '@silverhand/essentials': ^1.3.0
       '@silverhand/jest-config': 1.0.0
       '@silverhand/ts-config': 1.0.0
-      '@silverhand/ts-config-react': 1.0.0
+      '@silverhand/ts-config-react': 1.1.0
       '@testing-library/react': ^13.3.0
       '@types/color': ^3.0.3
       '@types/jest': ^28.1.6
@@ -723,7 +723,7 @@ importers:
       '@silverhand/essentials': 1.3.0
       '@silverhand/jest-config': 1.0.0_bi2kohzqnxavgozw3csgny5hju
       '@silverhand/ts-config': 1.0.0_typescript@4.7.4
-      '@silverhand/ts-config-react': 1.0.0_typescript@4.7.4
+      '@silverhand/ts-config-react': 1.1.0_typescript@4.7.4
       '@testing-library/react': 13.3.0_biqbaboplfbrettd7655fr4n2y
       '@types/color': 3.0.3
       '@types/jest': 28.1.6
@@ -4054,16 +4054,6 @@ packages:
       - babel-jest
       - esbuild
       - typescript
-    dev: true
-
-  /@silverhand/ts-config-react/1.0.0_typescript@4.7.4:
-    resolution: {integrity: sha512-Jto2iq5sM0/0f4X9T6nl8AvU2cl1A37aoGzLM3EU3P1LOATpbqnTHeoAra1ZyDcQBoYHyr4pRAvHACjWKQynlg==}
-    engines: {node: ^16.0.0 || ^18.0.0}
-    peerDependencies:
-      typescript: ^4.7.4
-    dependencies:
-      '@silverhand/ts-config': 1.0.0_typescript@4.7.4
-      typescript: 4.7.4
     dev: true
 
   /@silverhand/ts-config-react/1.1.0_typescript@4.7.4:
