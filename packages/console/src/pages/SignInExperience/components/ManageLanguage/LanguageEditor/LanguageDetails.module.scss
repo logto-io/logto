@@ -41,6 +41,8 @@
 
       > thead > tr {
         > th {
+          height: 36px;
+          padding: 0 _.unit(2);
           font: var(--font-label-large);
           color: var(--color-text);
           background-color: var(--color-layer-1);
@@ -48,7 +50,11 @@
 
         > th:first-child {
           width: 300px;
-          padding: _.unit(1) _.unit(5);
+          padding: 0 _.unit(5);
+        }
+
+        > th:last-child {
+          padding: 0 _.unit(8);
         }
       }
 
