@@ -21,6 +21,7 @@ const translation = {
     enter_passcode: '비밀번호 입력',
     confirm: '확인',
     cancel: '취소',
+    save_password: 'Save', // UNTRANSLATED
     bind: '{{address}}로 연동',
     back: '뒤로 가기',
     nav_back: '뒤로',
@@ -28,7 +29,7 @@ const translation = {
     got_it: '알겠습니다',
     sign_in_with: '{{name}} 로그인',
     forgot_password: '비밀번호를 잊어버리셨나요?',
-    switch_to: 'Switch to {{method}}', // TODO: untranslated
+    switch_to: 'Switch to {{method}}', // UNTRANSLATED
   },
   description: {
     email: '이메일',

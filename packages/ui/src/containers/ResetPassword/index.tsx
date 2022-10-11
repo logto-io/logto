@@ -118,7 +118,7 @@ const ResetPassword = ({ className, autoFocus }: Props) => {
         <ErrorMessage className={styles.formErrors}>{formErrorMessage}</ErrorMessage>
       )}
 
-      <Button title="action.confirm" onClick={async () => onSubmitHandler()} />
+      <Button title="action.save_password" onClick={async () => onSubmitHandler()} />
 
       <input hidden type="submit" />
     </form>
