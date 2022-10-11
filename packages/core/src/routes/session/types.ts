@@ -13,59 +13,62 @@ export type Operation = z.infer<typeof operationGuard>;
 
 export type VerifiedIdentity = { email: string } | { phone: string };
 
-export const verificationStorageGuard = z.object({
-  email: z.string().optional(),
-  phone: z.string().optional(),
-  flow: passcodeTypeGuard,
-  expiresAt: z.string(),
+export const verificationSessionGuard = z.object({
+  verification: z.object({}).catchall(z.unknown()),
 });
 
-export type VerificationStorage = z.infer<typeof verificationStorageGuard>;
-
-export type VerificationResult<T = VerificationStorage> = { verification: T };
-
-const smsSignInSessionStorageGuard = z.object({
+export const smsSignInSessionStorageGuard = z.object({
   flow: z.literal(PasscodeType.SignIn),
   expiresAt: z.string(),
   phone: z.string(),
 });
 
-export type SmsSignInSessionStorage = z.infer<typeof smsSignInSessionStorageGuard>;
-
-export const smsSignInSessionResultGuard = z.object({ verification: smsSignInSessionStorageGuard });
-
-const emailSignInSessionStorageGuard = z.object({
+export const emailSignInSessionStorageGuard = z.object({
   flow: z.literal(PasscodeType.SignIn),
   expiresAt: z.string(),
   email: z.string(),
 });
 
-export type EmailSignInSessionStorage = z.infer<typeof emailSignInSessionStorageGuard>;
-
-export const emailSignInSessionResultGuard = z.object({
-  verification: emailSignInSessionStorageGuard,
-});
-
-const smsRegisterSessionStorageGuard = z.object({
+export const smsRegisterSessionStorageGuard = z.object({
   flow: z.literal(PasscodeType.Register),
   expiresAt: z.string(),
   phone: z.string(),
 });
 
-export type SmsRegisterSessionStorage = z.infer<typeof smsRegisterSessionStorageGuard>;
-
-export const smsRegisterSessionResultGuard = z.object({
-  verification: smsRegisterSessionStorageGuard,
-});
-
-const emailRegisterSessionStorageGuard = z.object({
+export const emailRegisterSessionStorageGuard = z.object({
   flow: z.literal(PasscodeType.Register),
   expiresAt: z.string(),
   email: z.string(),
 });
 
-export type EmailRegisterSessionStorage = z.infer<typeof emailRegisterSessionStorageGuard>;
-
-export const emailRegisterSessionResultGuard = z.object({
-  verification: emailRegisterSessionStorageGuard,
+export const emailForgotPasswordSessionStorage = z.object({
+  flow: z.literal(PasscodeType.ForgotPassword),
+  expiresAt: z.string(),
+  email: z.string(),
 });
+
+export const smsForgotPasswordSessionStorage = z.object({
+  flow: z.literal(PasscodeType.ForgotPassword),
+  expiresAt: z.string(),
+  phone: z.string(),
+});
+
+export type VerificationStorage<F extends PasscodeType, M extends Method> = M extends 'email'
+  ? {
+      flow: F;
+      expiresAt: string;
+      email: string;
+    }
+  : {
+      flow: F;
+      expiresAt: string;
+      phone: string;
+    };
+
+export type VerificationResult<
+  T extends VerificationStorage<F, M>,
+  F extends PasscodeType,
+  M extends Method
+> = {
+  verification: T;
+};

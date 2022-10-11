@@ -9,7 +9,7 @@ import RequestError from '@/errors/RequestError';
 import assertThat from '@/utils/assert-that';
 
 import { verificationTimeout } from './consts';
-import { Method, Operation, VerificationResult, VerifiedIdentity } from './types';
+import { Method, Operation, VerificationStorage, verificationSessionGuard } from './types';
 
 export const getRoutePrefix = (
   type: 'sign-in' | 'register' | 'forgot-password',
@@ -35,25 +35,6 @@ export const getPasswordlessRelatedLogType = (
   return result.data;
 };
 
-const parseVerificationStorage = <T = unknown>(
-  data: unknown,
-  resultGuard: ZodType<VerificationResult<T>, ZodTypeDef, unknown>
-): T => {
-  const verificationResult = resultGuard.safeParse(data);
-
-  if (!verificationResult.success) {
-    throw new RequestError(
-      {
-        code: 'session.verification_session_not_found',
-        status: 404,
-      },
-      verificationResult.error
-    );
-  }
-
-  return verificationResult.data.verification;
-};
-
 export const validateAndCheckWhetherVerificationExpires = (expiresAt: string) => {
   assertThat(
     dayjs(expiresAt).isValid() && dayjs(expiresAt).isAfter(dayjs()),
@@ -61,28 +42,44 @@ export const validateAndCheckWhetherVerificationExpires = (expiresAt: string) =>
   );
 };
 
-export const getVerificationStorageFromInteraction = async <T = unknown>(
+export const getVerificationStorageFromInteraction = async <
+  T extends VerificationStorage<F, M>,
+  F extends PasscodeType,
+  M extends Method
+>(
   ctx: Context,
   provider: Provider,
-  resultGuard: ZodType<VerificationResult<T>, ZodTypeDef, unknown>
+  storageGuard: ZodType<T, ZodTypeDef, unknown>
 ): Promise<T> => {
   const { result } = await provider.interactionDetails(ctx.req, ctx.res);
+  console.log(result);
 
-  return parseVerificationStorage<T>(result, resultGuard);
+  try {
+    const verificationStorage = storageGuard.parse(
+      verificationSessionGuard.parse(result).verification
+    );
+
+    return verificationStorage;
+  } catch (error: unknown) {
+    throw new RequestError(
+      {
+        code: 'session.verification_session_not_found',
+        status: 404,
+      },
+      error
+    );
+  }
 };
 
-export const assignVerificationResult = async (
+export const assignVerificationResult = async <
+  T extends VerificationStorage<F, M>,
+  F extends PasscodeType,
+  M extends Method
+>(
   ctx: Context,
   provider: Provider,
-  flow: PasscodeType,
-  identity: VerifiedIdentity
-) => {
-  const verificationStorage: VerificationResult = {
-    verification: {
-      flow,
-      expiresAt: dayjs().add(verificationTimeout, 'second').toISOString(),
-      ...identity,
-    },
-  };
-  await provider.interactionResult(ctx.req, ctx.res, verificationStorage);
-};
+  verification: T
+) => provider.interactionResult(ctx.req, ctx.res, { verification });
+
+export const generateVerificationExpirationTime = () =>
+  dayjs().add(verificationTimeout, 'second').toISOString();

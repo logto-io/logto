@@ -16,11 +16,11 @@ import {
   updateUserById,
 } from '@/queries/user';
 import {
-  emailRegisterSessionResultGuard,
-  emailSignInSessionResultGuard,
+  emailRegisterSessionStorageGuard,
+  emailSignInSessionStorageGuard,
   passcodeTypeGuard,
-  smsRegisterSessionResultGuard,
-  smsSignInSessionResultGuard,
+  smsRegisterSessionStorageGuard,
+  smsSignInSessionStorageGuard,
 } from '@/routes/session/types';
 import assertThat from '@/utils/assert-that';
 
@@ -31,6 +31,7 @@ import {
   getRoutePrefix,
   getVerificationStorageFromInteraction,
   validateAndCheckWhetherVerificationExpires,
+  generateVerificationExpirationTime,
 } from './utils';
 
 export const registerRoute = getRoutePrefix('register', 'passwordless');
@@ -112,7 +113,11 @@ export default function passwordlessRoutes<T extends AnonymousRouter>(
 
       await verifyPasscode(jti, flow, code, { phone });
 
-      await assignVerificationResult(ctx, provider, flow, { phone });
+      await assignVerificationResult(ctx, provider, {
+        flow,
+        phone,
+        expiresAt: generateVerificationExpirationTime(),
+      });
       ctx.status = 204;
 
       return next();
@@ -139,7 +144,11 @@ export default function passwordlessRoutes<T extends AnonymousRouter>(
 
       await verifyPasscode(jti, flow, code, { email });
 
-      await assignVerificationResult(ctx, provider, flow, { email });
+      await assignVerificationResult(ctx, provider, {
+        flow,
+        email,
+        expiresAt: generateVerificationExpirationTime(),
+      });
       ctx.status = 204;
 
       return next();
@@ -150,7 +159,7 @@ export default function passwordlessRoutes<T extends AnonymousRouter>(
     const verificationStorage = await getVerificationStorageFromInteraction(
       ctx,
       provider,
-      smsSignInSessionResultGuard
+      smsSignInSessionStorageGuard
     );
 
     const type = getPasswordlessRelatedLogType(PasscodeType.SignIn, 'sms');
@@ -177,7 +186,7 @@ export default function passwordlessRoutes<T extends AnonymousRouter>(
     const verificationStorage = await getVerificationStorageFromInteraction(
       ctx,
       provider,
-      emailSignInSessionResultGuard
+      emailSignInSessionStorageGuard
     );
 
     const type = getPasswordlessRelatedLogType(PasscodeType.SignIn, 'email');
@@ -204,7 +213,7 @@ export default function passwordlessRoutes<T extends AnonymousRouter>(
     const verificationStorage = await getVerificationStorageFromInteraction(
       ctx,
       provider,
-      smsRegisterSessionResultGuard
+      smsRegisterSessionStorageGuard
     );
 
     const type = getPasswordlessRelatedLogType(PasscodeType.Register, 'sms');
@@ -231,7 +240,7 @@ export default function passwordlessRoutes<T extends AnonymousRouter>(
     const verificationStorage = await getVerificationStorageFromInteraction(
       ctx,
       provider,
-      emailRegisterSessionResultGuard
+      emailRegisterSessionStorageGuard
     );
 
     const type = getPasswordlessRelatedLogType(PasscodeType.Register, 'email');
