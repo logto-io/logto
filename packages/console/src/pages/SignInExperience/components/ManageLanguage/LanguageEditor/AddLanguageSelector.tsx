@@ -7,6 +7,7 @@ import Plus from '@/assets/images/plus.svg';
 import SearchIcon from '@/assets/images/search.svg';
 import Button from '@/components/Button';
 import TextInput from '@/components/TextInput';
+import { onKeyDownHandler } from '@/utilities/a11y';
 
 import * as style from './AddLanguageSelector.module.scss';
 
@@ -54,6 +55,12 @@ const AddLanguageSelector = ({ options, onSelect }: Props) => {
     };
   }, [isDropDownOpen, searchInputRef]);
 
+  const handleSelect = (languageTag: LanguageTag) => {
+    onSelect(languageTag);
+    setIsDropDownOpen(false);
+    setSearchInputValue('');
+  };
+
   return (
     <div ref={selectorRef} className={style.languageSelector}>
       <div className={style.input}>
@@ -81,15 +88,16 @@ const AddLanguageSelector = ({ options, onSelect }: Props) => {
       {isDropDownOpen && filteredOptions.length > 0 && (
         <ul className={style.dropDown}>
           {filteredOptions.map((languageTag) => (
-            // TODO: @yijun
-            // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-noninteractive-element-interactions
             <li
               key={languageTag}
+              role="tab"
+              tabIndex={0}
               className={style.dropDownItem}
+              onKeyDown={onKeyDownHandler(() => {
+                handleSelect(languageTag);
+              })}
               onClick={() => {
-                onSelect(languageTag);
-                setIsDropDownOpen(false);
-                setSearchInputValue('');
+                handleSelect(languageTag);
               }}
             >
               <div className={style.languageName}>{uiLanguageNameMapping[languageTag]}</div>
