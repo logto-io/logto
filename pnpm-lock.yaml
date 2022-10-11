@@ -412,9 +412,9 @@ importers:
       '@parcel/core': 2.7.0
       '@parcel/transformer-sass': 2.7.0
       '@silverhand/eslint-config': 1.0.0
-      '@silverhand/eslint-config-react': 1.0.0
+      '@silverhand/eslint-config-react': 1.1.0
       '@silverhand/ts-config': 1.0.0
-      '@silverhand/ts-config-react': 1.0.0
+      '@silverhand/ts-config-react': 1.1.0
       '@types/react': ^18.0.0
       '@types/react-dom': ^18.0.0
       cross-env: ^7.0.3
@@ -439,9 +439,9 @@ importers:
       '@parcel/core': 2.7.0
       '@parcel/transformer-sass': 2.7.0_@parcel+core@2.7.0
       '@silverhand/eslint-config': 1.0.0_swk2g7ygmfleszo5c33j4vooni
-      '@silverhand/eslint-config-react': 1.0.0_qoomm4vc6ijs52fnjlal4yoenm
+      '@silverhand/eslint-config-react': 1.1.0_qoomm4vc6ijs52fnjlal4yoenm
       '@silverhand/ts-config': 1.0.0_typescript@4.7.4
-      '@silverhand/ts-config-react': 1.0.0_typescript@4.7.4
+      '@silverhand/ts-config-react': 1.1.0_typescript@4.7.4
       '@types/react': 18.0.15
       '@types/react-dom': 18.0.6
       cross-env: 7.0.3
@@ -3899,27 +3899,6 @@ packages:
     resolution: {integrity: sha512-RNiOoTPkptFtSVzQevY/yWtZwf/RxyVnPy/OcA9HBM3MlGDnBEYL5B41H0MTn0Uec8Hi+2qUtTfG2WWZBmMejQ==}
     dev: true
 
-  /@silverhand/eslint-config-react/1.0.0_qoomm4vc6ijs52fnjlal4yoenm:
-    resolution: {integrity: sha512-t+DOdP51k0iP84nkOhnUOTqgXFhy3k6MKckZIzX8h7Poz4o0Xr6Nmeslksce49Mticxw4KE/gLk4X6cidpjNaA==}
-    engines: {node: ^16.0.0 || ^18.0.0}
-    peerDependencies:
-      stylelint: ^14.9.1
-    dependencies:
-      '@silverhand/eslint-config': 1.0.0_swk2g7ygmfleszo5c33j4vooni
-      eslint-config-xo-react: 0.27.0_5dhhqh7zhie7fohiouyxntxzve
-      eslint-plugin-react: 7.29.3_eslint@8.21.0
-      eslint-plugin-react-hooks: 4.3.0_eslint@8.21.0
-      stylelint: 14.9.1
-      stylelint-config-xo-scss: 0.15.0_uyk3cwxn3favstz4untq233szu
-    transitivePeerDependencies:
-      - eslint
-      - eslint-import-resolver-webpack
-      - postcss
-      - prettier
-      - supports-color
-      - typescript
-    dev: true
-
   /@silverhand/eslint-config-react/1.1.0_3jdvf2aalbcoibv3m53iflhmym:
     resolution: {integrity: sha512-I9mmOLMaGtdqr6qMFnYLBUFfhkfLJxl1X9venb+Ek9+IvVr9x9LsgVpgB8CYXIlwwJCUdXAE0VmocISvbBr9BQ==}
     engines: {node: ^16.0.0 || ^18.0.0}
@@ -3933,6 +3912,28 @@ packages:
       eslint-plugin-react-hooks: 4.3.0_eslint@8.21.0
       stylelint: 14.9.1
       stylelint-config-xo-scss: 0.15.0_eqpuutlgonckfyjzwkrpusdvaa
+    transitivePeerDependencies:
+      - eslint
+      - eslint-import-resolver-webpack
+      - postcss
+      - prettier
+      - supports-color
+      - typescript
+    dev: true
+
+  /@silverhand/eslint-config-react/1.1.0_qoomm4vc6ijs52fnjlal4yoenm:
+    resolution: {integrity: sha512-I9mmOLMaGtdqr6qMFnYLBUFfhkfLJxl1X9venb+Ek9+IvVr9x9LsgVpgB8CYXIlwwJCUdXAE0VmocISvbBr9BQ==}
+    engines: {node: ^16.0.0 || ^18.0.0}
+    peerDependencies:
+      stylelint: ^14.9.1
+    dependencies:
+      '@silverhand/eslint-config': 1.0.0_swk2g7ygmfleszo5c33j4vooni
+      eslint-config-xo-react: 0.27.0_5dhhqh7zhie7fohiouyxntxzve
+      eslint-plugin-jsx-a11y: 6.6.1_eslint@8.21.0
+      eslint-plugin-react: 7.29.3_eslint@8.21.0
+      eslint-plugin-react-hooks: 4.3.0_eslint@8.21.0
+      stylelint: 14.9.1
+      stylelint-config-xo-scss: 0.15.0_uyk3cwxn3favstz4untq233szu
     transitivePeerDependencies:
       - eslint
       - eslint-import-resolver-webpack
@@ -4016,6 +4017,16 @@ packages:
 
   /@silverhand/ts-config-react/1.0.0_typescript@4.7.4:
     resolution: {integrity: sha512-Jto2iq5sM0/0f4X9T6nl8AvU2cl1A37aoGzLM3EU3P1LOATpbqnTHeoAra1ZyDcQBoYHyr4pRAvHACjWKQynlg==}
+    engines: {node: ^16.0.0 || ^18.0.0}
+    peerDependencies:
+      typescript: ^4.7.4
+    dependencies:
+      '@silverhand/ts-config': 1.0.0_typescript@4.7.4
+      typescript: 4.7.4
+    dev: true
+
+  /@silverhand/ts-config-react/1.1.0_typescript@4.7.4:
+    resolution: {integrity: sha512-vDJIJeIIIG6rkWtKXPEr6JREbZaaejFB9jaetiFCWIcrXb/H28M1LA/OmM+dDxKh/GhzIfX3MxVFbi8e0Q6oNA==}
     engines: {node: ^16.0.0 || ^18.0.0}
     peerDependencies:
       typescript: ^4.7.4
