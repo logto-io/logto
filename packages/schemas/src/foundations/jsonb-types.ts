@@ -1,4 +1,4 @@
-import { hexColorRegEx, languageKeys } from '@logto/core-kit';
+import { hexColorRegEx } from '@logto/core-kit';
 import { languageTagGuard } from '@logto/language-kit';
 import { z } from 'zod';
 
@@ -124,8 +124,6 @@ export type TermsOfUse = z.infer<typeof termsOfUseGuard>;
 export const languageInfoGuard = z.object({
   autoDetect: z.boolean(),
   fallbackLanguage: languageTagGuard,
-  /** @deprecated */
-  fixedLanguage: z.enum(languageKeys),
 });
 
 export type LanguageInfo = z.infer<typeof languageInfoGuard>;

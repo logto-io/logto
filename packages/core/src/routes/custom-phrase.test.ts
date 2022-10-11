@@ -57,7 +57,6 @@ const findDefaultSignInExperience = jest.fn(
     languageInfo: {
       autoDetect: true,
       fallbackLanguage: mockFallbackLanguage,
-      fixedLanguage: mockFallbackLanguage,
     },
   })
 );
