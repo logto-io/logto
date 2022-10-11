@@ -2,6 +2,8 @@ import { languages, LanguageTag } from '@logto/language-kit';
 import classNames from 'classnames';
 import { useEffect, useRef } from 'react';
 
+import { onKeyDownHandler } from '@/utilities/a11y';
+
 import * as style from './LanguageItem.module.scss';
 
 type Props = {
@@ -19,18 +21,22 @@ const LanguageItem = ({ languageTag, isSelected, onClick }: Props) => {
     }
   }, [isSelected]);
 
+  const handleSelect = () => {
+    if (isSelected) {
+      return;
+    }
+    onClick();
+  };
+
   return (
-    // TODO: @yijun
-    // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
     <div
       ref={itemRef}
+      role="tab"
+      tabIndex={0}
+      aria-selected={isSelected}
       className={classNames(style.languageItem, isSelected && style.selected)}
-      onClick={() => {
-        if (isSelected) {
-          return;
-        }
-        onClick();
-      }}
+      onClick={handleSelect}
+      onKeyDown={onKeyDownHandler(handleSelect)}
     >
       <div className={style.languageName}>{languages[languageTag]}</div>
       <div className={style.languageTag}>{languageTag}</div>
