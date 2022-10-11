@@ -16,6 +16,7 @@ import {
   mockColor,
 } from '@/__mocks__';
 import * as signInExpLib from '@/lib/sign-in-experience';
+import * as signInMethodsLib from '@/lib/sign-in-experience/sign-in-methods';
 import { createRequester } from '@/utils/test-utils';
 
 import signInExperiencesRoutes from './sign-in-experience';
@@ -139,7 +140,7 @@ describe('PATCH /sign-in-exp', () => {
 
     const validateBranding = jest.spyOn(signInExpLib, 'validateBranding');
     const validateTermsOfUse = jest.spyOn(signInExpLib, 'validateTermsOfUse');
-    const validateSignInMethods = jest.spyOn(signInExpLib, 'validateSignInMethods');
+    const validateSignInMethods = jest.spyOn(signInMethodsLib, 'validateSignInMethods');
 
     const response = await signInExperienceRequester.patch('/sign-in-exp').send({
       color: mockColor,

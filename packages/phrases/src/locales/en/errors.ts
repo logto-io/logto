@@ -105,6 +105,8 @@ const errors = {
     enabled_connector_not_found: 'Enabled {{type}} connector not found.',
     not_one_and_only_one_primary_sign_in_method:
       'There must be one and only one primary sign-in method. Please check your input.',
+    username_requires_password: 'Must enable set a password for username sign up identifier.',
+    passwordless_requires_verify: 'Must enable verify for email/phone sign up identifier.',
   },
   localization: {
     cannot_delete_default_language:

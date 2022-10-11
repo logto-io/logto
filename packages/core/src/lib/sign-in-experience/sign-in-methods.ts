@@ -1,30 +1,9 @@
-import {
-  Branding,
-  BrandingStyle,
-  SignInMethods,
-  SignInMethodState,
-  TermsOfUse,
-} from '@logto/schemas';
+import { ConnectorType, SignInMethods, SignInMethodState } from '@logto/schemas';
 import { Optional } from '@silverhand/essentials';
 
-import { ConnectorType, LogtoConnector } from '@/connectors/types';
+import { LogtoConnector } from '@/connectors/types';
 import RequestError from '@/errors/RequestError';
 import assertThat from '@/utils/assert-that';
-
-export const validateBranding = (branding: Branding) => {
-  if (branding.style === BrandingStyle.Logo_Slogan) {
-    assertThat(branding.slogan?.trim(), 'sign_in_experiences.empty_slogan');
-  }
-
-  assertThat(branding.logoUrl.trim(), 'sign_in_experiences.empty_logo');
-};
-
-export const validateTermsOfUse = (termsOfUse: TermsOfUse) => {
-  assertThat(
-    !termsOfUse.enabled || termsOfUse.contentUrl,
-    'sign_in_experiences.empty_content_url_of_terms_of_use'
-  );
-};
 
 export const isEnabled = (state: SignInMethodState) => state !== SignInMethodState.Disabled;
 

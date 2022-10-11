@@ -106,6 +106,8 @@ const errors = {
     enabled_connector_not_found: 'Etkin {{type}} bağlayıcı bulunamadı.',
     not_one_and_only_one_primary_sign_in_method:
       'Yalnızca bir tane birincil oturum açma yöntemi olmalıdır. Lütfen inputu kontrol ediniz.',
+    username_requires_password: 'Must enable set a password for username sign up identifier.', // UNTRANSLATED
+    passwordless_requires_verify: 'Must enable verify for email/phone sign up identifier.', // UNTRANSLATED
   },
   localization: {
     cannot_delete_default_language:

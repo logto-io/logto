@@ -6,6 +6,7 @@ import {
   validateTermsOfUse,
   validateSignInMethods,
   isEnabled,
+  validateSignUp,
 } from '@/lib/sign-in-experience';
 import koaGuard from '@/middleware/koa-guard';
 import {
@@ -33,7 +34,7 @@ export default function signInExperiencesRoutes<T extends AuthedRouter>(router: 
     }),
     async (ctx, next) => {
       const { socialSignInConnectorTargets, ...rest } = ctx.guard.body;
-      const { branding, termsOfUse, signInMethods } = rest;
+      const { branding, termsOfUse, signInMethods, signUp } = rest;
 
       if (branding) {
         validateBranding(branding);
@@ -60,6 +61,10 @@ export default function signInExperiencesRoutes<T extends AuthedRouter>(router: 
           filteredSocialSignInConnectorTargets,
           enabledConnectors
         );
+      }
+
+      if (signUp) {
+        validateSignUp(signUp, enabledConnectors);
       }
 
       // Update socialSignInConnectorTargets only when social sign-in is enabled.
