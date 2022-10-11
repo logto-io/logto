@@ -10,6 +10,7 @@ import {
   Color,
   SignUpIdentifier,
   SignInIdentifier,
+  SignUp,
 } from '@logto/schemas';
 
 export const mockSignInExperience: SignInExperience = {
@@ -86,4 +87,10 @@ export const mockSignInMethods: SignInMethods = {
   email: SignInMethodState.Disabled,
   sms: SignInMethodState.Disabled,
   social: SignInMethodState.Disabled,
+};
+
+export const mockSignUp: SignUp = {
+  identifier: SignUpIdentifier.Username,
+  password: true,
+  verify: false,
 };

@@ -108,6 +108,8 @@ const errors = {
     enabled_connector_not_found: 'Conector {{type}} ativado não encontrado.',
     not_one_and_only_one_primary_sign_in_method:
       'Deve haver um e apenas um método de login principal. Por favor, verifique sua entrada.',
+    username_requires_password: 'Must enable set a password for username sign up identifier.', // UNTRANSLATED
+    passwordless_requires_verify: 'Must enable verify for email/phone sign up identifier.', // UNTRANSLATED
   },
   localization: {
     cannot_delete_default_language:
