@@ -157,7 +157,7 @@ export const inquireOfficialConnectors = async (initialAnswer?: boolean) => {
   const { value } = await inquirer.prompt<{ value: boolean }>(
     {
       name: 'value',
-      message: 'Do you want to install official connectors?',
+      message: 'Do you want to add official connectors?',
       type: 'confirm',
       default: true,
     },

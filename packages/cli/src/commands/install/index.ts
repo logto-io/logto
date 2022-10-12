@@ -81,7 +81,7 @@ const install: CommandModule<unknown, InstallArgs> = {
       },
       officialConnectors: {
         alias: 'oc',
-        describe: 'Install official connectors after downloading Logto',
+        describe: 'Add official connectors after downloading Logto',
         type: 'boolean',
       },
     }),
