@@ -37,7 +37,11 @@ const installLogto = async ({ path, skipSeed, officialConnectors }: InstallArgs)
 
   // Seed database
   if (skipSeed) {
-    log.info(`You can use ${chalk.green('db seed')} command to seed database when ready.`);
+    log.info(
+      `Skipped database seeding.\n\n' + '  You can use the ${chalk.green(
+        'db seed'
+      )} command to seed database when ready.\n`
+    );
   } else {
     await seedDatabase(instancePath);
   }
@@ -48,6 +52,11 @@ const installLogto = async ({ path, skipSeed, officialConnectors }: InstallArgs)
   // Add official connectors
   if (await inquireOfficialConnectors(officialConnectors)) {
     await addOfficialConnectors(instancePath);
+  } else {
+    log.info(
+      'Skipped adding official connectors.\n\n' +
+        `  You can use the ${chalk.green('connector add')} command to add connectors at any time.\n`
+    );
   }
 
   // Finale

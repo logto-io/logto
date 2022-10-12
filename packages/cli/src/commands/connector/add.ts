@@ -1,5 +1,6 @@
 import { CommandModule } from 'yargs';
 
+import { log } from '../../utilities';
 import { addConnectors, addOfficialConnectors, inquireInstancePath } from './utils';
 
 const add: CommandModule<unknown, { packages: string[]; path?: string; official: boolean }> = {
@@ -26,10 +27,12 @@ const add: CommandModule<unknown, { packages: string[]; path?: string; official:
     const instancePath = await inquireInstancePath(path);
 
     if (official) {
-      return addOfficialConnectors(instancePath);
+      await addOfficialConnectors(instancePath);
     }
 
-    return addConnectors(instancePath, packageNames);
+    await addConnectors(instancePath, packageNames);
+
+    log.info('Restart your Logto instance to get the changes reflected.');
   },
 };
 
