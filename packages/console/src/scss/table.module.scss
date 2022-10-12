@@ -14,8 +14,8 @@ tr.clickable {
 
 .scrollable {
   overflow-y: auto;
-  border: 1px solid var(--color-neutral-90);
-  border-radius: _.unit(2);
+  border: 1px solid var(--color-divider);
+  border-radius: 12px;
 
   table {
     border: none;
