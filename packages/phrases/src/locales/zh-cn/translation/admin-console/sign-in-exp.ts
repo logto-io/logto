@@ -70,7 +70,7 @@ const sign_in_exp = {
       title: '语言',
       enable_auto_detect: '开启语言自动适配',
       description:
-        '基于用户的位置信息和相关设定，产品将展示最符合用户使用习惯的语言。你可以为产品添加翻译内容、选择语言代码和设定自定义语言，来延展产品的本地化需求。',
+        '基于用户自身的语言设定，产品将展示最符合用户使用习惯的语言。你可以为产品添加翻译内容、选择语言代码和设定自定义语言，来延展产品的本地化需求。',
       manage_language: '管理语言',
       default_language: '默认语言',
       default_language_description_auto:

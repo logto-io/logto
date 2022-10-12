@@ -111,8 +111,7 @@ const errors = {
   localization: {
     cannot_delete_default_language:
       '{{languageTag}} is set as your default language and can’t be deleted.', // UNTRANSLATED
-    invalid_translation_structure:
-      'You’re making changes to an added language. Check your translation and try again.', // UNTRANSLATED
+    invalid_translation_structure: 'Invalid data schemas. Please check your input and try again.', // UNTRANSLATED
   },
   swagger: {
     invalid_zod_type:

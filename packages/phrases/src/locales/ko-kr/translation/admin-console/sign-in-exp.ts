@@ -70,7 +70,7 @@ const sign_in_exp = {
       title: '언어',
       enable_auto_detect: 'Enable auto-detect', // UNTRANSLATED
       description:
-        "Your software detects the user's location and switches to the local language. You can add new languages by translating UI from English to another language.", // UNTRANSLATED
+        "Your software detects the user's locale setting and switches to the local language. You can add new languages by translating UI from English to another language.", // UNTRANSLATED
       manage_language: 'Manage language', // UNTRANSLATED
       default_language: 'Default language', // UNTRANSLATED
       default_language_description_auto:

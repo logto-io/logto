@@ -102,8 +102,7 @@ const errors = {
   },
   localization: {
     cannot_delete_default_language: '你已设置{{languageTag}}为你的默认语言，你无法删除默认语言。',
-    invalid_translation_structure:
-      '你正在修改新加语言的部分翻译，检查内容无误后，可尝试再次保存。无效的 translation 结构。请检查输入的 translation。',
+    invalid_translation_structure: '无效的数据格式，请检查你的输入并重试。',
   },
   swagger: {
     invalid_zod_type: '无效的 Zod 类型，请检查路由 guard 配置。',

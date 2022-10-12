@@ -73,7 +73,7 @@ const sign_in_exp = {
       title: 'LANGUAGES',
       enable_auto_detect: 'Enable auto-detect',
       description:
-        "Your software detects the user's location and switches to the local language. You can add new languages by translating UI from English to another language.",
+        "Your software detects the user's locale setting and switches to the local language. You can add new languages by translating UI from English to another language.",
       manage_language: 'Manage language',
       default_language: 'Default language',
       default_language_description_auto:

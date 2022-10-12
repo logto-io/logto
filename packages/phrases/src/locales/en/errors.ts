@@ -110,8 +110,7 @@ const errors = {
   localization: {
     cannot_delete_default_language:
       '{{languageTag}} is set as your default language and can’t be deleted.',
-    invalid_translation_structure:
-      'You’re making changes to an added language. Check your translation and try again.',
+    invalid_translation_structure: 'Invalid data schemas. Please check your input and try again.',
   },
   swagger: {
     invalid_zod_type: 'Invalid Zod type. Please check route guard config.',
