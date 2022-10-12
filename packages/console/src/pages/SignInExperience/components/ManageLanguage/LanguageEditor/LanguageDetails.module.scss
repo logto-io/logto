@@ -44,6 +44,8 @@
           font: var(--font-label-large);
           color: var(--color-text);
           background-color: var(--color-layer-1);
+          position: sticky;
+          top: 0;
         }
 
         > th:first-child {
