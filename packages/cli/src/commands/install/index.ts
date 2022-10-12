@@ -3,6 +3,7 @@ import { CommandModule } from 'yargs';
 
 import { getDatabaseUrlFromConfig } from '../../database';
 import { log } from '../../utilities';
+import { addOfficialConnectors } from '../connector/utils';
 import {
   validateNodeVersion,
   inquireInstancePath,
@@ -12,14 +13,16 @@ import {
   createEnv,
   logFinale,
   decompress,
+  inquireOfficialConnectors,
 } from './utils';
 
 export type InstallArgs = {
   path?: string;
   skipSeed: boolean;
+  officialConnectors?: boolean;
 };
 
-const installLogto = async ({ path, skipSeed }: InstallArgs) => {
+const installLogto = async ({ path, skipSeed, officialConnectors }: InstallArgs) => {
   validateNodeVersion();
 
   // Get instance path
@@ -34,7 +37,11 @@ const installLogto = async ({ path, skipSeed }: InstallArgs) => {
 
   // Seed database
   if (skipSeed) {
-    log.info(`You can use ${chalk.green('db seed')} command to seed database when ready.`);
+    log.info(
+      `Skipped database seeding.\n\n' + '  You can use the ${chalk.green(
+        'db seed'
+      )} command to seed database when ready.\n`
+    );
   } else {
     await seedDatabase(instancePath);
   }
@@ -42,11 +49,21 @@ const installLogto = async ({ path, skipSeed }: InstallArgs) => {
   // Save to dot env
   await createEnv(instancePath, await getDatabaseUrlFromConfig());
 
+  // Add official connectors
+  if (await inquireOfficialConnectors(officialConnectors)) {
+    await addOfficialConnectors(instancePath);
+  } else {
+    log.info(
+      'Skipped adding official connectors.\n\n' +
+        `  You can use the ${chalk.green('connector add')} command to add connectors at any time.\n`
+    );
+  }
+
   // Finale
   logFinale(instancePath);
 };
 
-const install: CommandModule<unknown, { path?: string; skipSeed: boolean }> = {
+const install: CommandModule<unknown, InstallArgs> = {
   command: ['init', 'i', 'install'],
   describe: 'Download and run the latest Logto release',
   builder: (yargs) =>
@@ -62,9 +79,14 @@ const install: CommandModule<unknown, { path?: string; skipSeed: boolean }> = {
         type: 'boolean',
         default: false,
       },
+      officialConnectors: {
+        alias: 'oc',
+        describe: 'Add official connectors after downloading Logto',
+        type: 'boolean',
+      },
     }),
-  handler: async ({ path, skipSeed }) => {
-    await installLogto({ path, skipSeed });
+  handler: async ({ path, skipSeed, officialConnectors }) => {
+    await installLogto({ path, skipSeed, officialConnectors });
   },
 };
 
