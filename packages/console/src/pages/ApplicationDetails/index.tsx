@@ -7,6 +7,9 @@ import { Trans, useTranslation } from 'react-i18next';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import useSWR from 'swr';
 
+import Back from '@/assets/images/back.svg';
+import Delete from '@/assets/images/delete.svg';
+import More from '@/assets/images/more.svg';
 import ActionMenu, { ActionMenuItem } from '@/components/ActionMenu';
 import ApplicationIcon from '@/components/ApplicationIcon';
 import Button from '@/components/Button';
@@ -19,9 +22,6 @@ import LinkButton from '@/components/LinkButton';
 import TabNav, { TabNavItem } from '@/components/TabNav';
 import useApi, { RequestError } from '@/hooks/use-api';
 import useDocumentationUrl from '@/hooks/use-documentation-url';
-import Back from '@/icons/Back';
-import Delete from '@/icons/Delete';
-import More from '@/icons/More';
 import * as detailsStyles from '@/scss/details.module.scss';
 import { applicationTypeI18nKey } from '@/types/applications';
 

@@ -1,12 +1,13 @@
 import { useLogto, IdTokenClaims } from '@logto/react';
 import classNames from 'classnames';
-import { useEffect, useRef, useState, MouseEvent } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import SignOut from '@/assets/images/sign-out.svg';
 import Dropdown, { DropdownItem } from '@/components/Dropdown';
 import { Ring as Spinner } from '@/components/Spinner';
 import { generateAvatarPlaceHolderById } from '@/consts/avatars';
-import SignOut from '@/icons/SignOut';
+import { onKeyDownHandler } from '@/utilities/a11y';
 
 import UserInfoSkeleton from '../UserInfoSkeleton';
 import * as styles from './index.module.scss';
@@ -43,13 +44,18 @@ const UserInfo = () => {
     <>
       <div
         ref={anchorRef}
+        role="button"
+        tabIndex={0}
         className={classNames(styles.container, showDropdown && styles.active)}
+        onKeyDown={onKeyDownHandler(() => {
+          setShowDropdown(true);
+        })}
         onClick={() => {
           setShowDropdown(true);
         }}
       >
         {/* TODO: revert after SDK updated */}
-        <img src={picture ? String(picture) : generateAvatarPlaceHolderById(id)} />
+        <img src={picture ? String(picture) : generateAvatarPlaceHolderById(id)} alt="avatar" />
         <div className={styles.wrapper}>
           <div className={styles.name}>{username}</div>
         </div>
@@ -66,7 +72,7 @@ const UserInfo = () => {
         <DropdownItem
           className={classNames(styles.dropdownItem, isLoading && styles.loading)}
           icon={<SignOut className={styles.signOutIcon} />}
-          onClick={(event: MouseEvent<HTMLLIElement>) => {
+          onClick={(event) => {
             event.stopPropagation();
 
             if (isLoading) {

@@ -1,4 +1,4 @@
-import en from './en';
+import { LocalePhrase } from '../types';
 
 const translation = {
   input: {
@@ -61,6 +61,7 @@ const translation = {
     reset_password_description_sms:
       'Entrez le numéro de téléphone associé à votre compte et nous vous enverrons le code de vérification par SMS pour réinitialiser votre mot de passe.',
     new_password: 'Nouveau mot de passe',
+    password_changed: 'Password Changed', // UNTRANSLATED
   },
   error: {
     username_password_mismatch: "Le nom d'utilisateur et le mot de passe ne correspondent pas",
@@ -84,7 +85,7 @@ const translation = {
   },
 };
 
-const fr: typeof en = Object.freeze({
+const fr: LocalePhrase = Object.freeze({
   translation,
 });
 

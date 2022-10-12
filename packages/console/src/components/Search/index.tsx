@@ -1,7 +1,7 @@
 import { FormEventHandler, KeyboardEventHandler, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import SearchIcon from '@/icons/Search';
+import SearchIcon from '@/assets/images/search.svg';
 
 import Button from '../Button';
 import TextInput from '../TextInput';

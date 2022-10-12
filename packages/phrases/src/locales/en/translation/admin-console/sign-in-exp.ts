@@ -71,13 +71,34 @@ const sign_in_exp = {
     },
     languages: {
       title: 'LANGUAGES',
-      mode: 'Language mode',
-      auto: 'Auto',
-      fixed: 'Fixed',
-      fallback_language: 'Fallback language',
-      fallback_language_tip:
-        'Which language to fall back if Logto finds no proper language phrase-set.',
-      fixed_language: 'Fixed language',
+      enable_auto_detect: 'Enable auto detect',
+      description:
+        "Your software detects the user's location and switches to the local language. You can add new locales by translating UI from English to another language.",
+      manage_language: 'Manage language',
+      default_language: 'Default language',
+      default_language_description_auto:
+        'The default language will be used when a text segment is missing translation.',
+      default_language_description_fixed:
+        'When auto detect is off, the default language is the only language your software will show. Turn on auto detect for language customization.',
+    },
+    manage_language: {
+      title: 'Manage language',
+      subtitle:
+        'Localize the product experience by adding languages and translations. Your contribution can be set as the default language.',
+      add_language: 'Add Language',
+      logto_provided: 'Logto provided',
+      key: 'Key',
+      logto_source_language: 'Logto source language',
+      custom_values: 'Custom values',
+      clear_all: 'Clear all',
+      unsaved_description: 'Changes won’t be saved if you leave this page without saving.',
+      deletion_title: 'Do you want to delete the added language?',
+      deletion_description:
+        'After deletion, your users won’t be able to browse in that language again.',
+      default_language_deletion_title: 'Default language can’t be deleted.',
+      default_language_deletion_description:
+        '{{language}} is set as your default language and can’t be deleted. ',
+      got_it: 'Got It',
     },
     authentication: {
       title: 'AUTHENTICATION',

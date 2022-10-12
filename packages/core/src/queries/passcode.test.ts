@@ -1,13 +1,9 @@
 import { Passcodes, PasscodeType } from '@logto/schemas';
+import { convertToIdentifiers, convertToPrimitiveOrSql, excludeAutoSetFields } from '@logto/shared';
 import { createMockPool, createMockQueryResult, sql } from 'slonik';
 import { snakeCase } from 'snake-case';
 
 import { mockPasscode } from '@/__mocks__';
-import {
-  convertToIdentifiers,
-  convertToPrimitiveOrSql,
-  excludeAutoSetFields,
-} from '@/database/utils';
 import envSet from '@/env-set';
 import { DeletionError } from '@/errors/SlonikError';
 import { expectSqlAssert, QueryType } from '@/utils/test-utils';
@@ -133,12 +129,12 @@ describe('passcode query', () => {
     const ids = ['foo', 'foo2'];
     const expectSql = sql`
       delete from ${table}
-      where ${fields.id} in (${ids.join(',')})
+      where ${fields.id} in (${sql.join(ids, sql`,`)})
     `;
 
     mockQuery.mockImplementationOnce(async (sql, values) => {
       expectSqlAssert(sql, expectSql.sql);
-      expect(values).toEqual([ids.join(',')]);
+      expect(values).toEqual(ids);
 
       return createMockQueryResult([mockPasscode, mockPasscode]);
     });
@@ -150,12 +146,12 @@ describe('passcode query', () => {
     const ids = ['foo', 'foo2'];
     const expectSql = sql`
       delete from ${table}
-      where ${fields.id} in (${ids.join(',')})
+      where ${fields.id} in (${sql.join(ids, sql`,`)})
     `;
 
     mockQuery.mockImplementationOnce(async (sql, values) => {
       expectSqlAssert(sql, expectSql.sql);
-      expect(values).toEqual([ids.join(',')]);
+      expect(values).toEqual(ids);
 
       return createMockQueryResult([mockPasscode]);
     });

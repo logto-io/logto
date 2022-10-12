@@ -110,10 +110,13 @@ const errors = {
     enabled_connector_not_found: 'Etkin {{type}} bağlayıcı bulunamadı.',
     not_one_and_only_one_primary_sign_in_method:
       'Yalnızca bir tane birincil oturum açma yöntemi olmalıdır. Lütfen inputu kontrol ediniz.',
+    unsupported_default_language: 'Default language {{language}} is unsupported.', // UNTRANSLATED
   },
   localization: {
     cannot_delete_default_language:
-      'You cannot delete {{languageKey}} language since it is used as default language in sign-in experience.', // UNTRANSLATED
+      'You cannot delete {{languageTag}} language since it is used as default language in sign-in experience.', // UNTRANSLATED
+    invalid_translation_structure:
+      'Invalid translation structure. Please check the input translation.', // UNTRANSLATED
   },
   swagger: {
     invalid_zod_type:

@@ -27,6 +27,16 @@
     top: 0%;
   }
 
+  &.arrowRight::after {
+    top: 50%;
+    left: 100%;
+  }
+
+  &.arrowLeft::after {
+    top: 50%;
+    left: 0%;
+  }
+
   &.start::after {
     left: _.unit(10);
   }

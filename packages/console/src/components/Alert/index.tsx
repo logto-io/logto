@@ -2,8 +2,8 @@ import { AdminConsoleKey } from '@logto/phrases';
 import classNames from 'classnames';
 import { ReactNode } from 'react';
 
+import Info from '@/assets/images/info.svg';
 import LinkButton from '@/components/LinkButton';
-import Info from '@/icons/Info';
 
 import Button from '../Button';
 import * as styles from './index.module.scss';

@@ -1,4 +1,5 @@
 import { CreateUser, Users } from '@logto/schemas';
+import { convertToIdentifiers } from '@logto/shared';
 import decamelize from 'decamelize';
 
 import envSet from '@/env-set';
@@ -6,7 +7,6 @@ import { InsertionError } from '@/errors/SlonikError';
 import { createTestPool } from '@/utils/test-utils';
 
 import { buildInsertInto } from './insert-into';
-import { convertToIdentifiers } from './utils';
 
 const poolSpy = jest.spyOn(envSet, 'pool', 'get');
 

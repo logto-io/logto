@@ -71,12 +71,34 @@ const sign_in_exp = {
     },
     languages: {
       title: 'LÍNGUAS',
-      mode: 'Modo de idioma',
-      auto: 'automático',
-      fixed: 'Fixo',
-      fallback_language: 'Idioma fallback',
-      fallback_language_tip: 'Qual idioma usar se o Logto não encontrar o idioma requisitado.',
-      fixed_language: 'Idioma fixo',
+      enable_auto_detect: 'Enable auto detect', // UNTRANSLATED
+      description:
+        "Your software detects the user's location and switches to the local language. You can add new locales by translating UI from English to another language.", // UNTRANSLATED
+      manage_language: 'Manage language', // UNTRANSLATED
+      default_language: 'Default language', // UNTRANSLATED
+      default_language_description_auto:
+        'The default language will be used when a text segment is missing translation.', // UNTRANSLATED
+      default_language_description_fixed:
+        'When auto detect is off, the default language is the only language your software will show. Turn on auto detect for language customization.', // UNTRANSLATED
+    },
+    manage_language: {
+      title: 'Manage language', // UNTRANSLATED
+      subtitle:
+        'Localize the product experience by adding languages and translations. Your contribution can be set as the default language.', // UNTRANSLATED
+      add_language: 'Add Language', // UNTRANSLATED
+      logto_provided: 'Logto provided', // UNTRANSLATED
+      key: 'Key', // UNTRANSLATED
+      logto_source_language: 'Logto source language', // UNTRANSLATED
+      custom_values: 'Custom values', // UNTRANSLATED
+      clear_all: 'Clear all', // UNTRANSLATED
+      unsaved_description: 'Changes won’t be saved if you leave this page without saving.', // UNTRANSLATED
+      deletion_title: 'Do you want to delete the added language?', // UNTRANSLATED
+      deletion_description:
+        'After deletion, your users won’t be able to browse in that language again.', // UNTRANSLATED
+      default_language_deletion_title: 'Default language can’t be deleted.', // UNTRANSLATED
+      default_language_deletion_description:
+        '{{language}} is set as your default language and can’t be deleted. ', // UNTRANSLATED
+      got_it: 'Got It', // UNTRANSLATED
     },
     authentication: {
       title: 'AUTENTICAÇÃO',

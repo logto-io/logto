@@ -1,4 +1,4 @@
-import en from './en';
+import { LocalePhrase } from '../types';
 
 const translation = {
   input: {
@@ -58,6 +58,7 @@ const translation = {
     reset_password_description_sms:
       'Hesabınızla ilişkili telefon numarasını girin, şifrenizi sıfırlamak için size doğrulama kodunu kısa mesajla gönderelim.',
     new_password: 'Yeni Şifre',
+    password_changed: 'Password Changed', // UNTRANSLATED
   },
   error: {
     username_password_mismatch: 'Kullanıcı adı ve şifre eşleşmiyor.',
@@ -78,7 +79,7 @@ const translation = {
   },
 };
 
-const trTR: typeof en = Object.freeze({
+const trTR: LocalePhrase = Object.freeze({
   translation,
 });
 

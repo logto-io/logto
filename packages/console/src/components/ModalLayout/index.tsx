@@ -2,7 +2,7 @@ import { AdminConsoleKey } from '@logto/phrases';
 import classNames from 'classnames';
 import { ReactNode } from 'react';
 
-import Close from '@/icons/Close';
+import Close from '@/assets/images/close.svg';
 
 import Card from '../Card';
 import CardTitle from '../CardTitle';

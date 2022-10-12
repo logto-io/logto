@@ -9,13 +9,16 @@
     "bootstrap": "lerna bootstrap",
     "prepare": "if test \"$NODE_ENV\" != \"production\" && test \"$CI\" != \"true\" ; then husky install ; fi",
     "prepack": "lerna run --stream prepack",
-    "dev": "lerna run --stream prepack -- --incremental && lerna --ignore=@logto/integration-test run --parallel dev",
+    "dev": "lerna run --stream prepack -- --incremental && lerna --ignore=@logto/integration-tests run --parallel dev",
     "start": "cd packages/core && NODE_ENV=production node . --from-root",
-    "alteration": "cd packages/core && pnpm alteration",
+    "//": "For production, use NPM instead",
+    "cli": "cd packages/core && npm run cli",
+    "//": "For production, use NPM instead",
+    "alteration": "cd packages/core && npm run alteration",
     "ci:build": "lerna run --stream build",
     "ci:lint": "lerna run --parallel lint",
     "ci:stylelint": "lerna run --parallel stylelint",
-    "ci:test": "lerna run --parallel test:coverage"
+    "ci:test": "lerna run --parallel test:ci"
   },
   "devDependencies": {
     "@commitlint/cli": "^17.0.0",
