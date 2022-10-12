@@ -13,7 +13,7 @@ import tar from 'tar';
 import { z } from 'zod';
 
 import { connectorDirectory } from '../../constants';
-import { log } from '../../utilities';
+import { log, oraPromise } from '../../utilities';
 import { defaultPath } from '../install/utils';
 
 const coreDirectory = 'packages/core';
@@ -96,38 +96,40 @@ export const addConnectors = async (instancePath: string, packageNames: string[]
   log.info('Fetch connector metadata');
 
   const results = await Promise.all(
-    packageNames.map(async (packageName) => {
-      const run = async () => {
-        const { stdout } = await execPromise(`npm pack ${packageName} --json`, { cwd });
-        const result = npmPackResultGuard.parse(JSON.parse(stdout));
+    packageNames
+      .map((name) => normalizePackageName(name))
+      .map(async (packageName) => {
+        const run = async () => {
+          const { stdout } = await execPromise(`npm pack ${packageName} --json`, { cwd });
+          const result = npmPackResultGuard.parse(JSON.parse(stdout));
 
-        if (!result[0]) {
-          throw new Error(
-            `Unable to execute ${chalk.green('npm pack')} on package ${chalk.green(packageName)}`
-          );
+          if (!result[0]) {
+            throw new Error(
+              `Unable to execute ${chalk.green('npm pack')} on package ${chalk.green(packageName)}`
+            );
+          }
+
+          const { filename, name } = result[0];
+          const escapedFilename = filename.replace(/\//g, '-').replace(/@/g, '');
+          const tarPath = path.join(cwd, escapedFilename);
+          const packageDirectory = path.join(cwd, name.replace(/\//g, '-'));
+
+          await remove(packageDirectory);
+          await ensureDir(packageDirectory);
+          await tar.extract({ cwd: packageDirectory, file: tarPath, strip: 1 });
+          await unlink(tarPath);
+
+          log.succeed(`Added ${chalk.green(name)}`);
+        };
+
+        try {
+          await pRetry(run, { retries: 2 });
+        } catch (error: unknown) {
+          console.warn(`[${packageName}]`, error);
+
+          return packageName;
         }
-
-        const { filename, name } = result[0];
-        const escapedFilename = filename.replace(/\//g, '-').replace(/@/g, '');
-        const tarPath = path.join(cwd, escapedFilename);
-        const packageDirectory = path.join(cwd, name.replace(/\//g, '-'));
-
-        await remove(packageDirectory);
-        await ensureDir(packageDirectory);
-        await tar.extract({ cwd: packageDirectory, file: tarPath, strip: 1 });
-        await unlink(tarPath);
-
-        log.succeed(`Added ${chalk.green(name)}`);
-      };
-
-      try {
-        await pRetry(run, { retries: 2 });
-      } catch (error: unknown) {
-        console.warn(`[${packageName}]`, error);
-
-        return packageName;
-      }
-    })
+      })
   );
 
   const errorPackages = results.filter(Boolean);
@@ -146,7 +148,7 @@ export const addConnectors = async (instancePath: string, packageNames: string[]
 
 const officialConnectorPrefix = '@logto/connector-';
 
-export const fetchOfficialConnectorList = async () => {
+const fetchOfficialConnectorList = async () => {
   const { stdout } = await execPromise(`npm search ${officialConnectorPrefix} --json`);
   const packages = z
     .object({ name: z.string() })
@@ -159,4 +161,12 @@ export const fetchOfficialConnectorList = async () => {
       (excluded) => !name.slice(officialConnectorPrefix.length).startsWith(excluded)
     )
   );
+};
+
+export const addOfficialConnectors = async (instancePath: string) => {
+  const packages = await oraPromise(fetchOfficialConnectorList(), {
+    text: 'Fetch official connector list',
+    prefixText: chalk.blue('[info]'),
+  });
+  await addConnectors(instancePath, packages);
 };

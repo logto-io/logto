@@ -1,13 +1,6 @@
-import chalk from 'chalk';
 import { CommandModule } from 'yargs';
 
-import { oraPromise } from '../../utilities';
-import {
-  addConnectors,
-  fetchOfficialConnectorList,
-  inquireInstancePath,
-  normalizePackageName,
-} from './utils';
+import { addConnectors, addOfficialConnectors, inquireInstancePath } from './utils';
 
 const add: CommandModule<unknown, { packages: string[]; path?: string; official: boolean }> = {
   command: ['add [packages...]', 'a', 'install', 'i'],
@@ -32,14 +25,11 @@ const add: CommandModule<unknown, { packages: string[]; path?: string; official:
   handler: async ({ packages: packageNames, path, official }) => {
     const instancePath = await inquireInstancePath(path);
 
-    const packages = official
-      ? await oraPromise(fetchOfficialConnectorList(), {
-          text: 'Fetch official connector list',
-          prefixText: chalk.blue('[info]'),
-        })
-      : packageNames.map((name) => normalizePackageName(name));
+    if (official) {
+      return addOfficialConnectors(instancePath);
+    }
 
-    await addConnectors(instancePath, packages);
+    return addConnectors(instancePath, packageNames);
   },
 };
 
