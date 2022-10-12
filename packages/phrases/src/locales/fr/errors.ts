@@ -113,13 +113,12 @@ const errors = {
     enabled_connector_not_found: 'Le connecteur {{type}} activé est introuvable.',
     not_one_and_only_one_primary_sign_in_method:
       'Il doit y avoir une et une seule méthode de connexion primaire. Veuillez vérifier votre saisie.',
-    unsupported_default_language: 'Default language {{language}} is unsupported.', // UNTRANSLATED
+    unsupported_default_language: 'This language - {{language}} is not supported at the moment.', // UNTRANSLATED
   },
   localization: {
     cannot_delete_default_language:
-      'You cannot delete {{languageTag}} language since it is used as default language in sign-in experience.', // UNTRANSLATED
-    invalid_translation_structure:
-      'Invalid translation structure. Please check the input translation.', // UNTRANSLATED
+      '{{languageTag}} is set as your default language and can’t be deleted.', // UNTRANSLATED
+    invalid_translation_structure: 'Invalid data schemas. Please check your input and try again.', // UNTRANSLATED
   },
   swagger: {
     invalid_zod_type: 'Type Zod non valide. Veuillez vérifier la configuration du garde-route.',

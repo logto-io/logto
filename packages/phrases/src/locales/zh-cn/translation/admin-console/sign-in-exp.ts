@@ -68,34 +68,32 @@ const sign_in_exp = {
     },
     languages: {
       title: '语言',
-      enable_auto_detect: 'Enable auto detect', // UNTRANSLATED
+      enable_auto_detect: '开启语言自动适配',
       description:
-        "Your software detects the user's location and switches to the local language. You can add new locales by translating UI from English to another language.", // UNTRANSLATED
-      manage_language: 'Manage language', // UNTRANSLATED
-      default_language: 'Default language', // UNTRANSLATED
+        '基于用户自身的语言设定，产品将展示最符合用户使用习惯的语言。你可以为产品添加翻译内容、选择语言代码和设定自定义语言，来延展产品的本地化需求。',
+      manage_language: '管理语言',
+      default_language: '默认语言',
       default_language_description_auto:
-        'The default language will be used when a text segment is missing translation.', // UNTRANSLATED
+        '当语言代码对应的翻译文本缺失时，用户将看到已设定的产品默认语言内容。',
       default_language_description_fixed:
-        'When auto detect is off, the default language is the only language your software will show. Turn on auto detect for language customization.', // UNTRANSLATED
+        '语言自动适配已关闭，你的应用将只展示默认语言。开启自动适配即可定制语言。',
     },
     manage_language: {
-      title: 'Manage language', // UNTRANSLATED
-      subtitle:
-        'Localize the product experience by adding languages and translations. Your contribution can be set as the default language.', // UNTRANSLATED
-      add_language: 'Add Language', // UNTRANSLATED
-      logto_provided: 'Logto provided', // UNTRANSLATED
-      key: 'Key', // UNTRANSLATED
-      logto_source_language: 'Logto source language', // UNTRANSLATED
-      custom_values: 'Custom values', // UNTRANSLATED
-      clear_all: 'Clear all', // UNTRANSLATED
-      unsaved_description: 'Changes won’t be saved if you leave this page without saving.', // UNTRANSLATED
-      deletion_title: 'Do you want to delete the added language?', // UNTRANSLATED
-      deletion_description:
-        'After deletion, your users won’t be able to browse in that language again.', // UNTRANSLATED
-      default_language_deletion_title: 'Default language can’t be deleted.', // UNTRANSLATED
+      title: '管理语言',
+      subtitle: '你可以为产品添加翻译内容、选择语言代码和设定自定义语言，来延展产品的本地化需求。',
+      add_language: '添加语言',
+      logto_provided: 'Logto 提供',
+      key: '键名',
+      logto_source_language: 'Logto 源语言',
+      custom_values: '翻译文本',
+      clear_all: '一键清除',
+      unsaved_description: '离开页面前，记得保存你本次做的内容修改。',
+      deletion_title: '你确定你要删除新加的语言吗？',
+      deletion_description: '删除后，你的用户将无法使用该语言查看内容。',
+      default_language_deletion_title: '你无法删除默认语言',
       default_language_deletion_description:
-        '{{language}} is set as your default language and can’t be deleted. ', // UNTRANSLATED
-      got_it: 'Got It', // UNTRANSLATED
+        '你已设置{{language}}为你的默认语言，你无法删除默认语言。',
+      got_it: '知道了',
     },
     authentication: {
       title: '身份验证',
