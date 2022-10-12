@@ -2,20 +2,21 @@ import path from 'path';
 
 import { AlterationScript } from '@logto/schemas/lib/types/alteration';
 import { findPackage } from '@logto/shared';
-import { conditional, conditionalString } from '@silverhand/essentials';
+import { conditionalString } from '@silverhand/essentials';
 import chalk from 'chalk';
 import { copy, existsSync, remove, readdir } from 'fs-extra';
-import inquirer from 'inquirer';
-import { SemVer, compare, eq, gt } from 'semver';
+import { SemVer } from 'semver';
 import { DatabasePool } from 'slonik';
 import { CommandModule } from 'yargs';
 
-import { createPoolFromConfig } from '../../database';
+import { createPoolFromConfig } from '../../../database';
 import {
   getCurrentDatabaseAlterationTimestamp,
   updateDatabaseTimestamp,
-} from '../../queries/logto-config';
-import { getPathInModule, log } from '../../utilities';
+} from '../../../queries/logto-config';
+import { getPathInModule, log } from '../../../utilities';
+import { AlterationFile } from './type';
+import { chooseAlterationsByVersion } from './version';
 
 const alterationFilenameRegex = /-(\d+)-?.*\.js$/;
 
@@ -42,8 +43,6 @@ const importAlterationScript = async (filePath: string): Promise<AlterationScrip
   // eslint-disable-next-line no-restricted-syntax
   return module.default as AlterationScript;
 };
-
-type AlterationFile = { path: string; filename: string };
 
 export const getAlterationFiles = async (): Promise<AlterationFile[]> => {
   const alterationDirectory = getPathInModule('@logto/schemas', 'alterations');
@@ -124,51 +123,6 @@ const deployAlteration = async (
   }
 
   log.info(`Run alteration ${filename} succeeded`);
-};
-
-const latestTag = 'latest';
-
-export const chooseAlterationsByVersion = async (
-  alterations: readonly AlterationFile[],
-  initialVersion?: string
-) => {
-  const versions = alterations
-    .map(({ filename }) => getVersionFromFilename(filename))
-    .filter((version): version is SemVer => version instanceof SemVer)
-    // Cannot use `Set` to deduplicate since it's a class
-    .filter((version, index, self) => index === self.findIndex((another) => eq(version, another)))
-    .slice()
-    .sort((i, j) => compare(j, i));
-
-  if (!versions[0]) {
-    log.error('No alteration script to deploy');
-  }
-
-  const { version: targetVersion } =
-    initialVersion === latestTag
-      ? { version: versions[0] }
-      : await inquirer.prompt<{ version: SemVer }>(
-          {
-            type: 'list',
-            message: 'Choose the alteration target version',
-            name: 'version',
-            choices: versions.map((semVersion) => ({
-              name: semVersion.version,
-              value: semVersion,
-            })),
-          },
-          {
-            version: conditional(initialVersion && new SemVer(initialVersion)),
-          }
-        );
-
-  log.info(`Deploy target ${chalk.green(targetVersion.version)}`);
-
-  return alterations.filter(({ filename }) => {
-    const version = getVersionFromFilename(filename);
-
-    return version && !gt(version, targetVersion);
-  });
 };
 
 const alteration: CommandModule<unknown, { action: string; target?: string }> = {

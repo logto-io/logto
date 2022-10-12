@@ -1,8 +1,9 @@
 import { createMockPool } from 'slonik';
 
-import * as queries from '../../queries/logto-config';
-import { QueryType } from '../../test-utilities';
-import * as functions from './alteration';
+import * as functions from '.';
+import * as queries from '../../../queries/logto-config';
+import { QueryType } from '../../../test-utilities';
+import { chooseAlterationsByVersion } from './version';
 
 const mockQuery: jest.MockedFunction<QueryType> = jest.fn();
 
@@ -55,27 +56,28 @@ describe('chooseAlterationsByVersion()', () => {
       '1.0.0-1663923776-c.js',
       '1.0.1-1663923777-c.js',
       '1.2.0-1663923778-c.js',
+      'next-1663923778-c.js',
+      'next-1663923779-c.js',
+      'next-1663923780-c.js',
+      'next1-1663923781-c.js',
     ].map((filename) => ({ filename, path: '/alterations/' + filename }))
   );
 
   it('exits with code 1 when no alteration file available', async () => {
     jest.spyOn(process, 'exit').mockImplementation(mockExit);
-    await expect(functions.chooseAlterationsByVersion([], 'v1.0.0')).rejects.toThrow('1');
+    await expect(chooseAlterationsByVersion([], 'v1.0.0')).rejects.toThrow('1');
     mockExit.mockRestore();
   });
 
   it('chooses correct alteration files', async () => {
     await Promise.all([
-      expect(functions.chooseAlterationsByVersion(files, 'v1.0.0')).resolves.toEqual(
-        files.slice(0, 7)
-      ),
-      expect(functions.chooseAlterationsByVersion(files, 'v1.0.0-beta.10')).resolves.toEqual(
+      expect(chooseAlterationsByVersion(files, 'v1.0.0')).resolves.toEqual(files.slice(0, 7)),
+      expect(chooseAlterationsByVersion(files, 'v1.0.0-beta.10')).resolves.toEqual(
         files.slice(0, 3)
       ),
-      expect(functions.chooseAlterationsByVersion(files, 'v1.1.0')).resolves.toEqual(
-        files.slice(0, 8)
-      ),
-      expect(functions.chooseAlterationsByVersion(files, 'v1.2.0')).resolves.toEqual(files),
+      expect(chooseAlterationsByVersion(files, 'v1.1.0')).resolves.toEqual(files.slice(0, 8)),
+      expect(chooseAlterationsByVersion(files, 'v1.2.0')).resolves.toEqual(files.slice(0, 9)),
+      expect(chooseAlterationsByVersion(files, 'next')).resolves.toEqual(files.slice(0, 11)),
     ]);
   });
 });
