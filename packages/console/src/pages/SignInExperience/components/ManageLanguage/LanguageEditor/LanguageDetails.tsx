@@ -15,6 +15,7 @@ import Button from '@/components/Button';
 import ConfirmModal from '@/components/ConfirmModal';
 import IconButton from '@/components/IconButton';
 import useApi, { RequestError } from '@/hooks/use-api';
+import useUiLanguages from '@/hooks/use-ui-languages';
 import { CustomPhraseResponse } from '@/types/custom-phrase';
 
 import { createEmptyUiTranslation, flattenTranslation } from '../../../utilities';
@@ -29,8 +30,9 @@ const LanguageDetails = () => {
 
   const { data: signInExperience } = useSWR<SignInExperience, RequestError>('/api/sign-in-exp');
 
-  const { languages, selectedLanguage, setIsDirty, setSelectedLanguage, stopAddingLanguage } =
-    useContext(LanguageEditorContext);
+  const { languages } = useUiLanguages();
+
+  const { selectedLanguage, setIsDirty, setSelectedLanguage } = useContext(LanguageEditorContext);
 
   const [isDeletionAlertOpen, setIsDeletionAlertOpen] = useState(false);
 
@@ -105,31 +107,10 @@ const LanguageDetails = () => {
 
       void globalMutate('/api/custom-phrases');
 
-      stopAddingLanguage();
-
       return updatedCustomPhrase;
     },
-    [api, globalMutate, stopAddingLanguage]
+    [api, globalMutate]
   );
-
-  const onDelete = useCallback(() => {
-    if (!customPhrase && !isDefaultLanguage) {
-      stopAddingLanguage(true);
-      setSelectedLanguage(
-        languages.find((languageTag) => languageTag !== selectedLanguage) ?? 'en'
-      );
-
-      return;
-    }
-    setIsDeletionAlertOpen(true);
-  }, [
-    customPhrase,
-    isDefaultLanguage,
-    languages,
-    selectedLanguage,
-    setSelectedLanguage,
-    stopAddingLanguage,
-  ]);
 
   const onConfirmDeletion = useCallback(async () => {
     setIsDeletionAlertOpen(false);
@@ -176,7 +157,11 @@ const LanguageDetails = () => {
           )}
         </div>
         {!isBuiltIn && (
-          <IconButton onClick={onDelete}>
+          <IconButton
+            onClick={() => {
+              setIsDeletionAlertOpen(true);
+            }}
+          >
             <Delete />
           </IconButton>
         )}

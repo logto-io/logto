@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import Modal from 'react-modal';
 
@@ -19,23 +19,27 @@ type Props = {
 
 const LanguageEditorModal = ({ isOpen, onClose }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const { languages, addLanguage } = useUiLanguages();
+
+  const defaultSelectedLanguage = languages[0] ?? 'en';
 
   const {
-    languages,
     preSelectedLanguage,
     preAddedLanguage,
-    isAddingLanguage,
     isDirty,
     confirmationState,
     setSelectedLanguage,
     setPreSelectedLanguage,
+    setPreAddedLanguage,
     setConfirmationState,
-    startAddingLanguage,
-    stopAddingLanguage,
   } = useContext(LanguageEditorContext);
 
+  useEffect(() => {
+    setSelectedLanguage(defaultSelectedLanguage);
+  }, [defaultSelectedLanguage, setSelectedLanguage]);
+
   const onCloseModal = () => {
-    if (isAddingLanguage || isDirty) {
+    if (isDirty) {
       setConfirmationState('try-close');
 
       return;
@@ -45,9 +49,7 @@ const LanguageEditorModal = ({ isOpen, onClose }: Props) => {
     setSelectedLanguage(languages[0] ?? 'en');
   };
 
-  const onConfirmUnsavedChanges = () => {
-    stopAddingLanguage(true);
-
+  const onConfirmUnsavedChanges = async () => {
     if (confirmationState === 'try-close') {
       onClose();
     }
@@ -58,7 +60,9 @@ const LanguageEditorModal = ({ isOpen, onClose }: Props) => {
     }
 
     if (confirmationState === 'try-add-language' && preAddedLanguage) {
-      startAddingLanguage(preAddedLanguage);
+      await addLanguage(preAddedLanguage);
+      setSelectedLanguage(preAddedLanguage);
+      setPreAddedLanguage(undefined);
     }
 
     setConfirmationState('none');
@@ -92,9 +96,8 @@ const LanguageEditorModal = ({ isOpen, onClose }: Props) => {
 };
 
 const LanguageEditor = (props: Props) => {
-  const { languages } = useUiLanguages();
   const { context: languageEditorContext, Provider: LanguageEditorContextProvider } =
-    useLanguageEditorContext(languages);
+    useLanguageEditorContext();
 
   return (
     <LanguageEditorContextProvider value={languageEditorContext}>
