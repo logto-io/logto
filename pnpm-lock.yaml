@@ -692,7 +692,6 @@ importers:
       react-dom: ^18.0.0
       react-i18next: ^11.18.3
       react-modal: ^3.15.1
-      react-modal-promise: ^1.0.2
       react-router-dom: ^6.2.2
       react-string-replace: ^1.0.0
       react-timer-hook: ^3.0.5
@@ -746,7 +745,6 @@ importers:
       react-dom: 18.2.0_react@18.2.0
       react-i18next: 11.18.3_shxxmfhtk2bc4pbx5cyq3uoph4
       react-modal: 3.15.1_biqbaboplfbrettd7655fr4n2y
-      react-modal-promise: 1.0.2_biqbaboplfbrettd7655fr4n2y
       react-router-dom: 6.2.2_biqbaboplfbrettd7655fr4n2y
       react-string-replace: 1.0.0
       react-timer-hook: 3.0.5_biqbaboplfbrettd7655fr4n2y
@@ -4037,7 +4035,7 @@ packages:
       '@jest/types': 28.1.3
       deepmerge: 4.2.2
       identity-obj-proxy: 3.0.0
-      jest: 28.1.3_@types+node@16.11.12
+      jest: 28.1.3_k5ytkvaprncdyzidqqws5bqksq
       jest-matcher-specific-error: 1.0.0
       jest-transform-stub: 2.0.0
       ts-jest: 28.0.7_lhw3xkmzugq5tscs3x2ndm4sby
@@ -13382,16 +13380,6 @@ packages:
       - supports-color
     dev: true
 
-  /react-modal-promise/1.0.2_biqbaboplfbrettd7655fr4n2y:
-    resolution: {integrity: sha512-dqT618ROhG8qh1+O6EZkia5ELw3zaZWGpMX2YfEH4bgwYENPuFonqKw1W70LFx3K/SCZvVBcD6UYEI12yzYXzg==}
-    peerDependencies:
-      react: '>=16.8.0 || ^18.0.0'
-      react-dom: '>=16.8.0'
-    dependencies:
-      react: 18.2.0
-      react-dom: 18.2.0_react@18.2.0
-    dev: true
-
   /react-modal/3.15.1_biqbaboplfbrettd7655fr4n2y:
     resolution: {integrity: sha512-duB9bxOaYg7Zt6TMFldIFxQRtSP+Dg3F1ZX3FXxSUn+3tZZ/9JCgeAQKDg7rhZSAqopq8TFRw3yIbnx77gyFTw==}
     engines: {node: '>=8'}
@@ -15207,7 +15195,7 @@ packages:
       '@jest/types': 28.1.3
       bs-logger: 0.2.6
       fast-json-stable-stringify: 2.1.0
-      jest: 28.1.3_@types+node@16.11.12
+      jest: 28.1.3_k5ytkvaprncdyzidqqws5bqksq
       jest-util: 28.1.3
       json5: 2.2.1
       lodash.memoize: 4.1.2
