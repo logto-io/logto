@@ -45,8 +45,7 @@
           font: var(--font-body-small);
           color: var(--color-caption);
           margin-top: _.unit(1);
-          height: 60px;
-          overflow: hidden;
+          @include _.multi-line-ellipsis(3);
         }
       }
     }
