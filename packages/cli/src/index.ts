@@ -14,12 +14,12 @@ void yargs(hideBin(process.argv))
     describe: 'The path to your `.env` file',
     type: 'string',
   })
-  .option('databaseUrl', {
-    alias: ['db-url'],
+  .option('db', {
+    alias: ['db-url', 'database-url'],
     describe: 'The Postgres URL to Logto database',
     type: 'string',
   })
-  .middleware(({ env, databaseUrl }) => {
+  .middleware(({ env, db: databaseUrl }) => {
     dotenv.config({ path: env });
 
     const initialDatabaseUrl = databaseUrl ?? process.env[ConfigKey.DatabaseUrl];
