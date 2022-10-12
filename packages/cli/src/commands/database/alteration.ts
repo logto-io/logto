@@ -98,7 +98,7 @@ export const getUndeployedAlterations = async (pool: DatabasePool) => {
   const databaseTimestamp = await getCurrentDatabaseAlterationTimestamp(pool);
   const files = await getAlterationFiles();
 
-  return files.filter(({ filename }) => getTimestampFromFilename(filename) > 0);
+  return files.filter(({ filename }) => getTimestampFromFilename(filename) > databaseTimestamp);
 };
 
 const deployAlteration = async (
@@ -128,9 +128,8 @@ const deployAlteration = async (
 
 const latestTag = 'latest';
 
-// TODO: add tests
 export const chooseAlterationsByVersion = async (
-  alterations: AlterationFile[],
+  alterations: readonly AlterationFile[],
   initialVersion?: string
 ) => {
   const versions = alterations
@@ -142,7 +141,7 @@ export const chooseAlterationsByVersion = async (
     .sort((i, j) => compare(j, i));
 
   if (!versions[0]) {
-    log.error('No deployable alteration found');
+    log.error('No alteration script to deploy');
   }
 
   const { version: targetVersion } =
@@ -153,8 +152,8 @@ export const chooseAlterationsByVersion = async (
             type: 'list',
             message: 'Choose the alteration target version',
             name: 'version',
-            choices: versions.map((semVersion, index) => ({
-              name: semVersion.version + conditionalString(!index && ` (${latestTag})`),
+            choices: versions.map((semVersion) => ({
+              name: semVersion.version,
               value: semVersion,
             })),
           },
@@ -162,6 +161,8 @@ export const chooseAlterationsByVersion = async (
             version: conditional(initialVersion && new SemVer(initialVersion)),
           }
         );
+
+  log.info(`Deploy target ${chalk.green(targetVersion.version)}`);
 
   return alterations.filter(({ filename }) => {
     const version = getVersionFromFilename(filename);
