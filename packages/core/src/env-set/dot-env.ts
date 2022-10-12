@@ -1,17 +1,12 @@
 import { appendFileSync } from 'fs';
 
 import dotenv from 'dotenv';
-
-import { fromRoot } from './parameters';
+import findUp from 'find-up';
 
 export const appendDotEnv = (key: string, value: string) => {
   appendFileSync('.env', `${key}=${value}\n`);
 };
 
-export const configDotEnv = () => {
-  if (fromRoot) {
-    dotenv.config({ path: '../../.env' });
-  } else {
-    dotenv.config();
-  }
+export const configDotEnv = async () => {
+  dotenv.config({ path: await findUp('.env', {}) });
 };
