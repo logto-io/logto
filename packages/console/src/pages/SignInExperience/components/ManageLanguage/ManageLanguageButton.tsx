@@ -3,7 +3,6 @@ import { useState } from 'react';
 import Button from '@/components/Button';
 
 import LanguageEditor from './LanguageEditor';
-import * as styles from './ManageLanguageButton.module.scss';
 
 const ManageLanguageButton = () => {
   const [isLanguageEditorOpen, setIsLanguageEditorOpen] = useState(false);
@@ -13,7 +12,6 @@ const ManageLanguageButton = () => {
       <Button
         type="plain"
         title="sign_in_exp.others.languages.manage_language"
-        className={styles.manageLanguage}
         onClick={() => {
           setIsLanguageEditorOpen(true);
         }}
