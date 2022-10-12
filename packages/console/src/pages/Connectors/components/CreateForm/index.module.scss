@@ -38,12 +38,12 @@
         .connectorId {
           margin-top: _.unit(1);
           font: var(--font-body-small);
-          color: var(--color-caption);
+          color: var(--color-text-secondary);
         }
 
         .description {
           font: var(--font-body-small);
-          color: var(--color-caption);
+          color: var(--color-text-secondary);
           margin-top: _.unit(1);
           @include _.multi-line-ellipsis(3);
         }

@@ -63,8 +63,8 @@
   },
   "prettier": "@silverhand/eslint-config/.prettierrc",
   "dependencies": {
-    "@logto/connector-kit": "^1.0.0-beta.13",
-    "@logto/core-kit": "^1.0.0-beta.13",
+    "@logto/connector-kit": "1.0.0-beta.18",
+    "@logto/core-kit": "1.0.0-beta.18",
     "@logto/language-kit": "^1.0.0-beta.16",
     "@logto/phrases": "workspace:1.0.0-beta.10",
     "@logto/phrases-ui": "workspace:1.0.0-beta.10",

@@ -33,7 +33,7 @@
 }
 
 @mixin subhead-cap {
-  color: var(--color-caption);
+  color: var(--color-text-secondary);
   font: var(--font-subhead-cap);
   letter-spacing: 0.1em;
   text-transform: uppercase;
