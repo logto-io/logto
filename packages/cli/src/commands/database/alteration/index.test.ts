@@ -13,10 +13,6 @@ const pool = createMockPool({
   },
 });
 
-const mockExit = jest.fn((code?: number) => {
-  throw new Error(String(code));
-});
-
 describe('getUndeployedAlterations()', () => {
   const files = Object.freeze([
     { filename: '1.0.0-1663923770-a.js', path: '/alterations/1.0.0-1663923770-a.js' },
@@ -63,14 +59,16 @@ describe('chooseAlterationsByVersion()', () => {
     ].map((filename) => ({ filename, path: '/alterations/' + filename }))
   );
 
-  it('exits with code 1 when no alteration file available', async () => {
-    jest.spyOn(process, 'exit').mockImplementation(mockExit);
-    await expect(chooseAlterationsByVersion([], 'v1.0.0')).rejects.toThrow('1');
-    mockExit.mockRestore();
+  it('chooses nothing when input version is invalid', async () => {
+    await expect(chooseAlterationsByVersion(files, 'next1')).rejects.toThrow(
+      'Invalid Version: next1'
+    );
+    await expect(chooseAlterationsByVersion([], 'ok')).rejects.toThrow('Invalid Version: ok');
   });
 
   it('chooses correct alteration files', async () => {
     await Promise.all([
+      expect(chooseAlterationsByVersion([], 'v1.0.0')).resolves.toEqual([]),
       expect(chooseAlterationsByVersion(files, 'v1.0.0')).resolves.toEqual(files.slice(0, 7)),
       expect(chooseAlterationsByVersion(files, 'v1.0.0-beta.10')).resolves.toEqual(
         files.slice(0, 3)

@@ -27,7 +27,7 @@ export const chooseAlterationsByVersion = async (
     );
 
     if (endIndex === -1) {
-      log.error('No alteration script to deploy');
+      return [];
     }
 
     log.info(`Deploy target ${chalk.green(nextTag)}`);
@@ -42,10 +42,6 @@ export const chooseAlterationsByVersion = async (
     .filter((version, index, self) => index === self.findIndex((another) => eq(version, another)))
     .slice()
     .sort((i, j) => compare(j, i));
-
-  if (!versions[0]) {
-    log.error('No alteration script to deploy');
-  }
 
   const { version: targetVersion } =
     initialVersion === latestTag
@@ -64,6 +60,10 @@ export const chooseAlterationsByVersion = async (
             version: conditional(initialVersion && new SemVer(initialVersion)),
           }
         );
+
+  if (!targetVersion) {
+    return [];
+  }
 
   log.info(`Deploy target ${chalk.green(targetVersion.version)}`);
 
