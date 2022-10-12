@@ -5,14 +5,15 @@
   margin-bottom: _.unit(1);
   cursor: pointer;
   border-radius: 8px;
-  font: var(--font-body-medium);
 
   .languageName {
     color: var(--color-text);
+    font: var(--font-label-large);
   }
 
   .languageTag {
     color: var(--color-caption);
+    font: var(--font-body-medium);
   }
 
   &:hover {
