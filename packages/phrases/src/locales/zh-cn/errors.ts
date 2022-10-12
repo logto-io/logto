@@ -100,6 +100,11 @@ const errors = {
     not_one_and_only_one_primary_sign_in_method: '主要的登录方式必须有且仅有一个，请检查你的输入。',
     username_requires_password: 'Must enable set a password for username sign up identifier.', // UNTRANSLATED
     passwordless_requires_verify: 'Must enable verify for email/phone sign up identifier.', // UNTRANSLATED
+    miss_sign_up_identifier_in_sign_in: 'Sign in methods must contain the sign up identifier.', // UNTRANSLATED
+    password_sign_in_must_be_enabled:
+      'Password sign in must be enabled when set a password is required in sign up.', // UNTRANSLATED
+    code_sign_in_must_be_enabled:
+      'Verification code sign in must be enabled when set a password is not required in sign up.', // UNTRANSLATED
   },
   localization: {
     cannot_delete_default_language: '不能删除「登录体验」正在使用的默认语言 {{languageKey}}。', // UNTRANSLATED
