@@ -1,12 +1,9 @@
-import path from 'path';
-
 import { getEnv, getEnvAsStringArray, Optional } from '@silverhand/essentials';
 import { DatabasePool } from 'slonik';
 
 import { getOidcConfigs } from '@/lib/logto-config';
 import { appendPath } from '@/utils/url';
 
-import { addConnectors } from './add-connectors';
 import { checkAlterationState } from './check-alteration-state';
 import createPoolByEnv from './create-pool-by-env';
 import loadOidcValues from './oidc';
@@ -19,9 +16,6 @@ export enum MountedApps {
   DemoApp = 'demo-app',
   Welcome = 'welcome',
 }
-
-// eslint-disable-next-line unicorn/prefer-module
-export const defaultConnectorDirectory = path.join(__dirname, '../../connectors');
 
 const loadEnvValues = async () => {
   const isProduction = getEnv('NODE_ENV') === 'production';
@@ -46,7 +40,6 @@ const loadEnvValues = async () => {
     developmentUserId: getEnv('DEVELOPMENT_USER_ID'),
     trustProxyHeader: isTrue(getEnv('TRUST_PROXY_HEADER')),
     adminConsoleUrl: appendPath(endpoint, '/console'),
-    connectorDirectory: getEnv('CONNECTOR_DIRECTORY', defaultConnectorDirectory),
   });
 };
 
@@ -93,8 +86,6 @@ function createEnvSet() {
 
       const [, oidcConfigs] = await Promise.all([checkAlterationState(pool), getOidcConfigs(pool)]);
       oidc = await loadOidcValues(appendPath(values.endpoint, '/oidc').toString(), oidcConfigs);
-
-      await addConnectors(values.connectorDirectory);
     },
   };
 }

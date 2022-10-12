@@ -12,6 +12,7 @@ import pRetry from 'p-retry';
 import tar from 'tar';
 import { z } from 'zod';
 
+import { connectorDirectory } from '../../constants';
 import { log } from '../../utilities';
 import { defaultPath } from '../install/utils';
 
@@ -86,7 +87,7 @@ export const normalizePackageName = (name: string) =>
     .join('/');
 
 export const addConnectors = async (instancePath: string, packageNames: string[]) => {
-  const cwd = path.join(instancePath, coreDirectory, 'connectors');
+  const cwd = path.join(instancePath, coreDirectory, connectorDirectory);
 
   if (!existsSync(cwd)) {
     await mkdir(cwd);
