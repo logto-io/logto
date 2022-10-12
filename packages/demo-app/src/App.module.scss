@@ -75,6 +75,10 @@
         cursor: pointer;
         background: var(--color-hover);
       }
+
+      &:focus {
+        outline: 3px solid var(--color-focused-variant);
+      }
     }
 
     .continue {
