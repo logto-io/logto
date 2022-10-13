@@ -43,7 +43,7 @@ const errors = {
     identity_exists: 'Le compte social a été enregistré.',
     invalid_role_names: 'les noms de rôles ({{roleNames}}) ne sont pas valides',
     cannot_delete_self: 'You cannot delete yourself.', // UNTRANSLATED
-    same_password: 'Your new password can not be the same as current password.', // UNTRANSLATED
+    same_password: 'Your new password can’t be the same as your current password.', // UNTRANSLATED
   },
   password: {
     unsupported_encryption_method: "La méthode de cryptage {{name}} n'est pas prise en charge.",
@@ -61,14 +61,10 @@ const errors = {
     connector_id_mismatch: "Le connectorId ne correspond pas à l'enregistrement de la session.",
     connector_session_not_found:
       "La session du connecteur n'a pas été trouvée. Veuillez revenir en arrière et vous connecter à nouveau.",
-    forgot_password_session_not_found:
-      'Forgot password session not found. Please go back and verify.', // UNTRANSLATED
-    forgot_password_verification_expired:
-      'Forgot password verification has expired. Please go back and verify again.', // UNTRANSLATED
     verification_session_not_found:
-      'Passwordless verification session not found. Please go back and retry.', // UNTRANSLATED
-    verification_expired: 'Passwordless verification has expired. Please go back and verify again.', // UNTRANSLATED
-    invalid_verification: 'Can not store invalid passwordless verification.', // UNTRANSLATED
+      'The verification was not successful. Restart the verification flow and try again.', // UNTRANSLATED
+    verification_expired:
+      'The connection has timed out. Verify again to ensure your account safety.', // UNTRANSLATED
     unauthorized: "Veuillez vous enregistrer d'abord.",
     unsupported_prompt_name: "Nom d'invite non supporté.",
   },
