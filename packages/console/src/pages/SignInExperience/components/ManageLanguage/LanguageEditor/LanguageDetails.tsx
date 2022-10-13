@@ -10,6 +10,7 @@ import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import useSWR, { useSWRConfig } from 'swr';
 
+import Clear from '@/assets/images/clear.svg';
 import Delete from '@/assets/images/delete.svg';
 import Button from '@/components/Button';
 import ConfirmModal from '@/components/ConfirmModal';
@@ -158,6 +159,7 @@ const LanguageDetails = () => {
         </div>
         {!isBuiltIn && (
           <IconButton
+            tooltip="general.delete"
             onClick={() => {
               setIsDeletionAlertOpen(true);
             }}
@@ -183,11 +185,9 @@ const LanguageDetails = () => {
                 <th>
                   <span className={style.customValuesColumn}>
                     {t('sign_in_exp.others.manage_language.custom_values')}
-                    <Button
-                      type="plain"
-                      title="sign_in_exp.others.manage_language.clear_all"
+                    <IconButton
                       className={style.clearButton}
-                      icon={<Delete />}
+                      tooltip="sign_in_exp.others.manage_language.clear_all"
                       onClick={() => {
                         for (const [key, value] of Object.entries(
                           flattenTranslation(emptyUiTranslation)
@@ -195,7 +195,9 @@ const LanguageDetails = () => {
                           setValue(key, value, { shouldDirty: true });
                         }
                       }}
-                    />
+                    >
+                      <Clear />
+                    </IconButton>
                   </span>
                 </th>
               </tr>
