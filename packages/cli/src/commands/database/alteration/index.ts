@@ -5,7 +5,6 @@ import { findPackage } from '@logto/shared';
 import { conditionalString } from '@silverhand/essentials';
 import chalk from 'chalk';
 import { copy, existsSync, remove, readdir } from 'fs-extra';
-import { SemVer } from 'semver';
 import { DatabasePool } from 'slonik';
 import { CommandModule } from 'yargs';
 
@@ -28,12 +27,6 @@ const getTimestampFromFilename = (filename: string) => {
   }
 
   return Number(match[1]);
-};
-
-const getVersionFromFilename = (filename: string) => {
-  try {
-    return new SemVer(filename.split('-')[0]?.replaceAll('_', '-') ?? 'unknown');
-  } catch {}
 };
 
 const importAlterationScript = async (filePath: string): Promise<AlterationScript> => {
