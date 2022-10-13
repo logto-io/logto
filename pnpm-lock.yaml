@@ -20,8 +20,8 @@ importers:
 
   packages/cli:
     specifiers:
-      '@logto/schemas': ^1.0.0-beta.10
-      '@logto/shared': ^1.0.0-beta.10
+      '@logto/schemas': workspace:1.0.0-beta.10
+      '@logto/shared': workspace:1.0.0-beta.10
       '@silverhand/eslint-config': 1.0.0
       '@silverhand/essentials': ^1.3.0
       '@silverhand/jest-config': 1.0.0
@@ -104,10 +104,10 @@ importers:
       '@fontsource/roboto-mono': ^4.5.7
       '@logto/core-kit': 1.0.0-beta.16
       '@logto/language-kit': 1.0.0-beta.16
-      '@logto/phrases': ^1.0.0-beta.10
-      '@logto/phrases-ui': ^1.0.0-beta.10
+      '@logto/phrases': workspace:1.0.0-beta.10
+      '@logto/phrases-ui': workspace:1.0.0-beta.10
       '@logto/react': 1.0.0-beta.8
-      '@logto/schemas': ^1.0.0-beta.10
+      '@logto/schemas': workspace:1.0.0-beta.10
       '@mdx-js/react': ^1.6.22
       '@parcel/core': 2.7.0
       '@parcel/transformer-mdx': 2.7.0
@@ -237,14 +237,14 @@ importers:
 
   packages/core:
     specifiers:
-      '@logto/cli': ^1.0.0-beta.10
+      '@logto/cli': workspace:1.0.0-beta.10
       '@logto/connector-kit': ^1.0.0-beta.13
       '@logto/core-kit': ^1.0.0-beta.16
       '@logto/language-kit': ^1.0.0-beta.16
-      '@logto/phrases': ^1.0.0-beta.10
-      '@logto/phrases-ui': ^1.0.0-beta.10
-      '@logto/schemas': ^1.0.0-beta.10
-      '@logto/shared': ^1.0.0-beta.10
+      '@logto/phrases': workspace:1.0.0-beta.10
+      '@logto/phrases-ui': workspace:1.0.0-beta.10
+      '@logto/schemas': workspace:1.0.0-beta.10
+      '@logto/shared': workspace:1.0.0-beta.10
       '@shopify/jest-koa-mocks': ^5.0.0
       '@silverhand/eslint-config': 1.0.0
       '@silverhand/essentials': ^1.3.0
@@ -396,7 +396,7 @@ importers:
 
   packages/create:
     specifiers:
-      '@logto/cli': ^1.0.0-beta.10
+      '@logto/cli': workspace:1.0.0-beta.10
     dependencies:
       '@logto/cli': link:../cli
 
@@ -404,9 +404,9 @@ importers:
     specifiers:
       '@logto/core-kit': ^1.0.0-beta.13
       '@logto/language-kit': 1.0.0-beta.16
-      '@logto/phrases': ^1.0.0-beta.10
+      '@logto/phrases': workspace:1.0.0-beta.10
       '@logto/react': 1.0.0-beta.8
-      '@logto/schemas': ^1.0.0-beta.10
+      '@logto/schemas': workspace:1.0.0-beta.10
       '@parcel/core': 2.7.0
       '@parcel/transformer-sass': 2.7.0
       '@silverhand/eslint-config': 1.0.0
@@ -460,7 +460,7 @@ importers:
     specifiers:
       '@jest/types': ^28.1.3
       '@logto/node': 1.0.0-beta.8
-      '@logto/schemas': ^1.0.0-beta.10
+      '@logto/schemas': workspace:1.0.0-beta.10
       '@peculiar/webcrypto': ^1.3.3
       '@silverhand/eslint-config': 1.0.0
       '@silverhand/essentials': ^1.3.0
@@ -563,8 +563,8 @@ importers:
       '@logto/connector-kit': ^1.0.0-beta.13
       '@logto/core-kit': ^1.0.0-beta.13
       '@logto/language-kit': ^1.0.0-beta.16
-      '@logto/phrases': ^1.0.0-beta.10
-      '@logto/phrases-ui': ^1.0.0-beta.10
+      '@logto/phrases': workspace:1.0.0-beta.10
+      '@logto/phrases-ui': workspace:1.0.0-beta.10
       '@silverhand/eslint-config': 1.0.0
       '@silverhand/essentials': ^1.3.0
       '@silverhand/jest-config': 1.0.0
@@ -613,7 +613,7 @@ importers:
 
   packages/shared:
     specifiers:
-      '@logto/schemas': ^1.0.0-beta.10
+      '@logto/schemas': workspace:1.0.0-beta.10
       '@silverhand/eslint-config': 1.0.0
       '@silverhand/essentials': ^1.3.0
       '@silverhand/jest-config': 1.0.0
@@ -649,9 +649,9 @@ importers:
   packages/ui:
     specifiers:
       '@logto/core-kit': ^1.0.0-beta.13
-      '@logto/phrases': ^1.0.0-beta.10
-      '@logto/phrases-ui': ^1.0.0-beta.10
-      '@logto/schemas': ^1.0.0-beta.10
+      '@logto/phrases': workspace:1.0.0-beta.10
+      '@logto/phrases-ui': workspace:1.0.0-beta.10
+      '@logto/schemas': workspace:1.0.0-beta.10
       '@parcel/core': 2.7.0
       '@parcel/transformer-sass': 2.7.0
       '@parcel/transformer-svg-react': 2.7.0

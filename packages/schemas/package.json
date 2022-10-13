@@ -66,8 +66,8 @@
     "@logto/connector-kit": "^1.0.0-beta.13",
     "@logto/core-kit": "^1.0.0-beta.13",
     "@logto/language-kit": "^1.0.0-beta.16",
-    "@logto/phrases": "^1.0.0-beta.10",
-    "@logto/phrases-ui": "^1.0.0-beta.10",
+    "@logto/phrases": "workspace:1.0.0-beta.10",
+    "@logto/phrases-ui": "workspace:1.0.0-beta.10",
     "zod": "^3.18.0"
   }
 }
