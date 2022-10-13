@@ -44,8 +44,6 @@ export const getVerificationStorageFromInteraction = async <T = VerificationStor
 
   const verificationResult = resultGuard.safeParse(result);
 
-  console.log(result);
-
   if (!verificationResult.success) {
     throw new RequestError(
       {
