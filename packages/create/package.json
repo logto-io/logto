@@ -11,6 +11,6 @@
     "node": "^16.0.0"
   },
   "dependencies": {
-    "@logto/cli": "workspace:1.0.0-beta.10"
+    "@logto/cli": "^1.0.0-beta.10"
   }
 }
