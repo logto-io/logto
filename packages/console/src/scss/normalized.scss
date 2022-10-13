@@ -21,8 +21,7 @@ input {
 }
 
 table {
-  border: 1px solid var(--color-neutral-90);
-  border-radius: _.unit(2);
+  border: 1px solid var(--color-divider);
   border-spacing: 0;
   width: 100%;
   table-layout: fixed;
@@ -30,14 +29,14 @@ table {
   thead {
     th {
       font: var(--font-subhead-2);
-      color: var(--color-caption);
-      padding: _.unit(2);
-      border-bottom: 1px solid var(--color-neutral-90);
+      color: var(--color-text);
+      padding: _.unit(3);
+      border-bottom: 1px solid var(--color-divider);
       text-align: left;
 
       &:first-child,
       &:last-child {
-        padding: _.unit(2) _.unit(8);
+        padding: _.unit(3) _.unit(8);
       }
     }
   }
@@ -45,7 +44,7 @@ table {
   tbody {
     td {
       font: var(--font-body-medium);
-      border-bottom: 1px solid var(--color-neutral-90);
+      border-bottom: 1px solid var(--color-divider);
       padding: _.unit(3) _.unit(2);
 
       &:first-child,
@@ -68,7 +67,7 @@ table {
   background: var(--color-neutral-variant-80);
   background-clip: content-box;
   border: 4px solid transparent;
-  border-radius: 8px;
+  border-radius: 12px;
 }
 
 ::-webkit-scrollbar-track {
