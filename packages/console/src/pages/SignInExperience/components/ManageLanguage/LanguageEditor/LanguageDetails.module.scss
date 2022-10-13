@@ -46,6 +46,8 @@
           background-color: var(--color-layer-1);
           position: sticky;
           top: 0;
+          // Note: cells with `position: relative` style will overlap this sticky header, add a z-index to fix it.
+          z-index: 1;
         }
 
         > th:first-child {
