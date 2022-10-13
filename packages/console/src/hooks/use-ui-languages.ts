@@ -1,10 +1,11 @@
+import { LanguageTag } from '@logto/language-kit';
 import { builtInLanguages as builtInUiLanguages } from '@logto/phrases-ui';
-import { useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import useSWR from 'swr';
 
 import { CustomPhraseResponse } from '@/types/custom-phrase';
 
-import { RequestError } from './use-api';
+import useApi, { RequestError } from './use-api';
 
 const useUiLanguages = () => {
   const {
@@ -26,11 +27,22 @@ const useUiLanguages = () => {
     [customPhraseList]
   );
 
+  const api = useApi();
+
+  const addLanguage = useCallback(
+    async (languageTag: LanguageTag) => {
+      await api.put(`/api/custom-phrases/${languageTag}`, { json: {} });
+      await mutate();
+    },
+    [api, mutate]
+  );
+
   return {
     customPhrases: customPhraseList,
     languages,
     error,
     isLoading: !customPhraseList && !error,
+    addLanguage,
     mutate,
   };
 };

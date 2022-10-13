@@ -5,22 +5,23 @@ import {
 } from '@logto/language-kit';
 import { useContext } from 'react';
 
+import useUiLanguages from '@/hooks/use-ui-languages';
+
 import AddLanguageSelector from './AddLanguageSelector';
 import LanguageItem from './LanguageItem';
 import * as style from './LanguageNav.module.scss';
 import { LanguageEditorContext } from './use-language-editor-context';
 
 const LanguageNav = () => {
+  const { languages, addLanguage } = useUiLanguages();
+
   const {
-    languages,
     selectedLanguage,
-    isAddingLanguage,
     isDirty,
     setConfirmationState,
     setSelectedLanguage,
     setPreSelectedLanguage,
     setPreAddedLanguage,
-    startAddingLanguage,
   } = useContext(LanguageEditorContext);
 
   const languageOptions = Object.keys(uiLanguageNameMapping).filter(
@@ -28,19 +29,20 @@ const LanguageNav = () => {
       isLanguageTag(languageTag) && !languages.includes(languageTag)
   );
 
-  const onAddLanguage = (languageTag: LanguageTag) => {
-    if (isDirty || isAddingLanguage) {
+  const onAddLanguage = async (languageTag: LanguageTag) => {
+    if (isDirty) {
       setPreAddedLanguage(languageTag);
       setConfirmationState('try-add-language');
 
       return;
     }
 
-    startAddingLanguage(languageTag);
+    await addLanguage(languageTag);
+    setSelectedLanguage(languageTag);
   };
 
   const onSwitchLanguage = (languageTag: LanguageTag) => {
-    if (isDirty || isAddingLanguage) {
+    if (isDirty) {
       setPreSelectedLanguage(languageTag);
       setConfirmationState('try-switch-language');
 
