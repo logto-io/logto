@@ -84,6 +84,7 @@ const LanguageEditorModal = ({ isOpen, onClose }: Props) => {
       <ConfirmModal
         isOpen={confirmationState !== 'none'}
         cancelButtonText="general.stay_on_page"
+        confirmButtonText="general.leave_page"
         onCancel={() => {
           setConfirmationState('none');
         }}

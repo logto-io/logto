@@ -90,8 +90,9 @@ const sign_in_exp = {
       key: 'Key',
       logto_source_language: 'Logto source language',
       custom_values: 'Custom values',
-      clear_all: 'Clear all',
+      clear_all_tip: 'Clear all values',
       unsaved_description: 'Changes won’t be saved if you leave this page without saving.',
+      deletion_tip: 'Delete the language',
       deletion_title: 'Do you want to delete the added language?',
       deletion_description:
         'After deletion, your users won’t be able to browse in that language again.',

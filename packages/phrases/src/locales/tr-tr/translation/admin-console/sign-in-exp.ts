@@ -91,9 +91,10 @@ const sign_in_exp = {
       key: 'Key', // UNTRANSLATED
       logto_source_language: 'Logto source language', // UNTRANSLATED
       custom_values: 'Custom values', // UNTRANSLATED
-      clear_all: 'Clear all', // UNTRANSLATED
+      clear_all_tip: 'Clear all values', // UNTRANSLATED
       unsaved_description: 'Changes won’t be saved if you leave this page without saving.', // UNTRANSLATED
       deletion_title: 'Do you want to delete the added language?', // UNTRANSLATED
+      deletion_tip: 'Delete the language', // UNTRANSLATED
       deletion_description:
         'After deletion, your users won’t be able to browse in that language again.', // UNTRANSLATED
       default_language_deletion_title: 'Default language can’t be deleted.', // UNTRANSLATED
