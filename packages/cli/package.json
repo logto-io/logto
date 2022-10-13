@@ -19,7 +19,6 @@
   },
   "scripts": {
     "precommit": "lint-staged",
-    "//": "Manually ln since `preserveSymlinks` in TSC doesn't work as expected",
     "build": "rimraf lib && tsc -p tsconfig.build.json",
     "postbuild": "unlink ./lib/package.json && ln -s ../package.json ./lib/package.json",
     "start": "node .",
