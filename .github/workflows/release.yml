@@ -12,7 +12,7 @@ concurrency:
 
 jobs:
   dockerize:
-    environment: ${{ startsWith(github.ref, 'refs/tags/') && 'release' }}
+    environment: ${{ startsWith(github.ref, 'refs/tags/') && 'release' || '' }}
     runs-on: ubuntu-latest
 
     steps:
