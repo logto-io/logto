@@ -1,18 +1,49 @@
+import { AdminConsoleKey } from '@logto/phrases';
+import { Nullable } from '@silverhand/essentials';
 import classNames from 'classnames';
-import { HTMLProps } from 'react';
+import { ForwardedRef, forwardRef, HTMLProps, useImperativeHandle, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 
+import Tooltip from '../Tooltip';
 import * as styles from './index.module.scss';
 
 export type Props = Omit<HTMLProps<HTMLButtonElement>, 'size' | 'type'> & {
   size?: 'small' | 'medium' | 'large';
+  tooltip?: AdminConsoleKey;
 };
 
-const IconButton = ({ size = 'medium', children, className, ...rest }: Props) => {
+const IconButton = (
+  { size = 'medium', children, className, tooltip, ...rest }: Props,
+  reference: ForwardedRef<HTMLButtonElement>
+) => {
+  const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
+  const innerReference = useRef<HTMLButtonElement>(null);
+
+  useImperativeHandle<Nullable<HTMLButtonElement>, Nullable<HTMLButtonElement>>(
+    reference,
+    () => innerReference.current
+  );
+
   return (
-    <button type="button" className={classNames(styles.button, styles[size], className)} {...rest}>
-      {children}
-    </button>
+    <>
+      <button
+        ref={innerReference}
+        type="button"
+        className={classNames(styles.button, styles[size], className)}
+        {...rest}
+      >
+        {children}
+      </button>
+      {tooltip && (
+        <Tooltip
+          anchorRef={innerReference}
+          content={t(tooltip)}
+          horizontalAlign="center"
+          verticalAlign="top"
+        />
+      )}
+    </>
   );
 };
 
-export default IconButton;
+export default forwardRef(IconButton);
