@@ -23,12 +23,7 @@
     color: var(--color-text-secondary);
 
     .hideButton {
-      color: var(--color-text-link);
-      cursor: pointer;
-
-      &:hover {
-        text-decoration: underline;
-      }
+      display: inline-block;
     }
   }
 }

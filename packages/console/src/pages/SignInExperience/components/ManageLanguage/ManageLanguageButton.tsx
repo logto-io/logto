@@ -4,14 +4,20 @@ import Button from '@/components/Button';
 
 import LanguageEditor from './LanguageEditor';
 
-const ManageLanguageButton = () => {
+type Props = {
+  className?: string;
+};
+
+const ManageLanguageButton = ({ className }: Props) => {
   const [isLanguageEditorOpen, setIsLanguageEditorOpen] = useState(false);
 
   return (
     <>
       <Button
-        type="plain"
+        type="text"
+        size="small"
         title="sign_in_exp.others.languages.manage_language"
+        className={className}
         onClick={() => {
           setIsLanguageEditorOpen(true);
         }}

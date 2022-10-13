@@ -27,6 +27,11 @@
   align-items: baseline;
   font: var(--font-body-medium);
   color: var(--color-text-secondary);
+  margin-top: _.unit(1);
+}
+
+.manageLanguageButton {
+  margin-top: _.unit(1);
 }
 
 .defaultLanguageDescription {

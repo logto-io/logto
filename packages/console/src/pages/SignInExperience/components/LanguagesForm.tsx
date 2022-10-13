@@ -51,7 +51,9 @@ const LanguagesForm = ({ isManageLanguageVisible = false }: Props) => {
           {...register('languageInfo.autoDetect')}
           label={t('sign_in_exp.others.languages.description')}
         />
-        {isManageLanguageVisible && <ManageLanguageButton />}
+        {isManageLanguageVisible && (
+          <ManageLanguageButton className={styles.manageLanguageButton} />
+        )}
       </FormField>
       <FormField title="sign_in_exp.others.languages.default_language">
         <Controller
