@@ -1,4 +1,4 @@
-import { redirectUriRegEx } from '@logto/core-kit';
+import { validateRedirectUrl } from '@logto/core-kit';
 import { ConnectorType, userInfoSelectFields } from '@logto/schemas';
 import pick from 'lodash.pick';
 import { Provider } from 'oidc-provider';
@@ -36,7 +36,7 @@ export default function socialRoutes<T extends AnonymousRouter>(router: T, provi
       body: object({
         connectorId: string(),
         state: string(),
-        redirectUri: string().regex(redirectUriRegEx),
+        redirectUri: string().refine((url) => validateRedirectUrl(url, 'web')),
       }),
     }),
     async (ctx, next) => {

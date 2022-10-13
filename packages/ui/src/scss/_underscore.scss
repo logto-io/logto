@@ -21,7 +21,7 @@
 
 @mixin text-hint {
   font: var(--font-caption);
-  color: var(--color-caption);
+  color: var(--color-text-secondary);
 }
 
 @mixin title {

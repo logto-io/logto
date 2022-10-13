@@ -36,7 +36,7 @@
     padding: 0;
 
     &::placeholder {
-      color: var(--color-caption);
+      color: var(--color-placeholder);
     }
 
     // Overwrite webkit auto-fill style
@@ -51,7 +51,7 @@
 
       &::-webkit-calendar-picker-indicator {
         background-image: none;
-        background-color: var(--color-icon);
+        background-color: var(--color-text-secondary);
         mask-image: url('../../assets/images/calendar.png');
         mask-size: 20px 20px;
         width: 16px;
@@ -62,7 +62,7 @@
 
   &.disabled {
     background: var(--color-inverse-on-surface);
-    color: var(--color-caption);
+    color: var(--color-text-secondary);
     border-color: var(--color-border);
   }
 

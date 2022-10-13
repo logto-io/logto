@@ -102,7 +102,7 @@ importers:
   packages/console:
     specifiers:
       '@fontsource/roboto-mono': ^4.5.7
-      '@logto/core-kit': 1.0.0-beta.16
+      '@logto/core-kit': 1.0.0-beta.18
       '@logto/language-kit': 1.0.0-beta.16
       '@logto/phrases': workspace:1.0.0-beta.10
       '@logto/phrases-ui': workspace:1.0.0-beta.10
@@ -169,7 +169,7 @@ importers:
       zod: ^3.18.0
     devDependencies:
       '@fontsource/roboto-mono': 4.5.7
-      '@logto/core-kit': 1.0.0-beta.16
+      '@logto/core-kit': 1.0.0-beta.18
       '@logto/language-kit': 1.0.0-beta.16
       '@logto/phrases': link:../phrases
       '@logto/phrases-ui': link:../phrases-ui
@@ -238,8 +238,8 @@ importers:
   packages/core:
     specifiers:
       '@logto/cli': workspace:1.0.0-beta.10
-      '@logto/connector-kit': ^1.0.0-beta.13
-      '@logto/core-kit': ^1.0.0-beta.16
+      '@logto/connector-kit': ^1.0.0-beta.18
+      '@logto/core-kit': ^1.0.0-beta.18
       '@logto/language-kit': ^1.0.0-beta.16
       '@logto/phrases': workspace:1.0.0-beta.10
       '@logto/phrases-ui': workspace:1.0.0-beta.10
@@ -316,8 +316,8 @@ importers:
       zod: ^3.18.0
     dependencies:
       '@logto/cli': link:../cli
-      '@logto/connector-kit': 1.0.0-beta.13
-      '@logto/core-kit': 1.0.0-beta.16
+      '@logto/connector-kit': 1.0.0-beta.18
+      '@logto/core-kit': 1.0.0-beta.18
       '@logto/language-kit': 1.0.0-beta.16
       '@logto/phrases': link:../phrases
       '@logto/phrases-ui': link:../phrases-ui
@@ -402,7 +402,7 @@ importers:
 
   packages/demo-app:
     specifiers:
-      '@logto/core-kit': ^1.0.0-beta.13
+      '@logto/core-kit': 1.0.0-beta.18
       '@logto/language-kit': 1.0.0-beta.16
       '@logto/phrases': workspace:1.0.0-beta.10
       '@logto/react': 1.0.0-beta.8
@@ -429,7 +429,7 @@ importers:
       stylelint: ^14.9.1
       typescript: ^4.7.4
     devDependencies:
-      '@logto/core-kit': 1.0.0-beta.13
+      '@logto/core-kit': 1.0.0-beta.18
       '@logto/language-kit': 1.0.0-beta.16
       '@logto/phrases': link:../phrases
       '@logto/react': 1.0.0-beta.8_react@18.2.0
@@ -510,7 +510,7 @@ importers:
 
   packages/phrases:
     specifiers:
-      '@logto/core-kit': 1.0.0-beta.16
+      '@logto/core-kit': 1.0.0-beta.18
       '@logto/language-kit': 1.0.0-beta.15
       '@silverhand/eslint-config': 1.0.0
       '@silverhand/essentials': ^1.3.0
@@ -521,7 +521,7 @@ importers:
       typescript: ^4.7.4
       zod: ^3.18.0
     dependencies:
-      '@logto/core-kit': 1.0.0-beta.16
+      '@logto/core-kit': 1.0.0-beta.18
       '@logto/language-kit': 1.0.0-beta.15
       '@silverhand/essentials': 1.3.0
       zod: 3.18.0
@@ -535,7 +535,7 @@ importers:
 
   packages/phrases-ui:
     specifiers:
-      '@logto/core-kit': 1.0.0-beta.16
+      '@logto/core-kit': 1.0.0-beta.18
       '@logto/language-kit': 1.0.0-beta.16
       '@silverhand/eslint-config': 1.0.0
       '@silverhand/essentials': ^1.3.0
@@ -546,7 +546,7 @@ importers:
       typescript: ^4.7.4
       zod: ^3.18.0
     dependencies:
-      '@logto/core-kit': 1.0.0-beta.16
+      '@logto/core-kit': 1.0.0-beta.18
       '@logto/language-kit': 1.0.0-beta.16
       '@silverhand/essentials': 1.3.0
       zod: 3.18.0
@@ -560,8 +560,8 @@ importers:
 
   packages/schemas:
     specifiers:
-      '@logto/connector-kit': ^1.0.0-beta.13
-      '@logto/core-kit': ^1.0.0-beta.13
+      '@logto/connector-kit': 1.0.0-beta.18
+      '@logto/core-kit': 1.0.0-beta.18
       '@logto/language-kit': ^1.0.0-beta.16
       '@logto/phrases': workspace:1.0.0-beta.10
       '@logto/phrases-ui': workspace:1.0.0-beta.10
@@ -585,8 +585,8 @@ importers:
       typescript: ^4.7.4
       zod: ^3.18.0
     dependencies:
-      '@logto/connector-kit': 1.0.0-beta.13
-      '@logto/core-kit': 1.0.0-beta.13
+      '@logto/connector-kit': 1.0.0-beta.18
+      '@logto/core-kit': 1.0.0-beta.18
       '@logto/language-kit': 1.0.0-beta.16
       '@logto/phrases': link:../phrases
       '@logto/phrases-ui': link:../phrases-ui
@@ -648,7 +648,7 @@ importers:
 
   packages/ui:
     specifiers:
-      '@logto/core-kit': ^1.0.0-beta.13
+      '@logto/core-kit': 1.0.0-beta.18
       '@logto/phrases': workspace:1.0.0-beta.10
       '@logto/phrases-ui': workspace:1.0.0-beta.10
       '@logto/schemas': workspace:1.0.0-beta.10
@@ -701,7 +701,7 @@ importers:
       typescript: ^4.7.4
       use-debounced-loader: ^0.1.1
     dependencies:
-      '@logto/core-kit': 1.0.0-beta.13
+      '@logto/core-kit': 1.0.0-beta.18
     devDependencies:
       '@logto/phrases': link:../phrases
       '@logto/phrases-ui': link:../phrases-ui
@@ -2592,22 +2592,15 @@ packages:
       lodash.once: 4.1.1
     dev: true
 
-  /@logto/connector-kit/1.0.0-beta.13:
-    resolution: {integrity: sha512-bUgAaba1RkYIjHMPrcefLTJAf0d1uVhr864Gh/4JO7/du3xmbFbAWzDyfOhwzt1YZoG4NaMmjVXicfSh/zF/YQ==}
+  /@logto/connector-kit/1.0.0-beta.18:
+    resolution: {integrity: sha512-V3QxKE2gjs5FpLBihHA4YLC0RFK8gW56qZkBKk0uWt2gxcs5eGJvBxV1rgskn6W/3Z8ohnK5FJRv6fIOsUWSKw==}
     engines: {node: ^16.0.0}
     dependencies:
-      '@logto/core-kit': 1.0.0-beta.16
+      '@logto/core-kit': 1.0.0-beta.18
+      '@logto/language-kit': 1.0.0-beta.16
       '@silverhand/essentials': 1.3.0
       zod: 3.18.0
     dev: false
-
-  /@logto/core-kit/1.0.0-beta.13:
-    resolution: {integrity: sha512-3Ugvpu2VHfBziEOZ07v+JpwQSoU71pO60dIeN2w3SHVgr0G6TV0FC/0NxJqEOGEEh6rEvcikVocwZJBJ+P6CoA==}
-    engines: {node: ^16.0.0}
-    dependencies:
-      color: 4.2.3
-      nanoid: 3.3.4
-      zod: 3.18.0
 
   /@logto/core-kit/1.0.0-beta.14:
     resolution: {integrity: sha512-nyRlOU92k65TRHA7WaeM2ktiy0OmCooD8OXW9XxEOx4d6tJUReuFisPmNEh8bV3wK41fSy3zRwo93SAF6nSlRQ==}
@@ -2618,8 +2611,8 @@ packages:
       zod: 3.18.0
     dev: true
 
-  /@logto/core-kit/1.0.0-beta.16:
-    resolution: {integrity: sha512-6f03W+FczXOusWPB9PiMz8mIMIaylYEyPSmICmN8YmIUJgD7jN1tHRJSZjnuo/8h2L6szm/8oNGqcxgIpBjeWg==}
+  /@logto/core-kit/1.0.0-beta.18:
+    resolution: {integrity: sha512-VgSBWbPeFHgSOiOoYiE+TQF8byImxfd2xGTjA37RtFHMeUfT8CNTQWESUYuP7JWrKNm1N2ua7DTZZAJAKH9qMg==}
     engines: {node: ^16.0.0}
     dependencies:
       '@logto/language-kit': 1.0.0-beta.16

@@ -15,6 +15,9 @@
     "test:ci": "jest --coverage --silent",
     "test": "jest"
   },
+  "dependencies": {
+    "@logto/core-kit": "1.0.0-beta.18"
+  },
   "devDependencies": {
     "@logto/phrases": "workspace:1.0.0-beta.10",
     "@logto/phrases-ui": "workspace:1.0.0-beta.10",
@@ -80,8 +83,5 @@
   "stylelint": {
     "extends": "@silverhand/eslint-config-react/.stylelintrc"
   },
-  "prettier": "@silverhand/eslint-config/.prettierrc",
-  "dependencies": {
-    "@logto/core-kit": "^1.0.0-beta.13"
-  }
+  "prettier": "@silverhand/eslint-config/.prettierrc"
 }

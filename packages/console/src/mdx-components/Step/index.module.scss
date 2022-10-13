@@ -13,7 +13,7 @@
     cursor: pointer;
 
     > svg {
-      color: var(--color-icon);
+      color: var(--color-text-secondary);
     }
 
     .index {
@@ -83,7 +83,7 @@
 
   h3 {
     font: var(--font-title-medium);
-    color: var(--color-caption);
+    color: var(--color-text-secondary);
     margin: _.unit(6) 0 _.unit(3);
   }
 

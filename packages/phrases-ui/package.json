@@ -29,7 +29,7 @@
     "url": "https://github.com/logto-io/logto/issues"
   },
   "dependencies": {
-    "@logto/core-kit": "1.0.0-beta.16",
+    "@logto/core-kit": "1.0.0-beta.18",
     "@logto/language-kit": "1.0.0-beta.16",
     "@silverhand/essentials": "^1.3.0",
     "zod": "^3.18.0"

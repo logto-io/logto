@@ -11,7 +11,7 @@
 }
 
 .primaryTag {
-  color: var(--color-caption);
+  color: var(--color-text-secondary);
 }
 
 .method {
@@ -26,11 +26,11 @@
   display: flex;
   align-items: baseline;
   font: var(--font-body-medium);
-  color: var(--color-caption);
+  color: var(--color-text-secondary);
 }
 
 .defaultLanguageDescription {
   padding-top: _.unit(2);
   font: var(--font-body-medium);
-  color: var(--color-caption);
+  color: var(--color-text-secondary);
 }
