@@ -4,7 +4,7 @@ import { useState, useRef, useMemo, createContext, useCallback } from 'react';
 import { WebModal, MobileModal, ModalProps } from '@/components/ConfirmModal';
 import usePlatform from '@/hooks/use-platform';
 
-export type ChildRenderProps = {
+export type ModalContentRenderProps = {
   confirm: (data?: unknown) => void;
   cancel: (data?: unknown) => void;
 };
@@ -12,7 +12,7 @@ export type ChildRenderProps = {
 type ConfirmModalType = 'alert' | 'confirm';
 
 type ConfirmModalState = Omit<ModalProps, 'onClose' | 'onConfirm' | 'children'> & {
-  ModalContent: string | ((props: ChildRenderProps) => Nullable<JSX.Element>);
+  ModalContent: string | ((props: ModalContentRenderProps) => Nullable<JSX.Element>);
   type: ConfirmModalType;
 };
 
