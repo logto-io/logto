@@ -14,7 +14,6 @@
 }
 
 .sectionBuiltInText {
-  width: 280px;
   padding: _.unit(2) _.unit(3);
   border-radius: 6px;
   border: 1px solid var(--color-border);
@@ -28,7 +27,7 @@
 
 .sectionInputArea {
   position: absolute;
-  inset: _.unit(3) _.unit(8);
+  inset: _.unit(2) _.unit(5);
   border-radius: 6px;
   border: 1px solid var(--color-border);
   outline: 3px solid transparent;

@@ -39,31 +39,23 @@
     > table {
       border: none;
 
-      > thead > tr {
-        > th {
+      > thead {
+        position: sticky;
+        top: 0;
+        // Note: cells with `position: relative` style will overlap this sticky header, add a z-index to fix it.
+        z-index: 1;
+
+        tr > th {
+          padding: _.unit(1) _.unit(5);
           font: var(--font-label-large);
           color: var(--color-text);
           background-color: var(--color-layer-1);
-          position: sticky;
-          top: 0;
-          // Note: cells with `position: relative` style will overlap this sticky header, add a z-index to fix it.
-          z-index: 1;
-        }
-
-        > th:first-child {
-          width: 300px;
-          padding: _.unit(1) _.unit(5);
         }
       }
 
-      > tbody > tr {
-        > td {
-          border: none;
-        }
-
-        > td:first-child {
-          padding: _.unit(1) _.unit(5);
-        }
+      > tbody > tr > td {
+        padding: _.unit(2) _.unit(5);
+        border: none;
       }
     }
 
