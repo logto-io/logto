@@ -74,6 +74,11 @@
       margin-left: _.unit(1);
     }
 
+    .clearIcon {
+      width: 16px;
+      height: 16px;
+    }
+
     .sectionTitle {
       @include _.subhead-cap;
       background-color: var(--color-layer-light);
