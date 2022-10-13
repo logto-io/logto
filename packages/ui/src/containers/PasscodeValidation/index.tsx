@@ -7,8 +7,8 @@ import { useTimer } from 'react-timer-hook';
 import { getSendPasscodeApi, getVerifyPasscodeApi } from '@/apis/utils';
 import Passcode, { defaultLength } from '@/components/Passcode';
 import TextLink from '@/components/TextLink';
+import usePasswordlessErrorHandler from '@/containers/PasscodeValidation/use-passwordless-error-handler';
 import useApi, { ErrorHandlers } from '@/hooks/use-api';
-import { useConfirmModal } from '@/hooks/use-confirm-modal';
 import { PageContext } from '@/hooks/use-page-context';
 import { UserFlow, SearchParameters } from '@/types';
 import { getSearchParameters } from '@/utils';
@@ -36,7 +36,6 @@ const PasscodeValidation = ({ type, method, className, target }: Props) => {
   const [error, setError] = useState<string>();
   const { setToast } = useContext(PageContext);
   const { t } = useTranslation();
-  const { show } = useConfirmModal();
   const navigate = useNavigate();
 
   const { seconds, isRunning, restart } = useTimer({
@@ -44,27 +43,22 @@ const PasscodeValidation = ({ type, method, className, target }: Props) => {
     expiryTimestamp: getTimeout(),
   });
 
+  const { passwordlessErrorHandlers } = usePasswordlessErrorHandler(type, target);
+
   const verifyPasscodeErrorHandlers: ErrorHandlers = useMemo(
     () => ({
       'passcode.expired': (error) => {
         setError(error.message);
       },
-      'user.phone_not_exists': async (error) => {
-        await show({ type: 'alert', ModalContent: error.message, cancelText: 'action.got_it' });
-        navigate(-1);
-      },
-      'user.email_not_exists': async (error) => {
-        await show({ type: 'alert', ModalContent: error.message, cancelText: 'action.got_it' });
-        navigate(-1);
-      },
       'passcode.code_mismatch': (error) => {
         setError(error.message);
       },
+      ...passwordlessErrorHandlers,
       callback: () => {
         setCode([]);
       },
     }),
-    [navigate, show]
+    [passwordlessErrorHandlers]
   );
 
   const { result: verifyPasscodeResult, run: verifyPassCode } = useApi(
