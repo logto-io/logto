@@ -6,8 +6,6 @@ import findUp, { exists } from 'find-up';
 
 const findPackage = async (cwd: string, allowSymlink = false) =>
   findUp(
-    // Will update to 7 soon
-    // eslint-disable-next-line complexity
     async (directory) => {
       const testPath = path.join(directory, 'package.json');
       const hasPackageJson = await exists(testPath);
