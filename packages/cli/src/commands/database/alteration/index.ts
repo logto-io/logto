@@ -5,26 +5,35 @@ import { findPackage } from '@logto/shared';
 import { conditionalString } from '@silverhand/essentials';
 import chalk from 'chalk';
 import { copy, existsSync, remove, readdir } from 'fs-extra';
+import { SemVer } from 'semver';
 import { DatabasePool } from 'slonik';
 import { CommandModule } from 'yargs';
 
-import { createPoolFromConfig } from '../../database';
+import { createPoolFromConfig } from '../../../database';
 import {
   getCurrentDatabaseAlterationTimestamp,
   updateDatabaseTimestamp,
-} from '../../queries/logto-config';
-import { getPathInModule, log } from '../../utilities';
+} from '../../../queries/logto-config';
+import { getPathInModule, log } from '../../../utilities';
+import { AlterationFile } from './type';
+import { chooseAlterationsByVersion } from './version';
 
-const alterationFileNameRegex = /-(\d+)-?.*\.js$/;
+const alterationFilenameRegex = /-(\d+)-?.*\.js$/;
 
-const getTimestampFromFileName = (fileName: string) => {
-  const match = alterationFileNameRegex.exec(fileName);
+const getTimestampFromFilename = (filename: string) => {
+  const match = alterationFilenameRegex.exec(filename);
 
   if (!match?.[1]) {
-    throw new Error(`Can not get timestamp: ${fileName}`);
+    throw new Error(`Can not get timestamp: ${filename}`);
   }
 
   return Number(match[1]);
+};
+
+const getVersionFromFilename = (filename: string) => {
+  try {
+    return new SemVer(filename.split('-')[0]?.replaceAll('_', '-') ?? 'unknown');
+  } catch {}
 };
 
 const importAlterationScript = async (filePath: string): Promise<AlterationScript> => {
@@ -34,8 +43,6 @@ const importAlterationScript = async (filePath: string): Promise<AlterationScrip
   // eslint-disable-next-line no-restricted-syntax
   return module.default as AlterationScript;
 };
-
-type AlterationFile = { path: string; filename: string };
 
 export const getAlterationFiles = async (): Promise<AlterationFile[]> => {
   const alterationDirectory = getPathInModule('@logto/schemas', 'alterations');
@@ -67,11 +74,11 @@ export const getAlterationFiles = async (): Promise<AlterationFile[]> => {
   await copy(alterationDirectory, localAlterationDirectory);
 
   const directory = await readdir(localAlterationDirectory);
-  const files = directory.filter((file) => alterationFileNameRegex.test(file));
+  const files = directory.filter((file) => alterationFilenameRegex.test(file));
 
   return files
     .slice()
-    .sort((file1, file2) => getTimestampFromFileName(file1) - getTimestampFromFileName(file2))
+    .sort((file1, file2) => getTimestampFromFilename(file1) - getTimestampFromFilename(file2))
     .map((filename) => ({ path: path.join(localAlterationDirectory, filename), filename }));
 };
 
@@ -83,14 +90,14 @@ export const getLatestAlterationTimestamp = async () => {
     return 0;
   }
 
-  return getTimestampFromFileName(lastFile.filename);
+  return getTimestampFromFilename(lastFile.filename);
 };
 
 export const getUndeployedAlterations = async (pool: DatabasePool) => {
   const databaseTimestamp = await getCurrentDatabaseAlterationTimestamp(pool);
   const files = await getAlterationFiles();
 
-  return files.filter(({ filename }) => getTimestampFromFileName(filename) > databaseTimestamp);
+  return files.filter(({ filename }) => getTimestampFromFilename(filename) > databaseTimestamp);
 };
 
 const deployAlteration = async (
@@ -102,7 +109,7 @@ const deployAlteration = async (
   try {
     await pool.transaction(async (connection) => {
       await up(connection);
-      await updateDatabaseTimestamp(connection, getTimestampFromFileName(filename));
+      await updateDatabaseTimestamp(connection, getTimestampFromFilename(filename));
     });
   } catch (error: unknown) {
     console.error(error);
@@ -118,22 +125,30 @@ const deployAlteration = async (
   log.info(`Run alteration ${filename} succeeded`);
 };
 
-const alteration: CommandModule<unknown, { action: string }> = {
-  command: ['alteration <action>', 'alt', 'alter'],
+const alteration: CommandModule<unknown, { action: string; target?: string }> = {
+  command: ['alteration <action> [target]', 'alt', 'alter'],
   describe: 'Perform database alteration',
   builder: (yargs) =>
-    yargs.positional('action', {
-      describe: 'The action to perform, now it only accepts `deploy`',
-      type: 'string',
-      demandOption: true,
-    }),
-  handler: async ({ action }) => {
+    yargs
+      .positional('action', {
+        describe: 'The action to perform, now it only accepts `deploy`',
+        type: 'string',
+        demandOption: true,
+      })
+      .positional('target', {
+        describe: 'The target Logto version for alteration',
+        type: 'string',
+      }),
+  handler: async ({ action, target }) => {
     if (action !== 'deploy') {
       log.error('Unsupported action');
     }
 
     const pool = await createPoolFromConfig();
-    const alterations = await getUndeployedAlterations(pool);
+    const alterations = await chooseAlterationsByVersion(
+      await getUndeployedAlterations(pool),
+      target
+    );
 
     log.info(
       `Found ${alterations.length} alteration${conditionalString(

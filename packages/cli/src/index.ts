@@ -6,20 +6,35 @@ import { hideBin } from 'yargs/helpers';
 import connector from './commands/connector';
 import database from './commands/database';
 import install from './commands/install';
+import packageJson from './package.json';
 import { cliConfig, ConfigKey } from './utilities';
 
 void yargs(hideBin(process.argv))
+  .version(false)
   .option('env', {
     alias: ['e', 'env-file'],
     describe: 'The path to your `.env` file',
     type: 'string',
   })
-  .option('databaseUrl', {
-    alias: ['db-url'],
+  .option('db', {
+    alias: ['db-url', 'database-url'],
     describe: 'The Postgres URL to Logto database',
     type: 'string',
   })
-  .middleware(({ env, databaseUrl }) => {
+  .option('version', {
+    alias: 'v',
+    describe: 'Print Logto CLI version',
+    type: 'boolean',
+    global: false,
+  })
+  .middleware(({ version }) => {
+    if (version) {
+      console.log(packageJson.name + ' v' + packageJson.version);
+      // eslint-disable-next-line unicorn/no-process-exit
+      process.exit(0);
+    }
+  }, true)
+  .middleware(({ env, db: databaseUrl }) => {
     dotenv.config({ path: env });
 
     const initialDatabaseUrl = databaseUrl ?? process.env[ConfigKey.DatabaseUrl];

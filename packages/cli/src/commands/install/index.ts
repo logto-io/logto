@@ -63,30 +63,37 @@ const installLogto = async ({ path, skipSeed, officialConnectors }: InstallArgs)
   logFinale(instancePath);
 };
 
-const install: CommandModule<unknown, InstallArgs> = {
+const install: CommandModule<
+  unknown,
+  {
+    p?: string;
+    ss: boolean;
+    oc?: boolean;
+  }
+> = {
   command: ['init', 'i', 'install'],
   describe: 'Download and run the latest Logto release',
   builder: (yargs) =>
     yargs.options({
-      path: {
-        alias: 'p',
+      p: {
+        alias: 'path',
         describe: 'Path of Logto, must be a non-existing path',
         type: 'string',
       },
-      skipSeed: {
-        alias: 'ss',
+      ss: {
+        alias: 'skip-seed',
         describe: 'Skip Logto database seeding',
         type: 'boolean',
         default: false,
       },
-      officialConnectors: {
-        alias: 'oc',
+      oc: {
+        alias: 'official-connectors',
         describe: 'Add official connectors after downloading Logto',
         type: 'boolean',
       },
     }),
-  handler: async ({ path, skipSeed, officialConnectors }) => {
-    await installLogto({ path, skipSeed, officialConnectors });
+  handler: async ({ p, ss, oc }) => {
+    await installLogto({ path: p, skipSeed: ss, officialConnectors: oc });
   },
 };
 

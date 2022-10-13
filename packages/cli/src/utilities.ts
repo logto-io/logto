@@ -152,3 +152,30 @@ export const getCliConfigWithPrompt = async ({
 
   return input;
 };
+
+// https://stackoverflow.com/a/53187807/12514940
+/**
+ * Returns the index of the last element in the array where predicate is true, and -1
+ * otherwise.
+ * @param array The source array to search in
+ * @param predicate find calls predicate once for each element of the array, in descending
+ * order, until it finds one where predicate returns true. If such an element is found,
+ * findLastIndex immediately returns that element index. Otherwise, findLastIndex returns -1.
+ */
+export function findLastIndex<T>(
+  array: readonly T[],
+  predicate: (value: T, index: number, object: readonly T[]) => boolean
+): number {
+  // eslint-disable-next-line @silverhand/fp/no-let
+  let { length } = array;
+
+  // eslint-disable-next-line @silverhand/fp/no-mutation
+  while (length--) {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    if (predicate(array[length]!, length, array)) {
+      return length;
+    }
+  }
+
+  return -1;
+}
