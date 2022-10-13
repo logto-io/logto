@@ -13,7 +13,7 @@ const encryptUserPassword = jest.fn(async (password: string) => ({
   passwordEncryptionMethod: 'Argon2i',
 }));
 const findUserById = jest.fn(async (): Promise<User> => mockUserWithPassword);
-const updateUserById = jest.fn(async (..._args: unknown[]) => ({ id: 'id' }));
+const updateUserById = jest.fn(async (..._args: unknown[]) => ({ userId: 'id' }));
 
 jest.mock('@/lib/user', () => ({
   ...jest.requireActual('@/lib/user'),
@@ -23,16 +23,16 @@ jest.mock('@/lib/user', () => ({
 jest.mock('@/queries/user', () => ({
   ...jest.requireActual('@/queries/user'),
   hasUserWithPhone: async (phone: string) => phone === '13000000000',
-  findUserByPhone: async () => ({ id: 'id' }),
+  findUserByPhone: async () => ({ userId: 'id' }),
   hasUserWithEmail: async (email: string) => email === 'a@a.com',
-  findUserByEmail: async () => ({ id: 'id' }),
+  findUserByEmail: async () => ({ userId: 'id' }),
   findUserById: async () => findUserById(),
   updateUserById: async (...args: unknown[]) => updateUserById(...args),
 }));
 
 const sendPasscode = jest.fn(async () => ({ dbEntry: { id: 'connectorIdValue' } }));
 jest.mock('@/lib/passcode', () => ({
-  createPasscode: async () => ({ id: 'id' }),
+  createPasscode: async () => ({ userId: 'id' }),
   sendPasscode: async () => sendPasscode(),
   verifyPasscode: async (_a: unknown, _b: unknown, code: string) => {
     if (code !== '1234') {
@@ -82,7 +82,7 @@ describe('session -> forgotPasswordRoutes', () => {
       interactionDetails.mockResolvedValueOnce({
         result: {
           verification: {
-            id: 'id',
+            userId: 'id',
             expiresAt: dayjs().add(1, 'day').toISOString(),
             flow: PasscodeType.ForgotPassword,
           },
@@ -119,7 +119,7 @@ describe('session -> forgotPasswordRoutes', () => {
       interactionDetails.mockResolvedValueOnce({
         result: {
           verification: {
-            id: 'id',
+            userId: 'id',
             expiresAt: dayjs().add(1, 'day').toISOString(),
             flow: PasscodeType.SignIn,
           },
@@ -134,7 +134,7 @@ describe('session -> forgotPasswordRoutes', () => {
     it('should throw when `verification.expiresAt` is not string', async () => {
       interactionDetails.mockResolvedValueOnce({
         result: {
-          verification: { id: 'id', expiresAt: 0, flow: PasscodeType.ForgotPassword },
+          verification: { userId: 'id', expiresAt: 0, flow: PasscodeType.ForgotPassword },
         },
       });
       const response = await sessionRequest
@@ -147,7 +147,7 @@ describe('session -> forgotPasswordRoutes', () => {
       interactionDetails.mockResolvedValueOnce({
         result: {
           verification: {
-            id: 'id',
+            userId: 'id',
             expiresAt: 'invalid date string',
             flow: PasscodeType.ForgotPassword,
           },
@@ -163,7 +163,7 @@ describe('session -> forgotPasswordRoutes', () => {
       interactionDetails.mockResolvedValueOnce({
         result: {
           verification: {
-            id: 'id',
+            userId: 'id',
             expiresAt: dayjs().subtract(1, 'day').toISOString(),
             flow: PasscodeType.ForgotPassword,
           },
@@ -179,7 +179,7 @@ describe('session -> forgotPasswordRoutes', () => {
       interactionDetails.mockResolvedValueOnce({
         result: {
           verification: {
-            id: 'id',
+            userId: 'id',
             expiresAt: dayjs().add(1, 'day').toISOString(),
             flow: PasscodeType.ForgotPassword,
           },
@@ -196,7 +196,7 @@ describe('session -> forgotPasswordRoutes', () => {
       interactionDetails.mockResolvedValueOnce({
         result: {
           verification: {
-            id: 'id',
+            userId: 'id',
             expiresAt: dayjs().add(1, 'day').toISOString(),
             flow: PasscodeType.ForgotPassword,
           },

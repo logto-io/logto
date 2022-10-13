@@ -8,6 +8,7 @@ import RequestError from '@/errors/RequestError';
 import { createRequester } from '@/utils/test-utils';
 
 import { verificationTimeout } from './consts';
+import * as passwordlessActions from './middleware/passwordless-action';
 import passwordlessRoutes, { registerRoute, signInRoute } from './passwordless';
 
 const insertUser = jest.fn(async (..._args: unknown[]) => ({ id: 'id' }));
@@ -28,6 +29,11 @@ jest.mock('@/queries/user', () => ({
   hasUserWithPhone: async (phone: string) => phone === '13000000000',
   hasUserWithEmail: async (email: string) => email === 'a@a.com',
 }));
+
+const smsSignInActionSpy = jest.spyOn(passwordlessActions, 'smsSignInAction');
+const emailSignInActionSpy = jest.spyOn(passwordlessActions, 'emailSignInAction');
+const smsRegisterActionSpy = jest.spyOn(passwordlessActions, 'smsRegisterAction');
+const emailRegisterActionSpy = jest.spyOn(passwordlessActions, 'emailRegisterAction');
 
 const sendPasscode = jest.fn(async () => ({ dbEntry: { id: 'connectorIdValue' } }));
 const createPasscode = jest.fn(async (..._args: unknown[]) => ({ id: 'id' }));
@@ -171,18 +177,21 @@ describe('session -> passwordlessRoutes', () => {
         jti: 'jti',
       });
     });
+
     afterEach(() => {
       jest.useRealTimers();
       jest.clearAllMocks();
       jest.resetModules();
     });
+
     it('should call interactionResult (with flow `sign-in`)', async () => {
       const fakeTime = new Date();
       jest.useFakeTimers().setSystemTime(fakeTime);
-      const response = await sessionRequest
+
+      await sessionRequest
         .post('/session/passwordless/sms/verify')
         .send({ phone: '13000000000', code: '1234', flow: PasscodeType.SignIn });
-      expect(response.statusCode).toEqual(204);
+
       expect(interactionResult).toHaveBeenCalledWith(
         expect.anything(),
         expect.anything(),
@@ -194,14 +203,19 @@ describe('session -> passwordlessRoutes', () => {
           },
         })
       );
+
+      // Should call sign-in with sms properly
+      expect(smsSignInActionSpy).toBeCalled();
     });
+
     it('should call interactionResult (with flow `register`)', async () => {
       const fakeTime = new Date();
       jest.useFakeTimers().setSystemTime(fakeTime);
-      const response = await sessionRequest
+
+      await sessionRequest
         .post('/session/passwordless/sms/verify')
         .send({ phone: '13000000000', code: '1234', flow: PasscodeType.Register });
-      expect(response.statusCode).toEqual(204);
+
       expect(interactionResult).toHaveBeenCalledWith(
         expect.anything(),
         expect.anything(),
@@ -213,26 +227,33 @@ describe('session -> passwordlessRoutes', () => {
           },
         })
       );
+
+      expect(smsRegisterActionSpy).toBeCalled();
     });
+
     it('should call interactionResult (with flow `forgot-password`)', async () => {
       const fakeTime = new Date();
       jest.useFakeTimers().setSystemTime(fakeTime);
+
       const response = await sessionRequest
         .post('/session/passwordless/sms/verify')
         .send({ phone: '13000000000', code: '1234', flow: PasscodeType.ForgotPassword });
+
       expect(response.statusCode).toEqual(204);
+
       expect(interactionResult).toHaveBeenCalledWith(
         expect.anything(),
         expect.anything(),
         expect.objectContaining({
           verification: {
-            id: 'id',
+            userId: 'id',
             expiresAt: dayjs(fakeTime).add(verificationTimeout, 'second').toISOString(),
             flow: PasscodeType.ForgotPassword,
           },
         })
       );
     });
+
     it('throw 404 (with flow `forgot-password`)', async () => {
       const response = await sessionRequest
         .post('/session/passwordless/sms/verify')
@@ -240,6 +261,7 @@ describe('session -> passwordlessRoutes', () => {
       expect(response.statusCode).toEqual(404);
       expect(interactionResult).toHaveBeenCalledTimes(0);
     });
+
     it('throw when code is wrong', async () => {
       const response = await sessionRequest
         .post('/session/passwordless/sms/verify')
@@ -254,18 +276,21 @@ describe('session -> passwordlessRoutes', () => {
         jti: 'jti',
       });
     });
+
     afterEach(() => {
       jest.useRealTimers();
       jest.clearAllMocks();
       jest.resetModules();
     });
+
     it('should call interactionResult (with flow `sign-in`)', async () => {
       const fakeTime = new Date();
       jest.useFakeTimers().setSystemTime(fakeTime);
-      const response = await sessionRequest
+
+      await sessionRequest
         .post('/session/passwordless/email/verify')
         .send({ email: 'a@a.com', code: '1234', flow: PasscodeType.SignIn });
-      expect(response.statusCode).toEqual(204);
+
       expect(interactionResult).toHaveBeenCalledWith(
         expect.anything(),
         expect.anything(),
@@ -277,14 +302,18 @@ describe('session -> passwordlessRoutes', () => {
           },
         })
       );
+
+      expect(emailSignInActionSpy).toBeCalled();
     });
+
     it('should call interactionResult (with flow `register`)', async () => {
       const fakeTime = new Date();
       jest.useFakeTimers().setSystemTime(fakeTime);
-      const response = await sessionRequest
+
+      await sessionRequest
         .post('/session/passwordless/email/verify')
         .send({ email: 'a@a.com', code: '1234', flow: PasscodeType.Register });
-      expect(response.statusCode).toEqual(204);
+
       expect(interactionResult).toHaveBeenCalledWith(
         expect.anything(),
         expect.anything(),
@@ -296,26 +325,33 @@ describe('session -> passwordlessRoutes', () => {
           },
         })
       );
+
+      expect(emailRegisterActionSpy).toBeCalled();
     });
+
     it('should call interactionResult (with flow `forgot-password`)', async () => {
       const fakeTime = new Date();
       jest.useFakeTimers().setSystemTime(fakeTime);
+
       const response = await sessionRequest
         .post('/session/passwordless/email/verify')
         .send({ email: 'a@a.com', code: '1234', flow: PasscodeType.ForgotPassword });
+
       expect(response.statusCode).toEqual(204);
+
       expect(interactionResult).toHaveBeenCalledWith(
         expect.anything(),
         expect.anything(),
         expect.objectContaining({
           verification: {
-            id: 'id',
+            userId: 'id',
             expiresAt: dayjs(fakeTime).add(verificationTimeout, 'second').toISOString(),
             flow: PasscodeType.ForgotPassword,
           },
         })
       );
     });
+
     it('throw 404 (with flow `forgot-password`)', async () => {
       const fakeTime = new Date();
       jest.useFakeTimers().setSystemTime(fakeTime);
@@ -325,6 +361,7 @@ describe('session -> passwordlessRoutes', () => {
       expect(response.statusCode).toEqual(404);
       expect(interactionResult).toHaveBeenCalledTimes(0);
     });
+
     it('throw when code is wrong', async () => {
       const response = await sessionRequest
         .post('/session/passwordless/email/verify')
@@ -337,6 +374,7 @@ describe('session -> passwordlessRoutes', () => {
     beforeEach(() => {
       jest.resetAllMocks();
     });
+
     it('should call interactionResult (with flow `sign-in`)', async () => {
       interactionDetails.mockResolvedValueOnce({
         result: {
@@ -348,7 +386,9 @@ describe('session -> passwordlessRoutes', () => {
         },
       });
       const response = await sessionRequest.post(`${signInRoute}/sms`);
+
       expect(response.statusCode).toEqual(200);
+
       expect(interactionResult).toHaveBeenCalledWith(
         expect.anything(),
         expect.anything(),
@@ -358,6 +398,7 @@ describe('session -> passwordlessRoutes', () => {
         expect.anything()
       );
     });
+
     it('should call interactionResult (with flow `register`)', async () => {
       interactionDetails.mockResolvedValueOnce({
         result: {
@@ -379,6 +420,7 @@ describe('session -> passwordlessRoutes', () => {
         expect.anything()
       );
     });
+
     it('throw when verification session invalid', async () => {
       interactionDetails.mockResolvedValueOnce({
         result: {
@@ -391,6 +433,7 @@ describe('session -> passwordlessRoutes', () => {
       const response = await sessionRequest.post(`${signInRoute}/sms`);
       expect(response.statusCode).toEqual(404);
     });
+
     it('throw when flow is not `sign-in` and `register`', async () => {
       interactionDetails.mockResolvedValueOnce({
         result: {
@@ -404,6 +447,7 @@ describe('session -> passwordlessRoutes', () => {
       const response = await sessionRequest.post(`${signInRoute}/sms`);
       expect(response.statusCode).toEqual(404);
     });
+
     it('throw when expiresAt is not valid ISO date string', async () => {
       interactionDetails.mockResolvedValueOnce({
         result: {
@@ -417,6 +461,7 @@ describe('session -> passwordlessRoutes', () => {
       const response = await sessionRequest.post(`${signInRoute}/sms`);
       expect(response.statusCode).toEqual(401);
     });
+
     it('throw when validation expired', async () => {
       interactionDetails.mockResolvedValueOnce({
         result: {
@@ -430,10 +475,12 @@ describe('session -> passwordlessRoutes', () => {
       const response = await sessionRequest.post(`${signInRoute}/sms`);
       expect(response.statusCode).toEqual(401);
     });
+
     it('throw when phone not exist', async () => {
       interactionDetails.mockResolvedValueOnce({
         result: {
           verification: {
+            email: 'XX@foo',
             flow: PasscodeType.SignIn,
             expiresAt: dayjs().add(1, 'day').toISOString(),
           },
@@ -442,6 +489,7 @@ describe('session -> passwordlessRoutes', () => {
       const response = await sessionRequest.post(`${signInRoute}/sms`);
       expect(response.statusCode).toEqual(404);
     });
+
     it("throw when phone not exist as user's primaryPhone", async () => {
       interactionDetails.mockResolvedValueOnce({
         result: {
@@ -453,7 +501,7 @@ describe('session -> passwordlessRoutes', () => {
         },
       });
       const response = await sessionRequest.post(`${signInRoute}/sms`);
-      expect(response.statusCode).toEqual(422);
+      expect(response.statusCode).toEqual(404);
     });
   });
 
@@ -461,6 +509,7 @@ describe('session -> passwordlessRoutes', () => {
     beforeEach(() => {
       jest.resetAllMocks();
     });
+
     it('should call interactionResult (with flow `sign-in`)', async () => {
       interactionDetails.mockResolvedValueOnce({
         result: {
@@ -471,7 +520,9 @@ describe('session -> passwordlessRoutes', () => {
           },
         },
       });
+
       const response = await sessionRequest.post(`${signInRoute}/email`);
+
       expect(response.statusCode).toEqual(200);
       expect(interactionResult).toHaveBeenCalledWith(
         expect.anything(),
@@ -482,6 +533,7 @@ describe('session -> passwordlessRoutes', () => {
         expect.anything()
       );
     });
+
     it('should call interactionResult (with flow `register`)', async () => {
       interactionDetails.mockResolvedValueOnce({
         result: {
@@ -492,7 +544,9 @@ describe('session -> passwordlessRoutes', () => {
           },
         },
       });
+
       const response = await sessionRequest.post(`${signInRoute}/email`);
+
       expect(response.statusCode).toEqual(200);
       expect(interactionResult).toHaveBeenCalledWith(
         expect.anything(),
@@ -503,6 +557,7 @@ describe('session -> passwordlessRoutes', () => {
         expect.anything()
       );
     });
+
     it('throw when verification session invalid', async () => {
       interactionDetails.mockResolvedValueOnce({
         result: {
@@ -515,6 +570,7 @@ describe('session -> passwordlessRoutes', () => {
       const response = await sessionRequest.post(`${signInRoute}/email`);
       expect(response.statusCode).toEqual(404);
     });
+
     it('throw when flow is not `sign-in` and `register`', async () => {
       interactionDetails.mockResolvedValueOnce({
         result: {
@@ -528,6 +584,7 @@ describe('session -> passwordlessRoutes', () => {
       const response = await sessionRequest.post(`${signInRoute}/email`);
       expect(response.statusCode).toEqual(404);
     });
+
     it('throw when email not exist', async () => {
       interactionDetails.mockResolvedValueOnce({
         result: {
@@ -540,6 +597,7 @@ describe('session -> passwordlessRoutes', () => {
       const response = await sessionRequest.post(`${signInRoute}/email`);
       expect(response.statusCode).toEqual(404);
     });
+
     it("throw when email not exist as user's primaryEmail", async () => {
       interactionDetails.mockResolvedValueOnce({
         result: {
@@ -551,7 +609,7 @@ describe('session -> passwordlessRoutes', () => {
         },
       });
       const response = await sessionRequest.post(`${signInRoute}/email`);
-      expect(response.statusCode).toEqual(422);
+      expect(response.statusCode).toEqual(404);
     });
   });
 
@@ -559,6 +617,7 @@ describe('session -> passwordlessRoutes', () => {
     beforeEach(() => {
       jest.resetAllMocks();
     });
+
     it('should call interactionResult (with flow `register`)', async () => {
       interactionDetails.mockResolvedValueOnce({
         result: {
@@ -580,6 +639,7 @@ describe('session -> passwordlessRoutes', () => {
         expect.anything()
       );
     });
+
     it('should call interactionResult (with flow `sign-in`)', async () => {
       interactionDetails.mockResolvedValueOnce({
         result: {
@@ -601,6 +661,7 @@ describe('session -> passwordlessRoutes', () => {
         expect.anything()
       );
     });
+
     it('throw when verification session invalid', async () => {
       interactionDetails.mockResolvedValueOnce({
         result: {
@@ -613,6 +674,7 @@ describe('session -> passwordlessRoutes', () => {
       const response = await sessionRequest.post(`${registerRoute}/sms`);
       expect(response.statusCode).toEqual(404);
     });
+
     it('throw when flow is not `register` and `sign-in`', async () => {
       interactionDetails.mockResolvedValueOnce({
         result: {
@@ -626,6 +688,7 @@ describe('session -> passwordlessRoutes', () => {
       const response = await sessionRequest.post(`${registerRoute}/sms`);
       expect(response.statusCode).toEqual(404);
     });
+
     it('throw when phone not exist', async () => {
       interactionDetails.mockResolvedValueOnce({
         result: {
@@ -638,6 +701,7 @@ describe('session -> passwordlessRoutes', () => {
       const response = await sessionRequest.post(`${registerRoute}/sms`);
       expect(response.statusCode).toEqual(404);
     });
+
     it("throw when phone already exist as user's primaryPhone", async () => {
       interactionDetails.mockResolvedValueOnce({
         result: {
@@ -657,6 +721,7 @@ describe('session -> passwordlessRoutes', () => {
     beforeEach(() => {
       jest.resetAllMocks();
     });
+
     it('should call interactionResult (with flow `register`)', async () => {
       interactionDetails.mockResolvedValueOnce({
         result: {
@@ -678,6 +743,7 @@ describe('session -> passwordlessRoutes', () => {
         expect.anything()
       );
     });
+
     it('should call interactionResult (with flow `sign-in`)', async () => {
       interactionDetails.mockResolvedValueOnce({
         result: {
@@ -699,6 +765,7 @@ describe('session -> passwordlessRoutes', () => {
         expect.anything()
       );
     });
+
     it('throw when verification session invalid', async () => {
       interactionDetails.mockResolvedValueOnce({
         result: {
@@ -711,6 +778,7 @@ describe('session -> passwordlessRoutes', () => {
       const response = await sessionRequest.post(`${registerRoute}/email`);
       expect(response.statusCode).toEqual(404);
     });
+
     it('throw when flow is not `register` and `sign-in`', async () => {
       interactionDetails.mockResolvedValueOnce({
         result: {
@@ -724,6 +792,7 @@ describe('session -> passwordlessRoutes', () => {
       const response = await sessionRequest.post(`${registerRoute}/email`);
       expect(response.statusCode).toEqual(404);
     });
+
     it('throw when email not exist', async () => {
       interactionDetails.mockResolvedValueOnce({
         result: {
@@ -736,6 +805,7 @@ describe('session -> passwordlessRoutes', () => {
       const response = await sessionRequest.post(`${registerRoute}/email`);
       expect(response.statusCode).toEqual(404);
     });
+
     it("throw when email already exist as user's primaryEmail", async () => {
       interactionDetails.mockResolvedValueOnce({
         result: {

@@ -39,11 +39,11 @@ export default function forgotPasswordRoutes<T extends AnonymousRouter>(
       const type = 'ForgotPasswordReset';
       ctx.log(type, verificationStorage);
 
-      const { id, expiresAt } = verificationStorage;
+      const { userId, expiresAt } = verificationStorage;
 
       checkValidateExpiration(expiresAt);
 
-      const { passwordEncrypted: oldPasswordEncrypted } = await findUserById(id);
+      const { passwordEncrypted: oldPasswordEncrypted } = await findUserById(userId);
 
       assertThat(
         !oldPasswordEncrypted ||
@@ -53,9 +53,9 @@ export default function forgotPasswordRoutes<T extends AnonymousRouter>(
 
       const { passwordEncrypted, passwordEncryptionMethod } = await encryptUserPassword(password);
 
-      ctx.log(type, { userId: id });
+      ctx.log(type, { userId });
 
-      await updateUserById(id, { passwordEncrypted, passwordEncryptionMethod });
+      await updateUserById(userId, { passwordEncrypted, passwordEncryptionMethod });
       await clearVerificationResult(ctx, provider);
       ctx.status = 204;
 

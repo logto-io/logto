@@ -9,16 +9,7 @@ import RequestError from '@/errors/RequestError';
 import assertThat from '@/utils/assert-that';
 
 import { verificationTimeout } from './consts';
-import {
-  emailSessionResultGuard,
-  smsSessionResultGuard,
-  forgotPasswordSessionResultGuard,
-  Method,
-  Operation,
-  VerificationResult,
-  VerificationStorage,
-  VerifiedIdentity,
-} from './types';
+import { Method, Operation, VerificationResult, VerificationStorage } from './types';
 
 export const getRoutePrefix = (
   type: 'sign-in' | 'register' | 'forgot-password',
@@ -44,11 +35,14 @@ export const getPasswordlessRelatedLogType = (
   return result.data;
 };
 
-const parseVerificationStorage = <T = VerificationStorage>(
-  data: unknown,
+export const getVerificationStorageFromInteraction = async <T = VerificationStorage>(
+  ctx: Context,
+  provider: Provider,
   resultGuard: ZodType<VerificationResult<T>>
-): T => {
-  const verificationResult = resultGuard.safeParse(data);
+): Promise<T> => {
+  const { result } = await provider.interactionDetails(ctx.req, ctx.res);
+
+  const verificationResult = resultGuard.safeParse(result);
 
   if (!verificationResult.success) {
     throw new RequestError(
@@ -63,16 +57,6 @@ const parseVerificationStorage = <T = VerificationStorage>(
   return verificationResult.data.verification;
 };
 
-export const getVerificationStorageFromInteraction = async <T = VerificationStorage>(
-  ctx: Context,
-  provider: Provider,
-  resultGuard: ZodType<VerificationResult<T>>
-): Promise<T> => {
-  const { result } = await provider.interactionDetails(ctx.req, ctx.res);
-
-  return parseVerificationStorage<T>(result, resultGuard);
-};
-
 export const checkValidateExpiration = (expiresAt: string) => {
   assertThat(
     dayjs(expiresAt).isValid() && dayjs(expiresAt).isAfter(dayjs()),
@@ -80,28 +64,21 @@ export const checkValidateExpiration = (expiresAt: string) => {
   );
 };
 
+type DistributiveOmit<T, K extends keyof T> = T extends unknown ? Omit<T, K> : never;
+
 export const assignVerificationResult = async (
   ctx: Context,
   provider: Provider,
-  flow: PasscodeType,
-  identity: VerifiedIdentity
+  verificationData: DistributiveOmit<VerificationStorage, 'expiresAt'>
 ) => {
-  const verificationResult = {
-    verification: {
-      flow,
-      expiresAt: dayjs().add(verificationTimeout, 'second').toISOString(),
-      ...identity,
-    },
+  const verification: VerificationStorage = {
+    ...verificationData,
+    expiresAt: dayjs().add(verificationTimeout, 'second').toISOString(),
   };
 
-  assertThat(
-    emailSessionResultGuard.safeParse(verificationResult).success ||
-      smsSessionResultGuard.safeParse(verificationResult).success ||
-      forgotPasswordSessionResultGuard.safeParse(verificationResult).success,
-    new RequestError({ code: 'session.invalid_verification' })
-  );
-
-  await provider.interactionResult(ctx.req, ctx.res, verificationResult);
+  await provider.interactionResult(ctx.req, ctx.res, {
+    verification,
+  });
 };
 
 export const clearVerificationResult = async (ctx: Context, provider: Provider) => {
