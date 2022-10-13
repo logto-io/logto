@@ -1,6 +1,8 @@
 import { Translation } from '@logto/schemas';
 import { useFormContext } from 'react-hook-form';
 
+import Textarea from '@/components/Textarea';
+
 import * as style from './EditSection.module.scss';
 
 type EditSectionProps = {
@@ -28,9 +30,7 @@ const EditSection = ({ dataKey, data }: EditSectionProps) => {
               <div className={style.sectionBuiltInText}>{value}</div>
             </td>
             <td className={style.inputCell}>
-              <div className={style.sectionInputArea}>
-                <textarea {...register(fieldKey)} />
-              </div>
+              <Textarea className={style.sectionInputArea} {...register(fieldKey)} />
             </td>
           </tr>
         );
