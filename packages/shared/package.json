@@ -20,7 +20,7 @@
   },
   "devDependencies": {
     "@silverhand/eslint-config": "1.0.0",
-    "@silverhand/jest-config": "1.0.0",
+    "@silverhand/jest-config": "1.2.0",
     "@silverhand/ts-config": "1.0.0",
     "@types/jest": "^28.1.6",
     "eslint": "^8.21.0",
