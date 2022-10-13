@@ -10,16 +10,12 @@ import {
 import {
   sendRegisterUserWithEmailPasscode,
   verifyRegisterUserWithEmailPasscode,
-  checkVerificationSessionAndRegisterWithEmail,
   sendSignInUserWithEmailPasscode,
   verifySignInUserWithEmailPasscode,
-  checkVerificationSessionAndSignInWithEmail,
   sendRegisterUserWithSmsPasscode,
   verifyRegisterUserWithSmsPasscode,
-  checkVerificationSessionAndRegisterWithSms,
   sendSignInUserWithSmsPasscode,
   verifySignInUserWithSmsPasscode,
-  checkVerificationSessionAndSignInWithSms,
   disableConnector,
   signInWithUsernameAndPassword,
 } from '@/api';
@@ -73,11 +69,9 @@ describe('email passwordless flow', () => {
 
     const { code } = passcodeRecord;
 
-    await expect(
-      verifyRegisterUserWithEmailPasscode(email, code, client.interactionCookie)
-    ).resolves.not.toThrow();
-
-    const { redirectTo } = await checkVerificationSessionAndRegisterWithEmail(
+    const { redirectTo } = await verifyRegisterUserWithEmailPasscode(
+      email,
+      code,
       client.interactionCookie
     );
 
@@ -105,11 +99,9 @@ describe('email passwordless flow', () => {
 
     const { code } = passcodeRecord;
 
-    await expect(
-      verifySignInUserWithEmailPasscode(email, code, client.interactionCookie)
-    ).resolves.not.toThrow();
-
-    const { redirectTo } = await checkVerificationSessionAndSignInWithEmail(
+    const { redirectTo } = await verifySignInUserWithEmailPasscode(
+      email,
+      code,
       client.interactionCookie
     );
 
@@ -150,11 +142,9 @@ describe('sms passwordless flow', () => {
 
     const { code } = passcodeRecord;
 
-    await expect(
-      verifyRegisterUserWithSmsPasscode(phone, code, client.interactionCookie)
-    ).resolves.not.toThrow();
-
-    const { redirectTo } = await checkVerificationSessionAndRegisterWithSms(
+    const { redirectTo } = await verifyRegisterUserWithSmsPasscode(
+      phone,
+      code,
       client.interactionCookie
     );
 
@@ -182,11 +172,11 @@ describe('sms passwordless flow', () => {
 
     const { code } = passcodeRecord;
 
-    await expect(
-      verifySignInUserWithSmsPasscode(phone, code, client.interactionCookie)
-    ).resolves.not.toThrow();
-
-    const { redirectTo } = await checkVerificationSessionAndSignInWithSms(client.interactionCookie);
+    const { redirectTo } = await verifySignInUserWithSmsPasscode(
+      phone,
+      code,
+      client.interactionCookie
+    );
 
     await client.processSession(redirectTo);
 
