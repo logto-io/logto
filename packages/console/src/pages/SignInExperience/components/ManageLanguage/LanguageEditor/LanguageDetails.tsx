@@ -181,7 +181,7 @@ const LanguageDetails = () => {
             <thead>
               <tr>
                 <th>{t('sign_in_exp.others.manage_language.key')}</th>
-                <th>{t('sign_in_exp.others.manage_language.logto_source_language')}</th>
+                <th>{t('sign_in_exp.others.manage_language.logto_source_values')}</th>
                 <th>
                   <span className={style.customValuesColumn}>
                     {t('sign_in_exp.others.manage_language.custom_values')}
