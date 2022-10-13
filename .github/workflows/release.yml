@@ -12,6 +12,7 @@ concurrency:
 
 jobs:
   dockerize:
+    environment: ${{ startsWith(github.ref, 'refs/tags/') && 'release' }}
     runs-on: ubuntu-latest
 
     steps:
@@ -79,6 +80,7 @@ jobs:
 
 
   create-github-release:
+    environment: release
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags/')
 
