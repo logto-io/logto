@@ -4,7 +4,8 @@
     "outDir": "lib",
     "declaration": true,
     "module": "node16",
-    "target": "es2022"
+    "target": "es2022",
+    "types": ["node", "jest"]
   },
   "include": [
     "src",

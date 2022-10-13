@@ -42,6 +42,11 @@ export const chooseAlterationsByVersion = async (
     .filter((version, index, self) => index === self.findIndex((another) => eq(version, another)))
     .slice()
     .sort((i, j) => compare(j, i));
+  const initialSemVersion = conditional(initialVersion && new SemVer(initialVersion));
+
+  if (!versions[0]) {
+    return [];
+  }
 
   const { version: targetVersion } =
     initialVersion === latestTag
@@ -57,13 +62,9 @@ export const chooseAlterationsByVersion = async (
             })),
           },
           {
-            version: conditional(initialVersion && new SemVer(initialVersion)),
+            version: initialSemVersion,
           }
         );
-
-  if (!targetVersion) {
-    return [];
-  }
 
   log.info(`Deploy target ${chalk.green(targetVersion.version)}`);
 

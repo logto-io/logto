@@ -6,7 +6,7 @@ import { hideBin } from 'yargs/helpers';
 import connector from './commands/connector';
 import database from './commands/database';
 import install from './commands/install';
-import packageJson from './package.json';
+import { packageJson } from './package-json';
 import { cliConfig, ConfigKey } from './utilities';
 
 void yargs(hideBin(process.argv))
