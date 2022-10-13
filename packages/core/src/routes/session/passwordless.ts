@@ -5,31 +5,24 @@ import { object, string } from 'zod';
 
 import RequestError from '@/errors/RequestError';
 import { createPasscode, sendPasscode, verifyPasscode } from '@/lib/passcode';
-import { assignInteractionResults } from '@/lib/session';
-import { generateUserId, insertUser } from '@/lib/user';
 import koaGuard from '@/middleware/koa-guard';
 import {
   findUserByEmail,
   findUserByPhone,
   hasUserWithEmail,
   hasUserWithPhone,
-  updateUserById,
 } from '@/queries/user';
-import {
-  emailSessionResultGuard,
-  passcodeTypeGuard,
-  smsSessionResultGuard,
-} from '@/routes/session/types';
+import { passcodeTypeGuard } from '@/routes/session/types';
 import assertThat from '@/utils/assert-that';
 
 import { AnonymousRouter } from '../types';
 import {
-  assignVerificationResult,
-  getPasswordlessRelatedLogType,
-  getRoutePrefix,
-  getVerificationStorageFromInteraction,
-  checkValidateExpiration,
-} from './utils';
+  smsSignInAction,
+  emailSignInAction,
+  smsRegisterAction,
+  emailRegisterAction,
+} from './middleware/passwordless-action';
+import { assignVerificationResult, getPasswordlessRelatedLogType, getRoutePrefix } from './utils';
 
 export const registerRoute = getRoutePrefix('register', 'passwordless');
 export const signInRoute = getRoutePrefix('sign-in', 'passwordless');
@@ -101,6 +94,7 @@ export default function passwordlessRoutes<T extends AnonymousRouter>(
     }),
     async (ctx, next) => {
       const { jti } = await provider.interactionDetails(ctx.req, ctx.res);
+
       const {
         body: { phone, code, flow },
       } = ctx.guard;
@@ -117,17 +111,19 @@ export default function passwordlessRoutes<T extends AnonymousRouter>(
         );
 
         const { id } = await findUserByPhone(phone);
-
-        await assignVerificationResult(ctx, provider, flow, { id });
+        await assignVerificationResult(ctx, provider, { flow, userId: id });
         ctx.status = 204;
 
         return next();
       }
 
-      await assignVerificationResult(ctx, provider, flow, { phone });
-      ctx.status = 204;
+      await assignVerificationResult(ctx, provider, { flow, phone });
 
-      return next();
+      if (flow === PasscodeType.SignIn) {
+        return smsSignInAction(provider)(ctx, next);
+      }
+
+      return smsRegisterAction(provider)(ctx, next);
     }
   );
 
@@ -159,124 +155,27 @@ export default function passwordlessRoutes<T extends AnonymousRouter>(
 
         const { id } = await findUserByEmail(email);
 
-        await assignVerificationResult(ctx, provider, flow, { id });
+        await assignVerificationResult(ctx, provider, { flow, userId: id });
         ctx.status = 204;
 
         return next();
       }
 
-      await assignVerificationResult(ctx, provider, flow, { email });
-      ctx.status = 204;
+      await assignVerificationResult(ctx, provider, { flow, email });
 
-      return next();
+      if (flow === PasscodeType.SignIn) {
+        return emailSignInAction(provider)(ctx, next);
+      }
+
+      return emailRegisterAction(provider)(ctx, next);
     }
   );
 
-  router.post(`${signInRoute}/sms`, async (ctx, next) => {
-    const verificationStorage = await getVerificationStorageFromInteraction(
-      ctx,
-      provider,
-      smsSessionResultGuard
-    );
+  router.post(`${signInRoute}/sms`, smsSignInAction(provider));
 
-    const type = getPasswordlessRelatedLogType(PasscodeType.SignIn, 'sms');
-    ctx.log(type, verificationStorage);
+  router.post(`${signInRoute}/email`, emailSignInAction(provider));
 
-    const { phone, expiresAt } = verificationStorage;
+  router.post(`${registerRoute}/sms`, smsRegisterAction(provider));
 
-    checkValidateExpiration(expiresAt);
-
-    assertThat(
-      await hasUserWithPhone(phone),
-      new RequestError({ code: 'user.phone_not_exists', status: 422 })
-    );
-    const { id } = await findUserByPhone(phone);
-    ctx.log(type, { userId: id });
-
-    await updateUserById(id, { lastSignInAt: Date.now() });
-    await assignInteractionResults(ctx, provider, { login: { accountId: id } });
-
-    return next();
-  });
-
-  router.post(`${signInRoute}/email`, async (ctx, next) => {
-    const verificationStorage = await getVerificationStorageFromInteraction(
-      ctx,
-      provider,
-      emailSessionResultGuard
-    );
-
-    const type = getPasswordlessRelatedLogType(PasscodeType.SignIn, 'email');
-    ctx.log(type, verificationStorage);
-
-    const { email, expiresAt } = verificationStorage;
-
-    checkValidateExpiration(expiresAt);
-
-    assertThat(
-      await hasUserWithEmail(email),
-      new RequestError({ code: 'user.email_not_exists', status: 422 })
-    );
-    const { id } = await findUserByEmail(email);
-    ctx.log(type, { userId: id });
-
-    await updateUserById(id, { lastSignInAt: Date.now() });
-    await assignInteractionResults(ctx, provider, { login: { accountId: id } });
-
-    return next();
-  });
-
-  router.post(`${registerRoute}/sms`, async (ctx, next) => {
-    const verificationStorage = await getVerificationStorageFromInteraction(
-      ctx,
-      provider,
-      smsSessionResultGuard
-    );
-
-    const type = getPasswordlessRelatedLogType(PasscodeType.Register, 'sms');
-    ctx.log(type, verificationStorage);
-
-    const { phone, expiresAt } = verificationStorage;
-
-    checkValidateExpiration(expiresAt);
-
-    assertThat(
-      !(await hasUserWithPhone(phone)),
-      new RequestError({ code: 'user.phone_exists_register', status: 422 })
-    );
-    const id = await generateUserId();
-    ctx.log(type, { userId: id });
-
-    await insertUser({ id, primaryPhone: phone, lastSignInAt: Date.now() });
-    await assignInteractionResults(ctx, provider, { login: { accountId: id } });
-
-    return next();
-  });
-
-  router.post(`${registerRoute}/email`, async (ctx, next) => {
-    const verificationStorage = await getVerificationStorageFromInteraction(
-      ctx,
-      provider,
-      emailSessionResultGuard
-    );
-
-    const type = getPasswordlessRelatedLogType(PasscodeType.Register, 'email');
-    ctx.log(type, verificationStorage);
-
-    const { email, expiresAt } = verificationStorage;
-
-    checkValidateExpiration(expiresAt);
-
-    assertThat(
-      !(await hasUserWithEmail(email)),
-      new RequestError({ code: 'user.email_exists_register', status: 422 })
-    );
-    const id = await generateUserId();
-    ctx.log(type, { userId: id });
-
-    await insertUser({ id, primaryEmail: email, lastSignInAt: Date.now() });
-    await assignInteractionResults(ctx, provider, { login: { accountId: id } });
-
-    return next();
-  });
+  router.post(`${registerRoute}/email`, emailRegisterAction(provider));
 }
