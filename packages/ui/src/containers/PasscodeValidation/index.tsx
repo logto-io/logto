@@ -7,13 +7,13 @@ import { useTimer } from 'react-timer-hook';
 import { getSendPasscodeApi, getVerifyPasscodeApi } from '@/apis/utils';
 import Passcode, { defaultLength } from '@/components/Passcode';
 import TextLink from '@/components/TextLink';
-import usePasswordlessErrorHandler from '@/containers/PasscodeValidation/use-passwordless-error-handler';
 import useApi, { ErrorHandlers } from '@/hooks/use-api';
 import { PageContext } from '@/hooks/use-page-context';
 import { UserFlow, SearchParameters } from '@/types';
 import { getSearchParameters } from '@/utils';
 
 import * as styles from './index.module.scss';
+import { getPasscodeValidationErrorHandlersByFlowAndMethod } from './utils';
 
 type Props = {
   type: UserFlow;
@@ -43,22 +43,28 @@ const PasscodeValidation = ({ type, method, className, target }: Props) => {
     expiryTimestamp: getTimeout(),
   });
 
-  const { passwordlessErrorHandlers } = usePasswordlessErrorHandler(type, target);
+  // Get the flow specific error handler hook
+  const useFlowErrorHandler = useMemo(
+    () => getPasscodeValidationErrorHandlersByFlowAndMethod(type, method),
+    [method, type]
+  );
+
+  const { errorHandler } = useFlowErrorHandler(target);
 
   const verifyPasscodeErrorHandlers: ErrorHandlers = useMemo(
     () => ({
+      ...errorHandler,
       'passcode.expired': (error) => {
         setError(error.message);
       },
       'passcode.code_mismatch': (error) => {
         setError(error.message);
       },
-      ...passwordlessErrorHandlers,
       callback: () => {
         setCode([]);
       },
     }),
-    [passwordlessErrorHandlers]
+    [errorHandler]
   );
 
   const { result: verifyPasscodeResult, run: verifyPassCode } = useApi(
