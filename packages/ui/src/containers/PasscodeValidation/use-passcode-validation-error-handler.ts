@@ -33,11 +33,11 @@ const getPasscodeValidationErrorHandlersByFlowAndMethod = (flow: UserFlow, metho
   return useForgotPasswordWithSmsErrorHandler;
 };
 
-const usePassCodeValidationErrorHandler = (type: UserFlow, method: Method, target: string) => {
+const usePasscodeValidationErrorHandler = (type: UserFlow, method: Method, target: string) => {
   const useFlowErrorHandler = getPasscodeValidationErrorHandlersByFlowAndMethod(type, method);
   const { errorHandler } = useFlowErrorHandler(target);
 
   return { errorHandler };
 };
 
-export default usePassCodeValidationErrorHandler;
+export default usePasscodeValidationErrorHandler;
