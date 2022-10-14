@@ -109,7 +109,7 @@ const ResetPassword = ({ className, autoFocus }: Props) => {
         {...register('confirmPassword', (confirmPassword) =>
           confirmPasswordValidation(fieldValue.password, confirmPassword)
         )}
-        errorStyling={false}
+        isErrorStyling={false}
         onClear={() => {
           setFieldValue((state) => ({ ...state, confirmPassword: '' }));
         }}

@@ -131,13 +131,13 @@ const Users = () => {
               >
                 <td>
                   <ItemPreview
-                    title={name || t('users.unnamed')}
+                    title={name ?? t('users.unnamed')}
                     subtitle={id}
                     icon={
                       <img
                         alt="avatar"
                         className={styles.avatar}
-                        src={avatar || generateAvatarPlaceHolderById(id)}
+                        src={avatar ?? generateAvatarPlaceHolderById(id)}
                       />
                     }
                     to={`/users/${id}`}

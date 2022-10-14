@@ -97,7 +97,7 @@ const UserDetails = () => {
              */}
             <img
               className={styles.avatar}
-              src={data.avatar || generateAvatarPlaceHolderById(userId)}
+              src={data.avatar ?? generateAvatarPlaceHolderById(userId)}
               referrerPolicy="no-referrer"
               alt="avatar"
             />
