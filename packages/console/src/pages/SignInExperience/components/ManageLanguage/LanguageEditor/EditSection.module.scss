@@ -14,5 +14,18 @@
 }
 
 .sectionBuiltInText {
-  padding: _.unit(2) 0;
+  padding: _.unit(2) _.unit(3);
+  border-radius: 6px;
+  border: 1px solid var(--color-border);
+  color: var(--color-text);
+  background: var(--color-layer-2);
+}
+
+.inputCell {
+  position: relative;
+}
+
+.sectionInputArea {
+  position: absolute;
+  inset: _.unit(2) _.unit(5);
 }
