@@ -79,7 +79,7 @@ const sign_in_exp = {
       manage_language: 'Manage language', // UNTRANSLATED
       default_language: 'Default language', // UNTRANSLATED
       default_language_description_auto:
-        'The default language will be used when a text segment is missing translation.', // UNTRANSLATED
+        'The default language will be used when the detected user language isn’t covered in the current language library.', // UNTRANSLATED
       default_language_description_fixed:
         'When auto-detect is off, the default language is the only language your software will show. Turn on auto-detect for language extension.', // UNTRANSLATED
     },
@@ -90,10 +90,11 @@ const sign_in_exp = {
       add_language: 'Add Language', // UNTRANSLATED
       logto_provided: 'Logto provided', // UNTRANSLATED
       key: 'Key', // UNTRANSLATED
-      logto_source_language: 'Logto source language', // UNTRANSLATED
+      logto_source_values: 'Logto source values', // UNTRANSLATED
       custom_values: 'Custom values', // UNTRANSLATED
-      clear_all: 'Clear all', // UNTRANSLATED
+      clear_all_tip: 'Clear all values', // UNTRANSLATED
       unsaved_description: 'Changes won’t be saved if you leave this page without saving.', // UNTRANSLATED
+      deletion_tip: 'Delete the language', // UNTRANSLATED
       deletion_title: 'Do you want to delete the added language?', // UNTRANSLATED
       deletion_description:
         'After deletion, your users won’t be able to browse in that language again.', // UNTRANSLATED

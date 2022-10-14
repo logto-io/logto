@@ -74,7 +74,7 @@ const sign_in_exp = {
       manage_language: '管理语言',
       default_language: '默认语言',
       default_language_description_auto:
-        '当语言代码对应的翻译文本缺失时，用户将看到已设定的产品默认语言内容。',
+        '语言自动适配已开启，当用户设定的语言无法匹配时，他们将看到默认语言。',
       default_language_description_fixed:
         '语言自动适配已关闭，你的应用将只展示默认语言。开启自动适配即可定制语言。',
     },
@@ -84,10 +84,11 @@ const sign_in_exp = {
       add_language: '添加语言',
       logto_provided: 'Logto 提供',
       key: '键名',
-      logto_source_language: 'Logto 源语言',
+      logto_source_values: 'Logto 源语言',
       custom_values: '翻译文本',
-      clear_all: '一键清除',
+      clear_all_tip: '清空',
       unsaved_description: '离开页面前，记得保存你本次做的内容修改。',
+      deletion_tip: '删除',
       deletion_title: '你确定你要删除新加的语言吗？',
       deletion_description: '删除后，你的用户将无法使用该语言查看内容。',
       default_language_deletion_title: '你无法删除默认语言',
