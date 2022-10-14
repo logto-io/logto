@@ -35,6 +35,8 @@ export default function koaPagination<StateT, ContextT, ResponseBodyT>({
     StateT,
     WithPaginationContext<ContextT>,
     ResponseBodyT
+    // TODO: Refactor me
+    // eslint-disable-next-line complexity
   > = async (ctx, next) => {
     try {
       const {

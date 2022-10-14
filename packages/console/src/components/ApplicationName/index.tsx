@@ -17,7 +17,7 @@ const ApplicationName = ({ applicationId, isLink = false }: Props) => {
   const { data } = useSWR<Application>(!isAdminConsole && `/api/applications/${applicationId}`);
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
 
-  const name = (isAdminConsole ? <>Admin Console ({t('system_app')})</> : data?.name) || '-';
+  const name = (isAdminConsole ? <>Admin Console ({t('system_app')})</> : data?.name) ?? '-';
 
   if (isLink && !isAdminConsole) {
     return (

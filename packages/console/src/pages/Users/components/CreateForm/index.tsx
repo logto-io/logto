@@ -37,7 +37,7 @@ const CreateForm = ({ onClose }: Props) => {
     const password = nanoid(8);
 
     const createdUser = await api.post('/api/users', { json: { ...data, password } }).json<User>();
-    onClose?.(createdUser, btoa(password));
+    onClose?.(createdUser, password);
   });
 
   return (

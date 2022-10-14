@@ -78,7 +78,6 @@ describe('validate language info', () => {
     await validateLanguageInfo({
       autoDetect: true,
       fallbackLanguage: 'zh-CN',
-      fixedLanguage: 'en',
     });
     expect(findAllCustomLanguageTags).toBeCalledTimes(1);
   });
@@ -89,7 +88,6 @@ describe('validate language info', () => {
       validateLanguageInfo({
         autoDetect: true,
         fallbackLanguage: builtInSupportedLanguage,
-        fixedLanguage: 'en',
       })
     ).resolves.not.toThrow();
     expect(findAllCustomLanguageTags).toBeCalledTimes(1);
@@ -103,7 +101,6 @@ describe('validate language info', () => {
       validateLanguageInfo({
         autoDetect: true,
         fallbackLanguage: customOnlySupportedLanguage,
-        fixedLanguage: 'en',
       })
     ).resolves.not.toThrow();
     expect(findAllCustomLanguageTags).toBeCalledTimes(1);
@@ -117,7 +114,6 @@ describe('validate language info', () => {
       validateLanguageInfo({
         autoDetect: true,
         fallbackLanguage: unsupportedLanguage,
-        fixedLanguage: 'en',
       })
     ).rejects.toMatchError(
       new RequestError({

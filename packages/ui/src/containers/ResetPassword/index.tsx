@@ -109,7 +109,7 @@ const ResetPassword = ({ className, autoFocus }: Props) => {
         {...register('confirmPassword', (confirmPassword) =>
           confirmPasswordValidation(fieldValue.password, confirmPassword)
         )}
-        errorStyling={false}
+        isErrorStyling={false}
         onClear={() => {
           setFieldValue((state) => ({ ...state, confirmPassword: '' }));
         }}
@@ -118,7 +118,7 @@ const ResetPassword = ({ className, autoFocus }: Props) => {
         <ErrorMessage className={styles.formErrors}>{formErrorMessage}</ErrorMessage>
       )}
 
-      <Button title="action.confirm" onClick={async () => onSubmitHandler()} />
+      <Button title="action.save_password" onClick={async () => onSubmitHandler()} />
 
       <input hidden type="submit" />
     </form>

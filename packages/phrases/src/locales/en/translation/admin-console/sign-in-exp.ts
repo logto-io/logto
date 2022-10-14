@@ -71,15 +71,15 @@ const sign_in_exp = {
     },
     languages: {
       title: 'LANGUAGES',
-      enable_auto_detect: 'Enable auto detect',
+      enable_auto_detect: 'Enable auto-detect',
       description:
-        "Your software detects the user's location and switches to the local language. You can add new locales by translating UI from English to another language.",
+        "Your software detects the user's locale setting and switches to the local language. You can add new languages by translating UI from English to another language.",
       manage_language: 'Manage language',
       default_language: 'Default language',
       default_language_description_auto:
-        'The default language will be used when a text segment is missing translation.',
+        'The default language will be used when the detected user language isn’t covered in the current language library.',
       default_language_description_fixed:
-        'When auto detect is off, the default language is the only language your software will show. Turn on auto detect for language customization.',
+        'When auto-detect is off, the default language is the only language your software will show. Turn on auto-detect for language extension.',
     },
     manage_language: {
       title: 'Manage language',
@@ -88,10 +88,11 @@ const sign_in_exp = {
       add_language: 'Add Language',
       logto_provided: 'Logto provided',
       key: 'Key',
-      logto_source_language: 'Logto source language',
+      logto_source_values: 'Logto source values',
       custom_values: 'Custom values',
-      clear_all: 'Clear all',
+      clear_all_tip: 'Clear all values',
       unsaved_description: 'Changes won’t be saved if you leave this page without saving.',
+      deletion_tip: 'Delete the language',
       deletion_title: 'Do you want to delete the added language?',
       deletion_description:
         'After deletion, your users won’t be able to browse in that language again.',

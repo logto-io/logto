@@ -117,7 +117,7 @@ const CreateAccount = ({ className, autoFocus }: Props) => {
           {...fieldRegister('confirmPassword', (confirmPassword) =>
             confirmPasswordValidation(fieldValue.password, confirmPassword)
           )}
-          errorStyling={false}
+          isErrorStyling={false}
           onClear={() => {
             setFieldValue((state) => ({ ...state, confirmPassword: '' }));
           }}

@@ -105,13 +105,12 @@ const errors = {
     enabled_connector_not_found: 'Enabled {{type}} connector not found.',
     not_one_and_only_one_primary_sign_in_method:
       'There must be one and only one primary sign-in method. Please check your input.',
-    unsupported_default_language: 'Default language {{language}} is unsupported.', // UNTRANSLATED
+    unsupported_default_language: 'This language - {{language}} is not supported at the moment.',
   },
   localization: {
     cannot_delete_default_language:
-      'You cannot delete {{languageTag}} language since it is used as default language in sign-in experience.', // UNTRANSLATED
-    invalid_translation_structure:
-      'Invalid translation structure. Please check the input translation.', // UNTRANSLATED
+      '{{languageTag}} is set as your default language and can’t be deleted.',
+    invalid_translation_structure: 'Invalid data schemas. Please check your input and try again.',
   },
   swagger: {
     invalid_zod_type: 'Invalid Zod type. Please check route guard config.',

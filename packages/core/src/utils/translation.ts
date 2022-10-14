@@ -1,5 +1,7 @@
 import { Translation } from '@logto/schemas';
 
+// LOG-4385: Refactor me
+// eslint-disable-next-line complexity
 export const isValidStructure = (fullTranslation: Translation, partialTranslation: Translation) => {
   const fullKeys = new Set(Object.keys(fullTranslation));
   const partialKeys = Object.keys(partialTranslation);

@@ -87,7 +87,7 @@ const GuideHeader = ({ appName, selectedSdk, isCompact = false, onClose }: Props
             subtitle="applications.guide.header_description"
           />
           <Spacer />
-          <Button type="plain" size="small" title="general.skip" onClick={onClose} />
+          <Button type="text" size="small" title="general.skip" onClick={onClose} />
           <Button
             className={styles.getSampleButton}
             type="outline"

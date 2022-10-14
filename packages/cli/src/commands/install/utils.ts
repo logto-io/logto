@@ -152,3 +152,17 @@ export const logFinale = (instancePath: string) => {
     `Use the command below to start Logto. Happy hacking!\n\n  ${chalk.green(startCommand)}`
   );
 };
+
+export const inquireOfficialConnectors = async (initialAnswer?: boolean) => {
+  const { value } = await inquirer.prompt<{ value: boolean }>(
+    {
+      name: 'value',
+      message: 'Do you want to add official connectors?',
+      type: 'confirm',
+      default: true,
+    },
+    { value: initialAnswer }
+  );
+
+  return value;
+};

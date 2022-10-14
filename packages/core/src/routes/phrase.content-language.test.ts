@@ -27,7 +27,6 @@ const findDefaultSignInExperience = jest.fn(async () => ({
   languageInfo: {
     autoDetect: true,
     fallbackLanguage,
-    fixedLanguage: fallbackLanguage,
   },
 }));
 
@@ -60,7 +59,6 @@ describe('when auto-detect is not enabled', () => {
       languageInfo: {
         autoDetect: false,
         fallbackLanguage: unsupportedLanguageX,
-        fixedLanguage: unsupportedLanguageX,
       },
     });
     const response = await phraseRequest
@@ -76,7 +74,6 @@ describe('when auto-detect is not enabled', () => {
         languageInfo: {
           autoDetect: false,
           fallbackLanguage,
-          fixedLanguage: fallbackLanguage,
         },
       });
     });
@@ -102,7 +99,6 @@ describe('when auto-detect is enabled', () => {
       languageInfo: {
         autoDetect: true,
         fallbackLanguage: unsupportedLanguageX,
-        fixedLanguage: unsupportedLanguageX,
       },
     });
     const response = await phraseRequest
@@ -118,7 +114,6 @@ describe('when auto-detect is enabled', () => {
         languageInfo: {
           autoDetect: true,
           fallbackLanguage,
-          fixedLanguage: fallbackLanguage,
         },
       });
     });

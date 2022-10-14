@@ -24,7 +24,7 @@ import * as styles from './index.module.scss';
 import { ActiveUsersResponse, NewUsersResponse, TotalUsersResponse } from './types';
 
 const tickStyle = {
-  fill: 'var(--color-caption)',
+  fill: 'var(--color-text-secondary)',
   fontSize: 11,
   fontFamily: 'var(--font-family)',
 };

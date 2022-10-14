@@ -48,7 +48,8 @@
   "pnpm": {
     "peerDependencyRules": {
       "allowedVersions": {
-        "react": "^18.0.0"
+        "react": "^18.0.0",
+        "jest": "^29.1.2"
       }
     }
   }

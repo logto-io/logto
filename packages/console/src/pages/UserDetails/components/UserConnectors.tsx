@@ -126,7 +126,8 @@ const UserConnectors = ({ userId, connectors, onDelete }: Props) => {
                   <td>
                     <Button
                       title="user_details.connectors.remove"
-                      type="plain"
+                      type="text"
+                      size="small"
                       onClick={() => {
                         setDeletingConnector(connector);
                       }}

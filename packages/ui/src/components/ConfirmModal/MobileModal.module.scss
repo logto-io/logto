@@ -37,3 +37,29 @@
     margin-right: _.unit(2);
   }
 }
+
+.iframeModal {
+  top: 40px;
+  bottom: 40px;
+  transform: none;
+
+  .container {
+    padding: 0;
+    border-radius: 12px;
+    width: 100%;
+    height: 100%;
+    @include _.flex_column(stretch, center);
+  }
+
+  .content {
+    padding: _.unit(5);
+    flex: 1;
+    @include _.flex_column;
+  }
+
+  .footer {
+    margin-top: 0;
+    border-top: 1px solid var(--color-divider);
+    padding: _.unit(5);
+  }
+}

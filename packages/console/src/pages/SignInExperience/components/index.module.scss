@@ -11,7 +11,7 @@
 }
 
 .primaryTag {
-  color: var(--color-caption);
+  color: var(--color-text-secondary);
 }
 
 .method {
@@ -26,15 +26,16 @@
   display: flex;
   align-items: baseline;
   font: var(--font-body-medium);
-  color: var(--color-caption);
+  color: var(--color-text-secondary);
+  margin-top: _.unit(1);
 }
 
-.manageLanguage {
-  margin-top: _.unit(2);
+.manageLanguageButton {
+  margin-top: _.unit(1);
 }
 
 .defaultLanguageDescription {
   padding-top: _.unit(2);
   font: var(--font-body-medium);
-  color: var(--color-caption);
+  color: var(--color-text-secondary);
 }
