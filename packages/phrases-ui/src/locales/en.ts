@@ -47,6 +47,7 @@ const translation = {
       'The account with {{type}} {{value}} already exists, would you like to sign in?',
     sign_in_id_does_not_exists:
       'The account with {{type}} {{value}} does not exist, would you like to create a new account?',
+    forgot_password_id_does_not_exits: 'The account with {{type}} {{value}} does not exist.',
     bind_account_title: 'Link account',
     social_create_account: 'No account? You can create a new account and link.',
     social_bind_account: 'Already have an account? Sign in to link it with your social identity.',

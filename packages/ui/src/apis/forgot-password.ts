@@ -21,8 +21,8 @@ export const sendForgotPasswordSmsPasscode = async (phone: string) => {
   return { success: true };
 };
 
-export const verifyForgotPasswordSmsPasscode = async (phone: string, code: string) =>
-  api
+export const verifyForgotPasswordSmsPasscode = async (phone: string, code: string) => {
+  await api
     .post('/api/session/passwordless/sms/verify', {
       json: {
         phone,
@@ -30,7 +30,10 @@ export const verifyForgotPasswordSmsPasscode = async (phone: string, code: strin
         flow: PasscodeType.ForgotPassword,
       },
     })
-    .json<Response>();
+    .json();
+
+  return { success: true };
+};
 
 export const sendForgotPasswordEmailPasscode = async (email: string) => {
   await api
@@ -45,8 +48,8 @@ export const sendForgotPasswordEmailPasscode = async (email: string) => {
   return { success: true };
 };
 
-export const verifyForgotPasswordEmailPasscode = async (email: string, code: string) =>
-  api
+export const verifyForgotPasswordEmailPasscode = async (email: string, code: string) => {
+  await api
     .post('/api/session/passwordless/email/verify', {
       json: {
         email,
@@ -54,7 +57,10 @@ export const verifyForgotPasswordEmailPasscode = async (email: string, code: str
         flow: PasscodeType.ForgotPassword,
       },
     })
-    .json<Response>();
+    .json();
+
+  return { success: true };
+};
 
 export const resetPassword = async (password: string) => {
   await api

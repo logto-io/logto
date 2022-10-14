@@ -47,6 +47,7 @@ const translation = {
     continue_with: '通过以下方式继续',
     create_account_id_exists: '{{ type }}为 {{ value }} 的帐号已存在，你要登录吗？',
     sign_in_id_does_not_exists: '{{ type }}为 {{ value }} 的帐号不存在，你要创建一个新帐号吗？',
+    forgot_password_id_does_not_exits: '{{ type }}为 {{ value }} 的帐号不存在。',
     bind_account_title: '绑定帐号',
     social_create_account: '没有帐号？你可以创建一个帐号并绑定。',
     social_bind_account: '已有帐号？登录以绑定社交身份。',

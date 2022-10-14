@@ -73,7 +73,7 @@ export const emailSignInAction = <StateT, ContextT extends WithLogContext, Respo
 
     assertThat(
       await hasUserWithEmail(email),
-      new RequestError({ code: 'user.phone_not_exists', status: 404 })
+      new RequestError({ code: 'user.email_not_exists', status: 404 })
     );
 
     const { id } = await findUserByEmail(email);

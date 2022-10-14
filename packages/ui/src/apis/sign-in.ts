@@ -3,13 +3,15 @@ import { PasscodeType } from '@logto/schemas';
 import api from './api';
 import { bindSocialAccount } from './social';
 
-export const signInBasic = async (username: string, password: string, socialToBind?: string) => {
-  type Response = {
-    redirectTo: string;
-  };
+const apiPrefix = '/api/session';
 
+type Response = {
+  redirectTo: string;
+};
+
+export const signInBasic = async (username: string, password: string, socialToBind?: string) => {
   const result = await api
-    .post('/api/session/sign-in/username-password', {
+    .post(`${apiPrefix}/sign-in/username-password`, {
       json: {
         username,
         password,
@@ -24,9 +26,29 @@ export const signInBasic = async (username: string, password: string, socialToBi
   return result;
 };
 
+export const signInWithSms = async (socialToBind?: string) => {
+  const result = await api.post(`${apiPrefix}/sign-in/passwordless/sms`).json<Response>();
+
+  if (result.redirectTo && socialToBind) {
+    await bindSocialAccount(socialToBind);
+  }
+
+  return result;
+};
+
+export const signInWithEmail = async (socialToBind?: string) => {
+  const result = await api.post(`${apiPrefix}/sign-in/passwordless/email`).json<Response>();
+
+  if (result.redirectTo && socialToBind) {
+    await bindSocialAccount(socialToBind);
+  }
+
+  return result;
+};
+
 export const sendSignInSmsPasscode = async (phone: string) => {
   await api
-    .post('/api/session/passwordless/sms/send', {
+    .post(`${apiPrefix}/passwordless/sms/send`, {
       json: {
         phone,
         flow: PasscodeType.SignIn,
@@ -42,19 +64,15 @@ export const verifySignInSmsPasscode = async (
   code: string,
   socialToBind?: string
 ) => {
-  type Response = {
-    redirectTo: string;
-  };
-
-  await api.post('/api/session/passwordless/sms/verify', {
-    json: {
-      phone,
-      code,
-      flow: PasscodeType.SignIn,
-    },
-  });
-
-  const result = await api.post('/api/session/sign-in/passwordless/sms').json<Response>();
+  const result = await api
+    .post(`${apiPrefix}/passwordless/sms/verify`, {
+      json: {
+        phone,
+        code,
+        flow: PasscodeType.SignIn,
+      },
+    })
+    .json<Response>();
 
   if (result.redirectTo && socialToBind) {
     await bindSocialAccount(socialToBind);
@@ -65,7 +83,7 @@ export const verifySignInSmsPasscode = async (
 
 export const sendSignInEmailPasscode = async (email: string) => {
   await api
-    .post('/api/session/passwordless/email/send', {
+    .post(`${apiPrefix}/passwordless/email/send`, {
       json: {
         email,
         flow: PasscodeType.SignIn,
@@ -81,19 +99,15 @@ export const verifySignInEmailPasscode = async (
   code: string,
   socialToBind?: string
 ) => {
-  type Response = {
-    redirectTo: string;
-  };
-
-  await api.post('/api/session/passwordless/email/verify', {
-    json: {
-      email,
-      code,
-      flow: PasscodeType.SignIn,
-    },
-  });
-
-  const result = await api.post('/api/session/sign-in/passwordless/email').json<Response>();
+  const result = await api
+    .post(`${apiPrefix}/passwordless/email/verify`, {
+      json: {
+        email,
+        code,
+        flow: PasscodeType.SignIn,
+      },
+    })
+    .json<Response>();
 
   if (result.redirectTo && socialToBind) {
     await bindSocialAccount(socialToBind);
