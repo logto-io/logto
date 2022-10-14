@@ -7,10 +7,9 @@ import useSignInWithEmailErrorHandler from './use-sign-in-with-email-error-handl
 import useSignInWithSmsErrorHandler from './use-sign-in-with-sms-error-handler';
 import useRegisterWithEmailErrorHandler from './user-register-with-email-error-handler';
 
-export const getPasscodeValidationErrorHandlersByFlowAndMethod = (
-  flow: UserFlow,
-  method: 'email' | 'sms'
-) => {
+type Method = 'email' | 'sms';
+
+const getPasscodeValidationErrorHandlersByFlowAndMethod = (flow: UserFlow, method: Method) => {
   if (flow === 'sign-in' && method === 'email') {
     return useSignInWithEmailErrorHandler;
   }
@@ -33,3 +32,12 @@ export const getPasscodeValidationErrorHandlersByFlowAndMethod = (
 
   return useForgotPasswordWithSmsErrorHandler;
 };
+
+const usePassCodeValidationErrorHandler = (type: UserFlow, method: Method, target: string) => {
+  const useFlowErrorHandler = getPasscodeValidationErrorHandlersByFlowAndMethod(type, method);
+  const { errorHandler } = useFlowErrorHandler(target);
+
+  return { errorHandler };
+};
+
+export default usePassCodeValidationErrorHandler;

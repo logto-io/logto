@@ -13,7 +13,7 @@ import { UserFlow, SearchParameters } from '@/types';
 import { getSearchParameters } from '@/utils';
 
 import * as styles from './index.module.scss';
-import { getPasscodeValidationErrorHandlersByFlowAndMethod } from './utils';
+import usePasscodeValidationErrorHandler from './use-passcode-validation-error-handler';
 
 type Props = {
   type: UserFlow;
@@ -44,12 +44,7 @@ const PasscodeValidation = ({ type, method, className, target }: Props) => {
   });
 
   // Get the flow specific error handler hook
-  const useFlowErrorHandler = useMemo(
-    () => getPasscodeValidationErrorHandlersByFlowAndMethod(type, method),
-    [method, type]
-  );
-
-  const { errorHandler } = useFlowErrorHandler(target);
+  const { errorHandler } = usePasscodeValidationErrorHandler(type, method, target);
 
   const verifyPasscodeErrorHandlers: ErrorHandlers = useMemo(
     () => ({
