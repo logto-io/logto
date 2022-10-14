@@ -196,7 +196,7 @@ const LanguageDetails = () => {
                         }
                       }}
                     >
-                      <Clear />
+                      <Clear className={style.clearIcon} />
                     </IconButton>
                   </span>
                 </th>
