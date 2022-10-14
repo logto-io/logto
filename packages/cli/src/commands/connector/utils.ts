@@ -1,6 +1,6 @@
 import { exec } from 'child_process';
 import { existsSync } from 'fs';
-import { readFile, mkdir, unlink } from 'fs/promises';
+import { readFile, mkdir, unlink, readdir } from 'fs/promises';
 import path from 'path';
 import { promisify } from 'util';
 
@@ -86,13 +86,13 @@ export const normalizePackageName = (name: string) =>
     )
     .join('/');
 
-export const getConnectorDirectory = (instancePath: string) =>
+const getConnectorDirectory = (instancePath: string) =>
   path.join(instancePath, coreDirectory, connectorDirectory);
 
 export const isOfficialConnector = (packageName: string) =>
   packageName.startsWith('@logto/connector-');
 
-export const getConnectorPackageName = async (directory: string) => {
+const getConnectorPackageName = async (directory: string) => {
   const filePath = path.join(directory, 'package.json');
 
   if (!existsSync(filePath)) {
@@ -105,6 +105,27 @@ export const getConnectorPackageName = async (directory: string) => {
   if (name.startsWith('connector-') || Boolean(name.split('/')[1]?.startsWith('connector-'))) {
     return name;
   }
+};
+
+export type ConnectorPackage = {
+  name: string;
+  path: string;
+};
+
+export const getConnectorPackagesFrom = async (instancePath?: string) => {
+  const directory = getConnectorDirectory(await inquireInstancePath(instancePath));
+  const content = await readdir(directory, 'utf8');
+  const rawPackages = await Promise.all(
+    content.map(async (value) => {
+      const currentDirectory = path.join(directory, value);
+
+      return { name: await getConnectorPackageName(currentDirectory), path: currentDirectory };
+    })
+  );
+
+  return rawPackages.filter(
+    (packageInfo): packageInfo is ConnectorPackage => typeof packageInfo.name === 'string'
+  );
 };
 
 export const addConnectors = async (instancePath: string, packageNames: string[]) => {

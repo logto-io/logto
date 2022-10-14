@@ -5,17 +5,17 @@ import { addConnectors, addOfficialConnectors, inquireInstancePath } from './uti
 
 const add: CommandModule<
   { path?: string },
-  { packages: string[]; path?: string; official: boolean }
+  { packages?: string[]; path?: string; official: boolean }
 > = {
   command: ['add [packages...]', 'a', 'install', 'i'],
   describe: 'Add specific Logto connectors',
   builder: (yargs) =>
     yargs
       .positional('packages', {
-        describe: 'The additional connector package names',
+        describe: 'The connector package names to add',
         type: 'string',
         array: true,
-        default: [],
+        default: undefined,
       })
       .option('official', {
         alias: 'o',
@@ -30,9 +30,12 @@ const add: CommandModule<
 
     if (official) {
       await addOfficialConnectors(instancePath);
+    } else {
+      if (!packageNames?.length) {
+        log.error('No connector name provided');
+      }
+      await addConnectors(instancePath, packageNames);
     }
-
-    await addConnectors(instancePath, packageNames);
 
     log.info('Restart your Logto instance to get the changes reflected.');
   },
