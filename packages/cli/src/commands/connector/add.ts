@@ -3,7 +3,10 @@ import { CommandModule } from 'yargs';
 import { log } from '../../utilities';
 import { addConnectors, addOfficialConnectors, inquireInstancePath } from './utils';
 
-const add: CommandModule<unknown, { packages: string[]; path?: string; official: boolean }> = {
+const add: CommandModule<
+  { path?: string },
+  { packages: string[]; path?: string; official: boolean }
+> = {
   command: ['add [packages...]', 'a', 'install', 'i'],
   describe: 'Add specific Logto connectors',
   builder: (yargs) =>
@@ -21,8 +24,7 @@ const add: CommandModule<unknown, { packages: string[]; path?: string; official:
         describe:
           'Add all official connectors.\n' +
           "If it's true, the specified package names will be ignored.",
-      })
-      .option('path', { alias: 'p', type: 'string', describe: 'The path to your Logto instance' }),
+      }),
   handler: async ({ packages: packageNames, path, official }) => {
     const instancePath = await inquireInstancePath(path);
 

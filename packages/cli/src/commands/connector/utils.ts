@@ -86,8 +86,29 @@ export const normalizePackageName = (name: string) =>
     )
     .join('/');
 
+export const getConnectorDirectory = (instancePath: string) =>
+  path.join(instancePath, coreDirectory, connectorDirectory);
+
+export const isOfficialConnector = (packageName: string) =>
+  packageName.startsWith('@logto/connector-');
+
+export const getConnectorPackageName = async (directory: string) => {
+  const filePath = path.join(directory, 'package.json');
+
+  if (!existsSync(filePath)) {
+    return;
+  }
+
+  const json = await readFile(filePath, 'utf8');
+  const { name } = z.object({ name: z.string() }).parse(JSON.parse(json));
+
+  if (name.startsWith('connector-') || Boolean(name.split('/')[1]?.startsWith('connector-'))) {
+    return name;
+  }
+};
+
 export const addConnectors = async (instancePath: string, packageNames: string[]) => {
-  const cwd = path.join(instancePath, coreDirectory, connectorDirectory);
+  const cwd = getConnectorDirectory(instancePath);
 
   if (!existsSync(cwd)) {
     await mkdir(cwd);
