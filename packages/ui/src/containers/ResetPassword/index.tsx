@@ -47,11 +47,11 @@ const ResetPassword = ({ className, autoFocus }: Props) => {
 
   const resetPasswordErrorHandlers: ErrorHandlers = useMemo(
     () => ({
-      'session.forgot_password_session_not_found': async (error) => {
+      'session.verification_session_not_found': async (error) => {
         await show({ type: 'alert', ModalContent: error.message, cancelText: 'action.got_it' });
         navigate(-1);
       },
-      'session.forgot_password_verification_expired': async (error) => {
+      'session.verification_expired': async (error) => {
         await show({ type: 'alert', ModalContent: error.message, cancelText: 'action.got_it' });
         navigate(-1);
       },
