@@ -99,10 +99,6 @@ export const verifySignInEmailPasscode = async (
   code: string,
   socialToBind?: string
 ) => {
-  type Response = {
-    redirectTo: string;
-  };
-
   const result = await api
     .post(`${apiPrefix}/passwordless/email/verify`, {
       json: {
