@@ -8,7 +8,6 @@ import Card from '@/components/Card';
 import ConfirmModal from '@/components/ConfirmModal';
 import Spacer from '@/components/Spacer';
 import useUserPreferences from '@/hooks/use-user-preferences';
-import { onKeyDownHandler } from '@/utilities/a11y';
 
 import Skeleton from './components/Skeleton';
 import useGetStartedMetadata from './hook';
@@ -44,19 +43,13 @@ const GetStarted = () => {
           <Spacer />
           <span>
             {t('get_started.subtitle_part2')}
-            <span
-              role="button"
-              tabIndex={0}
+            <Button
+              title="get_started.hide_this"
+              type="text"
+              size="small"
               className={styles.hideButton}
               onClick={showConfirmModalHandler}
-              onKeyDown={onKeyDownHandler({
-                Enter: showConfirmModalHandler,
-                ' ': showConfirmModalHandler,
-                Esc: hideConfirmModalHandler,
-              })}
-            >
-              {t('get_started.hide_this')}
-            </span>
+            />
           </span>
         </div>
       </div>

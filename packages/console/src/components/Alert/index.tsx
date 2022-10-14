@@ -38,7 +38,7 @@ const Alert = ({
       )}
       {action && onClick && (
         <div className={styles.action}>
-          <Button title={action} type="plain" onClick={onClick} />
+          <Button title={action} type="text" size="small" onClick={onClick} />
         </div>
       )}
     </div>
