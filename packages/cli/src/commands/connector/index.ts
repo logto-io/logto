@@ -6,7 +6,7 @@ import list from './list';
 import remove from './remove';
 
 const connector: CommandModule = {
-  command: ['connector', 'c'],
+  command: ['connector', 'c', 'connectors'],
   describe: 'Command for Logto connectors',
   builder: (yargs) =>
     yargs
