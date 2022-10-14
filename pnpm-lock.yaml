@@ -511,7 +511,7 @@ importers:
   packages/phrases:
     specifiers:
       '@logto/core-kit': 1.0.0-beta.18
-      '@logto/language-kit': 1.0.0-beta.15
+      '@logto/language-kit': 1.0.0-beta.16
       '@silverhand/eslint-config': 1.0.0
       '@silverhand/essentials': ^1.3.0
       '@silverhand/ts-config': 1.0.0
@@ -522,7 +522,7 @@ importers:
       zod: ^3.18.0
     dependencies:
       '@logto/core-kit': 1.0.0-beta.18
-      '@logto/language-kit': 1.0.0-beta.15
+      '@logto/language-kit': 1.0.0-beta.16
       '@silverhand/essentials': 1.3.0
       zod: 3.18.0
     devDependencies:
@@ -2629,13 +2629,6 @@ packages:
       jose: 4.6.0
       lodash.get: 4.4.2
     dev: true
-
-  /@logto/language-kit/1.0.0-beta.15:
-    resolution: {integrity: sha512-gRwE1E1+pItO/LsczC+hj02/wcIVjPJFB4qFBz580gTaa3rhWVYoZZ0DIGqZMQ0fMZ9Qwq7ncG47lS06gKBPmA==}
-    engines: {node: ^16.0.0}
-    dependencies:
-      zod: 3.18.0
-    dev: false
 
   /@logto/language-kit/1.0.0-beta.16:
     resolution: {integrity: sha512-1F7o6DlBrmK9QgZNOzf5RmWjN+36Pak2qfiu7NbMRRAlmNLmADqA0Is6v+cfRb6PMCPmRgbn9Iad5Q7NZctDVg==}
