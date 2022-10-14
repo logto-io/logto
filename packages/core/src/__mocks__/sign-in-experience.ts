@@ -102,3 +102,7 @@ export const mockSignInMethod: SignIn['methods'][0] = {
   verificationCode: false,
   isPasswordPrimary: true,
 };
+
+export const mockSignIn = {
+  methods: [mockSignInMethod],
+};

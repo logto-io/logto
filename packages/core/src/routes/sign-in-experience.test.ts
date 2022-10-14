@@ -14,9 +14,13 @@ import {
   mockSignInMethods,
   mockWechatConnector,
   mockColor,
+  mockSignUp,
+  mockSignIn,
 } from '@/__mocks__';
 import * as signInExpLib from '@/lib/sign-in-experience';
+import * as signInLib from '@/lib/sign-in-experience/sign-in';
 import * as signInMethodsLib from '@/lib/sign-in-experience/sign-in-methods';
+import * as signUpLib from '@/lib/sign-in-experience/sign-up';
 import { createRequester } from '@/utils/test-utils';
 
 import signInExperiencesRoutes from './sign-in-experience';
@@ -65,39 +69,6 @@ describe('GET /sign-in-exp', () => {
 });
 
 describe('PATCH /sign-in-exp', () => {
-  it('should not update social connector targets when social sign-in is disabled', async () => {
-    const signInMethods = { ...mockSignInMethods, social: SignInMethodState.Disabled };
-    const response = await signInExperienceRequester.patch('/sign-in-exp').send({
-      signInMethods,
-      socialSignInConnectorTargets: ['facebook'],
-    });
-    expect(response).toMatchObject({
-      status: 200,
-      body: {
-        ...mockSignInExperience,
-        signInMethods,
-      },
-    });
-  });
-
-  it('should update enabled social connector targets only when social sign-in is enabled', async () => {
-    const signInMethods = { ...mockSignInMethods, social: SignInMethodState.Secondary };
-    const socialSignInConnectorTargets = ['facebook'];
-    const signInExperience = {
-      signInMethods,
-      socialSignInConnectorTargets,
-    };
-    const response = await signInExperienceRequester.patch('/sign-in-exp').send(signInExperience);
-    expect(response).toMatchObject({
-      status: 200,
-      body: {
-        ...mockSignInExperience,
-        signInMethods,
-        socialSignInConnectorTargets,
-      },
-    });
-  });
-
   it('should update social connector targets in correct sorting order', async () => {
     const signInMethods = { ...mockSignInMethods, social: SignInMethodState.Secondary };
     const socialSignInConnectorTargets = ['github', 'facebook'];
@@ -141,6 +112,8 @@ describe('PATCH /sign-in-exp', () => {
     const validateBranding = jest.spyOn(signInExpLib, 'validateBranding');
     const validateTermsOfUse = jest.spyOn(signInExpLib, 'validateTermsOfUse');
     const validateSignInMethods = jest.spyOn(signInMethodsLib, 'validateSignInMethods');
+    const validateSignIn = jest.spyOn(signInLib, 'validateSignIn');
+    const validateSignUp = jest.spyOn(signUpLib, 'validateSignUp');
 
     const response = await signInExperienceRequester.patch('/sign-in-exp').send({
       color: mockColor,
@@ -148,15 +121,21 @@ describe('PATCH /sign-in-exp', () => {
       termsOfUse,
       signInMethods: mockSignInMethods,
       socialSignInConnectorTargets,
+      signUp: mockSignUp,
+      signIn: mockSignIn,
+      forgotPassword: true,
     });
+    const connectors = [mockFacebookConnector, mockGithubConnector, mockWechatConnector];
 
     expect(validateBranding).toHaveBeenCalledWith(mockBranding);
     expect(validateTermsOfUse).toHaveBeenCalledWith(termsOfUse);
     expect(validateSignInMethods).toHaveBeenCalledWith(
       mockSignInMethods,
       socialSignInConnectorTargets,
-      [mockFacebookConnector, mockGithubConnector, mockWechatConnector]
+      connectors
     );
+    expect(validateSignUp).toHaveBeenCalledWith(mockSignUp, connectors);
+    expect(validateSignIn).toHaveBeenCalledWith(mockSignIn, mockSignUp, connectors);
 
     expect(response).toMatchObject({
       status: 200,
