@@ -7,9 +7,12 @@ importers:
       '@commitlint/cli': ^17.0.0
       '@commitlint/config-conventional': ^17.0.0
       '@commitlint/types': ^17.0.0
+      '@logto/cli': ^1.0.0-beta.10
       husky: ^8.0.0
       lerna: ^5.0.0
       typescript: ^4.7.4
+    dependencies:
+      '@logto/cli': link:packages/cli
     devDependencies:
       '@commitlint/cli': 17.0.0
       '@commitlint/config-conventional': 17.0.0

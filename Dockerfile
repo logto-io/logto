@@ -14,9 +14,8 @@ RUN pnpm i
 RUN pnpm -- lerna run build --stream
 
 # Add official connectors
-WORKDIR /etc/logto/packages/core
-RUN pnpm add-official-connectors
 WORKDIR /etc/logto
+RUN pnpm cli connector add --official
 
 # Prune dependencies for production
 RUN rm -rf node_modules packages/*/node_modules
@@ -30,5 +29,4 @@ FROM node:16-alpine as app
 WORKDIR /etc/logto
 COPY --from=builder /etc/logto .
 EXPOSE 3001
-ENV NO_INQUIRY true
 ENTRYPOINT ["npm", "start"]

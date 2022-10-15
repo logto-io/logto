@@ -8,8 +8,8 @@ tasks:
       pnpm prepack
       cd packages/core
       pnpm build
-      pnpm add-official-connectors
       cd -
+      pnpm cli connector add --official
     command: |
       export ENDPOINT=$(gp url 3001)
       pnpm cli db seed
