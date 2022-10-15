@@ -90,7 +90,7 @@ jobs:
           fetch-depth: 0
 
       - name: Setup Node and pnpm
-        uses: silverhand-io/actions-node-pnpm-run-steps@v1.2.3
+        uses: silverhand-io/actions-node-pnpm-run-steps@v2
 
       - name: Extract changelog
         run: |
