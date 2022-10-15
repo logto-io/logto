@@ -12,21 +12,21 @@ export const findUserByUsername = async (username: string) =>
   envSet.pool.maybeOne<User>(sql`
     select ${sql.join(Object.values(fields), sql`,`)}
     from ${table}
-    where ${fields.username}=${username}
+    where ${fields.username}=${username} and ${fields.accountStatus}=${'true'}
   `);
 
 export const findUserByEmail = async (email: string) =>
   envSet.pool.one<User>(sql`
     select ${sql.join(Object.values(fields), sql`,`)}
     from ${table}
-    where ${fields.primaryEmail}=${email}
+    where ${fields.primaryEmail}=${email} and ${fields.accountStatus}=${'true'}
   `);
 
 export const findUserByPhone = async (phone: string) =>
   envSet.pool.one<User>(sql`
     select ${sql.join(Object.values(fields), sql`,`)}
     from ${table}
-    where ${fields.primaryPhone}=${phone}
+    where ${fields.primaryPhone}=${phone} and ${fields.accountStatus}=${'true'}
   `);
 
 export const findUserById = async (id: string) =>
@@ -41,7 +41,9 @@ export const findUserByIdentity = async (target: string, userId: string) =>
     sql`
       select ${sql.join(Object.values(fields), sql`,`)}
       from ${table}
-      where ${fields.identities}::json#>>'{${sql.identifier([target])},userId}' = ${userId}
+      where ${fields.identities}::json#>>'{${sql.identifier([target])},userId}' = ${userId} and ${
+      fields.accountStatus
+    }=${'true'}
     `
   );
 
