@@ -186,6 +186,7 @@ const LanguageDetails = () => {
                   <span className={style.customValuesColumn}>
                     {t('sign_in_exp.others.manage_language.custom_values')}
                     <IconButton
+                      size="small"
                       className={style.clearButton}
                       tooltip="sign_in_exp.others.manage_language.clear_all_tip"
                       onClick={() => {
