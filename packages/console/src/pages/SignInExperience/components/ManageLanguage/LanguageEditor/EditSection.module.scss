@@ -1,0 +1,31 @@
+@use '@/scss/underscore' as _;
+
+.sectionTitle {
+  @include _.subhead-cap-small;
+  color: var(--color-neutral-variant-60);
+  background-color: var(--color-layer-light);
+  padding: _.unit(1) 0;
+}
+
+.sectionDataKey {
+  padding: _.unit(4) _.unit(5);
+  font: var(--font-body-medium);
+  color: var(--color-text);
+}
+
+.sectionBuiltInText {
+  padding: _.unit(2) _.unit(3);
+  border-radius: 6px;
+  border: 1px solid var(--color-border);
+  color: var(--color-text);
+  background: var(--color-layer-2);
+}
+
+.inputCell {
+  position: relative;
+}
+
+.sectionInputArea {
+  position: absolute;
+  inset: _.unit(2) _.unit(5);
+}

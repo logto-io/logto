@@ -21,6 +21,7 @@ const translation = {
     enter_passcode: 'Entrer le code',
     confirm: 'Confirmer',
     cancel: 'Annuler',
+    save_password: 'Save', // UNTRANSLATED
     bind: 'Lier avec {{address}}',
     back: 'Aller en arrière',
     nav_back: 'Retour',

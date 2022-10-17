@@ -29,7 +29,6 @@ const findDefaultSignInExperience = jest.fn(
     languageInfo: {
       autoDetect: true,
       fallbackLanguage: customizedLanguage,
-      fixedLanguage: customizedLanguage,
     },
   })
 );
@@ -147,7 +146,6 @@ describe('when the application is not admin-console', () => {
       languageInfo: {
         autoDetect: false,
         fallbackLanguage: customizedLanguage,
-        fixedLanguage: customizedLanguage,
       },
     });
     await expect(phraseRequest.get('/phrase')).resolves.toHaveProperty('status', 200);

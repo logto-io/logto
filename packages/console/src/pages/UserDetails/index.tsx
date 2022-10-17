@@ -4,7 +4,7 @@ import { useMemo, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import ReactModal from 'react-modal';
-import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import useSWR from 'swr';
 
 import Back from '@/assets/images/back.svg';
@@ -18,6 +18,7 @@ import DeleteConfirmModal from '@/components/DeleteConfirmModal';
 import DetailsSkeleton from '@/components/DetailsSkeleton';
 import LinkButton from '@/components/LinkButton';
 import TabNav, { TabNavItem } from '@/components/TabNav';
+import { generatedPasswordStorageKey } from '@/consts';
 import { generateAvatarPlaceHolderById } from '@/consts/avatars';
 import useApi, { RequestError } from '@/hooks/use-api';
 import * as detailsStyles from '@/scss/details.module.scss';
@@ -33,15 +34,13 @@ const UserDetails = () => {
   const location = useLocation();
   const isLogs = location.pathname.endsWith('/logs');
   const { userId } = useParams();
-  const [searchParameters, setSearchParameters] = useSearchParams();
-  const passwordEncoded = searchParameters.get('password');
-  const password = passwordEncoded && atob(passwordEncoded);
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
   const [isDeleteFormOpen, setIsDeleteFormOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [isDeleted, setIsDeleted] = useState(false);
   const [isResetPasswordFormOpen, setIsResetPasswordFormOpen] = useState(false);
   const [resetResult, setResetResult] = useState<string>();
+  const [password, setPassword] = useState(sessionStorage.getItem(generatedPasswordStorageKey));
 
   const { data, error, mutate } = useSWR<User, RequestError>(userId && `/api/users/${userId}`);
   const isLoading = !data && !error;
@@ -98,7 +97,7 @@ const UserDetails = () => {
              */}
             <img
               className={styles.avatar}
-              src={data.avatar || generateAvatarPlaceHolderById(userId)}
+              src={data.avatar ?? generateAvatarPlaceHolderById(userId)}
               referrerPolicy="no-referrer"
               alt="avatar"
             />
@@ -192,7 +191,8 @@ const UserDetails = () => {
           username={data.username ?? '-'}
           password={password}
           onClose={() => {
-            setSearchParameters({});
+            setPassword(null);
+            sessionStorage.removeItem(generatedPasswordStorageKey);
           }}
         />
       )}

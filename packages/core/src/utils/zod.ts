@@ -54,6 +54,8 @@ export const translationSchemas: Record<string, OpenAPIV3.SchemaObject> = {
 
 export type ZodStringCheck = ValuesOf<ZodStringDef['checks']>;
 
+// Switch-clause
+// eslint-disable-next-line complexity
 const zodStringCheckToSwaggerFormat = (zodStringCheck: ZodStringCheck) => {
   const { kind } = zodStringCheck;
 
@@ -126,6 +128,8 @@ const zodLiteralToSwagger = (zodLiteral: ZodLiteral<unknown>): OpenAPIV3.SchemaO
   }
 };
 
+// Too many zod types :-)
+// eslint-disable-next-line complexity
 export const zodTypeToSwagger = (
   config: unknown
 ): OpenAPIV3.SchemaObject | OpenAPIV3.ReferenceObject => {

@@ -92,7 +92,7 @@ const GuideModal = ({ isOpen, onClose }: Props) => {
           <CardTitle size="small" title="sign_in_exp.title" subtitle="sign_in_exp.description" />
           <Spacer />
           <Button
-            type="plain"
+            type="text"
             size="small"
             title="general.skip"
             isLoading={isLoading}

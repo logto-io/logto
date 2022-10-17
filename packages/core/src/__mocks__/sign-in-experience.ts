@@ -28,7 +28,6 @@ export const mockSignInExperience: SignInExperience = {
   languageInfo: {
     autoDetect: true,
     fallbackLanguage: 'en',
-    fixedLanguage: 'zh-CN',
   },
   signInMethods: {
     username: SignInMethodState.Primary,
@@ -60,7 +59,6 @@ export const mockTermsOfUse: TermsOfUse = {
 export const mockLanguageInfo: LanguageInfo = {
   autoDetect: true,
   fallbackLanguage: 'en',
-  fixedLanguage: 'zh-CN',
 };
 
 export const mockSignInMethods: SignInMethods = {

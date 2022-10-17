@@ -15,8 +15,6 @@ tasks:
       pnpm cli db seed
       pnpm lerna --ignore=@logto/integration-test run --parallel dev
     env:
-      ALL_YES: 1
-      NO_INQUIRY: 0
       TRUST_PROXY_HEADER: 1
       DB_URL: postgres://postgres:p0stgr3s@127.0.0.1:5432
 
