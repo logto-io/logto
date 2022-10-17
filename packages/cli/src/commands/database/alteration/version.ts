@@ -32,7 +32,7 @@ export const chooseAlterationsByVersion = async (
 
     log.info(`Deploy target ${chalk.green(nextTag)}`);
 
-    return alterations.slice(0, endIndex);
+    return alterations.slice(0, endIndex + 1);
   }
 
   const versions = alterations

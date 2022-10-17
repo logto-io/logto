@@ -75,7 +75,7 @@ describe('chooseAlterationsByVersion()', () => {
       ),
       expect(chooseAlterationsByVersion(files, 'v1.1.0')).resolves.toEqual(files.slice(0, 8)),
       expect(chooseAlterationsByVersion(files, 'v1.2.0')).resolves.toEqual(files.slice(0, 9)),
-      expect(chooseAlterationsByVersion(files, 'next')).resolves.toEqual(files.slice(0, 11)),
+      expect(chooseAlterationsByVersion(files, 'next')).resolves.toEqual(files.slice(0, 12)),
     ]);
   });
 });
