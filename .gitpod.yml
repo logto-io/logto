@@ -13,7 +13,7 @@ tasks:
     command: |
       export ENDPOINT=$(gp url 3001)
       pnpm cli db seed
-      pnpm lerna --ignore=@logto/integration-test run --parallel dev
+      pnpm -r --parallel --filter=!@logto/integration-tests dev
     env:
       TRUST_PROXY_HEADER: 1
       DB_URL: postgres://postgres:p0stgr3s@127.0.0.1:5432
