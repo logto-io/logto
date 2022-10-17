@@ -11,7 +11,7 @@ RUN apk add --no-cache python3 make g++
 
 # Install dependencies and build
 RUN pnpm i
-RUN pnpm -- lerna run build --stream
+RUN pnpm -r build
 
 # Add official connectors
 WORKDIR /etc/logto

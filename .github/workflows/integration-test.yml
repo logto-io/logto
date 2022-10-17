@@ -22,7 +22,7 @@ jobs:
         uses: silverhand-io/actions-node-pnpm-run-steps@v2
 
       - name: Build
-        run: pnpm -- lerna run build --stream
+        run: pnpm -r build
 
       - name: Package
         run: ./package.sh

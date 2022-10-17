@@ -28,7 +28,7 @@ jobs:
         run: pnpm prepack
 
       - name: Lint with Report
-        run: pnpm -- lerna run --parallel lint:report && node merge-eslint-reports.js
+        run: pnpm -r --parallel lint:report && node merge-eslint-reports.js
 
       - name: Annotate Code Linting Results
         uses: ataylorme/eslint-annotate-action@1.2.0

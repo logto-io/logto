@@ -46,7 +46,7 @@ jobs:
       - name: Publish to GitHub
         # add `no-verify-access` due to https://github.com/lerna/lerna/issues/2788
         run: |
-          pnpm lerna publish \
+          pnpx lerna@^5.0.0 publish \
             -m "release: %s" \
             --conventional-commits \
             --preid=${{ github.event.inputs.preid }} \
