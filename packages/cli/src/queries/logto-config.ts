@@ -7,10 +7,19 @@ import {
   AlterationStateKey,
 } from '@logto/schemas';
 import { convertToIdentifiers } from '@logto/shared';
+import { Nullable } from '@silverhand/essentials';
 import { DatabasePool, DatabaseTransactionConnection, sql } from 'slonik';
 import { z } from 'zod';
 
 const { table, fields } = convertToIdentifiers(LogtoConfigs);
+
+export const isConfigsTableExists = async (pool: DatabasePool) => {
+  const { rows } = await pool.query<Nullable<string>>(
+    sql`select to_regclass(${LogtoConfigs.table})`
+  );
+
+  return Boolean(rows[0]);
+};
 
 export const getRowsByKeys = async (
   pool: DatabasePool | DatabaseTransactionConnection,
