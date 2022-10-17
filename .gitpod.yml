@@ -1,8 +1,9 @@
 tasks:
-  - name: DB Server
+  - name: Database
     init: docker pull postgres:14-alpine
     command: docker run -p 5432:5432 -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=p0stgr3s postgres:14-alpine
-  - name: Logto Dev Mode
+
+  - name: Logto dev
     init: |
       pnpm i
       pnpm prepack
@@ -11,9 +12,10 @@ tasks:
       cd -
       pnpm cli connector add --official -p .
     command: |
+      gp ports await 5432
       export ENDPOINT=$(gp url 3001)
       pnpm cli db seed
-      pnpm -r --parallel --filter=!@logto/integration-tests dev
+      pnpm start:dev
     env:
       TRUST_PROXY_HEADER: 1
       DB_URL: postgres://postgres:p0stgr3s@127.0.0.1:5432
