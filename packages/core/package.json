@@ -14,10 +14,6 @@
     "lint:report": "pnpm lint --format json --output-file report.json",
     "dev": "rm -rf build/ && pnpm run copyfiles && nodemon",
     "start": "NODE_ENV=production node build/index.js",
-    "add-connector": "logto connector add -p ../../",
-    "add-official-connectors": "logto connector add -o -p ../../",
-    "alteration": "logto db alt",
-    "cli": "logto",
     "test": "jest",
     "test:ci": "jest --coverage --silent",
     "test:report": "codecov -F core"

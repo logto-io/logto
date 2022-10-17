@@ -10,11 +10,9 @@
     "prepare": "if test \"$NODE_ENV\" != \"production\" && test \"$CI\" != \"true\" ; then husky install ; fi",
     "prepack": "lerna run --stream prepack",
     "dev": "lerna run --stream prepack -- --incremental && lerna --ignore=@logto/integration-tests run --parallel dev",
-    "start": "cd packages/core && NODE_ENV=production node . --from-root",
-    "//": "For production, use NPM instead",
-    "cli": "cd packages/core && npm run cli",
-    "//": "For production, use NPM instead",
-    "alteration": "cd packages/core && npm run alteration",
+    "start": "cd packages/core && NODE_ENV=production node .",
+    "cli": "logto",
+    "alteration": "logto db alt",
     "ci:build": "lerna run --stream build",
     "ci:lint": "lerna run --parallel lint",
     "ci:stylelint": "lerna run --parallel stylelint",
@@ -52,5 +50,8 @@
         "jest": "^29.1.2"
       }
     }
+  },
+  "dependencies": {
+    "@logto/cli": "^1.0.0-beta.10"
   }
 }

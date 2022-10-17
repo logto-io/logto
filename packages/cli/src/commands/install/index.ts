@@ -14,15 +14,17 @@ import {
   logFinale,
   decompress,
   inquireOfficialConnectors,
+  isUrl,
 } from './utils';
 
 export type InstallArgs = {
   path?: string;
   skipSeed: boolean;
   officialConnectors?: boolean;
+  downloadUrl?: string;
 };
 
-const installLogto = async ({ path, skipSeed, officialConnectors }: InstallArgs) => {
+const installLogto = async ({ path, skipSeed, officialConnectors, downloadUrl }: InstallArgs) => {
   validateNodeVersion();
 
   // Get instance path
@@ -32,7 +34,8 @@ const installLogto = async ({ path, skipSeed, officialConnectors }: InstallArgs)
   await validateDatabase();
 
   // Download and decompress
-  const tarPath = await downloadRelease();
+  const tarPath =
+    !downloadUrl || isUrl(downloadUrl) ? await downloadRelease(downloadUrl) : downloadUrl;
   await decompress(instancePath, tarPath);
 
   // Seed database
@@ -69,6 +72,7 @@ const install: CommandModule<
     p?: string;
     ss: boolean;
     oc?: boolean;
+    du?: string;
   }
 > = {
   command: ['init', 'i', 'install'],
@@ -91,9 +95,15 @@ const install: CommandModule<
         describe: 'Add official connectors after downloading Logto',
         type: 'boolean',
       },
+      du: {
+        alias: 'download-url',
+        describe: 'URL for downloading Logto, can be a local path to tar',
+        type: 'string',
+        hidden: true,
+      },
     }),
-  handler: async ({ p, ss, oc }) => {
-    await installLogto({ path: p, skipSeed: ss, officialConnectors: oc });
+  handler: async ({ p, ss, oc, du }) => {
+    await installLogto({ path: p, skipSeed: ss, officialConnectors: oc, downloadUrl: du });
   },
 };
 

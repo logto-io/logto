@@ -84,12 +84,12 @@ export const validateDatabase = async () => {
   }
 };
 
-export const downloadRelease = async () => {
+export const downloadRelease = async (url?: string) => {
   const tarFilePath = path.resolve(os.tmpdir(), './logto.tar.gz');
 
   log.info(`Download Logto to ${tarFilePath}`);
   await downloadFile(
-    'https://github.com/logto-io/logto/releases/latest/download/logto.tar.gz',
+    url ?? 'https://github.com/logto-io/logto/releases/latest/download/logto.tar.gz',
     tarFilePath
   );
 
@@ -165,4 +165,16 @@ export const inquireOfficialConnectors = async (initialAnswer?: boolean) => {
   );
 
   return value;
+};
+
+export const isUrl = (string: string) => {
+  try {
+    // On purpose to test
+    // eslint-disable-next-line no-new
+    new URL(string);
+
+    return true;
+  } catch {
+    return false;
+  }
 };
