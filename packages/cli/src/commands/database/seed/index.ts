@@ -12,6 +12,7 @@ import { z } from 'zod';
 import { createPoolAndDatabaseIfNeeded, insertInto } from '../../../database';
 import {
   getRowsByKeys,
+  isConfigsTableExists,
   updateDatabaseTimestamp,
   updateValueByKey,
 } from '../../../queries/logto-config';
@@ -126,18 +127,31 @@ export const seedByPool = async (pool: DatabasePool, type: SeedChoice) => {
   });
 };
 
-const seed: CommandModule<Record<string, unknown>, { type: string }> = {
+const seed: CommandModule<Record<string, unknown>, { type: string; swe?: boolean }> = {
   command: 'seed [type]',
   describe: 'Create database then seed tables and data',
   builder: (yargs) =>
-    yargs.positional('type', {
-      describe: 'Optional seed type',
-      type: 'string',
-      choices: seedChoices,
-      default: 'all',
-    }),
-  handler: async ({ type }) => {
+    yargs
+      .option('swe', {
+        describe: 'Skip the seeding process when Logto configs table exists',
+        alias: 'skip-when-exists',
+        type: 'boolean',
+      })
+      .positional('type', {
+        describe: 'Optional seed type',
+        type: 'string',
+        choices: seedChoices,
+        default: 'all',
+      }),
+  handler: async ({ type, swe }) => {
     const pool = await createPoolAndDatabaseIfNeeded();
+
+    if (swe && (await isConfigsTableExists(pool))) {
+      log.info('Seeding skipped');
+      await pool.end();
+
+      return;
+    }
 
     try {
       // Cannot avoid `as` since the official type definition of `yargs` doesn't work.
