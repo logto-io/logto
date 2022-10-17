@@ -36,7 +36,7 @@ jobs:
           git_commit_gpgsign: true
 
       - name: Setup Node and pnpm
-        uses: silverhand-io/actions-node-pnpm-run-steps@v1.2.3
+        uses: silverhand-io/actions-node-pnpm-run-steps@v2
 
       - name: Configure Git user
         run: |
