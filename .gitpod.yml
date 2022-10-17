@@ -13,6 +13,7 @@ tasks:
       pnpm cli connector add --official -p .
     command: |
       gp ports await 5432
+      sleep 3
       export ENDPOINT=$(gp url 3001)
       pnpm cli db seed
       pnpm start:dev
