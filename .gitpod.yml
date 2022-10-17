@@ -9,7 +9,7 @@ tasks:
       cd packages/core
       pnpm build
       cd -
-      pnpm cli connector add --official
+      pnpm cli connector add --official -p .
     command: |
       export ENDPOINT=$(gp url 3001)
       pnpm cli db seed
