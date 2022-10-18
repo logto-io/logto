@@ -1,7 +1,19 @@
 @use '@/scss/underscore' as _;
+@use '@/scss/dimensions' as dim;
 
 .radioGroup {
   margin-top: _.unit(2);
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: _.unit(4);
+
+  @media screen and (max-width: dim.$modal-layout-grid-medium) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media screen and (max-width: dim.$modal-layout-grid-small) {
+    grid-template-columns: repeat(1, 1fr);
+  }
 }
 
 .error {

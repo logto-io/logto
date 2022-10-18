@@ -11,18 +11,8 @@
 }
 
 .card {
-  display: flex;
-  flex-wrap: wrap;
-  gap: _.unit(3);
-
   > .radio {
-    position: relative;
-    flex: 1;
-    min-width: 170px;
-    max-width: 230px;
-    padding: _.unit(5);
-    display: flex;
-    flex-direction: column;
+    padding: _.unit(3);
     border-radius: _.unit(4);
     border: 1px solid transparent;
     outline: 1px solid var(--color-neutral-90);
@@ -45,39 +35,36 @@
       box-shadow: var(--shadow-2);
     }
 
-    svg {
-      opacity: 0%;
-      position: absolute;
-      right: _.unit(5);
-      top: _.unit(5);
-    }
+    .content {
+      position: relative;
 
-    &.small {
-      padding: _.unit(3);
+      .indicator {
+        position: absolute;
+        right: 0;
+        top: 0;
 
-      svg {
-        right: _.unit(3);
-        top: _.unit(3);
+        svg {
+          opacity: 0%;
+        }
       }
-    }
 
-    .disabledLabel {
-      position: absolute;
-      right: _.unit(3);
-      top: _.unit(3);
-      background: var(--color-neutral-90);
-      padding: _.unit(0.5) _.unit(2);
-      border-radius: 10px;
-      font: var(--font-label-medium);
-      color: var(--color-text);
+      .disabledLabel {
+        background: var(--color-neutral-90);
+        padding: _.unit(0.5) _.unit(2);
+        border-radius: 10px;
+        font: var(--font-label-medium);
+        color: var(--color-text);
+      }
     }
 
     &.checked {
       border-color: var(--color-primary);
       outline: 1px solid var(--color-primary);
 
-      svg {
-        opacity: 100%;
+      .indicator {
+        svg {
+          opacity: 100%;
+        }
       }
     }
   }
@@ -88,8 +75,6 @@
 
   /* stylelint-disable-next-line no-descending-specificity */
   > .radio {
-    display: flex;
-    align-items: center;
     cursor: pointer;
 
     /* stylelint-disable-next-line no-descending-specificity */
@@ -97,29 +82,36 @@
       margin-bottom: _.unit(2);
     }
 
-    .indicator {
-      border-radius: 50%;
-      border: 2px solid var(--color-neutral-60);
-      display: inline-block;
-      margin-right: _.unit(2);
+    .content {
+      display: flex;
+      align-items: center;
 
-      &::before {
-        content: '';
-        background: var(--color-layer-1);
-        width: 10px;
-        height: 10px;
-        display: block;
+      .indicator {
         border-radius: 50%;
-        border: 2px solid var(--color-layer-1);
+        border: 2px solid var(--color-neutral-60);
+        display: inline-block;
+        margin-right: _.unit(2);
+
+        &::before {
+          content: '';
+          background: var(--color-layer-1);
+          width: 10px;
+          height: 10px;
+          display: block;
+          border-radius: 50%;
+          border: 2px solid var(--color-layer-1);
+        }
       }
     }
 
     &.checked {
-      .indicator {
-        border-color: var(--color-primary);
+      .content {
+        .indicator {
+          border-color: var(--color-primary);
 
-        &::before {
-          background: var(--color-primary);
+          &::before {
+            background: var(--color-primary);
+          }
         }
       }
     }
@@ -128,11 +120,13 @@
       cursor: not-allowed;
       color: var(--color-disabled);
 
-      .indicator {
-        border-color: var(--color-disabled);
+      .content {
+        .indicator {
+          border-color: var(--color-disabled);
 
-        &::before {
-          background: var(--color-layer-1);
+          &::before {
+            background: var(--color-layer-1);
+          }
         }
       }
     }

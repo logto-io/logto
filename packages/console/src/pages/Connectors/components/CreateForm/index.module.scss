@@ -1,15 +1,42 @@
 @use '@/scss/underscore' as _;
+@use '@/scss/dimensions' as dim;
 
 .body {
   .connectorGroup {
     gap: _.unit(4);
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
 
-    .connectorRadio {
-      // Override radio style
-      min-width: 276px;
-      max-width: 276px;
-      width: 276px;
-      height: 96px;
+    @media screen and (max-width: dim.$modal-layout-grid-large) {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    @media screen and (max-width: dim.$modal-layout-grid-medium) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    @media screen and (max-width: dim.$modal-layout-grid-small) {
+      grid-template-columns: repeat(1, 1fr);
+    }
+
+    &.medium {
+      grid-template-columns: repeat(2, 1fr);
+
+      @media screen and (max-width: dim.$modal-layout-grid-small) {
+        grid-template-columns: repeat(1, 1fr);
+      }
+    }
+
+    &.large {
+      grid-template-columns: repeat(3, 1fr);
+
+      @media screen and (max-width: dim.$modal-layout-grid-medium) {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      @media screen and (max-width: dim.$modal-layout-grid-small) {
+        grid-template-columns: repeat(1, 1fr);
+      }
     }
 
     .connector {
@@ -17,14 +44,15 @@
       display: flex;
 
       .logo {
-        width: 48px;
-        height: 48px;
+        width: 40px;
+        height: 40px;
         display: flex;
         align-items: center;
+        margin-right: _.unit(3);
 
         img {
-          width: 36px;
-          height: 36px;
+          width: 40px;
+          height: 40px;
         }
       }
 
@@ -33,6 +61,11 @@
 
         .name {
           font: var(--font-subhead-2);
+          @include _.multi-line-ellipsis(1);
+
+          &.nameWithRightPadding {
+            padding-right: _.unit(12); /* For check mark and added label */
+          }
         }
 
         .connectorId {
@@ -45,7 +78,7 @@
           font: var(--font-body-small);
           color: var(--color-text-secondary);
           margin-top: _.unit(1);
-          @include _.multi-line-ellipsis(3);
+          @include _.multi-line-ellipsis(4);
         }
       }
     }
