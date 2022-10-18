@@ -17,7 +17,7 @@ const LanguageItem = ({ languageTag, isSelected, onClick }: Props) => {
 
   useEffect(() => {
     if (isSelected) {
-      itemRef.current?.scrollIntoView(false);
+      itemRef.current?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
     }
   }, [isSelected]);
 
