@@ -1,5 +1,6 @@
 import { AppearanceMode } from '@logto/schemas';
 
+import CheckBoxSelectedDark from '@/assets/images/check-box-selected-dark.svg';
 import CheckBoxSelectedDisabledDark from '@/assets/images/check-box-selected-disabled-dark.svg';
 import CheckBoxSelectedDisabled from '@/assets/images/check-box-selected-disabled.svg';
 import CheckBoxSelected from '@/assets/images/check-box-selected.svg';
@@ -19,7 +20,7 @@ const Icon = ({ className }: Props) => {
 
   return (
     <span className={className}>
-      <CheckBoxSelected />
+      {isLightMode ? <CheckBoxSelected /> : <CheckBoxSelectedDark />}
       {isLightMode ? <CheckBoxUnselected /> : <CheckBoxUnselectedDark />}
       {isLightMode ? <CheckBoxSelectedDisabled /> : <CheckBoxSelectedDisabledDark />}
       {isLightMode ? <CheckBoxUnselectedDisabled /> : <CheckBoxUnselectedDisabledDark />}
