@@ -4,7 +4,7 @@
 .divider {
   @include _.flex-row;
   font: var(--font-body);
-  color: var(--color-text-secondary);
+  color: var(--color-caption);
 
   .line {
     flex: 1;
