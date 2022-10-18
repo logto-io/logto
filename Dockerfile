@@ -14,7 +14,6 @@ RUN pnpm i
 RUN pnpm -r build
 
 # Add official connectors
-WORKDIR /etc/logto
 RUN pnpm cli connector add --official
 
 # Prune dependencies for production
