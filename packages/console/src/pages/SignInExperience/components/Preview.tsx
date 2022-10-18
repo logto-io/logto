@@ -1,5 +1,4 @@
-import type { LanguageKey } from '@logto/core-kit';
-import { languageOptions } from '@logto/phrases-ui';
+import { LanguageTag, languages as uiLanguageNameMapping } from '@logto/language-kit';
 import {
   AppearanceMode,
   ConnectorResponse,
@@ -13,11 +12,12 @@ import { useEffect, useMemo, useState, useRef, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import useSWR from 'swr';
 
+import PhoneInfo from '@/assets/images/phone-info.svg';
 import Card from '@/components/Card';
 import Select from '@/components/Select';
 import TabNav, { TabNavItem } from '@/components/TabNav';
 import { RequestError } from '@/hooks/use-api';
-import PhoneInfo from '@/icons/PhoneInfo';
+import useUiLanguages from '@/hooks/use-ui-languages';
 
 import * as styles from './Preview.module.scss';
 
@@ -28,11 +28,14 @@ type Props = {
 
 const Preview = ({ signInExperience, className }: Props) => {
   const { t } = useTranslation(undefined, { keyPrefix: 'admin_console' });
-  const [language, setLanguage] = useState<LanguageKey>('en');
+  const [language, setLanguage] = useState<LanguageTag>('en');
   const [mode, setMode] = useState<AppearanceMode>(AppearanceMode.LightMode);
   const [platform, setPlatform] = useState<'desktopWeb' | 'mobile' | 'mobileWeb'>('desktopWeb');
   const { data: allConnectors } = useSWR<ConnectorResponse[], RequestError>('/api/connectors');
   const previewRef = useRef<HTMLIFrameElement>(null);
+  const { customPhrases } = useUiLanguages();
+
+  const { languages } = useUiLanguages();
 
   const modeOptions = useMemo(() => {
     const light = { value: AppearanceMode.LightMode, title: t('sign_in_exp.preview.light') };
@@ -56,14 +59,18 @@ const Preview = ({ signInExperience, className }: Props) => {
   }, [modeOptions, mode]);
 
   const availableLanguageOptions = useMemo(() => {
-    if (signInExperience && !signInExperience.languageInfo.autoDetect) {
-      return languageOptions.filter(
-        ({ value }) => value === signInExperience.languageInfo.fixedLanguage
-      );
-    }
+    const availableLanguageTags =
+      signInExperience && !signInExperience.languageInfo.autoDetect
+        ? languages.filter(
+            (languageTag) => languageTag === signInExperience.languageInfo.fallbackLanguage
+          )
+        : languages;
 
-    return languageOptions;
-  }, [signInExperience]);
+    return availableLanguageTags.map((languageTag) => ({
+      value: languageTag,
+      title: uiLanguageNameMapping[languageTag],
+    }));
+  }, [languages, signInExperience]);
 
   useEffect(() => {
     if (!availableLanguageOptions[0]) {
@@ -103,7 +110,7 @@ const Preview = ({ signInExperience, className }: Props) => {
   }, [allConnectors, language, mode, platform, signInExperience]);
 
   const postPreviewMessage = useCallback(() => {
-    if (!config) {
+    if (!config || !customPhrases) {
       return;
     }
 
@@ -111,7 +118,7 @@ const Preview = ({ signInExperience, className }: Props) => {
       { sender: 'ac_preview', config },
       window.location.origin
     );
-  }, [config]);
+  }, [config, customPhrases]);
 
   useEffect(() => {
     postPreviewMessage();
@@ -195,12 +202,14 @@ const Preview = ({ signInExperience, className }: Props) => {
                 <PhoneInfo />
               </div>
             )}
-            {
-              // The missing of attribute "sandbox" is intended since the source is trusted
-              /* eslint-disable react/iframe-missing-sandbox */
-            }
-            <iframe ref={previewRef} src="/sign-in?preview=true" tabIndex={-1} />
-            {/* eslint-enable react/iframe-missing-sandbox */}
+            <iframe
+              ref={previewRef}
+              // Allow all sandbox rules
+              sandbox={undefined}
+              src="/sign-in?preview=true"
+              tabIndex={-1}
+              title={t('sign_in_exp.preview.title')}
+            />
           </div>
         </div>
       </div>

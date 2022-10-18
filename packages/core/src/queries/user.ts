@@ -1,8 +1,8 @@
 import { User, CreateUser, Users, UserRole } from '@logto/schemas';
+import { conditionalSql, convertToIdentifiers, OmitAutoSetFields } from '@logto/shared';
 import { sql } from 'slonik';
 
 import { buildUpdateWhere } from '@/database/update-where';
-import { conditionalSql, convertToIdentifiers, OmitAutoSetFields } from '@/database/utils';
 import envSet from '@/env-set';
 import { DeletionError } from '@/errors/SlonikError';
 

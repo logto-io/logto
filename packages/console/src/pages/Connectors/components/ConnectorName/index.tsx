@@ -75,6 +75,7 @@ const ConnectorName = ({ type, connectors, onClickSetup }: Props) => {
           <div className={styles.logoContainer}>
             <img
               className={styles.logo}
+              alt="logo"
               src={
                 theme === AppearanceMode.DarkMode && connector.logoDark
                   ? connector.logoDark

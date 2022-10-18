@@ -1,5 +1,3 @@
-import ModalContainer from 'react-modal-promise';
-
 import TermsOfUseComponent from '@/components/TermsOfUse';
 import usePlatform from '@/hooks/use-platform';
 import useTerms from '@/hooks/use-terms';
@@ -18,19 +16,16 @@ const TermsOfUse = ({ className }: Props) => {
   }
 
   return (
-    <>
-      <TermsOfUseComponent
-        className={className}
-        name="termsAgreement"
-        termsUrl={termsSettings.contentUrl}
-        isChecked={termsAgreement}
-        onChange={(checked) => {
-          setTermsAgreement(checked);
-        }}
-        onTermsClick={isMobile ? termsOfUseIframeModalHandler : undefined}
-      />
-      <ModalContainer />
-    </>
+    <TermsOfUseComponent
+      className={className}
+      name="termsAgreement"
+      termsUrl={termsSettings.contentUrl}
+      isChecked={termsAgreement}
+      onChange={(checked) => {
+        setTermsAgreement(checked);
+      }}
+      onTermsClick={isMobile ? termsOfUseIframeModalHandler : undefined}
+    />
   );
 };
 

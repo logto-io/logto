@@ -34,7 +34,7 @@
     .text {
       margin-top: _.unit(1);
       font: var(--font-body-medium);
-      color: var(--color-caption);
+      color: var(--color-text-secondary);
     }
 
     .infoCard {
@@ -64,7 +64,7 @@
     .button {
       user-select: none;
       margin-top: _.unit(8);
-      border: 1px solid var(--color-outline);
+      border: 1px solid var(--color-border);
       border-radius: 8px;
       padding: _.unit(3) _.unit(6);
       font: var(--font-button);
@@ -75,6 +75,10 @@
         cursor: pointer;
         background: var(--color-hover);
       }
+
+      &:focus {
+        outline: 3px solid var(--color-focused-variant);
+      }
     }
 
     .continue {
@@ -82,7 +86,7 @@
       display: flex;
       align-items: center;
       column-gap: _.unit(4);
-      color: var(--color-caption);
+      color: var(--color-text-secondary);
 
       .hr {
         width: 110px;

@@ -45,7 +45,7 @@
 :global(body.desktop) {
   .countryCodeSelector {
     > svg {
-      color: var(--color-icon);
+      color: var(--color-text-secondary);
       margin-left: _.unit(2);
       width: 20px;
       height: 20px;

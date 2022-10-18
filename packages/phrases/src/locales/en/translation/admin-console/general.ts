@@ -35,6 +35,7 @@ const general = {
   unsaved_changes_warning: 'You have made some changes. Are you sure you want to leave this page?',
   leave_page: 'Leave Page',
   stay_on_page: 'Stay on Page',
+  type_to_search: 'Type to search',
 };
 
 export default general;

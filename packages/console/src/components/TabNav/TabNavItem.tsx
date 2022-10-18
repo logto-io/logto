@@ -1,6 +1,8 @@
 import classNames from 'classnames';
 import { Link, useLocation } from 'react-router-dom';
 
+import { onKeyDownHandler } from '@/utilities/a11y';
+
 import * as styles from './TabNavItem.module.scss';
 
 type Props = {
@@ -16,7 +18,14 @@ const TabNavItem = ({ children, href, isActive, onClick }: Props) => {
 
   return (
     <div className={classNames(styles.link, selected && styles.selected)}>
-      {href ? <Link to={href}>{children}</Link> : <a onClick={onClick}>{children}</a>}
+      {href ? (
+        <Link to={href}>{children}</Link>
+      ) : (
+        // eslint-disable-next-line jsx-a11y/anchor-is-valid
+        <a role="tab" tabIndex={0} onKeyDown={onKeyDownHandler(onClick)} onClick={onClick}>
+          {children}
+        </a>
+      )}
     </div>
   );
 };

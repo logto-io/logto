@@ -158,7 +158,6 @@ const parseStringMaxLength = (rawType: string) => {
   );
 };
 
-// eslint-disable-next-line complexity
 export const parseType = (tableFieldDefinition: string): Field => {
   const [nameRaw, typeRaw, ...rest] = tableFieldDefinition.split(' ');
 

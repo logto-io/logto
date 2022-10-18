@@ -19,7 +19,7 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Setup Node and pnpm
-        uses: silverhand-io/actions-node-pnpm-run-steps@v1.2.3
+        uses: silverhand-io/actions-node-pnpm-run-steps@v2
 
       - name: Build
         run: pnpm ci:build
@@ -33,7 +33,7 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Setup Node and pnpm
-        uses: silverhand-io/actions-node-pnpm-run-steps@v1.2.3
+        uses: silverhand-io/actions-node-pnpm-run-steps@v2
 
       - name: Prepack
         run: pnpm prepack
@@ -51,7 +51,7 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Setup Node and pnpm
-        uses: silverhand-io/actions-node-pnpm-run-steps@v1.2.3
+        uses: silverhand-io/actions-node-pnpm-run-steps@v2
 
       - name: Prepack
         run: pnpm prepack
