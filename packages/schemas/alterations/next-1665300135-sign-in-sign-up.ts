@@ -16,7 +16,7 @@ enum SignInMethodKey {
 }
 
 type SignInExperience = {
-  sign_in_methods: {
+  signInMethods: {
     [SignInMethodKey.Username]: SignInMethodState;
     [SignInMethodKey.Email]: SignInMethodState;
     [SignInMethodKey.Sms]: SignInMethodState;
@@ -104,7 +104,7 @@ const alteration: AlterationScript = {
 
     /* eslint-disable @silverhand/fp/no-mutating-methods */
     if (data) {
-      const { sign_in_methods: signInMethods } = data;
+      const { signInMethods } = data;
       const methodKeys = Object.values(SignInMethodKey);
       const primaryMethod = methodKeys.find(
         (key) => signInMethods[key] === SignInMethodState.Primary
