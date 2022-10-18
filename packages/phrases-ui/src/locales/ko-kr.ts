@@ -1,4 +1,4 @@
-import en from './en';
+import { LocalePhrase } from '../types';
 
 const translation = {
   input: {
@@ -21,6 +21,7 @@ const translation = {
     enter_passcode: '비밀번호 입력',
     confirm: '확인',
     cancel: '취소',
+    save_password: 'Save', // UNTRANSLATED
     bind: '{{address}}로 연동',
     back: '뒤로 가기',
     nav_back: '뒤로',
@@ -28,7 +29,7 @@ const translation = {
     got_it: '알겠습니다',
     sign_in_with: '{{name}} 로그인',
     forgot_password: '비밀번호를 잊어버리셨나요?',
-    switch_to: 'Switch to {{method}}', // TODO: untranslated
+    switch_to: 'Switch to {{method}}', // UNTRANSLATED
   },
   description: {
     email: '이메일',
@@ -57,6 +58,7 @@ const translation = {
     reset_password_description_sms:
       '계정과 연결된 전화번호를 입력하면 비밀번호 재설정을 위한 인증 코드를 문자로 보내드립니다.',
     new_password: '새 비밀번호',
+    password_changed: 'Password Changed', // UNTRANSLATED
   },
   error: {
     username_password_mismatch: '사용자 이름 또는 비밀번호가 일치하지 않아요.',
@@ -77,7 +79,7 @@ const translation = {
   },
 };
 
-const koKR: typeof en = Object.freeze({
+const koKR: LocalePhrase = Object.freeze({
   translation,
 });
 

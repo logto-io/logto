@@ -4,6 +4,7 @@ import koaBody from 'koa-body';
 import { IMiddleware, IRouterParamContext } from 'koa-router';
 import { ZodType } from 'zod';
 
+import envSet from '@/env-set';
 import RequestError from '@/errors/RequestError';
 import ServerError from '@/errors/ServerError';
 import assertThat from '@/utils/assert-that';
@@ -114,7 +115,14 @@ export default function koaGuard<
     }
 
     if (response !== undefined) {
-      assertThat(response.safeParse(ctx.body).success, new ServerError());
+      const result = response.safeParse(ctx.body);
+
+      if (!result.success) {
+        if (!envSet.values.isProduction) {
+          console.error('Invalid response:', result.error);
+        }
+        throw new ServerError();
+      }
     }
   };
 

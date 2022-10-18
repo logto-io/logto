@@ -105,9 +105,11 @@ const errors = {
       'Password sign in must be enabled when set a password is required in sign up.', // UNTRANSLATED
     code_sign_in_must_be_enabled:
       'Verification code sign in must be enabled when set a password is not required in sign up.', // UNTRANSLATED
+    unsupported_default_language: '{{language}}无法选择为默认语言。',
   },
   localization: {
-    cannot_delete_default_language: '不能删除「登录体验」正在使用的默认语言 {{languageKey}}。', // UNTRANSLATED
+    cannot_delete_default_language: '你已设置{{languageTag}}为你的默认语言，你无法删除默认语言。',
+    invalid_translation_structure: '无效的数据格式，请检查你的输入并重试。',
   },
   swagger: {
     invalid_zod_type: '无效的 Zod 类型，请检查路由 guard 配置。',

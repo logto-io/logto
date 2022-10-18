@@ -9,6 +9,7 @@ import Dropdown, { DropdownItem } from '@/components/Dropdown';
 import Index from '@/components/Index';
 import { useTheme } from '@/hooks/use-theme';
 import useUserPreferences from '@/hooks/use-user-preferences';
+import { onKeyDownHandler } from '@/utilities/a11y';
 
 import useGetStartedMetadata from '../../hook';
 import * as styles from './index.module.scss';
@@ -28,14 +29,27 @@ const GetStartedProgress = () => {
     return null;
   }
 
+  const showDropDown = () => {
+    setShowDropdown(true);
+  };
+
+  const hideDropDown = () => {
+    setShowDropdown(false);
+  };
+
   return (
     <>
       <div
         ref={anchorRef}
+        role="button"
+        tabIndex={0}
         className={classNames(styles.container, showDropdown && styles.active)}
-        onClick={() => {
-          setShowDropdown(true);
-        }}
+        onKeyDown={onKeyDownHandler({
+          Esc: hideDropDown,
+          Enter: showDropDown,
+          ' ': showDropDown,
+        })}
+        onClick={showDropDown}
       >
         <Icon className={styles.icon} />
         <span>
@@ -52,9 +66,7 @@ const GetStartedProgress = () => {
         horizontalAlign="end"
         title={t('get_started.progress_dropdown_title')}
         titleClassName={styles.dropdownTitle}
-        onClose={() => {
-          setShowDropdown(false);
-        }}
+        onClose={hideDropDown}
       >
         {data.map(({ id, title, isComplete, onClick }, index) => (
           <DropdownItem

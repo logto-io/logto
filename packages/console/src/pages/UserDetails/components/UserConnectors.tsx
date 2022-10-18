@@ -113,7 +113,7 @@ const UserConnectors = ({ userId, connectors, onDelete }: Props) => {
                 <tr key={target}>
                   <td>
                     <div className={styles.connectorName}>
-                      <img src={logo} />
+                      <img src={logo} alt="logo" />
                       <div className={styles.name}>
                         <UnnamedTrans resource={name} />
                       </div>
@@ -126,7 +126,8 @@ const UserConnectors = ({ userId, connectors, onDelete }: Props) => {
                   <td>
                     <Button
                       title="user_details.connectors.remove"
-                      type="plain"
+                      type="text"
+                      size="small"
                       onClick={() => {
                         setDeletingConnector(connector);
                       }}

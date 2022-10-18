@@ -8,16 +8,15 @@ tasks:
       pnpm prepack
       cd packages/core
       pnpm build
-      pnpm add-official-connectors
       cd -
+      pnpm cli connector add --official
     command: |
       export ENDPOINT=$(gp url 3001)
-      pnpm lerna --ignore=@logto/integration-test run --parallel dev
+      pnpm cli db seed
+      pnpm -r --parallel --filter=!@logto/integration-tests dev
     env:
-      ALL_YES: 1
-      NO_INQUIRY: 0
       TRUST_PROXY_HEADER: 1
-      DB_URL_DEFAULT: postgres://postgres:p0stgr3s@127.0.0.1:5432
+      DB_URL: postgres://postgres:p0stgr3s@127.0.0.1:5432
 
 ports:
   - name: Logto

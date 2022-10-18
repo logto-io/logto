@@ -1,13 +1,9 @@
 import { Passcodes, PasscodeType } from '@logto/schemas';
+import { convertToIdentifiers, convertToPrimitiveOrSql, excludeAutoSetFields } from '@logto/shared';
 import { createMockPool, createMockQueryResult, sql } from 'slonik';
 import { snakeCase } from 'snake-case';
 
 import { mockPasscode } from '@/__mocks__';
-import {
-  convertToIdentifiers,
-  convertToPrimitiveOrSql,
-  excludeAutoSetFields,
-} from '@/database/utils';
 import envSet from '@/env-set';
 import { DeletionError } from '@/errors/SlonikError';
 import { expectSqlAssert, QueryType } from '@/utils/test-utils';

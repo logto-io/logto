@@ -37,7 +37,7 @@ const CreateForm = ({ onClose }: Props) => {
     const password = nanoid(8);
 
     const createdUser = await api.post('/api/users', { json: { ...data, password } }).json<User>();
-    onClose?.(createdUser, btoa(password));
+    onClose?.(createdUser, password);
   });
 
   return (
@@ -58,6 +58,7 @@ const CreateForm = ({ onClose }: Props) => {
       <form>
         <FormField isRequired title="users.create_form_username">
           <TextInput
+            // eslint-disable-next-line jsx-a11y/no-autofocus
             autoFocus
             {...register('username', {
               required: true,

@@ -12,6 +12,7 @@ concurrency:
 
 jobs:
   dockerize:
+    environment: ${{ startsWith(github.ref, 'refs/tags/') && 'release' || '' }}
     runs-on: ubuntu-latest
 
     steps:
@@ -79,6 +80,7 @@ jobs:
 
 
   create-github-release:
+    environment: release
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags/')
 
@@ -88,7 +90,7 @@ jobs:
           fetch-depth: 0
 
       - name: Setup Node and pnpm
-        uses: silverhand-io/actions-node-pnpm-run-steps@v1.2.3
+        uses: silverhand-io/actions-node-pnpm-run-steps@v2
 
       - name: Extract changelog
         run: |
@@ -100,7 +102,7 @@ jobs:
           > /tmp/changelog.txt
 
       - name: Build
-        run: pnpm -- lerna run build --stream
+        run: pnpm -r build
 
       - name: Package
         run: ./package.sh

@@ -27,7 +27,7 @@ jest.mock('@/queries/oidc-model-instance', () => ({
   revokeInstanceByGrantId: jest.fn(),
 }));
 
-jest.mock('@/utils/id', () => ({
+jest.mock('@logto/shared', () => ({
   // eslint-disable-next-line unicorn/consistent-function-scoping
   buildIdGenerator: jest.fn(() => () => 'randomId'),
 }));

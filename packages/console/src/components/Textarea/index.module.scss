@@ -1,0 +1,29 @@
+@use '@/scss/underscore' as _;
+
+.container {
+  border-radius: 6px;
+  border: 1px solid var(--color-border);
+  outline: 3px solid transparent;
+  padding: _.unit(2) _.unit(3);
+
+  &:focus-within {
+    border-color: var(--color-primary);
+    outline-color: var(--color-focused-variant);
+  }
+
+  textarea {
+    width: 100%;
+    height: 100%;
+    color: var(--color-text);
+    font: var(--font-body-medium);
+    background: transparent;
+    border: none;
+    outline: none;
+    resize: none;
+    padding: 0;
+
+    &::placeholder {
+      color: var(--color-caption);
+    }
+  }
+}

@@ -2,9 +2,9 @@ import classNames from 'classnames';
 import { ReactNode, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import CircleMinus from '@/icons/CircleMinus';
-import CirclePlus from '@/icons/CirclePlus';
-import Draggable from '@/icons/Draggable';
+import CircleMinus from '@/assets/images/circle-minus.svg';
+import CirclePlus from '@/assets/images/circle-plus.svg';
+import Draggable from '@/assets/images/draggable.svg';
 
 import IconButton from '../IconButton';
 import DragDropProvider from './DragDropProvider';

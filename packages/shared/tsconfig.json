@@ -1,0 +1,12 @@
+{
+  "extends": "@silverhand/ts-config/tsconfig.base",
+  "compilerOptions": {
+    "outDir": "lib",
+    "declaration": true,
+    "types": ["node", "jest"]
+  },
+  "include": [
+    "src",
+    "jest.config.ts"
+  ]
+}
