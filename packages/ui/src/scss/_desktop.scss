@@ -16,12 +16,12 @@ $font-family: -apple-system, system-ui, 'BlinkMacSystemFont', 'Segoe UI', 'Robot
   --color-pressed: rgba(25, 28, 29, 12%); // 12% Neutral-10
   --color-hover: rgba(25, 28, 29, 8%); // 8% Neutral-10
 
-  --color-primary: var(--light-brand-color);
-  --color-focused-variant: var(--light-overlay-brand-focused);
-  --color-hover-variant: var(--light-overlay-brand-hover);
-  --color-pressed-variant: var(--light-overlay-brand-pressed);
-  --color-primary-pressed: var(--light-brand-pressed);
-  --color-primary-hover: var(--light-brand-hover);
+  --color-primary: var(--color-light-brand);
+  --color-focused-variant: var(--color-light-overlay-brand-focused);
+  --color-hover-variant: var(--color-light-overlay-brand-hover);
+  --color-pressed-variant: var(--color-light-overlay-brand-pressed);
+  --color-primary-pressed: var(--color-light-brand-pressed);
+  --color-primary-hover: var(--color-light-brand-hover);
 
   --color-inverse-on-surface: #f3effa;
   --color-outline: #78767f;
@@ -50,12 +50,12 @@ $font-family: -apple-system, system-ui, 'BlinkMacSystemFont', 'Segoe UI', 'Robot
   --color-pressed: rgba(247, 248, 248, 12%); // 12% Neutral-10
   --color-hover: rgba(247, 248, 248, 8%); // 8% Neutral-10
 
-  --color-primary: var(--dark-brand-color);
-  --color-focused-variant: var(--dark-overlay-brand-focused);
-  --color-hover-variant: var(--dark-overlay-brand-hover);
-  --color-pressed-variant: var(--dark-overlay-brand-pressed);
-  --color-primary-pressed: var(--dark-brand-pressed);
-  --color-primary-hover: var(--dark-brand-hover);
+  --color-primary: var(--color-dark-brand);
+  --color-focused-variant: var(--color-dark-overlay-brand-focused);
+  --color-hover-variant: var(--color-dark-overlay-brand-hover);
+  --color-pressed-variant: var(--color-dark-overlay-brand-pressed);
+  --color-primary-pressed: var(--color-dark-brand-pressed);
+  --color-primary-hover: var(--color-dark-brand-hover);
 
   --color-inverse-on-surface: #2d3132;
   --color-outline: #928f9a;
