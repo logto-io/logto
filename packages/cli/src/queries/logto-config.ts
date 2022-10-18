@@ -14,11 +14,11 @@ import { z } from 'zod';
 const { table, fields } = convertToIdentifiers(LogtoConfigs);
 
 export const isConfigsTableExists = async (pool: DatabasePool) => {
-  const { rows } = await pool.query<Nullable<string>>(
-    sql`select to_regclass(${LogtoConfigs.table})`
+  const { rows } = await pool.query<{ regclass: Nullable<string> }>(
+    sql`select to_regclass(${LogtoConfigs.table}) as regclass`
   );
 
-  return Boolean(rows[0]);
+  return Boolean(rows[0]?.regclass);
 };
 
 export const getRowsByKeys = async (
