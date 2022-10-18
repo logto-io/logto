@@ -1,4 +1,2 @@
 /src/db-entries
-/alterations/*.d.ts
-/alterations/*.js
-/alterations/*.tsbuildinfo
+/alterations-js

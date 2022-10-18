@@ -15,9 +15,9 @@ const pool = createMockPool({
 
 describe('getUndeployedAlterations()', () => {
   const files = Object.freeze([
-    { filename: '1.0.0-1663923770-a.js', path: '/alterations/1.0.0-1663923770-a.js' },
-    { filename: '1.0.0-1663923771-b.js', path: '/alterations/1.0.0-1663923771-b.js' },
-    { filename: '1.0.0-1663923772-c.js', path: '/alterations/1.0.0-1663923772-c.js' },
+    { filename: '1.0.0-1663923770-a.js', path: '/alterations-js/1.0.0-1663923770-a.js' },
+    { filename: '1.0.0-1663923771-b.js', path: '/alterations-js/1.0.0-1663923771-b.js' },
+    { filename: '1.0.0-1663923772-c.js', path: '/alterations-js/1.0.0-1663923772-c.js' },
   ]);
 
   beforeEach(() => {

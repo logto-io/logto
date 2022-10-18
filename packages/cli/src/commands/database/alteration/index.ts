@@ -38,7 +38,7 @@ const importAlterationScript = async (filePath: string): Promise<AlterationScrip
 };
 
 export const getAlterationFiles = async (): Promise<AlterationFile[]> => {
-  const alterationDirectory = getPathInModule('@logto/schemas', 'alterations');
+  const alterationDirectory = getPathInModule('@logto/schemas', 'alterations-js');
 
   /**
    * We copy all alteration scripts to the CLI package root directory,
@@ -88,6 +88,7 @@ export const getLatestAlterationTimestamp = async () => {
 
 export const getUndeployedAlterations = async (pool: DatabasePool) => {
   const databaseTimestamp = await getCurrentDatabaseAlterationTimestamp(pool);
+
   const files = await getAlterationFiles();
 
   return files.filter(({ filename }) => getTimestampFromFilename(filename) > databaseTimestamp);

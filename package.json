@@ -7,7 +7,7 @@
     "version": "pnpm i --frozen-lockfile=false && git add pnpm-lock.yaml",
     "prepare": "if test \"$NODE_ENV\" != \"production\" && test \"$CI\" != \"true\" ; then husky install ; fi",
     "prepack": "pnpm -r prepack",
-    "dev": "pnpm -r prepack --incremental && pnpm start:dev",
+    "dev": "pnpm -r prepack && pnpm start:dev",
     "start:dev": "pnpm -r --parallel --filter=!@logto/integration-tests dev",
     "start": "cd packages/core && NODE_ENV=production node .",
     "cli": "logto",
