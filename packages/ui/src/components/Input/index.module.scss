@@ -19,7 +19,7 @@
     top: 50%;
     transform: translateY(-50%);
     display: none;
-    color: var(--color-text-secondary);
+    color: var(--color-icon);
     width: 24px;
     height: 24px;
   }
@@ -34,7 +34,7 @@
     align-self: stretch;
 
     &::placeholder {
-      color: var(--color-placeholder);
+      color: var(--color-caption);
     }
 
     // Overwrite webkit auto-fill style
