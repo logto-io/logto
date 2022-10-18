@@ -108,6 +108,8 @@ export const oraPromise = async <T>(
   }
 };
 
+export const isTty = () => process.stdin.isTTY;
+
 export enum ConfigKey {
   DatabaseUrl = 'DB_URL',
 }
@@ -127,26 +129,16 @@ export const getCliConfigWithPrompt = async ({
   comments,
   defaultValue,
 }: GetCliConfigWithPrompt) => {
-  if (cliConfig.has(key)) {
+  if (cliConfig.has(key) || !isTty()) {
     return cliConfig.get(key);
   }
 
-  const { input } = await inquirer
-    .prompt<{ input?: string }>({
-      type: 'input',
-      name: 'input',
-      message: `Enter your ${readableKey}${conditionalString(comments && ' ' + comments)}`,
-      default: defaultValue,
-    })
-    .catch(async (error) => {
-      if (error.isTtyError) {
-        log.error(`No ${readableKey} (${chalk.green(key)}) configured in option nor env`);
-      }
-
-      // The type definition does not give us type except `any`, throw it directly will honor the original behavior.
-      // eslint-disable-next-line @typescript-eslint/no-throw-literal
-      throw error;
-    });
+  const { input } = await inquirer.prompt<{ input?: string }>({
+    type: 'input',
+    name: 'input',
+    message: `Enter your ${readableKey}${conditionalString(comments && ' ' + comments)}`,
+    default: defaultValue,
+  });
 
   cliConfig.set(key, input);
 

@@ -1,9 +1,9 @@
-import { conditional } from '@silverhand/essentials';
+import { assert, conditional } from '@silverhand/essentials';
 import chalk from 'chalk';
 import inquirer from 'inquirer';
 import { SemVer, compare, eq, gt } from 'semver';
 
-import { findLastIndex, log } from '../../../utilities';
+import { findLastIndex, isTty, log } from '../../../utilities';
 import { AlterationFile } from './type';
 
 const getVersionFromFilename = (filename: string) => {
@@ -45,28 +45,42 @@ export const chooseAlterationsByVersion = async (
   const initialSemVersion = conditional(
     initialVersion && initialVersion !== latestTag && new SemVer(initialVersion)
   );
+  const firstVersion = versions[0];
 
-  if (!versions[0]) {
+  if (!firstVersion) {
     return [];
   }
 
-  const { version: targetVersion } =
-    initialVersion === latestTag
-      ? { version: versions[0] }
-      : await inquirer.prompt<{ version: SemVer }>(
-          {
-            type: 'list',
-            message: 'Choose the alteration target version',
-            name: 'version',
-            choices: versions.map((semVersion) => ({
-              name: semVersion.version,
-              value: semVersion,
-            })),
-          },
-          {
-            version: initialSemVersion,
-          }
-        );
+  const getTargetVersion = async () => {
+    if (initialVersion === latestTag) {
+      return firstVersion;
+    }
+
+    if (!isTty()) {
+      assert(initialSemVersion, new Error('Missing target version'));
+
+      return initialSemVersion;
+    }
+
+    const { version } = await inquirer.prompt<{ version: SemVer }>(
+      {
+        type: 'list',
+        message: 'Choose the alteration target version',
+        name: 'version',
+        choices: versions.map((semVersion) => ({
+          name: semVersion.version,
+          value: semVersion,
+        })),
+      },
+      {
+        version: initialSemVersion,
+      }
+    );
+
+    return version;
+  };
+
+  const targetVersion = await getTargetVersion();
 
   log.info(`Deploy target ${chalk.green(targetVersion.version)}`);
 

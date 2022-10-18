@@ -4,7 +4,7 @@ import { readFile, mkdir, unlink, readdir } from 'fs/promises';
 import path from 'path';
 import { promisify } from 'util';
 
-import { conditionalString } from '@silverhand/essentials';
+import { assert, conditionalString } from '@silverhand/essentials';
 import chalk from 'chalk';
 import { ensureDir, remove } from 'fs-extra';
 import inquirer from 'inquirer';
@@ -13,7 +13,7 @@ import tar from 'tar';
 import { z } from 'zod';
 
 import { connectorDirectory } from '../../constants';
-import { log, oraPromise } from '../../utilities';
+import { isTty, log, oraPromise } from '../../utilities';
 import { defaultPath } from '../install/utils';
 
 const coreDirectory = 'packages/core';
@@ -51,19 +51,29 @@ const validatePath = async (value: string) => {
 };
 
 export const inquireInstancePath = async (initialPath?: string) => {
-  const { instancePath } = await inquirer.prompt<{ instancePath: string }>(
-    {
-      name: 'instancePath',
-      message: 'Where is your Logto instance?',
-      type: 'input',
-      default: defaultPath,
-      filter: (value: string) => value.trim(),
-      validate: validatePath,
-    },
-    { instancePath: initialPath }
-  );
+  const inquire = async () => {
+    if (!isTty()) {
+      assert(initialPath, new Error('Path is missing'));
 
-  // Validate for initialPath
+      return initialPath;
+    }
+
+    const { instancePath } = await inquirer.prompt<{ instancePath: string }>(
+      {
+        name: 'instancePath',
+        message: 'Where is your Logto instance?',
+        type: 'input',
+        default: defaultPath,
+        filter: (value: string) => value.trim(),
+        validate: validatePath,
+      },
+      { instancePath: initialPath }
+    );
+
+    return instancePath;
+  };
+
+  const instancePath = await inquire();
   const validated = await validatePath(instancePath);
 
   if (validated !== true) {
