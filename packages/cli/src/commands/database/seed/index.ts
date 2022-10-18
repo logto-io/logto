@@ -12,7 +12,7 @@ import { z } from 'zod';
 import { createPoolAndDatabaseIfNeeded, insertInto } from '../../../database';
 import {
   getRowsByKeys,
-  isConfigsTableExists,
+  doesConfigsTableExist,
   updateDatabaseTimestamp,
   updateValueByKey,
 } from '../../../queries/logto-config';
@@ -146,7 +146,7 @@ const seed: CommandModule<Record<string, unknown>, { type: string; swe?: boolean
   handler: async ({ type, swe }) => {
     const pool = await createPoolAndDatabaseIfNeeded();
 
-    if (swe && (await isConfigsTableExists(pool))) {
+    if (swe && (await doesConfigsTableExist(pool))) {
       log.info('Seeding skipped');
       await pool.end();
 
