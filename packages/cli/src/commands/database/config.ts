@@ -1,5 +1,5 @@
 import { logtoConfigGuards, LogtoConfigKey, logtoConfigKeys } from '@logto/schemas';
-import { deduplicate } from '@silverhand/essentials';
+import { deduplicate, noop } from '@silverhand/essentials';
 import chalk from 'chalk';
 import { CommandModule } from 'yargs';
 
@@ -28,8 +28,8 @@ const validateKeys: ValidateKeysFunction = (keys) => {
   }
 };
 
-export const getConfig: CommandModule<unknown, { key: string; keys: string[] }> = {
-  command: 'get-config <key> [keys...]',
+const getConfig: CommandModule<unknown, { key: string; keys: string[] }> = {
+  command: 'get <key> [keys...]',
   describe: 'Get config value(s) of the given key(s) in Logto database',
   builder: (yargs) =>
     yargs
@@ -68,8 +68,8 @@ export const getConfig: CommandModule<unknown, { key: string; keys: string[] }> 
   },
 };
 
-export const setConfig: CommandModule<unknown, { key: string; value: string }> = {
-  command: 'set-config <key> <value>',
+const setConfig: CommandModule<unknown, { key: string; value: string }> = {
+  command: 'set <key> <value>',
   describe: 'Set config value of the given key in Logto database',
   builder: (yargs) =>
     yargs
@@ -95,3 +95,12 @@ export const setConfig: CommandModule<unknown, { key: string; value: string }> =
     log.info(`Update ${chalk.green(key)} succeeded`);
   },
 };
+
+const config: CommandModule = {
+  command: ['config', 'configs'],
+  describe: 'Commands for Logto database config',
+  builder: (yargs) => yargs.command(getConfig).command(setConfig).demandCommand(1),
+  handler: noop,
+};
+
+export default config;
