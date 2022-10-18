@@ -13,7 +13,7 @@ import { z } from 'zod';
 
 const { table, fields } = convertToIdentifiers(LogtoConfigs);
 
-export const isConfigsTableExists = async (pool: DatabasePool) => {
+export const doesConfigsTableExist = async (pool: DatabasePool) => {
   const { rows } = await pool.query<{ regclass: Nullable<string> }>(
     sql`select to_regclass(${LogtoConfigs.table}) as regclass`
   );
